@@ -12,6 +12,7 @@ import argparse
 import csv
 import hashlib
 import json
+import time
 from pathlib import Path
 from typing import Any
 
@@ -205,7 +206,9 @@ def main() -> None:
             condition["prompt"],
             int(plan["sampling_seed"]),
         )
+        request_started = time.perf_counter()
         response = client.infer(request)
+        request_wall_seconds = time.perf_counter() - request_started
         action_key = "action" if "action" in response else "actions"
         action = np.asarray(response[action_key], dtype=np.float32)
         if action.ndim != 2 or action.shape[1] != 8:
@@ -225,6 +228,7 @@ def main() -> None:
                 "prompt": condition["prompt"],
                 "requested_sampling_seed": int(plan["sampling_seed"]),
                 "server_sampling_seed": response.get("sampling_seed"),
+                "request_wall_seconds": request_wall_seconds,
                 "action_shape": list(action.shape),
                 "future_shape": list(video.shape) if video is not None else None,
             }
@@ -282,6 +286,12 @@ def main() -> None:
         "conditioning_png_sha256": observed_sha,
         "conditioning_raw_rgb_sha256": raw_rgb_sha,
         "sampling_seed": int(plan["sampling_seed"]),
+        "timing_note": (
+            "Client WebSocket round-trip around infer(), including transport, server inference, "
+            "serialization, and any returned-video decoding. Cosmos returns actions plus decoded "
+            "future video; pi0.5 returns actions only, so the timings represent deployed interfaces "
+            "rather than an architecture-only comparison."
+        ),
         "exact_repeat_action_rms": action_noise,
         "exact_repeat_future_pixel_mae": future_noise,
         "records": records,

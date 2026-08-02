@@ -349,7 +349,8 @@ The first compiler and trajectory renderer must each report 160 episodes and
 zero missing. The renderer includes every success and failure, validates the
 official root-pose geometry, writes machine-readable CSV/JSON indexes, and
 produces the complete gallery plus deterministic landscape and square social
-exports. The dashed path shown in an episode panel is explicitly illustrative;
+exports, including scorecard, same-seed path, and failure-anatomy cards. The
+dashed path shown in an episode panel is explicitly illustrative;
 the shaded 45-degree cone is the scored goal. The second compiler must
 verify 80 original-confirmatory episodes, 80 post-interim direct-stress
 episodes, zero coached episodes, one exact physical robot/object reset

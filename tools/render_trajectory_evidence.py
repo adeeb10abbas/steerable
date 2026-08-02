@@ -804,14 +804,35 @@ def _render_endpoint_atlas(episodes: list[Episode], output: Path) -> None:
     plt.close(fig)
 
 
-def _render_failure_anatomy(episodes: list[Episode], output: Path) -> None:
+def _render_failure_anatomy(
+    episodes: list[Episode], output: Path, *, square: bool = False
+) -> bool:
     models = ["pi05_droid_vla", "cosmos3_edge_droid_wam"]
     slots = [
         (wording, direction)
         for wording in ("canonical", "short_paraphrase", "declarative_goal", "contrastive_goal")
         for direction in ("left", "right")
     ]
-    fig, axes = plt.subplots(1, 2, figsize=(14.0, 7.2), sharex=True, sharey=True)
+    complete = all(
+        len(
+            [
+                episode
+                for episode in episodes
+                if episode.model_id == model_id
+                and episode.wording == wording
+                and episode.direction == direction
+            ]
+        )
+        == 10
+        for model_id in models
+        for wording, direction in slots
+    )
+    if square and not complete:
+        return False
+    layout = (2, 1) if square else (1, 2)
+    figsize = (12, 12) if square else (14.0, 7.2)
+    fig, axes = plt.subplots(*layout, figsize=figsize, sharex=True, sharey=True)
+    axes = np.asarray(axes).reshape(-1)
     for ax, model_id in zip(axes, models):
         left = np.zeros(len(slots), dtype=float)
         for stage in OUTCOME_STAGE_ORDER:
@@ -856,33 +877,54 @@ def _render_failure_anatomy(episodes: list[Episode], output: Path) -> None:
         for spine in ("top", "right", "left"):
             ax.spines[spine].set_visible(False)
     axes[0].invert_yaxis()
-    axes[0].set_yticks(
-        np.arange(len(slots)),
-        [f"{WORDING_LABELS[wording]} · {direction.upper()}" for wording, direction in slots],
+    for ax in axes:
+        ax.set_yticks(
+            np.arange(len(slots)),
+            [f"{WORDING_LABELS[wording]} · {direction.upper()}" for wording, direction in slots],
+        )
+    title_x = 0.09 if square else 0.08
+    fig.suptitle(
+        "Where each rollout stopped making progress",
+        x=title_x,
+        y=0.975 if square else 0.99,
+        ha="left",
+        fontsize=21 if square else 17,
+        fontweight="bold",
     )
-    fig.suptitle("Where each rollout stopped making progress", x=0.08, y=0.99, ha="left", fontsize=17, fontweight="bold")
     fig.text(
-        0.08,
-        0.935,
+        title_x,
+        0.938 if square else 0.935,
         "Mutually exclusive terminal anatomy from raw events and robot-frame cube paths · every episode included",
         ha="left",
         color=MUTED,
-        fontsize=10,
+        fontsize=9.5 if square else 10,
     )
     handles, labels = axes[0].get_legend_handles_labels()
     fig.legend(
         handles,
         labels,
         loc="lower center",
-        bbox_to_anchor=(0.5, 0.005),
-        ncol=3,
+        bbox_to_anchor=(0.5, 0.04 if square else 0.005),
+        ncol=2 if square else 3,
         frameon=False,
         fontsize=8.5,
     )
-    fig.subplots_adjust(left=0.18, right=0.985, top=0.84, bottom=0.16, wspace=0.10)
+    if square:
+        fig.text(
+            0.09,
+            0.018,
+            "Ali Adeeb Abbas · Senior Scientist, General Motors · personal analysis",
+            ha="left",
+            color=MUTED,
+            fontsize=9,
+        )
+        fig.subplots_adjust(left=0.22, right=0.975, top=0.89, bottom=0.15, hspace=0.30)
+    else:
+        fig.subplots_adjust(left=0.18, right=0.985, top=0.84, bottom=0.16, wspace=0.10)
     output.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(output, dpi=220)
+    fig.savefig(output, dpi=100 if square else 220)
     plt.close(fig)
+    return True
 
 
 def _format_compact_axes(ax: plt.Axes) -> None:
@@ -1337,6 +1379,11 @@ def main() -> None:
     retrospective = output / "social" / "retrospective_wording_discordance_1600x900.png"
     rendered = _render_retrospective_discordance(episodes, retrospective)
     social_outputs[retrospective.name] = str(retrospective.relative_to(repo_root)) if rendered else None
+    failure_square = output / "social" / "failure_progress_anatomy_1200x1200.png"
+    rendered = _render_failure_anatomy(episodes, failure_square, square=True)
+    social_outputs[failure_square.name] = (
+        str(failure_square.relative_to(repo_root)) if rendered else None
+    )
     for name, square in (
         ("steerability_scorecard_1600x900.png", False),
         ("steerability_scorecard_1200x1200.png", True),

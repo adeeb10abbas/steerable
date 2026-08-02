@@ -13,6 +13,11 @@
       "model_id": "pi05_droid_vla",
       "model_class": "VLA",
       "wording": "canonical",
+      "instruction_type": "default",
+      "expected_instruction": {
+        "left": "Put the rubiks cube to the left of the bowl",
+        "right": "Put the rubiks cube to the right of the bowl"
+      },
       "analysis_tier": "original_confirmatory",
       "controller": "static",
       "open_loop_horizon": 15,
@@ -24,6 +29,11 @@
       "model_id": "pi05_droid_vla",
       "model_class": "VLA",
       "wording": "short_paraphrase",
+      "instruction_type": "vague",
+      "expected_instruction": {
+        "left": "Put the cube left of the bowl",
+        "right": "Put the cube right of the bowl"
+      },
       "analysis_tier": "original_confirmatory",
       "controller": "static",
       "open_loop_horizon": 15,
@@ -35,6 +45,11 @@
       "model_id": "cosmos3_edge_droid_wam",
       "model_class": "WAM",
       "wording": "canonical",
+      "instruction_type": "default",
+      "expected_instruction": {
+        "left": "Put the rubiks cube to the left of the bowl",
+        "right": "Put the rubiks cube to the right of the bowl"
+      },
       "analysis_tier": "original_confirmatory",
       "controller": "static",
       "open_loop_horizon": 32,
@@ -46,6 +61,11 @@
       "model_id": "cosmos3_edge_droid_wam",
       "model_class": "WAM",
       "wording": "short_paraphrase",
+      "instruction_type": "vague",
+      "expected_instruction": {
+        "left": "Put the cube left of the bowl",
+        "right": "Put the cube right of the bowl"
+      },
       "analysis_tier": "original_confirmatory",
       "controller": "static",
       "open_loop_horizon": 32,
@@ -57,6 +77,11 @@
       "model_id": "pi05_droid_vla",
       "model_class": "VLA",
       "wording": "declarative_goal",
+      "instruction_type": "declarative",
+      "expected_instruction": {
+        "left": "The rubiks cube should end up to the left of the bowl",
+        "right": "The rubiks cube should end up to the right of the bowl"
+      },
       "analysis_tier": "post_interim_direct_stress",
       "controller": "static",
       "open_loop_horizon": 15,
@@ -68,6 +93,11 @@
       "model_id": "pi05_droid_vla",
       "model_class": "VLA",
       "wording": "contrastive_goal",
+      "instruction_type": "contrastive",
+      "expected_instruction": {
+        "left": "Put the rubiks cube to the left of the bowl, not to the right of the bowl",
+        "right": "Put the rubiks cube to the right of the bowl, not to the left of the bowl"
+      },
       "analysis_tier": "post_interim_direct_stress",
       "controller": "static",
       "open_loop_horizon": 15,
@@ -79,6 +109,11 @@
       "model_id": "cosmos3_edge_droid_wam",
       "model_class": "WAM",
       "wording": "declarative_goal",
+      "instruction_type": "declarative",
+      "expected_instruction": {
+        "left": "The rubiks cube should end up to the left of the bowl",
+        "right": "The rubiks cube should end up to the right of the bowl"
+      },
       "analysis_tier": "post_interim_direct_stress",
       "controller": "static",
       "open_loop_horizon": 32,
@@ -90,6 +125,11 @@
       "model_id": "cosmos3_edge_droid_wam",
       "model_class": "WAM",
       "wording": "contrastive_goal",
+      "instruction_type": "contrastive",
+      "expected_instruction": {
+        "left": "Put the rubiks cube to the left of the bowl, not to the right of the bowl",
+        "right": "Put the rubiks cube to the right of the bowl, not to the left of the bowl"
+      },
       "analysis_tier": "post_interim_direct_stress",
       "controller": "static",
       "open_loop_horizon": 32,

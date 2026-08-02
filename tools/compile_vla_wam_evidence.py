@@ -172,6 +172,20 @@ def _load_episode(
     delta_y = float(cube[-1, 1] - bowl[-1, 1])
     requested_signed_offset = delta_y if direction == "left" else -delta_y
     root_result = result_index.get((task, run), {})
+    if not root_result:
+        raise RuntimeError(f"Missing episode_results record for {condition['id']} {task} run {run}")
+    expected_instruction = condition["expected_instruction"][direction]
+    if root_result.get("instruction") != expected_instruction:
+        raise RuntimeError(
+            f"Instruction mismatch for {condition['id']} {direction} run {run}: "
+            f"expected {expected_instruction!r}, got {root_result.get('instruction')!r}"
+        )
+    if root_result.get("instruction_type") != condition["instruction_type"]:
+        raise RuntimeError(
+            f"Instruction type mismatch for {condition['id']} {direction} run {run}: "
+            f"expected {condition['instruction_type']!r}, "
+            f"got {root_result.get('instruction_type')!r}"
+        )
     timing = root_result.get("timing", {})
     steps = int(log["final_step"])
     policy_inference_s = timing.get("policy_inference_s")

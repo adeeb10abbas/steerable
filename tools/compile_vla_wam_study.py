@@ -153,15 +153,30 @@ def _trajectory_evidence_summary(
 
     landscape = evidence_root / "social/first_seed_stress_landscape_1600x900.png"
     square = evidence_root / "social/first_seed_stress_square_1200x1200.png"
+    scorecard_landscape = evidence_root / "social/steerability_scorecard_1600x900.png"
+    scorecard_square = evidence_root / "social/steerability_scorecard_1200x1200.png"
     atlas = evidence_root / "blog/all_executed_paths_and_endpoints.png"
+    failure_anatomy = evidence_root / "blog/failure_progress_anatomy.png"
     gallery = evidence_root / "gallery/index.html"
-    for path in (landscape, square, atlas, gallery):
+    for path in (
+        landscape,
+        square,
+        scorecard_landscape,
+        scorecard_square,
+        atlas,
+        failure_anatomy,
+        gallery,
+    ):
         if not path.exists():
             raise FileNotFoundError(path)
     if cv2.imread(str(landscape)).shape[:2] != (900, 1600):
         raise RuntimeError("Landscape social trajectory export is not 1600x900")
     if cv2.imread(str(square)).shape[:2] != (1200, 1200):
         raise RuntimeError("Square social trajectory export is not 1200x1200")
+    if cv2.imread(str(scorecard_landscape)).shape[:2] != (900, 1600):
+        raise RuntimeError("Landscape social scorecard export is not 1600x900")
+    if cv2.imread(str(scorecard_square)).shape[:2] != (1200, 1200):
+        raise RuntimeError("Square social scorecard export is not 1200x1200")
 
     return {
         "status": summary["status"],
@@ -179,9 +194,12 @@ def _trajectory_evidence_summary(
         "index_csv_sha256": _sha256(evidence_root / "trajectory_index.csv"),
         "artifacts": {
             "atlas": _relative(atlas, workspace),
+            "failure_anatomy": _relative(failure_anatomy, workspace),
             "gallery": _relative(gallery, workspace),
             "landscape_social": _relative(landscape, workspace),
             "square_social": _relative(square, workspace),
+            "scorecard_landscape_social": _relative(scorecard_landscape, workspace),
+            "scorecard_square_social": _relative(scorecard_square, workspace),
         },
     }
 
@@ -1587,8 +1605,10 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         "- `direct_language_requested_side_offsets.png`: endpoint directionality, including failures.",
         "- `direct_prompt_robustness.png`: model-by-wording-by-direction success matrix without a coach.",
         "- `../trajectory_evidence/blog/all_executed_paths_and_endpoints.png`: every executed cube path and endpoint, faceted by checkpoint and wording.",
+        "- `../trajectory_evidence/blog/failure_progress_anatomy.png`: mutually exclusive action-stage anatomy for every success and failure.",
         "- `../trajectory_evidence/social/first_seed_stress_landscape_1600x900.png`: deterministic same-seed stress-language comparison for social sharing.",
         "- `../trajectory_evidence/social/first_seed_stress_square_1200x1200.png`: square social crop of the same deterministic comparison.",
+        "- `../trajectory_evidence/social/steerability_scorecard_1600x900.png` and `...1200x1200.png`: complete 16-cell checkpoint/wording/direction scorecard in share-ready formats.",
         "- `cosmos_conditioning_image_variation.png`: measured realtime-renderer variation despite exact physical resets.",
         "- `cosmos_imagination_execution_quadrants.png`: WAM-only semantic future/action agreement.",
         "- `semantic_threshold_sensitivity.png`: scorer coverage/agreement at 0.10, 0.15, and frozen 0.20 m reliability thresholds.",

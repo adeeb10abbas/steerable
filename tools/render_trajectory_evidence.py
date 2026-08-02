@@ -64,6 +64,23 @@ EE_COLOR = "#93A1AB"
 PATH_LIGHT = "#A9C7D4"
 PATH_DARK = "#153F57"
 BOWL_FACE = "#E7B96D"
+OUTCOME_STAGE_LABELS = {
+    "success": "success",
+    "ended_in_goal_without_terminal_success": "ended in goal · terminal failure",
+    "entered_goal_then_lost_it": "entered goal · lost it",
+    "picked_never_entered_goal": "picked · never entered goal",
+    "interaction_without_verified_pickup": "interaction · no verified pickup",
+    "no_cube_interaction": "no cube interaction",
+}
+OUTCOME_STAGE_COLORS = {
+    "no_cube_interaction": "#C9D1D7",
+    "interaction_without_verified_pickup": "#8EA3B2",
+    "picked_never_entered_goal": "#E5A443",
+    "entered_goal_then_lost_it": "#D96D5F",
+    "ended_in_goal_without_terminal_success": "#9E5A8A",
+    "success": SUCCESS,
+}
+OUTCOME_STAGE_ORDER = tuple(OUTCOME_STAGE_COLORS)
 
 LATERAL_LIMIT_M = 0.55
 FORWARD_MIN_M = -0.40
@@ -124,6 +141,20 @@ class Episode:
     @property
     def cube_path_length_xy_m(self) -> float:
         return float(np.linalg.norm(np.diff(self.cube_robot[:, :2], axis=0), axis=1).sum())
+
+    @property
+    def outcome_stage(self) -> str:
+        if self.success:
+            return "success"
+        if bool(self.requested_mask[-1]):
+            return "ended_in_goal_without_terminal_success"
+        if self.first_relation_step is not None:
+            return "entered_goal_then_lost_it"
+        if self.pickup_step is not None:
+            return "picked_never_entered_goal"
+        if self.interaction_step is not None:
+            return "interaction_without_verified_pickup"
+        return "no_cube_interaction"
 
 
 def _sha256(path: Path) -> str:
@@ -674,6 +705,8 @@ def _trajectory_index_row(episode: Episode, figure: Path, repo_root: Path) -> di
         "episode_seed": episode.seed,
         "instruction": episode.instruction,
         "binary_success": episode.success,
+        "outcome_stage": episode.outcome_stage,
+        "outcome_stage_label": OUTCOME_STAGE_LABELS[episode.outcome_stage],
         "endpoint_class": episode.endpoint_class,
         "final_requested_relation": bool(episode.requested_mask[-1]),
         "final_opposite_relation": bool(episode.opposite_mask[-1]),
@@ -766,6 +799,87 @@ def _render_endpoint_atlas(episodes: list[Episode], output: Path) -> None:
         fontsize=10,
     )
     fig.subplots_adjust(left=0.09, right=0.99, top=0.86, bottom=0.12, wspace=0.18, hspace=0.34)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(output, dpi=220)
+    plt.close(fig)
+
+
+def _render_failure_anatomy(episodes: list[Episode], output: Path) -> None:
+    models = ["pi05_droid_vla", "cosmos3_edge_droid_wam"]
+    slots = [
+        (wording, direction)
+        for wording in ("canonical", "short_paraphrase", "declarative_goal", "contrastive_goal")
+        for direction in ("left", "right")
+    ]
+    fig, axes = plt.subplots(1, 2, figsize=(14.0, 7.2), sharex=True, sharey=True)
+    for ax, model_id in zip(axes, models):
+        left = np.zeros(len(slots), dtype=float)
+        for stage in OUTCOME_STAGE_ORDER:
+            values = []
+            for wording, direction in slots:
+                group = [
+                    episode
+                    for episode in episodes
+                    if episode.model_id == model_id
+                    and episode.wording == wording
+                    and episode.direction == direction
+                ]
+                values.append(sum(episode.outcome_stage == stage for episode in group))
+            bars = ax.barh(
+                np.arange(len(slots)),
+                values,
+                left=left,
+                color=OUTCOME_STAGE_COLORS[stage],
+                edgecolor="white",
+                linewidth=0.55,
+                label=OUTCOME_STAGE_LABELS[stage],
+            )
+            for bar, value in zip(bars, values):
+                if value:
+                    ax.text(
+                        bar.get_x() + bar.get_width() / 2,
+                        bar.get_y() + bar.get_height() / 2,
+                        str(value),
+                        ha="center",
+                        va="center",
+                        fontsize=8,
+                        fontweight="bold",
+                        color="white" if stage not in {"no_cube_interaction", "interaction_without_verified_pickup"} else INK,
+                    )
+            left += np.asarray(values)
+        ax.set_title(MODEL_LABELS[model_id], loc="left", fontsize=12, fontweight="bold")
+        ax.set_xlim(0, 10)
+        ax.set_xticks(np.arange(0, 11, 2))
+        ax.set_xlabel("Episodes (n = 10 per row)")
+        ax.grid(axis="x", color=GRID, linewidth=0.6)
+        ax.set_axisbelow(True)
+        for spine in ("top", "right", "left"):
+            ax.spines[spine].set_visible(False)
+    axes[0].invert_yaxis()
+    axes[0].set_yticks(
+        np.arange(len(slots)),
+        [f"{WORDING_LABELS[wording]} · {direction.upper()}" for wording, direction in slots],
+    )
+    fig.suptitle("Where each rollout stopped making progress", x=0.08, y=0.99, ha="left", fontsize=17, fontweight="bold")
+    fig.text(
+        0.08,
+        0.935,
+        "Mutually exclusive terminal anatomy from raw events and robot-frame cube paths · every episode included",
+        ha="left",
+        color=MUTED,
+        fontsize=10,
+    )
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(
+        handles,
+        labels,
+        loc="lower center",
+        bbox_to_anchor=(0.5, 0.005),
+        ncol=3,
+        frameon=False,
+        fontsize=8.5,
+    )
+    fig.subplots_adjust(left=0.18, right=0.985, top=0.84, bottom=0.16, wspace=0.10)
     output.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(output, dpi=220)
     plt.close(fig)
@@ -925,15 +1039,136 @@ def _render_retrospective_discordance(episodes: list[Episode], output: Path) -> 
     return True
 
 
+def _render_social_scorecard(episodes: list[Episode], output: Path, *, square: bool) -> bool:
+    wordings = ["canonical", "short_paraphrase", "declarative_goal", "contrastive_goal"]
+    columns = [
+        ("pi05_droid_vla", "left"),
+        ("pi05_droid_vla", "right"),
+        ("cosmos3_edge_droid_wam", "left"),
+        ("cosmos3_edge_droid_wam", "right"),
+    ]
+    counts = np.zeros((len(wordings), len(columns)), dtype=int)
+    totals = np.zeros_like(counts)
+    for row, wording in enumerate(wordings):
+        for column, (model_id, direction) in enumerate(columns):
+            group = [
+                episode
+                for episode in episodes
+                if episode.model_id == model_id
+                and episode.wording == wording
+                and episode.direction == direction
+            ]
+            totals[row, column] = len(group)
+            counts[row, column] = sum(episode.success for episode in group)
+    if not np.all(totals == 10):
+        return False
+
+    figsize, dpi = ((12, 12), 100) if square else ((16, 9), 100)
+    fig = plt.figure(figsize=figsize, dpi=dpi, facecolor="white")
+    if square:
+        ax = fig.add_axes([0.15, 0.27, 0.80, 0.46])
+        title_y, subtitle_y, byline_y, note_y = 0.91, 0.84, 0.125, 0.075
+        title_size = 25
+    else:
+        ax = fig.add_axes([0.19, 0.22, 0.72, 0.54])
+        title_y, subtitle_y, byline_y, note_y = 0.91, 0.835, 0.105, 0.055
+        title_size = 29
+    cmap = LinearSegmentedColormap.from_list(
+        "scorecard", ["#EDF2F4", "#9ECDBD", "#15785A"]
+    )
+    rates = counts / totals
+    ax.imshow(rates, vmin=0, vmax=1, cmap=cmap, aspect="auto")
+    for row in range(rates.shape[0]):
+        for column in range(rates.shape[1]):
+            value = rates[row, column]
+            ax.text(
+                column,
+                row - 0.07,
+                f"{counts[row, column]}/10",
+                ha="center",
+                va="center",
+                fontsize=16 if not square else 14,
+                fontweight="bold",
+                color="white" if value >= 0.62 else INK,
+            )
+            ax.text(
+                column,
+                row + 0.24,
+                f"{value:.0%}",
+                ha="center",
+                va="center",
+                fontsize=9.5,
+                color="white" if value >= 0.62 else MUTED,
+            )
+    ax.set_xticks(
+        np.arange(4),
+        ["π0.5 VLA\nLEFT", "π0.5 VLA\nRIGHT", "Cosmos WAM\nLEFT", "Cosmos WAM\nRIGHT"],
+        fontweight="bold",
+    )
+    ax.xaxis.tick_top()
+    ax.tick_params(axis="x", pad=12, length=0)
+    ax.set_yticks(np.arange(4), [WORDING_LABELS[wording] for wording in wordings])
+    ax.tick_params(axis="y", pad=10, length=0)
+    ax.axvline(1.5, color="white", linewidth=8)
+    ax.set_xticks(np.arange(-0.5, 4, 1), minor=True)
+    ax.set_yticks(np.arange(-0.5, 4, 1), minor=True)
+    ax.grid(which="minor", color="white", linewidth=2.5)
+    ax.tick_params(which="minor", bottom=False, left=False)
+    for spine in ax.spines.values():
+        spine.set_visible(False)
+    fig.text(
+        0.075,
+        title_y,
+        "Steerability is not one number.",
+        ha="left",
+        va="top",
+        fontsize=title_size,
+        fontweight="bold",
+        color=INK,
+    )
+    fig.text(
+        0.075,
+        subtitle_y,
+        "Same neutral start · episode-static prompts · matched seeds · no coach or oracle",
+        ha="left",
+        va="top",
+        fontsize=12 if not square else 11,
+        color=MUTED,
+    )
+    fig.text(
+        0.075,
+        byline_y,
+        "Ali Adeeb Abbas · Senior Scientist, General Motors · personal analysis",
+        ha="left",
+        va="bottom",
+        fontsize=10,
+        color=INK,
+    )
+    fig.text(
+        0.075,
+        note_y,
+        "Binary RoboLab task success. One public checkpoint per model class; this is a checkpoint comparison, not a class ranking.",
+        ha="left",
+        va="bottom",
+        fontsize=8.5,
+        color=MUTED,
+    )
+    output.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(output, dpi=dpi)
+    plt.close(fig)
+    return True
+
+
 def _render_gallery(path: Path, rows: list[dict[str, Any]], summary: dict[str, Any]) -> None:
     cards = []
     for row in rows:
         relative_image = Path("..") / "episodes" / Path(row["figure_path"]).name
         outcome = "success" if row["binary_success"] else "failure"
+        stage = row["outcome_stage"]
         cards.append(
-            f'''<article class="episode" data-model="{html.escape(row['model_id'])}" data-wording="{html.escape(row['wording'])}" data-direction="{row['direction']}" data-outcome="{outcome}">
+            f'''<article class="episode" data-model="{html.escape(row['model_id'])}" data-wording="{html.escape(row['wording'])}" data-direction="{row['direction']}" data-outcome="{outcome}" data-stage="{stage}">
   <a href="{html.escape(str(relative_image))}"><img loading="lazy" src="{html.escape(str(relative_image))}" alt="{html.escape(outcome)} trajectory for {html.escape(row['instruction'])}, seed {row['episode_seed']}"></a>
-  <div class="meta"><strong>{outcome.upper()}</strong> · {html.escape(MODEL_LABELS[row['model_id']])} · {html.escape(WORDING_LABELS[row['wording']])} · {row['direction'].upper()} · seed {row['episode_seed']}</div>
+  <div class="meta"><strong>{outcome.upper()}</strong> · {html.escape(row['outcome_stage_label'])} · {html.escape(MODEL_LABELS[row['model_id']])} · {html.escape(WORDING_LABELS[row['wording']])} · {row['direction'].upper()} · seed {row['episode_seed']}</div>
 </article>'''
         )
     document = f'''<!doctype html>
@@ -966,6 +1201,7 @@ main{{max-width:1500px;margin:auto;padding:24px 28px 80px;display:grid;grid-temp
   <select id="wording" aria-label="Wording"><option value="all">All wordings</option><option value="canonical">Canonical</option><option value="short_paraphrase">Short</option><option value="declarative_goal">Declarative</option><option value="contrastive_goal">Contrastive</option></select>
   <select id="direction" aria-label="Direction"><option value="all">Both directions</option><option value="left">Left</option><option value="right">Right</option></select>
   <select id="outcome" aria-label="Outcome"><option value="all">Successes + failures</option><option value="success">Success only</option><option value="failure">Failure only</option></select>
+  <select id="stage" aria-label="Outcome stage"><option value="all">All progress stages</option><option value="success">Success</option><option value="ended_in_goal_without_terminal_success">Ended in goal · terminal failure</option><option value="entered_goal_then_lost_it">Entered goal · lost it</option><option value="picked_never_entered_goal">Picked · never entered goal</option><option value="interaction_without_verified_pickup">Interaction · no verified pickup</option><option value="no_cube_interaction">No cube interaction</option></select>
 </div>
 <main>{''.join(cards)}</main>
 <footer>Binary success is the official RoboLab terminal predicate. Endpoint region is shown separately in the machine-readable index.</footer>
@@ -988,6 +1224,7 @@ def _group_summary(episodes: list[Episode]) -> list[dict[str, Any]]:
     output = []
     for (model_id, wording, direction), values in sorted(groups.items()):
         endpoint_counts = Counter(value.endpoint_class for value in values)
+        stage_counts = Counter(value.outcome_stage for value in values)
         output.append(
             {
                 "model_id": model_id,
@@ -997,6 +1234,9 @@ def _group_summary(episodes: list[Episode]) -> list[dict[str, Any]]:
                 "successes": sum(value.success for value in values),
                 "failures": sum(not value.success for value in values),
                 "endpoint_class_counts": dict(sorted(endpoint_counts.items())),
+                "outcome_stage_counts": {
+                    stage: stage_counts.get(stage, 0) for stage in OUTCOME_STAGE_ORDER
+                },
             }
         )
     return output
@@ -1049,6 +1289,7 @@ def main() -> None:
     _write_csv(output / "trajectory_index.csv", rows)
     _dump_json(output / "trajectory_index.json", rows)
     _render_endpoint_atlas(episodes, output / "blog" / "all_executed_paths_and_endpoints.png")
+    _render_failure_anatomy(episodes, output / "blog" / "failure_progress_anatomy.png")
 
     social_outputs: dict[str, str | None] = {}
     for name, square in (("first_seed_stress_landscape_1600x900.png", False), ("first_seed_stress_square_1200x1200.png", True)):
@@ -1058,6 +1299,13 @@ def main() -> None:
     retrospective = output / "social" / "retrospective_wording_discordance_1600x900.png"
     rendered = _render_retrospective_discordance(episodes, retrospective)
     social_outputs[retrospective.name] = str(retrospective.relative_to(repo_root)) if rendered else None
+    for name, square in (
+        ("steerability_scorecard_1600x900.png", False),
+        ("steerability_scorecard_1200x1200.png", True),
+    ):
+        path = output / "social" / name
+        rendered = _render_social_scorecard(episodes, path, square=square)
+        social_outputs[name] = str(path.relative_to(repo_root)) if rendered else None
 
     summary = {
         "schema_version": "1.0.0",
@@ -1072,6 +1320,10 @@ def main() -> None:
             "success": sum(episode.success for episode in episodes),
             "failure": sum(not episode.success for episode in episodes),
         },
+        "outcome_stage_counts": {
+            stage: sum(episode.outcome_stage == stage for episode in episodes)
+            for stage in OUTCOME_STAGE_ORDER
+        },
         "group_summaries": _group_summary(episodes),
         "missing": missing,
         "manifest": str(args.manifest.resolve()),
@@ -1083,7 +1335,14 @@ def main() -> None:
         "illustrative_route_disclaimer": "The dashed direct route is explanatory only and is not a scored or claimed ground-truth trajectory.",
         "all_episode_policy": selection_plan["all_episode_policy"],
         "social_outputs": social_outputs,
-        "primary_blog_output": str((output / "blog" / "all_executed_paths_and_endpoints.png").relative_to(repo_root)),
+        "blog_outputs": {
+            "all_executed_paths_and_endpoints": str(
+                (output / "blog" / "all_executed_paths_and_endpoints.png").relative_to(repo_root)
+            ),
+            "failure_progress_anatomy": str(
+                (output / "blog" / "failure_progress_anatomy.png").relative_to(repo_root)
+            ),
+        },
     }
     _dump_json(output / "summary.json", summary)
     _render_gallery(output / "gallery" / "index.html", rows, summary)

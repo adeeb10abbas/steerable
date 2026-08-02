@@ -770,7 +770,7 @@ def _write_summary_csv(path: Path, rows: list[dict[str, Any]]) -> None:
 
 
 def _write_raw_evidence_manifest(
-    path: Path, roots: list[Path]
+    path: Path, roots: list[Path], *, scope: str
 ) -> dict[str, Any]:
     allowed_suffixes = {
         ".csv",
@@ -781,7 +781,11 @@ def _write_raw_evidence_manifest(
         ".md",
         ".mp4",
         ".npy",
+        ".npz",
         ".png",
+        ".py",
+        ".sh",
+        ".txt",
     }
     files: dict[str, Path] = {}
     for root in roots:
@@ -806,7 +810,7 @@ def _write_raw_evidence_manifest(
         "files": len(rows),
         "total_bytes": sum(row["bytes"] for row in rows),
         "sha256": _sha256(path),
-        "scope": "All HDF5, JSON/JSONL, CSV, NPY, image, video, and Markdown files under the eight run roots plus prospective command-probe and semantic-scoring roots.",
+        "scope": scope,
     }
 
 
@@ -845,6 +849,7 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         "| GPU assignment audit | `../cosmos_gpu_assignment_audit.json` | Quantifies why cross-card Cosmos output was excluded |",
         "| Confirmation resource snapshot | `../operational_snapshot_cosmos_confirmation.json` | Temperatures, memory, utilization, and physical GPU roles during a valid request |",
         "| Raw file hash ledger | `raw_evidence_manifest.csv` | Byte size and SHA-256 for every prospective raw/derived evidence file |",
+        "| Supporting hash ledger | `supporting_evidence_manifest.csv` | Calibration, exclusions, and separately labeled retrospective raw/derived evidence |",
         "| Setup exclusion | `../setup_exclusions/2026-08-02_cosmos_canonical_driver_check.md` | Failed startup with zero requests, excluded transparently |",
         "| Thermal exclusion | `../setup_exclusions/2026-08-02_cosmos_gpu0_thermal_restart.md` | Interrupted and cross-GPU batches preserved outside estimates |",
         "",
@@ -936,7 +941,30 @@ def main() -> None:
     )
     output.mkdir(parents=True, exist_ok=True)
     raw_manifest = _write_raw_evidence_manifest(
-        output / "raw_evidence_manifest.csv", raw_roots
+        output / "raw_evidence_manifest.csv",
+        raw_roots,
+        scope="All supported data, image, video, and documentation files under the eight definitive run roots plus prospective command-probe and semantic-scoring roots.",
+    )
+    supporting_roots = [
+        Path("/home/ali/projects/RoboLab/output/v1_calibration_cosmos_left_5100"),
+        Path("/home/ali/projects/RoboLab/output/v1_calibration_cosmos_right_5100"),
+        Path("/home/ali/projects/RoboLab/output/v1_cosmos_canonical_original_hot_gpu0"),
+        Path("/home/ali/projects/RoboLab/output/v1_cosmos_vague_interrupted_hot_gpu0"),
+        root / "calibration_semantic_dry_run",
+        root / "command_probe/cosmos",
+        root / "command_probe/cosmos_semantics",
+        workspace / "artifacts/wam_language_gate",
+        Path("/home/ali/projects/Efficient-WAM/experiments/robotwin_language_gate"),
+        Path("/home/ali/projects/Efficient-WAM/outputs/robotwin_language_gate"),
+        Path("/home/ali/projects/FastWAM/experiments/robotwin_language_gate"),
+        Path("/home/ali/projects/FastWAM/outputs/robotwin_language_gate"),
+        Path("/home/ali/projects/lerobot-lingbot/experiments/lingbot_language_gate"),
+        Path("/home/ali/projects/lerobot-lingbot/outputs/lingbot_language_gate"),
+    ]
+    supporting_manifest = _write_raw_evidence_manifest(
+        output / "supporting_evidence_manifest.csv",
+        supporting_roots,
+        scope="Calibration, excluded thermal/GPU-role runs, the excluded Cosmos GPU0 command probe, and separately labeled retrospective Efficient-WAM, Fast-WAM, LingBot-VA, Cosmos, and pi0.5 evidence.",
     )
 
     core_files = [
@@ -979,6 +1007,7 @@ def main() -> None:
             "command_probe_plan_sha256": plan_sha,
             "semantic_calibration_sha256": calibration_sha,
             "raw_evidence_manifest": raw_manifest,
+            "supporting_evidence_manifest": supporting_manifest,
         },
         "prospective": {
             "closed_loop": closed,

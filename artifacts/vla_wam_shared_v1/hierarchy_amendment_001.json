@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0.0",
+  "amendment_id": "vla_wam_shared_spatial_v1_hierarchy_001",
+  "status": "frozen_before_any_hierarchy_episode",
+  "registered_at_utc": "2026-08-02T15:22:35Z",
+  "repository_commit_before_amendment": "db28f4964abfbd2c0211734e53b708b5b05ad58d",
+  "parent_preregistration": "artifacts/vla_wam_shared_v1/preregistration.json",
+  "parent_preregistration_sha256": "10a54897b1c1b1fec6837aaf70ef525085ebae876264bc052541700258c915aa",
+  "reason": "The preregistration declared 20 hierarchy episodes but its comparison text also required a static canonical rerun at the same five-step horizon. This amendment corrects the total arithmetic without changing models, tasks, seeds, prompts, metrics, or stopping rules.",
+  "hierarchy_grid": {
+    "models": [
+      "pi05_droid_vla",
+      "cosmos3_edge_droid_wam"
+    ],
+    "directions": [
+      "left",
+      "right"
+    ],
+    "episode_seeds": [
+      7100,
+      7101,
+      7102,
+      7103,
+      7104
+    ],
+    "open_loop_horizon": 5,
+    "oracle_episodes": 20,
+    "oracle_formula": "2 models * 2 directions * 5 seeds",
+    "static_control_episodes": 20,
+    "static_control_formula": "2 models * 2 directions * 5 seeds",
+    "total_episodes": 40
+  },
+  "oracle_commands": {
+    "not_holding_cube": "Reach for and firmly grasp the rubiks cube",
+    "holding_without_goal": {
+      "left": "Move the rubiks cube to the left of the bowl",
+      "right": "Move the rubiks cube to the right of the bowl"
+    },
+    "holding_at_goal": "Open the gripper and release the rubiks cube"
+  },
+  "selection_predicates": {
+    "holding": "RoboLab gripper-cube contact predicate",
+    "requested_side": "RoboLab robot-frame 45-degree left/right spatial predicate without requiring release",
+    "cadence": "The command is selected at every five-environment-step policy replan and the exact prompt plus oracle state are persisted in episode timing.command_history."
+  },
+  "claim_boundary": "The controller has privileged simulator predicates. It measures low-level response to a perfect command selector and is not evidence of learned hierarchical reasoning."
+}

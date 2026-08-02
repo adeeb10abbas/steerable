@@ -31,11 +31,14 @@ schedule is used for the paired left/right prompts within a model. Integers do
 not imply equivalent diffusion samples across architectures; they make repeats
 within each architecture auditable.
 
-An additional 20 hierarchy episodes use seeds 7100–7104. The static canonical
-control and predicate-oracle controller both replan every five environment
-steps. The oracle issues a grasp command before pickup, the requested spatial
-command while holding, and a release command once the requested relation is
-true.
+The hierarchy add-on uses seeds 7100–7104. The predicate-oracle condition has
+20 episodes and its matched static canonical control has another 20, for 40
+episodes total. Both replan every five environment steps. The oracle issues a
+grasp command before pickup, the requested spatial command while holding, and
+a release command once the requested relation is true. This arithmetic
+clarification was frozen before any hierarchy run in
+`artifacts/vla_wam_shared_v1/hierarchy_amendment_001.json`; no model, task,
+seed, prompt, metric, or stopping rule changed.
 
 ## Primary outcomes
 

@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "status": "fixed_before_any_confirmation_semantic_label",
+  "fixed_at_utc": "2026-08-02T23:16:07Z",
+  "purpose": "Select generated-future examples for the public blog without choosing the most visually persuasive instance after semantic scoring.",
+  "timing_disclosure": {
+    "known_when_fixed": [
+      "all 80 Cosmos direct-language closed-loop binary outcomes",
+      "the excluded calibration and dry-run semantic results",
+      "the frozen semantic scorer and audit sample"
+    ],
+    "not_known_when_fixed": [
+      "any canonical, short, declarative, or contrastive confirmation semantic label",
+      "any confirmation localization cache",
+      "any confirmation imagination/execution quadrant"
+    ]
+  },
+  "eligible_population": "Every scored replan chunk from the 80 registered Cosmos direct-language episodes.",
+  "category_order": [
+    "imagines_requested_executes_requested",
+    "imagines_requested_executes_not_requested",
+    "does_not_imagine_requested_executes_requested",
+    "neither_imagines_nor_executes_requested",
+    "uncertain_future"
+  ],
+  "selection_rule": {
+    "description": "For each category, choose the first eligible chunk in the fixed lexicographic ordering below. If a category is absent, render an explicit no-observed-example panel.",
+    "wording_order": [
+      "canonical",
+      "short_paraphrase",
+      "declarative_goal",
+      "contrastive_goal"
+    ],
+    "direction_order": ["left", "right"],
+    "then": ["episode_index ascending", "replan_index ascending"]
+  },
+  "rendering": {
+    "future_frame_indices": [8, 16, 24, 32],
+    "camera_panels": ["left_camera", "right_camera"],
+    "cube_marker": "cyan",
+    "bowl_marker": "red",
+    "required_annotations": [
+      "requested relation",
+      "imagined relation or abstention",
+      "executed relation at the matched action horizon",
+      "wording, direction, episode seed, and replan index",
+      "retrospective example label"
+    ],
+    "caption_boundary": "These examples explain frozen aggregate labels. They are not additional independent trials and are never used to estimate a rate."
+  }
+}

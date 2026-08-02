@@ -660,6 +660,10 @@ RESULT_TBD_POSITIVE_FINDINGS
   in-distribution, motion, spatial, and semantic suites.
 - It does not test cross-scene or cross-object robustness in the shared
   RoboLab grid.
+- A left/right gap can combine language grounding with a checkpoint's learned
+  motor or workspace handedness. The matched prompts, endpoint paths, and
+  word-order probe expose the asymmetry but do not completely separate those
+  causes.
 - It does not make fixed-observation distance a success metric.
 - It does not call closed-loop first-action separation a pure language effect;
   realtime-renderer variation remains in that contrast.
@@ -705,6 +709,8 @@ defect; it cannot repair a model that does not ground the user's request.
 The next version should retain the exact neutral-start seed grid and add:
 
 - multiple object/reference pairs and scene layouts;
+- mirror-reflected scene and robot-frame controls to separate lexical
+  direction from workspace handedness;
 - all four generalization splits from the paper;
 - task-specific semantic scorers for gripper displacement, grasp/release,
   object identity, points, and traces;

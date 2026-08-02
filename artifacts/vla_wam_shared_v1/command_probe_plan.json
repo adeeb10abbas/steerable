@@ -1,0 +1,131 @@
+{
+  "schema_version": "1.0.0",
+  "status": "frozen_before_fixed_observation_probe",
+  "frozen_at_utc": "2026-08-02T15:30:49Z",
+  "purpose": "Paper-inspired diagnostic of command-interface sensitivity on one identical neutral observation. This is secondary evidence and cannot substitute for closed-loop success.",
+  "source": {
+    "policy_data_split": "excluded 51xx calibration",
+    "episode_seed": 5100,
+    "task": "RubiksCubeLeftOfBowlMatchedTask",
+    "episode": 0,
+    "replan": 0,
+    "conditioning_png": "/home/ali/projects/RoboLab/output/v1_calibration_cosmos_left_5100/RubiksCubeLeftOfBowlMatchedTask/predicted_chunks/episode_000/chunk_000/conditioning.png",
+    "conditioning_png_sha256": "32080f16b44c4a7f9dd32a4f2d84f23e8d2e766585d01443efcc687414e72144",
+    "conditioning_raw_rgb_sha256": "6c9a4d1a38e7ac167a4d0a0e065054fe6b172d59974940d00f082864d8376767",
+    "conditioning_shape": [540, 640, 3],
+    "layout": "wrist 640x360 on top; left and right exterior cameras each 320x180 on bottom",
+    "joint_position": [0.0, -0.6283185482025146, 0.0, -2.5132741928100586, 0.0, 1.884955644607544, 0.0],
+    "gripper_position": [0.0]
+  },
+  "grounding": {
+    "camera": "over_shoulder_left_camera",
+    "source_resolution_px": [1280, 720],
+    "method": "Exact RoboLab pinhole intrinsics and extrinsics project simulator ground-truth centroids into the actual source image; coordinates are frozen before model requests.",
+    "points_px": {
+      "gripper": [859, 181],
+      "rubiks_cube": [767, 495],
+      "red_bowl": [706, 428],
+      "left_of_bowl_target": [617, 482],
+      "right_of_bowl_target": [779, 384]
+    },
+    "gripper_to_cube_trace_px": [[859, 181], [828, 286], [797, 391], [767, 495]],
+    "left_placement_trace_px": [[767, 495], [717, 491], [667, 486], [617, 482]],
+    "right_placement_trace_px": [[767, 495], [771, 458], [775, 421], [779, 384]]
+  },
+  "sampling_seed": 8100000,
+  "conditions": [
+    {
+      "id": "task_left",
+      "style": "task",
+      "prompt": "Put the rubiks cube to the left of the bowl"
+    },
+    {
+      "id": "task_left_repeat",
+      "style": "exact_repeat_control",
+      "prompt": "Put the rubiks cube to the left of the bowl"
+    },
+    {
+      "id": "task_left_paraphrase",
+      "style": "paraphrase_control",
+      "prompt": "Place the multicolored cube on the table on the bowl's left side"
+    },
+    {
+      "id": "task_right",
+      "style": "opposite_relation_control",
+      "prompt": "Put the rubiks cube to the right of the bowl"
+    },
+    {
+      "id": "subtask_grasp",
+      "style": "subtask",
+      "prompt": "Reach for and firmly grasp the rubiks cube"
+    },
+    {
+      "id": "atomic_left",
+      "style": "atomic_motion",
+      "prompt": "Move the gripper left"
+    },
+    {
+      "id": "atomic_right",
+      "style": "atomic_motion_counterfactual",
+      "prompt": "Move the gripper right"
+    },
+    {
+      "id": "gripper_trace_to_cube",
+      "style": "gripper_trace",
+      "prompt": "Move the gripper through left-camera pixel points [(859,181), (828,286), (797,391), (767,495)]"
+    },
+    {
+      "id": "point_cube",
+      "style": "point",
+      "prompt": "Grasp the rubiks cube at left-camera image point [767,495]"
+    },
+    {
+      "id": "point_left_target",
+      "style": "point_spatial",
+      "prompt": "Place the rubiks cube at left-camera image point [617,482]"
+    },
+    {
+      "id": "point_right_target",
+      "style": "point_spatial_counterfactual",
+      "prompt": "Place the rubiks cube at left-camera image point [779,384]"
+    },
+    {
+      "id": "combination_left",
+      "style": "combination",
+      "prompt": "Move left from gripper point [859,181] to the rubiks cube at [767,495], firmly grasp it, then follow [(767,495), (717,491), (667,486), (617,482)]"
+    },
+    {
+      "id": "combination_right",
+      "style": "combination_counterfactual",
+      "prompt": "Move right from gripper point [859,181] to the rubiks cube at [767,495], firmly grasp it, then follow [(767,495), (771,458), (775,421), (779,384)]"
+    },
+    {
+      "id": "unrelated_control",
+      "style": "unrelated_control",
+      "prompt": "Open the top drawer"
+    },
+    {
+      "id": "noun_swap_control",
+      "style": "noun_control",
+      "prompt": "Put the banana to the left of the bowl"
+    },
+    {
+      "id": "contradictory_control",
+      "style": "contradictory_control",
+      "prompt": "Put the rubiks cube to both the left and the right of the bowl at the same time"
+    }
+  ],
+  "reporting": {
+    "shared": [
+      "action RMS versus canonical task",
+      "action RMS for exact repeat",
+      "paired left/right action RMS",
+      "action effect relative to exact-repeat noise"
+    ],
+    "wam_only": [
+      "future pixel MAE versus canonical task",
+      "semantic future labels from the frozen prompt-blind scorer where applicable"
+    ],
+    "claim_boundary": "Distances measure sensitivity. Correct steerability requires directionally appropriate closed-loop behavior or a reliable semantic future predicate."
+  }
+}

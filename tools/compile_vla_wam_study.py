@@ -1365,7 +1365,7 @@ def _plot_observation_variation(audit: dict[str, Any], output: Path) -> None:
         ax.text(bar.get_x() + bar.get_width() / 2, value + 0.08, f"{value:.2f}", ha="center", fontsize=8)
     ax.set_xticks(x, labels, rotation=25, ha="right")
     ax.set_ylabel("First-conditioning-image MAE (0–255)")
-    ax.set_title("Exact reset-state arrays are not byte-identical realtime renders")
+    ax.set_title("Exact physical resets are not byte-identical realtime renders")
     ax.grid(axis="y", alpha=0.2)
     ax.legend(frameon=False)
     fig.tight_layout()

@@ -1,0 +1,53 @@
+{
+  "schema_version": "0.1.0",
+  "paper": "https://arxiv.org/abs/2602.13193",
+  "primary_metrics": [
+    "requested_goal_success_rate",
+    "final_task_progression",
+    "maximum_task_progression",
+    "task_progression_auc"
+  ],
+  "generalization_splits": [
+    "in_distribution",
+    "motion_generalization",
+    "spatial_generalization",
+    "semantic_generalization"
+  ],
+  "command_styles": [
+    "task",
+    "subtask",
+    "atomic_motion",
+    "gripper_trace",
+    "point",
+    "combination"
+  ],
+  "wam_secondary_metrics": [
+    "action_prompt_effect_rms",
+    "action_sampling_noise_rms",
+    "action_effect_to_noise_ratio",
+    "future_prompt_effect_rms",
+    "future_sampling_noise_rms",
+    "future_effect_to_noise_ratio",
+    "predicted_goal_predicate_rate",
+    "executed_goal_predicate_rate",
+    "predicted_executed_predicate_agreement",
+    "action_future_direction_agreement",
+    "intervention_latency_steps",
+    "intervention_persistence_steps"
+  ],
+  "required_controls": [
+    "exact_repeat",
+    "semantic_paraphrase",
+    "matched_opposite_goal",
+    "unrelated_command",
+    "noun_only_change",
+    "same_direction_reissue",
+    "impossible_or_contradictory_command"
+  ],
+  "evidence_tiers": {
+    "pilot": "one valid scene, both goal directions, three matched model seeds",
+    "discovery": "at least five valid scenes and ten paired trials per condition",
+    "estimate": "preregistered task and seed grid with uncertainty intervals",
+    "general_claim": "all four generalization splits, multiple command styles, held-out scenes and objects"
+  }
+}

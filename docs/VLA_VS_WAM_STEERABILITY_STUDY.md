@@ -325,6 +325,13 @@ beside the result.
 
 RESULT_TBD_STATIC_TABLE
 
+![Complete checkpoint-by-wording-by-direction scorecard.](../artifacts/vla_wam_shared_v1/trajectory_evidence/social/steerability_scorecard_1600x900.png)
+
+The scorecard keeps the raw numerators visible. The interval plot below makes
+the corresponding uncertainty impossible to miss; ten trials per cell are
+enough to expose large brittleness, not to estimate deployment reliability
+with precision.
+
 ![Direct-language success with uncertainty.](../artifacts/vla_wam_shared_v1/final_evidence/direct_language_success_with_intervals.png)
 
 RESULT_TBD_STATIC_INTERPRETATION

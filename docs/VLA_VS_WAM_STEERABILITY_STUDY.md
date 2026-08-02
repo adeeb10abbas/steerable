@@ -366,6 +366,12 @@ metric suite rich enough to distinguish end-effector motion, grasp state,
 object identity, traces, points, and full task success. One left/right object
 predicate cannot stand in for the paper's six styles.
 
+The lone subtask condition here is a one-request, fixed-observation interface
+diagnostic. It is never selected from simulator state, never switched during a
+rollout, and never enters closed-loop success. In other words, the study has no
+subtask coach even though it still documents whether the released endpoint
+reacts to a subtask-form string.
+
 ## Does the WAM imagine what it executes?
 
 RESULT_TBD_SEMANTIC_TABLE

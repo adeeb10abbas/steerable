@@ -34,9 +34,12 @@ reliable frames show the requested relation, `false` when at most 25% do, and
 `uncertain` otherwise. Frame zero is conditioning and never counts as future
 evidence.
 
-The execution comparison uses the state after the actions actually executed
-from the chunk, at `start_step + open_loop_horizon - 1`. This supports four
-semantic quadrants rather than treating any pixel change as steerability:
+The execution comparison uses the saved rigid-object root poses after the
+actions actually executed from the chunk, transformed into the saved robot
+frame at `start_step + open_loop_horizon - 1`. This is the geometry source used
+by RoboLab's directional predicate. The semantic comparison retains its frozen
+additional `|delta_z| <= 0.1 m` rule. This supports four semantic quadrants
+rather than treating any pixel change as steerability:
 
 1. imagines requested and executes requested;
 2. imagines requested and does not execute requested;
@@ -61,7 +64,9 @@ both direction words. Asking the scorer to resolve that negation would add a
 second, unregistered language judge. The dated
 `semantic_target_parser_amendment_004.json` froze this interface correction
 before any contrastive rollout or stress semantic label; visual localization,
-thresholds, execution geometry, and quadrants are unchanged.
+thresholds, and quadrants were unchanged. A later source-alignment check
+corrected the execution geometry from rendered bounding-box centroids to
+rigid-object root poses; see `execution_geometry_amendment_005.json`.
 
 For the fixed-observation command-style probe, this cube/bowl predicate is
 applied only to commands that actually request a left/right cube placement:
@@ -76,6 +81,21 @@ The supplemental exact direct-task probe instead supplies an explicit,
 registered `requested_relation` for every condition. That is necessary for
 contrastive prompts containing both direction tokens and keeps the semantic
 scorer from interpreting their scope. It changes target bookkeeping only.
+
+## Execution geometry source correction
+
+Before any confirmation semantic label was produced, a successful RoboLab
+episode exposed a mismatch: the task predicate was true, but the derived
+relation scorer was neutral. RoboLab's source calls `world.get_pose`; the
+derived scorer had preferred axis-aligned bounding-box centroids. A rotated
+cube can move that visual centroid enough to cross the 45-degree boundary.
+
+`execution_geometry_amendment_005.json` therefore freezes a source-alignment
+correction. Executed relations now use rigid-object root poses in the robot
+frame. Visual-centroid calibration is intentionally unchanged because the
+localizer marks visible object centers. Binary success, model requests,
+generated futures, localization caches, thresholds, and abstention rules are
+unchanged.
 
 ## Frozen calibration
 

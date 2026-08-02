@@ -332,6 +332,15 @@ diagnostic, not a causal language estimate. The fixed-observation probe below
 is the exact byte-level intervention. Closed-loop requested-goal success remains
 the important outcome.
 
+A second integrity check caught a subtler derived-metric bug before any
+confirmation future was semantically scored. The task predicate uses rigid-
+object root poses, but the first compiler used rendered bounding-box centroids;
+cube rotation can shift those centroids across the 45-degree boundary. The
+dated execution-geometry amendment switches endpoint and executed-state
+relations to root poses in the robot frame, leaves visual calibration on visual
+centroids, and changes no binary success, prompt, action, future, or inclusion
+decision.
+
 ![First-conditioning-image variation across exact physical resets.](../artifacts/vla_wam_shared_v1/final_evidence/cosmos_conditioning_image_variation.png)
 
 ## The six-style fixed-observation probe
@@ -691,6 +700,8 @@ Key protocol files:
   localizer response;
 - `semantic_target_parser_amendment_004.json`: target resolution from matched
   task identity for prompts containing both direction words;
+- `execution_geometry_amendment_005.json`: source-aligned root-pose geometry
+  for endpoint and executed-state relations;
 - `run_manifest.json`: local mapping for all eight direct-language conditions.
 
 Key implementation files:

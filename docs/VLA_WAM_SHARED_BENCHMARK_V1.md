@@ -92,6 +92,12 @@ avoids adding an unregistered negation judge for contrastive prompts. The
 interface correction is disclosed in
 `semantic_target_parser_amendment_004.json`; no visual threshold changed.
 
+Executed and endpoint relations use saved rigid-object root poses transformed
+into the robot frame, matching RoboLab's `world.get_pose` source. Rendered
+bounding-box centroids are retained only for camera/localizer calibration and
+renderer-variation audits. The source correction and its outcome-timing
+disclosure are in `execution_geometry_amendment_005.json`.
+
 The exact prompt-blind localizer, projection, abstention rules, excluded
 calibration metrics, and evidence hashes were frozen separately in
 `docs/SEMANTIC_FUTURE_SCORER_V1.md` before confirmation inference.

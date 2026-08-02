@@ -219,8 +219,24 @@ def _episode_state(task_dir: Path, episode_index: int) -> dict[str, np.ndarray]:
             )
         demo = handle["data/demo_0"]
         return {
-            "cube": np.asarray(demo["bbox/centroid/rubiks_cube"], dtype=np.float64),
-            "bowl": np.asarray(demo["bbox/centroid/bowl"], dtype=np.float64),
+            # Visual centroids remain the frozen calibration target because
+            # the localizer marks visible object centers in rendered images.
+            "cube_visual": np.asarray(
+                demo["bbox/centroid/rubiks_cube"], dtype=np.float64
+            ),
+            "bowl_visual": np.asarray(demo["bbox/centroid/bowl"], dtype=np.float64),
+            # Executed task geometry must use the same root poses as
+            # RoboLab's directional predicate. A rotated cube's axis-aligned
+            # bounding-box centroid is not its task pose.
+            "cube_pose": np.asarray(
+                demo["states/rigid_object/rubiks_cube/root_pose"], dtype=np.float64
+            ),
+            "bowl_pose": np.asarray(
+                demo["states/rigid_object/bowl/root_pose"], dtype=np.float64
+            ),
+            "robot_pose": np.asarray(
+                demo["states/articulation/robot/root_pose"], dtype=np.float64
+            ),
         }
 
 
@@ -366,10 +382,20 @@ def _direction(cube: np.ndarray, bowl: np.ndarray) -> str:
     return "neutral"
 
 
-def _official_execution_relation(cube: np.ndarray, bowl: np.ndarray) -> str:
-    if abs(float(cube[2] - bowl[2])) > 0.1:
+def _robot_frame_delta(
+    cube_pose: np.ndarray, bowl_pose: np.ndarray, robot_pose: np.ndarray
+) -> np.ndarray:
+    rotation = _quaternion_matrix(robot_pose[3:7].tolist())
+    return rotation.T @ (cube_pose[:3] - bowl_pose[:3])
+
+
+def _semantic_execution_relation(
+    cube_pose: np.ndarray, bowl_pose: np.ndarray, robot_pose: np.ndarray
+) -> str:
+    delta = _robot_frame_delta(cube_pose, bowl_pose, robot_pose)
+    if abs(float(delta[2])) > 0.1:
         return "neutral"
-    return _direction(cube, bowl)
+    return _direction(delta, np.zeros(3, dtype=np.float64))
 
 
 def _request_direction(prompt: str) -> str:
@@ -452,7 +478,9 @@ def calibrate(args: argparse.Namespace) -> None:
         state_cache: dict[int, dict[str, np.ndarray]] = {}
         for episode_index, chunk_dir, metadata in _iter_chunks(task_dir):
             state = state_cache.setdefault(episode_index, _episode_state(task_dir, episode_index))
-            step = min(int(metadata["executed_step_start"]), len(state["cube"]) - 1)
+            step = min(
+                int(metadata["executed_step_start"]), len(state["cube_visual"]) - 1
+            )
             rgb = cv2.cvtColor(cv2.imread(str(chunk_dir / "conditioning.png")), cv2.COLOR_BGR2RGB)
             panels = _bottom_camera_panels(rgb)
             localization = {camera: localizer.locate(panels[camera]) for camera in CAMERAS}
@@ -463,8 +491,8 @@ def calibrate(args: argparse.Namespace) -> None:
                 "sampling_seed": metadata["server_sampling_seed"],
                 "state_step": step,
                 "world": {
-                    "cube": state["cube"][step].tolist(),
-                    "bowl": state["bowl"][step].tolist(),
+                    "cube": state["cube_visual"][step].tolist(),
+                    "bowl": state["bowl_visual"][step].tolist(),
                 },
                 "localization": localization,
             }
@@ -668,10 +696,12 @@ def score(args: argparse.Namespace) -> None:
             state = state_cache.setdefault(episode_index, _episode_state(task_dir, episode_index))
             end_step = min(
                 int(metadata["executed_step_start"]) + int(metadata["open_loop_horizon"]) - 1,
-                len(state["cube"]) - 1,
+                len(state["cube_pose"]) - 1,
             )
-            executed_relation = _official_execution_relation(
-                state["cube"][end_step], state["bowl"][end_step]
+            executed_relation = _semantic_execution_relation(
+                state["cube_pose"][end_step],
+                state["bowl_pose"][end_step],
+                state["robot_pose"][end_step],
             )
             executed_requested = executed_relation == requested
             if imagined_requested is None:
@@ -696,6 +726,7 @@ def score(args: argparse.Namespace) -> None:
                 "execution_end_step": end_step,
                 "executed_relation": executed_relation,
                 "executed_requested": executed_requested,
+                "execution_geometry_source": "rigid_object_root_pose_in_robot_frame",
                 "quadrant": quadrant,
                 "chunk_dir": str(chunk_dir.resolve()),
             }
@@ -725,6 +756,7 @@ def score(args: argparse.Namespace) -> None:
         "schema_version": 1,
         "calibration_path": str(args.calibration.resolve()),
         "calibration_sha256": _sha256(args.calibration),
+        "execution_geometry_source": "rigid_object_root_pose_in_robot_frame",
         "num_chunks": len(all_rows),
         "num_certain_chunks": sum(row["imagined_requested"] is not None for row in all_rows),
         "coverage_fraction": sum(row["imagined_requested"] is not None for row in all_rows) / len(all_rows),

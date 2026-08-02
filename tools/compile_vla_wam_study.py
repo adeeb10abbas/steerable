@@ -1469,6 +1469,7 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         "| Thermal-control amendment | `../thermal_control_amendment_001.json` | Freezes pause/resume and emergency-stop behavior after the first matched-role thermal stop |",
         "| Thermal timing amendment | `../thermal_timing_amendment_002.json` | Treats guarded client request timing as an upper bound and forbids fabricated phase attribution |",
         "| Semantic target parser amendment | `../semantic_target_parser_amendment_004.json` | Uses matched task identity rather than interpreting contrastive prompt negation inside the visual scorer |",
+        "| Execution geometry amendment | `../execution_geometry_amendment_005.json` | Aligns derived task/execution relations with RoboLab rigid-object root poses while preserving visual-centroid calibration |",
         "| Grounded probe plan | `../command_probe_plan.json` | Hash-pinned observation, six command styles, controls, seed |",
         "| Direct-task probe plan | `../direct_task_command_probe_plan.json` | Exact-input syntax, contrastive scope, and target-token-order diagnostic |",
         "| Closed-loop episode table | `episodes.csv` | One row per registered direct-language rollout, with analysis tier |",
@@ -1569,6 +1570,9 @@ def main() -> None:
         raise RuntimeError("Confirmatory/stress episode accounting does not match the amended grid")
     if len(closed["initial_state_fingerprint_counts"]) != 1:
         raise RuntimeError("Closed-loop inputs do not share one exact initial-state fingerprint")
+    geometry_sources = {row.get("relation_geometry_source") for row in closed["episodes"]}
+    if geometry_sources != {"rigid_object_root_pose_in_robot_frame"}:
+        raise RuntimeError(f"Unexpected closed-loop relation geometry: {geometry_sources}")
 
     plan_path = root / "command_probe_plan.json"
     plan_sha = _sha256(plan_path)
@@ -1598,6 +1602,12 @@ def main() -> None:
         summary = _load(path)
         if summary["calibration_sha256"] != calibration_sha:
             raise RuntimeError(f"Semantic calibration hash mismatch in {path}")
+        if summary.get("execution_geometry_source") != "rigid_object_root_pose_in_robot_frame":
+            raise RuntimeError(f"Semantic execution geometry mismatch in {path}")
+        if {
+            row.get("execution_geometry_source") for row in summary["rows"]
+        } != {"rigid_object_root_pose_in_robot_frame"}:
+            raise RuntimeError(f"Semantic row geometry mismatch in {path}")
         semantic_inputs.append((wording, path.parent, summary))
     semantic = _semantic_aggregate(semantic_inputs)
 
@@ -1674,6 +1684,7 @@ def main() -> None:
         root / "command_probe_amendment_001.json",
         root / "semantic_future_calibration.json",
         root / "semantic_target_parser_amendment_004.json",
+        root / "execution_geometry_amendment_005.json",
         root / "semantic_confirmation_audit_plan.json",
         root / "semantic_confirmation_audit_amendment_002.json",
         root / "semantic_confirmation_audit.md",

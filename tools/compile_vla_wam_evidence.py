@@ -77,8 +77,41 @@ def _initial_fingerprint(arrays: dict[str, np.ndarray]) -> str:
     return digest.hexdigest()
 
 
-def _relation_mask(cube: np.ndarray, bowl: np.ndarray, direction: str) -> np.ndarray:
-    delta = cube - bowl
+def _quaternion_wxyz_matrix(quaternion: np.ndarray) -> np.ndarray:
+    """Return local-to-world rotation matrices for normalized wxyz quaternions."""
+
+    quaternion = np.asarray(quaternion, dtype=np.float64)
+    norm = np.linalg.norm(quaternion, axis=1, keepdims=True)
+    if np.any(norm <= 1e-12):
+        raise ValueError("Robot root pose contains a zero quaternion")
+    w, x, y, z = (quaternion / norm).T
+    matrix = np.empty((len(quaternion), 3, 3), dtype=np.float64)
+    matrix[:, 0, 0] = 1 - 2 * (y * y + z * z)
+    matrix[:, 0, 1] = 2 * (x * y - z * w)
+    matrix[:, 0, 2] = 2 * (x * z + y * w)
+    matrix[:, 1, 0] = 2 * (x * y + z * w)
+    matrix[:, 1, 1] = 1 - 2 * (x * x + z * z)
+    matrix[:, 1, 2] = 2 * (y * z - x * w)
+    matrix[:, 2, 0] = 2 * (x * z - y * w)
+    matrix[:, 2, 1] = 2 * (y * z + x * w)
+    matrix[:, 2, 2] = 1 - 2 * (x * x + y * y)
+    return matrix
+
+
+def _robot_frame_delta(
+    cube_pose: np.ndarray, bowl_pose: np.ndarray, robot_pose: np.ndarray
+) -> np.ndarray:
+    """Match RoboLab's directional predicate using rigid-object root poses."""
+
+    if not (len(cube_pose) == len(bowl_pose) == len(robot_pose)):
+        raise ValueError("Pose trajectories have different lengths")
+    delta_world = cube_pose[:, :3] - bowl_pose[:, :3]
+    robot_local_to_world = _quaternion_wxyz_matrix(robot_pose[:, 3:7])
+    return np.einsum("tij,ti->tj", robot_local_to_world, delta_world)
+
+
+def _relation_mask(delta_robot: np.ndarray, direction: str) -> np.ndarray:
+    delta = delta_robot
     horizontal_norm = np.linalg.norm(delta[:, :2], axis=1)
     sign = 1.0 if direction == "left" else -1.0
     cosine = np.divide(
@@ -87,7 +120,10 @@ def _relation_mask(cube: np.ndarray, bowl: np.ndarray, direction: str) -> np.nda
         out=np.zeros_like(horizontal_norm),
         where=horizontal_norm > 1e-8,
     )
-    return (cosine >= math.cos(math.radians(45.0))) & (np.abs(delta[:, 2]) <= 0.1)
+    # The matched task's terminal predicate applies the 45-degree horizontal
+    # cone plus gripper detachment. It does not apply the generic `level`
+    # predicate when `require_gripper_detached=True`.
+    return cosine >= math.cos(math.radians(45.0))
 
 
 def _first_true(mask: np.ndarray) -> int | None:
@@ -130,16 +166,21 @@ def _load_episode(
     with h5py.File(hdf_path, "r") as handle:
         demo = handle["data/demo_0"]
         actions = np.asarray(demo["actions"], dtype=np.float64)
+        cube_pose = np.asarray(
+            demo["states/rigid_object/rubiks_cube/root_pose"], dtype=np.float64
+        )
+        bowl_pose = np.asarray(
+            demo["states/rigid_object/bowl/root_pose"], dtype=np.float64
+        )
+        robot_pose = np.asarray(
+            demo["states/articulation/robot/root_pose"], dtype=np.float64
+        )
         if "bbox/centroid/rubiks_cube" in demo:
-            cube = np.asarray(demo["bbox/centroid/rubiks_cube"], dtype=np.float64)
-            bowl = np.asarray(demo["bbox/centroid/bowl"], dtype=np.float64)
+            cube_centroid = np.asarray(demo["bbox/centroid/rubiks_cube"], dtype=np.float64)
+            bowl_centroid = np.asarray(demo["bbox/centroid/bowl"], dtype=np.float64)
         else:
-            cube = np.asarray(
-                demo["states/rigid_object/rubiks_cube/root_pose"][:, :3], dtype=np.float64
-            )
-            bowl = np.asarray(
-                demo["states/rigid_object/bowl/root_pose"][:, :3], dtype=np.float64
-            )
+            cube_centroid = cube_pose[:, :3]
+            bowl_centroid = bowl_pose[:, :3]
         initial = _initial_arrays(demo["initial_state"])
 
     log = json.loads(log_path.read_text())
@@ -158,7 +199,8 @@ def _load_episode(
     ]
     pickup_step = int(pickup_events[0]["step"]) if pickup_events else None
     interaction_step = int(interaction_events[0]["step"]) if interaction_events else None
-    relation = _relation_mask(cube, bowl, direction)
+    delta_robot = _robot_frame_delta(cube_pose, bowl_pose, robot_pose)
+    relation = _relation_mask(delta_robot, direction)
     first_relation_step = _first_true(relation)
     final_relation = bool(relation[-1])
     post_pick_transition = False
@@ -172,7 +214,7 @@ def _load_episode(
     relation_only_progression = (int(picked) + int(final_relation)) / 2.0
     strict_completion = picked and binary_success and post_pick_transition
     strict_progression = (int(picked) + int(strict_completion)) / 2.0
-    delta_y = float(cube[-1, 1] - bowl[-1, 1])
+    delta_y = float(delta_robot[-1, 1])
     requested_signed_offset = delta_y if direction == "left" else -delta_y
     root_result = result_index.get((task, run), {})
     if not root_result:
@@ -221,8 +263,9 @@ def _load_episode(
         "final_cube_minus_bowl_y_m": delta_y,
         "requested_signed_final_offset_m": requested_signed_offset,
         "initial_requested_relation": bool(relation[0]),
-        "first_recorded_cube_centroid_m": cube[0].tolist(),
-        "first_recorded_bowl_centroid_m": bowl[0].tolist(),
+        "first_recorded_cube_centroid_m": cube_centroid[0].tolist(),
+        "first_recorded_bowl_centroid_m": bowl_centroid[0].tolist(),
+        "relation_geometry_source": "rigid_object_root_pose_in_robot_frame",
         "initial_state_sha256": _initial_fingerprint(initial),
         "raw_robolab_score": root_result.get("score"),
         "policy_inference_s": policy_inference_s,
@@ -393,6 +436,7 @@ def _markdown(summary: dict[str, Any]) -> str:
         [
             "",
             "Paper progression is the mean of persistent correct-cube pickup credit and released-object success in the requested location. Relation-only progress is retained in the machine-readable output as a secondary diagnostic. Strict progression additionally requires a post-pick relation transition.",
+            "Endpoint relations and signed offsets use rigid-object root poses transformed into the robot frame, matching RoboLab's directional predicate. Rendered bounding-box centroids are used only for the separately labeled visual/settling audit.",
             "",
             "## First-action opposite-prompt separation versus same-prompt variation",
             "",

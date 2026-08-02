@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "amendment_id": "vla_wam_shared_spatial_v1_execution_geometry_005",
+  "status": "source_alignment_correction_before_any_confirmation_semantic_label",
+  "fixed_at_utc": "2026-08-02T21:42:46Z",
+  "repository_commit_before_amendment": "2cb3eaa79854de84be4bfa45e5b25924b18568d1",
+  "robolab_commit": "992bc34eedb2b909888af8a334a2ac33b86c51d8",
+  "robolab_predicate_logic_sha256": "1aefff7d1c400501238c86780f37a5fcc4f40d3a522254bfe51163548df75dde",
+  "robolab_conditionals_sha256": "ff267b76c06aad6bed11842671373176d14222d9e158a139bf77d2588f4ae7f1",
+  "semantic_calibration_sha256": "56b7155fdb2eee1732e7636a104b2966323fcfc947c699cf3ac58635b232ace9",
+  "trigger": "An integrity comparison found simulator-successful episodes that the derived relation diagnostic marked neutral. The compiler and semantic execution scorer were using axis-aligned bounding-box centroids, while RoboLab's left/right predicate calls world.get_pose and therefore uses rigid-object root poses transformed into the robot frame.",
+  "correction": {
+    "closed_loop_geometry": "Use saved rubiks_cube and bowl rigid-object root poses, transform their displacement into the saved robot-root frame, and apply the 45-degree horizontal directional cone.",
+    "task_relation_only_diagnostic": "Mirror the matched terminal direction predicate without adding a height gate. Binary success continues to supply the registered gripper-detachment requirement.",
+    "semantic_execution_geometry": "Use the same root-pose robot-frame displacement, while retaining the semantic scorer's independently frozen absolute delta-z <= 0.1 m reliability rule.",
+    "visual_calibration": "Continue using rendered-object bounding-box centroids for camera/localizer calibration because they represent visible object centers. No localizer output, bias, plane, frame index, threshold, or prompt changes."
+  },
+  "outcome_timing_disclosure": "All 20 Cosmos declarative outcomes were known (19 successes). The first nine contrastive-left outcomes had completed (one success); no contrastive-right outcome existed. Canonical and short Cosmos outcomes were already known. No original-confirmation or stress semantic localization/label had been produced.",
+  "primary_outcome_impact": "None. RoboLab binary success records, task stopping, prompts, actions, futures, seeds, and episode inclusion are unchanged.",
+  "secondary_outcome_impact": "Final signed offsets, relation-only/strict progression diagnostics, executed semantic relations, and imagined-versus-executed quadrant assignments may change. They will be compiled once from the corrected source and reported as post-freeze derived diagnostics.",
+  "validation_rule": "For every binary-success episode, the saved final root poses must satisfy the requested horizontal cone. Bounding-box centroids remain available only for visual/renderer variation audits.",
+  "claim_boundary": "This correction aligns evaluation with the simulator source. It does not improve policy behavior or interpret the natural-language prompt."
+}

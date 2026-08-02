@@ -36,3 +36,9 @@ identical simulator state. The original canonical batch, which used the old GPU
 assignment, is also excluded and rerun from seed 6100 under the new assignment.
 Only the fresh canonical and short-paraphrase batches—both Cosmos server on
 physical GPU 1 and Isaac Sim on physical GPU 0—enter the prospective comparison.
+
+For transparency, the excluded original canonical outcomes were 7/10 left and
+9/10 right. They are a renderer-role sensitivity observation, not a hidden
+alternate estimate, and they are never pooled with the fresh batch. The full
+directory is preserved at
+`/home/ali/projects/RoboLab/output/v1_cosmos_canonical_original_hot_gpu0`.

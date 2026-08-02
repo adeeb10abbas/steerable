@@ -687,6 +687,47 @@ def _write_summary_csv(path: Path, rows: list[dict[str, Any]]) -> None:
             )
 
 
+def _write_raw_evidence_manifest(
+    path: Path, roots: list[Path]
+) -> dict[str, Any]:
+    allowed_suffixes = {
+        ".csv",
+        ".hdf5",
+        ".jpg",
+        ".json",
+        ".jsonl",
+        ".md",
+        ".mp4",
+        ".npy",
+        ".png",
+    }
+    files: dict[str, Path] = {}
+    for root in roots:
+        if not root.exists():
+            raise FileNotFoundError(root)
+        candidates = [root] if root.is_file() else root.rglob("*")
+        for candidate in candidates:
+            if candidate.is_file() and candidate.suffix.lower() in allowed_suffixes:
+                files[str(candidate.resolve())] = candidate
+    rows = []
+    for absolute, candidate in sorted(files.items()):
+        rows.append(
+            {
+                "absolute_path": absolute,
+                "bytes": candidate.stat().st_size,
+                "sha256": _sha256(candidate),
+            }
+        )
+    _write_summary_csv(path, rows)
+    return {
+        "path": str(path.resolve()),
+        "files": len(rows),
+        "total_bytes": sum(row["bytes"] for row in rows),
+        "sha256": _sha256(path),
+        "scope": "All HDF5, JSON/JSONL, CSV, NPY, image, video, and Markdown files under the eight run roots plus prospective command-probe and semantic-scoring roots.",
+    }
+
+
 def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
     closed = compiled["prospective"]["closed_loop"]
     semantic = compiled["prospective"]["cosmos_semantic_futures"]
@@ -718,6 +759,7 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         "| Closed-loop summary | `closed_loop_summary.json` | Success, progression, offsets, timing, contrasts |",
         "| Cosmos future semantics | `compiled_evidence.json` | Prompt-blind imagined/executed quadrants and coverage |",
         "| Command probes | `compiled_evidence.json` | Exact repeat, command sensitivity, semantic futures |",
+        "| Raw file hash ledger | `raw_evidence_manifest.csv` | Byte size and SHA-256 for every prospective raw/derived evidence file |",
         "| Setup exclusion | `../setup_exclusions/2026-08-02_cosmos_canonical_driver_check.md` | Failed startup with zero requests, excluded transparently |",
         "",
         "## Figures",
@@ -792,6 +834,22 @@ def main() -> None:
         semantic_inputs.append((wording, path.parent, summary))
     semantic = _semantic_aggregate(semantic_inputs)
 
+    run_manifest = _load(root / "run_manifest.json")
+    raw_roots = [Path(condition["output_root"]) for condition in run_manifest["conditions"]]
+    raw_roots.extend(
+        [
+            root / "command_probe/pi05",
+            root / "command_probe/cosmos",
+            root / "command_probe/cosmos_semantics",
+            root / "semantic_confirmation/cosmos_canonical",
+            root / "semantic_confirmation/cosmos_vague",
+        ]
+    )
+    output.mkdir(parents=True, exist_ok=True)
+    raw_manifest = _write_raw_evidence_manifest(
+        output / "raw_evidence_manifest.csv", raw_roots
+    )
+
     core_files = [
         root / "preregistration.json",
         root / "run_manifest.json",
@@ -814,6 +872,7 @@ def main() -> None:
             "one_exact_initial_state_fingerprint": True,
             "command_probe_plan_sha256": plan_sha,
             "semantic_calibration_sha256": calibration_sha,
+            "raw_evidence_manifest": raw_manifest,
         },
         "prospective": {
             "closed_loop": closed,
@@ -840,7 +899,6 @@ def main() -> None:
         "claim_boundary": "These results compare one public VLA checkpoint with one public WAM checkpoint on one neutral-start spatial task pair. They do not establish a model-class ranking.",
     }
 
-    output.mkdir(parents=True, exist_ok=True)
     _configure_plotting()
     _plot_static_success(closed, output)
     _plot_offsets(closed, output)

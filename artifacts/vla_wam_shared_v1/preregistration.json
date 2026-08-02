@@ -1,0 +1,131 @@
+{
+  "schema_version": "1.0.0",
+  "study_id": "vla_wam_shared_spatial_v1",
+  "status": "frozen_before_calibration_and_confirmation",
+  "registered_at_utc": "2026-08-02T14:37:57Z",
+  "repository_commit_before_registration": "d57b1e0b54033f4a99bc1fb6c005ddbf340f379a",
+  "research_question": "Under an exact shared DROID simulator state, do a standard VLA and a WAM follow left/right task language, retain control under a short paraphrase, and benefit differently from the same predicate-oracle hierarchy?",
+  "scope": {
+    "paper_alignment": "Success rate and final task progression follow Chen et al. arXiv:2602.13193. WAM future compliance, action-future agreement, strict pick-then-place, and effect-to-noise measurements are declared additions.",
+    "generalization_slice": "spatial_generalization_only",
+    "claim_exclusions": [
+      "No conclusion about all VLAs or all WAMs.",
+      "No claim about in-distribution, motion, or semantic generalization.",
+      "No direct numerical comparison with the paper's Bridge real-robot results.",
+      "The predicate oracle isolates low-level hierarchical controllability; it is not a learned VLM reasoner."
+    ]
+  },
+  "models": [
+    {
+      "id": "pi05_droid_vla",
+      "class": "VLA",
+      "checkpoint": "gs://openpi-assets-simeval/pi05_droid_jointpos",
+      "action_schema": "seven DROID joint-position targets plus gripper",
+      "future_output": false
+    },
+    {
+      "id": "cosmos3_edge_droid_wam",
+      "class": "WAM",
+      "checkpoint": "nvidia/Cosmos3-Edge-Policy-DROID",
+      "action_schema": "seven DROID joint-position targets plus gripper",
+      "future_output": true
+    }
+  ],
+  "shared_environment": {
+    "repository": "/home/ali/projects/RoboLab",
+    "tasks": [
+      "RubiksCubeLeftOfBowlMatchedTask",
+      "RubiksCubeRightOfBowlMatchedTask"
+    ],
+    "initial_relation": "cube and bowl laterally neutral; neither requested predicate is true",
+    "prior_shared_state_check": "18 shared robot, object, and camera datasets had maximum absolute difference 0.0; Cosmos records four additional camera arrays",
+    "maximum_steps": 450,
+    "dt_seconds": 0.06666666666666667,
+    "num_envs": 1
+  },
+  "prompt_conditions": {
+    "canonical": {
+      "left": "Put the rubiks cube to the left of the bowl",
+      "right": "Put the rubiks cube to the right of the bowl"
+    },
+    "short_paraphrase": {
+      "left": "Put the cube left of the bowl",
+      "right": "Put the cube right of the bowl"
+    },
+    "fixed_observation_command_styles": [
+      "task",
+      "subtask",
+      "atomic_motion",
+      "grounded_point",
+      "grounded_gripper_trace",
+      "combination"
+    ],
+    "negative_controls": [
+      "exact_same_prompt_and_seed",
+      "same_goal_paraphrase",
+      "opposite_relation",
+      "unrelated_grammatical_command"
+    ]
+  },
+  "sampling": {
+    "confirmation_episode_seeds": [6100, 6101, 6102, 6103, 6104, 6105, 6106, 6107, 6108, 6109],
+    "per_replan_seed_formula": "episode_seed * 1000 + zero_based_replan_index",
+    "static_grid_episodes": 80,
+    "static_grid_formula": "2 models * 2 prompt wordings * 2 directions * 10 episode seeds",
+    "hierarchy_episode_seeds": [7100, 7101, 7102, 7103, 7104],
+    "hierarchy_additional_episodes": 20,
+    "hierarchy_formula": "2 models * 2 directions * 5 episode seeds",
+    "calibration_policy": "Scorer and recorder calibration episodes use seed prefix 51xx, are stored separately, and are excluded from all confirmation estimates.",
+    "stopping_rule": "Complete the fixed grid. Rerun only documented setup-invalid episodes. Do not select prompts, thresholds, or seeds from confirmation outcomes."
+  },
+  "primary_metrics": {
+    "binary_requested_goal_success_rate": "successful predicate-terminated episodes / valid attempted episodes",
+    "final_paper_style_progression": [
+      "picked or interacted with the correct cube at least once; credit persists",
+      "cube satisfies the requested left/right relation at episode end; credit is revoked if undone"
+    ],
+    "reporting": "Report numerator, denominator, direction separately, wording separately, and a 95% Beta(1,1) posterior interval."
+  },
+  "declared_secondary_metrics": [
+    "strict_pick_then_place_progression",
+    "signed_final_cube_minus_bowl_lateral_offset",
+    "first_action_chunk opposite-prompt RMS",
+    "first_action_chunk same-prompt same-seed RMS",
+    "first_action_chunk same-prompt different-seed RMS",
+    "prompt-effect to sampling-noise ratio",
+    "paraphrase success retention",
+    "predicted requested-relation rate per Cosmos future chunk",
+    "executed requested-relation rate over the corresponding action horizon",
+    "predicted-versus-executed relation agreement",
+    "imagines requested and acts requested quadrant counts",
+    "semantic scorer coverage and uncertain count",
+    "inference, environment, wall-clock, memory, disk, and setup burden"
+  ],
+  "semantic_future_evaluation": {
+    "unit": "Cosmos replan chunk",
+    "conditioning_frame": "frame zero; never counted as future evidence",
+    "requested_predicate": "signed cube centroid minus bowl centroid in a calibrated over-shoulder view",
+    "execution_target": "RoboLab ground-truth cube/bowl state after the actions actually executed from that chunk",
+    "uncertainty": "A chunk without reliable cube and bowl tracks is labeled uncertain, excluded from semantic rate denominators, and included in coverage counts.",
+    "validation": "Freeze detector thresholds after excluded 51xx calibration data and audit a fixed contact sheet before confirmation."
+  },
+  "hierarchical_condition": {
+    "name": "five_step_predicate_oracle",
+    "requery_cadence_environment_steps": 5,
+    "commands": {
+      "not_holding_cube": "Reach for and firmly grasp the rubiks cube",
+      "holding_without_goal": "Move the rubiks cube to the requested side of the bowl",
+      "holding_at_goal": "Open the gripper and release the rubiks cube"
+    },
+    "comparison": "For seeds 7100-7104, compare oracle outcomes with canonical static-task outcomes rerun under the same seeds and five-action replan horizon.",
+    "interpretation": "This tests low-level interface bandwidth under a perfect state-aware command selector, not learned reasoning quality."
+  },
+  "evidence_separation": {
+    "retrospective": [
+      "Efficient-WAM, FastWAM, LingBot-VA, earlier Cosmos, and earlier pi0.5 pilots"
+    ],
+    "prospective": [
+      "all outputs under artifacts/vla_wam_shared_v1 and corresponding RoboLab confirmation directories"
+    ]
+  }
+}

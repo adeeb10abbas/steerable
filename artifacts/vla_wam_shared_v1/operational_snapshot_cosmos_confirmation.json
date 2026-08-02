@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "captured_at_utc": "2026-08-02T16:41:06Z",
+  "measurement_context": "Valid short-paraphrase confirmation batch during a Cosmos3 Edge policy request. Physical GPU 1 served the policy with decoded futures; physical GPU 0 ran the RoboLab Isaac Sim client. This is a steady-state point measurement, not a peak-memory measurement.",
+  "host_driver_version": "535.309.01",
+  "gpus": [
+    {
+      "index": 0,
+      "name": "NVIDIA GeForce RTX 3090",
+      "role": "RoboLab Isaac Sim client",
+      "temperature_c": 83,
+      "fan_percent": 89,
+      "memory_used_mib": 7917,
+      "memory_total_mib": 24576,
+      "utilization_percent": 1,
+      "power_draw_watts": 132.18,
+      "software_thermal_slowdown": true,
+      "hardware_thermal_slowdown": false
+    },
+    {
+      "index": 1,
+      "name": "NVIDIA GeForce RTX 3090",
+      "role": "Cosmos3 Edge DROID policy server with video decoding",
+      "temperature_c": 67,
+      "fan_percent": 43,
+      "memory_used_mib": 14423,
+      "memory_total_mib": 24576,
+      "utilization_percent": 100,
+      "power_draw_watts": 345.45,
+      "software_thermal_slowdown": false,
+      "hardware_thermal_slowdown": false
+    }
+  ],
+  "processes": [
+    {
+      "role": "Cosmos3 Edge policy server",
+      "pid_at_capture": 2475294,
+      "gpu_memory_mib": 14406,
+      "host_rss_kib": 2559700
+    },
+    {
+      "role": "RoboLab Isaac Sim client",
+      "pid_at_capture": 2475586,
+      "gpu_memory_mib": 7866,
+      "host_rss_kib": 8891696
+    }
+  ],
+  "policy_server": {
+    "checkpoint_revision": "3ea407af3e156c0af3b4bb6edd85842cc9a58777",
+    "physical_gpu": 1,
+    "decode_video": true,
+    "action_space": "joint_pos",
+    "action_dimension": 8,
+    "action_chunk_size": 32
+  },
+  "simulator": {
+    "physical_gpu": 0,
+    "container_image": "robolab:codex-steerability",
+    "batch": "v1_cosmos_vague",
+    "renderer": "realtime",
+    "version_check_override": "--/rtx/verifyDriverVersion/enabled=false"
+  },
+  "interpretation": "The policy server fits with approximately 14.4 GiB allocated on one 24 GiB card; the simulator separately uses approximately 7.9 GiB. The simulator card reported software thermal slowdown at this instant but remained below the preregistered 90 C stop threshold. No hardware thermal slowdown was active. Wall-time measurements, temperatures, and throttling state are reported rather than hidden."
+}

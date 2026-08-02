@@ -6,7 +6,7 @@ closed-loop episode extraction; this script verifies and joins that output with
 the frozen Cosmos semantic-future scorer, the fixed-observation command probe,
 operational evidence, and the explicitly retrospective WAM evidence tier.
 
-The compiler fails closed unless every preregistered episode and every frozen
+The compiler fails closed unless every registered episode and every frozen
 secondary probe is present. Generated plots are descriptive: the study has one
 checkpoint per model class, and future chunks within an episode are correlated.
 """
@@ -29,20 +29,32 @@ import numpy as np
 from scipy.stats import binomtest
 
 
-EXPECTED_EPISODES = 120
-EXPECTED_STATIC_EPISODES = 80
-EXPECTED_HIERARCHY_EPISODES = 40
+EXPECTED_EPISODES = 160
+EXPECTED_CONFIRMATORY_EPISODES = 80
+EXPECTED_DIRECT_STRESS_EPISODES = 80
 EXPECTED_PROBE_CONDITIONS = 16
 EXPECTED_THERMAL_LOGS = (
     "cosmos_canonical",
     "cosmos_vague",
-    "cosmos_h5_static",
-    "cosmos_h5_oracle",
+    "cosmos_declarative",
+    "cosmos_contrastive",
     "pi05_canonical",
     "pi05_vague",
-    "pi05_h5_static",
-    "pi05_h5_oracle",
+    "pi05_declarative",
+    "pi05_contrastive",
 )
+WORDINGS = (
+    "canonical",
+    "short_paraphrase",
+    "declarative_goal",
+    "contrastive_goal",
+)
+WORDING_LABELS = {
+    "canonical": "canonical",
+    "short_paraphrase": "short",
+    "declarative_goal": "declarative",
+    "contrastive_goal": "contrastive",
+}
 TASK_DIRS = {
     "left": "RubiksCubeLeftOfBowlMatchedTask",
     "right": "RubiksCubeRightOfBowlMatchedTask",
@@ -235,42 +247,43 @@ def _paired_diagnostics(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 rows,
                 {
                     "model_id": model_id,
-                    "wording": "canonical",
+                    "wording": "declarative_goal",
                     "controller": "static",
-                    "open_loop_horizon": 5,
+                    "open_loop_horizon": horizon,
                 },
                 {
                     "model_id": model_id,
-                    "wording": "canonical",
-                    "controller": "predicate_oracle",
-                    "open_loop_horizon": 5,
+                    "wording": "contrastive_goal",
+                    "controller": "static",
+                    "open_loop_horizon": horizon,
                 },
                 ("direction", "episode_seed"),
-                f"{model_id}: horizon-5 static task versus predicate oracle",
+                f"{model_id}: declarative versus contrastive direct task language",
             )
         )
-    for direction in ("left", "right"):
-        results.append(
-            _paired_exact(
-                rows,
-                {
-                    "model_id": "pi05_droid_vla",
-                    "wording": "canonical",
-                    "controller": "static",
-                    "open_loop_horizon": 15,
-                    "direction": direction,
-                },
-                {
-                    "model_id": "cosmos3_edge_droid_wam",
-                    "wording": "canonical",
-                    "controller": "static",
-                    "open_loop_horizon": 32,
-                    "direction": direction,
-                },
-                ("episode_seed",),
-                f"canonical {direction}: pi05 VLA versus Cosmos WAM at native horizons",
+    for wording in WORDINGS:
+        for direction in ("left", "right"):
+            results.append(
+                _paired_exact(
+                    rows,
+                    {
+                        "model_id": "pi05_droid_vla",
+                        "wording": wording,
+                        "controller": "static",
+                        "open_loop_horizon": 15,
+                        "direction": direction,
+                    },
+                    {
+                        "model_id": "cosmos3_edge_droid_wam",
+                        "wording": wording,
+                        "controller": "static",
+                        "open_loop_horizon": 32,
+                        "direction": direction,
+                    },
+                    ("episode_seed",),
+                    f"{wording} {direction}: pi05 VLA versus Cosmos WAM at native horizons",
+                )
             )
-        )
     return results
 
 
@@ -540,10 +553,11 @@ def _cosmos_observation_variation(run_manifest: dict[str, Any]) -> dict[str, Any
         if condition["model_id"] == "cosmos3_edge_droid_wam"
         and int(condition["open_loop_horizon"]) == 32
     ]
-    if len(conditions) != 2:
-        raise RuntimeError(f"Expected two static Cosmos conditions, got {len(conditions)}")
+    if len(conditions) != 4:
+        raise RuntimeError(f"Expected four direct-language Cosmos conditions, got {len(conditions)}")
     for condition in conditions:
         root = Path(condition["output_root"])
+        episode_seeds = [int(seed) for seed in condition["episode_seeds"]]
         for direction, task_name in TASK_DIRS.items():
             task_dir = root / task_name
             manifest_path = task_dir / "predicted_chunks/manifest.jsonl"
@@ -558,7 +572,9 @@ def _cosmos_observation_variation(run_manifest: dict[str, Any]) -> dict[str, Any
                 if chunk_key in seen_chunks:
                     raise RuntimeError(f"Duplicate Cosmos chunk {chunk_key} in {manifest_path}")
                 seen_chunks.add(chunk_key)
-                expected_seed = (6100 + episode_index) * 1000 + replan_index
+                if episode_index >= len(episode_seeds):
+                    raise RuntimeError(f"Unexpected episode index in {manifest_path}: {row}")
+                expected_seed = episode_seeds[episode_index] * 1000 + replan_index
                 if row["requested_sampling_seed"] != expected_seed:
                     raise RuntimeError(f"Requested seed mismatch in {manifest_path}: {row}")
                 if row["server_sampling_seed"] != expected_seed:
@@ -575,9 +591,9 @@ def _cosmos_observation_variation(run_manifest: dict[str, Any]) -> dict[str, Any
                 for row in manifest_rows
                 if int(row["replan_index"]) == 0
             }
-            if set(first_rows) != set(range(10)):
+            if set(first_rows) != set(range(len(episode_seeds))):
                 raise RuntimeError(f"Missing Cosmos first-chunk records in {manifest_path}")
-            for episode_index in range(10):
+            for episode_index in range(len(episode_seeds)):
                 row = first_rows[episode_index]
                 image_path = (
                     task_dir
@@ -594,9 +610,10 @@ def _cosmos_observation_variation(run_manifest: dict[str, Any]) -> dict[str, Any
                 images[(condition["id"], direction, episode_index)] = bgr
 
     for condition in conditions:
+        episode_count = len(condition["episode_seeds"])
         for direction in TASK_DIRS:
-            for left_index in range(10):
-                for right_index in range(left_index + 1, 10):
+            for left_index in range(episode_count):
+                for right_index in range(left_index + 1, episode_count):
                     records.append(
                         {
                             "comparison": "within_condition_direction",
@@ -610,7 +627,7 @@ def _cosmos_observation_variation(run_manifest: dict[str, Any]) -> dict[str, Any
                             ),
                         }
                     )
-        for episode_index in range(10):
+        for episode_index in range(episode_count):
             records.append(
                 {
                     "comparison": "matched_left_right",
@@ -625,21 +642,26 @@ def _cosmos_observation_variation(run_manifest: dict[str, Any]) -> dict[str, Any
                 }
             )
     by_wording = {condition["wording"]: condition["id"] for condition in conditions}
-    for direction in TASK_DIRS:
-        for episode_index in range(10):
-            records.append(
-                {
-                    "comparison": "matched_canonical_short",
-                    "condition_id": "cosmos_canonical_vs_short",
-                    "direction": direction,
-                    "left_episode_index": episode_index,
-                    "right_episode_index": episode_index,
-                    **_image_difference(
-                        images[(by_wording["canonical"], direction, episode_index)],
-                        images[(by_wording["short_paraphrase"], direction, episode_index)],
-                    ),
-                }
-            )
+    wording_pairs = (
+        ("canonical", "short_paraphrase", "matched_canonical_short"),
+        ("declarative_goal", "contrastive_goal", "matched_declarative_contrastive"),
+    )
+    for left_wording, right_wording, comparison in wording_pairs:
+        for direction in TASK_DIRS:
+            for episode_index in range(10):
+                records.append(
+                    {
+                        "comparison": comparison,
+                        "condition_id": f"cosmos_{left_wording}_vs_{right_wording}",
+                        "direction": direction,
+                        "left_episode_index": episode_index,
+                        "right_episode_index": episode_index,
+                        **_image_difference(
+                            images[(by_wording[left_wording], direction, episode_index)],
+                            images[(by_wording[right_wording], direction, episode_index)],
+                        ),
+                    }
+                )
 
     grouped: dict[tuple[str, str, str], list[dict[str, Any]]] = defaultdict(list)
     for row in records:
@@ -774,32 +796,43 @@ def _initial_physical_variation(closed: dict[str, Any]) -> dict[str, Any]:
             ("direction", "episode_seed"),
         )
         add_matched(
-            "matched_horizon5_static_oracle",
+            "matched_declarative_contrastive",
             model_id,
-            {"model_id": model_id, "controller": "static", "open_loop_horizon": 5},
-            {"model_id": model_id, "controller": "predicate_oracle", "open_loop_horizon": 5},
+            {
+                "model_id": model_id,
+                "wording": "declarative_goal",
+                "controller": "static",
+                "open_loop_horizon": native_horizon,
+            },
+            {
+                "model_id": model_id,
+                "wording": "contrastive_goal",
+                "controller": "static",
+                "open_loop_horizon": native_horizon,
+            },
             ("direction", "episode_seed"),
         )
-    for direction in TASK_DIRS:
-        add_matched(
-            "matched_pi05_cosmos_canonical",
-            direction,
-            {
-                "model_id": "pi05_droid_vla",
-                "wording": "canonical",
-                "controller": "static",
-                "open_loop_horizon": 15,
-                "direction": direction,
-            },
-            {
-                "model_id": "cosmos3_edge_droid_wam",
-                "wording": "canonical",
-                "controller": "static",
-                "open_loop_horizon": 32,
-                "direction": direction,
-            },
-            ("episode_seed",),
-        )
+    for wording in WORDINGS:
+        for direction in TASK_DIRS:
+            add_matched(
+                "matched_pi05_cosmos",
+                f"{wording}:{direction}",
+                {
+                    "model_id": "pi05_droid_vla",
+                    "wording": wording,
+                    "controller": "static",
+                    "open_loop_horizon": 15,
+                    "direction": direction,
+                },
+                {
+                    "model_id": "cosmos3_edge_droid_wam",
+                    "wording": wording,
+                    "controller": "static",
+                    "open_loop_horizon": 32,
+                    "direction": direction,
+                },
+                ("episode_seed",),
+            )
 
     summary_groups: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
     for row in pairs:
@@ -848,14 +881,9 @@ def _plot_static_success(closed: dict[str, Any], output: Path) -> None:
         if row["controller"] == "static"
         and row["open_loop_horizon"] in {15, 32}
     ]
-    slots = [
-        ("canonical", "left"),
-        ("canonical", "right"),
-        ("short_paraphrase", "left"),
-        ("short_paraphrase", "right"),
-    ]
-    labels = ["canonical\nleft", "canonical\nright", "short\nleft", "short\nright"]
-    fig, ax = plt.subplots(figsize=(8.2, 4.1))
+    slots = [(wording, direction) for wording in WORDINGS for direction in ("left", "right")]
+    labels = [f"{WORDING_LABELS[wording]}\n{direction}" for wording, direction in slots]
+    fig, ax = plt.subplots(figsize=(12.5, 4.4))
     x = np.arange(len(slots))
     width = 0.34
     for model_index, model_id in enumerate(MODEL_LABELS):
@@ -889,7 +917,7 @@ def _plot_static_success(closed: dict[str, Any], output: Path) -> None:
     ax.legend(frameon=False, ncol=2, loc="upper center")
     ax.grid(axis="y", alpha=0.2)
     fig.tight_layout()
-    fig.savefig(output / "static_success_with_intervals.png", bbox_inches="tight")
+    fig.savefig(output / "direct_language_success_with_intervals.png", bbox_inches="tight")
     plt.close(fig)
 
 
@@ -903,7 +931,7 @@ def _plot_offsets(closed: dict[str, Any], output: Path) -> None:
     data = []
     colors = []
     for model_id in MODEL_LABELS:
-        for wording in ("canonical", "short_paraphrase"):
+        for wording in WORDINGS:
             for direction in ("left", "right"):
                 values = [
                     row["requested_signed_final_offset_m"]
@@ -913,11 +941,11 @@ def _plot_offsets(closed: dict[str, Any], output: Path) -> None:
                     and row["direction"] == direction
                 ]
                 slots.append(
-                    f"{MODEL_LABELS[model_id].split(' ')[0]}\n{wording.replace('_paraphrase', '')}\n{direction}"
+                    f"{MODEL_LABELS[model_id].split(' ')[0]}\n{WORDING_LABELS[wording]}\n{direction}"
                 )
                 data.append(values)
                 colors.append(MODEL_COLORS[model_id])
-    fig, ax = plt.subplots(figsize=(10.5, 4.5))
+    fig, ax = plt.subplots(figsize=(15.5, 4.8))
     parts = ax.violinplot(data, showmedians=True, showextrema=False)
     for body, color in zip(parts["bodies"], colors):
         body.set_facecolor(color)
@@ -940,58 +968,54 @@ def _plot_offsets(closed: dict[str, Any], output: Path) -> None:
     ax.set_title("Directionality of final cube position; positive is prompt-consistent")
     ax.grid(axis="y", alpha=0.2)
     fig.tight_layout()
-    fig.savefig(output / "static_requested_side_offsets.png", bbox_inches="tight")
+    fig.savefig(output / "direct_language_requested_side_offsets.png", bbox_inches="tight")
     plt.close(fig)
 
 
-def _plot_hierarchy(closed: dict[str, Any], output: Path) -> None:
-    groups = [
-        row
+def _plot_direct_prompt_robustness(closed: dict[str, Any], output: Path) -> None:
+    groups = {
+        (row["wording"], row["model_id"], row["direction"]): row
         for row in closed["group_summaries"]
-        if row["open_loop_horizon"] == 5
-        and row["wording"] == "canonical"
+        if row["controller"] == "static" and row["open_loop_horizon"] in {15, 32}
+    }
+    columns = [
+        ("pi05_droid_vla", "left"),
+        ("pi05_droid_vla", "right"),
+        ("cosmos3_edge_droid_wam", "left"),
+        ("cosmos3_edge_droid_wam", "right"),
     ]
-    fig, axes = plt.subplots(1, 2, figsize=(9.5, 4.1), sharey=True)
-    for axis, model_id in zip(axes, MODEL_LABELS):
-        selected = {
-            (row["controller"], row["direction"]): row
-            for row in groups
-            if row["model_id"] == model_id
-        }
-        x = np.arange(2)
-        width = 0.34
-        for controller_index, controller in enumerate(("static", "predicate_oracle")):
-            values = [selected[(controller, direction)]["success_rate"] for direction in ("left", "right")]
-            intervals = [
-                selected[(controller, direction)]["success_beta11_interval_95"]
-                for direction in ("left", "right")
-            ]
-            errors = np.asarray(
-                [
-                    [value - interval[0] for value, interval in zip(values, intervals)],
-                    [interval[1] - value for value, interval in zip(values, intervals)],
-                ]
+    values = np.asarray(
+        [
+            [groups[(wording, model_id, direction)]["success_rate"] for model_id, direction in columns]
+            for wording in WORDINGS
+        ]
+    )
+    fig, ax = plt.subplots(figsize=(7.6, 4.6))
+    image = ax.imshow(values, vmin=0, vmax=1, cmap="YlGn", aspect="auto")
+    for row_index in range(values.shape[0]):
+        for column_index in range(values.shape[1]):
+            ax.text(
+                column_index,
+                row_index,
+                f"{values[row_index, column_index]:.0%}\n(n=10)",
+                ha="center",
+                va="center",
+                color="white" if values[row_index, column_index] >= 0.62 else "#222222",
             )
-            bars = axis.bar(
-                x + (controller_index - 0.5) * width,
-                values,
-                width,
-                label="Static task" if controller == "static" else "Predicate oracle",
-                color="#7b7b7b" if controller == "static" else MODEL_COLORS[model_id],
-                yerr=errors,
-                capsize=3,
-            )
-            for bar, value in zip(bars, values):
-                axis.text(bar.get_x() + bar.get_width() / 2, value + 0.035, f"{value:.0%}", ha="center")
-        axis.set_xticks(x, ["left", "right"])
-        axis.set_ylim(0, 1.14)
-        axis.set_title(MODEL_LABELS[model_id])
-        axis.grid(axis="y", alpha=0.2)
-    axes[0].set_ylabel("Success rate (5 matched seeds)")
-    axes[1].legend(frameon=False, loc="upper center")
-    fig.suptitle("Does perfect state-aware command selection help at horizon 5?")
+    ax.set_yticks(np.arange(len(WORDINGS)), [WORDING_LABELS[wording] for wording in WORDINGS])
+    ax.set_xticks(
+        np.arange(len(columns)),
+        [
+            f"{MODEL_LABELS[model_id].split(' ')[0]}\n{direction}"
+            for model_id, direction in columns
+        ],
+    )
+    ax.set_xlabel("Checkpoint and requested direction")
+    ax.set_ylabel("Episode-static task wording")
+    ax.set_title("Direct task-language robustness without a subtask coach")
+    fig.colorbar(image, ax=ax, label="Success rate")
     fig.tight_layout()
-    fig.savefig(output / "hierarchy_static_vs_oracle.png", bbox_inches="tight")
+    fig.savefig(output / "direct_prompt_robustness.png", bbox_inches="tight")
     plt.close(fig)
 
 
@@ -1011,8 +1035,8 @@ def _plot_semantic_quadrants(semantic: dict[str, Any], output: Path) -> None:
         "uncertain_future": "future uncertain",
     }
     groups = semantic["groups"]
-    names = [f"{row['wording'].replace('_paraphrase', '')}\n{row['direction']}" for row in groups]
-    fig, ax = plt.subplots(figsize=(8.7, 4.4))
+    names = [f"{WORDING_LABELS[row['wording']]}\n{row['direction']}" for row in groups]
+    fig, ax = plt.subplots(figsize=(11.5, 4.6))
     bottoms = np.zeros(len(groups))
     for quadrant in order:
         values = np.asarray(
@@ -1055,7 +1079,8 @@ def _plot_observation_variation(audit: dict[str, Any], output: Path) -> None:
             label = f"{condition}\nmatched L/R"
             color = "#fc8d62"
         else:
-            label = f"canonical/short\n{direction}"
+            prompt_pair = comparison.replace("matched_", "").replace("_", "/")
+            label = f"{prompt_pair}\n{direction}"
             color = "#66c2a5"
         labels.append(label)
         means.append(row["mean_mae_0_255"])
@@ -1082,13 +1107,18 @@ def _plot_semantic_threshold_sensitivity(semantic: dict[str, Any], output: Path)
     fig, axes = plt.subplots(1, 2, figsize=(9.5, 4.0), sharex=True, sharey=True)
     groups = sorted({(row["wording"], row["direction"]) for row in rows})
     colors = {"left": "#6a51a3", "right": "#d95f0e"}
-    styles = {"canonical": "-", "short_paraphrase": "--"}
+    styles = {
+        "canonical": "-",
+        "short_paraphrase": "--",
+        "declarative_goal": "-.",
+        "contrastive_goal": ":",
+    }
     for wording, direction in groups:
         selected = sorted(
             [row for row in rows if row["wording"] == wording and row["direction"] == direction],
             key=lambda row: row["cross_camera_threshold_m"],
         )
-        label = f"{wording.replace('_paraphrase', '')} {direction}"
+        label = f"{WORDING_LABELS[wording]} {direction}"
         x = [row["cross_camera_threshold_m"] for row in selected]
         axes[0].plot(
             x,
@@ -1292,13 +1322,14 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
     lines = [
         "# VLA-WAM study evidence index",
         "",
-        "Status: complete prospective grid plus a separately labeled retrospective WAM tier.",
+        "Status: complete direct-language grid with an original confirmatory tier, a prospectively frozen post-interim stress tier, and a separately labeled retrospective WAM tier.",
         "",
         "## Integrity checks",
         "",
         f"- Closed-loop episodes: **{closed['episode_count']}/{EXPECTED_EPISODES}**.",
-        f"- Static episodes: **{compiled['integrity']['static_episode_count']}/{EXPECTED_STATIC_EPISODES}**.",
-        f"- Hierarchy episodes: **{compiled['integrity']['hierarchy_episode_count']}/{EXPECTED_HIERARCHY_EPISODES}**.",
+        f"- Original confirmatory episodes: **{compiled['integrity']['original_confirmatory_episode_count']}/{EXPECTED_CONFIRMATORY_EPISODES}**.",
+        f"- Post-interim direct-language stress episodes: **{compiled['integrity']['post_interim_direct_stress_episode_count']}/{EXPECTED_DIRECT_STRESS_EPISODES}**.",
+        "- Oracle or dynamic-prompt episodes in the analysis: **0**.",
         f"- Shared initial-state fingerprints: **{len(closed['initial_state_fingerprint_counts'])}**.",
         f"- First-recorded cube/bowl physical observations audited: **{compiled['integrity']['initial_physical_observations_audited']}**.",
         f"- Fixed-observation probe conditions: **{len(probes['pi05']['manifest']['records'])} per model**.",
@@ -1312,18 +1343,18 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         "| Evidence | Artifact | Purpose |",
         "| --- | --- | --- |",
         "| Frozen design | `../preregistration.json` | Questions, fixed grid, primary/secondary metrics, stopping rule |",
-        "| Hierarchy amendment | `../hierarchy_amendment_001.json` | Correct 40-episode matched static/oracle arithmetic |",
+        "| Direct-language scope amendment | `../direct_language_scope_amendment_003.json` | Retires the oracle grid and freezes declarative/contrastive task-language stress conditions before those runs |",
         "| Metric amendment | `../metric_amendment_001.json` | Exact paper-style progression after primary-source verification |",
         "| Observation amendment | `../observation_variation_amendment_001.json` | Downgrades closed-loop action contrast after measured renderer variation |",
         "| Thermal-control amendment | `../thermal_control_amendment_001.json` | Freezes pause/resume and emergency-stop behavior after the first matched-role thermal stop |",
         "| Thermal timing amendment | `../thermal_timing_amendment_002.json` | Treats guarded client request timing as an upper bound and forbids fabricated phase attribution |",
         "| Grounded probe plan | `../command_probe_plan.json` | Hash-pinned observation, six command styles, controls, seed |",
-        "| Closed-loop episode table | `episodes.csv` | One row per preregistered rollout |",
+        "| Closed-loop episode table | `episodes.csv` | One row per registered direct-language rollout, with analysis tier |",
         "| Closed-loop summary | `closed_loop_summary.json` | Success, progression, offsets, timing, contrasts |",
         "| Cosmos future semantics | `compiled_evidence.json` | Prompt-blind imagined/executed quadrants and coverage |",
         "| Renderer variation audit | `cosmos_observation_variation.csv` | First-conditioning-image differences within and across static conditions |",
         "| Physical settling audit | `initial_physical_variation.csv` | Reset-state identity versus first-recorded cube/bowl centroid differences |",
-        "| Human semantic audit | `../semantic_confirmation_audit_plan.json` and `../semantic_confirmation_audit.md` | Outcome-independent sheet sample and completed visual review |",
+        "| Human semantic audit | `../semantic_confirmation_audit_plan.json`, `../semantic_confirmation_audit_amendment_002.json`, and `../semantic_confirmation_audit.md` | Outcome-independent sheet samples and completed visual review |",
         "| Command probes | `compiled_evidence.json` | Exact repeat, command sensitivity, semantic futures |",
         "| GPU assignment audit | `../cosmos_gpu_assignment_audit.json` | Quantifies why cross-card Cosmos output was excluded |",
         "| Cosmos resource snapshot | `../operational_snapshot_cosmos_confirmation.json` | Temperatures, memory, utilization, and physical GPU roles during a valid WAM request |",
@@ -1335,13 +1366,14 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         "| Thermal exclusion | `../setup_exclusions/2026-08-02_cosmos_gpu0_thermal_restart.md` | Interrupted and cross-GPU batches preserved outside estimates |",
         "| Confirmation thermal exclusion | `../setup_exclusions/2026-08-02_cosmos_confirmation_thermal_stop.md` | Whole matched-role batch excluded after the simulator reached the 90 C stop threshold |",
         "| Pre-guard wording exclusion | `../setup_exclusions/2026-08-02_cosmos_vague_pre_thermal_guard.md` | Completed short-paraphrase batch rerun so both wordings share one logged thermal cadence |",
+        "| Oracle scope exclusion | `../setup_exclusions/2026-08-02_oracle_scope_change.md` | Preserves the interrupted coached batch while excluding it from every direct-language estimate |",
         "",
         "## Figures",
         "",
-        "- `static_success_with_intervals.png`: primary binary success with Beta(1,1) 95% intervals.",
-        "- `static_requested_side_offsets.png`: endpoint directionality, including failures.",
+        "- `direct_language_success_with_intervals.png`: binary success for all four static task wordings with Beta(1,1) 95% intervals.",
+        "- `direct_language_requested_side_offsets.png`: endpoint directionality, including failures.",
+        "- `direct_prompt_robustness.png`: model-by-wording-by-direction success matrix without a coach.",
         "- `cosmos_conditioning_image_variation.png`: measured realtime-renderer variation despite exact physical resets.",
-        "- `hierarchy_static_vs_oracle.png`: matched five-step static versus predicate-oracle control.",
         "- `cosmos_imagination_execution_quadrants.png`: WAM-only semantic future/action agreement.",
         "- `semantic_threshold_sensitivity.png`: scorer coverage/agreement at 0.10, 0.15, and frozen 0.20 m reliability thresholds.",
         "- `command_probe_action_sensitivity.png`: same-observation six-style prompt response.",
@@ -1354,6 +1386,7 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         "## Statistical guardrails",
         "",
         "- A Beta(1,1) interval accompanies each success proportion.",
+        "- Declarative and contrastive conditions are explicitly post-interim stress tests, not retroactively presented as part of the original preregistration.",
         "- Exact paired McNemar tests are exploratory and uncorrected for multiple comparisons.",
         "- Replan chunks are correlated within episodes; semantic quadrant rates are descriptive and receive no pseudo-replicated binomial interval.",
         "- One checkpoint represents each model class, so no result establishes a general VLA-versus-WAM class effect.",
@@ -1380,16 +1413,37 @@ def main() -> None:
     root = (workspace / args.study_root).resolve() if not args.study_root.is_absolute() else args.study_root.resolve()
     output = args.output_dir or (root / "final_evidence")
     output = output.resolve()
+    run_manifest = _load(root / "run_manifest.json")
+    if int(run_manifest["expected_episode_count"]) != EXPECTED_EPISODES:
+        raise RuntimeError("Run-manifest episode count disagrees with the study compiler")
+    if any(condition["controller"] != "static" for condition in run_manifest["conditions"]):
+        raise RuntimeError("Run manifest contains an oracle or dynamic controller")
     closed_path = args.closed_loop or (output / "closed_loop_summary.json")
     closed = _load(closed_path)
     if not closed.get("complete") or closed["episode_count"] != EXPECTED_EPISODES:
         raise RuntimeError(
             f"Closed-loop grid incomplete: complete={closed.get('complete')} episodes={closed.get('episode_count')}"
         )
-    static_rows = [row for row in closed["episodes"] if row["open_loop_horizon"] in {15, 32}]
-    hierarchy_rows = [row for row in closed["episodes"] if row["open_loop_horizon"] == 5]
-    if len(static_rows) != EXPECTED_STATIC_EPISODES or len(hierarchy_rows) != EXPECTED_HIERARCHY_EPISODES:
-        raise RuntimeError("Static/hierarchy episode accounting does not match the frozen grid")
+    invalid_controller_rows = [
+        row
+        for row in closed["episodes"]
+        if row["controller"] != "static" or row["open_loop_horizon"] not in {15, 32}
+    ]
+    if invalid_controller_rows:
+        raise RuntimeError("Closed-loop evidence contains a coached or non-native-horizon episode")
+    confirmatory_rows = [
+        row for row in closed["episodes"] if row["analysis_tier"] == "original_confirmatory"
+    ]
+    stress_rows = [
+        row
+        for row in closed["episodes"]
+        if row["analysis_tier"] == "post_interim_direct_stress"
+    ]
+    if (
+        len(confirmatory_rows) != EXPECTED_CONFIRMATORY_EPISODES
+        or len(stress_rows) != EXPECTED_DIRECT_STRESS_EPISODES
+    ):
+        raise RuntimeError("Confirmatory/stress episode accounting does not match the amended grid")
     if len(closed["initial_state_fingerprint_counts"]) != 1:
         raise RuntimeError("Closed-loop inputs do not share one exact initial-state fingerprint")
 
@@ -1405,6 +1459,8 @@ def main() -> None:
     for wording, path in (
         ("canonical", root / "semantic_confirmation/cosmos_canonical/semantic_quadrants_summary.json"),
         ("short_paraphrase", root / "semantic_confirmation/cosmos_vague/semantic_quadrants_summary.json"),
+        ("declarative_goal", root / "semantic_confirmation/cosmos_declarative/semantic_quadrants_summary.json"),
+        ("contrastive_goal", root / "semantic_confirmation/cosmos_contrastive/semantic_quadrants_summary.json"),
     ):
         summary = _load(path)
         if summary["calibration_sha256"] != calibration_sha:
@@ -1412,7 +1468,6 @@ def main() -> None:
         semantic_inputs.append((wording, path.parent, summary))
     semantic = _semantic_aggregate(semantic_inputs)
 
-    run_manifest = _load(root / "run_manifest.json")
     observation_variation = _cosmos_observation_variation(run_manifest)
     physical_variation = _initial_physical_variation(closed)
     thermal_control = _thermal_log_summary(root)
@@ -1424,6 +1479,8 @@ def main() -> None:
             root / "command_probe/cosmos_gpu1_semantics",
             root / "semantic_confirmation/cosmos_canonical",
             root / "semantic_confirmation/cosmos_vague",
+            root / "semantic_confirmation/cosmos_declarative",
+            root / "semantic_confirmation/cosmos_contrastive",
             root / "thermal_logs",
         ]
     )
@@ -1439,7 +1496,7 @@ def main() -> None:
     raw_manifest = _write_raw_evidence_manifest(
         output / "raw_evidence_manifest.csv",
         raw_roots,
-        scope="All supported data, image, video, documentation, and thermal-event files under the eight definitive run roots plus prospective command-probe, semantic-scoring, and thermal-log roots.",
+        scope="All supported data, image, video, documentation, and thermal-event files under the eight direct-language run roots plus command-probe, semantic-scoring, and thermal-log roots.",
     )
     supporting_roots = [
         Path("/home/ali/projects/RoboLab/output/v1_calibration_cosmos_left_5100"),
@@ -1448,6 +1505,8 @@ def main() -> None:
         Path("/home/ali/projects/RoboLab/output/v1_cosmos_vague_interrupted_hot_gpu0"),
         Path("/home/ali/projects/RoboLab/output/v1_cosmos_vague_pre_thermal_guard"),
         Path("/home/ali/projects/RoboLab/output/v1_cosmos_canonical_interrupted_thermal_gpu1roles"),
+        Path("/home/ali/projects/RoboLab/output/v1_cosmos_h5_static"),
+        Path("/home/ali/projects/RoboLab/output/v1_cosmos_h5_oracle_scope_change_excluded"),
         root / "calibration_semantic_dry_run",
         root / "command_probe/cosmos",
         root / "command_probe/cosmos_semantics",
@@ -1462,13 +1521,14 @@ def main() -> None:
     supporting_manifest = _write_raw_evidence_manifest(
         output / "supporting_evidence_manifest.csv",
         supporting_roots,
-        scope="Calibration, excluded thermal/GPU-role runs, the excluded Cosmos GPU0 command probe, and separately labeled retrospective Efficient-WAM, Fast-WAM, LingBot-VA, Cosmos, and pi0.5 evidence.",
+        scope="Calibration, excluded thermal/GPU-role/oracle runs, the excluded Cosmos GPU0 command probe, and separately labeled retrospective Efficient-WAM, FastWAM, LingBot-VA, Cosmos, and pi0.5 evidence.",
     )
 
     core_files = [
         root / "preregistration.json",
         root / "run_manifest.json",
         root / "hierarchy_amendment_001.json",
+        root / "direct_language_scope_amendment_003.json",
         root / "metric_amendment_001.json",
         root / "observation_variation_amendment_001.json",
         root / "thermal_control_amendment_001.json",
@@ -1477,6 +1537,7 @@ def main() -> None:
         root / "command_probe_amendment_001.json",
         root / "semantic_future_calibration.json",
         root / "semantic_confirmation_audit_plan.json",
+        root / "semantic_confirmation_audit_amendment_002.json",
         root / "semantic_confirmation_audit.md",
         root / "checkpoint_provenance.json",
         root / "operational_snapshot_cosmos.json",
@@ -1487,6 +1548,8 @@ def main() -> None:
         root / "setup_exclusions/2026-08-02_cosmos_gpu0_thermal_restart.md",
         root / "setup_exclusions/2026-08-02_cosmos_confirmation_thermal_stop.md",
         root / "setup_exclusions/2026-08-02_cosmos_vague_pre_thermal_guard.md",
+        root / "setup_exclusions/2026-08-02_oracle_scope_change.md",
+        root / "setup_exclusions/cosmos_h5_oracle_scope_change_thermal.jsonl",
         workspace / "artifacts/wam_language_gate/summary.json",
         workspace / "docs/VLA_WAM_SHARED_BENCHMARK_V1.md",
         workspace / "docs/SEMANTIC_FUTURE_SCORER_V1.md",
@@ -1503,11 +1566,13 @@ def main() -> None:
     ]
     compiled = {
         "schema_version": 1,
-        "status": "complete_prospective_grid_with_separate_retrospective_tier",
+        "status": "complete_direct_language_grid_with_confirmatory_and_post_interim_stress_tiers",
         "integrity": {
             "expected_episode_count": EXPECTED_EPISODES,
-            "static_episode_count": len(static_rows),
-            "hierarchy_episode_count": len(hierarchy_rows),
+            "original_confirmatory_episode_count": len(confirmatory_rows),
+            "post_interim_direct_stress_episode_count": len(stress_rows),
+            "oracle_episode_count": 0,
+            "dynamic_prompt_episode_count": 0,
             "one_exact_initial_state_fingerprint": True,
             "command_probe_plan_sha256": plan_sha,
             "semantic_calibration_sha256": calibration_sha,
@@ -1565,7 +1630,7 @@ def main() -> None:
     _configure_plotting()
     _plot_static_success(closed, output)
     _plot_offsets(closed, output)
-    _plot_hierarchy(closed, output)
+    _plot_direct_prompt_robustness(closed, output)
     _plot_observation_variation(observation_variation, output)
     _plot_semantic_quadrants(semantic, output)
     _plot_semantic_threshold_sensitivity(semantic, output)

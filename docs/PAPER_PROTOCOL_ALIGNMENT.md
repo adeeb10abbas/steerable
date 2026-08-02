@@ -56,8 +56,8 @@ choice is auditable.
 | No ordering requirement | Paper progression scores both items independently | Direct |
 | Ordered pick-and-place | Additional post-pick relation-transition metric | Declared local extension |
 | Four generalization splits | Neutral-start left/right DROID scene | Spatial slice only |
-| Six command styles | Frozen fixed-observation probe plus state-aware hierarchy | Interface diagnostic, not trained-style reproduction |
-| Five-step learned reasoner | Five-step perfect predicate selector | Same cadence; privileged oracle, not learned reasoning |
+| Six command styles | Frozen fixed-observation probe | Interface diagnostic, not trained-style reproduction |
+| Five-step learned reasoner | Not run | Deliberately outside the direct-grounding question |
 | Twenty-step in-context VLM | Not run | Missing |
 | Human oracle | Not run | Missing |
 | 0-to-255 grounded coordinates | Simulator-projected points in actual left camera, converted to 0-to-255 | Direct serialization analogue |
@@ -81,14 +81,23 @@ head, scene shift, or control horizon rather than the whole model class.
 
 ## Source-driven amendments
 
-Two corrections were made before their affected analyses ran:
+Three corrections or scope amendments were made before their affected analyses
+ran:
 
 - `command_probe_amendment_001.json` converts grounded prompts from raw pixels
   to the paper's 0-to-255 range before any fixed-observation request;
 - `metric_amendment_001.json` adds the paper's explicit put-down requirement to
-  progression item 2 before final compilation.
+  progression item 2 before final compilation;
+- `direct_language_scope_amendment_003.json` retires the privileged coach and
+  freezes two task-level prompt stressors before any associated rollout.
 
 The metric correction occurred after the first Cosmos batch began, so it is
 reported as an amendment rather than misrepresented as part of the initial
 preregistration. It tightened the rubric and changed no policy input, episode,
 or stopping rule.
+
+The scope change happened after some original Cosmos and preliminary
+five-step outcomes were visible, so the new declarative/contrastive grid is
+reported as a prospectively frozen **post-interim stress tier**, not rewritten
+into the original preregistration. This distinction is central to the study's
+claim boundary.

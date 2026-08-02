@@ -182,6 +182,7 @@ def _load_episode(
         "model_id": condition["model_id"],
         "model_class": condition["model_class"],
         "wording": condition["wording"],
+        "analysis_tier": condition["analysis_tier"],
         "controller": condition["controller"],
         "open_loop_horizon": int(condition["open_loop_horizon"]),
         "direction": direction,
@@ -232,6 +233,7 @@ def _group_summary(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
             row["model_id"],
             row["model_class"],
             row["wording"],
+            row["analysis_tier"],
             row["controller"],
             row["open_loop_horizon"],
             row["direction"],
@@ -254,19 +256,16 @@ def _group_summary(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
             for row in group
             if row["mean_policy_request_s"] is not None
         ]
-        phase_counts: Counter[str] = Counter()
-        for row in group:
-            for command in row["command_history"] or []:
-                phase_counts[command["phase"]] += 1
         summaries.append(
             {
                 "condition_id": key[0],
                 "model_id": key[1],
                 "model_class": key[2],
                 "wording": key[3],
-                "controller": key[4],
-                "open_loop_horizon": key[5],
-                "direction": key[6],
+                "analysis_tier": key[4],
+                "controller": key[5],
+                "open_loop_horizon": key[6],
+                "direction": key[7],
                 "successes": successes,
                 "episodes": len(group),
                 "success_rate": successes / len(group),
@@ -292,7 +291,6 @@ def _group_summary(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
                     float(np.mean(request_latency)) if request_latency else None
                 ),
                 "mean_wall_total_s": float(np.mean(wall)) if wall else None,
-                "oracle_command_phase_counts": dict(phase_counts),
             }
         )
     return summaries
@@ -340,37 +338,6 @@ def _action_contrasts(
     return contrasts
 
 
-def _hierarchy_pairs(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    index = {
-        (row["model_id"], row["direction"], row["episode_seed"], row["controller"]): row
-        for row in rows
-        if row["open_loop_horizon"] == 5 and row["wording"] == "canonical"
-    }
-    pairs = []
-    bases = sorted({key[:3] for key in index})
-    for model_id, direction, seed in bases:
-        static = index.get((model_id, direction, seed, "static"))
-        oracle = index.get((model_id, direction, seed, "predicate_oracle"))
-        if static is None or oracle is None:
-            continue
-        pairs.append(
-            {
-                "model_id": model_id,
-                "direction": direction,
-                "episode_seed": seed,
-                "static_success": static["binary_success"],
-                "oracle_success": oracle["binary_success"],
-                "success_delta": int(oracle["binary_success"]) - int(static["binary_success"]),
-                "static_paper_progression": static["paper_progression"],
-                "oracle_paper_progression": oracle["paper_progression"],
-                "paper_progression_delta": (
-                    oracle["paper_progression"] - static["paper_progression"]
-                ),
-            }
-        )
-    return pairs
-
-
 def _write_csv(path: Path, rows: list[dict[str, Any]], excluded: set[str] | None = None) -> None:
     if not rows:
         return
@@ -391,13 +358,13 @@ def _markdown(summary: dict[str, Any]) -> str:
         "",
         "## Closed-loop outcomes",
         "",
-        "| Model | Wording | Controller | Horizon | Direction | Success | 95% Beta(1,1) | Paper progression | Strict progression | Signed offset |",
+        "| Tier | Model | Wording | Horizon | Direction | Success | 95% Beta(1,1) | Paper progression | Strict progression | Signed offset |",
         "| --- | --- | --- | ---: | --- | ---: | --- | ---: | ---: | ---: |",
     ]
     for row in summary["group_summaries"]:
         interval = row["success_beta11_interval_95"]
         lines.append(
-            f"| {row['model_id']} | {row['wording']} | {row['controller']} | "
+            f"| {row['analysis_tier']} | {row['model_id']} | {row['wording']} | "
             f"{row['open_loop_horizon']} | {row['direction']} | "
             f"{row['successes']}/{row['episodes']} ({row['success_rate']:.0%}) | "
             f"[{interval[0]:.1%}, {interval[1]:.1%}] | "
@@ -432,22 +399,6 @@ def _markdown(summary: dict[str, Any]) -> str:
             "Realtime rendering was not pixel-repeatable across resets despite one exact simulator-state fingerprint. Opposite-prompt and same-prompt first-action distances therefore both include renderer variation. The ratio is a sensitivity diagnostic, not an isolated causal language effect; the frozen-observation probe supplies that test.",
         ]
     )
-    if summary["hierarchy_pairs"]:
-        lines.extend(
-            [
-                "",
-                "## Five-step predicate-oracle paired deltas",
-                "",
-                "| Model | Direction | Seed | Static success | Oracle success | Progression delta |",
-                "| --- | --- | ---: | ---: | ---: | ---: |",
-            ]
-        )
-        for row in summary["hierarchy_pairs"]:
-            lines.append(
-                f"| {row['model_id']} | {row['direction']} | {row['episode_seed']} | "
-                f"{int(row['static_success'])} | {int(row['oracle_success'])} | "
-                f"{row['paper_progression_delta']:+.2f} |"
-            )
     lines.extend(
         [
             "",
@@ -468,6 +419,17 @@ def main() -> None:
     args = parser.parse_args()
 
     manifest = json.loads(args.manifest.read_text())
+    expected_episodes = int(manifest["expected_episode_count"])
+    if any(condition["controller"] != "static" for condition in manifest["conditions"]):
+        raise RuntimeError("Direct-language manifest contains a non-static controller")
+    declared_episodes = sum(
+        len(TASKS) * len(condition["episode_seeds"])
+        for condition in manifest["conditions"]
+    )
+    if declared_episodes != expected_episodes:
+        raise RuntimeError(
+            f"Manifest declares {declared_episodes} episodes but expects {expected_episodes}"
+        )
     rows: list[dict[str, Any]] = []
     actions: dict[tuple[str, str, int], np.ndarray] = {}
     missing: list[dict[str, Any]] = []
@@ -500,15 +462,24 @@ def main() -> None:
                 initial_fingerprints[row["initial_state_sha256"]] += 1
     if missing and not args.allow_incomplete:
         raise RuntimeError(
-            f"Missing {len(missing)} preregistered episodes; rerun or pass --allow-incomplete"
+            f"Missing {len(missing)} registered episodes; rerun or pass --allow-incomplete"
         )
+    if not missing and len(rows) != expected_episodes:
+        raise RuntimeError(
+            f"Compiled {len(rows)} episodes but manifest expects {expected_episodes}"
+        )
+
+    tier_counts = Counter(row["analysis_tier"] for row in rows)
 
     summary = {
         "schema_version": 1,
         "manifest_path": str(args.manifest.resolve()),
         "manifest_sha256": _sha256(args.manifest),
         "complete": not missing,
+        "expected_episode_count": expected_episodes,
         "episode_count": len(rows),
+        "analysis_tier_episode_counts": dict(tier_counts),
+        "direct_task_language_only": True,
         "missing_episodes": missing,
         "initial_state_fingerprint_counts": dict(initial_fingerprints),
         "paper_progression_operationalization": (
@@ -526,7 +497,6 @@ def main() -> None:
         ),
         "group_summaries": _group_summary(rows),
         "action_contrasts": _action_contrasts(manifest, actions),
-        "hierarchy_pairs": _hierarchy_pairs(rows),
         "episodes": rows,
     }
     args.output_dir.mkdir(parents=True, exist_ok=True)
@@ -537,7 +507,7 @@ def main() -> None:
     _write_csv(
         args.output_dir / "group_summaries.csv",
         summary["group_summaries"],
-        excluded={"success_beta11_interval_95", "oracle_command_phase_counts"},
+        excluded={"success_beta11_interval_95"},
     )
     (args.output_dir / "CLOSED_LOOP_RESULTS.md").write_text(_markdown(summary))
     print(

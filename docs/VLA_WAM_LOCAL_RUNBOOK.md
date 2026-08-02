@@ -1,9 +1,13 @@
 # Local VLA-WAM steerability runbook
 
-This runbook reproduces the prospective study frozen in
-`artifacts/vla_wam_shared_v1/preregistration.json`. It is host-specific by
-design: the checkpoints, four repositories, and two physical RTX 3090 roles
-are pinned in the evidence package.
+This runbook reproduces the direct-language study frozen across
+`artifacts/vla_wam_shared_v1/preregistration.json` and
+`direct_language_scope_amendment_003.json`. The original canonical/short grid
+is the confirmatory tier; the declarative/contrastive grid is a prospectively
+frozen post-interim stress tier. No oracle, simulator-state coach, dynamic
+prompt, or five-step condition enters the analysis. The runbook is
+host-specific by design: the checkpoints, four repositories, and two physical
+RTX 3090 roles are pinned in the evidence package.
 
 ## Safety and validity invariants
 
@@ -14,7 +18,8 @@ are pinned in the evidence package.
 - Stop a batch if either card reaches 90 C. Preserve interrupted output as an
   exclusion; restart the whole condition from seed 0 rather than mixing roles.
 - Run one Isaac environment at a time.
-- Static confirmation seeds are 6100--6109. Hierarchy seeds are 7100--7104.
+- Original confirmation seeds are 6100--6109. Direct stress seeds are
+  7200--7209.
 - Every request uses `episode_seed * 1000 + replan_index`.
 - Exact reset state does not imply identical first-observed object centroids or
   realtime-rendered pixels. Preserve every recorded conditioning frame and
@@ -80,6 +85,7 @@ docker run --rm --name <exact-container-name> \
   -v /home/ali/projects/RoboLab/.cache/ov:/root/.cache/ov \
   -v /home/ali/projects/RoboLab/.cache/kit:/isaac-sim/kit/cache \
   -v /home/ali/projects/RoboLab:/workspace/robolab \
+  --entrypoint /bin/bash \
   robolab:codex-steerability -lc \
   '<COMMAND> --kit_args=--/rtx/verifyDriverVersion/enabled=false'
 ```
@@ -106,7 +112,10 @@ CUDA_VISIBLE_DEVICES=1 DS_IGNORE_CUDA_DETECTION=1 .venv/bin/python \
   --action-space joint_pos --action-dim 8 --action-chunk-size 32
 ```
 
-Run the two static conditions through the shared container wrapper:
+Run all four episode-static task-language conditions through the shared
+container wrapper. Use containers `v1-cosmos-canonical`, `v1-cosmos-vague`,
+`v1-cosmos-declarative`, and `v1-cosmos-contrastive`, with matching thermal
+log basenames:
 
 ```bash
 /workspace/isaaclab/_isaac_sim/python.sh policies/cosmos3/run.py \
@@ -120,6 +129,18 @@ Run the two static conditions through the shared container wrapper:
   --num-envs 1 --num-runs 10 --headless --device cuda:0 --video-mode none \
   --output-folder-name v1_cosmos_vague --instruction-type vague \
   --sampling-seed-base 6100 --record-predictions
+
+/workspace/isaaclab/_isaac_sim/python.sh policies/cosmos3/run.py \
+  --task RubiksCubeLeftOfBowlMatchedTask RubiksCubeRightOfBowlMatchedTask \
+  --num-envs 1 --num-runs 10 --headless --device cuda:0 --video-mode none \
+  --output-folder-name v1_cosmos_declarative --instruction-type declarative \
+  --sampling-seed-base 7200 --record-predictions
+
+/workspace/isaaclab/_isaac_sim/python.sh policies/cosmos3/run.py \
+  --task RubiksCubeLeftOfBowlMatchedTask RubiksCubeRightOfBowlMatchedTask \
+  --num-envs 1 --num-runs 10 --headless --device cuda:0 --video-mode none \
+  --output-folder-name v1_cosmos_contrastive --instruction-type contrastive \
+  --sampling-seed-base 7200 --record-predictions
 ```
 
 With Isaac stopped, run the frozen fixed-observation probe from the steerable
@@ -139,25 +160,10 @@ cd /home/ali/projects/steerable
   --output artifacts/vla_wam_shared_v1/cosmos_gpu_assignment_audit.json
 ```
 
-For the five-step hierarchy comparison, restart the same server without
-`--decode-video`; these episodes do not consume generated futures. First run
-the excluded seed-5190 one-episode oracle pilot. Then run:
-
-```bash
-/workspace/isaaclab/_isaac_sim/python.sh policies/cosmos3/run.py \
-  --task RubiksCubeLeftOfBowlMatchedTask RubiksCubeRightOfBowlMatchedTask \
-  --num-envs 1 --num-runs 5 --headless --device cuda:0 --video-mode none \
-  --open-loop-horizon 5 --output-folder-name v1_cosmos_h5_static \
-  --instruction-type default --instruction-controller static \
-  --sampling-seed-base 7100
-
-/workspace/isaaclab/_isaac_sim/python.sh policies/cosmos3/run.py \
-  --task RubiksCubeLeftOfBowlMatchedTask RubiksCubeRightOfBowlMatchedTask \
-  --num-envs 1 --num-runs 5 --headless --device cuda:0 --video-mode none \
-  --open-loop-horizon 5 --output-folder-name v1_cosmos_h5_oracle \
-  --instruction-type default --instruction-controller predicate_oracle \
-  --sampling-seed-base 7100
-```
+The earlier five-step static run, one-episode pilot, and interrupted oracle run
+are supporting/excluded provenance only. Their locations and observed outcomes
+are recorded in `setup_exclusions/2026-08-02_oracle_scope_change.md`. Do not
+resume them.
 
 ## pi0.5 DROID
 
@@ -189,7 +195,10 @@ PIDs/RSS, and the exact GPU roles in
 `artifacts/vla_wam_shared_v1/operational_snapshot_pi05_confirmation.json`.
 This is explicitly a point measurement rather than a peak-memory claim.
 
-Run the static conditions through the shared container wrapper:
+Run all four episode-static conditions through the shared container wrapper.
+Use containers `v1-pi05-canonical`, `v1-pi05-vague`,
+`v1-pi05-declarative`, and `v1-pi05-contrastive`, with matching thermal log
+basenames:
 
 ```bash
 /workspace/isaaclab/_isaac_sim/python.sh policies/pi0_family/run.py \
@@ -205,33 +214,27 @@ Run the static conditions through the shared container wrapper:
   --num-envs 1 --num-runs 10 --headless --device cuda:0 --video-mode none \
   --open-loop-horizon 15 --output-folder-name v1_pi05_vague \
   --instruction-type vague --sampling-seed-base 6100
-```
-
-After the excluded seed-5190 one-episode oracle pilot, run:
-
-```bash
-/workspace/isaaclab/_isaac_sim/python.sh policies/pi0_family/run.py \
-  --policy pi05 \
-  --task RubiksCubeLeftOfBowlMatchedTask RubiksCubeRightOfBowlMatchedTask \
-  --num-envs 1 --num-runs 5 --headless --device cuda:0 --video-mode none \
-  --open-loop-horizon 5 --output-folder-name v1_pi05_h5_static \
-  --instruction-type default --instruction-controller static \
-  --sampling-seed-base 7100
 
 /workspace/isaaclab/_isaac_sim/python.sh policies/pi0_family/run.py \
   --policy pi05 \
   --task RubiksCubeLeftOfBowlMatchedTask RubiksCubeRightOfBowlMatchedTask \
-  --num-envs 1 --num-runs 5 --headless --device cuda:0 --video-mode none \
-  --open-loop-horizon 5 --output-folder-name v1_pi05_h5_oracle \
-  --instruction-type default --instruction-controller predicate_oracle \
-  --sampling-seed-base 7100
+  --num-envs 1 --num-runs 10 --headless --device cuda:0 --video-mode none \
+  --open-loop-horizon 15 --output-folder-name v1_pi05_declarative \
+  --instruction-type declarative --sampling-seed-base 7200
+
+/workspace/isaaclab/_isaac_sim/python.sh policies/pi0_family/run.py \
+  --policy pi05 \
+  --task RubiksCubeLeftOfBowlMatchedTask RubiksCubeRightOfBowlMatchedTask \
+  --num-envs 1 --num-runs 10 --headless --device cuda:0 --video-mode none \
+  --open-loop-horizon 15 --output-folder-name v1_pi05_contrastive \
+  --instruction-type contrastive --sampling-seed-base 7200
 ```
 
 ## Prompt-blind future scoring
 
 Stop both policy and Isaac processes before loading Qwen on physical GPU 1.
-The calibration file is immutable. Score the two Cosmos static batches and
-the fixed-observation probe:
+The calibration file is immutable. Score all four Cosmos direct-language
+batches and the fixed-observation probe:
 
 ```bash
 cd /home/ali/projects/steerable
@@ -250,6 +253,22 @@ CUDA_VISIBLE_DEVICES=1 /home/ali/cosmos-framework/.venv/bin/python \
     /home/ali/projects/RoboLab/output/v1_cosmos_vague/RubiksCubeRightOfBowlMatchedTask \
   --calibration artifacts/vla_wam_shared_v1/semantic_future_calibration.json \
   --output-dir artifacts/vla_wam_shared_v1/semantic_confirmation/cosmos_vague
+
+CUDA_VISIBLE_DEVICES=1 /home/ali/cosmos-framework/.venv/bin/python \
+  tools/score_cosmos_semantic_futures.py score \
+  --task-dir \
+    /home/ali/projects/RoboLab/output/v1_cosmos_declarative/RubiksCubeLeftOfBowlMatchedTask \
+    /home/ali/projects/RoboLab/output/v1_cosmos_declarative/RubiksCubeRightOfBowlMatchedTask \
+  --calibration artifacts/vla_wam_shared_v1/semantic_future_calibration.json \
+  --output-dir artifacts/vla_wam_shared_v1/semantic_confirmation/cosmos_declarative
+
+CUDA_VISIBLE_DEVICES=1 /home/ali/cosmos-framework/.venv/bin/python \
+  tools/score_cosmos_semantic_futures.py score \
+  --task-dir \
+    /home/ali/projects/RoboLab/output/v1_cosmos_contrastive/RubiksCubeLeftOfBowlMatchedTask \
+    /home/ali/projects/RoboLab/output/v1_cosmos_contrastive/RubiksCubeRightOfBowlMatchedTask \
+  --calibration artifacts/vla_wam_shared_v1/semantic_future_calibration.json \
+  --output-dir artifacts/vla_wam_shared_v1/semantic_confirmation/cosmos_contrastive
 
 CUDA_VISIBLE_DEVICES=1 /home/ali/cosmos-framework/.venv/bin/python \
   tools/score_cosmos_semantic_futures.py score-probe \
@@ -277,8 +296,9 @@ uv pip install --python .venv/bin/python \
   --output-dir artifacts/vla_wam_shared_v1/final_evidence
 ```
 
-The first compiler must report 120 episodes and zero missing. The second must
-verify 80 static episodes, 40 hierarchy episodes, one exact initial-state
-fingerprint, 40 Cosmos first-conditioning images and their renderer variation,
-16 probe conditions per model, frozen calibration/plan hashes, and a completed
-semantic audit before the evidence package is publishable.
+The first compiler must report 160 episodes and zero missing. The second must
+verify 80 original-confirmatory episodes, 80 post-interim direct-stress
+episodes, zero coached episodes, one exact initial-state fingerprint, 80
+Cosmos first-conditioning images and their renderer variation, 16 probe
+conditions per model, frozen calibration/plan hashes, and the completed
+24-sheet semantic audit before the evidence package is publishable.

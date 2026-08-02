@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "amendment_id": "vla_wam_shared_spatial_v1_semantic_audit_002",
+  "status": "fixed_before_any_declarative_or_contrastive_episode_or_semantic_label",
+  "fixed_at_utc": "2026-08-02T20:37:39Z",
+  "parent_plan": "artifacts/vla_wam_shared_v1/semantic_confirmation_audit_plan.json",
+  "parent_plan_sha256": "561a9b67a3c71a9b313114d837b9b0eb0fc44f272dc0ef030a711a64fdb1d424",
+  "scope_amendment": "artifacts/vla_wam_shared_v1/direct_language_scope_amendment_003.json",
+  "scope_amendment_sha256": "1910e9616cd9d13a4b8a51d1299cf1d97e5dac69003633003ada9f0a2d01c366",
+  "reason": "The direct-language scope amendment adds two Cosmos prompt conditions whose imagined futures require the same outcome-independent visual audit coverage as the original wordings.",
+  "additional_population": "All Cosmos declarative-goal and contrastive-goal episodes, both directions, seeds 7200-7209.",
+  "additional_detailed_human_sample": {
+    "selection_rule": "First, middle, and final seed in the frozen ordered stress-seed list, selected before any stress episode or semantic label.",
+    "episode_seeds": [7200, 7204, 7209],
+    "wordings": ["declarative_goal", "contrastive_goal"],
+    "directions": ["left", "right"],
+    "sheets": 12,
+    "coverage": "Every replan and scored frame in each selected episode."
+  },
+  "combined_audit": {
+    "wordings": ["canonical", "short_paraphrase", "declarative_goal", "contrastive_goal"],
+    "detailed_sheets": 24,
+    "automatic_contact_sheets": "one for every one of the 80 Cosmos direct-language episodes"
+  },
+  "unchanged": [
+    "review questions",
+    "prompt-blind localizer and frozen thresholds",
+    "decision rule",
+    "prohibition on tuning labels from the audit"
+  ]
+}

@@ -2,7 +2,9 @@
 
 Status: **frozen before confirmation inference** on 2 August 2026. Calibration
 and dry-run evidence uses only the excluded seed-prefix 51xx rollouts. None of
-the 6100--6109 confirmation episodes existed when these rules were committed.
+the 6100--6109 original-confirmation episodes existed when these rules were
+committed, and no threshold changed when the later 7200--7209 declarative and
+contrastive stress tier was added.
 
 ## What is measured
 
@@ -43,6 +45,14 @@ semantic quadrants rather than treating any pixel change as steerability:
 
 Uncertain futures are reported as coverage failures and are never coerced into
 success or failure.
+
+The same prompt-blind scorer is applied to all four direct task wordings:
+canonical, short paraphrase, declarative goal, and contrastive goal. The
+human-audit extension in
+`semantic_confirmation_audit_amendment_002.json` freezes first/middle/final
+stress-seed sheets before any stress rollout, bringing the detailed visual
+audit to 24 episodes and the automatic contact-sheet population to all 80
+Cosmos direct-language episodes.
 
 For the fixed-observation command-style probe, this cube/bowl predicate is
 applied only to commands that actually request a left/right cube placement:

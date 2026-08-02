@@ -17,7 +17,7 @@ a full reproduction of Chen et al.'s in-distribution, motion, spatial, and
 semantic suites, because checkpoint training-set membership and equivalent
 tasks are not established for the three omitted slices.
 
-## Fixed confirmation grid
+## Direct-language grids
 
 The static grid contains 80 episodes:
 
@@ -31,14 +31,23 @@ schedule is used for the paired left/right prompts within a model. Integers do
 not imply equivalent diffusion samples across architectures; they make repeats
 within each architecture auditable.
 
-The hierarchy add-on uses seeds 7100–7104. The predicate-oracle condition has
-20 episodes and its matched static canonical control has another 20, for 40
-episodes total. Both replan every five environment steps. The oracle issues a
-grasp command before pickup, the requested spatial command while holding, and
-a release command once the requested relation is true. This arithmetic
-clarification was frozen before any hierarchy run in
-`artifacts/vla_wam_shared_v1/hierarchy_amendment_001.json`; no model, task,
-seed, prompt, metric, or stopping rule changed.
+After 40 Cosmos confirmation outcomes and preliminary five-step evidence were
+known, the user narrowed the scientific question to direct task-language
+steerability. `direct_language_scope_amendment_003.json` prospectively froze a
+second, separately labeled 80-episode stress tier before any of its rollouts:
+
+- 2 models;
+- 2 task-level wordings: declarative end-state and contrastive instruction;
+- 2 requested relations;
+- 10 new episode seeds: 7200–7209.
+
+The contrastive prompt includes both relation tokens and explicitly negates
+the incorrect one, testing semantic scope rather than mere response to the
+presence of “left” or “right.” All 160 analyzed episodes use one static task
+instruction and each checkpoint's native horizon (15 for π0.5, 32 for
+Cosmos). No simulator-state oracle, subtask coach, prompt switching, or
+five-step episode enters an estimate. Completed/partial five-step data is
+preserved as excluded or supporting provenance rather than discarded.
 
 ## Primary outcomes
 
@@ -97,10 +106,11 @@ direction. They are not substitutes for closed-loop success.
 ## Calibration and exclusions
 
 Recorder and semantic-scorer calibration uses seed prefix 51xx and is excluded
-from confirmation estimates. Detector thresholds and manual-audit rules are
-frozen before seed 6100 is run. Earlier experiments are retrospective evidence
-and remain in `artifacts/wam_language_gate`; they never enter v1 confidence
-intervals.
+from confirmation estimates. Detector thresholds were frozen before seed 6100
+was run and were not changed for the stress tier. The original audit plan was
+extended—before seed 7200 was run—to select first/middle/final stress episodes.
+Earlier experiments and retired coached episodes are supporting or
+retrospective evidence; they never enter direct-language confidence intervals.
 
 Setup failures are excluded only with an error log demonstrating that no valid
 policy episode ran. Full-horizon task failures remain model failures. Prompts,

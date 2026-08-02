@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_final_timing_analysis",
+  "frozen_at_utc": "2026-08-02T17:36:00Z",
+  "trigger": "The first live cooldowns showed that pausing the client process can overlap either environment stepping or a policy request; the client timer alone cannot identify the overlap.",
+  "metric_consequence": {
+    "episode_wall_time": "Retain raw values; they include all cooling pauses.",
+    "client_policy_request_time": "Retain raw values and label them upper bounds on model-plus-transport latency because a pause can occur while the client waits for a response.",
+    "thermal_log": "Report cooldown count and total seconds per batch without allocating cooldown time to an unobserved request or step phase.",
+    "operational_model_latency": "Prefer separately measured warm fixed-observation/native probe latency for model-only engineering comparisons; report closed-loop client request timing only with the upper-bound qualifier."
+  },
+  "outcome_metrics": "No success, progression, endpoint, action, or semantic-future metric changes.",
+  "reason": "Subtracting every cooldown from policy time or environment time would fabricate phase attribution not present in the logs."
+}

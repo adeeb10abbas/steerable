@@ -32,6 +32,9 @@ are pinned in the evidence package.
   runs with `tools/thermal_guard.py`: pause the named Isaac container at 87 C,
   resume at 80 C, and still stop/exclude at 90 C. Preserve its JSONL log.
   `thermal_control_amendment_001.json` freezes this post-stop safety cadence.
+- Do not subtract cooldowns from a guessed policy/step phase. Client request
+  and episode wall timers can include pauses and are reported raw; see
+  `thermal_timing_amendment_002.json`.
 
 Monitor both cards while a batch is live:
 

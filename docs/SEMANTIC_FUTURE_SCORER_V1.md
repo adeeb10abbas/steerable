@@ -44,6 +44,15 @@ semantic quadrants rather than treating any pixel change as steerability:
 Uncertain futures are reported as coverage failures and are never coerced into
 success or failure.
 
+For the fixed-observation command-style probe, this cube/bowl predicate is
+applied only to commands that actually request a left/right cube placement:
+task, relation paraphrase/opposite, spatial point, and combination styles.
+Subtask, atomic gripper motion, gripper trace, unrelated-object, and
+contradictory commands remain sensitivity diagnostics and receive no semantic
+cube/bowl label. In particular, "move the gripper left" is not silently scored
+as "put the cube left of the bowl." This applicability rule does not alter any
+frozen localization or relation threshold.
+
 ## Frozen calibration
 
 The localizer checkpoint is the local Qwen3-VL-2B-Instruct snapshot

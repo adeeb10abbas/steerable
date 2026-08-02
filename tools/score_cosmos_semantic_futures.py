@@ -36,6 +36,16 @@ DEFAULT_MODEL = Path(
 )
 FRAME_INDICES = (8, 16, 24, 32)
 CAMERAS = ("left_camera", "right_camera")
+RELATION_PROBE_STYLES = {
+    "task",
+    "exact_repeat_control",
+    "paraphrase_control",
+    "opposite_relation_control",
+    "point_spatial",
+    "point_spatial_counterfactual",
+    "combination",
+    "combination_counterfactual",
+}
 CAMERA_GEOMETRY = {
     "left_camera": {
         "position": [0.05, 0.57, 0.66],
@@ -757,9 +767,14 @@ def score_probe(args: argparse.Namespace) -> None:
             winner, count = max(relation_counts.items(), key=lambda item: item[1])
             if count / len(reliable) >= 0.75:
                 predicted_relation = winner
-        try:
+        # The frozen localizer measures the cube/bowl relation. Applying that
+        # predicate to an atomic gripper-motion command would silently score a
+        # different behavior than the command asks for. Only styles whose goal
+        # is actually a left/right cube placement receive a semantic label.
+        semantic_applicable = record["style"] in RELATION_PROBE_STYLES
+        if semantic_applicable:
             requested_relation = _request_direction(record["prompt"])
-        except ValueError:
+        else:
             requested_relation = None
         requested_fraction = (
             relation_counts[requested_relation] / len(reliable)
@@ -779,6 +794,8 @@ def score_probe(args: argparse.Namespace) -> None:
                 "condition": condition,
                 "style": record["style"],
                 "prompt": record["prompt"],
+                "semantic_target": "cube_relative_to_bowl" if semantic_applicable else None,
+                "semantic_applicable": semantic_applicable,
                 "requested_relation": requested_relation,
                 "predicted_relation": predicted_relation,
                 "imagined_requested": imagined_requested,

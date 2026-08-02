@@ -593,6 +593,48 @@ def _plot_semantic_quadrants(semantic: dict[str, Any], output: Path) -> None:
     plt.close(fig)
 
 
+def _plot_semantic_threshold_sensitivity(semantic: dict[str, Any], output: Path) -> None:
+    rows = semantic["threshold_sensitivity"]
+    fig, axes = plt.subplots(1, 2, figsize=(9.5, 4.0), sharex=True, sharey=True)
+    groups = sorted({(row["wording"], row["direction"]) for row in rows})
+    colors = {"left": "#6a51a3", "right": "#d95f0e"}
+    styles = {"canonical": "-", "short_paraphrase": "--"}
+    for wording, direction in groups:
+        selected = sorted(
+            [row for row in rows if row["wording"] == wording and row["direction"] == direction],
+            key=lambda row: row["cross_camera_threshold_m"],
+        )
+        label = f"{wording.replace('_paraphrase', '')} {direction}"
+        x = [row["cross_camera_threshold_m"] for row in selected]
+        axes[0].plot(
+            x,
+            [row["coverage_fraction"] for row in selected],
+            marker="o",
+            color=colors[direction],
+            linestyle=styles[wording],
+            label=label,
+        )
+        axes[1].plot(
+            x,
+            [row["imagination_execution_agreement_among_certain"] for row in selected],
+            marker="o",
+            color=colors[direction],
+            linestyle=styles[wording],
+            label=label,
+        )
+    for axis, title in zip(axes, ("Coverage", "Agreement among scored chunks")):
+        axis.set_title(title)
+        axis.set_xlabel("Cross-camera disagreement threshold (m)")
+        axis.set_ylim(0, 1.05)
+        axis.grid(alpha=0.2)
+    axes[0].set_ylabel("Fraction")
+    axes[1].legend(frameon=False, fontsize=8)
+    fig.suptitle("Frozen semantic-future scorer sensitivity (labels unchanged at 0.20 m)")
+    fig.tight_layout()
+    fig.savefig(output / "semantic_threshold_sensitivity.png", bbox_inches="tight")
+    plt.close(fig)
+
+
 def _plot_probe(probes: dict[str, Any], output: Path) -> None:
     condition_order = [row["condition"] for row in probes["pi05"]["manifest"]["records"]]
     short = {
@@ -684,6 +726,7 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         "- `static_requested_side_offsets.png`: endpoint directionality, including failures.",
         "- `hierarchy_static_vs_oracle.png`: matched five-step static versus predicate-oracle control.",
         "- `cosmos_imagination_execution_quadrants.png`: WAM-only semantic future/action agreement.",
+        "- `semantic_threshold_sensitivity.png`: scorer coverage/agreement at 0.10, 0.15, and frozen 0.20 m reliability thresholds.",
         "- `command_probe_action_sensitivity.png`: same-observation six-style prompt response.",
         "",
         "## Retrospective evidence tier",
@@ -803,6 +846,7 @@ def main() -> None:
     _plot_offsets(closed, output)
     _plot_hierarchy(closed, output)
     _plot_semantic_quadrants(semantic, output)
+    _plot_semantic_threshold_sensitivity(semantic, output)
     _plot_probe(probes, output)
     _dump(output / "compiled_evidence.json", compiled)
     _write_summary_csv(output / "semantic_future_groups.csv", semantic["groups"])

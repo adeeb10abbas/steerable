@@ -1113,8 +1113,13 @@ def _initial_physical_variation(closed: dict[str, Any]) -> dict[str, Any]:
         )
     return {
         "episodes": len(episodes),
-        "exact_reset_state_fingerprints": len(closed["initial_state_fingerprint_counts"]),
-        "interpretation": "Reset-state arrays are exact, while first-recorded object centroids may differ after settling. Distances below quantify that physical observation variation separately from pixel-render variation.",
+        "exact_physical_reset_state_fingerprints": len(
+            closed["physical_initial_state_fingerprint_counts"]
+        ),
+        "full_recorded_initial_state_fingerprints": len(
+            closed["full_recorded_initial_state_fingerprint_counts"]
+        ),
+        "interpretation": "Robot/object reset arrays are exact. Full recorded reset groups have one schema-specific hash per checkpoint because Cosmos records two additional camera poses. First-recorded object centroids may still differ after settling; the distances below quantify that variation separately from pixel-render variation.",
         "summaries": summaries,
         "pairs": pairs,
     }
@@ -1638,7 +1643,7 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         f"- Original confirmatory episodes: **{compiled['integrity']['original_confirmatory_episode_count']}/{EXPECTED_CONFIRMATORY_EPISODES}**.",
         f"- Post-interim direct-language stress episodes: **{compiled['integrity']['post_interim_direct_stress_episode_count']}/{EXPECTED_DIRECT_STRESS_EPISODES}**.",
         "- Oracle or dynamic-prompt episodes in the analysis: **0**.",
-        f"- Shared initial-state fingerprints: **{len(closed['initial_state_fingerprint_counts'])}**.",
+        f"- Shared physical robot/object reset fingerprints: **{len(closed['physical_initial_state_fingerprint_counts'])}**; full recorder-schema fingerprints: **{len(closed['full_recorded_initial_state_fingerprint_counts'])}**.",
         f"- First-recorded cube/bowl physical observations audited: **{compiled['integrity']['initial_physical_observations_audited']}**.",
         f"- Fixed-observation probe conditions: **{len(probes['pi05']['manifest']['records'])} per model**.",
         f"- Exact direct-task prompt conditions: **{len(direct_probe['pi05']['manifest']['records'])}/{EXPECTED_DIRECT_TASK_PROBE_CONDITIONS} per model**.",
@@ -1657,6 +1662,7 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         "| Direct-language scope amendment | `../direct_language_scope_amendment_003.json` | Retires the oracle grid and freezes declarative/contrastive task-language stress conditions before those runs |",
         "| Metric amendment | `../metric_amendment_001.json` | Exact paper-style progression after primary-source verification |",
         "| Observation amendment | `../observation_variation_amendment_001.json` | Downgrades closed-loop action contrast after measured renderer variation |",
+        "| Initial-state schema amendment | `../initial_state_schema_amendment_006.json` | Separates exact physical reset identity from checkpoint-specific camera recorder schemas |",
         "| Thermal-control amendment | `../thermal_control_amendment_001.json` | Freezes pause/resume and emergency-stop behavior after the first matched-role thermal stop |",
         "| Thermal timing amendment | `../thermal_timing_amendment_002.json` | Treats guarded client request timing as an upper bound and forbids fabricated phase attribution |",
         "| Semantic target parser amendment | `../semantic_target_parser_amendment_004.json` | Uses matched task identity rather than interpreting contrastive prompt negation inside the visual scorer |",
@@ -1771,8 +1777,14 @@ def main() -> None:
         or len(stress_rows) != EXPECTED_DIRECT_STRESS_EPISODES
     ):
         raise RuntimeError("Confirmatory/stress episode accounting does not match the amended grid")
-    if len(closed["initial_state_fingerprint_counts"]) != 1:
-        raise RuntimeError("Closed-loop inputs do not share one exact initial-state fingerprint")
+    if len(closed["physical_initial_state_fingerprint_counts"]) != 1:
+        raise RuntimeError(
+            "Closed-loop inputs do not share one exact physical reset-state fingerprint"
+        )
+    if len(closed["full_recorded_initial_state_fingerprint_counts"]) != 2:
+        raise RuntimeError(
+            "Expected two checkpoint-specific full recorder-state fingerprints"
+        )
     geometry_sources = {row.get("relation_geometry_source") for row in closed["episodes"]}
     if geometry_sources != {"rigid_object_root_pose_in_robot_frame"}:
         raise RuntimeError(f"Unexpected closed-loop relation geometry: {geometry_sources}")
@@ -1891,6 +1903,7 @@ def main() -> None:
         root / "direct_language_scope_amendment_003.json",
         root / "metric_amendment_001.json",
         root / "observation_variation_amendment_001.json",
+        root / "initial_state_schema_amendment_006.json",
         root / "thermal_control_amendment_001.json",
         root / "thermal_timing_amendment_002.json",
         root / "command_probe_plan.json",
@@ -1941,7 +1954,10 @@ def main() -> None:
             "post_interim_direct_stress_episode_count": len(stress_rows),
             "oracle_episode_count": 0,
             "dynamic_prompt_episode_count": 0,
-            "one_exact_initial_state_fingerprint": True,
+            "one_exact_physical_initial_state_fingerprint": True,
+            "checkpoint_specific_full_recorder_fingerprint_count": len(
+                closed["full_recorded_initial_state_fingerprint_counts"]
+            ),
             "command_probe_plan_sha256": plan_sha,
             "direct_task_command_probe_plan_sha256": direct_plan_sha,
             "semantic_calibration_sha256": calibration_sha,

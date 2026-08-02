@@ -77,6 +77,21 @@ def _initial_fingerprint(arrays: dict[str, np.ndarray]) -> str:
     return digest.hexdigest()
 
 
+def _physical_initial_arrays(arrays: dict[str, np.ndarray]) -> dict[str, np.ndarray]:
+    """Exclude policy-specific camera recorder schemas from reset identity."""
+
+    physical = {
+        name: value
+        for name, value in arrays.items()
+        if name.startswith(("articulation/", "rigid_object/"))
+    }
+    if len(physical) != 12:
+        raise RuntimeError(
+            f"Expected 12 articulation/rigid-object reset datasets, found {len(physical)}"
+        )
+    return physical
+
+
 def _quaternion_wxyz_matrix(quaternion: np.ndarray) -> np.ndarray:
     """Return local-to-world rotation matrices for normalized wxyz quaternions."""
 
@@ -266,7 +281,10 @@ def _load_episode(
         "first_recorded_cube_centroid_m": cube_centroid[0].tolist(),
         "first_recorded_bowl_centroid_m": bowl_centroid[0].tolist(),
         "relation_geometry_source": "rigid_object_root_pose_in_robot_frame",
-        "initial_state_sha256": _initial_fingerprint(initial),
+        "physical_initial_state_sha256": _initial_fingerprint(
+            _physical_initial_arrays(initial)
+        ),
+        "full_recorded_initial_state_sha256": _initial_fingerprint(initial),
         "raw_robolab_score": root_result.get("score"),
         "policy_inference_s": policy_inference_s,
         "policy_inference_avg_ms": timing.get("policy_inference_avg_ms"),
@@ -457,7 +475,7 @@ def _markdown(summary: dict[str, Any]) -> str:
     lines.extend(
         [
             "",
-            "Realtime rendering was not pixel-repeatable across resets despite one exact simulator-state fingerprint. Opposite-prompt and same-prompt first-action distances therefore both include renderer variation. The ratio is a sensitivity diagnostic, not an isolated causal language effect; the frozen-observation probe supplies that test.",
+            "Realtime rendering was not pixel-repeatable across resets despite one exact physical robot/object reset fingerprint. Full recorder groups differ only because the WAM records two additional camera poses. Opposite-prompt and same-prompt first-action distances therefore both include renderer variation. The ratio is a sensitivity diagnostic, not an isolated causal language effect; the frozen-observation probe supplies that test.",
         ]
     )
     lines.extend(
@@ -494,7 +512,8 @@ def main() -> None:
     rows: list[dict[str, Any]] = []
     actions: dict[tuple[str, str, int], np.ndarray] = {}
     missing: list[dict[str, Any]] = []
-    initial_fingerprints: dict[str, int] = Counter()
+    physical_initial_fingerprints: dict[str, int] = Counter()
+    full_recorded_initial_fingerprints: dict[str, int] = Counter()
     for condition in manifest["conditions"]:
         result_index = _load_result_index(Path(condition["output_root"]))
         expected_result_keys = {
@@ -530,7 +549,12 @@ def main() -> None:
                     )
                 rows.append(row)
                 actions[(condition["id"], direction, run)] = action
-                initial_fingerprints[row["initial_state_sha256"]] += 1
+                physical_initial_fingerprints[
+                    row["physical_initial_state_sha256"]
+                ] += 1
+                full_recorded_initial_fingerprints[
+                    row["full_recorded_initial_state_sha256"]
+                ] += 1
     if missing and not args.allow_incomplete:
         raise RuntimeError(
             f"Missing {len(missing)} registered episodes; rerun or pass --allow-incomplete"
@@ -552,7 +576,17 @@ def main() -> None:
         "analysis_tier_episode_counts": dict(tier_counts),
         "direct_task_language_only": True,
         "missing_episodes": missing,
-        "initial_state_fingerprint_counts": dict(initial_fingerprints),
+        "physical_initial_state_fingerprint_counts": dict(
+            physical_initial_fingerprints
+        ),
+        "full_recorded_initial_state_fingerprint_counts": dict(
+            full_recorded_initial_fingerprints
+        ),
+        "initial_state_schema_interpretation": (
+            "Physical reset identity hashes only articulation/ and rigid_object/ arrays. "
+            "The full recorder group is retained separately because Cosmos records two "
+            "additional camera poses that pi0.5 does not request."
+        ),
         "paper_progression_operationalization": (
             "persistent correct-cube OBJECT_GRABBED_SUCCESS plus RoboLab requested-side "
             "success, which requires the final 45-degree relation and gripper detachment; "

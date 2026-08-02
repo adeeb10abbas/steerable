@@ -386,9 +386,15 @@ explicitly labeled as such and carry no inferential weight.
 
 RESULT_TBD_ACTION_CONTRAST
 
-All 160 analyzed episodes share one exact simulator reset-state fingerprint,
-but an
-integrity check found that this does **not** produce byte-identical first
+All 160 analyzed episodes share one exact **physical** reset fingerprint across
+the robot and rigid objects. A fail-closed preview also exposed two hashes for
+the complete recorded reset group: Cosmos stores head and right-shoulder camera
+poses that the π0.5 recorder omits. Every one of the 18 datasets shared by both
+schemas is byte-identical; the difference is observation bookkeeping, not a
+different scene. The correction and exact dataset names are preserved in the
+initial-state schema amendment.
+
+That exact physical reset still does **not** produce byte-identical first
 observations. Objects can settle by millimeters before the first recorded
 action: the first two same-direction resets differed by 3.50 mm at the cube,
 while the matched seed-6100 left/right centroids were exact. Their conditioning
@@ -787,6 +793,8 @@ Key protocol files:
   task identity for prompts containing both direction words;
 - `execution_geometry_amendment_005.json`: source-aligned root-pose geometry
   for endpoint and executed-state relations;
+- `initial_state_schema_amendment_006.json`: exact physical reset identity
+  separated from checkpoint-specific camera recorder schemas;
 - `trajectory_visualization_plan.json`: complete-gallery policy, coordinate
   convention, deterministic social panel, and disclosed retrospective
   exemplar rule;

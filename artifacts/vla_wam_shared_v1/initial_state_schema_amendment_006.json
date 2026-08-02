@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "amendment_id": "vla_wam_shared_spatial_v1_initial_state_schema_006",
+  "status": "fixed_after_pi05_declarative_and_before_pi05_contrastive",
+  "fixed_at_utc": "2026-08-02T23:25:21Z",
+  "trigger": "The 140-episode fail-closed preview produced two hashes when the complete HDF5 initial_state group was fingerprinted, despite prior numeric comparison showing identical physical states.",
+  "outcomes_known_when_fixed": {
+    "cosmos_direct_language_episodes": 80,
+    "pi05_direct_language_episodes": 60,
+    "pi05_contrastive_episodes": 0
+  },
+  "root_cause": {
+    "cosmos_initial_state_dataset_count": 22,
+    "pi05_initial_state_dataset_count": 18,
+    "cosmos_only_datasets": [
+      "cameras/head_camera/orientation",
+      "cameras/head_camera/position",
+      "cameras/over_shoulder_right_camera/orientation",
+      "cameras/over_shoulder_right_camera/position"
+    ],
+    "shared_dataset_count": 18,
+    "shared_datasets_byte_identical": true,
+    "interpretation": "The two full-group hashes encode different policy observation/recorder camera schemas. They do not indicate different robot or object reset states."
+  },
+  "observed_hashes": {
+    "cosmos_full_recorded_initial_state_sha256": "fc559f0cfc5ca12d10657a1ad1680cef2b5702e443a114f6818291d9d72c7000",
+    "pi05_full_recorded_initial_state_sha256": "1b1ddf04672b0ac9dfdaeec96d84829c23a4fd3e250b3a62c01745a3cb3ab470",
+    "shared_18_dataset_sha256": "1b1ddf04672b0ac9dfdaeec96d84829c23a4fd3e250b3a62c01745a3cb3ab470",
+    "shared_physical_initial_state_sha256": "5da70e5190e75ede26d49b82bd15bde7731a94364c2aac9f66afcba565d6b1a8"
+  },
+  "registered_correction": {
+    "physical_state_prefixes": ["articulation/", "rigid_object/"],
+    "physical_dataset_count": 12,
+    "required_physical_fingerprint_count": 1,
+    "expected_full_recorded_fingerprint_count": 2,
+    "row_fields": [
+      "physical_initial_state_sha256",
+      "full_recorded_initial_state_sha256"
+    ],
+    "summary_fields": [
+      "physical_initial_state_fingerprint_counts",
+      "full_recorded_initial_state_fingerprint_counts"
+    ]
+  },
+  "claim_change": "Replace 'one exact complete initial-state-group fingerprint' with 'one exact physical robot/object reset fingerprint; full recorder groups differ only because Cosmos records two additional cameras.'",
+  "unchanged": [
+    "binary success and progression metrics",
+    "task geometry and endpoint metrics",
+    "action contrasts",
+    "semantic future scoring",
+    "all episode inclusion and exclusion decisions"
+  ]
+}

@@ -352,7 +352,8 @@ produces the complete gallery plus deterministic landscape and square social
 exports. The dashed path shown in an episode panel is explicitly illustrative;
 the shaded 45-degree cone is the scored goal. The second compiler must
 verify 80 original-confirmatory episodes, 80 post-interim direct-stress
-episodes, zero coached episodes, one exact initial-state fingerprint, 80
+episodes, zero coached episodes, one exact physical robot/object reset
+fingerprint (plus two disclosed checkpoint-specific full recorder schemas), 80
 Cosmos first-conditioning images and their renderer variation, 16 rich-command
 conditions plus 11 exact direct-task conditions per model, frozen
 calibration/plan hashes, and the completed

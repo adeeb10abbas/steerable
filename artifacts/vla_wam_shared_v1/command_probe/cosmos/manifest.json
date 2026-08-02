@@ -1,0 +1,384 @@
+{
+  "claim_boundary": "Distances measure sensitivity. Correct steerability requires directionally appropriate closed-loop behavior or a reliable semantic future predicate.",
+  "conditioning_png_sha256": "32080f16b44c4a7f9dd32a4f2d84f23e8d2e766585d01443efcc687414e72144",
+  "conditioning_raw_rgb_sha256": "6c9a4d1a38e7ac167a4d0a0e065054fe6b172d59974940d00f082864d8376767",
+  "exact_repeat_action_rms": 0.0,
+  "exact_repeat_future_pixel_mae": 0.0,
+  "model": "cosmos",
+  "plan_path": "/home/ali/projects/steerable/artifacts/vla_wam_shared_v1/command_probe_plan.json",
+  "plan_sha256": "6c250c5860206ef6e5ac8e16bb9e2188af6dc1a66dc59e609d11f1271872123d",
+  "records": [
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": false,
+      "action_rms_vs_task_left": 0.0,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "task_left",
+      "future_effect_to_repeat_noise": null,
+      "future_exceeds_repeat_noise": false,
+      "future_pixel_mae_vs_task_left": 0.0,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Put the rubiks cube to the left of the bowl",
+      "requested_sampling_seed": 8100000,
+      "server_sampling_seed": 8100000,
+      "style": "task"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": false,
+      "action_rms_vs_task_left": 0.0,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "task_left_repeat",
+      "future_effect_to_repeat_noise": null,
+      "future_exceeds_repeat_noise": false,
+      "future_pixel_mae_vs_task_left": 0.0,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Put the rubiks cube to the left of the bowl",
+      "requested_sampling_seed": 8100000,
+      "server_sampling_seed": 8100000,
+      "style": "exact_repeat_control"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.04367305045245156,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "task_left_paraphrase",
+      "future_effect_to_repeat_noise": null,
+      "future_exceeds_repeat_noise": true,
+      "future_pixel_mae_vs_task_left": 10.2032406809573,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Place the multicolored cube on the table on the bowl's left side",
+      "requested_sampling_seed": 8100000,
+      "server_sampling_seed": 8100000,
+      "style": "paraphrase_control"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.02390876354243824,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "task_right",
+      "future_effect_to_repeat_noise": null,
+      "future_exceeds_repeat_noise": true,
+      "future_pixel_mae_vs_task_left": 5.603539657943067,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Put the rubiks cube to the right of the bowl",
+      "requested_sampling_seed": 8100000,
+      "server_sampling_seed": 8100000,
+      "style": "opposite_relation_control"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.03973588227084833,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "subtask_grasp",
+      "future_effect_to_repeat_noise": null,
+      "future_exceeds_repeat_noise": true,
+      "future_pixel_mae_vs_task_left": 6.903311584117692,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Reach for and firmly grasp the rubiks cube",
+      "requested_sampling_seed": 8100000,
+      "server_sampling_seed": 8100000,
+      "style": "subtask"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.31826497670853393,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "atomic_left",
+      "future_effect_to_repeat_noise": null,
+      "future_exceeds_repeat_noise": true,
+      "future_pixel_mae_vs_task_left": 20.795111478181436,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Move the gripper left",
+      "requested_sampling_seed": 8100000,
+      "server_sampling_seed": 8100000,
+      "style": "atomic_motion"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.3130859809328499,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "atomic_right",
+      "future_effect_to_repeat_noise": null,
+      "future_exceeds_repeat_noise": true,
+      "future_pixel_mae_vs_task_left": 21.415579594476966,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Move the gripper right",
+      "requested_sampling_seed": 8100000,
+      "server_sampling_seed": 8100000,
+      "style": "atomic_motion_counterfactual"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.3324843475024719,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "gripper_trace_to_cube",
+      "future_effect_to_repeat_noise": null,
+      "future_exceeds_repeat_noise": true,
+      "future_pixel_mae_vs_task_left": 21.438268904719543,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Move the gripper through left-camera points [(171,64), (165,101), (159,138), (153,175)]",
+      "requested_sampling_seed": 8100000,
+      "server_sampling_seed": 8100000,
+      "style": "gripper_trace"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.04163227202101778,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "point_cube",
+      "future_effect_to_repeat_noise": null,
+      "future_exceeds_repeat_noise": true,
+      "future_pixel_mae_vs_task_left": 6.750508667403198,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Grasp the rubiks cube at left-camera point [153,175]",
+      "requested_sampling_seed": 8100000,
+      "server_sampling_seed": 8100000,
+      "style": "point"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.0268917018353521,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "point_left_target",
+      "future_effect_to_repeat_noise": null,
+      "future_exceeds_repeat_noise": true,
+      "future_pixel_mae_vs_task_left": 5.671719144570707,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Place the rubiks cube at left-camera point [123,171]",
+      "requested_sampling_seed": 8100000,
+      "server_sampling_seed": 8100000,
+      "style": "point_spatial"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.023097408627485782,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "point_right_target",
+      "future_effect_to_repeat_noise": null,
+      "future_exceeds_repeat_noise": true,
+      "future_pixel_mae_vs_task_left": 6.288500326417585,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Place the rubiks cube at left-camera point [155,136]",
+      "requested_sampling_seed": 8100000,
+      "server_sampling_seed": 8100000,
+      "style": "point_spatial_counterfactual"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.03832519903815109,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "combination_left",
+      "future_effect_to_repeat_noise": null,
+      "future_exceeds_repeat_noise": true,
+      "future_pixel_mae_vs_task_left": 7.975133735556321,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Move left from gripper point [171,64] to the rubiks cube at [153,175], firmly grasp it, then follow [(153,175), (143,174), (133,172), (123,171)]",
+      "requested_sampling_seed": 8100000,
+      "server_sampling_seed": 8100000,
+      "style": "combination"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.042179374069040404,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "combination_right",
+      "future_effect_to_repeat_noise": null,
+      "future_exceeds_repeat_noise": true,
+      "future_pixel_mae_vs_task_left": 11.171115541064049,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Move right from gripper point [171,64] to the rubiks cube at [153,175], firmly grasp it, then follow [(153,175), (154,162), (154,149), (155,136)]",
+      "requested_sampling_seed": 8100000,
+      "server_sampling_seed": 8100000,
+      "style": "combination_counterfactual"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.36182568132839676,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "unrelated_control",
+      "future_effect_to_repeat_noise": null,
+      "future_exceeds_repeat_noise": true,
+      "future_pixel_mae_vs_task_left": 21.990497272679445,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Open the top drawer",
+      "requested_sampling_seed": 8100000,
+      "server_sampling_seed": 8100000,
+      "style": "unrelated_control"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.20622790670465171,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "noun_swap_control",
+      "future_effect_to_repeat_noise": null,
+      "future_exceeds_repeat_noise": true,
+      "future_pixel_mae_vs_task_left": 25.31892471710476,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Put the banana to the left of the bowl",
+      "requested_sampling_seed": 8100000,
+      "server_sampling_seed": 8100000,
+      "style": "noun_control"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.023847017597150202,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "contradictory_control",
+      "future_effect_to_repeat_noise": null,
+      "future_exceeds_repeat_noise": true,
+      "future_pixel_mae_vs_task_left": 4.773082147229874,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Put the rubiks cube to both the left and the right of the bowl at the same time",
+      "requested_sampling_seed": 8100000,
+      "server_sampling_seed": 8100000,
+      "style": "contradictory_control"
+    }
+  ],
+  "sampling_seed": 8100000,
+  "schema_version": 1,
+  "server": "ws://localhost:8000",
+  "status": "fixed_observation_secondary_diagnostic"
+}

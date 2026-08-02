@@ -1,0 +1,268 @@
+{
+  "calibration": "/home/ali/projects/steerable/artifacts/vla_wam_shared_v1/semantic_future_calibration.json",
+  "calibration_sha256": "56b7155fdb2eee1732e7636a104b2966323fcfc947c699cf3ac58635b232ace9",
+  "conditions": 16,
+  "conditions_with_predicted_relation": 16,
+  "probe_manifest": "/home/ali/projects/steerable/artifacts/vla_wam_shared_v1/command_probe/cosmos/manifest.json",
+  "probe_manifest_sha256": "1d73928cd411bae8aabb0499c1dea2d0a37675c1c64484fda7375b315e416123",
+  "rows": [
+    {
+      "condition": "task_left",
+      "imagined_requested": false,
+      "predicted_relation": "neutral",
+      "prompt": "Put the rubiks cube to the left of the bowl",
+      "relation_counts": {
+        "left": 0,
+        "neutral": 3,
+        "right": 0
+      },
+      "reliable_future_frames": 3,
+      "requested_relation": "left",
+      "semantic_applicable": true,
+      "semantic_target": "cube_relative_to_bowl",
+      "style": "task"
+    },
+    {
+      "condition": "task_left_repeat",
+      "imagined_requested": false,
+      "predicted_relation": "neutral",
+      "prompt": "Put the rubiks cube to the left of the bowl",
+      "relation_counts": {
+        "left": 0,
+        "neutral": 3,
+        "right": 0
+      },
+      "reliable_future_frames": 3,
+      "requested_relation": "left",
+      "semantic_applicable": true,
+      "semantic_target": "cube_relative_to_bowl",
+      "style": "exact_repeat_control"
+    },
+    {
+      "condition": "task_left_paraphrase",
+      "imagined_requested": false,
+      "predicted_relation": "neutral",
+      "prompt": "Place the multicolored cube on the table on the bowl's left side",
+      "relation_counts": {
+        "left": 0,
+        "neutral": 4,
+        "right": 0
+      },
+      "reliable_future_frames": 4,
+      "requested_relation": "left",
+      "semantic_applicable": true,
+      "semantic_target": "cube_relative_to_bowl",
+      "style": "paraphrase_control"
+    },
+    {
+      "condition": "task_right",
+      "imagined_requested": false,
+      "predicted_relation": "neutral",
+      "prompt": "Put the rubiks cube to the right of the bowl",
+      "relation_counts": {
+        "left": 0,
+        "neutral": 4,
+        "right": 0
+      },
+      "reliable_future_frames": 4,
+      "requested_relation": "right",
+      "semantic_applicable": true,
+      "semantic_target": "cube_relative_to_bowl",
+      "style": "opposite_relation_control"
+    },
+    {
+      "condition": "subtask_grasp",
+      "imagined_requested": null,
+      "predicted_relation": "neutral",
+      "prompt": "Reach for and firmly grasp the rubiks cube",
+      "relation_counts": {
+        "left": 0,
+        "neutral": 3,
+        "right": 0
+      },
+      "reliable_future_frames": 3,
+      "requested_relation": null,
+      "semantic_applicable": false,
+      "semantic_target": null,
+      "style": "subtask"
+    },
+    {
+      "condition": "atomic_left",
+      "imagined_requested": null,
+      "predicted_relation": "neutral",
+      "prompt": "Move the gripper left",
+      "relation_counts": {
+        "left": 0,
+        "neutral": 4,
+        "right": 0
+      },
+      "reliable_future_frames": 4,
+      "requested_relation": null,
+      "semantic_applicable": false,
+      "semantic_target": null,
+      "style": "atomic_motion"
+    },
+    {
+      "condition": "atomic_right",
+      "imagined_requested": null,
+      "predicted_relation": "neutral",
+      "prompt": "Move the gripper right",
+      "relation_counts": {
+        "left": 0,
+        "neutral": 3,
+        "right": 0
+      },
+      "reliable_future_frames": 3,
+      "requested_relation": null,
+      "semantic_applicable": false,
+      "semantic_target": null,
+      "style": "atomic_motion_counterfactual"
+    },
+    {
+      "condition": "gripper_trace_to_cube",
+      "imagined_requested": null,
+      "predicted_relation": "neutral",
+      "prompt": "Move the gripper through left-camera points [(171,64), (165,101), (159,138), (153,175)]",
+      "relation_counts": {
+        "left": 0,
+        "neutral": 3,
+        "right": 0
+      },
+      "reliable_future_frames": 3,
+      "requested_relation": null,
+      "semantic_applicable": false,
+      "semantic_target": null,
+      "style": "gripper_trace"
+    },
+    {
+      "condition": "point_cube",
+      "imagined_requested": null,
+      "predicted_relation": "neutral",
+      "prompt": "Grasp the rubiks cube at left-camera point [153,175]",
+      "relation_counts": {
+        "left": 0,
+        "neutral": 3,
+        "right": 0
+      },
+      "reliable_future_frames": 3,
+      "requested_relation": null,
+      "semantic_applicable": false,
+      "semantic_target": null,
+      "style": "point"
+    },
+    {
+      "condition": "point_left_target",
+      "imagined_requested": false,
+      "predicted_relation": "neutral",
+      "prompt": "Place the rubiks cube at left-camera point [123,171]",
+      "relation_counts": {
+        "left": 0,
+        "neutral": 4,
+        "right": 0
+      },
+      "reliable_future_frames": 4,
+      "requested_relation": "left",
+      "semantic_applicable": true,
+      "semantic_target": "cube_relative_to_bowl",
+      "style": "point_spatial"
+    },
+    {
+      "condition": "point_right_target",
+      "imagined_requested": false,
+      "predicted_relation": "neutral",
+      "prompt": "Place the rubiks cube at left-camera point [155,136]",
+      "relation_counts": {
+        "left": 0,
+        "neutral": 4,
+        "right": 0
+      },
+      "reliable_future_frames": 4,
+      "requested_relation": "left",
+      "semantic_applicable": true,
+      "semantic_target": "cube_relative_to_bowl",
+      "style": "point_spatial_counterfactual"
+    },
+    {
+      "condition": "combination_left",
+      "imagined_requested": false,
+      "predicted_relation": "neutral",
+      "prompt": "Move left from gripper point [171,64] to the rubiks cube at [153,175], firmly grasp it, then follow [(153,175), (143,174), (133,172), (123,171)]",
+      "relation_counts": {
+        "left": 0,
+        "neutral": 3,
+        "right": 0
+      },
+      "reliable_future_frames": 3,
+      "requested_relation": "left",
+      "semantic_applicable": true,
+      "semantic_target": "cube_relative_to_bowl",
+      "style": "combination"
+    },
+    {
+      "condition": "combination_right",
+      "imagined_requested": false,
+      "predicted_relation": "neutral",
+      "prompt": "Move right from gripper point [171,64] to the rubiks cube at [153,175], firmly grasp it, then follow [(153,175), (154,162), (154,149), (155,136)]",
+      "relation_counts": {
+        "left": 0,
+        "neutral": 4,
+        "right": 0
+      },
+      "reliable_future_frames": 4,
+      "requested_relation": "right",
+      "semantic_applicable": true,
+      "semantic_target": "cube_relative_to_bowl",
+      "style": "combination_counterfactual"
+    },
+    {
+      "condition": "unrelated_control",
+      "imagined_requested": null,
+      "predicted_relation": "neutral",
+      "prompt": "Open the top drawer",
+      "relation_counts": {
+        "left": 0,
+        "neutral": 3,
+        "right": 0
+      },
+      "reliable_future_frames": 3,
+      "requested_relation": null,
+      "semantic_applicable": false,
+      "semantic_target": null,
+      "style": "unrelated_control"
+    },
+    {
+      "condition": "noun_swap_control",
+      "imagined_requested": null,
+      "predicted_relation": "neutral",
+      "prompt": "Put the banana to the left of the bowl",
+      "relation_counts": {
+        "left": 0,
+        "neutral": 4,
+        "right": 0
+      },
+      "reliable_future_frames": 4,
+      "requested_relation": null,
+      "semantic_applicable": false,
+      "semantic_target": null,
+      "style": "noun_control"
+    },
+    {
+      "condition": "contradictory_control",
+      "imagined_requested": null,
+      "predicted_relation": "neutral",
+      "prompt": "Put the rubiks cube to both the left and the right of the bowl at the same time",
+      "relation_counts": {
+        "left": 0,
+        "neutral": 4,
+        "right": 0
+      },
+      "reliable_future_frames": 4,
+      "requested_relation": null,
+      "semantic_applicable": false,
+      "semantic_target": null,
+      "style": "contradictory_control"
+    }
+  ],
+  "schema_version": 1,
+  "status": "fixed_observation_secondary_diagnostic"
+}

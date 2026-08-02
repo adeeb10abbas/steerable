@@ -33,6 +33,16 @@ EXPECTED_EPISODES = 120
 EXPECTED_STATIC_EPISODES = 80
 EXPECTED_HIERARCHY_EPISODES = 40
 EXPECTED_PROBE_CONDITIONS = 16
+EXPECTED_THERMAL_LOGS = (
+    "cosmos_canonical",
+    "cosmos_vague",
+    "cosmos_h5_static",
+    "cosmos_h5_oracle",
+    "pi05_canonical",
+    "pi05_vague",
+    "pi05_h5_static",
+    "pi05_h5_oracle",
+)
 TASK_DIRS = {
     "left": "RubiksCubeLeftOfBowlMatchedTask",
     "right": "RubiksCubeRightOfBowlMatchedTask",
@@ -91,6 +101,65 @@ def _repo_state(path: Path) -> dict[str, Any]:
         "branch": run("branch", "--show-current"),
         "dirty": bool(status),
         "dirty_path_count": len(status),
+    }
+
+
+def _thermal_log_summary(root: Path) -> dict[str, Any]:
+    """Validate the frozen safety guard lifecycle for every definitive batch."""
+
+    summaries = []
+    for batch in EXPECTED_THERMAL_LOGS:
+        path = root / "thermal_logs" / f"{batch}.jsonl"
+        if not path.exists():
+            raise FileNotFoundError(path)
+        rows = [json.loads(line) for line in path.read_text().splitlines() if line.strip()]
+        if not rows:
+            raise RuntimeError(f"Empty thermal guard log: {path}")
+        events = [row["event"] for row in rows]
+        if events[0] != "monitor_started" or events[-1] != "monitor_completed":
+            raise RuntimeError(f"Incomplete thermal guard lifecycle in {path}: {events}")
+        emergency = [event for event in events if event.startswith("emergency_stop")]
+        if emergency:
+            raise RuntimeError(f"Emergency thermal stop in definitive batch {path}: {emergency}")
+        cooldown_started = sum(event == "cooldown_started" for event in events)
+        completed_rows = [row for row in rows if row["event"] == "cooldown_completed"]
+        if cooldown_started != len(completed_rows):
+            raise RuntimeError(
+                f"Unpaired thermal cooldown in {path}: starts={cooldown_started} "
+                f"completions={len(completed_rows)}"
+            )
+        temperatures = []
+        for row in rows:
+            for field in ("temperature_c", "peak_temperature_c"):
+                if field in row:
+                    temperatures.append(int(row[field]))
+        summaries.append(
+            {
+                "batch": batch,
+                "path": str(path.resolve()),
+                "sha256": _sha256(path),
+                "events": len(rows),
+                "cooldowns": len(completed_rows),
+                "cooldown_seconds": float(
+                    sum(float(row["cooldown_seconds"]) for row in completed_rows)
+                ),
+                "max_logged_temperature_c": max(temperatures) if temperatures else None,
+            }
+        )
+    return {
+        "status": "all_definitive_guard_lifecycles_complete_without_emergency_stop",
+        "batches": len(summaries),
+        "total_cooldowns": sum(row["cooldowns"] for row in summaries),
+        "total_cooldown_seconds": float(sum(row["cooldown_seconds"] for row in summaries)),
+        "max_logged_temperature_c": max(
+            (
+                row["max_logged_temperature_c"]
+                for row in summaries
+                if row["max_logged_temperature_c"] is not None
+            ),
+            default=None,
+        ),
+        "summaries": summaries,
     }
 
 
@@ -1223,6 +1292,7 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         f"- Fixed-observation probe conditions: **{len(probes['pi05']['manifest']['records'])} per model**.",
         f"- Cosmos semantically scored confirmation chunks: **{semantic['total_chunks']}** across **{semantic['total_episodes']} episodes**.",
         f"- Cosmos recorded prediction chunks with verified request/server seeds, step alignment, and shapes: **{compiled['integrity']['cosmos_prediction_chunks_validated']}**.",
+        f"- Completed thermal-guard lifecycles without emergency stop: **{compiled['integrity']['thermal_guard_logs_verified']}/{len(EXPECTED_THERMAL_LOGS)}**.",
         "- Calibration, command-probe, and run-manifest hashes were verified by the compilers.",
         "",
         "## Prospective evidence",
@@ -1245,6 +1315,7 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         "| GPU assignment audit | `../cosmos_gpu_assignment_audit.json` | Quantifies why cross-card Cosmos output was excluded |",
         "| Cosmos resource snapshot | `../operational_snapshot_cosmos_confirmation.json` | Temperatures, memory, utilization, and physical GPU roles during a valid WAM request |",
         "| pi0.5 resource snapshot | `../operational_snapshot_pi05_confirmation.json` | Temperatures, memory, utilization, and physical GPU roles during a valid VLA request |",
+        "| Thermal event logs | `../thermal_logs/*.jsonl` | Complete pause/resume lifecycle, cooldown duration, sampled peak, and emergency-stop audit for all eight definitive batches |",
         "| Raw file hash ledger | `raw_evidence_manifest.csv` | Byte size and SHA-256 for every prospective raw/derived evidence file |",
         "| Supporting hash ledger | `supporting_evidence_manifest.csv` | Calibration, exclusions, and separately labeled retrospective raw/derived evidence |",
         "| Setup exclusion | `../setup_exclusions/2026-08-02_cosmos_canonical_driver_check.md` | Failed startup with zero requests, excluded transparently |",
@@ -1331,6 +1402,7 @@ def main() -> None:
     run_manifest = _load(root / "run_manifest.json")
     observation_variation = _cosmos_observation_variation(run_manifest)
     physical_variation = _initial_physical_variation(closed)
+    thermal_control = _thermal_log_summary(root)
     raw_roots = [Path(condition["output_root"]) for condition in run_manifest["conditions"]]
     raw_roots.extend(
         [
@@ -1434,6 +1506,7 @@ def main() -> None:
                 "prediction_chunks_validated"
             ],
             "initial_physical_observations_audited": physical_variation["episodes"],
+            "thermal_guard_logs_verified": thermal_control["batches"],
         },
         "prospective": {
             "closed_loop": closed,
@@ -1458,6 +1531,7 @@ def main() -> None:
                 root / "cosmos_gpu_assignment_audit.json"
             ),
             "checkpoint_provenance": _load(root / "checkpoint_provenance.json"),
+            "thermal_control": thermal_control,
         },
         "provenance": {
             "files": {

@@ -40,6 +40,12 @@ from 0 to 255. The first value is the image column and the second is the row.
 The local command probe preserves raw source-image pixels for visual audit but
 serializes 0-to-255 coordinates in the model prompt.
 
+The appendix text is internally inconsistent about the origin: it describes a
+column measured from the left and a row measured from the top, then calls
+`[0,0]` the top-right corner. We use the conventional top-left origin implied
+by the first two definitions and retain the annotated source image so this
+choice is auditable.
+
 ## Local mapping
 
 | Paper concept | Local implementation | Alignment |

@@ -160,6 +160,24 @@ The models retain their native action horizons—15 for π0.5 and 32 for Cosmos�
 in every analyzed episode. This avoids introducing a horizon-five distribution
 shift merely to support a controller that is outside the revised question.
 
+```mermaid
+flowchart LR
+    S[Same neutral DROID state] --> P{Episode-static direct prompt}
+    P --> V[π0.5 VLA]
+    P --> W[Cosmos3 Edge WAM]
+    V --> A15[15-action chunk]
+    W --> A32[32-action chunk]
+    W --> F[33-frame imagined future]
+    A15 --> R[Closed-loop RoboLab]
+    A32 --> R
+    R --> O[Success · progression · endpoint · full path]
+    F --> Q[Prompt-blind visual localizer]
+    R --> X[Executed state at the same horizon]
+    Q --> C[Imagined relation]
+    X --> C
+    C --> G[Imagination/execution quadrant]
+```
+
 ## The registered study—and the disclosed scope change
 
 The original design was committed before confirmation inference. Its direct

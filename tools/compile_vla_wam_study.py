@@ -1233,6 +1233,7 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         "| Hierarchy amendment | `../hierarchy_amendment_001.json` | Correct 40-episode matched static/oracle arithmetic |",
         "| Metric amendment | `../metric_amendment_001.json` | Exact paper-style progression after primary-source verification |",
         "| Observation amendment | `../observation_variation_amendment_001.json` | Downgrades closed-loop action contrast after measured renderer variation |",
+        "| Thermal-control amendment | `../thermal_control_amendment_001.json` | Freezes pause/resume and emergency-stop behavior after the first matched-role thermal stop |",
         "| Grounded probe plan | `../command_probe_plan.json` | Hash-pinned observation, six command styles, controls, seed |",
         "| Closed-loop episode table | `episodes.csv` | One row per preregistered rollout |",
         "| Closed-loop summary | `closed_loop_summary.json` | Success, progression, offsets, timing, contrasts |",
@@ -1249,6 +1250,7 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         "| Setup exclusion | `../setup_exclusions/2026-08-02_cosmos_canonical_driver_check.md` | Failed startup with zero requests, excluded transparently |",
         "| Thermal exclusion | `../setup_exclusions/2026-08-02_cosmos_gpu0_thermal_restart.md` | Interrupted and cross-GPU batches preserved outside estimates |",
         "| Confirmation thermal exclusion | `../setup_exclusions/2026-08-02_cosmos_confirmation_thermal_stop.md` | Whole matched-role batch excluded after the simulator reached the 90 C stop threshold |",
+        "| Pre-guard wording exclusion | `../setup_exclusions/2026-08-02_cosmos_vague_pre_thermal_guard.md` | Completed short-paraphrase batch rerun so both wordings share one logged thermal cadence |",
         "",
         "## Figures",
         "",
@@ -1337,6 +1339,7 @@ def main() -> None:
             root / "command_probe/cosmos_gpu1_semantics",
             root / "semantic_confirmation/cosmos_canonical",
             root / "semantic_confirmation/cosmos_vague",
+            root / "thermal_logs",
         ]
     )
     output.mkdir(parents=True, exist_ok=True)
@@ -1351,13 +1354,14 @@ def main() -> None:
     raw_manifest = _write_raw_evidence_manifest(
         output / "raw_evidence_manifest.csv",
         raw_roots,
-        scope="All supported data, image, video, and documentation files under the eight definitive run roots plus prospective command-probe and semantic-scoring roots.",
+        scope="All supported data, image, video, documentation, and thermal-event files under the eight definitive run roots plus prospective command-probe, semantic-scoring, and thermal-log roots.",
     )
     supporting_roots = [
         Path("/home/ali/projects/RoboLab/output/v1_calibration_cosmos_left_5100"),
         Path("/home/ali/projects/RoboLab/output/v1_calibration_cosmos_right_5100"),
         Path("/home/ali/projects/RoboLab/output/v1_cosmos_canonical_original_hot_gpu0"),
         Path("/home/ali/projects/RoboLab/output/v1_cosmos_vague_interrupted_hot_gpu0"),
+        Path("/home/ali/projects/RoboLab/output/v1_cosmos_vague_pre_thermal_guard"),
         Path("/home/ali/projects/RoboLab/output/v1_cosmos_canonical_interrupted_thermal_gpu1roles"),
         root / "calibration_semantic_dry_run",
         root / "command_probe/cosmos",
@@ -1382,6 +1386,7 @@ def main() -> None:
         root / "hierarchy_amendment_001.json",
         root / "metric_amendment_001.json",
         root / "observation_variation_amendment_001.json",
+        root / "thermal_control_amendment_001.json",
         root / "command_probe_plan.json",
         root / "command_probe_amendment_001.json",
         root / "semantic_future_calibration.json",
@@ -1395,6 +1400,7 @@ def main() -> None:
         root / "setup_exclusions/2026-08-02_cosmos_canonical_driver_check.md",
         root / "setup_exclusions/2026-08-02_cosmos_gpu0_thermal_restart.md",
         root / "setup_exclusions/2026-08-02_cosmos_confirmation_thermal_stop.md",
+        root / "setup_exclusions/2026-08-02_cosmos_vague_pre_thermal_guard.md",
         workspace / "artifacts/wam_language_gate/summary.json",
         workspace / "docs/VLA_WAM_SHARED_BENCHMARK_V1.md",
         workspace / "docs/SEMANTIC_FUTURE_SCORER_V1.md",
@@ -1406,6 +1412,7 @@ def main() -> None:
         workspace / "tools/compare_command_probe_hardware.py",
         workspace / "tools/run_fixed_observation_command_probe.py",
         workspace / "tools/score_cosmos_semantic_futures.py",
+        workspace / "tools/thermal_guard.py",
         workspace / "tools/vla_wam_study_requirements.txt",
     ]
     compiled = {

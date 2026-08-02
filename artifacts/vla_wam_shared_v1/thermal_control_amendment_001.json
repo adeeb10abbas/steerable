@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "status": "frozen_before_thermal_guard_confirmation_reruns",
+  "frozen_at_utc": "2026-08-02T17:26:30Z",
+  "trigger": "The matched-role Cosmos canonical batch reached the preregistered 90 C simulator-card stop threshold and was excluded in full.",
+  "purpose": "Complete the local grid without weakening the 90 C safety stop or silently mixing different safety cadences.",
+  "guard": {
+    "simulator_physical_gpu": 0,
+    "pause_temperature_c": 87,
+    "resume_temperature_c": 80,
+    "emergency_stop_temperature_c": 90,
+    "poll_seconds": 0.5,
+    "mechanism": "docker pause/unpause of the named Isaac simulator container only",
+    "event_log": "One JSONL file per batch under artifacts/vla_wam_shared_v1/thermal_logs"
+  },
+  "scope": "All definitive closed-loop batches executed after this amendment, for both checkpoints and both static and hierarchy grids.",
+  "matched_static_consequence": "The previously completed Cosmos short-paraphrase batch is moved to supporting evidence and rerun from seed 6100 under this same active guard. The interrupted canonical batch remains excluded. Neither earlier batch enters prospective estimates.",
+  "invariants": [
+    "The guard does not advance simulated time while paused.",
+    "Task, reset state, model, prompt, policy request seed, action horizon, camera configuration, and GPU roles remain frozen.",
+    "The 90 C emergency threshold still stops and excludes the entire batch.",
+    "Every pause, resume, peak sampled temperature, and cooldown duration is logged.",
+    "Policy-request latency remains the inference comparison; episode wall time includes any cooling pause and is reported with that limitation."
+  ],
+  "claim_boundary": "A host pause can influence wall-clock-dependent realtime rendering. Exact byte-causal language claims therefore continue to come only from the fixed-observation probe; closed-loop task success remains the primary behavioral outcome."
+}

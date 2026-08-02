@@ -28,11 +28,26 @@ are pinned in the evidence package.
   the raw directory to an explicitly excluded name and restart from the first
   frozen seed after cooling; never pool a resumed suffix with the earlier
   prefix.
+- After the first matched-role thermal stop, every remaining definitive batch
+  runs with `tools/thermal_guard.py`: pause the named Isaac container at 87 C,
+  resume at 80 C, and still stop/exclude at 90 C. Preserve its JSONL log.
+  `thermal_control_amendment_001.json` freezes this post-stop safety cadence.
 
 Monitor both cards while a batch is live:
 
 ```bash
 watch -n 2 'nvidia-smi --query-gpu=index,temperature.gpu,fan.speed,utilization.gpu,memory.used,clocks_throttle_reasons.sw_thermal_slowdown,power.draw --format=csv,noheader'
+```
+
+Start the guard immediately after each named simulator container starts:
+
+```bash
+cd /home/ali/projects/steerable
+.venv/bin/python tools/thermal_guard.py \
+  --container <exact-container-name> --gpu-index 0 \
+  --pause-temperature-c 87 --resume-temperature-c 80 \
+  --emergency-stop-temperature-c 90 --poll-seconds 0.5 \
+  --output artifacts/vla_wam_shared_v1/thermal_logs/<batch>.jsonl
 ```
 
 ## Repositories and checkpoints

@@ -695,6 +695,125 @@ def score(args: argparse.Namespace) -> None:
     _json_dump(args.output_dir / "semantic_quadrants_summary.json", summary)
 
 
+def score_probe(args: argparse.Namespace) -> None:
+    """Apply the frozen prompt-blind future scorer to a fixed-observation probe."""
+    calibration = json.loads(args.calibration.read_text())
+    if calibration.get("status") != "frozen_calibration_only":
+        raise ValueError("Calibration is not frozen_calibration_only")
+    if tuple(calibration["frame_indices"]) != FRAME_INDICES:
+        raise ValueError("Frame-index mismatch between scorer and calibration")
+    if args.model_path.resolve() != Path(calibration["model_path"]).resolve():
+        raise ValueError(
+            f"Localizer model mismatch: calibration={calibration['model_path']} "
+            f"requested={args.model_path.resolve()}"
+        )
+    probe_manifest = json.loads((args.probe_dir / "manifest.json").read_text())
+    args.output_dir.mkdir(parents=True, exist_ok=True)
+    localizer: QwenLocalizer | None = None
+    rows = []
+    contact_rows = []
+    for record in probe_manifest["records"]:
+        condition = record["condition"]
+        video_path = args.probe_dir / f"{condition}_future.mp4"
+        if not video_path.exists():
+            raise FileNotFoundError(video_path)
+        frames = _read_rgb_frames(video_path, FRAME_INDICES)
+        if len(frames) != len(FRAME_INDICES):
+            raise RuntimeError(f"Missing scored frames in {video_path}")
+        cache_path = args.output_dir / "localization_cache" / f"{condition}.json"
+        if cache_path.exists() and not args.force:
+            frame_results = json.loads(cache_path.read_text())["frames"]
+            for item in frame_results:
+                item["semantics"] = _frame_semantics(item["localization"], calibration)
+        else:
+            if localizer is None:
+                localizer = QwenLocalizer(args.model_path)
+            frame_results = []
+            for frame_index in FRAME_INDICES:
+                panels = _bottom_camera_panels(frames[frame_index])
+                localization = {camera: localizer.locate(panels[camera]) for camera in CAMERAS}
+                frame_results.append(
+                    {
+                        "frame_index": frame_index,
+                        "localization": localization,
+                        "semantics": _frame_semantics(localization, calibration),
+                    }
+                )
+        _json_dump(
+            cache_path,
+            {
+                "calibration_sha256": _sha256(args.calibration),
+                "frame_indices": list(FRAME_INDICES),
+                "frames": frame_results,
+            },
+        )
+        reliable = [item for item in frame_results if item["semantics"]["reliable"]]
+        relation_counts = {
+            relation: sum(item["semantics"]["relation"] == relation for item in reliable)
+            for relation in ("left", "right", "neutral")
+        }
+        predicted_relation = None
+        if len(reliable) >= 2:
+            winner, count = max(relation_counts.items(), key=lambda item: item[1])
+            if count / len(reliable) >= 0.75:
+                predicted_relation = winner
+        try:
+            requested_relation = _request_direction(record["prompt"])
+        except ValueError:
+            requested_relation = None
+        requested_fraction = (
+            relation_counts[requested_relation] / len(reliable)
+            if requested_relation is not None and reliable
+            else None
+        )
+        if requested_relation is None or len(reliable) < 2:
+            imagined_requested = None
+        elif requested_fraction >= 0.75:
+            imagined_requested = True
+        elif requested_fraction <= 0.25:
+            imagined_requested = False
+        else:
+            imagined_requested = None
+        rows.append(
+            {
+                "condition": condition,
+                "style": record["style"],
+                "prompt": record["prompt"],
+                "requested_relation": requested_relation,
+                "predicted_relation": predicted_relation,
+                "imagined_requested": imagined_requested,
+                "reliable_future_frames": len(reliable),
+                "relation_counts": relation_counts,
+            }
+        )
+        contact_rows.append(_annotated_row(frames, frame_results, condition))
+        print(
+            f"probe {condition} predicted={predicted_relation} "
+            f"imagined_requested={imagined_requested}"
+        )
+
+    cv2.imwrite(
+        str(args.output_dir / "semantic_future_contact_sheet.jpg"),
+        np.concatenate(contact_rows, axis=0),
+    )
+    _json_dump(
+        args.output_dir / "semantic_future_summary.json",
+        {
+            "schema_version": 1,
+            "status": "fixed_observation_secondary_diagnostic",
+            "probe_manifest": str((args.probe_dir / "manifest.json").resolve()),
+            "probe_manifest_sha256": _sha256(args.probe_dir / "manifest.json"),
+            "calibration": str(args.calibration.resolve()),
+            "calibration_sha256": _sha256(args.calibration),
+            "conditions": len(rows),
+            "conditions_with_predicted_relation": sum(
+                row["predicted_relation"] is not None for row in rows
+            ),
+            "rows": rows,
+        },
+    )
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -710,6 +829,13 @@ def build_parser() -> argparse.ArgumentParser:
     scoring.add_argument("--output-dir", type=Path, required=True)
     scoring.add_argument("--force", action="store_true")
     scoring.set_defaults(func=score)
+    probe = subparsers.add_parser("score-probe")
+    probe.add_argument("--probe-dir", type=Path, required=True)
+    probe.add_argument("--model-path", type=Path, default=DEFAULT_MODEL)
+    probe.add_argument("--calibration", type=Path, required=True)
+    probe.add_argument("--output-dir", type=Path, required=True)
+    probe.add_argument("--force", action="store_true")
+    probe.set_defaults(func=score_probe)
     return parser
 
 

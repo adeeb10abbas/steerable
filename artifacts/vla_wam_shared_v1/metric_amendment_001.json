@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0.0",
+  "amendment_id": "vla_wam_shared_spatial_v1_metric_001",
+  "status": "source_correction_during_inference_before_final_analysis",
+  "registered_at_utc": "2026-08-02T15:40:08Z",
+  "reason": "Primary-source verification of Chen et al. Table III showed that the spatial task-progression rubric is (1) pick up the correct object and (2) put down the correct object in the correct location. The original preregistration operationalized item 2 as final spatial relation alone and therefore omitted the put-down requirement.",
+  "paper_aligned_progression": {
+    "item_1": "Correct Rubik's cube receives OBJECT_GRABBED_SUCCESS at least once; credit persists.",
+    "item_2": "RoboLab requested-side success predicate terminates true, which requires the final 45-degree relation and gripper detachment.",
+    "score": "(item_1 + item_2) / 2"
+  },
+  "declared_secondary_diagnostics": {
+    "relation_only_progression": "(persistent correct-cube pickup + final requested relation regardless of detachment) / 2",
+    "strict_ordered_progression": "pickup credit plus released requested-side completion after a post-pick relation transition"
+  },
+  "timing_and_bias_disclosure": "This correction was made after the Cosmos canonical run began and interim success fields existed, but before final compilation. It follows the paper text, tightens rather than relaxes the second item, changes no model input or stopping rule, and is reported as an amendment rather than represented as part of the original freeze.",
+  "paper_source": "Chen et al., arXiv:2602.13193, Table III and Appendix C: spatial rubric items are pick up correct object and put down correct object in correct location; rubric items need not be completed in order."
+}

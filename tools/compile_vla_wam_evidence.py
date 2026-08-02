@@ -164,8 +164,10 @@ def _load_episode(
         post_pick_transition = bool(np.any(relation[start:] & ~relation[start - 1 : -1]))
 
     picked = pickup_step is not None
-    paper_progression = (int(picked) + int(final_relation)) / 2.0
-    strict_completion = picked and final_relation and post_pick_transition
+    binary_success = bool(log["success"])
+    paper_progression = (int(picked) + int(binary_success)) / 2.0
+    relation_only_progression = (int(picked) + int(final_relation)) / 2.0
+    strict_completion = picked and binary_success and post_pick_transition
     strict_progression = (int(picked) + int(strict_completion)) / 2.0
     delta_y = float(cube[-1, 1] - bowl[-1, 1])
     requested_signed_offset = delta_y if direction == "left" else -delta_y
@@ -183,7 +185,7 @@ def _load_episode(
         "run": run,
         "episode_seed": seed,
         "valid": True,
-        "binary_success": bool(log["success"]),
+        "binary_success": binary_success,
         "steps": int(log["final_step"]),
         "correct_cube_interacted": interaction_step is not None,
         "first_interaction_step": interaction_step,
@@ -193,6 +195,7 @@ def _load_episode(
         "first_requested_relation_step": first_relation_step,
         "post_pick_relation_transition": post_pick_transition,
         "paper_progression": paper_progression,
+        "relation_only_progression": relation_only_progression,
         "strict_pick_then_place_progression": strict_progression,
         "final_cube_minus_bowl_y_m": delta_y,
         "requested_signed_final_offset_m": requested_signed_offset,
@@ -257,6 +260,9 @@ def _group_summary(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 "strict_completion_count": strict,
                 "mean_paper_progression": float(
                     np.mean([row["paper_progression"] for row in group])
+                ),
+                "mean_relation_only_progression": float(
+                    np.mean([row["relation_only_progression"] for row in group])
                 ),
                 "mean_strict_progression": float(
                     np.mean([row["strict_pick_then_place_progression"] for row in group])
@@ -383,7 +389,7 @@ def _markdown(summary: dict[str, Any]) -> str:
     lines.extend(
         [
             "",
-            "Paper progression is the mean of persistent correct-cube pickup credit and the final requested relation. Strict progression only credits placement after a post-pick relation transition.",
+            "Paper progression is the mean of persistent correct-cube pickup credit and released-object success in the requested location. Relation-only progress is retained in the machine-readable output as a secondary diagnostic. Strict progression additionally requires a post-pick relation transition.",
             "",
             "## Prompt effect versus sampling noise",
             "",
@@ -481,8 +487,13 @@ def main() -> None:
         "missing_episodes": missing,
         "initial_state_fingerprint_counts": dict(initial_fingerprints),
         "paper_progression_operationalization": (
-            "persistent correct-cube OBJECT_GRABBED_SUCCESS plus final requested 45-degree "
-            "relation; each item contributes one half"
+            "persistent correct-cube OBJECT_GRABBED_SUCCESS plus RoboLab requested-side "
+            "success, which requires the final 45-degree relation and gripper detachment; "
+            "each item contributes one half"
+        ),
+        "relation_only_progression_operationalization": (
+            "persistent correct-cube pickup plus final requested relation regardless of "
+            "gripper detachment; declared secondary diagnostic"
         ),
         "strict_progression_operationalization": (
             "pickup credit plus a requested-relation false-to-true transition after pickup "

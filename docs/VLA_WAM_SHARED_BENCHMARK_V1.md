@@ -45,14 +45,19 @@ seed, prompt, metric, or stopping rule changed.
 The paper-aligned outcomes are requested-goal success and final task
 progression. The two-item spatial rubric is:
 
-1. correct cube picked/interacted with at least once; this credit persists;
-2. requested left/right relation true at the end; this credit is revoked if
-   later undone.
+1. correct cube picked up at least once; this credit persists;
+2. correct cube put down in the requested left/right location.
+
+Primary-source verification during inference corrected item 2 to include the
+paper's explicit put-down requirement. The dated disclosure is in
+`artifacts/vla_wam_shared_v1/metric_amendment_001.json`. Relation satisfaction
+without release remains a secondary geometric diagnostic, not paper-aligned
+task progression.
 
 Every result is reported by model, wording, and direction with numerator,
-denominator, and a 95% Beta(1,1) posterior interval. A stricter diagnostic
-requires pickup before placement so that pushing across a relation boundary is
-not described as complete pick-and-place manipulation.
+denominator, and a 95% Beta(1,1) posterior interval. A stricter ordered
+diagnostic requires pickup before placement so that pushing across a relation
+boundary is not described as complete pick-and-place manipulation.
 
 ## WAM-only semantic outcome
 

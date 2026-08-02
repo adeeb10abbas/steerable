@@ -306,6 +306,16 @@ CUDA_VISIBLE_DEVICES=1 /home/ali/cosmos-framework/.venv/bin/python \
   --output-dir artifacts/vla_wam_shared_v1/command_probe/direct_task_cosmos_semantics
 ```
 
+After all four confirmation summaries exist, render the actual generated-video
+examples selected by the plan frozen before confirmation scoring:
+
+```bash
+.venv/bin/python tools/render_semantic_future_examples.py \
+  --study-root artifacts/vla_wam_shared_v1 \
+  --plan artifacts/vla_wam_shared_v1/semantic_future_visualization_plan.json \
+  --output artifacts/vla_wam_shared_v1/semantic_future_visualization
+```
+
 ## Fail-closed compilation
 
 Install the CPU-side evidence environment and run both compilers:
@@ -323,6 +333,11 @@ uv pip install --python .venv/bin/python \
   --manifest artifacts/vla_wam_shared_v1/run_manifest.json \
   --selection-plan artifacts/vla_wam_shared_v1/trajectory_visualization_plan.json \
   --output artifacts/vla_wam_shared_v1/trajectory_evidence
+
+.venv/bin/python tools/render_semantic_future_examples.py \
+  --study-root artifacts/vla_wam_shared_v1 \
+  --plan artifacts/vla_wam_shared_v1/semantic_future_visualization_plan.json \
+  --output artifacts/vla_wam_shared_v1/semantic_future_visualization
 
 .venv/bin/python tools/compile_vla_wam_study.py \
   --study-root artifacts/vla_wam_shared_v1 \

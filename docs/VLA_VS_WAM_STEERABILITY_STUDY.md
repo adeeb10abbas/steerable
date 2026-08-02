@@ -453,6 +453,15 @@ reacts to a subtask-form string.
 
 RESULT_TBD_SEMANTIC_TABLE
 
+The generated-video strips below are selected by a rule frozen before any
+confirmation semantic label: take the first eligible chunk in registered
+wording, direction, episode, and replan order for each category. Missing
+categories remain visibly empty. Cyan marks the prompt-blind cube localization;
+red marks the bowl. These examples explain the aggregate labels and are not
+additional independent trials.
+
+![Frozen-order generated-future examples for each imagination/execution category.](../artifacts/vla_wam_shared_v1/semantic_future_visualization/blog/selected_semantic_future_examples.png)
+
 ![Cosmos semantic imagination/execution quadrants.](../artifacts/vla_wam_shared_v1/final_evidence/cosmos_imagination_execution_quadrants.png)
 
 RESULT_TBD_SEMANTIC_INTERPRETATION
@@ -772,6 +781,8 @@ Key protocol files:
   contrastive word-order diagnostic;
 - `semantic_future_calibration.json`: every calibration point, threshold, and
   localizer response;
+- `semantic_future_visualization_plan.json`: frozen first-in-order example
+  selection before confirmation semantic scoring;
 - `semantic_target_parser_amendment_004.json`: target resolution from matched
   task identity for prompts containing both direction words;
 - `execution_geometry_amendment_005.json`: source-aligned root-pose geometry
@@ -785,6 +796,10 @@ Key implementation files:
 
 - `tools/compile_vla_wam_evidence.py`: fail-closed 160-episode compiler;
 - `tools/score_cosmos_semantic_futures.py`: frozen prompt-blind scorer;
+- `tools/run_vla_wam_semantic_confirmation.sh`: sequential GPU-1 scoring
+  driver with resumable localization caches and per-stage timing logs;
+- `tools/render_semantic_future_examples.py`: deterministic future-frame
+  strips and share-ready imagination/execution cards;
 - `tools/run_fixed_observation_command_probe.py`: shared command-style probe;
 - `tools/render_trajectory_evidence.py`: every-episode path renderer,
   machine-readable index, self-contained gallery, and social exports;

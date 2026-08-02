@@ -204,6 +204,68 @@ def _trajectory_evidence_summary(
     }
 
 
+def _semantic_visualization_summary(
+    root: Path, workspace: Path, expected_chunks: int
+) -> dict[str, Any]:
+    evidence_root = root / "semantic_future_visualization"
+    summary_path = evidence_root / "summary.json"
+    selection_path = evidence_root / "selection.json"
+    summary = _load(summary_path)
+    selection = _load(selection_path)
+    plan_path = root / "semantic_future_visualization_plan.json"
+    plan_sha = _sha256(plan_path)
+    if summary.get("status") != "complete":
+        raise RuntimeError("Semantic-future example visualization is not complete")
+    if summary.get("selection_plan_sha256") != plan_sha:
+        raise RuntimeError("Semantic-future visualization plan hash mismatch")
+    if selection.get("selection_plan_sha256") != plan_sha:
+        raise RuntimeError("Semantic-future selection record plan hash mismatch")
+    if int(summary.get("eligible_chunk_count", -1)) != expected_chunks:
+        raise RuntimeError("Semantic-future example population disagrees with scored chunks")
+    if int(selection.get("eligible_chunk_count", -1)) != expected_chunks:
+        raise RuntimeError("Semantic-future selection population disagrees with scored chunks")
+    if summary.get("selection_sha256") != _sha256(selection_path):
+        raise RuntimeError("Semantic-future selection hash mismatch")
+    expected_categories = {
+        "imagines_requested_executes_requested",
+        "imagines_requested_executes_not_requested",
+        "does_not_imagine_requested_executes_requested",
+        "neither_imagines_nor_executes_requested",
+        "uncertain_future",
+    }
+    if set(selection.get("categories", {})) != expected_categories:
+        raise RuntimeError("Semantic-future example category set is incomplete")
+    observed = sum(value is not None for value in selection["categories"].values())
+    if int(summary.get("observed_category_count", -1)) != observed:
+        raise RuntimeError("Semantic-future observed-category count mismatch")
+    blog = evidence_root / "blog/selected_semantic_future_examples.png"
+    landscape = evidence_root / "social/wam_semantic_quadrants_1600x900.png"
+    square = evidence_root / "social/wam_semantic_quadrants_1200x1200.png"
+    for path in (blog, landscape, square):
+        if not path.exists() or path.stat().st_size == 0:
+            raise FileNotFoundError(path)
+    landscape_image = cv2.imread(str(landscape))
+    square_image = cv2.imread(str(square))
+    if landscape_image is None or landscape_image.shape[:2] != (900, 1600):
+        raise RuntimeError("Semantic landscape social export is not 1600x900")
+    if square_image is None or square_image.shape[:2] != (1200, 1200):
+        raise RuntimeError("Semantic square social export is not 1200x1200")
+    return {
+        "status": summary["status"],
+        "eligible_chunk_count": summary["eligible_chunk_count"],
+        "observed_category_count": observed,
+        "selection_plan_sha256": plan_sha,
+        "selection_sha256": _sha256(selection_path),
+        "summary_sha256": _sha256(summary_path),
+        "categories": selection["categories"],
+        "artifacts": {
+            "blog": _relative(blog, workspace),
+            "landscape_social": _relative(landscape, workspace),
+            "square_social": _relative(square, workspace),
+        },
+    }
+
+
 def _repo_state(path: Path) -> dict[str, Any]:
     def run(*args: str) -> str:
         return subprocess.check_output(
@@ -1564,6 +1626,7 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
     probes = compiled["prospective"]["command_probe"]
     direct_probe = compiled["prospective"]["direct_task_command_probe"]
     trajectories = compiled["prospective"]["trajectory_evidence"]
+    semantic_visuals = compiled["prospective"]["semantic_future_visualization"]
     lines = [
         "# VLA-WAM study evidence index",
         "",
@@ -1580,6 +1643,7 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         f"- Fixed-observation probe conditions: **{len(probes['pi05']['manifest']['records'])} per model**.",
         f"- Exact direct-task prompt conditions: **{len(direct_probe['pi05']['manifest']['records'])}/{EXPECTED_DIRECT_TASK_PROBE_CONDITIONS} per model**.",
         f"- Cosmos semantically scored confirmation chunks: **{semantic['total_chunks']}** across **{semantic['total_episodes']} episodes**.",
+        f"- Frozen-order semantic categories rendered: **{semantic_visuals['observed_category_count']}/5 observed**; absent categories remain explicit empty panels.",
         f"- Cosmos recorded prediction chunks with verified request/server seeds, step alignment, and shapes: **{compiled['integrity']['cosmos_prediction_chunks_validated']}**.",
         f"- Completed thermal-guard lifecycles without emergency stop: **{compiled['integrity']['thermal_guard_logs_verified']}/{len(EXPECTED_THERMAL_LOGS)}**.",
         f"- Executed trajectory panels indexed: **{trajectories['rendered_episode_count']}/{EXPECTED_EPISODES}**, including **{trajectories['success_count']} successes** and **{trajectories['failure_count']} failures**.",
@@ -1598,6 +1662,7 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         "| Semantic target parser amendment | `../semantic_target_parser_amendment_004.json` | Uses matched task identity rather than interpreting contrastive prompt negation inside the visual scorer |",
         "| Execution geometry amendment | `../execution_geometry_amendment_005.json` | Aligns derived task/execution relations with RoboLab rigid-object root poses while preserving visual-centroid calibration |",
         "| Trajectory visualization plan | `../trajectory_visualization_plan.json` | Freezes complete-gallery, deterministic social-panel, and retrospective-exemplar rules |",
+        "| Semantic-future visualization plan | `../semantic_future_visualization_plan.json` | Freezes first-in-order example selection before confirmation semantic labels |",
         "| Grounded probe plan | `../command_probe_plan.json` | Hash-pinned observation, six command styles, controls, seed |",
         "| Direct-task probe plan | `../direct_task_command_probe_plan.json` | Exact-input syntax, contrastive scope, and target-token-order diagnostic |",
         "| Closed-loop episode table | `episodes.csv` | One row per registered direct-language rollout, with analysis tier |",
@@ -1605,6 +1670,7 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         "| Complete trajectory index | `../trajectory_evidence/trajectory_index.csv` and `.json` | Every success and failure with endpoint class, event steps, raw paths, and rendered panel |",
         "| Trajectory evidence gallery | `../trajectory_evidence/gallery/index.html` | Filterable visual audit of every registered episode |",
         "| Cosmos future semantics | `compiled_evidence.json` | Prompt-blind imagined/executed quadrants and coverage |",
+        "| Semantic-future examples | `../semantic_future_visualization/selection.json` | Deterministic source rows, videos, caches, and hashes for each observed quadrant |",
         "| Renderer variation audit | `cosmos_observation_variation.csv` | First-conditioning-image differences within and across static conditions |",
         "| Physical settling audit | `initial_physical_variation.csv` | Reset-state identity versus first-recorded cube/bowl centroid differences |",
         "| Human semantic audit | `../semantic_confirmation_audit_plan.json`, `../semantic_confirmation_audit_amendment_002.json`, and `../semantic_confirmation_audit.md` | Outcome-independent sheet samples and completed visual review |",
@@ -1634,6 +1700,8 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         "- `cosmos_conditioning_image_variation.png`: measured realtime-renderer variation despite exact physical resets.",
         "- `cosmos_imagination_execution_quadrants.png`: WAM-only semantic future/action agreement.",
         "- `semantic_threshold_sensitivity.png`: scorer coverage/agreement at 0.10, 0.15, and frozen 0.20 m reliability thresholds.",
+        "- `../semantic_future_visualization/blog/selected_semantic_future_examples.png`: frozen first-in-order generated-video strip for every observed semantic category.",
+        "- `../semantic_future_visualization/social/wam_semantic_quadrants_1600x900.png` and `...1200x1200.png`: share-ready actual-future examples for the four certain imagination/execution outcomes.",
         "- `command_probe_action_sensitivity.png`: same-observation six-style prompt response.",
         "- `direct_task_exact_probe.png`: same-input left/right and contrastive word-order action separation.",
         "- `command_probe_selected_futures.png`: selected Cosmos future strips with frozen prompt-blind relation labels.",
@@ -1745,6 +1813,9 @@ def main() -> None:
             raise RuntimeError(f"Semantic row geometry mismatch in {path}")
         semantic_inputs.append((wording, path.parent, summary))
     semantic = _semantic_aggregate(semantic_inputs)
+    semantic_visualization = _semantic_visualization_summary(
+        root, workspace, semantic["total_chunks"]
+    )
 
     observation_variation = _cosmos_observation_variation(run_manifest)
     physical_variation = _initial_physical_variation(closed)
@@ -1770,6 +1841,7 @@ def main() -> None:
             root / "trajectory_evidence/blog",
             root / "trajectory_evidence/social",
             root / "trajectory_evidence/gallery/index.html",
+            root / "semantic_future_visualization",
         ]
     )
     output.mkdir(parents=True, exist_ok=True)
@@ -1825,6 +1897,7 @@ def main() -> None:
         root / "direct_task_command_probe_plan.json",
         root / "command_probe_amendment_001.json",
         root / "semantic_future_calibration.json",
+        root / "semantic_future_visualization_plan.json",
         root / "semantic_target_parser_amendment_004.json",
         root / "execution_geometry_amendment_005.json",
         root / "trajectory_visualization_plan.json",
@@ -1853,6 +1926,7 @@ def main() -> None:
         workspace / "tools/compare_command_probe_hardware.py",
         workspace / "tools/run_fixed_observation_command_probe.py",
         workspace / "tools/score_cosmos_semantic_futures.py",
+        workspace / "tools/render_semantic_future_examples.py",
         workspace / "tools/run_vla_wam_semantic_confirmation.sh",
         workspace / "tools/thermal_guard.py",
         workspace / "tools/render_trajectory_evidence.py",
@@ -1892,6 +1966,7 @@ def main() -> None:
             "closed_loop": closed,
             "paired_diagnostics": _paired_diagnostics(closed["episodes"]),
             "cosmos_semantic_futures": semantic,
+            "semantic_future_visualization": semantic_visualization,
             "cosmos_observation_variation": observation_variation,
             "initial_physical_variation": physical_variation,
             "command_probe": probes,

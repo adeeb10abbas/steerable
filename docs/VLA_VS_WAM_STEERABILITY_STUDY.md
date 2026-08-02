@@ -2,6 +2,10 @@
 
 ## A matched VLA-versus-WAM study of direct language steerability
 
+*Ali Adeeb Abbas · Senior Scientist, General Motors*
+
+*Personal research analysis; views are my own.*
+
 *Evidence-backed draft, 2 August 2026. The `RESULT_TBD` markers are replaced
 only after the registered 160-episode direct-language grid and semantic audit
 complete.*
@@ -313,6 +317,45 @@ against a lucky termination event:
 ![Final offset toward the requested side.](../artifacts/vla_wam_shared_v1/final_evidence/direct_language_requested_side_offsets.png)
 
 RESULT_TBD_OFFSET_INTERPRETATION
+
+## From a score to a visible path
+
+A binary score says whether a rollout ended correctly. It does not show *how*
+the model failed. For every registered episode, I therefore transform the saved
+cube root pose into the robot frame, place the bowl at the origin, and draw the
+entire executed cube path. The page is deliberately intuitive: robot-left is
+left on the page and robot-right is right.
+
+The shaded 45-degree cone is the expected **goal region**. The dashed green
+arrow is only an illustrative direct route from the initial cube position to a
+fixed point inside that region. It is not an oracle trajectory, does not enter
+any metric, and is not the only valid route. The task permits any collision-free
+path that ends with the cube released inside the requested cone.
+
+The primary paired display uses the lowest registered stress seed for both
+checkpoints and both wordings. That deterministic rule is fixed across all four
+panels; it is not a best-looking-example search.
+
+![Same scene and seed under declarative and contrastive language.](../artifacts/vla_wam_shared_v1/trajectory_evidence/social/first_seed_stress_landscape_1600x900.png)
+
+The aggregate view then plots all 160 paths and endpoints. Successful LEFT and
+RIGHT trials keep distinct marker shapes; every failure remains a red ×. This
+is the visual antidote to a cherry-picked rollout montage.
+
+![Every executed path and endpoint.](../artifacts/vla_wam_shared_v1/trajectory_evidence/blog/all_executed_paths_and_endpoints.png)
+
+Finally, each episode receives one mutually exclusive terminal diagnosis:
+no cube interaction; interaction without a verified pickup; pickup without
+ever entering the goal; entry followed by losing the relation; ending in the
+goal without satisfying the terminal release predicate; or success. This turns
+“failure” into an actionable engineering description.
+
+![Failure and success anatomy.](../artifacts/vla_wam_shared_v1/trajectory_evidence/blog/failure_progress_anatomy.png)
+
+The [complete filterable gallery](../artifacts/vla_wam_shared_v1/trajectory_evidence/gallery/index.html)
+and its CSV/JSON index expose every seed, instruction, endpoint class, event
+step, source HDF5/log path, and rendered panel. Retrospective exemplars are
+explicitly labeled as such and carry no inferential weight.
 
 ### What the action contrast adds
 

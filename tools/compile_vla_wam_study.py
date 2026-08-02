@@ -1752,6 +1752,23 @@ def main() -> None:
     root = (workspace / args.study_root).resolve() if not args.study_root.is_absolute() else args.study_root.resolve()
     output = args.output_dir or (root / "final_evidence")
     output = output.resolve()
+    blog_path = workspace / "docs/VLA_VS_WAM_STEERABILITY_STUDY.md"
+    blog_text = blog_path.read_text()
+    if "RESULT_TBD" in blog_text:
+        raise RuntimeError(
+            "Publication draft still contains RESULT_TBD markers; resolve every claim "
+            "from the closed evidence before final compilation"
+        )
+    normalized_blog = " ".join(blog_text.split()).lower()
+    for required_boundary in (
+        "personal research analysis; views are my own.",
+        "one checkpoint cannot represent a whole model class.",
+        "study has no subtask coach",
+    ):
+        if required_boundary not in normalized_blog:
+            raise RuntimeError(
+                f"Publication draft is missing required claim boundary: {required_boundary!r}"
+            )
     run_manifest = _load(root / "run_manifest.json")
     if int(run_manifest["expected_episode_count"]) != EXPECTED_EPISODES:
         raise RuntimeError("Run-manifest episode count disagrees with the study compiler")

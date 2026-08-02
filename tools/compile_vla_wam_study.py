@@ -365,6 +365,28 @@ def _paired_diagnostics(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 f"{model_id}: declarative versus contrastive direct task language",
             )
         )
+        for wording in WORDINGS:
+            results.append(
+                _paired_exact(
+                    rows,
+                    {
+                        "model_id": model_id,
+                        "wording": wording,
+                        "controller": "static",
+                        "open_loop_horizon": horizon,
+                        "direction": "left",
+                    },
+                    {
+                        "model_id": model_id,
+                        "wording": wording,
+                        "controller": "static",
+                        "open_loop_horizon": horizon,
+                        "direction": "right",
+                    },
+                    ("episode_seed",),
+                    f"{model_id}: {wording} left versus right directional asymmetry",
+                )
+            )
     for wording in WORDINGS:
         for direction in ("left", "right"):
             results.append(

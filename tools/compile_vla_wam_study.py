@@ -830,8 +830,11 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         "| Cosmos future semantics | `compiled_evidence.json` | Prompt-blind imagined/executed quadrants and coverage |",
         "| Human semantic audit | `../semantic_confirmation_audit_plan.json` and `../semantic_confirmation_audit.md` | Outcome-independent sheet sample and completed visual review |",
         "| Command probes | `compiled_evidence.json` | Exact repeat, command sensitivity, semantic futures |",
+        "| GPU assignment audit | `../cosmos_gpu_assignment_audit.json` | Quantifies why cross-card Cosmos output was excluded |",
+        "| Confirmation resource snapshot | `../operational_snapshot_cosmos_confirmation.json` | Temperatures, memory, utilization, and physical GPU roles during a valid request |",
         "| Raw file hash ledger | `raw_evidence_manifest.csv` | Byte size and SHA-256 for every prospective raw/derived evidence file |",
         "| Setup exclusion | `../setup_exclusions/2026-08-02_cosmos_canonical_driver_check.md` | Failed startup with zero requests, excluded transparently |",
+        "| Thermal exclusion | `../setup_exclusions/2026-08-02_cosmos_gpu0_thermal_restart.md` | Interrupted and cross-GPU batches preserved outside estimates |",
         "",
         "## Figures",
         "",
@@ -933,10 +936,24 @@ def main() -> None:
         root / "command_probe_amendment_001.json",
         root / "semantic_future_calibration.json",
         root / "semantic_confirmation_audit_plan.json",
+        root / "semantic_confirmation_audit.md",
         root / "checkpoint_provenance.json",
+        root / "operational_snapshot_cosmos.json",
+        root / "operational_snapshot_cosmos_confirmation.json",
+        root / "cosmos_gpu_assignment_audit.json",
+        root / "setup_exclusions/2026-08-02_cosmos_canonical_driver_check.md",
+        root / "setup_exclusions/2026-08-02_cosmos_gpu0_thermal_restart.md",
+        workspace / "artifacts/wam_language_gate/summary.json",
         workspace / "docs/VLA_WAM_SHARED_BENCHMARK_V1.md",
         workspace / "docs/SEMANTIC_FUTURE_SCORER_V1.md",
         workspace / "docs/PAPER_PROTOCOL_ALIGNMENT.md",
+        workspace / "docs/VLA_WAM_LOCAL_RUNBOOK.md",
+        workspace / "docs/VLA_VS_WAM_STEERABILITY_STUDY.md",
+        workspace / "tools/compile_vla_wam_evidence.py",
+        workspace / "tools/compile_vla_wam_study.py",
+        workspace / "tools/run_fixed_observation_command_probe.py",
+        workspace / "tools/score_cosmos_semantic_futures.py",
+        workspace / "tools/vla_wam_study_requirements.txt",
     ]
     compiled = {
         "schema_version": 1,
@@ -958,7 +975,15 @@ def main() -> None:
         },
         "retrospective": _load((workspace / args.retrospective).resolve() if not args.retrospective.is_absolute() else args.retrospective),
         "operational": {
-            "cosmos_live_snapshot": _load(root / "operational_snapshot_cosmos.json"),
+            "cosmos_confirmation_snapshot": _load(
+                root / "operational_snapshot_cosmos_confirmation.json"
+            ),
+            "cosmos_excluded_initial_snapshot": _load(
+                root / "operational_snapshot_cosmos.json"
+            ),
+            "cosmos_gpu_assignment_audit": _load(
+                root / "cosmos_gpu_assignment_audit.json"
+            ),
             "checkpoint_provenance": _load(root / "checkpoint_provenance.json"),
         },
         "provenance": {

@@ -786,7 +786,7 @@ def _plot_selected_probe_futures(root: Path, probes: dict[str, Any], output: Pat
                 axis.set_title("conditioning" if frame_index == 0 else f"future frame {frame_index}")
             if column_index == 0:
                 axis.set_ylabel(f"{labels[condition]}\nsemantic: {relation}")
-    fig.suptitle("Same observation and seed: appearance changes without a one-chunk relation change")
+    fig.suptitle("Same observation and seed: selected Cosmos prompt-conditioned futures")
     fig.tight_layout()
     fig.savefig(output / "command_probe_selected_futures.png", bbox_inches="tight")
     plt.close(fig)
@@ -900,7 +900,7 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         "- `cosmos_imagination_execution_quadrants.png`: WAM-only semantic future/action agreement.",
         "- `semantic_threshold_sensitivity.png`: scorer coverage/agreement at 0.10, 0.15, and frozen 0.20 m reliability thresholds.",
         "- `command_probe_action_sensitivity.png`: same-observation six-style prompt response.",
-        "- `command_probe_selected_futures.png`: selected Cosmos future strips showing large appearance changes without a one-chunk cube/bowl relation change.",
+        "- `command_probe_selected_futures.png`: selected Cosmos future strips with frozen prompt-blind relation labels.",
         "",
         "## Retrospective evidence tier",
         "",

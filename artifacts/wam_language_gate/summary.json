@@ -21,6 +21,38 @@
     "observed_closed_loop_gpu_memory_gb": 10.0,
     "claim_limit": "One expert-valid bell/bread scene; scene transfer remains unmeasured."
   },
+  "paper_inspired_hierarchical_gate": {
+    "source": "Chen et al., Steerable Vision-Language-Action Policies for Embodied Reasoning and Hierarchical Control, arXiv:2602.13193",
+    "closed_loop_episodes": 42,
+    "task_directions": 2,
+    "sampling_seeds_per_direction": 3,
+    "switch_action": 25,
+    "exact_prefix_groups": 6,
+    "matched_groups": 6,
+    "static_native_successes": 6,
+    "static_native_trials": 6,
+    "static_counterfactual_successes": 2,
+    "static_counterfactual_trials": 6,
+    "after_grasp_full_task_successes": 3,
+    "after_grasp_full_task_trials": 6,
+    "after_grasp_subtask_successes": 2,
+    "after_grasp_subtask_trials": 6,
+    "after_grasp_atomic_successes": 0,
+    "after_grasp_atomic_trials": 6,
+    "after_grasp_combined_successes": 1,
+    "after_grasp_combined_trials": 6,
+    "combined_requested_side_reached": 4,
+    "combined_requested_side_trials": 6,
+    "same_direction_control_successes": 6,
+    "same_direction_control_trials": 6,
+    "native_right_to_left_full_task_successes": 3,
+    "native_right_to_left_full_task_trials": 3,
+    "native_left_to_right_full_task_successes": 0,
+    "native_left_to_right_full_task_trials": 3,
+    "adaptive_timer_oracle_pilot_successes": 0,
+    "adaptive_timer_oracle_pilot_trials": 2,
+    "interpretation": "The model can redirect an already-grasped object from an identical trajectory prefix, but control depends sharply on command abstraction and direction. A timed abstraction carousel is not a substitute for the paper's competent visual high-level reasoner."
+  },
   "fastwam": {
     "best_tested_text_cfg_scale": 2.0,
     "prompt_action_rms": 0.005320593983709472,
@@ -52,5 +84,5 @@
     "memory_fix": "Share one frozen VAE weight set across two independent streaming-cache wrappers.",
     "evaluation_fix": "Run one episode per subprocess because CuRobo CUDA-graph pools survive environment close."
   },
-  "claim": "Efficient-WAM-RT is a usable research WAM for matched language-steering experiments, not a generally reliable language controller."
+  "claim": "Efficient-WAM-RT is a usable research WAM for causal mid-rollout language interventions, not a generally reliable language controller."
 }

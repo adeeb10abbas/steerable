@@ -1,8 +1,9 @@
 # The first small world-action model that actually moved when the word changed
 
-Status: experiment-backed blog core. The default LingBot-VA gate is complete;
-the action-guidance intervention is running. Keep the distinction between
-directional evidence and successful counterfactual control explicit.
+Status: experiment-backed blog core. The static relation gate, LingBot-VA
+comparison, and paper-inspired mid-rollout command-style gate are complete.
+Keep the distinction between directional evidence and successful
+counterfactual control explicit.
 
 ## The story in one paragraph
 
@@ -11,7 +12,10 @@ not merely one that accepted a string argument. A fixed-observation heatmap
 made several models look alive, but a matched closed-loop test told a harsher
 story. Efficient-WAM became the first useful experimental organism: on one
 expert-valid scene, every left/right prompt swap shifted the endpoint in the
-requested direction and 2/6 counterfactuals cleanly succeeded. FastWAM then
+requested direction and 2/6 counterfactuals cleanly succeeded. A stronger
+after-grasp intervention then showed that the model can redirect an identical
+running trajectory, while exposing sharp command-style and directional
+asymmetries. FastWAM then
 revealed a real implementation bug—its advertised text CFG argument never
 reached inference—and repairing it exposed one valid but fragile
 counterfactual. LingBot-VA supplies the strongest semantic imagined-future
@@ -76,6 +80,45 @@ The earlier heatmap failed because pairwise pixel or action distance answers
 only the second question, and can be dominated by sampling noise, unrelated
 nouns, or video appearance.
 
+## The paper-inspired upgrade: change the command after the grasp
+
+[Chen et al.](https://arxiv.org/abs/2602.13193) train Steerable Policies on a
+mixture of task, subtask, atomic-motion, point/trace, and combined commands,
+then let a high-level oracle replace commands during execution. Efficient-WAM
+was not trained on their synthetic command mixture, so this is not a
+reproduction. It is a controlled test of how much of that interface the
+released WAM supports zero-shot.
+
+For each native task direction and each of three diffusion seeds, the robot
+starts under the native full-task prompt. At the first verified lifted-object,
+closed-gripper state, action 25, the unexecuted remainder of the action chunk is
+discarded and only the command changes. All five intervention conditions have
+a byte-identical action prefix within every matched task/seed group: **6/6
+prefix-integrity checks pass**.
+
+| After-grasp command | Strict counterfactual success | Requested side reached | Favorable shift vs native control |
+| --- | ---: | ---: | ---: |
+| Full task | 3/6 | 3/6 | 4/6 |
+| Subtask | 2/6 | 3/6 | 3/6 |
+| Atomic motion | 0/6 | 1/6 | 3/6 |
+| Combined motion + release | 1/6 | 4/6 | 5/6 |
+| Same-direction control | 6/6 | 6/6 | - |
+
+The crucial split is direction. Full-task intervention is **3/3** for native
+right to requested left, and **0/3** for native left to requested right. On the
+successful direction, changing to the counterfactual task only after grasp is
+actually more reliable than using it from the start (3/3 versus 2/3). This is
+stronger causal evidence than the static swap because the robot and model have
+the exact same physical history until the word-level intervention.
+
+The paper's other lesson also survives: abstraction matters. “Move left” can
+alter the trajectory without producing a valid placement, while a grounded
+combined command often reaches the requested side but does not reliably satisfy
+geometry and release. A timer-based controller that cycled abstractions every
+20 actions failed one pilot in each direction and pushed the scene off-manifold.
+Re-querying is not enough; the high-level reasoner must understand the scene and
+the low-level policy's affordances.
+
 ## Results so far
 
 ### Efficient-WAM (1B): the blog's core experimental model
@@ -107,8 +150,6 @@ to one expert-valid scene until a multi-scene expert-validation pass is run.
 
 The release accepted `text_cfg_scale` but never used it in action-only or joint
 inference. After implementing the missing positive/negative passes and moving
-UMT5 to CPU:
-
 - Best fixed-observation scale in the tested sweep: CFG 2.0.
 - Prompt action RMS: 0.00532; sampling RMS: 0.00793; ratio: 0.67.
 - One clean matched counterfactual on the native-left scene:
@@ -182,27 +223,34 @@ card demo.
 1. Open with the bad heatmap and the question it could not answer.
 2. Define the left/right matched intervention and the claim ladder.
 3. Show Efficient-WAM's 6/6 directional shifts and the clean successful pair.
-4. Trace FastWAM's unused CFG argument and show the repaired denoising path.
-5. Introduce LingBot's deterministic future-latent result.
-6. Put native and swapped rollouts side by side.
-7. Explain the VAE-sharing and process-isolation fixes.
-8. End with the honest result: Efficient-WAM is a usable research WAM, not a
+4. Upgrade the test: switch language at the verified grasp and show the
+   byte-identical trajectory prefix splitting by command abstraction.
+5. Trace FastWAM's unused CFG argument and show the repaired denoising path.
+6. Introduce LingBot's deterministic future-latent result.
+7. Put native and swapped rollouts side by side.
+8. Explain the VAE-sharing and process-isolation fixes.
+9. End with the honest result: Efficient-WAM is a usable research WAM, not a
    generally reliable language controller; LingBot is the stronger semantic
    comparison but currently slower and less successful under swaps.
-9. Next experiment: fine-tune on explicit paired relation counterfactuals and
-   evaluate across object, scene, and diffusion seeds.
+10. Next experiment: fine-tune on the paper's diverse synthetic steering
+    command styles plus explicit paired relation counterfactuals, then evaluate
+    across object, scene, and diffusion seeds.
 
 ## Figures to publish
 
 1. **The failed heatmap** — label it “sensitivity is not control.”
 2. **Claim ladder** — six levels from repeatability to robustness.
 3. **FastWAM CFG sweep** — prompt RMS and sampling RMS versus guidance.
-4. **LingBot imagined-future delta** — same observation, left/right predicted
+4. **Identical prefix, divergent trajectories** — action 25 intervention with
+   task, subtask, atomic, combined, and native-control curves.
+5. **Command-style endpoint grid** — strict successes and failures split by
+   native task direction.
+6. **LingBot imagined-future delta** — same observation, left/right predicted
    video, plus latent RMS.
-5. **Four rollout strips** — native-left, swapped-right, native-right,
+7. **Four rollout strips** — native-left, swapped-right, native-right,
    swapped-left at matched seeds.
-6. **Outcome plot** — final `(dx, dy)` overlaid on the valid left/right regions.
-7. **Memory diagram** — duplicate VAE weights versus shared weights and two
+8. **Outcome plot** — final `(dx, dy)` overlaid on the valid left/right regions.
+9. **Memory diagram** — duplicate VAE weights versus shared weights and two
    independent wrapper caches.
 
 ## Claim limits
@@ -213,6 +261,10 @@ card demo.
   without the action and closed-loop controls.
 - The current tests cover two relation tasks and one primary environment/model
   seed; they do not establish broad language grounding.
+- The paper-inspired intervention covers six matched task/diffusion groups but
+  still only one object/layout scene. Its 3/3 success is direction-specific.
+- Efficient-WAM was not trained with the paper's steering-command augmentation;
+  zero-shot command-style failures do not test the paper's trained method.
 - The FastWAM counterfactual is real but post-hoc hyperparameter selection and
   1/5 robustness make it a discovery result, not an estimate of success rate.
 - Report both CUDA allocator peak and driver-observed peak; the single-3090
@@ -226,5 +278,7 @@ card demo.
   `/home/ali/projects/FastWAM/experiments/robotwin_language_gate/`
 - Efficient-WAM matched gate:
   `/home/ali/projects/Efficient-WAM/experiments/robotwin_language_gate/`
+- Tracked hierarchical summary and blog figures:
+  `/home/ali/projects/steerable/artifacts/wam_language_gate/hierarchical/`
 - Full MP4/action/latent outputs are under each repository's ignored
   `outputs/robotwin_language_gate/` or `outputs/lingbot_language_gate/` tree.

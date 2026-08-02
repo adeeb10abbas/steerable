@@ -75,13 +75,19 @@ All RoboLab commands below run from `/home/ali/projects/RoboLab` in the same
 image and mounts:
 
 ```bash
-docker run --rm --runtime nvidia --gpus device=0 --net host \
+docker run --rm --name <exact-container-name> \
+  --runtime nvidia --gpus device=0 --net host \
   -v /home/ali/projects/RoboLab/.cache/ov:/root/.cache/ov \
   -v /home/ali/projects/RoboLab/.cache/kit:/isaac-sim/kit/cache \
   -v /home/ali/projects/RoboLab:/workspace/robolab \
   robolab:codex-steerability -lc \
   '<COMMAND> --kit_args=--/rtx/verifyDriverVersion/enabled=false'
 ```
+
+Use the batch names with hyphens as the container names (for example,
+`v1-cosmos-canonical` for output folder `v1_cosmos_canonical`). Start the
+matching guard as soon as Docker creates the container. The container name is
+part of the thermal evidence and must agree with the guard log.
 
 The version-check override is narrow. Host `nvidia-smi` reports driver
 535.309.01; Isaac's Vulkan parser incorrectly renders its three-digit minor as

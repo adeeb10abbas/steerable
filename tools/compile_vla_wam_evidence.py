@@ -104,7 +104,10 @@ def _load_result_index(root: Path) -> dict[tuple[str, int], dict[str, Any]]:
         if not line.strip():
             continue
         value = json.loads(line)
-        index[(value["env_name"], int(value["run"]))] = value
+        key = (value["env_name"], int(value["run"]))
+        if key in index:
+            raise RuntimeError(f"Duplicate episode_results record for {key} in {path}")
+        index[key] = value
     return index
 
 
@@ -450,6 +453,16 @@ def main() -> None:
     initial_fingerprints: dict[str, int] = Counter()
     for condition in manifest["conditions"]:
         result_index = _load_result_index(Path(condition["output_root"]))
+        expected_result_keys = {
+            (task, run)
+            for task in TASKS.values()
+            for run in range(len(condition["episode_seeds"]))
+        }
+        extra_result_keys = sorted(set(result_index) - expected_result_keys)
+        if extra_result_keys:
+            raise RuntimeError(
+                f"Unexpected completed episodes in {condition['id']}: {extra_result_keys}"
+            )
         for direction in TASKS:
             for run, seed in enumerate(condition["episode_seeds"]):
                 try:

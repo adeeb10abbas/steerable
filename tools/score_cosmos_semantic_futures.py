@@ -207,7 +207,17 @@ def _episode_hdf(task_dir: Path, episode_index: int) -> Path:
 
 def _episode_state(task_dir: Path, episode_index: int) -> dict[str, np.ndarray]:
     with h5py.File(_episode_hdf(task_dir, episode_index), "r") as handle:
-        demo = handle["data"][f"demo_{episode_index}"]
+        # RoboLab writes one HDF5 file per run and numbers the sole trajectory
+        # locally as demo_0. The run index belongs in the filename, not the
+        # group name. Calibration covered only run 0, so enforce the on-disk
+        # invariant explicitly before scoring the multi-run confirmation grid.
+        demo_names = list(handle["data"])
+        if demo_names != ["demo_0"]:
+            raise RuntimeError(
+                f"Expected one per-run trajectory named demo_0 in {handle.filename}; "
+                f"found {demo_names}"
+            )
+        demo = handle["data/demo_0"]
         return {
             "cube": np.asarray(demo["bbox/centroid/rubiks_cube"], dtype=np.float64),
             "bowl": np.asarray(demo["bbox/centroid/bowl"], dtype=np.float64),

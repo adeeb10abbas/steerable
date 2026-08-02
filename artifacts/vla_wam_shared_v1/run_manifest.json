@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0.0",
+  "status": "executable_mapping_of_preregistered_grid",
+  "note": "This file maps the already-preregistered conditions to local output directories. It was created after the Cosmos canonical batch began and is not itself the prospective registration; preregistration.json and hierarchy_amendment_001.json are authoritative.",
+  "preregistration": "artifacts/vla_wam_shared_v1/preregistration.json",
+  "hierarchy_amendment": "artifacts/vla_wam_shared_v1/hierarchy_amendment_001.json",
+  "conditions": [
+    {
+      "id": "pi05_canonical_static15",
+      "model_id": "pi05_droid_vla",
+      "model_class": "VLA",
+      "wording": "canonical",
+      "controller": "static",
+      "open_loop_horizon": 15,
+      "output_root": "/home/ali/projects/RoboLab/output/v1_pi05_canonical",
+      "episode_seeds": [6100, 6101, 6102, 6103, 6104, 6105, 6106, 6107, 6108, 6109]
+    },
+    {
+      "id": "pi05_short_static15",
+      "model_id": "pi05_droid_vla",
+      "model_class": "VLA",
+      "wording": "short_paraphrase",
+      "controller": "static",
+      "open_loop_horizon": 15,
+      "output_root": "/home/ali/projects/RoboLab/output/v1_pi05_vague",
+      "episode_seeds": [6100, 6101, 6102, 6103, 6104, 6105, 6106, 6107, 6108, 6109]
+    },
+    {
+      "id": "cosmos_canonical_static32",
+      "model_id": "cosmos3_edge_droid_wam",
+      "model_class": "WAM",
+      "wording": "canonical",
+      "controller": "static",
+      "open_loop_horizon": 32,
+      "output_root": "/home/ali/projects/RoboLab/output/v1_cosmos_canonical",
+      "episode_seeds": [6100, 6101, 6102, 6103, 6104, 6105, 6106, 6107, 6108, 6109]
+    },
+    {
+      "id": "cosmos_short_static32",
+      "model_id": "cosmos3_edge_droid_wam",
+      "model_class": "WAM",
+      "wording": "short_paraphrase",
+      "controller": "static",
+      "open_loop_horizon": 32,
+      "output_root": "/home/ali/projects/RoboLab/output/v1_cosmos_vague",
+      "episode_seeds": [6100, 6101, 6102, 6103, 6104, 6105, 6106, 6107, 6108, 6109]
+    },
+    {
+      "id": "pi05_canonical_static5",
+      "model_id": "pi05_droid_vla",
+      "model_class": "VLA",
+      "wording": "canonical",
+      "controller": "static",
+      "open_loop_horizon": 5,
+      "output_root": "/home/ali/projects/RoboLab/output/v1_pi05_h5_static",
+      "episode_seeds": [7100, 7101, 7102, 7103, 7104]
+    },
+    {
+      "id": "pi05_canonical_oracle5",
+      "model_id": "pi05_droid_vla",
+      "model_class": "VLA",
+      "wording": "canonical",
+      "controller": "predicate_oracle",
+      "open_loop_horizon": 5,
+      "output_root": "/home/ali/projects/RoboLab/output/v1_pi05_h5_oracle",
+      "episode_seeds": [7100, 7101, 7102, 7103, 7104]
+    },
+    {
+      "id": "cosmos_canonical_static5",
+      "model_id": "cosmos3_edge_droid_wam",
+      "model_class": "WAM",
+      "wording": "canonical",
+      "controller": "static",
+      "open_loop_horizon": 5,
+      "output_root": "/home/ali/projects/RoboLab/output/v1_cosmos_h5_static",
+      "episode_seeds": [7100, 7101, 7102, 7103, 7104]
+    },
+    {
+      "id": "cosmos_canonical_oracle5",
+      "model_id": "cosmos3_edge_droid_wam",
+      "model_class": "WAM",
+      "wording": "canonical",
+      "controller": "predicate_oracle",
+      "open_loop_horizon": 5,
+      "output_root": "/home/ali/projects/RoboLab/output/v1_cosmos_h5_oracle",
+      "episode_seeds": [7100, 7101, 7102, 7103, 7104]
+    }
+  ]
+}

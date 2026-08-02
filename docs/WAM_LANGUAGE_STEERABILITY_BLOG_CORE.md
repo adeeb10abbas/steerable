@@ -1,5 +1,10 @@
 # The first small world-action model that actually moved when the word changed
 
+> **Historical exploratory artifact.** This WAM-only narrative includes
+> coached and mid-rollout experiments that are not part of the current study.
+> The analyzed oracle-free VLA/WAM comparison is
+> [VLA_VS_WAM_STEERABILITY_STUDY.md](VLA_VS_WAM_STEERABILITY_STUDY.md).
+
 Status: experiment-backed blog core. The static relation gate, LingBot-VA
 comparison, and paper-inspired mid-rollout command-style gate are complete.
 Keep the distinction between directional evidence and successful

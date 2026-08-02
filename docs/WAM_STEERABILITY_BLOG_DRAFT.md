@@ -1,5 +1,10 @@
 # Does the world model listen?
 
+> **Historical exploratory draft.** Its coached and hierarchical material is
+> retained as provenance, not analyzed evidence. The current direct-language,
+> oracle-free study is
+> [VLA_VS_WAM_STEERABILITY_STUDY.md](VLA_VS_WAM_STEERABILITY_STUDY.md).
+
 ## A matched VLA-versus-WAM stress test of language steerability
 
 *Draft, 2 August 2026. Results are pilots unless a larger evidence tier is

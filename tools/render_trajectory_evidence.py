@@ -1160,15 +1160,53 @@ def _render_social_scorecard(episodes: list[Episode], output: Path, *, square: b
 
 
 def _render_gallery(path: Path, rows: list[dict[str, Any]], summary: dict[str, Any]) -> None:
+    def svg_point(point: list[float]) -> tuple[float, float]:
+        lateral, forward = point
+        x = (float(lateral) + LATERAL_LIMIT_M) / (2 * LATERAL_LIMIT_M) * 360.0
+        y = (FORWARD_MAX_M - float(forward)) / (FORWARD_MAX_M - FORWARD_MIN_M) * 240.0
+        return x, y
+
+    bowl_x, bowl_y = svg_point([0.0, 0.0])
+
+    def episode_svg(row: dict[str, Any], outcome: str) -> str:
+        points = [svg_point(point) for point in row["downsampled_plot_path_lateral_forward_m"]]
+        polyline = " ".join(f"{x:.1f},{y:.1f}" for x, y in points)
+        start_x, start_y = points[0]
+        final_x, final_y = points[-1]
+        anchor_x, anchor_y = svg_point(
+            [-DIRECT_GOAL_M if row["direction"] == "left" else DIRECT_GOAL_M, 0.0]
+        )
+        left_triangle = f"{bowl_x:.1f},{bowl_y:.1f} 0,0 0,240"
+        right_triangle = f"{bowl_x:.1f},{bowl_y:.1f} 360,0 360,240"
+        target_triangle, opposite_triangle = (
+            (left_triangle, right_triangle)
+            if row["direction"] == "left"
+            else (right_triangle, left_triangle)
+        )
+        status_class = "end-success" if outcome == "success" else "end-failure"
+        accessible = html.escape(
+            f"{outcome} path, {row['instruction']}, seed {row['episode_seed']}; "
+            f"final {row['endpoint_class'].replace('_', ' ')}"
+        )
+        return f'''<svg class="plot" viewBox="0 0 360 240" role="img" aria-label="{accessible}">
+  <title>{accessible}</title>
+  <polygon class="target" points="{target_triangle}"/><polygon class="opposite" points="{opposite_triangle}"/>
+  <line class="axis" x1="0" y1="{bowl_y:.1f}" x2="360" y2="{bowl_y:.1f}"/><line class="axis" x1="{bowl_x:.1f}" y1="0" x2="{bowl_x:.1f}" y2="240"/>
+  <line class="expected" x1="{start_x:.1f}" y1="{start_y:.1f}" x2="{anchor_x:.1f}" y2="{anchor_y:.1f}"/>
+  <polyline class="actual" points="{polyline}"/>
+  <circle class="start" cx="{start_x:.1f}" cy="{start_y:.1f}" r="4"/><circle class="bowl" cx="{bowl_x:.1f}" cy="{bowl_y:.1f}" r="6"/>
+  <text class="endpoint {status_class}" x="{final_x:.1f}" y="{final_y + 5:.1f}" text-anchor="middle">★</text>
+  <text class="side-label" x="8" y="16">LEFT</text><text class="side-label" x="352" y="16" text-anchor="end">RIGHT</text>
+</svg>'''
+
     cards = []
     for row in rows:
-        relative_image = Path("..") / "episodes" / Path(row["figure_path"]).name
         outcome = "success" if row["binary_success"] else "failure"
         stage = row["outcome_stage"]
         cards.append(
             f'''<article class="episode" data-model="{html.escape(row['model_id'])}" data-wording="{html.escape(row['wording'])}" data-direction="{row['direction']}" data-outcome="{outcome}" data-stage="{stage}">
-  <a href="{html.escape(str(relative_image))}"><img loading="lazy" src="{html.escape(str(relative_image))}" alt="{html.escape(outcome)} trajectory for {html.escape(row['instruction'])}, seed {row['episode_seed']}"></a>
-  <div class="meta"><strong>{outcome.upper()}</strong> · {html.escape(row['outcome_stage_label'])} · {html.escape(MODEL_LABELS[row['model_id']])} · {html.escape(WORDING_LABELS[row['wording']])} · {row['direction'].upper()} · seed {row['episode_seed']}</div>
+  {episode_svg(row, outcome)}
+  <div class="meta"><strong>{outcome.upper()}</strong> · {html.escape(row['outcome_stage_label'])}<br>{html.escape(MODEL_LABELS[row['model_id']])} · {html.escape(WORDING_LABELS[row['wording']])} · {row['direction'].upper()} · seed {row['episode_seed']}<br><span>“{html.escape(row['instruction'])}”</span></div>
 </article>'''
         )
     document = f'''<!doctype html>
@@ -1185,7 +1223,7 @@ header{{max-width:1500px;margin:auto;padding:42px 28px 24px}} h1{{font-size:clam
 .controls{{position:sticky;top:0;z-index:20;background:rgba(251,252,253,.96);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:12px 28px;display:flex;gap:10px;flex-wrap:wrap}}
 select{{font:inherit;color:var(--ink);background:white;border:1px solid var(--line);border-radius:999px;padding:8px 34px 8px 12px}}
 main{{max-width:1500px;margin:auto;padding:24px 28px 80px;display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:18px}}
-.episode{{background:white;border:1px solid var(--line);border-radius:14px;overflow:hidden}} .episode img{{display:block;width:100%;height:auto}} .meta{{border-top:1px solid var(--line);padding:11px 13px;color:var(--muted);font-size:12px;line-height:1.45}} .episode[data-outcome="success"] strong{{color:var(--success)}} .episode[data-outcome="failure"] strong{{color:var(--failure)}}
+.episode{{background:white;border:1px solid var(--line);border-radius:14px;overflow:hidden}} .plot{{display:block;width:100%;height:auto;background:#fbfcfd}} .target{{fill:#ddf3ea}} .opposite{{fill:#f8e3e3}} .axis{{stroke:#d8e0e5;stroke-width:.7}} .expected{{stroke:#1f9d78;stroke-width:1.4;stroke-dasharray:5 4}} .actual{{fill:none;stroke:#153f57;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}} .start{{fill:white;stroke:#142b3a;stroke-width:1.2}} .bowl{{fill:#e7b96d;stroke:#142b3a;stroke-width:1}} .endpoint{{font-size:18px;font-weight:500;paint-order:stroke;stroke:white;stroke-width:2px}} .end-success{{fill:#17845f}} .end-failure{{fill:#c84b4b}} .side-label{{fill:#667785;font-size:9px;font-weight:500}} .meta{{border-top:1px solid var(--line);padding:11px 13px;color:var(--muted);font-size:12px;line-height:1.45}} .meta span{{color:var(--ink)}} .episode[data-outcome="success"] strong{{color:var(--success)}} .episode[data-outcome="failure"] strong{{color:var(--failure)}}
 .hidden{{display:none}} footer{{max-width:1500px;margin:auto;padding:0 28px 40px;color:var(--muted);font-size:12px}}
 @media(max-width:520px){{header{{padding:28px 16px 18px}}.controls{{padding:10px 16px}}main{{padding:18px 16px 60px;grid-template-columns:1fr}}}}
 </style>
@@ -1193,7 +1231,7 @@ main{{max-width:1500px;margin:auto;padding:24px 28px 80px;display:grid;grid-temp
 <body>
 <header>
   <h1>Steerability, path by path.</h1>
-  <p>Every completed oracle-free episode is included. The translucent cone is the scored requested side. The dashed green arrow is only an illustrative direct route: RoboLab does not require one canonical path. The dark line is the executed cube path; the star is its final endpoint.</p>
+  <p>Every completed oracle-free episode is included. The translucent cone is the scored requested side. The dashed green line is only an illustrative direct route: RoboLab does not require one canonical path. The dark line is the executed cube path; the star is its final endpoint.</p>
   <div class="stats"><div class="stat"><b>{summary['rendered_episode_count']}</b><span>rendered episodes</span></div><div class="stat"><b>{summary['success_count']}</b><span>successes</span></div><div class="stat"><b>{summary['failure_count']}</b><span>failures</span></div></div>
 </header>
 <div class="controls" aria-label="Gallery filters">

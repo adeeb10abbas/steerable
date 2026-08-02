@@ -616,7 +616,12 @@ def _plot_semantic_threshold_sensitivity(semantic: dict[str, Any], output: Path)
         )
         axes[1].plot(
             x,
-            [row["imagination_execution_agreement_among_certain"] for row in selected],
+            [
+                row["imagination_execution_agreement_among_certain"]
+                if row["imagination_execution_agreement_among_certain"] is not None
+                else np.nan
+                for row in selected
+            ],
             marker="o",
             color=colors[direction],
             linestyle=styles[wording],

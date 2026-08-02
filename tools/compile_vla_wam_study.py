@@ -257,11 +257,88 @@ def _probe_summary(
     return result
 
 
-def _semantic_aggregate(summaries: list[tuple[str, dict[str, Any]]]) -> dict[str, Any]:
+def _chunk_imagined_at_threshold(
+    cache: dict[str, Any], requested: str, threshold_m: float
+) -> bool | None:
+    relations = []
+    for frame in cache["frames"]:
+        semantics = frame["semantics"]
+        by_camera = semantics.get("relations_by_camera", {})
+        disagreements = semantics.get("cross_camera_disagreement_m", {})
+        camera_relations = [by_camera.get(name) for name in ("left_camera", "right_camera")]
+        reliable = (
+            None not in camera_relations
+            and camera_relations[0] == camera_relations[1]
+            and disagreements.get("cube", math.inf) <= threshold_m
+            and disagreements.get("bowl", math.inf) <= threshold_m
+        )
+        if reliable:
+            relations.append(camera_relations[0])
+    if len(relations) < 2:
+        return None
+    fraction = sum(relation == requested for relation in relations) / len(relations)
+    if fraction >= 0.75:
+        return True
+    if fraction <= 0.25:
+        return False
+    return None
+
+
+def _semantic_threshold_sensitivity(
+    summaries: list[tuple[str, Path, dict[str, Any]]]
+) -> list[dict[str, Any]]:
+    output = []
+    for threshold_m in (0.10, 0.15, 0.20):
+        grouped: dict[tuple[str, str], list[tuple[bool | None, bool]]] = defaultdict(list)
+        for wording, directory, summary in summaries:
+            for row in summary["rows"]:
+                task_dir = Path(row["task_dir"])
+                task_key = f"{task_dir.parent.name}__{task_dir.name}"
+                cache_path = (
+                    directory
+                    / "localization_cache"
+                    / task_key
+                    / f"episode_{row['episode_index']:03d}_chunk_{row['replan_index']:03d}.json"
+                )
+                cache = _load(cache_path)
+                imagined = _chunk_imagined_at_threshold(
+                    cache, row["requested_relation"], threshold_m
+                )
+                if math.isclose(threshold_m, 0.20) and imagined != row["imagined_requested"]:
+                    raise RuntimeError(f"Threshold replay disagrees with frozen label: {cache_path}")
+                grouped[(wording, row["requested_relation"])].append(
+                    (imagined, bool(row["executed_requested"]))
+                )
+        for (wording, direction), pairs in sorted(grouped.items()):
+            certain = [pair for pair in pairs if pair[0] is not None]
+            output.append(
+                {
+                    "cross_camera_threshold_m": threshold_m,
+                    "wording": wording,
+                    "direction": direction,
+                    "chunks": len(pairs),
+                    "certain_chunks": len(certain),
+                    "coverage_fraction": len(certain) / len(pairs),
+                    "imagined_requested_rate_among_certain": (
+                        sum(bool(pair[0]) for pair in certain) / len(certain)
+                        if certain
+                        else None
+                    ),
+                    "imagination_execution_agreement_among_certain": (
+                        sum(pair[0] == pair[1] for pair in certain) / len(certain)
+                        if certain
+                        else None
+                    ),
+                }
+            )
+    return output
+
+
+def _semantic_aggregate(summaries: list[tuple[str, Path, dict[str, Any]]]) -> dict[str, Any]:
     groups: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
     all_rows = []
     input_summaries = []
-    for wording, summary in summaries:
+    for wording, directory, summary in summaries:
         input_summaries.append(
             {
                 "wording": wording,
@@ -310,6 +387,7 @@ def _semantic_aggregate(summaries: list[tuple[str, dict[str, Any]]]) -> dict[str
         "total_chunks": len(all_rows),
         "total_episodes": len({(row["task_dir"], row["episode_index"]) for row in all_rows}),
         "guardrail": "Chunk rates are descriptive and receive no binomial interval because replans within an episode are correlated.",
+        "threshold_sensitivity": _semantic_threshold_sensitivity(summaries),
         "groups": grouped,
         "rows": all_rows,
     }
@@ -668,7 +746,7 @@ def main() -> None:
         summary = _load(path)
         if summary["calibration_sha256"] != calibration_sha:
             raise RuntimeError(f"Semantic calibration hash mismatch in {path}")
-        semantic_inputs.append((wording, summary))
+        semantic_inputs.append((wording, path.parent, summary))
     semantic = _semantic_aggregate(semantic_inputs)
 
     core_files = [
@@ -728,6 +806,10 @@ def main() -> None:
     _plot_probe(probes, output)
     _dump(output / "compiled_evidence.json", compiled)
     _write_summary_csv(output / "semantic_future_groups.csv", semantic["groups"])
+    _write_summary_csv(
+        output / "semantic_threshold_sensitivity.csv",
+        semantic["threshold_sensitivity"],
+    )
     _write_summary_csv(output / "paired_diagnostics.csv", compiled["prospective"]["paired_diagnostics"])
     (output / "EVIDENCE_INDEX.md").write_text(_evidence_markdown(compiled, root))
     print(

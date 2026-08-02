@@ -1853,6 +1853,7 @@ def main() -> None:
         workspace / "tools/compare_command_probe_hardware.py",
         workspace / "tools/run_fixed_observation_command_probe.py",
         workspace / "tools/score_cosmos_semantic_futures.py",
+        workspace / "tools/run_vla_wam_semantic_confirmation.sh",
         workspace / "tools/thermal_guard.py",
         workspace / "tools/render_trajectory_evidence.py",
         workspace / "tools/vla_wam_study_requirements.txt",

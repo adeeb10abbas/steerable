@@ -248,6 +248,17 @@ Stop both policy and Isaac processes before loading Qwen on physical GPU 1.
 The calibration file is immutable. Score all four Cosmos direct-language
 batches and the fixed-observation probe:
 
+The checked-in driver below runs the six commands sequentially, preserves
+per-stage stdout and `/usr/bin/time -v` evidence, and safely reuses only the
+prompt-blind localization caches after an interruption:
+
+```bash
+cd /home/ali/projects/steerable
+bash tools/run_vla_wam_semantic_confirmation.sh
+```
+
+The equivalent expanded commands are retained below for inspection:
+
 ```bash
 cd /home/ali/projects/steerable
 CUDA_VISIBLE_DEVICES=1 /home/ali/cosmos-framework/.venv/bin/python \

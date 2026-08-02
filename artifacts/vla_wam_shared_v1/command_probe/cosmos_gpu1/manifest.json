@@ -27,6 +27,7 @@
         3
       ],
       "prompt": "Put the rubiks cube to the left of the bowl",
+      "request_wall_seconds": 5.525160523946397,
       "requested_sampling_seed": 8100000,
       "server_sampling_seed": 8100000,
       "style": "task"
@@ -50,6 +51,7 @@
         3
       ],
       "prompt": "Put the rubiks cube to the left of the bowl",
+      "request_wall_seconds": 5.5026359430048615,
       "requested_sampling_seed": 8100000,
       "server_sampling_seed": 8100000,
       "style": "exact_repeat_control"
@@ -73,6 +75,7 @@
         3
       ],
       "prompt": "Place the multicolored cube on the table on the bowl's left side",
+      "request_wall_seconds": 5.485294139012694,
       "requested_sampling_seed": 8100000,
       "server_sampling_seed": 8100000,
       "style": "paraphrase_control"
@@ -96,6 +99,7 @@
         3
       ],
       "prompt": "Put the rubiks cube to the right of the bowl",
+      "request_wall_seconds": 5.501944808987901,
       "requested_sampling_seed": 8100000,
       "server_sampling_seed": 8100000,
       "style": "opposite_relation_control"
@@ -119,6 +123,7 @@
         3
       ],
       "prompt": "Reach for and firmly grasp the rubiks cube",
+      "request_wall_seconds": 5.507608282961883,
       "requested_sampling_seed": 8100000,
       "server_sampling_seed": 8100000,
       "style": "subtask"
@@ -142,6 +147,7 @@
         3
       ],
       "prompt": "Move the gripper left",
+      "request_wall_seconds": 5.5048340550856665,
       "requested_sampling_seed": 8100000,
       "server_sampling_seed": 8100000,
       "style": "atomic_motion"
@@ -165,6 +171,7 @@
         3
       ],
       "prompt": "Move the gripper right",
+      "request_wall_seconds": 5.519399159005843,
       "requested_sampling_seed": 8100000,
       "server_sampling_seed": 8100000,
       "style": "atomic_motion_counterfactual"
@@ -188,6 +195,7 @@
         3
       ],
       "prompt": "Move the gripper through left-camera points [(171,64), (165,101), (159,138), (153,175)]",
+      "request_wall_seconds": 5.526941859978251,
       "requested_sampling_seed": 8100000,
       "server_sampling_seed": 8100000,
       "style": "gripper_trace"
@@ -211,6 +219,7 @@
         3
       ],
       "prompt": "Grasp the rubiks cube at left-camera point [153,175]",
+      "request_wall_seconds": 5.518859186093323,
       "requested_sampling_seed": 8100000,
       "server_sampling_seed": 8100000,
       "style": "point"
@@ -234,6 +243,7 @@
         3
       ],
       "prompt": "Place the rubiks cube at left-camera point [123,171]",
+      "request_wall_seconds": 5.558441241970286,
       "requested_sampling_seed": 8100000,
       "server_sampling_seed": 8100000,
       "style": "point_spatial"
@@ -257,6 +267,7 @@
         3
       ],
       "prompt": "Place the rubiks cube at left-camera point [155,136]",
+      "request_wall_seconds": 5.560448557022028,
       "requested_sampling_seed": 8100000,
       "server_sampling_seed": 8100000,
       "style": "point_spatial_counterfactual"
@@ -280,6 +291,7 @@
         3
       ],
       "prompt": "Move left from gripper point [171,64] to the rubiks cube at [153,175], firmly grasp it, then follow [(153,175), (143,174), (133,172), (123,171)]",
+      "request_wall_seconds": 5.579439145047218,
       "requested_sampling_seed": 8100000,
       "server_sampling_seed": 8100000,
       "style": "combination"
@@ -303,6 +315,7 @@
         3
       ],
       "prompt": "Move right from gripper point [171,64] to the rubiks cube at [153,175], firmly grasp it, then follow [(153,175), (154,162), (154,149), (155,136)]",
+      "request_wall_seconds": 5.5720611159922555,
       "requested_sampling_seed": 8100000,
       "server_sampling_seed": 8100000,
       "style": "combination_counterfactual"
@@ -326,6 +339,7 @@
         3
       ],
       "prompt": "Open the top drawer",
+      "request_wall_seconds": 5.581682591000572,
       "requested_sampling_seed": 8100000,
       "server_sampling_seed": 8100000,
       "style": "unrelated_control"
@@ -349,6 +363,7 @@
         3
       ],
       "prompt": "Put the banana to the left of the bowl",
+      "request_wall_seconds": 5.571353617939167,
       "requested_sampling_seed": 8100000,
       "server_sampling_seed": 8100000,
       "style": "noun_control"
@@ -372,6 +387,7 @@
         3
       ],
       "prompt": "Put the rubiks cube to both the left and the right of the bowl at the same time",
+      "request_wall_seconds": 5.582787732011639,
       "requested_sampling_seed": 8100000,
       "server_sampling_seed": 8100000,
       "style": "contradictory_control"
@@ -380,5 +396,6 @@
   "sampling_seed": 8100000,
   "schema_version": 1,
   "server": "ws://localhost:8000",
-  "status": "fixed_observation_secondary_diagnostic"
+  "status": "fixed_observation_secondary_diagnostic",
+  "timing_note": "Client WebSocket round-trip around infer(), including transport, server inference, serialization, and any returned-video decoding. Cosmos returns actions plus decoded future video; pi0.5 returns actions only, so the timings represent deployed interfaces rather than an architecture-only comparison."
 }

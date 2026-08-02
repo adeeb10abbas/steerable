@@ -33,6 +33,10 @@ EXPECTED_EPISODES = 120
 EXPECTED_STATIC_EPISODES = 80
 EXPECTED_HIERARCHY_EPISODES = 40
 EXPECTED_PROBE_CONDITIONS = 16
+TASK_DIRS = {
+    "left": "RubiksCubeLeftOfBowlMatchedTask",
+    "right": "RubiksCubeRightOfBowlMatchedTask",
+}
 MODEL_LABELS = {
     "pi05_droid_vla": "π0.5 DROID (VLA)",
     "cosmos3_edge_droid_wam": "Cosmos3 Edge DROID (WAM)",
@@ -430,6 +434,144 @@ def _semantic_aggregate(summaries: list[tuple[str, Path, dict[str, Any]]]) -> di
         "groups": grouped,
         "episode_summaries": episode_summaries,
         "rows": all_rows,
+    }
+
+
+def _image_difference(left: np.ndarray, right: np.ndarray) -> dict[str, Any]:
+    if left.shape != right.shape:
+        raise RuntimeError(f"Conditioning-image shape mismatch: {left.shape} versus {right.shape}")
+    difference = np.abs(left.astype(np.int16) - right.astype(np.int16))
+    return {
+        "mae_0_255": float(np.mean(difference)),
+        "nonidentical_channel_fraction": float(np.mean(difference > 0)),
+        "p99_abs_difference": float(np.percentile(difference, 99)),
+        "max_abs_difference": int(np.max(difference)),
+    }
+
+
+def _cosmos_observation_variation(run_manifest: dict[str, Any]) -> dict[str, Any]:
+    images: dict[tuple[str, str, int], np.ndarray] = {}
+    records: list[dict[str, Any]] = []
+    conditions = [
+        condition
+        for condition in run_manifest["conditions"]
+        if condition["model_id"] == "cosmos3_edge_droid_wam"
+        and int(condition["open_loop_horizon"]) == 32
+    ]
+    if len(conditions) != 2:
+        raise RuntimeError(f"Expected two static Cosmos conditions, got {len(conditions)}")
+    for condition in conditions:
+        root = Path(condition["output_root"])
+        for direction, task_name in TASK_DIRS.items():
+            task_dir = root / task_name
+            manifest_path = task_dir / "predicted_chunks/manifest.jsonl"
+            manifest_rows = [
+                json.loads(line) for line in manifest_path.read_text().splitlines() if line.strip()
+            ]
+            first_rows = {
+                int(row["episode_index"]): row
+                for row in manifest_rows
+                if int(row["replan_index"]) == 0
+            }
+            if set(first_rows) != set(range(10)):
+                raise RuntimeError(f"Missing Cosmos first-chunk records in {manifest_path}")
+            for episode_index in range(10):
+                row = first_rows[episode_index]
+                expected_seed = (6100 + episode_index) * 1000
+                if row["requested_sampling_seed"] != expected_seed:
+                    raise RuntimeError(f"Requested seed mismatch in {manifest_path}: {row}")
+                if row["server_sampling_seed"] != expected_seed:
+                    raise RuntimeError(f"Server seed mismatch in {manifest_path}: {row}")
+                if row["conditioning_shape"] != [540, 640, 3]:
+                    raise RuntimeError(f"Conditioning shape mismatch in {manifest_path}: {row}")
+                if row["action_shape"] != [32, 8] or row["future_shape"] != [33, 528, 640, 3]:
+                    raise RuntimeError(f"Cosmos output shape mismatch in {manifest_path}: {row}")
+                image_path = (
+                    task_dir
+                    / "predicted_chunks"
+                    / f"episode_{episode_index:03d}"
+                    / "chunk_000"
+                    / "conditioning.png"
+                )
+                if _sha256(image_path) != row["conditioning_sha256"]:
+                    raise RuntimeError(f"Conditioning hash mismatch: {image_path}")
+                bgr = cv2.imread(str(image_path))
+                if bgr is None:
+                    raise FileNotFoundError(image_path)
+                images[(condition["id"], direction, episode_index)] = bgr
+
+    for condition in conditions:
+        for direction in TASK_DIRS:
+            for left_index in range(10):
+                for right_index in range(left_index + 1, 10):
+                    records.append(
+                        {
+                            "comparison": "within_condition_direction",
+                            "condition_id": condition["id"],
+                            "direction": direction,
+                            "left_episode_index": left_index,
+                            "right_episode_index": right_index,
+                            **_image_difference(
+                                images[(condition["id"], direction, left_index)],
+                                images[(condition["id"], direction, right_index)],
+                            ),
+                        }
+                    )
+        for episode_index in range(10):
+            records.append(
+                {
+                    "comparison": "matched_left_right",
+                    "condition_id": condition["id"],
+                    "direction": "left_vs_right",
+                    "left_episode_index": episode_index,
+                    "right_episode_index": episode_index,
+                    **_image_difference(
+                        images[(condition["id"], "left", episode_index)],
+                        images[(condition["id"], "right", episode_index)],
+                    ),
+                }
+            )
+    by_wording = {condition["wording"]: condition["id"] for condition in conditions}
+    for direction in TASK_DIRS:
+        for episode_index in range(10):
+            records.append(
+                {
+                    "comparison": "matched_canonical_short",
+                    "condition_id": "cosmos_canonical_vs_short",
+                    "direction": direction,
+                    "left_episode_index": episode_index,
+                    "right_episode_index": episode_index,
+                    **_image_difference(
+                        images[(by_wording["canonical"], direction, episode_index)],
+                        images[(by_wording["short_paraphrase"], direction, episode_index)],
+                    ),
+                }
+            )
+
+    grouped: dict[tuple[str, str, str], list[dict[str, Any]]] = defaultdict(list)
+    for row in records:
+        grouped[(row["comparison"], row["condition_id"], row["direction"])].append(row)
+    summaries = []
+    for (comparison, condition_id, direction), rows in sorted(grouped.items()):
+        maes = [row["mae_0_255"] for row in rows]
+        summaries.append(
+            {
+                "comparison": comparison,
+                "condition_id": condition_id,
+                "direction": direction,
+                "pairs": len(rows),
+                "mean_mae_0_255": float(np.mean(maes)),
+                "median_mae_0_255": float(np.median(maes)),
+                "p90_mae_0_255": float(np.percentile(maes, 90)),
+                "max_mae_0_255": float(np.max(maes)),
+            }
+        )
+    return {
+        "first_conditioning_images": len(images),
+        "all_server_seeds_match_frozen_schedule": True,
+        "interpretation": "Exact simulator state does not yield byte-identical realtime-rendered observations. These differences contaminate closed-loop first-action prompt/noise contrasts but not the exact fixed-observation command probe.",
+        "summaries": summaries,
+        "pairs": records,
     }
 
 
@@ -879,10 +1021,12 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         "| Frozen design | `../preregistration.json` | Questions, fixed grid, primary/secondary metrics, stopping rule |",
         "| Hierarchy amendment | `../hierarchy_amendment_001.json` | Correct 40-episode matched static/oracle arithmetic |",
         "| Metric amendment | `../metric_amendment_001.json` | Exact paper-style progression after primary-source verification |",
+        "| Observation amendment | `../observation_variation_amendment_001.json` | Downgrades closed-loop action contrast after measured renderer variation |",
         "| Grounded probe plan | `../command_probe_plan.json` | Hash-pinned observation, six command styles, controls, seed |",
         "| Closed-loop episode table | `episodes.csv` | One row per preregistered rollout |",
         "| Closed-loop summary | `closed_loop_summary.json` | Success, progression, offsets, timing, contrasts |",
         "| Cosmos future semantics | `compiled_evidence.json` | Prompt-blind imagined/executed quadrants and coverage |",
+        "| Renderer variation audit | `cosmos_observation_variation.csv` | First-conditioning-image differences within and across static conditions |",
         "| Human semantic audit | `../semantic_confirmation_audit_plan.json` and `../semantic_confirmation_audit.md` | Outcome-independent sheet sample and completed visual review |",
         "| Command probes | `compiled_evidence.json` | Exact repeat, command sensitivity, semantic futures |",
         "| GPU assignment audit | `../cosmos_gpu_assignment_audit.json` | Quantifies why cross-card Cosmos output was excluded |",
@@ -968,6 +1112,7 @@ def main() -> None:
     semantic = _semantic_aggregate(semantic_inputs)
 
     run_manifest = _load(root / "run_manifest.json")
+    observation_variation = _cosmos_observation_variation(run_manifest)
     raw_roots = [Path(condition["output_root"]) for condition in run_manifest["conditions"]]
     raw_roots.extend(
         [
@@ -979,6 +1124,10 @@ def main() -> None:
         ]
     )
     output.mkdir(parents=True, exist_ok=True)
+    _write_summary_csv(
+        output / "cosmos_observation_variation.csv",
+        observation_variation["pairs"],
+    )
     raw_manifest = _write_raw_evidence_manifest(
         output / "raw_evidence_manifest.csv",
         raw_roots,
@@ -1011,6 +1160,7 @@ def main() -> None:
         root / "run_manifest.json",
         root / "hierarchy_amendment_001.json",
         root / "metric_amendment_001.json",
+        root / "observation_variation_amendment_001.json",
         root / "command_probe_plan.json",
         root / "command_probe_amendment_001.json",
         root / "semantic_future_calibration.json",
@@ -1047,11 +1197,15 @@ def main() -> None:
             "semantic_calibration_sha256": calibration_sha,
             "raw_evidence_manifest": raw_manifest,
             "supporting_evidence_manifest": supporting_manifest,
+            "cosmos_first_conditioning_images_audited": observation_variation[
+                "first_conditioning_images"
+            ],
         },
         "prospective": {
             "closed_loop": closed,
             "paired_diagnostics": _paired_diagnostics(closed["episodes"]),
             "cosmos_semantic_futures": semantic,
+            "cosmos_observation_variation": observation_variation,
             "command_probe": probes,
         },
         "retrospective": _load((workspace / args.retrospective).resolve() if not args.retrospective.is_absolute() else args.retrospective),

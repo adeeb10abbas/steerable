@@ -328,9 +328,9 @@ def _action_contrasts(
                 "open_loop_horizon": horizon,
                 "paired_opposite_prompt_rms": opposite,
                 "mean_opposite_prompt_effect": effect,
-                "all_pair_same_prompt_different_seed_rms": noise,
-                "mean_sampling_noise": noise_floor,
-                "effect_to_sampling_noise_ratio": (
+                "all_pair_same_prompt_different_seed_and_render_rms": noise,
+                "mean_same_prompt_seed_and_render_variation": noise_floor,
+                "effect_to_same_prompt_variation_ratio": (
                     effect / noise_floor if effect is not None and noise_floor else None
                 ),
             }
@@ -408,22 +408,28 @@ def _markdown(summary: dict[str, Any]) -> str:
             "",
             "Paper progression is the mean of persistent correct-cube pickup credit and released-object success in the requested location. Relation-only progress is retained in the machine-readable output as a secondary diagnostic. Strict progression additionally requires a post-pick relation transition.",
             "",
-            "## Prompt effect versus sampling noise",
+            "## First-action opposite-prompt separation versus same-prompt variation",
             "",
-            "| Model/condition | Opposite effect RMS | Sampling-noise RMS | Ratio |",
+            "| Model/condition | Opposite-prompt RMS | Same-prompt seed + renderer RMS | Ratio |",
             "| --- | ---: | ---: | ---: |",
         ]
     )
     for row in summary["action_contrasts"]:
         effect = row["mean_opposite_prompt_effect"]
-        noise = row["mean_sampling_noise"]
-        ratio = row["effect_to_sampling_noise_ratio"]
+        noise = row["mean_same_prompt_seed_and_render_variation"]
+        ratio = row["effect_to_same_prompt_variation_ratio"]
         lines.append(
             f"| {row['model_id']} / {row['condition_id']} | "
             f"{effect:.5f} | {noise:.5f} | {ratio:.3f} |"
             if effect is not None and noise is not None and ratio is not None
             else f"| {row['model_id']} / {row['condition_id']} | insufficient | insufficient | insufficient |"
         )
+    lines.extend(
+        [
+            "",
+            "Realtime rendering was not pixel-repeatable across resets despite one exact simulator-state fingerprint. Opposite-prompt and same-prompt first-action distances therefore both include renderer variation. The ratio is a sensitivity diagnostic, not an isolated causal language effect; the frozen-observation probe supplies that test.",
+        ]
+    )
     if summary["hierarchy_pairs"]:
         lines.extend(
             [

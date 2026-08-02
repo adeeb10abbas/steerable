@@ -1,0 +1,81 @@
+{
+  "schema_version": "1.0.0",
+  "amendment_id": "vla_wam_shared_spatial_v1_direct_language_scope_003",
+  "status": "frozen_before_any_declarative_or_contrastive_episode",
+  "registered_at_utc": "2026-08-02T20:29:52Z",
+  "repository_commit_before_amendment": "61472f0217a90081d2273243ac0fe00eea596a53",
+  "parent_preregistration": "artifacts/vla_wam_shared_v1/preregistration.json",
+  "parent_preregistration_sha256": "10a54897b1c1b1fec6837aaf70ef525085ebae876264bc052541700258c915aa",
+  "superseded_hierarchy_amendment": "artifacts/vla_wam_shared_v1/hierarchy_amendment_001.json",
+  "superseded_hierarchy_amendment_sha256": "81c616937936b9f76eeb009855e47b444e87b1b8bd0fef01de1153eabd59ac29",
+  "scope_change": "Remove the predicate-oracle controller and all five-step coached conditions from the study. Evaluate only direct, episode-static task language at each checkpoint's native action horizon.",
+  "rationale": [
+    "A privileged simulator-state coach measures whether an ideal controller can expose low-level skills; it does not measure whether the released model grounds the user's task language directly.",
+    "The VLA and WAM were not trained under the same subtask-coaching interface, so oracle gains or failures would be difficult to interpret as a model-class difference.",
+    "Task-level declarative and contrastive prompts preserve the user's actual intervention while testing syntactic robustness and semantic scope."
+  ],
+  "outcome_timing_disclosure": {
+    "known_before_this_amendment": [
+      "All 40 definitive Cosmos canonical and short-paraphrase native-horizon outcomes.",
+      "All 10 Cosmos canonical five-step static outcomes: 2 successes and 8 failures.",
+      "One excluded seed-5190 predicate-oracle pilot failure.",
+      "Eight completed episodes from the interrupted predicate-oracle batch: 0 successes; five left and three right."
+    ],
+    "not_known_before_this_amendment": [
+      "Any declarative-goal outcome for either checkpoint.",
+      "Any contrastive-goal outcome for either checkpoint.",
+      "Any definitive pi0.5 outcome in this shared study."
+    ],
+    "analysis_tier": "The original 80-episode canonical/short grid remains the preregistered confirmatory tier. The 80-episode declarative/contrastive grid is a post-interim, prospectively frozen stress-test tier and must be labeled as such rather than retroactively called preregistered."
+  },
+  "retired_conditions": {
+    "condition_ids": [
+      "pi05_canonical_static5",
+      "pi05_canonical_oracle5",
+      "cosmos_canonical_static5",
+      "cosmos_canonical_oracle5"
+    ],
+    "statistical_use": "none",
+    "preservation": "Completed and partial outputs remain in explicitly labeled supporting or setup-exclusion directories for provenance and are never pooled with the direct-language grid."
+  },
+  "direct_language_conditions": {
+    "controller": "static episode-level task instruction; no prompt switching and no simulator-state access",
+    "native_open_loop_horizons": {
+      "pi05_droid_vla": 15,
+      "cosmos3_edge_droid_wam": 32
+    },
+    "episode_seeds": [7200, 7201, 7202, 7203, 7204, 7205, 7206, 7207, 7208, 7209],
+    "prompts": {
+      "declarative_goal": {
+        "left": "The rubiks cube should end up to the left of the bowl",
+        "right": "The rubiks cube should end up to the right of the bowl",
+        "purpose": "Test whether an end-state description grounds like an imperative task caption."
+      },
+      "contrastive_goal": {
+        "left": "Put the rubiks cube to the left of the bowl, not to the right of the bowl",
+        "right": "Put the rubiks cube to the right of the bowl, not to the left of the bowl",
+        "purpose": "Test semantic scope when both direction tokens are present and the incorrect relation is explicitly negated."
+      }
+    },
+    "episodes": 80,
+    "formula": "2 models * 2 stress wordings * 2 directions * 10 seeds"
+  },
+  "revised_evidence_grid": {
+    "original_confirmatory_episodes": 80,
+    "post_interim_direct_stress_episodes": 80,
+    "total_direct_language_episodes": 160,
+    "oracle_episodes": 0,
+    "dynamic_prompt_episodes": 0
+  },
+  "unchanged": [
+    "models and exact checkpoints",
+    "matched neutral simulator tasks and reset state",
+    "maximum episode length and success predicate",
+    "paper-style progression and declared diagnostics",
+    "per-replan sampling-seed formula",
+    "thermal guard and exclusion rules",
+    "prompt-blind semantic future scorer for Cosmos",
+    "fixed-observation six-style probe as a separate diagnostic"
+  ],
+  "claim_boundary": "The revised study estimates direct task-language steerability for two released DROID checkpoints on one matched spatial task family. It does not measure learned high-level reasoning, prove a VLA-versus-WAM class effect, or establish robustness beyond the tested prompts, seeds, and scene."
+}

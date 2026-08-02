@@ -16,10 +16,11 @@ are pinned in the evidence package.
 - Run one Isaac environment at a time.
 - Static confirmation seeds are 6100--6109. Hierarchy seeds are 7100--7104.
 - Every request uses `episode_seed * 1000 + replan_index`.
-- Exact simulator state does not imply identical realtime-rendered pixels.
-  Preserve every recorded conditioning frame and treat closed-loop first-action
-  distances as prompt-plus-renderer sensitivity; use the hash-pinned probe for
-  an exact prompt intervention.
+- Exact reset state does not imply identical first-observed object centroids or
+  realtime-rendered pixels. Preserve every recorded conditioning frame and
+  first centroid; treat closed-loop first-action distances as prompt plus
+  settling/renderer sensitivity, and use the hash-pinned probe for an exact
+  prompt intervention.
 - Never reuse the excluded 51xx calibration episodes in a confirmation rate.
 - `--output-folder-name` resumes existing runs. Begin a definitive condition
   only with an absent/empty registered output directory.

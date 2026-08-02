@@ -588,6 +588,163 @@ def _cosmos_observation_variation(run_manifest: dict[str, Any]) -> dict[str, Any
     }
 
 
+def _initial_physical_variation(closed: dict[str, Any]) -> dict[str, Any]:
+    episodes = closed["episodes"]
+
+    def difference(left: dict[str, Any], right: dict[str, Any]) -> dict[str, float]:
+        cube = float(
+            np.linalg.norm(
+                np.asarray(left["first_recorded_cube_centroid_m"], dtype=np.float64)
+                - np.asarray(right["first_recorded_cube_centroid_m"], dtype=np.float64)
+            )
+        )
+        bowl = float(
+            np.linalg.norm(
+                np.asarray(left["first_recorded_bowl_centroid_m"], dtype=np.float64)
+                - np.asarray(right["first_recorded_bowl_centroid_m"], dtype=np.float64)
+            )
+        )
+        return {
+            "cube_centroid_distance_m": cube,
+            "bowl_centroid_distance_m": bowl,
+            "max_object_centroid_distance_m": max(cube, bowl),
+        }
+
+    pairs: list[dict[str, Any]] = []
+    grouped: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+    for row in episodes:
+        grouped[(row["condition_id"], row["direction"])].append(row)
+    for (condition_id, direction), rows in sorted(grouped.items()):
+        ordered = sorted(rows, key=lambda row: int(row["episode_seed"]))
+        for left_index in range(len(ordered)):
+            for right_index in range(left_index + 1, len(ordered)):
+                left, right = ordered[left_index], ordered[right_index]
+                pairs.append(
+                    {
+                        "comparison": "within_condition_direction",
+                        "label": f"{condition_id}:{direction}",
+                        "left_seed": left["episode_seed"],
+                        "right_seed": right["episode_seed"],
+                        **difference(left, right),
+                    }
+                )
+
+    index = {
+        (
+            row["condition_id"],
+            row["direction"],
+            int(row["episode_seed"]),
+        ): row
+        for row in episodes
+    }
+    conditions = {row["condition_id"] for row in episodes}
+    for condition_id in sorted(conditions):
+        for seed in sorted(
+            {row["episode_seed"] for row in episodes if row["condition_id"] == condition_id}
+        ):
+            left = index.get((condition_id, "left", int(seed)))
+            right = index.get((condition_id, "right", int(seed)))
+            if left is not None and right is not None:
+                pairs.append(
+                    {
+                        "comparison": "matched_left_right",
+                        "label": condition_id,
+                        "left_seed": seed,
+                        "right_seed": seed,
+                        **difference(left, right),
+                    }
+                )
+
+    def add_matched(
+        comparison: str,
+        label: str,
+        left_filter: dict[str, Any],
+        right_filter: dict[str, Any],
+        pair_keys: tuple[str, ...],
+    ) -> None:
+        def select(criteria: dict[str, Any]) -> dict[tuple[Any, ...], dict[str, Any]]:
+            return {
+                tuple(row[key] for key in pair_keys): row
+                for row in episodes
+                if all(row.get(key) == value for key, value in criteria.items())
+            }
+
+        left_rows, right_rows = select(left_filter), select(right_filter)
+        for key in sorted(set(left_rows) & set(right_rows)):
+            pairs.append(
+                {
+                    "comparison": comparison,
+                    "label": label,
+                    "left_seed": left_rows[key]["episode_seed"],
+                    "right_seed": right_rows[key]["episode_seed"],
+                    **difference(left_rows[key], right_rows[key]),
+                }
+            )
+
+    for model_id, native_horizon in (
+        ("pi05_droid_vla", 15),
+        ("cosmos3_edge_droid_wam", 32),
+    ):
+        add_matched(
+            "matched_canonical_short",
+            model_id,
+            {"model_id": model_id, "wording": "canonical", "open_loop_horizon": native_horizon},
+            {"model_id": model_id, "wording": "short_paraphrase", "open_loop_horizon": native_horizon},
+            ("direction", "episode_seed"),
+        )
+        add_matched(
+            "matched_horizon5_static_oracle",
+            model_id,
+            {"model_id": model_id, "controller": "static", "open_loop_horizon": 5},
+            {"model_id": model_id, "controller": "predicate_oracle", "open_loop_horizon": 5},
+            ("direction", "episode_seed"),
+        )
+    for direction in TASK_DIRS:
+        add_matched(
+            "matched_pi05_cosmos_canonical",
+            direction,
+            {
+                "model_id": "pi05_droid_vla",
+                "wording": "canonical",
+                "controller": "static",
+                "open_loop_horizon": 15,
+                "direction": direction,
+            },
+            {
+                "model_id": "cosmos3_edge_droid_wam",
+                "wording": "canonical",
+                "controller": "static",
+                "open_loop_horizon": 32,
+                "direction": direction,
+            },
+            ("episode_seed",),
+        )
+
+    summary_groups: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+    for row in pairs:
+        summary_groups[(row["comparison"], row["label"])].append(row)
+    summaries = []
+    for (comparison, label), rows in sorted(summary_groups.items()):
+        distances = [row["max_object_centroid_distance_m"] for row in rows]
+        summaries.append(
+            {
+                "comparison": comparison,
+                "label": label,
+                "pairs": len(rows),
+                "mean_max_object_centroid_distance_m": float(np.mean(distances)),
+                "p90_max_object_centroid_distance_m": float(np.percentile(distances, 90)),
+                "max_object_centroid_distance_m": float(np.max(distances)),
+            }
+        )
+    return {
+        "episodes": len(episodes),
+        "exact_reset_state_fingerprints": len(closed["initial_state_fingerprint_counts"]),
+        "interpretation": "Reset-state arrays are exact, while first-recorded object centroids may differ after settling. Distances below quantify that physical observation variation separately from pixel-render variation.",
+        "summaries": summaries,
+        "pairs": pairs,
+    }
+
+
 def _configure_plotting() -> None:
     plt.rcParams.update(
         {
@@ -831,7 +988,7 @@ def _plot_observation_variation(audit: dict[str, Any], output: Path) -> None:
         ax.text(bar.get_x() + bar.get_width() / 2, value + 0.08, f"{value:.2f}", ha="center", fontsize=8)
     ax.set_xticks(x, labels, rotation=25, ha="right")
     ax.set_ylabel("First-conditioning-image MAE (0–255)")
-    ax.set_title("Exact physical resets are not byte-identical realtime renders")
+    ax.set_title("Exact reset-state arrays are not byte-identical realtime renders")
     ax.grid(axis="y", alpha=0.2)
     ax.legend(frameon=False)
     fig.tight_layout()
@@ -1062,6 +1219,7 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         f"- Static episodes: **{compiled['integrity']['static_episode_count']}/{EXPECTED_STATIC_EPISODES}**.",
         f"- Hierarchy episodes: **{compiled['integrity']['hierarchy_episode_count']}/{EXPECTED_HIERARCHY_EPISODES}**.",
         f"- Shared initial-state fingerprints: **{len(closed['initial_state_fingerprint_counts'])}**.",
+        f"- First-recorded cube/bowl physical observations audited: **{compiled['integrity']['initial_physical_observations_audited']}**.",
         f"- Fixed-observation probe conditions: **{len(probes['pi05']['manifest']['records'])} per model**.",
         f"- Cosmos semantically scored confirmation chunks: **{semantic['total_chunks']}** across **{semantic['total_episodes']} episodes**.",
         f"- Cosmos recorded prediction chunks with verified request/server seeds, step alignment, and shapes: **{compiled['integrity']['cosmos_prediction_chunks_validated']}**.",
@@ -1080,6 +1238,7 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         "| Closed-loop summary | `closed_loop_summary.json` | Success, progression, offsets, timing, contrasts |",
         "| Cosmos future semantics | `compiled_evidence.json` | Prompt-blind imagined/executed quadrants and coverage |",
         "| Renderer variation audit | `cosmos_observation_variation.csv` | First-conditioning-image differences within and across static conditions |",
+        "| Physical settling audit | `initial_physical_variation.csv` | Reset-state identity versus first-recorded cube/bowl centroid differences |",
         "| Human semantic audit | `../semantic_confirmation_audit_plan.json` and `../semantic_confirmation_audit.md` | Outcome-independent sheet sample and completed visual review |",
         "| Command probes | `compiled_evidence.json` | Exact repeat, command sensitivity, semantic futures |",
         "| GPU assignment audit | `../cosmos_gpu_assignment_audit.json` | Quantifies why cross-card Cosmos output was excluded |",
@@ -1167,6 +1326,7 @@ def main() -> None:
 
     run_manifest = _load(root / "run_manifest.json")
     observation_variation = _cosmos_observation_variation(run_manifest)
+    physical_variation = _initial_physical_variation(closed)
     raw_roots = [Path(condition["output_root"]) for condition in run_manifest["conditions"]]
     raw_roots.extend(
         [
@@ -1181,6 +1341,10 @@ def main() -> None:
     _write_summary_csv(
         output / "cosmos_observation_variation.csv",
         observation_variation["pairs"],
+    )
+    _write_summary_csv(
+        output / "initial_physical_variation.csv",
+        physical_variation["pairs"],
     )
     raw_manifest = _write_raw_evidence_manifest(
         output / "raw_evidence_manifest.csv",
@@ -1257,12 +1421,14 @@ def main() -> None:
             "cosmos_prediction_chunks_validated": observation_variation[
                 "prediction_chunks_validated"
             ],
+            "initial_physical_observations_audited": physical_variation["episodes"],
         },
         "prospective": {
             "closed_loop": closed,
             "paired_diagnostics": _paired_diagnostics(closed["episodes"]),
             "cosmos_semantic_futures": semantic,
             "cosmos_observation_variation": observation_variation,
+            "initial_physical_variation": physical_variation,
             "command_probe": probes,
         },
         "retrospective": _load((workspace / args.retrospective).resolve() if not args.retrospective.is_absolute() else args.retrospective),

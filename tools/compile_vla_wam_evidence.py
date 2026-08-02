@@ -203,6 +203,8 @@ def _load_episode(
         "final_cube_minus_bowl_y_m": delta_y,
         "requested_signed_final_offset_m": requested_signed_offset,
         "initial_requested_relation": bool(relation[0]),
+        "first_recorded_cube_centroid_m": cube[0].tolist(),
+        "first_recorded_bowl_centroid_m": bowl[0].tolist(),
         "initial_state_sha256": _initial_fingerprint(initial),
         "raw_robolab_score": root_result.get("score"),
         "policy_inference_s": policy_inference_s,

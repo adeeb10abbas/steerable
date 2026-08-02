@@ -787,6 +787,45 @@ def _plot_semantic_quadrants(semantic: dict[str, Any], output: Path) -> None:
     plt.close(fig)
 
 
+def _plot_observation_variation(audit: dict[str, Any], output: Path) -> None:
+    rows = audit["summaries"]
+    labels = []
+    means = []
+    p90 = []
+    colors = []
+    for row in rows:
+        comparison = row["comparison"]
+        condition = row["condition_id"].replace("cosmos_", "").replace("_static32", "")
+        direction = row["direction"].replace("left_vs_right", "L/R")
+        if comparison == "within_condition_direction":
+            label = f"{condition}\nwithin {direction}"
+            color = "#8da0cb"
+        elif comparison == "matched_left_right":
+            label = f"{condition}\nmatched L/R"
+            color = "#fc8d62"
+        else:
+            label = f"canonical/short\n{direction}"
+            color = "#66c2a5"
+        labels.append(label)
+        means.append(row["mean_mae_0_255"])
+        p90.append(row["p90_mae_0_255"])
+        colors.append(color)
+    x = np.arange(len(rows))
+    fig, ax = plt.subplots(figsize=(10.8, 4.4))
+    bars = ax.bar(x, means, color=colors)
+    ax.scatter(x, p90, marker="_", s=180, color="#222222", label="pairwise p90")
+    for bar, value in zip(bars, means):
+        ax.text(bar.get_x() + bar.get_width() / 2, value + 0.08, f"{value:.2f}", ha="center", fontsize=8)
+    ax.set_xticks(x, labels, rotation=25, ha="right")
+    ax.set_ylabel("First-conditioning-image MAE (0–255)")
+    ax.set_title("Exact physical resets are not byte-identical realtime renders")
+    ax.grid(axis="y", alpha=0.2)
+    ax.legend(frameon=False)
+    fig.tight_layout()
+    fig.savefig(output / "cosmos_conditioning_image_variation.png", bbox_inches="tight")
+    plt.close(fig)
+
+
 def _plot_semantic_threshold_sensitivity(semantic: dict[str, Any], output: Path) -> None:
     rows = semantic["threshold_sensitivity"]
     fig, axes = plt.subplots(1, 2, figsize=(9.5, 4.0), sharex=True, sharey=True)
@@ -1040,6 +1079,7 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         "",
         "- `static_success_with_intervals.png`: primary binary success with Beta(1,1) 95% intervals.",
         "- `static_requested_side_offsets.png`: endpoint directionality, including failures.",
+        "- `cosmos_conditioning_image_variation.png`: measured realtime-renderer variation despite exact physical resets.",
         "- `hierarchy_static_vs_oracle.png`: matched five-step static versus predicate-oracle control.",
         "- `cosmos_imagination_execution_quadrants.png`: WAM-only semantic future/action agreement.",
         "- `semantic_threshold_sensitivity.png`: scorer coverage/agreement at 0.10, 0.15, and frozen 0.20 m reliability thresholds.",
@@ -1240,12 +1280,16 @@ def main() -> None:
     _plot_static_success(closed, output)
     _plot_offsets(closed, output)
     _plot_hierarchy(closed, output)
+    _plot_observation_variation(observation_variation, output)
     _plot_semantic_quadrants(semantic, output)
     _plot_semantic_threshold_sensitivity(semantic, output)
     _plot_probe(probes, output)
     _plot_selected_probe_futures(root, probes, output)
     _dump(output / "compiled_evidence.json", compiled)
     _write_summary_csv(output / "semantic_future_groups.csv", semantic["groups"])
+    _write_summary_csv(
+        output / "semantic_future_episodes.csv", semantic["episode_summaries"]
+    )
     _write_summary_csv(
         output / "semantic_threshold_sensitivity.csv",
         semantic["threshold_sensitivity"],

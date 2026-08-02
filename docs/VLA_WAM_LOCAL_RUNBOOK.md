@@ -243,5 +243,6 @@ uv pip install --python .venv/bin/python \
 
 The first compiler must report 120 episodes and zero missing. The second must
 verify 80 static episodes, 40 hierarchy episodes, one exact initial-state
-fingerprint, 16 probe conditions per model, frozen calibration/plan hashes,
-and a completed semantic audit before the evidence package is publishable.
+fingerprint, 40 Cosmos first-conditioning images and their renderer variation,
+16 probe conditions per model, frozen calibration/plan hashes, and a completed
+semantic audit before the evidence package is publishable.

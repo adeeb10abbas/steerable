@@ -452,6 +452,7 @@ def _image_difference(left: np.ndarray, right: np.ndarray) -> dict[str, Any]:
 def _cosmos_observation_variation(run_manifest: dict[str, Any]) -> dict[str, Any]:
     images: dict[tuple[str, str, int], np.ndarray] = {}
     records: list[dict[str, Any]] = []
+    prediction_chunks_validated = 0
     conditions = [
         condition
         for condition in run_manifest["conditions"]
@@ -468,6 +469,26 @@ def _cosmos_observation_variation(run_manifest: dict[str, Any]) -> dict[str, Any
             manifest_rows = [
                 json.loads(line) for line in manifest_path.read_text().splitlines() if line.strip()
             ]
+            seen_chunks = set()
+            for row in manifest_rows:
+                episode_index = int(row["episode_index"])
+                replan_index = int(row["replan_index"])
+                chunk_key = (episode_index, replan_index)
+                if chunk_key in seen_chunks:
+                    raise RuntimeError(f"Duplicate Cosmos chunk {chunk_key} in {manifest_path}")
+                seen_chunks.add(chunk_key)
+                expected_seed = (6100 + episode_index) * 1000 + replan_index
+                if row["requested_sampling_seed"] != expected_seed:
+                    raise RuntimeError(f"Requested seed mismatch in {manifest_path}: {row}")
+                if row["server_sampling_seed"] != expected_seed:
+                    raise RuntimeError(f"Server seed mismatch in {manifest_path}: {row}")
+                if int(row["executed_step_start"]) != replan_index * 32:
+                    raise RuntimeError(f"Executed-step alignment mismatch in {manifest_path}: {row}")
+                if row["conditioning_shape"] != [540, 640, 3]:
+                    raise RuntimeError(f"Conditioning shape mismatch in {manifest_path}: {row}")
+                if row["action_shape"] != [32, 8] or row["future_shape"] != [33, 528, 640, 3]:
+                    raise RuntimeError(f"Cosmos output shape mismatch in {manifest_path}: {row}")
+                prediction_chunks_validated += 1
             first_rows = {
                 int(row["episode_index"]): row
                 for row in manifest_rows
@@ -477,15 +498,6 @@ def _cosmos_observation_variation(run_manifest: dict[str, Any]) -> dict[str, Any
                 raise RuntimeError(f"Missing Cosmos first-chunk records in {manifest_path}")
             for episode_index in range(10):
                 row = first_rows[episode_index]
-                expected_seed = (6100 + episode_index) * 1000
-                if row["requested_sampling_seed"] != expected_seed:
-                    raise RuntimeError(f"Requested seed mismatch in {manifest_path}: {row}")
-                if row["server_sampling_seed"] != expected_seed:
-                    raise RuntimeError(f"Server seed mismatch in {manifest_path}: {row}")
-                if row["conditioning_shape"] != [540, 640, 3]:
-                    raise RuntimeError(f"Conditioning shape mismatch in {manifest_path}: {row}")
-                if row["action_shape"] != [32, 8] or row["future_shape"] != [33, 528, 640, 3]:
-                    raise RuntimeError(f"Cosmos output shape mismatch in {manifest_path}: {row}")
                 image_path = (
                     task_dir
                     / "predicted_chunks"
@@ -568,6 +580,7 @@ def _cosmos_observation_variation(run_manifest: dict[str, Any]) -> dict[str, Any
         )
     return {
         "first_conditioning_images": len(images),
+        "prediction_chunks_validated": prediction_chunks_validated,
         "all_server_seeds_match_frozen_schedule": True,
         "interpretation": "Exact simulator state does not yield byte-identical realtime-rendered observations. These differences contaminate closed-loop first-action prompt/noise contrasts but not the exact fixed-observation command probe.",
         "summaries": summaries,
@@ -1051,6 +1064,7 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         f"- Shared initial-state fingerprints: **{len(closed['initial_state_fingerprint_counts'])}**.",
         f"- Fixed-observation probe conditions: **{len(probes['pi05']['manifest']['records'])} per model**.",
         f"- Cosmos semantically scored confirmation chunks: **{semantic['total_chunks']}** across **{semantic['total_episodes']} episodes**.",
+        f"- Cosmos recorded prediction chunks with verified request/server seeds, step alignment, and shapes: **{compiled['integrity']['cosmos_prediction_chunks_validated']}**.",
         "- Calibration, command-probe, and run-manifest hashes were verified by the compilers.",
         "",
         "## Prospective evidence",
@@ -1239,6 +1253,9 @@ def main() -> None:
             "supporting_evidence_manifest": supporting_manifest,
             "cosmos_first_conditioning_images_audited": observation_variation[
                 "first_conditioning_images"
+            ],
+            "cosmos_prediction_chunks_validated": observation_variation[
+                "prediction_chunks_validated"
             ],
         },
         "prospective": {

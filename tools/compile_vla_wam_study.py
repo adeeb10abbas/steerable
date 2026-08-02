@@ -1791,6 +1791,19 @@ def main() -> None:
         raise RuntimeError(
             "Expected two checkpoint-specific full recorder-state fingerprints"
         )
+    initial_schema = _load(root / "initial_state_schema_amendment_006.json")
+    observed_hashes = initial_schema["observed_hashes"]
+    expected_physical_hashes = {
+        observed_hashes["shared_physical_initial_state_sha256"]
+    }
+    if set(closed["physical_initial_state_fingerprint_counts"]) != expected_physical_hashes:
+        raise RuntimeError("Physical reset-state hash disagrees with the schema amendment")
+    expected_full_hashes = {
+        observed_hashes["cosmos_full_recorded_initial_state_sha256"],
+        observed_hashes["pi05_full_recorded_initial_state_sha256"],
+    }
+    if set(closed["full_recorded_initial_state_fingerprint_counts"]) != expected_full_hashes:
+        raise RuntimeError("Full recorder-state hashes disagree with the schema amendment")
     geometry_sources = {row.get("relation_geometry_source") for row in closed["episodes"]}
     if geometry_sources != {"rigid_object_root_pose_in_robot_frame"}:
         raise RuntimeError(f"Unexpected closed-loop relation geometry: {geometry_sources}")
@@ -1963,6 +1976,9 @@ def main() -> None:
             "one_exact_physical_initial_state_fingerprint": True,
             "checkpoint_specific_full_recorder_fingerprint_count": len(
                 closed["full_recorded_initial_state_fingerprint_counts"]
+            ),
+            "physical_initial_state_sha256": next(
+                iter(closed["physical_initial_state_fingerprint_counts"])
             ),
             "command_probe_plan_sha256": plan_sha,
             "direct_task_command_probe_plan_sha256": direct_plan_sha,

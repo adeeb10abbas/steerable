@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "status": "fixed_before_confirmation_semantic_scoring",
+  "fixed_at_utc": "2026-08-02T16:18:00Z",
+  "purpose": "Human visual audit of the prompt-blind future localizer. This audit may invalidate or qualify the scorer but may not tune its frozen thresholds.",
+  "population": "All Cosmos canonical and short-paraphrase confirmation episodes, both directions, seeds 6100-6109.",
+  "automatic_evidence": "The scorer writes one full contact sheet for every episode, covering every replan chunk and all four scored frames in both third-person cameras.",
+  "detailed_human_sample": {
+    "selection_rule": "First, middle, and final seed in the already-frozen ordered seed list; selected without reference to semantic labels or closed-loop success.",
+    "episode_seeds": [6100, 6104, 6109],
+    "wordings": ["canonical", "short_paraphrase"],
+    "directions": ["left", "right"],
+    "sheets": 12,
+    "coverage": "Every replan and scored frame in each selected episode."
+  },
+  "review_questions": [
+    "Does the cyan point visibly mark the physical Rubik's cube in each camera?",
+    "Does the red point visibly mark the red bowl in each camera?",
+    "Do abstentions correspond to visible occlusion, object ambiguity, cross-camera inconsistency, or gross localization error?",
+    "Are any certain left/right labels visibly contradicted by the marked object centers?",
+    "Is there evidence that the localizer follows a policy prompt rather than image content?"
+  ],
+  "decision_rule": "Report errors and examples without altering labels. If gross systematic object confusion appears, semantic results are a no-go and only raw/contact-sheet evidence remains publishable."
+}

@@ -69,6 +69,10 @@ The report must show the four quadrants:
 Unreliable visual tracks are `uncertain`, not coerced to success or failure.
 Coverage and audit contact sheets are mandatory.
 
+The exact prompt-blind localizer, projection, abstention rules, excluded
+calibration metrics, and evidence hashes were frozen separately in
+`docs/SEMANTIC_FUTURE_SCORER_V1.md` before confirmation inference.
+
 ## Command-interface diagnostic
 
 On a fixed initial observation and fixed sampling seed, both models receive the

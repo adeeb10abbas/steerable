@@ -321,9 +321,21 @@ def _probe_summary(
         ("cosmos", root / "command_probe/cosmos_gpu1"),
     ):
         manifest = _load_probe(directory / "manifest.json", model, plan_sha)
+        request_times = [row.get("request_wall_seconds") for row in manifest["records"]]
+        if any(value is None or float(value) <= 0 for value in request_times):
+            raise RuntimeError(f"Missing fixed-probe endpoint timing in {directory}")
+        timing = np.asarray(request_times, dtype=np.float64)
         result[model] = {
             "manifest": manifest,
             "left_right_action_pairs": _pairwise_probe_action(directory),
+            "endpoint_timing": {
+                "requests": int(len(timing)),
+                "median_request_wall_seconds": float(np.median(timing)),
+                "mean_request_wall_seconds": float(np.mean(timing)),
+                "min_request_wall_seconds": float(np.min(timing)),
+                "max_request_wall_seconds": float(np.max(timing)),
+                "interface_note": manifest["timing_note"],
+            },
         }
     if future_semantics["conditions"] != EXPECTED_PROBE_CONDITIONS:
         raise RuntimeError("Incomplete Cosmos command-probe semantic scoring")

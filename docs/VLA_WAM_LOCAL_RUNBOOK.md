@@ -24,6 +24,10 @@ are pinned in the evidence package.
 - Never reuse the excluded 51xx calibration episodes in a confirmation rate.
 - `--output-folder-name` resumes existing runs. Begin a definitive condition
   only with an absent/empty registered output directory.
+- A 90 C stop excludes the entire batch, including completed episodes. Move
+  the raw directory to an explicitly excluded name and restart from the first
+  frozen seed after cooling; never pool a resumed suffix with the earlier
+  prefix.
 
 Monitor both cards while a batch is live:
 

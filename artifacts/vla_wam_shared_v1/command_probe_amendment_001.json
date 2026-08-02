@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0.0",
+  "amendment_id": "vla_wam_shared_spatial_v1_command_probe_001",
+  "status": "frozen_before_any_fixed_observation_probe_request",
+  "registered_at_utc": "2026-08-02T15:39:03Z",
+  "reason": "Primary-source verification found Appendix A of Chen et al. specifies that pixel coordinates are normalized to the integer range 0 to 255. The initial probe plan used source-resolution coordinates. No command-probe model request had run, so the grounded prompts were corrected prospectively.",
+  "changes": [
+    "Retain raw 1280x720 coordinates for source-image audit overlays.",
+    "Add the corresponding 0-to-255 points and traces.",
+    "Serialize only the 0-to-255 values in point, trace, and combination prompts."
+  ],
+  "unchanged": [
+    "source observation and SHA-256",
+    "projected physical points",
+    "condition IDs and semantic intentions",
+    "model sampling seed",
+    "metrics and claim boundary"
+  ],
+  "paper_source": "Chen et al., Steerable Vision-Language-Action Policies for Embodied Reasoning and Hierarchical Control, Appendix A: pixel coordinates normalized from 0 to 255"
+}

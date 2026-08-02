@@ -2,6 +2,8 @@
   "schema_version": "1.0.0",
   "status": "frozen_before_fixed_observation_probe",
   "frozen_at_utc": "2026-08-02T15:30:49Z",
+  "amended_at_utc": "2026-08-02T15:39:03Z",
+  "amendment": "command_probe_amendment_001.json",
   "purpose": "Paper-inspired diagnostic of command-interface sensitivity on one identical neutral observation. This is secondary evidence and cannot substitute for closed-loop success.",
   "source": {
     "policy_data_split": "excluded 51xx calibration",
@@ -28,9 +30,21 @@
       "left_of_bowl_target": [617, 482],
       "right_of_bowl_target": [779, 384]
     },
+    "paper_coordinate_range": [0, 255],
+    "paper_coordinate_origin": "top-left; first value is column from the left and second is row from the top",
+    "points_0_255": {
+      "gripper": [171, 64],
+      "rubiks_cube": [153, 175],
+      "red_bowl": [141, 152],
+      "left_of_bowl_target": [123, 171],
+      "right_of_bowl_target": [155, 136]
+    },
     "gripper_to_cube_trace_px": [[859, 181], [828, 286], [797, 391], [767, 495]],
     "left_placement_trace_px": [[767, 495], [717, 491], [667, 486], [617, 482]],
-    "right_placement_trace_px": [[767, 495], [771, 458], [775, 421], [779, 384]]
+    "right_placement_trace_px": [[767, 495], [771, 458], [775, 421], [779, 384]],
+    "gripper_to_cube_trace_0_255": [[171, 64], [165, 101], [159, 138], [153, 175]],
+    "left_placement_trace_0_255": [[153, 175], [143, 174], [133, 172], [123, 171]],
+    "right_placement_trace_0_255": [[153, 175], [154, 162], [154, 149], [155, 136]]
   },
   "sampling_seed": 8100000,
   "conditions": [
@@ -72,32 +86,32 @@
     {
       "id": "gripper_trace_to_cube",
       "style": "gripper_trace",
-      "prompt": "Move the gripper through left-camera pixel points [(859,181), (828,286), (797,391), (767,495)]"
+      "prompt": "Move the gripper through left-camera points [(171,64), (165,101), (159,138), (153,175)]"
     },
     {
       "id": "point_cube",
       "style": "point",
-      "prompt": "Grasp the rubiks cube at left-camera image point [767,495]"
+      "prompt": "Grasp the rubiks cube at left-camera point [153,175]"
     },
     {
       "id": "point_left_target",
       "style": "point_spatial",
-      "prompt": "Place the rubiks cube at left-camera image point [617,482]"
+      "prompt": "Place the rubiks cube at left-camera point [123,171]"
     },
     {
       "id": "point_right_target",
       "style": "point_spatial_counterfactual",
-      "prompt": "Place the rubiks cube at left-camera image point [779,384]"
+      "prompt": "Place the rubiks cube at left-camera point [155,136]"
     },
     {
       "id": "combination_left",
       "style": "combination",
-      "prompt": "Move left from gripper point [859,181] to the rubiks cube at [767,495], firmly grasp it, then follow [(767,495), (717,491), (667,486), (617,482)]"
+      "prompt": "Move left from gripper point [171,64] to the rubiks cube at [153,175], firmly grasp it, then follow [(153,175), (143,174), (133,172), (123,171)]"
     },
     {
       "id": "combination_right",
       "style": "combination_counterfactual",
-      "prompt": "Move right from gripper point [859,181] to the rubiks cube at [767,495], firmly grasp it, then follow [(767,495), (771,458), (775,421), (779,384)]"
+      "prompt": "Move right from gripper point [171,64] to the rubiks cube at [153,175], firmly grasp it, then follow [(153,175), (154,162), (154,149), (155,136)]"
     },
     {
       "id": "unrelated_control",

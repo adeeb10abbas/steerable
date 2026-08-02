@@ -1242,7 +1242,8 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         "| Human semantic audit | `../semantic_confirmation_audit_plan.json` and `../semantic_confirmation_audit.md` | Outcome-independent sheet sample and completed visual review |",
         "| Command probes | `compiled_evidence.json` | Exact repeat, command sensitivity, semantic futures |",
         "| GPU assignment audit | `../cosmos_gpu_assignment_audit.json` | Quantifies why cross-card Cosmos output was excluded |",
-        "| Confirmation resource snapshot | `../operational_snapshot_cosmos_confirmation.json` | Temperatures, memory, utilization, and physical GPU roles during a valid request |",
+        "| Cosmos resource snapshot | `../operational_snapshot_cosmos_confirmation.json` | Temperatures, memory, utilization, and physical GPU roles during a valid WAM request |",
+        "| pi0.5 resource snapshot | `../operational_snapshot_pi05_confirmation.json` | Temperatures, memory, utilization, and physical GPU roles during a valid VLA request |",
         "| Raw file hash ledger | `raw_evidence_manifest.csv` | Byte size and SHA-256 for every prospective raw/derived evidence file |",
         "| Supporting hash ledger | `supporting_evidence_manifest.csv` | Calibration, exclusions, and separately labeled retrospective raw/derived evidence |",
         "| Setup exclusion | `../setup_exclusions/2026-08-02_cosmos_canonical_driver_check.md` | Failed startup with zero requests, excluded transparently |",
@@ -1387,6 +1388,7 @@ def main() -> None:
         root / "checkpoint_provenance.json",
         root / "operational_snapshot_cosmos.json",
         root / "operational_snapshot_cosmos_confirmation.json",
+        root / "operational_snapshot_pi05_confirmation.json",
         root / "cosmos_gpu_assignment_audit.json",
         root / "setup_exclusions/2026-08-02_cosmos_canonical_driver_check.md",
         root / "setup_exclusions/2026-08-02_cosmos_gpu0_thermal_restart.md",
@@ -1435,6 +1437,9 @@ def main() -> None:
         "operational": {
             "cosmos_confirmation_snapshot": _load(
                 root / "operational_snapshot_cosmos_confirmation.json"
+            ),
+            "pi05_confirmation_snapshot": _load(
+                root / "operational_snapshot_pi05_confirmation.json"
             ),
             "cosmos_excluded_initial_snapshot": _load(
                 root / "operational_snapshot_cosmos.json"

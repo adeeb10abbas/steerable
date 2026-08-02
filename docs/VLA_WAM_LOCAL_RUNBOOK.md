@@ -154,6 +154,13 @@ cd /home/ali/projects/steerable
   --output-dir artifacts/vla_wam_shared_v1/command_probe/pi05
 ```
 
+During a valid closed-loop policy request, capture one steady-state
+`nvidia-smi` point measurement (temperature, memory, utilization, power, and
+thermal-throttling flags for both physical cards), the server and simulator
+PIDs/RSS, and the exact GPU roles in
+`artifacts/vla_wam_shared_v1/operational_snapshot_pi05_confirmation.json`.
+This is explicitly a point measurement rather than a peak-memory claim.
+
 Run the static conditions through the shared container wrapper:
 
 ```bash

@@ -19,7 +19,20 @@ prediction recording. Only the physical roles of the two identical RTX 3090s
 are swapped: the Cosmos server moves to the cooler physical GPU 1 and Isaac Sim
 moves to physical GPU 0.
 
-Before accepting the restarted batch, seed 6100 is compared against its
-preserved counterpart for exact first-chunk action and future-video equality.
-If the two cards do not reproduce, the restart is invalid and the GPU identity
-must be treated as an experimental factor.
+Before accepting the restarted batch, seed 6100 was compared against its
+preserved counterpart. The simulator initial-state arrays were exactly equal
+(maximum absolute difference 0.0), as were the prompt, request/server seed,
+joint state, gripper state, and output shapes. The physical-GPU swap was **not**
+pixel reproducible:
+
+- conditioning-image MAE was 0.193934 on the 0–255 scale;
+- 17.43% of color-channel values differed, with a 99th-percentile absolute
+  difference of 2 and a maximum of 15;
+- first action-chunk RMS was 0.010875;
+- none of 15 conditioning PNG, action NPY, or future MP4 hashes matched.
+
+The safety restart is therefore a real renderer/model-input factor despite the
+identical simulator state. The original canonical batch, which used the old GPU
+assignment, is also excluded and rerun from seed 6100 under the new assignment.
+Only the fresh canonical and short-paraphrase batches—both Cosmos server on
+physical GPU 1 and Isaac Sim on physical GPU 0—enter the prospective comparison.

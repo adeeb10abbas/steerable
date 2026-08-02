@@ -178,9 +178,9 @@ Start the policy server on physical GPU 1:
 ```bash
 cd /home/ali/openpi-robolab
 CUDA_VISIBLE_DEVICES=1 .venv/bin/python scripts/serve_policy.py \
+  --port 8000 \
   policy:checkpoint --policy.config=pi05_droid_jointpos \
-  --policy.dir=/home/ali/.cache/openpi/openpi-assets-simeval/pi05_droid_jointpos \
-  --port=8000
+  --policy.dir=/home/ali/.cache/openpi/openpi-assets-simeval/pi05_droid_jointpos
 ```
 
 Run the fixed-observation probe with the same frozen plan:

@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "status": "valid_confirmation_point_measurement",
+  "captured_at_utc": "2026-08-02T22:06:32Z",
+  "host": "ali-MS-7D25",
+  "measurement_scope": "One steady-state point sampled while the canonical-left confirmation episode was active and the policy GPU reported nonzero inference utilization. This is not a peak-memory or latency measurement.",
+  "model": {
+    "id": "pi05_droid_vla",
+    "checkpoint": "/home/ali/.cache/openpi/openpi-assets-simeval/pi05_droid_jointpos",
+    "checkpoint_directory_bytes": 12435172897,
+    "openpi_commit": "9e46d3aea26417bfb564227734b95d010aa827e5",
+    "server_command": "CUDA_VISIBLE_DEVICES=1 .venv/bin/python scripts/serve_policy.py --port 8000 policy:checkpoint --policy.config=pi05_droid_jointpos --policy.dir=/home/ali/.cache/openpi/openpi-assets-simeval/pi05_droid_jointpos"
+  },
+  "simulator": {
+    "robolab_commit": "992bc34eedb2b909888af8a334a2ac33b86c51d8",
+    "container": "v1-pi05-canonical",
+    "container_state": "running",
+    "container_paused": false,
+    "container_init_pid": 2959782,
+    "instruction": "Put the rubiks cube to the left of the bowl",
+    "instruction_type": "default",
+    "controller": "static",
+    "open_loop_horizon": 15,
+    "episode_seed_block": 6100,
+    "command": "/workspace/isaaclab/_isaac_sim/python.sh policies/pi0_family/run.py --policy pi05 --task RubiksCubeLeftOfBowlMatchedTask RubiksCubeRightOfBowlMatchedTask --num-envs 1 --num-runs 10 --headless --device cuda:0 --video-mode none --open-loop-horizon 15 --output-folder-name v1_pi05_canonical --instruction-type default --sampling-seed-base 6100 --kit_args=--/rtx/verifyDriverVersion/enabled=false"
+  },
+  "driver_version": "535.309.01",
+  "physical_gpu_roles": {
+    "0": "Isaac Sim inside v1-pi05-canonical",
+    "1": "pi0.5 DROID joint-position policy server"
+  },
+  "gpu_point_measurements": [
+    {
+      "index": 0,
+      "uuid": "GPU-169a32b5-70a4-4e3b-732b-1e14c55fde3a",
+      "pci_bus_id": "00000000:01:00.0",
+      "name": "NVIDIA GeForce RTX 3090",
+      "temperature_c": 75,
+      "memory_used_mib": 7570,
+      "utilization_percent": 40,
+      "power_draw_w": 171.64,
+      "software_thermal_slowdown": false,
+      "hardware_thermal_slowdown": false
+    },
+    {
+      "index": 1,
+      "uuid": "GPU-d8caae27-6b67-b96a-74de-124a0ea0907e",
+      "pci_bus_id": "00000000:05:00.0",
+      "name": "NVIDIA GeForce RTX 3090",
+      "temperature_c": 47,
+      "memory_used_mib": 18509,
+      "utilization_percent": 64,
+      "power_draw_w": 136.54,
+      "software_thermal_slowdown": false,
+      "hardware_thermal_slowdown": false
+    }
+  ],
+  "process_point_measurements": [
+    {
+      "role": "pi0.5 policy server",
+      "host_pid": 2958554,
+      "rss_kib": 5099480,
+      "gpu_index": 1,
+      "gpu_memory_mib": 18488
+    },
+    {
+      "role": "Isaac Sim runner",
+      "host_pid": 2959839,
+      "rss_kib": 8612376,
+      "gpu_index": 0,
+      "gpu_memory_mib": 7520
+    }
+  ],
+  "operational_notes": [
+    "The policy server restored 6.2 GiB of parameters and loaded DROID normalization statistics from the checkpoint assets.",
+    "Isaac Sim reported the host CPU governor as powersave; latency measurements therefore describe this host state.",
+    "The narrow RTX driver-version-check override addresses Isaac's 535.53.01 parser display; nvidia-smi reported 535.309.01 on both cards."
+  ]
+}

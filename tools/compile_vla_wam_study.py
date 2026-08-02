@@ -530,12 +530,24 @@ def _plot_hierarchy(closed: dict[str, Any], output: Path) -> None:
         width = 0.34
         for controller_index, controller in enumerate(("static", "predicate_oracle")):
             values = [selected[(controller, direction)]["success_rate"] for direction in ("left", "right")]
+            intervals = [
+                selected[(controller, direction)]["success_beta11_interval_95"]
+                for direction in ("left", "right")
+            ]
+            errors = np.asarray(
+                [
+                    [value - interval[0] for value, interval in zip(values, intervals)],
+                    [interval[1] - value for value, interval in zip(values, intervals)],
+                ]
+            )
             bars = axis.bar(
                 x + (controller_index - 0.5) * width,
                 values,
                 width,
                 label="Static task" if controller == "static" else "Predicate oracle",
                 color="#7b7b7b" if controller == "static" else MODEL_COLORS[model_id],
+                yerr=errors,
+                capsize=3,
             )
             for bar, value in zip(bars, values):
                 axis.text(bar.get_x() + bar.get_width() / 2, value + 0.035, f"{value:.0%}", ha="center")

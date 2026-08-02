@@ -800,9 +800,14 @@ def score_probe(args: argparse.Namespace) -> None:
         # predicate to an atomic gripper-motion command would silently score a
         # different behavior than the command asks for. Only styles whose goal
         # is actually a left/right cube placement receive a semantic label.
-        semantic_applicable = record["style"] in RELATION_PROBE_STYLES
+        explicit_requested = record.get("requested_relation")
+        if explicit_requested not in {None, "left", "right"}:
+            raise ValueError(f"Invalid explicit requested relation in probe record: {record}")
+        semantic_applicable = (
+            explicit_requested is not None or record["style"] in RELATION_PROBE_STYLES
+        )
         if semantic_applicable:
-            requested_relation = _request_direction(record["prompt"])
+            requested_relation = explicit_requested or _request_direction(record["prompt"])
         else:
             requested_relation = None
         requested_fraction = (

@@ -1,0 +1,132 @@
+{
+  "schema_version": "1.0.0",
+  "status": "frozen_before_fixed_observation_probe",
+  "frozen_at_utc": "2026-08-02T20:50:27Z",
+  "analysis_tier": "post_interim_supplemental_diagnostic",
+  "parent_probe_plan": "artifacts/vla_wam_shared_v1/command_probe_plan.json",
+  "parent_probe_plan_sha256": "6c250c5860206ef6e5ac8e16bb9e2188af6dc1a66dc59e609d11f1271872123d",
+  "purpose": "Exact-observation direct task-language diagnostic for syntax, semantic scope, and contrastive target-token order. Distances establish sensitivity only; closed-loop outcomes establish control.",
+  "outcome_timing_disclosure": "Four Cosmos declarative-left episodes had completed and all four succeeded. No contrastive episode and no request under this supplemental plan existed.",
+  "source": {
+    "policy_data_split": "excluded 51xx calibration",
+    "episode_seed": 5100,
+    "task": "RubiksCubeLeftOfBowlMatchedTask",
+    "episode": 0,
+    "replan": 0,
+    "conditioning_png": "/home/ali/projects/RoboLab/output/v1_calibration_cosmos_left_5100/RubiksCubeLeftOfBowlMatchedTask/predicted_chunks/episode_000/chunk_000/conditioning.png",
+    "conditioning_png_sha256": "32080f16b44c4a7f9dd32a4f2d84f23e8d2e766585d01443efcc687414e72144",
+    "conditioning_raw_rgb_sha256": "6c9a4d1a38e7ac167a4d0a0e065054fe6b172d59974940d00f082864d8376767",
+    "conditioning_shape": [540, 640, 3],
+    "layout": "wrist 640x360 on top; left and right exterior cameras each 320x180 on bottom",
+    "joint_position": [0.0, -0.6283185482025146, 0.0, -2.5132741928100586, 0.0, 1.884955644607544, 0.0],
+    "gripper_position": [0.0]
+  },
+  "grounding": {
+    "camera": "over_shoulder_left_camera",
+    "source_resolution_px": [1280, 720],
+    "points_px": {
+      "gripper": [859, 181],
+      "rubiks_cube": [767, 495],
+      "red_bowl": [706, 428],
+      "left_of_bowl_target": [617, 482],
+      "right_of_bowl_target": [779, 384]
+    }
+  },
+  "sampling_seed": 8200000,
+  "conditions": [
+    {
+      "id": "task_left",
+      "style": "task",
+      "prompt_family": "canonical",
+      "requested_relation": "left",
+      "prompt": "Put the rubiks cube to the left of the bowl"
+    },
+    {
+      "id": "task_left_repeat",
+      "style": "exact_repeat_control",
+      "prompt_family": "canonical_repeat",
+      "requested_relation": "left",
+      "prompt": "Put the rubiks cube to the left of the bowl"
+    },
+    {
+      "id": "task_right",
+      "style": "opposite_relation_control",
+      "prompt_family": "canonical",
+      "requested_relation": "right",
+      "prompt": "Put the rubiks cube to the right of the bowl"
+    },
+    {
+      "id": "short_left",
+      "style": "paraphrase_control",
+      "prompt_family": "short_paraphrase",
+      "requested_relation": "left",
+      "prompt": "Put the cube left of the bowl"
+    },
+    {
+      "id": "short_right",
+      "style": "paraphrase_control",
+      "prompt_family": "short_paraphrase",
+      "requested_relation": "right",
+      "prompt": "Put the cube right of the bowl"
+    },
+    {
+      "id": "declarative_left",
+      "style": "paraphrase_control",
+      "prompt_family": "declarative_goal",
+      "requested_relation": "left",
+      "prompt": "The rubiks cube should end up to the left of the bowl"
+    },
+    {
+      "id": "declarative_right",
+      "style": "paraphrase_control",
+      "prompt_family": "declarative_goal",
+      "requested_relation": "right",
+      "prompt": "The rubiks cube should end up to the right of the bowl"
+    },
+    {
+      "id": "contrastive_first_left",
+      "style": "contrastive_task",
+      "prompt_family": "contrastive_goal",
+      "target_token_order": "target_first",
+      "requested_relation": "left",
+      "prompt": "Put the rubiks cube to the left of the bowl, not to the right of the bowl"
+    },
+    {
+      "id": "contrastive_first_right",
+      "style": "contrastive_task",
+      "prompt_family": "contrastive_goal",
+      "target_token_order": "target_first",
+      "requested_relation": "right",
+      "prompt": "Put the rubiks cube to the right of the bowl, not to the left of the bowl"
+    },
+    {
+      "id": "contrastive_last_left",
+      "style": "contrastive_task",
+      "prompt_family": "contrastive_order_control",
+      "target_token_order": "target_last",
+      "requested_relation": "left",
+      "prompt": "Do not put the rubiks cube to the right of the bowl; put it to the left of the bowl"
+    },
+    {
+      "id": "contrastive_last_right",
+      "style": "contrastive_task",
+      "prompt_family": "contrastive_order_control",
+      "target_token_order": "target_last",
+      "requested_relation": "right",
+      "prompt": "Do not put the rubiks cube to the left of the bowl; put it to the right of the bowl"
+    }
+  ],
+  "reporting": {
+    "shared": [
+      "exact-repeat action RMS",
+      "action RMS versus canonical left",
+      "paired left/right action RMS per prompt family",
+      "target-first versus target-last contrastive action RMS"
+    ],
+    "wam_only": [
+      "future pixel MAE versus canonical left",
+      "prompt-blind semantic future label using the explicit registered requested_relation"
+    ],
+    "claim_boundary": "This one-observation probe establishes deterministic language sensitivity and semantic future direction only. It cannot substitute for closed-loop task success or support broad prompt-robustness claims."
+  }
+}

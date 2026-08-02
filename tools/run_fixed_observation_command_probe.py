@@ -221,18 +221,20 @@ def main() -> None:
             output["video"] = video
             _save_mp4(video, args.output_dir / f"{condition_id}_future.mp4", args.future_fps)
         outputs[condition_id] = output
-        records.append(
-            {
-                "condition": condition_id,
-                "style": condition["style"],
-                "prompt": condition["prompt"],
-                "requested_sampling_seed": int(plan["sampling_seed"]),
-                "server_sampling_seed": response.get("sampling_seed"),
-                "request_wall_seconds": request_wall_seconds,
-                "action_shape": list(action.shape),
-                "future_shape": list(video.shape) if video is not None else None,
-            }
-        )
+        record = {
+            "condition": condition_id,
+            "style": condition["style"],
+            "prompt": condition["prompt"],
+            "requested_sampling_seed": int(plan["sampling_seed"]),
+            "server_sampling_seed": response.get("sampling_seed"),
+            "request_wall_seconds": request_wall_seconds,
+            "action_shape": list(action.shape),
+            "future_shape": list(video.shape) if video is not None else None,
+        }
+        for optional_key in ("prompt_family", "requested_relation", "target_token_order"):
+            if optional_key in condition:
+                record[optional_key] = condition[optional_key]
+        records.append(record)
         print(f"completed {args.model} {condition_id}")
 
     canonical = outputs["task_left"]

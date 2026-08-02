@@ -1,0 +1,219 @@
+{
+  "claim_boundary": "This one-observation probe establishes deterministic language sensitivity and semantic future direction only. It cannot substitute for closed-loop task success or support broad prompt-robustness claims.",
+  "conditioning_png_sha256": "32080f16b44c4a7f9dd32a4f2d84f23e8d2e766585d01443efcc687414e72144",
+  "conditioning_raw_rgb_sha256": "6c9a4d1a38e7ac167a4d0a0e065054fe6b172d59974940d00f082864d8376767",
+  "exact_repeat_action_rms": 0.0,
+  "exact_repeat_future_pixel_mae": null,
+  "model": "pi05",
+  "plan_path": "/home/ali/projects/steerable/artifacts/vla_wam_shared_v1/direct_task_command_probe_plan.json",
+  "plan_sha256": "c5025b51f57224308d16338db38ab57b06e7025ba9e585a05993e01a79952fc3",
+  "records": [
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": false,
+      "action_rms_vs_task_left": 0.0,
+      "action_shape": [
+        15,
+        8
+      ],
+      "condition": "task_left",
+      "future_shape": null,
+      "prompt": "Put the rubiks cube to the left of the bowl",
+      "prompt_family": "canonical",
+      "request_wall_seconds": 0.1564266060013324,
+      "requested_relation": "left",
+      "requested_sampling_seed": 8200000,
+      "server_sampling_seed": 8200000,
+      "style": "task"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": false,
+      "action_rms_vs_task_left": 0.0,
+      "action_shape": [
+        15,
+        8
+      ],
+      "condition": "task_left_repeat",
+      "future_shape": null,
+      "prompt": "Put the rubiks cube to the left of the bowl",
+      "prompt_family": "canonical_repeat",
+      "request_wall_seconds": 0.14965365210082382,
+      "requested_relation": "left",
+      "requested_sampling_seed": 8200000,
+      "server_sampling_seed": 8200000,
+      "style": "exact_repeat_control"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.00362381172733518,
+      "action_shape": [
+        15,
+        8
+      ],
+      "condition": "task_right",
+      "future_shape": null,
+      "prompt": "Put the rubiks cube to the right of the bowl",
+      "prompt_family": "canonical",
+      "request_wall_seconds": 0.14495430700480938,
+      "requested_relation": "right",
+      "requested_sampling_seed": 8200000,
+      "server_sampling_seed": 8200000,
+      "style": "opposite_relation_control"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.02942675340710119,
+      "action_shape": [
+        15,
+        8
+      ],
+      "condition": "short_left",
+      "future_shape": null,
+      "prompt": "Put the cube left of the bowl",
+      "prompt_family": "short_paraphrase",
+      "request_wall_seconds": 0.14515351504087448,
+      "requested_relation": "left",
+      "requested_sampling_seed": 8200000,
+      "server_sampling_seed": 8200000,
+      "style": "paraphrase_control"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.02854087886822323,
+      "action_shape": [
+        15,
+        8
+      ],
+      "condition": "short_right",
+      "future_shape": null,
+      "prompt": "Put the cube right of the bowl",
+      "prompt_family": "short_paraphrase",
+      "request_wall_seconds": 0.14524355600588024,
+      "requested_relation": "right",
+      "requested_sampling_seed": 8200000,
+      "server_sampling_seed": 8200000,
+      "style": "paraphrase_control"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.023187738554125675,
+      "action_shape": [
+        15,
+        8
+      ],
+      "condition": "declarative_left",
+      "future_shape": null,
+      "prompt": "The rubiks cube should end up to the left of the bowl",
+      "prompt_family": "declarative_goal",
+      "request_wall_seconds": 0.1452040079748258,
+      "requested_relation": "left",
+      "requested_sampling_seed": 8200000,
+      "server_sampling_seed": 8200000,
+      "style": "paraphrase_control"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.022141693514130773,
+      "action_shape": [
+        15,
+        8
+      ],
+      "condition": "declarative_right",
+      "future_shape": null,
+      "prompt": "The rubiks cube should end up to the right of the bowl",
+      "prompt_family": "declarative_goal",
+      "request_wall_seconds": 0.14559769292827696,
+      "requested_relation": "right",
+      "requested_sampling_seed": 8200000,
+      "server_sampling_seed": 8200000,
+      "style": "paraphrase_control"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.007549677571777702,
+      "action_shape": [
+        15,
+        8
+      ],
+      "condition": "contrastive_first_left",
+      "future_shape": null,
+      "prompt": "Put the rubiks cube to the left of the bowl, not to the right of the bowl",
+      "prompt_family": "contrastive_goal",
+      "request_wall_seconds": 0.14730274700559676,
+      "requested_relation": "left",
+      "requested_sampling_seed": 8200000,
+      "server_sampling_seed": 8200000,
+      "style": "contrastive_task",
+      "target_token_order": "target_first"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.00740666872239644,
+      "action_shape": [
+        15,
+        8
+      ],
+      "condition": "contrastive_first_right",
+      "future_shape": null,
+      "prompt": "Put the rubiks cube to the right of the bowl, not to the left of the bowl",
+      "prompt_family": "contrastive_goal",
+      "request_wall_seconds": 0.14602355600800365,
+      "requested_relation": "right",
+      "requested_sampling_seed": 8200000,
+      "server_sampling_seed": 8200000,
+      "style": "contrastive_task",
+      "target_token_order": "target_first"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.009391752750163952,
+      "action_shape": [
+        15,
+        8
+      ],
+      "condition": "contrastive_last_left",
+      "future_shape": null,
+      "prompt": "Do not put the rubiks cube to the right of the bowl; put it to the left of the bowl",
+      "prompt_family": "contrastive_order_control",
+      "request_wall_seconds": 0.1458114970009774,
+      "requested_relation": "left",
+      "requested_sampling_seed": 8200000,
+      "server_sampling_seed": 8200000,
+      "style": "contrastive_task",
+      "target_token_order": "target_last"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.008156445882636957,
+      "action_shape": [
+        15,
+        8
+      ],
+      "condition": "contrastive_last_right",
+      "future_shape": null,
+      "prompt": "Do not put the rubiks cube to the left of the bowl; put it to the right of the bowl",
+      "prompt_family": "contrastive_order_control",
+      "request_wall_seconds": 0.14543163205962628,
+      "requested_relation": "right",
+      "requested_sampling_seed": 8200000,
+      "server_sampling_seed": 8200000,
+      "style": "contrastive_task",
+      "target_token_order": "target_last"
+    }
+  ],
+  "sampling_seed": 8200000,
+  "schema_version": 1,
+  "server": "ws://localhost:8000",
+  "status": "fixed_observation_secondary_diagnostic",
+  "timing_note": "Client WebSocket round-trip around infer(), including transport, server inference, serialization, and any returned-video decoding. Cosmos returns actions plus decoded future video; pi0.5 returns actions only, so the timings represent deployed interfaces rather than an architecture-only comparison."
+}

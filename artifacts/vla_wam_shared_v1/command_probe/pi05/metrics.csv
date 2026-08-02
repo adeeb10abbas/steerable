@@ -1,0 +1,17 @@
+condition,style,prompt,requested_sampling_seed,server_sampling_seed,request_wall_seconds,action_shape,future_shape,action_rms_vs_task_left,action_effect_to_repeat_noise,action_exceeds_repeat_noise
+task_left,task,Put the rubiks cube to the left of the bowl,8100000,8100000,11.24285890092142,"[15, 8]",,0.0,,False
+task_left_repeat,exact_repeat_control,Put the rubiks cube to the left of the bowl,8100000,8100000,0.14609326503705233,"[15, 8]",,0.0,,False
+task_left_paraphrase,paraphrase_control,Place the multicolored cube on the table on the bowl's left side,8100000,8100000,0.1474642480025068,"[15, 8]",,0.015941526369720446,,True
+task_right,opposite_relation_control,Put the rubiks cube to the right of the bowl,8100000,8100000,0.1453935339814052,"[15, 8]",,0.004000380203157861,,True
+subtask_grasp,subtask,Reach for and firmly grasp the rubiks cube,8100000,8100000,0.14582660899031907,"[15, 8]",,0.01905587168369308,,True
+atomic_left,atomic_motion,Move the gripper left,8100000,8100000,0.14471639599651098,"[15, 8]",,0.15520671471793823,,True
+atomic_right,atomic_motion_counterfactual,Move the gripper right,8100000,8100000,0.14498360897414386,"[15, 8]",,0.16478055378368928,,True
+gripper_trace_to_cube,gripper_trace,"Move the gripper through left-camera points [(171,64), (165,101), (159,138), (153,175)]",8100000,8100000,0.1454545200103894,"[15, 8]",,0.17870011557800417,,True
+point_cube,point,"Grasp the rubiks cube at left-camera point [153,175]",8100000,8100000,0.14524305996019393,"[15, 8]",,0.00795759552524884,,True
+point_left_target,point_spatial,"Place the rubiks cube at left-camera point [123,171]",8100000,8100000,0.14473599893972278,"[15, 8]",,0.008634616381364592,,True
+point_right_target,point_spatial_counterfactual,"Place the rubiks cube at left-camera point [155,136]",8100000,8100000,0.14505516493227333,"[15, 8]",,0.006118576594514334,,True
+combination_left,combination,"Move left from gripper point [171,64] to the rubiks cube at [153,175], firmly grasp it, then follow [(153,175), (143,174), (133,172), (123,171)]",8100000,8100000,0.14492529002018273,"[15, 8]",,0.10939195819423961,,True
+combination_right,combination_counterfactual,"Move right from gripper point [171,64] to the rubiks cube at [153,175], firmly grasp it, then follow [(153,175), (154,162), (154,149), (155,136)]",8100000,8100000,0.14533396298065782,"[15, 8]",,0.12635639578285698,,True
+unrelated_control,unrelated_control,Open the top drawer,8100000,8100000,0.1459388619987294,"[15, 8]",,0.13323926749820117,,True
+noun_swap_control,noun_control,Put the banana to the left of the bowl,8100000,8100000,0.14858873700723052,"[15, 8]",,0.13756351564969813,,True
+contradictory_control,contradictory_control,Put the rubiks cube to both the left and the right of the bowl at the same time,8100000,8100000,0.1482339930953458,"[15, 8]",,0.007588233928292505,,True

@@ -23,6 +23,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
+import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import binomtest
@@ -676,6 +677,70 @@ def _plot_probe(probes: dict[str, Any], output: Path) -> None:
     plt.close(fig)
 
 
+def _read_probe_frames(path: Path, indices: tuple[int, ...]) -> list[np.ndarray]:
+    capture = cv2.VideoCapture(str(path))
+    wanted = set(indices)
+    frames: dict[int, np.ndarray] = {}
+    index = 0
+    try:
+        while wanted:
+            ok, bgr = capture.read()
+            if not ok:
+                break
+            if index in wanted:
+                frames[index] = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
+                wanted.remove(index)
+            index += 1
+    finally:
+        capture.release()
+    if wanted:
+        raise RuntimeError(f"Missing frames {sorted(wanted)} in {path}")
+    return [frames[index] for index in indices]
+
+
+def _plot_selected_probe_futures(root: Path, probes: dict[str, Any], output: Path) -> None:
+    selected = [
+        "task_left",
+        "task_left_repeat",
+        "task_left_paraphrase",
+        "task_right",
+        "unrelated_control",
+        "noun_swap_control",
+    ]
+    labels = {
+        "task_left": "canonical left",
+        "task_left_repeat": "exact repeat",
+        "task_left_paraphrase": "left paraphrase",
+        "task_right": "opposite right",
+        "unrelated_control": "unrelated drawer",
+        "noun_swap_control": "banana noun swap",
+    }
+    semantic = {
+        row["condition"]: row
+        for row in probes["cosmos"]["semantic_futures"]["rows"]
+    }
+    indices = (0, 16, 32)
+    fig, axes = plt.subplots(len(selected), len(indices), figsize=(9.4, 13.0))
+    for row_index, condition in enumerate(selected):
+        frames = _read_probe_frames(
+            root / "command_probe/cosmos" / f"{condition}_future.mp4", indices
+        )
+        relation = semantic[condition]["predicted_relation"] or "uncertain"
+        for column_index, (frame_index, frame) in enumerate(zip(indices, frames)):
+            axis = axes[row_index, column_index]
+            axis.imshow(frame)
+            axis.set_xticks([])
+            axis.set_yticks([])
+            if row_index == 0:
+                axis.set_title("conditioning" if frame_index == 0 else f"future frame {frame_index}")
+            if column_index == 0:
+                axis.set_ylabel(f"{labels[condition]}\nsemantic: {relation}")
+    fig.suptitle("Same observation and seed: appearance changes without a one-chunk relation change")
+    fig.tight_layout()
+    fig.savefig(output / "command_probe_selected_futures.png", bbox_inches="tight")
+    plt.close(fig)
+
+
 def _write_summary_csv(path: Path, rows: list[dict[str, Any]]) -> None:
     if not rows:
         return
@@ -775,6 +840,7 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         "- `cosmos_imagination_execution_quadrants.png`: WAM-only semantic future/action agreement.",
         "- `semantic_threshold_sensitivity.png`: scorer coverage/agreement at 0.10, 0.15, and frozen 0.20 m reliability thresholds.",
         "- `command_probe_action_sensitivity.png`: same-observation six-style prompt response.",
+        "- `command_probe_selected_futures.png`: selected Cosmos future strips showing large appearance changes without a one-chunk cube/bowl relation change.",
         "",
         "## Retrospective evidence tier",
         "",
@@ -913,6 +979,7 @@ def main() -> None:
     _plot_semantic_quadrants(semantic, output)
     _plot_semantic_threshold_sensitivity(semantic, output)
     _plot_probe(probes, output)
+    _plot_selected_probe_futures(root, probes, output)
     _dump(output / "compiled_evidence.json", compiled)
     _write_summary_csv(output / "semantic_future_groups.csv", semantic["groups"])
     _write_summary_csv(

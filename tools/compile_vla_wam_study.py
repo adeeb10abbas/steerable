@@ -337,6 +337,7 @@ def _semantic_threshold_sensitivity(
 
 def _semantic_aggregate(summaries: list[tuple[str, Path, dict[str, Any]]]) -> dict[str, Any]:
     groups: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+    episode_groups: dict[tuple[str, str, str, int], list[dict[str, Any]]] = defaultdict(list)
     all_rows = []
     input_summaries = []
     for wording, directory, summary in summaries:
@@ -351,6 +352,14 @@ def _semantic_aggregate(summaries: list[tuple[str, Path, dict[str, Any]]]) -> di
         for row in summary["rows"]:
             enriched = {**row, "wording": wording}
             groups[(wording, row["requested_relation"])].append(enriched)
+            episode_groups[
+                (
+                    wording,
+                    row["requested_relation"],
+                    row["task_dir"],
+                    int(row["episode_index"]),
+                )
+            ].append(enriched)
             all_rows.append(enriched)
     grouped = []
     for (wording, direction), rows in sorted(groups.items()):
@@ -383,6 +392,35 @@ def _semantic_aggregate(summaries: list[tuple[str, Path, dict[str, Any]]]) -> di
                 "quadrant_counts": dict(counts),
             }
         )
+    episode_summaries = []
+    for (wording, direction, task_dir, episode_index), rows in sorted(
+        episode_groups.items()
+    ):
+        ordered = sorted(rows, key=lambda row: int(row["replan_index"]))
+        certain = [row for row in ordered if row["imagined_requested"] is not None]
+        last = ordered[-1]
+        episode_summaries.append(
+            {
+                "wording": wording,
+                "direction": direction,
+                "task_dir": task_dir,
+                "episode_index": episode_index,
+                "chunks": len(ordered),
+                "certain_chunks": len(certain),
+                "coverage_fraction": len(certain) / len(ordered),
+                "any_imagined_requested": (
+                    any(bool(row["imagined_requested"]) for row in certain)
+                    if certain
+                    else None
+                ),
+                "any_executed_requested": any(
+                    bool(row["executed_requested"]) for row in ordered
+                ),
+                "terminal_imagined_requested": last["imagined_requested"],
+                "terminal_executed_requested": bool(last["executed_requested"]),
+                "terminal_quadrant": last["quadrant"],
+            }
+        )
     return {
         "input_summaries": input_summaries,
         "total_chunks": len(all_rows),
@@ -390,6 +428,7 @@ def _semantic_aggregate(summaries: list[tuple[str, Path, dict[str, Any]]]) -> di
         "guardrail": "Chunk rates are descriptive and receive no binomial interval because replans within an episode are correlated.",
         "threshold_sensitivity": _semantic_threshold_sensitivity(summaries),
         "groups": grouped,
+        "episode_summaries": episode_summaries,
         "rows": all_rows,
     }
 

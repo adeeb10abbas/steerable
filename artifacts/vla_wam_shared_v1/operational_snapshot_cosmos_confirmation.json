@@ -1,19 +1,19 @@
 {
   "schema_version": 1,
-  "captured_at_utc": "2026-08-02T16:41:06Z",
-  "measurement_context": "Valid short-paraphrase confirmation batch during a Cosmos3 Edge policy request. Physical GPU 1 served the policy with decoded futures; physical GPU 0 ran the RoboLab Isaac Sim client. This is a steady-state point measurement, not a peak-memory measurement.",
+  "captured_at_utc": "2026-08-02T17:52:41Z",
+  "measurement_context": "Valid canonical confirmation batch during a Cosmos3 Edge policy request, after the frozen thermal guard was introduced. Physical GPU 1 served the policy with decoded futures; physical GPU 0 ran the RoboLab Isaac Sim client. This is a steady-state point measurement, not a peak-memory measurement.",
   "host_driver_version": "535.309.01",
   "gpus": [
     {
       "index": 0,
       "name": "NVIDIA GeForce RTX 3090",
       "role": "RoboLab Isaac Sim client",
-      "temperature_c": 83,
-      "fan_percent": 89,
-      "memory_used_mib": 7917,
+      "temperature_c": 85,
+      "fan_percent": 83,
+      "memory_used_mib": 7949,
       "memory_total_mib": 24576,
       "utilization_percent": 1,
-      "power_draw_watts": 132.18,
+      "power_draw_watts": 162.55,
       "software_thermal_slowdown": true,
       "hardware_thermal_slowdown": false
     },
@@ -21,12 +21,12 @@
       "index": 1,
       "name": "NVIDIA GeForce RTX 3090",
       "role": "Cosmos3 Edge DROID policy server with video decoding",
-      "temperature_c": 67,
-      "fan_percent": 43,
-      "memory_used_mib": 14423,
+      "temperature_c": 66,
+      "fan_percent": 41,
+      "memory_used_mib": 14435,
       "memory_total_mib": 24576,
-      "utilization_percent": 100,
-      "power_draw_watts": 345.45,
+      "utilization_percent": 93,
+      "power_draw_watts": 159.81,
       "software_thermal_slowdown": false,
       "hardware_thermal_slowdown": false
     }
@@ -35,14 +35,14 @@
     {
       "role": "Cosmos3 Edge policy server",
       "pid_at_capture": 2475294,
-      "gpu_memory_mib": 14406,
-      "host_rss_kib": 2559700
+      "gpu_memory_mib": 14418,
+      "host_rss_kib": 2537796
     },
     {
       "role": "RoboLab Isaac Sim client",
-      "pid_at_capture": 2475586,
-      "gpu_memory_mib": 7866,
-      "host_rss_kib": 8891696
+      "pid_at_capture": 2520722,
+      "gpu_memory_mib": 7898,
+      "host_rss_kib": 8812644
     }
   ],
   "policy_server": {
@@ -56,9 +56,16 @@
   "simulator": {
     "physical_gpu": 0,
     "container_image": "robolab:codex-steerability",
-    "batch": "v1_cosmos_vague",
+    "batch": "v1_cosmos_canonical",
     "renderer": "realtime",
     "version_check_override": "--/rtx/verifyDriverVersion/enabled=false"
   },
-  "interpretation": "The policy server fits with approximately 14.4 GiB allocated on one 24 GiB card; the simulator separately uses approximately 7.9 GiB. The simulator card reported software thermal slowdown at this instant but remained below the documented 90 C safety stop threshold. No hardware thermal slowdown was active. Wall-time measurements, temperatures, and throttling state are reported rather than hidden."
+  "thermal_guard": {
+    "gpu_index": 0,
+    "pause_temperature_c": 87,
+    "resume_temperature_c": 80,
+    "emergency_stop_temperature_c": 90,
+    "event_log": "artifacts/vla_wam_shared_v1/thermal_logs/cosmos_canonical.jsonl"
+  },
+  "interpretation": "The policy server fits with approximately 14.4 GiB allocated on one 24 GiB card; the simulator separately uses approximately 7.9 GiB. The simulator card reported software thermal slowdown at this instant but remained below the 87 C proactive pause threshold and the 90 C emergency stop threshold. No hardware thermal slowdown was active. Wall-time measurements, temperatures, throttling state, and cooling pauses are reported rather than hidden."
 }

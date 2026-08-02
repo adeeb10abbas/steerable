@@ -770,6 +770,9 @@ Key protocol files:
   task identity for prompts containing both direction words;
 - `execution_geometry_amendment_005.json`: source-aligned root-pose geometry
   for endpoint and executed-state relations;
+- `trajectory_visualization_plan.json`: complete-gallery policy, coordinate
+  convention, deterministic social panel, and disclosed retrospective
+  exemplar rule;
 - `run_manifest.json`: local mapping for all eight direct-language conditions.
 
 Key implementation files:
@@ -777,6 +780,8 @@ Key implementation files:
 - `tools/compile_vla_wam_evidence.py`: fail-closed 160-episode compiler;
 - `tools/score_cosmos_semantic_futures.py`: frozen prompt-blind scorer;
 - `tools/run_fixed_observation_command_probe.py`: shared command-style probe;
+- `tools/render_trajectory_evidence.py`: every-episode path renderer,
+  machine-readable index, self-contained gallery, and social exports;
 - `tools/compile_vla_wam_study.py`: final join, integrity checks, paired
   diagnostics, robustness audit, and figures.
 

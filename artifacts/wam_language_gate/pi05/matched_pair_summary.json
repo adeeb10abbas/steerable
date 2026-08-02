@@ -1,0 +1,167 @@
+{
+  "schema_version": 1,
+  "model": "pi0.5 DROID joint-position",
+  "checkpoint": "gs://openpi-assets-simeval/pi05_droid_jointpos",
+  "action_chunk_steps": 15,
+  "rollouts": [
+    {
+      "direction": "left",
+      "run": 0,
+      "steps": 450,
+      "binary_success": false,
+      "picked_correct_object": false,
+      "pickup_step": null,
+      "reached_requested_relation": false,
+      "relation_step": null,
+      "paper_progression": 0.0,
+      "strict_pick_then_place_progression": 0.0,
+      "initial_cube_minus_bowl_y_m": -0.0026322156190872192,
+      "final_cube_minus_bowl_y_m": 0.0030214786529541016,
+      "initial_state_sha256": "1b1ddf04672b0ac9dfdaeec96d84829c23a4fd3e250b3a62c01745a3cb3ab470"
+    },
+    {
+      "direction": "left",
+      "run": 1,
+      "steps": 450,
+      "binary_success": false,
+      "picked_correct_object": false,
+      "pickup_step": null,
+      "reached_requested_relation": false,
+      "relation_step": null,
+      "paper_progression": 0.0,
+      "strict_pick_then_place_progression": 0.0,
+      "initial_cube_minus_bowl_y_m": -0.0026322156190872192,
+      "final_cube_minus_bowl_y_m": -0.0026284903287887573,
+      "initial_state_sha256": "1b1ddf04672b0ac9dfdaeec96d84829c23a4fd3e250b3a62c01745a3cb3ab470"
+    },
+    {
+      "direction": "right",
+      "run": 0,
+      "steps": 360,
+      "binary_success": true,
+      "picked_correct_object": true,
+      "pickup_step": 76,
+      "reached_requested_relation": true,
+      "relation_step": 358,
+      "paper_progression": 1.0,
+      "strict_pick_then_place_progression": 1.0,
+      "initial_cube_minus_bowl_y_m": -0.0026322156190872192,
+      "final_cube_minus_bowl_y_m": -0.06286098062992096,
+      "initial_state_sha256": "1b1ddf04672b0ac9dfdaeec96d84829c23a4fd3e250b3a62c01745a3cb3ab470"
+    },
+    {
+      "direction": "right",
+      "run": 1,
+      "steps": 86,
+      "binary_success": true,
+      "picked_correct_object": false,
+      "pickup_step": null,
+      "reached_requested_relation": true,
+      "relation_step": 86,
+      "paper_progression": 0.5,
+      "strict_pick_then_place_progression": 0.0,
+      "initial_cube_minus_bowl_y_m": -0.0026322156190872192,
+      "final_cube_minus_bowl_y_m": -0.08713725209236145,
+      "initial_state_sha256": "1b1ddf04672b0ac9dfdaeec96d84829c23a4fd3e250b3a62c01745a3cb3ab470"
+    }
+  ],
+  "paraphrase_rollouts": [
+    {
+      "direction": "left",
+      "run": 0,
+      "steps": 450,
+      "binary_success": false,
+      "picked_correct_object": false,
+      "pickup_step": null,
+      "reached_requested_relation": false,
+      "relation_step": null,
+      "paper_progression": 0.0,
+      "strict_pick_then_place_progression": 0.0,
+      "initial_cube_minus_bowl_y_m": -0.0026322156190872192,
+      "final_cube_minus_bowl_y_m": 0.010648578405380249,
+      "initial_state_sha256": "1b1ddf04672b0ac9dfdaeec96d84829c23a4fd3e250b3a62c01745a3cb3ab470"
+    },
+    {
+      "direction": "right",
+      "run": 0,
+      "steps": 450,
+      "binary_success": false,
+      "picked_correct_object": true,
+      "pickup_step": 357,
+      "reached_requested_relation": false,
+      "relation_step": null,
+      "paper_progression": 0.5,
+      "strict_pick_then_place_progression": 0.5,
+      "initial_cube_minus_bowl_y_m": -0.0026322156190872192,
+      "final_cube_minus_bowl_y_m": 0.1942676305770874,
+      "initial_state_sha256": "1b1ddf04672b0ac9dfdaeec96d84829c23a4fd3e250b3a62c01745a3cb3ab470"
+    }
+  ],
+  "controls": {
+    "initial_state_max_abs_difference": {
+      "left_vs_right_run_0": 0.0,
+      "left_vs_right_run_1": 0.0,
+      "left_repeat": 0.0,
+      "right_repeat": 0.0
+    },
+    "opposite_prompt_action_rms_first_chunk": {
+      "run_0": 0.06842414289712906,
+      "run_1": 0.07843519002199173
+    },
+    "same_prompt_repeat_action_rms_first_chunk": {
+      "left": 0.09719772636890411,
+      "right": 0.09350210428237915
+    },
+    "mean_opposite_prompt_effect": 0.0734296664595604,
+    "mean_same_prompt_noise_floor": 0.09534991532564163,
+    "effect_to_noise_ratio": 0.7701073064279228,
+    "same_prompt_repeat_action_rms_shared_horizon": {
+      "left": 0.3549455404281616,
+      "right": 0.10165868699550629
+    },
+    "canonical_vs_paraphrase_action_rms_first_chunk": {
+      "left": 0.0763704851269722,
+      "right": 0.2993934452533722
+    },
+    "paraphrase_opposite_prompt_action_rms_first_chunk": 0.2979101240634918
+  },
+  "cross_model_initial_state": {
+    "left": {
+      "common_dataset_count": 18,
+      "common_max_abs_difference": 0.0,
+      "only_in_primary": [],
+      "only_in_comparison": [
+        "cameras/head_camera/orientation",
+        "cameras/head_camera/position",
+        "cameras/over_shoulder_right_camera/orientation",
+        "cameras/over_shoulder_right_camera/position"
+      ]
+    },
+    "right": {
+      "common_dataset_count": 18,
+      "common_max_abs_difference": 0.0,
+      "only_in_primary": [],
+      "only_in_comparison": [
+        "cameras/head_camera/orientation",
+        "cameras/head_camera/position",
+        "cameras/over_shoulder_right_camera/orientation",
+        "cameras/over_shoulder_right_camera/position"
+      ]
+    }
+  },
+  "aggregate": {
+    "binary_success_rate": {
+      "left": 0.0,
+      "right": 1.0
+    },
+    "mean_paper_progression": {
+      "left": 0.0,
+      "right": 0.75
+    },
+    "mean_strict_pick_then_place_progression": {
+      "left": 0.0,
+      "right": 0.5
+    }
+  },
+  "interpretation_guardrail": "Treat the language effect as resolved only when opposite-prompt action separation exceeds same-prompt repeat variation and behavior changes in the requested directions. Binary success alone is insufficient."
+}

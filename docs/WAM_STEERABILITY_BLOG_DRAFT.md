@@ -1,6 +1,6 @@
 # Does the world model listen?
 
-## A stress test of steerability in world-action models
+## A matched VLA-versus-WAM stress test of language steerability
 
 *Draft, 2 August 2026. Results are pilots unless a larger evidence tier is
 explicitly stated.*
@@ -23,13 +23,16 @@ So I rebuilt the test around a harder question:
 > the requested goal, does the robot reach the newly requested goal?
 
 I tested four publicly runnable world-action models (WAMs): Efficient-WAM,
-FastWAM, LingBot-VA, and NVIDIA's Cosmos3 Edge Policy for DROID. The answer is
-not a clean yes or no. There are real signs of life. Efficient-WAM can redirect
-an already grasped object after a command switch from an identical trajectory
-prefix. Cosmos can solve a native spatial task in RoboLab. LingBot produces
-deterministic, language-dependent future latents. But none of the tested
-releases yet supports the broad, reliable, multi-abstraction steering interface
-that the word *steerable* suggests.
+FastWAM, LingBot-VA, and NVIDIA's Cosmos3 Edge Policy for DROID. I then ran the
+public standard π0.5 DROID VLA as a non-WAM control on the same neutral RoboLab
+left/right tasks as Cosmos. The answer is not a clean yes or no. There are real
+signs of life. Efficient-WAM can redirect an already grasped object after a
+command switch from an identical trajectory prefix. Cosmos can solve a native
+spatial task in RoboLab. LingBot produces deterministic, language-dependent
+future latents. Standard π0.5 repeats a canonical right-side task result—but
+fails left and breaks under a short paraphrase. None of the tested releases yet
+supports the broad, reliable, multi-abstraction steering interface that the
+word *steerable* suggests.
 
 My practical conclusion is:
 
@@ -105,20 +108,23 @@ action schema is a setup failure, not a model failure. Conversely, a rollout
 that runs the complete valid horizon without satisfying the requested goal is
 a failure even if the recorder forgets to serialize its timeout.
 
-Long-horizon tasks use an ordered progression rubric. For a pick-and-place
-relation, a simple version is:
+The paper's long-horizon metric is a task-specific success/fail rubric. It is
+**not ordered**: a policy need not complete rubric items in sequence. Credit is
+revoked when the policy undoes a stateful item, except that first interaction
+or pickup credit persists. For its spatial-generalization pick-and-place tasks,
+the two items are simply:
 
-1. reach and grasp the requested object;
-2. transport it toward the requested relation;
-3. establish the relation and release safely.
+1. pick up the correct object;
+2. put down the correct object in the requested location.
 
-I record final progression, maximum progression, and area under the progression
-curve. Final progression is the closest match to the paper. Maximum progression
-distinguishes a robot that made progress and regressed from one that never
-started. AUC rewards early, persistent progress. Simulator-native subtask scores
-are retained but not automatically treated as identical to an ordered rubric.
-For example, a “dropped” predicate can be true before the robot has ever grasped
-the object, producing a misleading one-third raw score.
+The paper reports final average task progression across trials. I use that as
+the primary partial-credit metric. I additionally record a stricter
+pick-then-place score, maximum progression, and area under the progression
+curve as diagnostics; those additions are not paper metrics. Simulator-native
+subtask scores are retained but not automatically treated as the rubric. For
+example, RoboLab's “dropped” predicate can be true at reset before the robot has
+ever grasped the object, while binary termination can also reward pushing an
+object across a spatial boundary without picking it up.
 
 The WAM-specific quantities—action RMS, future-latent RMS, pixel RMS, prompt
 effect relative to sampling noise, predicted-goal compliance, and
@@ -169,7 +175,7 @@ step 25. A competent hierarchical controller should intervene after a verified
 event such as grasp, lift, or release. Cycling prompts every fixed number of
 steps confounds language with progress and can push a policy off-distribution.
 
-## The four WAMs, at a glance
+## The WAMs and VLA control, at a glance
 
 | Model | Strongest positive result | Main negative result | Practical verdict |
 | --- | --- | --- | --- |
@@ -177,6 +183,7 @@ steps confounds language with progress and can push a policy off-distribution.
 | **FastWAM** | One clean matched left/right counterfactual after repairing text CFG | Prompt effect below sampling noise; counterfactual reproduced only 1/5 seeds | Useful debugging case, weak core |
 | **LingBot-VA** | Exact repeat; strong language-dependent future latent; 2/2 native success | 0/2 swapped success; about 7 s per warm chunk | Strong semantic comparison, slow controller |
 | **Cosmos3 Edge DROID** | Native-left success plus 1/2 success in an exact neutral-start left/right pair | Neutral-left failed and both neutral endpoints moved toward robot-right; offline selectivity was weak | Real one-sided signal, strong ecosystem comparison |
+| **Standard π0.5 DROID VLA** | Canonical right reaches the requested relation in 2/2 exact-start samples | Left 0/2; prompt effect/noise 0.77; short right ends 19.4 cm on the wrong side | Cheap non-WAM control, not a steering winner |
 
 The public-interface coverage is much narrower than the model list initially
 suggests:
@@ -186,7 +193,8 @@ suggests:
 | Efficient-WAM | Closed loop | Closed loop | Closed loop | No native structured test | No native structured test | Closed loop |
 | FastWAM | Closed loop | Not tested | Not tested | Unsupported/not tested | Unsupported/not tested | Not tested |
 | LingBot-VA | Closed loop | Not tested | Not tested | Unsupported/not tested | Unsupported/not tested | Not tested |
-| Cosmos3 Edge | Closed loop | Offline text only | Offline text only | Text-only negative probe | Text-only negative probe | Offline text only |
+| Cosmos3 Edge | Closed loop | Offline text only | Offline text only | Ungrounded text probe | Ungrounded text probe | Offline text only |
+| Standard π0.5 DROID | Closed loop | Not tested | Not tested | Unsupported/not tested | Unsupported/not tested | Not tested |
 
 “Unsupported,” “not tested,” and “tested but failed” are different outcomes.
 Collapsing them to zero would unfairly compare an absent interface with an
@@ -376,6 +384,82 @@ about 19.9 GiB; driver-observed use approached the card's capacity.
 comparison, but it is currently too slow and too weak under counterfactuals to
 anchor rapid closed-loop steering work.
 
+## Standard π0.5: the VLA control is biased too
+
+The paper's strongest comparison is not “WAM versus no WAM.” It compares
+standard VLAs with variants deliberately trained on a much richer steering
+language distribution. To separate architecture from language-interface
+training, I ran the public standard
+[`pi05_droid_jointpos`](https://github.com/Physical-Intelligence/openpi)
+checkpoint as a non-WAM control. It emits 15-step DROID joint-position chunks
+and no imagined future.
+
+This is the cleanest direct comparison in the study. π0.5 and Cosmos run in the
+same RoboLab matched tasks. The robot, cube, bowl, banana, table, and all cameras
+shared by the integrations have exactly equal initial-state arrays; Cosmos
+records two extra views. The cube begins only 0.263 cm to robot-right of the
+bowl, below the relation threshold. Each direction received two canonical
+samples from that exact state.
+
+| π0.5 condition | Binary success | Picked cube | Requested relation | Paper-style geometric progression | Strict pick-then-place | Final offset |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Canonical left, run 0 | 0 | no | no | 0/2 | 0/2 | +0.30 cm |
+| Canonical left, run 1 | 0 | no | no | 0/2 | 0/2 | −0.26 cm |
+| Canonical right, run 0 | 1 | yes | yes | 2/2 | 2/2 | −6.29 cm |
+| Canonical right, run 1 | 1 | no | yes | 1/2 | 0/2 | −8.71 cm |
+
+This table reveals two distinct phenomena. First, canonical right activates a
+repeatable goal-predicate behavior while canonical left effectively stalls.
+Second, RoboLab's binary success is too permissive for the blog's manipulation
+claim. The second right rollout reaches the geometric relation without a
+recorded pickup, so it is a success for the simulator predicate but not a
+successful pick-and-place. The paper-style geometric proxy gives 1/2; the
+strict score gives 0/2.
+
+The open-loop control is less encouraging. Across the first 15 actions, mean
+left/right RMS is 0.0734 while mean same-prompt repeat RMS is 0.0953: an
+effect-to-noise ratio of **0.77**. The prompt change is therefore not resolved
+above π0.5's own sample variation in this small control. A successful member of
+a stochastic pair can still be real, but its action-distance heatmap is not
+clean causal evidence. The public server advances its JAX sampling state and
+does not expose a per-request seed in this client path, so this is a deployment
+noise estimate rather than a same-seed determinism test.
+
+The paraphrase probe is harsher. Shortening “Put the rubiks cube to the right
+of the bowl” to “Put the cube right of the bowl” changes the first chunk by RMS
+0.2994, grasps late, fails the goal, and finishes **19.43 cm on the wrong left
+side**. The short-left rollout also fails. This is exactly why larger prompt
+deltas cannot be equated with stronger grounding.
+
+![π0.5 canonical and short-form matched rollouts. Rows show canonical left,
+canonical right, short left, and short right; columns show start, middle, and
+end.](../artifacts/wam_language_gate/pi05/pi05_matched_rollout_montage.jpg)
+
+π0.5 is still operationally useful. The local server occupied about 12.5 GB on
+one 3090, leaving the second 3090 for Isaac. A 450-step episode took roughly 81
+to 85 seconds wall time. No cloud GPU or paid API was used. This makes it a good
+control model for much larger grids—provided the result is described as
+one-sided task activation, not steerability.
+
+### What this changes about VLA versus WAM
+
+On this one neutral scene, standard π0.5 and Cosmos share the same qualitative
+failure: right succeeds and matched left fails. Cosmos's left rollout at least
+picks the cube before moving it to the wrong side; π0.5 left barely moves the
+cube. π0.5 repeats right more often, but only one of its two right runs is a
+strict pick-and-place. Cosmos uniquely exposes a deterministic imagined future,
+yet its offline opposite-command delta is usually no more selective than a
+paraphrase or unrelated command.
+
+That is not a victory for either architecture class. It suggests that a future
+head does not automatically make a policy more controllable, and removing the
+future head does not eliminate directional bias. The paper's central
+intervention—training the low-level policy on multiple, grounded command
+styles—remains the missing variable in both public checkpoints.
+
+**Verdict:** standard π0.5 is the right cheap VLA baseline. It is not evidence
+that ordinary VLA language grounding is already good enough.
+
 ## Cosmos3 Edge: the ecosystem finally reaches the primary metric
 
 [Cosmos3-Edge-Policy-DROID](https://huggingface.co/nvidia/Cosmos3-Edge-Policy-DROID)
@@ -412,9 +496,11 @@ is wrong nor that the unrelated future is meaningful—pixel RMS is too blunt fo
 that. It does show why the heatmap cannot support a steering claim.
 
 I also sent subtask, atomic, point, trace, and combined text. These are useful
-capability probes, but the distinction is crucial: the RoboLab request has no
-native structured coordinate field. A sentence containing `[320, 220]` is not
-equivalent to the paper's grounded point interface.
+capability probes, but the distinction is crucial: the paper also represents
+points and traces as text tokens, but its coordinates are extracted from and
+refer to the current image. My pilot coordinates were not calibrated to the
+selected DROID view. They test response to coordinate-shaped text, not grounded
+point or trace control.
 
 ![Cosmos3 Edge decoded future frames for the fixed-observation command-style
 probe. Visual differences are secondary diagnostics, not success
@@ -425,7 +511,7 @@ evidence.](../artifacts/wam_language_gate/cosmos/cosmos_imagined_future_grid.jpg
 The first native pilot succeeds: in RoboLab's released left-of-bowl task,
 Cosmos grasps the cube, moves it from robot-right to robot-left, establishes the
 relation at step 319, and releases at step 320. The final cube-minus-bowl lateral
-offset is +8.04 cm. The raw and ordered progression scores are both 1.0.
+offset is +8.04 cm. It earns both items in the paper-style progression rubric.
 
 My first attempt to create a matched right counterpart was invalid. The
 released scene already starts with the cube to the bowl's robot-right. RoboLab
@@ -439,10 +525,10 @@ scene, objects, episode length, event, simulator seed, model seed, and predicate
 structure. Recorded robot and object initial-state arrays are byte-identical;
 only the instruction and goal predicate change.
 
-| Neutral-start condition | Success | Ordered final progression | Raw unordered score | Outcome |
+| Neutral-start condition | Success | Paper-style progression | Raw RoboLab score | Outcome |
 | --- | ---: | ---: | ---: | --- |
-| Left | **0/1** | **1/3** | 2/3 | Grasped at step 141; never established left; full 450-step horizon |
-| Right | **1/1** | **1.0** | 1.0 | Grasped at step 62; established right at 106; released at 114 |
+| Left | **0/1** | **1/2** | 2/3 | Grasped at step 141; never established left; full 450-step horizon |
+| Right | **1/1** | **2/2** | 1.0 | Grasped at step 62; established right at 106; released at 114 |
 
 The first 32-action chunks differ with RMS 0.01648. By the matched 114-step
 horizon, action RMS is 0.28413. The endpoint is even more informative: the
@@ -495,7 +581,7 @@ a model that yields a controlled trial in an hour.
 - The neutral matched pair is one-sided: right succeeds, left fails, and both
   endpoints move robot-right.
 - Offline prompt response was deterministic but poorly semantically selective.
-- Point and trace commands are text-only hacks without a grounded interface.
+- Point and trace probes were not grounded to calibrated current-image pixels.
 - A 4B model and Isaac/RoboLab stack are heavier than Efficient-WAM.
 - Chunk-length, guardrail, driver-reporting, and timeout issues complicate a
   supposedly official path.
@@ -556,17 +642,18 @@ does not mean atomic steering is a bad idea. It means the public checkpoint's
 language interface is shaped by its training distribution. A fair future study
 must train on the command mixture before judging which abstraction is best.
 
-Point and trace interfaces also cannot be evaluated by embedding coordinates in
-a sentence and hoping. They need structured grounding tied to the current image
-and camera geometry.
+Point and trace interfaces also cannot be evaluated by embedding arbitrary
+coordinates in a sentence and hoping. The paper serializes them as text, but
+the values are grounded in the current image. A reproducible WAM API should
+also log the source camera, image transform, and coordinate convention.
 
 ### 5. Asymmetry is a result, not noise to average away
 
-Efficient-WAM's 3/3 versus 0/3 direction split and Cosmos's left-native success
-versus right-counterfactual failure could come from task distribution, camera
-frame, scene geometry, or policy bias. The next benchmark should reverse object
-positions and camera viewpoints, then report both directions separately before
-an aggregate.
+Efficient-WAM's 3/3 versus 0/3 direction split, Cosmos's neutral-right success
+versus neutral-left failure, and π0.5's 2/2 versus 0/2 split could come from task
+distribution, camera frame, scene geometry, or policy bias. The next benchmark
+should reverse object positions and camera viewpoints, then report both
+directions separately before an aggregate.
 
 ### 6. Systems usability belongs in the comparison
 
@@ -596,9 +683,11 @@ controllable.
 
 ### 3. Give grounding a real interface
 
-Points and traces should be tensors or structured fields linked to the source
-image and camera, not serialized coordinate strings. The WAM should condition
-both its action and future heads on the same grounding representation.
+Points and traces must be linked to the source image and camera. They can be
+serialized as text as in the paper, but the benchmark should also retain
+structured camera identity, image transform, and coordinates for verification.
+The WAM should condition both its action and future heads on the same grounding
+representation.
 
 ### 4. Couple action and future predicates
 
@@ -617,8 +706,11 @@ its chunk.
 
 The paper's hierarchical result does not come from blindly rotating prompts.
 The controller observes task progress and chooses an abstraction suited to the
-failure. A WAM benchmark should compare predicate-triggered, five-step, and
-twenty-step intervention cadences, while logging why each command was issued.
+failure. Its learned reasoner re-queries after five low-level environment
+steps. Its in-context experiment runs for 20 high-level queries (25 in the
+second long-horizon suite); 20 is an episode budget, not a cadence. A WAM
+benchmark should reproduce the five-step loop and compare it with
+predicate-triggered intervention while logging why each command was issued.
 
 ## The benchmark I would trust
 
@@ -633,7 +725,7 @@ the six command styles explicitly:
 | Semantic generalization | New object, category, or affordance | Does grounding transfer? |
 
 For every condition, publish numerator/denominator success, a 95% interval,
-ordered task progression, seeds, exact prompts, command activation steps,
+paper-style final task progression, seeds, exact prompts, command activation steps,
 trajectory-prefix hashes, and invalid-scene counts. Secondary WAM tables should
 contain prompt/noise effect ratios, predicted predicate success,
 executed-predicate success, action–future agreement, intervention latency, and
@@ -663,7 +755,9 @@ futures with exact repeatability, but those futures do not reliably become
 successful counterfactual actions. Cosmos can complete a native RoboLab spatial
 task and the right member of an exact neutral-start pair through an official
 end-to-end stack, while the matched left member fails and its offline prompt
-changes lack selectivity.
+changes lack selectivity. Standard π0.5 repeats the same neutral-right predicate
+success but fails left, has a first-chunk effect below same-prompt variation,
+and reverses direction under a short right paraphrase.
 
 The fairest one-line conclusion is:
 
@@ -672,11 +766,11 @@ The fairest one-line conclusion is:
 > general control interface.**
 
 For the blog and the next experimental cycle, I would use Efficient-WAM as the
-fast core, Cosmos as the ecosystem-scale comparison, LingBot as the
-future-semantics comparison, and FastWAM as the cautionary implementation case.
-Then I would fine-tune the small core on multi-abstraction, grounded, paired
-counterfactual commands and evaluate it with success and task progression—not
-another heatmap.
+fast WAM core, Cosmos as the ecosystem-scale comparison, standard π0.5 as the
+matched VLA control, LingBot as the future-semantics comparison, and FastWAM as
+the cautionary implementation case. Then I would fine-tune the small core on
+multi-abstraction, grounded, paired counterfactual commands and evaluate it
+with success and task progression—not another heatmap.
 
 ## Reproducibility map
 
@@ -684,6 +778,8 @@ another heatmap.
 - Efficient-WAM summary and figures:
   `artifacts/wam_language_gate/hierarchical/`
 - Cosmos summary and rollout montage: `artifacts/wam_language_gate/cosmos/`
+- π0.5 VLA summary, analysis, and montage:
+  `artifacts/wam_language_gate/pi05/`
 - Cross-model machine-readable summary: `artifacts/wam_language_gate/summary.json`
 - Efficient-WAM raw experiments:
   `/home/ali/projects/Efficient-WAM/experiments/robotwin_language_gate/`
@@ -693,6 +789,7 @@ another heatmap.
   `/home/ali/projects/lerobot-lingbot/experiments/lingbot_language_gate/`
 - Cosmos offline probe: `/home/ali/cosmos-framework/scripts/cosmos_droid_steerability_probe.py`
 - Cosmos closed loop: `/home/ali/projects/RoboLab/output/cosmos_edge_steerability_*`
+- π0.5 closed loop: `/home/ali/projects/RoboLab/output/pi05_steerability_*`
 
 Primary model and benchmark sources:
 [Steerable Policies](https://arxiv.org/abs/2602.13193),
@@ -700,4 +797,5 @@ Primary model and benchmark sources:
 [FastWAM](https://yuantianyuan01.github.io/FastWAM/),
 [LingBot-VA](https://github.com/robbyant/lingbot-va),
 [Cosmos3 Edge DROID](https://huggingface.co/nvidia/Cosmos3-Edge-Policy-DROID),
+[OpenPI / π0.5](https://github.com/Physical-Intelligence/openpi),
 and [RoboLab](https://github.com/NVlabs/RoboLab).

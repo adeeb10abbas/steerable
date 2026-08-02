@@ -3,9 +3,7 @@
   "paper": "https://arxiv.org/abs/2602.13193",
   "primary_metrics": [
     "requested_goal_success_rate",
-    "final_task_progression",
-    "maximum_task_progression",
-    "task_progression_auc"
+    "final_task_progression"
   ],
   "generalization_splits": [
     "in_distribution",
@@ -33,7 +31,9 @@
     "predicted_executed_predicate_agreement",
     "action_future_direction_agreement",
     "intervention_latency_steps",
-    "intervention_persistence_steps"
+    "intervention_persistence_steps",
+    "maximum_task_progression",
+    "task_progression_auc"
   ],
   "required_controls": [
     "exact_repeat",
@@ -49,5 +49,13 @@
     "discovery": "at least five valid scenes and ten paired trials per condition",
     "estimate": "preregistered task and seed grid with uncertainty intervals",
     "general_claim": "all four generalization splits, multiple command styles, held-out scenes and objects"
+  },
+  "paper_protocol_notes": {
+    "rubric_ordering": "Rubric items need not be completed in order.",
+    "credit_revocation": "Credit is revoked when progress is undone, except first interaction or pickup credit persists.",
+    "learned_reasoner_cadence_environment_steps": 5,
+    "in_context_episode_budget_high_level_steps": 20,
+    "long_horizon_2_episode_budget_high_level_steps": 25,
+    "human_oracle_minimum_seconds_between_interventions": 2
   }
 }

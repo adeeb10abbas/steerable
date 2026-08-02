@@ -10,9 +10,9 @@ the DROID joint-position controller. Scene/model seed: 0.
 
 The released native-left task establishes task competence:
 
-| Condition | Success | Ordered final progression | Episode result |
+| Condition | Success | Paper-style progression | Episode result |
 | --- | ---: | ---: | --- |
-| Released native left | 1/1 | 1.0 | Grasped cube; established left at step 319; released at 320; final lateral offset +8.04 cm |
+| Released native left | 1/1 | 2/2 | Grasped cube; established left at step 319; released at 320; final lateral offset +8.04 cm |
 
 The first same-scene right task was invalid because the cube already started
 robot-right of the bowl. RoboLab treated each one-step termination as a physics
@@ -25,17 +25,19 @@ lateral offset, so neither relation is initially satisfied. The recorded robot,
 cube, bowl, and banana initial-state arrays are byte-identical between tasks.
 Only instruction and requested predicate differ.
 
-| Neutral-start condition | Success | Ordered progression | Raw score | Episode result |
+| Neutral-start condition | Success | Paper-style progression | Raw score | Episode result |
 | --- | ---: | ---: | ---: | --- |
-| Left | 0/1 | 1/3 | 2/3 | Grasped at 141; never established left; truncated at 450; final lateral offset −11.79 cm |
-| Right | 1/1 | 1.0 | 1.0 | Grasped at 62; established right at 106; released at 114; final lateral offset −24.09 cm |
+| Left | 0/1 | 1/2 | 2/3 | Grasped at 141; never established left; truncated at 450; final lateral offset −11.79 cm |
+| Right | 1/1 | 2/2 | 1.0 | Grasped at 62; established right at 106; released at 114; final lateral offset −24.09 cm |
 
 The raw left score counts `object_dropped` at step 1 before a grasp. The
-paper-aligned ordered rubric gives credit only for grasp, hence 1/3. First-chunk
-(32-action) RMS between the two prompt conditions is 0.01648; RMS over their
-shared 114-step horizon is 0.28413. The result is one-sided steering evidence:
-the successful right command amplifies robot-right motion, while the left
-condition also finishes on robot-right and fails.
+paper-aligned two-item rubric instead asks whether the correct object was picked
+and whether it reached the requested relation. Rubric items need not be
+completed in order, and pickup credit persists. First-chunk (32-action) RMS
+between the two prompt conditions is 0.01648; RMS over their shared 114-step
+horizon is 0.28413. The result is one-sided steering evidence: the successful
+right command amplifies robot-right motion, while the left condition also
+finishes on robot-right and fails.
 
 The runner gap found during the invalid pilot was still repaired: an active
 environment at runner-horizon exhaustion now serializes as `success=false` and
@@ -92,9 +94,11 @@ At the one-second observation, the full command-style probe produced:
 | Combined left task | 0.01741 | 9.9423 |
 | Unrelated drawer control | 0.07774 | 20.2037 |
 
-The point and trace rows are negative capability probes. RoboLab's Cosmos
-request schema has no structured grounded-coordinate field, so coordinate text
-is not equivalent to the point/trace interface in Chen et al.
+The point and trace rows are negative capability probes. Chen et al. also
+serialize coordinates as text tokens, but their coordinates are grounded in
+the current image. These pilot coordinates were not calibrated to the selected
+DROID view, so they measure response to coordinate-shaped text rather than a
+valid grounded point/trace interface.
 
 Probe implementation and raw outputs:
 

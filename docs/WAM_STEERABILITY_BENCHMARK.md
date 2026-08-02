@@ -66,25 +66,33 @@ Use the paper's four slices:
 
 ### Task progression
 
-Long-horizon episodes receive an ordered, task-specific rubric. At every
-control step:
+Long-horizon episodes receive a task-specific success/fail rubric. The paper
+does **not** require rubric items to be completed in order. At evaluation time:
 
 ```text
-progress = currently satisfied rubric items / total rubric items
+progress = credited rubric items / total rubric items
 ```
 
-Report final progression, maximum progression, and area under the progression
-curve. Final progression is the closest paper analogue. Maximum progression
-distinguishes “made useful progress and regressed” from “never began”; AUC
-penalizes late or unstable progress. If RoboLab's built-in subtask score is
-used, preserve its raw score and additionally map its predicates into this
-rubric rather than claiming the two definitions are identical.
+Credit for a stateful item is revoked if the policy later undoes it. The paper's
+exception is first interaction/pickup credit, which persists. Its reported
+metric is final average task progression across trials. Maximum progression and
+area under the progression curve are useful WAM diagnostics, but are additions
+to the paper rather than paper-primary metrics. If RoboLab's built-in subtask
+score is used, preserve its raw score and additionally map its predicates into
+the rubric rather than claiming the two definitions are identical. In
+particular, an initially detached object must not earn “put down” credit before
+the robot acts.
 
 ### Intervention protocol
 
 Record the high-level intervention cadence in low-level environment steps.
-For comparisons inspired by the paper, include cadences of 5 and 20 steps,
-plus predicate-triggered intervention. Always log:
+The paper's learned embodied reasoner emits a command that the low-level policy
+follows for **5 environment steps** before another high-level query. Its
+in-context experiments run for **20 high-level steps** (25 for the second
+long-horizon suite); 20 is an episode budget, not an intervention cadence. Its
+human-oracle study allows interventions no more frequently than every 2
+seconds. For WAM comparisons, add predicate-triggered interventions. Always
+log:
 
 - the exact command and style;
 - the observation/action index at which it became active;
@@ -172,6 +180,7 @@ status:
 | FastWAM | task tested; repaired text CFG | measured | measured | pending | available | pending | fragile across seeds |
 | LingBot-VA | task tested | measured | measured | pending | latent future measured | pending | deterministic, slower |
 | Cosmos3 Edge DROID | task supported; other styles under test | pending | pending | RoboLab score available | decoded video available | pending | official RoboLab path |
+| Standard π0.5 DROID VLA | task tested | measured | measured | paper-style geometric proxy | not applicable | not applicable | non-WAM matched control |
 
 “Unsupported” and “not yet tested” are distinct. Zero-shot failure on a
 command style absent from a checkpoint's training data measures interface

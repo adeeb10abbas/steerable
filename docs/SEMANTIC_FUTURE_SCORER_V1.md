@@ -72,6 +72,11 @@ cube/bowl label. In particular, "move the gripper left" is not silently scored
 as "put the cube left of the bowl." This applicability rule does not alter any
 frozen localization or relation threshold.
 
+The supplemental exact direct-task probe instead supplies an explicit,
+registered `requested_relation` for every condition. That is necessary for
+contrastive prompts containing both direction tokens and keeps the semantic
+scorer from interpreting their scope. It changes target bookkeeping only.
+
 ## Frozen calibration
 
 The localizer checkpoint is the local Qwen3-VL-2B-Instruct snapshot

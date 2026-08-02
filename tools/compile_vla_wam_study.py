@@ -33,6 +33,7 @@ EXPECTED_EPISODES = 160
 EXPECTED_CONFIRMATORY_EPISODES = 80
 EXPECTED_DIRECT_STRESS_EPISODES = 80
 EXPECTED_PROBE_CONDITIONS = 16
+EXPECTED_DIRECT_TASK_PROBE_CONDITIONS = 11
 EXPECTED_THERMAL_LOGS = (
     "cosmos_canonical",
     "cosmos_vague",
@@ -287,14 +288,19 @@ def _paired_diagnostics(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return results
 
 
-def _load_probe(path: Path, expected_model: str, plan_sha: str) -> dict[str, Any]:
+def _load_probe(
+    path: Path,
+    expected_model: str,
+    plan_sha: str,
+    expected_conditions: int = EXPECTED_PROBE_CONDITIONS,
+) -> dict[str, Any]:
     value = _load(path)
     if value["model"] != expected_model:
         raise RuntimeError(f"Probe model mismatch in {path}: {value['model']}")
     if value["plan_sha256"] != plan_sha:
         raise RuntimeError(f"Probe plan hash mismatch in {path}")
-    if len(value["records"]) != EXPECTED_PROBE_CONDITIONS:
-        raise RuntimeError(f"Expected 16 probe conditions in {path}")
+    if len(value["records"]) != expected_conditions:
+        raise RuntimeError(f"Expected {expected_conditions} probe conditions in {path}")
     seeds = {row["server_sampling_seed"] for row in value["records"]}
     if seeds != {value["sampling_seed"]}:
         raise RuntimeError(f"Server did not honor the frozen probe seed in {path}: {seeds}")
@@ -352,6 +358,74 @@ def _probe_summary(
         }
     if future_semantics["conditions"] != EXPECTED_PROBE_CONDITIONS:
         raise RuntimeError("Incomplete Cosmos command-probe semantic scoring")
+    result["cosmos"]["semantic_futures"] = future_semantics
+    return result
+
+
+def _direct_task_probe_pairs(probe_dir: Path) -> list[dict[str, Any]]:
+    pairs = (
+        ("canonical", "task_left", "task_right"),
+        ("short", "short_left", "short_right"),
+        ("declarative", "declarative_left", "declarative_right"),
+        ("contrastive target first", "contrastive_first_left", "contrastive_first_right"),
+        ("contrastive target last", "contrastive_last_left", "contrastive_last_right"),
+    )
+    rows = []
+    for family, left_name, right_name in pairs:
+        left = np.load(probe_dir / f"{left_name}_action.npy").astype(np.float64)
+        right = np.load(probe_dir / f"{right_name}_action.npy").astype(np.float64)
+        if left.shape != right.shape:
+            raise RuntimeError(f"Direct-probe pair shape mismatch: {left_name}, {right_name}")
+        rows.append(
+            {
+                "prompt_family": family,
+                "left_condition": left_name,
+                "right_condition": right_name,
+                "action_rms": float(np.sqrt(np.mean(np.square(left - right)))),
+            }
+        )
+    for direction in ("left", "right"):
+        target_first = np.load(probe_dir / f"contrastive_first_{direction}_action.npy").astype(
+            np.float64
+        )
+        target_last = np.load(probe_dir / f"contrastive_last_{direction}_action.npy").astype(
+            np.float64
+        )
+        rows.append(
+            {
+                "prompt_family": f"contrastive order {direction}",
+                "left_condition": f"contrastive_first_{direction}",
+                "right_condition": f"contrastive_last_{direction}",
+                "action_rms": float(
+                    np.sqrt(np.mean(np.square(target_first - target_last)))
+                ),
+            }
+        )
+    return rows
+
+
+def _direct_task_probe_summary(
+    root: Path, plan_sha: str, future_semantics: dict[str, Any]
+) -> dict[str, Any]:
+    result: dict[str, Any] = {}
+    for model, directory in (
+        ("pi05", root / "command_probe/direct_task_pi05"),
+        ("cosmos", root / "command_probe/direct_task_cosmos"),
+    ):
+        manifest = _load_probe(
+            directory / "manifest.json",
+            model,
+            plan_sha,
+            EXPECTED_DIRECT_TASK_PROBE_CONDITIONS,
+        )
+        if manifest["exact_repeat_action_rms"] != 0.0:
+            raise RuntimeError(f"Direct probe is not exactly repeatable in {directory}")
+        result[model] = {
+            "manifest": manifest,
+            "paired_action_rms": _direct_task_probe_pairs(directory),
+        }
+    if future_semantics["conditions"] != EXPECTED_DIRECT_TASK_PROBE_CONDITIONS:
+        raise RuntimeError("Incomplete Cosmos direct-task probe semantic scoring")
     result["cosmos"]["semantic_futures"] = future_semantics
     return result
 
@@ -1190,6 +1264,50 @@ def _plot_probe(probes: dict[str, Any], output: Path) -> None:
     plt.close(fig)
 
 
+def _plot_direct_task_probe(probe: dict[str, Any], output: Path) -> None:
+    families = [
+        "canonical",
+        "short",
+        "declarative",
+        "contrastive target first",
+        "contrastive target last",
+    ]
+    order_labels = ["contrastive order left", "contrastive order right"]
+    fig, axes = plt.subplots(1, 2, figsize=(11.5, 4.2))
+    width = 0.35
+    for model_index, model in enumerate(("pi05", "cosmos")):
+        rows = {row["prompt_family"]: row for row in probe[model]["paired_action_rms"]}
+        model_id = "pi05_droid_vla" if model == "pi05" else "cosmos3_edge_droid_wam"
+        positions = np.arange(len(families)) + (model_index - 0.5) * width
+        axes[0].bar(
+            positions,
+            [rows[family]["action_rms"] for family in families],
+            width,
+            color=MODEL_COLORS[model_id],
+            label=MODEL_LABELS[model_id],
+        )
+        positions = np.arange(len(order_labels)) + (model_index - 0.5) * width
+        axes[1].bar(
+            positions,
+            [rows[label]["action_rms"] for label in order_labels],
+            width,
+            color=MODEL_COLORS[model_id],
+            label=MODEL_LABELS[model_id],
+        )
+    axes[0].set_xticks(np.arange(len(families)), families, rotation=24, ha="right")
+    axes[0].set_title("Left-versus-right action separation")
+    axes[1].set_xticks(np.arange(len(order_labels)), ["left target", "right target"])
+    axes[1].set_title("Target-first versus target-last sensitivity")
+    for axis in axes:
+        axis.set_ylabel("Action RMS on identical input bytes")
+        axis.grid(axis="y", alpha=0.2)
+    axes[1].legend(frameon=False)
+    fig.suptitle("Exact-observation direct task-language probe")
+    fig.tight_layout()
+    fig.savefig(output / "direct_task_exact_probe.png", bbox_inches="tight")
+    plt.close(fig)
+
+
 def _read_probe_frames(path: Path, indices: tuple[int, ...]) -> list[np.ndarray]:
     capture = cv2.VideoCapture(str(path))
     wanted = set(indices)
@@ -1319,6 +1437,7 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
     closed = compiled["prospective"]["closed_loop"]
     semantic = compiled["prospective"]["cosmos_semantic_futures"]
     probes = compiled["prospective"]["command_probe"]
+    direct_probe = compiled["prospective"]["direct_task_command_probe"]
     lines = [
         "# VLA-WAM study evidence index",
         "",
@@ -1333,6 +1452,7 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         f"- Shared initial-state fingerprints: **{len(closed['initial_state_fingerprint_counts'])}**.",
         f"- First-recorded cube/bowl physical observations audited: **{compiled['integrity']['initial_physical_observations_audited']}**.",
         f"- Fixed-observation probe conditions: **{len(probes['pi05']['manifest']['records'])} per model**.",
+        f"- Exact direct-task prompt conditions: **{len(direct_probe['pi05']['manifest']['records'])}/{EXPECTED_DIRECT_TASK_PROBE_CONDITIONS} per model**.",
         f"- Cosmos semantically scored confirmation chunks: **{semantic['total_chunks']}** across **{semantic['total_episodes']} episodes**.",
         f"- Cosmos recorded prediction chunks with verified request/server seeds, step alignment, and shapes: **{compiled['integrity']['cosmos_prediction_chunks_validated']}**.",
         f"- Completed thermal-guard lifecycles without emergency stop: **{compiled['integrity']['thermal_guard_logs_verified']}/{len(EXPECTED_THERMAL_LOGS)}**.",
@@ -1350,6 +1470,7 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         "| Thermal timing amendment | `../thermal_timing_amendment_002.json` | Treats guarded client request timing as an upper bound and forbids fabricated phase attribution |",
         "| Semantic target parser amendment | `../semantic_target_parser_amendment_004.json` | Uses matched task identity rather than interpreting contrastive prompt negation inside the visual scorer |",
         "| Grounded probe plan | `../command_probe_plan.json` | Hash-pinned observation, six command styles, controls, seed |",
+        "| Direct-task probe plan | `../direct_task_command_probe_plan.json` | Exact-input syntax, contrastive scope, and target-token-order diagnostic |",
         "| Closed-loop episode table | `episodes.csv` | One row per registered direct-language rollout, with analysis tier |",
         "| Closed-loop summary | `closed_loop_summary.json` | Success, progression, offsets, timing, contrasts |",
         "| Cosmos future semantics | `compiled_evidence.json` | Prompt-blind imagined/executed quadrants and coverage |",
@@ -1378,6 +1499,7 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         "- `cosmos_imagination_execution_quadrants.png`: WAM-only semantic future/action agreement.",
         "- `semantic_threshold_sensitivity.png`: scorer coverage/agreement at 0.10, 0.15, and frozen 0.20 m reliability thresholds.",
         "- `command_probe_action_sensitivity.png`: same-observation six-style prompt response.",
+        "- `direct_task_exact_probe.png`: same-input left/right and contrastive word-order action separation.",
         "- `command_probe_selected_futures.png`: selected Cosmos future strips with frozen prompt-blind relation labels.",
         "",
         "## Retrospective evidence tier",
@@ -1455,6 +1577,16 @@ def main() -> None:
     )
     cosmos_probe_semantic = _load(cosmos_probe_semantic_path)
     probes = _probe_summary(root, plan_sha, cosmos_probe_semantic)
+    direct_plan_path = root / "direct_task_command_probe_plan.json"
+    direct_plan_sha = _sha256(direct_plan_path)
+    direct_cosmos_probe_semantic_path = (
+        root / "command_probe/direct_task_cosmos_semantics/semantic_future_summary.json"
+    )
+    direct_probes = _direct_task_probe_summary(
+        root,
+        direct_plan_sha,
+        _load(direct_cosmos_probe_semantic_path),
+    )
     calibration_sha = _sha256(root / "semantic_future_calibration.json")
     semantic_inputs = []
     for wording, path in (
@@ -1478,6 +1610,9 @@ def main() -> None:
             root / "command_probe/pi05",
             root / "command_probe/cosmos_gpu1",
             root / "command_probe/cosmos_gpu1_semantics",
+            root / "command_probe/direct_task_pi05",
+            root / "command_probe/direct_task_cosmos",
+            root / "command_probe/direct_task_cosmos_semantics",
             root / "semantic_confirmation/cosmos_canonical",
             root / "semantic_confirmation/cosmos_vague",
             root / "semantic_confirmation/cosmos_declarative",
@@ -1535,6 +1670,7 @@ def main() -> None:
         root / "thermal_control_amendment_001.json",
         root / "thermal_timing_amendment_002.json",
         root / "command_probe_plan.json",
+        root / "direct_task_command_probe_plan.json",
         root / "command_probe_amendment_001.json",
         root / "semantic_future_calibration.json",
         root / "semantic_target_parser_amendment_004.json",
@@ -1577,6 +1713,7 @@ def main() -> None:
             "dynamic_prompt_episode_count": 0,
             "one_exact_initial_state_fingerprint": True,
             "command_probe_plan_sha256": plan_sha,
+            "direct_task_command_probe_plan_sha256": direct_plan_sha,
             "semantic_calibration_sha256": calibration_sha,
             "raw_evidence_manifest": raw_manifest,
             "supporting_evidence_manifest": supporting_manifest,
@@ -1596,6 +1733,7 @@ def main() -> None:
             "cosmos_observation_variation": observation_variation,
             "initial_physical_variation": physical_variation,
             "command_probe": probes,
+            "direct_task_command_probe": direct_probes,
         },
         "retrospective": _load((workspace / args.retrospective).resolve() if not args.retrospective.is_absolute() else args.retrospective),
         "operational": {
@@ -1637,6 +1775,7 @@ def main() -> None:
     _plot_semantic_quadrants(semantic, output)
     _plot_semantic_threshold_sensitivity(semantic, output)
     _plot_probe(probes, output)
+    _plot_direct_task_probe(direct_probes, output)
     _plot_selected_probe_futures(root, probes, output)
     _dump(output / "compiled_evidence.json", compiled)
     _write_summary_csv(output / "semantic_future_groups.csv", semantic["groups"])
@@ -1652,7 +1791,8 @@ def main() -> None:
     print(
         f"complete: {closed['episode_count']} closed-loop episodes, "
         f"{semantic['total_chunks']} scored WAM chunks, "
-        f"{EXPECTED_PROBE_CONDITIONS * 2} command probes -> {output}"
+        f"{EXPECTED_PROBE_CONDITIONS * 2} rich command probes and "
+        f"{EXPECTED_DIRECT_TASK_PROBE_CONDITIONS * 2} direct task probes -> {output}"
     )
 
 

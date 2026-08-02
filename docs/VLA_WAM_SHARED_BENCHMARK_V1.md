@@ -109,6 +109,13 @@ camera image. Arbitrary coordinate-shaped text is invalid.
 These fixed-observation probes diagnose interface sensitivity and semantic
 direction. They are not substitutes for closed-loop success.
 
+A post-interim supplemental plan reuses the same exact observation with
+canonical, short, declarative, and contrastive task prompts. It also swaps
+whether the requested relation appears before or after the negated distractor.
+This separates target semantics from a first-token or last-token heuristic;
+its outcome timing and seed are frozen in
+`direct_task_command_probe_plan.json`.
+
 ## Calibration and exclusions
 
 Recorder and semantic-scorer calibration uses seed prefix 51xx and is excluded

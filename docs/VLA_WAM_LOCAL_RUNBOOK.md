@@ -154,6 +154,12 @@ cd /home/ali/projects/steerable
   --model cosmos \
   --output-dir artifacts/vla_wam_shared_v1/command_probe/cosmos_gpu1
 
+/home/ali/cosmos-framework/.venv/bin/python \
+  tools/run_fixed_observation_command_probe.py \
+  --plan artifacts/vla_wam_shared_v1/direct_task_command_probe_plan.json \
+  --model cosmos \
+  --output-dir artifacts/vla_wam_shared_v1/command_probe/direct_task_cosmos
+
 .venv/bin/python tools/compare_command_probe_hardware.py \
   --gpu0-probe artifacts/vla_wam_shared_v1/command_probe/cosmos \
   --gpu1-probe artifacts/vla_wam_shared_v1/command_probe/cosmos_gpu1 \
@@ -186,6 +192,12 @@ cd /home/ali/projects/steerable
   --plan artifacts/vla_wam_shared_v1/command_probe_plan.json \
   --model pi05 \
   --output-dir artifacts/vla_wam_shared_v1/command_probe/pi05
+
+/home/ali/openpi-robolab/.venv/bin/python \
+  tools/run_fixed_observation_command_probe.py \
+  --plan artifacts/vla_wam_shared_v1/direct_task_command_probe_plan.json \
+  --model pi05 \
+  --output-dir artifacts/vla_wam_shared_v1/command_probe/direct_task_pi05
 ```
 
 During a valid closed-loop policy request, capture one steady-state
@@ -275,6 +287,12 @@ CUDA_VISIBLE_DEVICES=1 /home/ali/cosmos-framework/.venv/bin/python \
   --probe-dir artifacts/vla_wam_shared_v1/command_probe/cosmos_gpu1 \
   --calibration artifacts/vla_wam_shared_v1/semantic_future_calibration.json \
   --output-dir artifacts/vla_wam_shared_v1/command_probe/cosmos_gpu1_semantics
+
+CUDA_VISIBLE_DEVICES=1 /home/ali/cosmos-framework/.venv/bin/python \
+  tools/score_cosmos_semantic_futures.py score-probe \
+  --probe-dir artifacts/vla_wam_shared_v1/command_probe/direct_task_cosmos \
+  --calibration artifacts/vla_wam_shared_v1/semantic_future_calibration.json \
+  --output-dir artifacts/vla_wam_shared_v1/command_probe/direct_task_cosmos_semantics
 ```
 
 ## Fail-closed compilation
@@ -299,6 +317,7 @@ uv pip install --python .venv/bin/python \
 The first compiler must report 160 episodes and zero missing. The second must
 verify 80 original-confirmatory episodes, 80 post-interim direct-stress
 episodes, zero coached episodes, one exact initial-state fingerprint, 80
-Cosmos first-conditioning images and their renderer variation, 16 probe
-conditions per model, frozen calibration/plan hashes, and the completed
+Cosmos first-conditioning images and their renderer variation, 16 rich-command
+conditions plus 11 exact direct-task conditions per model, frozen
+calibration/plan hashes, and the completed
 24-sheet semantic audit before the evidence package is publishable.

@@ -215,6 +215,11 @@ row from the top, then calls `[0,0]` the top-right. This benchmark adopts the
 conventional top-left origin implied by the row/column definition and records
 that choice instead of silently guessing.
 
+A supplemental exact-input probe narrows in on the four task wordings. It adds
+contrastive target-first and target-last variants while holding input pixels,
+robot state, and sampling seed byte-for-byte fixed. This can reveal a lexical
+order heuristic that closed-loop success proportions alone cannot isolate.
+
 ## Metrics and what they do not say
 
 ### Primary metrics
@@ -330,6 +335,18 @@ the important outcome.
 ![First-conditioning-image variation across exact physical resets.](../artifacts/vla_wam_shared_v1/final_evidence/cosmos_conditioning_image_variation.png)
 
 ## The six-style fixed-observation probe
+
+Before the broader taxonomy, the direct task-language subset gets its own
+exact-input check:
+
+![Exact-observation direct task prompt response.](../artifacts/vla_wam_shared_v1/final_evidence/direct_task_exact_probe.png)
+
+RESULT_TBD_DIRECT_TASK_PROBE
+
+The left/right bars ask whether each wording separates requested directions.
+The word-order bars compare semantically equivalent contrastive prompts with
+the target relation before versus after the negated distractor. Neither is a
+success metric; they diagnose why a closed-loop condition may succeed or fail.
 
 ![Command sensitivity from one exact observation and seed.](../artifacts/vla_wam_shared_v1/final_evidence/command_probe_action_sensitivity.png)
 
@@ -662,6 +679,8 @@ Key protocol files:
 - `metric_amendment_001.json`: exact paper-style progression correction;
 - `command_probe_plan.json`: hash-pinned observation, coordinates, prompts,
   and seed;
+- `direct_task_command_probe_plan.json`: exact-input task wording and
+  contrastive word-order diagnostic;
 - `semantic_future_calibration.json`: every calibration point, threshold, and
   localizer response;
 - `semantic_target_parser_amendment_004.json`: target resolution from matched

@@ -308,13 +308,23 @@ uv pip install --python .venv/bin/python \
   --manifest artifacts/vla_wam_shared_v1/run_manifest.json \
   --output-dir artifacts/vla_wam_shared_v1/final_evidence
 
+.venv/bin/python tools/render_trajectory_evidence.py \
+  --manifest artifacts/vla_wam_shared_v1/run_manifest.json \
+  --selection-plan artifacts/vla_wam_shared_v1/trajectory_visualization_plan.json \
+  --output artifacts/vla_wam_shared_v1/trajectory_evidence
+
 .venv/bin/python tools/compile_vla_wam_study.py \
   --study-root artifacts/vla_wam_shared_v1 \
   --closed-loop artifacts/vla_wam_shared_v1/final_evidence/closed_loop_summary.json \
   --output-dir artifacts/vla_wam_shared_v1/final_evidence
 ```
 
-The first compiler must report 160 episodes and zero missing. The second must
+The first compiler and trajectory renderer must each report 160 episodes and
+zero missing. The renderer includes every success and failure, validates the
+official root-pose geometry, writes machine-readable CSV/JSON indexes, and
+produces the complete gallery plus deterministic landscape and square social
+exports. The dashed path shown in an episode panel is explicitly illustrative;
+the shaded 45-degree cone is the scored goal. The second compiler must
 verify 80 original-confirmatory episodes, 80 post-interim direct-stress
 episodes, zero coached episodes, one exact initial-state fingerprint, 80
 Cosmos first-conditioning images and their renderer variation, 16 rich-command

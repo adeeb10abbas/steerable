@@ -101,6 +101,91 @@ def _relative(path: Path, root: Path) -> str:
         return str(path.resolve())
 
 
+def _trajectory_evidence_summary(
+    root: Path, workspace: Path, closed: dict[str, Any]
+) -> dict[str, Any]:
+    evidence_root = root / "trajectory_evidence"
+    summary_path = evidence_root / "summary.json"
+    index_path = evidence_root / "trajectory_index.json"
+    summary = _load(summary_path)
+    rows = _load(index_path)
+    if summary.get("status") != "complete":
+        raise RuntimeError(f"Trajectory evidence is not complete: {summary.get('status')}")
+    if (
+        summary.get("expected_episode_count") != EXPECTED_EPISODES
+        or summary.get("rendered_episode_count") != EXPECTED_EPISODES
+        or summary.get("missing_episode_count") != 0
+        or len(rows) != EXPECTED_EPISODES
+    ):
+        raise RuntimeError("Trajectory evidence does not cover all registered episodes")
+    plan_path = root / "trajectory_visualization_plan.json"
+    if summary.get("selection_plan_sha256") != _sha256(plan_path):
+        raise RuntimeError("Trajectory evidence selection-plan hash mismatch")
+
+    closed_index = {
+        (row["condition_id"], row["direction"], int(row["episode_seed"])): row
+        for row in closed["episodes"]
+    }
+    trajectory_index = {
+        (row["condition_id"], row["direction"], int(row["episode_seed"])): row
+        for row in rows
+    }
+    if len(closed_index) != EXPECTED_EPISODES or set(closed_index) != set(trajectory_index):
+        raise RuntimeError("Trajectory index keys disagree with closed-loop evidence")
+    for key, trajectory in trajectory_index.items():
+        episode = closed_index[key]
+        if bool(trajectory["binary_success"]) != bool(episode["binary_success"]):
+            raise RuntimeError(f"Trajectory success label disagrees with closed-loop evidence: {key}")
+        if bool(trajectory["final_requested_relation"]) != bool(
+            episode["final_requested_relation"]
+        ):
+            raise RuntimeError(f"Trajectory endpoint relation disagrees with closed-loop evidence: {key}")
+        if not np.isclose(
+            float(trajectory["requested_signed_final_offset_m"]),
+            float(episode["requested_signed_final_offset_m"]),
+            atol=1e-8,
+            rtol=0.0,
+        ):
+            raise RuntimeError(f"Trajectory endpoint offset disagrees with closed-loop evidence: {key}")
+        figure = workspace / trajectory["figure_path"]
+        if not figure.exists():
+            raise FileNotFoundError(figure)
+
+    landscape = evidence_root / "social/first_seed_stress_landscape_1600x900.png"
+    square = evidence_root / "social/first_seed_stress_square_1200x1200.png"
+    atlas = evidence_root / "blog/all_executed_paths_and_endpoints.png"
+    gallery = evidence_root / "gallery/index.html"
+    for path in (landscape, square, atlas, gallery):
+        if not path.exists():
+            raise FileNotFoundError(path)
+    if cv2.imread(str(landscape)).shape[:2] != (900, 1600):
+        raise RuntimeError("Landscape social trajectory export is not 1600x900")
+    if cv2.imread(str(square)).shape[:2] != (1200, 1200):
+        raise RuntimeError("Square social trajectory export is not 1200x1200")
+
+    return {
+        "status": summary["status"],
+        "rendered_episode_count": summary["rendered_episode_count"],
+        "success_count": summary["success_count"],
+        "failure_count": summary["failure_count"],
+        "group_summaries": summary["group_summaries"],
+        "coordinate_convention": summary["coordinate_convention"],
+        "scored_goal": summary["scored_goal"],
+        "illustrative_route_disclaimer": summary["illustrative_route_disclaimer"],
+        "all_episode_policy": summary["all_episode_policy"],
+        "selection_plan_sha256": summary["selection_plan_sha256"],
+        "summary_sha256": _sha256(summary_path),
+        "index_sha256": _sha256(index_path),
+        "index_csv_sha256": _sha256(evidence_root / "trajectory_index.csv"),
+        "artifacts": {
+            "atlas": _relative(atlas, workspace),
+            "gallery": _relative(gallery, workspace),
+            "landscape_social": _relative(landscape, workspace),
+            "square_social": _relative(square, workspace),
+        },
+    }
+
+
 def _repo_state(path: Path) -> dict[str, Any]:
     def run(*args: str) -> str:
         return subprocess.check_output(
@@ -1438,6 +1523,7 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
     semantic = compiled["prospective"]["cosmos_semantic_futures"]
     probes = compiled["prospective"]["command_probe"]
     direct_probe = compiled["prospective"]["direct_task_command_probe"]
+    trajectories = compiled["prospective"]["trajectory_evidence"]
     lines = [
         "# VLA-WAM study evidence index",
         "",
@@ -1456,6 +1542,7 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         f"- Cosmos semantically scored confirmation chunks: **{semantic['total_chunks']}** across **{semantic['total_episodes']} episodes**.",
         f"- Cosmos recorded prediction chunks with verified request/server seeds, step alignment, and shapes: **{compiled['integrity']['cosmos_prediction_chunks_validated']}**.",
         f"- Completed thermal-guard lifecycles without emergency stop: **{compiled['integrity']['thermal_guard_logs_verified']}/{len(EXPECTED_THERMAL_LOGS)}**.",
+        f"- Executed trajectory panels indexed: **{trajectories['rendered_episode_count']}/{EXPECTED_EPISODES}**, including **{trajectories['success_count']} successes** and **{trajectories['failure_count']} failures**.",
         "- Calibration, command-probe, and run-manifest hashes were verified by the compilers.",
         "",
         "## Prospective evidence",
@@ -1470,10 +1557,13 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         "| Thermal timing amendment | `../thermal_timing_amendment_002.json` | Treats guarded client request timing as an upper bound and forbids fabricated phase attribution |",
         "| Semantic target parser amendment | `../semantic_target_parser_amendment_004.json` | Uses matched task identity rather than interpreting contrastive prompt negation inside the visual scorer |",
         "| Execution geometry amendment | `../execution_geometry_amendment_005.json` | Aligns derived task/execution relations with RoboLab rigid-object root poses while preserving visual-centroid calibration |",
+        "| Trajectory visualization plan | `../trajectory_visualization_plan.json` | Freezes complete-gallery, deterministic social-panel, and retrospective-exemplar rules |",
         "| Grounded probe plan | `../command_probe_plan.json` | Hash-pinned observation, six command styles, controls, seed |",
         "| Direct-task probe plan | `../direct_task_command_probe_plan.json` | Exact-input syntax, contrastive scope, and target-token-order diagnostic |",
         "| Closed-loop episode table | `episodes.csv` | One row per registered direct-language rollout, with analysis tier |",
         "| Closed-loop summary | `closed_loop_summary.json` | Success, progression, offsets, timing, contrasts |",
+        "| Complete trajectory index | `../trajectory_evidence/trajectory_index.csv` and `.json` | Every success and failure with endpoint class, event steps, raw paths, and rendered panel |",
+        "| Trajectory evidence gallery | `../trajectory_evidence/gallery/index.html` | Filterable visual audit of every registered episode |",
         "| Cosmos future semantics | `compiled_evidence.json` | Prompt-blind imagined/executed quadrants and coverage |",
         "| Renderer variation audit | `cosmos_observation_variation.csv` | First-conditioning-image differences within and across static conditions |",
         "| Physical settling audit | `initial_physical_variation.csv` | Reset-state identity versus first-recorded cube/bowl centroid differences |",
@@ -1496,6 +1586,9 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         "- `direct_language_success_with_intervals.png`: binary success for all four static task wordings with Beta(1,1) 95% intervals.",
         "- `direct_language_requested_side_offsets.png`: endpoint directionality, including failures.",
         "- `direct_prompt_robustness.png`: model-by-wording-by-direction success matrix without a coach.",
+        "- `../trajectory_evidence/blog/all_executed_paths_and_endpoints.png`: every executed cube path and endpoint, faceted by checkpoint and wording.",
+        "- `../trajectory_evidence/social/first_seed_stress_landscape_1600x900.png`: deterministic same-seed stress-language comparison for social sharing.",
+        "- `../trajectory_evidence/social/first_seed_stress_square_1200x1200.png`: square social crop of the same deterministic comparison.",
         "- `cosmos_conditioning_image_variation.png`: measured realtime-renderer variation despite exact physical resets.",
         "- `cosmos_imagination_execution_quadrants.png`: WAM-only semantic future/action agreement.",
         "- `semantic_threshold_sensitivity.png`: scorer coverage/agreement at 0.10, 0.15, and frozen 0.20 m reliability thresholds.",
@@ -1614,6 +1707,7 @@ def main() -> None:
     observation_variation = _cosmos_observation_variation(run_manifest)
     physical_variation = _initial_physical_variation(closed)
     thermal_control = _thermal_log_summary(root)
+    trajectory_evidence = _trajectory_evidence_summary(root, workspace, closed)
     raw_roots = [Path(condition["output_root"]) for condition in run_manifest["conditions"]]
     raw_roots.extend(
         [
@@ -1628,6 +1722,12 @@ def main() -> None:
             root / "semantic_confirmation/cosmos_declarative",
             root / "semantic_confirmation/cosmos_contrastive",
             root / "thermal_logs",
+            root / "trajectory_evidence/summary.json",
+            root / "trajectory_evidence/trajectory_index.csv",
+            root / "trajectory_evidence/trajectory_index.json",
+            root / "trajectory_evidence/blog",
+            root / "trajectory_evidence/social",
+            root / "trajectory_evidence/gallery/index.html",
         ]
     )
     output.mkdir(parents=True, exist_ok=True)
@@ -1685,6 +1785,7 @@ def main() -> None:
         root / "semantic_future_calibration.json",
         root / "semantic_target_parser_amendment_004.json",
         root / "execution_geometry_amendment_005.json",
+        root / "trajectory_visualization_plan.json",
         root / "semantic_confirmation_audit_plan.json",
         root / "semantic_confirmation_audit_amendment_002.json",
         root / "semantic_confirmation_audit.md",
@@ -1711,6 +1812,7 @@ def main() -> None:
         workspace / "tools/run_fixed_observation_command_probe.py",
         workspace / "tools/score_cosmos_semantic_futures.py",
         workspace / "tools/thermal_guard.py",
+        workspace / "tools/render_trajectory_evidence.py",
         workspace / "tools/vla_wam_study_requirements.txt",
     ]
     compiled = {
@@ -1736,6 +1838,12 @@ def main() -> None:
             ],
             "initial_physical_observations_audited": physical_variation["episodes"],
             "thermal_guard_logs_verified": thermal_control["batches"],
+            "trajectory_episodes_rendered": trajectory_evidence[
+                "rendered_episode_count"
+            ],
+            "trajectory_selection_plan_sha256": trajectory_evidence[
+                "selection_plan_sha256"
+            ],
         },
         "prospective": {
             "closed_loop": closed,
@@ -1745,6 +1853,7 @@ def main() -> None:
             "initial_physical_variation": physical_variation,
             "command_probe": probes,
             "direct_task_command_probe": direct_probes,
+            "trajectory_evidence": trajectory_evidence,
         },
         "retrospective": _load((workspace / args.retrospective).resolve() if not args.retrospective.is_absolute() else args.retrospective),
         "operational": {

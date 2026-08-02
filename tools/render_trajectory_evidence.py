@@ -447,10 +447,10 @@ def _render_episode_axis(
         zorder=3,
     )
     if not compact:
-        route_midpoint = (cube[0] + anchor) / 2
+        route_midpoint = 0.20 * cube[0] + 0.80 * anchor
         ax.text(
             route_midpoint[0],
-            route_midpoint[1] + 0.025,
+            route_midpoint[1] + 0.030,
             "illustrative direct route",
             color=TARGET,
             fontsize=7.5,
@@ -484,12 +484,12 @@ def _render_episode_axis(
     )
 
     marker_specs = [
-        (episode.pickup_step, "D", "#6F54A3", "pickup"),
-        (episode.release_step, "s", "#DA8C24", "release"),
-        (episode.first_relation_step, "X", TARGET, "first enters goal"),
+        (episode.pickup_step, "D", "#6F54A3", "pickup", (7, -15)),
+        (episode.release_step, "s", "#DA8C24", "release", (7, 13)),
+        (episode.first_relation_step, "X", TARGET, "first enters goal", (7, -18)),
     ]
     occupied: list[np.ndarray] = []
-    for step, marker, color, label in marker_specs:
+    for step, marker, color, label, label_offset in marker_specs:
         bounded = _bounded_step(step, len(cube))
         if bounded is None:
             continue
@@ -497,12 +497,12 @@ def _render_episode_axis(
         if any(np.linalg.norm(point - other) < 0.012 for other in occupied):
             continue
         occupied.append(point)
-        if np.linalg.norm(point - cube[-1]) < 0.012:
+        if np.linalg.norm(point - cube[-1]) < 0.025:
             if not compact:
                 ax.annotate(
                     f"{label} · {bounded}",
                     xy=point,
-                    xytext=(8, 8),
+                    xytext=label_offset,
                     textcoords="offset points",
                     fontsize=7.2,
                     color=INK,
@@ -524,7 +524,7 @@ def _render_episode_axis(
             ax.annotate(
                 f"{label} · {bounded}",
                 xy=point,
-                xytext=(5, 5),
+                xytext=label_offset,
                 textcoords="offset points",
                 fontsize=7.2,
                 color=INK,

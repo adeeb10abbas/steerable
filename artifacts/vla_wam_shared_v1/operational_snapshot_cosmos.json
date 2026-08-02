@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "captured_at_utc": "2026-08-02T15:49:16Z",
+  "measurement_context": "Cosmos3 Edge policy server on physical GPU 0 while the RoboLab Isaac Sim confirmation client ran on physical GPU 1. This is a live steady-state snapshot during a policy request, not a maximum-memory measurement.",
+  "host_driver_version": "535.309.01",
+  "gpus": [
+    {
+      "index": 0,
+      "name": "NVIDIA GeForce RTX 3090",
+      "memory_total_mib": 24576,
+      "memory_used_mib": 14438,
+      "utilization_percent": 99,
+      "power_draw_watts": 203.54,
+      "role": "Cosmos3 Edge DROID policy server with video decoding"
+    },
+    {
+      "index": 1,
+      "name": "NVIDIA GeForce RTX 3090",
+      "memory_total_mib": 24576,
+      "memory_used_mib": 8887,
+      "utilization_percent": 1,
+      "power_draw_watts": 161.08,
+      "role": "RoboLab Isaac Sim client"
+    }
+  ],
+  "processes": [
+    {
+      "role": "Cosmos3 Edge policy server",
+      "gpu_memory_mib": 14406,
+      "host_rss_kib": 2607572
+    },
+    {
+      "role": "RoboLab Isaac Sim client",
+      "gpu_memory_mib": 8852,
+      "host_rss_kib": 9385812
+    }
+  ],
+  "driver_workaround": "Isaac Sim's Vulkan parser displayed 535.53.01 because the three-digit driver minor overflowed its field, so the run used --/rtx/verifyDriverVersion/enabled=false after host nvidia-smi verified 535.309.01. The rejected startup produced no policy requests and is excluded separately."
+}

@@ -269,7 +269,9 @@ The exact server command is preserved in the runbook.
 A local [Qwen3-VL-2B-Instruct](https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct)
 model sees one third-person camera panel at a time
 and only this object-localization request: find the multicolored cube and red
-bowl. It never sees the policy instruction or requested direction. Exact
+bowl. It never sees the policy instruction or requested direction. The target
+relation comes from the authoritative left/right simulator task identity, not
+from asking the scorer to interpret the contrastive prompt's negation. Exact
 RoboLab camera intrinsics and extrinsics project the two centroids to the table
 plane. Both over-shoulder cameras must agree on the categorical relation and
 their two reconstructed positions must agree within a frozen 0.20 m threshold.
@@ -662,6 +664,8 @@ Key protocol files:
   and seed;
 - `semantic_future_calibration.json`: every calibration point, threshold, and
   localizer response;
+- `semantic_target_parser_amendment_004.json`: target resolution from matched
+  task identity for prompts containing both direction words;
 - `run_manifest.json`: local mapping for all eight direct-language conditions.
 
 Key implementation files:

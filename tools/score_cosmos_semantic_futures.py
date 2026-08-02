@@ -379,6 +379,25 @@ def _request_direction(prompt: str) -> str:
     return found[0]
 
 
+def _task_requested_direction(task_dir: Path) -> str:
+    """Read the evaluation target from the authoritative matched-task identity.
+
+    Contrastive task prompts intentionally contain both direction tokens, so
+    parsing the target from natural language would make the semantic scorer an
+    unregistered negation interpreter. The task identity is the source of the
+    closed-loop predicate and remains independent of generated pixels.
+    """
+
+    matches = [
+        direction
+        for direction, marker in (("left", "LeftOfBowl"), ("right", "RightOfBowl"))
+        if marker in task_dir.name
+    ]
+    if len(matches) != 1:
+        raise ValueError(f"Expected one matched left/right task identity in {task_dir}")
+    return matches[0]
+
+
 def _frame_semantics(
     localization: dict[str, Any], calibration: dict[str, Any]
 ) -> dict[str, Any]:
@@ -583,6 +602,7 @@ def score(args: argparse.Namespace) -> None:
     all_rows: list[dict[str, Any]] = []
     for task_dir in args.task_dir:
         task_key = f"{task_dir.parent.name}__{task_dir.name}"
+        requested = _task_requested_direction(task_dir)
         state_cache: dict[int, dict[str, np.ndarray]] = {}
         contact_rows: dict[int, list[np.ndarray]] = {}
         for episode_index, chunk_dir, metadata in _iter_chunks(task_dir):
@@ -635,7 +655,6 @@ def score(args: argparse.Namespace) -> None:
                     },
                 )
 
-            requested = _request_direction(metadata["prompt"])
             reliable = [item for item in frame_results if item["semantics"]["reliable"]]
             requested_count = sum(item["semantics"]["relation"] == requested for item in reliable)
             requested_fraction = requested_count / len(reliable) if reliable else None

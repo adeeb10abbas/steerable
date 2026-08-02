@@ -54,6 +54,15 @@ stress-seed sheets before any stress rollout, bringing the detailed visual
 audit to 24 episodes and the automatic contact-sheet population to all 80
 Cosmos direct-language episodes.
 
+For closed-loop scoring, the requested relation comes from the authoritative
+matched task identity (`LeftOfBowl` or `RightOfBowl`), not from parsing the
+policy prompt. This matters for contrastive prompts, which deliberately contain
+both direction words. Asking the scorer to resolve that negation would add a
+second, unregistered language judge. The dated
+`semantic_target_parser_amendment_004.json` froze this interface correction
+before any contrastive rollout or stress semantic label; visual localization,
+thresholds, execution geometry, and quadrants are unchanged.
+
 For the fixed-observation command-style probe, this cube/bowl predicate is
 applied only to commands that actually request a left/right cube placement:
 task, relation paraphrase/opposite, spatial point, and combination styles.

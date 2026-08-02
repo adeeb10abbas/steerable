@@ -86,6 +86,12 @@ The report must show the four quadrants:
 Unreliable visual tracks are `uncertain`, not coerced to success or failure.
 Coverage and audit contact sheets are mandatory.
 
+The requested relation is read from the matched simulator task identity, not
+interpreted from the policy text. This keeps the visual scorer prompt-blind and
+avoids adding an unregistered negation judge for contrastive prompts. The
+interface correction is disclosed in
+`semantic_target_parser_amendment_004.json`; no visual threshold changed.
+
 The exact prompt-blind localizer, projection, abstention rules, excluded
 calibration metrics, and evidence hashes were frozen separately in
 `docs/SEMANTIC_FUTURE_SCORER_V1.md` before confirmation inference.

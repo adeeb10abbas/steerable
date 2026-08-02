@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "amendment_id": "vla_wam_shared_spatial_v1_semantic_target_parser_004",
+  "status": "frozen_before_any_contrastive_episode_and_before_any_stress_semantic_scoring",
+  "fixed_at_utc": "2026-08-02T20:47:42Z",
+  "repository_commit_before_amendment": "ffa16303f890d956fe44eff7d7ccceebb9fab57d",
+  "scope_amendment_sha256": "1910e9616cd9d13a4b8a51d1299cf1d97e5dac69003633003ada9f0a2d01c366",
+  "semantic_calibration_sha256": "56b7155fdb2eee1732e7636a104b2966323fcfc947c699cf3ac58635b232ace9",
+  "trigger": "The contrastive task prompt intentionally contains both left and right, while the original scorer helper required exactly one direction token.",
+  "change": "For closed-loop episodes only, obtain the requested relation from the authoritative matched task-directory identity (LeftOfBowl or RightOfBowl), which is also the source of the simulator success predicate. Do not parse negation or direction scope from policy text inside the visual scorer.",
+  "unchanged": [
+    "all localization prompts and model weights",
+    "all calibration values and semantic thresholds",
+    "future frame indices and conditioning-frame exclusion",
+    "execution-state relation calculation",
+    "quadrant definitions and coverage rules",
+    "fixed-observation probe request parser for applicable single-direction conditions"
+  ],
+  "outcome_timing_disclosure": "Two declarative-left Cosmos episodes had completed and both succeeded. No contrastive episode and no declarative/contrastive semantic localization or label existed.",
+  "validity_reason": "The visual scorer should evaluate generated content against the registered task target, not become an unregistered language model for resolving a deliberately difficult contrastive prompt.",
+  "claim_boundary": "This amendment does not decide whether the policy understood negation. The policy sees the full prompt; the scorer merely compares generated/executed relations with the task predicate."
+}

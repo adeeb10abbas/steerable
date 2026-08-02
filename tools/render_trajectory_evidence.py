@@ -789,16 +789,16 @@ def _render_endpoint_atlas(episodes: list[Episode], output: Path) -> None:
         Line2D([0], [0], color=MUTED, linewidth=1, alpha=0.4, label="executed cube path"),
     ]
     fig.legend(handles=legend, loc="lower center", ncol=4, frameon=False, bbox_to_anchor=(0.5, 0.005))
-    fig.suptitle("Every executed cube path and endpoint", x=0.055, y=0.99, ha="left", fontsize=16, fontweight="bold")
+    fig.suptitle("Every executed cube path and endpoint", x=0.055, y=0.985, ha="left", fontsize=16, fontweight="bold")
     fig.text(
         0.055,
-        0.95,
+        0.925,
         "Matched scenes and seeds · triangles are successes · red × marks are failures",
         ha="left",
         color=MUTED,
         fontsize=10,
     )
-    fig.subplots_adjust(left=0.09, right=0.99, top=0.86, bottom=0.12, wspace=0.18, hspace=0.34)
+    fig.subplots_adjust(left=0.09, right=0.99, top=0.82, bottom=0.12, wspace=0.18, hspace=0.34)
     output.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(output, dpi=220)
     plt.close(fig)

@@ -1,0 +1,56 @@
+{
+  "decision": {
+    "blog_core_model": "Efficient-WAM-RT",
+    "checkpoint": "jiajun0613/Efficient-WAM_RoboTwin",
+    "reason": "Fast one-3090 operation plus causal prompted endpoint shifts in all six matched pairs and two clean counterfactual successes.",
+    "secondary_model": "LingBot-VA RoboTwin",
+    "secondary_role": "Stronger semantic imagined-future comparison and a promising fine-tuning substrate; default swaps are not yet successful."
+  },
+  "efficient_wam": {
+    "environment_seed": 4200000,
+    "sampling_seeds": [600, 601, 602],
+    "correct_successes": 6,
+    "correct_trials": 6,
+    "swapped_successes": 2,
+    "swapped_trials": 6,
+    "prompted_direction_shifts": 6,
+    "matched_pairs": 6,
+    "native_left_to_prompt_right_median_shift_cm": 15.2,
+    "native_right_to_prompt_left_median_shift_cm": -17.3,
+    "warm_action_chunk_median_seconds": 0.137,
+    "observed_closed_loop_gpu_memory_gb": 10.0,
+    "claim_limit": "One expert-valid bell/bread scene; scene transfer remains unmeasured."
+  },
+  "fastwam": {
+    "best_tested_text_cfg_scale": 2.0,
+    "prompt_action_rms": 0.005320593983709472,
+    "sampling_action_rms": 0.007933875223921315,
+    "prompt_to_sampling_ratio": 0.6706173003159193,
+    "clean_counterfactuals": 1,
+    "counterfactual_robustness_successes": 1,
+    "counterfactual_robustness_trials": 5,
+    "implementation_finding": "The release accepted text_cfg_scale but did not apply CFG in action-only or joint inference."
+  },
+  "lingbot_va": {
+    "parameter_count": 5088872670,
+    "deterministic_repeat_action_rms": 0.0,
+    "deterministic_repeat_predicted_latent_rms": 0.0,
+    "left_right_predicted_latent_rms": 0.027331126835330146,
+    "left_right_normalized_action_rms": 0.001161961582279455,
+    "default_correct_successes": 2,
+    "default_correct_trials": 2,
+    "default_swapped_successes": 0,
+    "default_swapped_trials": 2,
+    "directional_swap_crossings": 1,
+    "swap_trials": 2,
+    "action_cfg_3_prompt_to_sampling_ratio": 0.48556793871407784,
+    "action_cfg_3_correct_successes": 2,
+    "action_cfg_3_swapped_successes": 0,
+    "action_cfg_3_directional_swap_crossings": 0,
+    "warm_chunk_seconds": 7.0,
+    "pytorch_peak_memory_mib": 19888.79052734375,
+    "memory_fix": "Share one frozen VAE weight set across two independent streaming-cache wrappers.",
+    "evaluation_fix": "Run one episode per subprocess because CuRobo CUDA-graph pools survive environment close."
+  },
+  "claim": "Efficient-WAM-RT is a usable research WAM for matched language-steering experiments, not a generally reliable language controller."
+}

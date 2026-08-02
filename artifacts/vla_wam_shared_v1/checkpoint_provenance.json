@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "aggregate_digest_definition": "SHA-256 of the sorted sha256sum output for every included regular file. Hugging Face snapshot symlinks are followed. Absolute local paths are part of the aggregate input, so these digests pin this evidence host rather than serving as portable model-distribution checksums.",
+  "checkpoints": [
+    {
+      "role": "prospective WAM",
+      "model": "nvidia/Cosmos3-Edge-Policy-DROID",
+      "local_snapshot": "/home/ali/cosmos-framework/.cache/huggingface/hub/models--nvidia--Cosmos3-Edge-Policy-DROID/snapshots/3ea407af3e156c0af3b4bb6edd85842cc9a58777",
+      "huggingface_snapshot_revision": "3ea407af3e156c0af3b4bb6edd85842cc9a58777",
+      "regular_files": 34,
+      "resolved_bytes": 9171983421,
+      "host_aggregate_sha256": "6fc53c34bac540151d4710583c85b10c258b6905c5a8106cf8f33145641eda19"
+    },
+    {
+      "role": "prospective VLA",
+      "model": "pi05_droid_jointpos",
+      "local_snapshot": "/home/ali/.cache/openpi/openpi-assets-simeval/pi05_droid_jointpos",
+      "source_identifier": "gs://openpi-assets-simeval/pi05_droid_jointpos",
+      "regular_files": 25,
+      "resolved_bytes": 12435123745,
+      "excluded_local_file": "params/._CHECKPOINT_METADATA.swp",
+      "exclusion_reason": "Editor swap file is not checkpoint data and is not loaded by OpenPI.",
+      "host_aggregate_sha256": "2fa09065b948fc3365e8eda0fde95f14ee4f3252e4c066ef0afb836e40856353"
+    },
+    {
+      "role": "prompt-blind semantic future localizer",
+      "model": "Qwen/Qwen3-VL-2B-Instruct",
+      "local_snapshot": "/home/ali/.cache/huggingface/hub/models--Qwen--Qwen3-VL-2B-Instruct/snapshots/89644892e4d85e24eaac8bacfd4f463576704203",
+      "huggingface_snapshot_revision": "89644892e4d85e24eaac8bacfd4f463576704203",
+      "regular_files": 10,
+      "resolved_bytes": 4266640306,
+      "host_aggregate_sha256": "185b559c8b436d6abe85816a06bce8b737df30f0c8738ee4fa39abb9450f5c73"
+    }
+  ]
+}

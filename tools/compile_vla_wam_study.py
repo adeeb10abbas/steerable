@@ -863,6 +863,7 @@ def main() -> None:
         root / "command_probe_plan.json",
         root / "command_probe_amendment_001.json",
         root / "semantic_future_calibration.json",
+        root / "checkpoint_provenance.json",
         workspace / "docs/VLA_WAM_SHARED_BENCHMARK_V1.md",
         workspace / "docs/SEMANTIC_FUTURE_SCORER_V1.md",
         workspace / "docs/PAPER_PROTOCOL_ALIGNMENT.md",
@@ -888,6 +889,7 @@ def main() -> None:
         "retrospective": _load((workspace / args.retrospective).resolve() if not args.retrospective.is_absolute() else args.retrospective),
         "operational": {
             "cosmos_live_snapshot": _load(root / "operational_snapshot_cosmos.json"),
+            "checkpoint_provenance": _load(root / "checkpoint_provenance.json"),
         },
         "provenance": {
             "files": {

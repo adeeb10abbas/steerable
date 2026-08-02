@@ -173,6 +173,9 @@ def _load_episode(
     requested_signed_offset = delta_y if direction == "left" else -delta_y
     root_result = result_index.get((task, run), {})
     timing = root_result.get("timing", {})
+    steps = int(log["final_step"])
+    policy_inference_s = timing.get("policy_inference_s")
+    estimated_policy_requests = math.ceil(steps / int(condition["open_loop_horizon"]))
 
     row = {
         "condition_id": condition["id"],
@@ -186,7 +189,7 @@ def _load_episode(
         "episode_seed": seed,
         "valid": True,
         "binary_success": binary_success,
-        "steps": int(log["final_step"]),
+        "steps": steps,
         "correct_cube_interacted": interaction_step is not None,
         "first_interaction_step": interaction_step,
         "correct_cube_grabbed": picked,
@@ -202,8 +205,14 @@ def _load_episode(
         "initial_requested_relation": bool(relation[0]),
         "initial_state_sha256": _initial_fingerprint(initial),
         "raw_robolab_score": root_result.get("score"),
-        "policy_inference_s": timing.get("policy_inference_s"),
+        "policy_inference_s": policy_inference_s,
         "policy_inference_avg_ms": timing.get("policy_inference_avg_ms"),
+        "estimated_policy_requests": estimated_policy_requests,
+        "mean_policy_request_s": (
+            float(policy_inference_s) / estimated_policy_requests
+            if policy_inference_s is not None and estimated_policy_requests
+            else None
+        ),
         "env_step_s": timing.get("env_step_s"),
         "wall_total_s": timing.get("wall_total_s"),
         "command_history": timing.get("command_history"),
@@ -237,6 +246,11 @@ def _group_summary(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
             row["policy_inference_avg_ms"]
             for row in group
             if row["policy_inference_avg_ms"] is not None
+        ]
+        request_latency = [
+            row["mean_policy_request_s"]
+            for row in group
+            if row["mean_policy_request_s"] is not None
         ]
         phase_counts: Counter[str] = Counter()
         for row in group:
@@ -272,6 +286,9 @@ def _group_summary(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 ),
                 "median_steps": float(np.median([row["steps"] for row in group])),
                 "mean_policy_inference_avg_ms": float(np.mean(inference)) if inference else None,
+                "mean_policy_request_s": (
+                    float(np.mean(request_latency)) if request_latency else None
+                ),
                 "mean_wall_total_s": float(np.mean(wall)) if wall else None,
                 "oracle_command_phase_counts": dict(phase_counts),
             }

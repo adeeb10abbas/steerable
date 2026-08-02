@@ -1,0 +1,364 @@
+{
+  "action_hash_matches": 16,
+  "claim_boundary": "This comparison isolates the physical inference card only. It does not test simulator/render GPU assignment. The definitive Cosmos probe and all definitive Cosmos rollouts use policy GPU 1; GPU0 probe outputs are retained as supporting provenance.",
+  "conditions": 16,
+  "future_hash_matches": 16,
+  "gpu0_manifest_sha256": "1d73928cd411bae8aabb0499c1dea2d0a37675c1c64484fda7375b315e416123",
+  "gpu0_probe": "/home/ali/projects/steerable/artifacts/vla_wam_shared_v1/command_probe/cosmos",
+  "gpu1_manifest_sha256": "1d73928cd411bae8aabb0499c1dea2d0a37675c1c64484fda7375b315e416123",
+  "gpu1_probe": "/home/ali/projects/steerable/artifacts/vla_wam_shared_v1/command_probe/cosmos_gpu1",
+  "interpretation": "All action NPY and future MP4 files match exactly across physical policy GPUs for the same input bytes, prompts, and seed. The earlier cross-role rollout difference is therefore attributable to simulator/render input variation, not a detected numerical policy-card effect.",
+  "invariants": {
+    "conditioning_png_sha256": true,
+    "conditioning_raw_rgb_sha256": true,
+    "plan_sha256": true,
+    "sampling_seed": true
+  },
+  "max_action_rms_gpu0_vs_gpu1": 0.0,
+  "max_decoded_future_mae_0_255_gpu0_vs_gpu1": 0.0,
+  "mean_action_rms_gpu0_vs_gpu1": 0.0,
+  "mean_decoded_future_mae_0_255_gpu0_vs_gpu1": 0.0,
+  "median_action_rms_gpu0_vs_gpu1": 0.0,
+  "median_decoded_future_mae_0_255_gpu0_vs_gpu1": 0.0,
+  "purpose": "Quantify physical-policy-GPU sensitivity using the exact same frozen observation, 16 prompts, and request seed. These distances are not steerability evidence.",
+  "rows": [
+    {
+      "action_file_hash_match": true,
+      "action_max_abs_gpu0_vs_gpu1": 0.0,
+      "action_rms_gpu0_vs_gpu1": 0.0,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "task_left",
+      "decoded_future_mae_0_255_gpu0_vs_gpu1": 0.0,
+      "decoded_future_rms_0_255_gpu0_vs_gpu1": 0.0,
+      "future_file_hash_match": true,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Put the rubiks cube to the left of the bowl",
+      "style": "task"
+    },
+    {
+      "action_file_hash_match": true,
+      "action_max_abs_gpu0_vs_gpu1": 0.0,
+      "action_rms_gpu0_vs_gpu1": 0.0,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "task_left_repeat",
+      "decoded_future_mae_0_255_gpu0_vs_gpu1": 0.0,
+      "decoded_future_rms_0_255_gpu0_vs_gpu1": 0.0,
+      "future_file_hash_match": true,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Put the rubiks cube to the left of the bowl",
+      "style": "exact_repeat_control"
+    },
+    {
+      "action_file_hash_match": true,
+      "action_max_abs_gpu0_vs_gpu1": 0.0,
+      "action_rms_gpu0_vs_gpu1": 0.0,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "task_left_paraphrase",
+      "decoded_future_mae_0_255_gpu0_vs_gpu1": 0.0,
+      "decoded_future_rms_0_255_gpu0_vs_gpu1": 0.0,
+      "future_file_hash_match": true,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Place the multicolored cube on the table on the bowl's left side",
+      "style": "paraphrase_control"
+    },
+    {
+      "action_file_hash_match": true,
+      "action_max_abs_gpu0_vs_gpu1": 0.0,
+      "action_rms_gpu0_vs_gpu1": 0.0,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "task_right",
+      "decoded_future_mae_0_255_gpu0_vs_gpu1": 0.0,
+      "decoded_future_rms_0_255_gpu0_vs_gpu1": 0.0,
+      "future_file_hash_match": true,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Put the rubiks cube to the right of the bowl",
+      "style": "opposite_relation_control"
+    },
+    {
+      "action_file_hash_match": true,
+      "action_max_abs_gpu0_vs_gpu1": 0.0,
+      "action_rms_gpu0_vs_gpu1": 0.0,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "subtask_grasp",
+      "decoded_future_mae_0_255_gpu0_vs_gpu1": 0.0,
+      "decoded_future_rms_0_255_gpu0_vs_gpu1": 0.0,
+      "future_file_hash_match": true,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Reach for and firmly grasp the rubiks cube",
+      "style": "subtask"
+    },
+    {
+      "action_file_hash_match": true,
+      "action_max_abs_gpu0_vs_gpu1": 0.0,
+      "action_rms_gpu0_vs_gpu1": 0.0,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "atomic_left",
+      "decoded_future_mae_0_255_gpu0_vs_gpu1": 0.0,
+      "decoded_future_rms_0_255_gpu0_vs_gpu1": 0.0,
+      "future_file_hash_match": true,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Move the gripper left",
+      "style": "atomic_motion"
+    },
+    {
+      "action_file_hash_match": true,
+      "action_max_abs_gpu0_vs_gpu1": 0.0,
+      "action_rms_gpu0_vs_gpu1": 0.0,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "atomic_right",
+      "decoded_future_mae_0_255_gpu0_vs_gpu1": 0.0,
+      "decoded_future_rms_0_255_gpu0_vs_gpu1": 0.0,
+      "future_file_hash_match": true,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Move the gripper right",
+      "style": "atomic_motion_counterfactual"
+    },
+    {
+      "action_file_hash_match": true,
+      "action_max_abs_gpu0_vs_gpu1": 0.0,
+      "action_rms_gpu0_vs_gpu1": 0.0,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "gripper_trace_to_cube",
+      "decoded_future_mae_0_255_gpu0_vs_gpu1": 0.0,
+      "decoded_future_rms_0_255_gpu0_vs_gpu1": 0.0,
+      "future_file_hash_match": true,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Move the gripper through left-camera points [(171,64), (165,101), (159,138), (153,175)]",
+      "style": "gripper_trace"
+    },
+    {
+      "action_file_hash_match": true,
+      "action_max_abs_gpu0_vs_gpu1": 0.0,
+      "action_rms_gpu0_vs_gpu1": 0.0,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "point_cube",
+      "decoded_future_mae_0_255_gpu0_vs_gpu1": 0.0,
+      "decoded_future_rms_0_255_gpu0_vs_gpu1": 0.0,
+      "future_file_hash_match": true,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Grasp the rubiks cube at left-camera point [153,175]",
+      "style": "point"
+    },
+    {
+      "action_file_hash_match": true,
+      "action_max_abs_gpu0_vs_gpu1": 0.0,
+      "action_rms_gpu0_vs_gpu1": 0.0,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "point_left_target",
+      "decoded_future_mae_0_255_gpu0_vs_gpu1": 0.0,
+      "decoded_future_rms_0_255_gpu0_vs_gpu1": 0.0,
+      "future_file_hash_match": true,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Place the rubiks cube at left-camera point [123,171]",
+      "style": "point_spatial"
+    },
+    {
+      "action_file_hash_match": true,
+      "action_max_abs_gpu0_vs_gpu1": 0.0,
+      "action_rms_gpu0_vs_gpu1": 0.0,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "point_right_target",
+      "decoded_future_mae_0_255_gpu0_vs_gpu1": 0.0,
+      "decoded_future_rms_0_255_gpu0_vs_gpu1": 0.0,
+      "future_file_hash_match": true,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Place the rubiks cube at left-camera point [155,136]",
+      "style": "point_spatial_counterfactual"
+    },
+    {
+      "action_file_hash_match": true,
+      "action_max_abs_gpu0_vs_gpu1": 0.0,
+      "action_rms_gpu0_vs_gpu1": 0.0,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "combination_left",
+      "decoded_future_mae_0_255_gpu0_vs_gpu1": 0.0,
+      "decoded_future_rms_0_255_gpu0_vs_gpu1": 0.0,
+      "future_file_hash_match": true,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Move left from gripper point [171,64] to the rubiks cube at [153,175], firmly grasp it, then follow [(153,175), (143,174), (133,172), (123,171)]",
+      "style": "combination"
+    },
+    {
+      "action_file_hash_match": true,
+      "action_max_abs_gpu0_vs_gpu1": 0.0,
+      "action_rms_gpu0_vs_gpu1": 0.0,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "combination_right",
+      "decoded_future_mae_0_255_gpu0_vs_gpu1": 0.0,
+      "decoded_future_rms_0_255_gpu0_vs_gpu1": 0.0,
+      "future_file_hash_match": true,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Move right from gripper point [171,64] to the rubiks cube at [153,175], firmly grasp it, then follow [(153,175), (154,162), (154,149), (155,136)]",
+      "style": "combination_counterfactual"
+    },
+    {
+      "action_file_hash_match": true,
+      "action_max_abs_gpu0_vs_gpu1": 0.0,
+      "action_rms_gpu0_vs_gpu1": 0.0,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "unrelated_control",
+      "decoded_future_mae_0_255_gpu0_vs_gpu1": 0.0,
+      "decoded_future_rms_0_255_gpu0_vs_gpu1": 0.0,
+      "future_file_hash_match": true,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Open the top drawer",
+      "style": "unrelated_control"
+    },
+    {
+      "action_file_hash_match": true,
+      "action_max_abs_gpu0_vs_gpu1": 0.0,
+      "action_rms_gpu0_vs_gpu1": 0.0,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "noun_swap_control",
+      "decoded_future_mae_0_255_gpu0_vs_gpu1": 0.0,
+      "decoded_future_rms_0_255_gpu0_vs_gpu1": 0.0,
+      "future_file_hash_match": true,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Put the banana to the left of the bowl",
+      "style": "noun_control"
+    },
+    {
+      "action_file_hash_match": true,
+      "action_max_abs_gpu0_vs_gpu1": 0.0,
+      "action_rms_gpu0_vs_gpu1": 0.0,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "contradictory_control",
+      "decoded_future_mae_0_255_gpu0_vs_gpu1": 0.0,
+      "decoded_future_rms_0_255_gpu0_vs_gpu1": 0.0,
+      "future_file_hash_match": true,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Put the rubiks cube to both the left and the right of the bowl at the same time",
+      "style": "contradictory_control"
+    }
+  ],
+  "schema_version": 1,
+  "status": "fixed_observation_policy_gpu_invariant"
+}

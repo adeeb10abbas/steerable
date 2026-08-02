@@ -129,9 +129,16 @@ def main() -> None:
 
     action_rms = [row["action_rms_gpu0_vs_gpu1"] for row in rows]
     future_mae = [row["decoded_future_mae_0_255_gpu0_vs_gpu1"] for row in rows]
+    action_hash_matches = sum(row["action_file_hash_match"] for row in rows)
+    future_hash_matches = sum(row["future_file_hash_match"] for row in rows)
+    exact_across_cards = action_hash_matches == len(rows) and future_hash_matches == len(rows)
     output = {
         "schema_version": 1,
-        "status": "excluded_hardware_sensitivity_audit",
+        "status": (
+            "fixed_observation_policy_gpu_invariant"
+            if exact_across_cards
+            else "fixed_observation_policy_gpu_sensitive"
+        ),
         "purpose": "Quantify physical-policy-GPU sensitivity using the exact same frozen observation, 16 prompts, and request seed. These distances are not steerability evidence.",
         "gpu0_probe": str(args.gpu0_probe.resolve()),
         "gpu1_probe": str(args.gpu1_probe.resolve()),
@@ -139,8 +146,8 @@ def main() -> None:
         "gpu1_manifest_sha256": _sha256(gpu1_manifest_path),
         "invariants": invariants,
         "conditions": len(rows),
-        "action_hash_matches": sum(row["action_file_hash_match"] for row in rows),
-        "future_hash_matches": sum(row["future_file_hash_match"] for row in rows),
+        "action_hash_matches": action_hash_matches,
+        "future_hash_matches": future_hash_matches,
         "mean_action_rms_gpu0_vs_gpu1": float(np.mean(action_rms)),
         "median_action_rms_gpu0_vs_gpu1": float(np.median(action_rms)),
         "max_action_rms_gpu0_vs_gpu1": float(np.max(action_rms)),
@@ -148,7 +155,12 @@ def main() -> None:
         "median_decoded_future_mae_0_255_gpu0_vs_gpu1": float(np.median(future_mae)),
         "max_decoded_future_mae_0_255_gpu0_vs_gpu1": float(np.max(future_mae)),
         "rows": rows,
-        "claim_boundary": "The comparison measures numerical sensitivity to the physical inference card. The definitive Cosmos probe and all definitive Cosmos rollouts use policy GPU 1; GPU0 probe outputs are retained only as excluded provenance.",
+        "interpretation": (
+            "All action NPY and future MP4 files match exactly across physical policy GPUs for the same input bytes, prompts, and seed. The earlier cross-role rollout difference is therefore attributable to simulator/render input variation, not a detected numerical policy-card effect."
+            if exact_across_cards
+            else "At least one action or future differs across physical policy GPUs despite identical input bytes, prompts, and seed. Definitive inference must stay on one card."
+        ),
+        "claim_boundary": "This comparison isolates the physical inference card only. It does not test simulator/render GPU assignment. The definitive Cosmos probe and all definitive Cosmos rollouts use policy GPU 1; GPU0 probe outputs are retained as supporting provenance.",
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(output, indent=2, sort_keys=True, allow_nan=False) + "\n")

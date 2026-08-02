@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0.0",
+  "plan_id": "vla_wam_shared_spatial_v1_trajectory_visuals",
+  "frozen_at_utc": "2026-08-02T22:15:26Z",
+  "purpose": "Make successes, failures, requested regions, executed cube paths, and final endpoints directly inspectable in the study and its social-media excerpts.",
+  "all_episode_policy": "Render and index every one of the 160 registered direct-language episodes. No episode may be removed from the evidence gallery because it is visually inconvenient or contradicts the narrative.",
+  "scored_goal_definition": "The official binary task requires the cube to be released inside the requested 45-degree horizontal cone in the robot frame. It does not prescribe a unique path.",
+  "expected_path_display": {
+    "design": "Draw a dashed arrow from the initial cube position to a fixed interior anchor on the requested side.",
+    "label": "illustrative direct route",
+    "non_metric_disclosure": "This line is explanatory, is not an oracle trajectory, is not used in any metric, and must not be described as the sole correct path. The shaded requested region is the normative goal display."
+  },
+  "actual_path_display": {
+    "source": "states/rigid_object/rubiks_cube/root_pose transformed into the robot frame relative to the bowl",
+    "coordinate_convention": "Page horizontal equals negative robot-frame y so that robot-left appears visually left; page vertical equals robot-frame x, or forward.",
+    "markers": [
+      "start circle",
+      "verified pickup diamond when present",
+      "verified release square when present",
+      "first requested-region crossing X when present",
+      "final endpoint star"
+    ]
+  },
+  "primary_visuals": [
+    "one labeled path panel for every registered episode",
+    "an eight-panel all-path endpoint atlas covering both checkpoints and all four wordings",
+    "a filterable gallery backed by JSON and CSV indexes"
+  ],
+  "deterministic_social_selection": {
+    "rule": "For the stress-language paired panel, use the lowest registered stress seed, 7200, for both checkpoints, both stress wordings, and the left request.",
+    "rationale": "The same minimal-seed rule is applied to every checkpoint and wording. Aggregate results and the full gallery remain the evidence-bearing views.",
+    "exports": [
+      "1600x900 landscape",
+      "1200x1200 square"
+    ]
+  },
+  "retrospective_visual_selection": {
+    "rule": "For each checkpoint, select the lexicographically first same-seed declarative/contrastive pair with discordant binary outcomes.",
+    "required_label": "retrospective diagnostic exemplar",
+    "inferential_status": "Illustrative only; never substitute this panel for complete success rates or all-episode evidence."
+  },
+  "timing_disclosure": {
+    "known_before_freeze": "All 80 Cosmos outcomes and the first five pi0.5 canonical-left failures had been inspected.",
+    "mitigation": "Every registered episode is rendered; the primary paired social rule is deterministic; outcome-aware discordance panels are labeled retrospective."
+  },
+  "accessibility": "Outcome uses both text and border color; request direction uses labels and marker orientation; figures do not depend on hue alone."
+}

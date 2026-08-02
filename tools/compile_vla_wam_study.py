@@ -245,7 +245,7 @@ def _probe_summary(
     result: dict[str, Any] = {}
     for model, directory in (
         ("pi05", root / "command_probe/pi05"),
-        ("cosmos", root / "command_probe/cosmos"),
+        ("cosmos", root / "command_probe/cosmos_gpu1"),
     ):
         manifest = _load_probe(directory / "manifest.json", model, plan_sha)
         result[model] = {
@@ -723,7 +723,7 @@ def _plot_selected_probe_futures(root: Path, probes: dict[str, Any], output: Pat
     fig, axes = plt.subplots(len(selected), len(indices), figsize=(9.4, 13.0))
     for row_index, condition in enumerate(selected):
         frames = _read_probe_frames(
-            root / "command_probe/cosmos" / f"{condition}_future.mp4", indices
+            root / "command_probe/cosmos_gpu1" / f"{condition}_future.mp4", indices
         )
         relation = semantic[condition]["predicted_relation"] or "uncertain"
         for column_index, (frame_index, frame) in enumerate(zip(indices, frames)):
@@ -891,7 +891,9 @@ def main() -> None:
 
     plan_path = root / "command_probe_plan.json"
     plan_sha = _sha256(plan_path)
-    cosmos_probe_semantic_path = root / "command_probe/cosmos_semantics/semantic_future_summary.json"
+    cosmos_probe_semantic_path = (
+        root / "command_probe/cosmos_gpu1_semantics/semantic_future_summary.json"
+    )
     cosmos_probe_semantic = _load(cosmos_probe_semantic_path)
     probes = _probe_summary(root, plan_sha, cosmos_probe_semantic)
     calibration_sha = _sha256(root / "semantic_future_calibration.json")
@@ -911,8 +913,8 @@ def main() -> None:
     raw_roots.extend(
         [
             root / "command_probe/pi05",
-            root / "command_probe/cosmos",
-            root / "command_probe/cosmos_semantics",
+            root / "command_probe/cosmos_gpu1",
+            root / "command_probe/cosmos_gpu1_semantics",
             root / "semantic_confirmation/cosmos_canonical",
             root / "semantic_confirmation/cosmos_vague",
         ]

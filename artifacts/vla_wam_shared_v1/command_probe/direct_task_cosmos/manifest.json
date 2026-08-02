@@ -1,0 +1,307 @@
+{
+  "claim_boundary": "This one-observation probe establishes deterministic language sensitivity and semantic future direction only. It cannot substitute for closed-loop task success or support broad prompt-robustness claims.",
+  "conditioning_png_sha256": "32080f16b44c4a7f9dd32a4f2d84f23e8d2e766585d01443efcc687414e72144",
+  "conditioning_raw_rgb_sha256": "6c9a4d1a38e7ac167a4d0a0e065054fe6b172d59974940d00f082864d8376767",
+  "exact_repeat_action_rms": 0.0,
+  "exact_repeat_future_pixel_mae": 0.0,
+  "model": "cosmos",
+  "plan_path": "/home/ali/projects/steerable/artifacts/vla_wam_shared_v1/direct_task_command_probe_plan.json",
+  "plan_sha256": "c5025b51f57224308d16338db38ab57b06e7025ba9e585a05993e01a79952fc3",
+  "records": [
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": false,
+      "action_rms_vs_task_left": 0.0,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "task_left",
+      "future_effect_to_repeat_noise": null,
+      "future_exceeds_repeat_noise": false,
+      "future_pixel_mae_vs_task_left": 0.0,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Put the rubiks cube to the left of the bowl",
+      "prompt_family": "canonical",
+      "request_wall_seconds": 5.514833041001111,
+      "requested_relation": "left",
+      "requested_sampling_seed": 8200000,
+      "server_sampling_seed": 8200000,
+      "style": "task"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": false,
+      "action_rms_vs_task_left": 0.0,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "task_left_repeat",
+      "future_effect_to_repeat_noise": null,
+      "future_exceeds_repeat_noise": false,
+      "future_pixel_mae_vs_task_left": 0.0,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Put the rubiks cube to the left of the bowl",
+      "prompt_family": "canonical_repeat",
+      "request_wall_seconds": 5.469596010050736,
+      "requested_relation": "left",
+      "requested_sampling_seed": 8200000,
+      "server_sampling_seed": 8200000,
+      "style": "exact_repeat_control"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.017620958364218463,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "task_right",
+      "future_effect_to_repeat_noise": null,
+      "future_exceeds_repeat_noise": true,
+      "future_pixel_mae_vs_task_left": 5.074318229644934,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Put the rubiks cube to the right of the bowl",
+      "prompt_family": "canonical",
+      "request_wall_seconds": 5.469871827983297,
+      "requested_relation": "right",
+      "requested_sampling_seed": 8200000,
+      "server_sampling_seed": 8200000,
+      "style": "opposite_relation_control"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.029204519957544965,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "short_left",
+      "future_effect_to_repeat_noise": null,
+      "future_exceeds_repeat_noise": true,
+      "future_pixel_mae_vs_task_left": 8.499391524142945,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Put the cube left of the bowl",
+      "prompt_family": "short_paraphrase",
+      "request_wall_seconds": 5.473057650960982,
+      "requested_relation": "left",
+      "requested_sampling_seed": 8200000,
+      "server_sampling_seed": 8200000,
+      "style": "paraphrase_control"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.024848927105036295,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "short_right",
+      "future_effect_to_repeat_noise": null,
+      "future_exceeds_repeat_noise": true,
+      "future_pixel_mae_vs_task_left": 8.739688103812748,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Put the cube right of the bowl",
+      "prompt_family": "short_paraphrase",
+      "request_wall_seconds": 5.493392050964758,
+      "requested_relation": "right",
+      "requested_sampling_seed": 8200000,
+      "server_sampling_seed": 8200000,
+      "style": "paraphrase_control"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.012758217460038497,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "declarative_left",
+      "future_effect_to_repeat_noise": null,
+      "future_exceeds_repeat_noise": true,
+      "future_pixel_mae_vs_task_left": 3.555109989573768,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "The rubiks cube should end up to the left of the bowl",
+      "prompt_family": "declarative_goal",
+      "request_wall_seconds": 5.4982050489634275,
+      "requested_relation": "left",
+      "requested_sampling_seed": 8200000,
+      "server_sampling_seed": 8200000,
+      "style": "paraphrase_control"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.015558335355217133,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "declarative_right",
+      "future_effect_to_repeat_noise": null,
+      "future_exceeds_repeat_noise": true,
+      "future_pixel_mae_vs_task_left": 3.90631552265075,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "The rubiks cube should end up to the right of the bowl",
+      "prompt_family": "declarative_goal",
+      "request_wall_seconds": 5.503706180024892,
+      "requested_relation": "right",
+      "requested_sampling_seed": 8200000,
+      "server_sampling_seed": 8200000,
+      "style": "paraphrase_control"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.013051811817240471,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "contrastive_first_left",
+      "future_effect_to_repeat_noise": null,
+      "future_exceeds_repeat_noise": true,
+      "future_pixel_mae_vs_task_left": 5.098618374799128,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Put the rubiks cube to the left of the bowl, not to the right of the bowl",
+      "prompt_family": "contrastive_goal",
+      "request_wall_seconds": 5.510525724035688,
+      "requested_relation": "left",
+      "requested_sampling_seed": 8200000,
+      "server_sampling_seed": 8200000,
+      "style": "contrastive_task",
+      "target_token_order": "target_first"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.019305524713046435,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "contrastive_first_right",
+      "future_effect_to_repeat_noise": null,
+      "future_exceeds_repeat_noise": true,
+      "future_pixel_mae_vs_task_left": 6.570812767829813,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Put the rubiks cube to the right of the bowl, not to the left of the bowl",
+      "prompt_family": "contrastive_goal",
+      "request_wall_seconds": 5.515066824969836,
+      "requested_relation": "right",
+      "requested_sampling_seed": 8200000,
+      "server_sampling_seed": 8200000,
+      "style": "contrastive_task",
+      "target_token_order": "target_first"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.01967443851353295,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "contrastive_last_left",
+      "future_effect_to_repeat_noise": null,
+      "future_exceeds_repeat_noise": true,
+      "future_pixel_mae_vs_task_left": 5.884340504954851,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Do not put the rubiks cube to the right of the bowl; put it to the left of the bowl",
+      "prompt_family": "contrastive_order_control",
+      "request_wall_seconds": 5.516981954919174,
+      "requested_relation": "left",
+      "requested_sampling_seed": 8200000,
+      "server_sampling_seed": 8200000,
+      "style": "contrastive_task",
+      "target_token_order": "target_last"
+    },
+    {
+      "action_effect_to_repeat_noise": null,
+      "action_exceeds_repeat_noise": true,
+      "action_rms_vs_task_left": 0.021236756288095578,
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "contrastive_last_right",
+      "future_effect_to_repeat_noise": null,
+      "future_exceeds_repeat_noise": true,
+      "future_pixel_mae_vs_task_left": 6.670566161137894,
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Do not put the rubiks cube to the left of the bowl; put it to the right of the bowl",
+      "prompt_family": "contrastive_order_control",
+      "request_wall_seconds": 5.535998950013891,
+      "requested_relation": "right",
+      "requested_sampling_seed": 8200000,
+      "server_sampling_seed": 8200000,
+      "style": "contrastive_task",
+      "target_token_order": "target_last"
+    }
+  ],
+  "sampling_seed": 8200000,
+  "schema_version": 1,
+  "server": "ws://localhost:8000",
+  "status": "fixed_observation_secondary_diagnostic",
+  "timing_note": "Client WebSocket round-trip around infer(), including transport, server inference, serialization, and any returned-video decoding. Cosmos returns actions plus decoded future video; pi0.5 returns actions only, so the timings represent deployed interfaces rather than an architecture-only comparison."
+}

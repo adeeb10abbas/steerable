@@ -99,6 +99,11 @@ cd /home/ali/projects/steerable
   --plan artifacts/vla_wam_shared_v1/command_probe_plan.json \
   --model cosmos \
   --output-dir artifacts/vla_wam_shared_v1/command_probe/cosmos_gpu1
+
+.venv/bin/python tools/compare_command_probe_hardware.py \
+  --gpu0-probe artifacts/vla_wam_shared_v1/command_probe/cosmos \
+  --gpu1-probe artifacts/vla_wam_shared_v1/command_probe/cosmos_gpu1 \
+  --output artifacts/vla_wam_shared_v1/cosmos_gpu_assignment_audit.json
 ```
 
 For the five-step hierarchy comparison, restart the same server without

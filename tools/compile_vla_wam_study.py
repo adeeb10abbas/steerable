@@ -963,6 +963,7 @@ def main() -> None:
         workspace / "docs/VLA_VS_WAM_STEERABILITY_STUDY.md",
         workspace / "tools/compile_vla_wam_evidence.py",
         workspace / "tools/compile_vla_wam_study.py",
+        workspace / "tools/compare_command_probe_hardware.py",
         workspace / "tools/run_fixed_observation_command_probe.py",
         workspace / "tools/score_cosmos_semantic_futures.py",
         workspace / "tools/vla_wam_study_requirements.txt",

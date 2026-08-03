@@ -158,7 +158,8 @@
       "tensor_step_cu.cpython-310-x86_64-linux-gnu.so": "da3a07dc848a2e547b0ee357dc19af48ed13d873dbacf073d3ac2c94b6e01db1"
     },
     "cuda_visible_devices_contract": "Expose physical GPU 2 only; SAPIEN cuda:0 and Torch cuda:0 then resolve to that isolated physical device.",
-    "torch_sapien_curobo_import_and_render_preflight": "pass"
+    "torch_sapien_curobo_import_and_render_preflight": "minimal_scene_pass_full_robotwin_scene_failed",
+    "behavioral_use_status": "excluded_infrastructure_partial"
   },
   "pre_inference_setup_events": [
     {
@@ -197,6 +198,18 @@
       "denominator_policy": "infrastructure invalid; outside every model denominator",
       "preservation_root": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/invalid_setup/ffmpeg_missing",
       "resolution": "Use the exact hashed imageio-ffmpeg binary through VLA_WAM_FFMPEG and rerun only the affected cells."
+    },
+    {
+      "event": "pair02_b200_full_scene_oidn_failure",
+      "affected_pair_ids": ["robotwin_pair_02"],
+      "affected_cell_count": 2,
+      "reason": "The isolated sm_100 import and minimal SAPIEN render preflight passed, but the full RoboTwin scene repeatedly emitted OIDN unsupported CUDA-device and invalid-handle errors on B200. The process group was terminated and held outside evidence before accepting a completed cell.",
+      "behavioral_episode_consumed": false,
+      "model_action_request_status": "unknown_due_partial_without_completed_action_trace",
+      "denominator_policy": "infrastructure partial; outside every model denominator",
+      "preservation_root": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/invalid_setup/b200_oidn_invalid_handle/robotwin_pair_02",
+      "invalid_attempt_ledger": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/invalid_attempts_light_wam_robotwin_robotwin_pair_02.json",
+      "resolution": "Rerun exactly pair02 on a full-scene renderer-compatible A100 or RTX pod; do not use the B200 attempt as model evidence."
     }
   ],
   "fixed_observation_gate": {

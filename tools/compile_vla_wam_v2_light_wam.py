@@ -22,7 +22,7 @@ SCENES = {
 THERMAL_LOGS = {
     "robotwin_pair_00": "thermal_robotwin_pair_00_attempt02.jsonl",
     "robotwin_pair_01": "thermal_robotwin_pair_01_attempt02.jsonl",
-    "robotwin_pair_02": "thermal_robotwin_pair_02.jsonl",
+    "robotwin_pair_02": "thermal_robotwin_pair_02_attempt02.jsonl",
 }
 
 
@@ -166,6 +166,21 @@ def main() -> None:
         invalid_attempts.extend(setup_invalid)
         evidence_files.append(file_record(setup_invalid_path))
         excluded_setup_thermal.append(thermal_summary(root / f"thermal_{pair_id}.jsonl"))
+
+    b200_invalid_path = root / "invalid_attempts_light_wam_robotwin_robotwin_pair_02.json"
+    b200_invalid = json.loads(b200_invalid_path.read_text())
+    b200_events = b200_invalid.get("events", [])
+    if len(b200_events) != 2 or any(
+        row.get("behavioral_result_valid") is not False for row in b200_events
+    ):
+        raise RuntimeError("Expected two excluded B200 pair02 partial ledger events")
+    invalid_attempts.extend(b200_events)
+    evidence_files.append(file_record(b200_invalid_path))
+    excluded_setup_thermal.append(thermal_summary(root / "thermal_robotwin_pair_02.jsonl"))
+    b200_partial_root = root / "invalid_setup" / "b200_oidn_invalid_handle" / "robotwin_pair_02"
+    evidence_files.extend(
+        file_record(path) for path in sorted(b200_partial_root.rglob("*")) if path.is_file()
+    )
 
     success = {
         relation: sum(

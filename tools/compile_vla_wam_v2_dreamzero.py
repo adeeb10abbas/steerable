@@ -151,6 +151,66 @@ def validate_hashed_entry(entry: dict[str, Any], base: Path, label: str) -> Path
     return path
 
 
+def validate_checkpoint_payloads(
+    collection: dict[str, Any], base: Path, selected: dict[str, Any]
+) -> tuple[Path, Path]:
+    """Validate the committed nested manifest against an explicit PVC root.
+
+    The compact manifest belongs in Git while its 64.8 GB payload remains on
+    the PVC. Relative payload paths therefore resolve against the explicitly
+    declared checkpoint root, never against the manifest's Git directory.
+    """
+    checkpoint_manifest = resolved(collection["checkpoint_payload_manifest"], base)
+    checkpoint = load_json(checkpoint_manifest)
+    payload = checkpoint.get("checkpoint")
+    if (
+        checkpoint.get("schema_version")
+        != "vla-wam-shared-v2-dreamzero-official-source-checkpoint-manifest-v1"
+        or checkpoint.get("status") != "verified"
+        or not isinstance(payload, dict)
+        or payload.get("repository") != selected["checkpoint"]
+        or payload.get("revision") != selected["checkpoint_revision"]
+        or payload.get("payload_file_count")
+        != selected["checkpoint_observed_file_count"]
+        or payload.get("payload_bytes")
+        != selected["checkpoint_observed_payload_bytes"]
+    ):
+        raise RuntimeError("Committed DreamZero checkpoint manifest contract mismatch")
+    checkpoint_files = payload.get("files")
+    if (
+        not isinstance(checkpoint_files, list)
+        or len(checkpoint_files) != selected["checkpoint_observed_file_count"]
+        or sum(int(record["bytes"]) for record in checkpoint_files)
+        != selected["checkpoint_observed_payload_bytes"]
+    ):
+        raise RuntimeError("Checkpoint manifest payload inventory differs from A007")
+
+    root_value = collection.get("checkpoint_payload_root")
+    if not isinstance(root_value, str) or not root_value:
+        raise RuntimeError("Collection must declare checkpoint_payload_root")
+    checkpoint_root = resolved(root_value, base)
+    if not checkpoint_root.is_dir():
+        raise RuntimeError(f"Checkpoint payload root is not a directory: {checkpoint_root}")
+    for index, record in enumerate(checkpoint_files):
+        relative = Path(record["path"])
+        if relative.is_absolute() or ".." in relative.parts:
+            raise RuntimeError(
+                f"Checkpoint payload path escapes explicit root: {record['path']}"
+            )
+        candidate = (checkpoint_root / relative).resolve()
+        try:
+            candidate.relative_to(checkpoint_root)
+        except ValueError as exc:
+            raise RuntimeError(
+                f"Checkpoint payload path escapes explicit root: {record['path']}"
+            ) from exc
+        validate_hashed_entry(
+            {**record, "path": str(candidate)}, checkpoint_root,
+            f"checkpoint payload {index}",
+        )
+    return checkpoint_manifest, checkpoint_root
+
+
 def load_simulator(cell: dict[str, Any], base: Path) -> tuple[dict[str, Any], np.ndarray, str]:
     import h5py
 
@@ -394,15 +454,9 @@ def validate_collection(collection: dict[str, Any], base: Path) -> tuple[list[di
         or probe.get("status") != "passed" or probe.get("passed") is not True
     ):
         raise RuntimeError("DreamZero exact-repeat/sensitivity gate did not pass")
-    checkpoint_manifest = resolved(collection["checkpoint_payload_manifest"], base)
-    checkpoint = load_json(checkpoint_manifest)
-    checkpoint_files = checkpoint.get("files", checkpoint.get("payload_files"))
-    if not isinstance(checkpoint_files, list) or len(checkpoint_files) != selected["checkpoint_observed_file_count"]:
-        raise RuntimeError("Checkpoint manifest must contain all 25 observed payload files")
-    if sum(int(record["bytes"]) for record in checkpoint_files) != selected["checkpoint_observed_payload_bytes"]:
-        raise RuntimeError("Checkpoint manifest payload byte count differs from A007")
-    for index, record in enumerate(checkpoint_files):
-        validate_hashed_entry(record, checkpoint_manifest.parent, f"checkpoint payload {index}")
+    checkpoint_manifest, checkpoint_root = validate_checkpoint_payloads(
+        collection, base, selected
+    )
     metrics = probe.get("metrics", {})
     if not (
         metrics.get("left_exact_repeat_action_array_equal") is True
@@ -411,6 +465,15 @@ def validate_collection(collection: dict[str, Any], base: Path) -> tuple[list[di
         and metrics.get("left_vs_right_latent_rms", 0) > 0
     ):
         raise RuntimeError("DreamZero probe metrics do not satisfy the frozen release gate")
+    probe_records = probe.get("records", {})
+    if set(probe_records) != {"left_a", "left_b", "right"}:
+        raise RuntimeError("DreamZero probe must retain exactly LEFT/repeat-LEFT/RIGHT")
+    probe_decoded_futures = sum(
+        int(record.get("official_decode_count", -1))
+        for record in probe_records.values()
+    )
+    if probe_decoded_futures != 3:
+        raise RuntimeError("DreamZero probe must retain one official decode per request")
     invalid_path = resolved(collection["invalid_attempt_ledger"], base)
     intervention_path = resolved(collection["runtime_intervention_ledger"], base)
     invalid, interventions = rows_from_ledger(invalid_path), rows_from_ledger(intervention_path)
@@ -422,7 +485,13 @@ def validate_collection(collection: dict[str, Any], base: Path) -> tuple[list[di
         "amendment": file_record(AMENDMENT_PATH, repository_relative=True),
         "server_contract": file_record(server_contract_path),
         "checkpoint_payload_manifest": file_record(checkpoint_manifest),
+        "checkpoint_payload_root": str(checkpoint_root),
         "exact_repeat_probe": file_record(probe_path),
+        "fixed_observation_probe_retention": {
+            "request_count": len(probe_records),
+            "latent_future_count": len(probe_records),
+            "official_decoded_future_count": probe_decoded_futures,
+        },
         "invalid_attempt_ledger": file_record(invalid_path),
         "runtime_intervention_ledger": file_record(intervention_path),
         "invalid_attempt_count": len(invalid),
@@ -494,6 +563,13 @@ def compile_collection(args: argparse.Namespace) -> None:
         "both_directions" if successes["left"] and successes["right"] else
         "left_only" if successes["left"] else "right_only" if successes["right"] else "zero_direction"
     )
+    behavioral_latent_count = sum(
+        int(row["latent_future_request_count"]) for row in episodes
+    )
+    behavioral_decode_count = sum(
+        int(row["official_decoded_future_count"]) for row in episodes
+    )
+    probe_retention = provenance["fixed_observation_probe_retention"]
     result = {
         "schema_version": "vla-wam-shared-v2-dreamzero-droid-direct-gate-v1",
         "status": "complete",
@@ -513,6 +589,17 @@ def compile_collection(args: argparse.Namespace) -> None:
         "wording_grid_eligible": competence == "both_directions",
         "future_interface": "joint_action_and_latent_video_prediction_with_official_decode_path",
         "missing_or_unexposed_future_evidence_scored_as_zero": False,
+        "future_retention_audit": {
+            "behavioral_episode_count": len(episodes),
+            "behavioral_latent_future_count": behavioral_latent_count,
+            "behavioral_official_decoded_future_count": behavioral_decode_count,
+            "fixed_observation_probe_request_count": probe_retention["request_count"],
+            "fixed_observation_probe_latent_future_count": probe_retention["latent_future_count"],
+            "fixed_observation_probe_official_decoded_future_count": probe_retention["official_decoded_future_count"],
+            "total_server_episode_count": len(episodes) + probe_retention["request_count"],
+            "total_retained_latent_future_count": behavioral_latent_count + probe_retention["latent_future_count"],
+            "total_official_reset_decode_count": behavioral_decode_count + probe_retention["official_decoded_future_count"],
+        },
         "provenance": provenance,
         "pairs": pairs,
         "episodes": episodes,

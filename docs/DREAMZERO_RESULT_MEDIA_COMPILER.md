@@ -36,6 +36,7 @@ not episode evidence:
   "checkpoint_revision": "96ad344138c66e82536422432ad742f015784942",
   "server_contract": "/data/users/ali/vla_wam/raw/dreamzero_droid/v2_a007/server/server_contract.json",
   "checkpoint_payload_manifest": "/data/users/ali/vla_wam/checkpoints/DreamZero-DROID/payload_manifest.json",
+  "checkpoint_payload_root": "/data/users/ali/vla_wam/checkpoints/DreamZero-DROID-96ad344",
   "exact_repeat_probe": "/data/users/ali/vla_wam/raw/dreamzero_droid/v2_a007/probe/exact_repeat_probe.json",
   "invalid_attempt_ledger": "/data/users/ali/vla_wam/raw/dreamzero_droid/v2_a007/invalid_attempts.json",
   "invalid_attempt_count": 0,
@@ -63,6 +64,13 @@ not episode evidence:
 The `cells` array must contain the analogous six exact seed/relation entries.
 The explicit future-manifest path prevents a compiler from guessing the mapping
 between server episode indices and behavioral cells.
+
+`checkpoint_payload_manifest` points to the compact committed official-source
+and checkpoint manifest. Its checkpoint inventory is nested under
+`checkpoint.files`. `checkpoint_payload_root` is mandatory and names the exact
+PVC directory containing those relative payload paths; the compiler rejects
+absolute paths, parent traversal, symlink escape, missing files, byte-count
+mismatches, and SHA-256 mismatches.
 
 ## Pending-state check
 

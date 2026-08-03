@@ -283,9 +283,9 @@ Paper-style progression has two equally weighted items:
 2. the official requested-side success predicate is true, including release.
 
 The study reports each numerator and denominator, separates direction and
-wording, and places a 95% Beta(1,1) posterior interval around each success
-proportion. With only ten episodes per bar, wide intervals are a feature, not
-an inconvenience to hide.
+wording, and places a 95% Beta(1,1) posterior credible interval beside each
+observed success proportion. With only ten episodes per bar, wide intervals
+are a feature, not an inconvenience to hide.
 
 ### Declared secondary metrics
 

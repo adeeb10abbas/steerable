@@ -1280,10 +1280,6 @@ def _plot_static_success(closed: dict[str, Any], output: Path) -> None:
         }
         values = [selected[slot]["success_rate"] for slot in slots]
         intervals = [selected[slot]["success_beta11_interval_95"] for slot in slots]
-        errors = np.asarray(
-            [[value - interval[0] for value, interval in zip(values, intervals)],
-             [interval[1] - value for value, interval in zip(values, intervals)]]
-        )
         positions = x + (model_index - 0.5) * width
         bars = ax.bar(
             positions,
@@ -1291,15 +1287,38 @@ def _plot_static_success(closed: dict[str, Any], output: Path) -> None:
             width,
             color=MODEL_COLORS[model_id],
             label=MODEL_LABELS[model_id],
-            yerr=errors,
-            capsize=3,
         )
-        for bar, value in zip(bars, values):
-            ax.text(bar.get_x() + bar.get_width() / 2, value + 0.035, f"{value:.0%}", ha="center")
+        lower = np.asarray([interval[0] for interval in intervals])
+        upper = np.asarray([interval[1] for interval in intervals])
+        # A central Bayesian credible interval need not include the observed
+        # boundary proportion (for example, 0/10). Draw its endpoints directly
+        # instead of misusing a non-negative error-bar distance around the raw
+        # bar height.
+        ax.vlines(positions, lower, upper, color="#20252b", linewidth=1.2, zorder=4)
+        cap_half_width = width * 0.12
+        ax.hlines(
+            np.concatenate((lower, upper)),
+            np.concatenate((positions - cap_half_width, positions - cap_half_width)),
+            np.concatenate((positions + cap_half_width, positions + cap_half_width)),
+            color="#20252b",
+            linewidth=1.2,
+            zorder=4,
+        )
+        for bar, value, interval in zip(bars, values, intervals):
+            label_height = max(value, interval[1]) + 0.025
+            ax.text(
+                bar.get_x() + bar.get_width() / 2,
+                label_height,
+                f"{value:.0%}",
+                ha="center",
+            )
     ax.set_xticks(x, labels)
     ax.set_ylim(0, 1.18)
     ax.set_ylabel("Requested-goal success rate")
-    ax.set_title("Matched neutral-start closed-loop success (10 seeds per bar)")
+    ax.set_title(
+        "Matched neutral-start closed-loop success "
+        "(10 seeds per bar; whiskers are Beta(1,1) 95% credible intervals)"
+    )
     ax.legend(frameon=False, ncol=2, loc="upper center")
     ax.grid(axis="y", alpha=0.2)
     fig.tight_layout()

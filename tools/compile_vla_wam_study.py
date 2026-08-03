@@ -674,7 +674,13 @@ def _semantic_threshold_sensitivity(
                 grouped[(wording, row["requested_relation"])].append(
                     (imagined, bool(row["executed_requested"]))
                 )
-        for (wording, direction), pairs in sorted(grouped.items()):
+        for (wording, direction), pairs in sorted(
+            grouped.items(),
+            key=lambda item: (
+                WORDINGS.index(item[0][0]),
+                ("left", "right").index(item[0][1]),
+            ),
+        ):
             certain = [pair for pair in pairs if pair[0] is not None]
             agreement_count = sum(pair[0] == pair[1] for pair in certain)
             imagined_requested_count = sum(bool(pair[0]) for pair in certain)
@@ -739,7 +745,13 @@ def _semantic_aggregate(summaries: list[tuple[str, Path, dict[str, Any]]]) -> di
             ].append(enriched)
             all_rows.append(enriched)
     grouped = []
-    for (wording, direction), rows in sorted(groups.items()):
+    for (wording, direction), rows in sorted(
+        groups.items(),
+        key=lambda item: (
+            WORDINGS.index(item[0][0]),
+            ("left", "right").index(item[0][1]),
+        ),
+    ):
         certain = [row for row in rows if row["imagined_requested"] is not None]
         counts = Counter(row["quadrant"] for row in rows)
         grouped.append(
@@ -771,7 +783,13 @@ def _semantic_aggregate(summaries: list[tuple[str, Path, dict[str, Any]]]) -> di
         )
     episode_summaries = []
     for (wording, direction, task_dir, episode_index), rows in sorted(
-        episode_groups.items()
+        episode_groups.items(),
+        key=lambda item: (
+            WORDINGS.index(item[0][0]),
+            ("left", "right").index(item[0][1]),
+            item[0][2],
+            item[0][3],
+        ),
     ):
         ordered = sorted(rows, key=lambda row: int(row["replan_index"]))
         certain = [row for row in ordered if row["imagined_requested"] is not None]
@@ -1511,7 +1529,13 @@ def _plot_semantic_threshold_sensitivity(semantic: dict[str, Any], output: Path)
     rows = semantic["threshold_sensitivity"]
     overall = semantic["threshold_sensitivity_overall"]
     fig, axes = plt.subplots(1, 3, figsize=(13.2, 4.2), sharex=True, sharey=True)
-    groups = sorted({(row["wording"], row["direction"]) for row in rows})
+    groups = sorted(
+        {(row["wording"], row["direction"]) for row in rows},
+        key=lambda item: (
+            WORDINGS.index(item[0]),
+            ("left", "right").index(item[1]),
+        ),
+    )
     colors = {"left": "#6a51a3", "right": "#d95f0e"}
     styles = {
         "canonical": "-",

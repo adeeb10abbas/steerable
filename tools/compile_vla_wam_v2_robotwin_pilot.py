@@ -317,7 +317,7 @@ def main() -> None:
     json_path.write_text(json.dumps(compiled, indent=2) + "\n")
     flat = [flatten(row) for row in episodes]
     with csv_path.open("w", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=list(flat[0]))
+        writer = csv.DictWriter(handle, fieldnames=list(flat[0]), lineterminator="\n")
         writer.writeheader()
         writer.writerows(flat)
     write_report(report_path, compiled)

@@ -65,6 +65,28 @@
       "raw_log_bytes": 1581,
       "raw_log_sha256": "5356cc2935fe2279a79fff714fdc7be6cfec6958749b10219973b35da2da5833",
       "valid_behavioral_episode_count": 0
+    },
+    {
+      "attempt_id": "behavior_setup_seed8300_02",
+      "stage": "simulator_bootstrap_before_scene_or_model_request",
+      "result": "infrastructure_invalid",
+      "request_started": false,
+      "cause": "The portable Isaac runtime reached renderer initialization but failed while loading an MDL renderer dependency on the newly created ali RTX pod. No task scene or policy request started.",
+      "raw_log": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8300/simulator_attempt02_neutral/simulator.log",
+      "raw_log_bytes": 36097,
+      "raw_log_sha256": "effc8760295a9304e7f635f691bd96d93355cb825a29cad0e4e9e1ebe723b0ba",
+      "valid_behavioral_episode_count": 0
+    },
+    {
+      "attempt_id": "behavior_setup_seed8300_03",
+      "stage": "simulator_client_import_before_scene_or_model_request",
+      "result": "infrastructure_invalid",
+      "request_started": false,
+      "cause": "Renderer startup passed after the native-library repair, but the isolated portable environment did not yet contain openpi-client. Import failed before a task scene or policy request started.",
+      "raw_log": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8300/simulator_attempt03_neutral_mdl_repair/simulator.log",
+      "raw_log_bytes": 11476,
+      "raw_log_sha256": "ed560f6c15b547fb3b0b0f4d124e731c340620565bc785b4bb466219428b3199",
+      "valid_behavioral_episode_count": 0
     }
   ],
   "repairs": {

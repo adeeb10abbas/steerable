@@ -155,6 +155,43 @@ DreamZero has hash-validated publication media in the canonical manifest and app
 > LEFT: “Put the blue soap to the left of the tea-box.”
 > RIGHT: “Put the blue soap to the right of the tea-box.”
 
+## DreamZero imagined futures
+
+These are official model-predicted video decodes, not simulator executions, task outcomes, or additional episodes.
+
+### DreamZero DROID — imagined futures — seed 8300 matched behavioral sessions
+
+[▶ Open paired imagination video](../artifacts/vla_wam_shared_v2/media/dreamzero_droid/imagination/paired/dreamzero_seed8300_left_right_imagined_futures.mp4) · [Imagination manifest](../artifacts/vla_wam_shared_v2/media/dreamzero_droid/imagination/imagination_media_manifest.json)
+
+- Evidence status: Hash-validated official model decode; not simulator execution or an additional episode
+- Video SHA-256: `869db8d72d3066ba417f3088f06f53c76ed3741164ca601d5831d6a8fd6d0e45`
+
+### DreamZero DROID — imagined futures — seed 8301 matched behavioral sessions
+
+[▶ Open paired imagination video](../artifacts/vla_wam_shared_v2/media/dreamzero_droid/imagination/paired/dreamzero_seed8301_left_right_imagined_futures.mp4) · [Imagination manifest](../artifacts/vla_wam_shared_v2/media/dreamzero_droid/imagination/imagination_media_manifest.json)
+
+- Evidence status: Hash-validated official model decode; not simulator execution or an additional episode
+- Video SHA-256: `7106b2ff4811c508ef53e669f17eacb2c6ed26d144495dd51cfb42d8c395c45a`
+
+### DreamZero DROID — imagined futures — seed 8302 matched behavioral sessions
+
+[▶ Open paired imagination video](../artifacts/vla_wam_shared_v2/media/dreamzero_droid/imagination/paired/dreamzero_seed8302_left_right_imagined_futures.mp4) · [Imagination manifest](../artifacts/vla_wam_shared_v2/media/dreamzero_droid/imagination/imagination_media_manifest.json)
+
+- Evidence status: Hash-validated official model decode; not simulator execution or an additional episode
+- Video SHA-256: `4155ae6184d16ceb57dffebf4c5450a1f50d6c17ad6cc725992c87fef35942fc`
+
+### All nine original official decodes
+
+- [behavioral_seed8300_left](../artifacts/vla_wam_shared_v2/media/dreamzero_droid/imagination/official_decodes/behavioral_seed8300_left_official_decode.mp4) — `b28cbcfc69d131107f5987ea04f9a50864602015e09fd60fbfdb6789a831c5c3`
+- [behavioral_seed8300_right](../artifacts/vla_wam_shared_v2/media/dreamzero_droid/imagination/official_decodes/behavioral_seed8300_right_official_decode.mp4) — `806f9323708538b302afe307af9bb2b4c7285816f268498c2bb03c13a074bb83`
+- [behavioral_seed8301_left](../artifacts/vla_wam_shared_v2/media/dreamzero_droid/imagination/official_decodes/behavioral_seed8301_left_official_decode.mp4) — `41c24b9d997277aaaafceb276c947ba37a990f32a64a013f5d12c9e7be2932bb`
+- [behavioral_seed8301_right](../artifacts/vla_wam_shared_v2/media/dreamzero_droid/imagination/official_decodes/behavioral_seed8301_right_official_decode.mp4) — `eb6a4b8703e844458b89612907473526df406f335f29c4819ce7815868a5e6b7`
+- [behavioral_seed8302_left](../artifacts/vla_wam_shared_v2/media/dreamzero_droid/imagination/official_decodes/behavioral_seed8302_left_official_decode.mp4) — `7a5b76ee925cdeeae12d19c18266fa9ca9704adcc0aac91794ca4ecc46bdfccd`
+- [behavioral_seed8302_right](../artifacts/vla_wam_shared_v2/media/dreamzero_droid/imagination/official_decodes/behavioral_seed8302_right_official_decode.mp4) — `60f0139c63dda97c2f98ee38aaa0e842488280d37711c070d00317aa00252c37`
+- [fixed_probe_left_a](../artifacts/vla_wam_shared_v2/media/dreamzero_droid/imagination/official_decodes/fixed_probe_left_a_official_decode.mp4) — `6abcdd9cb48f4ce01339fb4e23e8113a2e42724ca8404b1f7f194efa98c14f64`
+- [fixed_probe_left_b_exact_repeat](../artifacts/vla_wam_shared_v2/media/dreamzero_droid/imagination/official_decodes/fixed_probe_left_b_exact_repeat_official_decode.mp4) — `6abcdd9cb48f4ce01339fb4e23e8113a2e42724ca8404b1f7f194efa98c14f64`
+- [fixed_probe_right](../artifacts/vla_wam_shared_v2/media/dreamzero_droid/imagination/official_decodes/fixed_probe_right_official_decode.mp4) — `0d32aaca8d6dc9b493847bf2f73f88e941728c6d2e48147f15112e3e86ae1c62`
+
 ## Missing publication media
 
 - **pi05_droid — no_selected_v2_publication_video:** The checkpoint is an existing v1 reference, but this branch contains no committed selected v2 behavioral clip for it.

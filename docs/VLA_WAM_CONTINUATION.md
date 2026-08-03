@@ -625,6 +625,17 @@ The three complete paired publication clips and their hashes are recorded in
 [`media_manifest.json`](../artifacts/vla_wam_shared_v2/media/dreamzero_droid/media_manifest.json)
 (SHA-256
 `ce453dcf22a2761867eedf93200b792c0062711d2b0cd783a715ec61e3e76cb3`).
+The complete bounded official imagination archive is separately committed in
+[`imagination_media_manifest.json`](../artifacts/vla_wam_shared_v2/media/dreamzero_droid/imagination/imagination_media_manifest.json)
+(SHA-256
+`6eb087ad9bb56f89e480fc486e67bab2b9364c5916a267ca38a93e131e16374a`).
+It includes all six behavioral-session reset-decode MP4s, all three
+fixed-observation probe decodes, and three derived LEFT/RIGHT paired views;
+there is no outcome-based selection. These files are explicitly labeled as
+model-predicted imagined futures, not simulator executions, task outcomes, or
+additional behavioral episodes. The 268 exact latent tensors remain on the
+ali PVC and are hash-addressed by the compiled result rather than committed to
+ordinary Git.
 
 <a id="experiment-3-lingbot-vla-4b-robotwin-onboarding"></a>
 ## Experiment 3 — LingBot-VLA 4B RoboTwin onboarding

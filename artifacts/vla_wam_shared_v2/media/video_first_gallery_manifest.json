@@ -23,6 +23,16 @@
     ],
     "note": "The renderer ingests gallery_entries only after this manifest exists and every referenced video hash and byte count validates. Until then DreamZero remains visibly pending; no placeholder is interpreted as evidence."
   },
+  "dreamzero_imagination_manifest_contract": {
+    "path": "artifacts/vla_wam_shared_v2/media/dreamzero_droid/imagination/imagination_media_manifest.json",
+    "status_when_absent": "pending_no_committed_imagination_archive",
+    "gallery_entries_key": "gallery_entries",
+    "archive_entries_key": "official_decodes",
+    "required_official_decode_count": 9,
+    "required_behavioral_decode_count": 6,
+    "required_fixed_observation_probe_decode_count": 3,
+    "note": "The renderer keeps official model-predicted decodes in a separate imagination section. They are never presented as simulator execution, task outcomes, or additional episodes."
+  },
   "entries": [
     {
       "id": "cosmos3_edge_seed8302",

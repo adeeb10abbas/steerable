@@ -1102,6 +1102,10 @@ def validate(workspace: Path) -> dict[str, Any]:
         workspace
         / "artifacts/vla_wam_shared_v2/media/dreamzero_droid/media_manifest.json"
     )
+    dreamzero_imagination_media_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/media/dreamzero_droid/imagination/imagination_media_manifest.json"
+    )
     efficient_pair03_integration_path = (
         workspace
         / "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/efficient_wam_rt_pair03_integration.json"
@@ -1151,6 +1155,7 @@ def validate(workspace: Path) -> dict[str, Any]:
     dreamzero_result = load_json(dreamzero_result_path)
     dreamzero_raw_collection = load_json(dreamzero_raw_collection_path)
     dreamzero_media = load_json(dreamzero_media_path)
+    dreamzero_imagination_media = load_json(dreamzero_imagination_media_path)
     bundle_manifest = load_json(bundle_manifest_path)
     paired_media = load_json(paired_media_path)
     droid_paired_media = load_json(droid_paired_media_path)
@@ -1881,6 +1886,16 @@ def validate(workspace: Path) -> dict[str, Any]:
         == sha256(dreamzero_raw_collection_path)
         and dreamzero_readiness.get("media_manifest_sha256")
         == sha256(dreamzero_media_path)
+        and dreamzero_readiness.get("imagination_media_manifest_sha256")
+        == sha256(dreamzero_imagination_media_path)
+        and dreamzero_readiness.get("published_imagination_media", {}).get(
+            "official_decode_count"
+        )
+        == 9
+        and dreamzero_readiness.get("published_imagination_media", {}).get(
+            "paired_behavioral_comparison_count"
+        )
+        == 3
         and dreamzero_readiness.get("invalid_attempt_count") == 11
         and dreamzero_readiness.get("runtime_intervention_count") == 0,
         "continuation state freezes completed work and records the completed DreamZero gate",
@@ -1978,6 +1993,63 @@ def validate(workspace: Path) -> dict[str, Any]:
             workspace,
             item["video"],
             f"DreamZero seed {item['seed']} paired video",
+            checks,
+        )
+    require(
+        dreamzero_imagination_media["schema_version"]
+        == "vla-wam-shared-v2-dreamzero-imagination-media-v1"
+        and dreamzero_imagination_media["status"]
+        == "complete_all_official_decodes_archived"
+        and dreamzero_imagination_media["model_id"] == "dreamzero_droid"
+        and dreamzero_imagination_media["amendment_id"] == "V2-A007"
+        and dreamzero_imagination_media["source_result"]["sha256"]
+        == sha256(dreamzero_result_path)
+        and dreamzero_imagination_media["official_decode_count"] == 9
+        and dreamzero_imagination_media["behavioral_decode_count"] == 6
+        and dreamzero_imagination_media["fixed_observation_probe_decode_count"] == 3
+        and len(dreamzero_imagination_media["official_decodes"]) == 9
+        and len(dreamzero_imagination_media["gallery_entries"]) == 3,
+        "DreamZero imagination archive includes all nine official decodes and three paired views",
+        checks,
+    )
+    require(
+        {item["scope"] for item in dreamzero_imagination_media["official_decodes"]}
+        == {"valid_behavioral_episode", "fixed_observation_diagnostic"}
+        and sum(
+            item["scope"] == "valid_behavioral_episode"
+            for item in dreamzero_imagination_media["official_decodes"]
+        )
+        == 6
+        and sum(
+            item["scope"] == "fixed_observation_diagnostic"
+            for item in dreamzero_imagination_media["official_decodes"]
+        )
+        == 3
+        and all(
+            item.get("media_kind") == "model_prediction_not_execution"
+            for item in dreamzero_imagination_media["gallery_entries"]
+        ),
+        "DreamZero imagination media separates behavioral-session and diagnostic predictions from execution",
+        checks,
+    )
+    validate_file_record(
+        workspace,
+        dreamzero_imagination_media["source_result"],
+        "DreamZero imagination source result",
+        checks,
+    )
+    for item in dreamzero_imagination_media["official_decodes"]:
+        validate_file_record(
+            workspace,
+            item["archived_video"],
+            f"DreamZero {item['id']} official decode",
+            checks,
+        )
+    for item in dreamzero_imagination_media["gallery_entries"]:
+        validate_file_record(
+            workspace,
+            item["video"],
+            f"DreamZero seed {item['seed']} paired imagination video",
             checks,
         )
     require(

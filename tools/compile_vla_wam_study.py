@@ -19,6 +19,7 @@ import hashlib
 import json
 import math
 import subprocess
+import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
@@ -27,6 +28,9 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import binomtest
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import render_study_figures  # noqa: E402  (local module, path inserted above)
 
 
 EXPECTED_EPISODES = 160
@@ -50,30 +54,11 @@ WORDINGS = (
     "declarative_goal",
     "contrastive_goal",
 )
-WORDING_LABELS = {
-    "canonical": "canonical",
-    "short_paraphrase": "short",
-    "declarative_goal": "declarative",
-    "contrastive_goal": "contrastive",
-}
+# Display labels, palettes and every other presentation constant now live in
+# tools/figure_style.py; this compiler only produces numbers.
 TASK_DIRS = {
     "left": "RubiksCubeLeftOfBowlMatchedTask",
     "right": "RubiksCubeRightOfBowlMatchedTask",
-}
-MODEL_LABELS = {
-    "pi05_droid_vla": "π0.5 DROID (VLA)",
-    "cosmos3_edge_droid_wam": "Cosmos3 Edge DROID (WAM)",
-}
-MODEL_COLORS = {
-    "pi05_droid_vla": "#2864dc",
-    "cosmos3_edge_droid_wam": "#e36a2e",
-}
-QUADRANT_COLORS = {
-    "imagines_requested_executes_requested": "#2a9d6f",
-    "imagines_requested_executes_not_requested": "#e9c46a",
-    "does_not_imagine_requested_executes_requested": "#4f86c6",
-    "neither_imagines_nor_executes_requested": "#777777",
-    "uncertain_future": "#d7d7d7",
 }
 
 
@@ -1278,432 +1263,12 @@ def _configure_plotting() -> None:
     )
 
 
-def _plot_static_success(closed: dict[str, Any], output: Path) -> None:
-    groups = [
-        row
-        for row in closed["group_summaries"]
-        if row["controller"] == "static"
-        and row["open_loop_horizon"] in {15, 32}
-    ]
-    slots = [(wording, direction) for wording in WORDINGS for direction in ("left", "right")]
-    labels = [f"{WORDING_LABELS[wording]}\n{direction}" for wording, direction in slots]
-    fig, ax = plt.subplots(figsize=(12.5, 4.4))
-    x = np.arange(len(slots))
-    width = 0.34
-    for model_index, model_id in enumerate(MODEL_LABELS):
-        selected = {
-            (row["wording"], row["direction"]): row
-            for row in groups
-            if row["model_id"] == model_id
-        }
-        values = [selected[slot]["success_rate"] for slot in slots]
-        intervals = [selected[slot]["success_beta11_interval_95"] for slot in slots]
-        positions = x + (model_index - 0.5) * width
-        bars = ax.bar(
-            positions,
-            values,
-            width,
-            color=MODEL_COLORS[model_id],
-            label=MODEL_LABELS[model_id],
-        )
-        lower = np.asarray([interval[0] for interval in intervals])
-        upper = np.asarray([interval[1] for interval in intervals])
-        # A central Bayesian credible interval need not include the observed
-        # boundary proportion (for example, 0/10). Draw its endpoints directly
-        # instead of misusing a non-negative error-bar distance around the raw
-        # bar height.
-        ax.vlines(positions, lower, upper, color="#20252b", linewidth=1.2, zorder=4)
-        cap_half_width = width * 0.12
-        ax.hlines(
-            np.concatenate((lower, upper)),
-            np.concatenate((positions - cap_half_width, positions - cap_half_width)),
-            np.concatenate((positions + cap_half_width, positions + cap_half_width)),
-            color="#20252b",
-            linewidth=1.2,
-            zorder=4,
-        )
-        for bar, value, interval in zip(bars, values, intervals):
-            label_height = max(value, interval[1]) + 0.025
-            ax.text(
-                bar.get_x() + bar.get_width() / 2,
-                label_height,
-                f"{value:.0%}",
-                ha="center",
-            )
-    ax.set_xticks(x, labels)
-    ax.set_ylim(0, 1.18)
-    ax.set_ylabel("Requested-goal success rate")
-    ax.set_title(
-        "Matched neutral-start closed-loop success "
-        "(10 seeds per bar; whiskers are Beta(1,1) 95% credible intervals)"
-    )
-    ax.legend(frameon=False, ncol=2, loc="upper center")
-    ax.grid(axis="y", alpha=0.2)
-    fig.tight_layout()
-    fig.savefig(output / "direct_language_success_with_intervals.png", bbox_inches="tight")
-    plt.close(fig)
 
 
-def _plot_offsets(closed: dict[str, Any], output: Path) -> None:
-    episodes = [
-        row
-        for row in closed["episodes"]
-        if row["controller"] == "static" and row["open_loop_horizon"] in {15, 32}
-    ]
-    slots = []
-    data = []
-    colors = []
-    for model_id in MODEL_LABELS:
-        for wording in WORDINGS:
-            for direction in ("left", "right"):
-                values = [
-                    row["requested_signed_final_offset_m"]
-                    for row in episodes
-                    if row["model_id"] == model_id
-                    and row["wording"] == wording
-                    and row["direction"] == direction
-                ]
-                slots.append(
-                    f"{MODEL_LABELS[model_id].split(' ')[0]}\n{WORDING_LABELS[wording]}\n{direction}"
-                )
-                data.append(values)
-                colors.append(MODEL_COLORS[model_id])
-    fig, ax = plt.subplots(figsize=(15.5, 4.8))
-    parts = ax.violinplot(data, showmedians=True, showextrema=False)
-    for body, color in zip(parts["bodies"], colors):
-        body.set_facecolor(color)
-        body.set_alpha(0.45)
-    parts["cmedians"].set_color("#222222")
-    rng = np.random.default_rng(0)
-    for index, (values, color) in enumerate(zip(data, colors), start=1):
-        ax.scatter(
-            index + rng.uniform(-0.07, 0.07, len(values)),
-            values,
-            s=15,
-            color=color,
-            edgecolor="white",
-            linewidth=0.35,
-            zorder=3,
-        )
-    ax.axhline(0, color="#555555", linewidth=1)
-    ax.set_xticks(np.arange(1, len(slots) + 1), slots)
-    ax.set_ylabel("Final offset toward requested side (m)")
-    ax.set_title("Directionality of final cube position; positive is prompt-consistent")
-    ax.grid(axis="y", alpha=0.2)
-    fig.tight_layout()
-    fig.savefig(output / "direct_language_requested_side_offsets.png", bbox_inches="tight")
-    plt.close(fig)
 
 
-def _plot_direct_prompt_robustness(closed: dict[str, Any], output: Path) -> None:
-    groups = {
-        (row["wording"], row["model_id"], row["direction"]): row
-        for row in closed["group_summaries"]
-        if row["controller"] == "static" and row["open_loop_horizon"] in {15, 32}
-    }
-    columns = [
-        ("pi05_droid_vla", "left"),
-        ("pi05_droid_vla", "right"),
-        ("cosmos3_edge_droid_wam", "left"),
-        ("cosmos3_edge_droid_wam", "right"),
-    ]
-    values = np.asarray(
-        [
-            [groups[(wording, model_id, direction)]["success_rate"] for model_id, direction in columns]
-            for wording in WORDINGS
-        ]
-    )
-    fig, ax = plt.subplots(figsize=(7.6, 4.6))
-    image = ax.imshow(values, vmin=0, vmax=1, cmap="YlGn", aspect="auto")
-    for row_index in range(values.shape[0]):
-        for column_index in range(values.shape[1]):
-            ax.text(
-                column_index,
-                row_index,
-                f"{values[row_index, column_index]:.0%}\n(n=10)",
-                ha="center",
-                va="center",
-                color="white" if values[row_index, column_index] >= 0.62 else "#222222",
-            )
-    ax.set_yticks(np.arange(len(WORDINGS)), [WORDING_LABELS[wording] for wording in WORDINGS])
-    ax.set_xticks(
-        np.arange(len(columns)),
-        [
-            f"{MODEL_LABELS[model_id].split(' ')[0]}\n{direction}"
-            for model_id, direction in columns
-        ],
-    )
-    ax.set_xlabel("Checkpoint and requested direction")
-    ax.set_ylabel("Episode-static task wording")
-    ax.set_title("Direct task-language robustness without a subtask coach")
-    fig.colorbar(image, ax=ax, label="Success rate")
-    fig.tight_layout()
-    fig.savefig(output / "direct_prompt_robustness.png", bbox_inches="tight")
-    plt.close(fig)
 
 
-def _plot_semantic_quadrants(semantic: dict[str, Any], output: Path) -> None:
-    order = [
-        "imagines_requested_executes_requested",
-        "imagines_requested_executes_not_requested",
-        "does_not_imagine_requested_executes_requested",
-        "neither_imagines_nor_executes_requested",
-        "uncertain_future",
-    ]
-    labels = {
-        "imagines_requested_executes_requested": "imagines + executes",
-        "imagines_requested_executes_not_requested": "imagines, not executes",
-        "does_not_imagine_requested_executes_requested": "executes, not imagines",
-        "neither_imagines_nor_executes_requested": "neither",
-        "uncertain_future": "future uncertain",
-    }
-    groups = semantic["groups"]
-    names = [f"{WORDING_LABELS[row['wording']]}\n{row['direction']}" for row in groups]
-    fig, ax = plt.subplots(figsize=(11.5, 4.6))
-    bottoms = np.zeros(len(groups))
-    for quadrant in order:
-        values = np.asarray(
-            [row["quadrant_counts"].get(quadrant, 0) / row["chunks"] for row in groups]
-        )
-        ax.bar(
-            np.arange(len(groups)),
-            values,
-            bottom=bottoms,
-            color=QUADRANT_COLORS[quadrant],
-            label=labels[quadrant],
-        )
-        bottoms += values
-    for index, row in enumerate(groups):
-        ax.text(index, 1.025, f"n={row['chunks']}", ha="center", fontsize=8)
-    ax.set_xticks(np.arange(len(groups)), names)
-    ax.set_ylim(0, 1.12)
-    ax.set_ylabel("Fraction of replan chunks")
-    ax.set_title("Cosmos imagined requested relation versus executed relation")
-    ax.legend(frameon=False, ncol=2, loc="upper center", bbox_to_anchor=(0.5, -0.17))
-    fig.tight_layout()
-    fig.savefig(output / "cosmos_imagination_execution_quadrants.png", bbox_inches="tight")
-    plt.close(fig)
-
-
-def _plot_observation_variation(audit: dict[str, Any], output: Path) -> None:
-    rows = audit["summaries"]
-    labels = []
-    means = []
-    p90 = []
-    colors = []
-    for row in rows:
-        comparison = row["comparison"]
-        condition = row["condition_id"].replace("cosmos_", "").replace("_static32", "")
-        direction = row["direction"].replace("left_vs_right", "L/R")
-        if comparison == "within_condition_direction":
-            label = f"{condition}\nwithin {direction}"
-            color = "#8da0cb"
-        elif comparison == "matched_left_right":
-            label = f"{condition}\nmatched L/R"
-            color = "#fc8d62"
-        else:
-            prompt_pair = comparison.replace("matched_", "").replace("_", "/")
-            label = f"{prompt_pair}\n{direction}"
-            color = "#66c2a5"
-        labels.append(label)
-        means.append(row["mean_mae_0_255"])
-        p90.append(row["p90_mae_0_255"])
-        colors.append(color)
-    x = np.arange(len(rows))
-    fig, ax = plt.subplots(figsize=(10.8, 4.4))
-    bars = ax.bar(x, means, color=colors)
-    ax.scatter(x, p90, marker="_", s=180, color="#222222", label="pairwise p90")
-    for bar, value in zip(bars, means):
-        ax.text(bar.get_x() + bar.get_width() / 2, value + 0.08, f"{value:.2f}", ha="center", fontsize=8)
-    ax.set_xticks(x, labels, rotation=25, ha="right")
-    ax.set_ylabel("First-conditioning-image MAE (0–255)")
-    ax.set_title("Exact physical resets are not byte-identical realtime renders")
-    ax.grid(axis="y", alpha=0.2)
-    ax.legend(frameon=False)
-    fig.tight_layout()
-    fig.savefig(output / "cosmos_conditioning_image_variation.png", bbox_inches="tight")
-    plt.close(fig)
-
-
-def _plot_semantic_threshold_sensitivity(semantic: dict[str, Any], output: Path) -> None:
-    rows = semantic["threshold_sensitivity"]
-    overall = semantic["threshold_sensitivity_overall"]
-    fig, axes = plt.subplots(1, 3, figsize=(13.2, 4.2), sharex=True, sharey=True)
-    groups = sorted(
-        {(row["wording"], row["direction"]) for row in rows},
-        key=lambda item: (
-            WORDINGS.index(item[0]),
-            ("left", "right").index(item[1]),
-        ),
-    )
-    colors = {"left": "#6a51a3", "right": "#d95f0e"}
-    styles = {
-        "canonical": "-",
-        "short_paraphrase": "--",
-        "declarative_goal": "-.",
-        "contrastive_goal": ":",
-    }
-    for wording, direction in groups:
-        selected = sorted(
-            [row for row in rows if row["wording"] == wording and row["direction"] == direction],
-            key=lambda row: row["cross_camera_threshold_m"],
-        )
-        label = f"{WORDING_LABELS[wording]} {direction}"
-        x = [row["cross_camera_threshold_m"] for row in selected]
-        series = (
-            [row["coverage_fraction"] for row in selected],
-            [
-                row["executed_positive_future_coverage_fraction"]
-                if row["executed_positive_future_coverage_fraction"] is not None
-                else np.nan
-                for row in selected
-            ],
-            [
-                row["imagination_execution_agreement_among_certain"]
-                if row["imagination_execution_agreement_among_certain"] is not None
-                else np.nan
-                for row in selected
-            ],
-        )
-        for axis, values in zip(axes, series):
-            axis.plot(
-                x,
-                values,
-                marker="o",
-                markersize=3.5,
-                linewidth=1.1,
-                alpha=0.55,
-                color=colors[direction],
-                linestyle=styles[wording],
-                label=label,
-            )
-    overall_x = [row["cross_camera_threshold_m"] for row in overall]
-    overall_series = (
-        [row["coverage_fraction"] for row in overall],
-        [row["executed_positive_future_coverage_fraction"] for row in overall],
-        [row["imagination_execution_agreement_among_certain"] for row in overall],
-    )
-    for axis, values in zip(axes, overall_series):
-        axis.plot(
-            overall_x,
-            values,
-            marker="o",
-            markersize=5,
-            linewidth=2.5,
-            color="#17222f",
-            label="all conditions",
-            zorder=10,
-        )
-        axis.annotate(
-            f"{values[-1]:.0%}",
-            xy=(overall_x[-1], values[-1]),
-            xytext=(-6, -16),
-            textcoords="offset points",
-            ha="right",
-            color="#17222f",
-            fontsize=9,
-            fontweight="bold",
-        )
-    titles = (
-        "All-chunk coverage",
-        "Coverage when execution\nreached the requested relation",
-        "Agreement among\nscored chunks",
-    )
-    for axis, title in zip(axes, titles):
-        axis.set_title(title)
-        axis.set_xlabel("Cross-camera disagreement threshold (m)")
-        axis.set_ylim(0, 1.05)
-        axis.grid(alpha=0.2)
-        axis.axvline(0.20, color="#8a8f98", linewidth=0.9, linestyle=":")
-    axes[0].set_ylabel("Fraction")
-    handles, labels = axes[-1].get_legend_handles_labels()
-    fig.legend(handles, labels, frameon=False, fontsize=8, ncol=5, loc="lower center")
-    fig.suptitle(
-        "Tighter cross-camera agreement sharply reduces usable semantic coverage"
-    )
-    fig.tight_layout(rect=(0, 0.16, 1, 0.96))
-    fig.savefig(output / "semantic_threshold_sensitivity.png", bbox_inches="tight")
-    plt.close(fig)
-
-
-def _plot_probe(probes: dict[str, Any], output: Path) -> None:
-    condition_order = [row["condition"] for row in probes["pi05"]["manifest"]["records"]]
-    short = {
-        "task_left": "task L",
-        "task_left_repeat": "repeat",
-        "task_left_paraphrase": "paraphrase",
-        "task_right": "task R",
-        "subtask_grasp": "subtask",
-        "atomic_left": "atomic L",
-        "atomic_right": "atomic R",
-        "gripper_trace_to_cube": "trace",
-        "point_cube": "point cube",
-        "point_left_target": "point L",
-        "point_right_target": "point R",
-        "combination_left": "combo L",
-        "combination_right": "combo R",
-        "unrelated_control": "unrelated",
-        "noun_swap_control": "noun swap",
-        "contradictory_control": "contradictory",
-    }
-    fig, axes = plt.subplots(2, 1, figsize=(10.8, 7.3), sharex=True)
-    x = np.arange(len(condition_order))
-    for axis, model in zip(axes, ("pi05", "cosmos")):
-        records = {row["condition"]: row for row in probes[model]["manifest"]["records"]}
-        values = [records[name]["action_rms_vs_task_left"] for name in condition_order]
-        axis.bar(x, values, color=MODEL_COLORS["pi05_droid_vla" if model == "pi05" else "cosmos3_edge_droid_wam"])
-        axis.set_ylabel("Action RMS")
-        axis.set_title("π0.5 VLA" if model == "pi05" else "Cosmos WAM")
-        axis.grid(axis="y", alpha=0.2)
-    axes[-1].set_xticks(x, [short[name] for name in condition_order], rotation=38, ha="right")
-    fig.suptitle("Frozen-observation command sensitivity relative to canonical left task")
-    fig.tight_layout()
-    fig.savefig(output / "command_probe_action_sensitivity.png", bbox_inches="tight")
-    plt.close(fig)
-
-
-def _plot_direct_task_probe(probe: dict[str, Any], output: Path) -> None:
-    families = [
-        "canonical",
-        "short",
-        "declarative",
-        "contrastive target first",
-        "contrastive target last",
-    ]
-    order_labels = ["contrastive order left", "contrastive order right"]
-    fig, axes = plt.subplots(1, 2, figsize=(11.5, 4.2))
-    width = 0.35
-    for model_index, model in enumerate(("pi05", "cosmos")):
-        rows = {row["prompt_family"]: row for row in probe[model]["paired_action_rms"]}
-        model_id = "pi05_droid_vla" if model == "pi05" else "cosmos3_edge_droid_wam"
-        positions = np.arange(len(families)) + (model_index - 0.5) * width
-        axes[0].bar(
-            positions,
-            [rows[family]["action_rms"] for family in families],
-            width,
-            color=MODEL_COLORS[model_id],
-            label=MODEL_LABELS[model_id],
-        )
-        positions = np.arange(len(order_labels)) + (model_index - 0.5) * width
-        axes[1].bar(
-            positions,
-            [rows[label]["action_rms"] for label in order_labels],
-            width,
-            color=MODEL_COLORS[model_id],
-            label=MODEL_LABELS[model_id],
-        )
-    axes[0].set_xticks(np.arange(len(families)), families, rotation=24, ha="right")
-    axes[0].set_title("Left-versus-right action separation")
-    axes[1].set_xticks(np.arange(len(order_labels)), ["left target", "right target"])
-    axes[1].set_title("Target-first versus target-last sensitivity")
-    for axis in axes:
-        axis.set_ylabel("Action RMS on identical input bytes")
-        axis.grid(axis="y", alpha=0.2)
-    axes[1].legend(frameon=False)
-    fig.suptitle("Exact-observation direct task-language probe")
-    fig.tight_layout()
-    fig.savefig(output / "direct_task_exact_probe.png", bbox_inches="tight")
-    plt.close(fig)
 
 
 def _read_probe_frames(path: Path, indices: tuple[int, ...]) -> list[np.ndarray]:
@@ -1887,7 +1452,8 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         "| Renderer variation audit | `cosmos_observation_variation.csv` | First-conditioning-image differences within and across static conditions |",
         "| Physical settling audit | `initial_physical_variation.csv` | Reset-state identity versus first-recorded cube/bowl centroid differences |",
         "| Human semantic audit | `../semantic_confirmation_audit_plan.json`, `../semantic_confirmation_audit_amendment_002.json`, and `../semantic_confirmation_audit.md` | Outcome-independent sheet samples and completed visual review |",
-        "| Publication article | `../../../docs/VLA_VS_WAM_STEERABILITY_STUDY.md` | Long-form interpretation with complete claim boundaries and visual evidence |",
+        "| Publication article | `../../../docs/VLA_VS_WAM_STEERABILITY_STUDY.md` | Lead essay: results, figures and claim boundaries |",
+        "| Protocol appendix | `../../../docs/VLA_WAM_STEERABILITY_APPENDIX.md` | Full protocol, metric definitions, amendment ledger, retrospective tier and operational cost |",
         "| Social launch kit | `../../../docs/VLA_WAM_STEERABILITY_SOCIAL_COPY.md` | Post-ready X/LinkedIn copy, carousel order, alt text, and claim guardrails |",
         "| Command probes | `compiled_evidence.json` | Exact repeat, command sensitivity, semantic futures |",
         "| GPU assignment audit | `../cosmos_gpu_assignment_audit.json` | Quantifies why cross-card Cosmos output was excluded |",
@@ -2181,6 +1747,7 @@ def main() -> None:
         workspace / "docs/PAPER_PROTOCOL_ALIGNMENT.md",
         workspace / "docs/VLA_WAM_LOCAL_RUNBOOK.md",
         workspace / "docs/VLA_VS_WAM_STEERABILITY_STUDY.md",
+        workspace / "docs/VLA_WAM_STEERABILITY_APPENDIX.md",
         workspace / "docs/VLA_WAM_STEERABILITY_SOCIAL_COPY.md",
         workspace / "tools/compile_vla_wam_evidence.py",
         workspace / "tools/compile_vla_wam_study.py",
@@ -2191,6 +1758,8 @@ def main() -> None:
         workspace / "tools/run_vla_wam_semantic_confirmation.sh",
         workspace / "tools/thermal_guard.py",
         workspace / "tools/render_trajectory_evidence.py",
+        workspace / "tools/render_study_figures.py",
+        workspace / "tools/figure_style.py",
         workspace / "tools/vla_wam_study_requirements.txt",
     ]
     compiled = {
@@ -2272,16 +1841,12 @@ def main() -> None:
         "claim_boundary": "These results compare one public VLA checkpoint with one public WAM checkpoint on one neutral-start spatial task pair. They do not establish a model-class ranking.",
     }
 
+    # Figure rendering lives in tools/render_study_figures.py so that the
+    # publication figures can be restyled without re-running the study. Every
+    # value it draws comes from `compiled`, which is finalised above.
     _configure_plotting()
-    _plot_static_success(closed, output)
-    _plot_offsets(closed, output)
-    _plot_direct_prompt_robustness(closed, output)
-    _plot_observation_variation(observation_variation, output)
-    _plot_semantic_quadrants(semantic, output)
-    _plot_semantic_threshold_sensitivity(semantic, output)
-    _plot_probe(probes, output)
-    _plot_direct_task_probe(direct_probes, output)
     _plot_selected_probe_futures(root, probes, output)
+    render_study_figures.render_all(compiled, output)
     _dump(output / "compiled_evidence.json", compiled)
     _write_summary_csv(output / "semantic_future_groups.csv", semantic["groups"])
     _write_summary_csv(

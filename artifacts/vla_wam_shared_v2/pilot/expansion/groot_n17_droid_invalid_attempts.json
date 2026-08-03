@@ -42,6 +42,15 @@
       "preserved_action_root": "/data/users/ali/vla_wam/raw/groot_n17_droid/invalid_attempts/upstream_biased_scene/direct_seed8300",
       "preserved_simulator_root": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_groot_direct_seed8300_invalid_biased_scene",
       "denominator_status": "excluded"
+    },
+    {
+      "attempt_id": "seed8301_study_commit_preflight_typo",
+      "stage": "behavior_preflight",
+      "environment_seed": 8301,
+      "behavior_actions_executed": 0,
+      "reason": "A shell preflight compared the pinned study clone against an incorrectly transcribed full commit suffix and exited before Python, Isaac, output-directory creation, or any model request.",
+      "resolution": "Read the exact full commit from the immutable study clone, repeated the preflight successfully, and then ran the valid pair without changing the model, fixture, prompt, or seed.",
+      "denominator_status": "excluded"
     }
   ],
   "valid_run_interventions": [],

@@ -1,0 +1,52 @@
+{
+  "schema_version": "vla-wam-shared-v2-light-wam-fixed-probe-integration-v1",
+  "status": "pass_behavioral_queue_released",
+  "model_id": "light_wam_robotwin",
+  "amendment_id": "V2-A006",
+  "recorded_at_git_head": "99e4ed8",
+  "pair_id": "robotwin_pair_00",
+  "task": "place_a2b_left",
+  "environment_seed": 4300000,
+  "sampling_seed": 8400,
+  "prompts": {
+    "left": "Put the blue soap to the left of the tea-box.",
+    "right": "Put the blue soap to the right of the tea-box."
+  },
+  "probe": {
+    "action_shape": [32, 14],
+    "all_actions_finite": true,
+    "left_repeat_array_equal": true,
+    "left_repeat_allclose_atol_1e_6": true,
+    "left_repeat_max_abs_delta": 0.0,
+    "left_right_array_distinct": true,
+    "left_right_mean_abs_delta": 0.010905257426202297,
+    "left_right_max_abs_delta": 0.1342640221118927,
+    "observation_sha256": "0cbd43fb313e702cd58ad9bfce4433a8a340d020a6f6cce9892859d95b0d73e4",
+    "observation_npz_sha256": "22ddd590b9e0ff7e59cf426620007a3d0aa8600edafee4be26e0a6389d4a2f8c",
+    "actions_npz_sha256": "2af0bfd3b6bc03d2846547d9b89a675cec50fe7d7e3f2e790b654a2eec0a07c0",
+    "future_interface": "action_only_infer_action",
+    "imagined_future_evidence": null
+  },
+  "raw_probe": {
+    "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/fixed_probe/fixed_probe.json",
+    "bytes": 1042,
+    "sha256": "dbe0195692efdb49e1298b24db824ae3bb288fcf906ae3025ff9a7399a49f8b4"
+  },
+  "thermal_guard": {
+    "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/thermal_fixed_probe_attempt03.jsonl",
+    "bytes": 10511,
+    "sha256": "5963164007a3fbef07718d9a63311ba87c6a626933c067ebba1772a8ab49f1a7",
+    "record_count": 34,
+    "temperature_sample_count": 31,
+    "maximum_temperature_c": 33,
+    "pause_count": 0,
+    "emergency_count": 0,
+    "worker_exit_code": 0
+  },
+  "future_evidence_rule": "The released inference method exposes only actions; unavailable decoded or latent futures remain not applicable and are never scored as zero.",
+  "behavioral_release": {
+    "pair_ids": ["robotwin_pair_00", "robotwin_pair_01", "robotwin_pair_02"],
+    "episode_count": 6,
+    "invocation_rule": "Run one matched LEFT/RIGHT pair per guarded invocation with --pair-id."
+  }
+}

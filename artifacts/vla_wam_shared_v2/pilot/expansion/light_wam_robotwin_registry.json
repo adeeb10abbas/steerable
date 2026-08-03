@@ -163,7 +163,11 @@
     }
   ],
   "fixed_observation_gate": {
-    "status": "pending_no_model_inference_at_freeze",
+    "status": "pass",
+    "integration_path": "artifacts/vla_wam_shared_v2/pilot/expansion/light_wam_robotwin_fixed_probe.json",
+    "left_repeat_max_abs_delta": 0.0,
+    "left_right_mean_abs_delta": 0.010905257426202297,
+    "left_right_max_abs_delta": 0.1342640221118927,
     "pair_id": "robotwin_pair_00",
     "environment_seed": 4300000,
     "sampling_seed": 8400,
@@ -176,7 +180,7 @@
     ]
   },
   "behavioral_queue": {
-    "status": "blocked_until_fixed_observation_and_rendering_contracts_pass",
+    "status": "released_after_fixed_observation_and_rendering_contracts_pass",
     "pair_ids": ["robotwin_pair_00", "robotwin_pair_01", "robotwin_pair_02"],
     "environment_seeds": [4300000, 4300001, 4300002],
     "sampling_seeds": [8400, 8401, 8402],

@@ -1,7 +1,7 @@
 {
   "schema_version": "vla-wam-shared-v2-dreamzero-b200-fallback-status-v1",
   "amendment_id": "V2-A007",
-  "observed_at_utc": "2026-08-03T20:57:49Z",
+  "observed_at_utc": "2026-08-03T21:01:16Z",
   "kubernetes": {
     "context": "prod-dcwi-warrenq1-vmkub007",
     "namespace": "211247-prod",
@@ -31,7 +31,7 @@
     "quota_or_admission_blocker": null
   },
   "status": {
-    "phase": "Pending",
+    "phase": "Deleted",
     "scheduled": false,
     "reason": "Unschedulable",
     "scheduler_message": "0/118 nodes are available: 110 node(s) didn't match Pod's node affinity/selector, 3 node(s) had untolerated taint {node-role.kubernetes.io/control-plane: }, 5 Insufficient nvidia.com/gpu. preemption: 0/118 nodes are available: 113 Preemption is not helpful for scheduling, 5 No preemption victims found for incoming pod.",
@@ -39,7 +39,9 @@
     "container_started": false,
     "gpu_visibility_verified": false,
     "pvc_mount_verified_inside_container": false,
-    "model_inference_started": false
+    "model_inference_started": false,
+    "deleted_at_utc": "2026-08-03T21:01:16Z",
+    "deletion_reason": "User requested finishing on the two already-running ali-owned pods; the queued fallback had never scheduled or started a container."
   },
-  "next_step": "Leave the ali-owned pod queued. When it becomes Ready, verify only nvidia-smi and /data PVC visibility before assigning any study inference."
+  "next_step": "No fallback-pod action. Finish the authorized DreamZero gate on lerobot-b200-4gpu-1-ali GPUs 1+2 and raytrace-rtxpro6000-ali."
 }

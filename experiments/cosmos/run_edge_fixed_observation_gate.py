@@ -18,6 +18,9 @@ from openpi_client import websocket_client_policy
 LEFT = "Put the Rubik's cube to the left of the bowl."
 RIGHT = "Put the Rubik's cube to the right of the bowl."
 CONDITIONS = (("left", LEFT), ("left_exact_repeat", LEFT), ("right", RIGHT))
+FROZEN_GROUNDED_OBSERVATION_SHA256 = (
+    "2a431b0fa288890b3509b314c0351c91123d5f64b237678fed972848e29cd55b"
+)
 
 
 def _sha256(path: Path) -> str:
@@ -70,8 +73,9 @@ def main() -> None:
         "right",
     ]:
         raise ValueError("Registry fixed-observation conditions changed")
-    if _sha256(args.conditioning_image) != source["conditioning_png_sha256"]:
-        raise ValueError("Conditioning PNG hash does not match its frozen source plan")
+    conditioning_png_sha256 = _sha256(args.conditioning_image)
+    if conditioning_png_sha256 != FROZEN_GROUNDED_OBSERVATION_SHA256:
+        raise ValueError("Input is not the committed frozen grounded observation")
 
     image_bgr = cv2.imread(str(args.conditioning_image), cv2.IMREAD_COLOR)
     if image_bgr is None:
@@ -80,8 +84,6 @@ def main() -> None:
     if image.shape != (540, 640, 3) or image.dtype != np.uint8:
         raise ValueError(f"Unexpected conditioning image contract: {image.shape}/{image.dtype}")
     raw_hash = hashlib.sha256(np.ascontiguousarray(image).tobytes()).hexdigest()
-    if raw_hash != source["conditioning_raw_rgb_sha256"]:
-        raise ValueError("Decoded conditioning RGB hash does not match its frozen source plan")
 
     joint = np.asarray(source["joint_position"], dtype=np.float32)
     gripper = np.asarray(source["gripper_position"], dtype=np.float32)
@@ -155,7 +157,11 @@ def main() -> None:
         "status": "passed" if passed else "failed",
         "registry_sha256": _sha256(args.registry),
         "source_plan_sha256": _sha256(args.source_plan),
-        "conditioning_png_sha256": _sha256(args.conditioning_image),
+        "conditioning_png_sha256": conditioning_png_sha256,
+        "conditioning_source": (
+            "Committed v1 grounded-observation artifact; it contains fixed visual "
+            "grounding overlays and is used only for this sensitivity diagnostic."
+        ),
         "observation_hashes": observation_hashes,
         "server": f"ws://{args.host}:{args.port}",
         "records": records,

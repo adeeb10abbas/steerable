@@ -3,7 +3,7 @@
   "updated_at_utc": "2026-08-03T20:20:29Z",
   "evidence_head_before_handoff": "77966ff125d84ed7575ea9e934e367246cf5cdc6",
   "active_branch": "codex/wam-language-steerability",
-  "study_status": "post_result_expansions_v2_a005_a006_a007_frozen_active_setup",
+  "study_status": "post_result_expansions_v2_a005_a006_a007_frozen_dreamzero_complete",
   "authoritative_docs": [
     "docs/VLA_WAM_CONTINUATION.md",
     "docs/VLA_WAM_STEERABILITY_V2_PROTOCOL.md",
@@ -140,7 +140,7 @@
     "denominator_policy": "This is a technical setup blocker outside every model denominator; do not assign failures or zeros."
   },
   "dreamzero_droid_readiness": {
-    "status": "v2_a007_frozen_setup_gates_in_progress_zero_study_requests",
+    "status": "complete_six_valid_cells_both_directions_gate",
     "amendment_id": "V2-A007",
     "amendment": "artifacts/vla_wam_shared_v2/pilot/post_result_dreamzero_amendment.json",
     "amendment_sha256": "785bf3a69409e231e3a78c7427089cbe653ceb37022ddfb16edd3f1bd152ee89",
@@ -160,8 +160,28 @@
     "policy_topology": "fresh official distributed server on two rechecked free B200 GPUs",
     "simulator_topology": "exact-reset RoboLab/Isaac simulator and viewport video on raytrace-rtxpro6000-ali",
     "future_interface": "joint_action_and_latent_video_prediction_with_official_decode_path",
-    "model_action_request_count": 0,
-    "behavioral_episode_count": 0,
+    "model_action_request_count": 268,
+    "behavioral_episode_count": 6,
+    "behavioral_result": "LEFT 2/3; RIGHT 1/3; 3/3 aligned endpoint pairs; 3/3 distinct executed-action pairs; three valid failures retained",
+    "competence_gate": "both_directions",
+    "wording_grid_eligible": true,
+    "result": "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json",
+    "result_sha256": "4c76cdc3ca9eaf227d21d160199408f22e1b3dd7a71176a5a5dbe22223714461",
+    "raw_collection_manifest": "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_raw_collection_manifest.json",
+    "raw_collection_manifest_sha256": "25cd8eca26361454d2cfd128a4d5f8d1771262ca220b61448d74f1318c32b64c",
+    "readiness": "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_readiness.json",
+    "readiness_sha256": "9cb26b569ebb08903ee68e9837afec3873d1e7cc4570ba0b1451d6c5729b231e",
+    "media_manifest": "artifacts/vla_wam_shared_v2/media/dreamzero_droid/media_manifest.json",
+    "media_manifest_sha256": "ce453dcf22a2761867eedf93200b792c0062711d2b0cd783a715ec61e3e76cb3",
+    "invalid_attempt_count": 11,
+    "runtime_intervention_count": 0,
+    "future_retention": {
+      "behavioral_latent_future_count": 265,
+      "fixed_probe_latent_future_count": 3,
+      "total_retained_latent_future_count": 268,
+      "total_official_reset_decode_count": 9,
+      "missing_or_unexposed_futures_scored_as_zero": false
+    },
     "preexisting_server": {
       "pod": "lerobot-b200-4gpu-1-ali",
       "gpu_index": 0,
@@ -169,8 +189,8 @@
       "port": 5000,
       "study_use": "prohibited_do_not_touch"
     },
-    "next_step": "Finish exact checkpoint hashes, isolated official environment, two-B200 server, RTX renderer, cross-pod reachability, neutral-reset, action/future contract, exact-repeat, and LEFT/RIGHT sensitivity gates. Only then run the six frozen cells.",
-    "denominator_policy": "Setup gates and partial attempts remain outside model denominators; DreamZero is not assigned a result until valid behavioral cells exist."
+    "next_step": "No authorized DreamZero direct-gate cell remains. Do not rerun the six valid episodes. Preserve all raw actions, latent futures, official decodes, simulator rollouts, and infrastructure-invalid attempts on the ali PVC.",
+    "denominator_policy": "All six valid behavioral cells are in the DreamZero DROID denominator, including three valid failures. Eleven setup-invalid attempts remain excluded. DROID results are not pooled with RoboTwin."
   },
   "completed_direct_gates": [
     {
@@ -382,10 +402,12 @@
     {
       "priority": 4,
       "id": "dreamzero_droid_direct_gate",
-      "status": "authorized_by_v2_a007_setup_gates_in_progress",
+      "status": "complete_six_valid_cells_both_directions_gate",
       "first_episode_count": 6,
       "checkpoint": "GEAR-Dreams/DreamZero-DROID@96ad344138c66e82536422432ad742f015784942",
-      "dependency": "All V2-A007 source, checkpoint, two-GPU server, RTX renderer, exact-reset, fixed-repeat, prompt-sensitivity, action-trace, and future-retention gates must pass before behavior.",
+      "result": "LEFT 2/3; RIGHT 1/3; 3/3 aligned endpoint pairs; 3/3 distinct executed-action pairs",
+      "artifact": "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json",
+      "artifact_sha256": "4c76cdc3ca9eaf227d21d160199408f22e1b3dd7a71176a5a5dbe22223714461",
       "resume_section": "docs/VLA_WAM_CONTINUATION.md#experiment-5-dreamzero-droid-direct-gate"
     }
   ],

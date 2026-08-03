@@ -1086,6 +1086,22 @@ def validate(workspace: Path) -> dict[str, Any]:
         workspace
         / "artifacts/vla_wam_shared_v2/pilot/post_result_dreamzero_amendment.json"
     )
+    dreamzero_readiness_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_readiness.json"
+    )
+    dreamzero_result_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json"
+    )
+    dreamzero_raw_collection_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_raw_collection_manifest.json"
+    )
+    dreamzero_media_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/media/dreamzero_droid/media_manifest.json"
+    )
     efficient_pair03_integration_path = (
         workspace
         / "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/efficient_wam_rt_pair03_integration.json"
@@ -1131,6 +1147,10 @@ def validate(workspace: Path) -> dict[str, Any]:
     post_result_amendment = load_json(post_result_amendment_path)
     second_wave_amendment = load_json(second_wave_amendment_path)
     dreamzero_amendment = load_json(dreamzero_amendment_path)
+    dreamzero_readiness_artifact = load_json(dreamzero_readiness_path)
+    dreamzero_result = load_json(dreamzero_result_path)
+    dreamzero_raw_collection = load_json(dreamzero_raw_collection_path)
+    dreamzero_media = load_json(dreamzero_media_path)
     bundle_manifest = load_json(bundle_manifest_path)
     paired_media = load_json(paired_media_path)
     droid_paired_media = load_json(droid_paired_media_path)
@@ -1792,8 +1812,8 @@ def validate(workspace: Path) -> dict[str, Any]:
 
     require(
         continuation_state["study_status"]
-        == "post_result_expansions_v2_a005_a006_a007_frozen_active_setup",
-        "continuation state names the frozen V2-A005/A006/A007 active-setup boundary",
+        == "post_result_expansions_v2_a005_a006_a007_frozen_dreamzero_complete",
+        "continuation state names the frozen V2-A005/A006/A007 DreamZero-complete boundary",
         checks,
     )
     queue = continuation_state["experiment_queue"]
@@ -1843,19 +1863,123 @@ def validate(workspace: Path) -> dict[str, Any]:
         and queue[3]["status"]
         == "authorized_ready_for_exact_repeat_probe_and_direct_gate"
         and queue[4]["status"]
-        == "authorized_by_v2_a007_setup_gates_in_progress"
+        == "complete_six_valid_cells_both_directions_gate"
         and queue[4]["first_episode_count"] == 6
+        and queue[4].get("artifact")
+        == "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json"
+        and queue[4].get("artifact_sha256") == sha256(dreamzero_result_path)
         and groot_readiness.get("status")
         == "assets_downloaded_and_server_contract_smoke_complete"
         and groot_readiness.get("server_smoke", {}).get("health_ping") is True
         and groot_readiness.get("server_smoke", {}).get("simulator_episode_started") is False
         and dreamzero_readiness.get("status")
-        == "v2_a007_frozen_setup_gates_in_progress_zero_study_requests"
-        and dreamzero_readiness.get("model_action_request_count") == 0
-        and dreamzero_readiness.get("behavioral_episode_count") == 0,
-        "continuation state freezes completed work and records the authorized DreamZero setup gate",
+        == "complete_six_valid_cells_both_directions_gate"
+        and dreamzero_readiness.get("model_action_request_count") == 268
+        and dreamzero_readiness.get("behavioral_episode_count") == 6
+        and dreamzero_readiness.get("result_sha256") == sha256(dreamzero_result_path)
+        and dreamzero_readiness.get("raw_collection_manifest_sha256")
+        == sha256(dreamzero_raw_collection_path)
+        and dreamzero_readiness.get("media_manifest_sha256")
+        == sha256(dreamzero_media_path)
+        and dreamzero_readiness.get("invalid_attempt_count") == 11
+        and dreamzero_readiness.get("runtime_intervention_count") == 0,
+        "continuation state freezes completed work and records the completed DreamZero gate",
         checks,
     )
+    require(
+        dreamzero_readiness_artifact["schema_version"]
+        == "vla-wam-shared-v2-dreamzero-droid-readiness-v1"
+        and dreamzero_readiness_artifact["status"]
+        == "complete_six_valid_cells_both_directions_gate"
+        and dreamzero_readiness_artifact["behavior_queue"]["completed_valid_cells"] == 6
+        and dreamzero_readiness_artifact["behavior_queue"]["next_cell"] is None
+        and dreamzero_readiness_artifact["behavior_queue"]["do_not_rerun"] is True
+        and dreamzero_readiness_artifact["compiled_result"]["sha256"]
+        == sha256(dreamzero_result_path),
+        "DreamZero readiness freezes the completed six-cell gate and exact compiled result",
+        checks,
+    )
+    require(
+        dreamzero_result["schema_version"]
+        == "vla-wam-shared-v2-dreamzero-droid-direct-gate-v1"
+        and dreamzero_result["status"] == "complete"
+        and dreamzero_result["model_id"] == "dreamzero_droid"
+        and dreamzero_result["amendment_id"] == "V2-A007"
+        and dreamzero_result["valid_episode_count"] == 6
+        and dreamzero_result["valid_failure_count"] == 3
+        and dreamzero_result["requested_success_count"] == 3,
+        "DreamZero result preserves all six valid cells, including three valid failures",
+        checks,
+    )
+    require(
+        dreamzero_result["success_by_relation"]
+        == {
+            "left": {"successes": 2, "trials": 3},
+            "right": {"successes": 1, "trials": 3},
+        }
+        and dreamzero_result["aligned_endpoint_pair_count"] == 3
+        and dreamzero_result["distinct_executed_action_pair_count"] == 3
+        and dreamzero_result["competence_gate"] == "both_directions"
+        and dreamzero_result["wording_grid_eligible"] is True,
+        "DreamZero result records bidirectional competence, prompt sensitivity, and aligned endpoints",
+        checks,
+    )
+    dreamzero_episodes = dreamzero_result["episodes"]
+    require(
+        len(dreamzero_episodes) == 6
+        and {(item["environment_seed"], item["requested_relation"]) for item in dreamzero_episodes}
+        == {(seed, relation) for seed in (8300, 8301, 8302) for relation in ("left", "right")}
+        and all(item["sampling_seed"] == item["environment_seed"] for item in dreamzero_episodes)
+        and all(item["prompt_family"] == "direct_command" for item in dreamzero_episodes)
+        and all(item["dynamic_prompt_switches"] == 0 for item in dreamzero_episodes),
+        "DreamZero episodes use the frozen matched seeds and static direct-command conditions",
+        checks,
+    )
+    future_audit = dreamzero_result["future_retention_audit"]
+    require(
+        future_audit["behavioral_episode_count"] == 6
+        and future_audit["behavioral_latent_future_count"] == 265
+        and future_audit["fixed_observation_probe_request_count"] == 3
+        and future_audit["fixed_observation_probe_latent_future_count"] == 3
+        and future_audit["total_retained_latent_future_count"] == 268
+        and future_audit["total_official_reset_decode_count"] == 9
+        and dreamzero_result["missing_or_unexposed_future_evidence_scored_as_zero"] is False,
+        "DreamZero result retains exposed future evidence without scoring missing futures as zero",
+        checks,
+    )
+    require(
+        dreamzero_raw_collection["schema_version"]
+        == "vla-wam-shared-v2-dreamzero-raw-collection-v1"
+        and dreamzero_raw_collection["status"] == "complete"
+        and len(dreamzero_raw_collection["cells"]) == 6
+        and dreamzero_raw_collection["invalid_attempt_count"] == 11
+        and dreamzero_raw_collection["runtime_intervention_count"] == 0,
+        "DreamZero raw collection separates six valid cells from eleven invalid attempts and zero interventions",
+        checks,
+    )
+    require(
+        dreamzero_media["schema_version"]
+        == "vla-wam-shared-v2-dreamzero-droid-media-v1"
+        and dreamzero_media["source_result"]["sha256"] == sha256(dreamzero_result_path)
+        and len(dreamzero_media["gallery_entries"]) == 3
+        and {item["seed"] for item in dreamzero_media["gallery_entries"]}
+        == {8300, 8301, 8302},
+        "DreamZero media manifest publishes all three matched pairs without outcome selection",
+        checks,
+    )
+    validate_file_record(
+        workspace,
+        dreamzero_media["source_result"],
+        "DreamZero media source result",
+        checks,
+    )
+    for item in dreamzero_media["gallery_entries"]:
+        validate_file_record(
+            workspace,
+            item["video"],
+            f"DreamZero seed {item['seed']} paired video",
+            checks,
+        )
     require(
         post_result_decision.get("status")
         == "recorded_and_frozen_before_new_inference"

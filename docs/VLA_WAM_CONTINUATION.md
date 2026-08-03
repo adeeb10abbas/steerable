@@ -548,7 +548,11 @@ by the user in the separately disclosed `V2-A007` amendment below.
 <a id="experiment-5-dreamzero-droid-direct-gate"></a>
 ## Experiment 5 — DreamZero DROID direct gate (`V2-A007`)
 
-Status: frozen before any DreamZero study request; setup gates in progress.
+Status: complete. All six authorized V2-A007 cells are valid and MUST NOT be
+rerun. Compiled evidence:
+[`dreamzero_droid_direct_gate.json`](../artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json)
+(SHA-256
+`4c76cdc3ca9eaf227d21d160199408f22e1b3dd7a71176a5a5dbe22223714461`).
 Machine-readable source:
 [`post_result_dreamzero_amendment.json`](../artifacts/vla_wam_shared_v2/pilot/post_result_dreamzero_amendment.json)
 (SHA-256
@@ -556,6 +560,24 @@ Machine-readable source:
 All completed V2-A005/V2-A006 results were known when this user-directed
 addition was selected, so it is a post-result breadth expansion rather than
 preregistration.
+
+The final direct-command result is LEFT 2/3 and RIGHT 1/3: seed 8300
+succeeded in both conditions, seed 8301 failed after 450 actions in both
+conditions, and seed 8302 succeeded LEFT at action 341 but failed RIGHT after
+450 actions. Every valid failure remains in the denominator. All three matched
+pairs had distinct executed-action traces and endpoint ordering aligned with
+the requested LEFT-to-RIGHT change. The competence gate is therefore
+`both_directions`; a future wording grid is eligible but is not authorized by
+this completed six-cell slice.
+
+The fixed-observation gate passed before behavior: repeat LEFT actions and
+latent futures were bit-identical, while LEFT versus RIGHT differed in actions
+(RMS `0.03544579397992704`) and latent futures (RMS
+`0.16675334252293472`). The complete server retention set contains 265
+behavioral latent futures plus three probe futures, and six behavioral plus
+three probe official reset-decode videos. Missing or unexposed futures were not
+converted to zeros. Eleven setup-invalid attempts remain outside the model
+denominator; no valid-run runtime intervention occurred.
 
 The exact official sources are `dreamzero0/dreamzero` commit
 `ab790c198fbce33503358efbbd4187ce9a89adf3` and
@@ -586,7 +608,7 @@ The old process PID 25608 on B200 GPU 0/port 5000 predates this amendment. It
 uses a different dirty checkout and is infrastructure outside the study. Never
 send it a request, stop it, modify it, or claim evidence from it.
 
-Before the first behavioral cell, all of these gates must pass:
+Before the first behavioral cell, all of these gates passed:
 
 1. exact repository/checkpoint hashes and isolated environment;
 2. fresh two-B200 official server and cross-pod transport;
@@ -598,11 +620,11 @@ Before the first behavioral cell, all of these gates must pass:
 8. LEFT/RIGHT prompt-only sensitivity request.
 
 Infrastructure failures and partial attempts stay outside the model
-denominator. Only after all gates pass may the six cells run. Preserve every
-valid failure, publish simulator video for every valid cell, and apply the
-original zero/one-direction/both-direction competence gate after the six-cell
-slice. Selected compact clips and their hashes belong in
-`artifacts/vla_wam_shared_v2/media/dreamzero_droid/media_manifest.json`.
+denominator. Preserve every valid failure and all raw evidence on the ali PVC.
+The three complete paired publication clips and their hashes are recorded in
+[`media_manifest.json`](../artifacts/vla_wam_shared_v2/media/dreamzero_droid/media_manifest.json)
+(SHA-256
+`ce453dcf22a2761867eedf93200b792c0062711d2b0cd783a715ec61e3e76cb3`).
 
 <a id="experiment-3-lingbot-vla-4b-robotwin-onboarding"></a>
 ## Experiment 3 — LingBot-VLA 4B RoboTwin onboarding

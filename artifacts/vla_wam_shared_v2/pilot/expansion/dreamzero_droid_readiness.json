@@ -1,7 +1,7 @@
 {
   "schema_version": "vla-wam-shared-v2-dreamzero-droid-readiness-v1",
   "amendment_id": "V2-A007",
-  "status": "renderer_reset_and_wire_contract_passed_model_probe_pending",
+  "status": "complete_six_valid_cells_both_directions_gate",
   "model_contract": {
     "repository": "https://github.com/dreamzero0/dreamzero.git",
     "repository_commit": "ab790c198fbce33503358efbbd4187ce9a89adf3",
@@ -70,19 +70,43 @@
     },
     "model_loaded_or_queried": false
   },
-  "pending_gates": [
-    "Exact official repository and checkpoint aggregate hash manifest",
+  "completed_gates": [
+    "Exact official repository and 25-file checkpoint payload manifest",
     "Fresh isolated two-rank B200 server on port 18017",
-    "RNG-restored exact-repeat action and latent-future equality",
-    "LEFT/RIGHT prompt-only action and latent-future sensitivity",
-    "Measurement-only future instrumentation action preservation"
+    "Bit-exact repeat LEFT action and latent-future equality",
+    "Nonzero LEFT/RIGHT prompt-only action and latent-future sensitivity",
+    "Measurement-only future instrumentation action preservation",
+    "Six valid static direct-command behavioral cells with simulator video"
   ],
+  "exact_repeat_probe": {
+    "status": "passed",
+    "path": "/data/users/ali/vla_wam/raw/dreamzero_droid/v2_a007/fixed_observation_probe_attempt06/exact_repeat_probe.json",
+    "left_repeat_action_array_equal": true,
+    "left_repeat_latent_array_equal": true,
+    "left_vs_right_action_rms": 0.03544579397992704,
+    "left_vs_right_latent_rms": 0.16675334252293472
+  },
+  "compiled_result": {
+    "path": "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json",
+    "sha256": "4c76cdc3ca9eaf227d21d160199408f22e1b3dd7a71176a5a5dbe22223714461",
+    "valid_episodes": 6,
+    "requested_successes": 3,
+    "left_successes": 2,
+    "right_successes": 1,
+    "aligned_endpoint_pairs": 3,
+    "distinct_executed_action_pairs": 3,
+    "competence_gate": "both_directions",
+    "total_retained_latent_futures": 268,
+    "total_official_reset_decodes": 9
+  },
   "behavior_queue": {
     "authorized_cells": 6,
     "environment_seeds": [8300, 8301, 8302],
     "conditions": ["LEFT", "RIGHT"],
-    "completed_valid_cells": 0,
-    "next_cell": "DreamZero-DROID seed8300 LEFT, only after every pending gate passes"
+    "completed_valid_cells": 6,
+    "next_cell": null,
+    "do_not_rerun": true,
+    "wording_grid_eligible": true
   },
   "invalid_attempt_ledger": "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_invalid_attempts.json"
 }

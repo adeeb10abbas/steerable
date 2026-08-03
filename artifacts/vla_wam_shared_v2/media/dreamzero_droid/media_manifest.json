@@ -1,0 +1,117 @@
+{
+  "arena": "droid",
+  "gallery_entries": [
+    {
+      "arena": "droid",
+      "arena_label": "DROID / RoboLab",
+      "category": "WAM",
+      "directions": [
+        {
+          "outcome": "success after 205 actions",
+          "prompt": "Put the Rubik's cube to the left of the bowl.",
+          "relation": "LEFT"
+        },
+        {
+          "outcome": "success after 194 actions",
+          "prompt": "Put the Rubik's cube to the right of the bowl.",
+          "relation": "RIGHT"
+        }
+      ],
+      "evidence_status": "Valid V2-A007 behavioral pair; committed RTX PRO 6000 publication video",
+      "future_interface": "Joint actions and latent video prediction with official decoded-future path",
+      "id": "dreamzero_droid_seed8300",
+      "model_label": "DreamZero DROID",
+      "pair_label": "seed 8300 matched pair",
+      "seed": 8300,
+      "selection_note": "Complete frozen pair; all three V2-A007 pairs are included, with no outcome-based selection.",
+      "source_manifest": "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json",
+      "video": {
+        "bytes": 261958,
+        "path": "artifacts/vla_wam_shared_v2/media/dreamzero_droid/dreamzero_droid_seed8300_paired.mp4",
+        "sha256": "cc00f5b5de10152b73d6a86d76c99ac3970dfa2a1d021b53f49d0ecf7e2231d2"
+      }
+    },
+    {
+      "arena": "droid",
+      "arena_label": "DROID / RoboLab",
+      "category": "WAM",
+      "directions": [
+        {
+          "outcome": "failure after 450 actions: picked_never_entered_requested_region",
+          "prompt": "Put the Rubik's cube to the left of the bowl.",
+          "relation": "LEFT"
+        },
+        {
+          "outcome": "failure after 450 actions: object_moved_no_verified_pickup",
+          "prompt": "Put the Rubik's cube to the right of the bowl.",
+          "relation": "RIGHT"
+        }
+      ],
+      "evidence_status": "Valid V2-A007 behavioral pair; committed RTX PRO 6000 publication video",
+      "future_interface": "Joint actions and latent video prediction with official decoded-future path",
+      "id": "dreamzero_droid_seed8301",
+      "model_label": "DreamZero DROID",
+      "pair_label": "seed 8301 matched pair",
+      "seed": 8301,
+      "selection_note": "Complete frozen pair; all three V2-A007 pairs are included, with no outcome-based selection.",
+      "source_manifest": "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json",
+      "video": {
+        "bytes": 466133,
+        "path": "artifacts/vla_wam_shared_v2/media/dreamzero_droid/dreamzero_droid_seed8301_paired.mp4",
+        "sha256": "f885b845365a990cd700350f0e5e2b773930217cfcc455a8e665850ac80025ec"
+      }
+    },
+    {
+      "arena": "droid",
+      "arena_label": "DROID / RoboLab",
+      "category": "WAM",
+      "directions": [
+        {
+          "outcome": "success after 341 actions",
+          "prompt": "Put the Rubik's cube to the left of the bowl.",
+          "relation": "LEFT"
+        },
+        {
+          "outcome": "failure after 450 actions: no_object_interaction",
+          "prompt": "Put the Rubik's cube to the right of the bowl.",
+          "relation": "RIGHT"
+        }
+      ],
+      "evidence_status": "Valid V2-A007 behavioral pair; committed RTX PRO 6000 publication video",
+      "future_interface": "Joint actions and latent video prediction with official decoded-future path",
+      "id": "dreamzero_droid_seed8302",
+      "model_label": "DreamZero DROID",
+      "pair_label": "seed 8302 matched pair",
+      "seed": 8302,
+      "selection_note": "Complete frozen pair; all three V2-A007 pairs are included, with no outcome-based selection.",
+      "source_manifest": "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json",
+      "video": {
+        "bytes": 457648,
+        "path": "artifacts/vla_wam_shared_v2/media/dreamzero_droid/dreamzero_droid_seed8302_paired.mp4",
+        "sha256": "e9feb9ccdb3c8935f87ddf251327f95d9d93400719d25d8a91de04cd0fc6bb71"
+      }
+    }
+  ],
+  "model_id": "dreamzero_droid",
+  "publication_policy": "All three exact LEFT/RIGHT V2-A007 pairs are included; no outcome-based selection.",
+  "renderer": {
+    "duration_probe": {
+      "backend": "ffmpeg_input_stderr",
+      "bytes": 79826272,
+      "path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v7.0.2",
+      "sha256": "e7e7fb30477f717e6f55f9180a70386c62677ef8a4d4d1a5d948f4098aa3eb99"
+    },
+    "ffmpeg": {
+      "bytes": 79826272,
+      "path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v7.0.2",
+      "sha256": "e7e7fb30477f717e6f55f9180a70386c62677ef8a4d4d1a5d948f4098aa3eb99"
+    },
+    "ffmpeg_version": "ffmpeg version 7.0.2-static https://johnvansickle.com/ffmpeg/  Copyright (c) 2000-2024 the FFmpeg developers"
+  },
+  "schema_version": "vla-wam-shared-v2-dreamzero-droid-media-v1",
+  "source_result": {
+    "bytes": 254288,
+    "path": "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json",
+    "sha256": "4c76cdc3ca9eaf227d21d160199408f22e1b3dd7a71176a5a5dbe22223714461"
+  }
+}

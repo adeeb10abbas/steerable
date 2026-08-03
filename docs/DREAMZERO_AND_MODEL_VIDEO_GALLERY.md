@@ -4,9 +4,45 @@ This is the portable index for the embedded [HTML video gallery](DREAMZERO_AND_M
 
 ## DreamZero status
 
-**Pending — no behavioral video exists in the committed evidence.** This is not a zero. The generator is wired to `artifacts/vla_wam_shared_v2/media/dreamzero_droid/media_manifest.json` and will ingest its `gallery_entries` only after every referenced clip validates.
+DreamZero has hash-validated publication media in the canonical manifest and appears in the DROID section below.
 
 ## DROID / RoboLab
+
+### DreamZero DROID — seed 8300 matched pair
+
+[▶ Open video](../artifacts/vla_wam_shared_v2/media/dreamzero_droid/dreamzero_droid_seed8300_paired.mp4) · [Evidence manifest](../artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json)
+
+- Outcome: LEFT: success after 205 actions; RIGHT: success after 194 actions
+- Future interface: Joint actions and latent video prediction with official decoded-future path
+- Evidence status: Valid V2-A007 behavioral pair; committed RTX PRO 6000 publication video
+- Video SHA-256: `cc00f5b5de10152b73d6a86d76c99ac3970dfa2a1d021b53f49d0ecf7e2231d2`
+
+> LEFT: “Put the Rubik's cube to the left of the bowl.”
+> RIGHT: “Put the Rubik's cube to the right of the bowl.”
+
+### DreamZero DROID — seed 8301 matched pair
+
+[▶ Open video](../artifacts/vla_wam_shared_v2/media/dreamzero_droid/dreamzero_droid_seed8301_paired.mp4) · [Evidence manifest](../artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json)
+
+- Outcome: LEFT: failure after 450 actions: picked_never_entered_requested_region; RIGHT: failure after 450 actions: object_moved_no_verified_pickup
+- Future interface: Joint actions and latent video prediction with official decoded-future path
+- Evidence status: Valid V2-A007 behavioral pair; committed RTX PRO 6000 publication video
+- Video SHA-256: `f885b845365a990cd700350f0e5e2b773930217cfcc455a8e665850ac80025ec`
+
+> LEFT: “Put the Rubik's cube to the left of the bowl.”
+> RIGHT: “Put the Rubik's cube to the right of the bowl.”
+
+### DreamZero DROID — seed 8302 matched pair
+
+[▶ Open video](../artifacts/vla_wam_shared_v2/media/dreamzero_droid/dreamzero_droid_seed8302_paired.mp4) · [Evidence manifest](../artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json)
+
+- Outcome: LEFT: success after 341 actions; RIGHT: failure after 450 actions: no_object_interaction
+- Future interface: Joint actions and latent video prediction with official decoded-future path
+- Evidence status: Valid V2-A007 behavioral pair; committed RTX PRO 6000 publication video
+- Video SHA-256: `e9feb9ccdb3c8935f87ddf251327f95d9d93400719d25d8a91de04cd0fc6bb71`
+
+> LEFT: “Put the Rubik's cube to the left of the bowl.”
+> RIGHT: “Put the Rubik's cube to the right of the bowl.”
 
 ### Cosmos3 Edge DROID — seed 8302 matched pair
 
@@ -121,7 +157,6 @@ This is the portable index for the embedded [HTML video gallery](DREAMZERO_AND_M
 
 ## Missing publication media
 
-- **dreamzero_droid — pending_no_behavioral_video:** No valid DreamZero direct-command rollout or committed publication video exists yet.
 - **pi05_droid — no_selected_v2_publication_video:** The checkpoint is an existing v1 reference, but this branch contains no committed selected v2 behavioral clip for it.
 - **light_wam_robotwin — raw_video_not_selected_for_publication:** All six valid episodes reference simulator videos on the ali PVC, but no compact selected Light-WAM publication clip is committed.
 - **lawam_robotwin — no_behavioral_episode:** Blocked before inference on gated DINOv3 access; no behavioral video exists.

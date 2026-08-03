@@ -1,0 +1,124 @@
+{
+  "schema_version": "1.0.0",
+  "study_id": "vla_wam_language_steerability_v2",
+  "audited_at_utc": "2026-08-03T01:42:00Z",
+  "host": "ali-MS-7D25",
+  "local_compute": {
+    "gpu_count": 2,
+    "gpu_model": "NVIDIA GeForce RTX 3090",
+    "memory_mib_per_gpu": 24576,
+    "container_image": "robolab:codex-steerability",
+    "container_image_size": "30.1GB"
+  },
+  "repositories": {
+    "robolab": {
+      "path": "/home/ali/projects/RoboLab",
+      "commit": "992bc34eedb2b909888af8a334a2ac33b86c51d8"
+    },
+    "openpi_robolab": {
+      "path": "/home/ali/openpi-robolab",
+      "commit": "9e46d3aea26417bfb564227734b95d010aa827e5"
+    },
+    "cosmos_framework": {
+      "path": "/home/ali/cosmos-framework",
+      "commit": "1439c1d5e45a23771e9b1a2ad8f40a5981ea86c0"
+    },
+    "efficient_wam": {
+      "path": "/home/ali/projects/Efficient-WAM",
+      "commit": "7ec94e27c2b9e7ae2f069b4251b8ec71cf4e849d"
+    },
+    "fastwam": {
+      "path": "/home/ali/projects/FastWAM",
+      "commit": "b9aef886e7a064e0c7877f370027213d4e15ca91"
+    },
+    "lerobot_lingbot": {
+      "path": "/home/ali/projects/lerobot-lingbot",
+      "commit": "36865b8a086ae57b99f2b91943589446780b1e3d"
+    }
+  },
+  "models": [
+    {
+      "id": "pi05_droid_vla",
+      "status": "reference_complete",
+      "policy_adapter": "validated_v1",
+      "checkpoint_status": "present",
+      "checkpoint_path": "/home/ali/.cache/openpi/openpi-assets-simeval/pi05_droid_jointpos",
+      "checkpoint_and_metadata_bytes": 12435172897,
+      "next_gate": "retrospective selected-episode replay with viewport validation"
+    },
+    {
+      "id": "pi0_fast_droid_vla",
+      "status": "adapter_present_checkpoint_missing",
+      "policy_adapter": "/home/ali/projects/RoboLab/policies/pi0_family",
+      "policy_config": "pi0_fast_droid_jointpos",
+      "checkpoint_status": "not_present",
+      "checkpoint_uri": "gs://openpi-assets-simeval/pi0_fast_droid_jointpos",
+      "next_gate": "download checkpoint, launch policy server, run fixed-observation prompt smoke, then six direct-command base-competence episodes"
+    },
+    {
+      "id": "groot_n17_droid_vla",
+      "status": "client_present_server_and_gated_assets_missing",
+      "policy_adapter": "/home/ali/projects/RoboLab/policies/gr00t",
+      "checkpoint_status": "not_present",
+      "checkpoint_uri": "nvidia/GR00T-N1.7-DROID",
+      "known_external_dependency": "nvidia/Cosmos-Reason2-2B access",
+      "next_gate": "audit Hugging Face access, install the server outside the study repo, and run a one-observation contract smoke before simulator episodes"
+    },
+    {
+      "id": "cosmos3_edge_droid_wam",
+      "status": "reference_complete",
+      "policy_adapter": "validated_v1",
+      "checkpoint_status": "present",
+      "checkpoint_path": "/home/ali/cosmos-framework/.cache/huggingface/hub/models--nvidia--Cosmos3-Edge-Policy-DROID",
+      "checkpoint_and_metadata_bytes": 9154949870,
+      "next_gate": "retrospective selected-episode replay and synchronized future/execution clip rendering"
+    },
+    {
+      "id": "lingbot_vla_4b_robotwin",
+      "status": "repository_and_checkpoint_missing",
+      "checkpoint_status": "not_present",
+      "checkpoint_uri": "Robbyant/lingbot-vla-4b-posttrain-robotwin",
+      "next_gate": "download into an isolated checkout, verify RoboTwin observation/action contract, then fixed-observation prompt smoke"
+    },
+    {
+      "id": "efficient_wam_rt_robotwin",
+      "status": "retrospective_runner_ready_standardized_adapter_pending",
+      "policy_adapter": "/home/ali/projects/Efficient-WAM/experiments/robotwin_language_gate/closed_loop_language_gate.py",
+      "checkpoint_status": "present",
+      "checkpoint_path": "/home/ali/projects/Efficient-WAM/checkpoints/Efficient-WAM_RoboTwin/Efficient-WAM-RT/Efficient-WAM-RT_stage3.pt",
+      "checkpoint_bytes": 1976610407,
+      "auxiliary_asset_path": "/home/ali/projects/Efficient-WAM/checkpoints/Wan2.2-TI2V-5B",
+      "auxiliary_asset_bytes": 34201555360,
+      "next_gate": "make task success prompt-aware, add the four frozen prompt forms, preserve simulator and imagined videos, and run fixed-observation prompt smoke"
+    },
+    {
+      "id": "fastwam_robotwin",
+      "status": "retrospective_runner_ready_standardized_adapter_pending",
+      "policy_adapter": "/home/ali/projects/FastWAM/experiments/robotwin_language_gate/closed_loop_language_gate.py",
+      "checkpoint_status": "present",
+      "checkpoint_path": "/home/ali/projects/FastWAM/checkpoints/fastwam_release/robotwin_uncond_3cam_384.pt",
+      "checkpoint_bytes": 12041813092,
+      "auxiliary_asset_path": "/home/ali/projects/FastWAM/checkpoints/DiffSynth-Studio",
+      "auxiliary_asset_bytes": 5114032589,
+      "next_gate": "make task success prompt-aware, add the four frozen prompt forms, and run fixed-observation CFG prompt smoke before closed loop"
+    },
+    {
+      "id": "lingbot_va_robotwin",
+      "status": "retrospective_runner_ready_standardized_adapter_pending",
+      "policy_adapter": "/home/ali/projects/lerobot-lingbot/experiments/lingbot_language_gate/closed_loop_language_gate.py",
+      "checkpoint_status": "present",
+      "checkpoint_path": "/home/ali/projects/lerobot-lingbot/checkpoints/lingbot_va_robotwin/model.safetensors",
+      "checkpoint_bytes": 10177841732,
+      "auxiliary_asset_path": "/home/ali/projects/lerobot-lingbot/checkpoints/lingbot_va_frozen",
+      "auxiliary_asset_bytes": 14202159514,
+      "next_gate": "make task success prompt-aware, add the four frozen prompt forms, preserve decoded futures, and run fixed-observation prompt smoke"
+    }
+  ],
+  "readiness_summary": {
+    "reference_complete": 2,
+    "checkpoint_present_adapter_pending": 3,
+    "checkpoint_or_server_missing": 3,
+    "standardized_v2_pilot_complete": 0
+  },
+  "claim_limit": "Present files establish local setup readiness only. They do not establish v2 language steerability or base task competence."
+}

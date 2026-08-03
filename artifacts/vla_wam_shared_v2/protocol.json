@@ -1,0 +1,293 @@
+{
+  "schema_version": "2.0.0",
+  "study_id": "vla_wam_language_steerability_v2",
+  "status": "frozen_before_any_standardized_v2_expansion_inference",
+  "frozen_at_utc": "2026-08-03T01:19:36Z",
+  "repository_commit_before_freeze": "ce4cc76b1c755283f76f1cfb82b6acb3a3649a50",
+  "repository_worktree_status_sha256": "7907ca4859dddb3fc0aea52295b704c4e7272d637ac4df7bcf6559e3283a2c9c",
+  "parent_study": "artifacts/vla_wam_shared_v1/preregistration.json",
+  "research_question": "Across multiple released VLAs and world-action models, when does changing only the language change the requested physical outcome rather than merely changing an action tensor or imagined video?",
+  "design": {
+    "arenas": [
+      {
+        "id": "droid_robolab",
+        "display_name": "DROID matched neutral scene",
+        "repository": "/home/ali/projects/RoboLab",
+        "repository_commit": "992bc34eedb2b909888af8a334a2ac33b86c51d8",
+        "tasks": {
+          "left": "RubiksCubeLeftOfBowlMatchedTask",
+          "right": "RubiksCubeRightOfBowlMatchedTask"
+        },
+        "object_template": {
+          "movable": "rubiks cube",
+          "reference": "bowl"
+        },
+        "episode_seeds": {
+          "original_confirmatory": [6100, 6101, 6102, 6103, 6104, 6105, 6106, 6107, 6108, 6109],
+          "post_interim_stress": [7200, 7201, 7202, 7203, 7204, 7205, 7206, 7207, 7208, 7209],
+          "new_v2_paired": [8300, 8301, 8302, 8303, 8304, 8305, 8306, 8307, 8308, 8309]
+        },
+        "v1_pairing_limitation": "The v1 direct/short cells used 6100-6109 and outcome/contrastive cells used 7200-7209. Those historical cells support tier-specific paired comparisons but not exact-seed direct-to-contrastive pairs.",
+        "v2_pairing_rule": "Every new expansion model uses the same seed integer for all four prompt forms and both directions. Pilot seeds are 8300-8302; expansion seeds are 8300-8309.",
+        "pilot_seed_count": 3,
+        "maximum_steps": 450,
+        "video_mode": "viewport",
+        "success_definition": "Official RoboLab relation-aware task termination: the cube is released inside the requested 45-degree robot-frame goal cone.",
+        "comparison_boundary": "Raw success, progression, endpoint, and failure-stage results may be compared only among models in this arena."
+      },
+      {
+        "id": "robotwin_place_a2b",
+        "display_name": "RoboTwin place-A-relative-to-B",
+        "tasks": {
+          "left": "place_a2b_left",
+          "right": "place_a2b_right"
+        },
+        "environment_seeds": [4300000, 4300001, 4300002],
+        "sampling_seeds": [8400, 8401, 8402],
+        "pilot_seed_count": 3,
+        "video_mode": "simulator_viewport",
+        "success_definition": "The moved object is released inside the requested left or right relation region using one relation-aware checker independent of the native task name.",
+        "comparison_boundary": "Raw success, progression, endpoint, and failure-stage results may be compared only among models in this arena. Existing single-scene retrospective gates are never pooled into v2 rates."
+      }
+    ],
+    "cross_arena_rule": "Never pool DROID and RoboTwin success counts. Cross-arena summaries may show only model-level normalized descriptors with the arena printed on every mark: direction gap, contrastive retention, paired endpoint shift, latency, memory, and future inspectability.",
+    "controller": "One episode-static task prompt. No prompt switching, subtask coach, predicate oracle, simulator-state language generation, or privileged planning component.",
+    "oracle_episode_count": 0,
+    "dynamic_prompt_episode_count": 0
+  },
+  "models": [
+    {
+      "id": "pi05_droid_vla",
+      "display_name": "pi0.5 DROID",
+      "arena": "droid_robolab",
+      "class": "VLA",
+      "world_model_interface": "none",
+      "checkpoint": "gs://openpi-assets-simeval/pi05_droid_jointpos",
+      "v2_role": "existing_v1_reference",
+      "standardized_v2_expansion_required": false
+    },
+    {
+      "id": "pi0_fast_droid_vla",
+      "display_name": "pi0-FAST DROID",
+      "arena": "droid_robolab",
+      "class": "VLA",
+      "world_model_interface": "none",
+      "checkpoint": "gs://openpi-assets-simeval/pi0_fast_droid_jointpos",
+      "v2_role": "new_expansion_model",
+      "standardized_v2_expansion_required": true
+    },
+    {
+      "id": "groot_n17_droid_vla",
+      "display_name": "GR00T N1.7 DROID",
+      "arena": "droid_robolab",
+      "class": "VLA",
+      "world_model_interface": "none",
+      "checkpoint": "nvidia/GR00T-N1.7-DROID",
+      "v2_role": "new_expansion_model",
+      "standardized_v2_expansion_required": true
+    },
+    {
+      "id": "cosmos3_edge_droid_wam",
+      "display_name": "Cosmos3 Edge DROID",
+      "arena": "droid_robolab",
+      "class": "WAM",
+      "world_model_interface": "decoded_future_video_and_actions",
+      "checkpoint": "nvidia/Cosmos3-Edge-Policy-DROID",
+      "v2_role": "existing_v1_reference",
+      "standardized_v2_expansion_required": false
+    },
+    {
+      "id": "lingbot_vla_4b_robotwin",
+      "display_name": "LingBot-VLA 4B",
+      "arena": "robotwin_place_a2b",
+      "class": "VLA",
+      "world_model_interface": "none",
+      "checkpoint": "Robbyant/lingbot-vla-4b-posttrain-robotwin",
+      "v2_role": "new_expansion_model",
+      "standardized_v2_expansion_required": true
+    },
+    {
+      "id": "efficient_wam_rt_robotwin",
+      "display_name": "Efficient-WAM-RT",
+      "arena": "robotwin_place_a2b",
+      "class": "WAM",
+      "world_model_interface": "decoded_coarse_future_video_and_actions",
+      "checkpoint": "jiajun0613/Efficient-WAM_RoboTwin/Efficient-WAM-RT",
+      "v2_role": "new_standardized_grid_from_retrospective_model",
+      "standardized_v2_expansion_required": true
+    },
+    {
+      "id": "fastwam_robotwin",
+      "display_name": "FastWAM",
+      "arena": "robotwin_place_a2b",
+      "class": "WAM",
+      "world_model_interface": "world_model_training_action_only_test_time",
+      "checkpoint": "yuanty/fastwam/robotwin_uncond_3cam_384.pt",
+      "v2_role": "new_standardized_grid_from_retrospective_model",
+      "standardized_v2_expansion_required": true
+    },
+    {
+      "id": "lingbot_va_robotwin",
+      "display_name": "LingBot-VA",
+      "arena": "robotwin_place_a2b",
+      "class": "WAM",
+      "world_model_interface": "joint_video_latent_and_actions_with_decodable_future",
+      "checkpoint": "lerobot/lingbot_va_robotwin",
+      "v2_role": "new_standardized_grid_from_retrospective_model",
+      "standardized_v2_expansion_required": true
+    }
+  ],
+  "prompt_families": [
+    {
+      "id": "direct_command",
+      "legacy_v1_id": "canonical",
+      "reader_label": "Direct command",
+      "left": "Put the {movable} to the left of the {reference}.",
+      "right": "Put the {movable} to the right of the {reference}.",
+      "desired_relation_tokens": 1,
+      "negated_opposite_tokens": 0,
+      "question": "Can the model ground a direct task instruction?",
+      "comparison": "Reference condition."
+    },
+    {
+      "id": "short_command",
+      "legacy_v1_id": "short_paraphrase",
+      "reader_label": "Short command",
+      "left": "Put the object left of the {reference}.",
+      "right": "Put the object right of the {reference}.",
+      "droid_exact_left": "Put the cube left of the bowl.",
+      "droid_exact_right": "Put the cube right of the bowl.",
+      "desired_relation_tokens": 1,
+      "negated_opposite_tokens": 0,
+      "question": "Does grounding survive removed object detail and function words?",
+      "comparison": "Lexical compression versus the direct command."
+    },
+    {
+      "id": "goal_as_outcome",
+      "legacy_v1_id": "declarative_goal",
+      "reader_label": "Goal stated as an outcome",
+      "left": "The {movable} should end up to the left of the {reference}.",
+      "right": "The {movable} should end up to the right of the {reference}.",
+      "desired_relation_tokens": 1,
+      "negated_opposite_tokens": 0,
+      "question": "Does a desired end-state description ground like an imperative?",
+      "comparison": "Speech-act form versus the direct command."
+    },
+    {
+      "id": "desired_plus_negated_opposite",
+      "legacy_v1_id": "contrastive_goal",
+      "reader_label": "Desired side plus negated opposite",
+      "left": "Put the {movable} to the left of the {reference}, not to the right of the {reference}.",
+      "right": "Put the {movable} to the right of the {reference}, not to the left of the {reference}.",
+      "desired_relation_tokens": 1,
+      "negated_opposite_tokens": 1,
+      "question": "Can the model resolve negation and semantic scope when both direction words occur?",
+      "comparison": "Scope-sensitive contrast versus the direct command.",
+      "definition": "Contrastive is coherent, not contradictory: one relation is requested and the other is explicitly rejected."
+    }
+  ],
+  "fixed_observation_order_probe": {
+    "analysis_tier": "supplemental_sensitivity_diagnostic",
+    "target_first_left": "Put the {movable} to the left of the {reference}, not to the right of the {reference}.",
+    "target_last_left": "Do not put the {movable} to the right of the {reference}; put it to the left of the {reference}.",
+    "right_is_mirrored": true,
+    "question": "Does equivalent meaning survive reversal of desired and negated direction-token order?",
+    "claim_limit": "This exact-input probe measures sensitivity and token-order dependence, not closed-loop success."
+  },
+  "hypotheses": [
+    {
+      "id": "H1_mirrored_language_redirects_endpoint",
+      "question": "Holding the reset and seed fixed, does mirroring LEFT to RIGHT move the final object endpoint in the requested physical direction?",
+      "primary_measure": "Paired bowl-relative lateral endpoint shift, reported with every individual pair.",
+      "success_measure": "Paired requested-relation binary outcome table as a secondary task-level measure.",
+      "claim_limit": "A nonzero action distance alone does not support this hypothesis."
+    },
+    {
+      "id": "H2_wording_robustness",
+      "question": "Does a model retain direct-command grounding under lexical compression, declarative goal phrasing, and scope-sensitive negation?",
+      "primary_measure": "Within-model retention and exact paired outcome discordance versus direct command.",
+      "claim_limit": "Retention is undefined when direct-command base competence is zero; those cells are reported as base-competence failures."
+    },
+    {
+      "id": "H3_directional_symmetry",
+      "question": "Is steerability symmetric between robot LEFT and RIGHT?",
+      "primary_measure": "LEFT-minus-RIGHT success gap and paired signed endpoint magnitudes for every prompt form.",
+      "claim_limit": "A direction gap is reported as checkpoint-and-arena-specific bias, not as a VLA or WAM class property."
+    },
+    {
+      "id": "H4_imagination_execution_agreement",
+      "question": "When a WAM exposes a decodable future, does its imagined relation agree with the subsequently executed relation over the same horizon?",
+      "primary_measure": "Prompt-blind imagination/execution quadrants with semantic-scorer coverage and abstention counts.",
+      "claim_limit": "Agreement is descriptive and horizon-conditional; it does not establish that the imagined future caused the executed action."
+    }
+  ],
+  "pilot": {
+    "new_model_count": 6,
+    "prompt_family_count": 4,
+    "direction_count": 2,
+    "seeds_per_cell": 3,
+    "expected_episode_count": 144,
+    "formula": "6 new models * 4 prompt families * 2 directions * 3 paired seeds",
+    "record_every_episode": true,
+    "retain_every_valid_failure": true,
+    "storage_budget_gib": 25,
+    "stopping_and_expansion_gate": {
+      "technical_invalid": "Preserve logs, repair setup, and rerun only the exact invalid cell. Never count infrastructure failure as model failure.",
+      "canonical_success_both_directions": "Expand the model to the frozen ten-seed four-prompt grid. Lack of language sensitivity is not an exclusion criterion.",
+      "canonical_success_one_direction_only": "Run a ten-seed direct-command directional-bias confirmation; do not spend the full wording grid until base competence exists in both directions.",
+      "zero_canonical_success": "Publish the six direct-command attempts as a base-competence failure and stop expansion for this arena/task. Do not relabel it as a language-steerability failure."
+    }
+  },
+  "metrics": {
+    "primary_within_arena": [
+      "binary requested-relation success with numerator and denominator",
+      "paper-style persistent pickup plus released requested placement progression",
+      "paired same-seed left/right endpoint displacement",
+      "failure-stage counts from interaction through release"
+    ],
+    "language_robustness": [
+      "short-command retention versus direct command",
+      "goal-as-outcome retention versus direct command",
+      "contrastive retention versus direct command",
+      "direction gap reported separately for every prompt family",
+      "exact paired discordances with no uncorrected p-value presented as confirmatory"
+    ],
+    "wam_only_when_interface_supports_it": [
+      "prompt-blind imagined requested-relation label",
+      "executed requested-relation label over the corresponding horizon",
+      "imagination/execution quadrant counts",
+      "semantic scorer coverage and explicit abstentions"
+    ],
+    "operational": [
+      "warm and cold policy latency",
+      "GPU memory and simulator memory",
+      "checkpoint and auxiliary-asset bytes",
+      "setup failures, thermal pauses, and media bytes"
+    ]
+  },
+  "known_outcomes_before_freeze": [
+    "All 160 v1 pi0.5 and Cosmos DROID direct-language outcomes and their compiled figures.",
+    "Retrospective single-scene or small-grid Efficient-WAM, FastWAM, and LingBot-VA left/right outcomes.",
+    "No standardized v2 four-prompt pilot outcome for any of the six expansion models.",
+    "No GR00T N1.7 DROID, pi0-FAST DROID, or LingBot-VLA RoboTwin result under this protocol."
+  ],
+  "second_wave_candidates": [
+    {
+      "id": "lawam",
+      "reason": "Local base and latent-action assets exist, but the released task policy checkpoint is incomplete."
+    },
+    {
+      "id": "light_wam",
+      "reason": "Promising low-cost WAM, but no local integration or checkpoint audit exists yet."
+    },
+    {
+      "id": "pi0_droid",
+      "reason": "Useful family ablation, deferred behind pi0-FAST and GR00T to control the first expansion cost."
+    },
+    {
+      "id": "dreamzero_droid",
+      "reason": "Policy serving plus the simulator does not fit the current two-3090 local allocation without a new execution design."
+    }
+  ],
+  "claim_boundary": "This is a multi-checkpoint, two-arena case study. Within-arena matched comparisons are valid for the tested checkpoints, prompts, seeds, scenes, action interfaces, and success predicates. The study does not estimate a universal VLA-versus-WAM class effect, and raw success counts are never compared or pooled across DROID and RoboTwin."
+}

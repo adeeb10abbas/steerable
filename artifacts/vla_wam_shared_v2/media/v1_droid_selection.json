@@ -1,0 +1,367 @@
+{
+  "media_plan_path": "artifacts/vla_wam_shared_v2/media_selection_plan.json",
+  "media_plan_sha256": "9c9368013845314a2402d64bfa4f59ce4625f0802cb2ddc1b810842a839bbb17",
+  "missing_role_count": 2,
+  "prompt_order": [
+    "canonical",
+    "short_paraphrase",
+    "declarative_goal",
+    "contrastive_goal"
+  ],
+  "replay_queue": [
+    {
+      "arena": "droid_robolab",
+      "binary_success": false,
+      "condition_id": "pi05_canonical_static15",
+      "direction": "left",
+      "endpoint_class": "neutral_region",
+      "episode_key": "pi05_droid_vla__canonical__left__seed-6100",
+      "episode_seed": 6100,
+      "final_cube_minus_bowl_robot_y_m": 0.0004633665084838867,
+      "hdf5_path": "/home/ali/projects/RoboLab/output/v1_pi05_canonical/RubiksCubeLeftOfBowlMatchedTask/run_0.hdf5",
+      "instruction": "Put the rubiks cube to the left of the bowl",
+      "log_path": "/home/ali/projects/RoboLab/output/v1_pi05_canonical/RubiksCubeLeftOfBowlMatchedTask/log_0_env0.json",
+      "model_class": "VLA",
+      "model_id": "pi05_droid_vla",
+      "outcome_stage": "picked_never_entered_goal",
+      "outcome_stage_label": "picked \u00b7 never entered goal",
+      "requested_signed_final_offset_m": 0.0004633665084838867,
+      "run": 0,
+      "selection_roles": [
+        "first_post_pick_placement_failure"
+      ],
+      "source_video_status": "needs_validated_replay",
+      "trajectory_figure_path": "artifacts/vla_wam_shared_v1/trajectory_evidence/episodes/pi05_droid_vla__canonical__left__seed-6100__failure.png",
+      "wording": "canonical"
+    },
+    {
+      "arena": "droid_robolab",
+      "binary_success": true,
+      "condition_id": "pi05_canonical_static15",
+      "direction": "right",
+      "endpoint_class": "requested_region",
+      "episode_key": "pi05_droid_vla__canonical__right__seed-6101",
+      "episode_seed": 6101,
+      "final_cube_minus_bowl_robot_y_m": -0.05105241760611534,
+      "hdf5_path": "/home/ali/projects/RoboLab/output/v1_pi05_canonical/RubiksCubeRightOfBowlMatchedTask/run_1.hdf5",
+      "instruction": "Put the rubiks cube to the right of the bowl",
+      "log_path": "/home/ali/projects/RoboLab/output/v1_pi05_canonical/RubiksCubeRightOfBowlMatchedTask/log_1_env0.json",
+      "model_class": "VLA",
+      "model_id": "pi05_droid_vla",
+      "outcome_stage": "success",
+      "outcome_stage_label": "success",
+      "requested_signed_final_offset_m": 0.05105241760611534,
+      "run": 1,
+      "selection_roles": [
+        "first_success_right"
+      ],
+      "source_video_status": "needs_validated_replay",
+      "trajectory_figure_path": "artifacts/vla_wam_shared_v1/trajectory_evidence/episodes/pi05_droid_vla__canonical__right__seed-6101__success.png",
+      "wording": "canonical"
+    },
+    {
+      "arena": "droid_robolab",
+      "binary_success": true,
+      "condition_id": "pi05_short_static15",
+      "direction": "left",
+      "endpoint_class": "requested_region",
+      "episode_key": "pi05_droid_vla__short_paraphrase__left__seed-6109",
+      "episode_seed": 6109,
+      "final_cube_minus_bowl_robot_y_m": 0.12398915737867355,
+      "hdf5_path": "/home/ali/projects/RoboLab/output/v1_pi05_vague/RubiksCubeLeftOfBowlMatchedTask/run_9.hdf5",
+      "instruction": "Put the cube left of the bowl",
+      "log_path": "/home/ali/projects/RoboLab/output/v1_pi05_vague/RubiksCubeLeftOfBowlMatchedTask/log_9_env0.json",
+      "model_class": "VLA",
+      "model_id": "pi05_droid_vla",
+      "outcome_stage": "success",
+      "outcome_stage_label": "success",
+      "requested_signed_final_offset_m": 0.12398915737867355,
+      "run": 9,
+      "selection_roles": [
+        "first_success_left"
+      ],
+      "source_video_status": "needs_validated_replay",
+      "trajectory_figure_path": "artifacts/vla_wam_shared_v1/trajectory_evidence/episodes/pi05_droid_vla__short_paraphrase__left__seed-6109__success.png",
+      "wording": "short_paraphrase"
+    },
+    {
+      "arena": "droid_robolab",
+      "binary_success": true,
+      "condition_id": "cosmos_canonical_static32",
+      "direction": "left",
+      "endpoint_class": "requested_region",
+      "episode_key": "cosmos3_edge_droid_wam__canonical__left__seed-6100",
+      "episode_seed": 6100,
+      "final_cube_minus_bowl_robot_y_m": 0.14841192960739136,
+      "hdf5_path": "/home/ali/projects/RoboLab/output/v1_cosmos_canonical/RubiksCubeLeftOfBowlMatchedTask/run_0.hdf5",
+      "instruction": "Put the rubiks cube to the left of the bowl",
+      "log_path": "/home/ali/projects/RoboLab/output/v1_cosmos_canonical/RubiksCubeLeftOfBowlMatchedTask/log_0_env0.json",
+      "model_class": "WAM",
+      "model_id": "cosmos3_edge_droid_wam",
+      "outcome_stage": "success",
+      "outcome_stage_label": "success",
+      "requested_signed_final_offset_m": 0.14841192960739136,
+      "run": 0,
+      "selection_roles": [
+        "first_success_left"
+      ],
+      "source_video_status": "needs_validated_replay",
+      "trajectory_figure_path": "artifacts/vla_wam_shared_v1/trajectory_evidence/episodes/cosmos3_edge_droid_wam__canonical__left__seed-6100__success.png",
+      "wording": "canonical"
+    },
+    {
+      "arena": "droid_robolab",
+      "binary_success": false,
+      "condition_id": "cosmos_canonical_static32",
+      "direction": "left",
+      "endpoint_class": "opposite_region",
+      "episode_key": "cosmos3_edge_droid_wam__canonical__left__seed-6102",
+      "episode_seed": 6102,
+      "final_cube_minus_bowl_robot_y_m": -0.02037990838289261,
+      "hdf5_path": "/home/ali/projects/RoboLab/output/v1_cosmos_canonical/RubiksCubeLeftOfBowlMatchedTask/run_2.hdf5",
+      "instruction": "Put the rubiks cube to the left of the bowl",
+      "log_path": "/home/ali/projects/RoboLab/output/v1_cosmos_canonical/RubiksCubeLeftOfBowlMatchedTask/log_2_env0.json",
+      "model_class": "WAM",
+      "model_id": "cosmos3_edge_droid_wam",
+      "outcome_stage": "picked_never_entered_goal",
+      "outcome_stage_label": "picked \u00b7 never entered goal",
+      "requested_signed_final_offset_m": -0.02037990838289261,
+      "run": 2,
+      "selection_roles": [
+        "first_post_pick_placement_failure"
+      ],
+      "source_video_status": "needs_validated_replay",
+      "trajectory_figure_path": "artifacts/vla_wam_shared_v1/trajectory_evidence/episodes/cosmos3_edge_droid_wam__canonical__left__seed-6102__failure.png",
+      "wording": "canonical"
+    },
+    {
+      "arena": "droid_robolab",
+      "binary_success": true,
+      "condition_id": "cosmos_canonical_static32",
+      "direction": "right",
+      "endpoint_class": "requested_region",
+      "episode_key": "cosmos3_edge_droid_wam__canonical__right__seed-6100",
+      "episode_seed": 6100,
+      "final_cube_minus_bowl_robot_y_m": -0.181039746850729,
+      "hdf5_path": "/home/ali/projects/RoboLab/output/v1_cosmos_canonical/RubiksCubeRightOfBowlMatchedTask/run_0.hdf5",
+      "instruction": "Put the rubiks cube to the right of the bowl",
+      "log_path": "/home/ali/projects/RoboLab/output/v1_cosmos_canonical/RubiksCubeRightOfBowlMatchedTask/log_0_env0.json",
+      "model_class": "WAM",
+      "model_id": "cosmos3_edge_droid_wam",
+      "outcome_stage": "success",
+      "outcome_stage_label": "success",
+      "requested_signed_final_offset_m": 0.181039746850729,
+      "run": 0,
+      "selection_roles": [
+        "first_success_right"
+      ],
+      "source_video_status": "needs_validated_replay",
+      "trajectory_figure_path": "artifacts/vla_wam_shared_v1/trajectory_evidence/episodes/cosmos3_edge_droid_wam__canonical__right__seed-6100__success.png",
+      "wording": "canonical"
+    }
+  ],
+  "schema_version": "1.0.0",
+  "selected_role_count": 6,
+  "selection_tier": "retrospective_deterministic",
+  "selections": [
+    {
+      "episodes": [
+        {
+          "arena": "droid_robolab",
+          "binary_success": true,
+          "condition_id": "pi05_short_static15",
+          "direction": "left",
+          "endpoint_class": "requested_region",
+          "episode_key": "pi05_droid_vla__short_paraphrase__left__seed-6109",
+          "episode_seed": 6109,
+          "final_cube_minus_bowl_robot_y_m": 0.12398915737867355,
+          "hdf5_path": "/home/ali/projects/RoboLab/output/v1_pi05_vague/RubiksCubeLeftOfBowlMatchedTask/run_9.hdf5",
+          "instruction": "Put the cube left of the bowl",
+          "log_path": "/home/ali/projects/RoboLab/output/v1_pi05_vague/RubiksCubeLeftOfBowlMatchedTask/log_9_env0.json",
+          "model_class": "VLA",
+          "model_id": "pi05_droid_vla",
+          "outcome_stage": "success",
+          "outcome_stage_label": "success",
+          "requested_signed_final_offset_m": 0.12398915737867355,
+          "run": 9,
+          "source_video_status": "needs_validated_replay",
+          "trajectory_figure_path": "artifacts/vla_wam_shared_v1/trajectory_evidence/episodes/pi05_droid_vla__short_paraphrase__left__seed-6109__success.png",
+          "wording": "short_paraphrase"
+        }
+      ],
+      "model_id": "pi05_droid_vla",
+      "reason": "First valid success in frozen prompt order, then ascending seed.",
+      "role": "first_success_left",
+      "status": "selected"
+    },
+    {
+      "episodes": [
+        {
+          "arena": "droid_robolab",
+          "binary_success": true,
+          "condition_id": "pi05_canonical_static15",
+          "direction": "right",
+          "endpoint_class": "requested_region",
+          "episode_key": "pi05_droid_vla__canonical__right__seed-6101",
+          "episode_seed": 6101,
+          "final_cube_minus_bowl_robot_y_m": -0.05105241760611534,
+          "hdf5_path": "/home/ali/projects/RoboLab/output/v1_pi05_canonical/RubiksCubeRightOfBowlMatchedTask/run_1.hdf5",
+          "instruction": "Put the rubiks cube to the right of the bowl",
+          "log_path": "/home/ali/projects/RoboLab/output/v1_pi05_canonical/RubiksCubeRightOfBowlMatchedTask/log_1_env0.json",
+          "model_class": "VLA",
+          "model_id": "pi05_droid_vla",
+          "outcome_stage": "success",
+          "outcome_stage_label": "success",
+          "requested_signed_final_offset_m": 0.05105241760611534,
+          "run": 1,
+          "source_video_status": "needs_validated_replay",
+          "trajectory_figure_path": "artifacts/vla_wam_shared_v1/trajectory_evidence/episodes/pi05_droid_vla__canonical__right__seed-6101__success.png",
+          "wording": "canonical"
+        }
+      ],
+      "model_id": "pi05_droid_vla",
+      "reason": "First valid success in frozen prompt order, then ascending seed.",
+      "role": "first_success_right",
+      "status": "selected"
+    },
+    {
+      "episodes": [
+        {
+          "arena": "droid_robolab",
+          "binary_success": false,
+          "condition_id": "pi05_canonical_static15",
+          "direction": "left",
+          "endpoint_class": "neutral_region",
+          "episode_key": "pi05_droid_vla__canonical__left__seed-6100",
+          "episode_seed": 6100,
+          "final_cube_minus_bowl_robot_y_m": 0.0004633665084838867,
+          "hdf5_path": "/home/ali/projects/RoboLab/output/v1_pi05_canonical/RubiksCubeLeftOfBowlMatchedTask/run_0.hdf5",
+          "instruction": "Put the rubiks cube to the left of the bowl",
+          "log_path": "/home/ali/projects/RoboLab/output/v1_pi05_canonical/RubiksCubeLeftOfBowlMatchedTask/log_0_env0.json",
+          "model_class": "VLA",
+          "model_id": "pi05_droid_vla",
+          "outcome_stage": "picked_never_entered_goal",
+          "outcome_stage_label": "picked \u00b7 never entered goal",
+          "requested_signed_final_offset_m": 0.0004633665084838867,
+          "run": 0,
+          "source_video_status": "needs_validated_replay",
+          "trajectory_figure_path": "artifacts/vla_wam_shared_v1/trajectory_evidence/episodes/pi05_droid_vla__canonical__left__seed-6100__failure.png",
+          "wording": "canonical"
+        }
+      ],
+      "model_id": "pi05_droid_vla",
+      "reason": "First pickup-without-requested-placement failure in frozen prompt, seed, and direction order.",
+      "role": "first_post_pick_placement_failure",
+      "status": "selected"
+    },
+    {
+      "episodes": [],
+      "model_id": "pi05_droid_vla",
+      "reason": "v1 has no exact-seed direct/contrastive pair: direct used 6100-6109 while contrastive used 7200-7209.",
+      "role": "first_direct_to_contrastive_reversal",
+      "status": "no_qualifying_example"
+    },
+    {
+      "episodes": [
+        {
+          "arena": "droid_robolab",
+          "binary_success": true,
+          "condition_id": "cosmos_canonical_static32",
+          "direction": "left",
+          "endpoint_class": "requested_region",
+          "episode_key": "cosmos3_edge_droid_wam__canonical__left__seed-6100",
+          "episode_seed": 6100,
+          "final_cube_minus_bowl_robot_y_m": 0.14841192960739136,
+          "hdf5_path": "/home/ali/projects/RoboLab/output/v1_cosmos_canonical/RubiksCubeLeftOfBowlMatchedTask/run_0.hdf5",
+          "instruction": "Put the rubiks cube to the left of the bowl",
+          "log_path": "/home/ali/projects/RoboLab/output/v1_cosmos_canonical/RubiksCubeLeftOfBowlMatchedTask/log_0_env0.json",
+          "model_class": "WAM",
+          "model_id": "cosmos3_edge_droid_wam",
+          "outcome_stage": "success",
+          "outcome_stage_label": "success",
+          "requested_signed_final_offset_m": 0.14841192960739136,
+          "run": 0,
+          "source_video_status": "needs_validated_replay",
+          "trajectory_figure_path": "artifacts/vla_wam_shared_v1/trajectory_evidence/episodes/cosmos3_edge_droid_wam__canonical__left__seed-6100__success.png",
+          "wording": "canonical"
+        }
+      ],
+      "model_id": "cosmos3_edge_droid_wam",
+      "reason": "First valid success in frozen prompt order, then ascending seed.",
+      "role": "first_success_left",
+      "status": "selected"
+    },
+    {
+      "episodes": [
+        {
+          "arena": "droid_robolab",
+          "binary_success": true,
+          "condition_id": "cosmos_canonical_static32",
+          "direction": "right",
+          "endpoint_class": "requested_region",
+          "episode_key": "cosmos3_edge_droid_wam__canonical__right__seed-6100",
+          "episode_seed": 6100,
+          "final_cube_minus_bowl_robot_y_m": -0.181039746850729,
+          "hdf5_path": "/home/ali/projects/RoboLab/output/v1_cosmos_canonical/RubiksCubeRightOfBowlMatchedTask/run_0.hdf5",
+          "instruction": "Put the rubiks cube to the right of the bowl",
+          "log_path": "/home/ali/projects/RoboLab/output/v1_cosmos_canonical/RubiksCubeRightOfBowlMatchedTask/log_0_env0.json",
+          "model_class": "WAM",
+          "model_id": "cosmos3_edge_droid_wam",
+          "outcome_stage": "success",
+          "outcome_stage_label": "success",
+          "requested_signed_final_offset_m": 0.181039746850729,
+          "run": 0,
+          "source_video_status": "needs_validated_replay",
+          "trajectory_figure_path": "artifacts/vla_wam_shared_v1/trajectory_evidence/episodes/cosmos3_edge_droid_wam__canonical__right__seed-6100__success.png",
+          "wording": "canonical"
+        }
+      ],
+      "model_id": "cosmos3_edge_droid_wam",
+      "reason": "First valid success in frozen prompt order, then ascending seed.",
+      "role": "first_success_right",
+      "status": "selected"
+    },
+    {
+      "episodes": [
+        {
+          "arena": "droid_robolab",
+          "binary_success": false,
+          "condition_id": "cosmos_canonical_static32",
+          "direction": "left",
+          "endpoint_class": "opposite_region",
+          "episode_key": "cosmos3_edge_droid_wam__canonical__left__seed-6102",
+          "episode_seed": 6102,
+          "final_cube_minus_bowl_robot_y_m": -0.02037990838289261,
+          "hdf5_path": "/home/ali/projects/RoboLab/output/v1_cosmos_canonical/RubiksCubeLeftOfBowlMatchedTask/run_2.hdf5",
+          "instruction": "Put the rubiks cube to the left of the bowl",
+          "log_path": "/home/ali/projects/RoboLab/output/v1_cosmos_canonical/RubiksCubeLeftOfBowlMatchedTask/log_2_env0.json",
+          "model_class": "WAM",
+          "model_id": "cosmos3_edge_droid_wam",
+          "outcome_stage": "picked_never_entered_goal",
+          "outcome_stage_label": "picked \u00b7 never entered goal",
+          "requested_signed_final_offset_m": -0.02037990838289261,
+          "run": 2,
+          "source_video_status": "needs_validated_replay",
+          "trajectory_figure_path": "artifacts/vla_wam_shared_v1/trajectory_evidence/episodes/cosmos3_edge_droid_wam__canonical__left__seed-6102__failure.png",
+          "wording": "canonical"
+        }
+      ],
+      "model_id": "cosmos3_edge_droid_wam",
+      "reason": "First pickup-without-requested-placement failure in frozen prompt, seed, and direction order.",
+      "role": "first_post_pick_placement_failure",
+      "status": "selected"
+    },
+    {
+      "episodes": [],
+      "model_id": "cosmos3_edge_droid_wam",
+      "reason": "v1 has no exact-seed direct/contrastive pair: direct used 6100-6109 while contrastive used 7200-7209.",
+      "role": "first_direct_to_contrastive_reversal",
+      "status": "no_qualifying_example"
+    }
+  ],
+  "source_episode_count": 160,
+  "source_path": "artifacts/vla_wam_shared_v1/trajectory_evidence/trajectory_index.csv",
+  "source_sha256": "aea44d8b53a252024db0414a82ce8b9b94e654eff9cf53fa8871a8f27d953787",
+  "status": "selected_from_complete_v1_population",
+  "unique_episode_replay_count": 6
+}

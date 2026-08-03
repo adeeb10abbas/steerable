@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0.0",
+  "plan_id": "vla_wam_language_steerability_v2_media",
+  "status": "frozen_before_any_standardized_v2_expansion_inference",
+  "frozen_at_utc": "2026-08-03T01:19:36Z",
+  "protocol": "artifacts/vla_wam_shared_v2/protocol.json",
+  "purpose": "Make exact prompts, expected goal regions, complete robot behavior, endpoints, successes, and failure stages visible without a success-montage selection bias.",
+  "recording": {
+    "future_pilots": "Record a viewport video for every valid pilot episode. Preserve WAM future videos or latents separately when the released inference interface exposes them.",
+    "existing_droid_v1": "Select source episodes deterministically from the complete 160-episode trajectory index, replay their saved HDF5 actions with recorded environment configuration, and validate the replay against the original endpoint and outcome before publication.",
+    "replay_failure": "If replay changes the requested relation, binary result, failure stage, or final bowl-relative lateral displacement by more than 0.02 m, reject the replay and rerun the exact policy, prompt, and seed with viewport recording enabled.",
+    "raw_media_git_policy": "Do not commit unbounded raw MP4 collections. Commit selection manifests, hashes, posters, compact publication clips, and the reproducible renderer."
+  },
+  "prospective_selection_roles_per_model": [
+    {
+      "id": "first_success_left",
+      "rule": "Lowest pilot seed with a valid LEFT success, ordered by direct, short, outcome, then contrastive prompt."
+    },
+    {
+      "id": "first_success_right",
+      "rule": "Lowest pilot seed with a valid RIGHT success, ordered by direct, short, outcome, then contrastive prompt."
+    },
+    {
+      "id": "first_post_pick_placement_failure",
+      "rule": "Lowest pilot seed whose last verified stage is pickup without entering the requested goal, using protocol prompt order then LEFT before RIGHT."
+    },
+    {
+      "id": "first_direct_to_contrastive_reversal",
+      "rule": "Lowest paired seed and LEFT-before-RIGHT direction where direct and contrastive prompts have discordant binary outcomes; retain both episodes."
+    }
+  ],
+  "missing_category_policy": "Render an explicit no-qualifying-example record rather than substituting a hand-picked clip.",
+  "existing_v1_timing_disclosure": "All v1 outcomes were known when this deterministic retrospective selection rule was frozen. The complete 160-episode gallery remains the evidence-bearing population.",
+  "clip_storyboard": [
+    "0-2 s: model, arena, exact prompt, requested relation, and expected goal-region diagram",
+    "full rollout: viewport video with requested region and actual object path overlay",
+    "end card: final endpoint, binary result, and last verified progress stage",
+    "WAM optional: synchronized generated future versus the subsequently executed horizon, labeled as horizon-level rather than full-episode prediction"
+  ],
+  "exports": {
+    "article_and_x": "H.264 yuv420p MP4, 16:9, 20-35 seconds where the full episode permits",
+    "linkedin": "Square H.264 MP4 or carousel poster",
+    "accessibility": "Burned-in prompt and outcome text, separate VTT captions, poster alt text, and no color-only success encoding",
+    "gallery": "Filterable local HTML backed by JSON and CSV media indexes"
+  }
+}

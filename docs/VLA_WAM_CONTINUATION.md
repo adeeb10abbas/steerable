@@ -217,22 +217,24 @@ Sequence:
 <a id="experiment-4-groot-n17-droid-onboarding"></a>
 ## Experiment 4 — GR00T N1.7 DROID onboarding
 
-Priority: fourth. Status: blocked on gated assets. The RoboLab client exists,
-but the DROID checkpoint and `nvidia/Cosmos-Reason2-2B` dependency are absent.
-Use the no-weight-download preflight in
+Priority: fourth. Status: onboarding assets and server smoke complete; the
+frozen direct-command pilot remains unrun. The official `Isaac-GR00T` checkout
+is pinned at `b9955401d50c92a29258732e3ad6ccd579f1bdc0`; local model
+directories contain `nvidia/GR00T-N1.7-DROID` at
+`05e7cc97e40dbd33b0890c35cc0214fcb0547ab5`, `nvidia/GR00T-N1.7-3B` at
+`2fc962b973bccdd5d8ce4f67cc63b264d6886495`, and
+`nvidia/Cosmos-Reason2-2B` at `9ce19a195e423419c349abfc86fd07178b230561`.
+The local DROID checkpoint loaded on GPU 0, bound `127.0.0.1:5555`, answered a
+health ping, and was shut down cleanly. Use the no-weight-download preflight in
 [`experiments/groot_droid/README.md`](../experiments/groot_droid/README.md)
-before installing anything.
+before launching a future server.
 
 Sequence:
 
-1. Verify Hugging Face access without changing study files.
-2. Install the server in an isolated Python 3.12 repository/environment and pin commits.
-3. Download `nvidia/GR00T-N1.7-DROID` plus required assets; record revisions and
-   exact byte counts.
-4. Run a one-observation server/client contract smoke.
-5. Run an exact-repeat language probe using the frozen v2 prompt bytes.
-6. Run only the six DROID direct-command cells at seeds 8300–8302.
-7. Apply the same competence gate; never infer unsteerability from setup failure.
+1. Run an exact-repeat language probe using the frozen v2 prompt bytes.
+2. Run only the six DROID direct-command cells at seeds 8300–8302, recording
+   viewport video for every cell.
+3. Apply the same competence gate; never infer unsteerability from setup failure.
 
 ## Wording grid—conditional, not currently runnable
 

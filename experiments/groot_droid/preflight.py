@@ -145,7 +145,7 @@ def main() -> int:
     _result(
         "ready_for_server_contract_smoke",
         detail=(
-            "Python 3.11, gated Cosmos access, and the official server entrypoint are present. "
+            "Python 3.12, gated Cosmos access, and the official server entrypoint are present. "
             "No policy was loaded by this preflight."
         ),
         server_script=str(server_script),

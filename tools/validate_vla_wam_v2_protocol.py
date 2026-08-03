@@ -825,11 +825,16 @@ def validate(workspace: Path) -> dict[str, Any]:
         "continuation queue preserves the four authorized or blocked next experiments",
         checks,
     )
+    groot_readiness = continuation_state.get("groot_n17_readiness", {})
     require(
         queue[0]["status"] == queue[1]["status"] == "ready"
         and queue[2]["status"].startswith("blocked_")
-        and queue[3]["status"].startswith("blocked_"),
-        "continuation state distinguishes runnable experiments from asset blockers",
+        and queue[3]["status"] == "ready_for_frozen_probe_and_direct_gate"
+        and groot_readiness.get("status")
+        == "assets_downloaded_and_server_contract_smoke_complete"
+        and groot_readiness.get("server_smoke", {}).get("health_ping") is True
+        and groot_readiness.get("server_smoke", {}).get("simulator_episode_started") is False,
+        "continuation state distinguishes remaining blockers from GR00T readiness evidence",
         checks,
     )
     for relative_doc in continuation_state["authoritative_docs"]:

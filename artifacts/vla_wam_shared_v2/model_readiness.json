@@ -62,12 +62,17 @@
     },
     {
       "id": "groot_n17_droid_vla",
-      "status": "client_present_server_and_gated_assets_missing",
+      "status": "assets_downloaded_server_contract_smoke_complete",
       "policy_adapter": "/home/ali/projects/RoboLab/policies/gr00t",
-      "checkpoint_status": "not_present",
+      "checkpoint_status": "present",
       "checkpoint_uri": "nvidia/GR00T-N1.7-DROID",
-      "known_external_dependency": "nvidia/Cosmos-Reason2-2B access",
-      "next_gate": "audit Hugging Face access, install the server outside the study repo, and run a one-observation contract smoke before simulator episodes"
+      "checkpoint_path": "/home/ali/models/GR00T-N1.7-DROID",
+      "checkpoint_revision": "05e7cc97e40dbd33b0890c35cc0214fcb0547ab5",
+      "backbone_uri": "nvidia/Cosmos-Reason2-2B",
+      "backbone_path": "/home/ali/models/Cosmos-Reason2-2B",
+      "backbone_revision": "9ce19a195e423419c349abfc86fd07178b230561",
+      "server_contract_smoke": "loaded local checkpoint on GPU 0, listened on 127.0.0.1:5555, returned health ping, then stopped cleanly without a simulator episode",
+      "next_gate": "run the frozen exact-repeat language probe, then six direct-command DROID cells at seeds 8300-8302 with viewport video"
     },
     {
       "id": "cosmos3_edge_droid_wam",

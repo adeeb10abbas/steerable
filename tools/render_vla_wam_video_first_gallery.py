@@ -204,7 +204,11 @@ def render_html(manifest: dict[str, Any], entries: list[dict[str, Any]], dreamze
             f'<div class="grid">{cards}</div></section>'
         )
 
-    missing = "".join(missing_card(item) for item in manifest["missing_publication_media"])
+    missing_items = [
+        item for item in manifest["missing_publication_media"]
+        if not (dreamzero_present and item["model_id"] == "dreamzero_droid")
+    ]
+    missing = "".join(missing_card(item) for item in missing_items)
     manifest_digest = sha256(DEFAULT_MANIFEST)
     return f"""<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -264,6 +268,8 @@ def render_markdown(manifest: dict[str, Any], entries: list[dict[str, Any]], dre
             lines.append("")
     lines.extend(["## Missing publication media", ""])
     for item in manifest["missing_publication_media"]:
+        if dreamzero_present and item["model_id"] == "dreamzero_droid":
+            continue
         lines.append(f"- **{item['model_id']} — {item['status']}:** {item['reason']}")
     lines.extend([
         "",

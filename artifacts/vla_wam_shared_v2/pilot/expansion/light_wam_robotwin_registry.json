@@ -74,8 +74,8 @@
   },
   "adapter_contract": {
     "runner_path": "experiments/light_wam_robotwin/v2_direct_gate.py",
-    "runner_bytes": 21588,
-    "runner_sha256": "09a503955f69e7b4b7dcd5acf74540b68700515fa691b114f0bf38e88c1a14d2",
+    "runner_bytes": 21634,
+    "runner_sha256": "b35d3975b31e158064b76be2acf331be79ad10c592f10c9b3d8c0c18afdaa9df",
     "pair_invocation_contract": "Use --pair-id so every guarded episodes invocation contains exactly one matched LEFT/RIGHT scene pair.",
     "official_deploy_path": "experiments/robotwin/lightwam_policy/deploy_policy.py",
     "official_deploy_sha256": "6194d0170de29aa3c102dc9e34019ad0fce3814b4ee413e46b0ef79f417da05d",
@@ -114,6 +114,9 @@
     "curobo_build_contract": "editable isolated build against torch 2.7.1+cu128 for sm_80; no shared binary extensions",
     "cuda_compiler": "/data/users/ali/vla_wam/envs/cuda-12.8-toolkit/bin/nvcc",
     "cuda_nvcc_headers": "nvidia-cuda-nvcc-cu12==12.8.93",
+    "ffmpeg_binary": "/data/users/ali/vla_wam/envs/light-wam-b200/lib/python3.10/site-packages/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v7.0.2",
+    "ffmpeg_binary_bytes": 79826272,
+    "ffmpeg_binary_sha256": "e7e7fb30477f717e6f55f9180a70386c62677ef8a4d4d1a5d948f4098aa3eb99",
     "planner_import_preflight": "pass",
     "dependency_check": "pass",
     "vulkan_and_simulator_rendering": "pass"
@@ -160,6 +163,19 @@
       "model_action_request_consumed": false,
       "denominator_policy": "infrastructure invalid; outside every model denominator",
       "resolution": "Build CuRobo commit d64c4b005459db10c5dd867d8b30a87d5bda9bdb in the isolated Light-WAM Torch 2.7.1 environment and use only that source and its extensions. The post-build planner import preflight passed."
+    }
+  ],
+  "behavioral_setup_events": [
+    {
+      "event": "pair00_and_pair01_video_encoder_missing_before_first_model_action",
+      "affected_pair_ids": ["robotwin_pair_00", "robotwin_pair_01"],
+      "affected_cell_count": 4,
+      "reason": "Both guarded workers reached an initial simulator frame, then each LEFT and RIGHT cell stopped before its first policy action because ffmpeg was absent from the base pod PATH.",
+      "behavioral_episode_consumed": false,
+      "model_action_request_consumed": false,
+      "denominator_policy": "infrastructure invalid; outside every model denominator",
+      "preservation_root": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/invalid_setup/ffmpeg_missing",
+      "resolution": "Use the exact hashed imageio-ffmpeg binary through VLA_WAM_FFMPEG and rerun only the affected cells."
     }
   ],
   "fixed_observation_gate": {

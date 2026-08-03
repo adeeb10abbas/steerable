@@ -207,7 +207,8 @@ def open_video_writer(path: Path, frame: np.ndarray) -> subprocess.Popen:
     height, width = frame.shape[:2]
     process = subprocess.Popen(
         [
-            "ffmpeg", "-y", "-loglevel", "error", "-f", "rawvideo",
+            os.environ.get("VLA_WAM_FFMPEG", "ffmpeg"),
+            "-y", "-loglevel", "error", "-f", "rawvideo",
             "-pixel_format", "rgb24", "-video_size", f"{width}x{height}",
             "-framerate", "10", "-i", "-", "-pix_fmt", "yuv420p",
             "-vcodec", "libx264", "-crf", "23", str(path),

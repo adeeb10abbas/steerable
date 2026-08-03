@@ -1,0 +1,70 @@
+{
+  "schema_version": "vla-wam-shared-v2-action-trace-instrumentation-amendment-v1",
+  "study_id": "vla_wam_language_steerability_v2",
+  "status": "frozen_before_any_pair03_pair09_wam_inference",
+  "recorded_at_utc": "2026-08-03T12:22:40Z",
+  "directional_expansion_registry": "artifacts/vla_wam_shared_v2/pilot/directional_expansion.json",
+  "new_directional_confirmation_episodes_completed_before_amendment": 0,
+  "reason": "The frozen analysis requests paired action divergence, but the released local RoboTwin runners did not retain the exact simulator actions with hash-bearing provenance. This amendment adds measurement-only action traces before the 42 prospective cells. It does not change prompts, seeds, checkpoints, model sampling, action horizons, guidance, success predicates, or task execution.",
+  "measurement_contract": {
+    "file": "action_trace.npz",
+    "array": "executed",
+    "definition": "The exact array passed to the RoboTwin env.take_action call at every executed step.",
+    "result_metadata": [
+      "path",
+      "sha256",
+      "count",
+      "shape"
+    ],
+    "paired_metric": "RMS over the first min(10, common executed steps) inside each same-scene LEFT/RIGHT pair.",
+    "historical_limit": "Pairs 00-02 predate this instrumentation. Their action metric remains unavailable rather than being reconstructed or assigned zero. Prospective metric coverage is therefore seven of ten pairs per model."
+  },
+  "repositories": [
+    {
+      "model_id": "efficient_wam_rt_robotwin",
+      "repository": "/home/ali/projects/Efficient-WAM",
+      "commit_before_instrumentation": "5c29f6e378e3ccb21bb1012c9871134b669476f3",
+      "commit_with_instrumentation": "b0b6cfabcbd68d18888866e958c677ce640f0412",
+      "files": [
+        {
+          "path": "experiments/robotwin_language_gate/closed_loop_language_gate.py",
+          "bytes": 17476,
+          "sha256": "ab479fa8560c8ac50433f80fb6394f5d6a5f9aa370e1693a2210b78a4a45b028"
+        }
+      ]
+    },
+    {
+      "model_id": "fastwam_robotwin",
+      "repository": "/home/ali/projects/FastWAM",
+      "commit_before_instrumentation": "1b26e35e3ac0717ba76d5fc78895d04479098328",
+      "commit_with_instrumentation": "068d3fd70c89df3726c09893f47b75a624b20c02",
+      "files": [
+        {
+          "path": "experiments/robotwin_language_gate/closed_loop_language_gate.py",
+          "bytes": 23642,
+          "sha256": "77f40086ec319c34fe41a0c208b5155ff0f297f6b615668ae95d695c3f0541dc"
+        },
+        {
+          "path": "experiments/robotwin_language_gate/run_gate_3090.sh",
+          "bytes": 1606,
+          "sha256": "da73ed99d3fa7b6e6f6ccd1725f877b0722b3d572e7dd7cd021de95c28de4d2a",
+          "note": "Adds an explicit verified CuRobo source fallback because this checkout does not vendor CuRobo."
+        }
+      ]
+    },
+    {
+      "model_id": "lingbot_va_robotwin",
+      "repository": "/home/ali/projects/lerobot-lingbot",
+      "commit_before_instrumentation": "48fe73372e3622d6e0943999e32246f36ce7ad31",
+      "commit_with_instrumentation": "d42efbc04e502057dab4b18bb14770cc48e85131",
+      "files": [
+        {
+          "path": "experiments/lingbot_language_gate/closed_loop_language_gate.py",
+          "bytes": 29043,
+          "sha256": "9b500a3d2f9910cee5add5dc1f3bf7129602c8805e700f728de9afc78480186d"
+        }
+      ]
+    }
+  ],
+  "claim_boundary": "This amendment makes a planned metric observable for prospective cells. It is not a model improvement, a protocol retune, or evidence that any checkpoint is steerable."
+}

@@ -1,0 +1,89 @@
+{
+  "schema_version": "vla-wam-shared-v2-pi0-fast-directional-runtime-interventions-v1",
+  "study_id": "vla_wam_language_steerability_v2",
+  "model_id": "pi0_fast_droid_vla",
+  "arena": "droid_robolab",
+  "scope": {
+    "episode_count": 20,
+    "completed_pilot_seeds": [8300, 8301, 8302],
+    "directional_confirmation_seeds": [8303, 8304, 8305, 8306, 8307, 8308, 8309]
+  },
+  "events": [
+    {
+      "id": "PI0-RUNTIME-001",
+      "model_id": "pi0_fast_droid_vla",
+      "environment_seed": 8305,
+      "sampling_seed": 8305,
+      "requested_relation": "left",
+      "task": "RubiksCubeLeftOfBowlMatchedTask",
+      "prompt_family": "direct_command",
+      "behavioral_result_valid": true,
+      "wall_latency_valid": false,
+      "behavioral_outcome": "failure",
+      "events": ["sw_thermal_slowdown"],
+      "started_at_utc": "2026-08-03T12:05:52Z",
+      "completed_at_utc": "2026-08-03T12:06:02Z",
+      "max_temperature_c": 85,
+      "intervention": "Physical GPU 0, which served the policy, reported intermittent sw_thermal_slowdown during the preserved sample interval. The simulator was not paused and the emergency threshold was not reached, so behavior remains valid while wall latency is excluded.",
+      "observed_at_utc": "2026-08-03T12:05:18Z",
+      "preserved_flag_sample_interval_utc": {
+        "start": "2026-08-03T12:05:52Z",
+        "end": "2026-08-03T12:06:02Z"
+      },
+      "gpu": {
+        "physical_index": 0,
+        "role": "policy_server",
+        "max_observed_temperature_c": 85,
+        "simulator_pause_occurred": false,
+        "emergency_stop_occurred": false
+      },
+      "external_evidence": [
+        {
+          "role": "policy_gpu_watchdog",
+          "path": "/home/ali/.cache/vla_wam_pi0_fast_directional_20260803/policy_gpu_watchdog.log",
+          "byte_size": 67969,
+          "sha256": "50f0bde7ad6bbc9e91b712e25aff0cf706350798ebc682b1c940c431c44575ae"
+        },
+        {
+          "role": "thermal_slowdown_snapshot",
+          "path": "/home/ali/.cache/vla_wam_pi0_fast_directional_20260803/thermal_snapshot_after_parent_alert.log",
+          "byte_size": 2143,
+          "sha256": "9add808b0ff370950f9a83ebe9fbad4e24017a431175d2934792b6f1856ceb77"
+        },
+        {
+          "role": "thermal_event_note",
+          "path": "/home/ali/.cache/vla_wam_pi0_fast_directional_20260803/thermal_event_notes.md",
+          "byte_size": 992,
+          "sha256": "585781527b7180b9f9b5c98c665e1579882e1a066b127cd3460e9552dcd88ba3"
+        }
+      ],
+      "source_logs": [
+        {
+          "path": "/home/ali/.cache/vla_wam_pi0_fast_directional_20260803/policy_gpu_watchdog.log",
+          "sha256": "50f0bde7ad6bbc9e91b712e25aff0cf706350798ebc682b1c940c431c44575ae"
+        },
+        {
+          "path": "/home/ali/.cache/vla_wam_pi0_fast_directional_20260803/thermal_snapshot_after_parent_alert.log",
+          "sha256": "9add808b0ff370950f9a83ebe9fbad4e24017a431175d2934792b6f1856ceb77"
+        },
+        {
+          "path": "/home/ali/.cache/vla_wam_pi0_fast_directional_20260803/thermal_event_notes.md",
+          "sha256": "585781527b7180b9f9b5c98c665e1579882e1a066b127cd3460e9552dcd88ba3"
+        }
+      ]
+    }
+  ],
+  "uninterrupted_cells": {
+    "count": 19,
+    "episode_keys": [
+      "8300:left", "8300:right", "8301:left", "8301:right", "8302:left", "8302:right",
+      "8303:left", "8303:right", "8304:left", "8304:right", "8305:right",
+      "8306:left", "8306:right", "8307:left", "8307:right", "8308:left", "8308:right",
+      "8309:left", "8309:right"
+    ],
+    "runtime_intervention_ids": [],
+    "invalid_attempt_count": 0
+  },
+  "invalid_attempts": [],
+  "claim_limit": "This ledger changes no behavioral label. It records one technical latency exclusion for seed 8305 LEFT; all other nineteen direct-command cells have no recorded runtime intervention and no invalid attempt."
+}

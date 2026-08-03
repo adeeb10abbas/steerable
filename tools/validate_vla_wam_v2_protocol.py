@@ -151,6 +151,302 @@ def validate_v1_disclosure(workspace: Path, checks: list[str]) -> dict[str, Any]
     }
 
 
+def validate_pi0_fast_confirmation(
+    workspace: Path, confirmation_path: Path, expansion_path: Path, checks: list[str]
+) -> dict[str, Any] | None:
+    """Validate the optional post-pilot evidence slice without changing pilot checks."""
+    if not confirmation_path.exists():
+        return None
+    confirmation = load_json(confirmation_path)
+    expansion = load_json(expansion_path)
+    require(
+        confirmation["schema_version"] == "vla-wam-shared-v2-pi0-fast-direct-confirmation-v1",
+        "pi0-FAST confirmation uses the dedicated immutable-follow-up schema",
+        checks,
+    )
+    require(
+        confirmation["model_id"] == "pi0_fast_droid_vla",
+        "pi0-FAST confirmation identifies the frozen checkpoint",
+        checks,
+    )
+    source = confirmation["source_registry"]
+    source_path = Path(source["path"])
+    if not source_path.is_absolute():
+        source_path = workspace / source_path
+    require(
+        source_path.resolve() == expansion_path.resolve() and source["sha256"] == sha256(expansion_path),
+        "pi0-FAST confirmation hashes the frozen directional registry",
+        checks,
+    )
+    episodes = confirmation["episodes"]
+    expected_cells = {(seed, direction) for seed in range(8300, 8310) for direction in ("left", "right")}
+    observed_cells = {(int(row["environment_seed"]), row["requested_relation"]) for row in episodes}
+    require(len(episodes) == 20 and observed_cells == expected_cells,
+            "pi0-FAST confirmation contains exactly twenty registered valid cells", checks)
+    prompts = expansion["prompts"]
+    require(
+        all(row["prompt_family"] == "direct_command" and row["prompt"] == prompts[row["requested_relation"]] for row in episodes),
+        "pi0-FAST confirmation preserves the registry-matched static direct prompts",
+        checks,
+    )
+    summary = confirmation["summary"]
+    require(summary["episode_count"] == 20 and summary["pair_count"] == 10,
+            "pi0-FAST confirmation summary reports ten exact pairs", checks)
+    require(
+        set(summary["by_direction"]) == {"left", "right"}
+        and all(summary["by_direction"][direction]["episodes"] == 10 for direction in ("left", "right")),
+        "pi0-FAST confirmation reports ten trials per direction", checks,
+    )
+    for direction in ("left", "right"):
+        metrics = summary["by_direction"][direction]
+        successes = sum(row["requested_success"] for row in episodes if row["requested_relation"] == direction)
+        require(metrics["successes"] == successes and 0 <= successes <= 10,
+                f"pi0-FAST confirmation {direction} numerator matches episode rows", checks)
+        interval = metrics["success_wilson_95"]
+        require(interval["confidence"] == 0.95 and 0 <= interval["lower"] <= interval["upper"] <= 1,
+                f"pi0-FAST confirmation {direction} includes a valid Wilson 95% interval", checks)
+        require(
+            all(key in metrics for key in ("verified_pickups", "entered_requested_region", "released_in_requested_region")),
+            f"pi0-FAST confirmation {direction} includes progression stage counts", checks,
+        )
+    pairs = summary["paired_endpoint_responses"]
+    require(len(pairs) == 10 and {int(pair["environment_seed"]) for pair in pairs} == set(range(8300, 8310)),
+            "pi0-FAST confirmation retains ten registered endpoint pairs", checks)
+    require(
+        all(
+            pair["endpoint_response_direction"] in {"aligned", "anti_directed", "none"}
+            and pair.get("physical_initial_state_sha256")
+            and isinstance(pair.get("first_ten_action_rms_steps_used"), int)
+            and 0 <= pair["first_ten_action_rms_steps_used"] <= 10
+            and (
+                (pair["first_ten_action_rms"] is not None
+                 and pair["first_ten_action_rms"] >= 0
+                 and pair["first_ten_action_rms_steps_used"] > 0
+                 and pair["first_ten_action_rms_unavailable_reason"] is None)
+                or (pair["first_ten_action_rms"] is None
+                    and pair["first_ten_action_rms_unavailable_reason"] in {
+                        "no_common_executed_actions", "paired_action_shape_mismatch"
+                    })
+            )
+            for pair in pairs
+        ),
+        "pi0-FAST confirmation records a bounded paired action metric or an explicit unavailable reason", checks,
+    )
+    episode_by_cell = {
+        (int(row["environment_seed"]), row["requested_relation"]): row for row in episodes
+    }
+    require(
+        all(
+            pair["physical_initial_state_sha256"]
+            == episode_by_cell[(int(pair["environment_seed"]), "left")]["physical_initial_state_sha256"]
+            == episode_by_cell[(int(pair["environment_seed"]), "right")]["physical_initial_state_sha256"]
+            for pair in pairs
+        ),
+        "pi0-FAST confirmation verifies identical recorded initial state inside every pair", checks,
+    )
+    require(
+        all(
+            row["operational_wall_latency_valid"] == (not bool(row["runtime_intervention_ids"]))
+            for row in episodes
+        ),
+        "pi0-FAST confirmation excludes thermally intervened wall latency without invalidating behavior", checks,
+    )
+    intervention_sources = confirmation["intervention_ledger_sources"]
+    for ledger_source in intervention_sources:
+        validate_file_record(workspace, ledger_source, "pi0-FAST intervention ledger", checks)
+        require(
+            ledger_source["total_event_count"]
+            == ledger_source["selected_model_event_count"]
+            + ledger_source["ignored_other_model_event_count"]
+            and set(ledger_source["applied_event_ids"])
+            <= set(ledger_source["selected_event_ids"]),
+            "pi0-FAST intervention ledger records selected, ignored, and applied events", checks,
+        )
+    applied_ids = sorted(
+        event_id for row in episodes for event_id in row["runtime_intervention_ids"]
+    )
+    require(
+        confirmation["applied_runtime_intervention_ids"] == applied_ids
+        == sorted(
+            event_id for source_record in intervention_sources
+            for event_id in source_record["applied_event_ids"]
+        )
+        and summary["operational_wall_latency_valid_episodes"]
+        + summary["operational_wall_latency_excluded_episodes"] == 20,
+        "pi0-FAST confirmation accounts for applied thermal events and all wall-latency rows", checks,
+    )
+    invalid_attempts = confirmation["invalid_attempts"]
+    require(
+        all(
+            event.get("classification") in {"technical_invalid", "partial"}
+            and event.get("behavioral_result_valid") is False
+            and event.get("wall_latency_valid") is False
+            for event in invalid_attempts
+        ),
+        "pi0-FAST confirmation keeps invalid or partial attempts outside behavior and latency counts", checks,
+    )
+    require(summary["invalid_attempt_count"] == len(invalid_attempts),
+            "pi0-FAST confirmation invalid-attempt count matches its separate ledger", checks)
+    return {
+        "path": str(confirmation_path.relative_to(workspace)),
+        "sha256": sha256(confirmation_path),
+        "episode_count": len(episodes),
+        "invalid_attempt_count": len(invalid_attempts),
+    }
+
+
+def validate_robotwin_confirmations(
+    workspace: Path, registry_path: Path, checks: list[str]
+) -> dict[str, dict[str, Any]]:
+    """Validate optional per-model confirmation slices, never replacing pilot checks."""
+    registry = load_json(registry_path)
+    reports: dict[str, dict[str, Any]] = {}
+    for model_id in registry["models"]:
+        stem = model_id.removesuffix("_robotwin")
+        path = workspace / f"artifacts/vla_wam_shared_v2/pilot/results/{stem}_direct_confirmation.json"
+        if not path.exists():
+            continue
+        compiled = load_json(path)
+        require(
+            compiled["schema_version"] == "vla-wam-shared-v2-robotwin-direct-confirmation-v1"
+            and compiled["model_id"] == model_id,
+            f"{model_id} confirmation uses the dedicated ten-scene schema", checks,
+        )
+        source = compiled["source_registry"]
+        require(source["sha256"] == sha256(registry_path),
+                f"{model_id} confirmation hashes the frozen directional registry", checks)
+        episodes = compiled["episodes"]
+        expected = {(int(scene["environment_seed"]), direction) for scene in registry["scenes"] for direction in ("left", "right")}
+        observed = {(int(row["environment_seed"]), row["requested_relation"]) for row in episodes}
+        require(len(episodes) == 20 and observed == expected,
+                f"{model_id} confirmation contains exactly twenty registered cells", checks)
+        summary = compiled["summary"]
+        require(summary["episode_count"] == 20 and summary["pair_count"] == 10,
+                f"{model_id} confirmation reports ten exact pairs", checks)
+        for direction in ("left", "right"):
+            metric = summary["by_direction"][direction]
+            numerator = sum(row["requested_success"] for row in episodes if row["requested_relation"] == direction)
+            require(metric["episodes"] == metric["started"] == 10 and metric["successes"] == numerator,
+                    f"{model_id} confirmation {direction} has ten stage-accounted trials", checks)
+            interval = metric["success_wilson_95"]
+            require(interval["confidence"] == 0.95 and 0 <= interval["lower"] <= interval["upper"] <= 1,
+                    f"{model_id} confirmation {direction} has a Wilson 95% interval", checks)
+        pairs = summary["paired_endpoint_responses"]
+        require(len(pairs) == 10 and all(pair["endpoint_response_direction"] in {"aligned", "anti_directed", "none"} for pair in pairs),
+                f"{model_id} confirmation records ten endpoint shifts and alignment labels", checks)
+        cells = {(int(row["environment_seed"]), row["requested_relation"]): row for row in episodes}
+        require(all(
+            pair["physical_initial_state_sha256"]
+            == cells[(int(pair["environment_seed"]), "left")]["physical_initial_state_sha256"]
+            == cells[(int(pair["environment_seed"]), "right")]["physical_initial_state_sha256"]
+            and pair["initial_state_coverage"]
+            == cells[(int(pair["environment_seed"]), "left")]["initial_state_coverage"]
+            == cells[(int(pair["environment_seed"]), "right")]["initial_state_coverage"]
+            and bool(pair["initial_state_coverage"].get("hash_input_initial_fields"))
+            and bool(pair["initial_state_coverage"].get("adapter_state_limits"))
+            for pair in pairs
+        ), f"{model_id} confirmation verifies matched recorded initial state with explicit coverage limits", checks)
+        phase_by_seed = {
+            int(scene["environment_seed"]): scene.get("phase", "new_expansion" if int(scene["environment_seed"]) >= 4300003 else "completed_pilot")
+            for scene in registry["scenes"]
+        }
+        for row in episodes:
+            trace = row.get("action_trace")
+            prospective = phase_by_seed[int(row["environment_seed"])] == "new_expansion"
+            require((trace is not None) if prospective else True,
+                    f"{model_id} confirmation requires action traces for prospective cells", checks)
+            if trace is not None:
+                validate_file_record(workspace, trace, f"{model_id} action trace", checks)
+                require(trace.get("executed_array") in {"executed", "denormalized"}
+                        and "count" in trace and "shape" in trace
+                        and bool(trace.get("arrays"))
+                        and all("count" in item and "shape" in item for item in trace["arrays"].values()),
+                        f"{model_id} action trace records verified executed count and shape", checks)
+            require(row["future_interface"] in {"decoded_future_video", "latent_only_future_not_decodable", "action_only_not_applicable"},
+                    f"{model_id} confirmation labels future interface without treating absence as zero", checks)
+            require(
+                row["operational_wall_latency_valid"] == (not bool(row["runtime_intervention_ids"])),
+                f"{model_id} confirmation fails closed when a thermal intervention reaches a latency-valid row", checks,
+            )
+        coverage = summary["first_ten_executed_action_rms_coverage"]
+        available_pairs = sum(pair["first_ten_executed_action_rms"] is not None for pair in pairs)
+        require(
+            coverage == {
+                "available_pairs": available_pairs,
+                "prospective_pairs": 7,
+                "total_pairs": 10,
+                "coverage": f"{available_pairs}/10",
+            },
+            f"{model_id} confirmation reports exact paired action-RMS coverage", checks,
+        )
+        require(all(
+            (pair["first_ten_executed_action_rms"] is None
+             and pair["first_ten_executed_action_rms_steps_used"] == 0
+             and pair["action_metric_unavailable_reason"] == "historical_pair00_pair02_action_trace_not_required_by_preclarification")
+            if phase_by_seed[int(pair["environment_seed"])] == "completed_pilot"
+            else (
+                isinstance(pair["first_ten_executed_action_rms_steps_used"], int)
+                and 0 <= pair["first_ten_executed_action_rms_steps_used"] <= 10
+                and (
+                    (pair["first_ten_executed_action_rms"] is not None
+                     and pair["first_ten_executed_action_rms"] >= 0
+                     and pair["first_ten_executed_action_rms_steps_used"] > 0
+                     and pair["action_metric_unavailable_reason"] is None)
+                    or (pair["first_ten_executed_action_rms"] is None
+                        and pair["action_metric_unavailable_reason"] in {
+                            "no_common_executed_actions", "paired_action_shape_mismatch",
+                            "action_trace_is_scalar_not_a_sequence"
+                        })
+                )
+            )
+            for pair in pairs
+        ), f"{model_id} confirmation preserves short action traces with steps-used or an explicit reason", checks)
+        intervention_sources = compiled["intervention_ledger_sources"]
+        for source in intervention_sources:
+            validate_file_record(workspace, source, f"{model_id} intervention ledger", checks)
+            require(
+                source["total_event_count"]
+                == source["selected_model_event_count"] + source["ignored_other_model_event_count"]
+                and set(source["applied_event_ids"]) <= set(source["selected_event_ids"]),
+                f"{model_id} intervention ledger records selected and ignored model counts", checks,
+            )
+        applied_ids = sorted(
+            event_id for row in episodes for event_id in row["runtime_intervention_ids"]
+        )
+        require(
+            compiled["applied_runtime_intervention_ids"] == applied_ids
+            == sorted(event_id for source in intervention_sources for event_id in source["applied_event_ids"]),
+            f"{model_id} confirmation accounts for every applied runtime intervention ID", checks,
+        )
+        invalid = compiled["invalid_attempts"]
+        require(
+            summary["invalid_attempt_count"] == len(invalid)
+            and all(
+                event.get("classification") in {"technical_invalid", "partial"}
+                and event.get("behavioral_result_valid") is False
+                and event.get("wall_latency_valid") is False
+                for event in invalid
+            ),
+            f"{model_id} confirmation keeps invalid attempts outside behavior and latency counts", checks,
+        )
+        invalid_sources = compiled["invalid_attempt_ledger_sources"]
+        for source in invalid_sources:
+            validate_file_record(workspace, source, f"{model_id} invalid-attempt ledger", checks)
+            require(
+                source["total_event_count"]
+                == source["selected_model_event_count"] + source["ignored_other_model_event_count"]
+                and set(source["retained_event_ids"]) <= set(source["selected_event_ids"]),
+                f"{model_id} invalid ledger records selected and ignored model counts", checks,
+            )
+        require(
+            compiled["retained_invalid_attempt_ids"] == sorted(event["id"] for event in invalid)
+            == sorted(event_id for source in invalid_sources for event_id in source["retained_event_ids"]),
+            f"{model_id} confirmation accounts for every retained invalid-attempt ID", checks,
+        )
+        reports[model_id] = {"path": str(path.relative_to(workspace)), "sha256": sha256(path), "episode_count": len(episodes)}
+    return reports
+
+
 def validate(workspace: Path) -> dict[str, Any]:
     protocol_path = workspace / "artifacts/vla_wam_shared_v2/protocol.json"
     media_path = workspace / "artifacts/vla_wam_shared_v2/media_selection_plan.json"
@@ -169,11 +465,18 @@ def validate(workspace: Path) -> dict[str, Any]:
     pi0_fast_result_path = (
         workspace / "artifacts/vla_wam_shared_v2/pilot/results/pi0_fast_direct_gate.json"
     )
+    pi0_fast_confirmation_path = (
+        workspace / "artifacts/vla_wam_shared_v2/pilot/results/pi0_fast_direct_confirmation.json"
+    )
     runtime_interventions_path = (
         workspace / "artifacts/vla_wam_shared_v2/pilot/runtime_interventions.json"
     )
     directional_expansion_path = (
         workspace / "artifacts/vla_wam_shared_v2/pilot/directional_expansion.json"
+    )
+    action_trace_amendment_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/action_trace_instrumentation_amendment.json"
     )
     directional_fixtures_path = (
         workspace
@@ -207,6 +510,7 @@ def validate(workspace: Path) -> dict[str, Any]:
     pi0_fast_result = load_json(pi0_fast_result_path)
     runtime_interventions = load_json(runtime_interventions_path)
     directional_expansion = load_json(directional_expansion_path)
+    action_trace_amendment = load_json(action_trace_amendment_path)
     directional_fixtures = load_json(directional_fixtures_path)
     pi0_fast_expansion = load_json(pi0_fast_expansion_path)
     continuation_state = load_json(continuation_state_path)
@@ -384,6 +688,51 @@ def validate(workspace: Path) -> dict[str, Any]:
         == "artifacts/vla_wam_shared_v2/pilot/directional_expansion.json",
         "the directional-confirmation amendment points to its frozen scene registry",
         checks,
+    )
+
+    require(
+        action_trace_amendment["status"]
+        == "frozen_before_any_pair03_pair09_wam_inference"
+        and action_trace_amendment["new_directional_confirmation_episodes_completed_before_amendment"]
+        == 0,
+        "action-trace instrumentation is frozen before every prospective WAM cell", checks,
+    )
+    amendment_repositories = action_trace_amendment["repositories"]
+    require(
+        [record["model_id"] for record in amendment_repositories]
+        == ["efficient_wam_rt_robotwin", "fastwam_robotwin", "lingbot_va_robotwin"],
+        "action-trace amendment covers exactly the three confirmation WAMs", checks,
+    )
+    require(
+        all(
+            len(record["commit_before_instrumentation"]) == 40
+            and len(record["commit_with_instrumentation"]) == 40
+            and record["commit_before_instrumentation"] != record["commit_with_instrumentation"]
+            for record in amendment_repositories
+        ),
+        "action-trace amendment records distinct before/after commits", checks,
+    )
+    for repository_record in amendment_repositories:
+        repository_root = Path(repository_record["repository"])
+        for script_record in repository_record["files"]:
+            script_path = repository_root / script_record["path"]
+            require(script_path.is_file(), f"{repository_record['model_id']} instrumented script exists", checks)
+            require(script_path.stat().st_size == script_record["bytes"],
+                    f"{repository_record['model_id']} instrumented script byte count matches", checks)
+            require(sha256(script_path) == script_record["sha256"],
+                    f"{repository_record['model_id']} instrumented script hash matches", checks)
+    measurement_contract = action_trace_amendment["measurement_contract"]
+    require(
+        measurement_contract["array"] == "executed"
+        and "env.take_action" in measurement_contract["definition"]
+        and measurement_contract["result_metadata"] == ["path", "sha256", "count", "shape"]
+        and "seven of ten" in measurement_contract["historical_limit"],
+        "action-trace amendment defines exact executed actions and prospective 7/10 coverage", checks,
+    )
+    unchanged_text = action_trace_amendment["reason"].lower()
+    require(
+        all(term in unchanged_text for term in ("prompts", "seeds", "checkpoints", "action horizons", "success predicates")),
+        "action-trace amendment changes measurement only, not behavior, prompts, seeds, checkpoints, or scoring", checks,
     )
 
     require(
@@ -804,13 +1153,13 @@ def validate(workspace: Path) -> dict[str, Any]:
 
     require(
         continuation_state["study_status"]
-        == "four_new_model_direct_gates_complete_directional_confirmations_pending",
+        == "pi0_fast_directional_confirmation_complete_three_wam_directional_confirmations_pending",
         "continuation state names the current evidence boundary",
         checks,
     )
     queue = continuation_state["experiment_queue"]
     require(
-        [item["priority"] for item in queue] == [1, 2, 3, 4],
+        [item["priority"] for item in queue] == [0, 1, 2, 3],
         "continuation queue has one unambiguous priority order",
         checks,
     )
@@ -827,7 +1176,10 @@ def validate(workspace: Path) -> dict[str, Any]:
     )
     groot_readiness = continuation_state.get("groot_n17_readiness", {})
     require(
-        queue[0]["status"] == queue[1]["status"] == "ready"
+        queue[0]["status"] == "complete"
+        and queue[0].get("result_artifact")
+        == "artifacts/vla_wam_shared_v2/pilot/results/pi0_fast_direct_confirmation.json"
+        and queue[1]["status"] == "ready"
         and queue[2]["status"].startswith("blocked_")
         and queue[3]["status"] == "ready_for_frozen_probe_and_direct_gate"
         and groot_readiness.get("status")
@@ -844,6 +1196,12 @@ def validate(workspace: Path) -> dict[str, Any]:
             checks,
         )
 
+    confirmation = validate_pi0_fast_confirmation(
+        workspace, pi0_fast_confirmation_path, pi0_fast_expansion_path, checks
+    )
+    robotwin_confirmations = validate_robotwin_confirmations(
+        workspace, directional_expansion_path, checks
+    )
     v1 = validate_v1_disclosure(workspace, checks)
     return {
         "status": "valid",
@@ -861,10 +1219,14 @@ def validate(workspace: Path) -> dict[str, Any]:
         "lingbot_result_sha256": sha256(lingbot_result_path),
         "pi0_fast_result_path": str(pi0_fast_result_path.relative_to(workspace)),
         "pi0_fast_result_sha256": sha256(pi0_fast_result_path),
+        "pi0_fast_confirmation": confirmation,
+        "robotwin_confirmations": robotwin_confirmations,
         "runtime_interventions_path": str(runtime_interventions_path.relative_to(workspace)),
         "runtime_interventions_sha256": sha256(runtime_interventions_path),
         "directional_expansion_path": str(directional_expansion_path.relative_to(workspace)),
         "directional_expansion_sha256": sha256(directional_expansion_path),
+        "action_trace_amendment_path": str(action_trace_amendment_path.relative_to(workspace)),
+        "action_trace_amendment_sha256": sha256(action_trace_amendment_path),
         "directional_fixtures_path": str(directional_fixtures_path.relative_to(workspace)),
         "directional_fixtures_sha256": sha256(directional_fixtures_path),
         "pi0_fast_expansion_path": str(pi0_fast_expansion_path.relative_to(workspace)),

@@ -2,15 +2,17 @@
 
 Status: the base protocol was **frozen before standardized v2 expansion
 inference** on 3 August 2026 at 01:19:36 UTC. Three six-episode RoboTwin WAM
-pilots and one six-episode π0-FAST DROID VLA pilot are now complete. Each
-triggered the one-direction-only branch of the frozen adaptive gate. The
+pilots and one six-episode π0-FAST DROID VLA pilot completed the
+one-direction-only branch of the frozen adaptive gate. π0-FAST has since
+completed its prospectively frozen ten-seed direct-command directional
+confirmation; the three RoboTwin WAM confirmations remain pending. The
 RoboTwin ten-scene directional confirmation was frozen at 03:29:32 UTC after
 disclosing all 18 WAM pilot outcomes and before any of its 42 new expansion
 episodes. The machine-readable source of truth is
 [`protocol.json`](../artifacts/vla_wam_shared_v2/protocol.json), and the media
 selection rules are frozen separately in
 [`media_selection_plan.json`](../artifacts/vla_wam_shared_v2/media_selection_plan.json).
-The executable validator currently passes 243 checks; its full report is
+The executable validator currently passes 284 checks; its full report is
 [`protocol_validation.json`](../artifacts/vla_wam_shared_v2/protocol_validation.json).
 
 This is a disclosed post-v1 extension. Every pi0.5/Cosmos result in the
@@ -37,7 +39,7 @@ compare only normalized model descriptors, and every mark must name its arena.
 | Arena | Checkpoint | Category | Future interface | v2 status |
 | --- | --- | --- | --- | --- |
 | DROID | pi0.5 DROID | VLA | none | existing v1 reference |
-| DROID | pi0-FAST DROID | VLA | none | direct gate complete: LEFT 0/3, RIGHT 3/3 |
+| DROID | pi0-FAST DROID | VLA | none | confirmation complete: LEFT 1/10, RIGHT 10/10; wording eligible but deferred |
 | DROID | GR00T N1.7 DROID | VLA | none | new expansion model |
 | DROID | Cosmos3 Edge DROID | WAM | decoded video plus actions | existing v1 reference |
 | RoboTwin | LingBot-VLA 4B | VLA | none | new expansion model |
@@ -243,6 +245,28 @@ prompt produced RMS 0 while the older-v1-wording LEFT/RIGHT swap produced action
 RMS 0.153. Because those diagnostic labels are not byte-identical to the v2
 closed-loop prompts, they establish repeatability and label sensitivity only.
 
+### Compiled π0-FAST direct-command directional confirmation
+
+The prospectively frozen fourteen new cells at seeds 8303–8309 completed under
+the same static direct prompts, ten-action open-loop controller, viewport-video
+retention, and no-coach rule. Combined with the preserved seeds 8300–8302,
+LEFT released requested placement is 1/10 (Wilson 95% [0.018, 0.404]) and
+RIGHT is 10/10 ([0.722, 1.000]). All 20 behavioral episodes are valid; all ten
+same-seed RIGHT-minus-LEFT endpoint shifts align with the requested direction.
+One intermittent policy-GPU thermal-slowdown event makes seed-8305 LEFT wall
+latency ineligible for operational aggregates, without changing its behavioral
+failure. The compiled evidence is
+[`pi0_fast_direct_confirmation.json`](../artifacts/vla_wam_shared_v2/pilot/results/pi0_fast_direct_confirmation.json)
+with its CSV and Markdown companions; the external-log provenance and
+latency-exclusion rule are hash-pinned in
+[`pi0_fast_runtime_interventions.json`](../artifacts/vla_wam_shared_v2/pilot/directional_confirmation/pi0_fast_runtime_interventions.json).
+
+This resolves π0-FAST direct competence in both directions and therefore makes
+its four-wording grid eligible under the frozen adaptive rule. It does **not**
+authorize a wording episode now: the grid is deliberately deferred until all
+three WAM directional confirmations are compiled and a disclosed post-result
+decision records the next authorized spend.
+
 ## Metrics
 
 The frozen hypotheses are deliberately physical rather than tensor-level:
@@ -410,6 +434,11 @@ pooled or placed on an unlabeled common leaderboard.
   is the prospective registry for the next fourteen DROID cells. It freezes
   seeds 8303--8309, exact prompts, checkpoint and repository revisions, video
   retention, and the no-coach static-controller rule before new inference.
+- [`pi0_fast_direct_confirmation.json`](../artifacts/vla_wam_shared_v2/pilot/results/pi0_fast_direct_confirmation.json)
+  compiles the completed twenty-episode direct-only confirmation without
+  overwriting the six-episode gate: LEFT is 1/10, RIGHT is 10/10, all ten
+  paired endpoints align, and one wall-latency-only intervention is recorded
+  in its hash-bearing directional-confirmation ledger.
 - [`directional_expansion.json`](../artifacts/vla_wam_shared_v2/pilot/directional_expansion.json)
   freezes the seven additional scene pairs and discloses the 18 known pilot
   outcomes. Its model-blind seven-scene setup audit is

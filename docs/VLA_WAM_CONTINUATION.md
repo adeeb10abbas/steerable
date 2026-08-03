@@ -1,7 +1,7 @@
 # VLA/WAM study continuation handoff
 
-Updated: 3 August 2026, after commit `c4c67ad` and before any directional-
-confirmation inference.
+Updated: 3 August 2026, after the compiled π0-FAST directional confirmation
+and before the three-WAM RoboTwin directional confirmations.
 
 This document is the restart point for a human or coding model with no chat
 context. The machine-readable companion is
@@ -17,14 +17,18 @@ Four new-model direct gates are complete:
 
 | Arena | Checkpoint | LEFT | RIGHT | Frozen next step |
 | --- | --- | ---: | ---: | --- |
-| DROID | π0-FAST | 0/3 | 3/3 | add seeds 8303–8309 under direct commands only |
+| DROID | π0-FAST | 1/10 | 10/10 | direct competence in both directions; wording eligible but deferred |
 | RoboTwin | Efficient-WAM-RT | 2/3 | 0/3 | add paired scenes 03–09 under direct commands only |
 | RoboTwin | FastWAM | 1/3 | 0/3 | add paired scenes 03–09 under direct commands only |
 | RoboTwin | LingBot-VA | 3/3 | 0/3 | add paired scenes 03–09 under direct commands only |
 
-All four therefore triggered the one-direction-only branch. **No short,
-declarative, or contrastive wording sweep is authorized yet.** This is the most
-important decision to preserve.
+The three WAM gates still trigger the one-direction-only branch. π0-FAST has
+now completed its direct-only confirmation: all 20 episodes are behaviorally
+valid, all ten endpoint pairs align with the requested LEFT-to-RIGHT change,
+and one thermal event excludes wall latency only. Its four-wording grid is
+eligible under the frozen rule, but is explicitly **deferred and not
+authorized** until the three WAM confirmations are compiled and a post-result
+decision is recorded. No WAM wording sweep is authorized.
 
 The current article, figures, and videos are:
 
@@ -48,7 +52,7 @@ ss -ltnp | rg ':8000|:5000' || true
 python3 tools/validate_vla_wam_v2_protocol.py
 ```
 
-Expected evidence baseline: validator status `valid`, 243 checks. The live host
+Expected evidence baseline: validator status `valid`, 284 checks. The live host
 snapshot at handoff had two idle 24 GiB RTX 3090s and 464 GiB free. Treat that
 as historical context and recheck it; it is not a guarantee.
 
@@ -59,12 +63,30 @@ were `/home/ali/projects/RoboLab/.cache/` and
 <a id="experiment-1-pi0-fast-droid-directional-confirmation"></a>
 ## Experiment 1 — π0-FAST DROID directional confirmation
 
-Priority: **first**. Cost: 14 new episodes. Status: ready.
+Priority: complete. Cost: 14 new episodes. Status: compiled; do not rerun.
 
 Frozen registry:
 [`pi0_fast_directional_expansion.json`](../artifacts/vla_wam_shared_v2/pilot/pi0_fast_directional_expansion.json).
-Seeds 8300–8302 are complete. Run exactly 8303–8309, LEFT and RIGHT once per
-seed. Do not rerun completed seeds unless hash validation shows corruption.
+Seeds 8300–8302 are the preserved pilot and 8303–8309 have now completed.
+Do not rerun any seed unless hash validation shows corruption.
+
+### Completion record
+
+The compiled confirmation is
+[`pi0_fast_direct_confirmation.json`](../artifacts/vla_wam_shared_v2/pilot/results/pi0_fast_direct_confirmation.json)
+(74,549 bytes; SHA-256
+`491c74812ed0e4d36c16f8e0ded17a70af3e69740c9bcb87af129bb6d9563073`),
+with [CSV](../artifacts/vla_wam_shared_v2/pilot/results/pi0_fast_direct_confirmation.csv)
+and [Markdown](../artifacts/vla_wam_shared_v2/pilot/results/pi0_fast_direct_confirmation.md)
+companions. LEFT released requested placement is 1/10 and RIGHT is 10/10;
+all 20 behavioral episodes are valid, all ten paired endpoint shifts align,
+and one seed-8305 LEFT wall-latency measurement is excluded without changing
+its behavioral failure. The hash-bearing intervention ledger is
+[`pi0_fast_runtime_interventions.json`](../artifacts/vla_wam_shared_v2/pilot/directional_confirmation/pi0_fast_runtime_interventions.json).
+The GPU-0 policy server, GPU-1 simulator container, and ports 8000/5000 were
+released cleanly.
+
+The historical launch recipe below is retained for provenance only.
 
 ### Policy server
 
@@ -125,7 +147,8 @@ wording cell.
 <a id="experiment-2-three-wam-robotwin-directional-confirmation"></a>
 ## Experiment 2 — three-WAM RoboTwin directional confirmation
 
-Priority: **second**. Cost: 42 new episodes. Status: fixtures and registry ready.
+Priority: **first**. Cost: 42 new episodes. Status: active next confirmation;
+fixtures and registry ready.
 
 Frozen registry:
 [`directional_expansion.json`](../artifacts/vla_wam_shared_v2/pilot/directional_expansion.json).
@@ -149,48 +172,119 @@ Scene mapping:
 | 08 | `place_a2b_left` | 4300008 | 8408 |
 | 09 | `place_a2b_right` | 4300009 | 8409 |
 
-Use the checked-in launch wrappers in the model repositories; they set the
-correct Python path, Vulkan ICD, headless environment, and local virtualenv.
-The pair03 commands illustrate the exact form:
+Use the native process-group thermal launcher for every pair. It starts the
+checked-in model wrapper in a private session, records its PID/PGID and
+temperatures, pauses only that group at 87 C, resumes at 80 C, and leaves it
+held (not killed) at 90 C. Each pair-level process emits two cell-level ledger
+records when a pause occurs; emergency or partial attempts go to the separate
+invalid-attempt ledger. The pair03 commands are:
 
 ```bash
 # Efficient-WAM-RT
-cd /home/ali/projects/Efficient-WAM
-EFFICIENT_WAM_GPU=1 experiments/robotwin_language_gate/run_gate_3090.sh \
-  --output-dir outputs/vla_wam_shared_v2/directional_confirmation/pair03 \
+cd /home/ali/projects/steerable
+EFFICIENT_WAM_GPU=1 python3 tools/native_process_group_thermal_guard.py --launch \
+  --gpu-index 1 \
+  --output artifacts/vla_wam_shared_v2/pilot/directional_confirmation/thermal/efficient_pair03.jsonl \
+  --ledger-output artifacts/vla_wam_shared_v2/pilot/directional_confirmation/runtime_interventions_efficient_wam_rt_robotwin.json \
+  --invalid-attempts-output artifacts/vla_wam_shared_v2/pilot/directional_confirmation/invalid_attempts_efficient_wam_rt_robotwin.json \
+  --model-id efficient_wam_rt_robotwin --pair-id robotwin_pair_03 \
+  --environment-seed 4300003 --sampling-seed 8403 \
+  --requested-relation left --requested-relation right -- \
+  /home/ali/projects/Efficient-WAM/experiments/robotwin_language_gate/run_gate_3090.sh \
+  --output-dir /home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/directional_confirmation/pair03 \
   --task place_a2b_right --seed 4300003 --sampling-seed 8403 \
   --prompt-family direct_command --max-actions 400 \
   --save-simulator-video --predicted-video-max-chunks 1
 
 # FastWAM
-cd /home/ali/projects/FastWAM
-FASTWAM_GPU=0 experiments/robotwin_language_gate/run_gate_3090.sh \
-  --output-dir outputs/vla_wam_shared_v2/directional_confirmation/pair03 \
+cd /home/ali/projects/steerable
+FASTWAM_GPU=0 python3 tools/native_process_group_thermal_guard.py --launch \
+  --gpu-index 0 \
+  --output artifacts/vla_wam_shared_v2/pilot/directional_confirmation/thermal/fastwam_pair03.jsonl \
+  --ledger-output artifacts/vla_wam_shared_v2/pilot/directional_confirmation/runtime_interventions_fastwam_robotwin.json \
+  --invalid-attempts-output artifacts/vla_wam_shared_v2/pilot/directional_confirmation/invalid_attempts_fastwam_robotwin.json \
+  --model-id fastwam_robotwin --pair-id robotwin_pair_03 \
+  --environment-seed 4300003 --sampling-seed 8403 \
+  --requested-relation left --requested-relation right -- \
+  /home/ali/projects/FastWAM/experiments/robotwin_language_gate/run_gate_3090.sh \
+  --output-dir /home/ali/projects/FastWAM/outputs/vla_wam_shared_v2/directional_confirmation/pair03 \
   --cell place_a2b_right:4300003:8403 \
   --prompt-family direct_command --max-actions 400 \
   --action-horizon 32 --replan-steps 24 --num-inference-steps 10 \
   --text-cfg-scale 2.0 --save-simulator-video --resume
 
 # LingBot-VA
-cd /home/ali/projects/lerobot-lingbot
+cd /home/ali/projects/steerable
 LINGBOT_GPU=0 VLA_WAM_V2_STUDY_ROOT=/home/ali/projects/steerable \
-  experiments/lingbot_language_gate/run_v2_directional_confirmation.sh --dry-run
-
-# After the study preflight passes, run the exact 14 new cells.
-LINGBOT_GPU=0 VLA_WAM_V2_STUDY_ROOT=/home/ali/projects/steerable \
-  experiments/lingbot_language_gate/run_v2_directional_confirmation.sh --run
+python3 tools/native_process_group_thermal_guard.py --launch --gpu-index 0 \
+  --output artifacts/vla_wam_shared_v2/pilot/directional_confirmation/thermal/lingbot_pair03.jsonl \
+  --ledger-output artifacts/vla_wam_shared_v2/pilot/directional_confirmation/runtime_interventions_lingbot_va_robotwin.json \
+  --invalid-attempts-output artifacts/vla_wam_shared_v2/pilot/directional_confirmation/invalid_attempts_lingbot_va_robotwin.json \
+  --model-id lingbot_va_robotwin --pair-id robotwin_pair_03 \
+  --environment-seed 4300003 --sampling-seed 8403 \
+  --requested-relation left --requested-relation right -- \
+  /home/ali/projects/lerobot-lingbot/experiments/lingbot_language_gate/run_gate_3090.sh \
+  --output-dir /home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2/directional_confirmation/robotwin_pair_03 \
+  --task place_a2b_right --environment-seed 4300003 --sampling-seed 8403 \
+  --prompt-family direct_command --condition correct --condition swapped \
+  --max-actions 400 --guidance-scale 5.0 --action-guidance-scale 1.0 \
+  --save-simulator-video --save-first-predicted-latent
 ```
 
-The LingBot wrapper reads pair03–pair09 directly from the frozen registry and
-launches one scene per invocation, each with its paired LEFT/RIGHT direct
-commands. Do not pass all seven tasks or seeds directly to the runner: repeated
-CLI values form an unsafe Cartesian product. Do not change model guidance,
-horizon, diffusion steps, task config, or future-retention settings. LingBot-VA
-previously required thermal pauses; exclude interrupted wall-time measurements
-while retaining valid behavior.
+Use the LingBot directional wrapper's `--dry-run` output to verify pair04–09,
+then launch each printed scene command separately through the same guard form;
+do not run the all-pairs `--run` mode outside the guard. Do not pass all seven
+tasks or seeds directly to a runner: repeated CLI values form an unsafe
+Cartesian product. Do not change model guidance, horizon, diffusion steps,
+task config, or future-retention settings. A pause preserves behavior but the
+generated ledger excludes both affected cells from wall-latency aggregates. An
+emergency-held or otherwise partial pair remains an infrastructure attempt,
+not a model failure; preserve its outputs and review before an exact-cell rerun.
 
-After all 42 cells, extend the compiler to produce a ten-scene result per model,
-then regenerate progression, endpoint, media, and article artifacts. Keep
+For pair04–pair09, copy the corresponding model's pair03 command and replace
+all of the following together from the scene-mapping table: `pair03` or
+`robotwin_pair_03` in the raw-log/output paths, `--pair-id`, anchor task,
+environment seed, and sampling seed. Keep both repeated `--requested-relation`
+flags. Keep that model's ledger filenames unchanged across its seven pairs:
+
+| Model | Runtime-intervention ledger | Invalid-attempt ledger |
+| --- | --- | --- |
+| Efficient-WAM-RT | `runtime_interventions_efficient_wam_rt_robotwin.json` | `invalid_attempts_efficient_wam_rt_robotwin.json` |
+| FastWAM | `runtime_interventions_fastwam_robotwin.json` | `invalid_attempts_fastwam_robotwin.json` |
+| LingBot-VA | `runtime_interventions_lingbot_va_robotwin.json` | `invalid_attempts_lingbot_va_robotwin.json` |
+
+After all seven pairs for a model complete, compile its ten-scene confirmation
+with both the historical pilot intervention ledger and only that model's new
+confirmation ledger. The `--runtime-interventions` flag is intentionally
+repeated; do not combine model ledgers:
+
+```bash
+cd /home/ali/projects/steerable
+
+python3 tools/compile_vla_wam_v2_robotwin_confirmation.py \
+  --input-root /home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2 \
+  --model-id efficient_wam_rt_robotwin \
+  --runtime-interventions artifacts/vla_wam_shared_v2/pilot/runtime_interventions.json \
+  --runtime-interventions artifacts/vla_wam_shared_v2/pilot/directional_confirmation/runtime_interventions_efficient_wam_rt_robotwin.json \
+  --invalid-attempts artifacts/vla_wam_shared_v2/pilot/directional_confirmation/invalid_attempts_efficient_wam_rt_robotwin.json
+
+python3 tools/compile_vla_wam_v2_robotwin_confirmation.py \
+  --input-root /home/ali/projects/FastWAM/outputs/vla_wam_shared_v2 \
+  --model-id fastwam_robotwin \
+  --runtime-interventions artifacts/vla_wam_shared_v2/pilot/runtime_interventions.json \
+  --runtime-interventions artifacts/vla_wam_shared_v2/pilot/directional_confirmation/runtime_interventions_fastwam_robotwin.json \
+  --invalid-attempts artifacts/vla_wam_shared_v2/pilot/directional_confirmation/invalid_attempts_fastwam_robotwin.json
+
+python3 tools/compile_vla_wam_v2_robotwin_confirmation.py \
+  --input-root /home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2 \
+  --model-id lingbot_va_robotwin \
+  --runtime-interventions artifacts/vla_wam_shared_v2/pilot/runtime_interventions.json \
+  --runtime-interventions artifacts/vla_wam_shared_v2/pilot/directional_confirmation/runtime_interventions_lingbot_va_robotwin.json \
+  --invalid-attempts artifacts/vla_wam_shared_v2/pilot/directional_confirmation/invalid_attempts_lingbot_va_robotwin.json
+```
+
+After all 42 cells, run the compiler above for all three models, then regenerate
+progression, endpoint, media, and article artifacts. Keep
 decoded video, latent-only future, and action-only future interfaces distinct.
 
 <a id="experiment-3-lingbot-vla-4b-robotwin-onboarding"></a>
@@ -236,16 +330,19 @@ Sequence:
    viewport video for every cell.
 3. Apply the same competence gate; never infer unsteerability from setup failure.
 
-## Wording grid—conditional, not currently runnable
+## Wording grid—π0-FAST eligible but explicitly deferred
 
 The four exact prompt families are direct, short, goal-as-outcome, and desired
 side plus negated opposite. The latter is the contrastive condition: it asks for
 one side and explicitly negates the other. It is not contradictory.
 
 Run the full wording grid for a checkpoint only after direct competence appears
-in both directions under its confirmation. When authorized, retain exact
-same-seed LEFT/RIGHT pairs and the target-last token-order diagnostic. Do not
-change the prompt templates in `protocol.json`.
+in both directions under its confirmation. π0-FAST now satisfies that frozen
+eligibility condition, but its grid is explicitly deferred and **not
+authorized** until the three-WAM directional confirmations are compiled and a
+post-result decision records whether to spend on it. When eventually
+authorized, retain exact same-seed LEFT/RIGHT pairs and the target-last
+token-order diagnostic. Do not change the prompt templates in `protocol.json`.
 
 ## Analysis and publication queue
 

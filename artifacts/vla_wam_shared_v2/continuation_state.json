@@ -1,9 +1,9 @@
 {
   "schema_version": "vla-wam-shared-v2-continuation-v1",
-  "updated_at_utc": "2026-08-03T11:38:10Z",
+  "updated_at_utc": "2026-08-03T12:25:30Z",
   "evidence_head_before_handoff": "c4c67ad5772c55f1d17617189fd58b1ec9955646",
   "active_branch": "codex/wam-language-steerability",
-  "study_status": "four_new_model_direct_gates_complete_directional_confirmations_pending",
+  "study_status": "pi0_fast_directional_confirmation_complete_three_wam_directional_confirmations_pending",
   "authoritative_docs": [
     "docs/VLA_WAM_CONTINUATION.md",
     "docs/VLA_WAM_STEERABILITY_V2_PROTOCOL.md",
@@ -13,7 +13,7 @@
   "validation": {
     "command": "python3 tools/validate_vla_wam_v2_protocol.py",
     "last_status": "valid",
-    "last_check_count": 243,
+    "last_check_count": 284,
     "report": "artifacts/vla_wam_shared_v2/protocol_validation.json"
   },
   "host_snapshot": {
@@ -67,7 +67,21 @@
       "arena": "droid_robolab",
       "result": "LEFT 0/3; RIGHT 3/3",
       "artifact": "artifacts/vla_wam_shared_v2/pilot/results/pi0_fast_direct_gate.json",
-      "next_gate": "ten_seed_direct_directional_confirmation"
+      "next_gate": "ten_seed_direct_directional_confirmation",
+      "directional_confirmation": {
+        "status": "complete",
+        "result": "LEFT 1/10; RIGHT 10/10; 20/20 valid behavioral episodes; 10/10 aligned endpoint pairs; one wall-latency exclusion",
+        "artifact": "artifacts/vla_wam_shared_v2/pilot/results/pi0_fast_direct_confirmation.json",
+        "artifact_sha256": "491c74812ed0e4d36c16f8e0ded17a70af3e69740c9bcb87af129bb6d9563073",
+        "artifact_bytes": 74549,
+        "csv": "artifacts/vla_wam_shared_v2/pilot/results/pi0_fast_direct_confirmation.csv",
+        "csv_sha256": "cb87c858878970624ee0b624a673b7bd13f3fcd5d5e83764e0da49b74a405fc4",
+        "markdown": "artifacts/vla_wam_shared_v2/pilot/results/pi0_fast_direct_confirmation.md",
+        "markdown_sha256": "677a933a261843b9b13d19d5a36be33d6d765f89b55f14240f70bb4bf41ef9aa",
+        "runtime_intervention_ledger": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/pi0_fast_runtime_interventions.json",
+        "runtime_intervention_ledger_sha256": "2bb10b39d91c441033de261045907f779b289e658b9ef296aacd4e9649eeeedb",
+        "wording_grid": "eligible_under_frozen_direct_competence_rule_but_explicitly_deferred_pending_three_wam_confirmations_and_post_result_decision"
+      }
     },
     {
       "model_id": "efficient_wam_rt_robotwin",
@@ -91,17 +105,26 @@
       "next_gate": "ten_scene_direct_directional_confirmation"
     }
   ],
+  "pi0_fast_directional_confirmation_runtime": {
+    "policy_gpu": 0,
+    "simulator_gpu": 1,
+    "policy_server_stopped_cleanly": true,
+    "simulator_container_stopped_cleanly": true,
+    "ports_released": [8000, 5000],
+    "post_run_gpu_state": "idle; 26 MiB on GPU 0 and 11 MiB on GPU 1"
+  },
   "experiment_queue": [
     {
-      "priority": 1,
+      "priority": 0,
       "id": "pi0_fast_directional_confirmation",
-      "status": "ready",
-      "new_episode_count": 14,
+      "status": "complete",
+      "new_episode_count": 0,
       "registry": "artifacts/vla_wam_shared_v2/pilot/pi0_fast_directional_expansion.json",
+      "result_artifact": "artifacts/vla_wam_shared_v2/pilot/results/pi0_fast_direct_confirmation.json",
       "resume_section": "docs/VLA_WAM_CONTINUATION.md#experiment-1-pi0-fast-droid-directional-confirmation"
     },
     {
-      "priority": 2,
+      "priority": 1,
       "id": "robotwin_three_wam_directional_confirmation",
       "status": "ready",
       "new_episode_count": 42,
@@ -110,7 +133,7 @@
       "resume_section": "docs/VLA_WAM_CONTINUATION.md#experiment-2-three-wam-robotwin-directional-confirmation"
     },
     {
-      "priority": 3,
+      "priority": 2,
       "id": "lingbot_vla_4b_robotwin_pilot",
       "status": "blocked_checkpoint_and_repository_missing",
       "first_episode_count": 6,
@@ -118,7 +141,7 @@
       "resume_section": "docs/VLA_WAM_CONTINUATION.md#experiment-3-lingbot-vla-4b-robotwin-onboarding"
     },
     {
-      "priority": 4,
+      "priority": 3,
       "id": "groot_n17_droid_pilot",
       "status": "ready_for_frozen_probe_and_direct_gate",
       "first_episode_count": 6,
@@ -128,7 +151,7 @@
     }
   ],
   "unauthorized_work": [
-    "Do not run short, declarative, or contrastive cells for a checkpoint until its direct directional gate passes in both directions.",
+    "Do not run short, declarative, or contrastive cells for a checkpoint until its direct directional gate passes in both directions. pi0-FAST now meets that eligibility threshold, but its wording grid remains explicitly deferred and is not authorized until the three-WAM directional confirmations are compiled and a post-result decision is recorded.",
     "Do not pool DROID and RoboTwin raw success counts.",
     "Do not add oracle actions, subtask coaching, dynamic prompts, or progress-conditioned instructions."
   ],

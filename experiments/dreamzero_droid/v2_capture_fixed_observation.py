@@ -86,8 +86,10 @@ def main() -> None:
         rendering_mode=args_cli.rendering_type,
     )
     try:
+        print("[DreamZero v2 fixture] environment created", flush=True)
         env.reset()
         obs, _ = env.reset()
+        print("[DreamZero v2 fixture] exact reset captured", flush=True)
         if env_cfg.instruction != LEFT:
             raise ValueError(f"Frozen prompt bytes changed: {env_cfg.instruction!r}")
         cube_xyz = env.scene["rubiks_cube"].data.root_pos_w[0].detach().cpu().numpy()
@@ -120,6 +122,7 @@ def main() -> None:
         )
         if left_at_reset or right_at_reset:
             raise ValueError("Matched reset must begin outside both requested predicates")
+        print("[DreamZero v2 fixture] neutral predicates verified", flush=True)
 
         helper = object.__new__(V2DreamZeroDroidClient)
         helper.cam2_source = "right"
@@ -143,6 +146,7 @@ def main() -> None:
                 raise ValueError(f"Request contract mismatch for {key}: {arrays[key].shape}/{arrays[key].dtype}")
         fixture_path = args_cli.output_dir / "seed8300_fixed_observation.npz"
         np.savez(fixture_path, **arrays)
+        print("[DreamZero v2 fixture] wire fixture retained", flush=True)
 
         viewport_path = args_cli.output_dir / "rtx_viewport_persistence_gate.mp4"
         video_fps = 1 / (env_cfg.sim.render_interval * env_cfg.sim.dt)
@@ -170,6 +174,7 @@ def main() -> None:
         capture.release()
         if decoded_frames != 8:
             raise ValueError(f"Viewport writer produced {decoded_frames} frames, expected 8")
+        print("[DreamZero v2 fixture] viewport video decoded", flush=True)
 
         robolab_root = Path.cwd().resolve()
         robolab_commit = subprocess.check_output(
@@ -219,7 +224,21 @@ def main() -> None:
         }
         manifest_path = args_cli.output_dir / "fixed_observation_manifest.json"
         manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
-        print(json.dumps(manifest, indent=2, sort_keys=True))
+        print(json.dumps(manifest, indent=2, sort_keys=True), flush=True)
+    except BaseException as exc:
+        failure = {
+            "schema_version": "vla-wam-shared-v2-dreamzero-renderer-failure-v1",
+            "status": "technical_failure",
+            "exception_type": type(exc).__name__,
+            "exception": str(exc),
+            "traceback": traceback.format_exc(),
+            "claim_boundary": "No model was loaded or queried by this reset/renderer gate.",
+        }
+        failure_path = args_cli.output_dir / "technical_failure.json"
+        failure_path.write_text(json.dumps(failure, indent=2, sort_keys=True) + "\n")
+        print(f"[DreamZero v2 fixture] technical failure retained: {failure_path}", flush=True)
+        print(failure["traceback"], flush=True)
+        raise
     finally:
         env.close()
         simulation_app.close()

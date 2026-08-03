@@ -436,12 +436,13 @@ new. Cosmos-Reason2 is not an action policy unless a separately frozen adapter
 proves otherwise, so its outputs never enter robot-success denominators.
 
 Cosmos3 Edge progress: the fixed-observation contract gate passed, and the
-corrected neutral-scene seed-8300 behavioral pair is complete and valid. LEFT
-and RIGHT both succeeded; the paired executed actions were distinct, the
-endpoint ordering was aligned, and every exposed 33-frame decoded future was
-retained losslessly. The compact hash-bearing slice is
-[`cosmos3_edge_droid_seed8300.json`](../artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_droid_seed8300.json).
-Seeds 8301 and 8302 remain next; do not rerun seed 8300. Cosmos-Reason2's
+corrected neutral-scene seed-8300 and seed-8301 behavioral pairs are complete
+and valid. All four LEFT/RIGHT cells succeeded; both paired executed-action
+traces were distinct, both endpoint orderings were aligned, and every exposed
+33-frame decoded future was retained losslessly. The compact hash-bearing
+slices are [`cosmos3_edge_droid_seed8300.json`](../artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_droid_seed8300.json)
+and [`cosmos3_edge_droid_seed8301.json`](../artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_droid_seed8301.json).
+Seed 8302 remains next; do not rerun seeds 8300 or 8301. Cosmos-Reason2's
 corrected neutral-fixture 12-call diagnostic is also complete, but remains a
 non-behavioral text/point diagnostic outside every robot-success denominator.
 

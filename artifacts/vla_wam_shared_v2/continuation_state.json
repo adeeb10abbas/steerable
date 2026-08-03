@@ -1,6 +1,6 @@
 {
   "schema_version": "vla-wam-shared-v2-continuation-v1",
-  "updated_at_utc": "2026-08-03T19:14:02Z",
+  "updated_at_utc": "2026-08-03T19:22:00Z",
   "evidence_head_before_handoff": "673babd3247077f3cadf7adb6591f9bb7f71d5bf",
   "active_branch": "codex/wam-language-steerability",
   "study_status": "post_result_expansions_v2_a005_a006_frozen_active_setup",
@@ -289,22 +289,31 @@
       "dreamzero"
     ],
     "cosmos3_edge_progress": {
-      "status": "fixed_observation_gate_passed_seed8300_pair_complete",
+      "status": "fixed_observation_gate_passed_seeds8300_8301_complete",
       "completed_environment_seeds": [
-        8300
+        8300,
+        8301
       ],
       "do_not_rerun_environment_seeds": [
-        8300
+        8300,
+        8301
       ],
       "remaining_environment_seeds": [
-        8301,
         8302
       ],
-      "result": "seed8300 LEFT 1/1 and RIGHT 1/1; aligned endpoint ordering; distinct executed actions; every exposed 33-frame decoded future retained",
-      "artifact": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_droid_seed8300.json",
-      "artifact_sha256": "f0be51e7a0e1852a66bbe5e3012855c1266cac9ea5ddc6b6bed5e5d7ab4d38ae",
+      "result": "seeds8300-8301 LEFT 2/2 and RIGHT 2/2; 2/2 aligned endpoint pairs; 2/2 distinct executed-action pairs; every exposed 33-frame decoded future retained",
+      "artifacts": {
+        "seed8300": {
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_droid_seed8300.json",
+          "sha256": "f0be51e7a0e1852a66bbe5e3012855c1266cac9ea5ddc6b6bed5e5d7ab4d38ae"
+        },
+        "seed8301": {
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_droid_seed8301.json",
+          "sha256": "42f312f0b916a9c09034c898ecf92cc311b3661a03ad23f673a298b0e45dd211"
+        }
+      },
       "invalid_attempt_ledger": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_droid_invalid_attempts.json",
-      "next_command_summary": "restart the identical Cosmos3 Edge server with deterministic seed 8301, then run the matched neutral LEFT/RIGHT pair on the ali-owned RTX renderer pod"
+      "next_command_summary": "restart the identical Cosmos3 Edge server with deterministic seed 8302, then run the matched neutral LEFT/RIGHT pair on the ali-owned RTX renderer pod"
     },
     "second_wave_amendment": {
       "status": "light_wam_and_lawam_selected_before_download_or_inference",

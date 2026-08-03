@@ -1,7 +1,8 @@
 {
   "schema_version": "vla-wam-shared-v2-light-wam-robotwin-registry-v1",
-  "status": "frozen_before_first_light_wam_model_inference",
+  "status": "fixed_observation_probe_ready_after_isolated_planner_build",
   "frozen_at_utc": "2026-08-03T18:38:55Z",
+  "last_updated_at_utc": "2026-08-03T19:05:00Z",
   "recorded_at_git_head": "cd9f7440114b8b8ee9866a56429059e17e084484",
   "amendment_id": "V2-A006",
   "amendment_path": "artifacts/vla_wam_shared_v2/pilot/post_result_second_wave_amendment.json",
@@ -106,9 +107,15 @@
     "mplib": "0.2.1",
     "open3d": "0.18.0",
     "native_library_prefix": "/data/users/ali/vla_wam/envs/fastwam-native-libs/lib",
-    "curobo_source": "/data/users/ali/vla_wam/external/curobo-0.7.8/src",
+    "curobo_source": "/data/users/ali/vla_wam/external/curobo-lightwam-torch27/src",
+    "curobo_repository_commit": "d64c4b005459db10c5dd867d8b30a87d5bda9bdb",
+    "curobo_version": "0.7.8",
+    "curobo_build_contract": "editable isolated build against torch 2.7.1+cu128 for sm_80; no shared binary extensions",
+    "cuda_compiler": "/data/users/ali/vla_wam/envs/cuda-12.8-toolkit/bin/nvcc",
+    "cuda_nvcc_headers": "nvidia-cuda-nvcc-cu12==12.8.93",
+    "planner_import_preflight": "pass",
     "dependency_check": "pass",
-    "vulkan_and_simulator_rendering": "required_before_fixed_probe"
+    "vulkan_and_simulator_rendering": "pass"
   },
   "simulator_assets": {
     "source": "/data/users/ali/vla_wam/external/EfficientWAM-RoboTwin/assets",
@@ -130,12 +137,28 @@
   },
   "pre_inference_setup_events": [
     {
+      "event": "guard_invocation_rejected_before_worker_launch",
+      "reason": "The first command used a model-specific ledger filename that did not include the exact model id required by the checked-in guard.",
+      "behavioral_episode_consumed": false,
+      "model_action_request_consumed": false,
+      "denominator_policy": "command validation only; no worker and outside every model denominator",
+      "resolution": "Use model-specific filenames containing light_wam_robotwin."
+    },
+    {
       "event": "fixed_probe_attempt_rejected_before_model_action_inference",
       "reason": "The first guarded worker loaded the model, then stopped before environment setup because the initially linked bf44be checkout had no expanded ALOHA asset tree.",
       "behavioral_episode_consumed": false,
       "model_action_request_consumed": false,
       "denominator_policy": "infrastructure invalid; outside every model denominator",
       "resolution": "Point the Light-WAM vendor asset link at the hashed, already validated ali-owned RoboTwin assets listed above."
+    },
+    {
+      "event": "fixed_probe_attempt_rejected_before_model_action_inference",
+      "reason": "The second guarded worker stopped during simulator planner import because the shared CuRobo binary extensions were built against an incompatible Torch ABI.",
+      "behavioral_episode_consumed": false,
+      "model_action_request_consumed": false,
+      "denominator_policy": "infrastructure invalid; outside every model denominator",
+      "resolution": "Build CuRobo commit d64c4b005459db10c5dd867d8b30a87d5bda9bdb in the isolated Light-WAM Torch 2.7.1 environment and use only that source and its extensions. The post-build planner import preflight passed."
     }
   ],
   "fixed_observation_gate": {

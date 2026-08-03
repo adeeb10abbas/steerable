@@ -1,0 +1,149 @@
+{
+  "schema_version": "vla-wam-shared-v2-post-result-expansion-amendment-v1",
+  "study_id": "vla_wam_language_steerability_v2",
+  "amendment_id": "V2-A005",
+  "status": "frozen_after_completed_three_wam_results_before_any_newly_authorized_inference",
+  "recorded_at_utc": "2026-08-03T18:04:30Z",
+  "recorded_at_git_head": "961a6e2c9713af1f377105dae96b11a7ab8bc419",
+  "authorization": {
+    "decision": "expand_after_three_wam_review",
+    "requested_scope": "Run Cosmos, GR00T, and additional VLA or WAM checkpoints that add useful non-redundant evidence.",
+    "interpretation": "Authorize bounded, gate-controlled additions while preserving the frozen static-prompt, no-oracle, arena-separation, valid-failure, video, and raw-evidence rules."
+  },
+  "known_evidence_at_decision": {
+    "continuation_state_sha256": "ee058e2de694453f1a4b55da33cafca2211df86be74f307a735b44747903e796",
+    "pi0_fast_direct_confirmation_sha256": "491c74812ed0e4d36c16f8e0ded17a70af3e69740c9bcb87af129bb6d9563073",
+    "efficient_wam_rt_pairs04_09_slice_sha256": "e7d2d3791323fecedb49e8c1ecc8fda1e0ade91dedd6613b9079f7b290e1fd54",
+    "fastwam_pairs03_09_slice_sha256": "9d52920cded17d0f61c997f02624ea38ffc4c9a3536cdacf9f71115b151d14be",
+    "lingbot_va_pairs03_09_slice_sha256": "8617da77c819ea57d374f463a672bf73414b088bb8188b9b13a6c1c2e1fb9d85",
+    "summary": [
+      "pi0-FAST DROID direct confirmation: LEFT 1/10, RIGHT 10/10, endpoint ordering aligned 10/10.",
+      "Efficient-WAM-RT RoboTwin pairs03-09: 5/14 requested successes, endpoint ordering aligned 6/7.",
+      "FastWAM RoboTwin pairs03-09: 2/14 requested successes, endpoint ordering aligned 3/7.",
+      "LingBot-VA RoboTwin pairs03-09: 7/14 requested successes, endpoint ordering aligned 6/7."
+    ]
+  },
+  "authorized_queue": [
+    {
+      "priority": 0,
+      "id": "groot_n17_droid_direct_gate",
+      "model_id": "groot_n17_droid_vla",
+      "arena": "droid_robolab",
+      "checkpoint": "nvidia/GR00T-N1.7-DROID",
+      "checkpoint_revision": "05e7cc97e40dbd33b0890c35cc0214fcb0547ab5",
+      "repository_commit": "b9955401d50c92a29258732e3ad6ccd579f1bdc0",
+      "first_gate": "exact_repeat_fixed_observation_language_probe",
+      "behavioral_episode_count": 6,
+      "environment_seeds": [8300, 8301, 8302],
+      "sampling_seeds": [8300, 8301, 8302],
+      "prompt_family": "direct_command",
+      "requested_relations": ["left", "right"],
+      "requirements": [
+        "Use the exact frozen DROID LEFT and RIGHT prompt bytes.",
+        "Record viewport video and executed actions for every valid episode.",
+        "Use the official requested-relation release checker and static episode prompt.",
+        "Do not expand beyond six episodes until the frozen competence gate is applied."
+      ]
+    },
+    {
+      "priority": 1,
+      "id": "cosmos3_edge_droid_v2_direct_replication",
+      "model_id": "cosmos3_edge_droid_wam",
+      "arena": "droid_robolab",
+      "checkpoint": "nvidia/Cosmos3-Edge-Policy-DROID",
+      "first_gate": "existing_adapter_exact_repeat_and_contract_audit",
+      "behavioral_episode_count": 6,
+      "environment_seeds": [8300, 8301, 8302],
+      "sampling_seeds": [8300, 8301, 8302],
+      "prompt_family": "direct_command",
+      "requested_relations": ["left", "right"],
+      "requirements": [
+        "Reuse the validated DROID arena without pooling with RoboTwin.",
+        "Record viewport video, executed actions, and every released decodable future.",
+        "Score imagined/executed agreement only where the released future interface exposes it.",
+        "Treat an unavailable or incompatible action adapter as a technical blocker, never as behavioral failure."
+      ]
+    },
+    {
+      "priority": 2,
+      "id": "lingbot_vla_4b_robotwin_direct_gate",
+      "model_id": "lingbot_vla_4b_robotwin",
+      "arena": "robotwin_place_a2b",
+      "checkpoint": "Robbyant/lingbot-vla-4b-posttrain-robotwin",
+      "first_gate": "repository_checkpoint_and_observation_action_contract_audit",
+      "behavioral_episode_count": 6,
+      "pair_ids": ["robotwin_pair_00", "robotwin_pair_01", "robotwin_pair_02"],
+      "environment_seeds": [4300000, 4300001, 4300002],
+      "sampling_seeds": [8400, 8401, 8402],
+      "prompt_family": "direct_command",
+      "requested_relations": ["left", "right"],
+      "requirements": [
+        "Use an isolated repository and environment.",
+        "Freeze exact repository and checkpoint revisions before the first behavioral episode.",
+        "Record simulator video and executed actions for every valid episode.",
+        "Apply the original zero/one-direction/both-direction competence gate after six episodes."
+      ]
+    },
+    {
+      "priority": 3,
+      "id": "cosmos_reason2_static_language_diagnostic",
+      "model_id": "cosmos_reason2_2b",
+      "arena": "droid_robolab_observation_diagnostic",
+      "checkpoint": "nvidia/Cosmos-Reason2-2B",
+      "checkpoint_revision": "9ce19a195e423419c349abfc86fd07178b230561",
+      "first_gate": "official_interface_and_deterministic_generation_audit",
+      "behavioral_episode_count": 0,
+      "diagnostic_input_count": 12,
+      "environment_seeds": [8300, 8301, 8302],
+      "prompt_family": "direct_command",
+      "requested_relations": ["left", "right"],
+      "exact_repeats_per_input": 2,
+      "requirements": [
+        "Use identical frozen reset observations within every LEFT/RIGHT prompt pair.",
+        "Retain raw model outputs and deterministic decoding settings.",
+        "Report prompt sensitivity, duplicate repeatability, and requested-side reasoning only.",
+        "Never enter this diagnostic in robot-action success denominators unless a separately frozen action-policy adapter is verified."
+      ]
+    },
+    {
+      "priority": 4,
+      "id": "pi0_fast_three_wording_expansion",
+      "model_id": "pi0_fast_droid_vla",
+      "arena": "droid_robolab",
+      "checkpoint": "gs://openpi-assets-simeval/pi0_fast_droid_jointpos",
+      "first_gate": "reuse_completed_direct_competence_and_verify_exact_prompt_registry",
+      "behavioral_episode_count": 60,
+      "environment_seeds": [8300, 8301, 8302, 8303, 8304, 8305, 8306, 8307, 8308, 8309],
+      "sampling_seeds": [8300, 8301, 8302, 8303, 8304, 8305, 8306, 8307, 8308, 8309],
+      "prompt_families": ["short_command", "goal_as_outcome", "desired_plus_negated_opposite"],
+      "requested_relations": ["left", "right"],
+      "requirements": [
+        "Reuse the completed twenty direct-command episodes; do not rerun them.",
+        "Use the exact prompt bytes already frozen in protocol.json.",
+        "Record viewport video and preserve exact-seed LEFT/RIGHT pairs.",
+        "Keep DROID results separate from every RoboTwin denominator."
+      ]
+    }
+  ],
+  "conditional_second_wave": {
+    "status": "audit_authorized_inference_not_yet_frozen",
+    "candidate_ids": [
+      "light_wam",
+      "lawam",
+      "pi0_droid_vla",
+      "dreamzero"
+    ],
+    "selection_rule": "Select at most one additional checkpoint after recording official code and weight availability, same-arena adapter feasibility, action-interface compatibility, scientific non-redundancy, and time-to-six-valid-cells. Freeze a model-specific registry in a new disclosed amendment before inference.",
+    "zero_policy": "Unavailable or technically incompatible candidates remain not measured, never zero."
+  },
+  "unchanged_rules": [
+    "Never pool DROID and RoboTwin raw success rates.",
+    "Use static episode prompts with no oracle, subtask coach, prompt switching, or progress-conditioned language.",
+    "Preserve every valid failure and keep infrastructure failures outside model denominators.",
+    "Record simulator video for every new behavioral episode.",
+    "Keep raw outputs, checkpoints, and environments on ali-owned PVC storage outside ordinary Git.",
+    "Score generated futures only when the released interface exposes decodable future evidence.",
+    "Do not rewrite the original frozen protocol or known-result disclosures."
+  ],
+  "claim_boundary": "V2-A005 is a disclosed post-result expansion. It authorizes bounded new evidence after the completed three-WAM results were known; it does not retroactively preregister the added experiments or change any completed result."
+}

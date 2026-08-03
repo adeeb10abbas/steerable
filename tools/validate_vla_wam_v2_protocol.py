@@ -1074,6 +1074,10 @@ def validate(workspace: Path) -> dict[str, Any]:
     continuation_state_path = (
         workspace / "artifacts/vla_wam_shared_v2/continuation_state.json"
     )
+    post_result_amendment_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/post_result_expansion_amendment.json"
+    )
     efficient_pair03_integration_path = (
         workspace
         / "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/efficient_wam_rt_pair03_integration.json"
@@ -1116,6 +1120,7 @@ def validate(workspace: Path) -> dict[str, Any]:
     directional_fixtures = load_json(directional_fixtures_path)
     pi0_fast_expansion = load_json(pi0_fast_expansion_path)
     continuation_state = load_json(continuation_state_path)
+    post_result_amendment = load_json(post_result_amendment_path)
     bundle_manifest = load_json(bundle_manifest_path)
     paired_media = load_json(paired_media_path)
     droid_paired_media = load_json(droid_paired_media_path)
@@ -1777,8 +1782,8 @@ def validate(workspace: Path) -> dict[str, Any]:
 
     require(
         continuation_state["study_status"]
-        == "pi0_fast_complete_three_wam_pairs03_09_complete_post_result_decision_pending",
-        "continuation state names the current evidence boundary",
+        == "post_result_expansion_v2_a005_frozen_before_new_inference",
+        "continuation state names the frozen V2-A005 pre-inference boundary",
         checks,
     )
     queue = continuation_state["experiment_queue"]
@@ -1821,28 +1826,95 @@ def validate(workspace: Path) -> dict[str, Any]:
         and queue[1]["remaining_new_episode_count"] == 0
         and queue[1]["next_cell"] is None
         and queue[1]["do_not_rerun"] == expected_do_not_rerun
-        and queue[2]["status"].startswith("blocked_")
+        and queue[2]["status"]
+        == "authorized_onboarding_blocked_checkpoint_and_repository_missing"
         and queue[3]["status"]
-        == "ready_but_not_authorized_pending_post_result_decision"
+        == "authorized_ready_for_exact_repeat_probe_and_direct_gate"
         and groot_readiness.get("status")
         == "assets_downloaded_and_server_contract_smoke_complete"
         and groot_readiness.get("server_smoke", {}).get("health_ping") is True
         and groot_readiness.get("server_smoke", {}).get("simulator_episode_started") is False,
-        "continuation state freezes all 42 WAM cells and distinguishes compiler blockers from GR00T readiness",
+        "continuation state freezes all 42 WAM cells and records authorized GR00T and LingBot-VLA gates",
         checks,
     )
     require(
-        post_result_decision.get("status") == "pending_explicit_authorization"
-        and post_result_decision.get("authorized_next_experiment") is None
-        and set(post_result_decision.get("candidates_not_started", []))
-        == {
-            "pi0_fast_wording_grid",
-            "wam_wording_sweeps",
-            "groot_n17_droid_pilot",
-            "lingbot_vla_4b_robotwin_pilot",
-            "cosmos_reason2_experiment",
-        },
-        "continuation state leaves wording, GR00T, LingBot-VLA, and Cosmos behind an explicit post-result decision",
+        post_result_decision.get("status")
+        == "recorded_and_frozen_before_new_inference"
+        and post_result_decision.get("amendment_id") == "V2-A005"
+        and post_result_decision.get("amendment")
+        == "artifacts/vla_wam_shared_v2/pilot/post_result_expansion_amendment.json"
+        and post_result_decision.get("amendment_sha256")
+        == sha256(post_result_amendment_path)
+        and post_result_decision.get("authorized_queue")
+        == [item["id"] for item in post_result_amendment["authorized_queue"]]
+        and post_result_decision.get("conditional_second_wave")
+        == post_result_amendment["conditional_second_wave"]["candidate_ids"],
+        "continuation state binds the frozen V2-A005 authorized queue and conditional audit",
+        checks,
+    )
+    authorized_queue = post_result_amendment["authorized_queue"]
+    require(
+        post_result_amendment["schema_version"]
+        == "vla-wam-shared-v2-post-result-expansion-amendment-v1"
+        and post_result_amendment["amendment_id"] == "V2-A005"
+        and post_result_amendment["status"]
+        == "frozen_after_completed_three_wam_results_before_any_newly_authorized_inference"
+        and post_result_amendment["recorded_at_git_head"]
+        == "961a6e2c9713af1f377105dae96b11a7ab8bc419"
+        and [item["priority"] for item in authorized_queue] == [0, 1, 2, 3, 4]
+        and [item["id"] for item in authorized_queue]
+        == [
+            "groot_n17_droid_direct_gate",
+            "cosmos3_edge_droid_v2_direct_replication",
+            "lingbot_vla_4b_robotwin_direct_gate",
+            "cosmos_reason2_static_language_diagnostic",
+            "pi0_fast_three_wording_expansion",
+        ],
+        "V2-A005 is disclosed, ordered, and frozen against the completed evidence head",
+        checks,
+    )
+    known = post_result_amendment["known_evidence_at_decision"]
+    require(
+        known["pi0_fast_direct_confirmation_sha256"]
+        == sha256(pi0_fast_confirmation_path)
+        and known["efficient_wam_rt_pairs04_09_slice_sha256"]
+        == sha256(
+            workspace
+            / "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/efficient_wam_rt_pairs04_09_slice.json"
+        )
+        and known["fastwam_pairs03_09_slice_sha256"]
+        == sha256(
+            workspace
+            / "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/fastwam_pairs03_09_slice.json"
+        )
+        and known["lingbot_va_pairs03_09_slice_sha256"]
+        == sha256(
+            workspace
+            / "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/lingbot_va_pairs03_09_slice.json"
+        ),
+        "V2-A005 hashes the completed evidence known when the expansion was selected",
+        checks,
+    )
+    by_id = {item["id"]: item for item in authorized_queue}
+    require(
+        by_id["groot_n17_droid_direct_gate"]["behavioral_episode_count"] == 6
+        and by_id["cosmos3_edge_droid_v2_direct_replication"]["behavioral_episode_count"]
+        == 6
+        and by_id["lingbot_vla_4b_robotwin_direct_gate"]["behavioral_episode_count"]
+        == 6
+        and by_id["cosmos_reason2_static_language_diagnostic"]["behavioral_episode_count"]
+        == 0
+        and by_id["cosmos_reason2_static_language_diagnostic"]["diagnostic_input_count"]
+        == 12
+        and by_id["pi0_fast_three_wording_expansion"]["behavioral_episode_count"]
+        == 60
+        and by_id["pi0_fast_three_wording_expansion"]["prompt_families"]
+        == [
+            "short_command",
+            "goal_as_outcome",
+            "desired_plus_negated_opposite",
+        ],
+        "V2-A005 bounds behavioral spend and keeps Cosmos-Reason2 diagnostic-only",
         checks,
     )
     for relative_doc in continuation_state["authoritative_docs"]:
@@ -1923,6 +1995,12 @@ def validate(workspace: Path) -> dict[str, Any]:
         "pi0_fast_expansion_sha256": sha256(pi0_fast_expansion_path),
         "continuation_state_path": str(continuation_state_path.relative_to(workspace)),
         "continuation_state_sha256": sha256(continuation_state_path),
+        "post_result_expansion_amendment_path": str(
+            post_result_amendment_path.relative_to(workspace)
+        ),
+        "post_result_expansion_amendment_sha256": sha256(
+            post_result_amendment_path
+        ),
         "efficient_wam_pair03_handoff": pair03_handoff,
         "efficient_wam_pairs04_09": efficient_pairs04_09,
         "fastwam_pairs03_09": fastwam_pairs03_09,

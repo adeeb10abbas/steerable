@@ -5,9 +5,9 @@ inference** on 3 August 2026 at 01:19:36 UTC. Three six-episode RoboTwin WAM
 pilots and one six-episode π0-FAST DROID VLA pilot completed the
 one-direction-only branch of the frozen adaptive gate. π0-FAST has since
 completed its prospectively frozen ten-seed direct-command directional
-confirmation. Efficient-WAM-RT has also completed the first prospective
-RoboTwin confirmation pair; the three model-level WAM confirmations remain
-pending. The RoboTwin ten-scene directional confirmation was frozen at
+confirmation. Efficient-WAM-RT, FastWAM, and LingBot-VA have completed all 42
+prospective pairs03–09 RoboTwin cells. The RoboTwin ten-scene directional
+confirmation was frozen at
 03:29:32 UTC after
 disclosing all 18 WAM pilot outcomes and before any of its 42 new expansion
 episodes. The machine-readable source of truth is
@@ -16,6 +16,14 @@ selection rules are frozen separately in
 [`media_selection_plan.json`](../artifacts/vla_wam_shared_v2/media_selection_plan.json).
 The executable validator and its exact current check count are recorded in
 [`protocol_validation.json`](../artifacts/vla_wam_shared_v2/protocol_validation.json).
+
+Disclosed post-result amendment `V2-A005` was recorded on 3 August 2026 after
+those WAM outcomes were known and before any newly authorized inference. It
+adds bounded GR00T and Cosmos gates, LingBot-VLA onboarding, a diagnostic-only
+Cosmos-Reason2 probe, and the eligible π0-FAST non-direct wording cells. Its
+machine-readable source is
+[`post_result_expansion_amendment.json`](../artifacts/vla_wam_shared_v2/pilot/post_result_expansion_amendment.json).
+The original freeze and known-result disclosures below remain unchanged.
 
 This is a disclosed post-v1 extension. Every pi0.5/Cosmos result in the
 160-episode DROID study and the small retrospective Efficient-WAM, FastWAM,

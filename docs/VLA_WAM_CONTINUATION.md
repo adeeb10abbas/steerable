@@ -31,9 +31,11 @@ Efficient-WAM-RT, eighteen for FastWAM, and five for LingBot-VA. The frozen
 twenty-episode compilers still fail closed because historical pairs00–02 raw
 files are absent on this PVC; the committed pairs03–09 slices are the current
 claim boundary. π0-FAST has completed its separate DROID direct-only
-confirmation. Its wording grid remains explicitly **deferred and not
-authorized** pending a post-result decision. No WAM wording sweep, GR00T run,
-or LingBot-VLA onboarding is authorized by this handoff.
+confirmation. Post-result amendment `V2-A005` now authorizes a bounded GR00T
+gate, Cosmos behavioral replication and non-behavioral Reason2 diagnostic,
+LingBot-VLA onboarding, and the three remaining π0-FAST wording families.
+This decision was made after the completed three-WAM outcomes were known and is
+not presented as preregistered.
 
 The current article, figures, and videos are:
 
@@ -406,11 +408,44 @@ prospective-slice compilers produced the committed claim boundary instead.
 Keep decoded video, latent-only future, and action-only future interfaces
 distinct in every downstream summary.
 
+<a id="post-result-expansion-v2-a005"></a>
+## Post-result expansion — V2-A005
+
+Status: frozen before any newly authorized inference. Machine-readable source:
+[`post_result_expansion_amendment.json`](../artifacts/vla_wam_shared_v2/pilot/post_result_expansion_amendment.json).
+
+The completed three-WAM results were known when this queue was chosen. The
+addition is therefore a disclosed post-result expansion, not a rewrite of the
+original freeze. Static prompts, no oracle or coach, full video retention,
+valid-failure preservation, infrastructure exclusions, and strict DROID versus
+RoboTwin separation remain unchanged.
+
+| Priority | Experiment | First gate | Authorized behavioral spend |
+| ---: | --- | --- | ---: |
+| 0 | GR00T N1.7 DROID VLA | exact-repeat fixed-observation probe | 6 direct cells |
+| 1 | Cosmos3 Edge DROID WAM | existing-adapter repeat and action-contract audit | 6 direct cells |
+| 2 | LingBot-VLA 4B RoboTwin | repository/checkpoint and observation/action audit | 6 direct cells |
+| 3 | Cosmos-Reason2-2B | official-interface deterministic reasoning audit | 0; diagnostic only |
+| 4 | π0-FAST wording expansion | verify frozen prompt registry | 60 non-direct cells |
+
+GR00T and Cosmos3 Edge use DROID seeds 8300–8302 with the exact direct-command
+LEFT/RIGHT prompts. LingBot-VLA uses RoboTwin pairs00–02. The π0-FAST direct
+cells are already complete and must not be rerun; only short-command,
+goal-as-outcome, and desired-plus-negated-opposite cells at seeds 8300–8309 are
+new. Cosmos-Reason2 is not an action policy unless a separately frozen adapter
+proves otherwise, so its outputs never enter robot-success denominators.
+
+Light-WAM, LaWAM, pi0 DROID, and DreamZero are an audit-only conditional second
+wave. Select at most one using released-code/weight availability, same-arena
+adapter feasibility, action-interface compatibility, non-redundancy, and
+time-to-six-valid-cells. Freeze a new model-specific amendment before inference.
+
 <a id="experiment-3-lingbot-vla-4b-robotwin-onboarding"></a>
 ## Experiment 3 — LingBot-VLA 4B RoboTwin onboarding
 
-Priority: third. Status: blocked because the isolated repository and checkpoint
-are not present. Do not confuse this VLA with the already-tested LingBot-VA WAM.
+Priority: third. Status: onboarding is authorized by `V2-A005`, but blocked
+until the isolated repository and checkpoint are present. Do not confuse this
+VLA with the already-tested LingBot-VA WAM.
 
 Checkpoint: `Robbyant/lingbot-vla-4b-posttrain-robotwin`.
 
@@ -430,9 +465,9 @@ Sequence:
 <a id="experiment-4-groot-n17-droid-onboarding"></a>
 ## Experiment 4 — GR00T N1.7 DROID onboarding
 
-Priority: fourth. Status: onboarding assets and server smoke complete, but the
-experiment is **not authorized** under the current handoff and the frozen
-direct-command pilot remains unrun. The official `Isaac-GR00T` checkout is
+Priority: first new behavioral model. Status: authorized by `V2-A005`; assets
+and server smoke are complete, while the exact-repeat probe and frozen
+direct-command pilot remain unrun. The official `Isaac-GR00T` checkout is
 pinned at `b9955401d50c92a29258732e3ad6ccd579f1bdc0`; local model
 directories contain `nvidia/GR00T-N1.7-DROID` at
 `05e7cc97e40dbd33b0890c35cc0214fcb0547ab5`, `nvidia/GR00T-N1.7-3B` at
@@ -441,9 +476,9 @@ directories contain `nvidia/GR00T-N1.7-DROID` at
 The local DROID checkpoint loaded on GPU 0, bound `127.0.0.1:5555`, answered a
 health ping, and was shut down cleanly. Use the no-weight-download preflight in
 [`experiments/groot_droid/README.md`](../experiments/groot_droid/README.md)
-before launching a future server, but only after explicit authorization.
-Cosmos-Reason2 is asset-only readiness: no adapter audit, language probe, or
-behavioral episode has started, and no Cosmos experiment is authorized.
+before launching the server. Cosmos-Reason2 remains a diagnostic-only backbone:
+no adapter audit or language probe has started, and it is not authorized for a
+behavioral denominator. Cosmos3 Edge is the separately authorized action WAM.
 
 Sequence if newly authorized:
 
@@ -452,7 +487,7 @@ Sequence if newly authorized:
    viewport video for every cell.
 3. Apply the same competence gate; never infer unsteerability from setup failure.
 
-## Wording grid—π0-FAST eligible but explicitly deferred
+## Wording grid—π0-FAST three-family expansion authorized
 
 The four exact prompt families are direct, short, goal-as-outcome, and desired
 side plus negated opposite. The latter is the contrastive condition: it asks for
@@ -460,11 +495,12 @@ one side and explicitly negates the other. It is not contradictory.
 
 Run the full wording grid for a checkpoint only after direct competence appears
 in both directions under its confirmation. π0-FAST satisfies that frozen
-eligibility condition, and the three-WAM pairs03–09 slices are now compiled,
-but no post-result authorization decision has been recorded. The grid remains
-explicitly deferred and **not authorized**. When eventually authorized, retain
-exact same-seed LEFT/RIGHT pairs and the target-last token-order diagnostic. Do
-not change the prompt templates in `protocol.json`.
+eligibility condition, the three-WAM pairs03–09 slices are compiled, and
+`V2-A005` authorizes the remaining three prompt families. Reuse the completed
+direct cells rather than rerunning them. Run short-command, goal-as-outcome,
+and contrastive cells at seeds 8300–8309 with exact same-seed LEFT/RIGHT pairs,
+viewport video, and the target-last token-order diagnostic. Do not change the
+prompt templates in `protocol.json`.
 
 ## Analysis and publication queue
 

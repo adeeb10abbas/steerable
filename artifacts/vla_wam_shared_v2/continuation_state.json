@@ -1,9 +1,9 @@
 {
   "schema_version": "vla-wam-shared-v2-continuation-v1",
-  "updated_at_utc": "2026-08-03T17:01:54Z",
+  "updated_at_utc": "2026-08-03T18:05:43Z",
   "evidence_head_before_handoff": "673babd3247077f3cadf7adb6591f9bb7f71d5bf",
   "active_branch": "codex/wam-language-steerability",
-  "study_status": "pi0_fast_complete_three_wam_pairs03_09_complete_post_result_decision_pending",
+  "study_status": "post_result_expansion_v2_a005_frozen_before_new_inference",
   "authoritative_docs": [
     "docs/VLA_WAM_CONTINUATION.md",
     "docs/VLA_WAM_STEERABILITY_V2_PROTOCOL.md",
@@ -14,7 +14,7 @@
   "validation": {
     "command": "python3 tools/validate_vla_wam_v2_protocol.py",
     "last_status": "valid",
-    "last_check_count": 615,
+    "last_check_count": 618,
     "report": "artifacts/vla_wam_shared_v2/protocol_validation.json"
   },
   "host_snapshot": {
@@ -60,7 +60,7 @@
       "simulator_episode_started": false,
       "server_stopped_cleanly": true
     },
-    "next_step": "Do not start GR00T under the current handoff. Preserve readiness and wait for an explicit post-result authorization decision."
+    "next_step": "Run the V2-A005 exact-repeat fixed-observation probe, then the six direct-command DROID cells at seeds 8300-8302 if the probe and action contract pass."
   },
   "completed_direct_gates": [
     {
@@ -255,7 +255,7 @@
     {
       "priority": 2,
       "id": "lingbot_vla_4b_robotwin_pilot",
-      "status": "blocked_checkpoint_and_repository_missing",
+      "status": "authorized_onboarding_blocked_checkpoint_and_repository_missing",
       "first_episode_count": 6,
       "checkpoint": "Robbyant/lingbot-vla-4b-posttrain-robotwin",
       "resume_section": "docs/VLA_WAM_CONTINUATION.md#experiment-3-lingbot-vla-4b-robotwin-onboarding"
@@ -263,24 +263,32 @@
     {
       "priority": 3,
       "id": "groot_n17_droid_pilot",
-      "status": "ready_but_not_authorized_pending_post_result_decision",
+      "status": "authorized_ready_for_exact_repeat_probe_and_direct_gate",
       "first_episode_count": 6,
       "checkpoint": "nvidia/GR00T-N1.7-DROID",
-      "dependency": "all model assets and server contract smoke complete; current handoff explicitly forbids starting the experiment",
+      "dependency": "all model assets and server contract smoke complete; V2-A005 authorizes the probe and six-cell direct gate",
       "resume_section": "docs/VLA_WAM_CONTINUATION.md#experiment-4-groot-n17-droid-onboarding"
     }
   ],
   "post_result_decision": {
-    "status": "pending_explicit_authorization",
-    "authorized_next_experiment": null,
-    "candidates_not_started": [
-      "pi0_fast_wording_grid",
-      "wam_wording_sweeps",
-      "groot_n17_droid_pilot",
-      "lingbot_vla_4b_robotwin_pilot",
-      "cosmos_reason2_experiment"
+    "status": "recorded_and_frozen_before_new_inference",
+    "amendment_id": "V2-A005",
+    "amendment": "artifacts/vla_wam_shared_v2/pilot/post_result_expansion_amendment.json",
+    "amendment_sha256": "e8f724a1818e20ab6cb1481c87a5d5c255d42148d47bf387d7f77f3643587101",
+    "authorized_queue": [
+      "groot_n17_droid_direct_gate",
+      "cosmos3_edge_droid_v2_direct_replication",
+      "lingbot_vla_4b_robotwin_direct_gate",
+      "cosmos_reason2_static_language_diagnostic",
+      "pi0_fast_three_wording_expansion"
     ],
-    "note": "The completed pairs03-09 WAM slices must be reviewed before expanding the frozen experimental boundary."
+    "conditional_second_wave": [
+      "light_wam",
+      "lawam",
+      "pi0_droid_vla",
+      "dreamzero"
+    ],
+    "note": "The expansion was selected after the completed three-WAM results were known and is disclosed as post-result rather than preregistered."
   },
   "cross_host_handoff": {
     "status": "portable_handoff_committed_assets_ready",
@@ -296,7 +304,7 @@
     ]
   },
   "unauthorized_work": [
-    "Do not start wording sweeps, GR00T, LingBot-VLA, or Cosmos under this handoff. The three-WAM pairs03-09 slices are compiled, but an explicit post-result authorization decision has not been recorded.",
+    "Do not exceed the bounded V2-A005 queue or start a conditional second-wave checkpoint before a model-specific registry is frozen in a new disclosed amendment.",
     "Do not pool DROID and RoboTwin raw success counts.",
     "Do not add oracle actions, subtask coaching, dynamic prompts, or progress-conditioned instructions."
   ],

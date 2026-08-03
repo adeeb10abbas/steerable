@@ -1,0 +1,142 @@
+{
+  "schema_version": "vla-wam-shared-v2-light-wam-robotwin-registry-v1",
+  "status": "frozen_before_first_light_wam_model_inference",
+  "frozen_at_utc": "2026-08-03T18:38:55Z",
+  "recorded_at_git_head": "cd9f7440114b8b8ee9866a56429059e17e084484",
+  "amendment_id": "V2-A006",
+  "amendment_path": "artifacts/vla_wam_shared_v2/pilot/post_result_second_wave_amendment.json",
+  "amendment_sha256": "5d011abc46c144e91ba7441fb5ed3c681ce67c1a56b6ca51c1c29810708eef7b",
+  "protocol_path": "artifacts/vla_wam_shared_v2/protocol.json",
+  "protocol_sha256": "1862fbbb40fef34621a840a0ed15889cf42da066424e866b66f04227b28c73b9",
+  "model": {
+    "id": "light_wam_robotwin",
+    "class": "WAM",
+    "repository": "https://github.com/L1ziang/Light-WAM.git",
+    "repository_commit": "b2785f66e13fd9987e94ae1ecc1c441d5059c9ae",
+    "pvc_path": "/data/users/ali/vla_wam/external/Light-WAM"
+  },
+  "checkpoint": {
+    "id": "l1ziang/lightwam-checkpoints",
+    "revision": "7cc8593fb95423a9cfbb93f82c95c2fa7d5357bd",
+    "scope": "lightwam_robotwin only",
+    "pvc_path": "/data/users/ali/vla_wam/checkpoints/lightwam-robotwin/lightwam_robotwin",
+    "resolved_regular_file_count": 3,
+    "resolved_bytes": 3720597150,
+    "files": {
+      "checkpoints/weights/step_460000.pt": {
+        "bytes": 3720498949,
+        "sha256": "d788c582f7f3338f7cb1c39e8e21bba0440179e3cb9bd557ce1788a81bece476"
+      },
+      "config.yaml": {
+        "bytes": 9486,
+        "sha256": "edd8807d2cf468ec9b4685e933544c1b1b7ec4fb469513c1b852fa5ce762be10"
+      },
+      "dataset_stats.json": {
+        "bytes": 88715,
+        "sha256": "7a02c46cfc8c5e746c0afbe41fca73f723eda34cbc083f8ca54f76d8f7468095"
+      }
+    }
+  },
+  "video_backbone": {
+    "id": "Wan-AI/Wan2.1-T2V-1.3B",
+    "revision": "37ec512624d61f7aa208f7ea8140a131f93afc9a",
+    "pvc_path": "/data/users/ali/vla_wam/checkpoints/Wan2.1-T2V-1.3B",
+    "resolved_regular_file_count": 22,
+    "resolved_bytes": 17573837064,
+    "critical_files": {
+      "diffusion_pytorch_model.safetensors": {
+        "bytes": 5676070424,
+        "sha256": "96b6b242ca1c2f24e9d02cd6596066fab6d310e2d7538f33ae267cb18d957e8f"
+      },
+      "Wan2.1_VAE.pth": {
+        "bytes": 507609880,
+        "sha256": "38071ab59bd94681c686fa51d75a1968f64e470262043be31f7a094e442fd981"
+      },
+      "models_t5_umt5-xxl-enc-bf16.pth": {
+        "bytes": 11361920418,
+        "sha256": "7cace0da2b446bbbbc57d031ab6cf163a3d59b366da94e5afe36745b746fd81d"
+      },
+      "config.json": {
+        "bytes": 249,
+        "sha256": "ab37994c43740513f94b3ba6233a784035a67b43c8cde83c8f31aa90468c67ce"
+      },
+      "google/umt5-xxl/tokenizer.json": {
+        "bytes": 16837417,
+        "sha256": "6e197b4d3dbd71da14b4eb255f4fa91c9c1f2068b20a2de2472967ca3d22602b"
+      },
+      "google/umt5-xxl/spiece.model": {
+        "bytes": 4548313,
+        "sha256": "e3909a67b780650b35cf529ac782ad2b6b26e6d1f849d3fbb6a872905f452458"
+      }
+    },
+    "download_note": "The complete pinned snapshot contains 22 non-cache files. Decorative repository media are retained but are not model inputs; every executable model asset is byte-counted and hashed above."
+  },
+  "adapter_contract": {
+    "runner_path": "experiments/light_wam_robotwin/v2_direct_gate.py",
+    "runner_bytes": 20966,
+    "runner_sha256": "51ab68b3dd5e1c816685226b3963ebb1912b25b8900e0b63369dd1b6e8d626c8",
+    "official_deploy_path": "experiments/robotwin/lightwam_policy/deploy_policy.py",
+    "official_deploy_sha256": "6194d0170de29aa3c102dc9e34019ad0fce3814b4ee413e46b0ef79f417da05d",
+    "official_inference_implementation_sha256": "450a0cf2706c110858f5d27fbd953f0ff7ca755a36f038567c517022545bfa4d",
+    "robotwin_vendor_base": "RoboTwin bf44be51cf5717a5595ce59447f2cf5263d2aa95",
+    "robotwin_base_task_sha256": "072bab0d0a83bc4cd29006ffed8fa6c53e4924a444c8faeb677659daed6f4a2c",
+    "prompt_wrapper": "A video recorded from a robot's point of view executing the following instruction: {task}",
+    "input_camera_layout": "three 320x240 views composed as head above left/right wrists, normalized to one 384x320 frame",
+    "state_shape": [14],
+    "action_chunk_shape": [32, 14],
+    "executed_replan_steps": 24,
+    "future_interface": "action_only_infer_action",
+    "future_evidence_classification": "not_applicable",
+    "future_evidence_reason": "The released RoboTwin deployment calls infer_action, whose returned dictionary contains only action. The state-fusion branch uses the video backbone as an observation encoder but exposes neither decoded video nor a retained future latent."
+  },
+  "runtime_gate": {
+    "kubernetes_context": "prod-dcwi-warrenq1-vmkub007",
+    "namespace": "211247-prod",
+    "pod": "lerobot-13-ali",
+    "gpu": "NVIDIA A100-SXM4-80GB",
+    "gpu_index": 0,
+    "free_memory_mib_before_model_load": 81153,
+    "pvc_available_bytes": 190574132985856,
+    "environment": "/data/users/ali/vla_wam/envs/light-wam-b200",
+    "python": "3.10.12",
+    "torch": "2.7.1+cu128",
+    "transformers": "4.49.0",
+    "sapien": "3.0.0b1",
+    "warp_lang": "1.12.0",
+    "mplib": "0.2.1",
+    "open3d": "0.18.0",
+    "native_library_prefix": "/data/users/ali/vla_wam/envs/fastwam-native-libs/lib",
+    "curobo_source": "/data/users/ali/vla_wam/external/curobo-0.7.8/src",
+    "dependency_check": "pass",
+    "vulkan_and_simulator_rendering": "required_before_fixed_probe"
+  },
+  "fixed_observation_gate": {
+    "status": "pending_no_model_inference_at_freeze",
+    "pair_id": "robotwin_pair_00",
+    "environment_seed": 4300000,
+    "sampling_seed": 8400,
+    "conditions": ["left", "left_exact_repeat", "right"],
+    "requirements": [
+      "Use one byte-identical head/wrist/state observation for all three calls.",
+      "Restore Python, NumPy, Torch, and CUDA RNG state before every call.",
+      "Require finite [32,14] action outputs and report exact-repeat and LEFT/RIGHT deltas.",
+      "Do not convert this diagnostic into behavioral success evidence."
+    ]
+  },
+  "behavioral_queue": {
+    "status": "blocked_until_fixed_observation_and_rendering_contracts_pass",
+    "pair_ids": ["robotwin_pair_00", "robotwin_pair_01", "robotwin_pair_02"],
+    "environment_seeds": [4300000, 4300001, 4300002],
+    "sampling_seeds": [8400, 8401, 8402],
+    "requested_relations": ["left", "right"],
+    "behavioral_episode_count": 6,
+    "task_config": "demo_clean",
+    "max_actions": 400,
+    "prompt_controller": "episode_static",
+    "simulator_video_required": true,
+    "executed_action_trace_required": true,
+    "valid_failure_retention": true,
+    "infrastructure_failure_denominator_policy": "exclude_and_ledger",
+    "oracle_or_coach": false
+  }
+}

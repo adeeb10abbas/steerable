@@ -11,6 +11,7 @@ from robolab.core.scenes.utils import import_scene
 from robolab.core.task.conditionals import object_dropped, object_grabbed, object_left_of
 from robolab.core.task.subtask import Subtask
 from robolab.core.task.task import Task
+from robolab.variations.camera import OverShoulderRightCameraCfg
 
 
 @configclass
@@ -32,6 +33,13 @@ class RubiksCubeLeftOfBowlMatchedTermination:
 class RubiksCubeLeftOfBowlMatchedTask(Task):
     contact_object_list = ["rubiks_cube", "banana", "bowl", "table"]
     scene = import_scene("rubiks_cube_banana_bowl.usda", contact_object_list)
+    # DreamZero-DROID's released interface consumes two exterior cameras.  The
+    # matched RoboLab scene supplies the left shoulder and wrist sensors through
+    # its runtime defaults, so add the official mirrored right-shoulder sensor
+    # without changing any object, robot, or success-predicate state.
+    scene.over_shoulder_right_camera = (
+        OverShoulderRightCameraCfg.over_shoulder_right_camera
+    )
     scene.rubiks_cube.init_state.pos = (
         0.303364634513855,
         0.12396888434886932,

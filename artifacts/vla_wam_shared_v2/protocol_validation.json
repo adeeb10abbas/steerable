@@ -1,6 +1,6 @@
 {
   "calculated_pilot_episode_count": 144,
-  "check_count": 85,
+  "check_count": 89,
   "checks": [
     "protocol is marked frozen before standardized v2 expansion inference",
     "media plan and protocol have the same freeze status",
@@ -76,6 +76,10 @@
     "compiled Efficient-WAM pilot contains six episodes in three exact pairs",
     "compiled Efficient-WAM pilot preserves the observed 2/3 LEFT and 0/3 RIGHT result",
     "Efficient-WAM pilot follows the frozen one-direction-only expansion gate",
+    "compiled FastWAM pilot contains six episodes in three exact pairs",
+    "compiled FastWAM pilot preserves the observed 1/3 LEFT and 0/3 RIGHT result",
+    "FastWAM pilot follows the frozen one-direction-only expansion gate",
+    "FastWAM action-only interface records imagined-video evidence as not applicable",
     "pre-episode failures and the renderer repair remain in a separate technical ledger",
     "pilot arithmetic evaluates to 144 episodes",
     "registered pilot episode count equals the calculated grid",
@@ -89,10 +93,12 @@
     "v1 direct and contrastive seed sets are disjoint and cannot be called exact-seed pairs"
   ],
   "efficient_result_path": "artifacts/vla_wam_shared_v2/pilot/results/efficient_wam_rt_direct_gate.json",
-  "efficient_result_sha256": "1f64302026ae5dd10ae1f7fd2ef29f202b631c5b03587f9f9bf7403c96e045fe",
+  "efficient_result_sha256": "2575d2893f7ec5c17eedeeba5fe7a1ea75e99cc0160417ba70805ee8b161f3eb",
   "execution_config_path": "artifacts/vla_wam_shared_v2/pilot/execution_configs.json",
   "execution_config_sha256": "b6d14f57d932b8801a54118729f30b5ec3aac877da8ab08622054e8cf996429a",
   "expansion_model_count": 6,
+  "fastwam_result_path": "artifacts/vla_wam_shared_v2/pilot/results/fastwam_direct_gate.json",
+  "fastwam_result_sha256": "eb59284d094083ad7cd0f464be17d3600268c60a2778dda7a3a3462be94f2ced",
   "media_plan_path": "artifacts/vla_wam_shared_v2/media_selection_plan.json",
   "media_plan_sha256": "9c9368013845314a2402d64bfa4f59ce4625f0802cb2ddc1b810842a839bbb17",
   "protocol_path": "artifacts/vla_wam_shared_v2/protocol.json",

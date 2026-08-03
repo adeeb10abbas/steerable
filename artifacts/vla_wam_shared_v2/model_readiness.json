@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "study_id": "vla_wam_language_steerability_v2",
-  "audited_at_utc": "2026-08-03T02:34:00Z",
+  "audited_at_utc": "2026-08-03T02:43:00Z",
   "host": "ali-MS-7D25",
   "local_compute": {
     "gpu_count": 2,
@@ -29,7 +29,7 @@
     },
     "fastwam": {
       "path": "/home/ali/projects/FastWAM",
-      "commit": "e9addcb37e4444fdfed040ea1abd127bbb8bc1db"
+      "commit": "04892b4a0873d3f38747182f051ee7c87e65ed90"
     },
     "lerobot_lingbot": {
       "path": "/home/ali/projects/lerobot-lingbot",
@@ -96,7 +96,7 @@
     },
     {
       "id": "fastwam_robotwin",
-      "status": "v2_static_contract_pass_runtime_pending",
+      "status": "standardized_v2_pilot_complete_directional_expansion_selected",
       "policy_adapter": "/home/ali/projects/FastWAM/experiments/robotwin_language_gate/closed_loop_language_gate.py",
       "checkpoint_status": "present",
       "checkpoint_path": "/home/ali/projects/FastWAM/checkpoints/fastwam_release/robotwin_uncond_3cam_384.pt",
@@ -104,7 +104,9 @@
       "auxiliary_asset_path": "/home/ali/projects/FastWAM/checkpoints/DiffSynth-Studio",
       "auxiliary_asset_bytes": 5114032589,
       "adapter_contract_report": "artifacts/vla_wam_shared_v2/pilot/adapter_contracts.json",
-      "next_gate": "load the checkpoint and run paired direct-command episodes in frozen anchor scene 00 with simulator video enabled"
+      "pilot_result": "artifacts/vla_wam_shared_v2/pilot/results/fastwam_direct_gate.json",
+      "pilot_outcome": "LEFT 1/3; RIGHT 0/3; test-time imagined-video metric not applicable for this action-only release interface",
+      "next_gate": "freeze the same seven additional anchor scenes used for Efficient-WAM-RT, then complete a ten-scene direct-command directional-bias confirmation"
     },
     {
       "id": "lingbot_va_robotwin",
@@ -122,9 +124,9 @@
   "readiness_summary": {
     "reference_complete": 2,
     "checkpoint_present_adapter_pending": 0,
-    "v2_static_contract_pass_runtime_pending": 2,
+    "v2_static_contract_pass_runtime_pending": 1,
     "checkpoint_or_server_missing": 3,
-    "standardized_v2_pilot_complete": 1
+    "standardized_v2_pilot_complete": 2
   },
-  "claim_limit": "Efficient-WAM-RT has a completed six-episode standardized direct-command pilot, which is too small for a stable rate estimate and selects only the directional-bias expansion. The other new models remain setup or runtime pending."
+  "claim_limit": "Efficient-WAM-RT and FastWAM have completed six-episode standardized direct-command pilots. Both are too small for stable rate estimates and select only the directional-bias expansion. LingBot-VA and all new VLA checkpoints remain runtime or setup pending."
 }

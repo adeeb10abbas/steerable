@@ -18,7 +18,13 @@ from pathlib import Path
 from typing import Any
 
 
-MODEL_ID = "efficient_wam_rt_robotwin"
+DEFAULT_MODEL_ID = "efficient_wam_rt_robotwin"
+MODEL_LABELS = {
+    "efficient_wam_rt_robotwin": "Efficient-WAM-RT",
+    "fastwam_robotwin": "FastWAM",
+    "lingbot_va_robotwin": "LingBot-VA",
+}
+PAIR_BY_ENVIRONMENT_SEED = {4300000: "pair00", 4300001: "pair01", 4300002: "pair02"}
 PICKUP_LIFT_M = 0.03
 PICKUP_CONSECUTIVE_STEPS = 3
 
@@ -42,7 +48,10 @@ def file_record(path: Path | None) -> dict[str, Any] | None:
 
 
 def predicted_video(result: dict[str, Any]) -> Path | None:
-    directory = Path(result["predicted_video_dir"])
+    directory_value = result.get("predicted_video_dir")
+    if not directory_value:
+        return None
+    directory = Path(directory_value)
     videos = sorted(directory.glob("*.mp4"))
     if len(videos) != 1:
         return None
@@ -58,7 +67,7 @@ def max_consecutive(values: list[bool]) -> int:
     return longest
 
 
-def classify_episode(result_path: Path) -> dict[str, Any]:
+def classify_episode(result_path: Path, model_id: str) -> dict[str, Any]:
     result = json.loads(result_path.read_text())
     trajectory_path = Path(result["trajectory_path"])
     trajectory = json.loads(trajectory_path.read_text())
@@ -100,14 +109,16 @@ def classify_episode(result_path: Path) -> dict[str, Any]:
     sim_video = Path(result["simulator_video"])
     future_video = predicted_video(result)
 
-    pair_id = next(part for part in result_path.parts if part.startswith("pair"))
+    pair_id = PAIR_BY_ENVIRONMENT_SEED.get(int(result["environment_seed"]))
+    if pair_id is None:
+        raise ValueError(f"Unregistered pilot environment seed: {result['environment_seed']}")
     prompt_body = result["prompt"].removeprefix("Put the ").removesuffix(".")
     prompt_separator = f" to the {result['requested_relation']} of the "
     if prompt_separator not in prompt_body:
         raise ValueError(f"Cannot recover direct-command object descriptions: {result['prompt']}")
     movable_description, reference_description = prompt_body.split(prompt_separator, 1)
     return {
-        "model_id": MODEL_ID,
+        "model_id": model_id,
         "pair_id": pair_id,
         "task": result["task"],
         "environment_seed": int(result["environment_seed"]),
@@ -200,6 +211,29 @@ def summarize(episodes: list[dict[str, Any]]) -> dict[str, Any]:
             }
         )
 
+    left_successes = by_direction["left"]["successes"]
+    right_successes = by_direction["right"]["successes"]
+    if left_successes and right_successes:
+        gate_decision = "expand_frozen_four_prompt_grid"
+        gate_reason = (
+            "Direct-command success occurred in both directions, so the frozen gate "
+            "permits the ten-seed four-prompt expansion."
+        )
+    elif left_successes or right_successes:
+        gate_decision = "expand_direct_directional_bias_only"
+        observed_direction = "LEFT" if left_successes else "RIGHT"
+        gate_reason = (
+            f"Direct-command success occurred for {observed_direction} only, so the frozen gate "
+            "calls for a ten-scene direct-command directional-bias confirmation before any "
+            "four-wording sweep."
+        )
+    else:
+        gate_decision = "stop_base_competence_failure"
+        gate_reason = (
+            "No direct-command episode succeeded in either direction. The frozen gate retains "
+            "all six attempts as a base-competence failure and stops this model's wording expansion."
+        )
+
     return {
         "episode_count": len(episodes),
         "pair_count": len(pairs),
@@ -211,12 +245,8 @@ def summarize(episodes: list[dict[str, Any]]) -> dict[str, Any]:
             row["prompt_ignored_native_task_completed"] for row in episodes
         ),
         "paired_endpoint_responses": pairs,
-        "pilot_gate_decision": "expand_direct_directional_bias_only",
-        "pilot_gate_reason": (
-            "Direct-command success occurred for LEFT but not RIGHT, so the frozen gate "
-            "calls for a ten-scene direct-command directional-bias confirmation before "
-            "any four-wording sweep."
-        ),
+        "pilot_gate_decision": gate_decision,
+        "pilot_gate_reason": gate_reason,
     }
 
 
@@ -225,7 +255,7 @@ def write_report(path: Path, compiled: dict[str, Any]) -> None:
     left = summary["by_direction"]["left"]
     right = summary["by_direction"]["right"]
     lines = [
-        "# Efficient-WAM-RT standardized direct-command pilot",
+        f"# {compiled['model_label']} standardized direct-command pilot",
         "",
         f"Compiled at `{compiled['compiled_at_utc']}` from {summary['episode_count']} executed episodes "
         f"in {summary['pair_count']} exact left/right scene pairs.",
@@ -237,9 +267,9 @@ def write_report(path: Path, compiled: dict[str, Any]) -> None:
         f"- Overall: **{summary['successes']}/{summary['episode_count']}**.",
         f"- Prompt-ignored/native-task-completed failures: **{summary['prompt_ignored_native_task_completed_count']}**.",
         "",
-        "This is evidence of directional asymmetry, not yet a stable rate estimate. The preregistered "
-        "pilot gate therefore selects a ten-scene direct-command directional-bias confirmation; it "
-        "does not authorize the four-wording sweep yet.",
+        compiled["summary"]["pilot_gate_reason"],
+        "",
+        "This six-episode pilot is a gate, not a stable rate estimate.",
         "",
         "## Exact command pairs and endpoints",
         "",
@@ -268,9 +298,14 @@ def write_report(path: Path, compiled: dict[str, Any]) -> None:
             "height while the gripper is reported closed. It is a transparent diagnostic proxy, not "
             "a learned semantic judgment.",
             "",
-            "Pixel differences between imagined futures are deliberately not used as semantic "
-            "steerability evidence. The raw imagined videos are hash-locked here for later predicate "
-            "scoring and imagination-versus-execution analysis.",
+            (
+                "Pixel differences between imagined futures are deliberately not used as semantic "
+                "steerability evidence. The raw imagined artifacts are hash-locked here for later "
+                "predicate scoring and imagination-versus-execution analysis."
+                if any(episode["imagined_future_video"] for episode in compiled["episodes"])
+                else "This inference interface emits actions but no test-time imagined-video artifact, "
+                "so imagination-versus-execution metrics are recorded as not applicable rather than zero."
+            ),
             "",
         ]
     )
@@ -284,6 +319,8 @@ def main() -> None:
         type=Path,
         default=Path("/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate"),
     )
+    parser.add_argument("--model-id", choices=sorted(MODEL_LABELS), default=DEFAULT_MODEL_ID)
+    parser.add_argument("--output-stem")
     parser.add_argument(
         "--output-dir",
         type=Path,
@@ -294,11 +331,17 @@ def main() -> None:
     paths = sorted(args.input_root.glob("pair*/**/result.json"))
     if len(paths) != 6:
         raise RuntimeError(f"Expected exactly six pilot results, found {len(paths)}")
-    episodes = [classify_episode(path) for path in paths]
+    episodes = [classify_episode(path, args.model_id) for path in paths]
+    output_stem = args.output_stem or (
+        "efficient_wam_rt_direct_gate"
+        if args.model_id == DEFAULT_MODEL_ID
+        else f"{args.model_id.removesuffix('_robotwin')}_direct_gate"
+    )
     compiled = {
         "schema_version": "vla-wam-shared-v2-robotwin-pilot-v1",
         "compiled_at_utc": datetime.now(timezone.utc).isoformat(),
-        "model_id": MODEL_ID,
+        "model_id": args.model_id,
+        "model_label": MODEL_LABELS[args.model_id],
         "measurement": {
             "oracle_actions": 0,
             "dynamic_prompts": 0,
@@ -311,9 +354,9 @@ def main() -> None:
     }
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
-    json_path = args.output_dir / "efficient_wam_rt_direct_gate.json"
-    csv_path = args.output_dir / "efficient_wam_rt_direct_gate.csv"
-    report_path = args.output_dir / "efficient_wam_rt_direct_gate.md"
+    json_path = args.output_dir / f"{output_stem}.json"
+    csv_path = args.output_dir / f"{output_stem}.csv"
+    report_path = args.output_dir / f"{output_stem}.md"
     json_path.write_text(json.dumps(compiled, indent=2) + "\n")
     flat = [flatten(row) for row in episodes]
     with csv_path.open("w", newline="") as handle:

@@ -1,7 +1,8 @@
 {
   "schema_version": "vla-wam-shared-v2-robotwin-pilot-v1",
-  "compiled_at_utc": "2026-08-03T02:33:02.808780+00:00",
+  "compiled_at_utc": "2026-08-03T02:39:02.064261+00:00",
   "model_id": "efficient_wam_rt_robotwin",
+  "model_label": "Efficient-WAM-RT",
   "measurement": {
     "oracle_actions": 0,
     "dynamic_prompts": 0,
@@ -67,7 +68,7 @@
       }
     ],
     "pilot_gate_decision": "expand_direct_directional_bias_only",
-    "pilot_gate_reason": "Direct-command success occurred for LEFT but not RIGHT, so the frozen gate calls for a ten-scene direct-command directional-bias confirmation before any four-wording sweep."
+    "pilot_gate_reason": "Direct-command success occurred for LEFT only, so the frozen gate calls for a ten-scene direct-command directional-bias confirmation before any four-wording sweep."
   },
   "episodes": [
     {

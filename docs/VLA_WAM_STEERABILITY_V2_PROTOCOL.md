@@ -309,6 +309,12 @@ pooled or placed on an unlabeled common leaderboard.
   the transparent verified-pickup proxy, so the four failures are post-pick
   placement failures. The frozen gate selects only a ten-scene direct-command
   directional-bias confirmation, not the four-wording sweep.
+- [`fastwam_direct_gate.md`](../artifacts/vla_wam_shared_v2/pilot/results/fastwam_direct_gate.md)
+  records FastWAM's matched result: 1/3 LEFT and 0/3 RIGHT. One additional
+  LEFT run entered the requested region without completing release. Because
+  the released action-only inference path emits no test-time future video, its
+  imagination/execution fields are explicitly not applicable. This model also
+  selects only the direct-command directional-bias confirmation.
 - [`execution_configs.json`](../artifacts/vla_wam_shared_v2/pilot/execution_configs.json)
   records Efficient-WAM-RT's exact completed-pilot settings and prospectively
   freezes FastWAM and LingBot-VA settings. The pre-episode SAPIEN startup

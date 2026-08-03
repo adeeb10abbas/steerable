@@ -146,11 +146,15 @@ def validate(workspace: Path) -> dict[str, Any]:
         workspace
         / "artifacts/vla_wam_shared_v2/pilot/results/efficient_wam_rt_direct_gate.json"
     )
+    fastwam_result_path = (
+        workspace / "artifacts/vla_wam_shared_v2/pilot/results/fastwam_direct_gate.json"
+    )
     protocol = load_json(protocol_path)
     media = load_json(media_path)
     execution = load_json(execution_path)
     technical = load_json(technical_path)
     efficient_result = load_json(efficient_result_path)
+    fastwam_result = load_json(fastwam_result_path)
     checks: list[str] = []
 
     require(
@@ -361,6 +365,31 @@ def validate(workspace: Path) -> dict[str, Any]:
         "Efficient-WAM pilot follows the frozen one-direction-only expansion gate",
         checks,
     )
+    fastwam_summary = fastwam_result["summary"]
+    require(
+        fastwam_summary["episode_count"] == 6 and fastwam_summary["pair_count"] == 3,
+        "compiled FastWAM pilot contains six episodes in three exact pairs",
+        checks,
+    )
+    require(
+        fastwam_summary["by_direction"]["left"]["successes"] == 1
+        and fastwam_summary["by_direction"]["right"]["successes"] == 0,
+        "compiled FastWAM pilot preserves the observed 1/3 LEFT and 0/3 RIGHT result",
+        checks,
+    )
+    require(
+        fastwam_summary["pilot_gate_decision"] == "expand_direct_directional_bias_only",
+        "FastWAM pilot follows the frozen one-direction-only expansion gate",
+        checks,
+    )
+    require(
+        all(
+            episode["imagined_future_video"] is None
+            for episode in fastwam_result["episodes"]
+        ),
+        "FastWAM action-only interface records imagined-video evidence as not applicable",
+        checks,
+    )
     require(
         len(technical["events"]) == 4
         and technical["events"][-1]["classification"] == "environment_repair",
@@ -415,6 +444,8 @@ def validate(workspace: Path) -> dict[str, Any]:
         "execution_config_sha256": sha256(execution_path),
         "efficient_result_path": str(efficient_result_path.relative_to(workspace)),
         "efficient_result_sha256": sha256(efficient_result_path),
+        "fastwam_result_path": str(fastwam_result_path.relative_to(workspace)),
+        "fastwam_result_sha256": sha256(fastwam_result_path),
         "check_count": len(checks),
         "checks": checks,
         "registered_model_count": len(models),

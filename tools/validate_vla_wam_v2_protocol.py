@@ -68,6 +68,19 @@ def validate_file_record(
     path = Path(record["path"])
     if not path.is_absolute():
         path = workspace / path
+    elif not path.is_file():
+        # Compiled evidence can retain the absolute path of the host where it
+        # was produced.  For portable handoffs, resolve checked-in sources by
+        # their repository-relative suffix without weakening the byte/hash
+        # validation below.  External raw-output paths still fail closed.
+        for repository_root in ("artifacts", "docs", "handoff", "experiments", "tools"):
+            if repository_root not in path.parts:
+                continue
+            relative_path = Path(*path.parts[path.parts.index(repository_root) :])
+            candidate = workspace / relative_path
+            if candidate.is_file():
+                path = candidate
+                break
     require(path.is_file(), f"{label} exists", checks)
     require(path.stat().st_size == record["bytes"], f"{label} byte count matches", checks)
     require(sha256(path) == record["sha256"], f"{label} hash matches", checks)

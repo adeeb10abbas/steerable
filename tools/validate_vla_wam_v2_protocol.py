@@ -239,6 +239,115 @@ def validate_efficient_pair03_handoff(
     }
 
 
+def validate_efficient_pairs04_09_slice(
+    workspace: Path,
+    manifest_path: Path,
+    checks: list[str],
+) -> dict[str, Any]:
+    """Validate the compact PVC-resident Efficient-WAM prospective slice."""
+    manifest = load_json(manifest_path)
+    require(
+        manifest["schema_version"]
+        == "vla-wam-shared-v2-prospective-slice-evidence-manifest-v1"
+        and manifest["model_id"] == "efficient_wam_rt_robotwin"
+        and manifest["valid_episode_count"] == 12
+        and manifest["requested_success_count"] == 5
+        and manifest["invalid_attempt_count"] == 4
+        and manifest["runtime_intervention_count"] == 0,
+        "Efficient-WAM pairs04-09 manifest fixes the valid, invalid, and intervention counts",
+        checks,
+    )
+    for label, record in manifest["files"].items():
+        validate_file_record(workspace, record, f"Efficient-WAM pairs04-09 {label}", checks)
+
+    slice_path = workspace / manifest["files"]["slice_json"]["path"]
+    payload = load_json(slice_path)
+    episodes = payload["episodes"]
+    expected = {
+        (seed, direction)
+        for seed in range(4300004, 4300010)
+        for direction in ("left", "right")
+    }
+    observed = {(int(row["environment_seed"]), row["requested_relation"]) for row in episodes}
+    require(
+        payload["schema_version"] == "vla-wam-shared-v2-robotwin-prospective-slice-v1"
+        and payload["model_id"] == "efficient_wam_rt_robotwin"
+        and payload["expected_environment_seeds"] == list(range(4300004, 4300010))
+        and len(episodes) == 12
+        and observed == expected,
+        "Efficient-WAM prospective slice contains exactly pairs04-09 and both directions",
+        checks,
+    )
+    summary = payload["summary"]
+    require(
+        summary["episode_count"] == 12
+        and summary["pair_count"] == 6
+        and summary["successes"] == 5
+        and summary["by_direction"]["left"]["successes"] == 3
+        and summary["by_direction"]["right"]["successes"] == 2
+        and summary["aligned_endpoint_pairs"] == 6
+        and summary["invalid_attempt_count"] == 4
+        and summary["future_interface_counts"] == {"decoded_future_video": 12},
+        "Efficient-WAM prospective slice reports 5/12 success and six aligned endpoint pairs",
+        checks,
+    )
+    require(
+        all(
+            row["prompt_family"] == "direct_command"
+            and row["action_trace"]["count"] == row["actions_executed"]
+            and row["action_trace"]["shape"][0] == row["actions_executed"]
+            and len(row["action_trace"]["sha256"]) == 64
+            and row["operational_wall_latency_valid"] is True
+            and row["runtime_intervention_ids"] == []
+            for row in episodes
+        ),
+        "Efficient-WAM pairs04-09 retain static direct prompts, executed traces, and valid latency",
+        checks,
+    )
+    pairs = summary["paired_endpoint_responses"]
+    cells = {(int(row["environment_seed"]), row["requested_relation"]): row for row in episodes}
+    require(
+        len(pairs) == 6
+        and all(
+            pair["physical_initial_state_sha256"]
+            == cells[(int(pair["environment_seed"]), "left")]["physical_initial_state_sha256"]
+            == cells[(int(pair["environment_seed"]), "right")]["physical_initial_state_sha256"]
+            and pair["first_ten_executed_action_rms"] > 0
+            and pair["first_ten_executed_action_rms_steps_used"] == 10
+            and pair["action_metric_unavailable_reason"] is None
+            for pair in pairs
+        ),
+        "Efficient-WAM pairs04-09 match recorded initial state and differ in paired executed actions",
+        checks,
+    )
+    invalid = load_json(
+        workspace / manifest["files"]["invalid_attempt_ledger"]["path"]
+    )["events"]
+    runtime = load_json(
+        workspace / manifest["files"]["runtime_intervention_ledger"]["path"]
+    )["events"]
+    require(
+        len(invalid) == 4
+        and all(
+            event["classification"] == "partial"
+            and event["behavioral_result_valid"] is False
+            and event["wall_latency_valid"] is False
+            for event in invalid
+        )
+        and runtime == [],
+        "Efficient-WAM infrastructure-invalid attempts remain outside behavior and no thermal event is invented",
+        checks,
+    )
+    return {
+        "manifest": str(manifest_path.relative_to(workspace)),
+        "manifest_sha256": sha256(manifest_path),
+        "slice": str(slice_path.relative_to(workspace)),
+        "slice_sha256": sha256(slice_path),
+        "valid_episode_count": 12,
+        "requested_success_count": 5,
+    }
+
+
 def require(condition: bool, message: str, checks: list[str]) -> None:
     if not condition:
         raise RuntimeError(message)
@@ -658,6 +767,10 @@ def validate(workspace: Path) -> dict[str, Any]:
     efficient_pair03_integration_path = (
         workspace
         / "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/efficient_wam_rt_pair03_integration.json"
+    )
+    efficient_pairs04_09_manifest_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/efficient_wam_rt_pairs04_09_evidence_manifest.json"
     )
     bundle_manifest_path = workspace / "handoff/repo_bundles/MANIFEST.json"
     paired_media_path = (
@@ -1346,7 +1459,7 @@ def validate(workspace: Path) -> dict[str, Any]:
 
     require(
         continuation_state["study_status"]
-        == "pi0_fast_complete_efficient_pair03_complete_40_wam_cells_pending",
+        == "pi0_fast_complete_efficient_pairs03_09_complete_28_wam_cells_pending",
         "continuation state names the current evidence boundary",
         checks,
     )
@@ -1372,10 +1485,13 @@ def validate(workspace: Path) -> dict[str, Any]:
         queue[0]["status"] == "complete"
         and queue[0].get("result_artifact")
         == "artifacts/vla_wam_shared_v2/pilot/results/pi0_fast_direct_confirmation.json"
-        and queue[1]["status"] == "ready_for_cross_host_resume"
-        and queue[1]["new_episode_count"] == 40
-        and queue[1]["completed_new_episode_count"] == 2
-        and queue[1]["next_cell"] == "efficient_wam_rt_robotwin/robotwin_pair_04"
+        and queue[1]["status"] == "efficient_complete_fastwam_lingbot_in_progress"
+        and queue[1]["new_episode_count"] == 42
+        and queue[1]["handoff_remaining_episode_count"] == 40
+        and queue[1]["completed_new_episode_count"] == 14
+        and queue[1]["remaining_new_episode_count"] == 28
+        and queue[1]["next_cell"] == "fastwam_robotwin/robotwin_pair_03"
+        and len(queue[1]["do_not_rerun"]) == 7
         and queue[2]["status"].startswith("blocked_")
         and queue[3]["status"] == "ready_for_frozen_probe_and_direct_gate"
         and groot_readiness.get("status")
@@ -1398,6 +1514,9 @@ def validate(workspace: Path) -> dict[str, Any]:
         directional_expansion_path,
         bundle_manifest_path,
         checks,
+    )
+    efficient_pairs04_09 = validate_efficient_pairs04_09_slice(
+        workspace, efficient_pairs04_09_manifest_path, checks
     )
     confirmation = validate_pi0_fast_confirmation(
         workspace, pi0_fast_confirmation_path, pi0_fast_expansion_path, checks
@@ -1437,6 +1556,7 @@ def validate(workspace: Path) -> dict[str, Any]:
         "continuation_state_path": str(continuation_state_path.relative_to(workspace)),
         "continuation_state_sha256": sha256(continuation_state_path),
         "efficient_wam_pair03_handoff": pair03_handoff,
+        "efficient_wam_pairs04_09": efficient_pairs04_09,
         "paired_media_path": str(paired_media_path.relative_to(workspace)),
         "paired_media_sha256": sha256(paired_media_path),
         "droid_paired_media_path": str(droid_paired_media_path.relative_to(workspace)),

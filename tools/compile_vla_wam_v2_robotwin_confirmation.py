@@ -19,6 +19,8 @@ from typing import Any
 
 import numpy as np
 
+from vla_wam_v2_protocol import first_seen_object_description
+
 from compile_vla_wam_v2_robotwin_pilot import (
     MODEL_LABELS, PICKUP_CONSECUTIVE_STEPS, PICKUP_LIFT_M, file_record,
     max_consecutive, predicted_artifact, predicted_video,
@@ -138,6 +140,18 @@ def load_registry(path: Path, model_id: str) -> dict[int, dict[str, Any]]:
     if len(scenes) != 10 or {scene["environment_seed"] for scene in scenes} != set(range(4300000, 4300010)):
         raise RuntimeError("Directional registry must contain exactly the ten frozen scenes")
     return {int(scene["environment_seed"]): scene for scene in scenes}
+
+
+def load_directional_fixtures(path: Path | None) -> dict[int, dict[str, Any]]:
+    if path is None:
+        return {}
+    payload = json.loads(path.read_text())
+    if payload.get("schema_version") != "vla-wam-shared-v2-directional-fixtures-v1":
+        raise RuntimeError(f"Unexpected directional-fixture schema: {path}")
+    fixtures = {int(scene["environment_seed"]): scene for scene in payload.get("scenes", [])}
+    if len(fixtures) != len(payload.get("scenes", [])):
+        raise RuntimeError(f"Duplicate environment seed in directional fixtures: {path}")
+    return fixtures
 
 
 def is_prospective_scene(scene: dict[str, Any]) -> bool:
@@ -270,6 +284,8 @@ def classify(
     result_path: Path, model_id: str, scenes: dict[int, dict[str, Any]],
     interventions: dict[tuple[int, str], list[dict[str, Any]]],
     invalid_attempts: dict[tuple[int, str], list[dict[str, Any]]],
+    fixtures: dict[int, dict[str, Any]] | None = None,
+    robotwin_root: Path | None = None,
 ) -> dict[str, Any]:
     result = json.loads(result_path.read_text())
     seed, direction = int(result["environment_seed"]), result["requested_relation"]
@@ -283,7 +299,35 @@ def classify(
         raise RuntimeError(f"Frozen task/seed mismatch: {result_path}")
     if result.get("prompt_family") != "direct_command":
         raise RuntimeError(f"Non-direct prompt family: {result_path}")
-    expected_prompt = f"Put the {result['object_name']} to the {direction} of the {result['target_name']}."
+    fixture = (fixtures or {}).get(seed)
+    if fixture is not None:
+        # Asset variant indices are adapter-local implementation details; the
+        # frozen semantic scene identity is task/seed plus asset names.  The
+        # recorded variant indices still enter the paired initial-state hash.
+        identity = (
+            result["task"], int(result["sampling_seed"]), result["object_name"],
+            result["target_name"],
+        )
+        expected_identity = (
+            fixture["anchor_task"], int(fixture["sampling_seed"]),
+            fixture["movable_model_name"], fixture["reference_model_name"],
+        )
+        if identity != expected_identity:
+            raise RuntimeError(f"Frozen directional-fixture identity mismatch: {result_path}")
+        if robotwin_root is not None:
+            movable = first_seen_object_description(
+                robotwin_root, result["object_name"], int(result["object_model_id"])
+            )
+            reference = first_seen_object_description(
+                robotwin_root, result["target_name"], int(result["target_model_id"])
+            )
+        else:
+            movable = fixture["movable_description"]
+            reference = fixture["reference_description"]
+    else:
+        movable = result["object_name"]
+        reference = result["target_name"]
+    expected_prompt = f"Put the {movable} to the {direction} of the {reference}."
     if result.get("prompt") != expected_prompt:
         raise RuntimeError(f"Prompt bytes do not match frozen direct template: {result_path}")
     trajectory_path = Path(result["trajectory_path"])
@@ -346,8 +390,11 @@ def compile_confirmation(
     input_root: Path, model_id: str, registry_path: Path,
     interventions_paths: Path | list[Path] | tuple[Path, ...] | None = None,
     invalid_attempts_paths: Path | list[Path] | tuple[Path, ...] | None = None,
+    fixtures_path: Path | None = None,
+    robotwin_root: Path | None = None,
 ) -> dict[str, Any]:
     scenes = load_registry(registry_path, model_id)
+    fixtures = load_directional_fixtures(fixtures_path)
     interventions, intervention_sources = load_interventions(interventions_paths, model_id)
     invalid_attempts, invalid_attempts_by_cell, invalid_sources = load_invalid_attempts(
         invalid_attempts_paths, model_id
@@ -355,7 +402,13 @@ def compile_confirmation(
     paths = sorted(input_root.rglob("result.json"))
     if len(paths) != 20:
         raise RuntimeError(f"Expected exactly 20 confirmation result files, found {len(paths)}")
-    episodes = [classify(path, model_id, scenes, interventions, invalid_attempts_by_cell) for path in paths]
+    episodes = [
+        classify(
+            path, model_id, scenes, interventions, invalid_attempts_by_cell,
+            fixtures, robotwin_root,
+        )
+        for path in paths
+    ]
     cells = {(row["environment_seed"], row["requested_relation"]) for row in episodes}
     expected_cells = {(seed, direction) for seed in scenes for direction in ("left", "right")}
     if cells != expected_cells:
@@ -418,6 +471,8 @@ def compile_confirmation(
     return {"schema_version": SCHEMA_VERSION, "compiled_at_utc": datetime.now(timezone.utc).isoformat(),
         "model_id": model_id, "model_label": MODEL_LABELS[model_id],
         "source_registry": {"path": str(registry_path), "sha256": sha256(registry_path)},
+        "source_directional_fixtures": file_record(fixtures_path) if fixtures_path is not None else None,
+        "robotwin_root": str(robotwin_root) if robotwin_root is not None else None,
         "measurement": {"oracle_actions": 0, "dynamic_prompts": 0,
             "simulator_state_role": "post_action_scoring_and_visualization_only"},
         "intervention_ledger_sources": intervention_sources,
@@ -470,6 +525,11 @@ def main() -> None:
     parser.add_argument("--model-id", choices=sorted(MODEL_LABELS), required=True)
     parser.add_argument("--registry", type=Path, default=Path("artifacts/vla_wam_shared_v2/pilot/directional_expansion.json"))
     parser.add_argument(
+        "--fixtures", type=Path,
+        default=Path("artifacts/vla_wam_shared_v2/pilot/directional_fixture_validation.json"),
+    )
+    parser.add_argument("--robotwin-root", type=Path)
+    parser.add_argument(
         "--interventions", "--runtime-interventions", dest="interventions",
         action="append", type=Path,
         help="Runtime intervention ledger; repeat for shared/pilot and model-specific confirmation ledgers.",
@@ -485,7 +545,8 @@ def main() -> None:
     if historical.is_file() and historical.resolve() not in {path.resolve() for path in interventions}:
         interventions.insert(0, historical)
     compiled = compile_confirmation(
-        args.input_root, args.model_id, args.registry, interventions, args.invalid_attempts
+        args.input_root, args.model_id, args.registry, interventions, args.invalid_attempts,
+        args.fixtures, args.robotwin_root,
     )
     write_outputs(args.output_dir / f"{args.model_id.removesuffix('_robotwin')}_direct_confirmation.json", compiled)
 

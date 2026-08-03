@@ -202,10 +202,54 @@ Raw model outputs remain outside ordinary Git at the path recorded in the
 integration manifest. Do not rerun this pair or reinterpret its two valid
 failures as infrastructure failures.
 
+### Efficient-WAM work-laptop completion record
+
+Pairs04–09 completed on the ali-owned B200 PVC on 2026-08-03. All twelve
+episodes exited cleanly, retained simulator video, decoded future video,
+trajectory, and executed-action traces, and are valid behavioral evidence.
+The compact hash-bearing slice is
+[`efficient_wam_rt_pairs04_09_slice.json`](../artifacts/vla_wam_shared_v2/pilot/directional_confirmation/efficient_wam_rt_pairs04_09_slice.json),
+with its enclosing file manifest in
+[`efficient_wam_rt_pairs04_09_evidence_manifest.json`](../artifacts/vla_wam_shared_v2/pilot/directional_confirmation/efficient_wam_rt_pairs04_09_evidence_manifest.json).
+The selected compact publication clip is the matched pair05 LEFT/RIGHT
+both-success execution in
+[`robotwin_wam_confirmation`](../artifacts/vla_wam_shared_v2/media/robotwin_wam_confirmation/media_index.json).
+
+| Pair | LEFT | RIGHT | Endpoint ordering | First-10 action RMS |
+| --- | --- | --- | --- | ---: |
+| 04 | success | failure | aligned | 0.001607 |
+| 05 | success | success | aligned | 0.002990 |
+| 06 | failure | failure | aligned | 0.003832 |
+| 07 | failure | success | aligned | 0.003067 |
+| 08 | success | failure | aligned | 0.002129 |
+| 09 | failure | failure | aligned | 0.060466 |
+
+The prospective B200 slice therefore has 5/12 requested-direction successes
+(LEFT 3/6; RIGHT 2/6), six of six aligned endpoint pairs, and paired executed
+actions that differ in every pair. Pair03 remains the separately committed
+0/2, anti-aligned do-not-rerun result. Four pre-action infrastructure attempts
+from pair04 and pair05 are retained separately in
+[`invalid_attempts_efficient_wam_rt_robotwin.json`](../artifacts/vla_wam_shared_v2/pilot/directional_confirmation/invalid_attempts_efficient_wam_rt_robotwin.json)
+and do not enter behavioral denominators. No valid run incurred a thermal
+intervention.
+
+The frozen twenty-episode compiler still fails closed on this work laptop. The
+PVC has raw pairs04–09, but completed-pilot pairs00–02 and prospective pair03
+are available here only through committed hash-bearing summaries; the compiler
+requires their original `result.json`, trajectories, videos, and pair03 action
+traces. Do not synthesize those files or weaken the compiler. Restore the raw
+directories recorded by the existing artifacts, stage one input root with
+pairs00–09, and then run the compiler command below. Until then the new slice
+is evidence, not a model-level ten-scene confirmation claim.
+
+The exact next authorized model cells are FastWAM `robotwin_pair_03` and
+LingBot-VA `robotwin_pair_03`; they may run concurrently in isolated model
+environments and with separate intervention/invalid-attempt ledgers.
+
 The pair03 commands below are retained as provenance and as templates. Do not
-run the Efficient-WAM command again. Its exact next cell is pair04; replace the
-pair id, anchor task, environment seed, sampling seed, and output/log path
-together using the table above.
+run the Efficient-WAM command or any Efficient-WAM pair03–09 cell again. For
+FastWAM and LingBot-VA, replace the pair id, anchor task, environment seed,
+sampling seed, and output/log path together using the table above.
 
 ```bash
 # Efficient-WAM-RT

@@ -1,9 +1,9 @@
 {
   "schema_version": "vla-wam-shared-v2-continuation-v1",
-  "updated_at_utc": "2026-08-03T13:00:00Z",
+  "updated_at_utc": "2026-08-03T15:06:00Z",
   "evidence_head_before_handoff": "673babd3247077f3cadf7adb6591f9bb7f71d5bf",
   "active_branch": "codex/wam-language-steerability",
-  "study_status": "pi0_fast_complete_efficient_pair03_complete_40_wam_cells_pending",
+  "study_status": "pi0_fast_complete_efficient_pairs03_09_complete_28_wam_cells_pending",
   "authoritative_docs": [
     "docs/VLA_WAM_CONTINUATION.md",
     "docs/VLA_WAM_STEERABILITY_V2_PROTOCOL.md",
@@ -14,7 +14,7 @@
   "validation": {
     "command": "python3 tools/validate_vla_wam_v2_protocol.py",
     "last_status": "valid",
-    "last_check_count": 319,
+    "last_check_count": 376,
     "report": "artifacts/vla_wam_shared_v2/protocol_validation.json"
   },
   "host_snapshot": {
@@ -91,13 +91,9 @@
       "artifact": "artifacts/vla_wam_shared_v2/pilot/results/efficient_wam_rt_direct_gate.json",
       "next_gate": "ten_scene_direct_directional_confirmation",
       "directional_confirmation_progress": {
-        "status": "pair03_complete_pairs04_09_pending",
-        "completed_pair_ids": ["robotwin_pair_03"],
-        "do_not_rerun_pair_ids": ["robotwin_pair_03"],
-        "result": "pair03 LEFT failure; RIGHT failure; 2/2 valid behavioral episodes; first-ten action RMS 0.07615897804498672; endpoint ordering anti-aligned",
-        "integration_manifest": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/efficient_wam_rt_pair03_integration.json",
-        "thermal_log": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/thermal/efficient_pair03.jsonl",
-        "remaining_pair_ids": [
+        "status": "pairs03_09_complete_full_compile_blocked_missing_historical_raw",
+        "completed_pair_ids": [
+          "robotwin_pair_03",
           "robotwin_pair_04",
           "robotwin_pair_05",
           "robotwin_pair_06",
@@ -105,7 +101,26 @@
           "robotwin_pair_08",
           "robotwin_pair_09"
         ],
-        "remaining_episode_count": 12
+        "do_not_rerun_pair_ids": [
+          "robotwin_pair_03",
+          "robotwin_pair_04",
+          "robotwin_pair_05",
+          "robotwin_pair_06",
+          "robotwin_pair_07",
+          "robotwin_pair_08",
+          "robotwin_pair_09"
+        ],
+        "result": "pair03: 0/2 success and anti-aligned endpoint ordering; pairs04-09: 5/12 requested-direction success (LEFT 3/6, RIGHT 2/6), 6/6 aligned endpoint pairs, 12/12 distinct paired executed-action traces, four infrastructure-invalid attempts retained separately",
+        "integration_manifest": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/efficient_wam_rt_pair03_integration.json",
+        "prospective_slice": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/efficient_wam_rt_pairs04_09_slice.json",
+        "evidence_manifest": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/efficient_wam_rt_pairs04_09_evidence_manifest.json",
+        "runtime_intervention_ledger": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/runtime_interventions_efficient_wam_rt_robotwin.json",
+        "invalid_attempt_ledger": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/invalid_attempts_efficient_wam_rt_robotwin.json",
+        "thermal_log": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/thermal/efficient_pair03.jsonl",
+        "remaining_pair_ids": [],
+        "remaining_episode_count": 0,
+        "full_confirmation_compile_blocker": "The work-laptop PVC contains pairs04-09, while pair03 and completed-pilot pairs00-02 are represented only by committed hash-bearing summaries. The frozen compiler requires their raw result.json, trajectory, video, and prospective pair03 action_trace files and therefore fails closed until those raw directories are restored.",
+        "full_confirmation_next_command": "python3 tools/compile_vla_wam_v2_robotwin_confirmation.py --input-root /data/users/ali/vla_wam/raw/efficient_wam_rt_robotwin/ten_scene_confirmation --model-id efficient_wam_rt_robotwin --robotwin-root /data/users/ali/vla_wam/external/EfficientWAM-RoboTwin --runtime-interventions artifacts/vla_wam_shared_v2/pilot/runtime_interventions.json --runtime-interventions artifacts/vla_wam_shared_v2/pilot/directional_confirmation/runtime_interventions_efficient_wam_rt_robotwin.json --invalid-attempts artifacts/vla_wam_shared_v2/pilot/directional_confirmation/invalid_attempts_efficient_wam_rt_robotwin.json"
       }
     },
     {
@@ -144,11 +159,21 @@
     {
       "priority": 1,
       "id": "robotwin_three_wam_directional_confirmation",
-      "status": "ready_for_cross_host_resume",
-      "new_episode_count": 40,
-      "completed_new_episode_count": 2,
-      "next_cell": "efficient_wam_rt_robotwin/robotwin_pair_04",
-      "do_not_rerun": ["efficient_wam_rt_robotwin/robotwin_pair_03"],
+      "status": "efficient_complete_fastwam_lingbot_in_progress",
+      "new_episode_count": 42,
+      "handoff_remaining_episode_count": 40,
+      "completed_new_episode_count": 14,
+      "remaining_new_episode_count": 28,
+      "next_cell": "fastwam_robotwin/robotwin_pair_03",
+      "do_not_rerun": [
+        "efficient_wam_rt_robotwin/robotwin_pair_03",
+        "efficient_wam_rt_robotwin/robotwin_pair_04",
+        "efficient_wam_rt_robotwin/robotwin_pair_05",
+        "efficient_wam_rt_robotwin/robotwin_pair_06",
+        "efficient_wam_rt_robotwin/robotwin_pair_07",
+        "efficient_wam_rt_robotwin/robotwin_pair_08",
+        "efficient_wam_rt_robotwin/robotwin_pair_09"
+      ],
       "registry": "artifacts/vla_wam_shared_v2/pilot/directional_expansion.json",
       "fixture_report": "artifacts/vla_wam_shared_v2/pilot/directional_fixture_validation.json",
       "resume_section": "docs/VLA_WAM_CONTINUATION.md#experiment-2-three-wam-robotwin-directional-confirmation"

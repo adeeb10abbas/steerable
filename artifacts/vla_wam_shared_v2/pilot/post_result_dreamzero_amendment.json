@@ -1,0 +1,92 @@
+{
+  "schema_version": "vla-wam-shared-v2-post-result-dreamzero-amendment-v1",
+  "study_id": "vla_wam_language_steerability_v2",
+  "amendment_id": "V2-A007",
+  "status": "frozen_after_existing_results_and_before_any_dreamzero_study_model_request_or_behavioral_inference",
+  "recorded_at_utc": "2026-08-03T20:13:51Z",
+  "recorded_at_git_head": "ca91aeb7a05b45a911c164638273be237c37b78b",
+  "parent_amendment": {
+    "id": "V2-A006",
+    "path": "artifacts/vla_wam_shared_v2/pilot/post_result_second_wave_amendment.json",
+    "sha256": "5d011abc46c144e91ba7441fb5ed3c681ce67c1a56b6ca51c1c29810708eef7b"
+  },
+  "known_result_disclosure": {
+    "cross_model_comparison": "artifacts/vla_wam_shared_v2/results/direct_command_cross_model_comparison.json",
+    "cross_model_comparison_sha256": "4c869d58c2d7c01b9e82117e63b479eb2237a68779f39993940072ebc2ab77a4",
+    "statement": "All completed V2-A005/V2-A006 outcomes were known when DreamZero was selected. This is a user-directed post-result breadth expansion, not preregistration."
+  },
+  "selected_model": {
+    "priority": 0,
+    "id": "dreamzero_droid_direct_gate",
+    "model_id": "dreamzero_droid",
+    "arena": "droid_robolab",
+    "class": "WAM",
+    "repository": "https://github.com/dreamzero0/dreamzero.git",
+    "repository_commit": "ab790c198fbce33503358efbbd4187ce9a89adf3",
+    "repository_license": "Apache-2.0",
+    "checkpoint": "GEAR-Dreams/DreamZero-DROID",
+    "checkpoint_revision": "96ad344138c66e82536422432ad742f015784942",
+    "checkpoint_license": "CC-BY-NC-4.0",
+    "checkpoint_observed_file_count": 25,
+    "checkpoint_observed_payload_bytes": 64789159581,
+    "first_gate": "exact_source_checkpoint_adapter_two_gpu_renderer_and_reset_contract_audit",
+    "behavioral_episode_count": 6,
+    "environment_seeds": [
+      8300,
+      8301,
+      8302
+    ],
+    "sampling_seeds": [
+      8300,
+      8301,
+      8302
+    ],
+    "prompt_family": "direct_command",
+    "requested_relations": [
+      "left",
+      "right"
+    ],
+    "exact_prompts_source": "artifacts/vla_wam_shared_v2/protocol.json",
+    "scene_contract": "Use the same neutral matched DROID cube-and-bowl reset and requested-relation success predicate as the completed v2 DROID direct gates. No canned DreamZero scene may be substituted.",
+    "action_contract": "Retain the official DreamZero absolute joint-position action interface, relative-joint denormalization, current-state addition, gripper binarization, and eight-action open-loop execution without changing checkpoint behavior.",
+    "future_interface": "joint_action_and_latent_video_prediction_with_official_decode_path",
+    "future_rule": "Retain every future exposed by the released interface at its native cadence. Measurement-only instrumentation may copy or decode returned future tensors without changing policy inputs, RNG, actions, horizons, or control flow. Missing or unexposed futures are not zeros.",
+    "competence_gate": "Apply the original zero-success, one-direction-only, or both-directions direct-command gate after exactly six valid cells."
+  },
+  "runtime_topology": {
+    "policy": "Launch a fresh isolated official distributed DreamZero server on two rechecked free GPUs in the ali-owned B200 pod.",
+    "simulator_and_video": "Run the exact-reset RoboLab/Isaac simulator and viewport capture on the ali-owned raytrace-rtxpro6000-ali pod so every behavioral video is rendered on the RTX PRO 6000 Blackwell lane.",
+    "network": "Gate explicit cross-pod reachability on a new DreamZero study port before model load; never reuse or interrupt the pre-existing port-5000 process.",
+    "storage": "Checkpoints, environments, raw actions, decoded futures, simulator rollouts, and unbounded videos stay on /data/users/ali/vla_wam on the ali PVC."
+  },
+  "preexisting_process_disclosure": {
+    "pod": "lerobot-b200-4gpu-1-ali",
+    "gpu_index": 0,
+    "pid": 25608,
+    "port": 5000,
+    "command": "/home/ali-lerobot/dreamzero/.venv/bin/python -u socket_test_optimized_AR.py --port 5000 --enable-dit-cache --model-path ./checkpoints/DreamZero-DROID",
+    "started_before_amendment": true,
+    "study_use": "prohibited",
+    "rule": "Do not send requests to, stop, modify, or claim evidence from this pre-existing process."
+  },
+  "release_gates": [
+    "Hash every official repository and checkpoint payload used by the run before model load.",
+    "Use isolated official DreamZero, policy-server, and simulator environments.",
+    "Prove the official two-GPU server topology on rechecked free ali-owned B200 GPUs.",
+    "Prove cross-pod policy reachability without exposing credentials or reusing port 5000.",
+    "Prove the RTX PRO 6000 Vulkan/Isaac viewport renderer and persistent video writer with the exact simulator environment.",
+    "Verify the neutral matched reset, static prompt bytes, action/state normalization, eight-action horizon, requested-relation success predicate, and executed-action trace instrumentation.",
+    "Run an RNG-restored exact-repeat fixed-observation request and a LEFT/RIGHT prompt-only sensitivity request before a behavioral cell.",
+    "Verify that future-retention instrumentation is measurement-only and preserves the official action response.",
+    "Only after every gate passes, run seeds 8300-8302 as exact LEFT/RIGHT pairs with viewport video for every cell."
+  ],
+  "unchanged_rules": [
+    "Never pool DROID and RoboTwin raw success rates.",
+    "Use one episode-static prompt with no oracle, coach, prompt switching, or progress-conditioned language.",
+    "Preserve every valid failure and keep infrastructure-invalid or partial attempts outside model denominators.",
+    "Record viewport video and exact executed-action traces for every valid behavioral cell.",
+    "Never convert unavailable, latent-only, or unexposed future evidence into zero.",
+    "Do not start a wording grid until the direct-command competence gate permits it."
+  ],
+  "claim_boundary": "V2-A007 authorizes only DreamZero setup gates and, if all gates pass, six direct-command DROID cells. It does not authorize a wording sweep, a canned-scene substitution, or any reuse of the pre-existing DreamZero server."
+}

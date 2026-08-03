@@ -70,7 +70,7 @@ def validate_prompt(prompt: dict[str, Any], checks: list[str]) -> None:
     for direction, opposite in (("left", "right"), ("right", "left")):
         text = prompt[direction].lower()
         require(
-            "{movable}" in text or prompt_id == "short_command",
+            "{movable}" in text or "{movable_short}" in text,
             f"{prompt_id}/{direction} identifies or deliberately shortens the movable object",
             checks,
         )
@@ -214,6 +214,35 @@ def validate(workspace: Path) -> dict[str, Any]:
         "DROID pilot uses paired seeds 8300-8302",
         checks,
     )
+    robotwin = arenas["robotwin_place_a2b"]
+    paired_scenes = robotwin["paired_scenes"]
+    require(len(paired_scenes) == 3, "RoboTwin pilot freezes exactly three paired scenes", checks)
+    require(
+        [scene["environment_seed"] for scene in paired_scenes] == [4300000, 4300001, 4300002],
+        "RoboTwin paired scenes use environment seeds 4300000-4300002",
+        checks,
+    )
+    require(
+        [scene["sampling_seed"] for scene in paired_scenes] == [8400, 8401, 8402],
+        "RoboTwin paired scenes use sampling seeds 8400-8402",
+        checks,
+    )
+    require(
+        [scene["anchor_task"] for scene in paired_scenes]
+        == ["place_a2b_left", "place_a2b_right", "place_a2b_left"],
+        "RoboTwin anchor-task assignment is frozen and direction-independent",
+        checks,
+    )
+    require(
+        "Never compare" in robotwin["native_task_confound_block"],
+        "RoboTwin native-task scene confound is explicitly blocked",
+        checks,
+    )
+    require(
+        "first entry" in robotwin["object_naming_rule"],
+        "RoboTwin object naming source is shared across adapters",
+        checks,
+    )
 
     prompt_ids = [prompt["id"] for prompt in protocol["prompt_families"]]
     require(prompt_ids == EXPECTED_PROMPT_IDS, "four prompt forms and their order are frozen", checks)
@@ -236,6 +265,21 @@ def validate(workspace: Path) -> dict[str, Any]:
             "H4_imagination_execution_agreement",
         },
         "hypothesis identities match the reader-facing protocol",
+        checks,
+    )
+    amendments = protocol["pre_inference_amendments"]
+    require(
+        {amendment["id"] for amendment in amendments}
+        == {
+            "V2-A001_robotwin_anchor_scene_pairing",
+            "V2-A002_shared_robotwin_object_naming",
+        },
+        "both pre-inference RoboTwin confound corrections are disclosed",
+        checks,
+    )
+    require(
+        all(amendment["inference_completed_before_amendment"] == 0 for amendment in amendments),
+        "no standardized v2 inference preceded either protocol amendment",
         checks,
     )
 

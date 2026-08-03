@@ -5,7 +5,7 @@ Status: **frozen before standardized v2 expansion inference** on 3 August
 [`protocol.json`](../artifacts/vla_wam_shared_v2/protocol.json), and the media
 selection rules are frozen separately in
 [`media_selection_plan.json`](../artifacts/vla_wam_shared_v2/media_selection_plan.json).
-The executable validator currently passes 66 checks; its full report is
+The executable validator currently passes 74 checks; its full report is
 [`protocol_validation.json`](../artifacts/vla_wam_shared_v2/protocol_validation.json).
 
 This is a disclosed post-v1 extension. Every pi0.5/Cosmos result in the
@@ -87,8 +87,11 @@ requested; the opposite relation is explicitly rejected. A direction-word bag
 sees both LEFT and RIGHT. A grounded policy must identify which relation is
 inside the negated phrase.
 
-The RIGHT prompts mirror these sentences exactly. RoboTwin substitutes the
-scene's moved and reference object names without altering the grammar.
+The RIGHT prompts mirror these sentences exactly. For RoboTwin, every adapter
+uses the same first `seen` object description from the simulator metadata. The
+short command removes moved-object modifiers by using the canonical noun from
+the raw object identifier; the other three forms use the full seen
+descriptions. This keeps rendered prompt bytes identical across checkpoints.
 
 ## Token-order diagnostic
 
@@ -127,9 +130,17 @@ horizon.
 
 ### RoboTwin place-A-relative-to-B
 
-- Tasks: `place_a2b_left` and `place_a2b_right`.
-- Frozen pilot environment seeds: 4300000, 4300001, and 4300002.
-- Frozen sampling-seed integers: 8400, 8401, and 8402. Equal integers make
+- Available task classes are `place_a2b_left` and `place_a2b_right`, but they
+  are **not** treated as matched scenes: the same integer seed samples different
+  objects under the two task classes.
+- Frozen pair 00 uses `place_a2b_left`, environment seed 4300000, and sampling
+  seed 8400.
+- Frozen pair 01 uses `place_a2b_right`, environment seed 4300001, and sampling
+  seed 8401.
+- Frozen pair 02 uses `place_a2b_left`, environment seed 4300002, and sampling
+  seed 8402.
+- Within each pair, both requested directions and all four prompt forms run in
+  that one anchor task and one object layout. Equal sampling-seed integers make
   within-model repeats auditable; they do not imply identical random samples
   across architectures.
 - One relation-aware success checker reads the requested prompt rather than the
@@ -139,6 +150,11 @@ horizon.
 
 Existing RoboTwin single-scene gates used different prompts and partial seed
 sets. They remain retrospective evidence and never enter v2 success rates.
+
+This anchor-scene rule is pre-inference amendment `V2-A001`. It was recorded
+after inspecting retrospective scene metadata and before completing any
+standardized v2 episode; it changes no episode count. `V2-A002` likewise
+standardizes object naming across model adapters before inference.
 
 ## Pilot and cost gate
 
@@ -280,6 +296,11 @@ pooled or placed on an unlabeled common leaderboard.
 - [`figures_manifest.json`](../artifacts/vla_wam_shared_v2/figures/figures_manifest.json)
   hashes six initial reader-first exports: prompt semantics, raw obedience
   scorecards, and all paired lateral endpoints in landscape and square formats.
+- [`pilot_grid.json`](../artifacts/vla_wam_shared_v2/pilot/pilot_grid.json)
+  compiles the effective protocol into 144 unique cells and 72 exact LEFT/RIGHT
+  pairs. The first execution batch is the 36-cell direct-command base-
+  competence gate; the remaining 108 wording cells are conditional on the
+  frozen gate rather than being launched blindly.
 
 Regenerate and validate them from the repository root:
 
@@ -288,4 +309,5 @@ python3 tools/validate_vla_wam_v2_protocol.py \
   --write-report artifacts/vla_wam_shared_v2/protocol_validation.json
 python3 tools/select_vla_wam_v2_media.py
 python3 tools/render_vla_wam_v2_reader_figures.py
+python3 tools/build_vla_wam_v2_pilot_grid.py
 ```

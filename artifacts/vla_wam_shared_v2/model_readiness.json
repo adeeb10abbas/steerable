@@ -25,15 +25,15 @@
     },
     "efficient_wam": {
       "path": "/home/ali/projects/Efficient-WAM",
-      "commit": "7ec94e27c2b9e7ae2f069b4251b8ec71cf4e849d"
+      "commit": "292074197c5e971439aeef1f6eef39e605ad8312"
     },
     "fastwam": {
       "path": "/home/ali/projects/FastWAM",
-      "commit": "b9aef886e7a064e0c7877f370027213d4e15ca91"
+      "commit": "e9addcb37e4444fdfed040ea1abd127bbb8bc1db"
     },
     "lerobot_lingbot": {
       "path": "/home/ali/projects/lerobot-lingbot",
-      "commit": "36865b8a086ae57b99f2b91943589446780b1e3d"
+      "commit": "a4fa5dbbb5097e91eeb1ca38675ff2402b489666"
     }
   },
   "models": [
@@ -82,41 +82,45 @@
     },
     {
       "id": "efficient_wam_rt_robotwin",
-      "status": "retrospective_runner_ready_standardized_adapter_pending",
+      "status": "v2_static_contract_pass_runtime_pending",
       "policy_adapter": "/home/ali/projects/Efficient-WAM/experiments/robotwin_language_gate/closed_loop_language_gate.py",
       "checkpoint_status": "present",
       "checkpoint_path": "/home/ali/projects/Efficient-WAM/checkpoints/Efficient-WAM_RoboTwin/Efficient-WAM-RT/Efficient-WAM-RT_stage3.pt",
       "checkpoint_bytes": 1976610407,
       "auxiliary_asset_path": "/home/ali/projects/Efficient-WAM/checkpoints/Wan2.2-TI2V-5B",
       "auxiliary_asset_bytes": 34201555360,
-      "next_gate": "make task success prompt-aware, add the four frozen prompt forms, preserve simulator and imagined videos, and run fixed-observation prompt smoke"
+      "adapter_contract_report": "artifacts/vla_wam_shared_v2/pilot/adapter_contracts.json",
+      "next_gate": "load the checkpoint and run paired direct-command episodes in frozen anchor scene 00 with simulator and imagined videos enabled"
     },
     {
       "id": "fastwam_robotwin",
-      "status": "retrospective_runner_ready_standardized_adapter_pending",
+      "status": "v2_static_contract_pass_runtime_pending",
       "policy_adapter": "/home/ali/projects/FastWAM/experiments/robotwin_language_gate/closed_loop_language_gate.py",
       "checkpoint_status": "present",
       "checkpoint_path": "/home/ali/projects/FastWAM/checkpoints/fastwam_release/robotwin_uncond_3cam_384.pt",
       "checkpoint_bytes": 12041813092,
       "auxiliary_asset_path": "/home/ali/projects/FastWAM/checkpoints/DiffSynth-Studio",
       "auxiliary_asset_bytes": 5114032589,
-      "next_gate": "make task success prompt-aware, add the four frozen prompt forms, and run fixed-observation CFG prompt smoke before closed loop"
+      "adapter_contract_report": "artifacts/vla_wam_shared_v2/pilot/adapter_contracts.json",
+      "next_gate": "load the checkpoint and run paired direct-command episodes in frozen anchor scene 00 with simulator video enabled"
     },
     {
       "id": "lingbot_va_robotwin",
-      "status": "retrospective_runner_ready_standardized_adapter_pending",
+      "status": "v2_static_contract_pass_runtime_pending",
       "policy_adapter": "/home/ali/projects/lerobot-lingbot/experiments/lingbot_language_gate/closed_loop_language_gate.py",
       "checkpoint_status": "present",
       "checkpoint_path": "/home/ali/projects/lerobot-lingbot/checkpoints/lingbot_va_robotwin/model.safetensors",
       "checkpoint_bytes": 10177841732,
       "auxiliary_asset_path": "/home/ali/projects/lerobot-lingbot/checkpoints/lingbot_va_frozen",
       "auxiliary_asset_bytes": 14202159514,
-      "next_gate": "make task success prompt-aware, add the four frozen prompt forms, preserve decoded futures, and run fixed-observation prompt smoke"
+      "adapter_contract_report": "artifacts/vla_wam_shared_v2/pilot/adapter_contracts.json",
+      "next_gate": "load the checkpoint and run paired direct-command episodes in frozen anchor scene 00 with simulator video and first predicted latent enabled"
     }
   ],
   "readiness_summary": {
     "reference_complete": 2,
-    "checkpoint_present_adapter_pending": 3,
+    "checkpoint_present_adapter_pending": 0,
+    "v2_static_contract_pass_runtime_pending": 3,
     "checkpoint_or_server_missing": 3,
     "standardized_v2_pilot_complete": 0
   },

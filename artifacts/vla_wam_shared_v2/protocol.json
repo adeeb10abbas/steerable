@@ -38,12 +38,35 @@
       {
         "id": "robotwin_place_a2b",
         "display_name": "RoboTwin place-A-relative-to-B",
-        "tasks": {
+        "available_native_tasks": {
           "left": "place_a2b_left",
           "right": "place_a2b_right"
         },
         "environment_seeds": [4300000, 4300001, 4300002],
         "sampling_seeds": [8400, 8401, 8402],
+        "paired_scenes": [
+          {
+            "pair_id": "robotwin_pair_00",
+            "anchor_task": "place_a2b_left",
+            "environment_seed": 4300000,
+            "sampling_seed": 8400
+          },
+          {
+            "pair_id": "robotwin_pair_01",
+            "anchor_task": "place_a2b_right",
+            "environment_seed": 4300001,
+            "sampling_seed": 8401
+          },
+          {
+            "pair_id": "robotwin_pair_02",
+            "anchor_task": "place_a2b_left",
+            "environment_seed": 4300002,
+            "sampling_seed": 8402
+          }
+        ],
+        "pairing_rule": "For each paired scene, LEFT and RIGHT prompts run inside the same anchor task, environment seed, object layout, and sampling seed. The relation-aware checker follows the requested prompt rather than the native task name.",
+        "native_task_confound_block": "Never compare place_a2b_left(seed=N) directly with place_a2b_right(seed=N) as if they were the same scene; RoboTwin samples different objects and layouts by task class.",
+        "object_naming_rule": "Every adapter uses the first entry in RoboTwin's seen object-description record for both moved and reference objects. The short-command moved noun is derived from the raw model identifier by removing the numeric prefix and splitting compound separators.",
         "pilot_seed_count": 3,
         "video_mode": "simulator_viewport",
         "success_definition": "The moved object is released inside the requested left or right relation region using one relation-aware checker independent of the native task name.",
@@ -153,8 +176,8 @@
       "id": "short_command",
       "legacy_v1_id": "short_paraphrase",
       "reader_label": "Short command",
-      "left": "Put the object left of the {reference}.",
-      "right": "Put the object right of the {reference}.",
+      "left": "Put the {movable_short} left of the {reference}.",
+      "right": "Put the {movable_short} right of the {reference}.",
       "droid_exact_left": "Put the cube left of the bowl.",
       "droid_exact_right": "Put the cube right of the bowl.",
       "desired_relation_tokens": 1,
@@ -270,6 +293,22 @@
     "Retrospective single-scene or small-grid Efficient-WAM, FastWAM, and LingBot-VA left/right outcomes.",
     "No standardized v2 four-prompt pilot outcome for any of the six expansion models.",
     "No GR00T N1.7 DROID, pi0-FAST DROID, or LingBot-VLA RoboTwin result under this protocol."
+  ],
+  "pre_inference_amendments": [
+    {
+      "id": "V2-A001_robotwin_anchor_scene_pairing",
+      "recorded_at_utc": "2026-08-03T01:42:33Z",
+      "inference_completed_before_amendment": 0,
+      "reason": "Local retrospective files showed that equal integer seeds in place_a2b_left and place_a2b_right instantiate different objects. Pair both requested directions inside one frozen anchor task per seed so language is the only episode-level intervention.",
+      "cost_effect": "None. The pilot remains 144 episodes."
+    },
+    {
+      "id": "V2-A002_shared_robotwin_object_naming",
+      "recorded_at_utc": "2026-08-03T01:42:33Z",
+      "inference_completed_before_amendment": 0,
+      "reason": "Existing model adapters used different object-name sources. Freeze one RoboTwin description source so every checkpoint receives byte-identical rendered language in a paired scene.",
+      "cost_effect": "None."
+    }
   ],
   "second_wave_candidates": [
     {

@@ -1,0 +1,172 @@
+{
+  "adapter_count": 3,
+  "adapters": [
+    {
+      "adapter_id": "efficient_wam_rt_robotwin",
+      "contract_markers": {
+        "accepts_prompt_family": true,
+        "accepts_study_protocol": true,
+        "records_prompt_family": true,
+        "records_relation_region": true,
+        "records_simulator_video": true,
+        "records_trajectory": true
+      },
+      "probe_stderr": "",
+      "rendered_prompts": {
+        "cards_coffee_box": {
+          "desired_plus_negated_opposite": {
+            "left": "Put the box with cards inside to the left of the red coffee-box, not to the right of the red coffee-box.",
+            "right": "Put the box with cards inside to the right of the red coffee-box, not to the left of the red coffee-box."
+          },
+          "direct_command": {
+            "left": "Put the box with cards inside to the left of the red coffee-box.",
+            "right": "Put the box with cards inside to the right of the red coffee-box."
+          },
+          "goal_as_outcome": {
+            "left": "The box with cards inside should end up to the left of the red coffee-box.",
+            "right": "The box with cards inside should end up to the right of the red coffee-box."
+          },
+          "short_command": {
+            "left": "Put the playing cards left of the red coffee-box.",
+            "right": "Put the playing cards right of the red coffee-box."
+          }
+        },
+        "soap_tea_box": {
+          "desired_plus_negated_opposite": {
+            "left": "Put the blue soap to the left of the tea-box, not to the right of the tea-box.",
+            "right": "Put the blue soap to the right of the tea-box, not to the left of the tea-box."
+          },
+          "direct_command": {
+            "left": "Put the blue soap to the left of the tea-box.",
+            "right": "Put the blue soap to the right of the tea-box."
+          },
+          "goal_as_outcome": {
+            "left": "The blue soap should end up to the left of the tea-box.",
+            "right": "The blue soap should end up to the right of the tea-box."
+          },
+          "short_command": {
+            "left": "Put the soap left of the tea-box.",
+            "right": "Put the soap right of the tea-box."
+          }
+        }
+      },
+      "robotwin_root": "/home/ali/projects/EfficientWAM-RoboTwin",
+      "runner": "/home/ali/projects/Efficient-WAM/experiments/robotwin_language_gate/closed_loop_language_gate.py",
+      "runner_sha256": "32ec61d10a97957a4100d1f723fed55f7a9f5774e4786605a1549643df7508d8"
+    },
+    {
+      "adapter_id": "fastwam_robotwin",
+      "contract_markers": {
+        "accepts_prompt_family": true,
+        "accepts_study_protocol": true,
+        "records_prompt_family": true,
+        "records_relation_region": true,
+        "records_simulator_video": true,
+        "records_trajectory": true
+      },
+      "probe_stderr": "",
+      "rendered_prompts": {
+        "cards_coffee_box": {
+          "desired_plus_negated_opposite": {
+            "left": "Put the box with cards inside to the left of the red coffee-box, not to the right of the red coffee-box.",
+            "right": "Put the box with cards inside to the right of the red coffee-box, not to the left of the red coffee-box."
+          },
+          "direct_command": {
+            "left": "Put the box with cards inside to the left of the red coffee-box.",
+            "right": "Put the box with cards inside to the right of the red coffee-box."
+          },
+          "goal_as_outcome": {
+            "left": "The box with cards inside should end up to the left of the red coffee-box.",
+            "right": "The box with cards inside should end up to the right of the red coffee-box."
+          },
+          "short_command": {
+            "left": "Put the playing cards left of the red coffee-box.",
+            "right": "Put the playing cards right of the red coffee-box."
+          }
+        },
+        "soap_tea_box": {
+          "desired_plus_negated_opposite": {
+            "left": "Put the blue soap to the left of the tea-box, not to the right of the tea-box.",
+            "right": "Put the blue soap to the right of the tea-box, not to the left of the tea-box."
+          },
+          "direct_command": {
+            "left": "Put the blue soap to the left of the tea-box.",
+            "right": "Put the blue soap to the right of the tea-box."
+          },
+          "goal_as_outcome": {
+            "left": "The blue soap should end up to the left of the tea-box.",
+            "right": "The blue soap should end up to the right of the tea-box."
+          },
+          "short_command": {
+            "left": "Put the soap left of the tea-box.",
+            "right": "Put the soap right of the tea-box."
+          }
+        }
+      },
+      "robotwin_root": "/home/ali/projects/FastWAM/third_party/RoboTwin",
+      "runner": "/home/ali/projects/FastWAM/experiments/robotwin_language_gate/closed_loop_language_gate.py",
+      "runner_sha256": "5db4c09c184532a5dc3f6764ca91648dce9fe030aef9faa7004345fa0b86e7cc"
+    },
+    {
+      "adapter_id": "lingbot_va_robotwin",
+      "contract_markers": {
+        "accepts_prompt_family": true,
+        "accepts_study_protocol": true,
+        "records_prompt_family": true,
+        "records_relation_region": true,
+        "records_simulator_video": true,
+        "records_trajectory": true
+      },
+      "probe_stderr": "",
+      "rendered_prompts": {
+        "cards_coffee_box": {
+          "desired_plus_negated_opposite": {
+            "left": "Put the box with cards inside to the left of the red coffee-box, not to the right of the red coffee-box.",
+            "right": "Put the box with cards inside to the right of the red coffee-box, not to the left of the red coffee-box."
+          },
+          "direct_command": {
+            "left": "Put the box with cards inside to the left of the red coffee-box.",
+            "right": "Put the box with cards inside to the right of the red coffee-box."
+          },
+          "goal_as_outcome": {
+            "left": "The box with cards inside should end up to the left of the red coffee-box.",
+            "right": "The box with cards inside should end up to the right of the red coffee-box."
+          },
+          "short_command": {
+            "left": "Put the playing cards left of the red coffee-box.",
+            "right": "Put the playing cards right of the red coffee-box."
+          }
+        },
+        "soap_tea_box": {
+          "desired_plus_negated_opposite": {
+            "left": "Put the blue soap to the left of the tea-box, not to the right of the tea-box.",
+            "right": "Put the blue soap to the right of the tea-box, not to the left of the tea-box."
+          },
+          "direct_command": {
+            "left": "Put the blue soap to the left of the tea-box.",
+            "right": "Put the blue soap to the right of the tea-box."
+          },
+          "goal_as_outcome": {
+            "left": "The blue soap should end up to the left of the tea-box.",
+            "right": "The blue soap should end up to the right of the tea-box."
+          },
+          "short_command": {
+            "left": "Put the soap left of the tea-box.",
+            "right": "Put the soap right of the tea-box."
+          }
+        }
+      },
+      "robotwin_root": "/home/ali/projects/lerobot-lingbot/third_party/RoboTwin",
+      "runner": "/home/ali/projects/lerobot-lingbot/experiments/lingbot_language_gate/closed_loop_language_gate.py",
+      "runner_sha256": "1535ad22131e220fd028582ffd21af6a9f271126200300f62105aaf37a5d23a6"
+    }
+  ],
+  "byte_identical_across_adapters": true,
+  "protocol_path": "artifacts/vla_wam_shared_v2/protocol.json",
+  "protocol_sha256": "81cc47ce119005dee6afd22f23b50e72104c2fbabd2951cec81b23c3a41e37f5",
+  "scene_fixture_count": 2,
+  "schema_version": "1.0.0",
+  "scope": "Static import and prompt/evidence-hook contract only; no checkpoint was loaded and no simulator episode was executed.",
+  "status": "contract_pass",
+  "unique_prompt_count": 16
+}

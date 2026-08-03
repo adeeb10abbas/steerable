@@ -542,12 +542,17 @@ def main() -> None:
         "paired_endpoints_landscape": output_dir / "droid_v1_paired_endpoints_1600x900.png",
         "paired_endpoints_square": output_dir / "droid_v1_paired_endpoints_1200x1200.png",
     }
-    prompt_semantics(outputs["prompt_semantics_landscape"], square=False)
-    prompt_semantics(outputs["prompt_semantics_square"], square=True)
-    scorecard(summaries, outputs["obedience_scorecard_landscape"], square=False)
-    scorecard(summaries, outputs["obedience_scorecard_square"], square=True)
-    endpoint_pairs(episodes, outputs["paired_endpoints_landscape"], square=False)
-    endpoint_pairs(episodes, outputs["paired_endpoints_square"], square=True)
+    render_jobs = [
+        ("prompt semantics landscape", prompt_semantics, outputs["prompt_semantics_landscape"], False),
+        ("prompt semantics square", prompt_semantics, outputs["prompt_semantics_square"], True),
+        ("obedience scorecard landscape", lambda path, square: scorecard(summaries, path, square), outputs["obedience_scorecard_landscape"], False),
+        ("obedience scorecard square", lambda path, square: scorecard(summaries, path, square), outputs["obedience_scorecard_square"], True),
+        ("paired endpoints landscape", lambda path, square: endpoint_pairs(episodes, path, square), outputs["paired_endpoints_landscape"], False),
+        ("paired endpoints square", lambda path, square: endpoint_pairs(episodes, path, square), outputs["paired_endpoints_square"], True),
+    ]
+    for label, renderer, path, square in render_jobs:
+        print(f"Rendering {label}...", flush=True)
+        renderer(path, square)
     manifest = {
         "schema_version": "1.0.0",
         "status": "complete",

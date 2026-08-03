@@ -212,7 +212,7 @@ def write_csv(path: Path, selections: list[dict[str, Any]]) -> None:
         "source_video_status",
     ]
     with path.open("w", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fields)
+        writer = csv.DictWriter(handle, fieldnames=fields, lineterminator="\n")
         writer.writeheader()
         for selection in selections:
             episodes = selection["episodes"] or [{}]

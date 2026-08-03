@@ -1,6 +1,6 @@
 {
   "calculated_pilot_episode_count": 144,
-  "check_count": 66,
+  "check_count": 74,
   "checks": [
     "protocol is marked frozen before standardized v2 expansion inference",
     "media plan and protocol have the same freeze status",
@@ -22,6 +22,12 @@
     "cross-arena raw-success pooling is explicitly forbidden",
     "DROID v2 uses the frozen ten-seed exact-pairing block 8300-8309",
     "DROID pilot uses paired seeds 8300-8302",
+    "RoboTwin pilot freezes exactly three paired scenes",
+    "RoboTwin paired scenes use environment seeds 4300000-4300002",
+    "RoboTwin paired scenes use sampling seeds 8400-8402",
+    "RoboTwin anchor-task assignment is frozen and direction-independent",
+    "RoboTwin native-task scene confound is explicitly blocked",
+    "RoboTwin object naming source is shared across adapters",
     "four prompt forms and their order are frozen",
     "every v2 prompt form maps to one disclosed v1 form",
     "direct_command/left identifies or deliberately shortens the movable object",
@@ -58,6 +64,8 @@
     "desired_plus_negated_opposite/right includes an explicitly negated opposite",
     "four physical hypotheses are frozen",
     "hypothesis identities match the reader-facing protocol",
+    "both pre-inference RoboTwin confound corrections are disclosed",
+    "no standardized v2 inference preceded either protocol amendment",
     "pilot arithmetic evaluates to 144 episodes",
     "registered pilot episode count equals the calculated grid",
     "every pilot episode must be recorded",
@@ -73,7 +81,7 @@
   "media_plan_path": "artifacts/vla_wam_shared_v2/media_selection_plan.json",
   "media_plan_sha256": "9c9368013845314a2402d64bfa4f59ce4625f0802cb2ddc1b810842a839bbb17",
   "protocol_path": "artifacts/vla_wam_shared_v2/protocol.json",
-  "protocol_sha256": "e6c8827e9373bcc3aee564730d90de3b25cfeca96e9649b0866584b2876caae5",
+  "protocol_sha256": "81cc47ce119005dee6afd22f23b50e72104c2fbabd2951cec81b23c3a41e37f5",
   "registered_model_count": 8,
   "status": "valid",
   "v1_disclosure": {

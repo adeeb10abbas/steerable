@@ -226,7 +226,7 @@ before installing anything.
 Sequence:
 
 1. Verify Hugging Face access without changing study files.
-2. Install the server in an isolated repository/environment and pin commits.
+2. Install the server in an isolated Python 3.12 repository/environment and pin commits.
 3. Download `nvidia/GR00T-N1.7-DROID` plus required assets; record revisions and
    exact byte counts.
 4. Run a one-observation server/client contract smoke.

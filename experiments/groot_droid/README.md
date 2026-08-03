@@ -16,10 +16,11 @@ Run this before downloading model tensors or starting a server:
 
 ```bash
 cd /home/ali/projects/steerable
-uv run --no-project --python 3.11 experiments/groot_droid/preflight.py
+uv run --no-project --python 3.12 experiments/groot_droid/preflight.py
 ```
 
-It requires CPython 3.11 even though the primary study repository has a
+It requires CPython 3.12, matching the current official Isaac-GR00T runtime,
+even though the primary study repository has a
 different environment. The command requests only the small gated Cosmos
 `config.json`, caps the read at 64 KiB, and exits before weight download or
 server startup. Expected status on an unauthenticated or unapproved host is
@@ -58,7 +59,7 @@ client's validated horizon of eight:
 
 ```bash
 cd /home/ali/projects/Isaac-GR00T
-CUDA_VISIBLE_DEVICES=0 uv run --python 3.11 python gr00t/eval/run_gr00t_server.py \
+CUDA_VISIBLE_DEVICES=0 uv run --python 3.12 python gr00t/eval/run_gr00t_server.py \
   --model-path nvidia/GR00T-N1.7-DROID \
   --embodiment-tag OXE_DROID_RELATIVE_EEF_RELATIVE_JOINT \
   --device cuda --host 127.0.0.1 --port 5555 --use-sim-policy-wrapper
@@ -69,10 +70,10 @@ official RoboLab smoke task:
 
 ```bash
 cd /home/ali/projects/RoboLab
-uv venv --python 3.11
+uv venv --python 3.12
 uv sync --extra isaac50
 export OMNI_KIT_ACCEPT_EULA=Y
-uv run --python 3.11 python policies/gr00t/run.py \
+uv run --python 3.12 python policies/gr00t/run.py \
   --task BananaOnPlateTask --remote-host 127.0.0.1 --remote-port 5555 \
   --open-loop-horizon 8
 ```

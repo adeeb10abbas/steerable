@@ -102,12 +102,12 @@ def _probe_cosmos_access(timeout_seconds: float) -> tuple[bool, str]:
 
 def main() -> int:
     args = _parser().parse_args()
-    if sys.version_info[:2] != (3, 11):
+    if sys.version_info[:2] != (3, 12):
         _result(
             "blocked_python",
             detail=(
-                "GR00T/RoboLab setup is pinned to CPython 3.11; rerun with "
-                "`uv run --no-project --python 3.11 experiments/groot_droid/preflight.py`."
+                "The current official Isaac-GR00T runtime is pinned to CPython 3.12; rerun with "
+                "`uv run --no-project --python 3.12 experiments/groot_droid/preflight.py`."
             ),
             detected_python=sys.version.split()[0],
         )

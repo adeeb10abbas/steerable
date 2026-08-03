@@ -1,0 +1,128 @@
+{
+  "schema_version": "vla-wam-shared-v2-pi0-fast-wording-readiness-v1",
+  "study_id": "vla_wam_language_steerability_v2",
+  "experiment_id": "pi0_fast_three_wording_expansion",
+  "recorded_at_utc": "2026-08-03T19:45:35Z",
+  "status": "blocked_before_model_load_and_behavioral_inference",
+  "authorization": {
+    "amendment_id": "V2-A005",
+    "behavioral_episode_count": 60,
+    "environment_seeds": [8300, 8301, 8302, 8303, 8304, 8305, 8306, 8307, 8308, 8309],
+    "sampling_seeds": [8300, 8301, 8302, 8303, 8304, 8305, 8306, 8307, 8308, 8309],
+    "prompt_families": [
+      "short_command",
+      "goal_as_outcome",
+      "desired_plus_negated_opposite"
+    ],
+    "requested_relations": ["left", "right"],
+    "completed_direct_cells_reused": 20,
+    "completed_direct_cells_rerun": 0
+  },
+  "eligibility_gate": {
+    "status": "passed_before_this_readiness_audit",
+    "direct_confirmation_path": "artifacts/vla_wam_shared_v2/pilot/results/pi0_fast_direct_confirmation.json",
+    "direct_confirmation_sha256": "491c74812ed0e4d36c16f8e0ded17a70af3e69740c9bcb87af129bb6d9563073",
+    "left_successes": 1,
+    "left_trials": 10,
+    "right_successes": 10,
+    "right_trials": 10,
+    "competence": "both_directions"
+  },
+  "frozen_sources": {
+    "protocol_path": "artifacts/vla_wam_shared_v2/protocol.json",
+    "protocol_sha256": "1862fbbb40fef34621a840a0ed15889cf42da066424e866b66f04227b28c73b9",
+    "authorization_path": "artifacts/vla_wam_shared_v2/pilot/post_result_expansion_amendment.json",
+    "authorization_sha256": "e8f724a1818e20ab6cb1481c87a5d5c255d42148d47bf387d7f77f3643587101",
+    "left_neutral_task_overlay_path": "experiments/groot_droid/robolab_v2_tasks/rubiks_cube_left_of_bowl_matched.py",
+    "left_neutral_task_overlay_sha256": "9c4d90be770266bac3ba5242b743098348c565ee622179b5e88fa2af0c4891bc",
+    "right_neutral_task_overlay_path": "experiments/groot_droid/robolab_v2_tasks/rubiks_cube_right_of_bowl_matched.py",
+    "right_neutral_task_overlay_sha256": "ba0eb879590960c57976dd1b749c4ebbd3e86054e152ca5af014ac1bc2b6d02a"
+  },
+  "exact_prompts": {
+    "short_command": {
+      "left": "Put the cube left of the bowl.",
+      "right": "Put the cube right of the bowl."
+    },
+    "goal_as_outcome": {
+      "left": "The Rubik's cube should end up to the left of the bowl.",
+      "right": "The Rubik's cube should end up to the right of the bowl."
+    },
+    "desired_plus_negated_opposite": {
+      "left": "Put the Rubik's cube to the left of the bowl, not to the right of the bowl.",
+      "right": "Put the Rubik's cube to the right of the bowl, not to the left of the bowl."
+    }
+  },
+  "checkpoint": {
+    "source": "gs://openpi-assets-simeval/pi0_fast_droid_jointpos",
+    "access": "anonymous_public_gcs",
+    "staged_path": "/data/users/ali/vla_wam/checkpoints/pi0_fast_droid_jointpos/pi0_fast_droid_jointpos",
+    "file_count": 19,
+    "payload_bytes": 10844314410,
+    "status": "complete_and_sha256_hashed",
+    "files": [
+      {"path": "assets/droid/norm_stats.json", "bytes": 2045, "sha256": "b6ea29dd1cce48be4a57850e9118d7723145fb69d86168be8e86ac38fcac8c4f"},
+      {"path": "params/_CHECKPOINT_METADATA", "bytes": 253, "sha256": "c857b71c5f2a0d03cfee7aa7af428333746bc8f41dc4b1e1c7a3f5045c04e8a5"},
+      {"path": "params/_METADATA", "bytes": 13550, "sha256": "1bd7f2f9c11fb0040417e94f4bc2036f812fa489b6552303f05bd6f4b7edc045"},
+      {"path": "params/_sharding", "bytes": 5221, "sha256": "917e1357937e695101f9086e07fd8827844a9e6cf6d18e65f0cdcd1977c63f69"},
+      {"path": "params/d/7c2d1f6c151d420d2969f54dacc0f070", "bytes": 1510, "sha256": "91ff655bae1b5cd0fe1c2a59902a5f60cddb85ff6e69a6cff2b9eb5e40c4e6fa"},
+      {"path": "params/manifest.ocdbt", "bytes": 117, "sha256": "5067dff93833122cbbbbd2ded39f5f921ada2342a66bb4fe34dbaa37ef078433"},
+      {"path": "params/ocdbt.process_0/d/048a03c3170e8cfc70fb54ab9ed1a20f", "bytes": 2238924247, "sha256": "606ee7f21780d42eccb40e6484135102788b6c4bae308b1537115f64c82af524"},
+      {"path": "params/ocdbt.process_0/d/12bbed3781375923e5fad2e0d0d10e84", "bytes": 1957698495, "sha256": "474c4425d71a2d7005a4c648bddc95d92c9e412e4c988a8e27e8f7f858bdc973"},
+      {"path": "params/ocdbt.process_0/d/19d2146dc98b7d101c9b7eaf17dfd06a", "bytes": 266234, "sha256": "e583e1910b5a5165d8330e8bad3fd5856cda08193e25e1252a7bb8fcc9a81711"},
+      {"path": "params/ocdbt.process_0/d/3455b9dd3b4787e1dc5979c854087631", "bytes": 5102494, "sha256": "7d0df94115e65d2bc480e371b99de7f3388ecc307ac1b18ebe08cd7abbd24e1e"},
+      {"path": "params/ocdbt.process_0/d/77ea885c87a1e9365163cf3f791d024a", "bytes": 531817823, "sha256": "c3d4f90ef1d60bf2d1483c6929edc490e3c5e24a84a60fc8efc29832252926c8"},
+      {"path": "params/ocdbt.process_0/d/ab64efe5fc266a8908f322b027a0e990", "bytes": 2238913353, "sha256": "c422cab7ab5022679cf064f470c5e03f58a490e009a9a5f6354ed3b3f5ff5185"},
+      {"path": "params/ocdbt.process_0/d/b62ff34cdb4b423f857135283ab9901f", "bytes": 2238892561, "sha256": "639e24a39964944ab579762d96ee4f53ad546e2a34b01a830cf9e4ab5960bc6e"},
+      {"path": "params/ocdbt.process_0/d/ba7cdb6735b020bea567bc10540ab3a7", "bytes": 8760536, "sha256": "e153eea30835bbb306ca03d285f3e599ecbb7afd0755db15059866df21cdadf6"},
+      {"path": "params/ocdbt.process_0/d/c3cb62b99e27672a2d73f8642c81c2a6", "bytes": 209, "sha256": "1f66ba60b03345079120ea57ab4fe94e2345986b7c773912ded5ab619da47f10"},
+      {"path": "params/ocdbt.process_0/d/cb7be6e5477ccd46629e07b3c0dff367", "bytes": 5114, "sha256": "97f17d985fdd656cc36c8042e7d6ff31f3b7a72e7554a5ed63af1612611c97b3"},
+      {"path": "params/ocdbt.process_0/d/d94a72349cf8fe374bdf603433378cef", "bytes": 1553905250, "sha256": "1804d1e001e0763eff2dc023300457d8e57c8b7c106effc01292a028bbed3538"},
+      {"path": "params/ocdbt.process_0/d/fa56975337b830e8b2707fda455682ea", "bytes": 70004909, "sha256": "729243537300b8c1e81681182e8abd1ac6c0fd55c94fb1afcd0470306aba116f"},
+      {"path": "params/ocdbt.process_0/manifest.ocdbt", "bytes": 489, "sha256": "93138473477c41e6db7f4b3103c37d99852c1607c4595feb0a2e70941081a1ef"}
+    ]
+  },
+  "required_external_revisions": {
+    "policy_repository": {
+      "path_at_completed_direct_confirmation": "/home/ali/openpi-robolab",
+      "required_commit": "9e46d3aea26417bfb564227734b95d010aa827e5",
+      "restore_attempts": [
+        "git fetch from https://github.com/Physical-Intelligence/openpi.git by exact SHA returned: remote error: upload-pack: not our ref",
+        "GitHub commit search under the authenticated study account returned no matching public or private commit",
+        "Every Git object store under /data/users/ali was tested with git cat-file and none contained the commit",
+        "The work-laptop filesystem contained no OpenPI checkout"
+      ],
+      "status": "missing_exact_revision"
+    },
+    "simulator_repository": {
+      "path_at_completed_direct_confirmation": "/home/ali/projects/RoboLab",
+      "required_commit": "11142d4319e44401e0464866bb5fedf7ec8a8927",
+      "restore_attempts": [
+        "git fetch from https://github.com/NVlabs/RoboLab.git by exact SHA returned: remote error: upload-pack: not our ref",
+        "The ali PVC directory named RoboLab-11142d4 resolves to 0aef241fb088ca21bb4ebd24448940ed56620d17, not the required commit",
+        "Every Git object store under /data/users/ali was tested with git cat-file and none contained the required commit",
+        "The work-laptop filesystem contained no RoboLab checkout"
+      ],
+      "status": "missing_exact_revision"
+    }
+  },
+  "disallowed_substitution": {
+    "policy_repository_discovered_head": "15a9616a00943ada6c20a0f158e3adb39df2ccac",
+    "simulator_repository_discovered_head": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "reason": "Neither discovered checkout is the source revision used for the completed direct-command eligibility evidence. The missing local OpenPI commit also contains the deployed simulator-checkpoint configuration and sampling-seed contract. Reconstructing or silently substituting those interfaces would violate the exact-adapter and do-not-guess rules."
+  },
+  "accounting": {
+    "model_load_attempt_count": 0,
+    "model_action_request_count": 0,
+    "behavioral_episode_count": 0,
+    "behavioral_failure_count": 0,
+    "infrastructure_invalid_cell_count": 0,
+    "direct_cells_rerun": 0,
+    "authorized_cells_remaining": 60
+  },
+  "exact_next_command": {
+    "where": "On the original machine that still has /home/ali/openpi-robolab and /home/ali/projects/RoboLab",
+    "command": "git -C /home/ali/openpi-robolab bundle create /tmp/openpi-robolab-all.bundle --all && git -C /home/ali/projects/RoboLab bundle create /tmp/robolab-all.bundle --all",
+    "then": "Transfer both bundles through the approved ali-owned PVC path, verify that each required commit exists with git bundle verify and git cat-file, restore detached exact-revision checkouts, and only then run the checkpoint load, exact-repeat, prompt-only sensitivity, neutral-reset, video, and action-trace gates before the first wording cell."
+  },
+  "claim_boundary": "The public checkpoint is fully staged and hash-pinned, and the exact sixty-cell prompt registry is verified. No model was loaded and no behavioral cell was attempted because both historical local integration commits required by the completed direct-command contract are unavailable. This is a technical setup blocker, not a model failure or a zero."
+}

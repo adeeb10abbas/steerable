@@ -875,6 +875,224 @@ def robotwin_paired_endpoints(
     save(fig, output)
 
 
+def pi0_fast_direct_gate(
+    compiled: dict[str, Any], output: Path, square: bool
+) -> None:
+    """Explain the exact intervention, progression, and paired endpoint shift."""
+
+    summary = compiled["summary"]
+    fig = plt.figure(figsize=(12, 12) if square else (16, 9))
+    draw_header(
+        fig,
+        "Did changing LEFT to RIGHT redirect π0-FAST?",
+        "Protocol-exact DROID pilot · same neutral scene and seed inside each pair · one episode-static prompt · no subtask coach or oracle · six episodes are a gate, not a stable population rate",
+        square,
+    )
+
+    if square:
+        cards = [(0.055, 0.72, 0.425, 0.13), (0.52, 0.72, 0.425, 0.13)]
+        stage_position = (0.10, 0.40, 0.82, 0.23)
+        endpoint_position = (0.24, 0.12, 0.69, 0.19)
+    else:
+        cards = [(0.055, 0.69, 0.425, 0.13), (0.52, 0.69, 0.425, 0.13)]
+        stage_position = (0.07, 0.20, 0.40, 0.40)
+        endpoint_position = (0.57, 0.20, 0.37, 0.40)
+
+    prompts = [
+        ("LEFT", "Put the Rubik's cube to the LEFT of the bowl.", LEFT, "0/3 success"),
+        ("RIGHT", "Put the Rubik's cube to the RIGHT of the bowl.", RIGHT, "3/3 success"),
+    ]
+    for (x, y, width, height), (direction, prompt, color, outcome) in zip(cards, prompts, strict=True):
+        fig.add_artist(
+            FancyBboxPatch(
+                (x, y),
+                width,
+                height,
+                boxstyle="round,pad=0.012,rounding_size=0.016",
+                transform=fig.transFigure,
+                facecolor=CARD,
+                edgecolor=GRID,
+                linewidth=1.1,
+            )
+        )
+        fig.add_artist(
+            Rectangle(
+                (x, y), 0.012, height, transform=fig.transFigure,
+                facecolor=color, edgecolor="none",
+            )
+        )
+        fig.text(x + 0.026, y + height - 0.035, f"ASKED {direction}", fontsize=9, weight="bold", color=MUTED)
+        fig.text(
+            x + 0.026,
+            y + height - 0.073,
+            prompt,
+            fontsize=11.2 if not square else 10.2,
+            weight="bold",
+            color=TEXT,
+        )
+        fig.text(x + 0.026, y + 0.022, outcome, fontsize=10.2, weight="bold", color=TEXT)
+        fig.text(
+            x + width - 0.018,
+            y + 0.022,
+            "only the direction word changes",
+            fontsize=8.7,
+            color=MUTED,
+            ha="right",
+        )
+
+    stage = fig.add_axes(stage_position)
+    stages = ["Started", "Lifted ≥3 cm\nfor 3 steps", "Entered requested\n45° region", "Released there\n(success)"]
+    for direction, color, offset in (("left", LEFT, -0.045), ("right", RIGHT, 0.045)):
+        values = summary["by_direction"][direction]
+        counts = [3, values["verified_pickups"], values["entered_requested_region"], values["successes"]]
+        xs = np.arange(4, dtype=float) + offset
+        stage.plot(xs, counts, color=color, linewidth=2.3, marker="o", markersize=7, zorder=3)
+        for x_value, count in zip(xs, counts, strict=True):
+            stage.text(x_value, count + 0.12, str(count), ha="center", va="bottom", fontsize=9, weight="bold")
+        stage.text(xs[-1] + 0.08, counts[-1], direction.upper(), fontsize=8.5, weight="bold", va="center")
+    stage.set_xlim(-0.2, 3.5)
+    stage.set_ylim(-0.15, 3.55)
+    stage.set_xticks(range(4))
+    stage.set_xticklabels(stages, fontsize=8.4)
+    stage.set_yticks([0, 1, 2, 3])
+    stage.set_ylabel("episodes (of 3)")
+    stage.set_title("What physically happened?", loc="left", fontsize=12, pad=9)
+    stage.grid(axis="y", color=GRID, linewidth=0.7)
+    stage.spines[["top", "right"]].set_visible(False)
+    stage.spines[["left", "bottom"]].set_color(GRID)
+
+    endpoint = fig.add_axes(endpoint_position)
+    endpoint.axvspan(-0.43, 0, color=LEFT, alpha=0.07, zorder=0)
+    endpoint.axvspan(0, 0.43, color=RIGHT, alpha=0.06, zorder=0)
+    endpoint.axvline(0, color=TEXT, linewidth=0.9)
+    for index, pair in enumerate(summary["paired_endpoint_responses"]):
+        y_value = 2 - index
+        left_x = pair["left_final_lateral_display_m"]
+        right_x = pair["right_final_lateral_display_m"]
+        endpoint.annotate(
+            "",
+            xy=(right_x, y_value - 0.09),
+            xytext=(left_x, y_value + 0.09),
+            arrowprops={"arrowstyle": "->", "color": "#AAB6BE", "linewidth": 1.5},
+        )
+        endpoint.scatter([left_x], [y_value + 0.09], marker="X", s=65, color=LEFT, zorder=3)
+        endpoint.scatter([right_x], [y_value - 0.09], marker="o", s=65, color=RIGHT, edgecolor=CARD, zorder=3)
+        endpoint.text(left_x - 0.012, y_value + 0.09, f"{left_x:+.3f}", ha="right", va="center", fontsize=8)
+        endpoint.text(right_x + 0.012, y_value - 0.09, f"{right_x:+.3f}", ha="left", va="center", fontsize=8)
+    endpoint.set_xlim(-0.43, 0.43)
+    endpoint.set_ylim(-0.55, 2.55)
+    endpoint.set_yticks([2, 1, 0])
+    endpoint.set_yticklabels(["seed 8300", "seed 8301", "seed 8302"], fontsize=8.7)
+    endpoint.set_xticks([-0.4, -0.2, 0, 0.2, 0.4])
+    endpoint.set_xticklabels(["−.4", "−.2", "BOWL", "+.2", "+.4"])
+    endpoint.set_xlabel("final bowl-relative lateral endpoint (m) · LEFT ←  → RIGHT")
+    endpoint.set_title("Did the same scene move when the word changed?", loc="left", fontsize=12, pad=9)
+    endpoint.grid(axis="x", color=GRID, linewidth=0.6)
+    endpoint.spines[["top", "right", "left"]].set_visible(False)
+    endpoint.spines["bottom"].set_color(GRID)
+    endpoint.tick_params(axis="y", length=0)
+
+    takeaway = (
+        "All three first action chunks changed, and all three endpoints shifted rightward. "
+        "But LEFT completed 0/3 while RIGHT completed 3/3: prompt-conditioned behavior is visible, "
+        "yet robust steerability is not. The frozen next step is a ten-seed direct-only bias check."
+    )
+    fig.text(
+        0.055,
+        0.035 if square else 0.07,
+        "\n".join(textwrap.wrap(takeaway, 105 if square else 145)),
+        fontsize=10 if square else 10.5,
+        color=MUTED,
+        weight="bold",
+        va="bottom",
+    )
+    save(fig, output)
+
+
+def pi0_fast_paired_paths(
+    compiled: dict[str, Any], output: Path, square: bool
+) -> None:
+    by_pair: dict[str, dict[str, dict[str, Any]]] = defaultdict(dict)
+    for episode in compiled["episodes"]:
+        by_pair[episode["pair_id"]][episode["requested_relation"]] = episode
+    fig = plt.figure(figsize=(12, 12) if square else (16, 9))
+    draw_header(
+        fig,
+        "Expected region versus the path π0-FAST actually took",
+        "Each panel is one seed-matched LEFT/RIGHT intervention · shaded wedges are the scored requested 45° regions · dotted arrows are illustrative only · solid lines are state-derived cube paths",
+        square,
+    )
+    positions = (
+        [(0.06, 0.57, 0.42, 0.27), (0.54, 0.57, 0.42, 0.27), (0.30, 0.17, 0.42, 0.27)]
+        if square
+        else [(0.055 + index * 0.315, 0.20, 0.285, 0.60) for index in range(3)]
+    )
+    for panel_index, (pair_id, pair) in enumerate(sorted(by_pair.items())):
+        axis = fig.add_axes(positions[panel_index])
+        axis.fill([-0.48, 0, -0.48], [-0.48, 0, 0.48], color=LEFT, alpha=0.08, edgecolor="none")
+        axis.fill([0.48, 0, 0.48], [-0.48, 0, 0.48], color=RIGHT, alpha=0.07, edgecolor="none")
+        axis.axhline(0, color=GRID, linewidth=0.7)
+        axis.axvline(0, color=TEXT, linewidth=0.85)
+        start = None
+        for direction, color, desired_x in (("left", LEFT, -0.25), ("right", RIGHT, 0.25)):
+            episode = pair[direction]
+            trajectory = json.loads(Path(episode["raw_trajectory"]["path"]).read_text())
+            xs = np.asarray([step["object_minus_target_x"] for step in trajectory])
+            ys = np.asarray([step["object_minus_target_y"] for step in trajectory])
+            if start is None:
+                start = (float(xs[0]), float(ys[0]))
+            axis.annotate(
+                "",
+                xy=(desired_x, 0),
+                xytext=(float(xs[0]), float(ys[0])),
+                arrowprops={"arrowstyle": "->", "color": color, "linestyle": ":", "linewidth": 1.3, "alpha": 0.75},
+                zorder=1,
+            )
+            axis.plot(xs, ys, color=color, linewidth=2.2, zorder=2)
+            marker = "o" if episode["requested_success"] else "X"
+            axis.scatter(
+                [xs[-1]], [ys[-1]], marker=marker, s=70, facecolor=color,
+                edgecolor=CARD if marker == "o" else color, linewidth=1.0, zorder=4,
+            )
+            axis.text(
+                0.02 if direction == "left" else 0.98,
+                0.03,
+                f"ASKED {direction.upper()} · {'SUCCESS' if episode['requested_success'] else 'FAIL'}\nend {float(xs[-1]):+.3f} m",
+                transform=axis.transAxes,
+                ha="left" if direction == "left" else "right",
+                va="bottom",
+                fontsize=8.5,
+                weight="bold",
+            )
+        axis.scatter([start[0]], [start[1]], marker="D", s=43, facecolor=TEXT, edgecolor=CARD, zorder=5)
+        axis.text(start[0], start[1] + 0.025, "same start", fontsize=8, color=MUTED, ha="center")
+        axis.text(-0.31, 0.34, "LEFT requested region", ha="center", fontsize=7.8)
+        axis.text(0.31, 0.34, "RIGHT requested region", ha="center", fontsize=7.8)
+        axis.set_xlim(-0.48, 0.48)
+        axis.set_ylim(-0.30, 0.42)
+        axis.set_aspect("equal", adjustable="box")
+        axis.set_title(f"Seed {pair['left']['environment_seed']} · only LEFT/RIGHT changes", loc="left", fontsize=11.2, pad=8)
+        axis.set_xlabel("bowl-relative lateral position · LEFT ←  → RIGHT", fontsize=8.5)
+        axis.set_ylabel("bowl-relative forward position", fontsize=8.5)
+        axis.grid(color=GRID, linewidth=0.5, alpha=0.65)
+        axis.spines[["top", "right"]].set_visible(False)
+        axis.spines[["left", "bottom"]].set_color(GRID)
+        axis.tick_params(labelsize=8)
+    path_takeaway = (
+        "The RIGHT command produces a released requested placement in every panel. "
+        "LEFT produces one inactive run and two incomplete pickups; all failures remain visible."
+    )
+    fig.text(
+        0.055,
+        0.055 if not square else 0.035,
+        "\n".join(textwrap.wrap(path_takeaway, 110 if square else 150)),
+        fontsize=10,
+        color=MUTED,
+        weight="bold",
+    )
+    save(fig, output)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -912,6 +1130,10 @@ def main() -> None:
     with efficient_result_path.open() as handle:
         efficient_result = json.load(handle)
     pilot_results = [json.loads(path.read_text()) for path in pilot_result_paths]
+    pi0_fast_result_path = (
+        workspace / "artifacts/vla_wam_shared_v2/pilot/results/pi0_fast_direct_gate.json"
+    )
+    pi0_fast_result = json.loads(pi0_fast_result_path.read_text())
     if len(summaries) != 16 or len(episodes) != 160:
         raise RuntimeError("Reader figures require all 16 group cells and all 160 episodes")
 
@@ -928,6 +1150,10 @@ def main() -> None:
         "robotwin_wam_progression_square": output_dir / "robotwin_wam_progression_1200x1200.png",
         "robotwin_wam_paired_endpoints_landscape": output_dir / "robotwin_wam_paired_endpoints_1600x900.png",
         "robotwin_wam_paired_endpoints_square": output_dir / "robotwin_wam_paired_endpoints_1200x1200.png",
+        "pi0_fast_direct_gate_landscape": output_dir / "pi0_fast_direct_gate_1600x900.png",
+        "pi0_fast_direct_gate_square": output_dir / "pi0_fast_direct_gate_1200x1200.png",
+        "pi0_fast_paired_paths_landscape": output_dir / "pi0_fast_paired_paths_1600x900.png",
+        "pi0_fast_paired_paths_square": output_dir / "pi0_fast_paired_paths_1200x1200.png",
     }
     render_jobs = [
         ("prompt semantics landscape", prompt_semantics, outputs["prompt_semantics_landscape"], False),
@@ -942,6 +1168,10 @@ def main() -> None:
         ("RoboTwin WAM progression square", lambda path, square: robotwin_progression(pilot_results, path, square), outputs["robotwin_wam_progression_square"], True),
         ("RoboTwin WAM paired endpoints landscape", lambda path, square: robotwin_paired_endpoints(pilot_results, path, square), outputs["robotwin_wam_paired_endpoints_landscape"], False),
         ("RoboTwin WAM paired endpoints square", lambda path, square: robotwin_paired_endpoints(pilot_results, path, square), outputs["robotwin_wam_paired_endpoints_square"], True),
+        ("pi0-FAST direct gate landscape", lambda path, square: pi0_fast_direct_gate(pi0_fast_result, path, square), outputs["pi0_fast_direct_gate_landscape"], False),
+        ("pi0-FAST direct gate square", lambda path, square: pi0_fast_direct_gate(pi0_fast_result, path, square), outputs["pi0_fast_direct_gate_square"], True),
+        ("pi0-FAST paired paths landscape", lambda path, square: pi0_fast_paired_paths(pi0_fast_result, path, square), outputs["pi0_fast_paired_paths_landscape"], False),
+        ("pi0-FAST paired paths square", lambda path, square: pi0_fast_paired_paths(pi0_fast_result, path, square), outputs["pi0_fast_paired_paths_square"], True),
     ]
     for label, renderer, path, square in render_jobs:
         print(f"Rendering {label}...", flush=True)
@@ -958,6 +1188,7 @@ def main() -> None:
         "robotwin_pilot_result_sha256": {
             path.stem: sha256(path) for path in pilot_result_paths
         },
+        "pi0_fast_pilot_result_sha256": sha256(pi0_fast_result_path),
         "figures": {
             key: {
                 "path": str(path.relative_to(workspace)),
@@ -966,7 +1197,7 @@ def main() -> None:
             }
             for key, path in outputs.items()
         },
-        "claim_boundary": "The first six figures explain the frozen prompt design and the two existing DROID reference checkpoints. The remaining six figures contain only the 18 standardized direct-command RoboTwin WAM pilot episodes. Six episodes per model are a base-competence and expansion gate, not stable population rates or a WAM-class estimate.",
+        "claim_boundary": "The first six figures explain the frozen prompt design and the two existing DROID reference checkpoints. Six figures contain only the 18 standardized direct-command RoboTwin WAM pilot episodes. Four figures contain only the six standardized pi0-FAST DROID pilot episodes. Every six-episode model result is a base-competence and expansion gate, not a stable population rate or a model-class estimate.",
     }
     manifest_path = output_dir / "figures_manifest.json"
     manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")

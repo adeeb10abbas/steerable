@@ -9,9 +9,10 @@
 ![Complete 160-episode steerability scorecard for the two tested checkpoints.](../artifacts/vla_wam_shared_v1/trajectory_evidence/social/steerability_scorecard_1600x900.png)
 
 *DROID v1 evidence package completed 2 August 2026. Standardized RoboTwin WAM
-pilot update added 3 August 2026. The registered 160-episode DROID grid,
-752-chunk semantic pass, frozen human audit, and 18-episode three-WAM pilot are
-kept as distinct evidence tiers throughout.*
+and π0-FAST DROID pilot updates added 3 August 2026. The registered 160-episode
+DROID grid, 752-chunk semantic pass, frozen human audit, 18-episode three-WAM
+RoboTwin pilot, and six-episode π0-FAST DROID gate are kept as distinct evidence
+tiers throughout.*
 
 The first plot looked encouraging. I held a robot observation fixed, changed
 the instruction from left to right, and saw the action tensor and imagined
@@ -65,6 +66,16 @@ versus 22/40 RIGHT, while Cosmos was 22/40 LEFT versus 36/40 RIGHT and collapsed
 from 19/20 declarative to 10/20 contrastive. Of the 77 combined failures, 53
 picked up the cube but never entered the requested goal. The dominant failure
 was therefore grounded placement, not simply inability to grasp.
+
+The standardized v2 pilots broaden the checkpoint set and make the central
+warning harder to ignore. In RoboTwin, Efficient-WAM-RT, FastWAM, and
+LingBot-VA succeed only under LEFT in their three-scene gates (respectively
+2/3, 1/3, and 3/3 LEFT; all are 0/3 RIGHT). In the separate DROID arena,
+π0-FAST shows the mirror image: 0/3 LEFT and 3/3 RIGHT. These rates are not
+pooled across arenas. Together they show why “the output changed” and even
+“one direction worked” are inadequate definitions of steerability: every new
+checkpoint responds asymmetrically under an exact counterfactual direction
+test.
 
 Cosmos's WAM output is informative but not a dependable semantic monitor. The
 prompt-blind scorer could label 421/752 action/future horizons; among those it
@@ -170,15 +181,82 @@ The first predicted latent is retained for every pilot cell, but this release
 does not yet provide a publication-ready decoder under the measured path, so
 the clip does not pretend that the latent is an inspectable video.
 
-All seven additional scene fixtures for the follow-up initialized successfully
-without loading a policy. They contain distinct object pairs and start outside
-both requested regions. This is setup evidence only. The 42 new expansion
-episodes have not yet been run.
+## Update: π0-FAST responds—and exposes the opposite directional bias
+
+π0-FAST is the first new v2 VLA through the exact DROID direct-command gate.
+It ran the neutral Rubik's-cube/bowl reset at seeds 8300–8302. Each seed was
+repeated under the exact sentences below, with the environment state, initial
+object poses, checkpoint, sampling-seed root, ten-action open-loop horizon, and
+static controller held fixed:
+
+> **LEFT:** “Put the Rubik's cube to the left of the bowl.”
+>
+> **RIGHT:** “Put the Rubik's cube to the right of the bowl.”
+
+There was no oracle action, subtask coach, progress-dependent prompt, or prompt
+switch. Simulator state was used only after actions for scoring and drawing the
+paths.
+
+![The exact six-episode π0-FAST gate, including prompts, progress stages, paired endpoints, and the next authorized experiment.](../artifacts/vla_wam_shared_v2/figures/pi0_fast_direct_gate_1600x900.png)
+
+| What the test asks | LEFT | RIGHT | What it means |
+| --- | ---: | ---: | --- |
+| Released in requested region | 0/3 | 3/3 | competence is strongly direction-dependent |
+| Verified pickup proxy | 2/3 | 3/3 | two LEFT failures were placement failures; one never interacted |
+| Ever entered requested region | 0/3 | 3/3 | the success split is not merely a release-threshold artifact |
+| First ten actions changed under the mirrored prompt | 3/3 pairs | 3/3 pairs | the model is command-sensitive at the action output |
+| RIGHT endpoint finished to the right of its matched LEFT endpoint | 3/3 pairs | 3/3 pairs | the action difference survives into directional physical motion |
+
+The first-action-chunk RMS differences were 0.0164, 0.0097, and 0.0371. More
+important than those tensor distances, the matched final endpoint shifts were
++0.374, +0.162, and +0.251 m toward robot RIGHT. That is a real sign of life:
+the language change does not merely perturb an action array; it redirects the
+closed-loop physical outcome in the requested counterfactual direction.
+
+![All three π0-FAST same-seed LEFT/RIGHT paths against the requested goal regions.](../artifacts/vla_wam_shared_v2/figures/pi0_fast_paired_paths_1600x900.png)
+
+It is still not robust steerability. The exact success pattern is 0/3 LEFT and
+3/3 RIGHT. Seed 8300's LEFT rollout leaves the cube effectively unmoved at
++0.003 m, while the matched RIGHT rollout releases it at +0.377 m. Seeds 8301
+and 8302 also fail LEFT despite two verified pickups. The evidence therefore
+supports **prompt-conditioned redirection with severe directional/base-
+competence asymmetry**, not “π0-FAST understands LEFT and RIGHT.”
+
+### π0-FAST: Rubik's cube relative to a bowl
+
+<video controls preload="metadata" width="100%" poster="../artifacts/vla_wam_shared_v2/media/droid_pi0_fast_pairs/pi0_fast_seed8300_left_failure_right_success_poster.jpg">
+  <source src="../artifacts/vla_wam_shared_v2/media/droid_pi0_fast_pairs/pi0_fast_seed8300_left_failure_right_success.mp4" type="video/mp4">
+  <track kind="captions" src="../artifacts/vla_wam_shared_v2/media/droid_pi0_fast_pairs/pi0_fast_seed8300_left_failure_right_success.vtt" srclang="en" label="English">
+</video>
+
+The clip is the first compiled same-seed LEFT-failure/RIGHT-success pair, a
+deterministic rule fixed before rendering. The complete 450-action LEFT failure
+remains visible; the shorter 311-action RIGHT success holds its final frame.
+The solid lines come from recorded 3D state. The dashed routes are explanatory
+only and never enter the success metric.
+
+A separate fixed-observation diagnostic duplicated one prompt exactly and then
+swapped LEFT to RIGHT. The duplicate was bit-identical at the action output
+(RMS 0), while LEFT-to-RIGHT RMS was 0.153. That probe used the older v1 label
+wording, so it is retained only as sensitivity and repeatability evidence. The
+closed-loop gate above uses the exact frozen v2 wording and carries the physical
+claim.
+
+The preregistered gate now authorizes a ten-seed direct-command directional-
+bias confirmation. It does **not** authorize spending on short, declarative, or
+contrastive wording yet. That decision protects the study from explaining a
+directional competence failure as a syntax effect.
+
+All seven additional RoboTwin scene fixtures for the WAM follow-up initialized
+successfully without loading a policy. They contain distinct object pairs and
+start outside both requested regions. This is setup evidence only. The 42 new
+RoboTwin expansion episodes have not yet been run.
 
 The same evidence is available in a
 [filterable video gallery](VLA_WAM_STEERABILITY_VIDEO_GALLERY.html). Every item
 also has a 1200×1200 H.264 social version and square poster generated from the
-same source pair; the media manifest hashes both aspect ratios.
+same source pair; the media manifests hash both aspect ratios. The gallery keeps
+the π0-FAST DROID and three RoboTwin WAM result tiers visibly separate.
 
 ## What steerability means
 

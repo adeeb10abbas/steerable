@@ -68,6 +68,7 @@ cd /home/ali/projects/steerable
 
 /home/ali/cosmos-framework/.cache/huggingface/hub/models--nvidia--Cosmos3-Edge-Policy-DROID/snapshots/3ea407af3e156c0af3b4bb6edd85842cc9a58777
 /home/ali/.cache/openpi/openpi-assets-simeval/pi05_droid_jointpos
+/home/ali/.cache/openpi/openpi-assets-simeval/pi0_fast_droid_jointpos
 /home/ali/.cache/huggingface/hub/models--Qwen--Qwen3-VL-2B-Instruct/snapshots/89644892e4d85e24eaac8bacfd4f463576704203
 ```
 
@@ -170,6 +171,54 @@ The earlier five-step static run, one-episode pilot, and interrupted oracle run
 are supporting/excluded provenance only. Their locations and observed outcomes
 are recorded in `setup_exclusions/2026-08-02_oracle_scope_change.md`. Do not
 resume them.
+
+## π0-FAST DROID v2 direct gate
+
+The completed v2 pilot uses physical GPU 0 for the policy and physical GPU 1
+for Isaac. The public checkpoint restore must bypass stale local Application
+Default Credentials. Once the checkpoint is local, serve that immutable path:
+
+```bash
+cd /home/ali/openpi-robolab
+FSSPEC_GS_TOKEN=anon CUDA_VISIBLE_DEVICES=0 \
+  XLA_PYTHON_CLIENT_MEM_FRACTION=0.50 \
+  .venv/bin/python scripts/serve_policy.py \
+  --port 8000 \
+  policy:checkpoint --policy.config=pi0_fast_droid_jointpos \
+  --policy.dir=/home/ali/.cache/openpi/openpi-assets-simeval/pi0_fast_droid_jointpos
+```
+
+For the shared container wrapper, expose physical GPU 1 with
+`--gpus device=1`; inside that container the simulator still receives
+`--device cuda:0`. Run one invocation per preregistered seed so the environment
+seed and server sampling-seed root remain identical within each LEFT/RIGHT
+pair:
+
+```bash
+for v2_seed in 8300 8301 8302; do
+  /workspace/isaaclab/_isaac_sim/python.sh policies/pi0_family/run.py \
+    --policy pi0_fast \
+    --task RubiksCubeLeftOfBowlMatchedTask RubiksCubeRightOfBowlMatchedTask \
+    --num-envs 1 --num-runs 1 --headless --device cuda:0 \
+    --video-mode viewport --disable-subtask \
+    --instruction-controller static --instruction-type default \
+    --open-loop-horizon 10 \
+    --environment-seed "${v2_seed}" --sampling-seed-base "${v2_seed}" \
+    --output-folder-name "v2_pi0_fast_direct_seed${v2_seed}"
+done
+```
+
+The retained raw outputs are under `/home/ali/projects/RoboLab/output/` and are
+not ordinary Git artifacts. Compile their hashes, failure stages, state paths,
+paired action distances, and gate decision with:
+
+```bash
+cd /home/ali/projects/steerable
+python3 tools/compile_vla_wam_v2_droid_pilot.py
+python3 tools/render_vla_wam_v2_droid_videos.py
+python3 tools/validate_vla_wam_v2_protocol.py \
+  --write-report artifacts/vla_wam_shared_v2/protocol_validation.json
+```
 
 ## pi0.5 DROID
 

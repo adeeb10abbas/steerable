@@ -166,6 +166,9 @@ def validate(workspace: Path) -> dict[str, Any]:
     lingbot_result_path = (
         workspace / "artifacts/vla_wam_shared_v2/pilot/results/lingbot_va_direct_gate.json"
     )
+    pi0_fast_result_path = (
+        workspace / "artifacts/vla_wam_shared_v2/pilot/results/pi0_fast_direct_gate.json"
+    )
     runtime_interventions_path = (
         workspace / "artifacts/vla_wam_shared_v2/pilot/runtime_interventions.json"
     )
@@ -180,6 +183,10 @@ def validate(workspace: Path) -> dict[str, Any]:
         workspace
         / "artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/media_index.json"
     )
+    droid_paired_media_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/media/droid_pi0_fast_pairs/media_index.json"
+    )
     figures_manifest_path = (
         workspace / "artifacts/vla_wam_shared_v2/figures/figures_manifest.json"
     )
@@ -190,10 +197,12 @@ def validate(workspace: Path) -> dict[str, Any]:
     efficient_result = load_json(efficient_result_path)
     fastwam_result = load_json(fastwam_result_path)
     lingbot_result = load_json(lingbot_result_path)
+    pi0_fast_result = load_json(pi0_fast_result_path)
     runtime_interventions = load_json(runtime_interventions_path)
     directional_expansion = load_json(directional_expansion_path)
     directional_fixtures = load_json(directional_fixtures_path)
     paired_media = load_json(paired_media_path)
+    droid_paired_media = load_json(droid_paired_media_path)
     figures_manifest = load_json(figures_manifest_path)
     checks: list[str] = []
 
@@ -577,10 +586,43 @@ def validate(workspace: Path) -> dict[str, Any]:
         "FastWAM action-only interface records imagined-video evidence as not applicable",
         checks,
     )
+    pi0_fast_summary = pi0_fast_result["summary"]
     require(
-        len(technical["events"]) == 4
+        pi0_fast_summary["episode_count"] == 6
+        and pi0_fast_summary["pair_count"] == 3,
+        "compiled pi0-FAST pilot contains six episodes in three exact pairs",
+        checks,
+    )
+    require(
+        pi0_fast_summary["by_direction"]["left"]["successes"] == 0
+        and pi0_fast_summary["by_direction"]["right"]["successes"] == 3,
+        "compiled pi0-FAST pilot preserves the observed 0/3 LEFT and 3/3 RIGHT result",
+        checks,
+    )
+    require(
+        pi0_fast_summary["aligned_endpoint_pairs"] == 3
+        and pi0_fast_summary["nonzero_first_chunk_pairs"] == 3,
+        "all three pi0-FAST pairs change actions and redirect endpoints toward RIGHT",
+        checks,
+    )
+    require(
+        pi0_fast_summary["pilot_gate_decision"]
+        == "expand_direct_directional_bias_only",
+        "pi0-FAST pilot follows the frozen one-direction-only expansion gate",
+        checks,
+    )
+    require(
+        pi0_fast_result["measurement"]["oracle_actions"] == 0
+        and pi0_fast_result["measurement"]["dynamic_prompts"] == 0
+        and not pi0_fast_result["measurement"]["subtask_progress_checking"],
+        "pi0-FAST pilot preserves the no-oracle and no-subtask-coach design",
+        checks,
+    )
+    require(
+        len(technical["events"]) == 5
+        and technical["events"][-1]["id"] == "PI0FAST-TECH-001"
         and technical["events"][-1]["classification"] == "environment_repair",
-        "pre-episode failures and the renderer repair remain in a separate technical ledger",
+        "pre-episode failures and both environment repairs remain in a separate technical ledger",
         checks,
     )
 
@@ -669,9 +711,42 @@ def validate(workspace: Path) -> dict[str, Any]:
             )
 
     require(
+        droid_paired_media["status"] == "complete",
+        "paired pi0-FAST DROID media package is complete",
+        checks,
+    )
+    droid_item = droid_paired_media["item"]
+    require(
+        droid_item["model_id"] == "pi0_fast_droid_vla"
+        and not droid_item["left"]["success"]
+        and droid_item["right"]["success"],
+        "pi0-FAST media is the frozen LEFT-failure and matched RIGHT-success pair",
+        checks,
+    )
+    require(
+        droid_item["environment_seed"] == 8300
+        and droid_item["sampling_seed"] == 8300,
+        "pi0-FAST media preserves the exact seed-8300 pair",
+        checks,
+    )
+    for artifact_name in (
+        "video",
+        "poster",
+        "square_video",
+        "square_poster",
+        "captions",
+    ):
+        validate_file_record(
+            workspace,
+            droid_item[artifact_name],
+            f"pi0-FAST paired {artifact_name}",
+            checks,
+        )
+
+    require(
         figures_manifest["status"] == "complete"
-        and len(figures_manifest["figures"]) == 12,
-        "reader-first figure manifest contains twelve completed exports",
+        and len(figures_manifest["figures"]) == 16,
+        "reader-first figure manifest contains sixteen completed exports",
         checks,
     )
     require(
@@ -697,6 +772,8 @@ def validate(workspace: Path) -> dict[str, Any]:
         "fastwam_result_sha256": sha256(fastwam_result_path),
         "lingbot_result_path": str(lingbot_result_path.relative_to(workspace)),
         "lingbot_result_sha256": sha256(lingbot_result_path),
+        "pi0_fast_result_path": str(pi0_fast_result_path.relative_to(workspace)),
+        "pi0_fast_result_sha256": sha256(pi0_fast_result_path),
         "runtime_interventions_path": str(runtime_interventions_path.relative_to(workspace)),
         "runtime_interventions_sha256": sha256(runtime_interventions_path),
         "directional_expansion_path": str(directional_expansion_path.relative_to(workspace)),
@@ -705,6 +782,8 @@ def validate(workspace: Path) -> dict[str, Any]:
         "directional_fixtures_sha256": sha256(directional_fixtures_path),
         "paired_media_path": str(paired_media_path.relative_to(workspace)),
         "paired_media_sha256": sha256(paired_media_path),
+        "droid_paired_media_path": str(droid_paired_media_path.relative_to(workspace)),
+        "droid_paired_media_sha256": sha256(droid_paired_media_path),
         "figures_manifest_path": str(figures_manifest_path.relative_to(workspace)),
         "figures_manifest_sha256": sha256(figures_manifest_path),
         "check_count": len(checks),

@@ -1,0 +1,77 @@
+{
+  "item": {
+    "alt_text": "Side-by-side pi0-FAST DROID rollouts from seed 8300. The LEFT prompt fails without object interaction at x=+0.003 m; the mirrored RIGHT prompt succeeds at x=+0.377 m. Target-relative path strips show the requested lateral bands and actual Rubik's-cube paths.",
+    "arena": "droid_rubiks_cube_relative_to_bowl",
+    "captions": {
+      "bytes": 305,
+      "path": "artifacts/vla_wam_shared_v2/media/droid_pi0_fast_pairs/pi0_fast_seed8300_left_failure_right_success.vtt",
+      "sha256": "489156c904a350e49172eaac9c038f7ab6d2630e4fe38871ff6c996ab766b4fe"
+    },
+    "duration_seconds": 29.934,
+    "environment_seed": 8300,
+    "id": "pi0_fast_seed8300_left_failure_right_success",
+    "interface_note": "VLA \u00b7 actions only",
+    "left": {
+      "failure_stage": "no_object_interaction",
+      "final_lateral_display_m": 0.00263272225856781,
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "source_trajectory": {
+        "bytes": 198149,
+        "path": "/home/ali/projects/steerable/artifacts/vla_wam_shared_v2/pilot/pi0_fast_direct/trajectories/seed8300_left.json",
+        "sha256": "21b77d1f10f27814314add08cb3cdf4b2c3b5875d6a85fef48c7469326ae46be"
+      },
+      "source_video": {
+        "bytes": 1224611,
+        "path": "/home/ali/projects/RoboLab/output/v2_pi0_fast_direct_seed8300/RubiksCubeLeftOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_left_of_the_bowl_0_viewport.mp4",
+        "sha256": "f195cc8cb298f821387f96ad14cb0c1e5354728aff1dbf6e6e334f583cab6874"
+      },
+      "success": false
+    },
+    "model_id": "pi0_fast_droid_vla",
+    "model_label": "\u03c00-FAST DROID",
+    "pair_id": "droid_pair_seed_8300",
+    "poster": {
+      "bytes": 78841,
+      "path": "artifacts/vla_wam_shared_v2/media/droid_pi0_fast_pairs/pi0_fast_seed8300_left_failure_right_success_poster.jpg",
+      "sha256": "54e1593a6c75515431ccae18ac5eebb9d77afb6f93900796d18fd320348eb749"
+    },
+    "right": {
+      "failure_stage": "success",
+      "final_lateral_display_m": 0.37686651945114136,
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "source_trajectory": {
+        "bytes": 136353,
+        "path": "/home/ali/projects/steerable/artifacts/vla_wam_shared_v2/pilot/pi0_fast_direct/trajectories/seed8300_right.json",
+        "sha256": "d312fada030a250136dc375eebc47444e1088615af7440bc0d0aee4a27c768dd"
+      },
+      "source_video": {
+        "bytes": 1193599,
+        "path": "/home/ali/projects/RoboLab/output/v2_pi0_fast_direct_seed8300/RubiksCubeRightOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_right_of_the_bowl_0_viewport.mp4",
+        "sha256": "a4635d294417ec2a24c33eb35f7d3d5ed1139e10b56ea850599b808cd7ac633d"
+      },
+      "success": true
+    },
+    "sampling_seed": 8300,
+    "square_poster": {
+      "bytes": 74238,
+      "path": "artifacts/vla_wam_shared_v2/media/droid_pi0_fast_pairs/pi0_fast_seed8300_left_failure_right_success_1200x1200_poster.jpg",
+      "sha256": "abb010569d5366636f6b3c6f7eee8cfdc9ff47b45f85163b4772e45337d7aea4"
+    },
+    "square_video": {
+      "bytes": 887242,
+      "path": "artifacts/vla_wam_shared_v2/media/droid_pi0_fast_pairs/pi0_fast_seed8300_left_failure_right_success_1200x1200.mp4",
+      "sha256": "d9eef591684d6cda2983559368dce46f9d96a306810caa33dd743ae1526bc500"
+    },
+    "video": {
+      "bytes": 1407040,
+      "path": "artifacts/vla_wam_shared_v2/media/droid_pi0_fast_pairs/pi0_fast_seed8300_left_failure_right_success.mp4",
+      "sha256": "84a424cdfb796bbce02a88eb6d9a22de74fc3b264b4a103bece09aea99ed3a6a"
+    }
+  },
+  "metric_boundary": "The dashed path is illustrative. Success is determined from recorded 3D state by the full relation-and-release checker, not from pixels or the drawn route.",
+  "schema_version": "vla-wam-shared-v2-droid-paired-media-v1",
+  "selection_rule": "First compiled same-seed pair containing a LEFT failure and RIGHT success; selected before rendering.",
+  "selection_scope": "The first compiled exact-prompt pi0-FAST pair: seed 8300 LEFT failure and matched RIGHT success.",
+  "shorter_rollout_policy": "Hold the final frame of the shorter rollout until the longer matched rollout ends; never trim the longer failure.",
+  "status": "complete"
+}

@@ -2,13 +2,15 @@
 
 Status: the base protocol was **frozen before standardized v2 expansion
 inference** on 3 August 2026 at 01:19:36 UTC. Three six-episode RoboTwin WAM
-pilots are now complete. Their adaptive ten-scene directional confirmation was
-frozen at 03:29:32 UTC after disclosing all 18 pilot outcomes and before any of
-the 42 new expansion episodes. The machine-readable source of truth is
+pilots and one six-episode π0-FAST DROID VLA pilot are now complete. Each
+triggered the one-direction-only branch of the frozen adaptive gate. The
+RoboTwin ten-scene directional confirmation was frozen at 03:29:32 UTC after
+disclosing all 18 WAM pilot outcomes and before any of its 42 new expansion
+episodes. The machine-readable source of truth is
 [`protocol.json`](../artifacts/vla_wam_shared_v2/protocol.json), and the media
 selection rules are frozen separately in
 [`media_selection_plan.json`](../artifacts/vla_wam_shared_v2/media_selection_plan.json).
-The executable validator currently passes 195 checks; its full report is
+The executable validator currently passes 230 checks; its full report is
 [`protocol_validation.json`](../artifacts/vla_wam_shared_v2/protocol_validation.json).
 
 This is a disclosed post-v1 extension. Every pi0.5/Cosmos result in the
@@ -35,7 +37,7 @@ compare only normalized model descriptors, and every mark must name its arena.
 | Arena | Checkpoint | Category | Future interface | v2 status |
 | --- | --- | --- | --- | --- |
 | DROID | pi0.5 DROID | VLA | none | existing v1 reference |
-| DROID | pi0-FAST DROID | VLA | none | new expansion model |
+| DROID | pi0-FAST DROID | VLA | none | direct gate complete: LEFT 0/3, RIGHT 3/3 |
 | DROID | GR00T N1.7 DROID | VLA | none | new expansion model |
 | DROID | Cosmos3 Edge DROID | WAM | decoded video plus actions | existing v1 reference |
 | RoboTwin | LingBot-VLA 4B | VLA | none | new expansion model |
@@ -212,6 +214,35 @@ started outside both relation regions. The fixture report establishes only
 technical validity and neutral starting geometry; it is not behavioral
 evidence.
 
+### Observed π0-FAST DROID gate and selected follow-up
+
+π0-FAST completed the exact six-episode DROID direct-command gate at
+environment/sampling seeds 8300–8302. The prompt pair was the frozen sentence
+“Put the Rubik's cube to the LEFT/RIGHT of the bowl.” The controller was static,
+the open-loop horizon was ten actions, viewport video was enabled, and no
+oracle action, subtask coach, dynamic prompt, or subtask progress checker was
+used.
+
+| Diagnostic | Observed result |
+| --- | ---: |
+| LEFT relation-and-release success | 0/3 |
+| RIGHT relation-and-release success | 3/3 |
+| LEFT / RIGHT verified pickup proxy | 2/3 / 3/3 |
+| Same-seed first ten actions differ | 3/3 pairs |
+| RIGHT endpoint is right of matched LEFT endpoint | 3/3 pairs |
+
+The paired final lateral shifts were +0.374, +0.162, and +0.251 m toward robot
+RIGHT. This supports command-conditioned physical redirection but not robust
+bidirectional steerability. Under branch 3, the selected next experiment is
+the ten-seed direct-command directional-bias confirmation. Short, outcome, and
+contrastive prompt cells remain unauthorized until that gate resolves the base-
+competence asymmetry.
+
+The fixed-observation diagnostic is deliberately secondary. An exact duplicate
+prompt produced RMS 0 while the older-v1-wording LEFT/RIGHT swap produced action
+RMS 0.153. Because those diagnostic labels are not byte-identical to the v2
+closed-loop prompts, they establish repeatability and label sensitivity only.
+
 ## Metrics
 
 The frozen hypotheses are deliberately physical rather than tensor-level:
@@ -316,6 +347,13 @@ interface. FastWAM's original capture used the wrong raw pixel dimensions; the
 gallery explicitly records the four-packet head-camera reconstruction, and the
 runner is repaired for all future captures.
 
+The π0-FAST DROID gate publishes its first compiled LEFT-failure and matched
+RIGHT-success pair under the same no-trimming rule. Its landscape and square
+clips include the exact prompts, complete viewport rollouts, state-derived
+Rubik's-cube paths, requested regions, endpoints, and failure stages. Its media
+manifest is separate from the RoboTwin manifest so the arenas cannot be pooled
+accidentally.
+
 ## Claim boundary
 
 This is a multi-checkpoint, two-arena case study. Within-arena matched
@@ -336,10 +374,11 @@ pooled or placed on an unlabeled common leaderboard.
   direct-to-contrastive slots are explicitly absent because v1 used disjoint
   seed tiers.
 - [`figures_manifest.json`](../artifacts/vla_wam_shared_v2/figures/figures_manifest.json)
-  hashes twelve reader-first exports: prompt semantics, raw DROID obedience
+  hashes sixteen reader-first exports: prompt semantics, raw DROID obedience
   scorecards, paired DROID lateral endpoints, Efficient-WAM-RT path panels,
-  cross-model RoboTwin stage counts, and all nine WAM paired endpoints. Every
-  figure is exported in landscape and square formats.
+  cross-model RoboTwin stage counts, all nine WAM paired endpoints, the exact
+  π0-FAST direct gate, and its three same-seed path pairs. Every figure is
+  exported in landscape and square formats.
 - [`pilot_grid.json`](../artifacts/vla_wam_shared_v2/pilot/pilot_grid.json)
   compiles the effective protocol into 144 unique cells and 72 exact LEFT/RIGHT
   pairs. The first execution batch is the 36-cell direct-command base-
@@ -362,6 +401,11 @@ pooled or placed on an unlabeled common leaderboard.
   first predicted latent. Three thermally paused cells remain valid behavioral
   episodes but are excluded from wall-latency aggregates in
   [`runtime_interventions.json`](../artifacts/vla_wam_shared_v2/pilot/runtime_interventions.json).
+- [`pi0_fast_direct_gate.md`](../artifacts/vla_wam_shared_v2/pilot/results/pi0_fast_direct_gate.md)
+  records the exact DROID result: 0/3 LEFT and 3/3 RIGHT, with all three paired
+  endpoints shifted toward RIGHT. The raw RoboLab HDF5, environment configs,
+  logs, and viewport videos stay outside ordinary Git; the compiled result
+  hashes each one and versions the six state-derived trajectories.
 - [`directional_expansion.json`](../artifacts/vla_wam_shared_v2/pilot/directional_expansion.json)
   freezes the seven additional scene pairs and discloses the 18 known pilot
   outcomes. Its model-blind seven-scene setup audit is
@@ -370,6 +414,11 @@ pooled or placed on an unlabeled common leaderboard.
   hashes three matched success/failure pairs in landscape and square formats,
   posters, captions, exact prompts, source trajectories, and the disclosed
   FastWAM pixel-layout repair.
+- The separate π0-FAST
+  [`media_index.json`](../artifacts/vla_wam_shared_v2/media/droid_pi0_fast_pairs/media_index.json)
+  hashes the seed-8300 LEFT-failure/RIGHT-success explainer in both aspect
+  ratios, its posters and captions, the exact source rollouts, and the frozen
+  deterministic selection rule.
 - [`execution_configs.json`](../artifacts/vla_wam_shared_v2/pilot/execution_configs.json)
   records the exact completed-pilot settings. Efficient-WAM-RT's entry was
   recorded retrospectively after its first six cells; FastWAM and LingBot-VA
@@ -386,6 +435,7 @@ python3 tools/validate_vla_wam_v2_protocol.py \
 python3 tools/select_vla_wam_v2_media.py
 python3 tools/render_vla_wam_v2_reader_figures.py
 python3 tools/render_vla_wam_v2_robotwin_videos.py
+python3 tools/render_vla_wam_v2_droid_videos.py
 env -u DISPLAY CUDA_VISIBLE_DEVICES=1 \
   VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json \
   PYTHONPATH=/home/ali/projects/EfficientWAM-RoboTwin:/home/ali/lab/RoboTwin/envs/curobo/src \

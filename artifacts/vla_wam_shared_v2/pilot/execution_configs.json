@@ -1,0 +1,60 @@
+{
+  "schema_version": "vla-wam-shared-v2-execution-configs-v1",
+  "recorded_at_utc": "2026-08-03T02:31:00Z",
+  "scope": "RoboTwin direct-command base-competence pilots",
+  "shared": {
+    "max_actions": 400,
+    "prompt_family": "direct_command",
+    "directions": [
+      "left",
+      "right"
+    ],
+    "paired_reset": "Environment seed, sampling seed, task, objects, and initial poses are identical inside each left/right pair.",
+    "headless_environment": {
+      "VK_ICD_FILENAMES": "/usr/share/vulkan/icd.d/nvidia_icd.json",
+      "DISPLAY": "unset"
+    },
+    "oracle_actions": 0,
+    "dynamic_prompts": 0
+  },
+  "models": [
+    {
+      "model_id": "efficient_wam_rt_robotwin",
+      "status": "retrospective_exact_config_record_for_completed_six_episode_pilot",
+      "new_v2_episodes_completed_before_record": 6,
+      "config_path": "/home/ali/projects/Efficient-WAM/configs/local/deploy_3090.yaml",
+      "config_sha256": "1962aaa9a9594459f3fe90816cdbdce34a402cb56a8741b578ff6979fe51722e",
+      "num_inference_steps": 10,
+      "action_chunk_size": 16,
+      "predicted_video_max_chunks": 1,
+      "predicted_video_enabled": true,
+      "simulator_video_enabled": true,
+      "selection_basis": "Exact settings used by the completed standardized pilot; no post-result parameter change."
+    },
+    {
+      "model_id": "fastwam_robotwin",
+      "status": "frozen_before_any_standardized_v2_inference",
+      "new_v2_episodes_completed_before_record": 0,
+      "text_cfg_scale": 2.0,
+      "contrastive_negative": false,
+      "num_inference_steps": 10,
+      "action_horizon": 32,
+      "replan_steps": 24,
+      "predicted_video_enabled": false,
+      "simulator_video_enabled": true,
+      "selection_basis": "Pre-v2 local gate: CFG 2.0 produced the only clean prompt-only counterfactual and the strongest prompt-to-sampling action ratio among the tested non-extreme settings. This prior result is disclosed, not re-tuned on v2 scenes."
+    },
+    {
+      "model_id": "lingbot_va_robotwin",
+      "status": "frozen_before_any_standardized_v2_inference",
+      "new_v2_episodes_completed_before_record": 0,
+      "guidance_scale": 5.0,
+      "action_guidance_scale": 1.0,
+      "predicted_video_enabled": true,
+      "predicted_video_artifact": "first predicted latent tensor",
+      "simulator_video_enabled": true,
+      "selection_basis": "Released/default action guidance. The pre-v2 action-guidance-3 experiment increased open-loop prompt delta without improving counterfactual completion, so it is not selected."
+    }
+  ],
+  "claim_limit": "Efficient-WAM-RT settings are an exact retrospective record because its standardized pilot preceded this registry. FastWAM and LingBot-VA settings are prospectively frozen for their v2 pilots."
+}

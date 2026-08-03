@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "study_id": "vla_wam_language_steerability_v2",
-  "audited_at_utc": "2026-08-03T01:42:00Z",
+  "audited_at_utc": "2026-08-03T02:34:00Z",
   "host": "ali-MS-7D25",
   "local_compute": {
     "gpu_count": 2,
@@ -25,7 +25,7 @@
     },
     "efficient_wam": {
       "path": "/home/ali/projects/Efficient-WAM",
-      "commit": "292074197c5e971439aeef1f6eef39e605ad8312"
+      "commit": "5c29f6e378e3ccb21bb1012c9871134b669476f3"
     },
     "fastwam": {
       "path": "/home/ali/projects/FastWAM",
@@ -82,7 +82,7 @@
     },
     {
       "id": "efficient_wam_rt_robotwin",
-      "status": "v2_static_contract_pass_runtime_pending",
+      "status": "standardized_v2_pilot_complete_directional_expansion_selected",
       "policy_adapter": "/home/ali/projects/Efficient-WAM/experiments/robotwin_language_gate/closed_loop_language_gate.py",
       "checkpoint_status": "present",
       "checkpoint_path": "/home/ali/projects/Efficient-WAM/checkpoints/Efficient-WAM_RoboTwin/Efficient-WAM-RT/Efficient-WAM-RT_stage3.pt",
@@ -90,7 +90,9 @@
       "auxiliary_asset_path": "/home/ali/projects/Efficient-WAM/checkpoints/Wan2.2-TI2V-5B",
       "auxiliary_asset_bytes": 34201555360,
       "adapter_contract_report": "artifacts/vla_wam_shared_v2/pilot/adapter_contracts.json",
-      "next_gate": "load the checkpoint and run paired direct-command episodes in frozen anchor scene 00 with simulator and imagined videos enabled"
+      "pilot_result": "artifacts/vla_wam_shared_v2/pilot/results/efficient_wam_rt_direct_gate.json",
+      "pilot_outcome": "LEFT 2/3; RIGHT 0/3; all six episodes verified pickup proxy positive",
+      "next_gate": "freeze seven additional anchor scenes before inference, validate scene fixtures without the model, then complete the ten-scene direct-command directional-bias confirmation"
     },
     {
       "id": "fastwam_robotwin",
@@ -120,9 +122,9 @@
   "readiness_summary": {
     "reference_complete": 2,
     "checkpoint_present_adapter_pending": 0,
-    "v2_static_contract_pass_runtime_pending": 3,
+    "v2_static_contract_pass_runtime_pending": 2,
     "checkpoint_or_server_missing": 3,
-    "standardized_v2_pilot_complete": 0
+    "standardized_v2_pilot_complete": 1
   },
-  "claim_limit": "Present files establish local setup readiness only. They do not establish v2 language steerability or base task competence."
+  "claim_limit": "Efficient-WAM-RT has a completed six-episode standardized direct-command pilot, which is too small for a stable rate estimate and selects only the directional-bias expansion. The other new models remain setup or runtime pending."
 }

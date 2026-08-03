@@ -13,7 +13,11 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
+import matplotlib
+
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.lines import Line2D
 from matplotlib.patches import FancyBboxPatch, Rectangle
 
@@ -101,8 +105,8 @@ def save(fig: plt.Figure, path: Path) -> None:
 
 def draw_header(fig: plt.Figure, title: str, subtitle: str, square: bool) -> None:
     fig.text(0.055, 0.946, title, fontsize=26 if not square else 24, weight="bold", va="top")
-    rendered_subtitle = (
-        "\n".join(textwrap.wrap(subtitle, 128)) if square else subtitle
+    rendered_subtitle = "\n".join(
+        textwrap.wrap(subtitle, 128 if square else 145)
     )
     fig.text(
         0.055,
@@ -506,6 +510,157 @@ def endpoint_pairs(rows: list[dict[str, str]], output: Path, square: bool) -> No
     save(fig, output)
 
 
+def efficient_pilot_paths(compiled: dict[str, Any], output: Path, square: bool) -> None:
+    episodes = compiled["episodes"]
+    by_pair: dict[str, dict[str, dict[str, Any]]] = defaultdict(dict)
+    for episode in episodes:
+        by_pair[episode["pair_id"]][episode["requested_relation"]] = episode
+    if len(by_pair) != 3 or any(set(pair) != {"left", "right"} for pair in by_pair.values()):
+        raise RuntimeError("Efficient-WAM path figure requires three exact left/right pairs")
+
+    fig = plt.figure(figsize=(12, 12) if square else (16, 9))
+    draw_header(
+        fig,
+        "Same scene. Opposite command. Where did the object go?",
+        "Efficient-WAM-RT standardized v2 pilot · solid lines are executed target-relative paths · dotted arrows show the shortest expected move into each requested success region · simulator state is used only for scoring and visualization",
+        square,
+    )
+    if square:
+        positions = [
+            (0.06, 0.57, 0.42, 0.26),
+            (0.54, 0.57, 0.42, 0.26),
+            (0.30, 0.17, 0.42, 0.26),
+        ]
+    else:
+        positions = [(0.055 + index * 0.315, 0.22, 0.285, 0.58) for index in range(3)]
+
+    x_grid = np.linspace(-0.3, 0.3, 401)
+    y_grid = np.linspace(-0.18, 0.30, 321)
+    xx, yy = np.meshgrid(x_grid, y_grid)
+    radius = np.sqrt(xx * xx + yy * yy)
+    base_region = (radius > 0.08) & (radius < 0.2) & (np.abs(yy) < 0.05)
+
+    for index, (pair_id, pair) in enumerate(sorted(by_pair.items())):
+        axis = fig.add_axes(positions[index])
+        axis.contourf(
+            xx,
+            yy,
+            (base_region & (xx < 0)).astype(float),
+            levels=[0.5, 1.5],
+            colors=[LEFT],
+            alpha=0.09,
+        )
+        axis.contourf(
+            xx,
+            yy,
+            (base_region & (xx > 0)).astype(float),
+            levels=[0.5, 1.5],
+            colors=[RIGHT],
+            alpha=0.08,
+        )
+        axis.axhline(0, color=GRID, linewidth=0.8, zorder=0)
+        axis.axvline(0, color=TEXT, linewidth=1.0, alpha=0.7, zorder=0)
+
+        left_episode = pair["left"]
+        object_label = left_episode["movable_description"]
+        reference_label = left_episode["reference_description"]
+        title = f"Scene {index + 1} · {object_label} → {reference_label}"
+        axis.set_title("\n".join(textwrap.wrap(title, 42)), loc="left", fontsize=11.5, pad=9)
+
+        start = None
+        for direction, color, desired_x in (
+            ("left", LEFT, -0.14),
+            ("right", RIGHT, 0.14),
+        ):
+            episode = pair[direction]
+            trajectory = json.loads(Path(episode["raw_trajectory"]["path"]).read_text())
+            xs = np.asarray([step["object_minus_target_x"] for step in trajectory])
+            ys = np.asarray([step["object_minus_target_y"] for step in trajectory])
+            if start is None:
+                start = (float(xs[0]), float(ys[0]))
+            axis.annotate(
+                "",
+                xy=(desired_x, 0),
+                xytext=(float(xs[0]), float(ys[0])),
+                arrowprops={
+                    "arrowstyle": "->",
+                    "color": color,
+                    "linestyle": ":",
+                    "linewidth": 1.25,
+                    "alpha": 0.65,
+                },
+                zorder=1,
+            )
+            axis.plot(xs, ys, color=color, linewidth=2.0, alpha=0.88, zorder=2)
+            endpoint_marker = "o" if episode["requested_success"] else "X"
+            axis.scatter(
+                [xs[-1]],
+                [ys[-1]],
+                s=72,
+                marker=endpoint_marker,
+                facecolor=color,
+                edgecolor=CARD if endpoint_marker == "o" else color,
+                linewidth=1.2,
+                zorder=4,
+            )
+            status = "SUCCESS" if episode["requested_success"] else "FAIL"
+            axis.text(
+                0.02 if direction == "left" else 0.98,
+                -0.18,
+                f"ASKED {direction.upper()}  ·  {status}\nend x {float(xs[-1]):+.3f} m",
+                transform=axis.transAxes,
+                ha="left" if direction == "left" else "right",
+                va="top",
+                fontsize=8.7,
+                color=TEXT,
+                weight="bold",
+            )
+        if start is not None:
+            axis.scatter(
+                [start[0]],
+                [start[1]],
+                s=45,
+                marker="D",
+                facecolor=TEXT,
+                edgecolor=CARD,
+                linewidth=0.8,
+                zorder=5,
+            )
+            axis.text(start[0], start[1] + 0.018, "same start", ha="center", fontsize=8, color=MUTED)
+        axis.text(-0.14, -0.043, "LEFT success region", ha="center", fontsize=7.8, color=TEXT)
+        axis.text(0.14, -0.043, "RIGHT success region", ha="center", fontsize=7.8, color=TEXT)
+        axis.set_xlim(-0.30, 0.30)
+        axis.set_ylim(-0.18, 0.30)
+        axis.set_aspect("equal", adjustable="box")
+        axis.set_xticks([-0.2, -0.1, 0, 0.1, 0.2])
+        axis.set_yticks([-0.1, 0, 0.1, 0.2])
+        axis.set_xticklabels(["−.2", "−.1", "TARGET", "+.1", "+.2"], fontsize=8)
+        axis.tick_params(axis="y", labelsize=8)
+        axis.grid(color=GRID, linewidth=0.55, alpha=0.7)
+        axis.spines[["top", "right"]].set_visible(False)
+        axis.spines[["left", "bottom"]].set_color(GRID)
+        axis.set_xlabel("target-relative x (m)", fontsize=8.5, labelpad=7)
+        axis.set_ylabel("target-relative y (m)", fontsize=8.5)
+
+    summary = compiled["summary"]
+    takeaway = (
+        f"Pilot gate: LEFT {summary['by_direction']['left']['successes']}/3 · "
+        f"RIGHT {summary['by_direction']['right']['successes']}/3. "
+        "All six runs picked up the object, so the failures are post-pick placement failures—not inactivity. "
+        "Two of three paired endpoint responses move in the wrong direction when LEFT is changed to RIGHT."
+    )
+    fig.text(
+        0.055,
+        0.065 if not square else 0.025,
+        "\n".join(textwrap.wrap(takeaway, 138 if not square else 96)),
+        fontsize=10.5 if not square else 9.7,
+        color=MUTED,
+        weight="bold",
+        va="bottom",
+    )
+    save(fig, output)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -527,10 +682,16 @@ def main() -> None:
     summaries_path = workspace / "artifacts/vla_wam_shared_v1/final_evidence/group_summaries.csv"
     episodes_path = workspace / "artifacts/vla_wam_shared_v1/final_evidence/episodes.csv"
     protocol_path = workspace / "artifacts/vla_wam_shared_v2/protocol.json"
+    efficient_result_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/results/efficient_wam_rt_direct_gate.json"
+    )
     with summaries_path.open(newline="") as handle:
         summaries = list(csv.DictReader(handle))
     with episodes_path.open(newline="") as handle:
         episodes = list(csv.DictReader(handle))
+    with efficient_result_path.open() as handle:
+        efficient_result = json.load(handle)
     if len(summaries) != 16 or len(episodes) != 160:
         raise RuntimeError("Reader figures require all 16 group cells and all 160 episodes")
 
@@ -541,6 +702,8 @@ def main() -> None:
         "obedience_scorecard_square": output_dir / "droid_v1_obedience_scorecard_1200x1200.png",
         "paired_endpoints_landscape": output_dir / "droid_v1_paired_endpoints_1600x900.png",
         "paired_endpoints_square": output_dir / "droid_v1_paired_endpoints_1200x1200.png",
+        "efficient_pilot_paths_landscape": output_dir / "efficient_wam_rt_pilot_paths_1600x900.png",
+        "efficient_pilot_paths_square": output_dir / "efficient_wam_rt_pilot_paths_1200x1200.png",
     }
     render_jobs = [
         ("prompt semantics landscape", prompt_semantics, outputs["prompt_semantics_landscape"], False),
@@ -549,6 +712,8 @@ def main() -> None:
         ("obedience scorecard square", lambda path, square: scorecard(summaries, path, square), outputs["obedience_scorecard_square"], True),
         ("paired endpoints landscape", lambda path, square: endpoint_pairs(episodes, path, square), outputs["paired_endpoints_landscape"], False),
         ("paired endpoints square", lambda path, square: endpoint_pairs(episodes, path, square), outputs["paired_endpoints_square"], True),
+        ("Efficient-WAM pilot paths landscape", lambda path, square: efficient_pilot_paths(efficient_result, path, square), outputs["efficient_pilot_paths_landscape"], False),
+        ("Efficient-WAM pilot paths square", lambda path, square: efficient_pilot_paths(efficient_result, path, square), outputs["efficient_pilot_paths_square"], True),
     ]
     for label, renderer, path, square in render_jobs:
         print(f"Rendering {label}...", flush=True)
@@ -561,6 +726,7 @@ def main() -> None:
         "source_episodes_sha256": sha256(episodes_path),
         "source_episode_count": len(episodes),
         "source_group_count": len(summaries),
+        "efficient_pilot_result_sha256": sha256(efficient_result_path),
         "figures": {
             key: {
                 "path": str(path.relative_to(workspace)),
@@ -569,7 +735,7 @@ def main() -> None:
             }
             for key, path in outputs.items()
         },
-        "claim_boundary": "These six figures explain the frozen prompt design and the two existing DROID reference checkpoints. They contain no standardized v2 expansion-model outcome.",
+        "claim_boundary": "The first six figures explain the frozen prompt design and the two existing DROID reference checkpoints. The two Efficient-WAM-RT path figures contain the six-episode standardized v2 direct-command pilot only; they do not imply a stable population rate.",
     }
     manifest_path = output_dir / "figures_manifest.json"
     manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")

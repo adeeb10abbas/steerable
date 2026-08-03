@@ -310,6 +310,17 @@
       "cost_effect": "None."
     }
   ],
+  "post_inference_amendments": [
+    {
+      "id": "V2-A003_robotwin_execution_config_registry",
+      "recorded_at_utc": "2026-08-03T02:31:00Z",
+      "inference_completed_before_amendment": 6,
+      "affected_completed_model": "efficient_wam_rt_robotwin",
+      "reason": "The first Efficient-WAM-RT pilot exposed that exact guidance, horizon, predicted-future, and renderer settings must be machine-readable alongside the prompt grid. Record Efficient-WAM-RT's unchanged actual settings retrospectively and freeze FastWAM and LingBot-VA settings before their v2 inference.",
+      "cost_effect": "None.",
+      "artifact": "artifacts/vla_wam_shared_v2/pilot/execution_configs.json"
+    }
+  ],
   "second_wave_candidates": [
     {
       "id": "lawam",

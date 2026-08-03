@@ -294,13 +294,27 @@ pooled or placed on an unlabeled common leaderboard.
   direct-to-contrastive slots are explicitly absent because v1 used disjoint
   seed tiers.
 - [`figures_manifest.json`](../artifacts/vla_wam_shared_v2/figures/figures_manifest.json)
-  hashes six initial reader-first exports: prompt semantics, raw obedience
-  scorecards, and all paired lateral endpoints in landscape and square formats.
+  hashes eight reader-first exports: prompt semantics, raw obedience
+  scorecards, all paired DROID lateral endpoints, and the first standardized
+  Efficient-WAM-RT expected-versus-executed path panels in landscape and
+  square formats.
 - [`pilot_grid.json`](../artifacts/vla_wam_shared_v2/pilot/pilot_grid.json)
   compiles the effective protocol into 144 unique cells and 72 exact LEFT/RIGHT
   pairs. The first execution batch is the 36-cell direct-command base-
   competence gate; the remaining 108 wording cells are conditional on the
   frozen gate rather than being launched blindly.
+- [`efficient_wam_rt_direct_gate.md`](../artifacts/vla_wam_shared_v2/pilot/results/efficient_wam_rt_direct_gate.md)
+  compiles the first six standardized RoboTwin episodes. Efficient-WAM-RT
+  succeeds on 2/3 LEFT prompts and 0/3 RIGHT prompts; all six episodes satisfy
+  the transparent verified-pickup proxy, so the four failures are post-pick
+  placement failures. The frozen gate selects only a ten-scene direct-command
+  directional-bias confirmation, not the four-wording sweep.
+- [`execution_configs.json`](../artifacts/vla_wam_shared_v2/pilot/execution_configs.json)
+  records Efficient-WAM-RT's exact completed-pilot settings and prospectively
+  freezes FastWAM and LingBot-VA settings. The pre-episode SAPIEN startup
+  failures and repair evidence remain separate in
+  [`technical_events.json`](../artifacts/vla_wam_shared_v2/pilot/technical_events.json)
+  and never enter a model denominator.
 
 Regenerate and validate them from the repository root:
 
@@ -310,4 +324,5 @@ python3 tools/validate_vla_wam_v2_protocol.py \
 python3 tools/select_vla_wam_v2_media.py
 python3 tools/render_vla_wam_v2_reader_figures.py
 python3 tools/build_vla_wam_v2_pilot_grid.py
+python3 tools/compile_vla_wam_v2_robotwin_pilot.py
 ```

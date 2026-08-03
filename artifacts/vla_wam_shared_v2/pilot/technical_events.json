@@ -1,0 +1,36 @@
+{
+  "schema_version": "vla-wam-shared-v2-technical-events-v1",
+  "scope": "Efficient-WAM-RT standardized RoboTwin pilot startup",
+  "events": [
+    {
+      "id": "EWAM-TECH-001",
+      "classification": "technical_invalid_no_episode_started",
+      "observation": "The first launch compiled and cached the required CuRobo extensions, then made no progress before episode creation.",
+      "model_result_retained": false
+    },
+    {
+      "id": "EWAM-TECH-002",
+      "classification": "technical_invalid_no_episode_started",
+      "observation": "A cached rerun reproduced the pre-episode block, ruling out one-time extension compilation as the remaining cause.",
+      "model_result_retained": false
+    },
+    {
+      "id": "EWAM-TECH-003",
+      "classification": "diagnostic",
+      "observation": "A SIGUSR1 faulthandler dump localized the main thread to SAPIEN renderer construction before task setup.",
+      "model_result_retained": false
+    },
+    {
+      "id": "EWAM-TECH-004",
+      "classification": "environment_repair",
+      "observation": "The host exposed multiple Vulkan ICDs. Pinning /usr/share/vulkan/icd.d/nvidia_icd.json and clearing forwarded DISPLAY made the official SAPIEN offscreen example complete and allowed the unchanged frozen model cells to run.",
+      "model_result_retained": false,
+      "repair_applied_to_all_retained_episodes": true,
+      "references": [
+        "https://sapien.ucsd.edu/docs/0.9/tutorial/basic/render.html",
+        "https://github.com/haosulab/SAPIEN"
+      ]
+    }
+  ],
+  "retention_rule": "Only attempts that reached model inference and emitted result.json are scientific episodes. All pre-episode failures remain in this technical ledger and never enter success-rate denominators."
+}

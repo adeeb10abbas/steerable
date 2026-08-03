@@ -140,8 +140,17 @@ def validate_v1_disclosure(workspace: Path, checks: list[str]) -> dict[str, Any]
 def validate(workspace: Path) -> dict[str, Any]:
     protocol_path = workspace / "artifacts/vla_wam_shared_v2/protocol.json"
     media_path = workspace / "artifacts/vla_wam_shared_v2/media_selection_plan.json"
+    execution_path = workspace / "artifacts/vla_wam_shared_v2/pilot/execution_configs.json"
+    technical_path = workspace / "artifacts/vla_wam_shared_v2/pilot/technical_events.json"
+    efficient_result_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/results/efficient_wam_rt_direct_gate.json"
+    )
     protocol = load_json(protocol_path)
     media = load_json(media_path)
+    execution = load_json(execution_path)
+    technical = load_json(technical_path)
+    efficient_result = load_json(efficient_result_path)
     checks: list[str] = []
 
     require(
@@ -282,6 +291,82 @@ def validate(workspace: Path) -> dict[str, Any]:
         "no standardized v2 inference preceded either protocol amendment",
         checks,
     )
+    post_amendments = protocol["post_inference_amendments"]
+    require(
+        [amendment["id"] for amendment in post_amendments]
+        == ["V2-A003_robotwin_execution_config_registry"],
+        "the post-pilot execution-config amendment is disclosed separately",
+        checks,
+    )
+    require(
+        post_amendments[0]["inference_completed_before_amendment"] == 6,
+        "the execution-config amendment discloses six preceding Efficient-WAM episodes",
+        checks,
+    )
+    require(
+        post_amendments[0]["artifact"]
+        == "artifacts/vla_wam_shared_v2/pilot/execution_configs.json",
+        "the post-pilot amendment points to its machine-readable registry",
+        checks,
+    )
+
+    execution_models = {model["model_id"]: model for model in execution["models"]}
+    require(
+        set(execution_models)
+        == {
+            "efficient_wam_rt_robotwin",
+            "fastwam_robotwin",
+            "lingbot_va_robotwin",
+        },
+        "execution registry covers all three runnable RoboTwin WAMs",
+        checks,
+    )
+    require(
+        execution_models["efficient_wam_rt_robotwin"]["new_v2_episodes_completed_before_record"]
+        == 6,
+        "Efficient-WAM execution settings are labeled retrospective after six episodes",
+        checks,
+    )
+    require(
+        all(
+            execution_models[model_id]["status"]
+            == "frozen_before_any_standardized_v2_inference"
+            and execution_models[model_id]["new_v2_episodes_completed_before_record"] == 0
+            for model_id in ("fastwam_robotwin", "lingbot_va_robotwin")
+        ),
+        "FastWAM and LingBot-VA execution settings are prospectively frozen",
+        checks,
+    )
+    require(
+        execution["shared"]["oracle_actions"] == 0
+        and execution["shared"]["dynamic_prompts"] == 0,
+        "RoboTwin execution registry preserves the no-oracle design",
+        checks,
+    )
+
+    summary = efficient_result["summary"]
+    require(
+        summary["episode_count"] == 6 and summary["pair_count"] == 3,
+        "compiled Efficient-WAM pilot contains six episodes in three exact pairs",
+        checks,
+    )
+    require(
+        summary["by_direction"]["left"]["successes"] == 2
+        and summary["by_direction"]["right"]["successes"] == 0,
+        "compiled Efficient-WAM pilot preserves the observed 2/3 LEFT and 0/3 RIGHT result",
+        checks,
+    )
+    require(
+        summary["pilot_gate_decision"] == "expand_direct_directional_bias_only",
+        "Efficient-WAM pilot follows the frozen one-direction-only expansion gate",
+        checks,
+    )
+    require(
+        len(technical["events"]) == 4
+        and technical["events"][-1]["classification"] == "environment_repair",
+        "pre-episode failures and the renderer repair remain in a separate technical ledger",
+        checks,
+    )
 
     pilot = protocol["pilot"]
     calculated_pilot = (
@@ -326,6 +411,10 @@ def validate(workspace: Path) -> dict[str, Any]:
         "protocol_sha256": sha256(protocol_path),
         "media_plan_path": str(media_path.relative_to(workspace)),
         "media_plan_sha256": sha256(media_path),
+        "execution_config_path": str(execution_path.relative_to(workspace)),
+        "execution_config_sha256": sha256(execution_path),
+        "efficient_result_path": str(efficient_result_path.relative_to(workspace)),
+        "efficient_result_sha256": sha256(efficient_result_path),
         "check_count": len(checks),
         "checks": checks,
         "registered_model_count": len(models),

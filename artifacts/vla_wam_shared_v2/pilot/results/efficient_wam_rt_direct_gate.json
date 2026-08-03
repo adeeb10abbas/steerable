@@ -1,0 +1,392 @@
+{
+  "schema_version": "vla-wam-shared-v2-robotwin-pilot-v1",
+  "compiled_at_utc": "2026-08-03T02:31:56.056005+00:00",
+  "model_id": "efficient_wam_rt_robotwin",
+  "measurement": {
+    "oracle_actions": 0,
+    "dynamic_prompts": 0,
+    "pickup_lift_threshold_m": 0.03,
+    "pickup_consecutive_steps": 3,
+    "simulator_state_role": "post_action_scoring_and_visualization_only"
+  },
+  "summary": {
+    "episode_count": 6,
+    "pair_count": 3,
+    "successes": 2,
+    "success_rate": 0.3333333333333333,
+    "by_direction": {
+      "left": {
+        "episodes": 3,
+        "successes": 2,
+        "verified_pickups": 3,
+        "entered_requested_region": 2,
+        "prompt_ignored_native_task_completed": 0,
+        "mean_command_alignment_margin_m": 7.521857817967732e-05
+      },
+      "right": {
+        "episodes": 3,
+        "successes": 0,
+        "verified_pickups": 3,
+        "entered_requested_region": 0,
+        "prompt_ignored_native_task_completed": 1,
+        "mean_command_alignment_margin_m": -0.16261613555252552
+      }
+    },
+    "failure_stage_counts": {
+      "success": 2,
+      "picked_never_entered_requested_region": 4
+    },
+    "prompt_ignored_native_task_completed_count": 1,
+    "paired_endpoint_responses": [
+      {
+        "pair_id": "pair00",
+        "left_success": true,
+        "right_success": false,
+        "left_final_dx_m": -0.1128547340631485,
+        "right_final_dx_m": -0.19365905225276947,
+        "right_minus_left_endpoint_dx_m": -0.08080431818962097,
+        "endpoint_response_direction": "anti_directed"
+      },
+      {
+        "pair_id": "pair01",
+        "left_success": false,
+        "right_success": false,
+        "left_final_dx_m": 0.23586991429328918,
+        "right_final_dx_m": -0.18294724822044373,
+        "right_minus_left_endpoint_dx_m": -0.4188171625137329,
+        "endpoint_response_direction": "anti_directed"
+      },
+      {
+        "pair_id": "pair02",
+        "left_success": true,
+        "right_success": false,
+        "left_final_dx_m": -0.12324083596467972,
+        "right_final_dx_m": -0.11124210618436337,
+        "right_minus_left_endpoint_dx_m": 0.011998729780316353,
+        "endpoint_response_direction": "aligned"
+      }
+    ],
+    "pilot_gate_decision": "expand_direct_directional_bias_only",
+    "pilot_gate_reason": "Direct-command success occurred for LEFT but not RIGHT, so the frozen gate calls for a ten-scene direct-command directional-bias confirmation before any four-wording sweep."
+  },
+  "episodes": [
+    {
+      "model_id": "efficient_wam_rt_robotwin",
+      "pair_id": "pair00",
+      "task": "place_a2b_left",
+      "environment_seed": 4300000,
+      "sampling_seed": 8400,
+      "prompt_family": "direct_command",
+      "requested_relation": "left",
+      "prompt": "Put the blue soap to the left of the tea-box.",
+      "movable_description": "blue soap",
+      "reference_description": "tea-box",
+      "movable_model_name": "107_soap",
+      "reference_model_name": "112_tea-box",
+      "requested_success": true,
+      "native_task_success": true,
+      "opposite_relation_success": false,
+      "prompt_ignored_native_task_completed": false,
+      "actions_executed": 44,
+      "wall_seconds": 25.676283404929563,
+      "initial_dx_m": -0.17838167771697044,
+      "initial_dy_m": -0.10894219484180212,
+      "final_dx_m": -0.1128547340631485,
+      "final_dy_m": 0.007840302772819996,
+      "command_alignment_margin_m": 0.1128547340631485,
+      "max_object_lift_m": 0.11334139108657837,
+      "ever_gripper_closed": true,
+      "verified_pickup_proxy": true,
+      "ever_entered_requested_region": true,
+      "first_requested_region_action": 32,
+      "ever_released_in_requested_region": true,
+      "first_release_in_requested_region_action": 44,
+      "failure_stage": "success",
+      "raw_result": {
+        "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__left/result.json",
+        "bytes": 2071,
+        "sha256": "a99c16655584844049d1afd71ab1a9aa59e909227767b7e5de5478d5ae2f24e1"
+      },
+      "raw_trajectory": {
+        "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__left/trajectory.json",
+        "bytes": 16962,
+        "sha256": "df6152e1f8f94a58946a419d5a88586d3079698d6955ddfb262f8dd56a51f849"
+      },
+      "executed_video": {
+        "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__left/simulator.mp4",
+        "bytes": 26141,
+        "sha256": "bf17e1c9f97496deac92382f0380086dacc6b4e60fab03d2de8be5d6c7e34ca9"
+      },
+      "imagined_future_video": {
+        "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__left/efficient_wam_predicted_video/episode0.mp4",
+        "bytes": 20939,
+        "sha256": "3788e10510d3ef68ea5278c327825e0aa276db9f509216499e1f6187d4425e86"
+      }
+    },
+    {
+      "model_id": "efficient_wam_rt_robotwin",
+      "pair_id": "pair00",
+      "task": "place_a2b_left",
+      "environment_seed": 4300000,
+      "sampling_seed": 8400,
+      "prompt_family": "direct_command",
+      "requested_relation": "right",
+      "prompt": "Put the blue soap to the right of the tea-box.",
+      "movable_description": "blue soap",
+      "reference_description": "tea-box",
+      "movable_model_name": "107_soap",
+      "reference_model_name": "112_tea-box",
+      "requested_success": false,
+      "native_task_success": false,
+      "opposite_relation_success": false,
+      "prompt_ignored_native_task_completed": false,
+      "actions_executed": 400,
+      "wall_seconds": 30.579722092021257,
+      "initial_dx_m": -0.17838167771697044,
+      "initial_dy_m": -0.10894219484180212,
+      "final_dx_m": -0.19365905225276947,
+      "final_dy_m": 0.15434131771326065,
+      "command_alignment_margin_m": -0.19365905225276947,
+      "max_object_lift_m": 0.16107177734375,
+      "ever_gripper_closed": true,
+      "verified_pickup_proxy": true,
+      "ever_entered_requested_region": false,
+      "first_requested_region_action": null,
+      "ever_released_in_requested_region": false,
+      "first_release_in_requested_region_action": null,
+      "failure_stage": "picked_never_entered_requested_region",
+      "raw_result": {
+        "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__right/result.json",
+        "bytes": 2077,
+        "sha256": "64f572ae6ea3f95e85a8e508935023f17f5a9c3c3d38748db545d31e72a3b28d"
+      },
+      "raw_trajectory": {
+        "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__right/trajectory.json",
+        "bytes": 150607,
+        "sha256": "fb024da9de2a2d3ce8cf154a283385d442787b1a7d7f5e676a6bd8edcd068ecb"
+      },
+      "executed_video": {
+        "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__right/simulator.mp4",
+        "bytes": 164988,
+        "sha256": "dadb64423352d268ae9219ba77494feec3a626d340b9373cbb928c410b463900"
+      },
+      "imagined_future_video": {
+        "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__right/efficient_wam_predicted_video/episode1.mp4",
+        "bytes": 21454,
+        "sha256": "27babe9655db0116af8175fc1f45308768ebae4a576560ba41c395bfe74a108e"
+      }
+    },
+    {
+      "model_id": "efficient_wam_rt_robotwin",
+      "pair_id": "pair01",
+      "task": "place_a2b_right",
+      "environment_seed": 4300001,
+      "sampling_seed": 8401,
+      "prompt_family": "direct_command",
+      "requested_relation": "left",
+      "prompt": "Put the brown woodenblock to the left of the black phone.",
+      "movable_description": "brown woodenblock",
+      "reference_description": "black phone",
+      "movable_model_name": "086_woodenblock",
+      "reference_model_name": "077_phone",
+      "requested_success": false,
+      "native_task_success": false,
+      "opposite_relation_success": false,
+      "prompt_ignored_native_task_completed": false,
+      "actions_executed": 400,
+      "wall_seconds": 32.71819053799845,
+      "initial_dx_m": -0.003953173756599426,
+      "initial_dy_m": 0.11879925802350044,
+      "final_dx_m": 0.23586991429328918,
+      "final_dy_m": 0.2429783083498478,
+      "command_alignment_margin_m": -0.23586991429328918,
+      "max_object_lift_m": 0.06417369842529297,
+      "ever_gripper_closed": true,
+      "verified_pickup_proxy": true,
+      "ever_entered_requested_region": false,
+      "first_requested_region_action": null,
+      "ever_released_in_requested_region": false,
+      "first_release_in_requested_region_action": null,
+      "failure_stage": "picked_never_entered_requested_region",
+      "raw_result": {
+        "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__left/result.json",
+        "bytes": 2093,
+        "sha256": "7c87d981f283006423dbfd0babf473f5d4245f026f9086bb754121041d50e63e"
+      },
+      "raw_trajectory": {
+        "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__left/trajectory.json",
+        "bytes": 150172,
+        "sha256": "3a4f02b4dcc079eb064b0322f9b5699c0a2a228a11c9c4812d557b5d0188ef38"
+      },
+      "executed_video": {
+        "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__left/simulator.mp4",
+        "bytes": 162392,
+        "sha256": "66ffbc2863a8d30f58bf9c75b53337f846492a5f44c640e22eca583771ff01cd"
+      },
+      "imagined_future_video": {
+        "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__left/efficient_wam_predicted_video/episode1.mp4",
+        "bytes": 20824,
+        "sha256": "22296a3671d2b1e726a80e0fdf28e41a66ba3d133a8d27d401d65de5ac20d3c3"
+      }
+    },
+    {
+      "model_id": "efficient_wam_rt_robotwin",
+      "pair_id": "pair01",
+      "task": "place_a2b_right",
+      "environment_seed": 4300001,
+      "sampling_seed": 8401,
+      "prompt_family": "direct_command",
+      "requested_relation": "right",
+      "prompt": "Put the brown woodenblock to the right of the black phone.",
+      "movable_description": "brown woodenblock",
+      "reference_description": "black phone",
+      "movable_model_name": "086_woodenblock",
+      "reference_model_name": "077_phone",
+      "requested_success": false,
+      "native_task_success": false,
+      "opposite_relation_success": false,
+      "prompt_ignored_native_task_completed": false,
+      "actions_executed": 400,
+      "wall_seconds": 40.1069857039256,
+      "initial_dx_m": -0.003953173756599426,
+      "initial_dy_m": 0.11879925802350044,
+      "final_dx_m": -0.18294724822044373,
+      "final_dy_m": 0.059385642409324646,
+      "command_alignment_margin_m": -0.18294724822044373,
+      "max_object_lift_m": 0.083507239818573,
+      "ever_gripper_closed": true,
+      "verified_pickup_proxy": true,
+      "ever_entered_requested_region": false,
+      "first_requested_region_action": null,
+      "ever_released_in_requested_region": false,
+      "first_release_in_requested_region_action": null,
+      "failure_stage": "picked_never_entered_requested_region",
+      "raw_result": {
+        "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__right/result.json",
+        "bytes": 2099,
+        "sha256": "5dea56614edd84a812e08f70616f13ccb262f285a17d853bfa30847b7dd0c7c3"
+      },
+      "raw_trajectory": {
+        "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__right/trajectory.json",
+        "bytes": 150779,
+        "sha256": "313f5a0d6efce20bbca47bb086cebbb7c09e59d9d99dd9c84040e74623fca0e2"
+      },
+      "executed_video": {
+        "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__right/simulator.mp4",
+        "bytes": 147352,
+        "sha256": "559feaf976df5c93322c693c43609c4c1253c23713a1273c844b74840113f13f"
+      },
+      "imagined_future_video": {
+        "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__right/efficient_wam_predicted_video/episode0.mp4",
+        "bytes": 20636,
+        "sha256": "1d39f27c715777b4102e424f4c9ee089de0a0de7724ab20b5da05f7ccf0c8367"
+      }
+    },
+    {
+      "model_id": "efficient_wam_rt_robotwin",
+      "pair_id": "pair02",
+      "task": "place_a2b_left",
+      "environment_seed": 4300002,
+      "sampling_seed": 8402,
+      "prompt_family": "direct_command",
+      "requested_relation": "left",
+      "prompt": "Put the box with cards inside to the left of the red coffee-box.",
+      "movable_description": "box with cards inside",
+      "reference_description": "red coffee-box",
+      "movable_model_name": "081_playingcards",
+      "reference_model_name": "113_coffee-box",
+      "requested_success": true,
+      "native_task_success": true,
+      "opposite_relation_success": false,
+      "prompt_ignored_native_task_completed": false,
+      "actions_executed": 46,
+      "wall_seconds": 24.906293029082008,
+      "initial_dx_m": 0.01300065778195858,
+      "initial_dy_m": 0.11296788789331913,
+      "final_dx_m": -0.12324083596467972,
+      "final_dy_m": 0.0038324594497680664,
+      "command_alignment_margin_m": 0.12324083596467972,
+      "max_object_lift_m": 0.1100054383277893,
+      "ever_gripper_closed": true,
+      "verified_pickup_proxy": true,
+      "ever_entered_requested_region": true,
+      "first_requested_region_action": 33,
+      "ever_released_in_requested_region": true,
+      "first_release_in_requested_region_action": 46,
+      "failure_stage": "success",
+      "raw_result": {
+        "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__left/result.json",
+        "bytes": 2106,
+        "sha256": "cbdceeb9a39219899933487c029825e26214e8013fc9d9aeae4afa98e0466737"
+      },
+      "raw_trajectory": {
+        "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__left/trajectory.json",
+        "bytes": 17791,
+        "sha256": "f1486f30d935b9bf70e31b3420576c6f1e5bb455f7bf9d49ddc45cb37a630bdc"
+      },
+      "executed_video": {
+        "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__left/simulator.mp4",
+        "bytes": 22548,
+        "sha256": "f648a1224b52624ce425aac3e8f49e62d91ca7587fe9208f23e0246048bf98fd"
+      },
+      "imagined_future_video": {
+        "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__left/efficient_wam_predicted_video/episode0.mp4",
+        "bytes": 22521,
+        "sha256": "f0c0dad0ae6c2a51413b57ec7b6a65cb0292cb4c3a3a1542eae43c2d51a439ec"
+      }
+    },
+    {
+      "model_id": "efficient_wam_rt_robotwin",
+      "pair_id": "pair02",
+      "task": "place_a2b_left",
+      "environment_seed": 4300002,
+      "sampling_seed": 8402,
+      "prompt_family": "direct_command",
+      "requested_relation": "right",
+      "prompt": "Put the box with cards inside to the right of the red coffee-box.",
+      "movable_description": "box with cards inside",
+      "reference_description": "red coffee-box",
+      "movable_model_name": "081_playingcards",
+      "reference_model_name": "113_coffee-box",
+      "requested_success": false,
+      "native_task_success": true,
+      "opposite_relation_success": true,
+      "prompt_ignored_native_task_completed": true,
+      "actions_executed": 400,
+      "wall_seconds": 30.420614784932695,
+      "initial_dx_m": 0.01300065778195858,
+      "initial_dy_m": 0.11296788789331913,
+      "final_dx_m": -0.11124210618436337,
+      "final_dy_m": 0.04901979863643646,
+      "command_alignment_margin_m": -0.11124210618436337,
+      "max_object_lift_m": 0.1150006651878357,
+      "ever_gripper_closed": true,
+      "verified_pickup_proxy": true,
+      "ever_entered_requested_region": false,
+      "first_requested_region_action": null,
+      "ever_released_in_requested_region": false,
+      "first_release_in_requested_region_action": null,
+      "failure_stage": "picked_never_entered_requested_region",
+      "raw_result": {
+        "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__right/result.json",
+        "bytes": 2113,
+        "sha256": "ea4f385c033f16b533757b02bca1a45c38a6bd95a9e5d2bcee8b0bee8182ad5d"
+      },
+      "raw_trajectory": {
+        "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__right/trajectory.json",
+        "bytes": 152241,
+        "sha256": "4f6e6e2c02929e5ef1741b3bb1f7a8993d5b7a807ba6881e288cf71d82878f48"
+      },
+      "executed_video": {
+        "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__right/simulator.mp4",
+        "bytes": 193269,
+        "sha256": "593797aa477bb4fc0ae614e4a747fadddb4bdf4c7b72db5befed20aa8de44ed9"
+      },
+      "imagined_future_video": {
+        "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__right/efficient_wam_predicted_video/episode1.mp4",
+        "bytes": 22286,
+        "sha256": "1697c80b7f76d6f013a20af764c7e61a0973025b7930190f99085d48180f6c7e"
+      }
+    }
+  ]
+}

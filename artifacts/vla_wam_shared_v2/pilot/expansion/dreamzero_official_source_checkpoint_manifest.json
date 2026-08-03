@@ -1,0 +1,70 @@
+{
+  "schema_version": "vla-wam-shared-v2-dreamzero-official-source-checkpoint-manifest-v1",
+  "amendment_id": "V2-A007",
+  "status": "verified",
+  "source": {
+    "repository": "https://github.com/dreamzero0/dreamzero.git",
+    "commit": "ab790c198fbce33503358efbbd4187ce9a89adf3",
+    "git_tree": "6b7ba27f1af81e963a6507f1204c05c65a94098c",
+    "tracked_file_count": 129,
+    "tracked_bytes": 4946544,
+    "aggregate_sha256": "a39e1ef8b7d8668caf15914637446fe58acb512e6672413d3af8b4b6442eca7f",
+    "aggregate_definition": "SHA-256 of the sha256sum output for every tracked file in git-ls-files sort order",
+    "verification": "clean detached exact checkout"
+  },
+  "checkpoint": {
+    "repository": "GEAR-Dreams/DreamZero-DROID",
+    "revision": "96ad344138c66e82536422432ad742f015784942",
+    "payload_file_count": 25,
+    "payload_bytes": 64789159581,
+    "aggregate_sha256": "b4af0ac93474c3295c1ba841a34a8f2f91a5c3ec3c6aac1431b97689a6618c56",
+    "aggregate_definition": "SHA-256 of sorted lines formatted as '<payload SHA-256><two spaces><relative path><newline>'; .cache is excluded",
+    "verification": "Every 64-hex Hugging Face LFS ETag was verified against its local payload; small Git-backed files were hashed locally.",
+    "files": [
+      {"path": ".gitattributes", "bytes": 1790, "sha256": "79faecd8a6ab4a7cb1732cc948428689f2415f96d56d54ff3066318bb2583118"},
+      {"path": "README.md", "bytes": 2680, "sha256": "01dc20aa62133894f14e01ed0ecdea50ed8897effebe13c858aa3cca690de43b"},
+      {"path": "config.json", "bytes": 3881, "sha256": "93b808c65724db8cd29bd70d37d1f26f70d498c7c5d621b7b754fdbaa82d46f2"},
+      {"path": "experiment_cfg/conf.yaml", "bytes": 351759, "sha256": "d63a63201c5141a6bc655ff29e60102aa2d9b1a16c2f526751d032e17b6e83a4"},
+      {"path": "experiment_cfg/metadata.json", "bytes": 17504, "sha256": "1b82792f03251a4df9c80bf92f9c4882662d398b6bb1647fa43d994649583d5d"},
+      {"path": "latest", "bytes": 17, "sha256": "64226c61662c93332dca36939eb03ae9dd499d727ccdb2a626fb0b941e05466c"},
+      {"path": "model-00001-of-00010.safetensors", "bytes": 4935816720, "sha256": "e0e0ff763ed8bb6b855782e10f1577d676bc7abce2df0e46cea5d340a05963a5"},
+      {"path": "model-00002-of-00010.safetensors", "bytes": 4983107552, "sha256": "3dd6a6ed2735b920badc8b58864ac567f921b5e1ab537f9c755e35e6c65ebd8c"},
+      {"path": "model-00003-of-00010.safetensors", "bytes": 4937567096, "sha256": "60bbc0d82d3dd6b7dc70290eb4e77b8710691c2b9446ea5846550808843506fb"},
+      {"path": "model-00004-of-00010.safetensors", "bytes": 4987670360, "sha256": "9f113af379cf74496d721d281a07a94068556f537ff949a32b718aac64122767"},
+      {"path": "model-00005-of-00010.safetensors", "bytes": 4987714608, "sha256": "750906bac3ab714feb4df7d5ae67ae47249bcb582855438b1f2c4bc6ccabec7d"},
+      {"path": "model-00006-of-00010.safetensors", "bytes": 4950963456, "sha256": "5689725911456978459731530e936cb15b6648d06658f0c1f880412251c816d3"},
+      {"path": "model-00007-of-00010.safetensors", "bytes": 4951004896, "sha256": "62b03f0e43909bcc20842a49ed4ad2c1d8d0c028b08724d0f5e4ae21a399acfd"},
+      {"path": "model-00008-of-00010.safetensors", "bytes": 4950963472, "sha256": "8ba6b9cbec10e346394168beb96b73ac76105613424369a757363caa09000eba"},
+      {"path": "model-00009-of-00010.safetensors", "bytes": 4950984200, "sha256": "12a295bba9307ed68bdf5b2abe3e85e28287e5b9113f2608b8385e9ca8c551b3"},
+      {"path": "model-00010-of-00010.safetensors", "bytes": 1212823208, "sha256": "3429d535e43ded09cc216cf134cd21c225fb405522c58d37f18769faeb96539a"},
+      {"path": "model.safetensors.index.json", "bytes": 203009, "sha256": "232b161ae7fd8edbcf5898bfe81dd8bfc9ce1e04b8a757dcd4a7674756b92946"},
+      {"path": "scheduler.pt", "bytes": 1263, "sha256": "c6bcfc2ff3be511fdb2e982acf6e55e0a1f2cab9831f9039b202918f17632be7"},
+      {"path": "tensorrt/wan/CausalWanModel.onnx", "bytes": 15998585, "sha256": "faecba279a95ab3ab8a6d9093323b2da4f8811506690a2b4734a743f9fd065c4"},
+      {"path": "tensorrt/wan/CausalWanModel.onnx_data", "bytes": 9409990144, "sha256": "b077cf7da708cfb9ae8a38fb24b10156f71aab20d0c74010f16d7639b6322a9b"},
+      {"path": "tensorrt/wan/WanModel_nvfp4.trt", "bytes": 9441029780, "sha256": "1b3470a28152b77610fa1422fa30b03ab80f3dd5f6f08bb9bbd736fe6f00bc30"},
+      {"path": "tensorrt/wan/WanModel_nvfp4_build.log", "bytes": 45055429, "sha256": "1eb927d77fdfadbc1c90190c643ffe893f4f43b5d13f86782e78d04fc14e8f64"},
+      {"path": "trainer_state.json", "bytes": 27854865, "sha256": "5c5219874d56efec0e28a33aedfe5172b1784b0e90c01a4d096b421239420814"},
+      {"path": "wandb_config.json", "bytes": 37, "sha256": "e1b9c649f59977a8868b8f7331b02f803bcd196727b05ed5ad52e82d1ac3ae17"},
+      {"path": "zero_to_fp32.py", "bytes": 33270, "sha256": "e8a2553b434ac043ec63b022db1e768277acf8d4e70f10a2842db6d238977135"}
+    ]
+  },
+  "tokenizer": {
+    "repository": "google/umt5-xxl",
+    "revision": "66cb9e7e85526fe440a945569e42c72fb6cbc0ad",
+    "payload_file_count": 4,
+    "payload_bytes": 21414790,
+    "aggregate_sha256": "00f9b974f8f0b33c5e284849a0507c308893d01d915377ba88c2f7084ea92434",
+    "aggregate_definition": "SHA-256 of sorted lines formatted as '<payload SHA-256><two spaces><relative path><newline>'; .cache is excluded",
+    "files": [
+      {"path": "special_tokens_map.json", "bytes": 6623, "sha256": "14ef492a69e59396e918521a5f8394af1acf9f8dddd47273693b2b42570dfd12"},
+      {"path": "spiece.model", "bytes": 4548313, "sha256": "e3909a67b780650b35cf529ac782ad2b6b26e6d1f849d3fbb6a872905f452458"},
+      {"path": "tokenizer.json", "bytes": 16853013, "sha256": "af904105ce1071b1202bba0059a841f4a7b85b48b6ec179c4948e3483476e0dd"},
+      {"path": "tokenizer_config.json", "bytes": 6841, "sha256": "616015e2b6c26f9a98ae3171634518d440a46260ebc1115c2596792d33827bdc"}
+    ]
+  },
+  "storage_policy": {
+    "payload_location": "ali-owned PVC outside ordinary Git",
+    "payloads_committed": false,
+    "manifest_only_committed": true
+  }
+}

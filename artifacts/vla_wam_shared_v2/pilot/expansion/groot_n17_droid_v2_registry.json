@@ -1,0 +1,340 @@
+{
+  "amendment_id": "V2-A005",
+  "claim_boundary": "Bounded six-cell DROID direct-command replication. It is separate from v1, Cosmos diagnostics, and all RoboTwin denominators.",
+  "design": {
+    "conditions": [
+      "LEFT",
+      "RIGHT"
+    ],
+    "environment_and_sampling_seeds": [
+      8300,
+      8301,
+      8302
+    ],
+    "oracle_or_subtask_coach": false,
+    "runtime_intervention_count": 0,
+    "static_episode_prompt_only": true,
+    "valid_episode_count": 6
+  },
+  "direction_summary": {
+    "LEFT": {
+      "success_rate": 0.0,
+      "successes": 0,
+      "trials": 3,
+      "wilson_95": [
+        0.0,
+        0.5614970317550454
+      ]
+    },
+    "RIGHT": {
+      "success_rate": 0.0,
+      "successes": 0,
+      "trials": 3,
+      "wilson_95": [
+        0.0,
+        0.5614970317550454
+      ]
+    }
+  },
+  "episodes": [
+    {
+      "condition": "LEFT",
+      "endpoint_cube_minus_bowl_world_xyz": [
+        -0.15235984325408936,
+        0.0678708553314209,
+        0.003756381571292877
+      ],
+      "environment_seed": 8300,
+      "executed_action_count": 450,
+      "executed_actions": {
+        "bytes": 14528,
+        "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/direct_gate/seed8300/action_traces/seed8300_left_executed_actions.npy",
+        "sha256": "36777007521f301e18c241d5c2b87a2d4f835af940ae556a86643878f886d621"
+      },
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "returned_action_chunks": {
+        "bytes": 73088,
+        "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/direct_gate/seed8300/action_traces/seed8300_left_returned_action_chunks.npy",
+        "sha256": "f8c1c43243632ebc502486d48635e10c1c93e24b505197d12ed0d11829bd6b74"
+      },
+      "returned_action_modalities": {
+        "bytes": 155872,
+        "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/direct_gate/seed8300/action_traces/seed8300_left_returned_action_modalities.npz",
+        "sha256": "e4adfee40dc94b964f91df3a1e7a3b5b246d6f8b5fdd5e4520aa75d83cfa6b8b"
+      },
+      "simulator_hdf5": {
+        "bytes": 315976,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_groot_direct_seed8300/RubiksCubeLeftOfBowlMatchedTask/run_0.hdf5",
+        "sha256": "0b201d2eefecad070de6fdc3fb744ecb30adb92faedf9c4ba6a541487bf04128"
+      },
+      "simulator_video": {
+        "bytes": 2887397,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_groot_direct_seed8300/RubiksCubeLeftOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_left_of_the_bowl_0_viewport.mp4",
+        "sha256": "ac6a7971d4f7dbb713f275e505d30123846fc326514709d7e73b051319b7d5ad"
+      },
+      "success": false
+    },
+    {
+      "condition": "RIGHT",
+      "endpoint_cube_minus_bowl_world_xyz": [
+        -0.1521213948726654,
+        0.01578556001186371,
+        0.0037546306848526
+      ],
+      "environment_seed": 8300,
+      "executed_action_count": 450,
+      "executed_actions": {
+        "bytes": 14528,
+        "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/direct_gate/seed8300/action_traces/seed8300_right_executed_actions.npy",
+        "sha256": "d030f16e99529767b93c7a7ca0047f4572bff212478dc21e4e2807311fb462fb"
+      },
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "returned_action_chunks": {
+        "bytes": 73088,
+        "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/direct_gate/seed8300/action_traces/seed8300_right_returned_action_chunks.npy",
+        "sha256": "08bfb9dc28cf244cf3f5a4aee2de382fd0a895f3fab32633a67fe26d3b3ddc32"
+      },
+      "returned_action_modalities": {
+        "bytes": 155872,
+        "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/direct_gate/seed8300/action_traces/seed8300_right_returned_action_modalities.npz",
+        "sha256": "659d35132641f5af26cb754b92788403a448ef2ca1ca8eafd110e4a563a84ad9"
+      },
+      "simulator_hdf5": {
+        "bytes": 316552,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_groot_direct_seed8300/RubiksCubeRightOfBowlMatchedTask/run_0.hdf5",
+        "sha256": "613389168e142e0bfaca8cae0a5e3e7f95d4d699fbb5e8059b399d9f6dc74c64"
+      },
+      "simulator_video": {
+        "bytes": 2957113,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_groot_direct_seed8300/RubiksCubeRightOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_right_of_the_bowl_0_viewport.mp4",
+        "sha256": "2bcc1edc9e526c39a38f369bc153264ec9df9cf302143c1395625074239d9067"
+      },
+      "success": false
+    },
+    {
+      "condition": "LEFT",
+      "endpoint_cube_minus_bowl_world_xyz": [
+        -0.09336668252944946,
+        0.05205358564853668,
+        0.0037528425455093384
+      ],
+      "environment_seed": 8301,
+      "executed_action_count": 450,
+      "executed_actions": {
+        "bytes": 14528,
+        "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/direct_gate/seed8301/action_traces/seed8301_left_executed_actions.npy",
+        "sha256": "e77112721eb6cbff7200f79bf3f75d2a5f6d37c3c7ce5ce0e4c7a569a9f64b5a"
+      },
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "returned_action_chunks": {
+        "bytes": 73088,
+        "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/direct_gate/seed8301/action_traces/seed8301_left_returned_action_chunks.npy",
+        "sha256": "d9a99d076a3316fd29f9326c3a03f336e23f5ec0dfe27aeedd1d4a67a995daf6"
+      },
+      "returned_action_modalities": {
+        "bytes": 155872,
+        "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/direct_gate/seed8301/action_traces/seed8301_left_returned_action_modalities.npz",
+        "sha256": "4e6911d8aecfb07a13477b829e9be21ccdc4d6d4e8b0caa044cdb36e7ddd96b4"
+      },
+      "simulator_hdf5": {
+        "bytes": 322375,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_groot_direct_seed8301/RubiksCubeLeftOfBowlMatchedTask/run_0.hdf5",
+        "sha256": "d67446ad65f9ab9c7e043890cc5fa5f5791a338d064c53f1f7df8dd5342c3616"
+      },
+      "simulator_video": {
+        "bytes": 3011093,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_groot_direct_seed8301/RubiksCubeLeftOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_left_of_the_bowl_0_viewport.mp4",
+        "sha256": "3a6f16d7803eb6093e0db44901d544ba602da735b3486e3c4b256ed1295564e5"
+      },
+      "success": false
+    },
+    {
+      "condition": "RIGHT",
+      "endpoint_cube_minus_bowl_world_xyz": [
+        -0.10221415758132935,
+        -0.004243046045303345,
+        0.006735973060131073
+      ],
+      "environment_seed": 8301,
+      "executed_action_count": 450,
+      "executed_actions": {
+        "bytes": 14528,
+        "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/direct_gate/seed8301/action_traces/seed8301_right_executed_actions.npy",
+        "sha256": "583de34e69650779007706c540d5b82d2a8dcd1dc4d95de97bad5172528ca250"
+      },
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "returned_action_chunks": {
+        "bytes": 73088,
+        "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/direct_gate/seed8301/action_traces/seed8301_right_returned_action_chunks.npy",
+        "sha256": "dd80b6fd2dd2db5bc6c1159c7b4760d52501fa18103f272a55120da2ea63a5ba"
+      },
+      "returned_action_modalities": {
+        "bytes": 155872,
+        "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/direct_gate/seed8301/action_traces/seed8301_right_returned_action_modalities.npz",
+        "sha256": "ce4de630520d4865580fb850036997379855c434e2f903e6ffe434515a0712c2"
+      },
+      "simulator_hdf5": {
+        "bytes": 313376,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_groot_direct_seed8301/RubiksCubeRightOfBowlMatchedTask/run_0.hdf5",
+        "sha256": "d983b49315711b90dfc83863412f2d9c8942fc2ec7387445d318a49eaaacfdcb"
+      },
+      "simulator_video": {
+        "bytes": 2943863,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_groot_direct_seed8301/RubiksCubeRightOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_right_of_the_bowl_0_viewport.mp4",
+        "sha256": "80c5a79b3bb4ae39dcb6b0452963e94d303ce10bbe05e74504442940ae64b331"
+      },
+      "success": false
+    },
+    {
+      "condition": "LEFT",
+      "endpoint_cube_minus_bowl_world_xyz": [
+        -0.14034336805343628,
+        0.024741411209106445,
+        0.003761015832424164
+      ],
+      "environment_seed": 8302,
+      "executed_action_count": 450,
+      "executed_actions": {
+        "bytes": 14528,
+        "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/direct_gate/seed8302/action_traces/seed8302_left_executed_actions.npy",
+        "sha256": "1fde527baa615c09fe28a605620f91b478e888f285e5258b091548c17be805b6"
+      },
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "returned_action_chunks": {
+        "bytes": 73088,
+        "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/direct_gate/seed8302/action_traces/seed8302_left_returned_action_chunks.npy",
+        "sha256": "12d3f007f234e891d868db705e45b0cca9f1fb522b9dae53f16fb44f6997fabf"
+      },
+      "returned_action_modalities": {
+        "bytes": 155872,
+        "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/direct_gate/seed8302/action_traces/seed8302_left_returned_action_modalities.npz",
+        "sha256": "f6934a7c2de2bc8ed93e937534e58ea5f8c3a8f369e24ae308f13014e86b55f6"
+      },
+      "simulator_hdf5": {
+        "bytes": 314660,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_groot_direct_seed8302/RubiksCubeLeftOfBowlMatchedTask/run_0.hdf5",
+        "sha256": "fb234a69f90a73e8ba84d86793d97f66217fdb3919e332223aac234c70b97c39"
+      },
+      "simulator_video": {
+        "bytes": 2918448,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_groot_direct_seed8302/RubiksCubeLeftOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_left_of_the_bowl_0_viewport.mp4",
+        "sha256": "c46adc303dcb0e8be8cfd8797c1a1c42d9de3f3119953b2d67104a41c13e24e1"
+      },
+      "success": false
+    },
+    {
+      "condition": "RIGHT",
+      "endpoint_cube_minus_bowl_world_xyz": [
+        -0.14669269323349,
+        0.019503071904182434,
+        0.0037566646933555603
+      ],
+      "environment_seed": 8302,
+      "executed_action_count": 450,
+      "executed_actions": {
+        "bytes": 14528,
+        "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/direct_gate/seed8302/action_traces/seed8302_right_executed_actions.npy",
+        "sha256": "2149482e0dc1b9ab4136cb805da40e64dde0cd894513371043cbb9e23eef6f01"
+      },
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "returned_action_chunks": {
+        "bytes": 73088,
+        "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/direct_gate/seed8302/action_traces/seed8302_right_returned_action_chunks.npy",
+        "sha256": "507abc1a92eaf62f4104143fd419b068d8aca4fd1ed52c7a6cb76ccfbbb9aebe"
+      },
+      "returned_action_modalities": {
+        "bytes": 155872,
+        "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/direct_gate/seed8302/action_traces/seed8302_right_returned_action_modalities.npz",
+        "sha256": "eda0c765e48c3074c5e118caf6065b6cf06a504633e6658c575bc3e14080667e"
+      },
+      "simulator_hdf5": {
+        "bytes": 317349,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_groot_direct_seed8302/RubiksCubeRightOfBowlMatchedTask/run_0.hdf5",
+        "sha256": "4f623f29b679d190faeb0fa01fe46c0e9001b06ecb96de853bdc273d31a74e01"
+      },
+      "simulator_video": {
+        "bytes": 2952716,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_groot_direct_seed8302/RubiksCubeRightOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_right_of_the_bowl_0_viewport.mp4",
+        "sha256": "a43644f1167f87ecb3865b1b044462b43b315d4abec466dbad52888516f50925"
+      },
+      "success": false
+    }
+  ],
+  "interpretation": {
+    "language_steerability_claim": "All three matched pairs changed executed actions and ordered final lateral cube positions in the requested LEFT-versus-RIGHT direction.",
+    "limitation": "Consistent lateral redirection without task completion is evidence of language-conditioned control, not evidence of successful spatial manipulation.",
+    "task_success_claim": "No valid episode succeeded in either direction."
+  },
+  "invalid_attempts": {
+    "behavior_cells_excluded": 2,
+    "ledger_entry_count": 5,
+    "path": "artifacts/vla_wam_shared_v2/pilot/expansion/groot_n17_droid_invalid_attempts.json",
+    "sha256": "d02c1805eae38730d249a3b02b2e620372226e990fe669865e8064ef1e0fbb80"
+  },
+  "model": {
+    "checkpoint": "nvidia/GR00T-N1.7-DROID",
+    "embodiment": "OXE_DROID_RELATIVE_EEF_RELATIVE_JOINT",
+    "isaac_groot_commit": "b9955401d50c92a29258732e3ad6ccd579f1bdc0",
+    "open_loop_horizon": 8,
+    "revision": "05e7cc97e40dbd33b0890c35cc0214fcb0547ab5"
+  },
+  "pair_slices": [
+    {
+      "bytes": 11707,
+      "environment_seed": 8300,
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/groot_n17_droid_seed8300_slice.json",
+      "sha256": "adb188bc1f425df50f2ed3d706935f94397adfd6df81a151a304c8721aecb4a6"
+    },
+    {
+      "bytes": 11716,
+      "environment_seed": 8301,
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/groot_n17_droid_seed8301_slice.json",
+      "sha256": "6f9ae8b5b813b66326539833cefffb0c75b44d997b11d5ce7e7eed471fd7044a"
+    },
+    {
+      "bytes": 11712,
+      "environment_seed": 8302,
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/groot_n17_droid_seed8302_slice.json",
+      "sha256": "54ceb3e9658ee6fa1efc2e5b7bd6ed13f5fcb302a2448142a2a39529ea74dcd4"
+    }
+  ],
+  "paired_directional_evidence": {
+    "action_different_pair_count": 3,
+    "endpoint_requested_ordering_aligned_pair_count": 3,
+    "pair_count": 3,
+    "pairs": [
+      {
+        "environment_seed": 8300,
+        "executed_action_rms": 0.14325852692127228,
+        "left_endpoint_lateral_y": 0.0678708553314209,
+        "left_minus_right_endpoint_lateral_y": 0.05208529531955719,
+        "requested_ordering_aligned": true,
+        "right_endpoint_lateral_y": 0.01578556001186371
+      },
+      {
+        "environment_seed": 8301,
+        "executed_action_rms": 0.19454936683177948,
+        "left_endpoint_lateral_y": 0.05205358564853668,
+        "left_minus_right_endpoint_lateral_y": 0.05629663169384003,
+        "requested_ordering_aligned": true,
+        "right_endpoint_lateral_y": -0.004243046045303345
+      },
+      {
+        "environment_seed": 8302,
+        "executed_action_rms": 0.13891646265983582,
+        "left_endpoint_lateral_y": 0.024741411209106445,
+        "left_minus_right_endpoint_lateral_y": 0.005238339304924011,
+        "requested_ordering_aligned": true,
+        "right_endpoint_lateral_y": 0.019503071904182434
+      }
+    ]
+  },
+  "repeat_gate": {
+    "left_exact_repeat_rms": 0.0,
+    "left_vs_right_rms": 0.08131226152181625,
+    "path": "artifacts/vla_wam_shared_v2/pilot/expansion/groot_n17_droid_exact_repeat_probe.json",
+    "sha256": "433a205f323dab0c5e76698155e5a8b71737911b2cc7bdeb34f29d5f4c973816"
+  },
+  "schema_version": "vla-wam-shared-v2-groot-droid-result-v1",
+  "status": "complete"
+}

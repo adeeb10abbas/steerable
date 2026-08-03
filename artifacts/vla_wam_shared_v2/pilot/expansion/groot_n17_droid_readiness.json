@@ -1,7 +1,7 @@
 {
   "schema_version": "vla-wam-shared-v2-groot-droid-readiness-v1",
   "amendment_id": "V2-A005",
-  "status": "behavior_in_progress_4_of_6_valid_cells",
+  "status": "complete_6_of_6_valid_cells",
   "model_contract": {
     "checkpoint": "nvidia/GR00T-N1.7-DROID",
     "checkpoint_revision": "05e7cc97e40dbd33b0890c35cc0214fcb0547ab5",
@@ -67,13 +67,32 @@
     "authorized_cells": 6,
     "environment_seeds": [8300, 8301, 8302],
     "conditions": ["LEFT", "RIGHT"],
-    "completed_valid_cells": 4,
+    "completed_valid_cells": 6,
     "completed_successes": 0,
     "invalid_behavior_attempts_excluded": 2,
     "completed_pair_slices": [
       "artifacts/vla_wam_shared_v2/pilot/expansion/groot_n17_droid_seed8300_slice.json",
-      "artifacts/vla_wam_shared_v2/pilot/expansion/groot_n17_droid_seed8301_slice.json"
+      "artifacts/vla_wam_shared_v2/pilot/expansion/groot_n17_droid_seed8301_slice.json",
+      "artifacts/vla_wam_shared_v2/pilot/expansion/groot_n17_droid_seed8302_slice.json"
     ],
-    "next_cell": "GR00T-N1.7-DROID seed8302 LEFT"
+    "result_registry": {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/groot_n17_droid_v2_registry.json",
+      "sha256": "95077a42bb0115bc673ea13ae5acdc6fdef6f476627804662f73c219ebd88bc7"
+    },
+    "next_cell": null
+  },
+  "publication_outputs": {
+    "selected_pair_video": {
+      "path": "artifacts/vla_wam_shared_v2/media/groot_n17_droid/groot_n17_droid_seed8301_pair.mp4",
+      "sha256": "3ff5ac38d8bd224f336531b93c09cd77dee565ab724647f4019a8b2e5d60600d",
+      "media_index": "artifacts/vla_wam_shared_v2/media/groot_n17_droid/media_index.json",
+      "media_index_sha256": "0c64b39e50e24dcb8dd788f34186c7a21844772df64f795b5902a4b3cdb1fd04"
+    },
+    "endpoint_redirection_figure": {
+      "path": "artifacts/vla_wam_shared_v2/figures/groot_n17_droid_endpoint_redirection.svg",
+      "sha256": "c7e1fd58de9fc9151e2f12fd1dc97b7d0f058237f582c5035f63cb69472fe525",
+      "manifest": "artifacts/vla_wam_shared_v2/figures/groot_n17_droid_endpoint_redirection.json",
+      "manifest_sha256": "48c1843b4bd2d442817f3c10f021ada0e32fb692ca5b2a166b1fd88e9d775d88"
+    }
   }
 }

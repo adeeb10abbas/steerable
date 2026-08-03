@@ -1,0 +1,30 @@
+{
+  "caption": "GR00T N1.7 DROID seed 8301: both static direct-command episodes fail, but matched LEFT and RIGHT prompts produce distinct actions and requested-order endpoint separation.",
+  "endpoint_lateral_y": {
+    "LEFT": 0.05205358564853668,
+    "RIGHT": -0.004243046045303345
+  },
+  "environment_seed": 8301,
+  "fps": 15.0,
+  "frame_count": 449,
+  "layout": "LEFT prompt on the left; RIGHT prompt on the right",
+  "model": "nvidia/GR00T-N1.7-DROID",
+  "publication_video": {
+    "bytes": 3546735,
+    "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/compiled/media/groot_n17_droid_seed8301_pair.mp4",
+    "repository_path": "artifacts/vla_wam_shared_v2/media/groot_n17_droid/groot_n17_droid_seed8301_pair.mp4",
+    "sha256": "3ff5ac38d8bd224f336531b93c09cd77dee565ab724647f4019a8b2e5d60600d"
+  },
+  "schema_version": "vla-wam-shared-v2-groot-paired-media-v1",
+  "selection_reason": "Seed 8301 has the largest observed LEFT-minus-RIGHT endpoint lateral separation among the three frozen pairs.",
+  "source_videos": {
+    "LEFT": {
+      "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_groot_direct_seed8301/RubiksCubeLeftOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_left_of_the_bowl_0_viewport.mp4",
+      "sha256": "3a6f16d7803eb6093e0db44901d544ba602da735b3486e3c4b256ed1295564e5"
+    },
+    "RIGHT": {
+      "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_groot_direct_seed8301/RubiksCubeRightOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_right_of_the_bowl_0_viewport.mp4",
+      "sha256": "80c5a79b3bb4ae39dcb6b0452963e94d303ce10bbe05e74504442940ae64b331"
+    }
+  }
+}

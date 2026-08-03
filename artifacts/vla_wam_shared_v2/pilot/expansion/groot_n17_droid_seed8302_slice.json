@@ -1,0 +1,300 @@
+{
+  "amendment_id": "V2-A005",
+  "denominator_status": "two_valid_cells",
+  "environment_seed": 8302,
+  "episodes": [
+    {
+      "condition": "LEFT",
+      "endpoint_bowl_world_xyz": [
+        0.4506768584251404,
+        0.12710930407047272,
+        0.07735036313533783
+      ],
+      "endpoint_cube_minus_bowl_world_xyz": [
+        -0.14034336805343628,
+        0.024741411209106445,
+        0.003761015832424164
+      ],
+      "endpoint_cube_world_xyz": [
+        0.3103334903717041,
+        0.15185071527957916,
+        0.081111378967762
+      ],
+      "environment_seed": 8302,
+      "executed_action_count": 450,
+      "files": {
+        "action_trace_manifest": {
+          "bytes": 2415,
+          "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/direct_gate/seed8302/action_traces/seed8302_left_executed_actions.json",
+          "sha256": "87c48c437da8fe6e27a969f5c6a6cd4d4341e0a9721e65f23fa08a8189e6d9ca"
+        },
+        "executed_actions": {
+          "bytes": 14528,
+          "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/direct_gate/seed8302/action_traces/seed8302_left_executed_actions.npy",
+          "sha256": "1fde527baa615c09fe28a605620f91b478e888f285e5258b091548c17be805b6"
+        },
+        "returned_action_chunks": {
+          "bytes": 73088,
+          "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/direct_gate/seed8302/action_traces/seed8302_left_returned_action_chunks.npy",
+          "sha256": "12d3f007f234e891d868db705e45b0cca9f1fb522b9dae53f16fb44f6997fabf"
+        },
+        "returned_action_modalities": {
+          "bytes": 155872,
+          "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/direct_gate/seed8302/action_traces/seed8302_left_returned_action_modalities.npz",
+          "sha256": "f6934a7c2de2bc8ed93e937534e58ea5f8c3a8f369e24ae308f13014e86b55f6"
+        },
+        "simulator_env_config": {
+          "bytes": 39620,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_groot_direct_seed8302/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+          "sha256": "d3018abc31fe313dff53ae80a56866240aebc6b709009261bb714c69343d94e8"
+        },
+        "simulator_episode_log": {
+          "bytes": 165,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_groot_direct_seed8302/RubiksCubeLeftOfBowlMatchedTask/log_0_env0.json",
+          "sha256": "1f772c80025d42df04b4885d3df166cf10a6cc330d68f7cc1277b68944c9d51b"
+        },
+        "simulator_hdf5": {
+          "bytes": 314660,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_groot_direct_seed8302/RubiksCubeLeftOfBowlMatchedTask/run_0.hdf5",
+          "sha256": "fb234a69f90a73e8ba84d86793d97f66217fdb3919e332223aac234c70b97c39"
+        },
+        "simulator_video": {
+          "bytes": 2918448,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_groot_direct_seed8302/RubiksCubeLeftOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_left_of_the_bowl_0_viewport.mp4",
+          "sha256": "c46adc303dcb0e8be8cfd8797c1a1c42d9de3f3119953b2d67104a41c13e24e1"
+        }
+      },
+      "future_interface": {
+        "returned_action_chunks": {
+          "count": 57,
+          "dtype": "float32",
+          "note": "Raw model futures before client gripper binarization.",
+          "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/direct_gate/seed8302/action_traces/seed8302_left_returned_action_chunks.npy",
+          "sha256": "12d3f007f234e891d868db705e45b0cca9f1fb522b9dae53f16fb44f6997fabf",
+          "shape": [
+            57,
+            40,
+            8
+          ]
+        },
+        "returned_action_modalities": {
+          "keys": {
+            "action.eef_9d": {
+              "dtype": "float32",
+              "shape": [
+                57,
+                1,
+                40,
+                9
+              ]
+            },
+            "action.gripper_position": {
+              "dtype": "float32",
+              "shape": [
+                57,
+                1,
+                40,
+                1
+              ]
+            },
+            "action.joint_position": {
+              "dtype": "float32",
+              "shape": [
+                57,
+                1,
+                40,
+                7
+              ]
+            }
+          },
+          "note": "All raw future modalities returned by the server.",
+          "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/direct_gate/seed8302/action_traces/seed8302_left_returned_action_modalities.npz",
+          "sha256": "f6934a7c2de2bc8ed93e937534e58ea5f8c3a8f369e24ae308f13014e86b55f6"
+        }
+      },
+      "initial_bowl_world_xyz": [
+        0.44258353114128113,
+        0.12658219039440155,
+        0.07732785493135452
+      ],
+      "initial_cube_world_xyz": [
+        0.303364634513855,
+        0.12396888434886932,
+        0.08113233000040054
+      ],
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "requested_direction_endpoint_scalar": 0.024741411209106445,
+      "sampling_seed_base": 8302,
+      "success": false
+    },
+    {
+      "condition": "RIGHT",
+      "endpoint_bowl_world_xyz": [
+        0.4658052325248718,
+        0.13263286650180817,
+        0.07734950631856918
+      ],
+      "endpoint_cube_minus_bowl_world_xyz": [
+        -0.14669269323349,
+        0.019503071904182434,
+        0.0037566646933555603
+      ],
+      "endpoint_cube_world_xyz": [
+        0.31911253929138184,
+        0.1521359384059906,
+        0.08110617101192474
+      ],
+      "environment_seed": 8302,
+      "executed_action_count": 450,
+      "files": {
+        "action_trace_manifest": {
+          "bytes": 2419,
+          "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/direct_gate/seed8302/action_traces/seed8302_right_executed_actions.json",
+          "sha256": "2736841c8048710add27c9ffdf6686e7ab9430b6fb24d308a7e9c5524bfb310a"
+        },
+        "executed_actions": {
+          "bytes": 14528,
+          "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/direct_gate/seed8302/action_traces/seed8302_right_executed_actions.npy",
+          "sha256": "2149482e0dc1b9ab4136cb805da40e64dde0cd894513371043cbb9e23eef6f01"
+        },
+        "returned_action_chunks": {
+          "bytes": 73088,
+          "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/direct_gate/seed8302/action_traces/seed8302_right_returned_action_chunks.npy",
+          "sha256": "507abc1a92eaf62f4104143fd419b068d8aca4fd1ed52c7a6cb76ccfbbb9aebe"
+        },
+        "returned_action_modalities": {
+          "bytes": 155872,
+          "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/direct_gate/seed8302/action_traces/seed8302_right_returned_action_modalities.npz",
+          "sha256": "eda0c765e48c3074c5e118caf6065b6cf06a504633e6658c575bc3e14080667e"
+        },
+        "simulator_env_config": {
+          "bytes": 39627,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_groot_direct_seed8302/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+          "sha256": "81081f42a00d17c9e143a1039865b0f8d5dbc9864cc1bd5ee3974e232c648201"
+        },
+        "simulator_episode_log": {
+          "bytes": 166,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_groot_direct_seed8302/RubiksCubeRightOfBowlMatchedTask/log_0_env0.json",
+          "sha256": "2f0f099cfc1d9964fe2da5abb3d71b9619db1cc7d81fa03e26aca299c9041146"
+        },
+        "simulator_hdf5": {
+          "bytes": 317349,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_groot_direct_seed8302/RubiksCubeRightOfBowlMatchedTask/run_0.hdf5",
+          "sha256": "4f623f29b679d190faeb0fa01fe46c0e9001b06ecb96de853bdc273d31a74e01"
+        },
+        "simulator_video": {
+          "bytes": 2952716,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_groot_direct_seed8302/RubiksCubeRightOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_right_of_the_bowl_0_viewport.mp4",
+          "sha256": "a43644f1167f87ecb3865b1b044462b43b315d4abec466dbad52888516f50925"
+        }
+      },
+      "future_interface": {
+        "returned_action_chunks": {
+          "count": 57,
+          "dtype": "float32",
+          "note": "Raw model futures before client gripper binarization.",
+          "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/direct_gate/seed8302/action_traces/seed8302_right_returned_action_chunks.npy",
+          "sha256": "507abc1a92eaf62f4104143fd419b068d8aca4fd1ed52c7a6cb76ccfbbb9aebe",
+          "shape": [
+            57,
+            40,
+            8
+          ]
+        },
+        "returned_action_modalities": {
+          "keys": {
+            "action.eef_9d": {
+              "dtype": "float32",
+              "shape": [
+                57,
+                1,
+                40,
+                9
+              ]
+            },
+            "action.gripper_position": {
+              "dtype": "float32",
+              "shape": [
+                57,
+                1,
+                40,
+                1
+              ]
+            },
+            "action.joint_position": {
+              "dtype": "float32",
+              "shape": [
+                57,
+                1,
+                40,
+                7
+              ]
+            }
+          },
+          "note": "All raw future modalities returned by the server.",
+          "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/direct_gate/seed8302/action_traces/seed8302_right_returned_action_modalities.npz",
+          "sha256": "eda0c765e48c3074c5e118caf6065b6cf06a504633e6658c575bc3e14080667e"
+        }
+      },
+      "initial_bowl_world_xyz": [
+        0.44258353114128113,
+        0.12658219039440155,
+        0.07732785493135452
+      ],
+      "initial_cube_world_xyz": [
+        0.303364634513855,
+        0.12396888434886932,
+        0.08113233000040054
+      ],
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "requested_direction_endpoint_scalar": -0.019503071904182434,
+      "sampling_seed_base": 8302,
+      "success": false
+    }
+  ],
+  "fixture": {
+    "manifest": "/data/users/ali/vla_wam/raw/groot_n17_droid/repeat_gate/fixture/seed8302_fixed_observation.json",
+    "neutral_reset_contract": {
+      "bowl_world_xyz": [
+        0.44258353114128113,
+        0.12658219039440155,
+        0.07732785493135452
+      ],
+      "cube_minus_bowl_world_xyz": [
+        -0.13921889662742615,
+        -0.0026133060455322266,
+        0.0038044750690460205
+      ],
+      "cube_world_xyz": [
+        0.303364634513855,
+        0.12396888434886932,
+        0.08113233000040054
+      ],
+      "left_predicate_at_reset": false,
+      "requires_neither_predicate": true,
+      "right_predicate_at_reset": false
+    },
+    "npz_path": "/data/users/ali/vla_wam/raw/groot_n17_droid/repeat_gate/fixture/seed8302_fixed_observation.npz",
+    "npz_sha256": "971216f91a55cec6024d311c59cac929b4dd0296a4ec6808bfa7b58098d1a04f"
+  },
+  "instruction_controller": "static",
+  "model": "nvidia/GR00T-N1.7-DROID",
+  "model_revision": "05e7cc97e40dbd33b0890c35cc0214fcb0547ab5",
+  "oracle_or_subtask_coach": false,
+  "pair_checks": {
+    "executed_action_max_abs": 1.0,
+    "executed_action_rms": 0.13891646265983582,
+    "executed_actions_differ": true,
+    "identical_initial_bowl_state": true,
+    "identical_initial_cube_state": true,
+    "valid_cell_count": 2
+  },
+  "raw_episode_results": {
+    "bytes": 1937,
+    "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_groot_direct_seed8302/episode_results.jsonl",
+    "sha256": "2b9321ad76871bebb377c4d7797918307683a0632dd57f8bb0b6d0865f98eb39"
+  },
+  "runtime_interventions": [],
+  "schema_version": "vla-wam-shared-v2-groot-droid-pair-slice-v1",
+  "study_commit": "2c16b5f"
+}

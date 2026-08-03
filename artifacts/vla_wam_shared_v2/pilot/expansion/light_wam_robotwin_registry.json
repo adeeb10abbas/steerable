@@ -139,6 +139,27 @@
       "113_coffee-box": {"file_count": 22, "bytes": 62684018, "model_data0_sha256": "86a986f83e031863e0e3ac15feb117792a451e6529b0a2b9e95646d4ae9126fd"}
     }
   },
+  "parallel_pair02_runtime": {
+    "kubernetes_context": "prod-dcwi-warrenq1-vmkub007",
+    "namespace": "211247-prod",
+    "pod": "lerobot-b200-4gpu-1-ali",
+    "physical_gpu_index": 2,
+    "gpu": "NVIDIA B200",
+    "free_memory_mib_before_setup": 182628,
+    "curobo_source": "/data/users/ali/vla_wam/external/curobo-lightwam-torch27-sm100/src",
+    "curobo_repository_commit": "d64c4b005459db10c5dd867d8b30a87d5bda9bdb",
+    "torch_cuda_arch_list": "10.0",
+    "build_mode": "isolated build_ext --inplace; never installed over the active sm_80 environment",
+    "extension_sha256": {
+      "geom_cu.cpython-310-x86_64-linux-gnu.so": "8ff74b5c673c4ef23c116a21dfef015d20ebb158c789a814a367c95242033c6b",
+      "kinematics_fused_cu.cpython-310-x86_64-linux-gnu.so": "fabca210aaafa454bcda77319ca594487b5b41a57741896f578440e4088f244f",
+      "lbfgs_step_cu.cpython-310-x86_64-linux-gnu.so": "e1f64aadb64d299c3d010307dd451298f7004290a660a1e5f05829a1d536842c",
+      "line_search_cu.cpython-310-x86_64-linux-gnu.so": "6ac4e9023151b338e5f1756e3569a8c834d57c564dd1197b578622bebedcf12e",
+      "tensor_step_cu.cpython-310-x86_64-linux-gnu.so": "da3a07dc848a2e547b0ee357dc19af48ed13d873dbacf073d3ac2c94b6e01db1"
+    },
+    "cuda_visible_devices_contract": "Expose physical GPU 2 only; SAPIEN cuda:0 and Torch cuda:0 then resolve to that isolated physical device.",
+    "torch_sapien_curobo_import_and_render_preflight": "pass"
+  },
   "pre_inference_setup_events": [
     {
       "event": "guard_invocation_rejected_before_worker_launch",

@@ -468,6 +468,45 @@ behavioral inference. Light-WAM's future interface is classified only after the
 released inference path is audited. LaWAM's exposed visual subgoals remain
 latent-only unless an official decoder is verified before inference.
 
+#### LaWAM pre-inference blocker
+
+LaWAM's multicomponent registry was frozen before any model action request and
+is committed as
+[`lawam_robotwin_registry.json`](../artifacts/vla_wam_shared_v2/pilot/expansion/lawam_robotwin_registry.json)
+(SHA-256
+`f2331f52f574a72ab26b9ab5c5bd54dbf41699f04e42abed4bdde7cc3ad332f0`).
+The clean repository is pinned at
+`1add20a376126eacab02f19a62d726072a322cae`. Qwen3-VL, the released LAM,
+the RoboTwin SFT policy, its normalization statistics, and the official native
+EEF adapter are present at the exact revisions and carry file-level hashes in
+the registry. The audited native interface is a 50-step, 16-dimensional
+absolute bimanual EEF action chunk at 30 Hz.
+
+Setup is blocked before inference on
+`facebook/dinov3-vitb16-pretrain-lvd1689m` revision
+`5931719e67bbdb9737e363e781fb0c67687896bc`. The official model is manually
+gated; anonymous exact-revision access returns HTTP 401, and no authorized
+credential or exact-revision copy exists in the ali-owned lane. This consumes
+zero model action requests and zero behavioral episodes and remains outside
+every model denominator. Do not assign a zero or substitute another DINO
+checkpoint.
+
+After a human accepts the model terms and authenticates Hugging Face in the
+ali-owned lane, the exact next authorized command is:
+
+```bash
+/data/users/ali/vla_wam/envs/hf-tools/bin/hf download \
+  facebook/dinov3-vitb16-pretrain-lvd1689m \
+  --revision 5931719e67bbdb9737e363e781fb0c67687896bc \
+  --local-dir /data/users/ali/vla_wam/checkpoints/dinov3-vitb16-pretrain-lvd1689m
+```
+
+Then hash every non-cache payload file and update the registry; build and gate
+the isolated policy and simulator environments; and run the RNG-restored
+exact-repeat and LEFT/RIGHT prompt-only probe. Only if that probe passes may
+the frozen six direct-command pairs00-02 cells begin. No LaWAM inference has
+started.
+
 DreamZero-DROID is deferred behind a two-GPU and exact-reset adapter gate; pi0
 DROID is deferred as the least architecturally distinct family ablation. Both
 remain not measured rather than zero.

@@ -1,7 +1,7 @@
 {
   "schema_version": "vla-wam-shared-v2-continuation-v1",
-  "updated_at_utc": "2026-08-03T19:22:00Z",
-  "evidence_head_before_handoff": "673babd3247077f3cadf7adb6591f9bb7f71d5bf",
+  "updated_at_utc": "2026-08-03T19:23:17Z",
+  "evidence_head_before_handoff": "359c008e7fd6d9cbbb9574edbf70cfa47ffc0582",
   "active_branch": "codex/wam-language-steerability",
   "study_status": "post_result_expansions_v2_a005_a006_frozen_active_setup",
   "authoritative_docs": [
@@ -61,6 +61,33 @@
       "server_stopped_cleanly": true
     },
     "next_step": "Run the V2-A005 exact-repeat fixed-observation probe, then the six direct-command DROID cells at seeds 8300-8302 if the probe and action contract pass."
+  },
+  "lawam_robotwin_readiness": {
+    "status": "registry_frozen_before_any_inference_blocked_on_gated_dinov3_access",
+    "amendment_id": "V2-A006",
+    "registry": "artifacts/vla_wam_shared_v2/pilot/expansion/lawam_robotwin_registry.json",
+    "registry_sha256": "f2331f52f574a72ab26b9ab5c5bd54dbf41699f04e42abed4bdde7cc3ad332f0",
+    "registry_commit": "8210f2cbc99ae3d7c9fd8a5733e556342700973d",
+    "repository_commit": "1add20a376126eacab02f19a62d726072a322cae",
+    "staged_and_hashed_components": {
+      "base_vlm": "Qwen/Qwen3-VL-2B-Instruct@89644892e4d85e24eaac8bacfd4f463576704203",
+      "latent_action_model": "jialei02/lawam_lam@bd993da2a0861afaac5a95ac86d2555b1313ab8c",
+      "robotwin_policy": "jialei02/lawam_robotwin_sft_release@f1c4f9a36bddc3e8243e1da8e2b7fb329f84fb86",
+      "normalization_asset_sha256": "1700bf8ca4eaddaa380a4786a58b09bdbf7474a6ef22fbe558e81c081e9599f0"
+    },
+    "blocked_component": "facebook/dinov3-vitb16-pretrain-lvd1689m@5931719e67bbdb9737e363e781fb0c67687896bc",
+    "blocker": "The official DINOv3 repository is manually gated. Anonymous exact-revision file access returns HTTP 401, and no authorized Hugging Face credential or pre-staged exact-revision copy exists in the ali-owned lane.",
+    "human_prerequisite": "Accept the DINOv3 model terms on Hugging Face and authenticate the ali-owned lane with an authorized account/token.",
+    "next_authorized_command": "/data/users/ali/vla_wam/envs/hf-tools/bin/hf download facebook/dinov3-vitb16-pretrain-lvd1689m --revision 5931719e67bbdb9737e363e781fb0c67687896bc --local-dir /data/users/ali/vla_wam/checkpoints/dinov3-vitb16-pretrain-lvd1689m",
+    "after_download": "Hash every non-cache DINOv3 payload file, update the registry, build and gate the isolated policy and simulator environments, then run the RNG-restored exact-repeat probe. Run the six frozen pairs00-02 cells only if that probe passes.",
+    "model_action_requests": 0,
+    "behavioral_episode_count": 0,
+    "denominator_policy": "This is a setup/access blocker outside every model denominator; do not assign a zero.",
+    "prohibited_until_release": [
+      "LaWAM model inference",
+      "LaWAM exact-repeat probe",
+      "LaWAM behavioral cells"
+    ]
   },
   "completed_direct_gates": [
     {

@@ -1,0 +1,69 @@
+{
+  "schema_version": "vla-wam-shared-v2-cosmos3-edge-invalid-attempts-v1",
+  "model_id": "cosmos3_edge_droid_wam",
+  "checkpoint_revision": "3ea407af3e156c0af3b4bb6edd85842cc9a58777",
+  "server_repository_commit": "a904d2d36b774a51dd06ff9ff906816b1a04f579",
+  "valid_model_request_count": 0,
+  "behavioral_denominator_count": 0,
+  "attempts": [
+    {
+      "attempt_id": "server_setup_01",
+      "stage": "pre_python_launch",
+      "result": "infrastructure_invalid",
+      "request_started": false,
+      "cause": "The first environment used a Python symlink into RTX pod-local managed storage, so the executable did not exist on the B200 pod.",
+      "raw_log_retained": false,
+      "preservation_note": "The zero-request failure was observed before the immutable per-attempt directory convention was applied; no model process started."
+    },
+    {
+      "attempt_id": "server_setup_02",
+      "stage": "import_before_model_load",
+      "result": "infrastructure_invalid",
+      "request_started": false,
+      "cause": "The portable environment lacked libxcb.so.1 on its runtime library path.",
+      "raw_log": "/data/users/ali/vla_wam/raw/cosmos_readiness/edge_server_a904d2d/server.log",
+      "raw_log_bytes": 4943,
+      "raw_log_sha256": "5f57512f7ba9c3c8fb73c6c08bbf0add68b98e03fb72703e470ef33c989a6170"
+    },
+    {
+      "attempt_id": "server_setup_03",
+      "stage": "dependency_resolution_before_policy_weights",
+      "result": "infrastructure_invalid",
+      "request_started": false,
+      "cause": "The official server attempted its separately gated Cosmos-Guardrail1 dependency while offline.",
+      "raw_log": "/data/users/ali/vla_wam/raw/cosmos_readiness/edge_server_a904d2d_attempt03/server.log",
+      "raw_log_bytes": 5895,
+      "raw_log_sha256": "142c4f02546737670bcdd448076443bc60f0d48541741f0488b75d55c2c75f66"
+    },
+    {
+      "attempt_id": "server_setup_04",
+      "stage": "argument_parse",
+      "result": "infrastructure_invalid",
+      "request_started": false,
+      "cause": "The RoboLab entrypoint did not expose the framework-level --no-guardrails option.",
+      "raw_log": "/data/users/ali/vla_wam/raw/cosmos_readiness/edge_server_a904d2d_attempt04/server.log",
+      "raw_log_bytes": 930,
+      "raw_log_sha256": "b2ed6fad3e4c23647b4f79590449aca6bea372d2a5367a6a29037f29ad185f5f"
+    },
+    {
+      "attempt_id": "server_setup_05",
+      "stage": "vision_tokenizer_setup_before_policy_weights",
+      "result": "infrastructure_invalid",
+      "request_started": false,
+      "cause": "After disabling only the unrelated guardrail runners, the official loader required the exact public Wan2.2 VAE dependency, which was not yet present in the offline PVC cache.",
+      "raw_log": "/data/users/ali/vla_wam/raw/cosmos_readiness/edge_server_a904d2d_attempt05/server.log",
+      "raw_log_bytes": 16590,
+      "raw_log_sha256": "1a8ff21904e9fab9fc120d7e085cb753275908b291eac268c6df89c5581561e8"
+    }
+  ],
+  "repairs": {
+    "native_library_path": "/data/users/ali/vla_wam/envs/fastwam-native-libs/lib",
+    "guardrail_override_launcher": "experiments/cosmos/serve_robolab_without_guardrails.py",
+    "guardrail_override_launcher_commit": "412bb89",
+    "guardrail_override_scope": "Sets only Omni setup guardrails=false; policy weights, transforms, prompt formatting, sampling, action output, and decoded-future output remain in the pinned official implementation.",
+    "wan22_vae_revision": "921dbaf3f1674a56f47e83fb80a34bac8a8f203e",
+    "wan22_vae_cache": "/data/users/ali/vla_wam/cache/huggingface-cosmos"
+  },
+  "first_valid_request_artifact": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_droid_fixed_observation_gate.json",
+  "claim_boundary": "All listed attempts ended before any model request and remain outside every diagnostic and behavioral denominator."
+}

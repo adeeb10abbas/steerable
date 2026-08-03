@@ -1,36 +1,83 @@
 {
-  "schema_version": "vla-wam-shared-v2-robotwin-confirmation-media-v1",
-  "selection_policy": "One compact same-seed pair selected after the valid Efficient-WAM-RT pairs04-09 slice. Raw videos remain on the PVC.",
   "items": [
     {
-      "id": "efficient_wam_rt_pair05_left_right_both_success",
-      "model_id": "efficient_wam_rt_robotwin",
-      "pair_id": "robotwin_pair_05",
+      "captions": {
+        "bytes": 185,
+        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_confirmation/efficient_wam_rt_pair05_left_right_both_success.vtt",
+        "sha256": "0a9f7a17d5299ac7a44b95cc722275321b35525d307aaaf7149e1f4530a382b7"
+      },
       "environment_seed": 4300005,
-      "sampling_seed": 8405,
+      "id": "efficient_wam_rt_pair05_left_right_both_success",
       "layout": "LEFT command on the left; RIGHT command on the right",
       "left_result": "success_after_46_actions",
-      "right_result": "success_after_47_actions",
-      "video": {
-        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_confirmation/efficient_wam_rt_pair05_left_right_both_success.mp4",
-        "bytes": 183829,
-        "sha256": "bbc833fc1faf84f38bd8307b8d7f6b73d0fad957ce5a822c7f07a1db6ba2e1a4",
-        "codec": "h264",
-        "width": 640,
-        "height": 240,
-        "frames": 116,
-        "duration_seconds": 4.64
-      },
+      "model_id": "efficient_wam_rt_robotwin",
+      "pair_id": "robotwin_pair_05",
       "poster": {
-        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_confirmation/efficient_wam_rt_pair05_left_right_both_success_poster.jpg",
         "bytes": 46401,
+        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_confirmation/efficient_wam_rt_pair05_left_right_both_success_poster.jpg",
         "sha256": "6bed015d7016fc636fd9a20f43b965612f80a31dd9893a7a467f9098422bc857"
       },
+      "right_result": "success_after_47_actions",
+      "sampling_seed": 8405,
+      "video": {
+        "bytes": 183829,
+        "codec": "h264",
+        "duration_seconds": 4.64,
+        "frames": 116,
+        "height": 240,
+        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_confirmation/efficient_wam_rt_pair05_left_right_both_success.mp4",
+        "sha256": "bbc833fc1faf84f38bd8307b8d7f6b73d0fad957ce5a822c7f07a1db6ba2e1a4",
+        "width": 640
+      }
+    },
+    {
+      "accessibility": "Burned-in command, outcome, action count, and time-normalization disclosure; VTT captions repeat the results.",
       "captions": {
-        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_confirmation/efficient_wam_rt_pair05_left_right_both_success.vtt",
-        "bytes": 185,
-        "sha256": "0a9f7a17d5299ac7a44b95cc722275321b35525d307aaaf7149e1f4530a382b7"
+        "bytes": 190,
+        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_confirmation/lingbot_va_pair03_left_right_normalized_full_rollouts.vtt",
+        "sha256": "5ef71c372b87ab6200bfea676a82943bd9e4db56d50682b49f5bf573f9134816"
+      },
+      "environment_seed": 4300003,
+      "first_ten_executed_action_rms": 0.0024885203675577626,
+      "id": "lingbot_va_pair03_left_right_normalized_full_rollouts",
+      "layout": "LEFT command on the left; RIGHT command on the right",
+      "left_result": "failure_after_400_actions",
+      "model_id": "lingbot_va_robotwin",
+      "pair_id": "robotwin_pair_03",
+      "paired_endpoint_response": "aligned",
+      "poster": {
+        "bytes": 38820,
+        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_confirmation/lingbot_va_pair03_left_right_normalized_full_rollouts_poster.jpg",
+        "sha256": "39790e1fb8bd82256f4a88671599ed64bff575b5b20ec38e264ddeca14e8e34a"
+      },
+      "right_result": "success_after_139_actions",
+      "sampling_seed": 8403,
+      "selection_rule": "First prospective LingBot-VA confirmation pair (pair03); selected by pair order, not outcome.",
+      "source_simulator_videos": {
+        "left": {
+          "bytes": 410973,
+          "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_03_attempt03/place_a2b_right/environment_seed_4300003/sampling_seed_8403/direct_command__left/simulator.mp4",
+          "sha256": "110f7d0e96417c24cc055947912941e0e1ec6b906ff245e489c85a8a9d23f815"
+        },
+        "right": {
+          "bytes": 160333,
+          "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_03_attempt03/place_a2b_right/environment_seed_4300003/sampling_seed_8403/direct_command__right/simulator.mp4",
+          "sha256": "5eb38c4c09b98278703400fbef0aab5082b3f2b85113de03ce1c35bda31c7046"
+        }
+      },
+      "temporal_alignment": "Each complete simulator rollout is independently time-normalized to 10 seconds of episode progress; no source frames are intentionally omitted.",
+      "video": {
+        "bytes": 539046,
+        "codec": "h264",
+        "duration_seconds": 10.0,
+        "frames": 200,
+        "height": 454,
+        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_confirmation/lingbot_va_pair03_left_right_normalized_full_rollouts.mp4",
+        "sha256": "074abb4d5ef3b39328535d6e86037c680da5afb45384884745df0624bcc09341",
+        "width": 960
       }
     }
-  ]
+  ],
+  "schema_version": "vla-wam-shared-v2-robotwin-confirmation-media-v1",
+  "selection_policy": "Compact same-seed confirmation pairs selected after each valid model slice. The LingBot-VA item uses the first prospective pair by frozen pair order, independent of outcome. Raw videos remain on the ali PVC."
 }

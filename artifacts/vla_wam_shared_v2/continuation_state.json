@@ -1,9 +1,9 @@
 {
   "schema_version": "vla-wam-shared-v2-continuation-v1",
-  "updated_at_utc": "2026-08-03T15:06:00Z",
+  "updated_at_utc": "2026-08-03T17:01:54Z",
   "evidence_head_before_handoff": "673babd3247077f3cadf7adb6591f9bb7f71d5bf",
   "active_branch": "codex/wam-language-steerability",
-  "study_status": "pi0_fast_complete_efficient_pairs03_09_complete_28_wam_cells_pending",
+  "study_status": "pi0_fast_complete_three_wam_pairs03_09_complete_post_result_decision_pending",
   "authoritative_docs": [
     "docs/VLA_WAM_CONTINUATION.md",
     "docs/VLA_WAM_STEERABILITY_V2_PROTOCOL.md",
@@ -14,7 +14,7 @@
   "validation": {
     "command": "python3 tools/validate_vla_wam_v2_protocol.py",
     "last_status": "valid",
-    "last_check_count": 376,
+    "last_check_count": 615,
     "report": "artifacts/vla_wam_shared_v2/protocol_validation.json"
   },
   "host_snapshot": {
@@ -60,7 +60,7 @@
       "simulator_episode_started": false,
       "server_stopped_cleanly": true
     },
-    "next_step": "Run the frozen exact-repeat language probe, then the six direct-command DROID gate cells at seeds 8300-8302 with viewport video."
+    "next_step": "Do not start GR00T under the current handoff. Preserve readiness and wait for an explicit post-result authorization decision."
   },
   "completed_direct_gates": [
     {
@@ -128,14 +128,74 @@
       "arena": "robotwin_place_a2b",
       "result": "LEFT 1/3; RIGHT 0/3",
       "artifact": "artifacts/vla_wam_shared_v2/pilot/results/fastwam_direct_gate.json",
-      "next_gate": "ten_scene_direct_directional_confirmation"
+      "next_gate": "ten_scene_direct_directional_confirmation",
+      "directional_confirmation_progress": {
+        "status": "pairs03_09_complete_full_compile_blocked_missing_historical_raw",
+        "completed_pair_ids": [
+          "robotwin_pair_03",
+          "robotwin_pair_04",
+          "robotwin_pair_05",
+          "robotwin_pair_06",
+          "robotwin_pair_07",
+          "robotwin_pair_08",
+          "robotwin_pair_09"
+        ],
+        "do_not_rerun_pair_ids": [
+          "robotwin_pair_03",
+          "robotwin_pair_04",
+          "robotwin_pair_05",
+          "robotwin_pair_06",
+          "robotwin_pair_07",
+          "robotwin_pair_08",
+          "robotwin_pair_09"
+        ],
+        "result": "pairs03-09: 2/14 requested-direction success (LEFT 1/7, RIGHT 1/7), 3/7 aligned endpoint pairs, 7/7 distinct paired executed-action traces, eighteen infrastructure-invalid attempts retained separately",
+        "prospective_slice": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/fastwam_pairs03_09_slice.json",
+        "evidence_manifest": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/fastwam_pairs03_09_evidence_manifest.json",
+        "runtime_intervention_ledger": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/runtime_interventions_fastwam_robotwin.json",
+        "invalid_attempt_ledger": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/invalid_attempts_fastwam_robotwin.json",
+        "remaining_pair_ids": [],
+        "remaining_episode_count": 0,
+        "full_confirmation_compile_blocker": "The work-laptop PVC contains prospective pairs03-09, while completed-pilot pairs00-02 are represented only by committed hash-bearing summaries. The frozen compiler fails closed because it requires exactly twenty raw result files and found fourteen.",
+        "full_confirmation_next_command": "python3 tools/compile_vla_wam_v2_robotwin_confirmation.py --input-root /data/users/ali/vla_wam/raw/fastwam_robotwin/ten_scene_confirmation --model-id fastwam_robotwin --robotwin-root /data/users/ali/vla_wam/external/FastWAM/third_party/RoboTwin --fixtures artifacts/vla_wam_shared_v2/pilot/directional_fixture_validation.json --runtime-interventions artifacts/vla_wam_shared_v2/pilot/runtime_interventions.json --runtime-interventions artifacts/vla_wam_shared_v2/pilot/directional_confirmation/runtime_interventions_fastwam_robotwin.json --invalid-attempts artifacts/vla_wam_shared_v2/pilot/directional_confirmation/invalid_attempts_fastwam_robotwin.json"
+      }
     },
     {
       "model_id": "lingbot_va_robotwin",
       "arena": "robotwin_place_a2b",
       "result": "LEFT 3/3; RIGHT 0/3",
       "artifact": "artifacts/vla_wam_shared_v2/pilot/results/lingbot_va_direct_gate.json",
-      "next_gate": "ten_scene_direct_directional_confirmation"
+      "next_gate": "ten_scene_direct_directional_confirmation",
+      "directional_confirmation_progress": {
+        "status": "pairs03_09_complete_full_compile_blocked_missing_historical_raw",
+        "completed_pair_ids": [
+          "robotwin_pair_03",
+          "robotwin_pair_04",
+          "robotwin_pair_05",
+          "robotwin_pair_06",
+          "robotwin_pair_07",
+          "robotwin_pair_08",
+          "robotwin_pair_09"
+        ],
+        "do_not_rerun_pair_ids": [
+          "robotwin_pair_03",
+          "robotwin_pair_04",
+          "robotwin_pair_05",
+          "robotwin_pair_06",
+          "robotwin_pair_07",
+          "robotwin_pair_08",
+          "robotwin_pair_09"
+        ],
+        "result": "pairs03-09: 7/14 requested-direction success (LEFT 3/7, RIGHT 4/7), 6/7 aligned endpoint pairs, 7/7 distinct paired executed-action traces, five infrastructure-invalid attempts retained separately",
+        "prospective_slice": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/lingbot_va_pairs03_09_slice.json",
+        "evidence_manifest": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/lingbot_va_pairs03_09_evidence_manifest.json",
+        "runtime_intervention_ledger": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/runtime_interventions_lingbot_va_robotwin.json",
+        "invalid_attempt_ledger": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/invalid_attempts_lingbot_va_robotwin.json",
+        "remaining_pair_ids": [],
+        "remaining_episode_count": 0,
+        "full_confirmation_compile_blocker": "The work-laptop PVC contains valid raw LingBot-VA pairs03-09, while completed-pilot pairs00-02 are available here only through committed summaries. The frozen compiler requires the original result.json, trajectory, simulator video, and related raw evidence for all twenty cells and correctly refuses the fourteen-file prospective-only root.",
+        "full_confirmation_next_command": "python3 tools/compile_vla_wam_v2_robotwin_confirmation.py --input-root /data/users/ali/vla_wam/raw/lingbot_va_robotwin/ten_scene_confirmation --model-id lingbot_va_robotwin --robotwin-root /data/users/ali/vla_wam/external/LingBot-RoboTwin --runtime-interventions artifacts/vla_wam_shared_v2/pilot/runtime_interventions.json --runtime-interventions artifacts/vla_wam_shared_v2/pilot/directional_confirmation/runtime_interventions_lingbot_va_robotwin.json --invalid-attempts artifacts/vla_wam_shared_v2/pilot/directional_confirmation/invalid_attempts_lingbot_va_robotwin.json"
+      }
     }
   ],
   "pi0_fast_directional_confirmation_runtime": {
@@ -159,12 +219,12 @@
     {
       "priority": 1,
       "id": "robotwin_three_wam_directional_confirmation",
-      "status": "efficient_complete_fastwam_lingbot_in_progress",
+      "status": "pairs03_09_complete_full_compilers_blocked_missing_historical_raw",
       "new_episode_count": 42,
       "handoff_remaining_episode_count": 40,
-      "completed_new_episode_count": 14,
-      "remaining_new_episode_count": 28,
-      "next_cell": "fastwam_robotwin/robotwin_pair_03",
+      "completed_new_episode_count": 42,
+      "remaining_new_episode_count": 0,
+      "next_cell": null,
       "do_not_rerun": [
         "efficient_wam_rt_robotwin/robotwin_pair_03",
         "efficient_wam_rt_robotwin/robotwin_pair_04",
@@ -172,7 +232,21 @@
         "efficient_wam_rt_robotwin/robotwin_pair_06",
         "efficient_wam_rt_robotwin/robotwin_pair_07",
         "efficient_wam_rt_robotwin/robotwin_pair_08",
-        "efficient_wam_rt_robotwin/robotwin_pair_09"
+        "efficient_wam_rt_robotwin/robotwin_pair_09",
+        "fastwam_robotwin/robotwin_pair_03",
+        "fastwam_robotwin/robotwin_pair_04",
+        "fastwam_robotwin/robotwin_pair_05",
+        "fastwam_robotwin/robotwin_pair_06",
+        "fastwam_robotwin/robotwin_pair_07",
+        "fastwam_robotwin/robotwin_pair_08",
+        "fastwam_robotwin/robotwin_pair_09",
+        "lingbot_va_robotwin/robotwin_pair_03",
+        "lingbot_va_robotwin/robotwin_pair_04",
+        "lingbot_va_robotwin/robotwin_pair_05",
+        "lingbot_va_robotwin/robotwin_pair_06",
+        "lingbot_va_robotwin/robotwin_pair_07",
+        "lingbot_va_robotwin/robotwin_pair_08",
+        "lingbot_va_robotwin/robotwin_pair_09"
       ],
       "registry": "artifacts/vla_wam_shared_v2/pilot/directional_expansion.json",
       "fixture_report": "artifacts/vla_wam_shared_v2/pilot/directional_fixture_validation.json",
@@ -189,13 +263,25 @@
     {
       "priority": 3,
       "id": "groot_n17_droid_pilot",
-      "status": "ready_for_frozen_probe_and_direct_gate",
+      "status": "ready_but_not_authorized_pending_post_result_decision",
       "first_episode_count": 6,
       "checkpoint": "nvidia/GR00T-N1.7-DROID",
-      "dependency": "all model assets and server contract smoke complete",
+      "dependency": "all model assets and server contract smoke complete; current handoff explicitly forbids starting the experiment",
       "resume_section": "docs/VLA_WAM_CONTINUATION.md#experiment-4-groot-n17-droid-onboarding"
     }
   ],
+  "post_result_decision": {
+    "status": "pending_explicit_authorization",
+    "authorized_next_experiment": null,
+    "candidates_not_started": [
+      "pi0_fast_wording_grid",
+      "wam_wording_sweeps",
+      "groot_n17_droid_pilot",
+      "lingbot_vla_4b_robotwin_pilot",
+      "cosmos_reason2_experiment"
+    ],
+    "note": "The completed pairs03-09 WAM slices must be reviewed before expanding the frozen experimental boundary."
+  },
   "cross_host_handoff": {
     "status": "portable_handoff_committed_assets_ready",
     "entrypoint": "docs/WORK_LAPTOP_B200_HANDOFF.md",
@@ -210,7 +296,7 @@
     ]
   },
   "unauthorized_work": [
-    "Do not run short, declarative, or contrastive cells for a checkpoint until its direct directional gate passes in both directions. pi0-FAST now meets that eligibility threshold, but its wording grid remains explicitly deferred and is not authorized until the three-WAM directional confirmations are compiled and a post-result decision is recorded.",
+    "Do not start wording sweeps, GR00T, LingBot-VLA, or Cosmos under this handoff. The three-WAM pairs03-09 slices are compiled, but an explicit post-result authorization decision has not been recorded.",
     "Do not pool DROID and RoboTwin raw success counts.",
     "Do not add oracle actions, subtask coaching, dynamic prompts, or progress-conditioned instructions."
   ],

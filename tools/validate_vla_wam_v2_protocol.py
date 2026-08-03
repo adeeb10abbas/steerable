@@ -348,6 +348,316 @@ def validate_efficient_pairs04_09_slice(
     }
 
 
+def validate_wam_pairs03_09_slice(
+    workspace: Path,
+    manifest_path: Path,
+    registry_path: Path,
+    fixture_path: Path,
+    *,
+    model_id: str,
+    expected_successes: dict[str, int],
+    expected_aligned_pairs: int,
+    expected_invalid_attempts: int,
+    expected_future_interface: str,
+    checks: list[str],
+) -> dict[str, Any]:
+    """Validate a completed fourteen-cell prospective WAM confirmation slice."""
+    manifest = load_json(manifest_path)
+    expected_pair_ids = [f"robotwin_pair_{index:02d}" for index in range(3, 10)]
+    expected_success_count = sum(expected_successes.values())
+    require(
+        manifest["schema_version"]
+        == "vla-wam-shared-v2-prospective-slice-evidence-manifest-v1"
+        and manifest["model_id"] == model_id
+        and manifest["pair_ids"] == expected_pair_ids
+        and manifest["valid_episode_count"] == 14
+        and manifest["requested_success_count"] == expected_success_count
+        and manifest["invalid_attempt_count"] == expected_invalid_attempts
+        and manifest["runtime_intervention_count"] == 0,
+        f"{model_id} pairs03-09 manifest fixes all valid, invalid, success, and intervention counts",
+        checks,
+    )
+    require(
+        {
+            "slice_json",
+            "slice_csv",
+            "slice_markdown",
+            "invalid_attempt_ledger",
+            "runtime_intervention_ledger",
+        }
+        <= set(manifest["files"]),
+        f"{model_id} manifest registers its slice and separate operational ledgers",
+        checks,
+    )
+    for label, record in manifest["files"].items():
+        validate_file_record(workspace, record, f"{model_id} pairs03-09 {label}", checks)
+
+    slice_path = workspace / manifest["files"]["slice_json"]["path"]
+    payload = load_json(slice_path)
+    registry = load_json(registry_path)
+    efficient_pair03 = load_json(
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/efficient_wam_rt_pair03_integration.json"
+    )
+    efficient_pairs04_09 = load_json(
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/efficient_wam_rt_pairs04_09_slice.json"
+    )
+    frozen_prompts = {
+        (efficient_pair03["pair"]["pair_id"], row["requested_relation"]): row["prompt"]
+        for row in efficient_pair03["cells"]
+    }
+    frozen_prompts.update(
+        {
+            (row["pair_id"], row["requested_relation"]): row["prompt"]
+            for row in efficient_pairs04_09["episodes"]
+        }
+    )
+    registry_scenes = {
+        int(scene["environment_seed"]): scene
+        for scene in registry["scenes"]
+        if 4300003 <= int(scene["environment_seed"]) <= 4300009
+    }
+    episodes = payload["episodes"]
+    expected_cells = {
+        (f"robotwin_pair_{index:02d}", 4300000 + index, 8400 + index, direction)
+        for index in range(3, 10)
+        for direction in ("left", "right")
+    }
+    observed_cells = {
+        (
+            row["pair_id"],
+            int(row["environment_seed"]),
+            int(row["sampling_seed"]),
+            row["requested_relation"],
+        )
+        for row in episodes
+    }
+    require(
+        payload["schema_version"] == "vla-wam-shared-v2-robotwin-prospective-slice-v1"
+        and payload["model_id"] == model_id
+        and payload["expected_environment_seeds"] == list(range(4300003, 4300010))
+        and len(episodes) == 14
+        and observed_cells == expected_cells
+        and all(
+            row["pair_id"] == registry_scenes[int(row["environment_seed"])]["pair_id"]
+            and row["sampling_seed"]
+            == registry_scenes[int(row["environment_seed"])]["sampling_seed"]
+            and row["task"]
+            == registry_scenes[int(row["environment_seed"])]["anchor_task"]
+            for row in episodes
+        ),
+        f"{model_id} slice contains exactly both directions for frozen pairs03-09",
+        checks,
+    )
+    validate_file_record(
+        workspace, payload["source_registry"], f"{model_id} frozen directional registry", checks
+    )
+    validate_file_record(
+        workspace,
+        payload["source_directional_fixtures"],
+        f"{model_id} model-blind directional fixtures",
+        checks,
+    )
+    require(
+        Path(payload["source_registry"]["path"]).name == registry_path.name
+        and payload["source_registry"]["sha256"] == sha256(registry_path)
+        and Path(payload["source_directional_fixtures"]["path"]).name == fixture_path.name
+        and payload["source_directional_fixtures"]["sha256"] == sha256(fixture_path),
+        f"{model_id} slice hashes the frozen registry and fixture report",
+        checks,
+    )
+
+    summary = payload["summary"]
+    require(
+        summary["episode_count"] == 14
+        and summary["pair_count"] == 7
+        and summary["successes"] == expected_success_count
+        and summary["by_direction"]["left"]["episodes"] == 7
+        and summary["by_direction"]["left"]["successes"]
+        == expected_successes["left"]
+        and summary["by_direction"]["right"]["episodes"] == 7
+        and summary["by_direction"]["right"]["successes"]
+        == expected_successes["right"]
+        and summary["aligned_endpoint_pairs"] == expected_aligned_pairs
+        and summary["invalid_attempt_count"] == expected_invalid_attempts
+        and summary["future_interface_counts"] == {expected_future_interface: 14},
+        f"{model_id} summary preserves the frozen directional success and endpoint numerators",
+        checks,
+    )
+    require(
+        all(
+            summary["by_direction"][direction]["successes"]
+            == sum(
+                bool(row["requested_success"])
+                for row in episodes
+                if row["requested_relation"] == direction
+            )
+            for direction in ("left", "right")
+        ),
+        f"{model_id} directional success numerators match the episode rows",
+        checks,
+    )
+
+    by_pair: dict[str, dict[str, dict[str, Any]]] = {}
+    for row in episodes:
+        by_pair.setdefault(row["pair_id"], {})[row["requested_relation"]] = row
+        direction = row["requested_relation"]
+        opposite = "right" if direction == "left" else "left"
+        prompt = row["prompt"].lower()
+        trace = row["action_trace"]
+        executed_array = trace["arrays"]["executed"]
+        require(
+            row["prompt_family"] == "direct_command"
+            and row["prompt"] == frozen_prompts[(row["pair_id"], direction)]
+            and direction in prompt
+            and opposite not in prompt
+            and row["runtime_intervention_ids"] == []
+            and row["operational_wall_latency_valid"] is True
+            and trace["executed_array"] == "executed"
+            and trace["count"] == row["actions_executed"]
+            and trace["shape"][0] == row["actions_executed"]
+            and executed_array["count"] == row["actions_executed"]
+            and executed_array["shape"] == trace["shape"]
+            and trace["bytes"] > 0
+            and len(trace["sha256"]) == 64,
+            f"{model_id} {row['pair_id']}/{direction} retains its static prompt and executed trace",
+            checks,
+        )
+        require(
+            all(
+                record["bytes"] > 0
+                and len(record["sha256"]) == 64
+                and bool(record["path"])
+                for record in (
+                    row["raw_result"],
+                    row["raw_trajectory"],
+                    row["executed_video"],
+                )
+            ),
+            f"{model_id} {row['pair_id']}/{direction} hashes raw scoring, trajectory, and video evidence",
+            checks,
+        )
+        if expected_future_interface == "action_only_not_applicable":
+            future_valid = row["imagined_future_artifact"] is None
+        else:
+            future = row["imagined_future_artifact"]
+            future_valid = (
+                isinstance(future, dict)
+                and future.get("kind") == "latent_tensor"
+                and future.get("bytes", 0) > 0
+                and len(future.get("sha256", "")) == 64
+                and bool(future.get("path"))
+            )
+        require(
+            row["future_interface"] == expected_future_interface and future_valid,
+            f"{model_id} {row['pair_id']}/{direction} preserves its released future-interface boundary",
+            checks,
+        )
+
+    require(
+        payload["measurement"] == {
+            "oracle_actions": 0,
+            "dynamic_prompts": 0,
+            "simulator_state_role": "post_action_scoring_and_visualization_only",
+        }
+        and all(
+            cells["left"]["prompt"].replace(" to the left of ", " to the right of ")
+            == cells["right"]["prompt"]
+            for cells in by_pair.values()
+        ),
+        f"{model_id} uses mirrored static direct commands with no oracle or prompt switching",
+        checks,
+    )
+
+    paired = summary["paired_endpoint_responses"]
+    paired_by_id = {pair["pair_id"]: pair for pair in paired}
+    require(
+        len(paired) == 7
+        and set(paired_by_id) == set(expected_pair_ids)
+        and sum(pair["endpoint_response_direction"] == "aligned" for pair in paired)
+        == expected_aligned_pairs
+        and all(
+            pair["endpoint_response_direction"] in {"aligned", "anti_directed"}
+            and pair["physical_initial_state_sha256"]
+            == by_pair[pair["pair_id"]]["left"]["physical_initial_state_sha256"]
+            == by_pair[pair["pair_id"]]["right"]["physical_initial_state_sha256"]
+            and pair["first_ten_executed_action_rms"] > 0
+            and pair["first_ten_executed_action_rms_steps_used"] == 10
+            and pair["action_metric_unavailable_reason"] is None
+            and by_pair[pair["pair_id"]]["left"]["action_trace"]["sha256"]
+            != by_pair[pair["pair_id"]]["right"]["action_trace"]["sha256"]
+            for pair in paired
+        ),
+        f"{model_id} records matched initial state and distinct executed actions for all seven pairs",
+        checks,
+    )
+
+    invalid_path = workspace / manifest["files"]["invalid_attempt_ledger"]["path"]
+    runtime_path = workspace / manifest["files"]["runtime_intervention_ledger"]["path"]
+    invalid = load_json(invalid_path)["events"]
+    runtime = load_json(runtime_path)["events"]
+    require(
+        len(invalid) == expected_invalid_attempts
+        and len(payload["invalid_attempts"]) == expected_invalid_attempts
+        and payload["retained_invalid_attempt_ids"]
+        == sorted(event["id"] for event in invalid)
+        == sorted(event["id"] for event in payload["invalid_attempts"])
+        and all(
+            event["model_id"] == model_id
+            and event["classification"] in {"technical_invalid", "partial"}
+            and event["behavioral_result_valid"] is False
+            and event["wall_latency_valid"] is False
+            for event in invalid
+        ),
+        f"{model_id} keeps exactly {expected_invalid_attempts} infrastructure-invalid attempts outside model denominators",
+        checks,
+    )
+    require(
+        runtime == []
+        and payload["applied_runtime_intervention_ids"] == []
+        and all(
+            source["total_event_count"]
+            == source["selected_model_event_count"]
+            == len(source["selected_event_ids"])
+            == 0
+            and source["ignored_other_model_event_count"] == 0
+            and source["applied_event_ids"] == []
+            and source["bytes"] == manifest["files"]["runtime_intervention_ledger"]["bytes"]
+            and source["sha256"] == manifest["files"]["runtime_intervention_ledger"]["sha256"]
+            for source in payload["intervention_ledger_sources"]
+        ),
+        f"{model_id} records zero runtime interventions without inventing thermal exclusions",
+        checks,
+    )
+    require(
+        all(
+            source["total_event_count"]
+            == source["selected_model_event_count"]
+            == len(source["selected_event_ids"])
+            == len(source["retained_event_ids"])
+            == expected_invalid_attempts
+            and source["ignored_other_model_event_count"] == 0
+            and source["bytes"] == manifest["files"]["invalid_attempt_ledger"]["bytes"]
+            and source["sha256"] == manifest["files"]["invalid_attempt_ledger"]["sha256"]
+            for source in payload["invalid_attempt_ledger_sources"]
+        ),
+        f"{model_id} invalid-attempt sources account for every retained event",
+        checks,
+    )
+    return {
+        "manifest": str(manifest_path.relative_to(workspace)),
+        "manifest_sha256": sha256(manifest_path),
+        "slice": str(slice_path.relative_to(workspace)),
+        "slice_sha256": sha256(slice_path),
+        "valid_episode_count": 14,
+        "requested_success_count": expected_success_count,
+        "aligned_endpoint_pair_count": expected_aligned_pairs,
+        "invalid_attempt_count": expected_invalid_attempts,
+        "runtime_intervention_count": 0,
+    }
+
+
 def require(condition: bool, message: str, checks: list[str]) -> None:
     if not condition:
         raise RuntimeError(message)
@@ -771,6 +1081,14 @@ def validate(workspace: Path) -> dict[str, Any]:
     efficient_pairs04_09_manifest_path = (
         workspace
         / "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/efficient_wam_rt_pairs04_09_evidence_manifest.json"
+    )
+    fastwam_pairs03_09_manifest_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/fastwam_pairs03_09_evidence_manifest.json"
+    )
+    lingbot_pairs03_09_manifest_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/lingbot_va_pairs03_09_evidence_manifest.json"
     )
     bundle_manifest_path = workspace / "handoff/repo_bundles/MANIFEST.json"
     paired_media_path = (
@@ -1459,7 +1777,7 @@ def validate(workspace: Path) -> dict[str, Any]:
 
     require(
         continuation_state["study_status"]
-        == "pi0_fast_complete_efficient_pairs03_09_complete_28_wam_cells_pending",
+        == "pi0_fast_complete_three_wam_pairs03_09_complete_post_result_decision_pending",
         "continuation state names the current evidence boundary",
         checks,
     )
@@ -1481,24 +1799,50 @@ def validate(workspace: Path) -> dict[str, Any]:
         checks,
     )
     groot_readiness = continuation_state.get("groot_n17_readiness", {})
+    expected_do_not_rerun = [
+        f"{model_id}/robotwin_pair_{pair_index:02d}"
+        for model_id in (
+            "efficient_wam_rt_robotwin",
+            "fastwam_robotwin",
+            "lingbot_va_robotwin",
+        )
+        for pair_index in range(3, 10)
+    ]
+    post_result_decision = continuation_state.get("post_result_decision", {})
     require(
         queue[0]["status"] == "complete"
         and queue[0].get("result_artifact")
         == "artifacts/vla_wam_shared_v2/pilot/results/pi0_fast_direct_confirmation.json"
-        and queue[1]["status"] == "efficient_complete_fastwam_lingbot_in_progress"
+        and queue[1]["status"]
+        == "pairs03_09_complete_full_compilers_blocked_missing_historical_raw"
         and queue[1]["new_episode_count"] == 42
         and queue[1]["handoff_remaining_episode_count"] == 40
-        and queue[1]["completed_new_episode_count"] == 14
-        and queue[1]["remaining_new_episode_count"] == 28
-        and queue[1]["next_cell"] == "fastwam_robotwin/robotwin_pair_03"
-        and len(queue[1]["do_not_rerun"]) == 7
+        and queue[1]["completed_new_episode_count"] == 42
+        and queue[1]["remaining_new_episode_count"] == 0
+        and queue[1]["next_cell"] is None
+        and queue[1]["do_not_rerun"] == expected_do_not_rerun
         and queue[2]["status"].startswith("blocked_")
-        and queue[3]["status"] == "ready_for_frozen_probe_and_direct_gate"
+        and queue[3]["status"]
+        == "ready_but_not_authorized_pending_post_result_decision"
         and groot_readiness.get("status")
         == "assets_downloaded_and_server_contract_smoke_complete"
         and groot_readiness.get("server_smoke", {}).get("health_ping") is True
         and groot_readiness.get("server_smoke", {}).get("simulator_episode_started") is False,
-        "continuation state distinguishes remaining blockers from GR00T readiness evidence",
+        "continuation state freezes all 42 WAM cells and distinguishes compiler blockers from GR00T readiness",
+        checks,
+    )
+    require(
+        post_result_decision.get("status") == "pending_explicit_authorization"
+        and post_result_decision.get("authorized_next_experiment") is None
+        and set(post_result_decision.get("candidates_not_started", []))
+        == {
+            "pi0_fast_wording_grid",
+            "wam_wording_sweeps",
+            "groot_n17_droid_pilot",
+            "lingbot_vla_4b_robotwin_pilot",
+            "cosmos_reason2_experiment",
+        },
+        "continuation state leaves wording, GR00T, LingBot-VLA, and Cosmos behind an explicit post-result decision",
         checks,
     )
     for relative_doc in continuation_state["authoritative_docs"]:
@@ -1517,6 +1861,30 @@ def validate(workspace: Path) -> dict[str, Any]:
     )
     efficient_pairs04_09 = validate_efficient_pairs04_09_slice(
         workspace, efficient_pairs04_09_manifest_path, checks
+    )
+    fastwam_pairs03_09 = validate_wam_pairs03_09_slice(
+        workspace,
+        fastwam_pairs03_09_manifest_path,
+        directional_expansion_path,
+        directional_fixtures_path,
+        model_id="fastwam_robotwin",
+        expected_successes={"left": 1, "right": 1},
+        expected_aligned_pairs=3,
+        expected_invalid_attempts=18,
+        expected_future_interface="action_only_not_applicable",
+        checks=checks,
+    )
+    lingbot_pairs03_09 = validate_wam_pairs03_09_slice(
+        workspace,
+        lingbot_pairs03_09_manifest_path,
+        directional_expansion_path,
+        directional_fixtures_path,
+        model_id="lingbot_va_robotwin",
+        expected_successes={"left": 3, "right": 4},
+        expected_aligned_pairs=6,
+        expected_invalid_attempts=5,
+        expected_future_interface="latent_only_future_not_decodable",
+        checks=checks,
     )
     confirmation = validate_pi0_fast_confirmation(
         workspace, pi0_fast_confirmation_path, pi0_fast_expansion_path, checks
@@ -1557,6 +1925,8 @@ def validate(workspace: Path) -> dict[str, Any]:
         "continuation_state_sha256": sha256(continuation_state_path),
         "efficient_wam_pair03_handoff": pair03_handoff,
         "efficient_wam_pairs04_09": efficient_pairs04_09,
+        "fastwam_pairs03_09": fastwam_pairs03_09,
+        "lingbot_va_pairs03_09": lingbot_pairs03_09,
         "paired_media_path": str(paired_media_path.relative_to(workspace)),
         "paired_media_sha256": sha256(paired_media_path),
         "droid_paired_media_path": str(droid_paired_media_path.relative_to(workspace)),

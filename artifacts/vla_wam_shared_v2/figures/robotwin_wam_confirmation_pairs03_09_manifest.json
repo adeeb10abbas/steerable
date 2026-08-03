@@ -1,0 +1,78 @@
+{
+  "claim_boundary": "Requested success and endpoint ordering are physical behavioral evidence. Distinct first-ten executed action traces establish command sensitivity only, not correct steering. Valid failures remain in denominators; infrastructure-invalid and partial attempts are excluded. DROID evidence is not pooled.",
+  "figures": {
+    "landscape": {
+      "bytes": 151542,
+      "path": "artifacts/vla_wam_shared_v2/figures/robotwin_wam_confirmation_pairs03_09_1600x900.png",
+      "sha256": "8db0d94076cf4df9b1c5f28ee49ef448fb93e6e04cd0926a154d674534b3b62e"
+    }
+  },
+  "model_pair_count": 21,
+  "schema_version": "vla-wam-shared-v2-robotwin-confirmation-summary-figure-v1",
+  "scope": "RoboTwin prospective direct-command pairs03-09 only",
+  "sources": [
+    {
+      "bytes": 7275,
+      "path": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/efficient_wam_rt_pair03_integration.json",
+      "sha256": "d850f8f2c3d32db705cc65326ca673c150ab7208a203a180bd32d88dfb0e5471"
+    },
+    {
+      "bytes": 64863,
+      "path": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/efficient_wam_rt_pairs04_09_slice.json",
+      "sha256": "e7d2d3791323fecedb49e8c1ecc8fda1e0ade91dedd6613b9079f7b290e1fd54"
+    },
+    {
+      "bytes": 91023,
+      "path": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/fastwam_pairs03_09_slice.json",
+      "sha256": "9d52920cded17d0f61c997f02624ea38ffc4c9a3536cdacf9f71115b151d14be"
+    },
+    {
+      "bytes": 80097,
+      "path": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/lingbot_va_pairs03_09_slice.json",
+      "sha256": "8617da77c819ea57d374f463a672bf73414b088bb8188b9b13a6c1c2e1fb9d85"
+    }
+  ],
+  "status": "complete",
+  "summary": [
+    {
+      "aligned_pairs": 6,
+      "distinct_trace_pairs": 7,
+      "episode_count": 14,
+      "future_interface_counts": {
+        "decoded_future_video": 14
+      },
+      "left_successes": 3,
+      "model_id": "efficient_wam_rt_robotwin",
+      "model_label": "Efficient-WAM-RT",
+      "pair_count": 7,
+      "right_successes": 2
+    },
+    {
+      "aligned_pairs": 3,
+      "distinct_trace_pairs": 7,
+      "episode_count": 14,
+      "future_interface_counts": {
+        "action_only_not_applicable": 14
+      },
+      "left_successes": 1,
+      "model_id": "fastwam_robotwin",
+      "model_label": "FastWAM",
+      "pair_count": 7,
+      "right_successes": 1
+    },
+    {
+      "aligned_pairs": 6,
+      "distinct_trace_pairs": 7,
+      "episode_count": 14,
+      "future_interface_counts": {
+        "latent_only_future_not_decodable": 14
+      },
+      "left_successes": 3,
+      "model_id": "lingbot_va_robotwin",
+      "model_label": "LingBot-VA",
+      "pair_count": 7,
+      "right_successes": 4
+    }
+  ],
+  "valid_episode_count": 42
+}

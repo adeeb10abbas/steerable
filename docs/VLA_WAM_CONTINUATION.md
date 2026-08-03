@@ -1,7 +1,7 @@
 # VLA/WAM study continuation handoff
 
-Updated: 3 August 2026, after the compiled π0-FAST directional confirmation
-and the first prospective Efficient-WAM-RT RoboTwin pair.
+Updated: 3 August 2026, after all 42 prospective three-WAM RoboTwin episodes
+completed and the model-specific pairs03–09 evidence slices were compiled.
 
 This document is the restart point for a human or coding model with no chat
 context. The machine-readable companion is
@@ -13,26 +13,27 @@ The study asks whether changing an episode-static language command changes the
 requested physical outcome. It compares checkpoints inside two separate arenas:
 DROID/RoboLab and RoboTwin. Raw success rates are never pooled across arenas.
 
-Four new-model direct gates are complete:
+Current direct-command evidence is:
 
 | Arena | Checkpoint | LEFT | RIGHT | Frozen next step |
 | --- | --- | ---: | ---: | --- |
 | DROID | π0-FAST | 1/10 | 10/10 | direct competence in both directions; wording eligible but deferred |
-| RoboTwin | Efficient-WAM-RT | 2/3 pilot + 0/1 confirmation | 0/3 pilot + 0/1 confirmation | pair03 valid and complete; run pairs04–09 |
-| RoboTwin | FastWAM | 1/3 | 0/3 | add paired scenes 03–09 under direct commands only |
-| RoboTwin | LingBot-VA | 3/3 | 0/3 | add paired scenes 03–09 under direct commands only |
+| RoboTwin | Efficient-WAM-RT | 3/7 | 2/7 | pairs03–09 complete; do not rerun |
+| RoboTwin | FastWAM | 1/7 | 1/7 | pairs03–09 complete; do not rerun |
+| RoboTwin | LingBot-VA | 3/7 | 4/7 | pairs03–09 complete; do not rerun |
 
-The three WAM gates still trigger the one-direction-only branch. Efficient-WAM
-pair03 is valid completed evidence and must not be rerun: both requested
-relations failed after 400 actions, the first ten executed actions differed
-(RMS 0.0762), and the RIGHT-minus-LEFT endpoint shift was -0.0081 m
-(anti-aligned). That leaves 40 prospective WAM episodes. π0-FAST has
-now completed its direct-only confirmation: all 20 episodes are behaviorally
-valid, all ten endpoint pairs align with the requested LEFT-to-RIGHT change,
-and one thermal event excludes wall latency only. Its four-wording grid is
-eligible under the frozen rule, but is explicitly **deferred and not
-authorized** until the three WAM confirmations are compiled and a post-result
-decision is recorded. No WAM wording sweep is authorized.
+All 42 prospective WAM episodes at pairs03–09 are now valid completed evidence
+and must not be rerun. Efficient-WAM-RT produced 5/14 requested-direction
+successes and 6/7 aligned endpoint pairs; FastWAM produced 2/14 and 3/7;
+LingBot-VA produced 7/14 and 6/7. Every paired executed-action trace differed.
+Infrastructure-invalid attempts remain outside model denominators: four for
+Efficient-WAM-RT, eighteen for FastWAM, and five for LingBot-VA. The frozen
+twenty-episode compilers still fail closed because historical pairs00–02 raw
+files are absent on this PVC; the committed pairs03–09 slices are the current
+claim boundary. π0-FAST has completed its separate DROID direct-only
+confirmation. Its wording grid remains explicitly **deferred and not
+authorized** pending a post-result decision. No WAM wording sweep, GR00T run,
+or LingBot-VLA onboarding is authorized by this handoff.
 
 The current article, figures, and videos are:
 
@@ -156,8 +157,9 @@ wording cell.
 <a id="experiment-2-three-wam-robotwin-directional-confirmation"></a>
 ## Experiment 2 — three-WAM RoboTwin directional confirmation
 
-Priority: **first**. Remaining cost: 40 new episodes. Status: active next
-confirmation; Efficient-WAM pair03 is complete and fixtures/registry are ready.
+Priority: complete. Remaining cost: 0 episodes. Status: all pairs03–09 model
+slices compiled; full twenty-episode compilers blocked on missing historical
+pairs00–02 raw evidence.
 
 Frozen registry:
 [`directional_expansion.json`](../artifacts/vla_wam_shared_v2/pilot/directional_expansion.json).
@@ -242,14 +244,57 @@ directories recorded by the existing artifacts, stage one input root with
 pairs00–09, and then run the compiler command below. Until then the new slice
 is evidence, not a model-level ten-scene confirmation claim.
 
-The exact next authorized model cells are FastWAM `robotwin_pair_03` and
-LingBot-VA `robotwin_pair_03`; they may run concurrently in isolated model
-environments and with separate intervention/invalid-attempt ledgers.
+### FastWAM work-laptop completion record
 
-The pair03 commands below are retained as provenance and as templates. Do not
-run the Efficient-WAM command or any Efficient-WAM pair03–09 cell again. For
-FastWAM and LingBot-VA, replace the pair id, anchor task, environment seed,
-sampling seed, and output/log path together using the table above.
+FastWAM pairs03–09 completed as fourteen valid behavioral episodes. The
+hash-bearing slice is
+[`fastwam_pairs03_09_slice.json`](../artifacts/vla_wam_shared_v2/pilot/directional_confirmation/fastwam_pairs03_09_slice.json),
+with its enclosing
+[`evidence manifest`](../artifacts/vla_wam_shared_v2/pilot/directional_confirmation/fastwam_pairs03_09_evidence_manifest.json).
+FastWAM produced 2/14 requested-direction successes (LEFT 1/7; RIGHT 1/7),
+3/7 aligned endpoint pairs, and 7/7 distinct paired executed-action traces.
+Its released interface is action-only, so imagined-future evidence is marked
+not applicable rather than zero. Eighteen pre-action infrastructure-invalid
+cell attempts are retained separately, and no runtime intervention occurred.
+
+| Pair | LEFT | RIGHT | Endpoint ordering | First-10 action RMS |
+| --- | --- | --- | --- | ---: |
+| 03 | failure | failure | anti-aligned | 0.010866 |
+| 04 | failure | failure | anti-aligned | 0.002838 |
+| 05 | failure | success | aligned | 0.003292 |
+| 06 | success | failure | aligned | 0.002798 |
+| 07 | failure | failure | anti-aligned | 0.003402 |
+| 08 | failure | failure | aligned | 0.006010 |
+| 09 | failure | failure | anti-aligned | 0.003468 |
+
+### LingBot-VA work-laptop completion record
+
+LingBot-VA pairs03–09 also completed as fourteen valid behavioral episodes.
+The hash-bearing slice is
+[`lingbot_va_pairs03_09_slice.json`](../artifacts/vla_wam_shared_v2/pilot/directional_confirmation/lingbot_va_pairs03_09_slice.json),
+with its enclosing
+[`evidence manifest`](../artifacts/vla_wam_shared_v2/pilot/directional_confirmation/lingbot_va_pairs03_09_evidence_manifest.json).
+LingBot-VA produced 7/14 requested-direction successes (LEFT 3/7; RIGHT 4/7),
+6/7 aligned endpoint pairs, and 7/7 distinct paired executed-action traces.
+All fourteen exposed first-predicted latent tensors are retained as latent-only,
+not decoded or scored as videos. Five infrastructure-invalid cell attempts are
+retained separately, and no runtime intervention occurred.
+
+| Pair | LEFT | RIGHT | Endpoint ordering | First-10 action RMS |
+| --- | --- | --- | --- | ---: |
+| 03 | failure | success | aligned | 0.002489 |
+| 04 | success | failure | aligned | 0.000599 |
+| 05 | failure | success | aligned | 0.000455 |
+| 06 | success | failure | aligned | 0.002692 |
+| 07 | failure | success | aligned | 0.000458 |
+| 08 | success | failure | aligned | 0.000549 |
+| 09 | failure | success | anti-aligned | 0.000508 |
+
+Both models' frozen twenty-episode compilers fail closed because raw pilot
+pairs00–02 are absent from this PVC. Do not synthesize those files, weaken the
+compiler, or promote these slices to ten-scene confirmation claims. There is
+no next authorized WAM cell. The commands below are retained for provenance
+only; do not rerun any Efficient-WAM-RT, FastWAM, or LingBot-VA pair03–09 cell.
 
 ```bash
 # Efficient-WAM-RT
@@ -355,9 +400,11 @@ python3 tools/compile_vla_wam_v2_robotwin_confirmation.py \
   --invalid-attempts artifacts/vla_wam_shared_v2/pilot/directional_confirmation/invalid_attempts_lingbot_va_robotwin.json
 ```
 
-After all 42 cells, run the compiler above for all three models, then regenerate
-progression, endpoint, media, and article artifacts. Keep
-decoded video, latent-only future, and action-only future interfaces distinct.
+The 42-cell queue is complete. Each full compiler was attempted and failed
+closed on the documented missing historical raw inputs; the model-specific
+prospective-slice compilers produced the committed claim boundary instead.
+Keep decoded video, latent-only future, and action-only future interfaces
+distinct in every downstream summary.
 
 <a id="experiment-3-lingbot-vla-4b-robotwin-onboarding"></a>
 ## Experiment 3 — LingBot-VLA 4B RoboTwin onboarding
@@ -383,9 +430,10 @@ Sequence:
 <a id="experiment-4-groot-n17-droid-onboarding"></a>
 ## Experiment 4 — GR00T N1.7 DROID onboarding
 
-Priority: fourth. Status: onboarding assets and server smoke complete; the
-frozen direct-command pilot remains unrun. The official `Isaac-GR00T` checkout
-is pinned at `b9955401d50c92a29258732e3ad6ccd579f1bdc0`; local model
+Priority: fourth. Status: onboarding assets and server smoke complete, but the
+experiment is **not authorized** under the current handoff and the frozen
+direct-command pilot remains unrun. The official `Isaac-GR00T` checkout is
+pinned at `b9955401d50c92a29258732e3ad6ccd579f1bdc0`; local model
 directories contain `nvidia/GR00T-N1.7-DROID` at
 `05e7cc97e40dbd33b0890c35cc0214fcb0547ab5`, `nvidia/GR00T-N1.7-3B` at
 `2fc962b973bccdd5d8ce4f67cc63b264d6886495`, and
@@ -393,9 +441,11 @@ directories contain `nvidia/GR00T-N1.7-DROID` at
 The local DROID checkpoint loaded on GPU 0, bound `127.0.0.1:5555`, answered a
 health ping, and was shut down cleanly. Use the no-weight-download preflight in
 [`experiments/groot_droid/README.md`](../experiments/groot_droid/README.md)
-before launching a future server.
+before launching a future server, but only after explicit authorization.
+Cosmos-Reason2 is asset-only readiness: no adapter audit, language probe, or
+behavioral episode has started, and no Cosmos experiment is authorized.
 
-Sequence:
+Sequence if newly authorized:
 
 1. Run an exact-repeat language probe using the frozen v2 prompt bytes.
 2. Run only the six DROID direct-command cells at seeds 8300–8302, recording
@@ -409,12 +459,12 @@ side plus negated opposite. The latter is the contrastive condition: it asks for
 one side and explicitly negates the other. It is not contradictory.
 
 Run the full wording grid for a checkpoint only after direct competence appears
-in both directions under its confirmation. π0-FAST now satisfies that frozen
-eligibility condition, but its grid is explicitly deferred and **not
-authorized** until the three-WAM directional confirmations are compiled and a
-post-result decision records whether to spend on it. When eventually
-authorized, retain exact same-seed LEFT/RIGHT pairs and the target-last
-token-order diagnostic. Do not change the prompt templates in `protocol.json`.
+in both directions under its confirmation. π0-FAST satisfies that frozen
+eligibility condition, and the three-WAM pairs03–09 slices are now compiled,
+but no post-result authorization decision has been recorded. The grid remains
+explicitly deferred and **not authorized**. When eventually authorized, retain
+exact same-seed LEFT/RIGHT pairs and the target-last token-order diagnostic. Do
+not change the prompt templates in `protocol.json`.
 
 ## Analysis and publication queue
 

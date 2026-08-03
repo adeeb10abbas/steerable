@@ -1,0 +1,1973 @@
+{
+  "applied_runtime_intervention_ids": [],
+  "claim_boundary": "This artifact compiles only the listed prospective PVC-resident pairs. It does not replace the frozen twenty-episode confirmation and authorizes no model-level ten-scene claim.",
+  "compiled_at_utc": "2026-08-03T16:55:09.787376+00:00",
+  "episodes": [
+    {
+      "action_trace": {
+        "arrays": {
+          "denormalized": {
+            "count": 400,
+            "shape": [
+              400,
+              16
+            ]
+          },
+          "executed": {
+            "count": 400,
+            "shape": [
+              400,
+              16
+            ]
+          },
+          "normalized": {
+            "count": 400,
+            "shape": [
+              400,
+              16
+            ]
+          }
+        },
+        "bytes": 47993,
+        "count": 400,
+        "executed_array": "executed",
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_03_attempt03/place_a2b_right/environment_seed_4300003/sampling_seed_8403/direct_command__left/action_trace.npz",
+        "sha256": "4b2e014420f125442b7ba478df64db95f83875d4ab60dca91ffe907a341adebf",
+        "shape": [
+          400,
+          16
+        ]
+      },
+      "actions_executed": 400,
+      "environment_seed": 4300003,
+      "ever_entered_requested_region": false,
+      "ever_released_in_requested_region": false,
+      "executed_video": {
+        "bytes": 410973,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_03_attempt03/place_a2b_right/environment_seed_4300003/sampling_seed_8403/direct_command__left/simulator.mp4",
+        "sha256": "110f7d0e96417c24cc055947912941e0e1ec6b906ff245e489c85a8a9d23f815"
+      },
+      "failure_stage": "picked_never_entered_requested_region",
+      "final_dx_m": -0.037194035947322845,
+      "final_dy_m": -0.08037135004997253,
+      "future_interface": "latent_only_future_not_decodable",
+      "imagined_future_artifact": {
+        "bytes": 93970,
+        "kind": "latent_tensor",
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_03_attempt03/place_a2b_right/environment_seed_4300003/sampling_seed_8403/direct_command__left/first_predicted_latent.pt",
+        "sha256": "e48f6b91ece9d0af6c69026759fd6f634ac4ab4c01b37aef1d69a25c0217fbfe"
+      },
+      "initial_dx_m": 0.16423030942678452,
+      "initial_dy_m": 0.13315433636307716,
+      "initial_state_coverage": {
+        "adapter_state_limits": [
+          "No full object or target orientation is recorded by the current adapter.",
+          "No robot joint state or end-effector pose is recorded by the current adapter.",
+          "Only aggregate grippers_open is recorded; individual gripper state is unavailable."
+        ],
+        "hash_input_initial_fields": [
+          "distance_xy",
+          "grippers_open",
+          "object_minus_target_x",
+          "object_minus_target_y",
+          "object_xyz",
+          "relation_region",
+          "success",
+          "target_xyz"
+        ],
+        "hash_input_top_level_fields": [
+          "initial"
+        ]
+      },
+      "model_id": "lingbot_va_robotwin",
+      "movable_model_name": "086_woodenblock",
+      "operational_wall_latency_valid": true,
+      "pair_id": "robotwin_pair_03",
+      "physical_initial_state_sha256": "b8331d6ed70bf32a606cec8728638c79b8de945d49e5008f21cbe8a7050a8e99",
+      "prompt": "Put the small woodenblock to the left of the red playingcards box.",
+      "prompt_family": "direct_command",
+      "raw_result": {
+        "bytes": 2692,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_03_attempt03/place_a2b_right/environment_seed_4300003/sampling_seed_8403/direct_command__left/result.json",
+        "sha256": "9fec90c8bbf6b33348e708fd05b607495d9b7a478269fa07e6e55bd3291d0a45"
+      },
+      "raw_trajectory": {
+        "bytes": 152056,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_03_attempt03/place_a2b_right/environment_seed_4300003/sampling_seed_8403/direct_command__left/trajectory.json",
+        "sha256": "d60e846cd3a0b4c2ad08297f8ad2b75965a56dfcf193ace6bd82aa8d1fdb2128"
+      },
+      "reference_model_name": "081_playingcards",
+      "requested_relation": "left",
+      "requested_success": false,
+      "runtime_intervention_ids": [],
+      "sampling_seed": 8403,
+      "task": "place_a2b_right",
+      "verified_pickup_proxy": true,
+      "wall_seconds": 531.2178940880112
+    },
+    {
+      "action_trace": {
+        "arrays": {
+          "denormalized": {
+            "count": 139,
+            "shape": [
+              139,
+              16
+            ]
+          },
+          "executed": {
+            "count": 139,
+            "shape": [
+              139,
+              16
+            ]
+          },
+          "normalized": {
+            "count": 139,
+            "shape": [
+              139,
+              16
+            ]
+          }
+        },
+        "bytes": 16888,
+        "count": 139,
+        "executed_array": "executed",
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_03_attempt03/place_a2b_right/environment_seed_4300003/sampling_seed_8403/direct_command__right/action_trace.npz",
+        "sha256": "1efd5672e05ef17b4242dc3f5c5aff77b6fbc17e2246cbb76914395bf4f64ec4",
+        "shape": [
+          139,
+          16
+        ]
+      },
+      "actions_executed": 139,
+      "environment_seed": 4300003,
+      "ever_entered_requested_region": true,
+      "ever_released_in_requested_region": true,
+      "executed_video": {
+        "bytes": 160333,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_03_attempt03/place_a2b_right/environment_seed_4300003/sampling_seed_8403/direct_command__right/simulator.mp4",
+        "sha256": "5eb38c4c09b98278703400fbef0aab5082b3f2b85113de03ce1c35bda31c7046"
+      },
+      "failure_stage": "success",
+      "final_dx_m": 0.13191236555576324,
+      "final_dy_m": 0.004491552710533142,
+      "future_interface": "latent_only_future_not_decodable",
+      "imagined_future_artifact": {
+        "bytes": 93970,
+        "kind": "latent_tensor",
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_03_attempt03/place_a2b_right/environment_seed_4300003/sampling_seed_8403/direct_command__right/first_predicted_latent.pt",
+        "sha256": "995407c1220c1cbd052249751426c92996af2d00b0e53d95c83b1f9bd83a6078"
+      },
+      "initial_dx_m": 0.16423030942678452,
+      "initial_dy_m": 0.13315433636307716,
+      "initial_state_coverage": {
+        "adapter_state_limits": [
+          "No full object or target orientation is recorded by the current adapter.",
+          "No robot joint state or end-effector pose is recorded by the current adapter.",
+          "Only aggregate grippers_open is recorded; individual gripper state is unavailable."
+        ],
+        "hash_input_initial_fields": [
+          "distance_xy",
+          "grippers_open",
+          "object_minus_target_x",
+          "object_minus_target_y",
+          "object_xyz",
+          "relation_region",
+          "success",
+          "target_xyz"
+        ],
+        "hash_input_top_level_fields": [
+          "initial"
+        ]
+      },
+      "model_id": "lingbot_va_robotwin",
+      "movable_model_name": "086_woodenblock",
+      "operational_wall_latency_valid": true,
+      "pair_id": "robotwin_pair_03",
+      "physical_initial_state_sha256": "b8331d6ed70bf32a606cec8728638c79b8de945d49e5008f21cbe8a7050a8e99",
+      "prompt": "Put the small woodenblock to the right of the red playingcards box.",
+      "prompt_family": "direct_command",
+      "raw_result": {
+        "bytes": 2691,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_03_attempt03/place_a2b_right/environment_seed_4300003/sampling_seed_8403/direct_command__right/result.json",
+        "sha256": "0e9475a8631d8aa318588c379aec93dd6490b7cced3b75c51412313591bcac4c"
+      },
+      "raw_trajectory": {
+        "bytes": 52632,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_03_attempt03/place_a2b_right/environment_seed_4300003/sampling_seed_8403/direct_command__right/trajectory.json",
+        "sha256": "095c039a0a1eda51d48a971575813d3c288fe1950e435e01f9d88da358868cd5"
+      },
+      "reference_model_name": "081_playingcards",
+      "requested_relation": "right",
+      "requested_success": true,
+      "runtime_intervention_ids": [],
+      "sampling_seed": 8403,
+      "task": "place_a2b_right",
+      "verified_pickup_proxy": true,
+      "wall_seconds": 344.5289034170564
+    },
+    {
+      "action_trace": {
+        "arrays": {
+          "denormalized": {
+            "count": 136,
+            "shape": [
+              136,
+              16
+            ]
+          },
+          "executed": {
+            "count": 136,
+            "shape": [
+              136,
+              16
+            ]
+          },
+          "normalized": {
+            "count": 136,
+            "shape": [
+              136,
+              16
+            ]
+          }
+        },
+        "bytes": 16379,
+        "count": 136,
+        "executed_array": "executed",
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_04/place_a2b_left/environment_seed_4300004/sampling_seed_8404/direct_command__left/action_trace.npz",
+        "sha256": "999d937a1963fb290ffee0fa847713d30804c7ed9e71a66df481cd33684754aa",
+        "shape": [
+          136,
+          16
+        ]
+      },
+      "actions_executed": 136,
+      "environment_seed": 4300004,
+      "ever_entered_requested_region": true,
+      "ever_released_in_requested_region": true,
+      "executed_video": {
+        "bytes": 114189,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_04/place_a2b_left/environment_seed_4300004/sampling_seed_8404/direct_command__left/simulator.mp4",
+        "sha256": "51fc9c001ba631bf66e6e9f8e6b3f7379c3fc5de0a8c303c01154d4d1286dda9"
+      },
+      "failure_stage": "success",
+      "final_dx_m": -0.11070992052555084,
+      "final_dy_m": 0.016330881044268608,
+      "future_interface": "latent_only_future_not_decodable",
+      "imagined_future_artifact": {
+        "bytes": 93970,
+        "kind": "latent_tensor",
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_04/place_a2b_left/environment_seed_4300004/sampling_seed_8404/direct_command__left/first_predicted_latent.pt",
+        "sha256": "bfda4b89124c9056fdc7802a6c03220d05ba4bae707666b14ec3bb164a5fcb59"
+      },
+      "initial_dx_m": -0.15773040056228638,
+      "initial_dy_m": -0.1260331403464079,
+      "initial_state_coverage": {
+        "adapter_state_limits": [
+          "No full object or target orientation is recorded by the current adapter.",
+          "No robot joint state or end-effector pose is recorded by the current adapter.",
+          "Only aggregate grippers_open is recorded; individual gripper state is unavailable."
+        ],
+        "hash_input_initial_fields": [
+          "distance_xy",
+          "grippers_open",
+          "object_minus_target_x",
+          "object_minus_target_y",
+          "object_xyz",
+          "relation_region",
+          "success",
+          "target_xyz"
+        ],
+        "hash_input_top_level_fields": [
+          "initial"
+        ]
+      },
+      "model_id": "lingbot_va_robotwin",
+      "movable_model_name": "047_mouse",
+      "operational_wall_latency_valid": true,
+      "pair_id": "robotwin_pair_04",
+      "physical_initial_state_sha256": "55968d16e738a0ca2c7e9fa75023e0cfbede614a53fdce042c3ffe50072189c5",
+      "prompt": "Put the plastic mouse to the left of the blue stapler.",
+      "prompt_family": "direct_command",
+      "raw_result": {
+        "bytes": 2610,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_04/place_a2b_left/environment_seed_4300004/sampling_seed_8404/direct_command__left/result.json",
+        "sha256": "54ffc03ba556bb4ef719eacff0d6b8f4d4e98c5d74754d8a400c655e5202ad7f"
+      },
+      "raw_trajectory": {
+        "bytes": 51356,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_04/place_a2b_left/environment_seed_4300004/sampling_seed_8404/direct_command__left/trajectory.json",
+        "sha256": "793c19e1e66b1e53de31dcd766aed051e2d9b67ec0c817b09a6cff257876658b"
+      },
+      "reference_model_name": "048_stapler",
+      "requested_relation": "left",
+      "requested_success": true,
+      "runtime_intervention_ids": [],
+      "sampling_seed": 8404,
+      "task": "place_a2b_left",
+      "verified_pickup_proxy": true,
+      "wall_seconds": 342.4991333601065
+    },
+    {
+      "action_trace": {
+        "arrays": {
+          "denormalized": {
+            "count": 400,
+            "shape": [
+              400,
+              16
+            ]
+          },
+          "executed": {
+            "count": 400,
+            "shape": [
+              400,
+              16
+            ]
+          },
+          "normalized": {
+            "count": 400,
+            "shape": [
+              400,
+              16
+            ]
+          }
+        },
+        "bytes": 46324,
+        "count": 400,
+        "executed_array": "executed",
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_04/place_a2b_left/environment_seed_4300004/sampling_seed_8404/direct_command__right/action_trace.npz",
+        "sha256": "9e012c11a8aea4f5bac0ad8d78bbd248aa5d2658a01d8586bbef9bed62f83464",
+        "shape": [
+          400,
+          16
+        ]
+      },
+      "actions_executed": 400,
+      "environment_seed": 4300004,
+      "ever_entered_requested_region": false,
+      "ever_released_in_requested_region": false,
+      "executed_video": {
+        "bytes": 439443,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_04/place_a2b_left/environment_seed_4300004/sampling_seed_8404/direct_command__right/simulator.mp4",
+        "sha256": "afd8ea80d162752637041ed678fef8544df36527e23f0d841a1e746b22cc6be7"
+      },
+      "failure_stage": "picked_never_entered_requested_region",
+      "final_dx_m": 0.06812755204737186,
+      "final_dy_m": -0.012919541448354721,
+      "future_interface": "latent_only_future_not_decodable",
+      "imagined_future_artifact": {
+        "bytes": 93970,
+        "kind": "latent_tensor",
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_04/place_a2b_left/environment_seed_4300004/sampling_seed_8404/direct_command__right/first_predicted_latent.pt",
+        "sha256": "16161bd5200fa673f9fb65dc5c2d4c0ae009772da80eaa9ceb9dd3085ff58c1c"
+      },
+      "initial_dx_m": -0.15773040056228638,
+      "initial_dy_m": -0.1260331403464079,
+      "initial_state_coverage": {
+        "adapter_state_limits": [
+          "No full object or target orientation is recorded by the current adapter.",
+          "No robot joint state or end-effector pose is recorded by the current adapter.",
+          "Only aggregate grippers_open is recorded; individual gripper state is unavailable."
+        ],
+        "hash_input_initial_fields": [
+          "distance_xy",
+          "grippers_open",
+          "object_minus_target_x",
+          "object_minus_target_y",
+          "object_xyz",
+          "relation_region",
+          "success",
+          "target_xyz"
+        ],
+        "hash_input_top_level_fields": [
+          "initial"
+        ]
+      },
+      "model_id": "lingbot_va_robotwin",
+      "movable_model_name": "047_mouse",
+      "operational_wall_latency_valid": true,
+      "pair_id": "robotwin_pair_04",
+      "physical_initial_state_sha256": "55968d16e738a0ca2c7e9fa75023e0cfbede614a53fdce042c3ffe50072189c5",
+      "prompt": "Put the plastic mouse to the right of the blue stapler.",
+      "prompt_family": "direct_command",
+      "raw_result": {
+        "bytes": 2627,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_04/place_a2b_left/environment_seed_4300004/sampling_seed_8404/direct_command__right/result.json",
+        "sha256": "31ef19b40d8fe40c7ed2f1db87a0801e322765cc9be192e7cf2d0fdcde0578e6"
+      },
+      "raw_trajectory": {
+        "bytes": 151512,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_04/place_a2b_left/environment_seed_4300004/sampling_seed_8404/direct_command__right/trajectory.json",
+        "sha256": "15b0fc85fdb57328113ec5440fdfd3d47d71d69f6caead1ba930475c96030e05"
+      },
+      "reference_model_name": "048_stapler",
+      "requested_relation": "right",
+      "requested_success": false,
+      "runtime_intervention_ids": [],
+      "sampling_seed": 8404,
+      "task": "place_a2b_left",
+      "verified_pickup_proxy": true,
+      "wall_seconds": 541.5922392390203
+    },
+    {
+      "action_trace": {
+        "arrays": {
+          "denormalized": {
+            "count": 400,
+            "shape": [
+              400,
+              16
+            ]
+          },
+          "executed": {
+            "count": 400,
+            "shape": [
+              400,
+              16
+            ]
+          },
+          "normalized": {
+            "count": 400,
+            "shape": [
+              400,
+              16
+            ]
+          }
+        },
+        "bytes": 50092,
+        "count": 400,
+        "executed_array": "executed",
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_05/place_a2b_right/environment_seed_4300005/sampling_seed_8405/direct_command__left/action_trace.npz",
+        "sha256": "e06ab4124dd822ea6208e32c8a22eb23a2383ca01fdfeb29647ecb7a964dfa96",
+        "shape": [
+          400,
+          16
+        ]
+      },
+      "actions_executed": 400,
+      "environment_seed": 4300005,
+      "ever_entered_requested_region": false,
+      "ever_released_in_requested_region": false,
+      "executed_video": {
+        "bytes": 388918,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_05/place_a2b_right/environment_seed_4300005/sampling_seed_8405/direct_command__left/simulator.mp4",
+        "sha256": "b93110b3081c500f560c15bc534c19a3cb2012318039895da023a96274c7ccfc"
+      },
+      "failure_stage": "picked_never_entered_requested_region",
+      "final_dx_m": 0.08901546150445938,
+      "final_dy_m": 0.05903136730194092,
+      "future_interface": "latent_only_future_not_decodable",
+      "imagined_future_artifact": {
+        "bytes": 93970,
+        "kind": "latent_tensor",
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_05/place_a2b_right/environment_seed_4300005/sampling_seed_8405/direct_command__left/first_predicted_latent.pt",
+        "sha256": "148bbb889e50440fefded4bd16633d661f513b89201bc4b2d99c946105c95e80"
+      },
+      "initial_dx_m": -0.02301768958568573,
+      "initial_dy_m": 0.11997690051794052,
+      "initial_state_coverage": {
+        "adapter_state_limits": [
+          "No full object or target orientation is recorded by the current adapter.",
+          "No robot joint state or end-effector pose is recorded by the current adapter.",
+          "Only aggregate grippers_open is recorded; individual gripper state is unavailable."
+        ],
+        "hash_input_initial_fields": [
+          "distance_xy",
+          "grippers_open",
+          "object_minus_target_x",
+          "object_minus_target_y",
+          "object_xyz",
+          "relation_region",
+          "success",
+          "target_xyz"
+        ],
+        "hash_input_top_level_fields": [
+          "initial"
+        ]
+      },
+      "model_id": "lingbot_va_robotwin",
+      "movable_model_name": "081_playingcards",
+      "operational_wall_latency_valid": true,
+      "pair_id": "robotwin_pair_05",
+      "physical_initial_state_sha256": "5b60598fdeac31b4cf802d4e1b528ebd1ffd143c61f59912e40b5414b67ac505",
+      "prompt": "Put the box of playingcards to the left of the rubikscube.",
+      "prompt_family": "direct_command",
+      "raw_result": {
+        "bytes": 2631,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_05/place_a2b_right/environment_seed_4300005/sampling_seed_8405/direct_command__left/result.json",
+        "sha256": "5500dfc275e4e4a84a19c416a81b22926cf4a0ad9e341cf3218b2976b27d7f5f"
+      },
+      "raw_trajectory": {
+        "bytes": 150364,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_05/place_a2b_right/environment_seed_4300005/sampling_seed_8405/direct_command__left/trajectory.json",
+        "sha256": "f4dca7e18733bb7f8302b48c6a6c6d6c07f1ea7c9a0c6ea61e3ffccb1957fb09"
+      },
+      "reference_model_name": "073_rubikscube",
+      "requested_relation": "left",
+      "requested_success": false,
+      "runtime_intervention_ids": [],
+      "sampling_seed": 8405,
+      "task": "place_a2b_right",
+      "verified_pickup_proxy": true,
+      "wall_seconds": 581.8317500578705
+    },
+    {
+      "action_trace": {
+        "arrays": {
+          "denormalized": {
+            "count": 140,
+            "shape": [
+              140,
+              16
+            ]
+          },
+          "executed": {
+            "count": 140,
+            "shape": [
+              140,
+              16
+            ]
+          },
+          "normalized": {
+            "count": 140,
+            "shape": [
+              140,
+              16
+            ]
+          }
+        },
+        "bytes": 17020,
+        "count": 140,
+        "executed_array": "executed",
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_05/place_a2b_right/environment_seed_4300005/sampling_seed_8405/direct_command__right/action_trace.npz",
+        "sha256": "9e2af0df1044ddc3e907b15d39ffcae73ac8e460faebecc5e77fa97928858fb4",
+        "shape": [
+          140,
+          16
+        ]
+      },
+      "actions_executed": 140,
+      "environment_seed": 4300005,
+      "ever_entered_requested_region": true,
+      "ever_released_in_requested_region": true,
+      "executed_video": {
+        "bytes": 152751,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_05/place_a2b_right/environment_seed_4300005/sampling_seed_8405/direct_command__right/simulator.mp4",
+        "sha256": "044453300abc4b0562c48d8f10cc8bb8e48216a0dcf44d1d8a1273e609208210"
+      },
+      "failure_stage": "success",
+      "final_dx_m": 0.15270116925239563,
+      "final_dy_m": 0.021893545985221863,
+      "future_interface": "latent_only_future_not_decodable",
+      "imagined_future_artifact": {
+        "bytes": 93970,
+        "kind": "latent_tensor",
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_05/place_a2b_right/environment_seed_4300005/sampling_seed_8405/direct_command__right/first_predicted_latent.pt",
+        "sha256": "6fa4f7619d3516f0702293caacf52049799b66ae94a6f4dec4be78874efd5dfb"
+      },
+      "initial_dx_m": -0.02301768958568573,
+      "initial_dy_m": 0.11997690051794052,
+      "initial_state_coverage": {
+        "adapter_state_limits": [
+          "No full object or target orientation is recorded by the current adapter.",
+          "No robot joint state or end-effector pose is recorded by the current adapter.",
+          "Only aggregate grippers_open is recorded; individual gripper state is unavailable."
+        ],
+        "hash_input_initial_fields": [
+          "distance_xy",
+          "grippers_open",
+          "object_minus_target_x",
+          "object_minus_target_y",
+          "object_xyz",
+          "relation_region",
+          "success",
+          "target_xyz"
+        ],
+        "hash_input_top_level_fields": [
+          "initial"
+        ]
+      },
+      "model_id": "lingbot_va_robotwin",
+      "movable_model_name": "081_playingcards",
+      "operational_wall_latency_valid": true,
+      "pair_id": "robotwin_pair_05",
+      "physical_initial_state_sha256": "5b60598fdeac31b4cf802d4e1b528ebd1ffd143c61f59912e40b5414b67ac505",
+      "prompt": "Put the box of playingcards to the right of the rubikscube.",
+      "prompt_family": "direct_command",
+      "raw_result": {
+        "bytes": 2638,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_05/place_a2b_right/environment_seed_4300005/sampling_seed_8405/direct_command__right/result.json",
+        "sha256": "89744dffd4cd3282d422b97c30f5a52b1e8798823edf8d378584fe19ccd5013b"
+      },
+      "raw_trajectory": {
+        "bytes": 52899,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_05/place_a2b_right/environment_seed_4300005/sampling_seed_8405/direct_command__right/trajectory.json",
+        "sha256": "de866d98572ad8ecd4614cdfeb5e7c362a0c72fc3075f6cdef8bda4137a25524"
+      },
+      "reference_model_name": "073_rubikscube",
+      "requested_relation": "right",
+      "requested_success": true,
+      "runtime_intervention_ids": [],
+      "sampling_seed": 8405,
+      "task": "place_a2b_right",
+      "verified_pickup_proxy": true,
+      "wall_seconds": 360.7923202479724
+    },
+    {
+      "action_trace": {
+        "arrays": {
+          "denormalized": {
+            "count": 129,
+            "shape": [
+              129,
+              16
+            ]
+          },
+          "executed": {
+            "count": 129,
+            "shape": [
+              129,
+              16
+            ]
+          },
+          "normalized": {
+            "count": 129,
+            "shape": [
+              129,
+              16
+            ]
+          }
+        },
+        "bytes": 16212,
+        "count": 129,
+        "executed_array": "executed",
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_06/place_a2b_left/environment_seed_4300006/sampling_seed_8406/direct_command__left/action_trace.npz",
+        "sha256": "a5f2a9f3d78298ac2c205dc1de8745135305113a94fd61a4eeaf460f4c2e01b3",
+        "shape": [
+          129,
+          16
+        ]
+      },
+      "actions_executed": 129,
+      "environment_seed": 4300006,
+      "ever_entered_requested_region": true,
+      "ever_released_in_requested_region": true,
+      "executed_video": {
+        "bytes": 148249,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_06/place_a2b_left/environment_seed_4300006/sampling_seed_8406/direct_command__left/simulator.mp4",
+        "sha256": "e227589c6d8d525e6b287647f36854126c1bbc04de2d2ce3eb6e35362eb64205"
+      },
+      "failure_stage": "success",
+      "final_dx_m": -0.14130160957574844,
+      "final_dy_m": -0.009255357086658478,
+      "future_interface": "latent_only_future_not_decodable",
+      "imagined_future_artifact": {
+        "bytes": 93970,
+        "kind": "latent_tensor",
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_06/place_a2b_left/environment_seed_4300006/sampling_seed_8406/direct_command__left/first_predicted_latent.pt",
+        "sha256": "d1b372f26732fad322677f34d181bf04000e0b01d57ced2b41f90cd5ca06417d"
+      },
+      "initial_dx_m": 0.0032056160271167755,
+      "initial_dy_m": -0.10816034488379955,
+      "initial_state_coverage": {
+        "adapter_state_limits": [
+          "No full object or target orientation is recorded by the current adapter.",
+          "No robot joint state or end-effector pose is recorded by the current adapter.",
+          "Only aggregate grippers_open is recorded; individual gripper state is unavailable."
+        ],
+        "hash_input_initial_fields": [
+          "distance_xy",
+          "grippers_open",
+          "object_minus_target_x",
+          "object_minus_target_y",
+          "object_xyz",
+          "relation_region",
+          "success",
+          "target_xyz"
+        ],
+        "hash_input_top_level_fields": [
+          "initial"
+        ]
+      },
+      "model_id": "lingbot_va_robotwin",
+      "movable_model_name": "113_coffee-box",
+      "operational_wall_latency_valid": true,
+      "pair_id": "robotwin_pair_06",
+      "physical_initial_state_sha256": "29e54d3354180802225e5002b0c18db1c12b33f1565cbc889bde86ad674ace42",
+      "prompt": "Put the coffee box to the left of the red playingcards box.",
+      "prompt_family": "direct_command",
+      "raw_result": {
+        "bytes": 2637,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_06/place_a2b_left/environment_seed_4300006/sampling_seed_8406/direct_command__left/result.json",
+        "sha256": "33109a83ba7c4297beb7c4b76575abff66f677ab5bc700b4e2fc46bd92074b20"
+      },
+      "raw_trajectory": {
+        "bytes": 49359,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_06/place_a2b_left/environment_seed_4300006/sampling_seed_8406/direct_command__left/trajectory.json",
+        "sha256": "bef156b30a4c4b3b970b2845b7ba72a2579128fd5f4e97784e6784409251ce12"
+      },
+      "reference_model_name": "081_playingcards",
+      "requested_relation": "left",
+      "requested_success": true,
+      "runtime_intervention_ids": [],
+      "sampling_seed": 8406,
+      "task": "place_a2b_left",
+      "verified_pickup_proxy": true,
+      "wall_seconds": 412.08179682609625
+    },
+    {
+      "action_trace": {
+        "arrays": {
+          "denormalized": {
+            "count": 400,
+            "shape": [
+              400,
+              16
+            ]
+          },
+          "executed": {
+            "count": 400,
+            "shape": [
+              400,
+              16
+            ]
+          },
+          "normalized": {
+            "count": 400,
+            "shape": [
+              400,
+              16
+            ]
+          }
+        },
+        "bytes": 47772,
+        "count": 400,
+        "executed_array": "executed",
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_06/place_a2b_left/environment_seed_4300006/sampling_seed_8406/direct_command__right/action_trace.npz",
+        "sha256": "18d7369353ffb62bd4c23064e302a8b81454dd04bc18d04464a040a9eceb2c68",
+        "shape": [
+          400,
+          16
+        ]
+      },
+      "actions_executed": 400,
+      "environment_seed": 4300006,
+      "ever_entered_requested_region": false,
+      "ever_released_in_requested_region": false,
+      "executed_video": {
+        "bytes": 410752,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_06/place_a2b_left/environment_seed_4300006/sampling_seed_8406/direct_command__right/simulator.mp4",
+        "sha256": "6065baf51462e67894aded88663c80eacbcec32f1c9eae352ac80931c0846fa3"
+      },
+      "failure_stage": "picked_never_entered_requested_region",
+      "final_dx_m": -0.07178466022014618,
+      "final_dy_m": 0.12030596379190683,
+      "future_interface": "latent_only_future_not_decodable",
+      "imagined_future_artifact": {
+        "bytes": 93970,
+        "kind": "latent_tensor",
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_06/place_a2b_left/environment_seed_4300006/sampling_seed_8406/direct_command__right/first_predicted_latent.pt",
+        "sha256": "aa7b81fb955911bbb319037bd6e299273d2df3a24babd318ad87ebfcf44d649e"
+      },
+      "initial_dx_m": 0.0032056160271167755,
+      "initial_dy_m": -0.10816034488379955,
+      "initial_state_coverage": {
+        "adapter_state_limits": [
+          "No full object or target orientation is recorded by the current adapter.",
+          "No robot joint state or end-effector pose is recorded by the current adapter.",
+          "Only aggregate grippers_open is recorded; individual gripper state is unavailable."
+        ],
+        "hash_input_initial_fields": [
+          "distance_xy",
+          "grippers_open",
+          "object_minus_target_x",
+          "object_minus_target_y",
+          "object_xyz",
+          "relation_region",
+          "success",
+          "target_xyz"
+        ],
+        "hash_input_top_level_fields": [
+          "initial"
+        ]
+      },
+      "model_id": "lingbot_va_robotwin",
+      "movable_model_name": "113_coffee-box",
+      "operational_wall_latency_valid": true,
+      "pair_id": "robotwin_pair_06",
+      "physical_initial_state_sha256": "29e54d3354180802225e5002b0c18db1c12b33f1565cbc889bde86ad674ace42",
+      "prompt": "Put the coffee box to the right of the red playingcards box.",
+      "prompt_family": "direct_command",
+      "raw_result": {
+        "bytes": 2644,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_06/place_a2b_left/environment_seed_4300006/sampling_seed_8406/direct_command__right/result.json",
+        "sha256": "8895535246b7fbb46c6bf28fce54fa6c6b5e8cd7e9d6ba1da658e2a6a8c7b2f4"
+      },
+      "raw_trajectory": {
+        "bytes": 152051,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_06/place_a2b_left/environment_seed_4300006/sampling_seed_8406/direct_command__right/trajectory.json",
+        "sha256": "5d77c5932e3977c1f155d573c3a6f2f70ef4b929d52499170479d4b72c6c6f15"
+      },
+      "reference_model_name": "081_playingcards",
+      "requested_relation": "right",
+      "requested_success": false,
+      "runtime_intervention_ids": [],
+      "sampling_seed": 8406,
+      "task": "place_a2b_left",
+      "verified_pickup_proxy": true,
+      "wall_seconds": 624.3056315339636
+    },
+    {
+      "action_trace": {
+        "arrays": {
+          "denormalized": {
+            "count": 400,
+            "shape": [
+              400,
+              16
+            ]
+          },
+          "executed": {
+            "count": 400,
+            "shape": [
+              400,
+              16
+            ]
+          },
+          "normalized": {
+            "count": 400,
+            "shape": [
+              400,
+              16
+            ]
+          }
+        },
+        "bytes": 45233,
+        "count": 400,
+        "executed_array": "executed",
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_07/place_a2b_right/environment_seed_4300007/sampling_seed_8407/direct_command__left/action_trace.npz",
+        "sha256": "11d8c01790f7896ceb40c6d5b01c95097382dcd2ade8bcc9c1bdf7d2faf5f945",
+        "shape": [
+          400,
+          16
+        ]
+      },
+      "actions_executed": 400,
+      "environment_seed": 4300007,
+      "ever_entered_requested_region": false,
+      "ever_released_in_requested_region": false,
+      "executed_video": {
+        "bytes": 399128,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_07/place_a2b_right/environment_seed_4300007/sampling_seed_8407/direct_command__left/simulator.mp4",
+        "sha256": "8b93756368dbead93fa597fde119b9d613b76c2d3468d9f39838bdc9528d0e94"
+      },
+      "failure_stage": "picked_never_entered_requested_region",
+      "final_dx_m": 0.08615197613835335,
+      "final_dy_m": 0.008339639753103256,
+      "future_interface": "latent_only_future_not_decodable",
+      "imagined_future_artifact": {
+        "bytes": 93970,
+        "kind": "latent_tensor",
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_07/place_a2b_right/environment_seed_4300007/sampling_seed_8407/direct_command__left/first_predicted_latent.pt",
+        "sha256": "5c41edcbb8df778886bb78cb0f582ad2d236b57bd791469d9d3df76df598778c"
+      },
+      "initial_dx_m": 0.011721611022949219,
+      "initial_dy_m": -0.19505312215187587,
+      "initial_state_coverage": {
+        "adapter_state_limits": [
+          "No full object or target orientation is recorded by the current adapter.",
+          "No robot joint state or end-effector pose is recorded by the current adapter.",
+          "Only aggregate grippers_open is recorded; individual gripper state is unavailable."
+        ],
+        "hash_input_initial_fields": [
+          "distance_xy",
+          "grippers_open",
+          "object_minus_target_x",
+          "object_minus_target_y",
+          "object_xyz",
+          "relation_region",
+          "success",
+          "target_xyz"
+        ],
+        "hash_input_top_level_fields": [
+          "initial"
+        ]
+      },
+      "model_id": "lingbot_va_robotwin",
+      "movable_model_name": "075_bread",
+      "operational_wall_latency_valid": true,
+      "pair_id": "robotwin_pair_07",
+      "physical_initial_state_sha256": "c7ef8a07f6ffb7e853b6e9d47e6a89afeecda3229850b5f0618c12a2d8c3bfc3",
+      "prompt": "Put the golden bread to the left of the blue stapler.",
+      "prompt_family": "direct_command",
+      "raw_result": {
+        "bytes": 2624,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_07/place_a2b_right/environment_seed_4300007/sampling_seed_8407/direct_command__left/result.json",
+        "sha256": "ec47a964b5b224124416c64bdfdc3323ebf75c8b487ce0354bdb9600b9cf9a7b"
+      },
+      "raw_trajectory": {
+        "bytes": 151534,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_07/place_a2b_right/environment_seed_4300007/sampling_seed_8407/direct_command__left/trajectory.json",
+        "sha256": "769b607e126d70c0ae217675062daed0eafac9393741ef10d5917fd50548f3f1"
+      },
+      "reference_model_name": "048_stapler",
+      "requested_relation": "left",
+      "requested_success": false,
+      "runtime_intervention_ids": [],
+      "sampling_seed": 8407,
+      "task": "place_a2b_right",
+      "verified_pickup_proxy": true,
+      "wall_seconds": 634.4654903849587
+    },
+    {
+      "action_trace": {
+        "arrays": {
+          "denormalized": {
+            "count": 133,
+            "shape": [
+              133,
+              16
+            ]
+          },
+          "executed": {
+            "count": 133,
+            "shape": [
+              133,
+              16
+            ]
+          },
+          "normalized": {
+            "count": 133,
+            "shape": [
+              133,
+              16
+            ]
+          }
+        },
+        "bytes": 15700,
+        "count": 133,
+        "executed_array": "executed",
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_07/place_a2b_right/environment_seed_4300007/sampling_seed_8407/direct_command__right/action_trace.npz",
+        "sha256": "d91c6e1ee5857763148dbd2d373037fb9e7e2fd944a042f0b23391150f03a77b",
+        "shape": [
+          133,
+          16
+        ]
+      },
+      "actions_executed": 133,
+      "environment_seed": 4300007,
+      "ever_entered_requested_region": true,
+      "ever_released_in_requested_region": true,
+      "executed_video": {
+        "bytes": 129445,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_07/place_a2b_right/environment_seed_4300007/sampling_seed_8407/direct_command__right/simulator.mp4",
+        "sha256": "5a8b256734cc33453848d31de8847ff532fceef657a16e81dc52c6bc551ac0aa"
+      },
+      "failure_stage": "success",
+      "final_dx_m": 0.12736405432224274,
+      "final_dy_m": -0.0038301210443023592,
+      "future_interface": "latent_only_future_not_decodable",
+      "imagined_future_artifact": {
+        "bytes": 93970,
+        "kind": "latent_tensor",
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_07/place_a2b_right/environment_seed_4300007/sampling_seed_8407/direct_command__right/first_predicted_latent.pt",
+        "sha256": "c8535f9757d16ed3096c6a92d8032f1b3d8c71d729230ecd44c6dff0c5c5b3fe"
+      },
+      "initial_dx_m": 0.011721611022949219,
+      "initial_dy_m": -0.19505312215187587,
+      "initial_state_coverage": {
+        "adapter_state_limits": [
+          "No full object or target orientation is recorded by the current adapter.",
+          "No robot joint state or end-effector pose is recorded by the current adapter.",
+          "Only aggregate grippers_open is recorded; individual gripper state is unavailable."
+        ],
+        "hash_input_initial_fields": [
+          "distance_xy",
+          "grippers_open",
+          "object_minus_target_x",
+          "object_minus_target_y",
+          "object_xyz",
+          "relation_region",
+          "success",
+          "target_xyz"
+        ],
+        "hash_input_top_level_fields": [
+          "initial"
+        ]
+      },
+      "model_id": "lingbot_va_robotwin",
+      "movable_model_name": "075_bread",
+      "operational_wall_latency_valid": true,
+      "pair_id": "robotwin_pair_07",
+      "physical_initial_state_sha256": "c7ef8a07f6ffb7e853b6e9d47e6a89afeecda3229850b5f0618c12a2d8c3bfc3",
+      "prompt": "Put the golden bread to the right of the blue stapler.",
+      "prompt_family": "direct_command",
+      "raw_result": {
+        "bytes": 2629,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_07/place_a2b_right/environment_seed_4300007/sampling_seed_8407/direct_command__right/result.json",
+        "sha256": "46b011bc1e2ba7c32c23caa6e4f7cdea45a06fcb947616b02d53a928a938ce06"
+      },
+      "raw_trajectory": {
+        "bytes": 50653,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_07/place_a2b_right/environment_seed_4300007/sampling_seed_8407/direct_command__right/trajectory.json",
+        "sha256": "5f8b8b1ee87bcee762c46bde0fb66f6463f019df0cb6cafc0e556bb06754848f"
+      },
+      "reference_model_name": "048_stapler",
+      "requested_relation": "right",
+      "requested_success": true,
+      "runtime_intervention_ids": [],
+      "sampling_seed": 8407,
+      "task": "place_a2b_right",
+      "verified_pickup_proxy": true,
+      "wall_seconds": 420.2195644590538
+    },
+    {
+      "action_trace": {
+        "arrays": {
+          "denormalized": {
+            "count": 133,
+            "shape": [
+              133,
+              16
+            ]
+          },
+          "executed": {
+            "count": 133,
+            "shape": [
+              133,
+              16
+            ]
+          },
+          "normalized": {
+            "count": 133,
+            "shape": [
+              133,
+              16
+            ]
+          }
+        },
+        "bytes": 16379,
+        "count": 133,
+        "executed_array": "executed",
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_08/place_a2b_left/environment_seed_4300008/sampling_seed_8408/direct_command__left/action_trace.npz",
+        "sha256": "66f57cc0e333af872d60c0d6be6f634a8672e54c0b88c7f0465fbf178ff9fde6",
+        "shape": [
+          133,
+          16
+        ]
+      },
+      "actions_executed": 133,
+      "environment_seed": 4300008,
+      "ever_entered_requested_region": true,
+      "ever_released_in_requested_region": true,
+      "executed_video": {
+        "bytes": 147997,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_08/place_a2b_left/environment_seed_4300008/sampling_seed_8408/direct_command__left/simulator.mp4",
+        "sha256": "3b85cec3bb2fed3266f0e1860de1ba405a0bc46bcf5a313650948bfdfc720a4d"
+      },
+      "failure_stage": "success",
+      "final_dx_m": -0.13582899421453476,
+      "final_dy_m": 0.01788775622844696,
+      "future_interface": "latent_only_future_not_decodable",
+      "imagined_future_artifact": {
+        "bytes": 93970,
+        "kind": "latent_tensor",
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_08/place_a2b_left/environment_seed_4300008/sampling_seed_8408/direct_command__left/first_predicted_latent.pt",
+        "sha256": "14fa7d795e6d8caf0f851e48ed685d46ac01a3dbccf478c6a4d03ea559ea8d6f"
+      },
+      "initial_dx_m": -0.2078294842503965,
+      "initial_dy_m": 0.10192853957414627,
+      "initial_state_coverage": {
+        "adapter_state_limits": [
+          "No full object or target orientation is recorded by the current adapter.",
+          "No robot joint state or end-effector pose is recorded by the current adapter.",
+          "Only aggregate grippers_open is recorded; individual gripper state is unavailable."
+        ],
+        "hash_input_initial_fields": [
+          "distance_xy",
+          "grippers_open",
+          "object_minus_target_x",
+          "object_minus_target_y",
+          "object_xyz",
+          "relation_region",
+          "success",
+          "target_xyz"
+        ],
+        "hash_input_top_level_fields": [
+          "initial"
+        ]
+      },
+      "model_id": "lingbot_va_robotwin",
+      "movable_model_name": "081_playingcards",
+      "operational_wall_latency_valid": true,
+      "pair_id": "robotwin_pair_08",
+      "physical_initial_state_sha256": "2466e3ccaffaa3d98303c9fa0d0711600cf581256eabff6faa1fb396567d4194",
+      "prompt": "Put the box with cards inside to the left of the black phone.",
+      "prompt_family": "direct_command",
+      "raw_result": {
+        "bytes": 2623,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_08/place_a2b_left/environment_seed_4300008/sampling_seed_8408/direct_command__left/result.json",
+        "sha256": "3a35185baac2bb5e56e00b26d272c48a9d86bff319da4b2be17c353b129a9f30"
+      },
+      "raw_trajectory": {
+        "bytes": 50357,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_08/place_a2b_left/environment_seed_4300008/sampling_seed_8408/direct_command__left/trajectory.json",
+        "sha256": "29f3f0a7d74d7eacb47748b80727e298b51d92e128fea704d05b851341b33d17"
+      },
+      "reference_model_name": "077_phone",
+      "requested_relation": "left",
+      "requested_success": true,
+      "runtime_intervention_ids": [],
+      "sampling_seed": 8408,
+      "task": "place_a2b_left",
+      "verified_pickup_proxy": true,
+      "wall_seconds": 410.9533599179704
+    },
+    {
+      "action_trace": {
+        "arrays": {
+          "denormalized": {
+            "count": 400,
+            "shape": [
+              400,
+              16
+            ]
+          },
+          "executed": {
+            "count": 400,
+            "shape": [
+              400,
+              16
+            ]
+          },
+          "normalized": {
+            "count": 400,
+            "shape": [
+              400,
+              16
+            ]
+          }
+        },
+        "bytes": 46393,
+        "count": 400,
+        "executed_array": "executed",
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_08/place_a2b_left/environment_seed_4300008/sampling_seed_8408/direct_command__right/action_trace.npz",
+        "sha256": "4d781cba86ad3cc9c526b706654041078693f2be65fb2fd59b3373b94e7f9e26",
+        "shape": [
+          400,
+          16
+        ]
+      },
+      "actions_executed": 400,
+      "environment_seed": 4300008,
+      "ever_entered_requested_region": false,
+      "ever_released_in_requested_region": false,
+      "executed_video": {
+        "bytes": 332761,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_08/place_a2b_left/environment_seed_4300008/sampling_seed_8408/direct_command__right/simulator.mp4",
+        "sha256": "1f6af4bfbe45ff458ccd70855b2770538fc4bbf4aca71716545ddb54a2cabf0e"
+      },
+      "failure_stage": "picked_never_entered_requested_region",
+      "final_dx_m": -0.11329678446054459,
+      "final_dy_m": 0.02488398551940918,
+      "future_interface": "latent_only_future_not_decodable",
+      "imagined_future_artifact": {
+        "bytes": 93970,
+        "kind": "latent_tensor",
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_08/place_a2b_left/environment_seed_4300008/sampling_seed_8408/direct_command__right/first_predicted_latent.pt",
+        "sha256": "d18b445a9a4d9b9b2f99034ee237d363d831a749c4e90d20e75f17afc0f911e9"
+      },
+      "initial_dx_m": -0.2078294842503965,
+      "initial_dy_m": 0.10192853957414627,
+      "initial_state_coverage": {
+        "adapter_state_limits": [
+          "No full object or target orientation is recorded by the current adapter.",
+          "No robot joint state or end-effector pose is recorded by the current adapter.",
+          "Only aggregate grippers_open is recorded; individual gripper state is unavailable."
+        ],
+        "hash_input_initial_fields": [
+          "distance_xy",
+          "grippers_open",
+          "object_minus_target_x",
+          "object_minus_target_y",
+          "object_xyz",
+          "relation_region",
+          "success",
+          "target_xyz"
+        ],
+        "hash_input_top_level_fields": [
+          "initial"
+        ]
+      },
+      "model_id": "lingbot_va_robotwin",
+      "movable_model_name": "081_playingcards",
+      "operational_wall_latency_valid": true,
+      "pair_id": "robotwin_pair_08",
+      "physical_initial_state_sha256": "2466e3ccaffaa3d98303c9fa0d0711600cf581256eabff6faa1fb396567d4194",
+      "prompt": "Put the box with cards inside to the right of the black phone.",
+      "prompt_family": "direct_command",
+      "raw_result": {
+        "bytes": 2634,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_08/place_a2b_left/environment_seed_4300008/sampling_seed_8408/direct_command__right/result.json",
+        "sha256": "33bb00e51dd931b2049de4cb4fb08079c97f8c562649b633cd3a4d2ddd4c4e39"
+      },
+      "raw_trajectory": {
+        "bytes": 150461,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_08/place_a2b_left/environment_seed_4300008/sampling_seed_8408/direct_command__right/trajectory.json",
+        "sha256": "127b25bf4bd13c981ea338f24005375e552d84071e85433fc2b3651073ec38da"
+      },
+      "reference_model_name": "077_phone",
+      "requested_relation": "right",
+      "requested_success": false,
+      "runtime_intervention_ids": [],
+      "sampling_seed": 8408,
+      "task": "place_a2b_left",
+      "verified_pickup_proxy": true,
+      "wall_seconds": 629.9174099860247
+    },
+    {
+      "action_trace": {
+        "arrays": {
+          "denormalized": {
+            "count": 400,
+            "shape": [
+              400,
+              16
+            ]
+          },
+          "executed": {
+            "count": 400,
+            "shape": [
+              400,
+              16
+            ]
+          },
+          "normalized": {
+            "count": 400,
+            "shape": [
+              400,
+              16
+            ]
+          }
+        },
+        "bytes": 46002,
+        "count": 400,
+        "executed_array": "executed",
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_09/place_a2b_right/environment_seed_4300009/sampling_seed_8409/direct_command__left/action_trace.npz",
+        "sha256": "911f307b9cf514d25fcbfbe16e70d64e29f4902a185d91c1dcedd172ed2255a6",
+        "shape": [
+          400,
+          16
+        ]
+      },
+      "actions_executed": 400,
+      "environment_seed": 4300009,
+      "ever_entered_requested_region": false,
+      "ever_released_in_requested_region": false,
+      "executed_video": {
+        "bytes": 469874,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_09/place_a2b_right/environment_seed_4300009/sampling_seed_8409/direct_command__left/simulator.mp4",
+        "sha256": "b01038d97d9aa696e9a73b8e41e6764b41610f8fd2ed59b4a78c8f3e4db5383a"
+      },
+      "failure_stage": "picked_never_entered_requested_region",
+      "final_dx_m": 0.16242416203022003,
+      "final_dy_m": 0.026966191828250885,
+      "future_interface": "latent_only_future_not_decodable",
+      "imagined_future_artifact": {
+        "bytes": 93970,
+        "kind": "latent_tensor",
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_09/place_a2b_right/environment_seed_4300009/sampling_seed_8409/direct_command__left/first_predicted_latent.pt",
+        "sha256": "82546b8e3662a8c312d2940432b4ea859551858275f9425f90d15ddee1d31535"
+      },
+      "initial_dx_m": 0.17049454897642136,
+      "initial_dy_m": -0.10333745181560516,
+      "initial_state_coverage": {
+        "adapter_state_limits": [
+          "No full object or target orientation is recorded by the current adapter.",
+          "No robot joint state or end-effector pose is recorded by the current adapter.",
+          "Only aggregate grippers_open is recorded; individual gripper state is unavailable."
+        ],
+        "hash_input_initial_fields": [
+          "distance_xy",
+          "grippers_open",
+          "object_minus_target_x",
+          "object_minus_target_y",
+          "object_xyz",
+          "relation_region",
+          "success",
+          "target_xyz"
+        ],
+        "hash_input_top_level_fields": [
+          "initial"
+        ]
+      },
+      "model_id": "lingbot_va_robotwin",
+      "movable_model_name": "073_rubikscube",
+      "operational_wall_latency_valid": true,
+      "pair_id": "robotwin_pair_09",
+      "physical_initial_state_sha256": "89738321d696fd6c0fac254a9150184b1f79332c2d5dfcc927acf0a3e6aad6ab",
+      "prompt": "Put the rubikscube to the left of the brown woodenblock.",
+      "prompt_family": "direct_command",
+      "raw_result": {
+        "bytes": 2632,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_09/place_a2b_right/environment_seed_4300009/sampling_seed_8409/direct_command__left/result.json",
+        "sha256": "46e2424fdc9abeea09e8d59314d773e7a410f402be7ff5ad23f526c7823670d9"
+      },
+      "raw_trajectory": {
+        "bytes": 150399,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_09/place_a2b_right/environment_seed_4300009/sampling_seed_8409/direct_command__left/trajectory.json",
+        "sha256": "ef23987f707f5c267f0986ab8965b1372be1cddcc2cd027274d53e29d5f2879d"
+      },
+      "reference_model_name": "086_woodenblock",
+      "requested_relation": "left",
+      "requested_success": false,
+      "runtime_intervention_ids": [],
+      "sampling_seed": 8409,
+      "task": "place_a2b_right",
+      "verified_pickup_proxy": true,
+      "wall_seconds": 644.9509660759941
+    },
+    {
+      "action_trace": {
+        "arrays": {
+          "denormalized": {
+            "count": 263,
+            "shape": [
+              263,
+              16
+            ]
+          },
+          "executed": {
+            "count": 263,
+            "shape": [
+              263,
+              16
+            ]
+          },
+          "normalized": {
+            "count": 263,
+            "shape": [
+              263,
+              16
+            ]
+          }
+        },
+        "bytes": 30148,
+        "count": 263,
+        "executed_array": "executed",
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_09/place_a2b_right/environment_seed_4300009/sampling_seed_8409/direct_command__right/action_trace.npz",
+        "sha256": "339750d04561c58a01a6876d6aa3f21dcc163e96cb1e99879de24aea1a0d333f",
+        "shape": [
+          263,
+          16
+        ]
+      },
+      "actions_executed": 263,
+      "environment_seed": 4300009,
+      "ever_entered_requested_region": true,
+      "ever_released_in_requested_region": true,
+      "executed_video": {
+        "bytes": 289268,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_09/place_a2b_right/environment_seed_4300009/sampling_seed_8409/direct_command__right/simulator.mp4",
+        "sha256": "2594176b16097b8c39ba980d08f93f23ef0fc7561bb53f2944037fa154b3489f"
+      },
+      "failure_stage": "success",
+      "final_dx_m": 0.15151115134358406,
+      "final_dy_m": 0.005795277655124664,
+      "future_interface": "latent_only_future_not_decodable",
+      "imagined_future_artifact": {
+        "bytes": 93970,
+        "kind": "latent_tensor",
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_09/place_a2b_right/environment_seed_4300009/sampling_seed_8409/direct_command__right/first_predicted_latent.pt",
+        "sha256": "6e0d2c390c83afe95ac90fafbc8e60098c1eca99130343c884463b01251f9bb9"
+      },
+      "initial_dx_m": 0.17049454897642136,
+      "initial_dy_m": -0.10333745181560516,
+      "initial_state_coverage": {
+        "adapter_state_limits": [
+          "No full object or target orientation is recorded by the current adapter.",
+          "No robot joint state or end-effector pose is recorded by the current adapter.",
+          "Only aggregate grippers_open is recorded; individual gripper state is unavailable."
+        ],
+        "hash_input_initial_fields": [
+          "distance_xy",
+          "grippers_open",
+          "object_minus_target_x",
+          "object_minus_target_y",
+          "object_xyz",
+          "relation_region",
+          "success",
+          "target_xyz"
+        ],
+        "hash_input_top_level_fields": [
+          "initial"
+        ]
+      },
+      "model_id": "lingbot_va_robotwin",
+      "movable_model_name": "073_rubikscube",
+      "operational_wall_latency_valid": true,
+      "pair_id": "robotwin_pair_09",
+      "physical_initial_state_sha256": "89738321d696fd6c0fac254a9150184b1f79332c2d5dfcc927acf0a3e6aad6ab",
+      "prompt": "Put the rubikscube to the right of the brown woodenblock.",
+      "prompt_family": "direct_command",
+      "raw_result": {
+        "bytes": 2631,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_09/place_a2b_right/environment_seed_4300009/sampling_seed_8409/direct_command__right/result.json",
+        "sha256": "09adcb68133d9b047180de71fa52ef5a1898b541595ccc331f3e68e338cf913e"
+      },
+      "raw_trajectory": {
+        "bytes": 98639,
+        "path": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/robotwin_pair_09/place_a2b_right/environment_seed_4300009/sampling_seed_8409/direct_command__right/trajectory.json",
+        "sha256": "a1738e1d1175d4d60e27ccc4e89f7b8e66aab1155ca7db6859086c5c034b0d23"
+      },
+      "reference_model_name": "086_woodenblock",
+      "requested_relation": "right",
+      "requested_success": true,
+      "runtime_intervention_ids": [],
+      "sampling_seed": 8409,
+      "task": "place_a2b_right",
+      "verified_pickup_proxy": true,
+      "wall_seconds": 540.3620449369773
+    }
+  ],
+  "expected_environment_seeds": [
+    4300003,
+    4300004,
+    4300005,
+    4300006,
+    4300007,
+    4300008,
+    4300009
+  ],
+  "input_root": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation",
+  "intervention_ledger_sources": [
+    {
+      "applied_event_ids": [],
+      "bytes": 92,
+      "ignored_other_model_event_count": 0,
+      "path": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/runtime_interventions_lingbot_va_robotwin.json",
+      "selected_event_ids": [],
+      "selected_model_event_count": 0,
+      "sha256": "1b44ff3e7bf06529c3f3c289427224ae2c3afbf14e2a29b42c7d0e094847a8e5",
+      "total_event_count": 0
+    }
+  ],
+  "invalid_attempt_ledger_sources": [
+    {
+      "bytes": 6843,
+      "ignored_other_model_event_count": 0,
+      "path": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/invalid_attempts_lingbot_va_robotwin.json",
+      "retained_event_ids": [
+        "manual-infrastructure-lingbot_va_robotwin-robotwin_pair_04-right-20260803T161859Z",
+        "native-thermal-lingbot_va_robotwin-robotwin_pair_03-left-20260803T154047932852Z",
+        "native-thermal-lingbot_va_robotwin-robotwin_pair_03-left-20260803T154529446699Z",
+        "native-thermal-lingbot_va_robotwin-robotwin_pair_03-right-20260803T154047932852Z",
+        "native-thermal-lingbot_va_robotwin-robotwin_pair_03-right-20260803T154529446699Z"
+      ],
+      "selected_event_ids": [
+        "native-thermal-lingbot_va_robotwin-robotwin_pair_03-left-20260803T154047932852Z",
+        "native-thermal-lingbot_va_robotwin-robotwin_pair_03-right-20260803T154047932852Z",
+        "native-thermal-lingbot_va_robotwin-robotwin_pair_03-left-20260803T154529446699Z",
+        "native-thermal-lingbot_va_robotwin-robotwin_pair_03-right-20260803T154529446699Z",
+        "manual-infrastructure-lingbot_va_robotwin-robotwin_pair_04-right-20260803T161859Z"
+      ],
+      "selected_model_event_count": 5,
+      "sha256": "a5f18736f58f4d999581d0ae3bf63caea9cc75dbebace76a82555e9124a349f4",
+      "total_event_count": 5
+    }
+  ],
+  "invalid_attempts": [
+    {
+      "behavioral_result_valid": false,
+      "classification": "partial",
+      "completed_at_utc": "2026-08-03T15:42:10.645374Z",
+      "environment_seed": 4300003,
+      "events": [
+        {
+          "event": "worker_started",
+          "timestamp_utc": "2026-08-03T15:40:47.932852Z",
+          "worker_state": "running"
+        },
+        {
+          "event": "monitor_started",
+          "timestamp_utc": "2026-08-03T15:40:47.934867Z",
+          "worker_state": "running"
+        },
+        {
+          "event": "monitor_completed",
+          "timestamp_utc": "2026-08-03T15:42:10.645374Z",
+          "worker_state": "running"
+        }
+      ],
+      "gpu_index": 0,
+      "id": "native-thermal-lingbot_va_robotwin-robotwin_pair_03-left-20260803T154047932852Z",
+      "max_temperature_c": 30,
+      "model_id": "lingbot_va_robotwin",
+      "pair_id": "robotwin_pair_03",
+      "raw_event_log": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/thermal/lingbot_pair03.jsonl",
+      "requested_relation": "left",
+      "sampling_seed": 8403,
+      "started_at_utc": "2026-08-03T15:40:47.932852Z",
+      "status": "worker_exit_nonzero",
+      "wall_latency_valid": false,
+      "worker_exit_code": 1,
+      "worker_pgid": 1527,
+      "worker_pid": 1527
+    },
+    {
+      "behavioral_result_valid": false,
+      "classification": "partial",
+      "completed_at_utc": "2026-08-03T15:42:10.645374Z",
+      "environment_seed": 4300003,
+      "events": [
+        {
+          "event": "worker_started",
+          "timestamp_utc": "2026-08-03T15:40:47.932852Z",
+          "worker_state": "running"
+        },
+        {
+          "event": "monitor_started",
+          "timestamp_utc": "2026-08-03T15:40:47.934867Z",
+          "worker_state": "running"
+        },
+        {
+          "event": "monitor_completed",
+          "timestamp_utc": "2026-08-03T15:42:10.645374Z",
+          "worker_state": "running"
+        }
+      ],
+      "gpu_index": 0,
+      "id": "native-thermal-lingbot_va_robotwin-robotwin_pair_03-right-20260803T154047932852Z",
+      "max_temperature_c": 30,
+      "model_id": "lingbot_va_robotwin",
+      "pair_id": "robotwin_pair_03",
+      "raw_event_log": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/thermal/lingbot_pair03.jsonl",
+      "requested_relation": "right",
+      "sampling_seed": 8403,
+      "started_at_utc": "2026-08-03T15:40:47.932852Z",
+      "status": "worker_exit_nonzero",
+      "wall_latency_valid": false,
+      "worker_exit_code": 1,
+      "worker_pgid": 1527,
+      "worker_pid": 1527
+    },
+    {
+      "behavioral_result_valid": false,
+      "classification": "partial",
+      "completed_at_utc": "2026-08-03T15:47:04.001684Z",
+      "environment_seed": 4300003,
+      "events": [
+        {
+          "event": "worker_started",
+          "timestamp_utc": "2026-08-03T15:45:29.446699Z",
+          "worker_state": "running"
+        },
+        {
+          "event": "monitor_started",
+          "timestamp_utc": "2026-08-03T15:45:29.448853Z",
+          "worker_state": "running"
+        },
+        {
+          "event": "monitor_completed",
+          "timestamp_utc": "2026-08-03T15:47:04.001684Z",
+          "worker_state": "running"
+        }
+      ],
+      "gpu_index": 0,
+      "id": "native-thermal-lingbot_va_robotwin-robotwin_pair_03-left-20260803T154529446699Z",
+      "max_temperature_c": 31,
+      "model_id": "lingbot_va_robotwin",
+      "pair_id": "robotwin_pair_03",
+      "raw_event_log": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/thermal/lingbot_pair03_attempt02.jsonl",
+      "requested_relation": "left",
+      "sampling_seed": 8403,
+      "started_at_utc": "2026-08-03T15:45:29.446699Z",
+      "status": "worker_exit_nonzero",
+      "wall_latency_valid": false,
+      "worker_exit_code": 1,
+      "worker_pgid": 3452,
+      "worker_pid": 3452
+    },
+    {
+      "behavioral_result_valid": false,
+      "classification": "partial",
+      "completed_at_utc": "2026-08-03T15:47:04.001684Z",
+      "environment_seed": 4300003,
+      "events": [
+        {
+          "event": "worker_started",
+          "timestamp_utc": "2026-08-03T15:45:29.446699Z",
+          "worker_state": "running"
+        },
+        {
+          "event": "monitor_started",
+          "timestamp_utc": "2026-08-03T15:45:29.448853Z",
+          "worker_state": "running"
+        },
+        {
+          "event": "monitor_completed",
+          "timestamp_utc": "2026-08-03T15:47:04.001684Z",
+          "worker_state": "running"
+        }
+      ],
+      "gpu_index": 0,
+      "id": "native-thermal-lingbot_va_robotwin-robotwin_pair_03-right-20260803T154529446699Z",
+      "max_temperature_c": 31,
+      "model_id": "lingbot_va_robotwin",
+      "pair_id": "robotwin_pair_03",
+      "raw_event_log": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/thermal/lingbot_pair03_attempt02.jsonl",
+      "requested_relation": "right",
+      "sampling_seed": 8403,
+      "started_at_utc": "2026-08-03T15:45:29.446699Z",
+      "status": "worker_exit_nonzero",
+      "wall_latency_valid": false,
+      "worker_exit_code": 1,
+      "worker_pgid": 3452,
+      "worker_pid": 3452
+    },
+    {
+      "attempted_actions_executed": 0,
+      "behavioral_result_valid": false,
+      "classification": "technical_invalid",
+      "completed_at_utc": "2026-08-03T16:32:48.603537Z",
+      "environment_seed": 4300004,
+      "events": [
+        {
+          "event": "right_worker_started",
+          "timestamp_utc": "2026-08-03T16:18:59Z",
+          "worker_state": "running"
+        },
+        {
+          "action": "terminate_exact_stalled_process_group",
+          "error": "The detached kubectl stdout consumer disappeared; the tee/guard/worker pipe filled before the RIGHT condition directory or any action was created.",
+          "event": "detached_stdout_pipe_stall_recovered",
+          "timestamp_utc": "2026-08-03T16:32:48.603537Z",
+          "worker_state": "stalled_pre_action"
+        }
+      ],
+      "gpu_index": 0,
+      "id": "manual-infrastructure-lingbot_va_robotwin-robotwin_pair_04-right-20260803T161859Z",
+      "max_temperature_c": 31,
+      "model_id": "lingbot_va_robotwin",
+      "pair_id": "robotwin_pair_04",
+      "preserved_valid_sibling_relation": "left",
+      "raw_event_log": "/data/users/ali/vla_wam/raw/lingbot_va_robotwin/directional_confirmation/thermal/lingbot_pair04_attempt01_stdout_stall.jsonl",
+      "requested_relation": "right",
+      "sampling_seed": 8404,
+      "started_at_utc": "2026-08-03T16:18:59Z",
+      "status": "detached_stdout_pipe_stall_pre_action",
+      "wall_latency_valid": false,
+      "worker_exit_code": null,
+      "worker_pgid": 10771,
+      "worker_pid": 13398
+    }
+  ],
+  "measurement": {
+    "dynamic_prompts": 0,
+    "oracle_actions": 0,
+    "simulator_state_role": "post_action_scoring_and_visualization_only"
+  },
+  "model_id": "lingbot_va_robotwin",
+  "model_label": "LingBot-VA",
+  "retained_invalid_attempt_ids": [
+    "manual-infrastructure-lingbot_va_robotwin-robotwin_pair_04-right-20260803T161859Z",
+    "native-thermal-lingbot_va_robotwin-robotwin_pair_03-left-20260803T154047932852Z",
+    "native-thermal-lingbot_va_robotwin-robotwin_pair_03-left-20260803T154529446699Z",
+    "native-thermal-lingbot_va_robotwin-robotwin_pair_03-right-20260803T154047932852Z",
+    "native-thermal-lingbot_va_robotwin-robotwin_pair_03-right-20260803T154529446699Z"
+  ],
+  "robotwin_root": "/data/users/ali/vla_wam/external/LingBot-RoboTwin",
+  "schema_version": "vla-wam-shared-v2-robotwin-prospective-slice-v1",
+  "source_directional_fixtures": {
+    "bytes": 7478,
+    "path": "artifacts/vla_wam_shared_v2/pilot/directional_fixture_validation.json",
+    "sha256": "b88cf3b1278a779c1b70338737ac234546bcf74855a102d2307993722b6e2a8d"
+  },
+  "source_registry": {
+    "bytes": 6006,
+    "path": "artifacts/vla_wam_shared_v2/pilot/directional_expansion.json",
+    "sha256": "66f392016b79de3357ff72fdc79df9a3e6f0966e7e0e2aa4f08613fd8f15ae75"
+  },
+  "summary": {
+    "aligned_endpoint_pairs": 6,
+    "by_direction": {
+      "left": {
+        "entered_requested_region": 3,
+        "episodes": 7,
+        "released_in_requested_region": 3,
+        "success_wilson_95": {
+          "confidence": 0.95,
+          "lower": 0.15821985525146975,
+          "upper": 0.7495416354723428
+        },
+        "successes": 3,
+        "verified_pickups": 7
+      },
+      "right": {
+        "entered_requested_region": 4,
+        "episodes": 7,
+        "released_in_requested_region": 4,
+        "success_wilson_95": {
+          "confidence": 0.95,
+          "lower": 0.2504583645276572,
+          "upper": 0.8417801447485302
+        },
+        "successes": 4,
+        "verified_pickups": 7
+      }
+    },
+    "episode_count": 14,
+    "failure_stage_counts": {
+      "picked_never_entered_requested_region": 7,
+      "success": 7
+    },
+    "future_interface_counts": {
+      "latent_only_future_not_decodable": 14
+    },
+    "invalid_attempt_count": 5,
+    "pair_count": 7,
+    "paired_endpoint_responses": [
+      {
+        "action_metric_unavailable_reason": null,
+        "endpoint_response_direction": "aligned",
+        "environment_seed": 4300003,
+        "first_ten_executed_action_rms": 0.0024885203675577626,
+        "first_ten_executed_action_rms_steps_used": 10,
+        "initial_state_coverage": {
+          "adapter_state_limits": [
+            "No full object or target orientation is recorded by the current adapter.",
+            "No robot joint state or end-effector pose is recorded by the current adapter.",
+            "Only aggregate grippers_open is recorded; individual gripper state is unavailable."
+          ],
+          "hash_input_initial_fields": [
+            "distance_xy",
+            "grippers_open",
+            "object_minus_target_x",
+            "object_minus_target_y",
+            "object_xyz",
+            "relation_region",
+            "success",
+            "target_xyz"
+          ],
+          "hash_input_top_level_fields": [
+            "initial"
+          ]
+        },
+        "left_final_dx_m": -0.037194035947322845,
+        "left_success": false,
+        "pair_id": "robotwin_pair_03",
+        "physical_initial_state_sha256": "b8331d6ed70bf32a606cec8728638c79b8de945d49e5008f21cbe8a7050a8e99",
+        "right_final_dx_m": 0.13191236555576324,
+        "right_minus_left_endpoint_dx_m": 0.1691064015030861,
+        "right_success": true
+      },
+      {
+        "action_metric_unavailable_reason": null,
+        "endpoint_response_direction": "aligned",
+        "environment_seed": 4300004,
+        "first_ten_executed_action_rms": 0.0005993643884543678,
+        "first_ten_executed_action_rms_steps_used": 10,
+        "initial_state_coverage": {
+          "adapter_state_limits": [
+            "No full object or target orientation is recorded by the current adapter.",
+            "No robot joint state or end-effector pose is recorded by the current adapter.",
+            "Only aggregate grippers_open is recorded; individual gripper state is unavailable."
+          ],
+          "hash_input_initial_fields": [
+            "distance_xy",
+            "grippers_open",
+            "object_minus_target_x",
+            "object_minus_target_y",
+            "object_xyz",
+            "relation_region",
+            "success",
+            "target_xyz"
+          ],
+          "hash_input_top_level_fields": [
+            "initial"
+          ]
+        },
+        "left_final_dx_m": -0.11070992052555084,
+        "left_success": true,
+        "pair_id": "robotwin_pair_04",
+        "physical_initial_state_sha256": "55968d16e738a0ca2c7e9fa75023e0cfbede614a53fdce042c3ffe50072189c5",
+        "right_final_dx_m": 0.06812755204737186,
+        "right_minus_left_endpoint_dx_m": 0.1788374725729227,
+        "right_success": false
+      },
+      {
+        "action_metric_unavailable_reason": null,
+        "endpoint_response_direction": "aligned",
+        "environment_seed": 4300005,
+        "first_ten_executed_action_rms": 0.0004546946476426057,
+        "first_ten_executed_action_rms_steps_used": 10,
+        "initial_state_coverage": {
+          "adapter_state_limits": [
+            "No full object or target orientation is recorded by the current adapter.",
+            "No robot joint state or end-effector pose is recorded by the current adapter.",
+            "Only aggregate grippers_open is recorded; individual gripper state is unavailable."
+          ],
+          "hash_input_initial_fields": [
+            "distance_xy",
+            "grippers_open",
+            "object_minus_target_x",
+            "object_minus_target_y",
+            "object_xyz",
+            "relation_region",
+            "success",
+            "target_xyz"
+          ],
+          "hash_input_top_level_fields": [
+            "initial"
+          ]
+        },
+        "left_final_dx_m": 0.08901546150445938,
+        "left_success": false,
+        "pair_id": "robotwin_pair_05",
+        "physical_initial_state_sha256": "5b60598fdeac31b4cf802d4e1b528ebd1ffd143c61f59912e40b5414b67ac505",
+        "right_final_dx_m": 0.15270116925239563,
+        "right_minus_left_endpoint_dx_m": 0.06368570774793625,
+        "right_success": true
+      },
+      {
+        "action_metric_unavailable_reason": null,
+        "endpoint_response_direction": "aligned",
+        "environment_seed": 4300006,
+        "first_ten_executed_action_rms": 0.002692080186894529,
+        "first_ten_executed_action_rms_steps_used": 10,
+        "initial_state_coverage": {
+          "adapter_state_limits": [
+            "No full object or target orientation is recorded by the current adapter.",
+            "No robot joint state or end-effector pose is recorded by the current adapter.",
+            "Only aggregate grippers_open is recorded; individual gripper state is unavailable."
+          ],
+          "hash_input_initial_fields": [
+            "distance_xy",
+            "grippers_open",
+            "object_minus_target_x",
+            "object_minus_target_y",
+            "object_xyz",
+            "relation_region",
+            "success",
+            "target_xyz"
+          ],
+          "hash_input_top_level_fields": [
+            "initial"
+          ]
+        },
+        "left_final_dx_m": -0.14130160957574844,
+        "left_success": true,
+        "pair_id": "robotwin_pair_06",
+        "physical_initial_state_sha256": "29e54d3354180802225e5002b0c18db1c12b33f1565cbc889bde86ad674ace42",
+        "right_final_dx_m": -0.07178466022014618,
+        "right_minus_left_endpoint_dx_m": 0.06951694935560226,
+        "right_success": false
+      },
+      {
+        "action_metric_unavailable_reason": null,
+        "endpoint_response_direction": "aligned",
+        "environment_seed": 4300007,
+        "first_ten_executed_action_rms": 0.00045800609667429043,
+        "first_ten_executed_action_rms_steps_used": 10,
+        "initial_state_coverage": {
+          "adapter_state_limits": [
+            "No full object or target orientation is recorded by the current adapter.",
+            "No robot joint state or end-effector pose is recorded by the current adapter.",
+            "Only aggregate grippers_open is recorded; individual gripper state is unavailable."
+          ],
+          "hash_input_initial_fields": [
+            "distance_xy",
+            "grippers_open",
+            "object_minus_target_x",
+            "object_minus_target_y",
+            "object_xyz",
+            "relation_region",
+            "success",
+            "target_xyz"
+          ],
+          "hash_input_top_level_fields": [
+            "initial"
+          ]
+        },
+        "left_final_dx_m": 0.08615197613835335,
+        "left_success": false,
+        "pair_id": "robotwin_pair_07",
+        "physical_initial_state_sha256": "c7ef8a07f6ffb7e853b6e9d47e6a89afeecda3229850b5f0618c12a2d8c3bfc3",
+        "right_final_dx_m": 0.12736405432224274,
+        "right_minus_left_endpoint_dx_m": 0.04121207818388939,
+        "right_success": true
+      },
+      {
+        "action_metric_unavailable_reason": null,
+        "endpoint_response_direction": "aligned",
+        "environment_seed": 4300008,
+        "first_ten_executed_action_rms": 0.0005493221147264073,
+        "first_ten_executed_action_rms_steps_used": 10,
+        "initial_state_coverage": {
+          "adapter_state_limits": [
+            "No full object or target orientation is recorded by the current adapter.",
+            "No robot joint state or end-effector pose is recorded by the current adapter.",
+            "Only aggregate grippers_open is recorded; individual gripper state is unavailable."
+          ],
+          "hash_input_initial_fields": [
+            "distance_xy",
+            "grippers_open",
+            "object_minus_target_x",
+            "object_minus_target_y",
+            "object_xyz",
+            "relation_region",
+            "success",
+            "target_xyz"
+          ],
+          "hash_input_top_level_fields": [
+            "initial"
+          ]
+        },
+        "left_final_dx_m": -0.13582899421453476,
+        "left_success": true,
+        "pair_id": "robotwin_pair_08",
+        "physical_initial_state_sha256": "2466e3ccaffaa3d98303c9fa0d0711600cf581256eabff6faa1fb396567d4194",
+        "right_final_dx_m": -0.11329678446054459,
+        "right_minus_left_endpoint_dx_m": 0.022532209753990173,
+        "right_success": false
+      },
+      {
+        "action_metric_unavailable_reason": null,
+        "endpoint_response_direction": "anti_directed",
+        "environment_seed": 4300009,
+        "first_ten_executed_action_rms": 0.0005084853798107165,
+        "first_ten_executed_action_rms_steps_used": 10,
+        "initial_state_coverage": {
+          "adapter_state_limits": [
+            "No full object or target orientation is recorded by the current adapter.",
+            "No robot joint state or end-effector pose is recorded by the current adapter.",
+            "Only aggregate grippers_open is recorded; individual gripper state is unavailable."
+          ],
+          "hash_input_initial_fields": [
+            "distance_xy",
+            "grippers_open",
+            "object_minus_target_x",
+            "object_minus_target_y",
+            "object_xyz",
+            "relation_region",
+            "success",
+            "target_xyz"
+          ],
+          "hash_input_top_level_fields": [
+            "initial"
+          ]
+        },
+        "left_final_dx_m": 0.16242416203022003,
+        "left_success": false,
+        "pair_id": "robotwin_pair_09",
+        "physical_initial_state_sha256": "89738321d696fd6c0fac254a9150184b1f79332c2d5dfcc927acf0a3e6aad6ab",
+        "right_final_dx_m": 0.15151115134358406,
+        "right_minus_left_endpoint_dx_m": -0.010913010686635971,
+        "right_success": true
+      }
+    ],
+    "successes": 7
+  }
+}

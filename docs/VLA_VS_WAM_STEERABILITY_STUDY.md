@@ -181,6 +181,40 @@ The first predicted latent is retained for every pilot cell, but this release
 does not yet provide a publication-ready decoder under the measured path, so
 the clip does not pretend that the latent is an inspectable video.
 
+## Update: the 42-episode WAM expansion is complete
+
+The frozen pairs03–09 expansion is now complete for all three RoboTwin WAMs.
+These are direct-command episodes only: the prompt stays static for the whole
+rollout, no oracle or progress-conditioned language is used, and every valid
+episode retains simulator video and an executed-action trace.
+
+![Requested-direction successes, endpoint ordering, and paired action response across the completed three-WAM pairs03–09 expansion.](../artifacts/vla_wam_shared_v2/figures/robotwin_wam_confirmation_pairs03_09_1600x900.png)
+
+| Checkpoint | LEFT success | RIGHT success | Total | Aligned endpoint pairs | Distinct paired traces |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Efficient-WAM-RT | 3/7 | 2/7 | 5/14 | 6/7 | 7/7 |
+| FastWAM | 1/7 | 1/7 | 2/14 | 3/7 | 7/7 |
+| LingBot-VA | 3/7 | 4/7 | 7/14 | 6/7 | 7/7 |
+
+The additional scenes soften the pilot's apparent universal LEFT bias.
+LingBot-VA alternates which direction succeeds across six aligned pairs and
+reaches near-parity across requested directions (3/7 LEFT, 4/7 RIGHT).
+Efficient-WAM-RT and LingBot-VA usually move the final
+endpoint in the requested LEFT-to-RIGHT order even when one condition fails the
+full release checker. FastWAM changes its actions under every mirrored prompt,
+but only three of seven endpoint pairs move in the requested order. Language
+sensitivity in the action trace is therefore not, by itself, reliable physical
+steering.
+
+The denominators above contain only valid behavioral episodes. Twenty-seven
+infrastructure-invalid cell attempts (4 Efficient-WAM-RT, 18 FastWAM, 5
+LingBot-VA) are retained separately, and no valid expansion episode incurred a
+runtime intervention. The frozen twenty-episode compilers still fail closed
+because historical pilot pairs00–02 raw files are not present on the work-laptop
+PVC. These pairs03–09 slices are hash-bearing evidence, not ten-scene
+confirmation claims. No wording sweep, GR00T, LingBot-VLA, or new Cosmos run
+was started under this boundary.
+
 ## Update: π0-FAST responds—and exposes the opposite directional bias
 
 π0-FAST is the first new v2 VLA through the exact DROID direct-command gate.

@@ -1,0 +1,188 @@
+{
+  "calibration": "/home/ali/projects/steerable/artifacts/vla_wam_shared_v1/semantic_future_calibration.json",
+  "calibration_sha256": "56b7155fdb2eee1732e7636a104b2966323fcfc947c699cf3ac58635b232ace9",
+  "conditions": 11,
+  "conditions_with_predicted_relation": 11,
+  "probe_manifest": "/home/ali/projects/steerable/artifacts/vla_wam_shared_v1/command_probe/direct_task_cosmos/manifest.json",
+  "probe_manifest_sha256": "eb0ca0c2fc429b3001712f6b1bd45f4b164319ebd3bf8dac3f7578f21a0e278e",
+  "rows": [
+    {
+      "condition": "task_left",
+      "imagined_requested": false,
+      "predicted_relation": "neutral",
+      "prompt": "Put the rubiks cube to the left of the bowl",
+      "relation_counts": {
+        "left": 0,
+        "neutral": 4,
+        "right": 0
+      },
+      "reliable_future_frames": 4,
+      "requested_relation": "left",
+      "semantic_applicable": true,
+      "semantic_target": "cube_relative_to_bowl",
+      "style": "task"
+    },
+    {
+      "condition": "task_left_repeat",
+      "imagined_requested": false,
+      "predicted_relation": "neutral",
+      "prompt": "Put the rubiks cube to the left of the bowl",
+      "relation_counts": {
+        "left": 0,
+        "neutral": 4,
+        "right": 0
+      },
+      "reliable_future_frames": 4,
+      "requested_relation": "left",
+      "semantic_applicable": true,
+      "semantic_target": "cube_relative_to_bowl",
+      "style": "exact_repeat_control"
+    },
+    {
+      "condition": "task_right",
+      "imagined_requested": false,
+      "predicted_relation": "neutral",
+      "prompt": "Put the rubiks cube to the right of the bowl",
+      "relation_counts": {
+        "left": 0,
+        "neutral": 3,
+        "right": 0
+      },
+      "reliable_future_frames": 3,
+      "requested_relation": "right",
+      "semantic_applicable": true,
+      "semantic_target": "cube_relative_to_bowl",
+      "style": "opposite_relation_control"
+    },
+    {
+      "condition": "short_left",
+      "imagined_requested": false,
+      "predicted_relation": "neutral",
+      "prompt": "Put the cube left of the bowl",
+      "relation_counts": {
+        "left": 0,
+        "neutral": 4,
+        "right": 0
+      },
+      "reliable_future_frames": 4,
+      "requested_relation": "left",
+      "semantic_applicable": true,
+      "semantic_target": "cube_relative_to_bowl",
+      "style": "paraphrase_control"
+    },
+    {
+      "condition": "short_right",
+      "imagined_requested": false,
+      "predicted_relation": "neutral",
+      "prompt": "Put the cube right of the bowl",
+      "relation_counts": {
+        "left": 0,
+        "neutral": 4,
+        "right": 0
+      },
+      "reliable_future_frames": 4,
+      "requested_relation": "right",
+      "semantic_applicable": true,
+      "semantic_target": "cube_relative_to_bowl",
+      "style": "paraphrase_control"
+    },
+    {
+      "condition": "declarative_left",
+      "imagined_requested": false,
+      "predicted_relation": "neutral",
+      "prompt": "The rubiks cube should end up to the left of the bowl",
+      "relation_counts": {
+        "left": 0,
+        "neutral": 4,
+        "right": 0
+      },
+      "reliable_future_frames": 4,
+      "requested_relation": "left",
+      "semantic_applicable": true,
+      "semantic_target": "cube_relative_to_bowl",
+      "style": "paraphrase_control"
+    },
+    {
+      "condition": "declarative_right",
+      "imagined_requested": false,
+      "predicted_relation": "neutral",
+      "prompt": "The rubiks cube should end up to the right of the bowl",
+      "relation_counts": {
+        "left": 0,
+        "neutral": 4,
+        "right": 0
+      },
+      "reliable_future_frames": 4,
+      "requested_relation": "right",
+      "semantic_applicable": true,
+      "semantic_target": "cube_relative_to_bowl",
+      "style": "paraphrase_control"
+    },
+    {
+      "condition": "contrastive_first_left",
+      "imagined_requested": false,
+      "predicted_relation": "neutral",
+      "prompt": "Put the rubiks cube to the left of the bowl, not to the right of the bowl",
+      "relation_counts": {
+        "left": 0,
+        "neutral": 4,
+        "right": 0
+      },
+      "reliable_future_frames": 4,
+      "requested_relation": "left",
+      "semantic_applicable": true,
+      "semantic_target": "cube_relative_to_bowl",
+      "style": "contrastive_task"
+    },
+    {
+      "condition": "contrastive_first_right",
+      "imagined_requested": false,
+      "predicted_relation": "neutral",
+      "prompt": "Put the rubiks cube to the right of the bowl, not to the left of the bowl",
+      "relation_counts": {
+        "left": 0,
+        "neutral": 4,
+        "right": 0
+      },
+      "reliable_future_frames": 4,
+      "requested_relation": "right",
+      "semantic_applicable": true,
+      "semantic_target": "cube_relative_to_bowl",
+      "style": "contrastive_task"
+    },
+    {
+      "condition": "contrastive_last_left",
+      "imagined_requested": false,
+      "predicted_relation": "neutral",
+      "prompt": "Do not put the rubiks cube to the right of the bowl; put it to the left of the bowl",
+      "relation_counts": {
+        "left": 0,
+        "neutral": 4,
+        "right": 0
+      },
+      "reliable_future_frames": 4,
+      "requested_relation": "left",
+      "semantic_applicable": true,
+      "semantic_target": "cube_relative_to_bowl",
+      "style": "contrastive_task"
+    },
+    {
+      "condition": "contrastive_last_right",
+      "imagined_requested": false,
+      "predicted_relation": "neutral",
+      "prompt": "Do not put the rubiks cube to the left of the bowl; put it to the right of the bowl",
+      "relation_counts": {
+        "left": 0,
+        "neutral": 4,
+        "right": 0
+      },
+      "reliable_future_frames": 4,
+      "requested_relation": "right",
+      "semantic_applicable": true,
+      "semantic_target": "cube_relative_to_bowl",
+      "style": "contrastive_task"
+    }
+  ],
+  "schema_version": 1,
+  "status": "fixed_observation_secondary_diagnostic"
+}

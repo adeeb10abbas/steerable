@@ -676,6 +676,10 @@ def _semantic_threshold_sensitivity(
                 )
         for (wording, direction), pairs in sorted(grouped.items()):
             certain = [pair for pair in pairs if pair[0] is not None]
+            agreement_count = sum(pair[0] == pair[1] for pair in certain)
+            imagined_requested_count = sum(bool(pair[0]) for pair in certain)
+            executed_requested_count = sum(bool(pair[1]) for pair in certain)
+            executed_requested_all = sum(bool(pair[1]) for pair in pairs)
             output.append(
                 {
                     "cross_camera_threshold_m": threshold_m,
@@ -684,13 +688,22 @@ def _semantic_threshold_sensitivity(
                     "chunks": len(pairs),
                     "certain_chunks": len(certain),
                     "coverage_fraction": len(certain) / len(pairs),
+                    "imagined_requested_count_among_certain": imagined_requested_count,
                     "imagined_requested_rate_among_certain": (
-                        sum(bool(pair[0]) for pair in certain) / len(certain)
+                        imagined_requested_count / len(certain)
                         if certain
                         else None
                     ),
+                    "executed_requested_count_among_certain": executed_requested_count,
+                    "executed_requested_count_all": executed_requested_all,
+                    "executed_positive_future_coverage_fraction": (
+                        executed_requested_count / executed_requested_all
+                        if executed_requested_all
+                        else None
+                    ),
+                    "imagination_execution_agreement_count_among_certain": agreement_count,
                     "imagination_execution_agreement_among_certain": (
-                        sum(pair[0] == pair[1] for pair in certain) / len(certain)
+                        agreement_count / len(certain)
                         if certain
                         else None
                     ),
@@ -785,12 +798,106 @@ def _semantic_aggregate(summaries: list[tuple[str, Path, dict[str, Any]]]) -> di
                 "terminal_quadrant": last["quadrant"],
             }
         )
+    certain_rows = [row for row in all_rows if row["imagined_requested"] is not None]
+    quadrant_counts = Counter(row["quadrant"] for row in all_rows)
+    true_positive = quadrant_counts["imagines_requested_executes_requested"]
+    false_positive = quadrant_counts[
+        "imagines_requested_executes_not_requested"
+    ]
+    false_negative = quadrant_counts[
+        "does_not_imagine_requested_executes_requested"
+    ]
+    true_negative = quadrant_counts["neither_imagines_nor_executes_requested"]
+    executed_positive_all = sum(bool(row["executed_requested"]) for row in all_rows)
+    executed_positive_certain = true_positive + false_negative
+    overall = {
+        "chunks": len(all_rows),
+        "certain_chunks": len(certain_rows),
+        "uncertain_chunks": len(all_rows) - len(certain_rows),
+        "coverage_fraction": len(certain_rows) / len(all_rows),
+        "quadrant_counts": dict(quadrant_counts),
+        "imagination_execution_agreement_among_certain": (
+            (true_positive + true_negative) / len(certain_rows)
+            if certain_rows
+            else None
+        ),
+        "imagined_positive_precision_for_execution_among_certain": (
+            true_positive / (true_positive + false_positive)
+            if true_positive + false_positive
+            else None
+        ),
+        "imagined_positive_recall_of_executed_positive_among_certain": (
+            true_positive / executed_positive_certain
+            if executed_positive_certain
+            else None
+        ),
+        "executed_positive_chunks_all": executed_positive_all,
+        "executed_positive_chunks_with_certain_future": executed_positive_certain,
+        "executed_positive_chunks_with_uncertain_future": (
+            executed_positive_all - executed_positive_certain
+        ),
+        "executed_positive_future_coverage_fraction": (
+            executed_positive_certain / executed_positive_all
+            if executed_positive_all
+            else None
+        ),
+        "episodes": len(episode_summaries),
+        "episodes_without_any_certain_chunk": sum(
+            row["certain_chunks"] == 0 for row in episode_summaries
+        ),
+        "episodes_with_any_imagined_requested": sum(
+            row["any_imagined_requested"] is True for row in episode_summaries
+        ),
+        "episodes_with_any_executed_requested": sum(
+            row["any_executed_requested"] for row in episode_summaries
+        ),
+    }
+    threshold_sensitivity = _semantic_threshold_sensitivity(summaries)
+    threshold_sensitivity_overall = []
+    for threshold_m in (0.10, 0.15, 0.20):
+        threshold_rows = [
+            row
+            for row in threshold_sensitivity
+            if math.isclose(row["cross_camera_threshold_m"], threshold_m)
+        ]
+        chunks = sum(row["chunks"] for row in threshold_rows)
+        certain_chunks = sum(row["certain_chunks"] for row in threshold_rows)
+        agreement_count = sum(
+            row["imagination_execution_agreement_count_among_certain"]
+            for row in threshold_rows
+        )
+        executed_requested_all = sum(
+            row["executed_requested_count_all"] for row in threshold_rows
+        )
+        executed_requested_certain = sum(
+            row["executed_requested_count_among_certain"] for row in threshold_rows
+        )
+        threshold_sensitivity_overall.append(
+            {
+                "cross_camera_threshold_m": threshold_m,
+                "chunks": chunks,
+                "certain_chunks": certain_chunks,
+                "coverage_fraction": certain_chunks / chunks,
+                "imagination_execution_agreement_among_certain": (
+                    agreement_count / certain_chunks if certain_chunks else None
+                ),
+                "executed_requested_count_all": executed_requested_all,
+                "executed_requested_count_among_certain": executed_requested_certain,
+                "executed_positive_future_coverage_fraction": (
+                    executed_requested_certain / executed_requested_all
+                    if executed_requested_all
+                    else None
+                ),
+            }
+        )
     return {
         "input_summaries": input_summaries,
         "total_chunks": len(all_rows),
         "total_episodes": len({(row["task_dir"], row["episode_index"]) for row in all_rows}),
         "guardrail": "Chunk rates are descriptive and receive no binomial interval because replans within an episode are correlated.",
-        "threshold_sensitivity": _semantic_threshold_sensitivity(summaries),
+        "threshold_sensitivity": threshold_sensitivity,
+        "threshold_sensitivity_overall": threshold_sensitivity_overall,
+        "overall": overall,
         "groups": grouped,
         "episode_summaries": episode_summaries,
         "rows": all_rows,
@@ -1375,7 +1482,8 @@ def _plot_observation_variation(audit: dict[str, Any], output: Path) -> None:
 
 def _plot_semantic_threshold_sensitivity(semantic: dict[str, Any], output: Path) -> None:
     rows = semantic["threshold_sensitivity"]
-    fig, axes = plt.subplots(1, 2, figsize=(9.5, 4.0), sharex=True, sharey=True)
+    overall = semantic["threshold_sensitivity_overall"]
+    fig, axes = plt.subplots(1, 3, figsize=(13.2, 4.2), sharex=True, sharey=True)
     groups = sorted({(row["wording"], row["direction"]) for row in rows})
     colors = {"left": "#6a51a3", "right": "#d95f0e"}
     styles = {
@@ -1391,36 +1499,78 @@ def _plot_semantic_threshold_sensitivity(semantic: dict[str, Any], output: Path)
         )
         label = f"{WORDING_LABELS[wording]} {direction}"
         x = [row["cross_camera_threshold_m"] for row in selected]
-        axes[0].plot(
-            x,
+        series = (
             [row["coverage_fraction"] for row in selected],
-            marker="o",
-            color=colors[direction],
-            linestyle=styles[wording],
-            label=label,
-        )
-        axes[1].plot(
-            x,
+            [
+                row["executed_positive_future_coverage_fraction"]
+                if row["executed_positive_future_coverage_fraction"] is not None
+                else np.nan
+                for row in selected
+            ],
             [
                 row["imagination_execution_agreement_among_certain"]
                 if row["imagination_execution_agreement_among_certain"] is not None
                 else np.nan
                 for row in selected
             ],
-            marker="o",
-            color=colors[direction],
-            linestyle=styles[wording],
-            label=label,
         )
-    for axis, title in zip(axes, ("Coverage", "Agreement among scored chunks")):
+        for axis, values in zip(axes, series):
+            axis.plot(
+                x,
+                values,
+                marker="o",
+                markersize=3.5,
+                linewidth=1.1,
+                alpha=0.55,
+                color=colors[direction],
+                linestyle=styles[wording],
+                label=label,
+            )
+    overall_x = [row["cross_camera_threshold_m"] for row in overall]
+    overall_series = (
+        [row["coverage_fraction"] for row in overall],
+        [row["executed_positive_future_coverage_fraction"] for row in overall],
+        [row["imagination_execution_agreement_among_certain"] for row in overall],
+    )
+    for axis, values in zip(axes, overall_series):
+        axis.plot(
+            overall_x,
+            values,
+            marker="o",
+            markersize=5,
+            linewidth=2.5,
+            color="#17222f",
+            label="all conditions",
+            zorder=10,
+        )
+        axis.annotate(
+            f"{values[-1]:.0%}",
+            xy=(overall_x[-1], values[-1]),
+            xytext=(-6, -16),
+            textcoords="offset points",
+            ha="right",
+            color="#17222f",
+            fontsize=9,
+            fontweight="bold",
+        )
+    titles = (
+        "All-chunk coverage",
+        "Coverage when execution\nreached the requested relation",
+        "Agreement among\nscored chunks",
+    )
+    for axis, title in zip(axes, titles):
         axis.set_title(title)
         axis.set_xlabel("Cross-camera disagreement threshold (m)")
         axis.set_ylim(0, 1.05)
         axis.grid(alpha=0.2)
+        axis.axvline(0.20, color="#8a8f98", linewidth=0.9, linestyle=":")
     axes[0].set_ylabel("Fraction")
-    axes[1].legend(frameon=False, fontsize=8)
-    fig.suptitle("Frozen semantic-future scorer sensitivity (labels unchanged at 0.20 m)")
-    fig.tight_layout()
+    handles, labels = axes[-1].get_legend_handles_labels()
+    fig.legend(handles, labels, frameon=False, fontsize=8, ncol=5, loc="lower center")
+    fig.suptitle(
+        "Tighter cross-camera agreement sharply reduces usable semantic coverage"
+    )
+    fig.tight_layout(rect=(0, 0.16, 1, 0.96))
     fig.savefig(output / "semantic_threshold_sensitivity.png", bbox_inches="tight")
     plt.close(fig)
 
@@ -1653,6 +1803,7 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         f"- Fixed-observation probe conditions: **{len(probes['pi05']['manifest']['records'])} per model**.",
         f"- Exact direct-task prompt conditions: **{len(direct_probe['pi05']['manifest']['records'])}/{EXPECTED_DIRECT_TASK_PROBE_CONDITIONS} per model**.",
         f"- Cosmos semantically scored confirmation chunks: **{semantic['total_chunks']}** across **{semantic['total_episodes']} episodes**.",
+        f"- Prompt-blind semantic scorer coverage: **{semantic['overall']['certain_chunks']}/{semantic['overall']['chunks']} chunks**; every abstention remains explicit.",
         f"- Frozen-order semantic categories rendered: **{semantic_visuals['observed_category_count']}/5 observed**; absent categories remain explicit empty panels.",
         f"- Cosmos recorded prediction chunks with verified request/server seeds, step alignment, and shapes: **{compiled['integrity']['cosmos_prediction_chunks_validated']}**.",
         f"- Completed thermal-guard lifecycles without emergency stop: **{compiled['integrity']['thermal_guard_logs_verified']}/{len(EXPECTED_THERMAL_LOGS)}**.",
@@ -1685,6 +1836,8 @@ def _evidence_markdown(compiled: dict[str, Any], root: Path) -> str:
         "| Renderer variation audit | `cosmos_observation_variation.csv` | First-conditioning-image differences within and across static conditions |",
         "| Physical settling audit | `initial_physical_variation.csv` | Reset-state identity versus first-recorded cube/bowl centroid differences |",
         "| Human semantic audit | `../semantic_confirmation_audit_plan.json`, `../semantic_confirmation_audit_amendment_002.json`, and `../semantic_confirmation_audit.md` | Outcome-independent sheet samples and completed visual review |",
+        "| Publication article | `../../../docs/VLA_VS_WAM_STEERABILITY_STUDY.md` | Long-form interpretation with complete claim boundaries and visual evidence |",
+        "| Social launch kit | `../../../docs/VLA_WAM_STEERABILITY_SOCIAL_COPY.md` | Post-ready X/LinkedIn copy, carousel order, alt text, and claim guardrails |",
         "| Command probes | `compiled_evidence.json` | Exact repeat, command sensitivity, semantic futures |",
         "| GPU assignment audit | `../cosmos_gpu_assignment_audit.json` | Quantifies why cross-card Cosmos output was excluded |",
         "| Cosmos resource snapshot | `../operational_snapshot_cosmos_confirmation.json` | Temperatures, memory, utilization, and physical GPU roles during a valid WAM request |",
@@ -1769,6 +1922,13 @@ def main() -> None:
             raise RuntimeError(
                 f"Publication draft is missing required claim boundary: {required_boundary!r}"
             )
+    social_copy_path = workspace / "docs/VLA_WAM_STEERABILITY_SOCIAL_COPY.md"
+    social_copy_text = social_copy_path.read_text()
+    if "TBD" in social_copy_text:
+        raise RuntimeError(
+            "Social launch kit still contains TBD markers; resolve every public claim "
+            "from the closed evidence before final compilation"
+        )
     run_manifest = _load(root / "run_manifest.json")
     if int(run_manifest["expected_episode_count"]) != EXPECTED_EPISODES:
         raise RuntimeError("Run-manifest episode count disagrees with the study compiler")
@@ -1970,6 +2130,7 @@ def main() -> None:
         workspace / "docs/PAPER_PROTOCOL_ALIGNMENT.md",
         workspace / "docs/VLA_WAM_LOCAL_RUNBOOK.md",
         workspace / "docs/VLA_VS_WAM_STEERABILITY_STUDY.md",
+        workspace / "docs/VLA_WAM_STEERABILITY_SOCIAL_COPY.md",
         workspace / "tools/compile_vla_wam_evidence.py",
         workspace / "tools/compile_vla_wam_study.py",
         workspace / "tools/compare_command_probe_hardware.py",
@@ -2078,6 +2239,10 @@ def main() -> None:
     _write_summary_csv(
         output / "semantic_threshold_sensitivity.csv",
         semantic["threshold_sensitivity"],
+    )
+    _write_summary_csv(
+        output / "semantic_threshold_sensitivity_overall.csv",
+        semantic["threshold_sensitivity_overall"],
     )
     _write_summary_csv(output / "paired_diagnostics.csv", compiled["prospective"]["paired_diagnostics"])
     (output / "EVIDENCE_INDEX.md").write_text(_evidence_markdown(compiled, root))

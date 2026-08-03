@@ -1,0 +1,280 @@
+{
+  "calibration_sha256": "56b7155fdb2eee1732e7636a104b2966323fcfc947c699cf3ac58635b232ace9",
+  "frame_indices": [
+    8,
+    16,
+    24,
+    32
+  ],
+  "frames": [
+    {
+      "frame_index": 8,
+      "localization": {
+        "left_camera": {
+          "bowl_center": [
+            500.0,
+            340.0
+          ],
+          "cube_center": [
+            570.0,
+            340.0
+          ],
+          "latency_s": 0.43461568700149655,
+          "parse_ok": true,
+          "raw": "```json\n{\n  \"cube_center\": [0.57, 0.34],\n  \"bowl_center\": [0.5, 0.34]\n}\n```"
+        },
+        "right_camera": {
+          "bowl_center": [
+            300.0,
+            441.0
+          ],
+          "cube_center": [
+            298.0,
+            581.0
+          ],
+          "latency_s": 0.3475357500137761,
+          "parse_ok": true,
+          "raw": "```json\n{\"cube_center\":[298, 581], \"bowl_center\":[300, 441]}\n```"
+        }
+      },
+      "semantics": {
+        "cross_camera_disagreement_m": {
+          "bowl": 0.7189508729795638,
+          "cube": 0.693120439771621
+        },
+        "reasons": [
+          "cube_cross_camera_disagreement",
+          "bowl_cross_camera_disagreement"
+        ],
+        "relation": null,
+        "relations_by_camera": {
+          "left_camera": "right",
+          "right_camera": "right"
+        },
+        "reliable": false,
+        "world_xy_by_camera": {
+          "left_camera": {
+            "bowl": [
+              0.9324438521913142,
+              -0.23855574163858362
+            ],
+            "cube": [
+              0.7890081799817207,
+              -0.42232168317059493
+            ]
+          },
+          "right_camera": {
+            "bowl": [
+              0.42908806292838053,
+              0.27478947083891303
+            ],
+            "cube": [
+              0.268821721926642,
+              0.03574162346432541
+            ]
+          }
+        }
+      }
+    },
+    {
+      "frame_index": 16,
+      "localization": {
+        "left_camera": {
+          "bowl_center": [
+            510.0,
+            550.0
+          ],
+          "cube_center": [
+            520.0,
+            550.0
+          ],
+          "latency_s": 0.34876623505260795,
+          "parse_ok": true,
+          "raw": "```json\n{\"cube_center\":[520, 550], \"bowl_center\":[510, 550]}\n```"
+        },
+        "right_camera": {
+          "bowl_center": [
+            314.0,
+            488.0
+          ],
+          "cube_center": [
+            314.0,
+            488.0
+          ],
+          "latency_s": 0.3479401310905814,
+          "parse_ok": true,
+          "raw": "```json\n{\"cube_center\":[314, 488], \"bowl_center\":[314, 488]}\n```"
+        }
+      },
+      "semantics": {
+        "cross_camera_disagreement_m": {
+          "bowl": 0.10541107970761196,
+          "cube": 0.09982509163561133
+        },
+        "reasons": [
+          "camera_relation_disagreement"
+        ],
+        "relation": null,
+        "relations_by_camera": {
+          "left_camera": "right",
+          "right_camera": "neutral"
+        },
+        "reliable": false,
+        "world_xy_by_camera": {
+          "left_camera": {
+            "bowl": [
+              0.4881298361310796,
+              0.12264087142108776
+            ],
+            "cube": [
+              0.474816769691222,
+              0.10557288257376263
+            ]
+          },
+          "right_camera": {
+            "bowl": [
+              0.3874484059415123,
+              0.15386178332493539
+            ],
+            "cube": [
+              0.3874484059415123,
+              0.15386178332493539
+            ]
+          }
+        }
+      }
+    },
+    {
+      "frame_index": 24,
+      "localization": {
+        "left_camera": {
+          "bowl_center": [
+            500.0,
+            580.0
+          ],
+          "cube_center": [
+            571.0,
+            600.0
+          ],
+          "latency_s": 0.34692578099202365,
+          "parse_ok": true,
+          "raw": "```json\n{\"cube_center\":[571, 600], \"bowl_center\":[500, 580]}\n```"
+        },
+        "right_camera": {
+          "bowl_center": [
+            341.0,
+            450.0
+          ],
+          "cube_center": [
+            341.0,
+            450.0
+          ],
+          "latency_s": 0.3478125099791214,
+          "parse_ok": true,
+          "raw": "```json\n{\"cube_center\":[341, 450], \"bowl_center\":[341, 450]}\n```"
+        }
+      },
+      "semantics": {
+        "cross_camera_disagreement_m": {
+          "bowl": 0.016714819714215085,
+          "cube": 0.15704815507836806
+        },
+        "reasons": [],
+        "relation": "neutral",
+        "relations_by_camera": {
+          "left_camera": "neutral",
+          "right_camera": "neutral"
+        },
+        "reliable": true,
+        "world_xy_by_camera": {
+          "left_camera": {
+            "bowl": [
+              0.46333333278762334,
+              0.17315620852534447
+            ],
+            "cube": [
+              0.3526404349484883,
+              0.0818803217600313
+            ]
+          },
+          "right_camera": {
+            "bowl": [
+              0.48003877712261434,
+              0.17371596530219546
+            ],
+            "cube": [
+              0.48003877712261434,
+              0.17371596530219546
+            ]
+          }
+        }
+      }
+    },
+    {
+      "frame_index": 32,
+      "localization": {
+        "left_camera": {
+          "bowl_center": [
+            520.0,
+            620.0
+          ],
+          "cube_center": [
+            520.0,
+            571.0
+          ],
+          "latency_s": 0.34652713092509657,
+          "parse_ok": true,
+          "raw": "```json\n{\"cube_center\":[520, 571], \"bowl_center\":[520, 620]}\n```"
+        },
+        "right_camera": {
+          "bowl_center": [
+            370.0,
+            444.0
+          ],
+          "cube_center": [
+            370.0,
+            444.0
+          ],
+          "latency_s": 0.34832972299773246,
+          "parse_ok": true,
+          "raw": "```json\n{\"cube_center\":[370, 444], \"bowl_center\":[370, 444]}\n```"
+        }
+      },
+      "semantics": {
+        "cross_camera_disagreement_m": {
+          "bowl": 0.1512371247944285,
+          "cube": 0.08620227408033347
+        },
+        "reasons": [],
+        "relation": "neutral",
+        "relations_by_camera": {
+          "left_camera": "neutral",
+          "right_camera": "neutral"
+        },
+        "reliable": true,
+        "world_xy_by_camera": {
+          "left_camera": {
+            "bowl": [
+              0.3939880666624833,
+              0.18252093698848776
+            ],
+            "cube": [
+              0.4486543888285684,
+              0.13047918727498314
+            ]
+          },
+          "right_camera": {
+            "bowl": [
+              0.5347995297022893,
+              0.12734123245253637
+            ],
+            "cube": [
+              0.5347995297022893,
+              0.12734123245253637
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

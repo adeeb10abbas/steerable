@@ -1,0 +1,420 @@
+{
+  "denominator_policy": "DROID and RoboTwin remain separate arenas; no raw success rate is pooled across them.",
+  "evidence_cutoff_git_commit": "a7bed6e4381106ce9a59132775953f0e7ba68b67",
+  "evidence_cutoff_utc": "2026-08-03T19:45:12Z",
+  "missing_evidence_policy": "Missing, action-only, and latent-only futures are never zeros. Unreported paired action metrics are null/NR, never zero.",
+  "rows": [
+    {
+      "arena": "DROID / RoboLab",
+      "arena_id": "droid_robolab",
+      "claim_boundary": "Frozen ten-seed direct-command directional confirmation.",
+      "future_evidence_status": "not_applicable_never_zero",
+      "future_interface": "none",
+      "invalid_attempt_count": 0,
+      "invalid_attempt_unit": "cell_attempts",
+      "left_success": {
+        "count": 1,
+        "status": "measured",
+        "trials": 10
+      },
+      "model": "\u03c00-FAST DROID",
+      "model_class": "VLA",
+      "model_id": "pi0_fast_droid_vla",
+      "model_revision": null,
+      "paired_action_distinctness": {
+        "count": 10,
+        "status": "measured",
+        "trials": 10
+      },
+      "paired_endpoint_alignment": {
+        "count": 10,
+        "status": "measured",
+        "trials": 10
+      },
+      "right_success": {
+        "count": 10,
+        "status": "measured",
+        "trials": 10
+      },
+      "sources": [
+        {
+          "bytes": 74549,
+          "path": "artifacts/vla_wam_shared_v2/pilot/results/pi0_fast_direct_confirmation.json",
+          "sha256": "491c74812ed0e4d36c16f8e0ded17a70af3e69740c9bcb87af129bb6d9563073"
+        }
+      ],
+      "valid_n": 20
+    },
+    {
+      "arena": "DROID / RoboLab",
+      "arena_id": "droid_robolab",
+      "claim_boundary": "V2-A005 bounded six-cell direct-command replication.",
+      "future_evidence_status": "not_applicable_never_zero",
+      "future_interface": "none",
+      "invalid_attempt_count": 5,
+      "invalid_attempt_unit": "ledger_entries; 2 behavior cells excluded",
+      "left_success": {
+        "count": 0,
+        "status": "measured",
+        "trials": 3
+      },
+      "model": "GR00T N1.7 DROID",
+      "model_class": "VLA",
+      "model_id": "groot_n17_droid",
+      "model_revision": "05e7cc97e40dbd33b0890c35cc0214fcb0547ab5",
+      "paired_action_distinctness": {
+        "count": 3,
+        "status": "measured",
+        "trials": 3
+      },
+      "paired_endpoint_alignment": {
+        "count": 3,
+        "status": "measured",
+        "trials": 3
+      },
+      "right_success": {
+        "count": 0,
+        "status": "measured",
+        "trials": 3
+      },
+      "sources": [
+        {
+          "bytes": 15172,
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/groot_n17_droid_v2_registry.json",
+          "sha256": "95077a42bb0115bc673ea13ae5acdc6fdef6f476627804662f73c219ebd88bc7"
+        }
+      ],
+      "valid_n": 6
+    },
+    {
+      "arena": "DROID / RoboLab",
+      "arena_id": "droid_robolab",
+      "claim_boundary": "V2-A005 six-cell behavioral replication; separate from v1.",
+      "future_evidence_status": "exposed_and_retained",
+      "future_interface": "decoded_rgb_uint8_33_frames_per_policy_request",
+      "invalid_attempt_count": 8,
+      "invalid_attempt_unit": "setup_attempts; all before model request",
+      "left_success": {
+        "count": 3,
+        "status": "measured",
+        "trials": 3
+      },
+      "model": "Cosmos3 Edge DROID",
+      "model_class": "WAM",
+      "model_id": "cosmos3_edge_droid_wam",
+      "model_revision": "3ea407af3e156c0af3b4bb6edd85842cc9a58777",
+      "paired_action_distinctness": {
+        "count": 3,
+        "status": "measured",
+        "trials": 3
+      },
+      "paired_endpoint_alignment": {
+        "count": 3,
+        "status": "measured",
+        "trials": 3
+      },
+      "right_success": {
+        "count": 3,
+        "status": "measured",
+        "trials": 3
+      },
+      "sources": [
+        {
+          "bytes": 67708,
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_droid_direct_gate.json",
+          "sha256": "1c559ee5667ac9d22d7b66eafa7a65551783eedaf7fb3de29a2faf450c2dd029"
+        },
+        {
+          "bytes": 6004,
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_droid_invalid_attempts.json",
+          "sha256": "b3a62c792c82d15143ef6c94b768e2bcf712dd69d9c2f96584c904140a452754"
+        }
+      ],
+      "valid_n": 6
+    },
+    {
+      "arena": "RoboTwin place-A-relative-to-B",
+      "arena_id": "robotwin_place_a2b",
+      "claim_boundary": "V2-A005 bounded six-cell direct-command gate.",
+      "future_evidence_status": "not_applicable_never_zero",
+      "future_interface": "none",
+      "invalid_attempt_count": 3,
+      "invalid_attempt_unit": "technical_setup_attempts",
+      "left_success": {
+        "count": 1,
+        "status": "measured",
+        "trials": 3
+      },
+      "model": "LingBot-VLA 4B",
+      "model_class": "VLA",
+      "model_id": "lingbot_vla_4b_robotwin",
+      "model_revision": "fb71a2c9749ccfedbb7290c2c3f0e5e7c7305c9e",
+      "paired_action_distinctness": {
+        "count": null,
+        "status": "not_reported_by_compiled_gate",
+        "trials": null
+      },
+      "paired_endpoint_alignment": {
+        "count": 2,
+        "status": "measured",
+        "trials": 3
+      },
+      "right_success": {
+        "count": 0,
+        "status": "measured",
+        "trials": 3
+      },
+      "sources": [
+        {
+          "bytes": 20538,
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/lingbot_vla_4b_direct_gate.json",
+          "sha256": "7c0ad19833d6cbb51bb5fbdac8f9546f0e311333e498a15594b55f68dc7b6534"
+        },
+        {
+          "bytes": 5845,
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/lingbot_vla_4b_robotwin_readiness.json",
+          "sha256": "588699ed912fe900de5a5ca36c350236e15ae0b0a2c55afeea22670759b68c30"
+        }
+      ],
+      "valid_n": 6
+    },
+    {
+      "arena": "RoboTwin place-A-relative-to-B",
+      "arena_id": "robotwin_place_a2b",
+      "claim_boundary": "Prospective pairs03\u201309 only; historical pairs00\u201302 are not merged into this row.",
+      "future_evidence_status": "exposed_and_retained",
+      "future_interface": "decoded_future_video",
+      "invalid_attempt_count": 4,
+      "invalid_attempt_unit": "cell_attempts",
+      "left_success": {
+        "count": 3,
+        "status": "measured",
+        "trials": 7
+      },
+      "model": "Efficient-WAM-RT",
+      "model_class": "WAM",
+      "model_id": "efficient_wam_rt_robotwin",
+      "model_revision": "b0b6cfabcbd68d18888866e958c677ce640f0412",
+      "paired_action_distinctness": {
+        "count": 7,
+        "status": "measured",
+        "trials": 7
+      },
+      "paired_endpoint_alignment": {
+        "count": 6,
+        "status": "measured",
+        "trials": 7
+      },
+      "right_success": {
+        "count": 2,
+        "status": "measured",
+        "trials": 7
+      },
+      "sources": [
+        {
+          "bytes": 7275,
+          "path": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/efficient_wam_rt_pair03_integration.json",
+          "sha256": "d850f8f2c3d32db705cc65326ca673c150ab7208a203a180bd32d88dfb0e5471"
+        },
+        {
+          "bytes": 64863,
+          "path": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/efficient_wam_rt_pairs04_09_slice.json",
+          "sha256": "e7d2d3791323fecedb49e8c1ecc8fda1e0ade91dedd6613b9079f7b290e1fd54"
+        }
+      ],
+      "valid_n": 14
+    },
+    {
+      "arena": "RoboTwin place-A-relative-to-B",
+      "arena_id": "robotwin_place_a2b",
+      "claim_boundary": "Prospective pairs03\u201309 only; historical pairs00\u201302 are not merged into this row.",
+      "future_evidence_status": "not_applicable_never_zero",
+      "future_interface": "action_only_at_test_time",
+      "invalid_attempt_count": 18,
+      "invalid_attempt_unit": "cell_attempts",
+      "left_success": {
+        "count": 1,
+        "status": "measured",
+        "trials": 7
+      },
+      "model": "FastWAM",
+      "model_class": "WAM",
+      "model_id": "fastwam_robotwin",
+      "model_revision": null,
+      "paired_action_distinctness": {
+        "count": 7,
+        "status": "measured",
+        "trials": 7
+      },
+      "paired_endpoint_alignment": {
+        "count": 3,
+        "status": "measured",
+        "trials": 7
+      },
+      "right_success": {
+        "count": 1,
+        "status": "measured",
+        "trials": 7
+      },
+      "sources": [
+        {
+          "bytes": 91023,
+          "path": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/fastwam_pairs03_09_slice.json",
+          "sha256": "9d52920cded17d0f61c997f02624ea38ffc4c9a3536cdacf9f71115b151d14be"
+        }
+      ],
+      "valid_n": 14
+    },
+    {
+      "arena": "RoboTwin place-A-relative-to-B",
+      "arena_id": "robotwin_place_a2b",
+      "claim_boundary": "Prospective pairs03\u201309 only; historical pairs00\u201302 are not merged into this row.",
+      "future_evidence_status": "latent_retained_not_scored_never_zero",
+      "future_interface": "latent_only_future_not_decodable",
+      "invalid_attempt_count": 5,
+      "invalid_attempt_unit": "cell_attempts",
+      "left_success": {
+        "count": 3,
+        "status": "measured",
+        "trials": 7
+      },
+      "model": "LingBot-VA",
+      "model_class": "WAM",
+      "model_id": "lingbot_va_robotwin",
+      "model_revision": null,
+      "paired_action_distinctness": {
+        "count": 7,
+        "status": "measured",
+        "trials": 7
+      },
+      "paired_endpoint_alignment": {
+        "count": 6,
+        "status": "measured",
+        "trials": 7
+      },
+      "right_success": {
+        "count": 4,
+        "status": "measured",
+        "trials": 7
+      },
+      "sources": [
+        {
+          "bytes": 80097,
+          "path": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/lingbot_va_pairs03_09_slice.json",
+          "sha256": "8617da77c819ea57d374f463a672bf73414b088bb8188b9b13a6c1c2e1fb9d85"
+        }
+      ],
+      "valid_n": 14
+    },
+    {
+      "arena": "RoboTwin place-A-relative-to-B",
+      "arena_id": "robotwin_place_a2b",
+      "claim_boundary": "V2-A006 bounded six-cell direct-command gate.",
+      "future_evidence_status": "not_applicable_never_zero",
+      "future_interface": "action_only_infer_action",
+      "invalid_attempt_count": 6,
+      "invalid_attempt_unit": "cell_attempts",
+      "left_success": {
+        "count": 1,
+        "status": "measured",
+        "trials": 3
+      },
+      "model": "Light-WAM",
+      "model_class": "WAM",
+      "model_id": "light_wam_robotwin",
+      "model_revision": "7cc8593fb95423a9cfbb93f82c95c2fa7d5357bd",
+      "paired_action_distinctness": {
+        "count": 3,
+        "status": "measured",
+        "trials": 3
+      },
+      "paired_endpoint_alignment": {
+        "count": 1,
+        "status": "measured",
+        "trials": 3
+      },
+      "right_success": {
+        "count": 0,
+        "status": "measured",
+        "trials": 3
+      },
+      "sources": [
+        {
+          "bytes": 42232,
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/light_wam_robotwin_direct_gate.json",
+          "sha256": "f33e1ff8fdc82c4a035f2cc113b91b311d685d9747dbcbb1104453fc455745d6"
+        },
+        {
+          "bytes": 16833,
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/light_wam_robotwin_registry.json",
+          "sha256": "c316bbebe8aa73cfe86b8749cb3cf6d8ebf438389a57b1d9e6c52dbfee67bbb5"
+        }
+      ],
+      "valid_n": 6
+    }
+  ],
+  "schema_version": "vla-wam-shared-v2-cross-model-direct-comparison-v1",
+  "source_ledger": [
+    {
+      "bytes": 7275,
+      "path": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/efficient_wam_rt_pair03_integration.json",
+      "sha256": "d850f8f2c3d32db705cc65326ca673c150ab7208a203a180bd32d88dfb0e5471"
+    },
+    {
+      "bytes": 64863,
+      "path": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/efficient_wam_rt_pairs04_09_slice.json",
+      "sha256": "e7d2d3791323fecedb49e8c1ecc8fda1e0ade91dedd6613b9079f7b290e1fd54"
+    },
+    {
+      "bytes": 91023,
+      "path": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/fastwam_pairs03_09_slice.json",
+      "sha256": "9d52920cded17d0f61c997f02624ea38ffc4c9a3536cdacf9f71115b151d14be"
+    },
+    {
+      "bytes": 80097,
+      "path": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/lingbot_va_pairs03_09_slice.json",
+      "sha256": "8617da77c819ea57d374f463a672bf73414b088bb8188b9b13a6c1c2e1fb9d85"
+    },
+    {
+      "bytes": 67708,
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_droid_direct_gate.json",
+      "sha256": "1c559ee5667ac9d22d7b66eafa7a65551783eedaf7fb3de29a2faf450c2dd029"
+    },
+    {
+      "bytes": 6004,
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_droid_invalid_attempts.json",
+      "sha256": "b3a62c792c82d15143ef6c94b768e2bcf712dd69d9c2f96584c904140a452754"
+    },
+    {
+      "bytes": 15172,
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/groot_n17_droid_v2_registry.json",
+      "sha256": "95077a42bb0115bc673ea13ae5acdc6fdef6f476627804662f73c219ebd88bc7"
+    },
+    {
+      "bytes": 42232,
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/light_wam_robotwin_direct_gate.json",
+      "sha256": "f33e1ff8fdc82c4a035f2cc113b91b311d685d9747dbcbb1104453fc455745d6"
+    },
+    {
+      "bytes": 16833,
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/light_wam_robotwin_registry.json",
+      "sha256": "c316bbebe8aa73cfe86b8749cb3cf6d8ebf438389a57b1d9e6c52dbfee67bbb5"
+    },
+    {
+      "bytes": 20538,
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/lingbot_vla_4b_direct_gate.json",
+      "sha256": "7c0ad19833d6cbb51bb5fbdac8f9546f0e311333e498a15594b55f68dc7b6534"
+    },
+    {
+      "bytes": 5845,
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/lingbot_vla_4b_robotwin_readiness.json",
+      "sha256": "588699ed912fe900de5a5ca36c350236e15ae0b0a2c55afeea22670759b68c30"
+    },
+    {
+      "bytes": 74549,
+      "path": "artifacts/vla_wam_shared_v2/pilot/results/pi0_fast_direct_confirmation.json",
+      "sha256": "491c74812ed0e4d36c16f8e0ded17a70af3e69740c9bcb87af129bb6d9563073"
+    }
+  ],
+  "source_set_sha256": "3a2395c5bf0265e91726a8304e075d8cb5da4da6bac3873c09dcb7e829061af2"
+}

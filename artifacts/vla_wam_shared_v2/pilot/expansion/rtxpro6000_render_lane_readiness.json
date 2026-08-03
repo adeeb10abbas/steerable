@@ -1,0 +1,45 @@
+{
+  "schema_version": "vla-wam-shared-v2-render-lane-readiness-v1",
+  "recorded_at_utc": "2026-08-03T19:40:34Z",
+  "claim_boundary": "Infrastructure readiness only. This record contains no model inference and enters no behavioral denominator.",
+  "ownership": {
+    "namespace": "211247-prod",
+    "pod": "raytrace-rtxpro6000-ali",
+    "owner_label": "ali",
+    "pvc": "211247-prod-pvc",
+    "pvc_mount": "/data"
+  },
+  "scheduler_contract": {
+    "gpu_product_label": "NVIDIA-RTX-PRO-6000-Blackwell-Server-Edition",
+    "gpu_count": 1,
+    "node": "dcwipphrtx0005.edc.nam.gm.com",
+    "status": "running"
+  },
+  "runtime": {
+    "image": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+    "nvidia_driver_capabilities": "compute,utility,graphics,display",
+    "gpu_name": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+    "gpu_memory_mib": 97887,
+    "torch": "2.7.1+cu128",
+    "torch_environment": "/data/users/ali/vla_wam/envs/light-wam-b200"
+  },
+  "render_gate": {
+    "sapien_import": "pass",
+    "vulkan_render": "pass",
+    "render_shape": [
+      64,
+      64,
+      4
+    ],
+    "render_dtype": "float32",
+    "mean_rgb": 0.5943819880485535,
+    "scene": "SAPIEN ground plus directional light and one offscreen camera",
+    "native_library_path": "/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/light-wam-b200/lib/python3.10/site-packages/sapien/oidn_library"
+  },
+  "availability_audit": {
+    "a6000_labeled_nodes": 0,
+    "selected_alternative": "RTX PRO 6000 Blackwell Server Edition",
+    "selection_reason": "The live cluster exposes no NVIDIA RTX A6000 product label. The single RTX PRO 6000 Blackwell lane provides hardware ray tracing, 97887 MiB of GPU memory, and passed the minimal Vulkan/SAPIEN render gate."
+  },
+  "next_use_rule": "Run a model-specific full-scene renderer preflight before behavioral inference; a minimal render pass does not override model-specific compatibility gates."
+}

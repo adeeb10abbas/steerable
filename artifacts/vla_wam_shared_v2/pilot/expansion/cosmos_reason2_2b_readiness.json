@@ -1,15 +1,15 @@
 {
   "schema_version": "vla-wam-shared-v2-cosmos-reason2-readiness-v1",
-  "observed_at_utc": "2026-08-03T18:16:00Z",
+  "observed_at_utc": "2026-08-03T18:41:50Z",
   "amendment_id": "V2-A005",
-  "status": "blocked_before_inference_missing_hugging_face_credential",
+  "status": "assets_verified_inference_environment_preparing",
   "model": {
     "id": "nvidia/Cosmos-Reason2-2B",
     "revision": "9ce19a195e423419c349abfc86fd07178b230561",
     "hugging_face_gating": "auto",
     "expected_regular_file_count": 15,
     "expected_resolved_bytes": 4889656452,
-    "expected_pvc_path": "/data/users/ali/vla_wam/checkpoints/cosmos_reason2_2b"
+    "expected_pvc_path": "/data/users/ali/vla_wam/checkpoints/cosmos-reason2-2b-9ce19a1"
   },
   "official_interface_audit": {
     "repository": "https://github.com/nvidia-cosmos/cosmos-reason2",
@@ -24,11 +24,20 @@
     "conclusion": "This checkpoint can support only a language/visual-planning diagnostic. It cannot enter a robot-action success denominator without a separately frozen and verified controller adapter."
   },
   "live_asset_gate": {
-    "pvc_asset_present": false,
+    "pvc_asset_present": true,
     "historical_non_pvc_path": "/home/ali/models/Cosmos-Reason2-2B",
     "historical_path_note": "The committed handoff records this path from a prior Linux host; it is not available on the current Mac or ali PVC.",
     "credential_probe": "Pinned config.json request through huggingface_hub 1.26.0",
-    "result": "HTTP 401 GatedRepoError: the model is restricted and the pod has no Hugging Face token.",
+    "historical_result": "HTTP 401 GatedRepoError: the model was restricted and the pod initially had no Hugging Face token.",
+    "current_result": "The owner staged the exact gated revision on the ali PVC. Verification found exactly 15 regular files and 4,889,656,452 resolved bytes; no credential was printed, committed, or retained by the study code.",
+    "pvc_path": "/data/users/ali/vla_wam/checkpoints/cosmos-reason2-2b-9ce19a1",
+    "verified_regular_file_count": 15,
+    "verified_resolved_bytes": 4889656452,
+    "selected_hashes": {
+      "config.json": "bec4b3d446efa05807365c9e1cec03ac590836879d02f3a6da879971154bdd3b",
+      "model.safetensors": "fa5a6e6ef4fce40216b185cc48a3b24d31637ac3e2ba69c107ed1f389c1e6ede",
+      "preprocessor_config.json": "27225450ac9c6529872ee1924fcb0962ff5634834f817040f444118116f4e516"
+    },
     "inference_started": false
   },
   "authorized_diagnostic": {
@@ -47,9 +56,11 @@
     ]
   },
   "resume": {
-    "precondition": "The ali owner must provide a Hugging Face token that has accepted access to nvidia/Cosmos-Reason2-2B; never commit or print the token.",
-    "download_python": "/data/users/ali/vla_wam/envs/lingbot-va-b200/bin/python",
-    "next_operation": "Call huggingface_hub.snapshot_download with repo_id=nvidia/Cosmos-Reason2-2B, revision=9ce19a195e423419c349abfc86fd07178b230561, local_dir=/data/users/ali/vla_wam/checkpoints/cosmos_reason2_2b, then verify 15 files and 4,889,656,452 resolved bytes before creating an isolated inference environment."
+    "precondition": "fulfilled_exact_revision_verified_on_ali_pvc",
+    "inference_environment": "/data/users/ali/vla_wam/envs/cosmos-reason2-a3b4a1d-py313",
+    "official_repository_path": "/data/users/ali/vla_wam/external/cosmos-reason2-a3b4a1d",
+    "official_repository_commit": "a3b4a1db4065fe13c4b1f4d2fb8605bad647f4b9",
+    "next_operation": "Finish the isolated official dependency environment, consume the hash-bearing seeds 8300-8302 RoboLab reset fixtures read-only, and run exactly 12 deterministic calls (LEFT and RIGHT twice per seed) on a separate ali-owned B200 GPU."
   },
-  "claim_boundary": "Missing credentials and absent PVC weights are infrastructure blockers, not a Cosmos-Reason2 model failure or a zero-valued behavioral result."
+  "claim_boundary": "The historical credential/asset blocker was infrastructure-only and is now resolved. This remains a text-output visual-planning diagnostic with zero behavioral episodes; it never enters robot-success or generated-future denominators."
 }

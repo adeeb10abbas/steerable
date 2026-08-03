@@ -1,0 +1,83 @@
+{
+  "claim_boundary": "Sensitivity and determinism diagnostic only; not robot success.",
+  "conditioning_png_sha256": "2a431b0fa288890b3509b314c0351c91123d5f64b237678fed972848e29cd55b",
+  "conditioning_source": "Committed v1 grounded-observation artifact; it contains fixed visual grounding overlays and is used only for this sensitivity diagnostic.",
+  "metrics": {
+    "left_repeat_action_rms": 0.0,
+    "left_repeat_future_pixel_mae": 0.0,
+    "left_right_action_rms": 0.1053965970822344,
+    "left_right_future_pixel_mae": 12.602476499129553
+  },
+  "observation_hashes": {
+    "gripper_position_raw_sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
+    "image_raw_rgb_sha256": "6261ce5ab21383342c2012c14f7ff97d3dcd74e5f4202f2b3444355cc7ba3332",
+    "joint_position_raw_sha256": "6661cda587dce95d7e39db70d98bbed73498aecc82f0a1407ea41bf3fd839b85"
+  },
+  "records": [
+    {
+      "action_sha256": "8567d244a3531293c4be5fa4ff9db3f5e62baf69ab2b0372a605eeb540ab05b8",
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "left",
+      "future_mp4_sha256": "3c24d6920932a1f1dca4a986e3943646f56211fe844e047781bfea9635da9d9c",
+      "future_npy_sha256": "6a3d8f72cfc7ae97a8de4496960ef1c1287c56769543c2e92173070baa4dc9c2",
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "requested_sampling_seed": 8300,
+      "server_sampling_seed": null,
+      "wall_seconds": 31.167293254984543
+    },
+    {
+      "action_sha256": "8567d244a3531293c4be5fa4ff9db3f5e62baf69ab2b0372a605eeb540ab05b8",
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "left_exact_repeat",
+      "future_mp4_sha256": "3c24d6920932a1f1dca4a986e3943646f56211fe844e047781bfea9635da9d9c",
+      "future_npy_sha256": "6a3d8f72cfc7ae97a8de4496960ef1c1287c56769543c2e92173070baa4dc9c2",
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "requested_sampling_seed": 8300,
+      "server_sampling_seed": null,
+      "wall_seconds": 0.9003696080762893
+    },
+    {
+      "action_sha256": "5b90add13a5e1a0b929d786dc9c2ef06341eabbb2e144b4f1a9f152b523a0501",
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "right",
+      "future_mp4_sha256": "91952cb7e3d21434cc6d76600c123bd7bff49be155069af9bdaa4cbba639b3bf",
+      "future_npy_sha256": "a286442c2077ce543ef13a2f39227d438df3b1cc878f8421095e05e84bcb5994",
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "requested_sampling_seed": 8300,
+      "server_sampling_seed": null,
+      "wall_seconds": 0.8310097251087427
+    }
+  ],
+  "registry_sha256": "a12e4dd6668cc7c234d4b7e597885c4f04072bfd601dbc4b7a13821e2f8a49cd",
+  "schema_version": "vla-wam-shared-v2-cosmos3-edge-fixed-observation-v1",
+  "server": "ws://127.0.0.1:18010",
+  "source_plan_sha256": "c5025b51f57224308d16338db38ab57b06e7025ba9e585a05993e01a79952fc3",
+  "status": "passed"
+}

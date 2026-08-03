@@ -1,9 +1,9 @@
 {
   "schema_version": "vla-wam-shared-v2-continuation-v1",
-  "updated_at_utc": "2026-08-03T18:05:43Z",
+  "updated_at_utc": "2026-08-03T18:12:27Z",
   "evidence_head_before_handoff": "673babd3247077f3cadf7adb6591f9bb7f71d5bf",
   "active_branch": "codex/wam-language-steerability",
-  "study_status": "post_result_expansion_v2_a005_frozen_before_new_inference",
+  "study_status": "post_result_expansions_v2_a005_a006_frozen_active_setup",
   "authoritative_docs": [
     "docs/VLA_WAM_CONTINUATION.md",
     "docs/VLA_WAM_STEERABILITY_V2_PROTOCOL.md",
@@ -14,7 +14,7 @@
   "validation": {
     "command": "python3 tools/validate_vla_wam_v2_protocol.py",
     "last_status": "valid",
-    "last_check_count": 618,
+    "last_check_count": 621,
     "report": "artifacts/vla_wam_shared_v2/protocol_validation.json"
   },
   "host_snapshot": {
@@ -288,6 +288,20 @@
       "pi0_droid_vla",
       "dreamzero"
     ],
+    "second_wave_amendment": {
+      "status": "light_wam_and_lawam_selected_before_download_or_inference",
+      "amendment_id": "V2-A006",
+      "path": "artifacts/vla_wam_shared_v2/pilot/post_result_second_wave_amendment.json",
+      "sha256": "5d011abc46c144e91ba7441fb5ed3c681ce67c1a56b6ca51c1c29810708eef7b",
+      "selected_queue": [
+        "light_wam_robotwin_direct_gate",
+        "lawam_robotwin_direct_gate"
+      ],
+      "deferred_not_zero": [
+        "dreamzero_droid",
+        "pi0_droid_vla"
+      ]
+    },
     "note": "The expansion was selected after the completed three-WAM results were known and is disclosed as post-result rather than preregistered."
   },
   "cross_host_handoff": {

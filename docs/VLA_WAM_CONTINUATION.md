@@ -435,10 +435,31 @@ goal-as-outcome, and desired-plus-negated-opposite cells at seeds 8300–8309 ar
 new. Cosmos-Reason2 is not an action policy unless a separately frozen adapter
 proves otherwise, so its outputs never enter robot-success denominators.
 
-Light-WAM, LaWAM, pi0 DROID, and DreamZero are an audit-only conditional second
-wave. Select at most one using released-code/weight availability, same-arena
-adapter feasibility, action-interface compatibility, non-redundancy, and
-time-to-six-valid-cells. Freeze a new model-specific amendment before inference.
+V2-A005 initially placed Light-WAM, LaWAM, pi0 DROID, and DreamZero in an
+audit-only conditional second wave capped at one checkpoint. The completed
+official-release audit changed that decision before any conditional-candidate
+download or inference; V2-A006 below discloses and freezes the revised choice.
+
+### Selected second wave — V2-A006
+
+The official-release audit selected two complementary RoboTwin WAMs before
+their assets were downloaded or inference began. The machine-readable freeze is
+[`post_result_second_wave_amendment.json`](../artifacts/vla_wam_shared_v2/pilot/post_result_second_wave_amendment.json).
+
+| Priority | Model | Scientific role | Authorized spend |
+| ---: | --- | --- | ---: |
+| 0 | Light-WAM | lightweight state-fusion test of whether FastWAM's weak alignment persists | 6 direct cells at pairs00–02 |
+| 1 | LaWAM | latent-visual-subgoal interface distinct from decoded-video and action-only WAMs | 6 direct cells at pairs00–02 |
+
+Both must pass isolated environment, pinned asset, exact-repeat, prompt-only
+action sensitivity, normalization, and native RoboTwin contract gates before
+behavioral inference. Light-WAM's future interface is classified only after the
+released inference path is audited. LaWAM's exposed visual subgoals remain
+latent-only unless an official decoder is verified before inference.
+
+DreamZero-DROID is deferred behind a two-GPU and exact-reset adapter gate; pi0
+DROID is deferred as the least architecturally distinct family ablation. Both
+remain not measured rather than zero.
 
 <a id="experiment-3-lingbot-vla-4b-robotwin-onboarding"></a>
 ## Experiment 3 — LingBot-VLA 4B RoboTwin onboarding

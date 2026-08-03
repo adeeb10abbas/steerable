@@ -1078,6 +1078,10 @@ def validate(workspace: Path) -> dict[str, Any]:
         workspace
         / "artifacts/vla_wam_shared_v2/pilot/post_result_expansion_amendment.json"
     )
+    second_wave_amendment_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/post_result_second_wave_amendment.json"
+    )
     efficient_pair03_integration_path = (
         workspace
         / "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/efficient_wam_rt_pair03_integration.json"
@@ -1121,6 +1125,7 @@ def validate(workspace: Path) -> dict[str, Any]:
     pi0_fast_expansion = load_json(pi0_fast_expansion_path)
     continuation_state = load_json(continuation_state_path)
     post_result_amendment = load_json(post_result_amendment_path)
+    second_wave_amendment = load_json(second_wave_amendment_path)
     bundle_manifest = load_json(bundle_manifest_path)
     paired_media = load_json(paired_media_path)
     droid_paired_media = load_json(droid_paired_media_path)
@@ -1782,8 +1787,8 @@ def validate(workspace: Path) -> dict[str, Any]:
 
     require(
         continuation_state["study_status"]
-        == "post_result_expansion_v2_a005_frozen_before_new_inference",
-        "continuation state names the frozen V2-A005 pre-inference boundary",
+        == "post_result_expansions_v2_a005_a006_frozen_active_setup",
+        "continuation state names the frozen V2-A005/A006 active-setup boundary",
         checks,
     )
     queue = continuation_state["experiment_queue"]
@@ -1917,6 +1922,61 @@ def validate(workspace: Path) -> dict[str, Any]:
         "V2-A005 bounds behavioral spend and keeps Cosmos-Reason2 diagnostic-only",
         checks,
     )
+    second_wave_state = post_result_decision.get("second_wave_amendment", {})
+    require(
+        second_wave_state.get("status")
+        == "light_wam_and_lawam_selected_before_download_or_inference"
+        and second_wave_state.get("amendment_id") == "V2-A006"
+        and second_wave_state.get("path")
+        == "artifacts/vla_wam_shared_v2/pilot/post_result_second_wave_amendment.json"
+        and second_wave_state.get("sha256") == sha256(second_wave_amendment_path)
+        and second_wave_state.get("selected_queue")
+        == [item["id"] for item in second_wave_amendment["selected_models"]]
+        and second_wave_state.get("deferred_not_zero")
+        == [
+            item["model_id"]
+            for item in second_wave_amendment["audited_not_selected_for_this_wave"]
+        ],
+        "continuation state binds the V2-A006 selected and deferred second wave",
+        checks,
+    )
+    selected_second_wave = second_wave_amendment["selected_models"]
+    require(
+        second_wave_amendment["schema_version"]
+        == "vla-wam-shared-v2-post-result-second-wave-amendment-v1"
+        and second_wave_amendment["amendment_id"] == "V2-A006"
+        and second_wave_amendment["status"]
+        == "frozen_after_official_release_audit_before_selected_second_wave_download_or_inference"
+        and second_wave_amendment["recorded_at_git_head"]
+        == "9c0bf0d44cfec7eeb35ab358d6bc38866e5005ab"
+        and second_wave_amendment["parent_amendment"]["sha256"]
+        == sha256(post_result_amendment_path)
+        and [item["priority"] for item in selected_second_wave] == [0, 1]
+        and [item["id"] for item in selected_second_wave]
+        == ["light_wam_robotwin_direct_gate", "lawam_robotwin_direct_gate"]
+        and all(item["behavioral_episode_count"] == 6 for item in selected_second_wave)
+        and all(
+            item["pair_ids"]
+            == ["robotwin_pair_00", "robotwin_pair_01", "robotwin_pair_02"]
+            and item["requested_relations"] == ["left", "right"]
+            and item["prompt_family"] == "direct_command"
+            for item in selected_second_wave
+        ),
+        "V2-A006 freezes exactly two bounded RoboTwin direct gates before selected-model setup",
+        checks,
+    )
+    require(
+        {
+            item["model_id"]: item["status"]
+            for item in second_wave_amendment["audited_not_selected_for_this_wave"]
+        }
+        == {
+            "dreamzero_droid": "deferred_adapter_and_cost_gate",
+            "pi0_droid_vla": "deferred_family_redundancy",
+        },
+        "V2-A006 keeps DreamZero and pi0 DROID deferred rather than assigning zeros",
+        checks,
+    )
     for relative_doc in continuation_state["authoritative_docs"]:
         require(
             (workspace / relative_doc).is_file(),
@@ -2000,6 +2060,12 @@ def validate(workspace: Path) -> dict[str, Any]:
         ),
         "post_result_expansion_amendment_sha256": sha256(
             post_result_amendment_path
+        ),
+        "post_result_second_wave_amendment_path": str(
+            second_wave_amendment_path.relative_to(workspace)
+        ),
+        "post_result_second_wave_amendment_sha256": sha256(
+            second_wave_amendment_path
         ),
         "efficient_wam_pair03_handoff": pair03_handoff,
         "efficient_wam_pairs04_09": efficient_pairs04_09,

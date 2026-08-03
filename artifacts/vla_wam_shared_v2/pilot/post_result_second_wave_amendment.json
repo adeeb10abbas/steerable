@@ -1,0 +1,96 @@
+{
+  "schema_version": "vla-wam-shared-v2-post-result-second-wave-amendment-v1",
+  "study_id": "vla_wam_language_steerability_v2",
+  "amendment_id": "V2-A006",
+  "status": "frozen_after_official_release_audit_before_selected_second_wave_download_or_inference",
+  "recorded_at_utc": "2026-08-03T18:11:35Z",
+  "recorded_at_git_head": "9c0bf0d44cfec7eeb35ab358d6bc38866e5005ab",
+  "parent_amendment": {
+    "id": "V2-A005",
+    "path": "artifacts/vla_wam_shared_v2/pilot/post_result_expansion_amendment.json",
+    "sha256": "e8f724a1818e20ab6cb1481c87a5d5c255d42148d47bf387d7f77f3643587101"
+  },
+  "relationship_to_parent": "V2-A005 initially capped the conditional audit at one additional checkpoint. Before any conditional-candidate download or inference, the completed official-release audit showed that Light-WAM and LaWAM add distinct action/future interfaces at bounded six-cell cost. V2-A006 explicitly supersedes that one-checkpoint cap and freezes exactly these two; it does not authorize the other audited candidates.",
+  "selection_rule": "Select checkpoints with official released code and weights, native or near-native same-arena action interfaces, evidence not redundant with the active queue, and a bounded path to six valid direct-command cells.",
+  "selected_models": [
+    {
+      "priority": 0,
+      "id": "light_wam_robotwin_direct_gate",
+      "model_id": "light_wam_robotwin",
+      "arena": "robotwin_place_a2b",
+      "class": "WAM",
+      "repository": "https://github.com/L1ziang/Light-WAM.git",
+      "repository_commit": "b2785f66e13fd9987e94ae1ecc1c441d5059c9ae",
+      "checkpoint": "l1ziang/lightwam-checkpoints",
+      "checkpoint_revision": "7cc8593fb95423a9cfbb93f82c95c2fa7d5357bd",
+      "checkpoint_scope": "RoboTwin files only",
+      "checkpoint_scope_size_observed_at_selection": "approximately 3.7206 GB from the official repository listing; exact bytes and hashes are required before inference",
+      "first_gate": "isolated_environment_checkpoint_hash_and_native_robotwin_contract_audit",
+      "behavioral_episode_count": 6,
+      "pair_ids": ["robotwin_pair_00", "robotwin_pair_01", "robotwin_pair_02"],
+      "environment_seeds": [4300000, 4300001, 4300002],
+      "sampling_seeds": [8400, 8401, 8402],
+      "prompt_family": "direct_command",
+      "requested_relations": ["left", "right"],
+      "future_rule": "Audit the released inference interface before classification. Training-only or unavailable future evidence is not applicable, never zero.",
+      "requirements": [
+        "Use an isolated repository and model environment.",
+        "Freeze exact asset byte counts and hashes before behavioral inference.",
+        "Run an RNG-restored exact-repeat and LEFT/RIGHT prompt-only action probe before the simulator gate.",
+        "Record simulator video and exact executed-action traces for every valid episode.",
+        "Apply the original zero/one-direction/both-direction competence gate after six episodes."
+      ],
+      "scientific_role": "Test whether FastWAM's weak endpoint alignment persists in a smaller state-fusion WAM with a related RoboTwin interface."
+    },
+    {
+      "priority": 1,
+      "id": "lawam_robotwin_direct_gate",
+      "model_id": "lawam_robotwin",
+      "arena": "robotwin_place_a2b",
+      "class": "WAM",
+      "repository": "https://github.com/RLinf/LaWAM.git",
+      "repository_commit": "1add20a376126eacab02f19a62d726072a322cae",
+      "checkpoint": "jialei02/lawam_robotwin_sft_release",
+      "checkpoint_revision": "f1c4f9a36bddc3e8243e1da8e2b7fb329f84fb86",
+      "checkpoint_size_observed_at_selection": "approximately 7.174 GB from the official repository listing; exact bytes and hashes are required before inference",
+      "first_gate": "isolated_multicomponent_asset_and_robotwin_eef_contract_audit",
+      "behavioral_episode_count": 6,
+      "pair_ids": ["robotwin_pair_00", "robotwin_pair_01", "robotwin_pair_02"],
+      "environment_seeds": [4300000, 4300001, 4300002],
+      "sampling_seeds": [8400, 8401, 8402],
+      "prompt_family": "direct_command",
+      "requested_relations": ["left", "right"],
+      "future_rule": "Retain exposed latent visual subgoals as latent-only evidence. Do not decode, score, or assign zero unless an official decoder is verified before inference.",
+      "requirements": [
+        "Use isolated policy-server and simulator environments.",
+        "Pin and hash the released Qwen3-VL, DINOv3, LAM, policy, and normalization assets before inference.",
+        "Verify the native RoboTwin EEF action transform and 50-step action horizon without changing the checkpoint interface.",
+        "Run an RNG-restored exact-repeat and LEFT/RIGHT prompt-only action probe before the simulator gate.",
+        "Record simulator video and exact executed-action traces for every valid episode.",
+        "Apply the original zero/one-direction/both-direction competence gate after six episodes."
+      ],
+      "scientific_role": "Add a latent-visual-subgoal WAM whose test-time future interface differs from decoded-video and action-only checkpoints."
+    }
+  ],
+  "audited_not_selected_for_this_wave": [
+    {
+      "model_id": "dreamzero_droid",
+      "status": "deferred_adapter_and_cost_gate",
+      "reason": "The official 14B release is approximately 64.8 GB, requires at least two high-end GPUs, and lacks a verified exact-reset RoboLab adapter. It remains a valuable later decoded-future DROID candidate, not a zero."
+    },
+    {
+      "model_id": "pi0_droid_vla",
+      "status": "deferred_family_redundancy",
+      "reason": "The existing pi0.5 and pi0-FAST DROID evidence makes this the least architecturally distinct addition. It remains useful as a later family ablation, not a zero."
+    }
+  ],
+  "unchanged_rules": [
+    "Never pool DROID and RoboTwin raw success rates.",
+    "Use static episode prompts with no oracle, coach, prompt switching, or progress-conditioned language.",
+    "Preserve valid failures and exclude infrastructure-invalid attempts from model denominators.",
+    "Record simulator video and exact executed-action traces for every new behavioral cell.",
+    "Keep checkpoints, environments, and raw outputs on ali-owned PVC storage outside ordinary Git.",
+    "Do not start a wording grid until the direct-command competence gate permits it."
+  ],
+  "claim_boundary": "V2-A006 selects Light-WAM and LaWAM after the completed three-WAM results and the official-release audit were known. It is a disclosed post-result breadth expansion, not preregistration or evidence of model performance."
+}

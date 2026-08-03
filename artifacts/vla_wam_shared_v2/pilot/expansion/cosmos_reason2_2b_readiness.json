@@ -1,8 +1,8 @@
 {
   "schema_version": "vla-wam-shared-v2-cosmos-reason2-readiness-v1",
-  "observed_at_utc": "2026-08-03T18:56:37Z",
+  "observed_at_utc": "2026-08-03T18:58:00Z",
   "amendment_id": "V2-A005",
-  "status": "diagnostic_complete",
+  "status": "diagnostic_invalid_fixture_pending_replacement",
   "model": {
     "id": "nvidia/Cosmos-Reason2-2B",
     "revision": "9ce19a195e423419c349abfc86fd07178b230561",
@@ -39,7 +39,7 @@
       "preprocessor_config.json": "27225450ac9c6529872ee1924fcb0962ff5634834f817040f444118116f4e516"
     },
     "inference_started": true,
-    "inference_complete": true
+    "inference_complete": false
   },
   "authorized_diagnostic": {
     "behavioral_episode_count": 0,
@@ -61,11 +61,11 @@
     "inference_environment": "/data/users/ali/vla_wam/envs/cosmos-reason2-a3b4a1d-py313",
     "official_repository_path": "/data/users/ali/vla_wam/external/cosmos-reason2-a3b4a1d",
     "official_repository_commit": "a3b4a1db4065fe13c4b1f4d2fb8605bad647f4b9",
-    "next_operation": "No additional Reason2 inference is authorized. Preserve the completed diagnostic as text-output planning evidence only."
+    "next_operation": "Wait for corrected hash-bearing neutral fixtures at seeds 8300-8302, verify every replacement manifest and neutral-start predicate, then rerun exactly the same authorized 12-call diagnostic."
   },
-  "completed_diagnostic": {
+  "invalid_diagnostic_attempt": {
     "artifact": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos_reason2_2b_static_diagnostic.json",
-    "artifact_sha256": "360fd43deb3fce613456a8de0edea1dda1eec814f20129b16784fd0ecb21abd2",
+    "artifact_sha256": "38f0baf490b012e95854a65b5715d07641b673bbc96a74ec9b4a5fc0adca813e",
     "call_count": 12,
     "json_parse_count": 12,
     "point_parse_count": 12,
@@ -73,7 +73,8 @@
     "exact_repeat_condition_total": 6,
     "aligned_requested_side_pair_count": 0,
     "requested_side_pair_total": 3,
-    "interpretation": "All exact repeats were raw-text identical and all outputs parsed, but the returned RIGHT-minus-LEFT x coordinate was zero in every scene. This is a negative requested-side pixel-ordering diagnostic, not a robot failure."
+    "interpretation": "The calls completed technically, but a later source-HDF5 audit invalidated all three input fixtures because the cube already satisfied a directional relation. Retain the outputs only as an infrastructure-invalid attempt; none of the apparent repeatability or ordering results is valid study evidence.",
+    "fixture_audit_failure": "cube world y=-0.097 versus bowl y=+0.127; does not match the frozen neutral reset"
   },
-  "claim_boundary": "The historical credential/asset blocker was infrastructure-only and is now resolved. This remains a text-output visual-planning diagnostic with zero behavioral episodes; it never enters robot-success or generated-future denominators."
+  "claim_boundary": "The historical credential/asset blocker is resolved, but the first 12-call attempt used subsequently invalidated fixtures and is excluded. Reason2 still has zero valid diagnostic calls, zero behavioral episodes, no robot-success rate, and no generated-future score until corrected fixtures are rerun."
 }

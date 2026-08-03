@@ -54,6 +54,17 @@
       "raw_log": "/data/users/ali/vla_wam/raw/cosmos_readiness/edge_server_a904d2d_attempt05/server.log",
       "raw_log_bytes": 16590,
       "raw_log_sha256": "1a8ff21904e9fab9fc120d7e085cb753275908b291eac268c6df89c5581561e8"
+    },
+    {
+      "attempt_id": "behavior_setup_seed8300_01",
+      "stage": "simulator_bootstrap_before_scene_or_model_request",
+      "result": "infrastructure_invalid",
+      "request_started": false,
+      "cause": "The newly created ali RTX renderer pod had not yet recorded Isaac Sim EULA acceptance in its ephemeral home, so noninteractive bootstrap exited before a scene or policy request. The attempt was then held when the shared fixture audit found the upstream cube pose already directional.",
+      "raw_log": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8300/simulator/simulator.log",
+      "raw_log_bytes": 1581,
+      "raw_log_sha256": "5356cc2935fe2279a79fff714fdc7be6cfec6958749b10219973b35da2da5833",
+      "valid_behavioral_episode_count": 0
     }
   ],
   "repairs": {

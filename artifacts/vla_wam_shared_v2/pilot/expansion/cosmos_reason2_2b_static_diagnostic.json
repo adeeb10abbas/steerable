@@ -1,5 +1,5 @@
 {
-  "claim_boundary": "Text-output visual-planning diagnostic only: zero behavioral episodes, no robot-success rate, and no generated-future score.",
+  "claim_boundary": "Excluded infrastructure-invalid fixture attempt: zero behavioral episodes, no robot-success rate, no generated-future score, and no valid Reason2 diagnostic numerator.",
   "fixtures": [
     {
       "environment_seed": 8300,
@@ -289,7 +289,13 @@
     }
   ],
   "schema_version": "vla-wam-shared-v2-cosmos-reason2-static-diagnostic-v1",
-  "status": "complete",
+  "status": "excluded_invalid_fixture",
+  "fixture_validity": {
+    "audit_result": "failed_after_inference",
+    "reason": "A deeper source-HDF5 audit found the upstream scene started with the cube already directional (cube world y=-0.097 versus bowl y=+0.127), rather than the frozen neutral v2 reset (cube [0.3033646, 0.1239689, 0.0811057], lateral separation approximately 0.00263, neither cone true).",
+    "denominator_policy": "All 12 calls are retained as an infrastructure-invalid attempt and excluded from every diagnostic or behavioral estimate.",
+    "replacement_required": true
+  },
   "summary": {
     "aligned_requested_side_pair_count": 0,
     "call_count": 12,

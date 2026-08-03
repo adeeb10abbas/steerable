@@ -75,6 +75,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--task-config", default="demo_clean")
     parser.add_argument("--max-actions", type=int, default=400)
+    parser.add_argument(
+        "--pair-id",
+        choices=tuple(scene["pair_id"] for scene in SCENES),
+        help="Run exactly one frozen LEFT/RIGHT pair in episodes mode.",
+    )
     return parser.parse_args()
 
 
@@ -439,7 +444,12 @@ def run_episode(
         env.close_env(clear_cache=False)
 
 
-def write_episode_summaries(output_dir: Path, results: list[dict[str, Any]], invalid: list[dict[str, Any]]) -> None:
+def write_episode_summaries(
+    output_dir: Path,
+    results: list[dict[str, Any]],
+    invalid: list[dict[str, Any]],
+    expected_episode_count: int,
+) -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
     with (output_dir / "results.jsonl").open("w") as handle:
         for result in results:
@@ -461,7 +471,7 @@ def write_episode_summaries(output_dir: Path, results: list[dict[str, Any]], inv
         "valid_episode_count": len(results),
         "requested_success_count": sum(bool(row["requested_success"]) for row in results),
         "invalid_attempt_count": len(invalid),
-        "expected_episode_count": 6,
+        "expected_episode_count": expected_episode_count,
         "future_interface": "action_only_infer_action",
     }
     (output_dir / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
@@ -471,7 +481,13 @@ def run_episodes(args: argparse.Namespace, policy) -> None:
     results: list[dict[str, Any]] = []
     invalid: list[dict[str, Any]] = []
     episode_index = 0
-    for scene in SCENES:
+    selected_scenes = tuple(
+        scene for scene in SCENES if args.pair_id is None or scene["pair_id"] == args.pair_id
+    )
+    if not selected_scenes:
+        raise RuntimeError(f"No frozen scene selected for pair id {args.pair_id!r}")
+    expected_episode_count = 2 * len(selected_scenes)
+    for scene in selected_scenes:
         initial_sha: str | None = None
         for relation in ("left", "right"):
             try:
@@ -497,7 +513,9 @@ def run_episodes(args: argparse.Namespace, policy) -> None:
                 print(traceback.format_exc(), file=sys.stderr, flush=True)
             finally:
                 episode_index += 1
-                write_episode_summaries(args.output_dir.resolve(), results, invalid)
+                write_episode_summaries(
+                    args.output_dir.resolve(), results, invalid, expected_episode_count
+                )
 
 
 def main() -> None:

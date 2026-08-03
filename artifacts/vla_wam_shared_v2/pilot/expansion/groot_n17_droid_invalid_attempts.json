@@ -1,0 +1,50 @@
+{
+  "schema_version": "vla-wam-shared-v2-invalid-attempt-ledger-v1",
+  "amendment_id": "V2-A005",
+  "model": "nvidia/GR00T-N1.7-DROID",
+  "denominator_policy": "Every entry is infrastructure- or contract-invalid and is excluded from model denominators. Raw outputs are preserved on the ali-owned PVC.",
+  "attempts": [
+    {
+      "attempt_id": "gated_backbone_preflight_01",
+      "stage": "setup",
+      "behavior_actions_executed": 0,
+      "reason": "The GR00T loader's first attempt to resolve gated nvidia/Cosmos-Reason2-2B returned HTTP 401 before model construction.",
+      "resolution": "Staged and hash-verified the exact backbone revision, then created a symlink-only local model view whose sole semantic override is model_name -> the verified local snapshot.",
+      "denominator_status": "excluded"
+    },
+    {
+      "attempt_id": "isaac_native_dependency_preflights",
+      "stage": "setup",
+      "behavior_actions_executed": 0,
+      "reason": "Initial Isaac launches stopped before scene creation while X11/GLU libraries and required Git LFS assets were absent.",
+      "resolution": "Created an isolated user-space native-library prefix, restored the exact LFS assets, selected headless OpenCV, and passed Vulkan/RTX scene capture.",
+      "denominator_status": "excluded"
+    },
+    {
+      "attempt_id": "upstream_biased_scene_fixtures_and_probe",
+      "stage": "repeat_gate",
+      "behavior_actions_executed": 0,
+      "reason": "The current upstream RoboLab scene reset the cube at [0.43065, -0.09745] and bowl at [0.44258, 0.12660], so the fixed observation was already directionally ordered and violated the frozen neutral-start contract.",
+      "preserved_raw_root": "/data/users/ali/vla_wam/raw/groot_n17_droid/invalid_attempts/upstream_biased_scene",
+      "invalid_fixture_sha256": "45b3509527778188fa03a8ba273ffc7b53c36d60847be6327152544118fddbdb",
+      "invalid_probe_metrics": {
+        "left_exact_repeat_rms": 0.0,
+        "left_vs_right_rms": 0.00565347308292985
+      },
+      "resolution": "Replaced all fixtures with task-level reset overrides derived from the frozen committed trajectory and required both official LEFT and RIGHT predicates to be false at reset.",
+      "denominator_status": "excluded"
+    },
+    {
+      "attempt_id": "seed8300_upstream_biased_scene_behavior",
+      "stage": "behavior",
+      "environment_seed": 8300,
+      "reason": "The scene-contract violation was discovered after behavior had started. LEFT completed 450 actions as a failure; RIGHT produced only a partial infrastructure run. Neither condition is valid evidence because both began from the invalid biased scene.",
+      "preserved_action_root": "/data/users/ali/vla_wam/raw/groot_n17_droid/invalid_attempts/upstream_biased_scene/direct_seed8300",
+      "preserved_simulator_root": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_groot_direct_seed8300_invalid_biased_scene",
+      "denominator_status": "excluded"
+    }
+  ],
+  "valid_run_interventions": [],
+  "valid_invalid_attempt_count": 0,
+  "next_command": "Run the frozen seed-8300 LEFT/RIGHT pair from scratch with v2_robolab_gate.py only after the corrected repeat-gate evidence is committed and pushed."
+}

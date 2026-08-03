@@ -1,0 +1,74 @@
+{
+  "schema_version": "vla-wam-shared-v2-groot-droid-readiness-v1",
+  "amendment_id": "V2-A005",
+  "status": "repeat_gate_passed_behavior_not_started",
+  "model_contract": {
+    "checkpoint": "nvidia/GR00T-N1.7-DROID",
+    "checkpoint_revision": "05e7cc97e40dbd33b0890c35cc0214fcb0547ab5",
+    "isaac_groot_commit": "b9955401d50c92a29258732e3ad6ccd579f1bdc0",
+    "cosmos_backbone": "nvidia/Cosmos-Reason2-2B",
+    "cosmos_backbone_revision": "9ce19a195e423419c349abfc86fd07178b230561",
+    "embodiment": "OXE_DROID_RELATIVE_EEF_RELATIVE_JOINT",
+    "open_loop_horizon": 8,
+    "checkpoint_files": {
+      "model-00001-of-00002.safetensors": "68d885c9684bb7d4781389873e4b7d33202b5618e70a83f2e78187a5fb839202",
+      "model-00002-of-00002.safetensors": "aa4c6e553ea8454500354352368bcbb7e4f0fb32a9816b20d5b25c231f13a8fd",
+      "model.safetensors.index.json": "407804ea5a62f4f8823f48811ae0edbb82fac101e9cf4d7273e6e2f692bb4d59",
+      "config.json": "b20d22636bdaf49436de49c5e7e5fc65203f7a4b88384eef426000100be57d1e",
+      "processor_config.json": "4b5c3bab3f148ff47ba903714c3247403c754f806ff2354a73acdfa2102a66fb",
+      "statistics.json": "127832f7df25cda15da4ba6be81737f96b65673d0f892f9fc1bce1bc062fa858"
+    },
+    "checkpoint_revision_metadata_verified_for_listed_files": true
+  },
+  "simulator_contract": {
+    "robolab_restored_commit_requested": "11142d4",
+    "robolab_restored_commit_available": false,
+    "robolab_commit_used": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "frozen_neutral_override": "The current upstream scene is reused with a study-owned task-level cube reset at [0.303364634513855, 0.12396888434886932, 0.08113233000040054].",
+    "left_task_sha256": "9c4d90be770266bac3ba5242b743098348c565ee622179b5e88fa2af0c4891bc",
+    "right_task_sha256": "ba0eb879590960c57976dd1b749c4ebbd3e86054e152ca5af014ac1bc2b6d02a"
+  },
+  "frozen_prompt_pair": {
+    "LEFT": "Put the Rubik's cube to the left of the bowl.",
+    "RIGHT": "Put the Rubik's cube to the right of the bowl."
+  },
+  "fixed_observations": [
+    {
+      "environment_seed": 8300,
+      "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/repeat_gate/fixture/seed8300_fixed_observation.npz",
+      "sha256": "e3ed8015c4ff5cb128fa8273f57a62432b14ae562e25f683a45972cbbbebd770",
+      "left_predicate_at_reset": false,
+      "right_predicate_at_reset": false
+    },
+    {
+      "environment_seed": 8301,
+      "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/repeat_gate/fixture/seed8301_fixed_observation.npz",
+      "sha256": "2bdeff27b9c73714722e94db3ffa681ac31d5656acdfb12bb481269b8c6e92c5",
+      "left_predicate_at_reset": false,
+      "right_predicate_at_reset": false
+    },
+    {
+      "environment_seed": 8302,
+      "path": "/data/users/ali/vla_wam/raw/groot_n17_droid/repeat_gate/fixture/seed8302_fixed_observation.npz",
+      "sha256": "971216f91a55cec6024d311c59cac929b4dd0296a4ec6808bfa7b58098d1a04f",
+      "left_predicate_at_reset": false,
+      "right_predicate_at_reset": false
+    }
+  ],
+  "repeat_gate": {
+    "artifact": "artifacts/vla_wam_shared_v2/pilot/expansion/groot_n17_droid_exact_repeat_probe.json",
+    "passed": true,
+    "left_exact_repeat_rms": 0.0,
+    "left_vs_right_rms": 0.08131226152181625,
+    "left_action_sha256": "8ba6699f3f7fb5c53552cb24d2f880a1f1c59ff18e563f8d5b535568ff1cf117",
+    "right_action_sha256": "8e57f8772044ed264b1c65205bc337cc5d4a9c7b8aaf0366912effa2c1c31513"
+  },
+  "behavior_queue": {
+    "authorized_cells": 6,
+    "environment_seeds": [8300, 8301, 8302],
+    "conditions": ["LEFT", "RIGHT"],
+    "completed_valid_cells": 0,
+    "invalid_behavior_attempts_excluded": 2,
+    "next_cell": "GR00T-N1.7-DROID seed8300 LEFT"
+  }
+}

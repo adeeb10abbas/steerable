@@ -1,0 +1,67 @@
+{
+  "contract": {
+    "action_shape": [
+      40,
+      8
+    ],
+    "prompt_difference_requires_nonzero_rms": true,
+    "repeat_requires_bit_exact": true
+  },
+  "fixture_manifest": "/data/users/ali/vla_wam/raw/groot_n17_droid/repeat_gate/fixture/seed8300_fixed_observation.json",
+  "fixture_sha256": "e3ed8015c4ff5cb128fa8273f57a62432b14ae562e25f683a45972cbbbebd770",
+  "metrics": {
+    "left_exact_repeat_max_abs": 0.0,
+    "left_exact_repeat_rms": 0.0,
+    "left_vs_right_max_abs": 0.12772469222545624,
+    "left_vs_right_rms": 0.08131226152181625
+  },
+  "passed": true,
+  "records": {
+    "left_a": {
+      "action_path": "/data/users/ali/vla_wam/raw/groot_n17_droid/repeat_gate/probe/left_a_action.npy",
+      "action_sha256": "8ba6699f3f7fb5c53552cb24d2f880a1f1c59ff18e563f8d5b535568ff1cf117",
+      "dtype": "float32",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "sampling_seed": 8300000,
+      "server_info": {
+        "sampling_seed": 8300000
+      },
+      "shape": [
+        40,
+        8
+      ]
+    },
+    "left_b": {
+      "action_path": "/data/users/ali/vla_wam/raw/groot_n17_droid/repeat_gate/probe/left_b_action.npy",
+      "action_sha256": "8ba6699f3f7fb5c53552cb24d2f880a1f1c59ff18e563f8d5b535568ff1cf117",
+      "dtype": "float32",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "sampling_seed": 8300000,
+      "server_info": {
+        "sampling_seed": 8300000
+      },
+      "shape": [
+        40,
+        8
+      ]
+    },
+    "right": {
+      "action_path": "/data/users/ali/vla_wam/raw/groot_n17_droid/repeat_gate/probe/right_action.npy",
+      "action_sha256": "8e57f8772044ed264b1c65205bc337cc5d4a9c7b8aaf0366912effa2c1c31513",
+      "dtype": "float32",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "sampling_seed": 8300000,
+      "server_info": {
+        "sampling_seed": 8300000
+      },
+      "shape": [
+        40,
+        8
+      ]
+    }
+  },
+  "remote_host": "10.244.103.110",
+  "remote_port": 5555,
+  "sampling_seed": 8300000,
+  "schema_version": "vla-wam-shared-v2-groot-exact-repeat-probe-v1"
+}

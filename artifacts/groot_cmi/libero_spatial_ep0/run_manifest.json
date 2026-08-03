@@ -1,0 +1,315 @@
+{
+  "analysis": {
+    "artifacts": {
+      "blog": "artifacts/groot_cmi/libero_spatial_ep0/BLOG_FINDINGS.md",
+      "frames": "artifacts/groot_cmi/libero_spatial_ep0/probe_frames.png",
+      "metrics": "artifacts/groot_cmi/libero_spatial_ep0/frame_metrics.csv",
+      "plot": "artifacts/groot_cmi/libero_spatial_ep0/cmi_over_rollout.png",
+      "sample_size_sensitivity": "artifacts/groot_cmi/libero_spatial_ep0/sample_size_sensitivity.csv",
+      "summary": "artifacts/groot_cmi/libero_spatial_ep0/frame_summary.csv"
+    },
+    "first_action_bonferroni_alpha": 0.00625,
+    "first_action_bonferroni_detected_frames": 8,
+    "first_action_language_dependence_detected_frames": 8,
+    "median_first_action_cmi_bits": 2.837239914949701,
+    "num_frames": 8,
+    "num_prompts": 10,
+    "prompt_entropy_ceiling_bits": 3.321928094887362,
+    "samples_per_prompt": 8
+  },
+  "base_model": {
+    "repo_id": "nvidia/GR00T-N1.7-3B",
+    "revision": "2fc962b973bccdd5d8ce4f67cc63b264d6886495"
+  },
+  "dataset": {
+    "episode": 0,
+    "repo_id": "IPEC-COMMUNITY/libero_spatial_no_noops_1.0.0_lerobot",
+    "revision": "bf14d6258218d12c2e3c1a3b9922e163cdf6455d"
+  },
+  "environment": {
+    "gpu": {
+      "capability": [
+        8,
+        6
+      ],
+      "cuda_runtime": "12.8",
+      "device": "cuda:0",
+      "name": "NVIDIA GeForce RTX 3090"
+    },
+    "packages": {
+      "huggingface-hub": "1.24.0",
+      "lerobot": "0.6.0",
+      "numpy": "2.2.6",
+      "torch": "2.11.0+cu128",
+      "transformers": "5.5.4"
+    },
+    "platform": "Linux-6.8.0-124-generic-x86_64-with-glibc2.35",
+    "python": "3.13.13",
+    "timestamp_utc": "2026-07-23T15:23:49.214216+00:00"
+  },
+  "estimator": {
+    "alpha": 0.05,
+    "bandwidth": null,
+    "bootstrap_samples": 200,
+    "continuous_dimensions": "all action dimensions except final gripper",
+    "continuous_estimator": "kde",
+    "gaussian_covariance": "diagonal",
+    "gripper_estimator": "categorical plug-in mutual information",
+    "permutations": 200,
+    "ridge": 1e-06
+  },
+  "model": {
+    "repo_id": "nvidia/gr00t17-lerobot-libero_spatial-640",
+    "revision": "32a6ec786d6509df31b40392b4e4dcdda78c0f11"
+  },
+  "processor_assets": {
+    "reason": "Public Qwen3-VL tokenizer/image/video processor assets are used because the architecture-compatible nvidia/Cosmos-Reason2-2B asset repo is gated.",
+    "repo_id": "Qwen/Qwen3-VL-2B-Instruct",
+    "revision": "89644892e4d85e24eaac8bacfd4f463576704203"
+  },
+  "prompt_entropy_ceiling_bits": 3.321928094887362,
+  "prompt_prior": "uniform",
+  "prompts": [
+    "pick up the black bowl next to the cookie box and place it on the plate",
+    "pick up the black bowl in the top drawer of the wooden cabinet and place it on the plate",
+    "pick up the black bowl on the ramekin and place it on the plate",
+    "pick up the black bowl on the stove and place it on the plate",
+    "pick up the black bowl between the plate and the ramekin and place it on the plate",
+    "pick up the black bowl on the cookie box and place it on the plate",
+    "pick up the black bowl next to the plate and place it on the plate",
+    "pick up the black bowl next to the ramekin and place it on the plate",
+    "pick up the black bowl from table center and place it on the plate",
+    "pick up the black bowl on the wooden cabinet and place it on the plate"
+  ],
+  "sampled_frames": {
+    "frames": [
+      {
+        "action_shape": [
+          10,
+          8,
+          16,
+          7
+        ],
+        "dataset_index": 0,
+        "episode_index": 0,
+        "episode_progress": 0.0,
+        "frame_index": 0,
+        "frame_order": 0,
+        "prompt_latencies_seconds": [
+          0.9765873750002356,
+          0.5639598920006392,
+          0.5629326529997343,
+          0.5624356770003942,
+          0.5641686529997969,
+          0.563053628000489,
+          0.5617259800001193,
+          0.566597876000742,
+          0.5673167360000662,
+          0.5630390799997258
+        ],
+        "true_task": "pick up the black bowl next to the cookie box and place it on the plate"
+      },
+      {
+        "action_shape": [
+          10,
+          8,
+          16,
+          7
+        ],
+        "dataset_index": 16,
+        "episode_index": 0,
+        "episode_progress": 0.14678899082568808,
+        "frame_index": 16,
+        "frame_order": 1,
+        "prompt_latencies_seconds": [
+          0.5680542160007462,
+          0.5666284239996457,
+          0.5653646629998548,
+          0.5696254810009123,
+          0.5670297509986995,
+          0.5664293649988394,
+          0.5664395920011884,
+          0.5676045629988948,
+          0.5680662569993729,
+          0.5688616949992138
+        ],
+        "true_task": "pick up the black bowl next to the cookie box and place it on the plate"
+      },
+      {
+        "action_shape": [
+          10,
+          8,
+          16,
+          7
+        ],
+        "dataset_index": 31,
+        "episode_index": 0,
+        "episode_progress": 0.28440366972477066,
+        "frame_index": 31,
+        "frame_order": 2,
+        "prompt_latencies_seconds": [
+          0.5701167610004632,
+          0.5691034790015692,
+          0.5703980529997352,
+          0.5742958890004957,
+          0.569588009000654,
+          0.569213815000694,
+          0.5692619709989231,
+          0.5722896679999394,
+          0.5744306260003214,
+          0.5695508130011149
+        ],
+        "true_task": "pick up the black bowl next to the cookie box and place it on the plate"
+      },
+      {
+        "action_shape": [
+          10,
+          8,
+          16,
+          7
+        ],
+        "dataset_index": 47,
+        "episode_index": 0,
+        "episode_progress": 0.43119266055045874,
+        "frame_index": 47,
+        "frame_order": 3,
+        "prompt_latencies_seconds": [
+          0.5755858510001417,
+          0.5732965900006093,
+          0.5733709500000259,
+          0.5738154580012633,
+          0.5701041700012865,
+          0.5740625870002987,
+          0.5764617959994212,
+          0.5771605960017041,
+          0.5754963079998561,
+          0.571711721999236
+        ],
+        "true_task": "pick up the black bowl next to the cookie box and place it on the plate"
+      },
+      {
+        "action_shape": [
+          10,
+          8,
+          16,
+          7
+        ],
+        "dataset_index": 62,
+        "episode_index": 0,
+        "episode_progress": 0.5688073394495413,
+        "frame_index": 62,
+        "frame_order": 4,
+        "prompt_latencies_seconds": [
+          0.7120044710009097,
+          0.572202739000204,
+          0.5733360920003179,
+          0.5732236320000084,
+          0.5703140099994926,
+          0.5762452319995646,
+          0.5753067810001085,
+          0.5774601569992228,
+          0.5778754500006471,
+          0.5770993890000682
+        ],
+        "true_task": "pick up the black bowl next to the cookie box and place it on the plate"
+      },
+      {
+        "action_shape": [
+          10,
+          8,
+          16,
+          7
+        ],
+        "dataset_index": 78,
+        "episode_index": 0,
+        "episode_progress": 0.7155963302752294,
+        "frame_index": 78,
+        "frame_order": 5,
+        "prompt_latencies_seconds": [
+          0.5747151439991285,
+          0.579660135001177,
+          0.5798199970013229,
+          0.5794233200012968,
+          0.5781700900006399,
+          0.5749466160013981,
+          0.5816762649992597,
+          0.5734932560008019,
+          0.5782258059989545,
+          0.5756545500007633
+        ],
+        "true_task": "pick up the black bowl next to the cookie box and place it on the plate"
+      },
+      {
+        "action_shape": [
+          10,
+          8,
+          16,
+          7
+        ],
+        "dataset_index": 93,
+        "episode_index": 0,
+        "episode_progress": 0.8532110091743119,
+        "frame_index": 93,
+        "frame_order": 6,
+        "prompt_latencies_seconds": [
+          0.5782101400000101,
+          0.5775792870008445,
+          0.5773377829991659,
+          0.5730465739998181,
+          0.577498298998762,
+          0.5762726060002024,
+          0.5748396880007931,
+          0.5779581759998109,
+          0.5866144640003768,
+          0.5834179230005248
+        ],
+        "true_task": "pick up the black bowl next to the cookie box and place it on the plate"
+      },
+      {
+        "action_shape": [
+          10,
+          8,
+          16,
+          7
+        ],
+        "dataset_index": 109,
+        "episode_index": 0,
+        "episode_progress": 1.0,
+        "frame_index": 109,
+        "frame_order": 7,
+        "prompt_latencies_seconds": [
+          0.5734446869992098,
+          0.5786409409993212,
+          0.5791276930012828,
+          0.5773462659999495,
+          0.5773812120005459,
+          0.5748745100008819,
+          0.5711708709986851,
+          0.578895308999563,
+          0.5788920480008528,
+          0.5758475520015054
+        ],
+        "true_task": "pick up the black bowl next to the cookie box and place it on the plate"
+      }
+    ],
+    "selected_dataset_indices": [
+      0,
+      16,
+      31,
+      47,
+      62,
+      78,
+      93,
+      109
+    ]
+  },
+  "sampling": {
+    "backbone_cache": true,
+    "bf16_params": false,
+    "horizon_steps_analyzed": 8,
+    "num_frames": 8,
+    "samples_per_prompt": 8,
+    "seed": 20260723
+  },
+  "status": "complete"
+}

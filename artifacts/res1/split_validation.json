@@ -1,0 +1,36 @@
+{
+  "absent_source_interpretation": "Bridge v1 and FLAP each have only one density-eligible trajectory; the deterministic exact-size target does not claim coverage of them.",
+  "all_group_and_role_assertions_pass": true,
+  "density_eligible_source_counts": {
+    "bridge_data_v1": 1,
+    "bridge_data_v2": 6374,
+    "flap": 1,
+    "icra": 1330,
+    "rss": 4626
+  },
+  "eligible_sources_absent_from_target": {
+    "bridge_data_v1": 1,
+    "flap": 1
+  },
+  "exact_normalized_task_is_globally_unique_in_conservative_join": true,
+  "pilot_is_subset_of_target": true,
+  "pilot_roles_match_target": true,
+  "pilot_source_counts": {
+    "bridge_data_v2": 101,
+    "icra": 18,
+    "rss": 73
+  },
+  "surface_holdout_protocol": "Use each view's selected_heldout_instruction on the same immutable row references. Val/test trajectory results are task plus trajectory generalization, not an isolated wording test.",
+  "target_exact_task_overlap_counts": {
+    "train__test": 0,
+    "train__validation": 0,
+    "validation__test": 0
+  },
+  "target_original_bridge_groups_disjoint": true,
+  "target_source_counts": {
+    "bridge_data_v2": 369,
+    "icra": 69,
+    "rss": 266
+  },
+  "target_trajectory_ids_disjoint": true
+}

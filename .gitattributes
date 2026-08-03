@@ -1,0 +1,7 @@
+# Generated evidence is retained byte-for-byte. Some upstream writers use CRLF
+# or presentation whitespace that must not be normalized after audit hashes are
+# frozen.
+artifacts/groot_cmi/**/*.csv -whitespace
+artifacts/res1/*.csv -whitespace
+artifacts/res1/DECISION_MEMO.md -whitespace
+artifacts/res1/visual_audit/index.html -whitespace

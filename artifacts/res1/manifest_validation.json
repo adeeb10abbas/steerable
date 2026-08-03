@@ -1,0 +1,175 @@
+{
+  "all_structural_assertions_pass": true,
+  "condition_key_set_exact": true,
+  "conditions": {
+    "A_task_canonical": {
+      "all_pass": true,
+      "checks": {
+        "canonical_instruction_matches_master": true,
+        "condition_metadata_exact": true,
+        "deterministic_language_selection": true,
+        "expected_heldout_pool_size": true,
+        "expected_training_pool_size": true,
+        "fixed_seed": true,
+        "instruction_pools_match_master": true,
+        "ordered_row_keys_equal": true,
+        "paraphrase_metadata_exact": true,
+        "pinned_reference_hash_equal": true,
+        "row_count_equal": true,
+        "selected_heldout_instruction_in_pool": true,
+        "selected_instruction_is_training_partition": true,
+        "selected_training_instruction_in_pool": true,
+        "semantic_intent_matches_master": true,
+        "semantic_update_rule": true,
+        "split_membership_equal": true,
+        "training_heldout_disjoint": true,
+        "uniform_sampling_policy": true,
+        "view_present": true
+      },
+      "heldout_pool_sizes": [
+        1
+      ],
+      "reference_hash": "2e4f6f1f80a75d8bd46529d1d622d753c3c9f39cf2907e6edfdc187c6631e6d1",
+      "row_count": 25910,
+      "training_heldout_overlap_count": null,
+      "training_pool_sizes": [
+        1
+      ]
+    },
+    "B_task_paraphrases": {
+      "all_pass": true,
+      "checks": {
+        "canonical_instruction_matches_master": true,
+        "condition_metadata_exact": true,
+        "deterministic_language_selection": true,
+        "expected_heldout_pool_size": true,
+        "expected_training_pool_size": true,
+        "fixed_seed": true,
+        "instruction_pools_match_master": true,
+        "ordered_row_keys_equal": true,
+        "paraphrase_metadata_exact": true,
+        "pinned_reference_hash_equal": true,
+        "row_count_equal": true,
+        "selected_heldout_instruction_in_pool": true,
+        "selected_instruction_is_training_partition": true,
+        "selected_training_instruction_in_pool": true,
+        "semantic_intent_matches_master": true,
+        "semantic_update_rule": true,
+        "split_membership_equal": true,
+        "training_heldout_disjoint": true,
+        "uniform_sampling_policy": true,
+        "view_present": true
+      },
+      "heldout_pool_sizes": [
+        2
+      ],
+      "reference_hash": "2e4f6f1f80a75d8bd46529d1d622d753c3c9f39cf2907e6edfdc187c6631e6d1",
+      "row_count": 25910,
+      "training_heldout_overlap_count": 0,
+      "training_pool_sizes": [
+        4
+      ]
+    },
+    "C_subtask_canonical": {
+      "all_pass": true,
+      "checks": {
+        "canonical_instruction_matches_master": true,
+        "condition_metadata_exact": true,
+        "deterministic_language_selection": true,
+        "expected_heldout_pool_size": true,
+        "expected_training_pool_size": true,
+        "fixed_seed": true,
+        "instruction_pools_match_master": true,
+        "ordered_row_keys_equal": true,
+        "paraphrase_metadata_exact": true,
+        "pinned_reference_hash_equal": true,
+        "row_count_equal": true,
+        "selected_heldout_instruction_in_pool": true,
+        "selected_instruction_is_training_partition": true,
+        "selected_training_instruction_in_pool": true,
+        "semantic_intent_matches_master": true,
+        "semantic_update_rule": true,
+        "split_membership_equal": true,
+        "training_heldout_disjoint": true,
+        "uniform_sampling_policy": true,
+        "view_present": true
+      },
+      "heldout_pool_sizes": [
+        1
+      ],
+      "reference_hash": "2e4f6f1f80a75d8bd46529d1d622d753c3c9f39cf2907e6edfdc187c6631e6d1",
+      "row_count": 25910,
+      "training_heldout_overlap_count": null,
+      "training_pool_sizes": [
+        1
+      ]
+    },
+    "D_subtask_paraphrases": {
+      "all_pass": true,
+      "checks": {
+        "canonical_instruction_matches_master": true,
+        "condition_metadata_exact": true,
+        "deterministic_language_selection": true,
+        "expected_heldout_pool_size": true,
+        "expected_training_pool_size": true,
+        "fixed_seed": true,
+        "instruction_pools_match_master": true,
+        "ordered_row_keys_equal": true,
+        "paraphrase_metadata_exact": true,
+        "pinned_reference_hash_equal": true,
+        "row_count_equal": true,
+        "selected_heldout_instruction_in_pool": true,
+        "selected_instruction_is_training_partition": true,
+        "selected_training_instruction_in_pool": true,
+        "semantic_intent_matches_master": true,
+        "semantic_update_rule": true,
+        "split_membership_equal": true,
+        "training_heldout_disjoint": true,
+        "uniform_sampling_policy": true,
+        "view_present": true
+      },
+      "heldout_pool_sizes": [
+        2
+      ],
+      "reference_hash": "2e4f6f1f80a75d8bd46529d1d622d753c3c9f39cf2907e6edfdc187c6631e6d1",
+      "row_count": 25910,
+      "training_heldout_overlap_count": 0,
+      "training_pool_sizes": [
+        4
+      ]
+    }
+  },
+  "master_reference_hash": "2e4f6f1f80a75d8bd46529d1d622d753c3c9f39cf2907e6edfdc187c6631e6d1",
+  "master_row_count": 25910,
+  "missing_condition_keys": [],
+  "paths": {
+    "A_task_canonical": "artifacts/res1/manifests/A_task_canonical.parquet",
+    "B_task_paraphrases": "artifacts/res1/manifests/B_task_paraphrases.parquet",
+    "C_subtask_canonical": "artifacts/res1/manifests/C_subtask_canonical.parquet",
+    "D_subtask_paraphrases": "artifacts/res1/manifests/D_subtask_paraphrases.parquet",
+    "master": "artifacts/res1/manifests/master_manifest.parquet"
+  },
+  "reference_hash_definition": "SHA-256 over pinned trajectory/timestep/observation_ref/action_ref records; this is a reference-identity hash, not a media-byte hash",
+  "sampling_seed": 20260723,
+  "schema_version": 1,
+  "scientific_language_conditions_pass": false,
+  "scientific_status": "structurally_valid_but_language_unverified",
+  "surface_match_validation": {
+    "added_token_mean_absolute_difference": 0.0,
+    "all_pass": false,
+    "checks": {
+      "embedding_distance_available_and_matched": false,
+      "mean_added_token_count_within_0_25": true,
+      "mean_pairwise_jaccard_within_0_05": false,
+      "same_surface_count": true,
+      "semantic_equivalence_audit_complete": false,
+      "surface_token_length_means_within_2_tokens": false
+    },
+    "interpretation": "The same wrapper count and added-token treatment do not make B and D matched: task and subtask base-language distributions differ.",
+    "pairwise_jaccard_mean_absolute_difference": 0.13323064913336524,
+    "status": "provisional_unmatched_pending_human_and_embedding_audit",
+    "surface_token_length_mean_absolute_difference": 5.138685696788242
+  },
+  "training_ready": false,
+  "unexpected_condition_keys": []
+}

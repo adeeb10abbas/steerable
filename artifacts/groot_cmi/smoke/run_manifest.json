@@ -1,0 +1,103 @@
+{
+  "analysis": {
+    "artifacts": {
+      "blog": "artifacts/groot_cmi/smoke/BLOG_FINDINGS.md",
+      "frames": "artifacts/groot_cmi/smoke/probe_frames.png",
+      "metrics": "artifacts/groot_cmi/smoke/frame_metrics.csv",
+      "plot": "artifacts/groot_cmi/smoke/cmi_over_rollout.png",
+      "summary": "artifacts/groot_cmi/smoke/frame_summary.csv"
+    },
+    "first_action_language_dependence_detected_frames": 0,
+    "median_first_action_adjusted_cmi_bits": 18.605780417210003,
+    "num_frames": 1,
+    "num_prompts": 2,
+    "samples_per_prompt": 2
+  },
+  "base_model": {
+    "repo_id": "nvidia/GR00T-N1.7-3B",
+    "revision": "2fc962b973bccdd5d8ce4f67cc63b264d6886495"
+  },
+  "dataset": {
+    "episode": 0,
+    "repo_id": "IPEC-COMMUNITY/libero_spatial_no_noops_1.0.0_lerobot",
+    "revision": "bf14d6258218d12c2e3c1a3b9922e163cdf6455d"
+  },
+  "environment": {
+    "gpu": {
+      "capability": [
+        8,
+        6
+      ],
+      "cuda_runtime": "12.8",
+      "device": "cuda:0",
+      "name": "NVIDIA GeForce RTX 3090"
+    },
+    "packages": {
+      "huggingface-hub": "1.24.0",
+      "lerobot": "0.6.0",
+      "numpy": "2.2.6",
+      "torch": "2.11.0+cu128",
+      "transformers": "5.5.4"
+    },
+    "platform": "Linux-6.8.0-124-generic-x86_64-with-glibc2.35",
+    "python": "3.13.13",
+    "timestamp_utc": "2026-07-23T15:08:32.859655+00:00"
+  },
+  "estimator": {
+    "alpha": 0.05,
+    "bootstrap_samples": 0,
+    "continuous_dimensions": "all action dimensions except final gripper",
+    "continuous_estimator": "diagonal Gaussian moment entropy",
+    "gripper_estimator": "categorical plug-in mutual information",
+    "permutations": 19,
+    "ridge": 1e-06
+  },
+  "model": {
+    "repo_id": "nvidia/gr00t17-lerobot-libero_spatial-640",
+    "revision": "32a6ec786d6509df31b40392b4e4dcdda78c0f11"
+  },
+  "processor_assets": {
+    "reason": "Public Qwen3-VL tokenizer/image/video processor assets are used because the architecture-compatible nvidia/Cosmos-Reason2-2B asset repo is gated.",
+    "repo_id": "Qwen/Qwen3-VL-2B-Instruct",
+    "revision": "89644892e4d85e24eaac8bacfd4f463576704203"
+  },
+  "prompt_prior": "uniform",
+  "prompts": [
+    "pick up the black bowl next to the cookie box and place it on the plate",
+    "pick up the black bowl in the top drawer of the wooden cabinet and place it on the plate"
+  ],
+  "sampled_frames": {
+    "frames": [
+      {
+        "action_shape": [
+          2,
+          2,
+          16,
+          7
+        ],
+        "dataset_index": 0,
+        "episode_index": 0,
+        "episode_progress": 0.0,
+        "frame_index": 0,
+        "frame_order": 0,
+        "prompt_latencies_seconds": [
+          1.1978185130010388,
+          0.17403075499896659
+        ],
+        "true_task": "pick up the black bowl next to the cookie box and place it on the plate"
+      }
+    ],
+    "selected_dataset_indices": [
+      0
+    ]
+  },
+  "sampling": {
+    "backbone_cache": true,
+    "bf16_params": false,
+    "horizon_steps_analyzed": 2,
+    "num_frames": 1,
+    "samples_per_prompt": 2,
+    "seed": 20260723
+  },
+  "status": "complete"
+}

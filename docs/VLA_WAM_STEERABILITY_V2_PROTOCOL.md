@@ -10,7 +10,7 @@ episodes. The machine-readable source of truth is
 [`protocol.json`](../artifacts/vla_wam_shared_v2/protocol.json), and the media
 selection rules are frozen separately in
 [`media_selection_plan.json`](../artifacts/vla_wam_shared_v2/media_selection_plan.json).
-The executable validator currently passes 230 checks; its full report is
+The executable validator currently passes 243 checks; its full report is
 [`protocol_validation.json`](../artifacts/vla_wam_shared_v2/protocol_validation.json).
 
 This is a disclosed post-v1 extension. Every pi0.5/Cosmos result in the
@@ -406,10 +406,19 @@ pooled or placed on an unlabeled common leaderboard.
   endpoints shifted toward RIGHT. The raw RoboLab HDF5, environment configs,
   logs, and viewport videos stay outside ordinary Git; the compiled result
   hashes each one and versions the six state-derived trajectories.
+- [`pi0_fast_directional_expansion.json`](../artifacts/vla_wam_shared_v2/pilot/pi0_fast_directional_expansion.json)
+  is the prospective registry for the next fourteen DROID cells. It freezes
+  seeds 8303--8309, exact prompts, checkpoint and repository revisions, video
+  retention, and the no-coach static-controller rule before new inference.
 - [`directional_expansion.json`](../artifacts/vla_wam_shared_v2/pilot/directional_expansion.json)
   freezes the seven additional scene pairs and discloses the 18 known pilot
   outcomes. Its model-blind seven-scene setup audit is
   [`directional_fixture_validation.json`](../artifacts/vla_wam_shared_v2/pilot/directional_fixture_validation.json).
+- [`continuation_state.json`](../artifacts/vla_wam_shared_v2/continuation_state.json)
+  and [`VLA_WAM_CONTINUATION.md`](VLA_WAM_CONTINUATION.md) provide the
+  machine-readable queue and human restart guide. They name the exact next
+  cells, launch commands, readiness blockers, stopping conditions, and
+  required handoff updates for a fresh model or a new usage window.
 - [`media_index.json`](../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/media_index.json)
   hashes three matched success/failure pairs in landscape and square formats,
   posters, captions, exact prompts, source trajectories, and the disclosed

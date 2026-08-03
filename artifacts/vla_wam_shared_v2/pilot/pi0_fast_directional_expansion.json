@@ -1,0 +1,71 @@
+{
+  "schema_version": "vla-wam-shared-v2-pi0-fast-directional-expansion-v1",
+  "study_id": "vla_wam_language_steerability_v2",
+  "status": "frozen_before_new_directional_expansion_inference",
+  "recorded_at_utc": "2026-08-03T11:12:07Z",
+  "repository_commit_before_freeze": "c4c67ad5772c55f1d17617189fd58b1ec9955646",
+  "model_id": "pi0_fast_droid_vla",
+  "trigger": {
+    "rule": "A model with direct-command success in exactly one direction receives a ten-seed direct-command directional-bias confirmation and no wording sweep.",
+    "known_episode_count": 6,
+    "known_result": {
+      "left_successes": 0,
+      "left_trials": 3,
+      "right_successes": 3,
+      "right_trials": 3,
+      "aligned_endpoint_pairs": 3,
+      "nonzero_first_chunk_pairs": 3
+    },
+    "decision": "directional_confirmation_only",
+    "wording_grid_authorized": false
+  },
+  "prompt_family": "direct_command",
+  "prompts": {
+    "left": "Put the Rubik's cube to the left of the bowl.",
+    "right": "Put the Rubik's cube to the right of the bowl."
+  },
+  "pairing_rule": "Within every seed, LEFT and RIGHT share the neutral reset, environment seed, sampling-seed root, checkpoint, static controller, ten-action open-loop horizon, and execution configuration. Only the direction word and requested-relation task checker change.",
+  "completed_seeds": [
+    8300,
+    8301,
+    8302
+  ],
+  "new_seeds": [
+    8303,
+    8304,
+    8305,
+    8306,
+    8307,
+    8308,
+    8309
+  ],
+  "episode_accounting": {
+    "completed_pairs": 3,
+    "new_pairs": 7,
+    "directions_per_pair": 2,
+    "completed_episode_count": 6,
+    "new_episode_count": 14,
+    "final_direct_confirmation_episode_count": 20
+  },
+  "execution": {
+    "policy_repository": "/home/ali/openpi-robolab",
+    "policy_repository_commit": "9e46d3aea26417bfb564227734b95d010aa827e5",
+    "simulator_repository": "/home/ali/projects/RoboLab",
+    "simulator_repository_commit": "11142d4319e44401e0464866bb5fedf7ec8a8927",
+    "checkpoint": "/home/ali/.cache/openpi/openpi-assets-simeval/pi0_fast_droid_jointpos",
+    "policy_gpu": 0,
+    "simulator_gpu": 1,
+    "open_loop_horizon": 10,
+    "instruction_controller": "static",
+    "subtask_progress_checking": false,
+    "video_mode": "viewport",
+    "output_folder_template": "v2_pi0_fast_direct_seed{seed}"
+  },
+  "analysis_plan": {
+    "primary": "Report exact LEFT and RIGHT successes out of ten with Wilson 95% intervals.",
+    "paired_effect": "For every seed, report first-ten-action RMS, both final target-relative endpoints, RIGHT-minus-LEFT endpoint shift, and whether the ordering aligns with the prompt change.",
+    "progression": "Report interaction, verified pickup, ever entered requested region, and relation-and-release success separately by direction.",
+    "exclusions": "Repair and rerun infrastructure-invalid cells at the same seed. Retain every valid behavioral failure. Thermal intervention invalidates latency, not behavior."
+  },
+  "claim_boundary": "This adaptive confirmation was frozen after the six pilot outcomes were known and before seeds 8303-8309 were run. It tests a checkpoint-specific DROID directional asymmetry and does not estimate a VLA-class effect."
+}

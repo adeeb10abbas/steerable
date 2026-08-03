@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RES-1 direct frame-alignment audit</title>
+  <style>
+    body { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; font: 16px/1.45 system-ui, sans-serif; color: #17202a; }
+    .warning { padding: 1rem; background: #fff4d6; border-left: 5px solid #c98200; }
+    article { margin: 2.5rem 0; padding-top: 1rem; border-top: 1px solid #ccd1d1; }
+    video { width: min(100%, 720px); background: #111; }
+    table { border-collapse: collapse; margin-top: 1rem; width: min(100%, 900px); }
+    th, td { border: 1px solid #ccd1d1; padding: .35rem .55rem; text-align: left; }
+    th { background: #eef2f3; }
+  </style>
+</head>
+<body>
+  <h1>RES-1 locked 20-video alignment audit</h1>
+  <p class="warning"><strong>Human judgment required.</strong> Captions show the candidate mapping
+  <code>LeRobot frame i -&gt; annotation step i</code>. The corresponding raw Bridge observation
+  index is <code>i+1</code>. Record decisions in <code>../visual_alignment_audit.csv</code>;
+  this page does not auto-approve boundaries.</p>
+  
+            <article>
+              <h2>01. Episode 40581 / steering 40460</h2>
+              <p><strong>Source:</strong> bridge_data_v2<br>
+                 <strong>Task:</strong> Fold the cloth into left side</p>
+              <video controls preload="metadata">
+                <source src="videos/episode_040581.mp4" type="video/mp4">
+                <track kind="captions" src="captions/episode_040581.vtt" srclang="en" label="Direct step i" default>
+              </video>
+              <table><thead><tr><th>Segment</th><th>Frames</th><th>Direct label</th></tr></thead>
+              <tbody><tr><td>0</td><td>0-10</td><td>Approach and move to the cloth on the left</td></tr><tr><td>1</td><td>11-17</td><td>Grasp the cloth</td></tr><tr><td>2</td><td>18-29</td><td>Lift and position the cloth</td></tr><tr><td>3</td><td>30-33</td><td>Fold the cloth to the left</td></tr><tr><td>4</td><td>34-40</td><td>Release and final positioning</td></tr></tbody></table>
+            </article>
+            
+            <article>
+              <h2>02. Episode 29200 / steering 29416</h2>
+              <p><strong>Source:</strong> bridge_data_v2<br>
+                 <strong>Task:</strong> moved the silver lid from the right top conner to the top of the silver pot</p>
+              <video controls preload="metadata">
+                <source src="videos/episode_029200.mp4" type="video/mp4">
+                <track kind="captions" src="captions/episode_029200.vtt" srclang="en" label="Direct step i" default>
+              </video>
+              <table><thead><tr><th>Segment</th><th>Frames</th><th>Direct label</th></tr></thead>
+              <tbody><tr><td>0</td><td>0-5</td><td>Move to the silver lid</td></tr><tr><td>1</td><td>6-11</td><td>Grasp the silver lid</td></tr><tr><td>2</td><td>12-25</td><td>Lift the silver lid</td></tr><tr><td>3</td><td>26-32</td><td>Release the silver lid</td></tr></tbody></table>
+            </article>
+            
+            <article>
+              <h2>03. Episode 13535 / steering 14038</h2>
+              <p><strong>Source:</strong> bridge_data_v2<br>
+                 <strong>Task:</strong> move the silver pot to the bottom side on the table</p>
+              <video controls preload="metadata">
+                <source src="videos/episode_013535.mp4" type="video/mp4">
+                <track kind="captions" src="captions/episode_013535.vtt" srclang="en" label="Direct step i" default>
+              </video>
+              <table><thead><tr><th>Segment</th><th>Frames</th><th>Direct label</th></tr></thead>
+              <tbody><tr><td>0</td><td>0-10</td><td>Move to and grasp silver pot</td></tr><tr><td>1</td><td>11-18</td><td>Lift and transport silver pot</td></tr><tr><td>2</td><td>19-24</td><td>Release silver pot</td></tr></tbody></table>
+            </article>
+            
+            <article>
+              <h2>04. Episode 32816 / steering 32899</h2>
+              <p><strong>Source:</strong> bridge_data_v2<br>
+                 <strong>Task:</strong> unfoldt the cloth from top left to left</p>
+              <video controls preload="metadata">
+                <source src="videos/episode_032816.mp4" type="video/mp4">
+                <track kind="captions" src="captions/episode_032816.vtt" srclang="en" label="Direct step i" default>
+              </video>
+              <table><thead><tr><th>Segment</th><th>Frames</th><th>Direct label</th></tr></thead>
+              <tbody><tr><td>0</td><td>0-5</td><td>Position end-effector above the top-left of the cloth</td></tr><tr><td>1</td><td>6-12</td><td>Grasp the cloth at the top-left corner</td></tr><tr><td>2</td><td>13-19</td><td>Move the cloth up and to the left</td></tr><tr><td>3</td><td>20-26</td><td>Release the cloth to unfold it</td></tr><tr><td>4</td><td>27-29</td><td>Complete Unfolding and Finalize Position</td></tr></tbody></table>
+            </article>
+            
+            <article>
+              <h2>05. Episode 33030 / steering 32766</h2>
+              <p><strong>Source:</strong> bridge_data_v2<br>
+                 <strong>Task:</strong> take the cylinder to top right</p>
+              <video controls preload="metadata">
+                <source src="videos/episode_033030.mp4" type="video/mp4">
+                <track kind="captions" src="captions/episode_033030.vtt" srclang="en" label="Direct step i" default>
+              </video>
+              <table><thead><tr><th>Segment</th><th>Frames</th><th>Direct label</th></tr></thead>
+              <tbody><tr><td>0</td><td>0-10</td><td>Reach for the cylinder</td></tr><tr><td>1</td><td>11-14</td><td>Grasp the cylinder</td></tr><tr><td>2</td><td>15-25</td><td>Lift and move the cylinder to the top right</td></tr><tr><td>3</td><td>26-27</td><td>Release the cylinder</td></tr><tr><td>4</td><td>28-32</td><td>Retract arm</td></tr></tbody></table>
+            </article>
+            
+            <article>
+              <h2>06. Episode 4568 / steering 4651</h2>
+              <p><strong>Source:</strong> bridge_data_v2<br>
+                 <strong>Task:</strong> move the red spoon onto the right burner</p>
+              <video controls preload="metadata">
+                <source src="videos/episode_004568.mp4" type="video/mp4">
+                <track kind="captions" src="captions/episode_004568.vtt" srclang="en" label="Direct step i" default>
+              </video>
+              <table><thead><tr><th>Segment</th><th>Frames</th><th>Direct label</th></tr></thead>
+              <tbody><tr><td>0</td><td>0-13</td><td>Reach for and grasp the red spoon</td></tr><tr><td>1</td><td>14-15</td><td>Lift the red spoon</td></tr><tr><td>2</td><td>16-35</td><td>Move the red spoon towards the right burner</td></tr><tr><td>3</td><td>36-45</td><td>Release the red spoon onto the right burner</td></tr></tbody></table>
+            </article>
+            
+            <article>
+              <h2>07. Episode 23650 / steering 23661</h2>
+              <p><strong>Source:</strong> bridge_data_v2<br>
+                 <strong>Task:</strong> stack cuboid to the left</p>
+              <video controls preload="metadata">
+                <source src="videos/episode_023650.mp4" type="video/mp4">
+                <track kind="captions" src="captions/episode_023650.vtt" srclang="en" label="Direct step i" default>
+              </video>
+              <table><thead><tr><th>Segment</th><th>Frames</th><th>Direct label</th></tr></thead>
+              <tbody><tr><td>0</td><td>0-34</td><td>Move Cuboid Above Stack Location</td></tr><tr><td>1</td><td>35-39</td><td>Release Cuboid on Stack</td></tr><tr><td>2</td><td>40-41</td><td>Move Away From Stack</td></tr></tbody></table>
+            </article>
+            
+            <article>
+              <h2>08. Episode 52550 / steering 52945</h2>
+              <p><strong>Source:</strong> icra<br>
+                 <strong>Task:</strong> Move orange pot to the bottom side of the knife and bottom right of the table</p>
+              <video controls preload="metadata">
+                <source src="videos/episode_052550.mp4" type="video/mp4">
+                <track kind="captions" src="captions/episode_052550.vtt" srclang="en" label="Direct step i" default>
+              </video>
+              <table><thead><tr><th>Segment</th><th>Frames</th><th>Direct label</th></tr></thead>
+              <tbody><tr><td>0</td><td>0-16</td><td>Reach for the orange pot</td></tr><tr><td>1</td><td>17-23</td><td>Grasp the orange pot</td></tr><tr><td>2</td><td>24-33</td><td>Lift the orange pot</td></tr><tr><td>3</td><td>34-35</td><td>Move the orange pot to the bottom side of the knife and bottom right of the table</td></tr><tr><td>4</td><td>36-39</td><td>Place the orange pot on the table</td></tr><tr><td>5</td><td>40-44</td><td>Release the orange pot</td></tr></tbody></table>
+            </article>
+            
+            <article>
+              <h2>09. Episode 19021 / steering 19044</h2>
+              <p><strong>Source:</strong> icra<br>
+                 <strong>Task:</strong> moved the green Broccoli from between two burner to the orange pot .</p>
+              <video controls preload="metadata">
+                <source src="videos/episode_019021.mp4" type="video/mp4">
+                <track kind="captions" src="captions/episode_019021.vtt" srclang="en" label="Direct step i" default>
+              </video>
+              <table><thead><tr><th>Segment</th><th>Frames</th><th>Direct label</th></tr></thead>
+              <tbody><tr><td>0</td><td>0-16</td><td>Move to the Broccoli near the burners</td></tr><tr><td>1</td><td>17-20</td><td>Grasp the Green Broccoli</td></tr><tr><td>2</td><td>21-31</td><td>Lift and Clear Broccoli (Failed Release?)</td></tr><tr><td>3</td><td>32-39</td><td>Move Broccoli to Orange Pot</td></tr></tbody></table>
+            </article>
+            
+            <article>
+              <h2>10. Episode 37280 / steering 37231</h2>
+              <p><strong>Source:</strong> icra<br>
+                 <strong>Task:</strong> move the metalic can to the right side of table</p>
+              <video controls preload="metadata">
+                <source src="videos/episode_037280.mp4" type="video/mp4">
+                <track kind="captions" src="captions/episode_037280.vtt" srclang="en" label="Direct step i" default>
+              </video>
+              <table><thead><tr><th>Segment</th><th>Frames</th><th>Direct label</th></tr></thead>
+              <tbody><tr><td>0</td><td>0-19</td><td>Reach for the metallic can</td></tr><tr><td>1</td><td>20-33</td><td>Grasp and adjust the metallic can</td></tr><tr><td>2</td><td>34-44</td><td>Move the metallic can to the right side of the table</td></tr></tbody></table>
+            </article>
+            
+            <article>
+              <h2>11. Episode 2733 / steering 3273</h2>
+              <p><strong>Source:</strong> icra<br>
+                 <strong>Task:</strong> put the stuff toy to the bottom right corner of the burner</p>
+              <video controls preload="metadata">
+                <source src="videos/episode_002733.mp4" type="video/mp4">
+                <track kind="captions" src="captions/episode_002733.vtt" srclang="en" label="Direct step i" default>
+              </video>
+              <table><thead><tr><th>Segment</th><th>Frames</th><th>Direct label</th></tr></thead>
+              <tbody><tr><td>0</td><td>0-5</td><td>Reach for the stuff toy</td></tr><tr><td>1</td><td>6-21</td><td>Grasp the stuff toy</td></tr><tr><td>2</td><td>22-28</td><td>Move the stuff toy towards the burner</td></tr><tr><td>3</td><td>29-34</td><td>Place the stuff toy on the burner</td></tr><tr><td>4</td><td>35-42</td><td>Retract from the burner</td></tr><tr><td>5</td><td>43-44</td><td>Final adjustment</td></tr></tbody></table>
+            </article>
+            
+            <article>
+              <h2>12. Episode 51316 / steering 51051</h2>
+              <p><strong>Source:</strong> icra<br>
+                 <strong>Task:</strong> put the wooden spatula on the top of the silver pot in the sink</p>
+              <video controls preload="metadata">
+                <source src="videos/episode_051316.mp4" type="video/mp4">
+                <track kind="captions" src="captions/episode_051316.vtt" srclang="en" label="Direct step i" default>
+              </video>
+              <table><thead><tr><th>Segment</th><th>Frames</th><th>Direct label</th></tr></thead>
+              <tbody><tr><td>0</td><td>0-22</td><td>Grasp the wooden spatula</td></tr><tr><td>1</td><td>23-34</td><td>Move towards the sink with the wooden spatula</td></tr><tr><td>2</td><td>35-38</td><td>Position the wooden spatula above the silver pot</td></tr><tr><td>3</td><td>39-44</td><td>Release the wooden spatula on the silver pot</td></tr><tr><td>4</td><td>45-55</td><td>Retract the gripper</td></tr></tbody></table>
+            </article>
+            
+            <article>
+              <h2>13. Episode 8444 / steering 8732</h2>
+              <p><strong>Source:</strong> icra<br>
+                 <strong>Task:</strong> move a blue pepper to the top right side of the burner</p>
+              <video controls preload="metadata">
+                <source src="videos/episode_008444.mp4" type="video/mp4">
+                <track kind="captions" src="captions/episode_008444.vtt" srclang="en" label="Direct step i" default>
+              </video>
+              <table><thead><tr><th>Segment</th><th>Frames</th><th>Direct label</th></tr></thead>
+              <tbody><tr><td>0</td><td>0-21</td><td>Reach towards the blue pepper</td></tr><tr><td>1</td><td>22-29</td><td>Grasp the blue pepper</td></tr><tr><td>2</td><td>30-38</td><td>Move the blue pepper to the right of the burner</td></tr><tr><td>3</td><td>39-52</td><td>Release the blue pepper on the burner</td></tr><tr><td>4</td><td>53-55</td><td>Move away from the burner</td></tr></tbody></table>
+            </article>
+            
+            <article>
+              <h2>14. Episode 18565 / steering 18361</h2>
+              <p><strong>Source:</strong> icra<br>
+                 <strong>Task:</strong> put the yellow cloth in the left side of the tables</p>
+              <video controls preload="metadata">
+                <source src="videos/episode_018565.mp4" type="video/mp4">
+                <track kind="captions" src="captions/episode_018565.vtt" srclang="en" label="Direct step i" default>
+              </video>
+              <table><thead><tr><th>Segment</th><th>Frames</th><th>Direct label</th></tr></thead>
+              <tbody><tr><td>0</td><td>0-1</td><td>Move to yellow cloth</td></tr><tr><td>1</td><td>2-13</td><td>Grasp the yellow cloth</td></tr><tr><td>2</td><td>14-27</td><td>Lift the yellow cloth</td></tr><tr><td>3</td><td>28-31</td><td>Move the yellow cloth to the left side of the tables</td></tr><tr><td>4</td><td>32-35</td><td>Place the yellow cloth on the left side of the tables</td></tr></tbody></table>
+            </article>
+            
+            <article>
+              <h2>15. Episode 27045 / steering 27236</h2>
+              <p><strong>Source:</strong> rss<br>
+                 <strong>Task:</strong> move the spatula on the far edge of the table</p>
+              <video controls preload="metadata">
+                <source src="videos/episode_027045.mp4" type="video/mp4">
+                <track kind="captions" src="captions/episode_027045.vtt" srclang="en" label="Direct step i" default>
+              </video>
+              <table><thead><tr><th>Segment</th><th>Frames</th><th>Direct label</th></tr></thead>
+              <tbody><tr><td>0</td><td>0-11</td><td>Reach for the spatula on the far edge of the table</td></tr><tr><td>1</td><td>12-16</td><td>Grasp the spatula</td></tr><tr><td>2</td><td>17-24</td><td>Lift the spatula</td></tr><tr><td>3</td><td>25-35</td><td>Release the spatula</td></tr></tbody></table>
+            </article>
+            
+            <article>
+              <h2>16. Episode 21226 / steering 21417</h2>
+              <p><strong>Source:</strong> rss<br>
+                 <strong>Task:</strong> move the chocolate bar to the left side of the spoon</p>
+              <video controls preload="metadata">
+                <source src="videos/episode_021226.mp4" type="video/mp4">
+                <track kind="captions" src="captions/episode_021226.vtt" srclang="en" label="Direct step i" default>
+              </video>
+              <table><thead><tr><th>Segment</th><th>Frames</th><th>Direct label</th></tr></thead>
+              <tbody><tr><td>0</td><td>0-12</td><td>Reach for the Chocolate Bar</td></tr><tr><td>1</td><td>13-16</td><td>Grasp the Chocolate Bar</td></tr><tr><td>2</td><td>17-18</td><td>Lift the Chocolate Bar</td></tr><tr><td>3</td><td>19-23</td><td>Move Above/To the Left of the Spoon</td></tr><tr><td>4</td><td>24-28</td><td>Release the Chocolate Bar</td></tr><tr><td>5</td><td>29-33</td><td>Move Away</td></tr></tbody></table>
+            </article>
+            
+            <article>
+              <h2>17. Episode 19409 / steering 19241</h2>
+              <p><strong>Source:</strong> rss<br>
+                 <strong>Task:</strong> Slide orange cloth up, to top edge of table.</p>
+              <video controls preload="metadata">
+                <source src="videos/episode_019409.mp4" type="video/mp4">
+                <track kind="captions" src="captions/episode_019409.vtt" srclang="en" label="Direct step i" default>
+              </video>
+              <table><thead><tr><th>Segment</th><th>Frames</th><th>Direct label</th></tr></thead>
+              <tbody><tr><td>0</td><td>0-13</td><td>Move to the Orange Cloth</td></tr><tr><td>1</td><td>14-20</td><td>Contact the Orange Cloth</td></tr><tr><td>2</td><td>21-27</td><td>Slide the Orange Cloth Up (First Part)</td></tr><tr><td>3</td><td>28-32</td><td>Slide the Orange Cloth Up (Second Part)</td></tr><tr><td>4</td><td>33-34</td><td>Final Adjustment to Top Edge</td></tr></tbody></table>
+            </article>
+            
+            <article>
+              <h2>18. Episode 19805 / steering 19720</h2>
+              <p><strong>Source:</strong> rss<br>
+                 <strong>Task:</strong> move the red spoon to the left corner of the table</p>
+              <video controls preload="metadata">
+                <source src="videos/episode_019805.mp4" type="video/mp4">
+                <track kind="captions" src="captions/episode_019805.vtt" srclang="en" label="Direct step i" default>
+              </video>
+              <table><thead><tr><th>Segment</th><th>Frames</th><th>Direct label</th></tr></thead>
+              <tbody><tr><td>0</td><td>0-11</td><td>Reach for and Grasp the Red Spoon</td></tr><tr><td>1</td><td>12-13</td><td>Lift the Red Spoon</td></tr><tr><td>2</td><td>14-18</td><td>Move the Red Spoon to the Left Corner of the Table</td></tr><tr><td>3</td><td>19-27</td><td>Place the Red Spoon in the Left Corner of the Table</td></tr><tr><td>4</td><td>28-35</td><td>Release and Retract</td></tr></tbody></table>
+            </article>
+            
+            <article>
+              <h2>19. Episode 6565 / steering 6588</h2>
+              <p><strong>Source:</strong> rss<br>
+                 <strong>Task:</strong> move the green cloth to the lower side of the left burner</p>
+              <video controls preload="metadata">
+                <source src="videos/episode_006565.mp4" type="video/mp4">
+                <track kind="captions" src="captions/episode_006565.vtt" srclang="en" label="Direct step i" default>
+              </video>
+              <table><thead><tr><th>Segment</th><th>Frames</th><th>Direct label</th></tr></thead>
+              <tbody><tr><td>0</td><td>0-8</td><td>Approach the Green Cloth</td></tr><tr><td>1</td><td>9-12</td><td>Grasp the Green Cloth</td></tr><tr><td>2</td><td>13-25</td><td>Move the Green Cloth to the Left Burner</td></tr><tr><td>3</td><td>26-30</td><td>Place the Green Cloth</td></tr></tbody></table>
+            </article>
+            
+            <article>
+              <h2>20. Episode 30415 / steering 30679</h2>
+              <p><strong>Source:</strong> rss<br>
+                 <strong>Task:</strong> Place broccoli into pot.</p>
+              <video controls preload="metadata">
+                <source src="videos/episode_030415.mp4" type="video/mp4">
+                <track kind="captions" src="captions/episode_030415.vtt" srclang="en" label="Direct step i" default>
+              </video>
+              <table><thead><tr><th>Segment</th><th>Frames</th><th>Direct label</th></tr></thead>
+              <tbody><tr><td>0</td><td>0-13</td><td>Reach and approach broccoli</td></tr><tr><td>1</td><td>14-19</td><td>Grasp the broccoli</td></tr><tr><td>2</td><td>20-28</td><td>Lift and move broccoli towards pot</td></tr><tr><td>3</td><td>29-33</td><td>Position broccoli over pot</td></tr><tr><td>4</td><td>34-37</td><td>Release broccoli into pot</td></tr><tr><td>5</td><td>38-43</td><td>Move away from pot</td></tr></tbody></table>
+            </article>
+            
+</body>
+</html>

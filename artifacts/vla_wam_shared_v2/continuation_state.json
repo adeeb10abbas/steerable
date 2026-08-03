@@ -1,0 +1,101 @@
+{
+  "schema_version": "vla-wam-shared-v2-continuation-v1",
+  "updated_at_utc": "2026-08-03T11:12:07Z",
+  "evidence_head_before_handoff": "c4c67ad5772c55f1d17617189fd58b1ec9955646",
+  "active_branch": "codex/wam-language-steerability",
+  "study_status": "four_new_model_direct_gates_complete_directional_confirmations_pending",
+  "authoritative_docs": [
+    "docs/VLA_WAM_CONTINUATION.md",
+    "docs/VLA_WAM_STEERABILITY_V2_PROTOCOL.md",
+    "docs/VLA_WAM_LOCAL_RUNBOOK.md",
+    "docs/VLA_VS_WAM_STEERABILITY_STUDY.md"
+  ],
+  "validation": {
+    "command": "python3 tools/validate_vla_wam_v2_protocol.py",
+    "last_status": "valid",
+    "last_check_count": 243,
+    "report": "artifacts/vla_wam_shared_v2/protocol_validation.json"
+  },
+  "host_snapshot": {
+    "observed_at_utc": "2026-08-03T11:12:07Z",
+    "gpus": "2 x NVIDIA GeForce RTX 3090, 24576 MiB each",
+    "gpu_state": "idle; 26 MiB on GPU 0 and 10 MiB on GPU 1",
+    "free_disk": "464 GiB",
+    "policy_or_simulator_listener": "none on ports 8000 or 5000"
+  },
+  "completed_direct_gates": [
+    {
+      "model_id": "pi0_fast_droid_vla",
+      "arena": "droid_robolab",
+      "result": "LEFT 0/3; RIGHT 3/3",
+      "artifact": "artifacts/vla_wam_shared_v2/pilot/results/pi0_fast_direct_gate.json",
+      "next_gate": "ten_seed_direct_directional_confirmation"
+    },
+    {
+      "model_id": "efficient_wam_rt_robotwin",
+      "arena": "robotwin_place_a2b",
+      "result": "LEFT 2/3; RIGHT 0/3",
+      "artifact": "artifacts/vla_wam_shared_v2/pilot/results/efficient_wam_rt_direct_gate.json",
+      "next_gate": "ten_scene_direct_directional_confirmation"
+    },
+    {
+      "model_id": "fastwam_robotwin",
+      "arena": "robotwin_place_a2b",
+      "result": "LEFT 1/3; RIGHT 0/3",
+      "artifact": "artifacts/vla_wam_shared_v2/pilot/results/fastwam_direct_gate.json",
+      "next_gate": "ten_scene_direct_directional_confirmation"
+    },
+    {
+      "model_id": "lingbot_va_robotwin",
+      "arena": "robotwin_place_a2b",
+      "result": "LEFT 3/3; RIGHT 0/3",
+      "artifact": "artifacts/vla_wam_shared_v2/pilot/results/lingbot_va_direct_gate.json",
+      "next_gate": "ten_scene_direct_directional_confirmation"
+    }
+  ],
+  "experiment_queue": [
+    {
+      "priority": 1,
+      "id": "pi0_fast_directional_confirmation",
+      "status": "ready",
+      "new_episode_count": 14,
+      "registry": "artifacts/vla_wam_shared_v2/pilot/pi0_fast_directional_expansion.json",
+      "resume_section": "docs/VLA_WAM_CONTINUATION.md#experiment-1-pi0-fast-droid-directional-confirmation"
+    },
+    {
+      "priority": 2,
+      "id": "robotwin_three_wam_directional_confirmation",
+      "status": "ready",
+      "new_episode_count": 42,
+      "registry": "artifacts/vla_wam_shared_v2/pilot/directional_expansion.json",
+      "fixture_report": "artifacts/vla_wam_shared_v2/pilot/directional_fixture_validation.json",
+      "resume_section": "docs/VLA_WAM_CONTINUATION.md#experiment-2-three-wam-robotwin-directional-confirmation"
+    },
+    {
+      "priority": 3,
+      "id": "lingbot_vla_4b_robotwin_pilot",
+      "status": "blocked_checkpoint_and_repository_missing",
+      "first_episode_count": 6,
+      "checkpoint": "Robbyant/lingbot-vla-4b-posttrain-robotwin",
+      "resume_section": "docs/VLA_WAM_CONTINUATION.md#experiment-3-lingbot-vla-4b-robotwin-onboarding"
+    },
+    {
+      "priority": 4,
+      "id": "groot_n17_droid_pilot",
+      "status": "blocked_gated_assets_missing",
+      "first_episode_count": 6,
+      "checkpoint": "nvidia/GR00T-N1.7-DROID",
+      "dependency": "nvidia/Cosmos-Reason2-2B access",
+      "resume_section": "docs/VLA_WAM_CONTINUATION.md#experiment-4-groot-n17-droid-onboarding"
+    }
+  ],
+  "unauthorized_work": [
+    "Do not run short, declarative, or contrastive cells for a checkpoint until its direct directional gate passes in both directions.",
+    "Do not pool DROID and RoboTwin raw success counts.",
+    "Do not add oracle actions, subtask coaching, dynamic prompts, or progress-conditioned instructions."
+  ],
+  "external_repository_dirt_to_preserve": [
+    "/home/ali/projects/RoboLab/.cache/",
+    "/home/ali/projects/Efficient-WAM/sapien_offscreen.png"
+  ]
+}

@@ -1,0 +1,28 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.egg-info/
+.DS_Store
+
+# Reproducible downloads and large row-level artifacts.
+data/raw/
+data/groot_cmi/
+artifacts/groot_cmi/*/samples/
+artifacts/groot_cmi/*/samples.npz
+artifacts/res1/manifests/**/*.parquet
+artifacts/res1/manifests/*.csv
+artifacts/res1/plots/*.png
+artifacts/res1/visual_audit/videos/*.mp4
+artifacts/res1/command_taxonomy.csv
+artifacts/res1/eligible_intents.csv
+artifacts/res1/quality_issues.csv
+artifacts/res1/episode_join.csv
+artifacts/res1/trajectory_density.csv
+
+# The semantic audit deliberately versions episodes 000, 004, and 009 only.
+# The other contact sheets are reproducible review aids and remain local.
+artifacts/vla_wam_shared_v1/semantic_confirmation/**/audit/**/episode_00[1235678]_contact_sheet.jpg

@@ -1,0 +1,623 @@
+{
+  "audit_template_write_status": {
+    "command": "written",
+    "paraphrase": "written",
+    "sequence": "written",
+    "visual_alignment": "written"
+  },
+  "claim_limits": [
+    "one-to-one normalized task identity is conservative but not an original Bridge key join",
+    "direct timestep mapping reproduces released loader indexing; visual boundary correctness is pending",
+    "automatic taxonomy candidates are not verified semantic paraphrases",
+    "generated verbatim wrappers are provisional and provide low-strength surface diversity",
+    "verified paraphrase capacity is zero until the locked human audits are finalized",
+    "the current B/D total-length and lexical-divergence distributions are not matched",
+    "exact task strings are unique in the conservative join, so trajectory test splits also change task identity",
+    "reference hashes prove identical immutable references, not locally re-hashed media bytes",
+    "the data does not establish same-observation counterfactual behavioral branches"
+  ],
+  "human_audit_gate": {
+    "audit_lock_validation": {
+      "all_pass": true,
+      "current_implementation_combined_sha256": "64317d31a734b7d6fea56294e81c1222fbed5c0708c4cd26df0b6d546fcbcff3",
+      "implementation_match": true,
+      "lock_present": true,
+      "locked_implementation_combined_sha256": "64317d31a734b7d6fea56294e81c1222fbed5c0708c4cd26df0b6d546fcbcff3",
+      "run_provenance": {
+        "all_files_present": true,
+        "all_pass": true,
+        "combined_sha256_match": true,
+        "file_records_match": true,
+        "lock_entry_present": true,
+        "locked_base_seed": 20260723,
+        "locked_combined_sha256": "2b3d661f65070dd316154a625b30635c327c9b7b40a5ef77bc13bb13c36a1280",
+        "observed_combined_sha256": "2b3d661f65070dd316154a625b30635c327c9b7b40a5ef77bc13bb13c36a1280",
+        "split_seeds_match_locked_base": true
+      },
+      "sample_sheets_pass": true,
+      "sheets": {
+        "manual_command_audit.csv": {
+          "all_pass": true,
+          "audit_seed_match": true,
+          "audit_seed_valid": true,
+          "identity_count_match": true,
+          "identity_rows_unique": true,
+          "identity_values_match": true,
+          "immutable_fields_present": true,
+          "immutable_sha256_match": true,
+          "locked_row_count": 838,
+          "locked_unit_count": 100,
+          "observed_row_count": 838,
+          "observed_unit_count": 100,
+          "row_count_match": true,
+          "unit_count_match": true,
+          "unit_identity_values_match": true
+        },
+        "manual_paraphrase_group_audit.csv": {
+          "all_pass": true,
+          "audit_seed_match": true,
+          "audit_seed_valid": true,
+          "identity_count_match": true,
+          "identity_rows_unique": true,
+          "identity_values_match": true,
+          "immutable_fields_present": true,
+          "immutable_sha256_match": true,
+          "locked_row_count": 100,
+          "locked_unit_count": 100,
+          "observed_row_count": 100,
+          "observed_unit_count": 100,
+          "row_count_match": true,
+          "unit_count_match": true,
+          "unit_identity_values_match": true
+        },
+        "manual_sequence_audit.csv": {
+          "all_pass": true,
+          "audit_seed_match": true,
+          "audit_seed_valid": true,
+          "identity_count_match": true,
+          "identity_rows_unique": true,
+          "identity_values_match": true,
+          "immutable_fields_present": true,
+          "immutable_sha256_match": true,
+          "locked_row_count": 30,
+          "locked_unit_count": 30,
+          "observed_row_count": 30,
+          "observed_unit_count": 30,
+          "row_count_match": true,
+          "unit_count_match": true,
+          "unit_identity_values_match": true
+        },
+        "visual_alignment_audit.csv": {
+          "all_pass": true,
+          "audit_seed_match": true,
+          "audit_seed_valid": true,
+          "identity_count_match": true,
+          "identity_rows_unique": true,
+          "identity_values_match": true,
+          "immutable_fields_present": true,
+          "immutable_sha256_match": true,
+          "locked_row_count": 20,
+          "locked_unit_count": 20,
+          "observed_row_count": 20,
+          "observed_unit_count": 20,
+          "row_count_match": true,
+          "unit_count_match": true,
+          "unit_identity_values_match": true
+        }
+      }
+    },
+    "checks": {
+      "audit_run_provenance_match": true,
+      "audit_sample_lock_pass": true,
+      "command_taxonomy_audit_complete": false,
+      "group_safe_nested_splits_pass": true,
+      "implementation_fingerprint_match": true,
+      "paraphrase_audit_pass": false,
+      "pilot_structural_manifests_pass": true,
+      "structural_manifests_pass": true,
+      "task_subtask_surface_distributions_matched": false,
+      "thirty_sequence_audit_pass": false,
+      "visual_alignment_audit_pass": false
+    },
+    "command_taxonomy_audit": {
+      "automatic_candidate_false_equivalence_rate": null,
+      "automatic_taxonomy_agreement_rate": null,
+      "automatic_to_manual_confusion": {},
+      "complete": false,
+      "expected_secondary_pool_count": 20,
+      "fully_primary_reviewed_command_rows": 0,
+      "fully_primary_reviewed_pools": 0,
+      "invalid_adjudication_rows": 0,
+      "invalid_secondary_flag_rows": 0,
+      "manual_unclear_rate": null,
+      "observed_secondary_pool_count": 20,
+      "per_automatic_class_precision": {},
+      "secondary_assignment_exact": true,
+      "secondary_complete_rows": 0,
+      "secondary_disagreement_rate": null,
+      "secondary_disagreement_rows": 0,
+      "secondary_required_rows": 163,
+      "slot_identity_rows_unique": true,
+      "template_command_rows": 838,
+      "template_pool_count": 100,
+      "unresolved_disagreement_rows": 0,
+      "unresolved_secondary_disagreement_rate": 0.0
+    },
+    "decision": "TRAINING NO-GO; CONDITIONAL GO TO CURATION",
+    "mode": "report_only_scientific_gate",
+    "note": "This gate is fail-closed. Blank, malformed, or incomplete reviewer fields remain failures; the pipeline never fabricates judgments. Finalization is report-only: it does not mutate eligibility, verified surface pools, manifests, or the decision memo. Reviewed surfaces require an explicit promotion and full regeneration step.",
+    "paraphrase_group_audit": {
+      "complete": false,
+      "estimated_false_equivalence_rate": null,
+      "expected_secondary_group_count": 20,
+      "gate_pass": false,
+      "intent_ids_unique": true,
+      "invalid_adjudication_groups": 0,
+      "invalid_secondary_flag_groups": 0,
+      "language_acceptability_pass_rate": null,
+      "observed_secondary_group_count": 20,
+      "primary_reviewed_groups": 0,
+      "secondary_assignment_exact": true,
+      "secondary_complete_groups": 0,
+      "secondary_disagreement_groups": 0,
+      "secondary_required_groups": 20,
+      "semantic_equivalence_pass_rate": null,
+      "template_group_count": 100,
+      "unique_intent_count": 100,
+      "unresolved_disagreement_groups": 0
+    },
+    "promotion_applied": false,
+    "schema_version": 2,
+    "sequence_audit": {
+      "boundary_alignment_pass_rate": null,
+      "complete": false,
+      "direct_mapping_pass_rate": null,
+      "expected_secondary_trajectory_count": 6,
+      "gate_pass": false,
+      "invalid_adjudication_trajectories": 0,
+      "invalid_secondary_flag_trajectories": 0,
+      "observed_secondary_trajectory_count": 6,
+      "primary_reviewed_trajectories": 0,
+      "secondary_assignment_exact": true,
+      "secondary_complete_trajectories": 0,
+      "secondary_disagreement_trajectories": 0,
+      "secondary_required_trajectories": 6,
+      "task_identity_pass_rate": null,
+      "template_trajectory_count": 30,
+      "trajectory_ids_unique": true,
+      "unique_trajectory_count": 30,
+      "unresolved_disagreement_trajectories": 0
+    },
+    "training_ready": false,
+    "visual_alignment_audit": {
+      "boundary_alignment_pass_rate": null,
+      "complete": false,
+      "direct_mapping_pass_rate": null,
+      "expected_secondary_trajectory_count": 4,
+      "gate_pass": false,
+      "invalid_adjudication_trajectories": 0,
+      "invalid_secondary_flag_trajectories": 0,
+      "observed_secondary_trajectory_count": 4,
+      "primary_reviewed_trajectories": 0,
+      "secondary_assignment_exact": true,
+      "secondary_complete_trajectories": 0,
+      "secondary_disagreement_trajectories": 0,
+      "secondary_required_trajectories": 4,
+      "task_identity_pass_rate": null,
+      "template_trajectory_count": 20,
+      "trajectory_ids_unique": true,
+      "unique_trajectory_count": 20,
+      "unresolved_disagreement_trajectories": 0
+    }
+  },
+  "implementation_manifest": {
+    "algorithm": "sha256",
+    "combined_sha256": "64317d31a734b7d6fea56294e81c1222fbed5c0708c4cd26df0b6d546fcbcff3",
+    "files": [
+      {
+        "path": "pyproject.toml",
+        "sha256": "ce1dd7e2535261f290516b6a15e76a390e808a36036a71ab34b79a81085c4899",
+        "size": 600
+      },
+      {
+        "path": "src/steerable_bridge/__init__.py",
+        "sha256": "10077b018d7feba73415ae5c8c7d81f74e8f21986299632b835342ebc9bc3fe9",
+        "size": 74
+      },
+      {
+        "path": "src/steerable_bridge/__main__.py",
+        "sha256": "d7815f9da17bcd8e79d1d47170e5795e29cc5837f97d1049664813068a9e563f",
+        "size": 63
+      },
+      {
+        "path": "src/steerable_bridge/audits.py",
+        "sha256": "91c092705e0129dd037c35845ac7d32d6e8deda0c83ef90619d6e62bb3890eb5",
+        "size": 45124
+      },
+      {
+        "path": "src/steerable_bridge/cli.py",
+        "sha256": "bfbe5d770d1d6b3f3e30123822b9799d803374ec23cb40e90a60165311ca4a8b",
+        "size": 1888
+      },
+      {
+        "path": "src/steerable_bridge/constants.py",
+        "sha256": "fca7abc44fd6b762975a5fd5f8902ff18a90a3d75be0e1458c17c5481cfe2085",
+        "size": 1926
+      },
+      {
+        "path": "src/steerable_bridge/io.py",
+        "sha256": "efcacd40a9c6025d1618411edce9c0481a922755f504211d16c0584539dc0608",
+        "size": 4404
+      },
+      {
+        "path": "src/steerable_bridge/join.py",
+        "sha256": "447bff86482dc9601609423d9f5b27f5701aec4d03da6dddf73cd72b8f441ae0",
+        "size": 21763
+      },
+      {
+        "path": "src/steerable_bridge/manifests.py",
+        "sha256": "73585fb16325f9e31fb4eb2682644f8f97ef7d17b4ac96d20a6a048de602070d",
+        "size": 17179
+      },
+      {
+        "path": "src/steerable_bridge/pipeline.py",
+        "sha256": "89f0447dfba5730a2eb61477be02458e9902a236dda96147fbfdef8f9d7f45d2",
+        "size": 60954
+      },
+      {
+        "path": "src/steerable_bridge/provenance.py",
+        "sha256": "23f8b51c3bca2a380c20609670a3c99c28360c61ac9d82937b9d879f3d23f6c2",
+        "size": 1197
+      },
+      {
+        "path": "src/steerable_bridge/splits.py",
+        "sha256": "e47e46f5f88b750e9d4d31d3b168426fddda5533083fa5e5854f4cdb2b90a916",
+        "size": 11253
+      },
+      {
+        "path": "src/steerable_bridge/taxonomy.py",
+        "sha256": "da9e2de64c78669cd1d85953033f10ac561d0ebf4e5c968107896f5f0a0a38ab",
+        "size": 20609
+      },
+      {
+        "path": "src/steerable_bridge/text.py",
+        "sha256": "df491e19a718a8c4af8ed895fbf01d0b29176fda3b9ef841cb1bc123af32a252",
+        "size": 2955
+      },
+      {
+        "path": "src/steerable_bridge/visual_audit.py",
+        "sha256": "c0bac1a9b616ec9ad2de8e274bbe39aee1272be707819103261fe903365da09c",
+        "size": 7228
+      },
+      {
+        "path": "uv.lock",
+        "sha256": "86961dcc7b7b061eab97e5aaf21e4b82efde4ed2bfa9a2bc0bb480a785a9688a",
+        "size": 286332
+      }
+    ],
+    "schema_version": 1
+  },
+  "input_manifest": {
+    "files": [
+      {
+        "local_path": "data/raw/steering_features_bridge/traj_idx_key_map.json",
+        "remote_path": "traj_idx_key_map.json",
+        "repo": "Embodied-CoT/steering_features_bridge",
+        "revision": "094f1f7259148e03619e73b45d7dff54995e7003",
+        "sha256": "b4c168b50f08c44d63070bf74204f3e1ee64e20a7d180c9358ac8e46d1583565",
+        "size": 17149202,
+        "url": "https://huggingface.co/datasets/Embodied-CoT/steering_features_bridge/resolve/094f1f7259148e03619e73b45d7dff54995e7003/traj_idx_key_map.json"
+      },
+      {
+        "local_path": "data/raw/steering_features_bridge/step_to_subtask_dict.json",
+        "remote_path": "step_to_subtask_dict.json",
+        "repo": "Embodied-CoT/steering_features_bridge",
+        "revision": "094f1f7259148e03619e73b45d7dff54995e7003",
+        "sha256": "35bbdf60c614a4af20266cc5756d1507173c2576a45cb796f54c2ccd2144939e",
+        "size": 49836416,
+        "url": "https://huggingface.co/datasets/Embodied-CoT/steering_features_bridge/resolve/094f1f7259148e03619e73b45d7dff54995e7003/step_to_subtask_dict.json"
+      },
+      {
+        "local_path": "data/raw/steering_features_bridge/subtask_level_commands.json",
+        "remote_path": "subtask_level_commands.json",
+        "repo": "Embodied-CoT/steering_features_bridge",
+        "revision": "094f1f7259148e03619e73b45d7dff54995e7003",
+        "sha256": "68fe581a3ed4ddbe15f5f394580b810de42a578640949b59d6db7bf8d98deffb",
+        "size": 81107672,
+        "url": "https://huggingface.co/datasets/Embodied-CoT/steering_features_bridge/resolve/094f1f7259148e03619e73b45d7dff54995e7003/subtask_level_commands.json"
+      },
+      {
+        "local_path": "data/raw/steering_features_bridge/rationales.json",
+        "remote_path": "rationales.json",
+        "repo": "Embodied-CoT/steering_features_bridge",
+        "revision": "094f1f7259148e03619e73b45d7dff54995e7003",
+        "sha256": "acd415fad56d4acd61e0e1abf2adc5b30c0dbd6b9eb523e0a6c97e042c07a7ef",
+        "size": 84532755,
+        "url": "https://huggingface.co/datasets/Embodied-CoT/steering_features_bridge/resolve/094f1f7259148e03619e73b45d7dff54995e7003/rationales.json"
+      },
+      {
+        "local_path": "data/raw/bridge_orig_lerobot/meta/info.json",
+        "remote_path": "meta/info.json",
+        "repo": "IPEC-COMMUNITY/bridge_orig_lerobot",
+        "revision": "0e9d76d07e9df3ea3eba257b2520d4913833fad2",
+        "sha256": "14fc7b0ae473266a2c7ee461cfb6d3d621f03ec4f51611cda07498d17eb57291",
+        "size": 4579,
+        "url": "https://huggingface.co/datasets/IPEC-COMMUNITY/bridge_orig_lerobot/resolve/0e9d76d07e9df3ea3eba257b2520d4913833fad2/meta/info.json"
+      },
+      {
+        "local_path": "data/raw/bridge_orig_lerobot/meta/episodes.jsonl",
+        "remote_path": "meta/episodes.jsonl",
+        "repo": "IPEC-COMMUNITY/bridge_orig_lerobot",
+        "revision": "0e9d76d07e9df3ea3eba257b2520d4913833fad2",
+        "sha256": "39043e8ffb580c02e9b884abd67f31dd5d1b87cdb763332b7957a1101e4c6952",
+        "size": 4351502,
+        "url": "https://huggingface.co/datasets/IPEC-COMMUNITY/bridge_orig_lerobot/resolve/0e9d76d07e9df3ea3eba257b2520d4913833fad2/meta/episodes.jsonl"
+      },
+      {
+        "local_path": "data/raw/bridge_orig_lerobot/meta/tasks.jsonl",
+        "remote_path": "meta/tasks.jsonl",
+        "repo": "IPEC-COMMUNITY/bridge_orig_lerobot",
+        "revision": "0e9d76d07e9df3ea3eba257b2520d4913833fad2",
+        "sha256": "2a832f97957188860ab3e95f5096385bffe0e5b03140531897e3e8d281fac625",
+        "size": 1637992,
+        "url": "https://huggingface.co/datasets/IPEC-COMMUNITY/bridge_orig_lerobot/resolve/0e9d76d07e9df3ea3eba257b2520d4913833fad2/meta/tasks.jsonl"
+      }
+    ],
+    "schema_version": 1
+  },
+  "join": {
+    "joined_raw_indices_equal": 403,
+    "lerobot_clean_task_records": 38660,
+    "normalized_task_overlap": 19318,
+    "one_to_one_joined_episodes": 17580,
+    "selected_join_tier": "A_internal_single_shared_task_only",
+    "shared_chat_16945_estimate_reproduced": false,
+    "steering_clean_task_records": 38390,
+    "tier_b_vocabulary_disambiguated_pairs": 17601
+  },
+  "join_normalization_sensitivity": [
+    {
+      "normalization": "raw_exact_strip",
+      "one_to_one_pairs": 18272,
+      "same_raw_index_pairs": 417,
+      "task_identity_warning": ""
+    },
+    {
+      "normalization": "nfkc_case_whitespace",
+      "one_to_one_pairs": 17884,
+      "same_raw_index_pairs": 408,
+      "task_identity_warning": ""
+    },
+    {
+      "normalization": "nfkc_case_ascii_alphanumeric",
+      "one_to_one_pairs": 17601,
+      "same_raw_index_pairs": 403,
+      "task_identity_warning": ""
+    },
+    {
+      "normalization": "ascii_alphanumeric_remove_articles",
+      "one_to_one_pairs": 16952,
+      "same_raw_index_pairs": 393,
+      "task_identity_warning": "stopword deletion is diagnostic only and is not allowed in the selected join"
+    },
+    {
+      "normalization": "ascii_alphanumeric_remove_articles_robot",
+      "one_to_one_pairs": 16946,
+      "same_raw_index_pairs": 393,
+      "task_identity_warning": "stopword deletion is diagnostic only and is not allowed in the selected join"
+    }
+  ],
+  "lerobot": {
+    "episodes_metadata_rows": 53192,
+    "fps": 5,
+    "reported_total_episodes": 53192,
+    "reported_total_frames": 1893026,
+    "reported_total_tasks": 19974
+  },
+  "paraphrase_eligibility": [
+    {
+      "final_verified_groups": 0,
+      "groups_at_least_1": 64976,
+      "groups_at_least_2": 64976,
+      "groups_at_least_4": 64976,
+      "groups_at_least_6": 64976,
+      "intent_groups": 64976,
+      "level": "subtask",
+      "origin": "generated_verbatim_wrapper"
+    },
+    {
+      "final_verified_groups": 0,
+      "groups_at_least_1": 17367,
+      "groups_at_least_2": 2157,
+      "groups_at_least_4": 6,
+      "groups_at_least_6": 0,
+      "intent_groups": 206243,
+      "level": "subtask",
+      "origin": "released"
+    },
+    {
+      "final_verified_groups": 0,
+      "groups_at_least_1": 12332,
+      "groups_at_least_2": 12332,
+      "groups_at_least_4": 12332,
+      "groups_at_least_6": 12332,
+      "intent_groups": 12332,
+      "level": "task",
+      "origin": "generated_verbatim_wrapper"
+    }
+  ],
+  "plots": {
+    "annotation_anatomy": "artifacts/res1/plots/annotation_anatomy.png",
+    "segment_length": "artifacts/res1/plots/segment_length.png",
+    "semantic_density_K_over_T": "artifacts/res1/plots/semantic_density_K_over_T.png",
+    "semantic_segments_K": "artifacts/res1/plots/semantic_segments_K.png"
+  },
+  "quality": {
+    "annotation_length_delta_counts": {
+      "2": 17580
+    },
+    "density_eligible_trajectories": 12332,
+    "direct_vs_plus_one_changed_frame_labels": 80486,
+    "episode_annotation_manifest_rows": 621480,
+    "integrity_eligible_trajectories": 17580,
+    "joined_trajectories_affected_by_plus_one": 17580,
+    "quality_issue_rows": 62689,
+    "retained_pool_resolution_exact_frames": 621480,
+    "retained_pool_resolution_normalized_key_frames": 0,
+    "unused_tail_rows": 35160,
+    "unused_tail_starts_new_segment_trajectories": 931
+  },
+  "released_files": {
+    "all_four_sidecar_intersection": 38454,
+    "command_map_semantic_pools": 206243,
+    "command_map_trajectories": 38454,
+    "command_slots": 1730644,
+    "rationale_map_trajectories": 38593,
+    "set_differences": {
+      "command_map": 0,
+      "rationale_map": 139,
+      "step_map": 0,
+      "trajectory_map": 14738
+    },
+    "step_map_timestep_rows": 1375726,
+    "step_map_trajectories": 38454,
+    "trajectory_map_records": 53192
+  },
+  "retention_funnel": [
+    {
+      "semantic_segments": null,
+      "stage": "released trajectory keys",
+      "timesteps": null,
+      "trajectories": 53192
+    },
+    {
+      "semantic_segments": 206243,
+      "stage": "has dense step and command maps",
+      "timesteps": 1375726,
+      "trajectories": 38454
+    },
+    {
+      "semantic_segments": null,
+      "stage": "clean recovered steering task",
+      "timesteps": null,
+      "trajectories": 38390
+    },
+    {
+      "semantic_segments": 97135,
+      "stage": "one-to-one task join",
+      "timesteps": 621480,
+      "trajectories": 17580
+    },
+    {
+      "semantic_segments": 97135,
+      "stage": "integrity eligible",
+      "timesteps": 621480,
+      "trajectories": 17580
+    },
+    {
+      "semantic_segments": 64976,
+      "stage": "temporal density eligible",
+      "timesteps": 454153,
+      "trajectories": 12332
+    },
+    {
+      "semantic_segments": 978,
+      "stage": "provisional pilot",
+      "timesteps": 7074,
+      "trajectories": 192
+    },
+    {
+      "semantic_segments": 3674,
+      "stage": "provisional target",
+      "timesteps": 25910,
+      "trajectories": 704
+    }
+  ],
+  "schema_version": 1,
+  "split_validation": {
+    "absent_source_interpretation": "Bridge v1 and FLAP each have only one density-eligible trajectory; the deterministic exact-size target does not claim coverage of them.",
+    "all_group_and_role_assertions_pass": true,
+    "density_eligible_source_counts": {
+      "bridge_data_v1": 1,
+      "bridge_data_v2": 6374,
+      "flap": 1,
+      "icra": 1330,
+      "rss": 4626
+    },
+    "eligible_sources_absent_from_target": {
+      "bridge_data_v1": 1,
+      "flap": 1
+    },
+    "exact_normalized_task_is_globally_unique_in_conservative_join": true,
+    "pilot_is_subset_of_target": true,
+    "pilot_roles_match_target": true,
+    "pilot_source_counts": {
+      "bridge_data_v2": 101,
+      "icra": 18,
+      "rss": 73
+    },
+    "surface_holdout_protocol": "Use each view's selected_heldout_instruction on the same immutable row references. Val/test trajectory results are task plus trajectory generalization, not an isolated wording test.",
+    "target_exact_task_overlap_counts": {
+      "train__test": 0,
+      "train__validation": 0,
+      "validation__test": 0
+    },
+    "target_original_bridge_groups_disjoint": true,
+    "target_source_counts": {
+      "bridge_data_v2": 369,
+      "icra": 69,
+      "rss": 266
+    },
+    "target_trajectory_ids_disjoint": true
+  },
+  "taxonomy": {
+    "command_slots": 1730644,
+    "display_normalized_unique_string_count": 1001531,
+    "method_note": "Automatic class 2 entries are candidates only. Context-sensitive strings with multiple classes are reported as mixed_across_contexts.",
+    "non_string_command_slots": 6,
+    "raw_exact_unique_string_count": 1032900,
+    "slot_counts": {
+      "atomic_motion_or_gripper_command": 99091,
+      "hybrid_or_added_behavioral_semantics": 246163,
+      "malformed_or_unclear": 373836,
+      "multi_point_gripper_trace": 194076,
+      "point_coordinate_grounding": 364922,
+      "subtask_same_intent_paraphrase_candidate": 244281,
+      "task_level_language": 208275
+    },
+    "slot_shares": {
+      "atomic_motion_or_gripper_command": 0.0572567206196075,
+      "hybrid_or_added_behavioral_semantics": 0.14223780280635417,
+      "malformed_or_unclear": 0.21600976283972903,
+      "multi_point_gripper_trace": 0.1121409140181343,
+      "point_coordinate_grounding": 0.21085907904803067,
+      "subtask_same_intent_paraphrase_candidate": 0.14115034634506,
+      "task_level_language": 0.12034537432308436
+    },
+    "token_normalized_unique_string_count": 977566,
+    "token_normalized_unique_string_counts": {
+      "atomic_motion_or_gripper_command": 4568,
+      "hybrid_or_added_behavioral_semantics": 175654,
+      "malformed_or_unclear": 152644,
+      "mixed_across_contexts": 15055,
+      "multi_point_gripper_trace": 194058,
+      "point_coordinate_grounding": 356621,
+      "subtask_same_intent_paraphrase_candidate": 60681,
+      "task_level_language": 18285
+    },
+    "token_normalized_unique_string_shares": {
+      "atomic_motion_or_gripper_command": 0.004672830274375336,
+      "hybrid_or_added_behavioral_semantics": 0.17968505451294337,
+      "malformed_or_unclear": 0.156147001839262,
+      "mixed_across_contexts": 0.015400494698056193,
+      "multi_point_gripper_trace": 0.1985114048565519,
+      "point_coordinate_grounding": 0.36480503618170024,
+      "subtask_same_intent_paraphrase_candidate": 0.06207355820476571,
+      "task_level_language": 0.01870461943234523
+    },
+    "within_pool_display_normalized_duplicate_rate": 0.01184707604941068,
+    "within_pool_display_normalized_extra_duplicate_slots": 20503,
+    "within_pool_token_normalized_duplicate_rate": 0.017574443644482556,
+    "within_pool_token_normalized_extra_duplicate_slots": 30415
+  }
+}

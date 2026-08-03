@@ -179,6 +179,13 @@ def validate(workspace: Path) -> dict[str, Any]:
         workspace
         / "artifacts/vla_wam_shared_v2/pilot/directional_fixture_validation.json"
     )
+    pi0_fast_expansion_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/pi0_fast_directional_expansion.json"
+    )
+    continuation_state_path = (
+        workspace / "artifacts/vla_wam_shared_v2/continuation_state.json"
+    )
     paired_media_path = (
         workspace
         / "artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/media_index.json"
@@ -201,6 +208,8 @@ def validate(workspace: Path) -> dict[str, Any]:
     runtime_interventions = load_json(runtime_interventions_path)
     directional_expansion = load_json(directional_expansion_path)
     directional_fixtures = load_json(directional_fixtures_path)
+    pi0_fast_expansion = load_json(pi0_fast_expansion_path)
+    continuation_state = load_json(continuation_state_path)
     paired_media = load_json(paired_media_path)
     droid_paired_media = load_json(droid_paired_media_path)
     figures_manifest = load_json(figures_manifest_path)
@@ -619,6 +628,42 @@ def validate(workspace: Path) -> dict[str, Any]:
         checks,
     )
     require(
+        pi0_fast_expansion["status"]
+        == "frozen_before_new_directional_expansion_inference",
+        "pi0-FAST directional confirmation is frozen before new inference",
+        checks,
+    )
+    require(
+        pi0_fast_expansion["completed_seeds"] == [8300, 8301, 8302]
+        and pi0_fast_expansion["new_seeds"]
+        == [8303, 8304, 8305, 8306, 8307, 8308, 8309],
+        "pi0-FAST confirmation separates three observed and seven prospective seeds",
+        checks,
+    )
+    require(
+        pi0_fast_expansion["episode_accounting"]["new_episode_count"] == 14
+        and pi0_fast_expansion["episode_accounting"][
+            "final_direct_confirmation_episode_count"
+        ]
+        == 20,
+        "pi0-FAST confirmation arithmetic is 14 new and 20 total direct episodes",
+        checks,
+    )
+    require(
+        not pi0_fast_expansion["trigger"]["wording_grid_authorized"]
+        and pi0_fast_expansion["trigger"]["known_result"]["left_successes"] == 0
+        and pi0_fast_expansion["trigger"]["known_result"]["right_successes"] == 3,
+        "pi0-FAST expansion discloses the observed one-direction-only trigger",
+        checks,
+    )
+    require(
+        pi0_fast_expansion["execution"]["instruction_controller"] == "static"
+        and not pi0_fast_expansion["execution"]["subtask_progress_checking"]
+        and pi0_fast_expansion["execution"]["video_mode"] == "viewport",
+        "pi0-FAST confirmation preserves static prompts, no coach, and viewport video",
+        checks,
+    )
+    require(
         len(technical["events"]) == 5
         and technical["events"][-1]["id"] == "PI0FAST-TECH-001"
         and technical["events"][-1]["classification"] == "environment_repair",
@@ -757,6 +802,43 @@ def validate(workspace: Path) -> dict[str, Any]:
     for figure_id, record in figures_manifest["figures"].items():
         validate_file_record(workspace, record, f"figure {figure_id}", checks)
 
+    require(
+        continuation_state["study_status"]
+        == "four_new_model_direct_gates_complete_directional_confirmations_pending",
+        "continuation state names the current evidence boundary",
+        checks,
+    )
+    queue = continuation_state["experiment_queue"]
+    require(
+        [item["priority"] for item in queue] == [1, 2, 3, 4],
+        "continuation queue has one unambiguous priority order",
+        checks,
+    )
+    require(
+        [item["id"] for item in queue]
+        == [
+            "pi0_fast_directional_confirmation",
+            "robotwin_three_wam_directional_confirmation",
+            "lingbot_vla_4b_robotwin_pilot",
+            "groot_n17_droid_pilot",
+        ],
+        "continuation queue preserves the four authorized or blocked next experiments",
+        checks,
+    )
+    require(
+        queue[0]["status"] == queue[1]["status"] == "ready"
+        and queue[2]["status"].startswith("blocked_")
+        and queue[3]["status"].startswith("blocked_"),
+        "continuation state distinguishes runnable experiments from asset blockers",
+        checks,
+    )
+    for relative_doc in continuation_state["authoritative_docs"]:
+        require(
+            (workspace / relative_doc).is_file(),
+            f"continuation document {relative_doc} exists",
+            checks,
+        )
+
     v1 = validate_v1_disclosure(workspace, checks)
     return {
         "status": "valid",
@@ -780,6 +862,10 @@ def validate(workspace: Path) -> dict[str, Any]:
         "directional_expansion_sha256": sha256(directional_expansion_path),
         "directional_fixtures_path": str(directional_fixtures_path.relative_to(workspace)),
         "directional_fixtures_sha256": sha256(directional_fixtures_path),
+        "pi0_fast_expansion_path": str(pi0_fast_expansion_path.relative_to(workspace)),
+        "pi0_fast_expansion_sha256": sha256(pi0_fast_expansion_path),
+        "continuation_state_path": str(continuation_state_path.relative_to(workspace)),
+        "continuation_state_sha256": sha256(continuation_state_path),
         "paired_media_path": str(paired_media_path.relative_to(workspace)),
         "paired_media_sha256": sha256(paired_media_path),
         "droid_paired_media_path": str(droid_paired_media_path.relative_to(workspace)),

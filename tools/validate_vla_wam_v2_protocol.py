@@ -73,6 +73,159 @@ def validate_file_record(
     require(sha256(path) == record["sha256"], f"{label} hash matches", checks)
 
 
+def validate_efficient_pair03_handoff(
+    workspace: Path,
+    integration_path: Path,
+    registry_path: Path,
+    bundle_manifest_path: Path,
+    checks: list[str],
+) -> dict[str, Any]:
+    """Validate the compact first prospective WAM pair and portable repo patches."""
+    integration = load_json(integration_path)
+    registry = load_json(registry_path)
+    require(
+        integration["schema_version"]
+        == "vla-wam-shared-v2-efficient-wam-pair-integration-v1"
+        and integration["status"] == "complete_valid_local_pair_do_not_rerun",
+        "Efficient-WAM pair03 is frozen as valid completed evidence that must not be rerun",
+        checks,
+    )
+    require(
+        integration["model_id"] == "efficient_wam_rt_robotwin"
+        and integration["model_repository_commit"]
+        == "b0b6cfabcbd68d18888866e958c677ce640f0412"
+        and integration["robotwin_repository_commit"]
+        == "0bd8e76fde3afcffa4b30a3e3e8f92a206aa66cc",
+        "Efficient-WAM pair03 identifies the exact model and simulator integration commits",
+        checks,
+    )
+    pair = integration["pair"]
+    registered = next(
+        scene for scene in registry["scenes"]
+        if scene["environment_seed"] == pair["environment_seed"]
+    )
+    require(
+        pair["pair_id"] == "robotwin_pair_03"
+        and pair["anchor_task"] == registered["anchor_task"] == "place_a2b_right"
+        and pair["environment_seed"] == registered["environment_seed"] == 4300003
+        and pair["sampling_seed"] == registered["sampling_seed"] == 8403
+        and pair["requested_relations"] == ["left", "right"],
+        "Efficient-WAM pair03 matches the frozen scene, seeds, and direct-command directions",
+        checks,
+    )
+    require(
+        integration["execution"]["instruction_controller"] == "static_episode_prompt"
+        and integration["execution"]["oracle_actions"] == 0
+        and integration["execution"]["subtask_coach"] is False
+        and integration["execution"]["simulator_video_enabled"] is True,
+        "Efficient-WAM pair03 used static prompts, no oracle or coach, and simulator video",
+        checks,
+    )
+    cells = integration["cells"]
+    require(
+        len(cells) == 2
+        and {cell["requested_relation"] for cell in cells} == {"left", "right"}
+        and all(cell["requested_success"] is False for cell in cells)
+        and all(cell["actions_executed"] == 400 for cell in cells),
+        "Efficient-WAM pair03 preserves two valid 400-action behavioral failures",
+        checks,
+    )
+    require(
+        all(
+            cell["files"]["action_trace"]["shape"] == [400, 14]
+            and cell["files"]["simulator_video"]["frames"] == 400
+            and cell["files"]["predicted_video"]["frames"] == 5
+            and all(
+                record.get("relative_path")
+                and record.get("bytes", 0) > 0
+                and len(record.get("sha256", "")) == 64
+                for record in cell["files"].values()
+            )
+            for cell in cells
+        ),
+        "Efficient-WAM pair03 records action, simulator-video, and decoded-future metadata for both cells",
+        checks,
+    )
+    require(
+        set(integration["collection_files"])
+        == {"manifest.json", "results.csv", "results.jsonl"}
+        and all(
+            record["bytes"] > 0 and len(record["sha256"]) == 64
+            for record in integration["collection_files"].values()
+        ),
+        "Efficient-WAM pair03 hashes its collection manifest and tabular summaries",
+        checks,
+    )
+    paired = integration["paired_metrics"]
+    require(
+        paired["first_ten_executed_action_rms"] > 0
+        and paired["steps_used"] == 10
+        and paired["right_minus_left_final_object_minus_target_x_m"] < 0
+        and paired["endpoint_ordering"] == "anti_aligned",
+        "Efficient-WAM pair03 distinguishes action sensitivity from anti-aligned physical steering",
+        checks,
+    )
+    thermal = integration["thermal_evidence"]
+    validate_file_record(workspace, thermal, "Efficient-WAM pair03 thermal log", checks)
+    require(
+        thermal["record_count"] == 273
+        and thermal["temperature_sample_count"] == 270
+        and thermal["maximum_temperature_c"] == 49
+        and thermal["pause_count"] == thermal["emergency_count"] == 0
+        and integration["execution"]["wall_latency_valid"] is True,
+        "Efficient-WAM pair03 thermal evidence contains no latency-invalidating intervention",
+        checks,
+    )
+    remaining = integration["remaining_scope"]
+    require(
+        remaining["efficient_wam_rt_robotwin"]["pairs"] == [4, 5, 6, 7, 8, 9]
+        and remaining["efficient_wam_rt_robotwin"]["episode_count"] == 12
+        and remaining["fastwam_robotwin"]["episode_count"] == 14
+        and remaining["lingbot_va_robotwin"]["episode_count"] == 14
+        and remaining["total_episode_count"] == 40,
+        "Efficient-WAM pair03 handoff leaves exactly forty prospective WAM episodes",
+        checks,
+    )
+
+    bundle_manifest = load_json(bundle_manifest_path)
+    bundles = bundle_manifest["bundles"]
+    require(
+        bundle_manifest["schema_version"] == "vla-wam-repository-handoff-bundles-v1"
+        and len(bundles) == 4,
+        "cross-host handoff registers exactly four incremental repository bundles",
+        checks,
+    )
+    for record in bundles:
+        validate_file_record(workspace, record, f"handoff bundle {Path(record['path']).name}", checks)
+        require(
+            len(record["prerequisite_commit"]) == 40
+            and len(record["target_commit"]) == 40
+            and record["prerequisite_commit"] != record["target_commit"]
+            and record["upstream"].startswith("https://github.com/"),
+            f"handoff bundle {Path(record['path']).name} pins upstream, prerequisite, and target",
+            checks,
+        )
+    require(
+        {record["target_commit"] for record in bundles}
+        == {
+            "b0b6cfabcbd68d18888866e958c677ce640f0412",
+            "068d3fd70c89df3726c09893f47b75a624b20c02",
+            "d42efbc04e502057dab4b18bb14770cc48e85131",
+            "0bd8e76fde3afcffa4b30a3e3e8f92a206aa66cc",
+        },
+        "handoff bundles contain the four exact integration commits",
+        checks,
+    )
+    return {
+        "path": str(integration_path.relative_to(workspace)),
+        "sha256": sha256(integration_path),
+        "valid_behavioral_episode_count": 2,
+        "remaining_new_episode_count": 40,
+        "bundle_manifest": str(bundle_manifest_path.relative_to(workspace)),
+        "bundle_manifest_sha256": sha256(bundle_manifest_path),
+    }
+
+
 def require(condition: bool, message: str, checks: list[str]) -> None:
     if not condition:
         raise RuntimeError(message)
@@ -489,6 +642,11 @@ def validate(workspace: Path) -> dict[str, Any]:
     continuation_state_path = (
         workspace / "artifacts/vla_wam_shared_v2/continuation_state.json"
     )
+    efficient_pair03_integration_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/efficient_wam_rt_pair03_integration.json"
+    )
+    bundle_manifest_path = workspace / "handoff/repo_bundles/MANIFEST.json"
     paired_media_path = (
         workspace
         / "artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/media_index.json"
@@ -514,6 +672,7 @@ def validate(workspace: Path) -> dict[str, Any]:
     directional_fixtures = load_json(directional_fixtures_path)
     pi0_fast_expansion = load_json(pi0_fast_expansion_path)
     continuation_state = load_json(continuation_state_path)
+    bundle_manifest = load_json(bundle_manifest_path)
     paired_media = load_json(paired_media_path)
     droid_paired_media = load_json(droid_paired_media_path)
     figures_manifest = load_json(figures_manifest_path)
@@ -698,6 +857,9 @@ def validate(workspace: Path) -> dict[str, Any]:
         "action-trace instrumentation is frozen before every prospective WAM cell", checks,
     )
     amendment_repositories = action_trace_amendment["repositories"]
+    portable_instrumentation_commits = {
+        record["target_commit"] for record in bundle_manifest["bundles"]
+    }
     require(
         [record["model_id"] for record in amendment_repositories]
         == ["efficient_wam_rt_robotwin", "fastwam_robotwin", "lingbot_va_robotwin"],
@@ -714,13 +876,31 @@ def validate(workspace: Path) -> dict[str, Any]:
     )
     for repository_record in amendment_repositories:
         repository_root = Path(repository_record["repository"])
+        require(
+            repository_record["commit_with_instrumentation"]
+            in portable_instrumentation_commits,
+            f"{repository_record['model_id']} instrumentation commit is available in the portable handoff",
+            checks,
+        )
         for script_record in repository_record["files"]:
             script_path = repository_root / script_record["path"]
-            require(script_path.is_file(), f"{repository_record['model_id']} instrumented script exists", checks)
-            require(script_path.stat().st_size == script_record["bytes"],
-                    f"{repository_record['model_id']} instrumented script byte count matches", checks)
-            require(sha256(script_path) == script_record["sha256"],
-                    f"{repository_record['model_id']} instrumented script hash matches", checks)
+            external_checkout_present = repository_root.is_dir()
+            require(
+                not external_checkout_present or script_path.is_file(),
+                f"{repository_record['model_id']} local instrumented script exists when its external checkout is present",
+                checks,
+            )
+            require(
+                not external_checkout_present
+                or script_path.stat().st_size == script_record["bytes"],
+                f"{repository_record['model_id']} local instrumented script byte count matches when present",
+                checks,
+            )
+            require(
+                not external_checkout_present or sha256(script_path) == script_record["sha256"],
+                f"{repository_record['model_id']} local instrumented script hash matches when present",
+                checks,
+            )
     measurement_contract = action_trace_amendment["measurement_contract"]
     require(
         measurement_contract["array"] == "executed"
@@ -1153,7 +1333,7 @@ def validate(workspace: Path) -> dict[str, Any]:
 
     require(
         continuation_state["study_status"]
-        == "pi0_fast_directional_confirmation_complete_three_wam_directional_confirmations_pending",
+        == "pi0_fast_complete_efficient_pair03_complete_40_wam_cells_pending",
         "continuation state names the current evidence boundary",
         checks,
     )
@@ -1179,7 +1359,10 @@ def validate(workspace: Path) -> dict[str, Any]:
         queue[0]["status"] == "complete"
         and queue[0].get("result_artifact")
         == "artifacts/vla_wam_shared_v2/pilot/results/pi0_fast_direct_confirmation.json"
-        and queue[1]["status"] == "ready"
+        and queue[1]["status"] == "ready_for_cross_host_resume"
+        and queue[1]["new_episode_count"] == 40
+        and queue[1]["completed_new_episode_count"] == 2
+        and queue[1]["next_cell"] == "efficient_wam_rt_robotwin/robotwin_pair_04"
         and queue[2]["status"].startswith("blocked_")
         and queue[3]["status"] == "ready_for_frozen_probe_and_direct_gate"
         and groot_readiness.get("status")
@@ -1196,6 +1379,13 @@ def validate(workspace: Path) -> dict[str, Any]:
             checks,
         )
 
+    pair03_handoff = validate_efficient_pair03_handoff(
+        workspace,
+        efficient_pair03_integration_path,
+        directional_expansion_path,
+        bundle_manifest_path,
+        checks,
+    )
     confirmation = validate_pi0_fast_confirmation(
         workspace, pi0_fast_confirmation_path, pi0_fast_expansion_path, checks
     )
@@ -1233,6 +1423,7 @@ def validate(workspace: Path) -> dict[str, Any]:
         "pi0_fast_expansion_sha256": sha256(pi0_fast_expansion_path),
         "continuation_state_path": str(continuation_state_path.relative_to(workspace)),
         "continuation_state_sha256": sha256(continuation_state_path),
+        "efficient_wam_pair03_handoff": pair03_handoff,
         "paired_media_path": str(paired_media_path.relative_to(workspace)),
         "paired_media_sha256": sha256(paired_media_path),
         "droid_paired_media_path": str(droid_paired_media_path.relative_to(workspace)),

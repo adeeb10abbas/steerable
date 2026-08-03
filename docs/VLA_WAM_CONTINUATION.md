@@ -1,7 +1,7 @@
 # VLA/WAM study continuation handoff
 
 Updated: 3 August 2026, after the compiled π0-FAST directional confirmation
-and before the three-WAM RoboTwin directional confirmations.
+and the first prospective Efficient-WAM-RT RoboTwin pair.
 
 This document is the restart point for a human or coding model with no chat
 context. The machine-readable companion is
@@ -18,11 +18,15 @@ Four new-model direct gates are complete:
 | Arena | Checkpoint | LEFT | RIGHT | Frozen next step |
 | --- | --- | ---: | ---: | --- |
 | DROID | π0-FAST | 1/10 | 10/10 | direct competence in both directions; wording eligible but deferred |
-| RoboTwin | Efficient-WAM-RT | 2/3 | 0/3 | add paired scenes 03–09 under direct commands only |
+| RoboTwin | Efficient-WAM-RT | 2/3 pilot + 0/1 confirmation | 0/3 pilot + 0/1 confirmation | pair03 valid and complete; run pairs04–09 |
 | RoboTwin | FastWAM | 1/3 | 0/3 | add paired scenes 03–09 under direct commands only |
 | RoboTwin | LingBot-VA | 3/3 | 0/3 | add paired scenes 03–09 under direct commands only |
 
-The three WAM gates still trigger the one-direction-only branch. π0-FAST has
+The three WAM gates still trigger the one-direction-only branch. Efficient-WAM
+pair03 is valid completed evidence and must not be rerun: both requested
+relations failed after 400 actions, the first ten executed actions differed
+(RMS 0.0762), and the RIGHT-minus-LEFT endpoint shift was -0.0081 m
+(anti-aligned). That leaves 40 prospective WAM episodes. π0-FAST has
 now completed its direct-only confirmation: all 20 episodes are behaviorally
 valid, all ten endpoint pairs align with the requested LEFT-to-RIGHT change,
 and one thermal event excludes wall latency only. Its four-wording grid is
@@ -38,6 +42,10 @@ The current article, figures, and videos are:
 - [π0-FAST media manifest](../artifacts/vla_wam_shared_v2/media/droid_pi0_fast_pairs/media_index.json)
 - [RoboTwin media manifest](../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/media_index.json)
 
+For a work-laptop Kubernetes/B200 continuation with no chat context, start at
+[`WORK_LAPTOP_B200_HANDOFF.md`](WORK_LAPTOP_B200_HANDOFF.md). It includes the
+portable external-repository bundle procedure and cluster/PVC evidence rules.
+
 ## Start-of-session checklist
 
 Run these before changing code or launching a model:
@@ -52,7 +60,8 @@ ss -ltnp | rg ':8000|:5000' || true
 python3 tools/validate_vla_wam_v2_protocol.py
 ```
 
-Expected evidence baseline: validator status `valid`, 284 checks. The live host
+Expected evidence baseline: validator status `valid`; use the check count in the
+committed validation report. The live host
 snapshot at handoff had two idle 24 GiB RTX 3090s and 464 GiB free. Treat that
 as historical context and recheck it; it is not a guarantee.
 
@@ -147,15 +156,16 @@ wording cell.
 <a id="experiment-2-three-wam-robotwin-directional-confirmation"></a>
 ## Experiment 2 — three-WAM RoboTwin directional confirmation
 
-Priority: **first**. Cost: 42 new episodes. Status: active next confirmation;
-fixtures and registry ready.
+Priority: **first**. Remaining cost: 40 new episodes. Status: active next
+confirmation; Efficient-WAM pair03 is complete and fixtures/registry are ready.
 
 Frozen registry:
 [`directional_expansion.json`](../artifacts/vla_wam_shared_v2/pilot/directional_expansion.json).
 Model-blind fixture validation:
 [`directional_fixture_validation.json`](../artifacts/vla_wam_shared_v2/pilot/directional_fixture_validation.json).
 
-Run pair03–pair09 for each of Efficient-WAM-RT, FastWAM, and LingBot-VA. Each
+Run pair04–pair09 for Efficient-WAM-RT and pair03–pair09 for FastWAM and
+LingBot-VA. Each
 anchor scene emits both the exact LEFT and RIGHT direct-command condition. Run
 one scene per invocation to avoid accidental task/seed Cartesian products and
 to keep thermal recovery manageable.
@@ -177,7 +187,25 @@ checked-in model wrapper in a private session, records its PID/PGID and
 temperatures, pauses only that group at 87 C, resumes at 80 C, and leaves it
 held (not killed) at 90 C. Each pair-level process emits two cell-level ledger
 records when a pause occurs; emergency or partial attempts go to the separate
-invalid-attempt ledger. The pair03 commands are:
+invalid-attempt ledger.
+
+### Efficient-WAM pair03 completion record
+
+`robotwin_pair_03` completed locally with two valid behavioral failures and no
+thermal intervention. Both cells ran 400 actions and retained viewport video,
+executed-action traces, and a five-frame decoded future. The exact compact
+record is
+[`efficient_wam_rt_pair03_integration.json`](../artifacts/vla_wam_shared_v2/pilot/directional_confirmation/efficient_wam_rt_pair03_integration.json);
+the hash-pinned thermal stream is
+[`efficient_pair03.jsonl`](../artifacts/vla_wam_shared_v2/pilot/directional_confirmation/thermal/efficient_pair03.jsonl).
+Raw model outputs remain outside ordinary Git at the path recorded in the
+integration manifest. Do not rerun this pair or reinterpret its two valid
+failures as infrastructure failures.
+
+The pair03 commands below are retained as provenance and as templates. Do not
+run the Efficient-WAM command again. Its exact next cell is pair04; replace the
+pair id, anchor task, environment seed, sampling seed, and output/log path
+together using the table above.
 
 ```bash
 # Efficient-WAM-RT

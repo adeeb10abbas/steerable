@@ -1,0 +1,186 @@
+{
+  "schema_version": "vla-wam-shared-v2-efficient-wam-pair-integration-v1",
+  "study_id": "vla_wam_language_steerability_v2",
+  "status": "complete_valid_local_pair_do_not_rerun",
+  "recorded_at_utc": "2026-08-03T12:38:09Z",
+  "model_id": "efficient_wam_rt_robotwin",
+  "arena": "robotwin_place_a2b",
+  "steerable_repository_commit": "673babd3247077f3cadf7adb6591f9bb7f71d5bf",
+  "model_repository": "/home/ali/projects/Efficient-WAM",
+  "model_repository_commit": "b0b6cfabcbd68d18888866e958c677ce640f0412",
+  "robotwin_repository": "/home/ali/projects/EfficientWAM-RoboTwin",
+  "robotwin_repository_commit": "0bd8e76fde3afcffa4b30a3e3e8f92a206aa66cc",
+  "frozen_registry": "artifacts/vla_wam_shared_v2/pilot/directional_expansion.json",
+  "instrumentation_amendment": "artifacts/vla_wam_shared_v2/pilot/action_trace_instrumentation_amendment.json",
+  "pair": {
+    "pair_id": "robotwin_pair_03",
+    "anchor_task": "place_a2b_right",
+    "environment_seed": 4300003,
+    "sampling_seed": 8403,
+    "prompt_family": "direct_command",
+    "requested_relations": [
+      "left",
+      "right"
+    ],
+    "valid_behavioral_episode_count": 2,
+    "invalid_attempt_count": 0,
+    "remaining_new_episode_count_after_pair": 40
+  },
+  "execution": {
+    "physical_gpu": 1,
+    "gpu_model": "NVIDIA GeForce RTX 3090",
+    "max_actions": 400,
+    "predicted_video_max_chunks": 1,
+    "instruction_controller": "static_episode_prompt",
+    "oracle_actions": 0,
+    "subtask_coach": false,
+    "simulator_video_enabled": true,
+    "guard_exit_code": 0,
+    "wall_latency_valid": true
+  },
+  "raw_output_root": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/directional_confirmation/pair03",
+  "collection_files": {
+    "manifest.json": {
+      "bytes": 601,
+      "sha256": "e629afcd53a34a8ca9de70b851286238c719e4153034a6fafd25f15d90b4f5c7"
+    },
+    "results.csv": {
+      "bytes": 603,
+      "sha256": "1a6ba9051b3f127bd8bfaac17858dd0cd11431ef6905db4720b15c00d85bb679"
+    },
+    "results.jsonl": {
+      "bytes": 4545,
+      "sha256": "ef0f34d2d5b9dc51075a14aaab383b4cc7172f80fb19e6ac84769d4b69f95969"
+    }
+  },
+  "cells": [
+    {
+      "requested_relation": "left",
+      "prompt": "Put the small woodenblock to the left of the red playingcards box.",
+      "requested_success": false,
+      "actions_executed": 400,
+      "final_object_minus_target_x_m": 0.17075879871845245,
+      "wall_seconds": 31.015593560000525,
+      "raw_directory": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/directional_confirmation/pair03/place_a2b_right/environment_seed_4300003/sampling_seed_8403/direct_command__left",
+      "files": {
+        "result": {
+          "relative_path": "result.json",
+          "bytes": 2525,
+          "sha256": "e9c22298eba2e072fdfa4db683add84f39445c49f9fc6ec6125d11146faa2275"
+        },
+        "trajectory": {
+          "relative_path": "trajectory.json",
+          "bytes": 151411,
+          "sha256": "eac3753aef3a58fba7729ba6ca1a83032a4d6088456a025d8527be7afba9e80d"
+        },
+        "action_trace": {
+          "relative_path": "action_trace.npz",
+          "bytes": 20715,
+          "sha256": "ef7f41cc11f01212afa17554fc9d3f830fbaed91501c03d7b6f5a2cc09fe33c0",
+          "array": "executed",
+          "shape": [400, 14]
+        },
+        "simulator_video": {
+          "relative_path": "simulator.mp4",
+          "bytes": 168974,
+          "sha256": "8fe52787ddc8beeeec5dfc2ff184b63a0609fb1c54cbc8dff043bb933517c494",
+          "codec": "h264",
+          "width": 320,
+          "height": 240,
+          "frames": 400
+        },
+        "predicted_video": {
+          "relative_path": "efficient_wam_predicted_video/episode1.mp4",
+          "bytes": 11160,
+          "sha256": "e830df12c5341f909f750a86a48823b9c6ff0a2a1339eea6f7582b6d42059bef",
+          "codec": "h264",
+          "width": 160,
+          "height": 192,
+          "frames": 5
+        }
+      }
+    },
+    {
+      "requested_relation": "right",
+      "prompt": "Put the small woodenblock to the right of the red playingcards box.",
+      "requested_success": false,
+      "actions_executed": 400,
+      "final_object_minus_target_x_m": 0.16269245743751526,
+      "wall_seconds": 41.06452174500009,
+      "raw_directory": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/directional_confirmation/pair03/place_a2b_right/environment_seed_4300003/sampling_seed_8403/direct_command__right",
+      "files": {
+        "result": {
+          "relative_path": "result.json",
+          "bytes": 2528,
+          "sha256": "a69d3a43644a5aa298176a93f65611cc11e1adf429bc469c194199de5330f6de"
+        },
+        "trajectory": {
+          "relative_path": "trajectory.json",
+          "bytes": 150776,
+          "sha256": "2135a46043277e0f8449536a644ee73f531095ae60de8d1f7957715ac8134cbf"
+        },
+        "action_trace": {
+          "relative_path": "action_trace.npz",
+          "bytes": 20356,
+          "sha256": "e29b8ae8f85af77e3018f05b3d8c489de1321640ef2ff57659dbde18e337fbee",
+          "array": "executed",
+          "shape": [400, 14]
+        },
+        "simulator_video": {
+          "relative_path": "simulator.mp4",
+          "bytes": 197995,
+          "sha256": "a4da4b5933d01adc711a2e63b83d5cd59e939671a96330bfd14a05d3eeba364b",
+          "codec": "h264",
+          "width": 320,
+          "height": 240,
+          "frames": 400
+        },
+        "predicted_video": {
+          "relative_path": "efficient_wam_predicted_video/episode0.mp4",
+          "bytes": 10867,
+          "sha256": "192e5475407dfff849f35fdd6bff71247799f332c27faf4cf301c5ed71d97a50",
+          "codec": "h264",
+          "width": 160,
+          "height": 192,
+          "frames": 5
+        }
+      }
+    }
+  ],
+  "paired_metrics": {
+    "first_ten_executed_action_rms": 0.07615897804498672,
+    "steps_used": 10,
+    "right_minus_left_final_object_minus_target_x_m": -0.008066341280937195,
+    "endpoint_ordering": "anti_aligned",
+    "interpretation": "The language changed the executed actions, but neither cell interacted enough to complete the requested relation and the final endpoint ordering did not follow the requested LEFT-to-RIGHT order."
+  },
+  "thermal_evidence": {
+    "path": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/thermal/efficient_pair03.jsonl",
+    "bytes": 79807,
+    "sha256": "7b4b7464d586324bf3468d6cc2b1947a33fd82cc328c075a0044ca9be8a68b2d",
+    "record_count": 273,
+    "temperature_sample_count": 270,
+    "minimum_temperature_c": 36,
+    "maximum_temperature_c": 49,
+    "pause_count": 0,
+    "emergency_count": 0,
+    "started_at_utc": "2026-08-03T12:35:49.614138Z",
+    "completed_at_utc": "2026-08-03T12:38:08.618416Z"
+  },
+  "remaining_scope": {
+    "efficient_wam_rt_robotwin": {
+      "pairs": [4, 5, 6, 7, 8, 9],
+      "episode_count": 12
+    },
+    "fastwam_robotwin": {
+      "pairs": [3, 4, 5, 6, 7, 8, 9],
+      "episode_count": 14
+    },
+    "lingbot_va_robotwin": {
+      "pairs": [3, 4, 5, 6, 7, 8, 9],
+      "episode_count": 14
+    },
+    "total_episode_count": 40
+  },
+  "claim_boundary": "This is one prospective Efficient-WAM-RT pair and not a ten-scene confirmation. It is valid behavioral evidence and must not be rerun, but no model-level confirmation claim is authorized until pairs 00-09 are compiled."
+}

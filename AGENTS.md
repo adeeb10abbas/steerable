@@ -10,6 +10,11 @@ VLA/WAM language-steerability study. Start every continuation by reading:
 Do not infer study state from chat history. Treat the committed artifacts as
 the source of truth.
 
+When continuing on the work laptop or a Kubernetes/B200 cluster, also read
+`docs/WORK_LAPTOP_B200_HANDOFF.md` before cloning model repositories or
+launching a pod. Restore the exact external integration commits from
+`handoff/repo_bundles/` and keep raw outputs on persistent cluster storage.
+
 ## Non-negotiable study rules
 
 - Never pool raw DROID and RoboTwin success rates.

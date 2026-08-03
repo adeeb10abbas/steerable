@@ -1,0 +1,52 @@
+{
+  "schema_version": "vla-wam-repository-handoff-bundles-v1",
+  "purpose": "Portable incremental Git objects for the exact model and simulator integration commits used by the frozen VLA/WAM study.",
+  "created_at_utc": "2026-08-03T13:00:00Z",
+  "usage_rule": "Clone the full upstream repository, verify that the prerequisite commit exists, fetch this bundle into a handoff remote ref, and detach or branch at the recorded target commit. Never apply these bundles to an unrelated repository.",
+  "bundles": [
+    {
+      "model_id": "efficient_wam_rt_robotwin",
+      "role": "model_adapter",
+      "path": "handoff/repo_bundles/efficient-wam-steerability.bundle",
+      "bytes": 34439,
+      "sha256": "f76d1bb91f4a58764cdd3cf60117ab4565d40182f0be25f4701df979c8f759df",
+      "upstream": "https://github.com/jiajun613/Efficient-WAM.git",
+      "prerequisite_commit": "2bd75a8c56acfcd5754b98c7ed313176911ccae0",
+      "target_commit": "b0b6cfabcbd68d18888866e958c677ce640f0412",
+      "target_ref": "refs/heads/codex/left-right-gate"
+    },
+    {
+      "model_id": "fastwam_robotwin",
+      "role": "model_and_robotwin_adapter",
+      "path": "handoff/repo_bundles/fastwam-steerability.bundle",
+      "bytes": 19712,
+      "sha256": "2c6291a08feddd514d2ea8170a1b0f4af62171bc2b73b65e0ac8b7fe957c1bac",
+      "upstream": "https://github.com/yuantianyuan01/FastWAM.git",
+      "prerequisite_commit": "45d8e1458921d83f8ad6cf9ce993d371208dabd0",
+      "target_commit": "068d3fd70c89df3726c09893f47b75a624b20c02",
+      "target_ref": "refs/heads/codex/language-steering-gate"
+    },
+    {
+      "model_id": "lingbot_va_robotwin",
+      "role": "model_adapter",
+      "path": "handoff/repo_bundles/lingbot-va-steerability.bundle",
+      "bytes": 23230,
+      "sha256": "972c13a1f8317228151104d8165502b1949e705e7f69f2b5bb02173a7fd6530b",
+      "upstream": "https://github.com/huggingface/lerobot.git",
+      "prerequisite_commit": "adccdea1cfbec83ed98263feb7e59f7d047c5692",
+      "target_commit": "d42efbc04e502057dab4b18bb14770cc48e85131",
+      "target_ref": "refs/heads/codex/lingbot-language-gate"
+    },
+    {
+      "model_id": "efficient_wam_rt_robotwin",
+      "role": "robotwin_simulator_adapter",
+      "path": "handoff/repo_bundles/efficient-wam-robotwin.bundle",
+      "bytes": 744,
+      "sha256": "d5cd3670bd6be1c674070323d63990a780b562f20a58f0c07b4f4cf865e063d4",
+      "upstream": "https://github.com/RoboTwin-Platform/RoboTwin.git",
+      "prerequisite_commit": "c3ddfa8b97d5519efa828b075999bd0006778e5e",
+      "target_commit": "0bd8e76fde3afcffa4b30a3e3e8f92a206aa66cc",
+      "target_ref": "refs/heads/codex/efficient-wam-gate"
+    }
+  ]
+}

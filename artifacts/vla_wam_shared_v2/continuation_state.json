@@ -1,19 +1,20 @@
 {
   "schema_version": "vla-wam-shared-v2-continuation-v1",
-  "updated_at_utc": "2026-08-03T12:25:30Z",
-  "evidence_head_before_handoff": "c4c67ad5772c55f1d17617189fd58b1ec9955646",
+  "updated_at_utc": "2026-08-03T13:00:00Z",
+  "evidence_head_before_handoff": "673babd3247077f3cadf7adb6591f9bb7f71d5bf",
   "active_branch": "codex/wam-language-steerability",
-  "study_status": "pi0_fast_directional_confirmation_complete_three_wam_directional_confirmations_pending",
+  "study_status": "pi0_fast_complete_efficient_pair03_complete_40_wam_cells_pending",
   "authoritative_docs": [
     "docs/VLA_WAM_CONTINUATION.md",
     "docs/VLA_WAM_STEERABILITY_V2_PROTOCOL.md",
     "docs/VLA_WAM_LOCAL_RUNBOOK.md",
+    "docs/WORK_LAPTOP_B200_HANDOFF.md",
     "docs/VLA_VS_WAM_STEERABILITY_STUDY.md"
   ],
   "validation": {
     "command": "python3 tools/validate_vla_wam_v2_protocol.py",
     "last_status": "valid",
-    "last_check_count": 284,
+    "last_check_count": 319,
     "report": "artifacts/vla_wam_shared_v2/protocol_validation.json"
   },
   "host_snapshot": {
@@ -88,7 +89,24 @@
       "arena": "robotwin_place_a2b",
       "result": "LEFT 2/3; RIGHT 0/3",
       "artifact": "artifacts/vla_wam_shared_v2/pilot/results/efficient_wam_rt_direct_gate.json",
-      "next_gate": "ten_scene_direct_directional_confirmation"
+      "next_gate": "ten_scene_direct_directional_confirmation",
+      "directional_confirmation_progress": {
+        "status": "pair03_complete_pairs04_09_pending",
+        "completed_pair_ids": ["robotwin_pair_03"],
+        "do_not_rerun_pair_ids": ["robotwin_pair_03"],
+        "result": "pair03 LEFT failure; RIGHT failure; 2/2 valid behavioral episodes; first-ten action RMS 0.07615897804498672; endpoint ordering anti-aligned",
+        "integration_manifest": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/efficient_wam_rt_pair03_integration.json",
+        "thermal_log": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/thermal/efficient_pair03.jsonl",
+        "remaining_pair_ids": [
+          "robotwin_pair_04",
+          "robotwin_pair_05",
+          "robotwin_pair_06",
+          "robotwin_pair_07",
+          "robotwin_pair_08",
+          "robotwin_pair_09"
+        ],
+        "remaining_episode_count": 12
+      }
     },
     {
       "model_id": "fastwam_robotwin",
@@ -126,8 +144,11 @@
     {
       "priority": 1,
       "id": "robotwin_three_wam_directional_confirmation",
-      "status": "ready",
-      "new_episode_count": 42,
+      "status": "ready_for_cross_host_resume",
+      "new_episode_count": 40,
+      "completed_new_episode_count": 2,
+      "next_cell": "efficient_wam_rt_robotwin/robotwin_pair_04",
+      "do_not_rerun": ["efficient_wam_rt_robotwin/robotwin_pair_03"],
       "registry": "artifacts/vla_wam_shared_v2/pilot/directional_expansion.json",
       "fixture_report": "artifacts/vla_wam_shared_v2/pilot/directional_fixture_validation.json",
       "resume_section": "docs/VLA_WAM_CONTINUATION.md#experiment-2-three-wam-robotwin-directional-confirmation"
@@ -150,6 +171,19 @@
       "resume_section": "docs/VLA_WAM_CONTINUATION.md#experiment-4-groot-n17-droid-onboarding"
     }
   ],
+  "cross_host_handoff": {
+    "status": "portable_handoff_committed_assets_ready",
+    "entrypoint": "docs/WORK_LAPTOP_B200_HANDOFF.md",
+    "repository_bundle_manifest": "handoff/repo_bundles/MANIFEST.json",
+    "repository_bundle_readme": "handoff/repo_bundles/README.md",
+    "raw_output_policy": "Keep checkpoints, raw rollouts, videos, trajectories, and model outputs on the cluster PVC. Sync only compact hash-bearing evidence, selected publication media, ledgers, and generated summaries back to this repository.",
+    "required_first_checks": [
+      "Discover only Kubernetes contexts and namespaces explicitly owned by ali.",
+      "Confirm B200 visibility, Vulkan/SAPIEN rendering, persistent storage, free capacity, and model-registry egress before inference.",
+      "Run the portable validator against the checked-in bundles, then restore their exact external repository commits before inference.",
+      "Do not rerun Efficient-WAM-RT robotwin_pair_03."
+    ]
+  },
   "unauthorized_work": [
     "Do not run short, declarative, or contrastive cells for a checkpoint until its direct directional gate passes in both directions. pi0-FAST now meets that eligibility threshold, but its wording grid remains explicitly deferred and is not authorized until the three-WAM directional confirmations are compiled and a post-result decision is recorded.",
     "Do not pool DROID and RoboTwin raw success counts.",

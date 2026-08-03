@@ -5,14 +5,16 @@ inference** on 3 August 2026 at 01:19:36 UTC. Three six-episode RoboTwin WAM
 pilots and one six-episode π0-FAST DROID VLA pilot completed the
 one-direction-only branch of the frozen adaptive gate. π0-FAST has since
 completed its prospectively frozen ten-seed direct-command directional
-confirmation; the three RoboTwin WAM confirmations remain pending. The
-RoboTwin ten-scene directional confirmation was frozen at 03:29:32 UTC after
+confirmation. Efficient-WAM-RT has also completed the first prospective
+RoboTwin confirmation pair; the three model-level WAM confirmations remain
+pending. The RoboTwin ten-scene directional confirmation was frozen at
+03:29:32 UTC after
 disclosing all 18 WAM pilot outcomes and before any of its 42 new expansion
 episodes. The machine-readable source of truth is
 [`protocol.json`](../artifacts/vla_wam_shared_v2/protocol.json), and the media
 selection rules are frozen separately in
 [`media_selection_plan.json`](../artifacts/vla_wam_shared_v2/media_selection_plan.json).
-The executable validator currently passes 284 checks; its full report is
+The executable validator and its exact current check count are recorded in
 [`protocol_validation.json`](../artifacts/vla_wam_shared_v2/protocol_validation.json).
 
 This is a disclosed post-v1 extension. Every pi0.5/Cosmos result in the
@@ -43,7 +45,7 @@ compare only normalized model descriptors, and every mark must name its arena.
 | DROID | GR00T N1.7 DROID | VLA | none | new expansion model |
 | DROID | Cosmos3 Edge DROID | WAM | decoded video plus actions | existing v1 reference |
 | RoboTwin | LingBot-VLA 4B | VLA | none | new expansion model |
-| RoboTwin | Efficient-WAM-RT | WAM | coarse decoded video plus actions | direct gate complete: LEFT 2/3, RIGHT 0/3 |
+| RoboTwin | Efficient-WAM-RT | WAM | coarse decoded video plus actions | direct gate complete; prospective pair03 adds LEFT 0/1, RIGHT 0/1 |
 | RoboTwin | FastWAM | WAM | world-model training; action-only test time | direct gate complete: LEFT 1/3, RIGHT 0/3 |
 | RoboTwin | LingBot-VA | WAM | joint video/action latent | direct gate complete: LEFT 3/3, RIGHT 0/3 |
 
@@ -215,6 +217,16 @@ model-blind. Every fixture contained distinct moved/reference objects and
 started outside both relation regions. The fixture report establishes only
 technical validity and neutral starting geometry; it is not behavioral
 evidence.
+
+Efficient-WAM-RT pair03 is the first prospective pair completed after that
+freeze. Its LEFT and RIGHT cells are both valid 400-action behavioral failures.
+The first ten executed actions differ (RMS 0.0762), but the final
+RIGHT-minus-LEFT object-to-target lateral offset is -0.0081 m, so the endpoint
+ordering is anti-aligned with the requested language change. Both cells retain
+simulator video and a five-frame decoded future; the thermal guard recorded a
+49 C maximum with no pause or emergency. This is evidence for one scene, not a
+model-level ten-scene result, and pair03 must not be rerun. The remaining
+prospective WAM queue is 40 episodes.
 
 ### Observed π0-FAST DROID gate and selected follow-up
 
@@ -443,11 +455,19 @@ pooled or placed on an unlabeled common leaderboard.
   freezes the seven additional scene pairs and discloses the 18 known pilot
   outcomes. Its model-blind seven-scene setup audit is
   [`directional_fixture_validation.json`](../artifacts/vla_wam_shared_v2/pilot/directional_fixture_validation.json).
+- [`efficient_wam_rt_pair03_integration.json`](../artifacts/vla_wam_shared_v2/pilot/directional_confirmation/efficient_wam_rt_pair03_integration.json)
+  preserves the first prospective Efficient-WAM-RT pair as two valid failures,
+  including paired action sensitivity, anti-aligned endpoint ordering, decoded
+  future metadata, raw-output hashes, and its no-intervention thermal record.
 - [`continuation_state.json`](../artifacts/vla_wam_shared_v2/continuation_state.json)
   and [`VLA_WAM_CONTINUATION.md`](VLA_WAM_CONTINUATION.md) provide the
   machine-readable queue and human restart guide. They name the exact next
   cells, launch commands, readiness blockers, stopping conditions, and
   required handoff updates for a fresh model or a new usage window.
+- [`WORK_LAPTOP_B200_HANDOFF.md`](WORK_LAPTOP_B200_HANDOFF.md) and the
+  [`repo_bundles` manifest](../handoff/repo_bundles/MANIFEST.json) make the
+  external model/simulator integration commits and cluster continuation
+  procedure portable without relying on chat history.
 - [`media_index.json`](../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/media_index.json)
   hashes three matched success/failure pairs in landscape and square formats,
   posters, captions, exact prompts, source trajectories, and the disclosed

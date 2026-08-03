@@ -1,0 +1,190 @@
+{
+  "schema_version": "vla-wam-shared-v2-lawam-robotwin-registry-v1",
+  "status": "frozen_before_any_inference_blocked_on_gated_dinov3_access",
+  "frozen_at_utc": "2026-08-03T19:18:18Z",
+  "recorded_at_git_head": "db58c4b0568b2c9d8b9544ac964ab6d6095cf284",
+  "amendment_id": "V2-A006",
+  "amendment_path": "artifacts/vla_wam_shared_v2/pilot/post_result_second_wave_amendment.json",
+  "amendment_sha256": "5d011abc46c144e91ba7441fb5ed3c681ce67c1a56b6ca51c1c29810708eef7b",
+  "protocol_path": "artifacts/vla_wam_shared_v2/protocol.json",
+  "protocol_sha256": "1862fbbb40fef34621a840a0ed15889cf42da066424e866b66f04227b28c73b9",
+  "freeze_boundary": {
+    "model_action_requests_before_registry_freeze": 0,
+    "simulator_behavioral_cells_before_registry_freeze": 0,
+    "rule": "No LaWAM inference request is permitted until every released component below is present at its pinned revision and all payload hashes are recorded.",
+    "registry_frozen_before_first_inference": true
+  },
+  "model_repository": {
+    "repository": "https://github.com/RLinf/LaWAM.git",
+    "commit": "1add20a376126eacab02f19a62d726072a322cae",
+    "tree": "304c7ed03a8a9e0f6348067d7bda0d7c1ffa77e9",
+    "pvc_path": "/data/users/ali/vla_wam/external/LaWAM",
+    "checkout_state": "detached_clean",
+    "official_robotwin_client_sha256": "7bc44dbf341f27c11d5893768ff40b62792de876e062ff870ffbfd437c9f0a10",
+    "official_robotwin_local_policy_sha256": "b4311198d6364b1c9dbc79323fbe9444b932e8d6faf7aa06e38fdacfa4427ad3",
+    "official_robotwin_bridge_sha256": "109b9bc924e1af7a6ffec8ba1be5c67ba30e964a60864d02112f4d1aff2cb222",
+    "official_robotwin_batched_runner_sha256": "c10b5e8b79eebd59caa6622cff1c20219f2c85e25bfefd218c1653fa1d180424",
+    "official_policy_server_sha256": "0aaa24a6d2534a6bccf223a51212e8530ad0f0094b400e98667282602c4264c2"
+  },
+  "released_components": {
+    "base_vlm": {
+      "id": "Qwen/Qwen3-VL-2B-Instruct",
+      "revision": "89644892e4d85e24eaac8bacfd4f463576704203",
+      "pvc_path": "/data/users/ali/vla_wam/checkpoints/Qwen3-VL-2B-Instruct",
+      "status": "downloaded_exact_revision_and_hashed",
+      "payload_file_count": 12,
+      "payload_bytes": 4266648961,
+      "files": {
+        ".gitattributes": {"bytes": 1519, "sha256": "11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361"},
+        "README.md": {"bytes": 7136, "sha256": "5fc5be1ca9a3910399bd6239ee5086ab5d82a2a59c5d2b00e887a8835cc110e4"},
+        "chat_template.json": {"bytes": 5502, "sha256": "6f8a6a55027e3da5160105556cda5dd69f6423f1c32645f6730d32de7773d0c4"},
+        "config.json": {"bytes": 1505, "sha256": "bec4b3d446efa05807365c9e1cec03ac590836879d02f3a6da879971154bdd3b"},
+        "generation_config.json": {"bytes": 269, "sha256": "1e241830b48b397cb0900101421df5450baddc7adf01e5fc86b5615865f3bae4"},
+        "merges.txt": {"bytes": 1671839, "sha256": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3"},
+        "model.safetensors": {"bytes": 4255140312, "sha256": "7de1838c87a5349b016c26a1c3f7d2bc400a3d485f95ef39a7059ffd734977a0"},
+        "preprocessor_config.json": {"bytes": 390, "sha256": "27225450ac9c6529872ee1924fcb0962ff5634834f817040f444118116f4e516"},
+        "tokenizer.json": {"bytes": 7032403, "sha256": "a5d85b6dcc535e6b93115a9ef287e6132fdbf30270da6218194ba742261173c7"},
+        "tokenizer_config.json": {"bytes": 10868, "sha256": "c2da771801886ad9ae98181793ffd3dfb7f1af30f6f7c6a4e15d7dbba52e2399"},
+        "video_preprocessor_config.json": {"bytes": 385, "sha256": "7768af27c1fafa9cc9011c1dc20067e03f8915e03b63504550e11d5066986d13"},
+        "vocab.json": {"bytes": 2776833, "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"}
+      }
+    },
+    "dinov3_vision_encoder": {
+      "id": "facebook/dinov3-vitb16-pretrain-lvd1689m",
+      "revision": "5931719e67bbdb9737e363e781fb0c67687896bc",
+      "required_pvc_path": "/data/users/ali/vla_wam/checkpoints/dinov3-vitb16-pretrain-lvd1689m",
+      "status": "blocked_manual_license_and_credentials",
+      "gated_repository_api_status": "manual",
+      "anonymous_exact_revision_resolve_status": 401,
+      "payload_file_count": null,
+      "payload_bytes": null,
+      "files": null,
+      "hash_gate_passed": false,
+      "blocker": "The exact released DINOv3 repository requires accepted manual terms and authenticated Hugging Face access. No authorized token or pre-staged exact-revision copy exists in the ali-owned lane, so the payload cannot yet be downloaded or hashed.",
+      "post_access_download_command": "/data/users/ali/vla_wam/envs/hf-tools/bin/hf download facebook/dinov3-vitb16-pretrain-lvd1689m --revision 5931719e67bbdb9737e363e781fb0c67687896bc --local-dir /data/users/ali/vla_wam/checkpoints/dinov3-vitb16-pretrain-lvd1689m"
+    },
+    "latent_action_model": {
+      "id": "jialei02/lawam_lam",
+      "revision": "bd993da2a0861afaac5a95ac86d2555b1313ab8c",
+      "pvc_path": "/data/users/ali/vla_wam/checkpoints/lawam_lam",
+      "status": "downloaded_exact_revision_and_hashed",
+      "payload_file_count": 4,
+      "payload_bytes": 2900642758,
+      "files": {
+        ".gitattributes": {"bytes": 1519, "sha256": "11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361"},
+        "README.md": {"bytes": 1474, "sha256": "642f8f2a83b326cceeef52e342ccfe903b9d050dca89ae4fd5393d92b757a473"},
+        "checkpoints/pytorch_model.pt": {"bytes": 2900637794, "sha256": "57c31dcba13c2998c4e866cdcfc427f14ae3c1b762a586778276e2100b48af88"},
+        "dino_large_vae.yaml": {"bytes": 1971, "sha256": "e5f98738d1c6dc8d8643d5a73d44ebd46385fbb2fc4031d46a02ad384a353449"}
+      }
+    },
+    "robotwin_policy": {
+      "id": "jialei02/lawam_robotwin_sft_release",
+      "revision": "f1c4f9a36bddc3e8243e1da8e2b7fb329f84fb86",
+      "pvc_path": "/data/users/ali/vla_wam/checkpoints/lawam_robotwin_sft_release",
+      "status": "pre_staged_exact_revision_and_hashed",
+      "payload_file_count": 5,
+      "payload_bytes": 7174225725,
+      "files": {
+        ".gitattributes": {"bytes": 1519, "sha256": "11ad7efa24975ee4b0c3c3a38ed18737f0658a5f75a0a96787b576a78a023361"},
+        "README.md": {"bytes": 1892, "sha256": "57bc1b83e45435993a36071a3cb6d7927b949c800b690f07134b969d5b86637a"},
+        "config.yaml": {"bytes": 1773, "sha256": "2ddf8f7af321ee166c7afb428460f65815d71d5bed2043e9ec7557ff216ab982"},
+        "dataset_statistics.json": {"bytes": 5896, "sha256": "1700bf8ca4eaddaa380a4786a58b09bdbf7474a6ef22fbe558e81c081e9599f0"},
+        "final_model/pytorch_model.pt": {"bytes": 7174214645, "sha256": "a52031302c6dc5b813982227255add8d2acb839149a4b90908b179a8f66adbeb"}
+      },
+      "normalization_asset": {
+        "path": "dataset_statistics.json",
+        "bytes": 5896,
+        "sha256": "1700bf8ca4eaddaa380a4786a58b09bdbf7474a6ef22fbe558e81c081e9599f0",
+        "unnorm_key": "agilex"
+      }
+    }
+  },
+  "official_interface_contract": {
+    "checkpoint_framework": "LaWAM",
+    "checkpoint_data_mix": "robotwin_eef_30hz",
+    "robotwin_mode": "eef",
+    "simulator_action_type": "ee",
+    "action_hz": 30.0,
+    "observation_images": ["head_camera.rgb", "left_camera.rgb", "right_camera.rgb"],
+    "model_image_size": [256, 256],
+    "observation_state_layout": ["left_position_xyz", "left_quaternion_wxyz", "left_gripper", "right_position_xyz", "right_quaternion_wxyz", "right_gripper"],
+    "observation_state_shape": [16],
+    "model_uses_state": false,
+    "normalized_action_shape": [50, 16],
+    "action_horizon": 50,
+    "action_layout": ["left_position_xyz", "left_quaternion_wxyz", "left_gripper", "right_position_xyz", "right_quaternion_wxyz", "right_gripper"],
+    "action_semantics": "absolute_bimanual_eef_pose_and_gripper",
+    "quaternion_passthrough_indices": [3, 4, 5, 6, 11, 12, 13, 14],
+    "quaternion_postprocess": "normalize each WXYZ quaternion; replace invalid row by identity [1,0,0,0]",
+    "gripper_indices": [7, 15],
+    "gripper_postprocess": "continuous denormalization followed by 1-value inversion for RoboTwin convention",
+    "action_reorder": null,
+    "default_replan_steps_in_official_benchmark": 36,
+    "fixed_probe_contract": "One byte-identical three-view observation; restore Python, NumPy, Torch, and CUDA RNG state before LEFT, repeated LEFT, and RIGHT calls; require finite [50,16] normalized and native action chunks.",
+    "behavior_contract": "Static prompt for the entire episode; execute native absolute EEF actions without oracle, subtask coaching, prompt switching, or progress-conditioned language; maximum 400 executed actions."
+  },
+  "future_evidence_contract": {
+    "released_interface": "latent_visual_subgoal_internal_to_policy",
+    "classification": "latent_only",
+    "retention": "Retain any latent visual subgoal tensors exposed by the released inference path with shape, dtype, and hash.",
+    "scoring": "not_applicable_unless_an_official_decoder_is_verified_before_inference",
+    "prohibitions": [
+      "Do not implement a study-authored latent decoder.",
+      "Do not score latent tensors as pixels or endpoints.",
+      "Do not convert unavailable or unexposed futures into zero."
+    ]
+  },
+  "runtime_gate": {
+    "kubernetes_context": "prod-dcwi-warrenq1-vmkub007",
+    "namespace": "211247-prod",
+    "pod": "lerobot-8-ali",
+    "gpu_index": 0,
+    "gpu": "NVIDIA A100-SXM4-80GB",
+    "gpu_total_memory_mib": 81920,
+    "gpu_free_memory_mib_at_freeze": 81153,
+    "gpu_temperature_c_at_freeze": 31,
+    "pvc_available_bytes_at_freeze": 190539127324672,
+    "github_egress": "pass",
+    "hugging_face_public_egress": "pass",
+    "hugging_face_gated_dinov3_credentials": "fail_401",
+    "policy_environment": "/data/users/ali/vla_wam/envs/lawam-policy-v2a006",
+    "simulator_environment": "/data/users/ali/vla_wam/envs/lawam-robotwin-sim-v2a006",
+    "environment_status": "not_built_while_required_dinov3_component_is_blocked",
+    "vulkan_and_sapien_rendering": "previously_passed_on_this_exact_pod_and_gpu_for_the_same_frozen_robotwin_arena; must_be_rechecked_in_isolated_lawam_simulator_environment_before_behavior"
+  },
+  "pre_inference_setup_events": [
+    {
+      "event": "dinov3_exact_revision_resolve_rejected",
+      "reason": "Anonymous exact-revision file access returned HTTP 401 because the official DINOv3 model is manually gated and the ali-owned lane has no authenticated Hugging Face credential.",
+      "model_action_request_consumed": false,
+      "behavioral_episode_consumed": false,
+      "denominator_policy": "setup blocker outside every model denominator"
+    }
+  ],
+  "exact_repeat_gate": {
+    "status": "not_started_registry_and_asset_gate_blocked",
+    "model_action_requests": 0,
+    "release_condition": "All five required component classes (repository, Qwen3-VL, DINOv3, LAM, policy plus normalization) must be present at pinned revisions and hash-verified, and both isolated environments must pass imports."
+  },
+  "behavioral_queue": {
+    "status": "frozen_not_released_until_exact_repeat_passes",
+    "pair_ids": ["robotwin_pair_00", "robotwin_pair_01", "robotwin_pair_02"],
+    "environment_seeds": [4300000, 4300001, 4300002],
+    "sampling_seeds": [8400, 8401, 8402],
+    "requested_relations": ["left", "right"],
+    "behavioral_episode_count": 6,
+    "max_actions": 400,
+    "prompt_family": "direct_command",
+    "prompt_controller": "episode_static",
+    "simulator_video_required": true,
+    "executed_action_trace_required": true,
+    "valid_failure_retention": true,
+    "infrastructure_failure_denominator_policy": "exclude_and_ledger",
+    "oracle_or_coach": false
+  },
+  "exact_next_step": {
+    "human_prerequisite": "Accept the license for facebook/dinov3-vitb16-pretrain-lvd1689m on Hugging Face and authenticate the ali-owned lane with an authorized token.",
+    "next_command_after_access": "/data/users/ali/vla_wam/envs/hf-tools/bin/hf download facebook/dinov3-vitb16-pretrain-lvd1689m --revision 5931719e67bbdb9737e363e781fb0c67687896bc --local-dir /data/users/ali/vla_wam/checkpoints/dinov3-vitb16-pretrain-lvd1689m",
+    "then": "Hash every non-cache payload file, update this registry, build and gate the isolated policy and simulator environments, and only then run the exact-repeat probe."
+  }
+}

@@ -1,7 +1,7 @@
 {
   "schema_version": "vla-wam-shared-v2-groot-droid-readiness-v1",
   "amendment_id": "V2-A005",
-  "status": "repeat_gate_passed_behavior_not_started",
+  "status": "behavior_in_progress_2_of_6_valid_cells",
   "model_contract": {
     "checkpoint": "nvidia/GR00T-N1.7-DROID",
     "checkpoint_revision": "05e7cc97e40dbd33b0890c35cc0214fcb0547ab5",
@@ -67,8 +67,12 @@
     "authorized_cells": 6,
     "environment_seeds": [8300, 8301, 8302],
     "conditions": ["LEFT", "RIGHT"],
-    "completed_valid_cells": 0,
+    "completed_valid_cells": 2,
+    "completed_successes": 0,
     "invalid_behavior_attempts_excluded": 2,
-    "next_cell": "GR00T-N1.7-DROID seed8300 LEFT"
+    "completed_pair_slices": [
+      "artifacts/vla_wam_shared_v2/pilot/expansion/groot_n17_droid_seed8300_slice.json"
+    ],
+    "next_cell": "GR00T-N1.7-DROID seed8301 LEFT"
   }
 }

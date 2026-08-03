@@ -119,6 +119,17 @@
       "bounded_loader_rank1_contract_sha256": "2481fca7f2d9369382d78f40f236018b222120d4478e250f941e7f3d79931458",
       "resolution": "Add an exact-action-head-hash-gated, construction-only overlay matching the audited old patch's three-component skip. Restore all monkeypatches before strict full-checkpoint assignment; exclude every old forward, offload, and KV-cache change.",
       "denominator_status": "excluded"
+    },
+    {
+      "attempt_id": "fixed_probe_server_attempt05",
+      "stage": "model_server_preflight",
+      "model_requests": 0,
+      "behavior_actions_executed": 0,
+      "reason": "This launch raced the construction-only repair publication and started from stale study commit 25535d8. The guarded process group was terminated before either worker initialized, before any loader contract or listener existed, and before any model request.",
+      "preserved_raw_log": "/data/users/ali/vla_wam/raw/dreamzero_droid/v2_a007/fixed_probe_server_attempt05/server_stdout.log",
+      "preserved_raw_log_sha256": "b6414259f4f9ec0f4259ba67c25d1b3c0fb8372096015c1a18a92745c1f94e6d",
+      "resolution": "Fast-forward the dedicated clean study checkout to b9594af and relaunch from a fresh attempt06 raw and future root.",
+      "denominator_status": "excluded"
     }
   ],
   "valid_run_interventions": [],

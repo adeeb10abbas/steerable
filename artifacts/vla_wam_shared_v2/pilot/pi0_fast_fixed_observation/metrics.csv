@@ -1,0 +1,12 @@
+condition,style,prompt,requested_sampling_seed,server_sampling_seed,request_wall_seconds,action_shape,future_shape,prompt_family,requested_relation,action_rms_vs_task_left,action_effect_to_repeat_noise,action_exceeds_repeat_noise,target_token_order
+task_left,task,Put the rubiks cube to the left of the bowl,8200000,8200000,12.788149329018779,"[10, 8]",,canonical,left,0.0,,False,
+task_left_repeat,exact_repeat_control,Put the rubiks cube to the left of the bowl,8200000,8200000,0.4567374379839748,"[10, 8]",,canonical_repeat,left,0.0,,False,
+task_right,opposite_relation_control,Put the rubiks cube to the right of the bowl,8200000,8200000,0.48875797097571194,"[10, 8]",,canonical,right,0.15283206064592306,,True,
+short_left,paraphrase_control,Put the cube left of the bowl,8200000,8200000,0.45732731197495013,"[10, 8]",,short_paraphrase,left,0.01671332993806636,,True,
+short_right,paraphrase_control,Put the cube right of the bowl,8200000,8200000,0.4738610730273649,"[10, 8]",,short_paraphrase,right,0.023720487517951274,,True,
+declarative_left,paraphrase_control,The rubiks cube should end up to the left of the bowl,8200000,8200000,0.4581906138919294,"[10, 8]",,declarative_goal,left,0.0287025023995916,,True,
+declarative_right,paraphrase_control,The rubiks cube should end up to the right of the bowl,8200000,8200000,0.4584603699622676,"[10, 8]",,declarative_goal,right,0.004278723792089459,,True,
+contrastive_first_left,contrastive_task,"Put the rubiks cube to the left of the bowl, not to the right of the bowl",8200000,8200000,0.39699712803121656,"[10, 8]",,contrastive_goal,left,0.11661766739007466,,True,target_first
+contrastive_first_right,contrastive_task,"Put the rubiks cube to the right of the bowl, not to the left of the bowl",8200000,8200000,0.44378710200544447,"[10, 8]",,contrastive_goal,right,0.064017698585721,,True,target_first
+contrastive_last_left,contrastive_task,Do not put the rubiks cube to the right of the bowl; put it to the left of the bowl,8200000,8200000,0.45962151302956045,"[10, 8]",,contrastive_order_control,left,0.043350043787417906,,True,target_last
+contrastive_last_right,contrastive_task,Do not put the rubiks cube to the left of the bowl; put it to the right of the bowl,8200000,8200000,0.45921379001811147,"[10, 8]",,contrastive_order_control,right,0.025565592728642943,,True,target_last

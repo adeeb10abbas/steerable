@@ -158,7 +158,9 @@ def _future_contact_sheet(
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--plan", type=Path, required=True)
-    parser.add_argument("--model", choices=["cosmos", "pi05"], required=True)
+    parser.add_argument(
+        "--model", choices=["cosmos", "pi05", "pi0_fast"], required=True
+    )
     parser.add_argument("--host", default="localhost")
     parser.add_argument("--port", type=int, default=8000)
     parser.add_argument("--output-dir", type=Path, required=True)
@@ -291,7 +293,7 @@ def main() -> None:
         "timing_note": (
             "Client WebSocket round-trip around infer(), including transport, server inference, "
             "serialization, and any returned-video decoding. Cosmos returns actions plus decoded "
-            "future video; pi0.5 returns actions only, so the timings represent deployed interfaces "
+            "future video; pi0.5 and pi0-FAST return actions only, so the timings represent deployed interfaces "
             "rather than an architecture-only comparison."
         ),
         "exact_repeat_action_rms": action_noise,

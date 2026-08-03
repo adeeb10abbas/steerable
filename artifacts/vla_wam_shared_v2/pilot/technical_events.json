@@ -1,6 +1,6 @@
 {
   "schema_version": "vla-wam-shared-v2-technical-events-v1",
-  "scope": "Efficient-WAM-RT standardized RoboTwin pilot startup",
+  "scope": "Standardized v2 pilot startup and infrastructure repairs",
   "events": [
     {
       "id": "EWAM-TECH-001",
@@ -30,6 +30,13 @@
         "https://sapien.ucsd.edu/docs/0.9/tutorial/basic/render.html",
         "https://github.com/haosulab/SAPIEN"
       ]
+    },
+    {
+      "id": "PI0FAST-TECH-001",
+      "classification": "environment_repair",
+      "observation": "The first public Google Storage checkpoint restore followed stale local Application Default Credentials and received HTTP 401 before any policy server or episode existed. Setting FSSPEC_GS_TOKEN=anon selected anonymous access for the public checkpoint; the complete checkpoint then restored and all retained probes and episodes used that unchanged local snapshot.",
+      "model_result_retained": false,
+      "repair_applied_to_all_retained_episodes": true
     }
   ],
   "retention_rule": "Only attempts that reached model inference and emitted result.json are scientific episodes. All pre-episode failures remain in this technical ledger and never enter success-rate denominators."

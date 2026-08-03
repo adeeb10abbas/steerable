@@ -13,7 +13,7 @@
   "repositories": {
     "robolab": {
       "path": "/home/ali/projects/RoboLab",
-      "commit": "992bc34eedb2b909888af8a334a2ac33b86c51d8"
+      "commit": "11142d4319e44401e0464866bb5fedf7ec8a8927"
     },
     "openpi_robolab": {
       "path": "/home/ali/openpi-robolab",
@@ -48,12 +48,17 @@
     },
     {
       "id": "pi0_fast_droid_vla",
-      "status": "adapter_present_checkpoint_missing",
+      "status": "standardized_v2_pilot_complete_directional_expansion_selected",
       "policy_adapter": "/home/ali/projects/RoboLab/policies/pi0_family",
       "policy_config": "pi0_fast_droid_jointpos",
-      "checkpoint_status": "not_present",
+      "checkpoint_status": "present",
       "checkpoint_uri": "gs://openpi-assets-simeval/pi0_fast_droid_jointpos",
-      "next_gate": "download checkpoint, launch policy server, run fixed-observation prompt smoke, then six direct-command base-competence episodes"
+      "checkpoint_path": "/home/ali/.cache/openpi/openpi-assets-simeval/pi0_fast_droid_jointpos",
+      "checkpoint_and_metadata_bytes": 10844343082,
+      "fixed_observation_probe": "artifacts/vla_wam_shared_v2/pilot/pi0_fast_fixed_observation/manifest.json",
+      "pilot_result": "artifacts/vla_wam_shared_v2/pilot/results/pi0_fast_direct_gate.json",
+      "pilot_outcome": "LEFT 0/3; RIGHT 3/3; all three same-seed endpoint shifts were directionally aligned; first ten actions differed in all three pairs",
+      "next_gate": "complete the frozen ten-seed direct-command directional-bias confirmation before any four-wording sweep"
     },
     {
       "id": "groot_n17_droid_vla",
@@ -128,8 +133,8 @@
     "reference_complete": 2,
     "checkpoint_present_adapter_pending": 0,
     "v2_static_contract_pass_runtime_pending": 0,
-    "checkpoint_or_server_missing": 3,
-    "standardized_v2_pilot_complete": 3
+    "checkpoint_or_server_missing": 2,
+    "standardized_v2_pilot_complete": 4
   },
-  "claim_limit": "All three locally runnable RoboTwin WAMs have completed six-episode standardized direct-command pilots. Every model selects only the directional-bias expansion; none has yet earned the four-wording grid. The new VLA checkpoints remain setup pending."
+  "claim_limit": "All three locally runnable RoboTwin WAMs and pi0-FAST DROID have completed six-episode standardized direct-command pilots. Every completed pilot selects only the directional-bias expansion; none has yet earned the four-wording grid. GR00T N1.7 and LingBot-VLA remain setup pending."
 }

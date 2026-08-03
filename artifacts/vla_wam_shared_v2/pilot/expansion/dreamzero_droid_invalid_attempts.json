@@ -104,9 +104,24 @@
       "preserved_raw_log_sha256": "31518e1a813489bdddbda7b5a29181c3437633eea0aa2d9e3c372f87012fe5d3",
       "resolution": "Install a load-time-only overlay gated to the exact official base_vla.py hash: meta-device construction, one safetensors shard at a time, assign=True without dtype/value conversion, garbage collection after each shard, and strict rejection of any missing, unexpected, duplicate, or remaining-meta tensor.",
       "denominator_status": "excluded"
+    },
+    {
+      "attempt_id": "fixed_probe_server_attempt04",
+      "stage": "model_server_preflight",
+      "model_requests": 0,
+      "behavior_actions_executed": 0,
+      "reason": "The bounded shard loader passed independently on both ranks with 2146/2146 keys and no missing, unexpected, or meta tensors, but the exact released action-head constructor still performed redundant T5, CLIP, and VAE ensure_file/load_state_dict calls before shard assignment. This triggered a Hugging Face Xet access and loaded component payloads that were no-ops on meta tensors. The guarded process group was terminated before a listener existed or any request was made.",
+      "preserved_raw_log": "/data/users/ali/vla_wam/raw/dreamzero_droid/v2_a007/fixed_probe_server_attempt04/server_stdout.log",
+      "preserved_raw_log_sha256": "8c42a11027184a9db8a240c02f26f5856566fad0588516617be76271c5624c2c",
+      "bounded_loader_rank0_contract": "/data/users/ali/vla_wam/raw/dreamzero_droid/v2_a007/fixed_probe_server_futures_attempt04/bounded_loader_rank0.json",
+      "bounded_loader_rank0_contract_sha256": "2481fca7f2d9369382d78f40f236018b222120d4478e250f941e7f3d79931458",
+      "bounded_loader_rank1_contract": "/data/users/ali/vla_wam/raw/dreamzero_droid/v2_a007/fixed_probe_server_futures_attempt04/bounded_loader_rank1.json",
+      "bounded_loader_rank1_contract_sha256": "2481fca7f2d9369382d78f40f236018b222120d4478e250f941e7f3d79931458",
+      "resolution": "Add an exact-action-head-hash-gated, construction-only overlay matching the audited old patch's three-component skip. Restore all monkeypatches before strict full-checkpoint assignment; exclude every old forward, offload, and KV-cache change.",
+      "denominator_status": "excluded"
     }
   ],
   "valid_run_interventions": [],
   "valid_invalid_attempt_count": 0,
-  "next_command": "Complete the exact two-B200 official DreamZero server gate on isolated port 18017, then run the fixed-observation exact-repeat and LEFT/RIGHT prompt-only sensitivity probe. Do not start a behavioral cell until it passes."
+  "next_command": "Launch fixed_probe_server_attempt05 with the exact source-hash-gated construction-only T5/CLIP/VAE suppression and bounded shard loader on physical B200 GPUs 1+2, isolated ports 18017/18018. Then run the fixed-observation exact-repeat and LEFT/RIGHT prompt-only sensitivity probe. Do not start a behavioral cell until it passes."
 }

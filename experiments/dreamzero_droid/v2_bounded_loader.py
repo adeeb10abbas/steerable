@@ -7,15 +7,21 @@ import gc
 import hashlib
 import json
 import os
+from contextlib import contextmanager
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
+import torch
 from accelerate import init_empty_weights
 from safetensors.torch import load_file
 
 
 OFFICIAL_BASE_VLA_SHA256 = (
     "6e926096f20b4c1bbba98c3e270bde1d5260609e4155de27c91c911f2f8f8e20"
+)
+OFFICIAL_ACTION_HEAD_SHA256 = (
+    "7193cd73423472aa252bee73bd80e0d673c89d773ec852e90f50154729b50845"
 )
 
 
@@ -38,6 +44,98 @@ def _state_signature(state: dict[str, Any]) -> str:
         digest.update(str(tensor.dtype).encode())
         digest.update(b"\n")
     return digest.hexdigest()
+
+
+class _ConstructionTorchProxy:
+    """Delegate to torch while making only constructor ``torch.load`` inert."""
+
+    def __init__(self, delegate: Any, load_calls: list[dict[str, Any]]) -> None:
+        self._delegate = delegate
+        self._load_calls = load_calls
+
+    def load(self, path: Any, *args: Any, **kwargs: Any) -> dict[str, Any]:
+        self._load_calls.append(
+            {
+                "path": str(path),
+                "positional_argument_count": len(args),
+                "keyword_arguments": sorted(kwargs),
+            }
+        )
+        return {}
+
+    def __getattr__(self, name: str) -> Any:
+        return getattr(self._delegate, name)
+
+
+@contextmanager
+def _suppress_redundant_component_loads() -> Any:
+    """Skip exactly the released T5, CLIP, and VAE constructor loads.
+
+    The old audited DreamZero patch moved these three load calls under the
+    existing ``skip_component_loading`` condition. This runtime overlay has the
+    identical construction-only effect without modifying the checked-out
+    external source. All monkeypatches are restored before checkpoint shards
+    are assigned, and strict complete-key/no-meta checks remain authoritative.
+    """
+    import groot.vla.model.dreamzero.action_head.wan_flow_matching_action_tf as action_module
+
+    action_path = Path(action_module.__file__).resolve()
+    action_hash = _sha256(action_path)
+    if action_hash != OFFICIAL_ACTION_HEAD_SHA256:
+        raise RuntimeError(
+            "DreamZero component suppression refuses a non-official action head: "
+            f"{action_hash}"
+        )
+
+    ensure_calls: list[dict[str, Any]] = []
+    torch_load_calls: list[dict[str, Any]] = []
+    state_load_calls: list[dict[str, Any]] = []
+    original_ensure_file = action_module.ensure_file
+    original_action_torch = action_module.torch
+    original_load_state_dict = torch.nn.Module.load_state_dict
+
+    def suppressed_ensure_file(path: Any, filename: str, **kwargs: Any) -> str:
+        ensure_calls.append(
+            {
+                "configured_path": None if path is None else str(path),
+                "filename": filename,
+                "keyword_arguments": sorted(kwargs),
+            }
+        )
+        return os.devnull
+
+    def suppressed_load_state_dict(
+        module: torch.nn.Module,
+        state_dict: dict[str, Any],
+        *args: Any,
+        **kwargs: Any,
+    ) -> SimpleNamespace:
+        state_load_calls.append(
+            {
+                "target_type": f"{type(module).__module__}.{type(module).__qualname__}",
+                "state_key_count": len(state_dict),
+                "positional_argument_count": len(args),
+                "keyword_arguments": sorted(kwargs),
+            }
+        )
+        return SimpleNamespace(missing_keys=[], unexpected_keys=[])
+
+    action_module.ensure_file = suppressed_ensure_file
+    action_module.torch = _ConstructionTorchProxy(torch, torch_load_calls)
+    torch.nn.Module.load_state_dict = suppressed_load_state_dict
+    record = {
+        "official_action_head_path": str(action_path),
+        "official_action_head_sha256": action_hash,
+        "ensure_file_calls": ensure_calls,
+        "torch_load_calls": torch_load_calls,
+        "load_state_dict_calls": state_load_calls,
+    }
+    try:
+        yield record
+    finally:
+        torch.nn.Module.load_state_dict = original_load_state_dict
+        action_module.torch = original_action_torch
+        action_module.ensure_file = original_ensure_file
 
 
 def install_bounded_loader(*, contract_path: Path) -> None:
@@ -92,8 +190,24 @@ def install_bounded_loader(*, contract_path: Path) -> None:
         else:
             loaded_config.action_head_cfg["defer_lora_injection"] = False
 
-        with init_empty_weights(include_buffers=False):
-            model = cls(loaded_config)
+        with _suppress_redundant_component_loads() as component_suppression:
+            with init_empty_weights(include_buffers=False):
+                model = cls(loaded_config)
+
+        suppression_counts = {
+            "ensure_file": len(component_suppression["ensure_file_calls"]),
+            "torch_load": len(component_suppression["torch_load_calls"]),
+            "load_state_dict": len(component_suppression["load_state_dict_calls"]),
+        }
+        if suppression_counts != {
+            "ensure_file": 3,
+            "torch_load": 3,
+            "load_state_dict": 3,
+        }:
+            raise RuntimeError(
+                "DreamZero constructor suppression did not match the exact "
+                f"three-component contract: {suppression_counts}"
+            )
 
         if index_path.is_file():
             index = json.loads(index_path.read_text())
@@ -192,6 +306,13 @@ def install_bounded_loader(*, contract_path: Path) -> None:
                 "original_present": original_skip_present,
                 "original_value": original_skip_value,
                 "restored_after_complete_checkpoint_assignment": True,
+            },
+            "construction_only_component_suppression": {
+                **component_suppression,
+                "call_counts": suppression_counts,
+                "expected_components": ["T5", "CLIP", "VAE"],
+                "official_source_modified": False,
+                "all_monkeypatches_restored_before_checkpoint_assignment": True,
             },
             "forward_path_modified": False,
             "passed": passed,

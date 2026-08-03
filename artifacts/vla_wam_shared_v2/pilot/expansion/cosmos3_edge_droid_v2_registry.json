@@ -1,0 +1,109 @@
+{
+  "schema_version": "vla-wam-shared-v2-cosmos3-edge-droid-registry-v1",
+  "status": "frozen_before_first_v2_a005_cosmos_request",
+  "frozen_at_utc": "2026-08-03T18:16:00Z",
+  "amendment_id": "V2-A005",
+  "amendment_path": "artifacts/vla_wam_shared_v2/pilot/post_result_expansion_amendment.json",
+  "amendment_sha256": "e8f724a1818e20ab6cb1481c87a5d5c255d42148d47bf387d7f77f3643587101",
+  "protocol_path": "artifacts/vla_wam_shared_v2/protocol.json",
+  "protocol_sha256": "1862fbbb40fef34621a840a0ed15889cf42da066424e866b66f04227b28c73b9",
+  "known_evidence_boundary": {
+    "existing_behavioral_evidence": "The separately compiled v1 Cosmos3 Edge DROID grid contains 80 valid behavioral episodes and is not rerun or relabeled by this registry.",
+    "existing_result": "58/80 requested-relation successes; LEFT 22/40 and RIGHT 36/40.",
+    "new_claim_boundary": "This is a bounded six-episode v2 direct-command replication at seeds 8300-8302. It remains separate from the v1 grid and from every RoboTwin denominator."
+  },
+  "checkpoint": {
+    "id": "nvidia/Cosmos3-Edge-Policy-DROID",
+    "revision": "3ea407af3e156c0af3b4bb6edd85842cc9a58777",
+    "pvc_path": "/data/users/ali/vla_wam/checkpoints/cosmos3_edge_policy_droid",
+    "resolved_regular_file_count": 34,
+    "resolved_bytes": 9171983421,
+    "gated": false,
+    "checkpoint_json_sha256": "a279d57b84d458c2aeeaf9698aee8c1b3830204422da67ab31c801ab57225019",
+    "config_json_sha256": "da6a23cbf4477aafda3e773874bf2c98d6869156e8a450d944e2f28c94eee00b",
+    "transformer_config_sha256": "8cdde02b8cf98c485c7f6f7282a938ebb7e14390327dbf5c4346de337c21327d",
+    "weight_file_sha256": {
+      "transformer/diffusion_pytorch_model-00001-of-00002.safetensors": "99b0ff1f9dbdcb497fac16cbc0ebe33dee19653b4c182fa0d474433dcc845206",
+      "transformer/diffusion_pytorch_model-00002-of-00002.safetensors": "1842fefdacd0dcbb8ab543b59848a0b696e0c9634676bc76db9e0c971fe328d5",
+      "vae/diffusion_pytorch_model.safetensors": "230496cb59ff85bc9c040487737c4062480cb61c71e697b197b4c30142f2a0da",
+      "vision_encoder/model.safetensors": "2180ad739ecc96b5c1e9386892d3c5c08bfa42b9cdab9aabc53b028671db89b3"
+    }
+  },
+  "adapter_audit": {
+    "rejected_checkout": {
+      "repository": "https://github.com/NVIDIA/cosmos-framework",
+      "commit": "411d25b2e35bc441126f48c44a4b93e1c0564274",
+      "reason": "Its RoboLab server does not expose or forward format_prompt_as_json. This checkpoint has config_file=null, so that checkout falls back to a plain-text ActionTransformPipeline and cannot satisfy the checkpoint model card's required JSON-prompt serving contract. No request was made from this checkout."
+    },
+    "selected_checkout": {
+      "repository": "https://github.com/NVIDIA/cosmos-framework",
+      "commit": "a904d2d36b774a51dd06ff9ff906816b1a04f579",
+      "pvc_path": "/data/users/ali/vla_wam/external/cosmos-framework-edge-a904d2d",
+      "selection_reason": "This exact official commit exposes format_prompt_as_json and threads it into the action transform required by the released checkpoint model card."
+    },
+    "prompt_transport": "format_prompt_as_json=true",
+    "observation_contract": {
+      "image_shape": [540, 640, 3],
+      "image_dtype": "uint8",
+      "required_state": [
+        "observation/joint_position",
+        "observation/gripper_position"
+      ],
+      "prompt_key": "prompt"
+    },
+    "output_contract": {
+      "action_space": "joint_pos",
+      "action_chunk_shape": [32, 8],
+      "history_rows_trimmed": 1,
+      "decoded_future_required": true,
+      "decoded_future_frame_count": 33,
+      "missing_future_policy": "technical contract failure, never zero imagined-future evidence"
+    },
+    "serving_parameters": {
+      "domain_name": "droid_lerobot",
+      "conditioning_fps": 15.0,
+      "action_chunk_size": 32,
+      "action_dim": 8,
+      "guidance": 3.0,
+      "num_steps": 4,
+      "shift": 5.0,
+      "resolution": "480",
+      "decode_video": true,
+      "format_prompt_as_json": true
+    }
+  },
+  "fixed_observation_gate": {
+    "status": "pending_no_request_made_at_freeze",
+    "conditions": [
+      "left",
+      "left_exact_repeat",
+      "right"
+    ],
+    "requirements": [
+      "All three requests use byte-identical observation and state arrays.",
+      "The LEFT repeat uses the identical prompt and sampling seed.",
+      "Actions must have shape [32,8] and every response must expose a 33-frame decoded future.",
+      "The exact repeat is a determinism check; LEFT/RIGHT output differences are sensitivity diagnostics, not behavioral success."
+    ]
+  },
+  "behavioral_queue": {
+    "status": "blocked_until_fixed_observation_gate_and_simulator_contract_pass",
+    "arena": "droid_robolab",
+    "environment_seeds": [8300, 8301, 8302],
+    "sampling_seeds": [8300, 8301, 8302],
+    "requested_relations": ["left", "right"],
+    "prompts": {
+      "left": "Put the Rubik's cube to the left of the bowl.",
+      "right": "Put the Rubik's cube to the right of the bowl."
+    },
+    "prompt_controller": "episode_static",
+    "behavioral_episode_count": 6,
+    "requirements": [
+      "No oracle, subtask coach, prompt switching, or progress-conditioned language.",
+      "Record viewport video, executed actions, and every released decoded future.",
+      "Use the requested-relation release checker.",
+      "Preserve all valid failures; keep infrastructure-invalid attempts outside the denominator."
+    ]
+  },
+  "cosmos_reason2_exclusion": "nvidia/Cosmos-Reason2-2B is a separate text-output VLM diagnostic and is never substituted for this action policy."
+}

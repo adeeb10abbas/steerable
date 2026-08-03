@@ -1,8 +1,8 @@
 {
   "schema_version": "vla-wam-shared-v2-light-wam-robotwin-registry-v1",
-  "status": "fixed_observation_probe_ready_after_isolated_planner_build",
+  "status": "six_cell_direct_gate_complete_left_only",
   "frozen_at_utc": "2026-08-03T18:38:55Z",
-  "last_updated_at_utc": "2026-08-03T18:59:48Z",
+  "last_updated_at_utc": "2026-08-03T19:44:08Z",
   "recorded_at_git_head": "cd9f7440114b8b8ee9866a56429059e17e084484",
   "amendment_id": "V2-A006",
   "amendment_path": "artifacts/vla_wam_shared_v2/pilot/post_result_second_wave_amendment.json",
@@ -230,7 +230,7 @@
     ]
   },
   "behavioral_queue": {
-    "status": "released_after_fixed_observation_and_rendering_contracts_pass",
+    "status": "complete_do_not_rerun",
     "pair_ids": ["robotwin_pair_00", "robotwin_pair_01", "robotwin_pair_02"],
     "environment_seeds": [4300000, 4300001, 4300002],
     "sampling_seeds": [8400, 8401, 8402],
@@ -243,6 +243,62 @@
     "executed_action_trace_required": true,
     "valid_failure_retention": true,
     "infrastructure_failure_denominator_policy": "exclude_and_ledger",
-    "oracle_or_coach": false
+    "oracle_or_coach": false,
+    "completed_pair_ids": ["robotwin_pair_00", "robotwin_pair_01", "robotwin_pair_02"],
+    "remaining_episode_count": 0
+  },
+  "successful_a100_runtimes": {
+    "robotwin_pair_00": {
+      "pod": "lerobot-13-ali",
+      "gpu": "NVIDIA A100-SXM4-80GB",
+      "thermal_log": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/thermal_robotwin_pair_00_attempt02.jsonl",
+      "worker_exit_code": 0,
+      "maximum_temperature_c": 44,
+      "runtime_interventions": 0
+    },
+    "robotwin_pair_01": {
+      "pod": "lightwam-a100-0-ali",
+      "gpu": "NVIDIA A100-SXM4-80GB",
+      "thermal_log": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/thermal_robotwin_pair_01_attempt02.jsonl",
+      "worker_exit_code": 0,
+      "maximum_temperature_c": 41,
+      "runtime_interventions": 0
+    },
+    "robotwin_pair_02": {
+      "pod": "lerobot-13-ali",
+      "gpu": "NVIDIA A100-SXM4-80GB",
+      "thermal_log": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/thermal_robotwin_pair_02_attempt02.jsonl",
+      "worker_exit_code": 0,
+      "maximum_temperature_c": 45,
+      "runtime_interventions": 0
+    }
+  },
+  "behavioral_result": {
+    "status": "complete",
+    "artifact": "artifacts/vla_wam_shared_v2/pilot/expansion/light_wam_robotwin_direct_gate.json",
+    "artifact_bytes": 42232,
+    "artifact_sha256": "f33e1ff8fdc82c4a035f2cc113b91b311d685d9747dbcbb1104453fc455745d6",
+    "valid_episode_count": 6,
+    "requested_success_count": 1,
+    "success_by_relation": {
+      "left": {"successes": 1, "trials": 3},
+      "right": {"successes": 0, "trials": 3}
+    },
+    "valid_failure_count": 5,
+    "infrastructure_invalid_attempt_count": 6,
+    "runtime_intervention_count": 0,
+    "executed_action_count": 2134,
+    "aligned_endpoint_pair_count": 1,
+    "distinct_executed_action_pair_count": 3,
+    "competence_gate": "left_only",
+    "wording_grid_eligible": false,
+    "future_interface": "action_only_infer_action",
+    "imagined_future_evidence": null,
+    "do_not_rerun": true,
+    "pair_summary": {
+      "robotwin_pair_00": "LEFT success at 134 actions; RIGHT valid failure at 400 actions; endpoint ordering aligned",
+      "robotwin_pair_01": "LEFT and RIGHT valid failures at 400 actions; endpoint ordering anti-aligned",
+      "robotwin_pair_02": "LEFT and RIGHT valid failures at 400 actions; endpoint ordering anti-aligned"
+    }
   }
 }

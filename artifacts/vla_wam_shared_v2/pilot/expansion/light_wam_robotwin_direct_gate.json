@@ -1,0 +1,902 @@
+{
+  "amendment_id": "V2-A006",
+  "competence_gate": "left_only",
+  "compiled_at_git_head": "e55996e803c9f3635faadfb0bb6a28fc83411855",
+  "episodes": [
+    {
+      "action_trace": {
+        "count": 134,
+        "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_00/robotwin_pair_00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__left/action_trace.npz",
+        "sha256": "9812c882b5e33155c6b4126c232852deeb555e9411b300bda6ade5b573fc5e60",
+        "shape": [
+          134,
+          14
+        ]
+      },
+      "actions_executed": 134,
+      "dynamic_prompt_switches": 0,
+      "environment_seed": 4300000,
+      "final": {
+        "distance_xy": 0.14019636963446486,
+        "grippers_open": true,
+        "object_minus_target_x": -0.13996154814958572,
+        "object_minus_target_y": -0.008110924623906612,
+        "object_xyz": [
+          0.04720603674650192,
+          -0.022556684911251068,
+          0.7738549709320068
+        ],
+        "relation_region": true,
+        "success": true,
+        "target_xyz": [
+          0.18716758489608765,
+          -0.014445760287344456,
+          0.7408512830734253
+        ]
+      },
+      "future_interface": "action_only_infer_action",
+      "imagined_future_artifact": null,
+      "imagined_future_video": null,
+      "initial": {
+        "distance_xy": 0.2090177618339415,
+        "grippers_open": true,
+        "object_minus_target_x": -0.17838167771697044,
+        "object_minus_target_y": -0.10894219484180212,
+        "object_xyz": [
+          0.008785907179117203,
+          -0.12338795512914658,
+          0.7408285140991211
+        ],
+        "relation_region": false,
+        "success": false,
+        "target_xyz": [
+          0.18716758489608765,
+          -0.014445760287344456,
+          0.7408512830734253
+        ]
+      },
+      "initial_observation_sha256": "0cbd43fb313e702cd58ad9bfce4433a8a340d020a6f6cce9892859d95b0d73e4",
+      "max_object_lift_m": 0.10556972026824951,
+      "model_id": "light_wam_robotwin",
+      "native_task_success": true,
+      "object_model_id": 2,
+      "object_name": "107_soap",
+      "opposite_relation_success": false,
+      "oracle_actions": 0,
+      "pair_id": "robotwin_pair_00",
+      "prompt": "Put the blue soap to the left of the tea-box.",
+      "prompt_controller": "episode_static",
+      "prompt_family": "direct_command",
+      "requested_relation": "left",
+      "requested_success": true,
+      "sampling_seed": 8400,
+      "schema_version": "vla-wam-shared-v2-light-wam-episode-v1",
+      "simulator_video": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_00/robotwin_pair_00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__left/simulator.mp4",
+      "target_model_id": 2,
+      "target_name": "112_tea-box",
+      "task": "place_a2b_left",
+      "trajectory_path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_00/robotwin_pair_00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__left/trajectory.json",
+      "wall_seconds": 133.5898015119601
+    },
+    {
+      "action_trace": {
+        "count": 400,
+        "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_00/robotwin_pair_00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__right/action_trace.npz",
+        "sha256": "5532aea0ce36abb1e205bb0c988fa25950c124158bf18d119259babca2e073e2",
+        "shape": [
+          400,
+          14
+        ]
+      },
+      "actions_executed": 400,
+      "dynamic_prompt_switches": 0,
+      "environment_seed": 4300000,
+      "final": {
+        "distance_xy": 0.07228184391058344,
+        "grippers_open": true,
+        "object_minus_target_x": -0.04700791835784912,
+        "object_minus_target_y": 0.05490829236805439,
+        "object_xyz": [
+          0.09403097629547119,
+          0.028006471693515778,
+          0.7777182459831238
+        ],
+        "relation_region": false,
+        "success": false,
+        "target_xyz": [
+          0.1410388946533203,
+          -0.026901820674538612,
+          0.7616532444953918
+        ]
+      },
+      "future_interface": "action_only_infer_action",
+      "imagined_future_artifact": null,
+      "imagined_future_video": null,
+      "initial": {
+        "distance_xy": 0.2090177618339415,
+        "grippers_open": true,
+        "object_minus_target_x": -0.17838167771697044,
+        "object_minus_target_y": -0.10894219484180212,
+        "object_xyz": [
+          0.008785907179117203,
+          -0.12338795512914658,
+          0.7408285140991211
+        ],
+        "relation_region": false,
+        "success": false,
+        "target_xyz": [
+          0.18716758489608765,
+          -0.014445760287344456,
+          0.7408512830734253
+        ]
+      },
+      "initial_observation_sha256": "0cbd43fb313e702cd58ad9bfce4433a8a340d020a6f6cce9892859d95b0d73e4",
+      "max_object_lift_m": 0.10879600048065186,
+      "model_id": "light_wam_robotwin",
+      "native_task_success": false,
+      "object_model_id": 2,
+      "object_name": "107_soap",
+      "opposite_relation_success": false,
+      "oracle_actions": 0,
+      "pair_id": "robotwin_pair_00",
+      "prompt": "Put the blue soap to the right of the tea-box.",
+      "prompt_controller": "episode_static",
+      "prompt_family": "direct_command",
+      "requested_relation": "right",
+      "requested_success": false,
+      "sampling_seed": 8400,
+      "schema_version": "vla-wam-shared-v2-light-wam-episode-v1",
+      "simulator_video": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_00/robotwin_pair_00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__right/simulator.mp4",
+      "target_model_id": 2,
+      "target_name": "112_tea-box",
+      "task": "place_a2b_left",
+      "trajectory_path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_00/robotwin_pair_00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__right/trajectory.json",
+      "wall_seconds": 365.3825090059545
+    },
+    {
+      "action_trace": {
+        "count": 400,
+        "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_01/robotwin_pair_01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__left/action_trace.npz",
+        "sha256": "85045747214b50260517152797ed9fa2fbd198966619e385581ac66ed9b8f2d7",
+        "shape": [
+          400,
+          14
+        ]
+      },
+      "actions_executed": 400,
+      "dynamic_prompt_switches": 0,
+      "environment_seed": 4300001,
+      "final": {
+        "distance_xy": 0.09205199638845121,
+        "grippers_open": true,
+        "object_minus_target_x": 0.06701716780662537,
+        "object_minus_target_y": -0.06310522370040417,
+        "object_xyz": [
+          -0.20298752188682556,
+          -0.034223128110170364,
+          0.7404758930206299
+        ],
+        "relation_region": false,
+        "success": false,
+        "target_xyz": [
+          -0.2700046896934509,
+          0.028882095590233803,
+          0.7413459420204163
+        ]
+      },
+      "future_interface": "action_only_infer_action",
+      "imagined_future_artifact": null,
+      "imagined_future_video": null,
+      "initial": {
+        "distance_xy": 0.118865012891448,
+        "grippers_open": true,
+        "object_minus_target_x": -0.003953173756599426,
+        "object_minus_target_y": 0.11879925802350044,
+        "object_xyz": [
+          -0.2183658927679062,
+          -0.04757332429289818,
+          0.7398282885551453
+        ],
+        "relation_region": false,
+        "success": false,
+        "target_xyz": [
+          -0.21441271901130676,
+          -0.16637258231639862,
+          0.7413460612297058
+        ]
+      },
+      "initial_observation_sha256": "c943c88d4ae86ef7f0d70c91f71a08da2ee797567ed6070ed3f36cf987948d2d",
+      "max_object_lift_m": 0.014410018920898438,
+      "model_id": "light_wam_robotwin",
+      "native_task_success": false,
+      "object_model_id": 0,
+      "object_name": "086_woodenblock",
+      "opposite_relation_success": false,
+      "oracle_actions": 0,
+      "pair_id": "robotwin_pair_01",
+      "prompt": "Put the brown woodenblock to the left of the black phone.",
+      "prompt_controller": "episode_static",
+      "prompt_family": "direct_command",
+      "requested_relation": "left",
+      "requested_success": false,
+      "sampling_seed": 8401,
+      "schema_version": "vla-wam-shared-v2-light-wam-episode-v1",
+      "simulator_video": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_01/robotwin_pair_01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__left/simulator.mp4",
+      "target_model_id": 4,
+      "target_name": "077_phone",
+      "task": "place_a2b_right",
+      "trajectory_path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_01/robotwin_pair_01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__left/trajectory.json",
+      "wall_seconds": 372.2422430110164
+    },
+    {
+      "action_trace": {
+        "count": 400,
+        "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_01/robotwin_pair_01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__right/action_trace.npz",
+        "sha256": "89b33aad377864e879bd8b5a6f89028268f0acd4c983ff2c2766637e56a03d71",
+        "shape": [
+          400,
+          14
+        ]
+      },
+      "actions_executed": 400,
+      "dynamic_prompt_switches": 0,
+      "environment_seed": 4300001,
+      "final": {
+        "distance_xy": 0.2085988645508527,
+        "grippers_open": false,
+        "object_minus_target_x": -0.12848304957151413,
+        "object_minus_target_y": -0.1643337830901146,
+        "object_xyz": [
+          -0.2111855149269104,
+          -0.08751656115055084,
+          0.739828884601593
+        ],
+        "relation_region": false,
+        "success": false,
+        "target_xyz": [
+          -0.08270246535539627,
+          0.07681722193956375,
+          0.7413460612297058
+        ]
+      },
+      "future_interface": "action_only_infer_action",
+      "imagined_future_artifact": null,
+      "imagined_future_video": null,
+      "initial": {
+        "distance_xy": 0.118865012891448,
+        "grippers_open": true,
+        "object_minus_target_x": -0.003953173756599426,
+        "object_minus_target_y": 0.11879925802350044,
+        "object_xyz": [
+          -0.2183658927679062,
+          -0.04757332429289818,
+          0.7398282885551453
+        ],
+        "relation_region": false,
+        "success": false,
+        "target_xyz": [
+          -0.21441271901130676,
+          -0.16637258231639862,
+          0.7413460612297058
+        ]
+      },
+      "initial_observation_sha256": "c943c88d4ae86ef7f0d70c91f71a08da2ee797567ed6070ed3f36cf987948d2d",
+      "max_object_lift_m": 0.015818655490875244,
+      "model_id": "light_wam_robotwin",
+      "native_task_success": false,
+      "object_model_id": 0,
+      "object_name": "086_woodenblock",
+      "opposite_relation_success": false,
+      "oracle_actions": 0,
+      "pair_id": "robotwin_pair_01",
+      "prompt": "Put the brown woodenblock to the right of the black phone.",
+      "prompt_controller": "episode_static",
+      "prompt_family": "direct_command",
+      "requested_relation": "right",
+      "requested_success": false,
+      "sampling_seed": 8401,
+      "schema_version": "vla-wam-shared-v2-light-wam-episode-v1",
+      "simulator_video": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_01/robotwin_pair_01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__right/simulator.mp4",
+      "target_model_id": 4,
+      "target_name": "077_phone",
+      "task": "place_a2b_right",
+      "trajectory_path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_01/robotwin_pair_01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__right/trajectory.json",
+      "wall_seconds": 364.2664068529848
+    },
+    {
+      "action_trace": {
+        "count": 400,
+        "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_02/robotwin_pair_02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__left/action_trace.npz",
+        "sha256": "12863a01fbc3f64cb52252c2a8034f921c5eff49978a0f2ad725abddb2c4d26d",
+        "shape": [
+          400,
+          14
+        ]
+      },
+      "actions_executed": 400,
+      "dynamic_prompt_switches": 0,
+      "environment_seed": 4300002,
+      "final": {
+        "distance_xy": 0.11348679542911522,
+        "grippers_open": false,
+        "object_minus_target_x": 0.01338961347937584,
+        "object_minus_target_y": 0.1126941479742527,
+        "object_xyz": [
+          -0.007282998412847519,
+          -0.02708813175559044,
+          0.7408637404441833
+        ],
+        "relation_region": false,
+        "success": false,
+        "target_xyz": [
+          -0.020672611892223358,
+          -0.13978227972984314,
+          0.7406607270240784
+        ]
+      },
+      "future_interface": "action_only_infer_action",
+      "imagined_future_artifact": null,
+      "imagined_future_video": null,
+      "initial": {
+        "distance_xy": 0.11371350314646506,
+        "grippers_open": true,
+        "object_minus_target_x": 0.01300065778195858,
+        "object_minus_target_y": 0.11296788789331913,
+        "object_xyz": [
+          -0.007671954110264778,
+          -0.02681439183652401,
+          0.7408637404441833
+        ],
+        "relation_region": false,
+        "success": false,
+        "target_xyz": [
+          -0.020672611892223358,
+          -0.13978227972984314,
+          0.7406607270240784
+        ]
+      },
+      "initial_observation_sha256": "99094d775169bd161230922fc71f3aac1749bd9684af723d1382e4d00f3243a9",
+      "max_object_lift_m": 0.00044661760330200195,
+      "model_id": "light_wam_robotwin",
+      "native_task_success": false,
+      "object_model_id": 2,
+      "object_name": "081_playingcards",
+      "opposite_relation_success": false,
+      "oracle_actions": 0,
+      "pair_id": "robotwin_pair_02",
+      "prompt": "Put the box with cards inside to the left of the red coffee-box.",
+      "prompt_controller": "episode_static",
+      "prompt_family": "direct_command",
+      "requested_relation": "left",
+      "requested_success": false,
+      "sampling_seed": 8402,
+      "schema_version": "vla-wam-shared-v2-light-wam-episode-v1",
+      "simulator_video": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_02/robotwin_pair_02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__left/simulator.mp4",
+      "target_model_id": 5,
+      "target_name": "113_coffee-box",
+      "task": "place_a2b_left",
+      "trajectory_path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_02/robotwin_pair_02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__left/trajectory.json",
+      "wall_seconds": 364.31435483996756
+    },
+    {
+      "action_trace": {
+        "count": 400,
+        "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_02/robotwin_pair_02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__right/action_trace.npz",
+        "sha256": "ef43db984893db61ad73f4870bc826f86778104266b90061f31ee7546c584816",
+        "shape": [
+          400,
+          14
+        ]
+      },
+      "actions_executed": 400,
+      "dynamic_prompt_switches": 0,
+      "environment_seed": 4300002,
+      "final": {
+        "distance_xy": 0.09352312585182432,
+        "grippers_open": false,
+        "object_minus_target_x": 0.012058528140187263,
+        "object_minus_target_y": 0.09274247661232948,
+        "object_xyz": [
+          -0.008614083752036095,
+          -0.04703980311751366,
+          0.7408638000488281
+        ],
+        "relation_region": false,
+        "success": false,
+        "target_xyz": [
+          -0.020672611892223358,
+          -0.13978227972984314,
+          0.7406607270240784
+        ]
+      },
+      "future_interface": "action_only_infer_action",
+      "imagined_future_artifact": null,
+      "imagined_future_video": null,
+      "initial": {
+        "distance_xy": 0.11371350314646506,
+        "grippers_open": true,
+        "object_minus_target_x": 0.01300065778195858,
+        "object_minus_target_y": 0.11296788789331913,
+        "object_xyz": [
+          -0.007671954110264778,
+          -0.02681439183652401,
+          0.7408637404441833
+        ],
+        "relation_region": false,
+        "success": false,
+        "target_xyz": [
+          -0.020672611892223358,
+          -0.13978227972984314,
+          0.7406607270240784
+        ]
+      },
+      "initial_observation_sha256": "99094d775169bd161230922fc71f3aac1749bd9684af723d1382e4d00f3243a9",
+      "max_object_lift_m": 0.00013196468353271484,
+      "model_id": "light_wam_robotwin",
+      "native_task_success": false,
+      "object_model_id": 2,
+      "object_name": "081_playingcards",
+      "opposite_relation_success": false,
+      "oracle_actions": 0,
+      "pair_id": "robotwin_pair_02",
+      "prompt": "Put the box with cards inside to the right of the red coffee-box.",
+      "prompt_controller": "episode_static",
+      "prompt_family": "direct_command",
+      "requested_relation": "right",
+      "requested_success": false,
+      "sampling_seed": 8402,
+      "schema_version": "vla-wam-shared-v2-light-wam-episode-v1",
+      "simulator_video": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_02/robotwin_pair_02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__right/simulator.mp4",
+      "target_model_id": 5,
+      "target_name": "113_coffee-box",
+      "task": "place_a2b_left",
+      "trajectory_path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_02/robotwin_pair_02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__right/trajectory.json",
+      "wall_seconds": 475.7537521768827
+    }
+  ],
+  "evidence_files": [
+    {
+      "bytes": 0,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_00/invalid_attempts.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 241,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_00/manifest.json",
+      "sha256": "b1762dc6692f7a1e23e36206bbaddd7a9fedf386eae073960aa7b2516638eab4"
+    },
+    {
+      "bytes": 4857,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_00/results.jsonl",
+      "sha256": "c240df7065996d42d45dda5e631a42647c325218cc3c3b56322b3387b25d114b"
+    },
+    {
+      "bytes": 3548,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_00/robotwin_pair_00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__left/action_trace.npz",
+      "sha256": "9812c882b5e33155c6b4126c232852deeb555e9411b300bda6ade5b573fc5e60"
+    },
+    {
+      "bytes": 2696,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_00/robotwin_pair_00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__left/result.json",
+      "sha256": "6b9f170da3574579f3b63e5819edfca361d6de8c0329c48dbfdd6bd2122e175d"
+    },
+    {
+      "bytes": 541814,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_00/robotwin_pair_00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__left/simulator.mp4",
+      "sha256": "6fc037f782b7e868a154d5b24cfb73134ce137ddaca769e1aad0a42c5bfca789"
+    },
+    {
+      "bytes": 50988,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_00/robotwin_pair_00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__left/trajectory.json",
+      "sha256": "2e61bdb2242ba63d01391cc73bb6809fa216bcd1ff651c9d3b89bd462c1920e5"
+    },
+    {
+      "bytes": 8100,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_00/robotwin_pair_00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__right/action_trace.npz",
+      "sha256": "5532aea0ce36abb1e205bb0c988fa25950c124158bf18d119259babca2e073e2"
+    },
+    {
+      "bytes": 2701,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_00/robotwin_pair_00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__right/result.json",
+      "sha256": "4bfcda27f93763cc1c14da055d411d052920a6a6f377ec447a7b760ad3c76839"
+    },
+    {
+      "bytes": 1620158,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_00/robotwin_pair_00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__right/simulator.mp4",
+      "sha256": "1c8a9d78e7ae53ab4a2ad42db401e11e6ac9abd3f772901d765c5f23ddd9adbd"
+    },
+    {
+      "bytes": 150841,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_00/robotwin_pair_00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__right/trajectory.json",
+      "sha256": "a4909e3082ef436d617b845616fed724575f19494ae7f646e3cee37d04952264"
+    },
+    {
+      "bytes": 0,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_01/invalid_attempts.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 241,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_01/manifest.json",
+      "sha256": "838c42af55a2845f5f7e64c6522293e8d975a688bc9bdc9d4ee16e7de6564267"
+    },
+    {
+      "bytes": 4898,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_01/results.jsonl",
+      "sha256": "f3735deb8b6b2864b0f19f7493ae3fc68d2173e44086ea04f7c62e571ccacbfb"
+    },
+    {
+      "bytes": 8937,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_01/robotwin_pair_01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__left/action_trace.npz",
+      "sha256": "85045747214b50260517152797ed9fa2fbd198966619e385581ac66ed9b8f2d7"
+    },
+    {
+      "bytes": 2718,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_01/robotwin_pair_01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__left/result.json",
+      "sha256": "2d7a1bf80c3667c8b7e1f4fab6ebaaab2d6755b5214b015464bd9d9b8facb84e"
+    },
+    {
+      "bytes": 1590228,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_01/robotwin_pair_01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__left/simulator.mp4",
+      "sha256": "7f1ff040e1ae121a6d52f51c74ecd9344e699d1598b713a4549dfa5452d8c176"
+    },
+    {
+      "bytes": 151001,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_01/robotwin_pair_01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__left/trajectory.json",
+      "sha256": "5e13a21ddb81d13b8089558e91fceb748a98587bf8eae19516dabeb736db9f9d"
+    },
+    {
+      "bytes": 8882,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_01/robotwin_pair_01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__right/action_trace.npz",
+      "sha256": "89b33aad377864e879bd8b5a6f89028268f0acd4c983ff2c2766637e56a03d71"
+    },
+    {
+      "bytes": 2720,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_01/robotwin_pair_01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__right/result.json",
+      "sha256": "cc8fd39b7597a3945decb230ad4882c2bbb193a3920c9240bdc92e209bd25c68"
+    },
+    {
+      "bytes": 1639610,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_01/robotwin_pair_01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__right/simulator.mp4",
+      "sha256": "12ad63234bfd36857f83e56cb85fd66c65ef7c018c13c3411c68c47381a3bf4e"
+    },
+    {
+      "bytes": 151171,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_01/robotwin_pair_01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__right/trajectory.json",
+      "sha256": "6317efd43e5e3cdd7a5cc8c2335667380c40b2563c7c7c1f62d0808bb843eedd"
+    },
+    {
+      "bytes": 0,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_02/invalid_attempts.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 241,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_02/manifest.json",
+      "sha256": "838c42af55a2845f5f7e64c6522293e8d975a688bc9bdc9d4ee16e7de6564267"
+    },
+    {
+      "bytes": 4934,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_02/results.jsonl",
+      "sha256": "343f4cd03c83d5d51a87fd758b5bc34492f8032ab93d99dc7f5a36e6a73ed8c2"
+    },
+    {
+      "bytes": 9945,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_02/robotwin_pair_02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__left/action_trace.npz",
+      "sha256": "12863a01fbc3f64cb52252c2a8034f921c5eff49978a0f2ad725abddb2c4d26d"
+    },
+    {
+      "bytes": 2734,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_02/robotwin_pair_02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__left/result.json",
+      "sha256": "88ecdeef668dd99f3c37d135760457bf2270af1c1f9475cbdc7d04df53d2cda2"
+    },
+    {
+      "bytes": 1355236,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_02/robotwin_pair_02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__left/simulator.mp4",
+      "sha256": "fb9eea1a20cf8db3ba0245aae7c6cf260d54345adc8a0b4e0e8c3b711997b7e6"
+    },
+    {
+      "bytes": 151913,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_02/robotwin_pair_02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__left/trajectory.json",
+      "sha256": "0dcdc4e37457b3e0103b9427901eae45bfbf3cac907ec051390de27632ea869a"
+    },
+    {
+      "bytes": 12184,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_02/robotwin_pair_02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__right/action_trace.npz",
+      "sha256": "ef43db984893db61ad73f4870bc826f86778104266b90061f31ee7546c584816"
+    },
+    {
+      "bytes": 2740,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_02/robotwin_pair_02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__right/result.json",
+      "sha256": "0de57ac21940ed1cc8f32563b3e392fa8205763e463dfe336b45a4dd29d9610c"
+    },
+    {
+      "bytes": 2258114,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_02/robotwin_pair_02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__right/simulator.mp4",
+      "sha256": "7dac489a321ebc17904ee5af6cd4eb91fdf4e1175e1891bbc36d9636883ad52e"
+    },
+    {
+      "bytes": 152482,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_02/robotwin_pair_02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__right/trajectory.json",
+      "sha256": "3508af7b9f12610bb4d57e0a2fdf89133728382b4b834b658a96f6abb90fc482"
+    },
+    {
+      "bytes": 2661,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/invalid_attempts_light_wam_robotwin_robotwin_pair_02.json",
+      "sha256": "f8a49f288a45f6746bee97fcb0025b8fd26c2e5b43b52cf4b022da6dca97d9da"
+    },
+    {
+      "bytes": 921374,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/invalid_setup/b200_oidn_invalid_handle/robotwin_pair_02/robotwin_pair_02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__left/simulator.mp4",
+      "sha256": "79cd1976400480dbaf97dfa5d4109127615df94be4a74182d14e927bb3bcc51b"
+    },
+    {
+      "bytes": 2453,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/invalid_setup/ffmpeg_missing/robotwin_pair_00/invalid_attempts.jsonl",
+      "sha256": "d11fb8157c1ccb3a2daf06b9c87ed6bb038d063a6d3f719aec1f324796d8ccb4"
+    },
+    {
+      "bytes": 2453,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/invalid_setup/ffmpeg_missing/robotwin_pair_01/invalid_attempts.jsonl",
+      "sha256": "3d708a880fc98273649d6dbf08d0a2fc316d148b23dc80c8587740b4e5f1a449"
+    }
+  ],
+  "excluded_setup_thermal_lifecycles": [
+    {
+      "bytes": 11446,
+      "emergency_count": 0,
+      "maximum_temperature_c": 32,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/thermal_robotwin_pair_00.jsonl",
+      "pause_count": 0,
+      "record_count": 37,
+      "resume_count": 0,
+      "sha256": "000d160436803f1876cdb0edb82dc6b00dc8825432f93612a9d3425e7c3e1cd0",
+      "temperature_sample_count": 34,
+      "worker_exit_code": 0
+    },
+    {
+      "bytes": 12153,
+      "emergency_count": 0,
+      "maximum_temperature_c": 30,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/thermal_robotwin_pair_01.jsonl",
+      "pause_count": 0,
+      "record_count": 40,
+      "resume_count": 0,
+      "sha256": "7a990b938035f48878e92cfffd9da7752caccde0a407d7179505c1ec45e0e4b6",
+      "temperature_sample_count": 37,
+      "worker_exit_code": 0
+    },
+    {
+      "bytes": 13471,
+      "emergency_count": 0,
+      "maximum_temperature_c": 28,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/thermal_robotwin_pair_02.jsonl",
+      "pause_count": 0,
+      "record_count": 44,
+      "resume_count": 0,
+      "sha256": "b4ba270e09999dd7087f5bb6cdfad4daae0abf3f9e54b74ef962f50534a1fd1e",
+      "temperature_sample_count": 41,
+      "worker_exit_code": -15
+    }
+  ],
+  "future_interface": "action_only_infer_action",
+  "imagined_future_evidence": null,
+  "invalid_attempt_count": 6,
+  "invalid_attempts": [
+    {
+      "environment_seed": 4300000,
+      "error": "[Errno 2] No such file or directory: 'ffmpeg'",
+      "error_type": "FileNotFoundError",
+      "included_in_model_denominator": false,
+      "pair_id": "robotwin_pair_00",
+      "requested_relation": "left",
+      "sampling_seed": 8400,
+      "stage": "infrastructure_or_runtime",
+      "traceback": "Traceback (most recent call last):\n  File \"/data/users/ali/vla_wam/src/steerable-lightwam/experiments/light_wam_robotwin/v2_direct_gate.py\", line 494, in run_episodes\n    result, observed_sha = run_episode(\n  File \"/data/users/ali/vla_wam/src/steerable-lightwam/experiments/light_wam_robotwin/v2_direct_gate.py\", line 369, in run_episode\n    video_writer = open_video_writer(simulator_video, frame)\n  File \"/data/users/ali/vla_wam/src/steerable-lightwam/experiments/light_wam_robotwin/v2_direct_gate.py\", line 208, in open_video_writer\n    process = subprocess.Popen(\n  File \"/usr/lib/python3.10/subprocess.py\", line 971, in __init__\n    self._execute_child(args, executable, preexec_fn, close_fds,\n  File \"/usr/lib/python3.10/subprocess.py\", line 1863, in _execute_child\n    raise child_exception_type(errno_num, err_msg, err_filename)\nFileNotFoundError: [Errno 2] No such file or directory: 'ffmpeg'\n"
+    },
+    {
+      "environment_seed": 4300000,
+      "error": "[Errno 2] No such file or directory: 'ffmpeg'",
+      "error_type": "FileNotFoundError",
+      "included_in_model_denominator": false,
+      "pair_id": "robotwin_pair_00",
+      "requested_relation": "right",
+      "sampling_seed": 8400,
+      "stage": "infrastructure_or_runtime",
+      "traceback": "Traceback (most recent call last):\n  File \"/data/users/ali/vla_wam/src/steerable-lightwam/experiments/light_wam_robotwin/v2_direct_gate.py\", line 494, in run_episodes\n    result, observed_sha = run_episode(\n  File \"/data/users/ali/vla_wam/src/steerable-lightwam/experiments/light_wam_robotwin/v2_direct_gate.py\", line 369, in run_episode\n    video_writer = open_video_writer(simulator_video, frame)\n  File \"/data/users/ali/vla_wam/src/steerable-lightwam/experiments/light_wam_robotwin/v2_direct_gate.py\", line 208, in open_video_writer\n    process = subprocess.Popen(\n  File \"/usr/lib/python3.10/subprocess.py\", line 971, in __init__\n    self._execute_child(args, executable, preexec_fn, close_fds,\n  File \"/usr/lib/python3.10/subprocess.py\", line 1863, in _execute_child\n    raise child_exception_type(errno_num, err_msg, err_filename)\nFileNotFoundError: [Errno 2] No such file or directory: 'ffmpeg'\n"
+    },
+    {
+      "environment_seed": 4300001,
+      "error": "[Errno 2] No such file or directory: 'ffmpeg'",
+      "error_type": "FileNotFoundError",
+      "included_in_model_denominator": false,
+      "pair_id": "robotwin_pair_01",
+      "requested_relation": "left",
+      "sampling_seed": 8401,
+      "stage": "infrastructure_or_runtime",
+      "traceback": "Traceback (most recent call last):\n  File \"/data/users/ali/vla_wam/src/steerable-lightwam/experiments/light_wam_robotwin/v2_direct_gate.py\", line 494, in run_episodes\n    result, observed_sha = run_episode(\n  File \"/data/users/ali/vla_wam/src/steerable-lightwam/experiments/light_wam_robotwin/v2_direct_gate.py\", line 369, in run_episode\n    video_writer = open_video_writer(simulator_video, frame)\n  File \"/data/users/ali/vla_wam/src/steerable-lightwam/experiments/light_wam_robotwin/v2_direct_gate.py\", line 208, in open_video_writer\n    process = subprocess.Popen(\n  File \"/usr/lib/python3.10/subprocess.py\", line 971, in __init__\n    self._execute_child(args, executable, preexec_fn, close_fds,\n  File \"/usr/lib/python3.10/subprocess.py\", line 1863, in _execute_child\n    raise child_exception_type(errno_num, err_msg, err_filename)\nFileNotFoundError: [Errno 2] No such file or directory: 'ffmpeg'\n"
+    },
+    {
+      "environment_seed": 4300001,
+      "error": "[Errno 2] No such file or directory: 'ffmpeg'",
+      "error_type": "FileNotFoundError",
+      "included_in_model_denominator": false,
+      "pair_id": "robotwin_pair_01",
+      "requested_relation": "right",
+      "sampling_seed": 8401,
+      "stage": "infrastructure_or_runtime",
+      "traceback": "Traceback (most recent call last):\n  File \"/data/users/ali/vla_wam/src/steerable-lightwam/experiments/light_wam_robotwin/v2_direct_gate.py\", line 494, in run_episodes\n    result, observed_sha = run_episode(\n  File \"/data/users/ali/vla_wam/src/steerable-lightwam/experiments/light_wam_robotwin/v2_direct_gate.py\", line 369, in run_episode\n    video_writer = open_video_writer(simulator_video, frame)\n  File \"/data/users/ali/vla_wam/src/steerable-lightwam/experiments/light_wam_robotwin/v2_direct_gate.py\", line 208, in open_video_writer\n    process = subprocess.Popen(\n  File \"/usr/lib/python3.10/subprocess.py\", line 971, in __init__\n    self._execute_child(args, executable, preexec_fn, close_fds,\n  File \"/usr/lib/python3.10/subprocess.py\", line 1863, in _execute_child\n    raise child_exception_type(errno_num, err_msg, err_filename)\nFileNotFoundError: [Errno 2] No such file or directory: 'ffmpeg'\n"
+    },
+    {
+      "behavioral_result_valid": false,
+      "classification": "partial",
+      "completed_at_utc": "2026-08-03T19:22:49.435611Z",
+      "environment_seed": 4300002,
+      "events": [
+        {
+          "event": "worker_started",
+          "timestamp_utc": "2026-08-03T19:19:19.670628Z",
+          "worker_state": "running"
+        },
+        {
+          "event": "monitor_started",
+          "timestamp_utc": "2026-08-03T19:19:19.675402Z",
+          "worker_state": "running"
+        },
+        {
+          "event": "monitor_completed",
+          "timestamp_utc": "2026-08-03T19:22:49.435611Z",
+          "worker_state": "running"
+        }
+      ],
+      "gpu_index": 2,
+      "id": "native-thermal-light_wam_robotwin-robotwin_pair_02-left-20260803T191919670628Z",
+      "max_temperature_c": 28,
+      "model_id": "light_wam_robotwin",
+      "pair_id": "robotwin_pair_02",
+      "raw_event_log": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/thermal_robotwin_pair_02.jsonl",
+      "requested_relation": "left",
+      "sampling_seed": 8402,
+      "started_at_utc": "2026-08-03T19:19:19.670628Z",
+      "status": "worker_exit_nonzero",
+      "wall_latency_valid": false,
+      "worker_exit_code": -15,
+      "worker_pgid": 90714,
+      "worker_pid": 90714
+    },
+    {
+      "behavioral_result_valid": false,
+      "classification": "partial",
+      "completed_at_utc": "2026-08-03T19:22:49.435611Z",
+      "environment_seed": 4300002,
+      "events": [
+        {
+          "event": "worker_started",
+          "timestamp_utc": "2026-08-03T19:19:19.670628Z",
+          "worker_state": "running"
+        },
+        {
+          "event": "monitor_started",
+          "timestamp_utc": "2026-08-03T19:19:19.675402Z",
+          "worker_state": "running"
+        },
+        {
+          "event": "monitor_completed",
+          "timestamp_utc": "2026-08-03T19:22:49.435611Z",
+          "worker_state": "running"
+        }
+      ],
+      "gpu_index": 2,
+      "id": "native-thermal-light_wam_robotwin-robotwin_pair_02-right-20260803T191919670628Z",
+      "max_temperature_c": 28,
+      "model_id": "light_wam_robotwin",
+      "pair_id": "robotwin_pair_02",
+      "raw_event_log": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/thermal_robotwin_pair_02.jsonl",
+      "requested_relation": "right",
+      "sampling_seed": 8402,
+      "started_at_utc": "2026-08-03T19:19:19.670628Z",
+      "status": "worker_exit_nonzero",
+      "wall_latency_valid": false,
+      "worker_exit_code": -15,
+      "worker_pgid": 90714,
+      "worker_pid": 90714
+    }
+  ],
+  "model_id": "light_wam_robotwin",
+  "pairs": [
+    {
+      "endpoint_ordering_aligned": true,
+      "executed_actions_distinct": true,
+      "first_10_action_rms": 0.007507444037020346,
+      "initial_observation_sha256": "0cbd43fb313e702cd58ad9bfce4433a8a340d020a6f6cce9892859d95b0d73e4",
+      "left_final_object_minus_target_x": -0.13996154814958572,
+      "left_requested_success": true,
+      "overlap_action_rms": 0.07725153074288044,
+      "pair_id": "robotwin_pair_00",
+      "right_final_object_minus_target_x": -0.04700791835784912,
+      "right_minus_left_endpoint_x": 0.0929536297917366,
+      "right_requested_success": false
+    },
+    {
+      "endpoint_ordering_aligned": false,
+      "executed_actions_distinct": true,
+      "first_10_action_rms": 0.006346732542739099,
+      "initial_observation_sha256": "c943c88d4ae86ef7f0d70c91f71a08da2ee797567ed6070ed3f36cf987948d2d",
+      "left_final_object_minus_target_x": 0.06701716780662537,
+      "left_requested_success": false,
+      "overlap_action_rms": 0.12045549835427433,
+      "pair_id": "robotwin_pair_01",
+      "right_final_object_minus_target_x": -0.12848304957151413,
+      "right_minus_left_endpoint_x": -0.1955002173781395,
+      "right_requested_success": false
+    },
+    {
+      "endpoint_ordering_aligned": false,
+      "executed_actions_distinct": true,
+      "first_10_action_rms": 0.045005923924406825,
+      "initial_observation_sha256": "99094d775169bd161230922fc71f3aac1749bd9684af723d1382e4d00f3243a9",
+      "left_final_object_minus_target_x": 0.01338961347937584,
+      "left_requested_success": false,
+      "overlap_action_rms": 1.2315145895221964,
+      "pair_id": "robotwin_pair_02",
+      "right_final_object_minus_target_x": 0.012058528140187263,
+      "right_minus_left_endpoint_x": -0.0013310853391885757,
+      "right_requested_success": false
+    }
+  ],
+  "raw_root": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006",
+  "requested_success_count": 1,
+  "runtime_intervention_count": 0,
+  "schema_version": "vla-wam-shared-v2-light-wam-robotwin-slice-v1",
+  "status": "complete",
+  "success_by_relation": {
+    "left": {
+      "successes": 1,
+      "trials": 3
+    },
+    "right": {
+      "successes": 0,
+      "trials": 3
+    }
+  },
+  "thermal_lifecycles": [
+    {
+      "bytes": 39768,
+      "emergency_count": 0,
+      "maximum_temperature_c": 44,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/thermal_robotwin_pair_00_attempt02.jsonl",
+      "pause_count": 0,
+      "record_count": 135,
+      "resume_count": 0,
+      "sha256": "68d3da463b13452ee29b7ff08b42183ef184afcb1cf2f3d1aed373fe2ade6873",
+      "temperature_sample_count": 132,
+      "worker_exit_code": 0
+    },
+    {
+      "bytes": 50117,
+      "emergency_count": 0,
+      "maximum_temperature_c": 41,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/thermal_robotwin_pair_01_attempt02.jsonl",
+      "pause_count": 0,
+      "record_count": 172,
+      "resume_count": 0,
+      "sha256": "f429420e224bc08dd936a4d8114f4555bb80dd04c0b5e19aa0827ccd07a30bc4",
+      "temperature_sample_count": 169,
+      "worker_exit_code": 0
+    },
+    {
+      "bytes": 58842,
+      "emergency_count": 0,
+      "maximum_temperature_c": 45,
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/thermal_robotwin_pair_02_attempt02.jsonl",
+      "pause_count": 0,
+      "record_count": 201,
+      "resume_count": 0,
+      "sha256": "453ddc4bedc24b876debdf21d84dce6e2f4ca1ca27adbf18890ea001b30fbde0",
+      "temperature_sample_count": 198,
+      "worker_exit_code": 0
+    }
+  ],
+  "valid_episode_count": 6,
+  "wording_grid_eligible": false
+}

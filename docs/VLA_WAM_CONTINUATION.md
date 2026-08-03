@@ -472,6 +472,29 @@ behavioral inference. Light-WAM's future interface is classified only after the
 released inference path is audited. LaWAM's exposed visual subgoals remain
 latent-only unless an official decoder is verified before inference.
 
+#### Light-WAM completion
+
+Light-WAM's six authorized direct-command cells are complete and must not be
+rerun. The compact hash-bearing result is
+[`light_wam_robotwin_direct_gate.json`](../artifacts/vla_wam_shared_v2/pilot/expansion/light_wam_robotwin_direct_gate.json)
+(42,232 bytes; SHA-256
+`f33e1ff8fdc82c4a035f2cc113b91b311d685d9747dbcbb1104453fc455745d6`).
+All six cells are valid behavioral evidence: LEFT is 1/3 and RIGHT is 0/3,
+for one requested-direction success and five valid failures. Pair00 LEFT
+succeeded after 134 actions; each other cell exhausted 400 actions. Only
+pair00 had aligned endpoint ordering, while all three exact pairs had distinct
+executed-action traces. The frozen competence result is therefore LEFT-only,
+so no wording grid is eligible.
+
+The released RoboTwin interface is action-only. It exposes neither decoded
+video nor a retained future latent, so imagined-future evidence is not
+applicable and is never zero. Three successful guarded pair processes recorded
+zero runtime interventions and a maximum temperature of 45 C. Six separate
+infrastructure-invalid attempts are preserved outside the model denominator:
+four pre-action ffmpeg failures from pair00/pair01 and two B200 OIDN partial
+events from pair02. The final pair02 evidence came from the renderer-compatible
+A100 retry; the B200 partial remains preserved and is not model evidence.
+
 #### LaWAM pre-inference blocker
 
 LaWAM's multicomponent registry was frozen before any model action request and

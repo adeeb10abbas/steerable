@@ -28,6 +28,7 @@ import socket_test_optimized_AR as official
 from eval_utils.policy_server import PolicyServerConfig
 from groot.vla.data.schema import EmbodimentTag
 from groot.vla.model.n1_5.sim_policy import GrootSimPolicy
+from v2_bounded_loader import install_bounded_loader
 
 
 LOGGER = logging.getLogger(__name__)
@@ -186,6 +187,10 @@ def main(args: Args) -> None:
         raise ValueError("V2-A007 policy ranks must run on ali-owned B200 GPUs")
     timeout = datetime.timedelta(seconds=args.timeout_seconds)
     signal_group = dist.new_group(backend="gloo", timeout=timeout)
+    future_root.mkdir(parents=True, exist_ok=True)
+    install_bounded_loader(
+        contract_path=future_root / f"bounded_loader_rank{rank}.json"
+    )
     policy = GrootSimPolicy(
         embodiment_tag=EmbodimentTag("oxe_droid"),
         model_path=str(model_path),

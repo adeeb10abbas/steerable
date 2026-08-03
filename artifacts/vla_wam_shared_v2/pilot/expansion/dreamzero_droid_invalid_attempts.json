@@ -93,6 +93,17 @@
       "preserved_raw_log_sha256": "7c5e088fbb6aff8766436e51547913742731678b1a9e56f7b50839cb3aa727c0",
       "resolution": "Import DeepSpeed before the official server module, matching the explicit import-order compatibility fix audited in the pre-existing source while leaving official checkpoint behavior unchanged.",
       "denominator_status": "excluded"
+    },
+    {
+      "attempt_id": "fixed_probe_server_attempt03",
+      "stage": "model_server_preflight",
+      "model_requests": 0,
+      "behavior_actions_executed": 0,
+      "reason": "The released loader materialized the complete checkpoint state dictionary independently on both ranks before model construction and reached the pod's 68719476736-byte host-memory cgroup; memory.events recorded oom=1 and oom_kill=1 and rank 1 exited by SIGKILL before a listener existed.",
+      "preserved_raw_log": "/data/users/ali/vla_wam/raw/dreamzero_droid/v2_a007/fixed_probe_server_attempt03/server_stdout.log",
+      "preserved_raw_log_sha256": "31518e1a813489bdddbda7b5a29181c3437633eea0aa2d9e3c372f87012fe5d3",
+      "resolution": "Install a load-time-only overlay gated to the exact official base_vla.py hash: meta-device construction, one safetensors shard at a time, assign=True without dtype/value conversion, garbage collection after each shard, and strict rejection of any missing, unexpected, duplicate, or remaining-meta tensor.",
+      "denominator_status": "excluded"
     }
   ],
   "valid_run_interventions": [],

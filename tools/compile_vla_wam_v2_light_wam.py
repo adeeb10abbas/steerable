@@ -19,6 +19,12 @@ SCENES = {
     "robotwin_pair_02": ("place_a2b_left", 4_300_002, 8_402),
 }
 
+THERMAL_LOGS = {
+    "robotwin_pair_00": "thermal_robotwin_pair_00_attempt02.jsonl",
+    "robotwin_pair_01": "thermal_robotwin_pair_01_attempt02.jsonl",
+    "robotwin_pair_02": "thermal_robotwin_pair_02.jsonl",
+}
+
 
 def sha256_file(path: Path) -> str:
     digest = hashlib.sha256()
@@ -81,6 +87,7 @@ def main() -> None:
     pairs: list[dict[str, Any]] = []
     evidence_files: list[dict[str, Any]] = []
     thermal: list[dict[str, Any]] = []
+    excluded_setup_thermal: list[dict[str, Any]] = []
     invalid_attempts: list[dict[str, Any]] = []
 
     for pair_id, (task, environment_seed, sampling_seed) in SCENES.items():
@@ -145,8 +152,20 @@ def main() -> None:
         }
         pairs.append(pair_record)
         evidence_files.extend(file_record(path) for path in (manifest_path, results_path, invalid_path))
-        thermal.append(thermal_summary(root / f"thermal_{pair_id}.jsonl"))
+        thermal.append(thermal_summary(root / THERMAL_LOGS[pair_id]))
         invalid_attempts.extend(invalid)
+
+    setup_root = root / "invalid_setup" / "ffmpeg_missing"
+    for pair_id in ("robotwin_pair_00", "robotwin_pair_01"):
+        setup_invalid_path = setup_root / pair_id / "invalid_attempts.jsonl"
+        setup_invalid = load_jsonl(setup_invalid_path)
+        if len(setup_invalid) != 2 or any(
+            row.get("included_in_model_denominator") is not False for row in setup_invalid
+        ):
+            raise RuntimeError(f"Expected two excluded ffmpeg setup attempts: {pair_id}")
+        invalid_attempts.extend(setup_invalid)
+        evidence_files.append(file_record(setup_invalid_path))
+        excluded_setup_thermal.append(thermal_summary(root / f"thermal_{pair_id}.jsonl"))
 
     success = {
         relation: sum(
@@ -183,6 +202,7 @@ def main() -> None:
         "pairs": pairs,
         "episodes": episodes,
         "thermal_lifecycles": thermal,
+        "excluded_setup_thermal_lifecycles": excluded_setup_thermal,
         "invalid_attempts": invalid_attempts,
         "evidence_files": sorted(evidence_files, key=lambda row: row["path"]),
     }

@@ -435,14 +435,18 @@ goal-as-outcome, and desired-plus-negated-opposite cells at seeds 8300–8309 ar
 new. Cosmos-Reason2 is not an action policy unless a separately frozen adapter
 proves otherwise, so its outputs never enter robot-success denominators.
 
-Cosmos3 Edge progress: the fixed-observation contract gate passed, and the
-corrected neutral-scene seed-8300 and seed-8301 behavioral pairs are complete
-and valid. All four LEFT/RIGHT cells succeeded; both paired executed-action
-traces were distinct, both endpoint orderings were aligned, and every exposed
-33-frame decoded future was retained losslessly. The compact hash-bearing
-slices are [`cosmos3_edge_droid_seed8300.json`](../artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_droid_seed8300.json)
-and [`cosmos3_edge_droid_seed8301.json`](../artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_droid_seed8301.json).
-Seed 8302 remains next; do not rerun seeds 8300 or 8301. Cosmos-Reason2's
+Cosmos3 Edge progress: the fixed-observation contract gate and the complete
+six-cell corrected-neutral-scene direct gate are valid. LEFT was 3/3 and RIGHT
+was 3/3; all three paired executed-action traces were distinct, all three
+endpoint orderings were aligned, and all 47 exposed 33-frame decoded futures
+were retained losslessly. The competence gate is `both_directions`. The
+complete hash-bearing result is
+[`cosmos3_edge_droid_direct_gate.json`](../artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_droid_direct_gate.json),
+with immutable pair slices for seeds 8300–8302 alongside it. Do not rerun these
+six valid cells. The deterministic seed-8302 paired publication video and the
+three-pair endpoint scorecard are registered in
+[`media_manifest.json`](../artifacts/vla_wam_shared_v2/media/cosmos3_edge_droid/media_manifest.json).
+Cosmos-Reason2's
 corrected neutral-fixture 12-call diagnostic is also complete, but remains a
 non-behavioral text/point diagnostic outside every robot-success denominator.
 

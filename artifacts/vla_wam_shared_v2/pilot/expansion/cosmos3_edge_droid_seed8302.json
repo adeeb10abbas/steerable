@@ -1,0 +1,607 @@
+{
+  "amendment_id": "V2-A005",
+  "arena": "droid_robolab",
+  "checkpoint_revision": "3ea407af3e156c0af3b4bb6edd85842cc9a58777",
+  "claim_boundary": "This v2 six-cell replication remains separate from the existing Cosmos3 Edge v1 80-episode DROID grid and every RoboTwin denominator.",
+  "compiled_at_git_head": "c7322defb60712fb1dc30da121a6c8819313054f",
+  "compiled_at_utc": "2026-08-03T19:27:39.554766+00:00",
+  "episodes": [
+    {
+      "actions_executed": 397,
+      "decoded_future_count": 13,
+      "dynamic_prompt_switches": 0,
+      "environment_seed": 8302,
+      "ever_entered_opposite_region": true,
+      "ever_entered_requested_region": true,
+      "ever_released_in_requested_region": true,
+      "executed_action_trace": {
+        "bytes": 12832,
+        "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/actions/seed8302_left_executed_actions.npy",
+        "sha256": "b8fecdef36cbb4cf7fb4b996524aeeedfdbad137345fba4dad49930646336052"
+      },
+      "executed_action_trace_metadata": {
+        "bytes": 9864,
+        "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/actions/seed8302_left_executed_actions.json",
+        "sha256": "5b3721dd338eaa1b95a1b15152f9cbb48865d171edd3587709b6f8615ecf1898"
+      },
+      "executed_video": {
+        "bytes": 2739706,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_edge_seed8302_neutral/RubiksCubeLeftOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_left_of_the_bowl_0_viewport.mp4",
+        "sha256": "5e78ff744696999f78819919f8f52f1fa7aedd9cf83fa3494aeef2a17f52785e"
+      },
+      "failure_stage": "success",
+      "final_lateral_display_m": -0.12339167296886444,
+      "final_opposite_relation": false,
+      "final_requested_relation": true,
+      "first_object_interaction_proxy_step": 57,
+      "first_requested_region_step": 362,
+      "first_verified_pickup_proxy_step": 59,
+      "imagined_future_interface": "decoded_rgb_uint8_33_frames_per_policy_request",
+      "imagined_future_requests": [
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/futures/seed8302_left_request000_future.npy",
+            "sha256": "ed277dbda7fdbfaf8522024212b5cd68e722ccfe339dfd411cbac3ada91ef0fa"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 0,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/actions/seed8302_left_request000_returned_action.npy",
+            "sha256": "8db1d3e618276097e01c86ee1b7497b3bea5e91aed6b39b2403ddd6bef3582f2"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/futures/seed8302_left_request001_future.npy",
+            "sha256": "9e844ef73f2c3b7f1e8b0e05f45dbf4646fef4100e84f0fa75259f47b6867cd5"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 1,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/actions/seed8302_left_request001_returned_action.npy",
+            "sha256": "1a3cf4be5a66777ac14cba0757bf89ececebd0fc0a1c6622e088e8eb43ac0670"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/futures/seed8302_left_request002_future.npy",
+            "sha256": "66e617cfae03373ef7bde7d1c440480f83fe2a2b31723538f6fffc073c1cf030"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 2,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/actions/seed8302_left_request002_returned_action.npy",
+            "sha256": "e131ab64cee5ffe3ae83ce6538643fd69986026095f782345647c0a602aafe2c"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/futures/seed8302_left_request003_future.npy",
+            "sha256": "ff1fbb428508bba99de8b213303de520d9b6dbefb791bcb40c25835d69721bb8"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 3,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/actions/seed8302_left_request003_returned_action.npy",
+            "sha256": "156a213329f951e2a569837289e8c0a0f051b83b4278f36ec41c21cfc9f8fbce"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/futures/seed8302_left_request004_future.npy",
+            "sha256": "6db7e21d9ac09ca1e9e00aa4d7b55af343dcb992a55f8fe39c38e2d013938f30"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 4,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/actions/seed8302_left_request004_returned_action.npy",
+            "sha256": "7229756b510d79982934f65a0d33c1ac365cc6271dc7ba591096ed88a40a8ef0"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/futures/seed8302_left_request005_future.npy",
+            "sha256": "a15ea16ee5eebcd01f8fd0b4dbe079f75e92253b2961db4dbc3b13ba4e6eb9a6"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 5,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/actions/seed8302_left_request005_returned_action.npy",
+            "sha256": "4ae918e9265d182798a4379bd09eb5eee6713cda159b2ab58131e166926f512c"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/futures/seed8302_left_request006_future.npy",
+            "sha256": "0a42d7a634a3cfca09e7459db94286717ace6f1a6bb55e027edee69d49f2b027"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 6,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/actions/seed8302_left_request006_returned_action.npy",
+            "sha256": "4cf20955724763f49718013a5504eff8be9ad09c24c67406c5c4ab4bfea31b09"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/futures/seed8302_left_request007_future.npy",
+            "sha256": "9b94f8bd6fc3f0760f686f6b2fb7b7b4d9a059613fb50f19edffe665ac88752f"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 7,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/actions/seed8302_left_request007_returned_action.npy",
+            "sha256": "844374c59d90423857425d18886e8c416b1697b7b376961c9f83918ca333ce94"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/futures/seed8302_left_request008_future.npy",
+            "sha256": "530a22d6a92f95dc3ce2d7a8eb762aed35235a6ee6e33026db8bf0cd7c78ab33"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 8,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/actions/seed8302_left_request008_returned_action.npy",
+            "sha256": "faf4bd72dbac0f5ff7032d09caf313f8b99ecd491cac3e891c7b246a2de0f349"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/futures/seed8302_left_request009_future.npy",
+            "sha256": "7b24b188d7cd66e416e399688dbcb0b68ce804d182df22e730b55b21120a7b85"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 9,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/actions/seed8302_left_request009_returned_action.npy",
+            "sha256": "21efd7b7b6c08525dd69f606f8e4ed3cf71a2e1df96e1e2154f68b536b293acf"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/futures/seed8302_left_request010_future.npy",
+            "sha256": "e094ffab3bcaed19fd6674a2c22c0d8ad16d1681073b363971e9d32ca362fbae"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 10,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/actions/seed8302_left_request010_returned_action.npy",
+            "sha256": "1faa84f87204d758e591b9adf7832f11f28f86e228b8cd3bc2ffd90eb550731a"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/futures/seed8302_left_request011_future.npy",
+            "sha256": "9b1d3ac9294b0c52cd147a6893aeed64854f90726d0f25b0feec3df9b314c64a"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 11,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/actions/seed8302_left_request011_returned_action.npy",
+            "sha256": "37bbda89a6a3add191ee136f9ce8caee0f4e63db84bbdc16203b27fd6193527f"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/futures/seed8302_left_request012_future.npy",
+            "sha256": "e155327368f5c04ee90ab3c995827c9433024f978f9b9ccf4717d4cfad081caf"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 12,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/actions/seed8302_left_request012_returned_action.npy",
+            "sha256": "3eeb2cd61d76a7067c7e276d547742e7ef5beeb7159cc51785bd7c01fec8e0c7"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        }
+      ],
+      "initial_lateral_display_m": 0.0053248777985572815,
+      "max_object_displacement_m": 0.2144484420294807,
+      "max_object_lift_m": 0.2076328694820404,
+      "model_id": "cosmos3_edge_droid_wam",
+      "object_interaction_proxy": true,
+      "oracle_actions": 0,
+      "pair_id": "droid_pair_seed_8302",
+      "physical_initial_state_sha256": "8b000f4d2c7c2296bf332984c0b83b47561d796790c32419480665e684635fb6",
+      "policy_inference_seconds": 32.186,
+      "policy_request_count": 13,
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_controller": "episode_static",
+      "prompt_family": "direct_command",
+      "raw_env_config": {
+        "bytes": 42859,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_edge_seed8302_neutral/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+        "sha256": "97847b8c2e019f0670d521a72d33e1a28dc39779ce379814e73ab216e92ab689"
+      },
+      "raw_hdf5": {
+        "bytes": 323142,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_edge_seed8302_neutral/RubiksCubeLeftOfBowlMatchedTask/run_0.hdf5",
+        "sha256": "3273f02575871c085292a408e2b00825f7923fc2ba9723f83cdb64a520733b58"
+      },
+      "raw_log": {
+        "bytes": 164,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_edge_seed8302_neutral/RubiksCubeLeftOfBowlMatchedTask/log_0_env0.json",
+        "sha256": "39a980288a3bd39158b9d193a20152387075d76909420c54b7fcb19b2ecfb66d"
+      },
+      "raw_trajectory": {
+        "bytes": 173524,
+        "path": "/data/users/ali/vla_wam/raw/cosmos_v2/compiled/seed8302/trajectories/seed8302_left.json",
+        "sha256": "a0a3190d6180091e644f4981cdc9a9c80ce73976b946590138fa5877904fa038"
+      },
+      "requested_relation": "left",
+      "requested_signed_final_offset_m": 0.12339167296886444,
+      "requested_success": true,
+      "sampling_seed": 8302,
+      "task": "RubiksCubeLeftOfBowlMatchedTask",
+      "verified_pickup_proxy": true,
+      "wall_seconds": 110.373
+    },
+    {
+      "actions_executed": 123,
+      "decoded_future_count": 4,
+      "dynamic_prompt_switches": 0,
+      "environment_seed": 8302,
+      "ever_entered_opposite_region": false,
+      "ever_entered_requested_region": true,
+      "ever_released_in_requested_region": true,
+      "executed_action_trace": {
+        "bytes": 4064,
+        "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/actions/seed8302_right_executed_actions.npy",
+        "sha256": "0800fd85fecebee0d59a37a33acb775f121539719d1bc1ea545ff53f6233de96"
+      },
+      "executed_action_trace_metadata": {
+        "bytes": 3463,
+        "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/actions/seed8302_right_executed_actions.json",
+        "sha256": "af0cf0f2c416435b8bcf15122120cf25886ac53541cb676ad42696e11755cfeb"
+      },
+      "executed_video": {
+        "bytes": 868609,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_edge_seed8302_neutral/RubiksCubeRightOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_right_of_the_bowl_0_viewport.mp4",
+        "sha256": "ce64f9b742a804834d962e62b38756020a533e5dfd623f7aace9d3b924b55da0"
+      },
+      "failure_stage": "success",
+      "final_lateral_display_m": 0.46461358666419983,
+      "final_opposite_relation": false,
+      "final_requested_relation": true,
+      "first_object_interaction_proxy_step": 58,
+      "first_requested_region_step": 76,
+      "first_verified_pickup_proxy_step": 60,
+      "imagined_future_interface": "decoded_rgb_uint8_33_frames_per_policy_request",
+      "imagined_future_requests": [
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/futures/seed8302_right_request000_future.npy",
+            "sha256": "3ffaa66d7a04de760699996d4d945d3ee6565cbb4d1ac66f4edfaa09e2ab0d88"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 0,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/actions/seed8302_right_request000_returned_action.npy",
+            "sha256": "be13d25120b38aa68df56379fdaf7e9ea3ec9db232ac907adb87961fdf9394ee"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/futures/seed8302_right_request001_future.npy",
+            "sha256": "1b264ed10a051fd1388e4b312e55c324870acb6df3b926d7f1e138b0f3b154e3"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 1,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/actions/seed8302_right_request001_returned_action.npy",
+            "sha256": "e72d2f90513cd87945e7fbbab5b239b3a80deeb43551a1f3a3939ad66bfdfcf2"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/futures/seed8302_right_request002_future.npy",
+            "sha256": "558b086efdaad083fd7a4178793b5e1bbd3c792e0c5b5f9138276b362d628c99"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 2,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/actions/seed8302_right_request002_returned_action.npy",
+            "sha256": "3878558bae5fd4320dabe570be9a2aa815f9332ab933dbe9282b142d5949e2e5"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/futures/seed8302_right_request003_future.npy",
+            "sha256": "aff6c034510ff7c952720dac9334a114a111de74d1f1c693f242b59f79a55f23"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 3,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos_v2/behavioral/seed8302/simulator_attempt01_neutral/actions/seed8302_right_request003_returned_action.npy",
+            "sha256": "f22fb2bb9dbd19c4e448118dc6cf4689cc0ac61b87fb308b401cf9d8230cd2ef"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        }
+      ],
+      "initial_lateral_display_m": 0.0053248777985572815,
+      "max_object_displacement_m": 0.4822634080718703,
+      "max_object_lift_m": 0.22298654913902283,
+      "model_id": "cosmos3_edge_droid_wam",
+      "object_interaction_proxy": true,
+      "oracle_actions": 0,
+      "pair_id": "droid_pair_seed_8302",
+      "physical_initial_state_sha256": "8b000f4d2c7c2296bf332984c0b83b47561d796790c32419480665e684635fb6",
+      "policy_inference_seconds": 5.811,
+      "policy_request_count": 4,
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_controller": "episode_static",
+      "prompt_family": "direct_command",
+      "raw_env_config": {
+        "bytes": 42866,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_edge_seed8302_neutral/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+        "sha256": "d5495c151403c86a9caf2b98d41792ab6827694eff77c18440eb9dc629055dba"
+      },
+      "raw_hdf5": {
+        "bytes": 218636,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_edge_seed8302_neutral/RubiksCubeRightOfBowlMatchedTask/run_0.hdf5",
+        "sha256": "949b35cbdb9a9a1de8f9ac46991b39e80be1297a82fd11b3ba7ba0d17dd32343"
+      },
+      "raw_log": {
+        "bytes": 165,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_edge_seed8302_neutral/RubiksCubeRightOfBowlMatchedTask/log_0_env0.json",
+        "sha256": "abbc6502715f345e41f1daf6b683092526078261b05cabc2f107f00d6422357d"
+      },
+      "raw_trajectory": {
+        "bytes": 53585,
+        "path": "/data/users/ali/vla_wam/raw/cosmos_v2/compiled/seed8302/trajectories/seed8302_right.json",
+        "sha256": "baa63f653eb543e9970315851b6aa06b9469a5ce7bf053a5781747e1fab80202"
+      },
+      "requested_relation": "right",
+      "requested_signed_final_offset_m": 0.46461358666419983,
+      "requested_success": true,
+      "sampling_seed": 8302,
+      "task": "RubiksCubeRightOfBowlMatchedTask",
+      "verified_pickup_proxy": true,
+      "wall_seconds": 29.569
+    }
+  ],
+  "measurement": {
+    "dynamic_prompts": 0,
+    "future_interface": "decoded_rgb_uint8_33_frames_per_policy_request",
+    "open_loop_horizon": 32,
+    "oracle_actions": 0,
+    "prompt_controller": "episode_static",
+    "simulator_state_role": "post_action_scoring_and_visualization_only",
+    "subtask_progress_checking": false
+  },
+  "model_id": "cosmos3_edge_droid_wam",
+  "pairs": [
+    {
+      "endpoint_response_direction": "aligned",
+      "environment_seed": 8302,
+      "executed_actions_distinct": true,
+      "first_chunk_action_rms": 0.015411976594211693,
+      "left_final_lateral_display_m": -0.12339167296886444,
+      "left_success": true,
+      "overlap_action_rms": 0.26418565586363657,
+      "pair_id": "droid_pair_seed_8302",
+      "physical_initial_state_sha256": "8b000f4d2c7c2296bf332984c0b83b47561d796790c32419480665e684635fb6",
+      "right_final_lateral_display_m": 0.46461358666419983,
+      "right_minus_left_endpoint_lateral_m": 0.5880052596330643,
+      "right_success": true
+    }
+  ],
+  "schema_version": "vla-wam-shared-v2-cosmos3-edge-droid-slice-v1",
+  "seeds": [
+    8302
+  ],
+  "server_repository_commit": "a904d2d36b774a51dd06ff9ff906816b1a04f579",
+  "status": "coherent_partial_slice",
+  "summary": {
+    "aligned_endpoint_pairs": 1,
+    "by_direction": {
+      "left": {
+        "entered_requested_region": 1,
+        "episodes": 1,
+        "successes": 1,
+        "verified_pickups": 1
+      },
+      "right": {
+        "entered_requested_region": 1,
+        "episodes": 1,
+        "successes": 1,
+        "verified_pickups": 1
+      }
+    },
+    "competence_gate": "pending_remaining_preregistered_pairs",
+    "episode_count": 2,
+    "failure_stage_counts": {
+      "success": 2
+    },
+    "nonzero_first_chunk_pairs": 1,
+    "pair_count": 1,
+    "success_rate": 1.0,
+    "successes": 2
+  }
+}

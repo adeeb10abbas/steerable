@@ -173,20 +173,21 @@ FASTWAM_GPU=0 experiments/robotwin_language_gate/run_gate_3090.sh \
 
 # LingBot-VA
 cd /home/ali/projects/lerobot-lingbot
-LINGBOT_GPU=0 experiments/lingbot_language_gate/run_gate_3090.sh \
-  --output-dir outputs/vla_wam_shared_v2/directional_confirmation/pair03 \
-  --task place_a2b_right --environment-seed 4300003 --sampling-seed 8403 \
-  --condition correct --condition swapped \
-  --prompt-family direct_command --max-actions 400 \
-  --guidance-scale 5.0 --action-guidance-scale 1.0 \
-  --save-simulator-video --save-first-predicted-latent --resume
+LINGBOT_GPU=0 VLA_WAM_V2_STUDY_ROOT=/home/ali/projects/steerable \
+  experiments/lingbot_language_gate/run_v2_directional_confirmation.sh --dry-run
+
+# After the study preflight passes, run the exact 14 new cells.
+LINGBOT_GPU=0 VLA_WAM_V2_STUDY_ROOT=/home/ali/projects/steerable \
+  experiments/lingbot_language_gate/run_v2_directional_confirmation.sh --run
 ```
 
-Substitute only the four frozen scene fields for pairs 04–09. Do not change
-model guidance, horizon, diffusion steps, task config, or future-retention
-settings. LingBot-VA previously required thermal pauses; run it one cell at a
-time and exclude interrupted wall-time measurements while retaining valid
-behavior.
+The LingBot wrapper reads pair03–pair09 directly from the frozen registry and
+launches one scene per invocation, each with its paired LEFT/RIGHT direct
+commands. Do not pass all seven tasks or seeds directly to the runner: repeated
+CLI values form an unsafe Cartesian product. Do not change model guidance,
+horizon, diffusion steps, task config, or future-retention settings. LingBot-VA
+previously required thermal pauses; exclude interrupted wall-time measurements
+while retaining valid behavior.
 
 After all 42 cells, extend the compiler to produce a ten-scene result per model,
 then regenerate progression, endpoint, media, and article artifacts. Keep

@@ -1,7 +1,7 @@
 {
   "schema_version": "vla-wam-shared-v2-continuation-v1",
-  "updated_at_utc": "2026-08-03T19:44:08Z",
-  "evidence_head_before_handoff": "e55996e803c9f3635faadfb0bb6a28fc83411855",
+  "updated_at_utc": "2026-08-03T19:47:44Z",
+  "evidence_head_before_handoff": "77966ff125d84ed7575ea9e934e367246cf5cdc6",
   "active_branch": "codex/wam-language-steerability",
   "study_status": "post_result_expansions_v2_a005_a006_frozen_active_setup",
   "authoritative_docs": [
@@ -117,6 +117,28 @@
       "LaWAM behavioral cells"
     ]
   },
+  "pi0_fast_wording_readiness": {
+    "status": "authorized_sixty_cells_blocked_before_model_load_on_missing_exact_integration_revisions",
+    "amendment_id": "V2-A005",
+    "registry": "artifacts/vla_wam_shared_v2/pilot/expansion/pi0_fast_wording_readiness.json",
+    "registry_sha256": "47b38eb2f17be802c126ef0a7e93b16693823ee2df62b8007f51bb0514baf5c5",
+    "checkpoint": "gs://openpi-assets-simeval/pi0_fast_droid_jointpos",
+    "checkpoint_staged_path": "/data/users/ali/vla_wam/checkpoints/pi0_fast_droid_jointpos/pi0_fast_droid_jointpos",
+    "checkpoint_file_count": 19,
+    "checkpoint_payload_bytes": 10844314410,
+    "checkpoint_status": "complete_and_sha256_hashed",
+    "missing_policy_repository_commit": "9e46d3aea26417bfb564227734b95d010aa827e5",
+    "missing_simulator_repository_commit": "11142d4319e44401e0464866bb5fedf7ec8a8927",
+    "blocker": "Both historical local integration commits used for the completed direct-command contract are absent from upstream, authenticated GitHub search, every ali-owned PVC Git object store, and the work laptop. The staged substitute checkouts are different revisions and are prohibited.",
+    "model_load_attempt_count": 0,
+    "model_action_request_count": 0,
+    "behavioral_episode_count": 0,
+    "authorized_cells_remaining": 60,
+    "direct_cells_rerun": 0,
+    "next_recovery_command": "git -C /home/ali/openpi-robolab bundle create /tmp/openpi-robolab-all.bundle --all && git -C /home/ali/projects/RoboLab bundle create /tmp/robolab-all.bundle --all",
+    "after_recovery": "Transfer both bundles through the approved ali-owned PVC path; verify and restore the two required commits; run checkpoint-load, exact-repeat, prompt-only sensitivity, neutral-reset, viewport-video, and action-trace gates; then begin the sixty frozen non-direct cells.",
+    "denominator_policy": "This is a technical setup blocker outside every model denominator; do not assign failures or zeros."
+  },
   "completed_direct_gates": [
     {
       "model_id": "pi0_fast_droid_vla",
@@ -136,7 +158,7 @@
         "markdown_sha256": "677a933a261843b9b13d19d5a36be33d6d765f89b55f14240f70bb4bf41ef9aa",
         "runtime_intervention_ledger": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/pi0_fast_runtime_interventions.json",
         "runtime_intervention_ledger_sha256": "2bb10b39d91c441033de261045907f779b289e658b9ef296aacd4e9649eeeedb",
-        "wording_grid": "eligible_under_frozen_direct_competence_rule_but_explicitly_deferred_pending_three_wam_confirmations_and_post_result_decision"
+        "wording_grid": "authorized_by_v2_a005_but_blocked_before_model_load_on_missing_exact_openpi_and_robolab_integration_revisions"
       }
     },
     {

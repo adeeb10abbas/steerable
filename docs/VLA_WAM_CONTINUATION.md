@@ -600,6 +600,44 @@ and contrastive cells at seeds 8300–8309 with exact same-seed LEFT/RIGHT pairs
 viewport video, and the target-last token-order diagnostic. Do not change the
 prompt templates in `protocol.json`.
 
+### π0-FAST wording pre-inference blocker
+
+The exact sixty-cell prompt registry and checkpoint are ready, but behavioral
+inference is blocked before model load. The hash-bearing readiness record is
+[`pi0_fast_wording_readiness.json`](../artifacts/vla_wam_shared_v2/pilot/expansion/pi0_fast_wording_readiness.json)
+(SHA-256
+`47b38eb2f17be802c126ef0a7e93b16693823ee2df62b8007f51bb0514baf5c5`).
+The public `pi0_fast_droid_jointpos` checkpoint is fully staged on the ali PVC
+as 19 files and 10,844,314,410 payload bytes, with a SHA-256 for every file.
+All twenty completed direct cells remain untouched.
+
+The blocker is exact adapter provenance. The completed direct confirmation
+records OpenPI commit `9e46d3aea26417bfb564227734b95d010aa827e5`
+and RoboLab commit `11142d4319e44401e0464866bb5fedf7ec8a8927`.
+Neither commit exists in its upstream repository, authenticated GitHub search,
+any ali-owned PVC Git object store, or the work-laptop filesystem. The PVC
+directory named `RoboLab-11142d4` actually resolves to
+`0aef241fb088ca21bb4ebd24448940ed56620d17`, and the available OpenPI checkout
+also differs. Do not substitute either checkout or reconstruct the missing
+sampling-seed and simulator-checkpoint adapter by guesswork.
+
+This setup consumed zero model loads, zero model action requests, and zero
+behavioral episodes. All sixty non-direct cells remain authorized and unrun;
+the blocker is outside every model denominator. On the original machine that
+still contains the two historical repositories, the exact next recovery
+command is:
+
+```bash
+git -C /home/ali/openpi-robolab bundle create /tmp/openpi-robolab-all.bundle --all && \
+git -C /home/ali/projects/RoboLab bundle create /tmp/robolab-all.bundle --all
+```
+
+Transfer both bundles through the approved ali-owned PVC path, verify the two
+required commits with `git bundle verify` and `git cat-file`, and restore
+detached exact-revision checkouts. Then run the checkpoint-load, exact-repeat,
+prompt-only sensitivity, neutral-reset, viewport-video, and executed-action
+trace gates. Only after all gates pass may the first wording cell begin.
+
 ## Analysis and publication queue
 
 After each coherent result slice:

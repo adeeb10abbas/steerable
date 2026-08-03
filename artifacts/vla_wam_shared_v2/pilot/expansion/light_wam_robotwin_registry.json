@@ -110,6 +110,34 @@
     "dependency_check": "pass",
     "vulkan_and_simulator_rendering": "required_before_fixed_probe"
   },
+  "simulator_assets": {
+    "source": "/data/users/ali/vla_wam/external/EfficientWAM-RoboTwin/assets",
+    "source_integration_commit": "0bd8e76fde3afcffa4b30a3e3e8f92a206aa66cc",
+    "selection_reason": "This is the already validated ali-owned expanded RoboTwin asset tree used by the completed same-scene WAM evidence. The clean bf44be checkout and Light-WAM vendor contain only the downloader, not expanded runtime assets.",
+    "aloha_agilex": {
+      "file_count": 84,
+      "bytes": 779882382,
+      "config_sha256": "a4f043d2d4b44cca5ec47fb498a3194da3f87ff9530dcbfdcee1539a44423d57"
+    },
+    "frozen_scene_object_directories": {
+      "107_soap": {"file_count": 13, "bytes": 28599347, "model_data0_sha256": "b2bde12c1abec0b09e4c2264fa6e6241bb1410a1e24135ab42e6ad093a5c6472"},
+      "112_tea-box": {"file_count": 19, "bytes": 60398912, "model_data0_sha256": "c1eaf4beef134c8089248a5e2a0ab5b44e7b20711d805740d1db51b1399504a2"},
+      "086_woodenblock": {"file_count": 16, "bytes": 36872767, "model_data0_sha256": "789a57fb2d1e2c1a3ed026ebcdf3f1c84905e86d5a7f23ef2392cdfc40f35c2f"},
+      "077_phone": {"file_count": 16, "bytes": 42117096, "model_data0_sha256": "dd1e9b5af53636a53dea72611fd638c183d83f9817d2d50239a46bd69d84bd46"},
+      "081_playingcards": {"file_count": 10, "bytes": 30938532, "model_data0_sha256": "ae60e2c2377edb3ab94ded0ef9f8254f87f6f2eb92a81b77d186d83faee6905d"},
+      "113_coffee-box": {"file_count": 22, "bytes": 62684018, "model_data0_sha256": "86a986f83e031863e0e3ac15feb117792a451e6529b0a2b9e95646d4ae9126fd"}
+    }
+  },
+  "pre_inference_setup_events": [
+    {
+      "event": "fixed_probe_attempt_rejected_before_model_action_inference",
+      "reason": "The first guarded worker loaded the model, then stopped before environment setup because the initially linked bf44be checkout had no expanded ALOHA asset tree.",
+      "behavioral_episode_consumed": false,
+      "model_action_request_consumed": false,
+      "denominator_policy": "infrastructure invalid; outside every model denominator",
+      "resolution": "Point the Light-WAM vendor asset link at the hashed, already validated ali-owned RoboTwin assets listed above."
+    }
+  ],
   "fixed_observation_gate": {
     "status": "pending_no_model_inference_at_freeze",
     "pair_id": "robotwin_pair_00",

@@ -1,0 +1,304 @@
+{
+  "claim_boundary": "Text-output visual-planning diagnostic only: zero behavioral episodes, no robot-success rate, and no generated-future score.",
+  "fixtures": [
+    {
+      "environment_seed": 8300,
+      "fixture_path": "/data/users/ali/vla_wam/raw/groot_n17_droid/repeat_gate/fixture/seed8300_fixed_observation.npz",
+      "fixture_sha256": "45b3509527778188fa03a8ba273ffc7b53c36d60847be6327152544118fddbdb",
+      "manifest_path": "/data/users/ali/vla_wam/raw/groot_n17_droid/repeat_gate/fixture/seed8300_fixed_observation.json",
+      "manifest_sha256": "30dc034f9b3c7ded701a1e823fffefca5378d20d9804600fa0a2ee22e2164086"
+    },
+    {
+      "environment_seed": 8301,
+      "fixture_path": "/data/users/ali/vla_wam/raw/groot_n17_droid/repeat_gate/fixture/seed8301_fixed_observation.npz",
+      "fixture_sha256": "7259f4596d6e8b165d15b10dac11825c4029adcb18f927d21ad78e4e41482a59",
+      "manifest_path": "/data/users/ali/vla_wam/raw/groot_n17_droid/repeat_gate/fixture/seed8301_fixed_observation.json",
+      "manifest_sha256": "51423a5300506e2b2bef60247b14b2f2c8d2b8e7a0c7bb443405637d02e97d14"
+    },
+    {
+      "environment_seed": 8302,
+      "fixture_path": "/data/users/ali/vla_wam/raw/groot_n17_droid/repeat_gate/fixture/seed8302_fixed_observation.npz",
+      "fixture_sha256": "3ff0ed881f7ffdd683d7c5429fcabfd8ce9f3d7891ccce726feb08f5603d666c",
+      "manifest_path": "/data/users/ali/vla_wam/raw/groot_n17_droid/repeat_gate/fixture/seed8302_fixed_observation.json",
+      "manifest_sha256": "1ce56ef4131ce216206b3c9345e4e76a1df99c323e47c9de6b9aee403f12205a"
+    }
+  ],
+  "generation": {
+    "attention": "sdpa",
+    "do_sample": false,
+    "dtype": "float16",
+    "image_source": "video.exterior_image_1_left",
+    "max_new_tokens": 256,
+    "system_prompt": "You are a helpful assistant.",
+    "user_prompt_template": "You are given the task \"{task_instruction}\". Specify the 2D trajectory your end effector should follow in pixel space. Return the trajectory coordinates in JSON format like this: {{\"point_2d\": [x, y], \"label\": \"gripper trajectory\"}}."
+  },
+  "model_config_sha256": "bec4b3d446efa05807365c9e1cec03ac590836879d02f3a6da879971154bdd3b",
+  "model_path": "/data/users/ali/vla_wam/checkpoints/cosmos-reason2-2b-9ce19a1",
+  "model_weights_sha256": "fa5a6e6ef4fce40216b185cc48a3b24d31637ac3e2ba69c107ed1f389c1e6ede",
+  "pairs": [
+    {
+      "environment_seed": 8300,
+      "left_point_2d": [
+        650.0,
+        533.0
+      ],
+      "left_repeat_raw_exact": true,
+      "requested_side_ordering_aligned": false,
+      "right_minus_left_x_px": 0.0,
+      "right_point_2d": [
+        650.0,
+        356.0
+      ],
+      "right_repeat_raw_exact": true
+    },
+    {
+      "environment_seed": 8301,
+      "left_point_2d": [
+        650.0,
+        533.0
+      ],
+      "left_repeat_raw_exact": true,
+      "requested_side_ordering_aligned": false,
+      "right_minus_left_x_px": 0.0,
+      "right_point_2d": [
+        650.0,
+        356.0
+      ],
+      "right_repeat_raw_exact": true
+    },
+    {
+      "environment_seed": 8302,
+      "left_point_2d": [
+        650.0,
+        533.0
+      ],
+      "left_repeat_raw_exact": true,
+      "requested_side_ordering_aligned": false,
+      "right_minus_left_x_px": 0.0,
+      "right_point_2d": [
+        650.0,
+        533.0
+      ],
+      "right_repeat_raw_exact": true
+    }
+  ],
+  "records": [
+    {
+      "environment_seed": 8300,
+      "fixture_sha256": "45b3509527778188fa03a8ba273ffc7b53c36d60847be6327152544118fddbdb",
+      "json_parsed": true,
+      "label": "gripper trajectory",
+      "point_2d": [
+        650.0,
+        533.0
+      ],
+      "raw_output": "```json\n{\"point_2d\": [650, 533], \"label\": \"gripper trajectory\"}\n```",
+      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt01/seed8300_left_repeat0.txt",
+      "raw_output_sha256": "56e7237fbb8da2ff4728d48709cbc65635cc0cb0f24adfd71108cdf672204c74",
+      "relation": "left",
+      "repeat": 0,
+      "task_instruction": "Put the Rubik's cube to the left of the bowl.",
+      "user_prompt": "You are given the task \"Put the Rubik's cube to the left of the bowl.\". Specify the 2D trajectory your end effector should follow in pixel space. Return the trajectory coordinates in JSON format like this: {\"point_2d\": [x, y], \"label\": \"gripper trajectory\"}."
+    },
+    {
+      "environment_seed": 8300,
+      "fixture_sha256": "45b3509527778188fa03a8ba273ffc7b53c36d60847be6327152544118fddbdb",
+      "json_parsed": true,
+      "label": "gripper trajectory",
+      "point_2d": [
+        650.0,
+        533.0
+      ],
+      "raw_output": "```json\n{\"point_2d\": [650, 533], \"label\": \"gripper trajectory\"}\n```",
+      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt01/seed8300_left_repeat1.txt",
+      "raw_output_sha256": "56e7237fbb8da2ff4728d48709cbc65635cc0cb0f24adfd71108cdf672204c74",
+      "relation": "left",
+      "repeat": 1,
+      "task_instruction": "Put the Rubik's cube to the left of the bowl.",
+      "user_prompt": "You are given the task \"Put the Rubik's cube to the left of the bowl.\". Specify the 2D trajectory your end effector should follow in pixel space. Return the trajectory coordinates in JSON format like this: {\"point_2d\": [x, y], \"label\": \"gripper trajectory\"}."
+    },
+    {
+      "environment_seed": 8300,
+      "fixture_sha256": "45b3509527778188fa03a8ba273ffc7b53c36d60847be6327152544118fddbdb",
+      "json_parsed": true,
+      "label": "gripper trajectory",
+      "point_2d": [
+        650.0,
+        356.0
+      ],
+      "raw_output": "```json\n{\"point_2d\": [650, 356], \"label\": \"gripper trajectory\"}\n```",
+      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt01/seed8300_right_repeat0.txt",
+      "raw_output_sha256": "d6e476f1e189bc162c8610a08055da1a7d93d190596169afe754cb301451cfb9",
+      "relation": "right",
+      "repeat": 0,
+      "task_instruction": "Put the Rubik's cube to the right of the bowl.",
+      "user_prompt": "You are given the task \"Put the Rubik's cube to the right of the bowl.\". Specify the 2D trajectory your end effector should follow in pixel space. Return the trajectory coordinates in JSON format like this: {\"point_2d\": [x, y], \"label\": \"gripper trajectory\"}."
+    },
+    {
+      "environment_seed": 8300,
+      "fixture_sha256": "45b3509527778188fa03a8ba273ffc7b53c36d60847be6327152544118fddbdb",
+      "json_parsed": true,
+      "label": "gripper trajectory",
+      "point_2d": [
+        650.0,
+        356.0
+      ],
+      "raw_output": "```json\n{\"point_2d\": [650, 356], \"label\": \"gripper trajectory\"}\n```",
+      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt01/seed8300_right_repeat1.txt",
+      "raw_output_sha256": "d6e476f1e189bc162c8610a08055da1a7d93d190596169afe754cb301451cfb9",
+      "relation": "right",
+      "repeat": 1,
+      "task_instruction": "Put the Rubik's cube to the right of the bowl.",
+      "user_prompt": "You are given the task \"Put the Rubik's cube to the right of the bowl.\". Specify the 2D trajectory your end effector should follow in pixel space. Return the trajectory coordinates in JSON format like this: {\"point_2d\": [x, y], \"label\": \"gripper trajectory\"}."
+    },
+    {
+      "environment_seed": 8301,
+      "fixture_sha256": "7259f4596d6e8b165d15b10dac11825c4029adcb18f927d21ad78e4e41482a59",
+      "json_parsed": true,
+      "label": "gripper trajectory",
+      "point_2d": [
+        650.0,
+        533.0
+      ],
+      "raw_output": "```json\n{\"point_2d\": [650, 533], \"label\": \"gripper trajectory\"}\n```",
+      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt01/seed8301_left_repeat0.txt",
+      "raw_output_sha256": "56e7237fbb8da2ff4728d48709cbc65635cc0cb0f24adfd71108cdf672204c74",
+      "relation": "left",
+      "repeat": 0,
+      "task_instruction": "Put the Rubik's cube to the left of the bowl.",
+      "user_prompt": "You are given the task \"Put the Rubik's cube to the left of the bowl.\". Specify the 2D trajectory your end effector should follow in pixel space. Return the trajectory coordinates in JSON format like this: {\"point_2d\": [x, y], \"label\": \"gripper trajectory\"}."
+    },
+    {
+      "environment_seed": 8301,
+      "fixture_sha256": "7259f4596d6e8b165d15b10dac11825c4029adcb18f927d21ad78e4e41482a59",
+      "json_parsed": true,
+      "label": "gripper trajectory",
+      "point_2d": [
+        650.0,
+        533.0
+      ],
+      "raw_output": "```json\n{\"point_2d\": [650, 533], \"label\": \"gripper trajectory\"}\n```",
+      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt01/seed8301_left_repeat1.txt",
+      "raw_output_sha256": "56e7237fbb8da2ff4728d48709cbc65635cc0cb0f24adfd71108cdf672204c74",
+      "relation": "left",
+      "repeat": 1,
+      "task_instruction": "Put the Rubik's cube to the left of the bowl.",
+      "user_prompt": "You are given the task \"Put the Rubik's cube to the left of the bowl.\". Specify the 2D trajectory your end effector should follow in pixel space. Return the trajectory coordinates in JSON format like this: {\"point_2d\": [x, y], \"label\": \"gripper trajectory\"}."
+    },
+    {
+      "environment_seed": 8301,
+      "fixture_sha256": "7259f4596d6e8b165d15b10dac11825c4029adcb18f927d21ad78e4e41482a59",
+      "json_parsed": true,
+      "label": "gripper trajectory",
+      "point_2d": [
+        650.0,
+        356.0
+      ],
+      "raw_output": "```json\n{\"point_2d\": [650, 356], \"label\": \"gripper trajectory\"}\n```",
+      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt01/seed8301_right_repeat0.txt",
+      "raw_output_sha256": "d6e476f1e189bc162c8610a08055da1a7d93d190596169afe754cb301451cfb9",
+      "relation": "right",
+      "repeat": 0,
+      "task_instruction": "Put the Rubik's cube to the right of the bowl.",
+      "user_prompt": "You are given the task \"Put the Rubik's cube to the right of the bowl.\". Specify the 2D trajectory your end effector should follow in pixel space. Return the trajectory coordinates in JSON format like this: {\"point_2d\": [x, y], \"label\": \"gripper trajectory\"}."
+    },
+    {
+      "environment_seed": 8301,
+      "fixture_sha256": "7259f4596d6e8b165d15b10dac11825c4029adcb18f927d21ad78e4e41482a59",
+      "json_parsed": true,
+      "label": "gripper trajectory",
+      "point_2d": [
+        650.0,
+        356.0
+      ],
+      "raw_output": "```json\n{\"point_2d\": [650, 356], \"label\": \"gripper trajectory\"}\n```",
+      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt01/seed8301_right_repeat1.txt",
+      "raw_output_sha256": "d6e476f1e189bc162c8610a08055da1a7d93d190596169afe754cb301451cfb9",
+      "relation": "right",
+      "repeat": 1,
+      "task_instruction": "Put the Rubik's cube to the right of the bowl.",
+      "user_prompt": "You are given the task \"Put the Rubik's cube to the right of the bowl.\". Specify the 2D trajectory your end effector should follow in pixel space. Return the trajectory coordinates in JSON format like this: {\"point_2d\": [x, y], \"label\": \"gripper trajectory\"}."
+    },
+    {
+      "environment_seed": 8302,
+      "fixture_sha256": "3ff0ed881f7ffdd683d7c5429fcabfd8ce9f3d7891ccce726feb08f5603d666c",
+      "json_parsed": true,
+      "label": "gripper trajectory",
+      "point_2d": [
+        650.0,
+        533.0
+      ],
+      "raw_output": "```json\n{\"point_2d\": [650, 533], \"label\": \"gripper trajectory\"}\n```",
+      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt01/seed8302_left_repeat0.txt",
+      "raw_output_sha256": "56e7237fbb8da2ff4728d48709cbc65635cc0cb0f24adfd71108cdf672204c74",
+      "relation": "left",
+      "repeat": 0,
+      "task_instruction": "Put the Rubik's cube to the left of the bowl.",
+      "user_prompt": "You are given the task \"Put the Rubik's cube to the left of the bowl.\". Specify the 2D trajectory your end effector should follow in pixel space. Return the trajectory coordinates in JSON format like this: {\"point_2d\": [x, y], \"label\": \"gripper trajectory\"}."
+    },
+    {
+      "environment_seed": 8302,
+      "fixture_sha256": "3ff0ed881f7ffdd683d7c5429fcabfd8ce9f3d7891ccce726feb08f5603d666c",
+      "json_parsed": true,
+      "label": "gripper trajectory",
+      "point_2d": [
+        650.0,
+        533.0
+      ],
+      "raw_output": "```json\n{\"point_2d\": [650, 533], \"label\": \"gripper trajectory\"}\n```",
+      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt01/seed8302_left_repeat1.txt",
+      "raw_output_sha256": "56e7237fbb8da2ff4728d48709cbc65635cc0cb0f24adfd71108cdf672204c74",
+      "relation": "left",
+      "repeat": 1,
+      "task_instruction": "Put the Rubik's cube to the left of the bowl.",
+      "user_prompt": "You are given the task \"Put the Rubik's cube to the left of the bowl.\". Specify the 2D trajectory your end effector should follow in pixel space. Return the trajectory coordinates in JSON format like this: {\"point_2d\": [x, y], \"label\": \"gripper trajectory\"}."
+    },
+    {
+      "environment_seed": 8302,
+      "fixture_sha256": "3ff0ed881f7ffdd683d7c5429fcabfd8ce9f3d7891ccce726feb08f5603d666c",
+      "json_parsed": true,
+      "label": "gripper trajectory",
+      "point_2d": [
+        650.0,
+        533.0
+      ],
+      "raw_output": "```json\n{\"point_2d\": [650, 533], \"label\": \"gripper trajectory\"}\n```",
+      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt01/seed8302_right_repeat0.txt",
+      "raw_output_sha256": "56e7237fbb8da2ff4728d48709cbc65635cc0cb0f24adfd71108cdf672204c74",
+      "relation": "right",
+      "repeat": 0,
+      "task_instruction": "Put the Rubik's cube to the right of the bowl.",
+      "user_prompt": "You are given the task \"Put the Rubik's cube to the right of the bowl.\". Specify the 2D trajectory your end effector should follow in pixel space. Return the trajectory coordinates in JSON format like this: {\"point_2d\": [x, y], \"label\": \"gripper trajectory\"}."
+    },
+    {
+      "environment_seed": 8302,
+      "fixture_sha256": "3ff0ed881f7ffdd683d7c5429fcabfd8ce9f3d7891ccce726feb08f5603d666c",
+      "json_parsed": true,
+      "label": "gripper trajectory",
+      "point_2d": [
+        650.0,
+        533.0
+      ],
+      "raw_output": "```json\n{\"point_2d\": [650, 533], \"label\": \"gripper trajectory\"}\n```",
+      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt01/seed8302_right_repeat1.txt",
+      "raw_output_sha256": "56e7237fbb8da2ff4728d48709cbc65635cc0cb0f24adfd71108cdf672204c74",
+      "relation": "right",
+      "repeat": 1,
+      "task_instruction": "Put the Rubik's cube to the right of the bowl.",
+      "user_prompt": "You are given the task \"Put the Rubik's cube to the right of the bowl.\". Specify the 2D trajectory your end effector should follow in pixel space. Return the trajectory coordinates in JSON format like this: {\"point_2d\": [x, y], \"label\": \"gripper trajectory\"}."
+    }
+  ],
+  "schema_version": "vla-wam-shared-v2-cosmos-reason2-static-diagnostic-v1",
+  "status": "complete",
+  "summary": {
+    "aligned_requested_side_pair_count": 0,
+    "call_count": 12,
+    "exact_repeat_condition_count": 6,
+    "exact_repeat_condition_total": 6,
+    "json_parse_count": 12,
+    "point_parse_count": 12,
+    "requested_side_pair_total": 3
+  },
+  "torch_version": "2.9.0+cu128",
+  "transformers_version": "4.57.3"
+}

@@ -44,6 +44,7 @@ from robolab.core.utils.video_utils import VideoWriter  # noqa: E402
 from robolab.registrations.droid.auto_env_registrations_jointpos import (  # noqa: E402
     auto_register_droid_envs,
 )
+from robolab.registrations.droid.camera_presets import WRIST_LEFT_RIGHT  # noqa: E402
 
 sys.path.insert(0, str(args_cli.study_root / "experiments/dreamzero_droid"))
 from v2_robolab_client import (  # noqa: E402
@@ -74,7 +75,7 @@ def main() -> None:
     set_output_dir(str(args_cli.output_dir))
     robolab.constants.ENABLE_SUBTASK_PROGRESS_CHECKING = False
     robolab.constants.RECORD_IMAGE_DATA = False
-    auto_register_droid_envs(task=[str(task_path)])
+    auto_register_droid_envs(task=[str(task_path)], cameras=WRIST_LEFT_RIGHT)
     env, env_cfg = create_env(
         TASK,
         device=args_cli.device,

@@ -11,7 +11,6 @@ from robolab.core.scenes.utils import import_scene
 from robolab.core.task.conditionals import object_dropped, object_grabbed, object_right_of
 from robolab.core.task.subtask import Subtask
 from robolab.core.task.task import Task
-from robolab.variations.camera import OverShoulderRightCameraCfg
 
 
 @configclass
@@ -33,9 +32,6 @@ class RubiksCubeRightOfBowlMatchedTermination:
 class RubiksCubeRightOfBowlMatchedTask(Task):
     contact_object_list = ["rubiks_cube", "banana", "bowl", "table"]
     scene = import_scene("rubiks_cube_banana_bowl.usda", contact_object_list)
-    scene.over_shoulder_right_camera = (
-        OverShoulderRightCameraCfg().over_shoulder_right_camera
-    )
     scene.rubiks_cube.init_state.pos = (
         0.303364634513855,
         0.12396888434886932,

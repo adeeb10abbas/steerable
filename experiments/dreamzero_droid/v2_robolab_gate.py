@@ -70,6 +70,7 @@ import robolab.core.environments.runtime as runtime  # noqa: E402
 from robolab.registrations.droid.auto_env_registrations_jointpos import (  # noqa: E402
     auto_register_droid_envs,
 )
+from robolab.registrations.droid.camera_presets import WRIST_LEFT_RIGHT  # noqa: E402
 
 sys.path.insert(0, str(args_cli.study_root / "experiments/dreamzero_droid"))
 from v2_robolab_client import V2DreamZeroDroidClient  # noqa: E402
@@ -92,7 +93,9 @@ task_names = {
         "RubiksCubeRightOfBowlMatchedTask",
     ],
 }
-auto_register_droid_envs(task=task_paths[args_cli.condition])
+auto_register_droid_envs(
+    task=task_paths[args_cli.condition], cameras=WRIST_LEFT_RIGHT
+)
 args_cli.task = task_names[args_cli.condition]
 
 _create_env = runtime.create_env

@@ -85,15 +85,16 @@ python3 tools/compile_vla_wam_v2_dreamzero.py \
 
 ## Exact six-cell ingestion command
 
-Discover the available ffmpeg/ffprobe pair in the execution pod; the compiler
-records the exact binary hashes and ffmpeg version in the media manifest:
+Discover the available ffmpeg binary in the execution pod; the compiler
+records its exact hash and version in the media manifest. `--ffprobe` is
+optional. When it is absent, the compiler obtains duration from the same
+hashed ffmpeg binary's input metadata and records that backend explicitly:
 
 ```bash
 python3 tools/compile_vla_wam_v2_dreamzero.py \
   --collection-manifest /data/users/ali/vla_wam/raw/dreamzero_droid/v2_a007/collection_manifest.json \
   --git-head "$(git rev-parse HEAD)" \
   --ffmpeg "$(command -v ffmpeg)" \
-  --ffprobe "$(command -v ffprobe)" \
   --result-output artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json \
   --media-dir artifacts/vla_wam_shared_v2/media/dreamzero_droid \
   --regenerate-gallery

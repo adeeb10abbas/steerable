@@ -14,6 +14,7 @@ import argparse
 import hashlib
 import json
 import math
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -363,7 +364,24 @@ def rms(left: np.ndarray, right: np.ndarray, limit: int = 8) -> float:
     return float(np.sqrt(np.mean(np.square(delta))))
 
 
-def ffprobe_duration(ffprobe: Path, video: Path) -> float:
+def parse_ffmpeg_duration(stderr: str) -> float:
+    match = re.search(r"Duration:\s*(\d+):(\d+):(\d+(?:\.\d+)?)", stderr)
+    if match is None:
+        raise RuntimeError("ffmpeg did not report an input duration")
+    hours, minutes, seconds = match.groups()
+    duration = int(hours) * 3600 + int(minutes) * 60 + float(seconds)
+    if not math.isfinite(duration) or duration <= 0:
+        raise RuntimeError(f"Invalid ffmpeg input duration: {duration}")
+    return duration
+
+
+def ffprobe_duration(ffprobe: Path | None, ffmpeg: Path, video: Path) -> float:
+    if ffprobe is None:
+        result = subprocess.run(
+            [str(ffmpeg), "-hide_banner", "-i", str(video)],
+            check=False, capture_output=True, text=True,
+        )
+        return parse_ffmpeg_duration(result.stderr)
     result = subprocess.run(
         [str(ffprobe), "-v", "error", "-show_entries", "format=duration", "-of", "json", str(video)],
         check=True, capture_output=True, text=True,
@@ -374,8 +392,9 @@ def ffprobe_duration(ffprobe: Path, video: Path) -> float:
     return duration
 
 
-def compose_pair(ffmpeg: Path, ffprobe: Path, left: Path, right: Path, output: Path) -> dict[str, Any]:
-    left_duration, right_duration = ffprobe_duration(ffprobe, left), ffprobe_duration(ffprobe, right)
+def compose_pair(ffmpeg: Path, ffprobe: Path | None, left: Path, right: Path, output: Path) -> dict[str, Any]:
+    left_duration = ffprobe_duration(ffprobe, ffmpeg, left)
+    right_duration = ffprobe_duration(ffprobe, ffmpeg, right)
     duration = max(left_duration, right_duration)
     output.parent.mkdir(parents=True, exist_ok=True)
     temporary = output.with_name(output.name + ".tmp.mp4")
@@ -630,7 +649,7 @@ def compile_collection(args: argparse.Namespace) -> None:
         right = next(row for row in episodes if row["environment_seed"] == seed and row["requested_relation"] == "right")
         video_path = video_paths[seed]
         video = compose_pair(
-            args.ffmpeg.resolve(), args.ffprobe.resolve(),
+            args.ffmpeg.resolve(), args.ffprobe.resolve() if args.ffprobe else None,
             Path(left["simulator_video"]["path"]), Path(right["simulator_video"]["path"]),
             video_stages[seed],
         )
@@ -675,7 +694,11 @@ def compile_collection(args: argparse.Namespace) -> None:
         "publication_policy": "All three exact LEFT/RIGHT V2-A007 pairs are included; no outcome-based selection.",
         "renderer": {
             "ffmpeg": file_record(args.ffmpeg.resolve()),
-            "ffprobe": file_record(args.ffprobe.resolve()),
+            "duration_probe": (
+                {"backend": "ffprobe_json", **file_record(args.ffprobe.resolve())}
+                if args.ffprobe else
+                {"backend": "ffmpeg_input_stderr", **file_record(args.ffmpeg.resolve())}
+            ),
             "ffmpeg_version": ffmpeg_version,
         },
         "gallery_entries": media_entries,
@@ -719,7 +742,6 @@ def main() -> None:
             ("--collection-manifest", args.collection_manifest),
             ("--git-head", args.git_head),
             ("--ffmpeg", args.ffmpeg),
-            ("--ffprobe", args.ffprobe),
         ) if value is None
     ]
     if missing:

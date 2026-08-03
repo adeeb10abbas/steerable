@@ -7,12 +7,17 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools"))
 from compile_vla_wam_v2_dreamzero import (  # noqa: E402
+    parse_ffmpeg_duration,
     sha256,
     validate_checkpoint_payloads,
 )
 
 
 class DreamZeroCheckpointManifestTest(unittest.TestCase):
+    def test_parses_ffmpeg_input_duration_fallback(self):
+        stderr = "Input #0, mov, from 'pair.mp4':\n  Duration: 00:01:02.50, start: 0.000000"
+        self.assertEqual(parse_ffmpeg_duration(stderr), 62.5)
+
     def _selected(self, count: int, size: int) -> dict:
         return {
             "checkpoint": "GEAR-Dreams/DreamZero-DROID",

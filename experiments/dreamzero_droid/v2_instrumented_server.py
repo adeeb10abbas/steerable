@@ -19,6 +19,11 @@ import torch
 import torch.distributed as dist
 import tyro
 
+# DeepSpeed 0.19 must finish importing before Transformers 4.51 imports
+# modeling_utils.  The reverse order recurses through modeling_opt and fails
+# before checkpoint construction; this import-order compatibility shim changes
+# no model inputs, weights, RNG, actions, horizons, or control flow.
+import deepspeed  # noqa: F401,E402
 import socket_test_optimized_AR as official
 from eval_utils.policy_server import PolicyServerConfig
 from groot.vla.data.schema import EmbodimentTag

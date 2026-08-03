@@ -175,6 +175,11 @@ without loading a policy. They contain distinct object pairs and start outside
 both requested regions. This is setup evidence only. The 42 new expansion
 episodes have not yet been run.
 
+The same evidence is available in a
+[filterable video gallery](VLA_WAM_STEERABILITY_VIDEO_GALLERY.html). Every item
+also has a 1200×1200 H.264 social version and square poster generated from the
+same source pair; the media manifest hashes both aspect ratios.
+
 ## What steerability means
 
 I use six claims that are often collapsed into one word:

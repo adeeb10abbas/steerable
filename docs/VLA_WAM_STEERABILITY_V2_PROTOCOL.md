@@ -8,7 +8,7 @@ the 42 new expansion episodes. The machine-readable source of truth is
 [`protocol.json`](../artifacts/vla_wam_shared_v2/protocol.json), and the media
 selection rules are frozen separately in
 [`media_selection_plan.json`](../artifacts/vla_wam_shared_v2/media_selection_plan.json).
-The executable validator currently passes 177 checks; its full report is
+The executable validator currently passes 195 checks; its full report is
 [`protocol_validation.json`](../artifacts/vla_wam_shared_v2/protocol_validation.json).
 
 This is a disclosed post-v1 extension. Every pi0.5/Cosmos result in the
@@ -307,12 +307,14 @@ text.
 
 The completed WAM gate additionally publishes one exact-pair explainer per
 model: the first compiled pair with a LEFT success and matched RIGHT failure.
-Each 1600×900 clip shows the exact prompts, full outcome text, both complete
-rollouts, requested regions, and state-derived paths. When one rollout ends
-first, its final frame is held while the other continues. FastWAM's original
-capture used the wrong raw pixel dimensions; the gallery explicitly records
-the four-packet head-camera reconstruction, and the runner is repaired for all
-future captures.
+Each clip is exported at 1600×900 for the article/X and 1200×1200 for social
+sharing. Both show the exact prompts, full outcome text, complete rollouts,
+requested regions, and state-derived paths. When one rollout ends first, its
+final frame is held while the other continues. The standalone
+[`video gallery`](VLA_WAM_STEERABILITY_VIDEO_GALLERY.html) filters by future
+interface. FastWAM's original capture used the wrong raw pixel dimensions; the
+gallery explicitly records the four-packet head-camera reconstruction, and the
+runner is repaired for all future captures.
 
 ## Claim boundary
 
@@ -365,8 +367,9 @@ pooled or placed on an unlabeled common leaderboard.
   outcomes. Its model-blind seven-scene setup audit is
   [`directional_fixture_validation.json`](../artifacts/vla_wam_shared_v2/pilot/directional_fixture_validation.json).
 - [`media_index.json`](../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/media_index.json)
-  hashes three matched success/failure MP4s, posters, captions, exact prompts,
-  source trajectories, and the disclosed FastWAM pixel-layout repair.
+  hashes three matched success/failure pairs in landscape and square formats,
+  posters, captions, exact prompts, source trajectories, and the disclosed
+  FastWAM pixel-layout repair.
 - [`execution_configs.json`](../artifacts/vla_wam_shared_v2/pilot/execution_configs.json)
   records the exact completed-pilot settings. Efficient-WAM-RT's entry was
   recorded retrospectively after its first six cells; FastWAM and LingBot-VA

@@ -381,6 +381,137 @@ def render_background(
     plt.close(fig)
 
 
+def render_square_background(
+    model_label: str,
+    interface_note: str,
+    left_episode: dict[str, Any],
+    right_episode: dict[str, Any],
+    output: Path,
+) -> None:
+    fig = plt.figure(figsize=(12, 12), dpi=100, facecolor=PAPER)
+    fig.text(
+        0.04,
+        0.965,
+        f"{model_label}: did one word redirect the robot?",
+        fontsize=22,
+        weight="bold",
+        color=TEXT,
+        ha="left",
+        va="top",
+    )
+    fig.text(
+        0.96,
+        0.925,
+        interface_note,
+        fontsize=9.5,
+        color=MUTED,
+        ha="right",
+        va="top",
+    )
+    fig.text(
+        0.04,
+        0.925,
+        "Same scene, seed, objects, initial state, checkpoint, and sampler.",
+        fontsize=10.2,
+        color=MUTED,
+        ha="left",
+        va="top",
+    )
+
+    panels = [
+        (left_episode, "left", LEFT, 0.04),
+        (right_episode, "right", RIGHT, 0.515),
+    ]
+    for episode, direction, color, x0 in panels:
+        fig.patches.append(
+            Rectangle(
+                (x0, 0.815),
+                0.445,
+                0.075,
+                transform=fig.transFigure,
+                facecolor=color,
+                alpha=0.09,
+                edgecolor="none",
+            )
+        )
+        fig.text(
+            x0 + 0.012,
+            0.872,
+            "ASKED " + direction.upper(),
+            fontsize=9.5,
+            weight="bold",
+            color=TEXT,
+            ha="left",
+            va="center",
+        )
+        prompt_lines = "\n".join(textwrap.wrap(episode["prompt"], 43))
+        fig.text(
+            x0 + 0.012,
+            0.842,
+            f'“{prompt_lines}”',
+            fontsize=10,
+            weight="bold",
+            color=TEXT,
+            ha="left",
+            va="center",
+        )
+        fig.text(
+            x0 + 0.012,
+            0.8,
+            status_text(episode),
+            fontsize=9.2,
+            weight="bold",
+            color=TEXT,
+            ha="left",
+            va="top",
+        )
+        fig.text(
+            x0 + 0.43,
+            0.8,
+            f"{episode['actions_executed']} actions",
+            fontsize=8.5,
+            color=MUTED,
+            ha="right",
+            va="top",
+        )
+        fig.patches.append(
+            Rectangle(
+                (x0 - 0.005, 0.445),
+                0.458,
+                0.35,
+                transform=fig.transFigure,
+                facecolor=CARD,
+                edgecolor=GRID,
+                linewidth=1.2,
+                zorder=-1,
+            )
+        )
+        path_axis = fig.add_axes((x0 + 0.018, 0.11, 0.405, 0.245))
+        draw_path_axis(path_axis, episode, direction)
+        path_axis.tick_params(axis="x", labelsize=8.5)
+
+    fig.text(
+        0.5,
+        0.405,
+        "Complete robot viewport above · target-relative object path below",
+        fontsize=9.5,
+        color=MUTED,
+        ha="center",
+        weight="bold",
+    )
+    fig.text(
+        0.5,
+        0.045,
+        "Circle = full relation-and-release success · cross = failure · dashed route is illustrative and never enters the metric",
+        fontsize=9.2,
+        color=MUTED,
+        ha="center",
+    )
+    output.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(output, dpi=100, facecolor=fig.get_facecolor())
+    plt.close(fig)
+
+
 def render_video(background: Path, left: Path, right: Path, output: Path) -> float:
     duration = max(ffprobe_duration(left), ffprobe_duration(right))
     filter_graph = (
@@ -432,6 +563,57 @@ def render_video(background: Path, left: Path, right: Path, output: Path) -> flo
     return duration
 
 
+def render_square_video(background: Path, left: Path, right: Path, output: Path) -> float:
+    duration = max(ffprobe_duration(left), ffprobe_duration(right))
+    filter_graph = (
+        f"[1:v]fps=10,scale=540:405:flags=lanczos,"
+        f"tpad=stop_mode=clone:stop_duration={duration:.3f},trim=duration={duration:.3f}[lv];"
+        f"[2:v]fps=10,scale=540:405:flags=lanczos,"
+        f"tpad=stop_mode=clone:stop_duration={duration:.3f},trim=duration={duration:.3f}[rv];"
+        "[0:v][lv]overlay=48:250:shortest=0[tmp];"
+        "[tmp][rv]overlay=618:250:shortest=1[outv]"
+    )
+    subprocess.run(
+        [
+            "ffmpeg",
+            "-y",
+            "-loglevel",
+            "error",
+            "-loop",
+            "1",
+            "-framerate",
+            "10",
+            "-i",
+            str(background),
+            "-i",
+            str(left),
+            "-i",
+            str(right),
+            "-filter_complex",
+            filter_graph,
+            "-map",
+            "[outv]",
+            "-t",
+            f"{duration:.3f}",
+            "-r",
+            "10",
+            "-c:v",
+            "libx264",
+            "-preset",
+            "medium",
+            "-crf",
+            "20",
+            "-pix_fmt",
+            "yuv420p",
+            "-movflags",
+            "+faststart",
+            str(output),
+        ],
+        check=True,
+    )
+    return duration
+
+
 def render_poster(video: Path, output: Path, duration: float) -> None:
     timestamp = min(max(duration * 0.72, 0.1), max(duration - 0.1, 0.1))
     subprocess.run(
@@ -440,10 +622,10 @@ def render_poster(video: Path, output: Path, duration: float) -> None:
             "-y",
             "-loglevel",
             "error",
-            "-ss",
-            f"{timestamp:.3f}",
             "-i",
             str(video),
+            "-ss",
+            f"{timestamp:.3f}",
             "-frames:v",
             "1",
             str(output),
@@ -511,8 +693,11 @@ def main() -> None:
 
         slug = f"{result_stem}_{pair_id}_left_success_right_failure"
         background = output_dir / f"{slug}_background.png"
+        square_background = output_dir / f"{slug}_square_background.png"
         video = output_dir / f"{slug}.mp4"
+        square_video = output_dir / f"{slug}_1200x1200.mp4"
         poster = output_dir / f"{slug}_poster.jpg"
+        square_poster = output_dir / f"{slug}_1200x1200_poster.jpg"
         captions = output_dir / f"{slug}.vtt"
         render_background(
             model_label,
@@ -520,6 +705,13 @@ def main() -> None:
             left_episode,
             right_episode,
             background,
+        )
+        render_square_background(
+            model_label,
+            interface_note,
+            left_episode,
+            right_episode,
+            square_background,
         )
         left_video = Path(left_episode["executed_video"]["path"])
         right_video = Path(right_episode["executed_video"]["path"])
@@ -542,7 +734,16 @@ def main() -> None:
         duration = render_video(
             background, publication_left_video, publication_right_video, video
         )
+        square_duration = render_square_video(
+            square_background,
+            publication_left_video,
+            publication_right_video,
+            square_video,
+        )
+        if abs(square_duration - duration) > 1e-6:
+            raise RuntimeError(f"Landscape/square duration mismatch for {slug}")
         render_poster(video, poster, duration)
+        render_poster(square_video, square_poster, duration)
         write_vtt(captions, duration, model_label, left_episode, right_episode)
         alt_text = (
             f"Side-by-side RoboTwin rollouts from {model_label} in the same {pair_id} scene. "
@@ -586,11 +787,14 @@ def main() -> None:
                 "source_video_correction": source_video_correction,
                 "video": file_record(video, workspace),
                 "poster": file_record(poster, workspace),
+                "square_video": file_record(square_video, workspace),
+                "square_poster": file_record(square_poster, workspace),
                 "captions": file_record(captions, workspace),
                 "alt_text": alt_text,
             }
         )
         background.unlink()
+        square_background.unlink()
         print(f"Rendered {video}")
 
     index = {

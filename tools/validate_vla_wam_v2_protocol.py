@@ -654,7 +654,13 @@ def validate(workspace: Path) -> dict[str, Any]:
         checks,
     )
     for item in paired_media["items"]:
-        for artifact_name in ("video", "poster", "captions"):
+        for artifact_name in (
+            "video",
+            "poster",
+            "square_video",
+            "square_poster",
+            "captions",
+        ):
             validate_file_record(
                 workspace,
                 item[artifact_name],

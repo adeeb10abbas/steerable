@@ -1082,6 +1082,10 @@ def validate(workspace: Path) -> dict[str, Any]:
         workspace
         / "artifacts/vla_wam_shared_v2/pilot/post_result_second_wave_amendment.json"
     )
+    dreamzero_amendment_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/post_result_dreamzero_amendment.json"
+    )
     efficient_pair03_integration_path = (
         workspace
         / "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/efficient_wam_rt_pair03_integration.json"
@@ -1126,6 +1130,7 @@ def validate(workspace: Path) -> dict[str, Any]:
     continuation_state = load_json(continuation_state_path)
     post_result_amendment = load_json(post_result_amendment_path)
     second_wave_amendment = load_json(second_wave_amendment_path)
+    dreamzero_amendment = load_json(dreamzero_amendment_path)
     bundle_manifest = load_json(bundle_manifest_path)
     paired_media = load_json(paired_media_path)
     droid_paired_media = load_json(droid_paired_media_path)
@@ -1787,13 +1792,13 @@ def validate(workspace: Path) -> dict[str, Any]:
 
     require(
         continuation_state["study_status"]
-        == "post_result_expansions_v2_a005_a006_frozen_active_setup",
-        "continuation state names the frozen V2-A005/A006 active-setup boundary",
+        == "post_result_expansions_v2_a005_a006_a007_frozen_active_setup",
+        "continuation state names the frozen V2-A005/A006/A007 active-setup boundary",
         checks,
     )
     queue = continuation_state["experiment_queue"]
     require(
-        [item["priority"] for item in queue] == [0, 1, 2, 3],
+        [item["priority"] for item in queue] == [0, 1, 2, 3, 4],
         "continuation queue has one unambiguous priority order",
         checks,
     )
@@ -1804,11 +1809,13 @@ def validate(workspace: Path) -> dict[str, Any]:
             "robotwin_three_wam_directional_confirmation",
             "lingbot_vla_4b_robotwin_pilot",
             "groot_n17_droid_pilot",
+            "dreamzero_droid_direct_gate",
         ],
-        "continuation queue preserves the four authorized or blocked next experiments",
+        "continuation queue preserves the five authorized or blocked next experiments",
         checks,
     )
     groot_readiness = continuation_state.get("groot_n17_readiness", {})
+    dreamzero_readiness = continuation_state.get("dreamzero_droid_readiness", {})
     expected_do_not_rerun = [
         f"{model_id}/robotwin_pair_{pair_index:02d}"
         for model_id in (
@@ -1835,11 +1842,18 @@ def validate(workspace: Path) -> dict[str, Any]:
         == "authorized_onboarding_blocked_checkpoint_and_repository_missing"
         and queue[3]["status"]
         == "authorized_ready_for_exact_repeat_probe_and_direct_gate"
+        and queue[4]["status"]
+        == "authorized_by_v2_a007_setup_gates_in_progress"
+        and queue[4]["first_episode_count"] == 6
         and groot_readiness.get("status")
         == "assets_downloaded_and_server_contract_smoke_complete"
         and groot_readiness.get("server_smoke", {}).get("health_ping") is True
-        and groot_readiness.get("server_smoke", {}).get("simulator_episode_started") is False,
-        "continuation state freezes all 42 WAM cells and records authorized GR00T and LingBot-VLA gates",
+        and groot_readiness.get("server_smoke", {}).get("simulator_episode_started") is False
+        and dreamzero_readiness.get("status")
+        == "v2_a007_frozen_setup_gates_in_progress_zero_study_requests"
+        and dreamzero_readiness.get("model_action_request_count") == 0
+        and dreamzero_readiness.get("behavioral_episode_count") == 0,
+        "continuation state freezes completed work and records the authorized DreamZero setup gate",
         checks,
     )
     require(
@@ -1977,6 +1991,59 @@ def validate(workspace: Path) -> dict[str, Any]:
         "V2-A006 keeps DreamZero and pi0 DROID deferred rather than assigning zeros",
         checks,
     )
+    dreamzero_state = post_result_decision.get("dreamzero_amendment", {})
+    require(
+        dreamzero_state.get("status")
+        == "frozen_before_any_dreamzero_study_model_request_or_behavioral_inference"
+        and dreamzero_state.get("amendment_id") == "V2-A007"
+        and dreamzero_state.get("path")
+        == "artifacts/vla_wam_shared_v2/pilot/post_result_dreamzero_amendment.json"
+        and dreamzero_state.get("sha256") == sha256(dreamzero_amendment_path)
+        and dreamzero_state.get("authorized_queue")
+        == [dreamzero_amendment["selected_model"]["id"]]
+        and dreamzero_state.get("behavioral_episode_count") == 6
+        and dreamzero_state.get("simulator_video_lane")
+        == "raytrace-rtxpro6000-ali",
+        "continuation state binds the frozen V2-A007 DreamZero gate",
+        checks,
+    )
+    dreamzero = dreamzero_amendment["selected_model"]
+    require(
+        dreamzero_amendment["schema_version"]
+        == "vla-wam-shared-v2-post-result-dreamzero-amendment-v1"
+        and dreamzero_amendment["amendment_id"] == "V2-A007"
+        and dreamzero_amendment["status"]
+        == "frozen_after_existing_results_and_before_any_dreamzero_study_model_request_or_behavioral_inference"
+        and dreamzero_amendment["recorded_at_git_head"]
+        == "ca91aeb7a05b45a911c164638273be237c37b78b"
+        and dreamzero_amendment["parent_amendment"]["sha256"]
+        == sha256(second_wave_amendment_path)
+        and dreamzero["id"] == "dreamzero_droid_direct_gate"
+        and dreamzero["repository_commit"]
+        == "ab790c198fbce33503358efbbd4187ce9a89adf3"
+        and dreamzero["checkpoint_revision"]
+        == "96ad344138c66e82536422432ad742f015784942"
+        and dreamzero["behavioral_episode_count"] == 6
+        and dreamzero["environment_seeds"] == [8300, 8301, 8302]
+        and dreamzero["sampling_seeds"] == [8300, 8301, 8302]
+        and dreamzero["requested_relations"] == ["left", "right"]
+        and dreamzero["prompt_family"] == "direct_command",
+        "V2-A007 freezes the exact DreamZero source and bounded six-cell direct gate",
+        checks,
+    )
+    require(
+        dreamzero_amendment["runtime_topology"]["simulator_and_video"].find(
+            "raytrace-rtxpro6000-ali"
+        )
+        >= 0
+        and dreamzero_amendment["preexisting_process_disclosure"]["study_use"]
+        == "prohibited"
+        and len(dreamzero_amendment["release_gates"]) == 9
+        and "Missing or unexposed futures are not zeros"
+        in dreamzero["future_rule"],
+        "V2-A007 requires RTX video, excludes the old server, and preserves future-evidence boundaries",
+        checks,
+    )
     for relative_doc in continuation_state["authoritative_docs"]:
         require(
             (workspace / relative_doc).is_file(),
@@ -2066,6 +2133,12 @@ def validate(workspace: Path) -> dict[str, Any]:
         ),
         "post_result_second_wave_amendment_sha256": sha256(
             second_wave_amendment_path
+        ),
+        "post_result_dreamzero_amendment_path": str(
+            dreamzero_amendment_path.relative_to(workspace)
+        ),
+        "post_result_dreamzero_amendment_sha256": sha256(
+            dreamzero_amendment_path
         ),
         "efficient_wam_pair03_handoff": pair03_handoff,
         "efficient_wam_pairs04_09": efficient_pairs04_09,

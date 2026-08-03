@@ -37,6 +37,13 @@ LingBot-VLA onboarding, and the three remaining π0-FAST wording families.
 This decision was made after the completed three-WAM outcomes were known and is
 not presented as preregistered.
 
+User-directed post-result amendment `V2-A007` now adds DreamZero-DROID as a
+bounded six-cell direct-command gate. DreamZero study inference had not begun
+when that amendment was committed. Its simulator and viewport video run on the
+ali-owned RTX PRO 6000 lane; a fresh isolated two-GPU policy server runs on
+separate rechecked B200 GPUs. The unrelated pre-existing DreamZero process on
+B200 GPU 0 and port 5000 is never used or modified.
+
 The current article, figures, and videos are:
 
 - [`VLA_VS_WAM_STEERABILITY_STUDY.md`](VLA_VS_WAM_STEERABILITY_STUDY.md)
@@ -534,9 +541,68 @@ exact-repeat and LEFT/RIGHT prompt-only probe. Only if that probe passes may
 the frozen six direct-command pairs00-02 cells begin. No LaWAM inference has
 started.
 
-DreamZero-DROID is deferred behind a two-GPU and exact-reset adapter gate; pi0
-DROID is deferred as the least architecturally distinct family ablation. Both
-remain not measured rather than zero.
+pi0 DROID remains deferred as the least architecturally distinct family
+ablation and is not assigned a zero. DreamZero-DROID was subsequently selected
+by the user in the separately disclosed `V2-A007` amendment below.
+
+<a id="experiment-5-dreamzero-droid-direct-gate"></a>
+## Experiment 5 — DreamZero DROID direct gate (`V2-A007`)
+
+Status: frozen before any DreamZero study request; setup gates in progress.
+Machine-readable source:
+[`post_result_dreamzero_amendment.json`](../artifacts/vla_wam_shared_v2/pilot/post_result_dreamzero_amendment.json)
+(SHA-256
+`785bf3a69409e231e3a78c7427089cbe653ceb37022ddfb16edd3f1bd152ee89`).
+All completed V2-A005/V2-A006 results were known when this user-directed
+addition was selected, so it is a post-result breadth expansion rather than
+preregistration.
+
+The exact official sources are `dreamzero0/dreamzero` commit
+`ab790c198fbce33503358efbbd4187ce9a89adf3` and
+`GEAR-Dreams/DreamZero-DROID` revision
+`96ad344138c66e82536422432ad742f015784942`. The observed release contains 25
+files and 64,789,159,581 payload bytes; every payload used by inference must be
+hashed before model load. The official policy jointly predicts actions and a
+latent video future. Retain the official decoded future separately from the
+executed RTX viewport video; unexposed or missing futures are not zeros.
+
+The bounded behavioral queue is exactly six DROID cells: static direct-command
+LEFT and RIGHT at environment/sampling seeds 8300, 8301, and 8302. Reuse the
+frozen prompt bytes, neutral cube/bowl reset, official release-inside-cone
+success predicate, and same-seed pairing used by the completed DROID gates. Do
+not substitute one of DreamZero's canned simulator scenes.
+
+Runtime topology is deliberately split:
+
+- launch a fresh official distributed DreamZero server on two rechecked free
+  GPUs in `lerobot-b200-4gpu-1-ali`;
+- run exact-reset RoboLab/Isaac simulation and every viewport capture on
+  `raytrace-rtxpro6000-ali`;
+- use a new study port and prove cross-pod reachability before model load;
+- keep all raw actions, futures, rollouts, and unbounded videos under
+  `/data/users/ali/vla_wam` on the ali PVC.
+
+The old process PID 25608 on B200 GPU 0/port 5000 predates this amendment. It
+uses a different dirty checkout and is infrastructure outside the study. Never
+send it a request, stop it, modify it, or claim evidence from it.
+
+Before the first behavioral cell, all of these gates must pass:
+
+1. exact repository/checkpoint hashes and isolated environment;
+2. fresh two-B200 official server and cross-pod transport;
+3. RTX PRO 6000 Vulkan/Isaac viewport rendering and persistent video writing;
+4. neutral matched reset and byte-identical static prompt injection;
+5. official state/action normalization and eight-action open-loop execution;
+6. exact executed-action trace and measurement-only decoded-future retention;
+7. RNG-restored exact-repeat fixed-observation request;
+8. LEFT/RIGHT prompt-only sensitivity request.
+
+Infrastructure failures and partial attempts stay outside the model
+denominator. Only after all gates pass may the six cells run. Preserve every
+valid failure, publish simulator video for every valid cell, and apply the
+original zero/one-direction/both-direction competence gate after the six-cell
+slice. Selected compact clips and their hashes belong in
+`artifacts/vla_wam_shared_v2/media/dreamzero_droid/media_manifest.json`.
 
 <a id="experiment-3-lingbot-vla-4b-robotwin-onboarding"></a>
 ## Experiment 3 — LingBot-VLA 4B RoboTwin onboarding

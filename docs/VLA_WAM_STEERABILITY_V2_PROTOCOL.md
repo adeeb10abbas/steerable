@@ -25,6 +25,15 @@ machine-readable source is
 [`post_result_expansion_amendment.json`](../artifacts/vla_wam_shared_v2/pilot/post_result_expansion_amendment.json).
 The original freeze and known-result disclosures below remain unchanged.
 
+User-directed post-result amendment `V2-A007` was recorded after the completed
+V2-A005/V2-A006 outcomes and before any DreamZero study request. It adds one
+bounded six-cell DreamZero-DROID direct-command gate. A fresh official
+two-B200 policy server is separated from the exact-reset simulator and viewport
+capture on the ali-owned RTX PRO 6000 lane. The amendment, exact source and
+checkpoint revisions, pre-existing-server exclusion, setup gates, future
+retention rule, and six-cell ceiling are frozen in
+[`post_result_dreamzero_amendment.json`](../artifacts/vla_wam_shared_v2/pilot/post_result_dreamzero_amendment.json).
+
 This is a disclosed post-v1 extension. Every pi0.5/Cosmos result in the
 160-episode DROID study and the small retrospective Efficient-WAM, FastWAM,
 and LingBot-VA gates was known when v2 was designed. Those outcomes motivated
@@ -62,12 +71,11 @@ human can inspect, a latent future representation, and a training-only future
 objective provide different kinds of evidence. Figures and tables must say
 which interface is present rather than using a generic WAM badge.
 
-LaWAM, Light-WAM, pi0 DROID, and DreamZero remain second-wave candidates. They
-are not assigned a zero: they are explicitly marked *not yet measured under
-v2*. LaWAM's task policy weights are incomplete locally; Light-WAM lacks a
-local integration audit; pi0 is deferred to limit first-wave family redundancy;
-and DreamZero does not currently fit beside the simulator on the local two-3090
-allocation.
+LaWAM, Light-WAM, pi0 DROID, and DreamZero entered the disclosed second-wave
+audit as candidates and were not assigned zeros. V2-A006 selected Light-WAM
+and LaWAM; V2-A007 later selected DreamZero after the user explicitly requested
+it and a separate two-B200-policy/RTX-simulator topology became available. pi0
+DROID remains deferred to limit first-wave family redundancy.
 
 ## Four prompts, in plain language
 

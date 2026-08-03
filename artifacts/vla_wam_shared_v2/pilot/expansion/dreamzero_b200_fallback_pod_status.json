@@ -1,0 +1,45 @@
+{
+  "schema_version": "vla-wam-shared-v2-dreamzero-b200-fallback-status-v1",
+  "amendment_id": "V2-A007",
+  "observed_at_utc": "2026-08-03T20:57:49Z",
+  "kubernetes": {
+    "context": "prod-dcwi-warrenq1-vmkub007",
+    "namespace": "211247-prod",
+    "pod_name": "dreamzero-b200-2gpu-128gi-ali",
+    "pod_uid": "a6d1272c-5e93-4ad8-a46e-ac2f1b44b9b8",
+    "created_at_utc": "2026-08-03T20:56:22Z",
+    "owner_scope": "ali",
+    "manifest": "handoff/k8s/dreamzero-b200-2gpu-128gi-ali.yaml"
+  },
+  "requested_contract": {
+    "image": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+    "gpu_product_affinity": "NVIDIA-B200",
+    "gpu_count": 2,
+    "cpu_request": "32",
+    "cpu_limit": "64",
+    "memory_request": "64Gi",
+    "memory_limit": "128Gi",
+    "pvc": "211247-prod-pvc",
+    "pvc_status": "Bound",
+    "pvc_capacity": "2Ti",
+    "pvc_access_mode": "ReadWriteMany",
+    "command_role": "sleep_only_readiness_placeholder"
+  },
+  "admission": {
+    "server_dry_run": "accepted",
+    "creation": "accepted",
+    "quota_or_admission_blocker": null
+  },
+  "status": {
+    "phase": "Pending",
+    "scheduled": false,
+    "reason": "Unschedulable",
+    "scheduler_message": "0/118 nodes are available: 110 node(s) didn't match Pod's node affinity/selector, 3 node(s) had untolerated taint {node-role.kubernetes.io/control-plane: }, 5 Insufficient nvidia.com/gpu. preemption: 0/118 nodes are available: 113 Preemption is not helpful for scheduling, 5 No preemption victims found for incoming pod.",
+    "effective_blocker": "All five B200-eligible nodes reported insufficient free nvidia.com/gpu capacity; no preemption victim was available.",
+    "container_started": false,
+    "gpu_visibility_verified": false,
+    "pvc_mount_verified_inside_container": false,
+    "model_inference_started": false
+  },
+  "next_step": "Leave the ali-owned pod queued. When it becomes Ready, verify only nvidia-smi and /data PVC visibility before assigning any study inference."
+}

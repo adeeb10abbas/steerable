@@ -1,26 +1,26 @@
 {
-  "claim_boundary": "Excluded infrastructure-invalid fixture attempt: zero behavioral episodes, no robot-success rate, no generated-future score, and no valid Reason2 diagnostic numerator.",
+  "claim_boundary": "Text-output visual-planning diagnostic only: zero behavioral episodes, no robot-success rate, and no generated-future score.",
   "fixtures": [
     {
       "environment_seed": 8300,
       "fixture_path": "/data/users/ali/vla_wam/raw/groot_n17_droid/repeat_gate/fixture/seed8300_fixed_observation.npz",
-      "fixture_sha256": "45b3509527778188fa03a8ba273ffc7b53c36d60847be6327152544118fddbdb",
+      "fixture_sha256": "e3ed8015c4ff5cb128fa8273f57a62432b14ae562e25f683a45972cbbbebd770",
       "manifest_path": "/data/users/ali/vla_wam/raw/groot_n17_droid/repeat_gate/fixture/seed8300_fixed_observation.json",
-      "manifest_sha256": "30dc034f9b3c7ded701a1e823fffefca5378d20d9804600fa0a2ee22e2164086"
+      "manifest_sha256": "c73ec3a3d847c25e39f31669fd1c09e6295e43eb6aaf7231c6508aff215b5b6c"
     },
     {
       "environment_seed": 8301,
       "fixture_path": "/data/users/ali/vla_wam/raw/groot_n17_droid/repeat_gate/fixture/seed8301_fixed_observation.npz",
-      "fixture_sha256": "7259f4596d6e8b165d15b10dac11825c4029adcb18f927d21ad78e4e41482a59",
+      "fixture_sha256": "2bdeff27b9c73714722e94db3ffa681ac31d5656acdfb12bb481269b8c6e92c5",
       "manifest_path": "/data/users/ali/vla_wam/raw/groot_n17_droid/repeat_gate/fixture/seed8301_fixed_observation.json",
-      "manifest_sha256": "51423a5300506e2b2bef60247b14b2f2c8d2b8e7a0c7bb443405637d02e97d14"
+      "manifest_sha256": "2e67d489cd1a73cf5bc0f37bd0a40a15bc6bbbd5647b3fab66cf45de73d52df8"
     },
     {
       "environment_seed": 8302,
       "fixture_path": "/data/users/ali/vla_wam/raw/groot_n17_droid/repeat_gate/fixture/seed8302_fixed_observation.npz",
-      "fixture_sha256": "3ff0ed881f7ffdd683d7c5429fcabfd8ce9f3d7891ccce726feb08f5603d666c",
+      "fixture_sha256": "971216f91a55cec6024d311c59cac929b4dd0296a4ec6808bfa7b58098d1a04f",
       "manifest_path": "/data/users/ali/vla_wam/raw/groot_n17_droid/repeat_gate/fixture/seed8302_fixed_observation.json",
-      "manifest_sha256": "1ce56ef4131ce216206b3c9345e4e76a1df99c323e47c9de6b9aee403f12205a"
+      "manifest_sha256": "b5f1beff91d9e72ea54a904afbdf7a84a4088c2a6dc5509eae23a53a44fced56"
     }
   ],
   "generation": {
@@ -39,14 +39,14 @@
     {
       "environment_seed": 8300,
       "left_point_2d": [
-        650.0,
-        533.0
+        607.0,
+        356.0
       ],
       "left_repeat_raw_exact": true,
       "requested_side_ordering_aligned": false,
       "right_minus_left_x_px": 0.0,
       "right_point_2d": [
-        650.0,
+        607.0,
         356.0
       ],
       "right_repeat_raw_exact": true
@@ -54,14 +54,14 @@
     {
       "environment_seed": 8301,
       "left_point_2d": [
-        650.0,
-        533.0
+        607.0,
+        356.0
       ],
       "left_repeat_raw_exact": true,
-      "requested_side_ordering_aligned": false,
-      "right_minus_left_x_px": 0.0,
+      "requested_side_ordering_aligned": true,
+      "right_minus_left_x_px": 12.0,
       "right_point_2d": [
-        650.0,
+        619.0,
         356.0
       ],
       "right_repeat_raw_exact": true
@@ -69,15 +69,15 @@
     {
       "environment_seed": 8302,
       "left_point_2d": [
-        650.0,
-        533.0
+        607.0,
+        356.0
       ],
       "left_repeat_raw_exact": true,
       "requested_side_ordering_aligned": false,
       "right_minus_left_x_px": 0.0,
       "right_point_2d": [
-        650.0,
-        533.0
+        607.0,
+        356.0
       ],
       "right_repeat_raw_exact": true
     }
@@ -85,16 +85,16 @@
   "records": [
     {
       "environment_seed": 8300,
-      "fixture_sha256": "45b3509527778188fa03a8ba273ffc7b53c36d60847be6327152544118fddbdb",
+      "fixture_sha256": "e3ed8015c4ff5cb128fa8273f57a62432b14ae562e25f683a45972cbbbebd770",
       "json_parsed": true,
       "label": "gripper trajectory",
       "point_2d": [
-        650.0,
-        533.0
+        607.0,
+        356.0
       ],
-      "raw_output": "```json\n{\"point_2d\": [650, 533], \"label\": \"gripper trajectory\"}\n```",
-      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt01/seed8300_left_repeat0.txt",
-      "raw_output_sha256": "56e7237fbb8da2ff4728d48709cbc65635cc0cb0f24adfd71108cdf672204c74",
+      "raw_output": "```json\n{\"point_2d\": [607, 356], \"label\": \"gripper trajectory\"}\n```",
+      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt02_corrected_neutral/seed8300_left_repeat0.txt",
+      "raw_output_sha256": "a4d765458b2c18cab2ac8056b99f10067e60e98220c516ca12f10bc194c1f24c",
       "relation": "left",
       "repeat": 0,
       "task_instruction": "Put the Rubik's cube to the left of the bowl.",
@@ -102,16 +102,16 @@
     },
     {
       "environment_seed": 8300,
-      "fixture_sha256": "45b3509527778188fa03a8ba273ffc7b53c36d60847be6327152544118fddbdb",
+      "fixture_sha256": "e3ed8015c4ff5cb128fa8273f57a62432b14ae562e25f683a45972cbbbebd770",
       "json_parsed": true,
       "label": "gripper trajectory",
       "point_2d": [
-        650.0,
-        533.0
+        607.0,
+        356.0
       ],
-      "raw_output": "```json\n{\"point_2d\": [650, 533], \"label\": \"gripper trajectory\"}\n```",
-      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt01/seed8300_left_repeat1.txt",
-      "raw_output_sha256": "56e7237fbb8da2ff4728d48709cbc65635cc0cb0f24adfd71108cdf672204c74",
+      "raw_output": "```json\n{\"point_2d\": [607, 356], \"label\": \"gripper trajectory\"}\n```",
+      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt02_corrected_neutral/seed8300_left_repeat1.txt",
+      "raw_output_sha256": "a4d765458b2c18cab2ac8056b99f10067e60e98220c516ca12f10bc194c1f24c",
       "relation": "left",
       "repeat": 1,
       "task_instruction": "Put the Rubik's cube to the left of the bowl.",
@@ -119,16 +119,16 @@
     },
     {
       "environment_seed": 8300,
-      "fixture_sha256": "45b3509527778188fa03a8ba273ffc7b53c36d60847be6327152544118fddbdb",
+      "fixture_sha256": "e3ed8015c4ff5cb128fa8273f57a62432b14ae562e25f683a45972cbbbebd770",
       "json_parsed": true,
       "label": "gripper trajectory",
       "point_2d": [
-        650.0,
+        607.0,
         356.0
       ],
-      "raw_output": "```json\n{\"point_2d\": [650, 356], \"label\": \"gripper trajectory\"}\n```",
-      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt01/seed8300_right_repeat0.txt",
-      "raw_output_sha256": "d6e476f1e189bc162c8610a08055da1a7d93d190596169afe754cb301451cfb9",
+      "raw_output": "```json\n{\"point_2d\": [607, 356], \"label\": \"gripper trajectory\"}\n```",
+      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt02_corrected_neutral/seed8300_right_repeat0.txt",
+      "raw_output_sha256": "a4d765458b2c18cab2ac8056b99f10067e60e98220c516ca12f10bc194c1f24c",
       "relation": "right",
       "repeat": 0,
       "task_instruction": "Put the Rubik's cube to the right of the bowl.",
@@ -136,16 +136,16 @@
     },
     {
       "environment_seed": 8300,
-      "fixture_sha256": "45b3509527778188fa03a8ba273ffc7b53c36d60847be6327152544118fddbdb",
+      "fixture_sha256": "e3ed8015c4ff5cb128fa8273f57a62432b14ae562e25f683a45972cbbbebd770",
       "json_parsed": true,
       "label": "gripper trajectory",
       "point_2d": [
-        650.0,
+        607.0,
         356.0
       ],
-      "raw_output": "```json\n{\"point_2d\": [650, 356], \"label\": \"gripper trajectory\"}\n```",
-      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt01/seed8300_right_repeat1.txt",
-      "raw_output_sha256": "d6e476f1e189bc162c8610a08055da1a7d93d190596169afe754cb301451cfb9",
+      "raw_output": "```json\n{\"point_2d\": [607, 356], \"label\": \"gripper trajectory\"}\n```",
+      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt02_corrected_neutral/seed8300_right_repeat1.txt",
+      "raw_output_sha256": "a4d765458b2c18cab2ac8056b99f10067e60e98220c516ca12f10bc194c1f24c",
       "relation": "right",
       "repeat": 1,
       "task_instruction": "Put the Rubik's cube to the right of the bowl.",
@@ -153,50 +153,50 @@
     },
     {
       "environment_seed": 8301,
-      "fixture_sha256": "7259f4596d6e8b165d15b10dac11825c4029adcb18f927d21ad78e4e41482a59",
+      "fixture_sha256": "2bdeff27b9c73714722e94db3ffa681ac31d5656acdfb12bb481269b8c6e92c5",
       "json_parsed": true,
       "label": "gripper trajectory",
       "point_2d": [
-        650.0,
-        533.0
-      ],
-      "raw_output": "```json\n{\"point_2d\": [650, 533], \"label\": \"gripper trajectory\"}\n```",
-      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt01/seed8301_left_repeat0.txt",
-      "raw_output_sha256": "56e7237fbb8da2ff4728d48709cbc65635cc0cb0f24adfd71108cdf672204c74",
-      "relation": "left",
-      "repeat": 0,
-      "task_instruction": "Put the Rubik's cube to the left of the bowl.",
-      "user_prompt": "You are given the task \"Put the Rubik's cube to the left of the bowl.\". Specify the 2D trajectory your end effector should follow in pixel space. Return the trajectory coordinates in JSON format like this: {\"point_2d\": [x, y], \"label\": \"gripper trajectory\"}."
-    },
-    {
-      "environment_seed": 8301,
-      "fixture_sha256": "7259f4596d6e8b165d15b10dac11825c4029adcb18f927d21ad78e4e41482a59",
-      "json_parsed": true,
-      "label": "gripper trajectory",
-      "point_2d": [
-        650.0,
-        533.0
-      ],
-      "raw_output": "```json\n{\"point_2d\": [650, 533], \"label\": \"gripper trajectory\"}\n```",
-      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt01/seed8301_left_repeat1.txt",
-      "raw_output_sha256": "56e7237fbb8da2ff4728d48709cbc65635cc0cb0f24adfd71108cdf672204c74",
-      "relation": "left",
-      "repeat": 1,
-      "task_instruction": "Put the Rubik's cube to the left of the bowl.",
-      "user_prompt": "You are given the task \"Put the Rubik's cube to the left of the bowl.\". Specify the 2D trajectory your end effector should follow in pixel space. Return the trajectory coordinates in JSON format like this: {\"point_2d\": [x, y], \"label\": \"gripper trajectory\"}."
-    },
-    {
-      "environment_seed": 8301,
-      "fixture_sha256": "7259f4596d6e8b165d15b10dac11825c4029adcb18f927d21ad78e4e41482a59",
-      "json_parsed": true,
-      "label": "gripper trajectory",
-      "point_2d": [
-        650.0,
+        607.0,
         356.0
       ],
-      "raw_output": "```json\n{\"point_2d\": [650, 356], \"label\": \"gripper trajectory\"}\n```",
-      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt01/seed8301_right_repeat0.txt",
-      "raw_output_sha256": "d6e476f1e189bc162c8610a08055da1a7d93d190596169afe754cb301451cfb9",
+      "raw_output": "```json\n{\"point_2d\": [607, 356], \"label\": \"gripper trajectory\"}\n```",
+      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt02_corrected_neutral/seed8301_left_repeat0.txt",
+      "raw_output_sha256": "a4d765458b2c18cab2ac8056b99f10067e60e98220c516ca12f10bc194c1f24c",
+      "relation": "left",
+      "repeat": 0,
+      "task_instruction": "Put the Rubik's cube to the left of the bowl.",
+      "user_prompt": "You are given the task \"Put the Rubik's cube to the left of the bowl.\". Specify the 2D trajectory your end effector should follow in pixel space. Return the trajectory coordinates in JSON format like this: {\"point_2d\": [x, y], \"label\": \"gripper trajectory\"}."
+    },
+    {
+      "environment_seed": 8301,
+      "fixture_sha256": "2bdeff27b9c73714722e94db3ffa681ac31d5656acdfb12bb481269b8c6e92c5",
+      "json_parsed": true,
+      "label": "gripper trajectory",
+      "point_2d": [
+        607.0,
+        356.0
+      ],
+      "raw_output": "```json\n{\"point_2d\": [607, 356], \"label\": \"gripper trajectory\"}\n```",
+      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt02_corrected_neutral/seed8301_left_repeat1.txt",
+      "raw_output_sha256": "a4d765458b2c18cab2ac8056b99f10067e60e98220c516ca12f10bc194c1f24c",
+      "relation": "left",
+      "repeat": 1,
+      "task_instruction": "Put the Rubik's cube to the left of the bowl.",
+      "user_prompt": "You are given the task \"Put the Rubik's cube to the left of the bowl.\". Specify the 2D trajectory your end effector should follow in pixel space. Return the trajectory coordinates in JSON format like this: {\"point_2d\": [x, y], \"label\": \"gripper trajectory\"}."
+    },
+    {
+      "environment_seed": 8301,
+      "fixture_sha256": "2bdeff27b9c73714722e94db3ffa681ac31d5656acdfb12bb481269b8c6e92c5",
+      "json_parsed": true,
+      "label": "gripper trajectory",
+      "point_2d": [
+        619.0,
+        356.0
+      ],
+      "raw_output": "```json\n{\"point_2d\": [619, 356], \"label\": \"gripper trajectory\"}\n```",
+      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt02_corrected_neutral/seed8301_right_repeat0.txt",
+      "raw_output_sha256": "6aa35751e2bfb17c71e54580906b7872dfb27abcad36ea0131362a78ef8afae5",
       "relation": "right",
       "repeat": 0,
       "task_instruction": "Put the Rubik's cube to the right of the bowl.",
@@ -204,16 +204,16 @@
     },
     {
       "environment_seed": 8301,
-      "fixture_sha256": "7259f4596d6e8b165d15b10dac11825c4029adcb18f927d21ad78e4e41482a59",
+      "fixture_sha256": "2bdeff27b9c73714722e94db3ffa681ac31d5656acdfb12bb481269b8c6e92c5",
       "json_parsed": true,
       "label": "gripper trajectory",
       "point_2d": [
-        650.0,
+        619.0,
         356.0
       ],
-      "raw_output": "```json\n{\"point_2d\": [650, 356], \"label\": \"gripper trajectory\"}\n```",
-      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt01/seed8301_right_repeat1.txt",
-      "raw_output_sha256": "d6e476f1e189bc162c8610a08055da1a7d93d190596169afe754cb301451cfb9",
+      "raw_output": "```json\n{\"point_2d\": [619, 356], \"label\": \"gripper trajectory\"}\n```",
+      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt02_corrected_neutral/seed8301_right_repeat1.txt",
+      "raw_output_sha256": "6aa35751e2bfb17c71e54580906b7872dfb27abcad36ea0131362a78ef8afae5",
       "relation": "right",
       "repeat": 1,
       "task_instruction": "Put the Rubik's cube to the right of the bowl.",
@@ -221,16 +221,16 @@
     },
     {
       "environment_seed": 8302,
-      "fixture_sha256": "3ff0ed881f7ffdd683d7c5429fcabfd8ce9f3d7891ccce726feb08f5603d666c",
+      "fixture_sha256": "971216f91a55cec6024d311c59cac929b4dd0296a4ec6808bfa7b58098d1a04f",
       "json_parsed": true,
       "label": "gripper trajectory",
       "point_2d": [
-        650.0,
-        533.0
+        607.0,
+        356.0
       ],
-      "raw_output": "```json\n{\"point_2d\": [650, 533], \"label\": \"gripper trajectory\"}\n```",
-      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt01/seed8302_left_repeat0.txt",
-      "raw_output_sha256": "56e7237fbb8da2ff4728d48709cbc65635cc0cb0f24adfd71108cdf672204c74",
+      "raw_output": "```json\n{\"point_2d\": [607, 356], \"label\": \"gripper trajectory\"}\n```",
+      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt02_corrected_neutral/seed8302_left_repeat0.txt",
+      "raw_output_sha256": "a4d765458b2c18cab2ac8056b99f10067e60e98220c516ca12f10bc194c1f24c",
       "relation": "left",
       "repeat": 0,
       "task_instruction": "Put the Rubik's cube to the left of the bowl.",
@@ -238,16 +238,16 @@
     },
     {
       "environment_seed": 8302,
-      "fixture_sha256": "3ff0ed881f7ffdd683d7c5429fcabfd8ce9f3d7891ccce726feb08f5603d666c",
+      "fixture_sha256": "971216f91a55cec6024d311c59cac929b4dd0296a4ec6808bfa7b58098d1a04f",
       "json_parsed": true,
       "label": "gripper trajectory",
       "point_2d": [
-        650.0,
-        533.0
+        607.0,
+        356.0
       ],
-      "raw_output": "```json\n{\"point_2d\": [650, 533], \"label\": \"gripper trajectory\"}\n```",
-      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt01/seed8302_left_repeat1.txt",
-      "raw_output_sha256": "56e7237fbb8da2ff4728d48709cbc65635cc0cb0f24adfd71108cdf672204c74",
+      "raw_output": "```json\n{\"point_2d\": [607, 356], \"label\": \"gripper trajectory\"}\n```",
+      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt02_corrected_neutral/seed8302_left_repeat1.txt",
+      "raw_output_sha256": "a4d765458b2c18cab2ac8056b99f10067e60e98220c516ca12f10bc194c1f24c",
       "relation": "left",
       "repeat": 1,
       "task_instruction": "Put the Rubik's cube to the left of the bowl.",
@@ -255,16 +255,16 @@
     },
     {
       "environment_seed": 8302,
-      "fixture_sha256": "3ff0ed881f7ffdd683d7c5429fcabfd8ce9f3d7891ccce726feb08f5603d666c",
+      "fixture_sha256": "971216f91a55cec6024d311c59cac929b4dd0296a4ec6808bfa7b58098d1a04f",
       "json_parsed": true,
       "label": "gripper trajectory",
       "point_2d": [
-        650.0,
-        533.0
+        607.0,
+        356.0
       ],
-      "raw_output": "```json\n{\"point_2d\": [650, 533], \"label\": \"gripper trajectory\"}\n```",
-      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt01/seed8302_right_repeat0.txt",
-      "raw_output_sha256": "56e7237fbb8da2ff4728d48709cbc65635cc0cb0f24adfd71108cdf672204c74",
+      "raw_output": "```json\n{\"point_2d\": [607, 356], \"label\": \"gripper trajectory\"}\n```",
+      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt02_corrected_neutral/seed8302_right_repeat0.txt",
+      "raw_output_sha256": "a4d765458b2c18cab2ac8056b99f10067e60e98220c516ca12f10bc194c1f24c",
       "relation": "right",
       "repeat": 0,
       "task_instruction": "Put the Rubik's cube to the right of the bowl.",
@@ -272,16 +272,16 @@
     },
     {
       "environment_seed": 8302,
-      "fixture_sha256": "3ff0ed881f7ffdd683d7c5429fcabfd8ce9f3d7891ccce726feb08f5603d666c",
+      "fixture_sha256": "971216f91a55cec6024d311c59cac929b4dd0296a4ec6808bfa7b58098d1a04f",
       "json_parsed": true,
       "label": "gripper trajectory",
       "point_2d": [
-        650.0,
-        533.0
+        607.0,
+        356.0
       ],
-      "raw_output": "```json\n{\"point_2d\": [650, 533], \"label\": \"gripper trajectory\"}\n```",
-      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt01/seed8302_right_repeat1.txt",
-      "raw_output_sha256": "56e7237fbb8da2ff4728d48709cbc65635cc0cb0f24adfd71108cdf672204c74",
+      "raw_output": "```json\n{\"point_2d\": [607, 356], \"label\": \"gripper trajectory\"}\n```",
+      "raw_output_path": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt02_corrected_neutral/seed8302_right_repeat1.txt",
+      "raw_output_sha256": "a4d765458b2c18cab2ac8056b99f10067e60e98220c516ca12f10bc194c1f24c",
       "relation": "right",
       "repeat": 1,
       "task_instruction": "Put the Rubik's cube to the right of the bowl.",
@@ -289,15 +289,9 @@
     }
   ],
   "schema_version": "vla-wam-shared-v2-cosmos-reason2-static-diagnostic-v1",
-  "status": "excluded_invalid_fixture",
-  "fixture_validity": {
-    "audit_result": "failed_after_inference",
-    "reason": "A deeper source-HDF5 audit found the upstream scene started with the cube already directional (cube world y=-0.097 versus bowl y=+0.127), rather than the frozen neutral v2 reset (cube [0.3033646, 0.1239689, 0.0811057], lateral separation approximately 0.00263, neither cone true).",
-    "denominator_policy": "All 12 calls are retained as an infrastructure-invalid attempt and excluded from every diagnostic or behavioral estimate.",
-    "replacement_required": true
-  },
+  "status": "complete",
   "summary": {
-    "aligned_requested_side_pair_count": 0,
+    "aligned_requested_side_pair_count": 1,
     "call_count": 12,
     "exact_repeat_condition_count": 6,
     "exact_repeat_condition_total": 6,

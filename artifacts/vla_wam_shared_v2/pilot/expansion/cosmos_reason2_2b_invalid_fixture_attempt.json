@@ -1,0 +1,19 @@
+{
+  "schema_version": "vla-wam-shared-v2-cosmos-reason2-invalid-attempt-v1",
+  "status": "excluded_invalid_fixture",
+  "model_id": "nvidia/Cosmos-Reason2-2B",
+  "model_revision": "9ce19a195e423419c349abfc86fd07178b230561",
+  "raw_root": "/data/users/ali/vla_wam/raw/cosmos_reason2/static_diagnostic_attempt01",
+  "call_count": 12,
+  "valid_diagnostic_call_count": 0,
+  "fixture_sha256": {
+    "8300": "45b3509527778188fa03a8ba273ffc7b53c36d60847be6327152544118fddbdb",
+    "8301": "7259f4596d6e8b165d15b10dac11825c4029adcb18f927d21ad78e4e41482a59",
+    "8302": "3ff0ed881f7ffdd683d7c5429fcabfd8ce9f3d7891ccce726feb08f5603d666c"
+  },
+  "fixture_audit_failure": "A deeper source-HDF5 audit found the upstream scene started with the cube already directional (cube world y=-0.097 versus bowl y=+0.127), not at the frozen neutral reset.",
+  "quarantine_root": "/data/users/ali/vla_wam/raw/groot_n17_droid/invalid_attempts/upstream_biased_scene",
+  "historical_full_compact_artifact_commit": "af2f52c",
+  "historical_full_compact_artifact_sha256": "38f0baf490b012e95854a65b5715d07641b673bbc96a74ec9b4a5fc0adca813e",
+  "denominator_policy": "Retained for provenance but excluded from every diagnostic and behavioral estimate."
+}

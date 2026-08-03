@@ -1,0 +1,79 @@
+{
+  "schema_version": "vla-wam-shared-v2-invalid-attempt-ledger-v1",
+  "amendment_id": "V2-A007",
+  "model": "GEAR-Dreams/DreamZero-DROID",
+  "denominator_policy": "Every entry is infrastructure- or contract-invalid and is excluded from model denominators. Raw outputs remain on the ali-owned PVC.",
+  "attempts": [
+    {
+      "attempt_id": "renderer_reset_gate_initial_native_preflights",
+      "stage": "setup",
+      "model_requests": 0,
+      "behavior_actions_executed": 0,
+      "reason": "Initial model-free Isaac launches stopped before a valid exact-scene fixture because the portable environment inherited an unwritable cache, the selected Vulkan ICD path was absent, and libGLU/libXt dependencies were missing. One retry overlapped another exact-scene preflight and segfaulted during RTX plugin teardown.",
+      "preserved_raw_log": "/data/users/ali/vla_wam/raw/dreamzero_droid/v2_a007/renderer_reset_gate/preflight_stdout.log",
+      "preserved_raw_log_sha256": "ea56cb55e866fdbf4f4eb96e55a8c0ced5f3081232265d1ddd130cfddfdf2c0f",
+      "resolution": "Selected the live /etc/vulkan/icd.d/nvidia_icd.json mount, isolated writable caches, prevented concurrent Isaac launches, and staged the missing Ubuntu 22.04 native libraries in a user-owned PVC prefix.",
+      "denominator_status": "excluded"
+    },
+    {
+      "attempt_id": "renderer_reset_gate_attempt03",
+      "stage": "setup",
+      "model_requests": 0,
+      "behavior_actions_executed": 0,
+      "reason": "Vulkan recognized the RTX device, but libGLU/libXt were still missing and an overlapping preflight left the MDL renderer startup invalid.",
+      "preserved_raw_log": "/data/users/ali/vla_wam/raw/dreamzero_droid/v2_a007/renderer_reset_gate_attempt03/stdout.log",
+      "preserved_raw_log_sha256": "5c4232fc379873e800f8b3ba486bbbf886cb83ddd5c5e9e8714419dd847160a7",
+      "denominator_status": "excluded"
+    },
+    {
+      "attempt_id": "renderer_reset_gate_attempt04",
+      "stage": "adapter_preflight",
+      "model_requests": 0,
+      "behavior_actions_executed": 0,
+      "reason": "The isolated native-library repair allowed exact-scene creation, but buffered shutdown hid the downstream missing-right-camera adapter exception and no fixture or manifest was produced.",
+      "preserved_raw_log": "/data/users/ali/vla_wam/raw/dreamzero_droid/v2_a007/renderer_reset_gate_attempt04/stdout.log",
+      "preserved_raw_log_sha256": "8bdbd5ff090ac813f7f5bccdccc580fe42c4a72ab03f282d5dc829ae93044b82",
+      "resolution": "Added durable milestone and technical-failure retention before the Isaac shutdown path.",
+      "denominator_status": "excluded"
+    },
+    {
+      "attempt_id": "renderer_reset_gate_attempt05",
+      "stage": "adapter_preflight",
+      "model_requests": 0,
+      "behavior_actions_executed": 0,
+      "reason": "The neutral reset and both false predicates passed, then the official DreamZero adapter raised KeyError: over_shoulder_right_camera because the default RoboLab registration exposed only left-shoulder and wrist image observations.",
+      "preserved_raw_log": "/data/users/ali/vla_wam/raw/dreamzero_droid/v2_a007/renderer_reset_gate_attempt05/stdout.log",
+      "preserved_raw_log_sha256": "a19a105c1a7c380101200a1920a94030a793c93c2c81ec251408a18b1870b669",
+      "technical_failure": "/data/users/ali/vla_wam/raw/dreamzero_droid/v2_a007/renderer_reset_gate_attempt05/technical_failure.json",
+      "technical_failure_sha256": "ebe99397b3a771be79e05a1587952d8698645ffd3e667e55eda6c3c4024e8763",
+      "resolution": "Use RoboLab's upstream WRIST_LEFT_RIGHT policy-camera preset, which adds the official mirrored right-shoulder sensor without changing objects, reset state, or predicates.",
+      "denominator_status": "excluded"
+    },
+    {
+      "attempt_id": "renderer_reset_gate_attempt06",
+      "stage": "adapter_preflight",
+      "model_requests": 0,
+      "behavior_actions_executed": 0,
+      "reason": "A first camera repair referenced a configclass field at class scope and failed during task import before scene creation.",
+      "preserved_raw_log": "/data/users/ali/vla_wam/raw/dreamzero_droid/v2_a007/renderer_reset_gate_attempt06/stdout.log",
+      "preserved_raw_log_sha256": "aeb0f793278d3fe7fce8d3330f1af3bb8997b35e44b9e55cbcf598ceca7b3f61",
+      "denominator_status": "excluded"
+    },
+    {
+      "attempt_id": "renderer_reset_gate_attempt07",
+      "stage": "adapter_preflight",
+      "model_requests": 0,
+      "behavior_actions_executed": 0,
+      "reason": "The right camera sensor was attached at the task scene layer but not added to RoboLab's image-observation group, so the official adapter still rejected the observation.",
+      "preserved_raw_log": "/data/users/ali/vla_wam/raw/dreamzero_droid/v2_a007/renderer_reset_gate_attempt07/stdout.log",
+      "preserved_raw_log_sha256": "970de4fcf811f71d4155a6553f1c611ba6c98cca8ba97fcf354884477879c759",
+      "technical_failure": "/data/users/ali/vla_wam/raw/dreamzero_droid/v2_a007/renderer_reset_gate_attempt07/technical_failure.json",
+      "technical_failure_sha256": "ebe99397b3a771be79e05a1587952d8698645ffd3e667e55eda6c3c4024e8763",
+      "resolution": "Replaced the task-local camera edit with the upstream WRIST_LEFT_RIGHT registration preset for both sensors and observation terms.",
+      "denominator_status": "excluded"
+    }
+  ],
+  "valid_run_interventions": [],
+  "valid_invalid_attempt_count": 0,
+  "next_command": "Complete the exact two-B200 official DreamZero server gate on isolated port 18017, then run the fixed-observation exact-repeat and LEFT/RIGHT prompt-only sensitivity probe. Do not start a behavioral cell until it passes."
+}

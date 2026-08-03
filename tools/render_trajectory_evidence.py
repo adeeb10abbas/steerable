@@ -736,7 +736,7 @@ def _write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
     fieldnames = [key for key in rows[0] if key not in excluded]
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer = csv.DictWriter(handle, fieldnames=fieldnames, lineterminator="\n")
         writer.writeheader()
         for row in rows:
             writer.writerow({key: row[key] for key in fieldnames})

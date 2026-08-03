@@ -1,0 +1,368 @@
+{
+  "all_episode_policy": "Render and index every one of the 160 registered direct-language episodes. No episode may be removed from the evidence gallery because it is visually inconvenient or contradicts the narrative.",
+  "blog_outputs": {
+    "all_executed_paths_and_endpoints": "artifacts/vla_wam_shared_v1/trajectory_evidence/blog/all_executed_paths_and_endpoints.png",
+    "failure_progress_anatomy": "artifacts/vla_wam_shared_v1/trajectory_evidence/blog/failure_progress_anatomy.png"
+  },
+  "coordinate_convention": "page x = -robot-frame y, so robot-left appears left; page y = robot-frame x (forward)",
+  "expected_episode_count": 160,
+  "failure_count": 77,
+  "group_summaries": [
+    {
+      "direction": "left",
+      "endpoint_class_counts": {
+        "neutral_region": 2,
+        "opposite_region": 1,
+        "requested_region": 7
+      },
+      "episodes": 10,
+      "failures": 3,
+      "model_id": "cosmos3_edge_droid_wam",
+      "outcome_stage_counts": {
+        "ended_in_goal_without_terminal_success": 0,
+        "entered_goal_then_lost_it": 0,
+        "interaction_without_verified_pickup": 0,
+        "no_cube_interaction": 0,
+        "picked_never_entered_goal": 3,
+        "success": 7
+      },
+      "successes": 7,
+      "wording": "canonical"
+    },
+    {
+      "direction": "right",
+      "endpoint_class_counts": {
+        "neutral_region": 1,
+        "requested_region": 9
+      },
+      "episodes": 10,
+      "failures": 2,
+      "model_id": "cosmos3_edge_droid_wam",
+      "outcome_stage_counts": {
+        "ended_in_goal_without_terminal_success": 1,
+        "entered_goal_then_lost_it": 0,
+        "interaction_without_verified_pickup": 0,
+        "no_cube_interaction": 0,
+        "picked_never_entered_goal": 1,
+        "success": 8
+      },
+      "successes": 8,
+      "wording": "canonical"
+    },
+    {
+      "direction": "left",
+      "endpoint_class_counts": {
+        "neutral_region": 6,
+        "opposite_region": 3,
+        "requested_region": 1
+      },
+      "episodes": 10,
+      "failures": 9,
+      "model_id": "cosmos3_edge_droid_wam",
+      "outcome_stage_counts": {
+        "ended_in_goal_without_terminal_success": 0,
+        "entered_goal_then_lost_it": 0,
+        "interaction_without_verified_pickup": 0,
+        "no_cube_interaction": 0,
+        "picked_never_entered_goal": 9,
+        "success": 1
+      },
+      "successes": 1,
+      "wording": "contrastive_goal"
+    },
+    {
+      "direction": "right",
+      "endpoint_class_counts": {
+        "opposite_region": 1,
+        "requested_region": 9
+      },
+      "episodes": 10,
+      "failures": 1,
+      "model_id": "cosmos3_edge_droid_wam",
+      "outcome_stage_counts": {
+        "ended_in_goal_without_terminal_success": 0,
+        "entered_goal_then_lost_it": 0,
+        "interaction_without_verified_pickup": 0,
+        "no_cube_interaction": 0,
+        "picked_never_entered_goal": 1,
+        "success": 9
+      },
+      "successes": 9,
+      "wording": "contrastive_goal"
+    },
+    {
+      "direction": "left",
+      "endpoint_class_counts": {
+        "requested_region": 10
+      },
+      "episodes": 10,
+      "failures": 0,
+      "model_id": "cosmos3_edge_droid_wam",
+      "outcome_stage_counts": {
+        "ended_in_goal_without_terminal_success": 0,
+        "entered_goal_then_lost_it": 0,
+        "interaction_without_verified_pickup": 0,
+        "no_cube_interaction": 0,
+        "picked_never_entered_goal": 0,
+        "success": 10
+      },
+      "successes": 10,
+      "wording": "declarative_goal"
+    },
+    {
+      "direction": "right",
+      "endpoint_class_counts": {
+        "neutral_region": 1,
+        "requested_region": 9
+      },
+      "episodes": 10,
+      "failures": 1,
+      "model_id": "cosmos3_edge_droid_wam",
+      "outcome_stage_counts": {
+        "ended_in_goal_without_terminal_success": 0,
+        "entered_goal_then_lost_it": 0,
+        "interaction_without_verified_pickup": 0,
+        "no_cube_interaction": 0,
+        "picked_never_entered_goal": 1,
+        "success": 9
+      },
+      "successes": 9,
+      "wording": "declarative_goal"
+    },
+    {
+      "direction": "left",
+      "endpoint_class_counts": {
+        "neutral_region": 3,
+        "opposite_region": 3,
+        "requested_region": 4
+      },
+      "episodes": 10,
+      "failures": 6,
+      "model_id": "cosmos3_edge_droid_wam",
+      "outcome_stage_counts": {
+        "ended_in_goal_without_terminal_success": 0,
+        "entered_goal_then_lost_it": 0,
+        "interaction_without_verified_pickup": 0,
+        "no_cube_interaction": 0,
+        "picked_never_entered_goal": 6,
+        "success": 4
+      },
+      "successes": 4,
+      "wording": "short_paraphrase"
+    },
+    {
+      "direction": "right",
+      "endpoint_class_counts": {
+        "requested_region": 10
+      },
+      "episodes": 10,
+      "failures": 0,
+      "model_id": "cosmos3_edge_droid_wam",
+      "outcome_stage_counts": {
+        "ended_in_goal_without_terminal_success": 0,
+        "entered_goal_then_lost_it": 0,
+        "interaction_without_verified_pickup": 0,
+        "no_cube_interaction": 0,
+        "picked_never_entered_goal": 0,
+        "success": 10
+      },
+      "successes": 10,
+      "wording": "short_paraphrase"
+    },
+    {
+      "direction": "left",
+      "endpoint_class_counts": {
+        "neutral_region": 10
+      },
+      "episodes": 10,
+      "failures": 10,
+      "model_id": "pi05_droid_vla",
+      "outcome_stage_counts": {
+        "ended_in_goal_without_terminal_success": 0,
+        "entered_goal_then_lost_it": 0,
+        "interaction_without_verified_pickup": 0,
+        "no_cube_interaction": 6,
+        "picked_never_entered_goal": 4,
+        "success": 0
+      },
+      "successes": 0,
+      "wording": "canonical"
+    },
+    {
+      "direction": "right",
+      "endpoint_class_counts": {
+        "neutral_region": 2,
+        "requested_region": 8
+      },
+      "episodes": 10,
+      "failures": 2,
+      "model_id": "pi05_droid_vla",
+      "outcome_stage_counts": {
+        "ended_in_goal_without_terminal_success": 0,
+        "entered_goal_then_lost_it": 0,
+        "interaction_without_verified_pickup": 0,
+        "no_cube_interaction": 0,
+        "picked_never_entered_goal": 2,
+        "success": 8
+      },
+      "successes": 8,
+      "wording": "canonical"
+    },
+    {
+      "direction": "left",
+      "endpoint_class_counts": {
+        "neutral_region": 8,
+        "requested_region": 2
+      },
+      "episodes": 10,
+      "failures": 8,
+      "model_id": "pi05_droid_vla",
+      "outcome_stage_counts": {
+        "ended_in_goal_without_terminal_success": 0,
+        "entered_goal_then_lost_it": 0,
+        "interaction_without_verified_pickup": 0,
+        "no_cube_interaction": 4,
+        "picked_never_entered_goal": 4,
+        "success": 2
+      },
+      "successes": 2,
+      "wording": "contrastive_goal"
+    },
+    {
+      "direction": "right",
+      "endpoint_class_counts": {
+        "neutral_region": 8,
+        "requested_region": 2
+      },
+      "episodes": 10,
+      "failures": 8,
+      "model_id": "pi05_droid_vla",
+      "outcome_stage_counts": {
+        "ended_in_goal_without_terminal_success": 0,
+        "entered_goal_then_lost_it": 0,
+        "interaction_without_verified_pickup": 0,
+        "no_cube_interaction": 2,
+        "picked_never_entered_goal": 6,
+        "success": 2
+      },
+      "successes": 2,
+      "wording": "contrastive_goal"
+    },
+    {
+      "direction": "left",
+      "endpoint_class_counts": {
+        "neutral_region": 10
+      },
+      "episodes": 10,
+      "failures": 10,
+      "model_id": "pi05_droid_vla",
+      "outcome_stage_counts": {
+        "ended_in_goal_without_terminal_success": 0,
+        "entered_goal_then_lost_it": 0,
+        "interaction_without_verified_pickup": 0,
+        "no_cube_interaction": 5,
+        "picked_never_entered_goal": 5,
+        "success": 0
+      },
+      "successes": 0,
+      "wording": "declarative_goal"
+    },
+    {
+      "direction": "right",
+      "endpoint_class_counts": {
+        "neutral_region": 3,
+        "requested_region": 7
+      },
+      "episodes": 10,
+      "failures": 3,
+      "model_id": "pi05_droid_vla",
+      "outcome_stage_counts": {
+        "ended_in_goal_without_terminal_success": 0,
+        "entered_goal_then_lost_it": 0,
+        "interaction_without_verified_pickup": 0,
+        "no_cube_interaction": 0,
+        "picked_never_entered_goal": 3,
+        "success": 7
+      },
+      "successes": 7,
+      "wording": "declarative_goal"
+    },
+    {
+      "direction": "left",
+      "endpoint_class_counts": {
+        "neutral_region": 9,
+        "requested_region": 1
+      },
+      "episodes": 10,
+      "failures": 9,
+      "model_id": "pi05_droid_vla",
+      "outcome_stage_counts": {
+        "ended_in_goal_without_terminal_success": 0,
+        "entered_goal_then_lost_it": 0,
+        "interaction_without_verified_pickup": 0,
+        "no_cube_interaction": 5,
+        "picked_never_entered_goal": 4,
+        "success": 1
+      },
+      "successes": 1,
+      "wording": "short_paraphrase"
+    },
+    {
+      "direction": "right",
+      "endpoint_class_counts": {
+        "neutral_region": 4,
+        "opposite_region": 1,
+        "requested_region": 5
+      },
+      "episodes": 10,
+      "failures": 5,
+      "model_id": "pi05_droid_vla",
+      "outcome_stage_counts": {
+        "ended_in_goal_without_terminal_success": 0,
+        "entered_goal_then_lost_it": 0,
+        "interaction_without_verified_pickup": 0,
+        "no_cube_interaction": 1,
+        "picked_never_entered_goal": 4,
+        "success": 5
+      },
+      "successes": 5,
+      "wording": "short_paraphrase"
+    }
+  ],
+  "illustrative_route_disclaimer": "The dashed direct route is explanatory only and is not a scored or claimed ground-truth trajectory.",
+  "manifest": "/home/ali/projects/steerable/artifacts/vla_wam_shared_v1/run_manifest.json",
+  "manifest_sha256": "eadac021a1b96544daf1300843aa9ec243f7d3bd7f1a7c0814c0c3bc06f23b2c",
+  "missing": [],
+  "missing_episode_count": 0,
+  "model_counts": {
+    "cosmos3_edge_droid_wam": 80,
+    "pi05_droid_vla": 80
+  },
+  "outcome_counts": {
+    "failure": 77,
+    "success": 83
+  },
+  "outcome_stage_counts": {
+    "ended_in_goal_without_terminal_success": 1,
+    "entered_goal_then_lost_it": 0,
+    "interaction_without_verified_pickup": 0,
+    "no_cube_interaction": 23,
+    "picked_never_entered_goal": 53,
+    "success": 83
+  },
+  "rendered_episode_count": 160,
+  "schema_version": "1.0.0",
+  "scored_goal": "released cube inside the requested RoboLab 45-degree horizontal cone",
+  "selection_plan": "/home/ali/projects/steerable/artifacts/vla_wam_shared_v1/trajectory_visualization_plan.json",
+  "selection_plan_sha256": "c62384820992e95d06c36b2a6d41d75005b94a66d8fefbd9cf1d79b120a706f5",
+  "social_outputs": {
+    "failure_progress_anatomy_1200x1200.png": "artifacts/vla_wam_shared_v1/trajectory_evidence/social/failure_progress_anatomy_1200x1200.png",
+    "first_seed_stress_landscape_1600x900.png": "artifacts/vla_wam_shared_v1/trajectory_evidence/social/first_seed_stress_landscape_1600x900.png",
+    "first_seed_stress_square_1200x1200.png": "artifacts/vla_wam_shared_v1/trajectory_evidence/social/first_seed_stress_square_1200x1200.png",
+    "retrospective_wording_discordance_1600x900.png": "artifacts/vla_wam_shared_v1/trajectory_evidence/social/retrospective_wording_discordance_1600x900.png",
+    "steerability_scorecard_1200x1200.png": "artifacts/vla_wam_shared_v1/trajectory_evidence/social/steerability_scorecard_1200x1200.png",
+    "steerability_scorecard_1600x900.png": "artifacts/vla_wam_shared_v1/trajectory_evidence/social/steerability_scorecard_1600x900.png"
+  },
+  "status": "complete",
+  "success_count": 83
+}

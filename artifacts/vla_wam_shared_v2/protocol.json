@@ -319,6 +319,20 @@
       "reason": "The first Efficient-WAM-RT pilot exposed that exact guidance, horizon, predicted-future, and renderer settings must be machine-readable alongside the prompt grid. Record Efficient-WAM-RT's unchanged actual settings retrospectively and freeze FastWAM and LingBot-VA settings before their v2 inference.",
       "cost_effect": "None.",
       "artifact": "artifacts/vla_wam_shared_v2/pilot/execution_configs.json"
+    },
+    {
+      "id": "V2-A004_robotwin_directional_confirmation",
+      "recorded_at_utc": "2026-08-03T03:29:32Z",
+      "inference_completed_before_amendment": 18,
+      "affected_completed_models": [
+        "efficient_wam_rt_robotwin",
+        "fastwam_robotwin",
+        "lingbot_va_robotwin"
+      ],
+      "known_pilot_outcomes": "Efficient-WAM-RT LEFT 2/3 versus RIGHT 0/3; FastWAM LEFT 1/3 versus RIGHT 0/3; LingBot-VA LEFT 3/3 versus RIGHT 0/3.",
+      "reason": "All three runnable RoboTwin WAMs triggered the frozen one-direction-only branch. Freeze the same seven additional scene pairs for a ten-scene direct-command directional confirmation before running any expansion cell.",
+      "cost_effect": "Authorizes 42 additional episodes: seven new scenes times two directions times three models. Authorizes zero wording-robustness episodes.",
+      "artifact": "artifacts/vla_wam_shared_v2/pilot/directional_expansion.json"
     }
   ],
   "second_wave_candidates": [

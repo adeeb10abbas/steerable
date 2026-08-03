@@ -1,0 +1,38 @@
+{
+  "schema_version": "vla-wam-shared-v2-runtime-interventions-v1",
+  "events": [
+    {
+      "id": "LING-RUNTIME-001",
+      "model_id": "lingbot_va_robotwin",
+      "environment_seed": 4300000,
+      "requested_relation": "right",
+      "intervention": "The live worker was paused and resumed repeatedly to cool GPU 0 during joint generation.",
+      "behavioral_result_valid": true,
+      "wall_latency_valid": false
+    },
+    {
+      "id": "LING-RUNTIME-002",
+      "model_id": "lingbot_va_robotwin",
+      "environment_seed": 4300002,
+      "requested_relation": "left",
+      "intervention": "The live worker received one short thermal pause at 87 C and resumed unchanged.",
+      "behavioral_result_valid": true,
+      "wall_latency_valid": false
+    },
+    {
+      "id": "LING-RUNTIME-003",
+      "model_id": "lingbot_va_robotwin",
+      "environment_seed": 4300002,
+      "requested_relation": "right",
+      "intervention": "The live worker was paused and resumed under a thermal guard after GPU 0 reached 91 C.",
+      "behavioral_result_valid": true,
+      "wall_latency_valid": false
+    }
+  ],
+  "uninterrupted_lingbot_cells": [
+    "4300000:left",
+    "4300001:left",
+    "4300001:right"
+  ],
+  "claim_limit": "OS-level pause and resume does not change model state, simulator state, prompt, seed, or action history, so behavior remains valid. Wall time and throughput for interrupted cells are excluded from operational aggregates."
+}

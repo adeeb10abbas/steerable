@@ -59,6 +59,20 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def validate_file_record(
+    workspace: Path,
+    record: dict[str, Any],
+    label: str,
+    checks: list[str],
+) -> None:
+    path = Path(record["path"])
+    if not path.is_absolute():
+        path = workspace / path
+    require(path.is_file(), f"{label} exists", checks)
+    require(path.stat().st_size == record["bytes"], f"{label} byte count matches", checks)
+    require(sha256(path) == record["sha256"], f"{label} hash matches", checks)
+
+
 def require(condition: bool, message: str, checks: list[str]) -> None:
     if not condition:
         raise RuntimeError(message)
@@ -149,12 +163,38 @@ def validate(workspace: Path) -> dict[str, Any]:
     fastwam_result_path = (
         workspace / "artifacts/vla_wam_shared_v2/pilot/results/fastwam_direct_gate.json"
     )
+    lingbot_result_path = (
+        workspace / "artifacts/vla_wam_shared_v2/pilot/results/lingbot_va_direct_gate.json"
+    )
+    runtime_interventions_path = (
+        workspace / "artifacts/vla_wam_shared_v2/pilot/runtime_interventions.json"
+    )
+    directional_expansion_path = (
+        workspace / "artifacts/vla_wam_shared_v2/pilot/directional_expansion.json"
+    )
+    directional_fixtures_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/directional_fixture_validation.json"
+    )
+    paired_media_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/media_index.json"
+    )
+    figures_manifest_path = (
+        workspace / "artifacts/vla_wam_shared_v2/figures/figures_manifest.json"
+    )
     protocol = load_json(protocol_path)
     media = load_json(media_path)
     execution = load_json(execution_path)
     technical = load_json(technical_path)
     efficient_result = load_json(efficient_result_path)
     fastwam_result = load_json(fastwam_result_path)
+    lingbot_result = load_json(lingbot_result_path)
+    runtime_interventions = load_json(runtime_interventions_path)
+    directional_expansion = load_json(directional_expansion_path)
+    directional_fixtures = load_json(directional_fixtures_path)
+    paired_media = load_json(paired_media_path)
+    figures_manifest = load_json(figures_manifest_path)
     checks: list[str] = []
 
     require(
@@ -298,8 +338,11 @@ def validate(workspace: Path) -> dict[str, Any]:
     post_amendments = protocol["post_inference_amendments"]
     require(
         [amendment["id"] for amendment in post_amendments]
-        == ["V2-A003_robotwin_execution_config_registry"],
-        "the post-pilot execution-config amendment is disclosed separately",
+        == [
+            "V2-A003_robotwin_execution_config_registry",
+            "V2-A004_robotwin_directional_confirmation",
+        ],
+        "both post-pilot adaptive amendments are disclosed separately",
         checks,
     )
     require(
@@ -311,6 +354,118 @@ def validate(workspace: Path) -> dict[str, Any]:
         post_amendments[0]["artifact"]
         == "artifacts/vla_wam_shared_v2/pilot/execution_configs.json",
         "the post-pilot amendment points to its machine-readable registry",
+        checks,
+    )
+    require(
+        post_amendments[1]["inference_completed_before_amendment"] == 18,
+        "the directional-confirmation amendment discloses all 18 preceding WAM pilot episodes",
+        checks,
+    )
+    require(
+        post_amendments[1]["artifact"]
+        == "artifacts/vla_wam_shared_v2/pilot/directional_expansion.json",
+        "the directional-confirmation amendment points to its frozen scene registry",
+        checks,
+    )
+
+    require(
+        directional_expansion["status"]
+        == "frozen_before_directional_expansion_inference",
+        "RoboTwin directional expansion is frozen before new expansion inference",
+        checks,
+    )
+    require(
+        directional_expansion["trigger"]["completed_episode_count_before_freeze"]
+        == 18,
+        "directional expansion discloses the 18 known pilot outcomes",
+        checks,
+    )
+    require(
+        directional_expansion["trigger"]["wording_grid_authorized"] is False,
+        "RoboTwin wording grid remains unauthorized after one-direction-only competence",
+        checks,
+    )
+    require(
+        directional_expansion["models"]
+        == [
+            "efficient_wam_rt_robotwin",
+            "fastwam_robotwin",
+            "lingbot_va_robotwin",
+        ],
+        "the same three completed WAM pilots enter directional confirmation",
+        checks,
+    )
+    expansion_scenes = directional_expansion["scenes"]
+    require(
+        len(expansion_scenes) == 10
+        and [scene["environment_seed"] for scene in expansion_scenes]
+        == list(range(4300000, 4300010))
+        and [scene["sampling_seed"] for scene in expansion_scenes]
+        == list(range(8400, 8410)),
+        "directional confirmation freezes ten contiguous exact-pair scenes",
+        checks,
+    )
+    require(
+        [scene["anchor_task"] for scene in expansion_scenes]
+        == [
+            "place_a2b_left",
+            "place_a2b_right",
+            "place_a2b_left",
+            "place_a2b_right",
+            "place_a2b_left",
+            "place_a2b_right",
+            "place_a2b_left",
+            "place_a2b_right",
+            "place_a2b_left",
+            "place_a2b_right",
+        ],
+        "directional confirmation alternates five LEFT and five RIGHT native anchors",
+        checks,
+    )
+    require(
+        sum(scene["phase"] == "completed_pilot" for scene in expansion_scenes) == 3
+        and sum(scene["phase"] == "new_expansion" for scene in expansion_scenes)
+        == 7,
+        "directional confirmation distinguishes three observed and seven prospective scenes",
+        checks,
+    )
+    require(
+        directional_expansion["episode_accounting"]["new_episode_count"] == 42
+        and directional_expansion["episode_accounting"][
+            "final_direct_confirmation_episode_count"
+        ]
+        == 60,
+        "directional expansion arithmetic is 42 new and 60 total direct episodes",
+        checks,
+    )
+    require(
+        directional_expansion["fixture_validation"]["status"]
+        == "completed_valid_before_model_inference"
+        and directional_expansion["fixture_validation"]["artifact"]
+        == "artifacts/vla_wam_shared_v2/pilot/directional_fixture_validation.json",
+        "directional registry points to completed model-blind fixture evidence",
+        checks,
+    )
+    require(
+        directional_fixtures["status"] == "valid"
+        and directional_fixtures["scene_count"] == 7
+        and directional_fixtures["valid_scene_count"] == 7,
+        "all seven prospective RoboTwin fixtures initialize successfully",
+        checks,
+    )
+    require(
+        directional_fixtures["registry_sha256"] == sha256(directional_expansion_path),
+        "fixture report hashes the current frozen directional registry",
+        checks,
+    )
+    require(
+        all(
+            not scene["initially_in_left_region"]
+            and not scene["initially_in_right_region"]
+            and scene["movable_model_name"] != scene["reference_model_name"]
+            for scene in directional_fixtures["scenes"]
+        ),
+        "all prospective scenes begin outside both goal regions with distinct objects",
         checks,
     )
 
@@ -339,6 +494,38 @@ def validate(workspace: Path) -> dict[str, Any]:
             for model_id in ("fastwam_robotwin", "lingbot_va_robotwin")
         ),
         "FastWAM and LingBot-VA execution settings are prospectively frozen",
+        checks,
+    )
+    lingbot_summary = lingbot_result["summary"]
+    require(
+        lingbot_summary["episode_count"] == 6 and lingbot_summary["pair_count"] == 3,
+        "compiled LingBot-VA pilot contains six episodes in three exact pairs",
+        checks,
+    )
+    require(
+        lingbot_summary["by_direction"]["left"]["successes"] == 3
+        and lingbot_summary["by_direction"]["right"]["successes"] == 0,
+        "compiled LingBot-VA pilot preserves the observed 3/3 LEFT and 0/3 RIGHT result",
+        checks,
+    )
+    require(
+        lingbot_summary["pilot_gate_decision"] == "expand_direct_directional_bias_only",
+        "LingBot-VA pilot follows the frozen one-direction-only expansion gate",
+        checks,
+    )
+    require(
+        all(
+            episode["imagined_future_artifact"] is not None
+            and episode["imagined_future_artifact"]["kind"] == "latent_tensor"
+            for episode in lingbot_result["episodes"]
+        ),
+        "all six LingBot-VA cells retain their first predicted latent tensor",
+        checks,
+    )
+    require(
+        lingbot_summary["operational_wall_latency_valid_episodes"] == 3
+        and len(runtime_interventions["events"]) == 3,
+        "three thermally interrupted LingBot wall times are explicitly excluded",
         checks,
     )
     require(
@@ -384,7 +571,7 @@ def validate(workspace: Path) -> dict[str, Any]:
     )
     require(
         all(
-            episode["imagined_future_video"] is None
+            episode["imagined_future_artifact"] is None
             for episode in fastwam_result["episodes"]
         ),
         "FastWAM action-only interface records imagined-video evidence as not applicable",
@@ -432,6 +619,62 @@ def validate(workspace: Path) -> dict[str, Any]:
         "missing media categories must be visible rather than hand substituted",
         checks,
     )
+    require(
+        paired_media["status"] == "complete" and len(paired_media["items"]) == 3,
+        "paired RoboTwin gallery contains three completed model videos",
+        checks,
+    )
+    require(
+        {item["model_id"] for item in paired_media["items"]}
+        == {
+            "efficient_wam_rt_robotwin",
+            "fastwam_robotwin",
+            "lingbot_va_robotwin",
+        },
+        "paired RoboTwin gallery represents every completed WAM pilot",
+        checks,
+    )
+    require(
+        all(item["left"]["success"] and not item["right"]["success"] for item in paired_media["items"]),
+        "each paired gallery item is a disclosed LEFT success and matched RIGHT failure",
+        checks,
+    )
+    fastwam_media = next(
+        item for item in paired_media["items"] if item["model_id"] == "fastwam_robotwin"
+    )
+    require(
+        fastwam_media["source_video_correction"]["classification"]
+        == "source_capture_pixel_layout_reconstruction"
+        and all(
+            item["source_video_correction"] is None
+            for item in paired_media["items"]
+            if item["model_id"] != "fastwam_robotwin"
+        ),
+        "FastWAM pixel-layout reconstruction is explicit and not applied to other models",
+        checks,
+    )
+    for item in paired_media["items"]:
+        for artifact_name in ("video", "poster", "captions"):
+            validate_file_record(
+                workspace,
+                item[artifact_name],
+                f"{item['model_id']} paired {artifact_name}",
+                checks,
+            )
+
+    require(
+        figures_manifest["status"] == "complete"
+        and len(figures_manifest["figures"]) == 12,
+        "reader-first figure manifest contains twelve completed exports",
+        checks,
+    )
+    require(
+        figures_manifest["protocol_sha256"] == sha256(protocol_path),
+        "reader-first figure manifest hashes the current protocol",
+        checks,
+    )
+    for figure_id, record in figures_manifest["figures"].items():
+        validate_file_record(workspace, record, f"figure {figure_id}", checks)
 
     v1 = validate_v1_disclosure(workspace, checks)
     return {
@@ -446,6 +689,18 @@ def validate(workspace: Path) -> dict[str, Any]:
         "efficient_result_sha256": sha256(efficient_result_path),
         "fastwam_result_path": str(fastwam_result_path.relative_to(workspace)),
         "fastwam_result_sha256": sha256(fastwam_result_path),
+        "lingbot_result_path": str(lingbot_result_path.relative_to(workspace)),
+        "lingbot_result_sha256": sha256(lingbot_result_path),
+        "runtime_interventions_path": str(runtime_interventions_path.relative_to(workspace)),
+        "runtime_interventions_sha256": sha256(runtime_interventions_path),
+        "directional_expansion_path": str(directional_expansion_path.relative_to(workspace)),
+        "directional_expansion_sha256": sha256(directional_expansion_path),
+        "directional_fixtures_path": str(directional_fixtures_path.relative_to(workspace)),
+        "directional_fixtures_sha256": sha256(directional_fixtures_path),
+        "paired_media_path": str(paired_media_path.relative_to(workspace)),
+        "paired_media_sha256": sha256(paired_media_path),
+        "figures_manifest_path": str(figures_manifest_path.relative_to(workspace)),
+        "figures_manifest_sha256": sha256(figures_manifest_path),
         "check_count": len(checks),
         "checks": checks,
         "registered_model_count": len(models),

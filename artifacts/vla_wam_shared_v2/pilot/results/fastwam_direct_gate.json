@@ -1,6 +1,6 @@
 {
   "schema_version": "vla-wam-shared-v2-robotwin-pilot-v1",
-  "compiled_at_utc": "2026-08-03T02:42:13.433587+00:00",
+  "compiled_at_utc": "2026-08-03T03:23:57.675752+00:00",
   "model_id": "fastwam_robotwin",
   "model_label": "FastWAM",
   "measurement": {
@@ -8,7 +8,8 @@
     "dynamic_prompts": 0,
     "pickup_lift_threshold_m": 0.03,
     "pickup_consecutive_steps": 3,
-    "simulator_state_role": "post_action_scoring_and_visualization_only"
+    "simulator_state_role": "post_action_scoring_and_visualization_only",
+    "runtime_interventions_path": "/home/ali/projects/steerable/artifacts/vla_wam_shared_v2/pilot/runtime_interventions.json"
   },
   "summary": {
     "episode_count": 6,
@@ -40,6 +41,8 @@
       "picked_never_entered_requested_region": 1
     },
     "prompt_ignored_native_task_completed_count": 1,
+    "operational_wall_latency_valid_episodes": 6,
+    "operational_wall_latency_excluded_episodes": 0,
     "paired_endpoint_responses": [
       {
         "pair_id": "pair00",
@@ -92,6 +95,8 @@
       "prompt_ignored_native_task_completed": false,
       "actions_executed": 400,
       "wall_seconds": 54.92153970699292,
+      "operational_wall_latency_valid": true,
+      "runtime_intervention_ids": [],
       "initial_dx_m": -0.17838167771697044,
       "initial_dy_m": -0.10894219484180212,
       "final_dx_m": -0.21534163504838943,
@@ -120,7 +125,8 @@
         "bytes": 3797358,
         "sha256": "961bc30c34a299ef3265c8ad70e6ac6468988f55ca8491124a3f458fe78850ef"
       },
-      "imagined_future_video": null
+      "imagined_future_video": null,
+      "imagined_future_artifact": null
     },
     {
       "model_id": "fastwam_robotwin",
@@ -141,6 +147,8 @@
       "prompt_ignored_native_task_completed": false,
       "actions_executed": 400,
       "wall_seconds": 43.42746455396991,
+      "operational_wall_latency_valid": true,
+      "runtime_intervention_ids": [],
       "initial_dx_m": -0.17838167771697044,
       "initial_dy_m": -0.10894219484180212,
       "final_dx_m": -0.17786626517772675,
@@ -169,7 +177,8 @@
         "bytes": 3052223,
         "sha256": "c69520714f8019abd697fa5135c1bccf72a8599bffa171edc1767605cdeee017"
       },
-      "imagined_future_video": null
+      "imagined_future_video": null,
+      "imagined_future_artifact": null
     },
     {
       "model_id": "fastwam_robotwin",
@@ -190,6 +199,8 @@
       "prompt_ignored_native_task_completed": false,
       "actions_executed": 121,
       "wall_seconds": 29.774368581012823,
+      "operational_wall_latency_valid": true,
+      "runtime_intervention_ids": [],
       "initial_dx_m": 0.01300065778195858,
       "initial_dy_m": 0.11296788789331913,
       "final_dx_m": -0.15219711512327194,
@@ -218,7 +229,8 @@
         "bytes": 1063683,
         "sha256": "6e96b55db27edaa60d482e771ad99c39c1f8036ca48d94d5a8bb8f0485e04c16"
       },
-      "imagined_future_video": null
+      "imagined_future_video": null,
+      "imagined_future_artifact": null
     },
     {
       "model_id": "fastwam_robotwin",
@@ -239,6 +251,8 @@
       "prompt_ignored_native_task_completed": true,
       "actions_executed": 400,
       "wall_seconds": 42.586307773017325,
+      "operational_wall_latency_valid": true,
+      "runtime_intervention_ids": [],
       "initial_dx_m": 0.01300065778195858,
       "initial_dy_m": 0.11296788789331913,
       "final_dx_m": -0.12339823506772518,
@@ -267,7 +281,8 @@
         "bytes": 3265964,
         "sha256": "fcd6b7c7537b15c59cf0f48bb795359f23971cac7fcc2b60796dfe7c7de074b2"
       },
-      "imagined_future_video": null
+      "imagined_future_video": null,
+      "imagined_future_artifact": null
     },
     {
       "model_id": "fastwam_robotwin",
@@ -288,6 +303,8 @@
       "prompt_ignored_native_task_completed": false,
       "actions_executed": 400,
       "wall_seconds": 44.53786621999461,
+      "operational_wall_latency_valid": true,
+      "runtime_intervention_ids": [],
       "initial_dx_m": -0.003953173756599426,
       "initial_dy_m": 0.11879925802350044,
       "final_dx_m": 0.07323344051837921,
@@ -316,7 +333,8 @@
         "bytes": 3503718,
         "sha256": "ba204565b23448d390d6c98430c976f92b80afa11fd805e202af258625fa716b"
       },
-      "imagined_future_video": null
+      "imagined_future_video": null,
+      "imagined_future_artifact": null
     },
     {
       "model_id": "fastwam_robotwin",
@@ -337,6 +355,8 @@
       "prompt_ignored_native_task_completed": false,
       "actions_executed": 400,
       "wall_seconds": 53.096147041069344,
+      "operational_wall_latency_valid": true,
+      "runtime_intervention_ids": [],
       "initial_dx_m": -0.003953173756599426,
       "initial_dy_m": 0.11879925802350044,
       "final_dx_m": 0.02749122679233551,
@@ -365,7 +385,8 @@
         "bytes": 3656051,
         "sha256": "e73c307e8e959780505ab70ab97d17aa3b958e72ee8d935e8e6d5346029c4a5d"
       },
-      "imagined_future_video": null
+      "imagined_future_video": null,
+      "imagined_future_artifact": null
     }
   ]
 }

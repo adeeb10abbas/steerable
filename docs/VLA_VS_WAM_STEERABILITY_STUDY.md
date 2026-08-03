@@ -8,9 +8,10 @@
 
 ![Complete 160-episode steerability scorecard for the two tested checkpoints.](../artifacts/vla_wam_shared_v1/trajectory_evidence/social/steerability_scorecard_1600x900.png)
 
-*Completed evidence package, 2 August 2026. The registered 160-episode
-direct-language grid, 752-chunk semantic pass, and frozen human audit are all
-closed before the claims below are compiled.*
+*DROID v1 evidence package completed 2 August 2026. Standardized RoboTwin WAM
+pilot update added 3 August 2026. The registered 160-episode DROID grid,
+752-chunk semantic pass, frozen human audit, and 18-episode three-WAM pilot are
+kept as distinct evidence tiers throughout.*
 
 The first plot looked encouraging. I held a robot observation fixed, changed
 the instruction from left to right, and saw the action tensor and imagined
@@ -87,6 +88,92 @@ The practical recommendation has two layers:
    π0.5 supplies an action-only baseline. Light-WAM is the next lightweight
    checkpoint worth bringing through the same protocol. None is ready to be
    treated as a reliable free-form language-control layer.
+
+## Update: three WAMs, the same six-episode gate
+
+The first v2 expansion removes a weakness in the earlier engineering evidence:
+Efficient-WAM-RT, FastWAM, and LingBot-VA now run the same direct-command gate.
+For each checkpoint, three exact RoboTwin scenes are repeated under mirrored
+LEFT and RIGHT instructions. Within a pair, the native anchor task, environment
+seed, object identities, initial poses, policy sampling seed, and execution
+configuration are held fixed. Only the direction word and the requested-side
+checker change. There is still no oracle, subtask coach, or prompt switching.
+
+![Progress reached by LEFT and RIGHT commands for all three standardized RoboTwin WAM pilots.](../artifacts/vla_wam_shared_v2/figures/robotwin_wam_progression_1600x900.png)
+
+The result is a striking but still small direction split:
+
+| Checkpoint | LEFT released in requested region | RIGHT released in requested region | What failed on RIGHT | Future visible at test time? |
+| --- | ---: | ---: | --- | --- |
+| Efficient-WAM-RT | 2/3 | 0/3 | 3/3 picked up; 0/3 entered requested region | decoded coarse video |
+| FastWAM | 1/3 | 0/3 | 1/3 verified pickup; 0/3 entered requested region | no; released path is action-only |
+| LingBot-VA | 3/3 | 0/3 | 3/3 picked up; 0/3 entered requested region | predicted latent retained |
+
+Descriptively, that is 6/9 LEFT and 0/9 RIGHT across the three checkpoints.
+It is not a WAM-class estimate: there are only three scenes per model, all use
+one simulator task family, and the checkpoints have different action/future
+interfaces. It is nevertheless enough to reject a full wording sweep for now.
+The frozen adaptive gate authorizes only a ten-scene direct-command direction
+confirmation.
+
+![Final target-relative endpoints after changing only LEFT to RIGHT.](../artifacts/vla_wam_shared_v2/figures/robotwin_wam_paired_endpoints_1600x900.png)
+
+The endpoint plot prevents a binary score from doing too much work. A shaded
+band shows only the lateral slice of the goal. The full success test also
+requires the correct distance, y-offset, and open-gripper release. A circle
+passes all of those checks; a cross fails at least one. Most mirrored RIGHT
+prompts did not redirect the endpoint into the RIGHT band. Pair 01 is especially
+useful: its frozen native anchor task is RIGHT, yet all three RIGHT prompts
+still fail, and LingBot-VA succeeds when the language requests LEFT. The pilot
+asymmetry therefore cannot be explained just by having two LEFT anchor tasks
+and one RIGHT anchor task.
+
+The three clips below are selected deterministically: the first compiled scene
+for each checkpoint containing a LEFT success and its matched RIGHT failure.
+The shorter rollout holds on its last frame while the longer rollout continues;
+the failure is never trimmed. The dashed arrow is an illustrative direct route
+to the requested region, not the metric. The solid line is the recorded object
+trajectory.
+
+### Efficient-WAM-RT: blue soap relative to a tea box
+
+<video controls preload="metadata" width="100%" poster="../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/efficient_wam_rt_pair00_left_success_right_failure_poster.jpg">
+  <source src="../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/efficient_wam_rt_pair00_left_success_right_failure.mp4" type="video/mp4">
+  <track kind="captions" src="../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/efficient_wam_rt_pair00_left_success_right_failure.vtt" srclang="en" label="English">
+</video>
+
+LEFT succeeds at −0.113 m. The matched RIGHT rollout ends farther left at
+−0.194 m after 400 actions.
+
+### FastWAM: cards box relative to a coffee box
+
+<video controls preload="metadata" width="100%" poster="../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/fastwam_pair02_left_success_right_failure_poster.jpg">
+  <source src="../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/fastwam_pair02_left_success_right_failure.mp4" type="video/mp4">
+  <track kind="captions" src="../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/fastwam_pair02_left_success_right_failure.vtt" srclang="en" label="English">
+</video>
+
+LEFT succeeds at −0.152 m. RIGHT ends at −0.123 m. FastWAM's original policy
+capture wrote a 640×480 three-camera buffer into a stream declared as 320×240.
+The publication clip transparently reconstructs each four-packet RGB frame and
+keeps the 320×240 head-camera crop; policy actions and state-derived metrics are
+unchanged. The runner is repaired for future episodes.
+
+### LingBot-VA: blue soap relative to a tea box
+
+<video controls preload="metadata" width="100%" poster="../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/lingbot_va_pair00_left_success_right_failure_poster.jpg">
+  <source src="../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/lingbot_va_pair00_left_success_right_failure.mp4" type="video/mp4">
+  <track kind="captions" src="../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/lingbot_va_pair00_left_success_right_failure.vtt" srclang="en" label="English">
+</video>
+
+LEFT succeeds at −0.140 m. RIGHT finishes at −0.161 m—again on the LEFT side.
+The first predicted latent is retained for every pilot cell, but this release
+does not yet provide a publication-ready decoder under the measured path, so
+the clip does not pretend that the latent is an inspectable video.
+
+All seven additional scene fixtures for the follow-up initialized successfully
+without loading a policy. They contain distinct object pairs and start outside
+both requested regions. This is setup evidence only. The 42 new expansion
+episodes have not yet been run.
 
 ## What steerability means
 
@@ -700,21 +787,23 @@ shows that the user-facing task-language interface is brittle. It still does
 not refute the paper, whose policies were explicitly trained on a richer
 steering-command mixture than either released checkpoint here.
 
-## The broader WAM evidence, kept separate
+## Earlier WAM diagnostics, kept separate
 
-The shared-grid confidence intervals contain only π0.5 and Cosmos. Earlier
-experiments on Efficient-WAM, FastWAM, and LingBot-VA are retained as a
-retrospective tier because they answer useful engineering questions but were
-not generated by the shared frozen grid.
+The DROID confidence intervals still contain only π0.5 and Cosmos; DROID and
+RoboTwin raw rates are never pooled. The standardized six-episode RoboTwin WAM
+gate is reported above. The larger or differently configured Efficient-WAM,
+FastWAM, and LingBot-VA experiments below remain a retrospective diagnostic
+tier: they answer useful engineering questions, but they do not enter the new
+three-model pilot rates.
 
 | WAM | Scale relevant to deployment | Evidence in this study | Local verdict |
 | --- | --- | --- | --- |
 | Light-WAM | 0.44B trainable plus frozen 1.3B Wan backbone | release review only | compelling next lightweight replication |
 | UVA | about 0.5B | invalid early heatmap only | not yet established |
-| Efficient-WAM-RT | 1B | 42 retrospective closed-loop episodes | usable causal-intervention core, asymmetric |
-| Fast-WAM | not normalized here | implementation audit plus six-seed gate | language signal exists after repair, not robust |
+| Efficient-WAM-RT | 1B | 6 standardized episodes plus 42 retrospective episodes | usable causal-intervention core, asymmetric |
+| FastWAM | not normalized here | 6 standardized episodes plus implementation diagnostics | action-only inference; directional result not robust |
 | Cosmos3 Edge DROID | 4B | full direct-language grid | shared-benchmark WAM |
-| LingBot-VA | 5.09B | retrospective native/swap gate | useful future-latent substrate, too slow for core |
+| LingBot-VA | 5.09B | 6 standardized episodes plus retrospective native/swap gate | useful future-latent substrate, too slow for core |
 | DreamZero | roughly 14B | setup/runtime experience only | later large-model confirmation |
 
 Parameter labels are not made artificially comparable: “trainable” excludes
@@ -992,13 +1081,15 @@ leaderboard scores.
 
 ## Final assessment
 
-The answer to the title is **yes, but selectively and unreliably**. Both tested
-checkpoints listen at the level of deterministic output sensitivity. They do
-not provide robust semantic control across direction, wording, and negation.
-Cosmos is the stronger controller in this one matched DROID case, but its
-58/80 total coexists with a 1/10 contrastive-LEFT collapse. π0.5's 25/80 total
-is dominated by a 22/40 RIGHT versus 3/40 LEFT split. A single aggregate score
-would conceal the central scientific result.
+The answer to the title is **yes, but selectively and unreliably**. In the
+registered DROID comparison, both checkpoints listen at the level of
+deterministic output sensitivity but fail robust semantic control across
+direction, wording, and negation. Cosmos's 58/80 total coexists with a 1/10
+contrastive-LEFT collapse. π0.5's 25/80 total is dominated by a 22/40 RIGHT
+versus 3/40 LEFT split. In the separate standardized RoboTwin pilot, three WAMs
+collectively complete 6/9 LEFT requests and 0/9 RIGHT requests. That repeated
+direction gap is a high-priority prospective target, not yet a model-class
+conclusion. A single aggregate score would conceal every one of these results.
 
 For practical experiments, I would use Efficient-WAM-RT as the rapid
 same-history intervention core, Cosmos as the slower generated-future and DROID

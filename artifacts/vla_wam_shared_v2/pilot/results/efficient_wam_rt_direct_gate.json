@@ -1,6 +1,6 @@
 {
   "schema_version": "vla-wam-shared-v2-robotwin-pilot-v1",
-  "compiled_at_utc": "2026-08-03T02:39:02.064261+00:00",
+  "compiled_at_utc": "2026-08-03T03:23:57.632176+00:00",
   "model_id": "efficient_wam_rt_robotwin",
   "model_label": "Efficient-WAM-RT",
   "measurement": {
@@ -8,7 +8,8 @@
     "dynamic_prompts": 0,
     "pickup_lift_threshold_m": 0.03,
     "pickup_consecutive_steps": 3,
-    "simulator_state_role": "post_action_scoring_and_visualization_only"
+    "simulator_state_role": "post_action_scoring_and_visualization_only",
+    "runtime_interventions_path": "/home/ali/projects/steerable/artifacts/vla_wam_shared_v2/pilot/runtime_interventions.json"
   },
   "summary": {
     "episode_count": 6,
@@ -38,6 +39,8 @@
       "picked_never_entered_requested_region": 4
     },
     "prompt_ignored_native_task_completed_count": 1,
+    "operational_wall_latency_valid_episodes": 6,
+    "operational_wall_latency_excluded_episodes": 0,
     "paired_endpoint_responses": [
       {
         "pair_id": "pair00",
@@ -90,6 +93,8 @@
       "prompt_ignored_native_task_completed": false,
       "actions_executed": 44,
       "wall_seconds": 25.676283404929563,
+      "operational_wall_latency_valid": true,
+      "runtime_intervention_ids": [],
       "initial_dx_m": -0.17838167771697044,
       "initial_dy_m": -0.10894219484180212,
       "final_dx_m": -0.1128547340631485,
@@ -122,6 +127,12 @@
         "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__left/efficient_wam_predicted_video/episode0.mp4",
         "bytes": 20939,
         "sha256": "3788e10510d3ef68ea5278c327825e0aa276db9f509216499e1f6187d4425e86"
+      },
+      "imagined_future_artifact": {
+        "kind": "decoded_video",
+        "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__left/efficient_wam_predicted_video/episode0.mp4",
+        "bytes": 20939,
+        "sha256": "3788e10510d3ef68ea5278c327825e0aa276db9f509216499e1f6187d4425e86"
       }
     },
     {
@@ -143,6 +154,8 @@
       "prompt_ignored_native_task_completed": false,
       "actions_executed": 400,
       "wall_seconds": 30.579722092021257,
+      "operational_wall_latency_valid": true,
+      "runtime_intervention_ids": [],
       "initial_dx_m": -0.17838167771697044,
       "initial_dy_m": -0.10894219484180212,
       "final_dx_m": -0.19365905225276947,
@@ -175,6 +188,12 @@
         "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__right/efficient_wam_predicted_video/episode1.mp4",
         "bytes": 21454,
         "sha256": "27babe9655db0116af8175fc1f45308768ebae4a576560ba41c395bfe74a108e"
+      },
+      "imagined_future_artifact": {
+        "kind": "decoded_video",
+        "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__right/efficient_wam_predicted_video/episode1.mp4",
+        "bytes": 21454,
+        "sha256": "27babe9655db0116af8175fc1f45308768ebae4a576560ba41c395bfe74a108e"
       }
     },
     {
@@ -196,6 +215,8 @@
       "prompt_ignored_native_task_completed": false,
       "actions_executed": 400,
       "wall_seconds": 32.71819053799845,
+      "operational_wall_latency_valid": true,
+      "runtime_intervention_ids": [],
       "initial_dx_m": -0.003953173756599426,
       "initial_dy_m": 0.11879925802350044,
       "final_dx_m": 0.23586991429328918,
@@ -228,6 +249,12 @@
         "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__left/efficient_wam_predicted_video/episode1.mp4",
         "bytes": 20824,
         "sha256": "22296a3671d2b1e726a80e0fdf28e41a66ba3d133a8d27d401d65de5ac20d3c3"
+      },
+      "imagined_future_artifact": {
+        "kind": "decoded_video",
+        "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__left/efficient_wam_predicted_video/episode1.mp4",
+        "bytes": 20824,
+        "sha256": "22296a3671d2b1e726a80e0fdf28e41a66ba3d133a8d27d401d65de5ac20d3c3"
       }
     },
     {
@@ -249,6 +276,8 @@
       "prompt_ignored_native_task_completed": false,
       "actions_executed": 400,
       "wall_seconds": 40.1069857039256,
+      "operational_wall_latency_valid": true,
+      "runtime_intervention_ids": [],
       "initial_dx_m": -0.003953173756599426,
       "initial_dy_m": 0.11879925802350044,
       "final_dx_m": -0.18294724822044373,
@@ -281,6 +310,12 @@
         "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__right/efficient_wam_predicted_video/episode0.mp4",
         "bytes": 20636,
         "sha256": "1d39f27c715777b4102e424f4c9ee089de0a0de7724ab20b5da05f7ccf0c8367"
+      },
+      "imagined_future_artifact": {
+        "kind": "decoded_video",
+        "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__right/efficient_wam_predicted_video/episode0.mp4",
+        "bytes": 20636,
+        "sha256": "1d39f27c715777b4102e424f4c9ee089de0a0de7724ab20b5da05f7ccf0c8367"
       }
     },
     {
@@ -302,6 +337,8 @@
       "prompt_ignored_native_task_completed": false,
       "actions_executed": 46,
       "wall_seconds": 24.906293029082008,
+      "operational_wall_latency_valid": true,
+      "runtime_intervention_ids": [],
       "initial_dx_m": 0.01300065778195858,
       "initial_dy_m": 0.11296788789331913,
       "final_dx_m": -0.12324083596467972,
@@ -334,6 +371,12 @@
         "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__left/efficient_wam_predicted_video/episode0.mp4",
         "bytes": 22521,
         "sha256": "f0c0dad0ae6c2a51413b57ec7b6a65cb0292cb4c3a3a1542eae43c2d51a439ec"
+      },
+      "imagined_future_artifact": {
+        "kind": "decoded_video",
+        "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__left/efficient_wam_predicted_video/episode0.mp4",
+        "bytes": 22521,
+        "sha256": "f0c0dad0ae6c2a51413b57ec7b6a65cb0292cb4c3a3a1542eae43c2d51a439ec"
       }
     },
     {
@@ -355,6 +398,8 @@
       "prompt_ignored_native_task_completed": true,
       "actions_executed": 400,
       "wall_seconds": 30.420614784932695,
+      "operational_wall_latency_valid": true,
+      "runtime_intervention_ids": [],
       "initial_dx_m": 0.01300065778195858,
       "initial_dy_m": 0.11296788789331913,
       "final_dx_m": -0.11124210618436337,
@@ -384,6 +429,12 @@
         "sha256": "593797aa477bb4fc0ae614e4a747fadddb4bdf4c7b72db5befed20aa8de44ed9"
       },
       "imagined_future_video": {
+        "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__right/efficient_wam_predicted_video/episode1.mp4",
+        "bytes": 22286,
+        "sha256": "1697c80b7f76d6f013a20af764c7e61a0973025b7930190f99085d48180f6c7e"
+      },
+      "imagined_future_artifact": {
+        "kind": "decoded_video",
         "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__right/efficient_wam_predicted_video/episode1.mp4",
         "bytes": 22286,
         "sha256": "1697c80b7f76d6f013a20af764c7e61a0973025b7930190f99085d48180f6c7e"

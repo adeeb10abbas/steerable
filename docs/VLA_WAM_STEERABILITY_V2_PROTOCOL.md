@@ -1,19 +1,24 @@
 # VLA/WAM language steerability v2
 
-Status: **frozen before standardized v2 expansion inference** on 3 August
-2026 at 01:19:36 UTC. The machine-readable source of truth is
+Status: the base protocol was **frozen before standardized v2 expansion
+inference** on 3 August 2026 at 01:19:36 UTC. Three six-episode RoboTwin WAM
+pilots are now complete. Their adaptive ten-scene directional confirmation was
+frozen at 03:29:32 UTC after disclosing all 18 pilot outcomes and before any of
+the 42 new expansion episodes. The machine-readable source of truth is
 [`protocol.json`](../artifacts/vla_wam_shared_v2/protocol.json), and the media
 selection rules are frozen separately in
 [`media_selection_plan.json`](../artifacts/vla_wam_shared_v2/media_selection_plan.json).
-The executable validator currently passes 74 checks; its full report is
+The executable validator currently passes 177 checks; its full report is
 [`protocol_validation.json`](../artifacts/vla_wam_shared_v2/protocol_validation.json).
 
 This is a disclosed post-v1 extension. Every pi0.5/Cosmos result in the
 160-episode DROID study and the small retrospective Efficient-WAM, FastWAM,
 and LingBot-VA gates was known when v2 was designed. Those outcomes motivated
 the model set and visuals; they are not presented as prospectively hidden. No
-standardized v2 four-prompt pilot result exists for any expansion model at the
-time of this freeze.
+standardized v2 four-prompt pilot result existed for any expansion model at
+the original freeze. Since then, Efficient-WAM-RT, FastWAM, and LingBot-VA have
+completed the frozen direct-command gate. This document labels those observed
+results separately from prospective follow-up cells.
 
 ## Research question
 
@@ -34,9 +39,9 @@ compare only normalized model descriptors, and every mark must name its arena.
 | DROID | GR00T N1.7 DROID | VLA | none | new expansion model |
 | DROID | Cosmos3 Edge DROID | WAM | decoded video plus actions | existing v1 reference |
 | RoboTwin | LingBot-VLA 4B | VLA | none | new expansion model |
-| RoboTwin | Efficient-WAM-RT | WAM | coarse decoded video plus actions | standardized rerun required |
-| RoboTwin | FastWAM | WAM | world-model training; action-only test time | standardized rerun required |
-| RoboTwin | LingBot-VA | WAM | joint video/action latent with decodable future | standardized rerun required |
+| RoboTwin | Efficient-WAM-RT | WAM | coarse decoded video plus actions | direct gate complete: LEFT 2/3, RIGHT 0/3 |
+| RoboTwin | FastWAM | WAM | world-model training; action-only test time | direct gate complete: LEFT 1/3, RIGHT 0/3 |
+| RoboTwin | LingBot-VA | WAM | joint video/action latent | direct gate complete: LEFT 3/3, RIGHT 0/3 |
 
 The WAM label is not treated as a single interface. A generated future that a
 human can inspect, a latent future representation, and a training-only future
@@ -183,6 +188,30 @@ The pilot media budget is 25 GiB. Raw episode collections stay outside ordinary
 Git history; manifests, hashes, posters, compact publication clips, and the
 renderer are versioned.
 
+### Observed RoboTwin gate and frozen follow-up
+
+All three locally runnable WAMs triggered branch 3:
+
+| Model | Direct LEFT | Direct RIGHT | Gate |
+| --- | ---: | ---: | --- |
+| Efficient-WAM-RT | 2/3 | 0/3 | directional confirmation only |
+| FastWAM | 1/3 | 0/3 | directional confirmation only |
+| LingBot-VA | 3/3 | 0/3 | directional confirmation only |
+
+Amendment `V2-A004` was recorded after those 18 outcomes were known. It does
+not claim preregistration. It freezes environment seeds 4300000–4300009,
+sampling seeds 8400–8409, alternating LEFT/RIGHT native anchors, and both
+requested directions inside every anchor scene. The first three scenes are the
+completed pilot. The same seven prospective scenes are used for every model,
+adding 42 episodes and producing 60 total direct-command episodes when
+complete. No wording cell is authorized.
+
+Before loading another policy, all seven prospective fixtures were initialized
+model-blind. Every fixture contained distinct moved/reference objects and
+started outside both relation regions. The fixture report establishes only
+technical validity and neutral starting geometry; it is not behavioral
+evidence.
+
 ## Metrics
 
 The frozen hypotheses are deliberately physical rather than tensor-level:
@@ -234,8 +263,10 @@ a nearby prompt key.
    raw successes, denominators, and uncertainty.
 3. **Where did the object finish?** Physical bowl-relative lateral endpoints,
    with robot LEFT and RIGHT shown directly and matched seeds connected.
-4. **How far did the behavior progress?** Interaction → pickup → requested
-   region → release funnel.
+4. **How far did the behavior progress?** Started, transparent pickup proxy,
+   requested region, and released success counts. These are observable stage
+   counts rather than an assumed monotone funnel: a successful slide can fail
+   the lift-based pickup proxy.
 5. **Did the sentence redirect the same scene?** Same-seed expected-region and
    actual-path pairs.
 6. **Did the WAM imagine what happened next?** Synchronized generated and
@@ -274,6 +305,15 @@ arena, seed, outcome, endpoint, failure stage, source/replay status, and file
 hashes. Every clip receives burned-in text, VTT captions, a poster, and alt
 text.
 
+The completed WAM gate additionally publishes one exact-pair explainer per
+model: the first compiled pair with a LEFT success and matched RIGHT failure.
+Each 1600×900 clip shows the exact prompts, full outcome text, both complete
+rollouts, requested regions, and state-derived paths. When one rollout ends
+first, its final frame is held while the other continues. FastWAM's original
+capture used the wrong raw pixel dimensions; the gallery explicitly records
+the four-packet head-camera reconstruction, and the runner is repaired for all
+future captures.
+
 ## Claim boundary
 
 This is a multi-checkpoint, two-arena case study. Within-arena matched
@@ -294,10 +334,10 @@ pooled or placed on an unlabeled common leaderboard.
   direct-to-contrastive slots are explicitly absent because v1 used disjoint
   seed tiers.
 - [`figures_manifest.json`](../artifacts/vla_wam_shared_v2/figures/figures_manifest.json)
-  hashes eight reader-first exports: prompt semantics, raw obedience
-  scorecards, all paired DROID lateral endpoints, and the first standardized
-  Efficient-WAM-RT expected-versus-executed path panels in landscape and
-  square formats.
+  hashes twelve reader-first exports: prompt semantics, raw DROID obedience
+  scorecards, paired DROID lateral endpoints, Efficient-WAM-RT path panels,
+  cross-model RoboTwin stage counts, and all nine WAM paired endpoints. Every
+  figure is exported in landscape and square formats.
 - [`pilot_grid.json`](../artifacts/vla_wam_shared_v2/pilot/pilot_grid.json)
   compiles the effective protocol into 144 unique cells and 72 exact LEFT/RIGHT
   pairs. The first execution batch is the 36-cell direct-command base-
@@ -315,10 +355,23 @@ pooled or placed on an unlabeled common leaderboard.
   the released action-only inference path emits no test-time future video, its
   imagination/execution fields are explicitly not applicable. This model also
   selects only the direct-command directional-bias confirmation.
+- [`lingbot_va_direct_gate.md`](../artifacts/vla_wam_shared_v2/pilot/results/lingbot_va_direct_gate.md)
+  records LingBot-VA's 3/3 LEFT and 0/3 RIGHT result. All six cells retain the
+  first predicted latent. Three thermally paused cells remain valid behavioral
+  episodes but are excluded from wall-latency aggregates in
+  [`runtime_interventions.json`](../artifacts/vla_wam_shared_v2/pilot/runtime_interventions.json).
+- [`directional_expansion.json`](../artifacts/vla_wam_shared_v2/pilot/directional_expansion.json)
+  freezes the seven additional scene pairs and discloses the 18 known pilot
+  outcomes. Its model-blind seven-scene setup audit is
+  [`directional_fixture_validation.json`](../artifacts/vla_wam_shared_v2/pilot/directional_fixture_validation.json).
+- [`media_index.json`](../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/media_index.json)
+  hashes three matched success/failure MP4s, posters, captions, exact prompts,
+  source trajectories, and the disclosed FastWAM pixel-layout repair.
 - [`execution_configs.json`](../artifacts/vla_wam_shared_v2/pilot/execution_configs.json)
-  records Efficient-WAM-RT's exact completed-pilot settings and prospectively
-  freezes FastWAM and LingBot-VA settings. The pre-episode SAPIEN startup
-  failures and repair evidence remain separate in
+  records the exact completed-pilot settings. Efficient-WAM-RT's entry was
+  recorded retrospectively after its first six cells; FastWAM and LingBot-VA
+  were frozen before their cells. The pre-episode SAPIEN startup failures and
+  repair evidence remain separate in
   [`technical_events.json`](../artifacts/vla_wam_shared_v2/pilot/technical_events.json)
   and never enter a model denominator.
 
@@ -329,6 +382,12 @@ python3 tools/validate_vla_wam_v2_protocol.py \
   --write-report artifacts/vla_wam_shared_v2/protocol_validation.json
 python3 tools/select_vla_wam_v2_media.py
 python3 tools/render_vla_wam_v2_reader_figures.py
+python3 tools/render_vla_wam_v2_robotwin_videos.py
+env -u DISPLAY CUDA_VISIBLE_DEVICES=1 \
+  VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json \
+  PYTHONPATH=/home/ali/projects/EfficientWAM-RoboTwin:/home/ali/lab/RoboTwin/envs/curobo/src \
+  /home/ali/projects/Efficient-WAM/.venv/bin/python \
+  tools/validate_robotwin_directional_fixtures.py
 python3 tools/build_vla_wam_v2_pilot_grid.py
 python3 tools/compile_vla_wam_v2_robotwin_pilot.py
 ```

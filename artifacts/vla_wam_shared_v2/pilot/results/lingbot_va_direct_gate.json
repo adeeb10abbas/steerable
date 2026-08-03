@@ -1,0 +1,426 @@
+{
+  "schema_version": "vla-wam-shared-v2-robotwin-pilot-v1",
+  "compiled_at_utc": "2026-08-03T03:23:57.716776+00:00",
+  "model_id": "lingbot_va_robotwin",
+  "model_label": "LingBot-VA",
+  "measurement": {
+    "oracle_actions": 0,
+    "dynamic_prompts": 0,
+    "pickup_lift_threshold_m": 0.03,
+    "pickup_consecutive_steps": 3,
+    "simulator_state_role": "post_action_scoring_and_visualization_only",
+    "runtime_interventions_path": "/home/ali/projects/steerable/artifacts/vla_wam_shared_v2/pilot/runtime_interventions.json"
+  },
+  "summary": {
+    "episode_count": 6,
+    "pair_count": 3,
+    "successes": 3,
+    "success_rate": 0.5,
+    "by_direction": {
+      "left": {
+        "episodes": 3,
+        "successes": 3,
+        "verified_pickups": 2,
+        "entered_requested_region": 3,
+        "prompt_ignored_native_task_completed": 0,
+        "mean_command_alignment_margin_m": 0.11134734004735947
+      },
+      "right": {
+        "episodes": 3,
+        "successes": 0,
+        "verified_pickups": 3,
+        "entered_requested_region": 0,
+        "prompt_ignored_native_task_completed": 0,
+        "mean_command_alignment_margin_m": -0.11222103734811147
+      }
+    },
+    "failure_stage_counts": {
+      "success": 3,
+      "picked_never_entered_requested_region": 3
+    },
+    "prompt_ignored_native_task_completed_count": 0,
+    "operational_wall_latency_valid_episodes": 3,
+    "operational_wall_latency_excluded_episodes": 3,
+    "paired_endpoint_responses": [
+      {
+        "pair_id": "pair00",
+        "left_success": true,
+        "right_success": false,
+        "left_final_dx_m": -0.14017310738563538,
+        "right_final_dx_m": -0.1612963266670704,
+        "right_minus_left_endpoint_dx_m": -0.021123219281435013,
+        "endpoint_response_direction": "anti_directed"
+      },
+      {
+        "pair_id": "pair01",
+        "left_success": true,
+        "right_success": false,
+        "left_final_dx_m": -0.08130115270614624,
+        "right_final_dx_m": -0.06746736168861389,
+        "right_minus_left_endpoint_dx_m": 0.013833791017532349,
+        "endpoint_response_direction": "aligned"
+      },
+      {
+        "pair_id": "pair02",
+        "left_success": true,
+        "right_success": false,
+        "left_final_dx_m": -0.11256776005029678,
+        "right_final_dx_m": -0.10789942368865013,
+        "right_minus_left_endpoint_dx_m": 0.004668336361646652,
+        "endpoint_response_direction": "aligned"
+      }
+    ],
+    "pilot_gate_decision": "expand_direct_directional_bias_only",
+    "pilot_gate_reason": "Direct-command success occurred for LEFT only, so the frozen gate calls for a ten-scene direct-command directional-bias confirmation before any four-wording sweep."
+  },
+  "episodes": [
+    {
+      "model_id": "lingbot_va_robotwin",
+      "pair_id": "pair00",
+      "task": "place_a2b_left",
+      "environment_seed": 4300000,
+      "sampling_seed": 8400,
+      "prompt_family": "direct_command",
+      "requested_relation": "left",
+      "prompt": "Put the blue soap to the left of the tea-box.",
+      "movable_description": "blue soap",
+      "reference_description": "tea-box",
+      "movable_model_name": "107_soap",
+      "reference_model_name": "112_tea-box",
+      "requested_success": true,
+      "native_task_success": true,
+      "opposite_relation_success": false,
+      "prompt_ignored_native_task_completed": false,
+      "actions_executed": 133,
+      "wall_seconds": 224.6127217579633,
+      "operational_wall_latency_valid": true,
+      "runtime_intervention_ids": [],
+      "initial_dx_m": -0.17838167771697044,
+      "initial_dy_m": -0.10894219484180212,
+      "final_dx_m": -0.14017310738563538,
+      "final_dy_m": -0.0008912589401006699,
+      "command_alignment_margin_m": 0.14017310738563538,
+      "max_object_lift_m": 0.10905730724334717,
+      "ever_gripper_closed": true,
+      "verified_pickup_proxy": true,
+      "ever_entered_requested_region": true,
+      "first_requested_region_action": 97,
+      "ever_released_in_requested_region": true,
+      "first_release_in_requested_region_action": 133,
+      "failure_stage": "success",
+      "raw_result": {
+        "path": "/home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__left/result.json",
+        "bytes": 1989,
+        "sha256": "ab1ea716e9564d423b37d271f6bca826cfcfc5c0ec150d14703e2e64ea2295f3"
+      },
+      "raw_trajectory": {
+        "path": "/home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__left/trajectory.json",
+        "bytes": 50664,
+        "sha256": "ac59160bb73abfd152961836cde3c9be5a48c63a2dc1d47a2ed4957263f8e633"
+      },
+      "executed_video": {
+        "path": "/home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__left/simulator.mp4",
+        "bytes": 155180,
+        "sha256": "cff65d924039307d71177cf9ec586065370248217a98a183ae51e09cd58c1725"
+      },
+      "imagined_future_video": null,
+      "imagined_future_artifact": {
+        "kind": "latent_tensor",
+        "path": "/home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__left/first_predicted_latent.pt",
+        "bytes": 93970,
+        "sha256": "938ac326fd5e5177262ecb019922da6441cffbc95e6df0874c4b2b906452ec5b"
+      }
+    },
+    {
+      "model_id": "lingbot_va_robotwin",
+      "pair_id": "pair00",
+      "task": "place_a2b_left",
+      "environment_seed": 4300000,
+      "sampling_seed": 8400,
+      "prompt_family": "direct_command",
+      "requested_relation": "right",
+      "prompt": "Put the blue soap to the right of the tea-box.",
+      "movable_description": "blue soap",
+      "reference_description": "tea-box",
+      "movable_model_name": "107_soap",
+      "reference_model_name": "112_tea-box",
+      "requested_success": false,
+      "native_task_success": false,
+      "opposite_relation_success": false,
+      "prompt_ignored_native_task_completed": false,
+      "actions_executed": 400,
+      "wall_seconds": 964.8550430049654,
+      "operational_wall_latency_valid": false,
+      "runtime_intervention_ids": [
+        "LING-RUNTIME-001"
+      ],
+      "initial_dx_m": -0.17838167771697044,
+      "initial_dy_m": -0.10894219484180212,
+      "final_dx_m": -0.1612963266670704,
+      "final_dy_m": -0.017928630113601685,
+      "command_alignment_margin_m": -0.1612963266670704,
+      "max_object_lift_m": 0.11374175548553467,
+      "ever_gripper_closed": true,
+      "verified_pickup_proxy": true,
+      "ever_entered_requested_region": false,
+      "first_requested_region_action": null,
+      "ever_released_in_requested_region": false,
+      "first_release_in_requested_region_action": null,
+      "failure_stage": "picked_never_entered_requested_region",
+      "raw_result": {
+        "path": "/home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__right/result.json",
+        "bytes": 1992,
+        "sha256": "07a3e295766d4f6967d35c9d6f9a261be7e939659f370115441417c94e02a1a3"
+      },
+      "raw_trajectory": {
+        "path": "/home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__right/trajectory.json",
+        "bytes": 150628,
+        "sha256": "f681ec25eec682152e938cbd694da293ab3743edc11bd0c4dce151c4700ec195"
+      },
+      "executed_video": {
+        "path": "/home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__right/simulator.mp4",
+        "bytes": 411289,
+        "sha256": "86a741db92c3f9d21a811584281025f5bfa05e868b185d642021e607779cd864"
+      },
+      "imagined_future_video": null,
+      "imagined_future_artifact": {
+        "kind": "latent_tensor",
+        "path": "/home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__right/first_predicted_latent.pt",
+        "bytes": 93970,
+        "sha256": "9be8b0e0963ce0249c84033ea1bcb70fbaf8a94d232c6353625b74236022c62b"
+      }
+    },
+    {
+      "model_id": "lingbot_va_robotwin",
+      "pair_id": "pair01",
+      "task": "place_a2b_right",
+      "environment_seed": 4300001,
+      "sampling_seed": 8401,
+      "prompt_family": "direct_command",
+      "requested_relation": "left",
+      "prompt": "Put the brown woodenblock to the left of the black phone.",
+      "movable_description": "brown woodenblock",
+      "reference_description": "black phone",
+      "movable_model_name": "086_woodenblock",
+      "reference_model_name": "077_phone",
+      "requested_success": true,
+      "native_task_success": false,
+      "opposite_relation_success": false,
+      "prompt_ignored_native_task_completed": false,
+      "actions_executed": 226,
+      "wall_seconds": 276.2038738139672,
+      "operational_wall_latency_valid": true,
+      "runtime_intervention_ids": [],
+      "initial_dx_m": -0.003953173756599426,
+      "initial_dy_m": 0.11879925802350044,
+      "final_dx_m": -0.08130115270614624,
+      "final_dy_m": 0.049656130373477936,
+      "command_alignment_margin_m": 0.08130115270614624,
+      "max_object_lift_m": 0.06700420379638672,
+      "ever_gripper_closed": true,
+      "verified_pickup_proxy": false,
+      "ever_entered_requested_region": true,
+      "first_requested_region_action": 226,
+      "ever_released_in_requested_region": true,
+      "first_release_in_requested_region_action": 226,
+      "failure_stage": "success",
+      "raw_result": {
+        "path": "/home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2/direct_gate/pair01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__left/result.json",
+        "bytes": 2225,
+        "sha256": "0df2763d98785d951ceb9a2f3d497cff471828364a85e944f70550cad4241e80"
+      },
+      "raw_trajectory": {
+        "path": "/home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2/direct_gate/pair01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__left/trajectory.json",
+        "bytes": 85346,
+        "sha256": "e8de59b3bf21eb5be1a837cc00737a3c5c36cb9eab6eb41861104f0c1b97cdfb"
+      },
+      "executed_video": {
+        "path": "/home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2/direct_gate/pair01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__left/simulator.mp4",
+        "bytes": 231414,
+        "sha256": "20a888d12171fb8989d2b53a407854a68c2e20ace26c756d2ea68cf9144d5903"
+      },
+      "imagined_future_video": null,
+      "imagined_future_artifact": {
+        "kind": "latent_tensor",
+        "path": "/home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2/direct_gate/pair01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__left/first_predicted_latent.pt",
+        "bytes": 93970,
+        "sha256": "6f6a1dbca34e9317c32ae3893101f8b828518652bbb1deb6b83949604265beef"
+      }
+    },
+    {
+      "model_id": "lingbot_va_robotwin",
+      "pair_id": "pair01",
+      "task": "place_a2b_right",
+      "environment_seed": 4300001,
+      "sampling_seed": 8401,
+      "prompt_family": "direct_command",
+      "requested_relation": "right",
+      "prompt": "Put the brown woodenblock to the right of the black phone.",
+      "movable_description": "brown woodenblock",
+      "reference_description": "black phone",
+      "movable_model_name": "086_woodenblock",
+      "reference_model_name": "077_phone",
+      "requested_success": false,
+      "native_task_success": false,
+      "opposite_relation_success": false,
+      "prompt_ignored_native_task_completed": false,
+      "actions_executed": 400,
+      "wall_seconds": 372.207613130915,
+      "operational_wall_latency_valid": true,
+      "runtime_intervention_ids": [],
+      "initial_dx_m": -0.003953173756599426,
+      "initial_dy_m": 0.11879925802350044,
+      "final_dx_m": -0.06746736168861389,
+      "final_dy_m": 0.09816023707389832,
+      "command_alignment_margin_m": -0.06746736168861389,
+      "max_object_lift_m": 0.0799601674079895,
+      "ever_gripper_closed": true,
+      "verified_pickup_proxy": true,
+      "ever_entered_requested_region": false,
+      "first_requested_region_action": null,
+      "ever_released_in_requested_region": false,
+      "first_release_in_requested_region_action": null,
+      "failure_stage": "picked_never_entered_requested_region",
+      "raw_result": {
+        "path": "/home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2/direct_gate/pair01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__right/result.json",
+        "bytes": 2236,
+        "sha256": "4e2415cd7856bdf833f255e821d44378c5114d77a71fd059934c5080a91aa54d"
+      },
+      "raw_trajectory": {
+        "path": "/home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2/direct_gate/pair01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__right/trajectory.json",
+        "bytes": 151332,
+        "sha256": "2e3773799ca65a062614bb7b89269a6242a4e61319d45052c1c5bbb22c1f1544"
+      },
+      "executed_video": {
+        "path": "/home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2/direct_gate/pair01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__right/simulator.mp4",
+        "bytes": 460358,
+        "sha256": "be77a08f364443aaff03917dc3d2c427d1bfa9d3503de30fcc45e96201bb21ac"
+      },
+      "imagined_future_video": null,
+      "imagined_future_artifact": {
+        "kind": "latent_tensor",
+        "path": "/home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2/direct_gate/pair01/place_a2b_right/environment_seed_4300001/sampling_seed_8401/direct_command__right/first_predicted_latent.pt",
+        "bytes": 93970,
+        "sha256": "ccdc954b3e2863c193a8b80012d09c1c3f6f27e213e9e698b699ce1e7ab56bad"
+      }
+    },
+    {
+      "model_id": "lingbot_va_robotwin",
+      "pair_id": "pair02",
+      "task": "place_a2b_left",
+      "environment_seed": 4300002,
+      "sampling_seed": 8402,
+      "prompt_family": "direct_command",
+      "requested_relation": "left",
+      "prompt": "Put the box with cards inside to the left of the red coffee-box.",
+      "movable_description": "box with cards inside",
+      "reference_description": "red coffee-box",
+      "movable_model_name": "081_playingcards",
+      "reference_model_name": "113_coffee-box",
+      "requested_success": true,
+      "native_task_success": true,
+      "opposite_relation_success": false,
+      "prompt_ignored_native_task_completed": false,
+      "actions_executed": 144,
+      "wall_seconds": 258.9054459190229,
+      "operational_wall_latency_valid": false,
+      "runtime_intervention_ids": [
+        "LING-RUNTIME-002"
+      ],
+      "initial_dx_m": 0.01300065778195858,
+      "initial_dy_m": 0.11296788789331913,
+      "final_dx_m": -0.11256776005029678,
+      "final_dy_m": 0.010934025049209595,
+      "command_alignment_margin_m": 0.11256776005029678,
+      "max_object_lift_m": 0.10759955644607544,
+      "ever_gripper_closed": true,
+      "verified_pickup_proxy": true,
+      "ever_entered_requested_region": true,
+      "first_requested_region_action": 107,
+      "ever_released_in_requested_region": true,
+      "first_release_in_requested_region_action": 144,
+      "failure_stage": "success",
+      "raw_result": {
+        "path": "/home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2/direct_gate/pair02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__left/result.json",
+        "bytes": 2241,
+        "sha256": "44bf6521198af2e81054104d3e179a22ca2c9186cc62bf126bad829b67c89bbf"
+      },
+      "raw_trajectory": {
+        "path": "/home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2/direct_gate/pair02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__left/trajectory.json",
+        "bytes": 54925,
+        "sha256": "98f9b7a05412dba399df85f77a11479197d4a2a7327004485ea9f76afcb69095"
+      },
+      "executed_video": {
+        "path": "/home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2/direct_gate/pair02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__left/simulator.mp4",
+        "bytes": 171325,
+        "sha256": "c9efa85fc5333bb3181a4eedeea61da4297bfbe53e74c4e021fcf572efe0acf4"
+      },
+      "imagined_future_video": null,
+      "imagined_future_artifact": {
+        "kind": "latent_tensor",
+        "path": "/home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2/direct_gate/pair02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__left/first_predicted_latent.pt",
+        "bytes": 93970,
+        "sha256": "39410c199270caf30997640e658f2174cee0f40377f6e66d2ed9595493e26e64"
+      }
+    },
+    {
+      "model_id": "lingbot_va_robotwin",
+      "pair_id": "pair02",
+      "task": "place_a2b_left",
+      "environment_seed": 4300002,
+      "sampling_seed": 8402,
+      "prompt_family": "direct_command",
+      "requested_relation": "right",
+      "prompt": "Put the box with cards inside to the right of the red coffee-box.",
+      "movable_description": "box with cards inside",
+      "reference_description": "red coffee-box",
+      "movable_model_name": "081_playingcards",
+      "reference_model_name": "113_coffee-box",
+      "requested_success": false,
+      "native_task_success": false,
+      "opposite_relation_success": false,
+      "prompt_ignored_native_task_completed": false,
+      "actions_executed": 400,
+      "wall_seconds": 652.7176541750086,
+      "operational_wall_latency_valid": false,
+      "runtime_intervention_ids": [
+        "LING-RUNTIME-003"
+      ],
+      "initial_dx_m": 0.01300065778195858,
+      "initial_dy_m": 0.11296788789331913,
+      "final_dx_m": -0.10789942368865013,
+      "final_dy_m": 0.010153993964195251,
+      "command_alignment_margin_m": -0.10789942368865013,
+      "max_object_lift_m": 0.11056274175643921,
+      "ever_gripper_closed": true,
+      "verified_pickup_proxy": true,
+      "ever_entered_requested_region": false,
+      "first_requested_region_action": null,
+      "ever_released_in_requested_region": false,
+      "first_release_in_requested_region_action": null,
+      "failure_stage": "picked_never_entered_requested_region",
+      "raw_result": {
+        "path": "/home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2/direct_gate/pair02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__right/result.json",
+        "bytes": 2250,
+        "sha256": "d72b72e31ee79c5eb8dcbe89035ae24bd51e5177f21fe4e46d8b81b5c9cac0bd"
+      },
+      "raw_trajectory": {
+        "path": "/home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2/direct_gate/pair02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__right/trajectory.json",
+        "bytes": 151723,
+        "sha256": "d3eb765e5641001c94738b5d45163130a91364799c4c733d158e541984244417"
+      },
+      "executed_video": {
+        "path": "/home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2/direct_gate/pair02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__right/simulator.mp4",
+        "bytes": 394556,
+        "sha256": "f10e369668d16b90a4bd6dc7e6f8d59f7db31421dc479934e5cdf37781a2d606"
+      },
+      "imagined_future_video": null,
+      "imagined_future_artifact": {
+        "kind": "latent_tensor",
+        "path": "/home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2/direct_gate/pair02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__right/first_predicted_latent.pt",
+        "bytes": 93970,
+        "sha256": "040bfdab24d97073cda754943d12040f1557c28ea464ba28a5ba21f41a426589"
+      }
+    }
+  ]
+}

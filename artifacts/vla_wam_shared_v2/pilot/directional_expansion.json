@@ -1,0 +1,144 @@
+{
+  "schema_version": "vla-wam-shared-v2-directional-expansion-v1",
+  "study_id": "vla_wam_language_steerability_v2",
+  "status": "frozen_before_directional_expansion_inference",
+  "recorded_at_utc": "2026-08-03T03:29:32Z",
+  "repository_commit_at_freeze": "3b7f4d1cc45cff8395ed924f3979634f6e9d8fae",
+  "trigger": {
+    "rule": "A model with direct-command success in exactly one direction receives a ten-scene direct-command directional-bias confirmation and no wording sweep.",
+    "completed_episode_count_before_freeze": 18,
+    "known_results": [
+      {
+        "model_id": "efficient_wam_rt_robotwin",
+        "left_successes": 2,
+        "left_trials": 3,
+        "right_successes": 0,
+        "right_trials": 3
+      },
+      {
+        "model_id": "fastwam_robotwin",
+        "left_successes": 1,
+        "left_trials": 3,
+        "right_successes": 0,
+        "right_trials": 3
+      },
+      {
+        "model_id": "lingbot_va_robotwin",
+        "left_successes": 3,
+        "left_trials": 3,
+        "right_successes": 0,
+        "right_trials": 3
+      }
+    ],
+    "decision": "directional_confirmation_only",
+    "wording_grid_authorized": false
+  },
+  "models": [
+    "efficient_wam_rt_robotwin",
+    "fastwam_robotwin",
+    "lingbot_va_robotwin"
+  ],
+  "prompt_family": "direct_command",
+  "requested_relations_per_scene": [
+    "left",
+    "right"
+  ],
+  "pairing_rule": "Within a model and scene, LEFT and RIGHT use the same anchor task, environment seed, sampling seed, object layout, and execution settings. Only the rendered direction word and requested relation checker change.",
+  "scene_selection_rule": "Use a contiguous environment-seed block beginning at 4300000 and a contiguous sampling-seed block beginning at 8400. Alternate native anchor task by pair index, yielding five LEFT anchors and five RIGHT anchors. The anchor task is held fixed across the two requested directions in a pair.",
+  "scenes": [
+    {
+      "pair_id": "robotwin_pair_00",
+      "anchor_task": "place_a2b_left",
+      "environment_seed": 4300000,
+      "sampling_seed": 8400,
+      "phase": "completed_pilot"
+    },
+    {
+      "pair_id": "robotwin_pair_01",
+      "anchor_task": "place_a2b_right",
+      "environment_seed": 4300001,
+      "sampling_seed": 8401,
+      "phase": "completed_pilot"
+    },
+    {
+      "pair_id": "robotwin_pair_02",
+      "anchor_task": "place_a2b_left",
+      "environment_seed": 4300002,
+      "sampling_seed": 8402,
+      "phase": "completed_pilot"
+    },
+    {
+      "pair_id": "robotwin_pair_03",
+      "anchor_task": "place_a2b_right",
+      "environment_seed": 4300003,
+      "sampling_seed": 8403,
+      "phase": "new_expansion"
+    },
+    {
+      "pair_id": "robotwin_pair_04",
+      "anchor_task": "place_a2b_left",
+      "environment_seed": 4300004,
+      "sampling_seed": 8404,
+      "phase": "new_expansion"
+    },
+    {
+      "pair_id": "robotwin_pair_05",
+      "anchor_task": "place_a2b_right",
+      "environment_seed": 4300005,
+      "sampling_seed": 8405,
+      "phase": "new_expansion"
+    },
+    {
+      "pair_id": "robotwin_pair_06",
+      "anchor_task": "place_a2b_left",
+      "environment_seed": 4300006,
+      "sampling_seed": 8406,
+      "phase": "new_expansion"
+    },
+    {
+      "pair_id": "robotwin_pair_07",
+      "anchor_task": "place_a2b_right",
+      "environment_seed": 4300007,
+      "sampling_seed": 8407,
+      "phase": "new_expansion"
+    },
+    {
+      "pair_id": "robotwin_pair_08",
+      "anchor_task": "place_a2b_left",
+      "environment_seed": 4300008,
+      "sampling_seed": 8408,
+      "phase": "new_expansion"
+    },
+    {
+      "pair_id": "robotwin_pair_09",
+      "anchor_task": "place_a2b_right",
+      "environment_seed": 4300009,
+      "sampling_seed": 8409,
+      "phase": "new_expansion"
+    }
+  ],
+  "episode_accounting": {
+    "completed_pilot_scenes": 3,
+    "new_expansion_scenes": 7,
+    "directions_per_scene": 2,
+    "affected_models": 3,
+    "completed_episode_count": 18,
+    "new_episode_count": 42,
+    "final_direct_confirmation_episode_count": 60
+  },
+  "fixture_validation": {
+    "status": "completed_valid_before_model_inference",
+    "artifact": "artifacts/vla_wam_shared_v2/pilot/directional_fixture_validation.json",
+    "validated_scene_count": 7,
+    "scope": "Initialize the seven new anchor scenes without loading a policy, record object identities and initial target-relative geometry, and reject only technical-invalid scenes under the replacement rule.",
+    "replacement_rule": "If a scene cannot initialize, lacks two task objects, or begins with the moved object already inside either requested success region, replace only that scene with the next unused environment and sampling seeds while preserving the alternating anchor-task assignment. Record the invalid fixture and replacement before model inference."
+  },
+  "analysis_plan": {
+    "primary": "For each model, report all ten paired LEFT/RIGHT endpoints and exact success counts by requested direction.",
+    "paired_effect": "For every scene, report final target-relative x for LEFT and RIGHT, their signed difference, and whether the direction-word change moved the endpoint in the requested ordering.",
+    "progression": "Report started, verified pickup, ever entered requested region, and released requested placement counts separately by direction.",
+    "uncertainty": "Show raw numerators and denominators plus Wilson 95% intervals. Treat the result as checkpoint-and-arena-specific; do not infer a WAM-class effect.",
+    "exclusions": "Infrastructure-invalid episodes are repaired and rerun at the same cell. Thermal interventions preserve behavioral outcomes but invalidate wall-latency measurements."
+  },
+  "claim_boundary": "This adaptive confirmation was frozen after observing all 18 direct-command pilot episodes. It was not preregistered before those pilot outcomes. The seven new scenes provide prospective confirmation of the observed checkpoint-specific direction gap, not a universal WAM bias estimate."
+}

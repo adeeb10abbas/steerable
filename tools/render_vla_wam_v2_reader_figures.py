@@ -661,6 +661,220 @@ def efficient_pilot_paths(compiled: dict[str, Any], output: Path, square: bool) 
     save(fig, output)
 
 
+ROBOTWIN_MODEL_META = {
+    "efficient_wam_rt_robotwin": ("Efficient-WAM-RT", "decoded future video"),
+    "fastwam_robotwin": ("FastWAM", "action-only at inference"),
+    "lingbot_va_robotwin": ("LingBot-VA", "predicted latent retained"),
+}
+
+
+def robotwin_progression(
+    pilots: list[dict[str, Any]], output: Path, square: bool
+) -> None:
+    by_model = {pilot["model_id"]: pilot for pilot in pilots}
+    fig = plt.figure(figsize=(12, 12) if square else (16, 9))
+    draw_header(
+        fig,
+        "How far did each command get?",
+        "Standardized RoboTwin direct-command pilot · three exact scene pairs per model · counts show episodes reaching each observable stage · success requires released placement inside the requested relation region",
+        square,
+    )
+    if square:
+        positions = [
+            (0.22, 0.65, 0.70, 0.17),
+            (0.22, 0.40, 0.70, 0.17),
+            (0.22, 0.15, 0.70, 0.17),
+        ]
+    else:
+        positions = [(0.055 + index * 0.315, 0.23, 0.285, 0.55) for index in range(3)]
+    stages = ["Started", "Verified\npickup", "Entered requested\nregion", "Released there\n(success)"]
+
+    for axis, model_id in zip(positions, ROBOTWIN_MODEL_META, strict=True):
+        plot = fig.add_axes(axis)
+        pilot = by_model[model_id]
+        label, future_note = ROBOTWIN_MODEL_META[model_id]
+        for direction, color, offset in (("left", LEFT, 0.04), ("right", RIGHT, -0.04)):
+            episodes = [
+                episode
+                for episode in pilot["episodes"]
+                if episode["requested_relation"] == direction
+            ]
+            counts = [
+                len(episodes),
+                sum(episode["verified_pickup_proxy"] for episode in episodes),
+                sum(episode["ever_entered_requested_region"] for episode in episodes),
+                sum(episode["requested_success"] for episode in episodes),
+            ]
+            xs = np.arange(4, dtype=float) + offset
+            plot.plot(xs, counts, color=color, linewidth=2.2, marker="o", markersize=7, zorder=3)
+            for x_value, count in zip(xs, counts, strict=True):
+                plot.text(
+                    x_value,
+                    count + 0.13,
+                    str(count),
+                    ha="center",
+                    va="bottom",
+                    fontsize=9,
+                    weight="bold",
+                    color=TEXT,
+                )
+            plot.text(
+                xs[-1] + 0.08,
+                counts[-1] + (0.03 if direction == "left" else -0.03),
+                direction.upper(),
+                ha="left",
+                va="center",
+                fontsize=8.5,
+                weight="bold",
+                color=TEXT,
+            )
+        plot.set_xlim(-0.18, 3.52)
+        plot.set_ylim(-0.15, 3.5)
+        plot.set_xticks(range(4))
+        plot.set_xticklabels(stages, fontsize=8.5)
+        plot.set_yticks([0, 1, 2, 3])
+        plot.set_ylabel("episodes (of 3)", fontsize=8.5)
+        plot.grid(axis="y", color=GRID, linewidth=0.7)
+        plot.spines[["top", "right"]].set_visible(False)
+        plot.spines[["left", "bottom"]].set_color(GRID)
+        plot.set_title(f"{label}  ·  {future_note}", loc="left", fontsize=11.5, pad=8)
+
+    legend = [
+        Line2D([0], [0], color=LEFT, marker="o", label="Prompt asks LEFT", linewidth=2),
+        Line2D([0], [0], color=RIGHT, marker="o", label="Prompt asks RIGHT", linewidth=2),
+    ]
+    fig.legend(
+        handles=legend,
+        loc="lower left",
+        bbox_to_anchor=(0.05, 0.075 if not square else 0.045),
+        ncol=2,
+        frameon=False,
+        fontsize=9.5,
+    )
+    takeaway = (
+        "The asymmetry is not inactivity: every Efficient-WAM run picked up the object, "
+        "and all three LingBot LEFT prompts completed. Across all three checkpoints, "
+        "RIGHT produced 0/9 released requested placements."
+    )
+    fig.text(
+        0.43 if not square else 0.05,
+        0.087 if not square else 0.015,
+        "\n".join(textwrap.wrap(takeaway, 92 if not square else 110)),
+        fontsize=9.7,
+        color=MUTED,
+        weight="bold",
+        va="center" if not square else "bottom",
+    )
+    save(fig, output)
+
+
+def robotwin_paired_endpoints(
+    pilots: list[dict[str, Any]], output: Path, square: bool
+) -> None:
+    by_model = {pilot["model_id"]: pilot for pilot in pilots}
+    fig = plt.figure(figsize=(12, 12) if square else (16, 9))
+    draw_header(
+        fig,
+        "Did changing LEFT to RIGHT redirect the endpoint?",
+        "Each line is one exact scene and seed pair. The two markers are final target-relative x after changing only the direction word. Circles passed the full relation-and-release checker; crosses failed it.",
+        square,
+    )
+    axis = fig.add_axes(
+        (0.31, 0.15, 0.63, 0.69)
+        if square
+        else (0.24, 0.19, 0.71, 0.65)
+    )
+    axis.axvspan(-0.20, -0.08, color=LEFT, alpha=0.085, zorder=0)
+    axis.axvspan(0.08, 0.20, color=RIGHT, alpha=0.075, zorder=0)
+    axis.axvline(0, color=TEXT, linewidth=1.0, alpha=0.75)
+    axis.text(-0.14, 8.55, "LEFT lateral\nsuccess band", ha="center", fontsize=8, color=MUTED)
+    axis.text(0.14, 8.55, "RIGHT lateral\nsuccess band", ha="center", fontsize=8, color=MUTED)
+
+    y_labels: list[str] = []
+    y_positions: list[int] = []
+    row_index = 0
+    short_names = {
+        "efficient_wam_rt_robotwin": "Efficient-WAM",
+        "fastwam_robotwin": "FastWAM",
+        "lingbot_va_robotwin": "LingBot-VA",
+    }
+    for model_index, model_id in enumerate(ROBOTWIN_MODEL_META):
+        episodes_by_pair: dict[str, dict[str, dict[str, Any]]] = defaultdict(dict)
+        for episode in by_model[model_id]["episodes"]:
+            episodes_by_pair[episode["pair_id"]][episode["requested_relation"]] = episode
+        for pair_number, pair_id in enumerate(sorted(episodes_by_pair), start=1):
+            y = 8 - row_index
+            pair = episodes_by_pair[pair_id]
+            left_episode, right_episode = pair["left"], pair["right"]
+            left_x = float(left_episode["final_dx_m"])
+            right_x = float(right_episode["final_dx_m"])
+            axis.plot([left_x, right_x], [y + 0.10, y - 0.10], color="#BFC8CE", linewidth=1.2, zorder=1)
+            for x_value, episode, dy, color in (
+                (left_x, left_episode, 0.10, LEFT),
+                (right_x, right_episode, -0.10, RIGHT),
+            ):
+                marker = "o" if episode["requested_success"] else "X"
+                axis.scatter(
+                    [x_value],
+                    [y + dy],
+                    s=58,
+                    marker=marker,
+                    facecolor=color,
+                    edgecolor=CARD if marker == "o" else color,
+                    linewidth=1.1,
+                    zorder=3,
+                )
+                label_x = x_value + (0.012 if x_value < 0.22 else -0.012)
+                axis.text(
+                    label_x,
+                    y + dy,
+                    f"{x_value:+.3f}",
+                    ha="left" if x_value < 0.22 else "right",
+                    va="center",
+                    fontsize=7.7,
+                    color=TEXT,
+                )
+            y_positions.append(y)
+            y_labels.append(f"{short_names[model_id]}  ·  scene {pair_number}")
+            row_index += 1
+        if model_index < 2:
+            axis.axhline(8 - row_index + 0.5, color=GRID, linewidth=1.1)
+
+    axis.set_xlim(-0.31, 0.31)
+    axis.set_ylim(-0.55, 8.85)
+    axis.set_yticks(y_positions)
+    axis.set_yticklabels(y_labels, fontsize=9)
+    axis.set_xticks([-0.3, -0.2, -0.1, 0, 0.1, 0.2, 0.3])
+    axis.set_xticklabels(["−.3", "−.2", "−.1", "TARGET", "+.1", "+.2", "+.3"])
+    axis.set_xlabel("final target-relative x (m)  ·  negative is robot LEFT", fontsize=10)
+    axis.grid(axis="x", color=GRID, linewidth=0.65)
+    axis.spines[["top", "right", "left"]].set_visible(False)
+    axis.spines["bottom"].set_color(GRID)
+    axis.tick_params(axis="y", length=0, pad=8)
+    legend = [
+        Line2D([0], [0], marker="o", color=LEFT, markerfacecolor=LEFT, label="Asked LEFT · success", linewidth=0),
+        Line2D([0], [0], marker="X", color=LEFT, label="Asked LEFT · failure", linewidth=0),
+        Line2D([0], [0], marker="o", color=RIGHT, markerfacecolor=RIGHT, label="Asked RIGHT · success", linewidth=0),
+        Line2D([0], [0], marker="X", color=RIGHT, label="Asked RIGHT · failure", linewidth=0),
+    ]
+    fig.legend(
+        handles=legend,
+        loc="lower left",
+        bbox_to_anchor=(0.05, 0.045),
+        ncol=2 if square else 4,
+        frameon=False,
+        fontsize=9,
+    )
+    fig.text(
+        0.31 if square else 0.24,
+        0.105 if square else 0.125,
+        "The shaded bands show only the lateral slice. A marker is a success only when distance, y-offset, and release also pass.",
+        fontsize=8.8,
+        color=MUTED,
+    )
+    save(fig, output)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -686,12 +900,18 @@ def main() -> None:
         workspace
         / "artifacts/vla_wam_shared_v2/pilot/results/efficient_wam_rt_direct_gate.json"
     )
+    pilot_result_paths = [
+        efficient_result_path,
+        workspace / "artifacts/vla_wam_shared_v2/pilot/results/fastwam_direct_gate.json",
+        workspace / "artifacts/vla_wam_shared_v2/pilot/results/lingbot_va_direct_gate.json",
+    ]
     with summaries_path.open(newline="") as handle:
         summaries = list(csv.DictReader(handle))
     with episodes_path.open(newline="") as handle:
         episodes = list(csv.DictReader(handle))
     with efficient_result_path.open() as handle:
         efficient_result = json.load(handle)
+    pilot_results = [json.loads(path.read_text()) for path in pilot_result_paths]
     if len(summaries) != 16 or len(episodes) != 160:
         raise RuntimeError("Reader figures require all 16 group cells and all 160 episodes")
 
@@ -704,6 +924,10 @@ def main() -> None:
         "paired_endpoints_square": output_dir / "droid_v1_paired_endpoints_1200x1200.png",
         "efficient_pilot_paths_landscape": output_dir / "efficient_wam_rt_pilot_paths_1600x900.png",
         "efficient_pilot_paths_square": output_dir / "efficient_wam_rt_pilot_paths_1200x1200.png",
+        "robotwin_wam_progression_landscape": output_dir / "robotwin_wam_progression_1600x900.png",
+        "robotwin_wam_progression_square": output_dir / "robotwin_wam_progression_1200x1200.png",
+        "robotwin_wam_paired_endpoints_landscape": output_dir / "robotwin_wam_paired_endpoints_1600x900.png",
+        "robotwin_wam_paired_endpoints_square": output_dir / "robotwin_wam_paired_endpoints_1200x1200.png",
     }
     render_jobs = [
         ("prompt semantics landscape", prompt_semantics, outputs["prompt_semantics_landscape"], False),
@@ -714,6 +938,10 @@ def main() -> None:
         ("paired endpoints square", lambda path, square: endpoint_pairs(episodes, path, square), outputs["paired_endpoints_square"], True),
         ("Efficient-WAM pilot paths landscape", lambda path, square: efficient_pilot_paths(efficient_result, path, square), outputs["efficient_pilot_paths_landscape"], False),
         ("Efficient-WAM pilot paths square", lambda path, square: efficient_pilot_paths(efficient_result, path, square), outputs["efficient_pilot_paths_square"], True),
+        ("RoboTwin WAM progression landscape", lambda path, square: robotwin_progression(pilot_results, path, square), outputs["robotwin_wam_progression_landscape"], False),
+        ("RoboTwin WAM progression square", lambda path, square: robotwin_progression(pilot_results, path, square), outputs["robotwin_wam_progression_square"], True),
+        ("RoboTwin WAM paired endpoints landscape", lambda path, square: robotwin_paired_endpoints(pilot_results, path, square), outputs["robotwin_wam_paired_endpoints_landscape"], False),
+        ("RoboTwin WAM paired endpoints square", lambda path, square: robotwin_paired_endpoints(pilot_results, path, square), outputs["robotwin_wam_paired_endpoints_square"], True),
     ]
     for label, renderer, path, square in render_jobs:
         print(f"Rendering {label}...", flush=True)
@@ -727,6 +955,9 @@ def main() -> None:
         "source_episode_count": len(episodes),
         "source_group_count": len(summaries),
         "efficient_pilot_result_sha256": sha256(efficient_result_path),
+        "robotwin_pilot_result_sha256": {
+            path.stem: sha256(path) for path in pilot_result_paths
+        },
         "figures": {
             key: {
                 "path": str(path.relative_to(workspace)),
@@ -735,7 +966,7 @@ def main() -> None:
             }
             for key, path in outputs.items()
         },
-        "claim_boundary": "The first six figures explain the frozen prompt design and the two existing DROID reference checkpoints. The two Efficient-WAM-RT path figures contain the six-episode standardized v2 direct-command pilot only; they do not imply a stable population rate.",
+        "claim_boundary": "The first six figures explain the frozen prompt design and the two existing DROID reference checkpoints. The remaining six figures contain only the 18 standardized direct-command RoboTwin WAM pilot episodes. Six episodes per model are a base-competence and expansion gate, not stable population rates or a WAM-class estimate.",
     }
     manifest_path = output_dir / "figures_manifest.json"
     manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")

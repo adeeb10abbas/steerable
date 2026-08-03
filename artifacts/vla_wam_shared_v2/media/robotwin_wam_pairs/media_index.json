@@ -1,0 +1,256 @@
+{
+  "items": [
+    {
+      "alt_text": "Side-by-side RoboTwin rollouts from Efficient-WAM-RT in the same pair00 scene. The LEFT prompt succeeds at x=-0.113 m; the mirrored RIGHT prompt fails at x=-0.194 m. Target-relative trajectory strips show the requested lateral bands and actual object paths.",
+      "anchor_task": "place_a2b_left",
+      "arena": "robotwin_place_a2b",
+      "captions": {
+        "bytes": 312,
+        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/efficient_wam_rt_pair00_left_success_right_failure.vtt",
+        "sha256": "c95374a1445f22088d9b5e77f673eea7a93d5add4c6ec52ffd1f153b1ec15b05"
+      },
+      "duration_seconds": 40.0,
+      "environment_seed": 4300000,
+      "id": "efficient_wam_rt_pair00_left_success_right_failure",
+      "interface_note": "decoded future video available",
+      "left": {
+        "failure_stage": "success",
+        "final_dx_m": -0.1128547340631485,
+        "prompt": "Put the blue soap to the left of the tea-box.",
+        "source_trajectory": {
+          "bytes": 16962,
+          "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__left/trajectory.json",
+          "sha256": "df6152e1f8f94a58946a419d5a88586d3079698d6955ddfb262f8dd56a51f849"
+        },
+        "source_video": {
+          "bytes": 26141,
+          "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__left/simulator.mp4",
+          "sha256": "bf17e1c9f97496deac92382f0380086dacc6b4e60fab03d2de8be5d6c7e34ca9"
+        },
+        "success": true
+      },
+      "model_id": "efficient_wam_rt_robotwin",
+      "model_label": "Efficient-WAM-RT",
+      "pair_id": "pair00",
+      "poster": {
+        "bytes": 71925,
+        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/efficient_wam_rt_pair00_left_success_right_failure_poster.jpg",
+        "sha256": "cc69e70e0fd4f5f14bc417f8c333c9b0ee19bd721be5bee9b98e6b671a856a69"
+      },
+      "publication_video_inputs": {
+        "left": {
+          "bytes": 26141,
+          "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__left/simulator.mp4",
+          "sha256": "bf17e1c9f97496deac92382f0380086dacc6b4e60fab03d2de8be5d6c7e34ca9"
+        },
+        "right": {
+          "bytes": 164988,
+          "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__right/simulator.mp4",
+          "sha256": "dadb64423352d268ae9219ba77494feec3a626d340b9373cbb928c410b463900"
+        }
+      },
+      "right": {
+        "failure_stage": "picked_never_entered_requested_region",
+        "final_dx_m": -0.19365905225276947,
+        "prompt": "Put the blue soap to the right of the tea-box.",
+        "source_trajectory": {
+          "bytes": 150607,
+          "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__right/trajectory.json",
+          "sha256": "fb024da9de2a2d3ce8cf154a283385d442787b1a7d7f5e676a6bd8edcd068ecb"
+        },
+        "source_video": {
+          "bytes": 164988,
+          "path": "/home/ali/projects/Efficient-WAM/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__right/simulator.mp4",
+          "sha256": "dadb64423352d268ae9219ba77494feec3a626d340b9373cbb928c410b463900"
+        },
+        "success": false
+      },
+      "sampling_seed": 8400,
+      "selection_rule": "First pair in compiled pair order containing a LEFT success and its matched RIGHT failure.",
+      "source_video_correction": null,
+      "video": {
+        "bytes": 854683,
+        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/efficient_wam_rt_pair00_left_success_right_failure.mp4",
+        "sha256": "bad140d1872ee904bd364c0f8c022b7e5944e3c7529d68f43b93ae72a194a7aa"
+      }
+    },
+    {
+      "alt_text": "Side-by-side RoboTwin rollouts from FastWAM in the same pair02 scene. The LEFT prompt succeeds at x=-0.152 m; the mirrored RIGHT prompt fails at x=-0.123 m. Target-relative trajectory strips show the requested lateral bands and actual object paths.",
+      "anchor_task": "place_a2b_left",
+      "arena": "robotwin_place_a2b",
+      "captions": {
+        "bytes": 341,
+        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/fastwam_pair02_left_success_right_failure.vtt",
+        "sha256": "585a4864dfd059acc5c8f3a4460d56eb7f672374a012bd7c4576fc00e9477f99"
+      },
+      "duration_seconds": 40.0,
+      "environment_seed": 4300002,
+      "id": "fastwam_pair02_left_success_right_failure",
+      "interface_note": "action-only \u00b7 source pixel layout reconstructed",
+      "left": {
+        "failure_stage": "success",
+        "final_dx_m": -0.15219711512327194,
+        "prompt": "Put the box with cards inside to the left of the red coffee-box.",
+        "source_trajectory": {
+          "bytes": 46249,
+          "path": "/home/ali/projects/FastWAM/outputs/vla_wam_shared_v2/direct_gate/pair01_pair02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__left/trajectory.json",
+          "sha256": "a4b55def343f806b2a74439bcc0c643afb432fadd7be668fcb677472bbea2bb4"
+        },
+        "source_video": {
+          "bytes": 1063683,
+          "path": "/home/ali/projects/FastWAM/outputs/vla_wam_shared_v2/direct_gate/pair01_pair02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__left/simulator.mp4",
+          "sha256": "6e96b55db27edaa60d482e771ad99c39c1f8036ca48d94d5a8bb8f0485e04c16"
+        },
+        "success": true
+      },
+      "model_id": "fastwam_robotwin",
+      "model_label": "FastWAM",
+      "pair_id": "pair02",
+      "poster": {
+        "bytes": 75166,
+        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/fastwam_pair02_left_success_right_failure_poster.jpg",
+        "sha256": "38721a822e70999ec051f10d4b7350b31fa77479053b9958a944a4baab938e0c"
+      },
+      "publication_video_inputs": {
+        "left": {
+          "bytes": 423336,
+          "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/fastwam_pair02_left_success_right_failure_left_reconstructed_head.mp4",
+          "sha256": "6ab636ebf99c61221052982031ceedc83efc9a9bdc89b3df0a633f2bf59b2f15"
+        },
+        "right": {
+          "bytes": 1223296,
+          "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/fastwam_pair02_left_success_right_failure_right_reconstructed_head.mp4",
+          "sha256": "b756bada8a6ba7cd9056048feeef72af6af8a585096599bd8053a41e5a2c56b8"
+        }
+      },
+      "right": {
+        "failure_stage": "picked_never_entered_requested_region",
+        "final_dx_m": -0.12339823506772518,
+        "prompt": "Put the box with cards inside to the right of the red coffee-box.",
+        "source_trajectory": {
+          "bytes": 151815,
+          "path": "/home/ali/projects/FastWAM/outputs/vla_wam_shared_v2/direct_gate/pair01_pair02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__right/trajectory.json",
+          "sha256": "911100b4e6c6618556860e69cc89430303436c8519e2ccd2863e9a502c7e05db"
+        },
+        "source_video": {
+          "bytes": 3265964,
+          "path": "/home/ali/projects/FastWAM/outputs/vla_wam_shared_v2/direct_gate/pair01_pair02/place_a2b_left/environment_seed_4300002/sampling_seed_8402/direct_command__right/simulator.mp4",
+          "sha256": "fcd6b7c7537b15c59cf0f48bb795359f23971cac7fcc2b60796dfe7c7de074b2"
+        },
+        "success": false
+      },
+      "sampling_seed": 8402,
+      "selection_rule": "First pair in compiled pair order containing a LEFT success and its matched RIGHT failure.",
+      "source_video_correction": {
+        "cause": "The pilot declared a 320x240 raw ffmpeg stream while this RoboTwin fork wrote a 640x480 three-camera buffer, producing four encoded packets per intended frame.",
+        "classification": "source_capture_pixel_layout_reconstruction",
+        "left": {
+          "behavioral_effect": "none; pixel-layout repair only",
+          "derived_video": {
+            "bytes": 423336,
+            "path": "/home/ali/projects/steerable/artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/fastwam_pair02_left_success_right_failure_left_reconstructed_head.mp4",
+            "sha256": "6ab636ebf99c61221052982031ceedc83efc9a9bdc89b3df0a633f2bf59b2f15"
+          },
+          "incomplete_packet_count": 0,
+          "method": "Reassembled each four decoded 320x240 packets into the original 640x480 RGB buffer, then retained the 320x240 head-camera crop.",
+          "reconstructed_frames": 122
+        },
+        "right": {
+          "behavioral_effect": "none; pixel-layout repair only",
+          "derived_video": {
+            "bytes": 1223296,
+            "path": "/home/ali/projects/steerable/artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/fastwam_pair02_left_success_right_failure_right_reconstructed_head.mp4",
+            "sha256": "b756bada8a6ba7cd9056048feeef72af6af8a585096599bd8053a41e5a2c56b8"
+          },
+          "incomplete_packet_count": 0,
+          "method": "Reassembled each four decoded 320x240 packets into the original 640x480 RGB buffer, then retained the 320x240 head-camera crop.",
+          "reconstructed_frames": 400
+        }
+      },
+      "video": {
+        "bytes": 4400504,
+        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/fastwam_pair02_left_success_right_failure.mp4",
+        "sha256": "7a152b61292fdfe9d341950d4448dce4c8c5d4b797aa073b246bafafbaaae4f2"
+      }
+    },
+    {
+      "alt_text": "Side-by-side RoboTwin rollouts from LingBot-VA in the same pair00 scene. The LEFT prompt succeeds at x=-0.140 m; the mirrored RIGHT prompt fails at x=-0.161 m. Target-relative trajectory strips show the requested lateral bands and actual object paths.",
+      "anchor_task": "place_a2b_left",
+      "arena": "robotwin_place_a2b",
+      "captions": {
+        "bytes": 306,
+        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/lingbot_va_pair00_left_success_right_failure.vtt",
+        "sha256": "e3d50f3b33a973c7179a7fb68c65966b88c65985ca5f3397bea2afebc6abf3f6"
+      },
+      "duration_seconds": 40.0,
+      "environment_seed": 4300000,
+      "id": "lingbot_va_pair00_left_success_right_failure",
+      "interface_note": "predicted future retained as latent",
+      "left": {
+        "failure_stage": "success",
+        "final_dx_m": -0.14017310738563538,
+        "prompt": "Put the blue soap to the left of the tea-box.",
+        "source_trajectory": {
+          "bytes": 50664,
+          "path": "/home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__left/trajectory.json",
+          "sha256": "ac59160bb73abfd152961836cde3c9be5a48c63a2dc1d47a2ed4957263f8e633"
+        },
+        "source_video": {
+          "bytes": 155180,
+          "path": "/home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__left/simulator.mp4",
+          "sha256": "cff65d924039307d71177cf9ec586065370248217a98a183ae51e09cd58c1725"
+        },
+        "success": true
+      },
+      "model_id": "lingbot_va_robotwin",
+      "model_label": "LingBot-VA",
+      "pair_id": "pair00",
+      "poster": {
+        "bytes": 72043,
+        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/lingbot_va_pair00_left_success_right_failure_poster.jpg",
+        "sha256": "7600b4fe5500a8470a4fdc9465daf33071bb6be61efaf0ecc9e6666087cd143b"
+      },
+      "publication_video_inputs": {
+        "left": {
+          "bytes": 155180,
+          "path": "/home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__left/simulator.mp4",
+          "sha256": "cff65d924039307d71177cf9ec586065370248217a98a183ae51e09cd58c1725"
+        },
+        "right": {
+          "bytes": 411289,
+          "path": "/home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__right/simulator.mp4",
+          "sha256": "86a741db92c3f9d21a811584281025f5bfa05e868b185d642021e607779cd864"
+        }
+      },
+      "right": {
+        "failure_stage": "picked_never_entered_requested_region",
+        "final_dx_m": -0.1612963266670704,
+        "prompt": "Put the blue soap to the right of the tea-box.",
+        "source_trajectory": {
+          "bytes": 150628,
+          "path": "/home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__right/trajectory.json",
+          "sha256": "f681ec25eec682152e938cbd694da293ab3743edc11bd0c4dce151c4700ec195"
+        },
+        "source_video": {
+          "bytes": 411289,
+          "path": "/home/ali/projects/lerobot-lingbot/outputs/vla_wam_shared_v2/direct_gate/pair00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__right/simulator.mp4",
+          "sha256": "86a741db92c3f9d21a811584281025f5bfa05e868b185d642021e607779cd864"
+        },
+        "success": false
+      },
+      "sampling_seed": 8400,
+      "selection_rule": "First pair in compiled pair order containing a LEFT success and its matched RIGHT failure.",
+      "source_video_correction": null,
+      "video": {
+        "bytes": 2822783,
+        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/lingbot_va_pair00_left_success_right_failure.mp4",
+        "sha256": "d7f5addbfbf0074a2e116d197b12b679e5489e81dd0120334221347c406c8a0b"
+      }
+    }
+  ],
+  "metric_boundary": "The dashed path is illustrative. Success is determined from recorded 3D state by the full relation-and-release checker, not from pixels or the drawn route.",
+  "schema_version": "vla-wam-shared-v2-robotwin-paired-media-v1",
+  "selection_scope": "Three deterministic matched LEFT-success/RIGHT-failure examples from the 18-episode standardized direct-command WAM pilot.",
+  "shorter_rollout_policy": "Hold the final frame of the shorter rollout until the longer matched rollout ends; never trim the longer failure.",
+  "status": "complete"
+}

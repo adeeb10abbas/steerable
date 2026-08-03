@@ -58,6 +58,18 @@ def predicted_video(result: dict[str, Any]) -> Path | None:
     return videos[0]
 
 
+def predicted_artifact(
+    result_path: Path, result: dict[str, Any], future_video: Path | None
+) -> dict[str, Any] | None:
+    if future_video is not None:
+        record = file_record(future_video)
+        return {"kind": "decoded_video", **record} if record else None
+    latent_value = result.get("first_predicted_latent_path")
+    latent_path = Path(latent_value) if latent_value else result_path.parent / "first_predicted_latent.pt"
+    record = file_record(latent_path)
+    return {"kind": "latent_tensor", **record} if record else None
+
+
 def max_consecutive(values: list[bool]) -> int:
     longest = 0
     current = 0
@@ -67,7 +79,11 @@ def max_consecutive(values: list[bool]) -> int:
     return longest
 
 
-def classify_episode(result_path: Path, model_id: str) -> dict[str, Any]:
+def classify_episode(
+    result_path: Path,
+    model_id: str,
+    interventions: dict[tuple[str, int, str], list[dict[str, Any]]],
+) -> dict[str, Any]:
     result = json.loads(result_path.read_text())
     trajectory_path = Path(result["trajectory_path"])
     trajectory = json.loads(trajectory_path.read_text())
@@ -108,6 +124,10 @@ def classify_episode(result_path: Path, model_id: str) -> dict[str, Any]:
     direction_sign = -1.0 if result["requested_relation"] == "left" else 1.0
     sim_video = Path(result["simulator_video"])
     future_video = predicted_video(result)
+    future_artifact = predicted_artifact(result_path, result, future_video)
+    cell_interventions = interventions.get(
+        (model_id, int(result["environment_seed"]), result["requested_relation"]), []
+    )
 
     pair_id = PAIR_BY_ENVIRONMENT_SEED.get(int(result["environment_seed"]))
     if pair_id is None:
@@ -140,6 +160,10 @@ def classify_episode(result_path: Path, model_id: str) -> dict[str, Any]:
         ),
         "actions_executed": int(result["actions_executed"]),
         "wall_seconds": float(result["wall_seconds"]),
+        "operational_wall_latency_valid": all(
+            event["wall_latency_valid"] for event in cell_interventions
+        ),
+        "runtime_intervention_ids": [event["id"] for event in cell_interventions],
         "initial_dx_m": float(result["initial"]["object_minus_target_x"]),
         "initial_dy_m": float(result["initial"]["object_minus_target_y"]),
         "final_dx_m": final_dx,
@@ -159,15 +183,25 @@ def classify_episode(result_path: Path, model_id: str) -> dict[str, Any]:
         "raw_trajectory": file_record(trajectory_path),
         "executed_video": file_record(sim_video),
         "imagined_future_video": file_record(future_video),
+        "imagined_future_artifact": future_artifact,
     }
 
 
 def flatten(row: dict[str, Any]) -> dict[str, Any]:
     flat = {key: value for key, value in row.items() if not isinstance(value, dict)}
-    for key in ("raw_result", "raw_trajectory", "executed_video", "imagined_future_video"):
+    flat["runtime_intervention_ids"] = ";".join(row["runtime_intervention_ids"])
+    for key in (
+        "raw_result",
+        "raw_trajectory",
+        "executed_video",
+        "imagined_future_video",
+        "imagined_future_artifact",
+    ):
         record = row.get(key)
         flat[f"{key}_path"] = record["path"] if record else ""
         flat[f"{key}_sha256"] = record["sha256"] if record else ""
+        if key == "imagined_future_artifact":
+            flat[f"{key}_kind"] = record["kind"] if record else ""
     return flat
 
 
@@ -244,6 +278,12 @@ def summarize(episodes: list[dict[str, Any]]) -> dict[str, Any]:
         "prompt_ignored_native_task_completed_count": sum(
             row["prompt_ignored_native_task_completed"] for row in episodes
         ),
+        "operational_wall_latency_valid_episodes": sum(
+            row["operational_wall_latency_valid"] for row in episodes
+        ),
+        "operational_wall_latency_excluded_episodes": sum(
+            not row["operational_wall_latency_valid"] for row in episodes
+        ),
         "paired_endpoint_responses": pairs,
         "pilot_gate_decision": gate_decision,
         "pilot_gate_reason": gate_reason,
@@ -266,6 +306,7 @@ def write_report(path: Path, compiled: dict[str, Any]) -> None:
         f"- RIGHT: **{right['successes']}/{right['episodes']}** requested-relation successes.",
         f"- Overall: **{summary['successes']}/{summary['episode_count']}**.",
         f"- Prompt-ignored/native-task-completed failures: **{summary['prompt_ignored_native_task_completed_count']}**.",
+        f"- Wall-latency-valid episodes: **{summary['operational_wall_latency_valid_episodes']}/{summary['episode_count']}**.",
         "",
         compiled["summary"]["pilot_gate_reason"],
         "",
@@ -302,7 +343,7 @@ def write_report(path: Path, compiled: dict[str, Any]) -> None:
                 "Pixel differences between imagined futures are deliberately not used as semantic "
                 "steerability evidence. The raw imagined artifacts are hash-locked here for later "
                 "predicate scoring and imagination-versus-execution analysis."
-                if any(episode["imagined_future_video"] for episode in compiled["episodes"])
+                if any(episode["imagined_future_artifact"] for episode in compiled["episodes"])
                 else "This inference interface emits actions but no test-time imagined-video artifact, "
                 "so imagination-versus-execution metrics are recorded as not applicable rather than zero."
             ),
@@ -322,6 +363,11 @@ def main() -> None:
     parser.add_argument("--model-id", choices=sorted(MODEL_LABELS), default=DEFAULT_MODEL_ID)
     parser.add_argument("--output-stem")
     parser.add_argument(
+        "--runtime-interventions",
+        type=Path,
+        default=Path("artifacts/vla_wam_shared_v2/pilot/runtime_interventions.json"),
+    )
+    parser.add_argument(
         "--output-dir",
         type=Path,
         default=Path("artifacts/vla_wam_shared_v2/pilot/results"),
@@ -331,7 +377,22 @@ def main() -> None:
     paths = sorted(args.input_root.glob("pair*/**/result.json"))
     if len(paths) != 6:
         raise RuntimeError(f"Expected exactly six pilot results, found {len(paths)}")
-    episodes = [classify_episode(path, args.model_id) for path in paths]
+    intervention_path = args.runtime_interventions
+    if not intervention_path.is_absolute():
+        intervention_path = Path(__file__).resolve().parents[1] / intervention_path
+    intervention_map: dict[tuple[str, int, str], list[dict[str, Any]]] = {}
+    if intervention_path.exists():
+        intervention_payload = json.loads(intervention_path.read_text())
+        for event in intervention_payload["events"]:
+            key = (
+                event["model_id"],
+                int(event["environment_seed"]),
+                event["requested_relation"],
+            )
+            intervention_map.setdefault(key, []).append(event)
+    episodes = [
+        classify_episode(path, args.model_id, intervention_map) for path in paths
+    ]
     output_stem = args.output_stem or (
         "efficient_wam_rt_direct_gate"
         if args.model_id == DEFAULT_MODEL_ID
@@ -348,6 +409,9 @@ def main() -> None:
             "pickup_lift_threshold_m": PICKUP_LIFT_M,
             "pickup_consecutive_steps": PICKUP_CONSECUTIVE_STEPS,
             "simulator_state_role": "post_action_scoring_and_visualization_only",
+            "runtime_interventions_path": (
+                str(intervention_path) if intervention_path.exists() else None
+            ),
         },
         "summary": summarize(episodes),
         "episodes": episodes,

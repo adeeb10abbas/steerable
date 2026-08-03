@@ -1,6 +1,6 @@
 {
-  "claim_boundary": "The first six figures explain the frozen prompt design and the two existing DROID reference checkpoints. The two Efficient-WAM-RT path figures contain the six-episode standardized v2 direct-command pilot only; they do not imply a stable population rate.",
-  "efficient_pilot_result_sha256": "2575d2893f7ec5c17eedeeba5fe7a1ea75e99cc0160417ba70805ee8b161f3eb",
+  "claim_boundary": "The first six figures explain the frozen prompt design and the two existing DROID reference checkpoints. The remaining six figures contain only the 18 standardized direct-command RoboTwin WAM pilot episodes. Six episodes per model are a base-competence and expansion gate, not stable population rates or a WAM-class estimate.",
+  "efficient_pilot_result_sha256": "ff2d0b01fddcc7e22ca6d6c7b5855ad3cb0dcabd36c69e39799323aaa47e946f",
   "figures": {
     "efficient_pilot_paths_landscape": {
       "bytes": 149180,
@@ -41,9 +41,34 @@
       "bytes": 137559,
       "path": "artifacts/vla_wam_shared_v2/figures/prompt_semantics_1200x1200.png",
       "sha256": "148c985f2eedec3b2acc1cf65f2b2a11def3c79d68e0bd2ccb0f5646bb56e2ff"
+    },
+    "robotwin_wam_paired_endpoints_landscape": {
+      "bytes": 113656,
+      "path": "artifacts/vla_wam_shared_v2/figures/robotwin_wam_paired_endpoints_1600x900.png",
+      "sha256": "a3435d697a6c0ad5111e38eade7de8275369a89a7a65fee8f27ff9cdb2f00142"
+    },
+    "robotwin_wam_paired_endpoints_square": {
+      "bytes": 111577,
+      "path": "artifacts/vla_wam_shared_v2/figures/robotwin_wam_paired_endpoints_1200x1200.png",
+      "sha256": "fc70859f948249619740ed58d7427dd0b0db87033ea06bba546aa9ea1cee9578"
+    },
+    "robotwin_wam_progression_landscape": {
+      "bytes": 124651,
+      "path": "artifacts/vla_wam_shared_v2/figures/robotwin_wam_progression_1600x900.png",
+      "sha256": "abd8fc42c619fc66c9638f9aec1a3a1b4a3667e0577fb9c2d29a6ad0a125cfa7"
+    },
+    "robotwin_wam_progression_square": {
+      "bytes": 143361,
+      "path": "artifacts/vla_wam_shared_v2/figures/robotwin_wam_progression_1200x1200.png",
+      "sha256": "b09ea5409f95238837a4fbdb38b53d4546c8f5ecf11c085f61078f59bb0155e1"
     }
   },
-  "protocol_sha256": "4cda902ba1d1a0fedfa07524531c44e6c0520828f872f7217ab42fe50b0d961f",
+  "protocol_sha256": "1862fbbb40fef34621a840a0ed15889cf42da066424e866b66f04227b28c73b9",
+  "robotwin_pilot_result_sha256": {
+    "efficient_wam_rt_direct_gate": "ff2d0b01fddcc7e22ca6d6c7b5855ad3cb0dcabd36c69e39799323aaa47e946f",
+    "fastwam_direct_gate": "d4f351c1b308b711145d73640448f7e052579ee74a4d0d5ada1ee60cf54c9bcb",
+    "lingbot_va_direct_gate": "a70e1d99da3c5a3178448865fdc2194b0d6c13d0c20741bf8ada61cffef6c1f5"
+  },
   "schema_version": "1.0.0",
   "source_episode_count": 160,
   "source_episodes_sha256": "8f7c22ff6f2eba337ef740ea284b9bad40d2a5cfc0506b15fb822a57f4873845",

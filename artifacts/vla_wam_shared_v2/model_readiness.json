@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "study_id": "vla_wam_language_steerability_v2",
-  "audited_at_utc": "2026-08-03T02:43:00Z",
+  "audited_at_utc": "2026-08-03T03:18:00Z",
   "host": "ali-MS-7D25",
   "local_compute": {
     "gpu_count": 2,
@@ -29,11 +29,11 @@
     },
     "fastwam": {
       "path": "/home/ali/projects/FastWAM",
-      "commit": "04892b4a0873d3f38747182f051ee7c87e65ed90"
+      "commit": "1b26e35e3ac0717ba76d5fc78895d04479098328"
     },
     "lerobot_lingbot": {
       "path": "/home/ali/projects/lerobot-lingbot",
-      "commit": "a4fa5dbbb5097e91eeb1ca38675ff2402b489666"
+      "commit": "150c4f9524059c87ec36231af5892ff1ba22ae24"
     }
   },
   "models": [
@@ -106,11 +106,12 @@
       "adapter_contract_report": "artifacts/vla_wam_shared_v2/pilot/adapter_contracts.json",
       "pilot_result": "artifacts/vla_wam_shared_v2/pilot/results/fastwam_direct_gate.json",
       "pilot_outcome": "LEFT 1/3; RIGHT 0/3; test-time imagined-video metric not applicable for this action-only release interface",
+      "publication_video_note": "The completed pilot's RoboTwin fork emitted a 640x480 composite into a stream declared as 320x240. Publication media reconstructs the head-camera pixels from four encoded packets; commit 1b26e35 repairs future capture without changing actions or state metrics.",
       "next_gate": "freeze the same seven additional anchor scenes used for Efficient-WAM-RT, then complete a ten-scene direct-command directional-bias confirmation"
     },
     {
       "id": "lingbot_va_robotwin",
-      "status": "v2_static_contract_pass_runtime_pending",
+      "status": "standardized_v2_pilot_complete_directional_expansion_selected",
       "policy_adapter": "/home/ali/projects/lerobot-lingbot/experiments/lingbot_language_gate/closed_loop_language_gate.py",
       "checkpoint_status": "present",
       "checkpoint_path": "/home/ali/projects/lerobot-lingbot/checkpoints/lingbot_va_robotwin/model.safetensors",
@@ -118,15 +119,17 @@
       "auxiliary_asset_path": "/home/ali/projects/lerobot-lingbot/checkpoints/lingbot_va_frozen",
       "auxiliary_asset_bytes": 14202159514,
       "adapter_contract_report": "artifacts/vla_wam_shared_v2/pilot/adapter_contracts.json",
-      "next_gate": "load the checkpoint and run paired direct-command episodes in frozen anchor scene 00 with simulator video and first predicted latent enabled"
+      "pilot_result": "artifacts/vla_wam_shared_v2/pilot/results/lingbot_va_direct_gate.json",
+      "pilot_outcome": "LEFT 3/3; RIGHT 0/3; six first predicted latent tensors retained; three thermally interrupted wall times excluded",
+      "next_gate": "freeze the same seven additional anchor scenes, then complete a ten-scene direct-command directional-bias confirmation with thermal-safe scheduling"
     }
   ],
   "readiness_summary": {
     "reference_complete": 2,
     "checkpoint_present_adapter_pending": 0,
-    "v2_static_contract_pass_runtime_pending": 1,
+    "v2_static_contract_pass_runtime_pending": 0,
     "checkpoint_or_server_missing": 3,
-    "standardized_v2_pilot_complete": 2
+    "standardized_v2_pilot_complete": 3
   },
-  "claim_limit": "Efficient-WAM-RT and FastWAM have completed six-episode standardized direct-command pilots. Both are too small for stable rate estimates and select only the directional-bias expansion. LingBot-VA and all new VLA checkpoints remain runtime or setup pending."
+  "claim_limit": "All three locally runnable RoboTwin WAMs have completed six-episode standardized direct-command pilots. Every model selects only the directional-bias expansion; none has yet earned the four-wording grid. The new VLA checkpoints remain setup pending."
 }

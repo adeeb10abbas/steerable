@@ -1,6 +1,6 @@
 # Efficient-WAM-RT standardized direct-command pilot
 
-Compiled at `2026-08-03T02:39:02.064261+00:00` from 6 executed episodes in 3 exact left/right scene pairs.
+Compiled at `2026-08-03T03:23:57.632176+00:00` from 6 executed episodes in 3 exact left/right scene pairs.
 
 ## Result
 
@@ -8,6 +8,7 @@ Compiled at `2026-08-03T02:39:02.064261+00:00` from 6 executed episodes in 3 exa
 - RIGHT: **0/3** requested-relation successes.
 - Overall: **2/6**.
 - Prompt-ignored/native-task-completed failures: **1**.
+- Wall-latency-valid episodes: **6/6**.
 
 Direct-command success occurred for LEFT only, so the frozen gate calls for a ten-scene direct-command directional-bias confirmation before any four-wording sweep.
 

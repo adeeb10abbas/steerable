@@ -1,0 +1,451 @@
+{
+  "schema_version": "vla-wam-shared-v2-robotwin-pilot-v1",
+  "compiled_at_utc": "2026-08-03T19:05:38.281919+00:00",
+  "model_id": "lingbot_vla_4b_robotwin",
+  "model_label": "LingBot-VLA 4B",
+  "measurement": {
+    "oracle_actions": 0,
+    "dynamic_prompts": 0,
+    "pickup_lift_threshold_m": 0.03,
+    "pickup_consecutive_steps": 3,
+    "simulator_state_role": "post_action_scoring_and_visualization_only",
+    "runtime_interventions_path": null
+  },
+  "summary": {
+    "episode_count": 6,
+    "pair_count": 3,
+    "successes": 1,
+    "success_rate": 0.16666666666666666,
+    "by_direction": {
+      "left": {
+        "episodes": 3,
+        "successes": 1,
+        "verified_pickups": 2,
+        "entered_requested_region": 1,
+        "prompt_ignored_native_task_completed": 0,
+        "mean_command_alignment_margin_m": 0.06322123110294342
+      },
+      "right": {
+        "episodes": 3,
+        "successes": 0,
+        "verified_pickups": 2,
+        "entered_requested_region": 0,
+        "prompt_ignored_native_task_completed": 1,
+        "mean_command_alignment_margin_m": -0.07233248154322307
+      }
+    },
+    "failure_stage_counts": {
+      "success": 1,
+      "picked_never_entered_requested_region": 3,
+      "closed_gripper_no_verified_pickup": 2
+    },
+    "prompt_ignored_native_task_completed_count": 1,
+    "operational_wall_latency_valid_episodes": 6,
+    "operational_wall_latency_excluded_episodes": 0,
+    "paired_endpoint_responses": [
+      {
+        "pair_id": "pair00",
+        "left_success": true,
+        "right_success": false,
+        "left_final_dx_m": -0.12440365552902222,
+        "right_final_dx_m": 0.004411637783050537,
+        "right_minus_left_endpoint_dx_m": 0.12881529331207275,
+        "endpoint_response_direction": "aligned"
+      },
+      {
+        "pair_id": "pair01",
+        "left_success": false,
+        "right_success": false,
+        "left_final_dx_m": 0.04080191254615784,
+        "right_final_dx_m": -0.13493162393569946,
+        "right_minus_left_endpoint_dx_m": -0.1757335364818573,
+        "endpoint_response_direction": "anti_directed"
+      },
+      {
+        "pair_id": "pair02",
+        "left_success": false,
+        "right_success": false,
+        "left_final_dx_m": -0.10606195032596588,
+        "right_final_dx_m": -0.08647745847702026,
+        "right_minus_left_endpoint_dx_m": 0.019584491848945618,
+        "endpoint_response_direction": "aligned"
+      }
+    ],
+    "pilot_gate_decision": "expand_direct_directional_bias_only",
+    "pilot_gate_reason": "Direct-command success occurred for LEFT only, so the frozen gate calls for a ten-scene direct-command directional-bias confirmation before any four-wording sweep."
+  },
+  "episodes": [
+    {
+      "model_id": "lingbot_vla_4b_robotwin",
+      "pair_id": "pair00",
+      "task": "place_a2b_left",
+      "environment_seed": 4300000,
+      "sampling_seed": 8400,
+      "prompt_family": "direct_command",
+      "requested_relation": "left",
+      "prompt": "Put the blue soap to the left of the tea-box.",
+      "movable_description": "blue soap",
+      "reference_description": "tea-box",
+      "movable_model_name": "107_soap",
+      "reference_model_name": "112_tea-box",
+      "requested_success": true,
+      "native_task_success": true,
+      "opposite_relation_success": false,
+      "prompt_ignored_native_task_completed": false,
+      "actions_executed": 127,
+      "wall_seconds": 105.43374930112623,
+      "operational_wall_latency_valid": true,
+      "runtime_intervention_ids": [],
+      "initial_dx_m": -0.17838167771697044,
+      "initial_dy_m": -0.10894219484180212,
+      "final_dx_m": -0.12440365552902222,
+      "final_dy_m": -0.010150924324989319,
+      "command_alignment_margin_m": 0.12440365552902222,
+      "max_object_lift_m": 0.10910016298294067,
+      "ever_gripper_closed": true,
+      "verified_pickup_proxy": true,
+      "ever_entered_requested_region": true,
+      "first_requested_region_action": 96,
+      "ever_released_in_requested_region": true,
+      "first_release_in_requested_region_action": 127,
+      "failure_stage": "success",
+      "raw_result": {
+        "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/direct_gate_attempt01/robotwin_pair_00/direct_command__left/result.json",
+        "bytes": 2571,
+        "sha256": "35586f415ebbf9bbae41ed5c491932721aa9e242d858612bef3c93f823d61a8f"
+      },
+      "raw_trajectory": {
+        "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/direct_gate_attempt01/robotwin_pair_00/direct_command__left/trajectory.json",
+        "bytes": 48329,
+        "sha256": "5c84d03c54f0e38707c4b39552c6134005b642779bac0296aef7f41a42cf163c"
+      },
+      "raw_action_trace": {
+        "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/direct_gate_attempt01/robotwin_pair_00/direct_command__left/action_trace.npz",
+        "bytes": 8134,
+        "sha256": "6ba18294628a4f2ca86467dd0da7c4e4c0738d17ecbfc466e9d1feae6202a86a"
+      },
+      "thermal_event_log": {
+        "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/direct_gate_attempt01/robotwin_pair_00/direct_command__left/thermal.jsonl",
+        "bytes": 70266,
+        "sha256": "1dfb682048da3b59003b1cc89b00e77724cba9755848bef2635dbff519fd6c5a"
+      },
+      "executed_video": {
+        "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/direct_gate_attempt01/robotwin_pair_00/direct_command__left/simulator.mp4",
+        "bytes": 34493,
+        "sha256": "00c5f04d11d766c54de7633934ad8fb1657ce8615aead26bb68b239900ca5fc5"
+      },
+      "imagined_future_video": null,
+      "imagined_future_artifact": null
+    },
+    {
+      "model_id": "lingbot_vla_4b_robotwin",
+      "pair_id": "pair00",
+      "task": "place_a2b_left",
+      "environment_seed": 4300000,
+      "sampling_seed": 8400,
+      "prompt_family": "direct_command",
+      "requested_relation": "right",
+      "prompt": "Put the blue soap to the right of the tea-box.",
+      "movable_description": "blue soap",
+      "reference_description": "tea-box",
+      "movable_model_name": "107_soap",
+      "reference_model_name": "112_tea-box",
+      "requested_success": false,
+      "native_task_success": false,
+      "opposite_relation_success": false,
+      "prompt_ignored_native_task_completed": false,
+      "actions_executed": 400,
+      "wall_seconds": 123.77386198192835,
+      "operational_wall_latency_valid": true,
+      "runtime_intervention_ids": [],
+      "initial_dx_m": -0.17838167771697044,
+      "initial_dy_m": -0.10894219484180212,
+      "final_dx_m": 0.004411637783050537,
+      "final_dy_m": -0.03758130595088005,
+      "command_alignment_margin_m": 0.004411637783050537,
+      "max_object_lift_m": 0.10521525144577026,
+      "ever_gripper_closed": true,
+      "verified_pickup_proxy": true,
+      "ever_entered_requested_region": false,
+      "first_requested_region_action": null,
+      "ever_released_in_requested_region": false,
+      "first_release_in_requested_region_action": null,
+      "failure_stage": "picked_never_entered_requested_region",
+      "raw_result": {
+        "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/direct_gate_attempt01/robotwin_pair_00/direct_command__right/result.json",
+        "bytes": 2593,
+        "sha256": "d9e6aaf1c66d9a815842b8c3ffb496c4050b30480e428041cc1c6820d9f73c09"
+      },
+      "raw_trajectory": {
+        "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/direct_gate_attempt01/robotwin_pair_00/direct_command__right/trajectory.json",
+        "bytes": 152146,
+        "sha256": "9b756496d52e9f2a6c6154b6b6277f9ae02c73bb035c1f2d61413153d6eb9446"
+      },
+      "raw_action_trace": {
+        "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/direct_gate_attempt01/robotwin_pair_00/direct_command__right/action_trace.npz",
+        "bytes": 17527,
+        "sha256": "4ed2a4b7e04346aed33cc1657203721687254307d072caa5bf5773ec090c2dee"
+      },
+      "thermal_event_log": {
+        "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/direct_gate_attempt01/robotwin_pair_00/direct_command__right/thermal.jsonl",
+        "bytes": 78650,
+        "sha256": "b155861c2a5666bca54db9d2cd1c2107eb4b29e9a7096bab8c8950fcf7c6e2f2"
+      },
+      "executed_video": {
+        "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/direct_gate_attempt01/robotwin_pair_00/direct_command__right/simulator.mp4",
+        "bytes": 71074,
+        "sha256": "4cc543299eec1440b045539d0e2b122f4fa0d20b017edcebb8ae3cecb8eff55e"
+      },
+      "imagined_future_video": null,
+      "imagined_future_artifact": null
+    },
+    {
+      "model_id": "lingbot_vla_4b_robotwin",
+      "pair_id": "pair01",
+      "task": "place_a2b_right",
+      "environment_seed": 4300001,
+      "sampling_seed": 8401,
+      "prompt_family": "direct_command",
+      "requested_relation": "left",
+      "prompt": "Put the brown woodenblock to the left of the black phone.",
+      "movable_description": "brown woodenblock",
+      "reference_description": "black phone",
+      "movable_model_name": "086_woodenblock",
+      "reference_model_name": "077_phone",
+      "requested_success": false,
+      "native_task_success": false,
+      "opposite_relation_success": false,
+      "prompt_ignored_native_task_completed": false,
+      "actions_executed": 400,
+      "wall_seconds": 144.0361372458283,
+      "operational_wall_latency_valid": true,
+      "runtime_intervention_ids": [],
+      "initial_dx_m": -0.003953173756599426,
+      "initial_dy_m": 0.11879925802350044,
+      "final_dx_m": 0.04080191254615784,
+      "final_dy_m": -0.125270233489573,
+      "command_alignment_margin_m": -0.04080191254615784,
+      "max_object_lift_m": 0.014885008335113525,
+      "ever_gripper_closed": true,
+      "verified_pickup_proxy": false,
+      "ever_entered_requested_region": false,
+      "first_requested_region_action": null,
+      "ever_released_in_requested_region": false,
+      "first_release_in_requested_region_action": null,
+      "failure_stage": "closed_gripper_no_verified_pickup",
+      "raw_result": {
+        "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/direct_gate_attempt01/robotwin_pair_01/direct_command__left/result.json",
+        "bytes": 2618,
+        "sha256": "5a51b66557e7a316e239829813c08eb7519335acc1f69370aaf5c6de2444a598"
+      },
+      "raw_trajectory": {
+        "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/direct_gate_attempt01/robotwin_pair_01/direct_command__left/trajectory.json",
+        "bytes": 151529,
+        "sha256": "359790c50f965d1d8a79f395a49ece4fae524d9e7c0ae10ca594ec5e4bed9cc2"
+      },
+      "raw_action_trace": {
+        "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/direct_gate_attempt01/robotwin_pair_01/direct_command__left/action_trace.npz",
+        "bytes": 17810,
+        "sha256": "822414aa52cad6ba5be4ba739c89e91ca66fa5f38bbec156eed554f53ecf0572"
+      },
+      "thermal_event_log": {
+        "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/direct_gate_attempt01/robotwin_pair_01/direct_command__left/thermal.jsonl",
+        "bytes": 90497,
+        "sha256": "930ff70ea62edbc2564757e81afcdbd33dc801d36e00215291261e0fa9f7af5d"
+      },
+      "executed_video": {
+        "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/direct_gate_attempt01/robotwin_pair_01/direct_command__left/simulator.mp4",
+        "bytes": 70345,
+        "sha256": "d255d1e1c5e7093950ae4e8c490dd171894399021c9e97b62842cbc7dcad7d3c"
+      },
+      "imagined_future_video": null,
+      "imagined_future_artifact": null
+    },
+    {
+      "model_id": "lingbot_vla_4b_robotwin",
+      "pair_id": "pair01",
+      "task": "place_a2b_right",
+      "environment_seed": 4300001,
+      "sampling_seed": 8401,
+      "prompt_family": "direct_command",
+      "requested_relation": "right",
+      "prompt": "Put the brown woodenblock to the right of the black phone.",
+      "movable_description": "brown woodenblock",
+      "reference_description": "black phone",
+      "movable_model_name": "086_woodenblock",
+      "reference_model_name": "077_phone",
+      "requested_success": false,
+      "native_task_success": false,
+      "opposite_relation_success": true,
+      "prompt_ignored_native_task_completed": false,
+      "actions_executed": 400,
+      "wall_seconds": 137.70983976707794,
+      "operational_wall_latency_valid": true,
+      "runtime_intervention_ids": [],
+      "initial_dx_m": -0.003953173756599426,
+      "initial_dy_m": 0.11879925802350044,
+      "final_dx_m": -0.13493162393569946,
+      "final_dy_m": -0.017243849113583565,
+      "command_alignment_margin_m": -0.13493162393569946,
+      "max_object_lift_m": 0.0039386749267578125,
+      "ever_gripper_closed": true,
+      "verified_pickup_proxy": false,
+      "ever_entered_requested_region": false,
+      "first_requested_region_action": null,
+      "ever_released_in_requested_region": false,
+      "first_release_in_requested_region_action": null,
+      "failure_stage": "closed_gripper_no_verified_pickup",
+      "raw_result": {
+        "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/direct_gate_attempt01/robotwin_pair_01/direct_command__right/result.json",
+        "bytes": 2624,
+        "sha256": "1293d5569ac67fc6dba59f7a28f28080fc19258fb3cbb6342c88a883fc5ec3db"
+      },
+      "raw_trajectory": {
+        "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/direct_gate_attempt01/robotwin_pair_01/direct_command__right/trajectory.json",
+        "bytes": 151612,
+        "sha256": "e1b5705e692e25ea7430336fdc7e2d8261e0222b159cb16002e062d3712284a0"
+      },
+      "raw_action_trace": {
+        "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/direct_gate_attempt01/robotwin_pair_01/direct_command__right/action_trace.npz",
+        "bytes": 17185,
+        "sha256": "9c0c70d30d884c38475fcf13a141fb9e600dc152326c9b9c1e6501264e9dc80b"
+      },
+      "thermal_event_log": {
+        "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/direct_gate_attempt01/robotwin_pair_01/direct_command__right/thermal.jsonl",
+        "bytes": 87032,
+        "sha256": "85eecd3c7fd3df8dd28dc890e5af3d68d0ed84d1587bf1f8671af79794cd441e"
+      },
+      "executed_video": {
+        "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/direct_gate_attempt01/robotwin_pair_01/direct_command__right/simulator.mp4",
+        "bytes": 74735,
+        "sha256": "92b7e952c69bfb80d4eb8d48038978398feceb96f1b6036b193f41734638af60"
+      },
+      "imagined_future_video": null,
+      "imagined_future_artifact": null
+    },
+    {
+      "model_id": "lingbot_vla_4b_robotwin",
+      "pair_id": "pair02",
+      "task": "place_a2b_left",
+      "environment_seed": 4300002,
+      "sampling_seed": 8402,
+      "prompt_family": "direct_command",
+      "requested_relation": "left",
+      "prompt": "Put the box with cards inside to the left of the red coffee-box.",
+      "movable_description": "box with cards inside",
+      "reference_description": "red coffee-box",
+      "movable_model_name": "081_playingcards",
+      "reference_model_name": "113_coffee-box",
+      "requested_success": false,
+      "native_task_success": false,
+      "opposite_relation_success": false,
+      "prompt_ignored_native_task_completed": false,
+      "actions_executed": 400,
+      "wall_seconds": 142.77596239210106,
+      "operational_wall_latency_valid": true,
+      "runtime_intervention_ids": [],
+      "initial_dx_m": 0.01300065778195858,
+      "initial_dy_m": 0.11296788789331913,
+      "final_dx_m": -0.10606195032596588,
+      "final_dy_m": 0.054675422608852386,
+      "command_alignment_margin_m": 0.10606195032596588,
+      "max_object_lift_m": 0.11689001321792603,
+      "ever_gripper_closed": true,
+      "verified_pickup_proxy": true,
+      "ever_entered_requested_region": false,
+      "first_requested_region_action": null,
+      "ever_released_in_requested_region": false,
+      "first_release_in_requested_region_action": null,
+      "failure_stage": "picked_never_entered_requested_region",
+      "raw_result": {
+        "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/direct_gate_attempt01/robotwin_pair_02/direct_command__left/result.json",
+        "bytes": 2646,
+        "sha256": "d3ca7b8a5aac4f0cd259879a89ea99729bd57158b1730b5d88e10cf383d91e6a"
+      },
+      "raw_trajectory": {
+        "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/direct_gate_attempt01/robotwin_pair_02/direct_command__left/trajectory.json",
+        "bytes": 151858,
+        "sha256": "318b3b6198368d82037236f9827f7c8da498a8392fb9e676c38c7057b7b7d568"
+      },
+      "raw_action_trace": {
+        "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/direct_gate_attempt01/robotwin_pair_02/direct_command__left/action_trace.npz",
+        "bytes": 18478,
+        "sha256": "2888849afecc9a83fb3cff03282f243e683bbb8fb4aca4db2161635e45533faa"
+      },
+      "thermal_event_log": {
+        "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/direct_gate_attempt01/robotwin_pair_02/direct_command__left/thermal.jsonl",
+        "bytes": 88762,
+        "sha256": "be2fb9afaf56b5dbeac866ad5306f4852c02ea4b3b4713391ba0d5401101dcfc"
+      },
+      "executed_video": {
+        "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/direct_gate_attempt01/robotwin_pair_02/direct_command__left/simulator.mp4",
+        "bytes": 71226,
+        "sha256": "e6b65a3e1fc46a3172d30c04d629e6de86a4867685506f4d1a6f906abac5dd68"
+      },
+      "imagined_future_video": null,
+      "imagined_future_artifact": null
+    },
+    {
+      "model_id": "lingbot_vla_4b_robotwin",
+      "pair_id": "pair02",
+      "task": "place_a2b_left",
+      "environment_seed": 4300002,
+      "sampling_seed": 8402,
+      "prompt_family": "direct_command",
+      "requested_relation": "right",
+      "prompt": "Put the box with cards inside to the right of the red coffee-box.",
+      "movable_description": "box with cards inside",
+      "reference_description": "red coffee-box",
+      "movable_model_name": "081_playingcards",
+      "reference_model_name": "113_coffee-box",
+      "requested_success": false,
+      "native_task_success": true,
+      "opposite_relation_success": true,
+      "prompt_ignored_native_task_completed": true,
+      "actions_executed": 400,
+      "wall_seconds": 142.84754265798256,
+      "operational_wall_latency_valid": true,
+      "runtime_intervention_ids": [],
+      "initial_dx_m": 0.01300065778195858,
+      "initial_dy_m": 0.11296788789331913,
+      "final_dx_m": -0.08647745847702026,
+      "final_dy_m": 0.01018477976322174,
+      "command_alignment_margin_m": -0.08647745847702026,
+      "max_object_lift_m": 0.11657041311264038,
+      "ever_gripper_closed": true,
+      "verified_pickup_proxy": true,
+      "ever_entered_requested_region": false,
+      "first_requested_region_action": null,
+      "ever_released_in_requested_region": false,
+      "first_release_in_requested_region_action": null,
+      "failure_stage": "picked_never_entered_requested_region",
+      "raw_result": {
+        "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/direct_gate_attempt01/robotwin_pair_02/direct_command__right/result.json",
+        "bytes": 2657,
+        "sha256": "8f441075d3c83b6318ed7a7b9e6e3bdd31448bf4391a5351fb087b84c86d63f6"
+      },
+      "raw_trajectory": {
+        "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/direct_gate_attempt01/robotwin_pair_02/direct_command__right/trajectory.json",
+        "bytes": 151904,
+        "sha256": "80d7fabc12d405e36275e32ed5a8c7725f1af99e18ee0a33689a984cd048326f"
+      },
+      "raw_action_trace": {
+        "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/direct_gate_attempt01/robotwin_pair_02/direct_command__right/action_trace.npz",
+        "bytes": 18726,
+        "sha256": "2458711e3c437d02e7fcad53e18c2e7662c00cbd3404f6b0111229352f58a7f0"
+      },
+      "thermal_event_log": {
+        "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/direct_gate_attempt01/robotwin_pair_02/direct_command__right/thermal.jsonl",
+        "bytes": 89632,
+        "sha256": "13c2bf48f61360c41155bea898b257b54b4594bf69edd999801a6fa0ee96ea08"
+      },
+      "executed_video": {
+        "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/direct_gate_attempt01/robotwin_pair_02/direct_command__right/simulator.mp4",
+        "bytes": 71214,
+        "sha256": "1a9052c7c429a40727f9a5c43c803d95a2efb37131d71228b334b901809e5a41"
+      },
+      "imagined_future_video": null,
+      "imagined_future_artifact": null
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "schema_version": "vla-wam-shared-v2-lingbot-vla-4b-exact-repeat-probe-v1",
+  "passed": true,
+  "contract": {
+    "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/contract_probe/probe_contract.json",
+    "sha256": "e13952b915ce70d5d5beb4e07d1e051d127c81f2e66079f735db6f2795bb9a87",
+    "action_shape": [50, 14],
+    "action_dtype": "float32",
+    "finite_required": true,
+    "repeat_max_abs_tolerance": 0.0,
+    "repeat_rms_tolerance": 0.0
+  },
+  "fixed_observation": {
+    "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/contract_probe/pair00_fixed_observation/observation.npz",
+    "sha256": "be227860fec29df05aba9ebf5ec12f4465a5582b66a810851f5476227730b70d",
+    "metadata_sha256": "dbd83c40d74ffe4af299d60b43aa4d1c0d606f60821e941942ef497071849134",
+    "environment_seed": 4300000,
+    "sampling_seed": 8400
+  },
+  "metrics": {
+    "left_exact_repeat_max_abs": 0.0,
+    "left_exact_repeat_rms": 0.0,
+    "left_exact_repeat_exact_equal": true,
+    "left_vs_right_max_abs": 0.017662644386291504,
+    "left_vs_right_rms": 0.003834044056503165,
+    "left_vs_right_differing_elements": 407
+  },
+  "records": {
+    "left_a": {
+      "prompt": "Put the blue soap to the left of the tea-box.",
+      "action_path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/contract_probe/repeat_01_attempt04/action.npz",
+      "action_sha256": "c6d4d0ef4dfdf3e2ab5c27ca7bccfeb8dae13ce65f189db7d7075e86806daa39",
+      "result_sha256": "d502e2b74f02d44f50f0213f185e4463b4ca8867a26469360531fe17337a8ed0"
+    },
+    "left_b": {
+      "prompt": "Put the blue soap to the left of the tea-box.",
+      "action_path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/contract_probe/repeat_02/action.npz",
+      "action_sha256": "c6d4d0ef4dfdf3e2ab5c27ca7bccfeb8dae13ce65f189db7d7075e86806daa39",
+      "result_sha256": "2c271d97bf862025da4e1d61e37848ff11e7a00b9584ce8b377004d329b84382"
+    },
+    "right": {
+      "prompt": "Put the blue soap to the right of the tea-box.",
+      "action_path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/contract_probe/right_prompt_diagnostic/action.npz",
+      "action_sha256": "03d89ecc636a3d2237d1909b189a6f80fdf44f025be2aaa509d3df6b85851f85",
+      "result_sha256": "9dbcade1dae1baf4cafbd0615a21cbb405c46f19f39ce12ff6385e3d2e6e09d9"
+    }
+  },
+  "interpretation": "The native action interface is bit-exact across two clean LEFT processes and changes under the matched RIGHT prompt. Prompt sensitivity is a diagnostic, not a behavioral success claim."
+}

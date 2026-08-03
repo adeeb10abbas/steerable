@@ -1,0 +1,115 @@
+{
+  "schema_version": "vla-wam-shared-v2-lingbot-vla-4b-readiness-v1",
+  "compiled_at_utc": "2026-08-03T19:06:42Z",
+  "status": "six_cell_gate_complete",
+  "amendment": {
+    "id": "V2-A005",
+    "path": "artifacts/vla_wam_shared_v2/pilot/post_result_expansion_amendment.json",
+    "sha256": "e8f724a1818e20ab6cb1481c87a5d5c255d42148d47bf387d7f77f3643587101"
+  },
+  "freeze_boundary": {
+    "note": "This compact readiness record was compiled after the six cells. The immutable raw probe contract below was written before the first model inference; V2-A005 froze the six-cell queue before behavior.",
+    "raw_probe_contract": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/contract_probe/probe_contract.json",
+    "raw_probe_contract_sha256": "e13952b915ce70d5d5beb4e07d1e051d127c81f2e66079f735db6f2795bb9a87"
+  },
+  "model": {
+    "model_id": "lingbot_vla_4b_robotwin",
+    "repository": "https://github.com/Robbyant/lingbot-vla.git",
+    "repository_commit": "4eb34b7693a0565c67433f8fac9c59a2e67eb60b",
+    "repository_pvc_path": "/data/users/ali/vla_wam/external/lingbot-vla-4b",
+    "checkpoint": "robbyant/lingbot-vla-4b-posttrain-robotwin",
+    "checkpoint_revision": "fb71a2c9749ccfedbb7290c2c3f0e5e7c7305c9e",
+    "checkpoint_pvc_path": "/data/users/ali/vla_wam/checkpoints/lingbot-vla-4b-posttrain-robotwin",
+    "checkpoint_payload_file_count": 6,
+    "checkpoint_payload_bytes": 16793145063,
+    "model_safetensors_bytes": 16789932052,
+    "model_safetensors_sha256": "12153da33b2712d1e17a35a334596f205bb95b6dcd6ad8725ef5d27d6d968752"
+  },
+  "base_vlm": {
+    "checkpoint": "Qwen/Qwen2.5-VL-3B-Instruct",
+    "revision": "66285546d2b821cf421d4f5eb2576359d3770cd3",
+    "pvc_path": "/data/users/ali/vla_wam/checkpoints/Qwen2.5-VL-3B-Instruct",
+    "payload_file_count": 14,
+    "payload_bytes": 7520919614,
+    "file_list_aggregate_sha256": "93914ca3640992eb853b582caea81c454b7f080466096e1da1c74cfa625464ef"
+  },
+  "simulator": {
+    "repository": "https://github.com/Robbyant/RoboTwin.git",
+    "repository_commit": "0aeea2d669c0f8516f4d5785f0aa33ba812c14b4",
+    "repository_pvc_path": "/data/users/ali/vla_wam/external/LingBot-RoboTwin",
+    "scene_gate_log": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/scene_gate_attempt01/worker.log",
+    "scene_gate_log_sha256": "b8af88deb71a18846339c1f38390cef9f020ae5a7716abd9960e9edc16ec9fbc",
+    "scene_gate_thermal_log_sha256": "127cea677aa52e013d04901613d447b5b74b3b7123db9583bc648ce79b656a26",
+    "headless_vulkan_sapien_render_passed": true,
+    "camera_shapes": [[240, 320, 3], [240, 320, 3], [240, 320, 3]],
+    "state_shape": [14]
+  },
+  "interface_contract": {
+    "prompt_controller": "episode_static",
+    "prompt_family": "direct_command",
+    "observation_images": ["cam_high", "cam_left_wrist", "cam_right_wrist"],
+    "observation_state_shape": [14],
+    "action_space": "native RoboTwin joint qpos",
+    "action_chunk_shape": [50, 14],
+    "executed_chunk_length": 50,
+    "maximum_actions": 400,
+    "future_interface": "none",
+    "future_scoring": "not_applicable_never_zero"
+  },
+  "integration": {
+    "behavior_runner": "experiments/lingbot_vla_4b_robotwin/v2_language_gate.py",
+    "behavior_runner_sha256": "3fd83b7b4ba0df1a2a3cffc214d841107a01d0cc23ffede3b64f8aa407cd9fa8",
+    "scene_gate": "experiments/lingbot_vla_4b_robotwin/v2_scene_gate.py",
+    "scene_gate_sha256": "4cea361a4b822815f2a145f7396d5c2a7e60f8a1937a56c091de7efe8becae2d"
+  },
+  "environment": {
+    "pvc_path": "/data/users/ali/vla_wam/envs/lingbot-vla-4b",
+    "torch": "2.8.0+cu128",
+    "torchvision": "0.23.0+cu128",
+    "transformers": "4.51.3",
+    "lerobot": "0.4.2",
+    "numpy": "1.26.4",
+    "scipy": "1.17.1",
+    "flash_attn": "2.8.3",
+    "sapien": "3.0.0b1",
+    "mplib": "0.2.1",
+    "open3d": "0.19.0",
+    "warp": "1.12.0",
+    "curobo_source": "/data/users/ali/vla_wam/external/curobo-0.7.8-torch28",
+    "curobo_version": "0.7.8",
+    "curobo_extensions_built_for_torch_2_8": true
+  },
+  "compute": {
+    "kubernetes_context": "prod-dcwi-warrenq1-vmkub007",
+    "namespace": "211247-prod",
+    "pod": "lerobot-8-ali",
+    "gpu_index": 0,
+    "gpu": "NVIDIA A100-SXM4-80GB",
+    "maximum_observed_cell_temperature_c": 37,
+    "thermal_pauses": 0,
+    "thermal_emergency_holds": 0
+  },
+  "publication_media": {
+    "path": "artifacts/vla_wam_shared_v2/pilot/expansion/media/lingbot_vla_4b_pair00_matched.mp4",
+    "sha256": "6fdf9383bcee0abf5cd6910afd477b3aa6bd69a0fd36ee4b8ab3eaf059b697ae",
+    "layout": "LEFT-command episode on the left; matched RIGHT-command episode on the right",
+    "source": "posthoc hstack of the two hash-locked raw simulator videos; not used for scoring"
+  },
+  "technical_setup_attempts_excluded_from_behavior_denominator": [
+    {
+      "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/contract_probe/repeat_01/lingbot_vla_4b_robotwin_contract_probe_invalid_attempts.json",
+      "sha256": "f5c8fd2acf36558679a2ba7b87d4590a1cce080d0954dcc8713b47623ecb5c0d",
+      "blocker": "FlashAttention2 package absent before model construction"
+    },
+    {
+      "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/contract_probe/repeat_01_attempt02/lingbot_vla_4b_robotwin_contract_probe_invalid_attempts.json",
+      "sha256": "2237f2a0d38fbaa3434991465741609a8a12b625388c6c30cd60cfec1532bef0",
+      "blocker": "worker exited nonzero; stdout/stderr were not retained, so no more specific cause is asserted"
+    },
+    {
+      "path": "/data/users/ali/vla_wam/raw/lingbot_vla_4b_robotwin/contract_probe/repeat_01_attempt03/lingbot_vla_4b_robotwin_contract_probe_invalid_attempts.json",
+      "sha256": "02853f40a24bf5d0bfaf175de725168e97a180b02631899076f74aa913b6abc5",
+      "blocker": "official reset used a repository-relative robotwin config while the diagnostic was in the simulator working directory"
+    }
+  ]
+}

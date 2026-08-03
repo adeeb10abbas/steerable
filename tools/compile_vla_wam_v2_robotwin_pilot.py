@@ -23,6 +23,7 @@ MODEL_LABELS = {
     "efficient_wam_rt_robotwin": "Efficient-WAM-RT",
     "fastwam_robotwin": "FastWAM",
     "lingbot_va_robotwin": "LingBot-VA",
+    "lingbot_vla_4b_robotwin": "LingBot-VLA 4B",
 }
 PAIR_BY_ENVIRONMENT_SEED = {4300000: "pair00", 4300001: "pair01", 4300002: "pair02"}
 PICKUP_LIFT_M = 0.03
@@ -123,6 +124,13 @@ def classify_episode(
     final_dy = float(result["final"]["object_minus_target_y"])
     direction_sign = -1.0 if result["requested_relation"] == "left" else 1.0
     sim_video = Path(result["simulator_video"])
+    action_trace_value = result.get("action_trace")
+    action_trace_path = (
+        Path(action_trace_value["path"])
+        if isinstance(action_trace_value, dict) and action_trace_value.get("path")
+        else result_path.parent / "action_trace.npz"
+    )
+    thermal_log_path = result_path.parent / "thermal.jsonl"
     future_video = predicted_video(result)
     future_artifact = predicted_artifact(result_path, result, future_video)
     cell_interventions = interventions.get(
@@ -181,6 +189,8 @@ def classify_episode(
         "failure_stage": failure_stage,
         "raw_result": file_record(result_path),
         "raw_trajectory": file_record(trajectory_path),
+        "raw_action_trace": file_record(action_trace_path),
+        "thermal_event_log": file_record(thermal_log_path),
         "executed_video": file_record(sim_video),
         "imagined_future_video": file_record(future_video),
         "imagined_future_artifact": future_artifact,
@@ -193,6 +203,8 @@ def flatten(row: dict[str, Any]) -> dict[str, Any]:
     for key in (
         "raw_result",
         "raw_trajectory",
+        "raw_action_trace",
+        "thermal_event_log",
         "executed_video",
         "imagined_future_video",
         "imagined_future_artifact",
@@ -374,7 +386,7 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    paths = sorted(args.input_root.glob("pair*/**/result.json"))
+    paths = sorted(args.input_root.rglob("result.json"))
     if len(paths) != 6:
         raise RuntimeError(f"Expected exactly six pilot results, found {len(paths)}")
     intervention_path = args.runtime_interventions

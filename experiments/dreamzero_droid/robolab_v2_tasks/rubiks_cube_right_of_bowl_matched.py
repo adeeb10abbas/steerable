@@ -34,7 +34,7 @@ class RubiksCubeRightOfBowlMatchedTask(Task):
     contact_object_list = ["rubiks_cube", "banana", "bowl", "table"]
     scene = import_scene("rubiks_cube_banana_bowl.usda", contact_object_list)
     scene.over_shoulder_right_camera = (
-        OverShoulderRightCameraCfg.over_shoulder_right_camera
+        OverShoulderRightCameraCfg().over_shoulder_right_camera
     )
     scene.rubiks_cube.init_state.pos = (
         0.303364634513855,

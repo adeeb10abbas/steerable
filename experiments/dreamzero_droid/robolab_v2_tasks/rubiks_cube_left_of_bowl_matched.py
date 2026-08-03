@@ -38,7 +38,7 @@ class RubiksCubeLeftOfBowlMatchedTask(Task):
     # its runtime defaults, so add the official mirrored right-shoulder sensor
     # without changing any object, robot, or success-predicate state.
     scene.over_shoulder_right_camera = (
-        OverShoulderRightCameraCfg.over_shoulder_right_camera
+        OverShoulderRightCameraCfg().over_shoulder_right_camera
     )
     scene.rubiks_cube.init_state.pos = (
         0.303364634513855,

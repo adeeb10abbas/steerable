@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DreamZero and matched VLA/WAM video evidence</title>
+<style>
+:root{--ink:#17202a;--muted:#596775;--paper:#f4f1ea;--card:#fff;--line:#d8d8d2;--left:#fff0d4;--right:#e4f1ff;--accent:#6941c6}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{width:min(1420px,calc(100% - 32px));margin:auto;padding:52px 0 80px}h1{max-width:980px;margin:.12em 0;font-size:clamp(42px,7vw,84px);line-height:.98;letter-spacing:-.05em}h2{font-size:clamp(31px,4vw,48px);margin:0}h3{font-size:25px;margin:2px 0 0}.lede{max-width:920px;color:var(--muted);font-size:20px}.boundary{padding:16px 20px;border-left:5px solid var(--accent);background:#fff;border-radius:0 12px 12px 0;max-width:1050px}section{margin-top:62px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:20px;border-bottom:1px solid var(--line);padding-bottom:14px}.section-head p{color:var(--muted);margin:0}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}article{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}article header{padding:20px 22px 14px;display:flex;justify-content:space-between;gap:18px}.overline{margin:0;color:var(--accent);text-transform:uppercase;letter-spacing:.06em;font-size:12px;font-weight:800}.status{max-width:46%;color:var(--muted);font-size:12px;text-align:right}video{display:block;width:100%;max-height:560px;background:#111}.directions{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px 18px 10px}.direction{padding:14px;border-radius:10px}.direction.left{background:var(--left)}.direction.right{background:var(--right)}.direction-top{display:flex;justify-content:space-between;gap:10px;font-size:13px}blockquote{margin:10px 0 0;font-weight:650}.facts{display:grid;grid-template-columns:1fr 1.4fr;gap:1px;background:var(--line);border-block:1px solid var(--line)}.facts div{background:#fff;padding:12px 18px}.facts div:last-child{grid-column:1/-1}dt{font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:800}dd{margin:3px 0 0}code{overflow-wrap:anywhere;font-size:12px}.note{padding:0 18px 18px;color:var(--muted);font-size:14px}a{color:#4a2aa5}.pending,.missing{padding:24px;border-style:dashed}.pending{border-color:#8c6ddb;background:#faf7ff}.missing h3{margin-top:4px}.missing-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}footer{margin-top:52px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:20px}@media(max-width:840px){.grid,.missing-grid{grid-template-columns:1fr}.section-head{display:block}.directions,.facts{grid-template-columns:1fr}.facts div:last-child{grid-column:auto}article header{display:block}.status{display:block;max-width:none;text-align:left;margin-top:7px}}
+</style></head><body><main>
+<p class="overline">Video-first evidence index · direct static LEFT/RIGHT commands</p><h1>DreamZero + every committed model video</h1>
+<p class="lede">Videos are embedded at full card width, grouped strictly by arena, and labeled with prompt, direction, outcome, model interface, and evidence status. Missing media stays missing. Embed each canonical publication video once. Alternate square encodes, posters, captions, and FastWAM reconstruction inputs remain available through their source manifests but are not duplicated as additional evidence cards.</p>
+<p class="boundary"><strong>Claim boundary.</strong> Publication-selected simulator clips are grouped by arena. DROID and RoboTwin success rates are never pooled. A clip is an evidence view, not an additional episode.</p>
+<section><div class="section-head"><h2>DROID / RoboLab</h2><p>Rubik’s cube relative to a bowl. Scores stay inside DROID.</p></div><div class="grid">
+      <article class="pending" id="dreamzero-pending">
+        <p class="overline">RTX rollout target · evidence pending</p>
+        <h3>DreamZero DROID</h3>
+        <p>No valid DreamZero behavioral clip is committed yet. This is intentionally not a zero and not a placeholder rollout.</p>
+        <p>When the RTX lane produces valid videos, the renderer will ingest hash-validated <code>gallery_entries</code> from <code>artifacts/vla_wam_shared_v2/media/dreamzero_droid/media_manifest.json</code>.</p>
+      </article>
+      <article class="card" id="cosmos3_edge_seed8302">
+        <header>
+          <div><p class="overline">WAM · seed 8302 matched pair</p>
+          <h3>Cosmos3 Edge DROID</h3></div>
+          <span class="status">Valid behavioral pair; both episodes succeeded; committed publication selection</span>
+        </header>
+        <video controls preload="metadata">
+          <source src="../artifacts/vla_wam_shared_v2/media/cosmos3_edge_droid/cosmos3_edge_seed8302_paired.mp4" type="video/mp4">
+          <a href="../artifacts/vla_wam_shared_v2/media/cosmos3_edge_droid/cosmos3_edge_seed8302_paired.mp4">Open the MP4 directly</a>.
+        </video>
+        <div class="directions"><div class="direction left"><div class="direction-top"><strong>LEFT</strong><span>success after 397 actions</span></div><blockquote>“Put the Rubik&#x27;s cube to the left of the bowl.”</blockquote></div><div class="direction right"><div class="direction-top"><strong>RIGHT</strong><span>success after 123 actions</span></div><blockquote>“Put the Rubik&#x27;s cube to the right of the bowl.”</blockquote></div></div>
+        <dl class="facts">
+          <div><dt>Arena</dt><dd>DROID / RoboLab</dd></div>
+          <div><dt>Future interface</dt><dd>Decoded video futures plus actions; 17 decoded futures retained for this pair</dd></div>
+          <div><dt>Video SHA-256</dt><dd><code>5eed8b8468aff6070617e126eac1c67a19fd62309279ca1a06f2d3b5abf4bdc9</code></dd></div>
+        </dl>
+        <p class="note">Largest observed RIGHT-minus-LEFT endpoint separation among the three frozen Cosmos3 Edge pairs. The shorter episode holds its final frame. <a href="../artifacts/vla_wam_shared_v2/media/cosmos3_edge_droid/cosmos3_edge_seed8302_paired.mp4">Open video</a> · <a href="../artifacts/vla_wam_shared_v2/media/cosmos3_edge_droid/media_manifest.json">Evidence manifest</a></p>
+      </article>
+      <article class="card" id="groot_n17_seed8301">
+        <header>
+          <div><p class="overline">VLA · seed 8301 matched pair</p>
+          <h3>GR00T N1.7 DROID</h3></div>
+          <span class="status">Valid behavioral pair; both episodes failed; committed publication selection</span>
+        </header>
+        <video controls preload="metadata">
+          <source src="../artifacts/vla_wam_shared_v2/media/groot_n17_droid/groot_n17_droid_seed8301_pair.mp4" type="video/mp4">
+          <a href="../artifacts/vla_wam_shared_v2/media/groot_n17_droid/groot_n17_droid_seed8301_pair.mp4">Open the MP4 directly</a>.
+        </video>
+        <div class="directions"><div class="direction left"><div class="direction-top"><strong>LEFT</strong><span>failure after 450 actions</span></div><blockquote>“Put the Rubik&#x27;s cube to the left of the bowl.”</blockquote></div><div class="direction right"><div class="direction-top"><strong>RIGHT</strong><span>failure after 450 actions</span></div><blockquote>“Put the Rubik&#x27;s cube to the right of the bowl.”</blockquote></div></div>
+        <dl class="facts">
+          <div><dt>Arena</dt><dd>DROID / RoboLab</dd></div>
+          <div><dt>Future interface</dt><dd>Action chunks only; no decoded visual future</dd></div>
+          <div><dt>Video SHA-256</dt><dd><code>3ff5ac38d8bd224f336531b93c09cd77dee565ab724647f4019a8b2e5d60600d</code></dd></div>
+        </dl>
+        <p class="note">Largest observed LEFT-minus-RIGHT endpoint separation among the three frozen GR00T pairs; endpoints were ordered in the requested direction despite both task failures. <a href="../artifacts/vla_wam_shared_v2/media/groot_n17_droid/groot_n17_droid_seed8301_pair.mp4">Open video</a> · <a href="../artifacts/vla_wam_shared_v2/media/groot_n17_droid/media_index.json">Evidence manifest</a></p>
+      </article>
+      <article class="card" id="pi0_fast_seed8300">
+        <header>
+          <div><p class="overline">VLA · seed 8300 matched pair</p>
+          <h3>π0-FAST DROID</h3></div>
+          <span class="status">Valid behavioral pair; LEFT failed and RIGHT succeeded; committed publication selection</span>
+        </header>
+        <video controls preload="metadata" poster="../artifacts/vla_wam_shared_v2/media/droid_pi0_fast_pairs/pi0_fast_seed8300_left_failure_right_success_poster.jpg">
+          <source src="../artifacts/vla_wam_shared_v2/media/droid_pi0_fast_pairs/pi0_fast_seed8300_left_failure_right_success.mp4" type="video/mp4"><track kind="captions" src="../artifacts/vla_wam_shared_v2/media/droid_pi0_fast_pairs/pi0_fast_seed8300_left_failure_right_success.vtt" srclang="en" label="English">
+          <a href="../artifacts/vla_wam_shared_v2/media/droid_pi0_fast_pairs/pi0_fast_seed8300_left_failure_right_success.mp4">Open the MP4 directly</a>.
+        </video>
+        <div class="directions"><div class="direction left"><div class="direction-top"><strong>LEFT</strong><span>failure: no object interaction</span></div><blockquote>“Put the Rubik&#x27;s cube to the left of the bowl.”</blockquote></div><div class="direction right"><div class="direction-top"><strong>RIGHT</strong><span>success</span></div><blockquote>“Put the Rubik&#x27;s cube to the right of the bowl.”</blockquote></div></div>
+        <dl class="facts">
+          <div><dt>Arena</dt><dd>DROID / RoboLab</dd></div>
+          <div><dt>Future interface</dt><dd>Actions only; no decoded visual future</dd></div>
+          <div><dt>Video SHA-256</dt><dd><code>84a424cdfb796bbce02a88eb6d9a22de74fc3b264b4a103bece09aea99ed3a6a</code></dd></div>
+        </dl>
+        <p class="note">First compiled same-seed pair containing a LEFT failure and RIGHT success; selected before rendering. <a href="../artifacts/vla_wam_shared_v2/media/droid_pi0_fast_pairs/pi0_fast_seed8300_left_failure_right_success.mp4">Open video</a> · <a href="../artifacts/vla_wam_shared_v2/media/droid_pi0_fast_pairs/media_index.json">Evidence manifest</a></p>
+      </article></div></section><section><div class="section-head"><h2>RoboTwin</h2><p>Place object A relative to object B. Scores stay inside RoboTwin.</p></div><div class="grid">
+      <article class="card" id="efficient_wam_rt_pair00">
+        <header>
+          <div><p class="overline">WAM · pair 00 pilot</p>
+          <h3>Efficient-WAM-RT</h3></div>
+          <span class="status">Valid behavioral pair; LEFT succeeded and RIGHT failed; committed publication selection</span>
+        </header>
+        <video controls preload="metadata" poster="../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/efficient_wam_rt_pair00_left_success_right_failure_poster.jpg">
+          <source src="../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/efficient_wam_rt_pair00_left_success_right_failure.mp4" type="video/mp4"><track kind="captions" src="../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/efficient_wam_rt_pair00_left_success_right_failure.vtt" srclang="en" label="English">
+          <a href="../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/efficient_wam_rt_pair00_left_success_right_failure.mp4">Open the MP4 directly</a>.
+        </video>
+        <div class="directions"><div class="direction left"><div class="direction-top"><strong>LEFT</strong><span>success</span></div><blockquote>“Put the blue soap to the left of the tea-box.”</blockquote></div><div class="direction right"><div class="direction-top"><strong>RIGHT</strong><span>failure: picked, never entered requested region</span></div><blockquote>“Put the blue soap to the right of the tea-box.”</blockquote></div></div>
+        <dl class="facts">
+          <div><dt>Arena</dt><dd>RoboTwin place-A-relative-to-B</dd></div>
+          <div><dt>Future interface</dt><dd>Decoded coarse future video plus actions; publication clip shows simulator execution</dd></div>
+          <div><dt>Video SHA-256</dt><dd><code>bad140d1872ee904bd364c0f8c022b7e5944e3c7529d68f43b93ae72a194a7aa</code></dd></div>
+        </dl>
+        <p class="note">First compiled pilot pair containing a LEFT success and matched RIGHT failure. <a href="../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/efficient_wam_rt_pair00_left_success_right_failure.mp4">Open video</a> · <a href="../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/media_index.json">Evidence manifest</a></p>
+      </article>
+      <article class="card" id="efficient_wam_rt_pair05">
+        <header>
+          <div><p class="overline">WAM · pair 05 confirmation</p>
+          <h3>Efficient-WAM-RT</h3></div>
+          <span class="status">Valid prospective confirmation pair; both episodes succeeded; committed publication selection</span>
+        </header>
+        <video controls preload="metadata" poster="../artifacts/vla_wam_shared_v2/media/robotwin_wam_confirmation/efficient_wam_rt_pair05_left_right_both_success_poster.jpg">
+          <source src="../artifacts/vla_wam_shared_v2/media/robotwin_wam_confirmation/efficient_wam_rt_pair05_left_right_both_success.mp4" type="video/mp4"><track kind="captions" src="../artifacts/vla_wam_shared_v2/media/robotwin_wam_confirmation/efficient_wam_rt_pair05_left_right_both_success.vtt" srclang="en" label="English">
+          <a href="../artifacts/vla_wam_shared_v2/media/robotwin_wam_confirmation/efficient_wam_rt_pair05_left_right_both_success.mp4">Open the MP4 directly</a>.
+        </video>
+        <div class="directions"><div class="direction left"><div class="direction-top"><strong>LEFT</strong><span>success after 46 actions</span></div><blockquote>“Put the box of playingcards to the left of the rubikscube.”</blockquote></div><div class="direction right"><div class="direction-top"><strong>RIGHT</strong><span>success after 47 actions</span></div><blockquote>“Put the box of playingcards to the right of the rubikscube.”</blockquote></div></div>
+        <dl class="facts">
+          <div><dt>Arena</dt><dd>RoboTwin place-A-relative-to-B</dd></div>
+          <div><dt>Future interface</dt><dd>Decoded coarse future video plus actions; publication clip shows simulator execution</dd></div>
+          <div><dt>Video SHA-256</dt><dd><code>bbc833fc1faf84f38bd8307b8d7f6b73d0fad957ce5a822c7f07a1db6ba2e1a4</code></dd></div>
+        </dl>
+        <p class="note">Matched confirmation pair with success in both requested directions. <a href="../artifacts/vla_wam_shared_v2/media/robotwin_wam_confirmation/efficient_wam_rt_pair05_left_right_both_success.mp4">Open video</a> · <a href="../artifacts/vla_wam_shared_v2/media/robotwin_wam_confirmation/media_index.json">Evidence manifest</a></p>
+      </article>
+      <article class="card" id="fastwam_pair02">
+        <header>
+          <div><p class="overline">WAM · pair 02 pilot</p>
+          <h3>FastWAM</h3></div>
+          <span class="status">Valid behavioral pair; LEFT succeeded and RIGHT failed; committed reconstructed publication selection</span>
+        </header>
+        <video controls preload="metadata" poster="../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/fastwam_pair02_left_success_right_failure_poster.jpg">
+          <source src="../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/fastwam_pair02_left_success_right_failure.mp4" type="video/mp4"><track kind="captions" src="../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/fastwam_pair02_left_success_right_failure.vtt" srclang="en" label="English">
+          <a href="../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/fastwam_pair02_left_success_right_failure.mp4">Open the MP4 directly</a>.
+        </video>
+        <div class="directions"><div class="direction left"><div class="direction-top"><strong>LEFT</strong><span>success</span></div><blockquote>“Put the box with cards inside to the left of the red coffee-box.”</blockquote></div><div class="direction right"><div class="direction-top"><strong>RIGHT</strong><span>failure: picked, never entered requested region</span></div><blockquote>“Put the box with cards inside to the right of the red coffee-box.”</blockquote></div></div>
+        <dl class="facts">
+          <div><dt>Arena</dt><dd>RoboTwin place-A-relative-to-B</dd></div>
+          <div><dt>Future interface</dt><dd>Action-only at inference; world-model objective is training-time only</dd></div>
+          <div><dt>Video SHA-256</dt><dd><code>7a152b61292fdfe9d341950d4448dce4c8c5d4b797aa073b246bafafbaaae4f2</code></dd></div>
+        </dl>
+        <p class="note">The source fork&#x27;s pixel-layout fault is disclosed; this clip uses the committed four-packet head-camera reconstruction. Actions and state-derived outcome are unchanged. <a href="../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/fastwam_pair02_left_success_right_failure.mp4">Open video</a> · <a href="../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/media_index.json">Evidence manifest</a></p>
+      </article>
+      <article class="card" id="lingbot_va_pair00">
+        <header>
+          <div><p class="overline">WAM · pair 00 pilot</p>
+          <h3>LingBot-VA</h3></div>
+          <span class="status">Valid behavioral pair; LEFT succeeded and RIGHT failed; committed publication selection</span>
+        </header>
+        <video controls preload="metadata" poster="../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/lingbot_va_pair00_left_success_right_failure_poster.jpg">
+          <source src="../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/lingbot_va_pair00_left_success_right_failure.mp4" type="video/mp4"><track kind="captions" src="../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/lingbot_va_pair00_left_success_right_failure.vtt" srclang="en" label="English">
+          <a href="../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/lingbot_va_pair00_left_success_right_failure.mp4">Open the MP4 directly</a>.
+        </video>
+        <div class="directions"><div class="direction left"><div class="direction-top"><strong>LEFT</strong><span>success</span></div><blockquote>“Put the blue soap to the left of the tea-box.”</blockquote></div><div class="direction right"><div class="direction-top"><strong>RIGHT</strong><span>failure: picked, never entered requested region</span></div><blockquote>“Put the blue soap to the right of the tea-box.”</blockquote></div></div>
+        <dl class="facts">
+          <div><dt>Arena</dt><dd>RoboTwin place-A-relative-to-B</dd></div>
+          <div><dt>Future interface</dt><dd>Joint video/action latent retained; no publication-ready visual decoder</dd></div>
+          <div><dt>Video SHA-256</dt><dd><code>d7f5addbfbf0074a2e116d197b12b679e5489e81dd0120334221347c406c8a0b</code></dd></div>
+        </dl>
+        <p class="note">First compiled pilot pair containing a LEFT success and matched RIGHT failure. The retained latent is not mislabeled as an inspectable future video. <a href="../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/lingbot_va_pair00_left_success_right_failure.mp4">Open video</a> · <a href="../artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/media_index.json">Evidence manifest</a></p>
+      </article>
+      <article class="card" id="lingbot_va_pair03">
+        <header>
+          <div><p class="overline">WAM · pair 03 confirmation</p>
+          <h3>LingBot-VA</h3></div>
+          <span class="status">Valid prospective confirmation pair; LEFT failed and RIGHT succeeded; committed publication selection</span>
+        </header>
+        <video controls preload="metadata" poster="../artifacts/vla_wam_shared_v2/media/robotwin_wam_confirmation/lingbot_va_pair03_left_right_normalized_full_rollouts_poster.jpg">
+          <source src="../artifacts/vla_wam_shared_v2/media/robotwin_wam_confirmation/lingbot_va_pair03_left_right_normalized_full_rollouts.mp4" type="video/mp4"><track kind="captions" src="../artifacts/vla_wam_shared_v2/media/robotwin_wam_confirmation/lingbot_va_pair03_left_right_normalized_full_rollouts.vtt" srclang="en" label="English">
+          <a href="../artifacts/vla_wam_shared_v2/media/robotwin_wam_confirmation/lingbot_va_pair03_left_right_normalized_full_rollouts.mp4">Open the MP4 directly</a>.
+        </video>
+        <div class="directions"><div class="direction left"><div class="direction-top"><strong>LEFT</strong><span>failure after 400 actions</span></div><blockquote>“Put the small woodenblock to the left of the red playingcards box.”</blockquote></div><div class="direction right"><div class="direction-top"><strong>RIGHT</strong><span>success after 139 actions</span></div><blockquote>“Put the small woodenblock to the right of the red playingcards box.”</blockquote></div></div>
+        <dl class="facts">
+          <div><dt>Arena</dt><dd>RoboTwin place-A-relative-to-B</dd></div>
+          <div><dt>Future interface</dt><dd>Joint video/action latent retained; no publication-ready visual decoder</dd></div>
+          <div><dt>Video SHA-256</dt><dd><code>074abb4d5ef3b39328535d6e86037c680da5afb45384884745df0624bcc09341</code></dd></div>
+        </dl>
+        <p class="note">First prospective LingBot-VA confirmation pair by frozen pair order. Complete rollouts are independently time-normalized to ten seconds. <a href="../artifacts/vla_wam_shared_v2/media/robotwin_wam_confirmation/lingbot_va_pair03_left_right_normalized_full_rollouts.mp4">Open video</a> · <a href="../artifacts/vla_wam_shared_v2/media/robotwin_wam_confirmation/media_index.json">Evidence manifest</a></p>
+      </article>
+      <article class="card" id="lingbot_vla_4b_pair00">
+        <header>
+          <div><p class="overline">VLA · pair 00 direct gate</p>
+          <h3>LingBot-VLA 4B</h3></div>
+          <span class="status">Valid behavioral pair; LEFT succeeded and RIGHT failed; committed matched clip</span>
+        </header>
+        <video controls preload="metadata">
+          <source src="../artifacts/vla_wam_shared_v2/pilot/expansion/media/lingbot_vla_4b_pair00_matched.mp4" type="video/mp4">
+          <a href="../artifacts/vla_wam_shared_v2/pilot/expansion/media/lingbot_vla_4b_pair00_matched.mp4">Open the MP4 directly</a>.
+        </video>
+        <div class="directions"><div class="direction left"><div class="direction-top"><strong>LEFT</strong><span>success after 127 actions</span></div><blockquote>“Put the blue soap to the left of the tea-box.”</blockquote></div><div class="direction right"><div class="direction-top"><strong>RIGHT</strong><span>failure after 400 actions: picked, never entered requested region</span></div><blockquote>“Put the blue soap to the right of the tea-box.”</blockquote></div></div>
+        <dl class="facts">
+          <div><dt>Arena</dt><dd>RoboTwin place-A-relative-to-B</dd></div>
+          <div><dt>Future interface</dt><dd>Actions only; no decoded visual future</dd></div>
+          <div><dt>Video SHA-256</dt><dd><code>6fdf9383bcee0abf5cd6910afd477b3aa6bd69a0fd36ee4b8ab3eaf059b697ae</code></dd></div>
+        </dl>
+        <p class="note">Matched pair00 clip from the six-cell direct gate. No separate media-index file was committed; the hash is anchored directly here and the behavioral source is the compiled direct-gate result. <a href="../artifacts/vla_wam_shared_v2/pilot/expansion/media/lingbot_vla_4b_pair00_matched.mp4">Open video</a> · <a href="../artifacts/vla_wam_shared_v2/pilot/expansion/lingbot_vla_4b_direct_gate.json">Evidence manifest</a></p>
+      </article></div></section>
+<section><div class="section-head"><h2>Explicit media gaps</h2><p>No raw or diagnostic artifact is substituted for publication video.</p></div><div class="missing-grid"><article class="missing"><p class="overline">No substituted media</p><h3>dreamzero_droid</h3><p><strong>pending_no_behavioral_video</strong> — No valid DreamZero direct-command rollout or committed publication video exists yet. Expected manifest: <code>artifacts/vla_wam_shared_v2/media/dreamzero_droid/media_manifest.json</code>.</p></article><article class="missing"><p class="overline">No substituted media</p><h3>pi05_droid</h3><p><strong>no_selected_v2_publication_video</strong> — The checkpoint is an existing v1 reference, but this branch contains no committed selected v2 behavioral clip for it. <a href="../artifacts/vla_wam_shared_v2/media/v1_droid_selection.json">Expected/source manifest</a>.</p></article><article class="missing"><p class="overline">No substituted media</p><h3>light_wam_robotwin</h3><p><strong>raw_video_not_selected_for_publication</strong> — All six valid episodes reference simulator videos on the ali PVC, but no compact selected Light-WAM publication clip is committed. <a href="../artifacts/vla_wam_shared_v2/pilot/expansion/light_wam_robotwin_direct_gate.json">Expected/source manifest</a>.</p></article><article class="missing"><p class="overline">No substituted media</p><h3>lawam_robotwin</h3><p><strong>no_behavioral_episode</strong> — Blocked before inference on gated DINOv3 access; no behavioral video exists. <a href="../artifacts/vla_wam_shared_v2/pilot/expansion/lawam_robotwin_registry.json">Expected/source manifest</a>.</p></article><article class="missing"><p class="overline">No substituted media</p><h3>cosmos_reason2_2b</h3><p><strong>not_behavioral_media</strong> — Static diagnostic calls are not robot rollouts and are intentionally excluded from the behavioral video gallery. <a href="../artifacts/vla_wam_shared_v2/pilot/expansion/cosmos_reason2_2b_static_diagnostic.json">Expected/source manifest</a>.</p></article></div></section>
+<footer>Generated by <code>tools/render_vla_wam_video_first_gallery.py</code> from the hash-bearing gallery manifest (SHA-256 <code>739bc96d3e150e9c20280ccc26a0473c8511eae7cb5e35eee2e866a8d6c5e483</code>). Re-run the generator after committing a conforming DreamZero media manifest.</footer>
+</main></body></html>

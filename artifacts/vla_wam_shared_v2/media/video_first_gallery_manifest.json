@@ -1,0 +1,395 @@
+{
+  "schema_version": "vla-wam-shared-v2-video-first-gallery-v1",
+  "title": "DreamZero and matched VLA/WAM video evidence",
+  "claim_boundary": "Publication-selected simulator clips are grouped by arena. DROID and RoboTwin success rates are never pooled. A clip is an evidence view, not an additional episode.",
+  "display_policy": "Embed each canonical publication video once. Alternate square encodes, posters, captions, and FastWAM reconstruction inputs remain available through their source manifests but are not duplicated as additional evidence cards.",
+  "dreamzero_manifest_contract": {
+    "path": "artifacts/vla_wam_shared_v2/media/dreamzero_droid/media_manifest.json",
+    "status_when_absent": "pending_no_behavioral_video",
+    "gallery_entries_key": "gallery_entries",
+    "required_entry_fields": [
+      "id",
+      "arena",
+      "arena_label",
+      "model_label",
+      "category",
+      "future_interface",
+      "evidence_status",
+      "pair_label",
+      "seed",
+      "video",
+      "directions",
+      "source_manifest"
+    ],
+    "note": "The renderer ingests gallery_entries only after this manifest exists and every referenced video hash and byte count validates. Until then DreamZero remains visibly pending; no placeholder is interpreted as evidence."
+  },
+  "entries": [
+    {
+      "id": "cosmos3_edge_seed8302",
+      "arena": "droid",
+      "arena_label": "DROID / RoboLab",
+      "model_label": "Cosmos3 Edge DROID",
+      "category": "WAM",
+      "future_interface": "Decoded video futures plus actions; 17 decoded futures retained for this pair",
+      "evidence_status": "Valid behavioral pair; both episodes succeeded; committed publication selection",
+      "pair_label": "seed 8302 matched pair",
+      "seed": 8302,
+      "video": {
+        "path": "artifacts/vla_wam_shared_v2/media/cosmos3_edge_droid/cosmos3_edge_seed8302_paired.mp4",
+        "bytes": 2612489,
+        "sha256": "5eed8b8468aff6070617e126eac1c67a19fd62309279ca1a06f2d3b5abf4bdc9"
+      },
+      "directions": [
+        {
+          "relation": "LEFT",
+          "prompt": "Put the Rubik's cube to the left of the bowl.",
+          "outcome": "success after 397 actions"
+        },
+        {
+          "relation": "RIGHT",
+          "prompt": "Put the Rubik's cube to the right of the bowl.",
+          "outcome": "success after 123 actions"
+        }
+      ],
+      "selection_note": "Largest observed RIGHT-minus-LEFT endpoint separation among the three frozen Cosmos3 Edge pairs. The shorter episode holds its final frame.",
+      "source_manifest": "artifacts/vla_wam_shared_v2/media/cosmos3_edge_droid/media_manifest.json"
+    },
+    {
+      "id": "groot_n17_seed8301",
+      "arena": "droid",
+      "arena_label": "DROID / RoboLab",
+      "model_label": "GR00T N1.7 DROID",
+      "category": "VLA",
+      "future_interface": "Action chunks only; no decoded visual future",
+      "evidence_status": "Valid behavioral pair; both episodes failed; committed publication selection",
+      "pair_label": "seed 8301 matched pair",
+      "seed": 8301,
+      "video": {
+        "path": "artifacts/vla_wam_shared_v2/media/groot_n17_droid/groot_n17_droid_seed8301_pair.mp4",
+        "bytes": 3546735,
+        "sha256": "3ff5ac38d8bd224f336531b93c09cd77dee565ab724647f4019a8b2e5d60600d"
+      },
+      "directions": [
+        {
+          "relation": "LEFT",
+          "prompt": "Put the Rubik's cube to the left of the bowl.",
+          "outcome": "failure after 450 actions"
+        },
+        {
+          "relation": "RIGHT",
+          "prompt": "Put the Rubik's cube to the right of the bowl.",
+          "outcome": "failure after 450 actions"
+        }
+      ],
+      "selection_note": "Largest observed LEFT-minus-RIGHT endpoint separation among the three frozen GR00T pairs; endpoints were ordered in the requested direction despite both task failures.",
+      "source_manifest": "artifacts/vla_wam_shared_v2/media/groot_n17_droid/media_index.json"
+    },
+    {
+      "id": "pi0_fast_seed8300",
+      "arena": "droid",
+      "arena_label": "DROID / RoboLab",
+      "model_label": "π0-FAST DROID",
+      "category": "VLA",
+      "future_interface": "Actions only; no decoded visual future",
+      "evidence_status": "Valid behavioral pair; LEFT failed and RIGHT succeeded; committed publication selection",
+      "pair_label": "seed 8300 matched pair",
+      "seed": 8300,
+      "video": {
+        "path": "artifacts/vla_wam_shared_v2/media/droid_pi0_fast_pairs/pi0_fast_seed8300_left_failure_right_success.mp4",
+        "bytes": 1407040,
+        "sha256": "84a424cdfb796bbce02a88eb6d9a22de74fc3b264b4a103bece09aea99ed3a6a"
+      },
+      "poster": {
+        "path": "artifacts/vla_wam_shared_v2/media/droid_pi0_fast_pairs/pi0_fast_seed8300_left_failure_right_success_poster.jpg",
+        "bytes": 78841,
+        "sha256": "54e1593a6c75515431ccae18ac5eebb9d77afb6f93900796d18fd320348eb749"
+      },
+      "captions": {
+        "path": "artifacts/vla_wam_shared_v2/media/droid_pi0_fast_pairs/pi0_fast_seed8300_left_failure_right_success.vtt",
+        "bytes": 305,
+        "sha256": "489156c904a350e49172eaac9c038f7ab6d2630e4fe38871ff6c996ab766b4fe"
+      },
+      "directions": [
+        {
+          "relation": "LEFT",
+          "prompt": "Put the Rubik's cube to the left of the bowl.",
+          "outcome": "failure: no object interaction"
+        },
+        {
+          "relation": "RIGHT",
+          "prompt": "Put the Rubik's cube to the right of the bowl.",
+          "outcome": "success"
+        }
+      ],
+      "selection_note": "First compiled same-seed pair containing a LEFT failure and RIGHT success; selected before rendering.",
+      "source_manifest": "artifacts/vla_wam_shared_v2/media/droid_pi0_fast_pairs/media_index.json"
+    },
+    {
+      "id": "efficient_wam_rt_pair00",
+      "arena": "robotwin",
+      "arena_label": "RoboTwin place-A-relative-to-B",
+      "model_label": "Efficient-WAM-RT",
+      "category": "WAM",
+      "future_interface": "Decoded coarse future video plus actions; publication clip shows simulator execution",
+      "evidence_status": "Valid behavioral pair; LEFT succeeded and RIGHT failed; committed publication selection",
+      "pair_label": "pair 00 pilot",
+      "seed": 4300000,
+      "video": {
+        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/efficient_wam_rt_pair00_left_success_right_failure.mp4",
+        "bytes": 854683,
+        "sha256": "bad140d1872ee904bd364c0f8c022b7e5944e3c7529d68f43b93ae72a194a7aa"
+      },
+      "poster": {
+        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/efficient_wam_rt_pair00_left_success_right_failure_poster.jpg",
+        "bytes": 71925,
+        "sha256": "cc69e70e0fd4f5f14bc417f8c333c9b0ee19bd721be5bee9b98e6b671a856a69"
+      },
+      "captions": {
+        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/efficient_wam_rt_pair00_left_success_right_failure.vtt",
+        "bytes": 312,
+        "sha256": "c95374a1445f22088d9b5e77f673eea7a93d5add4c6ec52ffd1f153b1ec15b05"
+      },
+      "directions": [
+        {
+          "relation": "LEFT",
+          "prompt": "Put the blue soap to the left of the tea-box.",
+          "outcome": "success"
+        },
+        {
+          "relation": "RIGHT",
+          "prompt": "Put the blue soap to the right of the tea-box.",
+          "outcome": "failure: picked, never entered requested region"
+        }
+      ],
+      "selection_note": "First compiled pilot pair containing a LEFT success and matched RIGHT failure.",
+      "source_manifest": "artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/media_index.json"
+    },
+    {
+      "id": "efficient_wam_rt_pair05",
+      "arena": "robotwin",
+      "arena_label": "RoboTwin place-A-relative-to-B",
+      "model_label": "Efficient-WAM-RT",
+      "category": "WAM",
+      "future_interface": "Decoded coarse future video plus actions; publication clip shows simulator execution",
+      "evidence_status": "Valid prospective confirmation pair; both episodes succeeded; committed publication selection",
+      "pair_label": "pair 05 confirmation",
+      "seed": 4300005,
+      "video": {
+        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_confirmation/efficient_wam_rt_pair05_left_right_both_success.mp4",
+        "bytes": 183829,
+        "sha256": "bbc833fc1faf84f38bd8307b8d7f6b73d0fad957ce5a822c7f07a1db6ba2e1a4"
+      },
+      "poster": {
+        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_confirmation/efficient_wam_rt_pair05_left_right_both_success_poster.jpg",
+        "bytes": 46401,
+        "sha256": "6bed015d7016fc636fd9a20f43b965612f80a31dd9893a7a467f9098422bc857"
+      },
+      "captions": {
+        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_confirmation/efficient_wam_rt_pair05_left_right_both_success.vtt",
+        "bytes": 185,
+        "sha256": "0a9f7a17d5299ac7a44b95cc722275321b35525d307aaaf7149e1f4530a382b7"
+      },
+      "directions": [
+        {
+          "relation": "LEFT",
+          "prompt": "Put the box of playingcards to the left of the rubikscube.",
+          "outcome": "success after 46 actions"
+        },
+        {
+          "relation": "RIGHT",
+          "prompt": "Put the box of playingcards to the right of the rubikscube.",
+          "outcome": "success after 47 actions"
+        }
+      ],
+      "selection_note": "Matched confirmation pair with success in both requested directions.",
+      "source_manifest": "artifacts/vla_wam_shared_v2/media/robotwin_wam_confirmation/media_index.json"
+    },
+    {
+      "id": "fastwam_pair02",
+      "arena": "robotwin",
+      "arena_label": "RoboTwin place-A-relative-to-B",
+      "model_label": "FastWAM",
+      "category": "WAM",
+      "future_interface": "Action-only at inference; world-model objective is training-time only",
+      "evidence_status": "Valid behavioral pair; LEFT succeeded and RIGHT failed; committed reconstructed publication selection",
+      "pair_label": "pair 02 pilot",
+      "seed": 4300002,
+      "video": {
+        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/fastwam_pair02_left_success_right_failure.mp4",
+        "bytes": 4400504,
+        "sha256": "7a152b61292fdfe9d341950d4448dce4c8c5d4b797aa073b246bafafbaaae4f2"
+      },
+      "poster": {
+        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/fastwam_pair02_left_success_right_failure_poster.jpg",
+        "bytes": 75166,
+        "sha256": "38721a822e70999ec051f10d4b7350b31fa77479053b9958a944a4baab938e0c"
+      },
+      "captions": {
+        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/fastwam_pair02_left_success_right_failure.vtt",
+        "bytes": 341,
+        "sha256": "585a4864dfd059acc5c8f3a4460d56eb7f672374a012bd7c4576fc00e9477f99"
+      },
+      "directions": [
+        {
+          "relation": "LEFT",
+          "prompt": "Put the box with cards inside to the left of the red coffee-box.",
+          "outcome": "success"
+        },
+        {
+          "relation": "RIGHT",
+          "prompt": "Put the box with cards inside to the right of the red coffee-box.",
+          "outcome": "failure: picked, never entered requested region"
+        }
+      ],
+      "selection_note": "The source fork's pixel-layout fault is disclosed; this clip uses the committed four-packet head-camera reconstruction. Actions and state-derived outcome are unchanged.",
+      "source_manifest": "artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/media_index.json"
+    },
+    {
+      "id": "lingbot_va_pair00",
+      "arena": "robotwin",
+      "arena_label": "RoboTwin place-A-relative-to-B",
+      "model_label": "LingBot-VA",
+      "category": "WAM",
+      "future_interface": "Joint video/action latent retained; no publication-ready visual decoder",
+      "evidence_status": "Valid behavioral pair; LEFT succeeded and RIGHT failed; committed publication selection",
+      "pair_label": "pair 00 pilot",
+      "seed": 4300000,
+      "video": {
+        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/lingbot_va_pair00_left_success_right_failure.mp4",
+        "bytes": 2822783,
+        "sha256": "d7f5addbfbf0074a2e116d197b12b679e5489e81dd0120334221347c406c8a0b"
+      },
+      "poster": {
+        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/lingbot_va_pair00_left_success_right_failure_poster.jpg",
+        "bytes": 72043,
+        "sha256": "7600b4fe5500a8470a4fdc9465daf33071bb6be61efaf0ecc9e6666087cd143b"
+      },
+      "captions": {
+        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/lingbot_va_pair00_left_success_right_failure.vtt",
+        "bytes": 306,
+        "sha256": "e3d50f3b33a973c7179a7fb68c65966b88c65985ca5f3397bea2afebc6abf3f6"
+      },
+      "directions": [
+        {
+          "relation": "LEFT",
+          "prompt": "Put the blue soap to the left of the tea-box.",
+          "outcome": "success"
+        },
+        {
+          "relation": "RIGHT",
+          "prompt": "Put the blue soap to the right of the tea-box.",
+          "outcome": "failure: picked, never entered requested region"
+        }
+      ],
+      "selection_note": "First compiled pilot pair containing a LEFT success and matched RIGHT failure. The retained latent is not mislabeled as an inspectable future video.",
+      "source_manifest": "artifacts/vla_wam_shared_v2/media/robotwin_wam_pairs/media_index.json"
+    },
+    {
+      "id": "lingbot_va_pair03",
+      "arena": "robotwin",
+      "arena_label": "RoboTwin place-A-relative-to-B",
+      "model_label": "LingBot-VA",
+      "category": "WAM",
+      "future_interface": "Joint video/action latent retained; no publication-ready visual decoder",
+      "evidence_status": "Valid prospective confirmation pair; LEFT failed and RIGHT succeeded; committed publication selection",
+      "pair_label": "pair 03 confirmation",
+      "seed": 4300003,
+      "video": {
+        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_confirmation/lingbot_va_pair03_left_right_normalized_full_rollouts.mp4",
+        "bytes": 539046,
+        "sha256": "074abb4d5ef3b39328535d6e86037c680da5afb45384884745df0624bcc09341"
+      },
+      "poster": {
+        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_confirmation/lingbot_va_pair03_left_right_normalized_full_rollouts_poster.jpg",
+        "bytes": 38820,
+        "sha256": "39790e1fb8bd82256f4a88671599ed64bff575b5b20ec38e264ddeca14e8e34a"
+      },
+      "captions": {
+        "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_confirmation/lingbot_va_pair03_left_right_normalized_full_rollouts.vtt",
+        "bytes": 190,
+        "sha256": "5ef71c372b87ab6200bfea676a82943bd9e4db56d50682b49f5bf573f9134816"
+      },
+      "directions": [
+        {
+          "relation": "LEFT",
+          "prompt": "Put the small woodenblock to the left of the red playingcards box.",
+          "outcome": "failure after 400 actions"
+        },
+        {
+          "relation": "RIGHT",
+          "prompt": "Put the small woodenblock to the right of the red playingcards box.",
+          "outcome": "success after 139 actions"
+        }
+      ],
+      "selection_note": "First prospective LingBot-VA confirmation pair by frozen pair order. Complete rollouts are independently time-normalized to ten seconds.",
+      "source_manifest": "artifacts/vla_wam_shared_v2/media/robotwin_wam_confirmation/media_index.json"
+    },
+    {
+      "id": "lingbot_vla_4b_pair00",
+      "arena": "robotwin",
+      "arena_label": "RoboTwin place-A-relative-to-B",
+      "model_label": "LingBot-VLA 4B",
+      "category": "VLA",
+      "future_interface": "Actions only; no decoded visual future",
+      "evidence_status": "Valid behavioral pair; LEFT succeeded and RIGHT failed; committed matched clip",
+      "pair_label": "pair 00 direct gate",
+      "seed": 4300000,
+      "video": {
+        "path": "artifacts/vla_wam_shared_v2/pilot/expansion/media/lingbot_vla_4b_pair00_matched.mp4",
+        "bytes": 105124,
+        "sha256": "6fdf9383bcee0abf5cd6910afd477b3aa6bd69a0fd36ee4b8ab3eaf059b697ae"
+      },
+      "directions": [
+        {
+          "relation": "LEFT",
+          "prompt": "Put the blue soap to the left of the tea-box.",
+          "outcome": "success after 127 actions"
+        },
+        {
+          "relation": "RIGHT",
+          "prompt": "Put the blue soap to the right of the tea-box.",
+          "outcome": "failure after 400 actions: picked, never entered requested region"
+        }
+      ],
+      "selection_note": "Matched pair00 clip from the six-cell direct gate. No separate media-index file was committed; the hash is anchored directly here and the behavioral source is the compiled direct-gate result.",
+      "source_manifest": "artifacts/vla_wam_shared_v2/pilot/expansion/lingbot_vla_4b_direct_gate.json"
+    }
+  ],
+  "missing_publication_media": [
+    {
+      "model_id": "dreamzero_droid",
+      "arena": "droid",
+      "status": "pending_no_behavioral_video",
+      "reason": "No valid DreamZero direct-command rollout or committed publication video exists yet.",
+      "expected_manifest": "artifacts/vla_wam_shared_v2/media/dreamzero_droid/media_manifest.json"
+    },
+    {
+      "model_id": "pi05_droid",
+      "arena": "droid",
+      "status": "no_selected_v2_publication_video",
+      "reason": "The checkpoint is an existing v1 reference, but this branch contains no committed selected v2 behavioral clip for it.",
+      "behavioral_manifest": "artifacts/vla_wam_shared_v2/media/v1_droid_selection.json"
+    },
+    {
+      "model_id": "light_wam_robotwin",
+      "arena": "robotwin",
+      "status": "raw_video_not_selected_for_publication",
+      "reason": "All six valid episodes reference simulator videos on the ali PVC, but no compact selected Light-WAM publication clip is committed.",
+      "behavioral_manifest": "artifacts/vla_wam_shared_v2/pilot/expansion/light_wam_robotwin_direct_gate.json"
+    },
+    {
+      "model_id": "lawam_robotwin",
+      "arena": "robotwin",
+      "status": "no_behavioral_episode",
+      "reason": "Blocked before inference on gated DINOv3 access; no behavioral video exists.",
+      "behavioral_manifest": "artifacts/vla_wam_shared_v2/pilot/expansion/lawam_robotwin_registry.json"
+    },
+    {
+      "model_id": "cosmos_reason2_2b",
+      "arena": "diagnostic_only",
+      "status": "not_behavioral_media",
+      "reason": "Static diagnostic calls are not robot rollouts and are intentionally excluded from the behavioral video gallery.",
+      "behavioral_manifest": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos_reason2_2b_static_diagnostic.json"
+    }
+  ]
+}

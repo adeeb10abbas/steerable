@@ -975,11 +975,19 @@ def _cosmos_observation_variation(run_manifest: dict[str, Any]) -> dict[str, Any
                     / "chunk_000"
                     / "conditioning.png"
                 )
-                if _sha256(image_path) != row["conditioning_sha256"]:
-                    raise RuntimeError(f"Conditioning hash mismatch: {image_path}")
                 bgr = cv2.imread(str(image_path))
                 if bgr is None:
                     raise FileNotFoundError(image_path)
+                # RoboLab records the SHA-256 of the contiguous RGB pixel
+                # array sent to the policy, not the PNG container bytes.
+                # Re-encoding the same lossless pixels changes the file hash,
+                # so verify the declared interface at its actual byte level.
+                rgb = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
+                pixel_sha256 = hashlib.sha256(
+                    np.ascontiguousarray(rgb).tobytes()
+                ).hexdigest()
+                if pixel_sha256 != row["conditioning_sha256"]:
+                    raise RuntimeError(f"Conditioning pixel hash mismatch: {image_path}")
                 images[(condition["id"], direction, episode_index)] = bgr
 
     for condition in conditions:

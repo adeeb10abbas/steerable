@@ -64,6 +64,20 @@ CuRobo mapping audit; Super used the image-only action-and-video route and had
 no robot state or controller. Their gallery clips are predictions, not
 rollouts. Edge base is not the completed Edge-Policy-DROID checkpoint.
 
+The disclosed post-result guidance ablation V2-A015 is also complete and must
+not be rerun. Cosmos3 Nano with its joint action/video CFG blend removed
+(`g=1`) scored LEFT `1/3`, RIGHT `3/3`, total `4/6`, versus the preserved
+`g=3` baseline total of `6/6`; both mean requested-side margins fell.
+DreamZero's derived negative-branch action guidance at `s=2` scored LEFT
+`1/3`, RIGHT `3/3`, total `4/6`, versus the preserved conditional-action
+equivalent `s=1` baseline of LEFT `2/3`, RIGHT `1/3`, total `3/6`. The
+DreamZero result is directional redistribution toward RIGHT, not a powered
+general improvement, and `s=2` is not an official action-CFG feature. All 12
+intervention cells, the paired figure, all six-cell execution composites, all
+six complete DreamZero official decodes, and all 64 Cosmos local prediction
+horizons are committed. No V2-A015 inference, plot, or media-render cell
+remains.
+
 ## Restrict Kubernetes discovery to ali-owned resources
 
 Do not use `--all-namespaces`, inspect other users' pods, or pick a shared B200

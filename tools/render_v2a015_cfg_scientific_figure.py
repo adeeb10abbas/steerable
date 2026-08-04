@@ -623,14 +623,16 @@ def _observed_story(model: ModelComparison) -> str:
     after = model.intervention.signed_direction_gap()
     before_side = _favored_direction(before)
     after_side = _favored_direction(after)
-    if before_side != after_side and "balanced" not in before_side + after_side:
+    if model.key == "cosmos3_nano":
+        direction_story = "mean-margin gap narrowed because RIGHT fell more"
+    elif before_side != after_side and "balanced" not in before_side + after_side:
         direction_story = "favored direction reversed"
     elif abs(after) > abs(before) + 0.01:
-        direction_story = "directional imbalance widened"
+        direction_story = "absolute mean-margin gap widened"
     elif abs(after) + 0.01 < abs(before):
-        direction_story = "directional imbalance narrowed"
+        direction_story = "absolute mean-margin gap narrowed"
     else:
-        direction_story = "directional imbalance was similar"
+        direction_story = "absolute mean-margin gap was similar"
     return (
         f"Observed: {direction_story}; total success "
         f"{model.baseline.total_successes()}/6 → {model.intervention.total_successes()}/6."
@@ -699,7 +701,7 @@ def _draw_imbalance(svg: SvgBuilder, model: ModelComparison, y: float) -> None:
     svg.text(x, y + 438, model.intervention.short_label, "body")
     svg.text(238, y + 438, _format_signed_m(after), "metric", fill=COLORS["ink"])
     svg.text(356, y + 438, _favored_direction(after), "small")
-    svg.text(x, y + 474, f"Absolute imbalance: {abs(before):.3f} → {abs(after):.3f} m", "small-emphasis")
+    svg.text(x, y + 474, f"Absolute mean-margin gap: {abs(before):.3f} → {abs(after):.3f} m", "small-emphasis")
     svg.text(x, y + 503, _observed_story(model), "story")
 
 
@@ -785,7 +787,7 @@ def render_svg(evidence: FigureEvidence) -> str:
         'aria-labelledby="v2a015-title v2a015-desc">'
     )
     svg.raw('<title id="v2a015-title">Guidance can redistribute directional performance without uniformly improving control</title>')
-    svg.raw('<desc id="v2a015-desc">Two DROID model panels compare baseline and guidance intervention success counts, exact-seed requested endpoint margins, and mean LEFT versus RIGHT directional imbalance.</desc>')
+    svg.raw('<desc id="v2a015-desc">Two DROID model panels compare baseline and guidance intervention success counts, exact-seed requested endpoint margins, and the mean RIGHT-minus-LEFT margin gap. A smaller gap is not interpreted as improved balance when both margins fall.</desc>')
     svg.raw(f"<metadata>{html.escape(json.dumps(metadata, sort_keys=True, separators=(',', ':')))}</metadata>")
     svg.raw(
         "<style>"

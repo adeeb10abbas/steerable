@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1530" viewBox="0 0 1600 1530" preserveAspectRatio="xMidYMid meet" style="max-width:100%;height:auto;display:block" role="img" aria-labelledby="v2a015-title v2a015-desc">
 <title id="v2a015-title">Guidance can redistribute directional performance without uniformly improving control</title>
-<desc id="v2a015-desc">Two DROID model panels compare baseline and guidance intervention success counts, exact-seed requested endpoint margins, and mean LEFT versus RIGHT directional imbalance.</desc>
+<desc id="v2a015-desc">Two DROID model panels compare baseline and guidance intervention success counts, exact-seed requested endpoint margins, and the mean RIGHT-minus-LEFT margin gap. A smaller gap is not interpreted as improved balance when both margins fall.</desc>
 <metadata>{&quot;arena&quot;:&quot;droid_robolab&quot;,&quot;exact_prompts&quot;:{&quot;left&quot;:&quot;Put the Rubik&#x27;s cube to the left of the bowl.&quot;,&quot;right&quot;:&quot;Put the Rubik&#x27;s cube to the right of the bowl.&quot;},&quot;schema_version&quot;:&quot;vla-wam-shared-v2-cfg-ablation-v2a015-figure-v1&quot;,&quot;seeds&quot;:[8300,8301,8302],&quot;source_sha256&quot;:{&quot;comparison&quot;:&quot;0e6daadd9391b7ad38ee316371df0235e34268cc4c32597c6597578ac9f9ed1e&quot;,&quot;cosmos_baseline&quot;:&quot;4a6cc1d61593c7ba5272e1707f6bbe51261f7d23438070992bd75fd9e95fdb93&quot;,&quot;cosmos_intervention&quot;:&quot;8796f4ab9ea9490ee5b78678bc689d6fd13f27a9551006f8b5d346e202d0cc5c&quot;,&quot;dreamzero_baseline&quot;:&quot;4c76cdc3ca9eaf227d21d160199408f22e1b3dd7a71176a5a5dbe22223714461&quot;,&quot;dreamzero_intervention&quot;:&quot;273b7191cde61b51bf90b2eda04b1910e214f48d34f2347f2a81325069c32444&quot;},&quot;statistical_scope&quot;:&quot;descriptive_post_result_n3_per_direction_no_powered_significance_claim&quot;}</metadata>
 <style>.academic{font-family:'Source Sans 3','Aptos','Segoe UI',Arial,sans-serif;fill:#23313B}.title{font-size:38px;font-weight:600;letter-spacing:-.5px}.subtitle{font-size:18px;fill:#65727B}.overline{font-size:13px;font-weight:600;letter-spacing:1px}.prompt{font-size:19px;font-weight:500}.model{font-size:29px;font-weight:600}.technical{font-size:17px;fill:#65727B}.story{font-size:16px;font-weight:600;fill:#71647F}.section{font-size:17px;font-weight:600}.body{font-size:16px}.small{font-size:13px;fill:#65727B}.small-emphasis{font-size:14px;font-weight:600}.column{font-size:13px;font-weight:600;letter-spacing:.8px}.count{font-size:18px;font-weight:600}.metric{font-size:17px;font-weight:600}.relation{font-size:14px;font-weight:600;letter-spacing:.5px}.seed{font-size:13px;fill:#65727B}.value{font-size:13px;font-variant-numeric:tabular-nums}.tick{font-size:12px;fill:#65727B;font-variant-numeric:tabular-nums}.axis{font-size:14px;font-weight:500}.zone{font-size:12px;fill:#65727B}.legend{font-size:14px;fill:#65727B}.footer{font-size:13px;fill:#65727B}.footer-strong{font-size:13px;font-weight:600}</style>
 <rect x="0.00" y="0.00" width="1600.00" height="1530.00" fill="#F7F4EE"/>
@@ -29,7 +29,7 @@
 <rect x="48.00" y="326.00" width="1504.00" height="516.00" rx="20" fill="#FFFDF9" stroke="#D8DDD9" stroke-width="1.4"/>
 <text x="80.00" y="368.00" class="model">Cosmos3 Nano Policy DROID</text>
 <text x="80.00" y="395.00" class="technical">Joint action–video guidance reduced: g = 3 baseline → g = 1 (no joint CFG blend)</text>
-<text x="1518.00" y="368.00" class="story" text-anchor="end">Observed: directional imbalance narrowed; total success 6/6 → 4/6.</text>
+<text x="1518.00" y="368.00" class="story" text-anchor="end">Observed: mean-margin gap narrowed because RIGHT fell more; total success 6/6 → 4/6.</text>
 <line x1="80.00" y1="410.00" x2="1520.00" y2="410.00" stroke="#D8DDD9" stroke-width="1.2"/>
 <line x1="504.00" y1="430.00" x2="504.00" y2="814.00" stroke="#D8DDD9" stroke-width="1.2"/>
 <text x="82.00" y="438.00" class="section">Full task success</text>
@@ -55,8 +55,8 @@
 <text x="82.00" y="764.00" class="body">g = 1 intervention</text>
 <text x="238.00" y="764.00" class="metric" fill="#23313B">+0.180 m</text>
 <text x="356.00" y="764.00" class="small">RIGHT larger</text>
-<text x="82.00" y="800.00" class="small-emphasis">Absolute imbalance: 0.306 → 0.180 m</text>
-<text x="82.00" y="829.00" class="story">Observed: directional imbalance narrowed; total success 6/6 → 4/6.</text>
+<text x="82.00" y="800.00" class="small-emphasis">Absolute mean-margin gap: 0.306 → 0.180 m</text>
+<text x="82.00" y="829.00" class="story">Observed: mean-margin gap narrowed because RIGHT fell more; total success 6/6 → 4/6.</text>
 <text x="530.00" y="438.00" class="section">Requested final margin by matched seed</text>
 <text x="1352.00" y="438.00" class="small" text-anchor="start">baseline → intervention</text>
 <rect x="672.00" y="474.00" width="93.71" height="254.00" fill="#F6ECE9"/>
@@ -161,7 +161,7 @@
 <text x="82.00" y="1304.00" class="body">s = 2 intervention</text>
 <text x="238.00" y="1304.00" class="metric" fill="#23313B">+0.165 m</text>
 <text x="356.00" y="1304.00" class="small">RIGHT larger</text>
-<text x="82.00" y="1340.00" class="small-emphasis">Absolute imbalance: 0.070 → 0.165 m</text>
+<text x="82.00" y="1340.00" class="small-emphasis">Absolute mean-margin gap: 0.070 → 0.165 m</text>
 <text x="82.00" y="1369.00" class="story">Observed: favored direction reversed; total success 3/6 → 4/6.</text>
 <text x="530.00" y="978.00" class="section">Requested final margin by matched seed</text>
 <text x="1352.00" y="978.00" class="small" text-anchor="start">baseline → intervention</text>

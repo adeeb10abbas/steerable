@@ -103,6 +103,21 @@ FIGURES = [
     "artifacts/vla_wam_shared_v2/figures/robotwin_wam_confirmation_pairs03_09_1600x900.png",
     "artifacts/vla_wam_shared_v2/figures/robotwin_wam_paired_endpoints_1600x900.png",
     "artifacts/vla_wam_shared_v2/figures/pi0_fast_paired_paths_1600x900.png",
+    "artifacts/vla_wam_shared_v2/figures/v2a015_cfg_guidance_ablation.svg",
+    "artifacts/vla_wam_shared_v2/figures/v2a015_cfg_guidance_ablation.png",
+]
+
+CFG_ABLATION_V2A015 = [
+    "artifacts/vla_wam_shared_v2/pilot/post_result_cfg_ablation_v2a015_amendment.json",
+    "artifacts/vla_wam_shared_v2/pilot/expansion/cfg_ablation_v2a015_preflight.json",
+    "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_v2a015_no_cfg_g1_result.json",
+    "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_v2a015_action_cfg_s2_result.json",
+    "artifacts/vla_wam_shared_v2/pilot/expansion/cfg_ablation_v2a015_comparison.json",
+    "tools/build_v2a015_cfg_media.py",
+    "tools/render_v2a015_cfg_scientific_figure.py",
+    "tools/render_vla_wam_video_first_gallery.py",
+    "tools/validate_vla_wam_v2_protocol.py",
+    "artifacts/vla_wam_shared_v2/protocol_validation.json",
 ]
 
 
@@ -177,6 +192,7 @@ def main() -> None:
 
     add_unique(CORE, "reader_core")
     add_unique(COSMOS3_SUPER_EDGE_BASE, "cosmos3_super_edge_base_provenance")
+    add_unique(CFG_ABLATION_V2A015, "cfg_ablation_v2a015")
     add_unique(FIGURES, "publication_figure")
     add_unique(media, "selected_media")
     records.sort(key=lambda item: (item["category"], item["path"]))

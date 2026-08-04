@@ -918,7 +918,7 @@ Edge-Policy-DROID result remains separate. See the [amendment](../artifacts/vla_
 [mapping audit](../artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_base_v2a013_curobo_usd_audit.json),
 and [runbook](../experiments/cosmos/COSMOS3_EDGE_BASE_V2A013.md).
 
-### V2-A015 post-result guidance ablation — active
+### V2-A015 post-result guidance ablation — complete
 
 Amendment
 [`post_result_cfg_ablation_v2a015_amendment.json`](../artifacts/vla_wam_shared_v2/pilot/post_result_cfg_ablation_v2a015_amendment.json)
@@ -961,7 +961,7 @@ the derived intervention was active.
 All six `s=2` behavioral cells are now complete valid evidence. Seed 8300 was
 LEFT failure at the 450-action cap and RIGHT success at action 217; seed 8301
 was LEFT failure at the cap and RIGHT success at action 269; seed 8302 was LEFT
-success at action 280 and RIGHT success at action 265. Thus `s=2` produced LEFT
+success at action 280 and RIGHT success at action 265. The `s=2` arm had LEFT
 `1/3`, RIGHT `3/3`, total `4/6`, compared with the preserved conditional-action
 equivalent `s=1` baseline of LEFT `2/3`, RIGHT `1/3`, total `3/6`. The observed
 change is primarily a redistribution toward RIGHT, not evidence that guidance
@@ -1004,11 +1004,11 @@ prompt “Put the Rubik's cube to the left of the bowl.”, seed 8300 failed at 
 450-action cap, seed 8301 succeeded at action 353, and seed 8302 failed at the
 cap: LEFT `1/3`. Under “Put the Rubik's cube to the right of the bowl.”, seeds
 8300, 8301, and 8302 succeeded at actions 253, 129, and 257: RIGHT `3/3`.
-Therefore `g=1` produced `4/6`, versus LEFT `3/3`, RIGHT `3/3`, total `6/6` in
-the preserved `g=3` baseline. Removing the joint action/video CFG blend
-coincided with two fewer LEFT successes and no loss on RIGHT, descriptively
-worsening directional balance and robustness. The sample is a six-cell
-post-result pilot: it is not a powered or general performance claim, and the
+The `g=1` arm therefore had `4/6`, versus LEFT `3/3`, RIGHT `3/3`, total `6/6`
+in the preserved `g=3` baseline. The contrast comprised two fewer LEFT
+successes and no loss on RIGHT; success-count balance and robustness were worse
+at `g=1` in this small sample. This is a six-cell post-result pilot, not a
+powered or general performance claim, and the
 two individual LEFT failures are not assigned a causal mechanism.
 
 All six viewport videos, six executed-action traces, and 64 decoded 33-frame
@@ -1032,14 +1032,31 @@ SHA-256
 The publication figure is available as
 [`v2a015_cfg_guidance_ablation.svg`](../artifacts/vla_wam_shared_v2/figures/v2a015_cfg_guidance_ablation.svg)
 (SHA-256
-`2c50c754e48e11a945de8bd3e17c47a600b8b1d7b460a78d91fb993ec81c4bc7`)
+`b2fdb9dbd743f435fae9cf008dcd9287f2c83aef0840f081a8faaa974b91435a`)
 and
 [`v2a015_cfg_guidance_ablation.png`](../artifacts/vla_wam_shared_v2/figures/v2a015_cfg_guidance_ablation.png)
 (SHA-256
-`5a322aa491e6935d3a6db1b5f9f63a56770bc16e728d66717a62e040e1f62349`).
+`0adef9257d4832923fc50fd28515091b4495488f4149675024324c185ff45e5b`).
 It shows both exact prompts, every matched seed's requested-margin change, and
 raw LEFT/RIGHT success counts; no confidence interval or significance claim is
 implied for `n=3` per direction and setting.
+
+Complete, hash-bound publication media retains every valid intervention cell
+without outcome-based selection. Cosmos3 Nano `g=1` has an
+[all-six-cell actual-execution composite](../artifacts/vla_wam_shared_v2/media/cfg_v2a015/cosmos3_nano_g1/cosmos3_nano_no_cfg_g1_all_seeds_actual.mp4)
+and an
+[all-request prediction composite](../artifacts/vla_wam_shared_v2/media/cfg_v2a015/cosmos3_nano_g1/cosmos3_nano_no_cfg_g1_all_seeds_local_predictions.mp4)
+containing all 64 retained 33-frame local horizons, separated by request
+slates. DreamZero `s=2` has an
+[all-six-cell actual-execution composite](../artifacts/vla_wam_shared_v2/media/cfg_v2a015/dreamzero_action_cfg_s2/dreamzero_action_cfg_s2_all_seeds_actual.mp4)
+and a
+[complete official-decoder-output composite](../artifacts/vla_wam_shared_v2/media/cfg_v2a015/dreamzero_action_cfg_s2/dreamzero_action_cfg_s2_all_seeds_imagination.mp4)
+containing all six official reset decodes. Predicted or imagined media is not
+execution and contributes no additional episode. The corresponding manifests
+are SHA-256 `c6d82722769f84023690e6a3cdeccb3bf7316ef0f4673fa50aa56680b8029e3b`
+for Cosmos and
+`48b8549f909a8c52500e56f035ae84a0cc0b090cef29019e8a5f4fe0f7ee3adc`
+for DreamZero.
 
 For Cosmos3 Nano, moving from `g=3` to `g=1` changed requested success from
 `6/6` to `4/6`: LEFT fell from `3/3` to `1/3`, while RIGHT remained `3/3`.
@@ -1059,9 +1076,9 @@ competence must therefore be read as distinct diagnostics.
 Trajectory quality was also mixed by direction. Mean cube path length changed
 from `0.252732` to `0.496044` m on LEFT and from `1.095421` to `0.439394` m on
 RIGHT. Mean joint-action total variation changed from `5.270188` to `10.041255`
-on LEFT and from `10.487576` to `6.695867` on RIGHT. Removing the joint
-action/video CFG blend did not make trajectories uniformly smoother; it
-produced direction-specific changes alongside reduced LEFT robustness. These
+on LEFT and from `10.487576` to `6.695867` on RIGHT. The `g=1` arm did not show
+uniformly smoother trajectories; the contrast was direction-specific and
+coincided with reduced LEFT robustness. These
 paired observations do not establish a powered or general effect and do not
 identify CFG as the cause of either individual failure.
 
@@ -1118,11 +1135,11 @@ changes, and effect sizes; it cannot establish a powered improvement or a
 general model-family effect. The optional higher-guidance arms remain
 unauthorized.
 
-V2-A015 is behaviorally complete: all twelve authorized cells are valid, no
-cell remains, and neither arm may be rerun. Keep the two six-cell denominators
-separate. No inference remains. The only next work is rendering the final
-plots, building and verifying paired media, and running final validation before
-committing the coherent evidence slice:
+V2-A015 is complete: all twelve authorized cells are valid, both result
+artifacts and the paired comparison are compiled, the scientific figure is
+rendered, and complete actual-versus-predicted publication media is verified.
+Keep the two six-cell denominators separate. No inference, rerun, plot, or
+media-render cell remains. Final repository validation is:
 
 ```bash
 python3 tools/validate_vla_wam_v2_protocol.py

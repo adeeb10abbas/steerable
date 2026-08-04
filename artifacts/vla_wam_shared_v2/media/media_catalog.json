@@ -1,12 +1,18 @@
 {
+  "cfg_ablation_episode_count_contribution": 0,
+  "cfg_ablation_video_count": 4,
   "claim_boundary": "Actual rollouts are behavioral evidence. Predictions, imagination, reconstruction components, and alternate encodes are not additional episodes.",
   "evidence_kind_counts": {
-    "actual rollout": 21,
+    "actual rollout": 23,
     "model prediction": 1,
-    "model prediction / imagination": 12,
+    "model prediction / imagination": 13,
+    "model prediction / local horizon": 1,
     "prediction-only interface probe": 2
   },
   "role_counts": {
+    "CFG ablation complete actual execution": 2,
+    "CFG ablation complete imagination": 1,
+    "CFG ablation complete local prediction": 1,
     "alternate square encode": 4,
     "canonical gallery": 17,
     "canonical paired comparison": 4,
@@ -15,6 +21,16 @@
   },
   "schema_version": "vla-wam-shared-v2-media-catalog-v1",
   "source_manifests": [
+    {
+      "bytes": 59367,
+      "path": "artifacts/vla_wam_shared_v2/media/cfg_v2a015/cosmos3_nano_g1/media_manifest.json",
+      "sha256": "c6d82722769f84023690e6a3cdeccb3bf7316ef0f4673fa50aa56680b8029e3b"
+    },
+    {
+      "bytes": 23492,
+      "path": "artifacts/vla_wam_shared_v2/media/cfg_v2a015/dreamzero_action_cfg_s2/media_manifest.json",
+      "sha256": "48b8549f909a8c52500e56f035ae84a0cc0b090cef29019e8a5f4fe0f7ee3adc"
+    },
     {
       "bytes": 1664,
       "path": "artifacts/vla_wam_shared_v2/media/cosmos3_edge_base_v2a013/media_manifest.json",
@@ -46,13 +62,57 @@
       "sha256": "f8aa6ba1ebd5fd3a7f680c7050b70d81ffa6e7d9a9acc0f63cd0b8c75a1747c3"
     },
     {
-      "bytes": 26473,
+      "bytes": 29254,
       "path": "artifacts/vla_wam_shared_v2/media/video_first_gallery_manifest.json",
-      "sha256": "5be93c2e4e7ff8acbf060388125586e4decc41a34f42f367b036503bc14adddf"
+      "sha256": "b80b1508935ab74e7fafbc9c354fbc98c0c1dad2ca06c1941f58bf8b6d75f67d"
     }
   ],
-  "video_count": 36,
+  "video_count": 40,
   "videos": [
+    {
+      "arena": "DROID / RoboLab",
+      "bytes": 2298283,
+      "evidence_kind": "actual rollout",
+      "model": "Cosmos3 Nano Policy DROID \u2014 V2-A015 g=1",
+      "model_class": "WAM",
+      "path": "artifacts/vla_wam_shared_v2/media/cfg_v2a015/cosmos3_nano_g1/cosmos3_nano_no_cfg_g1_all_seeds_actual.mp4",
+      "publication_role": "CFG ablation complete actual execution",
+      "sha256": "9cfe25e80ebd033adafb9b081f89203080471af8b42b7f0b03fa702c681da0f7",
+      "source_manifest": "artifacts/vla_wam_shared_v2/media/cfg_v2a015/cosmos3_nano_g1/media_manifest.json"
+    },
+    {
+      "arena": "DROID / RoboLab",
+      "bytes": 7962854,
+      "evidence_kind": "model prediction / local horizon",
+      "model": "Cosmos3 Nano Policy DROID \u2014 V2-A015 g=1",
+      "model_class": "WAM",
+      "path": "artifacts/vla_wam_shared_v2/media/cfg_v2a015/cosmos3_nano_g1/cosmos3_nano_no_cfg_g1_all_seeds_local_predictions.mp4",
+      "publication_role": "CFG ablation complete local prediction",
+      "sha256": "9a53dba82a0348805462c083c673e3be49804be3f9eda3304e29a24466ab666e",
+      "source_manifest": "artifacts/vla_wam_shared_v2/media/cfg_v2a015/cosmos3_nano_g1/media_manifest.json"
+    },
+    {
+      "arena": "DROID / RoboLab",
+      "bytes": 2180954,
+      "evidence_kind": "actual rollout",
+      "model": "DreamZero DROID \u2014 V2-A015 s=2",
+      "model_class": "WAM",
+      "path": "artifacts/vla_wam_shared_v2/media/cfg_v2a015/dreamzero_action_cfg_s2/dreamzero_action_cfg_s2_all_seeds_actual.mp4",
+      "publication_role": "CFG ablation complete actual execution",
+      "sha256": "de40f08c4d83f3b54a1537b6706f3d1b1cdcc729fd9d7804aecf2322f8d889a6",
+      "source_manifest": "artifacts/vla_wam_shared_v2/media/cfg_v2a015/dreamzero_action_cfg_s2/media_manifest.json"
+    },
+    {
+      "arena": "DROID / RoboLab",
+      "bytes": 22135191,
+      "evidence_kind": "model prediction / imagination",
+      "model": "DreamZero DROID \u2014 V2-A015 s=2",
+      "model_class": "WAM",
+      "path": "artifacts/vla_wam_shared_v2/media/cfg_v2a015/dreamzero_action_cfg_s2/dreamzero_action_cfg_s2_all_seeds_imagination.mp4",
+      "publication_role": "CFG ablation complete imagination",
+      "sha256": "57eaf8a1ea2283f37b52c30396aa5ddd1b2d653d18a471d828725e97b96c28ec",
+      "source_manifest": "artifacts/vla_wam_shared_v2/media/cfg_v2a015/dreamzero_action_cfg_s2/media_manifest.json"
+    },
     {
       "arena": "DROID / RoboLab",
       "bytes": 465926,

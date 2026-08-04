@@ -16,6 +16,23 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 MEDIA_ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v2/media"
 PILOT_MEDIA_ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v2/pilot/expansion/media"
 GALLERY_MANIFEST = MEDIA_ROOT / "video_first_gallery_manifest.json"
+CFG_MEDIA_ROOT = MEDIA_ROOT / "cfg_v2a015"
+
+
+CFG_ARM_METADATA = {
+    "dreamzero_action_cfg_s2": {
+        "model_id": "dreamzero_droid_action_cfg",
+        "model": "DreamZero DROID — V2-A015 s=2",
+        "prediction_kind": "model prediction / imagination",
+        "prediction_role": "CFG ablation complete imagination",
+    },
+    "cosmos3_nano_no_cfg_g1": {
+        "model_id": "cosmos3_nano_policy_droid",
+        "model": "Cosmos3 Nano Policy DROID — V2-A015 g=1",
+        "prediction_kind": "model prediction / local horizon",
+        "prediction_role": "CFG ablation complete local prediction",
+    },
+}
 
 
 def sha256(path: Path) -> str:
@@ -50,6 +67,136 @@ def add_reference(
         "publication_role": publication_role,
         "source_manifest": source_manifest,
     }
+
+
+def validate_cfg_output(
+    record: dict[str, Any], *, label: str, suffixes: tuple[str, ...]
+) -> Path:
+    if not isinstance(record, dict):
+        raise ValueError(f"{label} is not a file record")
+    path_value = record.get("path")
+    expected_bytes = record.get("bytes")
+    expected_sha256 = record.get("sha256")
+    if not isinstance(path_value, str) or not path_value:
+        raise ValueError(f"{label} lacks a path")
+    if not isinstance(expected_bytes, int) or expected_bytes <= 0:
+        raise ValueError(f"{label} lacks a positive byte count")
+    if not isinstance(expected_sha256, str) or len(expected_sha256) != 64:
+        raise ValueError(f"{label} lacks a SHA-256")
+    path = (REPO_ROOT / path_value).resolve()
+    try:
+        path.relative_to(REPO_ROOT.resolve())
+        path.relative_to(MEDIA_ROOT.resolve())
+    except ValueError as exc:
+        raise ValueError(f"{label} escapes the repository media root: {path}") from exc
+    if path.suffix.lower() not in suffixes:
+        raise ValueError(f"{label} has the wrong media suffix: {path}")
+    if not path.is_file():
+        raise ValueError(f"missing {label}: {path}")
+    if path.stat().st_size != expected_bytes or sha256(path) != expected_sha256:
+        raise ValueError(f"{label} path/hash/bytes validation failed: {path}")
+    return path
+
+
+def cfg_ablation_references(
+    gallery: dict[str, Any],
+) -> tuple[dict[str, dict[str, str]], list[str]]:
+    contracts = gallery.get("cfg_ablation_media_contracts")
+    if contracts is None:
+        return {}, []
+    if not isinstance(contracts, list):
+        raise ValueError("cfg_ablation_media_contracts must be a list when present")
+
+    references: dict[str, dict[str, str]] = {}
+    manifests: list[str] = []
+    observed_arms: set[str] = set()
+    observed_outputs: set[str] = set()
+    expected_outputs = {
+        "actual_video",
+        "actual_poster",
+        "prediction_or_imagination_video",
+        "prediction_or_imagination_poster",
+    }
+    for index, contract in enumerate(contracts):
+        if not isinstance(contract, dict) or not isinstance(contract.get("path"), str):
+            raise ValueError(f"CFG media contract {index} lacks a manifest path")
+        manifest_path = contract["path"]
+        manifest_file = (REPO_ROOT / manifest_path).resolve()
+        try:
+            manifest_file.relative_to(REPO_ROOT.resolve())
+        except ValueError as exc:
+            raise ValueError(f"CFG media manifest escapes the repository: {manifest_file}") from exc
+        manifest = load_json(manifest_path)
+        if (
+            manifest.get("schema_version") != "vla-wam-shared-v2-v2a015-cfg-media-v1"
+            or manifest.get("status")
+            != "complete_all_six_cells_actual_and_prediction_media"
+            or manifest.get("amendment_id") != "V2-A015"
+        ):
+            raise ValueError(f"CFG media manifest is not a complete V2-A015 arm: {manifest_path}")
+        arm_id = manifest.get("arm_id")
+        if arm_id not in CFG_ARM_METADATA or arm_id in observed_arms:
+            raise ValueError(f"Unknown or duplicate CFG media arm: {arm_id!r}")
+        observed_arms.add(arm_id)
+        metadata = CFG_ARM_METADATA[arm_id]
+        if manifest.get("model_id") != metadata["model_id"]:
+            raise ValueError(f"CFG media model/arm mismatch: {manifest_path}")
+        outputs = manifest.get("outputs")
+        if not isinstance(outputs, dict) or set(outputs) != expected_outputs:
+            raise ValueError(f"CFG media outputs are incomplete: {manifest_path}")
+
+        specs = (
+            (
+                "actual_video",
+                (".mp4",),
+                "actual rollout",
+                "CFG ablation complete actual execution",
+                True,
+            ),
+            (
+                "actual_poster",
+                (".jpg", ".jpeg"),
+                None,
+                None,
+                False,
+            ),
+            (
+                "prediction_or_imagination_video",
+                (".mp4",),
+                metadata["prediction_kind"],
+                metadata["prediction_role"],
+                True,
+            ),
+            (
+                "prediction_or_imagination_poster",
+                (".jpg", ".jpeg"),
+                None,
+                None,
+                False,
+            ),
+        )
+        for output_key, suffixes, evidence_kind, publication_role, catalog_video in specs:
+            path = validate_cfg_output(
+                outputs[output_key],
+                label=f"{arm_id} {output_key}",
+                suffixes=suffixes,
+            )
+            relative = str(path.relative_to(REPO_ROOT.resolve()))
+            if relative in observed_outputs:
+                raise ValueError(f"Duplicate CFG media output path: {relative}")
+            observed_outputs.add(relative)
+            if not catalog_video:
+                continue
+            references[relative] = {
+                "model": metadata["model"],
+                "arena": "DROID / RoboLab",
+                "model_class": "WAM",
+                "evidence_kind": evidence_kind,
+                "publication_role": publication_role,
+                "source_manifest": manifest_path,
+            }
+        manifests.append(manifest_path)
+    return references, manifests
 
 
 def reference_map() -> tuple[dict[str, dict[str, str]], list[str]]:
@@ -140,6 +287,12 @@ def reference_map() -> tuple[dict[str, dict[str, str]], list[str]]:
                 publication_role="canonical gallery",
                 source_manifest=manifest_path,
             )
+    cfg_refs, cfg_manifests = cfg_ablation_references(gallery)
+    for path, metadata in cfg_refs.items():
+        if path in refs:
+            raise ValueError(f"CFG media path duplicates an existing catalog reference: {path}")
+        refs[path] = metadata
+    source_manifests.extend(cfg_manifests)
     return refs, source_manifests
 
 
@@ -189,7 +342,14 @@ def fallback_metadata(relative: str) -> dict[str, str]:
 
 def build_rows() -> tuple[list[dict[str, Any]], list[str]]:
     refs, manifests = reference_map()
-    paths = sorted([*MEDIA_ROOT.rglob("*.mp4"), *PILOT_MEDIA_ROOT.rglob("*.mp4")])
+    discovered = [*MEDIA_ROOT.rglob("*.mp4"), *PILOT_MEDIA_ROOT.rglob("*.mp4")]
+    paths = []
+    for path in discovered:
+        relative = str(path.relative_to(REPO_ROOT))
+        if path.is_relative_to(CFG_MEDIA_ROOT) and relative not in refs:
+            continue
+        paths.append(path)
+    paths = sorted(set(paths))
     rows = []
     for path in paths:
         relative = str(path.relative_to(REPO_ROOT))
@@ -209,6 +369,7 @@ def build_rows() -> tuple[list[dict[str, Any]], list[str]]:
 
 
 def write_outputs(rows: list[dict[str, Any]], manifests: list[str]) -> None:
+    cfg_rows = [row for row in rows if row["publication_role"].startswith("CFG ablation")]
     catalog_json = {
         "schema_version": "vla-wam-shared-v2-media-catalog-v1",
         "claim_boundary": (
@@ -228,6 +389,13 @@ def write_outputs(rows: list[dict[str, Any]], manifests: list[str]) -> None:
         ],
         "videos": rows,
     }
+    if cfg_rows:
+        catalog_json.update(
+            {
+                "cfg_ablation_video_count": len(cfg_rows),
+                "cfg_ablation_episode_count_contribution": 0,
+            }
+        )
     (MEDIA_ROOT / "media_catalog.json").write_text(
         json.dumps(catalog_json, indent=2, sort_keys=True) + "\n"
     )
@@ -296,8 +464,11 @@ def write_outputs(rows: list[dict[str, Any]], manifests: list[str]) -> None:
 
 def main() -> None:
     rows, manifests = build_rows()
-    if len(rows) != 36:
-        raise ValueError(f"expected 36 committed MP4s, found {len(rows)}")
+    gallery = json.loads(GALLERY_MANIFEST.read_text())
+    contracts = gallery.get("cfg_ablation_media_contracts")
+    expected = 36 if contracts is None else 36 + 2 * len(contracts)
+    if len(rows) != expected:
+        raise ValueError(f"expected {expected} committed catalog items, found {len(rows)}")
     write_outputs(rows, manifests)
 
 

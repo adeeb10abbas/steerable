@@ -966,6 +966,311 @@ def validate_cfg_ablation_v2a015(
     }
 
 
+def validate_cfg_ablation_v2a015_media(
+    workspace: Path,
+    continuation_state: dict[str, Any],
+    checks: list[str],
+) -> dict[str, Any]:
+    """Fail closed on the complete V2-A015 actual and predicted media."""
+    expected_prompts = {
+        "left": "Put the Rubik's cube to the left of the bowl.",
+        "right": "Put the Rubik's cube to the right of the bowl.",
+    }
+    expected_cells = {
+        (seed, relation)
+        for seed in (8300, 8301, 8302)
+        for relation in ("left", "right")
+    }
+    arm_specs = {
+        "cosmos3_nano_no_cfg_g1": {
+            "manifest_path": workspace
+            / "artifacts/vla_wam_shared_v2/media/cfg_v2a015/"
+            "cosmos3_nano_g1/media_manifest.json",
+            "result_path": workspace
+            / "artifacts/vla_wam_shared_v2/pilot/expansion/"
+            "cosmos3_nano_v2a015_no_cfg_g1_result.json",
+            "model_id": "cosmos3_nano_policy_droid",
+            "state_future_path_key": "prediction_video_path",
+            "state_future_hash_key": "prediction_video_sha256",
+            "state_future_count_key": "retained_local_prediction_horizon_count",
+            "future_count": 64,
+        },
+        "dreamzero_action_cfg_s2": {
+            "manifest_path": workspace
+            / "artifacts/vla_wam_shared_v2/media/cfg_v2a015/"
+            "dreamzero_action_cfg_s2/media_manifest.json",
+            "result_path": workspace
+            / "artifacts/vla_wam_shared_v2/pilot/expansion/"
+            "dreamzero_v2a015_action_cfg_s2_result.json",
+            "model_id": "dreamzero_droid_action_cfg",
+            "state_future_path_key": "imagination_video_path",
+            "state_future_hash_key": "imagination_video_sha256",
+            "state_future_count_key": "complete_official_decode_count",
+            "future_count": 6,
+        },
+    }
+
+    cfg_state = continuation_state["cfg_ablation_v2a015"]
+    require(
+        cfg_state["status"] == "complete_compiled_evidence_and_publication_media"
+        and cfg_state["authorized_cells_completed"] == 12
+        and cfg_state["authorized_cells_remaining"] == 0,
+        "V2-A015 continuation state requires complete compiled evidence and publication media",
+        checks,
+    )
+    publication_media = cfg_state["final_compiled_comparison"]["publication_media"]
+    require(
+        "All six valid intervention cells per arm are shown"
+        in publication_media["selection_policy"]
+        and "no outcome-based selection" in publication_media["selection_policy"],
+        "V2-A015 publication media retains every intervention cell without outcome selection",
+        checks,
+    )
+
+    reports: dict[str, Any] = {}
+    workspace_resolved = workspace.resolve()
+    for arm_id, spec in arm_specs.items():
+        manifest_path = spec["manifest_path"]
+        result_path = spec["result_path"]
+        manifest = load_json(manifest_path)
+        result = load_json(result_path)
+        require(
+            manifest["schema_version"]
+            == "vla-wam-shared-v2-v2a015-cfg-media-v1"
+            and manifest["status"]
+            == "complete_all_six_cells_actual_and_prediction_media"
+            and manifest["amendment_id"] == "V2-A015"
+            and manifest["arm_id"] == result["arm_id"] == arm_id
+            and manifest["model_id"] == result["model_id"] == spec["model_id"]
+            and manifest["exact_prompts"]
+            == result["exact_prompts"]
+            == expected_prompts,
+            f"V2-A015 {arm_id} media fixes its schema, complete status, model, arm, and exact prompts",
+            checks,
+        )
+
+        source_result = manifest["source_result"]
+        require(
+            result["status"] == "complete"
+            and result["summary"]["valid_episode_count"] == 6
+            and source_result["bytes"] == result_path.stat().st_size
+            and source_result["sha256"] == sha256(result_path),
+            f"V2-A015 {arm_id} media hash-binds its committed compiled result",
+            checks,
+        )
+
+        input_cells = manifest["input_cells"]
+        observed_cells = {
+            (cell["environment_seed"], cell["relation"])
+            for cell in input_cells
+        }
+        require(
+            len(input_cells) == 6
+            and observed_cells == expected_cells
+            and set(manifest["request_or_decode_counts"])
+            == {f"seed{seed}_{relation}" for seed, relation in expected_cells},
+            f"V2-A015 {arm_id} media contains exactly the six paired seed-direction cells",
+            checks,
+        )
+        episodes = {
+            (episode["environment_seed"], episode["requested_relation"]): episode
+            for episode in result["episodes"]
+        }
+        require(
+            len(episodes) == 6 and set(episodes) == expected_cells,
+            f"V2-A015 {arm_id} committed result has the same six media cells",
+            checks,
+        )
+
+        total_future_sources = 0
+        for cell in input_cells:
+            relation = cell["relation"]
+            cell_id = f"seed{cell['environment_seed']}_{relation}"
+            episode = episodes[(cell["environment_seed"], relation)]
+            prediction_sources = cell["prediction_sources_in_order"]
+            source_count = cell["prediction_source_count"]
+            require(
+                cell["prompt"] == expected_prompts[relation]
+                and cell["actions_executed"] == episode["actions_executed"]
+                and cell["requested_success"] == episode["requested_success"]
+                and cell["complete_viewport_video"]
+                == episode["simulator_artifacts"]["viewport_video"]
+                and source_count == len(prediction_sources)
+                == manifest["request_or_decode_counts"][cell_id],
+                f"V2-A015 {arm_id} {cell_id} media matches its compiled episode and complete rollout",
+                checks,
+            )
+
+            if arm_id == "cosmos3_nano_no_cfg_g1":
+                requests = episode["imagined_future_requests"]
+                require(
+                    episode["decoded_future_count"] == len(requests) == source_count
+                    and [request["request_index"] for request in requests]
+                    == list(range(source_count))
+                    and prediction_sources
+                    == [request["decoded_future"] for request in requests]
+                    and cell["prediction_shapes"]
+                    == [request["decoded_future_shape"] for request in requests]
+                    and all(
+                        shape == [33, 528, 640, 3]
+                        for shape in cell["prediction_shapes"]
+                    ),
+                    f"V2-A015 {arm_id} {cell_id} retains every 33-frame local horizon in request order",
+                    checks,
+                )
+            else:
+                official_decodes = episode["official_decoded_futures"]
+                require(
+                    episode["official_decoded_future_count"]
+                    == len(official_decodes)
+                    == source_count
+                    == 1
+                    and prediction_sources == official_decodes
+                    and cell["prediction_shapes"] == [],
+                    f"V2-A015 {arm_id} {cell_id} retains its complete official reset decode",
+                    checks,
+                )
+            total_future_sources += source_count
+
+        if arm_id == "cosmos3_nano_no_cfg_g1":
+            require(
+                total_future_sources == spec["future_count"] == 64,
+                "V2-A015 Cosmos3 Nano publication media contains all 64 ordered local prediction horizons",
+                checks,
+            )
+        else:
+            require(
+                total_future_sources == spec["future_count"] == 6
+                and result["future_retention_audit"]
+                ["behavioral_official_decoded_future_count"]
+                == 6,
+                "V2-A015 DreamZero publication media contains all six complete official decodes",
+                checks,
+            )
+
+        outputs = manifest["outputs"]
+        require(
+            set(outputs)
+            == {
+                "actual_poster",
+                "actual_video",
+                "prediction_or_imagination_poster",
+                "prediction_or_imagination_video",
+            },
+            f"V2-A015 {arm_id} media declares both complete videos and their posters",
+            checks,
+        )
+        for output_id, record in outputs.items():
+            relative_path = Path(record["path"])
+            resolved_path = (workspace / relative_path).resolve()
+            try:
+                resolved_path.relative_to(workspace_resolved)
+                path_inside_repository = True
+            except ValueError:
+                path_inside_repository = False
+            require(
+                not relative_path.is_absolute() and path_inside_repository,
+                f"V2-A015 {arm_id} {output_id} resolves inside the repository",
+                checks,
+            )
+            validate_file_record(
+                workspace,
+                record,
+                f"V2-A015 {arm_id} {output_id}",
+                checks,
+            )
+
+        renderer_encoding = manifest["renderer"]["encoding"]
+        require(
+            renderer_encoding["codec"] == "libx264"
+            and renderer_encoding["pixel_format"] == "yuv420p"
+            and renderer_encoding["movflags"] == "+faststart",
+            f"V2-A015 {arm_id} renderer fixes H.264, yuv420p, and fast-start encoding",
+            checks,
+        )
+        output_validation = manifest["output_validation"]
+        require(
+            "H.264/yuv420p" in output_validation["policy"]
+            and "fast-start" in output_validation["policy"],
+            f"V2-A015 {arm_id} records its publication-video validation policy",
+            checks,
+        )
+        for output_id in ("actual", "prediction_or_imagination"):
+            validation = output_validation[output_id]
+            frame_count = validation["frame_count"]
+            expected_frame_indices = [0, frame_count // 2, frame_count - 1]
+            offsets = validation["faststart_atom_offsets"]
+            require(
+                validation["codec_name"] == "h264"
+                and validation["pixel_format"] == "yuv420p"
+                and validation["width"] == 1280
+                and validation["height"] == 480
+                and validation["duration_s"] > 0
+                and validation["fps"] > 0
+                and frame_count > 0
+                and offsets["ftyp"] == 0
+                and offsets["moov"] < offsets["mdat"]
+                and validation["decoded_frame_indices"] == expected_frame_indices
+                and [sample["frame_index"] for sample in validation["decoded_frame_samples"]]
+                == expected_frame_indices
+                and all(
+                    len(sample["decoded_bgr_sha256"]) == 64
+                    for sample in validation["decoded_frame_samples"]
+                ),
+                f"V2-A015 {arm_id} {output_id} records H.264/yuv420p, fast-start, and first/middle/last decodes",
+                checks,
+            )
+
+        claim_boundary = manifest["claim_boundary"].lower()
+        if arm_id == "cosmos3_nano_no_cfg_g1":
+            require(
+                "actual composite contains complete simulator viewport executions"
+                in claim_boundary
+                and "local model-prediction horizon" in claim_boundary
+                and "does not make a continuous imagined rollout" in claim_boundary
+                and "simulator execution" in claim_boundary,
+                "V2-A015 Cosmos3 Nano media distinguishes local horizons from execution and continuous imagination",
+                checks,
+            )
+        else:
+            require(
+                "actual composite contains complete simulator viewport executions"
+                in claim_boundary
+                and "imagination composite" in claim_boundary
+                and "official model decodes are not simulator execution" in claim_boundary
+                and "not an official dreamzero action-cfg mode" in claim_boundary,
+                "V2-A015 DreamZero media distinguishes official imagination from execution and official action CFG",
+                checks,
+            )
+
+        state_media = publication_media[arm_id]
+        future_output = outputs["prediction_or_imagination_video"]
+        require(
+            state_media["manifest_path"]
+            == str(manifest_path.relative_to(workspace))
+            and state_media["manifest_sha256"] == sha256(manifest_path)
+            and state_media["actual_video_path"] == outputs["actual_video"]["path"]
+            and state_media["actual_video_sha256"]
+            == outputs["actual_video"]["sha256"]
+            and state_media[spec["state_future_path_key"]] == future_output["path"]
+            and state_media[spec["state_future_hash_key"]]
+            == future_output["sha256"]
+            and state_media[spec["state_future_count_key"]] == spec["future_count"],
+            f"V2-A015 continuation state hash-binds the {arm_id} manifest and both videos",
+            checks,
+        )
+        reports[arm_id] = {
+            "manifest_path": str(manifest_path.relative_to(workspace)),
+            "manifest_sha256": sha256(manifest_path),
+            "actual_video_sha256": outputs["actual_video"]["sha256"],
+            "prediction_or_imagination_video_sha256": future_output["sha256"],
+            "input_cell_count": len(input_cells),
+            "retained_future_count": total_future_sources,
+        }
+
+    return reports
+
+
 def validate_pi0_fast_confirmation(
     workspace: Path, confirmation_path: Path, expansion_path: Path, checks: list[str]
 ) -> dict[str, Any] | None:
@@ -1701,6 +2006,9 @@ def validate(workspace: Path) -> dict[str, Any]:
     )
     cfg_ablation_v2a015 = validate_cfg_ablation_v2a015(
         workspace, cfg_ablation_v2a015_amendment_path, checks
+    )
+    cfg_ablation_v2a015["publication_media"] = (
+        validate_cfg_ablation_v2a015_media(workspace, continuation_state, checks)
     )
 
     require(

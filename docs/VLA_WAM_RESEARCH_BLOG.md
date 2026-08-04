@@ -1,4 +1,6 @@
-# Can language steer robot policies left versus right?
+# Language sensitivity is not directional control
+
+## Matched language interventions in robot policies
 
 Changing one word in a robot instruction should change what the robot does. We
 tested that simple expectation across vision-language-action models (VLAs) and
@@ -20,8 +22,8 @@ and it can imagine a plausible future without executing it successfully.
 Each matched pair begins from the same physical state and random seed. The only
 experimental change is a static episode-level command:
 
-- “Put the cube left of the bowl.”
-- “Put the cube right of the bowl.”
+- “Put the Rubik's cube to the left of the bowl.”
+- “Put the Rubik's cube to the right of the bowl.”
 
 There is no oracle, subtask coach, prompt switching, or progress-conditioned
 language. Every valid episode keeps its full simulator video and executed
@@ -88,6 +90,52 @@ labels this clip as model prediction only and shows the rollout as unavailable.
 Super base V2-A012/V2-A014 separately passed the same image-only deterministic
 and prompt-sensitivity interface test. Neither base arm enters a success table
 or behavioral denominator.
+
+### Post-result guidance ablation (V2-A015)
+
+We next asked whether changing inference-time guidance alters the same
+directional behavior. This was a matched, exploratory ablation with three
+paired seeds per direction (`n = 3` LEFT and `n = 3` RIGHT for each setting),
+not a powered confirmatory experiment. Every cell used one of two exact static
+prompts:
+
+- “Put the Rubik's cube to the left of the bowl.”
+- “Put the Rubik's cube to the right of the bowl.”
+
+![Paired guidance ablation: Cosmos3 Nano classifier-free guidance and DreamZero derived negative-branch action guidance](../artifacts/vla_wam_shared_v2/figures/v2a015_cfg_guidance_ablation.svg)
+
+[Open the full-resolution SVG](../artifacts/vla_wam_shared_v2/figures/v2a015_cfg_guidance_ablation.svg).
+The requested margin is the final bowl-relative lateral displacement signed in
+the requested direction; a positive value places the endpoint on the requested
+side.
+
+| Matched contrast | LEFT success | RIGHT success | Mean LEFT margin | Mean RIGHT margin | Paired mean margin change |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Cosmos3 Nano, guidance `g=3` → no blend `g=1` | 3/3 → 1/3 | 3/3 → 3/3 | 0.1032 → 0.0361 m | 0.4092 → 0.2159 m | −0.1302 m |
+| DreamZero, baseline-equivalent `s=1` → derived action guidance `s=2` | 2/3 → 1/3 | 1/3 → 3/3 | 0.1098 → 0.0517 m | 0.0401 → 0.2168 m | +0.0594 m |
+
+At Cosmos3 Nano `g=1`, we observed two paired LEFT success-to-failure
+transitions relative to `g=3`; the other four cells remained successful.
+Although the RIGHT-minus-LEFT margin gap narrowed from 0.3060 m to 0.1797 m,
+this was not improved balance: both directional margins fell, including the
+weaker LEFT margin from 0.1032 m to 0.0361 m. The `g=1` arm therefore had lower
+LEFT success and less requested-side separation overall than the `g=3` arm.
+
+DreamZero's aggregate score increased from 3/6 to 4/6, but the paired changes
+were directional: two RIGHT failures became successes, one LEFT success became
+a failure, and the remaining three outcomes were unchanged. The signed
+RIGHT-minus-LEFT margin shifted from −0.0697 m to +0.1651 m. Thus the one-cell
+aggregate gain reflects redistribution toward RIGHT, not direction-independent
+robustness. Moreover, `s=2` is a derived, CFG-style negative-branch action
+construction using DreamZero's fixed visual-quality negative prompt; it is not
+an official DreamZero action-CFG method or a strict empty-text unconditional
+branch. The [paired comparison record](../artifacts/vla_wam_shared_v2/pilot/expansion/cfg_ablation_v2a015_comparison.json)
+contains the cell-level evidence and configuration provenance.
+
+Complete, hash-bound six-cell media exports are:
+
+- Cosmos3 Nano `g=1`: [all six actual rollouts](../artifacts/vla_wam_shared_v2/media/cfg_v2a015/cosmos3_nano_g1/cosmos3_nano_no_cfg_g1_all_seeds_actual.mp4) and [all 64 retained local prediction horizons](../artifacts/vla_wam_shared_v2/media/cfg_v2a015/cosmos3_nano_g1/cosmos3_nano_no_cfg_g1_all_seeds_local_predictions.mp4). The horizons are separated by request slates; their concatenation is not a continuous imagined rollout.
+- DreamZero `s=2`: [all six actual rollouts](../artifacts/vla_wam_shared_v2/media/cfg_v2a015/dreamzero_action_cfg_s2/dreamzero_action_cfg_s2_all_seeds_actual.mp4) and [all six complete official reset decodes](../artifacts/vla_wam_shared_v2/media/cfg_v2a015/dreamzero_action_cfg_s2/dreamzero_action_cfg_s2_all_seeds_imagination.mp4). These decoder outputs are model imagination, not execution or additional episodes.
 
 ## Dreaming is not executing
 

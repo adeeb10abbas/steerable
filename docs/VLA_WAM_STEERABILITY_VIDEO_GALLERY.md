@@ -4,6 +4,50 @@ This is the portable index for the embedded [HTML video gallery](VLA_WAM_STEERAB
 
 ## WORLD MODELS — actual simulator execution
 
+### V2-A015 guidance ablation — complete six-cell media
+
+These are separate paired, descriptive post-result pilots with n=3 per direction in each setting. Each card keeps all six intervention executions beside all decodable retained media covered by the released interface: 64 Cosmos local RGB horizons or six DreamZero official reset decodes. No outcome-based selection is used.
+
+#### Cosmos3 Nano Policy DROID — joint action/video CFG g=1 (CFG blend removed); baseline g=3
+
+[▶ All six complete actual executions](../artifacts/vla_wam_shared_v2/media/cfg_v2a015/cosmos3_nano_g1/cosmos3_nano_no_cfg_g1_all_seeds_actual.mp4) · [▶ Complete local-prediction composite](../artifacts/vla_wam_shared_v2/media/cfg_v2a015/cosmos3_nano_g1/cosmos3_nano_no_cfg_g1_all_seeds_local_predictions.mp4) · [Media manifest](../artifacts/vla_wam_shared_v2/media/cfg_v2a015/cosmos3_nano_g1/media_manifest.json) · [Paired comparison](../artifacts/vla_wam_shared_v2/pilot/expansion/cfg_ablation_v2a015_comparison.json)
+
+> **Prompt asks LEFT:** “Put the Rubik's cube to the left of the bowl.”
+>
+> Requested-task success: **3/3 → 1/3**; mean signed endpoint margin: **+0.103 m → +0.036 m**.
+
+> **Prompt asks RIGHT:** “Put the Rubik's cube to the right of the bowl.”
+>
+> Requested-task success: **3/3 → 3/3**; mean signed endpoint margin: **+0.409 m → +0.216 m**.
+
+- Total requested-task success: **6/6 → 4/6**.
+- Mean-margin gap (RIGHT − LEFT): **+0.306 m → +0.180 m**.
+- Absolute mean-margin gap: **0.306 m → 0.180 m**.
+- Interpretation: At g=1, total success was 4/6 versus 6/6 at g=3. The smaller RIGHT-minus-LEFT margin gap is not improved balance: both requested-side margins fell, and LEFT lost two successes.
+- Prediction boundary: Every retained 33-frame request horizon is shown in request order. The joined review video is not a continuous imagined rollout.
+- Media boundary: The actual composite contains complete simulator viewport executions. The prediction composite contains every retained 33-frame RGB future in request order. Each request is a local model-prediction horizon; joining them for review does not make a continuous imagined rollout, simulator execution, task outcome, or additional behavioral episode.
+- Inference boundary: Each comparison is exact paired post-result evidence with n=3 per direction in each setting (six cells per setting). Improved, regressed, and unchanged cell transitions and paired effect sizes are descriptive; they do not support a powered or general performance-gain claim. Cosmos3 Nano and DreamZero denominators remain separate, and neither is pooled with RoboTwin.
+
+#### DreamZero DROID — conditional-action equivalent s=1 → derived negative-branch action guidance s=2; video CFG fixed at 5
+
+[▶ All six complete actual executions](../artifacts/vla_wam_shared_v2/media/cfg_v2a015/dreamzero_action_cfg_s2/dreamzero_action_cfg_s2_all_seeds_actual.mp4) · [▶ Complete imagination composite](../artifacts/vla_wam_shared_v2/media/cfg_v2a015/dreamzero_action_cfg_s2/dreamzero_action_cfg_s2_all_seeds_imagination.mp4) · [Media manifest](../artifacts/vla_wam_shared_v2/media/cfg_v2a015/dreamzero_action_cfg_s2/media_manifest.json) · [Paired comparison](../artifacts/vla_wam_shared_v2/pilot/expansion/cfg_ablation_v2a015_comparison.json)
+
+> **Prompt asks LEFT:** “Put the Rubik's cube to the left of the bowl.”
+>
+> Requested-task success: **2/3 → 1/3**; mean signed endpoint margin: **+0.110 m → +0.052 m**.
+
+> **Prompt asks RIGHT:** “Put the Rubik's cube to the right of the bowl.”
+>
+> Requested-task success: **1/3 → 3/3**; mean signed endpoint margin: **+0.040 m → +0.217 m**.
+
+- Total requested-task success: **3/6 → 4/6**.
+- Mean-margin gap (RIGHT − LEFT): **-0.070 m → +0.165 m**.
+- Absolute mean-margin gap: **0.070 m → 0.165 m**.
+- Interpretation: The one-cell aggregate gain was not uniform: LEFT lost one success while RIGHT gained two. Guidance reversed the favored direction rather than establishing direction-independent robustness.
+- Prediction boundary: Every complete official reset decode exposed by the six behavioral cells is shown. These are model imaginations, not executed robot trajectories.
+- Media boundary: The actual composite contains complete simulator viewport executions. The imagination composite contains every complete official_reset_decode listed by each of the six DreamZero behavioral cells. These official model decodes are not simulator execution, task outcomes, or additional behavioral episodes. The s=2 arm is derived CFG-style negative-branch action guidance, not an official DreamZero action-CFG mode.
+- Inference boundary: Each comparison is exact paired post-result evidence with n=3 per direction in each setting (six cells per setting). Improved, regressed, and unchanged cell transitions and paired effect sizes are descriptive; they do not support a powered or general performance-gain claim. Cosmos3 Nano and DreamZero denominators remain separate, and neither is pooled with RoboTwin.
+
 DreamZero's three hash-validated actual simulator pairs are listed in this section and link to same-seed imagined-future controls later in this document. Every other WAM states whether its released interface exposes decoded, latent-only, or action-only future evidence.
 
 ### Cosmos3 Nano Policy DROID — V2-A011 — seed 8300 matched pair

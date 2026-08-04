@@ -1,7 +1,7 @@
 {
   "schema_version": "vla_wam_publication_manifest_v1",
   "status": "article_ready_asset_whitelist",
-  "source_git_head": "efb36af79c073f4f9f50bbde0739261e89b13c08",
+  "source_git_head": "0bcaf371af582d4b7fe397b9e9a33e45c1394934",
   "claim_boundary": [
     "DROID and RoboTwin success rates remain separate",
     "invalid infrastructure attempts are outside behavioral denominators",
@@ -9,8 +9,68 @@
     "historical reference media is labeled and never substituted for current evidence",
     "Cosmos3 base-model probes remain non-behavioral; selected generated media is labeled prediction-only with actual rollout unavailable"
   ],
-  "asset_count": 145,
+  "asset_count": 167,
   "assets": [
+    {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cfg_ablation_v2a015_comparison.json",
+      "category": "cfg_ablation_v2a015",
+      "bytes": 96243,
+      "sha256": "0e6daadd9391b7ad38ee316371df0235e34268cc4c32597c6597578ac9f9ed1e"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cfg_ablation_v2a015_preflight.json",
+      "category": "cfg_ablation_v2a015",
+      "bytes": 18843,
+      "sha256": "472c09568713fc3e08dbb86d3c39a8da6f328b82b06ff5aadef4e02f1892dd4d"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_v2a015_no_cfg_g1_result.json",
+      "category": "cfg_ablation_v2a015",
+      "bytes": 104115,
+      "sha256": "8796f4ab9ea9490ee5b78678bc689d6fd13f27a9551006f8b5d346e202d0cc5c"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_v2a015_action_cfg_s2_result.json",
+      "category": "cfg_ablation_v2a015",
+      "bytes": 270309,
+      "sha256": "273b7191cde61b51bf90b2eda04b1910e214f48d34f2347f2a81325069c32444"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/pilot/post_result_cfg_ablation_v2a015_amendment.json",
+      "category": "cfg_ablation_v2a015",
+      "bytes": 9965,
+      "sha256": "7c3b98d5e578a5744a463201060ccdacf7462471418b08dc64a2ac29a9a9fece"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/protocol_validation.json",
+      "category": "cfg_ablation_v2a015",
+      "bytes": 95258,
+      "sha256": "d0e89b0c2c6a6f78ee4a6ca066de28df9227cb6975957d3f127c8b5cb8f47fae"
+    },
+    {
+      "path": "tools/build_v2a015_cfg_media.py",
+      "category": "cfg_ablation_v2a015",
+      "bytes": 53949,
+      "sha256": "f7490b7d3b746c86826185d665c87dd66ff74bf2509346abac526169c9f810a5"
+    },
+    {
+      "path": "tools/render_v2a015_cfg_scientific_figure.py",
+      "category": "cfg_ablation_v2a015",
+      "bytes": 45294,
+      "sha256": "d4c9422a395962eccd7fe5a0b96a8271c4599a44714e1a6cd3dd6331dd7f2582"
+    },
+    {
+      "path": "tools/render_vla_wam_video_first_gallery.py",
+      "category": "cfg_ablation_v2a015",
+      "bytes": 85784,
+      "sha256": "8942fa9c790686d03b48f641975c3159b4875a93ab87b061e4e80adf46c315c1"
+    },
+    {
+      "path": "tools/validate_vla_wam_v2_protocol.py",
+      "category": "cfg_ablation_v2a015",
+      "bytes": 264720,
+      "sha256": "da1c3fe9a310fde610112e0bb01f360d87777f3d3bee3d45cb407a25d98e0baa"
+    },
     {
       "path": "artifacts/vla_wam_shared_v2/media/cosmos3_edge_base_v2a013/media_manifest.json",
       "category": "cosmos3_super_edge_base_provenance",
@@ -192,6 +252,18 @@
       "sha256": "7dd55caee04c67e1868eac9c7a8ece419db585d80b24ca116b3754e6a46f2707"
     },
     {
+      "path": "artifacts/vla_wam_shared_v2/figures/v2a015_cfg_guidance_ablation.png",
+      "category": "publication_figure",
+      "bytes": 472710,
+      "sha256": "0adef9257d4832923fc50fd28515091b4495488f4149675024324c185ff45e5b"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/figures/v2a015_cfg_guidance_ablation.svg",
+      "category": "publication_figure",
+      "bytes": 24571,
+      "sha256": "b2fdb9dbd743f435fae9cf008dcd9287f2c83aef0840f081a8faaa974b91435a"
+    },
+    {
       "path": "README.md",
       "category": "reader_core",
       "bytes": 9935,
@@ -200,14 +272,14 @@
     {
       "path": "artifacts/vla_wam_shared_v2/continuation_state.json",
       "category": "reader_core",
-      "bytes": 53415,
-      "sha256": "7542063b079116ec41864603ee4a32b944be0503275c03059e69d22f5891acb8"
+      "bytes": 77263,
+      "sha256": "a79dc8c3eebe237039c15a8215bd902ca59fa53c9e4afde9df27e8a710a47f2d"
     },
     {
       "path": "artifacts/vla_wam_shared_v2/media/README.md",
       "category": "reader_core",
-      "bytes": 2145,
-      "sha256": "d323e925513093e31ca9460028bf34949b7117cb76e72577d7a4089c5e347dfd"
+      "bytes": 2299,
+      "sha256": "ecd3093535e0bc8d06e3b35ec287bcd6ee1ec42e094c2496292e13bb7a2cb121"
     },
     {
       "path": "artifacts/vla_wam_shared_v2/media/cosmos3_nano_policy_droid_v2a011/media_manifest.json",
@@ -218,14 +290,14 @@
     {
       "path": "artifacts/vla_wam_shared_v2/media/media_catalog.csv",
       "category": "reader_core",
-      "bytes": 12353,
-      "sha256": "30838d97f687f7aeae805e8571746741560acaff62749daf5d5ced9cadb5f6bb"
+      "bytes": 13913,
+      "sha256": "4b43e8e45d91444842646063a866995ec71d697f1f3fd6f576e70e8507c1ad61"
     },
     {
       "path": "artifacts/vla_wam_shared_v2/media/media_catalog.json",
       "category": "reader_core",
-      "bytes": 21902,
-      "sha256": "dff57075c2a056ff103f12002de9723d875a18d14e82aa24a86c7e12cd7b1788"
+      "bytes": 25008,
+      "sha256": "123b4c2d99082e0c6b87b83978ab5949e2dfb4b5013855f35c7adf883230afb5"
     },
     {
       "path": "artifacts/vla_wam_shared_v2/media/pi05_current_stack_v2a010/media_manifest.json",
@@ -236,8 +308,8 @@
     {
       "path": "artifacts/vla_wam_shared_v2/media/video_first_gallery_manifest.json",
       "category": "reader_core",
-      "bytes": 26473,
-      "sha256": "5be93c2e4e7ff8acbf060388125586e4decc41a34f42f367b036503bc14adddf"
+      "bytes": 29254,
+      "sha256": "b80b1508935ab74e7fafbc9c354fbc98c0c1dad2ca06c1941f58bf8b6d75f67d"
     },
     {
       "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_base_v2a013_registry.json",
@@ -416,32 +488,32 @@
     {
       "path": "docs/PUBLICATION_HANDOFF.md",
       "category": "reader_core",
-      "bytes": 5216,
-      "sha256": "6ee03274f5344ecb8b843587501e9abbde5491bb4a675da73e554a3be611701f"
+      "bytes": 6243,
+      "sha256": "305c74784e3dda6de60b6868cb7ca058d1cb54337eb73735addc11479c27c276"
     },
     {
       "path": "docs/VLA_WAM_RESEARCH_BLOG.md",
       "category": "reader_core",
-      "bytes": 7783,
-      "sha256": "9e25d423ce9ec31768cac2659bf002b0c528e554589f8c11b2efcb7f2c27dd2f"
+      "bytes": 11409,
+      "sha256": "982c59eb3a648eba9c4de47442e5fa7de2544d11eae86a9c69c6e84a02bd5d87"
     },
     {
       "path": "docs/VLA_WAM_STEERABILITY_V2_PROTOCOL.md",
       "category": "reader_core",
-      "bytes": 35268,
-      "sha256": "26a57258d877ff9a06bdbfc30eaf71634c08b253f48a262c66d1cca116660eb7"
+      "bytes": 36325,
+      "sha256": "eac6929e19951416667a81a8ff93df56b4aaf9d1aba08c360b7d72d82e7a93af"
     },
     {
       "path": "docs/VLA_WAM_STEERABILITY_VIDEO_GALLERY.html",
       "category": "reader_core",
-      "bytes": 56000,
-      "sha256": "98b4ba5dc3803c8e49270e997f5a45de53fc91433d636f9efd48b3e9cb0b37e2"
+      "bytes": 69391,
+      "sha256": "32fc5bfc4444551fe6a46b46cedba6321b2bfe04df38e2f9b20fed1272316f4a"
     },
     {
       "path": "docs/VLA_WAM_STEERABILITY_VIDEO_GALLERY.md",
       "category": "reader_core",
-      "bytes": 21120,
-      "sha256": "0e0c82c5f13ec5d7fc1f46b1b038022e5bbe84b00b226feee7f857cdcc5eb48c"
+      "bytes": 26149,
+      "sha256": "e4a90e5756bff5ff5cad36dab6a85902972feea0e4dde952ebbdb6d6d317e760"
     },
     {
       "path": "outputs/vla_wam_research_handoff/vla_wam_study_stats.xlsx",
@@ -452,14 +524,74 @@
     {
       "path": "tools/build_vla_wam_media_catalog.py",
       "category": "reader_core",
-      "bytes": 12077,
-      "sha256": "b7501fa9998d8fd411df67762aa5613bbbb9365a71640c35503293ce64ce055e"
+      "bytes": 19047,
+      "sha256": "de232c266edc0c44430944857ab4697a2f4372a2c66409e2b766cbfd99f8004f"
     },
     {
       "path": "tools/build_vla_wam_stats_workbook.mjs",
       "category": "reader_core",
       "bytes": 21383,
       "sha256": "2cea7482261f50c1d3792e77d34c89cf763977a81c0584474a334e09c92b8833"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/media/cfg_v2a015/cosmos3_nano_g1/cosmos3_nano_no_cfg_g1_all_seeds_actual.mp4",
+      "category": "selected_media",
+      "bytes": 2298283,
+      "sha256": "9cfe25e80ebd033adafb9b081f89203080471af8b42b7f0b03fa702c681da0f7"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/media/cfg_v2a015/cosmos3_nano_g1/cosmos3_nano_no_cfg_g1_all_seeds_actual_poster.jpg",
+      "category": "selected_media",
+      "bytes": 114601,
+      "sha256": "51be005f0442e1c5a132ad1dd28dce7426b027b2052c43c4f5a362f42ecf3fe1"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/media/cfg_v2a015/cosmos3_nano_g1/cosmos3_nano_no_cfg_g1_all_seeds_local_predictions.mp4",
+      "category": "selected_media",
+      "bytes": 7962854,
+      "sha256": "9a53dba82a0348805462c083c673e3be49804be3f9eda3304e29a24466ab666e"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/media/cfg_v2a015/cosmos3_nano_g1/cosmos3_nano_no_cfg_g1_all_seeds_local_predictions_poster.jpg",
+      "category": "selected_media",
+      "bytes": 100437,
+      "sha256": "2cd29c9f0e6fae264c9c2291bf2aff263dddfc1914a332bccdc4ec953570cc11"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/media/cfg_v2a015/cosmos3_nano_g1/media_manifest.json",
+      "category": "selected_media",
+      "bytes": 59367,
+      "sha256": "c6d82722769f84023690e6a3cdeccb3bf7316ef0f4673fa50aa56680b8029e3b"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/media/cfg_v2a015/dreamzero_action_cfg_s2/dreamzero_action_cfg_s2_all_seeds_actual.mp4",
+      "category": "selected_media",
+      "bytes": 2180954,
+      "sha256": "de40f08c4d83f3b54a1537b6706f3d1b1cdcc729fd9d7804aecf2322f8d889a6"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/media/cfg_v2a015/dreamzero_action_cfg_s2/dreamzero_action_cfg_s2_all_seeds_actual_poster.jpg",
+      "category": "selected_media",
+      "bytes": 109351,
+      "sha256": "727074d81b85ac39ca7ffdb6515387f7650f13d6ccb02e03aa8da8b96c1de796"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/media/cfg_v2a015/dreamzero_action_cfg_s2/dreamzero_action_cfg_s2_all_seeds_imagination.mp4",
+      "category": "selected_media",
+      "bytes": 22135191,
+      "sha256": "57eaf8a1ea2283f37b52c30396aa5ddd1b2d653d18a471d828725e97b96c28ec"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/media/cfg_v2a015/dreamzero_action_cfg_s2/dreamzero_action_cfg_s2_all_seeds_imagination_poster.jpg",
+      "category": "selected_media",
+      "bytes": 120154,
+      "sha256": "724084bb0b83209b97968cad7b1c8774cd26082ae6a7f646db2b82c7833bd026"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/media/cfg_v2a015/dreamzero_action_cfg_s2/media_manifest.json",
+      "category": "selected_media",
+      "bytes": 23492,
+      "sha256": "48b8549f909a8c52500e56f035ae84a0cc0b090cef29019e8a5f4fe0f7ee3adc"
     },
     {
       "path": "artifacts/vla_wam_shared_v2/media/cosmos3_edge_base_v2a013/cosmos3_edge_base_v2a013_seed8300_paired_model_prediction.mp4",

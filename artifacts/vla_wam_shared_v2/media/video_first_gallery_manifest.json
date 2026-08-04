@@ -33,6 +33,64 @@
     "required_fixed_observation_probe_decode_count": 3,
     "note": "The renderer keeps official model-predicted decodes in a separate imagination section. They are never presented as simulator execution, task outcomes, or additional episodes."
   },
+  "cfg_ablation_media_contracts": [
+    {
+      "path": "artifacts/vla_wam_shared_v2/media/cfg_v2a015/cosmos3_nano_g1/media_manifest.json",
+      "bytes": 59367,
+      "sha256": "c6d82722769f84023690e6a3cdeccb3bf7316ef0f4673fa50aa56680b8029e3b",
+      "schema_version": "vla-wam-shared-v2-v2a015-cfg-media-v1",
+      "status": "complete_all_six_cells_actual_and_prediction_media",
+      "amendment_id": "V2-A015",
+      "arm_id": "cosmos3_nano_no_cfg_g1",
+      "model_id": "cosmos3_nano_policy_droid",
+      "baseline_result": {
+        "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_direct_gate.json",
+        "bytes": 57097,
+        "sha256": "4a6cc1d61593c7ba5272e1707f6bbe51261f7d23438070992bd75fd9e95fdb93"
+      },
+      "intervention_result": {
+        "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_v2a015_no_cfg_g1_result.json",
+        "bytes": 104115,
+        "sha256": "8796f4ab9ea9490ee5b78678bc689d6fd13f27a9551006f8b5d346e202d0cc5c"
+      },
+      "comparison": {
+        "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cfg_ablation_v2a015_comparison.json",
+        "bytes": 96243,
+        "sha256": "0e6daadd9391b7ad38ee316371df0235e34268cc4c32597c6597578ac9f9ed1e",
+        "schema_version": "vla-wam-shared-v2-cfg-ablation-v2a015-comparison-v1",
+        "status": "complete",
+        "comparison_key": "cosmos3_nano"
+      }
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/media/cfg_v2a015/dreamzero_action_cfg_s2/media_manifest.json",
+      "bytes": 23492,
+      "sha256": "48b8549f909a8c52500e56f035ae84a0cc0b090cef29019e8a5f4fe0f7ee3adc",
+      "schema_version": "vla-wam-shared-v2-v2a015-cfg-media-v1",
+      "status": "complete_all_six_cells_actual_and_prediction_media",
+      "amendment_id": "V2-A015",
+      "arm_id": "dreamzero_action_cfg_s2",
+      "model_id": "dreamzero_droid_action_cfg",
+      "baseline_result": {
+        "path": "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json",
+        "bytes": 254288,
+        "sha256": "4c76cdc3ca9eaf227d21d160199408f22e1b3dd7a71176a5a5dbe22223714461"
+      },
+      "intervention_result": {
+        "path": "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_v2a015_action_cfg_s2_result.json",
+        "bytes": 270309,
+        "sha256": "273b7191cde61b51bf90b2eda04b1910e214f48d34f2347f2a81325069c32444"
+      },
+      "comparison": {
+        "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cfg_ablation_v2a015_comparison.json",
+        "bytes": 96243,
+        "sha256": "0e6daadd9391b7ad38ee316371df0235e34268cc4c32597c6597578ac9f9ed1e",
+        "schema_version": "vla-wam-shared-v2-cfg-ablation-v2a015-comparison-v1",
+        "status": "complete",
+        "comparison_key": "dreamzero"
+      }
+    }
+  ],
   "entries": [
     {
       "id": "cosmos3_edge_seed8302",

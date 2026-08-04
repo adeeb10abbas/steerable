@@ -267,7 +267,7 @@
     "denominator_policy": "All six valid behavioral cells are in the DreamZero DROID denominator, including three valid failures. Eleven setup-invalid attempts remain excluded. DROID results are not pooled with RoboTwin."
   },
   "cfg_ablation_v2a015": {
-    "status": "complete_compiled_evidence_ready_for_plots_media",
+    "status": "complete_compiled_evidence_and_publication_media",
     "amendment_id": "V2-A015",
     "amendment": "artifacts/vla_wam_shared_v2/pilot/post_result_cfg_ablation_v2a015_amendment.json",
     "preflight": "artifacts/vla_wam_shared_v2/pilot/expansion/cfg_ablation_v2a015_preflight.json",
@@ -391,7 +391,7 @@
           "retention": "All six viewport videos, six executed-action traces, and 64 decoded 33-frame request futures are retained on the ali PVC.",
           "successful_guard_exit_zero_count": 3,
           "runtime_intervention_count": 0,
-          "claim_boundary": "Removing joint action/video CFG from g=3 to g=1 coincided with two fewer LEFT successes and no change in RIGHT successes. This is descriptive evidence of worse directional balance and robustness, not a powered/general result or a causal explanation of either individual failure."
+          "claim_boundary": "The g=1 versus g=3 contrast had two fewer LEFT successes and no change in RIGHT successes. This is descriptive evidence of worse success-count balance and robustness, not a powered/general result or a causal explanation of either individual failure."
         }
       },
       "dreamzero_action_cfg_s2": {
@@ -505,10 +505,37 @@
       "compiled_at_git": "2f177333545e39e35d586e577a9a4496e4e97f24",
       "scientific_figure": {
         "svg_path": "artifacts/vla_wam_shared_v2/figures/v2a015_cfg_guidance_ablation.svg",
-        "svg_sha256": "2c50c754e48e11a945de8bd3e17c47a600b8b1d7b460a78d91fb993ec81c4bc7",
+        "svg_sha256": "b2fdb9dbd743f435fae9cf008dcd9287f2c83aef0840f081a8faaa974b91435a",
         "png_path": "artifacts/vla_wam_shared_v2/figures/v2a015_cfg_guidance_ablation.png",
-        "png_sha256": "5a322aa491e6935d3a6db1b5f9f63a56770bc16e728d66717a62e040e1f62349",
+        "png_sha256": "0adef9257d4832923fc50fd28515091b4495488f4149675024324c185ff45e5b",
         "content": "Exact prompt text, raw success counts, and baseline-to-intervention requested-margin trajectories for every matched seed."
+      },
+      "publication_media": {
+        "selection_policy": "All six valid intervention cells per arm are shown; no outcome-based selection. Shorter matched sides hold their final frame with an explicit label, and no source is truncated.",
+        "cosmos3_nano_no_cfg_g1": {
+          "manifest_path": "artifacts/vla_wam_shared_v2/media/cfg_v2a015/cosmos3_nano_g1/media_manifest.json",
+          "manifest_sha256": "c6d82722769f84023690e6a3cdeccb3bf7316ef0f4673fa50aa56680b8029e3b",
+          "actual_video_path": "artifacts/vla_wam_shared_v2/media/cfg_v2a015/cosmos3_nano_g1/cosmos3_nano_no_cfg_g1_all_seeds_actual.mp4",
+          "actual_video_sha256": "9cfe25e80ebd033adafb9b081f89203080471af8b42b7f0b03fa702c681da0f7",
+          "actual_duration_s": 86.93333333333334,
+          "prediction_video_path": "artifacts/vla_wam_shared_v2/media/cfg_v2a015/cosmos3_nano_g1/cosmos3_nano_no_cfg_g1_all_seeds_local_predictions.mp4",
+          "prediction_video_sha256": "9a53dba82a0348805462c083c673e3be49804be3f9eda3304e29a24466ab666e",
+          "prediction_duration_s": 135.2,
+          "retained_local_prediction_horizon_count": 64,
+          "claim_boundary": "All 64 exposed 33-frame futures are shown in request order with boundary slates. They are local prediction horizons, not a continuous imagined rollout or simulator execution."
+        },
+        "dreamzero_action_cfg_s2": {
+          "manifest_path": "artifacts/vla_wam_shared_v2/media/cfg_v2a015/dreamzero_action_cfg_s2/media_manifest.json",
+          "manifest_sha256": "48b8549f909a8c52500e56f035ae84a0cc0b090cef29019e8a5f4fe0f7ee3adc",
+          "actual_video_path": "artifacts/vla_wam_shared_v2/media/cfg_v2a015/dreamzero_action_cfg_s2/dreamzero_action_cfg_s2_all_seeds_actual.mp4",
+          "actual_video_sha256": "de40f08c4d83f3b54a1537b6706f3d1b1cdcc729fd9d7804aecf2322f8d889a6",
+          "actual_duration_s": 82.06666666666666,
+          "imagination_video_path": "artifacts/vla_wam_shared_v2/media/cfg_v2a015/dreamzero_action_cfg_s2/dreamzero_action_cfg_s2_all_seeds_imagination.mp4",
+          "imagination_video_sha256": "57eaf8a1ea2283f37b52c30396aa5ddd1b2d653d18a471d828725e97b96c28ec",
+          "imagination_duration_s": 271.4,
+          "complete_official_decode_count": 6,
+          "claim_boundary": "All six complete official reset decodes are shown. They are model imagination, not execution, task outcomes, or additional episodes; s=2 remains derived rather than an official action-CFG feature."
+        }
       },
       "prompts": {
         "left": "Put the Rubik's cube to the left of the bowl.",
@@ -540,7 +567,7 @@
           "left": "5.2701883513 to 10.0412547655",
           "right": "10.4875759159 to 6.6958667033"
         },
-        "interpretation": "Removing joint action/video CFG produced mixed, direction-specific trajectory-quality changes rather than uniformly smoother behavior, alongside reduced LEFT robustness."
+        "interpretation": "At g=1, observed trajectory-quality changes were mixed by direction rather than uniformly smoother, and LEFT robustness was lower than at g=3."
       },
       "dreamzero_s1_to_s2": {
         "success": {
@@ -638,9 +665,9 @@
     "setup_invalid_attempt_record": "artifacts/vla_wam_shared_v2/pilot/expansion/cfg_ablation_v2a015_preflight.json",
     "behavioral_denominator_policy": "All nine fixed-observation requests and all sixteen setup-invalid attempts are excluded from behavioral denominators. The six completed DreamZero s=2 episodes and six completed Cosmos g=1 episodes each form their own DROID denominator; valid failures remain included and the two arms are never pooled.",
     "next_steps": [
-      "Render the final V2-A015 plots from the hash-bound comparison artifact.",
-      "Build and verify paired actual-versus-predicted media for both completed guidance arms.",
-      "Run the final protocol validator and git diff --check; no further V2-A015 inference or rerun is authorized."
+      "No V2-A015 inference, rerun, plot, or media-render cell remains.",
+      "Preserve full raw rollouts, action traces, exposed futures, and setup-invalid ledgers on the ali PVC.",
+      "Any new guidance setting or confirmatory sample requires a separately frozen amendment before model requests."
     ],
     "claim_boundary": "V2-A015 is complete and compiled as an exploratory post-result ablation with separate six-cell DROID denominators. Cosmos g=1 lost two LEFT successes and no RIGHT successes relative to g=3; its smaller endpoint gap reflects a larger RIGHT-margin drop while the weaker LEFT margin also worsened. DreamZero s=2 redistributed success and signed margin bias toward RIGHT relative to s=1-equivalent; s=2 remains a derived negative-branch intervention, not official action CFG. All contrasts are descriptive, not powered/general or causal claims about individual failures, and no inference remains."
   },

@@ -22,8 +22,10 @@ DROID/RoboLab and RoboTwin use different tasks and denominators. Never pool thei
 | WAM | Cosmos3 Edge DROID | DROID / RoboLab | 1 | 0 | 0 |
 | WAM | Cosmos3 Edge base — DROID | DROID / RoboLab | 0 | 1 | 0 |
 | WAM | Cosmos3 Nano Policy DROID — V2-A011 | DROID / RoboLab | 1 | 1 | 0 |
+| WAM | Cosmos3 Nano Policy DROID — V2-A015 g=1 | DROID / RoboLab | 0 | 0 | 2 |
 | WAM | Cosmos3-Super base | DROID / RoboLab conditioning image only | 0 | 1 | 0 |
 | WAM | DreamZero DROID | DROID / RoboLab | 3 | 3 | 9 |
+| WAM | DreamZero DROID — V2-A015 s=2 | DROID / RoboLab | 0 | 0 | 2 |
 | WAM | Efficient-WAM-RT | RoboTwin place-A-relative-to-B | 2 | 0 | 1 |
 | WAM | FastWAM | RoboTwin place-A-relative-to-B | 1 | 0 | 3 |
 | WAM | Light-WAM | RoboTwin place-A-relative-to-B | 1 | 0 | 0 |
@@ -35,4 +37,4 @@ DROID/RoboLab and RoboTwin use different tasks and denominators. Never pool thei
 - [Hash-bearing JSON](media_catalog.json): roles, sizes, SHA-256 digests, and source manifests.
 - [Gallery manifest](video_first_gallery_manifest.json): canonical publication selections.
 
-Catalog total: **36 committed MP4s**. A file count is not an episode count.
+Catalog total: **40 committed MP4s**. A file count is not an episode count.

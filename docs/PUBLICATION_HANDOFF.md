@@ -28,6 +28,10 @@ Operational handoffs are evidence provenance, not article outlines.
 - DreamZero exposed repeatable, prompt-dependent decoded futures, but completed
   only three of six behavioral episodes. Dreaming did not guarantee execution.
 - DROID/RoboLab and RoboTwin outcomes must remain in separate tables.
+- In the exploratory V2-A015 guidance ablation, the Cosmos `g=1` arm had lower
+  total success and both requested-side margins than `g=3`; DreamZero's derived
+  `s=2` arm redistributed success toward RIGHT rather than improving both
+  directions.
 
 ## Claims not supported
 
@@ -69,6 +73,17 @@ separately labeled addition is complete:
 - V2-A012/V2-A014: Cosmos3 Super base passed the corresponding image-only
   action-plus-video diagnostic. It has no robot state, controller execution, or
   released behavioral cell and cannot support a DROID execution claim.
+
+- V2-A015: two separate six-cell, post-result DROID guidance ablations are
+  complete at seeds 8300–8302. Cosmos3 Nano `g=3 → g=1` changed success from
+  `6/6 → 4/6` (LEFT `3/3 → 1/3`; RIGHT `3/3 → 3/3`), and the all-cell paired
+  mean requested margin decreased by `0.1302 m`. DreamZero conditional-action-equivalent
+  `s=1 → s=2` changed success from `3/6 → 4/6`, but LEFT fell `2/3 → 1/3`
+  while RIGHT rose `1/3 → 3/3`. Report the latter as directional
+  redistribution under derived CFG-style negative-branch action guidance,
+  not as an official DreamZero action-CFG feature or a powered general gain.
+  The gallery contains all six intervention executions per arm, every complete
+  DreamZero official decode, and all 64 Cosmos local prediction horizons.
 
 The V2-A010 and V2-A011 results may be described only with their current-stack
 labels and separate DROID denominators. Nano’s two setup failures occurred

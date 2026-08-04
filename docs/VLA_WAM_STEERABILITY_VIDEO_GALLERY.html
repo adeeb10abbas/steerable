@@ -3,11 +3,98 @@
 <title>Matched VLA/WAM video evidence</title>
 <style>
 :root{--ink:#17202a;--muted:#596775;--paper:#f4f1ea;--card:#fff;--line:#d8d8d2;--left:#fff0d4;--right:#e4f1ff;--accent:#6941c6}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{width:min(1420px,calc(100% - 32px));margin:auto;padding:52px 0 80px}h1{max-width:980px;margin:.12em 0;font-size:clamp(42px,7vw,84px);line-height:.98;letter-spacing:-.05em}h2{font-size:clamp(31px,4vw,48px);margin:0}h3{font-size:25px;margin:2px 0 0}.lede{max-width:920px;color:var(--muted);font-size:20px}.boundary{padding:16px 20px;border-left:5px solid var(--accent);background:#fff;border-radius:0 12px 12px 0;max-width:1050px}section{margin-top:62px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:20px;border-bottom:1px solid var(--line);padding-bottom:14px}.section-head p{color:var(--muted);margin:0}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}article{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}article header{padding:20px 22px 14px;display:flex;justify-content:space-between;gap:18px}.overline{margin:0;color:var(--accent);text-transform:uppercase;letter-spacing:.06em;font-size:12px;font-weight:800}.status{max-width:46%;color:var(--muted);font-size:12px;text-align:right}video{display:block;width:100%;max-height:560px;background:#111}.comparison-media{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line)}.comparison-media figure{margin:0;background:#fff}.comparison-media figcaption{padding:10px 14px 8px;font-weight:800;font-size:12px;letter-spacing:.04em;color:var(--accent)}.comparison-media p{padding:0 14px 10px;margin:0;color:var(--muted);font-size:12px}.comparison-unavailable{display:flex;min-height:280px;flex-direction:column;justify-content:center;background:#faf7ff!important}.comparison-unavailable p{max-width:43ch}.directions{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px 18px 10px}.direction{padding:14px;border-radius:10px}.direction.left{background:var(--left)}.direction.right{background:var(--right)}.direction-top{display:flex;justify-content:space-between;gap:10px;font-size:13px}blockquote{margin:10px 0 0;font-weight:650}.facts{display:grid;grid-template-columns:1fr 1.4fr;gap:1px;background:var(--line);border-block:1px solid var(--line)}.facts div{background:#fff;padding:12px 18px}.facts div:last-child{grid-column:1/-1}dt{font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:800}dd{margin:3px 0 0}code{overflow-wrap:anywhere;font-size:12px}.note{padding:0 18px 18px;color:var(--muted);font-size:14px}a{color:#4a2aa5}.pending,.missing{padding:24px;border-style:dashed}.pending{border-color:#8c6ddb;background:#faf7ff}.missing h3{margin-top:4px}.missing-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.archive-box{margin-top:22px;padding:22px;background:#fff;border:1px solid var(--line);border-radius:16px}.archive{columns:2;column-gap:32px;padding-left:22px}.archive li{break-inside:avoid;margin:8px 0}.archive span{color:var(--muted);font-size:12px}footer{margin-top:52px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:20px}@media(max-width:840px){.grid,.missing-grid,.comparison-media{grid-template-columns:1fr}.section-head{display:block}.directions,.facts{grid-template-columns:1fr}.facts div:last-child{grid-column:auto}article header{display:block}.status{display:block;max-width:none;text-align:left;margin-top:7px}.archive{columns:1}}
+
+.cfg-intro{max-width:920px;margin:4px 0 20px}.cfg-intro h3{font-size:clamp(25px,3vw,35px);margin:4px 0}.cfg-intro p:last-child{color:var(--muted);margin:.45em 0 0}.cfg-stack{display:grid;gap:24px;margin-bottom:30px}.cfg-card{border-color:#cfc8df;box-shadow:0 14px 35px rgba(40,27,72,.06)}.cfg-card header{align-items:start}.cfg-setting{color:var(--muted);margin:6px 0 0}.cfg-media{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line)}.cfg-media figure{margin:0;background:#fff;min-width:0}.cfg-media figcaption{padding:11px 16px 9px;font-weight:800;font-size:12px;letter-spacing:.04em;color:var(--accent)}.cfg-media figure>p{padding:9px 16px 13px;margin:0;color:var(--muted);font-size:13px}.cfg-prompts{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:18px}.cfg-direction{border-radius:12px;padding:15px 16px}.cfg-direction.left{background:var(--left)}.cfg-direction.right{background:var(--right)}.cfg-direction-name{margin:0;text-transform:uppercase;letter-spacing:.05em;font-size:11px;font-weight:850}.cfg-direction blockquote{font-size:15px}.cfg-direction-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:13px}.cfg-direction-stats p{margin:0;padding-top:10px;border-top:1px solid rgba(23,32,42,.16)}.cfg-direction-stats span,.cfg-metrics span{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.035em}.cfg-direction-stats strong,.cfg-metrics strong{display:block;margin-top:3px;font-size:17px}.cfg-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border-block:1px solid var(--line)}.cfg-metrics>div{background:#fff;padding:14px 18px}.cfg-result{margin:17px 18px 0;padding:13px 15px;background:#f2f5f8;border-radius:10px;color:var(--ink);font-size:15px}.cfg-definition{margin:13px 18px 0;color:var(--muted);font-size:14px}.cfg-boundaries{margin:13px 18px 0;padding:14px 16px;background:#f8f6fc;border-left:4px solid var(--accent);border-radius:0 10px 10px 0;color:var(--muted);font-size:13px}.cfg-boundaries p{margin:0}.cfg-boundaries p+p{margin-top:8px}
+@media(max-width:840px){.cfg-media,.cfg-prompts,.cfg-metrics,.cfg-direction-stats{grid-template-columns:1fr}.cfg-card header{display:block}.cfg-card .status{margin-top:8px}.cfg-media video{max-height:none}.cfg-prompts{padding:12px}.cfg-metrics>div{padding:13px 15px}}
 </style></head><body><main>
 <p class="overline">Video-first evidence index · direct static LEFT/RIGHT commands</p><h1>Matched VLA/WAM video evidence</h1>
 <p class="lede">Videos are embedded at full card width, separated into WORLD MODEL and VLA sections, and labeled with arena, prompt, direction, outcome, model interface, and evidence status. Missing media stays missing. Embed each canonical publication video once. Alternate square encodes, posters, captions, and FastWAM reconstruction inputs remain available through their source manifests but are not duplicated as additional evidence cards.</p>
 <p class="boundary"><strong>Claim boundary.</strong> Publication-selected simulator clips are grouped by arena. DROID and RoboTwin success rates are never pooled. A clip is an evidence view, not an additional episode.</p>
-<section id="world-model-execution"><div class="section-head"><h2>WORLD MODELS — actual simulator execution</h2><p>Every card is an executed rollout. Its future interface states whether decoded, latent-only, or action-only future evidence was exposed.</p></div><div class="grid">
+<section id="world-model-execution"><div class="section-head"><h2>WORLD MODELS — actual simulator execution</h2><p>Every card is an executed rollout. Its future interface states whether decoded, latent-only, or action-only future evidence was exposed.</p></div><div class="cfg-intro"><p class="overline">Guidance ablation · complete media</p><h3>What changed when inference-time guidance changed?</h3><p>Each wide card keeps the six matched intervention executions beside all decodable retained media covered by the released interface: 64 Cosmos local RGB horizons or six DreamZero official reset decodes. It then reports exact before→after success counts and signed endpoint margins. Each setting has n=3 per direction; the two models remain separate descriptive pilots.</p></div><div class="cfg-stack">
+      <article class="cfg-card" id="v2a015-cosmos3-nano-g1-complete-media">
+        <header>
+          <div><p class="overline">V2-A015 · paired post-result guidance ablation · n=3 per direction per setting</p>
+          <h3>Cosmos3 Nano Policy DROID</h3>
+          <p class="cfg-setting">joint action/video CFG g=1 (CFG blend removed); baseline g=3</p></div>
+          <span class="status">DROID/RoboLab · seeds 8300–8302</span>
+        </header>
+        <div class="cfg-media">
+          <figure><figcaption>ALL SIX COMPLETE ACTUAL EXECUTIONS</figcaption>
+            <video controls preload="metadata" poster="../artifacts/vla_wam_shared_v2/media/cfg_v2a015/cosmos3_nano_g1/cosmos3_nano_no_cfg_g1_all_seeds_actual_poster.jpg"><source src="../artifacts/vla_wam_shared_v2/media/cfg_v2a015/cosmos3_nano_g1/cosmos3_nano_no_cfg_g1_all_seeds_actual.mp4" type="video/mp4"><a href="../artifacts/vla_wam_shared_v2/media/cfg_v2a015/cosmos3_nano_g1/cosmos3_nano_no_cfg_g1_all_seeds_actual.mp4">Open all actual executions</a>.</video>
+            <p>86.9 s · no outcome-based selection</p></figure>
+          <figure><figcaption>ALL LOCAL MODEL-PREDICTION HORIZONS — NOT EXECUTION</figcaption>
+            <video controls preload="metadata" poster="../artifacts/vla_wam_shared_v2/media/cfg_v2a015/cosmos3_nano_g1/cosmos3_nano_no_cfg_g1_all_seeds_local_predictions_poster.jpg"><source src="../artifacts/vla_wam_shared_v2/media/cfg_v2a015/cosmos3_nano_g1/cosmos3_nano_no_cfg_g1_all_seeds_local_predictions.mp4" type="video/mp4"><a href="../artifacts/vla_wam_shared_v2/media/cfg_v2a015/cosmos3_nano_g1/cosmos3_nano_no_cfg_g1_all_seeds_local_predictions.mp4">Open all model predictions</a>.</video>
+            <p>135.2 s · Every retained 33-frame request horizon is shown in request order. The joined review video is not a continuous imagined rollout.</p></figure>
+        </div>
+        <div class="cfg-prompts">
+        <div class="cfg-direction left">
+          <p class="cfg-direction-name">Prompt asks LEFT</p>
+          <blockquote>“Put the Rubik&#x27;s cube to the left of the bowl.”</blockquote>
+          <div class="cfg-direction-stats">
+            <p><span>Requested-task success</span><strong>3/3 → 1/3</strong></p>
+            <p><span>Mean signed endpoint margin</span><strong>+0.103 m → +0.036 m</strong></p>
+          </div>
+        </div>
+        <div class="cfg-direction right">
+          <p class="cfg-direction-name">Prompt asks RIGHT</p>
+          <blockquote>“Put the Rubik&#x27;s cube to the right of the bowl.”</blockquote>
+          <div class="cfg-direction-stats">
+            <p><span>Requested-task success</span><strong>3/3 → 3/3</strong></p>
+            <p><span>Mean signed endpoint margin</span><strong>+0.409 m → +0.216 m</strong></p>
+          </div>
+        </div></div>
+        <div class="cfg-metrics">
+          <div><span>Total requested-task success</span><strong>6/6 → 4/6</strong></div>
+          <div><span>Mean-margin gap, RIGHT − LEFT</span><strong>+0.306 m → +0.180 m</strong></div>
+          <div><span>Absolute mean-margin gap</span><strong>0.306 m → 0.180 m</strong></div>
+        </div>
+        <p class="cfg-result"><strong>Interpretation.</strong> At g=1, total success was 4/6 versus 6/6 at g=3. The smaller RIGHT-minus-LEFT margin gap is not improved balance: both requested-side margins fell, and LEFT lost two successes.</p>
+        <p class="cfg-definition"><strong>How to read the margin.</strong> Positive means the final cube endpoint lies on the requested side of the bowl; larger is farther into that side. The task-success checker is stricter than endpoint sign, so margin and success are reported separately.</p>
+        <div class="cfg-boundaries"><p><strong>Media boundary.</strong> The actual composite contains complete simulator viewport executions. The prediction composite contains every retained 33-frame RGB future in request order. Each request is a local model-prediction horizon; joining them for review does not make a continuous imagined rollout, simulator execution, task outcome, or additional behavioral episode.</p><p><strong>Inference boundary.</strong> Each comparison is exact paired post-result evidence with n=3 per direction in each setting (six cells per setting). Improved, regressed, and unchanged cell transitions and paired effect sizes are descriptive; they do not support a powered or general performance-gain claim. Cosmos3 Nano and DreamZero denominators remain separate, and neither is pooled with RoboTwin.</p></div>
+        <p class="note"><a href="../artifacts/vla_wam_shared_v2/media/cfg_v2a015/cosmos3_nano_g1/cosmos3_nano_no_cfg_g1_all_seeds_actual.mp4">Open complete executions</a> · <a href="../artifacts/vla_wam_shared_v2/media/cfg_v2a015/cosmos3_nano_g1/cosmos3_nano_no_cfg_g1_all_seeds_local_predictions.mp4">Open complete predictions</a> · <a href="../artifacts/vla_wam_shared_v2/media/cfg_v2a015/cosmos3_nano_g1/media_manifest.json">Media manifest</a> · <a href="../artifacts/vla_wam_shared_v2/pilot/expansion/cfg_ablation_v2a015_comparison.json">Paired comparison</a></p>
+      </article>
+      <article class="cfg-card" id="v2a015-dreamzero-action-guidance-s2-complete-media">
+        <header>
+          <div><p class="overline">V2-A015 · paired post-result guidance ablation · n=3 per direction per setting</p>
+          <h3>DreamZero DROID</h3>
+          <p class="cfg-setting">conditional-action equivalent s=1 → derived negative-branch action guidance s=2; video CFG fixed at 5</p></div>
+          <span class="status">DROID/RoboLab · seeds 8300–8302</span>
+        </header>
+        <div class="cfg-media">
+          <figure><figcaption>ALL SIX COMPLETE ACTUAL EXECUTIONS</figcaption>
+            <video controls preload="metadata" poster="../artifacts/vla_wam_shared_v2/media/cfg_v2a015/dreamzero_action_cfg_s2/dreamzero_action_cfg_s2_all_seeds_actual_poster.jpg"><source src="../artifacts/vla_wam_shared_v2/media/cfg_v2a015/dreamzero_action_cfg_s2/dreamzero_action_cfg_s2_all_seeds_actual.mp4" type="video/mp4"><a href="../artifacts/vla_wam_shared_v2/media/cfg_v2a015/dreamzero_action_cfg_s2/dreamzero_action_cfg_s2_all_seeds_actual.mp4">Open all actual executions</a>.</video>
+            <p>82.1 s · no outcome-based selection</p></figure>
+          <figure><figcaption>ALL SIX COMPLETE OFFICIAL DECODER OUTPUTS (MODEL IMAGINATIONS) — NOT EXECUTION</figcaption>
+            <video controls preload="metadata" poster="../artifacts/vla_wam_shared_v2/media/cfg_v2a015/dreamzero_action_cfg_s2/dreamzero_action_cfg_s2_all_seeds_imagination_poster.jpg"><source src="../artifacts/vla_wam_shared_v2/media/cfg_v2a015/dreamzero_action_cfg_s2/dreamzero_action_cfg_s2_all_seeds_imagination.mp4" type="video/mp4"><a href="../artifacts/vla_wam_shared_v2/media/cfg_v2a015/dreamzero_action_cfg_s2/dreamzero_action_cfg_s2_all_seeds_imagination.mp4">Open all model imaginations</a>.</video>
+            <p>271.4 s · Every complete official reset decode exposed by the six behavioral cells is shown. These are model imaginations, not executed robot trajectories.</p></figure>
+        </div>
+        <div class="cfg-prompts">
+        <div class="cfg-direction left">
+          <p class="cfg-direction-name">Prompt asks LEFT</p>
+          <blockquote>“Put the Rubik&#x27;s cube to the left of the bowl.”</blockquote>
+          <div class="cfg-direction-stats">
+            <p><span>Requested-task success</span><strong>2/3 → 1/3</strong></p>
+            <p><span>Mean signed endpoint margin</span><strong>+0.110 m → +0.052 m</strong></p>
+          </div>
+        </div>
+        <div class="cfg-direction right">
+          <p class="cfg-direction-name">Prompt asks RIGHT</p>
+          <blockquote>“Put the Rubik&#x27;s cube to the right of the bowl.”</blockquote>
+          <div class="cfg-direction-stats">
+            <p><span>Requested-task success</span><strong>1/3 → 3/3</strong></p>
+            <p><span>Mean signed endpoint margin</span><strong>+0.040 m → +0.217 m</strong></p>
+          </div>
+        </div></div>
+        <div class="cfg-metrics">
+          <div><span>Total requested-task success</span><strong>3/6 → 4/6</strong></div>
+          <div><span>Mean-margin gap, RIGHT − LEFT</span><strong>-0.070 m → +0.165 m</strong></div>
+          <div><span>Absolute mean-margin gap</span><strong>0.070 m → 0.165 m</strong></div>
+        </div>
+        <p class="cfg-result"><strong>Interpretation.</strong> The one-cell aggregate gain was not uniform: LEFT lost one success while RIGHT gained two. Guidance reversed the favored direction rather than establishing direction-independent robustness.</p>
+        <p class="cfg-definition"><strong>How to read the margin.</strong> Positive means the final cube endpoint lies on the requested side of the bowl; larger is farther into that side. The task-success checker is stricter than endpoint sign, so margin and success are reported separately.</p>
+        <div class="cfg-boundaries"><p><strong>Media boundary.</strong> The actual composite contains complete simulator viewport executions. The imagination composite contains every complete official_reset_decode listed by each of the six DreamZero behavioral cells. These official model decodes are not simulator execution, task outcomes, or additional behavioral episodes. The s=2 arm is derived CFG-style negative-branch action guidance, not an official DreamZero action-CFG mode.</p><p><strong>Inference boundary.</strong> Each comparison is exact paired post-result evidence with n=3 per direction in each setting (six cells per setting). Improved, regressed, and unchanged cell transitions and paired effect sizes are descriptive; they do not support a powered or general performance-gain claim. Cosmos3 Nano and DreamZero denominators remain separate, and neither is pooled with RoboTwin.</p></div>
+        <p class="note"><a href="../artifacts/vla_wam_shared_v2/media/cfg_v2a015/dreamzero_action_cfg_s2/dreamzero_action_cfg_s2_all_seeds_actual.mp4">Open complete executions</a> · <a href="../artifacts/vla_wam_shared_v2/media/cfg_v2a015/dreamzero_action_cfg_s2/dreamzero_action_cfg_s2_all_seeds_imagination.mp4">Open complete imaginations</a> · <a href="../artifacts/vla_wam_shared_v2/media/cfg_v2a015/dreamzero_action_cfg_s2/media_manifest.json">Media manifest</a> · <a href="../artifacts/vla_wam_shared_v2/pilot/expansion/cfg_ablation_v2a015_comparison.json">Paired comparison</a></p>
+      </article></div><div class="grid">
       <article class="card" id="dreamzero_droid_seed8300">
         <header>
           <div><p class="overline">ACTUAL ROLLOUT / EXECUTED BEHAVIOR · seed 8300 matched pair</p>
@@ -372,5 +459,5 @@
         <p class="note">Matched pair00 clip from the six-cell direct gate. No separate media-index file was committed; the hash is anchored directly here and the behavioral source is the compiled direct-gate result. <a href="../artifacts/vla_wam_shared_v2/pilot/expansion/media/lingbot_vla_4b_pair00_matched.mp4">Open video</a> · <a href="../artifacts/vla_wam_shared_v2/pilot/expansion/lingbot_vla_4b_direct_gate.json">Evidence manifest</a></p>
       </article></div></section>
 <section><div class="section-head"><h2>Explicit media gaps</h2><p>No raw or diagnostic artifact is substituted for publication video.</p></div><div class="missing-grid"><article class="missing"><p class="overline">No substituted media</p><h3>pi05_droid</h3><p><strong>historical_v1_reference_has_no_committed_rollout_video</strong> — π0.5 DROID is an existing v1 reference, but this branch contains no committed v1 behavioral rollout MP4. Its trajectory selections remain linked below; the π0-FAST clip above is a different checkpoint and is not substituted for it. A separate current-stack V2-A010 actual rollout is now shown in the VLA section, but it is not recovered v1 footage and must not be merged with that historical reference. <a href="../artifacts/vla_wam_shared_v2/media/v1_droid_selection.json">Expected/source manifest</a>.</p></article></div></section>
-<footer>Generated by <code>tools/render_vla_wam_video_first_gallery.py</code> from the hash-bearing gallery manifest (SHA-256 <code>5be93c2e4e7ff8acbf060388125586e4decc41a34f42f367b036503bc14adddf</code>). Re-run the generator after any conforming media-manifest update.</footer>
+<footer>Generated by <code>tools/render_vla_wam_video_first_gallery.py</code> from the hash-bearing gallery manifest (SHA-256 <code>b80b1508935ab74e7fafbc9c354fbc98c0c1dad2ca06c1941f58bf8b6d75f67d</code>). Re-run the generator after any conforming media-manifest update.</footer>
 </main></body></html>

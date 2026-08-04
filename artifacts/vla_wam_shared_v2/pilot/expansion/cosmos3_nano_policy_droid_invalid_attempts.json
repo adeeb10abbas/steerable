@@ -1,0 +1,50 @@
+{
+  "attempts": [
+    {
+      "attempt_id": "server_model_load_001",
+      "cause": "The pinned framework invoked its obsolete uvx hf@1.16.4 download helper for the exact Wan2.2 VAE. The dependency was staged at the pinned Hub revision and served through a narrow compatibility shim before any policy request.",
+      "raw_logs": [
+        {
+          "bytes": 6786,
+          "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/technical_events/console.log.model_load_attempt_001.log",
+          "sha256": "cedebd2bac176b3e3cc378b8e224003be23b0c318852cc0576e1582f5142dfc4"
+        },
+        {
+          "bytes": 7004,
+          "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/technical_events/debug.log.model_load_attempt_001.log",
+          "sha256": "e0cbc3fbfe34c1d31fca28b0366eea207b4e2bdfb27c3e3573d8c44344bd42a8"
+        }
+      ],
+      "request_started": false,
+      "result": "infrastructure_invalid",
+      "stage": "tokenizer_vae_dependency_resolution_before_policy_service"
+    },
+    {
+      "attempt_id": "server_model_load_003",
+      "cause": "The server completed model initialization but could not import OpenPI WebsocketPolicyServer; the pinned policy-server group and supplied exact OpenPI source path were then installed and used. No behavioral episode or policy request started.",
+      "raw_logs": [
+        {
+          "bytes": 12257,
+          "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/technical_events/server_model_load_attempt_003_missing_openpi.log",
+          "sha256": "817b8607533731b17b80b0157530c9966278549c5b78e2e2181ac3c8cfda47be"
+        }
+      ],
+      "request_started": false,
+      "result": "infrastructure_invalid",
+      "stage": "policy_service_dependency_before_behavioral_request"
+    }
+  ],
+  "checkpoint_revision": "6706d7680581c255ff61e0f3bb49d90eac55c79e",
+  "counts": {
+    "infrastructure_invalid_attempt_count": 2,
+    "partial_attempt_count": 0,
+    "runtime_intervention_count": 0,
+    "valid_behavioral_episode_count": 6
+  },
+  "denominator_policy": "The two setup attempts occurred before any behavioral policy request and are excluded. All six compiled direct-command DROID episodes are valid; no runtime intervention occurred.",
+  "model_id": "cosmos3_nano_policy_droid",
+  "runtime_interventions": [],
+  "schema_version": "vla-wam-shared-v2-cosmos3-nano-policy-droid-invalid-attempts-v1",
+  "server_repository_commit": "411d25b2e35bc441126f48c44a4b93e1c0564274",
+  "status": "complete_with_retained_pre_behavior_setup_attempts"
+}

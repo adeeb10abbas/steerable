@@ -1,0 +1,139 @@
+{
+  "schema_version": "vla-wam-shared-v2-cosmos3-super-droid-registry-v1",
+  "amendment_id": "V2-A012",
+  "amendment_path": "artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_super_droid_amendment.json",
+  "amendment_sha256": "df33a0bd5091c7853a56cad12dfdc82b303ce27b86c83a882099034366c19916",
+  "protocol_path": "artifacts/vla_wam_shared_v2/protocol.json",
+  "protocol_sha256": "1862fbbb40fef34621a840a0ed15889cf42da066424e866b66f04227b28c73b9",
+  "status": "pre_inference_feasibility_blocked_no_cells_released",
+  "checkpoint": {
+    "id": "nvidia/Cosmos3-Super",
+    "revision": "e0262be9d8f7586bc24c069a2aed2b665bdff266",
+    "pvc_path": "/data/users/ali/vla_wam/checkpoints/cosmos3_super_base",
+    "source_snapshot_manifest": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_super_v2a012_hf_snapshot.json",
+    "source_snapshot_manifest_sha256": "4eeaee092963552ba8090639cd9d75a6561d3e71612fd86467ea7227bb806153",
+    "expected_public": true,
+    "expected_gated": false,
+    "expected_snapshot_file_count": 88,
+    "expected_snapshot_total_bytes": 132710200213,
+    "expected_lfs_payload_bytes": 132693725766,
+    "expected_model_index_total_bytes": 129230007264,
+    "expected_indexed_weight_file_count": 28,
+    "download_status": "not_started",
+    "hash_gate_passed": false,
+    "model_load_attempt_count": 0,
+    "required_local_hash_rule": "Before any model load, every checkpoint file must have a local SHA-256 record; every LFS payload must equal the source snapshot manifest's frozen lfs_sha256 and bytes. The resolved revision metadata and the four frozen small-file SHA-256 values must also match.",
+    "next_download_command": "/data/users/ali/vla_wam/envs/hf-tools/bin/hf download nvidia/Cosmos3-Super --revision e0262be9d8f7586bc24c069a2aed2b665bdff266 --local-dir /data/users/ali/vla_wam/checkpoints/cosmos3_super_base"
+  },
+  "software": {
+    "nvidia_cosmos": {
+      "repository": "https://github.com/NVIDIA/Cosmos",
+      "commit": "e494d734022ab0610061cdf57fa24c843e18767e"
+    },
+    "vllm_omni": {
+      "repository": "https://github.com/vllm-project/vllm-omni",
+      "commit": "900a7f0813d0482811b0e4dfd3cf7deabbe2429f"
+    },
+    "runtime_provenance_gate": "The mutable vllm/vllm-omni:cosmos3 tag is not sufficient provenance. Before load, record the immutable container digest or a reproducible environment lock plus git HEADs for both source checkouts and installed package versions.",
+    "status": "pinned_source_commits_not_yet_restored_on_ali_pvc"
+  },
+  "server_topology": {
+    "preferred": {
+      "pod_manifest": "handoff/k8s/cosmos3-super-b200-4gpu-256gi-ali.yaml",
+      "gpu_requirement": "4 idle ali-owned B200 GPUs in one pod",
+      "memory_limit": "256Gi",
+      "pvc_free_bytes_minimum": 200000000000,
+      "status": "manifest_applied_pending_no_four_free_b200_node"
+    },
+    "conditional_fallback": {
+      "pod": "lerobot-b200-4gpu-1-ali",
+      "gpu_indices": [1, 2],
+      "tensor_parallel_size": 2,
+      "excluded_gpu_indices": {
+        "0": "protected unrelated process",
+        "3": "separate Cosmos3 Nano server"
+      },
+      "status": "not_attempted_load_only_if_both_selected_gpus_become_idle",
+      "release_rule": "A successful tensor-parallel-two model-load and free-memory record is required before any model request. A failed load or OOM is infrastructure evidence only and leaves all cells unreleased."
+    }
+  },
+  "behavioral_queue": {
+    "behavioral_episode_count": 6,
+    "released_episode_count": 0,
+    "environment_seeds": [8300, 8301, 8302],
+    "sampling_seeds": [8300, 8301, 8302],
+    "requested_relations": ["left", "right"],
+    "prompts": {
+      "left": "Put the Rubik's cube to the left of the bowl.",
+      "right": "Put the Rubik's cube to the right of the bowl."
+    },
+    "prompt_controller": "episode_static",
+    "oracle_or_subtask_coach": false,
+    "dynamic_prompt_switches": 0,
+    "viewport_video_required": true,
+    "executed_action_trace_required": true,
+    "model_returned_action_chunk_required": true,
+    "exposed_generated_future_required": true,
+    "valid_failure_retention": true,
+    "infrastructure_failure_denominator_policy": "exclude_and_ledger",
+    "status": "unreleased_missing_action_execution_contract"
+  },
+  "action_execution_branches": {
+    "direct_interface": {
+      "status": "blocked_missing_official_super_base_joint_pos_8d_contract",
+      "required_response_shape": "[T,8]",
+      "required_action_space": "joint_pos",
+      "required_provenance": [
+        "source-backed output layout and joint order",
+        "units and coordinate-frame definition",
+        "normalization statistics and inverse transform",
+        "gripper convention",
+        "exact model-returned action-chunk hash"
+      ],
+      "reporting": "A direct-interface result is never pooled with derived control."
+    },
+    "derived_control_curobo_ik": {
+      "status": "blocked_pending_documented_10d_output_and_frozen_controller_contract",
+      "eligible_only_if": "The released base response is documented as DROID 10D end-effector pose plus gripper action with complete layout, units, frame, normalization, and absolute-versus-delta semantics.",
+      "required_controller_provenance": [
+        "CuRobo package version and source commit",
+        "robot URDF and robot-description SHA-256",
+        "joint order, limits, start state, and gripper mapping",
+        "IK solver seeds, tolerances, collision world, collision configuration, and deterministic settings",
+        "per-step raw 10D model action, derived 8D joint_pos action, solver status, and transform hashes"
+      ],
+      "forbidden_inputs": ["task progress", "success state", "oracle action", "subtask coach", "prompt switch"],
+      "failure_policy": "No rejected IK/collision/limit/stale-state action is sent to the simulator. Retain it in a controller-rejection ledger outside requested-placement denominators; do not replace it with zero success.",
+      "reporting": "Report as a derived-control CuRobo IK intervention, never as native policy execution and never pooled with direct-interface results."
+    }
+  },
+  "fixed_observation_gate": {
+    "status": "blocked_before_model_load",
+    "conditions": ["left", "left_exact_repeat", "right"],
+    "sampling_seed": 8300,
+    "input_rule": "All three requests use the byte-identical frozen image and robot-state arrays from the completed Cosmos Edge DROID diagnostic.",
+    "required_outcomes": [
+      "LEFT repeat returned actions are bit-identical",
+      "LEFT repeat decoded futures are bit-identical",
+      "LEFT and RIGHT returned actions differ",
+      "LEFT and RIGHT decoded futures differ",
+      "server echoes the exact requested sampling seed",
+      "every response contains a decodable future and an action representation admitted by exactly one execution branch"
+    ],
+    "prohibited_outcome": "A video-only, latent-only, action-only, undocumented, or silently transformed response does not release behavioral inference."
+  },
+  "evidence_paths": {
+    "raw_root": "/data/users/ali/vla_wam/raw/cosmos3_super_droid/v2_a012",
+    "fixed_observation": "/data/users/ali/vla_wam/raw/cosmos3_super_droid/v2_a012/fixed_observation",
+    "invalid_attempts": "/data/users/ali/vla_wam/raw/cosmos3_super_droid/v2_a012/invalid_attempts.json",
+    "controller_rejections": "/data/users/ali/vla_wam/raw/cosmos3_super_droid/v2_a012/controller_rejections.json",
+    "runtime_interventions": "/data/users/ali/vla_wam/raw/cosmos3_super_droid/v2_a012/runtime_interventions.json",
+    "media_contract": "For each valid cell, retain ACTUAL ROLLOUT viewport MP4 and IMAGINED FUTURE decoded MP4 adjacent with seed, relation, prompt, model-action hash, and executed-action hash."
+  },
+  "claim_boundary": {
+    "no_model_request_yet": true,
+    "no_behavioral_episode_yet": true,
+    "no_video_yet": true,
+    "separation_rule": "Cosmos3-Super base remains distinct from completed Cosmos3 Edge, pending Cosmos3 Nano, Cosmos-Reason2 diagnostic, every VLA, and every RoboTwin denominator."
+  }
+}

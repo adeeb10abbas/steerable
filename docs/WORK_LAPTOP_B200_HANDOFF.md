@@ -43,13 +43,24 @@ currently runnable bounded gate is complete; all 42 prospective three-WAM
 pairs03–09 episodes are valid committed evidence and **must not be rerun**.
 The completed six-cell gates are GR00T N1.7, Cosmos3 Edge, LingBot-VLA 4B,
 Light-WAM, and DreamZero. DreamZero's six execution videos, all nine official
-imagination decodes, and three paired imagination views are committed. The
-active post-result work is 60 π0-FAST current-stack wording cells (`V2-A008`),
-six π0.5 current-stack direct/media cells (`V2-A010`), and six Cosmos3 Nano
-Policy DROID cells (`V2-A011`), all subject to their release gates. LaWAM was
-withdrawn before inference by `V2-A009` and has zero remaining cells. The
-historical 60-cell π0-FAST wording queue remains separately blocked on missing
-exact OpenPI/RoboLab revisions and must not be merged with V2-A008.
+imagination decodes, and three paired imagination views are committed. π0-FAST
+V2-A008 failed its fixed-observation prompt-sensitivity release gate: the two
+LEFT requests repeated bit-identically but LEFT and RIGHT had action RMS 0.0.
+It has zero behavioral episodes and no runnable cell under the frozen protocol.
+π0.5 V2-A010 is complete as a separate current-stack six-cell result (LEFT
+1/3, RIGHT 3/3; all three endpoint pairs aligned and action pairs distinct).
+Its selected seed-8300 actual-rollout pair is committed; it is not recovered
+historical v1 footage. Cosmos3 Nano Policy DROID V2-A011 is also complete as a
+separate six-cell current-stack result (LEFT 3/3, RIGHT 3/3; all endpoint and
+action pairs aligned/distinct; 37 decoded futures retained). Its selected
+seed-8300 actual rollout and model prediction are labelled separately. LaWAM was withdrawn before inference by
+`V2-A009` and has zero remaining cells. The historical 60-cell π0-FAST wording
+queue remains separately blocked on missing exact OpenPI/RoboLab revisions and
+must not be merged with V2-A008. Cosmos3 Super base V2-A012 and Cosmos3 Edge
+base V2-A013 are frozen as non-behavioral feasibility probes: each has exactly
+three conditional fixed-observation action-plus-future requests and zero
+released behavioral cells. They have no result or gallery media. Edge base is
+not the completed Edge-Policy-DROID checkpoint.
 
 ## Restrict Kubernetes discovery to ali-owned resources
 
@@ -154,7 +165,7 @@ preprocessing command after its Wan asset is present. Use the exact installation
 and download commands in the four readmes; keep their incompatible Python/Torch
 environments separate.
 
-## Remaining active queue: 72 current-stack cells at release gates
+## Current-stack status: completed gates plus two conditional base probes
 
 There is no runnable WAM confirmation cell left. Efficient-WAM-RT,
 FastWAM, and LingBot-VA pairs03–09 are complete; preserve their raw PVC output
@@ -162,15 +173,21 @@ and committed compact slices without rerunning them.
 
 | Priority | Queue | Cells | Status | Next gate |
 | ---: | --- | ---: | --- | --- |
-| 0 | π0-FAST V2-A008 current-stack three-wording replication | 60 | registry and adapters frozen | checkpoint load, exact-repeat, prompt-sensitivity, neutral-reset, renderer, trace, and PVC gates |
-| 1 | π0.5 V2-A010 current-stack direct/media gate | 6 | checkpoint staged; adapter preflight | hash manifest, seeded load/repeat/sensitivity, renderer, trace, and PVC gates |
-| 2 | Cosmos3 Nano Policy DROID V2-A011 | 6 | checkpoint staging; adapter preflight | exact-revision hash, model load/repeat/sensitivity, execution/future video, trace, and PVC gates |
+| 0 | π0-FAST V2-A008 current-stack three-wording replication | 0 | release gate failed; zero behavioral cells | do not run under the frozen protocol; compact probe records identical LEFT/RIGHT actions |
+| 1 | π0.5 V2-A010 current-stack direct/media gate | 0 | complete: 6/6 valid; LEFT 1/3, RIGHT 3/3 | retain the PVC raw evidence and selected seed-8300 actual-rollout pair; do not rerun or call it historical v1 media |
+| 2 | Cosmos3 Nano Policy DROID V2-A011 | 0 | complete: 6/6 valid; LEFT 3/3, RIGHT 3/3 | retain raw PVC evidence and the bounded seed-8300 actual-versus-prediction pair; do not rerun |
+| 3 | Cosmos3 Super base V2-A012 | 0 released (6 conditional) | exactly 3 fixed-observation probe requests pending; no model load or behavior yet | follow `experiments/cosmos/COSMOS3_SUPER_V2A012.md`; release no simulator action unless every interface/future/controller gate passes |
+| 4 | Cosmos3 Edge base V2-A013 | 0 released (6 conditional) | exactly 3 fixed-observation probe requests pending; no model load or behavior yet | follow `experiments/cosmos/COSMOS3_EDGE_BASE_V2A013.md`; preserve completed Edge-Policy-DROID and do not substitute Panda assets for Robotiq |
 
 The unavailable historical π0-FAST queue remains blocked on OpenPI
 `9e46d3aea26417bfb564227734b95d010aa827e5` and RoboLab
 `11142d4319e44401e0464866bb5fedf7ec8a8927`. Recovering those objects would
-restore the historical queue, but their absence does not block the separately
-labeled V2-A008 current-stack replication. LaWAM must not be resumed.
+restore the historical queue. Their absence did not prevent the separate
+V2-A008 release probe, but its prompt-sensitivity failure now blocks V2-A008
+behavioral inference under the frozen protocol. LaWAM must not be resumed.
+The two base-model probes are the only conditional inference work described by
+this handoff. They remain non-behavioral unless every model-specific release
+gate passes; do not create gallery cards until valid behavioral media exists.
 
 ## Compile, validate, sync, and stop
 

@@ -1,9 +1,9 @@
 {
   "schema_version": "vla-wam-shared-v2-continuation-v1",
-  "updated_at_utc": "2026-08-04T01:43:42Z",
+  "updated_at_utc": "2026-08-04T03:20:00Z",
   "evidence_head_before_handoff": "77966ff125d84ed7575ea9e934e367246cf5cdc6",
   "active_branch": "codex/wam-language-steerability",
-  "study_status": "pi0_fast_pi05_and_cosmos3_nano_current_stack_gates_active_lawam_withdrawn",
+  "study_status": "pi0_fast_release_gate_failed_pi05_current_stack_complete_cosmos3_nano_current_stack_complete_cosmos3_super_base_probe_frozen_cosmos3_edge_base_probe_frozen_lawam_withdrawn",
   "authoritative_docs": [
     "docs/VLA_WAM_CONTINUATION.md",
     "docs/VLA_WAM_RESEARCH_BLOG.md",
@@ -16,7 +16,7 @@
   "validation": {
     "command": "python3 tools/validate_vla_wam_v2_protocol.py",
     "last_status": "valid",
-    "last_check_count": 770,
+    "last_check_count": 829,
     "report": "artifacts/vla_wam_shared_v2/protocol_validation.json"
   },
   "host_snapshot": {
@@ -207,9 +207,20 @@
     "checkpoint_expected_file_count": 25,
     "checkpoint_expected_payload_bytes": 64789159581,
     "authorized_behavioral_episode_count": 6,
-    "authorized_environment_seeds": [8300, 8301, 8302],
-    "authorized_sampling_seeds": [8300, 8301, 8302],
-    "requested_relations": ["left", "right"],
+    "authorized_environment_seeds": [
+      8300,
+      8301,
+      8302
+    ],
+    "authorized_sampling_seeds": [
+      8300,
+      8301,
+      8302
+    ],
+    "requested_relations": [
+      "left",
+      "right"
+    ],
     "prompt_family": "direct_command",
     "policy_topology": "fresh official distributed server on two rechecked free B200 GPUs",
     "simulator_topology": "exact-reset RoboLab/Isaac simulator and viewport video on raytrace-rtxpro6000-ali",
@@ -396,7 +407,10 @@
     "simulator_gpu": 1,
     "policy_server_stopped_cleanly": true,
     "simulator_container_stopped_cleanly": true,
-    "ports_released": [8000, 5000],
+    "ports_released": [
+      8000,
+      5000
+    ],
     "post_run_gpu_state": "idle; 26 MiB on GPU 0 and 11 MiB on GPU 1"
   },
   "experiment_queue": [
@@ -485,40 +499,130 @@
     {
       "priority": 0,
       "id": "pi0_fast_current_stack_three_wording_replication",
-      "status": "authorized_current_stack_replication_release_gates_pending",
-      "authorized_cells_remaining": 60,
+      "status": "release_gate_failed_zero_behavioral_cells_not_runnable_under_frozen_protocol",
+      "authorized_cells_remaining": 0,
       "amendment": "artifacts/vla_wam_shared_v2/pilot/post_result_current_stack_replication_amendment.json",
       "amendment_sha256": "d38acc8ccfa144e829173b9cd52048a94686006fba27ca0d336c37968b177f96",
       "historical_queue_status": "blocked_and_unrun_missing_exact_policy_and_simulator_revisions",
       "registry": "artifacts/vla_wam_shared_v2/pilot/expansion/pi0_fast_current_stack_v2a008_registry.json",
       "registry_sha256": "eeca8679e345a602f6da6cb02635e4e1ec5274843dbea29d37cf26f2a7695d04",
-      "next_step": "Run the V2-A008 runtime release gates, then begin the sixty registered cells only if every gate passes."
+      "release_probe": "artifacts/vla_wam_shared_v2/pilot/expansion/pi0_fast_current_stack_v2a008_release_probe.json",
+      "release_probe_sha256": "26976f918110919f817070eae6c9fbf36c79295d90386b8bdab20ad0283b913b",
+      "model_action_request_count": 3,
+      "behavioral_episode_count": 0,
+      "denominator_policy": "Release-gate result outside every behavioral denominator; the sixty unrun cells are not failures or zeros.",
+      "next_step": "Do not launch V2-A008 behavioral cells or the 60-cell compiler under the frozen protocol. A new disclosed amendment would be required before any redesign or further inference."
     },
     {
       "priority": 1,
       "id": "pi05_droid_current_stack_direct_media_gate",
-      "status": "authorized_current_stack_media_gate_adapter_and_hash_manifest_pending",
-      "authorized_cells_remaining": 6,
+      "status": "complete_six_valid_behavioral_cells_current_stack_only",
+      "authorized_cells_remaining": 0,
       "amendment": "artifacts/vla_wam_shared_v2/pilot/post_result_pi05_current_stack_media_gate_amendment.json",
       "amendment_sha256": "b5663f1473f2d034116d4084aa2a22ccb01104806d83e5898b6cea2cf2765804",
       "registry": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_registry.json",
       "registry_sha256": "d480046bfc771436ca1d91b8c73e1bfab5854013117fbb34f4e3fc88cac42c99",
       "checkpoint_manifest": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_checkpoint_manifest.json",
       "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
-      "next_step": "Pass the seed-aware load, repeat, sensitivity, renderer, and persistence gates."
+      "release_probe": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_release_probe.json",
+      "release_probe_sha256": "be67709dfe8a0915db368cb843dedfd10dd5e2e399473e6d465593e6def2cb63",
+      "fixed_observation": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_fixed_observation.json",
+      "fixed_observation_sha256": "345cbf93e4b75c23ccf225a7a3014bd5175ecfb4b575213b4afeaabf62193201",
+      "result": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_direct_gate.json",
+      "result_sha256": "0c54758fe316764dbca3299d7b665e3edf59412410d844a1f825abad92045f0c",
+      "provenance": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_provenance.json",
+      "invalid_attempt_ledger": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_invalid_attempts.json",
+      "publication_media": "artifacts/vla_wam_shared_v2/media/pi05_current_stack_v2a010/media_manifest.json",
+      "valid_behavioral_episode_count": 6,
+      "success_by_relation": {
+        "left": "1/3",
+        "right": "3/3"
+      },
+      "aligned_endpoint_pair_count": 3,
+      "distinct_executed_action_pair_count": 3,
+      "infrastructure_invalid_attempt_count": 0,
+      "runtime_intervention_count": 0,
+      "do_not_rerun_environment_seeds": [
+        8300,
+        8301,
+        8302
+      ],
+      "denominator_policy": "All six valid current-stack V2-A010 episodes, including two valid LEFT failures, are in this separate DROID denominator only; do not merge with historical π0.5 or any other model.",
+      "next_step": "No V2-A010 behavioral cell remains. Retain raw PVC evidence and the selected seed-8300 actual-rollout pair; do not represent it as recovered historical v1 footage."
     },
     {
       "priority": 2,
       "id": "cosmos3_nano_policy_droid_direct_gate",
-      "status": "authorized_checkpoint_staging_and_adapter_preflight",
-      "authorized_cells_remaining": 6,
+      "status": "complete_six_valid_behavioral_cells_current_stack_only",
+      "authorized_cells_remaining": 0,
       "amendment": "artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_nano_droid_amendment.json",
       "amendment_sha256": "169e7a761394da0bc6e2e4c764b263fcbbe654320e7318fb0fe989a787b8cb01",
       "registry": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_v2a011_registry.json",
       "registry_sha256": "4b7fc1f7a98d73b3cd2995d32b926fc2bba4175f9b03a8131d81a78873b03eba",
       "checkpoint_file_count": 43,
       "checkpoint_payload_bytes": 32937432846,
-      "next_step": "Pass model-load and fixed-observation gates, then run seeds 8300-8302 LEFT/RIGHT with execution and generated-future video."
+      "fixed_observation": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_fixed_observation.json",
+      "fixed_observation_sha256": "f1fbad3e608dfbf36d744280f3aef6cfff85d35a7b3a798ba771eb7eb768c40b",
+      "result": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_direct_gate.json",
+      "result_sha256": "4a6cc1d61593c7ba5272e1707f6bbe51261f7d23438070992bd75fd9e95fdb93",
+      "provenance": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_provenance.json",
+      "invalid_attempt_ledger": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_invalid_attempts.json",
+      "invalid_attempt_count": 2,
+      "runtime_intervention_ledger": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_runtime_interventions.json",
+      "runtime_intervention_count": 0,
+      "valid_behavioral_episode_count": 6,
+      "success_by_relation": {
+        "left": "3/3",
+        "right": "3/3"
+      },
+      "aligned_endpoint_pair_count": 3,
+      "distinct_executed_action_pair_count": 3,
+      "decoded_future_count": 37,
+      "publication_media": "artifacts/vla_wam_shared_v2/media/cosmos3_nano_policy_droid_v2a011/media_manifest.json",
+      "do_not_rerun_environment_seeds": [
+        8300,
+        8301,
+        8302
+      ],
+      "denominator_policy": "The two pre-request setup attempts are infrastructure-invalid and excluded. All six V2-A011 direct cells are valid separate current-stack DROID evidence and are never pooled with Edge, Reason2, historical evidence, or RoboTwin.",
+      "next_step": "No V2-A011 behavioral cell remains. Retain the raw PVC collection; publish only the compact evidence plus the bounded seed-8300 actual-versus-model-prediction pair."
+    },
+    {
+      "priority": 3,
+      "id": "cosmos3_super_base_droid_feasibility_probe",
+      "status": "pre_inference_feasibility_blocked_no_cells_released",
+      "authorized_cells_remaining": 0,
+      "authorized_probe_requests_remaining": 3,
+      "conditional_behavioral_cell_count": 6,
+      "released_behavioral_cell_count": 0,
+      "amendment": "artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_super_droid_amendment.json",
+      "amendment_sha256": "df33a0bd5091c7853a56cad12dfdc82b303ce27b86c83a882099034366c19916",
+      "registry": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_super_droid_v2a012_registry.json",
+      "registry_sha256": "00f40692ba4681094a04d676c1f9368cf6dc136d79c527df0ec2c586830519b0",
+      "checkpoint_snapshot": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_super_v2a012_hf_snapshot.json",
+      "checkpoint_snapshot_sha256": "4eeaee092963552ba8090639cd9d75a6561d3e71612fd86467ea7227bb806153",
+      "model_load_attempt_count": 0,
+      "model_action_request_count": 0,
+      "behavioral_episode_count": 0,
+      "next_step": "Run only artifact, software, and resource gates, then exactly LEFT, repeat LEFT, and RIGHT on the frozen observation. Behavior remains blocked pending the action/future gates and exact derived-controller contract."
+    },
+    {
+      "priority": 4,
+      "id": "cosmos3_edge_base_droid_feasibility_probe",
+      "status": "pre_inference_probe_frozen_behavioral_cells_unreleased",
+      "authorized_cells_remaining": 0,
+      "authorized_probe_requests_remaining": 3,
+      "conditional_behavioral_cell_count": 6,
+      "released_behavioral_cell_count": 0,
+      "amendment": "artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_edge_base_amendment.json",
+      "amendment_sha256": "7b45688604e717aab598fc50a205e3d17160ec28863c294167c76b3e5abf8a5b",
+      "registry": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_base_v2a013_registry.json",
+      "registry_sha256": "dd8c33d66a30ec7518740822ffe8f53d800c1dfb337608593abd512f609fbbc2",
+      "model_load_attempt_count": 0,
+      "model_action_request_count": 0,
+      "behavioral_episode_count": 0,
+      "preserved_edge_policy_do_not_rerun": true,
+      "next_step": "Run only artifact, software, and resource gates, then exactly LEFT, repeat LEFT, and RIGHT on the frozen observation. Release no behavior without the exposed-future gate and exact Franka+Robotiq CuRobo mapping."
     }
   ],
   "post_result_decision": {
@@ -606,18 +710,20 @@
       "simulator_video_lane": "raytrace-rtxpro6000-ali"
     },
     "current_stack_replication_amendment": {
-      "status": "frozen_before_current_stack_model_load_or_behavioral_inference",
+      "status": "release_gate_failed_zero_behavioral_cells",
       "amendment_id": "V2-A008",
       "path": "artifacts/vla_wam_shared_v2/pilot/post_result_current_stack_replication_amendment.json",
       "sha256": "d38acc8ccfa144e829173b9cd52048a94686006fba27ca0d336c37968b177f96",
-      "authorized_queue": [
-        "pi0_fast_current_stack_three_wording_replication"
-      ],
-      "behavioral_episode_count": 60,
+      "authorized_queue": [],
+      "authorized_behavioral_episode_count": 60,
+      "behavioral_episode_count": 0,
       "registry": "artifacts/vla_wam_shared_v2/pilot/expansion/pi0_fast_current_stack_v2a008_registry.json",
       "registry_sha256": "eeca8679e345a602f6da6cb02635e4e1ec5274843dbea29d37cf26f2a7695d04",
-      "adapter_status": "implemented_and_static_validation_passed_release_gates_not_run",
-      "comparison_boundary": "separate non-comparable current-stack replication; never merge with the blocked historical wording queue"
+      "adapter_status": "implemented_release_gate_failed_prompt_sensitivity",
+      "release_probe": "artifacts/vla_wam_shared_v2/pilot/expansion/pi0_fast_current_stack_v2a008_release_probe.json",
+      "release_probe_sha256": "26976f918110919f817070eae6c9fbf36c79295d90386b8bdab20ad0283b913b",
+      "comparison_boundary": "separate non-comparable current-stack replication; never merge with the blocked historical wording queue",
+      "next_step": "No V2-A008 behavioral cell is runnable under the frozen protocol because the prompt-sensitivity release gate failed."
     },
     "lawam_withdrawal_amendment": {
       "status": "frozen_before_any_lawam_model_inference_or_behavioral_episode",
@@ -628,20 +734,57 @@
       "withdrawn_behavioral_episode_count": 6
     },
     "pi05_current_stack_media_gate_amendment": {
-      "status": "frozen_before_current_stack_model_load_or_behavioral_inference",
+      "status": "complete_six_valid_behavioral_cells_current_stack_only",
       "amendment_id": "V2-A010",
       "path": "artifacts/vla_wam_shared_v2/pilot/post_result_pi05_current_stack_media_gate_amendment.json",
       "sha256": "b5663f1473f2d034116d4084aa2a22ccb01104806d83e5898b6cea2cf2765804",
-      "authorized_queue": ["pi05_droid_current_stack_direct_media_gate"],
-      "behavioral_episode_count": 6
+      "authorized_queue": [],
+      "authorized_behavioral_episode_count": 6,
+      "behavioral_episode_count": 6,
+      "release_probe": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_release_probe.json",
+      "release_probe_sha256": "be67709dfe8a0915db368cb843dedfd10dd5e2e399473e6d465593e6def2cb63",
+      "result": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_direct_gate.json",
+      "result_sha256": "0c54758fe316764dbca3299d7b665e3edf59412410d844a1f825abad92045f0c",
+      "provenance": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_provenance.json",
+      "publication_media": "artifacts/vla_wam_shared_v2/media/pi05_current_stack_v2a010/media_manifest.json",
+      "summary": "LEFT 1/3; RIGHT 3/3; 3/3 aligned endpoint pairs; 3/3 distinct executed-action pairs; two valid failures retained; no invalid attempts or interventions.",
+      "comparison_boundary": "Separate current-stack V2-A010 evidence only; never merge it with historical v1 π0.5, π0-FAST V2-A008, Cosmos, or RoboTwin.",
+      "next_step": "No V2-A010 behavioral cell remains under the frozen protocol."
     },
     "cosmos3_nano_droid_amendment": {
       "status": "frozen_before_model_load_or_behavioral_inference",
       "amendment_id": "V2-A011",
       "path": "artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_nano_droid_amendment.json",
       "sha256": "169e7a761394da0bc6e2e4c764b263fcbbe654320e7318fb0fe989a787b8cb01",
-      "authorized_queue": ["cosmos3_nano_policy_droid_direct_gate"],
+      "authorized_queue": [
+        "cosmos3_nano_policy_droid_direct_gate"
+      ],
       "behavioral_episode_count": 6
+    },
+    "cosmos3_super_base_feasibility_amendment": {
+      "status": "pre_inference_feasibility_blocked_no_cells_released",
+      "amendment_id": "V2-A012",
+      "path": "artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_super_droid_amendment.json",
+      "sha256": "df33a0bd5091c7853a56cad12dfdc82b303ce27b86c83a882099034366c19916",
+      "registry": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_super_droid_v2a012_registry.json",
+      "registry_sha256": "00f40692ba4681094a04d676c1f9368cf6dc136d79c527df0ec2c586830519b0",
+      "authorized_probe_request_count": 3,
+      "conditional_behavioral_cell_count": 6,
+      "released_behavioral_cell_count": 0,
+      "behavioral_episode_count": 0
+    },
+    "cosmos3_edge_base_feasibility_amendment": {
+      "status": "pre_inference_probe_frozen_behavioral_cells_unreleased",
+      "amendment_id": "V2-A013",
+      "path": "artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_edge_base_amendment.json",
+      "sha256": "7b45688604e717aab598fc50a205e3d17160ec28863c294167c76b3e5abf8a5b",
+      "registry": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_base_v2a013_registry.json",
+      "registry_sha256": "dd8c33d66a30ec7518740822ffe8f53d800c1dfb337608593abd512f609fbbc2",
+      "authorized_probe_request_count": 3,
+      "conditional_behavioral_cell_count": 6,
+      "released_behavioral_cell_count": 0,
+      "behavioral_episode_count": 0,
+      "preserved_edge_policy_do_not_rerun": true
     },
     "note": "The expansion was selected after the completed three-WAM results were known and is disclosed as post-result rather than preregistered."
   },
@@ -659,7 +802,7 @@
     ]
   },
   "unauthorized_work": [
-    "Do not exceed the bounded active V2-A008/V2-A010/V2-A011 queues or start another checkpoint before a model-specific registry is frozen in a new disclosed amendment.",
+    "Do not relaunch V2-A008 behavioral cells after its failed release gate; do not exceed the bounded active V2-A010/V2-A011 queues or start another checkpoint before a model-specific registry is frozen in a new disclosed amendment.",
     "Do not pool DROID and RoboTwin raw success counts.",
     "Do not add oracle actions, subtask coaching, dynamic prompts, or progress-conditioned instructions."
   ],

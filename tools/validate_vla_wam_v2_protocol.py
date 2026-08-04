@@ -1095,6 +1095,11 @@ def validate(workspace: Path) -> dict[str, Any]:
         / "artifacts/vla_wam_shared_v2/pilot/expansion/"
         "pi0_fast_current_stack_v2a008_registry.json"
     )
+    current_stack_release_probe_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/expansion/"
+        "pi0_fast_current_stack_v2a008_release_probe.json"
+    )
     lawam_withdrawal_amendment_path = (
         workspace
         / "artifacts/vla_wam_shared_v2/pilot/post_result_lawam_withdrawal_amendment.json"
@@ -1115,10 +1120,109 @@ def validate(workspace: Path) -> dict[str, Any]:
         workspace
         / "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_registry.json"
     )
+    pi05_result_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_direct_gate.json"
+    )
+    pi05_release_probe_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_release_probe.json"
+    )
+    pi05_fixed_observation_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_fixed_observation.json"
+    )
+    pi05_invalid_attempts_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_invalid_attempts.json"
+    )
+    pi05_provenance_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_provenance.json"
+    )
+    pi05_media_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/media/pi05_current_stack_v2a010/media_manifest.json"
+    )
     cosmos3_nano_registry_path = (
         workspace
         / "artifacts/vla_wam_shared_v2/pilot/expansion/"
         "cosmos3_nano_policy_droid_v2a011_registry.json"
+    )
+    cosmos3_nano_result_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/expansion/"
+        "cosmos3_nano_policy_droid_direct_gate.json"
+    )
+    cosmos3_nano_fixed_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/expansion/"
+        "cosmos3_nano_policy_droid_fixed_observation.json"
+    )
+    cosmos3_nano_invalid_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/expansion/"
+        "cosmos3_nano_policy_droid_invalid_attempts.json"
+    )
+    cosmos3_nano_runtime_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/expansion/"
+        "cosmos3_nano_policy_droid_runtime_interventions.json"
+    )
+    cosmos3_nano_layout_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/expansion/"
+        "cosmos3_nano_policy_droid_raw_layout_compatibility.json"
+    )
+    cosmos3_nano_provenance_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/expansion/"
+        "cosmos3_nano_policy_droid_provenance.json"
+    )
+    cosmos3_nano_media_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/media/"
+        "cosmos3_nano_policy_droid_v2a011/media_manifest.json"
+    )
+    cosmos3_super_amendment_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_super_droid_amendment.json"
+    )
+    cosmos3_super_registry_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/expansion/"
+        "cosmos3_super_droid_v2a012_registry.json"
+    )
+    cosmos3_super_snapshot_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/expansion/"
+        "cosmos3_super_v2a012_hf_snapshot.json"
+    )
+    cosmos3_super_runbook_path = workspace / "experiments/cosmos/COSMOS3_SUPER_V2A012.md"
+    cosmos3_super_builder_path = workspace / "tools/build_cosmos3_super_checkpoint_manifest.py"
+    cosmos3_super_finalizer_path = workspace / "tools/finalize_cosmos3_super_registry.py"
+    cosmos3_super_pod_manifest_path = (
+        workspace / "handoff/k8s/cosmos3-super-b200-4gpu-256gi-ali.yaml"
+    )
+    cosmos3_edge_base_amendment_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_edge_base_amendment.json"
+    )
+    cosmos3_edge_base_registry_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/expansion/"
+        "cosmos3_edge_base_v2a013_registry.json"
+    )
+    cosmos3_edge_base_runbook_path = (
+        workspace / "experiments/cosmos/COSMOS3_EDGE_BASE_V2A013.md"
+    )
+    cosmos3_edge_base_builder_path = (
+        workspace / "tools/build_v2a013_cosmos3_edge_base_registry.py"
+    )
+    cosmos3_edge_policy_result_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/expansion/"
+        "cosmos3_edge_droid_direct_gate.json"
     )
     dreamzero_readiness_path = (
         workspace
@@ -1219,12 +1323,24 @@ def validate(workspace: Path) -> dict[str, Any]:
     dreamzero_amendment = load_json(dreamzero_amendment_path)
     current_stack_amendment = load_json(current_stack_amendment_path)
     current_stack_registry = load_json(current_stack_registry_path)
+    current_stack_release_probe = load_json(current_stack_release_probe_path)
     lawam_withdrawal_amendment = load_json(lawam_withdrawal_amendment_path)
     pi05_current_amendment = load_json(pi05_current_amendment_path)
     cosmos3_nano_amendment = load_json(cosmos3_nano_amendment_path)
     pi05_checkpoint_manifest = load_json(pi05_checkpoint_manifest_path)
     pi05_current_registry = load_json(pi05_current_registry_path)
+    pi05_result = load_json(pi05_result_path)
+    pi05_release_probe = load_json(pi05_release_probe_path)
+    pi05_fixed_observation = load_json(pi05_fixed_observation_path)
+    pi05_invalid_attempts = load_json(pi05_invalid_attempts_path)
+    pi05_provenance = load_json(pi05_provenance_path)
+    pi05_media = load_json(pi05_media_path)
     cosmos3_nano_registry = load_json(cosmos3_nano_registry_path)
+    cosmos3_super_amendment = load_json(cosmos3_super_amendment_path)
+    cosmos3_super_registry = load_json(cosmos3_super_registry_path)
+    cosmos3_super_snapshot = load_json(cosmos3_super_snapshot_path)
+    cosmos3_edge_base_amendment = load_json(cosmos3_edge_base_amendment_path)
+    cosmos3_edge_base_registry = load_json(cosmos3_edge_base_registry_path)
     dreamzero_readiness_artifact = load_json(dreamzero_readiness_path)
     dreamzero_result = load_json(dreamzero_result_path)
     dreamzero_raw_collection = load_json(dreamzero_raw_collection_path)
@@ -1899,8 +2015,8 @@ def validate(workspace: Path) -> dict[str, Any]:
 
     require(
         continuation_state["study_status"]
-        == "pi0_fast_pi05_and_cosmos3_nano_current_stack_gates_active_lawam_withdrawn",
-        "continuation state names all three current-stack gates and the withdrawn LaWAM boundary",
+        == "pi0_fast_release_gate_failed_pi05_current_stack_complete_cosmos3_nano_current_stack_complete_cosmos3_super_base_probe_frozen_cosmos3_edge_base_probe_frozen_lawam_withdrawn",
+        "continuation state names completed current-stack evidence and both frozen Cosmos3 base probes",
         checks,
     )
     queue = continuation_state["experiment_queue"]
@@ -2002,38 +2118,131 @@ def validate(workspace: Path) -> dict[str, Any]:
     )
     remaining = continuation_state.get("remaining_authorized_work", [])
     require(
-        [item.get("priority") for item in remaining] == [0, 1, 2]
+        [item.get("priority") for item in remaining] == [0, 1, 2, 3, 4]
         and [item.get("id") for item in remaining]
         == [
             "pi0_fast_current_stack_three_wording_replication",
             "pi05_droid_current_stack_direct_media_gate",
             "cosmos3_nano_policy_droid_direct_gate",
+            "cosmos3_super_base_droid_feasibility_probe",
+            "cosmos3_edge_base_droid_feasibility_probe",
         ]
-        and [item.get("authorized_cells_remaining") for item in remaining] == [60, 6, 6]
+        and [item.get("authorized_cells_remaining") for item in remaining]
+        == [0, 0, 0, 0, 0]
         and remaining[0].get("status")
-        == "authorized_current_stack_replication_release_gates_pending"
+        == "release_gate_failed_zero_behavioral_cells_not_runnable_under_frozen_protocol"
         and remaining[0].get("amendment_sha256") == sha256(current_stack_amendment_path)
+        and remaining[0].get("release_probe")
+        == str(current_stack_release_probe_path.relative_to(workspace))
+        and remaining[0].get("release_probe_sha256")
+        == sha256(current_stack_release_probe_path)
+        and remaining[0].get("model_action_request_count") == 3
+        and remaining[0].get("behavioral_episode_count") == 0
         and remaining[1].get("amendment_sha256") == sha256(pi05_current_amendment_path)
-        and remaining[2].get("amendment_sha256") == sha256(cosmos3_nano_amendment_path),
-        "continuation state exposes the sixty-cell pi0-FAST and two six-cell current-stack gates",
+        and remaining[1].get("status")
+        == "complete_six_valid_behavioral_cells_current_stack_only"
+        and remaining[1].get("result") == str(pi05_result_path.relative_to(workspace))
+        and remaining[1].get("result_sha256") == sha256(pi05_result_path)
+        and remaining[1].get("valid_behavioral_episode_count") == 6
+        and remaining[1].get("success_by_relation") == {"left": "1/3", "right": "3/3"}
+        and remaining[1].get("aligned_endpoint_pair_count") == 3
+        and remaining[1].get("distinct_executed_action_pair_count") == 3
+        and remaining[1].get("infrastructure_invalid_attempt_count") == 0
+        and remaining[1].get("runtime_intervention_count") == 0
+        and remaining[2].get("amendment_sha256") == sha256(cosmos3_nano_amendment_path)
+        and remaining[2].get("status") == "complete_six_valid_behavioral_cells_current_stack_only"
+        and remaining[2].get("result") == str(cosmos3_nano_result_path.relative_to(workspace))
+        and remaining[2].get("result_sha256") == sha256(cosmos3_nano_result_path)
+        and remaining[2].get("fixed_observation_sha256") == sha256(cosmos3_nano_fixed_path)
+        and remaining[2].get("valid_behavioral_episode_count") == 6
+        and remaining[2].get("success_by_relation") == {"left": "3/3", "right": "3/3"}
+        and remaining[2].get("aligned_endpoint_pair_count") == 3
+        and remaining[2].get("distinct_executed_action_pair_count") == 3
+        and remaining[2].get("decoded_future_count") == 37
+        and remaining[2].get("invalid_attempt_count") == 2
+        and remaining[2].get("runtime_intervention_count") == 0
+        and remaining[3].get("status")
+        == "pre_inference_feasibility_blocked_no_cells_released"
+        and remaining[3].get("amendment_sha256")
+        == sha256(cosmos3_super_amendment_path)
+        and remaining[3].get("registry_sha256")
+        == sha256(cosmos3_super_registry_path)
+        and remaining[3].get("checkpoint_snapshot_sha256")
+        == sha256(cosmos3_super_snapshot_path)
+        and remaining[3].get("authorized_probe_requests_remaining") == 3
+        and remaining[3].get("conditional_behavioral_cell_count") == 6
+        and remaining[3].get("released_behavioral_cell_count") == 0
+        and remaining[3].get("model_load_attempt_count") == 0
+        and remaining[3].get("model_action_request_count") == 0
+        and remaining[3].get("behavioral_episode_count") == 0
+        and remaining[4].get("status")
+        == "pre_inference_probe_frozen_behavioral_cells_unreleased"
+        and remaining[4].get("amendment_sha256")
+        == sha256(cosmos3_edge_base_amendment_path)
+        and remaining[4].get("registry_sha256")
+        == sha256(cosmos3_edge_base_registry_path)
+        and remaining[4].get("authorized_probe_requests_remaining") == 3
+        and remaining[4].get("conditional_behavioral_cell_count") == 6
+        and remaining[4].get("released_behavioral_cell_count") == 0
+        and remaining[4].get("model_load_attempt_count") == 0
+        and remaining[4].get("model_action_request_count") == 0
+        and remaining[4].get("behavioral_episode_count") == 0
+        and remaining[4].get("preserved_edge_policy_do_not_rerun") is True,
+        "continuation state closes completed gates and retains only the two bounded Cosmos3 base feasibility probes",
+        checks,
+    )
+    super_base_state = post_result_decision.get(
+        "cosmos3_super_base_feasibility_amendment", {}
+    )
+    edge_base_state = post_result_decision.get(
+        "cosmos3_edge_base_feasibility_amendment", {}
+    )
+    require(
+        super_base_state.get("status")
+        == "pre_inference_feasibility_blocked_no_cells_released"
+        and super_base_state.get("amendment_id") == "V2-A012"
+        and super_base_state.get("sha256") == sha256(cosmos3_super_amendment_path)
+        and super_base_state.get("registry_sha256")
+        == sha256(cosmos3_super_registry_path)
+        and super_base_state.get("authorized_probe_request_count") == 3
+        and super_base_state.get("conditional_behavioral_cell_count") == 6
+        and super_base_state.get("released_behavioral_cell_count") == 0
+        and super_base_state.get("behavioral_episode_count") == 0
+        and edge_base_state.get("status")
+        == "pre_inference_probe_frozen_behavioral_cells_unreleased"
+        and edge_base_state.get("amendment_id") == "V2-A013"
+        and edge_base_state.get("sha256")
+        == sha256(cosmos3_edge_base_amendment_path)
+        and edge_base_state.get("registry_sha256")
+        == sha256(cosmos3_edge_base_registry_path)
+        and edge_base_state.get("authorized_probe_request_count") == 3
+        and edge_base_state.get("conditional_behavioral_cell_count") == 6
+        and edge_base_state.get("released_behavioral_cell_count") == 0
+        and edge_base_state.get("behavioral_episode_count") == 0
+        and edge_base_state.get("preserved_edge_policy_do_not_rerun") is True,
+        "continuation state hash-binds V2-A012 and V2-A013 without claiming behavior",
         checks,
     )
     current_stack_state = post_result_decision.get("current_stack_replication_amendment", {})
     require(
         current_stack_state.get("status")
-        == "frozen_before_current_stack_model_load_or_behavioral_inference"
+        == "release_gate_failed_zero_behavioral_cells"
         and current_stack_state.get("amendment_id") == "V2-A008"
         and current_stack_state.get("sha256") == sha256(current_stack_amendment_path)
-        and current_stack_state.get("authorized_queue")
-        == ["pi0_fast_current_stack_three_wording_replication"]
-        and current_stack_state.get("behavioral_episode_count") == 60
+        and current_stack_state.get("authorized_queue") == []
+        and current_stack_state.get("authorized_behavioral_episode_count") == 60
+        and current_stack_state.get("behavioral_episode_count") == 0
         and current_stack_state.get("registry")
         == str(current_stack_registry_path.relative_to(workspace))
         and current_stack_state.get("registry_sha256")
         == sha256(current_stack_registry_path)
         and current_stack_state.get("adapter_status")
-        == "implemented_and_static_validation_passed_release_gates_not_run",
-        "continuation state binds the V2-A008 current-stack replication before inference",
+        == "implemented_release_gate_failed_prompt_sensitivity"
+        and current_stack_state.get("release_probe")
+        == str(current_stack_release_probe_path.relative_to(workspace))
+        and current_stack_state.get("release_probe_sha256")
+        == sha256(current_stack_release_probe_path),
+        "continuation state binds the V2-A008 release-gate failure without rewriting the frozen amendment",
         checks,
     )
     require(
@@ -2143,6 +2352,66 @@ def validate(workspace: Path) -> dict[str, Any]:
             f"V2-A008 adapter source {source['path']}",
             checks,
         )
+    probe_requests = current_stack_release_probe.get("requests", [])
+    require(
+        current_stack_release_probe.get("schema_version")
+        == "vla-wam-v2a008-pi0-current-release-probe-v1"
+        and current_stack_release_probe.get("amendment_id") == "V2-A008"
+        and current_stack_release_probe.get("status")
+        == "failed_prompt_sensitivity_zero_behavioral_cells"
+        and current_stack_release_probe.get("frozen_sources", {}).get("amendment", {}).get("path")
+        == str(current_stack_amendment_path.relative_to(workspace))
+        and current_stack_release_probe.get("frozen_sources", {}).get("amendment", {}).get("sha256")
+        == sha256(current_stack_amendment_path)
+        and current_stack_release_probe.get("frozen_sources", {}).get("registry", {}).get("path")
+        == str(current_stack_registry_path.relative_to(workspace))
+        and current_stack_release_probe.get("frozen_sources", {}).get("registry", {}).get("sha256")
+        == sha256(current_stack_registry_path)
+        and current_stack_release_probe.get("replication_identity", {}).get("policy_repository", {}).get("commit")
+        == "c23745b5ad24e98f66967ea795a07b2588ed6c79"
+        and current_stack_release_probe.get("replication_identity", {}).get("policy_repository", {}).get("config")
+        == "pi0_fast_droid_jointpos_polaris"
+        and current_stack_release_probe.get("replication_identity", {}).get("simulator_repository", {}).get("commit")
+        == "0aef241fb088ca21bb4ebd24448940ed56620d17"
+        and current_stack_release_probe.get("replication_identity", {}).get("checkpoint", {}).get("file_count") == 19
+        and current_stack_release_probe.get("replication_identity", {}).get("checkpoint", {}).get("payload_bytes") == 10_844_314_410
+        and current_stack_release_probe.get("fixed_observation", {}).get("fixture_sha256")
+        == "ce8be012347718a162bf0d92ba2fb71a01c570a3462d72ef2c16a86082131778"
+        and current_stack_release_probe.get("fixed_observation", {}).get("environment_seed") == 8300
+        and current_stack_release_probe.get("fixed_observation", {}).get("sampling_seed") == 8300000
+        and current_stack_release_probe.get("fixed_observation", {}).get("neutral_reset")
+        == {"left_predicate_at_reset": False, "right_predicate_at_reset": False}
+        and len(probe_requests) == 3
+        and [request.get("label") for request in probe_requests]
+        == ["left_a", "left_b_exact_repeat", "right"]
+        and [request.get("requested_relation") for request in probe_requests]
+        == ["left", "left", "right"]
+        and all(request.get("sampling_seed") == 8300000 for request in probe_requests)
+        and all(request.get("shape") == [10, 8] and request.get("dtype") == "float32" for request in probe_requests)
+        and {
+            request.get("action_sha256") for request in probe_requests
+        } == {"570867d7533005a68e3365013f2110a856cbbd09e6e190fcdb1dac5b812072f6"}
+        and current_stack_release_probe.get("metrics")
+        == {
+            "left_exact_repeat_bit_identical": True,
+            "left_vs_right_action_rms": 0.0,
+            "left_right_action_hashes_equal": True,
+        }
+        and current_stack_release_probe.get("release_gate", {}).get("passed") is False
+        and current_stack_release_probe.get("release_gate", {}).get("failed_condition")
+        == "LEFT versus RIGHT prompt-only action output differs"
+        and current_stack_release_probe.get("counts")
+        == {
+            "model_load_count": 1,
+            "model_action_request_count": 3,
+            "behavioral_episode_count": 0,
+            "valid_behavioral_failure_count": 0,
+            "infrastructure_invalid_attempt_count": 0,
+            "registered_behavioral_cells_unrun": 60,
+        },
+        "V2-A008 fixed-observation release probe preserves exact repeat, identical LEFT/RIGHT actions, and zero behavioral cells",
+        checks,
+    )
     require(
         lawam_withdrawal_amendment["schema_version"]
         == "vla-wam-shared-v2-post-result-scope-withdrawal-v1"
@@ -2235,6 +2504,132 @@ def validate(workspace: Path) -> dict[str, Any]:
             f"V2-A010 adapter source {source['path']}",
             checks,
         )
+    require(
+        pi05_result["schema_version"] == "vla-wam-v2a010-pi05-current-result-v1"
+        and pi05_result["status"] == "complete_6_of_6_valid_current_stack_cells"
+        and pi05_result["amendment_id"] == "V2-A010"
+        and pi05_result["openpi_commit"] == "c23745b5ad24e98f66967ea795a07b2588ed6c79"
+        and pi05_result["openpi_config"] == "pi05_droid_jointpos_polaris"
+        and pi05_result["robolab_commit"] == "0aef241fb088ca21bb4ebd24448940ed56620d17"
+        and pi05_result["valid_episode_count"] == 6
+        and pi05_result["summary"]
+        == {
+            "left_successes": 1,
+            "right_successes": 3,
+            "aligned_endpoint_pair_count": 3,
+            "distinct_executed_action_pair_count": 3,
+        }
+        and pi05_result["registry"]["sha256"] == sha256(pi05_current_registry_path)
+        and pi05_result["checkpoint_manifest"]["sha256"] == sha256(pi05_checkpoint_manifest_path),
+        "V2-A010 compiled result is hash-bound to the frozen current-stack registry and reports the complete six-cell outcome",
+        checks,
+    )
+    require(
+        {(row["environment_seed"], row["requested_relation"]) for row in pi05_result["episodes"]}
+        == {(seed, relation) for seed in (8300, 8301, 8302) for relation in ("left", "right")}
+        and len(pi05_result["episodes"]) == 6
+        and all(
+            row["prompt"] == expected_current_prompt("direct_command", row["requested_relation"])
+            and row["prompt_family"] == "direct_command"
+            and row["sampling_seed_base"] == row["environment_seed"]
+            and set(row["files"])
+            == {
+                "action_trace",
+                "environment",
+                "episode_log",
+                "episode_results",
+                "executed_actions",
+                "returned_action_chunks",
+                "trajectory",
+                "viewport_video",
+            }
+            for row in pi05_result["episodes"]
+        )
+        and pi05_result["infrastructure_invalid_attempts"] == [],
+        "V2-A010 retains six static-prompt episodes with hash-bearing raw PVC references and no invalid attempt in the behavioral result",
+        checks,
+    )
+    require(
+        len(pi05_result["pairs"]) == 3
+        and [row["environment_seed"] for row in pi05_result["pairs"]] == [8300, 8301, 8302]
+        and all(
+            row["endpoint_ordering_aligned"] is True
+            and row["executed_actions_distinct"] is True
+            and row["right_minus_left_endpoint_shift_m"] > 0
+            and row["first_ten_executed_action_rms"] > 0
+            for row in pi05_result["pairs"]
+        ),
+        "V2-A010 preserves all three aligned endpoint pairs and distinct executed-action pairs",
+        checks,
+    )
+    require(
+        pi05_release_probe["schema_version"] == "vla-wam-v2a010-pi05-current-release-probe-v1"
+        and pi05_release_probe["passed"] is True
+        and pi05_release_probe["fixture_sha256"]
+        == "19dc038dc152aa3408439f2161496efa2d83bc25b11741a6b5495a28113daf86"
+        and pi05_release_probe["registry_sha256"] == sha256(pi05_current_registry_path)
+        and pi05_release_probe["metrics"]["left_exact_repeat_bit_identical"] is True
+        and pi05_release_probe["metrics"]["left_vs_right_action_rms"] > 0
+        and all(row["shape"] == [15, 8] for row in pi05_release_probe["records"].values()),
+        "V2-A010 release probe passes deterministic-repeat and prompt-sensitivity gates without changing the fixed fixture",
+        checks,
+    )
+    require(
+        pi05_fixed_observation["schema_version"] == "vla-wam-v2a010-pi05-current-fixed-observation-v1"
+        and pi05_fixed_observation["fixture_sha256"]
+        == "19dc038dc152aa3408439f2161496efa2d83bc25b11741a6b5495a28113daf86"
+        and pi05_fixed_observation["registry_sha256"] == sha256(pi05_current_registry_path)
+        and pi05_fixed_observation["robolab_commit"] == "0aef241fb088ca21bb4ebd24448940ed56620d17"
+        and pi05_fixed_observation["neutral_reset_contract"]
+        == {"left_predicate_at_reset": False, "right_predicate_at_reset": False},
+        "V2-A010 fixed observation records the neutral-reset contract and exact current-stack simulator revision",
+        checks,
+    )
+    require(
+        pi05_invalid_attempts["schema_version"]
+        == "vla-wam-v2a010-pi05-current-stack-invalid-attempt-ledger-v1"
+        and pi05_invalid_attempts["status"]
+        == "complete_no_invalid_attempts_or_runtime_interventions"
+        and pi05_invalid_attempts["attempts"] == []
+        and pi05_invalid_attempts["runtime_interventions"] == []
+        and pi05_invalid_attempts["counts"]
+        == {
+            "infrastructure_invalid_attempt_count": 0,
+            "partial_attempt_count": 0,
+            "runtime_intervention_count": 0,
+            "valid_behavioral_episode_count": 6,
+        },
+        "V2-A010 keeps its empty invalid-attempt and intervention ledgers outside behavioral denominators",
+        checks,
+    )
+    compact = pi05_provenance["compact_evidence"]
+    require(
+        pi05_provenance["schema_version"] == "vla-wam-v2a010-pi05-current-stack-provenance-v1"
+        and pi05_provenance["status"] == "complete_six_valid_behavioral_cells"
+        and pi05_provenance["amendment_id"] == "V2-A010"
+        and compact["compiled_result"]["sha256"] == sha256(pi05_result_path)
+        and compact["release_probe"]["sha256"] == sha256(pi05_release_probe_path)
+        and compact["fixed_observation"]["sha256"] == sha256(pi05_fixed_observation_path)
+        and compact["invalid_attempt_ledger"]["sha256"] == sha256(pi05_invalid_attempts_path)
+        and compact["selected_media"]["sha256"] == sha256(pi05_media_path),
+        "V2-A010 provenance fail-closes the compiled result, gates, ledger, and selected-media hashes",
+        checks,
+    )
+    validate_file_record(workspace, compact["media_builder"], "V2-A010 media builder", checks)
+    require(
+        pi05_media["schema_version"] == "vla-wam-v2a010-pi05-current-stack-media-v1"
+        and pi05_media["status"] == "complete_selected_seed8300_actual_rollout"
+        and pi05_media["source_result"]["sha256"] == sha256(pi05_result_path)
+        and len(pi05_media["gallery_entries"]) == 1
+        and pi05_media["gallery_entries"][0]["seed"] == 8300
+        and pi05_media["gallery_entries"][0]["category"] == "VLA"
+        and pi05_media["gallery_entries"][0]["future_interface"] == "Actions only; no decoded visual future"
+        and "has no imagined-future counterpart" in pi05_media["gallery_entries"][0]["selection_note"],
+        "V2-A010 selected media is a bounded seed-8300 VLA actual rollout with no imagined-future claim",
+        checks,
+    )
+    validate_file_record(workspace, pi05_media["publication_video"], "V2-A010 selected actual video", checks)
+    validate_file_record(workspace, pi05_media["poster"], "V2-A010 selected actual poster", checks)
     nano_identity = cosmos3_nano_amendment["experiment_identity"]
     nano_grid = cosmos3_nano_amendment["behavioral_grid"]
     require(
@@ -2350,6 +2745,414 @@ def validate(workspace: Path) -> dict[str, Any]:
         "V2-A011 releases only the fixed gate and freezes six static video/action/future cells while preserving Edge",
         checks,
     )
+    nano_result = load_json(cosmos3_nano_result_path)
+    nano_fixed_result = load_json(cosmos3_nano_fixed_path)
+    nano_invalid = load_json(cosmos3_nano_invalid_path)
+    nano_runtime = load_json(cosmos3_nano_runtime_path)
+    nano_layout = load_json(cosmos3_nano_layout_path)
+    nano_provenance = load_json(cosmos3_nano_provenance_path)
+    nano_media = load_json(cosmos3_nano_media_path)
+    require(
+        nano_result["schema_version"] == "vla-wam-shared-v2-cosmos3-nano-policy-droid-result-v1"
+        and nano_result["status"] == "complete"
+        and nano_result["amendment_id"] == "V2-A011"
+        and nano_result["checkpoint_revision"] == nano_identity["model_revision"]
+        and nano_result["summary"]["episode_count"] == 6
+        and nano_result["summary"]["successes"] == 6
+        and nano_result["summary"]["by_direction"] == {
+            "left": {"episodes": 3, "successes": 3, "verified_pickups": 3, "entered_requested_region": 3},
+            "right": {"episodes": 3, "successes": 3, "verified_pickups": 3, "entered_requested_region": 3},
+        }
+        and nano_result["summary"]["aligned_endpoint_pairs"] == 3
+        and nano_result["summary"]["nonzero_first_chunk_pairs"] == 3
+        and len(nano_result["episodes"]) == 6
+        and sum(item["decoded_future_count"] for item in nano_result["episodes"]) == 37
+        and all(pair["executed_actions_distinct"] for pair in nano_result["pairs"])
+        and all(pair["endpoint_response_direction"] == "aligned" for pair in nano_result["pairs"]),
+        "V2-A011 complete result retains six successful valid cells, distinct actions, aligned endpoints, and all 37 exposed futures",
+        checks,
+    )
+    require(
+        nano_fixed_result["status"] == "passed"
+        and nano_fixed_result["metrics"] == {
+            "left_repeat_action_rms": 0.0,
+            "left_repeat_future_pixel_mae": 0.0,
+            "left_right_action_rms": 0.025650289164499847,
+            "left_right_future_pixel_mae": 7.465912737698959,
+        }
+        and len(nano_fixed_result["records"]) == 3,
+        "V2-A011 fixed-observation diagnostic is repeatable and prompt-sensitive before behavior",
+        checks,
+    )
+    require(
+        nano_invalid["counts"] == {
+            "infrastructure_invalid_attempt_count": 2,
+            "partial_attempt_count": 0,
+            "runtime_intervention_count": 0,
+            "valid_behavioral_episode_count": 6,
+        }
+        and all(item["request_started"] is False for item in nano_invalid["attempts"])
+        and nano_runtime["status"] == "complete_no_runtime_interventions"
+        and nano_runtime["events"] == []
+        and len(nano_runtime["guarded_pairs"]) == 3,
+        "V2-A011 preserves two pre-request infrastructure attempts outside denominators and no runtime intervention",
+        checks,
+    )
+    require(
+        nano_layout["status"] == "measurement_only_layout_compatibility"
+        and nano_layout["behavioral_data_modified"] is False
+        and nano_layout["episodes_rerun_by_resolution"] == 0
+        and nano_layout["model_requests_started_by_resolution"] == 0
+        and len(nano_layout["records"]) == 6
+        and all(item["copied_bytes"] == 0 and item["target_resolves_to_source"] for item in nano_layout["records"]),
+        "V2-A011 trace-layout compatibility is a six-link zero-copy measurement event",
+        checks,
+    )
+    require(
+        nano_provenance["status"] == "complete_compact_evidence_slice"
+        and nano_provenance["compact_evidence"]["compiled_result"]["sha256"] == sha256(cosmos3_nano_result_path)
+        and nano_provenance["compact_evidence"]["fixed_observation_gate"]["sha256"] == sha256(cosmos3_nano_fixed_path)
+        and nano_provenance["compact_evidence"]["invalid_attempt_ledger"]["sha256"] == sha256(cosmos3_nano_invalid_path)
+        and nano_provenance["compact_evidence"]["runtime_intervention_ledger"]["sha256"] == sha256(cosmos3_nano_runtime_path)
+        and nano_provenance["compact_evidence"]["raw_layout_compatibility_event"]["sha256"] == sha256(cosmos3_nano_layout_path)
+        and nano_provenance["compact_evidence"]["selected_media"]["sha256"] == sha256(cosmos3_nano_media_path),
+        "V2-A011 provenance binds all compact result, gate, ledger, layout, and media evidence",
+        checks,
+    )
+    require(
+        nano_media["status"] == "complete_selected_seed8300_actual_and_prediction_pair"
+        and len(nano_media["gallery_entries"]) == 1
+        and nano_media["gallery_entries"][0]["comparison_media"]["kind"] == "model_prediction_not_execution"
+        and nano_media["prediction_frame_count"] == 33
+        and nano_media["actual_frame_count"] == 332,
+        "V2-A011 gallery media separates the selected actual rollout from the same-seed decoded prediction",
+        checks,
+    )
+    for record, label in (
+        (nano_media["publication_video"], "V2-A011 actual rollout video"),
+        (nano_media["prediction_video"], "V2-A011 model prediction video"),
+        (nano_media["poster"], "V2-A011 actual rollout poster"),
+    ):
+        validate_file_record(workspace, record, label, checks)
+    super_identity = cosmos3_super_amendment["experiment_identity"]
+    super_grid = cosmos3_super_amendment["conditional_behavioral_grid"]
+    require(
+        cosmos3_super_amendment["schema_version"]
+        == "vla-wam-shared-v2-post-result-cosmos3-super-droid-feasibility-v1"
+        and cosmos3_super_amendment["amendment_id"] == "V2-A012"
+        and cosmos3_super_amendment["status"]
+        == "frozen_pre_inference_feasibility_not_released"
+        and super_identity["model_repository"] == "nvidia/Cosmos3-Super"
+        and super_identity["model_revision"]
+        == "e0262be9d8f7586bc24c069a2aed2b665bdff266"
+        and super_identity["parameter_count"] == "64B"
+        and super_identity["checkpoint_index_total_bytes"] == 129_230_007_264
+        and super_identity["full_snapshot_file_count"] == 88
+        and super_identity["full_snapshot_total_bytes"] == 132_710_200_213
+        and super_grid["potential_episode_count"] == 6
+        and super_grid["released_episode_count"] == 0
+        and super_grid["environment_seeds"] == [8300, 8301, 8302]
+        and super_grid["sampling_seeds"] == [8300, 8301, 8302]
+        and super_grid["requested_relations"] == ["left", "right"]
+        and super_grid["static_episode_prompt_only"] is True
+        and super_grid["oracle_or_subtask_coach"] is False
+        and super_grid["dynamic_prompt_switches"] == 0,
+        "V2-A012 freezes Cosmos3-Super base identity and six conditional static DROID cells without releasing behavior",
+        checks,
+    )
+    require(
+        cosmos3_super_snapshot["schema_version"]
+        == "vla-wam-shared-v2-cosmos3-super-hf-snapshot-v1"
+        and cosmos3_super_snapshot["amendment_id"] == "V2-A012"
+        and cosmos3_super_snapshot["model_repository"] == "nvidia/Cosmos3-Super"
+        and cosmos3_super_snapshot["model_revision"]
+        == "e0262be9d8f7586bc24c069a2aed2b665bdff266"
+        and cosmos3_super_snapshot["resolved_public"] is True
+        and cosmos3_super_snapshot["resolved_gated"] is False
+        and cosmos3_super_snapshot["model_index_total_bytes"] == 129_230_007_264
+        and cosmos3_super_snapshot["snapshot_file_count"] == 88
+        and cosmos3_super_snapshot["snapshot_total_bytes"] == 132_710_200_213
+        and cosmos3_super_snapshot["snapshot_lfs_payload_bytes"] == 132_693_725_766
+        and len(cosmos3_super_snapshot["files"]) == 88
+        and len(cosmos3_super_snapshot["indexed_weight_files"]) == 28
+        and sum(
+            1
+            for record in cosmos3_super_snapshot["files"].values()
+            if record["lfs_sha256"]
+        )
+        == 48
+        and all(
+            record["bytes"] > 0
+            and record["git_blob_oid"]
+            and (record["lfs_sha256"] is None or len(record["lfs_sha256"]) == 64)
+            for record in cosmos3_super_snapshot["files"].values()
+        )
+        and cosmos3_super_snapshot["metadata_sha256"]
+        == {
+            "config.json": "90510e6522fa44b79413076f0cf49b3c1b78241c53cfaf70ea0095bb7ed611a0",
+            "model.safetensors.index.json": "cc635ec58da60705cbba5ce92c89d10badb4c460a67131196e5d95895dda229b",
+            "model_index.json": "90088a6638deb68418d795971ad48e6d5aa3f7764d69f3c62bbca9e8f3485bcd",
+            "transformer/config.json": "7d4ade2f8cc05e8b2b505a0ed6260e8a0fb1027c5ee49bc9f0c854e895af682b",
+        },
+        "V2-A012 retains a public exact-revision 88-file snapshot plan and hash-bearing model metadata before download",
+        checks,
+    )
+    super_checkpoint = cosmos3_super_registry["checkpoint"]
+    super_queue = cosmos3_super_registry["behavioral_queue"]
+    super_branches = cosmos3_super_registry["action_execution_branches"]
+    require(
+        cosmos3_super_registry["schema_version"]
+        == "vla-wam-shared-v2-cosmos3-super-droid-registry-v1"
+        and cosmos3_super_registry["amendment_id"] == "V2-A012"
+        and cosmos3_super_registry["amendment_sha256"]
+        == sha256(cosmos3_super_amendment_path)
+        and cosmos3_super_registry["protocol_sha256"] == sha256(protocol_path)
+        and cosmos3_super_registry["status"]
+        == "pre_inference_feasibility_blocked_no_cells_released"
+        and super_checkpoint["id"] == "nvidia/Cosmos3-Super"
+        and super_checkpoint["revision"]
+        == "e0262be9d8f7586bc24c069a2aed2b665bdff266"
+        and super_checkpoint["source_snapshot_manifest_sha256"]
+        == sha256(cosmos3_super_snapshot_path)
+        and super_checkpoint["download_status"] == "not_started"
+        and super_checkpoint["hash_gate_passed"] is False
+        and super_checkpoint["model_load_attempt_count"] == 0
+        and super_queue["released_episode_count"] == 0
+        and super_queue["status"] == "unreleased_missing_action_execution_contract"
+        and super_queue["prompts"]
+        == {
+            "left": "Put the Rubik's cube to the left of the bowl.",
+            "right": "Put the Rubik's cube to the right of the bowl.",
+        }
+        and super_queue["viewport_video_required"] is True
+        and super_queue["executed_action_trace_required"] is True
+        and super_queue["model_returned_action_chunk_required"] is True
+        and super_queue["exposed_generated_future_required"] is True,
+        "V2-A012 registry keeps the Super checkpoint unloaded and the six-cell queue blocked pending its own action and future gates",
+        checks,
+    )
+    require(
+        cosmos3_super_registry["software"]["nvidia_cosmos"]["commit"]
+        == "e494d734022ab0610061cdf57fa24c843e18767e"
+        and cosmos3_super_registry["software"]["vllm_omni"]["commit"]
+        == "900a7f0813d0482811b0e4dfd3cf7deabbe2429f"
+        and "mutable" in cosmos3_super_registry["software"]["runtime_provenance_gate"]
+        and cosmos3_super_registry["server_topology"]["preferred"]["gpu_requirement"]
+        == "4 idle ali-owned B200 GPUs in one pod"
+        and cosmos3_super_registry["server_topology"]["preferred"]["memory_limit"] == "256Gi"
+        and cosmos3_super_registry["server_topology"]["conditional_fallback"]["gpu_indices"]
+        == [1, 2]
+        and cosmos3_super_registry["server_topology"]["conditional_fallback"]["tensor_parallel_size"]
+        == 2
+        and super_branches["direct_interface"]["status"]
+        == "blocked_missing_official_super_base_joint_pos_8d_contract"
+        and super_branches["derived_control_curobo_ik"]["status"]
+        == "blocked_pending_documented_10d_output_and_frozen_controller_contract"
+        and "never as native policy execution"
+        in super_branches["derived_control_curobo_ik"]["reporting"],
+        "V2-A012 pins source topology and keeps direct and separately labeled derived CuRobo control fail-closed",
+        checks,
+    )
+    require(
+        cosmos3_super_runbook_path.is_file()
+        and cosmos3_super_builder_path.is_file()
+        and cosmos3_super_finalizer_path.is_file()
+        and cosmos3_super_pod_manifest_path.is_file()
+        and cosmos3_super_amendment["claim_boundary"]["current_status"]
+        == "No Cosmos3-Super model inference, behavioral rollout, imagined video, or success claim exists yet."
+        and "never pool"
+        in cosmos3_super_amendment["analysis_branches"]["derived_control_curobo_ik"]["reporting"]
+        and "Never substitute imagination for execution"
+        in cosmos3_super_amendment["media_contract"]["presentation_rule"],
+        "V2-A012 provides the frozen builder, finalizer, runbook, four-B200 manifest, and adjacent actual-versus-imagined media rule",
+        checks,
+    )
+    edge_base_identity = cosmos3_edge_base_amendment["experiment_identity"]
+    edge_base_amendment_probe = cosmos3_edge_base_amendment[
+        "fixed_observation_feasibility_probe"
+    ]
+    edge_base_grid = cosmos3_edge_base_amendment["conditional_behavioral_grid"]
+    require(
+        cosmos3_edge_base_amendment["schema_version"]
+        == "vla-wam-shared-v2-post-result-cosmos3-edge-base-feasibility-v1"
+        and cosmos3_edge_base_amendment["amendment_id"] == "V2-A013"
+        and cosmos3_edge_base_amendment["status"]
+        == "frozen_pre_inference_feasibility_not_released"
+        and edge_base_identity["model_repository"] == "nvidia/Cosmos3-Edge"
+        and edge_base_identity["model_revision"]
+        == "ff48d22144de52de296a7b4d3a78914831007212"
+        and edge_base_identity["parameter_count_bf16_safetensors"] == 3_858_999_728
+        and edge_base_identity["snapshot_file_count"] == 48
+        and edge_base_identity["snapshot_total_bytes"] == 9_173_855_122
+        and edge_base_identity["snapshot_lfs_payload_bytes"] == 9_173_276_024
+        and edge_base_amendment_probe["authorized_request_count"] == 3
+        and edge_base_amendment_probe["behavioral_episode_count"] == 0
+        and edge_base_amendment_probe["conditions"]
+        == ["left", "left_exact_repeat", "right"]
+        and edge_base_amendment_probe["sampling_seed"] == 8300
+        and edge_base_grid["potential_episode_count"] == 6
+        and edge_base_grid["released_episode_count"] == 0
+        and edge_base_grid["environment_seeds"] == [8300, 8301, 8302]
+        and edge_base_grid["requested_relations"] == ["left", "right"]
+        and edge_base_grid["static_episode_prompt_only"] is True
+        and edge_base_grid["oracle_or_subtask_coach"] is False
+        and edge_base_grid["dynamic_prompt_switches"] == 0,
+        "V2-A013 freezes the exact Edge base identity, three feasibility requests, and six unreleased static cells",
+        checks,
+    )
+    edge_base_checkpoint = cosmos3_edge_base_registry["checkpoint"]
+    edge_base_files = edge_base_checkpoint["files"]
+    require(
+        cosmos3_edge_base_registry["schema_version"]
+        == "vla-wam-shared-v2-cosmos3-edge-base-v2a013-registry-v1"
+        and cosmos3_edge_base_registry["amendment_id"] == "V2-A013"
+        and cosmos3_edge_base_registry["status"]
+        == "pre_inference_probe_frozen_behavioral_cells_unreleased"
+        and cosmos3_edge_base_registry["amendment"]["sha256"]
+        == sha256(cosmos3_edge_base_amendment_path)
+        and cosmos3_edge_base_registry["protocol"]["sha256"]
+        == sha256(protocol_path)
+        and edge_base_checkpoint["id"] == "nvidia/Cosmos3-Edge"
+        and edge_base_checkpoint["revision"]
+        == "ff48d22144de52de296a7b4d3a78914831007212"
+        and edge_base_checkpoint["public"] is True
+        and edge_base_checkpoint["gated"] is False
+        and edge_base_checkpoint["download_status"] == "not_started"
+        and edge_base_checkpoint["hash_gate_passed"] is False
+        and edge_base_checkpoint["model_load_attempt_count"] == 0
+        and edge_base_checkpoint["model_action_request_count"] == 0
+        and edge_base_checkpoint["behavioral_episode_count"] == 0
+        and edge_base_checkpoint["snapshot_file_count"] == 48
+        and edge_base_checkpoint["snapshot_total_bytes"] == 9_173_855_122
+        and edge_base_checkpoint["snapshot_lfs_payload_bytes"] == 9_173_276_024
+        and edge_base_checkpoint["safetensors_parameter_count"] == 3_858_999_728
+        and len(edge_base_files) == 48
+        and sum(record["bytes"] for record in edge_base_files.values())
+        == 9_173_855_122
+        and sum(1 for record in edge_base_files.values() if record["lfs_sha256"])
+        == 16
+        and sum(
+            record["bytes"]
+            for record in edge_base_files.values()
+            if record["lfs_sha256"]
+        )
+        == 9_173_276_024
+        and all(
+            record["bytes"] > 0
+            and record["git_blob_oid"]
+            and (record["lfs_sha256"] is None or len(record["lfs_sha256"]) == 64)
+            for record in edge_base_files.values()
+        ),
+        "V2-A013 registry hash-binds the public exact-revision 48-file Edge base snapshot before download or load",
+        checks,
+    )
+    edge_base_probe = cosmos3_edge_base_registry["fixed_observation_probe"]
+    edge_base_queue = cosmos3_edge_base_registry["behavioral_queue"]
+    require(
+        edge_base_probe["status"] == "frozen_not_run"
+        and edge_base_probe["authorized_request_count"] == 3
+        and edge_base_probe["released_request_count"] == 0
+        and edge_base_probe["behavioral_episode_count"] == 0
+        and edge_base_probe["conditions"]
+        == ["left", "left_exact_repeat", "right"]
+        and edge_base_probe["sampling_seed"] == 8300
+        and edge_base_probe["request_contract"]["num_frames"] == 17
+        and edge_base_probe["request_contract"]["extra_params"]
+        == {
+            "action_chunk_size": 16,
+            "action_mode": "policy",
+            "domain_name": "droid_lerobot",
+            "raw_action_dim": 10,
+        }
+        and any("shape [16,10]" in item for item in edge_base_probe["pass_requirements"])
+        and "Missing future is unavailable evidence, not zero"
+        in edge_base_probe["failure_policy"]
+        and edge_base_queue["status"] == "six_cells_frozen_zero_released"
+        and edge_base_queue["potential_episode_count"] == 6
+        and edge_base_queue["released_episode_count"] == 0
+        and len(edge_base_queue["cells"]) == 6
+        and {
+            (cell["environment_seed"], cell["requested_relation"])
+            for cell in edge_base_queue["cells"]
+        }
+        == {(seed, relation) for seed in (8300, 8301, 8302) for relation in ("left", "right")}
+        and all(cell["status"] == "frozen_unreleased" for cell in edge_base_queue["cells"])
+        and edge_base_queue["static_episode_prompt_only"] is True
+        and edge_base_queue["oracle_or_subtask_coach"] is False
+        and edge_base_queue["exposed_generated_future_required"] is True,
+        "V2-A013 permits only three non-behavioral action-plus-future probes and releases zero of six behavioral cells",
+        checks,
+    )
+    edge_base_interface = cosmos3_edge_base_registry["interface"]
+    edge_base_derived = cosmos3_edge_base_registry["derived_control_curobo"]
+    edge_base_blocker = edge_base_derived["asset_mismatch_blocker"]
+    require(
+        edge_base_interface["direct_joint_pos_8d"]["status"]
+        == "blocked_no_official_base_to_droid_native_8d_contract"
+        and edge_base_interface["generic_droid_10d"]["status"]
+        == "source_backed_probe_interface_only_not_execution_released"
+        and len(edge_base_interface["generic_droid_10d"]["raw_layout"]) == 10
+        and edge_base_interface["generic_droid_10d"]["raw_layout"][-1] == "gripper"
+        and "backward_framewise"
+        in edge_base_interface["generic_droid_10d"]["pose_convention"]
+        and edge_base_derived["status"]
+        == "blocked_exact_franka_robotiq_urdf_and_control_frame_mapping_absent"
+        and edge_base_blocker["robolab_sim_asset_lfs_sha256"]
+        == "f555695465687548a1bd31b5e3f30385182d476a67c17080b7820ad0ef747e41"
+        and edge_base_blocker["robolab_control_body"]
+        == "Gripper/Robotiq_2F_85/base_link"
+        and edge_base_blocker["candidate_curobo_urdf_sha256"]
+        == "6a0044e6e72ee667927f17d1871ec3e2615a8bc5fe978882fc909e4094667967"
+        and "must not be substituted" in edge_base_blocker["candidate_rejection"],
+        "V2-A013 keeps native 8D and CuRobo-derived execution blocked at the exact Robotiq asset and frame boundary",
+        checks,
+    )
+    edge_base_software = cosmos3_edge_base_registry["software"]
+    edge_base_preserved = cosmos3_edge_base_registry[
+        "preserved_completed_edge_policy"
+    ]
+    require(
+        edge_base_software["nvidia_cosmos_commit"]
+        == "e494d734022ab0610061cdf57fa24c843e18767e"
+        and edge_base_software["nvidia_cosmos_framework_commit"]
+        == "a904d2d36b774a51dd06ff9ff906816b1a04f579"
+        and edge_base_software["vllm_omni_commit"]
+        == "900a7f0813d0482811b0e4dfd3cf7deabbe2429f"
+        and edge_base_software["robolab_commit"]
+        == "0aef241fb088ca21bb4ebd24448940ed56620d17"
+        and edge_base_software["curobo_commit"]
+        == "d64c4b005459db10c5dd867d8b30a87d5bda9bdb"
+        and edge_base_preserved["checkpoint"] == "nvidia/Cosmos3-Edge-Policy-DROID"
+        and edge_base_preserved["do_not_rerun"] is True
+        and edge_base_preserved["pool_with_edge_base"] is False
+        and edge_base_preserved["valid_behavioral_episode_count"] == 6
+        and edge_base_preserved["result"]["sha256"]
+        == sha256(cosmos3_edge_policy_result_path)
+        and cosmos3_edge_base_runbook_path.is_file()
+        and cosmos3_edge_base_builder_path.is_file(),
+        "V2-A013 pins official software and preserves the completed native Edge Policy result without rerun or pooling",
+        checks,
+    )
+    validate_file_record(
+        workspace,
+        cosmos3_edge_base_registry["amendment"],
+        "V2-A013 amendment",
+        checks,
+    )
+    validate_file_record(
+        workspace,
+        cosmos3_edge_base_registry["protocol"],
+        "V2-A013 protocol",
+        checks,
+    )
+    validate_file_record(
+        workspace,
+        edge_base_preserved["result"],
+        "V2-A013 preserved Edge Policy result",
+        checks,
+    )
+    for index, record in enumerate(cosmos3_edge_base_registry["local_sources"]):
+        validate_file_record(workspace, record, f"V2-A013 local source {index}", checks)
     require(
         groot_result["schema_version"] == "vla-wam-shared-v2-groot-droid-result-v1"
         and groot_result["status"] == "complete"
@@ -2896,6 +3699,12 @@ def validate(workspace: Path) -> dict[str, Any]:
         "pi0_fast_current_stack_v2a008_registry_sha256": sha256(
             current_stack_registry_path
         ),
+        "pi0_fast_current_stack_v2a008_release_probe_path": str(
+            current_stack_release_probe_path.relative_to(workspace)
+        ),
+        "pi0_fast_current_stack_v2a008_release_probe_sha256": sha256(
+            current_stack_release_probe_path
+        ),
         "lawam_withdrawal_amendment_path": str(
             lawam_withdrawal_amendment_path.relative_to(workspace)
         ),
@@ -2920,11 +3729,51 @@ def validate(workspace: Path) -> dict[str, Any]:
         "pi05_current_stack_registry_sha256": sha256(
             pi05_current_registry_path
         ),
+        "pi05_current_stack_result_path": str(pi05_result_path.relative_to(workspace)),
+        "pi05_current_stack_result_sha256": sha256(pi05_result_path),
+        "pi05_current_stack_release_probe_path": str(pi05_release_probe_path.relative_to(workspace)),
+        "pi05_current_stack_release_probe_sha256": sha256(pi05_release_probe_path),
+        "pi05_current_stack_fixed_observation_path": str(pi05_fixed_observation_path.relative_to(workspace)),
+        "pi05_current_stack_fixed_observation_sha256": sha256(pi05_fixed_observation_path),
+        "pi05_current_stack_invalid_attempts_path": str(pi05_invalid_attempts_path.relative_to(workspace)),
+        "pi05_current_stack_invalid_attempts_sha256": sha256(pi05_invalid_attempts_path),
+        "pi05_current_stack_provenance_path": str(pi05_provenance_path.relative_to(workspace)),
+        "pi05_current_stack_provenance_sha256": sha256(pi05_provenance_path),
+        "pi05_current_stack_media_path": str(pi05_media_path.relative_to(workspace)),
+        "pi05_current_stack_media_sha256": sha256(pi05_media_path),
         "cosmos3_nano_policy_droid_registry_path": str(
             cosmos3_nano_registry_path.relative_to(workspace)
         ),
         "cosmos3_nano_policy_droid_registry_sha256": sha256(
             cosmos3_nano_registry_path
+        ),
+        "cosmos3_super_droid_amendment_path": str(
+            cosmos3_super_amendment_path.relative_to(workspace)
+        ),
+        "cosmos3_super_droid_amendment_sha256": sha256(
+            cosmos3_super_amendment_path
+        ),
+        "cosmos3_super_droid_registry_path": str(
+            cosmos3_super_registry_path.relative_to(workspace)
+        ),
+        "cosmos3_super_droid_registry_sha256": sha256(
+            cosmos3_super_registry_path
+        ),
+        "cosmos3_super_hf_snapshot_path": str(
+            cosmos3_super_snapshot_path.relative_to(workspace)
+        ),
+        "cosmos3_super_hf_snapshot_sha256": sha256(cosmos3_super_snapshot_path),
+        "cosmos3_edge_base_amendment_path": str(
+            cosmos3_edge_base_amendment_path.relative_to(workspace)
+        ),
+        "cosmos3_edge_base_amendment_sha256": sha256(
+            cosmos3_edge_base_amendment_path
+        ),
+        "cosmos3_edge_base_registry_path": str(
+            cosmos3_edge_base_registry_path.relative_to(workspace)
+        ),
+        "cosmos3_edge_base_registry_sha256": sha256(
+            cosmos3_edge_base_registry_path
         ),
         "efficient_wam_pair03_handoff": pair03_handoff,
         "efficient_wam_pairs04_09": efficient_pairs04_09,

@@ -1,20 +1,21 @@
 {
   "schema_version": "vla_wam_publication_manifest_v1",
   "status": "article_ready_asset_whitelist",
-  "source_git_head": "4359785f17a333ad6df04ce55166f81dbedb0431",
+  "source_git_head": "8a9893e643772c35ade334d5e6f5580f7a3e3a16",
   "claim_boundary": [
     "DROID and RoboTwin success rates remain separate",
     "invalid infrastructure attempts are outside behavioral denominators",
     "missing, latent-only, and action-only futures are not scored as zeros",
-    "historical reference media is labeled and never substituted for current evidence"
+    "historical reference media is labeled and never substituted for current evidence",
+    "base-model feasibility probes are non-behavioral evidence and have no publication media"
   ],
-  "asset_count": 81,
+  "asset_count": 106,
   "assets": [
     {
       "path": "artifacts/vla_wam_shared_v2/figures/direct_command_cross_model_comparison_1600x900.svg",
       "category": "publication_figure",
-      "bytes": 13897,
-      "sha256": "dfdcb76a974622157a537293703e3fdcfd2253418bd50907c3d4629189226c69"
+      "bytes": 15617,
+      "sha256": "c751f63936a8c85cca0a468752c5be5b4795399802f948bb5becf384ab0ac031"
     },
     {
       "path": "artifacts/vla_wam_shared_v2/figures/groot_n17_droid_endpoint_redirection.svg",
@@ -49,14 +50,74 @@
     {
       "path": "artifacts/vla_wam_shared_v2/continuation_state.json",
       "category": "reader_core",
-      "bytes": 39096,
-      "sha256": "a937302b3e6199aabbbddf31c7521e7b78a999d034d94fbcd16e27258cb2cd56"
+      "bytes": 48409,
+      "sha256": "fa318a46918192320d24901c4ae30cd13836a17d2d1b6d66e00ced2d90fc7c87"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/media/cosmos3_nano_policy_droid_v2a011/media_manifest.json",
+      "category": "reader_core",
+      "bytes": 6449,
+      "sha256": "e5442012ab19083cab43a5135080eb5cb3eaa8e7a55095a94788d59365006c7f"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/media/pi05_current_stack_v2a010/media_manifest.json",
+      "category": "reader_core",
+      "bytes": 3723,
+      "sha256": "f8aa6ba1ebd5fd3a7f680c7050b70d81ffa6e7d9a9acc0f63cd0b8c75a1747c3"
     },
     {
       "path": "artifacts/vla_wam_shared_v2/media/video_first_gallery_manifest.json",
       "category": "reader_core",
-      "bytes": 19847,
-      "sha256": "19ac8422f53235b010b5266e545a8002ef8a4dc0eb10769f0c0753983e20efb9"
+      "bytes": 21398,
+      "sha256": "4e7e90989a02f35dbfd1d984efba4ad2b540e28fb0bd13d7d5bacf644ef08b58"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_base_v2a013_registry.json",
+      "category": "reader_core",
+      "bytes": 30072,
+      "sha256": "dd8c33d66a30ec7518740822ffe8f53d800c1dfb337608593abd512f609fbbc2"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_direct_gate.json",
+      "category": "reader_core",
+      "bytes": 57097,
+      "sha256": "4a6cc1d61593c7ba5272e1707f6bbe51261f7d23438070992bd75fd9e95fdb93"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_evidence_index.json",
+      "category": "reader_core",
+      "bytes": 9154,
+      "sha256": "6e427702db0d8b30323f7396962827ce016198eec2f8458ca6e5eae49891ef53"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_fixed_observation.json",
+      "category": "reader_core",
+      "bytes": 3133,
+      "sha256": "f1fbad3e608dfbf36d744280f3aef6cfff85d35a7b3a798ba771eb7eb768c40b"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_invalid_attempts.json",
+      "category": "reader_core",
+      "bytes": 2544,
+      "sha256": "baa4ea6254d7b181a62247b8acc2c1e2b7e918633ab14b39123de2f9519bfcf8"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_provenance.json",
+      "category": "reader_core",
+      "bytes": 3686,
+      "sha256": "bbc1b20c2d1837629410c9c56706fde1f4639982b77985f07f336e0715b59a00"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_raw_layout_compatibility.json",
+      "category": "reader_core",
+      "bytes": 5339,
+      "sha256": "555fa6b69662e52faa267eb1572573aef99015989a37d0d04520e43bbfb6427c"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_runtime_interventions.json",
+      "category": "reader_core",
+      "bytes": 1016,
+      "sha256": "f6ed31d4d0a2de08830915282a08e41fbeabbb2b0b00ff9db96aee743da879cb"
     },
     {
       "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_v2a011_registry.json",
@@ -65,10 +126,46 @@
       "sha256": "4b7fc1f7a98d73b3cd2995d32b926fc2bba4175f9b03a8131d81a78873b03eba"
     },
     {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_super_droid_v2a012_registry.json",
+      "category": "reader_core",
+      "bytes": 8032,
+      "sha256": "00f40692ba4681094a04d676c1f9368cf6dc136d79c527df0ec2c586830519b0"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_super_v2a012_hf_snapshot.json",
+      "category": "reader_core",
+      "bytes": 20927,
+      "sha256": "4eeaee092963552ba8090639cd9d75a6561d3e71612fd86467ea7227bb806153"
+    },
+    {
       "path": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_checkpoint_manifest.json",
       "category": "reader_core",
       "bytes": 4856,
       "sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_direct_gate.json",
+      "category": "reader_core",
+      "bytes": 20260,
+      "sha256": "0c54758fe316764dbca3299d7b665e3edf59412410d844a1f825abad92045f0c"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_fixed_observation.json",
+      "category": "reader_core",
+      "bytes": 1336,
+      "sha256": "345cbf93e4b75c23ccf225a7a3014bd5175ecfb4b575213b4afeaabf62193201"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_invalid_attempts.json",
+      "category": "reader_core",
+      "bytes": 587,
+      "sha256": "e0b074a5d4876f2ada1ea248aac2bef0132cf652007650f51da9fe328b6a1bb4"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_provenance.json",
+      "category": "reader_core",
+      "bytes": 3260,
+      "sha256": "0b3bac6fcbc6748f72bfc244f0a817b2779ed91686cdc40867843fc4411c70db"
     },
     {
       "path": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_registry.json",
@@ -77,16 +174,40 @@
       "sha256": "d480046bfc771436ca1d91b8c73e1bfab5854013117fbb34f4e3fc88cac42c99"
     },
     {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_release_probe.json",
+      "category": "reader_core",
+      "bytes": 1842,
+      "sha256": "be67709dfe8a0915db368cb843dedfd10dd5e2e399473e6d465593e6def2cb63"
+    },
+    {
       "path": "artifacts/vla_wam_shared_v2/pilot/expansion/pi0_fast_current_stack_v2a008_registry.json",
       "category": "reader_core",
       "bytes": 71304,
       "sha256": "eeca8679e345a602f6da6cb02635e4e1ec5274843dbea29d37cf26f2a7695d04"
     },
     {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/pi0_fast_current_stack_v2a008_release_probe.json",
+      "category": "reader_core",
+      "bytes": 4492,
+      "sha256": "26976f918110919f817070eae6c9fbf36c79295d90386b8bdab20ad0283b913b"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_edge_base_amendment.json",
+      "category": "reader_core",
+      "bytes": 11080,
+      "sha256": "7b45688604e717aab598fc50a205e3d17160ec28863c294167c76b3e5abf8a5b"
+    },
+    {
       "path": "artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_nano_droid_amendment.json",
       "category": "reader_core",
       "bytes": 2751,
       "sha256": "169e7a761394da0bc6e2e4c764b263fcbbe654320e7318fb0fe989a787b8cb01"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_super_droid_amendment.json",
+      "category": "reader_core",
+      "bytes": 10431,
+      "sha256": "df33a0bd5091c7853a56cad12dfdc82b303ce27b86c83a882099034366c19916"
     },
     {
       "path": "artifacts/vla_wam_shared_v2/pilot/post_result_current_stack_replication_amendment.json",
@@ -109,50 +230,50 @@
     {
       "path": "artifacts/vla_wam_shared_v2/results/direct_command_cross_model_comparison.json",
       "category": "reader_core",
-      "bytes": 15934,
-      "sha256": "54cca266181143e5da3bed7bbacb3748d9234dab54c22d61c9bfb31ff5303973"
+      "bytes": 18064,
+      "sha256": "a3613ae277a46810e126e8838c8b6af3eac4cd8f7b4b49ed956231c0f34e4ca4"
     },
     {
       "path": "artifacts/vla_wam_shared_v2/results/direct_command_cross_model_comparison.md",
       "category": "reader_core",
-      "bytes": 4830,
-      "sha256": "17f3016564d602a81cc141f23ec16d7cc38acfea9c3971372aec6e29db9ff6ce"
+      "bytes": 5377,
+      "sha256": "fb5dd22bcadb5ea037869817ffa517579158c6c316ac1d5fe1edb1d9c19140fc"
     },
     {
       "path": "artifacts/vla_wam_shared_v2/results/direct_command_cross_model_comparison_manifest.json",
       "category": "reader_core",
       "bytes": 1354,
-      "sha256": "8877a18da0d879bd39301b1dab021e43f557a1fb89a28a3ea827806fcd2ee29e"
+      "sha256": "992d3653447675543d10891fcc6412203bc319d3e3db42b4621d13b33a0dd220"
     },
     {
       "path": "docs/PUBLICATION_HANDOFF.md",
       "category": "reader_core",
-      "bytes": 3563,
-      "sha256": "a9d3418f6041093112ee47b5ef854740c44a26d4a9a2ed9e2dc3111ea85531e8"
+      "bytes": 4836,
+      "sha256": "c4cfd5a4745f2e060904101fec4b885a0ab44a66dda3d3bdecccb70753672329"
     },
     {
       "path": "docs/VLA_WAM_RESEARCH_BLOG.md",
       "category": "reader_core",
-      "bytes": 5913,
-      "sha256": "b8e6627169dea2fd717eba96f600d66767dd4c83d05601551f95dba942db8278"
+      "bytes": 7361,
+      "sha256": "b0f281a5c45d1df8f48f4ea5a4fe9512e08246ac837102c558ad3021c28db8b4"
     },
     {
       "path": "docs/VLA_WAM_STEERABILITY_V2_PROTOCOL.md",
       "category": "reader_core",
-      "bytes": 30160,
-      "sha256": "884fc5a6644eda67c7e7dff565315866865a9d99771a86a268e702d7c7cbb00f"
+      "bytes": 34979,
+      "sha256": "4d4add6020c14104b94aaad604a04c645107caf586f171cdca0aad1c3d6b773d"
     },
     {
       "path": "docs/VLA_WAM_STEERABILITY_VIDEO_GALLERY.html",
       "category": "reader_core",
-      "bytes": 43206,
-      "sha256": "bbfcc997a3f659dfd33f144266f2e55d98bc705aa085b344fc9859b3195035f9"
+      "bytes": 48599,
+      "sha256": "f9fe77b21d7c250229d4808fa6d4bb800d6bfdfaf1e714973daa7380ac282362"
     },
     {
       "path": "docs/VLA_WAM_STEERABILITY_VIDEO_GALLERY.md",
       "category": "reader_core",
-      "bytes": 16051,
-      "sha256": "49eda7b7851a248572cd2f70f768149ce6a217feb80cf89856c2382d6362e6a2"
+      "bytes": 17995,
+      "sha256": "d5d84e6a0ac0042ea3173b79a7889b5dfd873f851e9b96a86cdd1295fab02202"
     },
     {
       "path": "artifacts/vla_wam_shared_v2/media/cosmos3_edge_droid/cosmos3_edge_endpoint_scorecard.png",
@@ -171,6 +292,24 @@
       "category": "selected_media",
       "bytes": 1950,
       "sha256": "f0b4426b73f619b1f984229a4c810a867ffcbd627bdb9c3b90b286dfd7574909"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/media/cosmos3_nano_policy_droid_v2a011/cosmos3_nano_v2a011_seed8300_paired_actual.mp4",
+      "category": "selected_media",
+      "bytes": 2175403,
+      "sha256": "17f7d7f9120020db70bb007c0fee9e46c450b043b5132c30d72c1dc5b745f706"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/media/cosmos3_nano_policy_droid_v2a011/cosmos3_nano_v2a011_seed8300_paired_actual_poster.jpg",
+      "category": "selected_media",
+      "bytes": 66448,
+      "sha256": "03745a2eeb20f7003b7dcc4917d0a33c4870254ca8e48388ee1750b52753ea2e"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/media/cosmos3_nano_policy_droid_v2a011/cosmos3_nano_v2a011_seed8300_paired_model_prediction.mp4",
+      "category": "selected_media",
+      "bytes": 699636,
+      "sha256": "61c8664966304813f96ad59932879ba8f4fe094176e055b279a719feabe40938"
     },
     {
       "path": "artifacts/vla_wam_shared_v2/media/dreamzero_droid/dreamzero_droid_seed8300_paired.mp4",
@@ -333,6 +472,18 @@
       "category": "selected_media",
       "bytes": 3294,
       "sha256": "4c4ad1f9487191291d8614ec6cbad9fd0294384f6c6ed3159569137d356ad398"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/media/pi05_current_stack_v2a010/pi05_current_stack_v2a010_seed8300_paired_actual.mp4",
+      "category": "selected_media",
+      "bytes": 2655507,
+      "sha256": "1195a4f5bafc20d099644dc6c150d69113b1c88ed03d566308a7c7e7d61e294d"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/media/pi05_current_stack_v2a010/pi05_current_stack_v2a010_seed8300_paired_actual_poster.jpg",
+      "category": "selected_media",
+      "bytes": 64838,
+      "sha256": "a093701fc47a5ea37621948e04f443c6360ea0efc429bdc7dfccb5c651be514f"
     },
     {
       "path": "artifacts/vla_wam_shared_v2/media/robotwin_wam_confirmation/efficient_wam_rt_pair05_left_right_both_success.mp4",

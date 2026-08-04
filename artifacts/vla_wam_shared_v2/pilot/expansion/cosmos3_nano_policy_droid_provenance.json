@@ -1,0 +1,73 @@
+{
+  "schema_version": "vla-wam-shared-v2-cosmos3-nano-policy-droid-provenance-v1",
+  "status": "complete_compact_evidence_slice",
+  "amendment_id": "V2-A011",
+  "model_id": "cosmos3_nano_policy_droid",
+  "checkpoint_revision": "6706d7680581c255ff61e0f3bb49d90eac55c79e",
+  "arena": "droid_robolab",
+  "claim_boundary": "This six-cell current-stack DROID result is separate from Cosmos3 Edge, Cosmos-Reason2, historical pi0.5, and every RoboTwin denominator.",
+  "compact_evidence": {
+    "compiled_result": {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_direct_gate.json",
+      "bytes": 57097,
+      "sha256": "4a6cc1d61593c7ba5272e1707f6bbe51261f7d23438070992bd75fd9e95fdb93"
+    },
+    "fixed_observation_gate": {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_fixed_observation.json",
+      "bytes": 3133,
+      "sha256": "f1fbad3e608dfbf36d744280f3aef6cfff85d35a7b3a798ba771eb7eb768c40b"
+    },
+    "invalid_attempt_ledger": {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_invalid_attempts.json",
+      "bytes": 2544,
+      "sha256": "baa4ea6254d7b181a62247b8acc2c1e2b7e918633ab14b39123de2f9519bfcf8"
+    },
+    "runtime_intervention_ledger": {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_runtime_interventions.json",
+      "bytes": 1016,
+      "sha256": "f6ed31d4d0a2de08830915282a08e41fbeabbb2b0b00ff9db96aee743da879cb"
+    },
+    "raw_layout_compatibility_event": {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_raw_layout_compatibility.json",
+      "bytes": 5339,
+      "sha256": "555fa6b69662e52faa267eb1572573aef99015989a37d0d04520e43bbfb6427c"
+    },
+    "evidence_index": {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_evidence_index.json",
+      "bytes": 9154,
+      "sha256": "6e427702db0d8b30323f7396962827ce016198eec2f8458ca6e5eae49891ef53"
+    },
+    "selected_media": {
+      "path": "artifacts/vla_wam_shared_v2/media/cosmos3_nano_policy_droid_v2a011/media_manifest.json",
+      "bytes": 6449,
+      "sha256": "e5442012ab19083cab43a5135080eb5cb3eaa8e7a55095a94788d59365006c7f"
+    }
+  },
+  "measurement_only_trace_layout_compatibility": {
+    "issue": "The frozen shared Cosmos compiler expects only seed{seed}/simulator_attempt*/actions trace metadata, while the Nano runner wrote the identical hash-bearing metadata at canonical seed{seed}/actions paths.",
+    "resolution": "The separate V2-A011-only helper validates all canonical trace, action, and future hashes and creates six zero-copy symlinks at the frozen compiler layout. The shared Edge compiler and Nano compiler are unchanged.",
+    "behavioral_data_modified": false,
+    "episodes_rerun": 0,
+    "model_requests_started_by_resolution": 0,
+    "helper": {
+      "path": "tools/prepare_v2a011_nano_trace_layout.py",
+      "bytes": 4481,
+      "sha256": "f7c2c81dafc168f74592b56edfa26316f1a6e6db3d362ff939acb13feed4a5a5"
+    },
+    "unchanged_compilers": [
+      {
+        "path": "tools/compile_vla_wam_v2_cosmos_nano.py"
+      },
+      {
+        "path": "tools/compile_vla_wam_v2_cosmos_edge.py"
+      }
+    ],
+    "layout_event": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_raw_layout_compatibility.json"
+  },
+  "media_builder": {
+    "path": "tools/build_v2a011_cosmos_nano_media.py",
+    "bytes": 12039,
+    "sha256": "135afcddc02ad1460c68794b57578f9af1adf6553ec4f037e989c72d49c479ff",
+    "selection": "lowest complete seed (8300), paired actual simulator execution and first returned decoded future for each static direction"
+  }
+}

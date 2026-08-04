@@ -36,23 +36,42 @@ Operational handoffs are evidence provenance, not article outlines.
 - Presenting the current-stack π0 replication as the missing historical-code
   wording experiment.
 - Presenting static Cosmos-Reason2 diagnostics as robot behavior.
+- Presenting either Cosmos3 base-model feasibility probe as behavioral evidence
+  or adding gallery media before a valid rollout exists.
 
 ## Current additions
 
-The original bounded study is complete. Three later, separately labeled
-additions are active:
+The original bounded study is complete. π0-FAST V2-A008 is closed without
+behavioral evidence: its fixed-observation probe repeated LEFT exactly but
+returned an identical action tensor for LEFT and RIGHT (RMS 0.0). Its 60
+registered cells remain unrun and are not failures or zeros. A later,
+separately labeled addition is complete:
 
-- V2-A008: 60-cell π0 current-stack wording replication. It is explicitly
-  non-comparable with the missing historical revision queue.
-- V2-A010: six-cell π0.5 current-stack direct rollout/media gate.
-- V2-A011: six-cell Cosmos3 Nano Policy DROID direct gate, including actual
-  execution and exposed generated futures.
+- V2-A010: six valid π0.5 current-stack direct cells — LEFT 1/3, RIGHT 3/3,
+  three aligned endpoint pairs, and three distinct action pairs. Its selected
+  seed-8300 media is actual simulator execution only, not recovered historical
+  π0.5 footage and not an imagined future.
+
+- V2-A011: six valid Cosmos3 Nano Policy DROID current-stack direct cells —
+  LEFT 3/3, RIGHT 3/3, three aligned endpoint pairs, three distinct-action
+  pairs, and 37 retained decoded futures. Its selected seed-8300 card shows
+  actual simulator execution beside a clearly labeled model prediction; the
+  prediction is not execution or an additional trial.
+
+- V2-A012 and V2-A013: Cosmos3 Super base and Cosmos3 Edge base each have a
+  frozen three-request fixed-observation action-plus-future feasibility probe,
+  six conditional behavioral cells, and zero released behavioral cells. These
+  are pending probe definitions, not results. They have no publication media.
+  Edge base is distinct from the completed Edge-Policy-DROID result.
 
 V2-A009 withdrew LaWAM before inference. It has no active cells and should not
 appear in the shareable comparison or gallery.
 
-Do not update the blog with either addition until its compact evidence is
-compiled, validated, committed, and included in the publication manifest.
+The V2-A010 and V2-A011 results may be described only with their current-stack
+labels and separate DROID denominators. Nano’s two setup failures occurred
+before policy requests and are not behavioral failures. Do not add the V2-A012
+or V2-A013 base arms to result tables until their frozen gates release and
+produce valid behavioral evidence.
 
 ## Repository map
 

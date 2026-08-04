@@ -6,6 +6,22 @@ This is the portable index for the embedded [HTML video gallery](VLA_WAM_STEERAB
 
 DreamZero's three hash-validated actual simulator pairs are listed in this section and link to same-seed imagined-future controls later in this document. Every other WAM states whether its released interface exposes decoded, latent-only, or action-only future evidence.
 
+### Cosmos3 Nano Policy DROID — V2-A011 — seed 8300 matched pair
+
+[▶ Open video](../artifacts/vla_wam_shared_v2/media/cosmos3_nano_policy_droid_v2a011/cosmos3_nano_v2a011_seed8300_paired_actual.mp4) · [Evidence manifest](../artifacts/vla_wam_shared_v2/media/cosmos3_nano_policy_droid_v2a011/media_manifest.json)
+
+- Outcome: LEFT: success after 127 actions; RIGHT: success after 332 actions
+- Future interface: Actions plus decoded RGB futures; 15 futures retained for this selected pair (4 LEFT, 11 RIGHT)
+- Evidence status: Valid current-stack behavioral pair; both episodes succeeded; selected actual-versus-prediction comparison
+- Video SHA-256: `17f7d7f9120020db70bb007c0fee9e46c450b043b5132c30d72c1dc5b745f706`
+
+[Open adjacent MODEL PREDICTION — NOT EXECUTION](../artifacts/vla_wam_shared_v2/media/cosmos3_nano_policy_droid_v2a011/cosmos3_nano_v2a011_seed8300_paired_model_prediction.mp4)
+
+- Prediction boundary: Same seed and static LEFT/RIGHT prompts; first returned decoded future from each behavioral episode.
+
+> LEFT: “Put the Rubik's cube to the left of the bowl.”
+> RIGHT: “Put the Rubik's cube to the right of the bowl.”
+
 ### DreamZero DROID — seed 8300 matched pair
 
 [▶ Open video](../artifacts/vla_wam_shared_v2/media/dreamzero_droid/dreamzero_droid_seed8300_paired.mp4) · [Evidence manifest](../artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json)
@@ -178,6 +194,18 @@ These are official model-predicted video decodes, not simulator executions, task
 
 ## VLAs — actual simulator execution
 
+### π0.5 DROID — current-stack V2-A010 — seed 8300 matched pair
+
+[▶ Open video](../artifacts/vla_wam_shared_v2/media/pi05_current_stack_v2a010/pi05_current_stack_v2a010_seed8300_paired_actual.mp4) · [Evidence manifest](../artifacts/vla_wam_shared_v2/media/pi05_current_stack_v2a010/media_manifest.json)
+
+- Outcome: LEFT: success after 435 actions; RIGHT: success after 73 actions
+- Future interface: Actions only; no decoded visual future
+- Evidence status: Valid current-stack behavioral pair; both episodes succeeded; selected publication rollout
+- Video SHA-256: `1195a4f5bafc20d099644dc6c150d69113b1c88ed03d566308a7c7e7d61e294d`
+
+> LEFT: “Put the Rubik's cube to the left of the bowl.”
+> RIGHT: “Put the Rubik's cube to the right of the bowl.”
+
 ### GR00T N1.7 DROID — seed 8301 matched pair
 
 [▶ Open video](../artifacts/vla_wam_shared_v2/media/groot_n17_droid/groot_n17_droid_seed8301_pair.mp4) · [Evidence manifest](../artifacts/vla_wam_shared_v2/media/groot_n17_droid/media_index.json)
@@ -216,7 +244,7 @@ These are official model-predicted video decodes, not simulator executions, task
 
 ## Missing publication media
 
-- **pi05_droid — historical_v1_reference_has_no_committed_rollout_video:** π0.5 DROID is an existing v1 reference, but this branch contains no committed v1 behavioral rollout MP4. Its trajectory selections remain linked below; the π0-FAST clip above is a different checkpoint and is not substituted for it. V2-A010 is a separate active π0.5 current-stack rollout/media gate; its output is pending and will never be presented as recovered v1 footage.
+- **pi05_droid — historical_v1_reference_has_no_committed_rollout_video:** π0.5 DROID is an existing v1 reference, but this branch contains no committed v1 behavioral rollout MP4. Its trajectory selections remain linked below; the π0-FAST clip above is a different checkpoint and is not substituted for it. A separate current-stack V2-A010 actual rollout is now shown in the VLA section, but it is not recovered v1 footage and must not be merged with that historical reference.
 
 Regenerate and validate with:
 

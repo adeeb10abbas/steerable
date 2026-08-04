@@ -1,0 +1,1404 @@
+{
+  "amendment_id": "V2-A011",
+  "arena": "droid_robolab",
+  "checkpoint_revision": "6706d7680581c255ff61e0f3bb49d90eac55c79e",
+  "claim_boundary": "Separate V2-A011 Nano gate; never pooled with Cosmos3 Edge, Cosmos-Reason2, or RoboTwin.",
+  "compiled_at_git_head": "8a9893e643772c35ade334d5e6f5580f7a3e3a16",
+  "compiled_at_utc": "2026-08-04T02:55:51.728920+00:00",
+  "episodes": [
+    {
+      "actions_executed": 127,
+      "decoded_future_count": 4,
+      "dynamic_prompt_switches": 0,
+      "environment_seed": 8300,
+      "ever_entered_opposite_region": false,
+      "ever_entered_requested_region": true,
+      "ever_released_in_requested_region": true,
+      "executed_action_trace": {
+        "bytes": 4192,
+        "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/actions/seed8300_left_executed_actions.npy",
+        "sha256": "555d95c8b5a9bd1304dbf8cda0ea330d496116b87bfa6fad3e6c11c7789d5ba1"
+      },
+      "executed_action_trace_metadata": {
+        "bytes": 4020,
+        "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/actions/seed8300_left_executed_actions.json",
+        "sha256": "b141cdb2909f0079d5325004fb7b005de724a76a6c8b8e951946311ec54762b7"
+      },
+      "executed_video": {
+        "bytes": 892398,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_nano_seed8300_neutral/RubiksCubeLeftOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_left_of_the_bowl_0_viewport.mp4",
+        "sha256": "64840741def17f294f2785d3040793b44c650b637a7a13fecff748ce97083e7e"
+      },
+      "failure_stage": "success",
+      "final_lateral_display_m": -0.06788617372512817,
+      "final_opposite_relation": false,
+      "final_requested_relation": true,
+      "first_object_interaction_proxy_step": 104,
+      "first_requested_region_step": 122,
+      "first_verified_pickup_proxy_step": 109,
+      "imagined_future_interface": "decoded_rgb_uint8_33_frames_per_policy_request",
+      "imagined_future_requests": [
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/futures/seed8300_left_request000_future.npy",
+            "sha256": "704a931d5f6dcc858280a9c80ff70fb16b37726677d75448972a230d37fa0aaa"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 0,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/actions/seed8300_left_request000_returned_action.npy",
+            "sha256": "24f72870f38538d9cc6673d91e22b386316362d83bf1fcf3aa6eba5f10aa0e22"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/futures/seed8300_left_request001_future.npy",
+            "sha256": "d1f9fd23873071895a5ced9eef1250824fef6535738431514bc10f2e02cb9ab3"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 1,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/actions/seed8300_left_request001_returned_action.npy",
+            "sha256": "9c2e4a9ea28423078dcbd6a37e7d2412b8d19b59592c3b6881467419108f22ee"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/futures/seed8300_left_request002_future.npy",
+            "sha256": "8c677f1e09092fbddca17b28bee39bebc379eaf0c81b463f7d7c37cd8a255d70"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 2,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/actions/seed8300_left_request002_returned_action.npy",
+            "sha256": "e74126b6070efb60e318e60f12a0bd3c7187004e2ba20c9bf21a19c15dcdf1d2"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/futures/seed8300_left_request003_future.npy",
+            "sha256": "22fd47d0aad2e0d3786d0569307a15faf72fc163f0bdb94fea5d1881a6992cc1"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 3,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/actions/seed8300_left_request003_returned_action.npy",
+            "sha256": "c7a0a106777a000ca76dc58251df87601700b96458fe6569b149b250c4128e81"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        }
+      ],
+      "initial_lateral_display_m": 0.0053248777985572815,
+      "max_object_displacement_m": 0.14144545113879278,
+      "max_object_lift_m": 0.09538385272026062,
+      "model_id": "cosmos3_nano_policy_droid",
+      "object_interaction_proxy": true,
+      "oracle_actions": 0,
+      "pair_id": "droid_pair_seed_8300",
+      "physical_initial_state_sha256": "8b000f4d2c7c2296bf332984c0b83b47561d796790c32419480665e684635fb6",
+      "policy_inference_seconds": 7.438,
+      "policy_request_count": 4,
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_controller": "episode_static",
+      "prompt_family": "direct_command",
+      "raw_env_config": {
+        "bytes": 42864,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_nano_seed8300_neutral/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+        "sha256": "8161746e72629ff78dfeb306f2c1ed99551c375e9164211b759db530f1e8f208"
+      },
+      "raw_hdf5": {
+        "bytes": 218510,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_nano_seed8300_neutral/RubiksCubeLeftOfBowlMatchedTask/run_0.hdf5",
+        "sha256": "f686dc4344a0e5657043d118634b98b90b607b18d0b0106cf5e231ccc361b4b0"
+      },
+      "raw_log": {
+        "bytes": 164,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_nano_seed8300_neutral/RubiksCubeLeftOfBowlMatchedTask/log_0_env0.json",
+        "sha256": "b7464b6d22857038256d1588369e9c7ee55d5c2a09e51dc38d6aeb28f8508f7f"
+      },
+      "raw_trajectory": {
+        "bytes": 55609,
+        "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/trajectories/seed8300_left.json",
+        "sha256": "e92bf759b68be149968cb75c53c31c641a17267cea5887e5d0701ab46f70c8d3"
+      },
+      "requested_relation": "left",
+      "requested_signed_final_offset_m": 0.06788617372512817,
+      "requested_success": true,
+      "sampling_seed": 8300,
+      "task": "RubiksCubeLeftOfBowlMatchedTask",
+      "verified_pickup_proxy": true,
+      "wall_seconds": 30.529
+    },
+    {
+      "actions_executed": 332,
+      "decoded_future_count": 11,
+      "dynamic_prompt_switches": 0,
+      "environment_seed": 8300,
+      "ever_entered_opposite_region": false,
+      "ever_entered_requested_region": true,
+      "ever_released_in_requested_region": true,
+      "executed_action_trace": {
+        "bytes": 10752,
+        "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/actions/seed8300_right_executed_actions.npy",
+        "sha256": "540944be342888eb11026104900ffd063a387f9abca8ef16af2f22c84e5fb20f"
+      },
+      "executed_action_trace_metadata": {
+        "bytes": 9813,
+        "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/actions/seed8300_right_executed_actions.json",
+        "sha256": "8e1511ecf42a4842c31bf742ccdb6570952113c8fd566c626e3691a4c32e16c0"
+      },
+      "executed_video": {
+        "bytes": 2298957,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_nano_seed8300_neutral/RubiksCubeRightOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_right_of_the_bowl_0_viewport.mp4",
+        "sha256": "cd5dd0e2a1eaf577084bcef9566bd978a598c1cb7c64bc52fa756b9c28a65905"
+      },
+      "failure_stage": "success",
+      "final_lateral_display_m": 0.33815766870975494,
+      "final_opposite_relation": false,
+      "final_requested_relation": true,
+      "first_object_interaction_proxy_step": 72,
+      "first_requested_region_step": 204,
+      "first_verified_pickup_proxy_step": 78,
+      "imagined_future_interface": "decoded_rgb_uint8_33_frames_per_policy_request",
+      "imagined_future_requests": [
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/futures/seed8300_right_request000_future.npy",
+            "sha256": "8e4706fb5eb19d4e512f1206b0365aaaba9bcfb83ad899cfa1c7347835f16db0"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 0,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/actions/seed8300_right_request000_returned_action.npy",
+            "sha256": "f831a6915d4de8a70aaf90fec9b3b51aa5437fcc7ddca52a09e20966d7b0aaa5"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/futures/seed8300_right_request001_future.npy",
+            "sha256": "7c8a02273bec89d0b7921b90244b873cca45179bf51518d25291ee4a511a4974"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 1,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/actions/seed8300_right_request001_returned_action.npy",
+            "sha256": "2c4675cac99afd2e1d83de22cb590dc4ab791c9cf74f85fa3d5255a0afaebdc9"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/futures/seed8300_right_request002_future.npy",
+            "sha256": "5ccaa16c3e3154b4af3fd17aebba7b9152fb7e1bfb7073b2726b76020cbab36b"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 2,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/actions/seed8300_right_request002_returned_action.npy",
+            "sha256": "d26d109b739c1cee3f555d86221f369cd7abee3ed08974f5ba60074122af354a"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/futures/seed8300_right_request003_future.npy",
+            "sha256": "bc76340e16f66eebcc63148eb9d9f9954a40f038a6bcf6908498584509b8821c"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 3,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/actions/seed8300_right_request003_returned_action.npy",
+            "sha256": "795f9d7a6c5a1bdbe03233084984bd3814f37b4230c52f291341a90af5cee586"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/futures/seed8300_right_request004_future.npy",
+            "sha256": "bc583b29c91ad9a020df34fff7697848179fd4186fd745eb66349068ddae6cf6"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 4,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/actions/seed8300_right_request004_returned_action.npy",
+            "sha256": "79c5c87bbfcbe306d25443d656ac07eccf1513aa284c36575afb03e3f8e722cc"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/futures/seed8300_right_request005_future.npy",
+            "sha256": "0c0f6d441ef05ecd5526e8196a2c10b9afd4767a1baf25517fdc748267592f40"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 5,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/actions/seed8300_right_request005_returned_action.npy",
+            "sha256": "10047f043a75b41d34c71f413394401f9465f239c04814296acfd6fe23337790"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/futures/seed8300_right_request006_future.npy",
+            "sha256": "e8afcc75735f488af63ba3141636b970a537f96123a32e8e8bb35f8b62caf41f"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 6,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/actions/seed8300_right_request006_returned_action.npy",
+            "sha256": "84092291e9efca7c9c1298a1c8da9a85a2742c355580a399defed643857b86b8"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/futures/seed8300_right_request007_future.npy",
+            "sha256": "8d6577347f2d83e32aa1345ac38eb27d0fc9ac147ddfc3a9f08c8eb3df88bfd1"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 7,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/actions/seed8300_right_request007_returned_action.npy",
+            "sha256": "69fa587c73d962d5464eee143ad0026680b5f6c08dd46ceac949b77d236f769c"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/futures/seed8300_right_request008_future.npy",
+            "sha256": "1d6d93a64ad18745c66dfb638c52f647828ef8ae7a4d0d475c64b7abe6ef72b3"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 8,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/actions/seed8300_right_request008_returned_action.npy",
+            "sha256": "622e2bc5a9579fff5ef56556b6b96f3b3efe13e9713e73cd094c4f7f2f87c8a1"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/futures/seed8300_right_request009_future.npy",
+            "sha256": "d97216bd363ba6d1c4d6a7b191f05633b8b159ebcc45c930f48c78ab1d038a5f"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 9,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/actions/seed8300_right_request009_returned_action.npy",
+            "sha256": "ea827627488b575012a716bcb2770a538f2679ea543c2c839a509b803c3212e2"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/futures/seed8300_right_request010_future.npy",
+            "sha256": "843debffbc067884bf033395f11ebcd84918d36250c900b0e1582ad51926c19f"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 10,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/actions/seed8300_right_request010_returned_action.npy",
+            "sha256": "a434a78a0ca5be52d2b05bb1839e90cfaa7c9eb426b82966ebeb853b4124d9a0"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        }
+      ],
+      "initial_lateral_display_m": 0.0053248777985572815,
+      "max_object_displacement_m": 0.4762388842818727,
+      "max_object_lift_m": 0.2315380871295929,
+      "model_id": "cosmos3_nano_policy_droid",
+      "object_interaction_proxy": true,
+      "oracle_actions": 0,
+      "pair_id": "droid_pair_seed_8300",
+      "physical_initial_state_sha256": "8b000f4d2c7c2296bf332984c0b83b47561d796790c32419480665e684635fb6",
+      "policy_inference_seconds": 21.022,
+      "policy_request_count": 11,
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_controller": "episode_static",
+      "prompt_family": "direct_command",
+      "raw_env_config": {
+        "bytes": 42871,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_nano_seed8300_neutral/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+        "sha256": "c5e30eae84986f4485f12dba3890332538520ea0b4cb02e7202cd74a65b03bd0"
+      },
+      "raw_hdf5": {
+        "bytes": 293248,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_nano_seed8300_neutral/RubiksCubeRightOfBowlMatchedTask/run_0.hdf5",
+        "sha256": "00ff002d8b7f51d6fd81c9c52ee48903c55e6ac32675e71cf3d4b3094d61a72e"
+      },
+      "raw_log": {
+        "bytes": 165,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_nano_seed8300_neutral/RubiksCubeRightOfBowlMatchedTask/log_0_env0.json",
+        "sha256": "b9dd1cfff41c093d0b7c26f9f6edf9bc3455702103b0974b50a1785504f2204e"
+      },
+      "raw_trajectory": {
+        "bytes": 144677,
+        "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/trajectories/seed8300_right.json",
+        "sha256": "975f65ce27203f6520ef6c8b4dfd4e3cd4dfe6c0dcf16b3d72e9bb884865dfb4"
+      },
+      "requested_relation": "right",
+      "requested_signed_final_offset_m": 0.33815766870975494,
+      "requested_success": true,
+      "sampling_seed": 8300,
+      "task": "RubiksCubeRightOfBowlMatchedTask",
+      "verified_pickup_proxy": true,
+      "wall_seconds": 82.618
+    },
+    {
+      "actions_executed": 129,
+      "decoded_future_count": 5,
+      "dynamic_prompt_switches": 0,
+      "environment_seed": 8301,
+      "ever_entered_opposite_region": false,
+      "ever_entered_requested_region": true,
+      "ever_released_in_requested_region": true,
+      "executed_action_trace": {
+        "bytes": 4256,
+        "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8301/actions/seed8301_left_executed_actions.npy",
+        "sha256": "cc1b8b9ba7a48e5b053f44e91ed11c3e4b9ede2796161a63f4e60b4f751d6fa5"
+      },
+      "executed_action_trace_metadata": {
+        "bytes": 4844,
+        "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8301/actions/seed8301_left_executed_actions.json",
+        "sha256": "862de7f86f44dfaec3eb87ec78d2b0cae907d16f8861c3933a0eebb8f2774ac2"
+      },
+      "executed_video": {
+        "bytes": 889366,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_nano_seed8301_neutral/RubiksCubeLeftOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_left_of_the_bowl_0_viewport.mp4",
+        "sha256": "dfd386c0ec62507771638cf60770082b21d871d79fdeae4527c7a82747b2a279"
+      },
+      "failure_stage": "success",
+      "final_lateral_display_m": -0.12430895864963531,
+      "final_opposite_relation": false,
+      "final_requested_relation": true,
+      "first_object_interaction_proxy_step": 108,
+      "first_requested_region_step": 121,
+      "first_verified_pickup_proxy_step": 115,
+      "imagined_future_interface": "decoded_rgb_uint8_33_frames_per_policy_request",
+      "imagined_future_requests": [
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8301/futures/seed8301_left_request000_future.npy",
+            "sha256": "d3b01acf6b176a8d36b527c370ab7ea3c3b0d634e05bb6e97295edf57db88b09"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 0,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8301/actions/seed8301_left_request000_returned_action.npy",
+            "sha256": "5b7e96920fb7b93cf1732a4522fe4212908f7ec77e8138e31ba16894e051d933"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8301/futures/seed8301_left_request001_future.npy",
+            "sha256": "320d22a606a67eb270edf9ea574077a32a39c08690046283561482481043ae0a"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 1,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8301/actions/seed8301_left_request001_returned_action.npy",
+            "sha256": "f8b7343825a15a0a99f6a03222dce59459d220ee7a46a15d1524f6d93e205d50"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8301/futures/seed8301_left_request002_future.npy",
+            "sha256": "e7b43b4900abe7ea58b91aba47e69a9b0c13bdb6d11fca9ace0347ca9a6ef3d4"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 2,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8301/actions/seed8301_left_request002_returned_action.npy",
+            "sha256": "877d782870ffeea9844e188227ecba9acee4f7d9a28b40af841af767d5e6ceab"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8301/futures/seed8301_left_request003_future.npy",
+            "sha256": "624f370414f93bafc0c229122e385862aaf79474f1673ac367af8dd31864ff35"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 3,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8301/actions/seed8301_left_request003_returned_action.npy",
+            "sha256": "809815b49683ec427bdc1fa2f0e20d5c85154c3617b0b0f67a1ff0c1341b1eb2"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8301/futures/seed8301_left_request004_future.npy",
+            "sha256": "60f7bc5bb284d839adadb04d1160240ff0579f150b96e73c184b291fdbf5df2e"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 4,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8301/actions/seed8301_left_request004_returned_action.npy",
+            "sha256": "5b78a8487d16f531a77e54b20d227f85766aa97b0e39ed82a23c6a3ef7a28cd0"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        }
+      ],
+      "initial_lateral_display_m": 0.0053248777985572815,
+      "max_object_displacement_m": 0.17258344688109428,
+      "max_object_lift_m": 0.07500405609607697,
+      "model_id": "cosmos3_nano_policy_droid",
+      "object_interaction_proxy": true,
+      "oracle_actions": 0,
+      "pair_id": "droid_pair_seed_8301",
+      "physical_initial_state_sha256": "8b000f4d2c7c2296bf332984c0b83b47561d796790c32419480665e684635fb6",
+      "policy_inference_seconds": 9.417,
+      "policy_request_count": 5,
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_controller": "episode_static",
+      "prompt_family": "direct_command",
+      "raw_env_config": {
+        "bytes": 42864,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_nano_seed8301_neutral/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+        "sha256": "00e93506ef7c591a844fd86b17e9065219b1f1f63ea3bea81c35b86cd1de7b69"
+      },
+      "raw_hdf5": {
+        "bytes": 218795,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_nano_seed8301_neutral/RubiksCubeLeftOfBowlMatchedTask/run_0.hdf5",
+        "sha256": "f9b3c76567728d5fc105e90fe2ecc85ffde9f35dfc93132922df921c4d05197b"
+      },
+      "raw_log": {
+        "bytes": 164,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_nano_seed8301_neutral/RubiksCubeLeftOfBowlMatchedTask/log_0_env0.json",
+        "sha256": "0c693a880aa537bf942d870af7666d057e0c9af6cedbeec3fb6d10f43d9c7ade"
+      },
+      "raw_trajectory": {
+        "bytes": 56476,
+        "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/trajectories/seed8301_left.json",
+        "sha256": "d6036b67e944a2e63f3cbf83a531b79d69435400dc53391f5337adfc779ed6d7"
+      },
+      "requested_relation": "left",
+      "requested_signed_final_offset_m": 0.12430895864963531,
+      "requested_success": true,
+      "sampling_seed": 8301,
+      "task": "RubiksCubeLeftOfBowlMatchedTask",
+      "verified_pickup_proxy": true,
+      "wall_seconds": 32.184
+    },
+    {
+      "actions_executed": 158,
+      "decoded_future_count": 5,
+      "dynamic_prompt_switches": 0,
+      "environment_seed": 8301,
+      "ever_entered_opposite_region": false,
+      "ever_entered_requested_region": true,
+      "ever_released_in_requested_region": true,
+      "executed_action_trace": {
+        "bytes": 5184,
+        "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8301/actions/seed8301_right_executed_actions.npy",
+        "sha256": "3f44658504ca81bbc3d706b8149dddc9988ec8f15d488a6de7a2aa6eba634823"
+      },
+      "executed_action_trace_metadata": {
+        "bytes": 4856,
+        "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8301/actions/seed8301_right_executed_actions.json",
+        "sha256": "d3a64601ec934a85286fef0ba6878fdbc12427e429cf1ba3c738e0d5cb0f0dd8"
+      },
+      "executed_video": {
+        "bytes": 1100270,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_nano_seed8301_neutral/RubiksCubeRightOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_right_of_the_bowl_0_viewport.mp4",
+        "sha256": "ff3ff44ef8e772b38bdb4b24dc8728380ea6d3106d7bf5742a734d8ab37cb08a"
+      },
+      "failure_stage": "success",
+      "final_lateral_display_m": 0.4012126922607422,
+      "final_opposite_relation": false,
+      "final_requested_relation": true,
+      "first_object_interaction_proxy_step": 78,
+      "first_requested_region_step": 107,
+      "first_verified_pickup_proxy_step": 83,
+      "imagined_future_interface": "decoded_rgb_uint8_33_frames_per_policy_request",
+      "imagined_future_requests": [
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8301/futures/seed8301_right_request000_future.npy",
+            "sha256": "a5b9f7885e368bc6f62309a237fd3b93d8168e7c8e4d99112f261b2888d710a2"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 0,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8301/actions/seed8301_right_request000_returned_action.npy",
+            "sha256": "992da5721a0b6de2ef065434c9cb5c2453c1a5ea844dc77482c641adfe40b373"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8301/futures/seed8301_right_request001_future.npy",
+            "sha256": "f9aa613d3d814629b7b8d37f2198e3f0b33764b738883477bb3a7f956bc4cdc7"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 1,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8301/actions/seed8301_right_request001_returned_action.npy",
+            "sha256": "ffc410c39cbf71ea02498feb4529d16ff63e5161b5923b225e5c5dd6bfd6055f"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8301/futures/seed8301_right_request002_future.npy",
+            "sha256": "5919716daa95aa069ed6cba073acc2c0396d46746adeb3990c3c4e8e7c00e707"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 2,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8301/actions/seed8301_right_request002_returned_action.npy",
+            "sha256": "cc5ef67bd4aa7bf76afde902b5f0dcd95e541a186cc057d55d39d3af06556df6"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8301/futures/seed8301_right_request003_future.npy",
+            "sha256": "abbe3245c4ff9b2fe6afe754ef1b8b13cadf59d704cf72a3d0cdf733943965f0"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 3,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8301/actions/seed8301_right_request003_returned_action.npy",
+            "sha256": "5a6981a277c634833182ff7ac2603988521b75258578aca9226b81228f9ee127"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8301/futures/seed8301_right_request004_future.npy",
+            "sha256": "6f842a184e01a1da04a3a8e62d0df0f571f0a9264a96513d7e5eed3d22f94244"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 4,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8301/actions/seed8301_right_request004_returned_action.npy",
+            "sha256": "d0548925bf1d84225987db4fbb8b5951dd7374c5fcaff69d1180badaf366a631"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        }
+      ],
+      "initial_lateral_display_m": 0.0053248777985572815,
+      "max_object_displacement_m": 0.44700745954868965,
+      "max_object_lift_m": 0.17192146182060242,
+      "model_id": "cosmos3_nano_policy_droid",
+      "object_interaction_proxy": true,
+      "oracle_actions": 0,
+      "pair_id": "droid_pair_seed_8301",
+      "physical_initial_state_sha256": "8b000f4d2c7c2296bf332984c0b83b47561d796790c32419480665e684635fb6",
+      "policy_inference_seconds": 9.818,
+      "policy_request_count": 5,
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_controller": "episode_static",
+      "prompt_family": "direct_command",
+      "raw_env_config": {
+        "bytes": 42871,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_nano_seed8301_neutral/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+        "sha256": "77253ce8fb1a8b38c1222c8c6bb948378afa45af15f453fd7722e07b9679ecc8"
+      },
+      "raw_hdf5": {
+        "bytes": 230857,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_nano_seed8301_neutral/RubiksCubeRightOfBowlMatchedTask/run_0.hdf5",
+        "sha256": "205fba15b0b5312ec11528b3d0a60334de8754b5957b814fee3bacafc2d3beea"
+      },
+      "raw_log": {
+        "bytes": 165,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_nano_seed8301_neutral/RubiksCubeRightOfBowlMatchedTask/log_0_env0.json",
+        "sha256": "585fe7390d678750faa93fee6c3e9952f383f5076695f1aca342c445a232f207"
+      },
+      "raw_trajectory": {
+        "bytes": 68891,
+        "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/trajectories/seed8301_right.json",
+        "sha256": "c1e6b4902522aa46457c6b32c1ebb623fdeecaef30ab84a23f72c1db5c939756"
+      },
+      "requested_relation": "right",
+      "requested_signed_final_offset_m": 0.4012126922607422,
+      "requested_success": true,
+      "sampling_seed": 8301,
+      "task": "RubiksCubeRightOfBowlMatchedTask",
+      "verified_pickup_proxy": true,
+      "wall_seconds": 39.637
+    },
+    {
+      "actions_executed": 129,
+      "decoded_future_count": 5,
+      "dynamic_prompt_switches": 0,
+      "environment_seed": 8302,
+      "ever_entered_opposite_region": false,
+      "ever_entered_requested_region": true,
+      "ever_released_in_requested_region": true,
+      "executed_action_trace": {
+        "bytes": 4256,
+        "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/actions/seed8302_left_executed_actions.npy",
+        "sha256": "b47b65429ff15bd8a9250e2473349549ba1835f0091ff16388f76e285e268091"
+      },
+      "executed_action_trace_metadata": {
+        "bytes": 4844,
+        "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/actions/seed8302_left_executed_actions.json",
+        "sha256": "fc52085758d08938be24bb1da24abb5510a7c58e55878e81297cb0f816a59cc3"
+      },
+      "executed_video": {
+        "bytes": 923553,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_nano_seed8302_neutral/RubiksCubeLeftOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_left_of_the_bowl_0_viewport.mp4",
+        "sha256": "08232176e0b7377fbc8d2a733caaeb3c91c390dfad6397f40c611e7332f89c13"
+      },
+      "failure_stage": "success",
+      "final_lateral_display_m": -0.11747083067893982,
+      "final_opposite_relation": false,
+      "final_requested_relation": true,
+      "first_object_interaction_proxy_step": 90,
+      "first_requested_region_step": 108,
+      "first_verified_pickup_proxy_step": 92,
+      "imagined_future_interface": "decoded_rgb_uint8_33_frames_per_policy_request",
+      "imagined_future_requests": [
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/futures/seed8302_left_request000_future.npy",
+            "sha256": "d499fc6e589212d3b5991d603d7269776ff8311e637ef8e656c8fe195c9bf7cb"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 0,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/actions/seed8302_left_request000_returned_action.npy",
+            "sha256": "24a42cfba7017ffeb52a974badace432af662322eb5f908aa9795f6a029ad7d5"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/futures/seed8302_left_request001_future.npy",
+            "sha256": "80ea4f1723533beda1b7ad201ea4d919405a205bed0de776782afa9d97f35f78"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 1,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/actions/seed8302_left_request001_returned_action.npy",
+            "sha256": "8cdb1aaba2f41768cbacf0b0f1593b1061bc7b76fa6707561c4bed3c51d7a804"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/futures/seed8302_left_request002_future.npy",
+            "sha256": "083821d0adf7d8571c7de450affa3442b7f1bd0e5e04ccc48d23997b629a16a0"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 2,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/actions/seed8302_left_request002_returned_action.npy",
+            "sha256": "a00eb1bf75c203f69dbe683deb6bdc250b73563fcff04cf220a6c1510ac1a133"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/futures/seed8302_left_request003_future.npy",
+            "sha256": "9b896ea22aa3254fa6d77788c457487e66c9ad4635d9005a4274ac3fafbb0b9b"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 3,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/actions/seed8302_left_request003_returned_action.npy",
+            "sha256": "7c60bf7632052690984aaffb8fb99958b7efbf26ec1d3ea55c5e2919ccf16943"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/futures/seed8302_left_request004_future.npy",
+            "sha256": "1a68275908213edce289440c2f514ea87816fb490dc9d3ee090073286595c4c6"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 4,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/actions/seed8302_left_request004_returned_action.npy",
+            "sha256": "106c6f82f90239859d549560e5ddcf2feb585ab72e5438e994886928dee43ccb"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        }
+      ],
+      "initial_lateral_display_m": 0.0053248777985572815,
+      "max_object_displacement_m": 0.2067630613554299,
+      "max_object_lift_m": 0.12159478664398193,
+      "model_id": "cosmos3_nano_policy_droid",
+      "object_interaction_proxy": true,
+      "oracle_actions": 0,
+      "pair_id": "droid_pair_seed_8302",
+      "physical_initial_state_sha256": "8b000f4d2c7c2296bf332984c0b83b47561d796790c32419480665e684635fb6",
+      "policy_inference_seconds": 8.896,
+      "policy_request_count": 5,
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_controller": "episode_static",
+      "prompt_family": "direct_command",
+      "raw_env_config": {
+        "bytes": 42864,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_nano_seed8302_neutral/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+        "sha256": "9d2cf3bca2f577516545f76fb714272f99140085196e2580d7826e9fa66ad671"
+      },
+      "raw_hdf5": {
+        "bytes": 219519,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_nano_seed8302_neutral/RubiksCubeLeftOfBowlMatchedTask/run_0.hdf5",
+        "sha256": "f191e52ef10c2ebf77e0ffdbdba09397dd496cb468c81a8b9041c1b1aa1cd730"
+      },
+      "raw_log": {
+        "bytes": 164,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_nano_seed8302_neutral/RubiksCubeLeftOfBowlMatchedTask/log_0_env0.json",
+        "sha256": "0c693a880aa537bf942d870af7666d057e0c9af6cedbeec3fb6d10f43d9c7ade"
+      },
+      "raw_trajectory": {
+        "bytes": 56384,
+        "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/trajectories/seed8302_left.json",
+        "sha256": "81d4c785d511ec25a8b4597873e3fd26bb33a417859630346471004f25f5b922"
+      },
+      "requested_relation": "left",
+      "requested_signed_final_offset_m": 0.11747083067893982,
+      "requested_success": true,
+      "sampling_seed": 8302,
+      "task": "RubiksCubeLeftOfBowlMatchedTask",
+      "verified_pickup_proxy": true,
+      "wall_seconds": 32.609
+    },
+    {
+      "actions_executed": 215,
+      "decoded_future_count": 7,
+      "dynamic_prompt_switches": 0,
+      "environment_seed": 8302,
+      "ever_entered_opposite_region": false,
+      "ever_entered_requested_region": true,
+      "ever_released_in_requested_region": true,
+      "executed_action_trace": {
+        "bytes": 7008,
+        "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/actions/seed8302_right_executed_actions.npy",
+        "sha256": "4d396100fd66daa2ee98a44aedf63bb13f9c61f1624e189562fb718630ff1174"
+      },
+      "executed_action_trace_metadata": {
+        "bytes": 6508,
+        "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/actions/seed8302_right_executed_actions.json",
+        "sha256": "1e6eea1e148a408ddb5e484a97fda9a5e44117bfd17765926610f99e2a2a3120"
+      },
+      "executed_video": {
+        "bytes": 1449770,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_nano_seed8302_neutral/RubiksCubeRightOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_right_of_the_bowl_0_viewport.mp4",
+        "sha256": "a45fb165c795fd5e0f14e48bc12ef4cdfcab9e62646f3d15a5631e14257cc5a8"
+      },
+      "failure_stage": "success",
+      "final_lateral_display_m": 0.4882819652557373,
+      "final_opposite_relation": false,
+      "final_requested_relation": true,
+      "first_object_interaction_proxy_step": 105,
+      "first_requested_region_step": 131,
+      "first_verified_pickup_proxy_step": 109,
+      "imagined_future_interface": "decoded_rgb_uint8_33_frames_per_policy_request",
+      "imagined_future_requests": [
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/futures/seed8302_right_request000_future.npy",
+            "sha256": "9bf29dae7b7976751547e23d0b37a46bbbef1fca3725f1e94cabc080d247df78"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 0,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/actions/seed8302_right_request000_returned_action.npy",
+            "sha256": "6de38e67a4a81d9fafbf5eac1f8ef862c35e08e61d8147c6773cb7b573111fc2"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/futures/seed8302_right_request001_future.npy",
+            "sha256": "e22710afd692ca23f64a3baf9f1882490846edb85bfc58f0c270858eaf67f37a"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 1,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/actions/seed8302_right_request001_returned_action.npy",
+            "sha256": "399f6bf90125fcbdf6ede2c2daeca7dd45ffccaf51f46e58de49e7f324a6bcf2"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/futures/seed8302_right_request002_future.npy",
+            "sha256": "5b57f1d3b55d818a5f912cf57083e96f0eceec9bf26d1464d947692d67d21647"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 2,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/actions/seed8302_right_request002_returned_action.npy",
+            "sha256": "4a97a8d0c9c706fcf5fe7f254bf6ea8454bf0d6d9ffb9323281f71dbf2caa009"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/futures/seed8302_right_request003_future.npy",
+            "sha256": "be07898c044c45f8c0740de95670370cfd404d795ed5028daba6564e562f21b5"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 3,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/actions/seed8302_right_request003_returned_action.npy",
+            "sha256": "3fdf7ae7557477a716dbda5a9ad9019ef36cdc2fd9319e10b193f660fb559b0d"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/futures/seed8302_right_request004_future.npy",
+            "sha256": "42ff3f263ee7722cbc45f056aa15d41e8ef6ce954102d2e4bff390061ed683a7"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 4,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/actions/seed8302_right_request004_returned_action.npy",
+            "sha256": "46f90f95b559dce21940b12d3001fa05d2a93beafac5d101c75fdd25e4013a1d"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/futures/seed8302_right_request005_future.npy",
+            "sha256": "5f1c77dbac4d3e9abe0fe927dc5b76dccca10b6c9b2a49277b838d0029842dee"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 5,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/actions/seed8302_right_request005_returned_action.npy",
+            "sha256": "456ef1c790f1a8e99796646157285cdb1b48ddf527ba3d7a851fcc2ac511162b"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        },
+        {
+          "decoded_future": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/futures/seed8302_right_request006_future.npy",
+            "sha256": "12514c2b8b82302cfb9fe8aa7e440fdc49f573db7323c265dce8c2b1b51a0729"
+          },
+          "decoded_future_shape": [
+            33,
+            528,
+            640,
+            3
+          ],
+          "request_index": 6,
+          "returned_action": {
+            "bytes": 1152,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/actions/seed8302_right_request006_returned_action.npy",
+            "sha256": "3de99c06b5cd0609de087323e8a6d85cdad8317acbb4ded94cbb0b596bea1f63"
+          },
+          "returned_action_shape": [
+            32,
+            8
+          ]
+        }
+      ],
+      "initial_lateral_display_m": 0.0053248777985572815,
+      "max_object_displacement_m": 0.5212346759732169,
+      "max_object_lift_m": 0.15668092668056488,
+      "model_id": "cosmos3_nano_policy_droid",
+      "object_interaction_proxy": true,
+      "oracle_actions": 0,
+      "pair_id": "droid_pair_seed_8302",
+      "physical_initial_state_sha256": "8b000f4d2c7c2296bf332984c0b83b47561d796790c32419480665e684635fb6",
+      "policy_inference_seconds": 12.929,
+      "policy_request_count": 7,
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_controller": "episode_static",
+      "prompt_family": "direct_command",
+      "raw_env_config": {
+        "bytes": 42871,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_nano_seed8302_neutral/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+        "sha256": "7402619520e8a47e0605242f97e0c965e8e7681746f3416537fcd93140814911"
+      },
+      "raw_hdf5": {
+        "bytes": 250717,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_nano_seed8302_neutral/RubiksCubeRightOfBowlMatchedTask/run_0.hdf5",
+        "sha256": "2dc4d6e16f413de21c1f3459c5d8646d9a82071741a14bcc69651366d681a60f"
+      },
+      "raw_log": {
+        "bytes": 165,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_nano_seed8302_neutral/RubiksCubeRightOfBowlMatchedTask/log_0_env0.json",
+        "sha256": "d5fdaef881cc99ab9f6e5466635aea1645d3ff0187bc44833c495ce8cc4e1c93"
+      },
+      "raw_trajectory": {
+        "bytes": 93788,
+        "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/trajectories/seed8302_right.json",
+        "sha256": "a82bb50bb1d866f0cd2ed262cf54642cb4860238e581574887ee138f4ff7d50d"
+      },
+      "requested_relation": "right",
+      "requested_signed_final_offset_m": 0.4882819652557373,
+      "requested_success": true,
+      "sampling_seed": 8302,
+      "task": "RubiksCubeRightOfBowlMatchedTask",
+      "verified_pickup_proxy": true,
+      "wall_seconds": 53.516
+    }
+  ],
+  "fixed_observation_gate": {
+    "bytes": 3133,
+    "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/fixed_observation/manifest.json",
+    "sha256": "f1fbad3e608dfbf36d744280f3aef6cfff85d35a7b3a798ba771eb7eb768c40b"
+  },
+  "invalid_attempt_count": 2,
+  "invalid_attempt_denominator_policy": "excluded",
+  "invalid_attempt_ledger": {
+    "bytes": 2544,
+    "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/cosmos3_nano_policy_droid_invalid_attempts.json",
+    "sha256": "baa4ea6254d7b181a62247b8acc2c1e2b7e918633ab14b39123de2f9519bfcf8"
+  },
+  "measurement": {
+    "dynamic_prompts": 0,
+    "future_interface": "decoded_rgb_uint8_33_frames_per_policy_request",
+    "open_loop_horizon": 32,
+    "oracle_actions": 0,
+    "prompt_controller": "episode_static",
+    "simulator_state_role": "post_action_scoring_and_visualization_only",
+    "subtask_progress_checking": false
+  },
+  "model_id": "cosmos3_nano_policy_droid",
+  "pairs": [
+    {
+      "endpoint_response_direction": "aligned",
+      "environment_seed": 8300,
+      "executed_actions_distinct": true,
+      "first_chunk_action_rms": 0.019623786816897366,
+      "left_success": true,
+      "overlap_action_rms": 0.3141732780987425,
+      "pair_id": "droid_pair_seed_8300",
+      "physical_initial_state_sha256": "8b000f4d2c7c2296bf332984c0b83b47561d796790c32419480665e684635fb6",
+      "right_minus_left_endpoint_lateral_m": 0.4060438424348831,
+      "right_success": true
+    },
+    {
+      "endpoint_response_direction": "aligned",
+      "environment_seed": 8301,
+      "executed_actions_distinct": true,
+      "first_chunk_action_rms": 0.013292133724717622,
+      "left_success": true,
+      "overlap_action_rms": 0.22752840105203775,
+      "pair_id": "droid_pair_seed_8301",
+      "physical_initial_state_sha256": "8b000f4d2c7c2296bf332984c0b83b47561d796790c32419480665e684635fb6",
+      "right_minus_left_endpoint_lateral_m": 0.5255216509103775,
+      "right_success": true
+    },
+    {
+      "endpoint_response_direction": "aligned",
+      "environment_seed": 8302,
+      "executed_actions_distinct": true,
+      "first_chunk_action_rms": 0.017970046277805584,
+      "left_success": true,
+      "overlap_action_rms": 0.19310653737766664,
+      "pair_id": "droid_pair_seed_8302",
+      "physical_initial_state_sha256": "8b000f4d2c7c2296bf332984c0b83b47561d796790c32419480665e684635fb6",
+      "right_minus_left_endpoint_lateral_m": 0.6057527959346771,
+      "right_success": true
+    }
+  ],
+  "registry": {
+    "bytes": 12745,
+    "path": "/data/users/ali/vla_wam/src/steerable-current/artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_v2a011_registry.json",
+    "sha256": "4b7fc1f7a98d73b3cd2995d32b926fc2bba4175f9b03a8131d81a78873b03eba"
+  },
+  "schema_version": "vla-wam-shared-v2-cosmos3-nano-policy-droid-result-v1",
+  "seeds": [
+    8300,
+    8301,
+    8302
+  ],
+  "server_repository_commit": "411d25b2e35bc441126f48c44a4b93e1c0564274",
+  "simulator_repository_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+  "status": "complete",
+  "summary": {
+    "aligned_endpoint_pairs": 3,
+    "by_direction": {
+      "left": {
+        "entered_requested_region": 3,
+        "episodes": 3,
+        "successes": 3,
+        "verified_pickups": 3
+      },
+      "right": {
+        "entered_requested_region": 3,
+        "episodes": 3,
+        "successes": 3,
+        "verified_pickups": 3
+      }
+    },
+    "competence_gate": "both_directions",
+    "episode_count": 6,
+    "failure_stage_counts": {
+      "success": 6
+    },
+    "nonzero_first_chunk_pairs": 3,
+    "pair_count": 3,
+    "successes": 6
+  }
+}

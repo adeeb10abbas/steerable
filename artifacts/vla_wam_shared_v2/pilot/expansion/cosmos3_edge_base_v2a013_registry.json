@@ -1,0 +1,621 @@
+{
+  "amendment": {
+    "bytes": 11080,
+    "path": "artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_edge_base_amendment.json",
+    "sha256": "7b45688604e717aab598fc50a205e3d17160ec28863c294167c76b3e5abf8a5b"
+  },
+  "amendment_id": "V2-A013",
+  "behavioral_queue": {
+    "cells": [
+      {
+        "cell_id": "cosmos3_edge_base_seed8300_left",
+        "control_interface": "derived_control_curobo_ik_only_after_release",
+        "dynamic_prompt_switches": 0,
+        "environment_seed": 8300,
+        "executed_action_trace_required": true,
+        "exposed_generated_future_required": true,
+        "model_action_trace_required": true,
+        "oracle_or_subtask_coach": false,
+        "prompt_controller": "episode_static",
+        "rendered_prompt": "Put the Rubik's cube to the left of the bowl.",
+        "requested_relation": "left",
+        "sampling_seed": 8300,
+        "status": "frozen_unreleased",
+        "viewport_video_required": true
+      },
+      {
+        "cell_id": "cosmos3_edge_base_seed8300_right",
+        "control_interface": "derived_control_curobo_ik_only_after_release",
+        "dynamic_prompt_switches": 0,
+        "environment_seed": 8300,
+        "executed_action_trace_required": true,
+        "exposed_generated_future_required": true,
+        "model_action_trace_required": true,
+        "oracle_or_subtask_coach": false,
+        "prompt_controller": "episode_static",
+        "rendered_prompt": "Put the Rubik's cube to the right of the bowl.",
+        "requested_relation": "right",
+        "sampling_seed": 8300,
+        "status": "frozen_unreleased",
+        "viewport_video_required": true
+      },
+      {
+        "cell_id": "cosmos3_edge_base_seed8301_left",
+        "control_interface": "derived_control_curobo_ik_only_after_release",
+        "dynamic_prompt_switches": 0,
+        "environment_seed": 8301,
+        "executed_action_trace_required": true,
+        "exposed_generated_future_required": true,
+        "model_action_trace_required": true,
+        "oracle_or_subtask_coach": false,
+        "prompt_controller": "episode_static",
+        "rendered_prompt": "Put the Rubik's cube to the left of the bowl.",
+        "requested_relation": "left",
+        "sampling_seed": 8301,
+        "status": "frozen_unreleased",
+        "viewport_video_required": true
+      },
+      {
+        "cell_id": "cosmos3_edge_base_seed8301_right",
+        "control_interface": "derived_control_curobo_ik_only_after_release",
+        "dynamic_prompt_switches": 0,
+        "environment_seed": 8301,
+        "executed_action_trace_required": true,
+        "exposed_generated_future_required": true,
+        "model_action_trace_required": true,
+        "oracle_or_subtask_coach": false,
+        "prompt_controller": "episode_static",
+        "rendered_prompt": "Put the Rubik's cube to the right of the bowl.",
+        "requested_relation": "right",
+        "sampling_seed": 8301,
+        "status": "frozen_unreleased",
+        "viewport_video_required": true
+      },
+      {
+        "cell_id": "cosmos3_edge_base_seed8302_left",
+        "control_interface": "derived_control_curobo_ik_only_after_release",
+        "dynamic_prompt_switches": 0,
+        "environment_seed": 8302,
+        "executed_action_trace_required": true,
+        "exposed_generated_future_required": true,
+        "model_action_trace_required": true,
+        "oracle_or_subtask_coach": false,
+        "prompt_controller": "episode_static",
+        "rendered_prompt": "Put the Rubik's cube to the left of the bowl.",
+        "requested_relation": "left",
+        "sampling_seed": 8302,
+        "status": "frozen_unreleased",
+        "viewport_video_required": true
+      },
+      {
+        "cell_id": "cosmos3_edge_base_seed8302_right",
+        "control_interface": "derived_control_curobo_ik_only_after_release",
+        "dynamic_prompt_switches": 0,
+        "environment_seed": 8302,
+        "executed_action_trace_required": true,
+        "exposed_generated_future_required": true,
+        "model_action_trace_required": true,
+        "oracle_or_subtask_coach": false,
+        "prompt_controller": "episode_static",
+        "rendered_prompt": "Put the Rubik's cube to the right of the bowl.",
+        "requested_relation": "right",
+        "sampling_seed": 8302,
+        "status": "frozen_unreleased",
+        "viewport_video_required": true
+      }
+    ],
+    "dynamic_prompt_switches": 0,
+    "environment_seeds": [
+      8300,
+      8301,
+      8302
+    ],
+    "executed_action_trace_required": true,
+    "exposed_generated_future_required": true,
+    "model_action_trace_required": true,
+    "oracle_or_subtask_coach": false,
+    "potential_episode_count": 6,
+    "prompt_family": "direct_command",
+    "prompts": {
+      "left": "Put the Rubik's cube to the left of the bowl.",
+      "right": "Put the Rubik's cube to the right of the bowl."
+    },
+    "release_condition": "The fixed-observation probe and every checkpoint, software, simulator, unit, frame, robot-asset, CuRobo, collision, and controller gate in the generated registry must pass before the first environment action.",
+    "released_episode_count": 0,
+    "requested_relations": [
+      "left",
+      "right"
+    ],
+    "sampling_seeds": [
+      8300,
+      8301,
+      8302
+    ],
+    "static_episode_prompt_only": true,
+    "status": "six_cells_frozen_zero_released",
+    "viewport_video_required": true
+  },
+  "checkpoint": {
+    "behavioral_episode_count": 0,
+    "download_status": "not_started",
+    "files": {
+      ".gitattributes": {
+        "bytes": 2812,
+        "git_blob_oid": "19efd500666f00a8c46b65a243c11e2da699642d",
+        "lfs_sha256": null
+      },
+      "BIAS.md": {
+        "bytes": 4720,
+        "git_blob_oid": "0a30eddc040494e434e27b3e39aaf62ce907b3c6",
+        "lfs_sha256": null
+      },
+      "EXPLAINABILITY.md": {
+        "bytes": 3189,
+        "git_blob_oid": "f11cb8f3552fbc6fa450de8fed0e34b5e841fce0",
+        "lfs_sha256": null
+      },
+      "PRIVACY.md": {
+        "bytes": 1215,
+        "git_blob_oid": "7e2709dadccdd7983634f50e426168d09e3d4970",
+        "lfs_sha256": null
+      },
+      "README.md": {
+        "bytes": 46510,
+        "git_blob_oid": "9988c5c06a0d0070160e07789baf318aebc401f5",
+        "lfs_sha256": null
+      },
+      "SAFETY.md": {
+        "bytes": 3677,
+        "git_blob_oid": "44e1a5a58e8a5e76b8f0a6a415be45e59ba9f270",
+        "lfs_sha256": null
+      },
+      "assets/benchmark-image2video.png": {
+        "bytes": 57690,
+        "git_blob_oid": "ef3d1c565a21be211aae25a1b3272638a86f9949",
+        "lfs_sha256": null
+      },
+      "assets/benchmark-overall.png": {
+        "bytes": 112965,
+        "git_blob_oid": "67e4564bc3acd62a77726a3fa67bd7d0ce833672",
+        "lfs_sha256": "0ca9b82c2aea557c5c64c70b13067a6eb4f34136b0aa2353d7de83de87308f16"
+      },
+      "assets/edge_action_fd_umi_2chunk_output.mp4": {
+        "bytes": 31154,
+        "git_blob_oid": "58b09d6269fa3e474943998b6310b521f8666979",
+        "lfs_sha256": "f192544ff903b6bc88801845068e3cd1600703e7f1149264ac2db0ab5a97fd29"
+      },
+      "assets/edge_action_id_av_0_output.json": {
+        "bytes": 10454,
+        "git_blob_oid": "c2d289ca482737af5e09be658597adb502bf3f7c",
+        "lfs_sha256": null
+      },
+      "assets/edge_action_id_av_0_output.png": {
+        "bytes": 118154,
+        "git_blob_oid": "69860638fc50c0b0991fc25eb96a83017716028d",
+        "lfs_sha256": "048f4e46303e5fc8e03d28d9793af72c71b99df06029576f40c18caff9415b45"
+      },
+      "assets/edge_action_id_av_1_output.json": {
+        "bytes": 10309,
+        "git_blob_oid": "26f5495b4f761a7d985f6dfbbe64655962c7b2d7",
+        "lfs_sha256": null
+      },
+      "assets/edge_action_id_av_1_output.png": {
+        "bytes": 115094,
+        "git_blob_oid": "f61d2fc990c1bb66dfea8c03feae4c83efa61bf1",
+        "lfs_sha256": "26cb6961a3749685388f7adcfe1b03e5ed5cadf9d51446b2b263720e2aa013ce"
+      },
+      "assets/edge_i2v_output.mp4": {
+        "bytes": 7105138,
+        "git_blob_oid": "9845493495c4b92bd36ae31a4af95388675d72c3",
+        "lfs_sha256": "184a1cf43d8de6361a1c823818144bd95c4bdaaed3615b772e36f212c0f5977b"
+      },
+      "assets/example_action_fd_umi_action_chunks.json": {
+        "bytes": 10350,
+        "git_blob_oid": "a1d70feafb5369bf48d36fc9e45322defd8d52e7",
+        "lfs_sha256": null
+      },
+      "assets/example_action_fd_umi_first_frame.png": {
+        "bytes": 67026,
+        "git_blob_oid": "43888061e8a1265c3ec135425d5d4937706e4887",
+        "lfs_sha256": null
+      },
+      "assets/example_action_id_av_0_input.mp4": {
+        "bytes": 1125838,
+        "git_blob_oid": "8219e837ec8c1162149fa178ecd4e911606b94ed",
+        "lfs_sha256": "ff205f86ae169031c0e12c8c6bc8aabe24aeb44b84a16cba977669b29912f5fc"
+      },
+      "assets/example_action_id_av_1_input.mp4": {
+        "bytes": 1639407,
+        "git_blob_oid": "2dfd7a3c8fe9a77221c8fb968d2f9f309ffd7271",
+        "lfs_sha256": "169e65cee76ef7c6366987a8e4c8e4ec6f803f5e624ba2ef39ba1f0c672925aa"
+      },
+      "assets/example_i2v_input.jpg": {
+        "bytes": 860765,
+        "git_blob_oid": "bd1bc04ce3d511224c5e64cceff88126946bcf97",
+        "lfs_sha256": "1de51eb5c6d51ec97aa3351a6685717b0253e36073eb9cdd3ef65affa115a4e2"
+      },
+      "assets/example_i2v_prompt.json": {
+        "bytes": 9176,
+        "git_blob_oid": "71421c62d9f514feb8b266187ddad7ed7f6d767d",
+        "lfs_sha256": null
+      },
+      "assets/example_reasoning_input.png": {
+        "bytes": 230656,
+        "git_blob_oid": "c9d320b9412f6eaa011279f6f83ca41fc1c583c4",
+        "lfs_sha256": "6686b937bdb28e2c9804c435bd63a7ab56ac1531ffc9b482f2b8a75aed8770f5"
+      },
+      "assets/example_reasoning_prompt.json": {
+        "bytes": 151,
+        "git_blob_oid": "3371076f17b1ff8bfff60fb24536b160f637809b",
+        "lfs_sha256": null
+      },
+      "assets/negative_prompt.json": {
+        "bytes": 17578,
+        "git_blob_oid": "b51ecb2195e2f16a89959aa3b757c7d66cac6f22",
+        "lfs_sha256": null
+      },
+      "chat_template.jinja": {
+        "bytes": 12158,
+        "git_blob_oid": "0a3d5967de71577bd2bb20994cee54c39bed63ba",
+        "lfs_sha256": null
+      },
+      "config.json": {
+        "bytes": 1679,
+        "git_blob_oid": "dafc77c4e2d80aecea930d8d1f357f6bf60c729b",
+        "lfs_sha256": null
+      },
+      "generation_config.json": {
+        "bytes": 154,
+        "git_blob_oid": "7494902456e3a7ce7a82c235b365fdb583e88ca7",
+        "lfs_sha256": null
+      },
+      "images/benchmark-reasoning.png": {
+        "bytes": 265797,
+        "git_blob_oid": "b7203515846ec411b02fb6bb50201a0a9e730383",
+        "lfs_sha256": "75974a959d0eb23edb578dfd2b04656748b8f738f9bc19c2dd97f9d60c886fe1"
+      },
+      "model.safetensors.index.json": {
+        "bytes": 68564,
+        "git_blob_oid": "31e6b9d1b61d0ffa8c461176e05ba2bc5ed4d064",
+        "lfs_sha256": null
+      },
+      "model_index.json": {
+        "bytes": 555,
+        "git_blob_oid": "70fd5e0775133f2cbf4fc50c61507e4c49b071dc",
+        "lfs_sha256": null
+      },
+      "modular_model_index.json": {
+        "bytes": 1283,
+        "git_blob_oid": "7050a444e410edfe9ed9c7d9358f54c18c6fdceb",
+        "lfs_sha256": null
+      },
+      "preprocessor_config.json": {
+        "bytes": 334,
+        "git_blob_oid": "2155266cdf07aa75319c1603011bc5442df50910",
+        "lfs_sha256": null
+      },
+      "processor_config.json": {
+        "bytes": 875,
+        "git_blob_oid": "acd64f939fb21c0200e727a17dec183aed0fcb87",
+        "lfs_sha256": null
+      },
+      "scheduler/scheduler_config.json": {
+        "bytes": 889,
+        "git_blob_oid": "27259df12f63f649cfc694ed1c2b9d3ee3ede711",
+        "lfs_sha256": null
+      },
+      "special_tokens_map.json": {
+        "bytes": 563,
+        "git_blob_oid": "0451f37912edb7f8a4bf04d77eef13f6130f0515",
+        "lfs_sha256": null
+      },
+      "text_tokenizer/chat_template.jinja": {
+        "bytes": 12158,
+        "git_blob_oid": "0a3d5967de71577bd2bb20994cee54c39bed63ba",
+        "lfs_sha256": null
+      },
+      "text_tokenizer/special_tokens_map.json": {
+        "bytes": 563,
+        "git_blob_oid": "0451f37912edb7f8a4bf04d77eef13f6130f0515",
+        "lfs_sha256": null
+      },
+      "text_tokenizer/tokenizer.json": {
+        "bytes": 17077500,
+        "git_blob_oid": "6d41dc89180808d59f68d435ffdbae0e1619df6f",
+        "lfs_sha256": "4dc692a99dca6d92a44e9529ffb53541eb79bb260eec7281bc51268c05d7311c"
+      },
+      "text_tokenizer/tokenizer_config.json": {
+        "bytes": 393,
+        "git_blob_oid": "9bf527c33c251e8062bf2cd3c8dd6d2fc0591ea9",
+        "lfs_sha256": null
+      },
+      "tokenizer.json": {
+        "bytes": 17077500,
+        "git_blob_oid": "6d41dc89180808d59f68d435ffdbae0e1619df6f",
+        "lfs_sha256": "4dc692a99dca6d92a44e9529ffb53541eb79bb260eec7281bc51268c05d7311c"
+      },
+      "tokenizer_config.json": {
+        "bytes": 177253,
+        "git_blob_oid": "b3477e373eeb0753858974549bf9a67409acda03",
+        "lfs_sha256": null
+      },
+      "transformer/config.json": {
+        "bytes": 1075,
+        "git_blob_oid": "a2d137764c75e641bbe23def0c8516fbe4591b4b",
+        "lfs_sha256": null
+      },
+      "transformer/diffusion_pytorch_model-00001-of-00002.safetensors": {
+        "bytes": 5000039696,
+        "git_blob_oid": "cdb5ffa7ddaeeb7f82aea8d69fe320ec093a9efe",
+        "lfs_sha256": "f74b228d29f844a58bef266f3afc2d695fdc7e00f0d18b618f5889966586891b"
+      },
+      "transformer/diffusion_pytorch_model-00002-of-00002.safetensors": {
+        "bytes": 1739335880,
+        "git_blob_oid": "545e04aff97f91ef1f4d7cdb00dd63e440418e80",
+        "lfs_sha256": "96e9031a940699710dd11b3b81345c22418471ad82bb838abe40f4f03eb86503"
+      },
+      "transformer/diffusion_pytorch_model.safetensors.index.json": {
+        "bytes": 53623,
+        "git_blob_oid": "04368f3d6098ae49f4ac067cd2523fe4b734251e",
+        "lfs_sha256": null
+      },
+      "vae/config.json": {
+        "bytes": 1755,
+        "git_blob_oid": "12aeec832f9b85f555b1e2267f84defa2fc91e9e",
+        "lfs_sha256": null
+      },
+      "vae/diffusion_pytorch_model.safetensors": {
+        "bytes": 1409400600,
+        "git_blob_oid": "0c71384d6c6985e8a26aa317b48a8155d6e36bcd",
+        "lfs_sha256": "230496cb59ff85bc9c040487737c4062480cb61c71e697b197b4c30142f2a0da"
+      },
+      "video_preprocessor_config.json": {
+        "bytes": 367,
+        "git_blob_oid": "cd3f7bca81b97e3609fa6f372cd55d7654bb0791",
+        "lfs_sha256": null
+      },
+      "vision_encoder/model.safetensors": {
+        "bytes": 978739880,
+        "git_blob_oid": "2fcc1c37e9977c106cdd52733a0751774bb12821",
+        "lfs_sha256": "2180ad739ecc96b5c1e9386892d3c5c08bfa42b9cdab9aabc53b028671db89b3"
+      }
+    },
+    "gated": false,
+    "hash_gate_passed": false,
+    "id": "nvidia/Cosmos3-Edge",
+    "local_path": "/data/users/ali/vla_wam/checkpoints/cosmos3_edge_base_ff48d221",
+    "metadata_sha256": {
+      "README.md": "9b0b3e887389e04501658b9ecbcc50e972d47e688a7a7a3c9a8918f9285c9e00",
+      "config.json": "ffb75b654e65d10e337ea07f20ac4eadc3775dd22c9a8194c87c3b68df5c8f5f",
+      "model.safetensors.index.json": "c6b68383e58c1359c6b2dac5e64ec6edb1b5ce8a1b4af248c84f9d4e0e144ed2",
+      "transformer/config.json": "8c3c0945e7e66b2f59cbac80aace9db04edb4230fa0931bf64d4c12f51cbc81f"
+    },
+    "model_action_request_count": 0,
+    "model_load_attempt_count": 0,
+    "public": true,
+    "revision": "ff48d22144de52de296a7b4d3a78914831007212",
+    "safetensors_parameter_count": 3858999728,
+    "snapshot_file_count": 48,
+    "snapshot_lfs_payload_bytes": 9173276024,
+    "snapshot_total_bytes": 9173855122
+  },
+  "claim_boundary": {
+    "behavior_boundary": "All six potential behavioral cells remain unreleased. Missing future or mapping evidence is a gate failure, never a zero.",
+    "current_status": "No Cosmos3-Edge base checkpoint download, model load, inference request, behavioral rollout, imagined video, or success claim was made by this amendment.",
+    "identity_boundary": "Cosmos3-Edge base is separate from and never substituted for completed Cosmos3-Edge-Policy-DROID.",
+    "probe_boundary": "Exactly three fixed-observation feasibility requests are conditionally authorized after artifact and software gates. They do not execute robot actions."
+  },
+  "derived_control_curobo": {
+    "asset_mismatch_blocker": {
+      "candidate_curobo_urdf": "src/curobo/content/assets/robot/franka_description/franka_panda.urdf",
+      "candidate_curobo_urdf_sha256": "6a0044e6e72ee667927f17d1871ec3e2615a8bc5fe978882fc909e4094667967",
+      "candidate_rejection": "The CuRobo asset models the Panda hand/fingers, not RoboLab's Robotiq 2F-85 base_link and collision geometry. It must not be substituted.",
+      "required_resolution": "Provide and hash an exact Franka+Robotiq URDF/collision description kinematically matched to the frozen RoboLab USD, plus an independently checked panda_link0-to-Robotiq-base_link transform and joint-limit equivalence.",
+      "robolab_control_body": "Gripper/Robotiq_2F_85/base_link",
+      "robolab_sim_asset": "assets/robots/franka_robotiq_2f_85_flattened.usd",
+      "robolab_sim_asset_lfs_sha256": "f555695465687548a1bd31b5e3f30385182d476a67c17080b7820ad0ef747e41"
+    },
+    "frozen_solver_if_asset_gate_is_resolved": {
+      "collision_rule": "Both CuRobo self-collision and a hash-frozen world collision model derived from the same RoboLab reset must report collision-free. No empty, stale, or Panda-only collision world is accepted.",
+      "curobo_commit": "d64c4b005459db10c5dd867d8b30a87d5bda9bdb",
+      "derived_action_layout": "[panda_joint1..panda_joint7, gripper]",
+      "failure_rule": "No solution, nonfinite output, threshold failure, limit violation, collision, stale state, unit mismatch, frame mismatch, asset mismatch, or hash mismatch sends an action. Preserve the raw 10D chunk, rejection, solver record, and hashes in a controller-rejection ledger outside behavioral denominators.",
+      "gripper_map": "RoboLab command scalar 0.0=open finger_joint 0.0 rad; 1.0=close finger_joint pi/4 rad; reject values outside [0,1] before thresholding.",
+      "joint_order": [
+        "panda_joint1",
+        "panda_joint2",
+        "panda_joint3",
+        "panda_joint4",
+        "panda_joint5",
+        "panda_joint6",
+        "panda_joint7"
+      ],
+      "joint_units": "radians",
+      "num_seeds": 20,
+      "position_threshold_m": 0.005,
+      "rotation_threshold_rad": 0.05,
+      "seed_rule": "Set Python, NumPy, Torch CPU, and Torch CUDA seeds to environment_seed*1000+policy_request_index before every solve; record all seeds and candidate solutions.",
+      "self_collision_check": true,
+      "self_collision_opt": true,
+      "solution_selection": "Among successful finite collision-free candidates, choose minimum squared wrapped distance from the current seven arm joints; break exact ties by lowest solver candidate index.",
+      "solver": "curobo.wrap.reacher.ik_solver.IKSolver",
+      "use_cuda_graph": false
+    },
+    "never_pool_with": [
+      "Cosmos3-Edge-Policy-DROID native 8D",
+      "any direct-interface policy"
+    ],
+    "reporting_label": "Cosmos3-Edge base DROID derived-control CuRobo IK",
+    "status": "blocked_exact_franka_robotiq_urdf_and_control_frame_mapping_absent"
+  },
+  "evidence_paths": {
+    "controller_rejections": "/data/users/ali/vla_wam/raw/cosmos3_edge_base/v2_a013/controller_rejections.json",
+    "invalid_attempts": "/data/users/ali/vla_wam/raw/cosmos3_edge_base/v2_a013/invalid_attempts.json",
+    "raw_root": "/data/users/ali/vla_wam/raw/cosmos3_edge_base/v2_a013",
+    "runtime_interventions": "/data/users/ali/vla_wam/raw/cosmos3_edge_base/v2_a013/runtime_interventions.json"
+  },
+  "fixed_observation_probe": {
+    "authorized_request_count": 3,
+    "behavioral_episode_count": 0,
+    "conditions": [
+      "left",
+      "left_exact_repeat",
+      "right"
+    ],
+    "failure_policy": "Any repeat, sensitivity, action-layout, or exposed-future failure closes the probe without releasing behavior. Missing future is unavailable evidence, not zero.",
+    "input_rule": "Use the byte-identical frozen Cosmos3 Edge diagnostic RGB input (sha256 6261ce5ab21383342c2012c14f7ff97d3dcd74e5f4202f2b3444355cc7ba3332) for all three requests. LEFT repeat uses byte-identical multipart fields and sampling seed. No simulator action is sent.",
+    "pass_requirements": [
+      "All responses resolve the exact frozen model revision and echo or retain sampling seed 8300 in request provenance.",
+      "Each top-level action payload has shape [16,10], dtype, raw_action_dim=10, domain_id=8, finite values, and an exact hash.",
+      "LEFT and LEFT exact-repeat action payloads are bit-identical.",
+      "LEFT and RIGHT action payloads differ.",
+      "Each completed job exposes a downloadable, decodable 17-frame video; LEFT repeat videos are bit-identical and LEFT/RIGHT videos differ.",
+      "A missing, latent-only, corrupt, or substituted video fails the exposed-future gate and is retained as unavailable rather than scored zero."
+    ],
+    "raw_output_root": "/data/users/ali/vla_wam/raw/cosmos3_edge_base/v2_a013/fixed_observation",
+    "release_boundary": "This probe may establish interface feasibility only. It never enters a behavioral denominator and cannot release a simulator action.",
+    "released_request_count": 0,
+    "request_contract": {
+      "endpoint": "POST /v1/videos then poll /v1/videos/{id}",
+      "extra_params": {
+        "action_chunk_size": 16,
+        "action_mode": "policy",
+        "domain_name": "droid_lerobot",
+        "raw_action_dim": 10
+      },
+      "flow_shift": 5.0,
+      "fps": 5,
+      "guidance_scale": 1.0,
+      "num_frames": 17,
+      "num_inference_steps": 30,
+      "size": "640x480"
+    },
+    "sampling_seed": 8300,
+    "status": "frozen_not_run"
+  },
+  "interface": {
+    "direct_joint_pos_8d": {
+      "evidence": "NVIDIA and vLLM-Omni identify Edge-Policy-DROID as the DROID-specialized policy. The public Edge base advertises embodiment-specific action generation, but that does not establish native 8D joint-position execution for the base checkpoint.",
+      "status": "blocked_no_official_base_to_droid_native_8d_contract"
+    },
+    "generic_droid_10d": {
+      "generic_policy_request": "Asynchronous POST /v1/videos with image plus static instruction, action_mode=policy, domain_name=droid_lerobot, raw_action_dim=10, action_chunk_size=16, num_frames=17; inspect the top-level action payload and download the completed video content.",
+      "normalization": "No separate normalizer is applied by the pinned generic vLLM-Omni policy request path; raw_action_dim=10 is returned. Runtime must reject any response whose metadata or source path indicates another transform.",
+      "pose_convention": "backward_framewise: delta_T = inverse(T_i) @ T_i_plus_1; reconstruct T_i_plus_1 = T_i @ delta_T",
+      "raw_layout": [
+        "delta_x",
+        "delta_y",
+        "delta_z",
+        "rot6d_col0_x",
+        "rot6d_col0_y",
+        "rot6d_col0_z",
+        "rot6d_col1_x",
+        "rot6d_col1_y",
+        "rot6d_col1_z",
+        "gripper"
+      ],
+      "robolab_midtrain_postprocess": "The official RoboLab midtrain path reconstructs absolute poses from the 10D relative sequence and exposes [x,y,z,quat_xyzw,gripper], but its action-only response path cannot by itself satisfy this study's decoded-future requirement.",
+      "rotation_convention": "rot6d is the first two columns of the relative 3x3 rotation matrix, column 0 followed by column 1; decoding projects the matrix to SO(3)",
+      "status": "source_backed_probe_interface_only_not_execution_released",
+      "units_gate": "The pinned code leaves translation in the source pose units without scaling. Behavioral release requires a runtime source attestation that the DROID/RoboLab positions supplied to this branch are meters; inference output alone cannot prove units."
+    }
+  },
+  "local_sources": [
+    {
+      "bytes": 16137,
+      "path": "tools/build_v2a013_cosmos3_edge_base_registry.py",
+      "sha256": "400347900c68ec45557a0cdf3cba1439a0d7150fd6e85a71666fa72faf8ebcdb"
+    },
+    {
+      "bytes": 6560,
+      "path": "experiments/cosmos/COSMOS3_EDGE_BASE_V2A013.md",
+      "sha256": "c89fe5e95427f356a405ace7e143628615e6d9b05ed947f9eba202d63d85551a"
+    }
+  ],
+  "preserved_completed_edge_policy": {
+    "checkpoint": "nvidia/Cosmos3-Edge-Policy-DROID",
+    "do_not_rerun": true,
+    "native_action_interface": "32x8 joint_pos",
+    "pool_with_edge_base": false,
+    "result": {
+      "bytes": 67708,
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_droid_direct_gate.json",
+      "sha256": "1c559ee5667ac9d22d7b66eafa7a65551783eedaf7fb3de29a2faf450c2dd029"
+    },
+    "valid_behavioral_episode_count": 6
+  },
+  "protocol": {
+    "bytes": 19033,
+    "path": "artifacts/vla_wam_shared_v2/protocol.json",
+    "sha256": "1862fbbb40fef34621a840a0ed15889cf42da066424e866b66f04227b28c73b9"
+  },
+  "release_gates": [
+    "Verify every downloaded checkpoint file against this registry's revision, byte count, Git blob/LFS record, and local SHA-256 before model load.",
+    "Restore and record the exact pinned source commits in isolated environments; pass import and action-interface smoke checks before the fixed-observation probe.",
+    "Run exactly LEFT, LEFT exact repeat, RIGHT on the frozen RGB bytes through the generic async policy endpoint. Require [16,10] actions and decodable 17-frame future video for all three.",
+    "Require bit-identical LEFT repeats and non-identical LEFT/RIGHT action and future outputs. A failure preserves the three requests as diagnostic evidence and releases zero behavior.",
+    "Before behavior, replace neither RoboLab's Robotiq asset nor its base_link frame with CuRobo's Panda hand. Hash and verify an exact Franka+Robotiq URDF/collision model and transform equivalence to the frozen RoboLab USD.",
+    "Before behavior, attest source position units as meters, exact 10D semantics, robot base/world frames, quaternion ordering, joint order/limits, gripper mapping, solver/collision configuration, and deterministic seeds.",
+    "No rejected IK, collision, limit, stale-state, unit, frame, asset, or hash result sends an action; retain a controller-rejection ledger outside denominators.",
+    "Every released behavioral cell retains actual viewport video, executed 8D derived actions, raw 10D model chunks, decoded imagined futures, simulator state, solver records, and all hashes.",
+    "Report derived control separately from native policies. Preserve valid failures; exclude infrastructure failures and partial runs from behavioral denominators."
+  ],
+  "schema_version": "vla-wam-shared-v2-cosmos3-edge-base-v2a013-registry-v1",
+  "software": {
+    "curobo_commit": "d64c4b005459db10c5dd867d8b30a87d5bda9bdb",
+    "curobo_version": "0.7.8",
+    "nvidia_cosmos_commit": "e494d734022ab0610061cdf57fa24c843e18767e",
+    "nvidia_cosmos_framework_commit": "a904d2d36b774a51dd06ff9ff906816b1a04f579",
+    "official_source_records": {
+      "cosmos_framework_droid_dataset": {
+        "bytes": 23641,
+        "sha256": "418fc30908ff485a0f1f23cf021339247b58c90b40790f0e53f21833c65ba5bb",
+        "url": "https://raw.githubusercontent.com/NVIDIA/cosmos-framework/a904d2d36b774a51dd06ff9ff906816b1a04f579/cosmos_framework/data/generator/action/datasets/droid_lerobot_dataset.py"
+      },
+      "cosmos_framework_pose_utils": {
+        "bytes": 31209,
+        "sha256": "c3039f9c5b7c13fc65ffbef67331ae2261f941686065073ef5eac28a6dac31d0",
+        "url": "https://raw.githubusercontent.com/NVIDIA/cosmos-framework/a904d2d36b774a51dd06ff9ff906816b1a04f579/cosmos_framework/data/generator/action/pose_utils.py"
+      },
+      "curobo_franka_config": {
+        "bytes": 4174,
+        "sha256": "c809e9c1d044c8cf98d888552fb55739077419fb3568d5e696242cdecb457430",
+        "url": "https://raw.githubusercontent.com/NVlabs/curobo/d64c4b005459db10c5dd867d8b30a87d5bda9bdb/src/curobo/content/configs/robot/franka.yml"
+      },
+      "curobo_franka_urdf": {
+        "bytes": 9987,
+        "sha256": "6a0044e6e72ee667927f17d1871ec3e2615a8bc5fe978882fc909e4094667967",
+        "url": "https://raw.githubusercontent.com/NVlabs/curobo/d64c4b005459db10c5dd867d8b30a87d5bda9bdb/src/curobo/content/assets/robot/franka_description/franka_panda.urdf"
+      },
+      "robolab_droid_robot": {
+        "bytes": 16098,
+        "sha256": "3c43b562cc22476135b7cd82c9c4c01ed361350eda25f3ef6669408ffce53e5d",
+        "url": "https://raw.githubusercontent.com/NVlabs/RoboLab/0aef241fb088ca21bb4ebd24448940ed56620d17/robolab/robots/droid.py"
+      },
+      "vllm_omni_action_recipe": {
+        "bytes": 29828,
+        "sha256": "b80c81a92267cdf3162c170635a2b55c447a48dd97dbb525d409b4f1563ee979",
+        "url": "https://raw.githubusercontent.com/vllm-project/vllm-omni/900a7f0813d0482811b0e4dfd3cf7deabbe2429f/recipes/cosmos3/Cosmos3-Nano.md"
+      },
+      "vllm_omni_edge_recipe": {
+        "bytes": 4415,
+        "sha256": "9f5ce0484f94285ea2673f54e15314181d6cbb5534acfe95b24fbfd7f05b5ba8",
+        "url": "https://raw.githubusercontent.com/vllm-project/vllm-omni/900a7f0813d0482811b0e4dfd3cf7deabbe2429f/recipes/cosmos3/Cosmos3-Edge.md"
+      },
+      "vllm_omni_pipeline": {
+        "bytes": 164411,
+        "sha256": "d6cff51acc9c56a84c56274ddfd1e2d9580f26c2e72e0d5a9b3f813cc232b2c0",
+        "url": "https://raw.githubusercontent.com/vllm-project/vllm-omni/900a7f0813d0482811b0e4dfd3cf7deabbe2429f/vllm_omni/diffusion/models/cosmos3/pipeline_cosmos3.py"
+      },
+      "vllm_omni_robolab_utils": {
+        "bytes": 14146,
+        "sha256": "cc5e7f7bb9eb1c41754c49ce1399aa5439a78c4c7a2ac1f5bd1739c9c49fef87",
+        "url": "https://raw.githubusercontent.com/vllm-project/vllm-omni/900a7f0813d0482811b0e4dfd3cf7deabbe2429f/vllm_omni/diffusion/models/cosmos3/utils.py"
+      }
+    },
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "runtime_status": "pinned_not_restored_or_import_verified_by_this_freeze",
+    "vllm_omni_commit": "900a7f0813d0482811b0e4dfd3cf7deabbe2429f"
+  },
+  "status": "pre_inference_probe_frozen_behavioral_cells_unreleased"
+}

@@ -1,0 +1,116 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cosmos3-super-b200-2gpu-256gi-ali
+  namespace: 211247-prod
+  labels:
+    app: cosmos3-super-b200-2gpu-256gi-ali
+    owner: ali
+    study: vla-wam-steerability
+    component: cosmos3-super-inference
+    environment: production
+    site: warren
+spec:
+  restartPolicy: Never
+  nodeSelector:
+    node-role.kubernetes.io/worker-gpu: ""
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: nvidia.com/gpu.product
+                operator: In
+                values:
+                  - NVIDIA-B200
+  tolerations:
+    - key: nvidia.com/gpu
+      operator: Equal
+      value: present
+      effect: NoSchedule
+  imagePullSecrets:
+    - name: artifactory-ci-pull-secret
+  securityContext:
+    fsGroup: 2518800
+    supplementalGroups:
+      - 2518800
+    seccompProfile:
+      type: RuntimeDefault
+  containers:
+    - name: cosmos3-super-b200-2gpu-256gi-ali
+      image: artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c
+      imagePullPolicy: IfNotPresent
+      command:
+        - sh
+        - -lc
+        - >-
+          mkdir -p /home/ali-cosmos3-super/.cache /tmp/ali-cosmos3-super /var/tmp/ali-cosmos3-super
+          && exec sleep infinity
+      workingDir: /home/ali-cosmos3-super
+      env:
+        - name: USER
+          value: ali-cosmos3-super
+        - name: LOGNAME
+          value: ali-cosmos3-super
+        - name: HOME
+          value: /home/ali-cosmos3-super
+        - name: XDG_CACHE_HOME
+          value: /home/ali-cosmos3-super/.cache
+        - name: TMPDIR
+          value: /tmp/ali-cosmos3-super
+        - name: NVIDIA_DRIVER_CAPABILITIES
+          value: compute,utility
+      resources:
+        requests:
+          cpu: "64"
+          memory: 128Gi
+          nvidia.com/gpu: "2"
+        limits:
+          cpu: "128"
+          memory: 256Gi
+          nvidia.com/gpu: "2"
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        readOnlyRootFilesystem: false
+        runAsNonRoot: true
+        runAsUser: 816149040
+        runAsGroup: 2518800
+      volumeMounts:
+        - name: workspace
+          mountPath: /data
+        - name: dshm
+          mountPath: /dev/shm
+        - name: tmp
+          mountPath: /tmp
+        - name: vartmp
+          mountPath: /var/tmp
+        - name: home
+          mountPath: /home/ali-cosmos3-super
+        - name: userdb
+          mountPath: /etc/passwd
+          subPath: passwd
+          readOnly: true
+        - name: userdb
+          mountPath: /etc/group
+          subPath: group
+          readOnly: true
+  volumes:
+    - name: workspace
+      persistentVolumeClaim:
+        claimName: 211247-prod-pvc
+    - name: dshm
+      emptyDir:
+        medium: Memory
+        sizeLimit: 128Gi
+    - name: tmp
+      emptyDir: {}
+    - name: vartmp
+      emptyDir: {}
+    - name: home
+      emptyDir: {}
+    - name: userdb
+      configMap:
+        name: lerobot-b200-4gpu-1-ali-userdb

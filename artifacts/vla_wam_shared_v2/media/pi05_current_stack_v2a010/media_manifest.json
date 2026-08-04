@@ -1,0 +1,73 @@
+{
+  "amendment_id": "V2-A010",
+  "claim_boundary": "This is a current-stack V2-A010 actual simulator rollout, not recovered historical pi0.5 footage. It is VLA action-policy evidence and has no imagined-future media.",
+  "fps": 15.0,
+  "frame_count": 435,
+  "gallery_entries": [
+    {
+      "arena": "droid",
+      "arena_label": "DROID / RoboLab",
+      "category": "VLA",
+      "directions": [
+        {
+          "outcome": "success after 435 actions",
+          "prompt": "Put the Rubik's cube to the left of the bowl.",
+          "relation": "LEFT"
+        },
+        {
+          "outcome": "success after 73 actions",
+          "prompt": "Put the Rubik's cube to the right of the bowl.",
+          "relation": "RIGHT"
+        }
+      ],
+      "evidence_status": "Valid current-stack behavioral pair; both episodes succeeded; selected publication rollout",
+      "future_interface": "Actions only; no decoded visual future",
+      "id": "pi05_current_stack_v2a010_seed8300",
+      "model_label": "\u03c00.5 DROID \u2014 current-stack V2-A010",
+      "pair_label": "seed 8300 matched pair",
+      "poster": {
+        "bytes": 64838,
+        "path": "artifacts/vla_wam_shared_v2/media/pi05_current_stack_v2a010/pi05_current_stack_v2a010_seed8300_paired_actual_poster.jpg",
+        "sha256": "a093701fc47a5ea37621948e04f443c6360ea0efc429bdc7dfccb5c651be514f"
+      },
+      "seed": 8300,
+      "selection_note": "Lowest-seed valid matched V2-A010 pair. This is actual simulator execution only; it is not historical v1 pi0.5 footage and has no imagined-future counterpart.",
+      "source_manifest": "artifacts/vla_wam_shared_v2/media/pi05_current_stack_v2a010/media_manifest.json",
+      "video": {
+        "bytes": 2655507,
+        "path": "artifacts/vla_wam_shared_v2/media/pi05_current_stack_v2a010/pi05_current_stack_v2a010_seed8300_paired_actual.mp4",
+        "sha256": "1195a4f5bafc20d099644dc6c150d69113b1c88ed03d566308a7c7e7d61e294d"
+      }
+    }
+  ],
+  "poster": {
+    "bytes": 64838,
+    "path": "artifacts/vla_wam_shared_v2/media/pi05_current_stack_v2a010/pi05_current_stack_v2a010_seed8300_paired_actual_poster.jpg",
+    "sha256": "a093701fc47a5ea37621948e04f443c6360ea0efc429bdc7dfccb5c651be514f"
+  },
+  "publication_video": {
+    "bytes": 2655507,
+    "path": "artifacts/vla_wam_shared_v2/media/pi05_current_stack_v2a010/pi05_current_stack_v2a010_seed8300_paired_actual.mp4",
+    "sha256": "1195a4f5bafc20d099644dc6c150d69113b1c88ed03d566308a7c7e7d61e294d"
+  },
+  "schema_version": "vla-wam-v2a010-pi05-current-stack-media-v1",
+  "selection_rule": "Lowest environment seed with a complete valid matched LEFT/RIGHT pair; seed 8300. The shorter RIGHT rollout holds its final frame while LEFT continues.",
+  "source_result": {
+    "bytes": 20260,
+    "path": "/data/users/ali/vla_wam/raw/pi05_current_v2a010/compiled/pi05_current_stack_direct_gate.json",
+    "sha256": "0c54758fe316764dbca3299d7b665e3edf59412410d844a1f825abad92045f0c"
+  },
+  "source_videos": {
+    "left": {
+      "bytes": 2712446,
+      "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8300_direct_command_left/RubiksCubeLeftOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_left_of_the_bowl_0_viewport.mp4",
+      "sha256": "859ae0015080a0ebed57a9a74256051ad8b01de169e5da0b6d7080d507b7e293"
+    },
+    "right": {
+      "bytes": 595042,
+      "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8300_direct_command_right/RubiksCubeRightOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_right_of_the_bowl_0_viewport.mp4",
+      "sha256": "3999619462df08a84e96dd955a228d2f6dc1f2cf3788a1e4162362e18b738e7c"
+    }
+  },
+  "status": "complete_selected_seed8300_actual_rollout"
+}

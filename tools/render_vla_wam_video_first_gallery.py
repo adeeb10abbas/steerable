@@ -2,9 +2,10 @@
 """Render and validate the video-first VLA/WAM evidence gallery.
 
 The committed gallery manifest is the metadata source. DreamZero execution and
-imagination entries are optionally loaded from separate canonical manifests
-only after their media hashes validate. Model-predicted video is rendered in a
-dedicated section and is never presented as simulator execution.
+imagination entries are optionally loaded from separate canonical manifests,
+and supplementary completed-model manifests are ingested through hash-pinned
+contracts. Model-predicted video is rendered in a dedicated section and is
+never presented as simulator execution.
 """
 
 from __future__ import annotations
@@ -90,6 +91,13 @@ def validate_entry(entry: dict[str, Any], required_fields: list[str] | None = No
     for optional in ("poster", "captions"):
         if optional in entry:
             validate_file(entry[optional], f"{entry['id']} {optional}")
+    comparison = entry.get("comparison_media")
+    if comparison is not None:
+        if comparison.get("kind") != "model_prediction_not_execution":
+            raise SystemExit(f"gallery entry {entry['id']} has an invalid comparison-media kind")
+        if not comparison.get("label") or not comparison.get("note"):
+            raise SystemExit(f"gallery entry {entry['id']} has incomplete comparison-media labels")
+        validate_file(comparison["video"], f"{entry['id']} model prediction")
     source = repo_file(entry["source_manifest"])
     if not source.is_file():
         raise SystemExit(f"missing source manifest for {entry['id']}: {entry['source_manifest']}")
@@ -118,6 +126,24 @@ def load_entries(
             if entry["arena"] != "droid" or "dreamzero" not in entry["id"].lower():
                 raise SystemExit(f"non-DreamZero entry in canonical DreamZero manifest: {entry['id']}")
         entries = dreamzero_entries + entries
+
+    for contract in manifest.get("additional_manifest_contracts", []):
+        supplemental_path = repo_file(contract["path"])
+        if not supplemental_path.is_file():
+            raise SystemExit(f"missing supplementary media manifest: {contract['path']}")
+        if contract.get("sha256") and sha256(supplemental_path) != contract["sha256"]:
+            raise SystemExit(f"SHA-256 mismatch for supplementary media manifest: {contract['path']}")
+        supplemental = json.loads(supplemental_path.read_text())
+        if supplemental.get("status") != contract["status"]:
+            raise SystemExit(f"supplementary media manifest status mismatch: {contract['path']}")
+        supplemental_entries = supplemental.get(contract["gallery_entries_key"])
+        if not isinstance(supplemental_entries, list) or len(supplemental_entries) != contract["entry_count"]:
+            raise SystemExit(f"supplementary media manifest entry count mismatch: {contract['path']}")
+        for entry in supplemental_entries:
+            validate_entry(entry, contract.get("required_entry_fields"))
+            if entry["id"] != contract["entry_id"] or entry["arena"] != contract["arena"]:
+                raise SystemExit(f"supplementary media entry identity mismatch: {entry.get('id')}")
+        entries = supplemental_entries + entries
     ids = [entry["id"] for entry in entries]
     if len(ids) != len(set(ids)):
         raise SystemExit("duplicate gallery entry id")
@@ -195,6 +221,18 @@ def entry_card(entry: dict[str, Any]) -> str:
             f' · <a href="{html.escape(paired_control["href"])}">'
             f'{html.escape(paired_control["label"])}</a>'
         )
+    comparison = entry.get("comparison_media")
+    if comparison:
+        predicted = rel(comparison["video"]["path"])
+        media_block = f'''<div class="comparison-media"><figure><figcaption>ACTUAL SIMULATOR EXECUTION</figcaption>
+        <video controls preload="metadata"{poster}><source src="{html.escape(video)}" type="video/mp4"><a href="{html.escape(video)}">Open the actual MP4 directly</a>.</video></figure>
+        <figure><figcaption>{html.escape(comparison["label"])}</figcaption><video controls preload="metadata"><source src="{html.escape(predicted)}" type="video/mp4"><a href="{html.escape(predicted)}">Open the model prediction MP4 directly</a>.</video>
+        <p>{html.escape(comparison["note"])}</p></figure></div>'''
+    else:
+        media_block = f'''<video controls preload="metadata"{poster}>
+          <source src="{html.escape(video)}" type="video/mp4">{captions}
+          <a href="{html.escape(video)}">Open the MP4 directly</a>.
+        </video>'''
     return f"""
       <article class="card" id="{html.escape(entry['id'])}">
         <header>
@@ -202,10 +240,7 @@ def entry_card(entry: dict[str, Any]) -> str:
           <h3>{html.escape(entry['model_label'])}</h3></div>
           <span class="status">{html.escape(entry['evidence_status'])}</span>
         </header>
-        <video controls preload="metadata"{poster}>
-          <source src="{html.escape(video)}" type="video/mp4">{captions}
-          <a href="{html.escape(video)}">Open the MP4 directly</a>.
-        </video>
+        {media_block}
         <div class="directions">{''.join(direction_card(d) for d in entry['directions'])}</div>
         <dl class="facts">
           <div><dt>Arena</dt><dd>{html.escape(entry['arena_label'])}</dd></div>
@@ -349,7 +384,7 @@ def render_html(
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{html.escape(manifest['title'])}</title>
 <style>
-:root{{--ink:#17202a;--muted:#596775;--paper:#f4f1ea;--card:#fff;--line:#d8d8d2;--left:#fff0d4;--right:#e4f1ff;--accent:#6941c6}}*{{box-sizing:border-box}}body{{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}}main{{width:min(1420px,calc(100% - 32px));margin:auto;padding:52px 0 80px}}h1{{max-width:980px;margin:.12em 0;font-size:clamp(42px,7vw,84px);line-height:.98;letter-spacing:-.05em}}h2{{font-size:clamp(31px,4vw,48px);margin:0}}h3{{font-size:25px;margin:2px 0 0}}.lede{{max-width:920px;color:var(--muted);font-size:20px}}.boundary{{padding:16px 20px;border-left:5px solid var(--accent);background:#fff;border-radius:0 12px 12px 0;max-width:1050px}}section{{margin-top:62px}}.section-head{{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:20px;border-bottom:1px solid var(--line);padding-bottom:14px}}.section-head p{{color:var(--muted);margin:0}}.grid{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}}article{{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}}article header{{padding:20px 22px 14px;display:flex;justify-content:space-between;gap:18px}}.overline{{margin:0;color:var(--accent);text-transform:uppercase;letter-spacing:.06em;font-size:12px;font-weight:800}}.status{{max-width:46%;color:var(--muted);font-size:12px;text-align:right}}video{{display:block;width:100%;max-height:560px;background:#111}}.directions{{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px 18px 10px}}.direction{{padding:14px;border-radius:10px}}.direction.left{{background:var(--left)}}.direction.right{{background:var(--right)}}.direction-top{{display:flex;justify-content:space-between;gap:10px;font-size:13px}}blockquote{{margin:10px 0 0;font-weight:650}}.facts{{display:grid;grid-template-columns:1fr 1.4fr;gap:1px;background:var(--line);border-block:1px solid var(--line)}}.facts div{{background:#fff;padding:12px 18px}}.facts div:last-child{{grid-column:1/-1}}dt{{font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:800}}dd{{margin:3px 0 0}}code{{overflow-wrap:anywhere;font-size:12px}}.note{{padding:0 18px 18px;color:var(--muted);font-size:14px}}a{{color:#4a2aa5}}.pending,.missing{{padding:24px;border-style:dashed}}.pending{{border-color:#8c6ddb;background:#faf7ff}}.missing h3{{margin-top:4px}}.missing-grid{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}}.archive-box{{margin-top:22px;padding:22px;background:#fff;border:1px solid var(--line);border-radius:16px}}.archive{{columns:2;column-gap:32px;padding-left:22px}}.archive li{{break-inside:avoid;margin:8px 0}}.archive span{{color:var(--muted);font-size:12px}}footer{{margin-top:52px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:20px}}@media(max-width:840px){{.grid,.missing-grid{{grid-template-columns:1fr}}.section-head{{display:block}}.directions,.facts{{grid-template-columns:1fr}}.facts div:last-child{{grid-column:auto}}article header{{display:block}}.status{{display:block;max-width:none;text-align:left;margin-top:7px}}.archive{{columns:1}}}}
+:root{{--ink:#17202a;--muted:#596775;--paper:#f4f1ea;--card:#fff;--line:#d8d8d2;--left:#fff0d4;--right:#e4f1ff;--accent:#6941c6}}*{{box-sizing:border-box}}body{{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}}main{{width:min(1420px,calc(100% - 32px));margin:auto;padding:52px 0 80px}}h1{{max-width:980px;margin:.12em 0;font-size:clamp(42px,7vw,84px);line-height:.98;letter-spacing:-.05em}}h2{{font-size:clamp(31px,4vw,48px);margin:0}}h3{{font-size:25px;margin:2px 0 0}}.lede{{max-width:920px;color:var(--muted);font-size:20px}}.boundary{{padding:16px 20px;border-left:5px solid var(--accent);background:#fff;border-radius:0 12px 12px 0;max-width:1050px}}section{{margin-top:62px}}.section-head{{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:20px;border-bottom:1px solid var(--line);padding-bottom:14px}}.section-head p{{color:var(--muted);margin:0}}.grid{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}}article{{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}}article header{{padding:20px 22px 14px;display:flex;justify-content:space-between;gap:18px}}.overline{{margin:0;color:var(--accent);text-transform:uppercase;letter-spacing:.06em;font-size:12px;font-weight:800}}.status{{max-width:46%;color:var(--muted);font-size:12px;text-align:right}}video{{display:block;width:100%;max-height:560px;background:#111}}.comparison-media{{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line)}}.comparison-media figure{{margin:0;background:#fff}}.comparison-media figcaption{{padding:10px 14px 8px;font-weight:800;font-size:12px;letter-spacing:.04em;color:var(--accent)}}.comparison-media p{{padding:0 14px 10px;margin:0;color:var(--muted);font-size:12px}}.directions{{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px 18px 10px}}.direction{{padding:14px;border-radius:10px}}.direction.left{{background:var(--left)}}.direction.right{{background:var(--right)}}.direction-top{{display:flex;justify-content:space-between;gap:10px;font-size:13px}}blockquote{{margin:10px 0 0;font-weight:650}}.facts{{display:grid;grid-template-columns:1fr 1.4fr;gap:1px;background:var(--line);border-block:1px solid var(--line)}}.facts div{{background:#fff;padding:12px 18px}}.facts div:last-child{{grid-column:1/-1}}dt{{font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:800}}dd{{margin:3px 0 0}}code{{overflow-wrap:anywhere;font-size:12px}}.note{{padding:0 18px 18px;color:var(--muted);font-size:14px}}a{{color:#4a2aa5}}.pending,.missing{{padding:24px;border-style:dashed}}.pending{{border-color:#8c6ddb;background:#faf7ff}}.missing h3{{margin-top:4px}}.missing-grid{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}}.archive-box{{margin-top:22px;padding:22px;background:#fff;border:1px solid var(--line);border-radius:16px}}.archive{{columns:2;column-gap:32px;padding-left:22px}}.archive li{{break-inside:avoid;margin:8px 0}}.archive span{{color:var(--muted);font-size:12px}}footer{{margin-top:52px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:20px}}@media(max-width:840px){{.grid,.missing-grid,.comparison-media{{grid-template-columns:1fr}}.section-head{{display:block}}.directions,.facts{{grid-template-columns:1fr}}.facts div:last-child{{grid-column:auto}}article header{{display:block}}.status{{display:block;max-width:none;text-align:left;margin-top:7px}}.archive{{columns:1}}}}
 </style></head><body><main>
 <p class="overline">Video-first evidence index · direct static LEFT/RIGHT commands</p><h1>{html.escape(manifest['title'])}</h1>
 <p class="lede">Videos are embedded at full card width, separated into WORLD MODEL and VLA sections, and labeled with arena, prompt, direction, outcome, model interface, and evidence status. Missing media stays missing. {html.escape(manifest['display_policy'])}</p>
@@ -426,6 +461,14 @@ def render_markdown(
                 imagined = imagined_by_seed[entry["seed"]]
                 lines.append(f"[Open same-seed imagined-future control]({rel(imagined['video']['path'])})")
                 lines.append("")
+            comparison = entry.get("comparison_media")
+            if comparison:
+                lines.extend([
+                    f"[Open adjacent {comparison['label']}]({rel(comparison['video']['path'])})",
+                    "",
+                    f"- Prediction boundary: {comparison['note']}",
+                    "",
+                ])
             for direction in entry["directions"]:
                 lines.append(f"> {direction['relation']}: “{direction['prompt']}”")
             lines.append("")

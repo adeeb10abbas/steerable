@@ -395,12 +395,63 @@
       "source_manifest": "artifacts/vla_wam_shared_v2/media/light_wam_robotwin/media_manifest.json"
     }
   ],
+  "additional_manifest_contracts": [
+    {
+      "path": "artifacts/vla_wam_shared_v2/media/pi05_current_stack_v2a010/media_manifest.json",
+      "sha256": "f8aa6ba1ebd5fd3a7f680c7050b70d81ffa6e7d9a9acc0f63cd0b8c75a1747c3",
+      "status": "complete_selected_seed8300_actual_rollout",
+      "gallery_entries_key": "gallery_entries",
+      "entry_count": 1,
+      "entry_id": "pi05_current_stack_v2a010_seed8300",
+      "arena": "droid",
+      "required_entry_fields": [
+        "id",
+        "arena",
+        "arena_label",
+        "model_label",
+        "category",
+        "future_interface",
+        "evidence_status",
+        "pair_label",
+        "seed",
+        "video",
+        "poster",
+        "directions",
+        "source_manifest"
+      ]
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/media/cosmos3_nano_policy_droid_v2a011/media_manifest.json",
+      "sha256": "e5442012ab19083cab43a5135080eb5cb3eaa8e7a55095a94788d59365006c7f",
+      "status": "complete_selected_seed8300_actual_and_prediction_pair",
+      "gallery_entries_key": "gallery_entries",
+      "entry_count": 1,
+      "entry_id": "cosmos3_nano_v2a011_seed8300",
+      "arena": "droid",
+      "required_entry_fields": [
+        "id",
+        "arena",
+        "arena_label",
+        "model_label",
+        "category",
+        "future_interface",
+        "evidence_status",
+        "pair_label",
+        "seed",
+        "video",
+        "poster",
+        "comparison_media",
+        "directions",
+        "source_manifest"
+      ]
+    }
+  ],
   "missing_publication_media": [
     {
       "model_id": "pi05_droid",
       "arena": "droid",
       "status": "historical_v1_reference_has_no_committed_rollout_video",
-      "reason": "π0.5 DROID is an existing v1 reference, but this branch contains no committed v1 behavioral rollout MP4. Its trajectory selections remain linked below; the π0-FAST clip above is a different checkpoint and is not substituted for it. V2-A010 is a separate active π0.5 current-stack rollout/media gate; its output is pending and will never be presented as recovered v1 footage.",
+      "reason": "π0.5 DROID is an existing v1 reference, but this branch contains no committed v1 behavioral rollout MP4. Its trajectory selections remain linked below; the π0-FAST clip above is a different checkpoint and is not substituted for it. A separate current-stack V2-A010 actual rollout is now shown in the VLA section, but it is not recovered v1 footage and must not be merged with that historical reference.",
       "behavioral_manifest": "artifacts/vla_wam_shared_v2/media/v1_droid_selection.json"
     }
   ]

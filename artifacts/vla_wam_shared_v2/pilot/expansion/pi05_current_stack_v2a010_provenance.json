@@ -1,0 +1,68 @@
+{
+  "schema_version": "vla-wam-v2a010-pi05-current-stack-provenance-v1",
+  "amendment_id": "V2-A010",
+  "status": "complete_six_valid_behavioral_cells",
+  "claim_boundary": "Separate post-result current-stack direct-command/media gate. It is not recovered historical pi0.5 footage and is never pooled with the v1 80-episode result, V2-A008, Cosmos, or RoboTwin.",
+  "source_identity": {
+    "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+    "openpi_config": "pi05_droid_jointpos_polaris",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "checkpoint_manifest": {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_checkpoint_manifest.json",
+      "sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca"
+    },
+    "registry": {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_registry.json",
+      "sha256": "d480046bfc771436ca1d91b8c73e1bfab5854013117fbb34f4e3fc88cac42c99"
+    }
+  },
+  "compact_evidence": {
+    "fixed_observation": {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_fixed_observation.json",
+      "sha256": "345cbf93e4b75c23ccf225a7a3014bd5175ecfb4b575213b4afeaabf62193201",
+      "fixture_sha256": "19dc038dc152aa3408439f2161496efa2d83bc25b11741a6b5495a28113daf86"
+    },
+    "release_probe": {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_release_probe.json",
+      "sha256": "be67709dfe8a0915db368cb843dedfd10dd5e2e399473e6d465593e6def2cb63",
+      "passed": true,
+      "left_exact_repeat_bit_identical": true,
+      "left_vs_right_action_rms": 0.004146488383412361
+    },
+    "compiled_result": {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_direct_gate.json",
+      "sha256": "0c54758fe316764dbca3299d7b665e3edf59412410d844a1f825abad92045f0c"
+    },
+    "invalid_attempt_ledger": {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_invalid_attempts.json",
+      "sha256": "e0b074a5d4876f2ada1ea248aac2bef0132cf652007650f51da9fe328b6a1bb4"
+    },
+    "selected_media": {
+      "path": "artifacts/vla_wam_shared_v2/media/pi05_current_stack_v2a010/media_manifest.json",
+      "sha256": "f8aa6ba1ebd5fd3a7f680c7050b70d81ffa6e7d9a9acc0f63cd0b8c75a1747c3"
+    },
+    "media_builder": {
+      "path": "tools/build_v2a010_pi05_media.py",
+      "bytes": 8324,
+      "sha256": "2642e489031771d9c504e298d94e2eebdb6e7e528868e80734d46d68970770ef"
+    }
+  },
+  "raw_pvc_provenance": {
+    "raw_root": "/data/users/ali/vla_wam/raw/pi05_current_v2a010",
+    "simulator_output_root": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output",
+    "policy_server": "ali-owned B200 lane",
+    "simulator_and_viewport_lane": "raytrace-rtxpro6000-ali"
+  },
+  "summary": {
+    "valid_behavioral_episode_count": 6,
+    "left_successes": 1,
+    "left_trials": 3,
+    "right_successes": 3,
+    "right_trials": 3,
+    "aligned_endpoint_pair_count": 3,
+    "distinct_executed_action_pair_count": 3,
+    "infrastructure_invalid_attempt_count": 0,
+    "runtime_intervention_count": 0
+  },
+  "media_interface": "VLA actual simulator rollout only; no imagined future is exposed or implied."
+}

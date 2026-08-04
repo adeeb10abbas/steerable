@@ -1,0 +1,81 @@
+{
+  "behavioral_data_modified": false,
+  "compiler_expectation": "compile_vla_wam_v2_cosmos_edge.trace_metadata glob requires seed{seed}/simulator_attempt*/actions/seed{seed}_{direction}_executed_actions.json",
+  "episodes_rerun_by_resolution": 0,
+  "followup": "Use an explicit measurement-only compiler fallback for the direct seed/actions layout in a future committed change; do not treat this raw compatibility bridge as a behavioral implementation change.",
+  "future_evidence_paths_unchanged": true,
+  "model_id": "cosmos3_nano_policy_droid",
+  "model_requests_started_by_resolution": 0,
+  "records": [
+    {
+      "compatibility_symlink": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/simulator_attempt001/actions/seed8300_left_executed_actions.json",
+      "copied_bytes": 0,
+      "direction": "left",
+      "seed": 8300,
+      "source": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/actions/seed8300_left_executed_actions.json",
+      "source_metadata_bytes": 4020,
+      "source_metadata_sha256": "b141cdb2909f0079d5325004fb7b005de724a76a6c8b8e951946311ec54762b7",
+      "symlink_target": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/actions/seed8300_left_executed_actions.json",
+      "target_resolves_to_source": true
+    },
+    {
+      "compatibility_symlink": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/simulator_attempt001/actions/seed8300_right_executed_actions.json",
+      "copied_bytes": 0,
+      "direction": "right",
+      "seed": 8300,
+      "source": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/actions/seed8300_right_executed_actions.json",
+      "source_metadata_bytes": 9813,
+      "source_metadata_sha256": "8e1511ecf42a4842c31bf742ccdb6570952113c8fd566c626e3691a4c32e16c0",
+      "symlink_target": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/actions/seed8300_right_executed_actions.json",
+      "target_resolves_to_source": true
+    },
+    {
+      "compatibility_symlink": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8301/simulator_attempt001/actions/seed8301_left_executed_actions.json",
+      "copied_bytes": 0,
+      "direction": "left",
+      "seed": 8301,
+      "source": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8301/actions/seed8301_left_executed_actions.json",
+      "source_metadata_bytes": 4844,
+      "source_metadata_sha256": "862de7f86f44dfaec3eb87ec78d2b0cae907d16f8861c3933a0eebb8f2774ac2",
+      "symlink_target": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8301/actions/seed8301_left_executed_actions.json",
+      "target_resolves_to_source": true
+    },
+    {
+      "compatibility_symlink": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8301/simulator_attempt001/actions/seed8301_right_executed_actions.json",
+      "copied_bytes": 0,
+      "direction": "right",
+      "seed": 8301,
+      "source": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8301/actions/seed8301_right_executed_actions.json",
+      "source_metadata_bytes": 4856,
+      "source_metadata_sha256": "d3a64601ec934a85286fef0ba6878fdbc12427e429cf1ba3c738e0d5cb0f0dd8",
+      "symlink_target": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8301/actions/seed8301_right_executed_actions.json",
+      "target_resolves_to_source": true
+    },
+    {
+      "compatibility_symlink": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/simulator_attempt001/actions/seed8302_left_executed_actions.json",
+      "copied_bytes": 0,
+      "direction": "left",
+      "seed": 8302,
+      "source": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/actions/seed8302_left_executed_actions.json",
+      "source_metadata_bytes": 4844,
+      "source_metadata_sha256": "fc52085758d08938be24bb1da24abb5510a7c58e55878e81297cb0f816a59cc3",
+      "symlink_target": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/actions/seed8302_left_executed_actions.json",
+      "target_resolves_to_source": true
+    },
+    {
+      "compatibility_symlink": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/simulator_attempt001/actions/seed8302_right_executed_actions.json",
+      "copied_bytes": 0,
+      "direction": "right",
+      "seed": 8302,
+      "source": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/actions/seed8302_right_executed_actions.json",
+      "source_metadata_bytes": 6508,
+      "source_metadata_sha256": "1e6eea1e148a408ddb5e484a97fda9a5e44117bfd17765926610f99e2a2a3120",
+      "symlink_target": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8302/actions/seed8302_right_executed_actions.json",
+      "target_resolves_to_source": true
+    }
+  ],
+  "resolution": "Created six file symlinks inside raw simulator_attempt001/actions to the existing canonical metadata paths. No bytes were copied and no behavioral code, model server, prompt, simulator seed, action, decoded future, video, or rollout was changed.",
+  "runner_output": "v2_nano_robolab_gate receives explicit --action-trace-dir and wrote the canonical raw paths seed{seed}/actions/seed{seed}_{direction}_executed_actions.json",
+  "schema_version": "vla-wam-shared-v2-cosmos3-nano-policy-droid-raw-layout-compatibility-v1",
+  "status": "measurement_only_layout_compatibility"
+}

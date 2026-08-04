@@ -1,0 +1,46 @@
+{
+  "arrays": {
+    "observation/exterior_image_1_left": {
+      "dtype": "uint8",
+      "shape": [
+        224,
+        224,
+        3
+      ]
+    },
+    "observation/gripper_position": {
+      "dtype": "float32",
+      "shape": [
+        1
+      ]
+    },
+    "observation/joint_position": {
+      "dtype": "float32",
+      "shape": [
+        7
+      ]
+    },
+    "observation/wrist_image_left": {
+      "dtype": "uint8",
+      "shape": [
+        224,
+        224,
+        3
+      ]
+    }
+  },
+  "environment_seed": 8300,
+  "fixture_path": "/data/users/ali/vla_wam/raw/pi05_current_v2a010/preflight/seed8300_fixed_observation.npz",
+  "fixture_sha256": "19dc038dc152aa3408439f2161496efa2d83bc25b11741a6b5495a28113daf86",
+  "neutral_reset_contract": {
+    "left_predicate_at_reset": false,
+    "right_predicate_at_reset": false
+  },
+  "prompt": "Put the Rubik's cube to the left of the bowl.",
+  "registry_path": "/data/users/ali/vla_wam/src/steerable-current/artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_registry.json",
+  "registry_sha256": "d480046bfc771436ca1d91b8c73e1bfab5854013117fbb34f4e3fc88cac42c99",
+  "reset_count": 2,
+  "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+  "schema_version": "vla-wam-v2a010-pi05-current-fixed-observation-v1",
+  "task": "RubiksCubeLeftOfBowlMatchedTask"
+}

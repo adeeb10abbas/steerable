@@ -1,0 +1,85 @@
+{
+  "amendment_id": "V2-A011",
+  "checkpoint_revision": "6706d7680581c255ff61e0f3bb49d90eac55c79e",
+  "claim_boundary": "Sensitivity and determinism diagnostic only; not robot success.",
+  "conditioning_png_sha256": "2a431b0fa288890b3509b314c0351c91123d5f64b237678fed972848e29cd55b",
+  "metrics": {
+    "left_repeat_action_rms": 0.0,
+    "left_repeat_future_pixel_mae": 0.0,
+    "left_right_action_rms": 0.025650289164499847,
+    "left_right_future_pixel_mae": 7.465912737698959
+  },
+  "model_id": "cosmos3_nano_policy_droid",
+  "observation_hashes": {
+    "gripper_position_raw_sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
+    "image_raw_rgb_sha256": "6261ce5ab21383342c2012c14f7ff97d3dcd74e5f4202f2b3444355cc7ba3332",
+    "joint_position_raw_sha256": "6661cda587dce95d7e39db70d98bbed73498aecc82f0a1407ea41bf3fd839b85"
+  },
+  "records": [
+    {
+      "action_sha256": "e620c965bf476053cbb533776659b08bf6dd8047ccf638766482d02771fe2ed2",
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "left",
+      "future_mp4_sha256": "4ac63c4c3f732ad6de89511e00417bf43171c24cd39e600d38f0b322e6dadaa5",
+      "future_npy_sha256": "0db65bae30a2b9597855fe0c8930e49d7fc18bde37e5d855dbf5c070ab395cac",
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "requested_sampling_seed": 8300,
+      "server_sampling_seed": 8300,
+      "wall_seconds": 21.366014154162258
+    },
+    {
+      "action_sha256": "e620c965bf476053cbb533776659b08bf6dd8047ccf638766482d02771fe2ed2",
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "left_exact_repeat",
+      "future_mp4_sha256": "4ac63c4c3f732ad6de89511e00417bf43171c24cd39e600d38f0b322e6dadaa5",
+      "future_npy_sha256": "0db65bae30a2b9597855fe0c8930e49d7fc18bde37e5d855dbf5c070ab395cac",
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "requested_sampling_seed": 8300,
+      "server_sampling_seed": 8300,
+      "wall_seconds": 1.5666680841241032
+    },
+    {
+      "action_sha256": "c40b0660321f39ced976465c5adadfbb01668051abe48b5ad70a7797f34dbd0c",
+      "action_shape": [
+        32,
+        8
+      ],
+      "condition": "right",
+      "future_mp4_sha256": "9ab2649e9451dfc08ada41ba9ef2e33871886e2b15c3d10868a215d3d287234f",
+      "future_npy_sha256": "be1214ee0590d3b186a4bb6a864c09fcd4a6b08093a35c2e79cdaa2e7aef2a9b",
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "requested_sampling_seed": 8300,
+      "server_sampling_seed": 8300,
+      "wall_seconds": 1.4915957860648632
+    }
+  ],
+  "registry_sha256": "4b7fc1f7a98d73b3cd2995d32b926fc2bba4175f9b03a8131d81a78873b03eba",
+  "schema_version": "vla-wam-shared-v2-cosmos3-nano-policy-droid-fixed-observation-v1",
+  "server": "ws://127.0.0.1:18011",
+  "source_plan_sha256": "c5025b51f57224308d16338db38ab57b06e7025ba9e585a05993e01a79952fc3",
+  "status": "passed"
+}

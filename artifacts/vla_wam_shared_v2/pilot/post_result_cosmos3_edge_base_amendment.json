@@ -1,0 +1,171 @@
+{
+  "schema_version": "vla-wam-shared-v2-post-result-cosmos3-edge-base-feasibility-v1",
+  "amendment_id": "V2-A013",
+  "recorded_at_utc": "2026-08-04T02:56:55Z",
+  "recorded_at_git_head": "8a9893e643772c35ade334d5e6f5580f7a3e3a16",
+  "status": "frozen_pre_inference_feasibility_not_released",
+  "decision_origin": "The user explicitly requested the public Cosmos3-Edge base checkpoint as a separate DROID action-and-imagination feasibility arm. The completed Cosmos3-Edge-Policy-DROID evidence remains immutable and is not rerun.",
+  "experiment_identity": {
+    "experiment_id": "cosmos3_edge_base_droid_action_imagination_gate",
+    "model_id": "cosmos3_edge_base_droid",
+    "arena": "droid_robolab",
+    "model_repository": "nvidia/Cosmos3-Edge",
+    "model_revision": "ff48d22144de52de296a7b4d3a78914831007212",
+    "parameter_count_bf16_safetensors": 3858999728,
+    "snapshot_file_count": 48,
+    "snapshot_total_bytes": 9173855122,
+    "snapshot_lfs_payload_bytes": 9173276024,
+    "checkpoint_path": "/data/users/ali/vla_wam/checkpoints/cosmos3_edge_base_ff48d221"
+  },
+  "official_source_provenance": {
+    "model_card": "https://huggingface.co/nvidia/Cosmos3-Edge",
+    "model_snapshot_api": "https://huggingface.co/api/models/nvidia/Cosmos3-Edge/revision/ff48d22144de52de296a7b4d3a78914831007212",
+    "nvidia_cosmos": {
+      "repository": "https://github.com/NVIDIA/cosmos",
+      "commit": "e494d734022ab0610061cdf57fa24c843e18767e"
+    },
+    "nvidia_cosmos_framework": {
+      "repository": "https://github.com/NVIDIA/cosmos-framework",
+      "commit": "a904d2d36b774a51dd06ff9ff906816b1a04f579"
+    },
+    "vllm_omni": {
+      "repository": "https://github.com/vllm-project/vllm-omni",
+      "commit": "900a7f0813d0482811b0e4dfd3cf7deabbe2429f"
+    },
+    "robolab": {
+      "repository": "https://github.com/NVlabs/RoboLab",
+      "commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+    },
+    "curobo": {
+      "repository": "https://github.com/NVlabs/curobo",
+      "commit": "d64c4b005459db10c5dd867d8b30a87d5bda9bdb",
+      "version": "0.7.8"
+    }
+  },
+  "preserved_completed_edge_policy_evidence": {
+    "checkpoint": "nvidia/Cosmos3-Edge-Policy-DROID",
+    "result_path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_droid_direct_gate.json",
+    "result_sha256": "1c559ee5667ac9d22d7b66eafa7a65551783eedaf7fb3de29a2faf450c2dd029",
+    "valid_behavioral_episode_count": 6,
+    "native_action_interface": "32x8 joint_pos",
+    "decoded_future_retained": true,
+    "do_not_rerun": true,
+    "pooling_rule": "Never pool or relabel the completed native 8D Edge-Policy-DROID row as Cosmos3-Edge base or as derived control."
+  },
+  "frozen_interface_determination": {
+    "direct_joint_pos_8d": {
+      "status": "blocked_no_official_base_to_droid_native_8d_contract",
+      "evidence": "NVIDIA and vLLM-Omni identify Edge-Policy-DROID as the DROID-specialized policy. The public Edge base advertises embodiment-specific action generation, but that does not establish native 8D joint-position execution for the base checkpoint."
+    },
+    "generic_droid_10d": {
+      "status": "source_backed_probe_interface_only_not_execution_released",
+      "raw_layout": [
+        "delta_x",
+        "delta_y",
+        "delta_z",
+        "rot6d_col0_x",
+        "rot6d_col0_y",
+        "rot6d_col0_z",
+        "rot6d_col1_x",
+        "rot6d_col1_y",
+        "rot6d_col1_z",
+        "gripper"
+      ],
+      "pose_convention": "backward_framewise: delta_T = inverse(T_i) @ T_i_plus_1; reconstruct T_i_plus_1 = T_i @ delta_T",
+      "rotation_convention": "rot6d is the first two columns of the relative 3x3 rotation matrix, column 0 followed by column 1; decoding projects the matrix to SO(3)",
+      "normalization": "No separate normalizer is applied by the pinned generic vLLM-Omni policy request path; raw_action_dim=10 is returned. Runtime must reject any response whose metadata or source path indicates another transform.",
+      "units_gate": "The pinned code leaves translation in the source pose units without scaling. Behavioral release requires a runtime source attestation that the DROID/RoboLab positions supplied to this branch are meters; inference output alone cannot prove units.",
+      "generic_policy_request": "Asynchronous POST /v1/videos with image plus static instruction, action_mode=policy, domain_name=droid_lerobot, raw_action_dim=10, action_chunk_size=16, num_frames=17; inspect the top-level action payload and download the completed video content.",
+      "robolab_midtrain_postprocess": "The official RoboLab midtrain path reconstructs absolute poses from the 10D relative sequence and exposes [x,y,z,quat_xyzw,gripper], but its action-only response path cannot by itself satisfy this study's decoded-future requirement."
+    }
+  },
+  "fixed_observation_feasibility_probe": {
+    "authorized_request_count": 3,
+    "behavioral_episode_count": 0,
+    "conditions": ["left", "left_exact_repeat", "right"],
+    "sampling_seed": 8300,
+    "input_rule": "Use the byte-identical frozen Cosmos3 Edge diagnostic RGB input (sha256 6261ce5ab21383342c2012c14f7ff97d3dcd74e5f4202f2b3444355cc7ba3332) for all three requests. LEFT repeat uses byte-identical multipart fields and sampling seed. No simulator action is sent.",
+    "request_contract": {
+      "endpoint": "POST /v1/videos then poll /v1/videos/{id}",
+      "size": "640x480",
+      "num_frames": 17,
+      "fps": 5,
+      "num_inference_steps": 30,
+      "guidance_scale": 1.0,
+      "flow_shift": 5.0,
+      "extra_params": {
+        "action_mode": "policy",
+        "domain_name": "droid_lerobot",
+        "raw_action_dim": 10,
+        "action_chunk_size": 16
+      }
+    },
+    "pass_requirements": [
+      "All responses resolve the exact frozen model revision and echo or retain sampling seed 8300 in request provenance.",
+      "Each top-level action payload has shape [16,10], dtype, raw_action_dim=10, domain_id=8, finite values, and an exact hash.",
+      "LEFT and LEFT exact-repeat action payloads are bit-identical.",
+      "LEFT and RIGHT action payloads differ.",
+      "Each completed job exposes a downloadable, decodable 17-frame video; LEFT repeat videos are bit-identical and LEFT/RIGHT videos differ.",
+      "A missing, latent-only, corrupt, or substituted video fails the exposed-future gate and is retained as unavailable rather than scored zero."
+    ],
+    "release_boundary": "This probe may establish interface feasibility only. It never enters a behavioral denominator and cannot release a simulator action."
+  },
+  "conditional_behavioral_grid": {
+    "potential_episode_count": 6,
+    "released_episode_count": 0,
+    "environment_seeds": [8300, 8301, 8302],
+    "sampling_seeds": [8300, 8301, 8302],
+    "requested_relations": ["left", "right"],
+    "prompt_family": "direct_command",
+    "prompts": {
+      "left": "Put the Rubik's cube to the left of the bowl.",
+      "right": "Put the Rubik's cube to the right of the bowl."
+    },
+    "static_episode_prompt_only": true,
+    "oracle_or_subtask_coach": false,
+    "dynamic_prompt_switches": 0,
+    "viewport_video_required": true,
+    "executed_action_trace_required": true,
+    "model_action_trace_required": true,
+    "exposed_generated_future_required": true,
+    "release_condition": "The fixed-observation probe and every checkpoint, software, simulator, unit, frame, robot-asset, CuRobo, collision, and controller gate in the generated registry must pass before the first environment action."
+  },
+  "derived_control_curobo_contract": {
+    "status": "blocked_exact_franka_robotiq_urdf_and_control_frame_mapping_absent",
+    "reporting_label": "Cosmos3-Edge base DROID derived-control CuRobo IK",
+    "never_pool_with": ["Cosmos3-Edge-Policy-DROID native 8D", "any direct-interface policy"],
+    "frozen_solver_if_asset_gate_is_resolved": {
+      "solver": "curobo.wrap.reacher.ik_solver.IKSolver",
+      "curobo_commit": "d64c4b005459db10c5dd867d8b30a87d5bda9bdb",
+      "num_seeds": 20,
+      "position_threshold_m": 0.005,
+      "rotation_threshold_rad": 0.05,
+      "self_collision_check": true,
+      "self_collision_opt": true,
+      "use_cuda_graph": false,
+      "seed_rule": "Set Python, NumPy, Torch CPU, and Torch CUDA seeds to environment_seed*1000+policy_request_index before every solve; record all seeds and candidate solutions.",
+      "solution_selection": "Among successful finite collision-free candidates, choose minimum squared wrapped distance from the current seven arm joints; break exact ties by lowest solver candidate index.",
+      "joint_order": ["panda_joint1", "panda_joint2", "panda_joint3", "panda_joint4", "panda_joint5", "panda_joint6", "panda_joint7"],
+      "joint_units": "radians",
+      "derived_action_layout": "[panda_joint1..panda_joint7, gripper]",
+      "gripper_map": "RoboLab command scalar 0.0=open finger_joint 0.0 rad; 1.0=close finger_joint pi/4 rad; reject values outside [0,1] before thresholding.",
+      "collision_rule": "Both CuRobo self-collision and a hash-frozen world collision model derived from the same RoboLab reset must report collision-free. No empty, stale, or Panda-only collision world is accepted.",
+      "failure_rule": "No solution, nonfinite output, threshold failure, limit violation, collision, stale state, unit mismatch, frame mismatch, asset mismatch, or hash mismatch sends an action. Preserve the raw 10D chunk, rejection, solver record, and hashes in a controller-rejection ledger outside behavioral denominators."
+    },
+    "asset_mismatch_blocker": {
+      "robolab_sim_asset": "assets/robots/franka_robotiq_2f_85_flattened.usd",
+      "robolab_sim_asset_lfs_sha256": "f555695465687548a1bd31b5e3f30385182d476a67c17080b7820ad0ef747e41",
+      "robolab_control_body": "Gripper/Robotiq_2F_85/base_link",
+      "candidate_curobo_urdf": "src/curobo/content/assets/robot/franka_description/franka_panda.urdf",
+      "candidate_curobo_urdf_sha256": "6a0044e6e72ee667927f17d1871ec3e2615a8bc5fe978882fc909e4094667967",
+      "candidate_rejection": "The CuRobo asset models the Panda hand/fingers, not RoboLab's Robotiq 2F-85 base_link and collision geometry. It must not be substituted.",
+      "required_resolution": "Provide and hash an exact Franka+Robotiq URDF/collision description kinematically matched to the frozen RoboLab USD, plus an independently checked panda_link0-to-Robotiq-base_link transform and joint-limit equivalence."
+    }
+  },
+  "claim_boundary": {
+    "current_status": "No Cosmos3-Edge base checkpoint download, model load, inference request, behavioral rollout, imagined video, or success claim was made by this amendment.",
+    "probe_boundary": "Exactly three fixed-observation feasibility requests are conditionally authorized after artifact and software gates. They do not execute robot actions.",
+    "behavior_boundary": "All six potential behavioral cells remain unreleased. Missing future or mapping evidence is a gate failure, never a zero.",
+    "identity_boundary": "Cosmos3-Edge base is separate from and never substituted for completed Cosmos3-Edge-Policy-DROID."
+  }
+}

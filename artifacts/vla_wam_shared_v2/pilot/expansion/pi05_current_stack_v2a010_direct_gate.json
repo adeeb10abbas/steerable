@@ -1,0 +1,382 @@
+{
+  "amendment_id": "V2-A010",
+  "checkpoint_manifest": {
+    "bytes": 4856,
+    "path": "/data/users/ali/vla_wam/src/steerable-current/artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_checkpoint_manifest.json",
+    "sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca"
+  },
+  "claim_boundary": {
+    "current_stack_status": "separate post-result six-cell direct-command media gate",
+    "historical_v1_status": "preserved unchanged",
+    "media_rule": "Publication media must be labeled pi0.5 current-stack and must not be presented as recovered historical footage.",
+    "pooling_rule": "Do not merge this gate with the historical v1 80-episode pi0.5 result or the V2-A008 pi0-FAST wording replication."
+  },
+  "episodes": [
+    {
+      "cell_id": "pi05_droid_current_stack__droid_pair_seed_8300__direct_command__left",
+      "endpoint_lateral_display_m": -0.08784383535385132,
+      "environment_seed": 8300,
+      "executed_action_count": 435,
+      "files": {
+        "action_trace": {
+          "bytes": 1264,
+          "path": "/data/users/ali/vla_wam/raw/pi05_current_v2a010/action_traces/seed8300_direct_command_left_action_trace.json",
+          "sha256": "21c857c38f5ede46ac67a264700dee965ac684323ebcbeceb1c6ee7e6b466048"
+        },
+        "environment": {
+          "bytes": 39649,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8300_direct_command_left/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+          "sha256": "855a79cdc83a5016bdc0d0448a9c312e9ea166ec15e4adf0a69b8e6e11f0a265"
+        },
+        "episode_log": {
+          "bytes": 164,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8300_direct_command_left/RubiksCubeLeftOfBowlMatchedTask/log_0_env0.json",
+          "sha256": "d6da3d7255e998c220126ad629dc15b4c895e9421f0aa443522052b3405a3c8f"
+        },
+        "episode_results": {
+          "bytes": 976,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8300_direct_command_left/episode_results.jsonl",
+          "sha256": "1d6369e43e6ee17e5ee2e9f44bd351caad6d902063e628cea44f791723f602d6"
+        },
+        "executed_actions": {
+          "bytes": 14048,
+          "path": "/data/users/ali/vla_wam/raw/pi05_current_v2a010/action_traces/seed8300_direct_command_left_executed_actions.npy",
+          "sha256": "6df70c5ed7e48afa4d34b81ce07778715be4e0198980d8d0bc5cf7d188bd4b15"
+        },
+        "returned_action_chunks": {
+          "bytes": 14048,
+          "path": "/data/users/ali/vla_wam/raw/pi05_current_v2a010/action_traces/seed8300_direct_command_left_returned_action_chunks.npy",
+          "sha256": "4727fa787e7e897d3e37b56effd9ccf40a6e167c61765ab0004aa1326f9cf010"
+        },
+        "trajectory": {
+          "bytes": 309308,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8300_direct_command_left/RubiksCubeLeftOfBowlMatchedTask/run_0.hdf5",
+          "sha256": "fb90bee5d0ac72c34d3ffcca1d767059565a0eeaba8e197f52dae9257f50a3d8"
+        },
+        "viewport_video": {
+          "bytes": 2712446,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8300_direct_command_left/RubiksCubeLeftOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_left_of_the_bowl_0_viewport.mp4",
+          "sha256": "859ae0015080a0ebed57a9a74256051ad8b01de169e5da0b6d7080d507b7e293"
+        }
+      },
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_family": "direct_command",
+      "requested_relation": "left",
+      "sampling_seed_base": 8300,
+      "success": true
+    },
+    {
+      "cell_id": "pi05_droid_current_stack__droid_pair_seed_8300__direct_command__right",
+      "endpoint_lateral_display_m": 0.2381153553724289,
+      "environment_seed": 8300,
+      "executed_action_count": 73,
+      "files": {
+        "action_trace": {
+          "bytes": 952,
+          "path": "/data/users/ali/vla_wam/raw/pi05_current_v2a010/action_traces/seed8300_direct_command_right_action_trace.json",
+          "sha256": "0ed139bfa340ad01082e29438c5a8ae4ac1a9ed025ebac6323c09da37f55b0d9"
+        },
+        "environment": {
+          "bytes": 39657,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8300_direct_command_right/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+          "sha256": "2825aed4e20a1cbfdbab7c81a155963bd890a481752be4dd6417cfb0c1a7ab32"
+        },
+        "episode_log": {
+          "bytes": 164,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8300_direct_command_right/RubiksCubeRightOfBowlMatchedTask/log_0_env0.json",
+          "sha256": "ce940564ed6c83581ccf8a6f0b4c07e709f7cbff8818bed5991a26f1063f44f0"
+        },
+        "episode_results": {
+          "bytes": 993,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8300_direct_command_right/episode_results.jsonl",
+          "sha256": "e2fe9c9fa314686ae7ab074367aae1af1080ae6cffaed84d6c552a56bbb61775"
+        },
+        "executed_actions": {
+          "bytes": 2464,
+          "path": "/data/users/ali/vla_wam/raw/pi05_current_v2a010/action_traces/seed8300_direct_command_right_executed_actions.npy",
+          "sha256": "41936a985d693c972bb444ef6a000aa560683acd0559a48f5035cc2c803ea7fc"
+        },
+        "returned_action_chunks": {
+          "bytes": 2528,
+          "path": "/data/users/ali/vla_wam/raw/pi05_current_v2a010/action_traces/seed8300_direct_command_right_returned_action_chunks.npy",
+          "sha256": "688007c0c71f98738231662194e3ae4c2986c3e623343c2dbc2d30d9630d3bc3"
+        },
+        "trajectory": {
+          "bytes": 186603,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8300_direct_command_right/RubiksCubeRightOfBowlMatchedTask/run_0.hdf5",
+          "sha256": "a5526cdb67208a8a759aea59a7004656ebba48d18f14b54eab50dbf8343cc129"
+        },
+        "viewport_video": {
+          "bytes": 595042,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8300_direct_command_right/RubiksCubeRightOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_right_of_the_bowl_0_viewport.mp4",
+          "sha256": "3999619462df08a84e96dd955a228d2f6dc1f2cf3788a1e4162362e18b738e7c"
+        }
+      },
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_family": "direct_command",
+      "requested_relation": "right",
+      "sampling_seed_base": 8300,
+      "success": true
+    },
+    {
+      "cell_id": "pi05_droid_current_stack__droid_pair_seed_8301__direct_command__left",
+      "endpoint_lateral_display_m": -0.0142412930727005,
+      "environment_seed": 8301,
+      "executed_action_count": 450,
+      "files": {
+        "action_trace": {
+          "bytes": 1277,
+          "path": "/data/users/ali/vla_wam/raw/pi05_current_v2a010/action_traces/seed8301_direct_command_left_action_trace.json",
+          "sha256": "e8ae10cd9bca64c5d4f1948ad681315056c38ca5055131d7505543645fbca001"
+        },
+        "environment": {
+          "bytes": 39649,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8301_direct_command_left/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+          "sha256": "508825a8d38f0401d9af53406dea53449929031c30b2c90f9fd86ebc5131d845"
+        },
+        "episode_log": {
+          "bytes": 165,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8301_direct_command_left/RubiksCubeLeftOfBowlMatchedTask/log_0_env0.json",
+          "sha256": "1f772c80025d42df04b4885d3df166cf10a6cc330d68f7cc1277b68944c9d51b"
+        },
+        "episode_results": {
+          "bytes": 976,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8301_direct_command_left/episode_results.jsonl",
+          "sha256": "8b3785834b5ee66648e8c28e5521aed123b7812c519610f1d87b12f8c98bc27b"
+        },
+        "executed_actions": {
+          "bytes": 14528,
+          "path": "/data/users/ali/vla_wam/raw/pi05_current_v2a010/action_traces/seed8301_direct_command_left_executed_actions.npy",
+          "sha256": "c05feb8ad95cf57900c1f0b782f7771106701bea78194f1be1b267126441e53a"
+        },
+        "returned_action_chunks": {
+          "bytes": 14528,
+          "path": "/data/users/ali/vla_wam/raw/pi05_current_v2a010/action_traces/seed8301_direct_command_left_returned_action_chunks.npy",
+          "sha256": "08714ba2c4182046f37b45d17bac0a97eec322ef87f5d9be656cb0523ff9510e"
+        },
+        "trajectory": {
+          "bytes": 314828,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8301_direct_command_left/RubiksCubeLeftOfBowlMatchedTask/run_0.hdf5",
+          "sha256": "a50b1dd1c1aa2a6dd869af66b1d882856dee68fb6f550d1003d2b4f2467d806a"
+        },
+        "viewport_video": {
+          "bytes": 2739174,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8301_direct_command_left/RubiksCubeLeftOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_left_of_the_bowl_0_viewport.mp4",
+          "sha256": "07640e5fc8f435faa5a08a68b349fcb0ead6fe2e8e7baae6e7ffd9d92c739b4a"
+        }
+      },
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_family": "direct_command",
+      "requested_relation": "left",
+      "sampling_seed_base": 8301,
+      "success": false
+    },
+    {
+      "cell_id": "pi05_droid_current_stack__droid_pair_seed_8301__direct_command__right",
+      "endpoint_lateral_display_m": 0.08257321268320084,
+      "environment_seed": 8301,
+      "executed_action_count": 98,
+      "files": {
+        "action_trace": {
+          "bytes": 978,
+          "path": "/data/users/ali/vla_wam/raw/pi05_current_v2a010/action_traces/seed8301_direct_command_right_action_trace.json",
+          "sha256": "cb273248d2c8734c77066d9f7f64204463f4d301c886181500ba347181e2e11e"
+        },
+        "environment": {
+          "bytes": 39657,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8301_direct_command_right/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+          "sha256": "9c460fd7dce30ecb399cf2dddfc3919dd1732f94f151fae11cd18654305f1a40"
+        },
+        "episode_log": {
+          "bytes": 164,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8301_direct_command_right/RubiksCubeRightOfBowlMatchedTask/log_0_env0.json",
+          "sha256": "ac721672cdef4577fc2e6f8919ee1dad0d764720d61d85e8cc10feb75a758015"
+        },
+        "episode_results": {
+          "bytes": 990,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8301_direct_command_right/episode_results.jsonl",
+          "sha256": "bab340b0d28c40eee699fdf30085b5cac44cdbb7692c9e768f240bb62225822c"
+        },
+        "executed_actions": {
+          "bytes": 3264,
+          "path": "/data/users/ali/vla_wam/raw/pi05_current_v2a010/action_traces/seed8301_direct_command_right_executed_actions.npy",
+          "sha256": "05fd5c9aff4eeeb7bfb16a4ec0688214f55afcb75edd5115f12aa4d303833e4a"
+        },
+        "returned_action_chunks": {
+          "bytes": 3488,
+          "path": "/data/users/ali/vla_wam/raw/pi05_current_v2a010/action_traces/seed8301_direct_command_right_returned_action_chunks.npy",
+          "sha256": "0ce371b25d78fe929c18a9b11c43212cc5b48e35383f9158c03dfb5a2bd09681"
+        },
+        "trajectory": {
+          "bytes": 195119,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8301_direct_command_right/RubiksCubeRightOfBowlMatchedTask/run_0.hdf5",
+          "sha256": "5213ccd2f47dbea9615e984c24322707398525bf81a83ff1e90b599049fb8b5d"
+        },
+        "viewport_video": {
+          "bytes": 725117,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8301_direct_command_right/RubiksCubeRightOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_right_of_the_bowl_0_viewport.mp4",
+          "sha256": "47993975e627d05e02960cef001a92d09cdba036fdcb9279fc94c43068b9da33"
+        }
+      },
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_family": "direct_command",
+      "requested_relation": "right",
+      "sampling_seed_base": 8301,
+      "success": true
+    },
+    {
+      "cell_id": "pi05_droid_current_stack__droid_pair_seed_8302__direct_command__left",
+      "endpoint_lateral_display_m": -0.007900923490524292,
+      "environment_seed": 8302,
+      "executed_action_count": 450,
+      "files": {
+        "action_trace": {
+          "bytes": 1277,
+          "path": "/data/users/ali/vla_wam/raw/pi05_current_v2a010/action_traces/seed8302_direct_command_left_action_trace.json",
+          "sha256": "807caaab26cb3576fb6c70d6aa2fc2bece2f048ad1e3d7d4c772247eb4680861"
+        },
+        "environment": {
+          "bytes": 39649,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8302_direct_command_left/RubiksCubeLeftOfBowlMatchedTask/env_cfg.json",
+          "sha256": "94b8f1dc3a14f0e379f5ab1f3856028b7c3fb8613aebd938bf5da306f2f9b934"
+        },
+        "episode_log": {
+          "bytes": 165,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8302_direct_command_left/RubiksCubeLeftOfBowlMatchedTask/log_0_env0.json",
+          "sha256": "1f772c80025d42df04b4885d3df166cf10a6cc330d68f7cc1277b68944c9d51b"
+        },
+        "episode_results": {
+          "bytes": 979,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8302_direct_command_left/episode_results.jsonl",
+          "sha256": "1c9493472f9655db4ba761a3aa20338a5f70199fc11d6962825ff4f65cfb2b5a"
+        },
+        "executed_actions": {
+          "bytes": 14528,
+          "path": "/data/users/ali/vla_wam/raw/pi05_current_v2a010/action_traces/seed8302_direct_command_left_executed_actions.npy",
+          "sha256": "daad27d658ab7cd48bace4a0fab377c659354a25d97415709048b92712fb11e4"
+        },
+        "returned_action_chunks": {
+          "bytes": 14528,
+          "path": "/data/users/ali/vla_wam/raw/pi05_current_v2a010/action_traces/seed8302_direct_command_left_returned_action_chunks.npy",
+          "sha256": "b7cc5da32eabb715a6f5a44872e32c5faac6d58189436f7947e5fdd28aec9d7d"
+        },
+        "trajectory": {
+          "bytes": 316422,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8302_direct_command_left/RubiksCubeLeftOfBowlMatchedTask/run_0.hdf5",
+          "sha256": "af16c27f9762a646ac1ee4d8723be94c6d4efb84acfb11b65f9a2fb7adaaa9c7"
+        },
+        "viewport_video": {
+          "bytes": 2812373,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8302_direct_command_left/RubiksCubeLeftOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_left_of_the_bowl_0_viewport.mp4",
+          "sha256": "b338c968159fdde8cc72576fcaab99de75341f4c36e632eb5567fb01c5ab9bd5"
+        }
+      },
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_family": "direct_command",
+      "requested_relation": "left",
+      "sampling_seed_base": 8302,
+      "success": false
+    },
+    {
+      "cell_id": "pi05_droid_current_stack__droid_pair_seed_8302__direct_command__right",
+      "endpoint_lateral_display_m": 0.18962723016738892,
+      "environment_seed": 8302,
+      "executed_action_count": 39,
+      "files": {
+        "action_trace": {
+          "bytes": 926,
+          "path": "/data/users/ali/vla_wam/raw/pi05_current_v2a010/action_traces/seed8302_direct_command_right_action_trace.json",
+          "sha256": "9e7276ffe9bf0a3c5d69b6d59e6aaa1bd5e51b41cec85e768a48943cb3627f57"
+        },
+        "environment": {
+          "bytes": 39657,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8302_direct_command_right/RubiksCubeRightOfBowlMatchedTask/env_cfg.json",
+          "sha256": "51661a9337f7a22fd76d6f4508d5da7a47430b76b9d8b34de08981868960f1f1"
+        },
+        "episode_log": {
+          "bytes": 164,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8302_direct_command_right/RubiksCubeRightOfBowlMatchedTask/log_0_env0.json",
+          "sha256": "c3421a26f17a6a3fbb95bc3f4171d06690458b9576f8ad614d7828f53477a117"
+        },
+        "episode_results": {
+          "bytes": 975,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8302_direct_command_right/episode_results.jsonl",
+          "sha256": "db0fb807acfb7135567f1af5a07816128d0efc806f3fd2d288c1b6c4d6c04571"
+        },
+        "executed_actions": {
+          "bytes": 1376,
+          "path": "/data/users/ali/vla_wam/raw/pi05_current_v2a010/action_traces/seed8302_direct_command_right_executed_actions.npy",
+          "sha256": "99f901480cefc96f8bca25bb9d0b8e562dcb022f0016d39cb499400a4f93b77e"
+        },
+        "returned_action_chunks": {
+          "bytes": 1568,
+          "path": "/data/users/ali/vla_wam/raw/pi05_current_v2a010/action_traces/seed8302_direct_command_right_returned_action_chunks.npy",
+          "sha256": "fca1fd909a3416611f74371d1dcefdd7e3858ab9d93eb5f8cd65c3fe8cc1e61c"
+        },
+        "trajectory": {
+          "bytes": 174743,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8302_direct_command_right/RubiksCubeRightOfBowlMatchedTask/run_0.hdf5",
+          "sha256": "e7ffcab00d3991af81809286dbbae55f8f0dd0ca9b4b93f1695542deb0559cfd"
+        },
+        "viewport_video": {
+          "bytes": 373293,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2a010_pi05_current_seed8302_direct_command_right/RubiksCubeRightOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_right_of_the_bowl_0_viewport.mp4",
+          "sha256": "e9e089247257917d012ce33ab109c413a5577609bbb9b1fdb78d3c7a70715d0e"
+        }
+      },
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_family": "direct_command",
+      "requested_relation": "right",
+      "sampling_seed_base": 8302,
+      "success": true
+    }
+  ],
+  "infrastructure_invalid_attempts": [],
+  "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+  "openpi_config": "pi05_droid_jointpos_polaris",
+  "pairs": [
+    {
+      "endpoint_ordering_aligned": true,
+      "environment_seed": 8300,
+      "executed_actions_distinct": true,
+      "first_ten_executed_action_rms": 0.0039037647657096386,
+      "left_success": true,
+      "right_minus_left_endpoint_shift_m": 0.3259591907262802,
+      "right_success": true
+    },
+    {
+      "endpoint_ordering_aligned": true,
+      "environment_seed": 8301,
+      "executed_actions_distinct": true,
+      "first_ten_executed_action_rms": 0.0013508554548025131,
+      "left_success": false,
+      "right_minus_left_endpoint_shift_m": 0.09681450575590134,
+      "right_success": true
+    },
+    {
+      "endpoint_ordering_aligned": true,
+      "environment_seed": 8302,
+      "executed_actions_distinct": true,
+      "first_ten_executed_action_rms": 0.006495222449302673,
+      "left_success": false,
+      "right_minus_left_endpoint_shift_m": 0.1975281536579132,
+      "right_success": true
+    }
+  ],
+  "registry": {
+    "bytes": 10414,
+    "path": "/data/users/ali/vla_wam/src/steerable-current/artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_registry.json",
+    "sha256": "d480046bfc771436ca1d91b8c73e1bfab5854013117fbb34f4e3fc88cac42c99"
+  },
+  "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+  "schema_version": "vla-wam-v2a010-pi05-current-result-v1",
+  "status": "complete_6_of_6_valid_current_stack_cells",
+  "study_commit": "8a9893e643772c35ade334d5e6f5580f7a3e3a16",
+  "summary": {
+    "aligned_endpoint_pair_count": 3,
+    "distinct_executed_action_pair_count": 3,
+    "left_successes": 1,
+    "right_successes": 3
+  },
+  "valid_episode_count": 6
+}

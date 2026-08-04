@@ -1,0 +1,99 @@
+{
+  "schema_version": "vla-wam-v2a008-pi0-current-release-probe-v1",
+  "amendment_id": "V2-A008",
+  "status": "failed_prompt_sensitivity_zero_behavioral_cells",
+  "claim_boundary": "This is a fixed-observation release-gate result, not a behavioral episode, task-success result, or wording-study result. The sixty registered cells were not run and are not assigned failures or zeros.",
+  "replication_identity": {
+    "policy_repository": {
+      "commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+      "config": "pi0_fast_droid_jointpos_polaris"
+    },
+    "simulator_repository": {
+      "commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+    },
+    "checkpoint": {
+      "source": "gs://openpi-assets-simeval/pi0_fast_droid_jointpos",
+      "staged_path": "/data/users/ali/vla_wam/checkpoints/pi0_fast_droid_jointpos/pi0_fast_droid_jointpos",
+      "file_count": 19,
+      "payload_bytes": 10844314410,
+      "manifest": {
+        "path": "artifacts/vla_wam_shared_v2/pilot/expansion/pi0_fast_wording_readiness.json",
+        "sha256": "47b38eb2f17be802c126ef0a7e93b16693823ee2df62b8007f51bb0514baf5c5"
+      }
+    }
+  },
+  "frozen_sources": {
+    "amendment": {
+      "path": "artifacts/vla_wam_shared_v2/pilot/post_result_current_stack_replication_amendment.json",
+      "sha256": "d38acc8ccfa144e829173b9cd52048a94686006fba27ca0d336c37968b177f96"
+    },
+    "registry": {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/pi0_fast_current_stack_v2a008_registry.json",
+      "sha256": "eeca8679e345a602f6da6cb02635e4e1ec5274843dbea29d37cf26f2a7695d04"
+    }
+  },
+  "fixed_observation": {
+    "environment_seed": 8300,
+    "sampling_seed": 8300000,
+    "prompt_family": "short_command",
+    "fixture_path": "/data/users/ali/vla_wam/raw/pi0_fast_current_v2a008/preflight/seed8300_fixed_observation.npz",
+    "fixture_manifest_path": "/data/users/ali/vla_wam/raw/pi0_fast_current_v2a008/preflight/seed8300_fixed_observation.json",
+    "fixture_sha256": "ce8be012347718a162bf0d92ba2fb71a01c570a3462d72ef2c16a86082131778",
+    "neutral_reset": {
+      "left_predicate_at_reset": false,
+      "right_predicate_at_reset": false
+    }
+  },
+  "requests": [
+    {
+      "label": "left_a",
+      "requested_relation": "left",
+      "prompt": "Put the cube left of the bowl.",
+      "sampling_seed": 8300000,
+      "action_path": "/data/users/ali/vla_wam/raw/pi0_fast_current_v2a008/preflight/probe/left_a_actions.npy",
+      "action_sha256": "570867d7533005a68e3365013f2110a856cbbd09e6e190fcdb1dac5b812072f6",
+      "shape": [10, 8],
+      "dtype": "float32"
+    },
+    {
+      "label": "left_b_exact_repeat",
+      "requested_relation": "left",
+      "prompt": "Put the cube left of the bowl.",
+      "sampling_seed": 8300000,
+      "action_path": "/data/users/ali/vla_wam/raw/pi0_fast_current_v2a008/preflight/probe/left_b_actions.npy",
+      "action_sha256": "570867d7533005a68e3365013f2110a856cbbd09e6e190fcdb1dac5b812072f6",
+      "shape": [10, 8],
+      "dtype": "float32"
+    },
+    {
+      "label": "right",
+      "requested_relation": "right",
+      "prompt": "Put the cube right of the bowl.",
+      "sampling_seed": 8300000,
+      "action_path": "/data/users/ali/vla_wam/raw/pi0_fast_current_v2a008/preflight/probe/right_actions.npy",
+      "action_sha256": "570867d7533005a68e3365013f2110a856cbbd09e6e190fcdb1dac5b812072f6",
+      "shape": [10, 8],
+      "dtype": "float32"
+    }
+  ],
+  "metrics": {
+    "left_exact_repeat_bit_identical": true,
+    "left_vs_right_action_rms": 0.0,
+    "left_right_action_hashes_equal": true
+  },
+  "release_gate": {
+    "passed": false,
+    "failed_condition": "LEFT versus RIGHT prompt-only action output differs",
+    "blocker": "The released current-stack interface returned the same 10x8 action tensor for LEFT, repeated LEFT, and RIGHT under the fixed observation and identical sampling seed."
+  },
+  "counts": {
+    "model_load_count": 1,
+    "model_action_request_count": 3,
+    "behavioral_episode_count": 0,
+    "valid_behavioral_failure_count": 0,
+    "infrastructure_invalid_attempt_count": 0,
+    "registered_behavioral_cells_unrun": 60
+  },
+  "raw_output_policy": "The fixture, response arrays, server logs, and any renderer diagnostics remain on the ali-owned PVC. This compact artifact commits only provenance and digests.",
+  "next_command": "Do not launch V2-A008 behavioral cells or the 60-cell compiler under the frozen protocol. A new disclosed amendment would be required before any redesign or further inference."
+}

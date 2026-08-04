@@ -1,0 +1,114 @@
+{
+  "schema_version": "vla-wam-shared-v2-post-result-cosmos3-super-droid-feasibility-v1",
+  "amendment_id": "V2-A012",
+  "recorded_at_utc": "2026-08-04T02:47:57Z",
+  "recorded_at_git_head": "8a9893e643772c35ade334d5e6f5580f7a3e3a16",
+  "status": "frozen_pre_inference_feasibility_not_released",
+  "decision_origin": "User explicitly requested the largest Cosmos3 model, with adjacent imagined-future and actual DROID rollout evidence where the released interface permits both.",
+  "experiment_identity": {
+    "experiment_id": "cosmos3_super_base_droid_conditional_direct_gate",
+    "model_id": "cosmos3_super_base_droid",
+    "arena": "droid_robolab",
+    "model_repository": "nvidia/Cosmos3-Super",
+    "model_revision": "e0262be9d8f7586bc24c069a2aed2b665bdff266",
+    "parameter_count": "64B",
+    "checkpoint_index_total_bytes": 129230007264,
+    "full_snapshot_file_count": 88,
+    "full_snapshot_total_bytes": 132710200213,
+    "checkpoint_path": "/data/users/ali/vla_wam/checkpoints/cosmos3_super_base",
+    "checkpoint_snapshot_manifest": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_super_v2a012_hf_snapshot.json"
+  },
+  "official_source_provenance": {
+    "model_card": "https://huggingface.co/nvidia/Cosmos3-Super",
+    "model_snapshot_api": "https://huggingface.co/api/models/nvidia/Cosmos3-Super/revision/e0262be9d8f7586bc24c069a2aed2b665bdff266",
+    "nvidia_cosmos_repository": {
+      "repository": "https://github.com/NVIDIA/Cosmos",
+      "commit": "e494d734022ab0610061cdf57fa24c843e18767e"
+    },
+    "vllm_omni_repository": {
+      "repository": "https://github.com/vllm-project/vllm-omni",
+      "commit": "900a7f0813d0482811b0e4dfd3cf7deabbe2429f"
+    },
+    "verified_capability": "The pinned base configuration enables action_gen and vision_gen. The official vLLM-Omni action-mode documentation defines policy mode as image plus instruction to video plus predicted action chunk.",
+    "verified_limitation": "NVIDIA's pinned Cosmos source names only Cosmos3-Nano-Policy-DROID and Cosmos3-Edge-Policy-DROID as post-trained DROID policy models. It does not publish a Cosmos3-Super-Policy-DROID checkpoint or a Super-base-to-RoboLab joint_pos 8D execution contract."
+  },
+  "candidate_resources": {
+    "server_pod_manifest": "handoff/k8s/cosmos3-super-b200-4gpu-256gi-ali.yaml",
+    "preferred_server_requirement": "One ali-owned B200 pod with exactly four visible B200 GPUs, all four selected GPUs idle for this study process group, 256 GiB memory limit, and at least 200000000000 PVC bytes free before checkpoint download.",
+    "preferred_server_status_at_freeze": "The named four-GPU pod manifest is applied but Pending because no node currently has four free B200 GPUs.",
+    "conditional_tp2_fallback": "A load-only fallback may use only the already ali-owned B200 GPU 1 and GPU 2 with tensor parallelism 2 after both are independently confirmed idle. GPU 0 is protected and GPU 3 is reserved for the separate Nano server. The model has 64 attention heads, which divides by two, but that arithmetic is not a memory-fit claim. No request is allowed until the exact model-load and free-memory evidence passes.",
+    "simulator_requirement": "A separately verified ali-owned RTX rendering lane; no server GPU is reused for SAPIEN/RoboLab rendering.",
+    "no_cluster_action_taken_by_this_amendment": true
+  },
+  "conditional_behavioral_grid": {
+    "potential_episode_count": 6,
+    "released_episode_count": 0,
+    "environment_seeds": [8300, 8301, 8302],
+    "sampling_seeds": [8300, 8301, 8302],
+    "prompt_family": "direct_command",
+    "prompts": {
+      "left": "Put the Rubik's cube to the left of the bowl.",
+      "right": "Put the Rubik's cube to the right of the bowl."
+    },
+    "requested_relations": ["left", "right"],
+    "static_episode_prompt_only": true,
+    "oracle_or_subtask_coach": false,
+    "dynamic_prompt_switches": 0,
+    "viewport_video_required": true,
+    "executed_action_trace_required": true,
+    "exposed_generated_future_required": true,
+    "release_condition": "All model-specific gates in this amendment and registry must pass before the first environment action."
+  },
+  "hard_release_gates": [
+    "The hash-bearing Hugging Face snapshot manifest resolves exactly the frozen revision before any checkpoint bytes are downloaded.",
+    "The full checkpoint is present on the ali PVC and every LFS payload matches its frozen SHA-256 and byte count before model load.",
+    "The pinned NVIDIA Cosmos and vLLM-Omni source commits are restored in a separate environment; the serving image or environment has an immutable provenance record.",
+    "A dedicated four-B200 ali-owned server pod passes visibility, free-memory, PVC, egress, credentials, and model-load gates without borrowing another user's allocation. If it remains Pending, a separately attested tensor-parallel-two load-only fallback may use only ali B200 GPU 1 and GPU 2; an OOM or failed load is a preserved infrastructure event and releases no request.",
+    "The direct-interface branch requires a source-backed DROID execution contract exposing directly executable RoboLab joint_pos actions of exactly shape [T,8], including normalization statistics, units, ordering, gripper convention, and inverse transform.",
+    "The separately labeled derived-control branch is available only if the released base response is documented as DROID 10D end-effector pose plus gripper action. It must freeze the exact 10D layout, units, coordinate frame, absolute-versus-delta semantics, joint order, gripper map, robot URDF, CuRobo version and commit, IK/collision configuration, solver seeds, tolerances, and every raw-to-derived action hash before environment execution. It uses only current robot state plus model output; it receives no task-progress, success, oracle, or subtask input.",
+    "A no-environment fixed-observation probe makes two byte-identical LEFT requests and one RIGHT request with the frozen image/state bytes and sampling seed 8300. LEFT action and future outputs must repeat bit-identically; LEFT and RIGHT action and decodable-future outputs must differ.",
+    "The probe response retains both a decodable generated future and either the same directly executable 8D action representation or the fully frozen 10D input required by the derived-control branch. A video-only, latent-only, action-only, or unnormalized action response fails this gate for behavioral execution.",
+    "The neutral matched RoboLab reset begins outside both requested relations; each valid behavioral cell records viewport MP4, HDF5, exact executed action trace, model-returned action chunk, and decoded imagined future.",
+    "The derived-control branch fails closed: no IK solution, collision rejection, out-of-limit command, stale state, or transform mismatch sends an action. Preserve the raw model chunk, exact rejection reason, solver record, and cell state in a controller-rejection ledger; it is never silently treated as zero success or pooled with direct-interface results.",
+    "Infrastructure-invalid and partial attempts are written to model-specific ledgers and remain outside behavioral denominators."
+  ],
+  "known_pre_inference_blockers": [
+    {
+      "id": "no_published_cosmos3_super_policy_droid_checkpoint",
+      "status": "blocking",
+      "evidence": "The pinned official NVIDIA policy-server cookbook lists Nano Policy DROID and Edge Policy DROID only."
+    },
+    {
+      "id": "no_published_super_base_to_robolab_joint_pos_8d_normalization_contract",
+      "status": "blocking",
+      "evidence": "The pinned official action cookbook documents DROID as normalized 10D end-effector pose plus gripper action, whereas this study's executable RoboLab interface is 8D joint_pos. A user-authorized, separately labeled CuRobo derived-control branch is allowed only after its full deterministic transform contract is frozen."
+    },
+    {
+      "id": "four_gpu_runtime_and_immutable_serving_environment_unverified",
+      "status": "blocking",
+      "evidence": "No Cosmos3-Super checkpoint, model environment, server pod, or inference request was created by this amendment."
+    }
+  ],
+  "media_contract": {
+    "actual_rollout": "The RoboLab viewport video of actions actually sent to the simulator, labeled ACTUAL ROLLOUT.",
+    "imagined_future": "The decoded video returned by the same model request as the retained model action chunk, labeled IMAGINED FUTURE.",
+    "presentation_rule": "When both exist for a valid cell, publish them side-by-side or adjacent with the same seed, requested relation, prompt bytes, source action-chunk hash, and labels. Never substitute imagination for execution or execution for imagination.",
+    "missing_evidence_rule": "A missing or latent-only future is retained as unavailable; it is not converted to a zero, and it cannot satisfy this gate."
+  },
+  "analysis_branches": {
+    "direct_interface": {
+      "eligibility": "Only a released native [T,8] joint_pos DROID contract with its complete source-backed normalization definition.",
+      "reporting": "Report as Cosmos3-Super base DROID direct-interface; never pool with derived control."
+    },
+    "derived_control_curobo_ik": {
+      "eligibility": "Only a released, documented DROID 10D end-effector-plus-gripper output with the complete deterministic CuRobo contract in the registry.",
+      "reporting": "Report as Cosmos3-Super base DROID derived-control CuRobo IK intervention. It is not native policy execution and is never pooled with direct-interface results.",
+      "controller_rejection_handling": "A rejected raw model action remains hash-bearing interface evidence, outside requested-placement denominators because no simulator action was executed."
+    }
+  },
+  "claim_boundary": {
+    "current_status": "No Cosmos3-Super model inference, behavioral rollout, imagined video, or success claim exists yet.",
+    "policy_identity": "Cosmos3-Super base is not substituted for, pooled with, or reported as Cosmos3 Nano Policy DROID, Cosmos3 Edge Policy DROID, Cosmos-Reason2, DreamZero, pi0.5, or any RoboTwin model.",
+    "execution_boundary": "The base model may be investigated with a non-behavioral interface probe only after the frozen artifact, software, resource, and checkpoint gates pass. No action is sent to RoboLab until either the official direct 8D execution contract or the separately frozen deterministic derived-control CuRobo IK contract is proven."
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "actual_fps": 15.0,
+  "actual_frame_count": 332,
+  "amendment_id": "V2-A011",
+  "claim_boundary": "The actual MP4 is simulator execution. The paired prediction MP4 decodes the first returned future for the same seed and static command; it is not execution, a task outcome, or another behavioral trial.",
+  "fixed_observation_gate": {
+    "bytes": 3133,
+    "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/fixed_observation/manifest.json",
+    "sha256": "f1fbad3e608dfbf36d744280f3aef6cfff85d35a7b3a798ba771eb7eb768c40b"
+  },
+  "gallery_entries": [
+    {
+      "arena": "droid",
+      "arena_label": "DROID / RoboLab",
+      "category": "WAM",
+      "comparison_media": {
+        "kind": "model_prediction_not_execution",
+        "label": "MODEL PREDICTION \u2014 NOT EXECUTION",
+        "note": "Same seed and static LEFT/RIGHT prompts; first returned decoded future from each behavioral episode.",
+        "source_decoded_futures": {
+          "left_request_000": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/futures/seed8300_left_request000_future.npy",
+            "sha256": "704a931d5f6dcc858280a9c80ff70fb16b37726677d75448972a230d37fa0aaa"
+          },
+          "right_request_000": {
+            "bytes": 33454208,
+            "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/futures/seed8300_right_request000_future.npy",
+            "sha256": "8e4706fb5eb19d4e512f1206b0365aaaba9bcfb83ad899cfa1c7347835f16db0"
+          }
+        },
+        "video": {
+          "bytes": 699636,
+          "path": "artifacts/vla_wam_shared_v2/media/cosmos3_nano_policy_droid_v2a011/cosmos3_nano_v2a011_seed8300_paired_model_prediction.mp4",
+          "sha256": "61c8664966304813f96ad59932879ba8f4fe094176e055b279a719feabe40938"
+        }
+      },
+      "directions": [
+        {
+          "outcome": "success after 127 actions",
+          "prompt": "Put the Rubik's cube to the left of the bowl.",
+          "relation": "LEFT"
+        },
+        {
+          "outcome": "success after 332 actions",
+          "prompt": "Put the Rubik's cube to the right of the bowl.",
+          "relation": "RIGHT"
+        }
+      ],
+      "evidence_status": "Valid current-stack behavioral pair; both episodes succeeded; selected actual-versus-prediction comparison",
+      "future_interface": "Actions plus decoded RGB futures; 15 futures retained for this selected pair (4 LEFT, 11 RIGHT)",
+      "id": "cosmos3_nano_v2a011_seed8300",
+      "model_label": "Cosmos3 Nano Policy DROID \u2014 V2-A011",
+      "pair_label": "seed 8300 matched pair",
+      "poster": {
+        "bytes": 66448,
+        "path": "artifacts/vla_wam_shared_v2/media/cosmos3_nano_policy_droid_v2a011/cosmos3_nano_v2a011_seed8300_paired_actual_poster.jpg",
+        "sha256": "03745a2eeb20f7003b7dcc4917d0a33c4870254ca8e48388ee1750b52753ea2e"
+      },
+      "seed": 8300,
+      "selection_note": "Actual execution (left) and model prediction (right) are shown together below. Both seed-8300 episodes succeeded; the prediction is a decoded future, not a rollout.",
+      "source_manifest": "artifacts/vla_wam_shared_v2/media/cosmos3_nano_policy_droid_v2a011/media_manifest.json",
+      "video": {
+        "bytes": 2175403,
+        "path": "artifacts/vla_wam_shared_v2/media/cosmos3_nano_policy_droid_v2a011/cosmos3_nano_v2a011_seed8300_paired_actual.mp4",
+        "sha256": "17f7d7f9120020db70bb007c0fee9e46c450b043b5132c30d72c1dc5b745f706"
+      }
+    }
+  ],
+  "poster": {
+    "bytes": 66448,
+    "path": "artifacts/vla_wam_shared_v2/media/cosmos3_nano_policy_droid_v2a011/cosmos3_nano_v2a011_seed8300_paired_actual_poster.jpg",
+    "sha256": "03745a2eeb20f7003b7dcc4917d0a33c4870254ca8e48388ee1750b52753ea2e"
+  },
+  "prediction_fps": 15.0,
+  "prediction_frame_count": 33,
+  "prediction_video": {
+    "bytes": 699636,
+    "path": "artifacts/vla_wam_shared_v2/media/cosmos3_nano_policy_droid_v2a011/cosmos3_nano_v2a011_seed8300_paired_model_prediction.mp4",
+    "sha256": "61c8664966304813f96ad59932879ba8f4fe094176e055b279a719feabe40938"
+  },
+  "publication_video": {
+    "bytes": 2175403,
+    "path": "artifacts/vla_wam_shared_v2/media/cosmos3_nano_policy_droid_v2a011/cosmos3_nano_v2a011_seed8300_paired_actual.mp4",
+    "sha256": "17f7d7f9120020db70bb007c0fee9e46c450b043b5132c30d72c1dc5b745f706"
+  },
+  "raw_layout_compatibility_event": {
+    "bytes": 5339,
+    "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/technical_events/raw_layout_compatibility.json",
+    "sha256": "555fa6b69662e52faa267eb1572573aef99015989a37d0d04520e43bbfb6427c"
+  },
+  "schema_version": "vla-wam-v2a011-cosmos3-nano-policy-droid-media-v1",
+  "selection_rule": "Lowest environment seed with a complete valid matched LEFT/RIGHT pair: seed 8300. For bounded prediction media, select request index 0 from each paired episode.",
+  "source_decoded_futures": {
+    "left_request_000": {
+      "bytes": 33454208,
+      "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/futures/seed8300_left_request000_future.npy",
+      "sha256": "704a931d5f6dcc858280a9c80ff70fb16b37726677d75448972a230d37fa0aaa"
+    },
+    "right_request_000": {
+      "bytes": 33454208,
+      "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/seed8300/futures/seed8300_right_request000_future.npy",
+      "sha256": "8e4706fb5eb19d4e512f1206b0365aaaba9bcfb83ad899cfa1c7347835f16db0"
+    }
+  },
+  "source_result": {
+    "bytes": 57097,
+    "path": "/data/users/ali/vla_wam/raw/cosmos3_nano_droid/v2_a011/compiled/cosmos3_nano_policy_droid_direct_gate.json",
+    "sha256": "4a6cc1d61593c7ba5272e1707f6bbe51261f7d23438070992bd75fd9e95fdb93"
+  },
+  "source_videos": {
+    "left": {
+      "bytes": 892398,
+      "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_nano_seed8300_neutral/RubiksCubeLeftOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_left_of_the_bowl_0_viewport.mp4",
+      "sha256": "64840741def17f294f2785d3040793b44c650b637a7a13fecff748ce97083e7e"
+    },
+    "right": {
+      "bytes": 2298957,
+      "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/output/v2_cosmos_nano_seed8300_neutral/RubiksCubeRightOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_right_of_the_bowl_0_viewport.mp4",
+      "sha256": "cd5dd0e2a1eaf577084bcef9566bd978a598c1cb7c64bc52fa756b9c28a65905"
+    }
+  },
+  "status": "complete_selected_seed8300_actual_and_prediction_pair"
+}

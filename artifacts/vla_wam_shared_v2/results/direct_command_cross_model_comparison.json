@@ -1,7 +1,7 @@
 {
   "denominator_policy": "DROID and RoboTwin remain separate arenas; no raw success rate is pooled across them.",
-  "evidence_cutoff_git_commit": "e4c31fe686618590ca962d16fb606eda78446b7f",
-  "evidence_cutoff_utc": "2026-08-03T21:45:50Z",
+  "evidence_cutoff_git_commit": "8a9893e643772c35ade334d5e6f5580f7a3e3a16",
+  "evidence_cutoff_utc": "2026-08-04T02:55:51Z",
   "missing_evidence_policy": "Missing, action-only, and latent-only futures are never zeros. Unreported paired action metrics are null/NR, never zero.",
   "rows": [
     {
@@ -44,6 +44,52 @@
         }
       ],
       "valid_n": 20
+    },
+    {
+      "arena": "DROID / RoboLab",
+      "arena_id": "droid_robolab",
+      "claim_boundary": "Separate V2-A011 current-stack six-cell Nano gate; never pooled with Cosmos3 Edge, Cosmos-Reason2, historical VLA evidence, or RoboTwin.",
+      "future_evidence_status": "exposed_and_retained_37_decoded_futures",
+      "future_interface": "decoded_rgb_uint8_33_frames_per_policy_request",
+      "invalid_attempt_count": 2,
+      "invalid_attempt_unit": "setup_attempts; all before policy request",
+      "left_success": {
+        "count": 3,
+        "status": "measured",
+        "trials": 3
+      },
+      "model": "Cosmos3 Nano Policy DROID \u2014 V2-A011",
+      "model_class": "WAM",
+      "model_id": "cosmos3_nano_policy_droid",
+      "model_revision": "6706d7680581c255ff61e0f3bb49d90eac55c79e",
+      "paired_action_distinctness": {
+        "count": 3,
+        "status": "measured",
+        "trials": 3
+      },
+      "paired_endpoint_alignment": {
+        "count": 3,
+        "status": "measured",
+        "trials": 3
+      },
+      "right_success": {
+        "count": 3,
+        "status": "measured",
+        "trials": 3
+      },
+      "sources": [
+        {
+          "bytes": 57097,
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_direct_gate.json",
+          "sha256": "4a6cc1d61593c7ba5272e1707f6bbe51261f7d23438070992bd75fd9e95fdb93"
+        },
+        {
+          "bytes": 2544,
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_invalid_attempts.json",
+          "sha256": "baa4ea6254d7b181a62247b8acc2c1e2b7e918633ab14b39123de2f9519bfcf8"
+        }
+      ],
+      "valid_n": 6
     },
     {
       "arena": "DROID / RoboLab",
@@ -427,6 +473,16 @@
       "sha256": "b3a62c792c82d15143ef6c94b768e2bcf712dd69d9c2f96584c904140a452754"
     },
     {
+      "bytes": 57097,
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_direct_gate.json",
+      "sha256": "4a6cc1d61593c7ba5272e1707f6bbe51261f7d23438070992bd75fd9e95fdb93"
+    },
+    {
+      "bytes": 2544,
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_invalid_attempts.json",
+      "sha256": "baa4ea6254d7b181a62247b8acc2c1e2b7e918633ab14b39123de2f9519bfcf8"
+    },
+    {
       "bytes": 254288,
       "path": "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json",
       "sha256": "4c76cdc3ca9eaf227d21d160199408f22e1b3dd7a71176a5a5dbe22223714461"
@@ -462,5 +518,5 @@
       "sha256": "491c74812ed0e4d36c16f8e0ded17a70af3e69740c9bcb87af129bb6d9563073"
     }
   ],
-  "source_set_sha256": "3543560f867ccc8ca85fa619c0f05b8aec4c9312ba94f67b9756e34c2d8625d1"
+  "source_set_sha256": "d525591c714fe495a5e141c475f0e6cdf737df87af3438c6f8103e1fd1a087e9"
 }

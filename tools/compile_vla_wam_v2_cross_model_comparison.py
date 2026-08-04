@@ -18,8 +18,8 @@ from pathlib import Path
 from typing import Any
 
 
-EVIDENCE_HEAD = "e4c31fe686618590ca962d16fb606eda78446b7f"
-EVIDENCE_CUTOFF_UTC = "2026-08-03T21:45:50Z"
+EVIDENCE_HEAD = "8a9893e643772c35ade334d5e6f5580f7a3e3a16"
+EVIDENCE_CUTOFF_UTC = "2026-08-04T02:55:51Z"
 RESULT_DIR = Path("artifacts/vla_wam_shared_v2/results")
 FIGURE_DIR = Path("artifacts/vla_wam_shared_v2/figures")
 
@@ -39,6 +39,14 @@ SOURCES = {
     "cosmos_invalid": (
         "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_droid_invalid_attempts.json",
         "b3a62c792c82d15143ef6c94b768e2bcf712dd69d9c2f96584c904140a452754",
+    ),
+    "cosmos_nano": (
+        "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_direct_gate.json",
+        "4a6cc1d61593c7ba5272e1707f6bbe51261f7d23438070992bd75fd9e95fdb93",
+    ),
+    "cosmos_nano_invalid": (
+        "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_invalid_attempts.json",
+        "baa4ea6254d7b181a62247b8acc2c1e2b7e918633ab14b39123de2f9519bfcf8",
     ),
     "dreamzero": (
         "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json",
@@ -144,6 +152,33 @@ def build_rows(d: dict[str, Any], ledger: dict[str, dict[str, Any]]) -> list[dic
         "invalid_attempt_count": 0, "invalid_attempt_unit": "cell_attempts",
         "model_revision": None, "source_keys": ["pi0"],
         "claim_boundary": "Frozen ten-seed direct-command directional confirmation.",
+    })
+
+    nano = d["cosmos_nano"]
+    ns = nano["summary"]
+    nano_invalid_count = len(d["cosmos_nano_invalid"]["attempts"])
+    future_count = sum(row["decoded_future_count"] for row in nano["episodes"])
+    require(
+        (
+            nano["status"], ns["episode_count"], ns["by_direction"]["left"]["successes"],
+            ns["by_direction"]["right"]["successes"], ns["aligned_endpoint_pairs"],
+            ns["nonzero_first_chunk_pairs"], future_count,
+        ) == ("complete", 6, 3, 3, 3, 3, 37),
+        "Cosmos3 Nano result mismatch",
+    )
+    require(
+        all(pair["executed_actions_distinct"] for pair in nano["pairs"]),
+        "Cosmos3 Nano action-pair audit failed",
+    )
+    rows.append({
+        "model_id": "cosmos3_nano_policy_droid", "model": "Cosmos3 Nano Policy DROID — V2-A011", "model_class": "WAM",
+        "arena": "DROID / RoboLab", "arena_id": "droid_robolab", "valid_n": 6,
+        "left_success": metric(3, 3), "right_success": metric(3, 3),
+        "paired_endpoint_alignment": metric(3, 3), "paired_action_distinctness": metric(3, 3),
+        "future_interface": nano["measurement"]["future_interface"], "future_evidence_status": "exposed_and_retained_37_decoded_futures",
+        "invalid_attempt_count": nano_invalid_count, "invalid_attempt_unit": "setup_attempts; all before policy request",
+        "model_revision": nano["checkpoint_revision"], "source_keys": ["cosmos_nano", "cosmos_nano_invalid"],
+        "claim_boundary": "Separate V2-A011 current-stack six-cell Nano gate; never pooled with Cosmos3 Edge, Cosmos-Reason2, historical VLA evidence, or RoboTwin.",
     })
 
     groot = d["groot"]
@@ -447,8 +482,8 @@ def main() -> None:
     root = args.repo_root.resolve()
     documents, ledger = load_sources(root)
     rows = build_rows(documents, ledger)
-    require(len(rows) == 9, f"expected nine measured model rows, got {len(rows)}")
-    require(sum(row["valid_n"] for row in rows if row["arena_id"] == "droid_robolab") == 38, "DROID valid-n audit failed")
+    require(len(rows) == 10, f"expected ten measured model rows, got {len(rows)}")
+    require(sum(row["valid_n"] for row in rows if row["arena_id"] == "droid_robolab") == 44, "DROID valid-n audit failed")
     require(sum(row["valid_n"] for row in rows if row["arena_id"] == "robotwin_place_a2b") == 54, "RoboTwin valid-n audit failed")
     write_outputs(root, rows, ledger)
 

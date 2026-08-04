@@ -48,6 +48,8 @@ The last two are sensitivity measures, not substitutes for success.
 | GR00T N1.7 DROID | VLA | 6 | 0/3 | 0/3 | 3/3 | 3/3 |
 | Cosmos3 Edge DROID | WAM | 6 | 3/3 | 3/3 | 3/3 | 3/3 |
 | DreamZero DROID | WAM | 6 | 2/3 | 1/3 | 3/3 | 3/3 |
+| π0.5 DROID — current-stack V2-A010 | VLA | 6 | 1/3 | 3/3 | 3/3 | 3/3 |
+| Cosmos3 Nano Policy DROID — V2-A011 | WAM | 6 | 3/3 | 3/3 | 3/3 | 3/3 |
 
 ### RoboTwin place-A-relative-to-B
 
@@ -66,9 +68,19 @@ actions and correctly ordered endpoints, yet all six episodes failed the task.
 π0-FAST shows a different limitation: it completed nearly every RIGHT request
 but almost no LEFT request despite aligned endpoints in every pair.
 
-Cosmos3 Edge was the strongest bounded direct gate in this study, completing
-all six DROID episodes. The RoboTwin WAMs were less reliable, although
+Cosmos3 Edge and the separate current-stack Cosmos3 Nano Policy DROID gate
+each completed all six bounded DROID episodes. Nano retained 37 decoded RGB
+futures, and its three matched endpoint shifts all followed the requested
+LEFT-to-RIGHT order. The RoboTwin WAMs were less reliable, although
 Efficient-WAM-RT and LingBot-VA aligned six of seven endpoint pairs.
+
+Two newer Cosmos3 base-model arms are frozen as feasibility work, not results.
+Cosmos3 Super base V2-A012 and Cosmos3 Edge base V2-A013 each have an exact
+three-request fixed-observation action-plus-future probe pending and zero
+released behavioral cells. Edge base is distinct from the completed Edge
+Policy DROID row above. A possible 10D CuRobo-derived controller is a separate
+branch and remains blocked until its exact Franka+Robotiq asset and control
+mapping are verified. Neither pending arm has gallery media.
 
 ## Dreaming is not executing
 
@@ -111,9 +123,17 @@ storage rather than being committed.
 - [Operational continuation state](../artifacts/vla_wam_shared_v2/continuation_state.json)
 - [Full technical record](VLA_VS_WAM_STEERABILITY_STUDY.md)
 
-Three explicitly separated additions remain in progress: a current-stack
-π0-FAST wording replication, a six-episode π0.5 current-stack media gate, and a
-six-episode Cosmos3 Nano Policy DROID gate. None may be merged with historical
-evidence. LaWAM was withdrawn before inference and is outside the active study.
-New results belong here only after their release gates pass and their evidence
-is compiled.
+The π0-FAST current-stack wording replication stopped at its release gate: on
+a fixed observation, repeat LEFT was deterministic but LEFT and RIGHT produced
+the same action tensor (RMS 0.0). It has zero behavioral episodes and contributes
+neither successes nor failures. The separate π0.5 current-stack V2-A010 gate is
+complete: all six episodes are valid, with LEFT 1/3 and RIGHT 3/3, three aligned
+endpoint pairs, and three distinct action pairs. Its selected media is an actual
+rollout, not historical v1 footage and not an imagined future. Cosmos3 Nano
+Policy DROID V2-A011 is also complete as a separate current-stack gate (6/6
+successes; 37 retained decoded futures). The gallery places Nano’s actual
+execution beside a clearly labelled model prediction; predictions are not
+additional trials. The Super-base and Edge-base feasibility records contain no
+behavioral result or media and must not be added as zeros. None may be merged
+with historical evidence. LaWAM was
+withdrawn before inference and is outside the active study.

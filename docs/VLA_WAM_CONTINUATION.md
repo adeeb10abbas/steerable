@@ -1,7 +1,7 @@
 # VLA/WAM study continuation handoff
 
 Updated: 4 August 2026, after all original bounded gates completed and
-post-result current-stack amendments V2-A008 through V2-A011 were frozen.
+post-result current-stack amendments V2-A008 through V2-A013 were frozen.
 
 This document is the restart point for a human or coding model with no chat
 context. The machine-readable companion is
@@ -17,10 +17,14 @@ Current direct-command evidence is:
 
 | Arena | Checkpoint | LEFT | RIGHT | Frozen next step |
 | --- | --- | ---: | ---: | --- |
-| DROID | π0-FAST | 1/10 | 10/10 | historical wording blocked; V2-A008 current-stack release gates active |
+| DROID | π0-FAST | 1/10 | 10/10 | historical wording blocked; V2-A008 release gate failed with zero behavioral cells |
 | DROID | GR00T N1.7 | 0/3 | 0/3 | six-cell gate complete; no wording expansion |
 | DROID | Cosmos3 Edge | 3/3 | 3/3 | six-cell gate complete; decoded futures retained |
 | DROID | DreamZero | 2/3 | 1/3 | six-cell gate complete; official imagination archive published |
+| DROID | π0.5 current-stack V2-A010 | 1/3 | 3/3 | six-cell gate complete; selected actual-rollout pair published separately |
+| DROID | Cosmos3 Nano Policy DROID V2-A011 | 3/3 | 3/3 | separate six-cell current-stack gate complete; 37 decoded futures retained |
+| DROID | Cosmos3 Super base V2-A012 | — | — | three-request action+future probe pending; zero behavioral cells released |
+| DROID | Cosmos3 Edge base V2-A013 | — | — | three-request action+future probe pending; zero behavioral cells released |
 | RoboTwin | Efficient-WAM-RT | 3/7 | 2/7 | pairs03–09 complete; do not rerun |
 | RoboTwin | FastWAM | 1/7 | 1/7 | pairs03–09 complete; do not rerun |
 | RoboTwin | LingBot-VA | 3/7 | 4/7 | pairs03–09 complete; do not rerun |
@@ -29,15 +33,30 @@ Current direct-command evidence is:
 
 All original bounded gates are complete. The sixty-cell historical π0-FAST
 wording expansion remains blocked on missing exact OpenPI and RoboLab commits.
-User-directed amendment `V2-A008` separately authorizes rerunning those same
-prompt/seed cells as a current-stack replication at the exact available
-revisions; its results must never be merged with or represented as the
-historical queue. That replication is now at runtime release gates. User
+User-directed amendment `V2-A008` separately authorized the same prompt/seed
+cells as a current-stack replication at the exact available revisions; it must
+never be merged with or represented as the historical queue. Its fixed-
+observation prompt-sensitivity gate failed: repeated LEFT was bit-identical,
+but LEFT and RIGHT returned the same action tensor (RMS 0.0). It therefore has
+zero behavioral episodes and is not runnable under the frozen protocol. User
 amendment `V2-A009` withdrew LaWAM before any model request or behavioral
 episode; it has zero remaining cells and is absent from the shareable gallery.
-Amendments `V2-A010` and `V2-A011` add separate six-cell current-stack gates
-for π0.5 DROID and Cosmos3 Nano Policy DROID. Cosmos-Reason2 remains a completed
-static diagnostic, not an action policy or robot rollout.
+Amendment `V2-A010` is complete as a separate six-cell π0.5 current-stack gate:
+LEFT 1/3, RIGHT 3/3, three aligned endpoint pairs, and three distinct executed-
+action pairs. It is not recovered historical π0.5 footage and is never merged
+with v1 evidence. `V2-A011` is complete as a separate six-cell Cosmos3 Nano
+Policy DROID gate: all six cells succeeded, all three endpoint pairs were
+aligned, all paired executed actions differed, and 37 exposed decoded futures
+were retained. Its two pre-request setup attempts remain outside behavioral
+denominators. Cosmos-Reason2 remains a completed static diagnostic, not an
+action policy or robot rollout.
+
+Two additional base-checkpoint feasibility arms are frozen but have produced
+no behavioral evidence. V2-A012 (Cosmos3 Super base) and V2-A013 (Cosmos3 Edge
+base) each permit only a three-request fixed-observation LEFT/repeat-LEFT/RIGHT
+action-plus-future probe after their artifact and runtime gates pass. Each has
+six conditional cells and zero released cells. Edge base is distinct from the
+completed Cosmos3 Edge-Policy-DROID result, which must not be rerun or pooled.
 
 All 42 prospective WAM episodes at pairs03–09 are now valid completed evidence
 and must not be rerun. Efficient-WAM-RT produced 5/14 requested-direction
@@ -803,14 +822,18 @@ It uses OpenPI `c23745b5ad24e98f66967ea795a07b2588ed6c79`, RoboLab
 `pi0_fast_droid_jointpos` checkpoint.
 
 This is a separate post-result replication, not a repair of the historical
-queue. Before its first cell, the adapter must add and verify deterministic
-environment/policy sampling seeds and executed-action traces, then pass the
-checkpoint-load, exact-repeat, prompt-sensitivity, neutral-reset, viewport
-video, and invalid-attempt gates recorded in V2-A008. Keep its raw root,
-result schema, denominators, figures, and wording claims separate from the
-historical direct confirmation.
+queue. Its fixed-observation release probe is now committed at
+[`pi0_fast_current_stack_v2a008_release_probe.json`](../artifacts/vla_wam_shared_v2/pilot/expansion/pi0_fast_current_stack_v2a008_release_probe.json).
+The two LEFT requests were bit-identical, but the RIGHT request returned the
+same 10×8 action tensor (RMS 0.0). The prompt-sensitivity gate therefore
+failed after three model requests. No behavioral episode, simulator video, or
+executed-action trace was produced; all sixty registered cells remain unrun
+and are not behavioral failures or zeros. Do not launch them or the 60-cell
+compiler under the frozen protocol. Keep the raw fixed fixture and probe arrays
+on the ali PVC; only a new disclosed amendment could authorize a redesign or
+more inference.
 
-### V2-A010 π0.5 current-stack rollout/media gate
+### V2-A010 π0.5 current-stack rollout/media gate — complete
 
 The historical π0.5 result has trajectory evidence but no committed behavioral
 MP4. `V2-A010` freezes a separate six-cell current-stack direct-command gate at
@@ -819,7 +842,15 @@ OpenPI `c23745b5ad24e98f66967ea795a07b2588ed6c79`, RoboLab
 `pi05_droid_jointpos_polaris`. Seeds 8300–8302 each run static LEFT and RIGHT
 commands with horizon 15, viewport video, and executed-action traces. Label all
 results and media “π0.5 current-stack V2-A010”; never merge them with the v1
-80-episode π0.5 evidence or the π0-FAST V2-A008 replication.
+80-episode π0.5 evidence or the π0-FAST V2-A008 replication. The compiled
+result is [`pi05_current_stack_v2a010_direct_gate.json`](../artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_direct_gate.json)
+(SHA-256 `0c54758fe316764dbca3299d7b665e3edf59412410d844a1f825abad92045f0c`):
+all six cells are valid, LEFT is 1/3, RIGHT is 3/3, all three matched endpoint
+pairs are aligned, and all three executed-action pairs differ. Two LEFT
+failures remain in the denominator; there were no invalid attempts or runtime
+interventions. The selected lowest-seed matched pair is actual simulator
+execution only in the [V2-A010 media manifest](../artifacts/vla_wam_shared_v2/media/pi05_current_stack_v2a010/media_manifest.json);
+it has no imagined-future counterpart. No V2-A010 behavioral cell remains.
 
 ### V2-A011 Cosmos3 Nano Policy DROID gate
 
@@ -832,11 +863,46 @@ executed actions, and the checkpoint's exposed generated future. This is not
 the completed Cosmos-Reason2 static diagnostic and the two identities must
 never be conflated.
 
-Transfer both bundles through the approved ali-owned PVC path, verify the two
-required commits with `git bundle verify` and `git cat-file`, and restore
-detached exact-revision checkouts. Then run the checkpoint-load, exact-repeat,
-prompt-only sensitivity, neutral-reset, viewport-video, and executed-action
-trace gates. Only after all gates pass may the first wording cell begin.
+Complete. The fixed-observation gate passed: repeated LEFT actions and futures
+were bit-identical, while LEFT and RIGHT differed (action RMS 0.0256503;
+future pixel MAE 7.4659). The six static direct cells all succeeded (LEFT 3/3,
+RIGHT 3/3); every pair had aligned endpoints and distinct executed actions.
+The observed RIGHT-minus-LEFT endpoint shifts were +0.4060, +0.5255, and
++0.6058 m. All 37 exposed 33-frame RGB futures remain on the ali PVC. The
+compact [result](../artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_direct_gate.json),
+[provenance](../artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_provenance.json),
+and bounded seed-8300 actual-versus-prediction media are committed separately.
+Do not rerun these cells.
+
+### V2-A012 Cosmos3 Super base feasibility probe
+
+V2-A012 freezes `nvidia/Cosmos3-Super` revision
+`e0262be9d8f7586bc24c069a2aed2b665bdff266` (88 files;
+132,710,200,213 bytes). No checkpoint download, model load, request, video, or
+behavioral episode has been completed. After all exact artifact, software, and
+resource gates pass, run only the fixed-observation LEFT, identical-repeat
+LEFT, and RIGHT action-plus-future probe. Six behavioral cells remain
+conditional and unreleased. Native 8D DROID execution is not established; a
+10D CuRobo-derived branch remains separately blocked pending an exact frozen
+controller contract. See the [amendment](../artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_super_droid_amendment.json),
+[registry](../artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_super_droid_v2a012_registry.json),
+and [runbook](../experiments/cosmos/COSMOS3_SUPER_V2A012.md).
+
+### V2-A013 Cosmos3 Edge base feasibility probe
+
+V2-A013 freezes `nvidia/Cosmos3-Edge` revision
+`ff48d22144de52de296a7b4d3a78914831007212` (48 files;
+9,173,855,122 bytes). It permits exactly three fixed-observation requests and
+requires `[16,10]` actions plus a decodable 17-frame future for every request;
+missing futures close the gate rather than becoming zeros. Six behavioral
+cells remain conditional and unreleased. The generic 10D interface is
+probe-only: native 8D execution is unproven, and CuRobo control is blocked
+because the pinned Panda-hand URDF cannot substitute for RoboLab's
+Franka+Robotiq USD and `base_link` frame. The completed native 8D Cosmos3
+Edge-Policy-DROID six-cell result remains frozen and must not be rerun or
+pooled. See the [amendment](../artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_edge_base_amendment.json),
+[registry](../artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_base_v2a013_registry.json),
+and [runbook](../experiments/cosmos/COSMOS3_EDGE_BASE_V2A013.md).
 
 ## Analysis and publication queue
 

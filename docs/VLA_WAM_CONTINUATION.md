@@ -971,6 +971,28 @@ improvement claim. All six simulator videos, action traces, and future
 manifests are retained; all successful guards exited zero and no runtime
 thermal intervention occurred.
 
+The hash-bound compiled result is
+[`dreamzero_v2a015_action_cfg_s2_result.json`](../artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_v2a015_action_cfg_s2_result.json)
+(SHA-256
+`cff7f3a928921be068c591abf921c210d86afb49c0880e2c108262774590043b`).
+For the exact prompt “Put the Rubik's cube to the left of the bowl.”, requested
+margin was `-0.0057327524`, `0.0075855255`, and `0.1533745974` m across seeds
+8300–8302 (mean `0.0517424569` m; success `1/3`). For “Put the Rubik's cube to
+the right of the bowl.”, the corresponding margins were `0.1198861320`,
+`0.3106073290`, and `0.2200004235` m (mean `0.2168312948` m; success `3/3`).
+The RIGHT-minus-LEFT mean-margin imbalance was therefore `0.1650888380` m.
+All three matched pairs had aligned endpoints and distinct executed actions.
+The two valid failures were qualitatively different: one never interacted with
+the cube, while the other moved it without a verified pickup. These margins
+show that the RIGHT successes also finished farther inside the requested region
+on average; they do not turn the six-cell aggregate into a powered improvement
+claim.
+
+This `s=2` intervention remains derived CFG-style negative-branch action
+guidance using DreamZero's fixed visual-quality negative prompt. It is not an
+official DreamZero action-CFG feature, and the baseline-to-`s=2` change is
+reported as descriptive directional redistribution.
+
 The independent Cosmos3 Nano `g=1` release gate also passed. Repeat LEFT
 actions and complete 33-frame RGB futures were bit-identical. The exact LEFT
 and RIGHT prompts produced distinct finite `[32,8]` actions (RMS

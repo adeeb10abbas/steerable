@@ -1,6 +1,6 @@
 # Direct-command evidence across models
 
-Evidence cutoff: `8a9893e643772c35ade334d5e6f5580f7a3e3a16` (2026-08-04T02:55:51Z). Source-set SHA-256: `d525591c714fe495a5e141c475f0e6cdf737df87af3438c6f8103e1fd1a087e9`.
+Evidence cutoff: `047212414bfd901392c39b0f82946be49574ead6` (2026-08-04T04:00:00Z). Source-set SHA-256: `2ea061c98347a56ec2a22fb4d00536f7854159feb6c8dbdfc39c4439b4d531d0`.
 
 This is an arena-separated descriptive comparison. Raw DROID and RoboTwin success rates are never pooled. `NR` means the selected compiled evidence did not report a paired action-distinctness statistic; it is not a zero. Infrastructure-invalid attempts remain outside every valid-model denominator.
 
@@ -9,6 +9,7 @@ This is an arena-separated descriptive comparison. Raw DROID and RoboTwin succes
 | Class | Model | Valid n | LEFT | RIGHT | Endpoint aligned | Actions distinct | Future interface | Invalid attempts |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | --- | ---: |
 | VLA | π0-FAST DROID | 20 | 1/10 | 10/10 | 10/10 | 10/10 | `none` | 0 (cell_attempts) |
+| VLA | π0.5 DROID — current-stack V2-A010 | 6 | 1/3 | 3/3 | 3/3 | 3/3 | `none` | 0 (setup_attempts; excluded from valid behavior) |
 | WAM | Cosmos3 Nano Policy DROID — V2-A011 | 6 | 3/3 | 3/3 | 3/3 | 3/3 | `decoded_rgb_uint8_33_frames_per_policy_request` | 2 (setup_attempts; all before policy request) |
 | VLA | GR00T N1.7 DROID | 6 | 0/3 | 0/3 | 3/3 | 3/3 | `none` | 5 (ledger_entries; 2 behavior cells excluded) |
 | WAM | Cosmos3 Edge DROID | 6 | 3/3 | 3/3 | 3/3 | 3/3 | `decoded_rgb_uint8_33_frames_per_policy_request` | 8 (setup_attempts; all before model request) |
@@ -27,6 +28,7 @@ This is an arena-separated descriptive comparison. Raw DROID and RoboTwin succes
 ## Exact evidence sources
 
 - `artifacts/vla_wam_shared_v2/pilot/results/pi0_fast_direct_confirmation.json` — 74,549 bytes; SHA-256 `491c74812ed0e4d36c16f8e0ded17a70af3e69740c9bcb87af129bb6d9563073`
+- `artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_direct_gate.json` — 20,260 bytes; SHA-256 `0c54758fe316764dbca3299d7b665e3edf59412410d844a1f825abad92045f0c`
 - `artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_direct_gate.json` — 57,097 bytes; SHA-256 `4a6cc1d61593c7ba5272e1707f6bbe51261f7d23438070992bd75fd9e95fdb93`
 - `artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_invalid_attempts.json` — 2,544 bytes; SHA-256 `baa4ea6254d7b181a62247b8acc2c1e2b7e918633ab14b39123de2f9519bfcf8`
 - `artifacts/vla_wam_shared_v2/pilot/expansion/groot_n17_droid_v2_registry.json` — 15,172 bytes; SHA-256 `95077a42bb0115bc673ea13ae5acdc6fdef6f476627804662f73c219ebd88bc7`

@@ -137,5 +137,4 @@ successes; 37 retained decoded futures). The gallery places Nano’s actual
 execution beside a clearly labelled model prediction; predictions are not
 additional trials. The Edge and Super base arms contribute prediction-only
 interface media, with no actual rollout and no behavioral score. None may be
-merged with historical evidence. LaWAM was withdrawn before inference and is
-outside the active study.
+merged with historical evidence.

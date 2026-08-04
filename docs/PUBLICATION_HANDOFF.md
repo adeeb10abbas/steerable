@@ -11,9 +11,12 @@ Operational handoffs are evidence provenance, not article outlines.
    — canonical arena-separated result table.
 3. [`VLA_WAM_STEERABILITY_VIDEO_GALLERY.html`](VLA_WAM_STEERABILITY_VIDEO_GALLERY.html)
    — selected execution and exposed-imagination media.
-4. [`VLA_WAM_STEERABILITY_V2_PROTOCOL.md`](VLA_WAM_STEERABILITY_V2_PROTOCOL.md)
+4. [`media/README.md`](../artifacts/vla_wam_shared_v2/media/README.md) and
+   [`vla_wam_study_stats.xlsx`](../outputs/vla_wam_research_handoff/vla_wam_study_stats.xlsx)
+   — complete video roles plus formula-derived rates and evidence inventory.
+5. [`VLA_WAM_STEERABILITY_V2_PROTOCOL.md`](VLA_WAM_STEERABILITY_V2_PROTOCOL.md)
    — frozen experimental rules.
-5. [`publication_manifest.json`](../artifacts/vla_wam_shared_v2/publication_manifest.json)
+6. [`publication_manifest.json`](../artifacts/vla_wam_shared_v2/publication_manifest.json)
    — exact publication assets and SHA-256 digests.
 
 ## Claims that are safe to make
@@ -67,9 +70,6 @@ separately labeled addition is complete:
   action-plus-video diagnostic. It has no robot state, controller execution, or
   released behavioral cell and cannot support a DROID execution claim.
 
-V2-A009 withdrew LaWAM before inference. It has no active cells and should not
-appear in the shareable comparison or gallery.
-
 The V2-A010 and V2-A011 results may be described only with their current-stack
 labels and separate DROID denominators. Nano’s two setup failures occurred
 before policy requests and are not behavioral failures. Do not add either base
@@ -80,7 +80,9 @@ non-execution.
 
 - `docs/` — reader-facing blog, protocol, gallery, and operational handoffs.
 - `artifacts/vla_wam_shared_v2/results/` — compiled tables and figures.
-- `artifacts/vla_wam_shared_v2/media/` — bounded selected publication media.
+- `artifacts/vla_wam_shared_v2/media/` — complete role-aware video catalog and
+  bounded selected publication media.
+- `outputs/vla_wam_research_handoff/` — shareable research statistics workbook.
 - `artifacts/vla_wam_shared_v2/pilot/` — registries, compact episode evidence,
   and invalid-attempt/intervention ledgers.
 - `experiments/` — model adapters and launch documentation.

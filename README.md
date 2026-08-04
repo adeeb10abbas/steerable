@@ -2,7 +2,11 @@
 
 Start with the concise, shareable
 [`VLA/WAM research blog`](docs/VLA_WAM_RESEARCH_BLOG.md) and the
-[`video gallery`](docs/VLA_WAM_STEERABILITY_VIDEO_GALLERY.html). The frozen
+[`video gallery`](docs/VLA_WAM_STEERABILITY_VIDEO_GALLERY.html). The
+[`complete video map`](artifacts/vla_wam_shared_v2/media/README.md) explains
+every committed MP4, and the
+[`research statistics workbook`](outputs/vla_wam_research_handoff/vla_wam_study_stats.xlsx)
+provides formula-derived rates and a hash-bearing media inventory. The frozen
 protocol and hash-bearing evidence remain in the repository for auditability;
 operational handoffs and raw-run details are not part of the main reading path.
 
@@ -29,8 +33,7 @@ complete. Separately labeled current-stack gates for π0-FAST wording, π0.5,
 and Cosmos3 Nano Policy DROID are closed. Cosmos3 Edge base and Cosmos3-Super
 base also completed prediction-only interface probes with zero behavioral
 episodes; their gallery cards explicitly show actual rollout as unavailable.
-None changes the completed evidence retrospectively. LaWAM was withdrawn before
-inference and is not part of the active comparison.
+None changes the completed evidence retrospectively.
 
 Primary entrypoints:
 
@@ -46,6 +49,10 @@ Primary entrypoints:
   full technical record and historical detail.
 - [`VLA_WAM_STEERABILITY_VIDEO_GALLERY.html`](docs/VLA_WAM_STEERABILITY_VIDEO_GALLERY.html):
   complete paired success/failure clips.
+- [`media/README.md`](artifacts/vla_wam_shared_v2/media/README.md): canonical
+  execution, prediction/imagination, and archive/support video map.
+- [`vla_wam_study_stats.xlsx`](outputs/vla_wam_research_handoff/vla_wam_study_stats.xlsx):
+  formula-driven dashboard, exact counts, probe boundaries, and video inventory.
 - [`direct_command_cross_model_comparison.md`](artifacts/vla_wam_shared_v2/results/direct_command_cross_model_comparison.md):
   arena-separated compiled result table.
 

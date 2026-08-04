@@ -1,7 +1,7 @@
 {
   "denominator_policy": "DROID and RoboTwin remain separate arenas; no raw success rate is pooled across them.",
-  "evidence_cutoff_git_commit": "8a9893e643772c35ade334d5e6f5580f7a3e3a16",
-  "evidence_cutoff_utc": "2026-08-04T02:55:51Z",
+  "evidence_cutoff_git_commit": "047212414bfd901392c39b0f82946be49574ead6",
+  "evidence_cutoff_utc": "2026-08-04T04:00:00Z",
   "missing_evidence_policy": "Missing, action-only, and latent-only futures are never zeros. Unreported paired action metrics are null/NR, never zero.",
   "rows": [
     {
@@ -44,6 +44,47 @@
         }
       ],
       "valid_n": 20
+    },
+    {
+      "arena": "DROID / RoboLab",
+      "arena_id": "droid_robolab",
+      "claim_boundary": "Separate V2-A010 current-stack six-cell gate; never merged with historical v1 \u03c00.5 or the V2-A008 \u03c00-FAST wording replication.",
+      "future_evidence_status": "not_applicable_never_zero",
+      "future_interface": "none",
+      "invalid_attempt_count": 0,
+      "invalid_attempt_unit": "setup_attempts; excluded from valid behavior",
+      "left_success": {
+        "count": 1,
+        "status": "measured",
+        "trials": 3
+      },
+      "model": "\u03c00.5 DROID \u2014 current-stack V2-A010",
+      "model_class": "VLA",
+      "model_id": "pi05_current_stack_v2a010",
+      "model_revision": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+      "paired_action_distinctness": {
+        "count": 3,
+        "status": "measured",
+        "trials": 3
+      },
+      "paired_endpoint_alignment": {
+        "count": 3,
+        "status": "measured",
+        "trials": 3
+      },
+      "right_success": {
+        "count": 3,
+        "status": "measured",
+        "trials": 3
+      },
+      "sources": [
+        {
+          "bytes": 20260,
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_direct_gate.json",
+          "sha256": "0c54758fe316764dbca3299d7b665e3edf59412410d844a1f825abad92045f0c"
+        }
+      ],
+      "valid_n": 6
     },
     {
       "arena": "DROID / RoboLab",
@@ -513,10 +554,15 @@
       "sha256": "588699ed912fe900de5a5ca36c350236e15ae0b0a2c55afeea22670759b68c30"
     },
     {
+      "bytes": 20260,
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_direct_gate.json",
+      "sha256": "0c54758fe316764dbca3299d7b665e3edf59412410d844a1f825abad92045f0c"
+    },
+    {
       "bytes": 74549,
       "path": "artifacts/vla_wam_shared_v2/pilot/results/pi0_fast_direct_confirmation.json",
       "sha256": "491c74812ed0e4d36c16f8e0ded17a70af3e69740c9bcb87af129bb6d9563073"
     }
   ],
-  "source_set_sha256": "d525591c714fe495a5e141c475f0e6cdf737df87af3438c6f8103e1fd1a087e9"
+  "source_set_sha256": "2ea061c98347a56ec2a22fb4d00536f7854159feb6c8dbdfc39c4439b4d531d0"
 }

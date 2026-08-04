@@ -18,8 +18,8 @@ from pathlib import Path
 from typing import Any
 
 
-EVIDENCE_HEAD = "8a9893e643772c35ade334d5e6f5580f7a3e3a16"
-EVIDENCE_CUTOFF_UTC = "2026-08-04T02:55:51Z"
+EVIDENCE_HEAD = "047212414bfd901392c39b0f82946be49574ead6"
+EVIDENCE_CUTOFF_UTC = "2026-08-04T04:00:00Z"
 RESULT_DIR = Path("artifacts/vla_wam_shared_v2/results")
 FIGURE_DIR = Path("artifacts/vla_wam_shared_v2/figures")
 
@@ -27,6 +27,10 @@ SOURCES = {
     "pi0": (
         "artifacts/vla_wam_shared_v2/pilot/results/pi0_fast_direct_confirmation.json",
         "491c74812ed0e4d36c16f8e0ded17a70af3e69740c9bcb87af129bb6d9563073",
+    ),
+    "pi05_current": (
+        "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_direct_gate.json",
+        "0c54758fe316764dbca3299d7b665e3edf59412410d844a1f825abad92045f0c",
     ),
     "groot": (
         "artifacts/vla_wam_shared_v2/pilot/expansion/groot_n17_droid_v2_registry.json",
@@ -152,6 +156,43 @@ def build_rows(d: dict[str, Any], ledger: dict[str, dict[str, Any]]) -> list[dic
         "invalid_attempt_count": 0, "invalid_attempt_unit": "cell_attempts",
         "model_revision": None, "source_keys": ["pi0"],
         "claim_boundary": "Frozen ten-seed direct-command directional confirmation.",
+    })
+
+    pi05 = d["pi05_current"]
+    ps = pi05["summary"]
+    require(
+        (
+            pi05["status"],
+            pi05["valid_episode_count"],
+            ps["left_successes"],
+            ps["right_successes"],
+            ps["aligned_endpoint_pair_count"],
+            ps["distinct_executed_action_pair_count"],
+        )
+        == ("complete_6_of_6_valid_current_stack_cells", 6, 1, 3, 3, 3),
+        "pi0.5 current-stack result mismatch",
+    )
+    rows.append({
+        "model_id": "pi05_current_stack_v2a010",
+        "model": "π0.5 DROID — current-stack V2-A010",
+        "model_class": "VLA",
+        "arena": "DROID / RoboLab",
+        "arena_id": "droid_robolab",
+        "valid_n": 6,
+        "left_success": metric(1, 3),
+        "right_success": metric(3, 3),
+        "paired_endpoint_alignment": metric(3, 3),
+        "paired_action_distinctness": metric(3, 3),
+        "future_interface": "none",
+        "future_evidence_status": "not_applicable_never_zero",
+        "invalid_attempt_count": len(pi05["infrastructure_invalid_attempts"]),
+        "invalid_attempt_unit": "setup_attempts; excluded from valid behavior",
+        "model_revision": pi05["openpi_commit"],
+        "source_keys": ["pi05_current"],
+        "claim_boundary": (
+            "Separate V2-A010 current-stack six-cell gate; never merged with "
+            "historical v1 π0.5 or the V2-A008 π0-FAST wording replication."
+        ),
     })
 
     nano = d["cosmos_nano"]
@@ -400,12 +441,18 @@ def svg_text(rows: list[dict[str, Any]], source_set: str, width: int, height: in
         row_h = (h - 82) / len(panel_rows)
         for index, row in enumerate(panel_rows):
             cy = y + 76 + row_h * (index + 0.5)
+            model_label, separator, scope_label = row["model"].partition(" — ")
+            model_meta = (
+                f"{scope_label} · valid n={row['valid_n']}"
+                if separator
+                else f"valid n={row['valid_n']}"
+            )
             if index:
                 parts.append(f'<line x1="{x+20}" x2="{x+w-20}" y1="{cy-row_h/2}" y2="{cy-row_h/2}" stroke="#EEF2F6"/>')
             parts.append(f'<rect x="{x+22}" y="{cy-24}" width="40" height="18" rx="9" fill="{COLORS[row["model_class"]]}"/>')
             parts.append(f'<text class="badge" x="{x+42}" y="{cy-11}" text-anchor="middle">{row["model_class"]}</text>')
-            parts.append(f'<text class="model" x="{x+22}" y="{cy+7}">{html.escape(row["model"])}</text>')
-            parts.append(f'<text class="small" x="{x+22}" y="{cy+24}">valid n={row["valid_n"]}</text>')
+            parts.append(f'<text class="model" x="{x+22}" y="{cy+7}">{html.escape(model_label)}</text>')
+            parts.append(f'<text class="small" x="{x+22}" y="{cy+24}">{html.escape(model_meta)}</text>')
             bar_x, bar_w = x + w * 0.34, w * 0.28
             for offset, direction in ((-10, "LEFT"), (10, "RIGHT")):
                 m = row[f"{direction.lower()}_success"]
@@ -482,8 +529,8 @@ def main() -> None:
     root = args.repo_root.resolve()
     documents, ledger = load_sources(root)
     rows = build_rows(documents, ledger)
-    require(len(rows) == 10, f"expected ten measured model rows, got {len(rows)}")
-    require(sum(row["valid_n"] for row in rows if row["arena_id"] == "droid_robolab") == 44, "DROID valid-n audit failed")
+    require(len(rows) == 11, f"expected eleven measured model rows, got {len(rows)}")
+    require(sum(row["valid_n"] for row in rows if row["arena_id"] == "droid_robolab") == 50, "DROID valid-n audit failed")
     require(sum(row["valid_n"] for row in rows if row["arena_id"] == "robotwin_place_a2b") == 54, "RoboTwin valid-n audit failed")
     write_outputs(root, rows, ledger)
 

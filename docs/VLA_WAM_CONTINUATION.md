@@ -1,8 +1,8 @@
 # VLA/WAM study continuation handoff
 
 Updated: 4 August 2026, after all original bounded gates and both Cosmos3 base
-interface probes completed, after both V2-A015 release paths passed, and after
-the six-cell DreamZero `s=2` behavioral arm completed.
+interface probes completed, and after both six-cell V2-A015 behavioral arms
+completed.
 
 This document is the restart point for a human or coding model with no chat
 context. The machine-readable companion is
@@ -23,7 +23,7 @@ Current direct-command evidence is:
 | DROID | Cosmos3 Edge | 3/3 | 3/3 | six-cell gate complete; decoded futures retained |
 | DROID | DreamZero | 2/3 | 1/3 | baseline complete/do not rerun; V2-A015 `s=2` complete separately at LEFT 1/3 and RIGHT 3/3 |
 | DROID | π0.5 current-stack V2-A010 | 1/3 | 3/3 | six-cell gate complete; selected actual-rollout pair published separately |
-| DROID | Cosmos3 Nano Policy DROID V2-A011 | 3/3 | 3/3 | baseline complete/do not rerun; V2-A015 `g=1` release gate passed and six new cells are released |
+| DROID | Cosmos3 Nano Policy DROID V2-A011 | 3/3 | 3/3 | baseline complete/do not rerun; V2-A015 `g=1` complete separately at LEFT 1/3 and RIGHT 3/3 |
 | DROID | Cosmos3 Super base V2-A012/A014 | — | — | image-only action+video probe passed; zero behavioral cells released |
 | DROID | Cosmos3 Edge base V2-A013 | — | — | three-request interface probe passed; behavior blocked by exact mapping audit |
 | RoboTwin | Efficient-WAM-RT | 3/7 | 2/7 | pairs03–09 complete; do not rerun |
@@ -997,8 +997,25 @@ The independent Cosmos3 Nano `g=1` release gate also passed. Repeat LEFT
 actions and complete 33-frame RGB futures were bit-identical. The exact LEFT
 and RIGHT prompts produced distinct finite `[32,8]` actions (RMS
 `0.018947694945167855`) and distinct futures (pixel MAE
-`2.9921545294325833`). Its six `g=1` behavioral cells are therefore released;
-none had run when this handoff was updated.
+`2.9921545294325833`).
+
+All six `g=1` behavioral cells are now complete valid evidence. Under the exact
+prompt “Put the Rubik's cube to the left of the bowl.”, seed 8300 failed at the
+450-action cap, seed 8301 succeeded at action 353, and seed 8302 failed at the
+cap: LEFT `1/3`. Under “Put the Rubik's cube to the right of the bowl.”, seeds
+8300, 8301, and 8302 succeeded at actions 253, 129, and 257: RIGHT `3/3`.
+Therefore `g=1` produced `4/6`, versus LEFT `3/3`, RIGHT `3/3`, total `6/6` in
+the preserved `g=3` baseline. Removing the joint action/video CFG blend
+coincided with two fewer LEFT successes and no loss on RIGHT, descriptively
+worsening directional balance and robustness. The sample is a six-cell
+post-result pilot: it is not a powered or general performance claim, and the
+two individual LEFT failures are not assigned a causal mechanism.
+
+All six viewport videos, six executed-action traces, and 64 decoded 33-frame
+request futures are retained. The six episodes contain 1,892 executed actions
+and 64 behavioral model requests; per-cell request counts were LEFT/RIGHT
+`15/8`, `12/5`, and `15/9` for seeds 8300–8302. All three pair guards exited
+zero, and no runtime intervention occurred.
 
 The nine fixed-observation action requests across both arms are diagnostics,
 not robot episodes, and contribute zero observations to every behavioral
@@ -1041,11 +1058,11 @@ changes, and effect sizes; it cannot establish a powered improvement or a
 general model-family effect. The optional higher-guidance arms remain
 unauthorized.
 
-Both independent gates passed, and the DreamZero `s=2` arm is complete and must
-not be rerun. Exactly six Cosmos3 Nano `g=1` behavioral cells remain. Run that
-complete arm without outcome-based stopping and keep its denominator separate
-from both DreamZero settings. Before it advances, run the repository gate and
-use only the hash-pinned V2-A015 runbook:
+V2-A015 is behaviorally complete: all twelve authorized cells are valid, no
+cell remains, and neither arm may be rerun. Keep the two six-cell denominators
+separate. The next work is hash-bearing Cosmos compilation and comparison
+media, with no trajectory-quality claim added before that compiler runs. Run
+the repository gate before committing the coherent evidence slice:
 
 ```bash
 python3 tools/validate_vla_wam_v2_protocol.py

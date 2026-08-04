@@ -1,6 +1,6 @@
 {
   "schema_version": "vla-wam-shared-v2-continuation-v1",
-  "updated_at_utc": "2026-08-04T19:54:04Z",
+  "updated_at_utc": "2026-08-04T20:02:46Z",
   "evidence_head_before_handoff": "1155ae3f5e3c5db83d9b50a92d8519027bc1d61f",
   "active_branch": "codex/wam-language-steerability",
   "study_status": "pi0_fast_release_gate_failed_pi05_current_stack_complete_cosmos3_nano_current_stack_complete_cosmos3_edge_base_interface_passed_behavior_blocked_cosmos3_super_image_only_interface_passed_no_behavior_lawam_withdrawn",
@@ -267,18 +267,18 @@
     "denominator_policy": "All six valid behavioral cells are in the DreamZero DROID denominator, including three valid failures. Eleven setup-invalid attempts remain excluded. DROID results are not pooled with RoboTwin."
   },
   "cfg_ablation_v2a015": {
-    "status": "dreamzero_s2_complete_cosmos_g1_six_cells_remaining",
+    "status": "complete_twelve_valid_behavioral_cells_both_arms",
     "amendment_id": "V2-A015",
     "amendment": "artifacts/vla_wam_shared_v2/pilot/post_result_cfg_ablation_v2a015_amendment.json",
     "preflight": "artifacts/vla_wam_shared_v2/pilot/expansion/cfg_ablation_v2a015_preflight.json",
     "authorized_behavioral_episode_count": 12,
     "authorized_cells_released": 12,
-    "authorized_cells_completed": 6,
-    "authorized_cells_remaining": 6,
-    "model_action_request_count": 254,
+    "authorized_cells_completed": 12,
+    "authorized_cells_remaining": 0,
+    "model_action_request_count": 318,
     "fixed_observation_action_request_count": 9,
-    "behavioral_model_action_request_count": 245,
-    "behavioral_episode_count": 6,
+    "behavioral_model_action_request_count": 309,
+    "behavioral_episode_count": 12,
     "fixed_observation_requests_in_behavioral_denominator": 0,
     "setup_invalid_attempt_count": 16,
     "setup_invalid_attempts_in_behavioral_denominator": 0,
@@ -331,6 +331,60 @@
             640,
             3
           ]
+        },
+        "behavioral_result": {
+          "status": "complete_six_valid_behavioral_cells_do_not_rerun",
+          "valid_behavioral_episode_count": 6,
+          "requested_success_count": 4,
+          "success_by_relation": {
+            "left": "1/3",
+            "right": "3/3"
+          },
+          "g1_total": "4/6",
+          "preserved_g3_baseline": {
+            "left": "3/3",
+            "right": "3/3",
+            "total": "6/6"
+          },
+          "prompts": {
+            "left": "Put the Rubik's cube to the left of the bowl.",
+            "right": "Put the Rubik's cube to the right of the bowl."
+          },
+          "behavioral_model_action_request_count": 64,
+          "executed_action_count": 1892,
+          "pair_manifests": {
+            "seed8300": {
+              "path": "/data/users/ali/vla_wam/raw/cfg_ablation/v2_a015/cosmos3_nano_g1/behavioral/seed8300_attempt01/pair_manifest.json",
+              "sha256": "177c04b1b1c6448085b5cb44ea7f74a564b1d8907530126c11f78d50f6003e5f",
+              "result": "LEFT failure at action cap 450; RIGHT success at action 253",
+              "request_counts_left_right": [
+                15,
+                8
+              ]
+            },
+            "seed8301": {
+              "path": "/data/users/ali/vla_wam/raw/cfg_ablation/v2_a015/cosmos3_nano_g1/behavioral/seed8301_attempt01/pair_manifest.json",
+              "sha256": "435e3bb3cdd87835646316f8423d582541d683e972a46227d4e38f9324bf79e3",
+              "result": "LEFT success at action 353; RIGHT success at action 129",
+              "request_counts_left_right": [
+                12,
+                5
+              ]
+            },
+            "seed8302": {
+              "path": "/data/users/ali/vla_wam/raw/cfg_ablation/v2_a015/cosmos3_nano_g1/behavioral/seed8302_attempt01/pair_manifest.json",
+              "sha256": "53b48f55d31523565bb2dcc8e92de7670c2d74c62bde6e24cd79c4df10064aa2",
+              "result": "LEFT failure at action cap 450; RIGHT success at action 257",
+              "request_counts_left_right": [
+                15,
+                9
+              ]
+            }
+          },
+          "retention": "All six viewport videos, six executed-action traces, and 64 decoded 33-frame request futures are retained on the ali PVC.",
+          "successful_guard_exit_zero_count": 3,
+          "runtime_intervention_count": 0,
+          "claim_boundary": "Removing joint action/video CFG from g=3 to g=1 coincided with two fewer LEFT successes and no change in RIGHT successes. This is descriptive evidence of worse directional balance and robustness, not a powered/general result or a causal explanation of either individual failure."
         }
       },
       "dreamzero_action_cfg_s2": {
@@ -512,11 +566,12 @@
       }
     ],
     "setup_invalid_attempt_record": "artifacts/vla_wam_shared_v2/pilot/expansion/cfg_ablation_v2a015_preflight.json",
-    "behavioral_denominator_policy": "All nine fixed-observation requests and all sixteen setup-invalid attempts are excluded from behavioral denominators. The six completed DreamZero s=2 episodes, including two valid LEFT failures, form their own DROID denominator; the unrun Cosmos g=1 cells remain separate.",
+    "behavioral_denominator_policy": "All nine fixed-observation requests and all sixteen setup-invalid attempts are excluded from behavioral denominators. The six completed DreamZero s=2 episodes and six completed Cosmos g=1 episodes each form their own DROID denominator; valid failures remain included and the two arms are never pooled.",
     "next_steps": [
-      "Run and retain all six released Cosmos3 Nano guidance-1 seed-by-relation behavioral cells under the same retention rules and in its own denominator."
+      "Compile and hash-bind the completed Cosmos3 Nano g=1 raw behavioral evidence before reporting trajectory-quality metrics.",
+      "Build paired comparison media for the completed guidance arms without rerunning any V2-A015 cell."
     ],
-    "claim_boundary": "Exploratory post-result guidance ablation with a separate six-cell DROID denominator per arm. DreamZero s=2 is complete at LEFT 1/3 and RIGHT 3/3; Cosmos g=1 retains six unrun cells. Nine diagnostic requests and sixteen setup-invalid attempts remain outside every behavioral denominator. The DreamZero shift from baseline 3/6 to s=2 4/6 is descriptive directional redistribution, not a powered improvement claim, and preserved baselines are not rerun or overwritten."
+    "claim_boundary": "V2-A015 is complete as an exploratory post-result ablation with separate six-cell DROID denominators. DreamZero s=2 and Cosmos g=1 each produced LEFT 1/3 and RIGHT 3/3; nine diagnostic requests and sixteen setup-invalid attempts remain outside every behavioral denominator. Cosmos g=1 lost two LEFT successes and no RIGHT successes relative to its preserved g=3 baseline, while DreamZero s=2 redistributed success toward RIGHT relative to s=1-equivalent. Both contrasts are descriptive, not powered/general or causal claims about individual failures, and preserved baselines are not rerun or overwritten."
   },
   "completed_direct_gates": [
     {

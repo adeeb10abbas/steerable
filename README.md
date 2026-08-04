@@ -22,11 +22,14 @@ Do not combine results across these tracks. New agents should begin with
 
 ## Active VLA/WAM steerability study
 
-The current evidence spans nine checkpoints across DROID/RoboLab and RoboTwin.
+The current evidence spans eleven behavioral checkpoints across DROID/RoboLab
+and RoboTwin, plus two nonbehavioral Cosmos3 base-model interface probes.
 All original bounded direct gates and the 42-episode three-WAM confirmation are
-complete. Separately labeled current-stack gates for π0-FAST wording, π0.5
-rollout media, and Cosmos3 Nano Policy DROID are the only active additions;
-none changes the completed evidence retrospectively. LaWAM was withdrawn before
+complete. Separately labeled current-stack gates for π0-FAST wording, π0.5,
+and Cosmos3 Nano Policy DROID are closed. Cosmos3 Edge base and Cosmos3-Super
+base also completed prediction-only interface probes with zero behavioral
+episodes; their gallery cards explicitly show actual rollout as unavailable.
+None changes the completed evidence retrospectively. LaWAM was withdrawn before
 inference and is not part of the active comparison.
 
 Primary entrypoints:

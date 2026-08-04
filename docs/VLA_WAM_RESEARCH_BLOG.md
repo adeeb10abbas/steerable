@@ -74,13 +74,15 @@ futures, and its three matched endpoint shifts all followed the requested
 LEFT-to-RIGHT order. The RoboTwin WAMs were less reliable, although
 Efficient-WAM-RT and LingBot-VA aligned six of seven endpoint pairs.
 
-Two newer Cosmos3 base-model arms are frozen as feasibility work, not results.
-Cosmos3 Super base V2-A012 and Cosmos3 Edge base V2-A013 each have an exact
-three-request fixed-observation action-plus-future probe pending and zero
-released behavioral cells. Edge base is distinct from the completed Edge
-Policy DROID row above. A possible 10D CuRobo-derived controller is a separate
-branch and remains blocked until its exact Franka+Robotiq asset and control
-mapping are verified. Neither pending arm has gallery media.
+Two Cosmos3 base-model arms are interface studies, not behavioral results.
+Edge base V2-A013 completed three fixed-observation requests: repeat LEFT was
+bit-identical, and RIGHT changed both its 10D action and generated video. No
+action was executed because the exact RoboLab USD and pinned CuRobo parser
+disagree by 26.4 cm and about 90° at the control frame. The gallery therefore
+labels this clip as model prediction only and shows the rollout as unavailable.
+Super base V2-A012/V2-A014 separately passed the same image-only deterministic
+and prompt-sensitivity interface test. Neither base arm enters a success table
+or behavioral denominator.
 
 ## Dreaming is not executing
 
@@ -133,7 +135,7 @@ rollout, not historical v1 footage and not an imagined future. Cosmos3 Nano
 Policy DROID V2-A011 is also complete as a separate current-stack gate (6/6
 successes; 37 retained decoded futures). The gallery places Nano’s actual
 execution beside a clearly labelled model prediction; predictions are not
-additional trials. The Super-base and Edge-base feasibility records contain no
-behavioral result or media and must not be added as zeros. None may be merged
-with historical evidence. LaWAM was
-withdrawn before inference and is outside the active study.
+additional trials. The Edge and Super base arms contribute prediction-only
+interface media, with no actual rollout and no behavioral score. None may be
+merged with historical evidence. LaWAM was withdrawn before inference and is
+outside the active study.

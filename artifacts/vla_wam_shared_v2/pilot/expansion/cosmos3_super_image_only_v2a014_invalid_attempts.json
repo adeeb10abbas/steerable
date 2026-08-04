@@ -1,0 +1,77 @@
+{
+  "attempts": [
+    {
+      "attempt_id": "v2_a012_server_load_001",
+      "cause": "The private Cosmos3-Super process group was stopped before any request after the matching serving stack exposed a required writable speaker-storage prerequisite. This attempt did not itself reach that initializer.",
+      "model_request_count": 0,
+      "raw_logs": {
+        "stdout": {
+          "bytes": 65194,
+          "path": "/data/users/ali/vla_wam/raw/cosmos3_super_droid/v2_a012/runtime/attempt01_missing_speaker_dir.stdout.log",
+          "sha256": "2f7e1692cce70c510ae455008e0940d1c8b9aeb26116ca144733f4b29d89759f"
+        },
+        "thermal_guard": {
+          "bytes": 53822,
+          "path": "/data/users/ali/vla_wam/raw/cosmos3_super_droid/v2_a012/runtime/attempt01_missing_speaker_dir.thermal_guard.jsonl",
+          "sha256": "a13cdf16171cb65980fb6bf2d8daab1c4b60f18b56b471dc76d8ec7a54e578d7"
+        }
+      },
+      "result": "infrastructure_invalid",
+      "stage": "server_load_before_listener",
+      "worker_process_group": 138129
+    },
+    {
+      "attempt_id": "v2_a012_server_load_002",
+      "cause": "Rank 0 was SIGKILLed while loading shard 6/27 under a 64 GiB container memory limit. The cgroup reported OOM kills and both selected B200s returned fully free; this is a host-memory infrastructure failure, not a GPU OOM or model response.",
+      "model_request_count": 0,
+      "raw_logs": {
+        "stdout": {
+          "bytes": 128302,
+          "path": "/data/users/ali/vla_wam/raw/cosmos3_super_droid/v2_a012/runtime/attempt02.stdout.log",
+          "sha256": "1c11d2f2e6367323774a32ced4cafbcbb7b89446602289e4006cac9f77a9aa21"
+        },
+        "thermal_guard": {
+          "bytes": 57894,
+          "path": "/data/users/ali/vla_wam/raw/cosmos3_super_droid/v2_a012/runtime/attempt02.thermal_guard.jsonl",
+          "sha256": "179604932c23d564c2dbcedfdeda621db5f4bcc30986349f6707c462baa39543"
+        }
+      },
+      "result": "infrastructure_invalid",
+      "stage": "checkpoint_load_before_listener",
+      "worker_process_group": 140230
+    }
+  ],
+  "checkpoint_revision": "e0262be9d8f7586bc24c069a2aed2b665bdff266",
+  "counts": {
+    "authorized_v2_a014_request_count": 3,
+    "infrastructure_invalid_attempt_count": 2,
+    "partial_behavioral_attempt_count": 0,
+    "runtime_model_intervention_count": 0,
+    "valid_behavioral_episode_count": 0,
+    "valid_image_only_interface_request_count": 3
+  },
+  "denominator_policy": "Both invalid attempts ended before a listener accepted a model request and remain outside all model and behavioral denominators. The later A100 V2-A014 run issued exactly three valid image-only requests. No behavioral episode was attempted.",
+  "model_id": "cosmos3_super_base_image_only_interface_diagnostic",
+  "runtime_interventions": [],
+  "scheduler_events": [
+    {
+      "event_id": "b200_2gpu_256gi_pending",
+      "model_load_started": false,
+      "model_request_started": false,
+      "note": "The ali-owned two-B200 256 GiB pod remained unschedulable for insufficient GPU capacity."
+    },
+    {
+      "event_id": "b200_4gpu_256gi_pending",
+      "model_load_started": false,
+      "model_request_started": false,
+      "note": "The ali-owned four-B200 256 GiB pod remained unschedulable for insufficient GPU capacity."
+    }
+  ],
+  "schema_version": "vla-wam-shared-v2-cosmos3-super-image-only-v2a014-invalid-attempts-v1",
+  "source_runtime_gate": {
+    "bytes": 6724,
+    "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_super_v2a012_runtime_gate.json",
+    "sha256": "fef594057743e8f2fe457d12f0d4cee608ad4a5ef0d47d9baf5e49b1271482e5"
+  },
+  "status": "complete_with_two_pre_request_infrastructure_attempts"
+}

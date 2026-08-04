@@ -55,6 +55,42 @@ CORE = [
     "artifacts/vla_wam_shared_v2/media/video_first_gallery_manifest.json",
 ]
 
+# Compact, reproducible provenance for the Cosmos3 Super / Edge base-model
+# feasibility work.  Deliberately exclude PVC-resident outputs, checkpoints,
+# environments, and any media asset that is not selected through the gallery.
+COSMOS3_SUPER_EDGE_BASE = [
+    "artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_super_droid_amendment.json",
+    "artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_edge_base_amendment.json",
+    "artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_super_image_only_v2a014_amendment.json",
+    "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_super_droid_v2a012_registry.json",
+    "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_super_v2a012_hf_snapshot.json",
+    "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_super_v2a012_runtime_gate.json",
+    "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_super_image_only_v2a014_registry_overlay.json",
+    "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_super_image_only_v2a014_result.json",
+    "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_super_image_only_v2a014_provenance.json",
+    "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_super_image_only_v2a014_invalid_attempts.json",
+    "artifacts/vla_wam_shared_v2/media/cosmos3_super_base_v2a014/media_manifest.json",
+    "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_base_v2a013_registry.json",
+    "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_base_v2a013_fixed_observation.json",
+    "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_base_v2a013_invalid_attempts.json",
+    "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_base_v2a013_curobo_usd_audit.json",
+    "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_base_v2a013_provenance.json",
+    "artifacts/vla_wam_shared_v2/media/cosmos3_edge_base_v2a013/media_manifest.json",
+    "experiments/cosmos/COSMOS3_SUPER_V2A012.md",
+    "experiments/cosmos/COSMOS3_EDGE_BASE_V2A013.md",
+    "experiments/cosmos/run_cosmos3_super_v2a014_probe.py",
+    "experiments/cosmos/run_edge_base_v2a013_fixed_observation.py",
+    "tools/build_cosmos3_super_checkpoint_manifest.py",
+    "tools/finalize_cosmos3_super_registry.py",
+    "tools/build_cosmos3_super_v2a014_media.py",
+    "tools/build_v2a013_cosmos3_edge_base_registry.py",
+    "tools/build_cosmos3_edge_base_v2a013_media.py",
+    "tools/audit_v2a013_curobo_usd.py",
+    "handoff/k8s/cosmos3-super-b200-2gpu-256gi-ali.yaml",
+    "handoff/k8s/cosmos3-super-b200-4gpu-256gi-ali.yaml",
+    "handoff/k8s/cosmos3-super-a100-2gpu-256gi-ali.yaml",
+]
+
 FIGURES = [
     "artifacts/vla_wam_shared_v2/figures/direct_command_cross_model_comparison_1600x900.svg",
     "artifacts/vla_wam_shared_v2/figures/groot_n17_droid_endpoint_redirection.svg",
@@ -124,6 +160,11 @@ def record(relative: str, category: str) -> dict[str, Any]:
 def main() -> None:
     media = media_assets()
     records = [record(path, "reader_core") for path in CORE]
+    records += [
+        record(path, "cosmos3_super_edge_base_provenance")
+        for path in COSMOS3_SUPER_EDGE_BASE
+        if path not in CORE
+    ]
     records += [record(path, "publication_figure") for path in FIGURES]
     records += [record(path, "selected_media") for path in media if path not in CORE]
     records.sort(key=lambda item: (item["category"], item["path"]))
@@ -139,7 +180,7 @@ def main() -> None:
             "invalid infrastructure attempts are outside behavioral denominators",
             "missing, latent-only, and action-only futures are not scored as zeros",
             "historical reference media is labeled and never substituted for current evidence",
-            "base-model feasibility probes are non-behavioral evidence and have no publication media",
+            "Cosmos3 base-model probes remain non-behavioral; selected generated media is labeled prediction-only with actual rollout unavailable",
         ],
         "asset_count": len(records),
         "assets": records,

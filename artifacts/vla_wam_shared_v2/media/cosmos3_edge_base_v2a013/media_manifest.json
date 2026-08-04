@@ -1,0 +1,37 @@
+{
+  "amendment_id": "V2-A013",
+  "claim_boundary": "Fixed-observation model prediction only. No simulator rollout was authorized or run because the exact Franka+Robotiq CuRobo mapping gate is blocked.",
+  "entries": [
+    {
+      "actual_rollout": null,
+      "actual_rollout_unavailable_reason": "behavior_blocked_exact_franka_robotiq_mapping_not_verified",
+      "conditions": [
+        "left",
+        "right"
+      ],
+      "model_prediction": {
+        "bytes": 465926,
+        "frames": 17,
+        "height": 534,
+        "path": "artifacts/vla_wam_shared_v2/media/cosmos3_edge_base_v2a013/cosmos3_edge_base_v2a013_seed8300_paired_model_prediction.mp4",
+        "sha256": "42cf54de658b568716c91d004d3a17c2f3b53cd17e69a1f40d4fb93af8f1eb1c",
+        "width": 1280
+      },
+      "poster": {
+        "bytes": 160010,
+        "path": "artifacts/vla_wam_shared_v2/media/cosmos3_edge_base_v2a013/cosmos3_edge_base_v2a013_seed8300_paired_model_prediction_poster.jpg",
+        "sha256": "71f08e2ffb43a5bd08d3004afdee3940ec88efda7f9276487a00adaaf0e040fb"
+      },
+      "sampling_seed": 8300,
+      "source_predictions": {
+        "left_mp4_sha256": "0cde22e2f9bc2250eeb8d90c22a3f2fc141671616318f15ba2db153e4f805d98",
+        "right_mp4_sha256": "9d5b96102a4a43d529576a15519cc754b68445411bf416e2561fd49e4b863d93"
+      },
+      "type": "side_by_side_model_prediction"
+    }
+  ],
+  "fixed_observation_result": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_base_v2a013_fixed_observation.json",
+  "model_id": "cosmos3_edge_base_droid",
+  "schema_version": "vla-wam-shared-v2-cosmos3-edge-base-v2a013-media-v1",
+  "status": "complete_model_prediction_only"
+}

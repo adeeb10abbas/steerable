@@ -148,6 +148,34 @@ DreamZero's three hash-validated actual simulator pairs are listed in this secti
 > LEFT: “Put the blue soap to the left of the tea-box.”
 > RIGHT: “Put the blue soap to the right of the tea-box.”
 
+## WORLD MODELS — prediction-only
+
+These fixed-observation futures are model predictions, not simulator executions or behavioral episodes. The paired rollout panel is explicitly unavailable because the exact controller mapping remains blocked.
+
+### Cosmos3 Edge base — DROID — seed 8300 fixed-observation LEFT/RIGHT prediction
+
+[▶ Open paired model prediction](../artifacts/vla_wam_shared_v2/media/cosmos3_edge_base_v2a013/cosmos3_edge_base_v2a013_seed8300_paired_model_prediction.mp4) · [Poster](../artifacts/vla_wam_shared_v2/media/cosmos3_edge_base_v2a013/cosmos3_edge_base_v2a013_seed8300_paired_model_prediction_poster.jpg) · [Evidence manifest](../artifacts/vla_wam_shared_v2/media/cosmos3_edge_base_v2a013/media_manifest.json) · [CuRobo mapping audit](../artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_base_v2a013_curobo_usd_audit.json) · [Fixed-observation result](../artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_base_v2a013_fixed_observation.json)
+
+- Actual rollout: unavailable — `behavior_blocked_exact_franka_robotiq_mapping_not_verified`.
+- Reason: The exact Franka + Robotiq CuRobo mapping is not verified, so no controller, simulator rollout, or behavioral denominator is authorized.
+- Future interface: Image-conditioned 17-frame video prediction plus 16×10D policy actions; prediction-only evidence
+- Prediction SHA-256: `42cf54de658b568716c91d004d3a17c2f3b53cd17e69a1f40d4fb93af8f1eb1c`
+
+> LEFT: “Put the Rubik's cube to the left of the bowl.” — model prediction retained; not executed
+> RIGHT: “Put the Rubik's cube to the right of the bowl.” — model prediction retained; not executed
+
+### Cosmos3-Super base — seed 8300 image-only LEFT/RIGHT futures and unexecuted actions
+
+[▶ Open paired model prediction](../artifacts/vla_wam_shared_v2/media/cosmos3_super_base_v2a014/cosmos3_super_v2a014_paired_prediction_and_actions.mp4) · [Poster](../artifacts/vla_wam_shared_v2/media/cosmos3_super_base_v2a014/cosmos3_super_v2a014_paired_prediction_and_actions_poster.jpg) · [Evidence manifest](../artifacts/vla_wam_shared_v2/media/cosmos3_super_base_v2a014/media_manifest.json) · [Image-only result](../artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_super_image_only_v2a014_result.json) · [Runtime provenance](../artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_super_image_only_v2a014_provenance.json)
+
+- Actual rollout: unavailable — `v2_a014_authorized_image_only_interface_evidence_no_simulator_or_controller`.
+- Reason: V2-A014 authorized image-only generated futures and unexecuted actions only. It is not a DROID policy, state-conditioned prediction, execution, rollout, or behavioral result.
+- Future interface: Image-only generated futures plus unexecuted 16×10 action trajectories; no robot state
+- Prediction SHA-256: `b43e6df303cca34367c57515cc5191668d5bf9c88b5d4d9825d44e56c7dd2bc1`
+
+> LEFT: “Put the Rubik's cube to the left of the bowl.” — image-only generated future/actions retained; not executed
+> RIGHT: “Put the Rubik's cube to the right of the bowl.” — image-only generated future/actions retained; not executed
+
 ## DreamZero imagined futures — not execution
 
 These are official model-predicted video decodes, not simulator executions, task outcomes, or additional episodes.

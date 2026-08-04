@@ -446,6 +446,101 @@
       ]
     }
   ],
+  "prediction_only_manifest_contracts": [
+    {
+      "path": "artifacts/vla_wam_shared_v2/media/cosmos3_edge_base_v2a013/media_manifest.json",
+      "sha256": "74e71e96ef9b92f6f9cb7478927eaddf956c897f4f2e7062e5c19d267ddf3d5f",
+      "schema_version": "vla-wam-shared-v2-cosmos3-edge-base-v2a013-media-v1",
+      "status": "complete_model_prediction_only",
+      "entries_key": "entries",
+      "entry_count": 1,
+      "model_id": "cosmos3_edge_base_droid",
+      "entry_id": "cosmos3_edge_base_v2a013_seed8300_prediction",
+      "arena": "droid",
+      "arena_label": "DROID / RoboLab",
+      "model_label": "Cosmos3 Edge base — DROID",
+      "category": "WAM",
+      "pair_label": "seed 8300 fixed-observation LEFT/RIGHT prediction",
+      "future_interface": "Image-conditioned 17-frame video prediction plus 16×10D policy actions; prediction-only evidence",
+      "evidence_status": "Complete fixed-observation model prediction; zero behavioral episodes; no simulator rollout",
+      "record_type": "side_by_side_model_prediction",
+      "video_field": "model_prediction",
+      "prediction_media_label": "MODEL PREDICTION — NOT EXECUTION",
+      "actual_rollout_unavailable_reason": "behavior_blocked_exact_franka_robotiq_mapping_not_verified",
+      "actual_rollout_unavailable_detail": "The exact Franka + Robotiq CuRobo mapping is not verified, so no controller, simulator rollout, or behavioral denominator is authorized.",
+      "supporting_evidence": [
+        {
+          "label": "CuRobo mapping audit",
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_base_v2a013_curobo_usd_audit.json",
+          "sha256": "26288a0ed53040e7b2b7b6cd8f13178617a3b917b1d5735dbdcec24925df4bef"
+        },
+        {
+          "label": "Fixed-observation result",
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_base_v2a013_fixed_observation.json",
+          "sha256": "24eeffd51e348cd66af3a03068014298fd60f9d3cbbfa3eb6b924b119977b42c"
+        }
+      ],
+      "directions": [
+        {
+          "relation": "LEFT",
+          "prompt": "Put the Rubik's cube to the left of the bowl.",
+          "outcome": "model prediction retained; not executed"
+        },
+        {
+          "relation": "RIGHT",
+          "prompt": "Put the Rubik's cube to the right of the bowl.",
+          "outcome": "model prediction retained; not executed"
+        }
+      ]
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v2/media/cosmos3_super_base_v2a014/media_manifest.json",
+      "sha256": "826256d2d84a35208e5ceab4538210be714beb8b0fbd68c2c0a2597acbbb80db",
+      "schema_version": "vla-wam-shared-v2-cosmos3-super-image-only-v2a014-media-v1",
+      "status": "complete_prediction_and_unexecuted_actions_only",
+      "entries_key": "entries",
+      "entry_count": 1,
+      "model_id": "cosmos3_super_base_image_only_interface_diagnostic",
+      "entry_id": "cosmos3_super_v2a014_seed8300_image_only_prediction",
+      "arena": "droid",
+      "arena_label": "DROID / RoboLab conditioning image only",
+      "model_label": "Cosmos3-Super base",
+      "category": "WAM",
+      "pair_label": "seed 8300 image-only LEFT/RIGHT futures and unexecuted actions",
+      "future_interface": "Image-only generated futures plus unexecuted 16×10 action trajectories; no robot state",
+      "evidence_status": "Complete image-only interface evidence; zero behavioral episodes; no simulator rollout",
+      "record_type": "side_by_side_model_prediction_with_unexecuted_action_trajectories",
+      "video_field": "model_prediction_and_actions",
+      "requires_unexecuted_actions": true,
+      "prediction_media_label": "IMAGE-ONLY GENERATED FUTURES + UNEXECUTED ACTION TRAJECTORIES — NOT EXECUTION",
+      "actual_rollout_unavailable_reason": "v2_a014_authorized_image_only_interface_evidence_no_simulator_or_controller",
+      "actual_rollout_unavailable_detail": "V2-A014 authorized image-only generated futures and unexecuted actions only. It is not a DROID policy, state-conditioned prediction, execution, rollout, or behavioral result.",
+      "supporting_evidence": [
+        {
+          "label": "Image-only result",
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_super_image_only_v2a014_result.json",
+          "sha256": "7c69f493b1aefbd2e397d6f8acc592aa4c48c6d98a668fc8af04246c9b2433bb"
+        },
+        {
+          "label": "Runtime provenance",
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_super_image_only_v2a014_provenance.json",
+          "sha256": "7990113d3d317d2f57f2d21c4fbb0eed1e9067b4fd4f2c1520f8033c2162c3c6"
+        }
+      ],
+      "directions": [
+        {
+          "relation": "LEFT",
+          "prompt": "Put the Rubik's cube to the left of the bowl.",
+          "outcome": "image-only generated future/actions retained; not executed"
+        },
+        {
+          "relation": "RIGHT",
+          "prompt": "Put the Rubik's cube to the right of the bowl.",
+          "outcome": "image-only generated future/actions retained; not executed"
+        }
+      ]
+    }
+  ],
   "missing_publication_media": [
     {
       "model_id": "pi05_droid",

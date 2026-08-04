@@ -1,0 +1,57 @@
+{
+  "artifact": "cosmos3_edge_base_v2a013_curobo_usd_audit",
+  "status": "blocked_no_behavior",
+  "scope": "Static source-and-USD audit only; no Isaac startup, EULA acceptance, GPU initialization, controller construction, simulator action, or behavioral denominator.",
+  "source_provenance": {
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "robolab_hydrated_usd": "/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/robots/franka_robotiq_2f_85_flattened.usd",
+    "robolab_staged_lfs_pointer": "/data/users/ali/vla_wam/external/cosmos3-edge-v2a013/RoboLab/assets/robots/franka_robotiq_2f_85_flattened.usd",
+    "usd_bytes": 14156362,
+    "usd_sha256": "f555695465687548a1bd31b5e3f30385182d476a67c17080b7820ad0ef747e41",
+    "curobo_commit": "d64c4b005459db10c5dd867d8b30a87d5bda9bdb",
+    "curobo_usd_parser": "src/curobo/cuda_robot_model/usd_kinematics_parser.py",
+    "curobo_usd_parser_sha256": "d515ee59c456c1c98f9577ce45bd2c3a39554c2f327cb9c935c0fc892c789cc0"
+  },
+  "usd_facts": {
+    "default_prim": "/panda",
+    "robot_root": "/panda",
+    "meters_per_unit": 1.0,
+    "up_axis": "Z",
+    "base_path": "/panda/panda_link0",
+    "control_body_path": "/panda/Gripper/Robotiq_2F_85/base_link",
+    "arm_joint_order": ["panda_joint1", "panda_joint2", "panda_joint3", "panda_joint4", "panda_joint5", "panda_joint6", "panda_joint7"],
+    "gripper_actuated_joint": "finger_joint",
+    "fixed_adapter_joint": {
+      "name": "panda_hand_joint",
+      "body0": "/panda/panda_link8",
+      "body1": "/panda/Gripper/Robotiq_2F_85/base_link",
+      "body1_local_offset_m": [-0.018174022, -7.564315e-11, -2.1158286e-08]
+    },
+    "collision_prim_count_robot_only": 20,
+    "robot_collision_prims": [
+      "/panda/panda_link0/geometry/panda_link0", "/panda/panda_link1/geometry/panda_link1", "/panda/panda_link2/geometry/panda_link2", "/panda/panda_link3/geometry/panda_link3", "/panda/panda_link4/geometry/panda_link4", "/panda/panda_link5/geometry/panda_link5", "/panda/panda_link6/geometry/panda_link6", "/panda/panda_link7/geometry/panda_link7", "/panda/panda_link8/gripper_adapter",
+      "/panda/Gripper/Robotiq_2F_85/base_link/Defeatured_2F_85_PAD_OPEN_basestep_01", "/panda/Gripper/Robotiq_2F_85/left_outer_knuckle/Defeatured_2F_85_PAD_OPEN_Finger1step_01", "/panda/Gripper/Robotiq_2F_85/left_outer_finger/Defeatured_2F_85_PAD_OPEN_finger2step_01", "/panda/Gripper/Robotiq_2F_85/left_inner_finger/Defeatured_2F_85_PAD_OPEN_finger4step_01", "/panda/Gripper/Robotiq_2F_85/left_inner_finger/Defeatured_2F_85_PAD_OPEN_fingertipsstep_01", "/panda/Gripper/Robotiq_2F_85/left_inner_knuckle/Defeatured_2F_85_PAD_OPEN_finger3step_01", "/panda/Gripper/Robotiq_2F_85/right_outer_knuckle/Defeatured_2F_85_PAD_OPEN_Finger1step_01", "/panda/Gripper/Robotiq_2F_85/right_outer_finger/Defeatured_2F_85_PAD_OPEN_finger2step_01", "/panda/Gripper/Robotiq_2F_85/right_inner_finger/Defeatured_2F_85_PAD_OPEN_finger4step_01", "/panda/Gripper/Robotiq_2F_85/right_inner_finger/Defeatured_2F_85_PAD_OPEN_fingertipsstep_01", "/panda/Gripper/Robotiq_2F_85/right_inner_knuckle/Defeatured_2F_85_PAD_OPEN_finger3step_01"
+    ]
+  },
+  "zero_state_frame_comparison": {
+    "method": "PXR UsdGeom.XformCache versus exact CuRobo UsdKinematicsParser _get_joint_transform composition (localPos0 * inverse(localPos1)); matrices are Gf row-major.",
+    "joint_chain": ["panda_joint1", "panda_joint2", "panda_joint3", "panda_joint4", "panda_joint5", "panda_joint6", "panda_joint7", "panda_joint8", "panda_hand_joint"],
+    "pxr_panda_link0_to_robolab_base_link_row_major": [[0.0000463908888664, -0.000130004490921, -0.999999990473, 0.0], [0.00000158036337764, 0.999999991548, -0.000130004417746, 0.0], [0.999999998923, -0.00000157433234209, 0.0000463910939288, 0.0], [0.359712278843, -0.000010750118217, 0.471768674849, 1.0]],
+    "curobo_joint_only_reproduction_row_major": [[1.0, 0.0, 0.0, 0.0], [0.0, 1.0, 0.0, 0.0], [0.0, 0.0, 1.0, 0.0], [0.106173969805, 0.067999899463, 0.439999988972, 1.0]],
+    "translation_mismatch_m": 0.26441704182710424,
+    "rotation_mismatch_degrees": 89.99734223411144,
+    "result": "The direct USD parser is frame-wrong at zero state; it is not eligible for controller use."
+  },
+  "parser_and_collision_decision": {
+    "direct_usd_parser": "The pinned parser can open a USD but is explicitly experimental, cannot read mimic joints, and omits link geometry transformations after joints.",
+    "collision": "The parser supplies no collision meshes or spheres. CuRobo requires separately authored collision_spheres keyed by collision_link_names; its USD helper flattens/copies for visualization and does not export an exact URDF/XRDF/collision configuration.",
+    "decision": "No 10D-to-8D CuRobo action is authorized from the direct USD parser, and no Panda or unrelated Robotiq asset may substitute."
+  },
+  "future_release_requirements": [
+    "Hash-freeze an exact full USD-to-kinematics adapter that preserves link transforms and the Robotiq coupling.",
+    "Hash-freeze a collision representation derived from the exact USD, including arm, adapter, and Robotiq collision prims.",
+    "Independently compare forward kinematics across a fixed multi-joint test set against USD/Isaac and verify joint limits, units, frame convention, and gripper scalar mapping.",
+    "Verify the collision model against the same frozen RoboLab reset before any IKSolver call.",
+    "Record every verification hash and retain controller rejections outside behavioral denominators."
+  ]
+}

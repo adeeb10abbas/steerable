@@ -56,11 +56,13 @@ action pairs aligned/distinct; 37 decoded futures retained). Its selected
 seed-8300 actual rollout and model prediction are labelled separately. LaWAM was withdrawn before inference by
 `V2-A009` and has zero remaining cells. The historical 60-cell π0-FAST wording
 queue remains separately blocked on missing exact OpenPI/RoboLab revisions and
-must not be merged with V2-A008. Cosmos3 Super base V2-A012 and Cosmos3 Edge
-base V2-A013 are frozen as non-behavioral feasibility probes: each has exactly
-three conditional fixed-observation action-plus-future requests and zero
-released behavioral cells. They have no result or gallery media. Edge base is
-not the completed Edge-Policy-DROID checkpoint.
+must not be merged with V2-A008. Cosmos3 Edge base V2-A013 and Cosmos3 Super
+base V2-A012/V2-A014 have completed their exact three-request interface probes.
+Both were deterministic on repeat LEFT and prompt-sensitive between LEFT and
+RIGHT, but neither released behavior. Edge execution is blocked by the exact
+CuRobo mapping audit; Super used the image-only action-and-video route and had
+no robot state or controller. Their gallery clips are predictions, not
+rollouts. Edge base is not the completed Edge-Policy-DROID checkpoint.
 
 ## Restrict Kubernetes discovery to ali-owned resources
 
@@ -165,7 +167,7 @@ preprocessing command after its Wan asset is present. Use the exact installation
 and download commands in the four readmes; keep their incompatible Python/Torch
 environments separate.
 
-## Current-stack status: completed gates plus two conditional base probes
+## Current-stack status: completed gates and closed base probes
 
 There is no runnable WAM confirmation cell left. Efficient-WAM-RT,
 FastWAM, and LingBot-VA pairs03–09 are complete; preserve their raw PVC output
@@ -176,8 +178,8 @@ and committed compact slices without rerunning them.
 | 0 | π0-FAST V2-A008 current-stack three-wording replication | 0 | release gate failed; zero behavioral cells | do not run under the frozen protocol; compact probe records identical LEFT/RIGHT actions |
 | 1 | π0.5 V2-A010 current-stack direct/media gate | 0 | complete: 6/6 valid; LEFT 1/3, RIGHT 3/3 | retain the PVC raw evidence and selected seed-8300 actual-rollout pair; do not rerun or call it historical v1 media |
 | 2 | Cosmos3 Nano Policy DROID V2-A011 | 0 | complete: 6/6 valid; LEFT 3/3, RIGHT 3/3 | retain raw PVC evidence and the bounded seed-8300 actual-versus-prediction pair; do not rerun |
-| 3 | Cosmos3 Super base V2-A012 | 0 released (6 conditional) | exactly 3 fixed-observation probe requests pending; no model load or behavior yet | follow `experiments/cosmos/COSMOS3_SUPER_V2A012.md`; release no simulator action unless every interface/future/controller gate passes |
-| 4 | Cosmos3 Edge base V2-A013 | 0 released (6 conditional) | exactly 3 fixed-observation probe requests pending; no model load or behavior yet | follow `experiments/cosmos/COSMOS3_EDGE_BASE_V2A013.md`; preserve completed Edge-Policy-DROID and do not substitute Panda assets for Robotiq |
+| 3 | Cosmos3 Super base V2-A012/V2-A014 | 0 released | complete: 3/3 image-only interface requests; repeat deterministic, RIGHT distinct | retain prediction media; no behavior, controller, or rerun |
+| 4 | Cosmos3 Edge base V2-A013 | 0 released | complete: 3/3 interface requests; repeat deterministic, RIGHT distinct; mapping blocked | retain prediction media and CuRobo rejection; no behavior or rerun |
 
 The unavailable historical π0-FAST queue remains blocked on OpenPI
 `9e46d3aea26417bfb564227734b95d010aa827e5` and RoboLab
@@ -185,9 +187,9 @@ The unavailable historical π0-FAST queue remains blocked on OpenPI
 restore the historical queue. Their absence did not prevent the separate
 V2-A008 release probe, but its prompt-sensitivity failure now blocks V2-A008
 behavioral inference under the frozen protocol. LaWAM must not be resumed.
-The two base-model probes are the only conditional inference work described by
-this handoff. They remain non-behavioral unless every model-specific release
-gate passes; do not create gallery cards until valid behavioral media exists.
+The two base-model probes are complete and closed with zero behavioral cells.
+Their selected generated videos may appear only as interface predictions with
+actual rollout explicitly unavailable.
 
 ## Compile, validate, sync, and stop
 

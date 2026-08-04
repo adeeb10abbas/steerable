@@ -1,0 +1,166 @@
+{
+  "amendment_id": "V2-A014",
+  "behavioral_episode_count": 0,
+  "checkpoint": {
+    "file_count": 88,
+    "hash_gate": "passed",
+    "local_path": "/data/users/ali/vla_wam/checkpoints/cosmos3_super_base",
+    "repository": "nvidia/Cosmos3-Super",
+    "revision": "e0262be9d8f7586bc24c069a2aed2b665bdff266",
+    "total_bytes": 132710200213,
+    "verified_registry": {
+      "bytes": 23424,
+      "path": "/data/users/ali/vla_wam/raw/cosmos3_super_droid/v2_a012/checkpoint/verified_registry.json",
+      "sha256": "c3b42a2d37568bdf7777f58baf116a6b007d9a312340e1d76716bbc5adff67c4"
+    }
+  },
+  "checks": {
+    "all_actions_finite_16x10": true,
+    "all_videos_decode_to_17_frames": true,
+    "authorized_request_count_exactly_three": true,
+    "left_repeat_action_bit_identical": true,
+    "left_repeat_action_payload_identical": true,
+    "left_repeat_decoded_video_identical": true,
+    "left_repeat_request_body_identical": true,
+    "left_right_action_different": true,
+    "left_right_decoded_video_different": true
+  },
+  "claim_boundary": "Image-only action-and-video interface evidence. No robot state, simulator, controller, DROID execution, behavioral episode, success score, or behavioral denominator exists for Cosmos3-Super base.",
+  "conditioning": {
+    "decoded_rgb_sha256": "6261ce5ab21383342c2012c14f7ff97d3dcd74e5f4202f2b3444355cc7ba3332",
+    "png_sha256": "2a431b0fa288890b3509b314c0351c91123d5f64b237678fed972848e29cd55b"
+  },
+  "model_id": "cosmos3_super_base_image_only_interface_diagnostic",
+  "probe": {
+    "authorized_request_count": 3,
+    "manifest": {
+      "bytes": 6706,
+      "path": "/data/users/ali/vla_wam/raw/cosmos3_super_droid/v2_a014_image_only/probe/manifest.json",
+      "sha256": "54a942eaab8dbcbc73a9eab25dbf003d08be2db22eb2efa4dfe0d50f89af8dce"
+    },
+    "request_contract": {
+      "action_chunk_size": 16,
+      "action_mode": "policy",
+      "domain_name": "droid_lerobot",
+      "flow_shift": 5.0,
+      "fps": 5,
+      "guidance_scale": 1.0,
+      "num_frames": 17,
+      "num_inference_steps": 30,
+      "raw_action_dim": 10,
+      "sampling_seed": 8300,
+      "size": "640x480"
+    },
+    "status": "passed"
+  },
+  "records": [
+    {
+      "action": {
+        "data_sha256": "3d73c3fde1c5c2b0dc3bc78ded98b6449d4e4e2e8c3099745f332a9c802adac0",
+        "domain_id": 8,
+        "dtype": "torch.bfloat16",
+        "finite": true,
+        "json_sha256": "7096fa048fa278897116007877c7f8913286fa87a4b6a9353c9dce1f43a7d378",
+        "mode": "policy",
+        "npy_sha256": "29bceda4dc967a80cafbde874f00a44ee3114cad2645d936d7bbd233fd48f524",
+        "payload_sha256": "7a309a41d40671a0e8b6a77b182f868d076cd4baba31dfed3a8b699783bbdfac",
+        "raw_action_dim": 10,
+        "shape": [16, 10],
+        "storage_dtype": "uint16_bfloat16_bits"
+      },
+      "condition": "LEFT",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "request_body_sha256": "6ce59ac922c24b6abb0e8d4de2db8631671bc2abb7698fd648f061654dc1a2e3",
+      "request_id": "V2-A014-P00",
+      "server_id": "video_gen_ef477ebc7c4a487f97299c7724463a8a",
+      "video": {
+        "bytes": 662321,
+        "codec": "h264",
+        "decoded_frame_count": 17,
+        "decoded_rgb_bytes": 15667200,
+        "decoded_rgb_sha256": "dce2ebed79305b630c27e928d8159a623064d46b27e31aa176f804348e2eebdd",
+        "fps": 5,
+        "height": 480,
+        "mp4_sha256": "6cd7fdba1cbd5e34b87209074f895f11b7c8f5748c531b68888f52043893a187",
+        "width": 640
+      },
+      "wall_seconds": 20.18283422687091
+    },
+    {
+      "action": {
+        "data_sha256": "3d73c3fde1c5c2b0dc3bc78ded98b6449d4e4e2e8c3099745f332a9c802adac0",
+        "domain_id": 8,
+        "dtype": "torch.bfloat16",
+        "finite": true,
+        "json_sha256": "7096fa048fa278897116007877c7f8913286fa87a4b6a9353c9dce1f43a7d378",
+        "mode": "policy",
+        "npy_sha256": "29bceda4dc967a80cafbde874f00a44ee3114cad2645d936d7bbd233fd48f524",
+        "payload_sha256": "7a309a41d40671a0e8b6a77b182f868d076cd4baba31dfed3a8b699783bbdfac",
+        "raw_action_dim": 10,
+        "shape": [16, 10],
+        "storage_dtype": "uint16_bfloat16_bits"
+      },
+      "condition": "LEFT_exact_repeat",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "request_body_sha256": "6ce59ac922c24b6abb0e8d4de2db8631671bc2abb7698fd648f061654dc1a2e3",
+      "request_id": "V2-A014-P01",
+      "server_id": "video_gen_d2fbd6b825e841609f24843ade48817a",
+      "video": {
+        "bytes": 662321,
+        "codec": "h264",
+        "decoded_frame_count": 17,
+        "decoded_rgb_bytes": 15667200,
+        "decoded_rgb_sha256": "dce2ebed79305b630c27e928d8159a623064d46b27e31aa176f804348e2eebdd",
+        "fps": 5,
+        "height": 480,
+        "mp4_sha256": "6cd7fdba1cbd5e34b87209074f895f11b7c8f5748c531b68888f52043893a187",
+        "width": 640
+      },
+      "wall_seconds": 20.10241624386981
+    },
+    {
+      "action": {
+        "data_sha256": "c5627843c081d63b82a3683fc27481d0b3ddd6bd799a35999db3083044dcf580",
+        "domain_id": 8,
+        "dtype": "torch.bfloat16",
+        "finite": true,
+        "json_sha256": "08730b9477132a5510dd3be30fcc132d5eb28da02ad59653a1f10a9f49015b5b",
+        "mode": "policy",
+        "npy_sha256": "b2593a3a6b3e6620f50bdd7db2e58d288561c8eb3cf3a4ae698932e841eead5a",
+        "payload_sha256": "f3fb386250b43095e6171b461c4034f49706e3ff1dba2d2f6fe4073a5e1c1465",
+        "raw_action_dim": 10,
+        "shape": [16, 10],
+        "storage_dtype": "uint16_bfloat16_bits"
+      },
+      "condition": "RIGHT",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "request_body_sha256": "ca5a45a84a32f65f2c04f2fb4ff16eaed6f4bf26df7c5bf9e41743b68379a158",
+      "request_id": "V2-A014-P02",
+      "server_id": "video_gen_641423fa6288471a8d6a3579e6f61f98",
+      "video": {
+        "bytes": 659806,
+        "codec": "h264",
+        "decoded_frame_count": 17,
+        "decoded_rgb_bytes": 15667200,
+        "decoded_rgb_sha256": "1a7d17d936dbafaf1c6b3a7cb1b8937770df4ef94897b10fe8bbcab0efcd8107",
+        "fps": 5,
+        "height": 480,
+        "mp4_sha256": "df5b33069b3d2eb59a2ceded2ecaafb043bae530d9ce837c4dc17d28cb5e248e",
+        "width": 640
+      },
+      "wall_seconds": 20.102350840112194
+    }
+  ],
+  "registry_overlay": {
+    "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_super_image_only_v2a014_registry_overlay.json",
+    "sha256": "d04d25c0ae02b008cb3e0a58d80c5a0161430d4f9e6ead3cbe0d1a8c0e6190fe"
+  },
+  "robot_state_present": false,
+  "schema_version": "vla-wam-shared-v2-cosmos3-super-image-only-v2a014-result-v1",
+  "simulator_or_controller_invoked": false,
+  "source_commits": {
+    "cosmos": "e494d734022ab0610061cdf57fa24c843e18767e",
+    "vllm_omni": "900a7f0813d0482811b0e4dfd3cf7deabbe2429f"
+  },
+  "status": "passed_image_only_action_and_video_interface"
+}

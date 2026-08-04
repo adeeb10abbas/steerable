@@ -1,0 +1,132 @@
+{
+  "amendment": {
+    "id": "V2-A014",
+    "path": "artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_super_image_only_v2a014_amendment.json",
+    "sha256": "300bfe5043f06202405ea7d099af09287c57557556ba3b3914ea57849fc713a4"
+  },
+  "checkpoint": {
+    "file_count": 88,
+    "local_path": "/data/users/ali/vla_wam/checkpoints/cosmos3_super_base",
+    "repository": "nvidia/Cosmos3-Super",
+    "revision": "e0262be9d8f7586bc24c069a2aed2b665bdff266",
+    "total_bytes": 132710200213,
+    "verified_registry_sha256": "c3b42a2d37568bdf7777f58baf116a6b007d9a312340e1d76716bbc5adff67c4"
+  },
+  "claim_boundary": "The runtime proves only the frozen image-only three-request action-and-video interface. It is not robot-state-conditioned, no action reached a simulator or controller, and no behavioral cell was released.",
+  "environment": {
+    "av": "18.0.0",
+    "isolated_path": "/data/users/ali/vla_wam/envs/cosmos3-edge-vllm-omni-900a7f08-py313",
+    "numpy": "2.4.6",
+    "python": "3.13.6",
+    "torch": "2.11.0+cu130",
+    "transformers": "5.14.1",
+    "vllm": "0.26.0",
+    "vllm_omni": "0.26.1.dev3+g900a7f081"
+  },
+  "git": {
+    "branch": "codex/wam-language-steerability",
+    "handoff_head_before_runtime_evidence": "1155ae3f5e3c5db83d9b50a92d8519027bc1d61f"
+  },
+  "kubernetes": {
+    "container_memory_limit_bytes": 274877906944,
+    "context": "prod-dcwi-warrenq1-vmkub007",
+    "final_memory_events": {
+      "high": 0,
+      "low": 0,
+      "max": 550588,
+      "oom": 0,
+      "oom_kill": 0
+    },
+    "gpus": [
+      {
+        "driver": "580.95.05",
+        "index": 0,
+        "memory_total_mib": 81920,
+        "memory_used_mib_after_shutdown": 0,
+        "name": "NVIDIA A100-SXM4-80GB",
+        "observed_peak_sample_mib": 71709,
+        "uuid": "GPU-7fba747d-fd90-2596-e85c-aa384d042924"
+      },
+      {
+        "driver": "580.95.05",
+        "index": 1,
+        "memory_total_mib": 81920,
+        "memory_used_mib_after_shutdown": 0,
+        "name": "NVIDIA A100-SXM4-80GB",
+        "observed_peak_sample_mib": 71629,
+        "uuid": "GPU-98b74a74-71b4-d518-db5f-1e05274190b3"
+      }
+    ],
+    "namespace": "211247-prod",
+    "ownership_scope": "ali_only",
+    "pod": "cosmos3-super-a100-2gpu-256gi-ali",
+    "pvc": "211247-prod-pvc",
+    "pvc_available_bytes_after_probe": 190107034320896,
+    "pvc_mount": "/data"
+  },
+  "preflight": {
+    "github_egress": "passed_http_200",
+    "hugging_face_egress": "passed_http_200",
+    "model_credentials": "exact checkpoint already hash-verified on PVC; no credential retained in evidence",
+    "renderer": "not_applicable_to_v2_a014_image_only_no_simulator_probe",
+    "server_health": "passed_http_200",
+    "served_model_id": "nvidia/Cosmos3-Super",
+    "v1_models": "passed_http_200_exact_model_id"
+  },
+  "raw_evidence": {
+    "manifest_sha256": "54a942eaab8dbcbc73a9eab25dbf003d08be2db22eb2efa4dfe0d50f89af8dce",
+    "probe_driver_log": {
+      "bytes": 6706,
+      "sha256": "54a942eaab8dbcbc73a9eab25dbf003d08be2db22eb2efa4dfe0d50f89af8dce"
+    },
+    "probe_root": "/data/users/ali/vla_wam/raw/cosmos3_super_droid/v2_a014_image_only/probe",
+    "raw_root": "/data/users/ali/vla_wam/raw/cosmos3_super_droid/v2_a014_image_only",
+    "server_log": {
+      "bytes": 373823,
+      "sha256": "49cb13b259b2ac2db215d5e10b6271efb0925e182fe87c124371aea28b214a42"
+    },
+    "thermal_guard": {
+      "bytes": 320948,
+      "max_temperature_c": 69,
+      "monitor_exit_code": 0,
+      "pause_or_emergency_count": 0,
+      "sample_count": 1122,
+      "sha256": "154843f8e500fc054f0148901cf47dbdfa6005fb5ae29ad529dd6c81eba6953f"
+    }
+  },
+  "registry_overlay": {
+    "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_super_image_only_v2a014_registry_overlay.json",
+    "sha256": "d04d25c0ae02b008cb3e0a58d80c5a0161430d4f9e6ead3cbe0d1a8c0e6190fe"
+  },
+  "result": {
+    "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_super_image_only_v2a014_result.json",
+    "sha256": "7c69f493b1aefbd2e397d6f8acc592aa4c48c6d98a668fc8af04246c9b2433bb"
+  },
+  "runtime": {
+    "api": "vLLM-Omni asynchronous POST /v1/videos",
+    "behavioral_episode_count": 0,
+    "cfg_parallel_size": 2,
+    "fixed_image_only_request_count": 3,
+    "hsdp_shard_size": 2,
+    "model_load_shards": "27/27",
+    "process_group": 157,
+    "server_shutdown": "clean_exact_process_group_terminated_both_gpus_zero_mib",
+    "speaker_cache_override": "SPEAKER_SAMPLES_DIR=/data/users/ali/vla_wam/cache/cosmos3-super-v2a014-runtime/speakers"
+  },
+  "schema_version": "vla-wam-shared-v2-cosmos3-super-image-only-v2a014-provenance-v1",
+  "source_commits": {
+    "cosmos": "e494d734022ab0610061cdf57fa24c843e18767e",
+    "vllm_omni": "900a7f0813d0482811b0e4dfd3cf7deabbe2429f"
+  },
+  "status": "complete_image_only_interface_probe_passed",
+  "tools": {
+    "media_builder": {
+      "path": "tools/build_cosmos3_super_v2a014_media.py",
+      "sha256": "c07d9348c6e873f72112ab5bb50c06ff6ebb2487180ffb11dddf38418678d53d"
+    },
+    "probe_client": {
+      "path": "experiments/cosmos/run_cosmos3_super_v2a014_probe.py",
+      "sha256": "13e867f30d2f09e92c22363d403e506a8be2784d6a678a61c221a8c25de20167"
+    }
+  }
+}

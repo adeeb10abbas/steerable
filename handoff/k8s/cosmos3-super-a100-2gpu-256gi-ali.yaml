@@ -1,0 +1,125 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cosmos3-super-a100-2gpu-256gi-ali
+  namespace: 211247-prod
+  labels:
+    app.kubernetes.io/name: cosmos3-super
+    app.kubernetes.io/managed-by: codex
+    research-owner: ali
+    research-task: vla-wam-v2a014
+spec:
+  restartPolicy: Never
+  nodeSelector:
+    node-role.kubernetes.io/worker-gpu: ""
+    nvidia.com/gpu.product: NVIDIA-A100-SXM4-80GB
+  initContainers:
+    - name: install-glvnd
+      image: artifactory-ci.gm.com/docker-approved/devcontainers/base:ubuntu22.04
+      imagePullPolicy: IfNotPresent
+      command:
+        - sh
+        - -lc
+        - |
+          set -e
+          glvnd_root=/data/users/ali/glvnd
+          if [ -f "$glvnd_root/lib/libEGL.so.1" ]; then
+            exit 0
+          fi
+          mkdir -p "$glvnd_root/lib" "$glvnd_root/apt/lists/partial" "$glvnd_root/apt/cache/archives/partial" "$glvnd_root/debs"
+          : > "$glvnd_root/apt/status"
+          cd "$glvnd_root/debs"
+          apt_opts="-o Dir::State::Lists=$glvnd_root/apt/lists -o Dir::Cache=$glvnd_root/apt/cache -o Dir::State::status=$glvnd_root/apt/status -o Debug::NoLocking=true"
+          apt-get $apt_opts update
+          apt-get $apt_opts download libglvnd0 libegl1 libglx0 libgl1 libopengl0
+          mkdir -p "$glvnd_root/extract"
+          for deb in ./*.deb; do
+            dpkg-deb -x "$deb" "$glvnd_root/extract"
+          done
+          cp -a "$glvnd_root/extract/usr/lib/x86_64-linux-gnu/." "$glvnd_root/lib/"
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop: ["ALL"]
+        runAsNonRoot: true
+        runAsUser: 816149040
+        runAsGroup: 2518800
+      volumeMounts:
+        - name: workspace
+          mountPath: /data
+  containers:
+    - name: cosmos3-super-a100-2gpu-256gi-ali
+      image: artifactory-ci.gm.com/docker-approved/devcontainers/base:ubuntu22.04
+      imagePullPolicy: IfNotPresent
+      workingDir: /home/ali-lerobot
+      command:
+        - sh
+        - -lc
+        - mkdir -p /home/ali-lerobot/.cache /tmp/ali-cosmos3-super /var/tmp/ali-cosmos3-super && exec sleep infinity
+      env:
+        - name: USER
+          value: ali-lerobot
+        - name: LOGNAME
+          value: ali-lerobot
+        - name: TMPDIR
+          value: /tmp/ali-cosmos3-super
+        - name: NVIDIA_DRIVER_CAPABILITIES
+          value: compute,utility,graphics,display
+        - name: VK_ICD_FILENAMES
+          value: /etc/vulkan/icd.d/nvidia_icd.json
+        - name: VK_DRIVER_FILES
+          value: /etc/vulkan/icd.d/nvidia_icd.json
+        - name: LD_LIBRARY_PATH
+          value: /data/users/ali/glvnd/lib
+      resources:
+        requests:
+          cpu: "16"
+          memory: 128Gi
+          nvidia.com/gpu: "2"
+        limits:
+          cpu: "64"
+          memory: 256Gi
+          nvidia.com/gpu: "2"
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop: ["ALL"]
+        readOnlyRootFilesystem: false
+        runAsNonRoot: true
+        runAsUser: 816149040
+        runAsGroup: 2518800
+      volumeMounts:
+        - name: workspace
+          mountPath: /data
+        - name: dshm
+          mountPath: /dev/shm
+        - name: tmp
+          mountPath: /tmp
+        - name: vartmp
+          mountPath: /var/tmp
+        - name: home
+          mountPath: /home/ali-lerobot
+        - name: userdb
+          mountPath: /etc/passwd
+          subPath: passwd
+          readOnly: true
+        - name: userdb
+          mountPath: /etc/group
+          subPath: group
+          readOnly: true
+  volumes:
+    - name: workspace
+      persistentVolumeClaim:
+        claimName: 211247-prod-pvc
+    - name: dshm
+      emptyDir:
+        medium: Memory
+    - name: tmp
+      emptyDir: {}
+    - name: vartmp
+      emptyDir: {}
+    - name: home
+      emptyDir: {}
+    - name: userdb
+      configMap:
+        name: lerobot-4-ali-userdb

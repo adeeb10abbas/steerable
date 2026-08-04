@@ -36,8 +36,8 @@ Operational handoffs are evidence provenance, not article outlines.
 - Presenting the current-stack π0 replication as the missing historical-code
   wording experiment.
 - Presenting static Cosmos-Reason2 diagnostics as robot behavior.
-- Presenting either Cosmos3 base-model feasibility probe as behavioral evidence
-  or adding gallery media before a valid rollout exists.
+- Presenting either Cosmos3 base-model interface probe as behavioral evidence,
+  or presenting its generated video as simulator execution.
 
 ## Current additions
 
@@ -58,20 +58,23 @@ separately labeled addition is complete:
   actual simulator execution beside a clearly labeled model prediction; the
   prediction is not execution or an additional trial.
 
-- V2-A012 and V2-A013: Cosmos3 Super base and Cosmos3 Edge base each have a
-  frozen three-request fixed-observation action-plus-future feasibility probe,
-  six conditional behavioral cells, and zero released behavioral cells. These
-  are pending probe definitions, not results. They have no publication media.
-  Edge base is distinct from the completed Edge-Policy-DROID result.
+- V2-A013: Cosmos3 Edge base passed its three-request fixed-observation
+  action-plus-video interface probe. Repeat LEFT was bit-identical and RIGHT
+  differed, but the exact CuRobo mapping audit blocked execution. Its selected
+  gallery media is prediction-only; actual rollout is explicitly unavailable.
+
+- V2-A012/V2-A014: Cosmos3 Super base passed the corresponding image-only
+  action-plus-video diagnostic. It has no robot state, controller execution, or
+  released behavioral cell and cannot support a DROID execution claim.
 
 V2-A009 withdrew LaWAM before inference. It has no active cells and should not
 appear in the shareable comparison or gallery.
 
 The V2-A010 and V2-A011 results may be described only with their current-stack
 labels and separate DROID denominators. Nano’s two setup failures occurred
-before policy requests and are not behavioral failures. Do not add the V2-A012
-or V2-A013 base arms to result tables until their frozen gates release and
-produce valid behavioral evidence.
+before policy requests and are not behavioral failures. Do not add either base
+arm to behavioral result tables; their interface media must remain explicitly
+non-execution.
 
 ## Repository map
 

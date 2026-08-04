@@ -1,0 +1,77 @@
+{
+  "attempts": [
+    {
+      "attempt_id": "checkpoint_download_001",
+      "cause": "The first exact-revision Hugging Face download allowed Xet to select the unwritable default /home/ali-lerobot/.cache path. The same revision was then downloaded with Xet disabled and task-specific HF/XDG caches.",
+      "model_request_started": false,
+      "raw_log": {
+        "bytes": 11128,
+        "path": "/data/users/ali/vla_wam/raw/cosmos3_edge_base/v2_a013/download/hf_download.log",
+        "sha256": "6fff8d33cdf988b4a41b9c7f1f58e3bd0b572146aa42f9a91bbeaa5bf568d781"
+      },
+      "result": "infrastructure_invalid",
+      "stage": "checkpoint_download_before_hash_verification"
+    },
+    {
+      "attempt_id": "environment_build_001",
+      "cause": "An initial no-build-isolation source install stopped at metadata generation because setuptools_scm was absent. That environment also mixed Cosmos Framework requirements with vLLM 0.26.0 and failed pip check, so it was frozen and not used for model load.",
+      "model_request_started": false,
+      "raw_logs": [
+        {
+          "bytes": 2208,
+          "path": "/data/users/ali/vla_wam/raw/cosmos3_edge_base/v2_a013/environment/pip_install_vllm_omni_900a7f08.log",
+          "sha256": "38f5fbf848d7abd0b66217c9c994a0683e1cb2d002eace814412bb448886588f"
+        },
+        {
+          "bytes": 798,
+          "path": "/data/users/ali/vla_wam/raw/cosmos3_edge_base/v2_a013/environment/pip_check.txt",
+          "sha256": "7e7ae1efaaddfa3c0aac34ba711756bcaccf2918a36199dceb2f712b8ba108a3"
+        }
+      ],
+      "result": "infrastructure_invalid",
+      "stage": "environment_build_before_model_load"
+    },
+    {
+      "attempt_id": "server_load_001",
+      "cause": "The exact model loaded and warmed up, then the generic speech-serving initializer tried to create its unused speaker cache under the unwritable default home. No API request was admitted. Relaunch used the source-supported SPEAKER_SAMPLES_DIR task cache without overriding HOME.",
+      "model_request_started": false,
+      "raw_log": {
+        "bytes": 19675,
+        "path": "/data/users/ali/vla_wam/raw/cosmos3_edge_base/v2_a013/runtime/server_attempt_01.log",
+        "sha256": "b2d2fd5d7a2c3eaabe2c5d64110a2ad2f42e0332422af646d76263a86b24db3d"
+      },
+      "result": "infrastructure_invalid",
+      "stage": "api_initialization_before_fixed_observation_request"
+    }
+  ],
+  "checkpoint_revision": "ff48d22144de52de296a7b4d3a78914831007212",
+  "client_capture_events": [
+    {
+      "event_id": "fixed_probe_capture_001",
+      "effect": "The already-completed LEFT response was retained as the valid first authorized request. Its content was recovered by GET, canonical bfloat16 validation was added, and the client resumed with only LEFT repeat and RIGHT. LEFT was not rerun.",
+      "model_output_changed": false,
+      "new_model_request_for_recovery": false,
+      "reason": "The initial client validator did not recognize the valid action dtype string torch.bfloat16 and exited after saving the completed response but before content download."
+    }
+  ],
+  "counts": {
+    "authorized_fixed_observation_request_count": 3,
+    "infrastructure_invalid_attempt_count": 3,
+    "partial_behavioral_attempt_count": 0,
+    "runtime_model_intervention_count": 0,
+    "valid_behavioral_episode_count": 0
+  },
+  "denominator_policy": "All setup failures occurred before an authorized fixed-observation request and remain outside every model and behavioral denominator. The client capture event retained the completed LEFT request as valid and did not consume a replacement request. No behavioral episode was started.",
+  "model_id": "cosmos3_edge_base_droid",
+  "operator_setup_events": [
+    {
+      "event_id": "isaac_diagnostic_001",
+      "model_load_started": false,
+      "model_request_started": false,
+      "note": "A separate Isaac diagnostic accidentally overrode HOME once and failed during GL/Vulkan startup. Only its exact diagnostic process tree was terminated; GPU memory returned to zero. This setup event did not touch the Edge model, fixed probe, or simulator behavior and HOME was not overridden again."
+    }
+  ],
+  "runtime_interventions": [],
+  "schema_version": "vla-wam-shared-v2-cosmos3-edge-base-v2a013-invalid-attempts-v1",
+  "status": "complete_with_retained_pre_request_infrastructure_attempts"
+}

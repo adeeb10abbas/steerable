@@ -1,0 +1,134 @@
+{
+  "amendment_id": "V2-A013",
+  "behavioral_episode_count": 0,
+  "checkpoint": {
+    "file_count": 48,
+    "hash_gate": "passed",
+    "local_path": "/data/users/ali/vla_wam/checkpoints/cosmos3_edge_base_ff48d221",
+    "revision": "ff48d22144de52de296a7b4d3a78914831007212",
+    "total_bytes": 9173855122,
+    "verification": {
+      "bytes": 16568,
+      "path": "/data/users/ali/vla_wam/raw/cosmos3_edge_base/v2_a013/download/checkpoint_verification.json",
+      "sha256": "21e26094e3a9f292da02a416ee79adccb4bb3b48ae0c6cea68d7879d194162e7"
+    }
+  },
+  "checks": {
+    "action_contract_all_three": "torch.bfloat16 [16,10], raw_action_dim=10, domain_id=8, finite",
+    "authorized_request_count_exact": true,
+    "left_repeat_action_bit_identical": true,
+    "left_repeat_multipart_fields_identical": true,
+    "left_repeat_video_bit_identical": true,
+    "left_right_action_different": true,
+    "left_right_video_different": true,
+    "video_contract_all_three": "H.264 640x480, 17 decoded frames, 5 fps"
+  },
+  "claim_boundary": "Fixed-observation action-plus-exposed-future interface feasibility only. No simulator action was sent, no behavioral episode was run, and no behavioral denominator is released.",
+  "conditioning": {
+    "decoded_rgb_sha256": "6261ce5ab21383342c2012c14f7ff97d3dcd74e5f4202f2b3444355cc7ba3332",
+    "png_sha256": "2a431b0fa288890b3509b314c0351c91123d5f64b237678fed972848e29cd55b"
+  },
+  "environment": {
+    "device": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+    "device_uuid": "GPU-f28bd513-a38a-b768-7589-d2959f814ae8",
+    "diffusers": "0.38.0",
+    "isolated_environment": "/data/users/ali/vla_wam/envs/cosmos3-edge-vllm-omni-900a7f08-py313",
+    "pip_check": {
+      "bytes": 300,
+      "result": "No broken requirements found.",
+      "sha256": "6d6c716be1cd9c591acd8bb60b3511a8e7d3e0c06a856f51aa41a9aa481d4b16"
+    },
+    "pip_freeze": {
+      "bytes": 4748,
+      "sha256": "48d06efdb4a02f3979bcedd9bcf55dada74e7249caf693efbe8ed44f86931682"
+    },
+    "python": "3.13.6",
+    "torch": "2.11.0+cu130",
+    "transformers": "5.14.1",
+    "vllm": "0.26.0",
+    "vllm_omni": "0.26.1.dev3+g900a7f081"
+  },
+  "mapping_gate": {
+    "audit_artifact": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_base_v2a013_curobo_usd_audit.json",
+    "audit_sha256": "26288a0ed53040e7b2b7b6cd8f13178617a3b917b1d5735dbdcec24925df4bef",
+    "behavior_released": false,
+    "reason": "The pinned direct CuRobo USD parser is experimental and omits mimic-joint, collision, and link-transform parity. Its zero-state control frame differs from the exact RoboLab USD by 0.26441704182710424 m and 89.99734223411144 degrees. No Panda substitution is allowed.",
+    "status": "blocked_missing_exact_franka_robotiq_urdf_collision_and_control_frame_parity"
+  },
+  "model_id": "cosmos3_edge_base_droid",
+  "probe": {
+    "authorized_request_count": 3,
+    "conditions": [
+      "left",
+      "left_exact_repeat",
+      "right"
+    ],
+    "manifest": {
+      "bytes": 4506,
+      "path": "/data/users/ali/vla_wam/raw/cosmos3_edge_base/v2_a013/fixed_observation/probe_8300/manifest.json",
+      "sha256": "2908932e48ffd3e17d48e32eab3ed2c283c0a4f449b6821912e627a2a7cf355c"
+    },
+    "request_contract": {
+      "action_chunk_size": 16,
+      "action_mode": "policy",
+      "domain_name": "droid_lerobot",
+      "flow_shift": 5.0,
+      "fps": 5,
+      "guidance_scale": 1.0,
+      "num_frames": 17,
+      "num_inference_steps": 30,
+      "raw_action_dim": 10,
+      "sampling_seed": 8300,
+      "size": "640x480"
+    },
+    "status": "passed"
+  },
+  "records": [
+    {
+      "action_npy_sha256": "4f1ae07c4a1273a6fde5f3fbd0888022db35283d4ecbea1a3233d035963fb571",
+      "action_storage_sha256": "111a7dd3179a450c0d7fad5328403cf10135833804d07db261deb5751e600b6b",
+      "condition": "left",
+      "future_mp4_bytes": 712325,
+      "future_mp4_sha256": "0cde22e2f9bc2250eeb8d90c22a3f2fc141671616318f15ba2db153e4f805d98",
+      "job_id": "video_gen_e4f92e49acd54f468831ba9f4e35859b",
+      "multipart_fields_sha256": "f74ab99edc14a7a74e6b7dc6599b65636acdcf07f9628bebc45c76607c368acc",
+      "prompt": "Put the Rubik's cube to the left of the bowl."
+    },
+    {
+      "action_npy_sha256": "4f1ae07c4a1273a6fde5f3fbd0888022db35283d4ecbea1a3233d035963fb571",
+      "action_storage_sha256": "111a7dd3179a450c0d7fad5328403cf10135833804d07db261deb5751e600b6b",
+      "condition": "left_exact_repeat",
+      "future_mp4_bytes": 712325,
+      "future_mp4_sha256": "0cde22e2f9bc2250eeb8d90c22a3f2fc141671616318f15ba2db153e4f805d98",
+      "job_id": "video_gen_38df34aef25e4c18aa06cbcc06d768d5",
+      "multipart_fields_sha256": "f74ab99edc14a7a74e6b7dc6599b65636acdcf07f9628bebc45c76607c368acc",
+      "prompt": "Put the Rubik's cube to the left of the bowl."
+    },
+    {
+      "action_npy_sha256": "632a8260d86d84c75efc8e73f71493739d416f0aac0283866984119063917041",
+      "action_storage_sha256": "ad428d1176bb73cf4795429f5d92b1965b30b827470eeb8f1307229a8697028c",
+      "condition": "right",
+      "future_mp4_bytes": 707343,
+      "future_mp4_sha256": "9d5b96102a4a43d529576a15519cc754b68445411bf416e2561fd49e4b863d93",
+      "job_id": "video_gen_c641aab0e2524a56a2ce104cbc8d9ff2",
+      "multipart_fields_sha256": "6ba4217e775628cf2807081d7a2502645455bca8a43a0a467abb5d21c5016dbf",
+      "prompt": "Put the Rubik's cube to the right of the bowl."
+    }
+  ],
+  "registry_sha256": "dd8c33d66a30ec7518740822ffe8f53d800c1dfb337608593abd512f609fbbc2",
+  "schema_version": "vla-wam-shared-v2-cosmos3-edge-base-v2a013-fixed-observation-v1",
+  "server": {
+    "log_bytes": 37854,
+    "log_sha256": "dbea8b2eeb6c576fb17e8444e1fb3be1d4c1f6b7771b1b82f034b27a1e388dec",
+    "process_group": 45817,
+    "shutdown": "clean_exact_process_group_terminated_gpu_zero_mib_afterward"
+  },
+  "source_commits": {
+    "cosmos": "e494d734022ab0610061cdf57fa24c843e18767e",
+    "cosmos_framework": "a904d2d36b774a51dd06ff9ff906816b1a04f579",
+    "curobo": "d64c4b005459db10c5dd867d8b30a87d5bda9bdb",
+    "robolab": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "vllm_omni": "900a7f0813d0482811b0e4dfd3cf7deabbe2429f"
+  },
+  "status": "fixed_observation_passed_behavior_blocked"
+}

@@ -1,0 +1,108 @@
+{
+  "amendment": {
+    "id": "V2-A013",
+    "path": "artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_edge_base_amendment.json",
+    "sha256": "7b45688604e717aab598fc50a205e3d17160ec28863c294167c76b3e5abf8a5b"
+  },
+  "checkpoint": {
+    "credential_requirement": "public_ungated_no_token_used",
+    "file_count": 48,
+    "hash_gate": "passed",
+    "local_path": "/data/users/ali/vla_wam/checkpoints/cosmos3_edge_base_ff48d221",
+    "repository": "nvidia/Cosmos3-Edge",
+    "revision": "ff48d22144de52de296a7b4d3a78914831007212",
+    "verification_path": "/data/users/ali/vla_wam/raw/cosmos3_edge_base/v2_a013/download/checkpoint_verification.json",
+    "verification_sha256": "21e26094e3a9f292da02a416ee79adccb4bb3b48ae0c6cea68d7879d194162e7"
+  },
+  "claim_boundary": "The runtime proves only the frozen three-request fixed-observation interface. The exact robot mapping remains blocked, so no action reached a simulator and no behavioral cell was released.",
+  "environment": {
+    "diffusers": "0.38.0",
+    "isolated_path": "/data/users/ali/vla_wam/envs/cosmos3-edge-vllm-omni-900a7f08-py313",
+    "no_system_site_packages": true,
+    "pip_check_result": "No broken requirements found.",
+    "pip_check_sha256": "6d6c716be1cd9c591acd8bb60b3511a8e7d3e0c06a856f51aa41a9aa481d4b16",
+    "pip_freeze_sha256": "48d06efdb4a02f3979bcedd9bcf55dada74e7249caf693efbe8ed44f86931682",
+    "python": "3.13.6",
+    "torch": "2.11.0+cu130",
+    "transformers": "5.14.1",
+    "vllm": "0.26.0",
+    "vllm_omni": "0.26.1.dev3+g900a7f081"
+  },
+  "git": {
+    "branch": "codex/wam-language-steerability",
+    "handoff_head_before_runtime_evidence": "1155ae3f5e3c5db83d9b50a92d8519027bc1d61f",
+    "tracked_worktree_clean_before_unique_evidence_additions": true
+  },
+  "kubernetes": {
+    "context": "prod-dcwi-warrenq1-vmkub007",
+    "gpu": {
+      "driver": "580.105.08",
+      "index": 0,
+      "memory_free_mib_after_shutdown": 97251,
+      "memory_total_mib": 97887,
+      "memory_used_mib_after_shutdown": 0,
+      "name": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+      "uuid": "GPU-f28bd513-a38a-b768-7589-d2959f814ae8"
+    },
+    "namespace": "211247-prod",
+    "ownership_scope": "ali_only",
+    "pod": "raytrace-rtxpro6000-ali",
+    "pvc": "211247-prod-pvc",
+    "pvc_mount": "/data"
+  },
+  "preflight": {
+    "github_egress": "passed_http_200",
+    "hugging_face_egress": "passed_http_200",
+    "pvc_capacity": "200T total; 173T free at runtime",
+    "sapien_vulkan_offscreen": "passed_64x64_rgba_float32",
+    "successful_runtime_home_override": false
+  },
+  "raw_evidence": {
+    "fixed_observation_root": "/data/users/ali/vla_wam/raw/cosmos3_edge_base/v2_a013/fixed_observation/probe_8300",
+    "manifest_sha256": "2908932e48ffd3e17d48e32eab3ed2c283c0a4f449b6821912e627a2a7cf355c",
+    "raw_root": "/data/users/ali/vla_wam/raw/cosmos3_edge_base/v2_a013",
+    "server_log_sha256": "dbea8b2eeb6c576fb17e8444e1fb3be1d4c1f6b7771b1b82f034b27a1e388dec"
+  },
+  "registry": {
+    "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_base_v2a013_registry.json",
+    "sha256": "dd8c33d66a30ec7518740822ffe8f53d800c1dfb337608593abd512f609fbbc2"
+  },
+  "runtime": {
+    "api": "vLLM-Omni asynchronous POST /v1/videos",
+    "behavioral_episode_count": 0,
+    "fixed_observation_request_count": 3,
+    "model_load_gib": 7.1111,
+    "process_gpu_memory_after_load_gib": 7.75,
+    "server_process_group": 45817,
+    "server_shutdown": "clean_exact_process_group_terminated",
+    "speaker_cache_override": "SPEAKER_SAMPLES_DIR=/data/users/ali/vla_wam/cache/cosmos3-edge-v2a013-runtime/speakers",
+    "task_specific_cache_variables": [
+      "HF_HOME",
+      "XDG_CACHE_HOME",
+      "FLASHINFER_WORKSPACE_BASE",
+      "TORCH_HOME",
+      "TRITON_CACHE_DIR",
+      "TMPDIR",
+      "SPEAKER_SAMPLES_DIR"
+    ]
+  },
+  "schema_version": "vla-wam-shared-v2-cosmos3-edge-base-v2a013-provenance-v1",
+  "source_commits": {
+    "cosmos": "e494d734022ab0610061cdf57fa24c843e18767e",
+    "cosmos_framework": "a904d2d36b774a51dd06ff9ff906816b1a04f579",
+    "curobo": "d64c4b005459db10c5dd867d8b30a87d5bda9bdb",
+    "robolab": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "vllm_omni": "900a7f0813d0482811b0e4dfd3cf7deabbe2429f"
+  },
+  "tools": {
+    "media_builder": {
+      "path": "tools/build_cosmos3_edge_base_v2a013_media.py",
+      "sha256": "8d4e0137da2aed69cef825b046b588d6fc99b0909cfb57598b9218695d7dbf87"
+    },
+    "probe_client": {
+      "path": "experiments/cosmos/run_edge_base_v2a013_fixed_observation.py",
+      "sha256": "a51870898549ecd0a579be1295ef84befad8e4de718091ec8101c1fc70fc82d7"
+    }
+  },
+  "status": "complete_fixed_probe_passed_behavior_blocked"
+}

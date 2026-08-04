@@ -1,0 +1,163 @@
+{
+  "schema_version": "vla-wam-shared-v2-cosmos3-super-v2a012-runtime-gate-v1",
+  "amendment_id": "V2-A012",
+  "recorded_at_utc": "2026-08-04T03:58:00Z",
+  "status": "pre_request_infrastructure_blocked_64gib_cgroup_and_pending_256gib_pods",
+  "claim_boundary": {
+    "model_request_count": 0,
+    "behavioral_episode_count": 0,
+    "behavioral_video_count": 0,
+    "imagined_future_video_count": 0,
+    "denominator_policy": "Both attempts ended before the API accepted a model request. They are infrastructure evidence outside every model denominator and are not failures or zeros.",
+    "behavioral_release_status": "locked"
+  },
+  "checkpoint_verification": {
+    "model": "nvidia/Cosmos3-Super",
+    "revision": "e0262be9d8f7586bc24c069a2aed2b665bdff266",
+    "pvc_path": "/data/users/ali/vla_wam/checkpoints/cosmos3_super_base",
+    "file_count": 88,
+    "total_bytes": 132710200213,
+    "hash_gate_passed": true,
+    "verified_registry": {
+      "path": "/data/users/ali/vla_wam/raw/cosmos3_super_droid/v2_a012/checkpoint/verified_registry.json",
+      "bytes": 23424,
+      "sha256": "c3b42a2d37568bdf7777f58baf116a6b007d9a312340e1d76716bbc5adff67c4"
+    }
+  },
+  "software": {
+    "nvidia_cosmos": {
+      "path": "/data/users/ali/vla_wam/external/cosmos-e494d734",
+      "commit": "e494d734022ab0610061cdf57fa24c843e18767e",
+      "worktree_clean": true
+    },
+    "vllm_omni": {
+      "path": "/data/users/ali/vla_wam/external/vllm-omni-900a7f08",
+      "commit": "900a7f0813d0482811b0e4dfd3cf7deabbe2429f",
+      "worktree_clean": true
+    },
+    "environment": {
+      "path": "/data/users/ali/vla_wam/envs/cosmos3-edge-vllm-omni-900a7f08-py313",
+      "isolated_no_system_site_packages": true,
+      "shared_immutable_serving_stack_only": true,
+      "python": "3.13.6",
+      "vllm": "0.26.0",
+      "vllm_omni": "0.26.1.dev3+g900a7f081",
+      "torch": "2.11.0+cu130",
+      "transformers": "5.14.1",
+      "pip_check": "clean"
+    }
+  },
+  "topology": {
+    "context": "prod-dcwi-warrenq1-vmkub007",
+    "namespace": "211247-prod",
+    "fallback_pod": "lerobot-b200-4gpu-1-ali",
+    "selected_gpu_indices": [
+      1,
+      2
+    ],
+    "protected_gpu_indices": {
+      "0": "Existing DreamZero process; never touched.",
+      "3": "Excluded by the frozen fallback topology."
+    },
+    "pre_load_free_mib": {
+      "1": 182628,
+      "2": 182632
+    },
+    "post_failure_used_mib": {
+      "1": 5,
+      "2": 0
+    },
+    "container_memory_limit_bytes": 68719476736,
+    "container_memory_limit_human": "64Gi",
+    "memory_events_observed_after_attempts": {
+      "oom": 2,
+      "oom_kill": 2,
+      "interpretation": "Observed after the attempts; no pre-attempt counter baseline was retained, so the counter values are supporting context rather than a measured delta."
+    }
+  },
+  "server_command": {
+    "cuda_visible_devices": "1,2",
+    "endpoint": "http://127.0.0.1:18012",
+    "arguments": [
+      "vllm",
+      "serve",
+      "/data/users/ali/vla_wam/checkpoints/cosmos3_super_base",
+      "--omni",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "18012",
+      "--cfg-parallel-size",
+      "2",
+      "--use-hsdp",
+      "--hsdp-shard-size",
+      "2",
+      "--init-timeout",
+      "1800",
+      "--no-guardrails"
+    ],
+    "attempt_2_speaker_samples_dir": "/data/users/ali/vla_wam/cache/cosmos3-super-v2a012-runtime/speakers",
+    "home_overridden": false,
+    "thermal_process_group_guard_used": true
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "status": "terminated_pre_request_for_known_runtime_storage_prerequisite",
+      "description": "The private Super process group was stopped before a request after the matching stack exposed an unwritable default speaker-storage path. This attempt did not itself reach or demonstrate that error.",
+      "worker_pgid": 138129,
+      "model_request_count": 0,
+      "stdout": {
+        "path": "/data/users/ali/vla_wam/raw/cosmos3_super_droid/v2_a012/runtime/attempt01_missing_speaker_dir.stdout.log",
+        "bytes": 65194,
+        "sha256": "2f7e1692cce70c510ae455008e0940d1c8b9aeb26116ca144733f4b29d89759f"
+      },
+      "thermal_guard": {
+        "path": "/data/users/ali/vla_wam/raw/cosmos3_super_droid/v2_a012/runtime/attempt01_missing_speaker_dir.thermal_guard.jsonl",
+        "bytes": 53822,
+        "sha256": "a13cdf16171cb65980fb6bf2d8daab1c4b60f18b56b471dc76d8ec7a54e578d7"
+      }
+    },
+    {
+      "attempt": 2,
+      "status": "model_load_failed_before_listener",
+      "worker_pgid": 140230,
+      "model_request_count": 0,
+      "last_weight_progress": "6/27 shards",
+      "rank_0_exit_code": -9,
+      "rank_1_follow_on": "TCPStore broken pipe and orchestrator EOF after rank 0 died",
+      "failure_class": "infrastructure_host_memory",
+      "failure_inference": "The worker was SIGKILLed while loading the 64B checkpoint under a 64Gi cgroup; the cgroup reports OOM kills and both B200s became fully free. This is consistent with cgroup host-memory OOM, not a GPU OOM or model response.",
+      "stdout": {
+        "path": "/data/users/ali/vla_wam/raw/cosmos3_super_droid/v2_a012/runtime/attempt02.stdout.log",
+        "bytes": 128302,
+        "sha256": "1c11d2f2e6367323774a32ced4cafbcbb7b89446602289e4006cac9f77a9aa21"
+      },
+      "thermal_guard": {
+        "path": "/data/users/ali/vla_wam/raw/cosmos3_super_droid/v2_a012/runtime/attempt02.thermal_guard.jsonl",
+        "bytes": 57894,
+        "sha256": "179604932c23d564c2dbcedfdeda621db5f4bcc30986349f6707c462baa39543"
+      }
+    }
+  ],
+  "pending_capacity": [
+    {
+      "pod": "cosmos3-super-b200-2gpu-256gi-ali",
+      "phase": "Pending",
+      "reason": "Unschedulable",
+      "scheduler_message": "Five matching GPU nodes report Insufficient nvidia.com/gpu; no preemption victims found."
+    },
+    {
+      "pod": "cosmos3-super-b200-4gpu-256gi-ali",
+      "phase": "Pending",
+      "reason": "Unschedulable",
+      "scheduler_message": "Five matching GPU nodes report Insufficient nvidia.com/gpu; no preemption victims found."
+    }
+  ],
+  "next_step": {
+    "gate": "Wait for the named ali-owned two-GPU 256Gi pod to become Scheduled and Running. Do not retry this 64Gi fallback.",
+    "status_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 -n 211247-prod get pod cosmos3-super-b200-2gpu-256gi-ali -o wide",
+    "after_schedule": "Re-run the identical tensor-parallel-two HSDP load with the task-specific SPEAKER_SAMPLES_DIR. Require /v1/models success and a model-load memory record before any request.",
+    "request_policy": "V2-A012 behavior remains locked. Any separately frozen image-only action-plus-video diagnostic must remain explicitly non-DROID, non-behavioral, and without robot state or controller execution."
+  }
+}

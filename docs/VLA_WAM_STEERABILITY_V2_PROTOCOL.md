@@ -55,14 +55,17 @@ diagnostic, not an action policy. Their machine-readable sources are
 [`V2-A010`](../artifacts/vla_wam_shared_v2/pilot/post_result_pi05_current_stack_media_gate_amendment.json),
 and [`V2-A011`](../artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_nano_droid_amendment.json).
 
-User-directed amendments `V2-A012` and `V2-A013` freeze conditional
+User-directed amendments `V2-A012` and `V2-A013` froze conditional
 pre-inference feasibility probes for the Cosmos3 Super base and Cosmos3 Edge
 base checkpoints. Each permits exactly three fixed-observation
 LEFT/repeat-LEFT/RIGHT action-plus-future requests after artifact and software
 gates, while all six potential behavioral cells remain unreleased. Neither is
-a behavioral result or a source of publication media. Their sources are
+a behavioral result. `V2-A014`, frozen before Super inference, replaces only
+Super's fixed-probe input with the implementation's image-only action-and-video
+route; it does not release state, control, or behavior. Their sources are
 [`V2-A012`](../artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_super_droid_amendment.json)
-and [`V2-A013`](../artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_edge_base_amendment.json).
+[`V2-A013`](../artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_edge_base_amendment.json),
+and [`V2-A014`](../artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_super_image_only_v2a014_amendment.json).
 
 ### Post-result outcome record: V2-A008 release gate
 
@@ -108,24 +111,23 @@ occurred. The compact result is
 This result is never pooled with Cosmos3 Edge, Cosmos-Reason2, historical VLA
 evidence, or RoboTwin.
 
-### Post-result feasibility records: V2-A012 and V2-A013
+### Post-result interface records: V2-A012 through V2-A014
 
 V2-A012 freezes the public `nvidia/Cosmos3-Super` base checkpoint and V2-A013
-freezes the public `nvidia/Cosmos3-Edge` base checkpoint. No load, model
-request, imagined video, simulator action, or behavioral episode is recorded
-for either arm. Each first runs only the three-request deterministic and
-prompt-sensitivity probe and must expose both a finite action payload and a
-decodable future. Missing or latent-only futures fail the gate and are not
-scored as zeros.
+freezes the public `nvidia/Cosmos3-Edge` base checkpoint. V2-A014 records the
+Super implementation's image-only action-and-video route before inference.
+Both exact three-request probes passed: repeat LEFT was bit-identical and RIGHT
+changed both the finite `[16,10]` action payload and decodable 17-frame video.
+These are fixed-observation interface results, not behavioral episodes or
+successes. Missing or latent-only futures remain unscored rather than zeros.
 
 Both arms have zero released behavioral cells. Their base checkpoints do not
-have an established native DROID 8D joint-position execution contract. Any
-10D-to-8D CuRobo-derived controller is a separately labeled analysis branch
-and remains blocked until its exact robot asset, frame, unit, gripper,
-collision, and deterministic solver contract is hash-frozen. For Edge base,
-the pinned Panda-hand URDF cannot substitute for RoboLab's Franka+Robotiq USD.
-The completed six-cell Cosmos3 Edge-Policy-DROID native 8D result remains
-separate, valid, and do-not-rerun.
+have an established native DROID 8D execution contract. The Edge audit found
+that the exact RoboLab USD and pinned direct CuRobo parser differ by 0.264417 m
+and 89.997 degrees at zero state and lack mimic-joint, collision, and
+link-transform parity. The 10D-to-8D branch is therefore blocked; no action
+reached a simulator. The completed six-cell Cosmos3 Edge-Policy-DROID native
+8D result remains separate, valid, and do-not-rerun.
 
 This is a disclosed post-v1 extension. Every pi0.5/Cosmos result in the
 160-episode DROID study and the small retrospective Efficient-WAM, FastWAM,

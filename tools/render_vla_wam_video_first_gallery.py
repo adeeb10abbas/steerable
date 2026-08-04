@@ -103,9 +103,78 @@ def validate_entry(entry: dict[str, Any], required_fields: list[str] | None = No
         raise SystemExit(f"missing source manifest for {entry['id']}: {entry['source_manifest']}")
 
 
+def load_prediction_only_entries(manifest: dict[str, Any]) -> list[dict[str, Any]]:
+    entries: list[dict[str, Any]] = []
+    for contract in manifest.get("prediction_only_manifest_contracts", []):
+        source_path = repo_file(contract["path"])
+        if not source_path.is_file():
+            raise SystemExit(f"missing prediction-only media manifest: {contract['path']}")
+        if sha256(source_path) != contract["sha256"]:
+            raise SystemExit(f"SHA-256 mismatch for prediction-only media manifest: {contract['path']}")
+        source = json.loads(source_path.read_text())
+        if (
+            source.get("schema_version") != contract["schema_version"]
+            or source.get("status") != contract["status"]
+            or source.get("model_id") != contract["model_id"]
+        ):
+            raise SystemExit(f"prediction-only media manifest contract mismatch: {contract['path']}")
+        records = source.get(contract["entries_key"])
+        if not isinstance(records, list) or len(records) != contract["entry_count"]:
+            raise SystemExit(f"prediction-only media entry count mismatch: {contract['path']}")
+        for record in records:
+            if (
+                record.get("type") != contract["record_type"]
+                or record.get("actual_rollout") is not None
+                or record.get("actual_rollout_unavailable_reason")
+                != contract["actual_rollout_unavailable_reason"]
+            ):
+                raise SystemExit(f"prediction-only execution boundary mismatch: {contract['path']}")
+            video = record.get(contract["video_field"])
+            if not isinstance(video, dict):
+                raise SystemExit(f"prediction-only video field missing: {contract['path']}")
+            if contract.get("requires_unexecuted_actions") and not isinstance(
+                record.get("action_trajectories"), dict
+            ):
+                raise SystemExit(f"prediction-only unexecuted actions missing: {contract['path']}")
+            supporting_evidence = contract.get("supporting_evidence", [])
+            for evidence in supporting_evidence:
+                evidence_path = repo_file(evidence["path"])
+                if not evidence_path.is_file() or sha256(evidence_path) != evidence["sha256"]:
+                    raise SystemExit(f"prediction-only supporting evidence mismatch: {evidence['path']}")
+            entry = {
+                "id": contract["entry_id"],
+                "arena": contract["arena"],
+                "arena_label": contract["arena_label"],
+                "model_label": contract["model_label"],
+                "category": contract["category"],
+                "future_interface": contract["future_interface"],
+                "evidence_status": contract["evidence_status"],
+                "pair_label": contract["pair_label"],
+                "seed": record["sampling_seed"],
+                "video": video,
+                "poster": record["poster"],
+                "directions": contract["directions"],
+                "source_manifest": contract["path"],
+                "actual_rollout_unavailable_reason": contract["actual_rollout_unavailable_reason"],
+                "actual_rollout_unavailable_detail": contract["actual_rollout_unavailable_detail"],
+                "prediction_media_label": contract["prediction_media_label"],
+                "supporting_evidence": supporting_evidence,
+            }
+            validate_entry(entry)
+            entries.append(entry)
+    return entries
+
+
 def load_entries(
     manifest: dict[str, Any],
-) -> tuple[list[dict[str, Any]], bool, list[dict[str, Any]], list[dict[str, Any]], bool]:
+) -> tuple[
+    list[dict[str, Any]],
+    bool,
+    list[dict[str, Any]],
+    list[dict[str, Any]],
+    bool,
+    list[dict[str, Any]],
+]:
     entries = list(manifest["entries"])
     for entry in entries:
         validate_entry(entry)
@@ -185,7 +254,18 @@ def load_entries(
         all_ids = ids + [entry["id"] for entry in imagination_entries]
         if len(all_ids) != len(set(all_ids)):
             raise SystemExit("duplicate execution/imagination gallery entry id")
-    return entries, dreamzero_present, imagination_entries, official_decodes, imagination_present
+    prediction_only_entries = load_prediction_only_entries(manifest)
+    all_ids = ids + [entry["id"] for entry in prediction_only_entries]
+    if len(all_ids) != len(set(all_ids)):
+        raise SystemExit("duplicate execution/prediction gallery entry id")
+    return (
+        entries,
+        dreamzero_present,
+        imagination_entries,
+        official_decodes,
+        imagination_present,
+        prediction_only_entries,
+    )
 
 
 def rel(path: str) -> str:
@@ -251,6 +331,34 @@ def entry_card(entry: dict[str, Any]) -> str:
       </article>"""
 
 
+def prediction_only_card(entry: dict[str, Any]) -> str:
+    video = rel(entry["video"]["path"])
+    poster = html.escape(rel(entry["poster"]["path"]))
+    evidence_links = " · ".join(
+        f'<a href="{html.escape(rel(evidence["path"]))}">{html.escape(evidence["label"])}</a>'
+        for evidence in entry["supporting_evidence"]
+    )
+    return f"""
+      <article class="card" id="{html.escape(entry['id'])}">
+        <header>
+          <div><p class="overline">{html.escape(entry['category'])} · PREDICTION ONLY · {html.escape(entry['pair_label'])}</p>
+          <h3>{html.escape(entry['model_label'])}</h3></div>
+          <span class="status">{html.escape(entry['evidence_status'])}</span>
+        </header>
+        <div class="comparison-media"><figure class="comparison-unavailable"><figcaption>ACTUAL SIMULATOR ROLLOUT — UNAVAILABLE</figcaption>
+        <p><strong>{html.escape(entry['actual_rollout_unavailable_reason'])}</strong></p>
+        <p>{html.escape(entry['actual_rollout_unavailable_detail'])} {evidence_links}</p></figure>
+        <figure><figcaption>{html.escape(entry['prediction_media_label'])}</figcaption><video controls preload="metadata" poster="{poster}"><source src="{html.escape(video)}" type="video/mp4"><a href="{html.escape(video)}">Open the model-prediction MP4 directly</a>.</video></figure></div>
+        <div class="directions">{''.join(direction_card(d) for d in entry['directions'])}</div>
+        <dl class="facts">
+          <div><dt>Arena</dt><dd>{html.escape(entry['arena_label'])}</dd></div>
+          <div><dt>Future interface</dt><dd>{html.escape(entry['future_interface'])}</dd></div>
+          <div><dt>Prediction SHA-256</dt><dd><code>{html.escape(entry['video']['sha256'])}</code></dd></div>
+        </dl>
+        <p class="note">This prediction-only evidence is not an executed episode. <a href="{html.escape(video)}">Open prediction</a> · <a href="{poster}">Open poster</a> · <a href="{html.escape(rel(entry['source_manifest']))}">Evidence manifest</a>{(' · ' + evidence_links) if evidence_links else ''}</p>
+      </article>"""
+
+
 def missing_card(item: dict[str, Any]) -> str:
     source = item.get("expected_manifest") or item.get("behavioral_manifest")
     source_link = (
@@ -290,6 +398,7 @@ def render_html(
     imagination_entries: list[dict[str, Any]],
     official_decodes: list[dict[str, Any]],
     imagination_present: bool,
+    prediction_only_entries: list[dict[str, Any]],
 ) -> str:
     sections = []
     dreamzero_execution = [
@@ -341,6 +450,16 @@ def render_html(
             f'<div class="grid">{cards}</div></section>'
         )
 
+    prediction_only_section = ""
+    if prediction_only_entries:
+        prediction_only_section = (
+            '<section id="world-model-prediction-only"><div class="section-head">'
+            '<h2>WORLD MODELS — prediction-only</h2><p>Model futures are visible; simulator execution is unavailable.</p></div>'
+            '<p class="boundary"><strong>Execution boundary.</strong> These are fixed-observation model predictions, not robot rollouts. '
+            'The adjacent panel records why physical execution remains unavailable.</p>'
+            f'<div class="grid">{"".join(prediction_only_card(entry) for entry in prediction_only_entries)}</div></section>'
+        )
+
     if imagination_present:
         imagination_cards = "".join(
             entry_card(dict(
@@ -384,12 +503,13 @@ def render_html(
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{html.escape(manifest['title'])}</title>
 <style>
-:root{{--ink:#17202a;--muted:#596775;--paper:#f4f1ea;--card:#fff;--line:#d8d8d2;--left:#fff0d4;--right:#e4f1ff;--accent:#6941c6}}*{{box-sizing:border-box}}body{{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}}main{{width:min(1420px,calc(100% - 32px));margin:auto;padding:52px 0 80px}}h1{{max-width:980px;margin:.12em 0;font-size:clamp(42px,7vw,84px);line-height:.98;letter-spacing:-.05em}}h2{{font-size:clamp(31px,4vw,48px);margin:0}}h3{{font-size:25px;margin:2px 0 0}}.lede{{max-width:920px;color:var(--muted);font-size:20px}}.boundary{{padding:16px 20px;border-left:5px solid var(--accent);background:#fff;border-radius:0 12px 12px 0;max-width:1050px}}section{{margin-top:62px}}.section-head{{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:20px;border-bottom:1px solid var(--line);padding-bottom:14px}}.section-head p{{color:var(--muted);margin:0}}.grid{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}}article{{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}}article header{{padding:20px 22px 14px;display:flex;justify-content:space-between;gap:18px}}.overline{{margin:0;color:var(--accent);text-transform:uppercase;letter-spacing:.06em;font-size:12px;font-weight:800}}.status{{max-width:46%;color:var(--muted);font-size:12px;text-align:right}}video{{display:block;width:100%;max-height:560px;background:#111}}.comparison-media{{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line)}}.comparison-media figure{{margin:0;background:#fff}}.comparison-media figcaption{{padding:10px 14px 8px;font-weight:800;font-size:12px;letter-spacing:.04em;color:var(--accent)}}.comparison-media p{{padding:0 14px 10px;margin:0;color:var(--muted);font-size:12px}}.directions{{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px 18px 10px}}.direction{{padding:14px;border-radius:10px}}.direction.left{{background:var(--left)}}.direction.right{{background:var(--right)}}.direction-top{{display:flex;justify-content:space-between;gap:10px;font-size:13px}}blockquote{{margin:10px 0 0;font-weight:650}}.facts{{display:grid;grid-template-columns:1fr 1.4fr;gap:1px;background:var(--line);border-block:1px solid var(--line)}}.facts div{{background:#fff;padding:12px 18px}}.facts div:last-child{{grid-column:1/-1}}dt{{font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:800}}dd{{margin:3px 0 0}}code{{overflow-wrap:anywhere;font-size:12px}}.note{{padding:0 18px 18px;color:var(--muted);font-size:14px}}a{{color:#4a2aa5}}.pending,.missing{{padding:24px;border-style:dashed}}.pending{{border-color:#8c6ddb;background:#faf7ff}}.missing h3{{margin-top:4px}}.missing-grid{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}}.archive-box{{margin-top:22px;padding:22px;background:#fff;border:1px solid var(--line);border-radius:16px}}.archive{{columns:2;column-gap:32px;padding-left:22px}}.archive li{{break-inside:avoid;margin:8px 0}}.archive span{{color:var(--muted);font-size:12px}}footer{{margin-top:52px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:20px}}@media(max-width:840px){{.grid,.missing-grid,.comparison-media{{grid-template-columns:1fr}}.section-head{{display:block}}.directions,.facts{{grid-template-columns:1fr}}.facts div:last-child{{grid-column:auto}}article header{{display:block}}.status{{display:block;max-width:none;text-align:left;margin-top:7px}}.archive{{columns:1}}}}
+:root{{--ink:#17202a;--muted:#596775;--paper:#f4f1ea;--card:#fff;--line:#d8d8d2;--left:#fff0d4;--right:#e4f1ff;--accent:#6941c6}}*{{box-sizing:border-box}}body{{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}}main{{width:min(1420px,calc(100% - 32px));margin:auto;padding:52px 0 80px}}h1{{max-width:980px;margin:.12em 0;font-size:clamp(42px,7vw,84px);line-height:.98;letter-spacing:-.05em}}h2{{font-size:clamp(31px,4vw,48px);margin:0}}h3{{font-size:25px;margin:2px 0 0}}.lede{{max-width:920px;color:var(--muted);font-size:20px}}.boundary{{padding:16px 20px;border-left:5px solid var(--accent);background:#fff;border-radius:0 12px 12px 0;max-width:1050px}}section{{margin-top:62px}}.section-head{{display:flex;align-items:end;justify-content:space-between;gap:24px;margin-bottom:20px;border-bottom:1px solid var(--line);padding-bottom:14px}}.section-head p{{color:var(--muted);margin:0}}.grid{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}}article{{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}}article header{{padding:20px 22px 14px;display:flex;justify-content:space-between;gap:18px}}.overline{{margin:0;color:var(--accent);text-transform:uppercase;letter-spacing:.06em;font-size:12px;font-weight:800}}.status{{max-width:46%;color:var(--muted);font-size:12px;text-align:right}}video{{display:block;width:100%;max-height:560px;background:#111}}.comparison-media{{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line)}}.comparison-media figure{{margin:0;background:#fff}}.comparison-media figcaption{{padding:10px 14px 8px;font-weight:800;font-size:12px;letter-spacing:.04em;color:var(--accent)}}.comparison-media p{{padding:0 14px 10px;margin:0;color:var(--muted);font-size:12px}}.comparison-unavailable{{display:flex;min-height:280px;flex-direction:column;justify-content:center;background:#faf7ff!important}}.comparison-unavailable p{{max-width:43ch}}.directions{{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:16px 18px 10px}}.direction{{padding:14px;border-radius:10px}}.direction.left{{background:var(--left)}}.direction.right{{background:var(--right)}}.direction-top{{display:flex;justify-content:space-between;gap:10px;font-size:13px}}blockquote{{margin:10px 0 0;font-weight:650}}.facts{{display:grid;grid-template-columns:1fr 1.4fr;gap:1px;background:var(--line);border-block:1px solid var(--line)}}.facts div{{background:#fff;padding:12px 18px}}.facts div:last-child{{grid-column:1/-1}}dt{{font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:800}}dd{{margin:3px 0 0}}code{{overflow-wrap:anywhere;font-size:12px}}.note{{padding:0 18px 18px;color:var(--muted);font-size:14px}}a{{color:#4a2aa5}}.pending,.missing{{padding:24px;border-style:dashed}}.pending{{border-color:#8c6ddb;background:#faf7ff}}.missing h3{{margin-top:4px}}.missing-grid{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}}.archive-box{{margin-top:22px;padding:22px;background:#fff;border:1px solid var(--line);border-radius:16px}}.archive{{columns:2;column-gap:32px;padding-left:22px}}.archive li{{break-inside:avoid;margin:8px 0}}.archive span{{color:var(--muted);font-size:12px}}footer{{margin-top:52px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);padding-top:20px}}@media(max-width:840px){{.grid,.missing-grid,.comparison-media{{grid-template-columns:1fr}}.section-head{{display:block}}.directions,.facts{{grid-template-columns:1fr}}.facts div:last-child{{grid-column:auto}}article header{{display:block}}.status{{display:block;max-width:none;text-align:left;margin-top:7px}}.archive{{columns:1}}}}
 </style></head><body><main>
 <p class="overline">Video-first evidence index · direct static LEFT/RIGHT commands</p><h1>{html.escape(manifest['title'])}</h1>
 <p class="lede">Videos are embedded at full card width, separated into WORLD MODEL and VLA sections, and labeled with arena, prompt, direction, outcome, model interface, and evidence status. Missing media stays missing. {html.escape(manifest['display_policy'])}</p>
 <p class="boundary"><strong>Claim boundary.</strong> {html.escape(manifest['claim_boundary'])}</p>
 {sections[0]}
+{prediction_only_section}
 {imagination_section}
 {''.join(sections[1:])}
 <section><div class="section-head"><h2>Explicit media gaps</h2><p>No raw or diagnostic artifact is substituted for publication video.</p></div><div class="missing-grid">{missing}</div></section>
@@ -405,6 +525,7 @@ def render_markdown(
     imagination_entries: list[dict[str, Any]],
     official_decodes: list[dict[str, Any]],
     imagination_present: bool,
+    prediction_only_entries: list[dict[str, Any]],
 ) -> str:
     lines = [
         f"# {manifest['title']}",
@@ -478,6 +599,36 @@ def render_markdown(
         [entry for entry in entries if entry["category"] == "WAM"],
         heading_already_emitted=True,
     )
+    if prediction_only_entries:
+        lines.extend([
+            "## WORLD MODELS — prediction-only",
+            "",
+            "These fixed-observation futures are model predictions, not simulator executions or behavioral episodes. "
+            "The paired rollout panel is explicitly unavailable because the exact controller mapping remains blocked.",
+            "",
+        ])
+        for entry in prediction_only_entries:
+            evidence_links = " · ".join(
+                f"[{evidence['label']}]({rel(evidence['path'])})"
+                for evidence in entry["supporting_evidence"]
+            )
+            lines.extend([
+                f"### {entry['model_label']} — {entry['pair_label']}",
+                "",
+                f"[▶ Open paired model prediction]({rel(entry['video']['path'])}) · "
+                f"[Poster]({rel(entry['poster']['path'])}) · "
+                f"[Evidence manifest]({rel(entry['source_manifest'])})"
+                f"{(' · ' + evidence_links) if evidence_links else ''}",
+                "",
+                f"- Actual rollout: unavailable — `{entry['actual_rollout_unavailable_reason']}`.",
+                f"- Reason: {entry['actual_rollout_unavailable_detail']}",
+                f"- Future interface: {entry['future_interface']}",
+                f"- Prediction SHA-256: `{entry['video']['sha256']}`",
+                "",
+            ])
+            for direction in entry["directions"]:
+                lines.append(f"> {direction['relation']}: “{direction['prompt']}” — {direction['outcome']}")
+            lines.append("")
     lines.extend(["## DreamZero imagined futures — not execution", ""])
     if imagination_present:
         lines.append(
@@ -544,7 +695,14 @@ def main() -> None:
     markdown_path = args.markdown if args.markdown.is_absolute() else REPO_ROOT / args.markdown
 
     manifest = json.loads(args.manifest.read_text())
-    entries, dreamzero_present, imagination_entries, official_decodes, imagination_present = load_entries(manifest)
+    (
+        entries,
+        dreamzero_present,
+        imagination_entries,
+        official_decodes,
+        imagination_present,
+        prediction_only_entries,
+    ) = load_entries(manifest)
     html_path.write_text(
         render_html(
             manifest,
@@ -553,6 +711,7 @@ def main() -> None:
             imagination_entries,
             official_decodes,
             imagination_present,
+            prediction_only_entries,
         )
     )
     markdown_path.write_text(
@@ -563,6 +722,7 @@ def main() -> None:
             imagination_entries,
             official_decodes,
             imagination_present,
+            prediction_only_entries,
         )
     )
     print(
@@ -574,6 +734,7 @@ def main() -> None:
                 "dreamzero_imagination_media_present": imagination_present,
                 "dreamzero_imagination_entry_count": len(imagination_entries),
                 "dreamzero_official_decode_count": len(official_decodes),
+                "prediction_only_entry_count": len(prediction_only_entries),
                 "html": str(html_path.relative_to(REPO_ROOT)),
                 "markdown": str(markdown_path.relative_to(REPO_ROOT)),
             },

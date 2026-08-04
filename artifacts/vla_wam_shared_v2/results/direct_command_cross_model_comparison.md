@@ -19,7 +19,7 @@ This is an arena-separated descriptive comparison. Raw DROID and RoboTwin succes
 
 | Class | Model | Valid n | LEFT | RIGHT | Endpoint aligned | Actions distinct | Future interface | Invalid attempts |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | --- | ---: |
-| VLA | LingBot-VLA 4B | 6 | 1/3 | 0/3 | 2/3 | NR | `none` | 3 (technical_setup_attempts) |
+| VLA | LingBot-VLA 4B | 6 | 1/3 | 0/3 | 2/3 | NR (action metric only) | `none` | 3 (technical_setup_attempts) |
 | WAM | Efficient-WAM-RT | 14 | 3/7 | 2/7 | 6/7 | 7/7 | `decoded_future_video` | 4 (cell_attempts) |
 | WAM | FastWAM | 14 | 1/7 | 1/7 | 3/7 | 7/7 | `action_only_at_test_time` | 18 (cell_attempts) |
 | WAM | LingBot-VA | 14 | 3/7 | 4/7 | 6/7 | 7/7 | `latent_only_future_not_decodable` | 5 (cell_attempts) |
@@ -47,6 +47,7 @@ This is an arena-separated descriptive comparison. Raw DROID and RoboTwin succes
 ## Interpretation limits
 
 - Success is the frozen arena-specific requested-relation completion predicate.
+- LingBot-VLA 4B RIGHT success is measured as 0/3; only its paired action-distinctness statistic is NR.
 - Endpoint alignment and action distinctness are paired sensitivity measures, not task success.
 - Exposed decoded futures are retained; action-only, latent-only, and missing future interfaces are never converted into zero-valued future scores.
 - The three pairs03–09 RoboTwin WAM rows are prospective slices and do not synthesize or merge unavailable historical raw pairs00–02.

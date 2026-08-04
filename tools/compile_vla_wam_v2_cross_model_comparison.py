@@ -411,7 +411,10 @@ def markdown_text(rows: list[dict[str, Any]], source_set: str) -> str:
             if row["arena_id"] != arena_id:
                 continue
             invalid = f"{row['invalid_attempt_count']} ({row['invalid_attempt_unit']})"
-            lines.append(f"| {row['model_class']} | {row['model']} | {row['valid_n']} | {ratio(row['left_success'])} | {ratio(row['right_success'])} | {ratio(row['paired_endpoint_alignment'])} | {ratio(row['paired_action_distinctness'])} | `{row['future_interface']}` | {invalid} |")
+            actions = ratio(row["paired_action_distinctness"])
+            if row["model_id"] == "lingbot_vla_4b_robotwin" and actions == "NR":
+                actions = "NR (action metric only)"
+            lines.append(f"| {row['model_class']} | {row['model']} | {row['valid_n']} | {ratio(row['left_success'])} | {ratio(row['right_success'])} | {ratio(row['paired_endpoint_alignment'])} | {actions} | `{row['future_interface']}` | {invalid} |")
     lines.extend(["", "## Exact evidence sources", ""])
     seen: set[str] = set()
     for row in rows:
@@ -420,7 +423,7 @@ def markdown_text(rows: list[dict[str, Any]], source_set: str) -> str:
                 continue
             seen.add(source["path"])
             lines.append(f"- `{source['path']}` — {source['bytes']:,} bytes; SHA-256 `{source['sha256']}`")
-    lines.extend(["", "## Interpretation limits", "", "- Success is the frozen arena-specific requested-relation completion predicate.", "- Endpoint alignment and action distinctness are paired sensitivity measures, not task success.", "- Exposed decoded futures are retained; action-only, latent-only, and missing future interfaces are never converted into zero-valued future scores.", "- The three pairs03–09 RoboTwin WAM rows are prospective slices and do not synthesize or merge unavailable historical raw pairs00–02.", ""])
+    lines.extend(["", "## Interpretation limits", "", "- Success is the frozen arena-specific requested-relation completion predicate.", "- LingBot-VLA 4B RIGHT success is measured as 0/3; only its paired action-distinctness statistic is NR.", "- Endpoint alignment and action distinctness are paired sensitivity measures, not task success.", "- Exposed decoded futures are retained; action-only, latent-only, and missing future interfaces are never converted into zero-valued future scores.", "- The three pairs03–09 RoboTwin WAM rows are prospective slices and do not synthesize or merge unavailable historical raw pairs00–02.", ""])
     return "\n".join(lines)
 
 

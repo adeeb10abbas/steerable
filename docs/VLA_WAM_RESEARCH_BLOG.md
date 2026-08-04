@@ -55,11 +55,16 @@ The last two are sensitivity measures, not substitutes for success.
 
 | Model | Type | Valid episodes | LEFT | RIGHT | Aligned pairs | Distinct-action pairs |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
-| LingBot-VLA 4B | VLA | 6 | 1/3 | 0/3 | 2/3 | not reported |
+| LingBot-VLA 4B | VLA | 6 | 1/3 | 0/3 | 2/3 | NR (action metric only) |
 | Efficient-WAM-RT | WAM | 14 | 3/7 | 2/7 | 6/7 | 7/7 |
 | FastWAM | WAM | 14 | 1/7 | 1/7 | 3/7 | 7/7 |
 | LingBot-VA | WAM | 14 | 3/7 | 4/7 | 6/7 | 7/7 |
 | Light-WAM | WAM | 6 | 1/3 | 0/3 | 1/3 | 3/3 |
+
+LingBot-VLA 4B is included: RIGHT success is measured as **0/3**, not
+missing. Only its paired action-distinctness statistic is unavailable in the
+compiled gate. The selected [pair-00 rollout](../artifacts/vla_wam_shared_v2/pilot/expansion/media/lingbot_vla_4b_pair00_matched.mp4)
+shows the measured LEFT success beside the matched RIGHT failure.
 
 The main pattern is visible without pooling arenas: action redirection is
 common, but task success varies sharply by checkpoint and requested direction.

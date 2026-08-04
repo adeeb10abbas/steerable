@@ -1,0 +1,148 @@
+{
+  "schema_version": "vla-wam-shared-v2-post-result-cosmos3-super-image-only-interface-diagnostic-v1",
+  "amendment_id": "V2-A014",
+  "status": "frozen_pre_inference_nonbehavioral_probe_only",
+  "amends": {
+    "v2_a012_amendment": "artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_super_droid_amendment.json",
+    "v2_a012_registry": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_super_droid_v2a012_registry.json",
+    "supersedes_only": "The V2-A012 fixed-probe input rule. This amendment replaces its image-plus-robot-state probe with an image-only generic policy diagnostic because the pinned implementation cannot return robot-state-conditioned actions and a decoded future in one request.",
+    "does_not_supersede": [
+      "V2-A012 base checkpoint identity, revision, source commits, storage gate, load gate, topology gate, or behavioral lock",
+      "V2-A012 exactly three-request budget",
+      "V2-A012 six conditional behavioral cells, all of which remain unreleased",
+      "The requirement for a separately frozen 10D-to-8D controller before any possible behavior"
+    ]
+  },
+  "experiment_identity": {
+    "experiment_id": "cosmos3_super_base_image_only_interface_diagnostic",
+    "model_id": "cosmos3_super_base",
+    "model_repository": "nvidia/Cosmos3-Super",
+    "model_revision": "e0262be9d8f7586bc24c069a2aed2b665bdff266",
+    "reporting_label": "Cosmos3-Super base image-only action-and-video interface diagnostic",
+    "not_a_droid_policy_claim": true,
+    "not_a_behavioral_result": true
+  },
+  "pinned_source_attestation": {
+    "cosmos_commit": "e494d734022ab0610061cdf57fa24c843e18767e",
+    "vllm_omni_commit": "900a7f0813d0482811b0e4dfd3cf7deabbe2429f",
+    "source_roots_observed_on_ali_pvc": {
+      "cosmos": "/data/users/ali/vla_wam/external/cosmos-e494d734",
+      "vllm_omni": "/data/users/ali/vla_wam/external/vllm-omni-900a7f08"
+    },
+    "evidence_files": [
+      {
+        "path": "vllm_omni/diffusion/models/cosmos3/pipeline_cosmos3.py",
+        "sha256": "d6cff51acc9c56a84c56274ddfd1e2d9580f26c2e72e0d5a9b3f813cc232b2c0",
+        "fact": "A generic action_mode request without robot_obs or observation decodes video and returns payload.video plus payload.actions. The robot_obs/observation route bypasses video output and returns metadata.common.action_only_output=true."
+      },
+      {
+        "path": "vllm_omni/diffusion/models/cosmos3/action.py",
+        "sha256": "4164f5074ba48e49eb631db6b43e531521cb112242d6dfcafd63fe9e5000adec",
+        "fact": "policy uses first-frame visual conditioning and allows a policy action sequence when raw_action_dim and action_chunk_size are supplied."
+      },
+      {
+        "path": "vllm_omni/entrypoints/openai/protocol/videos.py",
+        "sha256": "54efaf320d1ab6a5c6da981920de039b4d87e86b027836115bed3193aa153da2",
+        "fact": "The asynchronous video response schema contains action metadata and a completed video artifact."
+      },
+      {
+        "path": "cookbooks/cosmos3/generator/action/README.md",
+        "sha256": "48df78f0531c6faa05c1435dcbcfc538163fbd8e94d5f59b5d9f2d1bd29e0ec2",
+        "fact": "The DROID action representation is 10D end-effector pose plus gripper and has a 16-frame action duration."
+      }
+    ],
+    "interface_decision": "Use the generic image-only policy route for the three-request action-and-video diagnostic. Do not send robot_obs, observation, joint state, end-effector state, gripper state, history action, simulator state, or a state surrogate, because the state-bearing route is action-only."
+  },
+  "frozen_input_and_requests": {
+    "parameter_provenance": {
+      "frozen_edge_generic_policy_contract": "artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_edge_base_amendment.json",
+      "sha256": "7b45688604e717aab598fc50a205e3d17160ec28863c294167c76b3e5abf8a5b",
+      "reason": "V2-A014 reuses the already frozen generic asynchronous action-and-video interface values (17 frames, 16x10 actions, and static image route) without releasing Edge behavior or changing Super's inherited three-request budget."
+    },
+    "fixed_rgb": {
+      "role": "same committed Edge diagnostic RGB bytes, reused without modification",
+      "raw_rgb_sha256": "6261ce5ab21383342c2012c14f7ff97d3dcd74e5f4202f2b3444355cc7ba3332",
+      "transport_file": "conditioning.png",
+      "transport_file_sha256": "2a431b0fa288890b3509b314c0351c91123d5f64b237678fed972848e29cd55b",
+      "multipart_field": "input_reference",
+      "mime_type": "image/png"
+    },
+    "robot_state": {
+      "present": false,
+      "prohibited_fields": ["robot_obs", "observation", "joint_position", "eef_pos", "eef_quat", "gripper_position", "history_action", "simulator_state"],
+      "interpretation": "Outputs are image-and-language-conditioned interface evidence only. They cannot support a DROID behavioral, closed-loop, state-conditioned, controller, or execution claim."
+    },
+    "endpoint": {
+      "create": "POST /v1/videos",
+      "poll": "GET /v1/videos/{id}",
+      "content": "GET /v1/videos/{id}/content",
+      "mode": "generic asynchronous action-capable video route"
+    },
+    "request_fields": {
+      "model": "nvidia/Cosmos3-Super",
+      "size": "640x480",
+      "num_frames": 17,
+      "fps": 5,
+      "num_inference_steps": 30,
+      "guidance_scale": 1.0,
+      "flow_shift": 5.0,
+      "seed": 8300,
+      "extra_params": {
+        "action_mode": "policy",
+        "domain_name": "droid_lerobot",
+        "raw_action_dim": 10,
+        "action_chunk_size": 16
+      }
+    },
+    "requests": [
+      {
+        "id": "V2-A014-P00",
+        "condition": "LEFT",
+        "prompt": "Put the Rubik's cube to the left of the bowl.",
+        "sampling_seed": 8300
+      },
+      {
+        "id": "V2-A014-P01",
+        "condition": "LEFT_exact_repeat",
+        "prompt": "Put the Rubik's cube to the left of the bowl.",
+        "sampling_seed": 8300,
+        "byte_identical_to": "V2-A014-P00 except request identifier and transport timestamps"
+      },
+      {
+        "id": "V2-A014-P02",
+        "condition": "RIGHT",
+        "prompt": "Put the Rubik's cube to the right of the bowl.",
+        "sampling_seed": 8300
+      }
+    ]
+  },
+  "acceptance_and_retention": {
+    "interface_evidence_only": true,
+    "required_per_completed_request": [
+      "full create and final response JSON with exact request-body hash",
+      "top-level returned action payload, metadata, dtype, shape, and hash",
+      "decoded content MP4 with byte hash and frame-count verification",
+      "server/software/environment provenance and immutable checkpoint hash"
+    ],
+    "shape_and_media_checks": {
+      "action_shape": [16, 10],
+      "action_values": "finite only; otherwise retain an interface failure and release no controller",
+      "video_frame_count": 17,
+      "repeat_requirement": "LEFT request, returned action payload, and decoded video must be bit-identical for V2-A014-P00/P01 after excluding server-assigned identifiers/timestamps.",
+      "contrast_requirement": "LEFT and RIGHT are retained as contrast evidence only; no success, endpoint, execution, or causality score is inferred."
+    },
+    "missing_or_partial_rule": "A missing action, latent-only action, corrupt video, non-decoding video, timeout, load failure, or partial response is preserved as interface or infrastructure evidence. It is never coerced to zero and never enters a behavioral denominator."
+  },
+  "hard_prohibitions": [
+    "No simulator launch, reset, action, controller, CuRobo call, or viewport video is authorized by this amendment.",
+    "No DROID execution, success rate, endpoint score, or behavioral denominator is authorized.",
+    "No robot state may be added to recover a state-conditioned result while retaining a future-video claim.",
+    "No Nano, Edge, or other checkpoint may substitute for Cosmos3-Super base.",
+    "No request may exceed the inherited total of three V2-A012/A014 fixed interface requests."
+  ],
+  "claim_boundary": {
+    "current_status": "No Cosmos3-Super inference, model-generated video, action output, simulator rollout, or success claim exists at amendment creation.",
+    "allowed_future_wording": "If gates pass, report only image-only action-and-video interface evidence under V2-A014.",
+    "disallowed_future_wording": ["DROID policy", "robot-state-conditioned policy", "execution", "rollout", "success", "world-model prediction conditioned on robot state"]
+  }
+}

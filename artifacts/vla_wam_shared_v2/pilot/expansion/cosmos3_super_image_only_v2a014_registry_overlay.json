@@ -1,0 +1,46 @@
+{
+  "schema_version": "vla-wam-shared-v2-cosmos3-super-image-only-interface-overlay-v1",
+  "amendment_id": "V2-A014",
+  "amendment_path": "artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_super_image_only_v2a014_amendment.json",
+  "base_registry_path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_super_droid_v2a012_registry.json",
+  "overlay_status": "frozen_pre_inference_no_behavior",
+  "override_scope": {
+    "replaces": "Only the V2-A012 nonbehavioral fixed-probe input contract.",
+    "preserves": [
+      "Cosmos3-Super base revision e0262be9d8f7586bc24c069a2aed2b665bdff266",
+      "V2-A012 model/PVC/software/topology/load gates",
+      "one LEFT, one byte-identical LEFT repeat, and one RIGHT request at seed 8300",
+      "zero released simulator cells and six conditional behavior cells",
+      "all V2-A012 native/derived controller blocks"
+    ]
+  },
+  "diagnostic_contract": {
+    "input": "exact committed conditioning.png SHA-256 2a431b0fa288890b3509b314c0351c91123d5f64b237678fed972848e29cd55b (decoded raw RGB SHA-256 6261ce5ab21383342c2012c14f7ff97d3dcd74e5f4202f2b3444355cc7ba3332) plus static prompt; no robot state",
+    "endpoint": "POST /v1/videos; poll /v1/videos/{id}; retrieve /v1/videos/{id}/content",
+    "params": {
+      "model": "nvidia/Cosmos3-Super",
+      "size": "640x480",
+      "num_frames": 17,
+      "fps": 5,
+      "num_inference_steps": 30,
+      "guidance_scale": 1.0,
+      "flow_shift": 5.0,
+      "seed": 8300,
+      "action_mode": "policy",
+      "domain_name": "droid_lerobot",
+      "raw_action_dim": 10,
+      "action_chunk_size": 16
+    },
+    "requests": ["LEFT", "LEFT_exact_repeat", "RIGHT"],
+    "required_outputs": ["finite action [16,10]", "17-frame decoded MP4", "full response/request/provenance hashes"],
+    "state_bearing_route": "prohibited: source attestations show robot_obs/observation returns action_only_output and does not retain a decoded future video"
+  },
+  "denominator_and_media_rules": {
+    "behavioral_cells_released": 0,
+    "behavioral_denominator": "none",
+    "simulator_media": "none",
+    "permitted_media_label_if_generated": "IMAGE-ONLY MODEL-GENERATED INTERFACE VIDEO — NOT EXECUTION",
+    "missing_future_rule": "Missing, corrupt, latent-only, or action-only outputs remain interface evidence and are not converted to zeros."
+  },
+  "next_command_after_all_existing_v2a012_gates_pass": "Use the V2-A014 amendment request fields exactly; preserve raw results under /data/users/ali/vla_wam/raw/cosmos3_super_droid/v2_a014_image_only outside Git; do not invoke simulator or controller."
+}

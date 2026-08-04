@@ -1,0 +1,54 @@
+{
+  "schema_version": "vla-wam-shared-v2-post-result-cosmos3-nano-droid-gate-v1",
+  "amendment_id": "V2-A011",
+  "recorded_at_utc": "2026-08-04T01:43:42Z",
+  "recorded_at_git_head": "4359785f17a333ad6df04ce55166f81dbedb0431",
+  "status": "frozen_before_model_load_or_behavioral_inference",
+  "decision_origin": "User explicitly requested the DROID policy checkpoints in NVIDIA's Cosmos3 collection after distinguishing them from the non-policy Cosmos-Reason2 diagnostic.",
+  "experiment_identity": {
+    "experiment_id": "cosmos3_nano_policy_droid_direct_gate",
+    "model_id": "cosmos3_nano_policy_droid",
+    "arena": "droid_robolab",
+    "model_repository": "nvidia/Cosmos3-Nano-Policy-DROID",
+    "model_revision": "6706d7680581c255ff61e0f3bb49d90eac55c79e",
+    "checkpoint_path": "/data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid",
+    "framework_repository": {
+      "path": "/data/users/ali/vla_wam/external/cosmos-framework",
+      "commit": "411d25b2e35bc441126f48c44a4b93e1c0564274"
+    },
+    "simulator_repository": {
+      "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4",
+      "commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+    }
+  },
+  "behavioral_grid": {
+    "episode_count": 6,
+    "environment_seeds": [8300, 8301, 8302],
+    "sampling_seeds": [8300, 8301, 8302],
+    "prompt_family": "direct_command",
+    "requested_relations": ["left", "right"],
+    "static_episode_prompt_only": true,
+    "oracle_or_subtask_coach": false,
+    "dynamic_prompt_switches": 0,
+    "viewport_video_required": true,
+    "executed_action_trace_required": true,
+    "exposed_generated_future_required": true
+  },
+  "release_gates": [
+    "exact model revision and current framework/simulator commits recorded",
+    "checkpoint file hashes compiled before model load",
+    "checkpoint loads through the DROID action-policy server without model substitution",
+    "fixed-observation exact-repeat output is bit-identical",
+    "LEFT versus RIGHT prompt-only action output differs",
+    "environment and policy sampling seeds are injected and recorded",
+    "neutral matched reset begins outside both requested regions",
+    "viewport video, generated future, and executed action trace persist for every valid episode",
+    "infrastructure-invalid attempts remain outside behavioral denominators"
+  ],
+  "claim_boundary": {
+    "cosmos3_edge_status": "preserved as its separate completed six-cell DROID gate",
+    "cosmos_reason2_status": "completed static diagnostic only; not an action policy and not a behavioral rollout",
+    "nano_status": "separate post-result six-cell DROID action-policy gate",
+    "pooling_rule": "Do not merge Nano episodes with Edge or Cosmos-Reason2; report the exact checkpoint identity."
+  }
+}

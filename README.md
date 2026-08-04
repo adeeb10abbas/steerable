@@ -1,5 +1,11 @@
 # Steerable robotics research
 
+Start with the concise, shareable
+[`VLA/WAM research blog`](docs/VLA_WAM_RESEARCH_BLOG.md) and the
+[`video gallery`](docs/VLA_WAM_STEERABILITY_VIDEO_GALLERY.html). The frozen
+protocol and hash-bearing evidence remain in the repository for auditability;
+operational handoffs and raw-run details are not part of the main reading path.
+
 This repository contains three evidence-preserving research tracks:
 
 1. **Active: VLA/WAM language steerability.** Matched LEFT/RIGHT interventions,
@@ -16,11 +22,12 @@ Do not combine results across these tracks. New agents should begin with
 
 ## Active VLA/WAM steerability study
 
-The current evidence includes two completed DROID reference checkpoints, three
-standardized RoboTwin WAM direct gates, and a standardized π0-FAST DROID direct
-gate. All four new-model gates show a one-direction-only competence split, so
-the next authorized experiments are directional confirmations—not wording
-sweeps.
+The current evidence spans nine checkpoints across DROID/RoboLab and RoboTwin.
+All original bounded direct gates and the 42-episode three-WAM confirmation are
+complete. Separately labeled current-stack gates for π0-FAST wording, π0.5
+rollout media, and Cosmos3 Nano Policy DROID are the only active additions;
+none changes the completed evidence retrospectively. LaWAM was withdrawn before
+inference and is not part of the active comparison.
 
 Primary entrypoints:
 
@@ -30,12 +37,14 @@ Primary entrypoints:
   machine-readable queue and blockers.
 - [`VLA_WAM_STEERABILITY_V2_PROTOCOL.md`](docs/VLA_WAM_STEERABILITY_V2_PROTOCOL.md):
   frozen design and claim boundary.
+- [`VLA_WAM_RESEARCH_BLOG.md`](docs/VLA_WAM_RESEARCH_BLOG.md): concise
+  reader-facing account.
 - [`VLA_VS_WAM_STEERABILITY_STUDY.md`](docs/VLA_VS_WAM_STEERABILITY_STUDY.md):
-  reader-facing article and current evidence.
+  full technical record and historical detail.
 - [`VLA_WAM_STEERABILITY_VIDEO_GALLERY.html`](docs/VLA_WAM_STEERABILITY_VIDEO_GALLERY.html):
   complete paired success/failure clips.
-- [`experiments/groot_droid/README.md`](experiments/groot_droid/README.md):
-  controlled-access preflight for the blocked GR00T N1.7 DROID checkpoint.
+- [`direct_command_cross_model_comparison.md`](artifacts/vla_wam_shared_v2/results/direct_command_cross_model_comparison.md):
+  arena-separated compiled result table.
 
 Validate the active evidence package with:
 

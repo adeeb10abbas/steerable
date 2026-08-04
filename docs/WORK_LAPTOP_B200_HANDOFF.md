@@ -37,16 +37,19 @@ Then read the four external readmes at their pinned checkouts:
 `lerobot-lingbot/experiments/lingbot_language_gate/README.md`, and
 `EfficientWAM-RoboTwin/README.md`.
 
-Live-verified committed facts: the protocol validator passes 698 checks; every
+Live-verified committed facts: use the check count in the current committed
+validation report; every
 currently runnable bounded gate is complete; all 42 prospective three-WAM
 pairs03–09 episodes are valid committed evidence and **must not be rerun**.
 The completed six-cell gates are GR00T N1.7, Cosmos3 Edge, LingBot-VLA 4B,
 Light-WAM, and DreamZero. DreamZero's six execution videos, all nine official
 imagination decodes, and three paired imagination views are committed. The
-only authorized work left is 60 π0-FAST wording cells blocked on missing exact
-historical OpenPI/RoboLab commits and six LaWAM cells blocked on gated DINOv3
-terms. Work-laptop Kubernetes facts must still be rediscovered before any
-future resumed cell.
+active post-result work is 60 π0-FAST current-stack wording cells (`V2-A008`),
+six π0.5 current-stack direct/media cells (`V2-A010`), and six Cosmos3 Nano
+Policy DROID cells (`V2-A011`), all subject to their release gates. LaWAM was
+withdrawn before inference by `V2-A009` and has zero remaining cells. The
+historical 60-cell π0-FAST wording queue remains separately blocked on missing
+exact OpenPI/RoboLab revisions and must not be merged with V2-A008.
 
 ## Restrict Kubernetes discovery to ali-owned resources
 
@@ -151,33 +154,28 @@ preprocessing command after its Wan asset is present. Use the exact installation
 and download commands in the four readmes; keep their incompatible Python/Torch
 environments separate.
 
-## Remaining authorized queue: 66 externally blocked cells
+## Remaining active queue: 72 current-stack cells at release gates
 
 There is no runnable WAM confirmation cell left. Efficient-WAM-RT,
 FastWAM, and LingBot-VA pairs03–09 are complete; preserve their raw PVC output
 and committed compact slices without rerunning them.
 
-| Priority | Queue | Cells | Status | Required external change |
+| Priority | Queue | Cells | Status | Next gate |
 | ---: | --- | ---: | --- | --- |
-| 0 | π0-FAST three-wording expansion | 60 | blocked before model load | recover exact OpenPI `9e46d3aea26417bfb564227734b95d010aa827e5` and RoboLab `11142d4319e44401e0464866bb5fedf7ec8a8927` Git object stores from the original machine |
-| 1 | LaWAM direct gate | 6 | blocked before model load | accept the `facebook/dinov3-vitb16-pretrain-lvd1689m` terms for the token-owning Hugging Face account |
+| 0 | π0-FAST V2-A008 current-stack three-wording replication | 60 | registry and adapters frozen | checkpoint load, exact-repeat, prompt-sensitivity, neutral-reset, renderer, trace, and PVC gates |
+| 1 | π0.5 V2-A010 current-stack direct/media gate | 6 | checkpoint staged; adapter preflight | hash manifest, seeded load/repeat/sensitivity, renderer, trace, and PVC gates |
+| 2 | Cosmos3 Nano Policy DROID V2-A011 | 6 | checkpoint staging; adapter preflight | exact-revision hash, model load/repeat/sensitivity, execution/future video, trace, and PVC gates |
 
-For π0-FAST, transfer verified `git bundle create ... --all` bundles and rerun
-the provenance audit in `VLA_WAM_CONTINUATION.md`; do not substitute available
-newer checkouts. For LaWAM, after the terms grant, rerun exactly:
-
-```bash
-/data/users/ali/vla_wam/envs/hf-tools/bin/hf download facebook/dinov3-vitb16-pretrain-lvd1689m --revision 5931719e67bbdb9737e363e781fb0c67687896bc --local-dir /data/users/ali/vla_wam/checkpoints/dinov3-vitb16-pretrain-lvd1689m
-```
-
-The 2026-08-04 authenticated retry still returned HTTP 401/GatedRepoError and
-performed zero model loads, action requests, or behavioral episodes. See
-`artifacts/vla_wam_shared_v2/pilot/expansion/lawam_dinov3_authenticated_access_retry.json`.
+The unavailable historical π0-FAST queue remains blocked on OpenPI
+`9e46d3aea26417bfb564227734b95d010aa827e5` and RoboLab
+`11142d4319e44401e0464866bb5fedf7ec8a8927`. Recovering those objects would
+restore the historical queue, but their absence does not block the separately
+labeled V2-A008 current-stack replication. LaWAM must not be resumed.
 
 ## Compile, validate, sync, and stop
 
-After either external blocker is genuinely cleared, follow its frozen resume
-section in `VLA_WAM_CONTINUATION.md`. Keep model-specific ledgers separate and
+After an active model's release gates pass, follow its frozen resume section in
+`VLA_WAM_CONTINUATION.md`. Keep model-specific ledgers separate and
 never combine DROID and RoboTwin success rates.
 
 Then run:

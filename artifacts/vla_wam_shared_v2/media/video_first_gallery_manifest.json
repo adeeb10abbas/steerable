@@ -1,6 +1,6 @@
 {
   "schema_version": "vla-wam-shared-v2-video-first-gallery-v1",
-  "title": "DreamZero and matched VLA/WAM video evidence",
+  "title": "Matched VLA/WAM video evidence",
   "claim_boundary": "Publication-selected simulator clips are grouped by arena. DROID and RoboTwin success rates are never pooled. A clip is an evidence view, not an additional episode.",
   "display_policy": "Embed each canonical publication video once. Alternate square encodes, posters, captions, and FastWAM reconstruction inputs remain available through their source manifests but are not duplicated as additional evidence cards.",
   "dreamzero_manifest_contract": {
@@ -40,7 +40,7 @@
       "arena_label": "DROID / RoboLab",
       "model_label": "Cosmos3 Edge DROID",
       "category": "WAM",
-      "future_interface": "Decoded video futures plus actions; 17 decoded futures retained for this pair",
+      "future_interface": "Decoded video futures plus actions; 17 decoded futures retained for this pair; no separate matched imagination MP4 is selected in this gallery",
       "evidence_status": "Valid behavioral pair; both episodes succeeded; committed publication selection",
       "pair_label": "seed 8302 matched pair",
       "seed": 8302,
@@ -98,10 +98,10 @@
       "id": "pi0_fast_seed8300",
       "arena": "droid",
       "arena_label": "DROID / RoboLab",
-      "model_label": "π0-FAST DROID",
+      "model_label": "π0-FAST DROID — historical frozen-stack reference",
       "category": "VLA",
       "future_interface": "Actions only; no decoded visual future",
-      "evidence_status": "Valid behavioral pair; LEFT failed and RIGHT succeeded; committed publication selection",
+      "evidence_status": "Historical frozen-stack behavioral pair; LEFT failed and RIGHT succeeded; not a substitute for current-stack or new-protocol inference",
       "pair_label": "seed 8300 matched pair",
       "seed": 8300,
       "video": {
@@ -131,7 +131,7 @@
           "outcome": "success"
         }
       ],
-      "selection_note": "First compiled same-seed pair containing a LEFT failure and RIGHT success; selected before rendering.",
+      "selection_note": "First compiled same-seed pair containing a LEFT failure and RIGHT success. This is the existing frozen π0-FAST reference clip, retained as historical evidence and never substituted for a current-stack or newly authorized cell.",
       "source_manifest": "artifacts/vla_wam_shared_v2/media/droid_pi0_fast_pairs/media_index.json"
     },
     {
@@ -140,7 +140,7 @@
       "arena_label": "RoboTwin place-A-relative-to-B",
       "model_label": "Efficient-WAM-RT",
       "category": "WAM",
-      "future_interface": "Decoded coarse future video plus actions; publication clip shows simulator execution",
+      "future_interface": "Decoded coarse future video plus actions; publication clip shows simulator execution; no separate matched future MP4 is selected",
       "evidence_status": "Valid behavioral pair; LEFT succeeded and RIGHT failed; committed publication selection",
       "pair_label": "pair 00 pilot",
       "seed": 4300000,
@@ -180,7 +180,7 @@
       "arena_label": "RoboTwin place-A-relative-to-B",
       "model_label": "Efficient-WAM-RT",
       "category": "WAM",
-      "future_interface": "Decoded coarse future video plus actions; publication clip shows simulator execution",
+      "future_interface": "Decoded coarse future video plus actions; publication clip shows simulator execution; no separate matched future MP4 is selected",
       "evidence_status": "Valid prospective confirmation pair; both episodes succeeded; committed publication selection",
       "pair_label": "pair 05 confirmation",
       "seed": 4300005,
@@ -399,23 +399,9 @@
     {
       "model_id": "pi05_droid",
       "arena": "droid",
-      "status": "no_selected_v2_publication_video",
-      "reason": "The checkpoint is an existing v1 reference, but this branch contains no committed selected v2 behavioral clip for it.",
+      "status": "historical_v1_reference_has_no_committed_rollout_video",
+      "reason": "π0.5 DROID is an existing v1 reference, but this branch contains no committed v1 behavioral rollout MP4. Its trajectory selections remain linked below; the π0-FAST clip above is a different checkpoint and is not substituted for it. V2-A010 is a separate active π0.5 current-stack rollout/media gate; its output is pending and will never be presented as recovered v1 footage.",
       "behavioral_manifest": "artifacts/vla_wam_shared_v2/media/v1_droid_selection.json"
-    },
-    {
-      "model_id": "lawam_robotwin",
-      "arena": "robotwin",
-      "status": "no_behavioral_episode",
-      "reason": "Blocked before inference on gated DINOv3 access; no behavioral video exists.",
-      "behavioral_manifest": "artifacts/vla_wam_shared_v2/pilot/expansion/lawam_robotwin_registry.json"
-    },
-    {
-      "model_id": "cosmos_reason2_2b",
-      "arena": "diagnostic_only",
-      "status": "not_behavioral_media",
-      "reason": "Static diagnostic calls are not robot rollouts and are intentionally excluded from the behavioral video gallery.",
-      "behavioral_manifest": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos_reason2_2b_static_diagnostic.json"
     }
   ]
 }

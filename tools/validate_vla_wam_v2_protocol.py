@@ -1090,6 +1090,36 @@ def validate(workspace: Path) -> dict[str, Any]:
         workspace
         / "artifacts/vla_wam_shared_v2/pilot/post_result_current_stack_replication_amendment.json"
     )
+    current_stack_registry_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/expansion/"
+        "pi0_fast_current_stack_v2a008_registry.json"
+    )
+    lawam_withdrawal_amendment_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/post_result_lawam_withdrawal_amendment.json"
+    )
+    pi05_current_amendment_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/post_result_pi05_current_stack_media_gate_amendment.json"
+    )
+    cosmos3_nano_amendment_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_nano_droid_amendment.json"
+    )
+    pi05_checkpoint_manifest_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_checkpoint_manifest.json"
+    )
+    pi05_current_registry_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_registry.json"
+    )
+    cosmos3_nano_registry_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/expansion/"
+        "cosmos3_nano_policy_droid_v2a011_registry.json"
+    )
     dreamzero_readiness_path = (
         workspace
         / "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_readiness.json"
@@ -1188,6 +1218,13 @@ def validate(workspace: Path) -> dict[str, Any]:
     second_wave_amendment = load_json(second_wave_amendment_path)
     dreamzero_amendment = load_json(dreamzero_amendment_path)
     current_stack_amendment = load_json(current_stack_amendment_path)
+    current_stack_registry = load_json(current_stack_registry_path)
+    lawam_withdrawal_amendment = load_json(lawam_withdrawal_amendment_path)
+    pi05_current_amendment = load_json(pi05_current_amendment_path)
+    cosmos3_nano_amendment = load_json(cosmos3_nano_amendment_path)
+    pi05_checkpoint_manifest = load_json(pi05_checkpoint_manifest_path)
+    pi05_current_registry = load_json(pi05_current_registry_path)
+    cosmos3_nano_registry = load_json(cosmos3_nano_registry_path)
     dreamzero_readiness_artifact = load_json(dreamzero_readiness_path)
     dreamzero_result = load_json(dreamzero_result_path)
     dreamzero_raw_collection = load_json(dreamzero_raw_collection_path)
@@ -1862,8 +1899,8 @@ def validate(workspace: Path) -> dict[str, Any]:
 
     require(
         continuation_state["study_status"]
-        == "v2_a008_current_stack_pi0_replication_frozen_before_release_gates_lawam_access_pending",
-        "continuation state names the frozen current-stack replication and LaWAM access boundary",
+        == "pi0_fast_pi05_and_cosmos3_nano_current_stack_gates_active_lawam_withdrawn",
+        "continuation state names all three current-stack gates and the withdrawn LaWAM boundary",
         checks,
     )
     queue = continuation_state["experiment_queue"]
@@ -1965,15 +2002,20 @@ def validate(workspace: Path) -> dict[str, Any]:
     )
     remaining = continuation_state.get("remaining_authorized_work", [])
     require(
-        [item.get("priority") for item in remaining] == [0, 1]
+        [item.get("priority") for item in remaining] == [0, 1, 2]
         and [item.get("id") for item in remaining]
-        == ["pi0_fast_current_stack_three_wording_replication", "lawam_robotwin_direct_gate"]
-        and [item.get("authorized_cells_remaining") for item in remaining] == [60, 6]
+        == [
+            "pi0_fast_current_stack_three_wording_replication",
+            "pi05_droid_current_stack_direct_media_gate",
+            "cosmos3_nano_policy_droid_direct_gate",
+        ]
+        and [item.get("authorized_cells_remaining") for item in remaining] == [60, 6, 6]
         and remaining[0].get("status")
         == "authorized_current_stack_replication_release_gates_pending"
         and remaining[0].get("amendment_sha256") == sha256(current_stack_amendment_path)
-        and remaining[1].get("status", "").startswith("blocked_before_model_load"),
-        "continuation state exposes the sixty-cell current-stack replication and six-cell LaWAM blocker",
+        and remaining[1].get("amendment_sha256") == sha256(pi05_current_amendment_path)
+        and remaining[2].get("amendment_sha256") == sha256(cosmos3_nano_amendment_path),
+        "continuation state exposes the sixty-cell pi0-FAST and two six-cell current-stack gates",
         checks,
     )
     current_stack_state = post_result_decision.get("current_stack_replication_amendment", {})
@@ -1984,7 +2026,13 @@ def validate(workspace: Path) -> dict[str, Any]:
         and current_stack_state.get("sha256") == sha256(current_stack_amendment_path)
         and current_stack_state.get("authorized_queue")
         == ["pi0_fast_current_stack_three_wording_replication"]
-        and current_stack_state.get("behavioral_episode_count") == 60,
+        and current_stack_state.get("behavioral_episode_count") == 60
+        and current_stack_state.get("registry")
+        == str(current_stack_registry_path.relative_to(workspace))
+        and current_stack_state.get("registry_sha256")
+        == sha256(current_stack_registry_path)
+        and current_stack_state.get("adapter_status")
+        == "implemented_and_static_validation_passed_release_gates_not_run",
         "continuation state binds the V2-A008 current-stack replication before inference",
         checks,
     )
@@ -2005,6 +2053,301 @@ def validate(workspace: Path) -> dict[str, Any]:
         == "remains blocked and unrun at the historical exact-adapter boundary"
         and len(current_stack_amendment["release_gates"]) == 9,
         "V2-A008 freezes exact current revisions, sixty cells, release gates, and non-comparability",
+        checks,
+    )
+    current_cells = current_stack_registry["cells"]
+    current_cell_keys = {
+        (
+            row["environment_seed"],
+            row["prompt_family"],
+            row["requested_relation"],
+        )
+        for row in current_cells
+    }
+    expected_current_cell_keys = {
+        (seed, family, relation)
+        for seed in range(8300, 8310)
+        for family in (
+            "short_command",
+            "goal_as_outcome",
+            "desired_plus_negated_opposite",
+        )
+        for relation in ("left", "right")
+    }
+    require(
+        current_stack_registry["schema_version"]
+        == "vla-wam-v2a008-pi0-current-stack-registry-v1"
+        and current_stack_registry["amendment_id"] == "V2-A008"
+        and current_stack_registry["status"]
+        == "frozen_before_current_stack_model_load_or_behavioral_inference"
+        and current_stack_registry["amendment"]["sha256"]
+        == sha256(current_stack_amendment_path)
+        and current_stack_registry["protocol"]["sha256"] == sha256(protocol_path)
+        and current_stack_registry["replication_identity"]
+        == current_stack_amendment["replication_identity"]
+        and current_stack_registry["claim_boundary"]
+        == current_stack_amendment["claim_boundary"],
+        "V2-A008 registry is hash-bound to the amendment, protocol, current revisions, and claim boundary",
+        checks,
+    )
+    require(
+        len(current_cells) == 60
+        and len({row["cell_id"] for row in current_cells}) == 60
+        and current_cell_keys == expected_current_cell_keys
+        and current_stack_registry["summary"]["left_right_pair_count"] == 30,
+        "V2-A008 registry contains exactly three wording families by ten seeds by LEFT and RIGHT",
+        checks,
+    )
+    protocol_prompts = {row["id"]: row for row in protocol["prompt_families"]}
+
+    def expected_current_prompt(family: str, relation: str) -> str:
+        prompt = protocol_prompts[family]
+        if family == "short_command":
+            return prompt[f"droid_exact_{relation}"]
+        return prompt[relation].format(
+            movable="Rubik's cube", movable_short="cube", reference="bowl"
+        )
+
+    require(
+        all(
+            row["rendered_prompt"]
+            == expected_current_prompt(row["prompt_family"], row["requested_relation"])
+            and row["sampling_seed_base"] == row["environment_seed"]
+            and row["first_policy_request_sampling_seed"]
+            == row["environment_seed"] * 1000
+            and row["instruction_controller"] == "static"
+            and row["oracle_or_subtask_coach"] is False
+            and row["dynamic_prompt_switches"] == 0
+            and row["video_mode"] == "viewport"
+            and row["executed_action_trace_required"] is True
+            and row["valid_failure_retained"] is True
+            and row["output_folder_name"]
+            == (
+                f"v2a008_pi0_current_seed{row['environment_seed']}_"
+                f"{row['prompt_family']}_{row['requested_relation']}"
+            )
+            for row in current_cells
+        ),
+        "V2-A008 registry renders exact protocol prompts and freezes static seeded video/action-trace cells",
+        checks,
+    )
+    require(
+        len(current_stack_registry["adapter_sources"]) == 9,
+        "V2-A008 registry enumerates the complete builder, compiler, adapter, preflight, and task-overlay source set",
+        checks,
+    )
+    for source in current_stack_registry["adapter_sources"]:
+        validate_file_record(
+            workspace,
+            source,
+            f"V2-A008 adapter source {source['path']}",
+            checks,
+        )
+    require(
+        lawam_withdrawal_amendment["schema_version"]
+        == "vla-wam-shared-v2-post-result-scope-withdrawal-v1"
+        and lawam_withdrawal_amendment["amendment_id"] == "V2-A009"
+        and lawam_withdrawal_amendment["status"]
+        == "frozen_before_any_lawam_model_inference_or_behavioral_episode"
+        and lawam_withdrawal_amendment["withdrawn_experiment"]["behavioral_episode_count_completed"] == 0
+        and lawam_withdrawal_amendment["withdrawn_experiment"]["model_action_request_count"] == 0
+        and lawam_withdrawal_amendment["withdrawn_experiment"]["authorized_cell_count_after_withdrawal"] == 0,
+        "V2-A009 withdraws LaWAM before inference without turning missing evidence into a zero",
+        checks,
+    )
+    require(
+        pi05_current_amendment["schema_version"]
+        == "vla-wam-shared-v2-post-result-pi05-current-stack-media-gate-v1"
+        and pi05_current_amendment["amendment_id"] == "V2-A010"
+        and pi05_current_amendment["status"]
+        == "frozen_before_current_stack_model_load_or_behavioral_inference"
+        and pi05_current_amendment["experiment_identity"]["policy_repository"]["commit"]
+        == "c23745b5ad24e98f66967ea795a07b2588ed6c79"
+        and pi05_current_amendment["experiment_identity"]["policy_repository"]["config"]
+        == "pi05_droid_jointpos_polaris"
+        and pi05_current_amendment["experiment_identity"]["simulator_repository"]["commit"]
+        == "0aef241fb088ca21bb4ebd24448940ed56620d17"
+        and pi05_current_amendment["behavioral_grid"]["episode_count"] == 6
+        and len(pi05_current_amendment["release_gates"]) == 9,
+        "V2-A010 freezes the exact pi0.5 current-stack identity, six cells, and release gates",
+        checks,
+    )
+    require(
+        pi05_checkpoint_manifest["schema_version"]
+        == "vla-wam-v2a010-pi05-current-checkpoint-manifest-v1"
+        and pi05_checkpoint_manifest["status"]
+        == "complete_sha256_hashed_before_model_load"
+        and pi05_checkpoint_manifest["file_count"] == 26
+        and len(pi05_checkpoint_manifest["files"]) == 26
+        and pi05_checkpoint_manifest["payload_bytes"] == 12_434_530_510
+        and sum(row["bytes"] for row in pi05_checkpoint_manifest["files"])
+        == pi05_checkpoint_manifest["payload_bytes"]
+        and len({row["path"] for row in pi05_checkpoint_manifest["files"]}) == 26
+        and pi05_checkpoint_manifest["model_load_attempt_count"] == 0,
+        "V2-A010 checkpoint manifest retains 26 unique SHA-256 records and zero model loads",
+        checks,
+    )
+    pi05_cells = pi05_current_registry["cells"]
+    require(
+        pi05_current_registry["schema_version"]
+        == "vla-wam-v2a010-pi05-current-stack-registry-v1"
+        and pi05_current_registry["amendment"]["sha256"]
+        == sha256(pi05_current_amendment_path)
+        and pi05_current_registry["checkpoint_manifest"]["sha256"]
+        == sha256(pi05_checkpoint_manifest_path)
+        and pi05_current_registry["protocol"]["sha256"] == sha256(protocol_path)
+        and len(pi05_cells) == 6
+        and len({row["cell_id"] for row in pi05_cells}) == 6
+        and {
+            (row["environment_seed"], row["requested_relation"])
+            for row in pi05_cells
+        }
+        == {(seed, relation) for seed in (8300, 8301, 8302) for relation in ("left", "right")},
+        "V2-A010 registry is hash-bound and contains exactly three direct-command LEFT/RIGHT pairs",
+        checks,
+    )
+    require(
+        all(
+            row["rendered_prompt"]
+            == expected_current_prompt("direct_command", row["requested_relation"])
+            and row["sampling_seed_base"] == row["environment_seed"]
+            and row["first_policy_request_sampling_seed"] == row["environment_seed"] * 1000
+            and row["open_loop_horizon"] == 15
+            and row["instruction_controller"] == "static"
+            and row["oracle_or_subtask_coach"] is False
+            and row["dynamic_prompt_switches"] == 0
+            and row["video_mode"] == "viewport"
+            and row["executed_action_trace_required"] is True
+            for row in pi05_cells
+        ),
+        "V2-A010 registry freezes exact direct prompts, horizon 15, seeded static control, videos, and traces",
+        checks,
+    )
+    require(
+        len(pi05_current_registry["adapter_sources"]) == 9,
+        "V2-A010 registry enumerates the complete adapter, preflight, compiler, builder, and task sources",
+        checks,
+    )
+    for source in pi05_current_registry["adapter_sources"]:
+        validate_file_record(
+            workspace,
+            source,
+            f"V2-A010 adapter source {source['path']}",
+            checks,
+        )
+    nano_identity = cosmos3_nano_amendment["experiment_identity"]
+    nano_grid = cosmos3_nano_amendment["behavioral_grid"]
+    require(
+        cosmos3_nano_amendment["schema_version"]
+        == "vla-wam-shared-v2-post-result-cosmos3-nano-droid-gate-v1"
+        and cosmos3_nano_amendment["amendment_id"] == "V2-A011"
+        and cosmos3_nano_amendment["status"]
+        == "frozen_before_model_load_or_behavioral_inference"
+        and nano_identity["model_repository"] == "nvidia/Cosmos3-Nano-Policy-DROID"
+        and nano_identity["model_revision"]
+        == "6706d7680581c255ff61e0f3bb49d90eac55c79e"
+        and nano_identity["framework_repository"]["commit"]
+        == "411d25b2e35bc441126f48c44a4b93e1c0564274"
+        and nano_identity["simulator_repository"]["commit"]
+        == "0aef241fb088ca21bb4ebd24448940ed56620d17"
+        and nano_grid["episode_count"] == 6
+        and nano_grid["environment_seeds"] == [8300, 8301, 8302]
+        and nano_grid["sampling_seeds"] == [8300, 8301, 8302]
+        and nano_grid["requested_relations"] == ["left", "right"]
+        and nano_grid["static_episode_prompt_only"] is True
+        and nano_grid["oracle_or_subtask_coach"] is False
+        and nano_grid["dynamic_prompt_switches"] == 0
+        and nano_grid["viewport_video_required"] is True
+        and nano_grid["executed_action_trace_required"] is True
+        and nano_grid["exposed_generated_future_required"] is True
+        and len(cosmos3_nano_amendment["release_gates"]) == 9,
+        "V2-A011 freezes the exact Cosmos3 Nano identity, six seeded direct cells, and release gates",
+        checks,
+    )
+    nano_checkpoint = cosmos3_nano_registry["checkpoint"]
+    nano_files = nano_checkpoint["files"]
+    require(
+        cosmos3_nano_registry["schema_version"]
+        == "vla-wam-shared-v2-cosmos3-nano-policy-droid-registry-v1"
+        and cosmos3_nano_registry["status"]
+        == "checkpoint_hash_verified_fixed_observation_gate_pending"
+        and cosmos3_nano_registry["amendment_id"] == "V2-A011"
+        and cosmos3_nano_registry["amendment_sha256"]
+        == sha256(cosmos3_nano_amendment_path)
+        and cosmos3_nano_registry["protocol_sha256"] == sha256(protocol_path)
+        and nano_checkpoint["id"] == "nvidia/Cosmos3-Nano-Policy-DROID"
+        and nano_checkpoint["revision"]
+        == "6706d7680581c255ff61e0f3bb49d90eac55c79e"
+        and nano_checkpoint["download_status"] == "complete_exact_revision_and_hashed"
+        and nano_checkpoint["exact_revision_confirmed_by_hf_metadata"] is True
+        and nano_checkpoint["hash_gate_passed"] is True
+        and nano_checkpoint["present_non_cache_file_count"] == 43
+        and len(nano_files) == 43
+        and nano_checkpoint["present_non_cache_bytes"] == 32_937_432_846
+        and sum(row["bytes"] for row in nano_files.values()) == 32_937_432_846
+        and all(len(row["sha256"]) == 64 for row in nano_files.values())
+        and nano_checkpoint["model_load_attempt_count"] == 0
+        and nano_checkpoint["behavioral_episode_count"] == 0,
+        "V2-A011 registry is hash-bound and retains all 43 exact-revision checkpoint payload hashes before model load",
+        checks,
+    )
+    require(
+        nano_checkpoint["required_indexed_weight_files"]
+        == [
+            "transformer/diffusion_pytorch_model-00001-of-00007.safetensors",
+            "transformer/diffusion_pytorch_model-00002-of-00007.safetensors",
+            "transformer/diffusion_pytorch_model-00003-of-00007.safetensors",
+            "transformer/diffusion_pytorch_model-00004-of-00007.safetensors",
+            "transformer/diffusion_pytorch_model-00005-of-00007.safetensors",
+            "transformer/diffusion_pytorch_model-00006-of-00007.safetensors",
+            "transformer/diffusion_pytorch_model-00007-of-00007.safetensors",
+            "vision_encoder/model.safetensors",
+        ]
+        and set(nano_checkpoint["required_indexed_weight_files"]) <= set(nano_files)
+        and set(nano_checkpoint["required_component_files"]) <= set(nano_files)
+        and cosmos3_nano_registry["software"]["cosmos_framework"]["commit"]
+        == "411d25b2e35bc441126f48c44a4b93e1c0564274"
+        and cosmos3_nano_registry["software"]["robolab"]["commit"]
+        == "0aef241fb088ca21bb4ebd24448940ed56620d17"
+        and cosmos3_nano_registry["serving_contract"]["action_chunk_size"] == 32
+        and cosmos3_nano_registry["serving_contract"]["action_dim"] == 8
+        and cosmos3_nano_registry["serving_contract"]["action_space"] == "joint_pos"
+        and cosmos3_nano_registry["serving_contract"]["decode_video"] is True
+        and "technical failure"
+        in cosmos3_nano_registry["serving_contract"]["generated_future_contract"],
+        "V2-A011 registry freezes complete model components, pinned software, 32x8 actions, and fail-closed futures",
+        checks,
+    )
+    nano_fixed = cosmos3_nano_registry["fixed_observation_gate"]
+    nano_queue = cosmos3_nano_registry["behavioral_queue"]
+    require(
+        nano_fixed["status"] == "released_pending_three_request_gate"
+        and nano_fixed["conditions"] == ["left", "left_exact_repeat", "right"]
+        and nano_fixed["sampling_seed"] == 8300
+        and nano_queue["status"]
+        == "frozen_not_released_until_checkpoint_hash_and_fixed_observation_gates_pass"
+        and nano_queue["environment_seeds"] == [8300, 8301, 8302]
+        and nano_queue["sampling_seeds"] == [8300, 8301, 8302]
+        and nano_queue["requested_relations"] == ["left", "right"]
+        and nano_queue["prompts"]
+        == {
+            "left": "Put the Rubik's cube to the left of the bowl.",
+            "right": "Put the Rubik's cube to the right of the bowl.",
+        }
+        and nano_queue["prompt_controller"] == "episode_static"
+        and nano_queue["behavioral_episode_count"] == 6
+        and nano_queue["viewport_video_required"] is True
+        and nano_queue["executed_action_trace_required"] is True
+        and nano_queue["exposed_generated_future_required"] is True
+        and nano_queue["valid_failure_retention"] is True
+        and nano_queue["infrastructure_failure_denominator_policy"]
+        == "exclude_and_ledger"
+        and nano_queue["oracle_or_subtask_coach"] is False
+        and "never pooled"
+        in cosmos3_nano_registry["claim_boundary"]["checkpoint_identity"]
+        and "immutable do-not-rerun evidence"
+        in cosmos3_nano_registry["claim_boundary"]["cosmos3_edge"],
+        "V2-A011 releases only the fixed gate and freezes six static video/action/future cells while preserving Edge",
         checks,
     )
     require(
@@ -2546,6 +2889,42 @@ def validate(workspace: Path) -> dict[str, Any]:
         ),
         "post_result_current_stack_replication_amendment_sha256": sha256(
             current_stack_amendment_path
+        ),
+        "pi0_fast_current_stack_v2a008_registry_path": str(
+            current_stack_registry_path.relative_to(workspace)
+        ),
+        "pi0_fast_current_stack_v2a008_registry_sha256": sha256(
+            current_stack_registry_path
+        ),
+        "lawam_withdrawal_amendment_path": str(
+            lawam_withdrawal_amendment_path.relative_to(workspace)
+        ),
+        "lawam_withdrawal_amendment_sha256": sha256(
+            lawam_withdrawal_amendment_path
+        ),
+        "pi05_current_stack_amendment_path": str(
+            pi05_current_amendment_path.relative_to(workspace)
+        ),
+        "pi05_current_stack_amendment_sha256": sha256(
+            pi05_current_amendment_path
+        ),
+        "pi05_current_stack_checkpoint_manifest_path": str(
+            pi05_checkpoint_manifest_path.relative_to(workspace)
+        ),
+        "pi05_current_stack_checkpoint_manifest_sha256": sha256(
+            pi05_checkpoint_manifest_path
+        ),
+        "pi05_current_stack_registry_path": str(
+            pi05_current_registry_path.relative_to(workspace)
+        ),
+        "pi05_current_stack_registry_sha256": sha256(
+            pi05_current_registry_path
+        ),
+        "cosmos3_nano_policy_droid_registry_path": str(
+            cosmos3_nano_registry_path.relative_to(workspace)
+        ),
+        "cosmos3_nano_policy_droid_registry_sha256": sha256(
+            cosmos3_nano_registry_path
         ),
         "efficient_wam_pair03_handoff": pair03_handoff,
         "efficient_wam_pairs04_09": efficient_pairs04_09,

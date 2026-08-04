@@ -1,0 +1,27 @@
+{
+  "schema_version": "vla-wam-shared-v2-post-result-scope-withdrawal-v1",
+  "amendment_id": "V2-A009",
+  "recorded_at_utc": "2026-08-04T01:43:42Z",
+  "recorded_at_git_head": "4359785f17a333ad6df04ce55166f81dbedb0431",
+  "status": "frozen_before_any_lawam_model_inference_or_behavioral_episode",
+  "decision_origin": "User explicitly removed LaWAM from the active study and requested that no further LaWAM setup, inference, rollout, or publication-gallery work continue.",
+  "withdrawn_experiment": {
+    "experiment_id": "lawam_robotwin_direct_gate",
+    "original_amendment_id": "V2-A006",
+    "behavioral_episode_count_completed": 0,
+    "model_action_request_count": 0,
+    "former_authorized_cell_count": 6,
+    "authorized_cell_count_after_withdrawal": 0
+  },
+  "publication_policy": {
+    "include_in_active_result_table": false,
+    "include_as_gallery_gap": false,
+    "retain_historical_registry_and_access_failure": true,
+    "reason": "Preserve the audit trail without cluttering the active model comparison or shareable media surface."
+  },
+  "claim_boundary": [
+    "LaWAM produced no behavioral evidence under this study.",
+    "The withdrawal is a scope decision, not a model failure or zero-valued result.",
+    "The frozen V2-A006 registry and access-failure evidence remain historical provenance and must not be deleted or rewritten."
+  ]
+}

@@ -43,6 +43,18 @@ release gates, and non-comparability boundary before current-stack model load
 or behavioral inference. Its source is
 [`post_result_current_stack_replication_amendment.json`](../artifacts/vla_wam_shared_v2/pilot/post_result_current_stack_replication_amendment.json).
 
+User-directed amendments `V2-A009` through `V2-A011` were recorded before any
+newly covered model load or behavioral inference. `V2-A009` withdraws LaWAM
+with zero model requests and zero behavioral episodes. `V2-A010` freezes a
+separate six-cell π0.5 current-stack rollout/media gate; it cannot be merged
+with the historical v1 π0.5 evidence. `V2-A011` freezes a six-cell
+`Cosmos3-Nano-Policy-DROID` gate with actual simulator video, executed traces,
+and exposed generated futures. Cosmos-Reason2 remains a completed static
+diagnostic, not an action policy. Their machine-readable sources are
+[`V2-A009`](../artifacts/vla_wam_shared_v2/pilot/post_result_lawam_withdrawal_amendment.json),
+[`V2-A010`](../artifacts/vla_wam_shared_v2/pilot/post_result_pi05_current_stack_media_gate_amendment.json),
+and [`V2-A011`](../artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_nano_droid_amendment.json).
+
 This is a disclosed post-v1 extension. Every pi0.5/Cosmos result in the
 160-episode DROID study and the small retrospective Efficient-WAM, FastWAM,
 and LingBot-VA gates was known when v2 was designed. Those outcomes motivated
@@ -84,7 +96,9 @@ LaWAM, Light-WAM, pi0 DROID, and DreamZero entered the disclosed second-wave
 audit as candidates and were not assigned zeros. V2-A006 selected Light-WAM
 and LaWAM; V2-A007 later selected DreamZero after the user explicitly requested
 it and a separate two-B200-policy/RTX-simulator topology became available. pi0
-DROID remains deferred to limit first-wave family redundancy.
+DROID remains deferred to limit first-wave family redundancy. V2-A009 later
+withdrew LaWAM before inference; V2-A010 and V2-A011 separately added the
+current-stack π0.5 media gate and Cosmos3 Nano DROID policy gate.
 
 ## Four prompts, in plain language
 

@@ -21,7 +21,6 @@ from typing import Any
 import h5py
 import numpy as np
 
-
 MODEL_ID = "cosmos3_edge_droid_wam"
 TASKS = {
     "left": "RubiksCubeLeftOfBowlMatchedTask",
@@ -139,9 +138,10 @@ def trace_metadata(raw_root: Path, seed: int, direction: str) -> tuple[dict[str,
 
 def load_episode(
     *, seed: int, direction: str, output_root: Path, raw_root: Path, trajectory_dir: Path,
+    output_prefix: str = "v2_cosmos_edge", policy_id: str = "cosmos3_v2",
 ) -> tuple[dict[str, Any], np.ndarray, str]:
     task = TASKS[direction]
-    root = output_root / f"v2_cosmos_edge_seed{seed}_neutral"
+    root = output_root / f"{output_prefix}_seed{seed}_neutral"
     task_dir = root / task
     hdf5_path = task_dir / "run_0.hdf5"
     log_path = task_dir / "log_0_env0.json"
@@ -154,7 +154,7 @@ def load_episode(
     env = json.loads(env_path.read_text())
     if result["instruction"] != PROMPTS[direction] or env["instruction"] != PROMPTS[direction]:
         raise RuntimeError(f"Static prompt mismatch for {seed}:{direction}")
-    if int(env["seed"]) != seed or result["policy"] != "cosmos3_v2":
+    if int(env["seed"]) != seed or result["policy"] != policy_id:
         raise RuntimeError(f"Environment/policy provenance mismatch for {seed}:{direction}")
     if bool(result["success"]) != bool(log["success"]):
         raise RuntimeError(f"Result/log success mismatch for {seed}:{direction}")

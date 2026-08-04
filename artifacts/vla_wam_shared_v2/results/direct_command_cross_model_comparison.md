@@ -1,6 +1,6 @@
 # Direct-command evidence across models
 
-Evidence cutoff: `a7bed6e4381106ce9a59132775953f0e7ba68b67` (2026-08-03T19:45:12Z). Source-set SHA-256: `3a2395c5bf0265e91726a8304e075d8cb5da4da6bac3873c09dcb7e829061af2`.
+Evidence cutoff: `e4c31fe686618590ca962d16fb606eda78446b7f` (2026-08-03T21:45:50Z). Source-set SHA-256: `3543560f867ccc8ca85fa619c0f05b8aec4c9312ba94f67b9756e34c2d8625d1`.
 
 This is an arena-separated descriptive comparison. Raw DROID and RoboTwin success rates are never pooled. `NR` means the selected compiled evidence did not report a paired action-distinctness statistic; it is not a zero. Infrastructure-invalid attempts remain outside every valid-model denominator.
 
@@ -11,6 +11,7 @@ This is an arena-separated descriptive comparison. Raw DROID and RoboTwin succes
 | VLA | π0-FAST DROID | 20 | 1/10 | 10/10 | 10/10 | 10/10 | `none` | 0 (cell_attempts) |
 | VLA | GR00T N1.7 DROID | 6 | 0/3 | 0/3 | 3/3 | 3/3 | `none` | 5 (ledger_entries; 2 behavior cells excluded) |
 | WAM | Cosmos3 Edge DROID | 6 | 3/3 | 3/3 | 3/3 | 3/3 | `decoded_rgb_uint8_33_frames_per_policy_request` | 8 (setup_attempts; all before model request) |
+| WAM | DreamZero DROID | 6 | 2/3 | 1/3 | 3/3 | 3/3 | `joint_action_and_latent_video_prediction_with_official_decode_path` | 11 (setup_attempts; all excluded from valid behavior) |
 
 ## RoboTwin place-A-relative-to-B
 
@@ -28,6 +29,7 @@ This is an arena-separated descriptive comparison. Raw DROID and RoboTwin succes
 - `artifacts/vla_wam_shared_v2/pilot/expansion/groot_n17_droid_v2_registry.json` — 15,172 bytes; SHA-256 `95077a42bb0115bc673ea13ae5acdc6fdef6f476627804662f73c219ebd88bc7`
 - `artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_droid_direct_gate.json` — 67,708 bytes; SHA-256 `1c559ee5667ac9d22d7b66eafa7a65551783eedaf7fb3de29a2faf450c2dd029`
 - `artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_droid_invalid_attempts.json` — 6,004 bytes; SHA-256 `b3a62c792c82d15143ef6c94b768e2bcf712dd69d9c2f96584c904140a452754`
+- `artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json` — 254,288 bytes; SHA-256 `4c76cdc3ca9eaf227d21d160199408f22e1b3dd7a71176a5a5dbe22223714461`
 - `artifacts/vla_wam_shared_v2/pilot/expansion/lingbot_vla_4b_direct_gate.json` — 20,538 bytes; SHA-256 `7c0ad19833d6cbb51bb5fbdac8f9546f0e311333e498a15594b55f68dc7b6534`
 - `artifacts/vla_wam_shared_v2/pilot/expansion/lingbot_vla_4b_robotwin_readiness.json` — 5,845 bytes; SHA-256 `588699ed912fe900de5a5ca36c350236e15ae0b0a2c55afeea22670759b68c30`
 - `artifacts/vla_wam_shared_v2/pilot/directional_confirmation/efficient_wam_rt_pair03_integration.json` — 7,275 bytes; SHA-256 `d850f8f2c3d32db705cc65326ca673c150ab7208a203a180bd32d88dfb0e5471`

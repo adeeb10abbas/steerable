@@ -1,0 +1,244 @@
+{
+  "adapter_sources": [
+    {
+      "bytes": 5460,
+      "path": "tools/build_v2a010_pi05_registry.py",
+      "sha256": "e97a5ae4e734301b77b462913231d57f14fddfdce49641af38317e52f5d9811d"
+    },
+    {
+      "bytes": 6647,
+      "path": "tools/compile_v2a010_pi05_gate.py",
+      "sha256": "14c85a9fa2e0369d805fa0eed5bb26d707b00e042b13b2475aaa077d682addfd"
+    },
+    {
+      "bytes": 3738,
+      "path": "experiments/pi05_current_stack/v2a010_serve_policy.py",
+      "sha256": "cd415e3a98da977f395242c24bb8f3d3187eb4cc3bf53c5dc659d190e6934051"
+    },
+    {
+      "bytes": 4343,
+      "path": "experiments/pi05_current_stack/v2a010_robolab_client.py",
+      "sha256": "de633d7219cc20da7fc7b87b6831139073eed135bbb7662e346c9e0912d89141"
+    },
+    {
+      "bytes": 4417,
+      "path": "experiments/pi05_current_stack/v2a010_robolab_gate.py",
+      "sha256": "bb0c7d232c31ccbbcbd149e8128aa66d817f59a20f752542c6ef19f48484531f"
+    },
+    {
+      "bytes": 4393,
+      "path": "experiments/pi05_current_stack/v2a010_capture_fixed_observation.py",
+      "sha256": "15672f76c407ded3dfb0bdf22a475c004e8b92caf6c9d6350438579306d9aaeb"
+    },
+    {
+      "bytes": 2851,
+      "path": "experiments/pi05_current_stack/v2a010_fixed_observation_probe.py",
+      "sha256": "87c6c5a748db8a52221acbb43df3b15038ec3807cc14217dd062db160d94c328"
+    },
+    {
+      "bytes": 2230,
+      "path": "experiments/groot_droid/robolab_v2_tasks/rubiks_cube_left_of_bowl_matched.py",
+      "sha256": "9c4d90be770266bac3ba5242b743098348c565ee622179b5e88fa2af0c4891bc"
+    },
+    {
+      "bytes": 2158,
+      "path": "experiments/groot_droid/robolab_v2_tasks/rubiks_cube_right_of_bowl_matched.py",
+      "sha256": "ba0eb879590960c57976dd1b749c4ebbd3e86054e152ca5af014ac1bc2b6d02a"
+    }
+  ],
+  "amendment": {
+    "path": "artifacts/vla_wam_shared_v2/pilot/post_result_pi05_current_stack_media_gate_amendment.json",
+    "sha256": "b5663f1473f2d034116d4084aa2a22ccb01104806d83e5898b6cea2cf2765804"
+  },
+  "amendment_id": "V2-A010",
+  "cells": [
+    {
+      "action_trace_stem": "seed8300_direct_command_left",
+      "anchor_task": "RubiksCubeLeftOfBowlMatchedTask",
+      "arena": "droid_robolab",
+      "cell_id": "pi05_droid_current_stack__droid_pair_seed_8300__direct_command__left",
+      "dynamic_prompt_switches": 0,
+      "environment_seed": 8300,
+      "executed_action_trace_required": true,
+      "experiment_id": "pi05_droid_current_stack_direct_media_gate",
+      "first_policy_request_sampling_seed": 8300000,
+      "instruction_controller": "static",
+      "model_id": "pi05_droid_current_stack",
+      "open_loop_horizon": 15,
+      "oracle_or_subtask_coach": false,
+      "output_folder_name": "v2a010_pi05_current_seed8300_direct_command_left",
+      "pair_id": "droid_pair_seed_8300",
+      "prompt_family": "direct_command",
+      "rendered_prompt": "Put the Rubik's cube to the left of the bowl.",
+      "requested_relation": "left",
+      "sampling_seed_base": 8300,
+      "valid_failure_retained": true,
+      "video_mode": "viewport"
+    },
+    {
+      "action_trace_stem": "seed8300_direct_command_right",
+      "anchor_task": "RubiksCubeRightOfBowlMatchedTask",
+      "arena": "droid_robolab",
+      "cell_id": "pi05_droid_current_stack__droid_pair_seed_8300__direct_command__right",
+      "dynamic_prompt_switches": 0,
+      "environment_seed": 8300,
+      "executed_action_trace_required": true,
+      "experiment_id": "pi05_droid_current_stack_direct_media_gate",
+      "first_policy_request_sampling_seed": 8300000,
+      "instruction_controller": "static",
+      "model_id": "pi05_droid_current_stack",
+      "open_loop_horizon": 15,
+      "oracle_or_subtask_coach": false,
+      "output_folder_name": "v2a010_pi05_current_seed8300_direct_command_right",
+      "pair_id": "droid_pair_seed_8300",
+      "prompt_family": "direct_command",
+      "rendered_prompt": "Put the Rubik's cube to the right of the bowl.",
+      "requested_relation": "right",
+      "sampling_seed_base": 8300,
+      "valid_failure_retained": true,
+      "video_mode": "viewport"
+    },
+    {
+      "action_trace_stem": "seed8301_direct_command_left",
+      "anchor_task": "RubiksCubeLeftOfBowlMatchedTask",
+      "arena": "droid_robolab",
+      "cell_id": "pi05_droid_current_stack__droid_pair_seed_8301__direct_command__left",
+      "dynamic_prompt_switches": 0,
+      "environment_seed": 8301,
+      "executed_action_trace_required": true,
+      "experiment_id": "pi05_droid_current_stack_direct_media_gate",
+      "first_policy_request_sampling_seed": 8301000,
+      "instruction_controller": "static",
+      "model_id": "pi05_droid_current_stack",
+      "open_loop_horizon": 15,
+      "oracle_or_subtask_coach": false,
+      "output_folder_name": "v2a010_pi05_current_seed8301_direct_command_left",
+      "pair_id": "droid_pair_seed_8301",
+      "prompt_family": "direct_command",
+      "rendered_prompt": "Put the Rubik's cube to the left of the bowl.",
+      "requested_relation": "left",
+      "sampling_seed_base": 8301,
+      "valid_failure_retained": true,
+      "video_mode": "viewport"
+    },
+    {
+      "action_trace_stem": "seed8301_direct_command_right",
+      "anchor_task": "RubiksCubeRightOfBowlMatchedTask",
+      "arena": "droid_robolab",
+      "cell_id": "pi05_droid_current_stack__droid_pair_seed_8301__direct_command__right",
+      "dynamic_prompt_switches": 0,
+      "environment_seed": 8301,
+      "executed_action_trace_required": true,
+      "experiment_id": "pi05_droid_current_stack_direct_media_gate",
+      "first_policy_request_sampling_seed": 8301000,
+      "instruction_controller": "static",
+      "model_id": "pi05_droid_current_stack",
+      "open_loop_horizon": 15,
+      "oracle_or_subtask_coach": false,
+      "output_folder_name": "v2a010_pi05_current_seed8301_direct_command_right",
+      "pair_id": "droid_pair_seed_8301",
+      "prompt_family": "direct_command",
+      "rendered_prompt": "Put the Rubik's cube to the right of the bowl.",
+      "requested_relation": "right",
+      "sampling_seed_base": 8301,
+      "valid_failure_retained": true,
+      "video_mode": "viewport"
+    },
+    {
+      "action_trace_stem": "seed8302_direct_command_left",
+      "anchor_task": "RubiksCubeLeftOfBowlMatchedTask",
+      "arena": "droid_robolab",
+      "cell_id": "pi05_droid_current_stack__droid_pair_seed_8302__direct_command__left",
+      "dynamic_prompt_switches": 0,
+      "environment_seed": 8302,
+      "executed_action_trace_required": true,
+      "experiment_id": "pi05_droid_current_stack_direct_media_gate",
+      "first_policy_request_sampling_seed": 8302000,
+      "instruction_controller": "static",
+      "model_id": "pi05_droid_current_stack",
+      "open_loop_horizon": 15,
+      "oracle_or_subtask_coach": false,
+      "output_folder_name": "v2a010_pi05_current_seed8302_direct_command_left",
+      "pair_id": "droid_pair_seed_8302",
+      "prompt_family": "direct_command",
+      "rendered_prompt": "Put the Rubik's cube to the left of the bowl.",
+      "requested_relation": "left",
+      "sampling_seed_base": 8302,
+      "valid_failure_retained": true,
+      "video_mode": "viewport"
+    },
+    {
+      "action_trace_stem": "seed8302_direct_command_right",
+      "anchor_task": "RubiksCubeRightOfBowlMatchedTask",
+      "arena": "droid_robolab",
+      "cell_id": "pi05_droid_current_stack__droid_pair_seed_8302__direct_command__right",
+      "dynamic_prompt_switches": 0,
+      "environment_seed": 8302,
+      "executed_action_trace_required": true,
+      "experiment_id": "pi05_droid_current_stack_direct_media_gate",
+      "first_policy_request_sampling_seed": 8302000,
+      "instruction_controller": "static",
+      "model_id": "pi05_droid_current_stack",
+      "open_loop_horizon": 15,
+      "oracle_or_subtask_coach": false,
+      "output_folder_name": "v2a010_pi05_current_seed8302_direct_command_right",
+      "pair_id": "droid_pair_seed_8302",
+      "prompt_family": "direct_command",
+      "rendered_prompt": "Put the Rubik's cube to the right of the bowl.",
+      "requested_relation": "right",
+      "sampling_seed_base": 8302,
+      "valid_failure_retained": true,
+      "video_mode": "viewport"
+    }
+  ],
+  "checkpoint_manifest": {
+    "path": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_checkpoint_manifest.json",
+    "sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca"
+  },
+  "claim_boundary": {
+    "current_stack_status": "separate post-result six-cell direct-command media gate",
+    "historical_v1_status": "preserved unchanged",
+    "media_rule": "Publication media must be labeled pi0.5 current-stack and must not be presented as recovered historical footage.",
+    "pooling_rule": "Do not merge this gate with the historical v1 80-episode pi0.5 result or the V2-A008 pi0-FAST wording replication."
+  },
+  "experiment_identity": {
+    "arena": "droid_robolab",
+    "checkpoint": {
+      "payload_bytes": 12434530510,
+      "payload_file_count": 26,
+      "payload_hash_manifest": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_checkpoint_manifest.json",
+      "payload_hash_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+      "source_assets": "gs://openpi-assets/checkpoints/polaris/pi05_droid_jointpos_polaris/assets",
+      "source_params": "gs://openpi-assets/checkpoints/polaris/pi05_droid_jointpos_polaris/params",
+      "staging_path": "/data/users/ali/vla_wam/checkpoints/pi05_droid_jointpos_polaris"
+    },
+    "experiment_id": "pi05_droid_current_stack_direct_media_gate",
+    "model_id": "pi05_droid_current_stack",
+    "policy_repository": {
+      "commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+      "config": "pi05_droid_jointpos_polaris",
+      "path": "/data/users/ali/openpi"
+    },
+    "simulator_repository": {
+      "commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+      "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4"
+    }
+  },
+  "protocol": {
+    "path": "artifacts/vla_wam_shared_v2/protocol.json",
+    "sha256": "1862fbbb40fef34621a840a0ed15889cf42da066424e866b66f04227b28c73b9"
+  },
+  "schema_version": "vla-wam-v2a010-pi05-current-stack-registry-v1",
+  "status": "frozen_before_current_stack_model_load_or_behavioral_inference",
+  "summary": {
+    "environment_seeds": [
+      8300,
+      8301,
+      8302
+    ],
+    "episode_count": 6,
+    "left_cells": 3,
+    "left_right_pair_count": 3,
+    "right_cells": 3
+  }
+}

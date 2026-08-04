@@ -18,8 +18,8 @@ from pathlib import Path
 from typing import Any
 
 
-EVIDENCE_HEAD = "a7bed6e4381106ce9a59132775953f0e7ba68b67"
-EVIDENCE_CUTOFF_UTC = "2026-08-03T19:45:12Z"
+EVIDENCE_HEAD = "e4c31fe686618590ca962d16fb606eda78446b7f"
+EVIDENCE_CUTOFF_UTC = "2026-08-03T21:45:50Z"
 RESULT_DIR = Path("artifacts/vla_wam_shared_v2/results")
 FIGURE_DIR = Path("artifacts/vla_wam_shared_v2/figures")
 
@@ -39,6 +39,10 @@ SOURCES = {
     "cosmos_invalid": (
         "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_droid_invalid_attempts.json",
         "b3a62c792c82d15143ef6c94b768e2bcf712dd69d9c2f96584c904140a452754",
+    ),
+    "dreamzero": (
+        "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json",
+        "4c76cdc3ca9eaf227d21d160199408f22e1b3dd7a71176a5a5dbe22223714461",
     ),
     "lingbot_vla": (
         "artifacts/vla_wam_shared_v2/pilot/expansion/lingbot_vla_4b_direct_gate.json",
@@ -173,6 +177,36 @@ def build_rows(d: dict[str, Any], ledger: dict[str, dict[str, Any]]) -> list[dic
         "invalid_attempt_count": cosmos_invalid_count, "invalid_attempt_unit": "setup_attempts; all before model request",
         "model_revision": cosmos["checkpoint_revision"], "source_keys": ["cosmos", "cosmos_invalid"],
         "claim_boundary": "V2-A005 six-cell behavioral replication; separate from v1.",
+    })
+
+    dreamzero = d["dreamzero"]
+    ds = dreamzero["success_by_relation"]
+    require(
+        (
+            dreamzero["status"],
+            dreamzero["valid_episode_count"],
+            ds["left"]["successes"],
+            ds["left"]["trials"],
+            ds["right"]["successes"],
+            ds["right"]["trials"],
+            dreamzero["aligned_endpoint_pair_count"],
+            dreamzero["distinct_executed_action_pair_count"],
+        )
+        == ("complete", 6, 2, 3, 1, 3, 3, 3),
+        "DreamZero result mismatch",
+    )
+    rows.append({
+        "model_id": "dreamzero_droid", "model": "DreamZero DROID", "model_class": "WAM",
+        "arena": "DROID / RoboLab", "arena_id": "droid_robolab", "valid_n": 6,
+        "left_success": metric(2, 3), "right_success": metric(1, 3),
+        "paired_endpoint_alignment": metric(3, 3),
+        "paired_action_distinctness": metric(3, 3),
+        "future_interface": dreamzero["future_interface"],
+        "future_evidence_status": "exposed_decoded_imagination_and_retained",
+        "invalid_attempt_count": len(dreamzero["invalid_attempts"]),
+        "invalid_attempt_unit": "setup_attempts; all excluded from valid behavior",
+        "model_revision": None, "source_keys": ["dreamzero"],
+        "claim_boundary": "V2-A007 bounded six-cell direct-command gate; decoded imagination is evidence, not execution.",
     })
 
     lingbot = d["lingbot_vla"]
@@ -413,8 +447,8 @@ def main() -> None:
     root = args.repo_root.resolve()
     documents, ledger = load_sources(root)
     rows = build_rows(documents, ledger)
-    require(len(rows) == 8, f"expected eight measured model rows, got {len(rows)}")
-    require(sum(row["valid_n"] for row in rows if row["arena_id"] == "droid_robolab") == 32, "DROID valid-n audit failed")
+    require(len(rows) == 9, f"expected nine measured model rows, got {len(rows)}")
+    require(sum(row["valid_n"] for row in rows if row["arena_id"] == "droid_robolab") == 38, "DROID valid-n audit failed")
     require(sum(row["valid_n"] for row in rows if row["arena_id"] == "robotwin_place_a2b") == 54, "RoboTwin valid-n audit failed")
     write_outputs(root, rows, ledger)
 

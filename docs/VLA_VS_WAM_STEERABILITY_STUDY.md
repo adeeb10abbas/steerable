@@ -1,5 +1,13 @@
 # Does the world model listen?
 
+> **Historical technical record.** This long-form document preserves the v1
+> study and early v2 pilot narrative at their original evidence cutoffs. It is
+> not the current shareable summary and its interim “next step” language is not
+> an active queue. For the completed multi-model result, read the concise
+> [research blog](VLA_WAM_RESEARCH_BLOG.md), the current
+> [cross-model table](../artifacts/vla_wam_shared_v2/results/direct_command_cross_model_comparison.md),
+> and the [continuation state](../artifacts/vla_wam_shared_v2/continuation_state.json).
+
 ## A matched VLA-versus-WAM study of direct language steerability
 
 *Ali Adeeb Abbas · Senior Scientist, General Motors*

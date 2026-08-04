@@ -1,7 +1,7 @@
 {
   "denominator_policy": "DROID and RoboTwin remain separate arenas; no raw success rate is pooled across them.",
-  "evidence_cutoff_git_commit": "a7bed6e4381106ce9a59132775953f0e7ba68b67",
-  "evidence_cutoff_utc": "2026-08-03T19:45:12Z",
+  "evidence_cutoff_git_commit": "e4c31fe686618590ca962d16fb606eda78446b7f",
+  "evidence_cutoff_utc": "2026-08-03T21:45:50Z",
   "missing_evidence_policy": "Missing, action-only, and latent-only futures are never zeros. Unreported paired action metrics are null/NR, never zero.",
   "rows": [
     {
@@ -128,6 +128,47 @@
           "bytes": 6004,
           "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_droid_invalid_attempts.json",
           "sha256": "b3a62c792c82d15143ef6c94b768e2bcf712dd69d9c2f96584c904140a452754"
+        }
+      ],
+      "valid_n": 6
+    },
+    {
+      "arena": "DROID / RoboLab",
+      "arena_id": "droid_robolab",
+      "claim_boundary": "V2-A007 bounded six-cell direct-command gate; decoded imagination is evidence, not execution.",
+      "future_evidence_status": "exposed_decoded_imagination_and_retained",
+      "future_interface": "joint_action_and_latent_video_prediction_with_official_decode_path",
+      "invalid_attempt_count": 11,
+      "invalid_attempt_unit": "setup_attempts; all excluded from valid behavior",
+      "left_success": {
+        "count": 2,
+        "status": "measured",
+        "trials": 3
+      },
+      "model": "DreamZero DROID",
+      "model_class": "WAM",
+      "model_id": "dreamzero_droid",
+      "model_revision": null,
+      "paired_action_distinctness": {
+        "count": 3,
+        "status": "measured",
+        "trials": 3
+      },
+      "paired_endpoint_alignment": {
+        "count": 3,
+        "status": "measured",
+        "trials": 3
+      },
+      "right_success": {
+        "count": 1,
+        "status": "measured",
+        "trials": 3
+      },
+      "sources": [
+        {
+          "bytes": 254288,
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json",
+          "sha256": "4c76cdc3ca9eaf227d21d160199408f22e1b3dd7a71176a5a5dbe22223714461"
         }
       ],
       "valid_n": 6
@@ -386,6 +427,11 @@
       "sha256": "b3a62c792c82d15143ef6c94b768e2bcf712dd69d9c2f96584c904140a452754"
     },
     {
+      "bytes": 254288,
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json",
+      "sha256": "4c76cdc3ca9eaf227d21d160199408f22e1b3dd7a71176a5a5dbe22223714461"
+    },
+    {
       "bytes": 15172,
       "path": "artifacts/vla_wam_shared_v2/pilot/expansion/groot_n17_droid_v2_registry.json",
       "sha256": "95077a42bb0115bc673ea13ae5acdc6fdef6f476627804662f73c219ebd88bc7"
@@ -416,5 +462,5 @@
       "sha256": "491c74812ed0e4d36c16f8e0ded17a70af3e69740c9bcb87af129bb6d9563073"
     }
   ],
-  "source_set_sha256": "3a2395c5bf0265e91726a8304e075d8cb5da4da6bac3873c09dcb7e829061af2"
+  "source_set_sha256": "3543560f867ccc8ca85fa619c0f05b8aec4c9312ba94f67b9756e34c2d8625d1"
 }

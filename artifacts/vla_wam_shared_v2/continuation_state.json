@@ -1,11 +1,13 @@
 {
   "schema_version": "vla-wam-shared-v2-continuation-v1",
-  "updated_at_utc": "2026-08-04T01:21:46Z",
+  "updated_at_utc": "2026-08-04T01:43:42Z",
   "evidence_head_before_handoff": "77966ff125d84ed7575ea9e934e367246cf5cdc6",
   "active_branch": "codex/wam-language-steerability",
-  "study_status": "v2_a008_current_stack_pi0_replication_frozen_before_release_gates_lawam_access_pending",
+  "study_status": "pi0_fast_pi05_and_cosmos3_nano_current_stack_gates_active_lawam_withdrawn",
   "authoritative_docs": [
     "docs/VLA_WAM_CONTINUATION.md",
+    "docs/VLA_WAM_RESEARCH_BLOG.md",
+    "docs/PUBLICATION_HANDOFF.md",
     "docs/VLA_WAM_STEERABILITY_V2_PROTOCOL.md",
     "docs/VLA_WAM_LOCAL_RUNBOOK.md",
     "docs/WORK_LAPTOP_B200_HANDOFF.md",
@@ -14,7 +16,7 @@
   "validation": {
     "command": "python3 tools/validate_vla_wam_v2_protocol.py",
     "last_status": "valid",
-    "last_check_count": 700,
+    "last_check_count": 770,
     "report": "artifacts/vla_wam_shared_v2/protocol_validation.json"
   },
   "host_snapshot": {
@@ -136,8 +138,11 @@
     "next_step": "No Light-WAM behavioral cell remains. Preserve the one-direction-only result, the compact matched publication clip, and every setup-invalid attempt outside model denominators."
   },
   "lawam_robotwin_readiness": {
-    "status": "registry_frozen_before_any_inference_blocked_on_gated_dinov3_access",
-    "amendment_id": "V2-A006",
+    "status": "withdrawn_by_user_before_any_model_inference_or_behavioral_episode",
+    "original_amendment_id": "V2-A006",
+    "withdrawal_amendment_id": "V2-A009",
+    "withdrawal_amendment": "artifacts/vla_wam_shared_v2/pilot/post_result_lawam_withdrawal_amendment.json",
+    "withdrawal_amendment_sha256": "cdae7482749c3571575ded034fd234e16abb49e19612152683abd063171bcd8f",
     "registry": "artifacts/vla_wam_shared_v2/pilot/expansion/lawam_robotwin_registry.json",
     "registry_sha256": "f2331f52f574a72ab26b9ab5c5bd54dbf41699f04e42abed4bdde7cc3ad332f0",
     "registry_commit": "8210f2cbc99ae3d7c9fd8a5733e556342700973d",
@@ -152,16 +157,18 @@
     "blocker": "The official DINOv3 repository is manually gated. Anonymous access and the 2026-08-04 ephemeral authenticated retry both returned HTTP 401 for exact-revision payload files; the supplied credential does not have the required gated-model grant.",
     "authenticated_access_retry": "artifacts/vla_wam_shared_v2/pilot/expansion/lawam_dinov3_authenticated_access_retry.json",
     "authenticated_access_retry_sha256": "ee8aa9b9d96c6edcdeedaf598402e4b257b55004125cfd333b8031bc894a0e5b",
-    "human_prerequisite": "Accept the DINOv3 model terms for the Hugging Face account that owns the token, then authenticate the ali-owned lane with that authorized account/token.",
-    "next_authorized_command": "/data/users/ali/vla_wam/envs/hf-tools/bin/hf download facebook/dinov3-vitb16-pretrain-lvd1689m --revision 5931719e67bbdb9737e363e781fb0c67687896bc --local-dir /data/users/ali/vla_wam/checkpoints/dinov3-vitb16-pretrain-lvd1689m",
-    "after_download": "Hash every non-cache DINOv3 payload file, update the registry, build and gate the isolated policy and simulator environments, then run the RNG-restored exact-repeat probe. Run the six frozen pairs00-02 cells only if that probe passes.",
+    "human_prerequisite": null,
+    "next_authorized_command": null,
+    "after_download": "No action. Preserve the historical registry and access evidence only.",
     "model_action_requests": 0,
     "behavioral_episode_count": 0,
-    "denominator_policy": "This is a setup/access blocker outside every model denominator; do not assign a zero.",
+    "denominator_policy": "Scope withdrawal outside every model denominator; do not assign a failure or zero.",
+    "authorized_cells_remaining": 0,
     "prohibited_until_release": [
       "LaWAM model inference",
       "LaWAM exact-repeat probe",
-      "LaWAM behavioral cells"
+      "LaWAM behavioral cells",
+      "LaWAM publication-gallery entry"
     ]
   },
   "pi0_fast_wording_readiness": {
@@ -483,15 +490,35 @@
       "amendment": "artifacts/vla_wam_shared_v2/pilot/post_result_current_stack_replication_amendment.json",
       "amendment_sha256": "d38acc8ccfa144e829173b9cd52048a94686006fba27ca0d336c37968b177f96",
       "historical_queue_status": "blocked_and_unrun_missing_exact_policy_and_simulator_revisions",
-      "next_step": "Implement deterministic seed injection and executed-action tracing for the frozen current OpenPI/RoboLab revisions, then pass every V2-A008 release gate before the first behavioral cell."
+      "registry": "artifacts/vla_wam_shared_v2/pilot/expansion/pi0_fast_current_stack_v2a008_registry.json",
+      "registry_sha256": "eeca8679e345a602f6da6cb02635e4e1ec5274843dbea29d37cf26f2a7695d04",
+      "next_step": "Run the V2-A008 runtime release gates, then begin the sixty registered cells only if every gate passes."
     },
     {
       "priority": 1,
-      "id": "lawam_robotwin_direct_gate",
-      "status": "blocked_before_model_load_authenticated_credential_lacks_gated_dinov3_access",
+      "id": "pi05_droid_current_stack_direct_media_gate",
+      "status": "authorized_current_stack_media_gate_adapter_and_hash_manifest_pending",
       "authorized_cells_remaining": 6,
-      "blocker_artifact": "artifacts/vla_wam_shared_v2/pilot/expansion/lawam_dinov3_authenticated_access_retry.json",
-      "required_external_change": "Accept the exact DINOv3 repository terms for the token owner and authenticate the ali-owned lane with that granted account."
+      "amendment": "artifacts/vla_wam_shared_v2/pilot/post_result_pi05_current_stack_media_gate_amendment.json",
+      "amendment_sha256": "b5663f1473f2d034116d4084aa2a22ccb01104806d83e5898b6cea2cf2765804",
+      "registry": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_registry.json",
+      "registry_sha256": "d480046bfc771436ca1d91b8c73e1bfab5854013117fbb34f4e3fc88cac42c99",
+      "checkpoint_manifest": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_checkpoint_manifest.json",
+      "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+      "next_step": "Pass the seed-aware load, repeat, sensitivity, renderer, and persistence gates."
+    },
+    {
+      "priority": 2,
+      "id": "cosmos3_nano_policy_droid_direct_gate",
+      "status": "authorized_checkpoint_staging_and_adapter_preflight",
+      "authorized_cells_remaining": 6,
+      "amendment": "artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_nano_droid_amendment.json",
+      "amendment_sha256": "169e7a761394da0bc6e2e4c764b263fcbbe654320e7318fb0fe989a787b8cb01",
+      "registry": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_v2a011_registry.json",
+      "registry_sha256": "4b7fc1f7a98d73b3cd2995d32b926fc2bba4175f9b03a8131d81a78873b03eba",
+      "checkpoint_file_count": 43,
+      "checkpoint_payload_bytes": 32937432846,
+      "next_step": "Pass model-load and fixed-observation gates, then run seeds 8300-8302 LEFT/RIGHT with execution and generated-future video."
     }
   ],
   "post_result_decision": {
@@ -587,7 +614,34 @@
         "pi0_fast_current_stack_three_wording_replication"
       ],
       "behavioral_episode_count": 60,
+      "registry": "artifacts/vla_wam_shared_v2/pilot/expansion/pi0_fast_current_stack_v2a008_registry.json",
+      "registry_sha256": "eeca8679e345a602f6da6cb02635e4e1ec5274843dbea29d37cf26f2a7695d04",
+      "adapter_status": "implemented_and_static_validation_passed_release_gates_not_run",
       "comparison_boundary": "separate non-comparable current-stack replication; never merge with the blocked historical wording queue"
+    },
+    "lawam_withdrawal_amendment": {
+      "status": "frozen_before_any_lawam_model_inference_or_behavioral_episode",
+      "amendment_id": "V2-A009",
+      "path": "artifacts/vla_wam_shared_v2/pilot/post_result_lawam_withdrawal_amendment.json",
+      "sha256": "cdae7482749c3571575ded034fd234e16abb49e19612152683abd063171bcd8f",
+      "authorized_queue": [],
+      "withdrawn_behavioral_episode_count": 6
+    },
+    "pi05_current_stack_media_gate_amendment": {
+      "status": "frozen_before_current_stack_model_load_or_behavioral_inference",
+      "amendment_id": "V2-A010",
+      "path": "artifacts/vla_wam_shared_v2/pilot/post_result_pi05_current_stack_media_gate_amendment.json",
+      "sha256": "b5663f1473f2d034116d4084aa2a22ccb01104806d83e5898b6cea2cf2765804",
+      "authorized_queue": ["pi05_droid_current_stack_direct_media_gate"],
+      "behavioral_episode_count": 6
+    },
+    "cosmos3_nano_droid_amendment": {
+      "status": "frozen_before_model_load_or_behavioral_inference",
+      "amendment_id": "V2-A011",
+      "path": "artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_nano_droid_amendment.json",
+      "sha256": "169e7a761394da0bc6e2e4c764b263fcbbe654320e7318fb0fe989a787b8cb01",
+      "authorized_queue": ["cosmos3_nano_policy_droid_direct_gate"],
+      "behavioral_episode_count": 6
     },
     "note": "The expansion was selected after the completed three-WAM results were known and is disclosed as post-result rather than preregistered."
   },
@@ -605,7 +659,7 @@
     ]
   },
   "unauthorized_work": [
-    "Do not exceed the bounded V2-A005/V2-A006/V2-A007/V2-A008 queues or start another checkpoint before a model-specific registry is frozen in a new disclosed amendment.",
+    "Do not exceed the bounded active V2-A008/V2-A010/V2-A011 queues or start another checkpoint before a model-specific registry is frozen in a new disclosed amendment.",
     "Do not pool DROID and RoboTwin raw success counts.",
     "Do not add oracle actions, subtask coaching, dynamic prompts, or progress-conditioned instructions."
   ],

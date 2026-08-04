@@ -1,0 +1,60 @@
+{
+  "schema_version": "vla-wam-shared-v2-post-result-pi05-current-stack-media-gate-v1",
+  "amendment_id": "V2-A010",
+  "recorded_at_utc": "2026-08-04T01:43:42Z",
+  "recorded_at_git_head": "4359785f17a333ad6df04ce55166f81dbedb0431",
+  "status": "frozen_before_current_stack_model_load_or_behavioral_inference",
+  "decision_origin": "User explicitly requested real pi0.5 rollouts and publication video after the gallery exposed that only trajectory evidence, not a committed behavioral MP4, survived from the historical v1 reference.",
+  "experiment_identity": {
+    "experiment_id": "pi05_droid_current_stack_direct_media_gate",
+    "model_id": "pi05_droid_current_stack",
+    "arena": "droid_robolab",
+    "policy_repository": {
+      "path": "/data/users/ali/openpi",
+      "commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+      "config": "pi05_droid_jointpos_polaris"
+    },
+    "simulator_repository": {
+      "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4",
+      "commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+    },
+    "checkpoint": {
+      "source_params": "gs://openpi-assets/checkpoints/polaris/pi05_droid_jointpos_polaris/params",
+      "source_assets": "gs://openpi-assets/checkpoints/polaris/pi05_droid_jointpos_polaris/assets",
+      "staging_path": "/data/users/ali/vla_wam/checkpoints/pi05_droid_jointpos_polaris",
+      "payload_file_count": 26,
+      "payload_bytes": 12434530510,
+      "payload_hash_manifest": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_checkpoint_manifest.json",
+      "payload_hash_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca"
+    }
+  },
+  "behavioral_grid": {
+    "episode_count": 6,
+    "environment_seeds": [8300, 8301, 8302],
+    "sampling_seeds": [8300, 8301, 8302],
+    "prompt_family": "direct_command",
+    "requested_relations": ["left", "right"],
+    "static_episode_prompt_only": true,
+    "oracle_or_subtask_coach": false,
+    "dynamic_prompt_switches": 0,
+    "viewport_video_required": true,
+    "executed_action_trace_required": true
+  },
+  "release_gates": [
+    "exact current source commits and clean repository state recorded",
+    "checkpoint and asset file hashes compiled before model load",
+    "current pi05_droid_jointpos_polaris config loads the checkpoint without compatibility substitution",
+    "fixed-observation exact-repeat output is bit-identical",
+    "LEFT versus RIGHT prompt-only action output differs",
+    "environment and policy sampling seeds are injected and recorded",
+    "neutral matched reset begins outside both requested regions",
+    "viewport video and executed action trace persist for every valid episode",
+    "infrastructure-invalid attempts remain outside behavioral denominators"
+  ],
+  "claim_boundary": {
+    "historical_v1_status": "preserved unchanged",
+    "current_stack_status": "separate post-result six-cell direct-command media gate",
+    "pooling_rule": "Do not merge this gate with the historical v1 80-episode pi0.5 result or the V2-A008 pi0-FAST wording replication.",
+    "media_rule": "Publication media must be labeled pi0.5 current-stack and must not be presented as recovered historical footage."
+  }
+}

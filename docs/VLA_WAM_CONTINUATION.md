@@ -1,7 +1,7 @@
 # VLA/WAM study continuation handoff
 
-Updated: 3 August 2026, after all 42 prospective three-WAM RoboTwin episodes
-completed and the model-specific pairs03–09 evidence slices were compiled.
+Updated: 4 August 2026, after all original bounded gates completed and
+post-result current-stack amendments V2-A008 through V2-A011 were frozen.
 
 This document is the restart point for a human or coding model with no chat
 context. The machine-readable companion is
@@ -17,7 +17,7 @@ Current direct-command evidence is:
 
 | Arena | Checkpoint | LEFT | RIGHT | Frozen next step |
 | --- | --- | ---: | ---: | --- |
-| DROID | π0-FAST | 1/10 | 10/10 | direct competence in both directions; wording eligible but deferred |
+| DROID | π0-FAST | 1/10 | 10/10 | historical wording blocked; V2-A008 current-stack release gates active |
 | DROID | GR00T N1.7 | 0/3 | 0/3 | six-cell gate complete; no wording expansion |
 | DROID | Cosmos3 Edge | 3/3 | 3/3 | six-cell gate complete; decoded futures retained |
 | DROID | DreamZero | 2/3 | 1/3 | six-cell gate complete; official imagination archive published |
@@ -32,9 +32,12 @@ wording expansion remains blocked on missing exact OpenPI and RoboLab commits.
 User-directed amendment `V2-A008` separately authorizes rerunning those same
 prompt/seed cells as a current-stack replication at the exact available
 revisions; its results must never be merged with or represented as the
-historical queue. That replication is now at pre-inference release gates. The
-six-cell LaWAM gate still requires a Hugging Face account and token with an
-accepted DINOv3 grant. Idle GPUs do not relax either release or access gate.
+historical queue. That replication is now at runtime release gates. User
+amendment `V2-A009` withdrew LaWAM before any model request or behavioral
+episode; it has zero remaining cells and is absent from the shareable gallery.
+Amendments `V2-A010` and `V2-A011` add separate six-cell current-stack gates
+for π0.5 DROID and Cosmos3 Nano Policy DROID. Cosmos-Reason2 remains a completed
+static diagnostic, not an action policy or robot rollout.
 
 All 42 prospective WAM episodes at pairs03–09 are now valid completed evidence
 and must not be rerun. Efficient-WAM-RT produced 5/14 requested-direction
@@ -529,7 +532,12 @@ denominator or score. Its reproducible composition record is
 (SHA-256
 `4c4ad1f9487191291d8614ec6cbad9fd0294384f6c6ed3159569137d356ad398`).
 
-#### LaWAM pre-inference blocker
+#### LaWAM withdrawn before inference (`V2-A009`)
+
+LaWAM is no longer active. The user withdrew its six cells before any model
+action request or behavioral episode. It is not a failure, is not assigned a
+zero, and is removed from the active result and media surfaces. The following
+record is retained only as historical setup provenance; do not resume it.
 
 LaWAM's multicomponent registry was frozen before any model action request and
 is committed as
@@ -561,8 +569,8 @@ The hash-bearing retry record is
 The blocker now specifically requires accepting the DINOv3 terms for the
 token-owning Hugging Face account, not another anonymous or ungranted retry.
 
-After a human accepts the model terms and authenticates Hugging Face in the
-ali-owned lane, the exact next authorized command is:
+The formerly proposed download command is retained for audit only and is no
+longer authorized by the active queue:
 
 ```bash
 /data/users/ali/vla_wam/envs/hf-tools/bin/hf download \
@@ -571,11 +579,7 @@ ali-owned lane, the exact next authorized command is:
   --local-dir /data/users/ali/vla_wam/checkpoints/dinov3-vitb16-pretrain-lvd1689m
 ```
 
-Then hash every non-cache payload file and update the registry; build and gate
-the isolated policy and simulator environments; and run the RNG-restored
-exact-repeat and LEFT/RIGHT prompt-only probe. Only if that probe passes may
-the frozen six direct-command pairs00-02 cells begin. No LaWAM inference has
-started.
+Do not execute it for this study. No LaWAM inference started.
 
 pi0 DROID remains deferred as the least architecturally distinct family
 ablation and is not assigned a zero. DreamZero-DROID was subsequently selected
@@ -805,6 +809,28 @@ checkpoint-load, exact-repeat, prompt-sensitivity, neutral-reset, viewport
 video, and invalid-attempt gates recorded in V2-A008. Keep its raw root,
 result schema, denominators, figures, and wording claims separate from the
 historical direct confirmation.
+
+### V2-A010 π0.5 current-stack rollout/media gate
+
+The historical π0.5 result has trajectory evidence but no committed behavioral
+MP4. `V2-A010` freezes a separate six-cell current-stack direct-command gate at
+OpenPI `c23745b5ad24e98f66967ea795a07b2588ed6c79`, RoboLab
+`0aef241fb088ca21bb4ebd24448940ed56620d17`, and config
+`pi05_droid_jointpos_polaris`. Seeds 8300–8302 each run static LEFT and RIGHT
+commands with horizon 15, viewport video, and executed-action traces. Label all
+results and media “π0.5 current-stack V2-A010”; never merge them with the v1
+80-episode π0.5 evidence or the π0-FAST V2-A008 replication.
+
+### V2-A011 Cosmos3 Nano Policy DROID gate
+
+NVIDIA's Cosmos3 collection contains two DROID action policies. Cosmos3 Edge
+Policy DROID is already complete under its own six-cell gate. `V2-A011` adds the
+other checkpoint, `nvidia/Cosmos3-Nano-Policy-DROID` revision
+`6706d7680581c255ff61e0f3bb49d90eac55c79e`, as a separate six-cell direct
+gate at seeds 8300–8302. Every valid episode must retain actual simulator video,
+executed actions, and the checkpoint's exposed generated future. This is not
+the completed Cosmos-Reason2 static diagnostic and the two identities must
+never be conflated.
 
 Transfer both bundles through the approved ali-owned PVC path, verify the two
 required commits with `git bundle verify` and `git cat-file`, and restore

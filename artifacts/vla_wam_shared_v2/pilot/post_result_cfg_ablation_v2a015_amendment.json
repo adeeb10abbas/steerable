@@ -81,14 +81,15 @@
     "patch": "experiments/dreamzero_droid/v2a015_action_cfg.patch",
     "patch_sha256": "de2b82a1c9f81ee4751fb384158775865f5e5e8fb622134cae3b2c4e8b2a2cc0",
     "derived_server": "experiments/dreamzero_droid/v2a015_instrumented_server.py",
-    "derived_server_sha256": "4dae9df89d77d3ad6909324d8f1e777b76c673054eff2da922727c656f216053",
+    "derived_server_sha256": "d709b05c0791915fdd03e74596553b612781f4a008a46117c04f032caa78d1c1",
     "preserved_baseline_server": "experiments/dreamzero_droid/v2_instrumented_server.py",
     "preserved_baseline_server_sha256": "2b0a83e21ee921527a2d0fc5cb9344d0b1f5950ff88906fd441fac2421c5a95f",
     "requirements": [
       "Scale 1.0 must take the untouched conditional-action branch for exact baseline equivalence.",
       "Only the action-flow prediction entering the existing scheduler may change.",
       "Video CFG, prompt transforms, weights, noise seed, scheduler, cache mask, horizon, normalization, and controller remain unchanged.",
-      "The isolated overlay checkout and resulting file hash must be recorded before model load."
+      "The isolated overlay checkout and resulting file hash must be recorded before model load.",
+      "The V2-A015 server may override the historical bounded-loader action-head gate only from the released hash to the single recorded target-after hash, and must disclose that override in each rank contract."
     ]
   },
   "fixed_observation_release_gates": {

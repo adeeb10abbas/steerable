@@ -31,6 +31,7 @@
     "target_before_sha256": "7193cd73423472aa252bee73bd80e0d673c89d773ec852e90f50154729b50845",
     "source_patch": "experiments/dreamzero_droid/v2a015_action_cfg.patch",
     "source_patch_sha256": "de2b82a1c9f81ee4751fb384158775865f5e5e8fb622134cae3b2c4e8b2a2cc0",
+    "derived_server_sha256": "d709b05c0791915fdd03e74596553b612781f4a008a46117c04f032caa78d1c1",
     "target_after_sha256": "65dc9873aef37563dedf3787fd7b59e0a6d50e575775e38b70edd9e38489f9b8",
     "git_binary_diff_sha256": "386316bda4c7842f4643cd5a1b9f959df377d5e6a77b4acc8043f0c0b1110a4d",
     "git_diff_check": "passed",
@@ -48,12 +49,18 @@
       "error": "corrupt patch at line 47",
       "cause": "hand-authored second hunk line count was inconsistent",
       "effect": "git apply --check rejected the patch before mutation or model load"
+    },
+    {
+      "stage": "bounded_loader_static_audit",
+      "error": "historical loader accepts only the released action-head hash",
+      "cause": "the loader's fail-closed source gate predates the V2-A015 derived intervention",
+      "effect": "the V2-A015 server was updated before model load to accept only the registered patched hash and to disclose the override; the historical loader remains unchanged"
     }
   ],
   "inference_accounting": {
     "model_action_request_count": 0,
     "behavioral_episode_count": 0,
-    "setup_invalid_attempt_count": 2,
+    "setup_invalid_attempt_count": 3,
     "setup_invalid_attempts_in_behavioral_denominator": 0
   },
   "next_gate": "Commit the corrected hash-bound patch, then run DreamZero scale-1 overlay equivalence and scale-2 fixed-observation gates; run Cosmos3 Nano g=1 fixed-observation gate independently."

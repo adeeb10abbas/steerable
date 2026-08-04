@@ -18,9 +18,12 @@ import torch.distributed as dist
 import tyro
 
 import v2_instrumented_server as base
+import v2_bounded_loader as bounded_loader
 
 
 LOGGER = logging.getLogger(__name__)
+OFFICIAL_ACTION_HEAD_SHA256 = "7193cd73423472aa252bee73bd80e0d673c89d773ec852e90f50154729b50845"
+V2A015_ACTION_HEAD_SHA256 = "65dc9873aef37563dedf3787fd7b59e0a6d50e575775e38b70edd9e38489f9b8"
 
 
 @dataclasses.dataclass
@@ -110,6 +113,8 @@ def main(args: Args) -> None:
         raise ValueError(
             f"V2-A015 patch hash mismatch: {patch_sha256} != {args.expected_patch_sha256}"
         )
+    if args.expected_patched_target_sha256 != V2A015_ACTION_HEAD_SHA256:
+        raise ValueError("V2-A015 refuses an unregistered patched action-head hash")
 
     os.environ["DREAMZERO_ACTION_CFG_SCALE"] = str(args.action_cfg_scale)
     os.environ["ENABLE_DIT_CACHE"] = "true" if args.enable_dit_cache else "false"
@@ -125,15 +130,51 @@ def main(args: Args) -> None:
     timeout = datetime.timedelta(seconds=args.timeout_seconds)
     signal_group = dist.new_group(backend="gloo", timeout=timeout)
     future_root.mkdir(parents=True, exist_ok=True)
-    base.install_bounded_loader(
-        contract_path=future_root / f"bounded_loader_rank{rank}.json"
-    )
+    bounded_contract_path = future_root / f"bounded_loader_rank{rank}.json"
+    # The historical loader remains byte-for-byte unchanged and accepts only
+    # the released action head. This derived server narrows its construction
+    # gate to the single V2-A015 hash before any weights are loaded.
+    bounded_loader.OFFICIAL_ACTION_HEAD_SHA256 = V2A015_ACTION_HEAD_SHA256
+    base.install_bounded_loader(contract_path=bounded_contract_path)
     policy = base.GrootSimPolicy(
         embodiment_tag=base.EmbodimentTag("oxe_droid"),
         model_path=str(model_path),
         device="cuda",
         device_mesh=device_mesh,
         tokenizer_path_override=str(tokenizer_path),
+    )
+
+    bounded_contract = json.loads(bounded_contract_path.read_text())
+    suppression = bounded_contract["construction_only_component_suppression"]
+    observed_loader_action_hash = suppression.pop("official_action_head_sha256")
+    observed_loader_action_path = suppression.pop("official_action_head_path")
+    if observed_loader_action_hash != V2A015_ACTION_HEAD_SHA256:
+        raise ValueError("Bounded loader did not construct from the V2-A015 action head")
+    suppression.update(
+        {
+            "derived_action_head_path": observed_loader_action_path,
+            "derived_action_head_sha256": observed_loader_action_hash,
+            "released_action_head_sha256": OFFICIAL_ACTION_HEAD_SHA256,
+            "v2a015_exact_hash_override": True,
+        }
+    )
+    bounded_contract.update(
+        {
+            "schema_version": "vla-wam-shared-v2-dreamzero-v2a015-bounded-loader-v1",
+            "amendment_id": "V2-A015",
+            "loader_overlay_forward_path_modified": False,
+            "model_action_forward_path_modified_by_v2a015": True,
+            "model_action_forward_intervention": (
+                "negative_action + scale * (conditional_action - negative_action)"
+            ),
+            "claim_boundary": (
+                "The bounded-memory load mechanics are unchanged. Its action-head source "
+                "hash gate accepts exactly the disclosed V2-A015 derived forward path."
+            ),
+        }
+    )
+    bounded_contract_path.write_text(
+        json.dumps(bounded_contract, indent=2, sort_keys=True) + "\n"
     )
 
     import groot.vla.model.dreamzero.action_head.wan_flow_matching_action_tf as action_module

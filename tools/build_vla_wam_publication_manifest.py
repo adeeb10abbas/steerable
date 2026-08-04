@@ -159,14 +159,20 @@ def record(relative: str, category: str) -> dict[str, Any]:
 
 def main() -> None:
     media = media_assets()
-    records = [record(path, "reader_core") for path in CORE]
-    records += [
-        record(path, "cosmos3_super_edge_base_provenance")
-        for path in COSMOS3_SUPER_EDGE_BASE
-        if path not in CORE
-    ]
-    records += [record(path, "publication_figure") for path in FIGURES]
-    records += [record(path, "selected_media") for path in media if path not in CORE]
+    records: list[dict[str, Any]] = []
+    seen: set[str] = set()
+
+    def add_unique(paths: list[str], category: str) -> None:
+        for path in paths:
+            if path in seen:
+                continue
+            seen.add(path)
+            records.append(record(path, category))
+
+    add_unique(CORE, "reader_core")
+    add_unique(COSMOS3_SUPER_EDGE_BASE, "cosmos3_super_edge_base_provenance")
+    add_unique(FIGURES, "publication_figure")
+    add_unique(media, "selected_media")
     records.sort(key=lambda item: (item["category"], item["path"]))
     git_head = subprocess.check_output(
         ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True

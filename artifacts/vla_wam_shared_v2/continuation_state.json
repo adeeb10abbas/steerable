@@ -1,6 +1,6 @@
 {
   "schema_version": "vla-wam-shared-v2-continuation-v1",
-  "updated_at_utc": "2026-08-04T18:39:07Z",
+  "updated_at_utc": "2026-08-04T19:43:52Z",
   "evidence_head_before_handoff": "1155ae3f5e3c5db83d9b50a92d8519027bc1d61f",
   "active_branch": "codex/wam-language-steerability",
   "study_status": "pi0_fast_release_gate_failed_pi05_current_stack_complete_cosmos3_nano_current_stack_complete_cosmos3_edge_base_interface_passed_behavior_blocked_cosmos3_super_image_only_interface_passed_no_behavior_lawam_withdrawn",
@@ -267,15 +267,21 @@
     "denominator_policy": "All six valid behavioral cells are in the DreamZero DROID denominator, including three valid failures. Eleven setup-invalid attempts remain excluded. DROID results are not pooled with RoboTwin."
   },
   "cfg_ablation_v2a015": {
-    "status": "frozen_source_overlay_ready_pending_fixed_observation_release_gates_no_model_request",
+    "status": "dreamzero_s2_complete_cosmos_g1_six_cells_remaining",
     "amendment_id": "V2-A015",
     "amendment": "artifacts/vla_wam_shared_v2/pilot/post_result_cfg_ablation_v2a015_amendment.json",
     "preflight": "artifacts/vla_wam_shared_v2/pilot/expansion/cfg_ablation_v2a015_preflight.json",
     "authorized_behavioral_episode_count": 12,
-    "authorized_cells_remaining": 12,
-    "model_action_request_count": 0,
-    "behavioral_episode_count": 0,
-    "setup_invalid_attempt_count": 5,
+    "authorized_cells_released": 12,
+    "authorized_cells_completed": 6,
+    "authorized_cells_remaining": 6,
+    "model_action_request_count": 254,
+    "fixed_observation_action_request_count": 9,
+    "behavioral_model_action_request_count": 245,
+    "behavioral_episode_count": 6,
+    "fixed_observation_requests_in_behavioral_denominator": 0,
+    "setup_invalid_attempt_count": 16,
+    "setup_invalid_attempts_in_behavioral_denominator": 0,
     "raw_namespace": "/data/users/ali/vla_wam/raw/cfg_ablation/v2_a015",
     "behavioral_grid": {
       "prompt_family": "direct_command",
@@ -308,7 +314,24 @@
         "checkpoint_revision": "6706d7680581c255ff61e0f3bb49d90eac55c79e",
         "baseline_artifact": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_direct_gate.json",
         "baseline_artifact_sha256": "4a6cc1d61593c7ba5272e1707f6bbe51261f7d23438070992bd75fd9e95fdb93",
-        "release_gate_status": "pending_fixed_observation_gate"
+        "release_gate_status": "passed_six_behavioral_cells_released",
+        "fixed_observation_action_request_count": 3,
+        "fixed_observation_requests_in_behavioral_denominator": 0,
+        "fixed_observation_release": {
+          "status": "passed",
+          "raw_result": "/data/users/ali/vla_wam/raw/cfg_ablation/v2_a015/cosmos3_nano_g1/fixed_observation_attempt01/manifest.json",
+          "raw_result_sha256": "96c365164e69e5a7b52e2c07a7e44874db247aec26446ab4f0064c3951f45385",
+          "left_repeat_actions_and_futures_bit_exact": true,
+          "left_vs_right_action_rms": 0.018947694945167855,
+          "left_vs_right_future_pixel_mae": 2.9921545294325833,
+          "all_actions_finite_shape_32x8": true,
+          "future_shape": [
+            33,
+            528,
+            640,
+            3
+          ]
+        }
       },
       "dreamzero_action_cfg_s2": {
         "behavioral_episode_count": 6,
@@ -318,7 +341,63 @@
         "checkpoint_revision": "96ad344138c66e82536422432ad742f015784942",
         "baseline_artifact": "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json",
         "baseline_artifact_sha256": "4c76cdc3ca9eaf227d21d160199408f22e1b3dd7a71176a5a5dbe22223714461",
-        "release_gate_status": "pending_scale1_equivalence_and_scale2_fixed_observation_gates"
+        "release_gate_status": "passed_six_behavioral_cells_released",
+        "fixed_observation_action_request_count": 6,
+        "fixed_observation_requests_in_behavioral_denominator": 0,
+        "scale1_overlay_equivalence": {
+          "status": "passed_bit_exact_against_archived_official_v2_a007",
+          "raw_result": "/data/users/ali/vla_wam/raw/cfg_ablation/v2_a015/dreamzero_action_s1/fixed_observation_attempt02/v2a015_fixed_observation_probe.json",
+          "raw_result_sha256": "4663db65362c188fe553acdeded62fb302eb2c7e634333e6ef3cee6e0c705c9a",
+          "left_vs_right_action_rms": 0.03544579397992704,
+          "left_vs_right_latent_rms": 0.16675334252293472
+        },
+        "scale2_fixed_observation_release": {
+          "status": "passed",
+          "raw_result": "/data/users/ali/vla_wam/raw/cfg_ablation/v2_a015/dreamzero_action_s2/fixed_observation_attempt01/v2a015_fixed_observation_probe.json",
+          "raw_result_sha256": "f4892deb99e54cb815d97f00d7db8d548fa944943e6b4d7bd6fd29bd9ab32b76",
+          "left_repeat_actions_and_latents_bit_exact": true,
+          "left_vs_right_action_rms": 0.031104018930907626,
+          "left_vs_right_latent_rms": 0.1741597991389692,
+          "all_actions_finite_shape_24x8": true,
+          "all_latents_finite": true
+        },
+        "behavioral_result": {
+          "status": "complete_six_valid_behavioral_cells_do_not_rerun",
+          "valid_behavioral_episode_count": 6,
+          "requested_success_count": 4,
+          "success_by_relation": {
+            "left": "1/3",
+            "right": "3/3"
+          },
+          "scale2_total": "4/6",
+          "preserved_scale1_equivalent_baseline": {
+            "left": "2/3",
+            "right": "1/3",
+            "total": "3/6"
+          },
+          "behavioral_model_action_request_count": 245,
+          "pair_manifests": {
+            "seed8300": {
+              "path": "/data/users/ali/vla_wam/raw/cfg_ablation/v2_a015/dreamzero_action_s2/behavioral/seed8300_attempt06/pair_manifest.json",
+              "sha256": "1a10444a845e66e663bfe4725bd9fa8f567e44eb1b27f242d65e77011bb722f9",
+              "result": "LEFT failure at action cap 450; RIGHT success at action 217"
+            },
+            "seed8301": {
+              "path": "/data/users/ali/vla_wam/raw/cfg_ablation/v2_a015/dreamzero_action_s2/behavioral/seed8301_attempt01/pair_manifest.json",
+              "sha256": "582575eba49c4ae0cc7ad10edaf208943e85bda101ed3f221b0a819bb32046f0",
+              "result": "LEFT failure at action cap 450; RIGHT success at action 269"
+            },
+            "seed8302": {
+              "path": "/data/users/ali/vla_wam/raw/cfg_ablation/v2_a015/dreamzero_action_s2/behavioral/seed8302_attempt01/pair_manifest.json",
+              "sha256": "629ad1dd70a9b2d5bbd00ad94e62d624b82d4679c992df29866eb30b85d9a4e0",
+              "result": "LEFT success at action 280; RIGHT success at action 265"
+            }
+          },
+          "retention": "All six viewport videos, executed-action traces, and per-cell future manifests with 245 retained request futures are preserved on the ali PVC.",
+          "successful_guard_exit_zero_count": 6,
+          "runtime_thermal_intervention_count": 0,
+          "claim_boundary": "The one-success total difference is descriptive. The clearer observed change is directional redistribution: LEFT decreased by one success and RIGHT increased by two; this six-cell post-result pilot does not establish a powered improvement."
+        }
       }
     },
     "planned_runtime": {
@@ -338,13 +417,69 @@
       "git_diff_check": "passed",
       "original_official_worktree_modified": false
     },
-    "next_steps": [
-      "Validate and commit the corrected hash-bound source overlay record before model load.",
-      "Run the Cosmos3 Nano guidance-1 fixed-observation determinism and prompt-sensitivity gate.",
-      "Run DreamZero scale-1 exact-equivalence followed by scale-2 determinism, prompt-sensitivity, shape, finite-value, normalization, and range gates.",
-      "Only after an arm passes its gate, run and retain all six exact seed-by-relation cells; preserve simulator video, executed actions, exposed futures, valid failures, and separate invalid-attempt ledgers."
+    "new_setup_invalid_attempts": [
+      {
+        "stage": "cosmos3_nano_g1_server_runtime_discovery",
+        "error": "RuntimeError: cudnn shared object not found",
+        "behavioral_denominator_count": 0
+      },
+      {
+        "stage": "cosmos3_nano_g1_server_exact_vae_resolution",
+        "error": "the registry S3-form Wan2.2 VAE URI could not resolve because the preserved V2-A011 compat-bin uvx wrapper and HF_HOME were omitted",
+        "behavioral_denominator_count": 0
+      },
+      {
+        "stage": "dreamzero_action_s1_fixed_observation_probe_import",
+        "error": "ModuleNotFoundError: No module named 'policies' because the pinned RoboLab root was absent from PYTHONPATH",
+        "behavioral_denominator_count": 0
+      },
+      {
+        "stage": "cosmos3_nano_g1_server_registry_vae_root_link_retry",
+        "error": "a root-link-only relaunch omitted the preserved compat-bin uvx wrapper and HF_HOME and exited before a request",
+        "behavioral_denominator_count": 0
+      },
+      {
+        "stage": "cosmos3_nano_g1_server_registry_vae_package_link_retry",
+        "error": "a package-link-only relaunch omitted the preserved compat-bin uvx wrapper and HF_HOME and exited before a request",
+        "behavioral_denominator_count": 0
+      },
+      {
+        "stage": "cosmos3_nano_g1_server_registry_vae_link_only_retry",
+        "error": "the final link-only relaunch still omitted the preserved compatibility wrapper/cache; attempt06 restored both and succeeded",
+        "behavioral_denominator_count": 0
+      },
+      {
+        "stage": "dreamzero_action_s2_behavior_guard_metadata_validation",
+        "error": "ledger filenames omitted dreamzero_droid_action_cfg and were rejected before simulator or model request",
+        "behavioral_denominator_count": 0
+      },
+      {
+        "stage": "dreamzero_action_s2_behavior_isaac_eula_gate",
+        "error": "the worker omitted the already-authorized OMNI_KIT_ACCEPT_EULA=YES scope and Isaac exited before simulator initialization or model request",
+        "behavioral_denominator_count": 0
+      },
+      {
+        "stage": "dreamzero_action_s2_behavior_vulkan_native_library_gate",
+        "error": "seed8300 attempt03 omitted the readiness-recorded native-library prefix and NVIDIA Vulkan ICD, causing libGL/libX11 and vkCreateInstance failures before any request",
+        "behavioral_denominator_count": 0
+      },
+      {
+        "stage": "dreamzero_action_s2_behavior_glvnd_and_warp_cache_gate",
+        "error": "seed8300 attempt04 used only the RoboLab native prefix, leaving libGL unavailable from the separate ali GLVND bundle and Warp pointed at unwritable /home/ali-lerobot; exact PGID 50233 was stopped before any request",
+        "behavioral_denominator_count": 0
+      },
+      {
+        "stage": "dreamzero_action_s2_behavior_guard_interpreter_resolution",
+        "error": "seed8300 attempt05 exited 127 because bare python did not exist; neither guard nor worker launched",
+        "behavioral_denominator_count": 0
+      }
     ],
-    "claim_boundary": "Exploratory post-result guidance ablation with a separate six-cell DROID denominator per arm; no inference has occurred and preserved baselines are not rerun or overwritten."
+    "setup_invalid_attempt_record": "artifacts/vla_wam_shared_v2/pilot/expansion/cfg_ablation_v2a015_preflight.json",
+    "behavioral_denominator_policy": "All nine fixed-observation requests and all sixteen setup-invalid attempts are excluded from behavioral denominators. The six completed DreamZero s=2 episodes, including two valid LEFT failures, form their own DROID denominator; the unrun Cosmos g=1 cells remain separate.",
+    "next_steps": [
+      "Run and retain all six released Cosmos3 Nano guidance-1 seed-by-relation behavioral cells under the same retention rules and in its own denominator."
+    ],
+    "claim_boundary": "Exploratory post-result guidance ablation with a separate six-cell DROID denominator per arm. DreamZero s=2 is complete at LEFT 1/3 and RIGHT 3/3; Cosmos g=1 retains six unrun cells. Nine diagnostic requests and sixteen setup-invalid attempts remain outside every behavioral denominator. The DreamZero shift from baseline 3/6 to s=2 4/6 is descriptive directional redistribution, not a powered improvement claim, and preserved baselines are not rerun or overwritten."
   },
   "completed_direct_gates": [
     {

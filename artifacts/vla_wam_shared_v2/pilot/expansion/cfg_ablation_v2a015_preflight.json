@@ -2,7 +2,8 @@
   "schema_version": "vla-wam-shared-v2-cfg-ablation-preflight-v1",
   "amendment_id": "V2-A015",
   "recorded_at_utc": "2026-08-04T18:39:07Z",
-  "status": "source_overlay_ready_fixed_observation_gates_pending_no_model_request",
+  "updated_at_utc": "2026-08-04T19:43:52Z",
+  "status": "dreamzero_s2_behavior_complete_cosmos_g1_six_cells_remaining",
   "study_git": {
     "frozen_commit": "a55fd133ff5be4d36938afa9a99cf394d33b819f",
     "clean_detached_worktree": "/data/users/ali/vla_wam/src/steerable-cfg-a55fd13",
@@ -67,13 +68,190 @@
       "error": "ImportError: libgthread-2.0.so.0: cannot open shared object file",
       "cause": "the first launch omitted the preserved isaac-system-libs runtime path required by OpenCV",
       "effect": "both ranks exited before checkpoint load, policy request, or behavior; the exact library path was recovered and import-tested before relaunch"
+    },
+    {
+      "stage": "cosmos3_nano_g1_server_runtime_discovery",
+      "error": "RuntimeError: cudnn shared object not found",
+      "cause": "the second launch did not expose the preserved project environment's cuDNN shared-library directory to Transformer Engine",
+      "effect": "process exited during import before checkpoint load, policy request, or behavior; it is excluded from every behavioral denominator"
+    },
+    {
+      "stage": "cosmos3_nano_g1_server_exact_vae_resolution",
+      "error": "CalledProcessError from uvx hf@1.16.4 while resolving Wan2.2_VAE.pth",
+      "cause": "the checkpoint registry resolves its S3-form Wan2.2 VAE URI through the preserved V2-A011 compat-bin uvx wrapper and Hugging Face cache; those exact PATH and HF_HOME settings were omitted, so a source-tree symlink alone could not satisfy registry resolution",
+      "effect": "process exited during model construction before policy request or behavior; attempt06 succeeded only after restoring the exact compatibility wrapper and cache, and this attempt is excluded from every behavioral denominator"
+    },
+    {
+      "stage": "cosmos3_nano_g1_server_registry_vae_root_link_retry",
+      "error": "CalledProcessError from uvx hf@1.16.4 while resolving the registry S3-form Wan2.2 VAE URI",
+      "cause": "a root-level exact-VAE link was tested while the preserved V2-A011 compat-bin uvx wrapper and HF_HOME cache were still omitted",
+      "effect": "relaunch exited during model construction before policy request or behavior and is excluded from every behavioral denominator"
+    },
+    {
+      "stage": "cosmos3_nano_g1_server_registry_vae_package_link_retry",
+      "error": "CalledProcessError from uvx hf@1.16.4 while resolving the registry S3-form Wan2.2 VAE URI",
+      "cause": "a package-level exact-VAE link was tested while the preserved V2-A011 compat-bin uvx wrapper and HF_HOME cache were still omitted",
+      "effect": "relaunch exited during model construction before policy request or behavior and is excluded from every behavioral denominator"
+    },
+    {
+      "stage": "cosmos3_nano_g1_server_registry_vae_link_only_retry",
+      "error": "CalledProcessError from uvx hf@1.16.4 while resolving the registry S3-form Wan2.2 VAE URI",
+      "cause": "the final link-only relaunch still omitted the preserved V2-A011 compat-bin uvx wrapper and HF_HOME; attempt06 subsequently restored both exact settings",
+      "effect": "relaunch exited during model construction before policy request or behavior and is excluded from every behavioral denominator"
+    },
+    {
+      "stage": "dreamzero_action_s1_fixed_observation_probe_import",
+      "error": "ModuleNotFoundError: No module named 'policies'",
+      "cause": "the first probe launch omitted the exact RoboLab source root from PYTHONPATH",
+      "effect": "the probe exited before simulator import, policy request, or behavior; the corrected probe added the pinned RoboLab root and this attempt is excluded from every behavioral denominator"
+    },
+    {
+      "stage": "dreamzero_action_s2_behavior_guard_metadata_validation",
+      "error": "guard metadata validation rejected intervention-ledger filenames that omitted dreamzero_droid_action_cfg",
+      "cause": "the first behavioral launch used ledger names that did not satisfy the V2-A015 DreamZero arm identity guard",
+      "effect": "launch was rejected before simulator start, model request, or behavior and is excluded from every behavioral denominator"
+    },
+    {
+      "stage": "dreamzero_action_s2_behavior_isaac_eula_gate",
+      "error": "Isaac/Omniverse import exited at the EULA environment gate",
+      "cause": "the guarded worker launch omitted OMNI_KIT_ACCEPT_EULA=YES even though that exact environment scope is already authorized in the committed readiness record",
+      "effect": "worker exited before simulator initialization, model request, or behavior; attempt03 restores the authorized variable and this attempt is excluded from every behavioral denominator"
+    },
+    {
+      "stage": "dreamzero_action_s2_behavior_vulkan_native_library_gate",
+      "error": "missing libGL/libX11 followed by vkCreateInstance ERROR_INCOMPATIBLE_DRIVER",
+      "cause": "seed8300 attempt03 omitted the readiness-recorded RoboLab native-library prefix and NVIDIA Vulkan ICD environment",
+      "effect": "the exact failed process group was validated and terminated before policy request or behavior; attempt04 restores the recorded LD_LIBRARY_PATH prefix and VK_ICD_FILENAMES, and this attempt is excluded from every behavioral denominator"
+    },
+    {
+      "stage": "dreamzero_action_s2_behavior_glvnd_and_warp_cache_gate",
+      "error": "libGL remained unavailable and Warp defaulted to unwritable /home/ali-lerobot",
+      "cause": "seed8300 attempt04 supplied only the recorded RoboLab native-library prefix; libGL is provided by the separate ali GLVND bundle, and no dedicated writable Warp cache was set",
+      "effect": "exact PGID 50233 was validated and stopped before model request or behavior; the attempt is excluded from every behavioral denominator"
+    },
+    {
+      "stage": "dreamzero_action_s2_behavior_guard_interpreter_resolution",
+      "error": "shell exit 127: python: command not found",
+      "cause": "seed8300 attempt05 invoked the metadata guard with nonexistent bare python instead of /usr/bin/python3",
+      "effect": "neither the guard nor worker launched, no model request or behavior occurred, and the attempt is excluded from every behavioral denominator"
     }
   ],
-  "inference_accounting": {
-    "model_action_request_count": 0,
+  "cosmos3_nano_fixed_observation_gate": {
+    "status": "passed_behavioral_arm_released",
+    "behavioral_cells_released": 6,
     "behavioral_episode_count": 0,
-    "setup_invalid_attempt_count": 5,
-    "setup_invalid_attempts_in_behavioral_denominator": 0
+    "fixed_observation_action_request_count": 3,
+    "fixed_observation_requests_in_behavioral_denominator": 0,
+    "guidance": 1.0,
+    "result": "Repeat LEFT actions and 33-frame RGB futures were bit-identical; exact LEFT and RIGHT prompts produced distinct finite [32,8] actions and distinct futures.",
+    "left_vs_right_action_rms": 0.018947694945167855,
+    "left_vs_right_future_pixel_mae": 2.9921545294325833,
+    "raw_result": "/data/users/ali/vla_wam/raw/cfg_ablation/v2_a015/cosmos3_nano_g1/fixed_observation_attempt01/manifest.json",
+    "raw_result_sha256": "96c365164e69e5a7b52e2c07a7e44874db247aec26446ab4f0064c3951f45385",
+    "denominator_policy": "The three fixed-observation action requests are diagnostic interface evidence only and contribute zero behavioral episodes."
   },
-  "next_gate": "Commit the corrected hash-bound patch, then run DreamZero scale-1 overlay equivalence and scale-2 fixed-observation gates; run Cosmos3 Nano g=1 fixed-observation gate independently."
+  "dreamzero_fixed_observation_gates": {
+    "status": "passed_behavioral_arm_released",
+    "behavioral_cells_released": 6,
+    "behavioral_episode_count": 0,
+    "fixed_observation_action_request_count": 6,
+    "fixed_observation_requests_in_behavioral_denominator": 0,
+    "action_s1_overlay_equivalence": {
+      "status": "passed",
+      "action_cfg_style_scale": 1.0,
+      "video_cfg_scale": 5.0,
+      "result": "All three returned actions and retained latent futures were bit-exact against the archived official V2-A007 fixed-observation probe; repeat LEFT was also bit-exact and LEFT versus RIGHT remained action- and future-distinct.",
+      "left_vs_right_action_rms": 0.03544579397992704,
+      "left_vs_right_latent_rms": 0.16675334252293472,
+      "raw_result": "/data/users/ali/vla_wam/raw/cfg_ablation/v2_a015/dreamzero_action_s1/fixed_observation_attempt02/v2a015_fixed_observation_probe.json",
+      "raw_result_sha256": "4663db65362c188fe553acdeded62fb302eb2c7e634333e6ef3cee6e0c705c9a",
+      "server_contract_sha256": "ba6307b35780acb8296d578394532349972c270f6e587f20cd792bb79521d185",
+      "archived_official_probe_sha256": "8a930c0bb7faf85d3439ff3d92baa3650ee76d43623eeba574479e5a9c1fb5f1"
+    },
+    "action_s2_release": {
+      "status": "passed",
+      "action_cfg_style_scale": 2.0,
+      "video_cfg_scale": 5.0,
+      "result": "Repeat LEFT actions and latent futures were bit-exact; LEFT and RIGHT actions differed; all returned actions were finite [24,8] tensors; all retained latent futures were finite; and the scale-2 outputs differed from the scale-1 overlay as expected.",
+      "left_vs_right_action_rms": 0.031104018930907626,
+      "left_vs_right_latent_rms": 0.1741597991389692,
+      "scale2_vs_scale1_left_action_rms": 0.016898730864203855,
+      "scale2_vs_scale1_right_action_rms": 0.009252966351341268,
+      "raw_result": "/data/users/ali/vla_wam/raw/cfg_ablation/v2_a015/dreamzero_action_s2/fixed_observation_attempt01/v2a015_fixed_observation_probe.json",
+      "raw_result_sha256": "f4892deb99e54cb815d97f00d7db8d548fa944943e6b4d7bd6fd29bd9ab32b76",
+      "server_contract_sha256": "b340a328930190d4e18caff15a74201521e9c452d0aa07bf340efbff889fe296"
+    },
+    "denominator_policy": "The six fixed-observation action requests and all setup-invalid attempts are diagnostic infrastructure evidence only. They contribute zero behavioral episodes and are excluded from every model-success denominator."
+  },
+  "behavioral_release_accounting": {
+    "authorized_behavioral_episode_count": 12,
+    "behavioral_cells_released": 12,
+    "behavioral_cells_completed": 6,
+    "behavioral_cells_remaining": 6,
+    "behavioral_episode_count": 6,
+    "dreamzero_action_cfg_s2_remaining": 0,
+    "cosmos3_nano_no_cfg_g1_remaining": 6
+  },
+  "dreamzero_behavioral_arm": {
+    "arm_id": "dreamzero_action_cfg_s2",
+    "status": "complete_six_valid_behavioral_cells",
+    "valid_behavioral_episode_count": 6,
+    "requested_success_count": 4,
+    "success_by_relation": {
+      "left": "1/3",
+      "right": "3/3"
+    },
+    "preserved_scale1_equivalent_baseline": {
+      "left": "2/3",
+      "right": "1/3",
+      "total": "3/6",
+      "artifact_sha256": "4c76cdc3ca9eaf227d21d160199408f22e1b3dd7a71176a5a5dbe22223714461"
+    },
+    "scale2_total": "4/6",
+    "behavioral_model_action_request_count": 245,
+    "pair_results": [
+      {
+        "seed": 8300,
+        "left": "failure_at_action_cap_450",
+        "right": "success_at_action_217",
+        "pair_manifest": "/data/users/ali/vla_wam/raw/cfg_ablation/v2_a015/dreamzero_action_s2/behavioral/seed8300_attempt06/pair_manifest.json",
+        "pair_manifest_sha256": "1a10444a845e66e663bfe4725bd9fa8f567e44eb1b27f242d65e77011bb722f9"
+      },
+      {
+        "seed": 8301,
+        "left": "failure_at_action_cap_450",
+        "right": "success_at_action_269",
+        "pair_manifest": "/data/users/ali/vla_wam/raw/cfg_ablation/v2_a015/dreamzero_action_s2/behavioral/seed8301_attempt01/pair_manifest.json",
+        "pair_manifest_sha256": "582575eba49c4ae0cc7ad10edaf208943e85bda101ed3f221b0a819bb32046f0"
+      },
+      {
+        "seed": 8302,
+        "left": "success_at_action_280",
+        "right": "success_at_action_265",
+        "pair_manifest": "/data/users/ali/vla_wam/raw/cfg_ablation/v2_a015/dreamzero_action_s2/behavioral/seed8302_attempt01/pair_manifest.json",
+        "pair_manifest_sha256": "629ad1dd70a9b2d5bbd00ad94e62d624b82d4679c992df29866eb30b85d9a4e0"
+      }
+    ],
+    "retention": {
+      "viewport_video_count": 6,
+      "executed_action_trace_count": 6,
+      "future_manifest_count": 6,
+      "retained_behavioral_future_request_count": 245,
+      "successful_guard_exit_zero_count": 6
+    },
+    "runtime_thermal_intervention_count": 0,
+    "setup_invalid_attempt_count_excluded": 16,
+    "claim_boundary": "The observed total changed from 3/6 at s=1-equivalent to 4/6 at s=2, while directional success redistributed from LEFT 2/3 and RIGHT 1/3 to LEFT 1/3 and RIGHT 3/3. This six-cell post-result pilot is descriptive and is not a powered improvement claim."
+  },
+  "inference_accounting": {
+    "model_action_request_count": 254,
+    "fixed_observation_action_request_count": 9,
+    "behavioral_model_action_request_count": 245,
+    "behavioral_episode_count": 6,
+    "fixed_observation_requests_in_behavioral_denominator": 0,
+    "setup_invalid_attempt_count": 16,
+    "setup_invalid_attempts_in_behavioral_denominator": 0,
+    "behavioral_denominator_count": 6
+  },
+  "next_gate": "DreamZero s=2 is complete and must not be rerun. Run the six remaining Cosmos3 Nano g=1 seed-by-relation behavioral cells without outcome-dependent stopping, preserving its separate denominator and every simulator video, executed action trace, exposed future, and valid failure."
 }

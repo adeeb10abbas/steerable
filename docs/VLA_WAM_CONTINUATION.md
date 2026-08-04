@@ -1,8 +1,8 @@
 # VLA/WAM study continuation handoff
 
 Updated: 4 August 2026, after all original bounded gates and both Cosmos3 base
-interface probes completed, and after post-result guidance amendment V2-A015
-was frozen before any newly authorized request.
+interface probes completed, after both V2-A015 release paths passed, and after
+the six-cell DreamZero `s=2` behavioral arm completed.
 
 This document is the restart point for a human or coding model with no chat
 context. The machine-readable companion is
@@ -21,9 +21,9 @@ Current direct-command evidence is:
 | DROID | π0-FAST | 1/10 | 10/10 | historical wording blocked; V2-A008 release gate failed with zero behavioral cells |
 | DROID | GR00T N1.7 | 0/3 | 0/3 | six-cell gate complete; no wording expansion |
 | DROID | Cosmos3 Edge | 3/3 | 3/3 | six-cell gate complete; decoded futures retained |
-| DROID | DreamZero | 2/3 | 1/3 | baseline complete/do not rerun; six V2-A015 `s=2` cells await release gates |
+| DROID | DreamZero | 2/3 | 1/3 | baseline complete/do not rerun; V2-A015 `s=2` complete separately at LEFT 1/3 and RIGHT 3/3 |
 | DROID | π0.5 current-stack V2-A010 | 1/3 | 3/3 | six-cell gate complete; selected actual-rollout pair published separately |
-| DROID | Cosmos3 Nano Policy DROID V2-A011 | 3/3 | 3/3 | baseline complete/do not rerun; six V2-A015 `g=1` cells await release gates |
+| DROID | Cosmos3 Nano Policy DROID V2-A011 | 3/3 | 3/3 | baseline complete/do not rerun; V2-A015 `g=1` release gate passed and six new cells are released |
 | DROID | Cosmos3 Super base V2-A012/A014 | — | — | image-only action+video probe passed; zero behavioral cells released |
 | DROID | Cosmos3 Edge base V2-A013 | — | — | three-request interface probe passed; behavior blocked by exact mapping audit |
 | RoboTwin | Efficient-WAM-RT | 3/7 | 2/7 | pairs03–09 complete; do not rerun |
@@ -947,6 +947,70 @@ releases no behavioral cells for that arm. After a passed gate, complete all
 six cells without outcome-dependent stopping, retaining full simulator video,
 executed actions, and every exposed future.
 
+The DreamZero release path is now complete. At `s=1`, all three returned
+actions and retained latent futures were bit-exact against the archived
+official V2-A007 fixed-observation probe. Repeat LEFT was bit-exact, while the
+exact LEFT and RIGHT prompts remained distinct in actions (RMS
+`0.03544579397992704`) and latent futures (RMS `0.16675334252293472`). At
+`s=2`, repeat LEFT actions and latent futures were again bit-exact; LEFT and
+RIGHT differed in actions (RMS `0.031104018930907626`) and latent futures (RMS
+`0.1741597991389692`); and all returned actions were finite `[24,8]` tensors
+with finite retained futures. The `s=2` outputs also differed from `s=1`, so
+the derived intervention was active.
+
+All six `s=2` behavioral cells are now complete valid evidence. Seed 8300 was
+LEFT failure at the 450-action cap and RIGHT success at action 217; seed 8301
+was LEFT failure at the cap and RIGHT success at action 269; seed 8302 was LEFT
+success at action 280 and RIGHT success at action 265. Thus `s=2` produced LEFT
+`1/3`, RIGHT `3/3`, total `4/6`, compared with the preserved conditional-action
+equivalent `s=1` baseline of LEFT `2/3`, RIGHT `1/3`, total `3/6`. The observed
+change is primarily a redistribution toward RIGHT, not evidence that guidance
+uniformly improved competence. With six post-result episodes per setting, the
+one-success aggregate difference is descriptive and is not a powered
+improvement claim. All six simulator videos, action traces, and future
+manifests are retained; all successful guards exited zero and no runtime
+thermal intervention occurred.
+
+The independent Cosmos3 Nano `g=1` release gate also passed. Repeat LEFT
+actions and complete 33-frame RGB futures were bit-identical. The exact LEFT
+and RIGHT prompts produced distinct finite `[32,8]` actions (RMS
+`0.018947694945167855`) and distinct futures (pixel MAE
+`2.9921545294325833`). Its six `g=1` behavioral cells are therefore released;
+none had run when this handoff was updated.
+
+The nine fixed-observation action requests across both arms are diagnostics,
+not robot episodes, and contribute zero observations to every behavioral
+success denominator. Sixteen setup-invalid attempts are also excluded. The
+Cosmos VAE failures were registry-resolution failures: its S3-form Wan2.2 VAE
+URI required the exact preserved V2-A011 compat-bin `uvx` wrapper and
+`HF_HOME`, so testing root- and package-level links alone was insufficient.
+Three further relaunches ended before any request while those settings were
+still omitted; attempt06 succeeded only after restoring the exact wrapper and
+cache. The separate cuDNN discovery failure and DreamZero probe launched
+without the pinned RoboLab `policies` package also ended before any request or
+executed behavior. Two subsequent DreamZero behavioral launches were likewise
+setup-only: the first failed the arm-identity guard because its ledger
+filenames omitted `dreamzero_droid_action_cfg`; the second reached the guarded
+worker but omitted the already-authorized `OMNI_KIT_ACCEPT_EULA=YES` scope and
+exited during Isaac import. A third passed the EULA gate but omitted the
+readiness-recorded native-library prefix and NVIDIA Vulkan ICD, producing
+missing `libGL`/`libX11` and `vkCreateInstance ERROR_INCOMPATIBLE_DRIVER` before
+any policy request. Its exact failed process group was validated and stopped;
+the later complete environment restored the combined native and GLVND paths.
+None initialized behavior or sent a model request. Exact causes and recovery
+boundaries are retained in
+[`cfg_ablation_v2a015_preflight.json`](../artifacts/vla_wam_shared_v2/pilot/expansion/cfg_ablation_v2a015_preflight.json).
+
+Two later seed-8300 launches were also setup-invalid. Attempt04 used only the
+RoboLab native-library prefix, leaving `libGL` unavailable from the separate
+ali GLVND bundle and Warp pointed at unwritable `/home/ali-lerobot`; exact PGID
+50233 was validated and stopped before a model request. Attempt05 exited 127
+before either guard or worker launch because the shell invoked nonexistent bare
+`python`. Attempt06 used `/usr/bin/python3`, the combined native/GLVND/FastWAM
+library path, and dedicated writable Warp/XDG/MPL caches; it became the valid
+seed-8300 pair reported above. Attempts04 and 05 remain setup-invalid and are
+not absorbed into the behavioral denominator.
+
 Keep the two new six-cell denominators separate from one another and from their
 historical baselines. Fixed probes, partial runs, and infrastructure-invalid
 attempts remain outside all behavioral denominators. This small post-result
@@ -955,8 +1019,11 @@ changes, and effect sizes; it cannot establish a powered improvement or a
 general model-family effect. The optional higher-guidance arms remain
 unauthorized.
 
-The exact next command is the repository gate; launch commands are taken from
-the hash-pinned V2-A015 runbook only after it passes:
+Both independent gates passed, and the DreamZero `s=2` arm is complete and must
+not be rerun. Exactly six Cosmos3 Nano `g=1` behavioral cells remain. Run that
+complete arm without outcome-based stopping and keep its denominator separate
+from both DreamZero settings. Before it advances, run the repository gate and
+use only the hash-pinned V2-A015 runbook:
 
 ```bash
 python3 tools/validate_vla_wam_v2_protocol.py

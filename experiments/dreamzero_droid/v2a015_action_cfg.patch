@@ -12,7 +12,7 @@ diff --git a/groot/vla/model/dreamzero/action_head/wan_flow_matching_action_tf.p
          self.denoising_strength = 1.0
          self.sigma_shift = 5.0
          self.kv_cache1: KVCacheType | None = None
-@@ -1274,16 +1278,23 @@ class WANPolicyHead(ActionHead):
+@@ -1274,14 +1278,21 @@ class WANPolicyHead(ActionHead):
                  flow_pred_cond, flow_pred_cond_action = predictions[0]
                  flow_pred_uncond, flow_pred_uncond_action = predictions[1]
  
@@ -36,7 +36,7 @@ diff --git a/groot/vla/model/dreamzero/action_head/wan_flow_matching_action_tf.p
 +                _, flow_pred, flow_pred_action = prev_predictions[-1]
  
              end_diffusion_events[index].record()
-@@ -1298,7 +1309,7 @@ class WANPolicyHead(ActionHead):
+@@ -1298,6 +1305,6 @@ class WANPolicyHead(ActionHead):
              # Action: always fully denoises with standard schedule (1000->0)
              noisy_input_action = sample_scheduler_action.step(
 -                model_output=flow_pred_cond_action,

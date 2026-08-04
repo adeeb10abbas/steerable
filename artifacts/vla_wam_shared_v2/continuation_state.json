@@ -1,6 +1,6 @@
 {
   "schema_version": "vla-wam-shared-v2-continuation-v1",
-  "updated_at_utc": "2026-08-04T18:31:29Z",
+  "updated_at_utc": "2026-08-04T18:39:07Z",
   "evidence_head_before_handoff": "1155ae3f5e3c5db83d9b50a92d8519027bc1d61f",
   "active_branch": "codex/wam-language-steerability",
   "study_status": "pi0_fast_release_gate_failed_pi05_current_stack_complete_cosmos3_nano_current_stack_complete_cosmos3_edge_base_interface_passed_behavior_blocked_cosmos3_super_image_only_interface_passed_no_behavior_lawam_withdrawn",
@@ -267,13 +267,15 @@
     "denominator_policy": "All six valid behavioral cells are in the DreamZero DROID denominator, including three valid failures. Eleven setup-invalid attempts remain excluded. DROID results are not pooled with RoboTwin."
   },
   "cfg_ablation_v2a015": {
-    "status": "frozen_pending_fixed_observation_release_gates_no_ablation_inference",
+    "status": "frozen_source_overlay_ready_pending_fixed_observation_release_gates_no_model_request",
     "amendment_id": "V2-A015",
     "amendment": "artifacts/vla_wam_shared_v2/pilot/post_result_cfg_ablation_v2a015_amendment.json",
+    "preflight": "artifacts/vla_wam_shared_v2/pilot/expansion/cfg_ablation_v2a015_preflight.json",
     "authorized_behavioral_episode_count": 12,
     "authorized_cells_remaining": 12,
     "model_action_request_count": 0,
     "behavioral_episode_count": 0,
+    "setup_invalid_attempt_count": 2,
     "raw_namespace": "/data/users/ali/vla_wam/raw/cfg_ablation/v2_a015",
     "behavioral_grid": {
       "prompt_family": "direct_command",
@@ -326,8 +328,17 @@
       "simulator_lane": "raytrace-rtxpro6000-ali sequential simulator and viewport-video execution",
       "protected_preexisting_process": "Do not touch B200 GPU 0 DreamZero PID 25608 or port 5000."
     },
+    "dreamzero_source_overlay": {
+      "derived_worktree": "/data/users/ali/vla_wam/external/DreamZero-v2a015-action-cfg",
+      "base_commit": "ab790c198fbce33503358efbbd4187ce9a89adf3",
+      "source_patch_sha256": "de2b82a1c9f81ee4751fb384158775865f5e5e8fb622134cae3b2c4e8b2a2cc0",
+      "target_before_sha256": "7193cd73423472aa252bee73bd80e0d673c89d773ec852e90f50154729b50845",
+      "target_after_sha256": "65dc9873aef37563dedf3787fd7b59e0a6d50e575775e38b70edd9e38489f9b8",
+      "git_diff_check": "passed",
+      "original_official_worktree_modified": false
+    },
     "next_steps": [
-      "Validate and commit the frozen amendment and isolated DreamZero source overlay before any model load.",
+      "Validate and commit the corrected hash-bound source overlay record before model load.",
       "Run the Cosmos3 Nano guidance-1 fixed-observation determinism and prompt-sensitivity gate.",
       "Run DreamZero scale-1 exact-equivalence followed by scale-2 determinism, prompt-sensitivity, shape, finite-value, normalization, and range gates.",
       "Only after an arm passes its gate, run and retain all six exact seed-by-relation cells; preserve simulator video, executed actions, exposed futures, valid failures, and separate invalid-attempt ledgers."

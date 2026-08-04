@@ -1,0 +1,60 @@
+{
+  "schema_version": "vla-wam-shared-v2-cfg-ablation-preflight-v1",
+  "amendment_id": "V2-A015",
+  "recorded_at_utc": "2026-08-04T18:39:07Z",
+  "status": "source_overlay_ready_fixed_observation_gates_pending_no_model_request",
+  "study_git": {
+    "frozen_commit": "a55fd133ff5be4d36938afa9a99cf394d33b819f",
+    "clean_detached_worktree": "/data/users/ali/vla_wam/src/steerable-cfg-a55fd13",
+    "preservation_note": "The older shared checkout was not advanced because five untracked LingBot evidence files would have been overwritten. They were left untouched."
+  },
+  "runtime_visibility": {
+    "checked_at_utc": "2026-08-04T18:33:00Z",
+    "b200_pod": "lerobot-b200-4gpu-1-ali",
+    "b200_gpu_memory_mib_used": {
+      "0": 44672,
+      "1": 5,
+      "2": 0,
+      "3": 0
+    },
+    "protected_existing_process": "B200 GPU 0 and its existing DreamZero port 5000 were not touched.",
+    "rtx_pod": "raytrace-rtxpro6000-ali",
+    "rtx_gpu": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+    "rtx_gpu_memory_mib_used": 0,
+    "pvc_root": "/data/users/ali/vla_wam"
+  },
+  "dreamzero_overlay": {
+    "official_worktree": "/data/users/ali/vla_wam/external/DreamZero-ab790c1",
+    "derived_worktree": "/data/users/ali/vla_wam/external/DreamZero-v2a015-action-cfg",
+    "base_commit": "ab790c198fbce33503358efbbd4187ce9a89adf3",
+    "target": "groot/vla/model/dreamzero/action_head/wan_flow_matching_action_tf.py",
+    "target_before_sha256": "7193cd73423472aa252bee73bd80e0d673c89d773ec852e90f50154729b50845",
+    "source_patch": "experiments/dreamzero_droid/v2a015_action_cfg.patch",
+    "source_patch_sha256": "de2b82a1c9f81ee4751fb384158775865f5e5e8fb622134cae3b2c4e8b2a2cc0",
+    "target_after_sha256": "65dc9873aef37563dedf3787fd7b59e0a6d50e575775e38b70edd9e38489f9b8",
+    "git_binary_diff_sha256": "386316bda4c7842f4643cd5a1b9f959df377d5e6a77b4acc8043f0c0b1110a4d",
+    "git_diff_check": "passed",
+    "original_worktree_modified": false
+  },
+  "setup_invalid_attempts": [
+    {
+      "stage": "source_patch_apply_check",
+      "error": "corrupt patch at line 39",
+      "cause": "hand-authored first hunk line count was inconsistent",
+      "effect": "git apply --check rejected the patch before mutation or model load"
+    },
+    {
+      "stage": "source_patch_apply_check",
+      "error": "corrupt patch at line 47",
+      "cause": "hand-authored second hunk line count was inconsistent",
+      "effect": "git apply --check rejected the patch before mutation or model load"
+    }
+  ],
+  "inference_accounting": {
+    "model_action_request_count": 0,
+    "behavioral_episode_count": 0,
+    "setup_invalid_attempt_count": 2,
+    "setup_invalid_attempts_in_behavioral_denominator": 0
+  },
+  "next_gate": "Commit the corrected hash-bound patch, then run DreamZero scale-1 overlay equivalence and scale-2 fixed-observation gates; run Cosmos3 Nano g=1 fixed-observation gate independently."
+}

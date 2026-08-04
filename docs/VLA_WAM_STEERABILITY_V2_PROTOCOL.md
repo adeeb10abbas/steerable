@@ -67,6 +67,21 @@ route; it does not release state, control, or behavior. Their sources are
 [`V2-A013`](../artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_edge_base_amendment.json),
 and [`V2-A014`](../artifacts/vla_wam_shared_v2/pilot/post_result_cosmos3_super_image_only_v2a014_amendment.json).
 
+Disclosed post-result amendment `V2-A015` was frozen after the completed
+Cosmos3 Nano and DreamZero results were known and before any guidance-ablation
+model request or behavioral inference. It authorizes exactly 12 new DROID
+cells: six Cosmos3 Nano cells at joint action-video CFG `g=1`, compared with
+the preserved `g=3` result, and six DreamZero cells using derived negative-
+branch action guidance `s=2`, compared with the preserved conditional-action
+equivalent `s=1` result while video CFG remains `5`. Both arms use seeds
+8300--8302 and the exact static direct prompts “Put the Rubik's cube to the
+left of the bowl.” and “Put the Rubik's cube to the right of the bowl.” Fixed-
+observation release gates precede behavior. Each configuration has a separate
+six-cell denominator; no baseline episode is rerun or overwritten. This is an
+exploratory, descriptive intervention rather than a powered confirmatory test.
+Its machine-readable source is
+[`V2-A015`](../artifacts/vla_wam_shared_v2/pilot/post_result_cfg_ablation_v2a015_amendment.json).
+
 ### Post-result outcome record: V2-A008 release gate
 
 The frozen V2-A008 amendment and registry remain unchanged. Its first

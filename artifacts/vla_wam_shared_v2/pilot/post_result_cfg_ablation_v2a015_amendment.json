@@ -1,0 +1,167 @@
+{
+  "schema_version": "vla-wam-shared-v2-post-result-cfg-ablation-v1",
+  "study_id": "vla_wam_language_steerability_v2",
+  "amendment_id": "V2-A015",
+  "status": "frozen_after_baseline_results_and_before_any_cfg_ablation_model_request_or_behavioral_inference",
+  "recorded_at_utc": "2026-08-04T18:26:13Z",
+  "recorded_at_git_head": "22218d01c2301cc6ad28c9c1c53905045d8f2e9c",
+  "user_request": "Test whether classifier-free guidance changes Cosmos3 and DreamZero performance.",
+  "protocol_reference": {
+    "path": "artifacts/vla_wam_shared_v2/protocol.json",
+    "sha256": "1862fbbb40fef34621a840a0ed15889cf42da066424e866b66f04227b28c73b9"
+  },
+  "known_result_disclosure": {
+    "statement": "Both baseline six-cell results were known when this exploratory ablation was selected. V2-A015 is a disclosed post-result intervention, not preregistration and not a rewrite of any frozen result.",
+    "cosmos3_nano_baseline": {
+      "checkpoint": "nvidia/Cosmos3-Nano-Policy-DROID",
+      "revision": "6706d7680581c255ff61e0f3bb49d90eac55c79e",
+      "source_commit": "411d25b2e35bc441126f48c44a4b93e1c0564274",
+      "guidance": 3.0,
+      "result": "LEFT 3/3; RIGHT 3/3; 3/3 aligned endpoint pairs",
+      "artifact": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_direct_gate.json",
+      "sha256": "4a6cc1d61593c7ba5272e1707f6bbe51261f7d23438070992bd75fd9e95fdb93"
+    },
+    "dreamzero_baseline": {
+      "checkpoint": "GEAR-Dreams/DreamZero-DROID",
+      "revision": "96ad344138c66e82536422432ad742f015784942",
+      "source_commit": "ab790c198fbce33503358efbbd4187ce9a89adf3",
+      "video_guidance": 5.0,
+      "action_guidance_equivalent": 1.0,
+      "result": "LEFT 2/3; RIGHT 1/3; 3/3 aligned endpoint pairs",
+      "artifact": "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json",
+      "sha256": "4c76cdc3ca9eaf227d21d160199408f22e1b3dd7a71176a5a5dbe22223714461"
+    }
+  },
+  "scientific_questions": [
+    "Does removing Cosmos3 Nano's existing joint action-video CFG reduce requested-task success or balanced directional margin?",
+    "Does adding moderate CFG-style action guidance to DreamZero improve execution while its official video guidance remains fixed?"
+  ],
+  "arms": [
+    {
+      "arm_id": "cosmos3_nano_no_cfg_g1",
+      "model_id": "cosmos3_nano_policy_droid",
+      "arena": "droid_robolab",
+      "checkpoint": "nvidia/Cosmos3-Nano-Policy-DROID",
+      "checkpoint_revision": "6706d7680581c255ff61e0f3bb49d90eac55c79e",
+      "source_commit": "411d25b2e35bc441126f48c44a4b93e1c0564274",
+      "intervention": "Change only joint latent guidance from 3.0 to 1.0; g=1 is the conditional prediction without a CFG blend.",
+      "guidance": 1.0,
+      "baseline_guidance": 3.0,
+      "num_steps": 4,
+      "shift": 5.0,
+      "action_chunk_shape": [32, 8],
+      "future_contract": "decoded 33-frame RGB future for every policy request",
+      "behavioral_episode_count": 6
+    },
+    {
+      "arm_id": "dreamzero_action_cfg_s2",
+      "model_id": "dreamzero_droid_action_cfg",
+      "arena": "droid_robolab",
+      "checkpoint": "GEAR-Dreams/DreamZero-DROID",
+      "checkpoint_revision": "96ad344138c66e82536422432ad742f015784942",
+      "source_commit": "ab790c198fbce33503358efbbd4187ce9a89adf3",
+      "intervention": "Use a_uncond + 2*(a_cond-a_uncond) for action-flow denoising while retaining the released video guidance at 5.0.",
+      "action_guidance": 2.0,
+      "baseline_action_guidance_equivalent": 1.0,
+      "video_guidance": 5.0,
+      "runtime_num_inference_steps": 16,
+      "dit_cache": true,
+      "evaluated_dit_steps": 8,
+      "negative_branch_caveat": "The released second branch uses DreamZero's fixed visual-quality negative prompt, not a strict empty-text unconditional prompt. Results are labeled CFG-style negative-branch action guidance rather than an official DreamZero action-CFG feature.",
+      "action_chunk_shape": [24, 8],
+      "executed_open_loop_horizon": 8,
+      "future_contract": "joint latent video future retained and officially decoded at reset",
+      "behavioral_episode_count": 6
+    }
+  ],
+  "dreamzero_source_overlay": {
+    "target": "groot/vla/model/dreamzero/action_head/wan_flow_matching_action_tf.py",
+    "target_before_sha256": "7193cd73423472aa252bee73bd80e0d673c89d773ec852e90f50154729b50845",
+    "patch": "experiments/dreamzero_droid/v2a015_action_cfg.patch",
+    "patch_sha256": "a10bbd57985f023027a889734f8a4d3e9fcecdf76d37b30c0c50699326dcb412",
+    "derived_server": "experiments/dreamzero_droid/v2a015_instrumented_server.py",
+    "derived_server_sha256": "4dae9df89d77d3ad6909324d8f1e777b76c673054eff2da922727c656f216053",
+    "preserved_baseline_server": "experiments/dreamzero_droid/v2_instrumented_server.py",
+    "preserved_baseline_server_sha256": "2b0a83e21ee921527a2d0fc5cb9344d0b1f5950ff88906fd441fac2421c5a95f",
+    "requirements": [
+      "Scale 1.0 must take the untouched conditional-action branch for exact baseline equivalence.",
+      "Only the action-flow prediction entering the existing scheduler may change.",
+      "Video CFG, prompt transforms, weights, noise seed, scheduler, cache mask, horizon, normalization, and controller remain unchanged.",
+      "The isolated overlay checkout and resulting file hash must be recorded before model load."
+    ]
+  },
+  "fixed_observation_release_gates": {
+    "cosmos3_nano_no_cfg_g1": [
+      "LEFT and exact-repeat LEFT actions and futures are bit-identical.",
+      "LEFT and RIGHT actions and decoded futures differ under identical observation and sampling seed.",
+      "Every action is finite with shape [32,8] and every future contains 33 RGB frames."
+    ],
+    "dreamzero_action_cfg_s2": [
+      "The scale-1 overlay returns bit-identical actions and latent video to the unmodified official path on the frozen fixture.",
+      "Scale-2 LEFT and exact-repeat LEFT actions and latent futures are bit-identical.",
+      "Scale-2 LEFT and RIGHT actions differ under identical observation and official noise seed 1140.",
+      "Scale-2 actions are finite, shape [24,8], and pass the unchanged normalization and range contract.",
+      "Record whether the scale-2 latent video differs from scale 1 under the same request; do not require equality because guided action latents can feed back through later joint-attention denoising steps."
+    ]
+  },
+  "behavioral_grid": {
+    "prompt_family": "direct_command",
+    "prompts": {
+      "left": "Put the Rubik's cube to the left of the bowl.",
+      "right": "Put the Rubik's cube to the right of the bowl."
+    },
+    "environment_seeds": [8300, 8301, 8302],
+    "sampling_seed_labels": [8300, 8301, 8302],
+    "requested_relations": ["left", "right"],
+    "new_behavioral_episode_count": 12,
+    "completion_rule": "After an arm passes its release gate, run and retain all six valid cells; do not stop early for poor outcomes.",
+    "prompt_controller": "episode_static",
+    "oracle_actions": 0,
+    "subtask_coach": false,
+    "prompt_switching": false,
+    "progress_conditioned_language": false,
+    "simulator_video_required": true,
+    "executed_action_trace_required": true,
+    "all_exposed_futures_retained": true
+  },
+  "analysis": {
+    "primary": [
+      "requested-task success by relation and exact paired change from the preserved checkpoint baseline",
+      "requested signed final margin, oriented so positive means farther into the requested region"
+    ],
+    "directional_quality": [
+      "minimum LEFT/RIGHT requested margin per seed",
+      "LEFT-RIGHT margin gap",
+      "paired endpoint ordering and separation",
+      "success asymmetry and any regression from a baseline success"
+    ],
+    "trajectory_quality": [
+      "verified pickup, requested-region entry, release, and failure stage",
+      "completion actions for successes with failures censored at the action cap",
+      "object path length, excess path ratio, maximum excursion, action total variation, and first-chunk prompt RMS"
+    ],
+    "future_rule": "Report imagined/executed semantic agreement and coverage separately from robot success; requests or frames within one episode are not independent samples; missing futures are never zeros.",
+    "inference_boundary": "This n=6-per-arm pilot is descriptive and exploratory. Report exact paired discordances and effect sizes; do not claim a powered improvement from a nonsignificant result."
+  },
+  "denominator_policy": [
+    "Each model and guidance configuration has its own six-cell DROID denominator.",
+    "The preserved baselines are referenced by committed hash and are not rerun or overwritten.",
+    "Fixed probes, partial runs, and infrastructure-invalid attempts remain outside behavioral denominators.",
+    "Cosmos3 Nano and DreamZero results are never pooled, and no DROID result is pooled with RoboTwin."
+  ],
+  "optional_followup_not_yet_authorized": {
+    "condition": "Only after both six-cell V2-A015 arms are compiled without outcome-based selection.",
+    "candidate_arms": [
+      "Cosmos3 Nano guidance 5.0, six cells",
+      "DreamZero action guidance 3.0 with video guidance 5.0, six cells"
+    ],
+    "authorized_behavioral_episode_count": 0
+  },
+  "unchanged_rules": [
+    "Static episode prompts only; no oracle, coach, prompt switching, or progress-conditioned language.",
+    "Preserve every valid failure and keep technical invalidity outside model denominators.",
+    "Record complete simulator video, executed actions, and every exposed future.",
+    "Keep raw outputs, checkpoints, environments, and unbounded video on the ali-owned PVC.",
+    "Do not alter artifacts/vla_wam_shared_v2/protocol.json retroactively."
+  ]
+}

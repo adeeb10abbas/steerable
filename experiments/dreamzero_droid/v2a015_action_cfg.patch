@@ -1,0 +1,46 @@
+diff --git a/groot/vla/model/dreamzero/action_head/wan_flow_matching_action_tf.py b/groot/vla/model/dreamzero/action_head/wan_flow_matching_action_tf.py
+--- a/groot/vla/model/dreamzero/action_head/wan_flow_matching_action_tf.py
++++ b/groot/vla/model/dreamzero/action_head/wan_flow_matching_action_tf.py
+@@ -180,6 +180,10 @@ class WANPolicyHead(ActionHead):
+         self.num_inference_steps = 16 
+         self.seed = 1140
+         self.cfg_scale = 5.0
++        self.action_cfg_scale = float(os.environ.get("DREAMZERO_ACTION_CFG_SCALE", "1.0"))
++        if not 0.0 <= self.action_cfg_scale <= 5.0:
++            raise ValueError("DREAMZERO_ACTION_CFG_SCALE must be within [0, 5]")
++        logger.info("DreamZero action CFG-style scale: %s", self.action_cfg_scale)
+         self.denoising_strength = 1.0
+         self.sigma_shift = 5.0
+         self.kv_cache1: KVCacheType | None = None
+@@ -1274,16 +1278,23 @@ class WANPolicyHead(ActionHead):
+                 flow_pred_cond, flow_pred_cond_action = predictions[0]
+                 flow_pred_uncond, flow_pred_uncond_action = predictions[1]
+ 
+                 flow_pred = flow_pred_uncond + self.cfg_scale * (flow_pred_cond - flow_pred_uncond)
+-                prev_predictions.append((current_timestep, flow_pred, flow_pred_cond_action))
++                if self.action_cfg_scale == 1.0:
++                    # Preserve the released action path bit-for-bit at the control scale.
++                    flow_pred_action = flow_pred_cond_action
++                else:
++                    flow_pred_action = flow_pred_uncond_action + self.action_cfg_scale * (
++                        flow_pred_cond_action - flow_pred_uncond_action
++                    )
++                prev_predictions.append((current_timestep, flow_pred, flow_pred_action))
+                 max_cache_size = 2
+                 if len(prev_predictions) > max_cache_size:
+                     prev_predictions.pop(0)
+ 
+             else:
+                 assert len(prev_predictions) > 0, "prev_predictions must be set when skipping"
+-                _, flow_pred, flow_pred_cond_action = prev_predictions[-1]
++                _, flow_pred, flow_pred_action = prev_predictions[-1]
+ 
+             end_diffusion_events[index].record()
+@@ -1298,7 +1309,7 @@ class WANPolicyHead(ActionHead):
+             # Action: always fully denoises with standard schedule (1000->0)
+             noisy_input_action = sample_scheduler_action.step(
+-                model_output=flow_pred_cond_action,
++                model_output=flow_pred_action,
+                 timestep=action_timestep,
+                 sample=noisy_input_action,
+                 step_index=index,

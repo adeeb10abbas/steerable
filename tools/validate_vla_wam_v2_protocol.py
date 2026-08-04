@@ -737,6 +737,235 @@ def validate_v1_disclosure(workspace: Path, checks: list[str]) -> dict[str, Any]
     }
 
 
+def validate_cfg_ablation_v2a015(
+    workspace: Path,
+    amendment_path: Path,
+    checks: list[str],
+) -> dict[str, Any]:
+    """Validate the disclosed, post-result Cosmos3/DreamZero CFG ablation freeze."""
+    amendment = load_json(amendment_path)
+    require(
+        amendment["schema_version"]
+        == "vla-wam-shared-v2-post-result-cfg-ablation-v1"
+        and amendment["study_id"] == "vla_wam_language_steerability_v2"
+        and amendment["amendment_id"] == "V2-A015"
+        and amendment["status"]
+        == "frozen_after_baseline_results_and_before_any_cfg_ablation_model_request_or_behavioral_inference"
+        and amendment["recorded_at_git_head"]
+        == "22218d01c2301cc6ad28c9c1c53905045d8f2e9c",
+        "V2-A015 is explicitly frozen post-result and before any CFG-ablation request or behavior",
+        checks,
+    )
+
+    disclosure = amendment["known_result_disclosure"]
+    require(
+        all(
+            phrase in disclosure["statement"]
+            for phrase in (
+                "known when this exploratory ablation was selected",
+                "disclosed post-result intervention",
+                "not preregistration",
+                "not a rewrite of any frozen result",
+            )
+        ),
+        "V2-A015 discloses known baselines and forbids a preregistration or frozen-result claim",
+        checks,
+    )
+    expected_baselines = {
+        "cosmos3_nano_baseline": {
+            "artifact": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_direct_gate.json",
+            "sha256": "4a6cc1d61593c7ba5272e1707f6bbe51261f7d23438070992bd75fd9e95fdb93",
+            "checkpoint": "nvidia/Cosmos3-Nano-Policy-DROID",
+            "revision": "6706d7680581c255ff61e0f3bb49d90eac55c79e",
+            "source_commit": "411d25b2e35bc441126f48c44a4b93e1c0564274",
+        },
+        "dreamzero_baseline": {
+            "artifact": "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json",
+            "sha256": "4c76cdc3ca9eaf227d21d160199408f22e1b3dd7a71176a5a5dbe22223714461",
+            "checkpoint": "GEAR-Dreams/DreamZero-DROID",
+            "revision": "96ad344138c66e82536422432ad742f015784942",
+            "source_commit": "ab790c198fbce33503358efbbd4187ce9a89adf3",
+        },
+    }
+    for baseline_id, expected in expected_baselines.items():
+        baseline = disclosure[baseline_id]
+        artifact_path = workspace / baseline["artifact"]
+        require(
+            all(baseline[key] == value for key, value in expected.items())
+            and artifact_path.is_file()
+            and sha256(artifact_path) == baseline["sha256"],
+            f"V2-A015 preserves and hash-binds the exact {baseline_id} evidence",
+            checks,
+        )
+    require(
+        disclosure["cosmos3_nano_baseline"]["guidance"] == 3.0
+        and disclosure["cosmos3_nano_baseline"]["result"]
+        == "LEFT 3/3; RIGHT 3/3; 3/3 aligned endpoint pairs"
+        and disclosure["dreamzero_baseline"]["video_guidance"] == 5.0
+        and disclosure["dreamzero_baseline"]["action_guidance_equivalent"] == 1.0
+        and disclosure["dreamzero_baseline"]["result"]
+        == "LEFT 2/3; RIGHT 1/3; 3/3 aligned endpoint pairs",
+        "V2-A015 records the exact known guidance settings and six-cell baseline outcomes",
+        checks,
+    )
+
+    arms = amendment["arms"]
+    require(
+        len(arms) == 2
+        and [arm["arm_id"] for arm in arms]
+        == ["cosmos3_nano_no_cfg_g1", "dreamzero_action_cfg_s2"]
+        and all(arm["behavioral_episode_count"] == 6 for arm in arms)
+        and sum(arm["behavioral_episode_count"] for arm in arms) == 12,
+        "V2-A015 freezes exactly two six-cell arms and twelve new behavioral cells",
+        checks,
+    )
+    arms_by_id = {arm["arm_id"]: arm for arm in arms}
+    cosmos = arms_by_id["cosmos3_nano_no_cfg_g1"]
+    require(
+        cosmos["model_id"] == "cosmos3_nano_policy_droid"
+        and cosmos["arena"] == "droid_robolab"
+        and cosmos["checkpoint"] == expected_baselines["cosmos3_nano_baseline"]["checkpoint"]
+        and cosmos["checkpoint_revision"]
+        == expected_baselines["cosmos3_nano_baseline"]["revision"]
+        and cosmos["source_commit"]
+        == expected_baselines["cosmos3_nano_baseline"]["source_commit"]
+        and cosmos["baseline_guidance"] == 3.0
+        and cosmos["guidance"] == 1.0
+        and cosmos["num_steps"] == 4
+        and cosmos["shift"] == 5.0
+        and cosmos["action_chunk_shape"] == [32, 8],
+        "V2-A015 changes Cosmos3 Nano only from joint CFG g=3 to g=1 while fixing steps, shift, source, and shape",
+        checks,
+    )
+    require(
+        "conditional prediction without a CFG blend" in cosmos["intervention"]
+        and "33-frame RGB future" in cosmos["future_contract"],
+        "V2-A015 defines Cosmos3 g=1 as no blend and retains its decoded-future contract",
+        checks,
+    )
+
+    dreamzero = arms_by_id["dreamzero_action_cfg_s2"]
+    require(
+        dreamzero["model_id"] == "dreamzero_droid_action_cfg"
+        and dreamzero["arena"] == "droid_robolab"
+        and dreamzero["checkpoint"] == expected_baselines["dreamzero_baseline"]["checkpoint"]
+        and dreamzero["checkpoint_revision"]
+        == expected_baselines["dreamzero_baseline"]["revision"]
+        and dreamzero["source_commit"]
+        == expected_baselines["dreamzero_baseline"]["source_commit"]
+        and dreamzero["baseline_action_guidance_equivalent"] == 1.0
+        and dreamzero["action_guidance"] == 2.0
+        and dreamzero["video_guidance"] == 5.0
+        and dreamzero["runtime_num_inference_steps"] == 16
+        and dreamzero["dit_cache"] is True
+        and dreamzero["evaluated_dit_steps"] == 8
+        and dreamzero["action_chunk_shape"] == [24, 8]
+        and dreamzero["executed_open_loop_horizon"] == 8,
+        "V2-A015 changes DreamZero action-equivalent guidance 1 to 2 while fixing video CFG 5, runtime 16, cache 8, source, and control shape",
+        checks,
+    )
+    caveat = dreamzero["negative_branch_caveat"]
+    require(
+        all(
+            phrase in caveat
+            for phrase in (
+                "fixed visual-quality negative prompt",
+                "not a strict empty-text unconditional prompt",
+                "CFG-style negative-branch action guidance",
+                "rather than an official DreamZero action-CFG feature",
+            )
+        )
+        and "a_uncond + 2*(a_cond-a_uncond)" in dreamzero["intervention"]
+        and "joint latent video future" in dreamzero["future_contract"],
+        "V2-A015 labels DreamZero's fixed-negative branch accurately and retains its latent-video future",
+        checks,
+    )
+
+    grid = amendment["behavioral_grid"]
+    expected_prompts = {
+        "left": "Put the Rubik's cube to the left of the bowl.",
+        "right": "Put the Rubik's cube to the right of the bowl.",
+    }
+    require(
+        grid["prompt_family"] == "direct_command"
+        and grid["prompts"] == expected_prompts
+        and grid["environment_seeds"] == [8300, 8301, 8302]
+        and grid["sampling_seed_labels"] == [8300, 8301, 8302]
+        and grid["requested_relations"] == ["left", "right"]
+        and grid["new_behavioral_episode_count"]
+        == len(arms) * len(grid["environment_seeds"]) * len(grid["requested_relations"])
+        == 12,
+        "V2-A015 fixes the exact direct prompts, paired seeds 8300-8302, relations, and twelve-cell cross-product",
+        checks,
+    )
+    require(
+        grid["prompt_controller"] == "episode_static"
+        and grid["oracle_actions"] == 0
+        and grid["subtask_coach"] is False
+        and grid["prompt_switching"] is False
+        and grid["progress_conditioned_language"] is False
+        and grid["simulator_video_required"] is True
+        and grid["executed_action_trace_required"] is True
+        and grid["all_exposed_futures_retained"] is True
+        and "do not stop early" in grid["completion_rule"],
+        "V2-A015 requires static language, no oracle or coach, complete video/actions/futures, and no outcome stopping",
+        checks,
+    )
+
+    release_gates = amendment["fixed_observation_release_gates"]
+    require(
+        set(release_gates) == set(arms_by_id)
+        and any("bit-identical" in item for item in release_gates["cosmos3_nano_no_cfg_g1"])
+        and any("LEFT and RIGHT actions" in item for item in release_gates["cosmos3_nano_no_cfg_g1"])
+        and any("[32,8]" in item and "33 RGB frames" in item for item in release_gates["cosmos3_nano_no_cfg_g1"])
+        and any("scale-1 overlay" in item and "bit-identical" in item for item in release_gates["dreamzero_action_cfg_s2"])
+        and any("Scale-2 LEFT and RIGHT actions differ" in item for item in release_gates["dreamzero_action_cfg_s2"])
+        and any("finite" in item and "[24,8]" in item for item in release_gates["dreamzero_action_cfg_s2"]),
+        "V2-A015 gates behavior on deterministic repeats, directional response, baseline equivalence, and output contracts",
+        checks,
+    )
+
+    expected_denominator_policy = [
+        "Each model and guidance configuration has its own six-cell DROID denominator.",
+        "The preserved baselines are referenced by committed hash and are not rerun or overwritten.",
+        "Fixed probes, partial runs, and infrastructure-invalid attempts remain outside behavioral denominators.",
+        "Cosmos3 Nano and DreamZero results are never pooled, and no DROID result is pooled with RoboTwin.",
+    ]
+    require(
+        amendment["denominator_policy"] == expected_denominator_policy,
+        "V2-A015 keeps guidance arms, models, and arenas in independent denominators and excludes invalid attempts",
+        checks,
+    )
+    followup = amendment["optional_followup_not_yet_authorized"]
+    require(
+        followup["authorized_behavioral_episode_count"] == 0
+        and followup["condition"]
+        == "Only after both six-cell V2-A015 arms are compiled without outcome-based selection."
+        and followup["candidate_arms"]
+        == [
+            "Cosmos3 Nano guidance 5.0, six cells",
+            "DreamZero action guidance 3.0 with video guidance 5.0, six cells",
+        ],
+        "V2-A015 authorizes zero optional follow-up episodes before both primary arms are compiled",
+        checks,
+    )
+    require(
+        "do not claim a powered improvement" in amendment["analysis"]["inference_boundary"]
+        and "missing futures are never zeros" in amendment["analysis"]["future_rule"],
+        "V2-A015 keeps its pilot inference descriptive and missing futures outside numeric zeros",
+        checks,
+    )
+    return {
+        "path": str(amendment_path.relative_to(workspace)),
+        "sha256": sha256(amendment_path),
+        "arm_count": len(arms),
+        "new_behavioral_episode_count": grid["new_behavioral_episode_count"],
+        "optional_followup_authorized_episode_count": followup[
+            "authorized_behavioral_episode_count"
+        ],
+    }
+
+
 def validate_pi0_fast_confirmation(
     workspace: Path, confirmation_path: Path, expansion_path: Path, checks: list[str]
 ) -> dict[str, Any] | None:
@@ -1087,6 +1316,11 @@ def validate(workspace: Path) -> dict[str, Any]:
         workspace
         / "artifacts/vla_wam_shared_v2/pilot/post_result_dreamzero_amendment.json"
     )
+    cfg_ablation_v2a015_amendment_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/"
+        "post_result_cfg_ablation_v2a015_amendment.json"
+    )
     current_stack_amendment_path = (
         workspace
         / "artifacts/vla_wam_shared_v2/pilot/post_result_current_stack_replication_amendment.json"
@@ -1391,6 +1625,7 @@ def validate(workspace: Path) -> dict[str, Any]:
     post_result_amendment = load_json(post_result_amendment_path)
     second_wave_amendment = load_json(second_wave_amendment_path)
     dreamzero_amendment = load_json(dreamzero_amendment_path)
+    cfg_ablation_v2a015_amendment = load_json(cfg_ablation_v2a015_amendment_path)
     current_stack_amendment = load_json(current_stack_amendment_path)
     current_stack_registry = load_json(current_stack_registry_path)
     current_stack_release_probe = load_json(current_stack_release_probe_path)
@@ -1455,6 +1690,18 @@ def validate(workspace: Path) -> dict[str, Any]:
     droid_paired_media = load_json(droid_paired_media_path)
     figures_manifest = load_json(figures_manifest_path)
     checks: list[str] = []
+
+    # Load above so a missing or malformed amendment fails before any weaker
+    # downstream state can be accepted; the dedicated validator re-loads and
+    # binds the exact on-disk bytes into the final report.
+    require(
+        cfg_ablation_v2a015_amendment["amendment_id"] == "V2-A015",
+        "V2-A015 CFG-ablation amendment is present and parseable",
+        checks,
+    )
+    cfg_ablation_v2a015 = validate_cfg_ablation_v2a015(
+        workspace, cfg_ablation_v2a015_amendment_path, checks
+    )
 
     require(
         protocol["status"] == "frozen_before_any_standardized_v2_expansion_inference",
@@ -4826,6 +5073,7 @@ def validate(workspace: Path) -> dict[str, Any]:
         "post_result_dreamzero_amendment_sha256": sha256(
             dreamzero_amendment_path
         ),
+        "post_result_cfg_ablation_v2a015": cfg_ablation_v2a015,
         "post_result_current_stack_replication_amendment_path": str(
             current_stack_amendment_path.relative_to(workspace)
         ),

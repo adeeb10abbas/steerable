@@ -1,7 +1,8 @@
 # VLA/WAM study continuation handoff
 
 Updated: 4 August 2026, after all original bounded gates and both Cosmos3 base
-interface probes completed.
+interface probes completed, and after post-result guidance amendment V2-A015
+was frozen before any newly authorized request.
 
 This document is the restart point for a human or coding model with no chat
 context. The machine-readable companion is
@@ -20,9 +21,9 @@ Current direct-command evidence is:
 | DROID | π0-FAST | 1/10 | 10/10 | historical wording blocked; V2-A008 release gate failed with zero behavioral cells |
 | DROID | GR00T N1.7 | 0/3 | 0/3 | six-cell gate complete; no wording expansion |
 | DROID | Cosmos3 Edge | 3/3 | 3/3 | six-cell gate complete; decoded futures retained |
-| DROID | DreamZero | 2/3 | 1/3 | six-cell gate complete; official imagination archive published |
+| DROID | DreamZero | 2/3 | 1/3 | baseline complete/do not rerun; six V2-A015 `s=2` cells await release gates |
 | DROID | π0.5 current-stack V2-A010 | 1/3 | 3/3 | six-cell gate complete; selected actual-rollout pair published separately |
-| DROID | Cosmos3 Nano Policy DROID V2-A011 | 3/3 | 3/3 | separate six-cell current-stack gate complete; 37 decoded futures retained |
+| DROID | Cosmos3 Nano Policy DROID V2-A011 | 3/3 | 3/3 | baseline complete/do not rerun; six V2-A015 `g=1` cells await release gates |
 | DROID | Cosmos3 Super base V2-A012/A014 | — | — | image-only action+video probe passed; zero behavioral cells released |
 | DROID | Cosmos3 Edge base V2-A013 | — | — | three-request interface probe passed; behavior blocked by exact mapping audit |
 | RoboTwin | Efficient-WAM-RT | 3/7 | 2/7 | pairs03–09 complete; do not rerun |
@@ -916,6 +917,50 @@ Edge-Policy-DROID result remains separate. See the [amendment](../artifacts/vla_
 [result](../artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_base_v2a013_fixed_observation.json),
 [mapping audit](../artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_base_v2a013_curobo_usd_audit.json),
 and [runbook](../experiments/cosmos/COSMOS3_EDGE_BASE_V2A013.md).
+
+### V2-A015 post-result guidance ablation — active
+
+Amendment
+[`post_result_cfg_ablation_v2a015_amendment.json`](../artifacts/vla_wam_shared_v2/pilot/post_result_cfg_ablation_v2a015_amendment.json)
+was frozen after both baseline outcomes were known and before any ablation
+model request. It authorizes exactly 12 new DROID/RoboLab behavioral cells,
+with six cells and a separate denominator for each configuration:
+
+| Configuration | New intervention | Preserved comparison |
+| --- | --- | --- |
+| Cosmos3 Nano Policy DROID | joint action-video CFG `g=1` | completed `g=3` V2-A011 result |
+| DreamZero DROID | derived negative-branch action guidance `s=2`; video CFG fixed at `5` | completed conditional-action equivalent `s=1` V2-A007 result |
+
+DreamZero's released second branch uses a fixed visual-quality negative prompt,
+not a strict empty-text unconditional prompt. Report its intervention as
+“CFG-style negative-branch action guidance,” not as an official DreamZero
+action-CFG feature. The preserved Cosmos3 Nano `g=3` and DreamZero `s=1`
+episodes are referenced by committed hashes; they are not rerun, relabeled, or
+overwritten.
+
+Each arm runs the exact static prompts “Put the Rubik's cube to the left of the
+bowl.” and “Put the Rubik's cube to the right of the bowl.” at environment and
+sampling seeds 8300, 8301, and 8302. Run the frozen fixed-observation gates
+first: repeat determinism, LEFT/RIGHT sensitivity, finite action shape and
+range, future retention, and DreamZero `s=1` overlay equivalence. A failed gate
+releases no behavioral cells for that arm. After a passed gate, complete all
+six cells without outcome-dependent stopping, retaining full simulator video,
+executed actions, and every exposed future.
+
+Keep the two new six-cell denominators separate from one another and from their
+historical baselines. Fixed probes, partial runs, and infrastructure-invalid
+attempts remain outside all behavioral denominators. This small post-result
+pilot can report paired discordances, directional margins, trajectory-quality
+changes, and effect sizes; it cannot establish a powered improvement or a
+general model-family effect. The optional higher-guidance arms remain
+unauthorized.
+
+The exact next command is the repository gate; launch commands are taken from
+the hash-pinned V2-A015 runbook only after it passes:
+
+```bash
+python3 tools/validate_vla_wam_v2_protocol.py
+```
 
 ## Analysis and publication queue
 

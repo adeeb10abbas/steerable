@@ -1,6 +1,6 @@
 {
   "schema_version": "vla-wam-shared-v2-continuation-v1",
-  "updated_at_utc": "2026-08-04T04:23:00Z",
+  "updated_at_utc": "2026-08-04T18:31:29Z",
   "evidence_head_before_handoff": "1155ae3f5e3c5db83d9b50a92d8519027bc1d61f",
   "active_branch": "codex/wam-language-steerability",
   "study_status": "pi0_fast_release_gate_failed_pi05_current_stack_complete_cosmos3_nano_current_stack_complete_cosmos3_edge_base_interface_passed_behavior_blocked_cosmos3_super_image_only_interface_passed_no_behavior_lawam_withdrawn",
@@ -265,6 +265,74 @@
     },
     "next_step": "No authorized DreamZero direct-gate cell remains. Do not rerun the six valid episodes. Preserve all raw actions, latent futures, official decodes, simulator rollouts, and infrastructure-invalid attempts on the ali PVC.",
     "denominator_policy": "All six valid behavioral cells are in the DreamZero DROID denominator, including three valid failures. Eleven setup-invalid attempts remain excluded. DROID results are not pooled with RoboTwin."
+  },
+  "cfg_ablation_v2a015": {
+    "status": "frozen_pending_fixed_observation_release_gates_no_ablation_inference",
+    "amendment_id": "V2-A015",
+    "amendment": "artifacts/vla_wam_shared_v2/pilot/post_result_cfg_ablation_v2a015_amendment.json",
+    "authorized_behavioral_episode_count": 12,
+    "authorized_cells_remaining": 12,
+    "model_action_request_count": 0,
+    "behavioral_episode_count": 0,
+    "raw_namespace": "/data/users/ali/vla_wam/raw/cfg_ablation/v2_a015",
+    "behavioral_grid": {
+      "prompt_family": "direct_command",
+      "prompts": {
+        "left": "Put the Rubik's cube to the left of the bowl.",
+        "right": "Put the Rubik's cube to the right of the bowl."
+      },
+      "environment_seeds": [
+        8300,
+        8301,
+        8302
+      ],
+      "sampling_seed_labels": [
+        8300,
+        8301,
+        8302
+      ],
+      "requested_relations": [
+        "left",
+        "right"
+      ],
+      "prompt_controller": "episode_static"
+    },
+    "arms": {
+      "cosmos3_nano_no_cfg_g1": {
+        "behavioral_episode_count": 6,
+        "intervention": "joint action-video guidance 3.0 to 1.0; all other inference settings fixed",
+        "source_commit": "411d25b2e35bc441126f48c44a4b93e1c0564274",
+        "checkpoint": "nvidia/Cosmos3-Nano-Policy-DROID",
+        "checkpoint_revision": "6706d7680581c255ff61e0f3bb49d90eac55c79e",
+        "baseline_artifact": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_direct_gate.json",
+        "baseline_artifact_sha256": "4a6cc1d61593c7ba5272e1707f6bbe51261f7d23438070992bd75fd9e95fdb93",
+        "release_gate_status": "pending_fixed_observation_gate"
+      },
+      "dreamzero_action_cfg_s2": {
+        "behavioral_episode_count": 6,
+        "intervention": "CFG-style negative-branch action guidance 1.0 to 2.0; released video guidance remains 5.0",
+        "source_commit": "ab790c198fbce33503358efbbd4187ce9a89adf3",
+        "checkpoint": "GEAR-Dreams/DreamZero-DROID",
+        "checkpoint_revision": "96ad344138c66e82536422432ad742f015784942",
+        "baseline_artifact": "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json",
+        "baseline_artifact_sha256": "4c76cdc3ca9eaf227d21d160199408f22e1b3dd7a71176a5a5dbe22223714461",
+        "release_gate_status": "pending_scale1_equivalence_and_scale2_fixed_observation_gates"
+      }
+    },
+    "planned_runtime": {
+      "policy_pod": "lerobot-b200-4gpu-1-ali",
+      "cosmos3_nano_lane": "B200 GPU 3 on port 18021",
+      "dreamzero_lane": "B200 GPUs 1 and 2 on port 18022",
+      "simulator_lane": "raytrace-rtxpro6000-ali sequential simulator and viewport-video execution",
+      "protected_preexisting_process": "Do not touch B200 GPU 0 DreamZero PID 25608 or port 5000."
+    },
+    "next_steps": [
+      "Validate and commit the frozen amendment and isolated DreamZero source overlay before any model load.",
+      "Run the Cosmos3 Nano guidance-1 fixed-observation determinism and prompt-sensitivity gate.",
+      "Run DreamZero scale-1 exact-equivalence followed by scale-2 determinism, prompt-sensitivity, shape, finite-value, normalization, and range gates.",
+      "Only after an arm passes its gate, run and retain all six exact seed-by-relation cells; preserve simulator video, executed actions, exposed futures, valid failures, and separate invalid-attempt ledgers."
+    ],
+    "claim_boundary": "Exploratory post-result guidance ablation with a separate six-cell DROID denominator per arm; no inference has occurred and preserved baselines are not rerun or overwritten."
   },
   "completed_direct_gates": [
     {

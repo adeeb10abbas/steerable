@@ -225,6 +225,8 @@ def main(args: Args) -> None:
             "patched_action_head": str(patched_target),
             "patched_action_head_sha256": patched_target_sha256,
             "base_instrumented_server_sha256": base._sha256(Path(base.__file__).resolve()),
+            "derived_instrumented_server": str(Path(__file__).resolve()),
+            "derived_instrumented_server_sha256": base._sha256(Path(__file__).resolve()),
             "future_root": str(future_root),
         }
         (future_root / "server_contract.json").write_text(

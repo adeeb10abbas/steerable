@@ -1,0 +1,251 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1530" viewBox="0 0 1600 1530" preserveAspectRatio="xMidYMid meet" style="max-width:100%;height:auto;display:block" role="img" aria-labelledby="v2a015-title v2a015-desc">
+<title id="v2a015-title">Guidance can redistribute directional performance without uniformly improving control</title>
+<desc id="v2a015-desc">Two DROID model panels compare baseline and guidance intervention success counts, exact-seed requested endpoint margins, and mean LEFT versus RIGHT directional imbalance.</desc>
+<metadata>{&quot;arena&quot;:&quot;droid_robolab&quot;,&quot;exact_prompts&quot;:{&quot;left&quot;:&quot;Put the Rubik&#x27;s cube to the left of the bowl.&quot;,&quot;right&quot;:&quot;Put the Rubik&#x27;s cube to the right of the bowl.&quot;},&quot;schema_version&quot;:&quot;vla-wam-shared-v2-cfg-ablation-v2a015-figure-v1&quot;,&quot;seeds&quot;:[8300,8301,8302],&quot;source_sha256&quot;:{&quot;comparison&quot;:&quot;0e6daadd9391b7ad38ee316371df0235e34268cc4c32597c6597578ac9f9ed1e&quot;,&quot;cosmos_baseline&quot;:&quot;4a6cc1d61593c7ba5272e1707f6bbe51261f7d23438070992bd75fd9e95fdb93&quot;,&quot;cosmos_intervention&quot;:&quot;8796f4ab9ea9490ee5b78678bc689d6fd13f27a9551006f8b5d346e202d0cc5c&quot;,&quot;dreamzero_baseline&quot;:&quot;4c76cdc3ca9eaf227d21d160199408f22e1b3dd7a71176a5a5dbe22223714461&quot;,&quot;dreamzero_intervention&quot;:&quot;273b7191cde61b51bf90b2eda04b1910e214f48d34f2347f2a81325069c32444&quot;},&quot;statistical_scope&quot;:&quot;descriptive_post_result_n3_per_direction_no_powered_significance_claim&quot;}</metadata>
+<style>.academic{font-family:'Source Sans 3','Aptos','Segoe UI',Arial,sans-serif;fill:#23313B}.title{font-size:38px;font-weight:600;letter-spacing:-.5px}.subtitle{font-size:18px;fill:#65727B}.overline{font-size:13px;font-weight:600;letter-spacing:1px}.prompt{font-size:19px;font-weight:500}.model{font-size:29px;font-weight:600}.technical{font-size:17px;fill:#65727B}.story{font-size:16px;font-weight:600;fill:#71647F}.section{font-size:17px;font-weight:600}.body{font-size:16px}.small{font-size:13px;fill:#65727B}.small-emphasis{font-size:14px;font-weight:600}.column{font-size:13px;font-weight:600;letter-spacing:.8px}.count{font-size:18px;font-weight:600}.metric{font-size:17px;font-weight:600}.relation{font-size:14px;font-weight:600;letter-spacing:.5px}.seed{font-size:13px;fill:#65727B}.value{font-size:13px;font-variant-numeric:tabular-nums}.tick{font-size:12px;fill:#65727B;font-variant-numeric:tabular-nums}.axis{font-size:14px;font-weight:500}.zone{font-size:12px;fill:#65727B}.legend{font-size:14px;fill:#65727B}.footer{font-size:13px;fill:#65727B}.footer-strong{font-size:13px;font-weight:600}</style>
+<rect x="0.00" y="0.00" width="1600.00" height="1530.00" fill="#F7F4EE"/>
+<g class="academic">
+<text x="64.00" y="64.00" class="title">Guidance can redistribute directional performance</text>
+<text x="64.00" y="108.00" class="title">without uniformly improving control</text>
+<text x="64.00" y="140.00" class="subtitle">V2-A015 exploratory DROID/RoboLab ablation · same reset, task predicate, static prompt, and seeds 8300–8302 within each model</text>
+<rect x="64.00" y="164.00" width="724.00" height="96.00" rx="16" fill="#FFFDF9" stroke="#D8DDD9" stroke-width="1.2"/>
+<rect x="64.00" y="164.00" width="8.00" height="96.00" rx="4" fill="#C87932"/>
+<text x="92.00" y="195.00" class="overline" fill="#C87932">LEFT CONDITION · EXACT EPISODE-STATIC PROMPT</text>
+<text x="92.00" y="232.00" class="prompt">“Put the Rubik&#x27;s cube to the left of the bowl.”</text>
+<rect x="812.00" y="164.00" width="724.00" height="96.00" rx="16" fill="#FFFDF9" stroke="#D8DDD9" stroke-width="1.2"/>
+<rect x="812.00" y="164.00" width="8.00" height="96.00" rx="4" fill="#4D7698"/>
+<text x="840.00" y="195.00" class="overline" fill="#4D7698">RIGHT CONDITION · EXACT EPISODE-STATIC PROMPT</text>
+<text x="840.00" y="232.00" class="prompt">“Put the Rubik&#x27;s cube to the right of the bowl.”</text>
+<circle cx="74.00" cy="290.00" r="7.00" fill="#4D7698" stroke="#4D7698" stroke-width="2.5"/>
+<text x="91.00" y="295.00" class="legend">circle = baseline</text>
+<polygon points="235.00,282.00 243.00,290.00 235.00,298.00 227.00,290.00" fill="#4D7698" stroke="#4D7698" stroke-width="2.5"/>
+<text x="252.00" y="295.00" class="legend">diamond = intervention</text>
+<circle cx="459.00" cy="290.00" r="7.00" fill="#C87932" stroke="#C87932" stroke-width="2.5"/>
+<circle cx="484.00" cy="290.00" r="7.00" fill="#FFFDF9" stroke="#C87932" stroke-width="2.5"/>
+<text x="501.00" y="295.00" class="legend">filled = full task success · hollow = failure</text>
+<line x1="846.00" y1="290.00" x2="886.00" y2="290.00" stroke="#65727B" stroke-width="2.0"/>
+<text x="898.00" y="295.00" class="legend">line = same seed</text>
+<text x="1130.00" y="295.00" class="legend">All counts: n = 3 per direction</text>
+<rect x="48.00" y="326.00" width="1504.00" height="516.00" rx="20" fill="#FFFDF9" stroke="#D8DDD9" stroke-width="1.4"/>
+<text x="80.00" y="368.00" class="model">Cosmos3 Nano Policy DROID</text>
+<text x="80.00" y="395.00" class="technical">Joint action–video guidance reduced: g = 3 baseline → g = 1 (no joint CFG blend)</text>
+<text x="1518.00" y="368.00" class="story" text-anchor="end">Observed: directional imbalance narrowed; total success 6/6 → 4/6.</text>
+<line x1="80.00" y1="410.00" x2="1520.00" y2="410.00" stroke="#D8DDD9" stroke-width="1.2"/>
+<line x1="504.00" y1="430.00" x2="504.00" y2="814.00" stroke="#D8DDD9" stroke-width="1.2"/>
+<text x="82.00" y="438.00" class="section">Full task success</text>
+<text x="82.00" y="462.00" class="small">Official release-inside-cone predicate · raw counts</text>
+<text x="346.00" y="491.00" class="column" text-anchor="middle" fill="#C87932">LEFT</text>
+<text x="438.00" y="491.00" class="column" text-anchor="middle" fill="#4D7698">RIGHT</text>
+<text x="82.00" y="533.00" class="body">g = 3 baseline</text>
+<rect x="311.00" y="506.00" width="70.00" height="38.00" rx="12" fill="#F7F4EE" stroke="#C87932" stroke-width="1.6"/>
+<text x="346.00" y="532.00" class="count" text-anchor="middle" fill="#C87932">3/3</text>
+<rect x="403.00" y="506.00" width="70.00" height="38.00" rx="12" fill="#F7F4EE" stroke="#4D7698" stroke-width="1.6"/>
+<text x="438.00" y="532.00" class="count" text-anchor="middle" fill="#4D7698">3/3</text>
+<text x="82.00" y="587.00" class="body">g = 1 intervention</text>
+<rect x="311.00" y="560.00" width="70.00" height="38.00" rx="12" fill="#F7F4EE" stroke="#C87932" stroke-width="1.6"/>
+<text x="346.00" y="586.00" class="count" text-anchor="middle" fill="#C87932">1/3</text>
+<rect x="403.00" y="560.00" width="70.00" height="38.00" rx="12" fill="#F7F4EE" stroke="#4D7698" stroke-width="1.6"/>
+<text x="438.00" y="586.00" class="count" text-anchor="middle" fill="#4D7698">3/3</text>
+<text x="82.00" y="623.00" class="small">n = 3 matched seeds per direction and setting</text>
+<text x="82.00" y="669.00" class="section">Mean directional margin gap</text>
+<text x="82.00" y="694.00" class="small">RIGHT mean − LEFT mean; sign identifies the larger margin</text>
+<text x="82.00" y="730.00" class="body">g = 3 baseline</text>
+<text x="238.00" y="730.00" class="metric" fill="#23313B">+0.306 m</text>
+<text x="356.00" y="730.00" class="small">RIGHT larger</text>
+<text x="82.00" y="764.00" class="body">g = 1 intervention</text>
+<text x="238.00" y="764.00" class="metric" fill="#23313B">+0.180 m</text>
+<text x="356.00" y="764.00" class="small">RIGHT larger</text>
+<text x="82.00" y="800.00" class="small-emphasis">Absolute imbalance: 0.306 → 0.180 m</text>
+<text x="82.00" y="829.00" class="story">Observed: directional imbalance narrowed; total success 6/6 → 4/6.</text>
+<text x="530.00" y="438.00" class="section">Requested final margin by matched seed</text>
+<text x="1352.00" y="438.00" class="small" text-anchor="start">baseline → intervention</text>
+<rect x="672.00" y="474.00" width="93.71" height="254.00" fill="#F6ECE9"/>
+<rect x="765.71" y="474.00" width="562.29" height="254.00" fill="#EDF3EE"/>
+<line x1="765.71" y1="474.00" x2="765.71" y2="728.00" stroke="#23313B" stroke-width="2.0"/>
+<line x1="672.00" y1="474.00" x2="672.00" y2="728.00" stroke="#D8DDD9" stroke-width="1.0"/>
+<text x="672.00" y="756.00" class="tick" text-anchor="middle">-0.10</text>
+<text x="765.71" y="756.00" class="tick" text-anchor="middle">0</text>
+<line x1="859.43" y1="474.00" x2="859.43" y2="728.00" stroke="#D8DDD9" stroke-width="1.0"/>
+<text x="859.43" y="756.00" class="tick" text-anchor="middle">+0.10</text>
+<line x1="953.14" y1="474.00" x2="953.14" y2="728.00" stroke="#D8DDD9" stroke-width="1.0"/>
+<text x="953.14" y="756.00" class="tick" text-anchor="middle">+0.20</text>
+<line x1="1046.86" y1="474.00" x2="1046.86" y2="728.00" stroke="#D8DDD9" stroke-width="1.0"/>
+<text x="1046.86" y="756.00" class="tick" text-anchor="middle">+0.30</text>
+<line x1="1140.57" y1="474.00" x2="1140.57" y2="728.00" stroke="#D8DDD9" stroke-width="1.0"/>
+<text x="1140.57" y="756.00" class="tick" text-anchor="middle">+0.40</text>
+<line x1="1234.29" y1="474.00" x2="1234.29" y2="728.00" stroke="#D8DDD9" stroke-width="1.0"/>
+<text x="1234.29" y="756.00" class="tick" text-anchor="middle">+0.50</text>
+<line x1="1328.00" y1="474.00" x2="1328.00" y2="728.00" stroke="#D8DDD9" stroke-width="1.0"/>
+<text x="1328.00" y="756.00" class="tick" text-anchor="middle">+0.60</text>
+<text x="530.00" y="495.00" class="relation" fill="#C87932">LEFT prompt</text>
+<text x="638.00" y="495.00" class="small">mean +0.036 m after intervention</text>
+<text x="610.00" y="525.00" class="seed" text-anchor="end">8300</text>
+<g role="img" aria-label="Seed 8300, left: baseline +0.068 metres, intervention -0.016 metres">
+<title>Seed 8300 LEFT: baseline +0.068 m; intervention -0.016 m</title>
+<line x1="829.33" y1="517.00" x2="750.62" y2="523.00" stroke="#65727B" stroke-width="2.0" stroke-opacity="0.65"/>
+<circle cx="829.33" cy="517.00" r="7.00" fill="#C87932" stroke="#C87932" stroke-width="2.5"/>
+<polygon points="750.62,515.00 758.62,523.00 750.62,531.00 742.62,523.00" fill="#FFFDF9" stroke="#C87932" stroke-width="2.5"/>
+</g>
+<text x="1352.00" y="525.00" class="value">+0.068 → -0.016 m</text>
+<text x="610.00" y="555.00" class="seed" text-anchor="end">8301</text>
+<g role="img" aria-label="Seed 8301, left: baseline +0.124 metres, intervention +0.161 metres">
+<title>Seed 8301 LEFT: baseline +0.124 m; intervention +0.161 m</title>
+<line x1="882.21" y1="547.00" x2="916.37" y2="553.00" stroke="#65727B" stroke-width="2.0" stroke-opacity="0.65"/>
+<circle cx="882.21" cy="547.00" r="7.00" fill="#C87932" stroke="#C87932" stroke-width="2.5"/>
+<polygon points="916.37,545.00 924.37,553.00 916.37,561.00 908.37,553.00" fill="#C87932" stroke="#C87932" stroke-width="2.5"/>
+</g>
+<text x="1352.00" y="555.00" class="value">+0.124 → +0.161 m</text>
+<text x="610.00" y="585.00" class="seed" text-anchor="end">8302</text>
+<g role="img" aria-label="Seed 8302, left: baseline +0.117 metres, intervention -0.036 metres">
+<title>Seed 8302 LEFT: baseline +0.117 m; intervention -0.036 m</title>
+<line x1="875.80" y1="577.00" x2="731.78" y2="583.00" stroke="#65727B" stroke-width="2.0" stroke-opacity="0.65"/>
+<circle cx="875.80" cy="577.00" r="7.00" fill="#C87932" stroke="#C87932" stroke-width="2.5"/>
+<polygon points="731.78,575.00 739.78,583.00 731.78,591.00 723.78,583.00" fill="#FFFDF9" stroke="#C87932" stroke-width="2.5"/>
+</g>
+<text x="1352.00" y="585.00" class="value">+0.117 → -0.036 m</text>
+<text x="530.00" y="629.00" class="relation" fill="#4D7698">RIGHT prompt</text>
+<text x="638.00" y="629.00" class="small">mean +0.216 m after intervention</text>
+<text x="610.00" y="659.00" class="seed" text-anchor="end">8300</text>
+<g role="img" aria-label="Seed 8300, right: baseline +0.338 metres, intervention +0.321 metres">
+<title>Seed 8300 RIGHT: baseline +0.338 m; intervention +0.321 m</title>
+<line x1="1082.62" y1="651.00" x2="1066.93" y2="657.00" stroke="#65727B" stroke-width="2.0" stroke-opacity="0.65"/>
+<circle cx="1082.62" cy="651.00" r="7.00" fill="#4D7698" stroke="#4D7698" stroke-width="2.5"/>
+<polygon points="1066.93,649.00 1074.93,657.00 1066.93,665.00 1058.93,657.00" fill="#4D7698" stroke="#4D7698" stroke-width="2.5"/>
+</g>
+<text x="1352.00" y="659.00" class="value">+0.338 → +0.321 m</text>
+<text x="610.00" y="689.00" class="seed" text-anchor="end">8301</text>
+<g role="img" aria-label="Seed 8301, right: baseline +0.401 metres, intervention +0.170 metres">
+<title>Seed 8301 RIGHT: baseline +0.401 m; intervention +0.170 m</title>
+<line x1="1141.71" y1="681.00" x2="924.86" y2="687.00" stroke="#65727B" stroke-width="2.0" stroke-opacity="0.65"/>
+<circle cx="1141.71" cy="681.00" r="7.00" fill="#4D7698" stroke="#4D7698" stroke-width="2.5"/>
+<polygon points="924.86,679.00 932.86,687.00 924.86,695.00 916.86,687.00" fill="#4D7698" stroke="#4D7698" stroke-width="2.5"/>
+</g>
+<text x="1352.00" y="689.00" class="value">+0.401 → +0.170 m</text>
+<text x="610.00" y="719.00" class="seed" text-anchor="end">8302</text>
+<g role="img" aria-label="Seed 8302, right: baseline +0.488 metres, intervention +0.156 metres">
+<title>Seed 8302 RIGHT: baseline +0.488 m; intervention +0.156 m</title>
+<line x1="1223.30" y1="711.00" x2="912.34" y2="717.00" stroke="#65727B" stroke-width="2.0" stroke-opacity="0.65"/>
+<circle cx="1223.30" cy="711.00" r="7.00" fill="#4D7698" stroke="#4D7698" stroke-width="2.5"/>
+<polygon points="912.34,709.00 920.34,717.00 912.34,725.00 904.34,717.00" fill="#4D7698" stroke="#4D7698" stroke-width="2.5"/>
+</g>
+<text x="1352.00" y="719.00" class="value">+0.488 → +0.156 m</text>
+<text x="1000.00" y="785.00" class="axis" text-anchor="middle">Requested endpoint margin (m) · positive is farther into the requested side</text>
+<text x="672.00" y="808.00" class="zone" text-anchor="start">opposite / short of requested side</text>
+<text x="1328.00" y="808.00" class="zone" text-anchor="end">farther into requested side</text>
+<rect x="48.00" y="866.00" width="1504.00" height="516.00" rx="20" fill="#FFFDF9" stroke="#D8DDD9" stroke-width="1.4"/>
+<text x="80.00" y="908.00" class="model">DreamZero DROID</text>
+<text x="80.00" y="935.00" class="technical">CFG-style negative-branch action guidance increased: s = 1 → s = 2; video CFG fixed at 5</text>
+<text x="1518.00" y="908.00" class="story" text-anchor="end">Observed: favored direction reversed; total success 3/6 → 4/6.</text>
+<line x1="80.00" y1="950.00" x2="1520.00" y2="950.00" stroke="#D8DDD9" stroke-width="1.2"/>
+<line x1="504.00" y1="970.00" x2="504.00" y2="1354.00" stroke="#D8DDD9" stroke-width="1.2"/>
+<text x="82.00" y="978.00" class="section">Full task success</text>
+<text x="82.00" y="1002.00" class="small">Official release-inside-cone predicate · raw counts</text>
+<text x="346.00" y="1031.00" class="column" text-anchor="middle" fill="#C87932">LEFT</text>
+<text x="438.00" y="1031.00" class="column" text-anchor="middle" fill="#4D7698">RIGHT</text>
+<text x="82.00" y="1073.00" class="body">s = 1 baseline</text>
+<rect x="311.00" y="1046.00" width="70.00" height="38.00" rx="12" fill="#F7F4EE" stroke="#C87932" stroke-width="1.6"/>
+<text x="346.00" y="1072.00" class="count" text-anchor="middle" fill="#C87932">2/3</text>
+<rect x="403.00" y="1046.00" width="70.00" height="38.00" rx="12" fill="#F7F4EE" stroke="#4D7698" stroke-width="1.6"/>
+<text x="438.00" y="1072.00" class="count" text-anchor="middle" fill="#4D7698">1/3</text>
+<text x="82.00" y="1127.00" class="body">s = 2 intervention</text>
+<rect x="311.00" y="1100.00" width="70.00" height="38.00" rx="12" fill="#F7F4EE" stroke="#C87932" stroke-width="1.6"/>
+<text x="346.00" y="1126.00" class="count" text-anchor="middle" fill="#C87932">1/3</text>
+<rect x="403.00" y="1100.00" width="70.00" height="38.00" rx="12" fill="#F7F4EE" stroke="#4D7698" stroke-width="1.6"/>
+<text x="438.00" y="1126.00" class="count" text-anchor="middle" fill="#4D7698">3/3</text>
+<text x="82.00" y="1163.00" class="small">n = 3 matched seeds per direction and setting</text>
+<text x="82.00" y="1209.00" class="section">Mean directional margin gap</text>
+<text x="82.00" y="1234.00" class="small">RIGHT mean − LEFT mean; sign identifies the larger margin</text>
+<text x="82.00" y="1270.00" class="body">s = 1 baseline</text>
+<text x="238.00" y="1270.00" class="metric" fill="#23313B">-0.070 m</text>
+<text x="356.00" y="1270.00" class="small">LEFT larger</text>
+<text x="82.00" y="1304.00" class="body">s = 2 intervention</text>
+<text x="238.00" y="1304.00" class="metric" fill="#23313B">+0.165 m</text>
+<text x="356.00" y="1304.00" class="small">RIGHT larger</text>
+<text x="82.00" y="1340.00" class="small-emphasis">Absolute imbalance: 0.070 → 0.165 m</text>
+<text x="82.00" y="1369.00" class="story">Observed: favored direction reversed; total success 3/6 → 4/6.</text>
+<text x="530.00" y="978.00" class="section">Requested final margin by matched seed</text>
+<text x="1352.00" y="978.00" class="small" text-anchor="start">baseline → intervention</text>
+<rect x="672.00" y="1014.00" width="93.71" height="254.00" fill="#F6ECE9"/>
+<rect x="765.71" y="1014.00" width="562.29" height="254.00" fill="#EDF3EE"/>
+<line x1="765.71" y1="1014.00" x2="765.71" y2="1268.00" stroke="#23313B" stroke-width="2.0"/>
+<line x1="672.00" y1="1014.00" x2="672.00" y2="1268.00" stroke="#D8DDD9" stroke-width="1.0"/>
+<text x="672.00" y="1296.00" class="tick" text-anchor="middle">-0.10</text>
+<text x="765.71" y="1296.00" class="tick" text-anchor="middle">0</text>
+<line x1="859.43" y1="1014.00" x2="859.43" y2="1268.00" stroke="#D8DDD9" stroke-width="1.0"/>
+<text x="859.43" y="1296.00" class="tick" text-anchor="middle">+0.10</text>
+<line x1="953.14" y1="1014.00" x2="953.14" y2="1268.00" stroke="#D8DDD9" stroke-width="1.0"/>
+<text x="953.14" y="1296.00" class="tick" text-anchor="middle">+0.20</text>
+<line x1="1046.86" y1="1014.00" x2="1046.86" y2="1268.00" stroke="#D8DDD9" stroke-width="1.0"/>
+<text x="1046.86" y="1296.00" class="tick" text-anchor="middle">+0.30</text>
+<line x1="1140.57" y1="1014.00" x2="1140.57" y2="1268.00" stroke="#D8DDD9" stroke-width="1.0"/>
+<text x="1140.57" y="1296.00" class="tick" text-anchor="middle">+0.40</text>
+<line x1="1234.29" y1="1014.00" x2="1234.29" y2="1268.00" stroke="#D8DDD9" stroke-width="1.0"/>
+<text x="1234.29" y="1296.00" class="tick" text-anchor="middle">+0.50</text>
+<line x1="1328.00" y1="1014.00" x2="1328.00" y2="1268.00" stroke="#D8DDD9" stroke-width="1.0"/>
+<text x="1328.00" y="1296.00" class="tick" text-anchor="middle">+0.60</text>
+<text x="530.00" y="1035.00" class="relation" fill="#C87932">LEFT prompt</text>
+<text x="638.00" y="1035.00" class="small">mean +0.052 m after intervention</text>
+<text x="610.00" y="1065.00" class="seed" text-anchor="end">8300</text>
+<g role="img" aria-label="Seed 8300, left: baseline +0.113 metres, intervention -0.006 metres">
+<title>Seed 8300 LEFT: baseline +0.113 m; intervention -0.006 m</title>
+<line x1="872.01" y1="1057.00" x2="760.34" y2="1063.00" stroke="#65727B" stroke-width="2.0" stroke-opacity="0.65"/>
+<circle cx="872.01" cy="1057.00" r="7.00" fill="#C87932" stroke="#C87932" stroke-width="2.5"/>
+<polygon points="760.34,1055.00 768.34,1063.00 760.34,1071.00 752.34,1063.00" fill="#FFFDF9" stroke="#C87932" stroke-width="2.5"/>
+</g>
+<text x="1352.00" y="1065.00" class="value">+0.113 → -0.006 m</text>
+<text x="610.00" y="1095.00" class="seed" text-anchor="end">8301</text>
+<g role="img" aria-label="Seed 8301, left: baseline +0.082 metres, intervention +0.008 metres">
+<title>Seed 8301 LEFT: baseline +0.082 m; intervention +0.008 m</title>
+<line x1="842.60" y1="1087.00" x2="772.82" y2="1093.00" stroke="#65727B" stroke-width="2.0" stroke-opacity="0.65"/>
+<circle cx="842.60" cy="1087.00" r="7.00" fill="#FFFDF9" stroke="#C87932" stroke-width="2.5"/>
+<polygon points="772.82,1085.00 780.82,1093.00 772.82,1101.00 764.82,1093.00" fill="#FFFDF9" stroke="#C87932" stroke-width="2.5"/>
+</g>
+<text x="1352.00" y="1095.00" class="value">+0.082 → +0.008 m</text>
+<text x="610.00" y="1125.00" class="seed" text-anchor="end">8302</text>
+<g role="img" aria-label="Seed 8302, left: baseline +0.134 metres, intervention +0.153 metres">
+<title>Seed 8302 LEFT: baseline +0.134 m; intervention +0.153 m</title>
+<line x1="891.18" y1="1117.00" x2="909.45" y2="1123.00" stroke="#65727B" stroke-width="2.0" stroke-opacity="0.65"/>
+<circle cx="891.18" cy="1117.00" r="7.00" fill="#C87932" stroke="#C87932" stroke-width="2.5"/>
+<polygon points="909.45,1115.00 917.45,1123.00 909.45,1131.00 901.45,1123.00" fill="#C87932" stroke="#C87932" stroke-width="2.5"/>
+</g>
+<text x="1352.00" y="1125.00" class="value">+0.134 → +0.153 m</text>
+<text x="530.00" y="1169.00" class="relation" fill="#4D7698">RIGHT prompt</text>
+<text x="638.00" y="1169.00" class="small">mean +0.217 m after intervention</text>
+<text x="610.00" y="1199.00" class="seed" text-anchor="end">8300</text>
+<g role="img" aria-label="Seed 8300, right: baseline +0.138 metres, intervention +0.120 metres">
+<title>Seed 8300 RIGHT: baseline +0.138 m; intervention +0.120 m</title>
+<line x1="894.92" y1="1191.00" x2="878.06" y2="1197.00" stroke="#65727B" stroke-width="2.0" stroke-opacity="0.65"/>
+<circle cx="894.92" cy="1191.00" r="7.00" fill="#4D7698" stroke="#4D7698" stroke-width="2.5"/>
+<polygon points="878.06,1189.00 886.06,1197.00 878.06,1205.00 870.06,1197.00" fill="#4D7698" stroke="#4D7698" stroke-width="2.5"/>
+</g>
+<text x="1352.00" y="1199.00" class="value">+0.138 → +0.120 m</text>
+<text x="610.00" y="1229.00" class="seed" text-anchor="end">8301</text>
+<g role="img" aria-label="Seed 8301, right: baseline -0.026 metres, intervention +0.311 metres">
+<title>Seed 8301 RIGHT: baseline -0.026 m; intervention +0.311 m</title>
+<line x1="741.45" y1="1221.00" x2="1056.80" y2="1227.00" stroke="#65727B" stroke-width="2.0" stroke-opacity="0.65"/>
+<circle cx="741.45" cy="1221.00" r="7.00" fill="#FFFDF9" stroke="#4D7698" stroke-width="2.5"/>
+<polygon points="1056.80,1219.00 1064.80,1227.00 1056.80,1235.00 1048.80,1227.00" fill="#4D7698" stroke="#4D7698" stroke-width="2.5"/>
+</g>
+<text x="1352.00" y="1229.00" class="value">-0.026 → +0.311 m</text>
+<text x="610.00" y="1259.00" class="seed" text-anchor="end">8302</text>
+<g role="img" aria-label="Seed 8302, right: baseline +0.008 metres, intervention +0.220 metres">
+<title>Seed 8302 RIGHT: baseline +0.008 m; intervention +0.220 m</title>
+<line x1="773.48" y1="1251.00" x2="971.89" y2="1257.00" stroke="#65727B" stroke-width="2.0" stroke-opacity="0.65"/>
+<circle cx="773.48" cy="1251.00" r="7.00" fill="#FFFDF9" stroke="#4D7698" stroke-width="2.5"/>
+<polygon points="971.89,1249.00 979.89,1257.00 971.89,1265.00 963.89,1257.00" fill="#4D7698" stroke="#4D7698" stroke-width="2.5"/>
+</g>
+<text x="1352.00" y="1259.00" class="value">+0.008 → +0.220 m</text>
+<text x="1000.00" y="1325.00" class="axis" text-anchor="middle">Requested endpoint margin (m) · positive is farther into the requested side</text>
+<text x="672.00" y="1348.00" class="zone" text-anchor="start">opposite / short of requested side</text>
+<text x="1328.00" y="1348.00" class="zone" text-anchor="end">farther into requested side</text>
+<line x1="64.00" y1="1406.00" x2="1536.00" y2="1406.00" stroke="#D8DDD9" stroke-width="1.4"/>
+<text x="64.00" y="1436.00" class="footer-strong">How to read the margin</text>
+<text x="240.00" y="1436.00" class="footer">LEFT uses −final lateral coordinate; RIGHT uses +final lateral coordinate. Positive means the endpoint lies on the requested side.</text>
+<text x="64.00" y="1460.00" class="footer-strong">Success remains stricter</text>
+<text x="240.00" y="1460.00" class="footer">A positive endpoint margin is not automatically a success; the full task also requires the official release-inside-45°-cone predicate.</text>
+<text x="64.00" y="1484.00" class="footer-strong">Inference boundary</text>
+<text x="240.00" y="1484.00" class="footer">Post-result descriptive pilot: three matched seeds per direction and setting. Raw counts and paired effects are shown without CI, p-value, or powered significance claim.</text>
+<text x="64.00" y="1508.00" class="footer-strong">DreamZero naming</text>
+<text x="240.00" y="1508.00" class="footer">s=2 is derived CFG-style negative-branch action guidance using the released visual-quality negative prompt—not an official action-CFG feature. DROID only; no RoboTwin pooling.</text>
+</g>
+</svg>

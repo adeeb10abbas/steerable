@@ -1,6 +1,6 @@
 {
   "schema_version": "vla-wam-shared-v2-continuation-v1",
-  "updated_at_utc": "2026-08-04T20:02:46Z",
+  "updated_at_utc": "2026-08-04T20:09:02Z",
   "evidence_head_before_handoff": "1155ae3f5e3c5db83d9b50a92d8519027bc1d61f",
   "active_branch": "codex/wam-language-steerability",
   "study_status": "pi0_fast_release_gate_failed_pi05_current_stack_complete_cosmos3_nano_current_stack_complete_cosmos3_edge_base_interface_passed_behavior_blocked_cosmos3_super_image_only_interface_passed_no_behavior_lawam_withdrawn",
@@ -267,10 +267,12 @@
     "denominator_policy": "All six valid behavioral cells are in the DreamZero DROID denominator, including three valid failures. Eleven setup-invalid attempts remain excluded. DROID results are not pooled with RoboTwin."
   },
   "cfg_ablation_v2a015": {
-    "status": "complete_twelve_valid_behavioral_cells_both_arms",
+    "status": "complete_compiled_evidence_ready_for_plots_media",
     "amendment_id": "V2-A015",
     "amendment": "artifacts/vla_wam_shared_v2/pilot/post_result_cfg_ablation_v2a015_amendment.json",
     "preflight": "artifacts/vla_wam_shared_v2/pilot/expansion/cfg_ablation_v2a015_preflight.json",
+    "preflight_sha256": "472c09568713fc3e08dbb86d3c39a8da6f328b82b06ff5aadef4e02f1892dd4d",
+    "compiled_at_git": "2f177333545e39e35d586e577a9a4496e4e97f24",
     "authorized_behavioral_episode_count": 12,
     "authorized_cells_released": 12,
     "authorized_cells_completed": 12,
@@ -349,6 +351,11 @@
           "prompts": {
             "left": "Put the Rubik's cube to the left of the bowl.",
             "right": "Put the Rubik's cube to the right of the bowl."
+          },
+          "compiled_result": {
+            "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_v2a015_no_cfg_g1_result.json",
+            "sha256": "8796f4ab9ea9490ee5b78678bc689d6fd13f27a9551006f8b5d346e202d0cc5c",
+            "compiled_at_git": "2f177333545e39e35d586e577a9a4496e4e97f24"
           },
           "behavioral_model_action_request_count": 64,
           "executed_action_count": 1892,
@@ -431,7 +438,8 @@
           },
           "compiled_result": {
             "path": "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_v2a015_action_cfg_s2_result.json",
-            "sha256": "cff7f3a928921be068c591abf921c210d86afb49c0880e2c108262774590043b",
+            "sha256": "273b7191cde61b51bf90b2eda04b1910e214f48d34f2347f2a81325069c32444",
+            "compiled_at_git": "2f177333545e39e35d586e577a9a4496e4e97f24",
             "requested_margin_definition": "-final_lateral_display_m for LEFT; +final_lateral_display_m for RIGHT",
             "by_direction": {
               "left": {
@@ -490,6 +498,68 @@
           "claim_boundary": "The one-success total difference is descriptive. The clearer observed change is directional redistribution: LEFT decreased by one success and RIGHT increased by two; this six-cell post-result pilot does not establish a powered improvement."
         }
       }
+    },
+    "final_compiled_comparison": {
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cfg_ablation_v2a015_comparison.json",
+      "sha256": "0e6daadd9391b7ad38ee316371df0235e34268cc4c32597c6597578ac9f9ed1e",
+      "compiled_at_git": "2f177333545e39e35d586e577a9a4496e4e97f24",
+      "scientific_figure": {
+        "svg_path": "artifacts/vla_wam_shared_v2/figures/v2a015_cfg_guidance_ablation.svg",
+        "svg_sha256": "2c50c754e48e11a945de8bd3e17c47a600b8b1d7b460a78d91fb993ec81c4bc7",
+        "png_path": "artifacts/vla_wam_shared_v2/figures/v2a015_cfg_guidance_ablation.png",
+        "png_sha256": "5a322aa491e6935d3a6db1b5f9f63a56770bc16e728d66717a62e040e1f62349",
+        "content": "Exact prompt text, raw success counts, and baseline-to-intervention requested-margin trajectories for every matched seed."
+      },
+      "prompts": {
+        "left": "Put the Rubik's cube to the left of the bowl.",
+        "right": "Put the Rubik's cube to the right of the bowl."
+      },
+      "cosmos3_nano_g3_to_g1": {
+        "success": {
+          "baseline_total": "6/6",
+          "intervention_total": "4/6",
+          "left": "3/3 to 1/3",
+          "right": "3/3 to 3/3",
+          "paired_transitions": "two LEFT success-to-failure; four unchanged success"
+        },
+        "requested_margin_mean_m": {
+          "left": "0.1032219877 to 0.0361488834",
+          "right": "0.4092174421 to 0.2158967126",
+          "all_cell_paired_intervention_minus_baseline": -0.13019691687077284
+        },
+        "direction_balance": {
+          "right_minus_left_margin_gap_m": "0.3059954544 to 0.1797478292",
+          "weaker_side_mean_margin_m": "0.1032219877 to 0.0361488834",
+          "interpretation": "The endpoint gap narrowed only because RIGHT margin fell more; the weaker LEFT side also worsened, so the smaller gap is not improved success balance."
+        },
+        "mean_cube_path_length_3d_m": {
+          "left": "0.2527320148 to 0.4960443581",
+          "right": "1.0954205205 to 0.4393935707"
+        },
+        "mean_joint_action_total_variation_l2": {
+          "left": "5.2701883513 to 10.0412547655",
+          "right": "10.4875759159 to 6.6958667033"
+        },
+        "interpretation": "Removing joint action/video CFG produced mixed, direction-specific trajectory-quality changes rather than uniformly smoother behavior, alongside reduced LEFT robustness."
+      },
+      "dreamzero_s1_to_s2": {
+        "success": {
+          "baseline_total": "3/6",
+          "intervention_total": "4/6",
+          "left": "2/3 to 1/3",
+          "right": "1/3 to 3/3",
+          "paired_transitions": "two RIGHT failure-to-success; one LEFT success-to-failure; one unchanged failure; two unchanged success"
+        },
+        "requested_margin_mean_m": {
+          "left": "0.1097840965 to 0.0517424569",
+          "right": "0.0400888349 to 0.2168312948",
+          "all_cell_paired_intervention_minus_baseline": 0.05935041016588608
+        },
+        "signed_right_minus_left_bias_m": "-0.0696952616 to 0.1650888380",
+        "guidance_caveat": "s=2 is derived CFG-style negative-branch action guidance using DreamZero's fixed visual-quality negative prompt, not an official DreamZero action-CFG feature.",
+        "interpretation": "Success and margin shifted strongly toward RIGHT; the one-success net increase is descriptive redistribution in a post-result n=6 comparison, not a powered or general improvement claim."
+      },
+      "inference_boundary": "No additional inference is authorized. These paired effects are descriptive; neither intervention supports a powered, general, or per-failure causal claim."
     },
     "planned_runtime": {
       "policy_pod": "lerobot-b200-4gpu-1-ali",
@@ -568,10 +638,11 @@
     "setup_invalid_attempt_record": "artifacts/vla_wam_shared_v2/pilot/expansion/cfg_ablation_v2a015_preflight.json",
     "behavioral_denominator_policy": "All nine fixed-observation requests and all sixteen setup-invalid attempts are excluded from behavioral denominators. The six completed DreamZero s=2 episodes and six completed Cosmos g=1 episodes each form their own DROID denominator; valid failures remain included and the two arms are never pooled.",
     "next_steps": [
-      "Compile and hash-bind the completed Cosmos3 Nano g=1 raw behavioral evidence before reporting trajectory-quality metrics.",
-      "Build paired comparison media for the completed guidance arms without rerunning any V2-A015 cell."
+      "Render the final V2-A015 plots from the hash-bound comparison artifact.",
+      "Build and verify paired actual-versus-predicted media for both completed guidance arms.",
+      "Run the final protocol validator and git diff --check; no further V2-A015 inference or rerun is authorized."
     ],
-    "claim_boundary": "V2-A015 is complete as an exploratory post-result ablation with separate six-cell DROID denominators. DreamZero s=2 and Cosmos g=1 each produced LEFT 1/3 and RIGHT 3/3; nine diagnostic requests and sixteen setup-invalid attempts remain outside every behavioral denominator. Cosmos g=1 lost two LEFT successes and no RIGHT successes relative to its preserved g=3 baseline, while DreamZero s=2 redistributed success toward RIGHT relative to s=1-equivalent. Both contrasts are descriptive, not powered/general or causal claims about individual failures, and preserved baselines are not rerun or overwritten."
+    "claim_boundary": "V2-A015 is complete and compiled as an exploratory post-result ablation with separate six-cell DROID denominators. Cosmos g=1 lost two LEFT successes and no RIGHT successes relative to g=3; its smaller endpoint gap reflects a larger RIGHT-margin drop while the weaker LEFT margin also worsened. DreamZero s=2 redistributed success and signed margin bias toward RIGHT relative to s=1-equivalent; s=2 remains a derived negative-branch intervention, not official action CFG. All contrasts are descriptive, not powered/general or causal claims about individual failures, and no inference remains."
   },
   "completed_direct_gates": [
     {

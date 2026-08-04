@@ -1,0 +1,2402 @@
+{
+  "amendment_id": "V2-A015",
+  "arena": "droid_robolab",
+  "comparisons": {
+    "cosmos3_nano": {
+      "baseline_configuration_summary": {
+        "aligned_endpoint_pair_count": 3,
+        "by_direction": {
+          "left": {
+            "entered_requested_region": 3,
+            "episodes": 3,
+            "mean_cube_path_length_3d_m": 0.2527320148287438,
+            "mean_joint_action_total_variation_l2": 5.270188351255409,
+            "prompt": "Put the Rubik's cube to the left of the bowl.",
+            "requested_margin_m": {
+              "maximum": 0.12430895864963531,
+              "mean": 0.10322198768456776,
+              "median": 0.11747083067893982,
+              "minimum": 0.06788617372512817,
+              "values_by_seed": [
+                {
+                  "environment_seed": 8300,
+                  "value": 0.06788617372512817
+                },
+                {
+                  "environment_seed": 8301,
+                  "value": 0.12430895864963531
+                },
+                {
+                  "environment_seed": 8302,
+                  "value": 0.11747083067893982
+                }
+              ]
+            },
+            "successes": 3,
+            "verified_pickups": 3
+          },
+          "right": {
+            "entered_requested_region": 3,
+            "episodes": 3,
+            "mean_cube_path_length_3d_m": 1.0954205204617808,
+            "mean_joint_action_total_variation_l2": 10.48757591585871,
+            "prompt": "Put the Rubik's cube to the right of the bowl.",
+            "requested_margin_m": {
+              "maximum": 0.4882819652557373,
+              "mean": 0.4092174420754115,
+              "median": 0.4012126922607422,
+              "minimum": 0.33815766870975494,
+              "values_by_seed": [
+                {
+                  "environment_seed": 8300,
+                  "value": 0.33815766870975494
+                },
+                {
+                  "environment_seed": 8301,
+                  "value": 0.4012126922607422
+                },
+                {
+                  "environment_seed": 8302,
+                  "value": 0.4882819652557373
+                }
+              ]
+            },
+            "successes": 3,
+            "verified_pickups": 3
+          }
+        },
+        "distinct_executed_action_pair_count": 3,
+        "failure_stage_counts": {
+          "success": 6
+        },
+        "mean_margin_balance": {
+          "absolute_direction_imbalance_m": 0.30599545439084375,
+          "right_minus_left_m": 0.30599545439084375,
+          "weaker_direction_mean_margin_m": 0.10322198768456776
+        },
+        "requested_success_count": 6,
+        "success_absolute_direction_imbalance_count": 0,
+        "success_direction_gap_right_minus_left_count": 0,
+        "success_weaker_direction_count": 3,
+        "valid_episode_count": 6,
+        "valid_failure_count": 0
+      },
+      "baseline_label": "g=3 baseline",
+      "cells": [
+        {
+          "cell_id": "seed8300_left",
+          "completion_actions": {
+            "comparison_status": "not_compared_because_at_least_one_cell_is_right_censored",
+            "g=1 intervention": null,
+            "g=3 baseline": 127,
+            "intervention_minus_baseline_when_both_observed": null
+          },
+          "environment_seed": 8300,
+          "executed_action_quality": {
+            "gripper_switch_count": {
+              "g=1 intervention": 2,
+              "g=3 baseline": 2,
+              "intervention_minus_baseline": 0
+            },
+            "joint_action_mean_l2_per_transition": {
+              "g=1 intervention": 0.023194708437852256,
+              "g=3 baseline": 0.03878239569277514,
+              "intervention_minus_baseline": -0.015587687254922884
+            },
+            "joint_action_total_variation_l2": {
+              "g=1 intervention": 10.414424088595663,
+              "g=3 baseline": 4.886581857289667,
+              "intervention_minus_baseline": 5.527842231305995
+            }
+          },
+          "physical_initial_state_sha256": "8b000f4d2c7c2296bf332984c0b83b47561d796790c32419480665e684635fb6",
+          "prompt": "Put the Rubik's cube to the left of the bowl.",
+          "requested_relation": "left",
+          "requested_signed_final_margin_m": {
+            "g=1 intervention": -0.016103550791740417,
+            "g=3 baseline": 0.06788617372512817,
+            "intervention_minus_baseline": -0.08398972451686859
+          },
+          "success": {
+            "g=1 intervention": false,
+            "g=3 baseline": true,
+            "numeric_delta": -1,
+            "transition": "regressed_success_to_failure"
+          },
+          "trajectory_quality": {
+            "cube_excess_path_ratio": {
+              "g=1 intervention": 2.738073420411689,
+              "g=3 baseline": 1.593050457759352,
+              "intervention_minus_baseline": 1.145022962652337
+            },
+            "cube_max_excursion_from_initial_3d_m": {
+              "g=1 intervention": 0.05085883749334569,
+              "g=3 baseline": 0.14144545113879278,
+              "intervention_minus_baseline": -0.0905866136454471
+            },
+            "cube_max_opposite_lateral_excursion_from_initial_m": {
+              "g=1 intervention": 0.013431072235107422,
+              "g=3 baseline": 1.6026198863983154e-05,
+              "intervention_minus_baseline": 0.013415046036243439
+            },
+            "cube_max_requested_lateral_excursion_from_initial_m": {
+              "g=1 intervention": 0.0021351948380470276,
+              "g=3 baseline": 0.07321105152368546,
+              "intervention_minus_baseline": -0.07107585668563843
+            },
+            "cube_net_displacement_3d_m": {
+              "g=1 intervention": 0.05085883749334569,
+              "g=3 baseline": 0.13703210946684188,
+              "intervention_minus_baseline": -0.0861732719734962
+            },
+            "cube_path_length_3d_m": {
+              "g=1 intervention": 0.13925523113356728,
+              "g=3 baseline": 0.2182990647138821,
+              "intervention_minus_baseline": -0.07904383358031483
+            }
+          }
+        },
+        {
+          "cell_id": "seed8300_right",
+          "completion_actions": {
+            "comparison_status": "both_success_events_observed",
+            "g=1 intervention": 253,
+            "g=3 baseline": 332,
+            "intervention_minus_baseline_when_both_observed": -79
+          },
+          "environment_seed": 8300,
+          "executed_action_quality": {
+            "gripper_switch_count": {
+              "g=1 intervention": 5,
+              "g=3 baseline": 4,
+              "intervention_minus_baseline": 1
+            },
+            "joint_action_mean_l2_per_transition": {
+              "g=1 intervention": 0.03143784729541083,
+              "g=3 baseline": 0.047116100564815175,
+              "intervention_minus_baseline": -0.015678253269404342
+            },
+            "joint_action_total_variation_l2": {
+              "g=1 intervention": 7.9223375184435305,
+              "g=3 baseline": 15.595429286953824,
+              "intervention_minus_baseline": -7.673091768510293
+            }
+          },
+          "physical_initial_state_sha256": "8b000f4d2c7c2296bf332984c0b83b47561d796790c32419480665e684635fb6",
+          "prompt": "Put the Rubik's cube to the right of the bowl.",
+          "requested_relation": "right",
+          "requested_signed_final_margin_m": {
+            "g=1 intervention": 0.3214142173528671,
+            "g=3 baseline": 0.33815766870975494,
+            "intervention_minus_baseline": -0.016743451356887817
+          },
+          "success": {
+            "g=1 intervention": true,
+            "g=3 baseline": true,
+            "numeric_delta": 0,
+            "transition": "unchanged_success"
+          },
+          "trajectory_quality": {
+            "cube_excess_path_ratio": {
+              "g=1 intervention": 1.8253613303653635,
+              "g=3 baseline": 4.92574621427872,
+              "intervention_minus_baseline": -3.1003848839133568
+            },
+            "cube_max_excursion_from_initial_3d_m": {
+              "g=1 intervention": 0.3501201303583779,
+              "g=3 baseline": 0.4762388842818727,
+              "intervention_minus_baseline": -0.1261187539234948
+            },
+            "cube_max_opposite_lateral_excursion_from_initial_m": {
+              "g=1 intervention": 0.0009512081742286682,
+              "g=3 baseline": 0.023795507848262787,
+              "intervention_minus_baseline": -0.02284429967403412
+            },
+            "cube_max_requested_lateral_excursion_from_initial_m": {
+              "g=1 intervention": 0.31880293041467667,
+              "g=3 baseline": 0.4555235579609871,
+              "intervention_minus_baseline": -0.13672062754631042
+            },
+            "cube_net_displacement_3d_m": {
+              "g=1 intervention": 0.3501201303583779,
+              "g=3 baseline": 0.3442320549483667,
+              "intervention_minus_baseline": 0.00588807541001124
+            },
+            "cube_path_length_3d_m": {
+              "g=1 intervention": 0.6390957469386632,
+              "g=3 baseline": 1.6955997414953017,
+              "intervention_minus_baseline": -1.0565039945566386
+            }
+          }
+        },
+        {
+          "cell_id": "seed8301_left",
+          "completion_actions": {
+            "comparison_status": "both_success_events_observed",
+            "g=1 intervention": 353,
+            "g=3 baseline": 129,
+            "intervention_minus_baseline_when_both_observed": 224
+          },
+          "environment_seed": 8301,
+          "executed_action_quality": {
+            "gripper_switch_count": {
+              "g=1 intervention": 5,
+              "g=3 baseline": 1,
+              "intervention_minus_baseline": 4
+            },
+            "joint_action_mean_l2_per_transition": {
+              "g=1 intervention": 0.025351310868696176,
+              "g=3 baseline": 0.04186110570604361,
+              "intervention_minus_baseline": -0.016509794837347432
+            },
+            "joint_action_total_variation_l2": {
+              "g=1 intervention": 8.923661425781054,
+              "g=3 baseline": 5.358221530373582,
+              "intervention_minus_baseline": 3.565439895407472
+            }
+          },
+          "physical_initial_state_sha256": "8b000f4d2c7c2296bf332984c0b83b47561d796790c32419480665e684635fb6",
+          "prompt": "Put the Rubik's cube to the left of the bowl.",
+          "requested_relation": "left",
+          "requested_signed_final_margin_m": {
+            "g=1 intervention": 0.1607627496123314,
+            "g=3 baseline": 0.12430895864963531,
+            "intervention_minus_baseline": 0.036453790962696075
+          },
+          "success": {
+            "g=1 intervention": true,
+            "g=3 baseline": true,
+            "numeric_delta": 0,
+            "transition": "unchanged_success"
+          },
+          "trajectory_quality": {
+            "cube_excess_path_ratio": {
+              "g=1 intervention": 2.7756734342790166,
+              "g=3 baseline": 1.1891789109258797,
+              "intervention_minus_baseline": 1.586494523353137
+            },
+            "cube_max_excursion_from_initial_3d_m": {
+              "g=1 intervention": 0.16688630654019868,
+              "g=3 baseline": 0.17258344688109428,
+              "intervention_minus_baseline": -0.005697140340895607
+            },
+            "cube_max_opposite_lateral_excursion_from_initial_m": {
+              "g=1 intervention": 0.00011452287435531616,
+              "g=3 baseline": 0.00016148388385772705,
+              "intervention_minus_baseline": -4.696100950241089e-05
+            },
+            "cube_max_requested_lateral_excursion_from_initial_m": {
+              "g=1 intervention": 0.16608762741088867,
+              "g=3 baseline": 0.1296338364481926,
+              "intervention_minus_baseline": 0.036453790962696075
+            },
+            "cube_net_displacement_3d_m": {
+              "g=1 intervention": 0.16688630654019868,
+              "g=3 baseline": 0.17258344688109428,
+              "intervention_minus_baseline": -0.005697140340895607
+            },
+            "cube_path_length_3d_m": {
+              "g=1 intervention": 0.46322188760857397,
+              "g=3 baseline": 0.2052325954058941,
+              "intervention_minus_baseline": 0.25798929220267985
+            }
+          }
+        },
+        {
+          "cell_id": "seed8301_right",
+          "completion_actions": {
+            "comparison_status": "both_success_events_observed",
+            "g=1 intervention": 129,
+            "g=3 baseline": 158,
+            "intervention_minus_baseline_when_both_observed": -29
+          },
+          "environment_seed": 8301,
+          "executed_action_quality": {
+            "gripper_switch_count": {
+              "g=1 intervention": 2,
+              "g=3 baseline": 2,
+              "intervention_minus_baseline": 0
+            },
+            "joint_action_mean_l2_per_transition": {
+              "g=1 intervention": 0.03126773314686831,
+              "g=3 baseline": 0.04504854613125121,
+              "intervention_minus_baseline": -0.013780812984382905
+            },
+            "joint_action_total_variation_l2": {
+              "g=1 intervention": 4.002269842799143,
+              "g=3 baseline": 7.07262174260644,
+              "intervention_minus_baseline": -3.0703518998072967
+            }
+          },
+          "physical_initial_state_sha256": "8b000f4d2c7c2296bf332984c0b83b47561d796790c32419480665e684635fb6",
+          "prompt": "Put the Rubik's cube to the right of the bowl.",
+          "requested_relation": "right",
+          "requested_signed_final_margin_m": {
+            "g=1 intervention": 0.16982027888298035,
+            "g=3 baseline": 0.4012126922607422,
+            "intervention_minus_baseline": -0.23139241337776184
+          },
+          "success": {
+            "g=1 intervention": true,
+            "g=3 baseline": true,
+            "numeric_delta": 0,
+            "transition": "unchanged_success"
+          },
+          "trajectory_quality": {
+            "cube_excess_path_ratio": {
+              "g=1 intervention": 1.5602667717621561,
+              "g=3 baseline": 1.7668780837400169,
+              "intervention_minus_baseline": -0.20661131197786076
+            },
+            "cube_max_excursion_from_initial_3d_m": {
+              "g=1 intervention": 0.2258218104448453,
+              "g=3 baseline": 0.44700745954868965,
+              "intervention_minus_baseline": -0.22118564910384433
+            },
+            "cube_max_opposite_lateral_excursion_from_initial_m": {
+              "g=1 intervention": 0.001018621027469635,
+              "g=3 baseline": 0.003815166652202606,
+              "intervention_minus_baseline": -0.002796545624732971
+            },
+            "cube_max_requested_lateral_excursion_from_initial_m": {
+              "g=1 intervention": 0.16449540108442307,
+              "g=3 baseline": 0.40204427391290665,
+              "intervention_minus_baseline": -0.23754887282848358
+            },
+            "cube_net_displacement_3d_m": {
+              "g=1 intervention": 0.21947490535776804,
+              "g=3 baseline": 0.43270193547465324,
+              "intervention_minus_baseline": -0.2132270301168852
+            },
+            "cube_path_length_3d_m": {
+              "g=1 intervention": 0.3424394020653695,
+              "g=3 baseline": 0.7645315665820518,
+              "intervention_minus_baseline": -0.4220921645166823
+            }
+          }
+        },
+        {
+          "cell_id": "seed8302_left",
+          "completion_actions": {
+            "comparison_status": "not_compared_because_at_least_one_cell_is_right_censored",
+            "g=1 intervention": null,
+            "g=3 baseline": 129,
+            "intervention_minus_baseline_when_both_observed": null
+          },
+          "environment_seed": 8302,
+          "executed_action_quality": {
+            "gripper_switch_count": {
+              "g=1 intervention": 5,
+              "g=3 baseline": 2,
+              "intervention_minus_baseline": 3
+            },
+            "joint_action_mean_l2_per_transition": {
+              "g=1 intervention": 0.02402155630735876,
+              "g=3 baseline": 0.043482513016429504,
+              "intervention_minus_baseline": -0.019460956709070745
+            },
+            "joint_action_total_variation_l2": {
+              "g=1 intervention": 10.785678782004084,
+              "g=3 baseline": 5.5657616661029765,
+              "intervention_minus_baseline": 5.219917115901107
+            }
+          },
+          "physical_initial_state_sha256": "8b000f4d2c7c2296bf332984c0b83b47561d796790c32419480665e684635fb6",
+          "prompt": "Put the Rubik's cube to the left of the bowl.",
+          "requested_relation": "left",
+          "requested_signed_final_margin_m": {
+            "g=1 intervention": -0.03621254861354828,
+            "g=3 baseline": 0.11747083067893982,
+            "intervention_minus_baseline": -0.1536833792924881
+          },
+          "success": {
+            "g=1 intervention": false,
+            "g=3 baseline": true,
+            "numeric_delta": -1,
+            "transition": "regressed_success_to_failure"
+          },
+          "trajectory_quality": {
+            "cube_excess_path_ratio": {
+              "g=1 intervention": 19.359415282885656,
+              "g=3 baseline": 1.6529912325468292,
+              "intervention_minus_baseline": 17.70642405033883
+            },
+            "cube_max_excursion_from_initial_3d_m": {
+              "g=1 intervention": 0.1108192027470391,
+              "g=3 baseline": 0.2067630613554299,
+              "intervention_minus_baseline": -0.0959438586083908
+            },
+            "cube_max_opposite_lateral_excursion_from_initial_m": {
+              "g=1 intervention": 0.0564073771238327,
+              "g=3 baseline": 0.0023519545793533325,
+              "intervention_minus_baseline": 0.05405542254447937
+            },
+            "cube_max_requested_lateral_excursion_from_initial_m": {
+              "g=1 intervention": 0.024240560829639435,
+              "g=3 baseline": 0.1227957084774971,
+              "intervention_minus_baseline": -0.09855514764785767
+            },
+            "cube_net_displacement_3d_m": {
+              "g=1 intervention": 0.045748073617576566,
+              "g=3 baseline": 0.2024598665601054,
+              "intervention_minus_baseline": -0.15671179294252882
+            },
+            "cube_path_length_3d_m": {
+              "g=1 intervention": 0.8856559555546899,
+              "g=3 baseline": 0.3346643843664552,
+              "intervention_minus_baseline": 0.5509915711882347
+            }
+          }
+        },
+        {
+          "cell_id": "seed8302_right",
+          "completion_actions": {
+            "comparison_status": "both_success_events_observed",
+            "g=1 intervention": 257,
+            "g=3 baseline": 215,
+            "intervention_minus_baseline_when_both_observed": 42
+          },
+          "environment_seed": 8302,
+          "executed_action_quality": {
+            "gripper_switch_count": {
+              "g=1 intervention": 6,
+              "g=3 baseline": 2,
+              "intervention_minus_baseline": 4
+            },
+            "joint_action_mean_l2_per_transition": {
+              "g=1 intervention": 0.031886690424436245,
+              "g=3 baseline": 0.041096620177644226,
+              "intervention_minus_baseline": -0.00920992975320798
+            },
+            "joint_action_total_variation_l2": {
+              "g=1 intervention": 8.162992748655679,
+              "g=3 baseline": 8.794676718015864,
+              "intervention_minus_baseline": -0.6316839693601857
+            }
+          },
+          "physical_initial_state_sha256": "8b000f4d2c7c2296bf332984c0b83b47561d796790c32419480665e684635fb6",
+          "prompt": "Put the Rubik's cube to the right of the bowl.",
+          "requested_relation": "right",
+          "requested_signed_final_margin_m": {
+            "g=1 intervention": 0.15645564161241055,
+            "g=3 baseline": 0.4882819652557373,
+            "intervention_minus_baseline": -0.33182632364332676
+          },
+          "success": {
+            "g=1 intervention": true,
+            "g=3 baseline": true,
+            "numeric_delta": 0,
+            "transition": "unchanged_success"
+          },
+          "trajectory_quality": {
+            "cube_excess_path_ratio": {
+              "g=1 intervention": 2.0032026325358516,
+              "g=3 baseline": 1.6777047857654883,
+              "intervention_minus_baseline": 0.3254978467703633
+            },
+            "cube_max_excursion_from_initial_3d_m": {
+              "g=1 intervention": 0.16805367445405545,
+              "g=3 baseline": 0.5212346759732169,
+              "intervention_minus_baseline": -0.3531810015191615
+            },
+            "cube_max_opposite_lateral_excursion_from_initial_m": {
+              "g=1 intervention": 0.003162108361721039,
+              "g=3 baseline": 0.0051939114928245544,
+              "intervention_minus_baseline": -0.0020318031311035156
+            },
+            "cube_max_requested_lateral_excursion_from_initial_m": {
+              "g=1 intervention": 0.15113076381385326,
+              "g=3 baseline": 0.5077677294611931,
+              "intervention_minus_baseline": -0.3566369656473398
+            },
+            "cube_net_displacement_3d_m": {
+              "g=1 intervention": 0.16805367445405545,
+              "g=3 baseline": 0.4924169379006987,
+              "intervention_minus_baseline": -0.32436326344664324
+            },
+            "cube_path_length_3d_m": {
+              "g=1 intervention": 0.33664556307368687,
+              "g=3 baseline": 0.8261302533079894,
+              "intervention_minus_baseline": -0.4894846902343025
+            }
+          }
+        }
+      ],
+      "exact_prompts": {
+        "left": "Put the Rubik's cube to the left of the bowl.",
+        "right": "Put the Rubik's cube to the right of the bowl."
+      },
+      "intervention_configuration_summary": {
+        "aligned_endpoint_pair_count": 3,
+        "by_direction": {
+          "left": {
+            "entered_requested_region": 1,
+            "episodes": 3,
+            "mean_cube_path_length_3d_m": 0.49604435809894376,
+            "mean_joint_action_total_variation_l2": 10.041254765460266,
+            "prompt": "Put the Rubik's cube to the left of the bowl.",
+            "requested_margin_m": {
+              "maximum": 0.1607627496123314,
+              "mean": 0.036148883402347565,
+              "median": -0.016103550791740417,
+              "minimum": -0.03621254861354828,
+              "values_by_seed": [
+                {
+                  "environment_seed": 8300,
+                  "value": -0.016103550791740417
+                },
+                {
+                  "environment_seed": 8301,
+                  "value": 0.1607627496123314
+                },
+                {
+                  "environment_seed": 8302,
+                  "value": -0.03621254861354828
+                }
+              ]
+            },
+            "successes": 1,
+            "verified_pickups": 2
+          },
+          "right": {
+            "entered_requested_region": 3,
+            "episodes": 3,
+            "mean_cube_path_length_3d_m": 0.4393935706925732,
+            "mean_joint_action_total_variation_l2": 6.695866703299451,
+            "prompt": "Put the Rubik's cube to the right of the bowl.",
+            "requested_margin_m": {
+              "maximum": 0.3214142173528671,
+              "mean": 0.215896712616086,
+              "median": 0.16982027888298035,
+              "minimum": 0.15645564161241055,
+              "values_by_seed": [
+                {
+                  "environment_seed": 8300,
+                  "value": 0.3214142173528671
+                },
+                {
+                  "environment_seed": 8301,
+                  "value": 0.16982027888298035
+                },
+                {
+                  "environment_seed": 8302,
+                  "value": 0.15645564161241055
+                }
+              ]
+            },
+            "successes": 3,
+            "verified_pickups": 3
+          }
+        },
+        "distinct_executed_action_pair_count": 3,
+        "failure_stage_counts": {
+          "object_moved_no_verified_pickup": 1,
+          "picked_never_entered_requested_region": 1,
+          "success": 4
+        },
+        "mean_margin_balance": {
+          "absolute_direction_imbalance_m": 0.17974782921373844,
+          "right_minus_left_m": 0.17974782921373844,
+          "weaker_direction_mean_margin_m": 0.036148883402347565
+        },
+        "requested_success_count": 4,
+        "success_absolute_direction_imbalance_count": 2,
+        "success_direction_gap_right_minus_left_count": 2,
+        "success_weaker_direction_count": 1,
+        "valid_episode_count": 6,
+        "valid_failure_count": 2
+      },
+      "intervention_label": "g=1 intervention",
+      "model": "Cosmos3 Nano Policy DROID",
+      "paired_effect_sizes_intervention_minus_baseline": {
+        "cube_excess_path_ratio": {
+          "comparable_cell_count": 6,
+          "maximum": 17.70642405033883,
+          "mean": 2.909407197870575,
+          "median": 0.7352604047113501,
+          "minimum": -3.1003848839133568,
+          "noncomparable_cell_count": 0,
+          "values_by_cell": [
+            {
+              "cell_id": "seed8300_left",
+              "value": 1.145022962652337
+            },
+            {
+              "cell_id": "seed8300_right",
+              "value": -3.1003848839133568
+            },
+            {
+              "cell_id": "seed8301_left",
+              "value": 1.586494523353137
+            },
+            {
+              "cell_id": "seed8301_right",
+              "value": -0.20661131197786076
+            },
+            {
+              "cell_id": "seed8302_left",
+              "value": 17.70642405033883
+            },
+            {
+              "cell_id": "seed8302_right",
+              "value": 0.3254978467703633
+            }
+          ]
+        },
+        "cube_max_excursion_from_initial_3d_m": {
+          "comparable_cell_count": 6,
+          "maximum": -0.005697140340895607,
+          "mean": -0.14878550285687234,
+          "median": -0.1110313062659428,
+          "minimum": -0.3531810015191615,
+          "noncomparable_cell_count": 0,
+          "values_by_cell": [
+            {
+              "cell_id": "seed8300_left",
+              "value": -0.0905866136454471
+            },
+            {
+              "cell_id": "seed8300_right",
+              "value": -0.1261187539234948
+            },
+            {
+              "cell_id": "seed8301_left",
+              "value": -0.005697140340895607
+            },
+            {
+              "cell_id": "seed8301_right",
+              "value": -0.22118564910384433
+            },
+            {
+              "cell_id": "seed8302_left",
+              "value": -0.0959438586083908
+            },
+            {
+              "cell_id": "seed8302_right",
+              "value": -0.3531810015191615
+            }
+          ]
+        },
+        "cube_max_opposite_lateral_excursion_from_initial_m": {
+          "comparable_cell_count": 6,
+          "maximum": 0.05405542254447937,
+          "mean": 0.006625143190224965,
+          "median": -0.0010393820703029633,
+          "minimum": -0.02284429967403412,
+          "noncomparable_cell_count": 0,
+          "values_by_cell": [
+            {
+              "cell_id": "seed8300_left",
+              "value": 0.013415046036243439
+            },
+            {
+              "cell_id": "seed8300_right",
+              "value": -0.02284429967403412
+            },
+            {
+              "cell_id": "seed8301_left",
+              "value": -4.696100950241089e-05
+            },
+            {
+              "cell_id": "seed8301_right",
+              "value": -0.002796545624732971
+            },
+            {
+              "cell_id": "seed8302_left",
+              "value": 0.05405542254447937
+            },
+            {
+              "cell_id": "seed8302_right",
+              "value": -0.0020318031311035156
+            }
+          ]
+        },
+        "cube_max_requested_lateral_excursion_from_initial_m": {
+          "comparable_cell_count": 6,
+          "maximum": 0.036453790962696075,
+          "mean": -0.14401394656548897,
+          "median": -0.11763788759708405,
+          "minimum": -0.3566369656473398,
+          "noncomparable_cell_count": 0,
+          "values_by_cell": [
+            {
+              "cell_id": "seed8300_left",
+              "value": -0.07107585668563843
+            },
+            {
+              "cell_id": "seed8300_right",
+              "value": -0.13672062754631042
+            },
+            {
+              "cell_id": "seed8301_left",
+              "value": 0.036453790962696075
+            },
+            {
+              "cell_id": "seed8301_right",
+              "value": -0.23754887282848358
+            },
+            {
+              "cell_id": "seed8302_left",
+              "value": -0.09855514764785767
+            },
+            {
+              "cell_id": "seed8302_right",
+              "value": -0.3566369656473398
+            }
+          ]
+        },
+        "cube_net_displacement_3d_m": {
+          "comparable_cell_count": 6,
+          "maximum": 0.00588807541001124,
+          "mean": -0.13004740390173963,
+          "median": -0.12144253245801251,
+          "minimum": -0.32436326344664324,
+          "noncomparable_cell_count": 0,
+          "values_by_cell": [
+            {
+              "cell_id": "seed8300_left",
+              "value": -0.0861732719734962
+            },
+            {
+              "cell_id": "seed8300_right",
+              "value": 0.00588807541001124
+            },
+            {
+              "cell_id": "seed8301_left",
+              "value": -0.005697140340895607
+            },
+            {
+              "cell_id": "seed8301_right",
+              "value": -0.2132270301168852
+            },
+            {
+              "cell_id": "seed8302_left",
+              "value": -0.15671179294252882
+            },
+            {
+              "cell_id": "seed8302_right",
+              "value": -0.32436326344664324
+            }
+          ]
+        },
+        "cube_path_length_3d_m": {
+          "comparable_cell_count": 6,
+          "maximum": 0.5509915711882347,
+          "mean": -0.20635730324950394,
+          "median": -0.2505679990484986,
+          "minimum": -1.0565039945566386,
+          "noncomparable_cell_count": 0,
+          "values_by_cell": [
+            {
+              "cell_id": "seed8300_left",
+              "value": -0.07904383358031483
+            },
+            {
+              "cell_id": "seed8300_right",
+              "value": -1.0565039945566386
+            },
+            {
+              "cell_id": "seed8301_left",
+              "value": 0.25798929220267985
+            },
+            {
+              "cell_id": "seed8301_right",
+              "value": -0.4220921645166823
+            },
+            {
+              "cell_id": "seed8302_left",
+              "value": 0.5509915711882347
+            },
+            {
+              "cell_id": "seed8302_right",
+              "value": -0.4894846902343025
+            }
+          ]
+        },
+        "gripper_switch_count": {
+          "comparable_cell_count": 6,
+          "maximum": 4,
+          "mean": 2.0,
+          "median": 2.0,
+          "minimum": 0,
+          "noncomparable_cell_count": 0,
+          "values_by_cell": [
+            {
+              "cell_id": "seed8300_left",
+              "value": 0
+            },
+            {
+              "cell_id": "seed8300_right",
+              "value": 1
+            },
+            {
+              "cell_id": "seed8301_left",
+              "value": 4
+            },
+            {
+              "cell_id": "seed8301_right",
+              "value": 0
+            },
+            {
+              "cell_id": "seed8302_left",
+              "value": 3
+            },
+            {
+              "cell_id": "seed8302_right",
+              "value": 4
+            }
+          ]
+        },
+        "joint_action_mean_l2_per_transition": {
+          "comparable_cell_count": 6,
+          "maximum": -0.00920992975320798,
+          "mean": -0.015037905801389381,
+          "median": -0.015632970262163613,
+          "minimum": -0.019460956709070745,
+          "noncomparable_cell_count": 0,
+          "values_by_cell": [
+            {
+              "cell_id": "seed8300_left",
+              "value": -0.015587687254922884
+            },
+            {
+              "cell_id": "seed8300_right",
+              "value": -0.015678253269404342
+            },
+            {
+              "cell_id": "seed8301_left",
+              "value": -0.016509794837347432
+            },
+            {
+              "cell_id": "seed8301_right",
+              "value": -0.013780812984382905
+            },
+            {
+              "cell_id": "seed8302_left",
+              "value": -0.019460956709070745
+            },
+            {
+              "cell_id": "seed8302_right",
+              "value": -0.00920992975320798
+            }
+          ]
+        },
+        "joint_action_total_variation_l2": {
+          "comparable_cell_count": 6,
+          "maximum": 5.527842231305995,
+          "mean": 0.48967860082279985,
+          "median": 1.4668779630236433,
+          "minimum": -7.673091768510293,
+          "noncomparable_cell_count": 0,
+          "values_by_cell": [
+            {
+              "cell_id": "seed8300_left",
+              "value": 5.527842231305995
+            },
+            {
+              "cell_id": "seed8300_right",
+              "value": -7.673091768510293
+            },
+            {
+              "cell_id": "seed8301_left",
+              "value": 3.565439895407472
+            },
+            {
+              "cell_id": "seed8301_right",
+              "value": -3.0703518998072967
+            },
+            {
+              "cell_id": "seed8302_left",
+              "value": 5.219917115901107
+            },
+            {
+              "cell_id": "seed8302_right",
+              "value": -0.6316839693601857
+            }
+          ]
+        },
+        "requested_signed_final_margin_m": {
+          "comparable_cell_count": 6,
+          "maximum": 0.036453790962696075,
+          "mean": -0.13019691687077284,
+          "median": -0.11883655190467834,
+          "minimum": -0.33182632364332676,
+          "noncomparable_cell_count": 0,
+          "values_by_cell": [
+            {
+              "cell_id": "seed8300_left",
+              "value": -0.08398972451686859
+            },
+            {
+              "cell_id": "seed8300_right",
+              "value": -0.016743451356887817
+            },
+            {
+              "cell_id": "seed8301_left",
+              "value": 0.036453790962696075
+            },
+            {
+              "cell_id": "seed8301_right",
+              "value": -0.23139241337776184
+            },
+            {
+              "cell_id": "seed8302_left",
+              "value": -0.1536833792924881
+            },
+            {
+              "cell_id": "seed8302_right",
+              "value": -0.33182632364332676
+            }
+          ]
+        }
+      },
+      "paired_seed_diagnostics": [
+        {
+          "endpoint_ordering": {
+            "g=1 intervention": "aligned",
+            "g=3 baseline": "aligned"
+          },
+          "endpoint_separation_right_minus_left_m": {
+            "g=1 intervention": 0.3053106665611267,
+            "g=3 baseline": 0.4060438424348831,
+            "intervention_minus_baseline": -0.10073317587375641
+          },
+          "environment_seed": 8300,
+          "first_chunk_prompt_response": {
+            "g=1 intervention": {
+              "executed_steps_compared": 32,
+              "gripper_disagreement_fraction": 0.0,
+              "gripper_disagreement_steps": 0,
+              "joint_only_rms_7d": 0.007577948799980769,
+              "legacy_all_8d_rms": 0.007088522026010693,
+              "requested_horizon": 32
+            },
+            "g=3 baseline": {
+              "executed_steps_compared": 32,
+              "gripper_disagreement_fraction": 0.0,
+              "gripper_disagreement_steps": 0,
+              "joint_only_rms_7d": 0.020978710542834608,
+              "legacy_all_8d_rms": 0.019623786816897366,
+              "requested_horizon": 32
+            }
+          },
+          "left_prompt": "Put the Rubik's cube to the left of the bowl.",
+          "pair_id": "droid_pair_seed_8300",
+          "right_prompt": "Put the Rubik's cube to the right of the bowl.",
+          "seed_absolute_direction_imbalance_m": {
+            "g=1 intervention": 0.33751776814460754,
+            "g=3 baseline": 0.27027149498462677,
+            "intervention_minus_baseline": 0.06724627315998077
+          },
+          "seed_balance_gap_right_minus_left_margin_m": {
+            "g=1 intervention": 0.33751776814460754,
+            "g=3 baseline": 0.27027149498462677,
+            "intervention_minus_baseline": 0.06724627315998077
+          },
+          "seed_weaker_side_margin_m": {
+            "g=1 intervention": -0.016103550791740417,
+            "g=3 baseline": 0.06788617372512817,
+            "intervention_minus_baseline": -0.08398972451686859
+          }
+        },
+        {
+          "endpoint_ordering": {
+            "g=1 intervention": "aligned",
+            "g=3 baseline": "aligned"
+          },
+          "endpoint_separation_right_minus_left_m": {
+            "g=1 intervention": 0.33058302849531174,
+            "g=3 baseline": 0.5255216509103775,
+            "intervention_minus_baseline": -0.19493862241506577
+          },
+          "environment_seed": 8301,
+          "first_chunk_prompt_response": {
+            "g=1 intervention": {
+              "executed_steps_compared": 32,
+              "gripper_disagreement_fraction": 0.0,
+              "gripper_disagreement_steps": 0,
+              "joint_only_rms_7d": 0.020737971339669915,
+              "legacy_all_8d_rms": 0.019398595912445554,
+              "requested_horizon": 32
+            },
+            "g=3 baseline": {
+              "executed_steps_compared": 32,
+              "gripper_disagreement_fraction": 0.0,
+              "gripper_disagreement_steps": 0,
+              "joint_only_rms_7d": 0.014209888667736204,
+              "legacy_all_8d_rms": 0.013292133724717622,
+              "requested_horizon": 32
+            }
+          },
+          "left_prompt": "Put the Rubik's cube to the left of the bowl.",
+          "pair_id": "droid_pair_seed_8301",
+          "right_prompt": "Put the Rubik's cube to the right of the bowl.",
+          "seed_absolute_direction_imbalance_m": {
+            "g=1 intervention": 0.009057529270648956,
+            "g=3 baseline": 0.2769037336111069,
+            "intervention_minus_baseline": -0.2678462043404579
+          },
+          "seed_balance_gap_right_minus_left_margin_m": {
+            "g=1 intervention": 0.009057529270648956,
+            "g=3 baseline": 0.2769037336111069,
+            "intervention_minus_baseline": -0.2678462043404579
+          },
+          "seed_weaker_side_margin_m": {
+            "g=1 intervention": 0.1607627496123314,
+            "g=3 baseline": 0.12430895864963531,
+            "intervention_minus_baseline": 0.036453790962696075
+          }
+        },
+        {
+          "endpoint_ordering": {
+            "g=1 intervention": "aligned",
+            "g=3 baseline": "aligned"
+          },
+          "endpoint_separation_right_minus_left_m": {
+            "g=1 intervention": 0.12024309299886227,
+            "g=3 baseline": 0.6057527959346771,
+            "intervention_minus_baseline": -0.48550970293581486
+          },
+          "environment_seed": 8302,
+          "first_chunk_prompt_response": {
+            "g=1 intervention": {
+              "executed_steps_compared": 32,
+              "gripper_disagreement_fraction": 0.0,
+              "gripper_disagreement_steps": 0,
+              "joint_only_rms_7d": 0.009949469062685542,
+              "legacy_all_8d_rms": 0.009306876103219041,
+              "requested_horizon": 32
+            },
+            "g=3 baseline": {
+              "executed_steps_compared": 32,
+              "gripper_disagreement_fraction": 0.0,
+              "gripper_disagreement_steps": 0,
+              "joint_only_rms_7d": 0.019210787541720238,
+              "legacy_all_8d_rms": 0.017970046277805584,
+              "requested_horizon": 32
+            }
+          },
+          "left_prompt": "Put the Rubik's cube to the left of the bowl.",
+          "pair_id": "droid_pair_seed_8302",
+          "right_prompt": "Put the Rubik's cube to the right of the bowl.",
+          "seed_absolute_direction_imbalance_m": {
+            "g=1 intervention": 0.19266819022595882,
+            "g=3 baseline": 0.3708111345767975,
+            "intervention_minus_baseline": -0.17814294435083866
+          },
+          "seed_balance_gap_right_minus_left_margin_m": {
+            "g=1 intervention": 0.19266819022595882,
+            "g=3 baseline": 0.3708111345767975,
+            "intervention_minus_baseline": -0.17814294435083866
+          },
+          "seed_weaker_side_margin_m": {
+            "g=1 intervention": -0.03621254861354828,
+            "g=3 baseline": 0.11747083067893982,
+            "intervention_minus_baseline": -0.1536833792924881
+          }
+        }
+      ],
+      "success": {
+        "baseline_total": 6,
+        "completion_actions": {
+          "baseline_observed_success_events": [
+            {
+              "actions": 127,
+              "cell_id": "seed8300_left",
+              "prompt": "Put the Rubik's cube to the left of the bowl."
+            },
+            {
+              "actions": 332,
+              "cell_id": "seed8300_right",
+              "prompt": "Put the Rubik's cube to the right of the bowl."
+            },
+            {
+              "actions": 129,
+              "cell_id": "seed8301_left",
+              "prompt": "Put the Rubik's cube to the left of the bowl."
+            },
+            {
+              "actions": 158,
+              "cell_id": "seed8301_right",
+              "prompt": "Put the Rubik's cube to the right of the bowl."
+            },
+            {
+              "actions": 129,
+              "cell_id": "seed8302_left",
+              "prompt": "Put the Rubik's cube to the left of the bowl."
+            },
+            {
+              "actions": 215,
+              "cell_id": "seed8302_right",
+              "prompt": "Put the Rubik's cube to the right of the bowl."
+            }
+          ],
+          "both_observed_paired_deltas": [
+            {
+              "cell_id": "seed8300_right",
+              "intervention_minus_baseline": -79
+            },
+            {
+              "cell_id": "seed8301_left",
+              "intervention_minus_baseline": 224
+            },
+            {
+              "cell_id": "seed8301_right",
+              "intervention_minus_baseline": -29
+            },
+            {
+              "cell_id": "seed8302_right",
+              "intervention_minus_baseline": 42
+            }
+          ],
+          "failure_policy": "Failures are right-censored at 450 actions and never entered as completion times.",
+          "intervention_observed_success_events": [
+            {
+              "actions": 253,
+              "cell_id": "seed8300_right",
+              "prompt": "Put the Rubik's cube to the right of the bowl."
+            },
+            {
+              "actions": 353,
+              "cell_id": "seed8301_left",
+              "prompt": "Put the Rubik's cube to the left of the bowl."
+            },
+            {
+              "actions": 129,
+              "cell_id": "seed8301_right",
+              "prompt": "Put the Rubik's cube to the right of the bowl."
+            },
+            {
+              "actions": 257,
+              "cell_id": "seed8302_right",
+              "prompt": "Put the Rubik's cube to the right of the bowl."
+            }
+          ]
+        },
+        "exact_paired_transitions": {
+          "regressed_success_to_failure": 2,
+          "unchanged_success": 4
+        },
+        "exact_paired_transitions_by_relation": {
+          "left": {
+            "regressed_success_to_failure": 2,
+            "unchanged_success": 1
+          },
+          "right": {
+            "unchanged_success": 3
+          }
+        },
+        "intervention_total": 4,
+        "net_success_change": -2
+      }
+    },
+    "dreamzero": {
+      "baseline_configuration_summary": {
+        "aligned_endpoint_pair_count": 3,
+        "by_direction": {
+          "left": {
+            "entered_requested_region": 2,
+            "episodes": 3,
+            "mean_cube_path_length_3d_m": 0.35746646503471413,
+            "mean_joint_action_total_variation_l2": 5.460561131360954,
+            "prompt": "Put the Rubik's cube to the left of the bowl.",
+            "requested_margin_m": {
+              "maximum": 0.13388146460056305,
+              "mean": 0.1097840964794159,
+              "median": 0.1134299635887146,
+              "minimum": 0.08204086124897003,
+              "values_by_seed": [
+                {
+                  "environment_seed": 8300,
+                  "value": 0.1134299635887146
+                },
+                {
+                  "environment_seed": 8301,
+                  "value": 0.08204086124897003
+                },
+                {
+                  "environment_seed": 8302,
+                  "value": 0.13388146460056305
+                }
+              ]
+            },
+            "successes": 2,
+            "verified_pickups": 3
+          },
+          "right": {
+            "entered_requested_region": 1,
+            "episodes": 3,
+            "mean_cube_path_length_3d_m": 0.12993350563660155,
+            "mean_joint_action_total_variation_l2": 5.464923346709289,
+            "prompt": "Put the Rubik's cube to the right of the bowl.",
+            "requested_margin_m": {
+              "maximum": 0.13787611573934555,
+              "mean": 0.040088834861914315,
+              "median": 0.00828687846660614,
+              "minimum": -0.02589648962020874,
+              "values_by_seed": [
+                {
+                  "environment_seed": 8300,
+                  "value": 0.13787611573934555
+                },
+                {
+                  "environment_seed": 8301,
+                  "value": -0.02589648962020874
+                },
+                {
+                  "environment_seed": 8302,
+                  "value": 0.00828687846660614
+                }
+              ]
+            },
+            "successes": 1,
+            "verified_pickups": 1
+          }
+        },
+        "distinct_executed_action_pair_count": 3,
+        "failure_stage_counts": {
+          "no_object_interaction": 1,
+          "object_moved_no_verified_pickup": 1,
+          "picked_never_entered_requested_region": 1,
+          "success": 3
+        },
+        "mean_margin_balance": {
+          "absolute_direction_imbalance_m": 0.06969526161750159,
+          "right_minus_left_m": -0.06969526161750159,
+          "weaker_direction_mean_margin_m": 0.040088834861914315
+        },
+        "requested_success_count": 3,
+        "success_absolute_direction_imbalance_count": 1,
+        "success_direction_gap_right_minus_left_count": -1,
+        "success_weaker_direction_count": 1,
+        "valid_episode_count": 6,
+        "valid_failure_count": 3
+      },
+      "baseline_label": "s=1 conditional-action equivalent",
+      "cells": [
+        {
+          "cell_id": "seed8300_left",
+          "completion_actions": {
+            "comparison_status": "not_compared_because_at_least_one_cell_is_right_censored",
+            "intervention_minus_baseline_when_both_observed": null,
+            "s=1 conditional-action equivalent": 205,
+            "s=2 CFG-style negative-branch action guidance": null
+          },
+          "environment_seed": 8300,
+          "executed_action_quality": {
+            "gripper_switch_count": {
+              "intervention_minus_baseline": 24,
+              "s=1 conditional-action equivalent": 2,
+              "s=2 CFG-style negative-branch action guidance": 26
+            },
+            "joint_action_mean_l2_per_transition": {
+              "intervention_minus_baseline": -0.004149974450225507,
+              "s=1 conditional-action equivalent": 0.01928901479212429,
+              "s=2 CFG-style negative-branch action guidance": 0.015139040341898783
+            },
+            "joint_action_total_variation_l2": {
+              "intervention_minus_baseline": 2.862470095919198,
+              "s=1 conditional-action equivalent": 3.9349590175933553,
+              "s=2 CFG-style negative-branch action guidance": 6.797429113512553
+            }
+          },
+          "physical_initial_state_sha256": "8b000f4d2c7c2296bf332984c0b83b47561d796790c32419480665e684635fb6",
+          "prompt": "Put the Rubik's cube to the left of the bowl.",
+          "requested_relation": "left",
+          "requested_signed_final_margin_m": {
+            "intervention_minus_baseline": -0.11916271597146988,
+            "s=1 conditional-action equivalent": 0.1134299635887146,
+            "s=2 CFG-style negative-branch action guidance": -0.0057327523827552795
+          },
+          "success": {
+            "numeric_delta": -1,
+            "s=1 conditional-action equivalent": true,
+            "s=2 CFG-style negative-branch action guidance": false,
+            "transition": "regressed_success_to_failure"
+          },
+          "trajectory_quality": {
+            "cube_excess_path_ratio": {
+              "intervention_minus_baseline": null,
+              "s=1 conditional-action equivalent": 1.6421808779334752,
+              "s=2 CFG-style negative-branch action guidance": null
+            },
+            "cube_max_excursion_from_initial_3d_m": {
+              "intervention_minus_baseline": -0.15924609642669982,
+              "s=1 conditional-action equivalent": 0.16036644272187522,
+              "s=2 CFG-style negative-branch action guidance": 0.0011203462951753936
+            },
+            "cube_max_opposite_lateral_excursion_from_initial_m": {
+              "intervention_minus_baseline": 0.0008484125137329102,
+              "s=1 conditional-action equivalent": 3.5434961318969727e-05,
+              "s=2 CFG-style negative-branch action guidance": 0.0008838474750518799
+            },
+            "cube_max_requested_lateral_excursion_from_initial_m": {
+              "intervention_minus_baseline": -0.12580252438783646,
+              "s=1 conditional-action equivalent": 0.1258234903216362,
+              "s=2 CFG-style negative-branch action guidance": 2.0965933799743652e-05
+            },
+            "cube_net_displacement_3d_m": {
+              "intervention_minus_baseline": -0.15037174739885853,
+              "s=1 conditional-action equivalent": 0.15091182010733364,
+              "s=2 CFG-style negative-branch action guidance": 0.0005400727084751219
+            },
+            "cube_path_length_3d_m": {
+              "intervention_minus_baseline": -0.24026072053421477,
+              "s=1 conditional-action equivalent": 0.24782450523439983,
+              "s=2 CFG-style negative-branch action guidance": 0.00756378470018506
+            }
+          }
+        },
+        {
+          "cell_id": "seed8300_right",
+          "completion_actions": {
+            "comparison_status": "both_success_events_observed",
+            "intervention_minus_baseline_when_both_observed": 23,
+            "s=1 conditional-action equivalent": 194,
+            "s=2 CFG-style negative-branch action guidance": 217
+          },
+          "environment_seed": 8300,
+          "executed_action_quality": {
+            "gripper_switch_count": {
+              "intervention_minus_baseline": 2,
+              "s=1 conditional-action equivalent": 1,
+              "s=2 CFG-style negative-branch action guidance": 3
+            },
+            "joint_action_mean_l2_per_transition": {
+              "intervention_minus_baseline": -0.001696310364181098,
+              "s=1 conditional-action equivalent": 0.02337364538109708,
+              "s=2 CFG-style negative-branch action guidance": 0.02167733501691598
+            },
+            "joint_action_total_variation_l2": {
+              "intervention_minus_baseline": 0.17119080510211582,
+              "s=1 conditional-action equivalent": 4.511113558551736,
+              "s=2 CFG-style negative-branch action guidance": 4.682304363653852
+            }
+          },
+          "physical_initial_state_sha256": "8b000f4d2c7c2296bf332984c0b83b47561d796790c32419480665e684635fb6",
+          "prompt": "Put the Rubik's cube to the right of the bowl.",
+          "requested_relation": "right",
+          "requested_signed_final_margin_m": {
+            "intervention_minus_baseline": -0.017989983782172203,
+            "s=1 conditional-action equivalent": 0.13787611573934555,
+            "s=2 CFG-style negative-branch action guidance": 0.11988613195717335
+          },
+          "success": {
+            "numeric_delta": 0,
+            "s=1 conditional-action equivalent": true,
+            "s=2 CFG-style negative-branch action guidance": true,
+            "transition": "unchanged_success"
+          },
+          "trajectory_quality": {
+            "cube_excess_path_ratio": {
+              "intervention_minus_baseline": 0.021915056309880665,
+              "s=1 conditional-action equivalent": 1.154949961204651,
+              "s=2 CFG-style negative-branch action guidance": 1.1768650175145317
+            },
+            "cube_max_excursion_from_initial_3d_m": {
+              "intervention_minus_baseline": -0.05556307739996044,
+              "s=1 conditional-action equivalent": 0.23767182291010386,
+              "s=2 CFG-style negative-branch action guidance": 0.18210874551014342
+            },
+            "cube_max_opposite_lateral_excursion_from_initial_m": {
+              "intervention_minus_baseline": -0.008217446506023407,
+              "s=1 conditional-action equivalent": 0.008225075900554657,
+              "s=2 CFG-style negative-branch action guidance": 7.62939453125e-06
+            },
+            "cube_max_requested_lateral_excursion_from_initial_m": {
+              "intervention_minus_baseline": -0.014810677617788315,
+              "s=1 conditional-action equivalent": 0.13255123794078827,
+              "s=2 CFG-style negative-branch action guidance": 0.11774056032299995
+            },
+            "cube_net_displacement_3d_m": {
+              "intervention_minus_baseline": -0.05556307739996044,
+              "s=1 conditional-action equivalent": 0.23767182291010386,
+              "s=2 CFG-style negative-branch action guidance": 0.18210874551014342
+            },
+            "cube_path_length_3d_m": {
+              "intervention_minus_baseline": -0.0601816506751188,
+              "s=1 conditional-action equivalent": 0.2744990626494631,
+              "s=2 CFG-style negative-branch action guidance": 0.2143174119743443
+            }
+          }
+        },
+        {
+          "cell_id": "seed8301_left",
+          "completion_actions": {
+            "comparison_status": "not_compared_because_at_least_one_cell_is_right_censored",
+            "intervention_minus_baseline_when_both_observed": null,
+            "s=1 conditional-action equivalent": null,
+            "s=2 CFG-style negative-branch action guidance": null
+          },
+          "environment_seed": 8301,
+          "executed_action_quality": {
+            "gripper_switch_count": {
+              "intervention_minus_baseline": 36,
+              "s=1 conditional-action equivalent": 12,
+              "s=2 CFG-style negative-branch action guidance": 48
+            },
+            "joint_action_mean_l2_per_transition": {
+              "intervention_minus_baseline": 0.001146576886400132,
+              "s=1 conditional-action equivalent": 0.01435189665862211,
+              "s=2 CFG-style negative-branch action guidance": 0.015498473545022241
+            },
+            "joint_action_total_variation_l2": {
+              "intervention_minus_baseline": 0.5148130219936595,
+              "s=1 conditional-action equivalent": 6.444001599721327,
+              "s=2 CFG-style negative-branch action guidance": 6.958814621714986
+            }
+          },
+          "physical_initial_state_sha256": "8b000f4d2c7c2296bf332984c0b83b47561d796790c32419480665e684635fb6",
+          "prompt": "Put the Rubik's cube to the left of the bowl.",
+          "requested_relation": "left",
+          "requested_signed_final_margin_m": {
+            "intervention_minus_baseline": -0.07445533573627472,
+            "s=1 conditional-action equivalent": 0.08204086124897003,
+            "s=2 CFG-style negative-branch action guidance": 0.0075855255126953125
+          },
+          "success": {
+            "numeric_delta": 0,
+            "s=1 conditional-action equivalent": false,
+            "s=2 CFG-style negative-branch action guidance": false,
+            "transition": "unchanged_failure"
+          },
+          "trajectory_quality": {
+            "cube_excess_path_ratio": {
+              "intervention_minus_baseline": 3.4881995197632976,
+              "s=1 conditional-action equivalent": 2.9596854740711502,
+              "s=2 CFG-style negative-branch action guidance": 6.447884993834448
+            },
+            "cube_max_excursion_from_initial_3d_m": {
+              "intervention_minus_baseline": -0.0945107874164664,
+              "s=1 conditional-action equivalent": 0.11532974768766757,
+              "s=2 CFG-style negative-branch action guidance": 0.02081896027120117
+            },
+            "cube_max_opposite_lateral_excursion_from_initial_m": {
+              "intervention_minus_baseline": 0.0013811364769935608,
+              "s=1 conditional-action equivalent": 0.0007628351449966431,
+              "s=2 CFG-style negative-branch action guidance": 0.002143971621990204
+            },
+            "cube_max_requested_lateral_excursion_from_initial_m": {
+              "intervention_minus_baseline": -0.07309845089912415,
+              "s=1 conditional-action equivalent": 0.09132269769906998,
+              "s=2 CFG-style negative-branch action guidance": 0.01822424679994583
+            },
+            "cube_net_displacement_3d_m": {
+              "intervention_minus_baseline": -0.07375385120856598,
+              "s=1 conditional-action equivalent": 0.08841486446154895,
+              "s=2 CFG-style negative-branch action guidance": 0.014661013252982961
+            },
+            "cube_path_length_3d_m": {
+              "intervention_minus_baseline": -0.1671476626904992,
+              "s=1 conditional-action equivalent": 0.261680190038816,
+              "s=2 CFG-style negative-branch action guidance": 0.0945325273483168
+            }
+          }
+        },
+        {
+          "cell_id": "seed8301_right",
+          "completion_actions": {
+            "comparison_status": "not_compared_because_at_least_one_cell_is_right_censored",
+            "intervention_minus_baseline_when_both_observed": null,
+            "s=1 conditional-action equivalent": null,
+            "s=2 CFG-style negative-branch action guidance": 269
+          },
+          "environment_seed": 8301,
+          "executed_action_quality": {
+            "gripper_switch_count": {
+              "intervention_minus_baseline": -48,
+              "s=1 conditional-action equivalent": 52,
+              "s=2 CFG-style negative-branch action guidance": 4
+            },
+            "joint_action_mean_l2_per_transition": {
+              "intervention_minus_baseline": 0.014629743755203362,
+              "s=1 conditional-action equivalent": 0.013626597410569562,
+              "s=2 CFG-style negative-branch action guidance": 0.028256341165772924
+            },
+            "joint_action_total_variation_l2": {
+              "intervention_minus_baseline": 1.4543571950814105,
+              "s=1 conditional-action equivalent": 6.1183422373457335,
+              "s=2 CFG-style negative-branch action guidance": 7.572699432427144
+            }
+          },
+          "physical_initial_state_sha256": "8b000f4d2c7c2296bf332984c0b83b47561d796790c32419480665e684635fb6",
+          "prompt": "Put the Rubik's cube to the right of the bowl.",
+          "requested_relation": "right",
+          "requested_signed_final_margin_m": {
+            "intervention_minus_baseline": 0.3365038186311722,
+            "s=1 conditional-action equivalent": -0.02589648962020874,
+            "s=2 CFG-style negative-branch action guidance": 0.31060732901096344
+          },
+          "success": {
+            "numeric_delta": 1,
+            "s=1 conditional-action equivalent": false,
+            "s=2 CFG-style negative-branch action guidance": true,
+            "transition": "improved_failure_to_success"
+          },
+          "trajectory_quality": {
+            "cube_excess_path_ratio": {
+              "intervention_minus_baseline": -0.9421815857108622,
+              "s=1 conditional-action equivalent": 2.4883229947716723,
+              "s=2 CFG-style negative-branch action guidance": 1.54614140906081
+            },
+            "cube_max_excursion_from_initial_3d_m": {
+              "intervention_minus_baseline": 0.3335695737942441,
+              "s=1 conditional-action equivalent": 0.03518004821837493,
+              "s=2 CFG-style negative-branch action guidance": 0.36874962201261907
+            },
+            "cube_max_opposite_lateral_excursion_from_initial_m": {
+              "intervention_minus_baseline": -0.031491540372371674,
+              "s=1 conditional-action equivalent": 0.03181355446577072,
+              "s=2 CFG-style negative-branch action guidance": 0.00032201409339904785
+            },
+            "cube_max_requested_lateral_excursion_from_initial_m": {
+              "intervention_minus_baseline": 0.3257785439491272,
+              "s=1 conditional-action equivalent": 0.0017410442233085632,
+              "s=2 CFG-style negative-branch action guidance": 0.32751958817243576
+            },
+            "cube_net_displacement_3d_m": {
+              "intervention_minus_baseline": 0.30323614258564446,
+              "s=1 conditional-action equivalent": 0.03457056656094908,
+              "s=2 CFG-style negative-branch action guidance": 0.33780670914659355
+            },
+            "cube_path_length_3d_m": {
+              "intervention_minus_baseline": 0.43627420555421514,
+              "s=1 conditional-action equivalent": 0.08602273571589425,
+              "s=2 CFG-style negative-branch action guidance": 0.5222969412701094
+            }
+          }
+        },
+        {
+          "cell_id": "seed8302_left",
+          "completion_actions": {
+            "comparison_status": "both_success_events_observed",
+            "intervention_minus_baseline_when_both_observed": -61,
+            "s=1 conditional-action equivalent": 341,
+            "s=2 CFG-style negative-branch action guidance": 280
+          },
+          "environment_seed": 8302,
+          "executed_action_quality": {
+            "gripper_switch_count": {
+              "intervention_minus_baseline": 0,
+              "s=1 conditional-action equivalent": 4,
+              "s=2 CFG-style negative-branch action guidance": 4
+            },
+            "joint_action_mean_l2_per_transition": {
+              "intervention_minus_baseline": 0.0025736635166309085,
+              "s=1 conditional-action equivalent": 0.017655066990494645,
+              "s=2 CFG-style negative-branch action guidance": 0.020228730507125554
+            },
+            "joint_action_total_variation_l2": {
+              "intervention_minus_baseline": -0.3589069652801502,
+              "s=1 conditional-action equivalent": 6.00272277676818,
+              "s=2 CFG-style negative-branch action guidance": 5.64381581148803
+            }
+          },
+          "physical_initial_state_sha256": "8b000f4d2c7c2296bf332984c0b83b47561d796790c32419480665e684635fb6",
+          "prompt": "Put the Rubik's cube to the left of the bowl.",
+          "requested_relation": "left",
+          "requested_signed_final_margin_m": {
+            "intervention_minus_baseline": 0.019493132829666138,
+            "s=1 conditional-action equivalent": 0.13388146460056305,
+            "s=2 CFG-style negative-branch action guidance": 0.1533745974302292
+          },
+          "success": {
+            "numeric_delta": 0,
+            "s=1 conditional-action equivalent": true,
+            "s=2 CFG-style negative-branch action guidance": true,
+            "transition": "unchanged_success"
+          },
+          "trajectory_quality": {
+            "cube_excess_path_ratio": {
+              "intervention_minus_baseline": -1.1598176164380831,
+              "s=1 conditional-action equivalent": 3.6915707047937434,
+              "s=2 CFG-style negative-branch action guidance": 2.5317530883556603
+            },
+            "cube_max_excursion_from_initial_3d_m": {
+              "intervention_minus_baseline": -0.0019733800650898747,
+              "s=1 conditional-action equivalent": 0.21561919639075702,
+              "s=2 CFG-style negative-branch action guidance": 0.21364581632566715
+            },
+            "cube_max_opposite_lateral_excursion_from_initial_m": {
+              "intervention_minus_baseline": 2.851337194442749e-05,
+              "s=1 conditional-action equivalent": 6.318837404251099e-05,
+              "s=2 CFG-style negative-branch action guidance": 9.170174598693848e-05
+            },
+            "cube_max_requested_lateral_excursion_from_initial_m": {
+              "intervention_minus_baseline": -0.00570601224899292,
+              "s=1 conditional-action equivalent": 0.17995665222406387,
+              "s=2 CFG-style negative-branch action guidance": 0.17425063997507095
+            },
+            "cube_net_displacement_3d_m": {
+              "intervention_minus_baseline": 0.022590560982246488,
+              "s=1 conditional-action equivalent": 0.1524810832147875,
+              "s=2 CFG-style negative-branch action guidance": 0.175071644197034
+            },
+            "cube_path_length_3d_m": {
+              "intervention_minus_baseline": -0.11965652395158238,
+              "s=1 conditional-action equivalent": 0.5628946998309265,
+              "s=2 CFG-style negative-branch action guidance": 0.44323817587934417
+            }
+          }
+        },
+        {
+          "cell_id": "seed8302_right",
+          "completion_actions": {
+            "comparison_status": "not_compared_because_at_least_one_cell_is_right_censored",
+            "intervention_minus_baseline_when_both_observed": null,
+            "s=1 conditional-action equivalent": null,
+            "s=2 CFG-style negative-branch action guidance": 265
+          },
+          "environment_seed": 8302,
+          "executed_action_quality": {
+            "gripper_switch_count": {
+              "intervention_minus_baseline": -58,
+              "s=1 conditional-action equivalent": 70,
+              "s=2 CFG-style negative-branch action guidance": 12
+            },
+            "joint_action_mean_l2_per_transition": {
+              "intervention_minus_baseline": 0.006865923781846528,
+              "s=1 conditional-action equivalent": 0.012840343528352779,
+              "s=2 CFG-style negative-branch action guidance": 0.019706267310199307
+            },
+            "joint_action_total_variation_l2": {
+              "intervention_minus_baseline": -0.5628596743377807,
+              "s=1 conditional-action equivalent": 5.765314244230398,
+              "s=2 CFG-style negative-branch action guidance": 5.202454569892617
+            }
+          },
+          "physical_initial_state_sha256": "8b000f4d2c7c2296bf332984c0b83b47561d796790c32419480665e684635fb6",
+          "prompt": "Put the Rubik's cube to the right of the bowl.",
+          "requested_relation": "right",
+          "requested_signed_final_margin_m": {
+            "intervention_minus_baseline": 0.211713545024395,
+            "s=1 conditional-action equivalent": 0.00828687846660614,
+            "s=2 CFG-style negative-branch action guidance": 0.22000042349100113
+          },
+          "success": {
+            "numeric_delta": 1,
+            "s=1 conditional-action equivalent": false,
+            "s=2 CFG-style negative-branch action guidance": true,
+            "transition": "improved_failure_to_success"
+          },
+          "trajectory_quality": {
+            "cube_excess_path_ratio": {
+              "intervention_minus_baseline": null,
+              "s=1 conditional-action equivalent": null,
+              "s=2 CFG-style negative-branch action guidance": 1.269916593223612
+            },
+            "cube_max_excursion_from_initial_3d_m": {
+              "intervention_minus_baseline": 0.2203716595898981,
+              "s=1 conditional-action equivalent": 0.004422441575789337,
+              "s=2 CFG-style negative-branch action guidance": 0.22479410116568743
+            },
+            "cube_max_opposite_lateral_excursion_from_initial_m": {
+              "intervention_minus_baseline": -0.0001704394817352295,
+              "s=1 conditional-action equivalent": 0.00022462010383605957,
+              "s=2 CFG-style negative-branch action guidance": 5.418062210083008e-05
+            },
+            "cube_max_requested_lateral_excursion_from_initial_m": {
+              "intervention_minus_baseline": 0.21096055209636688,
+              "s=1 conditional-action equivalent": 0.0037149935960769653,
+              "s=2 CFG-style negative-branch action guidance": 0.21467554569244385
+            },
+            "cube_net_displacement_3d_m": {
+              "intervention_minus_baseline": 0.2195129578351038,
+              "s=1 conditional-action equivalent": 0.0033168970887940195,
+              "s=2 CFG-style negative-branch action guidance": 0.2228298549238978
+            },
+            "cube_path_length_3d_m": {
+              "intervention_minus_baseline": 0.25369661168902075,
+              "s=1 conditional-action equivalent": 0.029278718544447288,
+              "s=2 CFG-style negative-branch action guidance": 0.28297533023346805
+            }
+          }
+        }
+      ],
+      "exact_prompts": {
+        "left": "Put the Rubik's cube to the left of the bowl.",
+        "right": "Put the Rubik's cube to the right of the bowl."
+      },
+      "intervention_configuration_summary": {
+        "aligned_endpoint_pair_count": 3,
+        "by_direction": {
+          "left": {
+            "entered_requested_region": 1,
+            "episodes": 3,
+            "mean_cube_path_length_3d_m": 0.18177816264261534,
+            "mean_joint_action_total_variation_l2": 6.466686515571856,
+            "prompt": "Put the Rubik's cube to the left of the bowl.",
+            "requested_margin_m": {
+              "maximum": 0.1533745974302292,
+              "mean": 0.05174245685338974,
+              "median": 0.0075855255126953125,
+              "minimum": -0.0057327523827552795,
+              "values_by_seed": [
+                {
+                  "environment_seed": 8300,
+                  "value": -0.0057327523827552795
+                },
+                {
+                  "environment_seed": 8301,
+                  "value": 0.0075855255126953125
+                },
+                {
+                  "environment_seed": 8302,
+                  "value": 0.1533745974302292
+                }
+              ]
+            },
+            "successes": 1,
+            "verified_pickups": 1
+          },
+          "right": {
+            "entered_requested_region": 3,
+            "episodes": 3,
+            "mean_cube_path_length_3d_m": 0.3398632278259739,
+            "mean_joint_action_total_variation_l2": 5.8191527886578704,
+            "prompt": "Put the Rubik's cube to the right of the bowl.",
+            "requested_margin_m": {
+              "maximum": 0.31060732901096344,
+              "mean": 0.21683129481971264,
+              "median": 0.22000042349100113,
+              "minimum": 0.11988613195717335,
+              "values_by_seed": [
+                {
+                  "environment_seed": 8300,
+                  "value": 0.11988613195717335
+                },
+                {
+                  "environment_seed": 8301,
+                  "value": 0.31060732901096344
+                },
+                {
+                  "environment_seed": 8302,
+                  "value": 0.22000042349100113
+                }
+              ]
+            },
+            "successes": 3,
+            "verified_pickups": 3
+          }
+        },
+        "distinct_executed_action_pair_count": 3,
+        "failure_stage_counts": {
+          "no_object_interaction": 1,
+          "object_moved_no_verified_pickup": 1,
+          "success": 4
+        },
+        "mean_margin_balance": {
+          "absolute_direction_imbalance_m": 0.1650888379663229,
+          "right_minus_left_m": 0.1650888379663229,
+          "weaker_direction_mean_margin_m": 0.05174245685338974
+        },
+        "requested_success_count": 4,
+        "success_absolute_direction_imbalance_count": 2,
+        "success_direction_gap_right_minus_left_count": 2,
+        "success_weaker_direction_count": 1,
+        "valid_episode_count": 6,
+        "valid_failure_count": 2
+      },
+      "intervention_label": "s=2 CFG-style negative-branch action guidance",
+      "model": "DreamZero DROID",
+      "paired_effect_sizes_intervention_minus_baseline": {
+        "cube_excess_path_ratio": {
+          "comparable_cell_count": 4,
+          "maximum": 3.4881995197632976,
+          "mean": 0.35202884348105823,
+          "median": -0.46013326470049076,
+          "minimum": -1.1598176164380831,
+          "noncomparable_cell_count": 2,
+          "values_by_cell": [
+            {
+              "cell_id": "seed8300_right",
+              "value": 0.021915056309880665
+            },
+            {
+              "cell_id": "seed8301_left",
+              "value": 3.4881995197632976
+            },
+            {
+              "cell_id": "seed8301_right",
+              "value": -0.9421815857108622
+            },
+            {
+              "cell_id": "seed8302_left",
+              "value": -1.1598176164380831
+            }
+          ]
+        },
+        "cube_max_excursion_from_initial_3d_m": {
+          "comparable_cell_count": 6,
+          "maximum": 0.3335695737942441,
+          "mean": 0.04044131534598761,
+          "median": -0.02876822873252516,
+          "minimum": -0.15924609642669982,
+          "noncomparable_cell_count": 0,
+          "values_by_cell": [
+            {
+              "cell_id": "seed8300_left",
+              "value": -0.15924609642669982
+            },
+            {
+              "cell_id": "seed8300_right",
+              "value": -0.05556307739996044
+            },
+            {
+              "cell_id": "seed8301_left",
+              "value": -0.0945107874164664
+            },
+            {
+              "cell_id": "seed8301_right",
+              "value": 0.3335695737942441
+            },
+            {
+              "cell_id": "seed8302_left",
+              "value": -0.0019733800650898747
+            },
+            {
+              "cell_id": "seed8302_right",
+              "value": 0.2203716595898981
+            }
+          ]
+        },
+        "cube_max_opposite_lateral_excursion_from_initial_m": {
+          "comparable_cell_count": 6,
+          "maximum": 0.0013811364769935608,
+          "mean": -0.006270227332909902,
+          "median": -7.0963054895401e-05,
+          "minimum": -0.031491540372371674,
+          "noncomparable_cell_count": 0,
+          "values_by_cell": [
+            {
+              "cell_id": "seed8300_left",
+              "value": 0.0008484125137329102
+            },
+            {
+              "cell_id": "seed8300_right",
+              "value": -0.008217446506023407
+            },
+            {
+              "cell_id": "seed8301_left",
+              "value": 0.0013811364769935608
+            },
+            {
+              "cell_id": "seed8301_right",
+              "value": -0.031491540372371674
+            },
+            {
+              "cell_id": "seed8302_left",
+              "value": 2.851337194442749e-05
+            },
+            {
+              "cell_id": "seed8302_right",
+              "value": -0.0001704394817352295
+            }
+          ]
+        },
+        "cube_max_requested_lateral_excursion_from_initial_m": {
+          "comparable_cell_count": 6,
+          "maximum": 0.3257785439491272,
+          "mean": 0.052886905148625374,
+          "median": -0.010258344933390617,
+          "minimum": -0.12580252438783646,
+          "noncomparable_cell_count": 0,
+          "values_by_cell": [
+            {
+              "cell_id": "seed8300_left",
+              "value": -0.12580252438783646
+            },
+            {
+              "cell_id": "seed8300_right",
+              "value": -0.014810677617788315
+            },
+            {
+              "cell_id": "seed8301_left",
+              "value": -0.07309845089912415
+            },
+            {
+              "cell_id": "seed8301_right",
+              "value": 0.3257785439491272
+            },
+            {
+              "cell_id": "seed8302_left",
+              "value": -0.00570601224899292
+            },
+            {
+              "cell_id": "seed8302_right",
+              "value": 0.21096055209636688
+            }
+          ]
+        },
+        "cube_net_displacement_3d_m": {
+          "comparable_cell_count": 6,
+          "maximum": 0.30323614258564446,
+          "mean": 0.04427516423260164,
+          "median": -0.016486258208856977,
+          "minimum": -0.15037174739885853,
+          "noncomparable_cell_count": 0,
+          "values_by_cell": [
+            {
+              "cell_id": "seed8300_left",
+              "value": -0.15037174739885853
+            },
+            {
+              "cell_id": "seed8300_right",
+              "value": -0.05556307739996044
+            },
+            {
+              "cell_id": "seed8301_left",
+              "value": -0.07375385120856598
+            },
+            {
+              "cell_id": "seed8301_right",
+              "value": 0.30323614258564446
+            },
+            {
+              "cell_id": "seed8302_left",
+              "value": 0.022590560982246488
+            },
+            {
+              "cell_id": "seed8302_right",
+              "value": 0.2195129578351038
+            }
+          ]
+        },
+        "cube_path_length_3d_m": {
+          "comparable_cell_count": 6,
+          "maximum": 0.43627420555421514,
+          "mean": 0.017120709898636788,
+          "median": -0.08991908731335059,
+          "minimum": -0.24026072053421477,
+          "noncomparable_cell_count": 0,
+          "values_by_cell": [
+            {
+              "cell_id": "seed8300_left",
+              "value": -0.24026072053421477
+            },
+            {
+              "cell_id": "seed8300_right",
+              "value": -0.0601816506751188
+            },
+            {
+              "cell_id": "seed8301_left",
+              "value": -0.1671476626904992
+            },
+            {
+              "cell_id": "seed8301_right",
+              "value": 0.43627420555421514
+            },
+            {
+              "cell_id": "seed8302_left",
+              "value": -0.11965652395158238
+            },
+            {
+              "cell_id": "seed8302_right",
+              "value": 0.25369661168902075
+            }
+          ]
+        },
+        "gripper_switch_count": {
+          "comparable_cell_count": 6,
+          "maximum": 36,
+          "mean": -7.333333333333333,
+          "median": 1.0,
+          "minimum": -58,
+          "noncomparable_cell_count": 0,
+          "values_by_cell": [
+            {
+              "cell_id": "seed8300_left",
+              "value": 24
+            },
+            {
+              "cell_id": "seed8300_right",
+              "value": 2
+            },
+            {
+              "cell_id": "seed8301_left",
+              "value": 36
+            },
+            {
+              "cell_id": "seed8301_right",
+              "value": -48
+            },
+            {
+              "cell_id": "seed8302_left",
+              "value": 0
+            },
+            {
+              "cell_id": "seed8302_right",
+              "value": -58
+            }
+          ]
+        },
+        "joint_action_mean_l2_per_transition": {
+          "comparable_cell_count": 6,
+          "maximum": 0.014629743755203362,
+          "mean": 0.003228270520945721,
+          "median": 0.0018601202015155202,
+          "minimum": -0.004149974450225507,
+          "noncomparable_cell_count": 0,
+          "values_by_cell": [
+            {
+              "cell_id": "seed8300_left",
+              "value": -0.004149974450225507
+            },
+            {
+              "cell_id": "seed8300_right",
+              "value": -0.001696310364181098
+            },
+            {
+              "cell_id": "seed8301_left",
+              "value": 0.001146576886400132
+            },
+            {
+              "cell_id": "seed8301_right",
+              "value": 0.014629743755203362
+            },
+            {
+              "cell_id": "seed8302_left",
+              "value": 0.0025736635166309085
+            },
+            {
+              "cell_id": "seed8302_right",
+              "value": 0.006865923781846528
+            }
+          ]
+        },
+        "joint_action_total_variation_l2": {
+          "comparable_cell_count": 6,
+          "maximum": 2.862470095919198,
+          "mean": 0.6801774130797421,
+          "median": 0.34300191354788767,
+          "minimum": -0.5628596743377807,
+          "noncomparable_cell_count": 0,
+          "values_by_cell": [
+            {
+              "cell_id": "seed8300_left",
+              "value": 2.862470095919198
+            },
+            {
+              "cell_id": "seed8300_right",
+              "value": 0.17119080510211582
+            },
+            {
+              "cell_id": "seed8301_left",
+              "value": 0.5148130219936595
+            },
+            {
+              "cell_id": "seed8301_right",
+              "value": 1.4543571950814105
+            },
+            {
+              "cell_id": "seed8302_left",
+              "value": -0.3589069652801502
+            },
+            {
+              "cell_id": "seed8302_right",
+              "value": -0.5628596743377807
+            }
+          ]
+        },
+        "requested_signed_final_margin_m": {
+          "comparable_cell_count": 6,
+          "maximum": 0.3365038186311722,
+          "mean": 0.05935041016588608,
+          "median": 0.0007515745237469673,
+          "minimum": -0.11916271597146988,
+          "noncomparable_cell_count": 0,
+          "values_by_cell": [
+            {
+              "cell_id": "seed8300_left",
+              "value": -0.11916271597146988
+            },
+            {
+              "cell_id": "seed8300_right",
+              "value": -0.017989983782172203
+            },
+            {
+              "cell_id": "seed8301_left",
+              "value": -0.07445533573627472
+            },
+            {
+              "cell_id": "seed8301_right",
+              "value": 0.3365038186311722
+            },
+            {
+              "cell_id": "seed8302_left",
+              "value": 0.019493132829666138
+            },
+            {
+              "cell_id": "seed8302_right",
+              "value": 0.211713545024395
+            }
+          ]
+        }
+      },
+      "paired_seed_diagnostics": [
+        {
+          "endpoint_ordering": {
+            "s=1 conditional-action equivalent": "aligned",
+            "s=2 CFG-style negative-branch action guidance": "aligned"
+          },
+          "endpoint_separation_right_minus_left_m": {
+            "intervention_minus_baseline": -0.13715269975364208,
+            "s=1 conditional-action equivalent": 0.25130607932806015,
+            "s=2 CFG-style negative-branch action guidance": 0.11415337957441807
+          },
+          "environment_seed": 8300,
+          "first_chunk_prompt_response": {
+            "s=1 conditional-action equivalent": {
+              "executed_steps_compared": 8,
+              "gripper_disagreement_fraction": 0.0,
+              "gripper_disagreement_steps": 0,
+              "joint_only_rms_7d": 0.044432634284646784,
+              "legacy_all_8d_rms": 0.04156292357124343,
+              "requested_horizon": 8
+            },
+            "s=2 CFG-style negative-branch action guidance": {
+              "executed_steps_compared": 8,
+              "gripper_disagreement_fraction": 0.0,
+              "gripper_disagreement_steps": 0,
+              "joint_only_rms_7d": 0.025191450445488237,
+              "legacy_all_8d_rms": 0.02356444416072769,
+              "requested_horizon": 8
+            }
+          },
+          "left_prompt": "Put the Rubik's cube to the left of the bowl.",
+          "pair_id": "droid_pair_seed_8300",
+          "right_prompt": "Put the Rubik's cube to the right of the bowl.",
+          "seed_absolute_direction_imbalance_m": {
+            "intervention_minus_baseline": 0.10117273218929768,
+            "s=1 conditional-action equivalent": 0.02444615215063095,
+            "s=2 CFG-style negative-branch action guidance": 0.12561888433992863
+          },
+          "seed_balance_gap_right_minus_left_margin_m": {
+            "intervention_minus_baseline": 0.10117273218929768,
+            "s=1 conditional-action equivalent": 0.02444615215063095,
+            "s=2 CFG-style negative-branch action guidance": 0.12561888433992863
+          },
+          "seed_weaker_side_margin_m": {
+            "intervention_minus_baseline": -0.11916271597146988,
+            "s=1 conditional-action equivalent": 0.1134299635887146,
+            "s=2 CFG-style negative-branch action guidance": -0.0057327523827552795
+          }
+        },
+        {
+          "endpoint_ordering": {
+            "s=1 conditional-action equivalent": "aligned",
+            "s=2 CFG-style negative-branch action guidance": "aligned"
+          },
+          "endpoint_separation_right_minus_left_m": {
+            "intervention_minus_baseline": 0.26204848289489746,
+            "s=1 conditional-action equivalent": 0.05614437162876129,
+            "s=2 CFG-style negative-branch action guidance": 0.31819285452365875
+          },
+          "environment_seed": 8301,
+          "first_chunk_prompt_response": {
+            "s=1 conditional-action equivalent": {
+              "executed_steps_compared": 8,
+              "gripper_disagreement_fraction": 0.0,
+              "gripper_disagreement_steps": 0,
+              "joint_only_rms_7d": 0.028251039046247154,
+              "legacy_all_8d_rms": 0.02642642723285743,
+              "requested_horizon": 8
+            },
+            "s=2 CFG-style negative-branch action guidance": {
+              "executed_steps_compared": 8,
+              "gripper_disagreement_fraction": 0.0,
+              "gripper_disagreement_steps": 0,
+              "joint_only_rms_7d": 0.024232031372991833,
+              "legacy_all_8d_rms": 0.022666989795823194,
+              "requested_horizon": 8
+            }
+          },
+          "left_prompt": "Put the Rubik's cube to the left of the bowl.",
+          "pair_id": "droid_pair_seed_8301",
+          "right_prompt": "Put the Rubik's cube to the right of the bowl.",
+          "seed_absolute_direction_imbalance_m": {
+            "intervention_minus_baseline": 0.19508445262908936,
+            "s=1 conditional-action equivalent": 0.10793735086917877,
+            "s=2 CFG-style negative-branch action guidance": 0.3030218034982681
+          },
+          "seed_balance_gap_right_minus_left_margin_m": {
+            "intervention_minus_baseline": 0.4109591543674469,
+            "s=1 conditional-action equivalent": -0.10793735086917877,
+            "s=2 CFG-style negative-branch action guidance": 0.3030218034982681
+          },
+          "seed_weaker_side_margin_m": {
+            "intervention_minus_baseline": 0.03348201513290405,
+            "s=1 conditional-action equivalent": -0.02589648962020874,
+            "s=2 CFG-style negative-branch action guidance": 0.0075855255126953125
+          }
+        },
+        {
+          "endpoint_ordering": {
+            "s=1 conditional-action equivalent": "aligned",
+            "s=2 CFG-style negative-branch action guidance": "aligned"
+          },
+          "endpoint_separation_right_minus_left_m": {
+            "intervention_minus_baseline": 0.23120667785406113,
+            "s=1 conditional-action equivalent": 0.1421683430671692,
+            "s=2 CFG-style negative-branch action guidance": 0.3733750209212303
+          },
+          "environment_seed": 8302,
+          "first_chunk_prompt_response": {
+            "s=1 conditional-action equivalent": {
+              "executed_steps_compared": 8,
+              "gripper_disagreement_fraction": 0.0,
+              "gripper_disagreement_steps": 0,
+              "joint_only_rms_7d": 0.04100645471834298,
+              "legacy_all_8d_rms": 0.03835802605057479,
+              "requested_horizon": 8
+            },
+            "s=2 CFG-style negative-branch action guidance": {
+              "executed_steps_compared": 8,
+              "gripper_disagreement_fraction": 0.0,
+              "gripper_disagreement_steps": 0,
+              "joint_only_rms_7d": 0.011243824641469825,
+              "legacy_all_8d_rms": 0.01051763488133661,
+              "requested_horizon": 8
+            }
+          },
+          "left_prompt": "Put the Rubik's cube to the left of the bowl.",
+          "pair_id": "droid_pair_seed_8302",
+          "right_prompt": "Put the Rubik's cube to the right of the bowl.",
+          "seed_absolute_direction_imbalance_m": {
+            "intervention_minus_baseline": -0.05896876007318497,
+            "s=1 conditional-action equivalent": 0.1255945861339569,
+            "s=2 CFG-style negative-branch action guidance": 0.06662582606077194
+          },
+          "seed_balance_gap_right_minus_left_margin_m": {
+            "intervention_minus_baseline": 0.19222041219472885,
+            "s=1 conditional-action equivalent": -0.1255945861339569,
+            "s=2 CFG-style negative-branch action guidance": 0.06662582606077194
+          },
+          "seed_weaker_side_margin_m": {
+            "intervention_minus_baseline": 0.14508771896362305,
+            "s=1 conditional-action equivalent": 0.00828687846660614,
+            "s=2 CFG-style negative-branch action guidance": 0.1533745974302292
+          }
+        }
+      ],
+      "success": {
+        "baseline_total": 3,
+        "completion_actions": {
+          "baseline_observed_success_events": [
+            {
+              "actions": 205,
+              "cell_id": "seed8300_left",
+              "prompt": "Put the Rubik's cube to the left of the bowl."
+            },
+            {
+              "actions": 194,
+              "cell_id": "seed8300_right",
+              "prompt": "Put the Rubik's cube to the right of the bowl."
+            },
+            {
+              "actions": 341,
+              "cell_id": "seed8302_left",
+              "prompt": "Put the Rubik's cube to the left of the bowl."
+            }
+          ],
+          "both_observed_paired_deltas": [
+            {
+              "cell_id": "seed8300_right",
+              "intervention_minus_baseline": 23
+            },
+            {
+              "cell_id": "seed8302_left",
+              "intervention_minus_baseline": -61
+            }
+          ],
+          "failure_policy": "Failures are right-censored at 450 actions and never entered as completion times.",
+          "intervention_observed_success_events": [
+            {
+              "actions": 217,
+              "cell_id": "seed8300_right",
+              "prompt": "Put the Rubik's cube to the right of the bowl."
+            },
+            {
+              "actions": 269,
+              "cell_id": "seed8301_right",
+              "prompt": "Put the Rubik's cube to the right of the bowl."
+            },
+            {
+              "actions": 280,
+              "cell_id": "seed8302_left",
+              "prompt": "Put the Rubik's cube to the left of the bowl."
+            },
+            {
+              "actions": 265,
+              "cell_id": "seed8302_right",
+              "prompt": "Put the Rubik's cube to the right of the bowl."
+            }
+          ]
+        },
+        "exact_paired_transitions": {
+          "improved_failure_to_success": 2,
+          "regressed_success_to_failure": 1,
+          "unchanged_failure": 1,
+          "unchanged_success": 2
+        },
+        "exact_paired_transitions_by_relation": {
+          "left": {
+            "regressed_success_to_failure": 1,
+            "unchanged_failure": 1,
+            "unchanged_success": 1
+          },
+          "right": {
+            "improved_failure_to_success": 2,
+            "unchanged_success": 1
+          }
+        },
+        "intervention_total": 4,
+        "net_success_change": 1
+      }
+    }
+  },
+  "compiled_at_git_head": "2f177333545e39e35d586e577a9a4496e4e97f24",
+  "exact_prompts": {
+    "left": "Put the Rubik's cube to the left of the bowl.",
+    "right": "Put the Rubik's cube to the right of the bowl."
+  },
+  "inference_boundary": "Each comparison is an exact paired, descriptive n=6 post-result pilot. Improved/regressed/unchanged cell transitions and paired effect sizes are reported without a powered or general performance-gain claim. Cosmos3 Nano and DreamZero denominators remain separate, and neither is pooled with RoboTwin.",
+  "metric_definitions": {
+    "completion_actions": "reported only for observed successes; failures are right-censored at the 450-action cap and are never treated as completion times",
+    "cube_excess_path_ratio": "cube 3D path length divided by start-to-end 3D displacement; null when net displacement is below 0.01 m",
+    "cube_max_excursion": "maximum 3D distance from the initial cube pose, with maximum requested- and opposite-oriented lateral displacement from the initial lateral coordinate reported separately",
+    "cube_path_length_3d_m": "sum of successive Euclidean displacements of the cube root pose in world XYZ",
+    "endpoint_separation": "RIGHT final lateral display coordinate minus LEFT final lateral display coordinate",
+    "first_chunk_prompt_response": "matched LEFT/RIGHT RMS over the first 32 executed steps for Nano or first 8 for DreamZero; joint-only 7D and legacy all-8D values plus gripper disagreement",
+    "gripper_switch_count": "successive changes in the separate executed binary gripper command",
+    "joint_action_total_variation_l2": "sum of successive Euclidean L2 changes over the seven executed joint-position dimensions",
+    "requested_signed_final_margin_m": "-final_lateral_display_m for LEFT and +final_lateral_display_m for RIGHT; positive is farther into the requested side",
+    "seed_absolute_direction_imbalance": "absolute value of the matched seed balance gap",
+    "seed_balance_gap": "RIGHT requested margin minus LEFT requested margin for the matched seed",
+    "seed_weaker_side_margin": "minimum of the matched LEFT and RIGHT requested margins"
+  },
+  "provenance": {
+    "cosmos3_nano_baseline": {
+      "bytes": 57097,
+      "path": "/data/users/ali/vla_wam/src/steerable-cfg-dabd2c4/artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_direct_gate.json",
+      "sha256": "4a6cc1d61593c7ba5272e1707f6bbe51261f7d23438070992bd75fd9e95fdb93"
+    },
+    "cosmos3_nano_intervention": {
+      "bytes": 104115,
+      "path": "/data/users/ali/vla_wam/raw/cfg_ablation/v2_a015/compiled/cosmos3_nano_g1_result.json",
+      "sha256": "8796f4ab9ea9490ee5b78678bc689d6fd13f27a9551006f8b5d346e202d0cc5c"
+    },
+    "dreamzero_baseline": {
+      "bytes": 254288,
+      "path": "/data/users/ali/vla_wam/src/steerable-cfg-dabd2c4/artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json",
+      "sha256": "4c76cdc3ca9eaf227d21d160199408f22e1b3dd7a71176a5a5dbe22223714461"
+    },
+    "dreamzero_intervention": {
+      "bytes": 270309,
+      "path": "/data/users/ali/vla_wam/raw/cfg_ablation/v2_a015/compiled/dreamzero_action_s2_result.json",
+      "sha256": "273b7191cde61b51bf90b2eda04b1910e214f48d34f2347f2a81325069c32444"
+    }
+  },
+  "schema_version": "vla-wam-shared-v2-cfg-ablation-v2a015-comparison-v1",
+  "status": "complete"
+}

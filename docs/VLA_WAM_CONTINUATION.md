@@ -974,7 +974,7 @@ thermal intervention occurred.
 The hash-bound compiled result is
 [`dreamzero_v2a015_action_cfg_s2_result.json`](../artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_v2a015_action_cfg_s2_result.json)
 (SHA-256
-`cff7f3a928921be068c591abf921c210d86afb49c0880e2c108262774590043b`).
+`273b7191cde61b51bf90b2eda04b1910e214f48d34f2347f2a81325069c32444`).
 For the exact prompt “Put the Rubik's cube to the left of the bowl.”, requested
 margin was `-0.0057327524`, `0.0075855255`, and `0.1533745974` m across seeds
 8300–8302 (mean `0.0517424569` m; success `1/3`). For “Put the Rubik's cube to
@@ -1016,6 +1016,66 @@ request futures are retained. The six episodes contain 1,892 executed actions
 and 64 behavioral model requests; per-cell request counts were LEFT/RIGHT
 `15/8`, `12/5`, and `15/9` for seeds 8300–8302. All three pair guards exited
 zero, and no runtime intervention occurred.
+
+The final Cosmos result and paired cross-configuration comparison are
+[`cosmos3_nano_v2a015_no_cfg_g1_result.json`](../artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_v2a015_no_cfg_g1_result.json)
+(SHA-256
+`8796f4ab9ea9490ee5b78678bc689d6fd13f27a9551006f8b5d346e202d0cc5c`)
+and
+[`cfg_ablation_v2a015_comparison.json`](../artifacts/vla_wam_shared_v2/pilot/expansion/cfg_ablation_v2a015_comparison.json)
+(SHA-256
+`0e6daadd9391b7ad38ee316371df0235e34268cc4c32597c6597578ac9f9ed1e`).
+Both were compiled at Git
+`2f177333545e39e35d586e577a9a4496e4e97f24` against the immutable preflight
+SHA-256
+`472c09568713fc3e08dbb86d3c39a8da6f328b82b06ff5aadef4e02f1892dd4d`.
+The publication figure is available as
+[`v2a015_cfg_guidance_ablation.svg`](../artifacts/vla_wam_shared_v2/figures/v2a015_cfg_guidance_ablation.svg)
+(SHA-256
+`2c50c754e48e11a945de8bd3e17c47a600b8b1d7b460a78d91fb993ec81c4bc7`)
+and
+[`v2a015_cfg_guidance_ablation.png`](../artifacts/vla_wam_shared_v2/figures/v2a015_cfg_guidance_ablation.png)
+(SHA-256
+`5a322aa491e6935d3a6db1b5f9f63a56770bc16e728d66717a62e040e1f62349`).
+It shows both exact prompts, every matched seed's requested-margin change, and
+raw LEFT/RIGHT success counts; no confidence interval or significance claim is
+implied for `n=3` per direction and setting.
+
+For Cosmos3 Nano, moving from `g=3` to `g=1` changed requested success from
+`6/6` to `4/6`: LEFT fell from `3/3` to `1/3`, while RIGHT remained `3/3`.
+The exact LEFT prompt was “Put the Rubik's cube to the left of the bowl.” and
+the exact RIGHT prompt was “Put the Rubik's cube to the right of the bowl.”
+Mean requested margin fell from `0.10322199` to `0.03614888` m on LEFT and
+from `0.40921744` to `0.21589671` m on RIGHT; the all-cell paired mean change
+was `-0.13019692` m. The paired transitions were two LEFT success-to-failure
+changes and four unchanged successes.
+
+The mean RIGHT-minus-LEFT margin gap narrowed from `0.305995` to `0.179748` m,
+but this is not improved success balance: RIGHT margin fell even more than
+LEFT, while the weaker-side mean margin itself worsened from `0.103222` to
+`0.036149` m and LEFT lost two successes. Endpoint separation and weaker-side
+competence must therefore be read as distinct diagnostics.
+
+Trajectory quality was also mixed by direction. Mean cube path length changed
+from `0.252732` to `0.496044` m on LEFT and from `1.095421` to `0.439394` m on
+RIGHT. Mean joint-action total variation changed from `5.270188` to `10.041255`
+on LEFT and from `10.487576` to `6.695867` on RIGHT. Removing the joint
+action/video CFG blend did not make trajectories uniformly smoother; it
+produced direction-specific changes alongside reduced LEFT robustness. These
+paired observations do not establish a powered or general effect and do not
+identify CFG as the cause of either individual failure.
+
+For DreamZero, moving from the conditional-action-equivalent `s=1` baseline to
+derived `s=2` changed success from `3/6` to `4/6`: LEFT `2/3` to `1/3`, RIGHT
+`1/3` to `3/3`. Mean requested margin changed from `0.10978410` to
+`0.05174246` m on LEFT and from `0.04008883` to `0.21683129` m on RIGHT; the
+all-cell paired mean change was `+0.05935041` m. Signed RIGHT-minus-LEFT bias
+flipped from `-0.069695` to `+0.165089` m. Exact transitions were two RIGHT
+failure-to-success changes, one LEFT success-to-failure, one unchanged failure,
+and two unchanged successes. This is descriptive redistribution toward RIGHT,
+not a powered aggregate improvement. DreamZero `s=2` remains derived CFG-style
+negative-branch action guidance using the fixed visual-quality negative
+prompt—not an official DreamZero action-CFG feature.
 
 The nine fixed-observation action requests across both arms are diagnostics,
 not robot episodes, and contribute zero observations to every behavioral
@@ -1060,9 +1120,9 @@ unauthorized.
 
 V2-A015 is behaviorally complete: all twelve authorized cells are valid, no
 cell remains, and neither arm may be rerun. Keep the two six-cell denominators
-separate. The next work is hash-bearing Cosmos compilation and comparison
-media, with no trajectory-quality claim added before that compiler runs. Run
-the repository gate before committing the coherent evidence slice:
+separate. No inference remains. The only next work is rendering the final
+plots, building and verifying paired media, and running final validation before
+committing the coherent evidence slice:
 
 ```bash
 python3 tools/validate_vla_wam_v2_protocol.py

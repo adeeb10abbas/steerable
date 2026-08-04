@@ -1,0 +1,71 @@
+{
+  "schema_version": "vla-wam-shared-v2-post-result-current-stack-replication-amendment-v1",
+  "amendment_id": "V2-A008",
+  "recorded_at_utc": "2026-08-04T01:21:46Z",
+  "recorded_at_git_head": "12758797e9e7cbfc28e1a0fb1759c730d72540b8",
+  "status": "frozen_before_current_stack_model_load_or_behavioral_inference",
+  "decision_origin": "User explicitly requested completing the authorized pi0-FAST wording episodes with the currently available code after the historical integration revisions proved unrecoverable.",
+  "parent_authorization": {
+    "amendment_id": "V2-A005",
+    "path": "artifacts/vla_wam_shared_v2/pilot/post_result_expansion_amendment.json",
+    "sha256": "e8f724a1818e20ab6cb1481c87a5d5c255d42148d47bf387d7f77f3643587101"
+  },
+  "known_blocker_at_decision": {
+    "path": "artifacts/vla_wam_shared_v2/pilot/expansion/pi0_fast_wording_readiness.json",
+    "sha256": "47b38eb2f17be802c126ef0a7e93b16693823ee2df62b8007f51bb0514baf5c5",
+    "historical_openpi_commit_missing": "9e46d3aea26417bfb564227734b95d010aa827e5",
+    "historical_robolab_commit_missing": "11142d4319e44401e0464866bb5fedf7ec8a8927"
+  },
+  "replication_identity": {
+    "experiment_id": "pi0_fast_current_stack_three_wording_replication",
+    "policy_repository": {
+      "path": "/data/users/ali/openpi",
+      "commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+      "config": "pi0_fast_droid_jointpos_polaris"
+    },
+    "simulator_repository": {
+      "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4",
+      "commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+    },
+    "checkpoint": {
+      "source": "gs://openpi-assets-simeval/pi0_fast_droid_jointpos",
+      "path": "/data/users/ali/vla_wam/checkpoints/pi0_fast_droid_jointpos/pi0_fast_droid_jointpos",
+      "payload_bytes": 10844314410,
+      "file_count": 19,
+      "file_hash_manifest": "artifacts/vla_wam_shared_v2/pilot/expansion/pi0_fast_wording_readiness.json"
+    }
+  },
+  "behavioral_grid": {
+    "episode_count": 60,
+    "environment_seeds": [8300, 8301, 8302, 8303, 8304, 8305, 8306, 8307, 8308, 8309],
+    "sampling_seeds": [8300, 8301, 8302, 8303, 8304, 8305, 8306, 8307, 8308, 8309],
+    "prompt_families": [
+      "short_command",
+      "goal_as_outcome",
+      "desired_plus_negated_opposite"
+    ],
+    "requested_relations": ["left", "right"],
+    "static_episode_prompt_only": true,
+    "oracle_or_subtask_coach": false,
+    "dynamic_prompt_switches": 0,
+    "viewport_video_required": true,
+    "executed_action_trace_required": true
+  },
+  "release_gates": [
+    "exact current source commits and clean repository state recorded",
+    "checkpoint file hashes match the existing committed manifest",
+    "current config loads the checkpoint without compatibility substitution",
+    "fixed-observation exact-repeat output is bit-identical",
+    "LEFT versus RIGHT prompt-only action output differs",
+    "environment and policy sampling seeds are injected and recorded",
+    "neutral matched reset begins outside both requested regions",
+    "viewport video and executed action trace persist for every valid episode",
+    "infrastructure-invalid attempts remain outside behavioral denominators"
+  ],
+  "claim_boundary": {
+    "historical_wording_queue_status": "remains blocked and unrun at the historical exact-adapter boundary",
+    "current_stack_replication_status": "authorized only under this new identity after every release gate passes",
+    "pooling_rule": "Do not merge current-stack episodes with the historical direct confirmation or describe them as the originally frozen wording grid.",
+    "comparison_rule": "Report current-stack wording results as a separate post-result replication with exact current revisions prominently disclosed."
+  }
+}

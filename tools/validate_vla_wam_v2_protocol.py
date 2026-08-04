@@ -1086,6 +1086,10 @@ def validate(workspace: Path) -> dict[str, Any]:
         workspace
         / "artifacts/vla_wam_shared_v2/pilot/post_result_dreamzero_amendment.json"
     )
+    current_stack_amendment_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/post_result_current_stack_replication_amendment.json"
+    )
     dreamzero_readiness_path = (
         workspace
         / "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_readiness.json"
@@ -1183,6 +1187,7 @@ def validate(workspace: Path) -> dict[str, Any]:
     post_result_amendment = load_json(post_result_amendment_path)
     second_wave_amendment = load_json(second_wave_amendment_path)
     dreamzero_amendment = load_json(dreamzero_amendment_path)
+    current_stack_amendment = load_json(current_stack_amendment_path)
     dreamzero_readiness_artifact = load_json(dreamzero_readiness_path)
     dreamzero_result = load_json(dreamzero_result_path)
     dreamzero_raw_collection = load_json(dreamzero_raw_collection_path)
@@ -1857,8 +1862,8 @@ def validate(workspace: Path) -> dict[str, Any]:
 
     require(
         continuation_state["study_status"]
-        == "authorized_bounded_gates_complete_external_access_and_provenance_blockers_remain",
-        "continuation state names the completed bounded-gate and external-blocker boundary",
+        == "v2_a008_current_stack_pi0_replication_frozen_before_release_gates_lawam_access_pending",
+        "continuation state names the frozen current-stack replication and LaWAM access boundary",
         checks,
     )
     queue = continuation_state["experiment_queue"]
@@ -1962,10 +1967,44 @@ def validate(workspace: Path) -> dict[str, Any]:
     require(
         [item.get("priority") for item in remaining] == [0, 1]
         and [item.get("id") for item in remaining]
-        == ["pi0_fast_three_wording_expansion", "lawam_robotwin_direct_gate"]
+        == ["pi0_fast_current_stack_three_wording_replication", "lawam_robotwin_direct_gate"]
         and [item.get("authorized_cells_remaining") for item in remaining] == [60, 6]
-        and all(item.get("status", "").startswith("blocked_before_model_load") for item in remaining),
-        "continuation state exposes exactly sixty-six authorized cells blocked before model load",
+        and remaining[0].get("status")
+        == "authorized_current_stack_replication_release_gates_pending"
+        and remaining[0].get("amendment_sha256") == sha256(current_stack_amendment_path)
+        and remaining[1].get("status", "").startswith("blocked_before_model_load"),
+        "continuation state exposes the sixty-cell current-stack replication and six-cell LaWAM blocker",
+        checks,
+    )
+    current_stack_state = post_result_decision.get("current_stack_replication_amendment", {})
+    require(
+        current_stack_state.get("status")
+        == "frozen_before_current_stack_model_load_or_behavioral_inference"
+        and current_stack_state.get("amendment_id") == "V2-A008"
+        and current_stack_state.get("sha256") == sha256(current_stack_amendment_path)
+        and current_stack_state.get("authorized_queue")
+        == ["pi0_fast_current_stack_three_wording_replication"]
+        and current_stack_state.get("behavioral_episode_count") == 60,
+        "continuation state binds the V2-A008 current-stack replication before inference",
+        checks,
+    )
+    require(
+        current_stack_amendment["schema_version"]
+        == "vla-wam-shared-v2-post-result-current-stack-replication-amendment-v1"
+        and current_stack_amendment["amendment_id"] == "V2-A008"
+        and current_stack_amendment["status"]
+        == "frozen_before_current_stack_model_load_or_behavioral_inference"
+        and current_stack_amendment["recorded_at_git_head"]
+        == "12758797e9e7cbfc28e1a0fb1759c730d72540b8"
+        and current_stack_amendment["replication_identity"]["policy_repository"]["commit"]
+        == "c23745b5ad24e98f66967ea795a07b2588ed6c79"
+        and current_stack_amendment["replication_identity"]["simulator_repository"]["commit"]
+        == "0aef241fb088ca21bb4ebd24448940ed56620d17"
+        and current_stack_amendment["behavioral_grid"]["episode_count"] == 60
+        and current_stack_amendment["claim_boundary"]["historical_wording_queue_status"]
+        == "remains blocked and unrun at the historical exact-adapter boundary"
+        and len(current_stack_amendment["release_gates"]) == 9,
+        "V2-A008 freezes exact current revisions, sixty cells, release gates, and non-comparability",
         checks,
     )
     require(
@@ -2501,6 +2540,12 @@ def validate(workspace: Path) -> dict[str, Any]:
         ),
         "post_result_dreamzero_amendment_sha256": sha256(
             dreamzero_amendment_path
+        ),
+        "post_result_current_stack_replication_amendment_path": str(
+            current_stack_amendment_path.relative_to(workspace)
+        ),
+        "post_result_current_stack_replication_amendment_sha256": sha256(
+            current_stack_amendment_path
         ),
         "efficient_wam_pair03_handoff": pair03_handoff,
         "efficient_wam_pairs04_09": efficient_pairs04_09,

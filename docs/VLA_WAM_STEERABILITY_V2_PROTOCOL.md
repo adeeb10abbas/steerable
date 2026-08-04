@@ -34,6 +34,15 @@ checkpoint revisions, pre-existing-server exclusion, setup gates, future
 retention rule, and six-cell ceiling are frozen in
 [`post_result_dreamzero_amendment.json`](../artifacts/vla_wam_shared_v2/pilot/post_result_dreamzero_amendment.json).
 
+User-directed post-result amendment `V2-A008` was recorded after the exact
+historical OpenPI and RoboLab revisions for the authorized π0-FAST wording
+grid proved unavailable. It does not rewrite or unblock that historical queue.
+Instead, it freezes a separate sixty-cell current-stack replication at the
+exact available source commits, checkpoint/config identity, prompts, seeds,
+release gates, and non-comparability boundary before current-stack model load
+or behavioral inference. Its source is
+[`post_result_current_stack_replication_amendment.json`](../artifacts/vla_wam_shared_v2/pilot/post_result_current_stack_replication_amendment.json).
+
 This is a disclosed post-v1 extension. Every pi0.5/Cosmos result in the
 160-episode DROID study and the small retrospective Efficient-WAM, FastWAM,
 and LingBot-VA gates was known when v2 was designed. Those outcomes motivated

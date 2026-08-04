@@ -1,9 +1,9 @@
 {
   "schema_version": "vla-wam-shared-v2-continuation-v1",
-  "updated_at_utc": "2026-08-04T00:22:57Z",
+  "updated_at_utc": "2026-08-04T01:21:46Z",
   "evidence_head_before_handoff": "77966ff125d84ed7575ea9e934e367246cf5cdc6",
   "active_branch": "codex/wam-language-steerability",
-  "study_status": "authorized_bounded_gates_complete_external_access_and_provenance_blockers_remain",
+  "study_status": "v2_a008_current_stack_pi0_replication_frozen_before_release_gates_lawam_access_pending",
   "authoritative_docs": [
     "docs/VLA_WAM_CONTINUATION.md",
     "docs/VLA_WAM_STEERABILITY_V2_PROTOCOL.md",
@@ -14,7 +14,7 @@
   "validation": {
     "command": "python3 tools/validate_vla_wam_v2_protocol.py",
     "last_status": "valid",
-    "last_check_count": 698,
+    "last_check_count": 700,
     "report": "artifacts/vla_wam_shared_v2/protocol_validation.json"
   },
   "host_snapshot": {
@@ -477,11 +477,13 @@
   "remaining_authorized_work": [
     {
       "priority": 0,
-      "id": "pi0_fast_three_wording_expansion",
-      "status": "blocked_before_model_load_missing_exact_policy_and_simulator_revisions",
+      "id": "pi0_fast_current_stack_three_wording_replication",
+      "status": "authorized_current_stack_replication_release_gates_pending",
       "authorized_cells_remaining": 60,
-      "blocker_artifact": "artifacts/vla_wam_shared_v2/pilot/expansion/pi0_fast_wording_readiness.json",
-      "required_external_change": "Recover the two historical Git object stores from the original machine and transfer verified bundles to the ali PVC."
+      "amendment": "artifacts/vla_wam_shared_v2/pilot/post_result_current_stack_replication_amendment.json",
+      "amendment_sha256": "d38acc8ccfa144e829173b9cd52048a94686006fba27ca0d336c37968b177f96",
+      "historical_queue_status": "blocked_and_unrun_missing_exact_policy_and_simulator_revisions",
+      "next_step": "Implement deterministic seed injection and executed-action tracing for the frozen current OpenPI/RoboLab revisions, then pass every V2-A008 release gate before the first behavioral cell."
     },
     {
       "priority": 1,
@@ -576,6 +578,17 @@
       "behavioral_episode_count": 6,
       "simulator_video_lane": "raytrace-rtxpro6000-ali"
     },
+    "current_stack_replication_amendment": {
+      "status": "frozen_before_current_stack_model_load_or_behavioral_inference",
+      "amendment_id": "V2-A008",
+      "path": "artifacts/vla_wam_shared_v2/pilot/post_result_current_stack_replication_amendment.json",
+      "sha256": "d38acc8ccfa144e829173b9cd52048a94686006fba27ca0d336c37968b177f96",
+      "authorized_queue": [
+        "pi0_fast_current_stack_three_wording_replication"
+      ],
+      "behavioral_episode_count": 60,
+      "comparison_boundary": "separate non-comparable current-stack replication; never merge with the blocked historical wording queue"
+    },
     "note": "The expansion was selected after the completed three-WAM results were known and is disclosed as post-result rather than preregistered."
   },
   "cross_host_handoff": {
@@ -592,7 +605,7 @@
     ]
   },
   "unauthorized_work": [
-    "Do not exceed the bounded V2-A005/V2-A006/V2-A007 queues or start another checkpoint before a model-specific registry is frozen in a new disclosed amendment.",
+    "Do not exceed the bounded V2-A005/V2-A006/V2-A007/V2-A008 queues or start another checkpoint before a model-specific registry is frozen in a new disclosed amendment.",
     "Do not pool DROID and RoboTwin raw success counts.",
     "Do not add oracle actions, subtask coaching, dynamic prompts, or progress-conditioned instructions."
   ],

@@ -27,11 +27,14 @@ Current direct-command evidence is:
 | RoboTwin | LingBot-VLA 4B | 1/3 | 0/3 | bounded six-cell gate complete |
 | RoboTwin | Light-WAM | 1/3 | 0/3 | bounded six-cell gate complete |
 
-All currently runnable bounded gates are complete. Two authorized queues remain
-blocked before model load: the sixty-cell π0-FAST wording expansion requires
-the missing exact historical OpenPI and RoboLab commits, and the six-cell
-LaWAM gate requires a Hugging Face account with accepted DINOv3 terms. Idle
-GPUs do not relax either provenance or access gate.
+All original bounded gates are complete. The sixty-cell historical π0-FAST
+wording expansion remains blocked on missing exact OpenPI and RoboLab commits.
+User-directed amendment `V2-A008` separately authorizes rerunning those same
+prompt/seed cells as a current-stack replication at the exact available
+revisions; its results must never be merged with or represented as the
+historical queue. That replication is now at pre-inference release gates. The
+six-cell LaWAM gate still requires a Hugging Face account and token with an
+accepted DINOv3 grant. Idle GPUs do not relax either release or access gate.
 
 All 42 prospective WAM episodes at pairs03–09 are now valid completed evidence
 and must not be rerun. Efficient-WAM-RT produced 5/14 requested-direction
@@ -782,6 +785,26 @@ command is:
 git -C /home/ali/openpi-robolab bundle create /tmp/openpi-robolab-all.bundle --all && \
 git -C /home/ali/projects/RoboLab bundle create /tmp/robolab-all.bundle --all
 ```
+
+### V2-A008 current-stack replication
+
+After the historical revisions proved unavailable, the user explicitly
+requested completing the sixty prompt/seed cells with the code that is
+actually present. Amendment
+[`post_result_current_stack_replication_amendment.json`](../artifacts/vla_wam_shared_v2/pilot/post_result_current_stack_replication_amendment.json)
+freezes that work before current-stack model load or behavioral inference.
+It uses OpenPI `c23745b5ad24e98f66967ea795a07b2588ed6c79`, RoboLab
+`0aef241fb088ca21bb4ebd24448940ed56620d17`, config
+`pi0_fast_droid_jointpos_polaris`, and the already hash-pinned public
+`pi0_fast_droid_jointpos` checkpoint.
+
+This is a separate post-result replication, not a repair of the historical
+queue. Before its first cell, the adapter must add and verify deterministic
+environment/policy sampling seeds and executed-action traces, then pass the
+checkpoint-load, exact-repeat, prompt-sensitivity, neutral-reset, viewport
+video, and invalid-attempt gates recorded in V2-A008. Keep its raw root,
+result schema, denominators, figures, and wording claims separate from the
+historical direct confirmation.
 
 Transfer both bundles through the approved ali-owned PVC path, verify the two
 required commits with `git bundle verify` and `git cat-file`, and restore

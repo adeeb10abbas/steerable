@@ -1,0 +1,73 @@
+{
+  "schema_version": "vla-wam-shared-v2-light-wam-media-v1",
+  "generated_at_utc": "2026-08-04T00:20:21.778474+00:00",
+  "status": "complete_selected_pair00",
+  "model_id": "light_wam_robotwin",
+  "media_kind": "simulator_execution_not_imagined_future",
+  "selection_policy": "First frozen pair containing a LEFT success and matched RIGHT failure.",
+  "behavioral_denominator_change": 0,
+  "source_result": {
+    "path": "artifacts/vla_wam_shared_v2/pilot/expansion/light_wam_robotwin_direct_gate.json",
+    "bytes": 42232,
+    "sha256": "f33e1ff8fdc82c4a035f2cc113b91b311d685d9747dbcbb1104453fc455745d6"
+  },
+  "source_videos": {
+    "LEFT": {
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_00/robotwin_pair_00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__left/simulator.mp4",
+      "bytes": 541814,
+      "sha256": "6fc037f782b7e868a154d5b24cfb73134ce137ddaca769e1aad0a42c5bfca789"
+    },
+    "RIGHT": {
+      "path": "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_00/robotwin_pair_00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__right/simulator.mp4",
+      "bytes": 1620158,
+      "sha256": "1c8a9d78e7ae53ab4a2ad42db401e11e6ac9abd3f772901d765c5f23ddd9adbd"
+    }
+  },
+  "composition": {
+    "layout": "LEFT command on the left; matched RIGHT command on the right",
+    "shorter_episode_policy": "hold_final_frame",
+    "left_duration_seconds": 26.8,
+    "right_duration_seconds": 80.0,
+    "output_duration_seconds": 80.0,
+    "ffmpeg": {
+      "path": "/data/users/ali/vla_wam/envs/light-wam-b200/lib/python3.10/site-packages/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v7.0.2",
+      "bytes": 79826272,
+      "sha256": "e7e7fb30477f717e6f55f9180a70386c62677ef8a4d4d1a5d948f4098aa3eb99"
+    },
+    "command": [
+      "/data/users/ali/vla_wam/envs/light-wam-b200/lib/python3.10/site-packages/imageio_ffmpeg/binaries/ffmpeg-linux-x86_64-v7.0.2",
+      "-y",
+      "-hide_banner",
+      "-loglevel",
+      "error",
+      "-i",
+      "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_00/robotwin_pair_00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__left/simulator.mp4",
+      "-i",
+      "/data/users/ali/vla_wam/raw/light_wam_robotwin/v2_a006/episodes/robotwin_pair_00/robotwin_pair_00/place_a2b_left/environment_seed_4300000/sampling_seed_8400/direct_command__right/simulator.mp4",
+      "-filter_complex",
+      "[0:v]setpts=PTS-STARTPTS,tpad=stop_mode=clone:stop_duration=53.200[l];[1:v]setpts=PTS-STARTPTS,tpad=stop_mode=clone:stop_duration=0.000[r];[l][r]hstack=inputs=2[v]",
+      "-map",
+      "[v]",
+      "-t",
+      "80.000",
+      "-r",
+      "10",
+      "-c:v",
+      "libx264",
+      "-preset",
+      "medium",
+      "-crf",
+      "25",
+      "-pix_fmt",
+      "yuv420p",
+      "-movflags",
+      "+faststart",
+      "artifacts/vla_wam_shared_v2/media/light_wam_robotwin/light_wam_pair00_left_success_right_failure.mp4"
+    ]
+  },
+  "publication_video": {
+    "path": "artifacts/vla_wam_shared_v2/media/light_wam_robotwin/light_wam_pair00_left_success_right_failure.mp4",
+    "bytes": 1634716,
+    "sha256": "1830c4a0339ffc47eebb38eb4f14a00b7adb8a507cf130e3dc3c1700fa299386"
+  }
+}

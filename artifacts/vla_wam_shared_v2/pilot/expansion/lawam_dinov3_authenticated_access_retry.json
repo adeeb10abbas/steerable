@@ -1,0 +1,39 @@
+{
+  "schema_version": "vla-wam-shared-v2-lawam-dinov3-access-retry-v1",
+  "recorded_at_utc": "2026-08-04T00:12:36Z",
+  "status": "blocked_authenticated_credential_lacks_gated_model_access",
+  "amendment_id": "V2-A006",
+  "model_id": "lawam_robotwin",
+  "dependency": {
+    "repository": "facebook/dinov3-vitb16-pretrain-lvd1689m",
+    "revision": "5931719e67bbdb9737e363e781fb0c67687896bc",
+    "destination": "/data/users/ali/vla_wam/checkpoints/dinov3-vitb16-pretrain-lvd1689m"
+  },
+  "attempt": {
+    "credential_source": "ephemeral user-supplied Hugging Face token; token value not retained",
+    "credential_present_in_pod_before_attempt": false,
+    "command_shape": "hf download <repository> --revision <exact revision> --local-dir <ali PVC destination>",
+    "http_status": 401,
+    "error_class": "huggingface_hub.errors.GatedRepoError",
+    "error_summary": "The authenticated request still lacks access to the manually gated DINOv3 repository. Model terms must be accepted for the token owner before exact-revision payload access is granted.",
+    "model_payload_downloaded": false,
+    "model_load_attempt_count": 0,
+    "model_action_request_count": 0,
+    "behavioral_episode_count": 0
+  },
+  "public_metadata_files_retained_outside_git": [
+    {
+      "path": "/data/users/ali/vla_wam/checkpoints/dinov3-vitb16-pretrain-lvd1689m/LICENSE.md",
+      "bytes": 7503,
+      "sha256": "42990cce5247479866ce2e6aa375eb3c3d1717966c41b74890d377a31ad0b0fe"
+    },
+    {
+      "path": "/data/users/ali/vla_wam/checkpoints/dinov3-vitb16-pretrain-lvd1689m/README.md",
+      "bytes": 14520,
+      "sha256": "25d122eb8f5b880fd23c736fb6ea8018ee45c12237e00b8a86d14c653904999e"
+    }
+  ],
+  "denominator_policy": "This is a pre-inference access blocker. It contributes no model failure, success, or behavioral denominator entry.",
+  "exact_next_command": "/data/users/ali/vla_wam/envs/hf-tools/bin/hf download facebook/dinov3-vitb16-pretrain-lvd1689m --revision 5931719e67bbdb9737e363e781fb0c67687896bc --local-dir /data/users/ali/vla_wam/checkpoints/dinov3-vitb16-pretrain-lvd1689m",
+  "human_prerequisite": "Accept the facebook/dinov3-vitb16-pretrain-lvd1689m terms for the Hugging Face account that owns the token, then authenticate the ali-owned lane and rerun the exact command."
+}

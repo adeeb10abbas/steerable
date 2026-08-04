@@ -1,9 +1,9 @@
 {
   "schema_version": "vla-wam-shared-v2-continuation-v1",
-  "updated_at_utc": "2026-08-03T20:20:29Z",
+  "updated_at_utc": "2026-08-04T00:22:57Z",
   "evidence_head_before_handoff": "77966ff125d84ed7575ea9e934e367246cf5cdc6",
   "active_branch": "codex/wam-language-steerability",
-  "study_status": "post_result_expansions_v2_a005_a006_a007_frozen_dreamzero_complete",
+  "study_status": "authorized_bounded_gates_complete_external_access_and_provenance_blockers_remain",
   "authoritative_docs": [
     "docs/VLA_WAM_CONTINUATION.md",
     "docs/VLA_WAM_STEERABILITY_V2_PROTOCOL.md",
@@ -14,7 +14,7 @@
   "validation": {
     "command": "python3 tools/validate_vla_wam_v2_protocol.py",
     "last_status": "valid",
-    "last_check_count": 624,
+    "last_check_count": 698,
     "report": "artifacts/vla_wam_shared_v2/protocol_validation.json"
   },
   "host_snapshot": {
@@ -25,7 +25,7 @@
     "policy_or_simulator_listener": "none on ports 8000 or 5000"
   },
   "groot_n17_readiness": {
-    "status": "assets_downloaded_and_server_contract_smoke_complete",
+    "status": "complete_6_of_6_valid_cells",
     "official_repository": {
       "path": "/home/ali/projects/Isaac-GR00T",
       "commit": "b9955401d50c92a29258732e3ad6ccd579f1bdc0",
@@ -60,7 +60,46 @@
       "simulator_episode_started": false,
       "server_stopped_cleanly": true
     },
-    "next_step": "Run the V2-A005 exact-repeat fixed-observation probe, then the six direct-command DROID cells at seeds 8300-8302 if the probe and action contract pass."
+    "result": "artifacts/vla_wam_shared_v2/pilot/expansion/groot_n17_droid_v2_registry.json",
+    "result_sha256": "95077a42bb0115bc673ea13ae5acdc6fdef6f476627804662f73c219ebd88bc7",
+    "readiness": "artifacts/vla_wam_shared_v2/pilot/expansion/groot_n17_droid_readiness.json",
+    "readiness_sha256": "b916ddc3209ed1b2b76d1e20f446abd40c88303a709d828f1ca702efc3af3f8e",
+    "valid_episode_count": 6,
+    "valid_failure_count": 6,
+    "success_by_relation": {
+      "left": "0/3",
+      "right": "0/3"
+    },
+    "aligned_endpoint_pair_count": 3,
+    "distinct_executed_action_pair_count": 3,
+    "competence_gate": "zero_direct_success_stop",
+    "do_not_rerun_environment_seeds": [
+      8300,
+      8301,
+      8302
+    ],
+    "next_step": "No GR00T behavioral cell remains. Preserve all six valid failures and the three aligned endpoint pairs; do not start a wording grid."
+  },
+  "lingbot_vla_4b_readiness": {
+    "status": "six_cell_gate_complete_left_only",
+    "amendment_id": "V2-A005",
+    "readiness": "artifacts/vla_wam_shared_v2/pilot/expansion/lingbot_vla_4b_robotwin_readiness.json",
+    "readiness_sha256": "588699ed912fe900de5a5ca36c350236e15ae0b0a2c55afeea22670759b68c30",
+    "result": "artifacts/vla_wam_shared_v2/pilot/expansion/lingbot_vla_4b_direct_gate.json",
+    "result_sha256": "7c0ad19833d6cbb51bb5fbdac8f9546f0e311333e498a15594b55f68dc7b6534",
+    "valid_episode_count": 6,
+    "success_by_relation": {
+      "left": "1/3",
+      "right": "0/3"
+    },
+    "competence_gate": "left_only",
+    "wording_grid_eligible": false,
+    "do_not_rerun_pair_ids": [
+      "robotwin_pair_00",
+      "robotwin_pair_01",
+      "robotwin_pair_02"
+    ],
+    "next_step": "The bounded V2-A005 six-cell gate is complete. No additional LingBot-VLA cell is authorized by the current committed amendments."
   },
   "light_wam_robotwin_readiness": {
     "status": "six_cell_direct_gate_complete_left_only",
@@ -83,12 +122,18 @@
     "wording_grid_eligible": false,
     "future_interface": "action_only_infer_action",
     "future_evidence": "not_applicable_never_zero",
+    "publication_media": {
+      "manifest": "artifacts/vla_wam_shared_v2/media/light_wam_robotwin/media_manifest.json",
+      "manifest_sha256": "4c4ad1f9487191291d8614ec6cbad9fd0294384f6c6ed3159569137d356ad398",
+      "paired_video": "artifacts/vla_wam_shared_v2/media/light_wam_robotwin/light_wam_pair00_left_success_right_failure.mp4",
+      "paired_video_sha256": "1830c4a0339ffc47eebb38eb4f14a00b7adb8a507cf130e3dc3c1700fa299386"
+    },
     "do_not_rerun_pair_ids": [
       "robotwin_pair_00",
       "robotwin_pair_01",
       "robotwin_pair_02"
     ],
-    "next_step": "No Light-WAM behavioral cell remains. Preserve the one-direction-only result and keep every setup-invalid attempt outside model denominators."
+    "next_step": "No Light-WAM behavioral cell remains. Preserve the one-direction-only result, the compact matched publication clip, and every setup-invalid attempt outside model denominators."
   },
   "lawam_robotwin_readiness": {
     "status": "registry_frozen_before_any_inference_blocked_on_gated_dinov3_access",
@@ -104,8 +149,10 @@
       "normalization_asset_sha256": "1700bf8ca4eaddaa380a4786a58b09bdbf7474a6ef22fbe558e81c081e9599f0"
     },
     "blocked_component": "facebook/dinov3-vitb16-pretrain-lvd1689m@5931719e67bbdb9737e363e781fb0c67687896bc",
-    "blocker": "The official DINOv3 repository is manually gated. Anonymous exact-revision file access returns HTTP 401, and no authorized Hugging Face credential or pre-staged exact-revision copy exists in the ali-owned lane.",
-    "human_prerequisite": "Accept the DINOv3 model terms on Hugging Face and authenticate the ali-owned lane with an authorized account/token.",
+    "blocker": "The official DINOv3 repository is manually gated. Anonymous access and the 2026-08-04 ephemeral authenticated retry both returned HTTP 401 for exact-revision payload files; the supplied credential does not have the required gated-model grant.",
+    "authenticated_access_retry": "artifacts/vla_wam_shared_v2/pilot/expansion/lawam_dinov3_authenticated_access_retry.json",
+    "authenticated_access_retry_sha256": "ee8aa9b9d96c6edcdeedaf598402e4b257b55004125cfd333b8031bc894a0e5b",
+    "human_prerequisite": "Accept the DINOv3 model terms for the Hugging Face account that owns the token, then authenticate the ali-owned lane with that authorized account/token.",
     "next_authorized_command": "/data/users/ali/vla_wam/envs/hf-tools/bin/hf download facebook/dinov3-vitb16-pretrain-lvd1689m --revision 5931719e67bbdb9737e363e781fb0c67687896bc --local-dir /data/users/ali/vla_wam/checkpoints/dinov3-vitb16-pretrain-lvd1689m",
     "after_download": "Hash every non-cache DINOv3 payload file, update the registry, build and gate the isolated policy and simulator environments, then run the RNG-restored exact-repeat probe. Run the six frozen pairs00-02 cells only if that probe passes.",
     "model_action_requests": 0,
@@ -394,18 +441,25 @@
     {
       "priority": 2,
       "id": "lingbot_vla_4b_robotwin_pilot",
-      "status": "authorized_onboarding_blocked_checkpoint_and_repository_missing",
+      "status": "complete_six_valid_cells_left_only",
       "first_episode_count": 6,
       "checkpoint": "Robbyant/lingbot-vla-4b-posttrain-robotwin",
+      "result": "LEFT 1/3; RIGHT 0/3; one of three endpoint pairs anti-directed; no decoded visual future",
+      "artifact": "artifacts/vla_wam_shared_v2/pilot/expansion/lingbot_vla_4b_direct_gate.json",
+      "artifact_sha256": "7c0ad19833d6cbb51bb5fbdac8f9546f0e311333e498a15594b55f68dc7b6534",
+      "next_cell": null,
       "resume_section": "docs/VLA_WAM_CONTINUATION.md#experiment-3-lingbot-vla-4b-robotwin-onboarding"
     },
     {
       "priority": 3,
       "id": "groot_n17_droid_pilot",
-      "status": "authorized_ready_for_exact_repeat_probe_and_direct_gate",
+      "status": "complete_six_valid_cells_zero_success",
       "first_episode_count": 6,
       "checkpoint": "nvidia/GR00T-N1.7-DROID",
-      "dependency": "all model assets and server contract smoke complete; V2-A005 authorizes the probe and six-cell direct gate",
+      "result": "LEFT 0/3; RIGHT 0/3; 3/3 aligned endpoint pairs; 3/3 distinct executed-action pairs",
+      "artifact": "artifacts/vla_wam_shared_v2/pilot/expansion/groot_n17_droid_v2_registry.json",
+      "artifact_sha256": "95077a42bb0115bc673ea13ae5acdc6fdef6f476627804662f73c219ebd88bc7",
+      "next_cell": null,
       "resume_section": "docs/VLA_WAM_CONTINUATION.md#experiment-4-groot-n17-droid-onboarding"
     },
     {
@@ -418,6 +472,24 @@
       "artifact": "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json",
       "artifact_sha256": "4c76cdc3ca9eaf227d21d160199408f22e1b3dd7a71176a5a5dbe22223714461",
       "resume_section": "docs/VLA_WAM_CONTINUATION.md#experiment-5-dreamzero-droid-direct-gate"
+    }
+  ],
+  "remaining_authorized_work": [
+    {
+      "priority": 0,
+      "id": "pi0_fast_three_wording_expansion",
+      "status": "blocked_before_model_load_missing_exact_policy_and_simulator_revisions",
+      "authorized_cells_remaining": 60,
+      "blocker_artifact": "artifacts/vla_wam_shared_v2/pilot/expansion/pi0_fast_wording_readiness.json",
+      "required_external_change": "Recover the two historical Git object stores from the original machine and transfer verified bundles to the ali PVC."
+    },
+    {
+      "priority": 1,
+      "id": "lawam_robotwin_direct_gate",
+      "status": "blocked_before_model_load_authenticated_credential_lacks_gated_dinov3_access",
+      "authorized_cells_remaining": 6,
+      "blocker_artifact": "artifacts/vla_wam_shared_v2/pilot/expansion/lawam_dinov3_authenticated_access_retry.json",
+      "required_external_change": "Accept the exact DINOv3 repository terms for the token owner and authenticate the ali-owned lane with that granted account."
     }
   ],
   "post_result_decision": {

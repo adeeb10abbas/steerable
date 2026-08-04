@@ -1106,6 +1106,38 @@ def validate(workspace: Path) -> dict[str, Any]:
         workspace
         / "artifacts/vla_wam_shared_v2/media/dreamzero_droid/imagination/imagination_media_manifest.json"
     )
+    groot_result_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/expansion/groot_n17_droid_v2_registry.json"
+    )
+    groot_readiness_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/expansion/groot_n17_droid_readiness.json"
+    )
+    lingbot_vla_result_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/expansion/lingbot_vla_4b_direct_gate.json"
+    )
+    lingbot_vla_readiness_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/expansion/lingbot_vla_4b_robotwin_readiness.json"
+    )
+    lawam_access_retry_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/expansion/lawam_dinov3_authenticated_access_retry.json"
+    )
+    light_wam_result_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/pilot/expansion/light_wam_robotwin_direct_gate.json"
+    )
+    light_wam_media_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/media/light_wam_robotwin/media_manifest.json"
+    )
+    video_gallery_path = (
+        workspace
+        / "artifacts/vla_wam_shared_v2/media/video_first_gallery_manifest.json"
+    )
     efficient_pair03_integration_path = (
         workspace
         / "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/efficient_wam_rt_pair03_integration.json"
@@ -1156,6 +1188,14 @@ def validate(workspace: Path) -> dict[str, Any]:
     dreamzero_raw_collection = load_json(dreamzero_raw_collection_path)
     dreamzero_media = load_json(dreamzero_media_path)
     dreamzero_imagination_media = load_json(dreamzero_imagination_media_path)
+    groot_result = load_json(groot_result_path)
+    groot_readiness_artifact = load_json(groot_readiness_path)
+    lingbot_vla_result = load_json(lingbot_vla_result_path)
+    lingbot_vla_readiness_artifact = load_json(lingbot_vla_readiness_path)
+    lawam_access_retry = load_json(lawam_access_retry_path)
+    light_wam_result = load_json(light_wam_result_path)
+    light_wam_media = load_json(light_wam_media_path)
+    video_gallery = load_json(video_gallery_path)
     bundle_manifest = load_json(bundle_manifest_path)
     paired_media = load_json(paired_media_path)
     droid_paired_media = load_json(droid_paired_media_path)
@@ -1817,8 +1857,8 @@ def validate(workspace: Path) -> dict[str, Any]:
 
     require(
         continuation_state["study_status"]
-        == "post_result_expansions_v2_a005_a006_a007_frozen_dreamzero_complete",
-        "continuation state names the frozen V2-A005/A006/A007 DreamZero-complete boundary",
+        == "authorized_bounded_gates_complete_external_access_and_provenance_blockers_remain",
+        "continuation state names the completed bounded-gate and external-blocker boundary",
         checks,
     )
     queue = continuation_state["experiment_queue"]
@@ -1840,6 +1880,8 @@ def validate(workspace: Path) -> dict[str, Any]:
         checks,
     )
     groot_readiness = continuation_state.get("groot_n17_readiness", {})
+    lingbot_vla_readiness = continuation_state.get("lingbot_vla_4b_readiness", {})
+    lawam_readiness = continuation_state.get("lawam_robotwin_readiness", {})
     dreamzero_readiness = continuation_state.get("dreamzero_droid_readiness", {})
     expected_do_not_rerun = [
         f"{model_id}/robotwin_pair_{pair_index:02d}"
@@ -1863,20 +1905,35 @@ def validate(workspace: Path) -> dict[str, Any]:
         and queue[1]["remaining_new_episode_count"] == 0
         and queue[1]["next_cell"] is None
         and queue[1]["do_not_rerun"] == expected_do_not_rerun
-        and queue[2]["status"]
-        == "authorized_onboarding_blocked_checkpoint_and_repository_missing"
-        and queue[3]["status"]
-        == "authorized_ready_for_exact_repeat_probe_and_direct_gate"
+        and queue[2]["status"] == "complete_six_valid_cells_left_only"
+        and queue[2].get("artifact_sha256") == sha256(lingbot_vla_result_path)
+        and queue[2].get("next_cell") is None
+        and queue[3]["status"] == "complete_six_valid_cells_zero_success"
+        and queue[3].get("artifact_sha256") == sha256(groot_result_path)
+        and queue[3].get("next_cell") is None
         and queue[4]["status"]
         == "complete_six_valid_cells_both_directions_gate"
         and queue[4]["first_episode_count"] == 6
         and queue[4].get("artifact")
         == "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json"
         and queue[4].get("artifact_sha256") == sha256(dreamzero_result_path)
-        and groot_readiness.get("status")
-        == "assets_downloaded_and_server_contract_smoke_complete"
+        and groot_readiness.get("status") == "complete_6_of_6_valid_cells"
         and groot_readiness.get("server_smoke", {}).get("health_ping") is True
         and groot_readiness.get("server_smoke", {}).get("simulator_episode_started") is False
+        and groot_readiness.get("result_sha256") == sha256(groot_result_path)
+        and groot_readiness.get("readiness_sha256") == sha256(groot_readiness_path)
+        and groot_readiness.get("valid_episode_count") == 6
+        and groot_readiness.get("valid_failure_count") == 6
+        and groot_readiness.get("aligned_endpoint_pair_count") == 3
+        and groot_readiness.get("distinct_executed_action_pair_count") == 3
+        and lingbot_vla_readiness.get("status") == "six_cell_gate_complete_left_only"
+        and lingbot_vla_readiness.get("result_sha256") == sha256(lingbot_vla_result_path)
+        and lingbot_vla_readiness.get("readiness_sha256")
+        == sha256(lingbot_vla_readiness_path)
+        and lingbot_vla_readiness.get("valid_episode_count") == 6
+        and lingbot_vla_readiness.get("competence_gate") == "left_only"
+        and lawam_readiness.get("authenticated_access_retry_sha256")
+        == sha256(lawam_access_retry_path)
         and dreamzero_readiness.get("status")
         == "complete_six_valid_cells_both_directions_gate"
         and dreamzero_readiness.get("model_action_request_count") == 268
@@ -1898,7 +1955,104 @@ def validate(workspace: Path) -> dict[str, Any]:
         == 3
         and dreamzero_readiness.get("invalid_attempt_count") == 11
         and dreamzero_readiness.get("runtime_intervention_count") == 0,
-        "continuation state freezes completed work and records the completed DreamZero gate",
+        "continuation state freezes every completed bounded gate and exact remaining blockers",
+        checks,
+    )
+    remaining = continuation_state.get("remaining_authorized_work", [])
+    require(
+        [item.get("priority") for item in remaining] == [0, 1]
+        and [item.get("id") for item in remaining]
+        == ["pi0_fast_three_wording_expansion", "lawam_robotwin_direct_gate"]
+        and [item.get("authorized_cells_remaining") for item in remaining] == [60, 6]
+        and all(item.get("status", "").startswith("blocked_before_model_load") for item in remaining),
+        "continuation state exposes exactly sixty-six authorized cells blocked before model load",
+        checks,
+    )
+    require(
+        groot_result["schema_version"] == "vla-wam-shared-v2-groot-droid-result-v1"
+        and groot_result["status"] == "complete"
+        and groot_result["design"]["valid_episode_count"] == 6
+        and groot_result["direction_summary"]["LEFT"]["successes"] == 0
+        and groot_result["direction_summary"]["RIGHT"]["successes"] == 0
+        and groot_result["paired_directional_evidence"]["pair_count"] == 3
+        and groot_result["paired_directional_evidence"]["action_different_pair_count"] == 3
+        and groot_result["paired_directional_evidence"]["endpoint_requested_ordering_aligned_pair_count"] == 3,
+        "GR00T result retains six valid failures with three action-distinct aligned endpoint pairs",
+        checks,
+    )
+    require(
+        groot_readiness_artifact["status"] == "complete_6_of_6_valid_cells"
+        and groot_readiness_artifact["behavior_queue"]["completed_valid_cells"] == 6
+        and groot_readiness_artifact["behavior_queue"]["completed_successes"] == 0
+        and groot_readiness_artifact["behavior_queue"]["next_cell"] is None
+        and groot_readiness_artifact["behavior_queue"]["result_registry"]["sha256"]
+        == sha256(groot_result_path),
+        "GR00T readiness closes the six-cell queue and hashes the result",
+        checks,
+    )
+    require(
+        lingbot_vla_result["schema_version"] == "vla-wam-shared-v2-robotwin-pilot-v1"
+        and len(lingbot_vla_result["episodes"]) == 6
+        and lingbot_vla_result["summary"]["by_direction"]["left"]["successes"] == 1
+        and lingbot_vla_result["summary"]["by_direction"]["right"]["successes"] == 0
+        and lingbot_vla_readiness_artifact["status"] == "six_cell_gate_complete"
+        and lingbot_vla_readiness_artifact["interface_contract"]["future_interface"] == "none",
+        "LingBot-VLA result closes six action-only cells with LEFT-only competence",
+        checks,
+    )
+    require(
+        light_wam_result["schema_version"]
+        == "vla-wam-shared-v2-light-wam-robotwin-slice-v1"
+        and light_wam_result["status"] == "complete"
+        and light_wam_result["valid_episode_count"] == 6
+        and light_wam_result["requested_success_count"] == 1
+        and light_wam_result["success_by_relation"]
+        == {"left": {"successes": 1, "trials": 3}, "right": {"successes": 0, "trials": 3}}
+        and light_wam_result["competence_gate"] == "left_only"
+        and light_wam_result["future_interface"] == "action_only_infer_action",
+        "Light-WAM result retains six action-only cells and five valid failures",
+        checks,
+    )
+    light_evidence = {item["path"]: item for item in light_wam_result["evidence_files"]}
+    require(
+        light_wam_media["schema_version"] == "vla-wam-shared-v2-light-wam-media-v1"
+        and light_wam_media["status"] == "complete_selected_pair00"
+        and light_wam_media["behavioral_denominator_change"] == 0
+        and light_wam_media["source_result"]["sha256"] == sha256(light_wam_result_path)
+        and all(
+            light_evidence.get(item["path"], {}).get("sha256") == item["sha256"]
+            for item in light_wam_media["source_videos"].values()
+        ),
+        "Light-WAM publication media is post-hoc and bound to hash-locked pair00 sources",
+        checks,
+    )
+    validate_file_record(workspace, light_wam_media["source_result"], "Light-WAM media source result", checks)
+    validate_file_record(workspace, light_wam_media["publication_video"], "Light-WAM paired video", checks)
+    require(
+        lawam_access_retry["schema_version"]
+        == "vla-wam-shared-v2-lawam-dinov3-access-retry-v1"
+        and lawam_access_retry["status"]
+        == "blocked_authenticated_credential_lacks_gated_model_access"
+        and lawam_access_retry["attempt"]["http_status"] == 401
+        and lawam_access_retry["attempt"]["model_payload_downloaded"] is False
+        and lawam_access_retry["attempt"]["model_load_attempt_count"] == 0
+        and lawam_access_retry["attempt"]["model_action_request_count"] == 0
+        and lawam_access_retry["attempt"]["behavioral_episode_count"] == 0,
+        "LaWAM authenticated retry remains a pre-inference access blocker outside denominators",
+        checks,
+    )
+    light_gallery_entries = [
+        item for item in video_gallery["entries"] if item["id"] == "light_wam_pair00"
+    ]
+    require(
+        len(light_gallery_entries) == 1
+        and light_gallery_entries[0]["video"]["sha256"]
+        == light_wam_media["publication_video"]["sha256"]
+        and not any(
+            item["model_id"] in {"dreamzero_droid", "light_wam_robotwin"}
+            for item in video_gallery["missing_publication_media"]
+        ),
+        "video gallery publishes Light-WAM and no longer lists completed DreamZero or Light-WAM media as missing",
         checks,
     )
     require(
@@ -2304,6 +2458,18 @@ def validate(workspace: Path) -> dict[str, Any]:
         "lingbot_result_sha256": sha256(lingbot_result_path),
         "pi0_fast_result_path": str(pi0_fast_result_path.relative_to(workspace)),
         "pi0_fast_result_sha256": sha256(pi0_fast_result_path),
+        "groot_result_path": str(groot_result_path.relative_to(workspace)),
+        "groot_result_sha256": sha256(groot_result_path),
+        "lingbot_vla_result_path": str(lingbot_vla_result_path.relative_to(workspace)),
+        "lingbot_vla_result_sha256": sha256(lingbot_vla_result_path),
+        "light_wam_result_path": str(light_wam_result_path.relative_to(workspace)),
+        "light_wam_result_sha256": sha256(light_wam_result_path),
+        "light_wam_media_path": str(light_wam_media_path.relative_to(workspace)),
+        "light_wam_media_sha256": sha256(light_wam_media_path),
+        "lawam_access_retry_path": str(lawam_access_retry_path.relative_to(workspace)),
+        "lawam_access_retry_sha256": sha256(lawam_access_retry_path),
+        "video_gallery_path": str(video_gallery_path.relative_to(workspace)),
+        "video_gallery_sha256": sha256(video_gallery_path),
         "pi0_fast_confirmation": confirmation,
         "robotwin_confirmations": robotwin_confirmations,
         "runtime_interventions_path": str(runtime_interventions_path.relative_to(workspace)),

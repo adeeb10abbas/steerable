@@ -21,7 +21,7 @@
       "directions",
       "source_manifest"
     ],
-    "note": "The renderer ingests gallery_entries only after this manifest exists and every referenced video hash and byte count validates. Until then DreamZero remains visibly pending; no placeholder is interpreted as evidence."
+    "note": "The renderer ingests gallery_entries only when this manifest exists and every referenced video hash and byte count validates. If it is absent or invalid, DreamZero remains visibly pending and no placeholder is interpreted as evidence."
   },
   "dreamzero_imagination_manifest_contract": {
     "path": "artifacts/vla_wam_shared_v2/media/dreamzero_droid/imagination/imagination_media_manifest.json",
@@ -363,29 +363,45 @@
       ],
       "selection_note": "Matched pair00 clip from the six-cell direct gate. No separate media-index file was committed; the hash is anchored directly here and the behavioral source is the compiled direct-gate result.",
       "source_manifest": "artifacts/vla_wam_shared_v2/pilot/expansion/lingbot_vla_4b_direct_gate.json"
+    },
+    {
+      "id": "light_wam_pair00",
+      "arena": "robotwin",
+      "arena_label": "RoboTwin place-A-relative-to-B",
+      "model_label": "Light-WAM",
+      "category": "WAM",
+      "future_interface": "Actions only at inference; no decoded visual future",
+      "evidence_status": "Valid behavioral pair; LEFT succeeded and RIGHT failed; committed matched clip",
+      "pair_label": "pair 00 direct gate",
+      "seed": 4300000,
+      "video": {
+        "path": "artifacts/vla_wam_shared_v2/media/light_wam_robotwin/light_wam_pair00_left_success_right_failure.mp4",
+        "bytes": 1634716,
+        "sha256": "1830c4a0339ffc47eebb38eb4f14a00b7adb8a507cf130e3dc3c1700fa299386"
+      },
+      "directions": [
+        {
+          "relation": "LEFT",
+          "prompt": "Put the blue soap to the left of the tea-box.",
+          "outcome": "success after 134 actions"
+        },
+        {
+          "relation": "RIGHT",
+          "prompt": "Put the blue soap to the right of the tea-box.",
+          "outcome": "failure after 400 actions"
+        }
+      ],
+      "selection_note": "First frozen Light-WAM pair containing a LEFT success and matched RIGHT failure. The shorter LEFT episode holds its final frame; the clip is post-hoc simulator media and does not change scoring.",
+      "source_manifest": "artifacts/vla_wam_shared_v2/media/light_wam_robotwin/media_manifest.json"
     }
   ],
   "missing_publication_media": [
-    {
-      "model_id": "dreamzero_droid",
-      "arena": "droid",
-      "status": "pending_no_behavioral_video",
-      "reason": "No valid DreamZero direct-command rollout or committed publication video exists yet.",
-      "expected_manifest": "artifacts/vla_wam_shared_v2/media/dreamzero_droid/media_manifest.json"
-    },
     {
       "model_id": "pi05_droid",
       "arena": "droid",
       "status": "no_selected_v2_publication_video",
       "reason": "The checkpoint is an existing v1 reference, but this branch contains no committed selected v2 behavioral clip for it.",
       "behavioral_manifest": "artifacts/vla_wam_shared_v2/media/v1_droid_selection.json"
-    },
-    {
-      "model_id": "light_wam_robotwin",
-      "arena": "robotwin",
-      "status": "raw_video_not_selected_for_publication",
-      "reason": "All six valid episodes reference simulator videos on the ali PVC, but no compact selected Light-WAM publication clip is committed.",
-      "behavioral_manifest": "artifacts/vla_wam_shared_v2/pilot/expansion/light_wam_robotwin_direct_gate.json"
     },
     {
       "model_id": "lawam_robotwin",

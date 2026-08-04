@@ -155,6 +155,18 @@ DreamZero has hash-validated publication media in the canonical manifest and app
 > LEFT: “Put the blue soap to the left of the tea-box.”
 > RIGHT: “Put the blue soap to the right of the tea-box.”
 
+### Light-WAM — pair 00 direct gate
+
+[▶ Open video](../artifacts/vla_wam_shared_v2/media/light_wam_robotwin/light_wam_pair00_left_success_right_failure.mp4) · [Evidence manifest](../artifacts/vla_wam_shared_v2/media/light_wam_robotwin/media_manifest.json)
+
+- Outcome: LEFT: success after 134 actions; RIGHT: failure after 400 actions
+- Future interface: Actions only at inference; no decoded visual future
+- Evidence status: Valid behavioral pair; LEFT succeeded and RIGHT failed; committed matched clip
+- Video SHA-256: `1830c4a0339ffc47eebb38eb4f14a00b7adb8a507cf130e3dc3c1700fa299386`
+
+> LEFT: “Put the blue soap to the left of the tea-box.”
+> RIGHT: “Put the blue soap to the right of the tea-box.”
+
 ## DreamZero imagined futures
 
 These are official model-predicted video decodes, not simulator executions, task outcomes, or additional episodes.
@@ -195,7 +207,6 @@ These are official model-predicted video decodes, not simulator executions, task
 ## Missing publication media
 
 - **pi05_droid — no_selected_v2_publication_video:** The checkpoint is an existing v1 reference, but this branch contains no committed selected v2 behavioral clip for it.
-- **light_wam_robotwin — raw_video_not_selected_for_publication:** All six valid episodes reference simulator videos on the ali PVC, but no compact selected Light-WAM publication clip is committed.
 - **lawam_robotwin — no_behavioral_episode:** Blocked before inference on gated DINOv3 access; no behavioral video exists.
 - **cosmos_reason2_2b — not_behavioral_media:** Static diagnostic calls are not robot rollouts and are intentionally excluded from the behavioral video gallery.
 

@@ -18,9 +18,20 @@ Current direct-command evidence is:
 | Arena | Checkpoint | LEFT | RIGHT | Frozen next step |
 | --- | --- | ---: | ---: | --- |
 | DROID | π0-FAST | 1/10 | 10/10 | direct competence in both directions; wording eligible but deferred |
+| DROID | GR00T N1.7 | 0/3 | 0/3 | six-cell gate complete; no wording expansion |
+| DROID | Cosmos3 Edge | 3/3 | 3/3 | six-cell gate complete; decoded futures retained |
+| DROID | DreamZero | 2/3 | 1/3 | six-cell gate complete; official imagination archive published |
 | RoboTwin | Efficient-WAM-RT | 3/7 | 2/7 | pairs03–09 complete; do not rerun |
 | RoboTwin | FastWAM | 1/7 | 1/7 | pairs03–09 complete; do not rerun |
 | RoboTwin | LingBot-VA | 3/7 | 4/7 | pairs03–09 complete; do not rerun |
+| RoboTwin | LingBot-VLA 4B | 1/3 | 0/3 | bounded six-cell gate complete |
+| RoboTwin | Light-WAM | 1/3 | 0/3 | bounded six-cell gate complete |
+
+All currently runnable bounded gates are complete. Two authorized queues remain
+blocked before model load: the sixty-cell π0-FAST wording expansion requires
+the missing exact historical OpenPI and RoboLab commits, and the six-cell
+LaWAM gate requires a Hugging Face account with accepted DINOv3 terms. Idle
+GPUs do not relax either provenance or access gate.
 
 All 42 prospective WAM episodes at pairs03–09 are now valid completed evidence
 and must not be rerun. Efficient-WAM-RT produced 5/14 requested-direction
@@ -31,18 +42,20 @@ Efficient-WAM-RT, eighteen for FastWAM, and five for LingBot-VA. The frozen
 twenty-episode compilers still fail closed because historical pairs00–02 raw
 files are absent on this PVC; the committed pairs03–09 slices are the current
 claim boundary. π0-FAST has completed its separate DROID direct-only
-confirmation. Post-result amendment `V2-A005` now authorizes a bounded GR00T
-gate, Cosmos behavioral replication and non-behavioral Reason2 diagnostic,
-LingBot-VLA onboarding, and the three remaining π0-FAST wording families.
-This decision was made after the completed three-WAM outcomes were known and is
-not presented as preregistered.
+confirmation. Post-result amendment `V2-A005` authorized the bounded GR00T and
+LingBot-VLA gates, Cosmos behavioral replication, the non-behavioral Reason2
+diagnostic, and the three remaining π0-FAST wording families. Every bounded
+gate and diagnostic in that list is complete; only the wording expansion is
+blocked on exact historical adapter provenance. This decision was made after
+the completed three-WAM outcomes were known and is not presented as
+preregistered.
 
-User-directed post-result amendment `V2-A007` now adds DreamZero-DROID as a
-bounded six-cell direct-command gate. DreamZero study inference had not begun
-when that amendment was committed. Its simulator and viewport video run on the
-ali-owned RTX PRO 6000 lane; a fresh isolated two-GPU policy server runs on
-separate rechecked B200 GPUs. The unrelated pre-existing DreamZero process on
-B200 GPU 0 and port 5000 is never used or modified.
+User-directed post-result amendment `V2-A007` added DreamZero-DROID as a bounded
+six-cell direct-command gate before DreamZero study inference began. That gate
+is complete, including its simulator videos and official imagination archive.
+Its behavioral simulator ran on the ali-owned RTX PRO 6000 lane and its policy
+server ran on separate rechecked B200 GPUs. The unrelated pre-existing
+DreamZero process on B200 GPU 0 and port 5000 was never used or modified.
 
 The current article, figures, and videos are:
 
@@ -502,6 +515,17 @@ four pre-action ffmpeg failures from pair00/pair01 and two B200 OIDN partial
 events from pair02. The final pair02 evidence came from the renderer-compatible
 A100 retry; the B200 partial remains preserved and is not model evidence.
 
+The preselected pair00 execution view is now published as
+[`light_wam_pair00_left_success_right_failure.mp4`](../artifacts/vla_wam_shared_v2/media/light_wam_robotwin/light_wam_pair00_left_success_right_failure.mp4)
+(1,634,716 bytes; SHA-256
+`1830c4a0339ffc47eebb38eb4f14a00b7adb8a507cf130e3dc3c1700fa299386`).
+It shows the LEFT-success episode beside its matched RIGHT failure; the shorter
+LEFT episode holds its final frame. This post-hoc rendering changes no model
+denominator or score. Its reproducible composition record is
+[`media_manifest.json`](../artifacts/vla_wam_shared_v2/media/light_wam_robotwin/media_manifest.json)
+(SHA-256
+`4c4ad1f9487191291d8614ec6cbad9fd0294384f6c6ed3159569137d356ad398`).
+
 #### LaWAM pre-inference blocker
 
 LaWAM's multicomponent registry was frozen before any model action request and
@@ -524,6 +548,15 @@ credential or exact-revision copy exists in the ali-owned lane. This consumes
 zero model action requests and zero behavioral episodes and remains outside
 every model denominator. Do not assign a zero or substitute another DINO
 checkpoint.
+
+An authenticated retry on 2026-08-04 used the ephemeral user-supplied
+credential without retaining its value. Exact-revision payload access still
+returned HTTP 401/GatedRepoError; only the public README and license were
+downloaded, no model payload was obtained, and no model was loaded or queried.
+The hash-bearing retry record is
+[`lawam_dinov3_authenticated_access_retry.json`](../artifacts/vla_wam_shared_v2/pilot/expansion/lawam_dinov3_authenticated_access_retry.json).
+The blocker now specifically requires accepting the DINOv3 terms for the
+token-owning Hugging Face account, not another anonymous or ungranted retry.
 
 After a human accepts the model terms and authenticates Hugging Face in the
 ali-owned lane, the exact next authorized command is:
@@ -640,13 +673,23 @@ ordinary Git.
 <a id="experiment-3-lingbot-vla-4b-robotwin-onboarding"></a>
 ## Experiment 3 — LingBot-VLA 4B RoboTwin onboarding
 
-Priority: third. Status: onboarding is authorized by `V2-A005`, but blocked
-until the isolated repository and checkpoint are present. Do not confuse this
-VLA with the already-tested LingBot-VA WAM.
+Priority: complete. Status: the bounded V2-A005 six-cell direct gate is
+compiled and MUST NOT be rerun. Do not confuse this VLA with the already-tested
+LingBot-VA WAM.
 
 Checkpoint: `Robbyant/lingbot-vla-4b-posttrain-robotwin`.
 
-Sequence:
+The compiled result is
+[`lingbot_vla_4b_direct_gate.json`](../artifacts/vla_wam_shared_v2/pilot/expansion/lingbot_vla_4b_direct_gate.json)
+(SHA-256
+`7c0ad19833d6cbb51bb5fbdac8f9546f0e311333e498a15594b55f68dc7b6534`).
+All six pair00–02 cells are valid: LEFT is 1/3 and RIGHT is 0/3. Two of three
+matched endpoint orderings align with the requested command change. The
+released interface is action-only, so imagined-video evidence is not
+applicable rather than zero. The bounded amendment authorizes no additional
+LingBot-VLA cell; a wording grid is not eligible from this left-only result.
+
+The historical sequence was:
 
 1. Create an isolated checkout and environment; do not modify
    `/home/ali/projects/lerobot-lingbot` in place.
@@ -662,9 +705,8 @@ Sequence:
 <a id="experiment-4-groot-n17-droid-onboarding"></a>
 ## Experiment 4 — GR00T N1.7 DROID onboarding
 
-Priority: first new behavioral model. Status: authorized by `V2-A005`; assets
-and server smoke are complete, while the exact-repeat probe and frozen
-direct-command pilot remain unrun. The official `Isaac-GR00T` checkout is
+Priority: complete. Status: the exact-repeat probe and all six V2-A005 direct
+cells are complete and MUST NOT be rerun. The official `Isaac-GR00T` checkout is
 pinned at `b9955401d50c92a29258732e3ad6ccd579f1bdc0`; local model
 directories contain `nvidia/GR00T-N1.7-DROID` at
 `05e7cc97e40dbd33b0890c35cc0214fcb0547ab5`, `nvidia/GR00T-N1.7-3B` at
@@ -677,7 +719,17 @@ before launching the server. Cosmos-Reason2 remains a diagnostic-only backbone:
 no adapter audit or language probe has started, and it is not authorized for a
 behavioral denominator. Cosmos3 Edge is the separately authorized action WAM.
 
-Sequence if newly authorized:
+The compiled result is
+[`groot_n17_droid_v2_registry.json`](../artifacts/vla_wam_shared_v2/pilot/expansion/groot_n17_droid_v2_registry.json)
+(SHA-256
+`95077a42bb0115bc673ea13ae5acdc6fdef6f476627804662f73c219ebd88bc7`).
+LEFT is 0/3 and RIGHT is 0/3: all six are valid behavioral failures. Every
+matched pair produced different executed actions and all three endpoint
+orderings align with the requested LEFT-to-RIGHT change. This is consistent
+language-conditioned redirection without successful task completion. Under
+the frozen zero-direct-success gate, no wording expansion is authorized.
+
+The historical sequence was:
 
 1. Run an exact-repeat language probe using the frozen v2 prompt bytes.
 2. Run only the six DROID direct-command cells at seeds 8300–8302, recording

@@ -37,12 +37,16 @@ Then read the four external readmes at their pinned checkouts:
 `lerobot-lingbot/experiments/lingbot_language_gate/README.md`, and
 `EfficientWAM-RoboTwin/README.md`.
 
-Live-verified committed facts: the protocol validator was valid at handoff;
-π0-FAST DROID's confirmation is complete and its wording grid is deferred;
-the three WAM direct gates triggered direct-only confirmation. Efficient-WAM
-pair03 is complete locally and **must not be rerun**. Work-laptop B200 facts
-(hardware, drivers, namespace/PVC, egress, credentials, and installed tools)
-are unknown until the gates below pass.
+Live-verified committed facts: the protocol validator passes 698 checks; every
+currently runnable bounded gate is complete; all 42 prospective three-WAM
+pairs03–09 episodes are valid committed evidence and **must not be rerun**.
+The completed six-cell gates are GR00T N1.7, Cosmos3 Edge, LingBot-VLA 4B,
+Light-WAM, and DreamZero. DreamZero's six execution videos, all nine official
+imagination decodes, and three paired imagination views are committed. The
+only authorized work left is 60 π0-FAST wording cells blocked on missing exact
+historical OpenPI/RoboLab commits and six LaWAM cells blocked on gated DINOv3
+terms. Work-laptop Kubernetes facts must still be rediscovered before any
+future resumed cell.
 
 ## Restrict Kubernetes discovery to ali-owned resources
 
@@ -147,56 +151,34 @@ preprocessing command after its Wan asset is present. Use the exact installation
 and download commands in the four readmes; keep their incompatible Python/Torch
 environments separate.
 
-## Authorized queue: exactly 40 remaining cells
+## Remaining authorized queue: 66 externally blocked cells
 
-Every row is a single process invocation that emits two static direct-command
-cells (LEFT and RIGHT), with viewport video. Do not pass many tasks/seeds to a
-runner—repeated CLI values form a Cartesian product. No oracle, subtask coach,
-prompt switching, or progress-conditioned instruction is allowed.
+There is no runnable WAM confirmation cell left. Efficient-WAM-RT,
+FastWAM, and LingBot-VA pairs03–09 are complete; preserve their raw PVC output
+and committed compact slices without rerunning them.
 
-| Pair | Task | Env seed | Sampling seed | Efficient | Fast | LingBot |
-| --- | --- | ---: | ---: | --- | --- | --- |
-| 03 | `place_a2b_right` | 4300003 | 8403 | **completed; do not rerun** | run | run |
-| 04 | `place_a2b_left` | 4300004 | 8404 | run | run | run |
-| 05 | `place_a2b_right` | 4300005 | 8405 | run | run | run |
-| 06 | `place_a2b_left` | 4300006 | 8406 | run | run | run |
-| 07 | `place_a2b_right` | 4300007 | 8407 | run | run | run |
-| 08 | `place_a2b_left` | 4300008 | 8408 | run | run | run |
-| 09 | `place_a2b_right` | 4300009 | 8409 | run | run | run |
+| Priority | Queue | Cells | Status | Required external change |
+| ---: | --- | ---: | --- | --- |
+| 0 | π0-FAST three-wording expansion | 60 | blocked before model load | recover exact OpenPI `9e46d3aea26417bfb564227734b95d010aa827e5` and RoboLab `11142d4319e44401e0464866bb5fedf7ec8a8927` Git object stores from the original machine |
+| 1 | LaWAM direct gate | 6 | blocked before model load | accept the `facebook/dinov3-vitb16-pretrain-lvd1689m` terms for the token-owning Hugging Face account |
 
-This is Efficient pair04–09 (12 cells), Fast pair03–09 (14), LingBot
-pair03–09 (14): 40 total. Historical pair00–02 action traces are unavailable,
-not zero. Preserve every valid model failure and every partial/invalid raw
-attempt on the PVC.
+For π0-FAST, transfer verified `git bundle create ... --all` bundles and rerun
+the provenance audit in `VLA_WAM_CONTINUATION.md`; do not substitute available
+newer checkouts. For LaWAM, after the terms grant, rerun exactly:
 
-For each row, copy the corresponding pair03 command in
-`docs/VLA_WAM_CONTINUATION.md`, replace pair identifier/task/environment seed/
-sampling seed together, and write outputs under a new immutable `$POD_RAW`
-run directory. Keep the repeated `--requested-relation left/right` flags and
-all frozen guidance, horizon, diffusion, and future-retention values. Always
-wrap exactly one pair in `tools/native_process_group_thermal_guard.py --launch`
-using the model's own runtime-intervention ledger and invalid-attempt ledger:
-
-```text
-runtime_interventions_efficient_wam_rt_robotwin.json   invalid_attempts_efficient_wam_rt_robotwin.json
-runtime_interventions_fastwam_robotwin.json            invalid_attempts_fastwam_robotwin.json
-runtime_interventions_lingbot_va_robotwin.json         invalid_attempts_lingbot_va_robotwin.json
+```bash
+/data/users/ali/vla_wam/envs/hf-tools/bin/hf download facebook/dinov3-vitb16-pretrain-lvd1689m --revision 5931719e67bbdb9737e363e781fb0c67687896bc --local-dir /data/users/ali/vla_wam/checkpoints/dinov3-vitb16-pretrain-lvd1689m
 ```
 
-The guard pauses at 87 C, resumes at 80 C, and holds at 90 C. A pause excludes
-affected cells only from wall-latency aggregates; a hold or incomplete result
-is `partial`/`technical_invalid`, not a behavioral failure. For LingBot inspect
-the frozen wrapper's `--dry-run` output first, but never use its all-pairs
-`--run` outside the guard.
+The 2026-08-04 authenticated retry still returned HTTP 401/GatedRepoError and
+performed zero model loads, action requests, or behavioral episodes. See
+`artifacts/vla_wam_shared_v2/pilot/expansion/lawam_dinov3_authenticated_access_retry.json`.
 
 ## Compile, validate, sync, and stop
 
-After each model's required pairs, copy only its compact model-specific ledgers
-from the PVC into `artifacts/vla_wam_shared_v2/pilot/directional_confirmation/`
-and run the three exact compiler commands in `VLA_WAM_CONTINUATION.md`, with
-each `--input-root` pointed at that model's PVC raw root. Repeat the historical
-pilot intervention ledger plus only that model's new ledger; never combine
-model ledgers or pool DROID/RoboTwin success rates.
+After either external blocker is genuinely cleared, follow its frozen resume
+section in `VLA_WAM_CONTINUATION.md`. Keep model-specific ledgers separate and
+never combine DROID and RoboTwin success rates.
 
 Then run:
 
@@ -219,9 +201,8 @@ and renderers; never commit checkpoints, environments, PVC raw collections,
 unbounded MP4s, or action traces.
 
 Before stopping, stop only this study's policy/server/simulator/thermal process
-group, confirm ports 8000/5000 are free, retain all raw PVC output, and update
+group, retain all raw PVC output, and update
 `continuation_state.json` with completed cells, invalid attempts, raw PVC
 provenance, active job/process IDs, and the exact next command. Update
-`VLA_WAM_CONTINUATION.md` only for a disclosed post-result decision. No WAM
-wording sweep, π0-FAST wording grid, GR00T, or LingBot-VLA onboarding is
-authorized until the three WAM confirmations are compiled.
+`VLA_WAM_CONTINUATION.md` only for a disclosed post-result decision. Do not
+rerun a completed cell or start an unlisted model/wording expansion.

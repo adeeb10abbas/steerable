@@ -1,0 +1,15 @@
+{
+  "schema_version": "vla-wam-shared-v3-stochastic-rollout-registry-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "status": "frozen_separately_gated_before_any_phase_d_model_request_or_behavioral_inference",
+  "phase": "D_16_rollout_stochastic_block",
+  "priority": "lower_than_all_released_phase_a_direct_replication_conditions",
+  "scope": "Every released Phase-A registered (runtime identity, scene/reset, static instruction, requested-relation) condition whose runtime exposes a real effective stochastic policy-sampling seed.",
+  "shared_sampling_seed_indices": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+  "rollout_contract": "For each eligible registered condition, execute exactly one rollout at each of the sixteen shared policy-sampling-seed indices while holding scene/reset, prompt bytes, checkpoint/runtime identity, controller, scorer, and artifact contract fixed.",
+  "eligibility_gate": "The runtime must document an exposed policy sampling-seed input and pass a fixed-observation effective-seed check showing that at least two registered seed indices produce distinguishable raw policy samples. A deterministic runtime or one with no effective seed is ineligible and is reported as such; it receives no fake repeated rollouts.",
+  "analysis_unit": "Policy-sampling rollout nested within its registered condition, then condition nested within scene/pair and model. The sixteen rollouts are not sixteen independent scenes or independent scene-level samples.",
+  "accounting": "For each eligible released Phase-A condition, 16 additional rollouts are registered. Total Phase-D episodes are conditional on the set of released, seed-effective conditions and are reported by arena/model/scene/pair without pooling.",
+  "required_evidence": ["viewport_video", "executed_action_trace", "raw_result_jsonl", "state_score_trace", "effective_seed_probe"],
+  "prohibited": ["select_only_favorable_sampling_seeds", "fake_repetition_for_deterministic_runtime", "treat_rollouts_as_independent_scenes", "cross_arena_pooling"]
+}

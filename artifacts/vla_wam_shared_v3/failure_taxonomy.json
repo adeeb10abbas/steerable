@@ -1,0 +1,64 @@
+{
+  "schema_version": "vla-wam-shared-v3-failure-taxonomy-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "status": "frozen_before_any_v3_behavioral_inference",
+  "scope": "A prospective secondary classification alongside, never in place of, the frozen v2 failure stage.",
+  "required_legacy_field": "frozen_failure_stage",
+  "primary_precedence": ["correct", "pick_failed", "wrong_side", "release_failed", "transport_failed"],
+  "classes": {
+    "correct": "The frozen requested relation-and-detached-release success predicate is true.",
+    "pick_failed": "No verified pickup event reaches +3 cm over the frozen baseline for three consecutive scored state samples.",
+    "wrong_side": "A picked object finishes in the opposite requested relation region for three consecutive scored final-state samples.",
+    "release_failed": "A picked object finishes in the requested relation region for three consecutive scored final-state samples and final_detached_release is false. final_detached_release is the separately recorded frozen-scorer boolean, not an inference from requested_success or a gripper command.",
+    "transport_failed": "All remaining valid picked behavioral outcomes after higher-precedence classes are assigned."
+  },
+  "continuous_fields": {
+    "signed_final_lateral_offset_m": "frozen raw robot-frame movable-minus-reference delta_y in meters, positive robot LEFT, matching the v2 scorer; this is not the negated reader-display coordinate",
+    "final_requested_signed_margin_m": "requested margin derived from the frozen raw offset: +delta_y for LEFT and -delta_y for RIGHT; positive means farther into the requested region",
+    "final_opposite_signed_margin_m": "positive means farther into the opposite region",
+    "maximum_requested_signed_margin_m": "maximum across scored state samples",
+    "maximum_pickup_height_m": "object height minus frozen baseline",
+    "first_verified_pickup_step": "null if no three-sample +3 cm pickup",
+    "first_cone_or_native_region_entry_step": "first scored step entering the applicable requested cone/native relation region; null only when entry_kind is none",
+    "entry_kind": "one of sustained, transient, or none; sustained requires three consecutive samples and transient is an entry that never reaches three consecutive samples",
+    "first_requested_region_step": "first sustained requested-region step; null if no sustained requested-region entry",
+    "final_detached_release": "separate boolean recorded by the frozen success scorer; it is never inferred from requested_success, a gripper command, or an action trace",
+    "executed_action_count": "integer",
+    "episode_length_steps": "total executed simulator steps in the behavioral episode",
+    "first_contact_status": "one of observed, not_observed, or instrumentation_unavailable",
+    "first_contact_step": "integer only when first_contact_status is observed; null when status is not_observed or instrumentation_unavailable",
+    "first_contact_unavailable_reason": "required nonempty reason only when first_contact_status is instrumentation_unavailable; absent or null when status is observed or not_observed",
+    "object_path_length_m": "sum of object-center displacement across scored state samples",
+    "wall_time_s": "operational field only; invalid after recorded thermal/runtime intervention"
+  },
+  "state_and_scoring_contract": {
+    "sustained_samples": 3,
+    "pickup_threshold_m": 0.03,
+    "final_window": "last three scored state samples",
+    "scorer": "hash-pinned deterministic scorer reads simulator state only after action execution; it never changes actions or prompts"
+  },
+  "contact_conditional_rules": {
+    "allowed_statuses": ["observed", "not_observed", "instrumentation_unavailable"],
+    "first_contact_step": {
+      "observed": "required integer",
+      "not_observed": "required null",
+      "instrumentation_unavailable": "required null"
+    },
+    "first_contact_unavailable_reason": {
+      "observed": "must be absent or null",
+      "not_observed": "must be absent or null",
+      "instrumentation_unavailable": "required nonempty string"
+    },
+    "all_false_retained_contact_stream": "A retained all-false contact stream is not_observed, not instrumentation_unavailable."
+  },
+  "scorer_consistency_rules": {
+    "release_failed": "requires verified pickup, sustained final requested region, and final_detached_release=false",
+    "requested_success_false_with_sustained_requested_and_detached_true": "technical_invalid_scorer_inconsistency; preserve the record and invalidate it from behavioral classification until the frozen scorer/input provenance is repaired",
+    "prohibited_inference": "Never infer final_detached_release from requested_success, gripper command, or action trace."
+  },
+  "infrastructure_separation": {
+    "ledger_fields": ["attempt_id", "registered_cell_id", "stage", "error", "log_hash", "runtime_intervention", "repair_attempt_id"],
+    "rule": "Infrastructure/setup failures, missing artifacts, and interventions are retained outside behavioral denominators. A valid behavioral outcome remains valid even when its wall-time field is excluded."
+  },
+  "retrospective_limit": "Existing v2 labels remain immutable. Any optional retrospective crosswalk is descriptive, uses this exact codebook, retains the original stage, and is not v3 primary evidence."
+}

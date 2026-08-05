@@ -1,0 +1,38 @@
+{
+  "schema_version": "vla-wam-shared-v3-four-phrasings-registry-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "status": "frozen_separately_gated_before_any_phase_c_model_request_or_behavioral_inference",
+  "arena": "droid_robolab",
+  "phase": "C_four_phrasings",
+  "eligible_model_ids": ["groot_n17_droid_vla", "cosmos3_edge_policy_droid", "cosmos3_nano_policy_droid"],
+  "optional_model_after_independent_release": {
+    "model_id": "pi0_fast_droid_vla",
+    "conditions": ["recover and hash-verify exact historical OpenPI/RoboLab revisions", "pass a new v3 model-specific fixed-observation repeat and LEFT/RIGHT prompt-sensitivity release"],
+    "accounting": "Not included in the frozen three-checkpoint Phase C denominator or episode total."
+  },
+  "shared_matched_pairs": {
+    "seed_range": [8500, 8519],
+    "environment_seed_equals_sampling_seed": true,
+    "pair_count_per_checkpoint": 20,
+    "directions_per_pair": ["left", "right"],
+    "matching": "Every model uses the same 20 seed/reset identities. Within a model, seed, and wording form, LEFT and RIGHT share the same neutral reset, runtime identity, controller, action contract, and sampling seed."
+  },
+  "prompt_forms": {
+    "direct_command": {"left": "Put the Rubik's cube to the left of the bowl.", "right": "Put the Rubik's cube to the right of the bowl."},
+    "short_command": {"left": "Put the cube left of the bowl.", "right": "Put the cube right of the bowl."},
+    "goal_as_outcome": {"left": "The Rubik's cube should end up to the left of the bowl.", "right": "The Rubik's cube should end up to the right of the bowl."},
+    "desired_plus_negated_opposite": {"left": "Put the Rubik's cube to the left of the bowl, not to the right of the bowl.", "right": "Put the Rubik's cube to the right of the bowl, not to the left of the bowl."}
+  },
+  "randomization": "Before any Phase C inference, a hash-pinned randomization manifest jointly assigns the four prompt-form and LEFT/RIGHT execution orders within each checkpoint/seed. The direct command is the within-seed control; no prompt changes during an episode.",
+  "release_gates": ["phase_a_direct_command_release_for_exact_runtime", "prompt_byte_hash", "fixed_observation_exact_repeat", "fixed_observation_prompt_only_sensitivity", "raw_video_action_jsonl_write"],
+  "episode_accounting": {
+    "checkpoints": 3,
+    "matched_pairs_per_checkpoint": 20,
+    "prompt_forms": 4,
+    "directions_per_pair": 2,
+    "episodes_per_checkpoint": 160,
+    "frozen_total_episodes": 480,
+    "formula": "3 checkpoints * 20 pairs * 4 prompt forms * 2 directions"
+  },
+  "prohibited": ["use_v2_a008_as_release", "include_pi0_fast_without_independent_release", "dynamic_prompt", "cross_arena_pooling"]
+}

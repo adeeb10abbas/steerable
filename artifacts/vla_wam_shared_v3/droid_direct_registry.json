@@ -1,0 +1,37 @@
+{
+  "schema_version": "vla-wam-shared-v3-droid-direct-registry-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "status": "frozen_before_any_v3_droid_behavioral_inference",
+  "arena": "droid_robolab",
+  "phase": "A_direct_command_matched_pairs",
+  "priority": ["pi0_fast_droid_vla", "groot_n17_droid_vla", "cosmos3_edge_policy_droid", "cosmos3_nano_policy_droid", "pi05_current_stack_droid", "dreamzero_droid_action_cfg"],
+  "target": {
+    "exact_matched_pair_count_per_checkpoint": 30,
+    "seed_range": [8300, 8329],
+    "directions_per_pair": ["left", "right"],
+    "matching": "Within each seed, LEFT and RIGHT use identical environment seed, sampling seed, neutral reset, checkpoint/runtime identity, controller, and action contract; only the static direct prompt and requested-relation predicate differ."
+  },
+  "direct_prompts": {
+    "left": "Put the Rubik's cube to the left of the bowl.",
+    "right": "Put the Rubik's cube to the right of the bowl.",
+    "predicate": "official release-inside-the-45-degree-cone requested relation termination"
+  },
+  "required_evidence": ["viewport_video", "executed_action_trace", "raw_result_jsonl", "final_state", "frozen_failure_stage", "v3_failure_taxonomy_fields"],
+  "runtime_reuse_rule": "A completed v2 seed may contribute only as preserved external evidence when the complete pinned runtime identity matches exactly. It is never rerun. A mismatch leaves that v3 seed unfilled; no replacement seed or denominator repair is permitted without a new amendment.",
+  "checkpoint_rules": {
+    "pi0_fast_droid_vla": {
+      "preserved_historical_seeds": [8300, 8301, 8302, 8303, 8304, 8305, 8306, 8307, 8308, 8309],
+      "blocked_new_seeds": [8310, 8311, 8312, 8313, 8314, 8315, 8316, 8317, 8318, 8319, 8320, 8321, 8322, 8323, 8324, 8325, 8326, 8327, 8328, 8329],
+      "blocker": "Exact historical OpenPI commit 9e46d3aea26417bfb564227734b95d010aa827e5 and RoboLab commit 11142d4319e44401e0464866bb5fedf7ec8a8927 must be recovered and hash-verified. V2-A008 current-stack prompt sensitivity failed and is not a behavioral release.",
+      "release": "No pi0-FAST v3 behavioral request may run while any blocked_new_seeds remain blocked."
+    },
+    "other_checkpoints": {
+      "models": ["groot_n17_droid_vla", "cosmos3_edge_policy_droid", "cosmos3_nano_policy_droid", "pi05_current_stack_droid", "dreamzero_droid_action_cfg"],
+      "preserved_candidate_seeds": [8300, 8301, 8302],
+      "new_addition_seeds": [8303, 8304, 8305, 8306, 8307, 8308, 8309, 8310, 8311, 8312, 8313, 8314, 8315, 8316, 8317, 8318, 8319, 8320, 8321, 8322, 8323, 8324, 8325, 8326, 8327, 8328, 8329],
+      "release": "The 8300-8302 cells are evidence-only runtime-identity checks; new behavioral additions begin at 8303. If any preserved identity mismatches, report at most a 27-pair prospective addition and do not substitute seeds."
+    }
+  },
+  "release_gates": ["model_blind_neutral_reset_fixture", "runtime_identity_and_checkpoint_hash", "raw_video_action_jsonl_write", "fixed_observation_exact_repeat", "fixed_observation_left_right_prompt_sensitivity"],
+  "prohibited": ["rerun_valid_v2_cell", "use_v2_a008_as_prompt_sensitive_release", "dynamic_prompt", "oracle_action", "cross_arena_pooling"]
+}

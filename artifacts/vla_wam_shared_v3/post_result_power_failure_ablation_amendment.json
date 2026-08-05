@@ -1,0 +1,42 @@
+{
+  "schema_version": "vla-wam-shared-v3-post-result-power-failure-ablation-amendment-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "status": "frozen_after_all_v2_and_v2_a015_results_and_before_any_v3_model_request_or_behavioral_inference",
+  "disclosure": "All original v2 gates, the completed RoboTwin pairs03-09, V2-A008 prompt-sensitivity failure, and V2-A015 results were known before this prospective plan was frozen. No result is represented as hidden preregistration.",
+  "non_retroactivity": "This amendment neither modifies v2 nor permits rerunning valid v2/V2-A015 cells. Preserved cells may be referenced only under their recorded runtime-identity and comparison boundaries.",
+  "phases": {
+    "A_direct_replication": {
+      "registries": ["droid_direct_registry.json", "robotwin_direct_registry.json"],
+      "gate": "Each model/arena passes independent fixture, raw-output, exact-repeat, and LEFT/RIGHT prompt-sensitivity gates before its behavioral cells release.",
+      "randomization": "Registered cell order is randomized within arena while preserving matched LEFT/RIGHT execution provenance."
+    },
+    "B_confound_ablation": {
+      "status": "separately_gated_not_released_by_phase_a",
+      "calibration_registry": "artifacts/vla_wam_shared_v3/confound_fixture_calibration_registry.json",
+      "unit": "A contemporaneous matched control/intervention pair at the same registered model, seed, reset, prompt, action contract, and execution lane.",
+      "one_factor_rule": "Each ablation changes exactly one named factor; checkpoint, source/runtime identity, prompt bytes, reset, scorer, controller, horizon, and retention contract remain fixed.",
+      "randomization": "Control/intervention order is randomized at the matched-pair level before any arm request. A paired allocation manifest and seed list are immutable before inference.",
+      "denominator": "Each intervention configuration has its own denominator. Existing v2/V2-A015 baselines are preserved descriptive comparators and are never overwritten or silently used as contemporaneous controls.",
+      "required_preflight": ["model-blind fixture calibration freezes numeric coordinates and margins in a new amendment", "factor-specific artifact hash", "fixed-observation repeat", "LEFT_RIGHT sensitivity", "control_action_contract_equivalence", "raw_video_action_jsonl_write"],
+      "claim_boundary": "Report exact paired transitions and continuous-margin effects descriptively. Do not make powered, general, or per-failure causal claims unless a future amendment supplies a power calculation and inferential threshold."
+    },
+    "C_four_phrasings": {
+      "status": "separately_gated_not_released_by_phase_a",
+      "registry": "artifacts/vla_wam_shared_v3/four_phrasings_registry.json",
+      "randomization": "The four exact v2 wording forms use the registry's 20 shared DROID matched seeds and hash-pinned joint prompt-form/LEFT/RIGHT randomization.",
+      "gate": "The direct-command control for that exact model/runtime must be released, and every wording must pass byte-hash, exact-repeat, and prompt-only sensitivity checks before behavioral execution.",
+      "semantic_boundary": "The registry freezes the exact v2 rendered DROID strings. No oracle, coach, prompt switching, or progress-conditioned instruction is permitted.",
+      "pi0_fast_boundary": "V2-A008 remains failed and unreleased. Its current-stack outcome cannot authorize this block; a v3 model-specific release gate is still required."
+    },
+    "D_16_rollout_stochastic_block": {
+      "status": "separately_gated_not_released_by_phase_a",
+      "registry": "artifacts/vla_wam_shared_v3/stochastic_rollout_registry.json",
+      "replication_definition": "Sixteen shared sampling-seed indices are nested within every released Phase-A registered condition only when the runtime exposes a real effective stochastic seed.",
+      "gate": "The registry's exact-runtime Phase-A release and effective-seed probe must pass before its sixteen rollout block releases.",
+      "analysis_boundary": "The sixteen observations estimate within-condition policy-sampling variability. They are not independent scenes and are analyzed as nested stochastic blocks."
+    }
+  },
+  "shared_required_evidence": ["viewport_video", "executed_action_trace", "raw_result_jsonl", "state_score_trace", "artifact_hash_manifest", "infrastructure_ledger"],
+  "arena_boundary": "DROID/RoboLab and RoboTwin raw results are never pooled.",
+  "stop_rule": "No phase releases another phase. A failed gate preserves its evidence, leaves its behavioral cells unrun, and requires a new disclosed amendment for any alternative path."
+}

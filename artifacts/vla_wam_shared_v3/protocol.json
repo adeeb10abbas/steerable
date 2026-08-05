@@ -1,0 +1,40 @@
+{
+  "schema_version": "vla-wam-shared-v3-protocol-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "status": "frozen_before_any_v3_model_request_or_behavioral_inference",
+  "recorded_at_utc": "2026-08-05T00:00:00Z",
+  "relationship_to_v2": {
+    "disclosure": "This is a disclosed prospective expansion after all v2 and V2-A015 results were known.",
+    "immutability": "Valid v2/V2-A015 cells, outcomes, seeds, raw collections, and denominators are preserved. They are never rewritten, relabeled as v3 primary evidence, or rerun.",
+    "arena_boundary": "DROID/RoboLab and RoboTwin are separate matched arenas. Raw successes, failure rates, and denominators are never pooled."
+  },
+  "required_artifacts": [
+    "artifacts/vla_wam_shared_v3/post_result_power_failure_ablation_amendment.json",
+    "artifacts/vla_wam_shared_v3/droid_direct_registry.json",
+    "artifacts/vla_wam_shared_v3/robotwin_direct_registry.json",
+    "artifacts/vla_wam_shared_v3/four_phrasings_registry.json",
+    "artifacts/vla_wam_shared_v3/stochastic_rollout_registry.json",
+    "artifacts/vla_wam_shared_v3/confound_fixture_calibration_registry.json",
+    "artifacts/vla_wam_shared_v3/phase_a_cells.jsonl",
+    "artifacts/vla_wam_shared_v3/phase_a_cells_manifest.json",
+    "artifacts/vla_wam_shared_v3/failure_taxonomy.json",
+    "artifacts/vla_wam_shared_v3/analysis_plan.json"
+  ],
+  "execution_order": [
+    "freeze_and_validate_artifacts",
+    "model_blind_fixture_and_raw_output_preflight",
+    "fixed_observation_repeat_and_prompt_sensitivity_release_gate",
+    "phase_a_direct_replication",
+    "phase_b_confounds_and_phase_c_four_phrasings_if_independently_released",
+    "phase_d_16_rollout_stochastic_block_if_released"
+  ],
+  "common_execution_contract": {
+    "instruction_controller": "static_episode_prompt",
+    "oracle_actions": 0,
+    "subtask_coach": false,
+    "progress_conditioned_instruction": false,
+    "required_raw_outputs": ["viewport_video", "executed_action_trace", "raw_result_jsonl"],
+    "valid_failure_policy": "Every valid behavioral failure remains in its registered denominator.",
+    "technical_invalidity_policy": "Infrastructure-invalid attempts are retained in a separate ledger, repaired only at the identical registered cell, and never counted as behavioral failures or successes."
+  }
+}

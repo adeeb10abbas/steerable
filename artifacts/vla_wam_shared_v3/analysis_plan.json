@@ -1,0 +1,24 @@
+{
+  "schema_version": "vla-wam-shared-v3-analysis-plan-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "status": "frozen_before_any_v3_behavioral_inference",
+  "primary_estimands": {
+    "droid": "Per checkpoint, report requested-relation-and-release success by direction across up to 30 exact matched pairs, exact paired endpoint ordering, frozen stage, and v3 taxonomy class. If preserved 8300-8302 runtime identities fail, report the registered 27-pair prospective addition without seed substitution.",
+    "robotwin": "Per model, report matched LEFT/RIGHT results over seven anchor scenes and ten sampling replicates. The scene/pair is the primary generalization unit; replicate-level results quantify conditional policy-sampling variation.",
+    "no_pooling": "Never combine DROID and RoboTwin raw numerators, denominators, failure frequencies, or intervals."
+  },
+  "reporting": {
+    "binary": ["raw successes/valid denominator", "Wilson 95% interval", "exact matched discordance table"],
+    "paired_continuous": ["final requested signed margin", "paired RIGHT-minus-LEFT endpoint shift", "pickup and transport progression", "action RMS over the registered common executed prefix"],
+    "failure": "Report frozen failure stage and the v3 precedence class jointly; valid failures remain included.",
+    "wam_future": "Report only released decodable future evidence, coverage, agreement, and abstentions. Missing or latent-only future evidence is never scored as zero."
+  },
+  "hierarchical_16_rollout_analysis": {
+    "unit": "policy-sampling rollout nested within every eligible released Phase-A registered scene/reset/static-instruction condition, then within scene/pair and model",
+    "eligibility": "Only runtimes that expose and pass the registered real effective stochastic-seed probe participate. Deterministic or no-effective-seed runtimes are reported ineligible rather than given fake repeats.",
+    "summary": "Show all sixteen shared-seed-index rollouts, their conditional success count, and within-condition distribution of continuous fields.",
+    "prohibition": "Do not treat sixteen rollouts as sixteen independent scenes or add them as independent scene-level evidence to Phase A."
+  },
+  "infrastructure_and_latency": "Infrastructure-invalid attempts are ledgered outside behavioral denominators. Thermal/runtime interventions retain behavior but invalidate only the affected operational aggregate according to the ledger.",
+  "claim_boundary": "This is a disclosed, checkpoint- and arena-specific prospective extension. Separate randomized ablation and wording blocks are exploratory unless a later amendment supplies their own power and inference plan."
+}

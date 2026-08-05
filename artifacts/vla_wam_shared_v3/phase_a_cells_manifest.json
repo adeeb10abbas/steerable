@@ -1,0 +1,102 @@
+{
+  "launch_rule": "Only status=authorized_new and execution_status=authorized_after_all_registered_release_gates may be launched. Preserved rows are evidence-only runtime identity checks; blocked_pi0 rows are never launchable.",
+  "phase": "A_direct_command_matched_pairs_and_sampling_replication",
+  "queue_file": "artifacts/vla_wam_shared_v3/phase_a_cells.jsonl",
+  "queue_sha256": "8350b98f958424b56b66e67e8c70ec3951d27f4ae257476d6f08c0aaa873cb7c",
+  "row_counts": {
+    "by_arena": {
+      "droid_robolab": 360,
+      "robotwin": 420
+    },
+    "by_model": {
+      "cosmos3_edge_policy_droid": 60,
+      "cosmos3_nano_policy_droid": 60,
+      "dreamzero_droid_action_cfg": 60,
+      "efficient_wam_rt_robotwin": 140,
+      "fastwam_robotwin": 140,
+      "groot_n17_droid_vla": 60,
+      "lingbot_va_robotwin": 140,
+      "pi05_current_stack_droid": 60,
+      "pi0_fast_droid_vla": 60
+    },
+    "by_status": {
+      "authorized_new": 648,
+      "blocked_pi0": 40,
+      "preserved_candidate": 50,
+      "preserved_r0": 42
+    },
+    "total": 780
+  },
+  "schema_version": "vla-wam-shared-v3-phase-a-cells-manifest-v1",
+  "source_registry_sha256": {
+    "droid": "eac46472bc9151cb355f964dedb436f5e1ff3b076226e64349dc5cbc7be87d22",
+    "protocol": "0e1a6465c96178e0c768c9398fe003c6617456b5101cfe8ce068283a8a7572d2",
+    "robotwin": "2a840a6eaa418980f8237f5f8ab522028d4b4453fc2133dd0c0180ac9d6be8b5"
+  },
+  "status_counts": {
+    "by_arena": {
+      "droid_robolab": {
+        "authorized_new": 270,
+        "blocked_pi0": 40,
+        "preserved_candidate": 50
+      },
+      "robotwin": {
+        "authorized_new": 378,
+        "preserved_r0": 42
+      }
+    },
+    "by_model": {
+      "cosmos3_edge_policy_droid": {
+        "authorized_new": 54,
+        "preserved_candidate": 6
+      },
+      "cosmos3_nano_policy_droid": {
+        "authorized_new": 54,
+        "preserved_candidate": 6
+      },
+      "dreamzero_droid_action_cfg": {
+        "authorized_new": 54,
+        "preserved_candidate": 6
+      },
+      "efficient_wam_rt_robotwin": {
+        "authorized_new": 126,
+        "preserved_r0": 14
+      },
+      "fastwam_robotwin": {
+        "authorized_new": 126,
+        "preserved_r0": 14
+      },
+      "groot_n17_droid_vla": {
+        "authorized_new": 54,
+        "preserved_candidate": 6
+      },
+      "lingbot_va_robotwin": {
+        "authorized_new": 126,
+        "preserved_r0": 14
+      },
+      "pi05_current_stack_droid": {
+        "authorized_new": 54,
+        "preserved_candidate": 6
+      },
+      "pi0_fast_droid_vla": {
+        "blocked_pi0": 40,
+        "preserved_candidate": 20
+      }
+    }
+  },
+  "study_id": "vla_wam_language_steerability_v3",
+  "target_counts": {
+    "droid": {
+      "cells": 360,
+      "checkpoints": 6,
+      "matched_pairs_per_checkpoint": 30
+    },
+    "robotwin": {
+      "cells": 420,
+      "models": 3,
+      "sampling_replicates_per_pair": 10,
+      "scene_pairs_per_model": 7
+    },
+    "total_cells": 780
+  }
+}

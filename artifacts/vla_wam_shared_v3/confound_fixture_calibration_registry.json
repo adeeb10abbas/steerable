@@ -1,0 +1,10 @@
+{
+  "schema_version": "vla-wam-shared-v3-confound-fixture-calibration-registry-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "status": "model_blind_fixture_calibration_required_before_any_confound_level_is_released",
+  "phase": "B_confound_ablation",
+  "purpose": "A model-blind calibration may freeze the numeric fixture coordinates, relation-region margins, neutral-start checks, and artifact hashes needed to define future one-factor confound levels. It is not model inference or behavioral evidence.",
+  "unreleased_fields": ["numeric_fixture_coordinates", "numeric_requested_region_margin_m", "numeric_opposite_region_margin_m", "confound_factor_levels", "control_intervention_allocation"],
+  "freeze_requirement": "After model-blind calibration, publish a new hash-pinned amendment/registry containing the observed numeric coordinates and margins, one named factor and its numeric levels, control/intervention allocation, and randomized pair manifest before any confound model request.",
+  "prohibited": ["invent_numeric_levels_before_calibration", "model_inference_during_calibration", "behavioral_scoring_during_calibration", "release_confound_arm_without_new_amendment"]
+}

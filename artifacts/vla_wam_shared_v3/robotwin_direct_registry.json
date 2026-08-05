@@ -1,0 +1,32 @@
+{
+  "schema_version": "vla-wam-shared-v3-robotwin-direct-registry-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "status": "frozen_before_any_v3_robotwin_behavioral_inference",
+  "arena": "robotwin",
+  "phase": "A_direct_command_sampling_replication",
+  "models": ["efficient_wam_rt_robotwin", "fastwam_robotwin", "lingbot_va_robotwin"],
+  "scene_pairs": [3, 4, 5, 6, 7, 8, 9],
+  "environment_scene_seed_rule": "pair p uses environment seed 4300000 + p; therefore pairs03-09 use 4300003-4300009.",
+  "anchor_task_rule": "pair p uses place_a2b_right when p is odd and place_a2b_left when p is even. Both requested directions execute in the identical anchor task, object layout, and reset; the relation-aware scorer, not native directory name, supplies the requested predicate.",
+  "direct_prompts": {
+    "left": "Put the {seen_object} to the left of the {seen_reference}.",
+    "right": "Put the {seen_object} to the right of the {seen_reference}.",
+    "rendering": "The exact first seen object/reference descriptions are frozen per pair before inference and rendered byte-identically across models for that pair."
+  },
+  "sampling": {
+    "replicates": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+    "seed_rule": "replicate r=0 uses 8400 + pair_number; replicate r=1..9 uses 8400 + pair_number + 100*r.",
+    "r0_policy": "Existing valid v2 r=0 episodes are preserved, never rerun, and may be carried only after exact pinned runtime-identity confirmation.",
+    "r1_to_r9_policy": "All r=1..9 cells are new prospective behavioral cells."
+  },
+  "pairing": "For a model, pair, and replicate, LEFT and RIGHT share the same anchor reset, environment seed, sampling seed, model runtime, horizon, and execution settings. Only requested direction, static prompt bytes, and relation-aware predicate change.",
+  "episode_accounting": {
+    "existing_r0_episodes": 42,
+    "new_episodes_per_model": 126,
+    "new_episodes_total": 378,
+    "formula": "3 models * 7 pairs * 9 new replicates * 2 directions"
+  },
+  "required_evidence": ["simulator_viewport_video", "executed_action_trace", "raw_result_jsonl", "fixture_manifest", "final_state", "frozen_failure_stage", "v3_failure_taxonomy_fields"],
+  "release_gates": ["model_blind_fixture_validation", "exact_runtime_identity", "raw_video_action_jsonl_write", "fixed_observation_exact_repeat", "fixed_observation_left_right_prompt_sensitivity"],
+  "prohibited": ["rerun_valid_v2_r0_cell", "treat_native_left_and_right_tasks_as_matched_scenes", "cross_arena_pooling"]
+}

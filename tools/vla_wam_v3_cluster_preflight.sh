@@ -9,14 +9,18 @@ Usage:
   tools/vla_wam_v3_cluster_preflight.sh \
     --context KCTX --namespace KNS --pod POD --pvc-root PVC_ROOT \
     --study-root STUDY_ROOT --vulkan-icd ICD_PATH \
+    --credential-gate-cmd 'MODEL-SPECIFIC-NON-SECRET-CHECK' \
     --sapien-gate-cmd 'MODEL-SPECIFIC-COMMAND' \
     [--study-branch codex/wam-language-steerability]
 
 All target arguments are mandatory.  PVC_ROOT must be a writable path inside a
 PVC mounted by the named pod.  SAPIEN_GATE_CMD must create an actual headless
-SAPIEN engine, renderer, and scene in the intended model environment; it is
-executed only after ownership, PVC, GPU, egress, and source gates pass.
+SAPIEN engine, renderer, and scene and capture a frame in the intended model
+environment; it is executed only after ownership, PVC, GPU, egress, and source
+gates pass.
 VULKAN_ICD must be a live-verified absolute path inside the named pod.
+CREDENTIAL_GATE_CMD is run with output suppressed: it must return success only
+when a local hash-pinned snapshot is complete or non-secret model auth passes.
 EOF
 }
 
@@ -26,6 +30,7 @@ POD=''
 PVC_ROOT=''
 STUDY_ROOT=''
 VULKAN_ICD=''
+CREDENTIAL_GATE_CMD=''
 SAPIEN_GATE_CMD=''
 STUDY_BRANCH='codex/wam-language-steerability'
 
@@ -37,6 +42,7 @@ while (($#)); do
     --pvc-root) PVC_ROOT=${2:?missing value for --pvc-root}; shift 2 ;;
     --study-root) STUDY_ROOT=${2:?missing value for --study-root}; shift 2 ;;
     --vulkan-icd) VULKAN_ICD=${2:?missing value for --vulkan-icd}; shift 2 ;;
+    --credential-gate-cmd) CREDENTIAL_GATE_CMD=${2:?missing value for --credential-gate-cmd}; shift 2 ;;
     --sapien-gate-cmd) SAPIEN_GATE_CMD=${2:?missing value for --sapien-gate-cmd}; shift 2 ;;
     --study-branch) STUDY_BRANCH=${2:?missing value for --study-branch}; shift 2 ;;
     -h|--help) usage; exit 0 ;;
@@ -44,7 +50,7 @@ while (($#)); do
   esac
 done
 
-for required in KCTX KNS POD PVC_ROOT STUDY_ROOT VULKAN_ICD SAPIEN_GATE_CMD; do
+for required in KCTX KNS POD PVC_ROOT STUDY_ROOT VULKAN_ICD CREDENTIAL_GATE_CMD SAPIEN_GATE_CMD; do
   if [[ -z ${!required} ]]; then
     printf 'ERROR: %s is required.\n' "$required" >&2
     usage >&2
@@ -123,6 +129,26 @@ kexec bash -lc '
   printf "PASS: study source is on the requested clean branch and both protocols validate.\n"
 ' bash "$STUDY_ROOT" "$STUDY_BRANCH" || fail 'study source branch, cleanliness, or protocol validator gate failed'
 
+say 'explicit Vulkan ICD path and external egress'
+kexec bash -lc '
+  set -euo pipefail
+  icd=$1
+  test -r "$icd"
+  curl --fail --silent --show-error --max-time 20 --head https://github.com/ >/dev/null
+  curl --fail --silent --show-error --max-time 20 --head https://huggingface.co/ >/dev/null
+  printf "PASS: explicit readable Vulkan ICD and GitHub/Hugging Face egress are available.\n"
+' bash "$VULKAN_ICD" || fail 'explicit Vulkan ICD path or egress gate failed'
+
+say 'model credential or local snapshot gate'
+# Deliberately suppress hook output so this generic preflight never exposes a
+# token. The per-model hook may instead attest complete hash-pinned local files.
+kexec bash -lc '
+  set -euo pipefail
+  gate=$1
+  bash -lc "$gate" >/dev/null 2>&1
+  printf "PASS: credential or local snapshot gate passed.\n"
+' bash "$CREDENTIAL_GATE_CMD" || fail 'credential or local snapshot gate failed'
+
 say 'GPU availability and current owners'
 kexec bash -lc '
   set -euo pipefail
@@ -132,24 +158,14 @@ kexec bash -lc '
   nvidia-smi --query-compute-apps=gpu_uuid,pid,process_name,used_memory --format=csv,noheader || true
 ' || fail 'GPU query failed in the named pod'
 
-say 'Vulkan and external egress'
-kexec bash -lc '
-  set -euo pipefail
-  icd=$1
-  test -r "$icd"
-  VK_ICD_FILENAMES="$icd" vulkaninfo --summary
-  curl --fail --silent --show-error --max-time 20 --head https://github.com/ >/dev/null
-  curl --fail --silent --show-error --max-time 20 --head https://huggingface.co/ >/dev/null
-  printf "PASS: Vulkan ICD and GitHub/Hugging Face egress are reachable.\n"
-' bash "$VULKAN_ICD" || fail 'Vulkan or egress gate failed'
-
 say 'model-specific headless SAPIEN gate'
-# Intentionally supplied by the model runbook, so this script never guesses an environment.
+# Intentionally supplied by the model runbook, so this script never guesses an
+# environment. It must render and capture a frame, rather than merely import SAPIEN.
 kexec bash -lc '
   set -euo pipefail
   gate=$1 icd=$2
   test -r "$icd"
   env -u DISPLAY VK_ICD_FILENAMES="$icd" bash -lc "$gate"
-' bash "$SAPIEN_GATE_CMD" "$VULKAN_ICD" || fail 'the supplied SAPIEN headless-renderer gate failed'
+' bash "$SAPIEN_GATE_CMD" "$VULKAN_ICD" || fail 'the supplied SAPIEN headless render-and-capture gate failed'
 
 printf '\nPASS: v3 preflight completed. This did not reserve GPUs or authorize inference.\n'

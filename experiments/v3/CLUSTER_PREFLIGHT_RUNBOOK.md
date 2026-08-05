@@ -41,7 +41,15 @@ Do not search another namespace or select another user's workload.
    **not a default or current verification**.
 4. Supply a model-specific, no-policy-load SAPIEN command that uses its real
    Python environment and constructs `sapien.Engine()`, `SapienRenderer()`,
-   and a scene. The generic preflight does not guess a Python environment.
+   and a scene **and renders/captures a frame**. An import-only test is not an
+   execution gate. The generic preflight does not guess a Python environment.
+5. Supply `CREDENTIAL_GATE_CMD`, a model-specific, non-secret check that exits
+   successfully only when either its required local snapshot is complete and
+   hash-pinned or its authentication is valid. Its output is suppressed by the
+   preflight, so it must not depend on emitting a token or a credential value.
+   The current B200 Hugging Face CLI reports that it is not logged in; this is
+   not a blocker when a model's complete verified local snapshot satisfies its
+   staging gate.
 
 Example invocation (the two path values and the SAPIEN hook are deliberately
 placeholders until they are verified):
@@ -52,15 +60,19 @@ tools/vla_wam_v3_cluster_preflight.sh \
   --pvc-root '<verified in-container PVC root>' \
   --study-root '<verified checkout under that PVC root>' \
   --vulkan-icd '<verified absolute in-container NVIDIA ICD path>' \
-  --sapien-gate-cmd '<verified model-environment SAPIEN engine/renderer/scene check>'
+  --credential-gate-cmd '<verified non-secret auth or local hash-pinned snapshot check>' \
+  --sapien-gate-cmd '<verified model-environment SAPIEN engine/renderer/scene render-and-capture check>'
 ```
 
 The preflight verifies the branch
 `codex/wam-language-steerability`, a clean worktree, **both frozen v2 and v3
 validators before any GPU inspection**, PVC capacity and persistence, GPU
-identity/free memory/current compute processes, the NVIDIA Vulkan ICD, and
-GitHub/Hugging Face egress. A failure is an infrastructure record, not
-behavioral evidence.
+identity/free memory/current compute processes, the explicit readable NVIDIA
+Vulkan ICD, a real SAPIEN render-and-capture gate, and GitHub/Hugging Face
+egress. After egress and before GPU/render checks, a silent per-model
+credential-or-local-snapshot gate must pass. `vulkaninfo` is not required: the
+actual SAPIEN capture is the renderer-execution check. A failure is an
+infrastructure record, not behavioral evidence.
 
 ## After a passing preflight
 

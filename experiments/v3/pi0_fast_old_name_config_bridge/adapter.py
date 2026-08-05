@@ -14,6 +14,7 @@ import argparse
 import hashlib
 import json
 import math
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -86,6 +87,12 @@ FROZEN_REPOSITORY_SOURCES = {
         "45d688adfb689350d19051782c541f98b34554095f6ea0019d83d02b8e669068",
     "experiments/v3/pi0_fast_old_name_config_bridge/fixed_observation_gate.py":
         "dc0ca2afab6ae93b11c649fdd4a7e1226e21be507c1cba5f2ab85d0a4ab7e14d",
+    "experiments/v3/pi0_fast_old_name_config_bridge/model_blind_writer_gate.py":
+        "7a4f7ff32c0a4e0e1672d48bc31ad6b5d539e4e89de10f45b812ee012a5a6d41",
+    "experiments/v3/pi0_fast_old_name_config_bridge/model_blind_renderer_gate.py":
+        "72ff267ef607ef3a58f730bef4a8702d807b3a029f321acbd0b8939a0eb0a678",
+    "experiments/v3/pi0_fast_old_name_config_bridge/run_shard.py":
+        "86f2b8bfe0cbd76717fe15c1b53e353af4dcc076c5adeb8ee199ec73c1114a19",
     "experiments/pi0_current_stack/v2a008_robolab_client.py":
         "60e70abde3642d58fdaa9101d633c62bdf33f07bd22e9683edd4f987c022c745",
     "experiments/pi0_current_stack/v2a008_robolab_gate.py":
@@ -101,6 +108,84 @@ ADAPTER_SOURCES = (
     "experiments/v3/pi0_fast_old_name_config_bridge/robolab_bridge.py",
 )
 HEX64 = set("0123456789abcdef")
+POLICY_RUNTIME = {
+    "pod": "lerobot-b200-4gpu-1-ali",
+    "pod_uid": "1e0f438c-6041-4cc3-af32-0c118963e54c",
+    "node": "dcwipphhgc225.edc.nam.gm.com",
+    "pod_ip": "10.244.103.110",
+    "container_image": "artifactory-ci.gm.com/docker-approved/devcontainers/base:ubuntu22.04",
+    "gpu_index": 2,
+    "gpu_uuid": "GPU-4ca76921-a7d2-e920-8555-47e0e8f105f7",
+    "gpu_model": "NVIDIA B200",
+    "driver": "580.95.05",
+    "cuda_visible_devices": "2",
+    "endpoint": "10.244.103.110:8011",
+}
+SIMULATOR_RUNTIMES = {
+    "raytrace-rtxpro6000-ali": {
+        "pod_uid": "d5b0405a-a9b1-4baa-a802-d5171e03c228",
+        "pod_ip": "10.244.222.28",
+        "gpu_uuid": "GPU-f28bd513-a38a-b768-7589-d2959f814ae8",
+        "seed_range": [8310, 8316],
+    },
+    "vla-wam-rtx-cosmos-ali": {
+        "pod_uid": "b7ec6369-2ab7-42d6-a4ef-3fc549ca652a",
+        "pod_ip": "10.244.222.15",
+        "gpu_uuid": "GPU-c2407ba3-cc0f-2456-5df4-8c968bfb8435",
+        "seed_range": [8317, 8323],
+    },
+    "vla-wam-rtx-nano-ali": {
+        "pod_uid": "30b51054-f277-480d-831d-337581e1cc49",
+        "pod_ip": "10.244.222.14",
+        "gpu_uuid": "GPU-37425604-6c72-a77a-f635-392439431707",
+        "seed_range": [8324, 8329],
+    },
+}
+SIMULATOR_SHARED = {
+    "node": "dcwipphrtx0005.edc.nam.gm.com",
+    "container_image": "artifactory-ci.gm.com/docker-approved/devcontainers/base:ubuntu22.04",
+    "gpu_index": 0,
+    "gpu_model": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+    "driver": "580.105.08",
+}
+FROZEN_PYTHONPATH = [
+    "/data/users/ali/vla_wam/src/steerable",
+    "/data/users/ali/vla_wam/external/RoboLab-pi0fast-bridge-0aef241-clean01",
+    "/data/users/ali/vla_wam/external/openpi-235044ed/packages/openpi-client/src",
+]
+FROZEN_IMPORTS = {
+    "openpi_client": (
+        "/data/users/ali/vla_wam/external/openpi-235044ed/packages/openpi-client/"
+        "src/openpi_client/__init__.py",
+        "91447944015cec709e8aa7655f7e9d64e1e4508e7023a57fe3746911c0fc6fed",
+    ),
+    "openpi_client.websocket_client_policy": (
+        "/data/users/ali/vla_wam/external/openpi-235044ed/packages/openpi-client/"
+        "src/openpi_client/websocket_client_policy.py",
+        "36557cb0b91ccf31cd4fb4b508306850d76ed0feb4028dac5182d0f5a5d88005",
+    ),
+    "openpi_client.msgpack_numpy": (
+        "/data/users/ali/vla_wam/external/openpi-235044ed/packages/openpi-client/"
+        "src/openpi_client/msgpack_numpy.py",
+        "c04568948fcee52b691e3be4b6cffb759f7e79ad67530fcd5d23095a0d13c057",
+    ),
+    "robolab": (
+        "/data/users/ali/vla_wam/external/RoboLab-pi0fast-bridge-0aef241-clean01/"
+        "robolab/__init__.py",
+        "d7912be543fa14354464740c9dd280e3530b38acbee28379b34a0ff825801d84",
+    ),
+    "policies.pi0_family.client": (
+        "/data/users/ali/vla_wam/external/RoboLab-pi0fast-bridge-0aef241-clean01/"
+        "policies/pi0_family/client.py",
+        "2386e6230ca4e2bbf163159ff0692780f5027a6b158b510b206700d54a4a29a3",
+    ),
+}
+WRITER_GATE_SCHEMA = (
+    "vla-wam-shared-v3-pi0-fast-old-name-config-model-blind-writer-gate-manifest-v1"
+)
+RENDERER_GATE_SCHEMA = (
+    "vla-wam-shared-v3-pi0-fast-old-name-config-model-blind-renderer-gate-v1"
+)
 
 
 class AdapterError(ValueError):
@@ -454,6 +539,136 @@ def _git_tree(directory: Path) -> str:
     ).strip()
 
 
+def _validate_file_record(raw: Any, label: str) -> Path:
+    if not isinstance(raw, dict):
+        _fail(f"{label} must be a file record")
+    path = Path(str(raw.get("path", ""))).resolve()
+    if (
+        not path.is_file()
+        or type(raw.get("bytes")) is not int
+        or raw["bytes"] <= 0
+        or path.stat().st_size != raw["bytes"]
+        or not _is_sha256(raw.get("sha256"))
+        or sha256_file(path) != raw["sha256"]
+    ):
+        _fail(f"{label} file record does not reproduce")
+    return path
+
+
+def _validate_runtime_gates(identity: dict[str, Any]) -> str:
+    target = identity.get("target_kubernetes", {})
+    if not isinstance(target, dict):
+        _fail("V3-A002 target_kubernetes must be an object")
+    for key, wanted in {
+        "context": "prod-dcwi-warrenq1-vmkub007",
+        "namespace": "211247-prod",
+        "pvc": "211247-prod-pvc",
+        "pvc_mount": "/data",
+    }.items():
+        if target.get(key) != wanted:
+            _fail(f"V3-A002 target Kubernetes mismatch for {key}")
+    if target.get("policy") != POLICY_RUNTIME:
+        _fail("V3-A002 policy pod/GPU/endpoint identity changed")
+    simulator = target.get("simulator", {})
+    if not isinstance(simulator, dict):
+        _fail("V3-A002 simulator runtime identity must be an object")
+    pod = simulator.get("pod")
+    if pod not in SIMULATOR_RUNTIMES:
+        _fail("V3-A002 simulator pod is outside the three frozen ali-owned shards")
+    expected_simulator = {
+        "pod": pod,
+        **SIMULATOR_RUNTIMES[pod],
+        **SIMULATOR_SHARED,
+    }
+    if simulator != expected_simulator:
+        _fail("V3-A002 simulator pod/UID/GPU identity changed")
+
+    writer_ref = identity.get("model_blind_writer_gate", {})
+    writer_path = _validate_file_record(writer_ref, "V3-A002 writer-gate manifest")
+    writer = _load_object(writer_path)
+    if (
+        writer.get("schema_version") != WRITER_GATE_SCHEMA
+        or writer.get("passed") is not True
+        or writer.get("pod") != pod
+        or writer.get("model_request_count") != 0
+    ):
+        _fail("V3-A002 writer-gate manifest identity changed")
+    for key in ("viewport_video", "neutral_hold_action", "writer_jsonl"):
+        _validate_file_record(writer.get(key), f"V3-A002 writer gate {key}")
+    writer_rows = _load_jsonl(Path(writer["writer_jsonl"]["path"]))
+    if len(writer_rows) != 1:
+        _fail("V3-A002 writer gate must contain one JSONL row")
+    writer_row = writer_rows[0]
+    if (
+        writer_row.get("model_id") != MODEL_ID
+        or writer_row.get("pod") != pod
+        or writer_row.get("model_request_count") != 0
+        or writer_row.get("neutral_reset_verified") is not True
+        or writer_row.get("fixture", {}).get("sha256") != FROZEN_FIXTURE_SHA256
+    ):
+        _fail("V3-A002 writer-gate JSONL contract changed")
+
+    renderer_ref = identity.get("live_renderer_gate", {})
+    renderer_path = _validate_file_record(renderer_ref, "V3-A002 renderer-gate manifest")
+    renderer = _load_object(renderer_path)
+    if (
+        renderer.get("schema_version") != RENDERER_GATE_SCHEMA
+        or renderer.get("status") != "passed"
+        or renderer.get("passed") is not True
+        or renderer.get("pod") != pod
+        or renderer.get("pod_uid") != simulator["pod_uid"]
+        or renderer.get("gpu_uuid") != simulator["gpu_uuid"]
+        or renderer.get("model_request_count") != 0
+        or renderer.get("environment_seed") != 8310
+        or renderer.get("prompt") != PROMPTS["left"]
+        or renderer.get("policy_endpoint") != POLICY_RUNTIME["endpoint"]
+        or renderer.get("neutral_reset_contract")
+        != {"left_predicate_at_reset": False, "right_predicate_at_reset": False}
+        or renderer.get("renderer")
+        != {"backend": "realtime RTX Vulkan", "quality": "balanced"}
+        or renderer.get("simulator_versions")
+        != {"isaaclab": "2.2.0", "isaacsim": "5.0.0.0", "robolab": "0.2.1"}
+    ):
+        _fail("V3-A002 live Isaac/Vulkan renderer-gate identity changed")
+    if renderer.get("nvidia_icd") != {
+        "path": "/etc/vulkan/icd.d/nvidia_icd.json",
+        "sha256": "7bdb6f27d35b66fc848df6f94b8773bba30ea3a7f06f114100d14154a235a34b",
+    }:
+        _fail("V3-A002 renderer gate NVIDIA Vulkan ICD changed")
+    viewport = _validate_file_record(
+        renderer.get("viewport_video"), "V3-A002 live renderer viewport"
+    )
+    if renderer.get("video_decode_frame_count", 0) < 1 or viewport.stat().st_size <= 0:
+        _fail("V3-A002 renderer viewport did not decode")
+    handshake = renderer.get("websocket_metadata_only_handshake", {})
+    expected_server_metadata = {
+        "pi0_fast_old_name_config_bridge": "v3a002",
+        "openpi_commit": FROZEN_OPENPI_COMMIT,
+        "openpi_tree": FROZEN_OPENPI_TREE,
+        "openpi_config": FROZEN_CONFIG,
+        "max_token_len": 250,
+        "checkpoint_assets_rule": "checkpoint_local_assets_only",
+        "sampling_contract": "required_request_field:sampling_seed",
+    }
+    if (
+        handshake.get("passed") is not True
+        or handshake.get("inference_requests_sent") != 0
+        or handshake.get("server_metadata") != expected_server_metadata
+    ):
+        _fail("V3-A002 metadata-only WebSocket handshake changed")
+    imports = renderer.get("effective_imports", {})
+    if imports.get("pythonpath") != FROZEN_PYTHONPATH:
+        _fail("V3-A002 effective PYTHONPATH changed")
+    modules = imports.get("modules", {})
+    if not isinstance(modules, dict) or set(modules) != set(FROZEN_IMPORTS):
+        _fail("V3-A002 effective import module set changed")
+    for module, (expected_path, expected_sha) in FROZEN_IMPORTS.items():
+        path = _validate_file_record(modules[module], f"V3-A002 import {module}")
+        if str(path) != expected_path or modules[module]["sha256"] != expected_sha:
+            _fail(f"V3-A002 effective import changed for {module}")
+    return str(pod)
+
+
 def validate_runtime_identity(
     study_root: Path, path: Path, *, check_live_repositories: bool = False
 ) -> dict[str, Any]:
@@ -537,8 +752,20 @@ def validate_runtime_identity(
         or identity["robolab_dir_status_sha256"] != clean_sha
     ):
         _fail("V3-A002 requires clean detached OpenPI and RoboLab worktrees")
+    simulator_pod = _validate_runtime_gates(identity)
 
     if check_live_repositories:
+        if os.environ.get("HOSTNAME") != simulator_pod:
+            _fail("live simulator pod differs from the bound V3-A002 runtime")
+        if os.environ.get("PYTHONPATH", "").split(":") != FROZEN_PYTHONPATH:
+            _fail("live V3-A002 PYTHONPATH differs from the import-bound runtime")
+        for key, wanted in {
+            "CUDA_VISIBLE_DEVICES": "0",
+            "VK_ICD_FILENAMES": "/etc/vulkan/icd.d/nvidia_icd.json",
+            "OMNI_KIT_ACCEPT_EULA": "YES",
+        }.items():
+            if os.environ.get(key) != wanted:
+                _fail(f"live V3-A002 simulator environment mismatch for {key}")
         for label, dir_key, commit_key, status_key in (
             ("OpenPI", "openpi_dir", "openpi_commit", "openpi_dir_status_sha256"),
             ("RoboLab", "robolab_dir", "robolab_commit", "robolab_dir_status_sha256"),
@@ -1057,6 +1284,9 @@ def build_behavioral_record(
         release_gate_path,
     )
     runtime = authorization["runtime_identity"]
+    simulator_pod = runtime["target_kubernetes"]["simulator"]["pod"]
+    if capture.get("simulator_pod") != simulator_pod:
+        _fail("V3-A002 state capture simulator pod differs from runtime identity")
     _, actions_path, chunks_path = _validate_action_trace(
         action_trace_metadata_path, cell, actions_executed
     )
@@ -1080,6 +1310,7 @@ def build_behavioral_record(
         "registered_cell_id": cell["cell_id"],
         "attempt_id": capture["attempt_id"],
         "model_id": MODEL_ID,
+        "simulator_pod": simulator_pod,
         "pair_id": cell["pair_id"],
         "bridge_provenance": {
             "amendment_id": "V3-A002",

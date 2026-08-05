@@ -44,13 +44,14 @@ if bootstrap.environment_seed != bootstrap.sampling_seed_base:
     BOOTSTRAP.error("environment and sampling seed bases must match")
 if bootstrap.open_loop_horizon != 10:
     BOOTSTRAP.error("the frozen V3-A002 π0-FAST old-name-config bridge horizon is 10")
-preflight(
+AUTHORIZATION = preflight(
     bootstrap.study_root.resolve(),
     bootstrap.environment_seed,
     bootstrap.runtime_identity,
     bootstrap.release_gate,
     check_live_repositories=True,
 )
+SIMULATOR_POD = AUTHORIZATION["runtime_identity"]["target_kubernetes"]["simulator"]["pod"]
 
 import cv2  # noqa: E402,F401 -- RoboLab requires this before Isaac Lab
 import numpy as np  # noqa: E402
@@ -300,6 +301,7 @@ class StateCaptureProxy:
                 f"{self._relation}"
             ),
             "attempt_id": f"{args_cli.output_folder_name}:{self._relation}",
+            "simulator_pod": SIMULATOR_POD,
             "environment_seed": args_cli.environment_seed,
             "policy_seed": args_cli.sampling_seed_base,
             "requested_relation": self._relation,

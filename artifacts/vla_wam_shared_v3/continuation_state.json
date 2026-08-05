@@ -1,23 +1,30 @@
 {
   "schema_version": "vla-wam-shared-v3-continuation-v1",
   "study_id": "vla_wam_language_steerability_v3",
-  "updated_at_utc": "2026-08-05T17:05:21Z",
+  "updated_at_utc": "2026-08-05T20:39:22Z",
   "active_branch": "codex/wam-language-steerability",
-  "evidence_head": "a04d74b4cbe687512b01573309053f4a38feaa76",
-  "status": "phase_a_all_648_launch_authorized_new_cells_complete_pi0_fast_40_cells_blocked_later_phases_unreleased",
+  "evidence_head": "2e97d0beb0fb1b4545460ffee60f5f240e163443",
+  "status": "phase_a_648_authorized_cells_complete_separate_pi0_fast_v3a002_40_cells_complete_later_phases_unreleased",
   "authoritative_files": [
     "docs/VLA_WAM_V3_CONTINUATION.md",
     "docs/VLA_WAM_STEERABILITY_V3_PROTOCOL.md",
     "artifacts/vla_wam_shared_v3/protocol.json",
     "artifacts/vla_wam_shared_v3/post_result_power_failure_ablation_amendment.json",
+    "artifacts/vla_wam_shared_v3/post_result_pi0_fast_old_name_config_amendment.json",
+    "artifacts/vla_wam_shared_v3/post_result_pi0_fast_token_trace_validation_amendment.json",
     "artifacts/vla_wam_shared_v3/phase_a_cells.jsonl",
-    "artifacts/vla_wam_shared_v3/phase_a_cells_manifest.json"
+    "artifacts/vla_wam_shared_v3/phase_a_cells_manifest.json",
+    "artifacts/vla_wam_shared_v3/results/pi0_fast_old_name_config_v3a002_release_gate.json",
+    "artifacts/vla_wam_shared_v3/results/pi0_fast_old_name_config_v3a002_summary.json",
+    "artifacts/vla_wam_shared_v3/results/pi0_fast_old_name_config_v3a002_evidence_hash_manifest.json",
+    "artifacts/vla_wam_shared_v3/results/pi0_fast_old_name_config_v3a002_infrastructure_ledger.json",
+    "artifacts/vla_wam_shared_v3/media/pi0_fast_old_name_config_v3a002/media_manifest.json"
   ],
   "validation": {
     "v3": {
       "command": ".venv/bin/python tools/validate_vla_wam_v3_protocol.py",
       "status": "valid",
-      "check_count": 91
+      "check_count": 271
     },
     "v2": {
       "command": ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
@@ -25,9 +32,9 @@
       "check_count": 994
     },
     "focused_tests": {
-      "command": ".venv/bin/python -m unittest -v tests.test_v3_robotwin_wams_launcher tests.test_vla_wam_v3_episode_schema",
+      "command": ".venv/bin/python -m unittest -v tests.test_validate_vla_wam_v3_protocol tests.test_v3_robotwin_wams_launcher tests.test_vla_wam_v3_episode_schema",
       "status": "passed",
-      "test_count": 18
+      "test_count": 30
     }
   },
   "nonnegotiable_boundaries": {
@@ -44,9 +51,11 @@
     "droid_completed_new_cells": 270,
     "robotwin_completed_new_cells": 378,
     "blocked_pi0_fast_cells": 40,
+    "post_result_bridge_completed_matched_pairs": 20,
+    "post_result_bridge_completed_cells": 40,
     "droid_preserved_candidate_cells": 50,
     "robotwin_preserved_r0_cells": 42,
-    "completion_statement": "Every row marked authorized_new in the frozen Phase-A queue is complete valid evidence. Blocked and preserved rows were not relaunched."
+    "completion_statement": "Every row marked authorized_new in the frozen Phase-A queue is complete valid evidence. Its 40 blocked_pi0 source rows remain immutable and were not relaunched under the historical identity. Post-result amendment V3-A002 separately authorized 40 distinct pi0_fast_old_name_config_v3a002 cells on the same registered seeds; all are complete valid evidence."
   },
   "exact_prompts": {
     "droid_robolab": {
@@ -154,6 +163,38 @@
           "evidence_manifest": {"path": "artifacts/vla_wam_shared_v3/results/dreamzero_droid_action_cfg_phase_a_evidence_hash_manifest.json", "sha256": "0150afb2145cc2e1d18bc16bd34b4af404c7fabb77486d197af78776fcd93427"},
           "infrastructure_ledger": {"path": "artifacts/vla_wam_shared_v3/results/dreamzero_droid_action_cfg_phase_a_infrastructure_ledger.json", "sha256": "97305ed45b616306788f64be692be4fba77824ce3ef88816d6cd67f15f3b28da"}
         }
+      },
+      "post_result_bridge_cohorts": {
+        "pi0_fast_old_name_config_v3a002": {
+          "status": "complete_20_matched_pairs_40_behavioral_episodes",
+          "cohort": "V3-A002_public_old_name_config_bridge",
+          "source_queue_boundary": "The original 40 blocked_pi0 rows remain frozen under pi0_fast_droid_vla; V3-A002 created a distinct model identity and denominator.",
+          "historical_pooling_prohibited": true,
+          "pooled_with_historical_pi0_fast": false,
+          "environment_seeds_inclusive": [8310, 8329],
+          "matched_pairs": 20,
+          "behavioral_episodes": 40,
+          "runtime_identity": {
+            "openpi_commit": "235044ed8a1502c0a18338eedc5d7adfe705af05",
+            "openpi_tree": "03a4387bedbc0fa1467c367c60fc24e28b61ec6c",
+            "openpi_config": "pi0_fast_droid_jointpos",
+            "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+          },
+          "success_by_direction": {"left": "0/20", "right": "12/20"},
+          "success_discordance": {"both": 0, "left_only": 0, "right_only": 12, "neither": 8, "exact_two_sided_mcnemar_p": 0.00048828125},
+          "endpoint_ordering": {"aligned": 16, "anti_aligned": 3, "ties": 1, "exact_two_sided_sign_test_p_excluding_ties": 0.004425048828125},
+          "right_minus_left_endpoint_shift_m": {"mean": -0.1655462902970612, "median": -0.1968926303088665},
+          "common_prefix_action_rms": {"nonzero_pairs": "20/20", "mean": 0.3350799604456891, "median": 0.3411288586217518, "unit": "descriptive_mixed_native_action_coordinates"},
+          "failure_taxonomy": {"correct": 12, "pick_failed": 22, "transport_failed": 4, "wrong_side": 0, "release_failed": 2},
+          "future_interface": "action_only_no_generated_future",
+          "contact_measurement": "instrumentation_unavailable_in_all_40_episodes_not_encoded_as_zero",
+          "infrastructure": {"excluded_attempt_pairs": 0, "runtime_interventions": 0, "retained_thermal_ledgers": 20},
+          "release_gate": {"path": "artifacts/vla_wam_shared_v3/results/pi0_fast_old_name_config_v3a002_release_gate.json", "sha256": "b4d7deff192c855b8077598c60c5fb2ec545edf54c7af97da4e724f9c4fb4269"},
+          "summary": {"path": "artifacts/vla_wam_shared_v3/results/pi0_fast_old_name_config_v3a002_summary.json", "sha256": "72df6398030199afd2ffc6f305c3a9b879801a07c42ff078a2c51f9c6090599a"},
+          "evidence_manifest": {"path": "artifacts/vla_wam_shared_v3/results/pi0_fast_old_name_config_v3a002_evidence_hash_manifest.json", "sha256": "74f27b27bca8011c5dfacde41a8d78f73665111fcf016619186dc975235530d0"},
+          "infrastructure_ledger": {"path": "artifacts/vla_wam_shared_v3/results/pi0_fast_old_name_config_v3a002_infrastructure_ledger.json", "sha256": "b926fa2774d6e220764f5a6a083a690645e818ae478057eff3d4c07680a107a3"},
+          "publication_media": {"manifest_path": "artifacts/vla_wam_shared_v3/media/pi0_fast_old_name_config_v3a002/media_manifest.json", "manifest_sha256": "cd0e99ae1559eeb6f0c08adb24bc7d4d37578e4d0f099f1e27833a6c14ad08d1", "selected_seed": 8311, "kind": "actual_simulator_execution_action_only"}
+        }
       }
     },
     "robotwin": {
@@ -206,7 +247,7 @@
   },
   "blocked_and_unreleased": {
     "pi0_fast_phase_a": {
-      "status": "blocked_before_v3_behavioral_request",
+      "status": "historical_identity_still_blocked_separate_v3a002_bridge_complete",
       "preserved_v2_pairs": 10,
       "preserved_v2_cells": 20,
       "blocked_new_pairs": 20,
@@ -214,9 +255,10 @@
       "blocked_seed_range": [8310, 8329],
       "required_openpi_commit": "9e46d3aea26417bfb564227734b95d010aa827e5",
       "required_robolab_commit": "11142d4319e44401e0464866bb5fedf7ec8a8927",
-      "blocker": "Both exact historical integration commits remain unavailable. V2-A008 current-stack LEFT/RIGHT prompt sensitivity failed with action RMS 0.0 and is not a substitute or behavioral release.",
+      "blocker": "Both exact historical integration commits remain unavailable. V2-A008 current-stack LEFT/RIGHT prompt sensitivity failed with action RMS 0.0. The completed V3-A002 public old-name-config bridge is a separate cohort, not exact historical recovery.",
       "model_load_attempt_count": 0,
-      "v3_behavioral_episode_count": 0,
+      "historical_identity_v3_behavioral_episode_count": 0,
+      "separate_bridge": {"model_id": "pi0_fast_old_name_config_v3a002", "matched_pairs": 20, "behavioral_episodes": 40, "pooled_with_historical": false},
       "denominator_effect": "none",
       "recovery_command": "git -C /home/ali/openpi-robolab bundle create /tmp/openpi-robolab-all.bundle --all && git -C /home/ali/projects/RoboLab bundle create /tmp/robolab-all.bundle --all"
     },
@@ -235,7 +277,7 @@
     }
   },
   "scientific_claim_boundary": {
-    "supported": "Across every completed checkpoint, matched LEFT/RIGHT prompts changed executed traces; endpoint ordering was often aligned, but requested task completion and failure mode remained strongly checkpoint- and direction-dependent.",
+    "supported": "Across every completed checkpoint, matched LEFT/RIGHT prompts changed executed traces; endpoint ordering was often aligned, but requested task completion and failure mode remained strongly checkpoint- and direction-dependent. In the separate V3-A002 public old-name-config bridge, all 20 common action prefixes differed and 16/20 endpoints aligned, yet success was 0/20 LEFT versus 12/20 RIGHT.",
     "not_supported": "Phase A alone does not identify training-distribution bias, scene geometry, reachability, start side, object role, or model family as a causal explanation. It also does not establish that an exposed or decoded future caused successful control.",
     "unit_warning": "RoboTwin sampling replicates are nested within seven scenes; they are not 63 independent scenes."
   },
@@ -252,7 +294,7 @@
       ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
       "git diff --check"
     ],
-    "inference_authority": "No Phase-A authorized_new cell remains. Do not rerun a valid cell. No Phase-B, Phase-C, or Phase-D cell may start without its frozen independent release path; pi0-FAST remains blocked until exact revision recovery.",
+    "inference_authority": "No Phase-A authorized_new or V3-A002 bridge cell remains. Do not rerun a valid cell. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or Phase C. No Phase-B, Phase-C, or Phase-D cell may start without its frozen independent release path.",
     "publication_note": "Use the compact result summaries and evidence manifests for analysis. Do not infer current study state from the older V2 article, gallery, figures, or chat history."
   }
 }

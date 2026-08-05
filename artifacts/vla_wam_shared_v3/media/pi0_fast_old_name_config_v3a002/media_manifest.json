@@ -1,0 +1,71 @@
+{
+  "amendment_id": "V3-A002",
+  "browser_encoding": "H.264 / yuv420p / faststart / no audio",
+  "claim_boundary": "Actual simulator execution from the separate public compatibility cohort. It is not recovered historical pi0-FAST evidence, is not pooled with the historical denominator, and has no imagined-future counterpart.",
+  "directions": {
+    "left": {
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "source_video": {
+        "bytes": 2654523,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-pi0fast-bridge-0aef241-clean01/output/v3a002_pi0_fast_old_name_config_bridge_seed8311_both_attempt01/RubiksCubeLeftOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_left_of_the_bowl_0_viewport.mp4",
+        "sha256": "60f8a925ac97e422a4c97cd249e1e0202f38c5c10016dc71aede53e65944ec4a"
+      },
+      "success": false
+    },
+    "right": {
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "source_video": {
+        "bytes": 1987583,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-pi0fast-bridge-0aef241-clean01/output/v3a002_pi0_fast_old_name_config_bridge_seed8311_both_attempt01/RubiksCubeRightOfBowlMatchedTask/Put_the_Rubiks_cube_to_the_right_of_the_bowl_0_viewport.mp4",
+        "sha256": "a10ce77606a35c99ef09d37b2cf78b71c5eed0999473952cba4e1c9b4dfcfcea"
+      },
+      "success": true
+    }
+  },
+  "duration_seconds": 30.0,
+  "fps": 15.0,
+  "frame_count": 450,
+  "matched_pair_diagnostics": {
+    "action_rms_common_prefix": 0.34335865851373426,
+    "action_rms_unit": "descriptive_mixed_native_action_coordinates",
+    "common_prefix_actions": 301,
+    "endpoint_ordering": "aligned",
+    "right_minus_left_endpoint_shift_m": -0.20842692255973816
+  },
+  "model_id": "pi0_fast_old_name_config_v3a002",
+  "poster": {
+    "bytes": 149666,
+    "path": "artifacts/vla_wam_shared_v3/media/pi0_fast_old_name_config_v3a002/pi0_fast_v3a002_seed8311_paired_actual_poster.jpg",
+    "sha256": "60f09a3075c4ea863f66149dde9828601e3b8ed2385ed24a33e6249128a43c49"
+  },
+  "publication_video": {
+    "bytes": 1606459,
+    "path": "artifacts/vla_wam_shared_v3/media/pi0_fast_old_name_config_v3a002/pi0_fast_v3a002_seed8311_paired_actual.mp4",
+    "sha256": "8f62f2bdd15b8ce05dcb40a2ddc93e0066e9b3ed139850d1c29e8a077198e61a"
+  },
+  "renderer": {
+    "bytes": 12294,
+    "path": "tools/build_v3a002_pi0_fast_media.py",
+    "sha256": "e88b854c4014db79fbc4273b9b0e3abbf5e7f23deaeda74fdae1968bcc757a71"
+  },
+  "schema_version": "vla-wam-shared-v3-pi0-fast-old-name-config-media-v1",
+  "seed": 8311,
+  "selection_rule": "Lowest seed in the completed V3-A002 cohort with LEFT failure and RIGHT success: seed 8311.",
+  "source_amendment": {
+    "bytes": 6535,
+    "path": "artifacts/vla_wam_shared_v3/post_result_pi0_fast_old_name_config_amendment.json",
+    "sha256": "f92103c710c503f1805d199567a0cba853398d8318f95c8d946a63c2c732d3c0"
+  },
+  "source_evidence_manifest": {
+    "bytes": 132414,
+    "path": "artifacts/vla_wam_shared_v3/results/pi0_fast_old_name_config_v3a002_evidence_hash_manifest.json",
+    "sha256": "74f27b27bca8011c5dfacde41a8d78f73665111fcf016619186dc975235530d0"
+  },
+  "source_summary": {
+    "bytes": 19799,
+    "path": "artifacts/vla_wam_shared_v3/results/pi0_fast_old_name_config_v3a002_summary.json",
+    "sha256": "72df6398030199afd2ffc6f305c3a9b879801a07c42ff078a2c51f9c6090599a"
+  },
+  "status": "complete_selected_matched_actual_rollout",
+  "study_id": "vla_wam_language_steerability_v3"
+}

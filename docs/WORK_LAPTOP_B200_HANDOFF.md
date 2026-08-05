@@ -5,9 +5,11 @@ It intentionally does **not** invent a cluster, context, namespace, pod, PVC,
 GPU index, container image, driver, Vulkan ICD, or egress status.
 
 > **Current state:** V3 Phase A has completed every one of its 648
-> launch-authorized new cells. Read the V3 continuation files below before the
-> historical V2 material. The 40 π0-FAST cells remain blocked; later V3 phases
-> are independently gated and unreleased.
+> launch-authorized new cells. The separate V3-A002 π0-FAST public
+> old-name-config cohort has also completed all 20 matched pairs / 40 episodes.
+> The original 40 `blocked_pi0` queue rows remain frozen under their unavailable
+> historical identity and are never pooled with V3-A002. Later V3 phases are
+> independently gated and unreleased.
 
 ## Authoritative state and reading order
 
@@ -23,6 +25,7 @@ git clone --branch "$STUDY_BRANCH" "$STEERABLE_REMOTE" "$MAC_STUDY"
 cd "$MAC_STUDY"
 git status --short
 git rev-parse HEAD
+python3 tools/validate_vla_wam_v3_protocol.py
 python3 tools/validate_vla_wam_v2_protocol.py
 ```
 
@@ -46,7 +49,7 @@ Then read the four external readmes at their pinned checkouts:
 `EfficientWAM-RoboTwin/README.md`.
 
 Live-verified committed facts: use the check count in the current committed
-validation report; every
+V3 continuation state; every
 currently runnable bounded gate is complete; all 42 prospective three-WAM
 pairs03–09 episodes are valid committed evidence and **must not be rerun**.
 The completed six-cell gates are GR00T N1.7, Cosmos3 Edge, LingBot-VLA 4B,
@@ -64,7 +67,15 @@ action pairs aligned/distinct; 37 decoded futures retained). Its selected
 seed-8300 actual rollout and model prediction are labelled separately. LaWAM was withdrawn before inference by
 `V2-A009` and has zero remaining cells. The historical 60-cell π0-FAST wording
 queue remains separately blocked on missing exact OpenPI/RoboLab revisions and
-must not be merged with V2-A008. Cosmos3 Edge base V2-A013 and Cosmos3 Super
+must not be merged with V2-A008. The separately authorized V3-A002 bridge is
+complete at seeds 8310–8329 using OpenPI
+`235044ed8a1502c0a18338eedc5d7adfe705af05` / config
+`pi0_fast_droid_jointpos` and RoboLab
+`0aef241fb088ca21bb4ebd24448940ed56620d17`: LEFT `0/20`, RIGHT `12/20`,
+16/20 endpoint pairs aligned, and 20/20 common action prefixes differed. Its
+exact two-sided McNemar `p` is `0.000488`; the endpoint sign-test `p` is
+`0.00443`. It is a distinct compatibility cohort, not historical recovery, and
+must not be rerun or pooled. Cosmos3 Edge base V2-A013 and Cosmos3 Super
 base V2-A012/V2-A014 have completed their exact three-request interface probes.
 Both were deterministic on repeat LEFT and prompt-sensitive between LEFT and
 RIGHT, but neither released behavior. Edge execution is blocked by the exact
@@ -197,18 +208,28 @@ and committed compact slices without rerunning them.
 
 | Priority | Queue | Cells | Status | Next gate |
 | ---: | --- | ---: | --- | --- |
+| 0 | π0-FAST V3-A002 public old-name-config compatibility cohort | 0 | complete: 40/40 valid; LEFT 0/20, RIGHT 12/20; no infrastructure exclusions | retain the raw PVC evidence and compact result triplet; do not rerun, pool with historical π0-FAST, or treat direct-command completion as a Phase-C release |
 | 0 | π0-FAST V2-A008 current-stack three-wording replication | 0 | release gate failed; zero behavioral cells | do not run under the frozen protocol; compact probe records identical LEFT/RIGHT actions |
 | 1 | π0.5 V2-A010 current-stack direct/media gate | 0 | complete: 6/6 valid; LEFT 1/3, RIGHT 3/3 | retain the PVC raw evidence and selected seed-8300 actual-rollout pair; do not rerun or call it historical v1 media |
 | 2 | Cosmos3 Nano Policy DROID V2-A011 | 0 | complete: 6/6 valid; LEFT 3/3, RIGHT 3/3 | retain raw PVC evidence and the bounded seed-8300 actual-versus-prediction pair; do not rerun |
 | 3 | Cosmos3 Super base V2-A012/V2-A014 | 0 released | complete: 3/3 image-only interface requests; repeat deterministic, RIGHT distinct | retain prediction media; no behavior, controller, or rerun |
 | 4 | Cosmos3 Edge base V2-A013 | 0 released | complete: 3/3 interface requests; repeat deterministic, RIGHT distinct; mapping blocked | retain prediction media and CuRobo rejection; no behavior or rerun |
 
+V3-A002 selected publication media is the
+[seed-8311 matched actual rollout](../artifacts/vla_wam_shared_v3/media/pi0_fast_old_name_config_v3a002/pi0_fast_v3a002_seed8311_paired_actual.mp4),
+with exact prompts printed in-frame and provenance in its
+[media manifest](../artifacts/vla_wam_shared_v3/media/pi0_fast_old_name_config_v3a002/media_manifest.json).
+All 40 source viewport videos remain on the ali-owned PVC.
+
 The unavailable historical π0-FAST queue remains blocked on OpenPI
 `9e46d3aea26417bfb564227734b95d010aa827e5` and RoboLab
 `11142d4319e44401e0464866bb5fedf7ec8a8927`. Recovering those objects would
 restore the historical queue. Their absence did not prevent the separate
 V2-A008 release probe, but its prompt-sensitivity failure now blocks V2-A008
-behavioral inference under the frozen protocol. LaWAM must not be resumed.
+behavioral inference under the frozen protocol. It also did not prevent the
+separate V3-A002 public compatibility cohort, whose completed 40 episodes have
+their own identity and denominator. V3-A002 does not resolve the missing
+historical identity. LaWAM must not be resumed.
 The two base-model probes are complete and closed with zero behavioral cells.
 Their selected generated videos may appear only as interface predictions with
 actual rollout explicitly unavailable.
@@ -223,6 +244,7 @@ Then run:
 
 ```bash
 cd "$STUDY_ROOT"
+python3 tools/validate_vla_wam_v3_protocol.py
 python3 tools/validate_vla_wam_v2_protocol.py --write-report artifacts/vla_wam_shared_v2/protocol_validation.json
 python3 tools/select_vla_wam_v2_media.py
 python3 tools/render_vla_wam_v2_reader_figures.py

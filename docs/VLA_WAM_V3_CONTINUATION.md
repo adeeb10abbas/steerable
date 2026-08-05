@@ -1,19 +1,23 @@
 # VLA/WAM v3 expansion continuation
 
-Updated: 5 August 2026, after the complete Phase-A launch-authorized queue was
-compiled and committed. The machine-readable source of truth is
+Updated: 5 August 2026, after the complete Phase-A launch-authorized queue and
+the separately authorized π0-FAST compatibility bridge were compiled. The
+machine-readable source of truth is
 [`continuation_state.json`](../artifacts/vla_wam_shared_v3/continuation_state.json).
 
 ## Status
 
 All **648 cells marked `authorized_new`** in the frozen Phase-A queue are
 complete valid evidence: 270 DROID/RoboLab episodes and 378 RoboTwin episodes.
-The 40 new π0-FAST cells were frozen as blocked, not launch-authorized, and
-remain unrun. Preserved V2 cells were not rerun and are not pooled into V3.
+The queue's 40 `blocked_pi0` rows remain frozen under their unavailable exact
+historical runtime identity. Amendment V3-A002 instead authorized a distinct,
+publicly reproducible π0-FAST compatibility cohort: all **20 matched pairs / 40
+episodes** are now complete valid evidence. That cohort is never pooled with
+the blocked rows or preserved V2 evidence.
 
-No Phase-A inference remains. Phase B confounds, Phase C wording, and Phase D
-stochastic repetitions have independent release gates and are not released by
-Phase A.
+No Phase-A or V3-A002 inference remains. Phase B confounds, Phase C wording,
+and Phase D stochastic repetitions have independent release gates and are not
+released by either direct-command result.
 
 ## Exact intervention
 
@@ -50,6 +54,45 @@ means correct, pick failed, transport failed, wrong side, release failed. All
 summary artifacts retain Wilson intervals, continuous measurements, exact
 paired tests, hashes, and infrastructure exclusions.
 
+### Post-result π0-FAST compatibility cohort (V3-A002)
+
+V3-A002 evaluates a public old-name OpenPI configuration without representing
+it as the missing historical system. It pins OpenPI
+`235044ed8a1502c0a18338eedc5d7adfe705af05` (tree
+`03a4387bedbc0fa1467c367c60fc24e28b61ec6c`), config
+`pi0_fast_droid_jointpos`, and RoboLab
+`0aef241fb088ca21bb4ebd24448940ed56620d17`. Seeds 8310–8329 use the exact
+static prompts quoted above and identical resets within every matched pair.
+
+| Cohort | LEFT | RIGHT | Success discordance B/L/R/N | Endpoint ordering A/X/T | V3 taxonomy C/P/T/W/R | Future interface |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| π0-FAST public old-name config | 0/20 | 12/20 | 0/0/12/8 | 16/3/1 | 12/22/4/0/2 | actions only |
+
+The direction imbalance is statistically identifiable within this cohort:
+exact two-sided McNemar `p = 0.000488`; Wilson 95% intervals are `[0, 0.161]`
+for LEFT and `[0.387, 0.781]` for RIGHT. The object-relative final lateral shift
+(`RIGHT − LEFT`) was aligned with the requested ordering for 16 of 20 pairs,
+with mean `−0.166 m` and median `−0.197 m`; an exact two-sided sign test
+excluding the tie gives `p = 0.00443`. All 20 common executed-action prefixes
+differed (mean RMS `0.335`, median `0.341`). RMS is descriptive in the native
+mixed 8-D action coordinates and is not a distance or path-length measure.
+Contact-timing instrumentation was unavailable in all 40 episodes and remains
+null rather than being interpreted as no contact. There were no infrastructure
+exclusions or runtime interventions.
+
+The result supports prompt sensitivity and physical redirection, but not
+symmetric directional competence: the same policy that redirected most
+matched endpoints completed 12 RIGHT requests and no LEFT requests. Because
+the runtime identity and denominator are distinct, these counts must not be
+combined with the earlier 10-pair π0-FAST evidence.
+
+The bounded [seed-8311 paired actual rollout](../artifacts/vla_wam_shared_v3/media/pi0_fast_old_name_config_v3a002/pi0_fast_v3a002_seed8311_paired_actual.mp4)
+shows a matched LEFT failure and RIGHT success with both exact prompts printed
+in the video. Its [media manifest](../artifacts/vla_wam_shared_v3/media/pi0_fast_old_name_config_v3a002/media_manifest.json)
+binds the source-video hashes and H.264 publication output. All 40 full raw
+viewport videos remain on the ali-owned PVC; π0-FAST is action-only and has no
+imagined-future video.
+
 ## RoboTwin Phase A
 
 Each model contributes **63 new matched pairs / 126 valid V3 episodes**:
@@ -76,19 +119,26 @@ requested task completion and failure mode remain checkpoint- and
 direction-dependent. Language sensitivity is therefore not equivalent to
 reliable directional control.
 
+The separate π0-FAST bridge sharpens that distinction: 20/20 action responses
+and 16/20 endpoint redirections coexist with a 0/20 versus 12/20 success split.
+This is evidence of strong direction-conditioned behavior and a large residual
+directional asymmetry, not robust bidirectional control.
+
 Phase A does **not** identify training distribution, geometry, reachability,
 starting side, or object role as the cause of an asymmetry. Those explanations
 require the separately gated Phase-B interventions. An exposed prediction is
 also not evidence that the prediction caused successful execution.
 
-## Remaining blocker and unreleased work
+## Historical identity blocker and unreleased work
 
-π0-FAST has 10 preserved V2 matched pairs (20 cells) and 20 blocked new
-matched pairs (40 cells, seeds 8310–8329). Behavioral execution requires exact
-recovery of OpenPI commit
+π0-FAST has 10 preserved V2 matched pairs (20 cells) and 20 frozen
+`blocked_pi0` pairs (40 cells, seeds 8310–8329) under the exact historical
+identity. Releasing those original rows would require recovery of OpenPI commit
 `9e46d3aea26417bfb564227734b95d010aa827e5` and RoboLab commit
 `11142d4319e44401e0464866bb5fedf7ec8a8927`. The current-stack V2-A008 probe
 returned identical LEFT/RIGHT actions (RMS 0.0), so it is not a substitute.
+The completed V3-A002 compatibility cohort is also not historical recovery and
+must remain separate. It is complete and must not be rerun.
 
 - Phase B: not released; numeric fixture levels require a new model-blind
   calibration amendment.
@@ -110,7 +160,8 @@ git status --short
 git diff --check
 ```
 
-Do not rerun a valid Phase-A cell. Use the eight committed summary, evidence-
-manifest, and infrastructure-ledger triplets under
-`artifacts/vla_wam_shared_v3/results/` for analysis. Do not infer current
-experiment state from the older article, website, gallery, figures, or chat.
+Do not rerun a valid Phase-A or V3-A002 cell. Use the eight original committed
+summary/evidence-manifest/infrastructure-ledger triplets plus the separate
+V3-A002 triplet under `artifacts/vla_wam_shared_v3/results/` for analysis. Do
+not infer current experiment state from the older article, website, gallery,
+figures, or chat.

@@ -7,7 +7,10 @@ import argparse
 from collections import Counter
 import hashlib
 import json
+import math
 from pathlib import Path
+import re
+import statistics
 from typing import Any
 
 
@@ -29,6 +32,23 @@ REQUIRED = {
     "taxonomy": f"{V3}/failure_taxonomy.json",
     "analysis": f"{V3}/analysis_plan.json",
     "document": "docs/VLA_WAM_STEERABILITY_V3_PROTOCOL.md",
+    "continuation": f"{V3}/continuation_state.json",
+    "continuation_document": "docs/VLA_WAM_V3_CONTINUATION.md",
+    "work_laptop_handoff": "docs/WORK_LAPTOP_B200_HANDOFF.md",
+    "pi0_bridge_amendment": f"{V3}/post_result_pi0_fast_old_name_config_amendment.json",
+    "pi0_trace_amendment": f"{V3}/post_result_pi0_fast_token_trace_validation_amendment.json",
+    "pi0_bridge_release_gate": f"{V3}/results/pi0_fast_old_name_config_v3a002_release_gate.json",
+    "pi0_bridge_summary": f"{V3}/results/pi0_fast_old_name_config_v3a002_summary.json",
+    "pi0_bridge_manifest": f"{V3}/results/pi0_fast_old_name_config_v3a002_evidence_hash_manifest.json",
+    "pi0_bridge_ledger": f"{V3}/results/pi0_fast_old_name_config_v3a002_infrastructure_ledger.json",
+    "pi0_bridge_media_manifest": f"{V3}/media/pi0_fast_old_name_config_v3a002/media_manifest.json",
+    "pi0_bridge_media_video": f"{V3}/media/pi0_fast_old_name_config_v3a002/pi0_fast_v3a002_seed8311_paired_actual.mp4",
+    "pi0_bridge_media_poster": f"{V3}/media/pi0_fast_old_name_config_v3a002/pi0_fast_v3a002_seed8311_paired_actual_poster.jpg",
+    "pi0_bridge_media_renderer": "tools/build_v3a002_pi0_fast_media.py",
+    "pi0_bridge_server": "experiments/v3/pi0_fast_old_name_config_bridge/serve_policy.py",
+    "pi0_bridge_gate": "experiments/v3/pi0_fast_old_name_config_bridge/fixed_observation_gate.py",
+    "pi0_bridge_adapter": "experiments/v3/pi0_fast_old_name_config_bridge/adapter.py",
+    "pi0_bridge_compiler": "experiments/v3/pi0_fast_old_name_config_bridge/compile_shards.py",
 }
 DROID_MODELS = [
     "pi0_fast_droid_vla",
@@ -111,6 +131,883 @@ def exact_range(start: int, end: int) -> list[int]:
     return list(range(start, end + 1))
 
 
+SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+
+
+def is_sha256(value: Any) -> bool:
+    return isinstance(value, str) and SHA256_RE.fullmatch(value) is not None
+
+
+def close(left: Any, right: Any, *, tolerance: float = 1e-12) -> bool:
+    return (
+        isinstance(left, (int, float))
+        and not isinstance(left, bool)
+        and isinstance(right, (int, float))
+        and not isinstance(right, bool)
+        and math.isclose(float(left), float(right), rel_tol=tolerance, abs_tol=tolerance)
+    )
+
+
+def wilson_95(successes: int, episodes: int) -> list[float]:
+    if episodes <= 0 or not 0 <= successes <= episodes:
+        raise ValidationError("Wilson interval inputs must be a valid nonempty binomial count")
+    z = 1.959963984540054
+    proportion = successes / episodes
+    denominator = 1 + z * z / episodes
+    center = proportion + z * z / (2 * episodes)
+    radius = z * math.sqrt((proportion * (1 - proportion) + z * z / (4 * episodes)) / episodes)
+    return [(center - radius) / denominator, (center + radius) / denominator]
+
+
+def exact_two_sided_binomial_p(first: int, second: int) -> float:
+    total = first + second
+    if total == 0:
+        return 1.0
+    tail = min(first, second)
+    return min(1.0, 2 * sum(math.comb(total, index) for index in range(tail + 1)) / (2**total))
+
+
+def require_numeric_summary(
+    record: dict[str, Any],
+    values: list[float | int],
+    label: str,
+    checks: list[str],
+) -> None:
+    require(bool(values), f"{label} has observations", checks)
+    expected = {
+        "observed_count": len(values),
+        "null_count": 0,
+        "minimum": min(values),
+        "maximum": max(values),
+        "mean": statistics.fmean(values),
+        "median": statistics.median(values),
+    }
+    require(
+        record.get("observed_count") == expected["observed_count"]
+        and record.get("null_count") == expected["null_count"]
+        and all(close(record.get(key), expected[key]) for key in ("minimum", "maximum", "mean", "median")),
+        f"{label} statistics recompute exactly from all matched pairs",
+        checks,
+    )
+
+
+def valid_file_record(record: Any, *, require_relative_path: bool = False) -> bool:
+    if not isinstance(record, dict):
+        return False
+    path = record.get("path")
+    byte_count = record.get("bytes")
+    if not isinstance(path, str) or not path.startswith("/data/users/ali/vla_wam/"):
+        return False
+    if type(byte_count) is not int or byte_count <= 0 or not is_sha256(record.get("sha256")):
+        return False
+    if require_relative_path:
+        relative = record.get("relative_path")
+        if not isinstance(relative, str) or not relative or relative.startswith("/") or ".." in Path(relative).parts:
+            return False
+    return True
+
+
+def same_local_file_reference(record: Any, path: Path) -> bool:
+    return (
+        isinstance(record, dict)
+        and record.get("sha256") == sha256(path)
+        and record.get("bytes") == path.stat().st_size
+    )
+
+
+def validate_pi0_fast_bridge(paths: dict[str, Path], checks: list[str]) -> dict[str, Any]:
+    bridge_amendment = load(paths["pi0_bridge_amendment"])
+    trace_amendment = load(paths["pi0_trace_amendment"])
+    release_gate = load(paths["pi0_bridge_release_gate"])
+    summary = load(paths["pi0_bridge_summary"])
+    manifest = load(paths["pi0_bridge_manifest"])
+    ledger = load(paths["pi0_bridge_ledger"])
+    media = load(paths["pi0_bridge_media_manifest"])
+
+    model_id = "pi0_fast_old_name_config_v3a002"
+    cohort = "V3-A002_public_old_name_config_bridge"
+    seeds = exact_range(8310, 8329)
+    left_prompt = EXACT_V2_WORDINGS["direct_command"]["left"]
+    right_prompt = EXACT_V2_WORDINGS["direct_command"]["right"]
+    openpi_commit = "235044ed8a1502c0a18338eedc5d7adfe705af05"
+    openpi_tree = "03a4387bedbc0fa1467c367c60fc24e28b61ec6c"
+    robolab_commit = "0aef241fb088ca21bb4ebd24448940ed56620d17"
+
+    require(
+        bridge_amendment.get("schema_version") == "vla-wam-shared-v3-post-result-pi0-fast-old-name-config-amendment-v1"
+        and bridge_amendment.get("study_id") == "vla_wam_language_steerability_v3"
+        and bridge_amendment.get("amendment_id") == "V3-A002"
+        and bridge_amendment.get("status") == "frozen_before_v3a002_model_load_or_request",
+        "V3-A002 is the pre-request frozen public old-name-config bridge amendment",
+        checks,
+    )
+    bridge_identity = bridge_amendment.get("bridge_identity", {})
+    openpi = bridge_identity.get("openpi", {})
+    robolab = bridge_identity.get("robolab", {})
+    require(
+        bridge_identity.get("model_id") == model_id
+        and openpi.get("commit") == openpi_commit
+        and openpi.get("tree") == openpi_tree
+        and openpi.get("config") == "pi0_fast_droid_jointpos"
+        and openpi.get("action_shape") == [10, 8]
+        and openpi.get("max_token_len") == 250
+        and openpi.get("data_config") == "SimpleDataConfig"
+        and robolab.get("commit") == robolab_commit,
+        "V3-A002 pins the exact public OpenPI old-name config and RoboLab bridge identity",
+        checks,
+    )
+    implementation = bridge_amendment.get("implementation", {})
+    require(
+        implementation.get("server_path") == REQUIRED["pi0_bridge_server"]
+        and implementation.get("server_sha256") == sha256(paths["pi0_bridge_server"])
+        and implementation.get("gate_path") == REQUIRED["pi0_bridge_gate"]
+        and implementation.get("gate_sha256") == sha256(paths["pi0_bridge_gate"]),
+        "V3-A002 binds the checked-in bridge server and release-gate implementations",
+        checks,
+    )
+    three_request_gate = bridge_amendment.get("three_request_gate", {})
+    require(
+        three_request_gate.get("sampling_seed") == 8310000
+        and three_request_gate.get("order") == ["left", "left_exact_repeat", "right"]
+        and three_request_gate.get("prompts") == {"left": left_prompt, "right": right_prompt},
+        "V3-A002 freezes the exact three-request prompt-sensitivity gate",
+        checks,
+    )
+    release = bridge_amendment.get("behavioral_release_if_gate_passes", {})
+    source_filter = release.get("source_filter", {})
+    require(
+        release.get("source_queue") == REQUIRED["phase_a_queue"]
+        and release.get("source_queue_sha256") == sha256(paths["phase_a_queue"])
+        and source_filter == {
+            "model_id": "pi0_fast_droid_vla",
+            "status": "blocked_pi0",
+            "execution_status": "blocked_pending_exact_historical_openpi_and_robolab_recovery",
+            "phase": "A_direct_command_matched_pairs",
+            "prompt_family": "direct_command",
+            "environment_seeds_inclusive": [8310, 8329],
+        }
+        and release.get("new_model_id") == model_id
+        and release.get("matched_pairs") == 20
+        and release.get("behavioral_cells") == 40
+        and release.get("action_cap") == 450
+        and release.get("open_loop_horizon") == 10,
+        "V3-A002 releases exactly 20 separate bridge pairs without rewriting the 40 blocked queue rows",
+        checks,
+    )
+    prohibited = bridge_amendment.get("reporting_boundary", {}).get("prohibited", [])
+    require(
+        "pooled pi0-FAST x/30 rates" in prohibited
+        and "pooled confidence intervals or tests across runtime identities" in prohibited
+        and "pooling DROID and RoboTwin" in prohibited,
+        "V3-A002 prohibits historical x/30 pooling and cross-arena pooling",
+        checks,
+    )
+
+    require(
+        trace_amendment.get("schema_version") == "vla-wam-shared-v3-post-result-pi0-fast-token-trace-validation-amendment-v1"
+        and trace_amendment.get("study_id") == "vla_wam_language_steerability_v3"
+        and trace_amendment.get("amendment_id") == "V3-A003"
+        and trace_amendment.get("status") == "frozen_after_structural_compiler_failure_and_before_any_v3a002_cell_was_accepted",
+        "V3-A003 is frozen after structural failure and before accepting a bridge cell",
+        checks,
+    )
+    discovery = trace_amendment.get("discovery", {})
+    require(
+        discovery.get("behavioral_cells_inspected_for_contract_diagnosis") == 12
+        and discovery.get("accepted_behavioral_cells_before_amendment") == 0
+        and discovery.get("classification") == "validator_contract_bug_not_model_or_infrastructure_failure",
+        "V3-A003 discloses the pre-acceptance token-trace validator diagnosis",
+        checks,
+    )
+    invalid_assumption = trace_amendment.get("invalid_original_assumption", {})
+    require(
+        invalid_assumption.get("source_path") == REQUIRED["pi0_bridge_adapter"]
+        and invalid_assumption.get("source_sha256") == sha256(paths["pi0_bridge_adapter"])
+        and "tokenized_prompt_sha256" in invalid_assumption.get("rule", ""),
+        "V3-A003 binds the original launch-time adapter and rejected token-equality rule",
+        checks,
+    )
+    frozen_source = trace_amendment.get("frozen_source_evidence", {})
+    require(
+        frozen_source.get("openpi_commit") == openpi_commit
+        and frozen_source.get("openpi_tree") == openpi_tree
+        and frozen_source.get("path") == "src/openpi/transforms.py"
+        and frozen_source.get("sha256") == "a1b94e9e72849a18834778f229c6bb389a495eb7fbe0aa800edea728b9424ff4"
+        and frozen_source.get("transform") == "TokenizeFASTInputs",
+        "V3-A003 pins the public TokenizeFASTInputs source evidence",
+        checks,
+    )
+    replacement = trace_amendment.get("replacement_validation", {})
+    require(
+        replacement.get("only_removed_requirement")
+        == "Within-episode equality of tokenized_prompt_sha256 across changing robot states.",
+        "V3-A003 removes only within-episode state-conditioned token-hash equality",
+        checks,
+    )
+    unchanged_requirements = replacement.get("unchanged_requirements", [])
+    require(
+        len(unchanged_requirements) == 8
+        and any("Exact top-level frozen prompt string" in item for item in unchanged_requirements)
+        and any("Contiguous deterministic per-request sampling seeds" in item for item in unchanged_requirements)
+        and any("syntactically valid lowercase 64-hex" in item for item in unchanged_requirements)
+        and any("prebehavior fixed-observation gate" in item for item in unchanged_requirements),
+        "V3-A003 retains prompt, sampling, payload, token syntax, and prebehavior gate checks",
+        checks,
+    )
+    token_boundary = replacement.get("matched_pair_token_boundary", {})
+    trace_scope = trace_amendment.get("scope", {})
+    require(
+        trace_scope.get("model_id") == model_id
+        and trace_scope.get("environment_seeds_inclusive") == [8310, 8329]
+        and trace_scope.get("matched_pairs") == 20
+        and trace_scope.get("behavioral_cells") == 40
+        and trace_scope.get("runtime_identity_hashes") == [
+            "591adbfed96fbe3a1f1016d08f0853b8f95e0b84895668e680610831270e96c2",
+            "3f30ae51c44182636afc7bff6448241a9ee9579a73282cfb3a5abe40c5440edb",
+            "49797dfb86f5b7f0ab9e4c06b14d8301e485b8e8cf06fabd909bcec0e0a730f0",
+        ]
+        and trace_scope.get("original_adapter_contract_sha256") == "0c7937482824090e3033fa3f6822c8277aff7b0b7f1403b565bc13140b5461db",
+        "V3-A003 is scoped only to the 20-pair launch-time bridge identity",
+        checks,
+    )
+    require(
+        "original launch-time adapter" in trace_amendment.get("compiler_rule", "")
+        and "without mutating any raw artifact" in trace_amendment.get("compiler_rule", ""),
+        "V3-A003 requires original identity validation and read-only raw evidence",
+        checks,
+    )
+
+    require(
+        release_gate.get("schema_version") == "vla-wam-shared-v3-pi0-fast-old-name-config-gate-v1"
+        and release_gate.get("study_id") == "vla_wam_language_steerability_v3"
+        and release_gate.get("model_id") == model_id
+        and release_gate.get("status") == "passed"
+        and release_gate.get("behavioral_release") is True,
+        "V3-A002 compact release gate passed and released behavior",
+        checks,
+    )
+    require(
+        release_gate.get("fixture", {}).get("sha256") == three_request_gate.get("fixture_sha256")
+        and release_gate.get("raw_gate", {}).get("sha256") == trace_scope.get("release_gate_sha256"),
+        "V3-A002 release gate binds the frozen fixture and raw gate hashes",
+        checks,
+    )
+    server_metadata = release_gate.get("server_metadata", {})
+    require(
+        server_metadata.get("pi0_fast_old_name_config_bridge") == "v3a002"
+        and server_metadata.get("openpi_commit") == openpi_commit
+        and server_metadata.get("openpi_tree") == openpi_tree
+        and server_metadata.get("openpi_config") == "pi0_fast_droid_jointpos"
+        and server_metadata.get("max_token_len") == 250
+        and server_metadata.get("checkpoint_assets_rule") == "checkpoint_local_assets_only"
+        and server_metadata.get("sampling_contract") == "required_request_field:sampling_seed",
+        "V3-A002 release gate attests the exact public runtime identity",
+        checks,
+    )
+    gate_metrics = release_gate.get("metrics", {})
+    require(
+        gate_metrics.get("left_exact_repeat_bit_identical") is True
+        and gate_metrics.get("left_exact_repeat_token_bytes_identical") is True
+        and gate_metrics.get("left_right_token_bytes_differ") is True
+        and gate_metrics.get("left_right_actions_bit_identical") is False
+        and close(gate_metrics.get("left_right_action_rms"), 0.014522109180688858)
+        and gate_metrics.get("left_right_action_rms", 0) > 0,
+        "V3-A002 release gate repeats LEFT exactly and distinguishes LEFT from RIGHT actions",
+        checks,
+    )
+    records = release_gate.get("records", {})
+    left_a, left_b, right = records.get("left_a", {}), records.get("left_b", {}), records.get("right", {})
+    require(
+        left_a.get("prompt") == left_prompt
+        and left_b.get("prompt") == left_prompt
+        and right.get("prompt") == right_prompt
+        and left_a.get("prompt_sha256") == left_b.get("prompt_sha256")
+        and left_a.get("tokenized_prompt_sha256") == left_b.get("tokenized_prompt_sha256") == token_boundary.get("left_first_request_sha256")
+        and right.get("tokenized_prompt_sha256") == token_boundary.get("right_first_request_sha256")
+        and left_a.get("tokenized_prompt_sha256") != right.get("tokenized_prompt_sha256")
+        and left_a.get("action_sha256") == left_b.get("action_sha256") != right.get("action_sha256")
+        and all(record.get("sampling_seed") == 8310000 and record.get("shape") == [10, 8] and record.get("dtype") == "float32" for record in (left_a, left_b, right)),
+        "V3-A002 release records preserve exact prompts, repeat identity, and LEFT/RIGHT token-action separation",
+        checks,
+    )
+    release_scope = release_gate.get("behavioral_release_scope", {})
+    require(
+        release_scope == {
+            "matched_pairs": 20,
+            "cells": 40,
+            "environment_seeds_inclusive": [8310, 8329],
+            "cohort_identity": model_id,
+            "historical_pooling": False,
+        },
+        "V3-A002 release gate fixes a separate 20-pair nonhistorical cohort",
+        checks,
+    )
+
+    require(
+        summary.get("schema_version") == "vla-wam-shared-v3-pi0-fast-old-name-config-summary-v3"
+        and summary.get("study_id") == "vla_wam_language_steerability_v3"
+        and summary.get("model_id") == model_id
+        and summary.get("cohort") == cohort
+        and summary.get("status") == "compiled_terminal_frozen_shards",
+        "V3-A002 summary schema, study, model, cohort, and terminal status are exact",
+        checks,
+    )
+    pair_rows = summary.get("pairs")
+    require(
+        isinstance(pair_rows, list)
+        and len(pair_rows) == 20
+        and summary.get("planned_matched_pairs") == 20
+        and summary.get("behavioral_matched_pairs") == 20
+        and summary.get("behavioral_episodes") == 40,
+        "V3-A002 summary has exactly 20 matched pairs and 40 behavioral episodes",
+        checks,
+    )
+    require(
+        [row.get("seed") for row in pair_rows] == seeds and len({row.get("seed") for row in pair_rows}) == 20,
+        "V3-A002 summary contains each exact seed 8310-8329 once",
+        checks,
+    )
+    require(
+        summary.get("historical_pi0_fast_denominator_included") is False
+        and summary.get("historical_pooling_prohibited") is True
+        and "not the missing historical runtime" in summary.get("claim_boundary", "")
+        and "separate 20-pair denominator" in summary.get("claim_boundary", ""),
+        "V3-A002 summary preserves a separate nonhistorical denominator",
+        checks,
+    )
+
+    left_successes = sum(row.get("left_success") is True for row in pair_rows)
+    right_successes = sum(row.get("right_success") is True for row in pair_rows)
+    success_by_direction = summary.get("success_by_direction", {})
+    require(
+        left_successes == 0
+        and right_successes == 12
+        and success_by_direction.get("left", {}).get("successes") == left_successes
+        and success_by_direction.get("left", {}).get("episodes") == 20
+        and success_by_direction.get("right", {}).get("successes") == right_successes
+        and success_by_direction.get("right", {}).get("episodes") == 20,
+        "V3-A002 success denominators are exactly LEFT 0/20 and RIGHT 12/20",
+        checks,
+    )
+    for relation, successes in (("left", left_successes), ("right", right_successes)):
+        observed_interval = success_by_direction[relation].get("wilson_95", [])
+        expected_interval = wilson_95(successes, 20)
+        require(
+            isinstance(observed_interval, list)
+            and len(observed_interval) == 2
+            and all(close(observed, expected) for observed, expected in zip(observed_interval, expected_interval)),
+            f"V3-A002 {relation.upper()} Wilson interval recomputes from its separate denominator",
+            checks,
+        )
+
+    discordance = Counter()
+    for row in pair_rows:
+        left_success = row.get("left_success") is True
+        right_success = row.get("right_success") is True
+        discordance[
+            "both" if left_success and right_success
+            else "left_only" if left_success
+            else "right_only" if right_success
+            else "neither"
+        ] += 1
+    observed_discordance = summary.get("success_discordance", {})
+    expected_discordance = {"both": 0, "left_only": 0, "right_only": 12, "neither": 8}
+    require(
+        {key: discordance[key] for key in expected_discordance} == expected_discordance
+        and {key: observed_discordance.get(key) for key in expected_discordance} == expected_discordance
+        and sum(expected_discordance.values()) == 20,
+        "V3-A002 paired success discordance recomputes to 0/0/12/8",
+        checks,
+    )
+    expected_mcnemar = exact_two_sided_binomial_p(discordance["left_only"], discordance["right_only"])
+    require(
+        close(observed_discordance.get("exact_two_sided_mcnemar_p"), expected_mcnemar)
+        and close(expected_mcnemar, 0.00048828125),
+        "V3-A002 exact two-sided McNemar p-value recomputes from discordant pairs",
+        checks,
+    )
+
+    ordering = Counter()
+    endpoint_shifts: list[float] = []
+    raw_y_shifts: list[float] = []
+    action_rms_values: list[float] = []
+    common_prefix_counts: list[int] = []
+    for row in pair_rows:
+        endpoint_shift = row.get("right_minus_left_endpoint_shift_m")
+        raw_y_shift = row.get("right_minus_left_raw_object_robot_y_shift_m")
+        action_rms = row.get("action_rms_common_prefix")
+        common_prefix = row.get("common_prefix_actions")
+        require(
+            close(endpoint_shift, row.get("right_signed_final_lateral_offset_m") - row.get("left_signed_final_lateral_offset_m"))
+            and close(raw_y_shift, row.get("right_raw_robot_y_m") - row.get("left_raw_robot_y_m")),
+            "V3-A002 per-pair RIGHT-minus-LEFT endpoint and raw-y differences recompute",
+            checks,
+        )
+        expected_order = "aligned" if endpoint_shift < 0 else "anti_aligned" if endpoint_shift > 0 else "tie"
+        require(
+            row.get("endpoint_ordering") == expected_order,
+            "V3-A002 endpoint labels follow the strict RIGHT-minus-LEFT sign rule",
+            checks,
+        )
+        require(
+            isinstance(action_rms, (int, float))
+            and not isinstance(action_rms, bool)
+            and math.isfinite(action_rms)
+            and action_rms > 0
+            and row.get("executed_actions_distinct") is True
+            and type(common_prefix) is int
+            and 0 < common_prefix <= 450,
+            "V3-A002 common-prefix RMS is finite, nonzero, and paired to a valid executed prefix",
+            checks,
+        )
+        ordering[expected_order] += 1
+        endpoint_shifts.append(endpoint_shift)
+        raw_y_shifts.append(raw_y_shift)
+        action_rms_values.append(action_rms)
+        common_prefix_counts.append(common_prefix)
+    observed_ordering = summary.get("endpoint_ordering", {})
+    require(
+        ordering == Counter({"aligned": 16, "anti_aligned": 3, "tie": 1})
+        and observed_ordering.get("aligned") == 16
+        and observed_ordering.get("anti_aligned") == 3
+        and observed_ordering.get("ties") == 1
+        and "strictly negative" in observed_ordering.get("definition", ""),
+        "V3-A002 endpoint ordering recomputes to 16 aligned, 3 anti-aligned, and 1 tie",
+        checks,
+    )
+    expected_sign_p = exact_two_sided_binomial_p(ordering["aligned"], ordering["anti_aligned"])
+    require(
+        close(observed_ordering.get("exact_two_sided_sign_test_p_excluding_ties"), expected_sign_p)
+        and close(expected_sign_p, 0.004425048828125),
+        "V3-A002 exact two-sided endpoint sign-test p-value recomputes excluding the tie",
+        checks,
+    )
+    require_numeric_summary(summary.get("right_minus_left_endpoint_shift_m", {}), endpoint_shifts, "V3-A002 endpoint-shift", checks)
+    require_numeric_summary(
+        summary.get("right_minus_left_raw_object_robot_y_shift_m_geometry_diagnostic", {}),
+        raw_y_shifts,
+        "V3-A002 raw-y geometry-diagnostic shift",
+        checks,
+    )
+    require_numeric_summary(summary.get("action_rms_common_prefix", {}), action_rms_values, "V3-A002 common-prefix action RMS", checks)
+    require_numeric_summary(summary.get("common_prefix_action_count", {}), common_prefix_counts, "V3-A002 common-prefix action count", checks)
+    require(
+        summary.get("action_rms_common_prefix", {}).get("not_meters_or_path_distance") is True
+        and summary.get("action_rms_common_prefix", {}).get("unit") == "descriptive_mixed_native_action_coordinates"
+        and summary.get("distinct_executed_action_pairs", {}).get("count") == 20
+        and summary.get("distinct_executed_action_pairs", {}).get("pairs") == 20,
+        "V3-A002 reports 20/20 distinct traces and does not mislabel action RMS as distance",
+        checks,
+    )
+    require(
+        summary.get("whole_file_executed_action_hash_differences_integrity_only")
+        == {"count": 20, "not_a_behavioral_metric": True, "pairs": 20}
+        and all(row.get("whole_file_hashes_differ_integrity_only") is True for row in pair_rows),
+        "V3-A002 keeps whole-file hash differences as integrity metadata only",
+        checks,
+    )
+    require(
+        summary.get("failure_taxonomy") == {
+            "correct": 12,
+            "pick_failed": 22,
+            "release_failed": 2,
+            "transport_failed": 4,
+        }
+        and sum(summary.get("failure_taxonomy", {}).values()) == 40
+        and summary.get("failure_taxonomy", {}).get("correct") == left_successes + right_successes,
+        "V3-A002 failure taxonomy accounts for all 40 episodes and all 12 successes",
+        checks,
+    )
+    require(
+        summary.get("total_actions_executed") == 16175
+        and summary.get("infrastructure_attempt_pairs") == 0
+        and summary.get("infrastructure_attempt_cell_records") == 0
+        and summary.get("thermal_guard") == {
+            "denominator_effect": "none",
+            "intervention_pairs": 0,
+            "retained_pair_ledgers": 20,
+        },
+        "V3-A002 summary accounts for actions and keeps zero infrastructure attempts outside behavior",
+        checks,
+    )
+    require(
+        same_local_file_reference(summary.get("post_result_trace_validation_amendment"), paths["pi0_trace_amendment"])
+        and summary.get("post_result_trace_validation_amendment", {}).get("amendment_id") == "V3-A003"
+        and summary.get("post_result_trace_validation_amendment", {}).get("applied_after_original_runtime_validation") is True
+        and summary.get("post_result_trace_validation_amendment", {}).get("raw_artifacts_mutated") is False,
+        "V3-A002 summary binds the read-only V3-A003 trace-validation amendment",
+        checks,
+    )
+    require(
+        same_local_file_reference(summary.get("infrastructure_intervention_ledger"), paths["pi0_bridge_ledger"]),
+        "V3-A002 summary binds its compact infrastructure ledger",
+        checks,
+    )
+
+    require(
+        manifest.get("schema_version") == "vla-wam-shared-v3-pi0-fast-old-name-config-hash-manifest-v3"
+        and manifest.get("study_id") == "vla_wam_language_steerability_v3"
+        and manifest.get("model_id") == model_id
+        and manifest.get("raw_inputs_read_only") is True
+        and manifest.get("historical_pooling_prohibited") is True,
+        "V3-A002 evidence manifest is read-only and prohibits historical pooling",
+        checks,
+    )
+    require(
+        same_local_file_reference(manifest.get("summary"), paths["pi0_bridge_summary"]),
+        "V3-A002 evidence-manifest summary digest matches the committed summary",
+        checks,
+    )
+    require(
+        same_local_file_reference(manifest.get("post_result_trace_validation_amendment"), paths["pi0_trace_amendment"])
+        and manifest.get("post_result_trace_validation_amendment", {}).get("raw_artifacts_mutated") is False,
+        "V3-A002 evidence manifest binds the read-only V3-A003 amendment digest",
+        checks,
+    )
+    require(
+        same_local_file_reference(manifest.get("infrastructure_intervention_ledger"), paths["pi0_bridge_ledger"]),
+        "V3-A002 evidence manifest binds the committed infrastructure ledger digest",
+        checks,
+    )
+    compiled_pair_manifests = manifest.get("compiled_pair_manifests")
+    require(
+        isinstance(compiled_pair_manifests, list)
+        and len(compiled_pair_manifests) == 20
+        and all(valid_file_record(record) for record in compiled_pair_manifests),
+        "V3-A002 evidence manifest has 20 syntactically valid compiled pair-manifest records",
+        checks,
+    )
+    manifest_pair_seeds: list[int] = []
+    for record in compiled_pair_manifests:
+        match = re.search(r"/pairs/seed(\d{4})/pair_manifest\.json$", record["path"])
+        require(match is not None, "V3-A002 compiled pair-manifest paths encode their seed", checks)
+        manifest_pair_seeds.append(int(match.group(1)))
+    require(
+        manifest_pair_seeds == seeds and len(set(manifest_pair_seeds)) == 20,
+        "V3-A002 compiled pair manifests cover each seed 8310-8329 once",
+        checks,
+    )
+    derived_artifacts = manifest.get("derived_artifacts")
+    raw_artifacts = manifest.get("raw_source_artifacts")
+    require(
+        isinstance(derived_artifacts, list)
+        and len(derived_artifacts) == 102
+        and all(valid_file_record(record, require_relative_path=True) for record in derived_artifacts)
+        and len({record["path"] for record in derived_artifacts}) == 102
+        and len({record["relative_path"] for record in derived_artifacts}) == 102,
+        "V3-A002 evidence manifest has 102 unique valid derived-file records",
+        checks,
+    )
+    require(
+        isinstance(raw_artifacts, list)
+        and len(raw_artifacts) == 289
+        and all(valid_file_record(record) for record in raw_artifacts)
+        and len({record["path"] for record in raw_artifacts}) == 289,
+        "V3-A002 evidence manifest has 289 unique valid read-only raw-source records",
+        checks,
+    )
+    derived_index = {(record["path"], record["sha256"], record["bytes"]) for record in derived_artifacts}
+    require(
+        all((record["path"], record["sha256"], record["bytes"]) in derived_index for record in compiled_pair_manifests),
+        "V3-A002 compiled pair-manifest records are hash-identical members of derived evidence",
+        checks,
+    )
+    trace_records = [
+        record for record in raw_artifacts
+        if record["path"].endswith("/" + REQUIRED["pi0_trace_amendment"])
+    ]
+    compiler_records = [
+        record for record in raw_artifacts
+        if record["path"].endswith("/" + REQUIRED["pi0_bridge_compiler"])
+    ]
+    require(
+        len(trace_records) == 1
+        and same_local_file_reference(trace_records[0], paths["pi0_trace_amendment"])
+        and len(compiler_records) == 1
+        and same_local_file_reference(compiler_records[0], paths["pi0_bridge_compiler"]),
+        "V3-A002 raw-source manifest binds the amendment and reproducible compiler digests",
+        checks,
+    )
+
+    require(
+        ledger.get("schema_version") == "vla-wam-shared-v3-pi0-fast-old-name-config-infrastructure-ledger-v1"
+        and ledger.get("study_id") == "vla_wam_language_steerability_v3"
+        and ledger.get("model_id") == model_id
+        and ledger.get("cohort") == cohort
+        and ledger.get("status") == "complete_terminal_guarded_cohort",
+        "V3-A002 infrastructure ledger schema, model, cohort, and terminal status are exact",
+        checks,
+    )
+    require(
+        ledger.get("behavioral_episode_count") == 40
+        and ledger.get("completed_guarded_pairs") == 20
+        and ledger.get("excluded_attempt_count") == 0
+        and ledger.get("attempts") == []
+        and ledger.get("technical_or_partial_pair_count") == 0
+        and ledger.get("technical_or_partial_cell_count") == 0
+        and ledger.get("behavioral_denominator_effect") == "none"
+        and ledger.get("historical_pooling_prohibited") is True,
+        "V3-A002 ledger keeps 20 complete pairs and zero infrastructure records outside its denominator",
+        checks,
+    )
+    require(
+        same_local_file_reference(ledger.get("post_result_trace_validation_amendment"), paths["pi0_trace_amendment"])
+        and ledger.get("post_result_trace_validation_amendment", {}).get("applied_after_original_runtime_validation") is True
+        and ledger.get("post_result_trace_validation_amendment", {}).get("raw_artifacts_mutated") is False,
+        "V3-A002 infrastructure ledger binds the read-only V3-A003 amendment",
+        checks,
+    )
+    terminal_shards = ledger.get("terminal_shard_ledgers")
+    require(
+        isinstance(terminal_shards, list)
+        and len(terminal_shards) == 3
+        and all(valid_file_record(record) and isinstance(record.get("pod"), str) for record in terminal_shards)
+        and [record.get("shard_id") for record in terminal_shards] == summary.get("frozen_shard_ids")
+        and len({record["path"] for record in terminal_shards}) == 3,
+        "V3-A002 infrastructure ledger binds the three exact terminal shard ledgers",
+        checks,
+    )
+    thermal_guard = ledger.get("thermal_guard", {})
+    thermal_pairs = thermal_guard.get("pairs")
+    require(
+        thermal_guard.get("intervention_pair_count") == 0
+        and thermal_guard.get("retained_pair_ledger_count") == 20
+        and isinstance(thermal_pairs, list)
+        and len(thermal_pairs) == 20
+        and [record.get("seed") for record in thermal_pairs] == seeds
+        and all(
+            record.get("pair_id") == f"v3:droid:{model_id}:seed{record.get('seed')}"
+            and record.get("intervention") is False
+            and isinstance(record.get("pod"), str)
+            and valid_file_record(record.get("ledger"))
+            for record in thermal_pairs
+        )
+        and len({record["ledger"]["path"] for record in thermal_pairs}) == 20,
+        "V3-A002 ledger retains 20 exact guarded pair records with no intervention",
+        checks,
+    )
+    raw_index = {(record["path"], record["sha256"], record["bytes"]) for record in raw_artifacts}
+    require(
+        all((record["path"], record["sha256"], record["bytes"]) in raw_index for record in terminal_shards)
+        and all(
+            (record["ledger"]["path"], record["ledger"]["sha256"], record["ledger"]["bytes"]) in raw_index
+            for record in thermal_pairs
+        ),
+        "V3-A002 terminal shard and thermal ledger records are hash-identical raw evidence",
+        checks,
+    )
+
+    require(
+        media.get("schema_version") == "vla-wam-shared-v3-pi0-fast-old-name-config-media-v1"
+        and media.get("study_id") == "vla_wam_language_steerability_v3"
+        and media.get("amendment_id") == "V3-A002"
+        and media.get("model_id") == model_id
+        and media.get("status") == "complete_selected_matched_actual_rollout"
+        and media.get("seed") == 8311
+        and media.get("browser_encoding") == "H.264 / yuv420p / faststart / no audio"
+        and "no imagined-future counterpart" in media.get("claim_boundary", ""),
+        "V3-A002 selected media is exact action-only seed-8311 H.264 execution evidence",
+        checks,
+    )
+    media_pair = next(row for row in pair_rows if row["seed"] == 8311)
+    directions = media.get("directions", {})
+    require(
+        directions.get("left", {}).get("prompt") == left_prompt
+        and directions.get("left", {}).get("success") is False
+        and directions.get("right", {}).get("prompt") == right_prompt
+        and directions.get("right", {}).get("success") is True
+        and all(
+            (
+                directions.get(relation, {}).get("source_video", {}).get("path"),
+                directions.get(relation, {}).get("source_video", {}).get("sha256"),
+                directions.get(relation, {}).get("source_video", {}).get("bytes"),
+            )
+            in raw_index
+            for relation in ("left", "right")
+        ),
+        "V3-A002 selected media binds both exact prompts, outcomes, and raw viewport hashes",
+        checks,
+    )
+    diagnostics = media.get("matched_pair_diagnostics", {})
+    require(
+        diagnostics.get("endpoint_ordering") == media_pair.get("endpoint_ordering")
+        and close(diagnostics.get("right_minus_left_endpoint_shift_m"), media_pair.get("right_minus_left_endpoint_shift_m"))
+        and close(diagnostics.get("action_rms_common_prefix"), media_pair.get("action_rms_common_prefix"))
+        and diagnostics.get("common_prefix_actions") == media_pair.get("common_prefix_actions")
+        and diagnostics.get("action_rms_unit") == summary.get("action_rms_common_prefix", {}).get("unit")
+        and media.get("frame_count") == 450
+        and close(media.get("fps"), 15.0)
+        and close(media.get("duration_seconds"), 30.0),
+        "V3-A002 selected media reproduces the seed-8311 matched-pair diagnostics and full rollout duration",
+        checks,
+    )
+    require(
+        media.get("source_summary", {}).get("path") == REQUIRED["pi0_bridge_summary"]
+        and same_local_file_reference(media.get("source_summary"), paths["pi0_bridge_summary"])
+        and media.get("source_evidence_manifest", {}).get("path") == REQUIRED["pi0_bridge_manifest"]
+        and same_local_file_reference(media.get("source_evidence_manifest"), paths["pi0_bridge_manifest"])
+        and media.get("source_amendment", {}).get("path") == REQUIRED["pi0_bridge_amendment"]
+        and same_local_file_reference(media.get("source_amendment"), paths["pi0_bridge_amendment"])
+        and media.get("renderer", {}).get("path") == REQUIRED["pi0_bridge_media_renderer"]
+        and same_local_file_reference(media.get("renderer"), paths["pi0_bridge_media_renderer"])
+        and media.get("publication_video", {}).get("path") == REQUIRED["pi0_bridge_media_video"]
+        and same_local_file_reference(media.get("publication_video"), paths["pi0_bridge_media_video"])
+        and media.get("poster", {}).get("path") == REQUIRED["pi0_bridge_media_poster"]
+        and same_local_file_reference(media.get("poster"), paths["pi0_bridge_media_poster"]),
+        "V3-A002 selected media hash-binds its sources, renderer, H.264 video, and poster",
+        checks,
+    )
+
+    return {
+        "summary": summary,
+        "manifest": manifest,
+        "ledger": ledger,
+        "release_gate": release_gate,
+        "media": media,
+    }
+
+
+def validate_pi0_fast_bridge_continuation(
+    continuation: dict[str, Any],
+    bridge_result: dict[str, Any],
+    paths: dict[str, Path],
+    checks: list[str],
+) -> None:
+    summary = bridge_result["summary"]
+    require(
+        continuation.get("schema_version") == "vla-wam-shared-v3-continuation-v1"
+        and continuation.get("study_id") == "vla_wam_language_steerability_v3",
+        "V3 continuation schema and study identity remain exact",
+        checks,
+    )
+    authoritative = continuation.get("authoritative_files", [])
+    required_authoritative = {
+        REQUIRED["pi0_bridge_amendment"],
+        REQUIRED["pi0_trace_amendment"],
+        REQUIRED["pi0_bridge_release_gate"],
+        REQUIRED["pi0_bridge_summary"],
+        REQUIRED["pi0_bridge_manifest"],
+        REQUIRED["pi0_bridge_ledger"],
+        REQUIRED["pi0_bridge_media_manifest"],
+    }
+    require(
+        required_authoritative.issubset(set(authoritative)),
+        "V3 continuation names both bridge amendments, all four compact results, and selected media as authoritative",
+        checks,
+    )
+    droid_results = continuation.get("phase_a_results", {}).get("droid_robolab", {})
+    bridge = droid_results.get("post_result_bridge_cohorts", {}).get("pi0_fast_old_name_config_v3a002")
+    require(isinstance(bridge, dict), "V3 continuation records the separate V3-A002 bridge cohort", checks)
+    require(
+        bridge.get("status") == "complete_20_matched_pairs_40_behavioral_episodes"
+        and bridge.get("cohort") == summary.get("cohort")
+        and bridge.get("historical_pooling_prohibited") is True
+        and bridge.get("pooled_with_historical_pi0_fast") is False
+        and bridge.get("environment_seeds_inclusive") == [8310, 8329]
+        and bridge.get("matched_pairs") == 20
+        and bridge.get("behavioral_episodes") == 40,
+        "V3 continuation preserves exact separate bridge accounting and non-pooling",
+        checks,
+    )
+    require(
+        bridge.get("runtime_identity") == {
+            "openpi_commit": "235044ed8a1502c0a18338eedc5d7adfe705af05",
+            "openpi_tree": "03a4387bedbc0fa1467c367c60fc24e28b61ec6c",
+            "openpi_config": "pi0_fast_droid_jointpos",
+            "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+        },
+        "V3 continuation binds the bridge runtime identity",
+        checks,
+    )
+    require(
+        bridge.get("success_by_direction") == {"left": "0/20", "right": "12/20"}
+        and bridge.get("success_discordance") == summary.get("success_discordance")
+        and all(
+            bridge.get("endpoint_ordering", {}).get(key) == summary.get("endpoint_ordering", {}).get(key)
+            for key in ("aligned", "anti_aligned", "ties", "exact_two_sided_sign_test_p_excluding_ties")
+        )
+        and close(bridge.get("right_minus_left_endpoint_shift_m", {}).get("mean"), summary.get("right_minus_left_endpoint_shift_m", {}).get("mean"))
+        and close(bridge.get("right_minus_left_endpoint_shift_m", {}).get("median"), summary.get("right_minus_left_endpoint_shift_m", {}).get("median")),
+        "V3 continuation mirrors bridge success, discordance, and endpoint statistics",
+        checks,
+    )
+    state_taxonomy = dict(bridge.get("failure_taxonomy", {}))
+    state_taxonomy.pop("wrong_side", None)
+    require(
+        state_taxonomy == summary.get("failure_taxonomy")
+        and bridge.get("failure_taxonomy", {}).get("wrong_side") == 0
+        and bridge.get("common_prefix_action_rms", {}).get("nonzero_pairs") == "20/20"
+        and close(bridge.get("common_prefix_action_rms", {}).get("mean"), summary.get("action_rms_common_prefix", {}).get("mean"))
+        and close(bridge.get("common_prefix_action_rms", {}).get("median"), summary.get("action_rms_common_prefix", {}).get("median")),
+        "V3 continuation mirrors bridge taxonomy and common-prefix action sensitivity",
+        checks,
+    )
+    require(
+        bridge.get("contact_measurement") == "instrumentation_unavailable_in_all_40_episodes_not_encoded_as_zero"
+        and bridge.get("infrastructure") == {
+            "excluded_attempt_pairs": 0,
+            "runtime_interventions": 0,
+            "retained_thermal_ledgers": 20,
+        },
+        "V3 continuation keeps unavailable contact distinct from zero and infrastructure outside behavior",
+        checks,
+    )
+    result_keys = {
+        "release_gate": "pi0_bridge_release_gate",
+        "summary": "pi0_bridge_summary",
+        "evidence_manifest": "pi0_bridge_manifest",
+        "infrastructure_ledger": "pi0_bridge_ledger",
+    }
+    require(
+        all(
+            bridge.get(field) == {"path": REQUIRED[path_key], "sha256": sha256(paths[path_key])}
+            for field, path_key in result_keys.items()
+        ),
+        "V3 continuation binds bridge result paths to their exact committed SHA-256 digests",
+        checks,
+    )
+    require(
+        bridge.get("publication_media")
+        == {
+            "manifest_path": REQUIRED["pi0_bridge_media_manifest"],
+            "manifest_sha256": sha256(paths["pi0_bridge_media_manifest"]),
+            "selected_seed": 8311,
+            "kind": "actual_simulator_execution_action_only",
+        },
+        "V3 continuation hash-binds the selected actual-only bridge media",
+        checks,
+    )
+    blocked = continuation.get("blocked_and_unreleased", {}).get("pi0_fast_phase_a", {})
+    require(
+        blocked.get("status") == "historical_identity_still_blocked_separate_v3a002_bridge_complete"
+        and blocked.get("preserved_v2_pairs") == 10
+        and blocked.get("preserved_v2_cells") == 20
+        and blocked.get("blocked_new_pairs") == 20
+        and blocked.get("blocked_new_cells") == 40
+        and blocked.get("blocked_seed_range") == [8310, 8329]
+        and blocked.get("required_openpi_commit") == "9e46d3aea26417bfb564227734b95d010aa827e5"
+        and blocked.get("required_robolab_commit") == "11142d4319e44401e0464866bb5fedf7ec8a8927"
+        and blocked.get("historical_identity_v3_behavioral_episode_count") == 0
+        and blocked.get("separate_bridge") == {
+            "model_id": "pi0_fast_old_name_config_v3a002",
+            "matched_pairs": 20,
+            "behavioral_episodes": 40,
+            "pooled_with_historical": False,
+        },
+        "V3 continuation leaves the historical 40-cell identity blocked while linking the separate bridge",
+        checks,
+    )
+    accounting = continuation.get("phase_a_accounting", {})
+    require(
+        accounting.get("frozen_queue_rows") == 780
+        and accounting.get("launch_authorized_new_cells") == 648
+        and accounting.get("completed_valid_new_cells") == 648
+        and accounting.get("blocked_pi0_fast_cells") == 40,
+        "V3 continuation does not rewrite frozen 780/648/40 Phase-A queue accounting",
+        checks,
+    )
+
+
 def validate(root: Path) -> list[str]:
     checks: list[str] = []
     paths = {name: root / relative for name, relative in REQUIRED.items()}
@@ -128,6 +1025,7 @@ def validate(root: Path) -> list[str]:
     phase_a_rows = load_jsonl(paths["phase_a_queue"])
     taxonomy = load(paths["taxonomy"])
     analysis = load(paths["analysis"])
+    continuation = load(paths["continuation"])
 
     require(protocol["schema_version"] == "vla-wam-shared-v3-protocol-v1", "protocol schema is frozen", checks)
     require(protocol["study_id"] == "vla_wam_language_steerability_v3", "protocol study identifier is frozen", checks)
@@ -260,9 +1158,57 @@ def validate(root: Path) -> list[str]:
     require("every eligible released Phase-A" in hierarchical["unit"] and "Deterministic" in hierarchical["eligibility"] and "independent scenes" in hierarchical["prohibition"] and "Do not" in hierarchical["prohibition"], "analysis nests Phase D rollouts within every eligible condition", checks)
     require("outside behavioral denominators" in analysis["infrastructure_and_latency"], "analysis separates infrastructure invalidity", checks)
 
+    bridge_result = validate_pi0_fast_bridge(paths, checks)
+    validate_pi0_fast_bridge_continuation(continuation, bridge_result, paths, checks)
+
     doc = paths["document"].read_text()
     for phrase in ("30 exact matched", "378 new episodes", "480", "16 shared", "never pooled"):
         require(phrase in doc, f"human-readable protocol states {phrase!r}", checks)
+    continuation_doc = " ".join(paths["continuation_document"].read_text().split())
+    handoff_doc = " ".join(paths["work_laptop_handoff"].read_text().split())
+    require(
+        "Post-result π0-FAST compatibility cohort (V3-A002)" in continuation_doc
+        and "public old-name OpenPI configuration" in continuation_doc
+        and "20 matched pairs / 40 episodes" in continuation_doc,
+        "V3 continuation documents the complete public old-name-config compatibility cohort",
+        checks,
+    )
+    require(
+        EXACT_V2_WORDINGS["direct_command"]["left"] in continuation_doc
+        and EXACT_V2_WORDINGS["direct_command"]["right"] in continuation_doc,
+        "V3 continuation states both exact bridge prompts rather than LEFT/RIGHT shorthand alone",
+        checks,
+    )
+    require(
+        "0/20 | 12/20" in continuation_doc
+        and "20/20 action responses" in continuation_doc
+        and "16/20 endpoint redirections" in continuation_doc,
+        "V3 continuation states bridge success, action-sensitivity, and endpoint counts",
+        checks,
+    )
+    require(
+        "not historical recovery" in continuation_doc
+        and "must remain separate" in continuation_doc
+        and "must not be rerun" in continuation_doc
+        and "Phase C: 480 registered episodes, not released" in continuation_doc,
+        "V3 continuation preserves non-pooling, no-rerun, historical-blocker, and Phase-C boundaries",
+        checks,
+    )
+    require(
+        "π0-FAST V3-A002 public old-name-config compatibility cohort" in handoff_doc
+        and "complete: 40/40 valid; LEFT 0/20, RIGHT 12/20" in handoff_doc
+        and "16/20 endpoint pairs aligned" in handoff_doc
+        and "20/20 common action prefixes differed" in handoff_doc,
+        "work-laptop handoff carries the complete bridge result and diagnostics",
+        checks,
+    )
+    require(
+        "distinct compatibility cohort, not historical recovery" in handoff_doc
+        and "must not be rerun or pooled" in handoff_doc
+        and "direct-command completion as a Phase-C release" in handoff_doc,
+        "work-laptop handoff prohibits bridge pooling, reruns, and implicit Phase-C release",
+        checks,
+    )
     return checks
 
 

@@ -17,6 +17,7 @@ import hashlib
 import json
 import math
 import os
+import statistics
 import sys
 from collections import Counter
 from dataclasses import dataclass
@@ -47,12 +48,15 @@ SHARD_LEDGER_SCHEMA = (
     "vla-wam-shared-v3-pi0-fast-old-name-config-shard-ledger-v1"
 )
 AUDIT_SCHEMA = "vla-wam-shared-v3-pi0-fast-old-name-config-shard-audit-v2"
-SUMMARY_SCHEMA = "vla-wam-shared-v3-pi0-fast-old-name-config-summary-v2"
+SUMMARY_SCHEMA = "vla-wam-shared-v3-pi0-fast-old-name-config-summary-v3"
 HASH_MANIFEST_SCHEMA = (
-    "vla-wam-shared-v3-pi0-fast-old-name-config-hash-manifest-v2"
+    "vla-wam-shared-v3-pi0-fast-old-name-config-hash-manifest-v3"
+)
+INFRASTRUCTURE_LEDGER_SCHEMA = (
+    "vla-wam-shared-v3-pi0-fast-old-name-config-infrastructure-ledger-v1"
 )
 PAIR_MANIFEST_SCHEMA = (
-    "vla-wam-shared-v3-pi0-fast-old-name-config-pair-manifest-v2"
+    "vla-wam-shared-v3-pi0-fast-old-name-config-pair-manifest-v3"
 )
 COMPILATION_AMENDMENT_ID = "V3-A003"
 COMPILATION_AMENDMENT_SCHEMA = (
@@ -184,6 +188,25 @@ def _file_record(path: Path) -> dict[str, Any]:
         "sha256": sha256_file(resolved),
         "bytes": resolved.stat().st_size,
     }
+
+
+def _file_record_as(actual_path: Path, advertised_path: Path) -> dict[str, Any]:
+    record = _file_record(actual_path)
+    record["path"] = str(advertised_path.resolve())
+    return record
+
+
+def _rehash_claimed_file(record: dict[str, Any]) -> dict[str, Any]:
+    path = Path(str(record.get("path", ""))).resolve()
+    observed = _file_record(path)
+    claimed = {
+        "path": str(path),
+        "sha256": record.get("sha256"),
+        "bytes": record.get("bytes"),
+    }
+    if observed != claimed:
+        _fail(f"stale hash claim at final closure: {path}")
+    return observed
 
 
 def _corrected_action_trace_validator(
@@ -356,6 +379,57 @@ def _write_json_atomic(path: Path, payload: dict[str, Any]) -> None:
         handle.flush()
         os.fsync(handle.fileno())
     os.replace(temporary, path)
+
+
+def _write_jsonl_staged(
+    *,
+    actual_path: Path,
+    advertised_path: Path,
+    records: list[dict[str, Any]],
+    study_root: Path,
+) -> dict[str, Any]:
+    """Write staged JSONL whose embedded path already names the final cohort."""
+
+    sys.path.insert(0, str(study_root / "tools"))
+    from vla_wam_v3_episode_schema import (  # type: ignore
+        validate_raw_episode_record,
+    )
+
+    normalized = [validate_raw_episode_record(record) for record in records]
+    if not normalized:
+        _fail("a staged JSONL batch must contain at least one record")
+    actual_path.parent.mkdir(parents=True, exist_ok=True)
+    manifest_path = actual_path.with_name(actual_path.name + ".manifest.json")
+    if actual_path.exists() or manifest_path.exists():
+        _fail(f"refusing to overwrite staged JSONL evidence: {actual_path}")
+    with actual_path.open("x", encoding="utf-8", newline="\n") as handle:
+        for record in normalized:
+            handle.write(
+                json.dumps(
+                    record,
+                    allow_nan=False,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                )
+                + "\n"
+            )
+        handle.flush()
+        os.fsync(handle.fileno())
+    study_ids = {record["study_id"] for record in normalized}
+    schemas = {record["schema_version"] for record in normalized}
+    if len(study_ids) != 1:
+        _fail("a staged JSONL batch must contain exactly one study_id")
+    manifest = {
+        "schema_version": "vla-wam-shared-v3-jsonl-batch-manifest-v1",
+        "study_id": next(iter(study_ids)),
+        "jsonl_path": str(advertised_path.resolve()),
+        "jsonl_sha256": sha256_file(actual_path),
+        "jsonl_bytes": actual_path.stat().st_size,
+        "row_count": len(normalized),
+        "record_schema_versions": sorted(schemas),
+    }
+    _write_json_atomic(manifest_path, manifest)
+    return manifest
 
 
 def _is_within(path: Path, root: Path) -> bool:
@@ -536,20 +610,35 @@ def _assert_unambiguous_behavioral_layout(
     return token_integrity
 
 
-def _technical_has_partial_material(
+def _technical_partial_material_by_relation(
     *, pair_dir: Path, robolab_root: Path, seed: int
-) -> bool:
+) -> dict[str, bool]:
     paths = _exact_behavioral_paths(
         pair_dir=pair_dir,
         robolab_root=robolab_root,
         seed=seed,
     )
-    if any((pair_dir / name).exists() for name in ("state_capture", "action_trace")):
-        for directory in (pair_dir / "state_capture", pair_dir / "action_trace"):
-            if directory.is_dir() and any(path.is_file() for path in directory.rglob("*")):
-                return True
-    native = paths["native_output_dir"]
-    return native.is_dir() and any(path.is_file() for path in native.rglob("*"))
+    result: dict[str, bool] = {}
+    for relation in ("left", "right"):
+        exact_candidates = (
+            paths[f"{relation}_capture"],
+            paths[f"{relation}_state_jsonl"],
+            paths[f"{relation}_action_trace"],
+            paths[f"{relation}_video"],
+        )
+        action_matches = list(
+            (pair_dir / "action_trace").glob(
+                f"seed{seed}_*_{relation}_*"
+            )
+        )
+        native_relation_dir = paths[f"{relation}_video"].parent
+        result[relation] = any(path.is_file() for path in exact_candidates) or any(
+            path.is_file() for path in action_matches
+        ) or (
+            native_relation_dir.is_dir()
+            and any(path.is_file() for path in native_relation_dir.rglob("*"))
+        )
+    return result
 
 
 def _inspect_shard(
@@ -715,20 +804,26 @@ def _inspect_shard(
             log_path = pair_dir / "pair_stdout_stderr.log"
             if not log_path.is_file() or log_path.stat().st_size <= 0:
                 log_path = ledger_path
+            partial_material = _technical_partial_material_by_relation(
+                pair_dir=pair_dir,
+                robolab_root=robolab_root,
+                seed=seed,
+            )
+            classification_by_relation = {
+                relation: (
+                    "partial"
+                    if partial_material[relation]
+                    else "technical_invalid"
+                )
+                for relation in ("left", "right")
+            }
             technical_count += 1
             pair_inventory.append(
                 {
                     **base,
                     "disposition": "infrastructure_attempt",
-                    "classification": (
-                        "partial"
-                        if _technical_has_partial_material(
-                            pair_dir=pair_dir,
-                            robolab_root=robolab_root,
-                            seed=seed,
-                        )
-                        else "technical_invalid"
-                    ),
+                    "classification_by_relation": classification_by_relation,
+                    "partial_material_by_relation": partial_material,
                     "error": row.get("error") or status,
                     "log": _file_record(log_path),
                     "thermal_events": (
@@ -972,6 +1067,7 @@ def _write_infrastructure_cells(
     *,
     study_root: Path,
     output_dir: Path,
+    advertised_output_dir: Path,
     pair: dict[str, Any],
     amendment: dict[str, Any],
     write_outputs: bool = True,
@@ -979,14 +1075,17 @@ def _write_infrastructure_cells(
     seed = int(pair["seed"])
     runtime_identity = Path(pair["runtime_identity"])
     cells = {row["relation"]: row for row in load_authorized_pair(study_root, seed)}
-    sys.path.insert(0, str(study_root / "tools"))
-    from vla_wam_v3_episode_schema import write_jsonl  # type: ignore
-
     records = []
     for relation in ("left", "right"):
         cell = cells[relation]
         destination = (
             output_dir / "infrastructure" / f"seed{seed}" / f"{relation}.jsonl"
+        )
+        advertised_destination = (
+            advertised_output_dir
+            / "infrastructure"
+            / f"seed{seed}"
+            / f"{relation}.jsonl"
         )
         capture = {
             "schema_version": INFRA_CAPTURE_SCHEMA,
@@ -996,7 +1095,7 @@ def _write_infrastructure_cells(
             "policy_seed": seed,
             "prompt": cell["prompt"],
             "requested_relation": relation,
-            "classification": pair["classification"],
+            "classification": pair["classification_by_relation"][relation],
             "stage": "paired_worker_guard",
             "error": pair["error"],
             "log_path": pair["log"]["path"],
@@ -1017,7 +1116,7 @@ def _write_infrastructure_cells(
             cell,
             capture,
             runtime_identity,
-            destination,
+            advertised_destination,
         )
         record["post_result_trace_validation_amendment"] = {
             "amendment_id": amendment["amendment_id"],
@@ -1031,15 +1130,22 @@ def _write_infrastructure_cells(
         if not write_outputs:
             records.append({"relation": relation, "record": record})
             continue
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        manifest = write_jsonl(destination, [record])
+        manifest = _write_jsonl_staged(
+            actual_path=destination,
+            advertised_path=advertised_destination,
+            records=[record],
+            study_root=study_root,
+        )
         records.append(
             {
                 "relation": relation,
                 "record": record,
-                "jsonl": _file_record(destination),
-                "jsonl_manifest": _file_record(
-                    destination.with_name(destination.name + ".manifest.json")
+                "jsonl": _file_record_as(destination, advertised_destination),
+                "jsonl_manifest": _file_record_as(
+                    destination.with_name(destination.name + ".manifest.json"),
+                    advertised_destination.with_name(
+                        advertised_destination.name + ".manifest.json"
+                    ),
                 ),
                 "writer_manifest": manifest,
             }
@@ -1071,12 +1177,84 @@ def _mcnemar_exact(left_only: int, right_only: int) -> float:
     return min(1.0, 2.0 * probability)
 
 
-def _final_lateral(record: dict[str, Any]) -> float:
+def _endpoint_sign_test_exact(aligned: int, anti_aligned: int) -> float:
+    """Exact two-sided binomial sign test, excluding exact ties."""
+
+    return _mcnemar_exact(aligned, anti_aligned)
+
+
+def _final_signed_lateral_offset(record: dict[str, Any]) -> float:
     steps = record.get("steps")
     if not isinstance(steps, list) or not steps:
         _fail("compiled behavioral record has no retained state steps")
     final = steps[-1]
     return float(final["object_xyz"][1]) - float(final["reference_xyz"][1])
+
+
+def _final_raw_object_robot_y(record: dict[str, Any]) -> float:
+    steps = record.get("steps")
+    if not isinstance(steps, list) or not steps:
+        _fail("compiled behavioral record has no retained state steps")
+    return float(steps[-1]["object_xyz"][1])
+
+
+def _common_prefix_action_metrics(
+    left: dict[str, Any], right: dict[str, Any]
+) -> dict[str, Any]:
+    import numpy as np
+
+    arrays = {}
+    for relation, record in (("left", left), ("right", right)):
+        artifact = record["artifacts"]["executed_action_trace"]
+        _rehash_claimed_file(artifact)
+        actions = np.load(Path(artifact["path"]), allow_pickle=False)
+        expected_steps = int(record["actions_executed"])
+        if (
+            actions.shape != (expected_steps, 8)
+            or actions.dtype != np.float32
+            or not np.isfinite(actions).all()
+        ):
+            _fail(f"{relation} validated executed actions changed before summary")
+        arrays[relation] = actions
+    common = min(len(arrays["left"]), len(arrays["right"]))
+    if common <= 0:
+        _fail("matched behavioral pair has no common executed-action prefix")
+    left_prefix = arrays["left"][:common]
+    right_prefix = arrays["right"][:common]
+    delta = left_prefix.astype(np.float64) - right_prefix.astype(np.float64)
+    return {
+        "action_rms_common_prefix": float(np.sqrt(np.mean(np.square(delta)))),
+        "common_prefix_actions": int(common),
+        "executed_actions_distinct": bool(
+            not np.array_equal(left_prefix, right_prefix)
+        ),
+        "whole_file_hashes_differ_integrity_only": (
+            left["artifacts"]["executed_action_trace"]["sha256"]
+            != right["artifacts"]["executed_action_trace"]["sha256"]
+        ),
+    }
+
+
+def _numeric_summary(values: list[float]) -> dict[str, Any]:
+    if not values:
+        return {
+            "kind": "numeric",
+            "minimum": None,
+            "maximum": None,
+            "mean": None,
+            "median": None,
+            "observed_count": 0,
+            "null_count": 0,
+        }
+    return {
+        "kind": "numeric",
+        "minimum": min(values),
+        "maximum": max(values),
+        "mean": statistics.fmean(values),
+        "median": statistics.median(values),
+        "observed_count": len(values),
+        "null_count": 0,
+    }
 
 
 def _add_raw_record(
@@ -1105,11 +1283,14 @@ def _compile_behavioral_pair_amended(
     left_video_path: Path,
     left_action_trace_path: Path,
     left_output_jsonl: Path,
+    advertised_left_output_jsonl: Path,
     right_capture_path: Path,
     right_video_path: Path,
     right_action_trace_path: Path,
     right_output_jsonl: Path,
+    advertised_right_output_jsonl: Path,
     pair_manifest_path: Path,
+    advertised_pair_manifest_path: Path,
     write_outputs: bool = True,
 ) -> dict[str, Any]:
     """Apply V3-A003 after revalidating the original launch-time contract."""
@@ -1137,6 +1318,10 @@ def _compile_behavioral_pair_amended(
         "left": left_output_jsonl,
         "right": right_output_jsonl,
     }
+    advertised_outputs = {
+        "left": advertised_left_output_jsonl,
+        "right": advertised_right_output_jsonl,
+    }
     videos = {"left": left_video_path, "right": right_video_path}
     capture_paths = {"left": left_capture_path, "right": right_capture_path}
 
@@ -1155,7 +1340,7 @@ def _compile_behavioral_pair_amended(
                 release_gate_path,
                 videos[relation],
                 traces[relation],
-                outputs[relation],
+                advertised_outputs[relation],
             )
             for relation in ("left", "right")
         }
@@ -1205,13 +1390,18 @@ def _compile_behavioral_pair_amended(
             "post_result_trace_validation_amendment": amendment_reference,
         }
 
-    for path in outputs.values():
-        path.parent.mkdir(parents=True, exist_ok=True)
-    sys.path.insert(0, str(study_root / "tools"))
-    from vla_wam_v3_episode_schema import write_jsonl  # type: ignore
-
-    left_manifest = write_jsonl(left_output_jsonl, [records["left"]])
-    right_manifest = write_jsonl(right_output_jsonl, [records["right"]])
+    left_manifest = _write_jsonl_staged(
+        actual_path=left_output_jsonl,
+        advertised_path=advertised_left_output_jsonl,
+        records=[records["left"]],
+        study_root=study_root,
+    )
+    right_manifest = _write_jsonl_staged(
+        actual_path=right_output_jsonl,
+        advertised_path=advertised_right_output_jsonl,
+        records=[records["right"]],
+        study_root=study_root,
+    )
     pair_manifest = {
         "schema_version": PAIR_MANIFEST_SCHEMA,
         "study_id": STUDY_ID,
@@ -1231,19 +1421,33 @@ def _compile_behavioral_pair_amended(
         "left": {
             "registered_cell_id": records["left"]["registered_cell_id"],
             "token_trace_integrity": records["left"]["token_trace_integrity"],
-            "raw_jsonl": _file_record(left_output_jsonl),
-            "raw_jsonl_manifest": _file_record(
-                left_output_jsonl.with_name(left_output_jsonl.name + ".manifest.json")
+            "raw_jsonl": _file_record_as(
+                left_output_jsonl,
+                advertised_left_output_jsonl,
+            ),
+            "raw_jsonl_manifest": _file_record_as(
+                left_output_jsonl.with_name(
+                    left_output_jsonl.name + ".manifest.json"
+                ),
+                advertised_left_output_jsonl.with_name(
+                    advertised_left_output_jsonl.name + ".manifest.json"
+                ),
             ),
         },
         "right": {
             "registered_cell_id": records["right"]["registered_cell_id"],
             "token_trace_integrity": records["right"]["token_trace_integrity"],
-            "raw_jsonl": _file_record(right_output_jsonl),
-            "raw_jsonl_manifest": _file_record(
+            "raw_jsonl": _file_record_as(
+                right_output_jsonl,
+                advertised_right_output_jsonl,
+            ),
+            "raw_jsonl_manifest": _file_record_as(
                 right_output_jsonl.with_name(
                     right_output_jsonl.name + ".manifest.json"
-                )
+                ),
+                advertised_right_output_jsonl.with_name(
+                    advertised_right_output_jsonl.name + ".manifest.json"
+                ),
             ),
         },
         "historical_pooling_prohibited": True,
@@ -1252,12 +1456,151 @@ def _compile_behavioral_pair_amended(
     _write_json_atomic(pair_manifest_path, pair_manifest)
     return {
         "status": "compiled_under_v3a003",
-        "pair_manifest": _file_record(pair_manifest_path),
+        "pair_manifest": _file_record_as(
+            pair_manifest_path,
+            advertised_pair_manifest_path,
+        ),
         "left_jsonl_manifest": left_manifest,
         "right_jsonl_manifest": right_manifest,
         "initial_state_sha256": pair_manifest["initial_state_sha256"],
         "post_result_trace_validation_amendment": amendment_reference,
     }
+
+
+def _verify_manifest_closure(
+    *,
+    manifest_path: Path,
+    actual_root: Path,
+    final_root: Path,
+    forbidden_staging_path: Path,
+    study_root: Path,
+) -> None:
+    manifest = _load_object(manifest_path)
+    if (
+        manifest.get("schema_version") != HASH_MANIFEST_SCHEMA
+        or manifest.get("study_id") != STUDY_ID
+        or manifest.get("model_id") != MODEL_ID
+    ):
+        _fail("final hash manifest identity changed")
+    amendment = manifest.get("post_result_trace_validation_amendment", {})
+    if amendment.get("sha256") != COMPILATION_AMENDMENT_SHA256:
+        _fail("final hash manifest lost V3-A003")
+
+    for record in manifest.get("raw_source_artifacts", []):
+        if not isinstance(record, dict):
+            _fail("raw-source manifest entry is not an object")
+        _rehash_claimed_file(record)
+
+    expected_relative: set[str] = set()
+    for record in manifest.get("derived_artifacts", []):
+        if not isinstance(record, dict):
+            _fail("derived manifest entry is not an object")
+        relative = record.get("relative_path")
+        if not isinstance(relative, str) or not relative:
+            _fail("derived manifest entry lacks relative_path")
+        advertised = Path(str(record.get("path", ""))).resolve()
+        if advertised != (final_root / relative).resolve():
+            _fail(f"derived artifact does not advertise final path: {advertised}")
+        actual = actual_root / relative
+        observed = _file_record(actual)
+        if (
+            record.get("sha256") != observed["sha256"]
+            or record.get("bytes") != observed["bytes"]
+        ):
+            _fail(f"derived artifact hash closure failed: {relative}")
+        if relative in expected_relative:
+            _fail(f"duplicate derived manifest path: {relative}")
+        expected_relative.add(relative)
+
+    observed_relative = {
+        str(path.relative_to(actual_root))
+        for path in actual_root.rglob("*")
+        if path.is_file() and path != manifest_path
+    }
+    if observed_relative != expected_relative:
+        _fail("derived manifest does not close over the staged cohort")
+
+    for label in ("summary", "infrastructure_intervention_ledger"):
+        record = manifest.get(label)
+        if not isinstance(record, dict):
+            _fail(f"hash manifest lacks {label}")
+        relative = str(
+            Path(record["path"]).resolve().relative_to(final_root.resolve())
+        )
+        derived = next(
+            (
+                row
+                for row in manifest["derived_artifacts"]
+                if row["relative_path"] == relative
+            ),
+            None,
+        )
+        if derived is None or any(
+            record.get(key) != derived.get(key) for key in ("path", "sha256", "bytes")
+        ):
+            _fail(f"{label} record disagrees with derived closure")
+
+    ledger_record = manifest["infrastructure_intervention_ledger"]
+    ledger_relative = Path(ledger_record["path"]).resolve().relative_to(
+        final_root.resolve()
+    )
+    infrastructure_ledger = _load_object(actual_root / ledger_relative)
+    for row in infrastructure_ledger.get("terminal_shard_ledgers", []):
+        _rehash_claimed_file(row)
+    for attempt in infrastructure_ledger.get("attempts", []):
+        _rehash_claimed_file(attempt["technical_log"])
+    for row in infrastructure_ledger.get("thermal_guard", {}).get("pairs", []):
+        _rehash_claimed_file(row["ledger"])
+
+    compiler = _file_record(study_root / COMPILER_RELATIVE)
+    for pair_record in manifest.get("compiled_pair_manifests", []):
+        if not isinstance(pair_record, dict):
+            _fail("compiled pair-manifest record is not an object")
+        relative = Path(pair_record["path"]).resolve().relative_to(
+            final_root.resolve()
+        )
+        pair_path = actual_root / relative
+        pair_manifest = _load_object(pair_path)
+        implementation = pair_manifest.get(
+            "corrected_validator_implementation", {}
+        )
+        if any(
+            implementation.get(key) != compiler[key]
+            for key in ("path", "sha256", "bytes")
+        ):
+            _fail("pair manifest does not retain the final compiler source hash")
+        observed = _file_record(pair_path)
+        if any(
+            pair_record.get(key) != value
+            for key, value in (
+                ("sha256", observed["sha256"]),
+                ("bytes", observed["bytes"]),
+            )
+        ):
+            _fail("compiled pair-manifest hash record is stale")
+
+    forbidden = str(forbidden_staging_path.resolve()).encode()
+    for path in actual_root.rglob("*"):
+        if not path.is_file() or path.suffix not in {".json", ".jsonl"}:
+            continue
+        payload = path.read_bytes()
+        if forbidden in payload:
+            _fail(f"derived artifact leaks staging path: {path}")
+        if path.suffix == ".jsonl":
+            for line in payload.decode().splitlines():
+                row = json.loads(line)
+                amendment = row.get(
+                    "post_result_trace_validation_amendment", {}
+                )
+                if amendment.get("sha256") != COMPILATION_AMENDMENT_SHA256:
+                    _fail(f"compiled row lacks V3-A003: {path}")
+                for artifact in row.get("artifacts", {}).values():
+                    if (
+                        isinstance(artifact, dict)
+                        and isinstance(artifact.get("sha256"), str)
+                        and isinstance(artifact.get("bytes"), int)
+                    ):
+                        _rehash_claimed_file(artifact)
 
 
 def compile_all(
@@ -1274,6 +1617,9 @@ def compile_all(
         _fail("compiled outputs must remain outside the raw evidence root")
     if output_dir.exists():
         _fail(f"refusing to overwrite compilation directory: {output_dir}")
+    staging_dir = output_dir.with_name(f".{output_dir.name}.staging")
+    if staging_dir.exists():
+        _fail(f"refusing to overwrite prior cohort staging directory: {staging_dir}")
 
     behavioral_pairs = sorted(
         (
@@ -1299,7 +1645,8 @@ def compile_all(
     ) -> dict[str, Any]:
         seed = int(pair["seed"])
         paths = {key: Path(value) for key, value in pair["paths"].items()}
-        pair_output = output_dir / "pairs" / f"seed{seed}"
+        pair_output = staging_dir / "pairs" / f"seed{seed}"
+        advertised_pair_output = output_dir / "pairs" / f"seed{seed}"
         return _compile_behavioral_pair_amended(
             study_root=study_root,
             seed=seed,
@@ -1310,11 +1657,20 @@ def compile_all(
             left_video_path=paths["left_video"],
             left_action_trace_path=paths["left_action_trace"],
             left_output_jsonl=pair_output / "left.jsonl",
+            advertised_left_output_jsonl=(
+                advertised_pair_output / "left.jsonl"
+            ),
             right_capture_path=paths["right_capture"],
             right_video_path=paths["right_video"],
             right_action_trace_path=paths["right_action_trace"],
             right_output_jsonl=pair_output / "right.jsonl",
+            advertised_right_output_jsonl=(
+                advertised_pair_output / "right.jsonl"
+            ),
             pair_manifest_path=pair_output / "pair_manifest.json",
+            advertised_pair_manifest_path=(
+                advertised_pair_output / "pair_manifest.json"
+            ),
             write_outputs=write_outputs,
         )
 
@@ -1328,19 +1684,21 @@ def compile_all(
     for pair in infrastructure_pairs:
         _write_infrastructure_cells(
             study_root=study_root,
-            output_dir=output_dir,
+            output_dir=staging_dir,
+            advertised_output_dir=output_dir,
             pair=pair,
             amendment=inspection["post_result_trace_validation_amendment"],
             write_outputs=False,
         )
 
-    output_dir.mkdir(parents=True, exist_ok=False)
+    staging_dir.mkdir(parents=True, exist_ok=False)
     compiled_pairs: list[dict[str, Any]] = []
     behavioral_records: list[dict[str, Any]] = []
     raw_records: dict[str, dict[str, Any]] = {}
     for pair in behavioral_pairs:
         seed = int(pair["seed"])
-        pair_output = output_dir / "pairs" / f"seed{seed}"
+        pair_output = staging_dir / "pairs" / f"seed{seed}"
+        advertised_pair_output = output_dir / "pairs" / f"seed{seed}"
         left_jsonl = pair_output / "left.jsonl"
         right_jsonl = pair_output / "right.jsonl"
         pair_manifest = pair_output / "pair_manifest.json"
@@ -1353,7 +1711,10 @@ def compile_all(
                 "seed": seed,
                 "pod": pair["pod"],
                 "compile_result": result,
-                "pair_manifest": _file_record(pair_manifest),
+                "pair_manifest": _file_record_as(
+                    pair_manifest,
+                    advertised_pair_output / "pair_manifest.json",
+                ),
             }
         )
         _add_raw_record(raw_records, pair["stdout_log"])
@@ -1372,7 +1733,8 @@ def compile_all(
     for pair in infrastructure_pairs:
         written = _write_infrastructure_cells(
             study_root=study_root,
-            output_dir=output_dir,
+            output_dir=staging_dir,
+            advertised_output_dir=output_dir,
             pair=pair,
             amendment=inspection["post_result_trace_validation_amendment"],
         )
@@ -1423,25 +1785,32 @@ def compile_all(
             else "neither"
         )
         discordance[outcome] += 1
-        left_lateral = _final_lateral(left)
-        right_lateral = _final_lateral(right)
-        delta = left_lateral - right_lateral
-        ordering = "aligned" if delta > 0 else "anti_aligned" if delta < 0 else "tie"
+        left_offset = _final_signed_lateral_offset(left)
+        right_offset = _final_signed_lateral_offset(right)
+        shift = right_offset - left_offset
+        left_raw_y = _final_raw_object_robot_y(left)
+        right_raw_y = _final_raw_object_robot_y(right)
+        ordering = (
+            "aligned" if shift < 0 else "anti_aligned" if shift > 0 else "tie"
+        )
         endpoint_ordering[ordering] += 1
-        left_actions = left["artifacts"]["executed_action_trace"]["sha256"]
-        right_actions = right["artifacts"]["executed_action_trace"]["sha256"]
-        actions_differ = left_actions != right_actions
-        distinct_action_pairs += int(actions_differ)
+        action_metrics = _common_prefix_action_metrics(left, right)
+        distinct_action_pairs += int(action_metrics["executed_actions_distinct"])
         pair_rows.append(
             {
                 "seed": seed,
                 "left_success": left["requested_success"],
                 "right_success": right["requested_success"],
-                "left_final_signed_lateral_m": left_lateral,
-                "right_final_signed_lateral_m": right_lateral,
-                "left_minus_right_endpoint_m": delta,
+                "left_signed_final_lateral_offset_m": left_offset,
+                "right_signed_final_lateral_offset_m": right_offset,
+                "right_minus_left_endpoint_shift_m": shift,
+                "left_raw_robot_y_m": left_raw_y,
+                "right_raw_robot_y_m": right_raw_y,
+                "right_minus_left_raw_object_robot_y_shift_m": (
+                    right_raw_y - left_raw_y
+                ),
                 "endpoint_ordering": ordering,
-                "executed_action_artifact_hashes_differ": actions_differ,
+                **action_metrics,
                 "left_token_hash_cardinality": left["token_trace_integrity"][
                     "token_hash_cardinality"
                 ],
@@ -1463,6 +1832,95 @@ def compile_all(
         _read_thermal_intervention(pair["thermal_events"]["path"])
         for pair in all_attempt_pairs
         if isinstance(pair.get("thermal_events"), dict)
+    )
+    infrastructure_ledger = {
+        "schema_version": INFRASTRUCTURE_LEDGER_SCHEMA,
+        "study_id": STUDY_ID,
+        "model_id": MODEL_ID,
+        "status": "complete_terminal_guarded_cohort",
+        "cohort": "V3-A002_public_old_name_config_bridge",
+        "historical_pooling_prohibited": True,
+        "completed_guarded_pairs": len(all_attempt_pairs),
+        "behavioral_episode_count": len(behavioral_records),
+        "excluded_attempt_count": len(infrastructure_pairs),
+        "terminal_shard_ledgers": [
+            {
+                "shard_id": shard["shard_id"],
+                "pod": shard["pod"],
+                **shard["ledger"],
+            }
+            for shard in inspection["shards"]
+        ],
+        "post_result_trace_validation_amendment": inspection[
+            "post_result_trace_validation_amendment"
+        ],
+        "behavioral_denominator_effect": "none",
+        "technical_or_partial_pair_count": len(infrastructure_pairs),
+        "technical_or_partial_cell_count": len(infrastructure_records),
+        "attempts": [
+            {
+                "seed": pair["seed"],
+                "pair_id": pair["pair_id"],
+                "pod": pair["pod"],
+                "classification_by_relation": pair[
+                    "classification_by_relation"
+                ],
+                "partial_material_by_relation": pair[
+                    "partial_material_by_relation"
+                ],
+                "error": pair["error"],
+                "technical_log": pair["log"],
+            }
+            for pair in infrastructure_pairs
+        ],
+        "thermal_guard": {
+            "retained_pair_ledger_count": retained_thermal_ledgers,
+            "intervention_pair_count": thermal_intervention_pairs,
+            "pairs": [
+                {
+                    "seed": pair["seed"],
+                    "pair_id": pair["pair_id"],
+                    "pod": pair["pod"],
+                    "ledger": pair["thermal_events"],
+                    "intervention": _read_thermal_intervention(
+                        pair["thermal_events"]["path"]
+                    ),
+                }
+                for pair in all_attempt_pairs
+                if isinstance(pair.get("thermal_events"), dict)
+            ],
+        },
+    }
+    infrastructure_ledger_path = (
+        staging_dir / "infrastructure_intervention_ledger.json"
+    )
+    advertised_infrastructure_ledger_path = (
+        output_dir / "infrastructure_intervention_ledger.json"
+    )
+    _write_json_atomic(infrastructure_ledger_path, infrastructure_ledger)
+    infrastructure_ledger_record = _file_record_as(
+        infrastructure_ledger_path,
+        advertised_infrastructure_ledger_path,
+    )
+    endpoint_shifts = [
+        float(pair["right_minus_left_endpoint_shift_m"])
+        for pair in pair_rows
+    ]
+    raw_object_y_shifts = [
+        float(pair["right_minus_left_raw_object_robot_y_shift_m"])
+        for pair in pair_rows
+    ]
+    action_rms_values = [
+        float(pair["action_rms_common_prefix"])
+        for pair in pair_rows
+    ]
+    common_prefix_counts = [
+        int(pair["common_prefix_actions"])
+        for pair in pair_rows
+    ]
+    whole_file_action_hash_differences = sum(
+        pair["whole_file_hashes_differ_integrity_only"]
+        for pair in pair_rows
     )
     summary = {
         "schema_version": SUMMARY_SCHEMA,
@@ -1486,6 +1944,7 @@ def compile_all(
             "intervention_pairs": thermal_intervention_pairs,
             "denominator_effect": "none",
         },
+        "infrastructure_intervention_ledger": infrastructure_ledger_record,
         "success_by_direction": direction_summary,
         "success_discordance": {
             "both": discordance["both"],
@@ -1500,14 +1959,47 @@ def compile_all(
             "aligned": endpoint_ordering["aligned"],
             "anti_aligned": endpoint_ordering["anti_aligned"],
             "ties": endpoint_ordering["tie"],
+            "exact_two_sided_sign_test_p_excluding_ties": (
+                _endpoint_sign_test_exact(
+                    endpoint_ordering["aligned"],
+                    endpoint_ordering["anti_aligned"],
+                )
+            ),
+            "definition": (
+                "RIGHT-condition signed final lateral offset minus LEFT-condition "
+                "signed final lateral offset is aligned only when strictly "
+                "negative; zero is a tie."
+            ),
         },
-        "distinct_executed_action_artifact_pairs": {
+        "right_minus_left_endpoint_shift_m": _numeric_summary(endpoint_shifts),
+        "right_minus_left_raw_object_robot_y_shift_m_geometry_diagnostic": (
+            _numeric_summary(raw_object_y_shifts)
+        ),
+        "action_rms_common_prefix": {
+            **_numeric_summary(action_rms_values),
+            "coordinate_definition": (
+                "RMS over all 8 native mixed policy action coordinates and "
+                "min(T_LEFT,T_RIGHT) common executed steps."
+            ),
+            "unit": "descriptive_mixed_native_action_coordinates",
+            "not_meters_or_path_distance": True,
+        },
+        "common_prefix_action_count": {
+            **_numeric_summary(common_prefix_counts),
+            "definition": "min(T_LEFT,T_RIGHT) executed action steps per pair",
+        },
+        "distinct_executed_action_pairs": {
             "count": distinct_action_pairs,
             "pairs": len(records_by_seed),
             "definition": (
-                "LEFT and RIGHT validated executed-action NPY artifacts have "
-                "different SHA-256 values; this is not first-chunk RMS."
+                "LEFT and RIGHT validated executed-action arrays differ over "
+                "their min-length common executed prefix."
             ),
+        },
+        "whole_file_executed_action_hash_differences_integrity_only": {
+            "count": whole_file_action_hash_differences,
+            "pairs": len(records_by_seed),
+            "not_a_behavioral_metric": True,
         },
         "failure_taxonomy": dict(sorted(taxonomy.items())),
         "total_actions_executed": sum(
@@ -1520,7 +2012,8 @@ def compile_all(
             "20-pair denominator."
         ),
     }
-    summary_path = output_dir / "summary.json"
+    summary_path = staging_dir / "summary.json"
+    advertised_summary_path = output_dir / "summary.json"
     _write_json_atomic(summary_path, summary)
 
     for shard in inspection["shards"]:
@@ -1533,13 +2026,18 @@ def compile_all(
         inspection["post_result_trace_validation_amendment"],
     )
     _add_raw_record(raw_records, _file_record(study_root / COMPILER_RELATIVE))
+    raw_records = {
+        path: _rehash_claimed_file(record)
+        for path, record in sorted(raw_records.items())
+    }
 
     derived = []
-    manifest_path = output_dir / "hash_manifest.json"
-    for path in sorted(output_dir.rglob("*")):
+    manifest_path = staging_dir / "hash_manifest.json"
+    for path in sorted(staging_dir.rglob("*")):
         if path.is_file() and path != manifest_path:
-            record = _file_record(path)
-            record["relative_path"] = str(path.relative_to(output_dir))
+            relative = path.relative_to(staging_dir)
+            record = _file_record_as(path, output_dir / relative)
+            record["relative_path"] = str(relative)
             derived.append(record)
     manifest = {
         "schema_version": HASH_MANIFEST_SCHEMA,
@@ -1550,16 +2048,42 @@ def compile_all(
         "post_result_trace_validation_amendment": inspection[
             "post_result_trace_validation_amendment"
         ],
-        "summary": _file_record(summary_path),
+        "summary": _file_record_as(summary_path, advertised_summary_path),
+        "infrastructure_intervention_ledger": (
+            infrastructure_ledger_record
+        ),
         "raw_source_artifacts": sorted(raw_records.values(), key=lambda row: row["path"]),
         "derived_artifacts": derived,
         "compiled_pair_manifests": [row["pair_manifest"] for row in compiled_pairs],
     }
     _write_json_atomic(manifest_path, manifest)
+    _verify_manifest_closure(
+        manifest_path=manifest_path,
+        actual_root=staging_dir,
+        final_root=output_dir,
+        forbidden_staging_path=staging_dir,
+        study_root=study_root,
+    )
+    os.replace(staging_dir, output_dir)
+    final_manifest_path = output_dir / "hash_manifest.json"
+    try:
+        _verify_manifest_closure(
+            manifest_path=final_manifest_path,
+            actual_root=output_dir,
+            final_root=output_dir,
+            forbidden_staging_path=staging_dir,
+            study_root=study_root,
+        )
+    except Exception:
+        os.replace(output_dir, staging_dir)
+        raise
     return {
         "status": "compiled",
-        "summary": _file_record(summary_path),
-        "hash_manifest": _file_record(manifest_path),
+        "summary": _file_record(output_dir / "summary.json"),
+        "hash_manifest": _file_record(final_manifest_path),
+        "infrastructure_intervention_ledger": _file_record(
+            output_dir / "infrastructure_intervention_ledger.json"
+        ),
         "behavioral_pairs": len(compiled_pairs),
         "infrastructure_pairs": len(infrastructure_pairs),
     }

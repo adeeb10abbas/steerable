@@ -1,0 +1,1210 @@
+{
+  "behavioral_denominator_effect": "none",
+  "curobo_gate_identity": {
+    "effective_runtime": "FastWAM Torch 2.7.1+cu128 runtime with FastWAM-specific CuRobo extension paths",
+    "interpretation": "The payload model_id, five real CUDA kernel checks, device class, and extension paths match the FastWAM shard lane.",
+    "observed_payload_model_id": "fastwam_robotwin",
+    "source_file": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_queue_shard_pairs06_09_attempt01/lane_gate/curobo_real_cuda.json"
+  },
+  "intentional_operational_boundary_count": 1,
+  "intentional_shard_boundary": {
+    "classification": "operational_boundary_not_infrastructure_failure_not_behavior",
+    "file": {
+      "bytes": 1463,
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_queue_attempt01/intentional_shard_boundary.json",
+      "sha256": "1c7828754509ad94ab9f6c3c9c9a6424e7b6fffe4f46ee887a7f2b6e128a4416"
+    },
+    "record": {
+      "accounting": {
+        "behavioral_episode": false,
+        "denominator_effect": "none",
+        "infrastructure_failure": false,
+        "runtime_intervention": false
+      },
+      "event": "original_lane_exited_42_on_precreated_disjoint_shard_attempt",
+      "model_id": "fastwam_robotwin",
+      "original_lane_last_event": {
+        "detail": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair06/r01/attempt01",
+        "event": "existing_attempt_refused",
+        "model_id": "fastwam_robotwin",
+        "pair": 6,
+        "replicate": 1,
+        "timestamp_utc": "2026-08-05T15:07:35.025464Z"
+      },
+      "reason": "Frozen operational plan assigned pairs03-05 to the original lane and pairs06-09 to the recycled lane; the precreated pair06-r01 attempt forced the original sequential queue to fail closed before duplicate behavior.",
+      "schema_version": "vla-wam-shared-v3-intentional-operational-shard-boundary-v1",
+      "shard_first_event": {
+        "detail": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair06/r01/attempt01",
+        "event": "pair_started",
+        "model_id": "fastwam_robotwin",
+        "pair": 6,
+        "replicate": 1,
+        "timestamp_utc": "2026-08-05T14:57:13.896109Z"
+      },
+      "shard_plan_path": "/data/users/ali/vla_wam/setup/v3_robotwin/shards/robotwin_phase_a_shard_plan_20260805.json",
+      "shard_plan_sha256": "d7dd055a14947fef0961f68e168b0126404c4674e5db40720073a83b23315608",
+      "study_id": "vla_wam_language_steerability_v3",
+      "timestamp_utc": "2026-08-05T15:10:11.612272Z"
+    }
+  },
+  "model_id": "fastwam_robotwin",
+  "native_guard_invalid_attempt_ledgers": [],
+  "native_guard_invalid_events": [],
+  "pre_behavior_repair_gate_failure_count": 2,
+  "pre_behavior_repair_gate_failures": [
+    {
+      "behavioral_denominator_effect": "none",
+      "classification": "pre_behavior_release_gate_failed_closed",
+      "gate_attempt": "lane_gate",
+      "reason": "legacy invalid-attempt ledger path contract rejected before any registered repair cell"
+    },
+    {
+      "behavioral_denominator_effect": "none",
+      "classification": "pre_behavior_fixed_probe_failed_closed",
+      "events": [
+        {
+          "behavioral_result_valid": false,
+          "classification": "partial",
+          "completed_at_utc": "2026-08-05T15:12:02.457258Z",
+          "environment_seed": 4300006,
+          "events": [
+            {
+              "event": "worker_started",
+              "timestamp_utc": "2026-08-05T15:11:58.035881Z",
+              "worker_state": "running"
+            },
+            {
+              "event": "monitor_started",
+              "timestamp_utc": "2026-08-05T15:11:58.038108Z",
+              "worker_state": "running"
+            },
+            {
+              "event": "monitor_completed",
+              "timestamp_utc": "2026-08-05T15:12:02.457258Z",
+              "worker_state": "running"
+            }
+          ],
+          "gpu_index": 0,
+          "id": "native-thermal-fastwam_robotwin-v3:robotwin:fastwam_robotwin:pair06:replicate01:attempt02_repair_gate-left-20260805T151158035881Z",
+          "max_temperature_c": 27,
+          "model_id": "fastwam_robotwin",
+          "pair_id": "v3:robotwin:fastwam_robotwin:pair06:replicate01:attempt02_repair_gate",
+          "raw_event_log": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/lane_gate_attempt02/fixed_probe_thermal_events_fastwam_robotwin.jsonl",
+          "requested_relation": "left",
+          "sampling_seed": 8503,
+          "started_at_utc": "2026-08-05T15:11:58.035881Z",
+          "status": "worker_exit_nonzero",
+          "wall_latency_valid": false,
+          "worker_exit_code": 1,
+          "worker_pgid": 170623,
+          "worker_pid": 170623
+        },
+        {
+          "behavioral_result_valid": false,
+          "classification": "partial",
+          "completed_at_utc": "2026-08-05T15:12:02.457258Z",
+          "environment_seed": 4300006,
+          "events": [
+            {
+              "event": "worker_started",
+              "timestamp_utc": "2026-08-05T15:11:58.035881Z",
+              "worker_state": "running"
+            },
+            {
+              "event": "monitor_started",
+              "timestamp_utc": "2026-08-05T15:11:58.038108Z",
+              "worker_state": "running"
+            },
+            {
+              "event": "monitor_completed",
+              "timestamp_utc": "2026-08-05T15:12:02.457258Z",
+              "worker_state": "running"
+            }
+          ],
+          "gpu_index": 0,
+          "id": "native-thermal-fastwam_robotwin-v3:robotwin:fastwam_robotwin:pair06:replicate01:attempt02_repair_gate-right-20260805T151158035881Z",
+          "max_temperature_c": 27,
+          "model_id": "fastwam_robotwin",
+          "pair_id": "v3:robotwin:fastwam_robotwin:pair06:replicate01:attempt02_repair_gate",
+          "raw_event_log": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/lane_gate_attempt02/fixed_probe_thermal_events_fastwam_robotwin.jsonl",
+          "requested_relation": "right",
+          "sampling_seed": 8503,
+          "started_at_utc": "2026-08-05T15:11:58.035881Z",
+          "status": "worker_exit_nonzero",
+          "wall_latency_valid": false,
+          "worker_exit_code": 1,
+          "worker_pgid": 170623,
+          "worker_pid": 170623
+        }
+      ],
+      "gate_attempt": "lane_gate_attempt02",
+      "invalid_attempt_ledger": {
+        "bytes": 3031,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/lane_gate_attempt02/fixed_probe_invalid_attempts_fastwam_robotwin.json",
+        "sha256": "fd4ada33e246076bfaac9aea5ee1d383522e6c0ef72fef8a6fa7514f10a40b33"
+      }
+    }
+  ],
+  "prospective_nonactivation_infrastructure_failure_count": 0,
+  "prospective_nonactivation_operational_event_count": 1,
+  "prospective_pair09_nonactivation": {
+    "amendment_created_at_utc": "2026-08-05T16:26:21Z",
+    "behavioral_denominator_effect": "none",
+    "classification": "prospective_amendment_release_precheck_not_activated",
+    "files": {
+      "amendment": {
+        "bytes": 2302,
+        "path": "/data/users/ali/vla_wam/setup/v3_robotwin/shards/fastwam_phase_a_shard_plan_amendment01_20260805.json",
+        "sha256": "87ee25264d865003a88f84c13daf3107b24669b787d1261567d5530bf490f1a5"
+      },
+      "nonactivation_record": {
+        "bytes": 2207,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_queue_shard_pair09_attempt01/nonactivation_precheck.json",
+        "sha256": "e06e953bcf0e7d912c5b63195a56435d8032cc95be25ce15ede731341bd6704a"
+      },
+      "queue_runner": {
+        "bytes": 6348,
+        "path": "/data/users/ali/vla_wam/setup/v3_robotwin/shards/run_fastwam_pair09_release_and_shard_attempt01.sh",
+        "sha256": "9e531437b8dc3305b0a953c2a53eaacd2dec96b2d64f896ac1277e3c4d01f2b5"
+      },
+      "release_precheck": {
+        "bytes": 6981,
+        "path": "/data/users/ali/vla_wam/setup/v3_robotwin/shards/release_fastwam_pair09_lane_attempt01.sh",
+        "sha256": "0f31b53dfe5f56a7bae42e5dee8741112d094f15f65550da86db1a4b1f25bc54"
+      }
+    },
+    "infrastructure_denominator_effect": "none",
+    "infrastructure_failure": false,
+    "nonactivation_evidence": {
+      "behavioral_episodes": 0,
+      "infrastructure_rows": 0,
+      "lane_gate_directory_created": false,
+      "model_action_requests": 0,
+      "model_loaded_on_prospective_lane": false,
+      "release_status_created": false,
+      "runtime_interventions": 0,
+      "simulator_loaded_on_prospective_lane": false,
+      "supervisor_pid_created": false
+    },
+    "precheck": {
+      "checked_path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair09/r01/attempt01",
+      "observed_condition": "path_present",
+      "required_condition": "path_absent_before_release_supervisor_launch",
+      "result": "failed_closed_before_supervisor_launch",
+      "shell_exit_code": 1
+    },
+    "runtime_intervention": false,
+    "status": "prospective_amendment_not_activated_original_lane_won_race",
+    "winning_original_lane_event": {
+      "attempt": "attempt01",
+      "event": "pair_started",
+      "pair": 9,
+      "queue_progress_jsonl": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_queue_shard_pairs06_09_attempt01/queue_progress.jsonl",
+      "replicate": 1,
+      "timestamp_utc": "2026-08-05T16:27:47.229898Z"
+    }
+  },
+  "repair": {
+    "failed_attempt_behavioral_rows_in_denominator": 0,
+    "failed_attempt_raw_behavioral_rows_preserved": 2,
+    "failed_pair_attempt_id": "fastwam-v3-pair06-r01-attempt01",
+    "repair_attempt_behavioral_rows": 2,
+    "repair_cell_ids": [
+      "v3:robotwin:fastwam_robotwin:pair06:replicate01:left",
+      "v3:robotwin:fastwam_robotwin:pair06:replicate01:right"
+    ],
+    "repair_completion": {
+      "completed_at_utc": "2026-08-05T15:20:55.131420Z",
+      "model_id": "fastwam_robotwin",
+      "progress_jsonl": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/queue_progress.jsonl",
+      "progress_sha256": "e0e583da3d0a7192b4f5f111bfec4c5988d9c9e50d965b083b3248bd03ebca62",
+      "registered_cell_id": "v3:robotwin:fastwam_robotwin:pair06:replicate01",
+      "replaces_in_denominator": "attempt01 infrastructure-invalid concurrent GPU owner",
+      "schema_version": "vla-wam-shared-v3-robotwin-infrastructure-repair-completion-v1",
+      "selected_attempt": "attempt02",
+      "status": "complete",
+      "study_id": "vla_wam_language_steerability_v3",
+      "valid_behavioral_episodes": 2,
+      "valid_matched_pairs": 1
+    },
+    "repair_pair_attempt_id": "fastwam-v3-pair06-r01-attempt02",
+    "repair_runtime_files": [
+      {
+        "bytes": 2685,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/lane_gate/curobo_real_cuda.json",
+        "sha256": "11ed58740185a68e73c2451643175a7655b234642994daa760309bd5a2cd502e"
+      },
+      {
+        "bytes": 2685,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/lane_gate/curobo_real_cuda.log",
+        "sha256": "11ed58740185a68e73c2451643175a7655b234642994daa760309bd5a2cd502e"
+      },
+      {
+        "bytes": 131,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/lane_gate/gpu_identity.csv",
+        "sha256": "ee3e150a95b1052efb37579deae047488c6eed3cf994beb73f405ab7535e8bd2"
+      },
+      {
+        "bytes": 641,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/lane_gate/input_hashes.txt",
+        "sha256": "5d774d089aa6ce0b84f89625eaae10ff31271e1a592b2a76e604745492849910"
+      },
+      {
+        "bytes": 191,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/lane_gate/pvc_capacity.log",
+        "sha256": "810a50a0022ac7ffd1188ee40e704fb9c316fecac15a00ee84c405cf31576d11"
+      },
+      {
+        "bytes": 370,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/lane_gate/pvc_mount.log",
+        "sha256": "3cce1fb90e12d4e2d445c5c79b688bdb074206d616c6bbd61b31596b8585b46a"
+      },
+      {
+        "bytes": 86,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/lane_gate/sapien_vulkan.log",
+        "sha256": "3300708ef53b2d241ad3acb0f6cf85628d46928db4944eb46dbff63d13e7b739"
+      },
+      {
+        "bytes": 2685,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/lane_gate_attempt02/curobo_real_cuda.json",
+        "sha256": "11ed58740185a68e73c2451643175a7655b234642994daa760309bd5a2cd502e"
+      },
+      {
+        "bytes": 2685,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/lane_gate_attempt02/curobo_real_cuda.log",
+        "sha256": "11ed58740185a68e73c2451643175a7655b234642994daa760309bd5a2cd502e"
+      },
+      {
+        "bytes": 3031,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/lane_gate_attempt02/fixed_probe_invalid_attempts_fastwam_robotwin.json",
+        "sha256": "fd4ada33e246076bfaac9aea5ee1d383522e6c0ef72fef8a6fa7514f10a40b33"
+      },
+      {
+        "bytes": 3922,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/lane_gate_attempt02/fixed_probe_thermal_events_fastwam_robotwin.jsonl",
+        "sha256": "fcb31e3d5fc98d6351cada3eea1ec8b4cf7866e44acd855c4bcad3d4c4cc4b34"
+      },
+      {
+        "bytes": 131,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/lane_gate_attempt02/gpu_identity.csv",
+        "sha256": "ee3e150a95b1052efb37579deae047488c6eed3cf994beb73f405ab7535e8bd2"
+      },
+      {
+        "bytes": 641,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/lane_gate_attempt02/input_hashes.txt",
+        "sha256": "5d774d089aa6ce0b84f89625eaae10ff31271e1a592b2a76e604745492849910"
+      },
+      {
+        "bytes": 191,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/lane_gate_attempt02/pvc_capacity.log",
+        "sha256": "810a50a0022ac7ffd1188ee40e704fb9c316fecac15a00ee84c405cf31576d11"
+      },
+      {
+        "bytes": 370,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/lane_gate_attempt02/pvc_mount.log",
+        "sha256": "3cce1fb90e12d4e2d445c5c79b688bdb074206d616c6bbd61b31596b8585b46a"
+      },
+      {
+        "bytes": 86,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/lane_gate_attempt02/sapien_vulkan.log",
+        "sha256": "3300708ef53b2d241ad3acb0f6cf85628d46928db4944eb46dbff63d13e7b739"
+      },
+      {
+        "bytes": 2304,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/lane_gate_attempt03/all_artifact_hashes.txt",
+        "sha256": "f3015effacc59edadef72d5116a9edb170f875d9481ce012745ed513cfe158c6"
+      },
+      {
+        "bytes": 2685,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/lane_gate_attempt03/curobo_real_cuda.json",
+        "sha256": "11ed58740185a68e73c2451643175a7655b234642994daa760309bd5a2cd502e"
+      },
+      {
+        "bytes": 2685,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/lane_gate_attempt03/curobo_real_cuda.log",
+        "sha256": "11ed58740185a68e73c2451643175a7655b234642994daa760309bd5a2cd502e"
+      },
+      {
+        "bytes": 4587,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/lane_gate_attempt03/fixed_probe/actions.npz",
+        "sha256": "211d171586a0f21582c571a95bed2bd35ed722c23d7438bb82e7f62035578bfc"
+      },
+      {
+        "bytes": 1450,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/lane_gate_attempt03/fixed_probe/fixed_observation_release.json",
+        "sha256": "692aad706428be6c1a3daa0927bee654304670a0acab47ab6ac99bd22af295b1"
+      },
+      {
+        "bytes": 1369,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/lane_gate_attempt03/fixed_probe/manifest.json",
+        "sha256": "ef70e4e1f0bba6a4bc075509b29596f3be809704ef95aab2e19e3076bc722389"
+      },
+      {
+        "bytes": 50482,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/lane_gate_attempt03/fixed_probe_thermal_events_fastwam_robotwin.jsonl",
+        "sha256": "da559e0dbe8e28da41b89a37cce6343ce75df5674d32009da8d84a4c5db389ac"
+      },
+      {
+        "bytes": 131,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/lane_gate_attempt03/gpu_identity.csv",
+        "sha256": "ee3e150a95b1052efb37579deae047488c6eed3cf994beb73f405ab7535e8bd2"
+      },
+      {
+        "bytes": 641,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/lane_gate_attempt03/input_hashes.txt",
+        "sha256": "5d774d089aa6ce0b84f89625eaae10ff31271e1a592b2a76e604745492849910"
+      },
+      {
+        "bytes": 191,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/lane_gate_attempt03/pvc_capacity.log",
+        "sha256": "810a50a0022ac7ffd1188ee40e704fb9c316fecac15a00ee84c405cf31576d11"
+      },
+      {
+        "bytes": 370,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/lane_gate_attempt03/pvc_mount.log",
+        "sha256": "3cce1fb90e12d4e2d445c5c79b688bdb074206d616c6bbd61b31596b8585b46a"
+      },
+      {
+        "bytes": 86,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/lane_gate_attempt03/sapien_vulkan.log",
+        "sha256": "3300708ef53b2d241ad3acb0f6cf85628d46928db4944eb46dbff63d13e7b739"
+      },
+      {
+        "bytes": 1337,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/pair06_r01_attempt02_launcher.log",
+        "sha256": "24d2a7cde9f3456476ceb8934ca0d67953c9747281809df198f665823d0b25da"
+      },
+      {
+        "bytes": 411,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/queue_progress.jsonl",
+        "sha256": "e0e583da3d0a7192b4f5f111bfec4c5988d9c9e50d965b083b3248bd03ebca62"
+      },
+      {
+        "bytes": 740,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/repair_complete.json",
+        "sha256": "b9633f1f5898e259e95321949d1de1f97dad0e31c8eaa9d7a9fe119f534f57c4"
+      },
+      {
+        "bytes": 7,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/repair_supervisor.pid",
+        "sha256": "3258bd30dca8ba7b0190824c82bde0434cfe2277a419282b326bbfb034841a01"
+      },
+      {
+        "bytes": 0,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/repair_supervisor.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 0,
+        "path": "/data/users/ali/vla_wam/raw/v3/robotwin/runtime/fastwam_pair06_r01_attempt02_repair_lane_attempt01/repair_supervisor.stdout.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "repair_status": "identical_registered_pair_completed_as_two_valid_behavioral_rows"
+  },
+  "rules": {
+    "intentional_boundary_outside_behavior": true,
+    "partial_attempts_outside_behavior": true,
+    "prospective_nonactivation_not_an_infrastructure_failure": true,
+    "prospective_nonactivation_outside_behavior": true,
+    "technical_invalids_outside_behavior": true,
+    "valid_failures_retained": true
+  },
+  "runtime_intervention_count": 0,
+  "runtime_intervention_events": [],
+  "runtime_intervention_ledgers": [],
+  "schema_version": "vla-wam-shared-v3-fastwam-robotwin-infrastructure-ledger-v1",
+  "source_files": {
+    "overlap_invalid_attempt_manifest": {
+      "bytes": 1174,
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair06/r01/attempt01/attempt_manifest.json",
+      "sha256": "e641367bbe4aa30cc83b08b44b663a657d59fd668d1c7d10ba03745bde0d54d7"
+    },
+    "overlap_invalid_behavioral_jsonl": {
+      "bytes": 289619,
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair06/r01/attempt01/behavioral_episodes.jsonl",
+      "sha256": "654eef9b28e2e88be3a1d5a0fd82ef6b14e026c7ddb6c8bfe26f042644064705"
+    },
+    "overlap_invalid_behavioral_jsonl_manifest": {
+      "bytes": 407,
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair06/r01/attempt01/behavioral_episodes.jsonl.manifest.json",
+      "sha256": "97c7f6a1665ca7f1d84e4c55b0b537840cb878c37eeccb8ee05e84587c9941b3"
+    },
+    "overlap_invalid_marker": {
+      "bytes": 2371,
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair06/r01/attempt01/concurrent_gpu_ownership_infrastructure_invalid.json",
+      "sha256": "cc556e2c4812358a0c07f977dbc1a4b3c194d48f7c656695670e2954ae5603c9"
+    }
+  },
+  "status": "complete",
+  "study_id": "vla_wam_language_steerability_v3",
+  "technical_invalid_attempts": [
+    {
+      "attempt_id": "fastwam-v3-pair06-r01-attempt01",
+      "behavioral_rows_in_denominator": 0,
+      "cell_ids": [
+        "v3:robotwin:fastwam_robotwin:pair06:replicate01:left",
+        "v3:robotwin:fastwam_robotwin:pair06:replicate01:right"
+      ],
+      "classification": "infrastructure_invalid_concurrent_gpu_owner",
+      "marker": {
+        "accounting": {
+          "behavioral_rows_in_denominator": 0,
+          "raw_outputs_preserved": true,
+          "required_repair": "rerun only the exact registered pair06 replicate01 as attempt02 under sole GPU ownership"
+        },
+        "attempt_id": "fastwam-v3-pair06-r01-attempt01",
+        "classification": "infrastructure_invalid_concurrent_gpu_owner",
+        "detected_at_utc": "2026-08-05T15:08:40.510329Z",
+        "fast_attempt_window_utc": {
+          "completed": "2026-08-05T15:00:20.517099Z",
+          "started": "2026-08-05T14:57:13.896109Z"
+        },
+        "model_id": "fastwam_robotwin",
+        "overlap": {
+          "other_attempt": "seed8300/attempt01",
+          "other_attempt_outcome": "contract_rejected_before_behavior: v3 Cosmos Phase-A seeds are exactly 8303..8329",
+          "other_executed_actions": 0,
+          "other_model_id": "cosmos3_edge_policy_droid",
+          "other_model_requests": 0,
+          "same_gpu_index": 0,
+          "same_pod": "vla-wam-rtx-cosmos-ali",
+          "server_started": "2026-08-05T14:57:34.350986Z",
+          "server_stopped": "2026-08-05T14:58:09.757069Z"
+        },
+        "registered_cell_id": "v3:robotwin:fastwam_robotwin:pair06:replicate01",
+        "rule": "The recycled-lane release requires no prior/live GPU owner. Concurrent model load violates the infrastructure gate even when the overlapping rejected attempt makes zero model requests or actions.",
+        "schema_version": "vla-wam-shared-v3-concurrent-gpu-ownership-infrastructure-invalid-v1",
+        "source_artifacts": [
+          {
+            "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair06/r01/attempt01/attempt_manifest.json",
+            "sha256": "e641367bbe4aa30cc83b08b44b663a657d59fd668d1c7d10ba03745bde0d54d7"
+          },
+          {
+            "path": "/data/users/ali/vla_wam/raw/v3/cosmos3_edge_policy_droid/runtime/queue_8300_8302_attempt01/queue_progress.jsonl",
+            "sha256": "1803c64c23499eb73470411348c9b36f374f181a32a329824a0f294018437723"
+          },
+          {
+            "path": "/data/users/ali/vla_wam/raw/v3/cosmos3_edge_policy_droid/phase_a/seed8300/attempt01/logs/simulator_stdout.log",
+            "sha256": "294b3d694185418a5ee9c867fa302f29d3f8dc8a7f9777ebf40c2d9a9d47ca3d"
+          },
+          {
+            "path": "/data/users/ali/vla_wam/raw/v3/cosmos3_edge_policy_droid/server_seed8300_attempt01/thermal/cosmos3_edge_policy_droid_events.jsonl",
+            "sha256": "e1d77ff5b22e4e4356f9ddb60f794c0c46240e9e08a70515c8827d454b649ed1"
+          }
+        ],
+        "study_id": "vla_wam_language_steerability_v3"
+      },
+      "raw_behavioral_rows_preserved": 2,
+      "registered_pair_id": "v3:robotwin:fastwam_robotwin:pair06:replicate01"
+    }
+  ],
+  "technical_invalid_cell_attempt_count": 2,
+  "technical_invalid_pair_attempt_count": 1,
+  "thermal_streams": [
+    {
+      "bytes": 93883,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 320,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair03/r01/attempt01/thermal_events.jsonl",
+      "sha256": "f9258267556c63fedcf82c99cb8901ad591e204ac6721ce77bb09603488a25a0"
+    },
+    {
+      "bytes": 93016,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 317,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair03/r02/attempt01/thermal_events.jsonl",
+      "sha256": "11f87317380e9aaf7af5e5a7f21b63a78d5b9f72bb1f53d68d5cca854c0f9778"
+    },
+    {
+      "bytes": 102264,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 349,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair03/r03/attempt01/thermal_events.jsonl",
+      "sha256": "32661c80e700c40860c6f41b7a6e7bef813eebe42e4a06c060e1a9f97e88b1cd"
+    },
+    {
+      "bytes": 95039,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 324,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair03/r04/attempt01/thermal_events.jsonl",
+      "sha256": "5aaeee67034d52a09f12f8d0cd447a945b25344aac102e2bb8fc7e8f5b4cf5cb"
+    },
+    {
+      "bytes": 87236,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 297,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair03/r05/attempt01/thermal_events.jsonl",
+      "sha256": "ecd5c42b2eb10fef6c0cd55dc3be7c9526af76f431429799ed6e1559114d3542"
+    },
+    {
+      "bytes": 92438,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 315,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair03/r06/attempt01/thermal_events.jsonl",
+      "sha256": "51fcec4b12373beed2078c1ded530e017228eddd0ebab2d8b9346f35ec6ab655"
+    },
+    {
+      "bytes": 95617,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 326,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair03/r07/attempt01/thermal_events.jsonl",
+      "sha256": "38e03862673d8f27685c87ef21123cebb41e06d28cc7136f5cbac6f6741e3808"
+    },
+    {
+      "bytes": 98218,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 335,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair03/r08/attempt01/thermal_events.jsonl",
+      "sha256": "515a230c3feb53ad8b543dd6cf475b0c35ba0403436f6c99899a7bcd3222050d"
+    },
+    {
+      "bytes": 94750,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 323,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair03/r09/attempt01/thermal_events.jsonl",
+      "sha256": "f333a3ef32036d1426311b0d047c04fba9aeb3e1106d59a062c61037cb252e74"
+    },
+    {
+      "bytes": 92437,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 315,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair04/r01/attempt01/thermal_events.jsonl",
+      "sha256": "e6b9e3c97fbfbb105a97df21b8d2d804d6aad5c5a89a02325187d8a2a22a8855"
+    },
+    {
+      "bytes": 91570,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 312,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair04/r02/attempt01/thermal_events.jsonl",
+      "sha256": "4e95eb86d86cd9274575e295db0c67c0718c61e8db373a64cc3aaf796f40c12e"
+    },
+    {
+      "bytes": 93593,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 319,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair04/r03/attempt01/thermal_events.jsonl",
+      "sha256": "76b6550aebfa90e0e5e2e00bd2d73fc30670df13dd2edf729c8f0fa94ada8aec"
+    },
+    {
+      "bytes": 90414,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 308,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair04/r04/attempt01/thermal_events.jsonl",
+      "sha256": "d72ebe6c00554d648ddb89e18b763c6f60a7b957177e7184e2b268151b9d7fd4"
+    },
+    {
+      "bytes": 98217,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 335,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair04/r05/attempt01/thermal_events.jsonl",
+      "sha256": "75f370b0ad15214bb46e49103b13b666f2ee61de8967d1d2f894f0a12147e754"
+    },
+    {
+      "bytes": 90414,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 308,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair04/r06/attempt01/thermal_events.jsonl",
+      "sha256": "8a64322b5d085aa64efea594a526b8337ad121a5eff32b71dbf4bb1ffeaf0cab"
+    },
+    {
+      "bytes": 94460,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 322,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair04/r07/attempt01/thermal_events.jsonl",
+      "sha256": "88c14fdb9e0051874ae4a733bed155dfb915b795dbfc62c1ba4be5d60126da04"
+    },
+    {
+      "bytes": 99662,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 340,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair04/r08/attempt01/thermal_events.jsonl",
+      "sha256": "ea949925d2a7c9df8be7051c72b065f2f2c2b106488c870bc45ee98096dbf604"
+    },
+    {
+      "bytes": 101685,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 347,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair04/r09/attempt01/thermal_events.jsonl",
+      "sha256": "a4b37996fe45a333fd41790ab7120086914c1366367b00ab151aca93e2a7833c"
+    },
+    {
+      "bytes": 97929,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 334,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair05/r01/attempt01/thermal_events.jsonl",
+      "sha256": "815e232067414ebed9107c36e1608594179a73c971da71cf51b51db6393b5b05"
+    },
+    {
+      "bytes": 94529,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 320,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair05/r02/attempt01/thermal_events.jsonl",
+      "sha256": "c78594cf1b24e5ba367c6509164d054fe12164192c4087efa4d53b743c26e7a4"
+    },
+    {
+      "bytes": 91619,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 310,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair05/r03/attempt01/thermal_events.jsonl",
+      "sha256": "bb5d564108e46fabc2947322d2a490900af3dfd2886024e50d384749d8152c53"
+    },
+    {
+      "bytes": 97148,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 329,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair05/r04/attempt01/thermal_events.jsonl",
+      "sha256": "dc8fb20831a72071da60e7902f2066a25b1f390b05eb59c07f4857dd184d8c62"
+    },
+    {
+      "bytes": 92492,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 313,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair05/r05/attempt01/thermal_events.jsonl",
+      "sha256": "5d4443ddf98d0d1e35d6b71c59941fde8f1adb1f497b7df6d147b7f4d1e4fc86"
+    },
+    {
+      "bytes": 99767,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 338,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair05/r06/attempt01/thermal_events.jsonl",
+      "sha256": "21071541a539c1fcb7688b55b1a9432056a183a0114c35f4f159b5c62af867af"
+    },
+    {
+      "bytes": 92201,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 312,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair05/r07/attempt01/thermal_events.jsonl",
+      "sha256": "57f4595863c4fe92a89c4d18fd82703d0ff7ce013b3e05433a847f2c125f7f59"
+    },
+    {
+      "bytes": 98894,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 335,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair05/r08/attempt01/thermal_events.jsonl",
+      "sha256": "e0782c26066755ea4b5cea4d90dc7943277eb197835156b5f4022e38a3313a8f"
+    },
+    {
+      "bytes": 97730,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 331,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair05/r09/attempt01/thermal_events.jsonl",
+      "sha256": "e04fb2df901df03ec6066c52e0f04bae80cdbad5c87559f0a93f67ebac2c0a2c"
+    },
+    {
+      "bytes": 97639,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 333,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair06/r01/attempt01/thermal_events.jsonl",
+      "sha256": "7f4909b6704ac34bd8bbbb0283242ca9b088895bad8f6914162cac3225ae1ff1"
+    },
+    {
+      "bytes": 102385,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 347,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair06/r01/attempt02/thermal_events.jsonl",
+      "sha256": "67b41de772627a8b1aba949f3ff784d2f40e9417be2f203faa9c243b936e49ac"
+    },
+    {
+      "bytes": 105586,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 358,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair06/r02/attempt01/thermal_events.jsonl",
+      "sha256": "e703d381614ef43f209192af94e8fdc730e9a12570be44ecf4759f130c32c354"
+    },
+    {
+      "bytes": 100639,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 341,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair06/r03/attempt01/thermal_events.jsonl",
+      "sha256": "92c6208d64caee4f23a1ba011b4fcf71cf0d1a447e7114dadd0006e2b61acde0"
+    },
+    {
+      "bytes": 91909,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 311,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair06/r04/attempt01/thermal_events.jsonl",
+      "sha256": "f5138d6783085402d4a205370c3fc22493924456bebc17f7a0d4a3af6defe842"
+    },
+    {
+      "bytes": 99184,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 336,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair06/r05/attempt01/thermal_events.jsonl",
+      "sha256": "c6a0d500eeb59632a4b7c05614f02a5edeff9c4ed01b2d53abcf1b70353422e1"
+    },
+    {
+      "bytes": 105877,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 359,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair06/r06/attempt01/thermal_events.jsonl",
+      "sha256": "c384f3db62f2f73a6526ff798a75bc72f46772667ffe061a53361ad7ac0d1ccf"
+    },
+    {
+      "bytes": 100057,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 339,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair06/r07/attempt01/thermal_events.jsonl",
+      "sha256": "72b51bb119a26e88a92125e9a7e4f29e10642e3711898b461d3492b4d10db049"
+    },
+    {
+      "bytes": 96565,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 327,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair06/r08/attempt01/thermal_events.jsonl",
+      "sha256": "c177a1606c8df6cc4b8d2e2903e23280c2f038f4917fefaa9f6b3d9b71d8c704"
+    },
+    {
+      "bytes": 99475,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 337,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair06/r09/attempt01/thermal_events.jsonl",
+      "sha256": "e16f02e92164882c3603d8d4ac1f0fc4ce402a2784a0e8123ebe82d104c02424"
+    },
+    {
+      "bytes": 116354,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 395,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair07/r01/attempt01/thermal_events.jsonl",
+      "sha256": "4ae1bd7f31ff53b64836e97d6ce42f4a16437201afa524c68854b1ccea798a9c"
+    },
+    {
+      "bytes": 98894,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 335,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair07/r02/attempt01/thermal_events.jsonl",
+      "sha256": "753fd8c9cc7a9a20c3c6b16b59712c885c429389096d89b7e156a27791381a15"
+    },
+    {
+      "bytes": 101804,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 345,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair07/r03/attempt01/thermal_events.jsonl",
+      "sha256": "137fb0215e5a1fcab8e6880f1852d87323b81b4b74e1f08c16012d7f0aa539c0"
+    },
+    {
+      "bytes": 107333,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 364,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair07/r04/attempt01/thermal_events.jsonl",
+      "sha256": "ac2011c0ae3144f5b84f4af58184d5c85f7e7bd233acf6ea32c6658ce7856d8b"
+    },
+    {
+      "bytes": 108497,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 368,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair07/r05/attempt01/thermal_events.jsonl",
+      "sha256": "0e106c63683ae47a1273a15de37fc71b6464c5c8ffc0dd7e0fbfed0c157660d1"
+    },
+    {
+      "bytes": 99185,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 336,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair07/r06/attempt01/thermal_events.jsonl",
+      "sha256": "61d2c5d43801c48da81dc540c2af94fabfe6379cdf5fed7a30f428896efd9b79"
+    },
+    {
+      "bytes": 124211,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 422,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair07/r07/attempt01/thermal_events.jsonl",
+      "sha256": "60c08f111b4d73581dae34562ecfcd2c305bacca681c59292cf5885e0fa2efda"
+    },
+    {
+      "bytes": 113444,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 385,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair07/r08/attempt01/thermal_events.jsonl",
+      "sha256": "a46c9c2263c1e03237129110616cb9b9d77d6fe32cf6ba7b7256f7ad99c88e43"
+    },
+    {
+      "bytes": 127703,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 434,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair07/r09/attempt01/thermal_events.jsonl",
+      "sha256": "eb723df045ad3aee28235a0180ba502be1fe4972e06216e35cf63b5d9afaa0c7"
+    },
+    {
+      "bytes": 119554,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 406,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair08/r01/attempt01/thermal_events.jsonl",
+      "sha256": "2541b4c62b8ee2e22f40c61e0124ae5d206f04144cd8ad2fcf853d3cb8c57f3f"
+    },
+    {
+      "bytes": 116935,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 397,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair08/r02/attempt01/thermal_events.jsonl",
+      "sha256": "eeb604aee256188e836ee511b35088d9473df0ee887bc1f0469273fefc1005cd"
+    },
+    {
+      "bytes": 103258,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 350,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair08/r03/attempt01/thermal_events.jsonl",
+      "sha256": "6e45d99ab966896d4d000e997df69c35a59d499d399348df72f5fb919183f30c"
+    },
+    {
+      "bytes": 113734,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 386,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair08/r04/attempt01/thermal_events.jsonl",
+      "sha256": "8d557e3fa2b9f465a3a8e88a7bb8450f7e4297aa46e2c0299074b9cba2e19d0f"
+    },
+    {
+      "bytes": 109078,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 370,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair08/r05/attempt01/thermal_events.jsonl",
+      "sha256": "6f79ad16f00f0af54f9a14d4253fa4486d891d7ec7783100e69854060de1a36f"
+    },
+    {
+      "bytes": 116062,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 394,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair08/r06/attempt01/thermal_events.jsonl",
+      "sha256": "4125ccc20de7f1d60ddc101170347e0284c7133fed32f3a7d58e1ebbb19fe6d4"
+    },
+    {
+      "bytes": 101221,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 343,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair08/r07/attempt01/thermal_events.jsonl",
+      "sha256": "b4805d7bd67d8d3f44cfea464f979df6736098ca04862b75817ba8f22fd1b329"
+    },
+    {
+      "bytes": 109660,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 372,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair08/r08/attempt01/thermal_events.jsonl",
+      "sha256": "c499d49616b053614892d904021a64e54d4001ec0928e4f93c8b5f7e374792a5"
+    },
+    {
+      "bytes": 103840,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 352,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair08/r09/attempt01/thermal_events.jsonl",
+      "sha256": "e2342c6e22bca76a6913b51f49f19190728782ddd7f8e67c506d1ed43efe4214"
+    },
+    {
+      "bytes": 109952,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 373,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair09/r01/attempt01/thermal_events.jsonl",
+      "sha256": "be73c0ae17e929030c5f904a8a794f006a5decf4a60c95f238860cc02d422968"
+    },
+    {
+      "bytes": 106169,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 360,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair09/r02/attempt01/thermal_events.jsonl",
+      "sha256": "5ec13fea40aa1800da94b7c8913dee9a34a6bcb1eda1d35386ffdf7282e4dbac"
+    },
+    {
+      "bytes": 104423,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 354,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair09/r03/attempt01/thermal_events.jsonl",
+      "sha256": "db0d5227d360018e7fb98bded9d3e87d9931c07997e12def374793982e7307d4"
+    },
+    {
+      "bytes": 119555,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 406,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair09/r04/attempt01/thermal_events.jsonl",
+      "sha256": "5b472b163607755fd0a11d7c7433d5a8134a0d03cd88881f822fb82dd95c3944"
+    },
+    {
+      "bytes": 120719,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 410,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair09/r05/attempt01/thermal_events.jsonl",
+      "sha256": "a3eec47885c79d22be8535bd0676ae07323647ae0ebffd14aeb473b27694acc8"
+    },
+    {
+      "bytes": 101804,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 345,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair09/r06/attempt01/thermal_events.jsonl",
+      "sha256": "da477e99cef77eb9998ec21cd0f1f8be1f75987b36d67e5cee00a0967bf6c0bb"
+    },
+    {
+      "bytes": 104132,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 353,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair09/r07/attempt01/thermal_events.jsonl",
+      "sha256": "b04335b8f49101a4b27689b57a3a325df65cc6263e36f5ae65aa7ced0288b456"
+    },
+    {
+      "bytes": 105296,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 357,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair09/r08/attempt01/thermal_events.jsonl",
+      "sha256": "d3cd49fb164f4b6b6bad7149d93b4a359615a068b92065cd132393955c52b33f"
+    },
+    {
+      "bytes": 94820,
+      "event_counts": {
+        "monitor_completed": 1,
+        "monitor_started": 1,
+        "temperature_sample": 321,
+        "worker_started": 1
+      },
+      "path": "/data/users/ali/vla_wam/raw/v3/robotwin/fastwam_robotwin/pair09/r09/attempt01/thermal_events.jsonl",
+      "sha256": "b323ce54fb7b0fe8b2f1b2b9f694c5a52c0ab785c684220fbb8f799d5ec109fb"
+    }
+  ]
+}

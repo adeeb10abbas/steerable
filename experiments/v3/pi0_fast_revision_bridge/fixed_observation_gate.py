@@ -16,6 +16,14 @@ PROMPTS = {
     "left": "Put the Rubik's cube to the left of the bowl.",
     "right": "Put the Rubik's cube to the right of the bowl.",
 }
+EXPECTED_SERVER_METADATA = {
+    "pi0_fast_revision_bridge": "v3a001",
+    "openpi_commit": "4cc827620360246dda0fa9d09a9e68269b186ecb",
+    "openpi_tree": "5c4129878e04359b55903e468922aedbf91843da",
+    "openpi_config": "pi0_fast_droid_jointpos_polaris",
+    "checkpoint_assets_rule": "checkpoint_local_assets_only",
+    "sampling_contract": "required_request_field:sampling_seed",
+}
 EXPECTED_FIXTURE_SHA256 = (
     "ce8be012347718a162bf0d92ba2fb71a01c570a3462d72ef2c16a86082131778"
 )
@@ -45,6 +53,18 @@ def main() -> None:
     client = websocket_client_policy.WebsocketClientPolicy(
         args.remote_host, args.remote_port
     )
+    server_metadata = client.get_server_metadata()
+    for key, expected in EXPECTED_SERVER_METADATA.items():
+        if server_metadata.get(key) != expected:
+            raise ValueError(
+                f"server metadata mismatch for {key}: "
+                f"{server_metadata.get(key)!r} != {expected!r}"
+            )
+    assets_override = server_metadata.get("checkpoint_assets_override")
+    if not isinstance(assets_override, str) or not assets_override.endswith(
+        "/pi0_fast_droid_jointpos/assets"
+    ):
+        raise ValueError("server did not attest the checkpoint-local π0-FAST assets")
     args.output_dir.mkdir(parents=True, exist_ok=False)
     arrays: dict[str, np.ndarray] = {}
     records: dict[str, dict] = {}
@@ -83,8 +103,18 @@ def main() -> None:
         records["left_a"]["tokenized_prompt_sha256"]
         != records["right"]["tokenized_prompt_sha256"]
     )
+    repeat_tokens_equal = (
+        records["left_a"]["tokenized_prompt_sha256"]
+        == records["left_b"]["tokenized_prompt_sha256"]
+    )
     prompt_rms = float(np.sqrt(np.mean((arrays["left_a"] - arrays["right"]) ** 2)))
-    passed = repeat_equal and prompt_tokens_differ and not action_equal and prompt_rms > 0.0
+    passed = (
+        repeat_equal
+        and repeat_tokens_equal
+        and prompt_tokens_differ
+        and not action_equal
+        and prompt_rms > 0.0
+    )
     manifest = {
         "schema_version": "vla-wam-shared-v3-pi0-fast-revision-bridge-gate-v1",
         "study_id": "vla_wam_language_steerability_v3",
@@ -92,9 +122,11 @@ def main() -> None:
         "status": "passed" if passed else "failed",
         "fixture_path": str(args.fixture),
         "fixture_sha256": sha256(args.fixture),
+        "server_metadata": server_metadata,
         "records": records,
         "metrics": {
             "left_exact_repeat_bit_identical": repeat_equal,
+            "left_exact_repeat_token_bytes_identical": repeat_tokens_equal,
             "left_right_token_bytes_differ": prompt_tokens_differ,
             "left_right_actions_bit_identical": action_equal,
             "left_right_action_rms": prompt_rms,

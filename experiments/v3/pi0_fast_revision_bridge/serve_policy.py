@@ -10,6 +10,7 @@ allowed only by the separate v3 amendment and only after its release gate.
 from __future__ import annotations
 
 import argparse
+import dataclasses
 import hashlib
 import json
 import logging
@@ -38,6 +39,19 @@ EXPECTED_PROMPTS = {
     "Put the Rubik's cube to the left of the bowl.",
     "Put the Rubik's cube to the right of the bowl.",
 }
+
+
+def verify_import_origin(root: Path) -> None:
+    expected = root.resolve()
+    imported = {
+        "openpi.policies.policy_config": Path(policy_config.__file__).resolve(),
+        "openpi.training.config": Path(training_config.__file__).resolve(),
+    }
+    for module, path in imported.items():
+        if not path.is_relative_to(expected):
+            raise ValueError(
+                f"{module} imported from {path}, outside pinned OpenPI tree {expected}"
+            )
 
 
 def sha256(path: Path) -> str:
@@ -106,10 +120,11 @@ def verify_checkpoint(checkpoint: Path, manifest_path: Path) -> None:
 class RevisionBridgePolicy:
     """Seed every request and attest the prompt at the tokenizer boundary."""
 
-    def __init__(self, policy: Any) -> None:
+    def __init__(self, policy: Any, checkpoint_assets_dir: Path) -> None:
         if not hasattr(policy, "_rng") or not hasattr(policy, "_input_transform"):
             raise TypeError("revision bridge requires the pinned JAX OpenPI policy")
         self._policy = policy
+        self._checkpoint_assets_dir = checkpoint_assets_dir.resolve()
 
     @property
     def metadata(self) -> dict[str, Any]:
@@ -119,6 +134,8 @@ class RevisionBridgePolicy:
             "openpi_commit": EXPECTED_OPENPI_COMMIT,
             "openpi_tree": EXPECTED_OPENPI_TREE,
             "openpi_config": EXPECTED_CONFIG,
+            "checkpoint_assets_override": str(self._checkpoint_assets_dir),
+            "checkpoint_assets_rule": "checkpoint_local_assets_only",
             "sampling_contract": "required_request_field:sampling_seed",
         }
 
@@ -163,14 +180,30 @@ def main() -> None:
     parser.add_argument("--port", type=int, default=8010)
     args = parser.parse_args()
 
+    verify_import_origin(args.openpi_root)
     verify_source(args.openpi_root)
     if args.config != EXPECTED_CONFIG:
         parser.error(f"revision bridge requires --config {EXPECTED_CONFIG}")
     verify_checkpoint(args.checkpoint, args.checkpoint_manifest)
-    policy = policy_config.create_trained_policy(
-        training_config.get_config(args.config), str(args.checkpoint)
+    config = training_config.get_config(args.config)
+    checkpoint_assets = (args.checkpoint / "assets").resolve()
+    if config.data.assets.asset_id != "droid":
+        raise ValueError("π0-FAST bridge requires the DROID normalization asset id")
+    # The 4cc config accidentally points its π0-FAST asset lookup at the π0.5
+    # bucket.  The checkpoint itself contains the exact DROID norm statistics,
+    # so V3-A001-C1 freezes this in-memory, checkpoint-local correction.
+    config = dataclasses.replace(
+        config,
+        data=dataclasses.replace(
+            config.data,
+            assets=dataclasses.replace(
+                config.data.assets,
+                assets_dir=str(checkpoint_assets),
+            ),
+        ),
     )
-    wrapped = RevisionBridgePolicy(policy)
+    policy = policy_config.create_trained_policy(config, str(args.checkpoint))
+    wrapped = RevisionBridgePolicy(policy, checkpoint_assets)
     server = websocket_policy_server.WebsocketPolicyServer(
         policy=wrapped,
         host="0.0.0.0",

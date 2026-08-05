@@ -1,0 +1,52 @@
+{
+  "schema_version": "vla-wam-shared-v3-post-result-pi0-fast-revision-bridge-correction-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "correction_id": "V3-A001-C1",
+  "corrects_amendment": "V3-A001",
+  "recorded_after_git_head": "94ccba82d8ed18d63e6ccdc0f4934ac7547592b6",
+  "status": "frozen_before_any_model_request_or_behavioral_cell",
+  "pre_correction_process_record": {
+    "event": "The initially frozen server process was started and then terminated during dependency review before it emitted server output or accepted any model request.",
+    "retained_log_path": "/data/users/ali/vla_wam/raw/v3/pi0_fast_revision_bridge_v3a001/logs/server.log",
+    "retained_log_bytes": 0,
+    "retained_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "model_requests": 0,
+    "behavioral_cells": 0,
+    "scientific_consequence": "No action, token, success, or trajectory outcome was observed before this correction. The initial process start is infrastructure-only and is excluded from model denominators."
+  },
+  "corrections": [
+    {
+      "issue": "The public 4cc π0-FAST config correctly names the frozen π0-FAST weight payload but mistakenly points its normalization-asset lookup at the π0.5 asset bucket.",
+      "resolution": "Replace only the in-memory assets_dir with the frozen checkpoint-local assets directory before policy construction. Keep the checked-in 4cc source tree byte-identical and load assets/droid/norm_stats.json from the already hashed checkpoint."
+    },
+    {
+      "issue": "A clean OpenPI worktree argument alone did not prove that Python imported OpenPI from that tree.",
+      "resolution": "Fail closed unless the resolved policy_config and training.config module files are descendants of the pinned 4cc worktree."
+    },
+    {
+      "issue": "The gate checked per-response bridge identity but did not persist the WebSocket server's commit, tree, config, asset rule, and sampling contract.",
+      "resolution": "Require and retain exact server metadata before issuing the three frozen model requests; also require repeated-LEFT token bytes to match exactly."
+    }
+  ],
+  "corrected_release_gate_implementation": {
+    "server_path": "experiments/v3/pi0_fast_revision_bridge/serve_policy.py",
+    "server_sha256": "f481cb7cf7b37eadd4dd4e2b17c60d0e19ff740b031e92d3f94b68d86b707192",
+    "gate_path": "experiments/v3/pi0_fast_revision_bridge/fixed_observation_gate.py",
+    "gate_sha256": "26598d70528fab999e2526b4da85b6e93f0103f28a13bfac73aa119d4681893c"
+  },
+  "unchanged_contract": {
+    "openpi_commit": "4cc827620360246dda0fa9d09a9e68269b186ecb",
+    "openpi_tree": "5c4129878e04359b55903e468922aedbf91843da",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "checkpoint_manifest_sha256": "47b38eb2f17be802c126ef0a7e93b16693823ee2df62b8007f51bb0514baf5c5",
+    "fixture_sha256": "ce8be012347718a162bf0d92ba2fb71a01c570a3462d72ef2c16a86082131778",
+    "sampling_seed": 8310000,
+    "prompts": {
+      "left": "Put the Rubik's cube to the left of the bowl.",
+      "right": "Put the Rubik's cube to the right of the bowl."
+    },
+    "behavioral_cell_count": 40,
+    "pooling_rule": "The bridge and historical cohorts remain separate."
+  },
+  "release_rule": "V3-A001 remains controlling except that these corrected implementation hashes and checks supersede its original release-gate implementation. No behavioral cell may run unless the corrected three-request gate passes."
+}

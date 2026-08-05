@@ -1,0 +1,63 @@
+{
+  "schema_version": "vla-wam-shared-v3-pi0-fast-revision-bridge-infrastructure-ledger-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "model_id": "pi0_fast_revision_bridge_v3a001",
+  "status": "release_gate_failed_zero_behavioral_cells",
+  "behavioral_episode_count": 0,
+  "denominator_effect": "none",
+  "correction_to_v3_a001_c1": "The first remote child process survived termination of its orchestration session, subsequently loaded and listened without accepting a connection. This supersedes only C1's provisional zero-byte process record; the zero-request scientific conclusion is unchanged.",
+  "attempts": [
+    {
+      "attempt": 1,
+      "classification": "infrastructure_invalid_stale_process",
+      "runtime": "pre-correction implementation in the pre-existing OpenPI environment",
+      "outcome": "Loaded the checkpoint, consulted the erroneous pi0.5 asset URI, and listened on port 8010. It recorded no connection and received no model request before exact-PID termination.",
+      "log": {
+        "path": "/data/users/ali/vla_wam/raw/v3/pi0_fast_revision_bridge_v3a001/logs/server.log",
+        "sha256": "0492b11a047461dcdc06d7117217e55412afa56e0d3722dfc57aef52366c2c4f",
+        "bytes": 2653
+      }
+    },
+    {
+      "attempt": 2,
+      "classification": "infrastructure_invalid_missing_locked_runtime_dependency",
+      "runtime": "dedicated OpenPI 4cc environment created with --no-dev",
+      "outcome": "Exited during import because 4cc imports pytest at runtime; no model load, bind, connection, or request.",
+      "log": {
+        "path": "/data/users/ali/vla_wam/raw/v3/pi0_fast_revision_bridge_v3a001/logs/server_attempt02.log",
+        "sha256": "da97f88a59f3733f6fc97a0f880cadb6978f80076d410fe7abeed4de08d0eb04",
+        "bytes": 968
+      }
+    },
+    {
+      "attempt": 3,
+      "classification": "infrastructure_invalid_port_collision",
+      "runtime": "dedicated complete frozen-lock OpenPI 4cc environment",
+      "outcome": "Loaded the exact checkpoint and checkpoint-local DROID statistics, then failed to bind because stale attempt 1 still held port 8010; no connection or request.",
+      "log": {
+        "path": "/data/users/ali/vla_wam/raw/v3/pi0_fast_revision_bridge_v3a001/logs/server_attempt03.log",
+        "sha256": "10ac2f581be3cfa7a75477687d0f4a7d521e7cc1155eed07b27ead06cc2e1237",
+        "bytes": 4216
+      }
+    },
+    {
+      "attempt": 4,
+      "classification": "valid_nonbehavioral_release_probe",
+      "runtime": "dedicated complete frozen-lock OpenPI 4cc environment and corrected V3-A001-C1 server",
+      "outcome": "Loaded, bound, accepted the single gate connection containing exactly LEFT, repeated LEFT, and RIGHT requests, then was stopped after the gate failed.",
+      "log": {
+        "path": "/data/users/ali/vla_wam/raw/v3/pi0_fast_revision_bridge_v3a001/logs/server_attempt04.log",
+        "sha256": "da922957a8ddb09224dce84d48965800a5823b4de6739b5c520cf32b2db74749",
+        "bytes": 2500
+      },
+      "gate": {
+        "path": "/data/users/ali/vla_wam/raw/v3/pi0_fast_revision_bridge_v3a001/release_gate_attempt01/release_gate.json",
+        "sha256": "cdd9cc43fceb980d7d46706fe42ef56b0edbec2b2b5cca4abb9108299706888c",
+        "bytes": 3129,
+        "status": "failed"
+      }
+    }
+  ],
+  "final_process_state": "The exact corrected server PID was terminated after the failed gate; no π0-FAST bridge server remains listening on port 8010.",
+  "behavioral_release": false
+}

@@ -1,0 +1,64 @@
+{
+  "schema_version": "vla-wam-shared-v3-pi0-fast-revision-bridge-gate-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "model_id": "pi0_fast_revision_bridge_v3a001",
+  "status": "failed",
+  "behavioral_release": false,
+  "claim_boundary": "Three no-environment model requests; not a behavioral episode or evidence of task competence.",
+  "fixture": {
+    "raw_path": "/data/users/ali/vla_wam/raw/pi0_fast_current_v2a008/preflight/seed8300_fixed_observation.npz",
+    "sha256": "ce8be012347718a162bf0d92ba2fb71a01c570a3462d72ef2c16a86082131778"
+  },
+  "raw_gate": {
+    "path": "/data/users/ali/vla_wam/raw/v3/pi0_fast_revision_bridge_v3a001/release_gate_attempt01/release_gate.json",
+    "sha256": "cdd9cc43fceb980d7d46706fe42ef56b0edbec2b2b5cca4abb9108299706888c",
+    "bytes": 3129
+  },
+  "server_metadata": {
+    "pi0_fast_revision_bridge": "v3a001",
+    "openpi_commit": "4cc827620360246dda0fa9d09a9e68269b186ecb",
+    "openpi_tree": "5c4129878e04359b55903e468922aedbf91843da",
+    "openpi_config": "pi0_fast_droid_jointpos_polaris",
+    "checkpoint_assets_rule": "checkpoint_local_assets_only",
+    "checkpoint_assets_override": "/data/users/ali/vla_wam/checkpoints/pi0_fast_droid_jointpos/pi0_fast_droid_jointpos/assets",
+    "sampling_contract": "required_request_field:sampling_seed"
+  },
+  "metrics": {
+    "left_exact_repeat_bit_identical": true,
+    "left_exact_repeat_token_bytes_identical": true,
+    "left_right_token_bytes_differ": true,
+    "left_right_actions_bit_identical": true,
+    "left_right_action_rms": 0.0
+  },
+  "records": {
+    "left_a": {
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "tokenized_prompt_sha256": "170379b05c505aeb9879714e5442ebbe3c7b1bcde8019e2636e35119f2d65fe7",
+      "sampling_seed": 8310000,
+      "action_sha256": "0fc1ba4720641f7581605660c93c019f87610d8a8b7d56719d6de1160f39e187",
+      "shape": [10, 8],
+      "dtype": "float32"
+    },
+    "left_b": {
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "tokenized_prompt_sha256": "170379b05c505aeb9879714e5442ebbe3c7b1bcde8019e2636e35119f2d65fe7",
+      "sampling_seed": 8310000,
+      "action_sha256": "0fc1ba4720641f7581605660c93c019f87610d8a8b7d56719d6de1160f39e187",
+      "shape": [10, 8],
+      "dtype": "float32"
+    },
+    "right": {
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+      "tokenized_prompt_sha256": "abda2f9b0f1bc2e5037adecc610fe4d23a636063fcf051db95b28baefbc71c84",
+      "sampling_seed": 8310000,
+      "action_sha256": "0fc1ba4720641f7581605660c93c019f87610d8a8b7d56719d6de1160f39e187",
+      "shape": [10, 8],
+      "dtype": "float32"
+    }
+  },
+  "failure_reason": "The exact LEFT and RIGHT prompts reached different token bytes, but the checkpoint returned bit-identical actions with RMS 0.0. V3-A001 therefore releases zero behavioral cells.",
+  "denominator_effect": "none"
+}

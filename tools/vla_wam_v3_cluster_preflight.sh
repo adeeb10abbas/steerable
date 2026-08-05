@@ -162,7 +162,9 @@ kexec bash -lc '
 say 'GPU availability and current owners'
 kexec bash -lc '
   set -euo pipefail
-  test -c /dev/nvidia0
+  # Kubernetes may expose physical /dev/nvidiaN while CUDA renumbers the
+  # allocated device to logical GPU 0.  Do not assume that physical N is zero.
+  test -c /dev/nvidiactl
   nvidia-smi -L
   nvidia-smi --query-gpu=index,name,driver_version,memory.total,memory.free,temperature.gpu --format=csv,noheader
   nvidia-smi --query-compute-apps=gpu_uuid,pid,process_name,used_memory --format=csv,noheader || true

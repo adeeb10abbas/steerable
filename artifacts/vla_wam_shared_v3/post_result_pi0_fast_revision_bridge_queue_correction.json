@@ -1,0 +1,27 @@
+{
+  "schema_version": "vla-wam-shared-v3-post-result-pi0-fast-revision-bridge-queue-correction-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "correction_id": "V3-A001-C2",
+  "corrects_amendment": "V3-A001",
+  "recorded_after_git_head": "47ff6edd564b34741b2db867d11c149b60c37ad4",
+  "status": "frozen_before_any_model_request_or_behavioral_cell",
+  "issue": "V3-A001 named a descriptive blocked status that is not the literal status value in the already committed Phase-A queue.",
+  "corrected_source_filter": {
+    "model_id": "pi0_fast_droid_vla",
+    "status": "blocked_pi0",
+    "execution_status": "blocked_pending_exact_historical_openpi_and_robolab_recovery",
+    "phase": "A_direct_command_matched_pairs",
+    "prompt_family": "direct_command",
+    "environment_seeds_inclusive": [8310, 8329]
+  },
+  "queue_binding": {
+    "path": "artifacts/vla_wam_shared_v3/phase_a_cells.jsonl",
+    "sha256": "8350b98f958424b56b66e67e8c70ec3951d27f4ae257476d6f08c0aaa873cb7c",
+    "matched_rows": 40,
+    "matched_pairs": 20,
+    "first_cell_id": "v3:droid:pi0_fast_droid_vla:seed8310:left",
+    "last_cell_id": "v3:droid:pi0_fast_droid_vla:seed8329:right"
+  },
+  "unchanged_contract": "Prompts, seeds, reset identity, success predicate, action cap, release gates, bridge runtime identity, evidence requirements, and no-pooling rule are unchanged.",
+  "release_rule": "The corrected literal filter supersedes only V3-A001 cell_contract.source_filter.status. It authorizes exactly the same 40 prospectively selected cells and no others."
+}

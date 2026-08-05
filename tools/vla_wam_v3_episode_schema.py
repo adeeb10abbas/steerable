@@ -10,6 +10,7 @@ infrastructure record type and can never receive a behavioral taxonomy.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import math
 import re
@@ -37,6 +38,7 @@ MEASUREMENT_FRAME_DESCRIPTION = (
     "forward is object-minus-reference x and lateral is object-minus-reference y, "
     "with positive lateral denoting robot LEFT."
 )
+_DROID_OBJECT_MOTION_THRESHOLD_M = 0.01
 
 
 class EpisodeSchemaError(ValueError):
@@ -169,10 +171,15 @@ def _validate_artifact_record(value: Any, name: str) -> None:
     digest = _require_string(record.get("sha256"), f"{name}.sha256")
     if not _SHA256_RE.fullmatch(digest):
         _fail(f"{name}.sha256 must be a lowercase SHA-256 hex digest")
-    _require_int(record.get("bytes"), f"{name}.bytes", minimum=0)
+    # A zero-byte file is not viewport/action evidence.  Infrastructure rows
+    # omit artifacts that did not exist; any artifact they do claim must be a
+    # real, non-empty retained file.
+    _require_int(record.get("bytes"), f"{name}.bytes", minimum=1)
 
 
-def _validate_provenance(record: dict[str, Any]) -> None:
+def _validate_provenance(
+    record: dict[str, Any], *, require_behavioral_artifacts: bool = True
+) -> None:
     """Require the scientific identity needed to reproduce one attempted cell."""
 
     contract = _frozen_contract()
@@ -198,15 +205,25 @@ def _validate_provenance(record: dict[str, Any]) -> None:
     if not _SHA256_RE.fullmatch(runtime_digest):
         _fail("runtime_identity.sha256 must be a lowercase SHA-256 hex digest")
     artifacts = _require_mapping(record.get("artifacts"), "artifacts")
-    for key in _frozen_contract()["required_raw_outputs"]:
+    required_outputs = _frozen_contract()["required_raw_outputs"]
+    raw_jsonl = _require_mapping(
+        artifacts.get("raw_result_jsonl"), "artifacts.raw_result_jsonl"
+    )
+    _require_string(raw_jsonl.get("path"), "artifacts.raw_result_jsonl.path")
+    if raw_jsonl.get("integrity_scope") != "batch_manifest_after_close":
+        _fail("artifacts.raw_result_jsonl requires batch_manifest_after_close integrity_scope")
+    if "sha256" in raw_jsonl or "bytes" in raw_jsonl:
+        _fail("artifacts.raw_result_jsonl must not make an inline self-hash or byte claim")
+
+    # A setup failure can occur before a viewport or action trace exists.  It
+    # still needs the common scientific identity and post-close JSONL
+    # integrity record, but inventing zero-byte behavioral artifacts would be
+    # false provenance.  Behavioral rows retain the complete-output gate;
+    # infrastructure rows validate only artifacts that were actually emitted.
+    for key in required_outputs:
         if key == "raw_result_jsonl":
-            raw_jsonl = _require_mapping(artifacts.get(key), f"artifacts.{key}")
-            _require_string(raw_jsonl.get("path"), f"artifacts.{key}.path")
-            if raw_jsonl.get("integrity_scope") != "batch_manifest_after_close":
-                _fail("artifacts.raw_result_jsonl requires batch_manifest_after_close integrity_scope")
-            if "sha256" in raw_jsonl or "bytes" in raw_jsonl:
-                _fail("artifacts.raw_result_jsonl must not make an inline self-hash or byte claim")
-        else:
+            continue
+        if require_behavioral_artifacts or key in artifacts:
             _validate_artifact_record(artifacts.get(key), f"artifacts.{key}")
 
 
@@ -248,6 +265,81 @@ def _path_length(points: list[tuple[float, float, float]]) -> float:
     return sum(
         math.dist(previous, current) for previous, current in zip(points, points[1:])
     )
+
+
+def derive_initial_state_sha256(record: dict[str, Any]) -> str:
+    """Hash the shared physical reset fields without prompt/direction labels.
+
+    The hash deliberately covers only measurements available in every arena:
+    the robot-base object/reference poses and the initial detached/open state.
+    Model-specific compilers may retain a richer native simulator fingerprint,
+    but this common digest is sufficient to fail closed on a LEFT/RIGHT scene
+    mismatch instead of trusting a caller-supplied hash.
+    """
+
+    record = _require_mapping(record, "record")
+    steps = record.get("steps")
+    if not isinstance(steps, list) or not steps:
+        _fail("steps must be a non-empty array before deriving initial-state identity")
+    first = _require_mapping(steps[0], "steps[0]")
+    payload = {
+        "measurement_frame": record.get("measurement_frame"),
+        "object_xyz": list(_require_xyz(first.get("object_xyz"), "steps[0].object_xyz")),
+        "reference_xyz": list(
+            _require_xyz(first.get("reference_xyz"), "steps[0].reference_xyz")
+        ),
+        "grippers_open": _require_bool(
+            first.get("grippers_open"), "steps[0].grippers_open"
+        ),
+    }
+    return hashlib.sha256(
+        json.dumps(payload, allow_nan=False, sort_keys=True, separators=(",", ":")).encode()
+    ).hexdigest()
+
+
+def derive_frozen_failure_stage(
+    record: dict[str, Any], measurements: dict[str, Any] | None = None
+) -> str:
+    """Reproduce the arena-specific v2 stage alongside the v3 taxonomy."""
+
+    record = _require_mapping(record, "record")
+    measurements = measurements or derive_measurements(record)
+    if record["requested_success"]:
+        return "success"
+    steps = record["steps"]
+    if record["arena"] == "droid_robolab":
+        initial = _require_xyz(steps[0].get("object_xyz"), "steps[0].object_xyz")
+        moved = [
+            math.dist(initial, _require_xyz(step.get("object_xyz"), f"steps[{index}].object_xyz"))
+            >= _DROID_OBJECT_MOTION_THRESHOLD_M
+            for index, step in enumerate(steps)
+        ]
+        if _first_sustained(moved) is None:
+            return "no_object_interaction"
+        if not measurements["verified_pickup"]:
+            return "object_moved_no_verified_pickup"
+        if measurements["first_requested_entry_step"] is None:
+            return "picked_never_entered_requested_region"
+        return "entered_requested_region_not_released"
+
+    requested_entry = measurements["first_requested_entry_step"] is not None
+    initial_z = _require_xyz(steps[0].get("object_xyz"), "steps[0].object_xyz")[2]
+    pickup_with_closed_gripper = _first_sustained(
+        [
+            _require_xyz(step.get("object_xyz"), f"steps[{index}].object_xyz")[2]
+            - initial_z
+            >= _pickup_lift_m()
+            and not _require_bool(step.get("grippers_open"), f"steps[{index}].grippers_open")
+            for index, step in enumerate(steps)
+        ]
+    ) is not None
+    if requested_entry:
+        return "entered_requested_region_without_verified_completion"
+    if pickup_with_closed_gripper:
+        return "picked_never_entered_requested_region"
+    if any(not bool(step["grippers_open"]) for step in steps):
+        return "closed_gripper_no_verified_pickup"
+    return "no_verified_interaction"
 
 
 def _direction_sign(relation: str) -> float:
@@ -530,6 +622,18 @@ def validate_behavioral_record(record: dict[str, Any]) -> dict[str, Any]:
     expected = derive_failure_taxonomy(record, measurements)
     if record["failure_taxonomy"] != expected:
         _fail(f"failure_taxonomy {record['failure_taxonomy']!r} disagrees with frozen precedence {expected!r}")
+    expected_stage = derive_frozen_failure_stage(record, measurements)
+    if record["frozen_failure_stage"] != expected_stage:
+        _fail(
+            f"frozen_failure_stage {record['frozen_failure_stage']!r} disagrees "
+            f"with the v2 arena classifier {expected_stage!r}"
+        )
+    initial_state_sha256 = _require_string(
+        record.get("initial_state_sha256"), "initial_state_sha256"
+    )
+    expected_initial_state_sha256 = derive_initial_state_sha256(record)
+    if initial_state_sha256 != expected_initial_state_sha256:
+        _fail("initial_state_sha256 does not match the retained initial physical state")
     normalized = dict(record)
     normalized["measurements"] = measurements
     return normalized
@@ -549,7 +653,7 @@ def validate_infrastructure_record(record: dict[str, Any]) -> dict[str, Any]:
         _fail(f"classification must be one of {sorted(INFRASTRUCTURE_CLASSIFICATIONS)}")
     if record.get("arena") not in ARENAS:
         _fail(f"arena must be one of {sorted(ARENAS)}")
-    _validate_provenance(record)
+    _validate_provenance(record, require_behavioral_artifacts=False)
     _require_string(record.get("stage"), "stage")
     _require_string(record.get("error"), "error")
     log_hash = _require_string(record.get("log_hash"), "log_hash")
@@ -625,14 +729,17 @@ def write_jsonl(path: Path, records: Iterable[dict[str, Any]]) -> dict[str, Any]
     """
 
     path = Path(path)
-    count = 0
+    manifest_path = path.with_name(path.name + ".manifest.json")
+    if path.exists() or manifest_path.exists():
+        _fail(f"refusing to overwrite retained JSONL evidence: {path}")
+    normalized_records = [validate_raw_episode_record(record) for record in records]
+    if not normalized_records:
+        _fail("a JSONL batch must contain at least one record")
     study_ids: set[str] = set()
     schemas: set[str] = set()
-    with path.open("w", encoding="utf-8", newline="\n") as handle:
-        for record in records:
-            normalized = validate_raw_episode_record(record)
+    with path.open("x", encoding="utf-8", newline="\n") as handle:
+        for normalized in normalized_records:
             handle.write(json.dumps(normalized, allow_nan=False, sort_keys=True, separators=(",", ":")) + "\n")
-            count += 1
             study_ids.add(normalized["study_id"])
             schemas.add(normalized["schema_version"])
     if len(study_ids) != 1:
@@ -643,9 +750,8 @@ def write_jsonl(path: Path, records: Iterable[dict[str, Any]]) -> dict[str, Any]
         "jsonl_path": str(path),
         "jsonl_sha256": _sha256_file(path),
         "jsonl_bytes": path.stat().st_size,
-        "row_count": count,
+        "row_count": len(normalized_records),
         "record_schema_versions": sorted(schemas),
     }
-    manifest_path = path.with_name(path.name + ".manifest.json")
     manifest_path.write_text(json.dumps(manifest, allow_nan=False, sort_keys=True, separators=(",", ":")) + "\n")
     return manifest

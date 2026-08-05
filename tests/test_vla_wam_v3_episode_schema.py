@@ -13,6 +13,8 @@ from vla_wam_v3_episode_schema import (  # noqa: E402
     BEHAVIORAL_SCHEMA_VERSION,
     INFRASTRUCTURE_SCHEMA_VERSION,
     EpisodeSchemaError,
+    derive_frozen_failure_stage,
+    derive_initial_state_sha256,
     encode_jsonl_record,
     validate_behavioral_record,
     validate_infrastructure_record,
@@ -44,7 +46,7 @@ def behavioral_record(*, arena: str = "droid_robolab", relation: str = "left", s
                 "grippers_open": True,
             }
         steps.append(step)
-    return {
+    record = {
         "schema_version": BEHAVIORAL_SCHEMA_VERSION,
         "record_type": "behavioral_episode",
         "behavioral_result_valid": True,
@@ -52,8 +54,8 @@ def behavioral_record(*, arena: str = "droid_robolab", relation: str = "left", s
         "requested_relation": relation,
         "requested_success": success,
         "final_detached_release": success,
-        "failure_stage": "legacy_stage_retained",
-        "frozen_failure_stage": "legacy_stage_retained",
+        "failure_stage": "object_moved_no_verified_pickup",
+        "frozen_failure_stage": "object_moved_no_verified_pickup",
         "failure_taxonomy": "pick_failed",
         "study_id": "vla_wam_language_steerability_v3",
         "registered_cell_id": "v3-droid-pair-8300-left",
@@ -97,6 +99,8 @@ def behavioral_record(*, arena: str = "droid_robolab", relation: str = "left", s
         ],
         "steps": steps,
     }
+    record["initial_state_sha256"] = derive_initial_state_sha256(record)
+    return record
 
 
 def set_droid_region(record: dict, indices: range, *, requested: bool) -> None:
@@ -152,6 +156,10 @@ def add_derived_events(record: dict) -> None:
     events.sort(key=lambda event: event["action_step"])
     events.append({"event": "episode_end", "action_step": record["actions_executed"]})
     record["event_timeline"] = events
+    stage = derive_frozen_failure_stage(record)
+    record["failure_stage"] = stage
+    record["frozen_failure_stage"] = stage
+    record["initial_state_sha256"] = derive_initial_state_sha256(record)
 
 
 class V3EpisodeSchemaTest(unittest.TestCase):
@@ -231,6 +239,19 @@ class V3EpisodeSchemaTest(unittest.TestCase):
         validated = validate_behavioral_record(not_observed)
         self.assertEqual(validated["measurements"]["first_contact_status"], "not_observed")
 
+    def test_initial_state_and_legacy_stage_are_derived_not_trusted(self) -> None:
+        record = behavioral_record()
+        tampered_state = copy.deepcopy(record)
+        tampered_state["initial_state_sha256"] = "0" * 64
+        with self.assertRaisesRegex(EpisodeSchemaError, "retained initial physical state"):
+            validate_behavioral_record(tampered_state)
+
+        tampered_stage = copy.deepcopy(record)
+        tampered_stage["failure_stage"] = "success"
+        tampered_stage["frozen_failure_stage"] = "success"
+        with self.assertRaisesRegex(EpisodeSchemaError, "v2 arena classifier"):
+            validate_behavioral_record(tampered_stage)
+
     def test_infrastructure_attempts_are_excluded_from_behavioral_taxonomy(self) -> None:
         infra = {
             "schema_version": INFRASTRUCTURE_SCHEMA_VERSION,
@@ -262,10 +283,6 @@ class V3EpisodeSchemaTest(unittest.TestCase):
                     "path": "raw/episode_results.jsonl",
                     "integrity_scope": "batch_manifest_after_close",
                 },
-                **{
-                    key: {"path": f"raw/{key}.bin", "sha256": "b" * 64, "bytes": 1}
-                    for key in ("executed_action_trace", "viewport_video")
-                },
             },
             "stage": "policy_server",
             "error": "worker exited before behavioral completion",
@@ -275,6 +292,22 @@ class V3EpisodeSchemaTest(unittest.TestCase):
             "event_timeline": [{"sequence": 0, "stage": "launch"}, {"sequence": 1, "stage": "partial"}],
         }
         self.assertEqual(validate_infrastructure_record(infra)["attempt_id"], infra["attempt_id"])
+        malformed_optional_artifact = copy.deepcopy(infra)
+        malformed_optional_artifact["artifacts"]["viewport_video"] = {
+            "path": "raw/partial.mp4",
+            "sha256": "not-a-sha256",
+            "bytes": 1,
+        }
+        with self.assertRaisesRegex(EpisodeSchemaError, "lowercase SHA-256"):
+            validate_infrastructure_record(malformed_optional_artifact)
+        empty_optional_artifact = copy.deepcopy(infra)
+        empty_optional_artifact["artifacts"]["viewport_video"] = {
+            "path": "raw/partial.mp4",
+            "sha256": "d" * 64,
+            "bytes": 0,
+        }
+        with self.assertRaisesRegex(EpisodeSchemaError, ">= 1"):
+            validate_infrastructure_record(empty_optional_artifact)
         infra["failure_taxonomy"] = "pick_failed"
         with self.assertRaisesRegex(EpisodeSchemaError, "must not carry"):
             validate_infrastructure_record(infra)
@@ -327,6 +360,8 @@ class V3EpisodeSchemaTest(unittest.TestCase):
             self.assertEqual(manifest["row_count"], 1)
             self.assertEqual(manifest["jsonl_bytes"], len(encoded.encode()))
             self.assertEqual(len(manifest["jsonl_sha256"]), 64)
+            with self.assertRaisesRegex(EpisodeSchemaError, "refusing to overwrite"):
+                write_jsonl(path, [record])
 
     def test_pick_failure_precedes_wrong_side_and_rejects_spoofed_offsets(self) -> None:
         record = behavioral_record()

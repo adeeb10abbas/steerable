@@ -1,0 +1,109 @@
+{
+  "schema_version": "vla-wam-shared-v3-post-result-pi0-fast-old-name-config-amendment-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-A002",
+  "recorded_after_git_head": "a8c283eafe1edd984be6dc328e93cf8b7d95241a",
+  "status": "frozen_before_v3a002_model_load_or_request",
+  "decision_origin": "The user requested fixing the 40-cell pi0-FAST blocker. V3-A001 failed its release gate after distinct LEFT/RIGHT token bytes produced bit-identical actions.",
+  "known_before_freeze": {
+    "historical_result": "LEFT 1/10 and RIGHT 10/10 under unavailable historical OpenPI and RoboLab commits.",
+    "v2_a008_result": "The newer current-stack wording probe returned LEFT/RIGHT action RMS 0.0.",
+    "v3_a001_result": "The public 4cc config produced distinct exact-direct-command token hashes but bit-identical actions with RMS 0.0.",
+    "disclosure": "This is a post-result config-isolation diagnostic, not preregistration, exact historical recovery, replication, or a hidden extension."
+  },
+  "candidate_selection": {
+    "evidence": "The committed historical readiness record explicitly names policy_config pi0_fast_droid_jointpos. Public OpenPI commit 235044e is the latest reachable revision that registers that exact old name and its 10x8 SimpleDataConfig semantics.",
+    "artifact": "artifacts/vla_wam_shared_v2/model_readiness.json",
+    "artifact_sha256": "9013439f67a765b21358b17bdc4b6848a397c7f6c57bec4977cbb19f7013fae2",
+    "selection_limit": "V3-A002 is the final public-revision diagnostic. If it fails, no further revision or seed probing is authorized by this amendment."
+  },
+  "bridge_identity": {
+    "model_id": "pi0_fast_old_name_config_v3a002",
+    "openpi": {
+      "commit": "235044ed8a1502c0a18338eedc5d7adfe705af05",
+      "tree": "03a4387bedbc0fa1467c367c60fc24e28b61ec6c",
+      "parent": "a4808042a2cd75964167c4a747d2aabdf5fb9133",
+      "config": "pi0_fast_droid_jointpos",
+      "config_source_path": "src/openpi/training/misc/polaris_config.py",
+      "config_source_sha256": "96ddf85ff5903e68acca310d7af9d9d093373f7dc060fe94dbb379c6828481ad",
+      "action_shape": [10, 8],
+      "max_token_len": 250,
+      "data_config": "SimpleDataConfig",
+      "input_transform": "DroidInputs(ModelType.PI0_FAST)",
+      "output_transforms": "AbsoluteActions(first_7_mask)+DroidOutputs",
+      "uv_lock_sha256": "5e3a9a0a12d9a6048afea5591f4520c98585499cbd4a8343dcabfe2aaed94e3d"
+    },
+    "source_relationship_to_v3_a001": {
+      "identical_core_inference_sources": true,
+      "material_probe_difference": "The old-name config uses the default 250-token FAST context; V3-A001 used 180. The data-config class also differs, but both use the same DROID input and absolute-action output transforms for this observation.",
+      "checkpoint_timing_warning": "The checkpoint metadata dates to April 2025 and public commit 235044e dates to December 2025. The public config is therefore a compatibility candidate, not the checkpoint's proven training revision."
+    },
+    "checkpoint": {
+      "source": "gs://openpi-assets-simeval/pi0_fast_droid_jointpos",
+      "manifest_path": "artifacts/vla_wam_shared_v2/pilot/expansion/pi0_fast_wording_readiness.json",
+      "manifest_sha256": "47b38eb2f17be802c126ef0a7e93b16693823ee2df62b8007f51bb0514baf5c5",
+      "file_count": 19,
+      "payload_bytes": 10844314410,
+      "asset_rule": "Use and hash checkpoint-local assets/droid/norm_stats.json only."
+    },
+    "robolab": {
+      "commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+      "left_task_source_sha256": "9c4d90be770266bac3ba5242b743098348c565ee622179b5e88fa2af0c4891bc",
+      "right_task_source_sha256": "ba0eb879590960c57976dd1b749c4ebbd3e86054e152ca5af014ac1bc2b6d02a"
+    }
+  },
+  "implementation": {
+    "server_path": "experiments/v3/pi0_fast_old_name_config_bridge/serve_policy.py",
+    "server_sha256": "45d688adfb689350d19051782c541f98b34554095f6ea0019d83d02b8e669068",
+    "gate_path": "experiments/v3/pi0_fast_old_name_config_bridge/fixed_observation_gate.py",
+    "gate_sha256": "dc0ca2afab6ae93b11c649fdd4a7e1226e21be507c1cba5f2ab85d0a4ab7e14d"
+  },
+  "three_request_gate": {
+    "fixture_sha256": "ce8be012347718a162bf0d92ba2fb71a01c570a3462d72ef2c16a86082131778",
+    "sampling_seed": 8310000,
+    "order": ["left", "left_exact_repeat", "right"],
+    "prompts": {
+      "left": "Put the Rubik's cube to the left of the bowl.",
+      "right": "Put the Rubik's cube to the right of the bowl."
+    },
+    "required_pass": [
+      "finite action shape [10,8]",
+      "exact bridge commit, tree, config, token length, asset rule, prompt hashes, and sampling seed attested",
+      "LEFT and repeated LEFT token bytes and actions bit-identical",
+      "LEFT and RIGHT tokenized prompt hashes differ",
+      "LEFT and RIGHT action hashes differ",
+      "LEFT versus RIGHT action RMS greater than zero"
+    ]
+  },
+  "behavioral_release_if_gate_passes": {
+    "source_queue": "artifacts/vla_wam_shared_v3/phase_a_cells.jsonl",
+    "source_queue_sha256": "8350b98f958424b56b66e67e8c70ec3951d27f4ae257476d6f08c0aaa873cb7c",
+    "source_filter": {
+      "model_id": "pi0_fast_droid_vla",
+      "status": "blocked_pi0",
+      "execution_status": "blocked_pending_exact_historical_openpi_and_robolab_recovery",
+      "phase": "A_direct_command_matched_pairs",
+      "prompt_family": "direct_command",
+      "environment_seeds_inclusive": [8310, 8329]
+    },
+    "new_model_id": "pi0_fast_old_name_config_v3a002",
+    "matched_pairs": 20,
+    "behavioral_cells": 40,
+    "action_cap": 450,
+    "open_loop_horizon": 10,
+    "success_predicate": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+    "rule": "Release all 40 cells exactly once only after every model-blind check and this exact three-request gate pass."
+  },
+  "failure_rule": "If the gate fails, run zero V3-A002 behavioral cells, preserve the diagnostic, stop public-revision probing, and leave the exact historical revisions as the only route to extend the historical cohort.",
+  "reporting_boundary": {
+    "historical": "Report preserved LEFT and RIGHT out of 10 under the historical identity.",
+    "v3_a001": "Report only its failed nonbehavioral gate.",
+    "v3_a002": "If released, report LEFT and RIGHT out of 20 under this identity.",
+    "prohibited": [
+      "pooled pi0-FAST x/30 rates",
+      "pooled confidence intervals or tests across runtime identities",
+      "calling V3-A002 checkpoint-era code or recovered historical code",
+      "pooling DROID and RoboTwin"
+    ]
+  }
+}

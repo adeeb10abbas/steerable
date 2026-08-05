@@ -1,5 +1,10 @@
 # VLA/WAM study continuation handoff
 
+> **Historical V2 handoff.** The current expansion state is
+> [`VLA_WAM_V3_CONTINUATION.md`](VLA_WAM_V3_CONTINUATION.md) with machine-readable
+> [`continuation_state.json`](../artifacts/vla_wam_shared_v3/continuation_state.json).
+> Read those first; do not infer current runnable cells from this V2 record.
+
 Updated: 4 August 2026, after all original bounded gates and both Cosmos3 base
 interface probes completed, and after both six-cell V2-A015 behavioral arms
 completed.

@@ -1,0 +1,258 @@
+{
+  "schema_version": "vla-wam-shared-v3-continuation-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "updated_at_utc": "2026-08-05T17:05:21Z",
+  "active_branch": "codex/wam-language-steerability",
+  "evidence_head": "a04d74b4cbe687512b01573309053f4a38feaa76",
+  "status": "phase_a_all_648_launch_authorized_new_cells_complete_pi0_fast_40_cells_blocked_later_phases_unreleased",
+  "authoritative_files": [
+    "docs/VLA_WAM_V3_CONTINUATION.md",
+    "docs/VLA_WAM_STEERABILITY_V3_PROTOCOL.md",
+    "artifacts/vla_wam_shared_v3/protocol.json",
+    "artifacts/vla_wam_shared_v3/post_result_power_failure_ablation_amendment.json",
+    "artifacts/vla_wam_shared_v3/phase_a_cells.jsonl",
+    "artifacts/vla_wam_shared_v3/phase_a_cells_manifest.json"
+  ],
+  "validation": {
+    "v3": {
+      "command": ".venv/bin/python tools/validate_vla_wam_v3_protocol.py",
+      "status": "valid",
+      "check_count": 91
+    },
+    "v2": {
+      "command": ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
+      "status": "valid",
+      "check_count": 994
+    },
+    "focused_tests": {
+      "command": ".venv/bin/python -m unittest -v tests.test_v3_robotwin_wams_launcher tests.test_vla_wam_v3_episode_schema",
+      "status": "passed",
+      "test_count": 18
+    }
+  },
+  "nonnegotiable_boundaries": {
+    "arena_separation": "DROID/RoboLab and RoboTwin raw successes, failures, denominators, and intervals are never pooled.",
+    "historical_separation": "Preserved V2 cells remain separate coverage layers and are never merged into a V3 behavioral denominator.",
+    "pairing": "LEFT and RIGHT share an identical registered reset and seed; only the static prompt and requested-relation predicate change.",
+    "valid_failures": "Every valid behavioral failure remains in its model denominator; infrastructure and operational records remain outside it.",
+    "future_evidence": "Decoded, latent-only, and action-only interfaces remain distinct; missing or latent-only futures are never converted into zeros."
+  },
+  "phase_a_accounting": {
+    "frozen_queue_rows": 780,
+    "launch_authorized_new_cells": 648,
+    "completed_valid_new_cells": 648,
+    "droid_completed_new_cells": 270,
+    "robotwin_completed_new_cells": 378,
+    "blocked_pi0_fast_cells": 40,
+    "droid_preserved_candidate_cells": 50,
+    "robotwin_preserved_r0_cells": 42,
+    "completion_statement": "Every row marked authorized_new in the frozen Phase-A queue is complete valid evidence. Blocked and preserved rows were not relaunched."
+  },
+  "exact_prompts": {
+    "droid_robolab": {
+      "left": "Put the Rubik's cube to the left of the bowl.",
+      "right": "Put the Rubik's cube to the right of the bowl."
+    },
+    "robotwin": {
+      "source": "artifacts/vla_wam_shared_v3/phase_a_cells.jsonl",
+      "pair03": {
+        "left": "Put the small woodenblock to the left of the red playingcards box.",
+        "right": "Put the small woodenblock to the right of the red playingcards box."
+      },
+      "pair04": {
+        "left": "Put the plastic mouse to the left of the blue stapler.",
+        "right": "Put the plastic mouse to the right of the blue stapler."
+      },
+      "pair05": {
+        "left": "Put the box of playingcards to the left of the rubikscube.",
+        "right": "Put the box of playingcards to the right of the rubikscube."
+      },
+      "pair06": {
+        "left": "Put the coffee box to the left of the red playingcards box.",
+        "right": "Put the coffee box to the right of the red playingcards box."
+      },
+      "pair07": {
+        "left": "Put the golden bread to the left of the blue stapler.",
+        "right": "Put the golden bread to the right of the blue stapler."
+      },
+      "pair08": {
+        "left": "Put the box with cards inside to the left of the black phone.",
+        "right": "Put the box with cards inside to the right of the black phone."
+      },
+      "pair09": {
+        "left": "Put the rubikscube to the left of the brown woodenblock.",
+        "right": "Put the rubikscube to the right of the brown woodenblock."
+      }
+    }
+  },
+  "phase_a_results": {
+    "droid_robolab": {
+      "denominator_policy": "Each completed checkpoint has 27 new matched pairs / 54 valid V3 episodes at seeds 8303-8329. Seeds 8300-8302 remain separate V2 evidence because their complete V3 runtime identity could not be established; they were not rerun or substituted.",
+      "models": {
+        "pi05_current_stack_droid": {
+          "status": "complete_27_new_matched_pairs",
+          "success_by_direction": {"left": "5/27", "right": "24/27"},
+          "success_discordance": {"both": 4, "left_only": 1, "right_only": 20, "neither": 2},
+          "endpoint_ordering": {"aligned": 25, "anti_aligned": 2, "ties": 0},
+          "distinct_executed_action_pairs": "27/27",
+          "failure_taxonomy": {"correct": 29, "pick_failed": 6, "transport_failed": 14, "wrong_side": 5, "release_failed": 0},
+          "future_interface": "action_only_no_generated_future",
+          "infrastructure": {"excluded_phase_a_attempt_entries": 2, "queue_infrastructure_invalid": 0, "runtime_interventions": 0},
+          "summary": {"path": "artifacts/vla_wam_shared_v3/results/pi05_current_stack_droid_phase_a_summary.json", "sha256": "5c6d07fca7a0d20ab8b757f028d469f864c78a1c43ffedc3d257a16caef2a02b"},
+          "evidence_manifest": {"path": "artifacts/vla_wam_shared_v3/results/pi05_current_stack_droid_phase_a_evidence_hash_manifest.json", "sha256": "dca633cfa74ff93926cb1d010d5a329908a02d81181f23cca4969c5d5f1f3cfd"},
+          "infrastructure_ledger": {"path": "artifacts/vla_wam_shared_v3/results/pi05_current_stack_droid_phase_a_infrastructure_ledger.json", "sha256": "909f6744d78fe9582715a20d7886f48dab51699ba5e36749f35c7c8bc8d813d5"}
+        },
+        "groot_n17_droid_vla": {
+          "status": "complete_27_new_matched_pairs",
+          "success_by_direction": {"left": "3/27", "right": "0/27"},
+          "success_discordance": {"both": 0, "left_only": 3, "right_only": 0, "neither": 24},
+          "endpoint_ordering": {"aligned": 21, "anti_aligned": 6, "ties": 0},
+          "distinct_executed_action_pairs": "27/27",
+          "failure_taxonomy": {"correct": 3, "pick_failed": 49, "transport_failed": 2, "wrong_side": 0, "release_failed": 0},
+          "future_interface": "action_only_no_generated_future",
+          "infrastructure": {"excluded_attempt_entries": 4, "queue_infrastructure_invalid": 0, "runtime_interventions": 0},
+          "summary": {"path": "artifacts/vla_wam_shared_v3/results/groot_n17_droid_phase_a_summary.json", "sha256": "0db751e94a48caa5815aa6d656ff8cf062283eba47b3048c7c2ac37744581486"},
+          "evidence_manifest": {"path": "artifacts/vla_wam_shared_v3/results/groot_n17_droid_phase_a_evidence_hash_manifest.json", "sha256": "c7ebddea0413090b18cec6e2044251e929aeef77d24fa0102fdd4f9ac63c09bd"},
+          "infrastructure_ledger": {"path": "artifacts/vla_wam_shared_v3/results/groot_n17_droid_phase_a_infrastructure_ledger.json", "sha256": "404e1332f13c1e6cf28d9ed4ca69a9d5a6338dc0cbc21f20a2e9cde5810ced02"}
+        },
+        "cosmos3_edge_policy_droid": {
+          "status": "complete_27_new_matched_pairs",
+          "success_by_direction": {"left": "18/27", "right": "25/27"},
+          "success_discordance": {"both": 16, "left_only": 2, "right_only": 9, "neither": 0, "exact_two_sided_mcnemar_p": 0.0654296875},
+          "endpoint_ordering": {"aligned": 27, "anti_aligned": 0, "ties": 0},
+          "distinct_executed_action_pairs": "27/27",
+          "failure_taxonomy": {"correct": 43, "pick_failed": 2, "transport_failed": 7, "wrong_side": 2, "release_failed": 0},
+          "future_interface": {"kind": "decoded_future_video", "retained_decoded_futures": 452, "missing_scored_as_zero": false},
+          "infrastructure": {"excluded_phase_a_attempt_entries": 3, "queue_infrastructure_invalid": 1, "runtime_interventions": 0},
+          "summary": {"path": "artifacts/vla_wam_shared_v3/results/cosmos3_edge_policy_droid_phase_a_summary.json", "sha256": "fc93b6518185641068ce51a4d81882dd1828ebeb9227b44c4ffc21a07b526c87"},
+          "evidence_manifest": {"path": "artifacts/vla_wam_shared_v3/results/cosmos3_edge_policy_droid_phase_a_evidence_hash_manifest.json", "sha256": "e37213a684ff07d379edc46754cb3167c476663921039f47e8f6ee3ff8c9556d"},
+          "infrastructure_ledger": {"path": "artifacts/vla_wam_shared_v3/results/cosmos3_edge_policy_droid_phase_a_infrastructure_ledger.json", "sha256": "b08ca70374cf36b6a8f6c75da2163aba1a62297815a5beb506e81ee3b65225a0"}
+        },
+        "cosmos3_nano_policy_droid": {
+          "status": "complete_27_new_matched_pairs",
+          "success_by_direction": {"left": "26/27", "right": "25/27"},
+          "success_discordance": {"both": 24, "left_only": 2, "right_only": 1, "neither": 0},
+          "endpoint_ordering": {"aligned": 27, "anti_aligned": 0, "ties": 0},
+          "distinct_executed_action_pairs": "27/27",
+          "failure_taxonomy": {"correct": 51, "pick_failed": 0, "transport_failed": 1, "wrong_side": 0, "release_failed": 2},
+          "future_interface": {"kind": "decoded_future_video", "retained_decoded_futures": 349, "returned_action_chunks": 349, "missing_scored_as_zero": false},
+          "infrastructure": {"excluded_attempt_entries": 2, "post_queue_operational_events": 1, "queue_infrastructure_invalid": 0, "runtime_interventions": 0},
+          "summary": {"path": "artifacts/vla_wam_shared_v3/results/cosmos3_nano_policy_droid_phase_a_summary.json", "sha256": "677c62845ff72bceb35b0c5e3e5b259a5c24da407648fe50f475656fe86cbcea"},
+          "evidence_manifest": {"path": "artifacts/vla_wam_shared_v3/results/cosmos3_nano_policy_droid_phase_a_evidence_hash_manifest.json", "sha256": "16c4d8afc40fa2f2417dbe128aff929642cf05d44d52c4687a6923de647aab64"},
+          "infrastructure_ledger": {"path": "artifacts/vla_wam_shared_v3/results/cosmos3_nano_policy_droid_phase_a_infrastructure_ledger.json", "sha256": "0ce81ac664c5187b69f96106c25a0b6f30852fa738aa6decfaef09fd8d51bd5c"}
+        },
+        "dreamzero_droid_action_cfg": {
+          "status": "complete_27_new_matched_pairs",
+          "success_by_direction": {"left": "3/27", "right": "17/27"},
+          "success_discordance": {"both": 1, "left_only": 2, "right_only": 16, "neither": 8, "exact_two_sided_mcnemar_p": 0.001312255859375},
+          "endpoint_ordering": {"aligned": 25, "anti_aligned": 2, "ties": 0},
+          "distinct_executed_action_pairs": "27/27",
+          "failure_taxonomy": {"correct": 20, "pick_failed": 20, "transport_failed": 14, "wrong_side": 0, "release_failed": 0},
+          "future_interface": {"kind": "official_decoded_imagination_plus_latent_future", "actual_rollout_videos": 54, "official_full_reset_decodes": 54, "retained_latent_futures": 2554, "missing_scored_as_zero": false},
+          "infrastructure": {"excluded_attempt_count": 4, "runtime_interventions": 0, "server_shutdown": "graceful_complete"},
+          "summary": {"path": "artifacts/vla_wam_shared_v3/results/dreamzero_droid_action_cfg_phase_a_summary.json", "sha256": "50ec800009b1f128ce8fe877c186b08a47ec3021feaa7cf4f8baab984549b120"},
+          "evidence_manifest": {"path": "artifacts/vla_wam_shared_v3/results/dreamzero_droid_action_cfg_phase_a_evidence_hash_manifest.json", "sha256": "0150afb2145cc2e1d18bc16bd34b4af404c7fabb77486d197af78776fcd93427"},
+          "infrastructure_ledger": {"path": "artifacts/vla_wam_shared_v3/results/dreamzero_droid_action_cfg_phase_a_infrastructure_ledger.json", "sha256": "97305ed45b616306788f64be692be4fba77824ce3ef88816d6cd67f15f3b28da"}
+        }
+      }
+    },
+    "robotwin": {
+      "denominator_policy": "Each model has 63 new matched pairs / 126 valid V3 episodes: pairs03-09, sampling replicates r01-r09. The 7 preserved V2 r00 pairs / 14 cells are a separate historical coverage layer and are not pooled with V3.",
+      "models": {
+        "efficient_wam_rt_robotwin": {
+          "status": "complete_63_new_matched_pairs",
+          "success_by_direction": {"left": "26/63", "right": "28/63"},
+          "success_discordance": {"both": 7, "left_only": 19, "right_only": 21, "neither": 16},
+          "endpoint_ordering": {"aligned": 42, "anti_aligned": 21, "ties": 0},
+          "distinct_executed_action_pairs": "63/63",
+          "failure_taxonomy": {"correct": 54, "pick_failed": 28, "transport_failed": 38, "wrong_side": 6, "release_failed": 0},
+          "future_interface": {"kind": "decoded_future_video", "episodes_with_exposed_future": 126, "decoded_future_files": 126, "missing_scored_as_zero": false},
+          "historical_v2_r0": {"matched_pairs": 7, "valid_cells": 14, "left": "3/7", "right": "2/7", "pooled_with_v3": false},
+          "infrastructure": {"technical_invalid_pair_attempts": 1, "technical_invalid_cell_rows": 2, "intentional_operational_boundaries": 1, "runtime_interventions": 0},
+          "summary": {"path": "artifacts/vla_wam_shared_v3/results/efficient_wam_rt_robotwin_phase_a_summary.json", "sha256": "5796bdbedde6124b9a849fa4ab9785171c0caddd5fd18d28e67706e30ed554e5"},
+          "evidence_manifest": {"path": "artifacts/vla_wam_shared_v3/results/efficient_wam_rt_robotwin_phase_a_evidence_hash_manifest.json", "sha256": "217d91ae52acc3771d7cc397a93043fa2a34a13df83cc35dee15f4554a6326bb"},
+          "infrastructure_ledger": {"path": "artifacts/vla_wam_shared_v3/results/efficient_wam_rt_robotwin_phase_a_infrastructure_ledger.json", "sha256": "c890a4016f3bf17c9e378c6c13ef8e814c4039712e8b916a0162028caa4b6cf1"}
+        },
+        "fastwam_robotwin": {
+          "status": "complete_63_new_matched_pairs",
+          "success_by_direction": {"left": "24/63", "right": "20/63"},
+          "success_discordance": {"both": 1, "left_only": 23, "right_only": 19, "neither": 20},
+          "endpoint_ordering": {"aligned": 39, "anti_aligned": 24, "ties": 0},
+          "distinct_executed_action_pairs": "63/63",
+          "failure_taxonomy": {"correct": 44, "pick_failed": 31, "transport_failed": 36, "wrong_side": 15, "release_failed": 0},
+          "future_interface": {"kind": "action_only_not_applicable", "episodes_with_exposed_future": 0, "missing_scored_as_zero": false},
+          "historical_v2_r0": {"matched_pairs": 7, "valid_cells": 14, "left": "1/7", "right": "1/7", "pooled_with_v3": false},
+          "infrastructure": {"technical_invalid_pair_attempts": 1, "technical_invalid_cell_rows": 2, "prebehavior_repair_gate_failures": 2, "intentional_operational_boundaries": 1, "prospective_nonactivation_events": 1, "runtime_interventions": 0},
+          "summary": {"path": "artifacts/vla_wam_shared_v3/results/fastwam_robotwin_phase_a_summary.json", "sha256": "da76cf534907714c1b9e74e096ed39578b308642504e145f40e834ff4ba65b4e"},
+          "evidence_manifest": {"path": "artifacts/vla_wam_shared_v3/results/fastwam_robotwin_phase_a_evidence_hash_manifest.json", "sha256": "096695c110e294be2d9471494cda49ad21de0e985a30c363bd62971301cd3c1b"},
+          "infrastructure_ledger": {"path": "artifacts/vla_wam_shared_v3/results/fastwam_robotwin_phase_a_infrastructure_ledger.json", "sha256": "cbabfe043c121890bc49631ec40bb0cf12961f98bc85e2bd859168e434039501"}
+        },
+        "lingbot_va_robotwin": {
+          "status": "complete_63_new_matched_pairs",
+          "success_by_direction": {"left": "19/63", "right": "19/63"},
+          "success_discordance": {"both": 1, "left_only": 18, "right_only": 18, "neither": 26},
+          "endpoint_ordering": {"aligned": 47, "anti_aligned": 16, "ties": 0},
+          "distinct_executed_action_pairs": "63/63",
+          "failure_taxonomy": {"correct": 38, "pick_failed": 9, "transport_failed": 64, "wrong_side": 15, "release_failed": 0},
+          "future_interface": {"kind": "latent_only_future_not_decodable", "episodes_with_exposed_future": 126, "latent_future_files": 126, "latent_shape": [1, 48, 2, 24, 20], "decoded_future_videos": 0, "missing_or_latent_only_scored_as_zero": false},
+          "historical_v2_r0": {"matched_pairs": 7, "valid_cells": 14, "left": "3/7", "right": "4/7", "pooled_with_v3": false},
+          "infrastructure": {"technical_invalid_pair_attempts": 0, "technical_invalid_cell_rows": 0, "intentional_operational_boundaries": 5, "atomic_no_model_reservations": 2, "superseded_prelaunch_nonactivations": 1, "runtime_interventions": 0},
+          "summary": {"path": "artifacts/vla_wam_shared_v3/results/lingbot_va_robotwin_phase_a_summary.json", "sha256": "ebffedaeaf42fb8916449136f617aaa9dab149645caad45aa461dec7aef878e3"},
+          "evidence_manifest": {"path": "artifacts/vla_wam_shared_v3/results/lingbot_va_robotwin_phase_a_evidence_hash_manifest.json", "sha256": "34ec6bf63ef825706f4ccc8bbf2b1d57854ebaa485879b54875b697ddea96cc4"},
+          "infrastructure_ledger": {"path": "artifacts/vla_wam_shared_v3/results/lingbot_va_robotwin_phase_a_infrastructure_ledger.json", "sha256": "4ae4ba45d3e8fa7fa10d3c1fbe475f6fbad1b0d1c1e64a43cc7c295347cdc7d2"}
+        }
+      }
+    }
+  },
+  "blocked_and_unreleased": {
+    "pi0_fast_phase_a": {
+      "status": "blocked_before_v3_behavioral_request",
+      "preserved_v2_pairs": 10,
+      "preserved_v2_cells": 20,
+      "blocked_new_pairs": 20,
+      "blocked_new_cells": 40,
+      "blocked_seed_range": [8310, 8329],
+      "required_openpi_commit": "9e46d3aea26417bfb564227734b95d010aa827e5",
+      "required_robolab_commit": "11142d4319e44401e0464866bb5fedf7ec8a8927",
+      "blocker": "Both exact historical integration commits remain unavailable. V2-A008 current-stack LEFT/RIGHT prompt sensitivity failed with action RMS 0.0 and is not a substitute or behavioral release.",
+      "model_load_attempt_count": 0,
+      "v3_behavioral_episode_count": 0,
+      "denominator_effect": "none",
+      "recovery_command": "git -C /home/ali/openpi-robolab bundle create /tmp/openpi-robolab-all.bundle --all && git -C /home/ali/projects/RoboLab bundle create /tmp/robolab-all.bundle --all"
+    },
+    "phase_b_confounds": {
+      "status": "not_released",
+      "reason": "Numeric fixture levels and margins require a new model-blind calibration amendment before any behavior. Phase A does not release Phase B."
+    },
+    "phase_c_four_phrasings": {
+      "status": "not_released",
+      "registered_episode_count": 480,
+      "reason": "The wording block has independent byte-hash, repeat, and prompt-sensitivity release gates. Phase A does not release Phase C."
+    },
+    "phase_d_stochastic_rollouts": {
+      "status": "not_released",
+      "reason": "Eligibility requires an exact-runtime effective stochastic-seed probe. Deterministic or seed-insensitive runtimes are ineligible rather than padded."
+    }
+  },
+  "scientific_claim_boundary": {
+    "supported": "Across every completed checkpoint, matched LEFT/RIGHT prompts changed executed traces; endpoint ordering was often aligned, but requested task completion and failure mode remained strongly checkpoint- and direction-dependent.",
+    "not_supported": "Phase A alone does not identify training-distribution bias, scene geometry, reachability, start side, object role, or model family as a causal explanation. It also does not establish that an exposed or decoded future caused successful control.",
+    "unit_warning": "RoboTwin sampling replicates are nested within seven scenes; they are not 63 independent scenes."
+  },
+  "storage": {
+    "raw_pvc_root": "/data/users/ali/vla_wam/raw/v3",
+    "checkpoints_root": "/data/users/ali/vla_wam/checkpoints",
+    "environments_root": "/data/users/ali/vla_wam/envs",
+    "policy": "Raw rollouts, checkpoints, environments, and unbounded media stay on the ali-owned PVC outside ordinary Git."
+  },
+  "next_agent": {
+    "safe_first_commands": [
+      "git status --short",
+      ".venv/bin/python tools/validate_vla_wam_v3_protocol.py",
+      ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
+      "git diff --check"
+    ],
+    "inference_authority": "No Phase-A authorized_new cell remains. Do not rerun a valid cell. No Phase-B, Phase-C, or Phase-D cell may start without its frozen independent release path; pi0-FAST remains blocked until exact revision recovery.",
+    "publication_note": "Use the compact result summaries and evidence manifests for analysis. Do not infer current study state from the older V2 article, gallery, figures, or chat history."
+  }
+}

@@ -4,6 +4,11 @@ This is the no-chat restart point for the VLA/WAM language-steerability study.
 It intentionally does **not** invent a cluster, context, namespace, pod, PVC,
 GPU index, container image, driver, Vulkan ICD, or egress status.
 
+> **Current state:** V3 Phase A has completed every one of its 648
+> launch-authorized new cells. Read the V3 continuation files below before the
+> historical V2 material. The 40 π0-FAST cells remain blocked; later V3 phases
+> are independently gated and unreleased.
+
 ## Authoritative state and reading order
 
 After this handoff is pushed, clone its exact study branch on the work Mac.
@@ -25,11 +30,14 @@ Read, in order, before modifying code, downloading assets, or launching a
 model:
 
 1. `AGENTS.md`
-2. `docs/VLA_WAM_CONTINUATION.md`
-3. `artifacts/vla_wam_shared_v2/continuation_state.json`
-4. `docs/VLA_WAM_STEERABILITY_V2_PROTOCOL.md`
-5. `artifacts/vla_wam_shared_v2/pilot/action_trace_instrumentation_amendment.json`
-6. `handoff/repo_bundles/MANIFEST.json` and `handoff/repo_bundles/README.md`
+2. `docs/VLA_WAM_V3_CONTINUATION.md`
+3. `artifacts/vla_wam_shared_v3/continuation_state.json`
+4. `docs/VLA_WAM_STEERABILITY_V3_PROTOCOL.md`
+5. `docs/VLA_WAM_CONTINUATION.md`
+6. `artifacts/vla_wam_shared_v2/continuation_state.json`
+7. `docs/VLA_WAM_STEERABILITY_V2_PROTOCOL.md`
+8. `artifacts/vla_wam_shared_v2/pilot/action_trace_instrumentation_amendment.json`
+9. `handoff/repo_bundles/MANIFEST.json` and `handoff/repo_bundles/README.md`
 
 Then read the four external readmes at their pinned checkouts:
 `Efficient-WAM/experiments/robotwin_language_gate/README.md`,

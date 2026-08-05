@@ -1,0 +1,80 @@
+{
+  "schema_version": "vla-wam-shared-v3-post-result-pi0-fast-token-trace-validation-amendment-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-A003",
+  "recorded_after_git_head": "3bc75a35fab006524a350f531b6cb8143819f4eb",
+  "status": "frozen_after_structural_compiler_failure_and_before_any_v3a002_cell_was_accepted",
+  "discovery": {
+    "stage": "fail_closed_compilation_audit_of_the_first_six_launch_complete_matched_pairs",
+    "behavioral_cells_inspected_for_contract_diagnosis": 12,
+    "accepted_behavioral_cells_before_amendment": 0,
+    "trigger": "The original compiler rejected every action trace because tokenized_prompt_sha256 varied across successive policy requests despite an unchanged raw episode prompt.",
+    "classification": "validator_contract_bug_not_model_or_infrastructure_failure"
+  },
+  "invalid_original_assumption": {
+    "source_path": "experiments/v3/pi0_fast_old_name_config_bridge/adapter.py",
+    "source_sha256": "f5fcb2b37c5e7582ec6d70ee6a7954e28edd3aa8dd3d7e7ae1bae66bd9b6eec6",
+    "rule": "All request-level tokenized_prompt_sha256 values within one episode must be identical, and the resulting singleton LEFT and RIGHT sets must differ.",
+    "manifestations": [
+      "_validate_action_trace rejects an episode unless its request-level token hash set has cardinality one.",
+      "_trace_token_hashes again requires a singleton set, after which compile_behavioral_pair compares the LEFT and RIGHT singleton sets."
+    ],
+    "why_invalid": "For the frozen PI0-FAST input transform, tokenized_prompt is the joint FAST token sequence for the exact language prompt and the current robot state. State changes after actions, so the token sequence is expected to change even though the episode language is static."
+  },
+  "frozen_source_evidence": {
+    "openpi_commit": "235044ed8a1502c0a18338eedc5d7adfe705af05",
+    "openpi_tree": "03a4387bedbc0fa1467c367c60fc24e28b61ec6c",
+    "path": "src/openpi/transforms.py",
+    "sha256": "a1b94e9e72849a18834778f229c6bb389a495eb7fbe0aa800edea728b9424ff4",
+    "transform": "TokenizeFASTInputs",
+    "semantics": "tokenizer.tokenize(prompt, state, actions); at inference actions is absent, while prompt is fixed and state changes across requests"
+  },
+  "replacement_validation": {
+    "unchanged_requirements": [
+      "Exact top-level frozen prompt string and its SHA-256.",
+      "prompt_controller equals episode_static.",
+      "Exact model, bridge, environment seed, sampling-seed base, relation, and ten-action horizon.",
+      "Contiguous deterministic per-request sampling seeds and request count equal ceil(actions_executed/10).",
+      "Exact file hashes, byte counts, shapes, float32 dtypes, and finite values for executed actions and returned action chunks.",
+      "Each request attestation has the exact request index, sampling seed, raw-prompt SHA-256, and action-chunk payload SHA-256.",
+      "Every request retains a syntactically valid lowercase 64-hex tokenized-input SHA-256.",
+      "The prebehavior fixed-observation gate retains its exact LEFT-repeat identity and LEFT-versus-RIGHT token/action difference requirements."
+    ],
+    "only_removed_requirement": "Within-episode equality of tokenized_prompt_sha256 across changing robot states.",
+    "descriptive_output": "Retain the ordered per-request token hashes and report token-hash cardinality as integrity metadata; do not interpret cardinality as prompt switching.",
+    "static_language_basis": "The raw prompt is supplied once per episode by the frozen static controller, repeated unchanged in every request, and independently attested by the server through its exact raw-prompt SHA-256.",
+    "matched_pair_token_boundary": {
+      "left_first_request_sha256": "d282373e2576a5e7d74efeecd12c7cf5530160ea78fb54ab8166edc4975a659a",
+      "right_first_request_sha256": "9ab3cb0ffc19e5a9e80bfd1822ef8d5c2f25446930e21743e020b6e057935cd9",
+      "rule": "Require each episode's first-request token hash to equal its relation-specific fixed-observation release-gate hash and require LEFT to differ from RIGHT. Do not compare the full post-intervention episode token sets because their robot states diverge."
+    }
+  },
+  "scope": {
+    "model_id": "pi0_fast_old_name_config_v3a002",
+    "environment_seeds_inclusive": [8310, 8329],
+    "matched_pairs": 20,
+    "behavioral_cells": 40,
+    "runtime_identity_hashes": [
+      "591adbfed96fbe3a1f1016d08f0853b8f95e0b84895668e680610831270e96c2",
+      "3f30ae51c44182636afc7bff6448241a9ee9579a73282cfb3a5abe40c5440edb",
+      "49797dfb86f5b7f0ab9e4c06b14d8301e485b8e8cf06fabd909bcec0e0a730f0"
+    ],
+    "original_adapter_contract_sha256": "0c7937482824090e3033fa3f6822c8277aff7b0b7f1403b565bc13140b5461db",
+    "release_gate_sha256": "12e3957adbf799aa989acbd55d122c761c86d6fc9f5304c4604a51b033ef7903"
+  },
+  "claim_and_denominator_boundary": {
+    "unchanged": [
+      "Prompts, prompt family, seeds, sampling, checkpoint, repositories, environments, action cap, renderer, task, success predicate, failure taxonomy, and denominators.",
+      "Every valid behavioral failure remains in the denominator.",
+      "Infrastructure-invalid and partial attempts remain outside model denominators.",
+      "The V3-A002 compatibility bridge remains separate from the historical PI0-FAST cohort and from all RoboTwin evidence."
+    ],
+    "prohibited": [
+      "Changing any behavioral outcome or success threshold because of this amendment.",
+      "Dropping cells based on token-hash cardinality.",
+      "Calling changing state-conditioned FAST token hashes prompt switching.",
+      "Pooling V3-A002 with historical PI0-FAST results."
+    ]
+  },
+  "compiler_rule": "Compilation must validate the original launch-time adapter and runtime identities first, then apply this narrowly scoped trace-validation amendment without mutating any raw artifact. Every compiled row and hash manifest must record this amendment path and SHA-256."
+}

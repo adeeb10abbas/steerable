@@ -83,8 +83,18 @@ has_ali_owner_label() {
 say 'named-pod authorization and ownership'
 kget auth can-i get pods || fail 'cannot read pods in the supplied namespace'
 # The only cluster object fetched is the explicitly supplied pod name.
-pod_labels=$(kget get pod "$POD" -o jsonpath='{range $k,$v := .metadata.labels}{$k}={$v}{";"}{end}') \
-  || fail 'named pod was not readable'
+pod_json=$(kget get pod "$POD" -o json) || fail 'named pod was not readable'
+pod_identity=$(python3 -c '
+import json, sys
+pod = json.load(sys.stdin)
+name = pod.get("metadata", {}).get("name", "")
+labels = pod.get("metadata", {}).get("labels", {})
+print(name)
+print(";".join(f"{key}={value}" for key, value in sorted(labels.items())))
+' <<< "$pod_json") || fail 'named pod identity could not be parsed'
+actual_pod_name=${pod_identity%%$'\n'*}
+pod_labels=${pod_identity#*$'\n'}
+[[ "$actual_pod_name" == "$POD" ]] || fail 'named pod response did not match the supplied pod name'
 if [[ ! "$POD" =~ (^|[-_.])ali([-_.]|$) ]] && ! has_ali_owner_label "$pod_labels"; then
   fail 'named pod lacks an ali token and labels lack an exact ali owner/user value'
 fi

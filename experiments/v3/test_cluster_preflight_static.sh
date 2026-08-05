@@ -9,7 +9,8 @@ bash -n "$script"
 for required in '--context' '--namespace' '--pod' '--pvc-root' '--study-root' '--vulkan-icd' '--credential-gate-cmd' '--sapien-gate-cmd' \
   'nvidia-smi --query-gpu' 'nvidia-smi --query-compute-apps' 'render and capture a frame' \
   'https://github.com/' 'https://huggingface.co/' 'validate_vla_wam_v2_protocol.py' \
-  'validate_vla_wam_v3_protocol.py' 'has_ali_owner_label' 'exact ali owner/user value' \
+  'validate_vla_wam_v3_protocol.py' 'has_ali_owner_label' 'actual_pod_name' \
+  'exact ali owner/user value' \
   'This did not reserve GPUs or authorize inference'; do
   rg -F --quiet -- "$required" "$script"
 done

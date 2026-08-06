@@ -130,6 +130,8 @@ REQUIRED = {
     "dreamzero_mirror_registration_test": "tests/test_build_dreamzero_v3b003_registration.py",
     "nano_lateral_sweep_amendment": f"{V3}/phase_b/nano_lateral_sweep_v3b004/post_result_nano_lateral_sweep_v3b004_amendment.json",
     "nano_lateral_sweep_neutrality_correction": f"{V3}/phase_b/nano_lateral_sweep_v3b004/prospective_neutrality_correction.json",
+    "nano_lateral_sweep_calibration_driver": "experiments/v3/cosmos_nano_lateral_sweep/model_blind_lateral_calibration.py",
+    "nano_lateral_sweep_calibration_design": "experiments/v3/cosmos_nano_lateral_sweep/calibration_design.py",
 }
 DROID_MODELS = [
     "pi0_fast_droid_vla",
@@ -3238,6 +3240,23 @@ def validate(root: Path) -> list[str]:
         )
         == 0.12658219039440155,
         "Nano V3-B004 prospectively corrects an analytically infeasible zero-centered sweep without using model outcomes",
+        checks,
+    )
+    lateral_driver_source = paths["nano_lateral_sweep_calibration_driver"].read_text(
+        encoding="utf-8"
+    )
+    lateral_design_source = paths["nano_lateral_sweep_calibration_design"].read_text(
+        encoding="utf-8"
+    )
+    require(
+        "model_request_count\": 0" in lateral_driver_source
+        and "behavioral_episode_count\": 0" in lateral_driver_source
+        and "select_largest_radius(passing)" in lateral_driver_source
+        and "candidate_lower_y_m" in lateral_driver_source
+        and "hold_action" in lateral_driver_source
+        and "CONTROL_BOWL_Y_M = 0.12658219039440155" in lateral_design_source
+        and "MINIMUM_RADIUS_MM = 90" in lateral_design_source,
+        "Nano V3-B004 calibration implementation preserves zero-request, live-bound, neutral, and fail-closed selection gates",
         checks,
     )
     lateral_analysis = nano_lateral_sweep_amendment.get("analysis_plan", {})

@@ -256,7 +256,14 @@ def main() -> None:
             finally:
                 if writer is not None:
                     writer.release()
-                env.close()
+                # Isaac Sim 5.0 crashes in ``env.close()`` on the ali RTX
+                # Blackwell lanes after a single-task preflight.  A
+                # condition-scoped process owns only one environment, so let
+                # the outer SimulationApp teardown release it after the
+                # evidence report has been durably written.  The legacy
+                # four-condition mode still needs per-environment cleanup.
+                if args_cli.condition == "all":
+                    env.close()
             capture = cv2.VideoCapture(str(video_path))
             ok, _ = capture.read()
             frame_count = int(capture.get(cv2.CAP_PROP_FRAME_COUNT))

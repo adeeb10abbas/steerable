@@ -1,0 +1,110 @@
+{
+  "schema_version": "vla-wam-shared-v3b-nano-lateral-sweep-amendment-v2",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B005",
+  "recorded_at_utc": "2026-08-06T22:29:00Z",
+  "status": "design_frozen_before_v3b005_model_blind_gate_and_before_any_v3b005_model_request",
+  "post_calibration_disclosure": {
+    "v3b004_status": "failed_closed_without_model_request",
+    "v3b004_failure_report_sha256": "d3441b899dfd21adf5421ddb00d829f588b25d5e630af1ca18821b6494c985ca",
+    "observed_failure": "The original fixed banana intersects the bowl's registered negative sweep by -30 mm, making every symmetric r >= 90 mm impossible.",
+    "design_response": "Register a new cohort rather than narrowing or shifting V3-B004. Move only the irrelevant banana distractor to one fixed, model-blind safe pose; retain the originally targeted center and minimum 90 mm half-range."
+  },
+  "design": {
+    "model_id": "cosmos3_nano_policy_droid",
+    "arena": "droid_robolab",
+    "factor": "reference_object_initial_lateral_position_y_m",
+    "reference_object": "bowl",
+    "target_object": "rubiks_cube",
+    "distractor_object": "banana",
+    "matched_seeds": [9500, 9501, 9502, 9503, 9504, 9505, 9506, 9507, 9508, 9509, 9510, 9511, 9512, 9513, 9514],
+    "matched_seed_count": 15,
+    "relations": ["left", "right"],
+    "exact_prompts": {
+      "left": "Put the Rubik's cube to the left of the bowl.",
+      "right": "Put the Rubik's cube to the right of the bowl."
+    },
+    "ordered_bowl_y_levels_m": [
+      0.03658219039440155,
+      0.06658219039440155,
+      0.09658219039440155,
+      0.12658219039440155,
+      0.15658219039440155,
+      0.18658219039440156,
+      0.21658219039440155
+    ],
+    "center_y_m": 0.12658219039440155,
+    "half_range_m": 0.09,
+    "level_spacing_m": 0.03,
+    "cells_per_seed": 14,
+    "registered_behavioral_episode_ceiling_after_release": 210,
+    "held_fixed_within_cohort": [
+      "rubiks_cube full initial pose at the V3-B001 control value",
+      "banana full initial pose at the prospectively registered V3-B005 safe-distractor value",
+      "bowl x, z, and quaternion at the V3-B001 control value",
+      "robot base, cameras, controller, and all nonmovable geometry",
+      "static prompt bytes, success predicate, requested 45-degree cone, and action cap",
+      "environment and registered sampling seed within every level-specific LEFT/RIGHT pair"
+    ],
+    "randomization": {
+      "unit": "14-cell matched seed block",
+      "seeds_9500_9513": "deterministic cyclic Latin order over seven levels by two relations",
+      "seed_9514": "SHA-256 order of vla_wam_language_steerability_v3:V3-B005:nano:seed9514:<level_index>:<relation>:order",
+      "lane_rule": "Never split one seed's 14 cells across runtime lanes"
+    }
+  },
+  "model_blind_release_gate": {
+    "model_request_count": 0,
+    "behavioral_episode_count": 0,
+    "exact_levels_only": true,
+    "fresh_resets_per_level_per_relation": 3,
+    "settle_steps": 60,
+    "stability_window_steps": 15,
+    "fixed_object_settle_error_max_m": 0.005,
+    "bowl_position_error_max_m": 0.005,
+    "linear_speed_max_m_s": 0.02,
+    "angular_speed_max_rad_s": 0.2,
+    "minimum_interobject_xy_aabb_gap_m": 0.002,
+    "requirements": [
+      "all 42 relation-by-level-by-repeat rows pass",
+      "fresh physical reset is attested before every row",
+      "neither requested-relation predicate is true at reset",
+      "all four RGB views are nonblank",
+      "LEFT and RIGHT physical fingerprints match within 5 mm at every level and repeat",
+      "RTX viewport video and append-only JSONL persist on the ali PVC"
+    ],
+    "failure_rule": "If any preregistered level fails, V3-B005 fails closed. Do not move the banana, narrow the range, shift the center, or respacing levels after this amendment."
+  },
+  "analysis_plan": {
+    "inferential_unit": "matched seed; repeated levels are within-seed observations",
+    "primary_endpoint": "requested-side depth contrast B[i,j] = (-signed_offset[i,j,RIGHT]) - signed_offset[i,j,LEFT]",
+    "dose_response": "For each seed, regress B on the seven registered bowl-y levels; report all 15 slopes, mean, median, 20,000-seed bootstrap 95% CI, signs, exact sign test, and an in-support zero crossing only.",
+    "binary_success_secondary": "Report LEFT/RIGHT successes and Wilson 95% intervals at each level plus paired success_R-minus-success_L slopes.",
+    "success_conditional_margin": "Use only level-specific pairs where both directions succeed; report realized n and never encode failure as zero.",
+    "failure_taxonomy": "Retain correct/pick/transport/wrong_side/release for every valid episode by level and direction.",
+    "missingness": "No imputation. Infrastructure-invalid and partial attempts remain separate and are repaired only as the identical registered cell.",
+    "bootstrap_master_seed": 3104161
+  },
+  "runtime_identity_requirement": {
+    "checkpoint_revision": "6706d7680581c255ff61e0f3bb49d90eac55c79e",
+    "server_repository_commit": "411d25b2e35bc441126f48c44a4b93e1c0564274",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "fresh_runtime_and_fixed_observation_gate_required": true,
+    "fixed_observation_gate_levels": [0, 3, 6]
+  },
+  "source": {
+    "v3b004_amendment_sha256": "6326ee2faebb21e50243a8018568bbd012f77ed58b35c6164a989b9a9cdb0dee",
+    "v3b004_failure_report_sha256": "d3441b899dfd21adf5421ddb00d829f588b25d5e630af1ca18821b6494c985ca",
+    "safe_distractor_fixture": {
+      "path": "prospective_safe_distractor_fixture.json",
+      "sha256": "87ff070be25b61538ead16ddbe06d2e9c155698ec2ea8acecbc30bd20b0197a5"
+    },
+    "v3b001_fixture_candidate_sha256": "e1799b815da41f9a08a4000a360c4958003269fed27e2abe75b273519e4d1c88",
+    "neutrality_correction_sha256": "3b3a9687f92367b6a65552af4c699d11edd14aac6074e0a4837b0745e27aa5e7"
+  },
+  "release_boundary": {
+    "behavioral_release": false,
+    "model_server_may_start": false,
+    "next_command": "Run only the exact 42-row V3-B005 zero-model-request physical gate. Commit its hash-bound report and generated 210-cell queue before any Nano model request."
+  }
+}

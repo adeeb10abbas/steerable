@@ -1,10 +1,10 @@
 {
   "schema_version": "vla-wam-shared-v3-continuation-v1",
   "study_id": "vla_wam_language_steerability_v3",
-  "updated_at_utc": "2026-08-06T20:39:16Z",
+  "updated_at_utc": "2026-08-06T22:34:10Z",
   "active_branch": "main",
   "evidence_head": "011431f59465176cd5f73cdc0e14d67624315023",
-  "status": "nano_v3b004_design_frozen_zero_model_requests_numeric_calibration_next",
+  "status": "nano_v3b004_failed_closed_zero_model_requests_nano_v3b005_registered_physical_gate_next",
   "authoritative_files": [
     "docs/VLA_WAM_V3_CONTINUATION.md",
     "docs/VLA_WAM_STEERABILITY_V3_PROTOCOL.md",
@@ -88,6 +88,12 @@
     "tools/build_dreamzero_v3b003_registration.py",
     "tests/test_build_dreamzero_v3b003_registration.py",
     "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b004/post_result_nano_lateral_sweep_v3b004_amendment.json",
+    "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b004/model_blind_calibration_failure_report.json",
+    "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/prospective_safe_distractor_fixture.json",
+    "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/post_result_nano_lateral_sweep_v3b005_amendment.json",
+    "experiments/v3/cosmos_nano_lateral_sweep/model_blind_lateral_calibration.py",
+    "tests/test_nano_v3b004_calibration_design.py",
+    "handoff/k8s/vla-wam-nano-dose-ali.yaml",
     "tools/normalize_pi05_v3b002_infrastructure.py",
     "experiments/v3/pi05_phase_b/contract.py",
     "experiments/v3/pi05_phase_b/runtime.py",
@@ -769,7 +775,7 @@
       "recovery_command": "git -C /home/ali/openpi-robolab bundle create /tmp/openpi-robolab-all.bundle --all && git -C /home/ali/projects/RoboLab bundle create /tmp/robolab-all.bundle --all"
     },
     "phase_b_confounds": {
-      "status": "nano_v3b001_and_pi05_v3b002_complete_dreamzero_v3b003_registered_not_released",
+      "status": "nano_v3b001_and_pi05_v3b002_complete_dreamzero_v3b003_and_nano_v3b005_registered_not_released_v3b004_failed_closed",
       "released": {
         "nano_v3b001": {
           "amendment_id": "V3-B001",
@@ -800,22 +806,35 @@
           "manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/dreamzero_mirror_v3b003_manifest.json", "sha256": "efe50df701193e48b981c025ea3b4d27a80e3bdf83216e38a98a63e27061cb23"},
           "release_condition": "Fresh DreamZero s=2 runtime identity, model-blind physical/reset/renderer/writer gate, exact bridge-reset attestation, and fixed-observation repeat/prompt-sensitivity/future-retention gate."
         },
-        "nano_v3b004": {
-          "amendment_id": "V3-B004",
+        "nano_v3b005": {
+          "amendment_id": "V3-B005",
           "model_id": "cosmos3_nano_policy_droid",
           "factor": "reference_object_initial_lateral_position_y_m",
           "matched_seeds": 15,
           "planned_lateral_levels": 7,
-          "planned_behavioral_cells_after_calibration": 210,
-          "numeric_levels_frozen": false,
+          "planned_behavioral_cells_after_gate": 210,
+          "numeric_levels_frozen": true,
           "model_requests_after_registration": 0,
           "behavioral_episodes_after_registration": 0,
-          "amendment": {"path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b004/post_result_nano_lateral_sweep_v3b004_amendment.json", "sha256": "6326ee2faebb21e50243a8018568bbd012f77ed58b35c6164a989b9a9cdb0dee"},
-          "prospective_neutrality_correction": {"path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b004/prospective_neutrality_correction.json", "sha256": "3b3a9687f92367b6a65552af4c699d11edd14aac6074e0a4837b0745e27aa5e7"},
-          "next_gate": "Run only the frozen zero-model-request dense physical calibration, then commit the exact seven levels and 210-cell queue before starting the Nano server."
+          "amendment": {"path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/post_result_nano_lateral_sweep_v3b005_amendment.json", "sha256": "ff23475b53791c42715938d51a303e0ab82de88b1b8a7a30758c008c9919a47b"},
+          "prospective_safe_distractor_fixture": {"path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/prospective_safe_distractor_fixture.json", "sha256": "87ff070be25b61538ead16ddbe06d2e9c155698ec2ea8acecbc30bd20b0197a5"},
+          "next_gate": "Run only the exact 42-row zero-model-request physical gate; commit its report and generated 210-cell queue before any Nano model request."
         }
       },
-      "unreleased": "DreamZero V3-B003 is hash-bound but not behaviorally released. Every other Phase-B confound ablation beyond completed Nano V3-B001 and pi0.5 V3-B002 requires its own frozen independent release path."
+      "failed_closed": {
+        "nano_v3b004": {
+          "amendment_id": "V3-B004",
+          "model_id": "cosmos3_nano_policy_droid",
+          "factor": "reference_object_initial_lateral_position_y_m",
+          "status": "failed_closed_before_any_model_request_or_behavioral_episode",
+          "model_request_count": 0,
+          "behavioral_episode_count": 0,
+          "failure": "The original fixed banana collides with the bowl by the registered -30 mm level, so every allowed symmetric half-range r >= 90 mm is infeasible.",
+          "failure_report": {"path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b004/model_blind_calibration_failure_report.json", "sha256": "d3441b899dfd21adf5421ddb00d829f588b25d5e630af1ca18821b6494c985ca"},
+          "denominator_effect": "none"
+        }
+      },
+      "unreleased": "DreamZero V3-B003 and Nano V3-B005 are hash-bound but not behaviorally released. V3-B004 failed closed before inference. Every other Phase-B confound ablation beyond completed Nano V3-B001 and pi0.5 V3-B002 requires its own frozen independent release path."
     },
     "phase_c_four_phrasings": {
       "status": "not_released",
@@ -845,7 +864,7 @@
       ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
       "git diff --check"
     ],
-    "inference_authority": "Do not rerun any valid Phase-A, V3-A002, Nano V3-B001, or pi0.5 V3-B002 cell. DreamZero V3-B003 is registered at 108 cells but not behaviorally released; no model request may occur until its fresh hash-bound runtime, physical/reset/renderer/writer, bridge-reset, repeat, prompt-sensitivity, and future-retention gates pass. Nano V3-B004 has only a hash-bound design: run the zero-model-request numeric physical calibration next, and do not start the Nano server or create behavioral rows until the seven exact levels are committed. No other Phase-B, Phase-C, or Phase-D cell is released. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or Phase C.",
+    "inference_authority": "Do not rerun any valid Phase-A, V3-A002, Nano V3-B001, or pi0.5 V3-B002 cell. DreamZero V3-B003 is registered at 108 cells but not behaviorally released; no model request may occur until its fresh hash-bound runtime, physical/reset/renderer/writer, bridge-reset, repeat, prompt-sensitivity, and future-retention gates pass. Nano V3-B004 failed closed with zero model requests and must never be run. Nano V3-B005 freezes the safe distractor and exact seven levels: run only its 42-row zero-model-request physical gate next, and do not start the Nano server or create behavioral rows until the gate report and exact 210-cell queue are committed. No other Phase-B, Phase-C, or Phase-D cell is released. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or Phase C.",
     "publication_note": "Use the compact result summaries and evidence manifests for analysis. Do not infer current study state from the older V2 article, gallery, figures, or chat history."
   }
 }

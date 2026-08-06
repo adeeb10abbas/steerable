@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the V3-B004 dense physical scan with zero policy/model requests."""
+"""Run the V3-B004/B005 physical calibration with zero model requests."""
 
 from __future__ import annotations
 
@@ -25,6 +25,16 @@ TASKS = {
     "left": ("V3BNanoControlLeftCalibrationTask", "task_files/control_left.py"),
     "right": ("V3BNanoControlRightCalibrationTask", "task_files/control_right.py"),
 }
+B005_BANANA_Y_M = -0.2755556747317314
+B005_LEVELS_Y_M = (
+    0.03658219039440155,
+    0.06658219039440155,
+    0.09658219039440155,
+    0.12658219039440155,
+    0.15658219039440155,
+    0.18658219039440156,
+    0.21658219039440155,
+)
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--study-root", type=Path, required=True)
@@ -34,6 +44,9 @@ parser.add_argument("--fixture-candidate-sha256", required=True)
 parser.add_argument("--neutrality-correction", type=Path, required=True)
 parser.add_argument("--neutrality-correction-sha256", required=True)
 parser.add_argument("--output-dir", type=Path, required=True)
+parser.add_argument("--amendment-id", choices=("V3-B004", "V3-B005"), default="V3-B004")
+parser.add_argument("--banana-y-override-m", type=float)
+parser.add_argument("--explicit-level-y-m", type=float, action="append", default=[])
 parser.add_argument("--environment-seed", type=int, default=9500)
 parser.add_argument("--repeat-resets", type=int, default=3)
 parser.add_argument("--settle-steps", type=int, default=60)
@@ -53,13 +66,26 @@ AppLauncher.add_app_launcher_args(parser)
 args_cli, _ = parser.parse_known_args()
 args_cli.enable_cameras = True
 if args_cli.num_envs != 1 or args_cli.repeat_resets != 3:
-    parser.error("V3-B004 requires one environment and exactly three fresh resets")
+    parser.error("the lateral calibration requires one environment and exactly three fresh resets")
 if args_cli.settle_steps != 60 or args_cli.stable_window_steps != 15:
-    parser.error("V3-B004 requires the frozen 60+15 step stability gate")
+    parser.error("the lateral calibration requires the frozen 60+15 step stability gate")
 if not args_cli.headless:
-    parser.error("V3-B004 model-blind calibration must run headless")
+    parser.error("the model-blind lateral calibration must run headless")
 if args_cli.renderer != "realtime" or args_cli.rendering_type != "balanced":
-    parser.error("V3-B004 calibration requires realtime/balanced RTX")
+    parser.error("the lateral calibration requires realtime/balanced RTX")
+if args_cli.amendment_id == "V3-B004":
+    if args_cli.banana_y_override_m is not None or args_cli.explicit_level_y_m:
+        parser.error("V3-B004 prohibits a distractor override or explicit level substitution")
+elif (
+    args_cli.banana_y_override_m != B005_BANANA_Y_M
+    or len(args_cli.explicit_level_y_m) != 7
+    or any(
+        abs(observed - expected) > 1e-12
+        for observed, expected in zip(args_cli.explicit_level_y_m, B005_LEVELS_Y_M)
+    )
+    or args_cli.position_tolerance_m != 0.005
+):
+    parser.error("V3-B005 requires its exact banana pose, seven levels, and 5 mm settle tolerance")
 
 study_root = args_cli.study_root.resolve()
 if str(study_root) not in sys.path:
@@ -173,10 +199,10 @@ def fresh_physical_reset(env) -> tuple[dict, dict, dict[str, list[int]]]:
     }
 
 
-def teleport_bowl_y(env, desired_robot_y_m: float) -> None:
+def teleport_object_y(env, name: str, desired_robot_y_m: float) -> None:
     world = get_world(env)
-    current_robot_y = float(numeric(world.get_pose("bowl", env_id=0)[0])[1])
-    asset = env.scene.rigid_objects["bowl"]
+    current_robot_y = float(numeric(world.get_pose(name, env_id=0)[0])[1])
+    asset = env.scene.rigid_objects[name]
     state = asset.data.root_state_w.clone()
     pose = state[:, :7].clone()
     pose[:, 1] += desired_robot_y_m - current_robot_y
@@ -201,7 +227,12 @@ def main() -> None:
         or correction.get("correction", {}).get("new_center_m") != CONTROL_BOWL_Y_M
     ):
         raise ValueError("neutrality correction is not the frozen zero-request source")
-    expected_positions = fixture["layouts"]["control"]["positions_robot_base_m"]
+    source_positions = fixture["layouts"]["control"]["positions_robot_base_m"]
+    expected_positions = {
+        name: list(position) for name, position in source_positions.items()
+    }
+    if args_cli.banana_y_override_m is not None:
+        expected_positions["banana"][1] = args_cli.banana_y_override_m
 
     robolab_root = args_cli.robolab_root.resolve()
     robolab_commit = subprocess.check_output(
@@ -239,7 +270,8 @@ def main() -> None:
     # Obtain live collision extents and table support without consulting a model.
     probe_env, _ = create_env(
         TASKS["left"][0], device=args_cli.device, seed=args_cli.environment_seed,
-        num_envs=1, instruction_type="default", policy="v3b004_zero_request_calibration",
+        num_envs=1, instruction_type="default",
+        policy=f"{args_cli.amendment_id.lower().replace('-', '')}_zero_request_calibration",
         renderer=args_cli.renderer, rendering_mode=args_cli.rendering_type,
     )
     try:
@@ -250,10 +282,15 @@ def main() -> None:
         bowl_half_y = float((bowl_max[1] - bowl_min[1]) / 2.0)
         lower_y = float(table_min[1] + bowl_half_y + args_cli.boundary_headroom_m)
         upper_y = float(table_max[1] - bowl_half_y - args_cli.boundary_headroom_m)
-        scan_y = tuple(sorted(
-            dense_candidates(lower_y_m=lower_y, upper_y_m=upper_y),
-            key=lambda value: (abs(candidate_key(value)), candidate_key(value)),
-        ))
+        if args_cli.explicit_level_y_m:
+            scan_y = tuple(args_cli.explicit_level_y_m)
+            if tuple(sorted(scan_y)) != scan_y or len(set(scan_y)) != 7:
+                raise ValueError("V3-B005 explicit levels must be seven unique increasing values")
+        else:
+            scan_y = tuple(sorted(
+                dense_candidates(lower_y_m=lower_y, upper_y_m=upper_y),
+                key=lambda value: (abs(candidate_key(value)), candidate_key(value)),
+            ))
         _ = combined_frame(probe_obs)
     finally:
         probe_env.close()
@@ -265,7 +302,8 @@ def main() -> None:
         for relation, (task_name, _) in TASKS.items():
             env, env_cfg = create_env(
                 task_name, device=args_cli.device, seed=args_cli.environment_seed,
-                num_envs=1, instruction_type="default", policy="v3b004_zero_request_calibration",
+                num_envs=1, instruction_type="default",
+                policy=f"{args_cli.amendment_id.lower().replace('-', '')}_zero_request_calibration",
                 renderer=args_cli.renderer, rendering_mode=args_cli.rendering_type,
             )
             writer = None
@@ -283,10 +321,12 @@ def main() -> None:
                         if max(
                             abs(a - b)
                             for name in POSITIONS
-                            for a, b in zip(pre_teleport_positions[name], expected_positions[name])
+                            for a, b in zip(pre_teleport_positions[name], source_positions[name])
                         ) > args_cli.position_tolerance_m:
                             failures.append("fresh_reset_fixture_tolerance")
-                        teleport_bowl_y(env, y_m)
+                        if args_cli.banana_y_override_m is not None:
+                            teleport_object_y(env, "banana", args_cli.banana_y_override_m)
+                        teleport_object_y(env, "bowl", y_m)
                         action = hold_action(obs, env.device)
                         stability = {
                             name: {"max_linear_speed_m_s": 0.0, "max_angular_speed_rad_s": 0.0}
@@ -423,11 +463,18 @@ def main() -> None:
                     fingerprints_equal = False
         if len(candidate_rows) == 6 and all(row["passed"] for row in candidate_rows) and fingerprints_equal:
             passing.append(y_m)
-    radius_mm, levels = select_largest_radius(passing)
+    if args_cli.explicit_level_y_m:
+        levels = tuple(args_cli.explicit_level_y_m)
+        if set(levels) != set(passing):
+            missing = sorted(set(levels) - set(passing))
+            raise ValueError(f"V3-B005 failed closed; nonpassing preregistered levels: {missing}")
+        radius_mm = 90
+    else:
+        radius_mm, levels = select_largest_radius(passing)
 
     report = {
         "schema_version": "vla-wam-shared-v3b-nano-lateral-model-blind-calibration-v1",
-        "study_id": "vla_wam_language_steerability_v3", "amendment_id": "V3-B004",
+        "study_id": "vla_wam_language_steerability_v3", "amendment_id": args_cli.amendment_id,
         "status": "complete_model_blind_numeric_calibration_not_behaviorally_released",
         "passed": True, "model_request_count": 0, "behavioral_episode_count": 0,
         "pod": args_cli.pod, "pod_uid": args_cli.pod_uid, "gpu_uuid": args_cli.gpu_uuid,
@@ -459,6 +506,11 @@ def main() -> None:
         "selection": {
             "center_y_m": CONTROL_BOWL_Y_M, "half_range_mm": radius_mm,
             "ordered_seven_levels_y_m": list(levels),
+            "banana_y_override_m": args_cli.banana_y_override_m,
+            "selection_mode": (
+                "prospectively_fixed_v3b005_levels"
+                if args_cli.explicit_level_y_m else "v3b004_largest_passing_radius"
+            ),
         },
         "viewport_write_gate": videos,
         "release_boundary": "Numeric levels are calibrated with zero model requests. Commit and hash-bind this report and the exact 210-cell queue before starting a Nano server.",
@@ -473,7 +525,7 @@ if __name__ == "__main__":
     try:
         main()
     except Exception as error:
-        print(f"[Nano V3-B004 model-blind lateral calibration] technical failure: {error}")
+        print(f"[Nano {args_cli.amendment_id} model-blind lateral calibration] technical failure: {error}")
         traceback.print_exc()
         simulation_app.close()
         raise

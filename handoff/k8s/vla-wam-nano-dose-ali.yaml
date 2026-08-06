@@ -1,0 +1,113 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: vla-wam-nano-dose-ali
+  namespace: 211247-prod
+  labels:
+    app: vla-wam-nano-dose-ali
+    environment: production
+    owner: ali
+    purpose: vla-wam-v3-nano-dose-response
+    site: warren
+spec:
+  automountServiceAccountToken: false
+  restartPolicy: Never
+  nodeSelector:
+    node-role.kubernetes.io/worker-gpu: ""
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: nvidia.com/gpu.product
+                operator: In
+                values:
+                  - NVIDIA-RTX-PRO-6000-Blackwell-Server-Edition
+  tolerations:
+    - key: nvidia.com/gpu
+      operator: Equal
+      value: present
+      effect: NoSchedule
+  imagePullSecrets:
+    - name: artifactory-ci-pull-secret
+  securityContext:
+    fsGroup: 2518800
+    supplementalGroups:
+      - 2518800
+    seccompProfile:
+      type: RuntimeDefault
+  containers:
+    - name: vla-wam-nano-dose-ali
+      image: artifactory-ci.gm.com/docker-approved/devcontainers/base:ubuntu22.04
+      command:
+        - sh
+        - -lc
+        - mkdir -p /home/ali-nano-dose/.cache /tmp/ali-nano-dose /var/tmp/ali-nano-dose && exec sleep infinity
+      workingDir: /home/ali-nano-dose
+      env:
+        - name: USER
+          value: ali-nano-dose
+        - name: LOGNAME
+          value: ali-nano-dose
+        - name: HOME
+          value: /home/ali-nano-dose
+        - name: XDG_CACHE_HOME
+          value: /home/ali-nano-dose/.cache
+        - name: TMPDIR
+          value: /tmp/ali-nano-dose
+        - name: NVIDIA_DRIVER_CAPABILITIES
+          value: compute,utility,graphics,display
+      resources:
+        requests:
+          cpu: "16"
+          memory: 64Gi
+          nvidia.com/gpu: "1"
+        limits:
+          cpu: "64"
+          memory: 128Gi
+          nvidia.com/gpu: "1"
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        readOnlyRootFilesystem: false
+        runAsGroup: 2518800
+        runAsNonRoot: true
+        runAsUser: 816149040
+      volumeMounts:
+        - name: workspace
+          mountPath: /data
+        - name: dshm
+          mountPath: /dev/shm
+        - name: tmp
+          mountPath: /tmp
+        - name: vartmp
+          mountPath: /var/tmp
+        - name: home
+          mountPath: /home/ali-nano-dose
+        - name: userdb
+          mountPath: /etc/passwd
+          subPath: passwd
+          readOnly: true
+        - name: userdb
+          mountPath: /etc/group
+          subPath: group
+          readOnly: true
+  volumes:
+    - name: workspace
+      persistentVolumeClaim:
+        claimName: 211247-prod-pvc
+    - name: dshm
+      emptyDir:
+        medium: Memory
+        sizeLimit: 96Gi
+    - name: tmp
+      emptyDir: {}
+    - name: vartmp
+      emptyDir: {}
+    - name: home
+      emptyDir: {}
+    - name: userdb
+      configMap:
+        name: lerobot-13-ali-userdb

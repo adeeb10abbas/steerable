@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import json
 
 import pytest
 
@@ -69,3 +70,31 @@ def test_live_driver_forces_and_records_each_fresh_physical_reset() -> None:
     assert "counter.zero_()" in source
     assert '"episode_length_buf_after_reset": after_reset' in source
     assert '"pre_teleport_positions_robot_base_m": pre_teleport_positions' in source
+
+
+def test_v3b005_replacement_is_frozen_before_its_model_blind_gate() -> None:
+    root = Path(__file__).resolve().parents[1]
+    artifact = root / "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005"
+    amendment = json.loads(
+        (artifact / "post_result_nano_lateral_sweep_v3b005_amendment.json").read_text()
+    )
+    fixture = json.loads(
+        (artifact / "prospective_safe_distractor_fixture.json").read_text()
+    )
+    assert amendment["amendment_id"] == "V3-B005"
+    assert amendment["release_boundary"]["behavioral_release"] is False
+    assert amendment["release_boundary"]["model_server_may_start"] is False
+    assert amendment["design"]["ordered_bowl_y_levels_m"] == fixture["ordered_bowl_y_levels_m"]
+    assert amendment["design"]["half_range_m"] == 0.09
+    assert fixture["positions_robot_base_m"]["banana"][1] == -0.2755556747317314
+
+
+def test_live_driver_rejects_any_unregistered_v3b005_geometry() -> None:
+    source = (
+        Path(__file__).resolve().parents[1]
+        / "experiments/v3/cosmos_nano_lateral_sweep/model_blind_lateral_calibration.py"
+    ).read_text()
+    assert 'B005_BANANA_Y_M = -0.2755556747317314' in source
+    assert 'args_cli.amendment_id == "V3-B004"' in source
+    assert 'V3-B005 failed closed; nonpassing preregistered levels' in source
+    assert 'args_cli.position_tolerance_m != 0.005' in source

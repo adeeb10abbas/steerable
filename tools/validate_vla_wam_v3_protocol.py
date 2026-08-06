@@ -130,6 +130,9 @@ REQUIRED = {
     "dreamzero_mirror_registration_test": "tests/test_build_dreamzero_v3b003_registration.py",
     "nano_lateral_sweep_amendment": f"{V3}/phase_b/nano_lateral_sweep_v3b004/post_result_nano_lateral_sweep_v3b004_amendment.json",
     "nano_lateral_sweep_neutrality_correction": f"{V3}/phase_b/nano_lateral_sweep_v3b004/prospective_neutrality_correction.json",
+    "nano_lateral_sweep_failure_report": f"{V3}/phase_b/nano_lateral_sweep_v3b004/model_blind_calibration_failure_report.json",
+    "nano_lateral_sweep_v3b005_amendment": f"{V3}/phase_b/nano_lateral_sweep_v3b005/post_result_nano_lateral_sweep_v3b005_amendment.json",
+    "nano_lateral_sweep_v3b005_fixture": f"{V3}/phase_b/nano_lateral_sweep_v3b005/prospective_safe_distractor_fixture.json",
     "nano_lateral_sweep_calibration_driver": "experiments/v3/cosmos_nano_lateral_sweep/model_blind_lateral_calibration.py",
     "nano_lateral_sweep_calibration_design": "experiments/v3/cosmos_nano_lateral_sweep/calibration_design.py",
 }
@@ -1715,6 +1718,15 @@ def validate(root: Path) -> list[str]:
     nano_lateral_sweep_neutrality_correction = load(
         paths["nano_lateral_sweep_neutrality_correction"]
     )
+    nano_lateral_sweep_failure_report = load(
+        paths["nano_lateral_sweep_failure_report"]
+    )
+    nano_lateral_sweep_v3b005_amendment = load(
+        paths["nano_lateral_sweep_v3b005_amendment"]
+    )
+    nano_lateral_sweep_v3b005_fixture = load(
+        paths["nano_lateral_sweep_v3b005_fixture"]
+    )
 
     require(
         nano_calibration.get("schema_version")
@@ -3279,6 +3291,89 @@ def validate(root: Path) -> list[str]:
         "Nano V3-B004 freezes full-sample depth slopes, seed-level inference, and complete-pair margin reporting",
         checks,
     )
+    v3b004_failure = nano_lateral_sweep_failure_report.get(
+        "decisive_model_blind_result", {}
+    )
+    require(
+        nano_lateral_sweep_failure_report.get("schema_version")
+        == "vla-wam-shared-v3b-nano-lateral-calibration-failure-v1"
+        and nano_lateral_sweep_failure_report.get("amendment_id") == "V3-B004"
+        and nano_lateral_sweep_failure_report.get("status")
+        == "failed_closed_before_any_model_request_or_behavioral_episode"
+        and nano_lateral_sweep_failure_report.get("model_request_count") == 0
+        and nano_lateral_sweep_failure_report.get("behavioral_episode_count") == 0
+        and v3b004_failure.get("offset_mm") == -30
+        and v3b004_failure.get("failure") == "bowl_banana_collision_projection"
+        and v3b004_failure.get("observed_xy_aabb_gap_m")
+        == 0.0018512308597564697
+        and v3b004_failure.get("required_minimum_gap_m") == 0.002
+        and nano_lateral_sweep_failure_report.get("release_boundary")
+        == "V3-B004 is permanently unreleased. Its numeric queue must never be generated and no V3-B004 Nano model request is authorized.",
+        "Nano V3-B004 records its decisive model-blind collision and fails closed with zero model requests",
+        checks,
+    )
+    v3b005_design = nano_lateral_sweep_v3b005_amendment.get("design", {})
+    v3b005_gate = nano_lateral_sweep_v3b005_amendment.get(
+        "model_blind_release_gate", {}
+    )
+    v3b005_source = nano_lateral_sweep_v3b005_amendment.get("source", {})
+    expected_v3b005_levels = [
+        0.03658219039440155,
+        0.06658219039440155,
+        0.09658219039440155,
+        0.12658219039440155,
+        0.15658219039440155,
+        0.18658219039440156,
+        0.21658219039440155,
+    ]
+    require(
+        nano_lateral_sweep_v3b005_amendment.get("schema_version")
+        == "vla-wam-shared-v3b-nano-lateral-sweep-amendment-v2"
+        and nano_lateral_sweep_v3b005_amendment.get("amendment_id") == "V3-B005"
+        and nano_lateral_sweep_v3b005_amendment.get("status")
+        == "design_frozen_before_v3b005_model_blind_gate_and_before_any_v3b005_model_request"
+        and v3b005_design.get("matched_seeds") == exact_range(9500, 9514)
+        and v3b005_design.get("ordered_bowl_y_levels_m")
+        == expected_v3b005_levels
+        and v3b005_design.get("exact_prompts") == EXACT_V2_WORDINGS["direct_command"]
+        and v3b005_design.get("registered_behavioral_episode_ceiling_after_release")
+        == 210
+        and v3b005_gate.get("model_request_count") == 0
+        and v3b005_gate.get("behavioral_episode_count") == 0
+        and v3b005_gate.get("fresh_resets_per_level_per_relation") == 3
+        and v3b005_gate.get("fixed_object_settle_error_max_m") == 0.005
+        and v3b005_source.get("v3b004_failure_report_sha256")
+        == sha256(paths["nano_lateral_sweep_failure_report"])
+        and v3b005_source.get("safe_distractor_fixture", {}).get("sha256")
+        == sha256(paths["nano_lateral_sweep_v3b005_fixture"]),
+        "Nano V3-B005 prospectively freezes the exact seven-level 15-seed dose-response before its zero-request gate",
+        checks,
+    )
+    require(
+        nano_lateral_sweep_v3b005_fixture.get("schema_version")
+        == "vla-wam-shared-v3b-nano-lateral-safe-distractor-fixture-v1"
+        and nano_lateral_sweep_v3b005_fixture.get("amendment_id") == "V3-B005"
+        and nano_lateral_sweep_v3b005_fixture.get("model_request_count_before_registration")
+        == 0
+        and nano_lateral_sweep_v3b005_fixture.get("behavioral_episode_count_before_registration")
+        == 0
+        and nano_lateral_sweep_v3b005_fixture.get("positions_robot_base_m", {}).get(
+            "banana"
+        )[1]
+        == -0.2755556747317314
+        and nano_lateral_sweep_v3b005_fixture.get("ordered_bowl_y_levels_m")
+        == expected_v3b005_levels,
+        "Nano V3-B005 freezes the safe distractor and bowl levels before its physical gate",
+        checks,
+    )
+    require(
+        'choices=("V3-B004", "V3-B005")' in lateral_driver_source
+        and "B005_BANANA_Y_M = -0.2755556747317314" in lateral_driver_source
+        and "V3-B005 failed closed" in lateral_driver_source
+        and "args_cli.position_tolerance_m != 0.005" in lateral_driver_source,
+        "Nano lateral calibration driver enforces V3-B005 exact inputs and fail-closed semantics",
+        checks,
+    )
     pi05_runtime_source = paths["pi05_mirror_runtime"].read_text(encoding="utf-8")
     pi05_preflight_source = paths["pi05_mirror_preflight"].read_text(encoding="utf-8")
     pi05_bridge_source = paths["pi05_mirror_bridge"].read_text(encoding="utf-8")
@@ -3378,7 +3473,9 @@ def validate(root: Path) -> list[str]:
             and completed_pi05_phase_b.get("completed_behavioral_cells") == 108
             and "27-seed" in completed_pi05_phase_b.get("release_condition", "")
             and "hash-closed" in completed_pi05_phase_b.get("release_condition", "")
-            and "DreamZero V3-B003 is hash-bound but not behaviorally released"
+            and "DreamZero V3-B003"
+            in phase_b_state.get("unreleased", "")
+            and "not behaviorally released"
             in phase_b_state.get("unreleased", ""),
             "V3 continuation marks V3-B002 complete while keeping V3-B003 unreleased",
             checks,
@@ -3402,23 +3499,39 @@ def validate(root: Path) -> list[str]:
             checks,
         )
     nano_lateral_registered = phase_b_state.get("registered_not_released", {}).get(
-        "nano_v3b004"
+        "nano_v3b005"
     )
     require(
-        nano_lateral_registered.get("amendment_id") == "V3-B004"
+        nano_lateral_registered.get("amendment_id") == "V3-B005"
         and nano_lateral_registered.get("model_id")
         == "cosmos3_nano_policy_droid"
         and nano_lateral_registered.get("matched_seeds") == 15
         and nano_lateral_registered.get("planned_lateral_levels") == 7
-        and nano_lateral_registered.get("planned_behavioral_cells_after_calibration")
+        and nano_lateral_registered.get("planned_behavioral_cells_after_gate")
         == 210
-        and nano_lateral_registered.get("numeric_levels_frozen") is False
+        and nano_lateral_registered.get("numeric_levels_frozen") is True
         and nano_lateral_registered.get("model_requests_after_registration") == 0
         and nano_lateral_registered.get("behavioral_episodes_after_registration")
         == 0
         and nano_lateral_registered.get("amendment", {}).get("sha256")
-        == sha256(paths["nano_lateral_sweep_amendment"]),
-        "V3 continuation preserves the zero-request Nano V3-B004 design-only calibration boundary",
+        == sha256(paths["nano_lateral_sweep_v3b005_amendment"])
+        and nano_lateral_registered.get("prospective_safe_distractor_fixture", {}).get(
+            "sha256"
+        )
+        == sha256(paths["nano_lateral_sweep_v3b005_fixture"]),
+        "V3 continuation preserves the zero-request Nano V3-B005 physical-gate boundary",
+        checks,
+    )
+    nano_lateral_failed = phase_b_state.get("failed_closed", {}).get("nano_v3b004")
+    require(
+        nano_lateral_failed.get("amendment_id") == "V3-B004"
+        and nano_lateral_failed.get("status")
+        == "failed_closed_before_any_model_request_or_behavioral_episode"
+        and nano_lateral_failed.get("model_request_count") == 0
+        and nano_lateral_failed.get("behavioral_episode_count") == 0
+        and nano_lateral_failed.get("failure_report", {}).get("sha256")
+        == sha256(paths["nano_lateral_sweep_failure_report"]),
+        "V3 continuation permanently excludes failed-closed V3-B004 from model and behavioral denominators",
         checks,
     )
     inference_authority = continuation.get("next_agent", {}).get(

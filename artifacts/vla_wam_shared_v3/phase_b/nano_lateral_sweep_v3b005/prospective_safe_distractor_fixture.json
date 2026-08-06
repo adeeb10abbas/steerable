@@ -1,0 +1,32 @@
+{
+  "schema_version": "vla-wam-shared-v3b-nano-lateral-safe-distractor-fixture-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B005",
+  "recorded_at_utc": "2026-08-06T22:28:00Z",
+  "status": "frozen_before_v3b005_model_blind_gate_and_before_any_v3b005_model_request",
+  "model_request_count_before_registration": 0,
+  "behavioral_episode_count_before_registration": 0,
+  "positions_robot_base_m": {
+    "rubiks_cube": [0.303364634513855, 0.12396888434886932, 0.08113233000040054],
+    "bowl_center_at_level_0": [0.44258353114128113, 0.12658219039440155, 0.07732785493135452],
+    "banana": [0.538878858089447, -0.2755556747317314, 0.0684281587600708]
+  },
+  "quaternions_wxyz_unchanged_from_v3b001_control": {
+    "rubiks_cube": [0.9999990463256836, -0.0009071399440944852, 0.0010379400315123045, 0.00008441170612118015],
+    "bowl": [0.9999999403953552, -0.00005875354421326538, -0.0003236202968188691, -0.00010501052579296266],
+    "banana": [0.9999781250953674, -0.002664888769974798, -0.006051987813043361, 0.00014540326035168]
+  },
+  "ordered_bowl_y_levels_m": [
+    0.03658219039440155,
+    0.06658219039440155,
+    0.09658219039440155,
+    0.12658219039440155,
+    0.15658219039440155,
+    0.18658219039440156,
+    0.21658219039440155
+  ],
+  "changed_from_v3b004": "The irrelevant banana distractor is translated by -0.2000000000000000 m in robot-frame y and then held fixed for every cell. No target, reference, prompt, scorer, camera, robot, controller, or nonmovable geometry is changed.",
+  "source_v3b001_fixture_candidate_sha256": "e1799b815da41f9a08a4000a360c4958003269fed27e2abe75b273519e4d1c88",
+  "source_v3b004_failure_report": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b004/model_blind_calibration_failure_report.json",
+  "release_boundary": "These prospective coordinates authorize only a zero-model-request 7x3x2 physical gate. Behavioral inference remains prohibited until its report and exact 210-cell queue are committed and hash-bound."
+}

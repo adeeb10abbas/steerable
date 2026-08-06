@@ -1,0 +1,62 @@
+{
+  "schema_version": "vla-wam-shared-v3b-nano-lateral-calibration-failure-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B004",
+  "recorded_at_utc": "2026-08-06T22:28:00Z",
+  "status": "failed_closed_before_any_model_request_or_behavioral_episode",
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "registered_minimum_half_range_mm": 90,
+  "registered_radius_90_offsets_mm": [-90, -60, -30, 0, 30, 60, 90],
+  "decisive_model_blind_result": {
+    "offset_mm": -30,
+    "failure": "bowl_banana_collision_projection",
+    "observed_xy_aabb_gap_m": 0.0018512308597564697,
+    "required_minimum_gap_m": 0.002,
+    "implication": "Every allowed radius r >= 90 mm contains a negative level at or beyond -30 mm, so no registered symmetric seven-level sweep can pass with the original fixed banana pose."
+  },
+  "fresh_reset_confirmation": {
+    "attempt": "calibration_attempt16",
+    "renderer": "realtime RTX Vulkan balanced",
+    "pod": "raytrace-rtxpro6000-ali",
+    "pod_uid": "d5b0405a-a9b1-4baa-a802-d5171e03c228",
+    "gpu_uuid": "GPU-f28bd513-a38a-b768-7589-d2959f814ae8",
+    "retained_rows": 11,
+    "fresh_physical_reset_attested": true,
+    "center_repeat_pass_fail": [2, 1],
+    "center_failure_detail": "One of three center repeats exceeded the preregistered 3 mm fixed-cube settle tolerance; this independently prevents release but is not needed for the collision proof.",
+    "raw_rows": {
+      "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/lateral_sweep/calibration_attempt16/live_gate/model_blind_scan_rows.jsonl",
+      "sha256": "6483b9b5eb5c7b98e1a3472465380f94d0eba4cb47a21872a08dfd3f8af8506a",
+      "bytes": 21758,
+      "row_count": 11
+    },
+    "stdout": {
+      "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/lateral_sweep/calibration_attempt16/launch.log",
+      "sha256": "14ce7e311c648a78e05ed9418543571205c823a365b4f885a2be358d807a71ca",
+      "bytes": 20144
+    }
+  },
+  "complete_geometry_scan_source": {
+    "scope": "480 zero-model-request rows from the original fixture; reset reuse invalidates its settle dynamics but not its deterministic candidate AABB collision calculation",
+    "raw_rows": {
+      "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/lateral_sweep/calibration_attempt05/live_gate/model_blind_scan_rows.jsonl",
+      "sha256": "8bd5f68fb248681fc89db2515c4e6bd836553d47c1c1480b7b41f993435617c6",
+      "bytes": 800494,
+      "row_count": 480
+    },
+    "collision_offsets_confirmed_mm": [-120, -100, -90, -60, -40, -30]
+  },
+  "termination": {
+    "reason": "The preregistered pass condition had become logically impossible; continuing the remaining physical scan could not change the release decision.",
+    "process_pid": 255812,
+    "signal": "SIGTERM",
+    "partial_attempt_denominator_policy": "infrastructure/model-blind calibration evidence only; excluded from every behavioral denominator"
+  },
+  "source": {
+    "v3b004_amendment_sha256": "6326ee2faebb21e50243a8018568bbd012f77ed58b35c6164a989b9a9cdb0dee",
+    "fixture_candidate_sha256": "e1799b815da41f9a08a4000a360c4958003269fed27e2abe75b273519e4d1c88",
+    "neutrality_correction_sha256": "3b3a9687f92367b6a65552af4c699d11edd14aac6074e0a4837b0745e27aa5e7"
+  },
+  "release_boundary": "V3-B004 is permanently unreleased. Its numeric queue must never be generated and no V3-B004 Nano model request is authorized."
+}

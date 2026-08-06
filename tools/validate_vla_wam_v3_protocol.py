@@ -91,6 +91,20 @@ REQUIRED = {
     "pi05_mirror_registration_builder": "tools/build_pi05_v3b002_registration.py",
     "pi05_failure_split_analyzer": "tools/analyze_v3_failure_mode_split.py",
     "pi05_mirror_registration_test": "tests/test_build_pi05_v3b002_registration.py",
+    "pi05_mirror_runtime_readme": "experiments/v3/pi05_phase_b/README.md",
+    "pi05_mirror_contract": "experiments/v3/pi05_phase_b/contract.py",
+    "pi05_mirror_runtime": "experiments/v3/pi05_phase_b/runtime.py",
+    "pi05_mirror_preflight": "experiments/v3/pi05_phase_b/model_blind_preflight.py",
+    "pi05_mirror_probe": "experiments/v3/pi05_phase_b/fixed_observation_probe.py",
+    "pi05_mirror_fixture_tasks": "experiments/v3/pi05_phase_b/fixture_tasks.py",
+    "pi05_mirror_client": "experiments/v3/pi05_phase_b/client.py",
+    "pi05_mirror_bridge": "experiments/v3/pi05_phase_b/robolab_bridge.py",
+    "pi05_mirror_queue": "experiments/v3/pi05_phase_b/queue.py",
+    "pi05_mirror_cell_compiler": "experiments/v3/pi05_phase_b/compile_cell.py",
+    "pi05_mirror_diagnostics": "experiments/v3/pi05_phase_b/diagnostics.py",
+    "pi05_mirror_results_compiler": "experiments/v3/pi05_phase_b/compiler.py",
+    "pi05_mirror_runtime_test": "tests/test_pi05_v3b002_runtime.py",
+    "pi05_mirror_compiler_test": "tests/test_pi05_v3b002_compiler.py",
 }
 DROID_MODELS = [
     "pi0_fast_droid_vla",
@@ -2477,6 +2491,27 @@ def validate(root: Path) -> list[str]:
         )
         == sha256(paths["pi05_failure_split_report"]),
         "V3-B002 failure-mode split binds 162 existing episodes and the three exact 2x5 tables",
+        checks,
+    )
+    pi05_runtime_source = paths["pi05_mirror_runtime"].read_text(encoding="utf-8")
+    pi05_preflight_source = paths["pi05_mirror_preflight"].read_text(encoding="utf-8")
+    pi05_bridge_source = paths["pi05_mirror_bridge"].read_text(encoding="utf-8")
+    pi05_queue_source = paths["pi05_mirror_queue"].read_text(encoding="utf-8")
+    pi05_diagnostics_source = paths["pi05_mirror_diagnostics"].read_text(encoding="utf-8")
+    pi05_compiler_source = paths["pi05_mirror_results_compiler"].read_text(encoding="utf-8")
+    require(
+        "cover every runtime simulator lane exactly once" in pi05_runtime_source
+        and '"model_request_count": 0' in pi05_preflight_source
+        and "for repeat in range(3)" in pi05_preflight_source
+        and "object_grabbed" in pi05_bridge_source
+        and "no verified physical contact stream" in pi05_bridge_source
+        and "native_process_group_thermal_guard.py" in pi05_queue_source
+        and "cells_for_lane" in pi05_queue_source
+        and "retained_object_grabbed_boolean_stream" in pi05_diagnostics_source
+        and "exact_two_sided_within_seed_control_reflected_label_permutation"
+        in pi05_compiler_source
+        and "total_permutations = 2 ** len(values)" in pi05_compiler_source,
+        "V3-B002 runtime enforces six-lane physical gates, guarded whole-seed queues, retained grasp/contact semantics, and the registered exact statistics",
         checks,
     )
     pi05_release = continuation.get("phase_b_releases", {}).get(

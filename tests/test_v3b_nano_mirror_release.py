@@ -434,6 +434,27 @@ class NanoMirrorReleaseTest(unittest.TestCase):
         with self.assertRaisesRegex(design.ReleaseError, "diagnostic mismatch"):
             self.build(falsify_diagnostic)
 
+    def test_accepts_one_ulp_dot_roundoff_but_not_inconsistent_angle(self) -> None:
+        def one_ulp_roundoff(report: dict, _: Path) -> None:
+            recorded = report["post_settle_cross_layout_quaternion_differences"][0][
+                "objects"
+            ]["banana"]
+            recorded_dot = math.nextafter(1.0, 0.0)
+            recorded["absolute_quaternion_dot"] = recorded_dot
+            recorded["angular_distance_rad"] = 2.0 * math.acos(recorded_dot)
+
+        release = self.build(one_ulp_roundoff)
+        self.assertEqual(len(release.rows), 108)
+
+        def inconsistent_angle(report: dict, root: Path) -> None:
+            one_ulp_roundoff(report, root)
+            report["post_settle_cross_layout_quaternion_differences"][0]["objects"][
+                "banana"
+            ]["angular_distance_rad"] += 1e-8
+
+        with self.assertRaisesRegex(design.ReleaseError, "angular_distance_rad"):
+            self.build(inconsistent_angle)
+
     def test_rejects_failed_neutral_or_sustained_stability_gate(self) -> None:
         with self.assertRaisesRegex(design.ReleaseError, "starts LEFT"):
             self.build(

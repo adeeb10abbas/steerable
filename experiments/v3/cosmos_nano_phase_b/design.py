@@ -699,20 +699,54 @@ def _validate_live_tasks(report: Mapping[str, Any], candidate: Mapping[str, Any]
                     )
                 ),
             )
-            expected = {
-                "max_abs_component_difference": max(
-                    abs(left - right)
-                    for left, right in zip(control_quaternion, mirrored_quaternion)
+            expected_component_difference = max(
+                abs(left - right)
+                for left, right in zip(control_quaternion, mirrored_quaternion)
+            )
+            observed_component_difference = _number(
+                recorded["max_abs_component_difference"],
+                "quaternion diagnostic max_abs_component_difference",
+            )
+            require(
+                math.isclose(
+                    observed_component_difference,
+                    expected_component_difference,
+                    rel_tol=0.0,
+                    abs_tol=1e-15,
                 ),
-                "absolute_quaternion_dot": dot,
-                "angular_distance_rad": 2.0 * math.acos(dot),
-            }
-            for field, expected_value in expected.items():
-                observed = _number(recorded[field], f"quaternion diagnostic {field}")
-                require(
-                    math.isclose(observed, expected_value, rel_tol=0.0, abs_tol=1e-15),
-                    f"post-settle quaternion diagnostic mismatch: {repeat_index}.{name}.{field}",
-                )
+                "post-settle quaternion diagnostic mismatch: "
+                f"{repeat_index}.{name}.max_abs_component_difference",
+            )
+
+            observed_dot = _number(
+                recorded["absolute_quaternion_dot"],
+                "quaternion diagnostic absolute_quaternion_dot",
+            )
+            require(
+                0.0 <= observed_dot <= 1.0
+                and math.isclose(observed_dot, dot, rel_tol=0.0, abs_tol=1e-15),
+                "post-settle quaternion diagnostic mismatch: "
+                f"{repeat_index}.{name}.absolute_quaternion_dot",
+            )
+
+            observed_angle = _number(
+                recorded["angular_distance_rad"],
+                "quaternion diagnostic angular_distance_rad",
+            )
+            # A one-ULP dot-product difference near |dot|=1 is valid serializer/runtime
+            # roundoff, but inverse cosine amplifies it.  Bind the recorded dot to the
+            # source quaternions above, then bind the angle to that recorded dot.
+            expected_angle = 2.0 * math.acos(observed_dot)
+            require(
+                math.isclose(
+                    observed_angle,
+                    expected_angle,
+                    rel_tol=0.0,
+                    abs_tol=1e-12,
+                ),
+                "post-settle quaternion diagnostic mismatch: "
+                f"{repeat_index}.{name}.angular_distance_rad",
+            )
 
 
 def _validate_report_shape(report: dict[str, Any], repo_root: Path) -> dict[str, Any]:

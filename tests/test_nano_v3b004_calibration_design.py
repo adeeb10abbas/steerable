@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 
 from experiments.v3.cosmos_nano_lateral_sweep.calibration_design import (
@@ -56,3 +58,14 @@ def test_original_zero_centering_was_analytically_infeasible() -> None:
 def test_xy_gap_is_zero_on_overlap_and_positive_when_separated() -> None:
     assert xy_aabb_separation_m((0, 0), (1, 1), (0.5, 0.5), (2, 2)) == 0
     assert xy_aabb_separation_m((0, 0), (1, 1), (1.3, 1.4), (2, 2)) == pytest.approx(0.5)
+
+
+def test_live_driver_forces_and_records_each_fresh_physical_reset() -> None:
+    source = (
+        Path(__file__).resolve().parents[1]
+        / "experiments/v3/cosmos_nano_lateral_sweep/model_blind_lateral_calibration.py"
+    ).read_text()
+    assert "def fresh_physical_reset" in source
+    assert "counter.zero_()" in source
+    assert '"episode_length_buf_after_reset": after_reset' in source
+    assert '"pre_teleport_positions_robot_base_m": pre_teleport_positions' in source

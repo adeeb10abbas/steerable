@@ -145,6 +145,34 @@ def hold_action(obs: dict, device: str) -> torch.Tensor:
     return action
 
 
+def fresh_physical_reset(env) -> tuple[dict, dict, dict[str, list[int]]]:
+    """Force RoboLab's active-reset branch and attest its episode counter.
+
+    RoboLab freezes an environment instead of physically resetting it when the
+    episode counter is already beyond its short initialization window.  A
+    calibration repeat must be an independent physical reset, so the counter
+    is explicitly zeroed before every reset and checked again afterwards.
+    """
+
+    counter = getattr(env, "episode_length_buf", None)
+    if counter is None or not hasattr(counter, "zero_"):
+        raise RuntimeError("RoboLab does not expose a resettable episode_length_buf")
+    before = [int(item) for item in numeric(counter)]
+    counter.zero_()
+    after_zero = [int(item) for item in numeric(counter)]
+    if after_zero != [0]:
+        raise RuntimeError(f"failed to arm fresh physical reset: {after_zero}")
+    obs, info = env.reset()
+    after_reset = [int(item) for item in numeric(counter)]
+    if after_reset != [0]:
+        raise RuntimeError(f"fresh physical reset did not clear episode counter: {after_reset}")
+    return obs, info, {
+        "episode_length_buf_before_force_reset": before,
+        "episode_length_buf_after_zero": after_zero,
+        "episode_length_buf_after_reset": after_reset,
+    }
+
+
 def teleport_bowl_y(env, desired_robot_y_m: float) -> None:
     world = get_world(env)
     current_robot_y = float(numeric(world.get_pose("bowl", env_id=0)[0])[1])
@@ -215,7 +243,7 @@ def main() -> None:
         renderer=args_cli.renderer, rendering_mode=args_cli.rendering_type,
     )
     try:
-        probe_obs, _ = probe_env.reset()
+        probe_obs, _, _ = fresh_physical_reset(probe_env)
         probe_world = get_world(probe_env)
         table_min, table_max = bbox(probe_world, "table")
         bowl_min, bowl_max = bbox(probe_world, "bowl")
@@ -246,7 +274,18 @@ def main() -> None:
                 for y_m in scan_y:
                     for repeat in range(args_cli.repeat_resets):
                         failures: list[str] = []
-                        obs, _ = env.reset()
+                        obs, _, reset_counter = fresh_physical_reset(env)
+                        reset_world = get_world(env)
+                        pre_teleport_positions = {
+                            name: numeric(reset_world.get_pose(name, env_id=0)[0])
+                            for name in POSITIONS
+                        }
+                        if max(
+                            abs(a - b)
+                            for name in POSITIONS
+                            for a, b in zip(pre_teleport_positions[name], expected_positions[name])
+                        ) > args_cli.position_tolerance_m:
+                            failures.append("fresh_reset_fixture_tolerance")
                         teleport_bowl_y(env, y_m)
                         action = hold_action(obs, env.device)
                         stability = {
@@ -332,6 +371,8 @@ def main() -> None:
                             "left_predicate_at_reset": left, "right_predicate_at_reset": right,
                             "bowl_interobject_xy_gap_m": xy_gaps, "input_views": views,
                             "hold_action": numeric(action[0]),
+                            "fresh_physical_reset": reset_counter,
+                            "pre_teleport_positions_robot_base_m": pre_teleport_positions,
                         }
                         rows.append(row)
                         jsonl.write(json.dumps(row, allow_nan=False, sort_keys=True, separators=(",", ":")) + "\n")

@@ -3254,6 +3254,9 @@ def validate(root: Path) -> list[str]:
         and "select_largest_radius(passing)" in lateral_driver_source
         and "candidate_lower_y_m" in lateral_driver_source
         and "hold_action" in lateral_driver_source
+        and "def fresh_physical_reset" in lateral_driver_source
+        and '"pre_teleport_positions_robot_base_m": pre_teleport_positions'
+        in lateral_driver_source
         and "CONTROL_BOWL_Y_M = 0.12658219039440155" in lateral_design_source
         and "MINIMUM_RADIUS_MM = 90" in lateral_design_source,
         "Nano V3-B004 calibration implementation preserves zero-request, live-bound, neutral, and fail-closed selection gates",

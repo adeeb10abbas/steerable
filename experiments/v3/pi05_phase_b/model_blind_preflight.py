@@ -28,6 +28,7 @@ parser.add_argument(
     choices=("all", "control:left", "control:right", "position_mirrored:left", "position_mirrored:right"),
     default="all",
 )
+parser.add_argument("--repeat-index", type=int, choices=range(3))
 parser.add_argument("--environment-seed", type=int, default=9400)
 parser.add_argument("--pod", required=True)
 parser.add_argument("--pod-uid", required=True)
@@ -149,6 +150,24 @@ def _file(path: Path) -> dict[str, object]:
     return {"path": str(path.resolve()), "sha256": sha256_file(path), "bytes": path.stat().st_size}
 
 
+def _decode_video(path: Path) -> tuple[bool, int]:
+    """Decode outside Kit; importing VideoCapture in-process crashes Isaac 5."""
+
+    probe = subprocess.check_output([
+        sys.executable,
+        "-c",
+        (
+            "import cv2,json,sys;"
+            "c=cv2.VideoCapture(sys.argv[1]);"
+            "ok,_=c.read();n=int(c.get(cv2.CAP_PROP_FRAME_COUNT));"
+            "c.release();print(json.dumps({'ok':bool(ok),'frames':n}))"
+        ),
+        str(path.resolve()),
+    ], text=True)
+    value = json.loads(probe)
+    return bool(value["ok"]), int(value["frames"])
+
+
 def main() -> None:
     try:
         if args_cli.output_dir.exists():
@@ -194,6 +213,11 @@ def main() -> None:
             key: value for key, value in TASKS.items()
             if args_cli.condition == "all" or args_cli.condition == f"{key[0]}:{key[1]}"
         }
+        if args_cli.condition == "all" and args_cli.repeat_index is not None:
+            raise RuntimeError("repeat-scoped preflight requires one explicit condition")
+        repeat_indices = (
+            range(3) if args_cli.repeat_index is None else (args_cli.repeat_index,)
+        )
         for (arm, relation), (_, task_name) in selected_tasks.items():
             env, env_cfg = create_env(
                 task_name, device=args_cli.device, seed=args_cli.environment_seed,
@@ -211,7 +235,7 @@ def main() -> None:
             try:
                 if env_cfg.instruction != PROMPTS[relation]:
                     raise RuntimeError("task wrapper prompt bytes changed")
-                for repeat in range(3):
+                for repeat in repeat_indices:
                     obs, _, reset_attestation = _fresh_physical_reset(env)
                     hold = _hold(obs, env.device)
                     for _ in range(60):
@@ -264,11 +288,8 @@ def main() -> None:
                 # four-condition mode still needs per-environment cleanup.
                 if args_cli.condition == "all":
                     env.close()
-            capture = cv2.VideoCapture(str(video_path))
-            ok, _ = capture.read()
-            frame_count = int(capture.get(cv2.CAP_PROP_FRAME_COUNT))
-            capture.release()
-            if not ok or frame_count != 3:
+            ok, frame_count = _decode_video(video_path)
+            if not ok or frame_count != len(repeat_indices):
                 raise RuntimeError("viewport proof video did not decode all reset frames")
             video_records[f"{arm}:{relation}"] = {**_file(video_path), "decoded_frame_count": frame_count}
             rows.append({"arm": arm, "relation": relation, "task_name": task_name, "passed": True, "repeat_resets": repeats})
@@ -299,6 +320,9 @@ def main() -> None:
             "settle_steps": 60, "stable_window_steps": 15,
             "tasks": rows, "viewport_evidence": video_records,
             "condition_scope": args_cli.condition,
+            "repeat_scope": (
+                "all" if args_cli.repeat_index is None else args_cli.repeat_index
+            ),
             "fresh_writer_evidence": {"action": _file(action_path), "raw_jsonl": _file(raw_path)},
             "fixture_candidate": _file(args_cli.candidate),
             "design_sources": design_sources,

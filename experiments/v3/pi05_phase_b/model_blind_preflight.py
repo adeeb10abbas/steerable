@@ -23,6 +23,11 @@ parser.add_argument("--candidate", type=Path, required=True)
 parser.add_argument("--candidate-sha256", required=True)
 parser.add_argument("--output-dir", type=Path, required=True)
 parser.add_argument("--amendment-id", choices=("V3-B002", "V3-B003"), default="V3-B002")
+parser.add_argument(
+    "--condition",
+    choices=("all", "control:left", "control:right", "position_mirrored:left", "position_mirrored:right"),
+    default="all",
+)
 parser.add_argument("--environment-seed", type=int, default=9400)
 parser.add_argument("--pod", required=True)
 parser.add_argument("--pod-uid", required=True)
@@ -185,7 +190,11 @@ def main() -> None:
         )
         rows = []
         video_records = {}
-        for (arm, relation), (_, task_name) in TASKS.items():
+        selected_tasks = {
+            key: value for key, value in TASKS.items()
+            if args_cli.condition == "all" or args_cli.condition == f"{key[0]}:{key[1]}"
+        }
+        for (arm, relation), (_, task_name) in selected_tasks.items():
             env, env_cfg = create_env(
                 task_name, device=args_cli.device, seed=args_cli.environment_seed,
                 num_envs=1, instruction_type="default",
@@ -282,6 +291,7 @@ def main() -> None:
             "fixture_positions_match": True, "neutral_reset_passed": True,
             "settle_steps": 60, "stable_window_steps": 15,
             "tasks": rows, "viewport_evidence": video_records,
+            "condition_scope": args_cli.condition,
             "fresh_writer_evidence": {"action": _file(action_path), "raw_jsonl": _file(raw_path)},
             "fixture_candidate": _file(args_cli.candidate),
             "design_sources": design_sources,

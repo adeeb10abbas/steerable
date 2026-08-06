@@ -134,6 +134,7 @@ REQUIRED = {
     "dreamzero_mirror_runtime_compiler": "experiments/v3/dreamzero_phase_b/compile_cell.py",
     "dreamzero_mirror_runtime_queue": "experiments/v3/dreamzero_phase_b/queue.py",
     "dreamzero_mirror_release_builder": "tools/build_dreamzero_v3b003_release_gate.py",
+    "dreamzero_mirror_preflight_merger": "tools/merge_dreamzero_v3b003_preflight.py",
     "dreamzero_mirror_runtime_test": "tests/test_dreamzero_v3b003_runtime.py",
     "nano_lateral_sweep_amendment": f"{V3}/phase_b/nano_lateral_sweep_v3b004/post_result_nano_lateral_sweep_v3b004_amendment.json",
     "nano_lateral_sweep_neutrality_correction": f"{V3}/phase_b/nano_lateral_sweep_v3b004/prospective_neutrality_correction.json",
@@ -3220,6 +3221,7 @@ def validate(root: Path) -> list[str]:
             "dreamzero_mirror_runtime_compiler",
             "dreamzero_mirror_runtime_queue",
             "dreamzero_mirror_release_builder",
+            "dreamzero_mirror_preflight_merger",
             "dreamzero_mirror_runtime_test",
         )
     }
@@ -3239,7 +3241,9 @@ def validate(root: Path) -> list[str]:
         and "fixed_observation_release_passed"
         in dream_runtime_sources["dreamzero_mirror_release_builder"]
         and "model_request_count_before_release"
-        in dream_runtime_sources["dreamzero_mirror_release_builder"],
+        in dream_runtime_sources["dreamzero_mirror_release_builder"]
+        and "fresh_process_count"
+        in dream_runtime_sources["dreamzero_mirror_preflight_merger"],
         "DreamZero V3-B003 implementation gates first inference on reset, retains continuous/failure evidence, and preserves whole-seed guarded execution",
         checks,
     )

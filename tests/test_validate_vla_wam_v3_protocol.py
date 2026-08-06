@@ -81,6 +81,7 @@ class ValidateV3ProtocolTest(unittest.TestCase):
             "build_pi05_v3b002_registration.py",
             "build_dreamzero_v3b003_registration.py",
             "build_dreamzero_v3b003_release_gate.py",
+            "merge_dreamzero_v3b003_preflight.py",
             "build_nano_v3b005_queue.py",
             "analyze_v3_failure_mode_split.py",
         ):

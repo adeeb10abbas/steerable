@@ -86,6 +86,8 @@ def main() -> None:
             or value.get("viewport_writer_passed") is not True
             or value.get("raw_jsonl_writer_passed") is not True
             or value.get("action_trace_writer_passed") is not True
+            or len(value.get("tasks", [])) != 4
+            or value.get("fresh_process_count") != 4
             or identity in seen
         ):
             raise ValueError(f"invalid or duplicate DreamZero model-blind lane: {path}")

@@ -128,11 +128,23 @@ REQUIRED = {
     "dreamzero_mirror_manifest": f"{V3}/phase_b/dreamzero_mirror_v3b003/dreamzero_mirror_v3b003_manifest.json",
     "dreamzero_mirror_registration_builder": "tools/build_dreamzero_v3b003_registration.py",
     "dreamzero_mirror_registration_test": "tests/test_build_dreamzero_v3b003_registration.py",
+    "dreamzero_mirror_runtime_contract": "experiments/v3/dreamzero_phase_b/contract.py",
+    "dreamzero_mirror_runtime_client": "experiments/v3/dreamzero_phase_b/client.py",
+    "dreamzero_mirror_runtime_bridge": "experiments/v3/dreamzero_phase_b/robolab_bridge.py",
+    "dreamzero_mirror_runtime_compiler": "experiments/v3/dreamzero_phase_b/compile_cell.py",
+    "dreamzero_mirror_runtime_queue": "experiments/v3/dreamzero_phase_b/queue.py",
+    "dreamzero_mirror_release_builder": "tools/build_dreamzero_v3b003_release_gate.py",
+    "dreamzero_mirror_runtime_test": "tests/test_dreamzero_v3b003_runtime.py",
     "nano_lateral_sweep_amendment": f"{V3}/phase_b/nano_lateral_sweep_v3b004/post_result_nano_lateral_sweep_v3b004_amendment.json",
     "nano_lateral_sweep_neutrality_correction": f"{V3}/phase_b/nano_lateral_sweep_v3b004/prospective_neutrality_correction.json",
     "nano_lateral_sweep_failure_report": f"{V3}/phase_b/nano_lateral_sweep_v3b004/model_blind_calibration_failure_report.json",
     "nano_lateral_sweep_v3b005_amendment": f"{V3}/phase_b/nano_lateral_sweep_v3b005/post_result_nano_lateral_sweep_v3b005_amendment.json",
     "nano_lateral_sweep_v3b005_fixture": f"{V3}/phase_b/nano_lateral_sweep_v3b005/prospective_safe_distractor_fixture.json",
+    "nano_lateral_sweep_v3b005_physical_gate": f"{V3}/phase_b/nano_lateral_sweep_v3b005/model_blind_lateral_calibration_report.json",
+    "nano_lateral_sweep_v3b005_cells": f"{V3}/phase_b/nano_lateral_sweep_v3b005/nano_lateral_v3b005_cells.jsonl",
+    "nano_lateral_sweep_v3b005_manifest": f"{V3}/phase_b/nano_lateral_sweep_v3b005/nano_lateral_v3b005_manifest.json",
+    "nano_lateral_sweep_v3b005_queue_builder": "tools/build_nano_v3b005_queue.py",
+    "nano_lateral_sweep_v3b005_queue_test": "tests/test_build_nano_v3b005_queue.py",
     "nano_lateral_sweep_calibration_driver": "experiments/v3/cosmos_nano_lateral_sweep/model_blind_lateral_calibration.py",
     "nano_lateral_sweep_calibration_design": "experiments/v3/cosmos_nano_lateral_sweep/calibration_design.py",
 }
@@ -1727,6 +1739,15 @@ def validate(root: Path) -> list[str]:
     nano_lateral_sweep_v3b005_fixture = load(
         paths["nano_lateral_sweep_v3b005_fixture"]
     )
+    nano_lateral_sweep_v3b005_physical_gate = load(
+        paths["nano_lateral_sweep_v3b005_physical_gate"]
+    )
+    nano_lateral_sweep_v3b005_cells = load_jsonl(
+        paths["nano_lateral_sweep_v3b005_cells"]
+    )
+    nano_lateral_sweep_v3b005_manifest = load(
+        paths["nano_lateral_sweep_v3b005_manifest"]
+    )
 
     require(
         nano_calibration.get("schema_version")
@@ -3190,6 +3211,38 @@ def validate(root: Path) -> list[str]:
         "DreamZero V3-B003 reuses Nano seeds, fixtures, prompts, and order while disclosing constant model-noise seed 1140",
         checks,
     )
+    dream_runtime_sources = {
+        name: paths[name].read_text(encoding="utf-8")
+        for name in (
+            "dreamzero_mirror_runtime_contract",
+            "dreamzero_mirror_runtime_client",
+            "dreamzero_mirror_runtime_bridge",
+            "dreamzero_mirror_runtime_compiler",
+            "dreamzero_mirror_runtime_queue",
+            "dreamzero_mirror_release_builder",
+            "dreamzero_mirror_runtime_test",
+        )
+    }
+    require(
+        "V3-B003 seeds are exactly 9400-9426"
+        in dream_runtime_sources["dreamzero_mirror_runtime_client"]
+        and "model_request_count_at_write"
+        in dream_runtime_sources["dreamzero_mirror_runtime_client"]
+        and "fresh V3-B003 physical reset was not attested"
+        in dream_runtime_sources["dreamzero_mirror_runtime_bridge"]
+        and "failure_taxonomy"
+        in dream_runtime_sources["dreamzero_mirror_runtime_bridge"]
+        and "signed_final_lateral_offset_m"
+        in dream_runtime_sources["dreamzero_mirror_runtime_compiler"]
+        and "native_process_group_thermal_guard.py"
+        in dream_runtime_sources["dreamzero_mirror_runtime_queue"]
+        and "fixed_observation_release_passed"
+        in dream_runtime_sources["dreamzero_mirror_release_builder"]
+        and "model_request_count_before_release"
+        in dream_runtime_sources["dreamzero_mirror_release_builder"],
+        "DreamZero V3-B003 implementation gates first inference on reset, retains continuous/failure evidence, and preserves whole-seed guarded execution",
+        checks,
+    )
     lateral_design = nano_lateral_sweep_amendment.get("design", {})
     lateral_calibration = nano_lateral_sweep_amendment.get(
         "model_blind_numeric_calibration", {}
@@ -3367,6 +3420,76 @@ def validate(root: Path) -> list[str]:
         checks,
     )
     require(
+        nano_lateral_sweep_v3b005_physical_gate.get("schema_version")
+        == "vla-wam-shared-v3b-nano-lateral-model-blind-calibration-v1"
+        and nano_lateral_sweep_v3b005_physical_gate.get("amendment_id") == "V3-B005"
+        and nano_lateral_sweep_v3b005_physical_gate.get("passed") is True
+        and nano_lateral_sweep_v3b005_physical_gate.get("model_request_count") == 0
+        and nano_lateral_sweep_v3b005_physical_gate.get("behavioral_episode_count") == 0
+        and nano_lateral_sweep_v3b005_physical_gate.get("dense_scan", {}).get("row_count")
+        == 42
+        and nano_lateral_sweep_v3b005_physical_gate.get("dense_scan", {}).get(
+            "passing_candidate_y_m"
+        )
+        == expected_v3b005_levels
+        and nano_lateral_sweep_v3b005_physical_gate.get("selection", {}).get(
+            "ordered_seven_levels_y_m"
+        )
+        == expected_v3b005_levels,
+        "Nano V3-B005 passes all 42 preregistered physical rows with zero model requests",
+        checks,
+    )
+    cells_by_seed: dict[int, list[dict[str, Any]]] = {}
+    for row in nano_lateral_sweep_v3b005_cells:
+        cells_by_seed.setdefault(row.get("environment_seed"), []).append(row)
+    expected_conditions = {(level, relation) for level in range(7) for relation in ("left", "right")}
+    require(
+        len(nano_lateral_sweep_v3b005_cells) == 210
+        and sorted(cells_by_seed) == exact_range(9500, 9514)
+        and all(len(rows) == 14 for rows in cells_by_seed.values())
+        and all(
+            {(row.get("level_index"), row.get("relation")) for row in rows}
+            == expected_conditions
+            and {row.get("execution_order_index_within_seed") for row in rows}
+            == set(range(1, 15))
+            for rows in cells_by_seed.values()
+        )
+        and all(
+            row.get("schema_version")
+            == "vla-wam-shared-v3b-nano-lateral-cell-v1"
+            and row.get("amendment_id") == "V3-B005"
+            and row.get("physical_gate_sha256")
+            == sha256(paths["nano_lateral_sweep_v3b005_physical_gate"])
+            and row.get("prompt") == EXACT_V2_WORDINGS["direct_command"][row.get("relation")]
+            for row in nano_lateral_sweep_v3b005_cells
+        ),
+        "Nano V3-B005 hash-binds 210 exact level-by-direction cells in complete matched seed blocks",
+        checks,
+    )
+    require(
+        nano_lateral_sweep_v3b005_manifest.get("schema_version")
+        == "vla-wam-shared-v3b-nano-lateral-manifest-v1"
+        and nano_lateral_sweep_v3b005_manifest.get("counts", {}).get("registered_cells")
+        == 210
+        and nano_lateral_sweep_v3b005_manifest.get("cells", {}).get("sha256")
+        == sha256(paths["nano_lateral_sweep_v3b005_cells"])
+        and nano_lateral_sweep_v3b005_manifest.get("physical_gate", {}).get("sha256")
+        == sha256(paths["nano_lateral_sweep_v3b005_physical_gate"])
+        and nano_lateral_sweep_v3b005_manifest.get("behavioral_release") is False,
+        "Nano V3-B005 queue remains behaviorally unreleased pending its fresh runtime gate",
+        checks,
+    )
+    queue_builder_source = paths["nano_lateral_sweep_v3b005_queue_builder"].read_text(
+        encoding="utf-8"
+    )
+    require(
+        "14-seed cyclic Latin rotation" in queue_builder_source
+        and "behavioral_release\": False" in queue_builder_source
+        and "refusing to overwrite V3-B005 queue evidence" in queue_builder_source,
+        "Nano V3-B005 queue builder preserves prospective order and fail-closed release",
+        checks,
+    )
+    require(
         'choices=("V3-B004", "V3-B005")' in lateral_driver_source
         and "B005_BANANA_Y_M = -0.2755556747317314" in lateral_driver_source
         and "V3-B005 failed closed" in lateral_driver_source
@@ -3510,6 +3633,14 @@ def validate(root: Path) -> list[str]:
         and nano_lateral_registered.get("planned_behavioral_cells_after_gate")
         == 210
         and nano_lateral_registered.get("numeric_levels_frozen") is True
+        and nano_lateral_registered.get("physical_gate_passed") is True
+        and nano_lateral_registered.get("physical_gate", {}).get("sha256")
+        == sha256(paths["nano_lateral_sweep_v3b005_physical_gate"])
+        and nano_lateral_registered.get("cells", {}).get("sha256")
+        == sha256(paths["nano_lateral_sweep_v3b005_cells"])
+        and nano_lateral_registered.get("cells", {}).get("row_count") == 210
+        and nano_lateral_registered.get("manifest", {}).get("sha256")
+        == sha256(paths["nano_lateral_sweep_v3b005_manifest"])
         and nano_lateral_registered.get("model_requests_after_registration") == 0
         and nano_lateral_registered.get("behavioral_episodes_after_registration")
         == 0

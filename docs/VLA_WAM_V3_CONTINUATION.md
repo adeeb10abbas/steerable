@@ -442,8 +442,21 @@ Hash-bound preregistration:
 | [`V3-B005 amendment`](../artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/post_result_nano_lateral_sweep_v3b005_amendment.json) | `ff23475b53791c42715938d51a303e0ab82de88b1b8a7a30758c008c9919a47b` |
 | [`V3-B005 safe-distractor fixture`](../artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/prospective_safe_distractor_fixture.json) | `87ff070be25b61538ead16ddbe06d2e9c155698ec2ea8acecbc30bd20b0197a5` |
 
-The exact next operation is the 42-row model-blind physical gate—not a Nano
-server launch.
+The physical gate is now complete: **42/42 rows passed**, with all seven exact
+positions accepted on both relation wrappers across three independent fresh
+resets. No Nano model request or behavioral episode occurred. The compact
+[`physical-gate report`](../artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/model_blind_lateral_calibration_report.json)
+has SHA-256 `60a065f24f76b0fe007a2455bf674dcde33204beb2f00dac1d930edd8f6542bf`.
+
+The exact **210-cell queue** is now committed before model use. Seeds
+9500–9513 use a cyclic Latin rotation over the fourteen level×relation cells;
+seed 9514 uses the preregistered SHA-256 order. The
+[`queue`](../artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/nano_lateral_v3b005_cells.jsonl)
+has SHA-256 `a770ae94274eaa85591a3ecd1f0f919b85dadc1c0ac3197c363b31659cb6b132`;
+the [`manifest`](../artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/nano_lateral_v3b005_manifest.json)
+has SHA-256 `47c426f13146591d1a0bde60136e124eb5818cd8d44ef312f0f8fa82ad1623a1`.
+Behavior remains unreleased until a fresh Nano runtime and fixed-observation
+exact-repeat/prompt-sensitivity gate pass.
 
 ## Exact intervention
 

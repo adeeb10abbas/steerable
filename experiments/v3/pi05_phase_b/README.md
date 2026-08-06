@@ -26,16 +26,26 @@ runtime interventions, invalid attempts, partial state streams, videos, action
 arrays, and raw cell JSONL stay on the PVC. Infrastructure failures remain in
 a separate append-only stream and are excluded from behavioral denominators.
 
-After all 108 valid cells exist, invoke `compiler.py` with the 108 individual
-cell JSONL paths. It emits 108 enriched episode rows, 54 separate pair rows,
-H1/H2/H3 results, infrastructure rows, and post-close hash manifests.
+Before aggregate compilation, normalize each retained technical-only launch
+with `tools/normalize_pi05_v3b002_infrastructure.py`. The normalizer binds the
+actual failed runtime and released cell, writes the common v3 infrastructure
+schema, and refuses behavioral contamination. Pass only the final behavioral
+root and the normalized infrastructure roots to `compiler.py`; never discover
+behavioral rows from a parent containing discarded attempts.
+
+After all 108 valid cells exist, `compiler.py` emits 108 enriched episode rows,
+54 separate pair rows, H1/H2/H3 results, infrastructure rows, and post-close
+hash manifests. The completed compact release is under
+`artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/`; raw videos,
+action arrays, and full simulator directories remain on the PVC.
 
 Focused local validation:
 
 ```bash
 python3 -m unittest \
   tests.test_pi05_v3b002_runtime \
-  tests.test_pi05_v3b002_compiler
+  tests.test_pi05_v3b002_compiler \
+  tests.test_normalize_pi05_v3b002_infrastructure
 python3 tools/validate_vla_wam_v3_protocol.py
 git diff --check
 ```

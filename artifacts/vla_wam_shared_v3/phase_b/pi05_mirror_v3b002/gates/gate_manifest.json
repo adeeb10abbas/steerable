@@ -1,0 +1,66 @@
+{
+  "schema_version": "vla-wam-shared-v3b-pi05-gate-evidence-manifest-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B002",
+  "model_id": "pi05_current_stack_droid",
+  "release_manifest_sha256": "8aaaa38302f6a654090250b3e12cd8735fab28a74027d50193325ffa9d0dddea",
+  "runtime_identity_sha256": "6e5e500f5efee2d7576d090a8ec544f28e47af4db6e797c1bb514a16a43fc944",
+  "release_gate_sha256": "d0f46be900fce8ac5ea31f0c17bff48a656bf38ac7c29cb66cb4bb400f82be15",
+  "gates": {
+    "behavioral_release": true,
+    "model_blind_lane_count": 6,
+    "model_blind_model_request_count": 0,
+    "model_blind_behavioral_episode_count": 0,
+    "model_blind_fixture_reset_renderer_writer_passed": true,
+    "fixed_observation_exact_repeat_passed": true,
+    "fixed_observation_left_right_prompt_sensitivity_passed": true,
+    "left_right_action_rms": 0.0036175365618920452
+  },
+  "files": [
+    {
+      "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/fixed_observation_gate.json",
+      "bytes": 2409,
+      "sha256": "baf8e9744bb3baa03748521dd72aed88283cbccb613ad0805c6ecbf89e7cdf06"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/preflight/lane0_lingbot.json",
+      "bytes": 25377,
+      "sha256": "64290a2bfc64f57bf357c522304be7bd98823dcff38709b539aaab3b4b6ffeb9"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/preflight/lane1_raytrace.json",
+      "bytes": 25377,
+      "sha256": "3ae494b87b1dd7f90755117f646f58f64fc6172522ae14aa7893f4280ced1a09"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/preflight/lane2_fastwam.json",
+      "bytes": 25377,
+      "sha256": "58c74496f56e2e4267b6bddda42f677b3d229511f2577454229aeed93a633ff4"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/preflight/lane3_robotwin.json",
+      "bytes": 25384,
+      "sha256": "2df468472cf7d891f50ac1920d3e7f50760452736459e86f0a29a5d0c3de2ac2"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/preflight/lane4_cosmos.json",
+      "bytes": 25364,
+      "sha256": "fdd074ea113eeb1f2cf3a8b05c5a7635b3dddd610e0a92f7ea42078be3fa7464"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/preflight/lane5_nano.json",
+      "bytes": 25350,
+      "sha256": "5c75dfdfbd57431771092d6026d291e18454e8716c47d2fc25a4395d9892723d"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/release_gate.json",
+      "bytes": 2820,
+      "sha256": "450fcac935b4ff570d53f7d2c844ee10e9c4f2bba8f151692a49fd6de25bc07e"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/runtime_identity.json",
+      "bytes": 4670,
+      "sha256": "928af903ff99b02dd753b21eca2f6243142aced320a31166645bb1a0427a0f89"
+    }
+  ]
+}

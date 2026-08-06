@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import importlib.util
+import hashlib
 import json
 import shutil
 import tempfile
@@ -47,6 +48,10 @@ class ValidateV3ProtocolTest(unittest.TestCase):
             ROOT / "experiments" / "v3" / "cosmos_nano_phase_b",
             root / "experiments" / "v3" / "cosmos_nano_phase_b",
         )
+        shutil.copytree(
+            ROOT / "experiments" / "v3" / "pi05_phase_b",
+            root / "experiments" / "v3" / "pi05_phase_b",
+        )
         (root / "experiments" / "groot_droid" / "robolab_v2_tasks").mkdir(
             parents=True
         )
@@ -78,6 +83,8 @@ class ValidateV3ProtocolTest(unittest.TestCase):
             "test_render_nano_v3b001_results.py",
             "test_build_nano_v3b001_publication_media.py",
             "test_build_pi05_v3b002_registration.py",
+            "test_pi05_v3b002_runtime.py",
+            "test_pi05_v3b002_compiler.py",
         ):
             shutil.copy2(ROOT / "tests" / name, root / "tests" / name)
 
@@ -226,6 +233,57 @@ class ValidateV3ProtocolTest(unittest.TestCase):
             value["publication_video"]["sha256"] = "0" * 64
             path.write_text(json.dumps(value))
             with self.assertRaisesRegex(VALIDATOR.ValidationError, "H.264 video"):
+                VALIDATOR.validate(root)
+
+    def test_tampered_pi05_b002_result_fails_output_manifest_binding(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.copy_protocol_root(root)
+            path = (
+                root
+                / "artifacts"
+                / "vla_wam_shared_v3"
+                / "phase_b"
+                / "pi05_mirror_v3b002"
+                / "results"
+                / "pi05_v3b002_report.json"
+            )
+            value = json.loads(path.read_text())
+            value["analysis"]["H3_binary_success"]["mean_DiD"] = 0
+            path.write_text(json.dumps(value))
+            with self.assertRaisesRegex(
+                VALIDATOR.ValidationError,
+                "output manifest byte/hash-binds every copied result",
+            ):
+                VALIDATOR.validate(root)
+
+    def test_tampered_pi05_b002_h3_fails_recomputation_even_if_rehashed(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.copy_protocol_root(root)
+            results = (
+                root
+                / "artifacts"
+                / "vla_wam_shared_v3"
+                / "phase_b"
+                / "pi05_mirror_v3b002"
+                / "results"
+            )
+            report_path = results / "pi05_v3b002_report.json"
+            report = json.loads(report_path.read_text())
+            report["analysis"]["H3_binary_success"]["mean_DiD"] = 0
+            report_path.write_text(json.dumps(report))
+            output_path = results / "pi05_v3b002_output_manifest.json"
+            output = json.loads(output_path.read_text())
+            output["files"]["report"]["bytes"] = report_path.stat().st_size
+            output["files"]["report"]["sha256"] = hashlib.sha256(
+                report_path.read_bytes()
+            ).hexdigest()
+            output_path.write_text(json.dumps(output))
+            with self.assertRaisesRegex(
+                VALIDATOR.ValidationError,
+                "H3 binds four n=27 cells",
+            ):
                 VALIDATOR.validate(root)
 
 

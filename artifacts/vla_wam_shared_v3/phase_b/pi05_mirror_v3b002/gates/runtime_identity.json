@@ -1,0 +1,104 @@
+{
+  "action_cap": 450,
+  "action_chunk_shape": [
+    15,
+    8
+  ],
+  "action_space": "joint_position_8d",
+  "amendment_id": "V3-B002",
+  "base_runtime_identity_sha256": "de55b8a73e8f27e0b67faf841595002578fcc1b3d7b583a151171114efead15f",
+  "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+  "checkpoint_sha256": "b193b28b05f9755e24d44a6f5cf3185ca23c2ad3da6c5913370379c82570fbf6",
+  "environment_lock_sha256": "8ab95005e08716a16eefb18846bb57bf436e71a3a102d428cb38df1f30ddb29b",
+  "external_repository_diff_hash": "9cb1e3c8adc8fbeb420c605f07c472eb7c210fc61cc91f6b7aec9e88ca3d559f",
+  "future_interface": "actions_only",
+  "instruction_controller": "static_episode_prompt",
+  "live_topology": {
+    "policy_server": {
+      "driver_version": "580.105.08",
+      "gpu_index": 2,
+      "gpu_model": "NVIDIA B200",
+      "gpu_uuid": "GPU-4ca76921-a7d2-e920-8555-47e0e8f105f7",
+      "model_request_count_at_capture": 0,
+      "owner": "ali",
+      "pod": "lerobot-b200-4gpu-1-ali",
+      "pod_ip": "10.244.103.110",
+      "pod_uid": "1e0f438c-6041-4cc3-af32-0c118963e54c",
+      "port": 8001
+    },
+    "schema_version": "vla-wam-shared-v3b-pi05-live-topology-v1",
+    "simulator_lanes": [
+      {
+        "driver_version": "580.105.08",
+        "gpu_model": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+        "gpu_uuid": "GPU-dc8db249-3b4c-1d36-0e9d-435a6d5f01c0",
+        "owner": "ali",
+        "pod": "vla-wam-lingbot-expansion-ali",
+        "pod_ip": "10.244.222.10",
+        "pod_uid": "7110c8d4-db9e-401a-ba85-58ba5e0dfcb3"
+      },
+      {
+        "driver_version": "580.105.08",
+        "gpu_model": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+        "gpu_uuid": "GPU-f28bd513-a38a-b768-7589-d2959f814ae8",
+        "owner": "ali",
+        "pod": "raytrace-rtxpro6000-ali",
+        "pod_ip": "10.244.222.28",
+        "pod_uid": "d5b0405a-a9b1-4baa-a802-d5171e03c228"
+      },
+      {
+        "driver_version": "580.105.08",
+        "gpu_model": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+        "gpu_uuid": "GPU-70318cf0-9d68-4c1b-9a94-d85d3c4af002",
+        "owner": "ali",
+        "pod": "vla-wam-fastwam-expansion-ali",
+        "pod_ip": "10.244.222.16",
+        "pod_uid": "68e4b518-a96d-4935-818f-6d975811bbc8"
+      },
+      {
+        "driver_version": "580.105.08",
+        "gpu_model": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+        "gpu_uuid": "GPU-8415b8cd-db0f-e848-0d1f-b389debe91ab",
+        "owner": "ali",
+        "pod": "vla-wam-robotwin-expansion-ali",
+        "pod_ip": "10.244.222.13",
+        "pod_uid": "06925ad6-e387-4c6a-89b3-5dbe44490ed6"
+      },
+      {
+        "driver_version": "580.105.08",
+        "gpu_model": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+        "gpu_uuid": "GPU-c2407ba3-cc0f-2456-5df4-8c968bfb8435",
+        "owner": "ali",
+        "pod": "vla-wam-rtx-cosmos-ali",
+        "pod_ip": "10.244.222.15",
+        "pod_uid": "b7ec6369-2ab7-42d6-a4ef-3fc549ca652a"
+      },
+      {
+        "driver_version": "580.105.08",
+        "gpu_model": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+        "gpu_uuid": "GPU-37425604-6c72-a77a-f635-392439431707",
+        "owner": "ali",
+        "pod": "vla-wam-rtx-nano-ali",
+        "pod_ip": "10.244.222.14",
+        "pod_uid": "30b51054-f277-480d-831d-337581e1cc49"
+      }
+    ]
+  },
+  "live_topology_sha256": "d18c4076b69a945ec4439db14b0eb74e185a41697f0ceb95546ef65c9ca58d01",
+  "missing_future_policy": "action_only_interface_not_applicable_never_zero",
+  "model_id": "pi05_current_stack_droid",
+  "open_loop_horizon": 15,
+  "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+  "openpi_config": "pi05_droid_jointpos_polaris",
+  "openpi_dir_status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "phase_b_adapter_contract_sha256": "03c051ed517e8d72660c77a8a0a536a423f6be76e99cba918c94ae43e754a932",
+  "release_manifest_sha256": "8aaaa38302f6a654090250b3e12cd8735fab28a74027d50193325ffa9d0dddea",
+  "renderer_backend": "Isaac Sim viewport realtime RTX Vulkan balanced; NVIDIA ICD /etc/vulkan/icd.d/nvidia_icd.json; RTX driver 580.105.08",
+  "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+  "robolab_dir_status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "runtime_identity_sha256": "6e5e500f5efee2d7576d090a8ec544f28e47af4db6e797c1bb514a16a43fc944",
+  "schema_version": "vla-wam-shared-v3b-pi05-runtime-identity-v1",
+  "simulator_version": "Isaac Sim 5.0.0.0 / Isaac Lab 2.2.0 / RoboLab 0.2.1",
+  "study_git_commit": "636a33eedb9e4a9920f4ff357388099fba78a108",
+  "study_id": "vla_wam_language_steerability_v3"
+}

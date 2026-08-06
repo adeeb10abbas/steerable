@@ -105,6 +105,24 @@ REQUIRED = {
     "pi05_mirror_results_compiler": "experiments/v3/pi05_phase_b/compiler.py",
     "pi05_mirror_runtime_test": "tests/test_pi05_v3b002_runtime.py",
     "pi05_mirror_compiler_test": "tests/test_pi05_v3b002_compiler.py",
+    "pi05_mirror_result_episodes": f"{V3}/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_episodes.jsonl",
+    "pi05_mirror_result_episodes_manifest": f"{V3}/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_episodes.jsonl.manifest.json",
+    "pi05_mirror_result_pairs": f"{V3}/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_pairs.jsonl",
+    "pi05_mirror_result_pairs_manifest": f"{V3}/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_pairs.jsonl.manifest.json",
+    "pi05_mirror_result_infrastructure": f"{V3}/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_infrastructure_attempts.jsonl",
+    "pi05_mirror_result_infrastructure_manifest": f"{V3}/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_infrastructure_attempts.jsonl.manifest.json",
+    "pi05_mirror_result_report": f"{V3}/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_report.json",
+    "pi05_mirror_result_output_manifest": f"{V3}/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_output_manifest.json",
+    "pi05_mirror_gate_fixed_observation": f"{V3}/phase_b/pi05_mirror_v3b002/gates/fixed_observation_gate.json",
+    "pi05_mirror_gate_release": f"{V3}/phase_b/pi05_mirror_v3b002/gates/release_gate.json",
+    "pi05_mirror_gate_runtime_identity": f"{V3}/phase_b/pi05_mirror_v3b002/gates/runtime_identity.json",
+    "pi05_mirror_gate_manifest": f"{V3}/phase_b/pi05_mirror_v3b002/gates/gate_manifest.json",
+    "pi05_mirror_gate_lane0": f"{V3}/phase_b/pi05_mirror_v3b002/gates/preflight/lane0_lingbot.json",
+    "pi05_mirror_gate_lane1": f"{V3}/phase_b/pi05_mirror_v3b002/gates/preflight/lane1_raytrace.json",
+    "pi05_mirror_gate_lane2": f"{V3}/phase_b/pi05_mirror_v3b002/gates/preflight/lane2_fastwam.json",
+    "pi05_mirror_gate_lane3": f"{V3}/phase_b/pi05_mirror_v3b002/gates/preflight/lane3_robotwin.json",
+    "pi05_mirror_gate_lane4": f"{V3}/phase_b/pi05_mirror_v3b002/gates/preflight/lane4_cosmos.json",
+    "pi05_mirror_gate_lane5": f"{V3}/phase_b/pi05_mirror_v3b002/gates/preflight/lane5_nano.json",
 }
 DROID_MODELS = [
     "pi0_fast_droid_vla",
@@ -269,6 +287,582 @@ def same_local_file_reference(record: Any, path: Path) -> bool:
         and record.get("sha256") == sha256(path)
         and record.get("bytes") == path.stat().st_size
     )
+
+
+def same_local_file_by_basename(record: Any, path: Path) -> bool:
+    """Bind a copied compact artifact while ignoring its raw absolute parent."""
+
+    return (
+        same_local_file_reference(record, path)
+        and isinstance(record.get("path"), str)
+        and Path(record["path"]).name == path.name
+    )
+
+
+def validate_pi05_v3b002_evidence(
+    paths: dict[str, Path],
+    registered_cells: list[dict[str, Any]],
+    checks: list[str],
+) -> dict[str, Any]:
+    """Validate the completed V3-B002 evidence without trusting raw path prefixes."""
+
+    episodes = load_jsonl(paths["pi05_mirror_result_episodes"])
+    episodes_manifest = load(paths["pi05_mirror_result_episodes_manifest"])
+    pairs = load_jsonl(paths["pi05_mirror_result_pairs"])
+    pairs_manifest = load(paths["pi05_mirror_result_pairs_manifest"])
+    infrastructure = load_jsonl(paths["pi05_mirror_result_infrastructure"])
+    infrastructure_manifest = load(paths["pi05_mirror_result_infrastructure_manifest"])
+    report = load(paths["pi05_mirror_result_report"])
+    output_manifest = load(paths["pi05_mirror_result_output_manifest"])
+    fixed_gate = load(paths["pi05_mirror_gate_fixed_observation"])
+    release_gate = load(paths["pi05_mirror_gate_release"])
+    runtime_identity = load(paths["pi05_mirror_gate_runtime_identity"])
+    gate_manifest = load(paths["pi05_mirror_gate_manifest"])
+    preflights = [load(paths[f"pi05_mirror_gate_lane{lane}"]) for lane in range(6)]
+
+    release_sha = sha256(paths["pi05_mirror_manifest"])
+    expected_output_files = {
+        "episodes": "pi05_mirror_result_episodes",
+        "episodes_manifest": "pi05_mirror_result_episodes_manifest",
+        "infrastructure": "pi05_mirror_result_infrastructure",
+        "infrastructure_manifest": "pi05_mirror_result_infrastructure_manifest",
+        "pairs": "pi05_mirror_result_pairs",
+        "pairs_manifest": "pi05_mirror_result_pairs_manifest",
+        "report": "pi05_mirror_result_report",
+    }
+    output_files = output_manifest.get("files", {})
+    require(
+        output_manifest.get("schema_version")
+        == "vla-wam-shared-v3b-pi05-reflection-output-manifest-v1"
+        and output_manifest.get("study_id") == "vla_wam_language_steerability_v3"
+        and output_manifest.get("amendment_id") == "V3-B002"
+        and output_manifest.get("release_manifest_sha256") == release_sha
+        and set(output_files) == set(expected_output_files)
+        and all(
+            same_local_file_by_basename(output_files.get(label), paths[path_key])
+            for label, path_key in expected_output_files.items()
+        ),
+        "V3-B002 output manifest byte/hash-binds every copied result by basename",
+        checks,
+    )
+
+    manifest_specs = (
+        (
+            episodes_manifest,
+            paths["pi05_mirror_result_episodes"],
+            108,
+            ["vla-wam-shared-v3-raw-episode-v1"],
+        ),
+        (
+            pairs_manifest,
+            paths["pi05_mirror_result_pairs"],
+            54,
+            ["vla-wam-shared-v3b-pi05-reflection-pair-v1"],
+        ),
+        (
+            infrastructure_manifest,
+            paths["pi05_mirror_result_infrastructure"],
+            18,
+            ["vla-wam-shared-v3-infrastructure-attempt-v1"],
+        ),
+    )
+    require(
+        all(
+            manifest.get("schema_version")
+            == "vla-wam-shared-v3b-pi05-reflection-jsonl-manifest-v1"
+            and manifest.get("study_id") == "vla_wam_language_steerability_v3"
+            and manifest.get("amendment_id") == "V3-B002"
+            and manifest.get("release_manifest_sha256") == release_sha
+            and manifest.get("row_count") == row_count
+            and manifest.get("record_schema_versions") == schemas
+            and manifest.get("jsonl_path") == jsonl_path.name
+            and manifest.get("jsonl_bytes") == jsonl_path.stat().st_size
+            and manifest.get("jsonl_sha256") == sha256(jsonl_path)
+            for manifest, jsonl_path, row_count, schemas in manifest_specs
+        ),
+        "V3-B002 JSONL sidecars bind exact row counts, schemas, bytes, and hashes",
+        checks,
+    )
+
+    registered_by_id = {row.get("cell_id"): row for row in registered_cells}
+    episode_by_id = {row.get("registered_cell_id"): row for row in episodes}
+    runtime_sha = runtime_identity.get("runtime_identity_sha256")
+    allowed_failures = {
+        "correct",
+        "pick_failed",
+        "transport_failed",
+        "wrong_side",
+        "release_failed",
+    }
+    require(
+        is_sha256(runtime_sha)
+        and runtime_identity.get("schema_version")
+        == "vla-wam-shared-v3b-pi05-runtime-identity-v1"
+        and runtime_identity.get("study_id") == "vla_wam_language_steerability_v3"
+        and runtime_identity.get("amendment_id") == "V3-B002"
+        and runtime_identity.get("model_id") == "pi05_current_stack_droid"
+        and runtime_identity.get("release_manifest_sha256") == release_sha
+        and runtime_identity.get("instruction_controller") == "static_episode_prompt"
+        and runtime_identity.get("openpi_commit")
+        == "c23745b5ad24e98f66967ea795a07b2588ed6c79"
+        and runtime_identity.get("robolab_commit")
+        == "0aef241fb088ca21bb4ebd24448940ed56620d17"
+        and len(episodes) == len(episode_by_id) == len(registered_by_id) == 108
+        and set(episode_by_id) == set(registered_by_id)
+        and len({row.get("attempt_id") for row in episodes}) == 108
+        and {row.get("runtime_identity", {}).get("sha256") for row in episodes}
+        == {runtime_sha}
+        and all(
+            row.get("schema_version") == "vla-wam-shared-v3-raw-episode-v1"
+            and row.get("record_type") == "behavioral_episode"
+            and row.get("study_id") == "vla_wam_language_steerability_v3"
+            and row.get("amendment_id") == "V3-B002"
+            and row.get("model_id") == "pi05_current_stack_droid"
+            and row.get("arena") == "droid_robolab"
+            and row.get("behavioral_result_valid") is True
+            and row.get("release_manifest_sha256") == release_sha
+            and row.get("environment_seed")
+            == registered_by_id[row["registered_cell_id"]].get("environment_seed")
+            and row.get("phase_b_arm")
+            == registered_by_id[row["registered_cell_id"]].get("arm")
+            and row.get("requested_relation")
+            == registered_by_id[row["registered_cell_id"]].get("relation")
+            and row.get("prompt")
+            == registered_by_id[row["registered_cell_id"]].get("prompt")
+            and row.get("success") is row.get("requested_success")
+            and row.get("failure_category") in allowed_failures
+            and (row.get("failure_category") == "correct") is row.get("success")
+            and isinstance(row.get("signed_final_lateral_offset_m"), (int, float))
+            and isinstance(row.get("requested_side_depth_m"), (int, float))
+            and isinstance(row.get("episode_length_steps"), int)
+            and isinstance(row.get("cumulative_lateral_path_m"), (int, float))
+            and isinstance(row.get("peak_lateral_excursion_m"), (int, float))
+            for row in episodes
+        ),
+        "V3-B002 has exactly 108 registered, unique, single-runtime behavioral episodes",
+        checks,
+    )
+    # Raw media are intentionally PVC-only, so validate their retained references rather
+    # than attempting to resolve them from the compact Git checkout.
+    require(
+        all(
+            valid_file_record(row.get("artifacts", {}).get("executed_action_trace"))
+            and valid_file_record(row.get("artifacts", {}).get("viewport_video"))
+            and row.get("artifacts", {}).get("executed_action_trace", {}).get("shape", [0])[0]
+            == row.get("actions_executed")
+            and row.get("episode_length_steps") == row.get("actions_executed")
+            and row.get("measurements", {}).get("signed_final_lateral_offset_m")
+            == row.get("signed_final_lateral_offset_m")
+            and row.get("measurements", {}).get("final_requested_signed_margin_m")
+            == row.get("requested_side_depth_m")
+            for row in episodes
+        ),
+        "V3-B002 retains video/action references and all required per-episode measurements",
+        checks,
+    )
+    failure_counts = Counter(row.get("failure_category") for row in episodes)
+    require(
+        failure_counts
+        == Counter(
+            {
+                "correct": 63,
+                "pick_failed": 14,
+                "transport_failed": 27,
+                "wrong_side": 3,
+                "release_failed": 1,
+            }
+        )
+        and report.get("behavioral_evidence", {}).get("failure_category_counts")
+        == dict(failure_counts)
+        and report.get("behavioral_evidence", {}).get("valid_failures_retained") is True,
+        "V3-B002 retains every behavioral failure and reports the exact failure taxonomy",
+        checks,
+    )
+
+    raw_episode_sources = {
+        entry.get("registered_cell_id"): entry.get("jsonl", {}).get("sha256")
+        for entry in episodes_manifest.get("source_batches", [])
+    }
+    action_sources = {
+        entry.get("registered_cell_id"): entry.get("sha256")
+        for entry in pairs_manifest.get("source_batches", [])
+    }
+    pairs_by_key = {(row.get("seed"), row.get("arm")): row for row in pairs}
+    expected_pair_keys = {
+        (seed, arm)
+        for seed in exact_range(9400, 9426)
+        for arm in ("control", "position_mirrored")
+    }
+    pair_rows_valid = len(pairs) == len(pairs_by_key) == 54 and set(pairs_by_key) == expected_pair_keys
+    for (seed, arm), pair in pairs_by_key.items():
+        left_id = f"v3b002:pi05:seed{seed}:{arm}:left"
+        right_id = f"v3b002:pi05:seed{seed}:{arm}:right"
+        left = episode_by_id.get(left_id, {})
+        right = episode_by_id.get(right_id, {})
+        pair_rows_valid = pair_rows_valid and (
+            pair.get("schema_version") == "vla-wam-shared-v3b-pi05-reflection-pair-v1"
+            and pair.get("left_registered_cell_id") == left_id
+            and pair.get("right_registered_cell_id") == right_id
+            and pair.get("initial_state_sha256") == left.get("initial_state_sha256")
+            == right.get("initial_state_sha256")
+            and pair.get("left_success") is left.get("success")
+            and pair.get("right_success") is right.get("success")
+            and pair.get("right_minus_left_success")
+            == int(bool(right.get("success"))) - int(bool(left.get("success")))
+            and close(
+                pair.get("endpoint_redirection_D_m"),
+                left.get("signed_final_lateral_offset_m", 0)
+                - right.get("signed_final_lateral_offset_m", 0),
+            )
+            and close(pair.get("endpoint_shift_m"), pair.get("endpoint_redirection_D_m"))
+            and close(
+                pair.get("requested_side_depth_contrast_B_m"),
+                right.get("requested_side_depth_m", 0)
+                - left.get("requested_side_depth_m", 0),
+            )
+            and pair.get("action_distinct") is True
+            and pair.get("executed_actions_distinct") is True
+            and pair.get("common_prefix_action_count", 0) > 0
+            and pair.get("common_prefix_action_rms", 0) > 0
+            and pair.get("left_executed_action_trace_sha256")
+            == left.get("artifacts", {}).get("executed_action_trace", {}).get("sha256")
+            == action_sources.get(left_id)
+            and pair.get("right_executed_action_trace_sha256")
+            == right.get("artifacts", {}).get("executed_action_trace", {}).get("sha256")
+            == action_sources.get(right_id)
+            and pair.get("left_raw_episode_jsonl_sha256") == raw_episode_sources.get(left_id)
+            and pair.get("right_raw_episode_jsonl_sha256") == raw_episode_sources.get(right_id)
+        )
+    require(
+        pair_rows_valid,
+        "V3-B002 has exactly 54 seed-by-layout pairs with recomputed endpoint, depth, success, and action diagnostics",
+        checks,
+    )
+
+    analysis = report.get("analysis", {})
+    seed_level = analysis.get("seed_level", [])
+    seed_level_by_seed = {row.get("seed"): row for row in seed_level}
+    h1_values: dict[str, list[float]] = {"control": [], "position_mirrored": []}
+    h2_values: dict[str, list[float]] = {"control": [], "position_mirrored": []}
+    h3_values: list[int] = []
+    seed_rows_valid = len(seed_level) == len(seed_level_by_seed) == 27
+    for seed in exact_range(9400, 9426):
+        control = pairs_by_key[(seed, "control")]
+        reflected = pairs_by_key[(seed, "position_mirrored")]
+        d_control = control["endpoint_redirection_D_m"]
+        d_reflected = reflected["endpoint_redirection_D_m"]
+        b_control = control["requested_side_depth_contrast_B_m"]
+        b_reflected = reflected["requested_side_depth_contrast_B_m"]
+        did = reflected["right_minus_left_success"] - control["right_minus_left_success"]
+        h1_values["control"].append(d_control)
+        h1_values["position_mirrored"].append(d_reflected)
+        h2_values["control"].append(b_control)
+        h2_values["position_mirrored"].append(b_reflected)
+        h3_values.append(did)
+        row = seed_level_by_seed.get(seed, {})
+        seed_rows_valid = seed_rows_valid and all(
+            close(row.get(key), expected)
+            for key, expected in {
+                "D_control_m": d_control,
+                "D_position_mirrored_m": d_reflected,
+                "J_redirection_interaction_m": d_reflected - d_control,
+                "B_control_m": b_control,
+                "B_position_mirrored_m": b_reflected,
+                "I_requested_side_depth_interaction_m": b_reflected - b_control,
+                "control_right_minus_left_success": control["right_minus_left_success"],
+                "position_mirrored_right_minus_left_success": reflected[
+                    "right_minus_left_success"
+                ],
+                "binary_success_DiD": did,
+            }.items()
+        )
+    require(seed_rows_valid, "V3-B002 seed-level H1/H2/H3 contrasts recompute from pairs", checks)
+
+    def validate_continuous_summary(summary: Any, values: list[float]) -> bool:
+        if not isinstance(summary, dict) or summary.get("n") != 27:
+            return False
+        positive = sum(value > 0 for value in values)
+        negative = sum(value < 0 for value in values)
+        ties = len(values) - positive - negative
+        sign = summary.get("paired_sign_test", {})
+        mean_ci = summary.get("mean_bootstrap_95", {})
+        return (
+            close(summary.get("mean_m"), statistics.fmean(values))
+            and close(summary.get("median_m"), statistics.median(values))
+            and sign.get("method") == "exact_two_sided_paired_sign_test"
+            and sign.get("positive") == positive
+            and sign.get("negative") == negative
+            and sign.get("ties") == ties
+            and sign.get("effective_n") == positive + negative
+            and close(sign.get("p_value"), exact_two_sided_binomial_p(positive, negative))
+            and mean_ci.get("method") == "matched_seed_nonparametric_percentile_bootstrap"
+            and mean_ci.get("unit_of_resampling") == "matched_seed"
+            and mean_ci.get("replicates") == 20000
+            and close(mean_ci.get("confidence"), 0.95)
+            and mean_ci.get("lower") <= summary.get("mean_m") <= mean_ci.get("upper")
+        )
+
+    h1 = analysis.get("H1_endpoint_redirection", {})
+    h2 = analysis.get("H2_requested_side_depth", {})
+    h1_interaction = [
+        reflected - control
+        for reflected, control in zip(h1_values["position_mirrored"], h1_values["control"])
+    ]
+    h2_interaction = [
+        reflected - control
+        for reflected, control in zip(h2_values["position_mirrored"], h2_values["control"])
+    ]
+    require(
+        all(
+            validate_continuous_summary(
+                hypothesis.get("paired_contrast_by_layout", {}).get(layout), values
+            )
+            for hypothesis, values_by_layout in ((h1, h1_values), (h2, h2_values))
+            for layout, values in values_by_layout.items()
+        )
+        and validate_continuous_summary(
+            h1.get("reflected_minus_control_interaction"), h1_interaction
+        )
+        and validate_continuous_summary(
+            h2.get("reflected_minus_control_interaction"), h2_interaction
+        ),
+        "V3-B002 H1/H2 use n=27, 20k matched-seed bootstrap CIs, and exact paired sign tests",
+        checks,
+    )
+    require(
+        close(statistics.fmean(h1_interaction), -0.011182827150656117)
+        and close(statistics.median(h1_interaction), -0.03668234497308731)
+        and Counter(value > 0 for value in h1_interaction) == Counter({False: 15, True: 12})
+        and close(exact_two_sided_binomial_p(12, 15), 0.7011080384254456)
+        and close(statistics.fmean(h2_interaction), -0.3459187115163163)
+        and close(statistics.median(h2_interaction), -0.3503093309700489)
+        and all(value < 0 for value in h2_interaction)
+        and close(exact_two_sided_binomial_p(0, 27), 1.4901161193847656e-08),
+        "V3-B002 reports the immutable H1 and H2 interaction estimates and exact sign results",
+        checks,
+    )
+
+    h3 = analysis.get("H3_binary_success", {})
+    expected_cell_table: dict[str, dict[str, dict[str, int]]] = {}
+    for arm in ("control", "position_mirrored"):
+        expected_cell_table[arm] = {}
+        for relation in ("left", "right"):
+            cell_rows = [
+                row
+                for row in episodes
+                if row.get("phase_b_arm") == arm
+                and row.get("requested_relation") == relation
+            ]
+            successes = sum(row.get("success") is True for row in cell_rows)
+            expected_cell_table[arm][relation] = {
+                "episodes": len(cell_rows),
+                "failures": len(cell_rows) - successes,
+                "successes": successes,
+            }
+    did_distribution = {str(value): h3_values.count(value) for value in range(-2, 3)}
+    observed_sum = sum(h3_values)
+    permutation_sums = Counter({0: 1})
+    for value in h3_values:
+        next_sums: Counter[int] = Counter()
+        for partial, count in permutation_sums.items():
+            next_sums[partial + value] += count
+            next_sums[partial - value] += count
+        permutation_sums = next_sums
+    extreme = sum(
+        count for value, count in permutation_sums.items() if abs(value) >= abs(observed_sum)
+    )
+    permutation = h3.get("exact_permutation_test", {})
+    require(
+        expected_cell_table
+        == {
+            "control": {
+                "left": {"episodes": 27, "failures": 23, "successes": 4},
+                "right": {"episodes": 27, "failures": 2, "successes": 25},
+            },
+            "position_mirrored": {
+                "left": {"episodes": 27, "failures": 2, "successes": 25},
+                "right": {"episodes": 27, "failures": 18, "successes": 9},
+            },
+        }
+        == h3.get("cell_success_table_2x2")
+        and did_distribution == {"-2": 12, "-1": 13, "0": 2, "1": 0, "2": 0}
+        == h3.get("per_seed_DiD_distribution")
+        and sum(did_distribution.values()) == 27
+        and close(h3.get("mean_DiD"), statistics.fmean(h3_values))
+        and close(h3.get("median_DiD"), statistics.median(h3_values))
+        and permutation.get("method")
+        == "exact_two_sided_within_seed_control_reflected_label_permutation"
+        and permutation.get("registered_seed_count") == 27
+        and permutation.get("observed_signed_sum") == observed_sum == -37
+        and permutation.get("observed_absolute_sum") == abs(observed_sum) == 37
+        and permutation.get("total_permutations") == sum(permutation_sums.values()) == 2**27
+        and permutation.get("extreme_permutations") == extreme == 8
+        and close(permutation.get("p_value"), extreme / 2**27)
+        and close(permutation.get("p_value"), 5.960464477539063e-08),
+        "V3-B002 H3 binds four n=27 cells, 27 DiDs, and the exact 2^27 permutation result",
+        checks,
+    )
+    require(
+        report.get("behavioral_evidence", {}).get("episode_count") == 108
+        and report.get("behavioral_evidence", {}).get("pair_count") == 54
+        and report.get("behavioral_evidence", {}).get("matched_seed_count") == 27
+        and report.get("runtime_identity_sha256") == runtime_sha
+        and report.get("uncertainty_contract", {}).get("bootstrap_master_seed")
+        == 3104159
+        and report.get("uncertainty_contract", {}).get("bootstrap_replicates")
+        == 20000
+        and report.get("analysis", {}).get("population")
+        == {
+            "behavioral_episode_count": 108,
+            "infrastructure_attempts_included": False,
+            "matched_left_right_pair_count": 54,
+            "matched_seed_count": 27,
+            "missing_value_imputation": "none",
+            "valid_behavioral_failures_included": True,
+        },
+        "V3-B002 report keeps one runtime, all valid failures, and no infrastructure in denominators",
+        checks,
+    )
+
+    require(
+        len(infrastructure) == 18
+        and len({row.get("attempt_id") for row in infrastructure}) == 18
+        and {row.get("schema_version") for row in infrastructure}
+        == {"vla-wam-shared-v3-infrastructure-attempt-v1"}
+        and all(
+            row.get("record_type") == "infrastructure_attempt"
+            and row.get("classification") == "technical_invalid"
+            and row.get("behavioral_result_valid") is False
+            and row.get("denominator_policy") == "excluded_from_behavioral_denominator"
+            and row.get("release_manifest_sha256") == release_sha
+            for row in infrastructure
+        )
+        and sum(
+            entry.get("attempt_count", 0)
+            for entry in infrastructure_manifest.get("source_batches", [])
+        )
+        == 18
+        and report.get("infrastructure_evidence")
+        == {"attempt_count": 18, "included_in_behavioral_denominators": False},
+        "V3-B002 preserves 18 unique common-schema nonbehavioral attempts outside denominators",
+        checks,
+    )
+
+    expected_gate_files = {
+        "pi05_mirror_gate_fixed_observation",
+        "pi05_mirror_gate_lane0",
+        "pi05_mirror_gate_lane1",
+        "pi05_mirror_gate_lane2",
+        "pi05_mirror_gate_lane3",
+        "pi05_mirror_gate_lane4",
+        "pi05_mirror_gate_lane5",
+        "pi05_mirror_gate_release",
+        "pi05_mirror_gate_runtime_identity",
+    }
+    gate_files_by_basename = {
+        Path(record.get("path", "")).name: record for record in gate_manifest.get("files", [])
+    }
+    require(
+        gate_manifest.get("schema_version")
+        == "vla-wam-shared-v3b-pi05-gate-evidence-manifest-v1"
+        and gate_manifest.get("study_id") == "vla_wam_language_steerability_v3"
+        and gate_manifest.get("amendment_id") == "V3-B002"
+        and gate_manifest.get("model_id") == "pi05_current_stack_droid"
+        and gate_manifest.get("release_manifest_sha256") == release_sha
+        and gate_manifest.get("runtime_identity_sha256") == runtime_sha
+        and len(gate_manifest.get("files", [])) == len(gate_files_by_basename) == 9
+        and {paths[key].name for key in expected_gate_files} == set(gate_files_by_basename)
+        and all(
+            same_local_file_by_basename(gate_files_by_basename.get(paths[key].name), paths[key])
+            for key in expected_gate_files
+        ),
+        "V3-B002 gate manifest byte/hash-binds all nine committed gate files",
+        checks,
+    )
+    lanes = runtime_identity.get("live_topology", {}).get("simulator_lanes", [])
+    lane_keys = {(row.get("pod_uid"), row.get("gpu_uuid")) for row in lanes}
+    preflight_keys = {(row.get("pod_uid"), row.get("gpu_uuid")) for row in preflights}
+    release_lane_keys = {
+        (row.get("pod_uid"), row.get("gpu_uuid"))
+        for row in release_gate.get("model_blind_lane_bindings", [])
+    }
+    preflights_pass = all(
+        preflight.get("schema_version")
+        == "vla-wam-shared-v3b-pi05-model-blind-preflight-v1"
+        and preflight.get("passed") is True
+        and preflight.get("model_request_count") == 0
+        and preflight.get("behavioral_episode_count") == 0
+        and preflight.get("renderer_backend") == "realtime RTX Vulkan"
+        and preflight.get("all_required_rgb_views_nonblank") is True
+        and preflight.get("viewport_writer_passed") is True
+        and preflight.get("action_trace_writer_passed") is True
+        and preflight.get("raw_jsonl_writer_passed") is True
+        and preflight.get("fixture_positions_match") is True
+        and preflight.get("neutral_reset_passed") is True
+        and len(preflight.get("tasks", [])) == 4
+        and all(
+            task.get("passed") is True and len(task.get("repeat_resets", [])) == 3
+            for task in preflight.get("tasks", [])
+        )
+        and len(preflight.get("viewport_evidence", {})) == 4
+        and all(
+            valid_file_record(record) and record.get("decoded_frame_count") == 3
+            for record in preflight.get("viewport_evidence", {}).values()
+        )
+        for preflight in preflights
+    )
+    require(
+        len(lanes) == len(lane_keys) == len(preflight_keys) == len(release_lane_keys) == 6
+        and lane_keys == preflight_keys == release_lane_keys
+        and all(row.get("owner") == "ali" and row.get("pod", "").endswith("ali") for row in lanes)
+        and preflights_pass,
+        "V3-B002 model-blind gate passed renderer, writers, fixtures, and three resets on six unique ali lanes with zero behavior or requests",
+        checks,
+    )
+    require(
+        fixed_gate.get("schema_version")
+        == "vla-wam-shared-v3b-pi05-fixed-observation-gate-v1"
+        and fixed_gate.get("passed") is True
+        and fixed_gate.get("model_request_count") == 3
+        and fixed_gate.get("left_exact_repeat_bit_identical") is True
+        and fixed_gate.get("fixed_observation_exact_repeat_passed") is True
+        and fixed_gate.get("fixed_observation_left_right_prompt_sensitivity_passed") is True
+        and fixed_gate.get("left_action_sha256") == fixed_gate.get("records", {}).get("left_a", {}).get("sha256")
+        == fixed_gate.get("records", {}).get("left_b", {}).get("sha256")
+        and fixed_gate.get("right_action_sha256")
+        == fixed_gate.get("records", {}).get("right", {}).get("sha256")
+        and fixed_gate.get("left_action_sha256") != fixed_gate.get("right_action_sha256")
+        and fixed_gate.get("left_right_action_rms", 0) > 0,
+        "V3-B002 fixed-observation gate has exact LEFT repeat and positive LEFT/RIGHT action RMS",
+        checks,
+    )
+    require(
+        release_gate.get("schema_version") == "vla-wam-shared-v3b-pi05-release-gate-v1"
+        and release_gate.get("behavioral_release") is True
+        and release_gate.get("release_manifest_sha256") == release_sha
+        and release_gate.get("runtime_identity_sha256") == runtime_sha
+        and release_gate.get("model_blind_lane_count") == 6
+        and release_gate.get("model_blind_model_request_count") == 0
+        and release_gate.get("model_blind_behavioral_episode_count") == 0
+        and release_gate.get("model_blind_fixture_reset_renderer_writer_passed") is True
+        and release_gate.get("left_exact_repeat_bit_identical") is True
+        and release_gate.get("fixed_observation_exact_repeat_passed") is True
+        and release_gate.get("fixed_observation_left_right_prompt_sensitivity_passed") is True
+        and close(release_gate.get("left_right_action_rms"), fixed_gate.get("left_right_action_rms"))
+        and gate_manifest.get("release_manifest_sha256") == release_sha
+        and gate_manifest.get("runtime_identity_sha256") == runtime_sha
+        and gate_manifest.get("gates", {}).get("behavioral_release") is True,
+        "V3-B002 release gate is true and cross-binds the runtime, release, and physical gates",
+        checks,
+    )
+    return {
+        "episode_count": 108,
+        "pair_count": 54,
+        "infrastructure_attempt_count": 18,
+        "runtime_identity_sha256": runtime_sha,
+        "output_manifest_sha256": sha256(paths["pi05_mirror_result_output_manifest"]),
+        "gate_manifest_sha256": sha256(paths["pi05_mirror_gate_manifest"]),
+    }
 
 
 def validate_pi0_fast_bridge(paths: dict[str, Path], checks: list[str]) -> dict[str, Any]:
@@ -2514,62 +3108,112 @@ def validate(root: Path) -> list[str]:
         "V3-B002 runtime enforces six-lane physical gates, guarded whole-seed queues, retained grasp/contact semantics, and the registered exact statistics",
         checks,
     )
+    pi05_result = validate_pi05_v3b002_evidence(paths, pi05_mirror_cells, checks)
     pi05_release = continuation.get("phase_b_releases", {}).get(
         "pi05_position_reflection_v3b002", {}
     )
-    require(
-        pi05_release.get("status")
-        == "hash_bound_registered_not_behaviorally_released"
-        and pi05_release.get("registered_behavioral_cell_count") == 108
-        and pi05_release.get("completed_behavioral_cell_count") == 0
-        and pi05_release.get("pre_registration_counts")
-        == {"model_requests": 0, "behavioral_episodes": 0}
-        and pi05_release.get("artifacts", {}).get("manifest", {}).get("sha256")
-        == sha256(paths["pi05_mirror_manifest"]),
-        "V3 continuation records pi0.5 V3-B002 as hash-bound and unreleased",
-        checks,
-    )
+    if pi05_release:
+        require(
+            pi05_release.get("registered_behavioral_cell_count") == 108
+            and pi05_release.get("completed_behavioral_cell_count") in {0, 108}
+            and pi05_release.get("pre_registration_counts")
+            == {"model_requests": 0, "behavioral_episodes": 0}
+            and pi05_release.get("artifacts", {}).get("manifest", {}).get("sha256")
+            == sha256(paths["pi05_mirror_manifest"]),
+            "V3 continuation preserves the registered V3-B002 boundary and any recorded completion count",
+            checks,
+        )
+        if pi05_release.get("completed_behavioral_cell_count") == 108:
+            final_result = pi05_release.get("final_result", {})
+            artifact_refs = pi05_release.get("artifacts", {})
+            require(
+                pi05_release.get("status")
+                == "complete_hash_closed_27_seed_108_episode_result_no_rerun"
+                and pi05_release.get("rerun_policy") == "do_not_rerun_any_valid_v3b002_cell"
+                and final_result.get("valid_behavioral_cells") == 108
+                and final_result.get("matched_seed_count") == 27
+                and final_result.get("matched_left_right_pairs") == 54
+                and final_result.get("condition_successes")
+                == {
+                    "control:left": "4/27",
+                    "control:right": "25/27",
+                    "position_mirrored:left": "25/27",
+                    "position_mirrored:right": "9/27",
+                }
+                and final_result.get("infrastructure")
+                == {
+                    "excluded_attempt_count": 18,
+                    "included_in_behavioral_denominator": False,
+                }
+                and artifact_refs.get("output_manifest", {}).get("sha256")
+                == pi05_result["output_manifest_sha256"]
+                and artifact_refs.get("gate_manifest", {}).get("sha256")
+                == pi05_result["gate_manifest_sha256"],
+                "V3 continuation records the complete no-rerun V3-B002 result and hash roots",
+                checks,
+            )
+            continuation_result_refs = pi05_release.get("results", {})
+            if continuation_result_refs:
+                require(
+                    continuation_result_refs.get("output_manifest_sha256")
+                    == pi05_result["output_manifest_sha256"]
+                    and continuation_result_refs.get("gate_manifest_sha256")
+                    == pi05_result["gate_manifest_sha256"],
+                    "V3 continuation hash-binds the completed V3-B002 result and gate manifests",
+                    checks,
+                )
     phase_b_state = continuation.get("blocked_and_unreleased", {}).get(
         "phase_b_confounds", {}
     )
+    released_phase_b = phase_b_state.get("released", {})
+    nano_phase_b = released_phase_b.get("nano_v3b001", released_phase_b)
     require(
-        phase_b_state.get("status")
-        == "nano_v3b001_complete_pi05_v3b002_registered_runtime_release_pending"
-        and phase_b_state.get("released", {}).get("amendment_id") == "V3-B001"
-        and phase_b_state.get("released", {}).get("released_behavioral_cells") == 108
-        and phase_b_state.get("released", {}).get("completed_behavioral_cells") == 108
+        nano_phase_b.get("amendment_id") == "V3-B001"
+        and nano_phase_b.get("released_behavioral_cells") == 108
+        and nano_phase_b.get("completed_behavioral_cells") == 108
         and "27-seed"
-        in phase_b_state.get("released", {}).get("release_condition", "")
+        in nano_phase_b.get("release_condition", "")
         and "hash-closed"
-        in phase_b_state.get("released", {}).get("release_condition", "")
-        and phase_b_state.get("registered_not_released", {}).get("amendment_id")
-        == "V3-B002"
-        and phase_b_state.get("registered_not_released", {}).get(
-            "registered_behavioral_cells"
-        )
-        == 108
-        and phase_b_state.get("registered_not_released", {}).get(
-            "completed_behavioral_cells"
-        )
-        == 0
-        and "Every other Phase-B" in phase_b_state.get("unreleased", ""),
-        "V3 continuation records completed Nano, registered-unreleased pi0.5, and every other confound gated",
+        in nano_phase_b.get("release_condition", ""),
+        "V3 continuation retains the completed Nano Phase-B evidence boundary",
         checks,
     )
+    completed_pi05_phase_b = released_phase_b.get("pi05_v3b002")
+    if completed_pi05_phase_b:
+        require(
+            completed_pi05_phase_b.get("amendment_id") == "V3-B002"
+            and completed_pi05_phase_b.get("released_behavioral_cells") == 108
+            and completed_pi05_phase_b.get("completed_behavioral_cells") == 108
+            and "27-seed" in completed_pi05_phase_b.get("release_condition", "")
+            and "hash-closed" in completed_pi05_phase_b.get("release_condition", "")
+            and "Every Phase-B confound ablation other than Nano V3-B001 and pi0.5 V3-B002"
+            in phase_b_state.get("unreleased", ""),
+            "V3 continuation marks V3-B002 complete while keeping every other Phase-B confound unreleased",
+            checks,
+        )
+    registered_not_released = phase_b_state.get("registered_not_released")
+    if registered_not_released:
+        require(
+            registered_not_released.get("amendment_id") == "V3-B002"
+            and registered_not_released.get("registered_behavioral_cells") == 108
+            and registered_not_released.get("completed_behavioral_cells") in {0, 108},
+            "V3 continuation preserves any remaining V3-B002 registration ledger",
+            checks,
+        )
     inference_authority = continuation.get("next_agent", {}).get(
         "inference_authority", ""
     )
-    require(
-        "Do not rerun any valid Phase-A, V3-A002, or Nano V3-B001 cell"
-        in inference_authority
-        and "V3-B002 is the exact next experiment" in inference_authority
-        and "108 registered pi0.5 cells" in inference_authority
-        and "only after its new runtime identity" in inference_authority
-        and "No other Phase-B, Phase-C, or Phase-D cell is released"
-        in inference_authority,
-        "V3 continuation closes prior inference and gates pi0.5 V3-B002 as the exact next experiment",
-        checks,
-    )
+    if "V3-B002 is the exact next experiment" in inference_authority:
+        require(
+            "Do not rerun any valid Phase-A, V3-A002, or Nano V3-B001 cell"
+            in inference_authority
+            and "108 registered pi0.5 cells" in inference_authority
+            and "only after its new runtime identity" in inference_authority
+            and "No other Phase-B, Phase-C, or Phase-D cell is released"
+            in inference_authority,
+            "V3 continuation preserves the pre-run V3-B002 inference authority if still present",
+            checks,
+        )
 
     require(protocol["schema_version"] == "vla-wam-shared-v3-protocol-v1", "protocol schema is frozen", checks)
     require(protocol["study_id"] == "vla_wam_language_steerability_v3", "protocol study identifier is frozen", checks)

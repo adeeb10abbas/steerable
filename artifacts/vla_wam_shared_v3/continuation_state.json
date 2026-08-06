@@ -1,10 +1,10 @@
 {
   "schema_version": "vla-wam-shared-v3-continuation-v1",
   "study_id": "vla_wam_language_steerability_v3",
-  "updated_at_utc": "2026-08-06T17:41:42Z",
+  "updated_at_utc": "2026-08-06T19:14:15Z",
   "active_branch": "codex/wam-language-steerability",
-  "evidence_head": "83ccd46e0339cf9a4c813f0927aa69e86c0ce495",
-  "status": "pi05_v3b002_registered_preinference_failure_split_complete_runtime_release_pending",
+  "evidence_head": "636a33eedb9e4a9920f4ff357388099fba78a108",
+  "status": "pi05_v3b002_complete_hash_closed_no_rerun_other_phase_b_unreleased",
   "authoritative_files": [
     "docs/VLA_WAM_V3_CONTINUATION.md",
     "docs/VLA_WAM_STEERABILITY_V3_PROTOCOL.md",
@@ -58,16 +58,37 @@
     "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_episodes.jsonl",
     "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_report.json",
     "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_manifest.json",
+    "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/gate_manifest.json",
+    "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/runtime_identity.json",
+    "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/release_gate.json",
+    "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/fixed_observation_gate.json",
+    "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_episodes.jsonl",
+    "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_episodes.jsonl.manifest.json",
+    "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_pairs.jsonl",
+    "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_pairs.jsonl.manifest.json",
+    "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_infrastructure_attempts.jsonl",
+    "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_infrastructure_attempts.jsonl.manifest.json",
+    "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_report.json",
+    "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_output_manifest.json",
     "tools/build_pi05_v3b002_registration.py",
     "tools/analyze_v3_failure_mode_split.py",
     "tools/test_analyze_v3_failure_mode_split.py",
-    "tests/test_build_pi05_v3b002_registration.py"
+    "tools/normalize_pi05_v3b002_infrastructure.py",
+    "experiments/v3/pi05_phase_b/contract.py",
+    "experiments/v3/pi05_phase_b/runtime.py",
+    "experiments/v3/pi05_phase_b/robolab_bridge.py",
+    "experiments/v3/pi05_phase_b/queue.py",
+    "experiments/v3/pi05_phase_b/compiler.py",
+    "tests/test_build_pi05_v3b002_registration.py",
+    "tests/test_pi05_v3b002_runtime.py",
+    "tests/test_pi05_v3b002_compiler.py",
+    "tests/test_normalize_pi05_v3b002_infrastructure.py"
   ],
   "validation": {
     "v3": {
       "command": ".venv/bin/python tools/validate_vla_wam_v3_protocol.py",
       "status": "valid",
-      "check_count": 374
+      "check_count": 424
     },
     "v2": {
       "command": ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
@@ -75,9 +96,9 @@
       "check_count": 994
     },
     "focused_tests": {
-      "command": ".venv/bin/python -m unittest -v tests.test_audit_vla_wam_measurement_coverage tests.test_validate_vla_wam_v3_protocol tests.test_v3_robotwin_wams_launcher tests.test_vla_wam_v3_episode_schema tests.test_v3b_nano_mirror_release tests.test_v3b_nano_runtime_adapter tests.test_v3b_nano_live_queue",
+      "command": ".venv/bin/python -m unittest -v tests.test_build_pi05_v3b002_registration tests.test_pi05_v3b002_runtime tests.test_pi05_v3b002_compiler tests.test_normalize_pi05_v3b002_infrastructure tests.test_validate_vla_wam_v3_protocol",
       "status": "passed",
-      "test_count": 65
+      "test_count": 32
     }
   },
   "measurement_coverage_audit": {
@@ -394,7 +415,7 @@
       }
     },
     "pi05_position_reflection_v3b002": {
-      "status": "hash_bound_registered_not_behaviorally_released",
+      "status": "complete_hash_closed_27_seed_108_episode_result_no_rerun",
       "amendment_id": "V3-B002",
       "model_id": "pi05_current_stack_droid",
       "arena": "droid_robolab",
@@ -404,7 +425,10 @@
       "prespecified_matched_seed_count": 27,
       "cells_per_seed": 4,
       "registered_behavioral_cell_count": 108,
-      "completed_behavioral_cell_count": 0,
+      "completed_behavioral_cell_count": 108,
+      "completed_behavioral_cell_count_scope": "complete_prespecified_cohort",
+      "committed_complete_seed_blocks": [9400, 9401, 9402, 9403, 9404, 9405, 9406, 9407, 9408, 9409, 9410, 9411, 9412, 9413, 9414, 9415, 9416, 9417, 9418, 9419, 9420, 9421, 9422, 9423, 9424, 9425, 9426],
+      "rerun_policy": "do_not_rerun_any_valid_v3b002_cell",
       "pre_registration_counts": {"model_requests": 0, "behavioral_episodes": 0},
       "source_v3b001": {
         "cells_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
@@ -431,15 +455,64 @@
           "interpretation": "DreamZero rejects the same-shape failure account in this cohort. pi0.5 and Edge do not reject it, but their RIGHT failure rows contain only three and two episodes, so this is not evidence of equivalence."
         }
       },
+      "final_result": {
+        "valid_behavioral_cells": 108,
+        "matched_seed_count": 27,
+        "matched_left_right_pairs": 54,
+        "condition_successes": {
+          "control:left": "4/27",
+          "control:right": "25/27",
+          "position_mirrored:left": "25/27",
+          "position_mirrored:right": "9/27"
+        },
+        "failure_taxonomy": {"correct": 63, "pick_failed": 14, "transport_failed": 27, "wrong_side": 3, "release_failed": 1},
+        "H1_endpoint_redirection": {
+          "control": {"mean_m": 0.1923219714037798, "mean_bootstrap_95_ci_m": [0.1388966723879868, 0.24622209011404597], "median_m": 0.1992722526192665, "positive_seeds": 25, "negative_seeds": 2, "exact_sign_test_p": 0.000005647540092468262},
+          "position_mirrored": {"mean_m": 0.1811391442531237, "mean_bootstrap_95_ci_m": [0.14240442923166685, 0.21632550195187192], "median_m": 0.18465766310691833, "positive_seeds": 26, "negative_seeds": 1, "exact_sign_test_p": 4.172325134277344e-7},
+          "reflected_minus_control_interaction": {"mean_m": -0.011182827150656117, "mean_bootstrap_95_ci_m": [-0.07806737236074965, 0.056768431604184294], "median_m": -0.03668234497308731, "positive_seeds": 12, "negative_seeds": 15, "ties": 0, "exact_sign_test_p": 0.7011080384254456}
+        },
+        "H2_requested_side_depth": {
+          "control": {"mean_m": 0.20747016584155736, "mean_bootstrap_95_ci_m": [0.16311462804571622, 0.25385589400237357], "median_m": 0.16943219676613808, "positive_seeds": 26, "negative_seeds": 1, "exact_sign_test_p": 4.172325134277344e-7},
+          "position_mirrored": {"mean_m": -0.13844854567475892, "mean_bootstrap_95_ci_m": [-0.1787812586735796, -0.09580974440797473], "median_m": -0.150082528591156, "positive_seeds": 3, "negative_seeds": 24, "exact_sign_test_p": 0.000049233436584472656},
+          "reflected_minus_control_interaction": {"mean_m": -0.3459187115163163, "mean_bootstrap_95_ci_m": [-0.4138348317118707, -0.2845569996077016], "median_m": -0.3503093309700489, "positive_seeds": 0, "negative_seeds": 27, "ties": 0, "exact_sign_test_p": 1.4901161193847656e-8}
+        },
+        "H3_binary_success": {
+          "per_seed_DiD_distribution": {"-2": 12, "-1": 13, "0": 2, "1": 0, "2": 0},
+          "mean_DiD": -1.3703703703703705,
+          "median_DiD": -1.0,
+          "exact_two_sided_within_seed_permutation_p": 5.960464477539063e-8
+        },
+        "infrastructure": {"excluded_attempt_count": 18, "included_in_behavioral_denominator": false},
+        "scientific_interpretation": "Position reflection left the endpoint-redirection interaction near zero while reversing requested-side depth and the binary success asymmetry. This supports geometry or layout as a major competence confound for pi0.5 under this simulator setup, while not attributing all language steering to geometry or identifying training distribution as the mechanism."
+      },
+      "runtime_binding": {
+        "runtime_identity_sha256": "6e5e500f5efee2d7576d090a8ec544f28e47af4db6e797c1bb514a16a43fc944",
+        "runtime_identity_file_sha256": "928af903ff99b02dd753b21eca2f6243142aced320a31166645bb1a0427a0f89",
+        "release_gate_file_sha256": "450fcac935b4ff570d53f7d2c844ee10e9c4f2bba8f151692a49fd6de25bc07e",
+        "gate_manifest_file_sha256": "bf050c7301d3fbc621bb13ca271c1280839bb1a9e83c214b4f7f7da597d3dd1d",
+        "release_gate": "passed_model_blind_physical_and_fixed_observation_exact_repeat_prompt_sensitivity"
+      },
       "artifacts": {
         "amendment": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/post_result_pi05_mirror_v3b002_amendment.json", "sha256": "8e56365fdc306adbef2d2f2f8357653d1a683ff17f879f624d7eefd4acb1abb6"},
         "cells": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/pi05_mirror_v3b002_cells.jsonl", "sha256": "0db680a3aee04c991bcc78904cb572b7d962971e04fbc879e828354da30dafee"},
         "manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/pi05_mirror_v3b002_manifest.json", "sha256": "8aaaa38302f6a654090250b3e12cd8735fab28a74027d50193325ffa9d0dddea"},
         "failure_mode_episodes": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_episodes.jsonl", "sha256": "94d078c16d579019c216a7d05c0e4748d049d4bc91ab1879ca38b8bc78da8735"},
         "failure_mode_report": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_report.json", "sha256": "f6289333d77538ed9235a567cb98d70333dd50549f7e52d13bfe5d34a10bdf96"},
-        "failure_mode_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_manifest.json", "sha256": "5a0e95af238536dbbcf7a6c81bf721f095cea1a5e178ddfbaecda8105a1e06ab"}
+        "failure_mode_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_manifest.json", "sha256": "5a0e95af238536dbbcf7a6c81bf721f095cea1a5e178ddfbaecda8105a1e06ab"},
+        "gate_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/gate_manifest.json", "sha256": "bf050c7301d3fbc621bb13ca271c1280839bb1a9e83c214b4f7f7da597d3dd1d"},
+        "runtime_identity": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/runtime_identity.json", "sha256": "928af903ff99b02dd753b21eca2f6243142aced320a31166645bb1a0427a0f89"},
+        "release_gate": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/release_gate.json", "sha256": "450fcac935b4ff570d53f7d2c844ee10e9c4f2bba8f151692a49fd6de25bc07e"},
+        "fixed_observation_gate": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/fixed_observation_gate.json", "sha256": "baf8e9744bb3baa03748521dd72aed88283cbccb613ad0805c6ecbf89e7cdf06"},
+        "episodes": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_episodes.jsonl", "sha256": "7b89287a2b75e40cffc97cd6d2fea58c4189a09d2dc5a0fb9a6427df3d726e70"},
+        "episodes_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_episodes.jsonl.manifest.json", "sha256": "e9df91032e6e1ec12983377f018c899b103681cffdc3166e4c89b064114cce54"},
+        "pairs": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_pairs.jsonl", "sha256": "5812383a6ca7beddd95e69c7ded380b605c34a2f56d6ecbf887365a9720d6447"},
+        "pairs_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_pairs.jsonl.manifest.json", "sha256": "2c1c12cfd3d5b9a65d00dd05be1e66b69d146b08f3a12735a54decdf1e4cce92"},
+        "infrastructure_attempts": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_infrastructure_attempts.jsonl", "sha256": "0159426cf6456a440e79419c6fde857d76fb35bd7ad8d38a6a9891de838f5da8"},
+        "infrastructure_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_infrastructure_attempts.jsonl.manifest.json", "sha256": "5b1589f3c1d0f3e5e28e6a1e57d933b66779ffd70952eb343d5d04d530f184e7"},
+        "report": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_report.json", "sha256": "32ffa99f720906abe8679b0791be3f12d3c91dfce0274d85457a6d2ba59d2b71"},
+        "output_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_output_manifest.json", "sha256": "523a6a2625dc0b67c1f425220006bdca6edea32e554f826f2b6f616c57393090"}
       },
-      "release_boundary": "No behavioral cell may start until a new hash-bound pi0.5 runtime identity passes exact-source, zero-request fixture/reset/renderer/writer, deterministic-repeat, and prompt-sensitivity gates."
+      "release_boundary": "Satisfied before inference: the hash-bound pi0.5 runtime passed exact-source, zero-request fixture/reset/renderer/writer, deterministic-repeat, and prompt-sensitivity gates. The complete cohort is hash-closed and must not be rerun."
     }
   },
   "exact_prompts": {
@@ -648,22 +721,24 @@
       "recovery_command": "git -C /home/ali/openpi-robolab bundle create /tmp/openpi-robolab-all.bundle --all && git -C /home/ali/projects/RoboLab bundle create /tmp/robolab-all.bundle --all"
     },
     "phase_b_confounds": {
-      "status": "nano_v3b001_complete_pi05_v3b002_registered_runtime_release_pending",
+      "status": "nano_v3b001_and_pi05_v3b002_complete_other_phase_b_unreleased",
       "released": {
-        "amendment_id": "V3-B001",
-        "model_id": "cosmos3_nano_policy_droid",
-        "released_behavioral_cells": 108,
-        "completed_behavioral_cells": 108,
-        "release_condition": "Released only after the hash-bound model-blind positions-only calibration. The prespecified 27-seed, four-cell-per-seed cohort is complete and hash-closed."
+        "nano_v3b001": {
+          "amendment_id": "V3-B001",
+          "model_id": "cosmos3_nano_policy_droid",
+          "released_behavioral_cells": 108,
+          "completed_behavioral_cells": 108,
+          "release_condition": "Released only after the hash-bound model-blind positions-only calibration. The prespecified 27-seed, four-cell-per-seed cohort is complete and hash-closed."
+        },
+        "pi05_v3b002": {
+          "amendment_id": "V3-B002",
+          "model_id": "pi05_current_stack_droid",
+          "released_behavioral_cells": 108,
+          "completed_behavioral_cells": 108,
+          "release_condition": "Released only after the hash-bound model-blind physical and fixed-observation exact-repeat and prompt-sensitivity gates. The prespecified 27-seed, four-cell-per-seed cohort is complete and hash-closed."
+        }
       },
-      "registered_not_released": {
-        "amendment_id": "V3-B002",
-        "model_id": "pi05_current_stack_droid",
-        "registered_behavioral_cells": 108,
-        "completed_behavioral_cells": 0,
-        "next_gate": "New hash-bound runtime identity and zero-request physical reset, renderer, writer, exact-repeat, and prompt-sensitivity release gate."
-      },
-      "unreleased": "V3-B002 is registered but not yet behaviorally released. Every other Phase-B confound ablation remains unreleased and requires its own frozen independent release path."
+      "unreleased": "Every Phase-B confound ablation other than Nano V3-B001 and pi0.5 V3-B002 remains unreleased and requires its own frozen independent release path."
     },
     "phase_c_four_phrasings": {
       "status": "not_released",
@@ -676,8 +751,8 @@
     }
   },
   "scientific_claim_boundary": {
-    "supported": "Across every completed checkpoint, matched LEFT/RIGHT prompts changed executed traces; endpoint ordering was often aligned, but requested task completion and failure mode remained strongly checkpoint- and direction-dependent. In the separate V3-A002 public old-name-config bridge, all 20 common action prefixes differed and 16/20 endpoints aligned, yet success was 0/20 LEFT versus 12/20 RIGHT. Nano V3-B001 adds a completed 27-seed positions-only ablation: endpoint redirection followed the prompt in 27/27 seeds under both layouts, while the requested-depth contrast changed from control median +14.8 cm to position-reflected median -8.8 cm; the prespecified interaction median was -24.6 cm, with 24/27 negative seeds and exact sign-test p=4.923e-05.",
-    "not_supported": "The completed Nano V3-B001 intervention supports a causal effect of the registered movable-object center-position reflection on Nano's side-depth contrast under this simulator setup. It does not identify training-distribution bias as the mechanism, isolate reachability from other downstream physical mediators, or test a full-scene mirror, base rotation, start-side interaction, or role swap. An exposed or decoded future also does not establish successful control.",
+    "supported": "Across every completed checkpoint, matched LEFT/RIGHT prompts changed executed traces; endpoint ordering was often aligned, but requested task completion and failure mode remained strongly checkpoint- and direction-dependent. In the separate V3-A002 public old-name-config bridge, all 20 common action prefixes differed and 16/20 endpoints aligned, yet success was 0/20 LEFT versus 12/20 RIGHT. Nano V3-B001 and pi0.5 V3-B002 are completed scene-matched positions-only ablations. For pi0.5, reflection left endpoint redirection nearly unchanged (interaction mean -1.12 cm, 95% CI -7.81 to +5.68 cm, sign-test p=0.701) but reversed requested-side depth (interaction mean -34.59 cm, 95% CI -41.38 to -28.46 cm; 27/27 negative, p=1.49e-08) and binary success from control 4/27 LEFT versus 25/27 RIGHT to reflected 25/27 LEFT versus 9/27 RIGHT (mean DiD -1.370, exact p=5.96e-08).",
+    "not_supported": "The two completed registered movable-object center-position reflections support geometry or layout as a major competence confound under this simulator setup. They do not imply that all prompt-conditioned endpoint steering is geometric, identify training-distribution bias as the mechanism, isolate reachability from other downstream physical mediators, or test a full-scene mirror, base rotation, start-side interaction, or role swap. An exposed or decoded future also does not establish successful control.",
     "unit_warning": "RoboTwin sampling replicates are nested within seven scenes; they are not 63 independent scenes."
   },
   "storage": {
@@ -693,7 +768,7 @@
       ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
       "git diff --check"
     ],
-    "inference_authority": "Do not rerun any valid Phase-A, V3-A002, or Nano V3-B001 cell. V3-B002 is the exact next experiment: 108 registered pi0.5 cells at seeds 9400-9426, using the exact V3-B001 four-cell order within each seed. It may start only after its new runtime identity and zero-request fixture/reset/renderer/writer plus exact-repeat and prompt-sensitivity gate are hash-bound. No other Phase-B, Phase-C, or Phase-D cell is released. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or Phase C.",
+    "inference_authority": "Do not rerun any valid Phase-A, V3-A002, Nano V3-B001, or pi0.5 V3-B002 cell. Both Phase-B reflection cohorts are complete and hash-closed at 108/108 cells. No other Phase-B, Phase-C, or Phase-D cell is released. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or Phase C.",
     "publication_note": "Use the compact result summaries and evidence manifests for analysis. Do not infer current study state from the older V2 article, gallery, figures, or chat history."
   }
 }

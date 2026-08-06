@@ -1,0 +1,61 @@
+{
+  "action_shape": [
+    15,
+    8
+  ],
+  "amendment_id": "V3-B002",
+  "fixed_observation_exact_repeat_passed": true,
+  "fixed_observation_left_right_prompt_sensitivity_passed": true,
+  "fixture_path": "/data/users/ali/vla_wam/raw/pi05_current_v2a010/preflight/seed8300_fixed_observation.npz",
+  "fixture_sha256": "19dc038dc152aa3408439f2161496efa2d83bc25b11741a6b5495a28113daf86",
+  "left_action_sha256": "44f5a557f9f7aaf326a8ee2751cf6681c1aceeae4621fa62e41bdc9220e9ff3a",
+  "left_exact_repeat_bit_identical": true,
+  "left_prompt": "Put the Rubik's cube to the left of the bowl.",
+  "left_right_action_rms": 0.0036175365618920452,
+  "model_id": "pi05_current_stack_droid",
+  "model_request_count": 3,
+  "passed": true,
+  "records": {
+    "left_a": {
+      "bytes": 608,
+      "dtype": "float32",
+      "path": "/data/users/ali/vla_wam/raw/v3b/pi05_current_stack/position_reflection_v3b002/runtime_attempt01/fixed_observation_gate/left_a_actions.npy",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "sampling_seed": 9400000,
+      "sha256": "44f5a557f9f7aaf326a8ee2751cf6681c1aceeae4621fa62e41bdc9220e9ff3a",
+      "shape": [
+        15,
+        8
+      ]
+    },
+    "left_b": {
+      "bytes": 608,
+      "dtype": "float32",
+      "path": "/data/users/ali/vla_wam/raw/v3b/pi05_current_stack/position_reflection_v3b002/runtime_attempt01/fixed_observation_gate/left_b_actions.npy",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "sampling_seed": 9400000,
+      "sha256": "44f5a557f9f7aaf326a8ee2751cf6681c1aceeae4621fa62e41bdc9220e9ff3a",
+      "shape": [
+        15,
+        8
+      ]
+    },
+    "right": {
+      "bytes": 608,
+      "dtype": "float32",
+      "path": "/data/users/ali/vla_wam/raw/v3b/pi05_current_stack/position_reflection_v3b002/runtime_attempt01/fixed_observation_gate/right_actions.npy",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "sampling_seed": 9400000,
+      "sha256": "5755dfbec3b78ab3e82b38d987e17e2e3772c9f770a55579b39853cfdcebc86e",
+      "shape": [
+        15,
+        8
+      ]
+    }
+  },
+  "right_action_sha256": "5755dfbec3b78ab3e82b38d987e17e2e3772c9f770a55579b39853cfdcebc86e",
+  "right_prompt": "Put the Rubik's cube to the right of the bowl.",
+  "sampling_seed": 9400000,
+  "schema_version": "vla-wam-shared-v3b-pi05-fixed-observation-gate-v1",
+  "study_id": "vla_wam_language_steerability_v3"
+}

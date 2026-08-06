@@ -2,7 +2,7 @@
   "schema_version": "vla-wam-shared-v3-continuation-v1",
   "study_id": "vla_wam_language_steerability_v3",
   "updated_at_utc": "2026-08-06T20:39:16Z",
-  "active_branch": "codex/wam-language-steerability",
+  "active_branch": "main",
   "evidence_head": "011431f59465176cd5f73cdc0e14d67624315023",
   "status": "nano_v3b004_design_frozen_zero_model_requests_numeric_calibration_next",
   "authoritative_files": [
@@ -103,7 +103,7 @@
     "v3": {
       "command": ".venv/bin/python tools/validate_vla_wam_v3_protocol.py",
       "status": "valid",
-      "check_count": 424
+      "check_count": 442
     },
     "v2": {
       "command": ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
@@ -111,9 +111,9 @@
       "check_count": 994
     },
     "focused_tests": {
-      "command": ".venv/bin/python -m unittest -v tests.test_build_pi05_v3b002_registration tests.test_pi05_v3b002_runtime tests.test_pi05_v3b002_compiler tests.test_normalize_pi05_v3b002_infrastructure tests.test_validate_vla_wam_v3_protocol",
+      "command": ".venv/bin/python -m pytest -q tests/test_v3_robotwin_wams_launcher.py tests/test_validate_vla_wam_v3_protocol.py tests/test_nano_v3b004_calibration_design.py",
       "status": "passed",
-      "test_count": 32
+      "test_count": 27
     },
     "retrospective_analysis_tests": {
       "command": ".venv/bin/python -m unittest tools/test_analyze_v3_failure_mode_split.py tools/test_analyze_v3_gap_vs_competence.py",

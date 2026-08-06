@@ -65,7 +65,7 @@ tools/vla_wam_v3_cluster_preflight.sh \
 ```
 
 The preflight verifies the branch
-`codex/wam-language-steerability`, a clean worktree, **both frozen v2 and v3
+`main`, a clean worktree, **both frozen v2 and v3
 validators before any GPU inspection**, PVC capacity and persistence, GPU
 identity/free memory/current compute processes, the explicit readable NVIDIA
 Vulkan ICD, a real SAPIEN render-and-capture gate, and GitHub/Hugging Face

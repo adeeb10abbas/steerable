@@ -603,8 +603,8 @@ def verify_runtime_identity(
         _fail("runtime identity requires adapter_files")
     if verify_live_files:
         branch = _git_output(root, "branch", "--show-current").decode().strip()
-        if branch != "codex/wam-language-steerability":
-            _fail("study repository is not on codex/wam-language-steerability")
+        if branch != "main":
+            _fail("study repository is not on main")
         if _git_output(root, "status", "--porcelain=v1", "--untracked-files=all"):
             _fail("study repository worktree must be clean before behavioral inference")
         _verify_live_git(

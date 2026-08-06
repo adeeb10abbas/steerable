@@ -445,7 +445,7 @@ def draw_cover(report: Report) -> None:
     para(c, "DROID/RoboLab and RoboTwin use different tasks, controllers, and success predicates. Their success rates are reported separately and never pooled.", MARGIN_X, 92, CONTENT_W, SMALL)
     c.setFillColor(MUTED)
     c.setFont("Arial", 7)
-    c.drawString(MARGIN_X, 34, "Branch: codex/wam-language-steerability")
+    c.drawString(MARGIN_X, 34, "Branch: main")
     c.drawRightString(PAGE_W - MARGIN_X, 34, "Evidence head: fabefebb1b13")
 
 
@@ -785,7 +785,7 @@ def draw_nano_evidence(report: Report, nano: dict[str, Any]) -> None:
     c = report.c
     y = report.new_page("Failures and future-interface evidence", "11  V3-B001 EPISODE EVIDENCE", "Actual simulator execution and request-local predictions are displayed together but remain analytically distinct.")
     posters_dir = ROOT / "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/publication_media"
-    base_url = "https://github.com/adeeb10abbas/steerable/blob/codex/wam-language-steerability/artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/publication_media/"
+    base_url = "https://github.com/adeeb10abbas/steerable/blob/main/artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/publication_media/"
     cells = [
         ("CONTROL - LEFT", "nano_v3b001_seed9400_control_left_poster.png", "nano_v3b001_seed9400_control_left_actual_vs_local_predictions.mp4"),
         ("CONTROL - RIGHT", "nano_v3b001_seed9400_control_right_poster.png", "nano_v3b001_seed9400_control_right_actual_vs_local_predictions.mp4"),
@@ -1090,7 +1090,7 @@ def draw_prompt_registry(report: Report) -> None:
 
 
 def github_media_url(path: str) -> str:
-    return "https://github.com/adeeb10abbas/steerable/blob/codex/wam-language-steerability/" + path
+    return "https://github.com/adeeb10abbas/steerable/blob/main/" + path
 
 
 def media_button(c: canvas.Canvas, label: str, url: str, x: float, y: float, w: float = 54) -> None:

@@ -11,7 +11,7 @@ Usage:
     --study-root STUDY_ROOT --vulkan-icd ICD_PATH \
     --credential-gate-cmd 'MODEL-SPECIFIC-NON-SECRET-CHECK' \
     --sapien-gate-cmd 'MODEL-SPECIFIC-COMMAND' \
-    [--study-branch codex/wam-language-steerability]
+    [--study-branch main]
 
 All target arguments are mandatory.  PVC_ROOT must be a writable path inside a
 PVC mounted by the named pod.  SAPIEN_GATE_CMD must create an actual headless
@@ -32,7 +32,7 @@ STUDY_ROOT=''
 VULKAN_ICD=''
 CREDENTIAL_GATE_CMD=''
 SAPIEN_GATE_CMD=''
-STUDY_BRANCH='codex/wam-language-steerability'
+STUDY_BRANCH='main'
 
 while (($#)); do
   case "$1" in

@@ -19,7 +19,7 @@ Replace only the remote URL if the repository is mirrored internally.
 ```bash
 set -euo pipefail
 export STEERABLE_REMOTE="${STEERABLE_REMOTE:?pushed steerable Git remote URL}"
-export STUDY_BRANCH="${STUDY_BRANCH:-codex/wam-language-steerability}"
+export STUDY_BRANCH="${STUDY_BRANCH:-main}"
 export MAC_STUDY="${MAC_STUDY:-$PWD/steerable}"
 git clone --branch "$STUDY_BRANCH" "$STEERABLE_REMOTE" "$MAC_STUDY"
 cd "$MAC_STUDY"

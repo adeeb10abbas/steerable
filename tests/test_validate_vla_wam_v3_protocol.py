@@ -52,6 +52,10 @@ class ValidateV3ProtocolTest(unittest.TestCase):
             ROOT / "experiments" / "v3" / "pi05_phase_b",
             root / "experiments" / "v3" / "pi05_phase_b",
         )
+        shutil.copytree(
+            ROOT / "experiments" / "v3" / "cosmos_nano_lateral_sweep",
+            root / "experiments" / "v3" / "cosmos_nano_lateral_sweep",
+        )
         (root / "experiments" / "groot_droid" / "robolab_v2_tasks").mkdir(
             parents=True
         )
@@ -71,6 +75,7 @@ class ValidateV3ProtocolTest(unittest.TestCase):
             "render_nano_v3b001_results.py",
             "build_nano_v3b001_publication_media.py",
             "build_pi05_v3b002_registration.py",
+            "build_dreamzero_v3b003_registration.py",
             "analyze_v3_failure_mode_split.py",
         ):
             shutil.copy2(ROOT / "tools" / name, root / "tools" / name)
@@ -83,6 +88,7 @@ class ValidateV3ProtocolTest(unittest.TestCase):
             "test_render_nano_v3b001_results.py",
             "test_build_nano_v3b001_publication_media.py",
             "test_build_pi05_v3b002_registration.py",
+            "test_build_dreamzero_v3b003_registration.py",
             "test_pi05_v3b002_runtime.py",
             "test_pi05_v3b002_compiler.py",
         ):

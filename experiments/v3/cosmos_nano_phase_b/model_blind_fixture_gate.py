@@ -368,15 +368,24 @@ def main() -> None:
             for field in ("positions_robot_base_m", "quaternions_wxyz"):
                 if left_row[field] != right_row[field]:
                     raise ValueError(f"{arm} LEFT/RIGHT reset fingerprints differ for {field}")
-    control = by_label["control_left"]["repeat_resets"][0]
-    mirrored = by_label["position_mirrored_left"]["repeat_resets"][0]
-    for name in POSITIONS:
-        c = control["positions_robot_base_m"][name]
-        m = mirrored["positions_robot_base_m"][name]
-        if not close_vector([c[0], -c[1], c[2]], m, 0.003):
-            raise ValueError(f"live position reflection failed for {name}")
-        if not close_vector(control["quaternions_wxyz"][name], mirrored["quaternions_wxyz"][name], 1e-5):
-            raise ValueError(f"non-factor quaternion changed for {name}")
+    controls = by_label["control_left"]["repeat_resets"]
+    mirrored_rows = by_label["position_mirrored_left"]["repeat_resets"]
+    for repeat, (control, mirrored) in enumerate(zip(controls, mirrored_rows)):
+        for name in POSITIONS:
+            c = control["positions_robot_base_m"][name]
+            m = mirrored["positions_robot_base_m"][name]
+            if not close_vector([c[0], -c[1], c[2]], m, 0.003):
+                raise ValueError(
+                    f"live position reflection failed for {name} at repeat {repeat}"
+                )
+            if not close_vector(
+                control["quaternions_wxyz"][name],
+                mirrored["quaternions_wxyz"][name],
+                1e-5,
+            ):
+                raise ValueError(
+                    f"non-factor quaternion changed for {name} at repeat {repeat}"
+                )
 
     output = {
         "schema_version": "vla-wam-shared-v3b-nano-position-mirror-model-blind-calibration-v1",
@@ -436,8 +445,8 @@ def main() -> None:
             ),
             "left_right_physical_fingerprints_equal_within_each_arm": True,
             "neither_predicate_true_at_every_reset": True,
-            "live_position_reflection_passed": True,
-            "nonfactor_quaternions_equal": True,
+            "live_position_reflection_passed_at_every_repeat": True,
+            "nonfactor_quaternions_equal_at_every_repeat": True,
         },
         "tasks": rows,
         "viewport_write_gate": videos,

@@ -178,6 +178,41 @@ class NanoPhaseBLiveQueueTest(unittest.TestCase):
         self.assertIn('"position_robot_xyz_m": _quat_inverse_rotate_wxyz(', source)
         self.assertIn('physical["objects"][name]["position_robot_xyz_m"]', source)
         self.assertIn('"position_frame": "robot"', source)
+        self.assertIn('released_fixture.get("frame_of_reference") != "robot"', source)
+
+    def test_bridge_reproduces_full_calibration_registration_context(self) -> None:
+        source = (
+            ROOT / "experiments/v3/cosmos_nano_phase_b/robolab_bridge.py"
+        ).read_text(encoding="utf-8")
+        expected_order = (
+            '("control", "left")',
+            '("control", "right")',
+            '("position_mirrored", "left")',
+            '("position_mirrored", "right")',
+        )
+        registration = source[
+            source.index("TASK_REGISTRATION_ORDER = (") :
+            source.index("args_cli.task = [TASK_NAMES")
+        ]
+        positions = [registration.index(item) for item in expected_order]
+        self.assertEqual(positions, sorted(positions))
+        self.assertIn(
+            "task=[str(task_root / TASK_FILES[key]) for key in TASK_REGISTRATION_ORDER]",
+            registration,
+        )
+
+    def test_bridge_persists_fixture_mismatch_evidence_before_rejecting(self) -> None:
+        source = (
+            ROOT / "experiments/v3/cosmos_nano_phase_b/robolab_bridge.py"
+        ).read_text(encoding="utf-8")
+        method = source[
+            source.index("    def write_reset_attestation(self) -> Path:") :
+            source.index("    def reset(self, *args: Any, **kwargs: Any) -> Any:")
+        ]
+        self.assertLess(
+            method.index("self.fixture_evidence_path.write_text("),
+            method.index('raise RuntimeError("live reset does not match'),
+        )
 
     def test_queue_rejects_clean_isaac_exit_without_export(self) -> None:
         source = (

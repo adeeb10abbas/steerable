@@ -1,10 +1,10 @@
 {
   "schema_version": "vla-wam-shared-v3-continuation-v1",
   "study_id": "vla_wam_language_steerability_v3",
-  "updated_at_utc": "2026-08-06T05:07:58Z",
+  "updated_at_utc": "2026-08-06T05:35:14Z",
   "active_branch": "codex/wam-language-steerability",
   "evidence_head": "6e1de8f2192ec9d7ef7f8356458775541f596a97",
-  "status": "phase_a_and_v3a002_complete_nano_v3b001_robot_frame_gate_repair_108_cells_released_zero_completed_other_phase_b_phase_c_phase_d_unreleased",
+  "status": "phase_a_and_v3a002_complete_nano_v3b001_registration_context_repair_108_cells_released_zero_completed_other_phase_b_phase_c_phase_d_unreleased",
   "authoritative_files": [
     "docs/VLA_WAM_V3_CONTINUATION.md",
     "docs/VLA_WAM_STEERABILITY_V3_PROTOCOL.md",
@@ -49,7 +49,7 @@
     "focused_tests": {
       "command": ".venv/bin/python -m unittest -v tests.test_audit_vla_wam_measurement_coverage tests.test_validate_vla_wam_v3_protocol tests.test_v3_robotwin_wams_launcher tests.test_vla_wam_v3_episode_schema tests.test_v3b_nano_mirror_release tests.test_v3b_nano_runtime_adapter tests.test_v3b_nano_live_queue",
       "status": "passed",
-      "test_count": 61
+      "test_count": 63
     }
   },
   "measurement_coverage_audit": {
@@ -137,16 +137,29 @@
         },
         "live_infrastructure_ledger": {
           "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_infrastructure_ledger.json",
-          "sha256": "382bd646fbbc854c98c1cfe5947cc59c4f6ae6caf7df7758d7e75bc2b3c888a0"
+          "sha256": "dd7cea461bad1aa918312dff3cff405e2db54744ae76af0c176399872d8061aa"
         }
       },
       "live_runtime": {
-        "status": "live_robot_frame_gate_repair_after_preserved_invalidated_smokes",
-        "model_request_count": 23,
+        "status": "live_registration_context_repair_after_preserved_invalidated_smokes",
+        "model_request_count": 31,
         "behavioral_episode_count": 0,
         "completed_behavioral_cell_count": 0,
-        "infrastructure_invalid_complete_behavior_attempt_count": 2,
-        "live_bound_runtime_identity": "must_be_rebound_on_the_ali_owned_pvc_after_the_robot_frame_gate_fix_before_retrying_the_exact_next_cell",
+        "infrastructure_invalid_complete_behavior_attempt_count": 3,
+        "live_bound_runtime_identity": "must_be_rebound_on_the_ali_owned_pvc_after_the_full_registration_context_fix_before_retrying_the_exact_next_cell",
+        "invalidated_runtime_attempt06": {
+          "runtime_identity_sha256": "fa962d1783a506abb2e0c11c5129087be62a9f698bd2a3bec2a97dddba9b6a71",
+          "manifest_file_sha256": "41b31bd7fab0c69d5e7f7deafe041177ffe97a7727003c17bdf85bb24cb07875",
+          "study_head": "a42ae3d3f8549ee4fac9704a59ee3c103bac5494",
+          "reason": "The first compiled row is invalidated before analysis because the bridge source is changing and the aggregate requires one runtime identity across all 108 cells."
+        },
+        "registration_context_diagnostic": {
+          "status": "passed_all_four_layouts_two_resets_each_server_unloaded",
+          "model_requests": 0,
+          "behavioral_episodes": 0,
+          "report_path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/diagnostic_server_unloaded_attempt01/live_gate/model_blind_calibration_report.json",
+          "report_sha256": "b15b3249647dbf468e745727e2d7677df9c74d919b399a3148be17312951ca04"
+        },
         "exact_next_cell": {
           "cell_id": "v3b001:nano:seed9400:position_mirrored:right",
           "environment_seed": 9400,
@@ -168,7 +181,29 @@
           "partial_attempts_outside_behavioral_denominator": true,
           "static_prompt_only": true,
           "omniverse_eula_acceptance": "OMNI_KIT_ACCEPT_EULA=YES",
-          "thermal_guard": "not_used"
+          "thermal_guard": "not_used",
+          "full_calibration_registration_context_required": true,
+          "split_policy_server_preferred_for_simulator_load_isolation": true
+        },
+        "execution_topology": {
+          "simulator_pod": {
+            "name": "vla-wam-rtx-nano-ali",
+            "uid": "30b51054-f277-480d-831d-337581e1cc49",
+            "owner": "ali",
+            "gpu_uuid": "GPU-37425604-6c72-a77a-f635-392439431707",
+            "gpu_product": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+            "driver_version": "580.105.08"
+          },
+          "split_policy_server_pod": {
+            "name": "raytrace-rtxpro6000-ali",
+            "uid": "d5b0405a-a9b1-4baa-a802-d5171e03c228",
+            "owner": "ali",
+            "pod_ip": "10.244.222.28",
+            "gpu_uuid": "GPU-f28bd513-a38a-b768-7589-d2959f814ae8",
+            "gpu_product": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+            "driver_version": "580.105.08"
+          },
+          "claim_boundary": "The split-server one-wrapper retry also failed. Registration context is the demonstrated mismatch; split pods remain preferred for load isolation without claiming GPU colocation was causal."
         },
         "source_bindings": {
           "runtime_adapter": {"path": "experiments/v3/cosmos_nano_phase_b/runtime_adapter.py", "sha256": "6ff6c48d28842d78fb8a1e105d1a48bc2149d6d320106775cf857cacd523b719"},
@@ -176,10 +211,10 @@
           "live_support": {"path": "experiments/v3/cosmos_nano_phase_b/live_support.py", "sha256": "445176755c89d34a597e83ed23fa0444922a4736e276117a5242335a2aa76590"},
           "live_client": {"path": "experiments/v3/cosmos_nano_phase_b/live_client.py", "sha256": "39efa19151039f8243cf452713bbaf13b3e955ccd590055d462c1ea66cac0a28"},
           "live_server": {"path": "experiments/v3/cosmos_nano_phase_b/serve_nano.py", "sha256": "caa2c7ca1ea8bc3dd831a0564c3f37f63c64dc90ddf104b1ae0281ae61e7e1cc"},
-          "live_bridge": {"path": "experiments/v3/cosmos_nano_phase_b/robolab_bridge.py", "sha256": "308a08496307d24ef5a1b58465412eaba46bcb1f4a88d33cf004b40427f80ab7"},
+          "live_bridge": {"path": "experiments/v3/cosmos_nano_phase_b/robolab_bridge.py", "sha256": "173ebb0fb4b292798051e8c63604dce1977408cd0b1a1d683991c9cd29057b29"},
           "queue_launcher": {"path": "experiments/v3/cosmos_nano_phase_b/queue_launcher.py", "sha256": "52a4132fb9f6dfff3e9e4bbb17862c682c3e0cc1fbdfc11e6c73e08316b87c4d"},
           "runtime_test": {"path": "tests/test_v3b_nano_runtime_adapter.py", "sha256": "4347a5354806da8180b13a64a712ba267397a387fd80f02f6d851950510f22ff"},
-          "live_queue_test": {"path": "tests/test_v3b_nano_live_queue.py", "sha256": "e8134fa168e67817d580b8aa123cdb8288646a424f3145fc04eff390f8451d02"}
+          "live_queue_test": {"path": "tests/test_v3b_nano_live_queue.py", "sha256": "6c48513d99fcfb904b204f2fe78608297e70ed8cd576869d00f8f0639b228422"}
         }
       }
     }
@@ -428,7 +463,7 @@
       ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
       "git diff --check"
     ],
-    "inference_authority": "No Phase-A authorized_new or V3-A002 bridge cell remains; do not rerun a valid cell. Nano V3-B001 is the only released Phase-B queue: its exact 108 hash-bound rows may start only after the required live runtime-identity, viewport-writer, and raw-output-path rechecks. No other Phase-B, Phase-C, or Phase-D cell may start without its own frozen independent release path. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or Phase C.",
+    "inference_authority": "No Phase-A authorized_new or V3-A002 bridge cell remains; do not rerun a valid cell. Nano V3-B001 is the only released Phase-B queue: its exact 108 hash-bound rows may start only after the full four-wrapper calibration registration context is reproduced, a fresh live runtime identity is bound, and viewport-writer and raw-output-path checks pass. Use the separate ali-owned RTX policy-server pod for load isolation while retaining the ali-owned simulator pod; the split topology is not itself a scientific intervention. No other Phase-B, Phase-C, or Phase-D cell may start without its own frozen independent release path. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or Phase C.",
     "publication_note": "Use the compact result summaries and evidence manifests for analysis. Do not infer current study state from the older V2 article, gallery, figures, or chat history."
   }
 }

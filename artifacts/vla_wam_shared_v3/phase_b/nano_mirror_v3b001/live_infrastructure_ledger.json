@@ -2,7 +2,7 @@
   "schema_version": "vla-wam-shared-v3b-nano-live-infrastructure-ledger-v1",
   "study_id": "vla_wam_language_steerability_v3",
   "amendment_id": "V3-B001",
-  "updated_at_utc": "2026-08-06T05:07:58Z",
+  "updated_at_utc": "2026-08-06T05:35:14Z",
   "behavioral_denominator_excludes_all_entries": true,
   "completed_valid_behavioral_cells": 0,
   "eula_acceptance": {
@@ -142,8 +142,147 @@
         "bytes": 1336,
         "sha256": "c7b7bfec5f1f8f9e0d060a9546e44ac77d7d24dffca040e2162e179082fd2fd8"
       }
+    },
+    {
+      "attempt_id": "behavioral_attempt05_position_mirrored_right",
+      "registered_cell_id": "v3b001:nano:seed9400:position_mirrored:right",
+      "stage": "post_compile_registration_context_audit",
+      "model_requests": 8,
+      "behavioral_actions_executed": 230,
+      "retained_action_chunks": 8,
+      "retained_decoded_futures": 8,
+      "provisional_compiled_measurements": {
+        "requested_success": true,
+        "signed_final_lateral_offset_m": -0.18141043186187744,
+        "final_requested_signed_margin_m": 0.18141043186187744
+      },
+      "denominator_eligible": false,
+      "disposition": "compiled_record_invalidated_before_analysis",
+      "reason": "The cell compiled under runtime_attempt06, but the following control reset exposed a calibration-registration-context mismatch. The live bridge is changing, and the aggregate requires one source-bound runtime identity for all 108 cells. This row was invalidated before analysis; its provisional measurements are retained only as infrastructure evidence.",
+      "runtime_identity": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/runtime_attempt06/runtime_identity.json",
+        "bytes": 2910,
+        "sha256": "41b31bd7fab0c69d5e7f7deafe041177ffe97a7727003c17bdf85bb24cb07875",
+        "runtime_identity_sha256": "fa962d1783a506abb2e0c11c5129087be62a9f698bd2a3bec2a97dddba9b6a71",
+        "study_head": "a42ae3d3f8549ee4fac9704a59ee3c103bac5494"
+      },
+      "raw_episode_jsonl": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt05/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__position_mirrored__right/attempt01/raw_episode.jsonl",
+        "bytes": 60655,
+        "sha256": "826fe279d006159a3752483afc585060873a72982a293f331dc6f0df49da033d"
+      },
+      "viewport_video": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt05/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__position_mirrored__right/attempt01/simulator/V3BNanoPositionMirroredRightCalibrationTask/Put_the_Rubiks_cube_to_the_right_of_the_bowl_0_viewport.mp4",
+        "bytes": 1472508,
+        "sha256": "4cee9b21bdbc30efe7a30b73543e25a09f90b3d234bf7dbf111c767a7af2d70d"
+      }
+    },
+    {
+      "attempt_id": "behavioral_attempt05_control_left",
+      "registered_cell_id": "v3b001:nano:seed9400:control:left",
+      "stage": "model_blind_reset_gate_registration_context_mismatch",
+      "model_requests": 0,
+      "behavioral_actions_executed": 0,
+      "released_position_tolerance_m": 0.003,
+      "rubiks_cube_max_position_error_m": 0.0034789443,
+      "denominator_eligible": false,
+      "disposition": "preserved_infrastructure_failure",
+      "reason": "The robot-frame gate rejected the deterministic control reset before any model request. The bridge registered only the active wrapper, unlike the four-wrapper calibration context.",
+      "bridge_failure": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt05/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/bridge_failure.json",
+        "bytes": 2905,
+        "sha256": "70b7829bc37faab8a0fd2dda0b4d41dddb96ac8920304745864d6395cc1dcc8b"
+      },
+      "settle_stability": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt05/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/state_capture/v3b001__nano__seed9400__control__left.settle_stability.json",
+        "bytes": 2580,
+        "sha256": "588297f9d058bb9997346f0c0c71e6420381ad5d9fae70687854adc4f76d4ef9"
+      }
+    },
+    {
+      "attempt_id": "behavioral_attempt06_control_left",
+      "registered_cell_id": "v3b001:nano:seed9400:control:left",
+      "stage": "model_blind_reset_gate_registration_context_reproduction",
+      "model_requests": 0,
+      "behavioral_actions_executed": 0,
+      "released_position_tolerance_m": 0.003,
+      "rubiks_cube_max_position_error_m": 0.0034789443,
+      "denominator_eligible": false,
+      "disposition": "preserved_infrastructure_failure",
+      "reason": "A fresh immutable retry reproduced the same pre-request control state and 3 mm gate rejection.",
+      "bridge_failure": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt06/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/bridge_failure.json",
+        "bytes": 2905,
+        "sha256": "70b7829bc37faab8a0fd2dda0b4d41dddb96ac8920304745864d6395cc1dcc8b"
+      },
+      "settle_stability": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt06/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/state_capture/v3b001__nano__seed9400__control__left.settle_stability.json",
+        "bytes": 2580,
+        "sha256": "588297f9d058bb9997346f0c0c71e6420381ad5d9fae70687854adc4f76d4ef9"
+      }
+    },
+    {
+      "attempt_id": "behavioral_attempt07_control_left_split_rtx",
+      "registered_cell_id": "v3b001:nano:seed9400:control:left",
+      "stage": "model_blind_reset_gate_split_server_reproduction",
+      "model_requests": 0,
+      "behavioral_actions_executed": 0,
+      "released_position_tolerance_m": 0.003,
+      "rubiks_cube_max_position_error_m": 0.0034789443,
+      "denominator_eligible": false,
+      "disposition": "preserved_infrastructure_failure",
+      "reason": "Moving the Nano server to a separate ali-owned RTX pod did not change the deterministic pre-request control reset failure while the bridge still registered only one wrapper. This rules out split GPU placement alone as a sufficient repair; it does not by itself prove that colocation had no effect.",
+      "bridge_failure": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt07/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/bridge_failure.json",
+        "bytes": 2905,
+        "sha256": "70b7829bc37faab8a0fd2dda0b4d41dddb96ac8920304745864d6395cc1dcc8b"
+      },
+      "settle_stability": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt07/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/state_capture/v3b001__nano__seed9400__control__left.settle_stability.json",
+        "bytes": 2580,
+        "sha256": "588297f9d058bb9997346f0c0c71e6420381ad5d9fae70687854adc4f76d4ef9"
+      }
+    },
+    {
+      "attempt_id": "diagnostic_server_unloaded_attempt01",
+      "stage": "model_blind_full_registration_context_diagnostic",
+      "model_requests": 0,
+      "behavioral_episodes": 0,
+      "behavioral_actions_executed": 0,
+      "registered_layouts": 4,
+      "resets_per_layout": 2,
+      "passed_all_released_layouts": true,
+      "denominator_eligible": false,
+      "disposition": "preserved_model_blind_diagnostic",
+      "reason": "With the policy server unloaded and all four released wrappers registered in the original calibration order, two resets for each control/mirrored and LEFT/RIGHT wrapper passed the frozen gate. Together with the three identical one-wrapper control failures, this diagnoses registration context as the demonstrated mismatch; no model behavior was sampled.",
+      "report": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/diagnostic_server_unloaded_attempt01/live_gate/model_blind_calibration_report.json",
+        "bytes": 36238,
+        "sha256": "b15b3249647dbf468e745727e2d7677df9c74d919b399a3148be17312951ca04"
+      }
     }
   ],
+  "execution_topology": {
+    "simulator": {
+      "pod": "vla-wam-rtx-nano-ali",
+      "pod_uid": "30b51054-f277-480d-831d-337581e1cc49",
+      "owner_label": "ali",
+      "pod_ip": "10.244.222.14",
+      "gpu_product": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+      "gpu_uuid": "GPU-37425604-6c72-a77a-f635-392439431707",
+      "driver_version": "580.105.08"
+    },
+    "split_policy_server": {
+      "pod": "raytrace-rtxpro6000-ali",
+      "pod_uid": "d5b0405a-a9b1-4baa-a802-d5171e03c228",
+      "owner_label": "ali",
+      "pod_ip": "10.244.222.28",
+      "gpu_product": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+      "gpu_uuid": "GPU-f28bd513-a38a-b768-7589-d2959f814ae8",
+      "driver_version": "580.105.08"
+    },
+    "diagnostic_boundary": "The split-server retry still failed under the one-wrapper bridge. Separate GPUs remain the preferred next topology for simulator-load isolation, but only the registration-context mismatch is demonstrated by the current diagnostics."
+  },
   "repair": {
     "export_before_isaac_close": true,
     "absolute_attempt_local_robolab_output_folder": true,
@@ -152,6 +291,11 @@
     "pre_fix_compiled_cell_invalidated": true,
     "durable_bridge_failure_before_isaac_close": true,
     "queue_requires_export_before_compilation": true,
+    "full_four_wrapper_registration_context_required": true,
+    "active_task_filtered_after_full_registration": true,
+    "fixture_mismatch_evidence_persisted_before_raise": true,
+    "registration_context_diagnostic_passed_without_server": true,
+    "registration_context_diagnostic_model_requests": 0,
     "fresh_runtime_identity_required": true,
     "exact_next_cell_unchanged": "v3b001:nano:seed9400:position_mirrored:right"
   }

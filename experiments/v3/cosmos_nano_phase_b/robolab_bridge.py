@@ -171,8 +171,21 @@ TASK_NAMES = {
     ("position_mirrored", "left"): "V3BNanoPositionMirroredLeftCalibrationTask",
     ("position_mirrored", "right"): "V3BNanoPositionMirroredRightCalibrationTask",
 }
-task_path = study_root / "experiments/v3/cosmos_nano_phase_b/task_files" / TASK_FILES[(cell.arm, cell.relation)]
-auto_register_droid_envs(task=[str(task_path)], cameras=WRIST_LEFT_RIGHT_HEAD)
+TASK_REGISTRATION_ORDER = (
+    ("control", "left"),
+    ("control", "right"),
+    ("position_mirrored", "left"),
+    ("position_mirrored", "right"),
+)
+task_root = study_root / "experiments/v3/cosmos_nano_phase_b/task_files"
+# Reproduce the released model-blind calibration's registration context exactly.
+# Registering only the active wrapper changed the control-layout post-settle pose
+# enough to cross the frozen 3 mm fixture gate.  RoboLab still evaluates only the
+# released active task selected immediately below.
+auto_register_droid_envs(
+    task=[str(task_root / TASK_FILES[key]) for key in TASK_REGISTRATION_ORDER],
+    cameras=WRIST_LEFT_RIGHT_HEAD,
+)
 args_cli.task = [TASK_NAMES[(cell.arm, cell.relation)]]
 
 
@@ -289,6 +302,8 @@ class StateCaptureProxy:
         )
         physical = self._physical_reset_payload()
         released_fixture = release.amendment["fixtures"][cell.arm]
+        if released_fixture.get("frame_of_reference") != "robot":
+            raise RuntimeError("released fixture is not expressed in the robot frame")
         expected_positions = released_fixture["positions_world_xyz"]
         tolerance = float(
             release.amendment["calibration_evidence"]["reset_gate"]["position_tolerance_m"]
@@ -319,13 +334,13 @@ class StateCaptureProxy:
             },
             "neutral_reset": not left and not right,
         }
-        if not fixture_match or left or right:
-            raise RuntimeError("live reset does not match the released neutral fixture")
         self._capture_dir.mkdir(parents=True, exist_ok=True)
         self.fixture_evidence_path.write_text(
             json.dumps(evidence, indent=2, sort_keys=True) + "\n",
             encoding="utf-8",
         )
+        if not fixture_match or left or right:
+            raise RuntimeError("live reset does not match the released neutral fixture")
         initial_hash = derive_initial_state_sha256(
             {"measurement_frame": MEASUREMENT_FRAME_ID, "steps": self._samples}
         )

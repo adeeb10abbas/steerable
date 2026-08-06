@@ -1238,13 +1238,19 @@ def validate(root: Path) -> list[str]:
     nano_live = nano_state.get("live_runtime", {})
     require(
         nano_live.get("status")
-        == "live_robot_frame_gate_repair_after_preserved_invalidated_smokes"
-        and nano_live.get("model_request_count") == 23
+        == "live_registration_context_repair_after_preserved_invalidated_smokes"
+        and nano_live.get("model_request_count") == 31
         and nano_live.get("behavioral_episode_count") == 0
         and nano_live.get("completed_behavioral_cell_count") == 0
-        and nano_live.get("infrastructure_invalid_complete_behavior_attempt_count") == 2
+        and nano_live.get("infrastructure_invalid_complete_behavior_attempt_count") == 3
         and nano_live.get("live_bound_runtime_identity")
-        == "must_be_rebound_on_the_ali_owned_pvc_after_the_robot_frame_gate_fix_before_retrying_the_exact_next_cell",
+        == "must_be_rebound_on_the_ali_owned_pvc_after_the_full_registration_context_fix_before_retrying_the_exact_next_cell"
+        and nano_live.get("invalidated_runtime_attempt06", {}).get(
+            "runtime_identity_sha256"
+        )
+        == "fa962d1783a506abb2e0c11c5129087be62a9f698bd2a3bec2a97dddba9b6a71"
+        and nano_live.get("registration_context_diagnostic", {}).get("model_requests")
+        == 0,
         "V3 continuation records the Nano smoke as infrastructure-invalid with zero completed cells",
         checks,
     )
@@ -1262,12 +1268,35 @@ def validate(root: Path) -> list[str]:
         ),
         {},
     )
+    registration_invalidated_compiled = next(
+        (
+            entry
+            for entry in ledger_entries
+            if entry.get("attempt_id")
+            == "behavioral_attempt05_position_mirrored_right"
+        ),
+        {},
+    )
     pre_request_failures = {
         entry.get("attempt_id"): entry
         for entry in ledger_entries
         if entry.get("attempt_id")
-        in {"behavioral_attempt03_control_left", "behavioral_attempt04_control_left"}
+        in {
+            "behavioral_attempt03_control_left",
+            "behavioral_attempt04_control_left",
+            "behavioral_attempt05_control_left",
+            "behavioral_attempt06_control_left",
+            "behavioral_attempt07_control_left_split_rtx",
+        }
     }
+    registration_diagnostic = next(
+        (
+            entry
+            for entry in ledger_entries
+            if entry.get("attempt_id") == "diagnostic_server_unloaded_attempt01"
+        ),
+        {},
+    )
     require(
         nano_live_ledger.get("behavioral_denominator_excludes_all_entries") is True
         and nano_live_ledger.get("completed_valid_behavioral_cells") == 0
@@ -1287,14 +1316,42 @@ def validate(root: Path) -> list[str]:
         and invalidated_compiled.get("denominator_eligible") is False
         and invalidated_compiled.get("disposition")
         == "compiled_record_invalidated_before_analysis"
+        and registration_invalidated_compiled.get("model_requests") == 8
+        and registration_invalidated_compiled.get("behavioral_actions_executed")
+        == 230
+        and registration_invalidated_compiled.get("denominator_eligible") is False
+        and registration_invalidated_compiled.get("disposition")
+        == "compiled_record_invalidated_before_analysis"
         and set(pre_request_failures)
-        == {"behavioral_attempt03_control_left", "behavioral_attempt04_control_left"}
+        == {
+            "behavioral_attempt03_control_left",
+            "behavioral_attempt04_control_left",
+            "behavioral_attempt05_control_left",
+            "behavioral_attempt06_control_left",
+            "behavioral_attempt07_control_left_split_rtx",
+        }
         and all(
             entry.get("model_requests") == 0
             and entry.get("behavioral_actions_executed") == 0
             and entry.get("denominator_eligible") is False
             for entry in pre_request_failures.values()
         )
+        and all(
+            pre_request_failures[attempt].get("rubiks_cube_max_position_error_m")
+            == 0.0034789443
+            for attempt in {
+                "behavioral_attempt05_control_left",
+                "behavioral_attempt06_control_left",
+                "behavioral_attempt07_control_left_split_rtx",
+            }
+        )
+        and registration_diagnostic.get("model_requests") == 0
+        and registration_diagnostic.get("behavioral_episodes") == 0
+        and registration_diagnostic.get("registered_layouts") == 4
+        and registration_diagnostic.get("resets_per_layout") == 2
+        and registration_diagnostic.get("passed_all_released_layouts") is True
+        and registration_diagnostic.get("report", {}).get("sha256")
+        == "b15b3249647dbf468e745727e2d7677df9c74d919b399a3148be17312951ca04"
         and nano_live_ledger.get("repair", {}).get("export_before_isaac_close") is True
         and nano_live_ledger.get("repair", {}).get(
             "absolute_attempt_local_robolab_output_folder"
@@ -1313,7 +1370,31 @@ def validate(root: Path) -> list[str]:
         and nano_live_ledger.get("repair", {}).get(
             "queue_requires_export_before_compilation"
         )
-        is True,
+        is True
+        and nano_live_ledger.get("repair", {}).get(
+            "full_four_wrapper_registration_context_required"
+        )
+        is True
+        and nano_live_ledger.get("repair", {}).get(
+            "fixture_mismatch_evidence_persisted_before_raise"
+        )
+        is True
+        and nano_live_ledger.get("execution_topology", {})
+        .get("simulator", {})
+        .get("pod_uid")
+        == "30b51054-f277-480d-831d-337581e1cc49"
+        and nano_live_ledger.get("execution_topology", {})
+        .get("split_policy_server", {})
+        .get("pod_uid")
+        == "d5b0405a-a9b1-4baa-a802-d5171e03c228"
+        and nano_live_ledger.get("execution_topology", {})
+        .get("simulator", {})
+        .get("owner_label")
+        == "ali"
+        and nano_live_ledger.get("execution_topology", {})
+        .get("split_policy_server", {})
+        .get("owner_label")
+        == "ali",
         "Nano live ledger preserves the excluded smoke and EULA-authorized repair boundary",
         checks,
     )
@@ -1375,6 +1456,8 @@ def validate(root: Path) -> list[str]:
             "static_prompt_only": True,
             "omniverse_eula_acceptance": "OMNI_KIT_ACCEPT_EULA=YES",
             "thermal_guard": "not_used",
+            "full_calibration_registration_context_required": True,
+            "split_policy_server_preferred_for_simulator_load_isolation": True,
         },
         "V3 continuation freezes the Nano settle, ordering, EULA, and evidence-retention boundary",
         checks,
@@ -1390,6 +1473,9 @@ def validate(root: Path) -> list[str]:
         and "episode_length_buf_before_reset" in nano_bridge_source
         and '"position_robot_xyz_m"' in nano_bridge_source
         and '"position_frame": "robot"' in nano_bridge_source
+        and "TASK_REGISTRATION_ORDER" in nano_bridge_source
+        and "for key in TASK_REGISTRATION_ORDER" in nano_bridge_source
+        and "released fixture is not expressed in the robot frame" in nano_bridge_source
         and 'bridge_failure_path.write_text' in nano_bridge_source
         and 'bridge_failure = attempt / "bridge_failure.json"' in nano_queue_source
         and "verify_live_runtime_identity" in nano_server_source
@@ -1691,6 +1777,10 @@ def validate(root: Path) -> list[str]:
         and "15 model requests" in continuation_doc
         and "released fixture is explicitly robot-frame" in continuation_doc
         and "invalidated before analysis" in continuation_doc
+        and "31 model requests" in continuation_doc
+        and "all four task wrappers" in continuation_doc
+        and "0.0034789443 m" in continuation_doc
+        and "registration context" in continuation_doc
         and "outside the behavioral denominator" in continuation_doc
         and "v3b001:nano:seed9400:position_mirrored:right" in continuation_doc
         and EXACT_V2_WORDINGS["direct_command"]["right"] in continuation_doc,

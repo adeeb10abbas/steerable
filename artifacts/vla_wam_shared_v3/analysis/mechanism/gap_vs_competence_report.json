@@ -1,0 +1,166 @@
+{
+  "analysis_date": "2026-08-06",
+  "analysis_git_head": "7902f4c498d03ef59710a5ea96e64bb3e1210d14",
+  "descriptive_associations": {
+    "competence_vs_absolute_gap": {
+      "pearson": {
+        "coefficient": -0.1618533923913611,
+        "permutations_enumerated": 120,
+        "two_sided_exact_permutation_p": 0.7833333333333333
+      },
+      "spearman": {
+        "coefficient": -0.3,
+        "permutations_enumerated": 120,
+        "two_sided_exact_permutation_p": 0.6833333333333333
+      }
+    },
+    "competence_vs_signed_gap": {
+      "pearson": {
+        "coefficient": 0.02905044252970712,
+        "permutations_enumerated": 120,
+        "two_sided_exact_permutation_p": 0.9666666666666667
+      },
+      "spearman": {
+        "coefficient": 0.1,
+        "permutations_enumerated": 120,
+        "two_sided_exact_permutation_p": 0.95
+      }
+    },
+    "multiplicity_note": "Descriptive five-checkpoint tests; no multiplicity adjustment and no population-level model claim."
+  },
+  "estimands": {
+    "absolute_directional_gap": "absolute value of the signed directional gap",
+    "competence": "(LEFT successes + RIGHT successes) / 54",
+    "mechanical_gap_envelope": "2 * min(overall success rate, 1 - overall success rate)",
+    "signed_directional_gap": "RIGHT success rate minus LEFT success rate"
+  },
+  "interpretation": {
+    "monotonic_difficulty_competence_account_supported": false,
+    "next_experiment": "Retain the lateral-position dose-response and DreamZero mirror experiments: they manipulate geometry directly and can distinguish a geometric mechanism from this descriptive success-rate envelope.",
+    "statement": "The five checkpoints do not show a monotonic relation between overall success and either the signed or absolute directional gap. Near-floor and near-ceiling competence mechanically compress the maximum observable binary gap; intermediate competence creates opportunity for a large gap but does not determine its sign or mechanism."
+  },
+  "results": [
+    {
+      "absolute_directional_gap": 0.7037037037037037,
+      "directional_gap_right_minus_left": 0.7037037037037037,
+      "display_name": "\u03c00.5",
+      "fraction_of_available_gap_magnitude": 0.7600000000000001,
+      "left_success_rate": 0.18518518518518517,
+      "left_successes": 5,
+      "left_trials": 27,
+      "maximum_observable_gap_magnitude_at_this_success_rate": 0.9259259259259258,
+      "model_id": "pi05_current_stack_droid",
+      "overall_success_rate": 0.5370370370370371,
+      "overall_successes": 29,
+      "overall_trials": 54,
+      "right_success_rate": 0.8888888888888888,
+      "right_successes": 24,
+      "right_trials": 27,
+      "source_summary": {
+        "bytes": 128505,
+        "path": "artifacts/vla_wam_shared_v3/results/pi05_current_stack_droid_phase_a_summary.json",
+        "sha256": "5c6d07fca7a0d20ab8b757f028d469f864c78a1c43ffedc3d257a16caef2a02b"
+      }
+    },
+    {
+      "absolute_directional_gap": 0.1111111111111111,
+      "directional_gap_right_minus_left": -0.1111111111111111,
+      "display_name": "GR00T N1.7",
+      "fraction_of_available_gap_magnitude": 1.0,
+      "left_success_rate": 0.1111111111111111,
+      "left_successes": 3,
+      "left_trials": 27,
+      "maximum_observable_gap_magnitude_at_this_success_rate": 0.1111111111111111,
+      "model_id": "groot_n17_droid_vla",
+      "overall_success_rate": 0.05555555555555555,
+      "overall_successes": 3,
+      "overall_trials": 54,
+      "right_success_rate": 0.0,
+      "right_successes": 0,
+      "right_trials": 27,
+      "source_summary": {
+        "bytes": 201245,
+        "path": "artifacts/vla_wam_shared_v3/results/groot_n17_droid_phase_a_summary.json",
+        "sha256": "0db751e94a48caa5815aa6d656ff8cf062283eba47b3048c7c2ac37744581486"
+      }
+    },
+    {
+      "absolute_directional_gap": 0.2592592592592593,
+      "directional_gap_right_minus_left": 0.2592592592592593,
+      "display_name": "Cosmos3 Edge",
+      "fraction_of_available_gap_magnitude": 0.6363636363636365,
+      "left_success_rate": 0.6666666666666666,
+      "left_successes": 18,
+      "left_trials": 27,
+      "maximum_observable_gap_magnitude_at_this_success_rate": 0.40740740740740744,
+      "model_id": "cosmos3_edge_policy_droid",
+      "overall_success_rate": 0.7962962962962963,
+      "overall_successes": 43,
+      "overall_trials": 54,
+      "right_success_rate": 0.9259259259259259,
+      "right_successes": 25,
+      "right_trials": 27,
+      "source_summary": {
+        "bytes": 197084,
+        "path": "artifacts/vla_wam_shared_v3/results/cosmos3_edge_policy_droid_phase_a_summary.json",
+        "sha256": "fc93b6518185641068ce51a4d81882dd1828ebeb9227b44c4ffc21a07b526c87"
+      }
+    },
+    {
+      "absolute_directional_gap": 0.03703703703703698,
+      "directional_gap_right_minus_left": -0.03703703703703698,
+      "display_name": "Cosmos3 Nano",
+      "fraction_of_available_gap_magnitude": 0.33333333333333265,
+      "left_success_rate": 0.9629629629629629,
+      "left_successes": 26,
+      "left_trials": 27,
+      "maximum_observable_gap_magnitude_at_this_success_rate": 0.11111111111111116,
+      "model_id": "cosmos3_nano_policy_droid",
+      "overall_success_rate": 0.9444444444444444,
+      "overall_successes": 51,
+      "overall_trials": 54,
+      "right_success_rate": 0.9259259259259259,
+      "right_successes": 25,
+      "right_trials": 27,
+      "source_summary": {
+        "bytes": 210426,
+        "path": "artifacts/vla_wam_shared_v3/results/cosmos3_nano_policy_droid_phase_a_summary.json",
+        "sha256": "677c62845ff72bceb35b0c5e3e5b259a5c24da407648fe50f475656fe86cbcea"
+      }
+    },
+    {
+      "absolute_directional_gap": 0.5185185185185186,
+      "directional_gap_right_minus_left": 0.5185185185185186,
+      "display_name": "DreamZero",
+      "fraction_of_available_gap_magnitude": 0.7000000000000002,
+      "left_success_rate": 0.1111111111111111,
+      "left_successes": 3,
+      "left_trials": 27,
+      "maximum_observable_gap_magnitude_at_this_success_rate": 0.7407407407407407,
+      "model_id": "dreamzero_droid_action_cfg",
+      "overall_success_rate": 0.37037037037037035,
+      "overall_successes": 20,
+      "overall_trials": 54,
+      "right_success_rate": 0.6296296296296297,
+      "right_successes": 17,
+      "right_trials": 27,
+      "source_summary": {
+        "bytes": 375241,
+        "path": "artifacts/vla_wam_shared_v3/results/dreamzero_droid_action_cfg_phase_a_summary.json",
+        "sha256": "50ec800009b1f128ce8fe877c186b08a47ec3021feaa7cf4f8baab984549b120"
+      }
+    }
+  ],
+  "schema_version": "vla-wam-shared-v3-gap-versus-competence-report-v1",
+  "scope": {
+    "arena": "droid_robolab",
+    "checkpoint_count": 5,
+    "cohorts": "five separate V3 Phase-A expanded cohorts",
+    "episodes_per_checkpoint": 54,
+    "matched_pairs_per_checkpoint": 27,
+    "new_model_compute": false,
+    "pooling": "No checkpoint cohorts are pooled."
+  },
+  "status": "complete_retrospective_analysis_no_new_inference",
+  "study_id": "vla_wam_language_steerability_v3"
+}

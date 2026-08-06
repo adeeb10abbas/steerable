@@ -1,10 +1,10 @@
 {
   "schema_version": "vla-wam-shared-v3-continuation-v1",
   "study_id": "vla_wam_language_steerability_v3",
-  "updated_at_utc": "2026-08-06T19:14:15Z",
+  "updated_at_utc": "2026-08-06T20:23:04Z",
   "active_branch": "codex/wam-language-steerability",
-  "evidence_head": "636a33eedb9e4a9920f4ff357388099fba78a108",
-  "status": "pi05_v3b002_complete_hash_closed_no_rerun_other_phase_b_unreleased",
+  "evidence_head": "7902f4c498d03ef59710a5ea96e64bb3e1210d14",
+  "status": "a1_failure_split_and_b1_gap_competence_complete_no_new_inference_next_phase_b_unreleased",
   "authoritative_files": [
     "docs/VLA_WAM_V3_CONTINUATION.md",
     "docs/VLA_WAM_STEERABILITY_V3_PROTOCOL.md",
@@ -73,6 +73,15 @@
     "tools/build_pi05_v3b002_registration.py",
     "tools/analyze_v3_failure_mode_split.py",
     "tools/test_analyze_v3_failure_mode_split.py",
+    "tools/analyze_v3_gap_vs_competence.py",
+    "tools/test_analyze_v3_gap_vs_competence.py",
+    "tools/render_v3_mechanism_figures.py",
+    "artifacts/vla_wam_shared_v3/analysis/mechanism/gap_vs_competence_report.json",
+    "artifacts/vla_wam_shared_v3/analysis/mechanism/figures/figure4_gap_vs_competence.svg",
+    "artifacts/vla_wam_shared_v3/analysis/mechanism/figures/figure4_gap_vs_competence.png",
+    "artifacts/vla_wam_shared_v3/analysis/mechanism/figures/figure6_failure_taxonomy_by_direction.svg",
+    "artifacts/vla_wam_shared_v3/analysis/mechanism/figures/figure6_failure_taxonomy_by_direction.png",
+    "artifacts/vla_wam_shared_v3/analysis/mechanism/figures/mechanism_figure_manifest.json",
     "tools/normalize_pi05_v3b002_infrastructure.py",
     "experiments/v3/pi05_phase_b/contract.py",
     "experiments/v3/pi05_phase_b/runtime.py",
@@ -99,6 +108,11 @@
       "command": ".venv/bin/python -m unittest -v tests.test_build_pi05_v3b002_registration tests.test_pi05_v3b002_runtime tests.test_pi05_v3b002_compiler tests.test_normalize_pi05_v3b002_infrastructure tests.test_validate_vla_wam_v3_protocol",
       "status": "passed",
       "test_count": 32
+    },
+    "retrospective_analysis_tests": {
+      "command": ".venv/bin/python -m unittest tools/test_analyze_v3_failure_mode_split.py tools/test_analyze_v3_gap_vs_competence.py",
+      "status": "passed",
+      "test_count": 6
     }
   },
   "measurement_coverage_audit": {
@@ -514,6 +528,29 @@
       },
       "release_boundary": "Satisfied before inference: the hash-bound pi0.5 runtime passed exact-source, zero-request fixture/reset/renderer/writer, deterministic-repeat, and prompt-sensitivity gates. The complete cohort is hash-closed and must not be rerun."
     }
+  },
+  "retrospective_mechanism_diagnostics": {
+    "status": "complete_no_new_model_compute",
+    "failure_mode_split_a1": {
+      "scope": "Separate 27-seed DROID Phase-A cohorts for pi0.5, DreamZero, and Cosmos3 Edge; direction by five-category frozen outcome table with a failure-only exact Fisher-Freeman-Halton test.",
+      "pi05": {"left_failures": 22, "right_failures": 3, "failure_only_exact_p": 0.38217391304347825, "interpretation": "No shape difference detected; the three-episode RIGHT failure row is too sparse to establish equivalence."},
+      "dreamzero": {"left_failures": 24, "right_failures": 10, "failure_only_exact_p": 0.0017219568583829528, "interpretation": "Failure composition differs by direction; a rate-only difficulty account is rejected in this cohort."},
+      "cosmos3_edge": {"left_failures": 9, "right_failures": 2, "failure_only_exact_p": 0.6181818181818182, "interpretation": "No shape difference detected; the two-episode RIGHT failure row is too sparse to establish equivalence."},
+      "source_report": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_report.json", "sha256": "f6289333d77538ed9235a567cb98d70333dd50549f7e52d13bfe5d34a10bdf96"}
+    },
+    "gap_versus_competence_b1": {
+      "scope": "Five separate 54-episode DROID Phase-A cohorts; overall success versus RIGHT-minus-LEFT success-rate gap.",
+      "spearman_signed_gap": {"rho": 0.1, "exact_permutation_p": 0.95},
+      "spearman_absolute_gap": {"rho": -0.3, "exact_permutation_p": 0.6833333333333333},
+      "interpretation": "No monotonic relationship is detected. Overall success mechanically bounds the largest observable binary directional gap through 2*min(success,1-success), but does not determine the gap's sign or mechanism.",
+      "source_report": {"path": "artifacts/vla_wam_shared_v3/analysis/mechanism/gap_vs_competence_report.json", "sha256": "c392c796c37193905d5824fda80b66737b39248a500134b973977bf67abe32f3"}
+    },
+    "figures": {
+      "gap_versus_competence_png": {"path": "artifacts/vla_wam_shared_v3/analysis/mechanism/figures/figure4_gap_vs_competence.png", "sha256": "511c5a27ade085594a783b16e55209ed55ab4ac5aed77a2076aeb537572df371"},
+      "failure_taxonomy_png": {"path": "artifacts/vla_wam_shared_v3/analysis/mechanism/figures/figure6_failure_taxonomy_by_direction.png", "sha256": "b457f1a1b47107143c4bbb87e4c45903fd20096b58badc32806a4d69adb865b1"},
+      "manifest": {"path": "artifacts/vla_wam_shared_v3/analysis/mechanism/figures/mechanism_figure_manifest.json", "sha256": "0733fcaf39b6e3e1a70999d656938df8bc4ec1d05a33bdc095038b86f6cac327"}
+    },
+    "decision": "The universal same-shape difficulty account does not survive A1, and competence alone does not explain directional gap in B1. Preserve DreamZero as the third reflection checkpoint and the lateral-position dose-response as the next mechanism tests. They remain unreleased until independent model-blind registration and runtime gates are committed."
   },
   "exact_prompts": {
     "droid_robolab": {

@@ -6,6 +6,8 @@ measurement-coverage audit, and the completed 27-seed Nano V3-B001
 position-reflection ablation were compiled. The separately preregistered π0.5
 V3-B002 scene-matched replication is also complete and hash-closed at 108/108
 valid episodes; its existing-log failure-mode split is complete. The
+five-checkpoint gap-versus-competence diagnostic is also complete and adds no
+new model inference. The
 machine-readable source of truth is
 [`continuation_state.json`](../artifacts/vla_wam_shared_v3/continuation_state.json).
 
@@ -330,6 +332,42 @@ Authoritative implementation and verification paths are
 `tests/test_pi05_v3b002_runtime.py`,
 `tests/test_pi05_v3b002_compiler.py`, and
 `tests/test_normalize_pi05_v3b002_infrastructure.py`.
+
+## Retrospective mechanism diagnostics (A1 and B1)
+
+The two zero-compute diagnostics requested before another Phase-B release are
+complete. They do not support a universal “same failure process at a different
+rate” explanation.
+
+The failure-mode split retains every episode in a direction × frozen-outcome
+table, then applies a probability-ordered two-sided Fisher–Freeman–Halton test
+to failures only. DreamZero's failure composition differs by requested
+direction (`p = 0.001722`): LEFT failures are 10 pick and 14 transport failures,
+whereas all 10 RIGHT failures are pick failures. π0.5 (`p = 0.3822`) and Cosmos3
+Edge (`p = 0.6182`) do not show a detected difference, but their smaller failure
+rows contain only three and two episodes. Those nulls do not establish equal
+failure shapes.
+
+![Failure taxonomy by direction](../artifacts/vla_wam_shared_v3/analysis/mechanism/figures/figure6_failure_taxonomy_by_direction.png)
+
+Across the five 54-episode DROID cohorts, overall success is not monotonically
+associated with the signed directional gap (Spearman `rho = 0.1`, exact
+permutation `p = 0.95`) or its magnitude (`rho = -0.3`, `p = 0.6833`). Binary
+competence instead imposes a mechanical envelope: at overall success `c`, the
+largest possible absolute LEFT/RIGHT gap is `2 min(c, 1-c)`. GR00T near floor
+and Nano near ceiling therefore cannot exhibit a large binary gap; intermediate
+competence permits one but does not determine its sign or cause.
+
+![Directional gap versus competence](../artifacts/vla_wam_shared_v3/analysis/mechanism/figures/figure4_gap_vs_competence.png)
+
+The complete machine-readable analysis is
+[`gap_vs_competence_report.json`](../artifacts/vla_wam_shared_v3/analysis/mechanism/gap_vs_competence_report.json),
+and the figure hashes and claim boundaries are in
+[`mechanism_figure_manifest.json`](../artifacts/vla_wam_shared_v3/analysis/mechanism/figures/mechanism_figure_manifest.json).
+The resulting decision is to retain DreamZero as the third position-reflection
+checkpoint and the lateral-position dose-response as the next mechanism tests.
+Neither is released until its independent model-blind registration and runtime
+gates are committed.
 
 ## Exact intervention
 

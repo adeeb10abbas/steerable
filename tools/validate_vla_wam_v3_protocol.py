@@ -50,6 +50,10 @@ REQUIRED = {
     "pi0_bridge_gate": "experiments/v3/pi0_fast_old_name_config_bridge/fixed_observation_gate.py",
     "pi0_bridge_adapter": "experiments/v3/pi0_fast_old_name_config_bridge/adapter.py",
     "pi0_bridge_compiler": "experiments/v3/pi0_fast_old_name_config_bridge/compile_shards.py",
+    "nano_mirror_calibration": f"{V3}/phase_b/nano_mirror_v3b001/model_blind_calibration_report.json",
+    "nano_mirror_amendment": f"{V3}/phase_b/nano_mirror_v3b001/post_result_nano_mirror_v3b001_amendment.json",
+    "nano_mirror_cells": f"{V3}/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_cells.jsonl",
+    "nano_mirror_manifest": f"{V3}/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_manifest.json",
 }
 DROID_MODELS = [
     "pi0_fast_droid_vla",
@@ -1028,6 +1032,219 @@ def validate(root: Path) -> list[str]:
     analysis = load(paths["analysis"])
     measurement_audit = load(paths["measurement_audit"])
     continuation = load(paths["continuation"])
+
+    nano_calibration = load(paths["nano_mirror_calibration"])
+    nano_amendment = load(paths["nano_mirror_amendment"])
+    nano_manifest = load(paths["nano_mirror_manifest"])
+    nano_cells = load_jsonl(paths["nano_mirror_cells"])
+
+    require(
+        nano_calibration.get("schema_version")
+        == "vla-wam-shared-v3b-nano-position-mirror-model-blind-calibration-v1"
+        and nano_calibration.get("passed") is True
+        and nano_calibration.get("model_request_count") == 0
+        and nano_calibration.get("behavioral_episode_count") == 0,
+        "Nano V3-B001 calibration passed model-blind with zero model requests and behavioral episodes",
+        checks,
+    )
+    require(
+        nano_calibration.get("model_id") == "cosmos3_nano_policy_droid"
+        and nano_calibration.get("renderer", {}).get("backend") == "realtime RTX Vulkan"
+        and nano_calibration.get("renderer", {}).get("all_required_rgb_views_nonblank") is True
+        and nano_calibration.get("reset_gate", {}).get("neither_predicate_true_at_every_reset") is True
+        and nano_calibration.get("reset_gate", {}).get("live_position_reflection_passed_at_every_repeat") is True
+        and nano_calibration.get("reset_gate", {}).get("post_settle_quaternion_differences_recorded_not_gated") is True,
+        "Nano V3-B001 calibration binds live RTX views, neutral resets, reflection, and orientation mediators",
+        checks,
+    )
+    require(
+        nano_amendment.get("schema_version")
+        == "vla-wam-shared-v3b-nano-mirror-amendment-v1"
+        and nano_amendment.get("amendment_id") == "V3-B001"
+        and nano_amendment.get("status")
+        == "released_after_model_blind_calibration_before_any_phase_b_model_request"
+        and nano_amendment.get("exact_prompts")
+        == {
+            "left": EXACT_V2_WORDINGS["direct_command"]["left"],
+            "right": EXACT_V2_WORDINGS["direct_command"]["right"],
+        },
+        "Nano V3-B001 amendment is released before inference with both exact static prompts",
+        checks,
+    )
+    nano_design = nano_amendment.get("design", {})
+    require(
+        nano_design.get("arms") == ["control", "position_mirrored"]
+        and nano_design.get("directions") == ["left", "right"]
+        and nano_design.get("matched_seed_count") == 27
+        and nano_design.get("behavioral_cell_count") == 108
+        and nano_design.get("seeds") == exact_range(9400, 9426)
+        and nano_design.get("factor")
+        == "movable_object_center_position_reflection_about_robot_sagittal_plane",
+        "Nano V3-B001 freezes 27 seeds and 108 position-reflection cells without calling it a full-scene mirror",
+        checks,
+    )
+    require(
+        nano_amendment.get("analysis_plan", {}).get("full_sample_primary", {}).get(
+            "position_reflection_interaction"
+        )
+        == "I[i] = B[position_mirrored,i] - B[control,i]"
+        and nano_amendment.get("analysis_plan", {}).get("success_conditional_secondary", {}).get(
+            "complete_case_subset_id"
+        )
+        == "nano_v3b001_all_four_cells_correct",
+        "Nano V3-B001 keeps signed offset primary and names the four-success margin subset",
+        checks,
+    )
+    require(
+        nano_manifest.get("schema_version")
+        == "vla-wam-shared-v3b-nano-mirror-manifest-v1"
+        and nano_manifest.get("status") == "hash_bound_release_ready"
+        and nano_manifest.get("counts")
+        == {
+            "behavioral_cells": 108,
+            "control_cells": 54,
+            "left_cells": 54,
+            "matched_seeds": 27,
+            "position_mirrored_cells": 54,
+            "right_cells": 54,
+        },
+        "Nano V3-B001 manifest accounts for all 108 released cells",
+        checks,
+    )
+    require(
+        nano_manifest.get("calibration_report")
+        == {
+            "path": "model_blind_calibration_report.json",
+            "bytes": paths["nano_mirror_calibration"].stat().st_size,
+            "sha256": sha256(paths["nano_mirror_calibration"]),
+        }
+        and nano_manifest.get("files", {}).get("amendment")
+        == {
+            "path": "post_result_nano_mirror_v3b001_amendment.json",
+            "bytes": paths["nano_mirror_amendment"].stat().st_size,
+            "sha256": sha256(paths["nano_mirror_amendment"]),
+        }
+        and nano_manifest.get("files", {}).get("cells")
+        == {
+            "path": "nano_mirror_v3b001_cells.jsonl",
+            "bytes": paths["nano_mirror_cells"].stat().st_size,
+            "row_count": 108,
+            "sha256": sha256(paths["nano_mirror_cells"]),
+        },
+        "Nano V3-B001 manifest hash-binds calibration, amendment, and exact cell queue",
+        checks,
+    )
+    require(
+        nano_amendment.get("calibration_report") == nano_manifest.get("calibration_report"),
+        "Nano V3-B001 amendment and manifest bind the same calibration report",
+        checks,
+    )
+    require(
+        all(
+            isinstance(relative, str)
+            and isinstance(digest, str)
+            and (root / relative).is_file()
+            and sha256(root / relative) == digest
+            for relative, digest in nano_amendment.get("source_bindings", {}).items()
+        )
+        and len(nano_amendment.get("source_bindings", {})) == 12,
+        "Nano V3-B001 amendment hash-binds all twelve committed source inputs",
+        checks,
+    )
+    require(
+        len(nano_cells) == 108
+        and len({row.get("cell_id") for row in nano_cells}) == 108
+        and Counter(row.get("environment_seed") for row in nano_cells)
+        == Counter({seed: 4 for seed in exact_range(9400, 9426)})
+        and Counter((row.get("arm"), row.get("relation")) for row in nano_cells)
+        == Counter(
+            {
+                ("control", "left"): 27,
+                ("control", "right"): 27,
+                ("position_mirrored", "left"): 27,
+                ("position_mirrored", "right"): 27,
+            }
+        ),
+        "Nano V3-B001 queue contains each seed and arm-direction cell exactly once",
+        checks,
+    )
+    require(
+        all(
+            row.get("sampling_seed") == row.get("environment_seed")
+            and row.get("prompt")
+            == EXACT_V2_WORDINGS["direct_command"].get(row.get("relation"))
+            and row.get("amendment_sha256") == sha256(paths["nano_mirror_amendment"])
+            and row.get("execution_status")
+            == "authorized_after_v3b001_calibration_with_live_identity_and_output_gate_recheck"
+            for row in nano_cells
+        ),
+        "Nano V3-B001 cells preserve matched seeds, exact prompts, release hash, and live recheck gate",
+        checks,
+    )
+    nano_cells_by_seed: dict[int, list[dict[str, Any]]] = {}
+    for row in nano_cells:
+        nano_cells_by_seed.setdefault(row["environment_seed"], []).append(row)
+    require(
+        all(
+            {row.get("execution_order_index_within_seed") for row in rows} == {1, 2, 3, 4}
+            for rows in nano_cells_by_seed.values()
+        ),
+        "Nano V3-B001 block randomization assigns each seed all four execution positions",
+        checks,
+    )
+    nano_state = continuation.get("phase_b_releases", {}).get(
+        "nano_position_reflection_v3b001", {}
+    )
+    require(
+        nano_state.get("status")
+        == "released_after_model_blind_calibration_before_any_phase_b_model_request"
+        and nano_state.get("released_behavioral_cell_count") == 108
+        and nano_state.get("completed_behavioral_cell_count") == 0
+        and nano_state.get("pre_release_counts")
+        == {"model_requests": 0, "behavioral_episodes": 0}
+        and nano_state.get("seed_range_inclusive") == [9400, 9426]
+        and nano_state.get("prespecified_matched_seed_count") == 27,
+        "V3 continuation records Nano V3-B001 as 108 released and zero completed cells",
+        checks,
+    )
+    nano_state_artifact_keys = {
+        "calibration": "nano_mirror_calibration",
+        "cells": "nano_mirror_cells",
+        "manifest": "nano_mirror_manifest",
+        "amendment": "nano_mirror_amendment",
+    }
+    require(
+        all(
+            nano_state.get("artifacts", {}).get(label)
+            == {"path": REQUIRED[path_key], "sha256": sha256(paths[path_key])}
+            and REQUIRED[path_key] in continuation.get("authoritative_files", [])
+            for label, path_key in nano_state_artifact_keys.items()
+        ),
+        "V3 continuation hash-binds all four authoritative Nano V3-B001 release artifacts",
+        checks,
+    )
+    phase_b_state = continuation.get("blocked_and_unreleased", {}).get(
+        "phase_b_confounds", {}
+    )
+    require(
+        phase_b_state.get("status") == "partial_release_nano_v3b001_only"
+        and phase_b_state.get("released", {}).get("amendment_id") == "V3-B001"
+        and phase_b_state.get("released", {}).get("released_behavioral_cells") == 108
+        and phase_b_state.get("released", {}).get("completed_behavioral_cells") == 0
+        and "Every other Phase-B" in phase_b_state.get("unreleased", ""),
+        "V3 continuation releases only Nano V3-B001 while keeping other confounds gated",
+        checks,
+    )
+    require(
+        "Nano V3-B001 is the only released Phase-B queue"
+        in continuation.get("next_agent", {}).get("inference_authority", "")
+        and "exact 108 hash-bound rows"
+        in continuation.get("next_agent", {}).get("inference_authority", "")
+        and "No other Phase-B, Phase-C, or Phase-D cell"
+        in continuation.get("next_agent", {}).get("inference_authority", ""),
+        "V3 continuation grants inference authority only to the exact Nano V3-B001 queue",
+        checks,
+    )
 
     require(protocol["schema_version"] == "vla-wam-shared-v3-protocol-v1", "protocol schema is frozen", checks)
     require(protocol["study_id"] == "vla_wam_language_steerability_v3", "protocol study identifier is frozen", checks)

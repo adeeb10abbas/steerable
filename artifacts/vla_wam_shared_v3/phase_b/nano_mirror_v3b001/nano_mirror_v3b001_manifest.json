@@ -1,0 +1,60 @@
+{
+  "amendment_id": "V3-B001",
+  "calibration_report": {
+    "bytes": 50677,
+    "path": "model_blind_calibration_report.json",
+    "sha256": "112716acada89050561c9488d93a333a300b1675c2305329c8e5aceeb4e6da71"
+  },
+  "counts": {
+    "behavioral_cells": 108,
+    "control_cells": 54,
+    "left_cells": 54,
+    "matched_seeds": 27,
+    "position_mirrored_cells": 54,
+    "right_cells": 54
+  },
+  "execution_order_position_counts": {
+    "control:left": {
+      "1": 7,
+      "2": 7,
+      "3": 6,
+      "4": 7
+    },
+    "control:right": {
+      "1": 6,
+      "2": 7,
+      "3": 7,
+      "4": 7
+    },
+    "position_mirrored:left": {
+      "1": 7,
+      "2": 6,
+      "3": 7,
+      "4": 7
+    },
+    "position_mirrored:right": {
+      "1": 7,
+      "2": 7,
+      "3": 7,
+      "4": 6
+    }
+  },
+  "files": {
+    "amendment": {
+      "bytes": 17702,
+      "path": "post_result_nano_mirror_v3b001_amendment.json",
+      "sha256": "9d88c29733fa3b24a154977bc25d04d2d77df5be59e3213f0c3a6cfbe3edc6a0"
+    },
+    "cells": {
+      "bytes": 242838,
+      "path": "nano_mirror_v3b001_cells.jsonl",
+      "row_count": 108,
+      "sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a"
+    }
+  },
+  "recorded_at_utc": "2026-08-06T04:03:25Z",
+  "release_rule": "Launch only rows in this exact queue after rechecking the hash-bound amendment, exact live runtime identity, viewport writer, and raw-output path; any failed calibration gate yields no queue.",
+  "schema_version": "vla-wam-shared-v3b-nano-mirror-manifest-v1",
+  "status": "hash_bound_release_ready",
+  "study_id": "vla_wam_language_steerability_v3"
+}

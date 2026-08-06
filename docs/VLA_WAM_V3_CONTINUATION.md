@@ -1,8 +1,9 @@
 # VLA/WAM v3 expansion continuation
 
-Updated: 5 August 2026, after the complete Phase-A launch-authorized queue, the
-separately authorized π0-FAST compatibility bridge, and the cross-version
-measurement-coverage audit were compiled. The machine-readable source of truth is
+Updated: 6 August 2026, after the complete Phase-A launch-authorized queue, the
+separately authorized π0-FAST compatibility bridge, the cross-version
+measurement-coverage audit, and the model-blind release of Nano V3-B001 were
+compiled. The machine-readable source of truth is
 [`continuation_state.json`](../artifacts/vla_wam_shared_v3/continuation_state.json).
 
 ## Status
@@ -15,9 +16,12 @@ publicly reproducible π0-FAST compatibility cohort: all **20 matched pairs / 40
 episodes** are now complete valid evidence. That cohort is never pooled with
 the blocked rows or preserved V2 evidence.
 
-No Phase-A or V3-A002 inference remains. Phase B confounds, Phase C wording,
-and Phase D stochastic repetitions have independent release gates and are not
-released by either direct-command result.
+No Phase-A or V3-A002 inference remains. Exactly one Phase-B ablation is now
+released: Nano V3-B001, a positions-only movable-object reflection with 108
+registered cells. Its release followed model-blind calibration and occurred
+before any Phase-B model request or behavioral episode. Every other Phase-B
+ablation, all Phase-C wording cells, and all Phase-D stochastic repetitions
+remain unreleased.
 
 ### Measurement-coverage gate for Phase B
 
@@ -37,6 +41,42 @@ at 27 matched pairs / 54 episodes and must not be rerun. Phase B must log both
 fields for every new valid episode: signed offset supplies the full-sample
 analysis, while any success-conditional margin analysis must name its reduced
 subset explicitly.
+
+### Nano Phase-B position-reflection release (V3-B001)
+
+V3-B001 asks whether Nano's directional bias changes when the center positions
+of the movable objects are reflected about the robot sagittal plane. It is a
+**positions-only movable-object intervention, not a full-scene mirror**: the
+robot, cameras, and nonmovable geometry remain fixed. Initial quaternion sources
+are identical across layouts; any measured post-settle orientation difference
+is retained as a downstream physical mediator rather than described as fixed.
+
+The frozen queue contains **27 prespecified seeds, 9400–9426, × four cells per
+seed = 108 cells**: `control` and `position_mirrored`, each under the exact
+static prompts:
+
+> Put the Rubik's cube to the left of the bowl.
+
+> Put the Rubik's cube to the right of the bowl.
+
+At release, calibration recorded **zero model requests and zero behavioral
+episodes**. The primary analysis uses signed final lateral offset for the full
+sample, including every valid behavioral failure. Requested-side margin is
+secondary and success-conditional: it may be analyzed only on the named
+`nano_v3b001_all_four_cells_correct` complete-case subset, containing seeds for
+which control LEFT, control RIGHT, position-mirrored LEFT, and
+position-mirrored RIGHT all pass the frozen success predicate. Missing values
+are never imputed and unmatched successful cells are never mixed.
+
+| Frozen release artifact | SHA-256 |
+| --- | --- |
+| [`model_blind_calibration_report.json`](../artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/model_blind_calibration_report.json) | `112716acada89050561c9488d93a333a300b1675c2305329c8e5aceeb4e6da71` |
+| [`nano_mirror_v3b001_cells.jsonl`](../artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_cells.jsonl) | `018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a` |
+| [`nano_mirror_v3b001_manifest.json`](../artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_manifest.json) | `5c82268739feb41281435a51dcd848b575218cd9fbe5839d9ad130d1a7888830` |
+| [`post_result_nano_mirror_v3b001_amendment.json`](../artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/post_result_nano_mirror_v3b001_amendment.json) | `9d88c29733fa3b24a154977bc25d04d2d77df5be59e3213f0c3a6cfbe3edc6a0` |
+
+These files authorize the exact queue after the required live identity and
+output-path rechecks; they do not report Phase-B behavioral outcomes.
 
 ## Exact intervention
 
@@ -144,9 +184,13 @@ This is evidence of strong direction-conditioned behavior and a large residual
 directional asymmetry, not robust bidirectional control.
 
 Phase A does **not** identify training distribution, geometry, reachability,
-starting side, or object role as the cause of an asymmetry. Those explanations
-require the separately gated Phase-B interventions. An exposed prediction is
-also not evidence that the prediction caused successful execution.
+starting side, or object role as the cause of an asymmetry. V3-B001 now
+provides a frozen test of whether Nano's directional-bias contrast changes
+under one positions-only movable-object reflection, but its release is not a
+behavioral result. Even a future interaction would not by itself identify
+training data as the cause or establish full-scene symmetry. An exposed
+prediction is also not evidence that the prediction caused successful
+execution.
 
 ## Historical identity blocker and unreleased work
 
@@ -159,8 +203,8 @@ returned identical LEFT/RIGHT actions (RMS 0.0), so it is not a substitute.
 The completed V3-A002 compatibility cohort is also not historical recovery and
 must remain separate. It is complete and must not be rerun.
 
-- Phase B: not released; numeric fixture levels require a new model-blind
-  calibration amendment.
+- Phase B: Nano V3-B001 alone is released as 108 exact cells after model-blind
+  calibration; every other Phase-B ablation remains unreleased.
 - Phase C: 480 registered episodes, not released; each wording requires its
   independent byte-hash, repeat, and prompt-sensitivity gates.
 - Phase D: not released; it requires an effective stochastic-seed probe for
@@ -179,8 +223,10 @@ git status --short
 git diff --check
 ```
 
-Do not rerun a valid Phase-A or V3-A002 cell. Use the eight original committed
-summary/evidence-manifest/infrastructure-ledger triplets plus the separate
-V3-A002 triplet under `artifacts/vla_wam_shared_v3/results/` for analysis. Do
-not infer current experiment state from the older article, website, gallery,
-figures, or chat.
+Do not rerun a valid Phase-A or V3-A002 cell. V3-B001 is the only released
+Phase-B queue; launch only its exact hash-bound rows after the required live
+identity, viewport-writer, and raw-output-path rechecks. Use the eight original
+committed summary/evidence-manifest/infrastructure-ledger triplets plus the
+separate V3-A002 triplet under `artifacts/vla_wam_shared_v3/results/` for
+completed-result analysis. Do not infer current experiment state from the
+older article, website, gallery, figures, or chat.

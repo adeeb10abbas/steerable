@@ -43,6 +43,21 @@ class ValidateV3ProtocolTest(unittest.TestCase):
             ROOT / "experiments" / "v3" / "pi0_fast_old_name_config_bridge",
             root / "experiments" / "v3" / "pi0_fast_old_name_config_bridge",
         )
+        shutil.copytree(
+            ROOT / "experiments" / "v3" / "cosmos_nano_phase_b",
+            root / "experiments" / "v3" / "cosmos_nano_phase_b",
+        )
+        (root / "experiments" / "groot_droid" / "robolab_v2_tasks").mkdir(
+            parents=True
+        )
+        for name in (
+            "rubiks_cube_left_of_bowl_matched.py",
+            "rubiks_cube_right_of_bowl_matched.py",
+        ):
+            shutil.copy2(
+                ROOT / "experiments" / "groot_droid" / "robolab_v2_tasks" / name,
+                root / "experiments" / "groot_droid" / "robolab_v2_tasks" / name,
+            )
         (root / "tools").mkdir()
         shutil.copy2(ROOT / "tools" / "build_v3a002_pi0_fast_media.py", root / "tools")
 
@@ -157,6 +172,29 @@ class ValidateV3ProtocolTest(unittest.TestCase):
             bridge["summary"]["sha256"] = "0" * 64
             path.write_text(json.dumps(value))
             with self.assertRaisesRegex(VALIDATOR.ValidationError, "binds bridge result paths"):
+                VALIDATOR.validate(root)
+
+    def test_tampered_nano_mirror_queue_fails_closed(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            self.copy_protocol_root(root)
+            path = (
+                root
+                / "artifacts"
+                / "vla_wam_shared_v3"
+                / "phase_b"
+                / "nano_mirror_v3b001"
+                / "nano_mirror_v3b001_cells.jsonl"
+            )
+            rows = path.read_text().splitlines()
+            first = json.loads(rows[0])
+            first["prompt"] = "Put the Rubik's cube somewhere."
+            rows[0] = json.dumps(first, sort_keys=True, separators=(",", ":"))
+            path.write_text("\n".join(rows) + "\n")
+            with self.assertRaisesRegex(
+                VALIDATOR.ValidationError,
+                "manifest hash-binds calibration, amendment, and exact cell queue",
+            ):
                 VALIDATOR.validate(root)
 
     def test_tampered_bridge_publication_video_digest_fails_closed(self) -> None:

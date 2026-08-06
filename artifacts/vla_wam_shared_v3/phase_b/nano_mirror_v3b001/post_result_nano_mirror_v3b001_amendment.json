@@ -1,0 +1,395 @@
+{
+  "amendment_id": "V3-B001",
+  "analysis_plan": {
+    "claim_boundary": "The position-reflection interaction tests whether directional bias changes under the registered movable-object center-position reflection. Robot, cameras, and nonmovable geometry remain fixed, so this is neither a full-scene symmetry test nor causal attribution to training data.",
+    "coordinate": {
+      "availability": "required for every valid episode, including failures",
+      "definition": "signed_final_lateral_offset_m; positive is robot LEFT",
+      "symbol": "s"
+    },
+    "full_sample_primary": {
+      "directional_bias_contrast": "B[a,i] = (-s[a,i,right]) - s[a,i,left]",
+      "interpretation": "positive D means the prompt change ordered endpoints LEFT-to-RIGHT",
+      "interpretation_of_bias": "positive B means greater requested-side depth for RIGHT than LEFT",
+      "missingness": "no imputation; valid behavioral failures remain included",
+      "per_arm_steering_separation": "D[a,i] = s[a,i,left] - s[a,i,right]",
+      "population": "all seeds with four valid behavioral cells; infrastructure-invalid attempts are repaired at the identical cell and remain outside the denominator",
+      "position_reflection_interaction": "I[i] = B[position_mirrored,i] - B[control,i]",
+      "secondary_redirection_interaction": "J[i] = D[position_mirrored,i] - D[control,i]"
+    },
+    "success_conditional_secondary": {
+      "complete_case_subset_id": "nano_v3b001_all_four_cells_correct",
+      "field": "final_requested_signed_margin_m",
+      "inclusion_rule": "a seed is included only when all four cells—control LEFT, control RIGHT, position-mirrored LEFT, and position-mirrored RIGHT—satisfy the frozen requested-success predicate",
+      "per_arm_margin_gap": "G[a,i] = margin[a,i,right] - margin[a,i,left] = (-s[a,i,right]) - s[a,i,left]",
+      "position_reflection_interaction": "G[position_mirrored,i] - G[control,i]",
+      "reporting": "name the subset and its realized n; do not use failures as zero margins or mix unmatched successful cells"
+    }
+  },
+  "calibration_evidence": {
+    "behavioral_episode_count": 0,
+    "calibration_driver_source": {
+      "bytes": 21468,
+      "path": "/data/users/ali/vla_wam/src/steerable/experiments/v3/cosmos_nano_phase_b/model_blind_fixture_gate.py",
+      "sha256": "c533f04116dbed356e3c87c0329bea0043c4c4c9df8aa1bcd0dd4983e34c816f"
+    },
+    "candidate": {
+      "bytes": 3514,
+      "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/calibration_attempt01/fixture_candidate.json",
+      "sha256": "e1799b815da41f9a08a4000a360c4958003269fed27e2abe75b273519e4d1c88"
+    },
+    "factor_task_source": {
+      "bytes": 4928,
+      "path": "/data/users/ali/vla_wam/src/steerable/experiments/v3/cosmos_nano_phase_b/fixture_tasks.py",
+      "sha256": "c2a9c10ffad7c51910448f70e7b4957f6ede75f27eb761e54224a2144d456148"
+    },
+    "factor_task_wrappers": {
+      "control_left": {
+        "bytes": 619,
+        "path": "/data/users/ali/vla_wam/src/steerable/experiments/v3/cosmos_nano_phase_b/task_files/control_left.py",
+        "sha256": "13caf30e102c2e342d8c6d8eb4d9f5f5fe5145f5509316f5c437715e401551ef"
+      },
+      "control_right": {
+        "bytes": 624,
+        "path": "/data/users/ali/vla_wam/src/steerable/experiments/v3/cosmos_nano_phase_b/task_files/control_right.py",
+        "sha256": "3293ec9f7ea46b5d81d859d7e0628199273e77acec89bc9e99c3577fd23ea53f"
+      },
+      "position_mirrored_left": {
+        "bytes": 672,
+        "path": "/data/users/ali/vla_wam/src/steerable/experiments/v3/cosmos_nano_phase_b/task_files/position_mirrored_left.py",
+        "sha256": "94547e8d7c979199aad30f2659f495685fda77ba0a544546ab9dd3ccac0b3a32"
+      },
+      "position_mirrored_right": {
+        "bytes": 677,
+        "path": "/data/users/ali/vla_wam/src/steerable/experiments/v3/cosmos_nano_phase_b/task_files/position_mirrored_right.py",
+        "sha256": "f340db0f4585bede492b1cecc69efd7c5490ef24b20f16581562317155f3b55d"
+      }
+    },
+    "model_request_count": 0,
+    "post_settle_cross_layout_quaternion_differences": [
+      {
+        "objects": {
+          "banana": {
+            "absolute_quaternion_dot": 0.9999999978730947,
+            "angular_distance_rad": 0.00013044248753492856,
+            "max_abs_component_difference": 4.408099630381912e-05
+          },
+          "bowl": {
+            "absolute_quaternion_dot": 1.0,
+            "angular_distance_rad": 0.0,
+            "max_abs_component_difference": 6.0586149629671127e-05
+          },
+          "rubiks_cube": {
+            "absolute_quaternion_dot": 0.9998667499147686,
+            "angular_distance_rad": 0.03265002843499045,
+            "max_abs_component_difference": 0.016312817111611366
+          }
+        },
+        "repeat": 0
+      },
+      {
+        "objects": {
+          "banana": {
+            "absolute_quaternion_dot": 1.0,
+            "angular_distance_rad": 0.0,
+            "max_abs_component_difference": 4.412580165080726e-05
+          },
+          "bowl": {
+            "absolute_quaternion_dot": 1.0,
+            "angular_distance_rad": 0.0,
+            "max_abs_component_difference": 6.072072574170306e-05
+          },
+          "rubiks_cube": {
+            "absolute_quaternion_dot": 0.9998668050832789,
+            "angular_distance_rad": 0.03264326866482336,
+            "max_abs_component_difference": 0.01631313981488347
+          }
+        },
+        "repeat": 1
+      },
+      {
+        "objects": {
+          "banana": {
+            "absolute_quaternion_dot": 1.0,
+            "angular_distance_rad": 0.0,
+            "max_abs_component_difference": 4.4677042751573026e-05
+          },
+          "bowl": {
+            "absolute_quaternion_dot": 1.0,
+            "angular_distance_rad": 0.0,
+            "max_abs_component_difference": 5.9228550526313484e-05
+          },
+          "rubiks_cube": {
+            "absolute_quaternion_dot": 0.9998667209989061,
+            "angular_distance_rad": 0.032653570922379534,
+            "max_abs_component_difference": 0.01631503738462925
+          }
+        },
+        "repeat": 2
+      }
+    ],
+    "renderer": {
+      "all_required_rgb_views_nonblank": true,
+      "backend": "realtime RTX Vulkan",
+      "nvidia_icd": {
+        "bytes": 140,
+        "path": "/etc/vulkan/icd.d/nvidia_icd.json",
+        "sha256": "7bdb6f27d35b66fc848df6f94b8773bba30ea3a7f06f114100d14154a235a34b"
+      },
+      "quality": "balanced"
+    },
+    "reset_gate": {
+      "angular_speed_tolerance_basis": "0.02 m/s linear tolerance divided by a conservative 0.10 m object radius gives 0.20 rad/s, bounding rotational surface speed at the same scale as translation",
+      "angular_speed_tolerance_rad_s": 0.2,
+      "initial_quaternion_sources_identical_across_layouts": true,
+      "left_right_physical_fingerprints_equal_within_each_arm": true,
+      "linear_speed_tolerance_m_s": 0.02,
+      "live_position_reflection_passed_at_every_repeat": true,
+      "neither_predicate_true_at_every_reset": true,
+      "position_tolerance_m": 0.003,
+      "post_settle_quaternion_differences_recorded_not_gated": true,
+      "repeat_count_per_task": 3,
+      "settle_steps": 60,
+      "settle_steps_basis": "The model-blind 60-step probe reduced movable-object translation below 0.004 m/s while preserving a neutral reset; a longer 180-step probe was rejected after free settling crossed a task termination boundary",
+      "stable_window_steps": 15
+    },
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "study_checkout": {
+      "commit": "eb18135ec86a848167c54ee0c01f267d89a8f423",
+      "tracked_diff_empty": true
+    },
+    "viewport_write_gate": {
+      "control_left": {
+        "bytes": 330124,
+        "decoded_frame_count": 3,
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/calibration_attempt10/live_gate/control_left_repeated_resets.mp4",
+        "sha256": "2758ac2b4360052f139c3248ff703aca8fa868864a5903a5c6995a5e3ea2cc29"
+      },
+      "control_right": {
+        "bytes": 327947,
+        "decoded_frame_count": 3,
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/calibration_attempt10/live_gate/control_right_repeated_resets.mp4",
+        "sha256": "39c18e690ed0821a02b17f6207564b7f9cb48aca9456835285259f15f954c166"
+      },
+      "position_mirrored_left": {
+        "bytes": 327733,
+        "decoded_frame_count": 3,
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/calibration_attempt10/live_gate/position_mirrored_left_repeated_resets.mp4",
+        "sha256": "fc6facc499ac6e0face14bf18be8206a414c79864000bfb60c65326da2afd403"
+      },
+      "position_mirrored_right": {
+        "bytes": 322572,
+        "decoded_frame_count": 3,
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/calibration_attempt10/live_gate/position_mirrored_right_repeated_resets.mp4",
+        "sha256": "fdfee1ac4875a880c13c07d0e977d12c4da4c76f29d2fa4009b79a97628e1c82"
+      }
+    }
+  },
+  "calibration_report": {
+    "bytes": 50677,
+    "path": "model_blind_calibration_report.json",
+    "sha256": "112716acada89050561c9488d93a333a300b1675c2305329c8e5aceeb4e6da71"
+  },
+  "design": {
+    "arms": [
+      "control",
+      "position_mirrored"
+    ],
+    "behavioral_cell_count": 108,
+    "cells_per_seed": 4,
+    "directions": [
+      "left",
+      "right"
+    ],
+    "execution_order": "outcome-independent SHA-256 block randomization, position-balanced to 6 or 7 appearances per condition per ordinal position",
+    "factor": "movable_object_center_position_reflection_about_robot_sagittal_plane",
+    "matched_seed_count": 27,
+    "pairing": "Each seed contains control/position-mirrored × LEFT/RIGHT; sampling and environment seed are identical across all four cells.",
+    "post_settle_orientation_policy": "Initial quaternion sources are identical. Cross-layout post-settle orientation differences are recorded as downstream physical mediators of the positions-only intervention, not used as a release threshold, and not silently described as held fixed.",
+    "randomization_namespace": "vla_wam_language_steerability_v3:V3-B001:cosmos3_nano:movable_object_center_position_reflection:block_hash_randomization_v1",
+    "seeds": [
+      9400,
+      9401,
+      9402,
+      9403,
+      9404,
+      9405,
+      9406,
+      9407,
+      9408,
+      9409,
+      9410,
+      9411,
+      9412,
+      9413,
+      9414,
+      9415,
+      9416,
+      9417,
+      9418,
+      9419,
+      9420,
+      9421,
+      9422,
+      9423,
+      9424,
+      9425,
+      9426
+    ]
+  },
+  "exact_prompts": {
+    "left": "Put the Rubik's cube to the left of the bowl.",
+    "right": "Put the Rubik's cube to the right of the bowl."
+  },
+  "fixtures": {
+    "control": {
+      "candidate_layout": "control",
+      "fixture_id": "v3b001_nano_control",
+      "frame_of_reference": "robot",
+      "nonposition_state_sha256": "fab99e58180af0a57631b8a3e629b1e4b38b5f551090f66221e2c2865aa9af8f",
+      "positions_world_xyz": {
+        "banana": [
+          0.538878858089447,
+          -0.07555567473173141,
+          0.0684281587600708
+        ],
+        "bowl": [
+          0.44258353114128113,
+          0.12658219039440155,
+          0.07732785493135452
+        ],
+        "rubiks_cube": [
+          0.303364634513855,
+          0.12396888434886932,
+          0.08113233000040054
+        ]
+      },
+      "quaternions_wxyz": {
+        "banana": [
+          0.9999781250953674,
+          -0.002664888769974798,
+          -0.006051987813043361,
+          0.00014540326035168
+        ],
+        "bowl": [
+          0.9999999403953552,
+          -5.875354421326538e-05,
+          -0.0003236202968188691,
+          -0.00010501052579296266
+        ],
+        "rubiks_cube": [
+          0.9999990463256836,
+          -0.0009071399440944852,
+          0.0010379400315123045,
+          8.441170612118015e-05
+        ]
+      },
+      "sagittal_plane_y_m": 0.0,
+      "scene_asset": "rubiks_cube_banana_bowl.usda"
+    },
+    "position_mirrored": {
+      "candidate_layout": "position_mirrored",
+      "fixture_id": "v3b001_nano_position_mirrored",
+      "frame_of_reference": "robot",
+      "nonposition_state_sha256": "fab99e58180af0a57631b8a3e629b1e4b38b5f551090f66221e2c2865aa9af8f",
+      "positions_world_xyz": {
+        "banana": [
+          0.538878858089447,
+          0.07555567473173141,
+          0.0684281587600708
+        ],
+        "bowl": [
+          0.44258353114128113,
+          -0.12658219039440155,
+          0.07732785493135452
+        ],
+        "rubiks_cube": [
+          0.303364634513855,
+          -0.12396888434886932,
+          0.08113233000040054
+        ]
+      },
+      "quaternions_wxyz": {
+        "banana": [
+          0.9999781250953674,
+          -0.002664888769974798,
+          -0.006051987813043361,
+          0.00014540326035168
+        ],
+        "bowl": [
+          0.9999999403953552,
+          -5.875354421326538e-05,
+          -0.0003236202968188691,
+          -0.00010501052579296266
+        ],
+        "rubiks_cube": [
+          0.9999990463256836,
+          -0.0009071399440944852,
+          0.0010379400315123045,
+          8.441170612118015e-05
+        ]
+      },
+      "sagittal_plane_y_m": 0.0,
+      "scene_asset": "rubiks_cube_banana_bowl.usda"
+    }
+  },
+  "logging_contract": {
+    "final_requested_signed_margin_m": "finite and explicit for every valid episode; analyzed only on the named success-complete subset",
+    "infrastructure_failures": "separate stream; never model failures or zeros",
+    "margin_derivation_check": "+signed offset for LEFT; -signed offset for RIGHT",
+    "signed_final_lateral_offset_m": "finite and explicit for every valid episode, failures included",
+    "valid_failures": "preserved in full-sample offset denominators"
+  },
+  "model_identity": {
+    "checkpoint_revision": "6706d7680581c255ff61e0f3bb49d90eac55c79e",
+    "model_id": "cosmos3_nano_policy_droid",
+    "model_repository": "nvidia/Cosmos3-Nano-Policy-DROID",
+    "robolab_repository_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "server_repository_commit": "411d25b2e35bc441126f48c44a4b93e1c0564274"
+  },
+  "phase": "B_confound_ablation",
+  "post_result_disclosure": "Phase-A Nano outcomes and the 982-episode measurement audit were known before this ablation was selected.",
+  "prohibited": [
+    "reuse Phase-A episodes as contemporaneous control",
+    "change prompts, success predicate, model revision, or fixture after release",
+    "infer missing margin or offset from requested_success",
+    "analyze requested-side margin outside the named success-complete subset",
+    "pool DROID and RoboTwin"
+  ],
+  "recorded_at_utc": "2026-08-06T04:03:25Z",
+  "relation_geometry": {
+    "calibration_selection_rule": "exact analytic fixture geometry plus repeated live model-blind neutrality checks before model inference",
+    "cone_half_angle_degrees": 45.0,
+    "neutral_reset_45deg_cone_exclusion_clearance_m": {
+      "control": 0.13660559058189392,
+      "position_mirrored": 0.13660559058189392
+    },
+    "opposite_side_margin_definition": "the negative of requested-side margin",
+    "requested_side_margin_definition": "+signed_final_lateral_offset_m for LEFT; -signed_final_lateral_offset_m for RIGHT",
+    "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+    "sustained_samples": 3
+  },
+  "schema_version": "vla-wam-shared-v3b-nano-mirror-amendment-v1",
+  "scientific_question": "Does Nano's directional margin asymmetry change when only movable-object center positions are reflected about the robot sagittal plane?",
+  "source_bindings": {
+    "artifacts/vla_wam_shared_v3/confound_fixture_calibration_registry.json": "47fe840bb0cfc343a09657c25132bd4da1dfe4bf6f2a5bad639bd0424189ffda",
+    "artifacts/vla_wam_shared_v3/measurement_coverage_audit.json": "86b3ded424bba2d697b406ea7b1c8bfc147dba8413363ae0190b4d151e76d4ea",
+    "artifacts/vla_wam_shared_v3/protocol.json": "0e1a6465c96178e0c768c9398fe003c6617456b5101cfe8ce068283a8a7572d2",
+    "experiments/groot_droid/robolab_v2_tasks/rubiks_cube_left_of_bowl_matched.py": "9c4d90be770266bac3ba5242b743098348c565ee622179b5e88fa2af0c4891bc",
+    "experiments/groot_droid/robolab_v2_tasks/rubiks_cube_right_of_bowl_matched.py": "ba0eb879590960c57976dd1b749c4ebbd3e86054e152ca5af014ac1bc2b6d02a",
+    "experiments/v3/cosmos_nano_phase_b/fixture_candidate.py": "a5523d4a9ac72843ee5f28357a5025bf604c1a06c639b1791cb836b7790b54ca",
+    "experiments/v3/cosmos_nano_phase_b/fixture_tasks.py": "c2a9c10ffad7c51910448f70e7b4957f6ede75f27eb761e54224a2144d456148",
+    "experiments/v3/cosmos_nano_phase_b/model_blind_fixture_gate.py": "c533f04116dbed356e3c87c0329bea0043c4c4c9df8aa1bcd0dd4983e34c816f",
+    "experiments/v3/cosmos_nano_phase_b/task_files/control_left.py": "13caf30e102c2e342d8c6d8eb4d9f5f5fe5145f5509316f5c437715e401551ef",
+    "experiments/v3/cosmos_nano_phase_b/task_files/control_right.py": "3293ec9f7ea46b5d81d859d7e0628199273e77acec89bc9e99c3577fd23ea53f",
+    "experiments/v3/cosmos_nano_phase_b/task_files/position_mirrored_left.py": "94547e8d7c979199aad30f2659f495685fda77ba0a544546ab9dd3ccac0b3a32",
+    "experiments/v3/cosmos_nano_phase_b/task_files/position_mirrored_right.py": "f340db0f4585bede492b1cecc69efd7c5490ef24b20f16581562317155f3b55d"
+  },
+  "status": "released_after_model_blind_calibration_before_any_phase_b_model_request",
+  "study_id": "vla_wam_language_steerability_v3",
+  "unused_seed_audit": {
+    "artifacts/vla_wam_shared_v3/four_phrasings_registry.json": [],
+    "artifacts/vla_wam_shared_v3/phase_a_cells.jsonl": [],
+    "artifacts/vla_wam_shared_v3/stochastic_rollout_registry.json": []
+  }
+}

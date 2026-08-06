@@ -1,10 +1,10 @@
 {
   "schema_version": "vla-wam-shared-v3-continuation-v1",
   "study_id": "vla_wam_language_steerability_v3",
-  "updated_at_utc": "2026-08-05T20:39:22Z",
+  "updated_at_utc": "2026-08-06T04:03:25Z",
   "active_branch": "codex/wam-language-steerability",
-  "evidence_head": "2e97d0beb0fb1b4545460ffee60f5f240e163443",
-  "status": "phase_a_648_authorized_cells_complete_separate_pi0_fast_v3a002_40_cells_complete_later_phases_unreleased",
+  "evidence_head": "f734a66a9d93e5ec681770c9110653bd4caf6f67",
+  "status": "phase_a_and_v3a002_complete_nano_v3b001_108_cells_released_other_phase_b_phase_c_phase_d_unreleased",
   "authoritative_files": [
     "docs/VLA_WAM_V3_CONTINUATION.md",
     "docs/VLA_WAM_STEERABILITY_V3_PROTOCOL.md",
@@ -19,13 +19,17 @@
     "artifacts/vla_wam_shared_v3/results/pi0_fast_old_name_config_v3a002_summary.json",
     "artifacts/vla_wam_shared_v3/results/pi0_fast_old_name_config_v3a002_evidence_hash_manifest.json",
     "artifacts/vla_wam_shared_v3/results/pi0_fast_old_name_config_v3a002_infrastructure_ledger.json",
-    "artifacts/vla_wam_shared_v3/media/pi0_fast_old_name_config_v3a002/media_manifest.json"
+    "artifacts/vla_wam_shared_v3/media/pi0_fast_old_name_config_v3a002/media_manifest.json",
+    "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/model_blind_calibration_report.json",
+    "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_cells.jsonl",
+    "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_manifest.json",
+    "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/post_result_nano_mirror_v3b001_amendment.json"
   ],
   "validation": {
     "v3": {
       "command": ".venv/bin/python tools/validate_vla_wam_v3_protocol.py",
       "status": "valid",
-      "check_count": 281
+      "check_count": 301
     },
     "v2": {
       "command": ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
@@ -33,9 +37,9 @@
       "check_count": 994
     },
     "focused_tests": {
-      "command": ".venv/bin/python -m unittest -v tests.test_audit_vla_wam_measurement_coverage tests.test_validate_vla_wam_v3_protocol tests.test_v3_robotwin_wams_launcher tests.test_vla_wam_v3_episode_schema",
+      "command": ".venv/bin/python -m unittest -v tests.test_audit_vla_wam_measurement_coverage tests.test_validate_vla_wam_v3_protocol tests.test_v3_robotwin_wams_launcher tests.test_vla_wam_v3_episode_schema tests.test_v3b_nano_mirror_release tests.test_v3b_nano_runtime_adapter",
       "status": "passed",
-      "test_count": 33
+      "test_count": 51
     }
   },
   "measurement_coverage_audit": {
@@ -67,6 +71,62 @@
     "droid_preserved_candidate_cells": 50,
     "robotwin_preserved_r0_cells": 42,
     "completion_statement": "Every row marked authorized_new in the frozen Phase-A queue is complete valid evidence. Its 40 blocked_pi0 source rows remain immutable and were not relaunched under the historical identity. Post-result amendment V3-A002 separately authorized 40 distinct pi0_fast_old_name_config_v3a002 cells on the same registered seeds; all are complete valid evidence."
+  },
+  "phase_b_releases": {
+    "nano_position_reflection_v3b001": {
+      "status": "released_after_model_blind_calibration_before_any_phase_b_model_request",
+      "amendment_id": "V3-B001",
+      "model_id": "cosmos3_nano_policy_droid",
+      "arena": "droid_robolab",
+      "factor": "movable_object_center_position_reflection_about_robot_sagittal_plane",
+      "claim_boundary": "Only movable-object center positions are reflected about the robot sagittal plane. The robot, cameras, and nonmovable geometry remain fixed; this is a positions-only movable-object intervention, not a full-scene mirror.",
+      "seed_range_inclusive": [
+        9400,
+        9426
+      ],
+      "prespecified_matched_seed_count": 27,
+      "arms": [
+        "control",
+        "position_mirrored"
+      ],
+      "directions": [
+        "left",
+        "right"
+      ],
+      "cells_per_seed": 4,
+      "released_behavioral_cell_count": 108,
+      "completed_behavioral_cell_count": 0,
+      "pre_release_counts": {
+        "model_requests": 0,
+        "behavioral_episodes": 0
+      },
+      "exact_prompts": {
+        "left": "Put the Rubik's cube to the left of the bowl.",
+        "right": "Put the Rubik's cube to the right of the bowl."
+      },
+      "analysis_plan": {
+        "primary": "Full-sample signed_final_lateral_offset_m analysis across seeds with four valid behavioral cells; every valid behavioral failure remains included and no missing value is imputed.",
+        "success_conditional_secondary": "Analyze final_requested_signed_margin_m only on complete-case subset nano_v3b001_all_four_cells_correct, requiring frozen requested-success passes in control LEFT, control RIGHT, position-mirrored LEFT, and position-mirrored RIGHT; report realized n and never mix unmatched successful cells."
+      },
+      "artifacts": {
+        "calibration": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/model_blind_calibration_report.json",
+          "sha256": "112716acada89050561c9488d93a333a300b1675c2305329c8e5aceeb4e6da71"
+        },
+        "cells": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_cells.jsonl",
+          "sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a"
+        },
+        "manifest": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_manifest.json",
+          "sha256": "5c82268739feb41281435a51dcd848b575218cd9fbe5839d9ad130d1a7888830"
+        },
+        "amendment": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/post_result_nano_mirror_v3b001_amendment.json",
+          "sha256": "9d88c29733fa3b24a154977bc25d04d2d77df5be59e3213f0c3a6cfbe3edc6a0"
+        }
+      }
+    }
   },
   "exact_prompts": {
     "droid_robolab": {
@@ -274,8 +334,15 @@
       "recovery_command": "git -C /home/ali/openpi-robolab bundle create /tmp/openpi-robolab-all.bundle --all && git -C /home/ali/projects/RoboLab bundle create /tmp/robolab-all.bundle --all"
     },
     "phase_b_confounds": {
-      "status": "not_released",
-      "reason": "Numeric fixture levels and margins require a new model-blind calibration amendment before any behavior. Phase A does not release Phase B."
+      "status": "partial_release_nano_v3b001_only",
+      "released": {
+        "amendment_id": "V3-B001",
+        "model_id": "cosmos3_nano_policy_droid",
+        "released_behavioral_cells": 108,
+        "completed_behavioral_cells": 0,
+        "release_condition": "Released only after the hash-bound model-blind positions-only calibration, before any Phase-B model request or behavioral episode."
+      },
+      "unreleased": "Every other Phase-B confound ablation remains unreleased and requires its own frozen independent release path."
     },
     "phase_c_four_phrasings": {
       "status": "not_released",
@@ -288,8 +355,8 @@
     }
   },
   "scientific_claim_boundary": {
-    "supported": "Across every completed checkpoint, matched LEFT/RIGHT prompts changed executed traces; endpoint ordering was often aligned, but requested task completion and failure mode remained strongly checkpoint- and direction-dependent. In the separate V3-A002 public old-name-config bridge, all 20 common action prefixes differed and 16/20 endpoints aligned, yet success was 0/20 LEFT versus 12/20 RIGHT.",
-    "not_supported": "Phase A alone does not identify training-distribution bias, scene geometry, reachability, start side, object role, or model family as a causal explanation. It also does not establish that an exposed or decoded future caused successful control.",
+    "supported": "Across every completed checkpoint, matched LEFT/RIGHT prompts changed executed traces; endpoint ordering was often aligned, but requested task completion and failure mode remained strongly checkpoint- and direction-dependent. In the separate V3-A002 public old-name-config bridge, all 20 common action prefixes differed and 16/20 endpoints aligned, yet success was 0/20 LEFT versus 12/20 RIGHT. Nano V3-B001 is a released prospective test, not completed behavioral evidence.",
+    "not_supported": "Phase A alone does not identify training-distribution bias, scene geometry, reachability, start side, object role, or model family as a causal explanation. V3-B001 reflects only movable-object center positions and is not a full-scene mirror; its release supplies no Phase-B outcome and does not establish causal attribution. An exposed or decoded future also does not establish successful control.",
     "unit_warning": "RoboTwin sampling replicates are nested within seven scenes; they are not 63 independent scenes."
   },
   "storage": {
@@ -305,7 +372,7 @@
       ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
       "git diff --check"
     ],
-    "inference_authority": "No Phase-A authorized_new or V3-A002 bridge cell remains. Do not rerun a valid cell. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or Phase C. No Phase-B, Phase-C, or Phase-D cell may start without its frozen independent release path.",
+    "inference_authority": "No Phase-A authorized_new or V3-A002 bridge cell remains; do not rerun a valid cell. Nano V3-B001 is the only released Phase-B queue: its exact 108 hash-bound rows may start only after the required live runtime-identity, viewport-writer, and raw-output-path rechecks. No other Phase-B, Phase-C, or Phase-D cell may start without its own frozen independent release path. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or Phase C.",
     "publication_note": "Use the compact result summaries and evidence manifests for analysis. Do not infer current study state from the older V2 article, gallery, figures, or chat history."
   }
 }

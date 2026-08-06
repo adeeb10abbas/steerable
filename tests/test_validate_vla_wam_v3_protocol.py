@@ -65,6 +65,8 @@ class ValidateV3ProtocolTest(unittest.TestCase):
             "finalize_nano_v3b001_evidence.py",
             "render_nano_v3b001_results.py",
             "build_nano_v3b001_publication_media.py",
+            "build_pi05_v3b002_registration.py",
+            "analyze_v3_failure_mode_split.py",
         ):
             shutil.copy2(ROOT / "tools" / name, root / "tools" / name)
         (root / "tests").mkdir()
@@ -75,6 +77,7 @@ class ValidateV3ProtocolTest(unittest.TestCase):
             "test_finalize_nano_v3b001_evidence.py",
             "test_render_nano_v3b001_results.py",
             "test_build_nano_v3b001_publication_media.py",
+            "test_build_pi05_v3b002_registration.py",
         ):
             shutil.copy2(ROOT / "tests" / name, root / "tests" / name)
 

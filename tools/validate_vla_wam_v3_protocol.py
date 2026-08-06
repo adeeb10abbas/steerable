@@ -82,6 +82,15 @@ REQUIRED = {
     "nano_mirror_evidence_finalizer_test": "tests/test_finalize_nano_v3b001_evidence.py",
     "nano_mirror_results_renderer_test": "tests/test_render_nano_v3b001_results.py",
     "nano_mirror_publication_media_test": "tests/test_build_nano_v3b001_publication_media.py",
+    "pi05_mirror_amendment": f"{V3}/phase_b/pi05_mirror_v3b002/post_result_pi05_mirror_v3b002_amendment.json",
+    "pi05_mirror_cells": f"{V3}/phase_b/pi05_mirror_v3b002/pi05_mirror_v3b002_cells.jsonl",
+    "pi05_mirror_manifest": f"{V3}/phase_b/pi05_mirror_v3b002/pi05_mirror_v3b002_manifest.json",
+    "pi05_failure_split_episodes": f"{V3}/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_episodes.jsonl",
+    "pi05_failure_split_report": f"{V3}/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_report.json",
+    "pi05_failure_split_manifest": f"{V3}/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_manifest.json",
+    "pi05_mirror_registration_builder": "tools/build_pi05_v3b002_registration.py",
+    "pi05_failure_split_analyzer": "tools/analyze_v3_failure_mode_split.py",
+    "pi05_mirror_registration_test": "tests/test_build_pi05_v3b002_registration.py",
 }
 DROID_MODELS = [
     "pi0_fast_droid_vla",
@@ -1076,6 +1085,12 @@ def validate(root: Path) -> list[str]:
     nano_final_evidence = load(paths["nano_mirror_final_evidence"])
     nano_figure_media_manifest = load(paths["nano_mirror_figure_media_manifest"])
     nano_publication_media_manifest = load(paths["nano_mirror_publication_media_manifest"])
+    pi05_mirror_amendment = load(paths["pi05_mirror_amendment"])
+    pi05_mirror_cells = load_jsonl(paths["pi05_mirror_cells"])
+    pi05_mirror_manifest = load(paths["pi05_mirror_manifest"])
+    pi05_failure_split_episodes = load_jsonl(paths["pi05_failure_split_episodes"])
+    pi05_failure_split_report = load(paths["pi05_failure_split_report"])
+    pi05_failure_split_manifest = load(paths["pi05_failure_split_manifest"])
 
     require(
         nano_calibration.get("schema_version")
@@ -2337,12 +2352,154 @@ def validate(root: Path) -> list[str]:
         "Nano live implementation fails closed on queue order, reset attestation, runtime identity, and retained attempts",
         checks,
     )
+    require(
+        pi05_mirror_amendment.get("schema_version")
+        == "vla-wam-shared-v3b-pi05-mirror-amendment-v1"
+        and pi05_mirror_amendment.get("amendment_id") == "V3-B002"
+        and pi05_mirror_amendment.get("status")
+        == "frozen_before_any_v3b002_model_request_or_behavioral_episode"
+        and pi05_mirror_amendment.get("release_boundary", {}).get(
+            "model_requests_before_registration"
+        )
+        == 0
+        and pi05_mirror_amendment.get("release_boundary", {}).get(
+            "behavioral_episodes_before_registration"
+        )
+        == 0
+        and pi05_mirror_amendment.get("release_boundary", {}).get(
+            "behavioral_release"
+        )
+        is False,
+        "pi0.5 V3-B002 predictions were frozen before inference and do not release behavior",
+        checks,
+    )
+    require(
+        pi05_mirror_amendment.get("design", {}).get("matched_seeds")
+        == exact_range(9400, 9426)
+        and pi05_mirror_amendment.get("design", {}).get("cells_per_seed") == 4
+        and pi05_mirror_amendment.get("design", {}).get(
+            "behavioral_episode_ceiling"
+        )
+        == 108
+        and pi05_mirror_amendment.get("analysis_plan", {}).get(
+            "continuous_reporting", {}
+        ).get("bootstrap_replicates")
+        == 20000
+        and pi05_mirror_amendment.get("analysis_plan", {}).get(
+            "continuous_reporting", {}
+        ).get("bootstrap_master_seed")
+        == 3104159,
+        "pi0.5 V3-B002 freezes the 27-seed four-cell design and exact uncertainty plan",
+        checks,
+    )
+    require(
+        len(pi05_mirror_cells) == 108
+        and pi05_mirror_manifest.get("status")
+        == "hash_bound_registered_not_behaviorally_released"
+        and pi05_mirror_manifest.get("counts", {}).get(
+            "registered_behavioral_cells"
+        )
+        == 108
+        and pi05_mirror_manifest.get("files", {}).get("amendment", {}).get(
+            "sha256"
+        )
+        == sha256(paths["pi05_mirror_amendment"])
+        and pi05_mirror_manifest.get("files", {}).get("cells", {}).get("sha256")
+        == sha256(paths["pi05_mirror_cells"]),
+        "pi0.5 V3-B002 registration manifest binds all 108 unreleased cells",
+        checks,
+    )
+    nano_cells_by_id = {row.get("cell_id"): row for row in nano_cells}
+    pi05_conditions_by_seed: dict[int, set[tuple[str, str]]] = {}
+    exact_pi05_source_reuse = True
+    for row in pi05_mirror_cells:
+        seed = row.get("environment_seed")
+        source = nano_cells_by_id.get(row.get("source_v3b001_cell_id"))
+        if type(seed) is not int or not source:
+            exact_pi05_source_reuse = False
+            continue
+        pi05_conditions_by_seed.setdefault(seed, set()).add(
+            (row.get("arm"), row.get("relation"))
+        )
+        exact_pi05_source_reuse = exact_pi05_source_reuse and all(
+            row.get(key) == source.get(key)
+            for key in (
+                "environment_seed",
+                "arm",
+                "relation",
+                "fixture_sha256",
+                "execution_order_index_within_seed",
+            )
+        )
+    expected_pi05_conditions = {
+        ("control", "left"),
+        ("control", "right"),
+        ("position_mirrored", "left"),
+        ("position_mirrored", "right"),
+    }
+    require(
+        exact_pi05_source_reuse
+        and sorted(pi05_conditions_by_seed) == exact_range(9400, 9426)
+        and all(
+            conditions == expected_pi05_conditions
+            for conditions in pi05_conditions_by_seed.values()
+        ),
+        "pi0.5 V3-B002 reuses Nano seeds, fixtures, and within-seed order exactly",
+        checks,
+    )
+    expected_failure_tables = {
+        "pi05_current_stack_droid": ([5, 6, 11, 5, 0], [24, 0, 3, 0, 0]),
+        "dreamzero_droid_action_cfg": ([3, 10, 14, 0, 0], [17, 10, 0, 0, 0]),
+        "cosmos3_edge_policy_droid": ([18, 1, 6, 2, 0], [25, 1, 1, 0, 0]),
+    }
+    observed_failure_tables = {
+        row.get("model_id"): (
+            row.get("table_2x5", {}).get("rows", {}).get("left"),
+            row.get("table_2x5", {}).get("rows", {}).get("right"),
+        )
+        for row in pi05_failure_split_report.get("results", [])
+    }
+    failure_outputs = {
+        entry.get("path"): entry.get("sha256")
+        for entry in pi05_failure_split_manifest.get("outputs", [])
+    }
+    require(
+        len(pi05_failure_split_episodes) == 162
+        and pi05_failure_split_report.get("status")
+        == "complete_retrospective_analysis_no_new_inference"
+        and observed_failure_tables == expected_failure_tables
+        and failure_outputs.get(
+            "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_episodes.jsonl"
+        )
+        == sha256(paths["pi05_failure_split_episodes"])
+        and failure_outputs.get(
+            "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_report.json"
+        )
+        == sha256(paths["pi05_failure_split_report"]),
+        "V3-B002 failure-mode split binds 162 existing episodes and the three exact 2x5 tables",
+        checks,
+    )
+    pi05_release = continuation.get("phase_b_releases", {}).get(
+        "pi05_position_reflection_v3b002", {}
+    )
+    require(
+        pi05_release.get("status")
+        == "hash_bound_registered_not_behaviorally_released"
+        and pi05_release.get("registered_behavioral_cell_count") == 108
+        and pi05_release.get("completed_behavioral_cell_count") == 0
+        and pi05_release.get("pre_registration_counts")
+        == {"model_requests": 0, "behavioral_episodes": 0}
+        and pi05_release.get("artifacts", {}).get("manifest", {}).get("sha256")
+        == sha256(paths["pi05_mirror_manifest"]),
+        "V3 continuation records pi0.5 V3-B002 as hash-bound and unreleased",
+        checks,
+    )
     phase_b_state = continuation.get("blocked_and_unreleased", {}).get(
         "phase_b_confounds", {}
     )
     require(
         phase_b_state.get("status")
-        == "nano_v3b001_complete_every_other_phase_b_ablation_unreleased"
+        == "nano_v3b001_complete_pi05_v3b002_registered_runtime_release_pending"
         and phase_b_state.get("released", {}).get("amendment_id") == "V3-B001"
         and phase_b_state.get("released", {}).get("released_behavioral_cells") == 108
         and phase_b_state.get("released", {}).get("completed_behavioral_cells") == 108
@@ -2350,23 +2507,32 @@ def validate(root: Path) -> list[str]:
         in phase_b_state.get("released", {}).get("release_condition", "")
         and "hash-closed"
         in phase_b_state.get("released", {}).get("release_condition", "")
+        and phase_b_state.get("registered_not_released", {}).get("amendment_id")
+        == "V3-B002"
+        and phase_b_state.get("registered_not_released", {}).get(
+            "registered_behavioral_cells"
+        )
+        == 108
+        and phase_b_state.get("registered_not_released", {}).get(
+            "completed_behavioral_cells"
+        )
+        == 0
         and "Every other Phase-B" in phase_b_state.get("unreleased", ""),
-        "V3 continuation records the completed Nano ablation while keeping every other confound gated",
+        "V3 continuation records completed Nano, registered-unreleased pi0.5, and every other confound gated",
         checks,
     )
     inference_authority = continuation.get("next_agent", {}).get(
         "inference_authority", ""
     )
     require(
-        "No Phase-A authorized_new, V3-A002 bridge, or Nano V3-B001 cell remains"
+        "Do not rerun any valid Phase-A, V3-A002, or Nano V3-B001 cell"
         in inference_authority
-        and "complete at 108/108 valid behavioral episodes" in inference_authority
-        and "2c5e314a62926a3d3c9b84fa73cff634c378b6140d390cbef6407ac9c633e64e"
-        in inference_authority
-        and "12-cell live snapshot is retained only as a historical prefix"
-        in inference_authority
-        and "No other Phase-B, Phase-C, or Phase-D cell" in inference_authority,
-        "V3 continuation closes Nano inference and keeps every unreleased phase gated",
+        and "V3-B002 is the exact next experiment" in inference_authority
+        and "108 registered pi0.5 cells" in inference_authority
+        and "only after its new runtime identity" in inference_authority
+        and "No other Phase-B, Phase-C, or Phase-D cell is released"
+        in inference_authority,
+        "V3 continuation closes prior inference and gates pi0.5 V3-B002 as the exact next experiment",
         checks,
     )
 

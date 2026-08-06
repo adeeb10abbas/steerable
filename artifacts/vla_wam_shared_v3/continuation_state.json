@@ -1,10 +1,10 @@
 {
   "schema_version": "vla-wam-shared-v3-continuation-v1",
   "study_id": "vla_wam_language_steerability_v3",
-  "updated_at_utc": "2026-08-06T10:08:01Z",
+  "updated_at_utc": "2026-08-06T17:41:42Z",
   "active_branch": "codex/wam-language-steerability",
-  "evidence_head": "39f19b57d5f5e68d0f03e4e4c7569350cb9a467f",
-  "status": "phase_a_v3a002_and_nano_v3b001_complete_other_phase_b_phase_c_phase_d_unreleased",
+  "evidence_head": "83ccd46e0339cf9a4c813f0927aa69e86c0ce495",
+  "status": "pi05_v3b002_registered_preinference_failure_split_complete_runtime_release_pending",
   "authoritative_files": [
     "docs/VLA_WAM_V3_CONTINUATION.md",
     "docs/VLA_WAM_STEERABILITY_V3_PROTOCOL.md",
@@ -51,13 +51,23 @@
     "tests/test_compile_nano_v3b001_results.py",
     "tests/test_finalize_nano_v3b001_evidence.py",
     "tests/test_render_nano_v3b001_results.py",
-    "tests/test_build_nano_v3b001_publication_media.py"
+    "tests/test_build_nano_v3b001_publication_media.py",
+    "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/post_result_pi05_mirror_v3b002_amendment.json",
+    "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/pi05_mirror_v3b002_cells.jsonl",
+    "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/pi05_mirror_v3b002_manifest.json",
+    "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_episodes.jsonl",
+    "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_report.json",
+    "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_manifest.json",
+    "tools/build_pi05_v3b002_registration.py",
+    "tools/analyze_v3_failure_mode_split.py",
+    "tools/test_analyze_v3_failure_mode_split.py",
+    "tests/test_build_pi05_v3b002_registration.py"
   ],
   "validation": {
     "v3": {
       "command": ".venv/bin/python tools/validate_vla_wam_v3_protocol.py",
       "status": "valid",
-      "check_count": 327
+      "check_count": 374
     },
     "v2": {
       "command": ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
@@ -382,6 +392,54 @@
           "live_queue_test": {"path": "tests/test_v3b_nano_live_queue.py", "sha256": "b0e29b0999223f88ec7782b66360dcd6b01dff48f89c917ff02f79da82303c0f"}
         }
       }
+    },
+    "pi05_position_reflection_v3b002": {
+      "status": "hash_bound_registered_not_behaviorally_released",
+      "amendment_id": "V3-B002",
+      "model_id": "pi05_current_stack_droid",
+      "arena": "droid_robolab",
+      "factor": "movable_object_center_position_reflection_about_robot_sagittal_plane",
+      "claim_boundary": "This is an exact scene-matched replication of Nano V3-B001 on pi0.5. Only movable-object center positions are reflected; robot base, cameras, nonmovable geometry, prompt bytes, controller, cone, and success predicate remain fixed.",
+      "seed_range_inclusive": [9400, 9426],
+      "prespecified_matched_seed_count": 27,
+      "cells_per_seed": 4,
+      "registered_behavioral_cell_count": 108,
+      "completed_behavioral_cell_count": 0,
+      "pre_registration_counts": {"model_requests": 0, "behavioral_episodes": 0},
+      "source_v3b001": {
+        "cells_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+        "manifest_sha256": "5c82268739feb41281435a51dcd848b575218cd9fbe5839d9ad130d1a7888830",
+        "reuse": "Exact seeds, fixtures, arm/relation assignments, and within-seed execution order are copied without resampling."
+      },
+      "exact_prompts": {
+        "left": "Put the Rubik's cube to the left of the bowl.",
+        "right": "Put the Rubik's cube to the right of the bowl."
+      },
+      "registered_predictions": {
+        "H1": "Endpoint-redirection interaction J is approximately zero; Nano mean was +0.0046802502 m with exact sign-test p=0.701108.",
+        "H2": "Requested-side-depth interaction I is strongly negative; Nano mean was -0.2476671935 m with exact sign-test p=4.9233437e-05.",
+        "H3": "Two-sided exact within-seed test of whether reflection changes pi0.5's Phase-A RIGHT-over-LEFT binary success gap of 24/27 versus 5/27; no post-registration directional outcome was specified."
+      },
+      "analysis": {
+        "continuous": "20,000 matched-seed bootstrap resamples using master seed 3104159; exact paired sign tests with ties excluded and sign counts reported.",
+        "binary_success": "Per-seed DiD=(R-L)_reflected-(R-L)_control, reported on {-2,-1,0,1,2}, with exact two-sided within-seed label permutation and the 2x2 cell table.",
+        "failure_mode_split": {
+          "status": "complete_retrospective_existing_phase_a_logs_no_new_inference",
+          "pi05": {"left_counts_correct_pick_transport_wrong_side_release": [5, 6, 11, 5, 0], "right_counts_correct_pick_transport_wrong_side_release": [24, 0, 3, 0, 0], "failure_only_exact_p": 0.38217391304347825},
+          "dreamzero": {"left_counts_correct_pick_transport_wrong_side_release": [3, 10, 14, 0, 0], "right_counts_correct_pick_transport_wrong_side_release": [17, 10, 0, 0, 0], "failure_only_exact_p": 0.0017219568583829528},
+          "cosmos3_edge": {"left_counts_correct_pick_transport_wrong_side_release": [18, 1, 6, 2, 0], "right_counts_correct_pick_transport_wrong_side_release": [25, 1, 1, 0, 0], "failure_only_exact_p": 0.6181818181818182},
+          "interpretation": "DreamZero rejects the same-shape failure account in this cohort. pi0.5 and Edge do not reject it, but their RIGHT failure rows contain only three and two episodes, so this is not evidence of equivalence."
+        }
+      },
+      "artifacts": {
+        "amendment": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/post_result_pi05_mirror_v3b002_amendment.json", "sha256": "8e56365fdc306adbef2d2f2f8357653d1a683ff17f879f624d7eefd4acb1abb6"},
+        "cells": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/pi05_mirror_v3b002_cells.jsonl", "sha256": "0db680a3aee04c991bcc78904cb572b7d962971e04fbc879e828354da30dafee"},
+        "manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/pi05_mirror_v3b002_manifest.json", "sha256": "8aaaa38302f6a654090250b3e12cd8735fab28a74027d50193325ffa9d0dddea"},
+        "failure_mode_episodes": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_episodes.jsonl", "sha256": "94d078c16d579019c216a7d05c0e4748d049d4bc91ab1879ca38b8bc78da8735"},
+        "failure_mode_report": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_report.json", "sha256": "f6289333d77538ed9235a567cb98d70333dd50549f7e52d13bfe5d34a10bdf96"},
+        "failure_mode_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_manifest.json", "sha256": "5a0e95af238536dbbcf7a6c81bf721f095cea1a5e178ddfbaecda8105a1e06ab"}
+      },
+      "release_boundary": "No behavioral cell may start until a new hash-bound pi0.5 runtime identity passes exact-source, zero-request fixture/reset/renderer/writer, deterministic-repeat, and prompt-sensitivity gates."
     }
   },
   "exact_prompts": {
@@ -590,7 +648,7 @@
       "recovery_command": "git -C /home/ali/openpi-robolab bundle create /tmp/openpi-robolab-all.bundle --all && git -C /home/ali/projects/RoboLab bundle create /tmp/robolab-all.bundle --all"
     },
     "phase_b_confounds": {
-      "status": "nano_v3b001_complete_every_other_phase_b_ablation_unreleased",
+      "status": "nano_v3b001_complete_pi05_v3b002_registered_runtime_release_pending",
       "released": {
         "amendment_id": "V3-B001",
         "model_id": "cosmos3_nano_policy_droid",
@@ -598,7 +656,14 @@
         "completed_behavioral_cells": 108,
         "release_condition": "Released only after the hash-bound model-blind positions-only calibration. The prespecified 27-seed, four-cell-per-seed cohort is complete and hash-closed."
       },
-      "unreleased": "Every other Phase-B confound ablation remains unreleased and requires its own frozen independent release path."
+      "registered_not_released": {
+        "amendment_id": "V3-B002",
+        "model_id": "pi05_current_stack_droid",
+        "registered_behavioral_cells": 108,
+        "completed_behavioral_cells": 0,
+        "next_gate": "New hash-bound runtime identity and zero-request physical reset, renderer, writer, exact-repeat, and prompt-sensitivity release gate."
+      },
+      "unreleased": "V3-B002 is registered but not yet behaviorally released. Every other Phase-B confound ablation remains unreleased and requires its own frozen independent release path."
     },
     "phase_c_four_phrasings": {
       "status": "not_released",
@@ -628,7 +693,7 @@
       ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
       "git diff --check"
     ],
-    "inference_authority": "No Phase-A authorized_new, V3-A002 bridge, or Nano V3-B001 cell remains; do not rerun any valid cell. The Nano queue is complete at 108/108 valid behavioral episodes under runtime_attempt08 identity 2c5e314a62926a3d3c9b84fa73cff634c378b6140d390cbef6407ac9c633e64e. The 12-cell live snapshot is retained only as a historical prefix; use the final results manifest, summary, and hash-closed evidence manifest for analysis. No other Phase-B, Phase-C, or Phase-D cell may start without its own frozen independent release path. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or Phase C.",
+    "inference_authority": "Do not rerun any valid Phase-A, V3-A002, or Nano V3-B001 cell. V3-B002 is the exact next experiment: 108 registered pi0.5 cells at seeds 9400-9426, using the exact V3-B001 four-cell order within each seed. It may start only after its new runtime identity and zero-request fixture/reset/renderer/writer plus exact-repeat and prompt-sensitivity gate are hash-bound. No other Phase-B, Phase-C, or Phase-D cell is released. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or Phase C.",
     "publication_note": "Use the compact result summaries and evidence manifests for analysis. Do not infer current study state from the older V2 article, gallery, figures, or chat history."
   }
 }

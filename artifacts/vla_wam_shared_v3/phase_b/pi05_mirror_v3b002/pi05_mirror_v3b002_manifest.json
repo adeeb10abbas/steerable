@@ -1,0 +1,56 @@
+{
+  "amendment_id": "V3-B002",
+  "counts": {
+    "control_cells": 54,
+    "left_cells": 54,
+    "matched_seeds": 27,
+    "position_mirrored_cells": 54,
+    "registered_behavioral_cells": 108,
+    "right_cells": 54
+  },
+  "execution_order_position_counts": {
+    "control:left": {
+      "1": 7,
+      "2": 7,
+      "3": 6,
+      "4": 7
+    },
+    "control:right": {
+      "1": 6,
+      "2": 7,
+      "3": 7,
+      "4": 7
+    },
+    "position_mirrored:left": {
+      "1": 7,
+      "2": 6,
+      "3": 7,
+      "4": 7
+    },
+    "position_mirrored:right": {
+      "1": 7,
+      "2": 7,
+      "3": 7,
+      "4": 6
+    }
+  },
+  "files": {
+    "amendment": {
+      "bytes": 5941,
+      "path": "post_result_pi05_mirror_v3b002_amendment.json",
+      "sha256": "8e56365fdc306adbef2d2f2f8357653d1a683ff17f879f624d7eefd4acb1abb6"
+    },
+    "cells": {
+      "bytes": 382104,
+      "path": "pi05_mirror_v3b002_cells.jsonl",
+      "row_count": 108,
+      "sha256": "0db680a3aee04c991bcc78904cb572b7d962971e04fbc879e828354da30dafee"
+    }
+  },
+  "recorded_at_utc": "2026-08-06T17:41:42Z",
+  "release_rule": "This registration freezes design and predictions only. No row may launch until a separately persisted runtime/reset/output/sensitivity release gate binds this manifest hash.",
+  "schema_version": "vla-wam-shared-v3b-pi05-mirror-manifest-v1",
+  "source_v3b001_cells_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+  "status": "hash_bound_registered_not_behaviorally_released",
+  "study_id": "vla_wam_language_steerability_v3"
+}

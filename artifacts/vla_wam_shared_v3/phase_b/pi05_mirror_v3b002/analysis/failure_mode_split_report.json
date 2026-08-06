@@ -1,0 +1,531 @@
+{
+  "analysis_date": "2026-08-06",
+  "analysis_git_head": "83ccd46e0339cf9a4c813f0927aa69e86c0ce495",
+  "derived_episode_view": {
+    "bytes": 118947,
+    "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_episodes.jsonl",
+    "sha256": "94d078c16d579019c216a7d05c0e4748d049d4bc91ab1879ca38b8bc78da8735"
+  },
+  "frozen_taxonomy": {
+    "categories_in_report_order": [
+      "correct",
+      "pick_failed",
+      "transport_failed",
+      "wrong_side",
+      "release_failed"
+    ],
+    "display_aliases_only": {
+      "correct": "correct",
+      "pick_failed": "pick",
+      "release_failed": "release",
+      "transport_failed": "transport",
+      "wrong_side": "wrong_side"
+    },
+    "path": "artifacts/vla_wam_shared_v3/failure_taxonomy.json",
+    "primary_precedence_unchanged": [
+      "correct",
+      "pick_failed",
+      "wrong_side",
+      "release_failed",
+      "transport_failed"
+    ],
+    "sha256": "48631b155721351460716a4fc7a69a8aa1b9a584ee78390ae6b332ccb39d76d9"
+  },
+  "hypothesis": "If leftward placement is only harder in rate, LEFT and RIGHT failures should have the same failure-mode shape. A direction-dependent shape supports a direction-specific mechanism within the tested cohort.",
+  "method": {
+    "all_episode_table": "2x5 raw counts and within-direction proportions",
+    "exact_test": "Probability-ordered two-sided Fisher-Freeman-Halton test, enumerating every table conditional on observed row and column margins.",
+    "exact_test_subset": "failures only; correct dropped before testing",
+    "inference_note": "A nonsignificant test does not establish equal shapes; sparse failure rows can have low power.",
+    "pairing_note": "The test requested here compares marginal failure-mode distributions. Matched seeds remain identifiable in the episode JSONL but are not used as independent failure observations in this contingency test.",
+    "table": "direction x frozen V3 failure taxonomy"
+  },
+  "results": [
+    {
+      "arena": "droid_robolab",
+      "cohort": "phase_a_expanded_54_episode",
+      "directions": {
+        "left": {
+          "failure_count": 22,
+          "failure_only_raw_counts": {
+            "pick_failed": 6,
+            "release_failed": 0,
+            "transport_failed": 11,
+            "wrong_side": 5
+          },
+          "failure_only_row_normalized_proportions": {
+            "pick_failed": 0.2727272727272727,
+            "release_failed": 0.0,
+            "transport_failed": 0.5,
+            "wrong_side": 0.22727272727272727
+          },
+          "failure_rate": 0.8148148148148148,
+          "raw_counts": {
+            "correct": 5,
+            "pick_failed": 6,
+            "release_failed": 0,
+            "transport_failed": 11,
+            "wrong_side": 5
+          },
+          "row_normalized_proportions_all_episodes": {
+            "correct": 0.18518518518518517,
+            "pick_failed": 0.2222222222222222,
+            "release_failed": 0.0,
+            "transport_failed": 0.4074074074074074,
+            "wrong_side": 0.18518518518518517
+          },
+          "success_rate": 0.18518518518518517
+        },
+        "right": {
+          "failure_count": 3,
+          "failure_only_raw_counts": {
+            "pick_failed": 0,
+            "release_failed": 0,
+            "transport_failed": 3,
+            "wrong_side": 0
+          },
+          "failure_only_row_normalized_proportions": {
+            "pick_failed": 0.0,
+            "release_failed": 0.0,
+            "transport_failed": 1.0,
+            "wrong_side": 0.0
+          },
+          "failure_rate": 0.1111111111111111,
+          "raw_counts": {
+            "correct": 24,
+            "pick_failed": 0,
+            "release_failed": 0,
+            "transport_failed": 3,
+            "wrong_side": 0
+          },
+          "row_normalized_proportions_all_episodes": {
+            "correct": 0.8888888888888888,
+            "pick_failed": 0.0,
+            "release_failed": 0.0,
+            "transport_failed": 0.1111111111111111,
+            "wrong_side": 0.0
+          },
+          "success_rate": 0.8888888888888888
+        }
+      },
+      "display_name": "pi0.5 current stack DROID",
+      "failure_only_exact_test": {
+        "alpha_descriptive_threshold": 0.05,
+        "alternative": "two_sided_probability_ordering",
+        "conditioning": "fixed row totals and fixed failure-category column totals",
+        "enumerated_table_count": 10,
+        "equally_or_less_probable_table_count": 7,
+        "failure_shape_difference_detected_at_alpha": false,
+        "observed_table_probability": 0.1582608695652174,
+        "observed_table_probability_exact": "91/575",
+        "p_value": 0.38217391304347825,
+        "p_value_exact": "879/2300",
+        "test": "Fisher-Freeman-Halton exact test for a 2xK contingency table",
+        "zero_total_columns_dropped_for_enumeration": [
+          "release_failed"
+        ]
+      },
+      "failure_only_table_2x4": {
+        "column_display_aliases": [
+          "pick",
+          "transport",
+          "wrong_side",
+          "release"
+        ],
+        "columns": [
+          "pick_failed",
+          "transport_failed",
+          "wrong_side",
+          "release_failed"
+        ],
+        "rows": {
+          "left": [
+            6,
+            11,
+            5,
+            0
+          ],
+          "right": [
+            0,
+            3,
+            0,
+            0
+          ]
+        }
+      },
+      "interpretation": "No failure-mode shape difference is detected in this cohort. This is compatible with, but does not prove, a same-shape/different-rate account; interpretation is limited by the smaller direction-specific failure row.",
+      "model_id": "pi05_current_stack_droid",
+      "source_evidence_manifest": {
+        "bytes": 45987,
+        "path": "artifacts/vla_wam_shared_v3/results/pi05_current_stack_droid_phase_a_evidence_hash_manifest.json",
+        "sha256": "dca633cfa74ff93926cb1d010d5a329908a02d81181f23cca4969c5d5f1f3cfd"
+      },
+      "source_summary": {
+        "bytes": 128505,
+        "path": "artifacts/vla_wam_shared_v3/results/pi05_current_stack_droid_phase_a_summary.json",
+        "sha256": "5c6d07fca7a0d20ab8b757f028d469f864c78a1c43ffedc3d257a16caef2a02b"
+      },
+      "table_2x5": {
+        "column_display_aliases": [
+          "correct",
+          "pick",
+          "transport",
+          "wrong_side",
+          "release"
+        ],
+        "columns": [
+          "correct",
+          "pick_failed",
+          "transport_failed",
+          "wrong_side",
+          "release_failed"
+        ],
+        "rows": {
+          "left": [
+            5,
+            6,
+            11,
+            5,
+            0
+          ],
+          "right": [
+            24,
+            0,
+            3,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "arena": "droid_robolab",
+      "cohort": "phase_a_expanded_54_episode",
+      "directions": {
+        "left": {
+          "failure_count": 24,
+          "failure_only_raw_counts": {
+            "pick_failed": 10,
+            "release_failed": 0,
+            "transport_failed": 14,
+            "wrong_side": 0
+          },
+          "failure_only_row_normalized_proportions": {
+            "pick_failed": 0.4166666666666667,
+            "release_failed": 0.0,
+            "transport_failed": 0.5833333333333334,
+            "wrong_side": 0.0
+          },
+          "failure_rate": 0.8888888888888888,
+          "raw_counts": {
+            "correct": 3,
+            "pick_failed": 10,
+            "release_failed": 0,
+            "transport_failed": 14,
+            "wrong_side": 0
+          },
+          "row_normalized_proportions_all_episodes": {
+            "correct": 0.1111111111111111,
+            "pick_failed": 0.37037037037037035,
+            "release_failed": 0.0,
+            "transport_failed": 0.5185185185185185,
+            "wrong_side": 0.0
+          },
+          "success_rate": 0.1111111111111111
+        },
+        "right": {
+          "failure_count": 10,
+          "failure_only_raw_counts": {
+            "pick_failed": 10,
+            "release_failed": 0,
+            "transport_failed": 0,
+            "wrong_side": 0
+          },
+          "failure_only_row_normalized_proportions": {
+            "pick_failed": 1.0,
+            "release_failed": 0.0,
+            "transport_failed": 0.0,
+            "wrong_side": 0.0
+          },
+          "failure_rate": 0.37037037037037035,
+          "raw_counts": {
+            "correct": 17,
+            "pick_failed": 10,
+            "release_failed": 0,
+            "transport_failed": 0,
+            "wrong_side": 0
+          },
+          "row_normalized_proportions_all_episodes": {
+            "correct": 0.6296296296296297,
+            "pick_failed": 0.37037037037037035,
+            "release_failed": 0.0,
+            "transport_failed": 0.0,
+            "wrong_side": 0.0
+          },
+          "success_rate": 0.6296296296296297
+        }
+      },
+      "display_name": "DreamZero DROID action guidance s=2",
+      "failure_only_exact_test": {
+        "alpha_descriptive_threshold": 0.05,
+        "alternative": "two_sided_probability_ordering",
+        "conditioning": "fixed row totals and fixed failure-category column totals",
+        "enumerated_table_count": 11,
+        "equally_or_less_probable_table_count": 3,
+        "failure_shape_difference_detected_at_alpha": true,
+        "observed_table_probability": 0.0014089729328883944,
+        "observed_table_probability_exact": "19/13485",
+        "p_value": 0.0017219568583829528,
+        "p_value_exact": "1579/916980",
+        "test": "Fisher-Freeman-Halton exact test for a 2xK contingency table",
+        "zero_total_columns_dropped_for_enumeration": [
+          "wrong_side",
+          "release_failed"
+        ]
+      },
+      "failure_only_table_2x4": {
+        "column_display_aliases": [
+          "pick",
+          "transport",
+          "wrong_side",
+          "release"
+        ],
+        "columns": [
+          "pick_failed",
+          "transport_failed",
+          "wrong_side",
+          "release_failed"
+        ],
+        "rows": {
+          "left": [
+            10,
+            14,
+            0,
+            0
+          ],
+          "right": [
+            10,
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "interpretation": "Failure-mode shape differs by direction in this cohort; the observed asymmetry is not described by a failure-rate change alone.",
+      "model_id": "dreamzero_droid_action_cfg",
+      "source_evidence_manifest": {
+        "bytes": 3088542,
+        "path": "artifacts/vla_wam_shared_v3/results/dreamzero_droid_action_cfg_phase_a_evidence_hash_manifest.json",
+        "sha256": "0150afb2145cc2e1d18bc16bd34b4af404c7fabb77486d197af78776fcd93427"
+      },
+      "source_summary": {
+        "bytes": 375241,
+        "path": "artifacts/vla_wam_shared_v3/results/dreamzero_droid_action_cfg_phase_a_summary.json",
+        "sha256": "50ec800009b1f128ce8fe877c186b08a47ec3021feaa7cf4f8baab984549b120"
+      },
+      "table_2x5": {
+        "column_display_aliases": [
+          "correct",
+          "pick",
+          "transport",
+          "wrong_side",
+          "release"
+        ],
+        "columns": [
+          "correct",
+          "pick_failed",
+          "transport_failed",
+          "wrong_side",
+          "release_failed"
+        ],
+        "rows": {
+          "left": [
+            3,
+            10,
+            14,
+            0,
+            0
+          ],
+          "right": [
+            17,
+            10,
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    },
+    {
+      "arena": "droid_robolab",
+      "cohort": "phase_a_expanded_54_episode",
+      "directions": {
+        "left": {
+          "failure_count": 9,
+          "failure_only_raw_counts": {
+            "pick_failed": 1,
+            "release_failed": 0,
+            "transport_failed": 6,
+            "wrong_side": 2
+          },
+          "failure_only_row_normalized_proportions": {
+            "pick_failed": 0.1111111111111111,
+            "release_failed": 0.0,
+            "transport_failed": 0.6666666666666666,
+            "wrong_side": 0.2222222222222222
+          },
+          "failure_rate": 0.3333333333333333,
+          "raw_counts": {
+            "correct": 18,
+            "pick_failed": 1,
+            "release_failed": 0,
+            "transport_failed": 6,
+            "wrong_side": 2
+          },
+          "row_normalized_proportions_all_episodes": {
+            "correct": 0.6666666666666666,
+            "pick_failed": 0.037037037037037035,
+            "release_failed": 0.0,
+            "transport_failed": 0.2222222222222222,
+            "wrong_side": 0.07407407407407407
+          },
+          "success_rate": 0.6666666666666666
+        },
+        "right": {
+          "failure_count": 2,
+          "failure_only_raw_counts": {
+            "pick_failed": 1,
+            "release_failed": 0,
+            "transport_failed": 1,
+            "wrong_side": 0
+          },
+          "failure_only_row_normalized_proportions": {
+            "pick_failed": 0.5,
+            "release_failed": 0.0,
+            "transport_failed": 0.5,
+            "wrong_side": 0.0
+          },
+          "failure_rate": 0.07407407407407407,
+          "raw_counts": {
+            "correct": 25,
+            "pick_failed": 1,
+            "release_failed": 0,
+            "transport_failed": 1,
+            "wrong_side": 0
+          },
+          "row_normalized_proportions_all_episodes": {
+            "correct": 0.9259259259259259,
+            "pick_failed": 0.037037037037037035,
+            "release_failed": 0.0,
+            "transport_failed": 0.037037037037037035,
+            "wrong_side": 0.0
+          },
+          "success_rate": 0.9259259259259259
+        }
+      },
+      "display_name": "Cosmos3 Edge Policy DROID",
+      "failure_only_exact_test": {
+        "alpha_descriptive_threshold": 0.05,
+        "alternative": "two_sided_probability_ordering",
+        "conditioning": "fixed row totals and fixed failure-category column totals",
+        "enumerated_table_count": 6,
+        "equally_or_less_probable_table_count": 5,
+        "failure_shape_difference_detected_at_alpha": false,
+        "observed_table_probability": 0.2545454545454545,
+        "observed_table_probability_exact": "14/55",
+        "p_value": 0.6181818181818182,
+        "p_value_exact": "34/55",
+        "test": "Fisher-Freeman-Halton exact test for a 2xK contingency table",
+        "zero_total_columns_dropped_for_enumeration": [
+          "release_failed"
+        ]
+      },
+      "failure_only_table_2x4": {
+        "column_display_aliases": [
+          "pick",
+          "transport",
+          "wrong_side",
+          "release"
+        ],
+        "columns": [
+          "pick_failed",
+          "transport_failed",
+          "wrong_side",
+          "release_failed"
+        ],
+        "rows": {
+          "left": [
+            1,
+            6,
+            2,
+            0
+          ],
+          "right": [
+            1,
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "interpretation": "No failure-mode shape difference is detected in this cohort. This is compatible with, but does not prove, a same-shape/different-rate account; interpretation is limited by the smaller direction-specific failure row.",
+      "model_id": "cosmos3_edge_policy_droid",
+      "source_evidence_manifest": {
+        "bytes": 666095,
+        "path": "artifacts/vla_wam_shared_v3/results/cosmos3_edge_policy_droid_phase_a_evidence_hash_manifest.json",
+        "sha256": "e37213a684ff07d379edc46754cb3167c476663921039f47e8f6ee3ff8c9556d"
+      },
+      "source_summary": {
+        "bytes": 197084,
+        "path": "artifacts/vla_wam_shared_v3/results/cosmos3_edge_policy_droid_phase_a_summary.json",
+        "sha256": "fc93b6518185641068ce51a4d81882dd1828ebeb9227b44c4ffc21a07b526c87"
+      },
+      "table_2x5": {
+        "column_display_aliases": [
+          "correct",
+          "pick",
+          "transport",
+          "wrong_side",
+          "release"
+        ],
+        "columns": [
+          "correct",
+          "pick_failed",
+          "transport_failed",
+          "wrong_side",
+          "release_failed"
+        ],
+        "rows": {
+          "left": [
+            18,
+            1,
+            6,
+            2,
+            0
+          ],
+          "right": [
+            25,
+            1,
+            1,
+            0,
+            0
+          ]
+        }
+      }
+    }
+  ],
+  "schema_version": "vla-wam-shared-v3-failure-mode-split-report-v1",
+  "scope": {
+    "arena": "droid_robolab",
+    "cohort": "three separate V3 Phase-A expanded 54-episode cohorts",
+    "models": [
+      "pi05_current_stack_droid",
+      "dreamzero_droid_action_cfg",
+      "cosmos3_edge_policy_droid"
+    ],
+    "new_model_compute": false,
+    "pooling": "No model cohorts are pooled."
+  },
+  "status": "complete_retrospective_analysis_no_new_inference",
+  "study_id": "vla_wam_language_steerability_v3"
+}

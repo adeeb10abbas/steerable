@@ -3,7 +3,9 @@
 Updated: 6 August 2026, after the complete Phase-A launch-authorized queue, the
 separately authorized π0-FAST compatibility bridge, the cross-version
 measurement-coverage audit, and the completed 27-seed Nano V3-B001
-position-reflection ablation were compiled. The machine-readable source of truth is
+position-reflection ablation were compiled. π0.5 V3-B002 is now registered
+before inference, and the existing-log failure-mode split is complete. The
+machine-readable source of truth is
 [`continuation_state.json`](../artifacts/vla_wam_shared_v3/continuation_state.json).
 
 ## Status
@@ -19,9 +21,11 @@ the blocked rows or preserved V2 evidence.
 No Phase-A, V3-A002, or Nano V3-B001 inference remains. Nano V3-B001 is complete
 at **27 matched seeds / 108 valid behavioral episodes** under one hash-bound
 runtime identity. Its release followed model-blind calibration and occurred
-before any Phase-B model request or behavioral episode. Every other Phase-B
-ablation, all Phase-C wording cells, and all Phase-D stochastic repetitions
-remain unreleased.
+before any Phase-B model request or behavioral episode. π0.5 V3-B002 is a
+separate 108-cell replication registered with zero V3-B002 requests and zero
+V3-B002 behavioral episodes; its model-specific runtime gate is the exact next
+step. Every other Phase-B ablation, all Phase-C wording cells, and all Phase-D
+stochastic repetitions remain unreleased.
 
 ### Measurement-coverage gate for Phase B
 
@@ -213,6 +217,63 @@ requested-side margin are retained for all 12 cells in
 The prefix's all-four-cells-correct margin subset contains only seed 9400
 (`n=1`); no inference is made from that prefix.
 
+### π0.5 position-reflection registration (V3-B002)
+
+V3-B002 is the exact scene-matched π0.5 replication of the Nano design: the
+same 27 seeds `9400–9426`, the same control and position-reflected fixtures,
+and the same randomized four-cell execution order within every seed. The
+frozen queue therefore contains **27 matched seeds × 4 cells = 108 episodes**.
+No seed was resampled. Each seed keeps all four cells under one runtime lane.
+The prompt bytes remain:
+
+> Put the Rubik's cube to the left of the bowl.
+
+> Put the Rubik's cube to the right of the bowl.
+
+The registration records three predictions before π0.5 V3-B002 inference.
+H1 predicts an endpoint-redirection interaction near zero, following Nano's
+mean `+0.5 cm` result (`p = 0.701`). H2 predicts a strongly negative
+requested-side-depth interaction, following Nano's mean `-24.8 cm` result
+(`p = 4.923e-05`). H3 is a two-sided exact test of whether reflection changes
+π0.5's prior binary RIGHT-over-LEFT gap (`24/27` versus `5/27`); its direction
+was deliberately not filled in after registration. Continuous interactions use
+20,000 matched-seed bootstrap resamples with master seed `3104159`, medians,
+and exact sign tests. H3 reports the per-seed difference-in-differences on
+`{-2,-1,0,1,2}`, its exact within-seed permutation test, and the 2×2 success
+table.
+
+The independent existing-log failure-mode split is already complete and adds
+no new inference. Counts below are `correct / pick / transport / wrong-side /
+release`:
+
+| Checkpoint | LEFT counts | RIGHT counts | Failure-only exact p |
+| --- | ---: | ---: | ---: |
+| π0.5 | 5 / 6 / 11 / 5 / 0 | 24 / 0 / 3 / 0 / 0 | 0.3822 |
+| DreamZero | 3 / 10 / 14 / 0 / 0 | 17 / 10 / 0 / 0 / 0 | 0.001722 |
+| Cosmos3 Edge | 18 / 1 / 6 / 2 / 0 | 25 / 1 / 1 / 0 / 0 | 0.6182 |
+
+DreamZero's failure-only distribution differs by requested direction in this
+cohort. π0.5 and Edge do not reject a shared failure shape, but their RIGHT
+failure rows contain only three and two episodes; this is not evidence of
+equivalence. Raw 162-row JSONL, row-normalized proportions, exact-test
+enumeration, and all source/output hashes are retained under the V3-B002
+analysis directory.
+
+| V3-B002 registration/analysis artifact | SHA-256 |
+| --- | --- |
+| [`post_result_pi05_mirror_v3b002_amendment.json`](../artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/post_result_pi05_mirror_v3b002_amendment.json) | `8e56365fdc306adbef2d2f2f8357653d1a683ff17f879f624d7eefd4acb1abb6` |
+| [`pi05_mirror_v3b002_cells.jsonl`](../artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/pi05_mirror_v3b002_cells.jsonl) | `0db680a3aee04c991bcc78904cb572b7d962971e04fbc879e828354da30dafee` |
+| [`pi05_mirror_v3b002_manifest.json`](../artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/pi05_mirror_v3b002_manifest.json) | `8aaaa38302f6a654090250b3e12cd8735fab28a74027d50193325ffa9d0dddea` |
+| [`failure_mode_split_episodes.jsonl`](../artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_episodes.jsonl) | `94d078c16d579019c216a7d05c0e4748d049d4bc91ab1879ca38b8bc78da8735` |
+| [`failure_mode_split_report.json`](../artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_report.json) | `f6289333d77538ed9235a567cb98d70333dd50549f7e52d13bfe5d34a10bdf96` |
+| [`failure_mode_split_manifest.json`](../artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_manifest.json) | `5a0e95af238536dbbcf7a6c81bf721f095cea1a5e178ddfbaecda8105a1e06ab` |
+
+V3-B002 is registered but not behaviorally released. Before its first model
+request, the new runtime identity must bind the exact OpenPI/RoboLab revisions,
+checkpoint, registration manifest, fixture wrappers, and queue code, then pass
+zero-request physical reset, fixture, real-renderer, and raw-writer gates plus
+fixed-observation exact-repeat and prompt-sensitivity checks.
+
 ## Exact intervention
 
 DROID changed only these episode-static prompts inside each matched seed:
@@ -320,12 +381,13 @@ directional asymmetry, not robust bidirectional control.
 
 Phase A does **not** identify training distribution, geometry, reachability,
 starting side, or object role as the cause of an asymmetry. V3-B001 now
-provides a frozen test of whether Nano's directional-bias contrast changes
-under one positions-only movable-object reflection, but its release is not a
-behavioral result. Even a future interaction would not by itself identify
-training data as the cause or establish full-scene symmetry. An exposed
-prediction is also not evidence that the prediction caused successful
-execution.
+provides a completed test of whether Nano's directional-bias contrast changes
+under one positions-only movable-object reflection. V3-B002 prospectively asks
+whether the same intervention changes π0.5's continuous contrasts and its much
+larger binary success gap; registration alone is not a behavioral result. Even
+a future interaction would not by itself identify training data as the cause
+or establish full-scene symmetry. An exposed prediction is also not evidence
+that the prediction caused successful execution.
 
 ## Historical identity blocker and unreleased work
 
@@ -338,8 +400,10 @@ returned identical LEFT/RIGHT actions (RMS 0.0), so it is not a substitute.
 The completed V3-A002 compatibility cohort is also not historical recovery and
 must remain separate. It is complete and must not be rerun.
 
-- Phase B: Nano V3-B001 is complete at 108/108 exact cells after model-blind
-  calibration; every other Phase-B ablation remains unreleased.
+- Phase B: Nano V3-B001 is complete at 108/108 exact cells. π0.5 V3-B002 is
+  registered at 108 exact cells with zero completed episodes and awaits its
+  model-specific runtime release gate. Every other Phase-B ablation remains
+  unreleased.
 - Phase C: 480 registered episodes, not released; each wording requires its
   independent byte-hash, repeat, and prompt-sensitivity gates.
 - Phase D: not released; it requires an effective stochastic-seed probe for
@@ -361,8 +425,10 @@ git diff --check
 Do not rerun a valid Phase-A, V3-A002, or Nano V3-B001 cell. Nano V3-B001 is
 complete at 108/108 valid episodes; the three-block live snapshot is historical
 only. Use its final results manifest, summary, aggregate JSONL, and hash-closed
-evidence manifest for analysis. Every other Phase-B, Phase-C, and Phase-D cell
-remains unreleased. Use the eight original committed
+evidence manifest for analysis. V3-B002 is the exact next experiment, but no
+cell may start before its new runtime/reset/renderer/writer/repeat/sensitivity
+gate is hash-bound. All other Phase-B, Phase-C, and Phase-D cells remain
+unreleased. Use the eight original committed
 summary/evidence-manifest/infrastructure-ledger triplets plus the separate
 V3-A002 triplet under `artifacts/vla_wam_shared_v3/results/` for earlier
 completed-result analysis. Do not infer current experiment state from the older

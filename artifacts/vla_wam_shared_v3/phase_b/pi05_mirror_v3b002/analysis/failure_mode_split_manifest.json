@@ -1,0 +1,86 @@
+{
+  "analysis_git_head": "83ccd46e0339cf9a4c813f0927aa69e86c0ce495",
+  "analysis_script": {
+    "bytes": 17989,
+    "path": "tools/analyze_v3_failure_mode_split.py",
+    "sha256": "948b77c75df7d4ea42cab6ca3e2d97f1a4f946573bf2adae0f1dcde2918e9fe5"
+  },
+  "inputs": [
+    {
+      "bytes": 128505,
+      "path": "artifacts/vla_wam_shared_v3/results/pi05_current_stack_droid_phase_a_summary.json",
+      "sha256": "5c6d07fca7a0d20ab8b757f028d469f864c78a1c43ffedc3d257a16caef2a02b"
+    },
+    {
+      "bytes": 45987,
+      "path": "artifacts/vla_wam_shared_v3/results/pi05_current_stack_droid_phase_a_evidence_hash_manifest.json",
+      "sha256": "dca633cfa74ff93926cb1d010d5a329908a02d81181f23cca4969c5d5f1f3cfd"
+    },
+    {
+      "bytes": 375241,
+      "path": "artifacts/vla_wam_shared_v3/results/dreamzero_droid_action_cfg_phase_a_summary.json",
+      "sha256": "50ec800009b1f128ce8fe877c186b08a47ec3021feaa7cf4f8baab984549b120"
+    },
+    {
+      "bytes": 3088542,
+      "path": "artifacts/vla_wam_shared_v3/results/dreamzero_droid_action_cfg_phase_a_evidence_hash_manifest.json",
+      "sha256": "0150afb2145cc2e1d18bc16bd34b4af404c7fabb77486d197af78776fcd93427"
+    },
+    {
+      "bytes": 197084,
+      "path": "artifacts/vla_wam_shared_v3/results/cosmos3_edge_policy_droid_phase_a_summary.json",
+      "sha256": "fc93b6518185641068ce51a4d81882dd1828ebeb9227b44c4ffc21a07b526c87"
+    },
+    {
+      "bytes": 666095,
+      "path": "artifacts/vla_wam_shared_v3/results/cosmos3_edge_policy_droid_phase_a_evidence_hash_manifest.json",
+      "sha256": "e37213a684ff07d379edc46754cb3167c476663921039f47e8f6ee3ff8c9556d"
+    },
+    {
+      "bytes": 5366,
+      "categories_in_report_order": [
+        "correct",
+        "pick_failed",
+        "transport_failed",
+        "wrong_side",
+        "release_failed"
+      ],
+      "display_aliases_only": {
+        "correct": "correct",
+        "pick_failed": "pick",
+        "release_failed": "release",
+        "transport_failed": "transport",
+        "wrong_side": "wrong_side"
+      },
+      "path": "artifacts/vla_wam_shared_v3/failure_taxonomy.json",
+      "primary_precedence_unchanged": [
+        "correct",
+        "pick_failed",
+        "wrong_side",
+        "release_failed",
+        "transport_failed"
+      ],
+      "sha256": "48631b155721351460716a4fc7a69a8aa1b9a584ee78390ae6b332ccb39d76d9"
+    }
+  ],
+  "integrity": {
+    "episode_rows": 162,
+    "frozen_definitions_modified": false,
+    "model_cohorts": 3,
+    "per_model_direction_denominator": 27
+  },
+  "outputs": [
+    {
+      "bytes": 118947,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_episodes.jsonl",
+      "sha256": "94d078c16d579019c216a7d05c0e4748d049d4bc91ab1879ca38b8bc78da8735"
+    },
+    {
+      "bytes": 17074,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_report.json",
+      "sha256": "f6289333d77538ed9235a567cb98d70333dd50549f7e52d13bfe5d34a10bdf96"
+    }
+  ],
+  "schema_version": "vla-wam-shared-v3-failure-mode-split-manifest-v1",
+  "study_id": "vla_wam_language_steerability_v3"
+}

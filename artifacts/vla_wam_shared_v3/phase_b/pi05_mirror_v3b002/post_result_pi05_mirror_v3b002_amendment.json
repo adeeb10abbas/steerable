@@ -1,0 +1,149 @@
+{
+  "amendment_id": "V3-B002",
+  "analysis_plan": {
+    "H1": {
+      "interaction": "J = D_position_mirrored - D_control",
+      "per_layout": "D_layout = signed_offset_LEFT - signed_offset_RIGHT"
+    },
+    "H2": {
+      "interaction": "I = B_position_mirrored - B_control",
+      "per_layout": "B_layout = requested_depth_RIGHT - requested_depth_LEFT = -signed_offset_RIGHT - signed_offset_LEFT"
+    },
+    "H3": {
+      "outputs": [
+        "per-seed DiD distribution",
+        "2x2 layout-by-direction success table"
+      ],
+      "per_seed": "DiD = (success_RIGHT-success_LEFT)_position_mirrored - (success_RIGHT-success_LEFT)_control",
+      "support": [
+        -2,
+        -1,
+        0,
+        1,
+        2
+      ],
+      "test": "exact two-sided within-seed control/reflected label permutation using the absolute summed DiD statistic"
+    },
+    "continuous_reporting": {
+      "bootstrap_master_seed": 3104159,
+      "bootstrap_replicates": 20000,
+      "bootstrap_unit": "matched seed",
+      "interaction": "mean with matched-seed percentile-bootstrap 95% CI plus median",
+      "per_layout": "mean paired contrast with matched-seed percentile-bootstrap 95% CI",
+      "sign_test": "exact two-sided paired sign test, ties excluded and sign counts reported"
+    },
+    "missingness": "No imputation. Every valid behavioral failure remains in full-sample offset/depth analyses; infrastructure failures are excluded and separately ledgered."
+  },
+  "design": {
+    "arena": "droid_robolab",
+    "arms": [
+      "control",
+      "position_mirrored"
+    ],
+    "behavioral_episode_ceiling": 108,
+    "cells_per_seed": 4,
+    "exact_prompts": {
+      "left": "Put the Rubik's cube to the left of the bowl.",
+      "right": "Put the Rubik's cube to the right of the bowl."
+    },
+    "execution_order": "Reuse the exact V3-B001 within-seed randomized cell order.",
+    "held_fixed": [
+      "robot base",
+      "cameras",
+      "all non-movable scene geometry",
+      "prompt bytes",
+      "controller and 15-action horizon",
+      "frozen 45-degree cone and detached-release success predicate",
+      "environment and sampling seed within every four-cell block"
+    ],
+    "matched_seed_count": 27,
+    "matched_seeds": [
+      9400,
+      9401,
+      9402,
+      9403,
+      9404,
+      9405,
+      9406,
+      9407,
+      9408,
+      9409,
+      9410,
+      9411,
+      9412,
+      9413,
+      9414,
+      9415,
+      9416,
+      9417,
+      9418,
+      9419,
+      9420,
+      9421,
+      9422,
+      9423,
+      9424,
+      9425,
+      9426
+    ],
+    "model_id": "pi05_current_stack_droid",
+    "reflection": "For rubiks_cube, bowl, and banana center positions only: (x,y,z) -> (x,-y,z) about robot-base sagittal plane y=0.",
+    "relations": [
+      "left",
+      "right"
+    ],
+    "source_registry": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_cells.jsonl"
+  },
+  "failure_mode_split": {
+    "cohort": "existing V3 Phase-A 54-episode expanded cohort for each checkpoint",
+    "models": [
+      "pi05_current_stack_droid",
+      "dreamzero_droid_action_cfg",
+      "cosmos3_edge_policy_droid"
+    ],
+    "report": "raw counts and row-normalized proportions",
+    "table": "direction by correct/pick_failed/transport_failed/wrong_side/release_failed",
+    "test": "Fisher exact test on the direction by four-class failure-only subtable"
+  },
+  "known_results_disclosure": {
+    "nano_v3b001": {
+      "endpoint_redirection_exact_sign_test_p": 0.7011080384254456,
+      "endpoint_redirection_interaction_mean_m": 0.004680250219448849,
+      "requested_side_depth_exact_sign_test_p": 4.9233436584472656e-05,
+      "requested_side_depth_interaction_mean_m": -0.24766719351626104,
+      "successes": {
+        "control:left": "26/27",
+        "control:right": "26/27",
+        "position_mirrored:left": "27/27",
+        "position_mirrored:right": "23/27"
+      }
+    },
+    "pi05_phase_a": {
+      "left": "5/27",
+      "right": "24/27",
+      "right_minus_left_success_count_gap": 19
+    }
+  },
+  "recorded_at_utc": "2026-08-06T17:41:42Z",
+  "registered_predictions": {
+    "H1_endpoint_redirection": "The reflected-minus-control interaction J is approximately zero, replicating Nano V3-B001.",
+    "H2_requested_side_depth": "The reflected-minus-control interaction I is strongly negative, replicating Nano V3-B001.",
+    "H3_binary_success": "Two-sided test of whether position reflection changes, attenuates, or reverses pi0.5's prior RIGHT-over-LEFT binary success gap; no outcome direction is added after registration."
+  },
+  "release_boundary": {
+    "behavioral_episodes_before_registration": 0,
+    "behavioral_release": false,
+    "model_requests_before_registration": 0,
+    "next_gate": "Hash-bound pi0.5 runtime identity, exact reflected-reset attestation, raw-output write proof, deterministic repeat, and LEFT/RIGHT prompt-sensitivity gate."
+  },
+  "schema_version": "vla-wam-shared-v3b-pi05-mirror-amendment-v1",
+  "source_sha256": {
+    "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_checkpoint_manifest.json": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+    "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_cells.jsonl": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+    "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_manifest.json": "5c82268739feb41281435a51dcd848b575218cd9fbe5839d9ad130d1a7888830",
+    "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/nano_v3b001_results_manifest.json": "ab9b9849e04bc15e65ed9d8d55d13e8aad62dbef5f5e2fa16b8eaf486a6ea517",
+    "artifacts/vla_wam_shared_v3/results/pi05_current_stack_droid_phase_a_summary.json": "5c6d07fca7a0d20ab8b757f028d469f864c78a1c43ffedc3d257a16caef2a02b"
+  },
+  "status": "frozen_before_any_v3b002_model_request_or_behavioral_episode",
+  "study_id": "vla_wam_language_steerability_v3"
+}

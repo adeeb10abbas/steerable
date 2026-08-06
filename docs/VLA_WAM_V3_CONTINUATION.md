@@ -426,6 +426,8 @@ Binary success is secondary because Nano is near ceiling.
 
 The hash-bound design amendment is
 [`post_result_nano_lateral_sweep_v3b004_amendment.json`](../artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b004/post_result_nano_lateral_sweep_v3b004_amendment.json)
+
+Before calibration, an analytic check of the frozen 45-degree predicate found that a sweep centered at robot-frame `y=0` could not remain neutral over the registered minimum ±0.09 m range while the cube stayed fixed. No model request had been issued. The prospective [neutrality correction](../artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b004/prospective_neutrality_correction.json) therefore centers the same seven-level intervention on the exact pre-existing V3-B001 control bowl coordinate (`y0=0.12658219039440155 m`). The factor, prompts, seeds, spacing, analysis, and 210-cell ceiling are unchanged.
 (`14aee46dd797e1219fc6df6c5e8091d2316c3583565b246294312a1fe9c779ed`).
 Model-request and behavioral counts are zero. The exact next operation is the
 model-blind physical calibration—not a Nano server launch.

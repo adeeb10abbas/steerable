@@ -129,6 +129,7 @@ REQUIRED = {
     "dreamzero_mirror_registration_builder": "tools/build_dreamzero_v3b003_registration.py",
     "dreamzero_mirror_registration_test": "tests/test_build_dreamzero_v3b003_registration.py",
     "nano_lateral_sweep_amendment": f"{V3}/phase_b/nano_lateral_sweep_v3b004/post_result_nano_lateral_sweep_v3b004_amendment.json",
+    "nano_lateral_sweep_neutrality_correction": f"{V3}/phase_b/nano_lateral_sweep_v3b004/prospective_neutrality_correction.json",
 }
 DROID_MODELS = [
     "pi0_fast_droid_vla",
@@ -1709,6 +1710,9 @@ def validate(root: Path) -> list[str]:
     dreamzero_mirror_cells = load_jsonl(paths["dreamzero_mirror_cells"])
     dreamzero_mirror_manifest = load(paths["dreamzero_mirror_manifest"])
     nano_lateral_sweep_amendment = load(paths["nano_lateral_sweep_amendment"])
+    nano_lateral_sweep_neutrality_correction = load(
+        paths["nano_lateral_sweep_neutrality_correction"]
+    )
 
     require(
         nano_calibration.get("schema_version")
@@ -3177,6 +3181,9 @@ def validate(root: Path) -> list[str]:
         "model_blind_numeric_calibration", {}
     )
     lateral_release = nano_lateral_sweep_amendment.get("release_boundary", {})
+    lateral_correction = nano_lateral_sweep_amendment.get(
+        "prospective_neutrality_correction", {}
+    )
     require(
         nano_lateral_sweep_amendment.get("schema_version")
         == "vla-wam-shared-v3b-nano-lateral-sweep-amendment-v1"
@@ -3199,6 +3206,10 @@ def validate(root: Path) -> list[str]:
             "minimum_half_range_m"
         )
         == 0.09
+        and "exact V3-B001 control bowl y=0.12658219039440155 m"
+        in lateral_calibration.get("dense_scan", {}).get("grid_alignment", "")
+        and lateral_correction.get("path")
+        == paths["nano_lateral_sweep_neutrality_correction"].relative_to(root).as_posix()
         and lateral_release
         == {
             "model_requests_before_registration": 0,
@@ -3208,6 +3219,25 @@ def validate(root: Path) -> list[str]:
             "next_command_boundary": "Run only the zero-model-request dense physical calibration. Do not start the Nano server or generate behavioral queue rows until the seven numeric levels and their calibration report are committed and hash-bound.",
         },
         "Nano V3-B004 freezes the seven-level 15-seed dose-response design before numeric calibration or model requests",
+        checks,
+    )
+    require(
+        nano_lateral_sweep_neutrality_correction.get("schema_version")
+        == "vla-wam-shared-v3b-nano-lateral-sweep-neutrality-correction-v1"
+        and nano_lateral_sweep_neutrality_correction.get("amendment_id") == "V3-B004"
+        and nano_lateral_sweep_neutrality_correction.get("model_request_count_before_correction")
+        == 0
+        and nano_lateral_sweep_neutrality_correction.get("behavioral_episode_count_before_correction")
+        == 0
+        and nano_lateral_sweep_neutrality_correction.get("exact_geometry", {}).get(
+            "original_centering_feasible"
+        )
+        is False
+        and nano_lateral_sweep_neutrality_correction.get("correction", {}).get(
+            "new_center_m"
+        )
+        == 0.12658219039440155,
+        "Nano V3-B004 prospectively corrects an analytically infeasible zero-centered sweep without using model outcomes",
         checks,
     )
     lateral_analysis = nano_lateral_sweep_amendment.get("analysis_plan", {})

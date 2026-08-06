@@ -1,0 +1,32 @@
+{
+  "schema_version": "vla-wam-shared-v3b-nano-lateral-sweep-neutrality-correction-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B004",
+  "recorded_at_utc": "2026-08-06T21:35:00Z",
+  "status": "prospective_design_correction_before_calibration_and_before_any_model_request",
+  "model_request_count_before_correction": 0,
+  "behavioral_episode_count_before_correction": 0,
+  "problem": "The design-only amendment centered the seven bowl-y levels on robot-frame y=0 while holding the cube at y=0.12396888434886932 m and requiring every reset to remain outside both frozen 45-degree relation cones. Those requirements cannot jointly support the preregistered minimum half-range of 0.09 m.",
+  "exact_geometry": {
+    "cube_x_m": 0.303364634513855,
+    "cube_y_m": 0.12396888434886932,
+    "bowl_x_m": 0.44258353114128113,
+    "control_bowl_y_m": 0.12658219039440155,
+    "absolute_cube_minus_bowl_x_m": 0.13921889662742615,
+    "frozen_cone_rule": "A reset is LEFT or RIGHT whenever absolute cube-minus-bowl y is at least absolute cube-minus-bowl x, with sign selecting direction.",
+    "neutral_bowl_y_open_interval_m": [-0.015250012278556824, 0.26318778097629547],
+    "largest_symmetric_half_range_about_robot_y_zero_m": 0.015250012278556824,
+    "registered_minimum_half_range_m": 0.09,
+    "original_centering_feasible": false
+  },
+  "correction": {
+    "factor_unchanged": "reference_object_initial_lateral_position_y_m",
+    "only_changed_scene_field_unchanged": "bowl robot-frame y",
+    "new_center_m": 0.12658219039440155,
+    "new_center_basis": "Exact V3-B001 control bowl y; chosen from the pre-existing fixture, not from a policy outcome.",
+    "seven_level_rule": "Select the largest r on the 0.03 m grid for which [y0-r, y0-2r/3, y0-r/3, y0, y0+r/3, y0+2r/3, y0+r] all pass the frozen model-blind gates, where y0=0.12658219039440155 m.",
+    "dense_grid_alignment": "Integer multiples of 0.01 m displacement about y0, clipped by live support and collision bounds.",
+    "minimum_half_range_m": 0.09
+  },
+  "claim_boundary": "This correction changes only the zero-request calibration coordinate origin needed to keep starts neutral. It does not use model behavior, alter the seven-level spacing, prompts, seeds, success predicate, analysis, or behavioral ceiling."
+}

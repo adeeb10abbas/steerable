@@ -65,7 +65,7 @@
     "fixed_poses": "Use the exact V3-B001 control positions and quaternion sources for rubiks_cube and banana, and the exact V3-B001 control bowl x, z, and quaternion source; vary only bowl robot-frame y.",
     "dense_scan": {
       "grid_spacing_m": 0.01,
-      "grid_alignment": "integer multiples of 0.01 m about robot sagittal plane y=0",
+      "grid_alignment": "integer multiples of 0.01 m displacement about the exact V3-B001 control bowl y=0.12658219039440155 m",
       "candidate_bounds": "Compute from the live table support AABB after subtracting the bowl collision projection and a 0.02 m boundary headroom; do not hand-enter bounds from model outcomes.",
       "fresh_resets_per_candidate": 3,
       "settle_steps": 60,
@@ -84,7 +84,7 @@
       "post_settle_orientation_differences": "record as downstream physical mediators; do not silently gate or discard"
     },
     "seven_level_selection_rule": {
-      "symmetry": "Select the largest r on the 0.03 m grid for which all seven levels [-r, -2r/3, -r/3, 0, r/3, 2r/3, r] are dense-scan passing candidates.",
+      "symmetry": "Select the largest r on the 0.03 m grid for which all seven levels [y0-r, y0-2r/3, y0-r/3, y0, y0+r/3, y0+2r/3, y0+r] are dense-scan passing candidates, where y0 is the exact V3-B001 control bowl y=0.12658219039440155 m.",
       "minimum_half_range_m": 0.09,
       "tie_break": "largest r only; no model-conditioned or outcome-conditioned choice",
       "failure_rule": "If no r >= 0.09 m passes, fail closed. Do not narrow, shift, or respacing the levels after any model request.",
@@ -117,6 +117,11 @@
     "fresh_identity_required": true,
     "fixed_observation_gate_levels": ["lowest", "center", "highest"],
     "fixed_observation_gate": "At each named level, require an exact repeated LEFT response and a finite positive LEFT/RIGHT action and decoded-future difference under the same runtime."
+  },
+  "prospective_neutrality_correction": {
+    "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b004/prospective_neutrality_correction.json",
+    "status": "prospective_design_correction_before_calibration_and_before_any_model_request",
+    "reason": "Centering the sweep at robot y=0 cannot preserve neutral starts over the preregistered minimum half-range; centering it at the exact pre-existing control bowl y can."
   },
   "release_boundary": {
     "model_requests_before_registration": 0,

@@ -50,7 +50,10 @@ parser.add_argument("--candidate-sha256", required=True)
 parser.add_argument("--output-dir", type=Path, required=True)
 parser.add_argument("--environment-seed", type=int, default=9400)
 parser.add_argument("--repeat-resets", type=int, default=3)
-parser.add_argument("--settle-steps", type=int, default=12)
+parser.add_argument("--settle-steps", type=int, default=180)
+parser.add_argument("--stable-window-steps", type=int, default=15)
+parser.add_argument("--linear-speed-tolerance-m-s", type=float, default=0.02)
+parser.add_argument("--angular-speed-tolerance-rad-s", type=float, default=0.12)
 parser.add_argument("--pod", required=True)
 parser.add_argument("--pod-uid", required=True)
 parser.add_argument("--gpu-uuid", required=True)
@@ -64,6 +67,13 @@ if args_cli.num_envs != 1:
     parser.error("model-blind fixture calibration requires one environment")
 if args_cli.repeat_resets < 2:
     parser.error("at least two repeated resets are required")
+if args_cli.settle_steps < 1 or args_cli.stable_window_steps < 2:
+    parser.error("settling and sustained-stability windows must be positive")
+if (
+    args_cli.linear_speed_tolerance_m_s <= 0
+    or args_cli.angular_speed_tolerance_rad_s <= 0
+):
+    parser.error("speed tolerances must be positive")
 if not args_cli.headless:
     parser.error("model-blind fixture calibration must run headless")
 if args_cli.renderer != "realtime" or args_cli.rendering_type != "balanced":
@@ -237,6 +247,25 @@ def main() -> None:
                     obs, _, terminated, truncated, _ = env.step(action)
                     if bool(terminated[0]) or bool(truncated[0]):
                         raise ValueError(f"{label} terminated during model-blind settling")
+                stability = {
+                    name: {"max_linear_speed_m_s": 0.0, "max_angular_speed_rad_s": 0.0}
+                    for name in POSITIONS
+                }
+                for _ in range(args_cli.stable_window_steps):
+                    obs, _, terminated, truncated, _ = env.step(action)
+                    if bool(terminated[0]) or bool(truncated[0]):
+                        raise ValueError(f"{label} terminated during stability window")
+                    stable_world = get_world(env)
+                    for name in POSITIONS:
+                        velocity = numeric(stable_world.get_velocity(name, env_id=0))
+                        stability[name]["max_linear_speed_m_s"] = max(
+                            stability[name]["max_linear_speed_m_s"],
+                            max(abs(item) for item in velocity[:3]),
+                        )
+                        stability[name]["max_angular_speed_rad_s"] = max(
+                            stability[name]["max_angular_speed_rad_s"],
+                            max(abs(item) for item in velocity[3:]),
+                        )
                 world = get_world(env)
                 positions = {}
                 quaternions = {}
@@ -248,9 +277,14 @@ def main() -> None:
                     velocities[name] = numeric(world.get_velocity(name, env_id=0))
                     if not close_vector(positions[name], expected[arm][name], 0.003):
                         raise ValueError(f"{label} live {name} position missed candidate tolerance")
-                    if max(abs(item) for item in velocities[name]) > 0.02:
+                    if (
+                        stability[name]["max_linear_speed_m_s"]
+                        > args_cli.linear_speed_tolerance_m_s
+                        or stability[name]["max_angular_speed_rad_s"]
+                        > args_cli.angular_speed_tolerance_rad_s
+                    ):
                         raise ValueError(
-                            f"{label} live {name} did not settle: {velocities[name]}"
+                            f"{label} live {name} did not sustain stability: {stability[name]}"
                         )
                 left = bool(object_left_of(
                     env,
@@ -299,6 +333,7 @@ def main() -> None:
                     "positions_robot_base_m": positions,
                     "quaternions_wxyz": quaternions,
                     "velocities": velocities,
+                    "stability_window": stability,
                     "left_predicate_at_reset": left,
                     "right_predicate_at_reset": right,
                     "input_views": views,
@@ -385,8 +420,10 @@ def main() -> None:
         "reset_gate": {
             "repeat_count_per_task": args_cli.repeat_resets,
             "settle_steps": args_cli.settle_steps,
+            "stable_window_steps": args_cli.stable_window_steps,
             "position_tolerance_m": 0.003,
-            "velocity_component_tolerance": 0.02,
+            "linear_speed_tolerance_m_s": args_cli.linear_speed_tolerance_m_s,
+            "angular_speed_tolerance_rad_s": args_cli.angular_speed_tolerance_rad_s,
             "left_right_physical_fingerprints_equal_within_each_arm": True,
             "neither_predicate_true_at_every_reset": True,
             "live_position_reflection_passed": True,

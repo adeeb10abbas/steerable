@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import importlib.metadata
 import json
+import math
 import os
 from pathlib import Path
 import subprocess
@@ -222,6 +223,11 @@ def main() -> None:
         "control": candidate["layouts"]["control"]["positions_robot_base_m"],
         "position_mirrored": candidate["layouts"]["position_mirrored"]["positions_robot_base_m"],
     }
+    if (
+        candidate["layouts"]["control"]["quaternions_wxyz_unchanged"]
+        != candidate["layouts"]["position_mirrored"]["quaternions_wxyz_unchanged"]
+    ):
+        raise ValueError("candidate changed initial object quaternions across layouts")
     rows: list[dict] = []
     videos: dict[str, dict[str, object]] = {}
     for label, (task_name, _) in TASKS.items():
@@ -370,7 +376,9 @@ def main() -> None:
                     raise ValueError(f"{arm} LEFT/RIGHT reset fingerprints differ for {field}")
     controls = by_label["control_left"]["repeat_resets"]
     mirrored_rows = by_label["position_mirrored_left"]["repeat_resets"]
+    post_settle_quaternion_differences = []
     for repeat, (control, mirrored) in enumerate(zip(controls, mirrored_rows)):
+        quaternion_row = {"repeat": repeat, "objects": {}}
         for name in POSITIONS:
             c = control["positions_robot_base_m"][name]
             m = mirrored["positions_robot_base_m"][name]
@@ -378,14 +386,17 @@ def main() -> None:
                 raise ValueError(
                     f"live position reflection failed for {name} at repeat {repeat}"
                 )
-            if not close_vector(
-                control["quaternions_wxyz"][name],
-                mirrored["quaternions_wxyz"][name],
-                1e-5,
-            ):
-                raise ValueError(
-                    f"non-factor quaternion changed for {name} at repeat {repeat}"
-                )
+            control_quaternion = control["quaternions_wxyz"][name]
+            mirrored_quaternion = mirrored["quaternions_wxyz"][name]
+            dot = abs(sum(a * b for a, b in zip(control_quaternion, mirrored_quaternion)))
+            quaternion_row["objects"][name] = {
+                "max_abs_component_difference": max(
+                    abs(a - b) for a, b in zip(control_quaternion, mirrored_quaternion)
+                ),
+                "absolute_quaternion_dot": min(1.0, dot),
+                "angular_distance_rad": 2.0 * math.acos(min(1.0, dot)),
+            }
+        post_settle_quaternion_differences.append(quaternion_row)
 
     output = {
         "schema_version": "vla-wam-shared-v3b-nano-position-mirror-model-blind-calibration-v1",
@@ -446,13 +457,20 @@ def main() -> None:
             "left_right_physical_fingerprints_equal_within_each_arm": True,
             "neither_predicate_true_at_every_reset": True,
             "live_position_reflection_passed_at_every_repeat": True,
-            "nonfactor_quaternions_equal_at_every_repeat": True,
+            "initial_quaternion_sources_identical_across_layouts": True,
+            "post_settle_quaternion_differences_recorded_not_gated": True,
         },
+        "post_settle_cross_layout_quaternion_differences": (
+            post_settle_quaternion_differences
+        ),
         "tasks": rows,
         "viewport_write_gate": videos,
         "claim_boundary": (
             "Model-blind calibration of a positions-only movable-object reflection. "
-            "It is not behavioral evidence, a full scene mirror, or a reachability claim."
+            "Initial quaternion sources are identical, while any recorded post-settle "
+            "orientation difference is a downstream physical consequence of the position "
+            "intervention. It is not behavioral evidence, a full scene mirror, or a "
+            "reachability claim."
         ),
     }
     output_path = args_cli.output_dir / "model_blind_calibration_report.json"

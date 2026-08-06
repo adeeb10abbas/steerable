@@ -31,6 +31,7 @@ REQUIRED = {
     "phase_a_manifest": f"{V3}/phase_a_cells_manifest.json",
     "taxonomy": f"{V3}/failure_taxonomy.json",
     "analysis": f"{V3}/analysis_plan.json",
+    "measurement_audit": f"{V3}/measurement_coverage_audit.json",
     "document": "docs/VLA_WAM_STEERABILITY_V3_PROTOCOL.md",
     "continuation": f"{V3}/continuation_state.json",
     "continuation_document": "docs/VLA_WAM_V3_CONTINUATION.md",
@@ -1025,6 +1026,7 @@ def validate(root: Path) -> list[str]:
     phase_a_rows = load_jsonl(paths["phase_a_queue"])
     taxonomy = load(paths["taxonomy"])
     analysis = load(paths["analysis"])
+    measurement_audit = load(paths["measurement_audit"])
     continuation = load(paths["continuation"])
 
     require(protocol["schema_version"] == "vla-wam-shared-v3-protocol-v1", "protocol schema is frozen", checks)
@@ -1158,8 +1160,98 @@ def validate(root: Path) -> list[str]:
     require("every eligible released Phase-A" in hierarchical["unit"] and "Deterministic" in hierarchical["eligibility"] and "independent scenes" in hierarchical["prohibition"] and "Do not" in hierarchical["prohibition"], "analysis nests Phase D rollouts within every eligible condition", checks)
     require("outside behavioral denominators" in analysis["infrastructure_and_latency"], "analysis separates infrastructure invalidity", checks)
 
+    require(
+        measurement_audit.get("schema_version") == "vla-wam-measurement-coverage-audit-v1"
+        and measurement_audit.get("study_id") == "vla_wam_language_steerability_v3"
+        and measurement_audit.get("status") == "complete_no_measurement_coverage_rerun_required",
+        "measurement audit schema, study identity, and no-rerun conclusion are exact",
+        checks,
+    )
+    require(
+        measurement_audit.get("scope") == {
+            "unique_behavioral_episode_count": 982,
+            "droid_robolab_episode_count": 532,
+            "robotwin_episode_count": 450,
+            "nonbehavioral_interface_probes": "not applicable: Cosmos-Reason2 and Cosmos3 base probes have no robot episode endpoint",
+            "withdrawn_or_unreleased_models": "not applicable: LaWAM has zero behavioral episodes",
+        },
+        "measurement audit accounts for all 982 unique behavioral episodes without nonbehavioral probes",
+        checks,
+    )
+    require(
+        measurement_audit.get("coverage") == {
+            "requested_side_margin_available": "982/982",
+            "signed_final_lateral_offset_available": "982/982",
+            "values_imputed_from_success_labels": 0,
+            "measurement_coverage_rerun_required": False,
+        },
+        "measurement audit proves complete margin and signed-offset coverage without success-label imputation",
+        checks,
+    )
+    nano_margin = measurement_audit.get("nano_phase_a_margin_sensitivity_reproduction", {})
+    require(
+        nano_margin.get("matched_pair_count") == 27
+        and nano_margin.get("positive_zero_negative_pair_counts") == [23, 0, 4]
+        and close(nano_margin.get("right_minus_left_mean_margin_gap_m"), 0.12360139639565239)
+        and close(nano_margin.get("exact_two_sided_sign_test_p_excluding_ties"), 0.000310748815536499),
+        "measurement audit exactly reproduces Nano Phase-A margin sensitivity",
+        checks,
+    )
+    require(
+        measurement_audit.get("groot_phase_a_reconciliation") == {
+            "matched_pairs": 27,
+            "behavioral_episodes": 54,
+            "status": "already_complete_do_not_rerun",
+            "source": f"{V3}/results/groot_n17_droid_phase_a_summary.json",
+        },
+        "measurement audit records GR00T n=27 as complete and non-rerunnable",
+        checks,
+    )
+    audit_cohorts = measurement_audit.get("cohorts", [])
+    require(
+        isinstance(audit_cohorts, list)
+        and len(audit_cohorts) == 27
+        and len({row.get("cohort_id") for row in audit_cohorts if isinstance(row, dict)}) == 27
+        and sum(row.get("behavioral_episode_count", 0) for row in audit_cohorts if isinstance(row, dict)) == 982
+        and all(
+            row.get("rerun_required_for_these_two_measurements") is False
+            for row in audit_cohorts
+            if isinstance(row, dict)
+        ),
+        "measurement audit has 27 unique all-covered cohorts totaling 982 episodes",
+        checks,
+    )
+    audit_state = continuation.get("measurement_coverage_audit", {})
+    require(
+        REQUIRED["measurement_audit"] in continuation.get("authoritative_files", [])
+        and audit_state == {
+            "path": REQUIRED["measurement_audit"],
+            "sha256": sha256(paths["measurement_audit"]),
+            "bytes": paths["measurement_audit"].stat().st_size,
+            "unique_behavioral_episodes": 982,
+            "requested_side_margin_available": "982/982",
+            "signed_final_lateral_offset_available": "982/982",
+            "legacy_measurement_rerun_required": False,
+            "groot_phase_a": "already_complete_27_matched_pairs_do_not_rerun",
+        },
+        "V3 continuation hash-binds the complete measurement audit and no-rerun decision",
+        checks,
+    )
+
     bridge_result = validate_pi0_fast_bridge(paths, checks)
     validate_pi0_fast_bridge_continuation(continuation, bridge_result, paths, checks)
+    require(
+        all(
+            isinstance(source, dict)
+            and (root / source.get("path", "")).is_file()
+            and source.get("bytes") == (root / source["path"]).stat().st_size
+            and source.get("sha256") == sha256(root / source["path"])
+            for row in audit_cohorts
+            for source in row.get("sources", [])
+        ),
+        "measurement audit hash-binds every source artifact",
+        checks,
+    )
 
     doc = paths["document"].read_text()
     for phrase in ("30 exact matched", "378 new episodes", "480", "16 shared", "never pooled"):
@@ -1192,6 +1284,13 @@ def validate(root: Path) -> list[str]:
         and "must not be rerun" in continuation_doc
         and "Phase C: 480 registered episodes, not released" in continuation_doc,
         "V3 continuation preserves non-pooling, no-rerun, historical-blocker, and Phase-C boundaries",
+        checks,
+    )
+    require(
+        "982/982" in continuation_doc
+        and "signed final lateral offset" in continuation_doc
+        and "GR00T is already complete at 27 matched pairs" in continuation_doc,
+        "V3 continuation documents complete measurement coverage and the GR00T no-rerun decision",
         checks,
     )
     require(

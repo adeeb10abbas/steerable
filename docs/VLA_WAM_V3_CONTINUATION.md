@@ -1,8 +1,8 @@
 # VLA/WAM v3 expansion continuation
 
-Updated: 5 August 2026, after the complete Phase-A launch-authorized queue and
-the separately authorized π0-FAST compatibility bridge were compiled. The
-machine-readable source of truth is
+Updated: 5 August 2026, after the complete Phase-A launch-authorized queue, the
+separately authorized π0-FAST compatibility bridge, and the cross-version
+measurement-coverage audit were compiled. The machine-readable source of truth is
 [`continuation_state.json`](../artifacts/vla_wam_shared_v3/continuation_state.json).
 
 ## Status
@@ -18,6 +18,25 @@ the blocked rows or preserved V2 evidence.
 No Phase-A or V3-A002 inference remains. Phase B confounds, Phase C wording,
 and Phase D stochastic repetitions have independent release gates and are not
 released by either direct-command result.
+
+### Measurement-coverage gate for Phase B
+
+The committed [measurement audit](../artifacts/vla_wam_shared_v3/measurement_coverage_audit.json)
+checks all **982 unique behavioral episodes** across V1, V2, Phase A, and
+V3-A002. Requested-side margin and signed final lateral offset are available
+for **982/982** episodes, including failures; no value is imputed from binary
+success. Older aliases are either explicit or algebraically exact. In
+particular, older RoboTwin object-minus-target `x` is standardized as `-x`, so
+positive remains robot LEFT, and its arena is still never pooled with DROID.
+No legacy behavioral rerun is required for these two measurements.
+
+The same audit reproduces Nano's 27-pair Phase-A margin gap: mean RIGHT-minus-
+LEFT requested margin `0.123601 m`, with 23 positive and 4 negative paired
+gaps and an exact two-sided sign-test `p = 0.0003107`. GR00T is already complete
+at 27 matched pairs / 54 episodes and must not be rerun. Phase B must log both
+fields for every new valid episode: signed offset supplies the full-sample
+analysis, while any success-conditional margin analysis must name its reduced
+subset explicitly.
 
 ## Exact intervention
 

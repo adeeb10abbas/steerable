@@ -21,6 +21,17 @@ SPEC.loader.exec_module(VALIDATOR)
 class ValidateV3ProtocolTest(unittest.TestCase):
     def copy_protocol_root(self, root: Path) -> None:
         shutil.copytree(ROOT / "artifacts" / "vla_wam_shared_v3", root / "artifacts" / "vla_wam_shared_v3")
+        measurement_audit = json.loads(
+            (ROOT / "artifacts" / "vla_wam_shared_v3" / "measurement_coverage_audit.json").read_text()
+        )
+        for cohort in measurement_audit["cohorts"]:
+            for source in cohort["sources"]:
+                source_path = ROOT / source["path"]
+                destination = root / source["path"]
+                if destination.exists():
+                    continue
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(source_path, destination)
         (root / "docs").mkdir()
         for name in (
             "VLA_WAM_STEERABILITY_V3_PROTOCOL.md",

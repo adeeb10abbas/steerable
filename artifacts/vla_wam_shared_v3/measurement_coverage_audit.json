@@ -1,0 +1,544 @@
+{
+  "analysis_rule_for_new_mirror_work": {
+    "full_sample": "Use signed final lateral offset for every valid episode, including failures.",
+    "margin": "Retain requested-side margin for every episode; report the all-episode paired margin estimand and identify any success-conditional subset explicitly rather than deleting failures.",
+    "pairing": "LEFT and RIGHT share the exact reset and seed; mirror/control comparisons use a separately frozen contemporaneous allocation."
+  },
+  "cohorts": [
+    {
+      "arena": "droid_robolab",
+      "behavioral_episode_count": 160,
+      "cohort_id": "v1_droid_wording_grid",
+      "extraction": "explicit final_cube_minus_bowl_y_m and requested_signed_final_offset_m",
+      "requested_side_margin_coverage": "160/160",
+      "requested_side_margin_storage": "explicit",
+      "rerun_required_for_these_two_measurements": false,
+      "signed_endpoint_coverage": "160/160",
+      "signed_endpoint_storage": "explicit",
+      "sources": [
+        {
+          "bytes": 118990,
+          "path": "artifacts/vla_wam_shared_v1/final_evidence/episodes.csv",
+          "sha256": "8f7c22ff6f2eba337ef740ea284b9bad40d2a5cfc0506b15fb822a57f4873845"
+        }
+      ]
+    },
+    {
+      "arena": "droid_robolab",
+      "behavioral_episode_count": 20,
+      "cohort_id": "v2_pi0_fast_direct_confirmation",
+      "extraction": "signed endpoint = -final_lateral_display_m; requested margin explicit in requested_signed_final_offset_m",
+      "requested_side_margin_coverage": "20/20",
+      "requested_side_margin_storage": "explicit",
+      "rerun_required_for_these_two_measurements": false,
+      "signed_endpoint_coverage": "20/20",
+      "signed_endpoint_storage": "exactly_derivable",
+      "sources": [
+        {
+          "bytes": 74549,
+          "path": "artifacts/vla_wam_shared_v2/pilot/results/pi0_fast_direct_confirmation.json",
+          "sha256": "491c74812ed0e4d36c16f8e0ded17a70af3e69740c9bcb87af129bb6d9563073"
+        }
+      ]
+    },
+    {
+      "arena": "droid_robolab",
+      "behavioral_episode_count": 6,
+      "cohort_id": "v2_pi05_current_stack_direct_gate",
+      "extraction": "signed endpoint = -endpoint_lateral_display_m; requested margin derived from relation",
+      "requested_side_margin_coverage": "6/6",
+      "requested_side_margin_storage": "exactly_derivable",
+      "rerun_required_for_these_two_measurements": false,
+      "signed_endpoint_coverage": "6/6",
+      "signed_endpoint_storage": "exactly_derivable",
+      "sources": [
+        {
+          "bytes": 20260,
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_v2a010_direct_gate.json",
+          "sha256": "0c54758fe316764dbca3299d7b665e3edf59412410d844a1f825abad92045f0c"
+        }
+      ]
+    },
+    {
+      "arena": "droid_robolab",
+      "behavioral_episode_count": 6,
+      "cohort_id": "v2_cosmos3_edge_policy_droid_direct_gate",
+      "extraction": "signed endpoint = -final_lateral_display_m; requested margin explicit in requested_signed_final_offset_m",
+      "requested_side_margin_coverage": "6/6",
+      "requested_side_margin_storage": "explicit",
+      "rerun_required_for_these_two_measurements": false,
+      "signed_endpoint_coverage": "6/6",
+      "signed_endpoint_storage": "exactly_derivable",
+      "sources": [
+        {
+          "bytes": 67708,
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_edge_droid_direct_gate.json",
+          "sha256": "1c559ee5667ac9d22d7b66eafa7a65551783eedaf7fb3de29a2faf450c2dd029"
+        }
+      ]
+    },
+    {
+      "arena": "droid_robolab",
+      "behavioral_episode_count": 6,
+      "cohort_id": "v2_cosmos3_nano_policy_droid_direct_gate",
+      "extraction": "signed endpoint = -final_lateral_display_m; requested margin explicit in requested_signed_final_offset_m",
+      "requested_side_margin_coverage": "6/6",
+      "requested_side_margin_storage": "explicit",
+      "rerun_required_for_these_two_measurements": false,
+      "signed_endpoint_coverage": "6/6",
+      "signed_endpoint_storage": "exactly_derivable",
+      "sources": [
+        {
+          "bytes": 57097,
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_direct_gate.json",
+          "sha256": "4a6cc1d61593c7ba5272e1707f6bbe51261f7d23438070992bd75fd9e95fdb93"
+        }
+      ]
+    },
+    {
+      "arena": "droid_robolab",
+      "behavioral_episode_count": 6,
+      "cohort_id": "v2_dreamzero_direct_gate",
+      "extraction": "signed endpoint = -final_lateral_display_m; requested margin derived from relation",
+      "requested_side_margin_coverage": "6/6",
+      "requested_side_margin_storage": "exactly_derivable",
+      "rerun_required_for_these_two_measurements": false,
+      "signed_endpoint_coverage": "6/6",
+      "signed_endpoint_storage": "exactly_derivable",
+      "sources": [
+        {
+          "bytes": 254288,
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_droid_direct_gate.json",
+          "sha256": "4c76cdc3ca9eaf227d21d160199408f22e1b3dd7a71176a5a5dbe22223714461"
+        }
+      ]
+    },
+    {
+      "arena": "droid_robolab",
+      "behavioral_episode_count": 6,
+      "cohort_id": "v2_cosmos3_nano_g1_guidance_ablation",
+      "extraction": "signed endpoint = -final_lateral_display_m; requested margin explicit in requested_signed_final_margin_m",
+      "requested_side_margin_coverage": "6/6",
+      "requested_side_margin_storage": "explicit",
+      "rerun_required_for_these_two_measurements": false,
+      "signed_endpoint_coverage": "6/6",
+      "signed_endpoint_storage": "exactly_derivable",
+      "sources": [
+        {
+          "bytes": 104115,
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_v2a015_no_cfg_g1_result.json",
+          "sha256": "8796f4ab9ea9490ee5b78678bc689d6fd13f27a9551006f8b5d346e202d0cc5c"
+        }
+      ]
+    },
+    {
+      "arena": "droid_robolab",
+      "behavioral_episode_count": 6,
+      "cohort_id": "v2_dreamzero_s2_guidance_ablation",
+      "extraction": "signed endpoint = -final_lateral_display_m; requested margin explicit in requested_signed_final_margin_m",
+      "requested_side_margin_coverage": "6/6",
+      "requested_side_margin_storage": "explicit",
+      "rerun_required_for_these_two_measurements": false,
+      "signed_endpoint_coverage": "6/6",
+      "signed_endpoint_storage": "exactly_derivable",
+      "sources": [
+        {
+          "bytes": 270309,
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_v2a015_action_cfg_s2_result.json",
+          "sha256": "273b7191cde61b51bf90b2eda04b1910e214f48d34f2347f2a81325069c32444"
+        }
+      ]
+    },
+    {
+      "arena": "droid_robolab",
+      "behavioral_episode_count": 6,
+      "cohort_id": "v2_groot_n17_direct_gate",
+      "extraction": "explicit cube-minus-bowl endpoint xyz and explicit requested-direction scalar",
+      "requested_side_margin_coverage": "6/6",
+      "requested_side_margin_storage": "explicit",
+      "rerun_required_for_these_two_measurements": false,
+      "signed_endpoint_coverage": "6/6",
+      "signed_endpoint_storage": "explicit",
+      "sources": [
+        {
+          "bytes": 11707,
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/groot_n17_droid_seed8300_slice.json",
+          "sha256": "adb188bc1f425df50f2ed3d706935f94397adfd6df81a151a304c8721aecb4a6"
+        },
+        {
+          "bytes": 11716,
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/groot_n17_droid_seed8301_slice.json",
+          "sha256": "6f9ae8b5b813b66326539833cefffb0c75b44d997b11d5ce7e7eed471fd7044a"
+        },
+        {
+          "bytes": 11712,
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/groot_n17_droid_seed8302_slice.json",
+          "sha256": "54ceb3e9658ee6fa1efc2e5b7bd6ed13f5fcb302a2448142a2a39529ea74dcd4"
+        }
+      ]
+    },
+    {
+      "arena": "robotwin_place_a2b",
+      "behavioral_episode_count": 6,
+      "cohort_id": "v2_efficient_wam_rt_pilot",
+      "extraction": "explicit native object-minus-target x; requested margin explicit or exact relation-sign transform",
+      "requested_side_margin_coverage": "6/6",
+      "requested_side_margin_storage": "explicit",
+      "rerun_required_for_these_two_measurements": false,
+      "signed_endpoint_coverage": "6/6",
+      "signed_endpoint_storage": "explicit",
+      "sources": [
+        {
+          "bytes": 22083,
+          "path": "artifacts/vla_wam_shared_v2/pilot/results/efficient_wam_rt_direct_gate.json",
+          "sha256": "ff2d0b01fddcc7e22ca6d6c7b5855ad3cb0dcabd36c69e39799323aaa47e946f"
+        }
+      ]
+    },
+    {
+      "arena": "robotwin_place_a2b",
+      "behavioral_episode_count": 6,
+      "cohort_id": "v2_fastwam_pilot",
+      "extraction": "explicit native object-minus-target x; requested margin explicit or exact relation-sign transform",
+      "requested_side_margin_coverage": "6/6",
+      "requested_side_margin_storage": "explicit",
+      "rerun_required_for_these_two_measurements": false,
+      "signed_endpoint_coverage": "6/6",
+      "signed_endpoint_storage": "explicit",
+      "sources": [
+        {
+          "bytes": 17942,
+          "path": "artifacts/vla_wam_shared_v2/pilot/results/fastwam_direct_gate.json",
+          "sha256": "d4f351c1b308b711145d73640448f7e052579ee74a4d0d5ada1ee60cf54c9bcb"
+        }
+      ]
+    },
+    {
+      "arena": "robotwin_place_a2b",
+      "behavioral_episode_count": 6,
+      "cohort_id": "v2_lingbot_va_pilot",
+      "extraction": "explicit native object-minus-target x; requested margin explicit or exact relation-sign transform",
+      "requested_side_margin_coverage": "6/6",
+      "requested_side_margin_storage": "explicit",
+      "rerun_required_for_these_two_measurements": false,
+      "signed_endpoint_coverage": "6/6",
+      "signed_endpoint_storage": "explicit",
+      "sources": [
+        {
+          "bytes": 20038,
+          "path": "artifacts/vla_wam_shared_v2/pilot/results/lingbot_va_direct_gate.json",
+          "sha256": "a70e1d99da3c5a3178448865fdc2194b0d6c13d0c20741bf8ada61cffef6c1f5"
+        }
+      ]
+    },
+    {
+      "arena": "robotwin_place_a2b",
+      "behavioral_episode_count": 6,
+      "cohort_id": "v2_lingbot_vla_4b_gate",
+      "extraction": "explicit native object-minus-target x; requested margin explicit or exact relation-sign transform",
+      "requested_side_margin_coverage": "6/6",
+      "requested_side_margin_storage": "explicit",
+      "rerun_required_for_these_two_measurements": false,
+      "signed_endpoint_coverage": "6/6",
+      "signed_endpoint_storage": "explicit",
+      "sources": [
+        {
+          "bytes": 20538,
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/lingbot_vla_4b_direct_gate.json",
+          "sha256": "7c0ad19833d6cbb51bb5fbdac8f9546f0e311333e498a15594b55f68dc7b6534"
+        }
+      ]
+    },
+    {
+      "arena": "robotwin_place_a2b",
+      "behavioral_episode_count": 12,
+      "cohort_id": "v2_efficient_wam_rt_pairs04_09",
+      "extraction": "explicit native object-minus-target x; requested margin explicit or exact relation-sign transform",
+      "requested_side_margin_coverage": "12/12",
+      "requested_side_margin_storage": "exactly_derivable",
+      "rerun_required_for_these_two_measurements": false,
+      "signed_endpoint_coverage": "12/12",
+      "signed_endpoint_storage": "explicit",
+      "sources": [
+        {
+          "bytes": 64863,
+          "path": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/efficient_wam_rt_pairs04_09_slice.json",
+          "sha256": "e7d2d3791323fecedb49e8c1ecc8fda1e0ade91dedd6613b9079f7b290e1fd54"
+        }
+      ]
+    },
+    {
+      "arena": "robotwin_place_a2b",
+      "behavioral_episode_count": 14,
+      "cohort_id": "v2_fastwam_pairs03_09",
+      "extraction": "explicit native object-minus-target x; requested margin explicit or exact relation-sign transform",
+      "requested_side_margin_coverage": "14/14",
+      "requested_side_margin_storage": "exactly_derivable",
+      "rerun_required_for_these_two_measurements": false,
+      "signed_endpoint_coverage": "14/14",
+      "signed_endpoint_storage": "explicit",
+      "sources": [
+        {
+          "bytes": 91023,
+          "path": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/fastwam_pairs03_09_slice.json",
+          "sha256": "9d52920cded17d0f61c997f02624ea38ffc4c9a3536cdacf9f71115b151d14be"
+        }
+      ]
+    },
+    {
+      "arena": "robotwin_place_a2b",
+      "behavioral_episode_count": 14,
+      "cohort_id": "v2_lingbot_va_pairs03_09",
+      "extraction": "explicit native object-minus-target x; requested margin explicit or exact relation-sign transform",
+      "requested_side_margin_coverage": "14/14",
+      "requested_side_margin_storage": "exactly_derivable",
+      "rerun_required_for_these_two_measurements": false,
+      "signed_endpoint_coverage": "14/14",
+      "signed_endpoint_storage": "explicit",
+      "sources": [
+        {
+          "bytes": 80097,
+          "path": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/lingbot_va_pairs03_09_slice.json",
+          "sha256": "8617da77c819ea57d374f463a672bf73414b088bb8188b9b13a6c1c2e1fb9d85"
+        }
+      ]
+    },
+    {
+      "arena": "robotwin_place_a2b",
+      "behavioral_episode_count": 6,
+      "cohort_id": "v2_light_wam_gate",
+      "extraction": "standardized signed lateral = -native object-minus-target x; exact relation-sign margin",
+      "requested_side_margin_coverage": "6/6",
+      "requested_side_margin_storage": "exactly_derivable",
+      "rerun_required_for_these_two_measurements": false,
+      "signed_endpoint_coverage": "6/6",
+      "signed_endpoint_storage": "exactly_derivable",
+      "sources": [
+        {
+          "bytes": 42232,
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/light_wam_robotwin_direct_gate.json",
+          "sha256": "f33e1ff8fdc82c4a035f2cc113b91b311d685d9747dbcbb1104453fc455745d6"
+        }
+      ]
+    },
+    {
+      "arena": "robotwin_place_a2b",
+      "behavioral_episode_count": 2,
+      "cohort_id": "v2_efficient_wam_rt_pair03",
+      "extraction": "standardized signed lateral = -native final_object_minus_target_x_m; exact relation-sign margin",
+      "requested_side_margin_coverage": "2/2",
+      "requested_side_margin_storage": "exactly_derivable",
+      "rerun_required_for_these_two_measurements": false,
+      "signed_endpoint_coverage": "2/2",
+      "signed_endpoint_storage": "exactly_derivable",
+      "sources": [
+        {
+          "bytes": 7275,
+          "path": "artifacts/vla_wam_shared_v2/pilot/directional_confirmation/efficient_wam_rt_pair03_integration.json",
+          "sha256": "d850f8f2c3d32db705cc65326ca673c150ab7208a203a180bd32d88dfb0e5471"
+        }
+      ]
+    },
+    {
+      "arena": "droid_robolab",
+      "behavioral_episode_count": 54,
+      "cohort_id": "v3_pi05_current_stack_droid_phase_a",
+      "extraction": "explicit signed_final_lateral_offset_m and final_requested_signed_margin_m",
+      "requested_side_margin_coverage": "54/54",
+      "requested_side_margin_storage": "explicit",
+      "rerun_required_for_these_two_measurements": false,
+      "signed_endpoint_coverage": "54/54",
+      "signed_endpoint_storage": "explicit",
+      "sources": [
+        {
+          "bytes": 128505,
+          "path": "artifacts/vla_wam_shared_v3/results/pi05_current_stack_droid_phase_a_summary.json",
+          "sha256": "5c6d07fca7a0d20ab8b757f028d469f864c78a1c43ffedc3d257a16caef2a02b"
+        }
+      ]
+    },
+    {
+      "arena": "droid_robolab",
+      "behavioral_episode_count": 54,
+      "cohort_id": "v3_groot_n17_droid_phase_a",
+      "extraction": "explicit signed_final_lateral_offset_m and final_requested_signed_margin_m",
+      "requested_side_margin_coverage": "54/54",
+      "requested_side_margin_storage": "explicit",
+      "rerun_required_for_these_two_measurements": false,
+      "signed_endpoint_coverage": "54/54",
+      "signed_endpoint_storage": "explicit",
+      "sources": [
+        {
+          "bytes": 201245,
+          "path": "artifacts/vla_wam_shared_v3/results/groot_n17_droid_phase_a_summary.json",
+          "sha256": "0db751e94a48caa5815aa6d656ff8cf062283eba47b3048c7c2ac37744581486"
+        }
+      ]
+    },
+    {
+      "arena": "droid_robolab",
+      "behavioral_episode_count": 54,
+      "cohort_id": "v3_cosmos3_edge_policy_droid_phase_a",
+      "extraction": "explicit signed_final_lateral_offset_m and final_requested_signed_margin_m",
+      "requested_side_margin_coverage": "54/54",
+      "requested_side_margin_storage": "explicit",
+      "rerun_required_for_these_two_measurements": false,
+      "signed_endpoint_coverage": "54/54",
+      "signed_endpoint_storage": "explicit",
+      "sources": [
+        {
+          "bytes": 197084,
+          "path": "artifacts/vla_wam_shared_v3/results/cosmos3_edge_policy_droid_phase_a_summary.json",
+          "sha256": "fc93b6518185641068ce51a4d81882dd1828ebeb9227b44c4ffc21a07b526c87"
+        }
+      ]
+    },
+    {
+      "arena": "droid_robolab",
+      "behavioral_episode_count": 54,
+      "cohort_id": "v3_cosmos3_nano_policy_droid_phase_a",
+      "extraction": "explicit signed_final_lateral_offset_m and final_requested_signed_margin_m",
+      "requested_side_margin_coverage": "54/54",
+      "requested_side_margin_storage": "explicit",
+      "rerun_required_for_these_two_measurements": false,
+      "signed_endpoint_coverage": "54/54",
+      "signed_endpoint_storage": "explicit",
+      "sources": [
+        {
+          "bytes": 210426,
+          "path": "artifacts/vla_wam_shared_v3/results/cosmos3_nano_policy_droid_phase_a_summary.json",
+          "sha256": "677c62845ff72bceb35b0c5e3e5b259a5c24da407648fe50f475656fe86cbcea"
+        }
+      ]
+    },
+    {
+      "arena": "droid_robolab",
+      "behavioral_episode_count": 54,
+      "cohort_id": "v3_dreamzero_droid_action_cfg_phase_a",
+      "extraction": "explicit signed_final_lateral_offset_m and final_requested_signed_margin_m",
+      "requested_side_margin_coverage": "54/54",
+      "requested_side_margin_storage": "explicit",
+      "rerun_required_for_these_two_measurements": false,
+      "signed_endpoint_coverage": "54/54",
+      "signed_endpoint_storage": "explicit",
+      "sources": [
+        {
+          "bytes": 375241,
+          "path": "artifacts/vla_wam_shared_v3/results/dreamzero_droid_action_cfg_phase_a_summary.json",
+          "sha256": "50ec800009b1f128ce8fe877c186b08a47ec3021feaa7cf4f8baab984549b120"
+        }
+      ]
+    },
+    {
+      "arena": "robotwin_place_a2b",
+      "behavioral_episode_count": 126,
+      "cohort_id": "v3_efficient_wam_rt_robotwin_phase_a",
+      "extraction": "explicit signed_final_lateral_offset_m and final_requested_signed_margin_m from the v3 robot-base scorer",
+      "requested_side_margin_coverage": "126/126",
+      "requested_side_margin_storage": "explicit",
+      "rerun_required_for_these_two_measurements": false,
+      "signed_endpoint_coverage": "126/126",
+      "signed_endpoint_storage": "explicit",
+      "sources": [
+        {
+          "bytes": 684315,
+          "path": "artifacts/vla_wam_shared_v3/results/efficient_wam_rt_robotwin_phase_a_summary.json",
+          "sha256": "5796bdbedde6124b9a849fa4ab9785171c0caddd5fd18d28e67706e30ed554e5"
+        }
+      ]
+    },
+    {
+      "arena": "robotwin_place_a2b",
+      "behavioral_episode_count": 126,
+      "cohort_id": "v3_fastwam_robotwin_phase_a",
+      "extraction": "explicit signed_final_lateral_offset_m and final_requested_signed_margin_m from the v3 robot-base scorer",
+      "requested_side_margin_coverage": "126/126",
+      "requested_side_margin_storage": "explicit",
+      "rerun_required_for_these_two_measurements": false,
+      "signed_endpoint_coverage": "126/126",
+      "signed_endpoint_storage": "explicit",
+      "sources": [
+        {
+          "bytes": 616899,
+          "path": "artifacts/vla_wam_shared_v3/results/fastwam_robotwin_phase_a_summary.json",
+          "sha256": "da76cf534907714c1b9e74e096ed39578b308642504e145f40e834ff4ba65b4e"
+        }
+      ]
+    },
+    {
+      "arena": "robotwin_place_a2b",
+      "behavioral_episode_count": 126,
+      "cohort_id": "v3_lingbot_va_robotwin_phase_a",
+      "extraction": "explicit signed_final_lateral_offset_m and final_requested_signed_margin_m from the v3 robot-base scorer",
+      "requested_side_margin_coverage": "126/126",
+      "requested_side_margin_storage": "explicit",
+      "rerun_required_for_these_two_measurements": false,
+      "signed_endpoint_coverage": "126/126",
+      "signed_endpoint_storage": "explicit",
+      "sources": [
+        {
+          "bytes": 789610,
+          "path": "artifacts/vla_wam_shared_v3/results/lingbot_va_robotwin_phase_a_summary.json",
+          "sha256": "ebffedaeaf42fb8916449136f617aaa9dab149645caad45aa461dec7aef878e3"
+        }
+      ]
+    },
+    {
+      "arena": "droid_robolab",
+      "behavioral_episode_count": 40,
+      "cohort_id": "v3a002_pi0_fast_compatibility_bridge",
+      "extraction": "explicit signed endpoint in pair rows; exact relation-sign requested margin",
+      "requested_side_margin_coverage": "40/40",
+      "requested_side_margin_storage": "exactly_derivable",
+      "rerun_required_for_these_two_measurements": false,
+      "signed_endpoint_coverage": "40/40",
+      "signed_endpoint_storage": "explicit",
+      "sources": [
+        {
+          "bytes": 19799,
+          "path": "artifacts/vla_wam_shared_v3/results/pi0_fast_old_name_config_v3a002_summary.json",
+          "sha256": "72df6398030199afd2ffc6f305c3a9b879801a07c42ff078a2c51f9c6090599a"
+        }
+      ]
+    }
+  ],
+  "coverage": {
+    "measurement_coverage_rerun_required": false,
+    "requested_side_margin_available": "982/982",
+    "signed_final_lateral_offset_available": "982/982",
+    "values_imputed_from_success_labels": 0
+  },
+  "field_aliases": {
+    "requested_side_margin_m": "V3 final_requested_signed_margin_m; older exact aliases include requested_signed_final_offset_m, requested_signed_final_margin_m, requested_direction_endpoint_scalar, and command_alignment_margin_m.",
+    "signed_final_lateral_offset_m": "Positive robot LEFT in each arena. DROID stores raw robot-frame movable-minus-reference y; older RoboTwin stores native object-minus-target x with the opposite sign, so standardized lateral is exactly -x. Arena coordinates are never pooled."
+  },
+  "groot_phase_a_reconciliation": {
+    "behavioral_episodes": 54,
+    "matched_pairs": 27,
+    "source": "artifacts/vla_wam_shared_v3/results/groot_n17_droid_phase_a_summary.json",
+    "status": "already_complete_do_not_rerun"
+  },
+  "nano_phase_a_margin_sensitivity_reproduction": {
+    "exact_two_sided_sign_test_p_excluding_ties": 0.000310748815536499,
+    "left_mean_requested_side_margin_m": 0.14270984629789987,
+    "matched_pair_count": 27,
+    "positive_zero_negative_pair_counts": [
+      23,
+      0,
+      4
+    ],
+    "right_mean_requested_side_margin_m": 0.2663112426935523,
+    "right_minus_left_mean_margin_gap_m": 0.12360139639565239
+  },
+  "recorded_at_utc": "2026-08-05T23:00:00Z",
+  "schema_version": "vla-wam-measurement-coverage-audit-v1",
+  "scope": {
+    "droid_robolab_episode_count": 532,
+    "nonbehavioral_interface_probes": "not applicable: Cosmos-Reason2 and Cosmos3 base probes have no robot episode endpoint",
+    "robotwin_episode_count": 450,
+    "unique_behavioral_episode_count": 982,
+    "withdrawn_or_unreleased_models": "not applicable: LaWAM has zero behavioral episodes"
+  },
+  "status": "complete_no_measurement_coverage_rerun_required",
+  "study_id": "vla_wam_language_steerability_v3"
+}

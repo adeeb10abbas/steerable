@@ -14,6 +14,7 @@
     "artifacts/vla_wam_shared_v3/post_result_pi0_fast_token_trace_validation_amendment.json",
     "artifacts/vla_wam_shared_v3/phase_a_cells.jsonl",
     "artifacts/vla_wam_shared_v3/phase_a_cells_manifest.json",
+    "artifacts/vla_wam_shared_v3/measurement_coverage_audit.json",
     "artifacts/vla_wam_shared_v3/results/pi0_fast_old_name_config_v3a002_release_gate.json",
     "artifacts/vla_wam_shared_v3/results/pi0_fast_old_name_config_v3a002_summary.json",
     "artifacts/vla_wam_shared_v3/results/pi0_fast_old_name_config_v3a002_evidence_hash_manifest.json",
@@ -24,7 +25,7 @@
     "v3": {
       "command": ".venv/bin/python tools/validate_vla_wam_v3_protocol.py",
       "status": "valid",
-      "check_count": 271
+      "check_count": 281
     },
     "v2": {
       "command": ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
@@ -32,10 +33,20 @@
       "check_count": 994
     },
     "focused_tests": {
-      "command": ".venv/bin/python -m unittest -v tests.test_validate_vla_wam_v3_protocol tests.test_v3_robotwin_wams_launcher tests.test_vla_wam_v3_episode_schema",
+      "command": ".venv/bin/python -m unittest -v tests.test_audit_vla_wam_measurement_coverage tests.test_validate_vla_wam_v3_protocol tests.test_v3_robotwin_wams_launcher tests.test_vla_wam_v3_episode_schema",
       "status": "passed",
-      "test_count": 30
+      "test_count": 33
     }
+  },
+  "measurement_coverage_audit": {
+    "path": "artifacts/vla_wam_shared_v3/measurement_coverage_audit.json",
+    "sha256": "86b3ded424bba2d697b406ea7b1c8bfc147dba8413363ae0190b4d151e76d4ea",
+    "bytes": 23602,
+    "unique_behavioral_episodes": 982,
+    "requested_side_margin_available": "982/982",
+    "signed_final_lateral_offset_available": "982/982",
+    "legacy_measurement_rerun_required": false,
+    "groot_phase_a": "already_complete_27_matched_pairs_do_not_rerun"
   },
   "nonnegotiable_boundaries": {
     "arena_separation": "DROID/RoboLab and RoboTwin raw successes, failures, denominators, and intervals are never pooled.",

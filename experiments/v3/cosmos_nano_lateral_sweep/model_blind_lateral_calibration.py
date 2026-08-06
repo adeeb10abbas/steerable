@@ -113,7 +113,8 @@ def corners_array(corners) -> np.ndarray:
 
 
 def bbox(world, name: str) -> tuple[np.ndarray, np.ndarray]:
-    corners = corners_array(world.get_bbox(name, env_id=0))
+    corners, _centroid = world.get_bbox(name, env_id=0)
+    corners = corners_array(corners)
     return corners.min(axis=0), corners.max(axis=0)
 
 

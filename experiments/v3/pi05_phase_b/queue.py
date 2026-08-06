@@ -96,7 +96,14 @@ def cell_plan(*, repo_root: Path, release_manifest: Path, release_manifest_sha25
             "OMNI_KIT_ACCEPT_EULA": "YES", "NVIDIA_DRIVER_CAPABILITIES": "all",
             "VK_ICD_FILENAMES": FROZEN_VK_ICD,
             "XDG_CACHE_HOME": str(attempt/"cache/xdg"), "WARP_CACHE_PATH": str(attempt/"cache/warp"),
-            "MPLCONFIGDIR": str(attempt/"cache/matplotlib"), "TMPDIR": str(attempt/"cache/tmp"),
+            "MPLCONFIGDIR": str(attempt/"cache/matplotlib"),
+            # Isaac/Kit temporary files must be pod-local.  Prior runs showed
+            # that putting TMPDIR on the shared PVC can leave NFS cleanup
+            # failures even when the behavioral episode itself is valid.
+            "TMPDIR": str(
+                Path("/tmp")/"vla_wam_v3b002"/lane_pod_uid/
+                cell.cell_id.replace(":", "__")
+            ),
         },
     }
 

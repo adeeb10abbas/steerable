@@ -1,10 +1,10 @@
 {
   "schema_version": "vla-wam-shared-v3-continuation-v1",
   "study_id": "vla_wam_language_steerability_v3",
-  "updated_at_utc": "2026-08-06T04:51:03Z",
+  "updated_at_utc": "2026-08-06T05:07:58Z",
   "active_branch": "codex/wam-language-steerability",
   "evidence_head": "6e1de8f2192ec9d7ef7f8356458775541f596a97",
-  "status": "phase_a_and_v3a002_complete_nano_v3b001_live_smoke_repair_108_cells_released_zero_completed_other_phase_b_phase_c_phase_d_unreleased",
+  "status": "phase_a_and_v3a002_complete_nano_v3b001_robot_frame_gate_repair_108_cells_released_zero_completed_other_phase_b_phase_c_phase_d_unreleased",
   "authoritative_files": [
     "docs/VLA_WAM_V3_CONTINUATION.md",
     "docs/VLA_WAM_STEERABILITY_V3_PROTOCOL.md",
@@ -49,7 +49,7 @@
     "focused_tests": {
       "command": ".venv/bin/python -m unittest -v tests.test_audit_vla_wam_measurement_coverage tests.test_validate_vla_wam_v3_protocol tests.test_v3_robotwin_wams_launcher tests.test_vla_wam_v3_episode_schema tests.test_v3b_nano_mirror_release tests.test_v3b_nano_runtime_adapter tests.test_v3b_nano_live_queue",
       "status": "passed",
-      "test_count": 59
+      "test_count": 61
     }
   },
   "measurement_coverage_audit": {
@@ -137,16 +137,16 @@
         },
         "live_infrastructure_ledger": {
           "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_infrastructure_ledger.json",
-          "sha256": "82f05ebe8257abbecafd4dc01a9f0b72e2756695cbb07b864f8befa9666757b3"
+          "sha256": "382bd646fbbc854c98c1cfe5947cc59c4f6ae6caf7df7758d7e75bc2b3c888a0"
         }
       },
       "live_runtime": {
-        "status": "live_smoke_repair_after_preserved_infrastructure_invalid_attempt",
-        "model_request_count": 15,
+        "status": "live_robot_frame_gate_repair_after_preserved_invalidated_smokes",
+        "model_request_count": 23,
         "behavioral_episode_count": 0,
         "completed_behavioral_cell_count": 0,
-        "infrastructure_invalid_complete_behavior_attempt_count": 1,
-        "live_bound_runtime_identity": "must_be_rebound_on_the_ali_owned_pvc_after_the_export_finalization_fix_before_retrying_the_exact_next_cell",
+        "infrastructure_invalid_complete_behavior_attempt_count": 2,
+        "live_bound_runtime_identity": "must_be_rebound_on_the_ali_owned_pvc_after_the_robot_frame_gate_fix_before_retrying_the_exact_next_cell",
         "exact_next_cell": {
           "cell_id": "v3b001:nano:seed9400:position_mirrored:right",
           "environment_seed": 9400,
@@ -176,10 +176,10 @@
           "live_support": {"path": "experiments/v3/cosmos_nano_phase_b/live_support.py", "sha256": "445176755c89d34a597e83ed23fa0444922a4736e276117a5242335a2aa76590"},
           "live_client": {"path": "experiments/v3/cosmos_nano_phase_b/live_client.py", "sha256": "39efa19151039f8243cf452713bbaf13b3e955ccd590055d462c1ea66cac0a28"},
           "live_server": {"path": "experiments/v3/cosmos_nano_phase_b/serve_nano.py", "sha256": "caa2c7ca1ea8bc3dd831a0564c3f37f63c64dc90ddf104b1ae0281ae61e7e1cc"},
-          "live_bridge": {"path": "experiments/v3/cosmos_nano_phase_b/robolab_bridge.py", "sha256": "37d4e431e3146d46416bc04f51f6153ec7df126ecddeb2685b9bc73ac7297e0f"},
-          "queue_launcher": {"path": "experiments/v3/cosmos_nano_phase_b/queue_launcher.py", "sha256": "6a7efd012b2381cc78152ec7ce74dfdcd26fc5d48b09f5a03bed29c9488149c8"},
+          "live_bridge": {"path": "experiments/v3/cosmos_nano_phase_b/robolab_bridge.py", "sha256": "308a08496307d24ef5a1b58465412eaba46bcb1f4a88d33cf004b40427f80ab7"},
+          "queue_launcher": {"path": "experiments/v3/cosmos_nano_phase_b/queue_launcher.py", "sha256": "52a4132fb9f6dfff3e9e4bbb17862c682c3e0cc1fbdfc11e6c73e08316b87c4d"},
           "runtime_test": {"path": "tests/test_v3b_nano_runtime_adapter.py", "sha256": "4347a5354806da8180b13a64a712ba267397a387fd80f02f6d851950510f22ff"},
-          "live_queue_test": {"path": "tests/test_v3b_nano_live_queue.py", "sha256": "00c9361999b098a21984322e92c05c8739f8c2e93dca396367b871f85e3e9286"}
+          "live_queue_test": {"path": "tests/test_v3b_nano_live_queue.py", "sha256": "e8134fa168e67817d580b8aa123cdb8288646a424f3145fc04eff390f8451d02"}
         }
       }
     }

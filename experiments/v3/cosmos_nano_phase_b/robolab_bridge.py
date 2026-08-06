@@ -98,7 +98,8 @@ os.environ["VLA_WAM_V3B_FIXTURE_SHA256"] = bootstrap.fixture_candidate_sha256
 
 if bootstrap.open_loop_horizon != ACTION_CHUNK_STEPS:
     BOOTSTRAP.error("the released Nano open-loop horizon is exactly 32")
-for output in (bootstrap.reset_attestation, bootstrap.simulator_export):
+bridge_failure_path = bootstrap.simulator_export.with_name("bridge_failure.json")
+for output in (bootstrap.reset_attestation, bootstrap.simulator_export, bridge_failure_path):
     if output.exists():
         BOOTSTRAP.error(f"refusing to overwrite retained Phase-B evidence: {output}")
 for directory in (
@@ -254,11 +255,18 @@ class StateCaptureProxy:
         }
 
     def _physical_reset_payload(self) -> dict[str, Any]:
+        robot = self._env.scene["robot"].data
+        robot_pos = robot.root_pos_w[0].detach().cpu().numpy()
+        robot_quat = robot.root_quat_w[0].detach().cpu().numpy()
         objects: dict[str, Any] = {}
         for name in ("rubiks_cube", "bowl", "banana"):
             asset = self._env.scene[name].data
+            position_world = asset.root_pos_w[0].detach().cpu().numpy()
             objects[name] = {
-                "position_world_xyz_m": asset.root_pos_w[0].detach().cpu().numpy().astype(float).tolist(),
+                "position_world_xyz_m": position_world.astype(float).tolist(),
+                "position_robot_xyz_m": _quat_inverse_rotate_wxyz(
+                    robot_quat, position_world - robot_pos
+                ).tolist(),
                 "quaternion_world_wxyz": asset.root_quat_w[0].detach().cpu().numpy().astype(float).tolist(),
             }
         return {
@@ -287,7 +295,9 @@ class StateCaptureProxy:
         )
         position_errors: dict[str, float] = {}
         for name, expected in expected_positions.items():
-            observed = np.asarray(physical["objects"][name]["position_world_xyz_m"], dtype=np.float64)
+            observed = np.asarray(
+                physical["objects"][name]["position_robot_xyz_m"], dtype=np.float64
+            )
             target = np.asarray(expected, dtype=np.float64)
             position_errors[name] = float(np.max(np.abs(observed - target)))
         fixture_match = max(position_errors.values()) <= tolerance
@@ -300,6 +310,7 @@ class StateCaptureProxy:
             "schema_version": "vla-wam-shared-v3b-nano-live-fixture-match-v1",
             "registered_cell_id": cell.cell_id,
             "released_fixture_sha256": cell.row["fixture_sha256"],
+            "position_frame": "robot",
             "position_tolerance_m": tolerance,
             "max_abs_position_error_m": position_errors,
             "positions_match": fixture_match,
@@ -651,10 +662,30 @@ def main() -> None:
             for proxy in proxies:
                 proxy.write_capture()
         if failure is not None:
-            raise failure
-        # Isaac's close path can terminate the process successfully, so all
-        # denominator-eligibility evidence must be durable before closing it.
-        _write_export()
+            bridge_failure_path.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "vla-wam-shared-v3b-nano-bridge-failure-v1",
+                        "registered_cell_id": cell.cell_id,
+                        "denominator_eligible": False,
+                        "error_type": type(failure).__name__,
+                        "error": str(failure),
+                        "traceback": "".join(
+                            traceback.format_exception(
+                                type(failure), failure, failure.__traceback__
+                            )
+                        ),
+                    },
+                    indent=2,
+                    sort_keys=True,
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+        else:
+            # Isaac's close path can terminate the process successfully, so all
+            # denominator-eligibility evidence must be durable before closing it.
+            _write_export()
     finally:
         simulation_app.close()
 

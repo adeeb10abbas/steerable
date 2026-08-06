@@ -1238,13 +1238,13 @@ def validate(root: Path) -> list[str]:
     nano_live = nano_state.get("live_runtime", {})
     require(
         nano_live.get("status")
-        == "live_smoke_repair_after_preserved_infrastructure_invalid_attempt"
-        and nano_live.get("model_request_count") == 15
+        == "live_robot_frame_gate_repair_after_preserved_invalidated_smokes"
+        and nano_live.get("model_request_count") == 23
         and nano_live.get("behavioral_episode_count") == 0
         and nano_live.get("completed_behavioral_cell_count") == 0
-        and nano_live.get("infrastructure_invalid_complete_behavior_attempt_count") == 1
+        and nano_live.get("infrastructure_invalid_complete_behavior_attempt_count") == 2
         and nano_live.get("live_bound_runtime_identity")
-        == "must_be_rebound_on_the_ali_owned_pvc_after_the_export_finalization_fix_before_retrying_the_exact_next_cell",
+        == "must_be_rebound_on_the_ali_owned_pvc_after_the_robot_frame_gate_fix_before_retrying_the_exact_next_cell",
         "V3 continuation records the Nano smoke as infrastructure-invalid with zero completed cells",
         checks,
     )
@@ -1253,6 +1253,21 @@ def validate(root: Path) -> list[str]:
         (entry for entry in ledger_entries if entry.get("attempt_id") == "behavioral_attempt02"),
         {},
     )
+    invalidated_compiled = next(
+        (
+            entry
+            for entry in ledger_entries
+            if entry.get("attempt_id")
+            == "behavioral_attempt03_position_mirrored_right"
+        ),
+        {},
+    )
+    pre_request_failures = {
+        entry.get("attempt_id"): entry
+        for entry in ledger_entries
+        if entry.get("attempt_id")
+        in {"behavioral_attempt03_control_left", "behavioral_attempt04_control_left"}
+    }
     require(
         nano_live_ledger.get("behavioral_denominator_excludes_all_entries") is True
         and nano_live_ledger.get("completed_valid_behavioral_cells") == 0
@@ -1267,9 +1282,36 @@ def validate(root: Path) -> list[str]:
         and invalid_behavior.get("denominator_eligible") is False
         and invalid_behavior.get("disposition")
         == "preserved_complete_behavior_infrastructure_invalid"
+        and invalidated_compiled.get("model_requests") == 8
+        and invalidated_compiled.get("behavioral_actions_executed") == 233
+        and invalidated_compiled.get("denominator_eligible") is False
+        and invalidated_compiled.get("disposition")
+        == "compiled_record_invalidated_before_analysis"
+        and set(pre_request_failures)
+        == {"behavioral_attempt03_control_left", "behavioral_attempt04_control_left"}
+        and all(
+            entry.get("model_requests") == 0
+            and entry.get("behavioral_actions_executed") == 0
+            and entry.get("denominator_eligible") is False
+            for entry in pre_request_failures.values()
+        )
         and nano_live_ledger.get("repair", {}).get("export_before_isaac_close") is True
         and nano_live_ledger.get("repair", {}).get(
             "absolute_attempt_local_robolab_output_folder"
+        )
+        is True
+        and nano_live_ledger.get("repair", {}).get("released_position_frame")
+        == "robot"
+        and nano_live_ledger.get("repair", {}).get("live_position_comparison_frame")
+        == "robot"
+        and nano_live_ledger.get("repair", {}).get("pre_fix_compiled_cell_invalidated")
+        is True
+        and nano_live_ledger.get("repair", {}).get(
+            "durable_bridge_failure_before_isaac_close"
+        )
+        is True
+        and nano_live_ledger.get("repair", {}).get(
+            "queue_requires_export_before_compilation"
         )
         is True,
         "Nano live ledger preserves the excluded smoke and EULA-authorized repair boundary",
@@ -1346,6 +1388,10 @@ def validate(root: Path) -> list[str]:
         and "run-cell preserves released global order" in nano_queue_source
         and "retained partial attempt is preserved outside the denominator" in nano_queue_source
         and "episode_length_buf_before_reset" in nano_bridge_source
+        and '"position_robot_xyz_m"' in nano_bridge_source
+        and '"position_frame": "robot"' in nano_bridge_source
+        and 'bridge_failure_path.write_text' in nano_bridge_source
+        and 'bridge_failure = attempt / "bridge_failure.json"' in nano_queue_source
         and "verify_live_runtime_identity" in nano_server_source
         and "validate_pinned_server_cli" in nano_server_source
         and "verify_live_runtime_identity" in nano_compiler_source,
@@ -1643,6 +1689,8 @@ def validate(root: Path) -> list[str]:
         "Nano V3-B001 live runtime boundary" in continuation_doc
         and "108 released cells and zero completed valid behavioral cells" in continuation_doc
         and "15 model requests" in continuation_doc
+        and "released fixture is explicitly robot-frame" in continuation_doc
+        and "invalidated before analysis" in continuation_doc
         and "outside the behavioral denominator" in continuation_doc
         and "v3b001:nano:seed9400:position_mirrored:right" in continuation_doc
         and EXACT_V2_WORDINGS["direct_command"]["right"] in continuation_doc,

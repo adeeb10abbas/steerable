@@ -2,7 +2,7 @@
   "schema_version": "vla-wam-shared-v3b-nano-live-infrastructure-ledger-v1",
   "study_id": "vla_wam_language_steerability_v3",
   "amendment_id": "V3-B001",
-  "updated_at_utc": "2026-08-06T04:51:03Z",
+  "updated_at_utc": "2026-08-06T05:07:58Z",
   "behavioral_denominator_excludes_all_entries": true,
   "completed_valid_behavioral_cells": 0,
   "eula_acceptance": {
@@ -74,11 +74,84 @@
         "bytes": 2877651,
         "sha256": "b027a83e6489c0c6975662e19ff62034419dd06367743912cfd66bbd57e31b16"
       }
+    },
+    {
+      "attempt_id": "behavioral_attempt03_position_mirrored_right",
+      "registered_cell_id": "v3b001:nano:seed9400:position_mirrored:right",
+      "stage": "post_compile_frame_contract_audit",
+      "model_requests": 8,
+      "behavioral_actions_executed": 233,
+      "retained_state_count": 234,
+      "retained_action_chunks": 8,
+      "retained_decoded_futures": 8,
+      "denominator_eligible": false,
+      "disposition": "compiled_record_invalidated_before_analysis",
+      "reason": "The release fixture declares robot-frame positions, but the live reset gate compared its values to world-frame poses. The next control cell exposed the mismatch. This compiled row is invalidated before analysis and must not be counted.",
+      "runtime_identity": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/runtime_attempt05/runtime_identity.json",
+        "bytes": 2910,
+        "sha256": "f0e20e0629251ee333c7eda551eefe3478269836c29a41fc3bce3ceaf3190beb"
+      },
+      "raw_episode_jsonl": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt03/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__position_mirrored__right/attempt01/raw_episode.jsonl",
+        "bytes": 61260,
+        "sha256": "f076a34017c5caf2eb78a48eba2d0de6ef64515d1261b7638a9427409dd6b9a4"
+      },
+      "viewport_video": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt03/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__position_mirrored__right/attempt01/simulator/V3BNanoPositionMirroredRightCalibrationTask/Put_the_Rubiks_cube_to_the_right_of_the_bowl_0_viewport.mp4",
+        "bytes": 1486733,
+        "sha256": "70870ae75499871f0fb470d540fbc105db13af20fad53d3995171b7503949c25"
+      }
+    },
+    {
+      "attempt_id": "behavioral_attempt03_control_left",
+      "registered_cell_id": "v3b001:nano:seed9400:control:left",
+      "stage": "model_blind_reset_gate",
+      "model_requests": 0,
+      "behavioral_actions_executed": 0,
+      "denominator_eligible": false,
+      "disposition": "preserved_infrastructure_failure",
+      "reason": "The pre-fix bridge compared the robot-frame released fixture to world-frame live positions, then Isaac close suppressed the raised exception. No reset attestation or behavioral request was emitted.",
+      "primary_log": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/queue_attempt01/queue.log",
+        "bytes": 27003,
+        "sha256": "9601bf7d7dc2714d6fb97c2c88cfd1efca017446c23a9f550e4983c1904fb744"
+      },
+      "state_capture": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt03/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/state_capture/v3b001__nano__seed9400__control__left.capture.json",
+        "bytes": 1336,
+        "sha256": "37c5f30fdeebc78f9bca046dc03d752bfc99665c940ae71aa8d6fde2cc3a0b55"
+      }
+    },
+    {
+      "attempt_id": "behavioral_attempt04_control_left",
+      "registered_cell_id": "v3b001:nano:seed9400:control:left",
+      "stage": "model_blind_reset_gate_reproduction",
+      "model_requests": 0,
+      "behavioral_actions_executed": 0,
+      "denominator_eligible": false,
+      "disposition": "preserved_infrastructure_failure",
+      "reason": "A fresh immutable retry reproduced the identical pre-request reset state and frame-mismatch rejection. No reset attestation or behavioral request was emitted.",
+      "primary_log": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/runtime_attempt05/retry_seed9400_control_left.log",
+        "bytes": 27007,
+        "sha256": "e4f350bee55ffb4cb8fc6d06b47e9cbb86cce14353b3b7c5acc25a8b928854f7"
+      },
+      "state_capture": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt04/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/state_capture/v3b001__nano__seed9400__control__left.capture.json",
+        "bytes": 1336,
+        "sha256": "c7b7bfec5f1f8f9e0d060a9546e44ac77d7d24dffca040e2162e179082fd2fd8"
+      }
     }
   ],
   "repair": {
     "export_before_isaac_close": true,
     "absolute_attempt_local_robolab_output_folder": true,
+    "released_position_frame": "robot",
+    "live_position_comparison_frame": "robot",
+    "pre_fix_compiled_cell_invalidated": true,
+    "durable_bridge_failure_before_isaac_close": true,
+    "queue_requires_export_before_compilation": true,
     "fresh_runtime_identity_required": true,
     "exact_next_cell_unchanged": "v3b001:nano:seed9400:position_mirrored:right"
   }

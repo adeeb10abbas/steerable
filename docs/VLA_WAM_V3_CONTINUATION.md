@@ -80,19 +80,22 @@ output-path rechecks; they do not report Phase-B behavioral outcomes.
 
 ### Nano V3-B001 live runtime boundary
 
-The fail-closed live implementation is in smoke repair: V3-B001 has 108
-released cells and zero completed valid behavioral cells. One complete
-450-action smoke produced 15 model requests, 15 action chunks, 15 decoded
-33-frame futures, 451 retained states, and a viewport video, but an export
-finalization defect kept that attempt outside the behavioral denominator. The
-raw attempt is preserved and hash-ledgered in
+The fail-closed live implementation is in reset-gate repair: V3-B001 has 108
+released cells and zero completed valid behavioral cells. The first excluded
+450-action smoke produced 15 model requests and exposed the export-finalization
+defect. After that repair, a 233-action smoke compiled with eight requests, but
+the following control cell exposed a coordinate-frame defect: the released
+fixture is explicitly robot-frame, while the bridge compared it to world-frame
+poses. The compiled smoke was invalidated before analysis. Both complete raw
+attempts, the deterministic zero-request control failures, and all media are
+preserved and hash-ledgered in
 [`live_infrastructure_ledger.json`](../artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_infrastructure_ledger.json).
 
-The repair writes the simulator export before Isaac closes and gives RoboLab
-the absolute immutable attempt-local output directory, preventing media from
-being routed into its repository output tree or reused across attempts. A new
-live identity must be bound after this source change before retrying the same
-first cell. The implementation binds a new
+The current repair compares released and observed positions in the robot frame,
+writes bridge exceptions durably before Isaac closes, requires the export
+before compilation, and keeps RoboLab output in the immutable attempt-local PVC
+directory. A new live identity must be bound after this source change before
+retrying the same first cell. The implementation binds a new
 Phase-B live runtime identity to the verified Phase-A Nano identity and exact
 release, pins the Nano server CLI, performs the released positions-only reset,
 and preserves every decoded future, executed action, viewport video, state
@@ -114,8 +117,8 @@ The exact next cell remains:
 
 Its repaired live-bound runtime identity must be created and verified on the
 ali-owned PVC after the committed implementation is synchronized. The excluded
-attempt does not change the scientific status: no valid Phase-B result exists
-yet.
+and invalidated attempts do not change the scientific status: no valid Phase-B
+result exists yet.
 
 ## Exact intervention
 

@@ -171,6 +171,22 @@ class NanoPhaseBLiveQueueTest(unittest.TestCase):
             main_source.index("simulation_app.close()"),
         )
 
+    def test_bridge_compares_released_robot_frame_to_robot_frame(self) -> None:
+        source = (
+            ROOT / "experiments/v3/cosmos_nano_phase_b/robolab_bridge.py"
+        ).read_text(encoding="utf-8")
+        self.assertIn('"position_robot_xyz_m": _quat_inverse_rotate_wxyz(', source)
+        self.assertIn('physical["objects"][name]["position_robot_xyz_m"]', source)
+        self.assertIn('"position_frame": "robot"', source)
+
+    def test_queue_rejects_clean_isaac_exit_without_export(self) -> None:
+        source = (
+            ROOT / "experiments/v3/cosmos_nano_phase_b/queue_launcher.py"
+        ).read_text(encoding="utf-8")
+        self.assertIn('bridge_failure = attempt / "bridge_failure.json"', source)
+        self.assertIn('or not simulator_export.is_file()', source)
+        self.assertIn('"infrastructure_failed_before_compilation"', source)
+
 
 if __name__ == "__main__":
     unittest.main()

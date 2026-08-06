@@ -265,6 +265,22 @@ def run_cell(plan: dict[str, Any]) -> dict[str, Any]:
             error=f"{type(exc).__name__}: {exc}",
         )
         raise
+    bridge_failure = attempt / "bridge_failure.json"
+    simulator_export = attempt / "simulator_export.json"
+    if bridge_failure.is_file() or not simulator_export.is_file():
+        reason = (
+            f"bridge recorded {bridge_failure}"
+            if bridge_failure.is_file()
+            else f"bridge did not write {simulator_export}"
+        )
+        _append_attempt_event(
+            attempt,
+            "infrastructure_failed_before_compilation",
+            cell_id=plan["cell_id"],
+            denominator_eligible=False,
+            error=reason,
+        )
+        raise RuntimeContractError(reason)
     try:
         subprocess.run(plan["compiler_command"], check=True, env=environment)
     except BaseException as exc:

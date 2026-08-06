@@ -22,6 +22,7 @@ parser.add_argument("--robolab-root", type=Path, required=True)
 parser.add_argument("--candidate", type=Path, required=True)
 parser.add_argument("--candidate-sha256", required=True)
 parser.add_argument("--output-dir", type=Path, required=True)
+parser.add_argument("--amendment-id", choices=("V3-B002", "V3-B003"), default="V3-B002")
 parser.add_argument("--environment-seed", type=int, default=9400)
 parser.add_argument("--pod", required=True)
 parser.add_argument("--pod-uid", required=True)
@@ -41,7 +42,7 @@ sys.path.insert(0, str(root))
 os.environ["VLA_WAM_V3B_FIXTURE_CANDIDATE"] = str(args_cli.candidate.resolve())
 os.environ["VLA_WAM_V3B_FIXTURE_SHA256"] = args_cli.candidate_sha256
 from experiments.v3.pi05_phase_b.contract import (  # noqa: E402
-    AMENDMENT_ID, MODEL_ID, OPENPI_COMMIT, PROMPTS, ROBOLAB_COMMIT, STUDY_ID,
+    OPENPI_COMMIT, PROMPTS, ROBOLAB_COMMIT, STUDY_ID,
     sha256_file,
 )
 from experiments.v3.pi05_phase_b.runtime import MODEL_BLIND_SCHEMA, adapter_contract_sha256  # noqa: E402
@@ -67,6 +68,23 @@ TASKS = {
 }
 OBJECTS = ("rubiks_cube", "bowl", "banana")
 CAMERAS = ("over_shoulder_left_camera", "over_shoulder_right_camera", "head_camera", "wrist_cam")
+DREAMZERO_SOURCES = {
+    "amendment": (
+        "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/"
+        "post_result_dreamzero_mirror_v3b003_amendment.json",
+        "ba22681ae4d7f748e375617617d9e130e6f1bd5bc0af1e7a995365b145a470fc",
+    ),
+    "cells": (
+        "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/"
+        "dreamzero_mirror_v3b003_cells.jsonl",
+        "a6d0f0a5d4c7cdfa5d3de95d44d7b11f42750a76a603ff8c2e44848e34b8f70d",
+    ),
+    "manifest": (
+        "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/"
+        "dreamzero_mirror_v3b003_manifest.json",
+        "efe50df701193e48b981c025ea3b4d27a80e3bdf83216e38a98a63e27061cb23",
+    ),
+}
 
 
 def _numeric(value) -> list[float]:
@@ -100,6 +118,28 @@ def _combined(obs: dict) -> np.ndarray:
     return np.concatenate(frames, axis=1)
 
 
+def _fresh_physical_reset(env):
+    """Force and attest an independent RoboLab physical reset."""
+
+    counter = getattr(env, "episode_length_buf", None)
+    if counter is None or not hasattr(counter, "zero_"):
+        raise RuntimeError("RoboLab does not expose a resettable episode_length_buf")
+    before = [int(item) for item in _numeric(counter)]
+    counter.zero_()
+    after_zero = [int(item) for item in _numeric(counter)]
+    if after_zero != [0]:
+        raise RuntimeError(f"failed to arm fresh physical reset: {after_zero}")
+    obs, info = env.reset()
+    after_reset = [int(item) for item in _numeric(counter)]
+    if after_reset != [0]:
+        raise RuntimeError(f"fresh physical reset did not clear episode counter: {after_reset}")
+    return obs, info, {
+        "episode_length_buf_before_force_reset": before,
+        "episode_length_buf_after_zero": after_zero,
+        "episode_length_buf_after_reset": after_reset,
+    }
+
+
 def _file(path: Path) -> dict[str, object]:
     return {"path": str(path.resolve()), "sha256": sha256_file(path), "bytes": path.stat().st_size}
 
@@ -124,6 +164,13 @@ def main() -> None:
             raise RuntimeError("preflight requires clean tracked frozen study/RoboLab checkouts")
         if not Path(robolab.__file__).resolve().is_relative_to(args_cli.robolab_root.resolve()):
             raise RuntimeError("effective RoboLab import is outside the pinned worktree")
+        design_sources = {}
+        if args_cli.amendment_id == "V3-B003":
+            for name, (relative, expected) in DREAMZERO_SOURCES.items():
+                path = root / relative
+                if not path.is_file() or sha256_file(path) != expected:
+                    raise RuntimeError(f"DreamZero V3-B003 {name} binding changed")
+                design_sources[name] = _file(path)
         gpu_lines = subprocess.check_output(["nvidia-smi", "--query-gpu=uuid,name,driver_version", "--format=csv,noheader"], text=True).splitlines()
         gpu_line = next((line for line in gpu_lines if args_cli.gpu_uuid in line), None)
         if gpu_line is None:
@@ -141,7 +188,12 @@ def main() -> None:
         for (arm, relation), (_, task_name) in TASKS.items():
             env, env_cfg = create_env(
                 task_name, device=args_cli.device, seed=args_cli.environment_seed,
-                num_envs=1, instruction_type="default", policy="v3b002_pi05_model_blind_preflight",
+                num_envs=1, instruction_type="default",
+                policy=(
+                    "v3b003_dreamzero_model_blind_preflight"
+                    if args_cli.amendment_id == "V3-B003"
+                    else "v3b002_pi05_model_blind_preflight"
+                ),
                 renderer=args_cli.renderer, rendering_mode=args_cli.rendering_type,
             )
             video_path = args_cli.output_dir/f"{arm}_{relation}_resets.mp4"
@@ -151,7 +203,7 @@ def main() -> None:
                 if env_cfg.instruction != PROMPTS[relation]:
                     raise RuntimeError("task wrapper prompt bytes changed")
                 for repeat in range(3):
-                    obs, _ = env.reset()
+                    obs, _, reset_attestation = _fresh_physical_reset(env)
                     hold = _hold(obs, env.device)
                     for _ in range(60):
                         obs, _, terminated, truncated, _ = env.step(hold)
@@ -185,7 +237,13 @@ def main() -> None:
                         if not writer.isOpened():
                             raise RuntimeError("viewport proof writer did not open")
                     writer.write(cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
-                    repeats.append({"repeat": repeat, "positions_robot_base_m": positions, "stability": maxima, "views": views})
+                    repeats.append({
+                        "repeat": repeat,
+                        "fresh_physical_reset": reset_attestation,
+                        "positions_robot_base_m": positions,
+                        "stability": maxima,
+                        "views": views,
+                    })
             finally:
                 if writer is not None:
                     writer.release()
@@ -204,9 +262,18 @@ def main() -> None:
         raw_path.write_text(json.dumps({"model_blind": True})+"\n")
         if np.load(action_path, allow_pickle=False).shape != (15, 8) or json.loads(raw_path.read_text()) != {"model_blind": True}:
             raise RuntimeError("raw/action writer readback failed")
+        dreamzero = args_cli.amendment_id == "V3-B003"
         output = {
-            "schema_version": MODEL_BLIND_SCHEMA, "study_id": STUDY_ID,
-            "amendment_id": AMENDMENT_ID, "model_id": MODEL_ID, "passed": True,
+            "schema_version": (
+                "vla-wam-shared-v3b-dreamzero-model-blind-preflight-v1"
+                if dreamzero else MODEL_BLIND_SCHEMA
+            ),
+            "study_id": STUDY_ID,
+            "amendment_id": args_cli.amendment_id,
+            "model_id": (
+                "dreamzero_droid_action_cfg" if dreamzero else "pi05_current_stack_droid"
+            ),
+            "passed": True,
             "model_request_count": 0, "behavioral_episode_count": 0,
             "pod": args_cli.pod, "pod_uid": args_cli.pod_uid, "gpu_uuid": args_cli.gpu_uuid,
             "gpu_query": gpu_line, "renderer_backend": "realtime RTX Vulkan",
@@ -217,8 +284,15 @@ def main() -> None:
             "tasks": rows, "viewport_evidence": video_records,
             "fresh_writer_evidence": {"action": _file(action_path), "raw_jsonl": _file(raw_path)},
             "fixture_candidate": _file(args_cli.candidate),
-            "b002_adapter_contract_sha256": adapter_contract_sha256(root),
-            "robolab_commit": robolab_head, "openpi_commit": OPENPI_COMMIT,
+            "design_sources": design_sources,
+            "b002_adapter_contract_sha256": (
+                None if dreamzero else adapter_contract_sha256(root)
+            ),
+            "robolab_commit": robolab_head,
+            "openpi_commit": None if dreamzero else OPENPI_COMMIT,
+            "dreamzero_identity_binding": (
+                "V2-A015:dreamzero_action_cfg_s2" if dreamzero else None
+            ),
         }
         path = args_cli.output_dir/"model_blind_preflight.json"
         path.write_text(json.dumps(output, indent=2, sort_keys=True)+"\n")

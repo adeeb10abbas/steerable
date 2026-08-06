@@ -222,7 +222,10 @@ def main() -> None:
         bowl_half_y = float((bowl_max[1] - bowl_min[1]) / 2.0)
         lower_y = float(table_min[1] + bowl_half_y + args_cli.boundary_headroom_m)
         upper_y = float(table_max[1] - bowl_half_y - args_cli.boundary_headroom_m)
-        scan_y = dense_candidates(lower_y_m=lower_y, upper_y_m=upper_y)
+        scan_y = tuple(sorted(
+            dense_candidates(lower_y_m=lower_y, upper_y_m=upper_y),
+            key=lambda value: (abs(candidate_key(value)), candidate_key(value)),
+        ))
         _ = combined_frame(probe_obs)
     finally:
         probe_env.close()

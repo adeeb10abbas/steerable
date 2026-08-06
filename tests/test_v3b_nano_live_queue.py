@@ -150,11 +150,11 @@ class NanoPhaseBLiveQueueTest(unittest.TestCase):
         self.assertEqual(plan["environment"]["LD_LIBRARY_PATH"], FROZEN_LD_LIBRARY_PATH)
         self.assertEqual(plan["thermal_guard"], "not_used")
 
-    def test_bridge_does_not_redeclare_robolab_output_dir_argument(self) -> None:
+    def test_bridge_declares_exactly_one_output_dir_argument(self) -> None:
         source = (
             ROOT / "experiments/v3/cosmos_nano_phase_b/robolab_bridge.py"
         ).read_text(encoding="utf-8")
-        self.assertNotIn('BOOTSTRAP.add_argument("--output-dir"', source)
+        self.assertEqual(source.count('BOOTSTRAP.add_argument("--output-dir"'), 1)
         self.assertIn("add_common_eval_args(parser)", source)
 
 

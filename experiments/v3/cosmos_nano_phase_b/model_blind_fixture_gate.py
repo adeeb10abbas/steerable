@@ -10,6 +10,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 import traceback
 
 import cv2
@@ -67,6 +68,12 @@ if not args_cli.headless:
     parser.error("model-blind fixture calibration must run headless")
 if args_cli.renderer != "realtime" or args_cli.rendering_type != "balanced":
     parser.error("model-blind fixture calibration requires realtime/balanced RTX")
+
+study_root = args_cli.study_root.resolve()
+if not (study_root / "experiments/v3/cosmos_nano_phase_b").is_dir():
+    parser.error("study root does not contain the Phase-B calibration package")
+if str(study_root) not in sys.path:
+    sys.path.insert(0, str(study_root))
 
 os.environ["VLA_WAM_V3B_FIXTURE_CANDIDATE"] = str(args_cli.candidate.resolve())
 os.environ["VLA_WAM_V3B_FIXTURE_SHA256"] = args_cli.candidate_sha256
@@ -160,6 +167,15 @@ def main() -> None:
     )
     if commit != ROBOLAB_COMMIT or tracked_diff:
         raise ValueError("calibration requires the clean tracked frozen RoboLab revision")
+    study_commit = subprocess.check_output(
+        ["git", "-C", str(study_root), "rev-parse", "HEAD"], text=True
+    ).strip()
+    study_tracked_diff = subprocess.check_output(
+        ["git", "-C", str(study_root), "status", "--porcelain=v1", "--untracked-files=no"],
+        text=True,
+    )
+    if study_tracked_diff:
+        raise ValueError("calibration requires a clean tracked study checkout")
     robolab_import = Path(robolab.__file__).resolve()
     if not robolab_import.is_relative_to(robolab_root):
         raise ValueError("effective RoboLab import is outside the pinned worktree")
@@ -233,7 +249,9 @@ def main() -> None:
                     if not close_vector(positions[name], expected[arm][name], 0.003):
                         raise ValueError(f"{label} live {name} position missed candidate tolerance")
                     if max(abs(item) for item in velocities[name]) > 0.02:
-                        raise ValueError(f"{label} live {name} did not settle")
+                        raise ValueError(
+                            f"{label} live {name} did not settle: {velocities[name]}"
+                        )
                 left = bool(object_left_of(
                     env,
                     object="rubiks_cube",
@@ -340,6 +358,7 @@ def main() -> None:
         "gpu_uuid": args_cli.gpu_uuid,
         "gpu_query": gpu_line,
         "candidate": record(args_cli.candidate),
+        "calibration_driver_source": record(Path(__file__).resolve()),
         "factor_task_source": record(task_path),
         "factor_task_wrappers": {
             label: record(task_wrappers[label]) for label in TASKS
@@ -352,6 +371,10 @@ def main() -> None:
                 name: importlib.metadata.version(name)
                 for name in ("isaacsim", "isaaclab", "robolab")
             },
+        },
+        "study_checkout": {
+            "commit": study_commit,
+            "tracked_diff_empty": True,
         },
         "renderer": {
             "backend": "realtime RTX Vulkan",

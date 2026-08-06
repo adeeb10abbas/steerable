@@ -1,0 +1,85 @@
+{
+  "schema_version": "vla-wam-shared-v3b-nano-live-infrastructure-ledger-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B001",
+  "updated_at_utc": "2026-08-06T04:51:03Z",
+  "behavioral_denominator_excludes_all_entries": true,
+  "completed_valid_behavioral_cells": 0,
+  "eula_acceptance": {
+    "scope": "Omniverse/Isaac software required by the authorized Nano V3-B001 queue",
+    "environment": "OMNI_KIT_ACCEPT_EULA=YES",
+    "user_authorized": true
+  },
+  "entries": [
+    {
+      "attempt_id": "server_attempt01",
+      "stage": "server_startup",
+      "model_requests": 0,
+      "behavioral_actions_executed": 0,
+      "denominator_eligible": false,
+      "disposition": "preserved_infrastructure_failure",
+      "reason": "The launch environment did not contain uvx; the exact server was not started.",
+      "primary_log": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/server_attempt01/server.log",
+        "bytes": 16299,
+        "sha256": "1ca34ad0a1d49cde0850f9f7fba5342cd261e186f1a6410a0794eb2c5b441a5d"
+      }
+    },
+    {
+      "attempt_id": "behavioral_attempt01",
+      "registered_cell_id": "v3b001:nano:seed9400:position_mirrored:right",
+      "stage": "bridge_argument_initialization",
+      "model_requests": 0,
+      "behavioral_actions_executed": 0,
+      "denominator_eligible": false,
+      "disposition": "preserved_infrastructure_failure",
+      "reason": "The bridge output directory was absent from the parsed argument namespace; Isaac and the model were never invoked.",
+      "primary_log": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/runtime_attempt01/smoke_seed9400_mirrored_right_attempt02.log",
+        "bytes": 4125,
+        "sha256": "26efc096ba79d71832652d7ca66cba644df5cbf28e8b50c230d23f3cd1a5d3ee"
+      }
+    },
+    {
+      "attempt_id": "behavioral_attempt02",
+      "registered_cell_id": "v3b001:nano:seed9400:position_mirrored:right",
+      "stage": "post_behavior_export_finalization",
+      "model_requests": 15,
+      "behavioral_actions_executed": 450,
+      "retained_state_count": 451,
+      "retained_action_chunks": 15,
+      "retained_decoded_futures": 15,
+      "decoded_future_frames_per_request": 33,
+      "denominator_eligible": false,
+      "disposition": "preserved_complete_behavior_infrastructure_invalid",
+      "reason": "Isaac closed before simulator_export.json was written, and RoboLab routed the simulator media outside the attempt-local output directory. No compiled behavioral JSONL was emitted.",
+      "raw_root": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt02/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__position_mirrored__right/attempt01",
+      "primary_log": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/runtime_attempt02/smoke_seed9400_mirrored_right.log",
+        "bytes": 54110,
+        "sha256": "bb0f3a3498f5cf75668e4d5e8b3214f01ce433c40c4650019d9ec1922ec01073"
+      },
+      "attempt_events": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt02/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__position_mirrored__right/attempt01/attempt_events.jsonl",
+        "bytes": 1866,
+        "sha256": "259eead6510b6cf93b9736226fd88afed5b2c29dd99ceeadbe3311a3e8fdaad8"
+      },
+      "state_capture": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt02/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__position_mirrored__right/attempt01/state_capture/v3b001__nano__seed9400__position_mirrored__right.capture.json",
+        "bytes": 137713,
+        "sha256": "44992be72864d234096870b2e67a69169dd3ee6340186dcec65fd98674b1166a"
+      },
+      "recovered_viewport_video": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt02/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__position_mirrored__right/attempt01/simulator/v3b001__nano__seed9400__position_mirrored__right/V3BNanoPositionMirroredRightCalibrationTask/Put_the_Rubiks_cube_to_the_right_of_the_bowl_0_viewport.mp4",
+        "bytes": 2877651,
+        "sha256": "b027a83e6489c0c6975662e19ff62034419dd06367743912cfd66bbd57e31b16"
+      }
+    }
+  ],
+  "repair": {
+    "export_before_isaac_close": true,
+    "absolute_attempt_local_robolab_output_folder": true,
+    "fresh_runtime_identity_required": true,
+    "exact_next_cell_unchanged": "v3b001:nano:seed9400:position_mirrored:right"
+  }
+}

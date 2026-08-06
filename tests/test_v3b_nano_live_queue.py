@@ -145,6 +145,10 @@ class NanoPhaseBLiveQueueTest(unittest.TestCase):
         ):
             self.assertEqual(command[command.index(flag) + 1], value)
         self.assertIn("--headless", command)
+        output_dir = command[command.index("--output-dir") + 1]
+        runner_output = command[command.index("--output-folder-name") + 1]
+        self.assertEqual(runner_output, output_dir)
+        self.assertTrue(Path(runner_output).is_absolute())
         self.assertEqual(plan["environment"]["OMNI_KIT_ACCEPT_EULA"], "YES")
         self.assertEqual(plan["environment"]["VK_ICD_FILENAMES"], FROZEN_VK_ICD)
         self.assertEqual(plan["environment"]["LD_LIBRARY_PATH"], FROZEN_LD_LIBRARY_PATH)
@@ -156,6 +160,16 @@ class NanoPhaseBLiveQueueTest(unittest.TestCase):
         ).read_text(encoding="utf-8")
         self.assertEqual(source.count('BOOTSTRAP.add_argument("--output-dir"'), 1)
         self.assertIn("add_common_eval_args(parser)", source)
+
+    def test_bridge_persists_export_before_isaac_close(self) -> None:
+        source = (
+            ROOT / "experiments/v3/cosmos_nano_phase_b/robolab_bridge.py"
+        ).read_text(encoding="utf-8")
+        main_source = source[source.index("def main() -> None:") :]
+        self.assertLess(
+            main_source.index("_write_export()"),
+            main_source.index("simulation_app.close()"),
+        )
 
 
 if __name__ == "__main__":

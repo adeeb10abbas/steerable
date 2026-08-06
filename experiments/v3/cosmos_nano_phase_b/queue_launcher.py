@@ -98,7 +98,11 @@ def bridge_command(
         "--open-loop-horizon", "32",
         "--instruction-controller", "static",
         "--output-dir", str(attempt / "simulator"),
-        "--output-folder-name", stem,
+        # RoboLab joins this value beneath its package output directory, but
+        # os.path.join preserves an absolute final component.  Supplying the
+        # immutable attempt-local directory keeps videos/HDF5/configs on the
+        # PVC evidence path and prevents cross-attempt output reuse.
+        "--output-folder-name", str(attempt / "simulator"),
         "--num-envs", "1",
         "--num-runs", "1",
         "--headless",

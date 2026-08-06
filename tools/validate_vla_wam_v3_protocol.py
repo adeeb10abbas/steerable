@@ -54,6 +54,7 @@ REQUIRED = {
     "nano_mirror_amendment": f"{V3}/phase_b/nano_mirror_v3b001/post_result_nano_mirror_v3b001_amendment.json",
     "nano_mirror_cells": f"{V3}/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_cells.jsonl",
     "nano_mirror_manifest": f"{V3}/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_manifest.json",
+    "nano_mirror_live_ledger": f"{V3}/phase_b/nano_mirror_v3b001/live_infrastructure_ledger.json",
     "nano_mirror_runtime_adapter": "experiments/v3/cosmos_nano_phase_b/runtime_adapter.py",
     "nano_mirror_compiler": "experiments/v3/cosmos_nano_phase_b/compile_cell.py",
     "nano_mirror_live_support": "experiments/v3/cosmos_nano_phase_b/live_support.py",
@@ -1045,6 +1046,7 @@ def validate(root: Path) -> list[str]:
     nano_calibration = load(paths["nano_mirror_calibration"])
     nano_amendment = load(paths["nano_mirror_amendment"])
     nano_manifest = load(paths["nano_mirror_manifest"])
+    nano_live_ledger = load(paths["nano_mirror_live_ledger"])
     nano_cells = load_jsonl(paths["nano_mirror_cells"])
 
     require(
@@ -1221,6 +1223,7 @@ def validate(root: Path) -> list[str]:
         "cells": "nano_mirror_cells",
         "manifest": "nano_mirror_manifest",
         "amendment": "nano_mirror_amendment",
+        "live_infrastructure_ledger": "nano_mirror_live_ledger",
     }
     require(
         all(
@@ -1229,18 +1232,47 @@ def validate(root: Path) -> list[str]:
             and REQUIRED[path_key] in continuation.get("authoritative_files", [])
             for label, path_key in nano_state_artifact_keys.items()
         ),
-        "V3 continuation hash-binds all four authoritative Nano V3-B001 release artifacts",
+        "V3 continuation hash-binds all release and live-infrastructure Nano V3-B001 artifacts",
         checks,
     )
     nano_live = nano_state.get("live_runtime", {})
     require(
-        nano_live.get("status") == "implementation_ready_pre_inference"
-        and nano_live.get("model_request_count") == 0
+        nano_live.get("status")
+        == "live_smoke_repair_after_preserved_infrastructure_invalid_attempt"
+        and nano_live.get("model_request_count") == 15
         and nano_live.get("behavioral_episode_count") == 0
         and nano_live.get("completed_behavioral_cell_count") == 0
+        and nano_live.get("infrastructure_invalid_complete_behavior_attempt_count") == 1
         and nano_live.get("live_bound_runtime_identity")
-        == "must_be_created_on_the_ali_owned_pvc_after_sync_and_verified_before_the_first_model_request",
-        "V3 continuation records the Nano live stack as ready but strictly pre-inference",
+        == "must_be_rebound_on_the_ali_owned_pvc_after_the_export_finalization_fix_before_retrying_the_exact_next_cell",
+        "V3 continuation records the Nano smoke as infrastructure-invalid with zero completed cells",
+        checks,
+    )
+    ledger_entries = nano_live_ledger.get("entries", [])
+    invalid_behavior = next(
+        (entry for entry in ledger_entries if entry.get("attempt_id") == "behavioral_attempt02"),
+        {},
+    )
+    require(
+        nano_live_ledger.get("behavioral_denominator_excludes_all_entries") is True
+        and nano_live_ledger.get("completed_valid_behavioral_cells") == 0
+        and nano_live_ledger.get("eula_acceptance", {}).get("user_authorized") is True
+        and nano_live_ledger.get("eula_acceptance", {}).get("environment")
+        == "OMNI_KIT_ACCEPT_EULA=YES"
+        and invalid_behavior.get("model_requests") == 15
+        and invalid_behavior.get("behavioral_actions_executed") == 450
+        and invalid_behavior.get("retained_state_count") == 451
+        and invalid_behavior.get("retained_action_chunks") == 15
+        and invalid_behavior.get("retained_decoded_futures") == 15
+        and invalid_behavior.get("denominator_eligible") is False
+        and invalid_behavior.get("disposition")
+        == "preserved_complete_behavior_infrastructure_invalid"
+        and nano_live_ledger.get("repair", {}).get("export_before_isaac_close") is True
+        and nano_live_ledger.get("repair", {}).get(
+            "absolute_attempt_local_robolab_output_folder"
+        )
+        is True,
+        "Nano live ledger preserves the excluded smoke and EULA-authorized repair boundary",
         checks,
     )
     require(
@@ -1609,11 +1641,12 @@ def validate(root: Path) -> list[str]:
     )
     require(
         "Nano V3-B001 live runtime boundary" in continuation_doc
-        and "108 released cells, zero completed behavioral cells, and zero model requests"
-        in continuation_doc
+        and "108 released cells and zero completed valid behavioral cells" in continuation_doc
+        and "15 model requests" in continuation_doc
+        and "outside the behavioral denominator" in continuation_doc
         and "v3b001:nano:seed9400:position_mirrored:right" in continuation_doc
         and EXACT_V2_WORDINGS["direct_command"]["right"] in continuation_doc,
-        "V3 continuation documents Nano live readiness without claiming a behavioral result",
+        "V3 continuation documents the excluded Nano smoke without claiming a behavioral result",
         checks,
     )
     require(

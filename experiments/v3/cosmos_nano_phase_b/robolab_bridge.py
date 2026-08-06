@@ -641,18 +641,22 @@ def _write_export() -> Path:
 def main() -> None:
     failure: BaseException | None = None
     try:
-        run_evaluation(args_cli, policy="cosmos3_nano_v2", client_factory=make_client)
-    except BaseException as exc:
-        failure = exc
+        try:
+            run_evaluation(args_cli, policy="cosmos3_nano_v2", client_factory=make_client)
+        except BaseException as exc:
+            failure = exc
+        finally:
+            for client in clients:
+                client.write_trace()
+            for proxy in proxies:
+                proxy.write_capture()
+        if failure is not None:
+            raise failure
+        # Isaac's close path can terminate the process successfully, so all
+        # denominator-eligibility evidence must be durable before closing it.
+        _write_export()
     finally:
-        for client in clients:
-            client.write_trace()
-        for proxy in proxies:
-            proxy.write_capture()
         simulation_app.close()
-    if failure is not None:
-        raise failure
-    _write_export()
 
 
 if __name__ == "__main__":

@@ -80,9 +80,19 @@ output-path rechecks; they do not report Phase-B behavioral outcomes.
 
 ### Nano V3-B001 live runtime boundary
 
-The fail-closed live implementation is ready, but this is still a
-**pre-inference state**: V3-B001 has 108 released cells, zero completed
-behavioral cells, and zero model requests. The implementation binds a new
+The fail-closed live implementation is in smoke repair: V3-B001 has 108
+released cells and zero completed valid behavioral cells. One complete
+450-action smoke produced 15 model requests, 15 action chunks, 15 decoded
+33-frame futures, 451 retained states, and a viewport video, but an export
+finalization defect kept that attempt outside the behavioral denominator. The
+raw attempt is preserved and hash-ledgered in
+[`live_infrastructure_ledger.json`](../artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_infrastructure_ledger.json).
+
+The repair writes the simulator export before Isaac closes and gives RoboLab
+the absolute immutable attempt-local output directory, preventing media from
+being routed into its repository output tree or reused across attempts. A new
+live identity must be bound after this source change before retrying the same
+first cell. The implementation binds a new
 Phase-B live runtime identity to the verified Phase-A Nano identity and exact
 release, pins the Nano server CLI, performs the released positions-only reset,
 and preserves every decoded future, executed action, viewport video, state
@@ -102,9 +112,10 @@ The exact next cell remains:
 
 > Put the Rubik's cube to the right of the bowl.
 
-Its live-bound runtime identity must be created and verified on the ali-owned
-PVC after the committed implementation is synchronized. Runtime readiness does
-not change the scientific status: no Phase-B result exists yet.
+Its repaired live-bound runtime identity must be created and verified on the
+ali-owned PVC after the committed implementation is synchronized. The excluded
+attempt does not change the scientific status: no valid Phase-B result exists
+yet.
 
 ## Exact intervention
 

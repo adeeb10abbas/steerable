@@ -1,10 +1,10 @@
 {
   "schema_version": "vla-wam-shared-v3-continuation-v1",
   "study_id": "vla_wam_language_steerability_v3",
-  "updated_at_utc": "2026-08-06T05:35:14Z",
+  "updated_at_utc": "2026-08-06T06:21:15Z",
   "active_branch": "codex/wam-language-steerability",
-  "evidence_head": "6e1de8f2192ec9d7ef7f8356458775541f596a97",
-  "status": "phase_a_and_v3a002_complete_nano_v3b001_registration_context_repair_108_cells_released_zero_completed_other_phase_b_phase_c_phase_d_unreleased",
+  "evidence_head": "3e906a6e0d2389ca79191d7583302b03e781cd49",
+  "status": "phase_a_and_v3a002_complete_nano_v3b001_reset_ordinal_preflight_108_cells_released_zero_completed_other_phase_b_phase_c_phase_d_unreleased",
   "authoritative_files": [
     "docs/VLA_WAM_V3_CONTINUATION.md",
     "docs/VLA_WAM_STEERABILITY_V3_PROTOCOL.md",
@@ -25,6 +25,7 @@
     "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_manifest.json",
     "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/post_result_nano_mirror_v3b001_amendment.json",
     "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_infrastructure_ledger.json",
+    "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_reset_semantics_correction.json",
     "experiments/v3/cosmos_nano_phase_b/runtime_adapter.py",
     "experiments/v3/cosmos_nano_phase_b/compile_cell.py",
     "experiments/v3/cosmos_nano_phase_b/live_support.py",
@@ -39,7 +40,7 @@
     "v3": {
       "command": ".venv/bin/python tools/validate_vla_wam_v3_protocol.py",
       "status": "valid",
-      "check_count": 318
+      "check_count": 321
     },
     "v2": {
       "command": ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
@@ -49,7 +50,7 @@
     "focused_tests": {
       "command": ".venv/bin/python -m unittest -v tests.test_audit_vla_wam_measurement_coverage tests.test_validate_vla_wam_v3_protocol tests.test_v3_robotwin_wams_launcher tests.test_vla_wam_v3_episode_schema tests.test_v3b_nano_mirror_release tests.test_v3b_nano_runtime_adapter tests.test_v3b_nano_live_queue",
       "status": "passed",
-      "test_count": 63
+      "test_count": 65
     }
   },
   "measurement_coverage_audit": {
@@ -137,16 +138,21 @@
         },
         "live_infrastructure_ledger": {
           "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_infrastructure_ledger.json",
-          "sha256": "dd7cea461bad1aa918312dff3cff405e2db54744ae76af0c176399872d8061aa"
+          "sha256": "f7fc5e76233e22ac9c677b722afd81de23fb2c404286d5eaba3960a45676610d"
+        },
+        "live_reset_semantics_correction": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_reset_semantics_correction.json",
+          "sha256": "167494ff48b075c41ff64fce4c18c78ae6650d1bcfd63d0646cf386a0a82875b"
         }
       },
       "live_runtime": {
-        "status": "live_registration_context_repair_after_preserved_invalidated_smokes",
-        "model_request_count": 31,
+        "status": "live_reset_ordinal_model_blind_preflight_required",
+        "model_request_count": 39,
         "behavioral_episode_count": 0,
         "completed_behavioral_cell_count": 0,
-        "infrastructure_invalid_complete_behavior_attempt_count": 3,
-        "live_bound_runtime_identity": "must_be_rebound_on_the_ali_owned_pvc_after_the_full_registration_context_fix_before_retrying_the_exact_next_cell",
+        "infrastructure_invalid_complete_behavior_attempt_count": 4,
+        "behavioral_denominator": 0,
+        "live_bound_runtime_identity": "fresh_source_bound_runtime_identity_then_zero_sampling_exact_bridge_preflight_then_behavior_under_same_identity_if_passed",
         "invalidated_runtime_attempt06": {
           "runtime_identity_sha256": "fa962d1783a506abb2e0c11c5129087be62a9f698bd2a3bec2a97dddba9b6a71",
           "manifest_file_sha256": "41b31bd7fab0c69d5e7f7deafe041177ffe97a7727003c17bdf85bb24cb07875",
@@ -154,11 +160,36 @@
           "reason": "The first compiled row is invalidated before analysis because the bridge source is changing and the aggregate requires one runtime identity across all 108 cells."
         },
         "registration_context_diagnostic": {
-          "status": "passed_all_four_layouts_two_resets_each_server_unloaded",
+          "status": "registration_context_hypothesis_falsified_as_sufficient",
           "model_requests": 0,
           "behavioral_episodes": 0,
           "report_path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/diagnostic_server_unloaded_attempt01/live_gate/model_blind_calibration_report.json",
-          "report_sha256": "b15b3249647dbf468e745727e2d7677df9c74d919b399a3148be17312951ca04"
+          "report_sha256": "b15b3249647dbf468e745727e2d7677df9c74d919b399a3148be17312951ca04",
+          "boundary": "This diagnostic did not reproduce the pinned runner's episode-length mutation order and did not isolate reset ordinal."
+        },
+        "reset_semantics_correction": {
+          "artifact_path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_reset_semantics_correction.json",
+          "artifact_sha256": "167494ff48b075c41ff64fce4c18c78ae6650d1bcfd63d0646cf386a0a82875b",
+          "status": "prospective_operational_correction_before_any_valid_phase_b_behavior",
+          "registration_context_hypothesis": "falsified_as_the_sufficient_root_cause",
+          "calibration_repeat_semantics": "Repeat 0 was a fresh physical reset plus 75 model-blind steps; repeats 1 and 2 saw ep_len=75 and entered the post-step freeze path before active_ids, so they were stability observations rather than fresh physical resets.",
+          "pre_fix_live_semantics": "After runner reset call 1 the proxy zeroed episode_length_buf, so call 2 saw ep_len=0, entered artifact_ids, and performed a fresh second physical reset.",
+          "attempt10_provisional_right": {
+            "actions_executed": 169,
+            "requested_success": true,
+            "raw_episode_sha256": "a51380c97cc6426332e3c8915d2950fb7785adabd13e5cab44ec34311141ce27",
+            "viewport_video_sha256": "92e26891c9ec1871d1c167d3914f22aa3fe90fc6fecc6af95a55684b8de2e1db",
+            "batch_manifest_sha256": "bca5342cbe6ccbf8a88d8c68b9900e7a1b6a79f1d39ececd6100ba667e244962",
+            "disposition": "invalidated_before_analysis"
+          },
+          "attempt10_control_left": {
+            "model_requests": 0,
+            "fixture_match_sha256": "573f1df5892d1137147945a2d8f531af9d59d1d60c744c717f396f0b17e4e276",
+            "settle_stability_sha256": "588297f9d058bb9997346f0c0c71e6420381ad5d9fae70687854adc4f76d4ef9",
+            "bridge_failure_sha256": "1f921e18c520dc6daa2d415cfe39f0f70903adc5a2b8c90e7c4e9f72db998519"
+          },
+          "attempt08_bridge_failure_sha256": "247d772c6895aa8fc69c7908bea11514b78c0643e29e7ed5ab020beb566dbc86",
+          "attempt09_bridge_failure_sha256": "ff2159bf3b5bec3f12d9a73eb6697ae2e5d1d52dfb7a28ea31b6251cc1a609ef"
         },
         "exact_next_cell": {
           "cell_id": "v3b001:nano:seed9400:position_mirrored:right",
@@ -168,9 +199,18 @@
           "prompt": "Put the Rubik's cube to the right of the bowl."
         },
         "model_blind_reset_gate": {
+          "runner_pre_action_reset_calls": 2,
+          "physical_reset_calls": 1,
+          "settle_gate_runs": 1,
+          "duplicate_second_reset_idempotent": true,
+          "call1_evidence": "provisional_not_persisted",
+          "call2_evidence": "final_persisted_attestation",
           "settle_steps": 60,
           "stability_window_steps": 15,
-          "episode_length_buf_before_behavior": 75,
+          "episode_length_buf_before_reset": [75],
+          "episode_length_buf_after_reset": [0],
+          "model_request_count_before_attestation": 0,
+          "frozen_flags_after_duplicate_reset": false,
           "linear_speed_threshold_m_s": 0.02,
           "angular_speed_threshold_rad_s": 0.2,
           "counter_reset_required_before_model_request": true
@@ -182,8 +222,10 @@
           "static_prompt_only": true,
           "omniverse_eula_acceptance": "OMNI_KIT_ACCEPT_EULA=YES",
           "thermal_guard": "not_used",
-          "full_calibration_registration_context_required": true,
-          "split_policy_server_preferred_for_simulator_load_isolation": true
+          "full_calibration_registration_context_retained": true,
+          "split_policy_server_preferred_for_simulator_load_isolation": true,
+          "persistent_caches": "ali_owned_pvc",
+          "temporary_directory": "pod_local_tmpdir"
         },
         "execution_topology": {
           "simulator_pod": {
@@ -203,18 +245,18 @@
             "gpu_product": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
             "driver_version": "580.105.08"
           },
-          "claim_boundary": "The split-server one-wrapper retry also failed. Registration context is the demonstrated mismatch; split pods remain preferred for load isolation without claiming GPU colocation was causal."
+          "claim_boundary": "Split pods remain preferred for load isolation without treating GPU placement as a scientific intervention. Registration context is falsified as the sufficient cause; the demonstrated defect is the runner/proxy episode-length and reset-ordinal interaction."
         },
         "source_bindings": {
-          "runtime_adapter": {"path": "experiments/v3/cosmos_nano_phase_b/runtime_adapter.py", "sha256": "6ff6c48d28842d78fb8a1e105d1a48bc2149d6d320106775cf857cacd523b719"},
+          "runtime_adapter": {"path": "experiments/v3/cosmos_nano_phase_b/runtime_adapter.py", "sha256": "dadac7a84dd31fe762a3bf52b41201164ae71155bbec9ac8d34ffc5ca20d1bda"},
           "compiler": {"path": "experiments/v3/cosmos_nano_phase_b/compile_cell.py", "sha256": "468bb9231316c4670a2dc3388ab7eb6f2ef5f42afc8fb04b16faca7b823f2a75"},
           "live_support": {"path": "experiments/v3/cosmos_nano_phase_b/live_support.py", "sha256": "445176755c89d34a597e83ed23fa0444922a4736e276117a5242335a2aa76590"},
           "live_client": {"path": "experiments/v3/cosmos_nano_phase_b/live_client.py", "sha256": "39efa19151039f8243cf452713bbaf13b3e955ccd590055d462c1ea66cac0a28"},
           "live_server": {"path": "experiments/v3/cosmos_nano_phase_b/serve_nano.py", "sha256": "caa2c7ca1ea8bc3dd831a0564c3f37f63c64dc90ddf104b1ae0281ae61e7e1cc"},
-          "live_bridge": {"path": "experiments/v3/cosmos_nano_phase_b/robolab_bridge.py", "sha256": "173ebb0fb4b292798051e8c63604dce1977408cd0b1a1d683991c9cd29057b29"},
+          "live_bridge": {"path": "experiments/v3/cosmos_nano_phase_b/robolab_bridge.py", "sha256": "d93ceb145430764341640c9925830fc10dce1329626a5076b52196f8b2d3a62b"},
           "queue_launcher": {"path": "experiments/v3/cosmos_nano_phase_b/queue_launcher.py", "sha256": "52a4132fb9f6dfff3e9e4bbb17862c682c3e0cc1fbdfc11e6c73e08316b87c4d"},
-          "runtime_test": {"path": "tests/test_v3b_nano_runtime_adapter.py", "sha256": "4347a5354806da8180b13a64a712ba267397a387fd80f02f6d851950510f22ff"},
-          "live_queue_test": {"path": "tests/test_v3b_nano_live_queue.py", "sha256": "6c48513d99fcfb904b204f2fe78608297e70ed8cd576869d00f8f0639b228422"}
+          "runtime_test": {"path": "tests/test_v3b_nano_runtime_adapter.py", "sha256": "ef763451067bce15f880f19457dbeee232b9cd2501941f396b85bae783a35f2b"},
+          "live_queue_test": {"path": "tests/test_v3b_nano_live_queue.py", "sha256": "b0e29b0999223f88ec7782b66360dcd6b01dff48f89c917ff02f79da82303c0f"}
         }
       }
     }
@@ -463,7 +505,7 @@
       ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
       "git diff --check"
     ],
-    "inference_authority": "No Phase-A authorized_new or V3-A002 bridge cell remains; do not rerun a valid cell. Nano V3-B001 is the only released Phase-B queue: its exact 108 hash-bound rows may start only after the full four-wrapper calibration registration context is reproduced, a fresh live runtime identity is bound, and viewport-writer and raw-output-path checks pass. Use the separate ali-owned RTX policy-server pod for load isolation while retaining the ali-owned simulator pod; the split topology is not itself a scientific intervention. No other Phase-B, Phase-C, or Phase-D cell may start without its own frozen independent release path. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or Phase C.",
+    "inference_authority": "No Phase-A authorized_new or V3-A002 bridge cell remains; do not rerun a valid cell. Nano V3-B001 is the only released Phase-B queue. Before model behavior, bind one fresh source-bound runtime identity, run the zero-sampling model-blind exact-bridge preflight under that identity, and verify two runner reset calls map to one physical reset and one settle gate with final call-2 attestation. If and only if the preflight passes, resume behavior under that same verified identity. The exact next behavioral cell remains v3b001:nano:seed9400:position_mirrored:right. Use the separate ali-owned RTX policy-server pod for load isolation while retaining the ali-owned simulator pod; the split topology is not itself a scientific intervention. No other Phase-B, Phase-C, or Phase-D cell may start without its own frozen independent release path. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or Phase C.",
     "publication_note": "Use the compact result summaries and evidence manifests for analysis. Do not infer current study state from the older V2 article, gallery, figures, or chat history."
   }
 }

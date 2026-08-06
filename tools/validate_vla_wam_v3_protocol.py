@@ -55,6 +55,7 @@ REQUIRED = {
     "nano_mirror_cells": f"{V3}/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_cells.jsonl",
     "nano_mirror_manifest": f"{V3}/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_manifest.json",
     "nano_mirror_live_ledger": f"{V3}/phase_b/nano_mirror_v3b001/live_infrastructure_ledger.json",
+    "nano_mirror_reset_correction": f"{V3}/phase_b/nano_mirror_v3b001/live_reset_semantics_correction.json",
     "nano_mirror_runtime_adapter": "experiments/v3/cosmos_nano_phase_b/runtime_adapter.py",
     "nano_mirror_compiler": "experiments/v3/cosmos_nano_phase_b/compile_cell.py",
     "nano_mirror_live_support": "experiments/v3/cosmos_nano_phase_b/live_support.py",
@@ -1047,6 +1048,7 @@ def validate(root: Path) -> list[str]:
     nano_amendment = load(paths["nano_mirror_amendment"])
     nano_manifest = load(paths["nano_mirror_manifest"])
     nano_live_ledger = load(paths["nano_mirror_live_ledger"])
+    nano_reset_correction = load(paths["nano_mirror_reset_correction"])
     nano_cells = load_jsonl(paths["nano_mirror_cells"])
 
     require(
@@ -1224,6 +1226,7 @@ def validate(root: Path) -> list[str]:
         "manifest": "nano_mirror_manifest",
         "amendment": "nano_mirror_amendment",
         "live_infrastructure_ledger": "nano_mirror_live_ledger",
+        "live_reset_semantics_correction": "nano_mirror_reset_correction",
     }
     require(
         all(
@@ -1238,13 +1241,14 @@ def validate(root: Path) -> list[str]:
     nano_live = nano_state.get("live_runtime", {})
     require(
         nano_live.get("status")
-        == "live_registration_context_repair_after_preserved_invalidated_smokes"
-        and nano_live.get("model_request_count") == 31
+        == "live_reset_ordinal_model_blind_preflight_required"
+        and nano_live.get("model_request_count") == 39
         and nano_live.get("behavioral_episode_count") == 0
         and nano_live.get("completed_behavioral_cell_count") == 0
-        and nano_live.get("infrastructure_invalid_complete_behavior_attempt_count") == 3
+        and nano_live.get("infrastructure_invalid_complete_behavior_attempt_count") == 4
+        and nano_live.get("behavioral_denominator") == 0
         and nano_live.get("live_bound_runtime_identity")
-        == "must_be_rebound_on_the_ali_owned_pvc_after_the_full_registration_context_fix_before_retrying_the_exact_next_cell"
+        == "fresh_source_bound_runtime_identity_then_zero_sampling_exact_bridge_preflight_then_behavior_under_same_identity_if_passed"
         and nano_live.get("invalidated_runtime_attempt06", {}).get(
             "runtime_identity_sha256"
         )
@@ -1252,6 +1256,56 @@ def validate(root: Path) -> list[str]:
         and nano_live.get("registration_context_diagnostic", {}).get("model_requests")
         == 0,
         "V3 continuation records the Nano smoke as infrastructure-invalid with zero completed cells",
+        checks,
+    )
+    require(
+        nano_reset_correction.get("schema_version")
+        == "vla-wam-shared-v3b-nano-live-reset-semantics-correction-v1"
+        and nano_reset_correction.get("status")
+        == "prospective_operational_correction_before_any_valid_phase_b_behavior"
+        and nano_reset_correction.get("diagnosis", {}).get("registration_context_hypothesis")
+        == "falsified_as_the_sufficient_root_cause"
+        and nano_reset_correction.get("diagnosis", {}).get("pinned_runner", {}).get(
+            "consecutive_pre_action_reset_calls"
+        ) == 2
+        and nano_reset_correction.get("diagnosis", {}).get("pinned_environment_runtime", {}).get(
+            "sha256"
+        ) == "c35a1aced26a30de1fde21f8db28f87910757d090b677172f9915432f3b45f12"
+        and nano_reset_correction.get("diagnosis", {}).get("direct_evidence", {}).get(
+            "committed_calibration_report", {}
+        ).get("sha256") == sha256(paths["nano_mirror_calibration"])
+        and nano_reset_correction.get("validity_and_resume", {}).get("behavioral_denominator") == 0
+        and nano_reset_correction.get("validity_and_resume", {}).get(
+            "prior_complete_attempts_invalidated_before_analysis"
+        ) == 4
+        and nano_reset_correction.get("validity_and_resume", {}).get(
+            "total_model_requests_retained_as_infrastructure_evidence"
+        ) == 39,
+        "Nano reset correction is prospective, evidence-bound, and preserves a zero denominator",
+        checks,
+    )
+    require(
+        nano_reset_correction.get("prospective_live_contract")
+        == {
+            "runner_pre_action_reset_calls": 2,
+            "physical_reset_calls": 1,
+            "settle_gate_runs": 1,
+            "duplicate_second_reset_idempotent": True,
+            "settle_steps": 60,
+            "stable_window_steps": 15,
+            "episode_length_buf_before_reset": [75],
+            "episode_length_buf_after_reset": [0],
+            "model_request_count_before_attestation": 0,
+            "position_tolerance_m": 0.003,
+            "logical_second_reset_behavior": "Return the cached settled observation and info without another Isaac reset or settle gate.",
+            "third_pre_action_reset_behavior": "Reject before inference.",
+        }
+        and all(
+            (root / relative).is_file() and sha256(root / relative) == digest
+            for relative, digest in nano_reset_correction.get("source_bindings", {}).items()
+        )
+        and len(nano_reset_correction.get("source_bindings", {})) == 4,
+        "Nano reset correction hash-binds the two-call one-physical-reset implementation and tests",
         checks,
     )
     ledger_entries = nano_live_ledger.get("entries", [])
@@ -1277,6 +1331,22 @@ def validate(root: Path) -> list[str]:
         ),
         {},
     )
+    cache_failures = {
+        entry.get("attempt_id"): entry
+        for entry in ledger_entries
+        if entry.get("attempt_id") in {
+            "behavioral_attempt08_position_mirrored_right",
+            "behavioral_attempt09_position_mirrored_right",
+        }
+    }
+    ordinal_invalidated_compiled = next(
+        (entry for entry in ledger_entries if entry.get("attempt_id") == "behavioral_attempt10_position_mirrored_right"),
+        {},
+    )
+    ordinal_gate_failure = next(
+        (entry for entry in ledger_entries if entry.get("attempt_id") == "behavioral_attempt10_control_left"),
+        {},
+    )
     pre_request_failures = {
         entry.get("attempt_id"): entry
         for entry in ledger_entries
@@ -1299,7 +1369,15 @@ def validate(root: Path) -> list[str]:
     )
     require(
         nano_live_ledger.get("behavioral_denominator_excludes_all_entries") is True
+        and nano_live_ledger.get("behavioral_denominator") == 0
         and nano_live_ledger.get("completed_valid_behavioral_cells") == 0
+        and nano_live_ledger.get("complete_behavioral_attempts_invalidated_before_analysis") == 4
+        and nano_live_ledger.get("total_model_requests_retained_as_infrastructure_evidence") == 39
+        and nano_live_ledger.get("prospective_reset_semantics_correction") == {
+            "path": REQUIRED["nano_mirror_reset_correction"],
+            "sha256": sha256(paths["nano_mirror_reset_correction"]),
+            "status": "prospective_operational_correction_before_any_valid_phase_b_behavior",
+        }
         and nano_live_ledger.get("eula_acceptance", {}).get("user_authorized") is True
         and nano_live_ledger.get("eula_acceptance", {}).get("environment")
         == "OMNI_KIT_ACCEPT_EULA=YES"
@@ -1322,6 +1400,31 @@ def validate(root: Path) -> list[str]:
         and registration_invalidated_compiled.get("denominator_eligible") is False
         and registration_invalidated_compiled.get("disposition")
         == "compiled_record_invalidated_before_analysis"
+        and set(cache_failures) == {
+            "behavioral_attempt08_position_mirrored_right",
+            "behavioral_attempt09_position_mirrored_right",
+        }
+        and sum(entry.get("model_requests", 0) for entry in cache_failures.values()) == 2
+        and cache_failures["behavioral_attempt08_position_mirrored_right"].get("bridge_failure", {}).get("sha256")
+        == "247d772c6895aa8fc69c7908bea11514b78c0643e29e7ed5ab020beb566dbc86"
+        and cache_failures["behavioral_attempt09_position_mirrored_right"].get("bridge_failure", {}).get("sha256")
+        == "ff2159bf3b5bec3f12d9a73eb6697ae2e5d1d52dfb7a28ea31b6251cc1a609ef"
+        and ordinal_invalidated_compiled.get("model_requests") == 6
+        and ordinal_invalidated_compiled.get("behavioral_actions_executed") == 169
+        and ordinal_invalidated_compiled.get("denominator_eligible") is False
+        and ordinal_invalidated_compiled.get("raw_episode_jsonl", {}).get("sha256")
+        == "a51380c97cc6426332e3c8915d2950fb7785adabd13e5cab44ec34311141ce27"
+        and ordinal_invalidated_compiled.get("viewport_video", {}).get("sha256")
+        == "92e26891c9ec1871d1c167d3914f22aa3fe90fc6fecc6af95a55684b8de2e1db"
+        and ordinal_invalidated_compiled.get("batch_manifest", {}).get("sha256")
+        == "bca5342cbe6ccbf8a88d8c68b9900e7a1b6a79f1d39ececd6100ba667e244962"
+        and ordinal_gate_failure.get("model_requests") == 0
+        and ordinal_gate_failure.get("fixture_match", {}).get("sha256")
+        == "573f1df5892d1137147945a2d8f531af9d59d1d60c744c717f396f0b17e4e276"
+        and ordinal_gate_failure.get("settle_stability", {}).get("sha256")
+        == "588297f9d058bb9997346f0c0c71e6420381ad5d9fae70687854adc4f76d4ef9"
+        and ordinal_gate_failure.get("bridge_failure", {}).get("sha256")
+        == "1f921e18c520dc6daa2d415cfe39f0f70903adc5a2b8c90e7c4e9f72db998519"
         and set(pre_request_failures)
         == {
             "behavioral_attempt03_control_left",
@@ -1372,9 +1475,15 @@ def validate(root: Path) -> list[str]:
         )
         is True
         and nano_live_ledger.get("repair", {}).get(
-            "full_four_wrapper_registration_context_required"
+            "full_four_wrapper_registration_context_retained"
         )
         is True
+        and nano_live_ledger.get("repair", {}).get("registration_context_hypothesis")
+        == "falsified_as_the_sufficient_root_cause"
+        and nano_live_ledger.get("repair", {}).get("runner_pre_action_reset_calls") == 2
+        and nano_live_ledger.get("repair", {}).get("physical_reset_calls") == 1
+        and nano_live_ledger.get("repair", {}).get("settle_gate_runs") == 1
+        and nano_live_ledger.get("repair", {}).get("duplicate_second_reset_idempotent") is True
         and nano_live_ledger.get("repair", {}).get(
             "fixture_mismatch_evidence_persisted_before_raise"
         )
@@ -1441,9 +1550,18 @@ def validate(root: Path) -> list[str]:
     require(
         nano_live.get("model_blind_reset_gate")
         == {
+            "runner_pre_action_reset_calls": 2,
+            "physical_reset_calls": 1,
+            "settle_gate_runs": 1,
+            "duplicate_second_reset_idempotent": True,
+            "call1_evidence": "provisional_not_persisted",
+            "call2_evidence": "final_persisted_attestation",
             "settle_steps": 60,
             "stability_window_steps": 15,
-            "episode_length_buf_before_behavior": 75,
+            "episode_length_buf_before_reset": [75],
+            "episode_length_buf_after_reset": [0],
+            "model_request_count_before_attestation": 0,
+            "frozen_flags_after_duplicate_reset": False,
             "linear_speed_threshold_m_s": 0.02,
             "angular_speed_threshold_rad_s": 0.2,
             "counter_reset_required_before_model_request": True,
@@ -1456,8 +1574,10 @@ def validate(root: Path) -> list[str]:
             "static_prompt_only": True,
             "omniverse_eula_acceptance": "OMNI_KIT_ACCEPT_EULA=YES",
             "thermal_guard": "not_used",
-            "full_calibration_registration_context_required": True,
+            "full_calibration_registration_context_retained": True,
             "split_policy_server_preferred_for_simulator_load_isolation": True,
+            "persistent_caches": "ali_owned_pvc",
+            "temporary_directory": "pod_local_tmpdir",
         },
         "V3 continuation freezes the Nano settle, ordering, EULA, and evidence-retention boundary",
         checks,
@@ -1475,6 +1595,10 @@ def validate(root: Path) -> list[str]:
         and '"position_frame": "robot"' in nano_bridge_source
         and "TASK_REGISTRATION_ORDER" in nano_bridge_source
         and "for key in TASK_REGISTRATION_ORDER" in nano_bridge_source
+        and "if self._runner_pre_action_reset_calls == 2:" in nano_bridge_source
+        and "self._runner_pre_action_reset_calls != 2" in nano_bridge_source
+        and "self._physical_reset_calls != 1" in nano_bridge_source
+        and "self._settle_gate_runs != 1" in nano_bridge_source
         and "released fixture is not expressed in the robot frame" in nano_bridge_source
         and 'bridge_failure_path.write_text' in nano_bridge_source
         and 'bridge_failure = attempt / "bridge_failure.json"' in nano_queue_source
@@ -1499,7 +1623,13 @@ def validate(root: Path) -> list[str]:
     require(
         "Nano V3-B001 is the only released Phase-B queue"
         in continuation.get("next_agent", {}).get("inference_authority", "")
-        and "exact 108 hash-bound rows"
+        and "bind one fresh source-bound runtime identity"
+        in continuation.get("next_agent", {}).get("inference_authority", "")
+        and "zero-sampling model-blind exact-bridge preflight"
+        in continuation.get("next_agent", {}).get("inference_authority", "")
+        and "under that same verified identity"
+        in continuation.get("next_agent", {}).get("inference_authority", "")
+        and "v3b001:nano:seed9400:position_mirrored:right"
         in continuation.get("next_agent", {}).get("inference_authority", "")
         and "No other Phase-B, Phase-C, or Phase-D cell"
         in continuation.get("next_agent", {}).get("inference_authority", ""),
@@ -1773,14 +1903,16 @@ def validate(root: Path) -> list[str]:
     )
     require(
         "Nano V3-B001 live runtime boundary" in continuation_doc
-        and "108 released cells and zero completed valid behavioral cells" in continuation_doc
-        and "15 model requests" in continuation_doc
-        and "released fixture is explicitly robot-frame" in continuation_doc
+        and "108 released cells, zero completed valid behavioral cells" in continuation_doc
+        and "behavioral denominator of zero" in continuation_doc
+        and "all 39 model requests" in continuation_doc
+        and "Four complete behavioral attempts" in continuation_doc
         and "invalidated before analysis" in continuation_doc
-        and "31 model requests" in continuation_doc
-        and "all four task wrappers" in continuation_doc
-        and "0.0034789443 m" in continuation_doc
-        and "registration context" in continuation_doc
+        and "Registration context is therefore falsified as the sufficient explanation" in continuation_doc
+        and "episode-length mutation order" in continuation_doc
+        and "two runner reset calls but perform one physical reset" in continuation_doc
+        and "zero-sampling, model-blind exact-bridge preflight under that identity" in continuation_doc
+        and "under that same verified identity" in continuation_doc
         and "outside the behavioral denominator" in continuation_doc
         and "v3b001:nano:seed9400:position_mirrored:right" in continuation_doc
         and EXACT_V2_WORDINGS["direct_command"]["right"] in continuation_doc,

@@ -2,13 +2,21 @@
   "schema_version": "vla-wam-shared-v3b-nano-live-infrastructure-ledger-v1",
   "study_id": "vla_wam_language_steerability_v3",
   "amendment_id": "V3-B001",
-  "updated_at_utc": "2026-08-06T05:35:14Z",
+  "updated_at_utc": "2026-08-06T06:21:15Z",
   "behavioral_denominator_excludes_all_entries": true,
+  "behavioral_denominator": 0,
   "completed_valid_behavioral_cells": 0,
+  "complete_behavioral_attempts_invalidated_before_analysis": 4,
+  "total_model_requests_retained_as_infrastructure_evidence": 39,
   "eula_acceptance": {
     "scope": "Omniverse/Isaac software required by the authorized Nano V3-B001 queue",
     "environment": "OMNI_KIT_ACCEPT_EULA=YES",
     "user_authorized": true
+  },
+  "prospective_reset_semantics_correction": {
+    "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_reset_semantics_correction.json",
+    "sha256": "167494ff48b075c41ff64fce4c18c78ae6650d1bcfd63d0646cf386a0a82875b",
+    "status": "prospective_operational_correction_before_any_valid_phase_b_behavior"
   },
   "entries": [
     {
@@ -244,6 +252,96 @@
       }
     },
     {
+      "attempt_id": "behavioral_attempt08_position_mirrored_right",
+      "registered_cell_id": "v3b001:nano:seed9400:position_mirrored:right",
+      "stage": "first_model_request_triton_cache_initialization",
+      "model_requests": 1,
+      "behavioral_actions_executed": 0,
+      "denominator_eligible": false,
+      "disposition": "preserved_infrastructure_failure",
+      "reason": "The first policy request reached Triton compilation, but the split policy-server process inherited a nonwritable home and failed while creating its cache under /home/ali-lerobot. The reset attestation is retained; no returned action was executed.",
+      "bridge_failure": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt08/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__position_mirrored__right/attempt01/bridge_failure.json",
+        "bytes": 25794,
+        "sha256": "247d772c6895aa8fc69c7908bea11514b78c0643e29e7ed5ab020beb566dbc86"
+      }
+    },
+    {
+      "attempt_id": "behavioral_attempt09_position_mirrored_right",
+      "registered_cell_id": "v3b001:nano:seed9400:position_mirrored:right",
+      "stage": "first_model_request_triton_temporary_directory_cleanup",
+      "model_requests": 1,
+      "behavioral_actions_executed": 0,
+      "denominator_eligible": false,
+      "disposition": "preserved_infrastructure_failure",
+      "reason": "The writable cache repair moved persistent Triton state onto the PVC, but Python TemporaryDirectory cleanup failed on the NFS-backed TMPDIR with Directory not empty. The reset attestation is retained; no returned action was executed. Persistent caches remain on the PVC, while subsequent server TMPDIR is pod-local.",
+      "bridge_failure": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt09/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__position_mirrored__right/attempt01/bridge_failure.json",
+        "bytes": 27504,
+        "sha256": "ff2159bf3b5bec3f12d9a73eb6697ae2e5d1d52dfb7a28ea31b6251cc1a609ef"
+      }
+    },
+    {
+      "attempt_id": "behavioral_attempt10_position_mirrored_right",
+      "registered_cell_id": "v3b001:nano:seed9400:position_mirrored:right",
+      "stage": "post_compile_reset_ordinal_audit",
+      "model_requests": 6,
+      "behavioral_actions_executed": 169,
+      "retained_action_chunks": 6,
+      "retained_decoded_futures": 6,
+      "provisional_compiled_measurements": {
+        "requested_success": true,
+        "failure_taxonomy": "correct",
+        "signed_final_lateral_offset_m": -0.2011365294456482,
+        "final_requested_signed_margin_m": 0.2011365294456482
+      },
+      "denominator_eligible": false,
+      "disposition": "compiled_record_invalidated_before_analysis",
+      "reason": "The first RIGHT cell compiled provisionally, but the following full-registration-context control cell falsified registration context as the sufficient root cause and exposed the runner/proxy reset-ordinal defect. The proxy source is changing, so all 108 cells require one fresh source-bound runtime identity. This provisional success is invalidated before analysis and retained only as infrastructure evidence.",
+      "raw_episode_jsonl": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt10/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__position_mirrored__right/attempt01/raw_episode.jsonl",
+        "bytes": 46605,
+        "sha256": "a51380c97cc6426332e3c8915d2950fb7785adabd13e5cab44ec34311141ce27"
+      },
+      "viewport_video": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt10/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__position_mirrored__right/attempt01/simulator/V3BNanoPositionMirroredRightCalibrationTask/Put_the_Rubiks_cube_to_the_right_of_the_bowl_0_viewport.mp4",
+        "bytes": 1088762,
+        "sha256": "92e26891c9ec1871d1c167d3914f22aa3fe90fc6fecc6af95a55684b8de2e1db"
+      },
+      "batch_manifest": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt10/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__position_mirrored__right/attempt01/raw_episode.jsonl.manifest.json",
+        "bytes": 502,
+        "sha256": "bca5342cbe6ccbf8a88d8c68b9900e7a1b6a79f1d39ececd6100ba667e244962"
+      }
+    },
+    {
+      "attempt_id": "behavioral_attempt10_control_left",
+      "registered_cell_id": "v3b001:nano:seed9400:control:left",
+      "stage": "model_blind_reset_gate_reset_ordinal_diagnosis",
+      "model_requests": 0,
+      "behavioral_actions_executed": 0,
+      "released_position_tolerance_m": 0.003,
+      "rubiks_cube_max_position_error_m": 0.0034789443,
+      "denominator_eligible": false,
+      "disposition": "preserved_infrastructure_failure",
+      "reason": "The control gate failed before inference even with all four wrappers registered. The pinned runner calls reset twice. After call 1, the pre-correction proxy zeroed episode_length_buf; call 2 therefore entered RoboLab's ep_len<=2 artifact branch and performed a second physical reset, while ordinal-1 live calibration evidence had validated the analytic frozen fixture coordinates.",
+      "fixture_match": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt10/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/state_capture/v3b001__nano__seed9400__control__left.fixture_match.json",
+        "bytes": 976,
+        "sha256": "573f1df5892d1137147945a2d8f531af9d59d1d60c744c717f396f0b17e4e276"
+      },
+      "settle_stability": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt10/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/state_capture/v3b001__nano__seed9400__control__left.settle_stability.json",
+        "bytes": 2580,
+        "sha256": "588297f9d058bb9997346f0c0c71e6420381ad5d9fae70687854adc4f76d4ef9"
+      },
+      "bridge_failure": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt10/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/bridge_failure.json",
+        "bytes": 2905,
+        "sha256": "1f921e18c520dc6daa2d415cfe39f0f70903adc5a2b8c90e7c4e9f72db998519"
+      }
+    },
+    {
       "attempt_id": "diagnostic_server_unloaded_attempt01",
       "stage": "model_blind_full_registration_context_diagnostic",
       "model_requests": 0,
@@ -254,7 +352,7 @@
       "passed_all_released_layouts": true,
       "denominator_eligible": false,
       "disposition": "preserved_model_blind_diagnostic",
-      "reason": "With the policy server unloaded and all four released wrappers registered in the original calibration order, two resets for each control/mirrored and LEFT/RIGHT wrapper passed the frozen gate. Together with the three identical one-wrapper control failures, this diagnoses registration context as the demonstrated mismatch; no model behavior was sampled.",
+      "reason": "With the policy server unloaded and all four wrappers registered, this diagnostic passed without model behavior. It initially motivated a registration-context hypothesis, but attempt 10 later failed under the full context and falsified that hypothesis as sufficient. The diagnostic did not reproduce the pinned runner's episode-length mutation order and therefore did not isolate reset ordinal.",
       "report": {
         "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/diagnostic_server_unloaded_attempt01/live_gate/model_blind_calibration_report.json",
         "bytes": 36238,
@@ -281,7 +379,7 @@
       "gpu_uuid": "GPU-f28bd513-a38a-b768-7589-d2959f814ae8",
       "driver_version": "580.105.08"
     },
-    "diagnostic_boundary": "The split-server retry still failed under the one-wrapper bridge. Separate GPUs remain the preferred next topology for simulator-load isolation, but only the registration-context mismatch is demonstrated by the current diagnostics."
+    "diagnostic_boundary": "Separate GPUs remain preferred for load isolation, but GPU placement is not a scientific intervention. Attempt 10 failed under the full registration context, falsifying that hypothesis as sufficient. The demonstrated defect is the episode-length/reset-ordinal interaction between the pinned runner and pre-correction proxy."
   },
   "repair": {
     "export_before_isaac_close": true,
@@ -291,11 +389,28 @@
     "pre_fix_compiled_cell_invalidated": true,
     "durable_bridge_failure_before_isaac_close": true,
     "queue_requires_export_before_compilation": true,
-    "full_four_wrapper_registration_context_required": true,
+    "full_four_wrapper_registration_context_retained": true,
     "active_task_filtered_after_full_registration": true,
     "fixture_mismatch_evidence_persisted_before_raise": true,
     "registration_context_diagnostic_passed_without_server": true,
+    "registration_context_hypothesis": "falsified_as_the_sufficient_root_cause",
     "registration_context_diagnostic_model_requests": 0,
+    "calibration_repeat_semantics_defect_disclosed": true,
+    "runner_pre_action_reset_calls": 2,
+    "physical_reset_calls": 1,
+    "settle_gate_runs": 1,
+    "duplicate_second_reset_idempotent": true,
+    "call1_attestation_persistence": "provisional_not_persisted",
+    "call2_attestation_persistence": "final_2_runner_calls_1_physical_reset_1_settle_gate_duplicate_true",
+    "episode_length_buf_before_reset": [75],
+    "episode_length_buf_after_reset": [0],
+    "model_request_count_before_attestation": 0,
+    "frozen_flags_after_duplicate_reset": false,
+    "unchanged_release_fields": "prompts, seeds, success predicate, analytic fixture coordinates, 60 settle steps, 15 stability steps, and 3 mm tolerance",
+    "cache_boundary": {
+      "persistent_caches": "ali-owned PVC",
+      "temporary_directory": "pod-local TMPDIR"
+    },
     "fresh_runtime_identity_required": true,
     "exact_next_cell_unchanged": "v3b001:nano:seed9400:position_mirrored:right"
   }

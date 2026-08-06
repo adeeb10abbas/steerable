@@ -80,69 +80,54 @@ output-path rechecks; they do not report Phase-B behavioral outcomes.
 
 ### Nano V3-B001 live runtime boundary
 
-The fail-closed live implementation is in registration-context repair:
-V3-B001 has 108 released cells and zero completed valid behavioral cells. The
-first excluded 450-action smoke produced 15 model requests and exposed the
-export-finalization defect. After that repair, a 233-action smoke compiled with
-eight requests, but the following control cell exposed a coordinate-frame
-defect: the released fixture is explicitly robot-frame, while the bridge
-compared it to world-frame poses. That smoke was invalidated before analysis.
-
-After the robot-frame repair, runtime attempt 06 was bound at study head
-`a42ae3d3f8549ee4fac9704a59ee3c103bac5494` (runtime identity
-`fa962d1783a506abb2e0c11c5129087be62a9f698bd2a3bec2a97dddba9b6a71`).
-Its first mirrored-RIGHT cell compiled after 230 actions and eight requests,
-but the next control-LEFT cell failed the released 3 mm gate before any request:
-the Rubik's cube maximum position error was `0.0034789443 m`. Fresh control
-retries in attempts 06 and 07 reproduced the same deterministic pre-request
-state, including when attempt 07 placed the policy server on a separate RTX
-pod. Because the bridge source must change and the aggregate requires one
-source-bound runtime identity across all 108 cells, the compiled first cell was
-also invalidated before analysis. Its provisional success, signed offset
-`-0.18141043186187744 m`, margin `+0.18141043186187744 m`, raw JSONL, and video
-remain infrastructure evidence only. Across the preserved live attempts there
-have now been 31 model requests and still no denominator-eligible Phase-B cell.
-
-A policy-server-unloaded diagnostic then registered all four task wrappers in
-the original calibration order. All four layouts passed two resets each with
-zero model requests and zero behavioral episodes. The report at
-`diagnostic_server_unloaded_attempt01/live_gate/model_blind_calibration_report.json`
-has SHA-256
-`b15b3249647dbf468e745727e2d7677df9c74d919b399a3148be17312951ca04`.
-The demonstrated mismatch is therefore the registration context: calibration
-registered all four wrappers, whereas the live bridge registered only the
-active wrapper, shifting the settled control pose by roughly 0.7 mm across the
-frozen gate. The split-server failure shows that separate GPU placement alone
-was not a sufficient repair; it does not establish that colocation had no
-effect. All complete raw attempts, deterministic zero-request failures,
-diagnostics, and media are preserved and hash-ledgered in
+V3-B001 still has **108 released cells, zero completed valid behavioral cells,
+and a behavioral denominator of zero**. Four complete behavioral attempts were
+invalidated before analysis; all 39 model requests remain infrastructure
+evidence in the hash-bearing
 [`live_infrastructure_ledger.json`](../artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_infrastructure_ledger.json).
 
-The current repair compares released and observed positions in the robot frame,
-registers all four wrappers in calibration order before filtering to the active
-task, persists fixture mismatch evidence before raising, writes bridge
-exceptions durably before Isaac closes, requires the export before compilation,
-and keeps RoboLab output in the immutable attempt-local PVC directory. A new
-live identity must be bound after this source change before retrying the same
-first cell. The implementation binds a new
-Phase-B live runtime identity to the verified Phase-A Nano identity and exact
-release, pins the Nano server CLI, performs the released positions-only reset,
-and preserves every decoded future, executed action, viewport video, state
-capture, reset attestation, and compiled JSONL record outside ordinary Git.
+Attempt 10 used all four wrappers in calibration order, yet its control-LEFT
+reset failed the frozen 3 mm gate before any model request. Registration context
+is therefore falsified as the sufficient explanation. The confirmed defect is
+the interaction between RoboLab's episode-length mutation order and the live
+proxy. The pinned runner calls `env.reset()` twice. After call 1, the
+pre-correction proxy zeroed `episode_length_buf`; call 2 then saw `ep_len=0`,
+entered RoboLab's `artifact_ids` branch, and performed a fresh second physical
+reset. Ordinal-1 live calibration evidence had validated the analytic frozen
+fixture coordinates; the pre-correction gate instead attested ordinal 2 and
+observed the `0.0034789443 m` error.
 
-Before the first request, the bridge must reproduce the model-blind reset gate:
-60 hold-action settle steps followed by a 15-step stability window, the frozen
-linear and angular speed thresholds, neutral requested-relation predicates, and
-an episode counter of 75 that is then reset to zero. A failed gate, partial
-attempt, or pre-existing output path remains outside the behavioral denominator
-and cannot be overwritten. The launcher preserves the frozen queue order,
-records `OMNI_KIT_ACCEPT_EULA=YES`, and does not use a thermal guard.
+Calibration repeat semantics are now disclosed precisely. Repeat 0 was one
+fresh physical reset followed by 60 settle and 15 stability steps. Repeats 1
+and 2 saw `ep_len=75`; RoboLab marked them frozen before computing active IDs,
+so they did not perform fresh physical resets. Their near-identical states are
+valid model-blind stability observations, but not three independent resets.
 
-The next runtime should keep simulator and policy server on the two separate
-ali-owned RTX PRO 6000 Blackwell pods for load isolation. Their distinct pod
-UIDs and GPU UUIDs are recorded in the ledger. That operational topology is not
-a scientific intervention and is not evidence that GPU colocation caused the
-reset mismatch.
+The prospective operational correction is frozen in
+[`live_reset_semantics_correction.json`](../artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_reset_semantics_correction.json).
+The exact bridge must receive two runner reset calls but perform one physical
+reset and one settle gate. Call 1 evidence is provisional and not persisted.
+The immediate call 2 is idempotent, returns cached observation/info, keeps the
+frozen flags false, and persists the final `2/1/1/true` attestation. That
+attestation must bind `[75] → [0]` and zero model requests. Prompts, seeds,
+analytic fixture coordinates, the success predicate, 60+15 steps, and the 3 mm
+tolerance are unchanged.
+
+Attempts 08 and 09 remain excluded server failures: a nonwritable Triton home
+(`247d772c…`) and NFS cleanup under a PVC-backed `TMPDIR` (`ff2159bf…`).
+Persistent caches stay on the ali-owned PVC; server `TMPDIR` is pod-local, and
+`OMNI_KIT_ACCEPT_EULA=YES` remains explicit. Attempt 10's first mirrored-RIGHT
+cell compiled provisionally as a success after 169 actions. Its raw JSONL
+(`a51380c9…`), video (`92e26891…`), and manifest (`bca5342c…`) are preserved but
+invalidated because the runtime source changes. The zero-request control
+failure retains fixture (`573f1df5…`), settle (`588297f9…`), and bridge
+(`1f921e18…`) evidence.
+
+The exact next action is to bind **one fresh source-bound runtime identity** and
+run a **zero-sampling, model-blind exact-bridge preflight under that identity**.
+Only if it proves the final two-call attestation may behavioral inference resume
+under that same verified identity. Split ali-owned RTX pods remain an
+operational load-isolation choice, not a scientific factor.
 
 The exact next cell remains:
 
@@ -150,10 +135,10 @@ The exact next cell remains:
 
 > Put the Rubik's cube to the right of the bowl.
 
-Its repaired live-bound runtime identity must be created and verified on the
-ali-owned PVC after the committed implementation is synchronized. The excluded
-and invalidated attempts remain outside the behavioral denominator and do not
-change the scientific status: no valid Phase-B result exists yet.
+The source-bound identity must be created and verified on the ali-owned PVC
+before the model-blind preflight, then retained unchanged for behavioral
+inference if the preflight passes. The excluded and invalidated attempts remain
+outside the behavioral denominator: no valid Phase-B result exists yet.
 
 ## Exact intervention
 

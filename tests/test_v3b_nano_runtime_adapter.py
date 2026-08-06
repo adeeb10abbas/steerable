@@ -291,6 +291,10 @@ def _reset(
         "episode_length_buf_reset_passed": True,
         "episode_length_buf_after_reset": [0],
         "model_request_count_during_gate": 0,
+        "runner_pre_action_reset_calls": 2,
+        "physical_reset_calls": 1,
+        "settle_gate_runs": 1,
+        "duplicate_second_reset_idempotent": True,
     }
     settle_path = directory / "settle.json"
     _write_json(settle_path, settle)
@@ -512,6 +516,24 @@ class NanoPhaseBRuntimeTest(unittest.TestCase):
             unstable["stability_window_component_maxima"]["rubiks_cube"][field] = value
             with self.subTest(field=field), self.assertRaisesRegex(RuntimeContractError, pattern):
                 validate_settle_stability_evidence(unstable, cell=self.cell)
+
+    def test_settle_evidence_cannot_claim_duplicate_reset_before_it_occurs(self) -> None:
+        steps = _steps("left", 4)
+        reset_path, _ = _reset(
+            self.tmp, release=self.release, cell=self.cell, runtime=self.runtime, steps=steps
+        )
+        reset = json.loads(reset_path.read_text())
+        final = json.loads(Path(reset["settle_stability_evidence_path"]).read_text())
+        provisional = json.loads(json.dumps(final))
+        provisional.update(
+            runner_pre_action_reset_calls=1,
+            duplicate_second_reset_idempotent=False,
+        )
+        validate_settle_stability_evidence(
+            provisional, cell=self.cell, runner_reset_contract_complete=False
+        )
+        with self.assertRaisesRegex(RuntimeContractError, "runner_pre_action_reset_calls"):
+            validate_settle_stability_evidence(provisional, cell=self.cell)
 
     def test_unsettled_reset_cannot_reach_request_adapter(self) -> None:
         steps = _steps("left", 4)

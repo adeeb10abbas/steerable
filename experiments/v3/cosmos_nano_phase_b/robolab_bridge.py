@@ -178,10 +178,9 @@ TASK_REGISTRATION_ORDER = (
     ("position_mirrored", "right"),
 )
 task_root = study_root / "experiments/v3/cosmos_nano_phase_b/task_files"
-# Reproduce the released model-blind calibration's registration context exactly.
-# Registering only the active wrapper changed the control-layout post-settle pose
-# enough to cross the frozen 3 mm fixture gate.  RoboLab still evaluates only the
-# released active task selected immediately below.
+# Match the released model-blind calibration's registry construction exactly as
+# a runtime-identity control.  This ordering is not treated as the cause of the
+# reset mismatch; RoboLab still evaluates only the active task selected below.
 auto_register_droid_envs(
     task=[str(task_root / TASK_FILES[key]) for key in TASK_REGISTRATION_ORDER],
     cameras=WRIST_LEFT_RIGHT_HEAD,
@@ -235,6 +234,10 @@ class StateCaptureProxy:
         self._partial_started = False
         self._written = False
         self._settle_evidence: dict[str, Any] | None = None
+        self._runner_pre_action_reset_calls = 0
+        self._physical_reset_calls = 0
+        self._settle_gate_runs = 0
+        self._cached_reset_result: tuple[Any, Any] | None = None
         stem = cell.cell_id.replace(":", "__")
         self.partial_path = capture_dir / f"{stem}.states.partial.jsonl"
         self.capture_path = capture_dir / f"{stem}.capture.json"
@@ -294,6 +297,10 @@ class StateCaptureProxy:
             return bootstrap.reset_attestation.resolve()
         if len(self._samples) != 1 or self._partial_started or self._settle_evidence is None:
             raise RuntimeError("reset attestation must precede every policy request/action")
+        if self._runner_pre_action_reset_calls != 2:
+            raise RuntimeError("frozen RoboLab runner must perform exactly two pre-action reset calls")
+        if self._physical_reset_calls != 1 or self._settle_gate_runs != 1:
+            raise RuntimeError("duplicate runner reset must map to one physical reset and one settle gate")
         validate_settle_stability_evidence(self._settle_evidence, cell=cell)
         self._capture_dir.mkdir(parents=True, exist_ok=True)
         self.settle_evidence_path.write_text(
@@ -399,11 +406,40 @@ class StateCaptureProxy:
     def reset(self, *args: Any, **kwargs: Any) -> Any:
         if self._partial_started or len(self._samples) > 1 or bootstrap.reset_attestation.exists():
             raise RuntimeError("RoboLab attempted a reset after Phase-B request/action authorization")
+        self._runner_pre_action_reset_calls += 1
+        if self._runner_pre_action_reset_calls > 2:
+            raise RuntimeError("frozen RoboLab runner performed more than two pre-action reset calls")
+        if self._runner_pre_action_reset_calls == 2:
+            if (
+                self._cached_reset_result is None
+                or self._physical_reset_calls != 1
+                or self._settle_gate_runs != 1
+                or self._settle_evidence is None
+                or len(self._samples) != 1
+            ):
+                raise RuntimeError("duplicate runner reset occurred before the physical reset gate completed")
+            # Pinned RoboLab calls env.reset() twice consecutively before its
+            # first policy request.  After this proxy's required 75-step gate,
+            # zeroing episode_length_buf would make the raw second call enter
+            # RoboLab's ep_len<=2 artifact branch and perform a fresh Isaac
+            # reset.  Preserve the runner API while making only that duplicate
+            # call idempotent: return the already-settled observation unchanged.
+            self._settle_evidence.update(
+                runner_pre_action_reset_calls=self._runner_pre_action_reset_calls,
+                physical_reset_calls=self._physical_reset_calls,
+                settle_gate_runs=self._settle_gate_runs,
+                duplicate_second_reset_idempotent=True,
+            )
+            validate_settle_stability_evidence(self._settle_evidence, cell=cell)
+            return self._cached_reset_result
+
+        self._physical_reset_calls += 1
         result = self._env.reset(*args, **kwargs)
         if not isinstance(result, tuple) or len(result) != 2:
             raise RuntimeError("RoboLab reset did not return (observation, info)")
         obs, info = result
         action = _hold_action(obs, self._env.device)
+        self._settle_gate_runs += 1
         for _ in range(SETTLE_STEPS):
             obs, _, terminated, truncated, _ = self._env.step(action)
             if bool(terminated[0]) or bool(truncated[0]):
@@ -475,14 +511,21 @@ class StateCaptureProxy:
             "episode_length_buf_reset_passed": counter_after == [0],
             "episode_length_buf_after_reset": counter_after,
             "model_request_count_during_gate": 0,
+            "runner_pre_action_reset_calls": self._runner_pre_action_reset_calls,
+            "physical_reset_calls": self._physical_reset_calls,
+            "settle_gate_runs": self._settle_gate_runs,
+            "duplicate_second_reset_idempotent": False,
         }
-        validate_settle_stability_evidence(evidence, cell=cell)
+        validate_settle_stability_evidence(
+            evidence, cell=cell, runner_reset_contract_complete=False
+        )
         self._settle_evidence = evidence
         # Support RoboLab's harmless multiple pre-action initialization resets.
         self._samples = [self._sample(0)]
         self._started = time.monotonic()
         self._written = False
-        return obs, info
+        self._cached_reset_result = (obs, info)
+        return self._cached_reset_result
 
     def step(self, action: Any) -> Any:
         if not bootstrap.reset_attestation.exists():

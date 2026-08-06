@@ -214,6 +214,29 @@ class NanoPhaseBLiveQueueTest(unittest.TestCase):
             method.index('raise RuntimeError("live reset does not match'),
         )
 
+    def test_bridge_makes_only_the_duplicate_runner_reset_idempotent(self) -> None:
+        source = (
+            ROOT / "experiments/v3/cosmos_nano_phase_b/robolab_bridge.py"
+        ).read_text(encoding="utf-8")
+        reset_method = source[
+            source.index("    def reset(self, *args: Any, **kwargs: Any) -> Any:") :
+            source.index("    def step(self, action: Any) -> Any:")
+        ]
+        self.assertEqual(reset_method.count("result = self._env.reset"), 1)
+        self.assertLess(
+            reset_method.index("if self._runner_pre_action_reset_calls == 2:"),
+            reset_method.index("result = self._env.reset"),
+        )
+        self.assertIn("return self._cached_reset_result", reset_method)
+        self.assertLess(
+            reset_method.index("self._settle_evidence.update("),
+            reset_method.index("return self._cached_reset_result"),
+        )
+        self.assertIn("self._runner_pre_action_reset_calls != 2", source)
+        self.assertIn("self._physical_reset_calls != 1", source)
+        self.assertIn("self._settle_gate_runs != 1", source)
+        self.assertNotIn("reset_eval_state()", reset_method)
+
     def test_queue_rejects_clean_isaac_exit_without_export(self) -> None:
         source = (
             ROOT / "experiments/v3/cosmos_nano_phase_b/queue_launcher.py"

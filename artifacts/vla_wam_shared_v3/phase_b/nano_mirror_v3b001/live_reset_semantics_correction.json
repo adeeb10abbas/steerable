@@ -1,0 +1,110 @@
+{
+  "schema_version": "vla-wam-shared-v3b-nano-live-reset-semantics-correction-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B001",
+  "issued_at_utc": "2026-08-06T06:08:43Z",
+  "status": "prospective_operational_correction_before_any_valid_phase_b_behavior",
+  "scope": "Exact live reset semantics only; prompts, seeds, fixtures, task predicates, action interface, settling thresholds, and denominators are unchanged.",
+  "eula_acceptance": {
+    "scope": "Omniverse/Isaac software required by the authorized Nano V3-B001 queue",
+    "environment": "OMNI_KIT_ACCEPT_EULA=YES",
+    "user_authorized": true
+  },
+  "diagnosis": {
+    "demonstrated_root_cause": "The pinned RoboLab episode runner calls env.reset() twice consecutively. The pre-correction live proxy zeroed episode_length_buf after its first 60+15 gate, so the second runner call entered RoboLab's ep_len<=2 artifact branch and performed a fresh Isaac physical reset. The live bridge therefore attested reset ordinal 2, while the analytic frozen fixture coordinates were validated by the calibration's ordinal-1 physical reset evidence.",
+    "registration_context_hypothesis": "falsified_as_the_sufficient_root_cause",
+    "pinned_runner": {
+      "repository_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+      "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/robolab/eval/episode.py",
+      "sha256": "aab5fe8fa51235b8bc4db4f557adc2c12031d9198e27e04703ee6aa400fc63c8",
+      "consecutive_pre_action_reset_calls": 2
+    },
+    "pinned_environment_runtime": {
+      "repository_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+      "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/robolab/core/environments/env.py",
+      "sha256": "c35a1aced26a30de1fde21f8db28f87910757d090b677172f9915432f3b45f12",
+      "relevant_branch": "After any step, ep_len<=2 takes a fresh artifact reset; ep_len>2 marks the env frozen before active_ids is computed."
+    },
+    "calibration_repeat_semantics": "Only repeat 0 was an independent fresh physical reset. After its 75 model-blind steps, later driver reset calls entered RoboLab's post-step freeze path because evaluation bookkeeping was not reset; the reported repeats therefore cannot be interpreted as three independent physical resets. Their retained near-identical states are still valid repeated model-blind stability observations of the ordinal-1 reset.",
+    "released_control_reset_ordinal_1": {
+      "rubiks_cube_robot_x_m": 0.30612239241600037,
+      "max_abs_fixture_error_m": 0.0027577579021453857,
+      "frozen_tolerance_m": 0.003,
+      "passes": true
+    },
+    "pre_correction_live_control_reset_ordinal_2": {
+      "rubiks_cube_robot_x_m": 0.3068435788154602,
+      "max_abs_fixture_error_m": 0.0034789443016052246,
+      "frozen_tolerance_m": 0.003,
+      "passes": false
+    },
+    "direct_evidence": {
+      "committed_calibration_report": {
+        "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/model_blind_calibration_report.json",
+        "sha256": "112716acada89050561c9488d93a333a300b1675c2305329c8e5aceeb4e6da71"
+      },
+      "attempt10_control_left_fixture_match": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt10/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/state_capture/v3b001__nano__seed9400__control__left.fixture_match.json",
+        "sha256": "573f1df5892d1137147945a2d8f531af9d59d1d60c744c717f396f0b17e4e276"
+      },
+      "attempt10_control_left_settle_stability": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt10/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/state_capture/v3b001__nano__seed9400__control__left.settle_stability.json",
+        "sha256": "588297f9d058bb9997346f0c0c71e6420381ad5d9fae70687854adc4f76d4ef9"
+      },
+      "attempt10_control_left_bridge_failure": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/behavioral_attempt10/V3-B001_cosmos3_nano_position_mirror/v3b001__nano__seed9400__control__left/attempt01/bridge_failure.json",
+        "sha256": "1f921e18c520dc6daa2d415cfe39f0f70903adc5a2b8c90e7c4e9f72db998519"
+      }
+    }
+  },
+  "prospective_live_contract": {
+    "runner_pre_action_reset_calls": 2,
+    "physical_reset_calls": 1,
+    "settle_gate_runs": 1,
+    "duplicate_second_reset_idempotent": true,
+    "settle_steps": 60,
+    "stable_window_steps": 15,
+    "episode_length_buf_before_reset": [
+      75
+    ],
+    "episode_length_buf_after_reset": [
+      0
+    ],
+    "model_request_count_before_attestation": 0,
+    "position_tolerance_m": 0.003,
+    "logical_second_reset_behavior": "Return the cached settled observation and info without another Isaac reset or settle gate.",
+    "third_pre_action_reset_behavior": "Reject before inference."
+  },
+  "unchanged_frozen_fields": {
+    "exact_left_prompt": "Put the Rubik's cube to the left of the bowl.",
+    "exact_right_prompt": "Put the Rubik's cube to the right of the bowl.",
+    "seed_range_inclusive": [
+      9400,
+      9426
+    ],
+    "released_behavioral_cells": 108,
+    "action_space": "8D joint position",
+    "open_loop_action_chunk": 32,
+    "action_cap": 450,
+    "static_episode_prompt_only": true,
+    "success_predicates_unchanged": true,
+    "fixture_coordinates_unchanged": true,
+    "valid_behavioral_failures_remain_in_denominators": true,
+    "infrastructure_and_invalidated_attempts_remain_outside_denominators": true
+  },
+  "source_bindings": {
+    "experiments/v3/cosmos_nano_phase_b/robolab_bridge.py": "d93ceb145430764341640c9925830fc10dce1329626a5076b52196f8b2d3a62b",
+    "experiments/v3/cosmos_nano_phase_b/runtime_adapter.py": "dadac7a84dd31fe762a3bf52b41201164ae71155bbec9ac8d34ffc5ca20d1bda",
+    "tests/test_v3b_nano_live_queue.py": "b0e29b0999223f88ec7782b66360dcd6b01dff48f89c917ff02f79da82303c0f",
+    "tests/test_v3b_nano_runtime_adapter.py": "ef763451067bce15f880f19457dbeee232b9cd2501941f396b85bae783a35f2b"
+  },
+  "validity_and_resume": {
+    "completed_valid_behavioral_cells": 0,
+    "behavioral_denominator": 0,
+    "prior_complete_attempts_invalidated_before_analysis": 4,
+    "total_model_requests_retained_as_infrastructure_evidence": 39,
+    "all_108_cells_require_one_fresh_source_bound_runtime_identity": true,
+    "exact_next_cell": "v3b001:nano:seed9400:position_mirrored:right",
+    "exact_next_prompt": "Put the Rubik's cube to the right of the bowl."
+  }
+}

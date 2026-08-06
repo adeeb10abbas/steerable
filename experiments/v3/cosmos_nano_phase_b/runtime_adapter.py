@@ -503,7 +503,10 @@ def verify_runtime_identity(
 
 
 def validate_settle_stability_evidence(
-    evidence: Mapping[str, Any], *, cell: AuthorizedCell
+    evidence: Mapping[str, Any],
+    *,
+    cell: AuthorizedCell,
+    runner_reset_contract_complete: bool = True,
 ) -> dict[str, Any]:
     """Verify the released model-blind settling gate without simulator imports."""
 
@@ -527,6 +530,10 @@ def validate_settle_stability_evidence(
             "episode_length_buf_before_reset": [SETTLE_STEPS + STABILITY_WINDOW_STEPS],
             "episode_length_buf_after_reset": [0],
             "model_request_count_during_gate": 0,
+            "runner_pre_action_reset_calls": 2 if runner_reset_contract_complete else 1,
+            "physical_reset_calls": 1,
+            "settle_gate_runs": 1,
+            "duplicate_second_reset_idempotent": runner_reset_contract_complete,
         },
         "settle/stability evidence",
     )

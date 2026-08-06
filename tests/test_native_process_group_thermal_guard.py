@@ -25,6 +25,21 @@ def _events(path: Path) -> list[dict]:
     return [json.loads(line) for line in path.read_text().splitlines()]
 
 
+def _process_state(pid: int) -> str:
+    proc_status = Path(f"/proc/{pid}/status")
+    if proc_status.is_file():
+        return next(
+            line for line in proc_status.read_text().splitlines() if line.startswith("State:")
+        )
+    result = subprocess.run(
+        ["ps", "-o", "state=", "-p", str(pid)],
+        text=True,
+        capture_output=True,
+        check=True,
+    )
+    return result.stdout.strip()
+
+
 def _cell_args(tmp_path: Path) -> list[str]:
     return [
         "--ledger-output",
@@ -115,8 +130,9 @@ def test_launch_mode_isolates_group_and_writes_compiler_ledger(tmp_path: Path) -
         unrelated.wait(timeout=0.01) if unrelated.poll() is not None else None
         assert unrelated.poll() is None
         assert unrelated_marker.read_text() == "done"
-        state = next(line for line in Path(f"/proc/{unrelated.pid}/status").read_text().splitlines() if line.startswith("State:"))
+        state = _process_state(unrelated.pid)
         assert "T (stopped)" not in state
+        assert not state.startswith("T")
     finally:
         if unrelated.poll() is None:
             os.killpg(os.getpgid(unrelated.pid), signal.SIGTERM)

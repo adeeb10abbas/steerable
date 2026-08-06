@@ -3,6 +3,8 @@ from __future__ import annotations
 import ast
 from pathlib import Path
 
+import pytest
+
 
 LINGBOT_RUNNER = Path(
     "/home/ali/projects/lerobot-lingbot/experiments/lingbot_language_gate/closed_loop_language_gate.py"
@@ -10,6 +12,8 @@ LINGBOT_RUNNER = Path(
 
 
 def test_lingbot_trace_is_the_exact_absolute_action_passed_to_environment() -> None:
+    if not LINGBOT_RUNNER.is_file():
+        pytest.skip("requires the restored LingBot runtime source on the work laptop")
     tree = ast.parse(LINGBOT_RUNNER.read_text())
     run_episode = next(
         node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "run_episode"

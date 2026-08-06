@@ -26,7 +26,7 @@ class RoboTwinConfirmationCompilerTest(unittest.TestCase):
                        "environment_seed": 4300000 + index, "sampling_seed": 8400 + index}
                       for index in range(10)]
             registry = root / "registry.json"
-            registry.write_text(json.dumps({"models": ["efficient_wam_rt_robotwin", "fastwam_robotwin", "lingbot_va_robotwin"], "scenes": scenes}))
+            registry.write_text(json.dumps({"models": ["efficient_wam_rt_robotwin", "fastwam_robotwin", "lingbot_va_robotwin", "lingbot_vla_4b_robotwin"], "scenes": scenes}))
             inputs = root / "inputs"
             for scene in scenes:
                 for direction in ("left", "right"):

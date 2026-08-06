@@ -1,0 +1,114 @@
+{
+  "schema_version": "vla-wam-shared-v3b-nano-v3b001-results-manifest-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B001",
+  "model_id": "cosmos3_nano_policy_droid",
+  "arena": "droid_robolab",
+  "status": "complete_hash_closed_27_seed_108_episode_result",
+  "compiled_at_utc": "2026-08-06T10:08:01Z",
+  "runtime_identity": {
+    "runtime_identity_sha256": "2c5e314a62926a3d3c9b84fa73cff634c378b6140d390cbef6407ac9c633e64e",
+    "study_source_commit": "39f19b57d5f5e68d0f03e4e4c7569350cb9a467f",
+    "release_manifest_sha256": "5c82268739feb41281435a51dcd848b575218cd9fbe5839d9ad130d1a7888830"
+  },
+  "design": {
+    "matched_seed_count": 27,
+    "seed_range_inclusive": [9400, 9426],
+    "arms": ["control", "position_mirrored"],
+    "directions": ["left", "right"],
+    "valid_behavioral_episode_count": 108,
+    "claim_boundary": "Only movable-object center positions were reflected about the robot sagittal plane. The robot, cameras, and nonmovable geometry remained fixed; this is a positions-only intervention, not a full-scene mirror.",
+    "exact_prompts": {
+      "left": "Put the Rubik's cube to the left of the bowl.",
+      "right": "Put the Rubik's cube to the right of the bowl."
+    }
+  },
+  "outcomes": {
+    "control:left": {"correct": 26, "transport_failed": 1, "episodes": 27},
+    "control:right": {"correct": 26, "release_failed": 1, "episodes": 27},
+    "position_mirrored:left": {"correct": 27, "episodes": 27},
+    "position_mirrored:right": {"correct": 23, "transport_failed": 4, "episodes": 27},
+    "all_conditions": {"correct": 102, "pick_failed": 0, "transport_failed": 5, "wrong_side": 0, "release_failed": 1, "episodes": 108}
+  },
+  "prespecified_estimands": {
+    "endpoint_redirection_control_D_m": {
+      "mean": 0.4480567460672723,
+      "mean_bootstrap_95": [0.40164243061854327, 0.4939816695982935],
+      "median": 0.4667481780052185,
+      "positive_negative_tie": [27, 0, 0],
+      "exact_two_sided_sign_test_p": 1.4901161193847656e-08
+    },
+    "endpoint_redirection_position_mirrored_D_m": {
+      "mean": 0.45273699628672115,
+      "mean_bootstrap_95": [0.40525535628268566, 0.5025619167489586],
+      "median": 0.4373619556427002,
+      "positive_negative_tie": [27, 0, 0],
+      "exact_two_sided_sign_test_p": 1.4901161193847656e-08
+    },
+    "redirection_interaction_J_m": {
+      "mean": 0.004680250219448849,
+      "mean_bootstrap_95": [-0.05600503564863983, 0.06576540515999549],
+      "median": 0.007228171452879906,
+      "positive_negative_tie": [15, 12, 0],
+      "exact_two_sided_sign_test_p": 0.7011080384254456
+    },
+    "requested_depth_control_B_m": {
+      "mean": 0.14766256421528481,
+      "mean_bootstrap_95": [0.09617430808333059, 0.1972134896398831],
+      "median": 0.14758701622486115,
+      "positive_negative_tie": [22, 5, 0],
+      "exact_two_sided_sign_test_p": 0.0015137195587158203
+    },
+    "requested_depth_position_mirrored_B_m": {
+      "mean": -0.10000462930097624,
+      "mean_bootstrap_95": [-0.14831408801040163, -0.05342710623172701],
+      "median": -0.08814282715320587,
+      "positive_negative_tie": [7, 20, 0],
+      "exact_two_sided_sign_test_p": 0.0191572904586792
+    },
+    "position_reflection_interaction_I_m": {
+      "mean": -0.24766719351626104,
+      "mean_bootstrap_95": [-0.323597148791197, -0.17255578080657877],
+      "median": -0.2463150918483734,
+      "positive_negative_tie": [3, 24, 0],
+      "exact_two_sided_sign_test_p": 4.9233436584472656e-05
+    }
+  },
+  "success_conditional_secondary": {
+    "subset_id": "nano_v3b001_all_four_cells_correct",
+    "matched_seed_count": 21,
+    "failures_as_zero": false,
+    "unmatched_successful_cells_used": false,
+    "position_reflection_interaction_G_m": {
+      "mean": -0.21200347110806478,
+      "mean_bootstrap_95": [-0.2911889207704613, -0.13499265807082086],
+      "median": -0.2282327301800251,
+      "positive_negative_tie": [3, 18, 0],
+      "exact_two_sided_sign_test_p": 0.0014896392822265625
+    }
+  },
+  "interpretation": {
+    "supported": "The exact static prompt reliably redirected matched endpoints in both layouts, while the registered movable-object position reflection changed which requested direction received greater side depth.",
+    "not_supported": "The intervention does not identify training-data imbalance as the mechanism, does not test a full-scene mirror, and does not imply that decoded local predictions caused the executed behavior."
+  },
+  "files": [
+    {"path": "nano_v3b001_episodes.jsonl", "bytes": 5822218, "sha256": "ce67aecb2705394e8161fa4b65df7130e62648e2f6d8b6a93408c8da685a7207"},
+    {"path": "nano_v3b001_episodes.jsonl.manifest.json", "bytes": 75276, "sha256": "660c32f8dc8a7c22db8142110c6139ad46a77361e6b8e9b824737377f0f67044"},
+    {"path": "nano_v3b001_summary.json", "bytes": 72705, "sha256": "f43636a03caade5f3dc65de6736808c8257c78eacb07ba4cb963bfc6a0e36578"},
+    {"path": "nano_v3b001_final_evidence_manifest.json", "bytes": 2015406, "sha256": "ed16c120f58b89fe67227c544a7ac7b20610e802a0a19276fcb0f7796cef5270"},
+    {"path": "figures/nano_v3b001_primary.png", "bytes": 780044, "sha256": "ab00fa8ee5ac5ba2045e4ed983850cbea68374628798a60e3e0b1d56977e97c6"},
+    {"path": "figures/nano_v3b001_primary.svg", "bytes": 28356, "sha256": "32070f005056660b444d4a6ada891fa60b910c128531ea46c88aad8891bbb5e0"},
+    {"path": "figures/nano_v3b001_failure_taxonomy.png", "bytes": 274003, "sha256": "6bd5a4972cf99366b0f6b35fa9ce124ca9208fc1b8f76bce16e3fccef73b3b01"},
+    {"path": "figures/nano_v3b001_failure_taxonomy.svg", "bytes": 8287, "sha256": "816a980c11f59f71373f6932ec4d84324758fe160eb3ed7ed99a907f1c2321f4"},
+    {"path": "figures/nano_v3b001_media_manifest.json", "bytes": 25572, "sha256": "b6286ff4e77be57a434312723210c2669764e5be21af85d7f5849f191ce912cb"},
+    {"path": "publication_media/nano_v3b001_publication_media_manifest.json", "bytes": 47015, "sha256": "2a9023b976b6a877b2da266ce1333f6639d89a971a4e082f50a7af1f0cf246ea"},
+    {"path": "publication_media/nano_v3b001_seed9400_control_left_actual_vs_local_predictions.mp4", "bytes": 1662892, "sha256": "78e9c2111faf3f4c180724314e8d0fe8a61dbdfb78e0fefa44d34434318a0b62"},
+    {"path": "publication_media/nano_v3b001_seed9400_control_left_poster.png", "bytes": 611119, "sha256": "9e8265ca8f95a2798646c09c8783e17eb24e271ee718a2001b7ff1e1f44b23d7"},
+    {"path": "publication_media/nano_v3b001_seed9400_control_right_actual_vs_local_predictions.mp4", "bytes": 4944505, "sha256": "67422e7d8d52dcdc74325d3d08e37cbd5b6c45bdef3721f4323625166065d84b"},
+    {"path": "publication_media/nano_v3b001_seed9400_control_right_poster.png", "bytes": 612384, "sha256": "5cdd1267c64fc90f67c8ba44dac6991326ec98ad9244c1e1c47a643d5523d36d"},
+    {"path": "publication_media/nano_v3b001_seed9400_position_mirrored_left_actual_vs_local_predictions.mp4", "bytes": 2903051, "sha256": "db73e5c504f6aa802008b4679165861b575b371604b84be0a6bdb12cd9e38df2"},
+    {"path": "publication_media/nano_v3b001_seed9400_position_mirrored_left_poster.png", "bytes": 613988, "sha256": "a974f4f69f828c3351f3a5c33a2e678d57507dfce032cf11e77d2aa961d9924f"},
+    {"path": "publication_media/nano_v3b001_seed9400_position_mirrored_right_actual_vs_local_predictions.mp4", "bytes": 2964567, "sha256": "296c8128b98674c94b402a56206314e48dc28e11ff62eedec55c0ea1ad5a46df"},
+    {"path": "publication_media/nano_v3b001_seed9400_position_mirrored_right_poster.png", "bytes": 617517, "sha256": "c7d1c5c07359507a45d2371c97a57a3625192c77e316d7901bc96cdad482de5d"}
+  ]
+}

@@ -58,6 +58,13 @@ REQUIRED = {
     "nano_mirror_reset_correction": f"{V3}/phase_b/nano_mirror_v3b001/live_reset_semantics_correction.json",
     "nano_mirror_reset_preflight": f"{V3}/phase_b/nano_mirror_v3b001/live_reset_preflight_report.json",
     "nano_mirror_live_snapshot": f"{V3}/phase_b/nano_mirror_v3b001/live_queue_snapshot.json",
+    "nano_mirror_results_manifest": f"{V3}/phase_b/nano_mirror_v3b001/results/nano_v3b001_results_manifest.json",
+    "nano_mirror_summary": f"{V3}/phase_b/nano_mirror_v3b001/results/nano_v3b001_summary.json",
+    "nano_mirror_episodes": f"{V3}/phase_b/nano_mirror_v3b001/results/nano_v3b001_episodes.jsonl",
+    "nano_mirror_episodes_manifest": f"{V3}/phase_b/nano_mirror_v3b001/results/nano_v3b001_episodes.jsonl.manifest.json",
+    "nano_mirror_final_evidence": f"{V3}/phase_b/nano_mirror_v3b001/results/nano_v3b001_final_evidence_manifest.json",
+    "nano_mirror_figure_media_manifest": f"{V3}/phase_b/nano_mirror_v3b001/results/figures/nano_v3b001_media_manifest.json",
+    "nano_mirror_publication_media_manifest": f"{V3}/phase_b/nano_mirror_v3b001/results/publication_media/nano_v3b001_publication_media_manifest.json",
     "nano_mirror_runtime_adapter": "experiments/v3/cosmos_nano_phase_b/runtime_adapter.py",
     "nano_mirror_compiler": "experiments/v3/cosmos_nano_phase_b/compile_cell.py",
     "nano_mirror_live_support": "experiments/v3/cosmos_nano_phase_b/live_support.py",
@@ -65,8 +72,16 @@ REQUIRED = {
     "nano_mirror_live_server": "experiments/v3/cosmos_nano_phase_b/serve_nano.py",
     "nano_mirror_live_bridge": "experiments/v3/cosmos_nano_phase_b/robolab_bridge.py",
     "nano_mirror_queue_launcher": "experiments/v3/cosmos_nano_phase_b/queue_launcher.py",
+    "nano_mirror_results_compiler": "tools/compile_nano_v3b001_results.py",
+    "nano_mirror_evidence_finalizer": "tools/finalize_nano_v3b001_evidence.py",
+    "nano_mirror_results_renderer": "tools/render_nano_v3b001_results.py",
+    "nano_mirror_publication_media_builder": "tools/build_nano_v3b001_publication_media.py",
     "nano_mirror_runtime_test": "tests/test_v3b_nano_runtime_adapter.py",
     "nano_mirror_live_queue_test": "tests/test_v3b_nano_live_queue.py",
+    "nano_mirror_results_compiler_test": "tests/test_compile_nano_v3b001_results.py",
+    "nano_mirror_evidence_finalizer_test": "tests/test_finalize_nano_v3b001_evidence.py",
+    "nano_mirror_results_renderer_test": "tests/test_render_nano_v3b001_results.py",
+    "nano_mirror_publication_media_test": "tests/test_build_nano_v3b001_publication_media.py",
 }
 DROID_MODELS = [
     "pi0_fast_droid_vla",
@@ -1054,6 +1069,13 @@ def validate(root: Path) -> list[str]:
     nano_reset_preflight = load(paths["nano_mirror_reset_preflight"])
     nano_live_snapshot = load(paths["nano_mirror_live_snapshot"])
     nano_cells = load_jsonl(paths["nano_mirror_cells"])
+    nano_results_manifest = load(paths["nano_mirror_results_manifest"])
+    nano_summary = load(paths["nano_mirror_summary"])
+    nano_episodes = load_jsonl(paths["nano_mirror_episodes"])
+    nano_episodes_manifest = load(paths["nano_mirror_episodes_manifest"])
+    nano_final_evidence = load(paths["nano_mirror_final_evidence"])
+    nano_figure_media_manifest = load(paths["nano_mirror_figure_media_manifest"])
+    nano_publication_media_manifest = load(paths["nano_mirror_publication_media_manifest"])
 
     require(
         nano_calibration.get("schema_version")
@@ -1214,18 +1236,18 @@ def validate(root: Path) -> list[str]:
     )
     require(
         nano_state.get("status")
-        == "live_queue_running_committed_snapshot_three_complete_seed_blocks"
+        == "complete_hash_closed_27_seed_108_episode_result"
         and nano_state.get("released_behavioral_cell_count") == 108
-        and nano_state.get("completed_behavioral_cell_count") == 12
+        and nano_state.get("completed_behavioral_cell_count") == 108
         and nano_state.get("completed_behavioral_cell_count_scope")
-        == "committed_snapshot_only_live_queue_may_be_ahead"
-        and nano_state.get("committed_complete_seed_blocks") == [9400, 9401, 9402]
-        and nano_state.get("live_queue_may_be_ahead_of_committed_snapshot") is True
+        == "complete_prespecified_cohort"
+        and nano_state.get("committed_complete_seed_blocks") == exact_range(9400, 9426)
+        and nano_state.get("live_queue_may_be_ahead_of_committed_snapshot") is False
         and nano_state.get("pre_release_counts")
         == {"model_requests": 0, "behavioral_episodes": 0}
         and nano_state.get("seed_range_inclusive") == [9400, 9426]
         and nano_state.get("prespecified_matched_seed_count") == 27,
-        "V3 continuation records Nano V3-B001 as 108 released with a coherent 12-cell prefix",
+        "V3 continuation records Nano V3-B001 as a complete 108-cell cohort",
         checks,
     )
     nano_state_artifact_keys = {
@@ -1237,6 +1259,10 @@ def validate(root: Path) -> list[str]:
         "live_reset_semantics_correction": "nano_mirror_reset_correction",
         "live_reset_preflight_report": "nano_mirror_reset_preflight",
         "live_queue_snapshot": "nano_mirror_live_snapshot",
+        "final_results_manifest": "nano_mirror_results_manifest",
+        "final_summary": "nano_mirror_summary",
+        "final_evidence_manifest": "nano_mirror_final_evidence",
+        "publication_media_manifest": "nano_mirror_publication_media_manifest",
     }
     require(
         all(
@@ -1245,14 +1271,330 @@ def validate(root: Path) -> list[str]:
             and REQUIRED[path_key] in continuation.get("authoritative_files", [])
             for label, path_key in nano_state_artifact_keys.items()
         ),
-        "V3 continuation hash-binds all release and live-infrastructure Nano V3-B001 artifacts",
+        "V3 continuation hash-binds Nano V3-B001 release, historical live, final-result, and publication artifacts",
+        checks,
+    )
+    nano_results_root = paths["nano_mirror_results_manifest"].parent
+    nano_result_files = nano_results_manifest.get("files", [])
+    require(
+        nano_results_manifest.get("schema_version")
+        == "vla-wam-shared-v3b-nano-v3b001-results-manifest-v1"
+        and nano_results_manifest.get("status")
+        == "complete_hash_closed_27_seed_108_episode_result"
+        and nano_results_manifest.get("runtime_identity", {}).get(
+            "runtime_identity_sha256"
+        )
+        == "2c5e314a62926a3d3c9b84fa73cff634c378b6140d390cbef6407ac9c633e64e"
+        and nano_results_manifest.get("runtime_identity", {}).get(
+            "study_source_commit"
+        )
+        == "39f19b57d5f5e68d0f03e4e4c7569350cb9a467f"
+        and nano_results_manifest.get("runtime_identity", {}).get(
+            "release_manifest_sha256"
+        )
+        == sha256(paths["nano_mirror_manifest"])
+        and nano_results_manifest.get("design", {}).get("matched_seed_count") == 27
+        and nano_results_manifest.get("design", {}).get(
+            "valid_behavioral_episode_count"
+        )
+        == 108
+        and nano_results_manifest.get("design", {}).get("exact_prompts")
+        == {
+            "left": EXACT_V2_WORDINGS["direct_command"]["left"],
+            "right": EXACT_V2_WORDINGS["direct_command"]["right"],
+        }
+        and len(nano_result_files) == 18
+        and len({item.get("path") for item in nano_result_files}) == 18
+        and all(
+            isinstance(item.get("path"), str)
+            and (nano_results_root / item["path"]).is_file()
+            and (nano_results_root / item["path"]).stat().st_size == item.get("bytes")
+            and sha256(nano_results_root / item["path"]) == item.get("sha256")
+            for item in nano_result_files
+        ),
+        "Nano V3-B001 final results manifest hash-binds all compact evidence, figures, and publication media",
+        checks,
+    )
+    expected_nano_condition_outcomes = {
+        "control:left": {
+            "episodes": 27,
+            "failure_taxonomy_counts": {"correct": 26, "transport_failed": 1},
+            "successes": 26,
+        },
+        "control:right": {
+            "episodes": 27,
+            "failure_taxonomy_counts": {"correct": 26, "release_failed": 1},
+            "successes": 26,
+        },
+        "position_mirrored:left": {
+            "episodes": 27,
+            "failure_taxonomy_counts": {"correct": 27},
+            "successes": 27,
+        },
+        "position_mirrored:right": {
+            "episodes": 27,
+            "failure_taxonomy_counts": {"correct": 23, "transport_failed": 4},
+            "successes": 23,
+        },
+    }
+    require(
+        nano_summary.get("schema_version")
+        == "vla-wam-shared-v3b-nano-v3b001-results-v1"
+        and nano_summary.get("study_id") == "vla_wam_language_steerability_v3"
+        and nano_summary.get("amendment_id") == "V3-B001"
+        and nano_summary.get("model_id") == "cosmos3_nano_policy_droid"
+        and nano_summary.get("runtime_identity_sha256")
+        == "2c5e314a62926a3d3c9b84fa73cff634c378b6140d390cbef6407ac9c633e64e"
+        and nano_summary.get("behavioral_evidence", {}).get("matched_seed_count") == 27
+        and nano_summary.get("behavioral_evidence", {}).get("valid_episode_count") == 108
+        and nano_summary.get("condition_outcomes") == expected_nano_condition_outcomes
+        and nano_summary.get("failure_taxonomy_counts")
+        == {"correct": 102, "release_failed": 1, "transport_failed": 5}
+        and nano_summary.get("exact_prompts")
+        == {
+            "left": EXACT_V2_WORDINGS["direct_command"]["left"],
+            "right": EXACT_V2_WORDINGS["direct_command"]["right"],
+        }
+        and nano_summary.get("uncertainty_contract", {}).get("bootstrap_replicates")
+        == 20000
+        and nano_summary.get("uncertainty_contract", {}).get("bootstrap_master_seed")
+        == 3104159,
+        "Nano V3-B001 summary retains the exact cohort, prompts, outcomes, and prespecified uncertainty contract",
+        checks,
+    )
+    nano_primary = nano_summary.get("full_sample_primary", {})
+    nano_D = nano_primary.get("D_by_arm", {})
+    nano_B = nano_primary.get("B_by_arm", {})
+    nano_I = nano_primary.get("I_position_reflection_interaction", {})
+    nano_J = nano_primary.get("J_redirection_interaction", {})
+    require(
+        nano_D.get("control", {}).get("n") == 27
+        and close(nano_D.get("control", {}).get("median_m"), 0.4667481780052185)
+        and nano_D.get("control", {}).get("paired_sign_test", {}).get("positive") == 27
+        and close(
+            nano_D.get("position_mirrored", {}).get("median_m"),
+            0.4373619556427002,
+        )
+        and nano_D.get("position_mirrored", {}).get("paired_sign_test", {}).get(
+            "positive"
+        )
+        == 27
+        and close(nano_J.get("median_m"), 0.007228171452879906)
+        and close(nano_J.get("paired_sign_test", {}).get("p_value"), 0.7011080384254456)
+        and close(nano_B.get("control", {}).get("median_m"), 0.14758701622486115)
+        and close(
+            nano_B.get("position_mirrored", {}).get("median_m"),
+            -0.08814282715320587,
+        )
+        and close(nano_I.get("median_m"), -0.2463150918483734)
+        and nano_I.get("paired_sign_test", {}).get("negative") == 24
+        and close(
+            nano_I.get("paired_sign_test", {}).get("p_value"),
+            4.9233436584472656e-05,
+        ),
+        "Nano V3-B001 primary result separates persistent endpoint redirection from the reflected side-depth interaction",
+        checks,
+    )
+    nano_secondary = nano_summary.get("success_conditional_secondary", {})
+    require(
+        nano_secondary.get("subset_id") == "nano_v3b001_all_four_cells_correct"
+        and nano_secondary.get("realized_matched_seed_count") == 21
+        and nano_secondary.get("failures_as_zero") is False
+        and nano_secondary.get("unmatched_successful_cells_used") is False
+        and close(
+            nano_secondary.get("G_position_reflection_interaction", {}).get("median_m"),
+            -0.2282327301800251,
+        )
+        and nano_secondary.get("G_position_reflection_interaction", {}).get(
+            "paired_sign_test", {}
+        ).get("negative")
+        == 18
+        and close(
+            nano_secondary.get("G_position_reflection_interaction", {})
+            .get("paired_sign_test", {})
+            .get("p_value"),
+            0.0014896392822265625,
+        ),
+        "Nano V3-B001 secondary margin result uses only the named 21-seed all-four-correct subset",
+        checks,
+    )
+    nano_episode_ids = {row.get("registered_cell_id") for row in nano_episodes}
+    require(
+        len(nano_episodes) == 108
+        and len(nano_episode_ids) == 108
+        and nano_episode_ids == {row.get("cell_id") for row in nano_cells}
+        and sum(row.get("actions_executed", 0) for row in nano_episodes) == 21972
+        and sum(len(row.get("future_requests", [])) for row in nano_episodes) == 738
+        and all(
+            row.get("behavioral_result_valid") is True
+            and row.get("runtime_identity", {}).get("sha256")
+            == "2c5e314a62926a3d3c9b84fa73cff634c378b6140d390cbef6407ac9c633e64e"
+            and row.get("prompt")
+            == EXACT_V2_WORDINGS["direct_command"][row.get("requested_relation")]
+            and row.get("failure_taxonomy")
+            in {"correct", "pick_failed", "transport_failed", "wrong_side", "release_failed"}
+            and isinstance(row.get("measurements", {}).get("signed_final_lateral_offset_m"), (int, float))
+            for row in nano_episodes
+        ),
+        "Nano V3-B001 aggregate contains all 108 exact cells, 21,972 actions, 738 retained futures, and full-sample offsets",
+        checks,
+    )
+    aggregate_evidence = nano_summary.get("behavioral_evidence", {}).get(
+        "aggregate_jsonl", {}
+    )
+    require(
+        aggregate_evidence
+        == {
+            "bytes": paths["nano_mirror_episodes"].stat().st_size,
+            "manifest_path": paths["nano_mirror_episodes_manifest"].name,
+            "manifest_sha256": sha256(paths["nano_mirror_episodes_manifest"]),
+            "path": paths["nano_mirror_episodes"].name,
+            "sha256": sha256(paths["nano_mirror_episodes"]),
+        }
+        and nano_episodes_manifest.get("jsonl_sha256")
+        == sha256(paths["nano_mirror_episodes"])
+        and nano_episodes_manifest.get("jsonl_bytes")
+        == paths["nano_mirror_episodes"].stat().st_size
+        and nano_episodes_manifest.get("row_count") == 108,
+        "Nano V3-B001 summary and aggregate manifest bind the exact 108-row JSONL",
+        checks,
+    )
+    require(
+        nano_final_evidence.get("schema_version")
+        == "vla-wam-shared-v3b-nano-v3b001-final-evidence-v1"
+        and nano_final_evidence.get("status")
+        == "complete_hash_closed_108_cell_evidence"
+        and nano_final_evidence.get("runtime_identity_sha256")
+        == "2c5e314a62926a3d3c9b84fa73cff634c378b6140d390cbef6407ac9c633e64e"
+        and nano_final_evidence.get("counts", {}).get("behavioral_episode_count") == 108
+        and nano_final_evidence.get("counts", {}).get("matched_seed_count") == 27
+        and nano_final_evidence.get("counts", {}).get("raw_batch_count") == 108
+        and nano_final_evidence.get("counts", {}).get("unique_referenced_artifact_count")
+        == 2233
+        and nano_final_evidence.get("compiled_outputs", {}).get(
+            "aggregate_behavioral_jsonl", {}
+        ).get("sha256")
+        == sha256(paths["nano_mirror_episodes"])
+        and nano_final_evidence.get("compiled_outputs", {}).get("summary", {}).get(
+            "sha256"
+        )
+        == sha256(paths["nano_mirror_summary"])
+        and nano_final_evidence.get("release_manifest", {}).get("sha256")
+        == sha256(paths["nano_mirror_manifest"])
+        and nano_final_evidence.get("statistics_contract", {}).get(
+            "valid_behavioral_failures_included"
+        )
+        is True,
+        "Nano V3-B001 evidence manifest hash-closes all batches, referenced assets, and compiled outputs",
+        checks,
+    )
+    figure_root = paths["nano_mirror_figure_media_manifest"].parent
+    require(
+        nano_figure_media_manifest.get("schema_version")
+        == "vla-wam-shared-v3b-nano-v3b001-results-media-manifest-v1"
+        and nano_figure_media_manifest.get("status") == "complete"
+        and nano_figure_media_manifest.get("selection", {}).get("selected_seed") == 9400
+        and nano_figure_media_manifest.get("selection", {}).get(
+            "selected_decoded_prediction_count"
+        )
+        == 30
+        and nano_figure_media_manifest.get("selection", {}).get("outcome_used_for_selection")
+        is False
+        and all(
+            (figure_root / item.get("path", "")).is_file()
+            and (figure_root / item["path"]).stat().st_size == item.get("bytes")
+            and sha256(figure_root / item["path"]) == item.get("sha256")
+            for item in nano_figure_media_manifest.get("generated_files", {}).values()
+        ),
+        "Nano V3-B001 renderer retains all seeds in readable hash-bound figures and selects media without outcomes",
+        checks,
+    )
+    publication_root = paths["nano_mirror_publication_media_manifest"].parent
+    selected_publication = nano_publication_media_manifest.get("selected_media", [])
+    require(
+        nano_publication_media_manifest.get("schema_version")
+        == "vla-wam-shared-v3b-nano-v3b001-publication-media-v1"
+        and nano_publication_media_manifest.get("status")
+        == "complete_minimum_seed_all_four_cells_actual_and_local_predictions"
+        and nano_publication_media_manifest.get("selection", {}).get("selected_seed") == 9400
+        and nano_publication_media_manifest.get("selection", {}).get("selected_cell_count") == 4
+        and nano_publication_media_manifest.get("selection", {}).get("outcome_used_for_selection")
+        is False
+        and len(selected_publication) == 4
+        and sum(
+            len(item.get("source_local_prediction_horizons_in_order", []))
+            for item in selected_publication
+        )
+        == 30
+        and all(
+            item.get("exact_prompt")
+            == EXACT_V2_WORDINGS["direct_command"][item.get("requested_relation")]
+            and all(
+                (publication_root / asset.get("path", "")).is_file()
+                and (publication_root / asset["path"]).stat().st_size == asset.get("bytes")
+                and sha256(publication_root / asset["path"]) == asset.get("sha256")
+                for asset in (item.get("publication_video", {}), item.get("poster", {}))
+            )
+            and item.get("output_validation", {}).get("codec_name") == "h264"
+            and item.get("output_validation", {}).get("pixel_format") == "yuv420p"
+            and item.get("output_validation", {}).get("has_audio") is False
+            for item in selected_publication
+        ),
+        "Nano V3-B001 publication media shows all four selected cells with complete actual rollouts and every local future",
+        checks,
+    )
+    nano_final_state = nano_state.get("final_result", {})
+    require(
+        nano_final_state.get("valid_behavioral_cells") == 108
+        and nano_final_state.get("matched_seed_count") == 27
+        and nano_final_state.get("valid_model_sampler_requests") == 738
+        and nano_final_state.get("executed_actions") == 21972
+        and nano_final_state.get("failure_taxonomy")
+        == {
+            "correct": 102,
+            "pick_failed": 0,
+            "transport_failed": 5,
+            "wrong_side": 0,
+            "release_failed": 1,
+        }
+        and close(
+            nano_final_state.get("requested_depth", {}).get(
+                "reflection_interaction_I_median_m"
+            ),
+            nano_I.get("median_m"),
+        )
+        and close(
+            nano_final_state.get("endpoint_redirection", {}).get(
+                "reflection_interaction_J_median_m"
+            ),
+            nano_J.get("median_m"),
+        ),
+        "V3 continuation mirrors the completed Nano counts and prespecified interaction estimates",
+        checks,
+    )
+    nano_final_source_keys = {
+        "nano_mirror_results_compiler",
+        "nano_mirror_evidence_finalizer",
+        "nano_mirror_results_renderer",
+        "nano_mirror_publication_media_builder",
+        "nano_mirror_results_compiler_test",
+        "nano_mirror_evidence_finalizer_test",
+        "nano_mirror_results_renderer_test",
+        "nano_mirror_publication_media_test",
+    }
+    require(
+        all(
+            REQUIRED[key] in continuation.get("authoritative_files", [])
+            for key in nano_final_source_keys
+        ),
+        "V3 continuation lists the Nano compiler, finalizer, renderer, media builder, and regression tests",
         checks,
     )
     nano_live = nano_state.get("live_runtime", {})
     live_identity = nano_live.get("live_bound_runtime_identity", {})
     require(
         nano_live.get("status")
-        == "queue_running_committed_snapshot_through_seed9402_live_may_be_ahead"
+        == "queue_complete_historical_live_prefix_details_retained_below"
         and nano_live.get("model_request_count") == 39
         and nano_live.get("model_request_count_semantics")
         == "prior_model_sampler_requests_retained_as_infrastructure_evidence; zero-sampling transport-handshake packets excluded"
@@ -1278,7 +1620,7 @@ def validate(root: Path) -> list[str]:
         == "fa962d1783a506abb2e0c11c5129087be62a9f698bd2a3bec2a97dddba9b6a71"
         and nano_live.get("registration_context_diagnostic", {}).get("model_requests")
         == 0,
-        "V3 continuation records the live Nano queue under one verified identity with 12 committed cells",
+        "V3 continuation preserves the historical Nano live prefix under the completed queue identity",
         checks,
     )
     require(
@@ -1999,38 +2341,32 @@ def validate(root: Path) -> list[str]:
         "phase_b_confounds", {}
     )
     require(
-        phase_b_state.get("status") == "partial_release_nano_v3b001_only"
+        phase_b_state.get("status")
+        == "nano_v3b001_complete_every_other_phase_b_ablation_unreleased"
         and phase_b_state.get("released", {}).get("amendment_id") == "V3-B001"
         and phase_b_state.get("released", {}).get("released_behavioral_cells") == 108
-        and phase_b_state.get("released", {}).get("completed_behavioral_cells") == 12
-        and "three complete seed blocks"
+        and phase_b_state.get("released", {}).get("completed_behavioral_cells") == 108
+        and "27-seed"
         in phase_b_state.get("released", {}).get("release_condition", "")
-        and "continuing queue may be ahead"
+        and "hash-closed"
         in phase_b_state.get("released", {}).get("release_condition", "")
         and "Every other Phase-B" in phase_b_state.get("unreleased", ""),
-        "V3 continuation records the bounded Nano live snapshot while keeping every other confound gated",
+        "V3 continuation records the completed Nano ablation while keeping every other confound gated",
         checks,
     )
+    inference_authority = continuation.get("next_agent", {}).get(
+        "inference_authority", ""
+    )
     require(
-        "No Phase-A authorized_new or V3-A002 bridge cell remains"
-        in continuation.get("next_agent", {}).get("inference_authority", "")
-        and "Nano V3-B001 is the only released Phase-B queue"
-        in continuation.get("next_agent", {}).get("inference_authority", "")
-        and "existing live queue is already running"
-        in continuation.get("next_agent", {}).get("inference_authority", "")
+        "No Phase-A authorized_new, V3-A002 bridge, or Nano V3-B001 cell remains"
+        in inference_authority
+        and "complete at 108/108 valid behavioral episodes" in inference_authority
         and "2c5e314a62926a3d3c9b84fa73cff634c378b6140d390cbef6407ac9c633e64e"
-        in continuation.get("next_agent", {}).get("inference_authority", "")
-        and "Do not start a duplicate queue"
-        in continuation.get("next_agent", {}).get("inference_authority", "")
-        and "snapshot freezes exactly seeds 9400-9402 (12 valid cells)"
-        in continuation.get("next_agent", {}).get("inference_authority", "")
-        and "live queue may be ahead"
-        in continuation.get("next_agent", {}).get("inference_authority", "")
-        and "Fail closed if the runtime manifest or source binding changes"
-        in continuation.get("next_agent", {}).get("inference_authority", "")
-        and "No other Phase-B, Phase-C, or Phase-D cell"
-        in continuation.get("next_agent", {}).get("inference_authority", ""),
-        "V3 continuation grants inference authority only to the already-running Nano V3-B001 queue",
+        in inference_authority
+        and "12-cell live snapshot is retained only as a historical prefix"
+        in inference_authority
+        and "No other Phase-B, Phase-C, or Phase-D cell" in inference_authority,
+        "V3 continuation closes Nano inference and keeps every unreleased phase gated",
         checks,
     )
 
@@ -2299,30 +2635,30 @@ def validate(root: Path) -> list[str]:
         checks,
     )
     require(
-        "Nano V3-B001 live runtime boundary" in continuation_doc
-        and "108 released cells" in continuation_doc
-        and "three complete four-cell seed" in continuation_doc
-        and "12 valid behavioral cells and a denominator of 12" in continuation_doc
-        and "10 `correct` outcomes" in continuation_doc
+        "Nano V3-B001 completed result" in continuation_doc
+        and "108/108 prespecified cells" in continuation_doc
+        and "27/27 control seeds" in continuation_doc
+        and "27/27" in continuation_doc
+        and "Historical live-boundary and reset audit" in continuation_doc
+        and "first three complete four-cell seed" in continuation_doc
+        and "12 valid behavioral cells" in continuation_doc
+        and "10 `correct`" in continuation_doc
         and "one `release_failed`" in continuation_doc
-        and "one behavioral" in continuation_doc
         and "`transport_failed`" in continuation_doc
-        and "prefix snapshot" in continuation_doc
-        and "not a claim that the live queue stopped" in continuation_doc
+        and "prefix, not current study state" in continuation_doc
         and "all 39 prior model-sampler requests" in continuation_doc
         and "Four earlier" in continuation_doc
         and "complete behavioral attempts" in continuation_doc
         and "invalidated before analysis" in continuation_doc
-        and "Registration context is therefore falsified as the sufficient explanation" in continuation_doc
+        and "falsified as the sufficient explanation" in continuation_doc
         and "episode-length mutation order" in continuation_doc
-        and "two runner reset calls but perform one physical reset" in continuation_doc
+        and "two runner reset calls" in continuation_doc
         and "zero-sampling exact-bridge preflight has now passed" in continuation_doc
         and "No model server or" in continuation_doc
         and "no model sample was drawn" in continuation_doc
-        and "running only under that same verified runtime identity" in continuation_doc
-        and "Do not launch a duplicate queue" in continuation_doc
-        and "descriptive live-prefix counts" in continuation_doc
-        and "No inferential mirror claim is made from this prefix" in continuation_doc
+        and "completed queue used only that verified runtime identity" in continuation_doc
+        and "descriptive historical-prefix counts" in continuation_doc
+        and "no inference is made from that prefix" in continuation_doc
         and "v3b001:nano:seed9400:position_mirrored:right" in continuation_doc
         and EXACT_V2_WORDINGS["direct_command"]["right"] in continuation_doc,
         "V3 continuation distinguishes the bounded Nano live snapshot from completed-ablation inference",

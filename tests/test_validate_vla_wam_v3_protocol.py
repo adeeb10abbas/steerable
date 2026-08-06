@@ -59,11 +59,22 @@ class ValidateV3ProtocolTest(unittest.TestCase):
                 root / "experiments" / "groot_droid" / "robolab_v2_tasks" / name,
             )
         (root / "tools").mkdir()
-        shutil.copy2(ROOT / "tools" / "build_v3a002_pi0_fast_media.py", root / "tools")
+        for name in (
+            "build_v3a002_pi0_fast_media.py",
+            "compile_nano_v3b001_results.py",
+            "finalize_nano_v3b001_evidence.py",
+            "render_nano_v3b001_results.py",
+            "build_nano_v3b001_publication_media.py",
+        ):
+            shutil.copy2(ROOT / "tools" / name, root / "tools" / name)
         (root / "tests").mkdir()
         for name in (
             "test_v3b_nano_runtime_adapter.py",
             "test_v3b_nano_live_queue.py",
+            "test_compile_nano_v3b001_results.py",
+            "test_finalize_nano_v3b001_evidence.py",
+            "test_render_nano_v3b001_results.py",
+            "test_build_nano_v3b001_publication_media.py",
         ):
             shutil.copy2(ROOT / "tests" / name, root / "tests" / name)
 

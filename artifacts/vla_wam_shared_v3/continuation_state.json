@@ -1,10 +1,10 @@
 {
   "schema_version": "vla-wam-shared-v3-continuation-v1",
   "study_id": "vla_wam_language_steerability_v3",
-  "updated_at_utc": "2026-08-06T07:15:17Z",
+  "updated_at_utc": "2026-08-06T10:08:01Z",
   "active_branch": "codex/wam-language-steerability",
   "evidence_head": "39f19b57d5f5e68d0f03e4e4c7569350cb9a467f",
-  "status": "phase_a_and_v3a002_complete_nano_v3b001_live_queue_running_committed_snapshot_3_blocks_12_cells_other_phase_b_phase_c_phase_d_unreleased",
+  "status": "phase_a_v3a002_and_nano_v3b001_complete_other_phase_b_phase_c_phase_d_unreleased",
   "authoritative_files": [
     "docs/VLA_WAM_V3_CONTINUATION.md",
     "docs/VLA_WAM_STEERABILITY_V3_PROTOCOL.md",
@@ -28,6 +28,13 @@
     "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_reset_semantics_correction.json",
     "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_reset_preflight_report.json",
     "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_queue_snapshot.json",
+    "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/nano_v3b001_results_manifest.json",
+    "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/nano_v3b001_summary.json",
+    "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/nano_v3b001_episodes.jsonl",
+    "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/nano_v3b001_episodes.jsonl.manifest.json",
+    "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/nano_v3b001_final_evidence_manifest.json",
+    "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/figures/nano_v3b001_media_manifest.json",
+    "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/publication_media/nano_v3b001_publication_media_manifest.json",
     "experiments/v3/cosmos_nano_phase_b/runtime_adapter.py",
     "experiments/v3/cosmos_nano_phase_b/compile_cell.py",
     "experiments/v3/cosmos_nano_phase_b/live_support.py",
@@ -35,8 +42,16 @@
     "experiments/v3/cosmos_nano_phase_b/serve_nano.py",
     "experiments/v3/cosmos_nano_phase_b/robolab_bridge.py",
     "experiments/v3/cosmos_nano_phase_b/queue_launcher.py",
+    "tools/compile_nano_v3b001_results.py",
+    "tools/finalize_nano_v3b001_evidence.py",
+    "tools/render_nano_v3b001_results.py",
+    "tools/build_nano_v3b001_publication_media.py",
     "tests/test_v3b_nano_runtime_adapter.py",
-    "tests/test_v3b_nano_live_queue.py"
+    "tests/test_v3b_nano_live_queue.py",
+    "tests/test_compile_nano_v3b001_results.py",
+    "tests/test_finalize_nano_v3b001_evidence.py",
+    "tests/test_render_nano_v3b001_results.py",
+    "tests/test_build_nano_v3b001_publication_media.py"
   ],
   "validation": {
     "v3": {
@@ -87,7 +102,7 @@
   },
   "phase_b_releases": {
     "nano_position_reflection_v3b001": {
-      "status": "live_queue_running_committed_snapshot_three_complete_seed_blocks",
+      "status": "complete_hash_closed_27_seed_108_episode_result",
       "amendment_id": "V3-B001",
       "model_id": "cosmos3_nano_policy_droid",
       "arena": "droid_robolab",
@@ -108,10 +123,10 @@
       ],
       "cells_per_seed": 4,
       "released_behavioral_cell_count": 108,
-      "completed_behavioral_cell_count": 12,
-      "completed_behavioral_cell_count_scope": "committed_snapshot_only_live_queue_may_be_ahead",
-      "committed_complete_seed_blocks": [9400, 9401, 9402],
-      "live_queue_may_be_ahead_of_committed_snapshot": true,
+      "completed_behavioral_cell_count": 108,
+      "completed_behavioral_cell_count_scope": "complete_prespecified_cohort",
+      "committed_complete_seed_blocks": [9400, 9401, 9402, 9403, 9404, 9405, 9406, 9407, 9408, 9409, 9410, 9411, 9412, 9413, 9414, 9415, 9416, 9417, 9418, 9419, 9420, 9421, 9422, 9423, 9424, 9425, 9426],
+      "live_queue_may_be_ahead_of_committed_snapshot": false,
       "pre_release_counts": {
         "model_requests": 0,
         "behavioral_episodes": 0
@@ -156,10 +171,63 @@
         "live_queue_snapshot": {
           "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_queue_snapshot.json",
           "sha256": "bfd8f0e095fc83dd2d09ba254c0860d8c2d8bbdf02205173369c50e56013e52c"
+        },
+        "final_results_manifest": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/nano_v3b001_results_manifest.json",
+          "sha256": "ab9b9849e04bc15e65ed9d8d55d13e8aad62dbef5f5e2fa16b8eaf486a6ea517"
+        },
+        "final_summary": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/nano_v3b001_summary.json",
+          "sha256": "f43636a03caade5f3dc65de6736808c8257c78eacb07ba4cb963bfc6a0e36578"
+        },
+        "final_evidence_manifest": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/nano_v3b001_final_evidence_manifest.json",
+          "sha256": "ed16c120f58b89fe67227c544a7ac7b20610e802a0a19276fcb0f7796cef5270"
+        },
+        "publication_media_manifest": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/publication_media/nano_v3b001_publication_media_manifest.json",
+          "sha256": "2a9023b976b6a877b2da266ce1333f6639d89a971a4e082f50a7af1f0cf246ea"
+        }
+      },
+      "final_result": {
+        "valid_behavioral_cells": 108,
+        "matched_seed_count": 27,
+        "valid_model_sampler_requests": 738,
+        "executed_actions": 21972,
+        "runtime_identity_sha256": "2c5e314a62926a3d3c9b84fa73cff634c378b6140d390cbef6407ac9c633e64e",
+        "condition_successes": {
+          "control:left": "26/27",
+          "control:right": "26/27",
+          "position_mirrored:left": "27/27",
+          "position_mirrored:right": "23/27"
+        },
+        "failure_taxonomy": {"correct": 102, "pick_failed": 0, "transport_failed": 5, "wrong_side": 0, "release_failed": 1},
+        "endpoint_redirection": {
+          "control_D_median_m": 0.4667481780052185,
+          "control_positive_seeds": "27/27",
+          "position_mirrored_D_median_m": 0.4373619556427002,
+          "position_mirrored_positive_seeds": "27/27",
+          "reflection_interaction_J_median_m": 0.007228171452879906,
+          "reflection_interaction_sign_test_p": 0.7011080384254456
+        },
+        "requested_depth": {
+          "control_B_median_m": 0.14758701622486115,
+          "position_mirrored_B_median_m": -0.08814282715320587,
+          "reflection_interaction_I_median_m": -0.2463150918483734,
+          "reflection_interaction_negative_seeds": "24/27",
+          "reflection_interaction_sign_test_p": 4.9233436584472656e-05
+        },
+        "success_conditional_secondary": {
+          "subset_id": "nano_v3b001_all_four_cells_correct",
+          "matched_seed_count": 21,
+          "reflection_interaction_G_median_m": -0.2282327301800251,
+          "reflection_interaction_negative_seeds": "18/21",
+          "reflection_interaction_sign_test_p": 0.0014896392822265625,
+          "failures_as_zero": false
         }
       },
       "live_runtime": {
-        "status": "queue_running_committed_snapshot_through_seed9402_live_may_be_ahead",
+        "status": "queue_complete_historical_live_prefix_details_retained_below",
         "model_request_count": 39,
         "model_request_count_semantics": "prior_model_sampler_requests_retained_as_infrastructure_evidence; zero-sampling transport-handshake packets excluded",
         "valid_model_sampler_request_count_in_committed_snapshot": 90,
@@ -522,13 +590,13 @@
       "recovery_command": "git -C /home/ali/openpi-robolab bundle create /tmp/openpi-robolab-all.bundle --all && git -C /home/ali/projects/RoboLab bundle create /tmp/robolab-all.bundle --all"
     },
     "phase_b_confounds": {
-      "status": "partial_release_nano_v3b001_only",
+      "status": "nano_v3b001_complete_every_other_phase_b_ablation_unreleased",
       "released": {
         "amendment_id": "V3-B001",
         "model_id": "cosmos3_nano_policy_droid",
         "released_behavioral_cells": 108,
-        "completed_behavioral_cells": 12,
-        "release_condition": "Released only after the hash-bound model-blind positions-only calibration. The committed live snapshot now contains three complete seed blocks; the continuing queue may be ahead."
+        "completed_behavioral_cells": 108,
+        "release_condition": "Released only after the hash-bound model-blind positions-only calibration. The prespecified 27-seed, four-cell-per-seed cohort is complete and hash-closed."
       },
       "unreleased": "Every other Phase-B confound ablation remains unreleased and requires its own frozen independent release path."
     },
@@ -543,8 +611,8 @@
     }
   },
   "scientific_claim_boundary": {
-    "supported": "Across every completed checkpoint, matched LEFT/RIGHT prompts changed executed traces; endpoint ordering was often aligned, but requested task completion and failure mode remained strongly checkpoint- and direction-dependent. In the separate V3-A002 public old-name-config bridge, all 20 common action prefixes differed and 16/20 endpoints aligned, yet success was 0/20 LEFT versus 12/20 RIGHT. The committed Nano V3-B001 live prefix contains exactly three complete four-cell seed blocks (12 valid cells): 10 correct, one release_failed, and one behavioral transport_failed.",
-    "not_supported": "Phase A alone does not identify training-distribution bias, scene geometry, reachability, start side, object role, or model family as a causal explanation. The three-block Nano V3-B001 prefix is descriptive, may trail the continuing live queue, and is not the completed 27-seed ablation or an inferential causal result. V3-B001 reflects only movable-object center positions and is not a full-scene mirror. An exposed or decoded future also does not establish successful control.",
+    "supported": "Across every completed checkpoint, matched LEFT/RIGHT prompts changed executed traces; endpoint ordering was often aligned, but requested task completion and failure mode remained strongly checkpoint- and direction-dependent. In the separate V3-A002 public old-name-config bridge, all 20 common action prefixes differed and 16/20 endpoints aligned, yet success was 0/20 LEFT versus 12/20 RIGHT. Nano V3-B001 adds a completed 27-seed positions-only ablation: endpoint redirection followed the prompt in 27/27 seeds under both layouts, while the requested-depth contrast changed from control median +14.8 cm to position-reflected median -8.8 cm; the prespecified interaction median was -24.6 cm, with 24/27 negative seeds and exact sign-test p=4.923e-05.",
+    "not_supported": "The completed Nano V3-B001 intervention supports a causal effect of the registered movable-object center-position reflection on Nano's side-depth contrast under this simulator setup. It does not identify training-distribution bias as the mechanism, isolate reachability from other downstream physical mediators, or test a full-scene mirror, base rotation, start-side interaction, or role swap. An exposed or decoded future also does not establish successful control.",
     "unit_warning": "RoboTwin sampling replicates are nested within seven scenes; they are not 63 independent scenes."
   },
   "storage": {
@@ -560,7 +628,7 @@
       ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
       "git diff --check"
     ],
-    "inference_authority": "No Phase-A authorized_new or V3-A002 bridge cell remains; do not rerun a valid cell. Nano V3-B001 is the only released Phase-B queue, and its existing live queue is already running under runtime_attempt08 identity 2c5e314a62926a3d3c9b84fa73cff634c378b6140d390cbef6407ac9c633e64e. Do not start a duplicate queue or infer the current next cell from the committed snapshot. The snapshot freezes exactly seeds 9400-9402 (12 valid cells); the live queue may be ahead. Fail closed if the runtime manifest or source binding changes. No other Phase-B, Phase-C, or Phase-D cell may start without its own frozen independent release path. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or Phase C.",
+    "inference_authority": "No Phase-A authorized_new, V3-A002 bridge, or Nano V3-B001 cell remains; do not rerun any valid cell. The Nano queue is complete at 108/108 valid behavioral episodes under runtime_attempt08 identity 2c5e314a62926a3d3c9b84fa73cff634c378b6140d390cbef6407ac9c633e64e. The 12-cell live snapshot is retained only as a historical prefix; use the final results manifest, summary, and hash-closed evidence manifest for analysis. No other Phase-B, Phase-C, or Phase-D cell may start without its own frozen independent release path. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or Phase C.",
     "publication_note": "Use the compact result summaries and evidence manifests for analysis. Do not infer current study state from the older V2 article, gallery, figures, or chat history."
   }
 }

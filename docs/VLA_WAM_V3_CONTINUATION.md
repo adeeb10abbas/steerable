@@ -2,8 +2,8 @@
 
 Updated: 6 August 2026, after the complete Phase-A launch-authorized queue, the
 separately authorized π0-FAST compatibility bridge, the cross-version
-measurement-coverage audit, and the model-blind release plus pre-inference live
-runtime implementation for Nano V3-B001 were compiled. The machine-readable source of truth is
+measurement-coverage audit, and the completed 27-seed Nano V3-B001
+position-reflection ablation were compiled. The machine-readable source of truth is
 [`continuation_state.json`](../artifacts/vla_wam_shared_v3/continuation_state.json).
 
 ## Status
@@ -16,9 +16,9 @@ publicly reproducible π0-FAST compatibility cohort: all **20 matched pairs / 40
 episodes** are now complete valid evidence. That cohort is never pooled with
 the blocked rows or preserved V2 evidence.
 
-No Phase-A or V3-A002 inference remains. Exactly one Phase-B ablation is now
-released: Nano V3-B001, a positions-only movable-object reflection with 108
-registered cells. Its release followed model-blind calibration and occurred
+No Phase-A, V3-A002, or Nano V3-B001 inference remains. Nano V3-B001 is complete
+at **27 matched seeds / 108 valid behavioral episodes** under one hash-bound
+runtime identity. Its release followed model-blind calibration and occurred
 before any Phase-B model request or behavioral episode. Every other Phase-B
 ablation, all Phase-C wording cells, and all Phase-D stochastic repetitions
 remain unreleased.
@@ -78,27 +78,73 @@ are never imputed and unmatched successful cells are never mixed.
 | [`live_reset_preflight_report.json`](../artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_reset_preflight_report.json) | `075a3d78fff99a74bfbb3981e77c20b6de20a9d5123e5ed4f6dea10ee2f61bc9` |
 | [`live_queue_snapshot.json`](../artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_queue_snapshot.json) | `bfd8f0e095fc83dd2d09ba254c0860d8c2d8bbdf02205173369c50e56013e52c` |
 | [`live_infrastructure_ledger.json`](../artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_infrastructure_ledger.json) | `33c83da878782f77aca60a95d0c7382982af33b2210403d96c17637d41cc0418` |
+| [`nano_v3b001_results_manifest.json`](../artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/nano_v3b001_results_manifest.json) | `ab9b9849e04bc15e65ed9d8d55d13e8aad62dbef5f5e2fa16b8eaf486a6ea517` |
+| [`nano_v3b001_summary.json`](../artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/nano_v3b001_summary.json) | `f43636a03caade5f3dc65de6736808c8257c78eacb07ba4cb963bfc6a0e36578` |
+| [`nano_v3b001_final_evidence_manifest.json`](../artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/nano_v3b001_final_evidence_manifest.json) | `ed16c120f58b89fe67227c544a7ac7b20610e802a0a19276fcb0f7796cef5270` |
+| [`nano_v3b001_publication_media_manifest.json`](../artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/publication_media/nano_v3b001_publication_media_manifest.json) | `2a9023b976b6a877b2da266ce1333f6639d89a971a4e082f50a7af1f0cf246ea` |
 
-The release files authorize the exact queue under the verified runtime identity
-below. The two live evidence files separately report only the bounded committed
-prefix described next; they do not imply that the continuing queue stopped at
-that boundary.
+The release files authorize the exact queue under the verified runtime identity.
+The two `live_*` evidence files remain immutable historical records of the
+12-cell prefix. Completed-result analysis must use the final results manifest,
+summary, aggregate JSONL, and hash-closed evidence manifest.
 
-### Nano V3-B001 live runtime boundary
+### Nano V3-B001 completed result
 
-V3-B001 has **108 released cells** and a continuing live queue. The committed
-progress snapshot freezes exactly the first **three complete four-cell seed
-blocks (9400–9402): 12 valid behavioral cells and a denominator of 12**. It
-contains 10 `correct` outcomes, one `release_failed`, and one behavioral
-`transport_failed`; both failures remain in the denominator. Four earlier
-complete behavioral attempts remain invalidated before analysis, and all 39
-prior model-sampler requests remain infrastructure evidence in the hash-bearing
+V3-B001 completed all **108/108 prespecified cells**: 27 matched seeds, two
+layouts, and the exact LEFT/RIGHT prompt pair. All 108 valid behavioral
+episodes—including every model failure—enter the denominator. The outcome
+taxonomy is 102 `correct`, five `transport_failed`, one `release_failed`, and
+zero `pick_failed` or `wrong_side`. Condition-level success is:
+
+| Layout | LEFT | RIGHT |
+| --- | ---: | ---: |
+| Control | 26/27 | 26/27 |
+| Position-reflected | 27/27 | 23/27 |
+
+The full-sample primary estimands use signed final lateral offset for every
+seed, including failures. Changing the prompt redirected endpoints in the
+requested LEFT-to-RIGHT order for **27/27 control seeds** and **27/27
+position-reflected seeds**. Median separation was `+46.7 cm` in control and
+`+43.7 cm` after position reflection. Their prespecified interaction was small:
+median `+0.7 cm`, mean `+0.5 cm` with paired-bootstrap 95% CI `[-5.6, +6.6] cm`,
+and exact two-sided sign-test `p = 0.701`.
+
+The requested-side depth contrast changed sharply. In control, RIGHT finished
+deeper in its requested side than LEFT by median `+14.8 cm`; after reflecting
+movable-object center positions, that contrast reversed to median `-8.8 cm`.
+The prespecified reflection interaction was median **`-24.6 cm`** and mean
+`-24.8 cm` with paired-bootstrap 95% CI `[-32.4, -17.3] cm`; **24/27** seeds
+were negative and the exact two-sided sign-test was **`p = 4.923e-05`**.
+
+The success-conditional secondary analysis contains only the named 21-seed
+all-four-cells-correct subset. It does not encode failures as zero or combine
+unmatched successful cells. Its requested-margin interaction was median
+`-22.8 cm`, mean `-21.2 cm` with 95% CI `[-29.1, -13.5] cm`, 18/21 negative,
+and exact sign-test `p = 0.00149`.
+
+The supported inference is precise: under this checkpoint and simulator, the
+static language probe robustly redirected endpoints in either layout, while the
+registered movable-object position reflection changed which requested direction
+received greater side depth. This establishes a causal effect of that physical
+intervention on the measured contrast. It does **not** identify training data as
+the mechanism, isolate reachability from downstream physical mediators, or test
+a full-scene mirror, base rotation, start-side interaction, or role swap.
+
+The compiler retained 738 decoded local predictions across 21,972 executed
+actions. The bounded publication clips show the complete actual rollout beside
+every exposed 33-frame request-local prediction in order; the stitched right
+panel is not a continuous full-task imagination and does not receive a success
+score.
+
+#### Historical live-boundary and reset audit
+
+The committed live snapshot freezes the first three complete four-cell seed
+blocks (9400–9402): 12 valid behavioral cells, 10 `correct`, one
+`release_failed`, and one `transport_failed`. It is retained as a historical
+prefix, not current study state. Four earlier complete behavioral attempts were
+invalidated before analysis, and all 39 prior model-sampler requests remain
+infrastructure evidence in the hash-bearing
 [`live_infrastructure_ledger.json`](../artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_infrastructure_ledger.json).
-
-This is a prefix snapshot, not a claim that the live queue stopped at seed
-9402. Seed 9403 and later are intentionally absent even if they finished before
-this document was written. A later agent must take a new coherent snapshot;
-the current queue position must not be inferred from this file.
 
 Attempt 10 used all four wrappers in calibration order, yet its control-LEFT
 reset failed the frozen 3 mm gate before any model request. Registration context
@@ -154,22 +200,18 @@ remaining within the frozen 3 mm tolerance. The control diagnostic did not
 advance the frozen queue. Complete hashes are retained in
 [`live_reset_preflight_report.json`](../artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_reset_preflight_report.json).
 
-The queue is running only under that same verified runtime identity. The
-preflight's mirrored-RIGHT cell is now one of the committed valid rows; it is no
-longer the next cell. Do not launch a duplicate queue or infer a next cell from
-the committed snapshot. If the runtime manifest or source binding changes,
-fail closed instead of treating the preflight as transferable. Split ali-owned
-RTX pods remain an operational load-isolation choice, not a scientific factor.
+The completed queue used only that verified runtime identity. The preflight's
+mirrored-RIGHT cell became one of the 108 valid rows. Split ali-owned RTX pods
+were an operational load-isolation choice, not a scientific factor.
 
 Within the three complete blocks, condition-level requested success is 2/3 for
 control LEFT, 2/3 for control RIGHT, 3/3 for position-mirrored LEFT, and 3/3 for
-position-mirrored RIGHT. These are descriptive live-prefix counts, not a
-completed ablation. Signed final lateral offset and requested-side margin are
-retained for all 12 cells in
+position-mirrored RIGHT. These remain descriptive historical-prefix counts and
+must not replace the completed result above. Signed final lateral offset and
+requested-side margin are retained for all 12 cells in
 [`live_queue_snapshot.json`](../artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_queue_snapshot.json).
-The full-sample offset prefix has three matched seeds; the prespecified
-all-four-cells-correct margin subset currently contains only seed 9400 (`n=1`).
-No inferential mirror claim is made from this prefix.
+The prefix's all-four-cells-correct margin subset contains only seed 9400
+(`n=1`); no inference is made from that prefix.
 
 ## Exact intervention
 
@@ -296,7 +338,7 @@ returned identical LEFT/RIGHT actions (RMS 0.0), so it is not a substitute.
 The completed V3-A002 compatibility cohort is also not historical recovery and
 must remain separate. It is complete and must not be rerun.
 
-- Phase B: Nano V3-B001 alone is released as 108 exact cells after model-blind
+- Phase B: Nano V3-B001 is complete at 108/108 exact cells after model-blind
   calibration; every other Phase-B ablation remains unreleased.
 - Phase C: 480 registered episodes, not released; each wording requires its
   independent byte-hash, repeat, and prompt-sensitivity gates.
@@ -316,13 +358,12 @@ git status --short
 git diff --check
 ```
 
-Do not rerun a valid Phase-A or V3-A002 cell. V3-B001 is the only released
-Phase-B queue, and its existing live queue may be ahead of the three-block
-snapshot. Do not launch a second queue or infer the live next cell from this
-document. Preserve runtime-attempt-08 identity `2c5e314a…` and global queue
-order. Use the eight original committed
+Do not rerun a valid Phase-A, V3-A002, or Nano V3-B001 cell. Nano V3-B001 is
+complete at 108/108 valid episodes; the three-block live snapshot is historical
+only. Use its final results manifest, summary, aggregate JSONL, and hash-closed
+evidence manifest for analysis. Every other Phase-B, Phase-C, and Phase-D cell
+remains unreleased. Use the eight original committed
 summary/evidence-manifest/infrastructure-ledger triplets plus the separate
-V3-A002 triplet under
-`artifacts/vla_wam_shared_v3/results/` for completed-result analysis. Do not
-infer current experiment state from the older article, website, gallery,
-figures, or chat.
+V3-A002 triplet under `artifacts/vla_wam_shared_v3/results/` for earlier
+completed-result analysis. Do not infer current experiment state from the older
+article, website, gallery, figures, or chat.

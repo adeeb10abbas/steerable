@@ -5,3 +5,6 @@ artifacts/groot_cmi/**/*.csv -whitespace
 artifacts/res1/*.csv -whitespace
 artifacts/res1/DECISION_MEMO.md -whitespace
 artifacts/res1/visual_audit/index.html -whitespace
+
+# Publication PDFs are binary release artifacts; do not text-diff or normalize them.
+*.pdf binary

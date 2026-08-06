@@ -105,6 +105,7 @@ def cell_plan(*, repo_root: Path, release_manifest: Path, release_manifest_sha25
             # failures even when the behavioral episode itself is valid.
             "TMPDIR": str(
                 Path("/tmp")/"vla_wam_v3b002"/lane_pod_uid/
+                Path(raw_root).resolve().name/
                 cell.cell_id.replace(":", "__")
             ),
         },

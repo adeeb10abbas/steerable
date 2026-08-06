@@ -162,6 +162,12 @@ def run_cell(plan: dict[str, Any]) -> dict[str, Any]:
     _append_infra(attempt, "bridge_started")
     try:
         subprocess.run(plan["bridge_command"], check=True, env=environment)
+        bridge_failure = attempt/"bridge_failure.json"
+        export = attempt/"simulator_export.json"
+        if bridge_failure.exists() or not export.is_file():
+            raise ContractError(
+                "bridge ended without a valid simulator export; retained bridge failure stays outside the denominator"
+            )
         subprocess.run(plan["compiler_command"], check=True, env=environment)
     except BaseException as exc:
         _append_infra(attempt, "infrastructure_failed_excluded_from_denominator", exc)

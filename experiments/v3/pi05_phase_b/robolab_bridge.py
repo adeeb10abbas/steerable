@@ -174,6 +174,14 @@ def _hold_action(obs: dict[str, Any], device: str) -> torch.Tensor:
     return action
 
 
+def _host_array(value: Any) -> np.ndarray:
+    """Convert simulator values without asking CUDA tensors for ``numpy()``."""
+
+    if hasattr(value, "detach"):
+        value = value.detach().cpu().numpy()
+    return np.asarray(value, dtype=float)
+
+
 class StateCaptureProxy:
     def __init__(self, env: Any) -> None:
         self._env = env
@@ -232,7 +240,7 @@ class StateCaptureProxy:
                 raise RuntimeError("cell terminated during 15-step stability window")
             world = get_world(self._env)
             for name, row in maxima.items():
-                velocity = np.asarray(world.get_velocity(name, env_id=0), dtype=float)
+                velocity = _host_array(world.get_velocity(name, env_id=0))
                 row["linear"] = max(row["linear"], float(np.max(np.abs(velocity[:3]))))
                 row["angular"] = max(row["angular"], float(np.max(np.abs(velocity[3:]))))
         if any(row["linear"] > .02 or row["angular"] > .2 for row in maxima.values()):

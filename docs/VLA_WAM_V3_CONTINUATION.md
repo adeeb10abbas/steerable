@@ -68,23 +68,37 @@ which control LEFT, control RIGHT, position-mirrored LEFT, and
 position-mirrored RIGHT all pass the frozen success predicate. Missing values
 are never imputed and unmatched successful cells are never mixed.
 
-| Frozen release artifact | SHA-256 |
+| Nano release/runtime artifact | SHA-256 |
 | --- | --- |
 | [`model_blind_calibration_report.json`](../artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/model_blind_calibration_report.json) | `112716acada89050561c9488d93a333a300b1675c2305329c8e5aceeb4e6da71` |
 | [`nano_mirror_v3b001_cells.jsonl`](../artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_cells.jsonl) | `018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a` |
 | [`nano_mirror_v3b001_manifest.json`](../artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_manifest.json) | `5c82268739feb41281435a51dcd848b575218cd9fbe5839d9ad130d1a7888830` |
 | [`post_result_nano_mirror_v3b001_amendment.json`](../artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/post_result_nano_mirror_v3b001_amendment.json) | `9d88c29733fa3b24a154977bc25d04d2d77df5be59e3213f0c3a6cfbe3edc6a0` |
+| [`live_reset_semantics_correction.json`](../artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_reset_semantics_correction.json) | `167494ff48b075c41ff64fce4c18c78ae6650d1bcfd63d0646cf386a0a82875b` |
+| [`live_reset_preflight_report.json`](../artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_reset_preflight_report.json) | `075a3d78fff99a74bfbb3981e77c20b6de20a9d5123e5ed4f6dea10ee2f61bc9` |
+| [`live_queue_snapshot.json`](../artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_queue_snapshot.json) | `bfd8f0e095fc83dd2d09ba254c0860d8c2d8bbdf02205173369c50e56013e52c` |
+| [`live_infrastructure_ledger.json`](../artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_infrastructure_ledger.json) | `33c83da878782f77aca60a95d0c7382982af33b2210403d96c17637d41cc0418` |
 
-These files authorize the exact queue after the required live identity and
-output-path rechecks; they do not report Phase-B behavioral outcomes.
+The release files authorize the exact queue under the verified runtime identity
+below. The two live evidence files separately report only the bounded committed
+prefix described next; they do not imply that the continuing queue stopped at
+that boundary.
 
 ### Nano V3-B001 live runtime boundary
 
-V3-B001 still has **108 released cells, zero completed valid behavioral cells,
-and a behavioral denominator of zero**. Four complete behavioral attempts were
-invalidated before analysis; all 39 model requests remain infrastructure
-evidence in the hash-bearing
+V3-B001 has **108 released cells** and a continuing live queue. The committed
+progress snapshot freezes exactly the first **three complete four-cell seed
+blocks (9400–9402): 12 valid behavioral cells and a denominator of 12**. It
+contains 10 `correct` outcomes, one `release_failed`, and one behavioral
+`transport_failed`; both failures remain in the denominator. Four earlier
+complete behavioral attempts remain invalidated before analysis, and all 39
+prior model-sampler requests remain infrastructure evidence in the hash-bearing
 [`live_infrastructure_ledger.json`](../artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_infrastructure_ledger.json).
+
+This is a prefix snapshot, not a claim that the live queue stopped at seed
+9402. Seed 9403 and later are intentionally absent even if they finished before
+this document was written. A later agent must take a new coherent snapshot;
+the current queue position must not be inferred from this file.
 
 Attempt 10 used all four wrappers in calibration order, yet its control-LEFT
 reset failed the frozen 3 mm gate before any model request. Registration context
@@ -123,22 +137,39 @@ invalidated because the runtime source changes. The zero-request control
 failure retains fixture (`573f1df5…`), settle (`588297f9…`), and bridge
 (`1f921e18…`) evidence.
 
-The exact next action is to bind **one fresh source-bound runtime identity** and
-run a **zero-sampling, model-blind exact-bridge preflight under that identity**.
-Only if it proves the final two-call attestation may behavioral inference resume
-under that same verified identity. Split ali-owned RTX pods remain an
-operational load-isolation choice, not a scientific factor.
+The zero-sampling exact-bridge preflight has now passed under runtime-attempt-08
+identity `2c5e314a…`, bound to clean pushed commit `39f19b57…`; the manifest file
+hash is `a609300c…`. The bridge accepted a transport request packet on each
+layout and received the explicit no-inference response. No model server or
+checkpoint was loaded, no model sample was drawn, and no action was executed.
 
-The exact next cell remains:
+Both the first released layout
+`v3b001:nano:seed9400:position_mirrored:right` and a control-LEFT diagnostic
+invoked through the exact `cell_plan` + `run_cell` path passed the final
+`2/1/1/true` reset attestation with `[75] → [0]`, zero requests during the gate,
+matching positions, and a neutral reset relation. The maximum position errors
+for mirrored RIGHT were `0.244`, `0.420`, and `0.609 mm` for banana, bowl, and
+cube. Control LEFT measured `0.244`, `0.022`, and `2.758 mm`, respectively,
+remaining within the frozen 3 mm tolerance. The control diagnostic did not
+advance the frozen queue. Complete hashes are retained in
+[`live_reset_preflight_report.json`](../artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_reset_preflight_report.json).
 
-> `v3b001:nano:seed9400:position_mirrored:right`
+The queue is running only under that same verified runtime identity. The
+preflight's mirrored-RIGHT cell is now one of the committed valid rows; it is no
+longer the next cell. Do not launch a duplicate queue or infer a next cell from
+the committed snapshot. If the runtime manifest or source binding changes,
+fail closed instead of treating the preflight as transferable. Split ali-owned
+RTX pods remain an operational load-isolation choice, not a scientific factor.
 
-> Put the Rubik's cube to the right of the bowl.
-
-The source-bound identity must be created and verified on the ali-owned PVC
-before the model-blind preflight, then retained unchanged for behavioral
-inference if the preflight passes. The excluded and invalidated attempts remain
-outside the behavioral denominator: no valid Phase-B result exists yet.
+Within the three complete blocks, condition-level requested success is 2/3 for
+control LEFT, 2/3 for control RIGHT, 3/3 for position-mirrored LEFT, and 3/3 for
+position-mirrored RIGHT. These are descriptive live-prefix counts, not a
+completed ablation. Signed final lateral offset and requested-side margin are
+retained for all 12 cells in
+[`live_queue_snapshot.json`](../artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_queue_snapshot.json).
+The full-sample offset prefix has three matched seeds; the prespecified
+all-four-cells-correct margin subset currently contains only seed 9400 (`n=1`).
+No inferential mirror claim is made from this prefix.
 
 ## Exact intervention
 
@@ -286,9 +317,12 @@ git diff --check
 ```
 
 Do not rerun a valid Phase-A or V3-A002 cell. V3-B001 is the only released
-Phase-B queue; launch only its exact hash-bound rows after the required live
-identity, viewport-writer, and raw-output-path rechecks. Use the eight original
-committed summary/evidence-manifest/infrastructure-ledger triplets plus the
-separate V3-A002 triplet under `artifacts/vla_wam_shared_v3/results/` for
-completed-result analysis. Do not infer current experiment state from the
-older article, website, gallery, figures, or chat.
+Phase-B queue, and its existing live queue may be ahead of the three-block
+snapshot. Do not launch a second queue or infer the live next cell from this
+document. Preserve runtime-attempt-08 identity `2c5e314a…` and global queue
+order. Use the eight original committed
+summary/evidence-manifest/infrastructure-ledger triplets plus the separate
+V3-A002 triplet under
+`artifacts/vla_wam_shared_v3/results/` for completed-result analysis. Do not
+infer current experiment state from the older article, website, gallery,
+figures, or chat.

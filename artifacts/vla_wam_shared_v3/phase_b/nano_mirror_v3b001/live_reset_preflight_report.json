@@ -1,0 +1,97 @@
+{
+  "schema_version": "vla-wam-shared-v3b-nano-live-reset-preflight-report-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B001",
+  "milestone_id": "nano_v3b001_zero_sampling_exact_bridge_preflight",
+  "status": "passed_behavior_ready_under_same_runtime_identity",
+  "recorded_at_utc": "2026-08-06T06:37:37Z",
+  "source_bound_runtime": {
+    "branch": "codex/wam-language-steerability",
+    "source_commit": "39f19b57d5f5e68d0f03e4e4c7569350cb9a467f",
+    "source_state": "pushed_synced_clean",
+    "manifest_path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/runtime_attempt08/runtime_identity.json",
+    "manifest_bytes": 2910,
+    "manifest_file_sha256": "a609300c4cbb826115692db8fecac7e14d7578e0ded00f63c06f5153619c2136",
+    "runtime_identity_sha256": "2c5e314a62926a3d3c9b84fa73cff634c378b6140d390cbef6407ac9c633e64e"
+  },
+  "execution_boundary": {
+    "owner": "ali",
+    "omniverse_eula_acceptance": "OMNI_KIT_ACCEPT_EULA=YES",
+    "model_server_loaded": false,
+    "checkpoint_loaded": false,
+    "request_packet_accepted_per_layout": true,
+    "transport_termination": "explicit_no_inference_response",
+    "model_sampler_request_count": 0,
+    "model_sample_count": 0,
+    "behavioral_action_count": 0,
+    "behavioral_episode_count": 0,
+    "denominator_eligible": false
+  },
+  "common_reset_attestation": {
+    "runner_pre_action_reset_calls": 2,
+    "physical_reset_calls": 1,
+    "settle_gate_runs": 1,
+    "duplicate_second_reset_idempotent": true,
+    "episode_length_buf_before_reset": [75],
+    "episode_length_buf_after_reset": [0],
+    "model_request_count_during_gate": 0,
+    "model_sample_count": 0
+  },
+  "layout_preflights": [
+    {
+      "attempt_id": "reset_preflight_attempt01",
+      "purpose": "exact_next_behavioral_cell_layout",
+      "invocation": "frozen_queue_exact_next_cell",
+      "cell_id": "v3b001:nano:seed9400:position_mirrored:right",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "raw_root": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/reset_preflight_attempt01",
+      "evidence_sha256": {
+        "reset_attestation": "2846c4b61eba7f6036ca64cea4165ea9814e57c1c3abfedc1352d46222f17ea0",
+        "settle_stability": "598fc91ad54f518a98cd1ccec39b2c7983aee41887dd4ef95736b0846689cc0f",
+        "fixture_match": "55964aa7e2e3c71c13c30d7709df0d1bf97a4e6159d4661ba44227d0a48b1c75",
+        "explicit_no_inference_termination": "7db0aed7731b81a64d4ff22352cbc3f8372576c2ca5f47a193701e71d5cf6bfb"
+      },
+      "max_position_error_m": {
+        "banana": 0.0002442300319671631,
+        "bowl": 0.00041985511779785156,
+        "rubiks_cube": 0.0006091296672821045
+      },
+      "positions_match": true,
+      "neutral_relation_at_reset": true,
+      "passed": true
+    },
+    {
+      "attempt_id": "reset_preflight_attempt02",
+      "purpose": "control_left_layout_diagnostic",
+      "invocation": "exact_cell_plan_plus_run_cell_without_advancing_frozen_queue",
+      "cell_id": "v3b001:nano:seed9400:control:left",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "raw_root": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/reset_preflight_attempt02",
+      "evidence_sha256": {
+        "reset_attestation": "162c5df2358a85de72de97d5c6b88ecbc18ed4ac69ccda30467c397513e493c6",
+        "settle_stability": "7de76494434d2cc5326b9424ef2b83436e79143032e79730503118eddaf1e830",
+        "fixture_match": "5f3b39d6d76921fa8bda8601dc232afe98128d4da2b792376fd21795ff381545",
+        "explicit_no_inference_termination": "6c8c0e2b7690a7ac07f329f1fa883b6ed4caa97cbf5e1653f6a09f0407a5ccb1"
+      },
+      "max_position_error_m": {
+        "banana": 0.00024374574422836304,
+        "bowl": 0.000021666288375854492,
+        "rubiks_cube": 0.0027577579021453857
+      },
+      "positions_match": true,
+      "neutral_relation_at_reset": true,
+      "passed": true
+    }
+  ],
+  "accounting_after_preflight": {
+    "total_prior_model_sampler_requests_retained_as_infrastructure_evidence": 39,
+    "completed_valid_behavioral_cells": 0,
+    "behavioral_denominator": 0
+  },
+  "resume_authority": {
+    "status": "behavior_ready_under_same_runtime_identity",
+    "required_runtime_identity_sha256": "2c5e314a62926a3d3c9b84fa73cff634c378b6140d390cbef6407ac9c633e64e",
+    "exact_next_behavioral_cell": "v3b001:nano:seed9400:position_mirrored:right",
+    "prompt": "Put the Rubik's cube to the right of the bowl."
+  }
+}

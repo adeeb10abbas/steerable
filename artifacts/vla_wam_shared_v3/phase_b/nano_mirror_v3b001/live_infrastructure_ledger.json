@@ -2,12 +2,15 @@
   "schema_version": "vla-wam-shared-v3b-nano-live-infrastructure-ledger-v1",
   "study_id": "vla_wam_language_steerability_v3",
   "amendment_id": "V3-B001",
-  "updated_at_utc": "2026-08-06T06:21:15Z",
+  "updated_at_utc": "2026-08-06T07:15:17Z",
   "behavioral_denominator_excludes_all_entries": true,
-  "behavioral_denominator": 0,
-  "completed_valid_behavioral_cells": 0,
+  "behavioral_denominator": 12,
+  "behavioral_denominator_source": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_queue_snapshot.json",
+  "completed_valid_behavioral_cells": 12,
   "complete_behavioral_attempts_invalidated_before_analysis": 4,
   "total_model_requests_retained_as_infrastructure_evidence": 39,
+  "request_count_semantics": "Counts model-sampler requests only; zero-sampling transport-handshake packets are not model requests.",
+  "valid_model_sampler_requests_in_committed_snapshot": 90,
   "eula_acceptance": {
     "scope": "Omniverse/Isaac software required by the authorized Nano V3-B001 queue",
     "environment": "OMNI_KIT_ACCEPT_EULA=YES",
@@ -17,6 +20,19 @@
     "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_reset_semantics_correction.json",
     "sha256": "167494ff48b075c41ff64fce4c18c78ae6650d1bcfd63d0646cf386a0a82875b",
     "status": "prospective_operational_correction_before_any_valid_phase_b_behavior"
+  },
+  "passed_reset_preflight": {
+    "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_reset_preflight_report.json",
+    "sha256": "075a3d78fff99a74bfbb3981e77c20b6de20a9d5123e5ed4f6dea10ee2f61bc9",
+    "status": "passed_behavior_ready_under_same_runtime_identity"
+  },
+  "committed_live_queue_snapshot": {
+    "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_queue_snapshot.json",
+    "sha256": "bfd8f0e095fc83dd2d09ba254c0860d8c2d8bbdf02205173369c50e56013e52c",
+    "snapshot_at_utc": "2026-08-06T07:15:17Z",
+    "complete_seed_blocks": [9400, 9401, 9402],
+    "completed_valid_behavioral_cells": 12,
+    "queue_may_be_ahead": true
   },
   "entries": [
     {
@@ -342,6 +358,56 @@
       }
     },
     {
+      "attempt_id": "reset_preflight_runtime_attempt08",
+      "stage": "zero_sampling_exact_bridge_preflight",
+      "model_requests": 0,
+      "model_samples": 0,
+      "behavioral_actions_executed": 0,
+      "behavioral_episodes": 0,
+      "denominator_eligible": false,
+      "disposition": "passed_model_blind_preflight_outside_behavioral_denominator",
+      "reason": "Under one fresh pushed, synced, clean source-bound runtime identity, the exact bridge accepted a transport request packet for each of the mirrored-RIGHT and control-LEFT physical layouts, then received the explicit no-inference response. No model server or checkpoint was loaded, no model sample or action was produced, and both layouts persisted the final two-call/one-physical-reset attestation.",
+      "runtime_identity": {
+        "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/runtime_attempt08/runtime_identity.json",
+        "bytes": 2910,
+        "sha256": "a609300c4cbb826115692db8fecac7e14d7578e0ded00f63c06f5153619c2136",
+        "runtime_identity_sha256": "2c5e314a62926a3d3c9b84fa73cff634c378b6140d390cbef6407ac9c633e64e",
+        "study_head": "39f19b57d5f5e68d0f03e4e4c7569350cb9a467f"
+      },
+      "layout_preflights": {
+        "position_mirrored_right": {
+          "registered_cell_id": "v3b001:nano:seed9400:position_mirrored:right",
+          "raw_root": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/reset_preflight_attempt01",
+          "reset_attestation_sha256": "2846c4b61eba7f6036ca64cea4165ea9814e57c1c3abfedc1352d46222f17ea0",
+          "settle_stability_sha256": "598fc91ad54f518a98cd1ccec39b2c7983aee41887dd4ef95736b0846689cc0f",
+          "fixture_match_sha256": "55964aa7e2e3c71c13c30d7709df0d1bf97a4e6159d4661ba44227d0a48b1c75",
+          "explicit_no_inference_termination_sha256": "7db0aed7731b81a64d4ff22352cbc3f8372576c2ca5f47a193701e71d5cf6bfb",
+          "positions_match": true,
+          "neutral_relation_at_reset": true
+        },
+        "control_left": {
+          "registered_cell_id": "v3b001:nano:seed9400:control:left",
+          "invocation": "exact_cell_plan_plus_run_cell_without_advancing_frozen_queue",
+          "raw_root": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/reset_preflight_attempt02",
+          "reset_attestation_sha256": "162c5df2358a85de72de97d5c6b88ecbc18ed4ac69ccda30467c397513e493c6",
+          "settle_stability_sha256": "7de76494434d2cc5326b9424ef2b83436e79143032e79730503118eddaf1e830",
+          "fixture_match_sha256": "5f3b39d6d76921fa8bda8601dc232afe98128d4da2b792376fd21795ff381545",
+          "explicit_no_inference_termination_sha256": "6c8c0e2b7690a7ac07f329f1fa883b6ed4caa97cbf5e1653f6a09f0407a5ccb1",
+          "positions_match": true,
+          "neutral_relation_at_reset": true
+        }
+      },
+      "reset_contract": {
+        "runner_pre_action_reset_calls": 2,
+        "physical_reset_calls": 1,
+        "settle_gate_runs": 1,
+        "duplicate_second_reset_idempotent": true,
+        "episode_length_buf_before_reset": [75],
+        "episode_length_buf_after_reset": [0],
+        "model_request_count_during_gate": 0
+      }
+    },
+    {
       "attempt_id": "diagnostic_server_unloaded_attempt01",
       "stage": "model_blind_full_registration_context_diagnostic",
       "model_requests": 0,
@@ -411,7 +477,12 @@
       "persistent_caches": "ali-owned PVC",
       "temporary_directory": "pod-local TMPDIR"
     },
-    "fresh_runtime_identity_required": true,
-    "exact_next_cell_unchanged": "v3b001:nano:seed9400:position_mirrored:right"
+    "fresh_runtime_identity_required": false,
+    "live_bound_runtime_identity_sha256": "2c5e314a62926a3d3c9b84fa73cff634c378b6140d390cbef6407ac9c633e64e",
+    "zero_sampling_exact_bridge_preflight_passed": true,
+    "behavior_ready_under_same_runtime_identity": true,
+    "preflight_exact_next_cell_completed_valid_in_snapshot": "v3b001:nano:seed9400:position_mirrored:right",
+    "committed_snapshot_last_fully_compiled_seed_block": 9402,
+    "live_queue_may_be_ahead_of_committed_snapshot": true
   }
 }

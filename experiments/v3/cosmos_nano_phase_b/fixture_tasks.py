@@ -11,7 +11,6 @@ import copy
 import hashlib
 import json
 import os
-from dataclasses import dataclass
 from functools import partial
 from pathlib import Path
 
@@ -27,7 +26,6 @@ from robolab.core.task.conditionals import (
     object_right_of,
 )
 from robolab.core.task.subtask import Subtask
-from robolab.core.task.task import Task
 
 
 EXPECTED_SCHEMA = "vla-wam-shared-v3b-nano-position-mirror-candidate-v1"
@@ -144,50 +142,8 @@ class _RightTermination:
     )
 
 
-@dataclass
-class V3BNanoControlLeftCalibrationTask(Task):
-    contact_object_list = ["rubiks_cube", "banana", "bowl", "table"]
-    scene = _scene("control")
-    terminations = _LeftTermination
-    instruction = {"default": LEFT_PROMPT}
-    attributes = ["spatial", "vla_wam_v3b", "model_blind_calibration", "control"]
-    episode_length_s: int = 30
-    subtasks = _subtask("left")
-
-
-@dataclass
-class V3BNanoControlRightCalibrationTask(Task):
-    contact_object_list = ["rubiks_cube", "banana", "bowl", "table"]
-    scene = _scene("control")
-    terminations = _RightTermination
-    instruction = {"default": RIGHT_PROMPT}
-    attributes = ["spatial", "vla_wam_v3b", "model_blind_calibration", "control"]
-    episode_length_s: int = 30
-    subtasks = _subtask("right")
-
-
-@dataclass
-class V3BNanoPositionMirroredLeftCalibrationTask(Task):
-    contact_object_list = ["rubiks_cube", "banana", "bowl", "table"]
-    scene = _scene("position_mirrored")
-    terminations = _LeftTermination
-    instruction = {"default": LEFT_PROMPT}
-    attributes = [
-        "spatial", "vla_wam_v3b", "model_blind_calibration", "position_mirrored"
-    ]
-    episode_length_s: int = 30
-    subtasks = _subtask("left")
-
-
-@dataclass
-class V3BNanoPositionMirroredRightCalibrationTask(Task):
-    contact_object_list = ["rubiks_cube", "banana", "bowl", "table"]
-    scene = _scene("position_mirrored")
-    terminations = _RightTermination
-    instruction = {"default": RIGHT_PROMPT}
-    attributes = [
-        "spatial", "vla_wam_v3b", "model_blind_calibration", "position_mirrored"
-    ]
-    episode_length_s: int = 30
-    subtasks = _subtask("right")
-
+# RoboLab loads task files with ``exec_module`` without first inserting the
+# transient module into ``sys.modules``.  Keep the shared, future-annotations
+# helpers here and expose each dataclass Task through its own small wrapper in
+# ``task_files``.  This also guarantees one Task subclass per file, which is
+# the invariant assumed by RoboLab's task resolver.

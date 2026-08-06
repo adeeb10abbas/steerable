@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 import json
 import tempfile
 import unittest
@@ -73,6 +74,28 @@ class NanoPhaseBFixtureCandidateTest(unittest.TestCase):
                     neutral_right_task_path=right,
                     robolab_commit=fixture.ROBOLAB_COMMIT,
                 )
+
+    def test_robolab_wrappers_expose_exactly_one_task_without_future_annotations(self) -> None:
+        root = Path(__file__).resolve().parents[1] / "experiments/v3/cosmos_nano_phase_b"
+        expected = {
+            "control_left.py": "V3BNanoControlLeftCalibrationTask",
+            "control_right.py": "V3BNanoControlRightCalibrationTask",
+            "position_mirrored_left.py": "V3BNanoPositionMirroredLeftCalibrationTask",
+            "position_mirrored_right.py": "V3BNanoPositionMirroredRightCalibrationTask",
+        }
+        for filename, class_name in expected.items():
+            tree = ast.parse((root / "task_files" / filename).read_text())
+            self.assertFalse(any(
+                isinstance(node, ast.ImportFrom) and node.module == "__future__"
+                for node in tree.body
+            ))
+            task_classes = [
+                node.name
+                for node in tree.body
+                if isinstance(node, ast.ClassDef)
+                and any(isinstance(base, ast.Name) and base.id == "Task" for base in node.bases)
+            ]
+            self.assertEqual(task_classes, [class_name])
 
 
 if __name__ == "__main__":

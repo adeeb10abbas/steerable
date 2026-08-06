@@ -21,10 +21,22 @@ from isaaclab.app import AppLauncher
 ROBOLAB_COMMIT = "0aef241fb088ca21bb4ebd24448940ed56620d17"
 MODEL_ID = "cosmos3_nano_policy_droid"
 TASKS = {
-    "control_left": "V3BNanoControlLeftCalibrationTask",
-    "control_right": "V3BNanoControlRightCalibrationTask",
-    "position_mirrored_left": "V3BNanoPositionMirroredLeftCalibrationTask",
-    "position_mirrored_right": "V3BNanoPositionMirroredRightCalibrationTask",
+    "control_left": (
+        "V3BNanoControlLeftCalibrationTask",
+        "task_files/control_left.py",
+    ),
+    "control_right": (
+        "V3BNanoControlRightCalibrationTask",
+        "task_files/control_right.py",
+    ),
+    "position_mirrored_left": (
+        "V3BNanoPositionMirroredLeftCalibrationTask",
+        "task_files/position_mirrored_left.py",
+    ),
+    "position_mirrored_right": (
+        "V3BNanoPositionMirroredRightCalibrationTask",
+        "task_files/position_mirrored_right.py",
+    ),
 }
 POSITIONS = ("rubiks_cube", "bowl", "banana")
 
@@ -171,7 +183,14 @@ def main() -> None:
         args_cli.study_root.resolve()
         / "experiments/v3/cosmos_nano_phase_b/fixture_tasks.py"
     )
-    auto_register_droid_envs(task=[str(task_path)], cameras=WRIST_LEFT_RIGHT_HEAD)
+    task_wrappers = {
+        label: task_path.parent / relative_path
+        for label, (_, relative_path) in TASKS.items()
+    }
+    auto_register_droid_envs(
+        task=[str(task_wrappers[label]) for label in TASKS],
+        cameras=WRIST_LEFT_RIGHT_HEAD,
+    )
 
     expected = {
         "control": candidate["layouts"]["control"]["positions_robot_base_m"],
@@ -179,7 +198,7 @@ def main() -> None:
     }
     rows: list[dict] = []
     videos: dict[str, dict[str, object]] = {}
-    for label, task_name in TASKS.items():
+    for label, (task_name, _) in TASKS.items():
         arm, relation = label.rsplit("_", 1)
         env, env_cfg = create_env(
             task_name,
@@ -322,6 +341,9 @@ def main() -> None:
         "gpu_query": gpu_line,
         "candidate": record(args_cli.candidate),
         "factor_task_source": record(task_path),
+        "factor_task_wrappers": {
+            label: record(task_wrappers[label]) for label in TASKS
+        },
         "robolab": {
             "commit": commit,
             "tracked_diff_empty": True,

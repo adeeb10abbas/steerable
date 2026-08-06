@@ -1,0 +1,170 @@
+{
+  "amendment_id": "V3-B003",
+  "analysis_plan": {
+    "H1": {
+      "interaction": "J = D_position_mirrored - D_control",
+      "per_layout": "D_layout = signed_offset_LEFT - signed_offset_RIGHT"
+    },
+    "H2": {
+      "interaction": "I = B_position_mirrored - B_control",
+      "per_layout": "B_layout = -signed_offset_RIGHT - signed_offset_LEFT"
+    },
+    "H3": {
+      "per_seed": "DiD = (success_RIGHT-success_LEFT)_position_mirrored - (success_RIGHT-success_LEFT)_control",
+      "test": "exact two-sided within-seed control/reflected label permutation using absolute summed DiD"
+    },
+    "continuous_reporting": {
+      "bootstrap_master_seed": 3104159,
+      "bootstrap_replicates": 20000,
+      "bootstrap_unit": "matched seed",
+      "report_median": true,
+      "sign_test": "exact two-sided paired sign test; ties excluded and reported"
+    },
+    "missingness": "No imputation. Every valid failure remains in full-sample signed-offset analysis; infrastructure attempts remain separate.",
+    "requested_margin_secondary": "Only the named all-four-cells-correct complete-case subset; report realized n and never mix unmatched successes."
+  },
+  "design": {
+    "arena": "droid_robolab",
+    "arms": [
+      "control",
+      "position_mirrored"
+    ],
+    "behavioral_episode_ceiling": 108,
+    "block_lane_rule": "All four cells for one seed execute on one runtime lane.",
+    "cells_per_seed": 4,
+    "exact_prompts": {
+      "left": "Put the Rubik's cube to the left of the bowl.",
+      "right": "Put the Rubik's cube to the right of the bowl."
+    },
+    "execution_order": "Reuse the exact V3-B001 within-seed randomized cell order.",
+    "held_fixed": [
+      "robot base",
+      "cameras",
+      "nonmovable geometry",
+      "prompt bytes",
+      "DreamZero s=2 identity",
+      "video guidance 5",
+      "16 inference steps",
+      "8-action execution horizon",
+      "450-action cap",
+      "frozen success predicate"
+    ],
+    "identity_binding": "V2-A015:dreamzero_action_cfg_s2",
+    "matched_seed_count": 27,
+    "matched_seeds": [
+      9400,
+      9401,
+      9402,
+      9403,
+      9404,
+      9405,
+      9406,
+      9407,
+      9408,
+      9409,
+      9410,
+      9411,
+      9412,
+      9413,
+      9414,
+      9415,
+      9416,
+      9417,
+      9418,
+      9419,
+      9420,
+      9421,
+      9422,
+      9423,
+      9424,
+      9425,
+      9426
+    ],
+    "model_id": "dreamzero_droid_action_cfg",
+    "reflection": "For rubiks_cube, bowl, and banana center positions only: (x,y,z) -> (x,-y,z) about robot-base sagittal plane y=0.",
+    "registered_seed_semantics": "Environment and matched-block labels are 9400-9426; the released DreamZero model-noise seed remains constant at 1140.",
+    "relations": [
+      "left",
+      "right"
+    ]
+  },
+  "post_result_disclosure": {
+    "dreamzero_phase_a": {
+      "failure_shape_exact_p": 0.0017219568583829528,
+      "left": "3/27",
+      "right": "17/27"
+    },
+    "nano_v3b001_known": true,
+    "pi05_v3b002_known": true,
+    "reason_selected": "Third checkpoint replication after A1 rejected a universal same-shape failure account for DreamZero and B1 found no monotonic competence-gap relation."
+  },
+  "recorded_at_utc": "2026-08-06T20:44:00Z",
+  "registered_predictions": {
+    "binary_success": "Reflection is predicted to attenuate or reverse DreamZero's Phase-A RIGHT advantage; the primary exact test remains two-sided.",
+    "endpoint_redirection": "Two-sided test of the reflected-minus-control interaction; no post-result direction is imposed.",
+    "requested_side_depth": "Reflection is predicted to produce a negative interaction, matching the known Nano and pi0.5 pattern."
+  },
+  "release_boundary": {
+    "behavioral_episodes_before_registration": 0,
+    "behavioral_release": false,
+    "model_requests_before_registration": 0,
+    "next_gate": "Fresh hash-bound DreamZero runtime identity, model-blind physical/reset/renderer/writer gates, exact bridge-reset attestation, and fixed-observation repeat/prompt-sensitivity/future-retention gate."
+  },
+  "runtime_contract_source": {
+    "action_cap": 450,
+    "action_cfg_style_scale": 2,
+    "baseline_action_cfg_equivalent": 1,
+    "baseline_s1_used": false,
+    "checkpoint": {
+      "id": "GEAR-Dreams/DreamZero-DROID",
+      "revision": "96ad344138c66e82536422432ad742f015784942",
+      "sha256": "b260d781c59b84a9a325184a31dcabd88f7874c69a7b5e514b78e6fabbc3af68"
+    },
+    "effective_official_model_noise_seed": 1140,
+    "frozen_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+    "future_interface": "joint action and latent video with official full reset decode",
+    "identity_binding": "V2-A015:dreamzero_action_cfg_s2",
+    "instruction_controller": "static_episode_prompt",
+    "measurement_frame": "robot_base_object_minus_reference_xyz_m",
+    "missing_future_policy": "infrastructure_invalid_never_zero",
+    "open_loop_horizon": 8,
+    "phase_d_stochastic_replication_eligible": false,
+    "prompt_family": "direct_command",
+    "prompts": {
+      "left": {
+        "encoding": "UTF-8",
+        "sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+        "text": "Put the Rubik's cube to the left of the bowl.",
+        "utf8_byte_count": 45,
+        "utf8_hex": "5075742074686520527562696b2773206375626520746f20746865206c656674206f662074686520626f776c2e"
+      },
+      "right": {
+        "encoding": "UTF-8",
+        "sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+        "text": "Put the Rubik's cube to the right of the bowl.",
+        "utf8_byte_count": 46,
+        "utf8_hex": "5075742074686520527562696b2773206375626520746f20746865207269676874206f662074686520626f776c2e"
+      }
+    },
+    "registered_seed_semantics": "matched-pair/environment label; effective released model noise remains 1140",
+    "runtime_identity": {
+      "id": "dreamzero-v2a015-s2-v3-0b24153-b20023-rtx0-20260805",
+      "sha256": "a590a06f0389d4c5c75f59e83ef71ce6e5e0af9bdb55bf71e0ca775dd544b6c3"
+    },
+    "video_cfg_scale": 5
+  },
+  "schema_version": "vla-wam-shared-v3b-dreamzero-mirror-amendment-v1",
+  "source_sha256": {
+    "artifacts/vla_wam_shared_v2/pilot/expansion/dreamzero_official_source_checkpoint_manifest.json": "75fd6c6b7601f5706eb70140519ee8d57b18fe79e49cc2792c30b0d9be016eeb",
+    "artifacts/vla_wam_shared_v2/pilot/post_result_cfg_ablation_v2a015_amendment.json": "7c3b98d5e578a5744a463201060ccdacf7462471418b08dc64a2ac29a9a9fece",
+    "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_cells.jsonl": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+    "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_manifest.json": "5c82268739feb41281435a51dcd848b575218cd9fbe5839d9ad130d1a7888830",
+    "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/post_result_nano_mirror_v3b001_amendment.json": "9d88c29733fa3b24a154977bc25d04d2d77df5be59e3213f0c3a6cfbe3edc6a0",
+    "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_report.json": "f6289333d77538ed9235a567cb98d70333dd50549f7e52d13bfe5d34a10bdf96",
+    "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_output_manifest.json": "523a6a2625dc0b67c1f425220006bdca6edea32e554f826f2b6f616c57393090",
+    "artifacts/vla_wam_shared_v3/results/dreamzero_droid_action_cfg_phase_a_evidence_hash_manifest.json": "0150afb2145cc2e1d18bc16bd34b4af404c7fabb77486d197af78776fcd93427",
+    "artifacts/vla_wam_shared_v3/results/dreamzero_droid_action_cfg_phase_a_summary.json": "50ec800009b1f128ce8fe877c186b08a47ec3021feaa7cf4f8baab984549b120"
+  },
+  "status": "frozen_before_any_v3b003_model_request_or_behavioral_episode",
+  "study_id": "vla_wam_language_steerability_v3"
+}

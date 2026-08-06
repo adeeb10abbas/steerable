@@ -123,6 +123,11 @@ REQUIRED = {
     "pi05_mirror_gate_lane3": f"{V3}/phase_b/pi05_mirror_v3b002/gates/preflight/lane3_robotwin.json",
     "pi05_mirror_gate_lane4": f"{V3}/phase_b/pi05_mirror_v3b002/gates/preflight/lane4_cosmos.json",
     "pi05_mirror_gate_lane5": f"{V3}/phase_b/pi05_mirror_v3b002/gates/preflight/lane5_nano.json",
+    "dreamzero_mirror_amendment": f"{V3}/phase_b/dreamzero_mirror_v3b003/post_result_dreamzero_mirror_v3b003_amendment.json",
+    "dreamzero_mirror_cells": f"{V3}/phase_b/dreamzero_mirror_v3b003/dreamzero_mirror_v3b003_cells.jsonl",
+    "dreamzero_mirror_manifest": f"{V3}/phase_b/dreamzero_mirror_v3b003/dreamzero_mirror_v3b003_manifest.json",
+    "dreamzero_mirror_registration_builder": "tools/build_dreamzero_v3b003_registration.py",
+    "dreamzero_mirror_registration_test": "tests/test_build_dreamzero_v3b003_registration.py",
 }
 DROID_MODELS = [
     "pi0_fast_droid_vla",
@@ -1699,6 +1704,9 @@ def validate(root: Path) -> list[str]:
     pi05_failure_split_episodes = load_jsonl(paths["pi05_failure_split_episodes"])
     pi05_failure_split_report = load(paths["pi05_failure_split_report"])
     pi05_failure_split_manifest = load(paths["pi05_failure_split_manifest"])
+    dreamzero_mirror_amendment = load(paths["dreamzero_mirror_amendment"])
+    dreamzero_mirror_cells = load_jsonl(paths["dreamzero_mirror_cells"])
+    dreamzero_mirror_manifest = load(paths["dreamzero_mirror_manifest"])
 
     require(
         nano_calibration.get("schema_version")
@@ -3087,6 +3095,81 @@ def validate(root: Path) -> list[str]:
         "V3-B002 failure-mode split binds 162 existing episodes and the three exact 2x5 tables",
         checks,
     )
+    dream_boundary = dreamzero_mirror_amendment.get("release_boundary", {})
+    require(
+        dreamzero_mirror_amendment.get("schema_version")
+        == "vla-wam-shared-v3b-dreamzero-mirror-amendment-v1"
+        and dreamzero_mirror_amendment.get("amendment_id") == "V3-B003"
+        and dreamzero_mirror_amendment.get("status")
+        == "frozen_before_any_v3b003_model_request_or_behavioral_episode"
+        and dream_boundary.get("model_requests_before_registration") == 0
+        and dream_boundary.get("behavioral_episodes_before_registration") == 0
+        and dream_boundary.get("behavioral_release") is False
+        and dreamzero_mirror_amendment.get("design", {}).get("identity_binding")
+        == "V2-A015:dreamzero_action_cfg_s2"
+        and dreamzero_mirror_amendment.get("design", {}).get("matched_seeds")
+        == exact_range(9400, 9426)
+        and dreamzero_mirror_amendment.get("design", {}).get("exact_prompts")
+        == EXACT_V2_WORDINGS["direct_command"],
+        "DreamZero V3-B003 freezes the disclosed s=2 third-mirror design before any model request",
+        checks,
+    )
+    dream_manifest_files = dreamzero_mirror_manifest.get("files", {})
+    require(
+        dreamzero_mirror_manifest.get("schema_version")
+        == "vla-wam-shared-v3b-dreamzero-mirror-manifest-v1"
+        and dreamzero_mirror_manifest.get("status")
+        == "hash_bound_registered_not_behaviorally_released"
+        and dreamzero_mirror_manifest.get("counts", {}).get("registered_behavioral_cells")
+        == 108
+        and dream_manifest_files.get("amendment", {}).get("sha256")
+        == sha256(paths["dreamzero_mirror_amendment"])
+        and dream_manifest_files.get("cells", {}).get("sha256")
+        == sha256(paths["dreamzero_mirror_cells"])
+        and dream_manifest_files.get("cells", {}).get("row_count") == 108,
+        "DreamZero V3-B003 manifest byte/hash-binds all 108 registered unreleased cells",
+        checks,
+    )
+    dream_conditions_by_seed: dict[int, set[tuple[str, str]]] = {}
+    exact_dream_source_reuse = len(dreamzero_mirror_cells) == 108
+    for row in dreamzero_mirror_cells:
+        seed = row.get("environment_seed")
+        source = nano_cells_by_id.get(row.get("source_v3b001_cell_id"))
+        if type(seed) is not int or not source:
+            exact_dream_source_reuse = False
+            continue
+        dream_conditions_by_seed.setdefault(seed, set()).add(
+            (row.get("arm"), row.get("relation"))
+        )
+        exact_dream_source_reuse = exact_dream_source_reuse and all(
+            row.get(key) == source.get(key)
+            for key in (
+                "environment_seed",
+                "arm",
+                "relation",
+                "fixture_sha256",
+                "execution_order_index_within_seed",
+            )
+        )
+        exact_dream_source_reuse = (
+            exact_dream_source_reuse
+            and row.get("model_id") == "dreamzero_droid_action_cfg"
+            and row.get("effective_model_noise_seed") == 1140
+            and row.get("prompt")
+            == EXACT_V2_WORDINGS["direct_command"][row.get("relation")]
+            and row.get("execution_status")
+            == "registered_pre_inference_runtime_release_gate_required"
+        )
+    require(
+        exact_dream_source_reuse
+        and sorted(dream_conditions_by_seed) == exact_range(9400, 9426)
+        and all(
+            conditions == expected_pi05_conditions
+            for conditions in dream_conditions_by_seed.values()
+        ),
+        "DreamZero V3-B003 reuses Nano seeds, fixtures, prompts, and order while disclosing constant model-noise seed 1140",
+        checks,
+    )
     pi05_runtime_source = paths["pi05_mirror_runtime"].read_text(encoding="utf-8")
     pi05_preflight_source = paths["pi05_mirror_preflight"].read_text(encoding="utf-8")
     pi05_bridge_source = paths["pi05_mirror_bridge"].read_text(encoding="utf-8")
@@ -3186,18 +3269,27 @@ def validate(root: Path) -> list[str]:
             and completed_pi05_phase_b.get("completed_behavioral_cells") == 108
             and "27-seed" in completed_pi05_phase_b.get("release_condition", "")
             and "hash-closed" in completed_pi05_phase_b.get("release_condition", "")
-            and "Every Phase-B confound ablation other than Nano V3-B001 and pi0.5 V3-B002"
+            and "DreamZero V3-B003 is hash-bound but not behaviorally released"
             in phase_b_state.get("unreleased", ""),
-            "V3 continuation marks V3-B002 complete while keeping every other Phase-B confound unreleased",
+            "V3 continuation marks V3-B002 complete while keeping V3-B003 unreleased",
             checks,
         )
-    registered_not_released = phase_b_state.get("registered_not_released")
+    registered_not_released = phase_b_state.get("registered_not_released", {}).get(
+        "dreamzero_v3b003"
+    )
     if registered_not_released:
         require(
-            registered_not_released.get("amendment_id") == "V3-B002"
+            registered_not_released.get("amendment_id") == "V3-B003"
             and registered_not_released.get("registered_behavioral_cells") == 108
-            and registered_not_released.get("completed_behavioral_cells") in {0, 108},
-            "V3 continuation preserves any remaining V3-B002 registration ledger",
+            and registered_not_released.get("model_requests_after_registration") == 0
+            and registered_not_released.get("behavioral_episodes_after_registration") == 0
+            and registered_not_released.get("amendment", {}).get("sha256")
+            == sha256(paths["dreamzero_mirror_amendment"])
+            and registered_not_released.get("cells", {}).get("sha256")
+            == sha256(paths["dreamzero_mirror_cells"])
+            and registered_not_released.get("manifest", {}).get("sha256")
+            == sha256(paths["dreamzero_mirror_manifest"]),
+            "V3 continuation preserves the unreleased zero-request DreamZero V3-B003 registration",
             checks,
         )
     inference_authority = continuation.get("next_agent", {}).get(

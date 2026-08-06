@@ -369,6 +369,36 @@ checkpoint and the lateral-position dose-response as the next mechanism tests.
 Neither is released until its independent model-blind registration and runtime
 gates are committed.
 
+### DreamZero third position reflection registered (V3-B003)
+
+V3-B003 is now hash-bound before inference for the exact DreamZero V2-A015
+action-guidance `s=2` identity. It reuses the complete V3-B001 scene, seeds
+`9400–9426`, four conditions per seed, exact prompt bytes, fixtures, and
+within-seed execution order: **27 matched seeds × 4 = 108 registered cells**.
+The registered seed labels remain 9400–9426, while the released DreamZero
+model-noise seed is explicitly constant at `1140`. This limitation is disclosed
+rather than represented as stochastic replication.
+
+Known before registration were DreamZero Phase-A success (LEFT 3/27, RIGHT
+17/27), its direction-dependent failure composition (`p = 0.001722`), and the
+completed Nano and π0.5 position-reflection results. The registered prediction
+is that reflection produces a negative requested-side-depth interaction and
+attenuates or reverses DreamZero's prior RIGHT advantage; the primary exact
+tests remain two-sided.
+
+| V3-B003 registration artifact | SHA-256 |
+| --- | --- |
+| [`post_result_dreamzero_mirror_v3b003_amendment.json`](../artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/post_result_dreamzero_mirror_v3b003_amendment.json) | `ba22681ae4d7f748e375617617d9e130e6f1bd5bc0af1e7a995365b145a470fc` |
+| [`dreamzero_mirror_v3b003_cells.jsonl`](../artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/dreamzero_mirror_v3b003_cells.jsonl) | `a6d0f0a5d4c7cdfa5d3de95d44d7b11f42750a76a603ff8c2e44848e34b8f70d` |
+| [`dreamzero_mirror_v3b003_manifest.json`](../artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/dreamzero_mirror_v3b003_manifest.json) | `efe50df701193e48b981c025ea3b4d27a80e3bdf83216e38a98a63e27061cb23` |
+
+Registration is not behavioral release. Model-request and behavioral counts
+remain zero. Release requires a fresh DreamZero `s=2` runtime identity,
+model-blind physical/reset/RTX-renderer/writer evidence on every used lane, an
+exact behavioral-bridge reset attestation with no inference, and an exact-repeat
+plus LEFT/RIGHT prompt-sensitivity gate that retains actions, latent futures,
+and an official reset decode.
+
 ## Exact intervention
 
 DROID changed only these episode-static prompts inside each matched seed:
@@ -498,7 +528,9 @@ The completed V3-A002 compatibility cohort is also not historical recovery and
 must remain separate. It is complete and must not be rerun.
 
 - Phase B: Nano V3-B001 and π0.5 V3-B002 are each complete and hash-closed at
-  108/108 exact cells. Every other Phase-B ablation remains unreleased.
+  108/108 exact cells. DreamZero V3-B003 has 108 hash-bound registered cells but
+  remains unreleased pending its fresh gates. Every other Phase-B ablation
+  remains unreleased.
 - Phase C: 480 registered episodes, not released; each wording requires its
   independent byte-hash, repeat, and prompt-sensitivity gates.
 - Phase D: not released; it requires an effective stochastic-seed probe for
@@ -521,7 +553,8 @@ Do not rerun a valid Phase-A, V3-A002, Nano V3-B001, or π0.5 V3-B002 cell. Both
 Phase-B reflection cohorts are complete at 108/108 valid episodes; Nano's
 three-block live snapshot is historical only. Use each cohort's final report,
 aggregate JSONL, and hash manifest for analysis. All other Phase-B, Phase-C,
-and Phase-D cells remain unreleased. Use the eight original committed
+and Phase-D cells remain unreleased. DreamZero V3-B003 is registered but not
+released; do not send a model request until its fresh gates pass. Use the eight original committed
 summary/evidence-manifest/infrastructure-ledger triplets plus the separate
 V3-A002 triplet under `artifacts/vla_wam_shared_v3/results/` for earlier
 completed-result analysis. Do not infer current experiment state from the older

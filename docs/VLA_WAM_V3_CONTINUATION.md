@@ -2,8 +2,8 @@
 
 Updated: 6 August 2026, after the complete Phase-A launch-authorized queue, the
 separately authorized π0-FAST compatibility bridge, the cross-version
-measurement-coverage audit, and the model-blind release of Nano V3-B001 were
-compiled. The machine-readable source of truth is
+measurement-coverage audit, and the model-blind release plus pre-inference live
+runtime implementation for Nano V3-B001 were compiled. The machine-readable source of truth is
 [`continuation_state.json`](../artifacts/vla_wam_shared_v3/continuation_state.json).
 
 ## Status
@@ -77,6 +77,34 @@ are never imputed and unmatched successful cells are never mixed.
 
 These files authorize the exact queue after the required live identity and
 output-path rechecks; they do not report Phase-B behavioral outcomes.
+
+### Nano V3-B001 live runtime boundary
+
+The fail-closed live implementation is ready, but this is still a
+**pre-inference state**: V3-B001 has 108 released cells, zero completed
+behavioral cells, and zero model requests. The implementation binds a new
+Phase-B live runtime identity to the verified Phase-A Nano identity and exact
+release, pins the Nano server CLI, performs the released positions-only reset,
+and preserves every decoded future, executed action, viewport video, state
+capture, reset attestation, and compiled JSONL record outside ordinary Git.
+
+Before the first request, the bridge must reproduce the model-blind reset gate:
+60 hold-action settle steps followed by a 15-step stability window, the frozen
+linear and angular speed thresholds, neutral requested-relation predicates, and
+an episode counter of 75 that is then reset to zero. A failed gate, partial
+attempt, or pre-existing output path remains outside the behavioral denominator
+and cannot be overwritten. The launcher preserves the frozen queue order,
+records `OMNI_KIT_ACCEPT_EULA=YES`, and does not use a thermal guard.
+
+The exact next cell remains:
+
+> `v3b001:nano:seed9400:position_mirrored:right`
+
+> Put the Rubik's cube to the right of the bowl.
+
+Its live-bound runtime identity must be created and verified on the ali-owned
+PVC after the committed implementation is synchronized. Runtime readiness does
+not change the scientific status: no Phase-B result exists yet.
 
 ## Exact intervention
 

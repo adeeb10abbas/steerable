@@ -54,6 +54,15 @@ REQUIRED = {
     "nano_mirror_amendment": f"{V3}/phase_b/nano_mirror_v3b001/post_result_nano_mirror_v3b001_amendment.json",
     "nano_mirror_cells": f"{V3}/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_cells.jsonl",
     "nano_mirror_manifest": f"{V3}/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_manifest.json",
+    "nano_mirror_runtime_adapter": "experiments/v3/cosmos_nano_phase_b/runtime_adapter.py",
+    "nano_mirror_compiler": "experiments/v3/cosmos_nano_phase_b/compile_cell.py",
+    "nano_mirror_live_support": "experiments/v3/cosmos_nano_phase_b/live_support.py",
+    "nano_mirror_live_client": "experiments/v3/cosmos_nano_phase_b/live_client.py",
+    "nano_mirror_live_server": "experiments/v3/cosmos_nano_phase_b/serve_nano.py",
+    "nano_mirror_live_bridge": "experiments/v3/cosmos_nano_phase_b/robolab_bridge.py",
+    "nano_mirror_queue_launcher": "experiments/v3/cosmos_nano_phase_b/queue_launcher.py",
+    "nano_mirror_runtime_test": "tests/test_v3b_nano_runtime_adapter.py",
+    "nano_mirror_live_queue_test": "tests/test_v3b_nano_live_queue.py",
 }
 DROID_MODELS = [
     "pi0_fast_droid_vla",
@@ -1223,6 +1232,94 @@ def validate(root: Path) -> list[str]:
         "V3 continuation hash-binds all four authoritative Nano V3-B001 release artifacts",
         checks,
     )
+    nano_live = nano_state.get("live_runtime", {})
+    require(
+        nano_live.get("status") == "implementation_ready_pre_inference"
+        and nano_live.get("model_request_count") == 0
+        and nano_live.get("behavioral_episode_count") == 0
+        and nano_live.get("completed_behavioral_cell_count") == 0
+        and nano_live.get("live_bound_runtime_identity")
+        == "must_be_created_on_the_ali_owned_pvc_after_sync_and_verified_before_the_first_model_request",
+        "V3 continuation records the Nano live stack as ready but strictly pre-inference",
+        checks,
+    )
+    require(
+        nano_live.get("exact_next_cell")
+        == {
+            "cell_id": nano_cells[0].get("cell_id"),
+            "environment_seed": nano_cells[0].get("environment_seed"),
+            "arm": nano_cells[0].get("arm"),
+            "relation": nano_cells[0].get("relation"),
+            "prompt": nano_cells[0].get("prompt"),
+        }
+        == {
+            "cell_id": "v3b001:nano:seed9400:position_mirrored:right",
+            "environment_seed": 9400,
+            "arm": "position_mirrored",
+            "relation": "right",
+            "prompt": EXACT_V2_WORDINGS["direct_command"]["right"],
+        },
+        "V3 continuation preserves the exact first released Nano smoke cell",
+        checks,
+    )
+    nano_live_source_keys = {
+        "runtime_adapter": "nano_mirror_runtime_adapter",
+        "compiler": "nano_mirror_compiler",
+        "live_support": "nano_mirror_live_support",
+        "live_client": "nano_mirror_live_client",
+        "live_server": "nano_mirror_live_server",
+        "live_bridge": "nano_mirror_live_bridge",
+        "queue_launcher": "nano_mirror_queue_launcher",
+        "runtime_test": "nano_mirror_runtime_test",
+        "live_queue_test": "nano_mirror_live_queue_test",
+    }
+    require(
+        all(
+            nano_live.get("source_bindings", {}).get(label)
+            == {"path": REQUIRED[path_key], "sha256": sha256(paths[path_key])}
+            and REQUIRED[path_key] in continuation.get("authoritative_files", [])
+            for label, path_key in nano_live_source_keys.items()
+        ),
+        "V3 continuation hash-binds the complete Nano live stack and both regression suites",
+        checks,
+    )
+    require(
+        nano_live.get("model_blind_reset_gate")
+        == {
+            "settle_steps": 60,
+            "stability_window_steps": 15,
+            "episode_length_buf_before_behavior": 75,
+            "linear_speed_threshold_m_s": 0.02,
+            "angular_speed_threshold_rad_s": 0.2,
+            "counter_reset_required_before_model_request": True,
+        }
+        and nano_live.get("execution_contract")
+        == {
+            "global_released_order_required": True,
+            "retained_output_overwrite_prohibited": True,
+            "partial_attempts_outside_behavioral_denominator": True,
+            "static_prompt_only": True,
+            "omniverse_eula_acceptance": "OMNI_KIT_ACCEPT_EULA=YES",
+            "thermal_guard": "not_used",
+        },
+        "V3 continuation freezes the Nano settle, ordering, EULA, and evidence-retention boundary",
+        checks,
+    )
+    nano_queue_source = paths["nano_mirror_queue_launcher"].read_text(encoding="utf-8")
+    nano_bridge_source = paths["nano_mirror_live_bridge"].read_text(encoding="utf-8")
+    nano_server_source = paths["nano_mirror_live_server"].read_text(encoding="utf-8")
+    nano_compiler_source = paths["nano_mirror_compiler"].read_text(encoding="utf-8")
+    require(
+        '"OMNI_KIT_ACCEPT_EULA": "YES"' in nano_queue_source
+        and "run-cell preserves released global order" in nano_queue_source
+        and "retained partial attempt is preserved outside the denominator" in nano_queue_source
+        and "episode_length_buf_before_reset" in nano_bridge_source
+        and "verify_live_runtime_identity" in nano_server_source
+        and "validate_pinned_server_cli" in nano_server_source
+        and "verify_live_runtime_identity" in nano_compiler_source,
+        "Nano live implementation fails closed on queue order, reset attestation, runtime identity, and retained attempts",
+        checks,
+    )
     phase_b_state = continuation.get("blocked_and_unreleased", {}).get(
         "phase_b_confounds", {}
     )
@@ -1508,6 +1605,15 @@ def validate(root: Path) -> list[str]:
         and "signed final lateral offset" in continuation_doc
         and "GR00T is already complete at 27 matched pairs" in continuation_doc,
         "V3 continuation documents complete measurement coverage and the GR00T no-rerun decision",
+        checks,
+    )
+    require(
+        "Nano V3-B001 live runtime boundary" in continuation_doc
+        and "108 released cells, zero completed behavioral cells, and zero model requests"
+        in continuation_doc
+        and "v3b001:nano:seed9400:position_mirrored:right" in continuation_doc
+        and EXACT_V2_WORDINGS["direct_command"]["right"] in continuation_doc,
+        "V3 continuation documents Nano live readiness without claiming a behavioral result",
         checks,
     )
     require(

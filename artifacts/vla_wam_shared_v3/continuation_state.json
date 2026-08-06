@@ -1,10 +1,10 @@
 {
   "schema_version": "vla-wam-shared-v3-continuation-v1",
   "study_id": "vla_wam_language_steerability_v3",
-  "updated_at_utc": "2026-08-06T04:03:25Z",
+  "updated_at_utc": "2026-08-06T04:28:25Z",
   "active_branch": "codex/wam-language-steerability",
-  "evidence_head": "f734a66a9d93e5ec681770c9110653bd4caf6f67",
-  "status": "phase_a_and_v3a002_complete_nano_v3b001_108_cells_released_other_phase_b_phase_c_phase_d_unreleased",
+  "evidence_head": "6e1de8f2192ec9d7ef7f8356458775541f596a97",
+  "status": "phase_a_and_v3a002_complete_nano_v3b001_live_runtime_ready_108_cells_released_zero_completed_other_phase_b_phase_c_phase_d_unreleased",
   "authoritative_files": [
     "docs/VLA_WAM_V3_CONTINUATION.md",
     "docs/VLA_WAM_STEERABILITY_V3_PROTOCOL.md",
@@ -23,13 +23,22 @@
     "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/model_blind_calibration_report.json",
     "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_cells.jsonl",
     "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_manifest.json",
-    "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/post_result_nano_mirror_v3b001_amendment.json"
+    "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/post_result_nano_mirror_v3b001_amendment.json",
+    "experiments/v3/cosmos_nano_phase_b/runtime_adapter.py",
+    "experiments/v3/cosmos_nano_phase_b/compile_cell.py",
+    "experiments/v3/cosmos_nano_phase_b/live_support.py",
+    "experiments/v3/cosmos_nano_phase_b/live_client.py",
+    "experiments/v3/cosmos_nano_phase_b/serve_nano.py",
+    "experiments/v3/cosmos_nano_phase_b/robolab_bridge.py",
+    "experiments/v3/cosmos_nano_phase_b/queue_launcher.py",
+    "tests/test_v3b_nano_runtime_adapter.py",
+    "tests/test_v3b_nano_live_queue.py"
   ],
   "validation": {
     "v3": {
       "command": ".venv/bin/python tools/validate_vla_wam_v3_protocol.py",
       "status": "valid",
-      "check_count": 301
+      "check_count": 316
     },
     "v2": {
       "command": ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
@@ -37,9 +46,9 @@
       "check_count": 994
     },
     "focused_tests": {
-      "command": ".venv/bin/python -m unittest -v tests.test_audit_vla_wam_measurement_coverage tests.test_validate_vla_wam_v3_protocol tests.test_v3_robotwin_wams_launcher tests.test_vla_wam_v3_episode_schema tests.test_v3b_nano_mirror_release tests.test_v3b_nano_runtime_adapter",
+      "command": ".venv/bin/python -m unittest -v tests.test_audit_vla_wam_measurement_coverage tests.test_validate_vla_wam_v3_protocol tests.test_v3_robotwin_wams_launcher tests.test_vla_wam_v3_episode_schema tests.test_v3b_nano_mirror_release tests.test_v3b_nano_runtime_adapter tests.test_v3b_nano_live_queue",
       "status": "passed",
-      "test_count": 51
+      "test_count": 58
     }
   },
   "measurement_coverage_audit": {
@@ -124,6 +133,47 @@
         "amendment": {
           "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/post_result_nano_mirror_v3b001_amendment.json",
           "sha256": "9d88c29733fa3b24a154977bc25d04d2d77df5be59e3213f0c3a6cfbe3edc6a0"
+        }
+      },
+      "live_runtime": {
+        "status": "implementation_ready_pre_inference",
+        "model_request_count": 0,
+        "behavioral_episode_count": 0,
+        "completed_behavioral_cell_count": 0,
+        "live_bound_runtime_identity": "must_be_created_on_the_ali_owned_pvc_after_sync_and_verified_before_the_first_model_request",
+        "exact_next_cell": {
+          "cell_id": "v3b001:nano:seed9400:position_mirrored:right",
+          "environment_seed": 9400,
+          "arm": "position_mirrored",
+          "relation": "right",
+          "prompt": "Put the Rubik's cube to the right of the bowl."
+        },
+        "model_blind_reset_gate": {
+          "settle_steps": 60,
+          "stability_window_steps": 15,
+          "episode_length_buf_before_behavior": 75,
+          "linear_speed_threshold_m_s": 0.02,
+          "angular_speed_threshold_rad_s": 0.2,
+          "counter_reset_required_before_model_request": true
+        },
+        "execution_contract": {
+          "global_released_order_required": true,
+          "retained_output_overwrite_prohibited": true,
+          "partial_attempts_outside_behavioral_denominator": true,
+          "static_prompt_only": true,
+          "omniverse_eula_acceptance": "OMNI_KIT_ACCEPT_EULA=YES",
+          "thermal_guard": "not_used"
+        },
+        "source_bindings": {
+          "runtime_adapter": {"path": "experiments/v3/cosmos_nano_phase_b/runtime_adapter.py", "sha256": "6ff6c48d28842d78fb8a1e105d1a48bc2149d6d320106775cf857cacd523b719"},
+          "compiler": {"path": "experiments/v3/cosmos_nano_phase_b/compile_cell.py", "sha256": "468bb9231316c4670a2dc3388ab7eb6f2ef5f42afc8fb04b16faca7b823f2a75"},
+          "live_support": {"path": "experiments/v3/cosmos_nano_phase_b/live_support.py", "sha256": "445176755c89d34a597e83ed23fa0444922a4736e276117a5242335a2aa76590"},
+          "live_client": {"path": "experiments/v3/cosmos_nano_phase_b/live_client.py", "sha256": "39efa19151039f8243cf452713bbaf13b3e955ccd590055d462c1ea66cac0a28"},
+          "live_server": {"path": "experiments/v3/cosmos_nano_phase_b/serve_nano.py", "sha256": "caa2c7ca1ea8bc3dd831a0564c3f37f63c64dc90ddf104b1ae0281ae61e7e1cc"},
+          "live_bridge": {"path": "experiments/v3/cosmos_nano_phase_b/robolab_bridge.py", "sha256": "19f7edaab1b19984e46fba24748578c6ad1a6bbaebb6fd4ce146e041d77720a7"},
+          "queue_launcher": {"path": "experiments/v3/cosmos_nano_phase_b/queue_launcher.py", "sha256": "389befcb72dcdf6fdb33127081e0dc9aed4833a095975aa2ce02c2cb75d3d73a"},
+          "runtime_test": {"path": "tests/test_v3b_nano_runtime_adapter.py", "sha256": "4347a5354806da8180b13a64a712ba267397a387fd80f02f6d851950510f22ff"},
+          "live_queue_test": {"path": "tests/test_v3b_nano_live_queue.py", "sha256": "506d04cfe80c077387a6d58c368537677ca831c80bc9641e1bbe08ae9c78eb02"}
         }
       }
     }

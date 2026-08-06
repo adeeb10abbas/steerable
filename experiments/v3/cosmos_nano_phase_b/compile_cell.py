@@ -17,6 +17,7 @@ from typing import Any, Mapping
 
 import numpy as np
 
+from experiments.v3.cosmos_nano_phase_b.live_support import verify_live_runtime_identity
 from experiments.v3.cosmos_nano_phase_b.runtime_adapter import (
     ACTION_CAP,
     ACTION_CHUNK_STEPS,
@@ -37,7 +38,6 @@ from experiments.v3.cosmos_nano_phase_b.runtime_adapter import (
     sha256_bytes,
     sha256_file,
     validate_reset_attestation,
-    verify_runtime_identity,
 )
 from tools.vla_wam_v3_episode_schema import (
     BEHAVIORAL_SCHEMA_VERSION,
@@ -381,7 +381,7 @@ def compile_cell(
         expected_manifest_sha256=release_manifest_sha256,
     )
     cell = release.cell(cell_id)
-    runtime = verify_runtime_identity(
+    runtime = verify_live_runtime_identity(
         runtime_manifest,
         study_root=study_root,
         release=release,

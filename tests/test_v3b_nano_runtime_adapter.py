@@ -16,11 +16,13 @@ from experiments.v3.cosmos_nano_phase_b.compile_cell import (
     EXPORT_SCHEMA,
     compile_cell,
 )
+from experiments.v3.cosmos_nano_phase_b.live_support import compute_live_stack_sha256
 from experiments.v3.cosmos_nano_phase_b.runtime_adapter import (
     ACTION_CAP,
     ACTION_CHUNK_STEPS,
     ACTION_DIM,
     ACTION_SPACE,
+    ANGULAR_SPEED_TOLERANCE_RAD_S,
     AMENDMENT_ID,
     AMENDMENT_SCHEMA,
     ARMS,
@@ -29,12 +31,18 @@ from experiments.v3.cosmos_nano_phase_b.runtime_adapter import (
     COSMOS_REPOSITORY_COMMIT,
     EMPTY_SHA256,
     MANIFEST_SCHEMA,
+    MIRROR_FACTOR,
     MODEL_ID,
     MODEL_REPOSITORY,
     PHASE,
     PROMPTS,
     RELATIONS,
     RESET_SCHEMA,
+    SETTLE_EVIDENCE_SCHEMA,
+    SETTLE_OBJECTS,
+    SETTLE_STEPS,
+    STABILITY_WINDOW_STEPS,
+    LINEAR_SPEED_TOLERANCE_M_S,
     ROBOLAB_REPOSITORY_COMMIT,
     RUNTIME_SCHEMA,
     SEEDS,
@@ -48,6 +56,7 @@ from experiments.v3.cosmos_nano_phase_b.runtime_adapter import (
     sha256_bytes,
     sha256_file,
     validate_reset_attestation,
+    validate_settle_stability_evidence,
     verify_runtime_identity,
 )
 from tools.vla_wam_v3_episode_schema import (
@@ -57,6 +66,12 @@ from tools.vla_wam_v3_episode_schema import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
+REAL_RELEASE_MANIFEST = (
+    ROOT
+    / "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/"
+    "nano_mirror_v3b001_manifest.json"
+)
+REAL_RELEASE_MANIFEST_SHA256 = "5c82268739feb41281435a51dcd848b575218cd9fbe5839d9ad130d1a7888830"
 
 
 def _write_json(path: Path, value: dict) -> None:
@@ -68,12 +83,12 @@ def _release(directory: Path) -> tuple[Path, str]:
         "control": {
             "fixture_id": "v3b001_nano_control",
             "positions_world_xyz": {"rubiks_cube": [0.3, 0.12, 0.08], "bowl": [0.44, 0.13, 0.08]},
-            "factor": "positions_only_sagittal_scene_mirror",
+            "factor": MIRROR_FACTOR,
         },
         "position_mirrored": {
             "fixture_id": "v3b001_nano_position_mirrored",
             "positions_world_xyz": {"rubiks_cube": [0.3, -0.12, 0.08], "bowl": [0.44, -0.13, 0.08]},
-            "factor": "positions_only_sagittal_scene_mirror",
+            "factor": MIRROR_FACTOR,
         },
     }
     amendment = {
@@ -91,7 +106,7 @@ def _release(directory: Path) -> tuple[Path, str]:
             "robolab_repository_commit": ROBOLAB_REPOSITORY_COMMIT,
         },
         "design": {
-            "factor": "positions_only_sagittal_scene_mirror",
+            "factor": MIRROR_FACTOR,
             "arms": list(ARMS),
             "directions": list(RELATIONS),
             "seeds": list(SEEDS),
@@ -131,7 +146,7 @@ def _release(directory: Path) -> tuple[Path, str]:
                 "randomization_key_sha256": hashlib.sha256(
                     f"{seed}:{arm}:{relation}:{order}".encode()
                 ).hexdigest(),
-                "factor": "positions_only_sagittal_scene_mirror",
+                "factor": MIRROR_FACTOR,
                 "fixture_id": fixture["fixture_id"],
                 "fixture_sha256": sha256_bytes(release_json_bytes(fixture)),
                 "prompt_family": "direct_command",
@@ -210,6 +225,7 @@ def _runtime(directory: Path, release_hash: str) -> tuple[Path, dict]:
         "open_loop_horizon": ACTION_CHUNK_STEPS,
         "action_cap": ACTION_CAP,
         "instruction_controller": "static",
+        "phase_b_live_stack_sha256": compute_live_stack_sha256(ROOT),
     }
     runtime["runtime_identity_sha256"] = sha256_bytes(canonical_json_bytes(runtime))
     path = directory / "runtime.json"
@@ -245,6 +261,39 @@ def _reset(
     initial_hash = derive_initial_state_sha256(
         {"measurement_frame": MEASUREMENT_FRAME_ID, "steps": steps}
     )
+    settle = {
+        "schema_version": SETTLE_EVIDENCE_SCHEMA,
+        "study_id": STUDY_ID,
+        "amendment_id": AMENDMENT_ID,
+        "registered_cell_id": cell.cell_id,
+        "settle_steps": SETTLE_STEPS,
+        "stable_window_steps": STABILITY_WINDOW_STEPS,
+        "linear_speed_tolerance_m_s": LINEAR_SPEED_TOLERANCE_M_S,
+        "angular_speed_tolerance_rad_s": ANGULAR_SPEED_TOLERANCE_RAD_S,
+        "hold_action_shape": [1, ACTION_DIM],
+        "terminated_or_truncated_during_gate": False,
+        "stability_window_component_maxima": {
+            name: {
+                "max_linear_component_speed_m_s": 0.001,
+                "max_angular_component_speed_rad_s": 0.01,
+            }
+            for name in SETTLE_OBJECTS
+        },
+        "post_settle_velocities": {name: [0.0] * 6 for name in SETTLE_OBJECTS},
+        "post_settle_positions_world_xyz_m": {
+            name: [0.1, 0.0, 0.1] for name in SETTLE_OBJECTS
+        },
+        "post_settle_quaternions_world_wxyz": {
+            name: [1.0, 0.0, 0.0, 0.0] for name in SETTLE_OBJECTS
+        },
+        "neutral_after_settle": True,
+        "episode_length_buf_before_reset": [SETTLE_STEPS + STABILITY_WINDOW_STEPS],
+        "episode_length_buf_reset_passed": True,
+        "episode_length_buf_after_reset": [0],
+        "model_request_count_during_gate": 0,
+    }
+    settle_path = directory / "settle.json"
+    _write_json(settle_path, settle)
     reset = {
         "schema_version": RESET_SCHEMA,
         "study_id": STUDY_ID,
@@ -266,6 +315,14 @@ def _reset(
         "released_fixture_match_passed": True,
         "viewport_writer_preflight_passed": True,
         "raw_output_preflight_passed": True,
+        "model_blind_settle_gate_passed": True,
+        "settle_steps": SETTLE_STEPS,
+        "stable_window_steps": STABILITY_WINDOW_STEPS,
+        "linear_speed_tolerance_m_s": LINEAR_SPEED_TOLERANCE_M_S,
+        "angular_speed_tolerance_rad_s": ANGULAR_SPEED_TOLERANCE_RAD_S,
+        "episode_length_buf_reset_passed": True,
+        "settle_stability_evidence_path": str(settle_path),
+        "settle_stability_evidence_sha256": sha256_file(settle_path),
         "physical_reset_sha256": "3" * 64,
         "initial_state_sha256": initial_hash,
         "fixture_match_evidence_sha256": "4" * 64,
@@ -379,6 +436,18 @@ class NanoPhaseBRuntimeTest(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeContractError, "hash/size"):
             load_release_bundle(self.release_path, expected_manifest_sha256=self.release_hash)
 
+    def test_real_committed_release_loads_with_exact_factor_and_hash(self) -> None:
+        release = load_release_bundle(
+            REAL_RELEASE_MANIFEST,
+            expected_manifest_sha256=REAL_RELEASE_MANIFEST_SHA256,
+        )
+        self.assertEqual(len(release.cells), 108)
+        self.assertEqual({cell.row["factor"] for cell in release.cells}, {MIRROR_FACTOR})
+        self.assertEqual(
+            release.cells[0].cell_id,
+            "v3b001:nano:seed9400:position_mirrored:right",
+        )
+
     def test_no_transport_call_before_per_cell_fingerprints(self) -> None:
         steps = _steps("left", 4)
         reset_path, _ = _reset(
@@ -425,6 +494,44 @@ class NanoPhaseBRuntimeTest(unittest.TestCase):
         self.assertEqual(len(calls), 1)
         self.assertEqual(calls[0]["release_fingerprint_sha256"], self.release.release_fingerprint(self.cell))
         self.assertEqual(calls[0]["reset_fingerprint_sha256"], reset_hash)
+
+    def test_settle_gate_rejects_linear_or_angular_instability(self) -> None:
+        steps = _steps("left", 4)
+        reset_path, _ = _reset(
+            self.tmp, release=self.release, cell=self.cell, runtime=self.runtime, steps=steps
+        )
+        reset = json.loads(reset_path.read_text())
+        settle_path = Path(reset["settle_stability_evidence_path"])
+        stable = json.loads(settle_path.read_text())
+        validate_settle_stability_evidence(stable, cell=self.cell)
+        for field, value, pattern in (
+            ("max_linear_component_speed_m_s", 0.020001, "linear-speed"),
+            ("max_angular_component_speed_rad_s", 0.200001, "angular-speed"),
+        ):
+            unstable = json.loads(json.dumps(stable))
+            unstable["stability_window_component_maxima"]["rubiks_cube"][field] = value
+            with self.subTest(field=field), self.assertRaisesRegex(RuntimeContractError, pattern):
+                validate_settle_stability_evidence(unstable, cell=self.cell)
+
+    def test_unsettled_reset_cannot_reach_request_adapter(self) -> None:
+        steps = _steps("left", 4)
+        reset_path, reset = _reset(
+            self.tmp, release=self.release, cell=self.cell, runtime=self.runtime, steps=steps
+        )
+        settle_path = Path(reset["settle_stability_evidence_path"])
+        settle = json.loads(settle_path.read_text())
+        settle["stability_window_component_maxima"]["bowl"][
+            "max_angular_component_speed_rad_s"
+        ] = 0.21
+        _write_json(settle_path, settle)
+        reset["settle_stability_evidence_sha256"] = sha256_file(settle_path)
+        _write_json(reset_path, reset)
+        transport_calls: list[dict] = []
+        with self.assertRaisesRegex(RuntimeContractError, "angular-speed"):
+            validate_reset_attestation(
+                reset_path, cell=self.cell, release=self.release, runtime=self.runtime
+            )
+        self.assertEqual(transport_calls, [])
 
     def test_runtime_identity_pins_exact_revisions_and_action_contract(self) -> None:
         payload = json.loads(self.runtime_path.read_text())

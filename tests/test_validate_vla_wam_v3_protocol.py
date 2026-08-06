@@ -60,6 +60,12 @@ class ValidateV3ProtocolTest(unittest.TestCase):
             )
         (root / "tools").mkdir()
         shutil.copy2(ROOT / "tools" / "build_v3a002_pi0_fast_media.py", root / "tools")
+        (root / "tests").mkdir()
+        for name in (
+            "test_v3b_nano_runtime_adapter.py",
+            "test_v3b_nano_live_queue.py",
+        ):
+            shutil.copy2(ROOT / "tests" / name, root / "tests" / name)
 
     def test_checked_in_protocol_passes(self) -> None:
         checks = VALIDATOR.validate(ROOT)

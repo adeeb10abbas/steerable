@@ -41,6 +41,12 @@ ACTION_CHUNK_STEPS = 32
 ACTION_DIM = 8
 ACTION_CAP = 450
 ACTION_SPACE = "joint_position_8d"
+MIRROR_FACTOR = "movable_object_center_position_reflection_about_robot_sagittal_plane"
+SETTLE_STEPS = 60
+STABILITY_WINDOW_STEPS = 15
+LINEAR_SPEED_TOLERANCE_M_S = 0.02
+ANGULAR_SPEED_TOLERANCE_RAD_S = 0.20
+SETTLE_OBJECTS = ("rubiks_cube", "bowl", "banana")
 SUCCESS_PREDICATE_ID = (
     "v2_frozen_droid_robolab_release_inside_45deg_requested_relation"
 )
@@ -50,6 +56,7 @@ CELL_SCHEMA = "vla-wam-shared-v3b-nano-mirror-cell-v1"
 MANIFEST_SCHEMA = "vla-wam-shared-v3b-nano-mirror-manifest-v1"
 RUNTIME_SCHEMA = "vla-wam-shared-v3b-nano-runtime-identity-v1"
 RESET_SCHEMA = "vla-wam-shared-v3b-nano-reset-attestation-v1"
+SETTLE_EVIDENCE_SCHEMA = "vla-wam-shared-v3b-nano-settle-stability-v1"
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 
 ADAPTER_CONTRACT_FILES = (
@@ -261,7 +268,7 @@ def _validate_release_row(row: dict[str, Any], amendment_sha256: str) -> Authori
             "relation": relation,
             "environment_seed": seed,
             "sampling_seed": seed,
-            "factor": "positions_only_sagittal_scene_mirror",
+            "factor": MIRROR_FACTOR,
             "prompt_family": "direct_command",
             "prompt": PROMPTS[relation],
             "prompt_sha256": sha256_bytes(PROMPTS[relation].encode("utf-8")),
@@ -495,6 +502,79 @@ def verify_runtime_identity(
     return runtime
 
 
+def validate_settle_stability_evidence(
+    evidence: Mapping[str, Any], *, cell: AuthorizedCell
+) -> dict[str, Any]:
+    """Verify the released model-blind settling gate without simulator imports."""
+
+    if not isinstance(evidence, Mapping):
+        _fail("settle/stability evidence must be an object")
+    _exact(
+        evidence,
+        {
+            "schema_version": SETTLE_EVIDENCE_SCHEMA,
+            "study_id": STUDY_ID,
+            "amendment_id": AMENDMENT_ID,
+            "registered_cell_id": cell.cell_id,
+            "settle_steps": SETTLE_STEPS,
+            "stable_window_steps": STABILITY_WINDOW_STEPS,
+            "linear_speed_tolerance_m_s": LINEAR_SPEED_TOLERANCE_M_S,
+            "angular_speed_tolerance_rad_s": ANGULAR_SPEED_TOLERANCE_RAD_S,
+            "hold_action_shape": [1, ACTION_DIM],
+            "terminated_or_truncated_during_gate": False,
+            "neutral_after_settle": True,
+            "episode_length_buf_reset_passed": True,
+            "episode_length_buf_before_reset": [SETTLE_STEPS + STABILITY_WINDOW_STEPS],
+            "episode_length_buf_after_reset": [0],
+            "model_request_count_during_gate": 0,
+        },
+        "settle/stability evidence",
+    )
+    maxima = evidence.get("stability_window_component_maxima")
+    final_velocities = evidence.get("post_settle_velocities")
+    positions = evidence.get("post_settle_positions_world_xyz_m")
+    quaternions = evidence.get("post_settle_quaternions_world_wxyz")
+    for label, value in (
+        ("stability_window_component_maxima", maxima),
+        ("post_settle_velocities", final_velocities),
+        ("post_settle_positions_world_xyz_m", positions),
+        ("post_settle_quaternions_world_wxyz", quaternions),
+    ):
+        if not isinstance(value, Mapping) or set(value) != set(SETTLE_OBJECTS):
+            _fail(f"settle/stability evidence {label} must cover the three released objects")
+    for name in SETTLE_OBJECTS:
+        row = maxima[name]
+        if not isinstance(row, Mapping):
+            _fail(f"settle/stability maximum for {name} must be an object")
+        linear = row.get("max_linear_component_speed_m_s")
+        angular = row.get("max_angular_component_speed_rad_s")
+        if (
+            not isinstance(linear, (int, float))
+            or isinstance(linear, bool)
+            or not np.isfinite(linear)
+            or linear < 0
+            or linear > LINEAR_SPEED_TOLERANCE_M_S
+        ):
+            _fail(f"{name} exceeded the released linear-speed stability threshold")
+        if (
+            not isinstance(angular, (int, float))
+            or isinstance(angular, bool)
+            or not np.isfinite(angular)
+            or angular < 0
+            or angular > ANGULAR_SPEED_TOLERANCE_RAD_S
+        ):
+            _fail(f"{name} exceeded the released angular-speed stability threshold")
+        for label, values, length in (
+            ("post-settle velocity", final_velocities[name], 6),
+            ("post-settle position", positions[name], 3),
+            ("post-settle quaternion", quaternions[name], 4),
+        ):
+            array = np.asarray(values, dtype=np.float64)
+            if array.shape != (length,) or not np.isfinite(array).all():
+                _fail(f"{name} {label} is malformed")
+    return dict(evidence)
+
+
 def validate_reset_attestation(
     reset_attestation_path: Path,
     *,
@@ -527,11 +607,29 @@ def validate_reset_attestation(
             "released_fixture_match_passed": True,
             "viewport_writer_preflight_passed": True,
             "raw_output_preflight_passed": True,
+            "model_blind_settle_gate_passed": True,
+            "settle_steps": SETTLE_STEPS,
+            "stable_window_steps": STABILITY_WINDOW_STEPS,
+            "linear_speed_tolerance_m_s": LINEAR_SPEED_TOLERANCE_M_S,
+            "angular_speed_tolerance_rad_s": ANGULAR_SPEED_TOLERANCE_RAD_S,
+            "episode_length_buf_reset_passed": True,
         },
         "live reset attestation",
     )
     for key in ("physical_reset_sha256", "initial_state_sha256", "fixture_match_evidence_sha256"):
         _sha(reset.get(key), f"live reset attestation.{key}")
+    settle_path_value = reset.get("settle_stability_evidence_path")
+    if not isinstance(settle_path_value, str) or not settle_path_value:
+        _fail("live reset attestation lacks settle/stability evidence path")
+    settle_path = Path(settle_path_value).resolve()
+    settle_evidence = load_json(settle_path, "settle/stability evidence")
+    settle_hash = _sha(
+        reset.get("settle_stability_evidence_sha256"),
+        "live reset attestation.settle_stability_evidence_sha256",
+    )
+    if not settle_path.is_file() or sha256_file(settle_path) != settle_hash:
+        _fail("settle/stability evidence file hash changed")
+    validate_settle_stability_evidence(settle_evidence, cell=cell)
     fingerprint = sha256_bytes(canonical_json_bytes(reset))
     return reset, fingerprint
 

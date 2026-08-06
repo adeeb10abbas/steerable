@@ -53,7 +53,7 @@ parser.add_argument("--repeat-resets", type=int, default=3)
 parser.add_argument("--settle-steps", type=int, default=180)
 parser.add_argument("--stable-window-steps", type=int, default=15)
 parser.add_argument("--linear-speed-tolerance-m-s", type=float, default=0.02)
-parser.add_argument("--angular-speed-tolerance-rad-s", type=float, default=0.12)
+parser.add_argument("--angular-speed-tolerance-rad-s", type=float, default=0.20)
 parser.add_argument("--pod", required=True)
 parser.add_argument("--pod-uid", required=True)
 parser.add_argument("--gpu-uuid", required=True)
@@ -424,6 +424,11 @@ def main() -> None:
             "position_tolerance_m": 0.003,
             "linear_speed_tolerance_m_s": args_cli.linear_speed_tolerance_m_s,
             "angular_speed_tolerance_rad_s": args_cli.angular_speed_tolerance_rad_s,
+            "angular_speed_tolerance_basis": (
+                "0.02 m/s linear tolerance divided by a conservative 0.10 m object "
+                "radius gives 0.20 rad/s, bounding rotational surface speed at the "
+                "same scale as translation"
+            ),
             "left_right_physical_fingerprints_equal_within_each_arm": True,
             "neither_predicate_true_at_every_reset": True,
             "live_position_reflection_passed": True,

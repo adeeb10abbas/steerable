@@ -50,7 +50,7 @@ parser.add_argument("--candidate-sha256", required=True)
 parser.add_argument("--output-dir", type=Path, required=True)
 parser.add_argument("--environment-seed", type=int, default=9400)
 parser.add_argument("--repeat-resets", type=int, default=3)
-parser.add_argument("--settle-steps", type=int, default=180)
+parser.add_argument("--settle-steps", type=int, default=60)
 parser.add_argument("--stable-window-steps", type=int, default=15)
 parser.add_argument("--linear-speed-tolerance-m-s", type=float, default=0.02)
 parser.add_argument("--angular-speed-tolerance-rad-s", type=float, default=0.20)
@@ -420,6 +420,11 @@ def main() -> None:
         "reset_gate": {
             "repeat_count_per_task": args_cli.repeat_resets,
             "settle_steps": args_cli.settle_steps,
+            "settle_steps_basis": (
+                "The model-blind 60-step probe reduced movable-object translation below "
+                "0.004 m/s while preserving a neutral reset; a longer 180-step probe was "
+                "rejected after free settling crossed a task termination boundary"
+            ),
             "stable_window_steps": args_cli.stable_window_steps,
             "position_tolerance_m": 0.003,
             "linear_speed_tolerance_m_s": args_cli.linear_speed_tolerance_m_s,

@@ -53,7 +53,10 @@ def cell_plan(*, repo_root: Path, release_manifest: Path, release_manifest_sha25
         "--fixture-candidate-sha256", FIXTURE_SHA256,
     ]
     bridge_worker = [
-        sys.executable, str(root/"experiments/v3/pi05_phase_b/robolab_bridge.py"), *common,
+        # Module execution keeps the package directory off sys.path[0].  A
+        # filename launch would let this package's queue.py shadow Python's
+        # standard-library queue module inside Isaac/OpenCV dependencies.
+        sys.executable, "-m", "experiments.v3.pi05_phase_b.robolab_bridge", *common,
         "--state-capture-dir", str(attempt/"state_capture"),
         "--action-trace-dir", str(attempt/"action_traces"),
         "--reset-attestation", str(attempt/"reset_attestation.json"),
@@ -79,7 +82,7 @@ def cell_plan(*, repo_root: Path, release_manifest: Path, release_manifest_sha25
         "--requested-relation", cell.relation, "--", *bridge_worker,
     ]
     compiler = [
-        sys.executable, str(root/"experiments/v3/pi05_phase_b/compile_cell.py"),
+        sys.executable, "-m", "experiments.v3.pi05_phase_b.compile_cell",
         "--repo-root", str(root), "--release-manifest", str(release_manifest.resolve()),
         "--release-manifest-sha256", release_manifest_sha256,
         "--runtime-manifest", str(runtime_manifest.resolve()), "--cell-id", cell.cell_id,

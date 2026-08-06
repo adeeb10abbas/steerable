@@ -1,10 +1,10 @@
 {
   "schema_version": "vla-wam-shared-v3-continuation-v1",
   "study_id": "vla_wam_language_steerability_v3",
-  "updated_at_utc": "2026-08-06T20:35:33Z",
+  "updated_at_utc": "2026-08-06T20:39:16Z",
   "active_branch": "codex/wam-language-steerability",
-  "evidence_head": "60fec7b6709cd299c1d2d97179ef9e8c9dad5201",
-  "status": "dreamzero_v3b003_hash_bound_registered_not_released_zero_model_requests",
+  "evidence_head": "011431f59465176cd5f73cdc0e14d67624315023",
+  "status": "nano_v3b004_design_frozen_zero_model_requests_numeric_calibration_next",
   "authoritative_files": [
     "docs/VLA_WAM_V3_CONTINUATION.md",
     "docs/VLA_WAM_STEERABILITY_V3_PROTOCOL.md",
@@ -87,6 +87,7 @@
     "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/dreamzero_mirror_v3b003_manifest.json",
     "tools/build_dreamzero_v3b003_registration.py",
     "tests/test_build_dreamzero_v3b003_registration.py",
+    "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b004/post_result_nano_lateral_sweep_v3b004_amendment.json",
     "tools/normalize_pi05_v3b002_infrastructure.py",
     "experiments/v3/pi05_phase_b/contract.py",
     "experiments/v3/pi05_phase_b/runtime.py",
@@ -798,6 +799,19 @@
           "cells": {"path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/dreamzero_mirror_v3b003_cells.jsonl", "sha256": "a6d0f0a5d4c7cdfa5d3de95d44d7b11f42750a76a603ff8c2e44848e34b8f70d"},
           "manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/dreamzero_mirror_v3b003_manifest.json", "sha256": "efe50df701193e48b981c025ea3b4d27a80e3bdf83216e38a98a63e27061cb23"},
           "release_condition": "Fresh DreamZero s=2 runtime identity, model-blind physical/reset/renderer/writer gate, exact bridge-reset attestation, and fixed-observation repeat/prompt-sensitivity/future-retention gate."
+        },
+        "nano_v3b004": {
+          "amendment_id": "V3-B004",
+          "model_id": "cosmos3_nano_policy_droid",
+          "factor": "reference_object_initial_lateral_position_y_m",
+          "matched_seeds": 15,
+          "planned_lateral_levels": 7,
+          "planned_behavioral_cells_after_calibration": 210,
+          "numeric_levels_frozen": false,
+          "model_requests_after_registration": 0,
+          "behavioral_episodes_after_registration": 0,
+          "amendment": {"path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b004/post_result_nano_lateral_sweep_v3b004_amendment.json", "sha256": "14aee46dd797e1219fc6df6c5e8091d2316c3583565b246294312a1fe9c779ed"},
+          "next_gate": "Run only the frozen zero-model-request dense physical calibration, then commit the exact seven levels and 210-cell queue before starting the Nano server."
         }
       },
       "unreleased": "DreamZero V3-B003 is hash-bound but not behaviorally released. Every other Phase-B confound ablation beyond completed Nano V3-B001 and pi0.5 V3-B002 requires its own frozen independent release path."
@@ -830,7 +844,7 @@
       ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
       "git diff --check"
     ],
-    "inference_authority": "Do not rerun any valid Phase-A, V3-A002, Nano V3-B001, or pi0.5 V3-B002 cell. DreamZero V3-B003 is registered at 108 cells but not behaviorally released; no model request may occur until its fresh hash-bound runtime, physical/reset/renderer/writer, bridge-reset, repeat, prompt-sensitivity, and future-retention gates pass. No other Phase-B, Phase-C, or Phase-D cell is released. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or Phase C.",
+    "inference_authority": "Do not rerun any valid Phase-A, V3-A002, Nano V3-B001, or pi0.5 V3-B002 cell. DreamZero V3-B003 is registered at 108 cells but not behaviorally released; no model request may occur until its fresh hash-bound runtime, physical/reset/renderer/writer, bridge-reset, repeat, prompt-sensitivity, and future-retention gates pass. Nano V3-B004 has only a hash-bound design: run the zero-model-request numeric physical calibration next, and do not start the Nano server or create behavioral rows until the seven exact levels are committed. No other Phase-B, Phase-C, or Phase-D cell is released. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or Phase C.",
     "publication_note": "Use the compact result summaries and evidence manifests for analysis. Do not infer current study state from the older V2 article, gallery, figures, or chat history."
   }
 }

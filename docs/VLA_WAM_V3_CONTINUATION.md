@@ -399,6 +399,37 @@ exact behavioral-bridge reset attestation with no inference, and an exact-repeat
 plus LEFT/RIGHT prompt-sensitivity gate that retains actions, latent futures,
 and an official reset decode.
 
+### Nano lateral-position dose-response design frozen (V3-B004)
+
+V3-B004 freezes the continuous mechanism test before numeric calibration and
+before any model request. The fully crossed design is **15 prespecified matched
+seeds (9500–9514) × seven bowl lateral positions × two exact directions = 210
+behavioral cells** after calibration. Within this new cohort, only the bowl's
+initial robot-frame lateral coordinate may vary. The Rubik's cube and banana
+poses, bowl `x/z` and quaternion source, robot, cameras, model, controller,
+prompts, horizon, scorer, and matched seed remain fixed.
+
+The exact numeric positions are intentionally absent from the amendment. A
+zero-model-request dense physical scan must select the largest symmetric
+seven-level grid `[-r, -2r/3, -r/3, 0, r/3, 2r/3, r]` on the 1 cm calibration
+grid with `r >= 0.09 m`. Every level must pass three fresh neutral resets,
+fixture error at most 3 mm, stability thresholds, collision checks, nonblank
+RTX/Vulkan views, and PVC writer persistence. If no such grid passes, the
+experiment fails closed; levels may not be narrowed or shifted after inference.
+
+The primary estimand includes every valid episode, including failures. For
+seed `i` and position `j`, `B[i,j] = (-s[i,j,RIGHT]) - s[i,j,LEFT]`, where `s`
+is signed final lateral offset. The confirmatory statistic is the within-seed
+slope of `B` against calibrated bowl position, summarized across the 15 seed
+slopes with an exact two-sided sign test and seed-level bootstrap intervals.
+Binary success is secondary because Nano is near ceiling.
+
+The hash-bound design amendment is
+[`post_result_nano_lateral_sweep_v3b004_amendment.json`](../artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b004/post_result_nano_lateral_sweep_v3b004_amendment.json)
+(`14aee46dd797e1219fc6df6c5e8091d2316c3583565b246294312a1fe9c779ed`).
+Model-request and behavioral counts are zero. The exact next operation is the
+model-blind physical calibration—not a Nano server launch.
+
 ## Exact intervention
 
 DROID changed only these episode-static prompts inside each matched seed:

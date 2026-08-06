@@ -1,0 +1,136 @@
+{
+  "schema_version": "vla-wam-shared-v3b-nano-lateral-sweep-amendment-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B004",
+  "recorded_at_utc": "2026-08-06T20:48:00Z",
+  "status": "design_frozen_before_model_blind_numeric_calibration_and_before_any_v3b004_model_request",
+  "post_result_disclosure": {
+    "nano_phase_a_success": {"left": "26/27", "right": "25/27"},
+    "nano_phase_a_requested_margin_gap": {
+      "right_minus_left_mean_m": 0.12360139639565239,
+      "positive_zero_negative_pairs": [23, 0, 4],
+      "exact_two_sided_sign_test_p": 0.000310748815536499
+    },
+    "nano_v3b001_position_reflection_known": true,
+    "pi05_v3b002_position_reflection_known": true,
+    "a1_dreamzero_failure_shape_exact_p": 0.0017219568583829528,
+    "b1_competence_vs_signed_gap_spearman": {"rho": 0.1, "exact_permutation_p": 0.95},
+    "reason_selected": "The completed binary reflections show that geometry can reverse requested-side depth and success asymmetry. A continuous, model-blind lateral intervention is required to estimate how the contrast changes with geometry rather than only whether it flips."
+  },
+  "design": {
+    "model_id": "cosmos3_nano_policy_droid",
+    "arena": "droid_robolab",
+    "factor": "reference_object_initial_lateral_position_y_m",
+    "reference_object": "bowl",
+    "target_object": "rubiks_cube",
+    "distractor_object": "banana",
+    "matched_seeds": [9500, 9501, 9502, 9503, 9504, 9505, 9506, 9507, 9508, 9509, 9510, 9511, 9512, 9513, 9514],
+    "matched_seed_count": 15,
+    "lateral_level_count": 7,
+    "relations": ["left", "right"],
+    "cells_per_seed": 14,
+    "registered_behavioral_episode_ceiling_after_calibration": 210,
+    "exact_prompts": {
+      "left": "Put the Rubik's cube to the left of the bowl.",
+      "right": "Put the Rubik's cube to the right of the bowl."
+    },
+    "prompt_sha256": {
+      "left": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "right": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4"
+    },
+    "held_fixed_within_cohort": [
+      "rubiks_cube full initial pose at the exact V3-B001 control fixture value",
+      "banana full initial pose at the exact V3-B001 control fixture value",
+      "bowl x, z, and source quaternion at the exact V3-B001 control fixture value",
+      "robot base, cameras, and all nonmovable geometry",
+      "prompt bytes and static-episode instruction controller",
+      "Cosmos3 Nano checkpoint revision and server repository revision",
+      "32-action open-loop horizon and 450-action cap",
+      "frozen 45-degree requested-relation cone and detached-release success predicate",
+      "environment and sampling seed within each seed-by-level LEFT/RIGHT pair"
+    ],
+    "numeric_lateral_levels_y_m": null,
+    "numeric_level_status": "must_be_selected_only_by_the_frozen_zero_model_request_calibration_below",
+    "randomization": {
+      "unit": "14-cell matched seed block",
+      "first_14_seed_rule": "Use a deterministic cyclic Latin order over the 14 level-by-direction conditions so every condition occupies every execution ordinal exactly once across seeds 9500-9513.",
+      "seed_9514_rule": "Order the 14 conditions by SHA-256 of vla_wam_language_steerability_v3:V3-B004:nano:seed9514:<level_id>:<relation>:order and record the keys.",
+      "lane_rule": "Keep all 14 cells for one seed on one runtime lane."
+    }
+  },
+  "model_blind_numeric_calibration": {
+    "behavioral_episode_count": 0,
+    "model_request_count": 0,
+    "model_server_must_be_absent": true,
+    "fixed_poses": "Use the exact V3-B001 control positions and quaternion sources for rubiks_cube and banana, and the exact V3-B001 control bowl x, z, and quaternion source; vary only bowl robot-frame y.",
+    "dense_scan": {
+      "grid_spacing_m": 0.01,
+      "grid_alignment": "integer multiples of 0.01 m about robot sagittal plane y=0",
+      "candidate_bounds": "Compute from the live table support AABB after subtracting the bowl collision projection and a 0.02 m boundary headroom; do not hand-enter bounds from model outcomes.",
+      "fresh_resets_per_candidate": 3,
+      "settle_steps": 60,
+      "stability_window_steps": 15
+    },
+    "candidate_pass_criteria": {
+      "bowl_position_error_max_m": 0.003,
+      "all_movable_objects_linear_speed_max_m_s": 0.02,
+      "all_movable_objects_angular_speed_max_rad_s": 0.2,
+      "neither_left_nor_right_success_predicate_true_at_reset": true,
+      "no_interobject_or_table_collision_at_reset": true,
+      "left_right_physical_fingerprints_identical_at_each_level": true,
+      "required_rgb_views_nonblank": true,
+      "renderer": "realtime RTX Vulkan",
+      "viewport_jsonl_action_and_pvc_write_persistence": true,
+      "post_settle_orientation_differences": "record as downstream physical mediators; do not silently gate or discard"
+    },
+    "seven_level_selection_rule": {
+      "symmetry": "Select the largest r on the 0.03 m grid for which all seven levels [-r, -2r/3, -r/3, 0, r/3, 2r/3, r] are dense-scan passing candidates.",
+      "minimum_half_range_m": 0.09,
+      "tie_break": "largest r only; no model-conditioned or outcome-conditioned choice",
+      "failure_rule": "If no r >= 0.09 m passes, fail closed. Do not narrow, shift, or respacing the levels after any model request.",
+      "required_output": "Persist and hash-bind exact poses, quaternions, seven ordered y levels, collision/table bounds, reset margins, all repeat measurements, renderer evidence, and source identities in model_blind_lateral_calibration_report.json before generating the 210-cell queue."
+    }
+  },
+  "analysis_plan": {
+    "inferential_unit": "matched seed; the 105 seed-by-level pairs are repeated observations, not independent seeds",
+    "full_sample_primary": {
+      "signed_offset": "s[i,j,d] = signed_final_lateral_offset_m for every valid episode, including failures; positive is robot LEFT",
+      "requested_depth_contrast": "B[i,j] = (-s[i,j,RIGHT]) - s[i,j,LEFT]",
+      "endpoint_redirection": "D[i,j] = s[i,j,LEFT] - s[i,j,RIGHT]",
+      "dose_response": "For each seed i, regress B[i,j] on the seven calibrated bowl-y levels. Report all 15 slopes, mean, median, 20,000-seed bootstrap 95% intervals, positive/negative/tie counts, and an exact two-sided sign test.",
+      "bootstrap_master_seed": 3104161,
+      "zero_crossing": "Estimate and report only if the fitted crossing lies inside the calibrated support; never extrapolate."
+    },
+    "binary_success_secondary": {
+      "outputs": "LEFT and RIGHT success counts and Wilson 95% intervals at each level; paired success_R-minus-success_L by seed and its within-seed slope",
+      "claim_boundary": "Nano is near binary ceiling, so success is secondary and may be insensitive."
+    },
+    "success_conditional_margin": "At each level, include only seed pairs where both LEFT and RIGHT pass. Name realized n separately at every level; never mix unmatched successes or turn failures into zero.",
+    "failure_taxonomy": "Retain the frozen five-class outcome for every valid episode and report it by level and direction.",
+    "missingness": "No imputation. Infrastructure and partial attempts remain in a separate stream and are repaired only as the identical registered cell."
+  },
+  "runtime_identity_requirement": {
+    "checkpoint_revision": "6706d7680581c255ff61e0f3bb49d90eac55c79e",
+    "server_repository_commit": "411d25b2e35bc441126f48c44a4b93e1c0564274",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "clean_external_repositories_required": true,
+    "fresh_identity_required": true,
+    "fixed_observation_gate_levels": ["lowest", "center", "highest"],
+    "fixed_observation_gate": "At each named level, require an exact repeated LEFT response and a finite positive LEFT/RIGHT action and decoded-future difference under the same runtime."
+  },
+  "release_boundary": {
+    "model_requests_before_registration": 0,
+    "behavioral_episodes_before_registration": 0,
+    "behavioral_release": false,
+    "calibration_release": false,
+    "next_command_boundary": "Run only the zero-model-request dense physical calibration. Do not start the Nano server or generate behavioral queue rows until the seven numeric levels and their calibration report are committed and hash-bound."
+  },
+  "source_sha256": {
+    "nano_v3b001_amendment": "9d88c29733fa3b24a154977bc25d04d2d77df5be59e3213f0c3a6cfbe3edc6a0",
+    "nano_v3b001_cells": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+    "nano_v3b001_manifest": "5c82268739feb41281435a51dcd848b575218cd9fbe5839d9ad130d1a7888830",
+    "nano_phase_a_summary": "677c62845ff72bceb35b0c5e3e5b259a5c24da407648fe50f475656fe86cbcea",
+    "measurement_coverage_audit": "86b3ded424bba2d697b406ea7b1c8bfc147dba8413363ae0190b4d151e76d4ea",
+    "gap_vs_competence_report": "c392c796c37193905d5824fda80b66737b39248a500134b973977bf67abe32f3"
+  }
+}

@@ -128,6 +128,7 @@ REQUIRED = {
     "dreamzero_mirror_manifest": f"{V3}/phase_b/dreamzero_mirror_v3b003/dreamzero_mirror_v3b003_manifest.json",
     "dreamzero_mirror_registration_builder": "tools/build_dreamzero_v3b003_registration.py",
     "dreamzero_mirror_registration_test": "tests/test_build_dreamzero_v3b003_registration.py",
+    "nano_lateral_sweep_amendment": f"{V3}/phase_b/nano_lateral_sweep_v3b004/post_result_nano_lateral_sweep_v3b004_amendment.json",
 }
 DROID_MODELS = [
     "pi0_fast_droid_vla",
@@ -1707,6 +1708,7 @@ def validate(root: Path) -> list[str]:
     dreamzero_mirror_amendment = load(paths["dreamzero_mirror_amendment"])
     dreamzero_mirror_cells = load_jsonl(paths["dreamzero_mirror_cells"])
     dreamzero_mirror_manifest = load(paths["dreamzero_mirror_manifest"])
+    nano_lateral_sweep_amendment = load(paths["nano_lateral_sweep_amendment"])
 
     require(
         nano_calibration.get("schema_version")
@@ -3170,6 +3172,61 @@ def validate(root: Path) -> list[str]:
         "DreamZero V3-B003 reuses Nano seeds, fixtures, prompts, and order while disclosing constant model-noise seed 1140",
         checks,
     )
+    lateral_design = nano_lateral_sweep_amendment.get("design", {})
+    lateral_calibration = nano_lateral_sweep_amendment.get(
+        "model_blind_numeric_calibration", {}
+    )
+    lateral_release = nano_lateral_sweep_amendment.get("release_boundary", {})
+    require(
+        nano_lateral_sweep_amendment.get("schema_version")
+        == "vla-wam-shared-v3b-nano-lateral-sweep-amendment-v1"
+        and nano_lateral_sweep_amendment.get("amendment_id") == "V3-B004"
+        and nano_lateral_sweep_amendment.get("status")
+        == "design_frozen_before_model_blind_numeric_calibration_and_before_any_v3b004_model_request"
+        and lateral_design.get("factor")
+        == "reference_object_initial_lateral_position_y_m"
+        and lateral_design.get("matched_seeds") == exact_range(9500, 9514)
+        and lateral_design.get("lateral_level_count") == 7
+        and lateral_design.get("cells_per_seed") == 14
+        and lateral_design.get("registered_behavioral_episode_ceiling_after_calibration")
+        == 210
+        and lateral_design.get("exact_prompts")
+        == EXACT_V2_WORDINGS["direct_command"]
+        and lateral_design.get("numeric_lateral_levels_y_m") is None
+        and lateral_calibration.get("model_request_count") == 0
+        and lateral_calibration.get("behavioral_episode_count") == 0
+        and lateral_calibration.get("seven_level_selection_rule", {}).get(
+            "minimum_half_range_m"
+        )
+        == 0.09
+        and lateral_release
+        == {
+            "model_requests_before_registration": 0,
+            "behavioral_episodes_before_registration": 0,
+            "behavioral_release": False,
+            "calibration_release": False,
+            "next_command_boundary": "Run only the zero-model-request dense physical calibration. Do not start the Nano server or generate behavioral queue rows until the seven numeric levels and their calibration report are committed and hash-bound.",
+        },
+        "Nano V3-B004 freezes the seven-level 15-seed dose-response design before numeric calibration or model requests",
+        checks,
+    )
+    lateral_analysis = nano_lateral_sweep_amendment.get("analysis_plan", {})
+    require(
+        lateral_analysis.get("inferential_unit")
+        == "matched seed; the 105 seed-by-level pairs are repeated observations, not independent seeds"
+        and "B[i,j] = (-s[i,j,RIGHT]) - s[i,j,LEFT]"
+        in lateral_analysis.get("full_sample_primary", {}).get(
+            "requested_depth_contrast", ""
+        )
+        and lateral_analysis.get("full_sample_primary", {}).get(
+            "bootstrap_master_seed"
+        )
+        == 3104161
+        and "never mix unmatched successes"
+        in lateral_analysis.get("success_conditional_margin", ""),
+        "Nano V3-B004 freezes full-sample depth slopes, seed-level inference, and complete-pair margin reporting",
+        checks,
+    )
     pi05_runtime_source = paths["pi05_mirror_runtime"].read_text(encoding="utf-8")
     pi05_preflight_source = paths["pi05_mirror_preflight"].read_text(encoding="utf-8")
     pi05_bridge_source = paths["pi05_mirror_bridge"].read_text(encoding="utf-8")
@@ -3292,6 +3349,26 @@ def validate(root: Path) -> list[str]:
             "V3 continuation preserves the unreleased zero-request DreamZero V3-B003 registration",
             checks,
         )
+    nano_lateral_registered = phase_b_state.get("registered_not_released", {}).get(
+        "nano_v3b004"
+    )
+    require(
+        nano_lateral_registered.get("amendment_id") == "V3-B004"
+        and nano_lateral_registered.get("model_id")
+        == "cosmos3_nano_policy_droid"
+        and nano_lateral_registered.get("matched_seeds") == 15
+        and nano_lateral_registered.get("planned_lateral_levels") == 7
+        and nano_lateral_registered.get("planned_behavioral_cells_after_calibration")
+        == 210
+        and nano_lateral_registered.get("numeric_levels_frozen") is False
+        and nano_lateral_registered.get("model_requests_after_registration") == 0
+        and nano_lateral_registered.get("behavioral_episodes_after_registration")
+        == 0
+        and nano_lateral_registered.get("amendment", {}).get("sha256")
+        == sha256(paths["nano_lateral_sweep_amendment"]),
+        "V3 continuation preserves the zero-request Nano V3-B004 design-only calibration boundary",
+        checks,
+    )
     inference_authority = continuation.get("next_agent", {}).get(
         "inference_authority", ""
     )

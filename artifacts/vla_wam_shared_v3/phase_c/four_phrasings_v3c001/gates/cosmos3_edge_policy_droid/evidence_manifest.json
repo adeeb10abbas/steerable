@@ -1,0 +1,86 @@
+{
+  "schema_version": "vla-wam-shared-v3c-four-phrasings-gate-evidence-v1",
+  "experiment_id": "V3-C001",
+  "model_id": "cosmos3_edge_policy_droid",
+  "status": "model_specific_release_passed_behavioral_bridge_not_implemented",
+  "counts": {
+    "fixed_observation_model_requests": 12,
+    "behavioral_episodes": 0,
+    "executed_actions": 0,
+    "prompt_forms_passed": 4,
+    "infrastructure_attempts_excluded": 2
+  },
+  "fixed_observation_result": {
+    "exact_repeat_passed": true,
+    "prompt_only_action_sensitivity_passed": true,
+    "prompt_only_future_sensitivity_passed": true,
+    "action_left_right_rms": {
+      "direct_command": 0.02389554769748097,
+      "short_command": 0.04805191826112695,
+      "goal_as_outcome": 0.03192653503979088,
+      "desired_plus_negated_opposite": 0.019465371704955804
+    },
+    "future_left_right_pixel_mae": {
+      "direct_command": 4.64183409019169,
+      "short_command": 7.1668110436753905,
+      "goal_as_outcome": 6.826756497264309,
+      "desired_plus_negated_opposite": 3.8432115604434496
+    },
+    "all_action_exact_repeat_rms": 0.0,
+    "all_future_exact_repeat_pixel_mae": 0.0
+  },
+  "runtime_identity": {
+    "checkpoint": "nvidia/Cosmos3-Edge-Policy-DROID",
+    "checkpoint_revision": "3ea407af3e156c0af3b4bb6edd85842cc9a58777",
+    "semantic_sha256": "e92f68c02345042190a415a67e3eafbb12b35fded6d59d77074c74cb28ef1940",
+    "pod": "lerobot-b200-4gpu-1-ali",
+    "pod_uid": "1e0f438c-6041-4cc3-af32-0c118963e54c",
+    "pod_ip": "10.244.103.110",
+    "gpu_index": 0,
+    "gpu_uuid": "GPU-60b3065c-79cb-61e6-b92a-32d0ae3750f3",
+    "server_attempt": 2,
+    "server_guard_pid": 815752,
+    "server_worker_pgid": 815755,
+    "server_stopped_after_gate": true,
+    "unrelated_gpu_process_pid_25608_preserved": true,
+    "gate_study_commit": "995a2d9"
+  },
+  "observation": {
+    "conditioning_image_path": "/data/users/ali/vla_wam/raw/cosmos_v2/fixed_observation_gate/conditioning.png",
+    "conditioning_image_sha256": "2a431b0fa288890b3509b314c0351c91123d5f64b237678fed972848e29cd55b",
+    "source_plan_path": "/data/users/ali/vla_wam/raw/cosmos_v2/fixed_observation_gate/source_plan.json",
+    "source_plan_sha256": "c5025b51f57224308d16338db38ab57b06e7025ba9e585a05993e01a79952fc3",
+    "sampling_seed": 8500,
+    "byte_identical_across_all_requests": true
+  },
+  "infrastructure_attempts": [
+    {
+      "attempt": "server_attempt01",
+      "stage": "thermal_guard_argument_validation",
+      "reason": "model-specific intervention ledger filename omitted the model_id",
+      "model_requests": 0,
+      "behavioral_episodes": 0
+    },
+    {
+      "attempt": "fixed_observation_attempt01",
+      "stage": "client_import_before_request",
+      "reason": "cv2 could not resolve libxcb.so.1 until the exact validated native-library path was restored",
+      "model_requests": 0,
+      "behavioral_episodes": 0
+    }
+  ],
+  "compact_files": {
+    "fixed_observation_report.json": "3bfa6d82206fad2b66ee24fd16b217018c371cb142a71cc5efb43d4e4eac8e29",
+    "prompt_byte_report.json": "c406445f9bd08d6e17e2144507f329b53b4c9f2cb64cfcad222f60ec227a1d7d",
+    "raw_write_preflight.json": "725068095fae01a8434cf6edd0ece2d95afbd427ee47412199506d778c178908",
+    "release.json": "3d59285b364ab338224f8085770440f09f69f466b82024769a842d2f0ec6f1ae",
+    "responses.jsonl": "ccf661556e127e0cdda6b6728880632ee774ff9e7a739b6dce6b35d0859d2468"
+  },
+  "raw_array_policy": {
+    "root": "/data/users/ali/vla_wam/raw/v3c/phase_c_v3c001/cosmos3_edge_policy_droid/fixed_observation_attempt02",
+    "retained_on_pvc": true,
+    "committed_to_git": false,
+    "hashes_recorded_in": "responses.jsonl"
+  },
+  "remaining_prerequisite": "Implement and validate a V3-C001 Edge behavioral bridge that consumes the released whole-seed plan, applies all eight exact static prompts without changing the frozen reset, scorer, controller, action/future contract, or condition order, and writes simulator video, executed actions, state traces, behavioral JSONL, and every exposed decoded future. Gate passage alone does not launch or validate behavioral inference."
+}

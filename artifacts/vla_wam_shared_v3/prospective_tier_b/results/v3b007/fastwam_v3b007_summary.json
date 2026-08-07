@@ -1,0 +1,260 @@
+{
+  "action_sensitivity": {
+    "pair_count": 54,
+    "pairs_with_distinct_first_10_actions": 54
+  },
+  "amendment_id": "V3-B007",
+  "arena": "robotwin",
+  "behavioral_evidence": {
+    "episodes": {
+      "bytes": 240226,
+      "path": "/data/users/ali/vla_wam/raw/v3b/tier_b/v3b007/compiled_results_attempt01/fastwam_v3b007_episodes.jsonl",
+      "sha256": "9c31a283607558e1003407ea5415124490fe13d6d33de9779750034fedc230db"
+    },
+    "pairs": {
+      "bytes": 19568,
+      "path": "/data/users/ali/vla_wam/raw/v3b/tier_b/v3b007/compiled_results_attempt01/fastwam_v3b007_pairs.jsonl",
+      "sha256": "73b873a199c797791523580fd1bb12469f502ab8658a08834ebfb9f0b8946a72"
+    }
+  },
+  "binary_success_difference_in_differences": {
+    "distribution": {
+      "-1": 11,
+      "-2": 1,
+      "0": 15,
+      "1": 0,
+      "2": 0
+    },
+    "exact_permutation_test": {
+      "assignments": 134217728,
+      "extreme_assignments": 65536,
+      "method": "exact_within_seed_layout_label_sign_flip_permutation",
+      "observed_sum": -13,
+      "p_value": 0.00048828125,
+      "statistic": "absolute_sum_of_success_difference_in_differences"
+    },
+    "mean": -0.48148148148148145,
+    "median": 0.0
+  },
+  "claim_boundary": "This is a RoboTwin negative-control mirror at one FastWAM checkpoint and one fixed pair03 scene. It is never pooled with DROID and cannot establish absence of geometry effects outside this checkpoint/arena.",
+  "condition_outcomes": {
+    "control:left": {
+      "episodes": 27,
+      "failure_taxonomy_counts": {
+        "pick_failed": 27
+      },
+      "mean_requested_side_depth_m": -0.1939019478029675,
+      "mean_signed_final_lateral_offset_m": -0.1939019478029675,
+      "successes": 0
+    },
+    "control:right": {
+      "episodes": 27,
+      "failure_taxonomy_counts": {
+        "correct": 4,
+        "pick_failed": 22,
+        "transport_failed": 1
+      },
+      "mean_requested_side_depth_m": 0.159098190565904,
+      "mean_signed_final_lateral_offset_m": -0.159098190565904,
+      "successes": 4
+    },
+    "position_mirrored:left": {
+      "episodes": 27,
+      "failure_taxonomy_counts": {
+        "correct": 9,
+        "pick_failed": 11,
+        "transport_failed": 7
+      },
+      "mean_requested_side_depth_m": 0.23511422785964828,
+      "mean_signed_final_lateral_offset_m": 0.23511422785964828,
+      "successes": 9
+    },
+    "position_mirrored:right": {
+      "episodes": 27,
+      "failure_taxonomy_counts": {
+        "pick_failed": 25,
+        "transport_failed": 1,
+        "wrong_side": 1
+      },
+      "mean_requested_side_depth_m": -0.1750716934049571,
+      "mean_signed_final_lateral_offset_m": 0.1750716934049571,
+      "successes": 0
+    }
+  },
+  "exact_prompts": {
+    "left": "Put the small woodenblock to the left of the red playingcards box.",
+    "right": "Put the small woodenblock to the right of the red playingcards box."
+  },
+  "failure_taxonomy_counts": {
+    "correct": 13,
+    "pick_failed": 85,
+    "transport_failed": 9,
+    "wrong_side": 1
+  },
+  "formulas": {
+    "endpoint_redirection": "s_LEFT - s_RIGHT within arm and seed",
+    "interaction": "position_mirrored minus control",
+    "requested_side_depth_gap": "(-s_RIGHT) - s_LEFT within arm and seed",
+    "s": "negative native SAPIEN object-minus-reference X; positive is robot LEFT"
+  },
+  "full_sample_primary": {
+    "endpoint_redirection_by_arm": {
+      "control": {
+        "maximum_m": 0.31389740109443665,
+        "mean_bootstrap_95": {
+          "confidence": 0.95,
+          "lower": -0.09242860861467542,
+          "method": "matched_seed_nonparametric_percentile_bootstrap",
+          "replicates": 10000,
+          "seed": 17079021412439196760,
+          "upper": 0.02070599026219158
+        },
+        "mean_m": -0.03480375723706351,
+        "median_m": -0.008682675659656525,
+        "minimum_m": -0.48025408387184143,
+        "n": 27,
+        "paired_sign_test": {
+          "effective_n": 27,
+          "method": "exact_two_sided_paired_sign_test",
+          "negative": 18,
+          "p_value": 0.12207812070846558,
+          "positive": 9,
+          "ties_excluded": 0
+        },
+        "sample_standard_deviation_m": 0.15229538722130026
+      },
+      "position_mirrored": {
+        "maximum_m": 0.47815753519535065,
+        "mean_bootstrap_95": {
+          "confidence": 0.95,
+          "lower": -0.0098646661072659,
+          "method": "matched_seed_nonparametric_percentile_bootstrap",
+          "replicates": 10000,
+          "seed": 571199556907009634,
+          "upper": 0.13098171488123217
+        },
+        "mean_m": 0.06004253445469119,
+        "median_m": 0.02799714356660843,
+        "minimum_m": -0.30831190198659897,
+        "n": 27,
+        "paired_sign_test": {
+          "effective_n": 27,
+          "method": "exact_two_sided_paired_sign_test",
+          "negative": 10,
+          "p_value": 0.24778856337070465,
+          "positive": 17,
+          "ties_excluded": 0
+        },
+        "sample_standard_deviation_m": 0.19091444594172421
+      }
+    },
+    "endpoint_redirection_interaction": {
+      "maximum_m": 0.6572542190551758,
+      "mean_bootstrap_95": {
+        "confidence": 0.95,
+        "lower": 0.01592575963198518,
+        "method": "matched_seed_nonparametric_percentile_bootstrap",
+        "replicates": 10000,
+        "seed": 14644983899665202603,
+        "upper": 0.18251252975659787
+      },
+      "mean_m": 0.09484629169175471,
+      "median_m": 0.01883220672607422,
+      "minimum_m": -0.21028948202729225,
+      "n": 27,
+      "paired_sign_test": {
+        "effective_n": 27,
+        "method": "exact_two_sided_paired_sign_test",
+        "negative": 10,
+        "p_value": 0.24778856337070465,
+        "positive": 17,
+        "ties_excluded": 0
+      },
+      "sample_standard_deviation_m": 0.22253808244648865
+    },
+    "requested_side_depth_gap_by_arm": {
+      "control": {
+        "maximum_m": 0.6284480392932892,
+        "mean_bootstrap_95": {
+          "confidence": 0.95,
+          "lower": 0.30462743697205075,
+          "method": "matched_seed_nonparametric_percentile_bootstrap",
+          "replicates": 10000,
+          "seed": 14634127352552606040,
+          "upper": 0.4018791791155107
+        },
+        "mean_m": 0.35300013836887145,
+        "median_m": 0.3478618450462818,
+        "minimum_m": 0.023782238364219666,
+        "n": 27,
+        "paired_sign_test": {
+          "effective_n": 27,
+          "method": "exact_two_sided_paired_sign_test",
+          "negative": 0,
+          "p_value": 1.4901161193847656e-08,
+          "positive": 27,
+          "ties_excluded": 0
+        },
+        "sample_standard_deviation_m": 0.1327190185416336
+      },
+      "position_mirrored": {
+        "maximum_m": -0.09197250008583069,
+        "mean_bootstrap_95": {
+          "confidence": 0.95,
+          "lower": -0.49315697993151847,
+          "method": "matched_seed_nonparametric_percentile_bootstrap",
+          "replicates": 10000,
+          "seed": 3653068479910253617,
+          "upper": -0.3333109453255828
+        },
+        "mean_m": -0.4101859212646054,
+        "median_m": -0.34922959841787815,
+        "minimum_m": -0.8748530820012093,
+        "n": 27,
+        "paired_sign_test": {
+          "effective_n": 27,
+          "method": "exact_two_sided_paired_sign_test",
+          "negative": 27,
+          "p_value": 1.4901161193847656e-08,
+          "positive": 0,
+          "ties_excluded": 0
+        },
+        "sample_standard_deviation_m": 0.21524178297753935
+      }
+    },
+    "requested_side_depth_interaction": {
+      "maximum_m": -0.43954410403966904,
+      "mean_bootstrap_95": {
+        "confidence": 0.95,
+        "lower": -0.8441065806748898,
+        "method": "matched_seed_nonparametric_percentile_bootstrap",
+        "replicates": 10000,
+        "seed": 1515822292482962808,
+        "upper": -0.6863662370670311
+      },
+      "mean_m": -0.7631860596334769,
+      "median_m": -0.7006843239068985,
+      "minimum_m": -1.2368372306227684,
+      "n": 27,
+      "paired_sign_test": {
+        "effective_n": 27,
+        "method": "exact_two_sided_paired_sign_test",
+        "negative": 27,
+        "p_value": 1.4901161193847656e-08,
+        "positive": 0,
+        "ties_excluded": 0
+      },
+      "sample_standard_deviation_m": 0.21222183533238517
+    }
+  },
+  "model_id": "fastwam_robotwin",
+  "population": {
+    "behavioral_episodes": 108,
+    "infrastructure_attempts_included": false,
+    "matched_seeds": 27,
+    "valid_failures_included": true
+  },
+  "schema_version": "vla-wam-shared-v3b007-fastwam-mirror-summary-v1",
+  "status": "complete_27_matched_seeds_108_valid_episodes",
+  "study_id": "vla_wam_language_steerability_v3"
+}

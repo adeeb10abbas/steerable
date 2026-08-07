@@ -449,11 +449,9 @@ def analyze(*, repo_root: Path, raw_root: Path, output_dir: Path, release_manife
     output_dir.mkdir(parents=True, exist_ok=True)
 
     compact_episodes = []
-    raw_records = {}
     for cell in release.cells:
-        compact, raw = _validate_episode(cell, raw_root)
+        compact, _ = _validate_episode(cell, raw_root)
         compact_episodes.append(compact)
-        raw_records[cell.cell_id] = raw
     compact_by_id = {row["registered_cell_id"]: row for row in compact_episodes}
     if len(compact_by_id) != 432:
         raise ContractError("validated episode IDs are not unique/exact")

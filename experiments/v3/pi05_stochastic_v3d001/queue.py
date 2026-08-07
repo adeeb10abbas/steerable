@@ -211,7 +211,7 @@ def compile_completed_pair(*, repo_root: Path, release_manifest: Path, release: 
 def main() -> None:
     parser = argparse.ArgumentParser()
     commands = parser.add_subparsers(dest="mode", required=True)
-    for mode in ("plan", "run-cell", "run-queue"):
+    for mode in ("plan", "run-cell", "run-queue", "run-blocks"):
         command = commands.add_parser(mode)
         command.add_argument("--repo-root", type=Path, required=True)
         command.add_argument("--release-manifest", type=Path, required=True)
@@ -231,12 +231,28 @@ def main() -> None:
             command.add_argument("--cell-id", required=True)
         if mode == "run-queue":
             command.add_argument("--limit-blocks", type=int)
+        if mode == "run-blocks":
+            command.add_argument("--block-id", action="append", required=True)
     args = parser.parse_args()
     release = load_release(args.repo_root, args.release_manifest)
     if sha256_file(args.release_manifest.resolve()) != RELEASE_MANIFEST_SHA256:
         raise ContractError("V3-D001 release manifest digest changed")
     validate_runtime(args.repo_root, args.runtime_identity, args.phase_a_release_gate)
     cells = list(cells_for_lane(release.cells, args.lane_index, args.lane_count))
+    if args.mode == "run-blocks":
+        if len(set(args.block_id)) != len(args.block_id):
+            raise ContractError("run-blocks received duplicate block IDs")
+        released_blocks = {cell.block_id for cell in release.cells}
+        missing = set(args.block_id) - released_blocks
+        if missing:
+            raise ContractError(f"run-blocks contains unreleased block IDs: {sorted(missing)}")
+        cells_by_block = {
+            block_id: [cell for cell in release.cells if cell.block_id == block_id]
+            for block_id in args.block_id
+        }
+        cells = [cell for block_id in args.block_id for cell in cells_by_block[block_id]]
+        if len(cells) != 2 * len(args.block_id):
+            raise ContractError("run-blocks must select complete two-cell matched blocks")
     if args.mode == "run-queue" and args.limit_blocks is not None:
         if args.limit_blocks < 1:
             raise ValueError("--limit-blocks must be positive")
@@ -254,6 +270,12 @@ def main() -> None:
                        gpu_index=args.gpu_index, lane_pod_uid=args.lane_pod_uid,
                        lane_gpu_uuid=args.lane_gpu_uuid,
                        attempt_index=args.attempt_index) for cell in cells]
+    if args.mode == "run-blocks":
+        for block_id in args.block_id:
+            block_plans = [plan for plan in plans if plan["matched_stochastic_block_id"] == block_id]
+            completed = [_completed(plan) for plan in block_plans]
+            if any(value is not None for value in completed) and not all(value is not None for value in completed):
+                raise ContractError(f"run-blocks refuses a half-completed matched block: {block_id}")
     if args.mode == "plan":
         print(json.dumps({"release_manifest_sha256": RELEASE_MANIFEST_SHA256,
                           "lane_index": args.lane_index, "lane_count": args.lane_count,

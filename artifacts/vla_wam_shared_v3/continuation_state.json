@@ -1204,14 +1204,52 @@
       "interpretation_boundary": "GR00T N1.7, Cosmos3 Edge, and Cosmos3 Nano are each complete at 160/160 prospectively registered behavioral episodes, for 480/480 total. Their four prompt forms share 20 scenes per model and must not be treated as 80 independent scenes. Success and endpoint redirection remain separate diagnostics. DROID is never pooled with RoboTwin."
     },
     "phase_d_stochastic_rollouts": {
-      "status": "not_released",
-      "reason": "Eligibility requires an exact-runtime effective stochastic-seed probe. Deterministic or seed-insensitive runtimes are ineligible rather than padded."
+      "status": "pi05_v3d001_complete",
+      "completed_release": {
+        "registration_id": "V3-D001",
+        "model_id": "pi05_current_stack_droid",
+        "arena": "droid_robolab",
+        "design": "27 fixed environment seeds x 8 stochastic policy samples x 2 exact directions",
+        "valid_behavioral_episodes": 432,
+        "matched_left_right_policy_sampling_pairs": 216,
+        "environment_seed_count": 27,
+        "policy_sampling_rollouts_per_seed_direction": 8,
+        "analysis_unit": "environment seed; the eight policy samples are nested repeated measurements",
+        "exact_prompts": {
+          "left": "Put the Rubik's cube to the left of the bowl.",
+          "right": "Put the Rubik's cube to the right of the bowl."
+        },
+        "success": {
+          "left": {"successes": 41, "episodes": 216, "estimated_probability": 0.18981481481481483, "environment_seed_cluster_bootstrap_95": [0.14351851851851852, 0.24074074074074073]},
+          "right": {"successes": 197, "episodes": 216, "estimated_probability": 0.9120370370370371, "environment_seed_cluster_bootstrap_95": [0.8796296296296297, 0.9444444444444444]},
+          "seed_level_directional_gap_right_minus_left": {"mean": 0.7222222222222222, "median": 0.75, "environment_seed_cluster_bootstrap_95": [0.6759259259259259, 0.7685185185185185], "positive_seeds": 27, "negative_seeds": 0, "ties": 0, "exact_sign_test_p": 1.4901161193847656e-8}
+        },
+        "failure_taxonomy": {
+          "left": {"correct": 41, "pick_failed": 57, "transport_failed": 104, "wrong_side": 14, "release_failed": 0},
+          "right": {"correct": 197, "pick_failed": 3, "transport_failed": 10, "wrong_side": 4, "release_failed": 2}
+        },
+        "matched_pair_response": {
+          "action_distinct": {"pairs": 216, "total": 216},
+          "endpoint_ordering_aligned": {"pairs": 198, "total": 216},
+          "endpoint_redirection_left_minus_right_m": {"mean_of_seed_means": 0.19366720872629364, "environment_seed_cluster_bootstrap_95": [0.17644619543638396, 0.2101811269515666], "positive_seeds": 27, "negative_seeds": 0, "exact_sign_test_p": 1.4901161193847656e-8}
+        },
+        "compact_result": {
+          "episodes": {"path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3d001/pi05_v3d001_episodes.jsonl", "sha256": "2586bdc4f963a610ea26f5fbe609f9a8c133d85e9f83b58ac6dfe3dd4c798976"},
+          "matched_pairs": {"path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3d001/pi05_v3d001_matched_pairs.jsonl", "sha256": "084372fc623c2c23622a54b72e13e21cc8d4247aafcf124757a5a8b362fa1e0a"},
+          "nonbehavioral_attempts": {"path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3d001/pi05_v3d001_invalid_attempts.jsonl", "sha256": "0a1940fb87bf4c546c59d1e271d6f80f0f0e9e2823cd3944a33cea0acf87385e"},
+          "summary": {"path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3d001/pi05_v3d001_summary.json", "sha256": "f05c23a0d40eb33e87deef5138e442ae230914e23f4986e2ddd45caddc2cd9e0"},
+          "evidence_manifest": {"path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3d001/evidence_manifest.json", "sha256": "bdbff6a3a18d1894158dc731df245173405c5f4508bf5da4a9031d5cb975309c"}
+        },
+        "raw_storage": "/data/users/ali/vla_wam/raw/v3d/v3d001_behavior",
+        "interpretation_boundary": "All 27 fixed scenes favored RIGHT over LEFT in estimated success probability across eight stochastic policy samples. The large directional gap therefore is not explained by one deterministic sample or a few exceptional scenes. The repeats estimate policy variability conditional on the fixed registered scenes; they do not identify the causal source of the asymmetry."
+      },
+      "other_checkpoints": "not_released_without_independent_exact-runtime stochastic-seed eligibility; deterministic or seed-insensitive runtimes are ineligible rather than padded"
     }
   },
   "scientific_claim_boundary": {
-    "supported": "Across every completed checkpoint, matched LEFT/RIGHT prompts changed executed traces; endpoint ordering was often aligned, but requested task completion and failure mode remained strongly checkpoint- and direction-dependent. In the separate V3-A002 public old-name-config bridge, all 20 common action prefixes differed and 16/20 endpoints aligned, yet success was 0/20 LEFT versus 12/20 RIGHT. Nano V3-B001, pi0.5 V3-B002, and DreamZero V3-B003 are completed scene-matched positions-only ablations. For pi0.5, reflection left endpoint redirection nearly unchanged (interaction mean -1.12 cm, 95% CI -7.81 to +5.68 cm, sign-test p=0.701) but reversed requested-side depth (interaction mean -34.59 cm, 95% CI -41.38 to -28.46 cm; 27/27 negative, p=1.49e-08) and binary success from control 4/27 LEFT versus 25/27 RIGHT to reflected 25/27 LEFT versus 9/27 RIGHT (mean DiD -1.370, exact p=5.96e-08). DreamZero reflection improved total success from 13/54 to 50/54 and changed depth (interaction mean -14.09 cm, 95% CI -19.92 to -8.19 cm, sign-test p=0.000311), while its binary success-gap DiD was not significant (p=0.581).",
-    "not_supported": "The three completed registered movable-object center-position reflections support geometry or layout as a major competence confound under this simulator setup. They do not imply that all prompt-conditioned endpoint steering is geometric, identify training-distribution bias as the mechanism, or isolate reachability from other downstream physical mediators. V3-B009 tests an object-role swap, not a full-scene mirror or base rotation, and changes semantics and affordances together. Start-side V3-B008 remains active. An exposed or decoded future also does not establish successful control.",
-    "unit_warning": "RoboTwin sampling replicates are nested within seven scenes; they are not 63 independent scenes."
+    "supported": "Across every completed checkpoint, matched LEFT/RIGHT prompts changed executed traces; endpoint ordering was often aligned, but requested task completion and failure mode remained strongly checkpoint- and direction-dependent. In the separate V3-A002 public old-name-config bridge, all 20 common action prefixes differed and 16/20 endpoints aligned, yet success was 0/20 LEFT versus 12/20 RIGHT. Nano V3-B001, pi0.5 V3-B002, and DreamZero V3-B003 are completed scene-matched positions-only ablations. For pi0.5, reflection left endpoint redirection nearly unchanged (interaction mean -1.12 cm, 95% CI -7.81 to +5.68 cm, sign-test p=0.701) but reversed requested-side depth (interaction mean -34.59 cm, 95% CI -41.38 to -28.46 cm; 27/27 negative, p=1.49e-08) and binary success from control 4/27 LEFT versus 25/27 RIGHT to reflected 25/27 LEFT versus 9/27 RIGHT (mean DiD -1.370, exact p=5.96e-08). DreamZero reflection improved total success from 13/54 to 50/54 and changed depth (interaction mean -14.09 cm, 95% CI -19.92 to -8.19 cm, sign-test p=0.000311), while its binary success-gap DiD was not significant (p=0.581). In V3-D001, pi0.5 succeeded in 41/216 LEFT and 197/216 RIGHT stochastic rollouts; every one of 27 fixed scenes had a positive estimated p(RIGHT)-p(LEFT) gap (mean +0.722, 95% environment-seed cluster-bootstrap CI +0.676 to +0.769, exact sign-test p=1.49e-08).",
+    "not_supported": "The three completed registered movable-object center-position reflections support geometry or layout as a major competence confound under this simulator setup. They do not imply that all prompt-conditioned endpoint steering is geometric, identify training-distribution bias as the mechanism, or isolate reachability from other downstream physical mediators. V3-B009 tests an object-role swap, not a full-scene mirror or base rotation, and changes semantics and affordances together. V3-B008 tests target start side without rotating the robot base. An exposed or decoded future also does not establish successful control.",
+    "unit_warning": "RoboTwin sampling replicates are nested within seven scenes; they are not 63 independent scenes. V3-D001's 432 pi0.5 episodes are eight repeated policy samples nested within 54 fixed scene-direction conditions; the primary inferential unit is the 27 environment seeds."
   },
   "storage": {
     "raw_pvc_root": "/data/users/ali/vla_wam/raw/v3",
@@ -1226,7 +1264,7 @@
       ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
       "git diff --check"
     ],
-    "inference_authority": "Do not rerun any valid Phase-A, V3-A002, Nano V3-B001, pi0.5 V3-B002, DreamZero V3-B003, Nano V3-B005, Nano V3-B009, GR00T V3-C001, Cosmos3 Edge V3-C001, or Cosmos3 Nano V3-C001 cell. All three Phase-C models are complete at 160/160 valid cells and hash-closed. DreamZero V3-B003 and Nano V3-B009 are complete and hash-closed. Nano V3-B004 failed closed with zero model requests and must never be run. Nano V3-B005 is complete at 210/210 valid cells and is hash-closed. Continue only missing exact V3-B008 cells in its existing queue. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or another Phase-C model.",
+    "inference_authority": "Do not rerun any valid Phase-A, V3-A002, Nano V3-B001, pi0.5 V3-B002, DreamZero V3-B003, Nano V3-B005, Nano V3-B008, Nano V3-B009, pi0.5 V3-D001, GR00T V3-C001, Cosmos3 Edge V3-C001, or Cosmos3 Nano V3-C001 cell. V3-D001 is complete and hash-closed at 432/432 valid episodes and 216/216 matched pairs. All three Phase-C models are complete at 160/160 valid cells and hash-closed. DreamZero V3-B003, Nano V3-B005, Nano V3-B008, and Nano V3-B009 are complete and hash-closed. Nano V3-B004 failed closed with zero model requests and must never be run. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or another Phase-C model.",
     "publication_note": "Use the compact result summaries and evidence manifests for analysis. Do not infer current study state from the older V2 article, gallery, figures, or chat history."
   }
 }

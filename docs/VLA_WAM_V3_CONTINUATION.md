@@ -10,7 +10,9 @@ five-checkpoint gap-versus-competence diagnostic is also complete and adds no
 new model inference. Phase C is complete for GR00T N1.7, Cosmos3 Edge, and
 Cosmos3 Nano Policy DROID: all three independently released cohorts are
 hash-closed at 160/160 valid episodes, for 480/480 total prospectively
-registered Phase-C cells. The
+registered Phase-C cells. π0.5 V3-D001 is complete and hash-closed at 432/432
+valid stochastic episodes and 216/216 matched LEFT/RIGHT policy-sampling pairs.
+The
 machine-readable source of truth is
 [`continuation_state.json`](../artifacts/vla_wam_shared_v3/continuation_state.json).
 
@@ -29,9 +31,9 @@ Phase-B reflection ablation is complete at **27 matched seeds / 108 valid
 behavioral episodes** under its own hash-bound runtime identity. Both releases
 followed model-blind physical gates before behavioral inference; π0.5 also
 passed fixed-observation exact-repeat and LEFT/RIGHT prompt-sensitivity gates.
-Every other Phase-B ablation and all Phase-D stochastic repetitions remain
-unreleased. The remaining Phase-C wording cells are active only in their
-three already released serial queues.
+Every other Phase-B ablation remains unreleased. No Phase-C inference remains.
+Other Phase-D checkpoints remain unreleased unless their exact runtime passes
+an independent effective-stochastic-seed gate.
 
 ### Measurement-coverage gate for Phase B
 
@@ -754,8 +756,9 @@ must remain separate. It is complete and must not be rerun.
   byte-hash, raw-writer, exact-repeat, and four-form prompt-sensitivity gates.
   All three cohorts are complete and hash-closed at 160/160 valid episodes;
   none may be rerun.
-- Phase D: not released; it requires an effective stochastic-seed probe for
-  each exact runtime.
+- Phase D: π0.5 V3-D001 is complete at 27 fixed scenes × eight policy samples ×
+  two directions = 432 valid episodes. Other checkpoints still require their
+  own effective stochastic-seed probe and release.
 
 ### Phase-C live behavioral milestone (V3-C001)
 
@@ -892,6 +895,60 @@ Cosmos, and retained action/future traces prevent cross-seed or concurrent-
 client mixing. Raw rollouts remain on the
 ali-owned PVC under `/data/users/ali/vla_wam/raw/v3c`; they are not committed
 to Git.
+
+## π0.5 nested stochastic repeats complete (V3-D001)
+
+V3-D001 estimates policy variability at fixed scene and instruction rather
+than treating repeated rollouts as new scenes. The exact release contains 27
+prespecified environment seeds (`8303`–`8329`), eight policy-sampling indices,
+and the two frozen instructions:
+
+> Put the Rubik's cube to the left of the bowl.
+
+> Put the Rubik's cube to the right of the bowl.
+
+All **432/432 behavioral episodes** and **216/216 matched LEFT/RIGHT sampling
+pairs** are valid and hash-closed. Behavioral failures remain in the
+denominator; three earlier nonbehavioral attempts are retained separately.
+The environment seed is the inferential unit: the eight samples are nested
+repeats within each fixed scene-direction condition, not 432 independent
+scenes.
+
+π0.5 succeeded in **41/216 LEFT episodes (18.98%)** and **197/216 RIGHT
+episodes (91.20%)**. The per-scene mean probability gap
+`p(RIGHT) - p(LEFT)` was **+0.722** (95% environment-seed cluster-bootstrap CI
+`+0.676` to `+0.769`; median `+0.750`). All 27 scenes had a positive gap and
+none tied or reversed (exact two-sided sign-test `p = 1.49e-08`). The result is
+therefore not attributable to a single deterministic sample or a small number
+of exceptional scenes. It remains conditional on these registered scenes and
+does not identify geometry, embodiment, or training distribution as the
+causal source.
+
+Every matched pair executed distinct actions (**216/216**), and **198/216**
+ended in the requested LEFT-to-RIGHT ordering. Mean seed-level endpoint
+redirection was **+19.37 cm** (95% cluster-bootstrap CI `+17.64` to `+21.02`
+cm); all 27 seed means were positive (`p = 1.49e-08`). Language sensitivity
+and physical redirection were therefore stable under policy resampling even
+though task competence remained sharply asymmetric.
+
+The descriptive failure decomposition also differs by direction. LEFT
+episodes contained 57 `pick_failed`, 104 `transport_failed`, 14 `wrong_side`,
+zero `release_failed`, and 41 `correct` outcomes. RIGHT episodes contained 3,
+10, 4, 2, and 197 respectively. These counts separate where execution ended;
+they do not by themselves isolate the causal mechanism.
+
+| V3-D001 compact evidence | SHA-256 |
+| --- | --- |
+| [`Episodes JSONL`](../artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3d001/pi05_v3d001_episodes.jsonl) | `2586bdc4f963a610ea26f5fbe609f9a8c133d85e9f83b58ac6dfe3dd4c798976` |
+| [`Matched-pairs JSONL`](../artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3d001/pi05_v3d001_matched_pairs.jsonl) | `084372fc623c2c23622a54b72e13e21cc8d4247aafcf124757a5a8b362fa1e0a` |
+| [`Nonbehavioral-attempt stream`](../artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3d001/pi05_v3d001_invalid_attempts.jsonl) | `0a1940fb87bf4c546c59d1e271d6f80f0f0e9e2823cd3944a33cea0acf87385e` |
+| [`Statistical summary`](../artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3d001/pi05_v3d001_summary.json) | `f05c23a0d40eb33e87deef5138e442ae230914e23f4986e2ddd45caddc2cd9e0` |
+| [`Evidence manifest`](../artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3d001/evidence_manifest.json) | `bdbff6a3a18d1894158dc731df245173405c5f4508bf5da4a9031d5cb975309c` |
+
+Full raw rollouts, videos, actions, returned chunks, and reset attestations
+remain on the ali-owned PVC under
+`/data/users/ali/vla_wam/raw/v3d/v3d001_behavior`; they are not committed to
+Git.
 
 ## Tier C1 checkpoint provenance — complete
 

@@ -1,0 +1,105 @@
+{
+  "behavioral_episode_count": 0,
+  "direction_metrics": {
+    "left": {
+      "all_exact_repeats_bit_identical": true,
+      "at_least_two_seed_indices_bitwise_distinct": true,
+      "exact_repeat_bit_identical_by_seed_index": {
+        "0": true,
+        "1": true,
+        "2": true,
+        "3": true,
+        "4": true,
+        "5": true,
+        "6": true,
+        "7": true
+      },
+      "passed": true,
+      "representative_action_sha256_by_seed_index": {
+        "0": "43c2519bbb7431ec04982b8d1b79fedbbdfbc1f8c59b440e925bd493f856b011",
+        "1": "a967ede94946b5a7442594287d1699a4f400fb3b4b4725a105adfd6158ee2d00",
+        "2": "82ae6bc91465e295b7c02d1eafec12dfa43ccd89ade60aa946368ec0ab0bbbe0",
+        "3": "4e040487cfc734d1c59e01cc4d86c3b7524c93eea5e063fa98944f5cd51fa86c",
+        "4": "5b1fcfdff0d7f10cdcb9747aac13548e37a045687cf5d7fbd1a5595090490975",
+        "5": "6044d15be66a5464fa4909bbfb40b20c72146556834862389e65b576d04b438c",
+        "6": "9ca43e32e343895c549b12dffed435452dd344bb916be5b84d717379bb46a5ae",
+        "7": "6bd19927d8ca7e34a95964ba7d974e0fae8aa854a7d1b9433040e57a25fc7f19"
+      },
+      "unique_raw_policy_samples_across_seed_indices": 8
+    },
+    "right": {
+      "all_exact_repeats_bit_identical": true,
+      "at_least_two_seed_indices_bitwise_distinct": true,
+      "exact_repeat_bit_identical_by_seed_index": {
+        "0": true,
+        "1": true,
+        "2": true,
+        "3": true,
+        "4": true,
+        "5": true,
+        "6": true,
+        "7": true
+      },
+      "passed": true,
+      "representative_action_sha256_by_seed_index": {
+        "0": "342fcd2820f26d30580408ac69a0a186f5d13afeb76ae541ada0c37ced26be95",
+        "1": "811f3a5c1fd79766b2b85e812210d9f8d8126740e554465b9e4256b9c1343e16",
+        "2": "16cd14702c61295554885ffbdcc0d1ed899c4d4772a311f140567d2ac5a2e70c",
+        "3": "bd2936d889e9f2faa9a5b331c95fac1940cbd7bef8d6932a0641bba693acb29e",
+        "4": "c271557f630d02404ef7c4134ee0f98068f5bd44c49b8bc959ace5e6dbc27c93",
+        "5": "baf35289d2e26e77292024bf1e4834cfef90934aa6c2b243c5a00d07852ab3c4",
+        "6": "72d5eac6f64d9edef53a7ac8a2206cac0357939e297a1a77876039e1b9faf97b",
+        "7": "0db89f916c2322edea48d9cded29f38adf88a634b62fa21c22f0755b1be2b7e6"
+      },
+      "unique_raw_policy_samples_across_seed_indices": 8
+    }
+  },
+  "exact_prompts": {
+    "left": "Put the Rubik's cube to the left of the bowl.",
+    "right": "Put the Rubik's cube to the right of the bowl."
+  },
+  "fresh_fixed_observation": {
+    "fixture_path": "/data/users/ali/vla_wam/raw/v3d/v3d001/fixed_observation_attempt01/fixture/seed8300_fixed_observation.npz",
+    "fixture_sha256": "3fc4ca247a7ed2ad512f0c30867eaad1ef136f1313564cb12d0108ca48b70622",
+    "manifest_path": "/data/users/ali/vla_wam/raw/v3d/v3d001/fixed_observation_attempt01/fixture/seed8300_fixed_observation.json",
+    "manifest_sha256": "e408902044c89eb423d69508b5c06f7815e1803aa9c4f64564a392d6d36d8eb3"
+  },
+  "model_id": "pi05_current_stack_droid",
+  "model_request_count": 32,
+  "passed": true,
+  "phase_d_registry_sha256": "e319f8dcaefa6803ca46989313ba737834eef1dd531c1898aeee5fa816a28ad9",
+  "raw_sample_records": {
+    "bytes": 19718,
+    "path": "/data/users/ali/vla_wam/raw/v3d/v3d001/eligibility_probe_attempt03/raw_sample_records.jsonl",
+    "rows": 32,
+    "sha256": "73695d44b49c74ebfe2e89c3ca8b98ea353851ec6fdf9c209faf1c595205f59a"
+  },
+  "registration_id": "V3-D001",
+  "registration_sha256": "899a52c79355919210d56fa8f31d944f8a373e1e184650ee8974d62acfd6c788",
+  "release_boundary": "Eligible result permits construction of a separate hash-bound 8-rollout-per-condition, 432-cell registry; this probe itself releases and executes zero behavior.",
+  "request_order": "LEFT indices0..7 a,b then RIGHT indices0..7 a,b",
+  "runtime_attestation": {
+    "path": "/data/users/ali/vla_wam/raw/v3d/v3d001/runtime_attestation_attempt04.json",
+    "runtime_attestation_sha256": "5ce5abcea8b4e188e696f52a988e48422df8539ee06405c5f70369413d500e41",
+    "sha256": "d4c1e9dc0e70ec00967952c36af1f70f9bdf39dd752c60c3b0757ef16b098180"
+  },
+  "sampling_seed_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "schema_version": "vla-wam-shared-v3d001-pi05-stochastic-eligibility-result-v1",
+  "scope_correction_sha256": "b8969639a1c45f5fd8981c5e053f170a8a6ddac5ae7ffd2185e08ff40f751b9e",
+  "server_metadata": {
+    "v2a010_config": "pi05_droid_jointpos_polaris",
+    "v2a010_openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+    "v2a010_sampling_contract": "required_request_field:sampling_seed"
+  },
+  "status": "eligible_effective_sampling_seed",
+  "study_id": "vla_wam_language_steerability_v3"
+}

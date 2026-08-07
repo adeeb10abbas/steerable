@@ -1,0 +1,41 @@
+{
+  "authorized_behavioral_cells": 432,
+  "behavioral_release": true,
+  "completed_behavioral_cells_at_release": 0,
+  "conditions": 54,
+  "directions": 2,
+  "eligibility_manifest": {
+    "path": "/data/users/ali/vla_wam/raw/v3d/v3d001/eligibility_probe_attempt03/evidence_manifest.json",
+    "sha256": "6f192d8c179bd36bc8b4246b8013dbec5ec07ea81ec0ad9a2521776b5ba5cb98"
+  },
+  "eligibility_report": {
+    "path": "/data/users/ali/vla_wam/raw/v3d/v3d001/eligibility_probe_attempt03/eligibility_report.json",
+    "sha256": "1108ff2c28c269f9dad307e80d363f93bb4ec7a9482894b74460da4281168b66"
+  },
+  "invariants": [
+    "same environment seed and reset within every original condition",
+    "only shared effective policy-sampling seed index changes across repeats",
+    "LEFT and RIGHT share every sampling-seed index",
+    "all valid behavioral failures remain in denominators",
+    "infrastructure failures and partial attempts remain separate",
+    "stochastic rollouts are nested observations, not independent scenes"
+  ],
+  "launched_behavioral_cells_at_release": 0,
+  "matched_scene_pairs": 27,
+  "model_id": "pi05_current_stack_droid",
+  "phase_d_registry_sha256": "e319f8dcaefa6803ca46989313ba737834eef1dd531c1898aeee5fa816a28ad9",
+  "queue": {
+    "bytes": 820800,
+    "path": "/data/users/ali/vla_wam/src/steerable-v3d001-4c7ad8b/artifacts/vla_wam_shared_v3/prospective_tier_b/releases/v3d001/pi05_v3d001_stochastic_cells.jsonl",
+    "rows": 432,
+    "sha256": "50bad0d86c0c1f2ef7204962dbefd20b04f55212aa90efea5870dfe9ef076d22"
+  },
+  "registration_id": "V3-D001",
+  "registration_sha256": "899a52c79355919210d56fa8f31d944f8a373e1e184650ee8974d62acfd6c788",
+  "rollouts_per_condition": 8,
+  "schema_version": "vla-wam-shared-v3d001-pi05-stochastic-eight-repeat-release-v1",
+  "scope_correction_sha256": "b8969639a1c45f5fd8981c5e053f170a8a6ddac5ae7ffd2185e08ff40f751b9e",
+  "source_phase_a_summary_sha256": "5c6d07fca7a0d20ab8b757f028d469f864c78a1c43ffedc3d257a16caef2a02b",
+  "status": "released_after_effective_seed_probe_zero_behavior_launched",
+  "study_id": "vla_wam_language_steerability_v3"
+}

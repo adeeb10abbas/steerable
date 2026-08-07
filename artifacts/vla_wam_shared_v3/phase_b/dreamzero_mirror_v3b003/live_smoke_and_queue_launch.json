@@ -1,0 +1,152 @@
+{
+  "schema_version": "vla-wam-shared-v3b-dreamzero-live-smoke-queue-launch-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B003",
+  "model_id": "dreamzero_droid_action_cfg",
+  "status": "four_cell_smoke_passed_full_whole_seed_queue_launched",
+  "recorded_at_utc": "2026-08-07T01:31:33Z",
+  "registered_evidence": {
+    "cells_path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/dreamzero_mirror_v3b003_cells.jsonl",
+    "cells_sha256": "a6d0f0a5d4c7cdfa5d3de95d44d7b11f42750a76a603ff8c2e44848e34b8f70d",
+    "manifest_path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/dreamzero_mirror_v3b003_manifest.json",
+    "manifest_sha256": "efe50df701193e48b981c025ea3b4d27a80e3bdf83216e38a98a63e27061cb23",
+    "release_gate_path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/gates/release_gate.json",
+    "release_gate_sha256": "7e30e618ee233ea04675d556f48621f6ff7de84f4ac9033460d0d9531a234dd6",
+    "runtime_identity_sha256": "a590a06f0389d4c5c75f59e83ef71ce6e5e0af9bdb55bf71e0ca775dd544b6c3"
+  },
+  "smoke_gate": {
+    "passed": true,
+    "seed": 9400,
+    "expected_cells": 4,
+    "valid_behavioral_cells": 4,
+    "behavioral_successes": 3,
+    "smoke_evidence_root_sha256": "50c6be24e317293f0e3fcac3a478fec0b6b0c6bc635d61b76464d353571e4e19",
+    "validation": [
+      "v3 behavioral schema",
+      "registered four-cell seed block",
+      "per-cell JSONL manifest hash",
+      "all referenced artifact byte counts and SHA-256 hashes",
+      "model-blind reset attestation",
+      "simulator viewport video",
+      "executed actions",
+      "exposed future evidence"
+    ],
+    "cells": [
+      {
+        "execution_order": 1,
+        "registered_cell_id": "v3b003:dreamzero:seed9400:position_mirrored:right",
+        "requested_success": true,
+        "failure_taxonomy": "correct",
+        "actions_executed": 244,
+        "retained_future_count": 32,
+        "raw_episode_sha256": "2807cd7fca1a6961cc0fde7d84be1c4130dc6398b99ff7c6473a3629ca72e039",
+        "manifest_sha256": "1a023867e5e95341451c007cab1e78738a6300a1a4585ba590ad0ac14dbb9352"
+      },
+      {
+        "execution_order": 2,
+        "registered_cell_id": "v3b003:dreamzero:seed9400:control:left",
+        "requested_success": false,
+        "failure_taxonomy": "pick_failed",
+        "actions_executed": 450,
+        "retained_future_count": 58,
+        "raw_episode_sha256": "dfabf4167c8c4566e6dddc76110815a54fcd3a60a8e800d00ea21d7816679fd9",
+        "manifest_sha256": "f7469851153312d9749ddf8738745deb3f4e4ee26e1ec20408614383df4ed1c8"
+      },
+      {
+        "execution_order": 3,
+        "registered_cell_id": "v3b003:dreamzero:seed9400:position_mirrored:left",
+        "requested_success": true,
+        "failure_taxonomy": "correct",
+        "actions_executed": 170,
+        "retained_future_count": 23,
+        "raw_episode_sha256": "0ff357b8e1b33910f3638a08ef1aab4331e8f5fcf62bcd52698e90b8b5a56998",
+        "manifest_sha256": "adae8c68947f6b65da9aa5d8a24e61e47d5d373359a41939c2911aabc3b12d38"
+      },
+      {
+        "execution_order": 4,
+        "registered_cell_id": "v3b003:dreamzero:seed9400:control:right",
+        "requested_success": true,
+        "failure_taxonomy": "correct",
+        "actions_executed": 248,
+        "retained_future_count": 32,
+        "raw_episode_sha256": "71e231ea617912f26dea67478523787bf7e63066c09a49cee8008501b5449251",
+        "manifest_sha256": "87f102b99fddaa368047b87e505130f71dbc046b2245b5e2138a3755e3e53d55"
+      }
+    ]
+  },
+  "compile_only_recovery": {
+    "simulator_rerun": false,
+    "cause": "Phase-B capture used v3 taxonomy label correct in the legacy frozen_failure_stage field; the retained raw state deterministically maps it to legacy stage success.",
+    "retained_infrastructure_failure_path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/behavioral_smoke_lane0_attempt02/raw/v3b003__dreamzero__seed9400__position_mirrored__right/attempt01/infrastructure_failure.json",
+    "retained_infrastructure_failure_sha256": "3b85c1e2b11560a0e92bffcd8a71965e2faba99cb729237ea415595b01e90ffc",
+    "bridge_fix_commit": "0d2e8aa",
+    "retained_compile_recovery_commit": "cb22c86"
+  },
+  "full_queue_launch": {
+    "launched_at_utc": "2026-08-07T01:31:05Z",
+    "runtime_checkout_git_sha": "cb22c86",
+    "raw_root": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/behavioral_smoke_lane0_attempt02/raw",
+    "server": {
+      "pod": "lerobot-b200-4gpu-1-ali",
+      "pod_uid": "1e0f438c-6041-4cc3-af32-0c118963e54c",
+      "pod_ip": "10.244.103.110",
+      "port": 18021
+    },
+    "registered_cells": 108,
+    "valid_cells_present_at_launch": 4,
+    "cells_remaining_at_launch": 104,
+    "whole_seed_lane_count": 4,
+    "lanes": [
+      {
+        "lane_index": 0,
+        "pod": "vla-wam-lingbot-expansion-ali",
+        "pod_uid": "7110c8d4-db9e-401a-ba85-58ba5e0dfcb3",
+        "gpu_uuid": "GPU-dc8db249-3b4c-1d36-0e9d-435a6d5f01c0",
+        "seeds": [9400, 9404, 9408, 9412, 9416, 9420, 9424],
+        "preexisting_valid_seed_blocks": [9400],
+        "remaining_cells": 24,
+        "launcher_pid": 198535,
+        "log_path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/behavioral_queue_attempt01/lane0/queue.log"
+      },
+      {
+        "lane_index": 1,
+        "pod": "vla-wam-fastwam-expansion-ali",
+        "pod_uid": "68e4b518-a96d-4935-818f-6d975811bbc8",
+        "gpu_uuid": "GPU-70318cf0-9d68-4c1b-9a94-d85d3c4af002",
+        "seeds": [9401, 9405, 9409, 9413, 9417, 9421, 9425],
+        "preexisting_valid_seed_blocks": [],
+        "remaining_cells": 28,
+        "launcher_pid": 235510,
+        "log_path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/behavioral_queue_attempt01/lane1/queue.log"
+      },
+      {
+        "lane_index": 2,
+        "pod": "vla-wam-rtx-nano-ali",
+        "pod_uid": "30b51054-f277-480d-831d-337581e1cc49",
+        "gpu_uuid": "GPU-37425604-6c72-a77a-f635-392439431707",
+        "seeds": [9402, 9406, 9410, 9414, 9418, 9422, 9426],
+        "preexisting_valid_seed_blocks": [],
+        "remaining_cells": 28,
+        "launcher_pid": 517134,
+        "log_path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/behavioral_queue_attempt01/lane2/queue.log"
+      },
+      {
+        "lane_index": 3,
+        "pod": "vla-wam-robotwin-expansion-ali",
+        "pod_uid": "06925ad6-e387-4c6a-89b3-5dbe44490ed6",
+        "gpu_uuid": "GPU-8415b8cd-db0f-e848-0d1f-b389debe91ab",
+        "seeds": [9403, 9407, 9411, 9415, 9419, 9423],
+        "preexisting_valid_seed_blocks": [],
+        "remaining_cells": 24,
+        "launcher_pid": 282905,
+        "log_path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/behavioral_queue_attempt01/lane3/queue.log"
+      }
+    ]
+  },
+  "accounting": {
+    "valid_behavioral_failures_remain_in_denominator": true,
+    "infrastructure_failures_remain_separate": true,
+    "valid_cells_are_never_rerun": true,
+    "full_result_status": "in_progress_not_compiled"
+  }
+}

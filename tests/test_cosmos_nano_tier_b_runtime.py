@@ -6,6 +6,7 @@ import numpy as np
 
 from experiments.v3.cosmos_nano_tier_b.fixed_observation_gate import collect, evaluate
 from experiments.v3.cosmos_nano_tier_b.runtime_contract import CONFIG, load_release
+from experiments.v3.cosmos_nano_tier_b.queue import cell_plan, ordered_cells
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -81,3 +82,38 @@ def test_fixed_observation_gate_requires_repeatability_and_sensitivity() -> None
     assert report["behavioral_episode_count"] == 0
     assert report["model_request_count"] == 6
 
+
+def test_role_swap_live_plan_preserves_whole_seed_order_and_dynamic_roles(tmp_path: Path) -> None:
+    release = _release("V3-B009")
+    cells = ordered_cells(release)
+    first_seed = [cell for cell in cells if cell.seed == 9800]
+    assert [cell.row["execution_order_index_within_seed"] for cell in first_seed] == [0, 1, 2, 3]
+    assert {(cell.row["target_object"], cell.row["reference_object"]) for cell in first_seed} == {
+        ("rubiks_cube", "bowl"),
+        ("bowl", "rubiks_cube"),
+    }
+    cell = first_seed[0]
+    plan = cell_plan(
+        study_root=ROOT,
+        study_root_string=str(ROOT),
+        amendment_id="V3-B009",
+        release_manifest=release.manifest_path,
+        release_manifest_sha256=release.manifest_sha256,
+        runtime_manifest=tmp_path / "runtime.json",
+        release_gate=tmp_path / "gate.json",
+        safe_fixture=tmp_path / "candidate.json",
+        safe_fixture_sha256=cell.row["candidate_sha256"],
+        raw_root=tmp_path / "raw",
+        cell=cell,
+        remote_host="10.0.0.1",
+        remote_port=18019,
+        lane_pod_uid="pod-uid",
+        lane_gpu_uuid="gpu-uuid",
+    )
+    assert plan["arm"] == "cube_target_bowl_reference"
+    assert plan["target_object"] == "rubiks_cube"
+    assert plan["reference_object"] == "bowl"
+    assert plan["matched_block_id"] == "v3b009:nano:seed9800"
+    assert "--amendment-id" in plan["bridge_command"]
+    assert "V3-B009" in plan["bridge_command"]
+    assert "--amendment-id" in plan["compiler_command"]

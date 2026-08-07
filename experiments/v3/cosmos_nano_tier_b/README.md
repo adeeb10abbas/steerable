@@ -27,9 +27,13 @@ raw-integrity check has passed.
    RIGHT within each arm. Any repeatability, action-sensitivity, or
    decoded-future-sensitivity failure closes the lane at zero behavior.
 4. Build the behavioral release with `build_behavioral_release_gate.py`.
-5. Stop the probe server. Start a fresh amendment-specific wrapper in
+5. Hash-bind the live client, bridge, compiler, queue, and task sources with
+   `build_launch_manifest.py`. The queue refuses a source change after this
+   zero-cell launch boundary.
+6. Stop the probe server. Start a fresh amendment-specific wrapper in
    `behavior_only` mode with the behavioral-release path. Attach exactly one
-   behavior client to that server.
+   behavior client to that server. Use `queue.py` to preserve the registered
+   within-seed cell order and raw-attempt boundary.
 
 The dedicated wrappers are `serve_v3b008_nano.py` and
 `serve_v3b009_nano.py`. Startup fails before model load if the manifest,
@@ -39,3 +43,8 @@ All model responses retain the exact sampling seed, registered cell,
 release/runtime hashes, and (for behavior) reset fingerprint. Behavioral
 failures remain in the denominator; partial and infrastructure-invalid
 attempts remain separate.
+
+The live reset fingerprint also binds the exact client and bridge source
+hashes before the first request. Every valid episode retains the complete
+executed 8-D action trace, every exposed 33-frame decoded future, all
+post-action states, and one viewport video on the ali PVC.

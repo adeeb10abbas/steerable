@@ -12,7 +12,7 @@
     "target_object": "rubiks_cube",
     "reference_object": "bowl",
     "registered_levels_after_gate": ["target_start_right", "target_start_center", "target_start_left"],
-    "numeric_levels": "Frozen only by the independent symmetric model-blind calibration; no behavioral selection is permitted.",
+    "numeric_levels": "Candidate cube-minus-bowl lateral offsets are preregistered in absolute-size order 0.10, 0.075, 0.05 m; choose the first symmetric three-level fixture that passes every model-blind row. No behavioral selection is permitted.",
     "matched_seeds": [9700, 9701, 9702, 9703, 9704, 9705, 9706, 9707, 9708, 9709, 9710, 9711, 9712, 9713, 9714, 9715, 9716, 9717, 9718, 9719, 9720, 9721, 9722, 9723, 9724, 9725, 9726],
     "relations": ["left", "right"],
     "behavioral_episode_ceiling_after_release": 162,
@@ -31,7 +31,7 @@
   "model_blind_gate": {
     "model_requests": 0,
     "behavioral_episodes": 0,
-    "selection_rule": "Choose the largest symmetric target-side offset from a preregistered calibration grid for which right, center, and left levels all pass every feasibility row; otherwise fail closed.",
+    "selection_rule": "Try absolute cube-minus-bowl lateral offsets 0.10, 0.075, then 0.05 m; choose the first for which right, center, and left levels all pass every feasibility row; otherwise fail closed.",
     "requirements": [
       "collision-free stable resets",
       "neither requested relation true at reset",

@@ -15,7 +15,7 @@ EXPECTED = {
     "pi05_stochastic_eligibility_v3d001.json": (2585, "899a52c79355919210d56fa8f31d944f8a373e1e184650ee8974d62acfd6c788"),
     "nano_base_rotation_v3b006.json": (3398, "4e157931a1f2cbaa6f51b5e93d49caa0420787621452e791e7a4569f4be14fd6"),
     "fastwam_robotwin_mirror_v3b007.json": (3585, "84d14a5c6a02c5f6655384d2ed1ef6e3cdaab05341136d81a3b0e727268ecc8e"),
-    "nano_start_side_v3b008.json": (2954, "5ea79f01933672da5948863295bf7b8e61a510d0f469b5375d0f67298ab446ce"),
+    "nano_start_side_v3b008.json": (3076, "8cd7c3bda7db0c3b9097e72c54d74fe0b81fd8a3d1909b6ec4aea00748c854c2"),
     "nano_role_swap_v3b009.json": (3102, "b6128c0ace0982980f1e650186324644cd89b896c2c1bb01c807adba584c1108"),
     "checkpoint_provenance.schema.json": (4374, "dc058dd11e09e70d5437d79db385910e6d5151642fc46829eb036b78e7fc8ddc"),
 }

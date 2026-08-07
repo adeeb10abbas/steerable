@@ -1,0 +1,51 @@
+{
+  "schema_version": "vla-wam-shared-v3b-droid-tier-b-gate-candidate-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "status": "model_blind_candidate_not_released_for_inference",
+  "recorded_at_utc": "2026-08-07T03:00:00Z",
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "source_fixture": {
+    "nano_v3b001_candidate_sha256": "e1799b815da41f9a08a4000a360c4958003269fed27e2abe75b273519e4d1c88",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+  },
+  "fixed_positions_robot_base_m": {
+    "banana": [0.538878858089447, -0.07555567473173141, 0.0684281587600708],
+    "bowl": [0.44258353114128113, 0.12658219039440155, 0.07732785493135452],
+    "rubiks_cube": [0.303364634513855, 0.12396888434886932, 0.08113233000040054]
+  },
+  "studies": {
+    "V3-B008": {
+      "selection_rule": "Try symmetric absolute cube-minus-bowl lateral offsets in preregistered order 0.10, 0.075, 0.05 m; choose the first whose three levels pass every model-blind row, otherwise fail closed.",
+      "candidate_absolute_offsets_m_in_gate_order": [0.1, 0.075, 0.05],
+      "selected_candidate_for_first_gate_attempt_m": 0.1,
+      "arms": {
+        "target_start_right": {
+          "target_object": "rubiks_cube", "reference_object": "bowl", "target_label": "Rubik's cube",
+          "positions_robot_base_m": {"banana": [0.538878858089447, -0.07555567473173141, 0.0684281587600708], "bowl": [0.44258353114128113, 0.12658219039440155, 0.07732785493135452], "rubiks_cube": [0.303364634513855, 0.02658219039440155, 0.08113233000040054]}
+        },
+        "target_start_center": {
+          "target_object": "rubiks_cube", "reference_object": "bowl", "target_label": "Rubik's cube",
+          "positions_robot_base_m": {"banana": [0.538878858089447, -0.07555567473173141, 0.0684281587600708], "bowl": [0.44258353114128113, 0.12658219039440155, 0.07732785493135452], "rubiks_cube": [0.303364634513855, 0.12658219039440155, 0.08113233000040054]}
+        },
+        "target_start_left": {
+          "target_object": "rubiks_cube", "reference_object": "bowl", "target_label": "Rubik's cube",
+          "positions_robot_base_m": {"banana": [0.538878858089447, -0.07555567473173141, 0.0684281587600708], "bowl": [0.44258353114128113, 0.12658219039440155, 0.07732785493135452], "rubiks_cube": [0.303364634513855, 0.22658219039440156, 0.08113233000040054]}
+        }
+      }
+    },
+    "V3-B009": {
+      "arms": {
+        "cube_target_bowl_reference": {
+          "target_object": "rubiks_cube", "reference_object": "bowl", "target_label": "Rubik's cube",
+          "positions_robot_base_m": {"banana": [0.538878858089447, -0.07555567473173141, 0.0684281587600708], "bowl": [0.44258353114128113, 0.12658219039440155, 0.07732785493135452], "rubiks_cube": [0.303364634513855, 0.12396888434886932, 0.08113233000040054]}
+        },
+        "bowl_target_cube_reference": {
+          "target_object": "bowl", "reference_object": "rubiks_cube", "target_label": "bowl",
+          "positions_robot_base_m": {"banana": [0.538878858089447, -0.07555567473173141, 0.0684281587600708], "bowl": [0.44258353114128113, 0.12658219039440155, 0.07732785493135452], "rubiks_cube": [0.303364634513855, 0.12396888434886932, 0.08113233000040054]}
+        }
+      }
+    }
+  },
+  "release_boundary": "Numeric reset candidates only. No model request or behavioral episode may start until the corresponding gate passes and a new release amendment binds its hashes."
+}

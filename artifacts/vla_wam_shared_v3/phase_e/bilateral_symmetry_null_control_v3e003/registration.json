@@ -2372,7 +2372,7 @@
   "release_boundary": "No model request or behavioral episode is authorized until the symmetry gate, exact runtime identity, reset gate, and raw-output write proof are hash-bound after this registration commit.",
   "scene_construction": {
     "caveat": "Robot joint configuration and wrist-camera mounting are not bilaterally symmetric; this is not a symmetric-embodiment control. The prior base-rotation control was invalid and is not reused.",
-    "construction": "B001 banana payload duplicated as a mirrored clutter pair in the new task scene; target and single reference are centered on y=0. Non-movable table, robot, cameras, and ground remain unchanged.",
+    "construction": "B001 banana payload duplicated as a mirrored clutter pair in the new task scene; target and single reference are centered on y=0. Movable-object initial linear/angular velocities are explicitly zeroed to define a settled layout. Non-movable table, robot, cameras, and ground remain unchanged.",
     "exactly_one_bowl": true,
     "movable_inventory": [
       "rubiks_cube",

@@ -60,6 +60,14 @@ def _scene():
     scene.banana_right.init_state.pos = tuple(BASE_POSITIONS["banana_right"])
     scene.bowl.init_state.pos = tuple(BASE_POSITIONS["bowl"])
     scene.rubiks_cube.init_state.pos = tuple(BASE_POSITIONS["rubiks_cube"])
+    # The source USD contains a captured nonzero velocity state.  E003's
+    # registered scene is a settled layout, so clear only the movable
+    # objects' initial velocities; robot/camera/non-movable geometry is untouched.
+    for asset in (scene.banana, scene.banana_right, scene.bowl, scene.rubiks_cube):
+        if hasattr(asset.init_state, "lin_vel"):
+            asset.init_state.lin_vel = (0.0, 0.0, 0.0)
+        if hasattr(asset.init_state, "ang_vel"):
+            asset.init_state.ang_vel = (0.0, 0.0, 0.0)
     return scene
 
 

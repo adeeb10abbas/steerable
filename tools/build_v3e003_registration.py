@@ -61,7 +61,7 @@ def main() -> None:
             "reference_object": "bowl",
             "target_object": "rubiks_cube",
             "positions_robot_base_m": SYMMETRIC_POSITIONS,
-            "construction": "B001 banana payload duplicated as a mirrored clutter pair in the new task scene; target and single reference are centered on y=0. Non-movable table, robot, cameras, and ground remain unchanged.",
+            "construction": "B001 banana payload duplicated as a mirrored clutter pair in the new task scene; target and single reference are centered on y=0. Movable-object initial linear/angular velocities are explicitly zeroed to define a settled layout. Non-movable table, robot, cameras, and ground remain unchanged.",
             "tolerances_m": {"midline": 0.001, "pair_x": 0.001, "pair_y_sum": 0.001},
             "symmetry_gate_required_before_inference": True,
         },
@@ -106,6 +106,7 @@ def main() -> None:
         "symmetry_residual": {"max_m": 0.0, "bowl_abs_y_m": 0.0, "cube_abs_y_m": 0.0, "banana_pair_y_sum_m": 0.0, "banana_pair_abs_x_diff_m": 0.0},
         "exactly_one_bowl": True,
         "robot_and_non_movable_geometry_unchanged": True,
+        "movable_initial_velocity_policy": "zero_linear_and_angular_velocity_for_cube_bowl_and_banana_pair_before_settle",
     }
     write_json(BASE / "symmetry_gate/candidate.json", candidate)
     print(json.dumps({"registration": str(BASE / "registration.json"), "queue_cells": len(queue), "candidate": str(BASE / "symmetry_gate/candidate.json")}, indent=2))

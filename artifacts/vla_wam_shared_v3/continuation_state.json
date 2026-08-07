@@ -1,10 +1,10 @@
 {
   "schema_version": "vla-wam-shared-v3-continuation-v1",
   "study_id": "vla_wam_language_steerability_v3",
-  "updated_at_utc": "2026-08-07T03:11:00Z",
+  "updated_at_utc": "2026-08-07T04:30:58Z",
   "active_branch": "main",
-  "evidence_head": "dd967c30199b0ea208607f71a290fe2690953653",
-  "status": "phase_c_groot_and_edge_seed8500_smokes_valid_remaining_seed_queues_active_nano_unreleased",
+  "evidence_head": "a602b8c7c1fc7d378810aa07eed7a72ec3a9e42f",
+  "status": "phase_c_all_three_seed8500_smokes_valid_remaining_seed_queues_active",
   "authoritative_files": [
     "docs/VLA_WAM_V3_CONTINUATION.md",
     "docs/VLA_WAM_STEERABILITY_V3_PROTOCOL.md",
@@ -111,10 +111,13 @@
     "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/phase_c_v3c001_manifest.json",
     "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/gates/groot_n17_droid_vla/release.json",
     "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/gates/cosmos3_edge_policy_droid/release.json",
+    "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/gates/cosmos3_nano_policy_droid/release.json",
     "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/smoke/groot_n17_droid_vla/evidence_manifest.json",
     "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/smoke/cosmos3_edge_policy_droid/evidence_manifest.json",
+    "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/smoke/cosmos3_nano_policy_droid/evidence_manifest.json",
     "experiments/v3/phase_c_four_phrasings/run_groot_phase_c_queue.sh",
     "experiments/v3/phase_c_four_phrasings/run_cosmos_phase_c_queue.sh",
+    "tools/finalize_v3c_cosmos_retained_seed.py",
     "tools/normalize_pi05_v3b002_infrastructure.py",
     "experiments/v3/pi05_phase_b/contract.py",
     "experiments/v3/pi05_phase_b/runtime.py",
@@ -130,7 +133,7 @@
     "v3": {
       "command": ".venv/bin/python tools/validate_vla_wam_v3_protocol.py",
       "status": "valid",
-      "check_count": 501
+      "check_count": 510
     },
     "v2": {
       "command": ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
@@ -865,10 +868,10 @@
       "unreleased": "Nano V3-B005 is hash-bound but not behaviorally released. DreamZero V3-B003 passed its independent release gate and its 108 cells are authorized but incomplete. V3-B004 failed closed before inference. Every other Phase-B confound ablation beyond completed Nano V3-B001 and pi0.5 V3-B002 requires its own frozen independent release path."
     },
     "phase_c_four_phrasings": {
-      "status": "groot_and_edge_released_seed8500_smokes_valid_remaining_queues_active_nano_not_released",
+      "status": "all_three_models_released_seed8500_smokes_valid_remaining_queues_active",
       "registered_episode_count": 480,
-      "released_episode_count": 320,
-      "completed_valid_behavioral_episode_count": 16,
+      "released_episode_count": 480,
+      "completed_valid_behavioral_episode_count": 24,
       "model_status": {
         "groot_n17_droid_vla": {
           "behavioral_release": true,
@@ -910,18 +913,44 @@
           },
           "active_queue": {
             "pod": "vla-wam-rtx-nano-ali",
-            "pid": 546011,
+            "pid": 556502,
             "execution": "one_client_per_server_serial",
-            "queue_log": "/data/users/ali/vla_wam/raw/v3c/phase_c_v3c001/cosmos3_edge_policy_droid/queue_seed8501_8519_attempt01.log"
+            "queue_log": "/data/users/ali/vla_wam/raw/v3c/phase_c_v3c001/cosmos3_edge_policy_droid/queue_attempt02.log"
           }
         },
         "cosmos3_nano_policy_droid": {
-          "behavioral_release": false,
-          "completed_valid_behavioral_episodes": 0,
-          "reason": "Its 160 registered cells require an independent byte-hash, writer, repeat, and prompt-sensitivity release gate. Neither GR00T nor Edge release transfers to Nano."
+          "behavioral_release": true,
+          "completed_valid_behavioral_episodes": 8,
+          "completed_seed_blocks": [8500],
+          "active_seed_range": [8501, 8519],
+          "seed8500_requested_successes": 7,
+          "seed8500_valid_failures": 1,
+          "seed8500_model_requests": 54,
+          "seed8500_decoded_futures_retained": 54,
+          "release": {
+            "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/gates/cosmos3_nano_policy_droid/release.json",
+            "sha256": "33096c0d1b2efa01d07a7020e3213b27b5de15ac05668faf09a8d9e4a2805cf8"
+          },
+          "smoke_evidence": {
+            "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/smoke/cosmos3_nano_policy_droid/evidence_manifest.json",
+            "sha256": "5c2ca8e13e0529022acff53c232d5d2fa11873683d3be8f6bb97f2fec5473240"
+          },
+          "active_queue": {
+            "client_pod": "vla-wam-fastwam-expansion-ali",
+            "server_pod": "lerobot-b200-4gpu-1-ali",
+            "pid": 262829,
+            "execution": "one_client_per_server_serial",
+            "queue_log": "/data/users/ali/vla_wam/raw/v3c/phase_c_v3c001/cosmos3_nano_policy_droid/queue_seed8501_8519_attempt01.log"
+          },
+          "seed8500_finalization_repair": {
+            "behavioral_rerun": false,
+            "inference_requests_during_repair": 0,
+            "actions_executed_during_repair": 0,
+            "reason": "All eight trajectories and raw artifacts were complete; only deterministic JSONL/report packaging was repaired after the isolated source bundle omitted the shared schema module."
+          }
         }
       },
-      "interpretation_boundary": "The complete seed-8500 blocks validate the two live behavioral bridges and are descriptive only. Population-level phrasing and direction inference requires the prospectively registered seeds 8501-8519."
+      "interpretation_boundary": "The complete seed-8500 blocks validate the three live behavioral bridges and are descriptive only. Population-level phrasing and direction inference requires the prospectively registered seeds 8501-8519."
     },
     "phase_d_stochastic_rollouts": {
       "status": "not_released",
@@ -946,7 +975,7 @@
       ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
       "git diff --check"
     ],
-    "inference_authority": "Do not rerun any valid Phase-A, V3-A002, Nano V3-B001, pi0.5 V3-B002, or Phase-C seed-8500 cell. DreamZero V3-B003 passed its hash-bound four-lane physical and fresh fixed-observation release gate; run only its exact 108 registered cells and preserve whole-seed order. Nano V3-B004 failed closed with zero model requests and must never be run. Nano V3-B005 passed all 42 model-blind physical rows and its exact 210-cell queue is hash-bound; run only its fresh Nano runtime and fixed-observation release gate next, with no behavioral cells before that gate passes. Phase C is released only for the already active GR00T and Cosmos3 Edge seed-8501-8519 queues. Preserve whole-seed serial execution; Edge additionally requires one client per server and exact echoed sampling seeds. Cosmos3 Nano Phase C and all Phase D cells remain unreleased. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or Phase C.",
+    "inference_authority": "Do not rerun any valid Phase-A, V3-A002, Nano V3-B001, pi0.5 V3-B002, or Phase-C seed-8500 cell. DreamZero V3-B003 passed its hash-bound four-lane physical and fresh fixed-observation release gate; run only its exact 108 registered cells and preserve whole-seed order. Nano V3-B004 failed closed with zero model requests and must never be run. Nano V3-B005 passed all 42 model-blind physical rows and its exact 210-cell queue is hash-bound; continue only its active exact queue. Phase C is released only for the already active GR00T, Cosmos3 Edge, and Cosmos3 Nano seed-8501-8519 queues. Preserve whole-seed serial execution; each Cosmos model additionally requires one client per server and exact echoed sampling seeds. Do not rerun the complete Nano seed-8500 behavior after its zero-inference packaging repair. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or Phase C.",
     "publication_note": "Use the compact result summaries and evidence manifests for analysis. Do not infer current study state from the older V2 article, gallery, figures, or chat history."
   }
 }

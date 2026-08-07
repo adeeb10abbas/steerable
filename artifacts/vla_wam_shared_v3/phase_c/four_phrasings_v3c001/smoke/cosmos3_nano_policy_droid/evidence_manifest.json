@@ -1,0 +1,114 @@
+{
+  "schema_version": "vla-wam-shared-v3c-cosmos-behavioral-smoke-evidence-v1",
+  "experiment_id": "V3-C001",
+  "model_id": "cosmos3_nano_policy_droid",
+  "seed": 8500,
+  "status": "whole_seed_behavioral_smoke_passed_remaining_seed_queue_released",
+  "counts": {
+    "registered_cells": 8,
+    "behavioral_episodes": 8,
+    "infrastructure_episodes": 0,
+    "requested_successes": 7,
+    "valid_behavioral_failures": 1,
+    "model_requests": 54,
+    "executed_actions": 1581,
+    "simulator_videos": 8,
+    "decoded_future_arrays": 54
+  },
+  "success_by_prompt_family": {
+    "short_command": {
+      "left": 1,
+      "right": 1
+    },
+    "direct_command": {
+      "left": 1,
+      "right": 1
+    },
+    "goal_as_outcome": {
+      "left": 1,
+      "right": 1
+    },
+    "desired_plus_negated_opposite": {
+      "left": 0,
+      "right": 1
+    }
+  },
+  "failure_taxonomy": {
+    "correct": 7,
+    "pick_failed": 0,
+    "transport_failed": 1,
+    "wrong_side": 0,
+    "release_failed": 0
+  },
+  "matched_reset": {
+    "initial_state_sha256": "d45adfd460a7e915189b9676b16fc081d125768a60f18ffdce17dd8b4da8bb0a",
+    "task_registration_cube_spread_m": 0.0,
+    "task_registration_bowl_spread_m": 0.0,
+    "left_predicate_at_reset": false,
+    "right_predicate_at_reset": false
+  },
+  "runtime_binding": {
+    "release_manifest_sha256": "33096c0d1b2efa01d07a7020e3213b27b5de15ac05668faf09a8d9e4a2805cf8",
+    "execution_plan_sha256": "62facfe7917c2fe7ad1b85cb7d675d040d883e4695f60e324710ab68dd9b1d8a",
+    "runtime_identity_sha256": "d4bc4ab7d03fd1d1041f0bcc384d34321f3bd7b16c0c4cf517b62b8a1a2160e2",
+    "checkpoint_revision": "6706d7680581c255ff61e0f3bb49d90eac55c79e",
+    "one_client_per_server": true,
+    "client_execution": "serial",
+    "sampling_seed_echo_required": true
+  },
+  "client_lane": {
+    "pod": "vla-wam-fastwam-expansion-ali",
+    "pod_uid": "68e4b518-a96d-4935-818f-6d975811bbc8",
+    "gpu_uuid": "GPU-70318cf0-9d68-4c1b-9a94-d85d3c4af002",
+    "gpu_name": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+    "renderer": "realtime RTX Vulkan balanced",
+    "pvc_write_gate": true
+  },
+  "raw_validation": {
+    "all_episode_jsonl_rows_schema_valid": true,
+    "all_action_arrays_shape_n_by_8": true,
+    "all_state_trace_rows_equal_actions_plus_one": true,
+    "all_viewport_videos_decodable": true,
+    "video_frame_counts": [96, 191, 213, 449, 212, 128, 188, 96],
+    "action_counts": [97, 192, 214, 450, 213, 129, 189, 97],
+    "decoded_future_count": 54,
+    "decoded_future_shape": [33, 528, 640, 3],
+    "all_decoded_future_hashes_shapes_and_seed_echo_match_trace": true
+  },
+  "compact_files": {
+    "behavioral_bridge_preflight_seed8500.json": "aa99f098dbad5d75bd0f0f1e70288b4deccc40bb0a79951ff6c9b71b4c9aa280",
+    "live_task_registration_seed8500.json": "be1afa268ad62729c657ee270036749763ad05a788938c66425464c5dab9a753",
+    "whole_seed_smoke_seed8500.json": "8bf4d516bc0a7f2ef27a2f79546d1bcac4135343f2fa57181ae41ea8755370cd",
+    "offline_finalization_repair_seed8500.json": "59269feec1327e032cc33be6cac11358d4f2e042077a188d33146e75283bc618",
+    "seed8500_integrity_validation.json": "01aa905551f6e0f577935df23800dba3b1310ac15c6ffd3a0aa9748216770c9c"
+  },
+  "source_code": {
+    "behavioral_bridge_source_commit": "beafd72",
+    "queue_launcher_sha256": "3768583107a186053984e3adeb3e1e849893f919ad74787d5d3c283fb9f44752",
+    "episode_schema_sha256": "f71c1ab5e499a118e074b304e6b8aef84f8beb01ac3e670692cb2597efe0197c",
+    "offline_finalizer_sha256": "0bd426c6203809817970c734e1762689f536a10d27fa3d56f0e4c8aa2125b6cf"
+  },
+  "raw_retention": {
+    "behavioral_root": "/data/users/ali/vla_wam/raw/v3c/behavioral/v3-c001/cosmos3_nano_policy_droid/seed8500",
+    "guard_root": "/data/users/ali/vla_wam/raw/v3c/phase_c_v3c001/cosmos3_nano_policy_droid/behavioral_seed8500_attempt01",
+    "retained_on_pvc": true,
+    "committed_to_git": false,
+    "contents": [
+      "eight viewport MP4s",
+      "eight executed-action arrays",
+      "fifty-four complete returned action chunks",
+      "fifty-four complete 33-frame decoded future arrays",
+      "eight complete state traces",
+      "eight schema-validated behavioral JSONL rows",
+      "thermal-process-group event log"
+    ]
+  },
+  "finalization_repair": {
+    "behavioral_rerun": false,
+    "inference_requests_during_repair": 0,
+    "actions_executed_during_repair": 0,
+    "excluded_infrastructure_episode_count": 0,
+    "reason": "The live bridge completed all eight trajectories and retained all raw artifacts, then the isolated deployment omitted the shared JSONL schema module at deterministic finalization. The retained trajectories were packaged and revalidated offline without contacting the model or simulator."
+  },
+  "interpretation_boundary": "This one-seed smoke validates the serial prompt-aware action/future bridge and preserves descriptive outcomes. It does not support a population-level phrasing or direction claim; the prospectively registered seeds 8501-8519 remain required."
+}

@@ -35,6 +35,14 @@ REQUIRED = {
     "phase_c_runner": "experiments/v3/phase_c_four_phrasings/runner.py",
     "phase_c_readme": "experiments/v3/phase_c_four_phrasings/README.md",
     "phase_c_test": "tests/test_phase_c_four_phrasings.py",
+    "phase_c_nano_release": f"{V3}/phase_c/four_phrasings_v3c001/gates/cosmos3_nano_policy_droid/release.json",
+    "phase_c_nano_smoke_preflight": f"{V3}/phase_c/four_phrasings_v3c001/smoke/cosmos3_nano_policy_droid/behavioral_bridge_preflight_seed8500.json",
+    "phase_c_nano_smoke_registration": f"{V3}/phase_c/four_phrasings_v3c001/smoke/cosmos3_nano_policy_droid/live_task_registration_seed8500.json",
+    "phase_c_nano_smoke_report": f"{V3}/phase_c/four_phrasings_v3c001/smoke/cosmos3_nano_policy_droid/whole_seed_smoke_seed8500.json",
+    "phase_c_nano_smoke_repair": f"{V3}/phase_c/four_phrasings_v3c001/smoke/cosmos3_nano_policy_droid/offline_finalization_repair_seed8500.json",
+    "phase_c_nano_smoke_integrity": f"{V3}/phase_c/four_phrasings_v3c001/smoke/cosmos3_nano_policy_droid/seed8500_integrity_validation.json",
+    "phase_c_nano_smoke_evidence": f"{V3}/phase_c/four_phrasings_v3c001/smoke/cosmos3_nano_policy_droid/evidence_manifest.json",
+    "phase_c_cosmos_retained_finalizer": "tools/finalize_v3c_cosmos_retained_seed.py",
     "stochastic": f"{V3}/stochastic_rollout_registry.json",
     "confound_calibration": f"{V3}/confound_fixture_calibration_registry.json",
     "phase_a_queue": f"{V3}/phase_a_cells.jsonl",
@@ -1722,6 +1730,11 @@ def validate(root: Path) -> list[str]:
     phase_c_cells = load_jsonl(paths["phase_c_cells"])
     phase_c_fixed_requests = load_jsonl(paths["phase_c_fixed_requests"])
     phase_c_manifest = load(paths["phase_c_manifest"])
+    phase_c_nano_release = load(paths["phase_c_nano_release"])
+    phase_c_nano_smoke_report = load(paths["phase_c_nano_smoke_report"])
+    phase_c_nano_smoke_repair = load(paths["phase_c_nano_smoke_repair"])
+    phase_c_nano_smoke_integrity = load(paths["phase_c_nano_smoke_integrity"])
+    phase_c_nano_smoke_evidence = load(paths["phase_c_nano_smoke_evidence"])
     stochastic_registry = load(paths["stochastic"])
     calibration_registry = load(paths["confound_calibration"])
     phase_a_manifest = load(paths["phase_a_manifest"])
@@ -4054,6 +4067,40 @@ def validate(root: Path) -> list[str]:
         "V3-C001 runtime scaffolding fails closed and emits only released whole-seed plans",
         checks,
     )
+    nano_compact_hashes = phase_c_nano_smoke_evidence.get("compact_files", {})
+    require(
+        phase_c_nano_release.get("behavioral_release") is True
+        and phase_c_nano_release.get("model_id") == "cosmos3_nano_policy_droid"
+        and phase_c_nano_smoke_report.get("passed") is True
+        and phase_c_nano_smoke_report.get("behavioral_episode_count") == 8
+        and phase_c_nano_smoke_report.get("infrastructure_episode_count") == 0
+        and phase_c_nano_smoke_report.get("model_request_count") == 54
+        and len(phase_c_nano_smoke_report.get("cells", [])) == 8
+        and phase_c_nano_smoke_integrity.get("passed") is True
+        and phase_c_nano_smoke_integrity.get("counts", {}).get("behavioral_episodes") == 8
+        and phase_c_nano_smoke_integrity.get("counts", {}).get("simulator_videos") == 8
+        and phase_c_nano_smoke_integrity.get("counts", {}).get("decoded_future_arrays") == 54
+        and phase_c_nano_smoke_repair.get("inference_requests_during_repair") == 0
+        and phase_c_nano_smoke_repair.get("actions_executed_during_repair") == 0
+        and phase_c_nano_smoke_evidence.get("status")
+        == "whole_seed_behavioral_smoke_passed_remaining_seed_queue_released"
+        and nano_compact_hashes.get(paths["phase_c_nano_smoke_preflight"].name)
+        == sha256(paths["phase_c_nano_smoke_preflight"])
+        and nano_compact_hashes.get(paths["phase_c_nano_smoke_registration"].name)
+        == sha256(paths["phase_c_nano_smoke_registration"])
+        and nano_compact_hashes.get(paths["phase_c_nano_smoke_report"].name)
+        == sha256(paths["phase_c_nano_smoke_report"])
+        and nano_compact_hashes.get(paths["phase_c_nano_smoke_repair"].name)
+        == sha256(paths["phase_c_nano_smoke_repair"])
+        and nano_compact_hashes.get(paths["phase_c_nano_smoke_integrity"].name)
+        == sha256(paths["phase_c_nano_smoke_integrity"])
+        and phase_c_nano_smoke_evidence.get("source_code", {}).get(
+            "offline_finalizer_sha256"
+        )
+        == sha256(paths["phase_c_cosmos_retained_finalizer"]),
+        "Nano Phase-C smoke is complete, hash-bound, and repaired without new inference",
+        checks,
+    )
     block = phases["D_16_rollout_stochastic_block"]
     require(block["status"] == "separately_gated_not_released_by_phase_a" and block["registry"] == f"{V3}/stochastic_rollout_registry.json", "Phase D is separately gated through its registry", checks)
     require(stochastic_registry["schema_version"] == "vla-wam-shared-v3-stochastic-rollout-registry-v1" and stochastic_registry["shared_sampling_seed_indices"] == list(range(16)), "Phase D freezes sixteen shared sampling-seed indices", checks)
@@ -4211,8 +4258,8 @@ def validate(root: Path) -> list[str]:
         "not historical recovery" in continuation_doc
         and "must remain separate" in continuation_doc
         and "must not be rerun" in continuation_doc
-        and "Phase C: GR00T N1.7 and Cosmos3 Edge" in continuation_doc
-        and "Cosmos3 Nano's 160 registered cells remain unreleased" in continuation_doc
+        and "Phase C: GR00T N1.7, Cosmos3 Edge, and Cosmos3 Nano" in continuation_doc
+        and "The repair made zero model requests" in continuation_doc
         and "do not support population-level claims" in continuation_doc,
         "V3 continuation preserves non-pooling, no-rerun, historical-blocker, and Phase-C boundaries",
         checks,

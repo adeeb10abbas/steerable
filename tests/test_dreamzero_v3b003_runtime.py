@@ -38,3 +38,11 @@ def test_initial_reset_sample_does_not_mark_behavior_as_executed() -> None:
     ).read_text()
     assert "def _sample(self, action_step: int, *, persist: bool = True)" in source
     assert "self._sample(0, persist=False)" in source
+
+
+def test_queue_restores_the_validated_isaac_and_glvnd_library_path() -> None:
+    source = (
+        ROOT / "experiments" / "v3" / "dreamzero_phase_b" / "queue.py"
+    ).read_text()
+    assert "/data/users/ali/glvnd/lib" in source
+    assert '"LD_LIBRARY_PATH": FROZEN_LD_LIBRARY_PATH' in source

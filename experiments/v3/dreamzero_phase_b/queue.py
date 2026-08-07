@@ -21,6 +21,13 @@ from experiments.v3.dreamzero_phase_b.contract import (
 
 
 FROZEN_VK_ICD = "/etc/vulkan/icd.d/nvidia_icd.json"
+FROZEN_LD_LIBRARY_PATH = (
+    "/data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/"
+    "usr/lib/x86_64-linux-gnu:"
+    "/data/users/ali/glvnd/lib:"
+    "/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:"
+    "/usr/lib/x86_64-linux-gnu"
+)
 
 
 def _attempt(raw_root: Path, cell_id: str) -> Path:
@@ -152,6 +159,7 @@ def main() -> None:
         environment.pop("DISPLAY", None)
         environment.update({key: str(value) for key, value in caches.items()})
         environment.update({
+            "LD_LIBRARY_PATH": FROZEN_LD_LIBRARY_PATH,
             "OMNI_KIT_ACCEPT_EULA": "YES",
             "NVIDIA_DRIVER_CAPABILITIES": "all",
             "VK_ICD_FILENAMES": FROZEN_VK_ICD,

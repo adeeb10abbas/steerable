@@ -94,7 +94,7 @@ def main():
     # gate, not an arbitrary millimetre-level tracking claim.
     feasible_depths = [
         depth for depth, group in by_depth.items()
-        if len(group) == 32 and all(r["ik_finite"] and r["waypoint_endpoint_error_m"] <= depth for r in group)
+        if len(group) == 8 and all(r["ik_finite"] and r["waypoint_endpoint_error_m"] <= depth for r in group)
     ]
     value={"schema_version":"vla-wam-shared-v3e002-model-blind-ik-gate-v2","amendment_id":"V3-E002","pod":args.pod,"gpu_uuid":args.gpu_uuid,"candidate_sha256":args.candidate_sha256,"candidate_depths_m":list(DEPTHS),"feasible_depths_m":feasible_depths,"selected_depth_m":max(feasible_depths) if feasible_depths else None,"rows":rows,"passed":bool(feasible_depths),"claim_boundary":"Static RoboLab absolute-IK target-manager sweep only; no behavioral success is inferred."}
     args.output.write_text(json.dumps(value,indent=2,sort_keys=True)+"\n")

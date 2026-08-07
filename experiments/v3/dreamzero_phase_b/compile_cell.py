@@ -6,7 +6,9 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 from pathlib import Path
+from typing import Any
 
 from experiments.v3.dreamzero_droid.adapter import build_behavioral_record
 from experiments.v3.dreamzero_phase_b.contract import (
@@ -14,6 +16,87 @@ from experiments.v3.dreamzero_phase_b.contract import (
     load_cell,
     sha256_file,
 )
+
+
+LEGACY_FAILURE_STAGES = {
+    "success",
+    "no_object_interaction",
+    "object_moved_no_verified_pickup",
+    "picked_never_entered_requested_region",
+    "entered_requested_region_not_released",
+}
+V3_FAILURE_TAXONOMY = {
+    "correct",
+    "pick_failed",
+    "transport_failed",
+    "wrong_side",
+    "release_failed",
+}
+
+
+def _first_sustained(mask: list[bool], count: int = 3) -> int | None:
+    run = 0
+    for index, value in enumerate(mask):
+        run = run + 1 if value else 0
+        if run == count:
+            return index - count + 1
+    return None
+
+
+def _xyz(sample: dict[str, Any], key: str) -> tuple[float, float, float]:
+    value = sample.get(key)
+    if not isinstance(value, list) or len(value) != 3:
+        raise ValueError(f"retained capture sample has invalid {key}")
+    return tuple(float(item) for item in value)
+
+
+def _normalize_frozen_failure_stage(capture: dict[str, Any]) -> dict[str, Any]:
+    """Repair only the known compile-time taxonomy/stage namespace mix-up.
+
+    The retained capture remains immutable.  The returned in-memory copy derives
+    the exact v2 DROID stage from its raw state samples before schema validation.
+    """
+
+    stage = capture.get("frozen_failure_stage")
+    if stage in LEGACY_FAILURE_STAGES:
+        return capture
+    if stage not in V3_FAILURE_TAXONOMY:
+        raise ValueError(f"unknown frozen_failure_stage {stage!r}")
+    samples = capture.get("samples")
+    if not isinstance(samples, list) or not samples:
+        raise ValueError("cannot derive legacy stage without retained state samples")
+    if capture.get("requested_success") is True:
+        derived = "success"
+    else:
+        object_xyz = [_xyz(sample, "object_xyz") for sample in samples]
+        reference_xyz = [_xyz(sample, "reference_xyz") for sample in samples]
+        initial = object_xyz[0]
+        moved = [math.dist(initial, point) >= 0.01 for point in object_xyz]
+        pickup = [point[2] - initial[2] >= 0.03 for point in object_xyz]
+        relation = capture.get("requested_relation")
+        if relation not in {"left", "right"}:
+            raise ValueError("retained capture has invalid requested_relation")
+        direction = 1.0 if relation == "left" else -1.0
+        entered = False
+        for obj, ref in zip(object_xyz, reference_xyz):
+            forward = obj[0] - ref[0]
+            lateral = obj[1] - ref[1]
+            distance = math.hypot(forward, lateral)
+            entered |= (
+                distance > 1e-8
+                and direction * lateral / distance >= math.cos(math.radians(45.0))
+            )
+        if _first_sustained(moved) is None:
+            derived = "no_object_interaction"
+        elif _first_sustained(pickup) is None:
+            derived = "object_moved_no_verified_pickup"
+        elif entered:
+            derived = "entered_requested_region_not_released"
+        else:
+            derived = "picked_never_entered_requested_region"
+    normalized = dict(capture)
+    normalized["frozen_failure_stage"] = derived
+    return normalized
 
 
 def main() -> None:
@@ -38,7 +121,7 @@ def main() -> None:
     capture_path = Path(export["capture_path"])
     trace_path = Path(export["trace_manifest_path"])
     video_path = Path(export["viewport_video_path"])
-    capture = json.loads(capture_path.read_text())
+    capture = _normalize_frozen_failure_stage(json.loads(capture_path.read_text()))
     phase_a_shape = {
         **cell.row,
         "pair_id": cell.row["matched_block_id"],

@@ -2,6 +2,9 @@
 
 from pathlib import Path
 
+from experiments.v3.dreamzero_phase_b.compile_cell import (
+    _normalize_frozen_failure_stage,
+)
 from experiments.v3.dreamzero_phase_b.contract import load_cells
 
 
@@ -56,3 +59,22 @@ def test_phase_b_bridge_keeps_legacy_stage_separate_from_v3_taxonomy() -> None:
     assert 'failure_category = "correct"' in source
     assert '"frozen_failure_stage": failure_stage' in source
     assert '"failure_taxonomy": failure_category' in source
+
+
+def test_compiler_recovers_known_taxonomy_stage_mixup_from_retained_samples() -> None:
+    capture = {
+        "frozen_failure_stage": "correct",
+        "requested_success": True,
+        "requested_relation": "right",
+        "samples": [
+            {"object_xyz": [0.3, -0.2, 0.1], "reference_xyz": [0.4, 0.0, 0.1]}
+        ],
+    }
+    normalized = _normalize_frozen_failure_stage(capture)
+    assert normalized["frozen_failure_stage"] == "success"
+    assert capture["frozen_failure_stage"] == "correct"
+
+
+def test_compiler_preserves_already_valid_legacy_stage() -> None:
+    capture = {"frozen_failure_stage": "no_object_interaction"}
+    assert _normalize_frozen_failure_stage(capture) is capture

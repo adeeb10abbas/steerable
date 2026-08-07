@@ -257,6 +257,20 @@ def main() -> None:
                             velocity = np.asarray(_numeric(world.get_velocity(name, env_id=0)))
                             maxima[name]["linear_m_s"] = max(maxima[name]["linear_m_s"], float(np.max(np.abs(velocity[:3]))))
                             maxima[name]["angular_rad_s"] = max(maxima[name]["angular_rad_s"], float(np.max(np.abs(velocity[3:]))))
+                    capture_root = os.environ.get("V3E_CAPTURE_OBSERVATION_DIR")
+                    if capture_root:
+                        capture_path = Path(capture_root) / f"settled_observation_{arm}_{relation}.npz"
+                        capture_path.parent.mkdir(parents=True, exist_ok=True)
+                        arrays = {
+                            f"image_obs/{name}": np.asarray(value[0].detach().cpu().numpy(), dtype=np.uint8)
+                            for name, value in obs["image_obs"].items()
+                        }
+                        arrays.update({
+                            f"proprio_obs/{name}": np.asarray(value[0].detach().cpu().numpy())
+                            for name, value in obs["proprio_obs"].items()
+                        })
+                        np.savez_compressed(capture_path, **arrays)
+                        print(f"[v3e-preflight] settled_observation_written {capture_path}", flush=True)
                     if any(value["linear_m_s"] > .02 or value["angular_rad_s"] > .2 for value in maxima.values()):
                         raise RuntimeError("object failed registered 60+15 stability tolerance")
                     world = get_world(env)

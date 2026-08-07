@@ -84,6 +84,7 @@ REQUIRED = {
     "pi05_v3d001_compiler": "experiments/v3/pi05_stochastic_v3d001/compile_cell.py",
     "pi05_v3d001_pair_compiler": "experiments/v3/pi05_stochastic_v3d001/compile_pair.py",
     "pi05_v3d001_queue": "experiments/v3/pi05_stochastic_v3d001/queue.py",
+    "pi05_v3d001_sequential_supervisor": "experiments/v3/pi05_stochastic_v3d001/sequential_supervisor.py",
     "pi05_v3d001_readme": "experiments/v3/pi05_stochastic_v3d001/README.md",
     "pi05_v3d001_test": "tests/test_pi05_v3d001_runtime.py",
     "document": "docs/VLA_WAM_STEERABILITY_V3_PROTOCOL.md",

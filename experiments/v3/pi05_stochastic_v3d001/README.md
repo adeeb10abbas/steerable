@@ -31,3 +31,9 @@ python -m experiments.v3.pi05_stochastic_v3d001.queue run-queue \
 
 The bridge and compiler both revalidate every committed release/gate hash and
 the exact Phase-A runtime before inference or denominator admission.
+
+When the two additional exact ali RTX pods remain unschedulable, run
+`sequential_supervisor.py` behind lane 0. It waits for all 144 lane-0 cells
+and 72 pair manifests to validate before launching lanes 1 and 2 sequentially.
+It fails closed if lane 0 exits early or either subsequent queue returns a
+nonzero status; it never infers completion from a PID alone.

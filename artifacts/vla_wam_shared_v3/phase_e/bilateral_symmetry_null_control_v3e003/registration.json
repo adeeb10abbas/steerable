@@ -1,0 +1,2436 @@
+{
+  "amendment_id": "V3-E003",
+  "analysis_plan": {
+    "depth": [
+      "mean and median RIGHT-minus-LEFT requested-side depth",
+      "20,000 matched-seed bootstrap 95% CI",
+      "exact two-sided sign test and sign counts",
+      "TOST or CI against 0.05 m margin"
+    ],
+    "endpoint": [
+      "paired endpoint shift mean and median",
+      "bootstrap 95% CI"
+    ],
+    "failure_taxonomy": [
+      "pick_failed",
+      "transport_failed",
+      "wrong_side",
+      "release_failed",
+      "correct"
+    ],
+    "missingness": "Infrastructure-invalid attempts are separate; NR remains null and is never imputed.",
+    "success": [
+      "Wilson 95% interval",
+      "exact McNemar with discordant counts"
+    ]
+  },
+  "arena": "droid_robolab",
+  "behavioral_episode_count_before_registration": 0,
+  "design": {
+    "cells": 54,
+    "cells_per_seed": 2,
+    "controller_and_predicate_frozen": true,
+    "held_fixed": [
+      "robot base",
+      "cameras",
+      "all non-movable scene geometry",
+      "controller",
+      "cone definition",
+      "prompt bytes"
+    ],
+    "matched_seed_count": 27,
+    "matched_seeds": [
+      9400,
+      9401,
+      9402,
+      9403,
+      9404,
+      9405,
+      9406,
+      9407,
+      9408,
+      9409,
+      9410,
+      9411,
+      9412,
+      9413,
+      9414,
+      9415,
+      9416,
+      9417,
+      9418,
+      9419,
+      9420,
+      9421,
+      9422,
+      9423,
+      9424,
+      9425,
+      9426
+    ],
+    "prompts": {
+      "left": "Put the Rubik's cube to the left of the bowl.",
+      "right": "Put the Rubik's cube to the right of the bowl."
+    },
+    "relations": [
+      "left",
+      "right"
+    ],
+    "seed_source": "exact V3-B001 seed list and per-seed source randomization keys",
+    "sign_convention": "+Y = robot-left",
+    "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation"
+  },
+  "equivalence_margins": {
+    "binary_gap_abs": 0.14814814814814814,
+    "registered_before_inference": true,
+    "requested_side_depth_contrast_abs_m": 0.05
+  },
+  "model_id": "pi05_current_stack_droid",
+  "model_request_count_before_registration": 0,
+  "phase": "E_publication_critical_controls",
+  "queue": [
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9400:symmetric:left",
+      "environment_seed": 9400,
+      "execution_order_index_within_seed": 1,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9400",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "relation": "left",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9400,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9400:position_mirrored:right",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "dd50f1dc6bfebbee2ddb532a1015cef1bfd32519c8c89aa8c64390eb3b9e1bb4",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9400:symmetric:right",
+      "environment_seed": 9400,
+      "execution_order_index_within_seed": 2,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9400",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+      "relation": "right",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9400,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9400:control:left",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "d18c385f3521b7b542ff21d1ccc4e0a916f2fa1bc63b3cb16db7c9fe4bc66efd",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9401:symmetric:left",
+      "environment_seed": 9401,
+      "execution_order_index_within_seed": 1,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9401",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "relation": "left",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9401,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9401:position_mirrored:left",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "1e1cdd0bedbdd0047f94780b28dc1ed90fbbbd1f2dd13070f8164ddccf5c2a6b",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9401:symmetric:right",
+      "environment_seed": 9401,
+      "execution_order_index_within_seed": 2,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9401",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+      "relation": "right",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9401,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9401:control:right",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "f607cca8e874aa3a4267b3c0f476e2666874c039e006fe77752d68afea84320e",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9402:symmetric:left",
+      "environment_seed": 9402,
+      "execution_order_index_within_seed": 1,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9402",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "relation": "left",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9402,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9402:control:right",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "ba465f785fe935c04f8f5ba3d49fb473adc0410e10221eec774949e02c4a9e51",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9402:symmetric:right",
+      "environment_seed": 9402,
+      "execution_order_index_within_seed": 2,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9402",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+      "relation": "right",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9402,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9402:position_mirrored:right",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "1eaa49eb7d9520f24dd60f0e86c4578d115b5a7dbef08da3a09e8f76a6ac9216",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9403:symmetric:left",
+      "environment_seed": 9403,
+      "execution_order_index_within_seed": 1,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9403",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "relation": "left",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9403,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9403:control:left",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "0fe6abebc0158b8bbf470eae4d3b50c14a941c9d75055c19b27c86d1a8f5f7da",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9403:symmetric:right",
+      "environment_seed": 9403,
+      "execution_order_index_within_seed": 2,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9403",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+      "relation": "right",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9403,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9403:position_mirrored:left",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "02e1ac7a3bf2e459a156b2e6551d4e89fd5e529818f5c7166c31b5cf947e32f8",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9404:symmetric:left",
+      "environment_seed": 9404,
+      "execution_order_index_within_seed": 1,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9404",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "relation": "left",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9404,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9404:control:right",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "285c46bd1e30ed3cf476a98582bc022706131da112c424ff0f28ecb67d49b39a",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9404:symmetric:right",
+      "environment_seed": 9404,
+      "execution_order_index_within_seed": 2,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9404",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+      "relation": "right",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9404,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9404:position_mirrored:right",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "4bd03f2a6e974b78ab97fe95a7d6e36077a4d32846404130921e30a34a1c0b02",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9405:symmetric:left",
+      "environment_seed": 9405,
+      "execution_order_index_within_seed": 1,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9405",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "relation": "left",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9405,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9405:control:left",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "1390959ac8bb5f9aeffe33feb3ebcbf0e34ce9cd6d4d2ab44c63acc61ecef7b7",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9405:symmetric:right",
+      "environment_seed": 9405,
+      "execution_order_index_within_seed": 2,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9405",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+      "relation": "right",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9405,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9405:control:right",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "a4d4ccc978e9882ec6f92e7011b2129f357526a66b4eebc5fb1118f2cdfa61da",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9406:symmetric:left",
+      "environment_seed": 9406,
+      "execution_order_index_within_seed": 1,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9406",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "relation": "left",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9406,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9406:position_mirrored:right",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "8594f5b2db38ea208bc2a2d0ffeef44e8e36594af602bdbd62310c23772864be",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9406:symmetric:right",
+      "environment_seed": 9406,
+      "execution_order_index_within_seed": 2,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9406",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+      "relation": "right",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9406,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9406:position_mirrored:left",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "8b20bf0151d1e0ffe804958d9356719c76fb04ff4bfb9b63a198dd307d08ad19",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9407:symmetric:left",
+      "environment_seed": 9407,
+      "execution_order_index_within_seed": 1,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9407",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "relation": "left",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9407,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9407:position_mirrored:left",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "6f91e88acd13a125c992b66ce6595e09677f98494ea66cc1fe64363ff4946354",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9407:symmetric:right",
+      "environment_seed": 9407,
+      "execution_order_index_within_seed": 2,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9407",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+      "relation": "right",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9407,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9407:control:left",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "5087815581eb378b5b5eac6b3d66bea9b92367b256e5744009ad4121f9f52070",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9408:symmetric:left",
+      "environment_seed": 9408,
+      "execution_order_index_within_seed": 1,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9408",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "relation": "left",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9408,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9408:control:left",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "14c28941c508fed29104c31aaa96562af0a96ab1a436ac14a46ed5131bfd825f",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9408:symmetric:right",
+      "environment_seed": 9408,
+      "execution_order_index_within_seed": 2,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9408",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+      "relation": "right",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9408,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9408:position_mirrored:left",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "89e28e3017f068882b1d582687e254c83fd432b886fb6a14ca2975eeef0ced7f",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9409:symmetric:left",
+      "environment_seed": 9409,
+      "execution_order_index_within_seed": 1,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9409",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "relation": "left",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9409,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9409:position_mirrored:right",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "e8b9a274ed5cf4b6f270fb198db4406e49ba1750a2f75ea11f5226d99107fdcd",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9409:symmetric:right",
+      "environment_seed": 9409,
+      "execution_order_index_within_seed": 2,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9409",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+      "relation": "right",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9409,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9409:control:right",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "2c0d2d550df5de67f49127b9608534bf8034d25da45ae02a994d2741a02b9f77",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9410:symmetric:left",
+      "environment_seed": 9410,
+      "execution_order_index_within_seed": 1,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9410",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "relation": "left",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9410,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9410:control:right",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "6a002150ff9b2a1ebaae8090687255ef879396b9dc8f3afe6168479db8df342e",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9410:symmetric:right",
+      "environment_seed": 9410,
+      "execution_order_index_within_seed": 2,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9410",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+      "relation": "right",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9410,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9410:control:left",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "2f47426e044eef4c4c0eb09383293eed96796f4cdba3b199d0f59f8f5b9d9de0",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9411:symmetric:left",
+      "environment_seed": 9411,
+      "execution_order_index_within_seed": 1,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9411",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "relation": "left",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9411,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9411:position_mirrored:left",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "f09ea1f1ed456f1af8746ee95409649a19a0102652b55e06af4192ac10ab7b49",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9411:symmetric:right",
+      "environment_seed": 9411,
+      "execution_order_index_within_seed": 2,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9411",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+      "relation": "right",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9411,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9411:position_mirrored:right",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "17e785afe666bee836d95f32e7934434ef833aa7b31ed3c2644a99f49ac1fc44",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9412:symmetric:left",
+      "environment_seed": 9412,
+      "execution_order_index_within_seed": 1,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9412",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "relation": "left",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9412,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9412:position_mirrored:left",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "d48fc5ea3d88addc9954c7670f54eee3b42aacb44b01602f79c506bd105a3694",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9412:symmetric:right",
+      "environment_seed": 9412,
+      "execution_order_index_within_seed": 2,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9412",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+      "relation": "right",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9412,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9412:control:left",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "08a911f2e1866b97b348cea4cc252c50c719b66c96d3547a56606fb4006f1bdd",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9413:symmetric:left",
+      "environment_seed": 9413,
+      "execution_order_index_within_seed": 1,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9413",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "relation": "left",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9413,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9413:control:right",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "21f4f4fbf1888919ec74c463db63e98ae30c381119ac6d50bbcfd98afcfac987",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9413:symmetric:right",
+      "environment_seed": 9413,
+      "execution_order_index_within_seed": 2,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9413",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+      "relation": "right",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9413,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9413:position_mirrored:left",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "30ce3cd338018862fb19d23ed46f70a3328a1fe98aca21be7c6783a1ee61ed69",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9414:symmetric:left",
+      "environment_seed": 9414,
+      "execution_order_index_within_seed": 1,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9414",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "relation": "left",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9414,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9414:position_mirrored:right",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "e71ba675d20728273bf7f2206d571e9744e3356bd0f36d1f50cc8a88cb797b69",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9414:symmetric:right",
+      "environment_seed": 9414,
+      "execution_order_index_within_seed": 2,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9414",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+      "relation": "right",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9414,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9414:control:right",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "33727465a16076c88931959a21e4974702183c50cffda26072158b79f1cfbd0b",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9415:symmetric:left",
+      "environment_seed": 9415,
+      "execution_order_index_within_seed": 1,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9415",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "relation": "left",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9415,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9415:control:left",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "03e13fec324f905c753969491431e6ddc12b01b54a79957906ba534e4aadfb59",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9415:symmetric:right",
+      "environment_seed": 9415,
+      "execution_order_index_within_seed": 2,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9415",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+      "relation": "right",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9415,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9415:position_mirrored:right",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "9d84a479cc8e3b886254bf6178beb50056f01850a7002f0f74da7e6231469e4d",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9416:symmetric:left",
+      "environment_seed": 9416,
+      "execution_order_index_within_seed": 1,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9416",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "relation": "left",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9416,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9416:position_mirrored:right",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "6814a904167dd294fdf20bd3e7458adfca4a1a3a798e73e0d8354fb705cab003",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9416:symmetric:right",
+      "environment_seed": 9416,
+      "execution_order_index_within_seed": 2,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9416",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+      "relation": "right",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9416,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9416:control:right",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "90db17109795ffe54d1916b63f55ac373490fc7ca89767d67b9ee54a73b098ab",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9417:symmetric:left",
+      "environment_seed": 9417,
+      "execution_order_index_within_seed": 1,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9417",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "relation": "left",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9417,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9417:position_mirrored:left",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "e30781c1525e496c4424d728449b6f4fac8f8c12bb3860e9faacfd2c69e140ba",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9417:symmetric:right",
+      "environment_seed": 9417,
+      "execution_order_index_within_seed": 2,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9417",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+      "relation": "right",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9417,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9417:control:left",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "0249c976b00fb52fead8c426c91ffc984808eda56dc613934e23ea68455104e9",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9418:symmetric:left",
+      "environment_seed": 9418,
+      "execution_order_index_within_seed": 1,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9418",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "relation": "left",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9418,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9418:control:left",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "e173e91876daa5a83544037d71cd93f224d761d1ef4b7366b9ab53de1de45a31",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9418:symmetric:right",
+      "environment_seed": 9418,
+      "execution_order_index_within_seed": 2,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9418",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+      "relation": "right",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9418,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9418:position_mirrored:right",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "06fe5bb5ac2480d0999fd8bae2952e1c46c16d0adee6275ba0dcf6d8ef507450",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9419:symmetric:left",
+      "environment_seed": 9419,
+      "execution_order_index_within_seed": 1,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9419",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "relation": "left",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9419,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9419:control:right",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "b20bc241476791f28b81fa3739e53f3a07bacc7951ffc1ce47c1e7a8fb3f22fa",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9419:symmetric:right",
+      "environment_seed": 9419,
+      "execution_order_index_within_seed": 2,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9419",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+      "relation": "right",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9419,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9419:position_mirrored:left",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "655aaa7b50f7b0e0a6db0ce28aab27ca30a4b24f11d55bc1648eecba2e31fdf0",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9420:symmetric:left",
+      "environment_seed": 9420,
+      "execution_order_index_within_seed": 1,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9420",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "relation": "left",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9420,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9420:control:right",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "36eaaa3d6d5f454d2cf2b7085f2774007aba2f6d946609992683d5db450423bc",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9420:symmetric:right",
+      "environment_seed": 9420,
+      "execution_order_index_within_seed": 2,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9420",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+      "relation": "right",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9420,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9420:position_mirrored:right",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "f59f9fdfae67e7733810bc670b6c1312f1010c36e80d2aef134201efa1cd1e6e",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9421:symmetric:left",
+      "environment_seed": 9421,
+      "execution_order_index_within_seed": 1,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9421",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "relation": "left",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9421,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9421:position_mirrored:right",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "a8a5acf43120aeb333d833233dcd4d3f51916ad4fedb3e2199069bdce020849f",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9421:symmetric:right",
+      "environment_seed": 9421,
+      "execution_order_index_within_seed": 2,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9421",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+      "relation": "right",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9421,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9421:position_mirrored:left",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "17f902df75be3758d1253b74261a46c54e5bddf4f5c67d6bf98684a83b127ab0",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9422:symmetric:left",
+      "environment_seed": 9422,
+      "execution_order_index_within_seed": 1,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9422",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "relation": "left",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9422,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9422:control:left",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "06e35308f5cac5ec470b93447a9ad2f04119349882e85df75a09afb340b6fa93",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9422:symmetric:right",
+      "environment_seed": 9422,
+      "execution_order_index_within_seed": 2,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9422",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+      "relation": "right",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9422,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9422:control:right",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "be448275a4352c769ef6869345dfbdc844350c928517a2ba4bd3a6ce96edf6ba",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9423:symmetric:left",
+      "environment_seed": 9423,
+      "execution_order_index_within_seed": 1,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9423",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "relation": "left",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9423,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9423:position_mirrored:left",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "a9158910eecfc7299658d73baff09271af748cd9f2996d475e400f511400a4f1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9423:symmetric:right",
+      "environment_seed": 9423,
+      "execution_order_index_within_seed": 2,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9423",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+      "relation": "right",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9423,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9423:control:left",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "f3f430447d43a669a3e7a3cb37f7bf5eae0532cc884d91cd70bd7546a0ba7dff",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9424:symmetric:left",
+      "environment_seed": 9424,
+      "execution_order_index_within_seed": 1,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9424",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "relation": "left",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9424,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9424:control:left",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "e62e3935182488c2d9c50f98c3f717ee770ab83d0057cb155af44fe2a319dbae",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9424:symmetric:right",
+      "environment_seed": 9424,
+      "execution_order_index_within_seed": 2,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9424",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+      "relation": "right",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9424,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9424:position_mirrored:right",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "8ee1b2326b5905a8efe9f26bb0e94210830514860721d1fcf6d0966b327f257f",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9425:symmetric:left",
+      "environment_seed": 9425,
+      "execution_order_index_within_seed": 1,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9425",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "relation": "left",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9425,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9425:position_mirrored:left",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "ab56a55f0a279fdb1c0c3c9f347da9f3ae1bcb5a6557117093dc2102481a42c8",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9425:symmetric:right",
+      "environment_seed": 9425,
+      "execution_order_index_within_seed": 2,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9425",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+      "relation": "right",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9425,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9425:control:left",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "b6675ca10956250eba1ab6ece8cc4b94d13817424c1e6825aa9606e8f5402568",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9426:symmetric:left",
+      "environment_seed": 9426,
+      "execution_order_index_within_seed": 1,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9426",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "relation": "left",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9426,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9426:position_mirrored:right",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "176f55b32651b9aa45e352898a02487d0332a06e2757131795a28f46d746e4f9",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    },
+    {
+      "amendment_id": "V3-E003",
+      "arena": "droid_robolab",
+      "cell_id": "v3e003:pi05:seed9426:symmetric:right",
+      "environment_seed": 9426,
+      "execution_order_index_within_seed": 2,
+      "fixture_id": "v3e003_pi05_symmetric_object_layout",
+      "fixture_sha256": "REGISTERED_BY_SYMMETRY_GATE",
+      "layout": "symmetric_object_layout",
+      "matched_block_id": "v3e003:pi05:seed9426",
+      "missing_measurement_policy": "NR is unavailable and never converted to zero",
+      "model_id": "pi05_current_stack_droid",
+      "phase": "E_publication_critical_controls",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+      "relation": "right",
+      "required_raw_outputs": [
+        "viewport_video",
+        "executed_action_trace",
+        "raw_behavioral_episode_jsonl"
+      ],
+      "runtime_identity_requirement": {
+        "action_cap": 450,
+        "action_shape": [
+          15,
+          8
+        ],
+        "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+        "open_loop_horizon": 15,
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+      },
+      "sampling_seed": 9426,
+      "schema_version": "vla-wam-shared-v3e003-cell-v1",
+      "source_v3b001_cell_id": "v3b001:nano:seed9426:control:right",
+      "source_v3b001_queue_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+      "source_v3b001_randomization_key_sha256": "6519cfcc33507dcc46daa409146467f3aebdf88b5d76b39f488049ea8bf9bdfd",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "technical_invalidity_policy": "Separate infrastructure ledger; no denominator entry",
+      "valid_failure_policy": "Retain every valid behavioral failure in full-sample analyses"
+    }
+  ],
+  "registered_at_utc": "2026-08-07T00:00:00Z",
+  "registered_predictions": {
+    "H1_binary_success_null": "binary LEFT/RIGHT success gap approximately zero; nondetection is not equivalence",
+    "H2_requested_side_depth_null": "requested-side depth contrast approximately zero; nondetection is not equivalence",
+    "H3_endpoint_redirection_positive_control": "paired endpoint shift remains strongly positive and comparable to control/reflected layouts",
+    "reference_control_layout": {
+      "left": "4/27",
+      "right": "25/27",
+      "source": "user-registered prior reference; existing committed summaries are retained separately and are not modified"
+    }
+  },
+  "release_boundary": "No model request or behavioral episode is authorized until the symmetry gate, exact runtime identity, reset gate, and raw-output write proof are hash-bound after this registration commit.",
+  "scene_construction": {
+    "caveat": "Robot joint configuration and wrist-camera mounting are not bilaterally symmetric; this is not a symmetric-embodiment control. The prior base-rotation control was invalid and is not reused.",
+    "construction": "B001 banana payload duplicated as a mirrored clutter pair in the new task scene; target and single reference are centered on y=0. Non-movable table, robot, cameras, and ground remain unchanged.",
+    "exactly_one_bowl": true,
+    "movable_inventory": [
+      "rubiks_cube",
+      "bowl",
+      "banana_left",
+      "banana_right"
+    ],
+    "name": "symmetric object layout relative to the robot midline",
+    "not_symmetric_robot_or_embodiment": true,
+    "positions_robot_base_m": {
+      "banana_left": [
+        0.538878858089447,
+        -0.07555567473173141,
+        0.0684281587600708
+      ],
+      "banana_right": [
+        0.538878858089447,
+        0.07555567473173141,
+        0.0684281587600708
+      ],
+      "bowl": [
+        0.44258353114128113,
+        0.0,
+        0.07732785493135452
+      ],
+      "rubiks_cube": [
+        0.303364634513855,
+        0.0,
+        0.08113233000040054
+      ]
+    },
+    "reference_object": "bowl",
+    "symmetry_gate_required_before_inference": true,
+    "target_object": "rubiks_cube",
+    "tolerances_m": {
+      "midline": 0.001,
+      "pair_x": 0.001,
+      "pair_y_sum": 0.001
+    }
+  },
+  "schema_version": "vla-wam-shared-v3e003-registration-v1",
+  "source_bindings": {
+    "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_cells.jsonl": {
+      "bytes": 242838,
+      "sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a"
+    },
+    "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_manifest.json": {
+      "bytes": 1618,
+      "sha256": "5c82268739feb41281435a51dcd848b575218cd9fbe5839d9ad130d1a7888830"
+    },
+    "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/post_result_nano_mirror_v3b001_amendment.json": {
+      "bytes": 17702,
+      "sha256": "9d88c29733fa3b24a154977bc25d04d2d77df5be59e3213f0c3a6cfbe3edc6a0"
+    },
+    "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+    "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
+  },
+  "status": "registered_before_inference",
+  "study_id": "vla_wam_language_steerability_v3"
+}

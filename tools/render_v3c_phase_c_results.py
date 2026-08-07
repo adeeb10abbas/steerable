@@ -251,7 +251,11 @@ def render_scope_figure(summary_by_model: dict[str, Any], output: Path) -> None:
         shift_axis.set_xlim(-shift_limit, shift_limit)
         shift_axis.set_yticks(y, [])
         shift_axis.invert_yaxis()
-        shift_axis.set_xlabel("Matched endpoint shift: RIGHT prompt − LEFT prompt (m)", color=INK, fontsize=9.5)
+        shift_axis.set_xlabel(
+            "Matched endpoint shift: RIGHT prompt − LEFT prompt (m; negative = requested ordering)",
+            color=INK,
+            fontsize=9.5,
+        )
     axes[0, 0].legend(
         handles=[
             Line2D([0], [0], marker="o", color=COLORS["left"], label="Prompt requests LEFT", linestyle="none"),
@@ -277,7 +281,7 @@ def render_scope_figure(summary_by_model: dict[str, Any], output: Path) -> None:
     figure.text(
         0.06,
         0.035,
-        "Success requires pickup, transport into the requested 45° cone, and detached release. Positive endpoint shift follows the requested LEFT→RIGHT ordering;\n"
+        "Success requires pickup, transport into the requested 45° cone, and detached release. Negative RIGHT-minus-LEFT endpoint shift follows the requested LEFT→RIGHT ordering;\n"
         "it measures redirection, not completion. Phase C is exploratory; DROID and RoboTwin are never pooled.",
         fontsize=9.3,
         color="#4C585D",

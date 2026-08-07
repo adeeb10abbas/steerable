@@ -49,7 +49,7 @@ def test_summary_keeps_phrasing_direction_and_pairing(tmp_path: Path) -> None:
                     "failure_taxonomy": "correct" if success else "transport_failed",
                     "model_request_count": None,
                     "measurements": {
-                        "signed_final_lateral_offset_m": -0.1 if relation == "left" else 0.1,
+                        "signed_final_lateral_offset_m": 0.1 if relation == "left" else -0.1,
                     },
                     "artifacts": {
                         "executed_actions": {
@@ -63,5 +63,7 @@ def test_summary_keeps_phrasing_direction_and_pairing(tmp_path: Path) -> None:
     assert result["success_by_condition"]["direct_command:right"]["successes"] == 20
     paired = result["paired_diagnostics_by_prompt_family"]["direct_command"]
     assert paired["endpoint_ordering_aligned"] == 20
+    assert paired["endpoint_ordering_anti_aligned"] == 0
+    assert "positive toward robot LEFT" in paired["endpoint_shift_definition"]
     assert paired["first_10_executed_actions_distinct"] == 20
     assert paired["success_discordance"]["right_only"] == 10

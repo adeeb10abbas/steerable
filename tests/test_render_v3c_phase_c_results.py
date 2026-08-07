@@ -32,9 +32,9 @@ def test_renderer_emits_both_scientific_diagnostics(tmp_path: Path) -> None:
                         "model_request_count": 1 if "cosmos" in model_id else None,
                         "measurements": {
                             "signed_final_lateral_offset_m": (
-                                -0.04 + 0.002 * (seed - 8500)
+                                0.04 + 0.002 * (seed - 8500)
                                 if relation == "left"
-                                else 0.06 + 0.002 * (seed - 8500)
+                                else -0.06 + 0.002 * (seed - 8500)
                             ),
                         },
                         "artifacts": {

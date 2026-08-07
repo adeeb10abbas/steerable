@@ -328,8 +328,12 @@ def summarize(rows: list[dict[str, Any]], *, model_id: str) -> dict[str, Any]:
             "matched_seed_count": 20,
             "success_discordance": mcnemar,
             "right_minus_left_endpoint_shift_m": shifts,
-            "endpoint_ordering_aligned": sum(shift > 0 for shift in shifts),
-            "endpoint_ordering_anti_aligned": sum(shift < 0 for shift in shifts),
+            "endpoint_shift_definition": (
+                "RIGHT-condition signed final lateral offset minus LEFT-condition "
+                "signed final lateral offset; signed lateral is positive toward robot LEFT"
+            ),
+            "endpoint_ordering_aligned": sum(shift < 0 for shift in shifts),
+            "endpoint_ordering_anti_aligned": sum(shift > 0 for shift in shifts),
             "endpoint_ordering_ties": sum(shift == 0 for shift in shifts),
             "median_right_minus_left_endpoint_shift_m": median(shifts),
             "first_10_executed_actions_distinct": sum(action_distinct),

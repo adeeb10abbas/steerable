@@ -46,6 +46,7 @@ REQUIRED = {
     "phase_c_runner": "experiments/v3/phase_c_four_phrasings/runner.py",
     "phase_c_readme": "experiments/v3/phase_c_four_phrasings/README.md",
     "phase_c_test": "tests/test_phase_c_four_phrasings.py",
+    "phase_c_edge_release": f"{V3}/phase_c/four_phrasings_v3c001/gates/cosmos3_edge_policy_droid/release.json",
     "phase_c_nano_release": f"{V3}/phase_c/four_phrasings_v3c001/gates/cosmos3_nano_policy_droid/release.json",
     "phase_c_nano_smoke_preflight": f"{V3}/phase_c/four_phrasings_v3c001/smoke/cosmos3_nano_policy_droid/behavioral_bridge_preflight_seed8500.json",
     "phase_c_nano_smoke_registration": f"{V3}/phase_c/four_phrasings_v3c001/smoke/cosmos3_nano_policy_droid/live_task_registration_seed8500.json",
@@ -58,6 +59,9 @@ REQUIRED = {
     "phase_c_groot_publication_media": "media/vla_wam/v3/phase_c/v3c001/groot_n17_droid_vla/groot_n17_droid_vla_v3c001_publication_media_manifest.json",
     "phase_c_edge_publication_media": "media/vla_wam/v3/phase_c/v3c001/cosmos3_edge_policy_droid/cosmos3_edge_policy_droid_v3c001_publication_media_manifest.json",
     "phase_c_nano_publication_media": "media/vla_wam/v3/phase_c/v3c001/cosmos3_nano_policy_droid/cosmos3_nano_policy_droid_v3c001_publication_media_manifest.json",
+    "phase_c_edge_result_episodes": f"{V3}/phase_c/four_phrasings_v3c001/results/cosmos3_edge_policy_droid/cosmos3_edge_policy_droid_phase_c_episodes.jsonl",
+    "phase_c_edge_result_summary": f"{V3}/phase_c/four_phrasings_v3c001/results/cosmos3_edge_policy_droid/cosmos3_edge_policy_droid_phase_c_summary.json",
+    "phase_c_edge_result_manifest": f"{V3}/phase_c/four_phrasings_v3c001/results/cosmos3_edge_policy_droid/cosmos3_edge_policy_droid_phase_c_evidence_manifest.json",
     "stochastic": f"{V3}/stochastic_rollout_registry.json",
     "confound_calibration": f"{V3}/confound_fixture_calibration_registry.json",
     "phase_a_queue": f"{V3}/phase_a_cells.jsonl",
@@ -1794,6 +1798,9 @@ def validate(root: Path) -> list[str]:
         "cosmos3_edge_policy_droid": load(paths["phase_c_edge_publication_media"]),
         "cosmos3_nano_policy_droid": load(paths["phase_c_nano_publication_media"]),
     }
+    phase_c_edge_result_episodes = load_jsonl(paths["phase_c_edge_result_episodes"])
+    phase_c_edge_result_summary = load(paths["phase_c_edge_result_summary"])
+    phase_c_edge_result_manifest = load(paths["phase_c_edge_result_manifest"])
     stochastic_registry = load(paths["stochastic"])
     calibration_registry = load(paths["confound_calibration"])
     phase_a_manifest = load(paths["phase_a_manifest"])
@@ -4470,6 +4477,167 @@ def validate(root: Path) -> list[str]:
     require(
         phase_c_media_valid and len(phase_c_media_asset_paths) == 40,
         "V3-C001 publication media hash-binds all four exact prompt families, matched directions, complete rollouts, and Cosmos local horizons",
+        checks,
+    )
+    phase_c_edge_condition_counts = Counter(
+        (row.get("prompt_family"), row.get("relation"))
+        for row in phase_c_edge_result_episodes
+    )
+    phase_c_edge_episode_ids = {
+        row.get("registered_cell_id") for row in phase_c_edge_result_episodes
+    }
+    phase_c_edge_rows_valid = all(
+        row.get("schema_version") == "vla-wam-shared-v3c-compiled-episode-v1"
+        and row.get("experiment_id") == "V3-C001"
+        and row.get("model_id") == "cosmos3_edge_policy_droid"
+        and row.get("seed") in range(8500, 8520)
+        and row.get("prompt_family") in EXACT_V2_WORDINGS
+        and row.get("relation") in {"left", "right"}
+        and row.get("prompt")
+        == EXACT_V2_WORDINGS[row["prompt_family"]][row["relation"]]
+        and row.get("failure_taxonomy")
+        in {"correct", "pick_failed", "transport_failed", "wrong_side", "release_failed"}
+        and row.get("requested_success")
+        == (row.get("failure_taxonomy") == "correct")
+        and row.get("initial_state_sha256")
+        == "d45adfd460a7e915189b9676b16fc081d125768a60f18ffdce17dd8b4da8bb0a"
+        and row.get("model_request_count", 0) > 0
+        and len(row.get("decoded_future_shapes", [])) > 0
+        and row.get("video", {}).get("frame_count", 0) > 0
+        and {
+            "behavioral_jsonl",
+            "decoded_future_trace",
+            "executed_actions",
+            "state_trace",
+            "viewport_video",
+        }.issubset(row.get("artifacts", {}))
+        and all(
+            artifact.get("path", "").startswith("/data/users/ali/vla_wam/raw/v3c/")
+            and len(artifact.get("sha256", "")) == 64
+            and artifact.get("bytes", 0) > 0
+            for artifact in row.get("artifacts", {}).values()
+        )
+        for row in phase_c_edge_result_episodes
+    )
+    require(
+        len(phase_c_edge_result_episodes) == 160
+        and len(phase_c_edge_episode_ids) == 160
+        and phase_c_edge_condition_counts
+        == Counter(
+            {
+                (family, relation): 20
+                for family in EXACT_V2_WORDINGS
+                for relation in ("left", "right")
+            }
+        )
+        and phase_c_edge_rows_valid,
+        "Cosmos3 Edge V3-C001 compact episodes preserve all 160 registered behavioral cells, prompts, futures, raw hashes, and videos",
+        checks,
+    )
+    phase_c_edge_expected_success = {
+        "desired_plus_negated_opposite:left": 10,
+        "desired_plus_negated_opposite:right": 18,
+        "direct_command:left": 18,
+        "direct_command:right": 20,
+        "goal_as_outcome:left": 15,
+        "goal_as_outcome:right": 18,
+        "short_command:left": 5,
+        "short_command:right": 19,
+    }
+    require(
+        phase_c_edge_result_summary.get("schema_version")
+        == "vla-wam-shared-v3c-model-summary-v1"
+        and phase_c_edge_result_summary.get("status")
+        == "complete_20_seed_160_behavioral_episode_result"
+        and phase_c_edge_result_summary.get("counts")
+        == {
+            "directions": 2,
+            "infrastructure_episodes_in_denominator": 0,
+            "matched_seeds": 20,
+            "model_requests": 1365,
+            "prompt_families": 4,
+            "valid_behavioral_episodes": 160,
+            "valid_behavioral_failures": 37,
+            "viewport_videos": 160,
+        }
+        and {
+            condition: result.get("successes")
+            for condition, result in phase_c_edge_result_summary.get(
+                "success_by_condition", {}
+            ).items()
+        }
+        == phase_c_edge_expected_success
+        and phase_c_edge_result_summary.get("failure_taxonomy_overall")
+        == {
+            "correct": 123,
+            "pick_failed": 11,
+            "release_failed": 0,
+            "transport_failed": 14,
+            "wrong_side": 12,
+        }
+        and all(
+            paired.get("matched_seed_count") == 20
+            and paired.get("endpoint_shift_definition")
+            == "RIGHT-condition signed final lateral offset minus LEFT-condition signed final lateral offset; signed lateral is positive toward robot LEFT"
+            and paired.get("endpoint_ordering_aligned", 0)
+            + paired.get("endpoint_ordering_anti_aligned", 0)
+            + paired.get("endpoint_ordering_ties", 0)
+            == 20
+            and paired.get("first_10_executed_actions_distinct") == 20
+            for paired in phase_c_edge_result_summary.get(
+                "paired_diagnostics_by_prompt_family", {}
+            ).values()
+        ),
+        "Cosmos3 Edge V3-C001 summary preserves the exploratory four-form success, failure, and matched-response statistics",
+        checks,
+    )
+    phase_c_edge_manifest_outputs = phase_c_edge_result_manifest.get("outputs", {})
+    phase_c_edge_report_provenance = phase_c_edge_result_manifest.get(
+        "source_whole_seed_reports", []
+    )
+    require(
+        phase_c_edge_result_manifest.get("schema_version")
+        == "vla-wam-shared-v3c-model-evidence-manifest-v1"
+        and phase_c_edge_result_manifest.get("status")
+        == "complete_20_seed_160_behavioral_episode_result"
+        and phase_c_edge_result_manifest.get("model_id")
+        == "cosmos3_edge_policy_droid"
+        and phase_c_edge_result_manifest.get("runtime_identity_sha256")
+        == "f7fbd253a1719cf7243fd8fad9070060d2a9b31624c5e3ce4593d879a0d52b97"
+        and phase_c_edge_result_manifest.get("release_manifest_sha256")
+        == sha256(paths["phase_c_edge_release"])
+        and phase_c_edge_result_manifest.get("matched_initial_state_sha256")
+        == "d45adfd460a7e915189b9676b16fc081d125768a60f18ffdce17dd8b4da8bb0a"
+        and phase_c_edge_result_manifest.get("registration", {}).get("sha256")
+        == sha256(paths["phase_c_cells"])
+        and phase_c_edge_manifest_outputs.get(
+            paths["phase_c_edge_result_episodes"].name, {}
+        ).get("sha256")
+        == sha256(paths["phase_c_edge_result_episodes"])
+        and phase_c_edge_manifest_outputs.get(
+            paths["phase_c_edge_result_summary"].name, {}
+        ).get("sha256")
+        == sha256(paths["phase_c_edge_result_summary"])
+        and len(phase_c_edge_report_provenance) == 20
+        and {item.get("seed") for item in phase_c_edge_report_provenance}
+        == set(range(8500, 8520))
+        and all(
+            item.get("path", "").startswith(
+                "/data/users/ali/vla_wam/raw/v3c/phase_c_v3c001/cosmos3_edge_policy_droid/"
+            )
+            and len(item.get("sha256", "")) == 64
+            and item.get("bytes", 0) > 0
+            for item in phase_c_edge_report_provenance
+        )
+        and phase_c_edge_result_manifest.get("raw_retention", {}).get(
+            "raw_outputs_retained_on_pvc"
+        )
+        is True
+        and phase_c_edge_result_manifest.get("raw_retention", {}).get(
+            "raw_outputs_committed_to_git"
+        )
+        is False,
+        "Cosmos3 Edge V3-C001 evidence manifest hash-binds the compact outputs and all 20 PVC-retained seed reports",
         checks,
     )
     block = phases["D_16_rollout_stochastic_block"]

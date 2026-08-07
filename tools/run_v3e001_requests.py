@@ -12,8 +12,12 @@ import argparse, hashlib, json, time
 from pathlib import Path
 from typing import Any
 
-import cv2
 import numpy as np
+try:
+    import cv2
+except ImportError:  # Cosmos inference env omits X11's libxcb; Pillow is enough here.
+    cv2 = None
+    from PIL import Image
 
 
 LEFT = "Put the Rubik's cube to the left of the bowl."
@@ -44,7 +48,8 @@ def jsonable(value: Any) -> Any:
 def resize_pad(image: np.ndarray, h: int, w: int) -> np.ndarray:
     scale = min(w / image.shape[1], h / image.shape[0])
     nw, nh = max(1, round(image.shape[1] * scale)), max(1, round(image.shape[0] * scale))
-    resized = cv2.resize(image, (nw, nh), interpolation=cv2.INTER_AREA)
+    resized = (cv2.resize(image, (nw, nh), interpolation=cv2.INTER_AREA)
+               if cv2 is not None else np.asarray(Image.fromarray(image).resize((nw, nh), Image.Resampling.LANCZOS), dtype=np.uint8))
     out = np.zeros((h, w, 3), dtype=np.uint8)
     y, x = (h - nh) // 2, (w - nw) // 2
     out[y:y + nh, x:x + nw] = resized
@@ -89,8 +94,10 @@ def model_request(model: str, z: dict[str, np.ndarray], prompt: str, seed: int, 
         # Official Cosmos RoboLab server accepts the composed [540,640,3]
         # image plus state.  The fixture has all three exterior views; retain
         # the exact raw image hash before this registered resize.
+        image = (cv2.resize(shoulder, (640, 540), interpolation=cv2.INTER_AREA)
+                 if cv2 is not None else np.asarray(Image.fromarray(shoulder).resize((640, 540), Image.Resampling.BILINEAR), dtype=np.uint8))
         req = {
-            "observation/image": cv2.resize(shoulder, (640, 540), interpolation=cv2.INTER_AREA).astype(np.uint8),
+            "observation/image": image.astype(np.uint8),
             "observation/joint_position": joints,
             "observation/gripper_position": grip,
             "prompt": prompt,

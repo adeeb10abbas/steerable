@@ -1,0 +1,40 @@
+{
+  "bootstrap": {
+    "replicates": 20000,
+    "seed": 110519,
+    "unit": "matched seed"
+  },
+  "claim_boundary": "The binary gates and requested-side depth are distinct diagnostics. Near-ceiling binary counts do not establish equivalence, and requested-side depth does not replace the frozen task predicate.",
+  "inputs": [
+    {
+      "bytes": 210426,
+      "path": "artifacts/vla_wam_shared_v3/results/cosmos3_nano_policy_droid_phase_a_summary.json",
+      "sha256": "677c62845ff72bceb35b0c5e3e5b259a5c24da407648fe50f475656fe86cbcea"
+    },
+    {
+      "bytes": 23602,
+      "path": "artifacts/vla_wam_shared_v3/measurement_coverage_audit.json",
+      "sha256": "86b3ded424bba2d697b406ea7b1c8bfc147dba8413363ae0190b4d151e76d4ea"
+    }
+  ],
+  "outputs": [
+    {
+      "bytes": 29729,
+      "path": "artifacts/vla_wam_shared_v3/analysis/paper_figures/figure1_nano_instrument_sensitivity.svg",
+      "sha256": "d7223d3d501d27072e322cd63c944fc0288ee79ce7d3a1811b16e040eb44cfc9"
+    },
+    {
+      "bytes": 353892,
+      "path": "artifacts/vla_wam_shared_v3/analysis/paper_figures/figure1_nano_instrument_sensitivity.png",
+      "sha256": "d1a270dc7a1ed488dd715e6738d26196477140fed109a4a7f0abac22253e2e19"
+    }
+  ],
+  "renderer": {
+    "bytes": 12678,
+    "path": "tools/render_v3_nano_instrument.py",
+    "sha256": "516013b00fd0e9eec119bb29418215e2ae9ae73fb887d2c1d502794d99399c16"
+  },
+  "schema_version": "vla-wam-shared-v3-nano-instrument-figure-manifest-v1",
+  "status": "complete_retrospective_visualization_no_new_inference",
+  "study_id": "vla_wam_language_steerability_v3"
+}

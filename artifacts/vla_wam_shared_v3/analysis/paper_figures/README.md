@@ -32,3 +32,9 @@ tmp/pdfs/.venv/bin/python tools/render_v3_cross_arena_success.py
 ```
 
 The adjacent manifest records every source, output, and renderer SHA-256.
+
+Validate the publication figures with:
+
+```bash
+tmp/pdfs/.venv/bin/python tools/validate_v3_paper_figures.py
+```

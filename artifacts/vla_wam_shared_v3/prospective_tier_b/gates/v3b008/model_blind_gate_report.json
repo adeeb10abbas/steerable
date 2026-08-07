@@ -1,0 +1,1893 @@
+{
+  "amendment_id": "V3-B008",
+  "behavioral_episode_count": 0,
+  "candidate": {
+    "bytes": 3449,
+    "path": "/data/users/ali/vla_wam/src/steerable-tierb-gates-dd967c3/artifacts/vla_wam_shared_v3/prospective_tier_b/droid_gate_candidate_v3b008_v3b009.json",
+    "sha256": "8820932c3768ca9324e1dce8b6e18c4c7847126cc4388aad6f305f7088b14f27"
+  },
+  "environment_seed": 9700,
+  "fixture_source": {
+    "bytes": 4329,
+    "path": "/data/users/ali/vla_wam/src/steerable-tierb-gates-dd967c3/experiments/v3/prospective_tier_b_gates/droid_fixture_tasks.py",
+    "sha256": "7125fa760094e34fba71bbfcbcc6a8b28eab166dd52dd3699ca7eb79cb2b3fea"
+  },
+  "gate_source": {
+    "bytes": 15628,
+    "path": "/data/users/ali/vla_wam/src/steerable-tierb-gates-dd967c3/experiments/v3/prospective_tier_b_gates/model_blind_droid_gate.py",
+    "sha256": "00591b695d9157dad74acc1a9c62cb9c5ef103356431da4f31b28142b8edd832"
+  },
+  "gpu_query": "0, GPU-70318cf0-9d68-4c1b-9a94-d85d3c4af002, NVIDIA RTX PRO 6000 Blackwell Server Edition, 580.105.08",
+  "gpu_uuid": "GPU-70318cf0-9d68-4c1b-9a94-d85d3c4af002",
+  "model_id": "cosmos3_nano_policy_droid",
+  "model_request_count": 0,
+  "passed": true,
+  "pod": "vla-wam-fastwam-expansion-ali",
+  "pod_uid": "68e4b518-a96d-4935-818f-6d975811bbc8",
+  "release_boundary": "This zero-model-request gate does not release behavioral inference. A hash-bound release amendment and exact queue are still required.",
+  "renderer": {
+    "all_required_rgb_views_nonblank": true,
+    "backend": "realtime RTX Vulkan",
+    "nvidia_icd": {
+      "bytes": 140,
+      "path": "/etc/vulkan/icd.d/nvidia_icd.json",
+      "sha256": "7bdb6f27d35b66fc848df6f94b8773bba30ea3a7f06f114100d14154a235a34b"
+    },
+    "quality": "balanced"
+  },
+  "reset_gate": {
+    "angular_speed_tolerance_rad_s": 0.2,
+    "left_right_physical_fingerprints_equal_within_each_arm": true,
+    "linear_speed_tolerance_m_s": 0.02,
+    "neither_predicate_true_at_every_reset": true,
+    "position_tolerance_m": 0.003,
+    "repeat_count_per_task": 3,
+    "settle_steps": 60,
+    "stable_window_steps": 15
+  },
+  "robolab": {
+    "commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "effective_import": {
+      "bytes": 949,
+      "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/robolab/__init__.py",
+      "sha256": "d7912be543fa14354464740c9dd280e3530b38acbee28379b34a0ff825801d84"
+    },
+    "tracked_diff_empty": true,
+    "versions": {
+      "isaaclab": "2.2.0",
+      "isaacsim": "5.0.0.0",
+      "robolab": "0.2.1"
+    }
+  },
+  "schema_version": "vla-wam-shared-v3b-droid-tier-b-model-blind-gate-v1",
+  "status": "passed_model_blind_not_released_for_behavior",
+  "study_checkout": {
+    "commit": "dd967c30199b0ea208607f71a290fe2690953653",
+    "tracked_diff_empty": true
+  },
+  "study_id": "vla_wam_language_steerability_v3",
+  "task_wrappers": {
+    "target_start_center_left": {
+      "bytes": 764,
+      "path": "/data/users/ali/vla_wam/src/steerable-tierb-gates-dd967c3/experiments/v3/prospective_tier_b_gates/task_files/v3b008_target_start_center_left.py",
+      "sha256": "41eca79f39127c9b50028da55d098db76ea09d2eb08ec62921162be73992f819"
+    },
+    "target_start_center_right": {
+      "bytes": 769,
+      "path": "/data/users/ali/vla_wam/src/steerable-tierb-gates-dd967c3/experiments/v3/prospective_tier_b_gates/task_files/v3b008_target_start_center_right.py",
+      "sha256": "30d467802c7366640047224c56b769e652ae737a092b2d92ea82be05ec012dd6"
+    },
+    "target_start_left_left": {
+      "bytes": 752,
+      "path": "/data/users/ali/vla_wam/src/steerable-tierb-gates-dd967c3/experiments/v3/prospective_tier_b_gates/task_files/v3b008_target_start_left_left.py",
+      "sha256": "94420b370e295d5054c00fd452a74f27c701d51afcaf7190f5599c38b11d0ad9"
+    },
+    "target_start_left_right": {
+      "bytes": 757,
+      "path": "/data/users/ali/vla_wam/src/steerable-tierb-gates-dd967c3/experiments/v3/prospective_tier_b_gates/task_files/v3b008_target_start_left_right.py",
+      "sha256": "b76878f71eb80bb6fe33c4a419eee66b69d712e4f90676b69dc4279b7579bf07"
+    },
+    "target_start_right_left": {
+      "bytes": 758,
+      "path": "/data/users/ali/vla_wam/src/steerable-tierb-gates-dd967c3/experiments/v3/prospective_tier_b_gates/task_files/v3b008_target_start_right_left.py",
+      "sha256": "dccc92b367ef6922f99fc32b824e09aa164b6d2340e05595c20bb79292c12cae"
+    },
+    "target_start_right_right": {
+      "bytes": 763,
+      "path": "/data/users/ali/vla_wam/src/steerable-tierb-gates-dd967c3/experiments/v3/prospective_tier_b_gates/task_files/v3b008_target_start_right_right.py",
+      "sha256": "571c3cecb66478a28138b8d590b54e5490f53424afc21a00e5cc01c8028a1ba6"
+    }
+  },
+  "tasks": [
+    {
+      "arm": "target_start_right",
+      "label": "target_start_right_left",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "reference_object": "bowl",
+      "relation": "left",
+      "repeat_resets": [
+        {
+          "input_views": {
+            "head_camera": {
+              "dtype": "uint8",
+              "pixel_range": 251,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_left_camera": {
+              "dtype": "uint8",
+              "pixel_range": 255,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_right_camera": {
+              "dtype": "uint8",
+              "pixel_range": 254,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "wrist_cam": {
+              "dtype": "uint8",
+              "pixel_range": 243,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            }
+          },
+          "left_predicate_at_reset": false,
+          "positions_robot_base_m": {
+            "banana": [
+              0.539054274559021,
+              -0.07562623172998428,
+              0.06818272173404694
+            ],
+            "bowl": [
+              0.4425782859325409,
+              0.12660090625286102,
+              0.07734914124011993
+            ],
+            "rubiks_cube": [
+              0.30373576283454895,
+              0.02623961679637432,
+              0.08110558241605759
+            ]
+          },
+          "quaternions_wxyz": {
+            "banana": [
+              0.9999991059303284,
+              -0.0006502629839815199,
+              -0.0012001909781247377,
+              0.00017731227853801101
+            ],
+            "bowl": [
+              0.9999998211860657,
+              -0.0004019897896796465,
+              -0.0004248521290719509,
+              -0.00010345388727728277
+            ],
+            "rubiks_cube": [
+              0.9999993443489075,
+              -0.0005110656493343413,
+              0.0008986918837763369,
+              1.2624505870917346e-05
+            ]
+          },
+          "repeat": 0,
+          "right_predicate_at_reset": false,
+          "stability_window": {
+            "banana": {
+              "max_angular_speed_rad_s": 0.11700606346130371,
+              "max_linear_speed_m_s": 0.0019355674739927053
+            },
+            "bowl": {
+              "max_angular_speed_rad_s": 0.03744780644774437,
+              "max_linear_speed_m_s": 0.0014353998703882098
+            },
+            "rubiks_cube": {
+              "max_angular_speed_rad_s": 0.15126162767410278,
+              "max_linear_speed_m_s": 0.0038596566300839186
+            }
+          }
+        },
+        {
+          "input_views": {
+            "head_camera": {
+              "dtype": "uint8",
+              "pixel_range": 252,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_left_camera": {
+              "dtype": "uint8",
+              "pixel_range": 255,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_right_camera": {
+              "dtype": "uint8",
+              "pixel_range": 254,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "wrist_cam": {
+              "dtype": "uint8",
+              "pixel_range": 250,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            }
+          },
+          "left_predicate_at_reset": false,
+          "positions_robot_base_m": {
+            "banana": [
+              0.5390536785125732,
+              -0.07562609016895294,
+              0.06818371266126633
+            ],
+            "bowl": [
+              0.44257837533950806,
+              0.1266011893749237,
+              0.07734958082437515
+            ],
+            "rubiks_cube": [
+              0.3037356734275818,
+              0.026239817962050438,
+              0.08110605180263519
+            ]
+          },
+          "quaternions_wxyz": {
+            "banana": [
+              0.9999990463256836,
+              -0.000656319607514888,
+              -0.0012152005219832063,
+              0.0001765331398928538
+            ],
+            "bowl": [
+              0.9999998807907104,
+              -0.00040145980892702937,
+              -0.00042539939749985933,
+              -0.0001003838624455966
+            ],
+            "rubiks_cube": [
+              0.9999994039535522,
+              -0.0005178955616429448,
+              0.0009057916468009353,
+              7.04311878507724e-06
+            ]
+          },
+          "repeat": 1,
+          "right_predicate_at_reset": false,
+          "stability_window": {
+            "banana": {
+              "max_angular_speed_rad_s": 0.11942189186811447,
+              "max_linear_speed_m_s": 0.001969120930880308
+            },
+            "bowl": {
+              "max_angular_speed_rad_s": 0.036681197583675385,
+              "max_linear_speed_m_s": 0.0013916735770180821
+            },
+            "rubiks_cube": {
+              "max_angular_speed_rad_s": 0.1340397596359253,
+              "max_linear_speed_m_s": 0.0034416746348142624
+            }
+          }
+        },
+        {
+          "input_views": {
+            "head_camera": {
+              "dtype": "uint8",
+              "pixel_range": 251,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_left_camera": {
+              "dtype": "uint8",
+              "pixel_range": 255,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_right_camera": {
+              "dtype": "uint8",
+              "pixel_range": 254,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "wrist_cam": {
+              "dtype": "uint8",
+              "pixel_range": 251,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            }
+          },
+          "left_predicate_at_reset": false,
+          "positions_robot_base_m": {
+            "banana": [
+              0.5390539169311523,
+              -0.07562622427940369,
+              0.06818341463804245
+            ],
+            "bowl": [
+              0.44257840514183044,
+              0.12660109996795654,
+              0.07734955102205276
+            ],
+            "rubiks_cube": [
+              0.3037366271018982,
+              0.026239562779664993,
+              0.0811053067445755
+            ]
+          },
+          "quaternions_wxyz": {
+            "banana": [
+              0.9999989867210388,
+              -0.0006539007881656289,
+              -0.0012096072314307094,
+              0.00017637790006119758
+            ],
+            "bowl": [
+              0.9999998211860657,
+              -0.0004016989259980619,
+              -0.00042574547114782035,
+              -0.0001021001226035878
+            ],
+            "rubiks_cube": [
+              0.9999993443489075,
+              -0.000515806779731065,
+              0.0009186684037558734,
+              6.577933163498528e-06
+            ]
+          },
+          "repeat": 2,
+          "right_predicate_at_reset": false,
+          "stability_window": {
+            "banana": {
+              "max_angular_speed_rad_s": 0.12090931087732315,
+              "max_linear_speed_m_s": 0.001829368993639946
+            },
+            "bowl": {
+              "max_angular_speed_rad_s": 0.03741767629981041,
+              "max_linear_speed_m_s": 0.0014062421396374702
+            },
+            "rubiks_cube": {
+              "max_angular_speed_rad_s": 0.1339225172996521,
+              "max_linear_speed_m_s": 0.003328648628666997
+            }
+          }
+        }
+      ],
+      "target_object": "rubiks_cube"
+    },
+    {
+      "arm": "target_start_right",
+      "label": "target_start_right_right",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "reference_object": "bowl",
+      "relation": "right",
+      "repeat_resets": [
+        {
+          "input_views": {
+            "head_camera": {
+              "dtype": "uint8",
+              "pixel_range": 251,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_left_camera": {
+              "dtype": "uint8",
+              "pixel_range": 255,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_right_camera": {
+              "dtype": "uint8",
+              "pixel_range": 254,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "wrist_cam": {
+              "dtype": "uint8",
+              "pixel_range": 244,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            }
+          },
+          "left_predicate_at_reset": false,
+          "positions_robot_base_m": {
+            "banana": [
+              0.539054274559021,
+              -0.07562623172998428,
+              0.06818272173404694
+            ],
+            "bowl": [
+              0.4425782859325409,
+              0.12660090625286102,
+              0.07734914124011993
+            ],
+            "rubiks_cube": [
+              0.30373576283454895,
+              0.02623961679637432,
+              0.08110558241605759
+            ]
+          },
+          "quaternions_wxyz": {
+            "banana": [
+              0.9999991059303284,
+              -0.0006502629839815199,
+              -0.0012001909781247377,
+              0.00017731227853801101
+            ],
+            "bowl": [
+              0.9999998211860657,
+              -0.0004019897896796465,
+              -0.0004248521290719509,
+              -0.00010345388727728277
+            ],
+            "rubiks_cube": [
+              0.9999993443489075,
+              -0.0005110656493343413,
+              0.0008986918837763369,
+              1.2624505870917346e-05
+            ]
+          },
+          "repeat": 0,
+          "right_predicate_at_reset": false,
+          "stability_window": {
+            "banana": {
+              "max_angular_speed_rad_s": 0.11700606346130371,
+              "max_linear_speed_m_s": 0.0019355674739927053
+            },
+            "bowl": {
+              "max_angular_speed_rad_s": 0.03744780644774437,
+              "max_linear_speed_m_s": 0.0014353998703882098
+            },
+            "rubiks_cube": {
+              "max_angular_speed_rad_s": 0.15126162767410278,
+              "max_linear_speed_m_s": 0.0038596566300839186
+            }
+          }
+        },
+        {
+          "input_views": {
+            "head_camera": {
+              "dtype": "uint8",
+              "pixel_range": 252,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_left_camera": {
+              "dtype": "uint8",
+              "pixel_range": 255,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_right_camera": {
+              "dtype": "uint8",
+              "pixel_range": 254,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "wrist_cam": {
+              "dtype": "uint8",
+              "pixel_range": 251,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            }
+          },
+          "left_predicate_at_reset": false,
+          "positions_robot_base_m": {
+            "banana": [
+              0.5390536785125732,
+              -0.07562609016895294,
+              0.06818371266126633
+            ],
+            "bowl": [
+              0.44257837533950806,
+              0.1266011893749237,
+              0.07734958082437515
+            ],
+            "rubiks_cube": [
+              0.3037356734275818,
+              0.026239817962050438,
+              0.08110605180263519
+            ]
+          },
+          "quaternions_wxyz": {
+            "banana": [
+              0.9999990463256836,
+              -0.000656319607514888,
+              -0.0012152005219832063,
+              0.0001765331398928538
+            ],
+            "bowl": [
+              0.9999998807907104,
+              -0.00040145980892702937,
+              -0.00042539939749985933,
+              -0.0001003838624455966
+            ],
+            "rubiks_cube": [
+              0.9999994039535522,
+              -0.0005178955616429448,
+              0.0009057916468009353,
+              7.04311878507724e-06
+            ]
+          },
+          "repeat": 1,
+          "right_predicate_at_reset": false,
+          "stability_window": {
+            "banana": {
+              "max_angular_speed_rad_s": 0.11942189186811447,
+              "max_linear_speed_m_s": 0.001969120930880308
+            },
+            "bowl": {
+              "max_angular_speed_rad_s": 0.036681197583675385,
+              "max_linear_speed_m_s": 0.0013916735770180821
+            },
+            "rubiks_cube": {
+              "max_angular_speed_rad_s": 0.1340397596359253,
+              "max_linear_speed_m_s": 0.0034416746348142624
+            }
+          }
+        },
+        {
+          "input_views": {
+            "head_camera": {
+              "dtype": "uint8",
+              "pixel_range": 251,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_left_camera": {
+              "dtype": "uint8",
+              "pixel_range": 255,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_right_camera": {
+              "dtype": "uint8",
+              "pixel_range": 254,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "wrist_cam": {
+              "dtype": "uint8",
+              "pixel_range": 250,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            }
+          },
+          "left_predicate_at_reset": false,
+          "positions_robot_base_m": {
+            "banana": [
+              0.5390539169311523,
+              -0.07562622427940369,
+              0.06818341463804245
+            ],
+            "bowl": [
+              0.44257840514183044,
+              0.12660109996795654,
+              0.07734955102205276
+            ],
+            "rubiks_cube": [
+              0.3037366271018982,
+              0.026239562779664993,
+              0.0811053067445755
+            ]
+          },
+          "quaternions_wxyz": {
+            "banana": [
+              0.9999989867210388,
+              -0.0006539007881656289,
+              -0.0012096072314307094,
+              0.00017637790006119758
+            ],
+            "bowl": [
+              0.9999998211860657,
+              -0.0004016989259980619,
+              -0.00042574547114782035,
+              -0.0001021001226035878
+            ],
+            "rubiks_cube": [
+              0.9999993443489075,
+              -0.000515806779731065,
+              0.0009186684037558734,
+              6.577933163498528e-06
+            ]
+          },
+          "repeat": 2,
+          "right_predicate_at_reset": false,
+          "stability_window": {
+            "banana": {
+              "max_angular_speed_rad_s": 0.12090931087732315,
+              "max_linear_speed_m_s": 0.001829368993639946
+            },
+            "bowl": {
+              "max_angular_speed_rad_s": 0.03741767629981041,
+              "max_linear_speed_m_s": 0.0014062421396374702
+            },
+            "rubiks_cube": {
+              "max_angular_speed_rad_s": 0.1339225172996521,
+              "max_linear_speed_m_s": 0.003328648628666997
+            }
+          }
+        }
+      ],
+      "target_object": "rubiks_cube"
+    },
+    {
+      "arm": "target_start_center",
+      "label": "target_start_center_left",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "reference_object": "bowl",
+      "relation": "left",
+      "repeat_resets": [
+        {
+          "input_views": {
+            "head_camera": {
+              "dtype": "uint8",
+              "pixel_range": 252,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_left_camera": {
+              "dtype": "uint8",
+              "pixel_range": 255,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_right_camera": {
+              "dtype": "uint8",
+              "pixel_range": 254,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "wrist_cam": {
+              "dtype": "uint8",
+              "pixel_range": 243,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            }
+          },
+          "left_predicate_at_reset": false,
+          "positions_robot_base_m": {
+            "banana": [
+              0.5390517115592957,
+              -0.07562578469514847,
+              0.06818392127752304
+            ],
+            "bowl": [
+              0.4425784945487976,
+              0.12660099565982819,
+              0.07734965533018112
+            ],
+            "rubiks_cube": [
+              0.30615848302841187,
+              0.12376827746629715,
+              0.08110452443361282
+            ]
+          },
+          "quaternions_wxyz": {
+            "banana": [
+              0.9999990463256836,
+              -0.0006599122425541282,
+              -0.001221932703629136,
+              0.00016518571646884084
+            ],
+            "bowl": [
+              0.9999998211860657,
+              -0.00040099190664477646,
+              -0.00042773797758854926,
+              -0.00010086284601129591
+            ],
+            "rubiks_cube": [
+              0.9998167157173157,
+              -0.0004246523603796959,
+              0.0007154500926844776,
+              0.019123295322060585
+            ]
+          },
+          "repeat": 0,
+          "right_predicate_at_reset": false,
+          "stability_window": {
+            "banana": {
+              "max_angular_speed_rad_s": 0.1225772276520729,
+              "max_linear_speed_m_s": 0.0019263087306171656
+            },
+            "bowl": {
+              "max_angular_speed_rad_s": 0.03865202143788338,
+              "max_linear_speed_m_s": 0.0014794593444094062
+            },
+            "rubiks_cube": {
+              "max_angular_speed_rad_s": 0.18416377902030945,
+              "max_linear_speed_m_s": 0.004834664985537529
+            }
+          }
+        },
+        {
+          "input_views": {
+            "head_camera": {
+              "dtype": "uint8",
+              "pixel_range": 250,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_left_camera": {
+              "dtype": "uint8",
+              "pixel_range": 255,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_right_camera": {
+              "dtype": "uint8",
+              "pixel_range": 254,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "wrist_cam": {
+              "dtype": "uint8",
+              "pixel_range": 250,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            }
+          },
+          "left_predicate_at_reset": false,
+          "positions_robot_base_m": {
+            "banana": [
+              0.5390512943267822,
+              -0.07562579214572906,
+              0.06818386167287827
+            ],
+            "bowl": [
+              0.44257795810699463,
+              0.12660075724124908,
+              0.07734983414411545
+            ],
+            "rubiks_cube": [
+              0.30616435408592224,
+              0.12377309799194336,
+              0.08110637217760086
+            ]
+          },
+          "quaternions_wxyz": {
+            "banana": [
+              0.9999989867210388,
+              -0.0006582177011296153,
+              -0.00121941021643579,
+              0.00016520728240720928
+            ],
+            "bowl": [
+              0.9999998807907104,
+              -0.00039663395727984607,
+              -0.00042922570719383657,
+              -0.00010283340816386044
+            ],
+            "rubiks_cube": [
+              0.9998170733451843,
+              -0.0005187575006857514,
+              0.0008560777641832829,
+              0.019098246470093727
+            ]
+          },
+          "repeat": 1,
+          "right_predicate_at_reset": false,
+          "stability_window": {
+            "banana": {
+              "max_angular_speed_rad_s": 0.12194798141717911,
+              "max_linear_speed_m_s": 0.0020574426744133234
+            },
+            "bowl": {
+              "max_angular_speed_rad_s": 0.037307560443878174,
+              "max_linear_speed_m_s": 0.0014372991863638163
+            },
+            "rubiks_cube": {
+              "max_angular_speed_rad_s": 0.18524737656116486,
+              "max_linear_speed_m_s": 0.00486461166292429
+            }
+          }
+        },
+        {
+          "input_views": {
+            "head_camera": {
+              "dtype": "uint8",
+              "pixel_range": 252,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_left_camera": {
+              "dtype": "uint8",
+              "pixel_range": 255,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_right_camera": {
+              "dtype": "uint8",
+              "pixel_range": 254,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "wrist_cam": {
+              "dtype": "uint8",
+              "pixel_range": 250,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            }
+          },
+          "left_predicate_at_reset": false,
+          "positions_robot_base_m": {
+            "banana": [
+              0.5390520095825195,
+              -0.07562586665153503,
+              0.06818340718746185
+            ],
+            "bowl": [
+              0.44257843494415283,
+              0.1266009658575058,
+              0.07734955847263336
+            ],
+            "rubiks_cube": [
+              0.30616581439971924,
+              0.12377293407917023,
+              0.08110561966896057
+            ]
+          },
+          "quaternions_wxyz": {
+            "banana": [
+              0.9999990463256836,
+              -0.0006561628542840481,
+              -0.001213051495142281,
+              0.0001651494821999222
+            ],
+            "bowl": [
+              0.9999998211860657,
+              -0.0004009569820482284,
+              -0.0004279203712940216,
+              -0.00010161983664147556
+            ],
+            "rubiks_cube": [
+              0.9998168349266052,
+              -0.0005038301460444927,
+              0.0008446007850579917,
+              0.01911584846675396
+            ]
+          },
+          "repeat": 2,
+          "right_predicate_at_reset": false,
+          "stability_window": {
+            "banana": {
+              "max_angular_speed_rad_s": 0.11795388907194138,
+              "max_linear_speed_m_s": 0.0018255222821608186
+            },
+            "bowl": {
+              "max_angular_speed_rad_s": 0.03817325830459595,
+              "max_linear_speed_m_s": 0.0014460479142144322
+            },
+            "rubiks_cube": {
+              "max_angular_speed_rad_s": 0.1863163560628891,
+              "max_linear_speed_m_s": 0.004769482649862766
+            }
+          }
+        }
+      ],
+      "target_object": "rubiks_cube"
+    },
+    {
+      "arm": "target_start_center",
+      "label": "target_start_center_right",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "reference_object": "bowl",
+      "relation": "right",
+      "repeat_resets": [
+        {
+          "input_views": {
+            "head_camera": {
+              "dtype": "uint8",
+              "pixel_range": 251,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_left_camera": {
+              "dtype": "uint8",
+              "pixel_range": 255,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_right_camera": {
+              "dtype": "uint8",
+              "pixel_range": 254,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "wrist_cam": {
+              "dtype": "uint8",
+              "pixel_range": 243,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            }
+          },
+          "left_predicate_at_reset": false,
+          "positions_robot_base_m": {
+            "banana": [
+              0.5390517115592957,
+              -0.07562578469514847,
+              0.06818392127752304
+            ],
+            "bowl": [
+              0.4425784945487976,
+              0.12660099565982819,
+              0.07734965533018112
+            ],
+            "rubiks_cube": [
+              0.30615848302841187,
+              0.12376827746629715,
+              0.08110452443361282
+            ]
+          },
+          "quaternions_wxyz": {
+            "banana": [
+              0.9999990463256836,
+              -0.0006599122425541282,
+              -0.001221932703629136,
+              0.00016518571646884084
+            ],
+            "bowl": [
+              0.9999998211860657,
+              -0.00040099190664477646,
+              -0.00042773797758854926,
+              -0.00010086284601129591
+            ],
+            "rubiks_cube": [
+              0.9998167157173157,
+              -0.0004246523603796959,
+              0.0007154500926844776,
+              0.019123295322060585
+            ]
+          },
+          "repeat": 0,
+          "right_predicate_at_reset": false,
+          "stability_window": {
+            "banana": {
+              "max_angular_speed_rad_s": 0.1225772276520729,
+              "max_linear_speed_m_s": 0.0019263087306171656
+            },
+            "bowl": {
+              "max_angular_speed_rad_s": 0.03865202143788338,
+              "max_linear_speed_m_s": 0.0014794593444094062
+            },
+            "rubiks_cube": {
+              "max_angular_speed_rad_s": 0.18416377902030945,
+              "max_linear_speed_m_s": 0.004834664985537529
+            }
+          }
+        },
+        {
+          "input_views": {
+            "head_camera": {
+              "dtype": "uint8",
+              "pixel_range": 252,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_left_camera": {
+              "dtype": "uint8",
+              "pixel_range": 255,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_right_camera": {
+              "dtype": "uint8",
+              "pixel_range": 254,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "wrist_cam": {
+              "dtype": "uint8",
+              "pixel_range": 251,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            }
+          },
+          "left_predicate_at_reset": false,
+          "positions_robot_base_m": {
+            "banana": [
+              0.5390512943267822,
+              -0.07562579214572906,
+              0.06818386167287827
+            ],
+            "bowl": [
+              0.44257795810699463,
+              0.12660075724124908,
+              0.07734983414411545
+            ],
+            "rubiks_cube": [
+              0.30616435408592224,
+              0.12377309799194336,
+              0.08110637217760086
+            ]
+          },
+          "quaternions_wxyz": {
+            "banana": [
+              0.9999989867210388,
+              -0.0006582177011296153,
+              -0.00121941021643579,
+              0.00016520728240720928
+            ],
+            "bowl": [
+              0.9999998807907104,
+              -0.00039663395727984607,
+              -0.00042922570719383657,
+              -0.00010283340816386044
+            ],
+            "rubiks_cube": [
+              0.9998170733451843,
+              -0.0005187575006857514,
+              0.0008560777641832829,
+              0.019098246470093727
+            ]
+          },
+          "repeat": 1,
+          "right_predicate_at_reset": false,
+          "stability_window": {
+            "banana": {
+              "max_angular_speed_rad_s": 0.12194798141717911,
+              "max_linear_speed_m_s": 0.0020574426744133234
+            },
+            "bowl": {
+              "max_angular_speed_rad_s": 0.037307560443878174,
+              "max_linear_speed_m_s": 0.0014372991863638163
+            },
+            "rubiks_cube": {
+              "max_angular_speed_rad_s": 0.18524737656116486,
+              "max_linear_speed_m_s": 0.00486461166292429
+            }
+          }
+        },
+        {
+          "input_views": {
+            "head_camera": {
+              "dtype": "uint8",
+              "pixel_range": 251,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_left_camera": {
+              "dtype": "uint8",
+              "pixel_range": 255,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_right_camera": {
+              "dtype": "uint8",
+              "pixel_range": 254,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "wrist_cam": {
+              "dtype": "uint8",
+              "pixel_range": 250,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            }
+          },
+          "left_predicate_at_reset": false,
+          "positions_robot_base_m": {
+            "banana": [
+              0.5390520095825195,
+              -0.07562586665153503,
+              0.06818340718746185
+            ],
+            "bowl": [
+              0.44257843494415283,
+              0.1266009658575058,
+              0.07734955847263336
+            ],
+            "rubiks_cube": [
+              0.30616581439971924,
+              0.12377293407917023,
+              0.08110561966896057
+            ]
+          },
+          "quaternions_wxyz": {
+            "banana": [
+              0.9999990463256836,
+              -0.0006561628542840481,
+              -0.001213051495142281,
+              0.0001651494821999222
+            ],
+            "bowl": [
+              0.9999998211860657,
+              -0.0004009569820482284,
+              -0.0004279203712940216,
+              -0.00010161983664147556
+            ],
+            "rubiks_cube": [
+              0.9998168349266052,
+              -0.0005038301460444927,
+              0.0008446007850579917,
+              0.01911584846675396
+            ]
+          },
+          "repeat": 2,
+          "right_predicate_at_reset": false,
+          "stability_window": {
+            "banana": {
+              "max_angular_speed_rad_s": 0.11795388907194138,
+              "max_linear_speed_m_s": 0.0018255222821608186
+            },
+            "bowl": {
+              "max_angular_speed_rad_s": 0.03817325830459595,
+              "max_linear_speed_m_s": 0.0014460479142144322
+            },
+            "rubiks_cube": {
+              "max_angular_speed_rad_s": 0.1863163560628891,
+              "max_linear_speed_m_s": 0.004769482649862766
+            }
+          }
+        }
+      ],
+      "target_object": "rubiks_cube"
+    },
+    {
+      "arm": "target_start_left",
+      "label": "target_start_left_left",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "reference_object": "bowl",
+      "relation": "left",
+      "repeat_resets": [
+        {
+          "input_views": {
+            "head_camera": {
+              "dtype": "uint8",
+              "pixel_range": 252,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_left_camera": {
+              "dtype": "uint8",
+              "pixel_range": 255,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_right_camera": {
+              "dtype": "uint8",
+              "pixel_range": 254,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "wrist_cam": {
+              "dtype": "uint8",
+              "pixel_range": 243,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            }
+          },
+          "left_predicate_at_reset": false,
+          "positions_robot_base_m": {
+            "banana": [
+              0.5390510559082031,
+              -0.07562603801488876,
+              0.0681837648153305
+            ],
+            "bowl": [
+              0.44257834553718567,
+              0.126600980758667,
+              0.07734960317611694
+            ],
+            "rubiks_cube": [
+              0.3053976893424988,
+              0.22469380497932434,
+              0.08110585808753967
+            ]
+          },
+          "quaternions_wxyz": {
+            "banana": [
+              0.9999989867210388,
+              -0.0006571629783138633,
+              -0.0012169674737378955,
+              0.00015922279271762818
+            ],
+            "bowl": [
+              0.9999998807907104,
+              -0.00040159051422961056,
+              -0.0004257885448168963,
+              -0.0001016754686133936
+            ],
+            "rubiks_cube": [
+              0.999771237373352,
+              -0.0005243045161478221,
+              0.0008766233222559094,
+              0.021364253014326096
+            ]
+          },
+          "repeat": 0,
+          "right_predicate_at_reset": false,
+          "stability_window": {
+            "banana": {
+              "max_angular_speed_rad_s": 0.12013613432645798,
+              "max_linear_speed_m_s": 0.001962061272934079
+            },
+            "bowl": {
+              "max_angular_speed_rad_s": 0.03653087839484215,
+              "max_linear_speed_m_s": 0.0013980030780658126
+            },
+            "rubiks_cube": {
+              "max_angular_speed_rad_s": 0.13417170941829681,
+              "max_linear_speed_m_s": 0.003251505782827735
+            }
+          }
+        },
+        {
+          "input_views": {
+            "head_camera": {
+              "dtype": "uint8",
+              "pixel_range": 251,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_left_camera": {
+              "dtype": "uint8",
+              "pixel_range": 255,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_right_camera": {
+              "dtype": "uint8",
+              "pixel_range": 255,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "wrist_cam": {
+              "dtype": "uint8",
+              "pixel_range": 250,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            }
+          },
+          "left_predicate_at_reset": false,
+          "positions_robot_base_m": {
+            "banana": [
+              0.5390508770942688,
+              -0.07562590390443802,
+              0.06818389147520065
+            ],
+            "bowl": [
+              0.44257819652557373,
+              0.12660075724124908,
+              0.07734949141740799
+            ],
+            "rubiks_cube": [
+              0.3053978383541107,
+              0.22469410300254822,
+              0.08110596239566803
+            ]
+          },
+          "quaternions_wxyz": {
+            "banana": [
+              0.9999990463256836,
+              -0.0006597230094484985,
+              -0.001222011516802013,
+              0.00015940600133035332
+            ],
+            "bowl": [
+              0.9999998807907104,
+              -0.0003998621250502765,
+              -0.000428147817729041,
+              -0.00010433507122797891
+            ],
+            "rubiks_cube": [
+              0.9997711181640625,
+              -0.000525782466866076,
+              0.0008737384341657162,
+              0.021367842331528664
+            ]
+          },
+          "repeat": 1,
+          "right_predicate_at_reset": false,
+          "stability_window": {
+            "banana": {
+              "max_angular_speed_rad_s": 0.12360267341136932,
+              "max_linear_speed_m_s": 0.002030853880569339
+            },
+            "bowl": {
+              "max_angular_speed_rad_s": 0.03784487396478653,
+              "max_linear_speed_m_s": 0.0014014440821483731
+            },
+            "rubiks_cube": {
+              "max_angular_speed_rad_s": 0.15253353118896484,
+              "max_linear_speed_m_s": 0.0037446573842316866
+            }
+          }
+        },
+        {
+          "input_views": {
+            "head_camera": {
+              "dtype": "uint8",
+              "pixel_range": 252,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_left_camera": {
+              "dtype": "uint8",
+              "pixel_range": 255,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_right_camera": {
+              "dtype": "uint8",
+              "pixel_range": 254,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "wrist_cam": {
+              "dtype": "uint8",
+              "pixel_range": 251,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            }
+          },
+          "left_predicate_at_reset": false,
+          "positions_robot_base_m": {
+            "banana": [
+              0.539050817489624,
+              -0.07562600821256638,
+              0.06818395853042603
+            ],
+            "bowl": [
+              0.44257816672325134,
+              0.12660089135169983,
+              0.07734960317611694
+            ],
+            "rubiks_cube": [
+              0.3053976893424988,
+              0.2246938794851303,
+              0.0811058059334755
+            ]
+          },
+          "quaternions_wxyz": {
+            "banana": [
+              0.9999991059303284,
+              -0.000658673990983516,
+              -0.001220835605636239,
+              0.00015936810814309865
+            ],
+            "bowl": [
+              0.9999998807907104,
+              -0.00040061690378934145,
+              -0.000426698214141652,
+              -0.00010188764281338081
+            ],
+            "rubiks_cube": [
+              0.9997711777687073,
+              -0.0005242510815151036,
+              0.0008768246625550091,
+              0.021364843472838402
+            ]
+          },
+          "repeat": 2,
+          "right_predicate_at_reset": false,
+          "stability_window": {
+            "banana": {
+              "max_angular_speed_rad_s": 0.11938513815402985,
+              "max_linear_speed_m_s": 0.0017753358697518706
+            },
+            "bowl": {
+              "max_angular_speed_rad_s": 0.03797444328665733,
+              "max_linear_speed_m_s": 0.0014229919761419296
+            },
+            "rubiks_cube": {
+              "max_angular_speed_rad_s": 0.13460493087768555,
+              "max_linear_speed_m_s": 0.0032141972333192825
+            }
+          }
+        }
+      ],
+      "target_object": "rubiks_cube"
+    },
+    {
+      "arm": "target_start_left",
+      "label": "target_start_left_right",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "reference_object": "bowl",
+      "relation": "right",
+      "repeat_resets": [
+        {
+          "input_views": {
+            "head_camera": {
+              "dtype": "uint8",
+              "pixel_range": 251,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_left_camera": {
+              "dtype": "uint8",
+              "pixel_range": 255,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_right_camera": {
+              "dtype": "uint8",
+              "pixel_range": 254,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "wrist_cam": {
+              "dtype": "uint8",
+              "pixel_range": 243,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            }
+          },
+          "left_predicate_at_reset": false,
+          "positions_robot_base_m": {
+            "banana": [
+              0.5390510559082031,
+              -0.07562603801488876,
+              0.0681837648153305
+            ],
+            "bowl": [
+              0.44257834553718567,
+              0.126600980758667,
+              0.07734960317611694
+            ],
+            "rubiks_cube": [
+              0.3053976893424988,
+              0.22469380497932434,
+              0.08110585808753967
+            ]
+          },
+          "quaternions_wxyz": {
+            "banana": [
+              0.9999989867210388,
+              -0.0006571629783138633,
+              -0.0012169674737378955,
+              0.00015922279271762818
+            ],
+            "bowl": [
+              0.9999998807907104,
+              -0.00040159051422961056,
+              -0.0004257885448168963,
+              -0.0001016754686133936
+            ],
+            "rubiks_cube": [
+              0.999771237373352,
+              -0.0005243045161478221,
+              0.0008766233222559094,
+              0.021364253014326096
+            ]
+          },
+          "repeat": 0,
+          "right_predicate_at_reset": false,
+          "stability_window": {
+            "banana": {
+              "max_angular_speed_rad_s": 0.12013613432645798,
+              "max_linear_speed_m_s": 0.001962061272934079
+            },
+            "bowl": {
+              "max_angular_speed_rad_s": 0.03653087839484215,
+              "max_linear_speed_m_s": 0.0013980030780658126
+            },
+            "rubiks_cube": {
+              "max_angular_speed_rad_s": 0.13417170941829681,
+              "max_linear_speed_m_s": 0.003251505782827735
+            }
+          }
+        },
+        {
+          "input_views": {
+            "head_camera": {
+              "dtype": "uint8",
+              "pixel_range": 251,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_left_camera": {
+              "dtype": "uint8",
+              "pixel_range": 255,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_right_camera": {
+              "dtype": "uint8",
+              "pixel_range": 254,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "wrist_cam": {
+              "dtype": "uint8",
+              "pixel_range": 250,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            }
+          },
+          "left_predicate_at_reset": false,
+          "positions_robot_base_m": {
+            "banana": [
+              0.5390508770942688,
+              -0.07562590390443802,
+              0.06818389147520065
+            ],
+            "bowl": [
+              0.44257819652557373,
+              0.12660075724124908,
+              0.07734949141740799
+            ],
+            "rubiks_cube": [
+              0.3053978383541107,
+              0.22469410300254822,
+              0.08110596239566803
+            ]
+          },
+          "quaternions_wxyz": {
+            "banana": [
+              0.9999990463256836,
+              -0.0006597230094484985,
+              -0.001222011516802013,
+              0.00015940600133035332
+            ],
+            "bowl": [
+              0.9999998807907104,
+              -0.0003998621250502765,
+              -0.000428147817729041,
+              -0.00010433507122797891
+            ],
+            "rubiks_cube": [
+              0.9997711181640625,
+              -0.000525782466866076,
+              0.0008737384341657162,
+              0.021367842331528664
+            ]
+          },
+          "repeat": 1,
+          "right_predicate_at_reset": false,
+          "stability_window": {
+            "banana": {
+              "max_angular_speed_rad_s": 0.12360267341136932,
+              "max_linear_speed_m_s": 0.002030853880569339
+            },
+            "bowl": {
+              "max_angular_speed_rad_s": 0.03784487396478653,
+              "max_linear_speed_m_s": 0.0014014440821483731
+            },
+            "rubiks_cube": {
+              "max_angular_speed_rad_s": 0.15253353118896484,
+              "max_linear_speed_m_s": 0.0037446573842316866
+            }
+          }
+        },
+        {
+          "input_views": {
+            "head_camera": {
+              "dtype": "uint8",
+              "pixel_range": 252,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_left_camera": {
+              "dtype": "uint8",
+              "pixel_range": 255,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "over_shoulder_right_camera": {
+              "dtype": "uint8",
+              "pixel_range": 254,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            },
+            "wrist_cam": {
+              "dtype": "uint8",
+              "pixel_range": 251,
+              "shape": [
+                720,
+                1280,
+                3
+              ]
+            }
+          },
+          "left_predicate_at_reset": false,
+          "positions_robot_base_m": {
+            "banana": [
+              0.539050817489624,
+              -0.07562600821256638,
+              0.06818395853042603
+            ],
+            "bowl": [
+              0.44257816672325134,
+              0.12660089135169983,
+              0.07734960317611694
+            ],
+            "rubiks_cube": [
+              0.3053976893424988,
+              0.2246938794851303,
+              0.0811058059334755
+            ]
+          },
+          "quaternions_wxyz": {
+            "banana": [
+              0.9999991059303284,
+              -0.000658673990983516,
+              -0.001220835605636239,
+              0.00015936810814309865
+            ],
+            "bowl": [
+              0.9999998807907104,
+              -0.00040061690378934145,
+              -0.000426698214141652,
+              -0.00010188764281338081
+            ],
+            "rubiks_cube": [
+              0.9997711777687073,
+              -0.0005242510815151036,
+              0.0008768246625550091,
+              0.021364843472838402
+            ]
+          },
+          "repeat": 2,
+          "right_predicate_at_reset": false,
+          "stability_window": {
+            "banana": {
+              "max_angular_speed_rad_s": 0.11938513815402985,
+              "max_linear_speed_m_s": 0.0017753358697518706
+            },
+            "bowl": {
+              "max_angular_speed_rad_s": 0.03797444328665733,
+              "max_linear_speed_m_s": 0.0014229919761419296
+            },
+            "rubiks_cube": {
+              "max_angular_speed_rad_s": 0.13460493087768555,
+              "max_linear_speed_m_s": 0.0032141972333192825
+            }
+          }
+        }
+      ],
+      "target_object": "rubiks_cube"
+    }
+  ],
+  "viewport_write_gate": {
+    "target_start_center_left": {
+      "bytes": 327683,
+      "decoded_frame_count": 3,
+      "path": "/data/users/ali/vla_wam/raw/v3b/tier_b_gates/v3b008/attempt02/target_start_center_left_repeated_resets.mp4",
+      "sha256": "0649bc3ea1ffa8a9aa89338e7afab2adb1a9527574d377826fda0d56992e2776"
+    },
+    "target_start_center_right": {
+      "bytes": 323450,
+      "decoded_frame_count": 3,
+      "path": "/data/users/ali/vla_wam/raw/v3b/tier_b_gates/v3b008/attempt02/target_start_center_right_repeated_resets.mp4",
+      "sha256": "b24509008a041e9fcc7d1ce2fa94cb9cbc02da2bed2ca389d5d15efcbb403f94"
+    },
+    "target_start_left_left": {
+      "bytes": 330278,
+      "decoded_frame_count": 3,
+      "path": "/data/users/ali/vla_wam/raw/v3b/tier_b_gates/v3b008/attempt02/target_start_left_left_repeated_resets.mp4",
+      "sha256": "6d29f34844c0af0e95f10097c6b2809a7a017e0b36fa10efd562bf31d98e98be"
+    },
+    "target_start_left_right": {
+      "bytes": 328150,
+      "decoded_frame_count": 3,
+      "path": "/data/users/ali/vla_wam/raw/v3b/tier_b_gates/v3b008/attempt02/target_start_left_right_repeated_resets.mp4",
+      "sha256": "5f3756a194982630e4cc7c5efbcacec489977951f61d2e7c6235513f1aff19bd"
+    },
+    "target_start_right_left": {
+      "bytes": 329354,
+      "decoded_frame_count": 3,
+      "path": "/data/users/ali/vla_wam/raw/v3b/tier_b_gates/v3b008/attempt02/target_start_right_left_repeated_resets.mp4",
+      "sha256": "7284cda7fcb27837045d1fe889f2cf9615c85abcb2c0d94fbe27924772156720"
+    },
+    "target_start_right_right": {
+      "bytes": 327339,
+      "decoded_frame_count": 3,
+      "path": "/data/users/ali/vla_wam/raw/v3b/tier_b_gates/v3b008/attempt02/target_start_right_right_repeated_resets.mp4",
+      "sha256": "eb9743abb575bcf86307b1c8ccb7fdadcb4028c3a3220ca247eab34fafbadc8c"
+    }
+  }
+}

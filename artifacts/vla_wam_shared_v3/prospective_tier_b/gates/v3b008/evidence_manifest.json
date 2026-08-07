@@ -1,0 +1,47 @@
+{
+  "schema_version": "vla-wam-shared-v3b-tier-b-gate-evidence-manifest-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B008",
+  "status": "model_blind_gate_passed_behavior_still_unreleased",
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "gate_summary": {
+    "registered_levels": ["target_start_right", "target_start_center", "target_start_left"],
+    "selected_symmetric_cube_minus_bowl_lateral_offset_m": 0.1,
+    "task_count": 6,
+    "repeated_resets_per_task": 3,
+    "left_right_physical_fingerprints_equal_within_each_arm": true,
+    "neither_requested_predicate_true_at_every_reset": true,
+    "all_required_rgb_views_nonblank": true,
+    "all_six_viewport_writes_decode": true
+  },
+  "files": [
+    {
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/nano_start_side_v3b008.json",
+      "bytes": 3076,
+      "sha256": "8cd7c3bda7db0c3b9097e72c54d74fe0b81fd8a3d1909b6ec4aea00748c854c2"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/droid_gate_candidate_v3b008_v3b009.json",
+      "bytes": 3449,
+      "sha256": "8820932c3768ca9324e1dce8b6e18c4c7847126cc4388aad6f305f7088b14f27"
+    },
+    {
+      "path": "experiments/v3/prospective_tier_b_gates/model_blind_droid_gate.py",
+      "bytes": 15628,
+      "sha256": "00591b695d9157dad74acc1a9c62cb9c5ef103356431da4f31b28142b8edd832"
+    },
+    {
+      "path": "experiments/v3/prospective_tier_b_gates/droid_fixture_tasks.py",
+      "bytes": 4329,
+      "sha256": "7125fa760094e34fba71bbfcbcc6a8b28eab166dd52dd3699ca7eb79cb2b3fea"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/gates/v3b008/model_blind_gate_report.json",
+      "bytes": 56076,
+      "sha256": "a256113c8a53186ad2842555804a491a2bc759f22bdb14bc5c89a44b1d88cb46"
+    }
+  ],
+  "pvc_media": "The report hash-binds all six persistent repeated-reset MP4s under /data/users/ali/vla_wam/raw/v3b/tier_b_gates/v3b008/attempt02; the bounded videos remain on the ali PVC and are not behavioral rollouts.",
+  "release_boundary": "This gate does not authorize a model server or any of the 162 prospective behavioral episodes. A new hash-bound release amendment and exact queue must pass validation first."
+}

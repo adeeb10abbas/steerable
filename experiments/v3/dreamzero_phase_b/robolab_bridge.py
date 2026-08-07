@@ -190,7 +190,7 @@ class StateCaptureProxy:
     def __getattr__(self, name: str) -> Any:
         return getattr(self._env, name)
 
-    def _sample(self, action_step: int) -> None:
+    def _sample(self, action_step: int, *, persist: bool = True) -> None:
         cube_world = self._env.scene["rubiks_cube"].data.root_pos_w[0].detach().cpu().numpy()
         bowl_world = self._env.scene["bowl"].data.root_pos_w[0].detach().cpu().numpy()
         robot = self._env.scene["robot"].data
@@ -203,8 +203,9 @@ class StateCaptureProxy:
             "grippers_open": bool(object_dropped(self._env, object="rubiks_cube", env_id=0)),
         }
         self._samples.append(sample)
-        with self._partial.open("a", encoding="utf-8") as handle:
-            handle.write(json.dumps(sample, sort_keys=True, separators=(",", ":")) + "\n")
+        if persist:
+            with self._partial.open("a", encoding="utf-8") as handle:
+                handle.write(json.dumps(sample, sort_keys=True, separators=(",", ":")) + "\n")
 
     def reset(self, *args: Any, **kwargs: Any) -> Any:
         if self._partial.exists() or len(self._samples) > 1:
@@ -273,7 +274,11 @@ class StateCaptureProxy:
         }
         self._samples = []
         self._started = time.monotonic()
-        self._sample(0)
+        # RoboLab deliberately calls reset twice before the first action. Keep
+        # the initial observation in memory until that idempotent second reset
+        # has been attested; the partial journal denotes executed behavior and
+        # therefore must not exist yet.
+        self._sample(0, persist=False)
         if not isinstance(result, tuple) or len(result) != 2:
             raise RuntimeError("RoboLab reset did not return (observation, info)")
         self._cached_reset_result = result

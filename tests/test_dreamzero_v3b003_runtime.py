@@ -30,3 +30,11 @@ def test_registered_noise_seed_is_constant_while_pair_labels_match() -> None:
     for cell in load_cells(ROOT):
         assert cell.row["effective_model_noise_seed"] == 1140
         assert cell.row["registered_sampling_seed_label"] == cell.seed
+
+
+def test_initial_reset_sample_does_not_mark_behavior_as_executed() -> None:
+    source = (
+        ROOT / "experiments" / "v3" / "dreamzero_phase_b" / "robolab_bridge.py"
+    ).read_text()
+    assert "def _sample(self, action_step: int, *, persist: bool = True)" in source
+    assert "self._sample(0, persist=False)" in source

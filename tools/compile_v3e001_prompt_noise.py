@@ -23,21 +23,25 @@ def main() -> None:
     ap.add_argument("--input-dir", type=Path, required=True)
     ap.add_argument("--output", type=Path, required=True)
     args = ap.parse_args()
-    rows = []
     source_files = []
+    unique, invalid = {}, []
     for path in sorted(args.input_dir.rglob("requests*.jsonl")):
         source_files.append({"path": str(path), "sha256": sha256(path), "bytes": path.stat().st_size})
-        for line in path.read_text(encoding="utf-8").splitlines():
-            if line.strip(): rows.append(json.loads(line))
-    # A crashed shard may leave a partial prefix. Keep the first registered
-    # record for a key and retain all infrastructure-invalid records separately.
-    unique, invalid = {}, []
-    for row in rows:
-        key = (row.get("model_id"), row.get("layout"), row.get("relation"), int(row.get("sampling_seed", -1)), bool(row.get("exact_repeat")))
-        if row.get("status") == "infrastructure_invalid":
-            invalid.append(row)
-        elif key not in unique:
-            unique[key] = row
+        # Stream one JSON object at a time. Nano's retained decoded future can
+        # make a single line hundreds of MB; keep only the action-bearing
+        # fields needed by this compact diagnostic and discard video tensors.
+        with path.open(encoding="utf-8") as handle:
+            for line in handle:
+                if not line.strip():
+                    continue
+                row = json.loads(line)
+                key = (row.get("model_id"), row.get("layout"), row.get("relation"), int(row.get("sampling_seed", -1)), bool(row.get("exact_repeat")))
+                if row.get("status") == "infrastructure_invalid":
+                    invalid.append({"model_id": row.get("model_id"), "layout": row.get("layout"), "relation": row.get("relation"), "sampling_seed": row.get("sampling_seed"), "error_type": row.get("error_type"), "error": row.get("error")})
+                elif key not in unique:
+                    response = row.get("response", {})
+                    unique[key] = {k: row.get(k) for k in ("model_id", "layout", "relation", "prompt", "sampling_seed", "exact_repeat", "status")}
+                    unique[key]["response"] = {k: response.get(k) for k in ("action", "action_shape", "action_sha256", "action_finite") if k in response}
     records = list(unique.values())
     metrics = {}
     for raw_model, model_id in EXPECTED.items():

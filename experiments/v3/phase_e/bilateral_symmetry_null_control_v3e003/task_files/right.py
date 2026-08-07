@@ -4,7 +4,7 @@ from robolab.core.task.task import Task
 
 @dataclass
 class V3E003Pi05SymmetricRightTask(Task):
-    contact_object_list = ["rubiks_cube", "banana_left", "banana_right", "bowl", "table"]
+    contact_object_list = ["rubiks_cube", "banana", "banana_right", "bowl", "table"]
     scene = fixture._scene()
     terminations = fixture._RightTermination
     instruction = {"default": fixture.RIGHT_PROMPT}

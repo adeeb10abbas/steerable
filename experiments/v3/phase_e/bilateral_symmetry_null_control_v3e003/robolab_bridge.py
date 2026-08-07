@@ -222,7 +222,7 @@ class StateCaptureProxy:
             obs, _, terminated, truncated, _ = self._env.step(hold)
             if bool(terminated[0]) or bool(truncated[0]):
                 raise RuntimeError("cell terminated during 60-step model-blind settle")
-        maxima = {name: {"linear": 0.0, "angular": 0.0} for name in ("rubiks_cube", "bowl", "banana_left", "banana_right")}
+        maxima = {name: {"linear": 0.0, "angular": 0.0} for name in ("rubiks_cube", "bowl", "banana", "banana_right")}
         for _ in range(15):
             obs, _, terminated, truncated, _ = self._env.step(hold)
             if bool(terminated[0]) or bool(truncated[0]):
@@ -233,7 +233,7 @@ class StateCaptureProxy:
                 row["linear"] = max(row["linear"], float(np.max(np.abs(velocity[:3]))))
                 row["angular"] = max(row["angular"], float(np.max(np.abs(velocity[3:]))))
         if any(row["linear"] > .02 or row["angular"] > .2 for row in maxima.values()):
-            raise RuntimeError("live reset failed Nano's registered stability tolerances")
+            raise RuntimeError(f"live reset failed registered stability tolerances: {maxima}")
         self._env.episode_length_buf.zero_()
         self.samples = [self._sample(0)]
         self.stability = {"maxima": maxima, "settle_steps": 60, "stable_window_steps": 15}

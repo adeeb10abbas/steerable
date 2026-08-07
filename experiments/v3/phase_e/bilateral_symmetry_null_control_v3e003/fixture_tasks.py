@@ -49,13 +49,14 @@ def _scene():
     # second YCB banana payload in the task config so the only extra movable
     # items are the registered mirrored clutter pair.
     scene = import_scene("rubiks_cube_banana_bowl.usda", ["rubiks_cube", "banana", "bowl", "table"])
-    left = copy.deepcopy(scene.banana)
+    # Reuse the asset's registered ``banana`` prim as the left member; adding
+    # a second prim is sufficient and avoids leaving a third, unregistered
+    # movable banana in the scene.
+    left = scene.banana
     right = copy.deepcopy(scene.banana)
     left.init_state.pos = tuple(BASE_POSITIONS["banana_left"])
     right.init_state.pos = tuple(BASE_POSITIONS["banana_right"])
-    scene.banana_left = left
     scene.banana_right = right
-    scene.banana_left.init_state.pos = tuple(BASE_POSITIONS["banana_left"])
     scene.banana_right.init_state.pos = tuple(BASE_POSITIONS["banana_right"])
     scene.bowl.init_state.pos = tuple(BASE_POSITIONS["bowl"])
     scene.rubiks_cube.init_state.pos = tuple(BASE_POSITIONS["rubiks_cube"])

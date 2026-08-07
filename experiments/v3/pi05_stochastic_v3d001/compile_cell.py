@@ -137,6 +137,7 @@ def build_record(*, export: Mapping[str, Any], output_jsonl: Path, cell: Authori
         "schema_version": EXPORT_SCHEMA, "study_id": STUDY_ID,
         "registration_id": REGISTRATION_ID, "phase": PHASE, "arena": ARENA,
         "model_id": MODEL_ID, "registered_cell_id": cell.cell_id,
+        "attempt_id": export.get("attempt_id"),
         "matched_stochastic_block_id": cell.block_id,
         "nested_condition_id": cell.row["nested_condition_id"],
         "environment_seed": cell.environment_seed,
@@ -161,6 +162,16 @@ def build_record(*, export: Mapping[str, Any], output_jsonl: Path, cell: Authori
     for key in ("lane_pod_uid", "lane_gpu_uuid"):
         if not isinstance(export.get(key), str) or not export[key].strip():
             raise ContractError(f"V3-D001 requires explicit {key}")
+    if not isinstance(export.get("attempt_id"), str) or not export["attempt_id"].startswith(cell.cell_id+":attempt"):
+        raise ContractError("V3-D001 attempt identity changed")
+    reset_records = export.get("pre_action_reset_attestations")
+    if not isinstance(reset_records, list) or not reset_records:
+        raise ContractError("V3-D001 requires every pre-action reset attestation")
+    bound_resets = [_bound_file(row, f"pre-action reset attestation {index}") for index, row in enumerate(reset_records)]
+    for index, row in enumerate(bound_resets):
+        value = _object(Path(row["path"]))
+        if value.get("registered_cell_id") != cell.cell_id or value.get("attempt_id") != export["attempt_id"] or value.get("pre_action_reset_index") != index or value.get("actions_executed_before_next_reset") != 0 or value.get("initial_state_sha256") != cell.row["source_phase_a_initial_state_sha256"]:
+            raise ContractError("V3-D001 pre-action reset attestation changed")
     steps = _steps(export.get("steps"))
     actions_executed = len(steps) - 1
     success, censored = export.get("requested_success"), export.get("right_censored")
@@ -190,7 +201,7 @@ def build_record(*, export: Mapping[str, Any], output_jsonl: Path, cell: Authori
         "schema_version": BEHAVIORAL_SCHEMA_VERSION, "record_type": "behavioral_episode",
         "behavioral_result_valid": True, "study_id": STUDY_ID,
         "registered_cell_id": cell.cell_id,
-        "attempt_id": f"{cell.cell_id}:attempt01", "model_id": MODEL_ID,
+        "attempt_id": export["attempt_id"], "model_id": MODEL_ID,
         "pair_id": cell.block_id, "arena": ARENA,
         "environment_seed": cell.environment_seed, "policy_seed": cell.sampling_seed_base,
         "requested_relation": cell.relation, "prompt": cell.row["prompt"],
@@ -203,7 +214,8 @@ def build_record(*, export: Mapping[str, Any], output_jsonl: Path, cell: Authori
         "artifacts": {"viewport_video": video, "executed_action_trace": actions_record,
                       "raw_result_jsonl": {"path": str(output_jsonl.resolve()), "integrity_scope": "batch_manifest_after_close"}},
         "source_artifacts": {"state_capture": capture, "action_trace_metadata": trace_metadata,
-                             "returned_action_chunks": chunks_record},
+                             "returned_action_chunks": chunks_record,
+                             "pre_action_reset_attestations": bound_resets},
         "future_interface": "actions_only", "future_evidence_status": "not_exposed_by_action_only_interface",
         "missing_future_policy": "action_only_interface_not_applicable_never_zero",
         "requested_success": success, "failure_stage": "pending", "frozen_failure_stage": "pending",

@@ -29,21 +29,24 @@ def _object(path: Path) -> dict[str, Any]:
     return value
 
 
-def _attempt(raw_root: Path, cell: AuthorizedCell) -> Path:
-    return Path(raw_root).resolve()/"V3-D001_pi05_nested_stochastic"/cell.cell_id.replace(":", "__")/"attempt01"
+def _attempt(raw_root: Path, cell: AuthorizedCell, attempt_index: int) -> Path:
+    if type(attempt_index) is not int or attempt_index < 1:
+        raise ContractError("attempt-index must be a positive integer")
+    return Path(raw_root).resolve()/"V3-D001_pi05_nested_stochastic"/cell.cell_id.replace(":", "__")/f"attempt{attempt_index:02d}"
 
 
 def cell_plan(*, repo_root: Path, release_manifest: Path, runtime_identity: Path,
               phase_a_release_gate: Path, raw_root: Path, cell: AuthorizedCell,
               remote_host: str, remote_port: int, device: str, gpu_index: int,
-              lane_pod_uid: str, lane_gpu_uuid: str) -> dict[str, Any]:
+              lane_pod_uid: str, lane_gpu_uuid: str, attempt_index: int = 1) -> dict[str, Any]:
     root = Path(repo_root).resolve()
-    attempt = _attempt(raw_root, cell)
+    attempt = _attempt(raw_root, cell, attempt_index)
     common = [
         "--study-root", str(root), "--release-manifest", str(release_manifest.resolve()),
         "--runtime-identity", str(runtime_identity.resolve()),
         "--phase-a-release-gate", str(phase_a_release_gate.resolve()),
-        "--cell-id", cell.cell_id, "--lane-pod-uid", lane_pod_uid,
+        "--cell-id", cell.cell_id, "--attempt-id", f"{cell.cell_id}:attempt{attempt_index:02d}",
+        "--lane-pod-uid", lane_pod_uid,
         "--lane-gpu-uuid", lane_gpu_uuid,
     ]
     worker = [
@@ -157,20 +160,21 @@ def run_cell(plan: dict[str, Any]) -> dict[str, Any]:
     return result
 
 
-def _pair_paths(release: Any, raw_root: Path, block_id: str) -> tuple[Path, Path, Path]:
+def _pair_paths(release: Any, raw_root: Path, block_id: str, attempt_index: int) -> tuple[Path, Path, Path]:
     cells = [cell for cell in release.cells if cell.block_id == block_id]
     if len(cells) != 2:
         raise ContractError("released matched block must contain exactly two cells")
     by_relation = {cell.relation: cell for cell in cells}
-    left = _attempt(raw_root, by_relation["left"])/"raw_episode.jsonl"
-    right = _attempt(raw_root, by_relation["right"])/"raw_episode.jsonl"
-    output = Path(raw_root).resolve()/"V3-D001_pi05_nested_stochastic"/"matched_pairs"/(block_id.replace(":", "__")+".json")
+    left = _attempt(raw_root, by_relation["left"], attempt_index)/"raw_episode.jsonl"
+    right = _attempt(raw_root, by_relation["right"], attempt_index)/"raw_episode.jsonl"
+    output = Path(raw_root).resolve()/"V3-D001_pi05_nested_stochastic"/"matched_pairs"/f"attempt{attempt_index:02d}"/(block_id.replace(":", "__")+".json")
     return left, right, output
 
 
 def compile_completed_pair(*, repo_root: Path, release_manifest: Path, release: Any,
-                           raw_root: Path, block_id: str) -> dict[str, Any] | None:
-    left, right, output = _pair_paths(release, raw_root, block_id)
+                           raw_root: Path, block_id: str,
+                           attempt_index: int = 1) -> dict[str, Any] | None:
+    left, right, output = _pair_paths(release, raw_root, block_id, attempt_index)
     manifest = output.with_name(output.name+".manifest.json")
     if output.is_file() and manifest.is_file():
         value = _object(manifest)
@@ -210,6 +214,7 @@ def main() -> None:
         command.add_argument("--lane-gpu-uuid", required=True)
         command.add_argument("--lane-index", type=int, default=0)
         command.add_argument("--lane-count", type=int, default=1)
+        command.add_argument("--attempt-index", type=int, default=1)
         if mode == "run-cell":
             command.add_argument("--cell-id", required=True)
         if mode == "run-queue":
@@ -235,7 +240,8 @@ def main() -> None:
                        raw_root=args.raw_root, cell=cell, remote_host=args.remote_host,
                        remote_port=args.remote_port, device=args.device,
                        gpu_index=args.gpu_index, lane_pod_uid=args.lane_pod_uid,
-                       lane_gpu_uuid=args.lane_gpu_uuid) for cell in cells]
+                       lane_gpu_uuid=args.lane_gpu_uuid,
+                       attempt_index=args.attempt_index) for cell in cells]
     if args.mode == "plan":
         print(json.dumps({"release_manifest_sha256": RELEASE_MANIFEST_SHA256,
                           "lane_index": args.lane_index, "lane_count": args.lane_count,
@@ -259,7 +265,8 @@ def main() -> None:
         pair = compile_completed_pair(repo_root=args.repo_root,
                                       release_manifest=args.release_manifest,
                                       release=release, raw_root=args.raw_root,
-                                      block_id=plan["matched_stochastic_block_id"])
+                                      block_id=plan["matched_stochastic_block_id"],
+                                      attempt_index=args.attempt_index)
         if pair is not None:
             pairs.append(pair)
     print(json.dumps({"completed": len(results), "pair_outputs": pairs,

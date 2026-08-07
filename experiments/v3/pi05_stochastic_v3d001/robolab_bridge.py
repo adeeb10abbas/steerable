@@ -21,6 +21,7 @@ BOOT.add_argument("--release-manifest", type=Path, required=True)
 BOOT.add_argument("--runtime-identity", type=Path, required=True)
 BOOT.add_argument("--phase-a-release-gate", type=Path, required=True)
 BOOT.add_argument("--cell-id", required=True)
+BOOT.add_argument("--attempt-id", required=True)
 BOOT.add_argument("--state-capture-dir", type=Path, required=True)
 BOOT.add_argument("--action-trace-dir", type=Path, required=True)
 BOOT.add_argument("--simulator-export", type=Path, required=True)
@@ -122,10 +123,13 @@ class StateCapture:
     def __init__(self, env: Any) -> None:
         self._env = env
         self.samples: list[dict[str, Any]] = []
+        self.reset_attestations: list[dict[str, Any]] = []
+        self.reset_count = 0
         self.started = time.monotonic()
         self.written = False
         stem = cell.cell_id.replace(":", "__")
-        self.partial = boot.state_capture_dir / f"{stem}.states.partial.jsonl"
+        self.stem = stem
+        self.partial: Path | None = None
         self.capture = boot.state_capture_dir / f"{stem}.capture.json"
 
     def __getattr__(self, name: str) -> Any:
@@ -146,22 +150,57 @@ class StateCapture:
         }
 
     def reset(self, *args: Any, **kwargs: Any) -> Any:
-        if self.partial.exists() or self.capture.exists():
-            raise FileExistsError("refusing to overwrite V3-D001 state evidence")
+        if len(self.samples) > 1:
+            raise RuntimeError("V3-D001 forbids a reset after any executed action")
+        if self.capture.exists():
+            raise FileExistsError("refusing to overwrite completed V3-D001 state evidence")
+        if self.samples:
+            self._write_reset_attestation()
         result = self._env.reset(*args, **kwargs)
         self.samples = [self._sample(0)]
         self.started = time.monotonic()
         boot.state_capture_dir.mkdir(parents=True, exist_ok=True)
+        self.partial = boot.state_capture_dir / f"{self.stem}.reset{self.reset_count:02d}.states.partial.jsonl"
+        if self.partial.exists():
+            raise FileExistsError("refusing to overwrite V3-D001 reset state evidence")
         self.partial.write_text(json.dumps(self.samples[0], sort_keys=True) + "\n", encoding="utf-8")
         initial = derive_initial_state_sha256({"measurement_frame": MEASUREMENT_FRAME_ID, "steps": self.samples})
         if initial != cell.row["source_phase_a_initial_state_sha256"]:
             raise RuntimeError("V3-D001 reset differs from its exact Phase-A condition")
+        self.reset_count += 1
+        self._write_reset_attestation()
         return result
+
+    def _write_reset_attestation(self) -> None:
+        index = self.reset_count - 1
+        if index < 0 or not self.samples or self.partial is None:
+            raise RuntimeError("cannot attest an absent V3-D001 reset")
+        if len(self.samples) != 1:
+            raise RuntimeError("only pre-action V3-D001 resets may be attested here")
+        path = boot.state_capture_dir / f"{self.stem}.reset{index:02d}.attestation.json"
+        if any(row["path"] == str(path.resolve()) for row in self.reset_attestations):
+            return
+        if path.exists():
+            raise FileExistsError("refusing to overwrite V3-D001 reset attestation")
+        initial = derive_initial_state_sha256({"measurement_frame": MEASUREMENT_FRAME_ID, "steps": self.samples})
+        if initial != cell.row["source_phase_a_initial_state_sha256"]:
+            raise RuntimeError("V3-D001 pre-action reset attestation changed")
+        value = {
+            "schema_version": "vla-wam-shared-v3d001-pi05-reset-attestation-v1",
+            "registered_cell_id": cell.cell_id, "attempt_id": boot.attempt_id,
+            "pre_action_reset_index": index, "actions_executed_before_next_reset": 0,
+            "initial_state_sha256": initial, "sample": self.samples[0],
+            "partial_state_stream": str(self.partial.resolve()),
+        }
+        path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        self.reset_attestations.append({"path": str(path.resolve()), "sha256": sha256_file(path), "bytes": path.stat().st_size})
 
     def step(self, action: Any) -> Any:
         result = self._env.step(action)
         sample = self._sample(len(self.samples))
         self.samples.append(sample)
+        if self.partial is None:
+            raise RuntimeError("V3-D001 step occurred before a retained reset")
         with self.partial.open("a", encoding="utf-8") as handle:
             handle.write(json.dumps(sample, sort_keys=True) + "\n")
         return result
@@ -178,6 +217,8 @@ class StateCapture:
         actions = len(self.samples) - 1
         complete = success or actions == ACTION_CAP
         requested = [_cone(sample, cell.relation) for sample in self.samples]
+        if len(self.samples) == 1:
+            self._write_reset_attestation()
         value = {
             "schema_version": "vla-wam-shared-v3d001-pi05-state-capture-v1",
             "registered_cell_id": cell.cell_id,
@@ -201,6 +242,8 @@ class StateCapture:
             "samples": self.samples,
             "behavioral_result_valid_candidate": complete,
             "partial_attempt_reason": None if complete else "episode ended before success or 450 actions",
+            "pre_action_reset_count": self.reset_count,
+            "pre_action_reset_attestations": self.reset_attestations,
         }
         self.capture.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
         self.written = True
@@ -261,6 +304,7 @@ def write_export() -> None:
         "arena": ARENA,
         "model_id": MODEL_ID,
         "registered_cell_id": cell.cell_id,
+        "attempt_id": boot.attempt_id,
         "matched_stochastic_block_id": cell.block_id,
         "nested_condition_id": cell.row["nested_condition_id"],
         "environment_seed": cell.environment_seed,
@@ -295,6 +339,7 @@ def write_export() -> None:
         "returned_action_chunks": trace["returned_action_chunks"],
         "action_trace_metadata_path": str(clients[0].trace_path),
         "state_capture_path": str(captures[0].capture.resolve()),
+        "pre_action_reset_attestations": capture["pre_action_reset_attestations"],
         "viewport_video_path": str(_one_video()),
         "wall_time_s": capture["wall_time_s"],
         "operational_wall_time_valid": True,

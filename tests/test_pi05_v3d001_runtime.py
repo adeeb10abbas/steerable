@@ -66,12 +66,13 @@ class V3D001RuntimeTest(unittest.TestCase):
             phase_a_release_gate=Path("/pvc/gate.json"), raw_root=Path("/pvc/raw"),
             cell=cell, remote_host="10.0.0.10", remote_port=8001,
             device="cuda:0", gpu_index=0, lane_pod_uid="ali-pod-uid",
-            lane_gpu_uuid="GPU-ALI",
+            lane_gpu_uuid="GPU-ALI", attempt_index=2,
         )
         self.assertIn("native_process_group_thermal_guard.py", " ".join(plan["bridge_command"]))
         self.assertIn(str(cell.sampling_seed_base), plan["bridge_command"])
         self.assertEqual(plan["environment"]["OMNI_KIT_ACCEPT_EULA"], "YES")
         self.assertEqual(plan["matched_stochastic_block_id"], cell.block_id)
+        self.assertTrue(plan["attempt_dir"].endswith("attempt02"))
 
 
 if __name__ == "__main__":

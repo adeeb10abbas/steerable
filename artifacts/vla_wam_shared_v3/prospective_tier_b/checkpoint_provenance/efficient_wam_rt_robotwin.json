@@ -1,0 +1,75 @@
+{
+  "action_future_interface": {
+    "actions": "16-action chunks",
+    "execution": "10 inference steps",
+    "future": "decoded coarse future video, maximum one retained chunk"
+  },
+  "arena": "robotwin",
+  "caption_exposure": {
+    "audit_method": "No training-caption corpus or episode-to-caption manifest is committed. Checkpoint names and this study's inference prompts are not treated as training-caption evidence.",
+    "disclosure_status": "not_auditable",
+    "exact_probe_sentences": "unknown",
+    "left_right_tokens": "unknown",
+    "matched_examples_sha256": "unknown",
+    "synthetic_or_recaptioned_language": "unknown"
+  },
+  "checkpoint_identity": {
+    "artifact_id": "jiajun0613/Efficient-WAM_RoboTwin/Efficient-WAM-RT",
+    "content_hash_kind": "sha256 of the hash-bearing checkpoint manifest artifact",
+    "content_sha256": "7f22e356fe8a0d209ecb8aed312b485e2a7aa6307a5f82edd0bf162c3c530d82",
+    "revision": "81280a79e8ac69dd6ffb9ce8698e00d122ec07fd",
+    "runtime_hash_kind": "runtime identity payload sha256",
+    "runtime_identity_sha256": "946d1ec792ed0875fd9aab2f3feb369ccc0a719743c5aa50b02b62682ca43a76"
+  },
+  "evidence": [
+    {
+      "path_or_url": "artifacts/vla_wam_shared_v3/results/efficient_wam_rt_robotwin_phase_a_summary.json",
+      "sha256_or_status": "5796bdbedde6124b9a849fa4ab9785171c0caddd5fd18d28e67706e30ed554e5"
+    },
+    {
+      "path_or_url": "experiments/v3/robotwin_wams/contract.py",
+      "sha256_or_status": "743288a8639cb3f74643bbe4e15b67a6d871a4beb9013a5f58481785a317463e"
+    },
+    {
+      "path_or_url": "artifacts/vla_wam_shared_v2/pilot/execution_configs.json",
+      "sha256_or_status": "b6d14f57d932b8801a54118729f30b5ec3aac877da8ab08622054e8cf996429a"
+    }
+  ],
+  "known_unknowns": [
+    "Exact training episode membership, sampling weights, numeric training preprocessing, and caption exposure are not disclosed."
+  ],
+  "model_family": "WAM",
+  "model_id": "efficient_wam_rt_robotwin",
+  "preprocessing": {
+    "action": "16-action chunks over ten inference steps.",
+    "camera_selection": "native checkpoint runner camera contract",
+    "frame_sampling": "native runner sequence contract",
+    "language": "One frozen static episode prompt; no prompt switching, coaching, or progress-conditioned language.",
+    "scope": "v3 inference-time interface only",
+    "training_preprocessing": "not_disclosed",
+    "visual": "Native Efficient-WAM-RT RoboTwin runner; exact training transforms are not disclosed."
+  },
+  "runtime_components": {
+    "model_source_commit": "b0b6cfabcbd68d18888866e958c677ce640f0412",
+    "robotwin_commit": "0bd8e76fde3afcffa4b30a3e3e8f92a206aa66cc"
+  },
+  "schema_version": "vla-wam-shared-v3-checkpoint-provenance-v1",
+  "source_boundary": "Training-data, caption, and training-preprocessing claims stop at public/committed disclosure. Observed inference adapters do not establish how the checkpoint was trained.",
+  "study_status": "reported_v3_checkpoint_identity",
+  "training_episode_multiset": {
+    "datasets": [
+      {
+        "dataset_id": "RoboTwin",
+        "episode_manifest_sha256": "not_disclosed",
+        "episode_membership": "The released checkpoint/configuration names this target domain, but the committed study evidence does not disclose the exact training episode multiset.",
+        "revision": "not_disclosed",
+        "source_boundary": "target-domain label; not a training-episode audit",
+        "split": "not_disclosed"
+      }
+    ],
+    "disclosure_status": "partially_disclosed",
+    "episode_count": "not_disclosed",
+    "sampling_or_duplication_policy": "not_disclosed by the checkpoint release or committed study evidence",
+    "trajectory_count": "not_disclosed"
+  }
+}

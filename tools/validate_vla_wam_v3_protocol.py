@@ -13,6 +13,17 @@ import re
 import statistics
 from typing import Any
 
+try:
+    from validate_v3_checkpoint_provenance import (
+        ProvenanceValidationError,
+        validate_checkpoint_provenance,
+    )
+except ModuleNotFoundError:  # imported as tools.validate_vla_wam_v3_protocol
+    from tools.validate_v3_checkpoint_provenance import (
+        ProvenanceValidationError,
+        validate_checkpoint_provenance,
+    )
+
 
 class ValidationError(ValueError):
     """Raised when a v3 invariant is absent or altered."""
@@ -54,6 +65,13 @@ REQUIRED = {
     "taxonomy": f"{V3}/failure_taxonomy.json",
     "analysis": f"{V3}/analysis_plan.json",
     "measurement_audit": f"{V3}/measurement_coverage_audit.json",
+    "checkpoint_provenance_schema": f"{V3}/prospective_tier_b/checkpoint_provenance.schema.json",
+    "checkpoint_provenance_table": f"{V3}/prospective_tier_b/checkpoint_provenance/checkpoint_provenance_table.json",
+    "checkpoint_provenance_table_md": f"{V3}/prospective_tier_b/checkpoint_provenance/checkpoint_provenance_table.md",
+    "checkpoint_provenance_manifest": f"{V3}/prospective_tier_b/checkpoint_provenance/checkpoint_provenance_manifest.json",
+    "checkpoint_provenance_builder": "tools/build_v3_checkpoint_provenance.py",
+    "checkpoint_provenance_validator": "tools/validate_v3_checkpoint_provenance.py",
+    "checkpoint_provenance_test": "tests/test_v3_checkpoint_provenance.py",
     "document": "docs/VLA_WAM_STEERABILITY_V3_PROTOCOL.md",
     "continuation": f"{V3}/continuation_state.json",
     "continuation_document": "docs/VLA_WAM_V3_CONTINUATION.md",
@@ -1735,6 +1753,12 @@ def validate(root: Path) -> list[str]:
     paths = {name: root / relative for name, relative in REQUIRED.items()}
     for name, path in paths.items():
         require(path.is_file(), f"required v3 {name} artifact exists", checks)
+
+    try:
+        provenance_checks = validate_checkpoint_provenance(root)
+    except ProvenanceValidationError as exc:
+        raise ValidationError(f"checkpoint provenance: {exc}") from exc
+    checks.extend(f"checkpoint provenance: {check}" for check in provenance_checks)
 
     protocol = load(paths["protocol"])
     amendment = load(paths["amendment"])
@@ -4543,6 +4567,40 @@ def validate(root: Path) -> list[str]:
             "groot_phase_a": "already_complete_27_matched_pairs_do_not_rerun",
         },
         "V3 continuation hash-binds the complete measurement audit and no-rerun decision",
+        checks,
+    )
+    provenance_state = continuation.get("checkpoint_provenance_c1", {})
+    require(
+        provenance_state == {
+            "status": "complete",
+            "identity_count": 10,
+            "schema_path": REQUIRED["checkpoint_provenance_schema"],
+            "manifest_path": REQUIRED["checkpoint_provenance_manifest"],
+            "manifest_sha256": sha256(paths["checkpoint_provenance_manifest"]),
+            "table_path": REQUIRED["checkpoint_provenance_table"],
+            "table_sha256": sha256(paths["checkpoint_provenance_table"]),
+            "training_episode_multisets": "partially_disclosed target-domain labels only; exact episode membership and sampling are not disclosed",
+            "caption_exposure": "not_auditable for every identity",
+            "preprocessing_boundary": "inference-time adapters are recorded; training preprocessing remains not_disclosed",
+            "identity_boundary": "historical pi0_fast_droid_vla remains distinct from pi0_fast_old_name_config_v3a002",
+        },
+        "V3 continuation hash-binds all ten source-bounded checkpoint provenance disclosures",
+        checks,
+    )
+    require(
+        all(
+            REQUIRED[name] in continuation.get("authoritative_files", [])
+            for name in (
+                "checkpoint_provenance_schema",
+                "checkpoint_provenance_manifest",
+                "checkpoint_provenance_table",
+                "checkpoint_provenance_table_md",
+                "checkpoint_provenance_builder",
+                "checkpoint_provenance_validator",
+                "checkpoint_provenance_test",
+            )
+        ),
+        "V3 continuation registers the provenance schema, release, tools, and test as authoritative",
         checks,
     )
 

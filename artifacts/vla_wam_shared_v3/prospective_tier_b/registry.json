@@ -2,7 +2,7 @@
   "schema_version": "vla-wam-shared-v3-prospective-tier-b-registry-v1",
   "study_id": "vla_wam_language_steerability_v3",
   "recorded_at_utc": "2026-08-07T02:46:00Z",
-  "status": "five_designs_one_scope_correction_and_one_provenance_schema_registered_zero_behavioral_release",
+  "status": "five_designs_one_scope_correction_and_ten_checkpoint_provenance_disclosures_complete_zero_behavioral_release",
   "behavioral_cells_authorized_by_this_registry": 0,
   "model_requests_authorized_by_this_registry": 0,
   "registrations": [
@@ -60,7 +60,16 @@
       "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/checkpoint_provenance.schema.json",
       "bytes": 4374,
       "sha256": "dc058dd11e09e70d5437d79db385910e6d5151642fc46829eb036b78e7fc8ddc",
-      "next_gate": "populate one hash-bound disclosure per reported checkpoint"
+      "next_gate": "complete",
+      "record_count": 10,
+      "records_manifest": {
+        "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/checkpoint_provenance/checkpoint_provenance_manifest.json",
+        "sha256": "0b154a99f4f0b291269cc99c52f6ccca8afe240deab213254962c8e3e321f0b4"
+      },
+      "compact_table": {
+        "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/checkpoint_provenance/checkpoint_provenance_table.json",
+        "sha256": "b84717ecbf2fd2fbd8f501f6cc4625d297aae251fb817d0975eb5d6d95c61ace"
+      }
     }
   ],
   "shared_rules": [

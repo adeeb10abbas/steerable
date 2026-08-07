@@ -694,6 +694,38 @@ prevent cross-seed or concurrent-client mixing. Raw rollouts remain on the
 ali-owned PVC under `/data/users/ali/vla_wam/raw/v3c`; they are not committed
 to Git.
 
+## Tier C1 checkpoint provenance — complete
+
+Ten V3 checkpoint/runtime identities now have schema-validated, hash-bound
+provenance records. The set covers the eight Phase-A reported checkpoints, the
+blocked historical π0-FAST identity, and its distinct V3-A002 compatibility
+cohort. The [machine-readable table](../artifacts/vla_wam_shared_v3/prospective_tier_b/checkpoint_provenance/checkpoint_provenance_table.json),
+[compact review table](../artifacts/vla_wam_shared_v3/prospective_tier_b/checkpoint_provenance/checkpoint_provenance_table.md),
+and [evidence manifest](../artifacts/vla_wam_shared_v3/prospective_tier_b/checkpoint_provenance/checkpoint_provenance_manifest.json)
+bind the individual disclosures, their source evidence, the committed schema,
+and the reproducible builder.
+
+| Coverage item | Result |
+| --- | --- |
+| Checkpoint/runtime identities | 10/10 recorded |
+| Exact artifact revision | Recorded when disclosed; the public GCS π0-FAST revision is `not_disclosed` |
+| Checkpoint content | Hash-bearing payload/file manifest recorded for every identity |
+| Exact V3 runtime identity | Hash recorded for eight identities; historical π0-FAST is unrecoverable, while V3-A002 has exact component revisions but no canonical full-runtime digest |
+| Training episode multiset | Target-domain label only; exact membership, split, counts, and duplication/sampling policy are `not_disclosed` |
+| Training preprocessing | `not_disclosed`; observed V3 inference adapters are reported separately |
+| Caption exposure | `not_auditable` for all ten identities; LEFT/RIGHT token exposure and exact-probe-sentence exposure remain `unknown` |
+| Arena/interface boundary | DROID/RoboLab and RoboTwin stay separate; decoded, latent-only, and action-only futures stay distinct |
+
+The target-domain names “DROID” and “RoboTwin” are not treated as proof of a
+specific training episode multiset. Likewise, an inference-time camera,
+normalization, or action adapter is not evidence of the training pipeline.
+These unknowns therefore constrain causal claims about pretraining-data or
+caption-distribution effects; they are not encoded as absences or zeros.
+
+The historical `pi0_fast_droid_vla` row remains source-blocked and is not
+reconstructed from current OpenPI. `pi0_fast_old_name_config_v3a002` is a
+separate compatibility cohort and must not be pooled with it.
+
 ## Restart checklist
 
 Read this file, the V3 continuation state, and the V3 protocol before the older

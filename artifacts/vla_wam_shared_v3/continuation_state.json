@@ -127,13 +127,20 @@
     "tests/test_build_pi05_v3b002_registration.py",
     "tests/test_pi05_v3b002_runtime.py",
     "tests/test_pi05_v3b002_compiler.py",
-    "tests/test_normalize_pi05_v3b002_infrastructure.py"
+    "tests/test_normalize_pi05_v3b002_infrastructure.py",
+    "artifacts/vla_wam_shared_v3/prospective_tier_b/checkpoint_provenance.schema.json",
+    "artifacts/vla_wam_shared_v3/prospective_tier_b/checkpoint_provenance/checkpoint_provenance_manifest.json",
+    "artifacts/vla_wam_shared_v3/prospective_tier_b/checkpoint_provenance/checkpoint_provenance_table.json",
+    "artifacts/vla_wam_shared_v3/prospective_tier_b/checkpoint_provenance/checkpoint_provenance_table.md",
+    "tools/build_v3_checkpoint_provenance.py",
+    "tools/validate_v3_checkpoint_provenance.py",
+    "tests/test_v3_checkpoint_provenance.py"
   ],
   "validation": {
     "v3": {
       "command": ".venv/bin/python tools/validate_vla_wam_v3_protocol.py",
       "status": "valid",
-      "check_count": 510
+      "check_count": 562
     },
     "v2": {
       "command": ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
@@ -159,6 +166,11 @@
       "command": ".venv/bin/python -m pytest -q tests/test_phase_c_four_phrasings.py",
       "status": "passed",
       "test_count": 18
+    },
+    "checkpoint_provenance_tests": {
+      "command": ".venv/bin/python -m unittest tests.test_v3_checkpoint_provenance",
+      "status": "passed",
+      "test_count": 4
     }
   },
   "measurement_coverage_audit": {
@@ -170,6 +182,19 @@
     "signed_final_lateral_offset_available": "982/982",
     "legacy_measurement_rerun_required": false,
     "groot_phase_a": "already_complete_27_matched_pairs_do_not_rerun"
+  },
+  "checkpoint_provenance_c1": {
+    "status": "complete",
+    "identity_count": 10,
+    "schema_path": "artifacts/vla_wam_shared_v3/prospective_tier_b/checkpoint_provenance.schema.json",
+    "manifest_path": "artifacts/vla_wam_shared_v3/prospective_tier_b/checkpoint_provenance/checkpoint_provenance_manifest.json",
+    "manifest_sha256": "0b154a99f4f0b291269cc99c52f6ccca8afe240deab213254962c8e3e321f0b4",
+    "table_path": "artifacts/vla_wam_shared_v3/prospective_tier_b/checkpoint_provenance/checkpoint_provenance_table.json",
+    "table_sha256": "b84717ecbf2fd2fbd8f501f6cc4625d297aae251fb817d0975eb5d6d95c61ace",
+    "training_episode_multisets": "partially_disclosed target-domain labels only; exact episode membership and sampling are not disclosed",
+    "caption_exposure": "not_auditable for every identity",
+    "preprocessing_boundary": "inference-time adapters are recorded; training preprocessing remains not_disclosed",
+    "identity_boundary": "historical pi0_fast_droid_vla remains distinct from pi0_fast_old_name_config_v3a002"
   },
   "nonnegotiable_boundaries": {
     "arena_separation": "DROID/RoboLab and RoboTwin raw successes, failures, denominators, and intervals are never pooled.",

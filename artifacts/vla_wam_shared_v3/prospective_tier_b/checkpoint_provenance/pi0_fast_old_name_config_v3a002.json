@@ -1,0 +1,81 @@
+{
+  "action_future_interface": {
+    "actions": "10x8 action-only output",
+    "execution": "completed V3-A002 compatibility cohort; not historical recovery",
+    "future": "no decoded future"
+  },
+  "arena": "droid_robolab",
+  "caption_exposure": {
+    "audit_method": "No training-caption corpus or episode-to-caption manifest is committed. Checkpoint names and this study's inference prompts are not treated as training-caption evidence.",
+    "disclosure_status": "not_auditable",
+    "exact_probe_sentences": "unknown",
+    "left_right_tokens": "unknown",
+    "matched_examples_sha256": "unknown",
+    "synthetic_or_recaptioned_language": "unknown"
+  },
+  "checkpoint_identity": {
+    "artifact_id": "gs://openpi-assets-simeval/pi0_fast_droid_jointpos",
+    "content_hash_kind": "sha256 of the hash-bearing readiness registry that enumerates all 19 checkpoint files (10,844,314,410 bytes)",
+    "content_sha256": "47b38eb2f17be802c126ef0a7e93b16693823ee2df62b8007f51bb0514baf5c5",
+    "revision": "not_disclosed",
+    "runtime_hash_kind": "exact components disclosed; no canonical full-runtime digest committed",
+    "runtime_identity_sha256": "unknown"
+  },
+  "evidence": [
+    {
+      "path_or_url": "artifacts/vla_wam_shared_v3/post_result_pi0_fast_old_name_config_amendment.json",
+      "sha256_or_status": "f92103c710c503f1805d199567a0cba853398d8318f95c8d946a63c2c732d3c0"
+    },
+    {
+      "path_or_url": "artifacts/vla_wam_shared_v3/results/pi0_fast_old_name_config_v3a002_release_gate.json",
+      "sha256_or_status": "b4d7deff192c855b8077598c60c5fb2ec545edf54c7af97da4e724f9c4fb4269"
+    },
+    {
+      "path_or_url": "artifacts/vla_wam_shared_v2/pilot/expansion/pi0_fast_wording_readiness.json",
+      "sha256_or_status": "47b38eb2f17be802c126ef0a7e93b16693823ee2df62b8007f51bb0514baf5c5"
+    }
+  ],
+  "known_unknowns": [
+    "The public compatibility configuration is not proven to be the source revision used to train the checkpoint.",
+    "Exact training episode multiset, sampling weights, training preprocessing, and caption exposure are not disclosed.",
+    "No canonical full-runtime identity digest was committed; component revisions are independently hash-bound."
+  ],
+  "model_family": "VLA",
+  "model_id": "pi0_fast_old_name_config_v3a002",
+  "preprocessing": {
+    "action": "DroidOutputs with AbsoluteActions on the first seven dimensions; 10x8 action chunk.",
+    "camera_selection": "current public pi0_fast_droid_jointpos configuration",
+    "frame_sampling": "current observation",
+    "language": "One frozen static episode prompt; no prompt switching, coaching, or progress-conditioned language.",
+    "scope": "v3 inference-time interface only",
+    "training_preprocessing": "not_disclosed",
+    "visual": "Current public OpenPI DroidInputs(ModelType.PI0_FAST) path; exact numeric training preprocessing remains undisclosed."
+  },
+  "runtime_components": {
+    "config": "pi0_fast_droid_jointpos",
+    "config_source_sha256": "96ddf85d2e9668d9e3d0d4d53f07de7bc0174918fab708fbb17b3bf547b1a54b",
+    "openpi_commit": "235044ed8a1502c0a18338eedc5d7adfe705af05",
+    "openpi_tree": "03a4387bedbc0fa1467c367c60fc24e28b61ec6c",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "uv_lock_sha256": "5e3a275dd30bcf6c1c36a8664307ed70801f17436721de5651870aa38c0b23ef"
+  },
+  "schema_version": "vla-wam-shared-v3-checkpoint-provenance-v1",
+  "source_boundary": "Training-data, caption, and training-preprocessing claims stop at public/committed disclosure. Observed inference adapters do not establish how the checkpoint was trained.",
+  "study_status": "completed_distinct_compatibility_cohort",
+  "training_episode_multiset": {
+    "datasets": [
+      {
+        "dataset_id": "DROID",
+        "episode_manifest_sha256": "not_disclosed",
+        "episode_membership": "The released checkpoint/configuration names this target domain, but the committed study evidence does not disclose the exact training episode multiset.",
+        "revision": "not_disclosed",
+        "source_boundary": "target-domain label; not a training-episode audit",
+        "split": "not_disclosed"
+      }
+    ],
+    "disclosure_status": "partially_disclosed",
+    "episode_count": "not_disclosed",
+    "sampling_or_duplication_policy": "not_disclosed by the checkpoint release or committed study evidence",
+    "trajectory_count": "not_disclosed"
+  }
+}

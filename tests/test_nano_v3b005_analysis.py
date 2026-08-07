@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+from pathlib import Path
 
 from experiments.v3.cosmos_nano_lateral_sweep.analyze_results import analyze
 from experiments.v3.cosmos_nano_lateral_sweep.compile_pair import SCHEMA as PAIR_SCHEMA
@@ -10,6 +11,7 @@ from experiments.v3.cosmos_nano_lateral_sweep.runtime_adapter import (
     MODEL_ID,
     SEEDS,
 )
+from tools.render_nano_v3b005_dose_response import render
 
 
 def _fixture() -> tuple[list[dict], list[dict]]:
@@ -69,3 +71,18 @@ def test_registered_dose_response_analysis_uses_all_matched_cells() -> None:
     assert report["by_level"][0]["binary_success"]["left"]["successes"] == 0
     assert report["by_level"][0]["binary_success"]["right"]["successes"] == 15
     assert report["failure_taxonomy_counts"]["0"]["left"]["transport_failed"] == 15
+
+
+def test_registered_dose_response_figures_render_complete_report(tmp_path: Path) -> None:
+    pairs, episodes = _fixture()
+    report = analyze(pairs, episodes, bootstrap_replicates=10_000, bootstrap_seed=7)
+
+    outputs = render(report, tmp_path)
+
+    assert {path.name for path in outputs} == {
+        "figure3_nano_lateral_dose_response.png",
+        "figure3_nano_lateral_dose_response.svg",
+        "nano_v3b005_failure_taxonomy_by_level.png",
+        "nano_v3b005_failure_taxonomy_by_level.svg",
+    }
+    assert all(path.stat().st_size > 1_000 for path in outputs)

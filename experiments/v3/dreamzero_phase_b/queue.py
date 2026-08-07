@@ -66,7 +66,10 @@ def main() -> None:
     parser.add_argument("--lane-pod-uid", required=True)
     parser.add_argument("--lane-gpu-uuid", required=True)
     parser.add_argument("--limit-seeds", type=int)
+    parser.add_argument("--max-new-cells", type=int)
     args = parser.parse_args()
+    if args.max_new_cells is not None and args.max_new_cells <= 0:
+        parser.error("--max-new-cells must be positive")
     if (
         args.release_manifest_sha256 != EXPECTED_SHA256["manifest"]
         or sha256_file(args.release_manifest) != EXPECTED_SHA256["manifest"]
@@ -92,10 +95,13 @@ def main() -> None:
     if args.mode == "plan":
         print(json.dumps({"lane_index": args.lane_index, "seeds": lane_seeds, "cells": plan}, indent=2))
         return
+    new_cells = 0
     for cell in cells:
         attempt = _attempt(args.raw_root, cell.cell_id)
         if _completed(attempt, cell.cell_id):
             continue
+        if args.max_new_cells is not None and new_cells >= args.max_new_cells:
+            break
         if attempt.exists():
             raise FileExistsError(f"partial V3-B003 attempt preserved: {attempt}")
         attempt.mkdir(parents=True, exist_ok=False)
@@ -178,6 +184,7 @@ def main() -> None:
                 "--export", str(attempt / "simulator_export.json"),
                 "--output-jsonl", str(attempt / "raw_episode.jsonl"),
             ], check=True, env=environment)
+            new_cells += 1
         except BaseException as error:
             (attempt / "infrastructure_failure.json").write_text(json.dumps({
                 "schema_version": "vla-wam-shared-v3b-dreamzero-infrastructure-failure-v1",
@@ -187,7 +194,11 @@ def main() -> None:
                 "error": f"{type(error).__name__}: {error}",
             }, indent=2, sort_keys=True) + "\n")
             raise
-    print(json.dumps({"completed_cells": len(cells), "lane_index": args.lane_index}, indent=2))
+    print(json.dumps({
+        "planned_cells": len(cells),
+        "new_cells_completed": new_cells,
+        "lane_index": args.lane_index,
+    }, indent=2))
 
 
 if __name__ == "__main__":

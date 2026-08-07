@@ -60,6 +60,14 @@ def test_queue_restores_the_validated_isaac_and_glvnd_library_path() -> None:
     assert '"LD_LIBRARY_PATH": FROZEN_LD_LIBRARY_PATH' in source
 
 
+def test_queue_can_stop_after_one_new_cell_for_concurrency_proof() -> None:
+    source = (
+        ROOT / "experiments" / "v3" / "dreamzero_phase_b" / "queue.py"
+    ).read_text()
+    assert 'parser.add_argument("--max-new-cells", type=int)' in source
+    assert "new_cells >= args.max_new_cells" in source
+
+
 def test_phase_b_bridge_keeps_legacy_stage_separate_from_v3_taxonomy() -> None:
     source = (
         ROOT / "experiments" / "v3" / "dreamzero_phase_b" / "robolab_bridge.py"

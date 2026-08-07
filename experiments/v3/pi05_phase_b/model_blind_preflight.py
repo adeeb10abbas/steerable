@@ -9,6 +9,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import traceback
 
 import cv2
 import numpy as np
@@ -344,6 +345,20 @@ def main() -> None:
         path.write_text(json.dumps(output, indent=2, sort_keys=True)+"\n")
         print("[v3e-preflight] report_written", path, flush=True)
         print(json.dumps({"path": str(path.resolve()), "sha256": sha256_file(path)}, indent=2))
+    except Exception as exc:
+        # Isaac's SimulationApp.close() can terminate the interpreter while
+        # unwinding. Persist the actual Python failure before teardown so a
+        # gate cannot silently look like a clean zero-request exit.
+        print(f"[v3e-preflight] failure {type(exc).__name__}: {exc}", flush=True)
+        traceback.print_exc()
+        try:
+            args_cli.output_dir.mkdir(parents=True, exist_ok=True)
+            (args_cli.output_dir / "preflight_failure.json").write_text(
+                json.dumps({"schema_version": "v3e-preflight-failure-v1", "error_type": type(exc).__name__, "error": str(exc)}, indent=2) + "\n"
+            )
+        except Exception:
+            pass
+        raise
     finally:
         simulation_app.close()
 

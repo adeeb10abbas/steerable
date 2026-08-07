@@ -140,6 +140,7 @@ def main() -> None:
     ap.add_argument("--mirror-left", type=Path, required=True)
     ap.add_argument("--mirror-right", type=Path, required=True)
     ap.add_argument("--output", type=Path, required=True)
+    ap.add_argument("--only-exact-repeats", action="store_true")
     args = ap.parse_args()
     from openpi_client.websocket_client_policy import WebsocketClientPolicy
     client = WebsocketClientPolicy(args.host, args.port)
@@ -163,11 +164,14 @@ def main() -> None:
             out.write(json.dumps(jsonable(rec), sort_keys=True, separators=(",", ":")) + "\n"); out.flush()
         # Full matched queue (108 requests) plus the two exact repeats per
         # layout required by the registration (4 requests).
-        for seed in SEEDS:
-            for layout, relation in (("control","left"),("control","right"),("position_mirrored","left"),("position_mirrored","right")):
-                issue(layout, relation, seed)
+        if not args.only_exact_repeats:
+            for seed in SEEDS:
+                for layout, relation in (("control","left"),("control","right"),("position_mirrored","left"),("position_mirrored","right")):
+                    issue(layout, relation, seed)
+            for layout in ("control", "position_mirrored"):
+                issue(layout, "left", 9400, repeat=True)
         for layout in ("control", "position_mirrored"):
-            issue(layout, "left", 9400, repeat=True)
+            issue(layout, "right", 9400, repeat=True)
 
 
 if __name__ == "__main__":

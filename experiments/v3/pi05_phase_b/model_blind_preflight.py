@@ -55,6 +55,7 @@ from experiments.v3.pi05_phase_b.runtime import MODEL_BLIND_SCHEMA, adapter_cont
 
 app_launcher = AppLauncher(args_cli)
 simulation_app = app_launcher.app
+print("[v3e-preflight] simulation_app_started", flush=True)
 
 import robolab  # noqa: E402
 import robolab.constants  # noqa: E402
@@ -170,6 +171,7 @@ def _decode_video(path: Path) -> tuple[bool, int]:
 
 def main() -> None:
     try:
+        print("[v3e-preflight] main_enter", flush=True)
         if args_cli.output_dir.exists():
             raise FileExistsError(f"refusing to overwrite preflight: {args_cli.output_dir}")
         if (
@@ -219,6 +221,7 @@ def main() -> None:
             range(3) if args_cli.repeat_index is None else (args_cli.repeat_index,)
         )
         for (arm, relation), (_, task_name) in selected_tasks.items():
+            print(f"[v3e-preflight] create_env {arm}:{relation}", flush=True)
             env, env_cfg = create_env(
                 task_name, device=args_cli.device, seed=args_cli.environment_seed,
                 num_envs=1, instruction_type="default",
@@ -233,6 +236,7 @@ def main() -> None:
             writer = None
             repeats = []
             try:
+                print(f"[v3e-preflight] env_ready {arm}:{relation}", flush=True)
                 if env_cfg.instruction != PROMPTS[relation]:
                     raise RuntimeError("task wrapper prompt bytes changed")
                 for repeat in repeat_indices:
@@ -292,6 +296,7 @@ def main() -> None:
             if not ok or frame_count != len(repeat_indices):
                 raise RuntimeError("viewport proof video did not decode all reset frames")
             video_records[f"{arm}:{relation}"] = {**_file(video_path), "decoded_frame_count": frame_count}
+            print(f"[v3e-preflight] condition_complete {arm}:{relation}", flush=True)
             rows.append({"arm": arm, "relation": relation, "task_name": task_name, "passed": True, "repeat_resets": repeats})
         action_path = args_cli.output_dir/"writer_probe_actions.npy"
         np.save(action_path, np.zeros((15, 8), dtype=np.float32), allow_pickle=False)
@@ -337,6 +342,7 @@ def main() -> None:
         }
         path = args_cli.output_dir/"model_blind_preflight.json"
         path.write_text(json.dumps(output, indent=2, sort_keys=True)+"\n")
+        print("[v3e-preflight] report_written", path, flush=True)
         print(json.dumps({"path": str(path.resolve()), "sha256": sha256_file(path)}, indent=2))
     finally:
         simulation_app.close()

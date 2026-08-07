@@ -47,51 +47,64 @@ def _artifact_array(value: Any) -> np.ndarray | None:
     path = Path(value["path"])
     if not path.is_file():
         raise GateError(f"retained array is missing: {path}")
-    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    digest_builder = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest_builder.update(chunk)
+    digest = digest_builder.hexdigest()
     if digest != value["sha256"]:
         raise GateError(f"retained array hash mismatch: {path}")
     try:
-        array = np.load(path, allow_pickle=False)
+        array = np.load(path, allow_pickle=False, mmap_mode="r")
     except Exception as error:  # pragma: no cover - numpy supplies details
         raise GateError(f"cannot load retained array {path}: {error}") from error
     if list(array.shape) != value["shape"] or str(array.dtype) != value["dtype"]:
         raise GateError(f"retained array metadata mismatch: {path}")
-    if array.dtype.kind not in "fiu" or not np.isfinite(array).all():
+    if array.dtype.kind not in "fiu":
         raise GateError(f"retained array must contain finite numeric values: {path}")
+    flat = array.reshape(-1)
+    for start in range(0, flat.size, 1024 * 1024):
+        if not np.isfinite(flat[start : start + 1024 * 1024]).all():
+            raise GateError(f"retained array must contain finite numeric values: {path}")
     return array
 
 
-def _flatten_numeric(value: Any) -> list[float]:
+def _numeric_array(value: Any) -> np.ndarray:
     artifact = _artifact_array(value)
     if artifact is not None:
-        return artifact.astype(np.float64, copy=False).ravel().tolist()
+        return artifact
     if isinstance(value, bool) or not isinstance(value, (list, tuple)):
         raise GateError("response arrays must be nested lists of finite numbers")
-    output: list[float] = []
-    for item in value:
-        if isinstance(item, (list, tuple)):
-            output.extend(_flatten_numeric(item))
-        elif isinstance(item, bool) or not isinstance(item, (int, float)) or not math.isfinite(float(item)):
-            raise GateError("response arrays must contain finite numbers")
-        else:
-            output.append(float(item))
-    if not output:
+    try:
+        output = np.asarray(value, dtype=np.float64)
+    except (TypeError, ValueError) as error:
+        raise GateError("response arrays must contain finite numbers") from error
+    if output.size == 0 or not np.isfinite(output).all():
         raise GateError("response arrays must not be empty")
     return output
 
 
-def _rms(left: Any, right: Any) -> float:
-    lhs, rhs = _flatten_numeric(left), _flatten_numeric(right)
-    if len(lhs) != len(rhs):
+def _mean_difference(left: Any, right: Any, *, squared: bool) -> float:
+    lhs, rhs = _numeric_array(left), _numeric_array(right)
+    if lhs.shape != rhs.shape:
         raise GateError("response array shapes differ")
-    return math.sqrt(sum((a - b) ** 2 for a, b in zip(lhs, rhs)) / len(lhs))
+    lhs_flat, rhs_flat = lhs.reshape(-1), rhs.reshape(-1)
+    total = 0.0
+    for start in range(0, lhs_flat.size, 1024 * 1024):
+        first = lhs_flat[start : start + 1024 * 1024].astype(np.float64, copy=False)
+        second = rhs_flat[start : start + 1024 * 1024].astype(np.float64, copy=False)
+        delta = first - second
+        total += float(np.square(delta).sum() if squared else np.abs(delta).sum())
+    mean = total / lhs_flat.size
+    return math.sqrt(mean) if squared else mean
+
+
+def _rms(left: Any, right: Any) -> float:
+    return _mean_difference(left, right, squared=True)
 
 
 def _mae(left: Any, right: Any) -> float:
-    lhs, rhs = _flatten_numeric(left), _flatten_numeric(right)
-    if len(lhs) != len(rhs):
-        raise GateError("future array shapes differ")
-    return sum(abs(a - b) for a, b in zip(lhs, rhs)) / len(lhs)
+    return _mean_difference(left, right, squared=False)
 
 
 def evaluate_records(records: Iterable[dict[str, Any]], *, model_id: str) -> dict[str, Any]:

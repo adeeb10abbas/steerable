@@ -21,7 +21,8 @@ raw-integrity check has passed.
 2. Start the amendment-specific wrapper in `probe_only` mode on its pinned
    port. Use the same official Nano CLI values as V3-B005; only the port
    differs.
-3. Capture one model-blind fixed observation for every registered arm, then
+3. Capture one model-blind fixed observation for every registered arm with
+   `capture_fixed_observation.py`, then
    run `fixed_observation_gate.py`. The order is LEFT, exact LEFT repeat,
    RIGHT within each arm. Any repeatability, action-sensitivity, or
    decoded-future-sensitivity failure closes the lane at zero behavior.

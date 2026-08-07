@@ -67,6 +67,7 @@ CONTRACT_FILES = (
     "experiments/v3/cosmos_nano_tier_b/runtime_contract.py",
     "experiments/v3/cosmos_nano_tier_b/server.py",
     "experiments/v3/cosmos_nano_tier_b/fixed_observation_gate.py",
+    "experiments/v3/cosmos_nano_tier_b/capture_fixed_observation.py",
     "experiments/v3/cosmos_nano_tier_b/build_behavioral_release_gate.py",
     "experiments/v3/cosmos_nano_tier_b/bind_runtime.py",
     "experiments/v3/cosmos_nano_tier_b/serve_v3b008_nano.py",

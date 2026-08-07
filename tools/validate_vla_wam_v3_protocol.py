@@ -25,6 +25,16 @@ REQUIRED = {
     "droid": f"{V3}/droid_direct_registry.json",
     "robotwin": f"{V3}/robotwin_direct_registry.json",
     "wording": f"{V3}/four_phrasings_registry.json",
+    "phase_c_registration": f"{V3}/phase_c/four_phrasings_v3c001/prospective_phase_c_v3c001_registration.json",
+    "phase_c_cells": f"{V3}/phase_c/four_phrasings_v3c001/phase_c_v3c001_cells.jsonl",
+    "phase_c_fixed_requests": f"{V3}/phase_c/four_phrasings_v3c001/phase_c_v3c001_fixed_observation_requests.jsonl",
+    "phase_c_manifest": f"{V3}/phase_c/four_phrasings_v3c001/phase_c_v3c001_manifest.json",
+    "phase_c_registration_builder": "experiments/v3/phase_c_four_phrasings/build_registration.py",
+    "phase_c_contract": "experiments/v3/phase_c_four_phrasings/contract.py",
+    "phase_c_fixed_gate": "experiments/v3/phase_c_four_phrasings/fixed_observation_gate.py",
+    "phase_c_runner": "experiments/v3/phase_c_four_phrasings/runner.py",
+    "phase_c_readme": "experiments/v3/phase_c_four_phrasings/README.md",
+    "phase_c_test": "tests/test_phase_c_four_phrasings.py",
     "stochastic": f"{V3}/stochastic_rollout_registry.json",
     "confound_calibration": f"{V3}/confound_fixture_calibration_registry.json",
     "phase_a_queue": f"{V3}/phase_a_cells.jsonl",
@@ -156,6 +166,12 @@ REQUIRED = {
     "nano_lateral_sweep_v3b005_queue_test": "tests/test_build_nano_v3b005_queue.py",
     "nano_lateral_sweep_calibration_driver": "experiments/v3/cosmos_nano_lateral_sweep/model_blind_lateral_calibration.py",
     "nano_lateral_sweep_calibration_design": "experiments/v3/cosmos_nano_lateral_sweep/calibration_design.py",
+    "nano_lateral_sweep_v3b005_runtime": "experiments/v3/cosmos_nano_lateral_sweep/runtime_adapter.py",
+    "nano_lateral_sweep_v3b005_live_support": "experiments/v3/cosmos_nano_lateral_sweep/live_support.py",
+    "nano_lateral_sweep_v3b005_server": "experiments/v3/cosmos_nano_lateral_sweep/serve_nano.py",
+    "nano_lateral_sweep_v3b005_fixed_gate": "experiments/v3/cosmos_nano_lateral_sweep/fixed_observation_gate.py",
+    "nano_lateral_sweep_v3b005_release_builder": "experiments/v3/cosmos_nano_lateral_sweep/build_release_gate.py",
+    "nano_lateral_sweep_v3b005_live_queue": "experiments/v3/cosmos_nano_lateral_sweep/queue.py",
 }
 DROID_MODELS = [
     "pi0_fast_droid_vla",
@@ -1702,6 +1718,10 @@ def validate(root: Path) -> list[str]:
     droid = load(paths["droid"])
     robotwin = load(paths["robotwin"])
     wording_registry = load(paths["wording"])
+    phase_c_registration = load(paths["phase_c_registration"])
+    phase_c_cells = load_jsonl(paths["phase_c_cells"])
+    phase_c_fixed_requests = load_jsonl(paths["phase_c_fixed_requests"])
+    phase_c_manifest = load(paths["phase_c_manifest"])
     stochastic_registry = load(paths["stochastic"])
     calibration_registry = load(paths["confound_calibration"])
     phase_a_manifest = load(paths["phase_a_manifest"])
@@ -3540,6 +3560,23 @@ def validate(root: Path) -> list[str]:
         "Nano lateral calibration driver enforces V3-B005 exact inputs and fail-closed semantics",
         checks,
     )
+    v3b005_runtime_source = paths["nano_lateral_sweep_v3b005_runtime"].read_text(encoding="utf-8")
+    v3b005_support_source = paths["nano_lateral_sweep_v3b005_live_support"].read_text(encoding="utf-8")
+    v3b005_server_source = paths["nano_lateral_sweep_v3b005_server"].read_text(encoding="utf-8")
+    v3b005_fixed_source = paths["nano_lateral_sweep_v3b005_fixed_gate"].read_text(encoding="utf-8")
+    v3b005_release_source = paths["nano_lateral_sweep_v3b005_release_builder"].read_text(encoding="utf-8")
+    v3b005_queue_source = paths["nano_lateral_sweep_v3b005_live_queue"].read_text(encoding="utf-8")
+    require(
+        "registry must contain exactly 210" in v3b005_runtime_source
+        and "PROBE_SEQUENCE" in v3b005_support_source
+        and 'MODE not in {"probe_only", "behavior_only"}' in v3b005_server_source
+        and "model_request_count\": 9" in v3b005_fixed_source
+        and '"behavioral_release": True' in v3b005_release_source
+        and "native_process_group_thermal_guard.py" in v3b005_queue_source
+        and "lane_seeds" in v3b005_queue_source,
+        "Nano V3-B005 live stack gates nine fixed requests before whole-seed behavioral lanes",
+        checks,
+    )
     pi05_runtime_source = paths["pi05_mirror_runtime"].read_text(encoding="utf-8")
     pi05_preflight_source = paths["pi05_mirror_preflight"].read_text(encoding="utf-8")
     pi05_bridge_source = paths["pi05_mirror_bridge"].read_text(encoding="utf-8")
@@ -3811,6 +3848,212 @@ def validate(root: Path) -> list[str]:
     optional_pi0 = wording_registry["optional_model_after_independent_release"]
     optional_pi0_conditions = " ".join(optional_pi0["conditions"])
     require(optional_pi0["model_id"] == "pi0_fast_droid_vla" and "exact historical OpenPI/RoboLab revisions" in optional_pi0_conditions and "sensitivity release" in optional_pi0_conditions, "pi0-FAST wording participation requires exact recovery and new sensitivity release", checks)
+    require(
+        phase_c_registration.get("schema_version")
+        == "vla-wam-shared-v3c-four-phrasings-registration-v1"
+        and phase_c_registration.get("experiment_id") == "V3-C001"
+        and phase_c_registration.get("status")
+        == "prospectively_frozen_not_released_no_phase_c_inference"
+        and phase_c_registration.get("design", {}).get("behavioral_cells") == 480
+        and phase_c_registration.get("design", {}).get("seed_blocks") == 60
+        and phase_c_registration.get("design", {}).get("seeds")
+        == exact_range(8500, 8519)
+        and phase_c_registration.get("design", {}).get("same_seed_is_environment_and_sampling_seed")
+        is True
+        and phase_c_registration.get("exact_prompts") == EXACT_V2_WORDINGS,
+        "V3-C001 materializes the exact unreleased 480-cell Phase-C design and prompt bytes",
+        checks,
+    )
+    require(
+        phase_c_registration.get("analysis_status", {}).get("wording_block")
+        == "exploratory"
+        and phase_c_registration.get("analysis_status", {}).get(
+            "confirmatory_inference"
+        )
+        == "not_registered"
+        and "later prospective amendment"
+        in phase_c_registration.get("analysis_status", {}).get("constraint", "")
+        and phase_c_registration.get("release_policy", {}).get("status")
+        == "all_models_unreleased"
+        and phase_c_registration.get("release_policy", {}).get(
+            "no_behavior_before_release"
+        )
+        is True,
+        "V3-C001 remains exploratory and fail-closed pending independent model releases",
+        checks,
+    )
+    phase_c_model_contracts = phase_c_registration.get("models", {})
+    require(
+        set(phase_c_model_contracts) == set(WORDING_MODELS)
+        and phase_c_model_contracts.get("groot_n17_droid_vla", {}).get(
+            "phase_a_runtime_identity_sha256"
+        )
+        == "1c9515daaae3b7298310694bd5b9eb0ecdbffb5c71df747f5e1cb0d0e711be64"
+        and phase_c_model_contracts.get("cosmos3_edge_policy_droid", {}).get(
+            "phase_a_runtime_identity_sha256"
+        )
+        == "e92f68c02345042190a415a67e3eafbb12b35fded6d59d77074c74cb28ef1940"
+        and phase_c_model_contracts.get("cosmos3_nano_policy_droid", {}).get(
+            "phase_a_runtime_identity_sha256"
+        )
+        == "d4bc4ab7d03fd1d1041f0bcc384d34321f3bd7b16c0c4cf517b62b8a1a2160e2",
+        "V3-C001 binds the three exact Phase-A runtime identities",
+        checks,
+    )
+    phase_c_namespace = "vla_wam_v3_phase_c_v3c001_joint_order_v1"
+    phase_c_by_block: dict[tuple[str, int], list[dict[str, Any]]] = {}
+    phase_c_ids: set[str] = set()
+    phase_c_cells_valid = True
+    for row in phase_c_cells:
+        model_id = row.get("model_id")
+        seed = row.get("seed")
+        prompt_family = row.get("prompt_family")
+        relation_name = row.get("relation")
+        if (
+            model_id not in WORDING_MODELS
+            or seed not in exact_range(8500, 8519)
+            or prompt_family not in EXACT_V2_WORDINGS
+            or relation_name not in {"left", "right"}
+        ):
+            phase_c_cells_valid = False
+            continue
+        prompt = EXACT_V2_WORDINGS[prompt_family][relation_name]
+        cell_id = f"v3c001:droid:{model_id}:seed{seed}:{prompt_family}:{relation_name}"
+        phase_c_cells_valid &= (
+            row.get("schema_version")
+            == "vla-wam-shared-v3c-four-phrasings-cell-v1"
+            and row.get("registered_cell_id") == cell_id
+            and cell_id not in phase_c_ids
+            and row.get("prompt") == prompt
+            and row.get("prompt_utf8_bytes") == len(prompt.encode("utf-8"))
+            and row.get("prompt_sha256")
+            == hashlib.sha256(prompt.encode("utf-8")).hexdigest()
+            and row.get("environment_seed") == seed
+            and row.get("sampling_seed") == seed
+            and row.get("randomization_namespace") == phase_c_namespace
+            and row.get("static_episode_prompt") is True
+            and row.get("behavioral_status")
+            == "prospectively_registered_not_released"
+        )
+        phase_c_ids.add(cell_id)
+        phase_c_by_block.setdefault((model_id, seed), []).append(row)
+    expected_phase_c_blocks = {
+        (model_id, seed)
+        for model_id in WORDING_MODELS
+        for seed in exact_range(8500, 8519)
+    }
+    phase_c_order_valid = set(phase_c_by_block) == expected_phase_c_blocks
+    for (model_id, seed), rows in phase_c_by_block.items():
+        observed = sorted(rows, key=lambda row: row.get("within_seed_execution_order", 0))
+        expected_conditions = sorted(
+            [
+                (prompt_family, relation_name)
+                for prompt_family in EXACT_V2_WORDINGS
+                for relation_name in ("left", "right")
+            ],
+            key=lambda condition: hashlib.sha256(
+                "\0".join(
+                    (
+                        phase_c_namespace,
+                        model_id,
+                        str(seed),
+                        condition[0],
+                        condition[1],
+                    )
+                ).encode("utf-8")
+            ).hexdigest(),
+        )
+        phase_c_order_valid &= (
+            len(observed) == 8
+            and [row.get("within_seed_execution_order") for row in observed]
+            == list(range(1, 9))
+            and [
+                (row.get("prompt_family"), row.get("relation")) for row in observed
+            ]
+            == expected_conditions
+        )
+    require(
+        len(phase_c_cells) == 480
+        and len(phase_c_ids) == 480
+        and phase_c_cells_valid
+        and phase_c_order_valid
+        and Counter(row.get("model_id") for row in phase_c_cells)
+        == Counter({model_id: 160 for model_id in WORDING_MODELS}),
+        "V3-C001 queue contains 60 indivisible seed blocks with deterministic eight-cell joint randomization",
+        checks,
+    )
+    phase_c_request_counts = Counter(
+        (row.get("model_id"), row.get("prompt_family"))
+        for row in phase_c_fixed_requests
+    )
+    require(
+        len(phase_c_fixed_requests) == 36
+        and phase_c_request_counts
+        == Counter(
+            {
+                (model_id, prompt_family): 3
+                for model_id in WORDING_MODELS
+                for prompt_family in EXACT_V2_WORDINGS
+            }
+        )
+        and all(
+            row.get("schema_version")
+            == "vla-wam-shared-v3c-four-phrasings-fixed-observation-request-v1"
+            and row.get("condition")
+            in {"left", "left_exact_repeat", "right"}
+            and row.get("behavioral_episode") is False
+            and row.get("observation_identity_requirement")
+            == "byte_identical_within_probe_id"
+            and row.get("prompt_sha256")
+            == hashlib.sha256(row.get("prompt", "").encode("utf-8")).hexdigest()
+            for row in phase_c_fixed_requests
+        ),
+        "V3-C001 fixes 36 nonbehavioral exact-repeat and prompt-sensitivity requests",
+        checks,
+    )
+    phase_c_manifest_files = phase_c_manifest.get("files", {})
+    require(
+        phase_c_manifest.get("schema_version")
+        == "vla-wam-shared-v3c-four-phrasings-manifest-v1"
+        and phase_c_manifest.get("status")
+        == "hash_bound_registration_ready_models_unreleased"
+        and phase_c_manifest.get("behavioral_inference_count_at_freeze") == 0
+        and phase_c_manifest.get("behavioral_release") is False
+        and phase_c_manifest.get("counts")
+        == {
+            "behavioral_cells": 480,
+            "cells_by_model": {model_id: 160 for model_id in WORDING_MODELS},
+            "fixed_observation_requests": 36,
+            "seed_blocks": 60,
+        }
+        and phase_c_manifest_files.get(paths["phase_c_registration"].name, {}).get(
+            "sha256"
+        )
+        == sha256(paths["phase_c_registration"])
+        and phase_c_manifest_files.get(paths["phase_c_cells"].name, {}).get(
+            "sha256"
+        )
+        == sha256(paths["phase_c_cells"])
+        and phase_c_manifest_files.get(paths["phase_c_fixed_requests"].name, {}).get(
+            "sha256"
+        )
+        == sha256(paths["phase_c_fixed_requests"]),
+        "V3-C001 manifest hash-binds its registration, queue, and fixed-observation requests",
+        checks,
+    )
+    phase_c_contract_source = paths["phase_c_contract"].read_text(encoding="utf-8")
+    phase_c_gate_source = paths["phase_c_fixed_gate"].read_text(encoding="utf-8")
+    phase_c_runner_source = paths["phase_c_runner"].read_text(encoding="utf-8")
+    require(
+        "Phase-C model remains unreleased" in phase_c_contract_source
+        and "raw_video_action_jsonl_state_write" in phase_c_contract_source
+        and "action_exact_repeat_rms" in phase_c_gate_source
+        and "future_exact_repeat_mae" in phase_c_gate_source
+        and "plan_only_model_specific_bridge_required" in phase_c_runner_source
+        and '"inference_launched": False' in phase_c_runner_source,
+        "V3-C001 runtime scaffolding fails closed and emits only released whole-seed plans",
+        checks,
+    )
     block = phases["D_16_rollout_stochastic_block"]
     require(block["status"] == "separately_gated_not_released_by_phase_a" and block["registry"] == f"{V3}/stochastic_rollout_registry.json", "Phase D is separately gated through its registry", checks)
     require(stochastic_registry["schema_version"] == "vla-wam-shared-v3-stochastic-rollout-registry-v1" and stochastic_registry["shared_sampling_seed_indices"] == list(range(16)), "Phase D freezes sixteen shared sampling-seed indices", checks)

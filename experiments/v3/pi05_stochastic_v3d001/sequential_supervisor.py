@@ -151,6 +151,15 @@ def _external_lanes(values: list[str]) -> dict[int, int]:
     return result
 
 
+def _progress_only_lanes(values: list[int], pid_lanes: dict[int, int]) -> set[int]:
+    lanes = set(values)
+    if any(type(lane) is not int or lane not in {1, 2} for lane in values):
+        raise ValueError("progress-only external lanes must be lane 1 or 2")
+    if len(lanes) != len(values) or lanes.intersection(pid_lanes):
+        raise ValueError("external lanes must be unique across PID and progress-only modes")
+    return lanes
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo-root", type=Path, required=True)
@@ -169,6 +178,7 @@ def main() -> None:
     parser.add_argument("--existing-lane-zero-pid", type=int, required=True)
     parser.add_argument("--poll-seconds", type=float, default=30.0)
     parser.add_argument("--external-lane-pid", action="append", default=[])
+    parser.add_argument("--external-lane-progress-only", action="append", type=int, default=[])
     parser.add_argument("--status-output", type=Path, required=True)
     parser.add_argument("--log-dir", type=Path, required=True)
     args = parser.parse_args()
@@ -176,8 +186,12 @@ def main() -> None:
         parser.error("V3-D001 fallback requires lane-count 3 and a positive poll interval")
     try:
         external_lanes = _external_lanes(args.external_lane_pid)
+        progress_only_lanes = _progress_only_lanes(
+            args.external_lane_progress_only, external_lanes,
+        )
     except ValueError as exc:
         parser.error(str(exc))
+    all_external_lanes = set(external_lanes).union(progress_only_lanes)
     release = load_release(args.repo_root, args.release_manifest)
     if sha256_file(args.release_manifest.resolve()) != RELEASE_MANIFEST_SHA256:
         raise ContractError("V3-D001 release manifest digest changed")
@@ -214,10 +228,14 @@ def main() -> None:
         time.sleep(args.poll_seconds)
     args.log_dir.mkdir(parents=True, exist_ok=True)
     for lane_index in (1, 2):
-        if lane_index in external_lanes:
+        if lane_index in all_external_lanes:
             status.update({
                 "state": f"lane_{lane_index}_externally_managed",
-                f"lane_{lane_index}_external_pid": external_lanes[lane_index],
+                f"lane_{lane_index}_external_monitor": (
+                    {"mode": "local_pid", "pid": external_lanes[lane_index]}
+                    if lane_index in external_lanes
+                    else {"mode": "shared_pvc_progress_fail_closed"}
+                ),
                 "updated_at_utc": _utc(),
             })
             _atomic_json(args.status_output, status)
@@ -247,7 +265,8 @@ def main() -> None:
             attempt_index=args.attempt_index,
         )
         _atomic_json(args.status_output, status)
-    for lane_index, pid in external_lanes.items():
+    for lane_index in sorted(all_external_lanes):
+        pid = external_lanes.get(lane_index)
         cells = _lane_cells(release, lane_index, args.lane_count)
         status.update({"state": f"waiting_for_external_lane_{lane_index}",
                        "updated_at_utc": _utc()})
@@ -259,7 +278,7 @@ def main() -> None:
             _atomic_json(args.status_output, status)
             if progress["complete"]:
                 break
-            state = _process_state(pid)
+            state = _process_state(pid) if pid is not None else None
             if state in {"absent", "Z"}:
                 status.update({"state": "failed", "failed_at_utc": _utc(),
                                "failed_lane": lane_index,

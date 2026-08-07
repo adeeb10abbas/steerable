@@ -7,6 +7,7 @@ from experiments.v3.pi05_stochastic_v3d001.sequential_supervisor import (
     _process_state,
     _raw_paths,
     _external_lanes,
+    _progress_only_lanes,
     lane_progress,
 )
 
@@ -45,6 +46,12 @@ class SequentialSupervisorTests(unittest.TestCase):
         for bad in (["0=123"], ["1=0"], ["1=123", "1=456"], ["nope"]):
             with self.assertRaises(ValueError):
                 _external_lanes(bad)
+
+    def test_progress_only_external_lane_contract(self) -> None:
+        self.assertEqual(_progress_only_lanes([1], {}), {1})
+        for bad, pids in (([0], {}), ([1, 1], {}), ([1], {1: 123})):
+            with self.assertRaises(ValueError):
+                _progress_only_lanes(bad, pids)
 
 
 if __name__ == "__main__":

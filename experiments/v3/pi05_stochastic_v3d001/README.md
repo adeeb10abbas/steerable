@@ -43,3 +43,9 @@ running, restart the supervisor with `--external-lane-pid 1=PID` (or lane 2).
 It will not duplicate that shard: it runs the remaining local shard, waits
 for the external lane, and requires both its cells and pair manifests before
 declaring completion.
+
+For a lane running in a different pod PID namespace, use
+`--external-lane-progress-only 1`. This mode cannot mistake an unrelated
+local PID for the worker: it remains fail-closed until every expected raw and
+pair manifest appears on the shared PVC. The owning agent separately monitors
+the exact remote pod and queue log for an early worker exit.

@@ -37,3 +37,9 @@ When the two additional exact ali RTX pods remain unschedulable, run
 and 72 pair manifests to validate before launching lanes 1 and 2 sequentially.
 It fails closed if lane 0 exits early or either subsequent queue returns a
 nonzero status; it never infers completion from a PID alone.
+
+If an additional ali-owned lane is explicitly released while lane 0 is
+running, restart the supervisor with `--external-lane-pid 1=PID` (or lane 2).
+It will not duplicate that shard: it runs the remaining local shard, waits
+for the external lane, and requires both its cells and pair manifests before
+declaring completion.

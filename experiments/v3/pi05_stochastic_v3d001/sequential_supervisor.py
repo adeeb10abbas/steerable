@@ -137,6 +137,20 @@ def _queue_command(args: argparse.Namespace, lane_index: int) -> list[str]:
     ]
 
 
+def _external_lanes(values: list[str]) -> dict[int, int]:
+    result: dict[int, int] = {}
+    for value in values:
+        try:
+            lane_text, pid_text = value.split("=", 1)
+            lane, pid = int(lane_text), int(pid_text)
+        except (TypeError, ValueError) as exc:
+            raise ValueError("external-lane-pid must be formatted LANE=PID") from exc
+        if lane not in {1, 2} or pid < 1 or lane in result:
+            raise ValueError("external lanes must be unique lane 1 or 2 with a positive PID")
+        result[lane] = pid
+    return result
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo-root", type=Path, required=True)
@@ -154,11 +168,16 @@ def main() -> None:
     parser.add_argument("--attempt-index", type=int, default=4)
     parser.add_argument("--existing-lane-zero-pid", type=int, required=True)
     parser.add_argument("--poll-seconds", type=float, default=30.0)
+    parser.add_argument("--external-lane-pid", action="append", default=[])
     parser.add_argument("--status-output", type=Path, required=True)
     parser.add_argument("--log-dir", type=Path, required=True)
     args = parser.parse_args()
     if args.lane_count != 3 or args.poll_seconds <= 0:
         parser.error("V3-D001 fallback requires lane-count 3 and a positive poll interval")
+    try:
+        external_lanes = _external_lanes(args.external_lane_pid)
+    except ValueError as exc:
+        parser.error(str(exc))
     release = load_release(args.repo_root, args.release_manifest)
     if sha256_file(args.release_manifest.resolve()) != RELEASE_MANIFEST_SHA256:
         raise ContractError("V3-D001 release manifest digest changed")
@@ -195,6 +214,14 @@ def main() -> None:
         time.sleep(args.poll_seconds)
     args.log_dir.mkdir(parents=True, exist_ok=True)
     for lane_index in (1, 2):
+        if lane_index in external_lanes:
+            status.update({
+                "state": f"lane_{lane_index}_externally_managed",
+                f"lane_{lane_index}_external_pid": external_lanes[lane_index],
+                "updated_at_utc": _utc(),
+            })
+            _atomic_json(args.status_output, status)
+            continue
         status.update({"state": f"running_lane_{lane_index}", "updated_at_utc": _utc()})
         _atomic_json(args.status_output, status)
         log = args.log_dir / f"full_attempt{args.attempt_index:02d}_lane{lane_index}of3.log"
@@ -209,6 +236,37 @@ def main() -> None:
                            "log": str(log)})
             _atomic_json(args.status_output, status)
             raise subprocess.CalledProcessError(completed.returncode, _queue_command(args, lane_index))
+        status[f"lane_{lane_index}"] = _validate_lane(
+            repo_root=args.repo_root, release_manifest=args.release_manifest,
+            release=release, runtime_identity=args.runtime_identity,
+            phase_a_release_gate=args.phase_a_release_gate, raw_root=args.raw_root,
+            remote_host=args.remote_host, remote_port=args.remote_port,
+            device=args.device, gpu_index=args.gpu_index,
+            lane_pod_uid=args.lane_pod_uid, lane_gpu_uuid=args.lane_gpu_uuid,
+            lane_index=lane_index, lane_count=args.lane_count,
+            attempt_index=args.attempt_index,
+        )
+        _atomic_json(args.status_output, status)
+    for lane_index, pid in external_lanes.items():
+        cells = _lane_cells(release, lane_index, args.lane_count)
+        status.update({"state": f"waiting_for_external_lane_{lane_index}",
+                       "updated_at_utc": _utc()})
+        _atomic_json(args.status_output, status)
+        while True:
+            progress = lane_progress(args.raw_root, cells, args.attempt_index)
+            status[f"lane_{lane_index}"] = progress
+            status["updated_at_utc"] = _utc()
+            _atomic_json(args.status_output, status)
+            if progress["complete"]:
+                break
+            state = _process_state(pid)
+            if state in {"absent", "Z"}:
+                status.update({"state": "failed", "failed_at_utc": _utc(),
+                               "failed_lane": lane_index,
+                               "error": f"external lane {lane_index} process state {state} before exact completion"})
+                _atomic_json(args.status_output, status)
+                raise RuntimeError(status["error"])
+            time.sleep(args.poll_seconds)
         status[f"lane_{lane_index}"] = _validate_lane(
             repo_root=args.repo_root, release_manifest=args.release_manifest,
             release=release, runtime_identity=args.runtime_identity,

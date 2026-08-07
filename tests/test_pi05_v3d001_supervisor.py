@@ -6,6 +6,7 @@ from experiments.v3.pi05_stochastic_v3d001.sequential_supervisor import (
     _pair_paths,
     _process_state,
     _raw_paths,
+    _external_lanes,
     lane_progress,
 )
 
@@ -38,6 +39,12 @@ class SequentialSupervisorTests(unittest.TestCase):
     def test_current_process_is_visible(self) -> None:
         import os
         self.assertNotEqual(_process_state(os.getpid()), "absent")
+
+    def test_external_lane_pid_contract(self) -> None:
+        self.assertEqual(_external_lanes(["1=123", "2=456"]), {1: 123, 2: 456})
+        for bad in (["0=123"], ["1=0"], ["1=123", "1=456"], ["nope"]):
+            with self.assertRaises(ValueError):
+                _external_lanes(bad)
 
 
 if __name__ == "__main__":

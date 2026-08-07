@@ -309,6 +309,10 @@ class StateCaptureProxy:
         action_count = len(self._samples) - 1
         object_xyz = [np.asarray(row["object_xyz"], dtype=float) for row in self._samples]
         z0 = float(object_xyz[0][2])
+        interaction_step = _first_sustained([
+            float(np.linalg.norm(point - object_xyz[0])) >= 0.01
+            for point in object_xyz
+        ])
         pickup_step = _first_sustained([float(point[2]) - z0 >= 0.03 for point in object_xyz])
         requested_mask = [_in_region(row, relation) for row in self._samples]
         opposite = "right" if relation == "left" else "left"
@@ -319,6 +323,18 @@ class StateCaptureProxy:
         signed_offset = float(final_delta[1])
         requested_depth = signed_offset if relation == "left" else -signed_offset
         detached = bool(object_dropped(self._env, object="rubiks_cube", env_id=0))
+        # Preserve the exact arena-specific v2 failure stage separately from
+        # the v3 failure taxonomy.  The two label spaces intentionally differ.
+        if success:
+            failure_stage = "success"
+        elif interaction_step is None:
+            failure_stage = "no_object_interaction"
+        elif pickup_step is None:
+            failure_stage = "object_moved_no_verified_pickup"
+        elif any(requested_mask):
+            failure_stage = "entered_requested_region_not_released"
+        else:
+            failure_stage = "picked_never_entered_requested_region"
         if success:
             failure_category = "correct"
         elif pickup_step is None:
@@ -349,7 +365,7 @@ class StateCaptureProxy:
             "requested_relation": relation,
             "prompt": cell.row["prompt"],
             "requested_success": success,
-            "frozen_failure_stage": failure_category,
+            "frozen_failure_stage": failure_stage,
             "failure_taxonomy": failure_category,
             "actions_executed": action_count,
             "action_cap": 450,

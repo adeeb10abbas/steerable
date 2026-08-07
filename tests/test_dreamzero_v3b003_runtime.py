@@ -46,3 +46,13 @@ def test_queue_restores_the_validated_isaac_and_glvnd_library_path() -> None:
     ).read_text()
     assert "/data/users/ali/glvnd/lib" in source
     assert '"LD_LIBRARY_PATH": FROZEN_LD_LIBRARY_PATH' in source
+
+
+def test_phase_b_bridge_keeps_legacy_stage_separate_from_v3_taxonomy() -> None:
+    source = (
+        ROOT / "experiments" / "v3" / "dreamzero_phase_b" / "robolab_bridge.py"
+    ).read_text()
+    assert 'failure_stage = "success"' in source
+    assert 'failure_category = "correct"' in source
+    assert '"frozen_failure_stage": failure_stage' in source
+    assert '"failure_taxonomy": failure_category' in source

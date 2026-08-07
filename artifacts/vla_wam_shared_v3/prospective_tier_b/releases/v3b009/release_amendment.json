@@ -1,0 +1,91 @@
+{
+  "amendment_id": "V3-B009",
+  "arena": "droid_robolab",
+  "arms": [
+    "cube_target_bowl_reference",
+    "bowl_target_cube_reference"
+  ],
+  "authorized_behavioral_cells": 108,
+  "claim_boundary": "Role swap changes semantic/scoring role and object affordance together; a measured interaction is role-affordance evidence, not a pure language-only effect.",
+  "completed_behavioral_cells_at_release": 0,
+  "exact_prompts": {
+    "bowl_target_cube_reference:left": "Put the bowl to the left of the Rubik's cube.",
+    "bowl_target_cube_reference:right": "Put the bowl to the right of the Rubik's cube.",
+    "cube_target_bowl_reference:left": "Put the Rubik's cube to the left of the bowl.",
+    "cube_target_bowl_reference:right": "Put the Rubik's cube to the right of the bowl."
+  },
+  "fixture_candidate": {
+    "bytes": 3449,
+    "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/droid_gate_candidate_v3b008_v3b009.json",
+    "sha256": "8820932c3768ca9324e1dce8b6e18c4c7847126cc4388aad6f305f7088b14f27"
+  },
+  "frozen_rules": [
+    "one static direct-command prompt per episode",
+    "same seed and full physical reset for all four cells in a matched block",
+    "pickup, transport, cone, and detached-release scoring follow the named target and reference",
+    "frozen DROID controller, 45-degree cone, and action cap",
+    "simulator viewport video and raw per-episode JSONL for every valid episode",
+    "behavioral failures stay in denominators; infrastructure failures remain separate",
+    "never pool DROID with RoboTwin"
+  ],
+  "launched_behavioral_cells_at_release": 0,
+  "matched_seeds": [
+    9800,
+    9801,
+    9802,
+    9803,
+    9804,
+    9805,
+    9806,
+    9807,
+    9808,
+    9809,
+    9810,
+    9811,
+    9812,
+    9813,
+    9814,
+    9815,
+    9816,
+    9817,
+    9818,
+    9819,
+    9820,
+    9821,
+    9822,
+    9823,
+    9824,
+    9825,
+    9826
+  ],
+  "model_blind_gate": {
+    "bytes": 38541,
+    "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/gates/v3b009/model_blind_gate_report.json",
+    "sha256": "d102e99cda8a38d1c936488c886fe2317cddf5cf13cf7eca149a010de97314b0"
+  },
+  "model_blind_gate_manifest": {
+    "bytes": 2241,
+    "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/gates/v3b009/evidence_manifest.json",
+    "sha256": "c41dec8d185e0310b3e4da4a818a2b41919eb2bcb577f28b9837f4178c69d907"
+  },
+  "model_id": "cosmos3_nano_policy_droid",
+  "queue": {
+    "bytes": 116262,
+    "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/releases/v3b009/v3b009_cells.jsonl",
+    "sha256": "ab2cda86e5cebfab23b1e2b683f023f5e94682e67041a5c304f0f435d10c52ad"
+  },
+  "recorded_at_utc": "2026-08-07T03:38:00Z",
+  "registration": {
+    "bytes": 3102,
+    "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/nano_role_swap_v3b009.json",
+    "sha256": "b6128c0ace0982980f1e650186324644cd89b896c2c1bb01c807adba584c1108"
+  },
+  "relations": [
+    "left",
+    "right"
+  ],
+  "runtime_boundary": "Reuse the exact hash-gated Nano policy/RoboLab stack only after active isolated Nano schedules permit it. This release starts no model server and launches no behavior.",
+  "schema_version": "vla-wam-shared-v3b009-release-amendment-v1",
+  "status": "released_after_model_blind_gate_behavior_deferred_for_server_scheduling",
+  "study_id": "vla_wam_language_steerability_v3"
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": "vla-wam-shared-v3b-tier-b-gate-evidence-manifest-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B009",
+  "status": "model_blind_gate_passed_behavior_still_unreleased",
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "gate_summary": {
+    "registered_arms": [
+      "cube_target_bowl_reference",
+      "bowl_target_cube_reference"
+    ],
+    "task_count": 4,
+    "repeated_resets_per_task": 3,
+    "left_right_physical_fingerprints_equal_within_each_arm": true,
+    "neither_requested_predicate_true_at_every_reset": true,
+    "all_required_rgb_views_nonblank": true,
+    "all_four_viewport_writes_decode": true,
+    "both_named_targets_physically_movable_and_scoreable": true
+  },
+  "files": [
+    {
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/nano_role_swap_v3b009.json",
+      "bytes": 3102,
+      "sha256": "b6128c0ace0982980f1e650186324644cd89b896c2c1bb01c807adba584c1108"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/droid_gate_candidate_v3b008_v3b009.json",
+      "bytes": 3449,
+      "sha256": "8820932c3768ca9324e1dce8b6e18c4c7847126cc4388aad6f305f7088b14f27"
+    },
+    {
+      "path": "experiments/v3/prospective_tier_b_gates/model_blind_droid_gate.py",
+      "bytes": 15628,
+      "sha256": "00591b695d9157dad74acc1a9c62cb9c5ef103356431da4f31b28142b8edd832"
+    },
+    {
+      "path": "experiments/v3/prospective_tier_b_gates/droid_fixture_tasks.py",
+      "bytes": 4329,
+      "sha256": "7125fa760094e34fba71bbfcbcc6a8b28eab166dd52dd3699ca7eb79cb2b3fea"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/gates/v3b009/model_blind_gate_report.json",
+      "bytes": 38541,
+      "sha256": "d102e99cda8a38d1c936488c886fe2317cddf5cf13cf7eca149a010de97314b0"
+    }
+  ],
+  "pvc_media": "The report hash-binds all four persistent repeated-reset MP4s under /data/users/ali/vla_wam/raw/v3b/tier_b_gates/v3b009/attempt01; these bounded videos are model-blind reset evidence, not behavioral rollouts.",
+  "release_boundary": "This gate authorizes no model server or behavioral episode by itself. The exact 108-row queue requires a separate hash-bound release amendment and independent validation."
+}

@@ -19,11 +19,6 @@ from typing import Any
 import numpy as np
 from policies.dreamzero.client import DreamZeroClient
 
-from experiments.v3.dreamzero_droid.future_retention import (
-    partition_session,
-    write_session_manifest,
-)
-
 
 STUDY_ID = "vla_wam_language_steerability_v3"
 MODEL_ID = "dreamzero_droid_action_cfg"
@@ -238,31 +233,22 @@ class V3DreamZeroS2Client(DreamZeroClient):
         self.trace_written = True
         return metadata_path
 
-    def _bind_completed_future_manifest(self, session_id: str) -> None:
+    def _bind_completed_future_manifest(self, manifests_before: set[Path]) -> None:
         deadline = time.monotonic() + 30.0
-        session_manifest: dict[str, Any] | None = None
-        raw_chunks = np.stack(self.returned_raw_chunks).astype(np.float32, copy=False)
+        new_manifests: set[Path] = set()
         while time.monotonic() < deadline:
-            try:
-                session_manifest = partition_session(
-                    self.future_root,
-                    session_id=session_id,
-                    prompt=str(self.prompt),
-                    returned_raw_chunks=raw_chunks,
-                )
+            manifests_after = set(self.future_root.glob("episode_*/future_manifest.json"))
+            new_manifests = manifests_after - manifests_before
+            if new_manifests:
                 break
-            except ValueError:
-                pass
             time.sleep(0.2)
-        if session_manifest is None:
+        if len(new_manifests) != 1:
             raise RuntimeError(
-                f"DreamZero session {session_id} did not finalize with exact request ownership"
+                "expected exactly one finalized DreamZero future manifest, found "
+                f"{sorted(str(path) for path in new_manifests)}"
             )
-        manifest_path = self.action_trace_dir / (
-            f"seed{self.sampling_seed_label}_{PROMPTS[self.prompt]}_future_manifest.json"
-        )
-        write_session_manifest(manifest_path, session_manifest)
-        manifest = session_manifest
+        manifest_path = next(iter(new_manifests)).resolve()
+        manifest = json.loads(manifest_path.read_text())
         if (
             manifest.get("schema_version")
             != "vla-wam-shared-v2-dreamzero-v2a015-future-retention-v1"
@@ -310,13 +296,12 @@ class V3DreamZeroS2Client(DreamZeroClient):
 
     def reset(self, *, env_id: int | None = None) -> None:
         retain_episode = env_id is None and bool(self.executed_actions)
-        session_ids = list(self._env_session_id.values()) if retain_episode else []
-        if retain_episode and len(session_ids) != 1:
-            raise RuntimeError(
-                "DreamZero retained episode requires exactly one active server session"
-            )
+        manifests_before = (
+            set(self.future_root.glob("episode_*/future_manifest.json"))
+            if retain_episode else set()
+        )
         if retain_episode:
             self.write_trace()
         super().reset(env_id=env_id)
         if retain_episode:
-            self._bind_completed_future_manifest(session_ids[0])
+            self._bind_completed_future_manifest(manifests_before)

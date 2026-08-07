@@ -1,0 +1,54 @@
+{
+  "schema_version": "vla-wam-shared-v3b007-fastwam-model-specific-gate-manifest-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B007",
+  "model_id": "fastwam_robotwin",
+  "arena": "robotwin",
+  "status": "passed_exact_repeat_and_left_right_prompt_sensitivity",
+  "behavioral_episode_count": 0,
+  "model_request_count": 3,
+  "sampling_seed": 9900,
+  "gate_metrics": {
+    "action_shape": [32, 14],
+    "left_repeat_bit_identical": true,
+    "left_right_action_rms": 0.03249591401368961,
+    "finite_actions": true,
+    "text_cfg_scale": 2.0,
+    "action_horizon": 32,
+    "replan_steps": 24,
+    "num_inference_steps": 10
+  },
+  "exact_prompts": {
+    "left": "Put the small woodenblock to the left of the red playingcards box.",
+    "right": "Put the small woodenblock to the right of the red playingcards box."
+  },
+  "runtime_identity": {
+    "fastwam_commit": "068d3fd70c89df3726c09893f47b75a624b20c02",
+    "checkpoint_sha256": "776475b22566a791854ecf31cf3b50f25e7d8d94c343132ec16eb94994aa9e63",
+    "dataset_stats_sha256": "7a02c46cfc8c5e746c0afbe41fca73f723eda34cbc083f8ca54f76d8f7468095",
+    "fixed_observation_sha256": "ca9f98693be163bdf7451ba3874b5bfdf574b7e290fecdb8f48b69c85c3d1d1e"
+  },
+  "files": [
+    {
+      "path": "experiments/v3/prospective_tier_b_gates/fastwam_v3b007_fixed_observation.py",
+      "bytes": 6228,
+      "sha256": "13631f88c4a295f4d506a9783cf46ef517bd501467d45f9ba7ba0efe5302fda2"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/gates/v3b007/model_specific/actions.npz",
+      "bytes": 4651,
+      "sha256": "b1abf4cd70b69340dfc4ef4bb206ce3178386b7a101ed905ef8c2300e8ba86b5"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/gates/v3b007/model_specific/native_manifest.json",
+      "bytes": 1366,
+      "sha256": "1425c27830135b37f151039b55eb7564de194f1136cdc84a2720cde86d00208e"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/gates/v3b007/model_specific/fixed_observation_release.json",
+      "bytes": 1340,
+      "sha256": "798bad08e76a6b313de370c75b67e78c5bb70d62441ee53bc7de988ee3b5e766"
+    }
+  ],
+  "release_boundary": "This three-request diagnostic released only the already hash-frozen V3-B007 queue. It is not a behavioral rollout and contributes zero episodes to any denominator."
+}

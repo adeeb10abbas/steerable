@@ -1,0 +1,37 @@
+{
+  "action_array_shape": [
+    32,
+    14
+  ],
+  "actions": {
+    "bytes": 4651,
+    "path": "/data/users/ali/vla_wam/raw/v3b/tier_b/v3b007/model_specific_gate_attempt01/actions.npz",
+    "sha256": "b1abf4cd70b69340dfc4ef4bb206ce3178386b7a101ed905ef8c2300e8ba86b5"
+  },
+  "behavioral_episodes": 0,
+  "left_right_action_rms": 0.03249591401368961,
+  "model_action_requests": 3,
+  "model_id": "fastwam_robotwin",
+  "native_probe_manifest": {
+    "bytes": 1366,
+    "path": "/data/users/ali/vla_wam/raw/v3b/tier_b/v3b007/model_specific_gate_attempt01/manifest.json",
+    "sha256": "1425c27830135b37f151039b55eb7564de194f1136cdc84a2720cde86d00208e"
+  },
+  "prompts": {
+    "left": "Put the small woodenblock to the left of the red playingcards box.",
+    "right": "Put the small woodenblock to the right of the red playingcards box."
+  },
+  "requested_release_checks": {
+    "exact_left_prompt": true,
+    "exact_right_prompt": true,
+    "finite_actions": true,
+    "frozen_action_horizon": true,
+    "frozen_text_cfg_scale": true,
+    "left_right_distinct": true,
+    "one_registered_sampling_seed": true,
+    "repeat_bit_identical": true
+  },
+  "schema_version": "vla-wam-shared-v3-robotwin-fixed-observation-release-v1",
+  "status": "passed_exact_repeat_and_left_right_prompt_sensitivity",
+  "study_id": "vla_wam_language_steerability_v3"
+}

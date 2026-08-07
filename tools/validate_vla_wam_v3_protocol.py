@@ -101,6 +101,11 @@ REQUIRED = {
     "pi05_v3d001_test": "tests/test_pi05_v3d001_runtime.py",
     "nano_tier_b_analyzer": "experiments/v3/cosmos_nano_tier_b/analyze_results.py",
     "nano_tier_b_analysis_test": "tests/test_cosmos_nano_tier_b_analysis.py",
+    "nano_v3b008_result_summary": f"{V3}/prospective_tier_b/results/v3b008/v3b008_summary.json",
+    "nano_v3b008_result_episodes": f"{V3}/prospective_tier_b/results/v3b008/v3b008_episodes.jsonl",
+    "nano_v3b008_result_pairs": f"{V3}/prospective_tier_b/results/v3b008/v3b008_matched_pairs.jsonl",
+    "nano_v3b008_result_manifest": f"{V3}/prospective_tier_b/results/v3b008/evidence_manifest.json",
+    "nano_v3b008_parallel_infrastructure_failure": f"{V3}/prospective_tier_b/gates/v3b008/model_specific/parallel_lane_infrastructure_failure.json",
     "nano_v3b009_result_summary": f"{V3}/prospective_tier_b/results/v3b009/v3b009_summary.json",
     "nano_v3b009_result_episodes": f"{V3}/prospective_tier_b/results/v3b009/v3b009_episodes.jsonl",
     "nano_v3b009_result_pairs": f"{V3}/prospective_tier_b/results/v3b009/v3b009_matched_pairs.jsonl",
@@ -1875,6 +1880,13 @@ def validate(root: Path) -> list[str]:
     dreamzero_mirror_taxonomy_repair_manifest = load(
         paths["dreamzero_mirror_taxonomy_repair_manifest"]
     )
+    nano_v3b008_result_summary = load(paths["nano_v3b008_result_summary"])
+    nano_v3b008_result_episodes = load_jsonl(paths["nano_v3b008_result_episodes"])
+    nano_v3b008_result_pairs = load_jsonl(paths["nano_v3b008_result_pairs"])
+    nano_v3b008_result_manifest = load(paths["nano_v3b008_result_manifest"])
+    nano_v3b008_parallel_infrastructure_failure = load(
+        paths["nano_v3b008_parallel_infrastructure_failure"]
+    )
     nano_v3b009_result_summary = load(paths["nano_v3b009_result_summary"])
     nano_v3b009_result_episodes = load_jsonl(paths["nano_v3b009_result_episodes"])
     nano_v3b009_result_pairs = load_jsonl(paths["nano_v3b009_result_pairs"])
@@ -3520,6 +3532,89 @@ def validate(root: Path) -> list[str]:
         "DreamZero V3-B003 taxonomy repair is hash-bound, packaging-only, zero-inference, and preserves the original",
         checks,
     )
+    nano_v3b008_population = nano_v3b008_result_summary.get("population", {})
+    nano_v3b008_conditions = nano_v3b008_result_summary.get("condition_outcomes", {})
+    nano_v3b008_factor = nano_v3b008_result_summary.get("factor_analysis", {}).get(
+        "pairwise_factor_interactions", {}
+    ).get("target_start_right_minus_target_start_left", {})
+    nano_v3b008_files = {
+        Path(row.get("path", "")).name: row
+        for row in nano_v3b008_result_manifest.get("files", [])
+    }
+    require(
+        nano_v3b008_result_summary.get("schema_version")
+        == "vla-wam-shared-v3b-nano-factor-results-v1"
+        and nano_v3b008_result_summary.get("amendment_id") == "V3-B008"
+        and nano_v3b008_population
+        == {
+            "behavioral_episode_count": 162,
+            "infrastructure_attempts_included": False,
+            "matched_left_right_pair_count": 81,
+            "matched_seed_count": 27,
+            "missing_value_imputation": "none",
+            "valid_behavioral_failures_included": True,
+        }
+        and len(nano_v3b008_result_episodes) == 162
+        and len(nano_v3b008_result_pairs) == 81
+        and nano_v3b008_result_summary.get("action_diagnostics")
+        == {"distinct_pairs": 81, "pairs": 81}
+        and {
+            key: (value.get("successes"), value.get("episodes"))
+            for key, value in nano_v3b008_conditions.items()
+        }
+        == {
+            "target_start_center:left": (26, 27),
+            "target_start_center:right": (26, 27),
+            "target_start_left:left": (26, 27),
+            "target_start_left:right": (22, 27),
+            "target_start_right:left": (23, 27),
+            "target_start_right:right": (27, 27),
+        }
+        and nano_v3b008_factor.get("binary_success_interaction", {})
+        .get("exact_permutation_test", {})
+        .get("p_value")
+        == 0.015625
+        and nano_v3b008_factor.get("endpoint_redirection_interaction_m", {})
+        .get("mean_bootstrap_95", {})
+        .get("lower")
+        == 0.0024705777910572512
+        and nano_v3b008_factor.get("requested_side_depth_interaction_m", {})
+        .get("mean_bootstrap_95", {})
+        .get("lower")
+        == 0.01240853934928223
+        and nano_v3b008_files.get("v3b008_summary.json", {}).get("sha256")
+        == sha256(paths["nano_v3b008_result_summary"])
+        and nano_v3b008_files.get("v3b008_episodes.jsonl", {}).get("sha256")
+        == sha256(paths["nano_v3b008_result_episodes"])
+        and nano_v3b008_files.get("v3b008_matched_pairs.jsonl", {}).get("sha256")
+        == sha256(paths["nano_v3b008_result_pairs"]),
+        "Nano V3-B008 binds all 162 start-side episodes, 81 pairs, exact outcomes, and registered interaction tests",
+        checks,
+    )
+    require(
+        nano_v3b008_parallel_infrastructure_failure.get("schema_version")
+        == "vla-wam-shared-v3b008-parallel-lane-infrastructure-failure-v1"
+        and nano_v3b008_parallel_infrastructure_failure.get("registered_cell_id")
+        == "v3b008:nano:start_side:seed9724:target_start_center:right"
+        and nano_v3b008_parallel_infrastructure_failure.get(
+            "behavioral_accounting", {}
+        ).get("denominator_eligible")
+        is False
+        and nano_v3b008_parallel_infrastructure_failure.get(
+            "behavioral_accounting", {}
+        ).get("simulator_actions_executed")
+        == 0
+        and nano_v3b008_parallel_infrastructure_failure.get("preservation", {}).get(
+            "before_after_file_hash_lists_identical"
+        )
+        is True
+        and nano_v3b008_parallel_infrastructure_failure.get("recovery", {}).get(
+            "final_cohort_valid_episode_count"
+        )
+        == 162,
+        "Nano V3-B008 retains the parallel cold-start failure outside denominators with byte-preservation evidence",
+        checks,
+    )
     nano_v3b009_population = nano_v3b009_result_summary.get("population", {})
     nano_v3b009_conditions = nano_v3b009_result_summary.get("condition_outcomes", {})
     nano_v3b009_factor = nano_v3b009_result_summary.get("factor_analysis", {}).get(
@@ -4169,6 +4264,41 @@ def validate(root: Path) -> list[str]:
         .get("sha256")
         == sha256(paths["dreamzero_mirror_taxonomy_repair"]),
         "V3 continuation records the complete no-rerun DreamZero V3-B003 result and hash roots",
+        checks,
+    )
+    nano_v3b008_state = continuation.get("prospective_tier_b_results", {}).get(
+        "v3b008_nano_start_side", {}
+    )
+    nano_v3b008_state_artifacts = nano_v3b008_state.get("artifacts", {})
+    require(
+        nano_v3b008_state.get("status")
+        == "complete_hash_closed_27_seed_162_episode_result_no_rerun"
+        and nano_v3b008_state.get("behavioral_episode_count") == 162
+        and nano_v3b008_state.get("matched_left_right_pair_count") == 81
+        and nano_v3b008_state.get("rerun_policy")
+        == "do_not_rerun_any_valid_v3b008_cell"
+        and nano_v3b008_state.get("retained_infrastructure_attempt", {}).get(
+            "sha256"
+        )
+        == sha256(paths["nano_v3b008_parallel_infrastructure_failure"])
+        and nano_v3b008_state.get("condition_successes")
+        == {
+            "target_start_left:left": "26/27",
+            "target_start_left:right": "22/27",
+            "target_start_center:left": "26/27",
+            "target_start_center:right": "26/27",
+            "target_start_right:left": "23/27",
+            "target_start_right:right": "27/27",
+        }
+        and nano_v3b008_state_artifacts.get("summary", {}).get("sha256")
+        == sha256(paths["nano_v3b008_result_summary"])
+        and nano_v3b008_state_artifacts.get("episodes", {}).get("sha256")
+        == sha256(paths["nano_v3b008_result_episodes"])
+        and nano_v3b008_state_artifacts.get("matched_pairs", {}).get("sha256")
+        == sha256(paths["nano_v3b008_result_pairs"])
+        and nano_v3b008_state_artifacts.get("evidence_manifest", {}).get("sha256")
+        == sha256(paths["nano_v3b008_result_manifest"]),
+        "V3 continuation records the complete no-rerun Nano V3-B008 result and hash roots",
         checks,
     )
     nano_v3b009_state = continuation.get("prospective_tier_b_results", {}).get(

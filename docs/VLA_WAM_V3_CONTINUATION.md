@@ -453,6 +453,37 @@ The compact result set is the
 [`matched-pair JSONL`](../artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/dreamzero_v3b003_matched_pairs.jsonl),
 and [`evidence manifest`](../artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/evidence_manifest.json).
 
+### Cosmos3 Nano target start-side interaction complete (V3-B008)
+
+The start-side cohort is complete at **162/162 valid episodes**: 27 matched
+seeds, three frozen initial target positions, and both exact directions.
+Behavioral failures remain in the denominator; the retained cold-server
+timeout is infrastructure-only and is excluded. All 81 matched LEFT/RIGHT
+action traces differed.
+
+| Initial Rubik's-cube position | Exact LEFT prompt | Exact RIGHT prompt | LEFT | RIGHT |
+| --- | --- | --- | ---: | ---: |
+| Robot-left of the bowl | “Put the Rubik's cube to the left of the bowl.” | “Put the Rubik's cube to the right of the bowl.” | 26/27 | 22/27 |
+| Laterally aligned with the bowl | “Put the Rubik's cube to the left of the bowl.” | “Put the Rubik's cube to the right of the bowl.” | 26/27 | 26/27 |
+| Robot-right of the bowl | “Put the Rubik's cube to the left of the bowl.” | “Put the Rubik's cube to the right of the bowl.” | 23/27 | 27/27 |
+
+The requested-direction success gap changed by `+0.296` per matched seed
+between the two outer start positions (target-start-right minus
+target-start-left; exact within-seed permutation `p = 0.0156`). The same
+outer-level interaction was `+0.0732 m` for endpoint redirection (95%
+matched-seed bootstrap CI `[+0.0025, +0.1512]`) and `+0.0789 m` for
+requested-side depth (95% CI `[+0.0124, +0.1470]`).
+
+Thus the initial target side measurably changes Nano's apparent directional
+competence. This supports a geometry, reachability, or policy-state account
+for part of the observed direction gap; it does not identify training data or
+remove the separate evidence that the action trace responds to the exact
+prompt. The compact [`summary`](../artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b008/v3b008_summary.json),
+[`episodes`](../artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b008/v3b008_episodes.jsonl),
+[`pairs`](../artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b008/v3b008_matched_pairs.jsonl),
+and [`evidence manifest`](../artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b008/evidence_manifest.json)
+are hash-closed. Do not rerun a valid V3-B008 cell.
+
 ### Cosmos3 Nano target/reference role swap complete (V3-B009)
 
 The role-swap cohort is complete at **108/108 valid episodes**: 27 matched
@@ -480,8 +511,7 @@ dynamics. The compact [`summary`](../artifacts/vla_wam_shared_v3/prospective_tie
 [`episodes`](../artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b009/v3b009_episodes.jsonl),
 [`pairs`](../artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b009/v3b009_matched_pairs.jsonl),
 and [`evidence manifest`](../artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b009/evidence_manifest.json)
-are hash-closed. Do not rerun a valid V3-B009 cell. V3-B008 start-side remains
-active in its separate queue.
+are hash-closed. Do not rerun a valid V3-B009 cell.
 
 ### Nano lateral-position dose response: V3-B004 failed closed; V3-B005 complete
 
@@ -718,8 +748,8 @@ must remain separate. It is complete and must not be rerun.
 
 - Phase B: Nano V3-B001, π0.5 V3-B002, DreamZero V3-B003, and Nano role-swap
   V3-B009 are complete and hash-closed at 108/108 exact cells. Nano V3-B005 is
-  complete at 210/210. V3-B008 start-side remains active in its separate exact
-  queue; every other Phase-B ablation remains unreleased.
+  complete at 210/210, and Nano V3-B008 start-side is complete at 162/162.
+  Every other Phase-B ablation remains unreleased.
 - Phase C: GR00T N1.7, Cosmos3 Edge, and Cosmos3 Nano each passed their independent
   byte-hash, raw-writer, exact-repeat, and four-form prompt-sensitivity gates.
   All three cohorts are complete and hash-closed at 160/160 valid episodes;

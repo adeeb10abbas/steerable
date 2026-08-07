@@ -670,6 +670,70 @@
     }
   },
   "prospective_tier_b_results": {
+    "v3b008_nano_start_side": {
+      "status": "complete_hash_closed_27_seed_162_episode_result_no_rerun",
+      "amendment_id": "V3-B008",
+      "model_id": "cosmos3_nano_policy_droid",
+      "arena": "droid_robolab",
+      "factor": "initial_target_start_side",
+      "matched_seed_count": 27,
+      "behavioral_episode_count": 162,
+      "matched_left_right_pair_count": 81,
+      "valid_behavioral_failures_included": true,
+      "infrastructure_attempts_included": false,
+      "retained_infrastructure_attempt": {
+        "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/gates/v3b008/model_specific/parallel_lane_infrastructure_failure.json",
+        "sha256": "517ed05d51920b2f8cd121b806350d4cd868c782d355e5ba15f909b344eec64e",
+        "denominator_eligible": false
+      },
+      "rerun_policy": "do_not_rerun_any_valid_v3b008_cell",
+      "exact_prompts": {
+        "left": "Put the Rubik's cube to the left of the bowl.",
+        "right": "Put the Rubik's cube to the right of the bowl."
+      },
+      "condition_successes": {
+        "target_start_left:left": "26/27",
+        "target_start_left:right": "22/27",
+        "target_start_center:left": "26/27",
+        "target_start_center:right": "26/27",
+        "target_start_right:left": "23/27",
+        "target_start_right:right": "27/27"
+      },
+      "outer_level_interaction": {
+        "definition": "direction contrast for target-start-right minus target-start-left",
+        "endpoint_redirection_mean_m": 0.07316158677416819,
+        "endpoint_redirection_bootstrap_95_ci_m": [
+          0.0024705777910572512,
+          0.15123524502851068
+        ],
+        "requested_side_depth_mean_m": 0.07890166556117711,
+        "requested_side_depth_bootstrap_95_ci_m": [
+          0.01240853934928223,
+          0.14696746939379307
+        ],
+        "binary_success_mean": 0.2962962962962963,
+        "binary_success_exact_permutation_p": 0.015625
+      },
+      "claim_boundary": "The target's initial lateral side significantly changes Nano's binary LEFT/RIGHT success gap and shifts the continuous direction contrasts. This supports a geometry/reachability/state-dependence account; it does not isolate training distribution or a language-only mechanism.",
+      "artifacts": {
+        "summary": {
+          "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b008/v3b008_summary.json",
+          "sha256": "dc64212c3252a8da27ad5d43c97d7d5061ec7cf8f8b79796e334c5be2889c99a"
+        },
+        "episodes": {
+          "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b008/v3b008_episodes.jsonl",
+          "sha256": "7775f19524d13409bc2da9e9d30d660e068fe735e0ce3d69f21fdbc0a3fe69e6"
+        },
+        "matched_pairs": {
+          "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b008/v3b008_matched_pairs.jsonl",
+          "sha256": "797cf2d43bf60921032c3940d82ec1e8803645684272f02b187915d5ab7f06f6"
+        },
+        "evidence_manifest": {
+          "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b008/evidence_manifest.json",
+          "sha256": "fa22f230ca87d5a382f089871da566c0be8534e34d67565b92c12bffd0497293"
+        }
+      }
+    },
     "v3b009_nano_role_swap": {
       "status": "complete_hash_closed_27_seed_108_episode_result_no_rerun",
       "amendment_id": "V3-B009",

@@ -1,0 +1,37 @@
+{
+  "schema_version": "vla-wam-shared-v3b008-parallel-lane-infrastructure-failure-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B008",
+  "model_id": "cosmos3_nano_policy_droid",
+  "registered_cell_id": "v3b008:nano:start_side:seed9724:target_start_center:right",
+  "started_at_utc": "2026-08-07T08:27:33.551287Z",
+  "failed_at_utc": "2026-08-07T08:28:38.813281Z",
+  "status": "retained_infrastructure_failure_excluded_from_behavioral_denominator",
+  "failure": "The cold parallel inference exceeded the WebSocket keepalive interval. The reconnect repeated request index 0 after the server had advanced its cell-local counter, so the frozen server contract rejected it fail-closed.",
+  "behavioral_accounting": {
+    "model_inference_completed_server_side": 1,
+    "action_response_received_by_client": 0,
+    "simulator_actions_executed": 0,
+    "raw_behavioral_episode_compiled": false,
+    "denominator_eligible": false,
+    "replacement_behavioral_episode_source": "The original untouched lane later executed this cell from request index 0 and compiled the sole valid denominator row."
+  },
+  "preservation": {
+    "method": "The complete partial cell directory was moved byte-for-byte from the behavioral root to the infrastructure-only root before the original lane reached the cell.",
+    "preserved_file_count": 146,
+    "before_after_file_hash_lists_identical": true,
+    "canonical_source_path_hash_listing_sha256": "8c37501c2ae76cfc2efec63def42e0683443c2c2c2644b6e2e24e8e2f8fbeb06",
+    "pvc_path": "/data/users/ali/vla_wam/raw/v3b/tier_b/v3b008/infrastructure_failures/parallel_lane_attempt01/v3b008__nano__start_side__seed9724__target_start_center__right/attempt01",
+    "bridge_failure_sha256": "0ea2690660a2380d747eca5895f281d11452a4cf212eebdbb212735c69234d6c",
+    "attempt_events_sha256": "4497231d9ef7c15d324dbcadff8c414b19ac9d8769615cec61b5d4fbee36e779",
+    "reset_attestation_sha256": "4e22358f2b316c52030bc1e316ea99b22758f8af44d124e4b252b2f26ede5a76"
+  },
+  "recovery": {
+    "parallel_seed_block": 9726,
+    "parallel_valid_episode_count": 6,
+    "registered_order_preserved": true,
+    "original_lane_interrupted": false,
+    "final_cohort_valid_episode_count": 162,
+    "final_cohort_infrastructure_attempts_included": false
+  }
+}

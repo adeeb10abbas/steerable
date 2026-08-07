@@ -188,6 +188,10 @@ def test_groot_prompt_routing_uses_exact_bytes_and_retains_all_task_sources() ->
         prompt_condition("Put it left, not right.")
     hashes = validate_task_sources(ROOT)
     assert len(hashes) == 8 and all(len(value) == 64 for value in hashes.values())
+    for relative in hashes:
+        source = (ROOT / relative).read_text()
+        assert " as _base" in source
+        assert " import RubiksCube" not in source
 
 
 def test_groot_live_registration_and_output_paths_fail_closed(tmp_path: Path) -> None:

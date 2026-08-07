@@ -1,0 +1,42 @@
+{
+  "behavioral_episode_count": 0,
+  "excluded_attempt_count": 3,
+  "experiment_id": "V3-C001",
+  "invalid_attempts": [
+    {
+      "attempt": "server_attempt01",
+      "behavioral_episode_count": 0,
+      "model_request_count": 0,
+      "port_opened": false,
+      "raw_record_path": "/data/users/ali/vla_wam/raw/v3c/phase_c_v3c001/cosmos3_nano_policy_droid/server_attempt01/infrastructure_attempt.json",
+      "raw_record_sha256": "57e8fdde5085364445558f3c55ec1e5484307596bedc73d4125e4a7eaa435dfa",
+      "reason": "The isolated launch used the wrong Hugging Face cache root, so the pre-owned Wan VAE was not visible.",
+      "stage": "model_load_before_server_ready"
+    },
+    {
+      "attempt": "server_attempt02",
+      "behavioral_episode_count": 0,
+      "model_request_count": 0,
+      "port_opened": false,
+      "raw_record_path": "/data/users/ali/vla_wam/raw/v3c/phase_c_v3c001/cosmos3_nano_policy_droid/server_attempt02/infrastructure_attempt.json",
+      "raw_record_sha256": "ea9b4376f58a4a6b80a17a9a72cca401a7d1117d2d00426d2ff732bc4693f621",
+      "reason": "A code-only checkout lacked the Phase-A local pretrained-asset view, so model construction fell through to the helper download command.",
+      "stage": "model_load_before_server_ready"
+    },
+    {
+      "attempt": "server_attempt03",
+      "behavioral_episode_count": 0,
+      "model_request_count": 0,
+      "port_opened": false,
+      "raw_record_path": "/data/users/ali/vla_wam/raw/v3c/phase_c_v3c001/cosmos3_nano_policy_droid/server_attempt03/infrastructure_attempt.json",
+      "raw_record_sha256": "8137ed29dac6c19d87b4c99956e11de6a43352f17150c55ede7099295b5420f1",
+      "reason": "The inherited pod PATH selected host uvx 0.11.28 instead of the exact Nano environment's compatible uvx 0.10.8.",
+      "stage": "model_load_before_server_ready"
+    }
+  ],
+  "model_id": "cosmos3_nano_policy_droid",
+  "model_request_count": 0,
+  "policy": "All three attempts ended before the service port opened. They are retained as infrastructure evidence and excluded from every behavioral denominator.",
+  "schema_version": "vla-wam-shared-v3c-live-infrastructure-ledger-v1",
+  "unrelated_pid_25608_preserved": true
+}

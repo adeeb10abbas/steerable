@@ -1,0 +1,77 @@
+{
+  "compact_files": {
+    "fixed_observation_report.json": "81f3421a48028ca701bbbc8df8ed8aa8ef9ac661f34ec38ac7119ec8a03bc824",
+    "live_infrastructure_ledger.json": "8acb14e60aaf02b735e524ca579ccf894ebe5a9f2b1261d8f7153fe92a6f601d",
+    "prompt_byte_report.json": "84bddb276e26b425f529e6fa22f5e05f4860d324769f90577ec2caa6b0b5e9ba",
+    "raw_write_preflight.json": "a5f86385feca7be481d0ca81065abafe04d8e8979a9c1d3ccb8ee6cef4cc1131",
+    "release.json": "33096c0d1b2efa01d07a7020e3213b27b5de15ac05668faf09a8d9e4a2805cf8",
+    "responses.jsonl": "1a4649d3e767465d4ae7104acc15522c04a59215f2dfdcbf12bb649c16d83c6d"
+  },
+  "counts": {
+    "behavioral_episodes": 0,
+    "executed_actions": 0,
+    "fixed_observation_model_requests": 12,
+    "infrastructure_attempts_excluded": 3,
+    "prompt_forms_passed": 4
+  },
+  "execution_plan": {
+    "cell_count": 160,
+    "path": "/data/users/ali/vla_wam/raw/v3c/phase_c_v3c001/cosmos3_nano_policy_droid/execution_plan_lane0.json",
+    "seed_blocks": 20,
+    "sha256": "62facfe7917c2fe7ad1b85cb7d675d040d883e4695f60e324710ab68dd9b1d8a"
+  },
+  "experiment_id": "V3-C001",
+  "fixed_observation_result": {
+    "action_left_right_rms": {
+      "desired_plus_negated_opposite": 0.020022412832520195,
+      "direct_command": 0.015441461608880349,
+      "goal_as_outcome": 0.03067238835084878,
+      "short_command": 0.031310581974356315
+    },
+    "all_action_exact_repeat_rms": 0.0,
+    "all_future_exact_repeat_pixel_mae": 0.0,
+    "exact_repeat_passed": true,
+    "future_left_right_pixel_mae": {
+      "desired_plus_negated_opposite": 6.015956469285659,
+      "direct_command": 4.589267766442838,
+      "goal_as_outcome": 7.17647635206229,
+      "short_command": 4.851796073901898
+    },
+    "prompt_only_action_sensitivity_passed": true,
+    "prompt_only_future_sensitivity_passed": true
+  },
+  "model_id": "cosmos3_nano_policy_droid",
+  "observation": {
+    "byte_identical_across_all_requests": true,
+    "conditioning_image_path": "/data/users/ali/vla_wam/raw/cosmos_v2/fixed_observation_gate/conditioning.png",
+    "conditioning_image_sha256": "2a431b0fa288890b3509b314c0351c91123d5f64b237678fed972848e29cd55b",
+    "sampling_seed": 8500,
+    "source_plan_path": "/data/users/ali/vla_wam/raw/cosmos_v2/fixed_observation_gate/source_plan.json",
+    "source_plan_sha256": "c5025b51f57224308d16338db38ab57b06e7025ba9e585a05993e01a79952fc3"
+  },
+  "raw_array_policy": {
+    "committed_to_git": false,
+    "hashes_recorded_in": "responses.jsonl",
+    "retained_on_pvc": true,
+    "root": "/data/users/ali/vla_wam/raw/v3c/phase_c_v3c001/cosmos3_nano_policy_droid/fixed_observation_attempt01/responses"
+  },
+  "runtime_identity": {
+    "checkpoint": "nvidia/Cosmos3-Nano-Policy-DROID",
+    "checkpoint_revision": "6706d7680581c255ff61e0f3bb49d90eac55c79e",
+    "gate_study_commit": "7f84018da9bb33c85ead511d59a29af158cf49ab",
+    "gpu_index": 0,
+    "gpu_uuid": "GPU-60b3065c-79cb-61e6-b92a-32d0ae3750f3",
+    "pod": "lerobot-b200-4gpu-1-ali",
+    "pod_ip": "10.244.103.110",
+    "pod_uid": "1e0f438c-6041-4cc3-af32-0c118963e54c",
+    "semantic_sha256": "d4bc4ab7d03fd1d1041f0bcc384d34321f3bd7b16c0c4cf517b62b8a1a2160e2",
+    "server_attempt": 4,
+    "server_guard_pid": 962550,
+    "server_port": 18011,
+    "server_running_for_behavioral_queue": true,
+    "server_worker_pgid": 962551,
+    "unrelated_pid_25608_preserved": true
+  },
+  "schema_version": "vla-wam-shared-v3c-four-phrasings-gate-evidence-v1",
+  "status": "model_specific_release_passed_awaiting_isolated_rtx_behavioral_lane"
+}

@@ -1,7 +1,7 @@
 {
   "schema_version": "vla-wam-shared-v3-continuation-v1",
   "study_id": "vla_wam_language_steerability_v3",
-  "updated_at_utc": "2026-08-07T07:33:36Z",
+  "updated_at_utc": "2026-08-07T07:48:51Z",
   "active_branch": "main",
   "evidence_head": "b3c1188dc371106833868545909bb6cd1a3aa116",
   "status": "phase_c_edge_and_nano_complete_groot_queue_active",
@@ -146,7 +146,7 @@
     "v3": {
       "command": ".venv/bin/python tools/validate_vla_wam_v3_protocol.py",
       "status": "valid",
-      "check_count": 562
+      "check_count": 600
     },
     "v2": {
       "command": ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
@@ -604,6 +604,61 @@
         "output_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_output_manifest.json", "sha256": "523a6a2625dc0b67c1f425220006bdca6edea32e554f826f2b6f616c57393090"}
       },
       "release_boundary": "Satisfied before inference: the hash-bound pi0.5 runtime passed exact-source, zero-request fixture/reset/renderer/writer, deterministic-repeat, and prompt-sensitivity gates. The complete cohort is hash-closed and must not be rerun."
+    },
+    "dreamzero_position_reflection_v3b003": {
+      "status": "complete_hash_closed_27_seed_108_episode_result_no_rerun",
+      "amendment_id": "V3-B003",
+      "model_id": "dreamzero_droid_action_cfg",
+      "identity_binding": "V2-A015:dreamzero_action_cfg_s2",
+      "arena": "droid_robolab",
+      "factor": "movable_object_center_position_reflection_about_robot_sagittal_plane",
+      "claim_boundary": "Only movable-object center positions were reflected. Robot base, cameras, nonmovable geometry, exact prompt bytes, controller, cone, and success predicate remained fixed. The model-noise seed was constant at 1140 and is not stochastic replication.",
+      "seed_range_inclusive": [9400, 9426],
+      "prespecified_matched_seed_count": 27,
+      "cells_per_seed": 4,
+      "registered_behavioral_cell_count": 108,
+      "completed_behavioral_cell_count": 108,
+      "matched_left_right_pair_count": 54,
+      "rerun_policy": "do_not_rerun_any_valid_v3b003_cell",
+      "exact_prompts": {
+        "left": "Put the Rubik's cube to the left of the bowl.",
+        "right": "Put the Rubik's cube to the right of the bowl."
+      },
+      "condition_successes": {
+        "control:left": "5/27",
+        "control:right": "8/27",
+        "position_mirrored:left": "25/27",
+        "position_mirrored:right": "25/27"
+      },
+      "failure_taxonomy": {"correct": 63, "pick_failed": 26, "transport_failed": 17, "wrong_side": 1, "release_failed": 1},
+      "registered_results": {
+        "endpoint_redirection_interaction_mean_m": 0.254698321947621,
+        "endpoint_redirection_interaction_bootstrap_95_ci_m": [0.20200158464204934, 0.3071430931988828],
+        "endpoint_redirection_interaction_exact_sign_p": 4.172325134277344e-7,
+        "requested_depth_interaction_mean_m": -0.14091859030088894,
+        "requested_depth_interaction_bootstrap_95_ci_m": [-0.19924238286567506, -0.08190082595511176],
+        "requested_depth_interaction_exact_sign_p": 0.000310748815536499,
+        "binary_success_DiD_mean": -0.1111111111111111,
+        "binary_success_DiD_distribution": {"-2": 0, "-1": 8, "0": 14, "1": 5, "2": 0},
+        "binary_success_exact_permutation_p": 0.5810546875,
+        "interpretation": "Reflection strongly improved overall competence and changed continuous endpoint/depth interactions, but the binary directional-success gap did not significantly reverse in this cohort."
+      },
+      "retained_taxonomy_packaging_repair": {
+        "registered_cell_id": "v3b003:dreamzero:seed9411:position_mirrored:right",
+        "before_taxonomy": "release_failed",
+        "after_taxonomy": "transport_failed",
+        "behavioral_episode_rerun": false,
+        "model_inference_requests": 0,
+        "actions_executed": 0,
+        "original_preserved": true,
+        "report": {"path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/retained_taxonomy_packaging_repair/repair_report.json", "sha256": "aa2b2779d87f9d0e63f0fa0b1e97a999c08dce92a61fdd68b4a9ff09c87e7922"}
+      },
+      "artifacts": {
+        "summary": {"path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/dreamzero_v3b003_summary.json", "sha256": "f45ab7d11281b994592948cdc11ea5d0fe24837d75d21a8a7dd42ff63b9c5817"},
+        "episodes": {"path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/dreamzero_v3b003_episodes.jsonl", "sha256": "31f0715c3cbc682f90e5cc6420b9f45f49622f876734d43ba7c8cb6545b80f34"},
+        "matched_pairs": {"path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/dreamzero_v3b003_matched_pairs.jsonl", "sha256": "bb88b62e9137f292a2a1739bd4976daf0d641d242876e921ed4f21d605d9e2a7"},
+        "evidence_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/evidence_manifest.json", "sha256": "a24278ee01624971877afd7c3db1b7f4377957c3f7d58b9fadc9bd6a70b6fd35"}
+      }
     }
   },
   "retrospective_mechanism_diagnostics": {
@@ -835,7 +890,7 @@
       "recovery_command": "git -C /home/ali/openpi-robolab bundle create /tmp/openpi-robolab-all.bundle --all && git -C /home/ali/projects/RoboLab bundle create /tmp/robolab-all.bundle --all"
     },
     "phase_b_confounds": {
-      "status": "nano_v3b001_pi05_v3b002_and_nano_v3b005_complete_dreamzero_v3b003_released_v3b004_failed_closed",
+      "status": "nano_v3b001_pi05_v3b002_dreamzero_v3b003_and_nano_v3b005_complete_v3b004_failed_closed",
       "released": {
         "nano_v3b001": {
           "amendment_id": "V3-B001",
@@ -856,11 +911,11 @@
           "model_id": "dreamzero_droid_action_cfg",
           "identity_binding": "V2-A015:dreamzero_action_cfg_s2",
           "released_behavioral_cells": 108,
-          "completed_behavioral_cells": 0,
+          "completed_behavioral_cells": 108,
           "fixed_observation_model_requests_before_release": 3,
           "behavioral_episodes_before_release": 0,
           "release_gate": {"path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/gates/release_gate.json", "sha256": "7e30e618ee233ea04675d556f48621f6ff7de84f4ac9033460d0d9531a234dd6"},
-          "release_condition": "Released only after four distinct ali RTX lanes each passed 12 fresh-process physical/reset/renderer/writer attestations and the fresh DreamZero s=2 server passed exact-repeat and LEFT/RIGHT action/latent sensitivity. The 108 registered cells are authorized but not yet complete."
+          "release_condition": "Released only after four distinct ali RTX lanes each passed 12 fresh-process physical/reset/renderer/writer attestations and the fresh DreamZero s=2 server passed exact-repeat and LEFT/RIGHT action/latent sensitivity. The 108 registered cells are complete and hash-closed; do not rerun."
         },
         "nano_v3b005": {
           "amendment_id": "V3-B005",
@@ -911,7 +966,7 @@
           "denominator_effect": "none"
         }
       },
-      "unreleased": "DreamZero V3-B003 passed its independent release gate and its 108 cells are authorized but incomplete. V3-B004 failed closed before inference. Nano V3-B005 is complete and must not be rerun. Every other Phase-B confound ablation beyond completed Nano V3-B001, pi0.5 V3-B002, and Nano V3-B005 requires its own frozen independent release path."
+      "unreleased": "V3-B004 failed closed before inference. DreamZero V3-B003 and Nano V3-B005 are complete and must not be rerun. Every other Phase-B confound ablation beyond completed Nano V3-B001, pi0.5 V3-B002, DreamZero V3-B003, and Nano V3-B005 requires its own frozen independent release path."
     },
     "phase_c_four_phrasings": {
       "status": "cosmos3_edge_and_nano_complete_groot_queue_active",
@@ -1024,8 +1079,8 @@
     }
   },
   "scientific_claim_boundary": {
-    "supported": "Across every completed checkpoint, matched LEFT/RIGHT prompts changed executed traces; endpoint ordering was often aligned, but requested task completion and failure mode remained strongly checkpoint- and direction-dependent. In the separate V3-A002 public old-name-config bridge, all 20 common action prefixes differed and 16/20 endpoints aligned, yet success was 0/20 LEFT versus 12/20 RIGHT. Nano V3-B001 and pi0.5 V3-B002 are completed scene-matched positions-only ablations. For pi0.5, reflection left endpoint redirection nearly unchanged (interaction mean -1.12 cm, 95% CI -7.81 to +5.68 cm, sign-test p=0.701) but reversed requested-side depth (interaction mean -34.59 cm, 95% CI -41.38 to -28.46 cm; 27/27 negative, p=1.49e-08) and binary success from control 4/27 LEFT versus 25/27 RIGHT to reflected 25/27 LEFT versus 9/27 RIGHT (mean DiD -1.370, exact p=5.96e-08).",
-    "not_supported": "The two completed registered movable-object center-position reflections support geometry or layout as a major competence confound under this simulator setup. They do not imply that all prompt-conditioned endpoint steering is geometric, identify training-distribution bias as the mechanism, isolate reachability from other downstream physical mediators, or test a full-scene mirror, base rotation, start-side interaction, or role swap. An exposed or decoded future also does not establish successful control.",
+    "supported": "Across every completed checkpoint, matched LEFT/RIGHT prompts changed executed traces; endpoint ordering was often aligned, but requested task completion and failure mode remained strongly checkpoint- and direction-dependent. In the separate V3-A002 public old-name-config bridge, all 20 common action prefixes differed and 16/20 endpoints aligned, yet success was 0/20 LEFT versus 12/20 RIGHT. Nano V3-B001, pi0.5 V3-B002, and DreamZero V3-B003 are completed scene-matched positions-only ablations. For pi0.5, reflection left endpoint redirection nearly unchanged (interaction mean -1.12 cm, 95% CI -7.81 to +5.68 cm, sign-test p=0.701) but reversed requested-side depth (interaction mean -34.59 cm, 95% CI -41.38 to -28.46 cm; 27/27 negative, p=1.49e-08) and binary success from control 4/27 LEFT versus 25/27 RIGHT to reflected 25/27 LEFT versus 9/27 RIGHT (mean DiD -1.370, exact p=5.96e-08). DreamZero reflection improved total success from 13/54 to 50/54 and changed depth (interaction mean -14.09 cm, 95% CI -19.92 to -8.19 cm, sign-test p=0.000311), while its binary success-gap DiD was not significant (p=0.581).",
+    "not_supported": "The three completed registered movable-object center-position reflections support geometry or layout as a major competence confound under this simulator setup. They do not imply that all prompt-conditioned endpoint steering is geometric, identify training-distribution bias as the mechanism, isolate reachability from other downstream physical mediators, or test a full-scene mirror, base rotation, start-side interaction, or role swap. An exposed or decoded future also does not establish successful control.",
     "unit_warning": "RoboTwin sampling replicates are nested within seven scenes; they are not 63 independent scenes."
   },
   "storage": {
@@ -1041,7 +1096,7 @@
       ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
       "git diff --check"
     ],
-    "inference_authority": "Do not rerun any valid Phase-A, V3-A002, Nano V3-B001, pi0.5 V3-B002, Nano V3-B005, Cosmos3 Edge V3-C001, or Cosmos3 Nano V3-C001 cell. DreamZero V3-B003 passed its hash-bound four-lane physical and fresh fixed-observation release gate; run only its exact 108 registered cells and preserve whole-seed order. Nano V3-B004 failed closed with zero model requests and must never be run. Nano V3-B005 is complete at 210/210 valid cells and is hash-closed. Phase C remains active only for the already running GR00T seed-8501-8519 queue. Preserve whole-seed serial execution and do not rerun complete seed blocks. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or another Phase-C model.",
+    "inference_authority": "Do not rerun any valid Phase-A, V3-A002, Nano V3-B001, pi0.5 V3-B002, DreamZero V3-B003, Nano V3-B005, Cosmos3 Edge V3-C001, or Cosmos3 Nano V3-C001 cell. DreamZero V3-B003 is complete at 108/108 valid cells and hash-closed. Nano V3-B004 failed closed with zero model requests and must never be run. Nano V3-B005 is complete at 210/210 valid cells and is hash-closed. Phase C remains active only for the already running GR00T seed-8501-8519 queue. Preserve whole-seed serial execution and do not rerun complete seed blocks. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or another Phase-C model.",
     "publication_note": "Use the compact result summaries and evidence manifests for analysis. Do not infer current study state from the older V2 article, gallery, figures, or chat history."
   }
 }

@@ -1,0 +1,47 @@
+{
+  "actions_executed": 0,
+  "after": {
+    "failure_taxonomy": "transport_failed",
+    "jsonl": {
+      "bytes": 124857,
+      "path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/compiled/retained_taxonomy_packaging_repair_attempt01/raw_episode.jsonl",
+      "sha256": "283320d547d611852f8aa012812a9bf57cc2684f9e5e4c77368d694696be1de5"
+    },
+    "manifest": {
+      "bytes": 284,
+      "path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/compiled/retained_taxonomy_packaging_repair_attempt01/raw_episode.jsonl.manifest.json",
+      "sha256": "64d1de2ac05e0870c8dcbac20bbfc06c20b40b9196ba8e423a50edf491db5c11"
+    }
+  },
+  "amendment_id": "V3-B003",
+  "before": {
+    "failure_taxonomy": "release_failed",
+    "jsonl": {
+      "bytes": 124855,
+      "path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/behavioral_isolated_attempt03/raw/v3b003__dreamzero__seed9411__position_mirrored__right/attempt01/raw_episode.jsonl",
+      "sha256": "172a474cfb545c71051529fcc64c4d6613b6da3616fe891336aa6c7ffbd094cc"
+    },
+    "manifest": {
+      "bytes": 284,
+      "path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/behavioral_isolated_attempt03/raw/v3b003__dreamzero__seed9411__position_mirrored__right/attempt01/raw_episode.jsonl.manifest.json",
+      "sha256": "3d5d723c5d9e9e0da38f13df8b2d85743e84ae4e7bd4e7ab3cffc0038ac2686a"
+    }
+  },
+  "behavioral_episode_rerun": false,
+  "frozen_derivation_facts": {
+    "failure_taxonomy": "release_failed",
+    "final_detached_release": false,
+    "final_opposite_region_sustained": false,
+    "final_requested_region_sustained": false,
+    "first_sustained_requested_entry_step": 152,
+    "requested_success": false,
+    "verified_pickup": true
+  },
+  "model_inference_requests": 0,
+  "original_preserved": true,
+  "reason": "The bridge used any requested-cone entry for release_failed; frozen V3 precedence requires final sustained requested-cone occupancy. The raw stream proves transient entry, verified pickup, and neither final sustained requested nor opposite occupancy.",
+  "registered_cell_id": "v3b003:dreamzero:seed9411:position_mirrored:right",
+  "repair_kind": "deterministic_retained_record_packaging_only",
+  "schema_version": "vla-wam-shared-v3b-dreamzero-taxonomy-packaging-repair-v1",
+  "study_id": "vla_wam_language_steerability_v3"
+}

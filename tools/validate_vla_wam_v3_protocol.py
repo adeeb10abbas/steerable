@@ -202,6 +202,13 @@ REQUIRED = {
     "dreamzero_mirror_runtime_bridge": "experiments/v3/dreamzero_phase_b/robolab_bridge.py",
     "dreamzero_mirror_runtime_compiler": "experiments/v3/dreamzero_phase_b/compile_cell.py",
     "dreamzero_mirror_runtime_queue": "experiments/v3/dreamzero_phase_b/queue.py",
+    "dreamzero_mirror_results_summary": f"{V3}/phase_b/dreamzero_mirror_v3b003/results/dreamzero_v3b003_summary.json",
+    "dreamzero_mirror_results_episodes": f"{V3}/phase_b/dreamzero_mirror_v3b003/results/dreamzero_v3b003_episodes.jsonl",
+    "dreamzero_mirror_results_pairs": f"{V3}/phase_b/dreamzero_mirror_v3b003/results/dreamzero_v3b003_matched_pairs.jsonl",
+    "dreamzero_mirror_results_manifest": f"{V3}/phase_b/dreamzero_mirror_v3b003/results/evidence_manifest.json",
+    "dreamzero_mirror_taxonomy_repair": f"{V3}/phase_b/dreamzero_mirror_v3b003/results/retained_taxonomy_packaging_repair/repair_report.json",
+    "dreamzero_mirror_taxonomy_repair_manifest": f"{V3}/phase_b/dreamzero_mirror_v3b003/results/retained_taxonomy_packaging_repair/repair_report.manifest.json",
+    "dreamzero_mirror_taxonomy_repair_tool": "tools/repair_dreamzero_v3b003_taxonomy.py",
     "dreamzero_mirror_release_builder": "tools/build_dreamzero_v3b003_release_gate.py",
     "dreamzero_mirror_preflight_merger": "tools/merge_dreamzero_v3b003_preflight.py",
     "dreamzero_mirror_preflight_lane_runner": "tools/run_dreamzero_v3b003_preflight_lane.py",
@@ -1845,6 +1852,14 @@ def validate(root: Path) -> list[str]:
     dreamzero_mirror_gate_lanes = [
         load(paths[f"dreamzero_mirror_gate_lane{index}"]) for index in range(4)
     ]
+    dreamzero_mirror_results_summary = load(paths["dreamzero_mirror_results_summary"])
+    dreamzero_mirror_results_episodes = load_jsonl(paths["dreamzero_mirror_results_episodes"])
+    dreamzero_mirror_results_pairs = load_jsonl(paths["dreamzero_mirror_results_pairs"])
+    dreamzero_mirror_results_manifest = load(paths["dreamzero_mirror_results_manifest"])
+    dreamzero_mirror_taxonomy_repair = load(paths["dreamzero_mirror_taxonomy_repair"])
+    dreamzero_mirror_taxonomy_repair_manifest = load(
+        paths["dreamzero_mirror_taxonomy_repair_manifest"]
+    )
     nano_lateral_sweep_amendment = load(paths["nano_lateral_sweep_amendment"])
     nano_lateral_sweep_neutrality_correction = load(
         paths["nano_lateral_sweep_neutrality_correction"]
@@ -3418,6 +3433,74 @@ def validate(root: Path) -> list[str]:
         "DreamZero V3-B003 release binds four 12-process RTX lanes and the passed fresh fixed-observation gate",
         checks,
     )
+    dream_result_population = dreamzero_mirror_results_summary.get("population", {})
+    dream_result_conditions = dreamzero_mirror_results_summary.get("condition_outcomes", {})
+    dream_result_primary = dreamzero_mirror_results_summary.get("full_sample_primary", {})
+    dream_result_files = {
+        Path(row.get("path", "")).name: row
+        for row in dreamzero_mirror_results_manifest.get("files", [])
+    }
+    require(
+        dreamzero_mirror_results_summary.get("schema_version")
+        == "vla-wam-shared-v3b-dreamzero-mirror-results-v1"
+        and dream_result_population
+        == {
+            "behavioral_episode_count": 108,
+            "infrastructure_attempts_included": False,
+            "matched_left_right_pair_count": 54,
+            "matched_seed_count": 27,
+            "missing_value_imputation": "none",
+            "valid_behavioral_failures_included": True,
+        }
+        and len(dreamzero_mirror_results_episodes) == 108
+        and len(dreamzero_mirror_results_pairs) == 54
+        and {
+            key: (value.get("successes"), value.get("episodes"))
+            for key, value in dream_result_conditions.items()
+        }
+        == {
+            "control:left": (5, 27),
+            "control:right": (8, 27),
+            "position_mirrored:left": (25, 27),
+            "position_mirrored:right": (25, 27),
+        }
+        and dream_result_primary.get("I_position_reflection_interaction", {})
+        .get("paired_sign_test", {})
+        .get("p_value")
+        == 0.000310748815536499
+        and dream_result_primary.get("binary_success_DiD", {})
+        .get("exact_permutation_test", {})
+        .get("p_value")
+        == 0.5810546875
+        and dream_result_files.get("dreamzero_v3b003_summary.json", {}).get("sha256")
+        == sha256(paths["dreamzero_mirror_results_summary"])
+        and dream_result_files.get("dreamzero_v3b003_episodes.jsonl", {}).get("sha256")
+        == sha256(paths["dreamzero_mirror_results_episodes"])
+        and dream_result_files.get("dreamzero_v3b003_matched_pairs.jsonl", {}).get("sha256")
+        == sha256(paths["dreamzero_mirror_results_pairs"]),
+        "DreamZero V3-B003 binds 108 valid episodes, 54 pairs, exact condition outcomes, and registered interaction tests",
+        checks,
+    )
+    require(
+        dreamzero_mirror_taxonomy_repair.get("schema_version")
+        == "vla-wam-shared-v3b-dreamzero-taxonomy-packaging-repair-v1"
+        and dreamzero_mirror_taxonomy_repair.get("registered_cell_id")
+        == "v3b003:dreamzero:seed9411:position_mirrored:right"
+        and dreamzero_mirror_taxonomy_repair.get("repair_kind")
+        == "deterministic_retained_record_packaging_only"
+        and dreamzero_mirror_taxonomy_repair.get("behavioral_episode_rerun") is False
+        and dreamzero_mirror_taxonomy_repair.get("model_inference_requests") == 0
+        and dreamzero_mirror_taxonomy_repair.get("actions_executed") == 0
+        and dreamzero_mirror_taxonomy_repair.get("original_preserved") is True
+        and dreamzero_mirror_taxonomy_repair.get("before", {}).get("jsonl", {}).get("sha256")
+        == "172a474cfb545c71051529fcc64c4d6613b6da3616fe891336aa6c7ffbd094cc"
+        and dreamzero_mirror_taxonomy_repair.get("after", {}).get("jsonl", {}).get("sha256")
+        == "283320d547d611852f8aa012812a9bf57cc2684f9e5e4c77368d694696be1de5"
+        and dreamzero_mirror_taxonomy_repair_manifest.get("sha256")
+        == sha256(paths["dreamzero_mirror_taxonomy_repair"]),
+        "DreamZero V3-B003 taxonomy repair is hash-bound, packaging-only, zero-inference, and preserves the original",
+        checks,
+    )
     lateral_design = nano_lateral_sweep_amendment.get("design", {})
     lateral_calibration = nano_lateral_sweep_amendment.get(
         "model_blind_numeric_calibration", {}
@@ -3968,6 +4051,39 @@ def validate(root: Path) -> list[str]:
                     "V3 continuation hash-binds the completed V3-B002 result and gate manifests",
                     checks,
                 )
+    dreamzero_result_state = continuation.get("phase_b_releases", {}).get(
+        "dreamzero_position_reflection_v3b003", {}
+    )
+    dreamzero_state_artifacts = dreamzero_result_state.get("artifacts", {})
+    require(
+        dreamzero_result_state.get("status")
+        == "complete_hash_closed_27_seed_108_episode_result_no_rerun"
+        and dreamzero_result_state.get("completed_behavioral_cell_count") == 108
+        and dreamzero_result_state.get("matched_left_right_pair_count") == 54
+        and dreamzero_result_state.get("rerun_policy")
+        == "do_not_rerun_any_valid_v3b003_cell"
+        and dreamzero_result_state.get("condition_successes")
+        == {
+            "control:left": "5/27",
+            "control:right": "8/27",
+            "position_mirrored:left": "25/27",
+            "position_mirrored:right": "25/27",
+        }
+        and dreamzero_state_artifacts.get("summary", {}).get("sha256")
+        == sha256(paths["dreamzero_mirror_results_summary"])
+        and dreamzero_state_artifacts.get("episodes", {}).get("sha256")
+        == sha256(paths["dreamzero_mirror_results_episodes"])
+        and dreamzero_state_artifacts.get("matched_pairs", {}).get("sha256")
+        == sha256(paths["dreamzero_mirror_results_pairs"])
+        and dreamzero_state_artifacts.get("evidence_manifest", {}).get("sha256")
+        == sha256(paths["dreamzero_mirror_results_manifest"])
+        and dreamzero_result_state.get("retained_taxonomy_packaging_repair", {})
+        .get("report", {})
+        .get("sha256")
+        == sha256(paths["dreamzero_mirror_taxonomy_repair"]),
+        "V3 continuation records the complete no-rerun DreamZero V3-B003 result and hash roots",
+        checks,
+    )
     phase_b_state = continuation.get("blocked_and_unreleased", {}).get(
         "phase_b_confounds", {}
     )
@@ -3993,19 +4109,19 @@ def validate(root: Path) -> list[str]:
             and "27-seed" in completed_pi05_phase_b.get("release_condition", "")
             and "hash-closed" in completed_pi05_phase_b.get("release_condition", "")
             and released_phase_b.get("dreamzero_v3b003", {}).get("released_behavioral_cells") == 108,
-            "V3 continuation marks V3-B002 complete and V3-B003 independently released",
+            "V3 continuation marks V3-B002 and V3-B003 independently released",
             checks,
         )
     dreamzero_released = released_phase_b.get("dreamzero_v3b003", {})
     require(
         dreamzero_released.get("amendment_id") == "V3-B003"
         and dreamzero_released.get("released_behavioral_cells") == 108
-        and dreamzero_released.get("completed_behavioral_cells") == 0
+        and dreamzero_released.get("completed_behavioral_cells") == 108
         and dreamzero_released.get("fixed_observation_model_requests_before_release") == 3
         and dreamzero_released.get("behavioral_episodes_before_release") == 0
         and dreamzero_released.get("release_gate", {}).get("sha256")
         == sha256(paths["dreamzero_mirror_gate_release"]),
-        "V3 continuation records the zero-behavior DreamZero V3-B003 release boundary",
+        "V3 continuation records the passed DreamZero V3-B003 release gate and completed 108-cell cohort",
         checks,
     )
     nano_lateral_complete = released_phase_b.get("nano_v3b005", {})

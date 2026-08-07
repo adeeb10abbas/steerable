@@ -406,6 +406,53 @@ and retained the official reset decode. The hash-bound
 has SHA-256 `7e30e618ee233ea04675d556f48621f6ff7de84f4ac9033460d0d9531a234dd6`.
 All 108 registered cells are authorized; none was complete at this checkpoint.
 
+### DreamZero third position reflection complete (V3-B003)
+
+The prespecified cohort is now complete: **108/108 valid behavioral episodes**
+(27 seeds × two layouts × two exact directions), with every behavioral failure
+retained and infrastructure attempts excluded. The exact prompts remained
+“Put the Rubik's cube to the left of the bowl.” and “Put the Rubik's cube to
+the right of the bowl.”
+
+| Layout | LEFT success | RIGHT success |
+| --- | ---: | ---: |
+| Control | 5/27 | 8/27 |
+| Positions reflected | 25/27 | 25/27 |
+
+Reflection substantially improved completion for both directions, from 13/54
+in control to 50/54 after reflection. It also changed the continuous
+requested-side-depth contrast: the reflected-minus-control interaction was
+`-0.1409 m` (95% matched-seed bootstrap CI `[-0.1992, -0.0819]`; 23/27
+negative; exact sign-test `p = 0.000311`). The binary directional-success gap,
+however, did **not** significantly reverse: per-seed DiD mean `-0.111`, with
+8 negative, 14 zero, and 5 positive seeds (exact within-seed permutation
+`p = 0.581`). This supports a large layout-dependent competence effect for
+DreamZero without evidence, in this cohort, that reflection reverses its
+binary LEFT-versus-RIGHT success gap.
+
+Matched endpoint redirection remained prompt-sensitive in both layouts and
+increased after reflection: mean RIGHT-minus-LEFT endpoint shift was
+`+0.1217 m` in control and `+0.3764 m` after reflection; their interaction was
+`+0.2547 m` (95% CI `[+0.2020, +0.3071]`; 26/27 positive; exact sign-test
+`p = 4.17e-7`). All 54 matched pairs had distinct executed actions. The final
+failure taxonomy is 63 correct, 26 pick failures, 17 transport failures, one
+wrong-side failure, and one release failure.
+
+One retained episode was initially packaged as `release_failed` by the bridge
+although its raw steps showed verified pickup, only transient requested-cone
+entry, and neither final sustained cone occupancy. Frozen taxonomy precedence
+therefore derives `transport_failed`. The original remains preserved; a
+deterministic hash-bound packaging copy was produced with **zero inference,
+zero executed actions, and no behavioral rerun**. The before/after hashes are
+in the committed
+[`repair report`](../artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/retained_taxonomy_packaging_repair/repair_report.json).
+
+The compact result set is the
+[`summary`](../artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/dreamzero_v3b003_summary.json),
+[`episode JSONL`](../artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/dreamzero_v3b003_episodes.jsonl),
+[`matched-pair JSONL`](../artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/dreamzero_v3b003_matched_pairs.jsonl),
+and [`evidence manifest`](../artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/evidence_manifest.json).
+
 ### Nano lateral-position dose response: V3-B004 failed closed; V3-B005 complete
 
 The original V3-B004 physical gate found a decisive model-blind geometry
@@ -791,15 +838,14 @@ git status --short
 git diff --check
 ```
 
-Do not rerun a valid Phase-A, V3-A002, Nano V3-B001, or π0.5 V3-B002 cell. Nano
-and π0.5 reflection cohorts are complete at 108/108 valid episodes; DreamZero
-V3-B003 is released but incomplete. Nano's three-block live snapshot is
+Do not rerun a valid Phase-A, V3-A002, Nano V3-B001, π0.5 V3-B002, or
+DreamZero V3-B003 cell. All three reflection cohorts are complete at 108/108
+valid episodes. Nano's three-block live snapshot is
 historical only. Use each completed cohort's final report,
 aggregate JSONL, and hash manifest for analysis. All other Phase-B and Phase-D
 cells remain unreleased. For Phase C, continue only the already active GR00T,
 Cosmos3 Edge, and Cosmos3 Nano seed-8501–8519 queues; do not rerun any valid
-seed-8500 block. Run DreamZero
-only through the exact hash-bound V3-B003 queue and release gate. Use the eight original committed
+seed-8500 block. Use the eight original committed
 summary/evidence-manifest/infrastructure-ledger triplets plus the separate
 V3-A002 triplet under `artifacts/vla_wam_shared_v3/results/` for earlier
 completed-result analysis. Do not infer current experiment state from the older

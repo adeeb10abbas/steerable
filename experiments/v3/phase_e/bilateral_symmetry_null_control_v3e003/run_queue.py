@@ -19,7 +19,11 @@ def main()->None:
   cid=row['cell_id']; attempt=base/cid.replace(':','__')/'attempt01'
   if attempt.exists():
    if (attempt/'raw_episode.jsonl').is_file(): results.append({'cell_id':cid,'status':'already_compiled'}); continue
-   raise RuntimeError(f'partial attempt retained: {attempt}')
+   # Retain an infrastructure-invalid partial and advance to a fresh attempt.
+   # A partial is never relabeled as a behavioral failure or overwritten.
+   n=2
+   while (base/cid.replace(':','__')/f'attempt{n:02d}').exists(): n += 1
+   attempt=base/cid.replace(':','__')/f'attempt{n:02d}'
   attempt.mkdir(parents=True)
   env=dict(os.environ); env.update({'OMNI_KIT_ACCEPT_EULA':'YES','NVIDIA_DRIVER_CAPABILITIES':'all','VK_ICD_FILENAMES':'/etc/vulkan/icd.d/nvidia_icd.json','TMPDIR':f'/tmp/vla_wam_v3e003/{cid.replace(":","__")}'})
   for key in ('TMPDIR',): Path(env[key]).mkdir(parents=True,exist_ok=False)

@@ -35,3 +35,11 @@ not evidence for a learned-policy direction effect.
 `results.json` contains cell summaries, paired contrasts, gate provenance, and
 source hashes. The raw JSONL episode ledgers remain committed here because
 they are small and are the machine-readable evidence for this diagnostic.
+
+Execution provenance is bound in `evidence_manifest.json`: the 108 rows were
+produced by `experiments/v3/phase_e/reference_controller_runner.py`
+(`f863ac74bd7b223ed1d64c8e9ca736a45e56f2050f2023596e83e45ffdb60e27`) against
+RoboLab commit `0aef241fb088ca21bb4ebd24448940ed56620d17`, with the registered
+fixture candidate and four lane pod/GPU attestations. The checked-in launcher
+`tools/run_v3e002_reference_controller.py` remains fail-closed by design and
+was not the producer of these episodes.

@@ -7,16 +7,16 @@ model-blind controller diagnostic and not a learned-policy baseline.
 ## V3-E001 — fixed observation, prompt versus sampling noise
 
 Three checkpoints × two layouts × 27 matched sampling seeds plus the four
-registered exact repeats per checkpoint were completed: **336/336 valid model
-requests, zero behavioral episodes**. Every model/layout cell has 27/27
-matched LEFT/RIGHT action effects and bit-identical exact repeats. The safe
-claim is reproducible prompt-conditioned action change at the same observation,
-qualified by the same-prompt cross-seed distributions in
+registered exact repeats per checkpoint were completed: **336/336 unique valid
+model requests, zero behavioral episodes**. All 12 registered exact-repeat
+comparisons are present, hash-equal, bit-identical, and have RMS 0.0. The raw
+ledgers contain 224 invalid rows but only 112 unique invalid attempts after
+duplicate provenance accounting. The effect-to-noise relation is not uniform:
+π0.5 is below measured sampling variation, Nano is mixed by layout, and
+DreamZero has zero measured same-prompt variation (ratio recorded as
+null/unbounded rather than assigned an epsilon). The paired sign-flip test and
+per-dimension vectors are in
 `fixed_observation_prompt_noise_v3e001/results/compiled_results.json`.
-The effect-to-noise relation is not uniform: π0.5 is below measured sampling
-variation, Nano is mixed by layout, and DreamZero has zero measured
-same-prompt variation (ratio recorded as null/unbounded rather than assigned
-an epsilon).
 
 ## V3-E002 — model-blind reference controller
 
@@ -25,7 +25,10 @@ relation criterion. The four 27-seed queues completed: **108/108 valid
 model-blind episodes, zero learned-model requests**. The single deterministic
 waypoint recipe produced 0/27 success in every cell and `pick_failed` for all
 episodes. This is a failed competence control, not evidence that the learned
-policies are mechanically feasible or that their asymmetry is explained.
+policies are mechanically feasible or that their asymmetry is explained. The
+actual producing runner, environment revision, fixture hash, and lane
+attestations are bound in the E002 evidence manifest; the checked-in launcher
+remains fail-closed and was not the producer.
 
 ## Manuscript guidance
 
@@ -45,8 +48,9 @@ controller is symmetric, or that language “reaches the policy every time.”
 “At an identical settled observation, changing only the static directional
 prompt produced a reproducible action change across 27 matched sampling seeds
 for π0.5, Cosmos3 Nano Policy DROID, and DreamZero in both control and
-position-mirrored layouts. Exact repeats were bit-identical; prompt effects
-are reported relative to same-prompt cross-seed variation rather than as task
+position-mirrored layouts. All 12 registered exact repeats were bit-identical;
+prompt effects are reported relative to checkpoint-specific same-prompt
+cross-seed variation and a paired systematic-shift test rather than as task
 success.”
 
 “A model-blind absolute-IK waypoint control was run on the same four fixtures

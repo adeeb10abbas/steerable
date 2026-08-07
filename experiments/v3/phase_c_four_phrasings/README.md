@@ -21,6 +21,8 @@ on the PVC as hash-bound `.npy` files.  The compact JSONL contains artifact
 references, never unbounded decoded-future pixels.  Evaluate that JSONL with
 `fixed_observation_gate.py`, then use `build_release.py`; the latter still
 requires an independent, zero-request raw video/action/state/JSONL write proof.
+`raw_write_preflight.py` supplies that model-blind PVC/format proof and binds
+it to the separately retained Phase-A simulator-release evidence.
 
 Every release assertion must name its retained proof path and SHA-256. The runner recomputes those hashes, including the runtime-identity file, before it will produce a plan.
 

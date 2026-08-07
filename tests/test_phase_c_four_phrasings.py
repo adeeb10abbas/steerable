@@ -3,6 +3,8 @@ from __future__ import annotations
 from collections import Counter, defaultdict
 import json
 from pathlib import Path
+import sys
+from types import SimpleNamespace
 
 import pytest
 
@@ -32,6 +34,7 @@ from experiments.v3.phase_c_four_phrasings.fixed_observation_gate import (
     evaluate_records,
 )
 from experiments.v3.phase_c_four_phrasings.live_fixed_observation import _array_record
+from experiments.v3.phase_c_four_phrasings.raw_write_preflight import run as run_write_preflight
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -137,6 +140,35 @@ def test_fixed_observation_gate_accepts_hash_bound_npy_artifacts(tmp_path: Path)
         record["actions"] = _array_record(actions, __import__("numpy").asarray(record["actions"], dtype="float32"))
         record["decoded_future"] = _array_record(future, __import__("numpy").asarray(record["decoded_future"], dtype="uint8"))
     assert evaluate_records(records, model_id="cosmos3_edge_policy_droid")["passed"] is True
+
+
+def test_raw_write_preflight_is_model_blind_and_fail_closed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    class FakeWriter:
+        def __init__(self, path: str, *_: object) -> None:
+            self.path = Path(path)
+
+        def isOpened(self) -> bool:
+            return True
+
+        def write(self, _: object) -> None:
+            self.path.write_bytes(b"model-blind-mp4-writer-proof")
+
+        def release(self) -> None:
+            pass
+
+    monkeypatch.setitem(sys.modules, "cv2", SimpleNamespace(
+        VideoWriter=FakeWriter,
+        VideoWriter_fourcc=lambda *_: 0,
+    ))
+    output = tmp_path / "write"
+    report = run_write_preflight(model_id="groot_n17_droid_vla", output_dir=output)
+    assert report["passed"] is True
+    assert report["model_request_count"] == report["behavioral_episode_count"] == 0
+    assert set(report["outputs"]) == {
+        "simulator_viewport_video", "executed_actions", "state_trace", "behavioral_jsonl"
+    }
+    with pytest.raises(ValueError, match="already exists"):
+        run_write_preflight(model_id="groot_n17_droid_vla", output_dir=output)
 
 
 def _release(

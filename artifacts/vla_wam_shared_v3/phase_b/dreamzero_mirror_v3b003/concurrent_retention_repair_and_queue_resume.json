@@ -1,0 +1,163 @@
+{
+  "schema_version": "vla-wam-shared-v3b-dreamzero-concurrent-retention-repair-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B003",
+  "model_id": "dreamzero_droid_action_cfg",
+  "status": "two_lane_concurrency_proof_passed_remaining_98_cells_resumed",
+  "recorded_at_utc": "2026-08-07T01:59:01Z",
+  "registered_evidence": {
+    "cells_sha256": "a6d0f0a5d4c7cdfa5d3de95d44d7b11f42750a76a603ff8c2e44848e34b8f70d",
+    "manifest_sha256": "efe50df701193e48b981c025ea3b4d27a80e3bdf83216e38a98a63e27061cb23",
+    "release_gate_sha256": "7e30e618ee233ea04675d556f48621f6ff7de84f4ac9033460d0d9531a234dd6",
+    "runtime_identity_sha256": "a590a06f0389d4c5c75f59e83ef71ce6e5e0af9bdb55bf71e0ca775dd544b6c3"
+  },
+  "incident": {
+    "scope": "first new cell on each of the four released lanes",
+    "cause": "The released server finalizes a global future batch when any client resets. Four concurrent clients therefore observed co-batched requests from multiple UUID sessions, while the Phase-A client expected one new global manifest containing only its requests.",
+    "behavioral_effect": "none; all four simulator exports, state traces, executed actions, raw action chunks, latent futures, reset decodes, and viewport videos were retained",
+    "denominator_policy_during_incident": "infrastructure-invalid until exact compile-only recovery",
+    "simulator_rerun": false
+  },
+  "repair": {
+    "method": "partition immutable server manifests by exact request session_id; require exactly one UUID-naming reset; then require every server returned-action tensor to equal the client's retained raw chunk before compiling",
+    "phase_a_runtime_identity_changed": false,
+    "phase_b_only_client_fix_commit": "54d811c",
+    "partition_and_recovery_commit": "3eea7ae",
+    "bounded_queue_commit": "166530d",
+    "tests": {
+      "dreamzero_v3b003_runtime": "9 passed",
+      "concurrency_regression": "one session split across two interleaved global batches is recovered without admitting the peer session",
+      "v3_protocol_validator": "501 checks passed",
+      "git_diff_check": "passed"
+    }
+  },
+  "compile_only_recoveries": [
+    {
+      "registered_cell_id": "v3b003:dreamzero:seed9401:position_mirrored:left",
+      "requested_success": true,
+      "failure_taxonomy": "correct",
+      "actions_executed": 337,
+      "request_count": 43,
+      "session_id": "e814697a-c9d0-4658-b969-379830727960",
+      "raw_episode_sha256": "7cb90f96ae4542678e93cacc5742cc8b75ba5e61f1b2dbcf6d44c5a09802bd89",
+      "raw_manifest_sha256": "480f5e75def364cc42692116c8a45168d62df7ed11b6e3aa43da5dc674b30085",
+      "future_manifest_sha256": "18c93ba30b11c1331261d4b4bc323d63a19b1812d1803cfd6f602daa14624c08",
+      "preserved_infrastructure_failure_sha256": "87394dda0983dbf902152e12a7b054eb3948eaecd75187eefa18c640d7277d78"
+    },
+    {
+      "registered_cell_id": "v3b003:dreamzero:seed9402:control:right",
+      "requested_success": false,
+      "failure_taxonomy": "pick_failed",
+      "actions_executed": 450,
+      "request_count": 57,
+      "session_id": "b17a54e0-88ce-4277-b4de-240c0240cdf2",
+      "raw_episode_sha256": "e0576b678606a2321d49a05522dc32b983557b01c05d49dfa66a99403d282b4a",
+      "raw_manifest_sha256": "468a12034c032a7b8ab6e0d180acbf1efd33d3ca49d50e689f377d04ed10c17a",
+      "future_manifest_sha256": "dd2d2a72db99a16f727f47e58495487c86481dc2bfa86582eb2d88362dd9b0ed",
+      "preserved_infrastructure_failure_sha256": "9c0e591b27289c83d3ead0294f680e60fce00955d42ca4377b0c3f972c7bb68b"
+    },
+    {
+      "registered_cell_id": "v3b003:dreamzero:seed9403:control:left",
+      "requested_success": false,
+      "failure_taxonomy": "transport_failed",
+      "actions_executed": 450,
+      "request_count": 57,
+      "session_id": "2b7aad8d-b770-4b25-9a1b-e56d197a8369",
+      "raw_episode_sha256": "a7f6cda201ae39c2397463ddd22376c1d24cf77daf556ef6e72621184cec0d3b",
+      "raw_manifest_sha256": "70287f41a8525cbc25c60dcad83f9cdb921da92b38bb4efbcfba91f87eea6465",
+      "future_manifest_sha256": "b8a0e5466dee3da7d99dc0ae4db3f1c364433f722ade61a7c29927b812206dbb",
+      "preserved_infrastructure_failure_sha256": "28928fb05b8b865033d72074b1103f9e7177b79f33cd985afc7f8832873752e7"
+    },
+    {
+      "registered_cell_id": "v3b003:dreamzero:seed9404:control:right",
+      "requested_success": true,
+      "failure_taxonomy": "correct",
+      "actions_executed": 385,
+      "request_count": 49,
+      "session_id": "63d6cc40-3d87-49f1-b7ea-4ca71696a7d2",
+      "raw_episode_sha256": "7254a9d5a099b82d1264cef3d506b78dcdc591ee42811b73e71f4448bb3a0181",
+      "raw_manifest_sha256": "0f2d75a8df5358da3145efc9dbb7cb320227ff66822fd93a8098ed8901d79c2e",
+      "future_manifest_sha256": "ceade43ee151d4c2e846584ad32fdad120d81cced3af20465ac6bdb89de35a05",
+      "preserved_infrastructure_failure_sha256": "408652ce02f61ef66526431c867bd81cca2abaf9e96026d2600f3ea1c82e9416"
+    }
+  ],
+  "two_lane_concurrency_proof": {
+    "passed": true,
+    "simultaneous_sessions_distinct": true,
+    "validation": "UUID ownership, UUID-naming reset decode, client/server action tensor equality, latent hash, source-manifest hash, viewport video, JSONL hash, and JSONL-manifest hash",
+    "cells": [
+      {
+        "lane_index": 0,
+        "registered_cell_id": "v3b003:dreamzero:seed9404:position_mirrored:right",
+        "session_id": "5ab98278-9d33-44a6-a466-3241d2f1155f",
+        "request_count": 18,
+        "source_manifest_count": 1,
+        "raw_episode_sha256": "8a2ab4ec1d04bf339fa9ddc1b40284a9f683a068b6e0886f389ab5ed89918615",
+        "raw_manifest_sha256": "55dd06dc64cdf8bbd850560e66417fcb26b68a2459aced08744c7302c90d5f08",
+        "future_manifest_sha256": "94e14ef829395b52233b5659c9605de6b47d4ffb6e9751fcfa77ae13753f0094"
+      },
+      {
+        "lane_index": 1,
+        "registered_cell_id": "v3b003:dreamzero:seed9401:control:right",
+        "session_id": "287cdce5-573f-4e0f-981b-1055e7deb241",
+        "request_count": 24,
+        "source_manifest_count": 2,
+        "raw_episode_sha256": "76f4f0eaa41b0f42304bb5e42a3756e8e2916153b1618f8b808c81ed82e0c415",
+        "raw_manifest_sha256": "09b31a2f1d6a2c8ca76e665a19e7d4eada02af50fcd2d0a104b398a9ed0204f3",
+        "future_manifest_sha256": "bd2449eacd983bf656b7a802007c09707d88a2410a49c6fcce50cb30a9c1682e"
+      }
+    ]
+  },
+  "full_queue_resume": {
+    "launched_at_utc": "2026-08-07T01:57:37Z",
+    "runtime_checkout_git_sha": "166530db86de6a986c5f9d90b5664093f6227382",
+    "valid_cells_before_resume": 10,
+    "remaining_cells": 98,
+    "valid_cells_are_skipped": true,
+    "raw_root": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/behavioral_smoke_lane0_attempt02/raw",
+    "lanes": [
+      {
+        "lane_index": 0,
+        "pod": "vla-wam-lingbot-expansion-ali",
+        "pod_uid": "7110c8d4-db9e-401a-ba85-58ba5e0dfcb3",
+        "gpu_uuid": "GPU-dc8db249-3b4c-1d36-0e9d-435a6d5f01c0",
+        "launcher_pid": 203345,
+        "remaining_cells_at_resume": 22,
+        "first_cell": "v3b003:dreamzero:seed9404:position_mirrored:left"
+      },
+      {
+        "lane_index": 1,
+        "pod": "vla-wam-fastwam-expansion-ali",
+        "pod_uid": "68e4b518-a96d-4935-818f-6d975811bbc8",
+        "gpu_uuid": "GPU-70318cf0-9d68-4c1b-9a94-d85d3c4af002",
+        "launcher_pid": 239354,
+        "remaining_cells_at_resume": 26,
+        "first_cell": "v3b003:dreamzero:seed9401:position_mirrored:right"
+      },
+      {
+        "lane_index": 2,
+        "pod": "vla-wam-rtx-nano-ali",
+        "pod_uid": "30b51054-f277-480d-831d-337581e1cc49",
+        "gpu_uuid": "GPU-37425604-6c72-a77a-f635-392439431707",
+        "launcher_pid": 519558,
+        "remaining_cells_at_resume": 27,
+        "first_cell": "v3b003:dreamzero:seed9402:position_mirrored:right"
+      },
+      {
+        "lane_index": 3,
+        "pod": "vla-wam-robotwin-expansion-ali",
+        "pod_uid": "06925ad6-e387-4c6a-89b3-5dbe44490ed6",
+        "gpu_uuid": "GPU-8415b8cd-db0f-e848-0d1f-b389debe91ab",
+        "launcher_pid": 285204,
+        "remaining_cells_at_resume": 23,
+        "first_cell": "v3b003:dreamzero:seed9403:position_mirrored:left"
+      }
+    ]
+  },
+  "accounting": {
+    "valid_behavioral_failures_remain_in_denominator": true,
+    "infrastructure_failures_remain_preserved_separately": true,
+    "behavioral_simulator_reruns_for_incident_cells": 0,
+    "full_result_status": "in_progress_not_compiled"
+  }
+}

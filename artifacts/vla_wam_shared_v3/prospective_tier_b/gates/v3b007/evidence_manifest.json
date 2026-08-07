@@ -1,0 +1,42 @@
+{
+  "schema_version": "vla-wam-shared-v3b-tier-b-gate-evidence-manifest-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B007",
+  "model_id": "fastwam_robotwin",
+  "arena": "robotwin",
+  "status": "model_blind_gate_passed_behavior_still_unreleased",
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "gate_summary": {
+    "anchor": "place_a2b_right / environment_seed_4300003",
+    "object": "086_woodenblock/base1",
+    "reference": "081_playingcards/base1",
+    "transform": "object and reference centers only: (x,y,z)->(-x,y,z); quaternions unchanged",
+    "task_count": 4,
+    "left_right_physical_fingerprints_equal_within_each_arm": true,
+    "neither_requested_predicate_true_at_every_reset": true,
+    "live_center_reflection_passed": true,
+    "all_required_sapien_views_nonblank": true,
+    "all_four_viewport_writes_decode": true,
+    "runtime_note": "The successful gate used the preserved FastWAM Torch-2.7 environment and /data/users/ali/vla_wam/external/curobo-fastwam-rtxpro-sm120-torch27/src, the architecture-compatible CuRobo build for this ali RTX lane."
+  },
+  "files": [
+    {
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/fastwam_robotwin_mirror_v3b007.json",
+      "bytes": 3585,
+      "sha256": "84d14a5c6a02c5f6655384d2ed1ef6e3cdaab05341136d81a3b0e727268ecc8e"
+    },
+    {
+      "path": "experiments/v3/prospective_tier_b_gates/model_blind_robotwin_mirror_gate.py",
+      "bytes": 15408,
+      "sha256": "0bd50d424d0bf1841e61ee1b0e355905c0cbb03a744f8b1d5fd54dcb2cdbc7bb"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/gates/v3b007/model_blind_gate_report.json",
+      "bytes": 15648,
+      "sha256": "e092917893591490f1b1ee2ab2f9c6bd4cd9cc560fa5702d49dd6974a301d6ad"
+    }
+  ],
+  "pvc_media": "The report hash-binds four bounded three-frame SAPIEN render MP4s under /data/users/ali/vla_wam/raw/v3b/tier_b_gates/v3b007/attempt04. They are reset/render evidence, not behavioral rollouts.",
+  "release_boundary": "This gate freezes the pair03 numeric control and reflected fixtures but authorizes no FastWAM inference. A separate 108-row release amendment and validator are required."
+}

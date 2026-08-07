@@ -1,0 +1,42 @@
+{
+  "schema_version": "vla-wam-shared-v3b-tier-b-gate-infrastructure-ledger-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B007",
+  "model_id": "fastwam_robotwin",
+  "arena": "robotwin",
+  "behavioral_denominator_contribution": 0,
+  "attempts": [
+    {
+      "attempt": 1,
+      "raw_root": "/data/users/ali/vla_wam/raw/v3b/tier_b_gates/v3b007/attempt01",
+      "status": "infrastructure_invalid_before_environment_construction",
+      "model_request_count": 0,
+      "behavioral_episode_count": 0,
+      "reason": "The isolated FastWAM environment could not import Open3D because libGL.so.1 was absent from the launcher's library path."
+    },
+    {
+      "attempt": 2,
+      "raw_root": "/data/users/ali/vla_wam/raw/v3b/tier_b_gates/v3b007/attempt02",
+      "status": "infrastructure_invalid_during_zero_model_fixture_construction",
+      "model_request_count": 0,
+      "behavioral_episode_count": 0,
+      "reason": "The older CuRobo extension had no SM120 kernel image on the RTX PRO 6000 Blackwell GPU."
+    },
+    {
+      "attempt": 3,
+      "raw_root": "/data/users/ali/vla_wam/raw/v3b/tier_b_gates/v3b007/attempt03",
+      "status": "infrastructure_invalid_after_zero_model_source_reset",
+      "model_request_count": 0,
+      "behavioral_episode_count": 0,
+      "reason": "The exact SM120/Torch-2.7 CuRobo build completed native setup, then the gate called a SAPIEN-2 velocity method absent in SAPIEN 3. The source reset was not scored or used as behavior."
+    },
+    {
+      "attempt": 4,
+      "raw_root": "/data/users/ali/vla_wam/raw/v3b/tier_b_gates/v3b007/attempt04",
+      "status": "passed_model_blind_not_released_for_behavior",
+      "model_request_count": 0,
+      "behavioral_episode_count": 0,
+      "report_sha256": "e092917893591490f1b1ee2ab2f9c6bd4cd9cc560fa5702d49dd6974a301d6ad"
+    }
+  ]
+}

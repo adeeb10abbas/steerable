@@ -1,0 +1,600 @@
+{
+  "amendment_id": "V3-B007",
+  "arena": "robotwin",
+  "behavioral_episode_count": 0,
+  "derived_numeric_fixture": {
+    "control": {
+      "object": {
+        "position_xyz_m": [
+          -0.047076620161533356,
+          -0.030880313366651535,
+          0.7405446767807007
+        ],
+        "quaternion_wxyz": [
+          0.3491150736808777,
+          0.3625031113624573,
+          0.609960675239563,
+          0.6120932698249817
+        ]
+      },
+      "reference": {
+        "position_xyz_m": [
+          -0.21130692958831787,
+          -0.1640346497297287,
+          0.7408550977706909
+        ],
+        "quaternion_wxyz": [
+          -0.34580183029174805,
+          -0.3450961410999298,
+          0.6168054938316345,
+          0.6171554923057556
+        ]
+      }
+    },
+    "position_mirrored": {
+      "object": {
+        "position_xyz_m": [
+          0.047076620161533356,
+          -0.030880313366651535,
+          0.7405446767807007
+        ],
+        "quaternion_wxyz": [
+          0.3491150736808777,
+          0.3625031113624573,
+          0.609960675239563,
+          0.6120932698249817
+        ]
+      },
+      "reference": {
+        "position_xyz_m": [
+          0.21130692958831787,
+          -0.1640346497297287,
+          0.7408550977706909
+        ],
+        "quaternion_wxyz": [
+          -0.34580183029174805,
+          -0.3450961410999298,
+          0.6168054938316345,
+          0.6171554923057556
+        ]
+      }
+    },
+    "transform": "object and reference centers only: (x,y,z)->(-x,y,z); quaternions unchanged"
+  },
+  "environment_seed": 4300003,
+  "fastwam_repository": {
+    "commit": "068d3fd70c89df3726c09893f47b75a624b20c02",
+    "path": "/data/users/ali/vla_wam/external/FastWAM",
+    "tracked_diff_empty": true
+  },
+  "gate_source": {
+    "bytes": 15408,
+    "path": "/data/users/ali/vla_wam/src/steerable-tierb-robotwin-fb34005/experiments/v3/prospective_tier_b_gates/model_blind_robotwin_mirror_gate.py",
+    "sha256": "0bd50d424d0bf1841e61ee1b0e355905c0cbb03a744f8b1d5fd54dcb2cdbc7bb"
+  },
+  "gpu_query": "0, GPU-8415b8cd-db0f-e848-0d1f-b389debe91ab, NVIDIA RTX PRO 6000 Blackwell Server Edition, 580.105.08",
+  "gpu_uuid": "GPU-8415b8cd-db0f-e848-0d1f-b389debe91ab",
+  "model_id": "fastwam_robotwin",
+  "model_request_count": 0,
+  "passed": true,
+  "pod": "vla-wam-robotwin-expansion-ali",
+  "pod_uid": "06925ad6-e387-4c6a-89b3-5dbe44490ed6",
+  "release_boundary": "This model-blind gate freezes the pair03 numeric mirror but releases zero behavioral cells. A separately validated queue/release amendment is required before inference.",
+  "renderer": {
+    "all_required_rgb_views_nonblank": true,
+    "backend": "headless SAPIEN Vulkan ray tracing",
+    "vulkan_icd": {
+      "bytes": 140,
+      "path": "/etc/vulkan/icd.d/nvidia_icd.json",
+      "sha256": "7bdb6f27d35b66fc848df6f94b8773bba30ea3a7f06f114100d14154a235a34b"
+    }
+  },
+  "reset_gate": {
+    "left_right_physical_fingerprints_equal_within_arm": true,
+    "live_center_reflection_passed": true,
+    "neither_predicate_true_at_every_reset": true,
+    "quaternion_absolute_dot_minimum": 0.999,
+    "repeat_count_per_arm": 2,
+    "settle_steps_after_native_stability_gate": 250,
+    "translation_drift_tolerance_m": 0.003
+  },
+  "schema_version": "vla-wam-shared-v3b-fastwam-robotwin-mirror-model-blind-gate-v1",
+  "simulator_repository": {
+    "commit": "068d3fd70c89df3726c09893f47b75a624b20c02",
+    "path": "/data/users/ali/vla_wam/external/FastWAM/third_party/RoboTwin"
+  },
+  "source_identity": {
+    "object": [
+      "086_woodenblock",
+      1
+    ],
+    "reference": [
+      "081_playingcards",
+      1
+    ]
+  },
+  "status": "passed_model_blind_not_released_for_behavior",
+  "study_checkout": {
+    "commit": "4c8d1b37475bf87e80e36f72384f8b8c7166588b",
+    "tracked_diff_empty": true
+  },
+  "study_id": "vla_wam_language_steerability_v3",
+  "task_config": {
+    "bytes": 873,
+    "path": "/data/users/ali/vla_wam/external/FastWAM-RoboTwin-bf44be/task_config/demo_clean.yml",
+    "sha256": "8ee5d0d07daecf7599b8d89b44776b700c7c60da24cd6317e176e6798d8cb11e"
+  },
+  "task_source": {
+    "bytes": 5890,
+    "path": "/data/users/ali/vla_wam/external/FastWAM/third_party/RoboTwin/envs/place_a2b_right.py",
+    "sha256": "1225e32207912e15855deff8aa9d4fd2cf425b4c5eeaeaf1eb795daaba4ac6ae"
+  },
+  "tasks": [
+    {
+      "after_stability_window": {
+        "object": {
+          "position_xyz_m": [
+            -0.047078654170036316,
+            -0.030879462137818336,
+            0.7404460310935974
+          ],
+          "quaternion_wxyz": [
+            0.3557261824607849,
+            0.35592615604400635,
+            0.6109005212783813,
+            0.6112087368965149
+          ]
+        },
+        "reference": {
+          "position_xyz_m": [
+            -0.21130691468715668,
+            -0.1640346646308899,
+            0.7408550381660461
+          ],
+          "quaternion_wxyz": [
+            -0.34580275416374207,
+            -0.34509512782096863,
+            0.6168050765991211,
+            0.6171559691429138
+          ]
+        }
+      },
+      "arm": "control",
+      "before_stability_window": {
+        "object": {
+          "position_xyz_m": [
+            -0.047078654170036316,
+            -0.030879462137818336,
+            0.7404460310935974
+          ],
+          "quaternion_wxyz": [
+            0.3557261824607849,
+            0.35592615604400635,
+            0.6109005212783813,
+            0.6112087368965149
+          ]
+        },
+        "reference": {
+          "position_xyz_m": [
+            -0.21130691468715668,
+            -0.1640346646308899,
+            0.7408550381660461
+          ],
+          "quaternion_wxyz": [
+            -0.34580275416374207,
+            -0.34509512782096863,
+            0.6168050765991211,
+            0.6171559691429138
+          ]
+        }
+      },
+      "identity": {
+        "object": [
+          "086_woodenblock",
+          1
+        ],
+        "reference": [
+          "081_playingcards",
+          1
+        ]
+      },
+      "label": "control_left",
+      "predicates_at_reset": {
+        "left": false,
+        "right": false
+      },
+      "prompt": "Put the small woodenblock to the left of the red playingcards box.",
+      "relation": "left",
+      "views": {
+        "head_camera": {
+          "dtype": "uint8",
+          "pixel_range": 246,
+          "shape": [
+            240,
+            320,
+            3
+          ]
+        },
+        "left_camera": {
+          "dtype": "uint8",
+          "pixel_range": 223,
+          "shape": [
+            240,
+            320,
+            3
+          ]
+        },
+        "right_camera": {
+          "dtype": "uint8",
+          "pixel_range": 219,
+          "shape": [
+            240,
+            320,
+            3
+          ]
+        }
+      }
+    },
+    {
+      "after_stability_window": {
+        "object": {
+          "position_xyz_m": [
+            -0.047078654170036316,
+            -0.030879462137818336,
+            0.7404460310935974
+          ],
+          "quaternion_wxyz": [
+            0.3557261824607849,
+            0.35592615604400635,
+            0.6109005212783813,
+            0.6112087368965149
+          ]
+        },
+        "reference": {
+          "position_xyz_m": [
+            -0.21130691468715668,
+            -0.1640346646308899,
+            0.7408550381660461
+          ],
+          "quaternion_wxyz": [
+            -0.34580275416374207,
+            -0.34509512782096863,
+            0.6168050765991211,
+            0.6171559691429138
+          ]
+        }
+      },
+      "arm": "control",
+      "before_stability_window": {
+        "object": {
+          "position_xyz_m": [
+            -0.047078654170036316,
+            -0.030879462137818336,
+            0.7404460310935974
+          ],
+          "quaternion_wxyz": [
+            0.3557261824607849,
+            0.35592615604400635,
+            0.6109005212783813,
+            0.6112087368965149
+          ]
+        },
+        "reference": {
+          "position_xyz_m": [
+            -0.21130691468715668,
+            -0.1640346646308899,
+            0.7408550381660461
+          ],
+          "quaternion_wxyz": [
+            -0.34580275416374207,
+            -0.34509512782096863,
+            0.6168050765991211,
+            0.6171559691429138
+          ]
+        }
+      },
+      "identity": {
+        "object": [
+          "086_woodenblock",
+          1
+        ],
+        "reference": [
+          "081_playingcards",
+          1
+        ]
+      },
+      "label": "control_right",
+      "predicates_at_reset": {
+        "left": false,
+        "right": false
+      },
+      "prompt": "Put the small woodenblock to the right of the red playingcards box.",
+      "relation": "right",
+      "views": {
+        "head_camera": {
+          "dtype": "uint8",
+          "pixel_range": 246,
+          "shape": [
+            240,
+            320,
+            3
+          ]
+        },
+        "left_camera": {
+          "dtype": "uint8",
+          "pixel_range": 223,
+          "shape": [
+            240,
+            320,
+            3
+          ]
+        },
+        "right_camera": {
+          "dtype": "uint8",
+          "pixel_range": 219,
+          "shape": [
+            240,
+            320,
+            3
+          ]
+        }
+      }
+    },
+    {
+      "after_stability_window": {
+        "object": {
+          "position_xyz_m": [
+            0.047074586153030396,
+            -0.030879439786076546,
+            0.7404460906982422
+          ],
+          "quaternion_wxyz": [
+            0.3557264804840088,
+            0.3559260964393616,
+            0.6108996868133545,
+            0.6112093329429626
+          ]
+        },
+        "reference": {
+          "position_xyz_m": [
+            0.21130692958831787,
+            -0.1640346646308899,
+            0.7408550977706909
+          ],
+          "quaternion_wxyz": [
+            -0.3458000719547272,
+            -0.3450978100299835,
+            0.6168063879013062,
+            0.6171546578407288
+          ]
+        }
+      },
+      "arm": "position_mirrored",
+      "before_stability_window": {
+        "object": {
+          "position_xyz_m": [
+            0.047074586153030396,
+            -0.030879439786076546,
+            0.7404460906982422
+          ],
+          "quaternion_wxyz": [
+            0.3557264804840088,
+            0.3559260964393616,
+            0.6108996868133545,
+            0.6112093329429626
+          ]
+        },
+        "reference": {
+          "position_xyz_m": [
+            0.21130692958831787,
+            -0.1640346646308899,
+            0.7408550977706909
+          ],
+          "quaternion_wxyz": [
+            -0.3458000719547272,
+            -0.3450978100299835,
+            0.6168063879013062,
+            0.6171546578407288
+          ]
+        }
+      },
+      "identity": {
+        "object": [
+          "086_woodenblock",
+          1
+        ],
+        "reference": [
+          "081_playingcards",
+          1
+        ]
+      },
+      "label": "position_mirrored_left",
+      "predicates_at_reset": {
+        "left": false,
+        "right": false
+      },
+      "prompt": "Put the small woodenblock to the left of the red playingcards box.",
+      "relation": "left",
+      "views": {
+        "head_camera": {
+          "dtype": "uint8",
+          "pixel_range": 246,
+          "shape": [
+            240,
+            320,
+            3
+          ]
+        },
+        "left_camera": {
+          "dtype": "uint8",
+          "pixel_range": 225,
+          "shape": [
+            240,
+            320,
+            3
+          ]
+        },
+        "right_camera": {
+          "dtype": "uint8",
+          "pixel_range": 219,
+          "shape": [
+            240,
+            320,
+            3
+          ]
+        }
+      }
+    },
+    {
+      "after_stability_window": {
+        "object": {
+          "position_xyz_m": [
+            0.047074586153030396,
+            -0.030879439786076546,
+            0.7404460906982422
+          ],
+          "quaternion_wxyz": [
+            0.3557264804840088,
+            0.3559260964393616,
+            0.6108996868133545,
+            0.6112093329429626
+          ]
+        },
+        "reference": {
+          "position_xyz_m": [
+            0.21130692958831787,
+            -0.1640346646308899,
+            0.7408550977706909
+          ],
+          "quaternion_wxyz": [
+            -0.3458000719547272,
+            -0.3450978100299835,
+            0.6168063879013062,
+            0.6171546578407288
+          ]
+        }
+      },
+      "arm": "position_mirrored",
+      "before_stability_window": {
+        "object": {
+          "position_xyz_m": [
+            0.047074586153030396,
+            -0.030879439786076546,
+            0.7404460906982422
+          ],
+          "quaternion_wxyz": [
+            0.3557264804840088,
+            0.3559260964393616,
+            0.6108996868133545,
+            0.6112093329429626
+          ]
+        },
+        "reference": {
+          "position_xyz_m": [
+            0.21130692958831787,
+            -0.1640346646308899,
+            0.7408550977706909
+          ],
+          "quaternion_wxyz": [
+            -0.3458000719547272,
+            -0.3450978100299835,
+            0.6168063879013062,
+            0.6171546578407288
+          ]
+        }
+      },
+      "identity": {
+        "object": [
+          "086_woodenblock",
+          1
+        ],
+        "reference": [
+          "081_playingcards",
+          1
+        ]
+      },
+      "label": "position_mirrored_right",
+      "predicates_at_reset": {
+        "left": false,
+        "right": false
+      },
+      "prompt": "Put the small woodenblock to the right of the red playingcards box.",
+      "relation": "right",
+      "views": {
+        "head_camera": {
+          "dtype": "uint8",
+          "pixel_range": 246,
+          "shape": [
+            240,
+            320,
+            3
+          ]
+        },
+        "left_camera": {
+          "dtype": "uint8",
+          "pixel_range": 225,
+          "shape": [
+            240,
+            320,
+            3
+          ]
+        },
+        "right_camera": {
+          "dtype": "uint8",
+          "pixel_range": 219,
+          "shape": [
+            240,
+            320,
+            3
+          ]
+        }
+      }
+    }
+  ],
+  "viewport_write_gate": {
+    "control_left": {
+      "bytes": 73534,
+      "decoded_frame_count": 3,
+      "path": "/data/users/ali/vla_wam/raw/v3b/tier_b_gates/v3b007/attempt04/control_left_repeated_frame.mp4",
+      "sha256": "07be966aaea0af9b89af3eed7ec4c071205ecac892da4c321cc171e431fc8b80",
+      "shape": [
+        240,
+        960,
+        3
+      ]
+    },
+    "control_right": {
+      "bytes": 73534,
+      "decoded_frame_count": 3,
+      "path": "/data/users/ali/vla_wam/raw/v3b/tier_b_gates/v3b007/attempt04/control_right_repeated_frame.mp4",
+      "sha256": "07be966aaea0af9b89af3eed7ec4c071205ecac892da4c321cc171e431fc8b80",
+      "shape": [
+        240,
+        960,
+        3
+      ]
+    },
+    "position_mirrored_left": {
+      "bytes": 73668,
+      "decoded_frame_count": 3,
+      "path": "/data/users/ali/vla_wam/raw/v3b/tier_b_gates/v3b007/attempt04/position_mirrored_left_repeated_frame.mp4",
+      "sha256": "d6a2b77341865493ddf70f11286278e55ab0d70f51bd00bd5321c5b9bae25b86",
+      "shape": [
+        240,
+        960,
+        3
+      ]
+    },
+    "position_mirrored_right": {
+      "bytes": 73668,
+      "decoded_frame_count": 3,
+      "path": "/data/users/ali/vla_wam/raw/v3b/tier_b_gates/v3b007/attempt04/position_mirrored_right_repeated_frame.mp4",
+      "sha256": "d6a2b77341865493ddf70f11286278e55ab0d70f51bd00bd5321c5b9bae25b86",
+      "shape": [
+        240,
+        960,
+        3
+      ]
+    }
+  }
+}

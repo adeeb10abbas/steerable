@@ -215,8 +215,16 @@ def _load_observation(path: Path) -> dict[str, np.ndarray]:
     with np.load(path, allow_pickle=False) as data:
         aliases = {
             "observation/image": ("observation/image", "image"),
-            "observation/joint_position": ("observation/joint_position", "joint"),
-            "observation/gripper_position": ("observation/gripper_position", "gripper"),
+            "observation/joint_position": (
+                "observation/joint_position",
+                "joint_position",
+                "joint",
+            ),
+            "observation/gripper_position": (
+                "observation/gripper_position",
+                "gripper_position",
+                "gripper",
+            ),
         }
         result = {}
         for target, choices in aliases.items():

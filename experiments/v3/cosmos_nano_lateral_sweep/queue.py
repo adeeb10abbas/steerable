@@ -78,7 +78,8 @@ def bridge_command(
     stem = cell.cell_id.replace(":", "__")
     return [
         sys.executable,
-        str(Path(study_root).resolve() / "experiments/v3/cosmos_nano_lateral_sweep/robolab_bridge.py"),
+        "-m",
+        "experiments.v3.cosmos_nano_lateral_sweep.robolab_bridge",
         "--study-root", str(Path(study_root).resolve()),
         "--release-manifest", str(Path(release_manifest).resolve()),
         "--release-manifest-sha256", release_manifest_sha256,
@@ -130,7 +131,8 @@ def compiler_command(
     attempt = _attempt_dir(raw_root, cell)
     return [
         sys.executable,
-        str(Path(study_root).resolve() / "experiments/v3/cosmos_nano_lateral_sweep/compile_cell.py"),
+        "-m",
+        "experiments.v3.cosmos_nano_lateral_sweep.compile_cell",
         "--study-root", str(Path(study_root).resolve()),
         "--release-manifest", str(Path(release_manifest).resolve()),
         "--release-manifest-sha256", release_manifest_sha256,
@@ -360,7 +362,7 @@ def main() -> None:
         command.add_argument("--safe-fixture", type=Path, required=True)
         command.add_argument("--raw-root", type=Path, required=True)
         command.add_argument("--remote-host", required=True)
-        command.add_argument("--remote-port", type=int, default=18031)
+        command.add_argument("--remote-port", type=int, default=18011)
         command.add_argument("--lane-index", type=int, required=True)
         command.add_argument("--lane-count", type=int, required=True)
         command.add_argument("--lane-pod-uid", required=True)

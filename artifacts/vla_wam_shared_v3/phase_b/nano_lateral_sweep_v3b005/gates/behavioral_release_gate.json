@@ -1,0 +1,79 @@
+{
+  "amendment_id": "V3-B005",
+  "authorized_behavioral_cell_count": 210,
+  "behavioral_episode_count_before_release": 0,
+  "behavioral_release": true,
+  "fixed_observation_probe_levels": [
+    0,
+    3,
+    6
+  ],
+  "fixed_observation_probe_sequence": [
+    [
+      0,
+      "left"
+    ],
+    [
+      0,
+      "left_exact_repeat"
+    ],
+    [
+      0,
+      "right"
+    ],
+    [
+      3,
+      "left"
+    ],
+    [
+      3,
+      "left_exact_repeat"
+    ],
+    [
+      3,
+      "right"
+    ],
+    [
+      6,
+      "left"
+    ],
+    [
+      6,
+      "left_exact_repeat"
+    ],
+    [
+      6,
+      "right"
+    ]
+  ],
+  "fixed_observation_release_passed": true,
+  "fixed_observation_report": {
+    "bytes": 16462,
+    "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/lateral_sweep_v3b005/gates/fixed_gate_attempt02/fixed_observation_report.json",
+    "sha256": "ad9e442ebd30fa9ec5be78ca1f5da44485d4ca281fd82a1b11931696fa7eacb5"
+  },
+  "model_id": "cosmos3_nano_policy_droid",
+  "model_request_count_before_release": 9,
+  "physical_gate": {
+    "bytes": 7776,
+    "path": "/data/users/ali/vla_wam/src/steerable/artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/model_blind_lateral_calibration_report.json",
+    "sha256": "60a065f24f76b0fe007a2455bf674dcde33204beb2f00dac1d930edd8f6542bf"
+  },
+  "physical_gate_passed": true,
+  "prospective_artifact_sha256": {
+    "amendment": "ff23475b53791c42715938d51a303e0ab82de88b1b8a7a30758c008c9919a47b",
+    "cells": "a770ae94274eaa85591a3ecd1f0f919b85dadc1c0ac3197c363b31659cb6b132",
+    "manifest": "47c426f13146591d1a0bde60136e124eb5818cd8d44ef312f0f8fa82ad1623a1",
+    "physical_gate": "60a065f24f76b0fe007a2455bf674dcde33204beb2f00dac1d930edd8f6542bf",
+    "safe_fixture": "87ff070be25b61538ead16ddbe06d2e9c155698ec2ea8acecbc30bd20b0197a5"
+  },
+  "release_boundary": "Only the exact 210 V3-B005 cells may run in frozen whole-seed order. The nine fixed-observation requests are diagnostics, not behavior.",
+  "runtime_identity": {
+    "bytes": 3236,
+    "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/lateral_sweep_v3b005/runtime_attempt05/runtime_identity.json",
+    "sha256": "ee567560bde972aebb873c8a4b2f2596e7d75413ec80622053c376dc2445788a"
+  },
+  "runtime_identity_sha256": "2aa9a2dbefa2fd24596fd97e5ac9084ed0745201be4ec801f3899a9c2982c022",
+  "schema_version": "vla-wam-shared-v3b005-nano-behavioral-release-v1",
+  "study_id": "vla_wam_language_steerability_v3"
+}

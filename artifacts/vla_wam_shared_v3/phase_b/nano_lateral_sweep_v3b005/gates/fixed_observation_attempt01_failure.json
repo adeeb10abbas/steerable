@@ -1,0 +1,13 @@
+{
+  "schema_version": "vla-wam-shared-v3b005-infrastructure-failure-v1",
+  "amendment_id": "V3-B005",
+  "attempt": "fixed_gate_attempt01",
+  "timestamp_utc": "2026-08-07T01:34:31Z",
+  "denominator_eligible": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "classification": "pre_inference_loader_schema_mismatch",
+  "error": "fixed_observation_level0.npz lacks observation/joint_position",
+  "root_cause": "Capture persisted official request components as joint_position and gripper_position; the fixed-observation loader allowed only joint and gripper aliases.",
+  "resolution": "Expand loader aliases without changing captured arrays; bind a fresh runtime identity before retrying."
+}

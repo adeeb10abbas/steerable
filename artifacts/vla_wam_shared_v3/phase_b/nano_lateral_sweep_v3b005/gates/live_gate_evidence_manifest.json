@@ -1,0 +1,54 @@
+{
+  "schema_version": "vla-wam-shared-v3b005-nano-live-gate-evidence-manifest-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B005",
+  "model_id": "cosmos3_nano_policy_droid",
+  "status": "passed_behavioral_release_gate",
+  "release_manifest_sha256": "47c426f13146591d1a0bde60136e124eb5818cd8d44ef312f0f8fa82ad1623a1",
+  "runtime_identity_sha256": "2aa9a2dbefa2fd24596fd97e5ac9084ed0745201be4ec801f3899a9c2982c022",
+  "contract_source_sha256": "423a92a625664b600a36587a07917071e1b1767594cf1c6571d59fc15e07785d",
+  "fixed_observation_gate": {
+    "model_request_count": 9,
+    "behavioral_episode_count": 0,
+    "status": "passed",
+    "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/gates/fixed_observation_report.json",
+    "sha256": "ad9e442ebd30fa9ec5be78ca1f5da44485d4ca281fd82a1b11931696fa7eacb5"
+  },
+  "behavioral_release_gate": {
+    "behavioral_release": true,
+    "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/gates/behavioral_release_gate.json",
+    "sha256": "4a1524b773db9b64a78e8cc81105d81ec2ece76755162d52501d6b9fe4a44b39"
+  },
+  "runtime_identity": {
+    "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/gates/runtime_identity.json",
+    "sha256": "ee567560bde972aebb873c8a4b2f2596e7d75413ec80622053c376dc2445788a"
+  },
+  "fixed_observations": [
+    {
+      "level_index": 0,
+      "capture_report": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/gates/captures/level0.capture.json",
+      "capture_report_sha256": "7966087f98e4e1ce98a746031e3e11c78e057a063ebf03b117211f06146f0608",
+      "raw_npz_sha256": "b2b604eaef7a056da14bbafd391b75e7cde94d53bf43881c49e63f4ef43498ea"
+    },
+    {
+      "level_index": 3,
+      "capture_report": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/gates/captures/level3.capture.json",
+      "capture_report_sha256": "a1d028c1c9c2199822a032d024dd96bf706b4720ec4cac90c9bc2bce7231b7c3",
+      "raw_npz_sha256": "9a81ccef2ee0550b9cf015ece3d683d99dc4645002317e1b1cf2dc6ebf974b8a"
+    },
+    {
+      "level_index": 6,
+      "capture_report": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/gates/captures/level6.capture.json",
+      "capture_report_sha256": "9146d80815bfbe5c87aa7dfe57d6d3cdea599c8606d4cd82bb2337c5ff4389a2",
+      "raw_npz_sha256": "281377b2390ef404e94949eb9ef8f705ce2ff8b4ea7b88085c4c158b878fd1be"
+    }
+  ],
+  "excluded_infrastructure_attempt": {
+    "denominator_eligible": false,
+    "model_request_count": 0,
+    "behavioral_episode_count": 0,
+    "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/gates/fixed_observation_attempt01_failure.json",
+    "sha256": "fb717e6f924e0160bfb3cb574707fc172743dff831f09467560c1ef80cf768dc"
+  },
+  "raw_evidence_policy": "NPZ observations, returned arrays, decoded futures, checkpoints, simulator state, and videos remain on the ali PVC and are not committed to Git."
+}

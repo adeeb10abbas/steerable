@@ -18,6 +18,10 @@ import torch
 from isaaclab.app import AppLauncher
 
 
+def _stage(message: str) -> None:
+    print(f"[V3-B005 fixed capture] {message}", flush=True)
+
+
 BOOTSTRAP = argparse.ArgumentParser(add_help=False)
 BOOTSTRAP.add_argument("--study-root", type=Path, required=True)
 BOOTSTRAP.add_argument("--manifest", type=Path, required=True)
@@ -128,6 +132,7 @@ def _array_record(value: object) -> dict[str, object]:
 
 
 def main() -> None:
+    _stage(f"starting level {bootstrap.level_index}")
     output_dir = bootstrap.output.parent.resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
     set_output_dir(str(output_dir / "native"))
@@ -136,6 +141,7 @@ def main() -> None:
     robolab.constants.VERBOSE = False
     task_path = study_root / "experiments/v3/cosmos_nano_lateral_sweep/task_files/left.py"
     auto_register_droid_envs(task=[str(task_path)], cameras=WRIST_LEFT_RIGHT_HEAD)
+    _stage("task registered; creating environment")
     env, env_cfg = create_env(
         "V3B005NanoLeftTask",
         device=args_cli.device,
@@ -147,19 +153,24 @@ def main() -> None:
         rendering_mode=args_cli.rendering_type,
     )
     try:
+        _stage("environment created; resetting")
         counter = getattr(env, "episode_length_buf", None)
         if counter is None or not hasattr(counter, "zero_"):
             raise RuntimeError("RoboLab episode counter is unavailable")
         counter.zero_()
         obs, _ = env.reset()
+        _stage("physical reset complete; settling")
         action = _hold_action(obs, env.device)
         for _ in range(SETTLE_STEPS + STABILITY_WINDOW_STEPS):
             obs, _, terminated, truncated, _ = env.step(action)
             if bool(terminated[0]) or bool(truncated[0]):
                 raise RuntimeError("fixed-observation environment terminated while settling")
+        _stage("settle complete; packing with official client")
         # Force the probe to use the exact request preprocessing owned by the
         # official checkpoint client.  object.__new__ avoids opening a socket.
         packer = object.__new__(Cosmos3Client)
+        packer._image_w = Cosmos3Client.IMAGE_W
+        packer._image_h = Cosmos3Client.IMAGE_H
         extracted = Cosmos3Client._extract_observation(packer, obs)
         request = Cosmos3Client._pack_request(packer, extracted, env_cfg.instruction)
         arrays = {
@@ -174,6 +185,7 @@ def main() -> None:
             if view.ndim != 3 or view.shape[-1] != 3 or not np.ptp(view):
                 raise RuntimeError(f"blank or malformed RTX view: {name}")
         np.savez(bootstrap.output, **arrays)
+        _stage("packed observation persisted")
         report = {
             "schema_version": "vla-wam-shared-v3b005-nano-fixed-observation-capture-v1",
             "study_id": "vla_wam_language_steerability_v3",
@@ -202,6 +214,7 @@ def main() -> None:
         }
         report_path = bootstrap.output.with_suffix(".capture.json")
         report_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
+        _stage("capture report persisted")
         print(json.dumps({"observation": report["observation_npz"], "capture_report": str(report_path)}, indent=2))
     finally:
         env.close()

@@ -21,13 +21,16 @@ def main() -> None:
     saved = {"count": 0, "files": []}
     def hold(obs, device):
         idx = saved["count"]
-        if idx == 0:
+        # The preflight calls hold exactly 75 times per condition (60 settle
+        # steps plus 15 stability steps); retain the first observation of each
+        # condition while leaving all reset/settle behavior untouched.
+        if idx % 75 == 0:
             arrays = {}
             for name, value in obs["image_obs"].items():
                 arrays[f"image_obs/{name}"] = np.asarray(value[0].detach().cpu().numpy(), dtype=np.uint8)
             for name, value in obs["proprio_obs"].items():
                 arrays[f"proprio_obs/{name}"] = np.asarray(value[0].detach().cpu().numpy())
-            path = output_dir / "settled_observation_raw.npz"
+            path = output_dir / f"settled_observation_raw_{idx // 75:03d}.npz"
             np.savez_compressed(path, **arrays)
             saved["files"].append({"path": str(path), "keys": sorted(arrays), "bytes": path.stat().st_size})
         saved["count"] += 1

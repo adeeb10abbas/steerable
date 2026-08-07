@@ -1,0 +1,159 @@
+#usda 1.0
+(
+    customLayerData = {
+        dictionary cameraSettings = {
+            dictionary Front = {
+                double3 position = (5, 0, 0)
+                double radius = 5
+            }
+            dictionary Perspective = {
+                double3 position = (-0.4991129744030215, 0.9676673360365909, 1.0881024346590007)
+                double3 target = (0.4776984668777441, 0.021145143144064904, 0.08130795452266715)
+            }
+            dictionary Right = {
+                double3 position = (0, -5, 0)
+                double radius = 5
+            }
+            dictionary Top = {
+                double3 position = (0, 0, 5)
+                double radius = 5
+            }
+            string boundCamera = "/OmniverseKit_Persp"
+        }
+        dictionary metricsAssembler = {
+            dictionary "/World/rubiks_cube" = {
+            }
+            int version = 1
+        }
+        dictionary omni_layer = {
+            string authoring_layer = "./rubiks_cube_banana_bowl.usda"
+            dictionary locked = {
+            }
+            dictionary muteness = {
+            }
+        }
+        dictionary renderSettings = {
+        }
+    }
+    defaultPrim = "World"
+    endTimeCode = 1000000
+    metersPerUnit = 1
+    startTimeCode = 0
+    timeCodesPerSecond = 60
+    upAxis = "Z"
+)
+
+def Xform "World"
+{
+    def Material "PhysicsMaterial" (
+        prepend apiSchemas = ["PhysicsMaterialAPI"]
+    )
+    {
+        float physics:dynamicFriction = 10
+        float physics:staticFriction = 10
+    }
+
+    def "bowl" (
+        prepend payload = @/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/objects/ycb/bowl.usd@
+    )
+    {
+        vector3f physics:angularVelocity = (-0.028470436, -2.94228, 0.9789772)
+        vector3f physics:velocity = (-0.0041700397, 0.0033279092, -0.0037108045)
+        quatf xformOp:orient = (0.99999994, -0.000056463647, -0.00031100732, -0.00010091778)
+        float3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0.44258353114128113, 0.12658219039440155, 0.07732785493135452)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+
+    def "rubiks_cube" (
+        prepend payload = @/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/objects/hot3d/rubiks_cube.usd@
+    )
+    {
+        vector3f physics:angularVelocity = (5.9271007, 12.596834, 0.58606464)
+        vector3f physics:velocity = (0.004463211, -0.0029563713, -0.0061056134)
+        quatf xformOp:orient = (0.99999905, -0.00090129115, 0.0010312479, 0.00008386746)
+        float3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0.4306528866291046, -0.09742811322212219, 0.08113233000040054)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+
+    def "banana" (
+        prepend payload = @/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/objects/ycb/banana.usd@
+    )
+    {
+        vector3f physics:angularVelocity = (5.1637526, 8.475268, -3.307949)
+        vector3f physics:velocity = (-0.00073417404, -0.0005390328, 0.0024819425)
+        quatf xformOp:orient = (0.9999781, -0.0026653102, -0.006052945, 0.00014542625)
+        float3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0.538878858089447, -0.07555567473173141, 0.0684281587600708)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+
+    def "banana_right" (
+        prepend payload = @/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/objects/ycb/banana.usd@
+    )
+    {
+        quatf xformOp:orient = (0.9999781, -0.0026653102, -0.006052945, 0.00014542625)
+        double3 xformOp:translate = (0.538878858089447, 0.07555567473173141, 0.0684281587600708)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+    }
+
+    def "franka_table" (
+        prepend payload = @/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/fixtures/franka_table.usd@
+    )
+    {
+        quatd xformOp:orient = (6.123233995736766e-17, 0, 0, 1)
+        double3 xformOp:translate = (-0.087, 0, 0)
+    }
+
+    def "table" (
+        prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+        prepend payload = @/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/fixtures/table_maple.usd@
+    )
+    {
+        vector3f physics:angularVelocity = (-0.07161438, -0.19253002, 0.024860827)
+        bool physics:kinematicEnabled = 0
+        bool physics:rigidBodyEnabled = 1
+        vector3f physics:velocity = (-0.0024860594, 0.0009620256, 0.00014461251)
+        quatf xformOp:orient = (1, 6.0581715e-7, 0.0000015003185, -6.090751e-7)
+        float3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0.19858434796333313, 0.02206825464963913, 0.05000072345137596)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+        over "table_01"
+        {
+            double3 xformOp:translate = (0, 0, 0)
+        }
+    }
+
+    def Xform "GroundPlane"
+    {
+        token visibility = "invisible"
+        quatf xformOp:orient = (1, 0, 0, 0)
+        float3 xformOp:scale = (1, 1, 1)
+        double3 xformOp:translate = (0, 0, -0.65)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+        def Mesh "CollisionMesh"
+        {
+            uniform bool doubleSided = 0
+            int[] faceVertexCounts = [4]
+            int[] faceVertexIndices = [0, 1, 2, 3]
+            normal3f[] normals = [(0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1)]
+            point3f[] points = [(-25, -25, 0), (25, -25, 0), (25, 25, 0), (-25, 25, 0)]
+            color3f[] primvars:displayColor = [(0.5, 0.5, 0.5)]
+            texCoord2f[] primvars:st = [(0, 0), (1, 0), (1, 1), (0, 1)] (
+                interpolation = "varying"
+            )
+        }
+
+        def Plane "CollisionPlane" (
+            prepend apiSchemas = ["PhysicsCollisionAPI"]
+        )
+        {
+            uniform token axis = "Z"
+            uniform token purpose = "guide"
+        }
+    }
+}
+

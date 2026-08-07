@@ -48,15 +48,17 @@ def _scene():
     # Keep the exact B001 scene asset and all non-movable geometry.  Add a
     # second YCB banana payload in the task config so the only extra movable
     # items are the registered mirrored clutter pair.
-    scene = import_scene("rubiks_cube_banana_bowl.usda", ["rubiks_cube", "banana", "bowl", "table"])
-    # Reuse the asset's registered ``banana`` prim as the left member; adding
-    # a second prim is sufficient and avoids leaving a third, unregistered
-    # movable banana in the scene.
+    scene_path = os.environ.get("VLA_WAM_V3E003_SCENE_ASSET")
+    if not scene_path:
+        raise RuntimeError("E003 custom USDA scene path is required")
+    scene = import_scene(scene_path, ["rubiks_cube", "banana", "banana_right", "bowl", "table"])
+    # The registered E003 USDA contains two distinct banana prims.  Keeping
+    # both in the asset (rather than aliasing one config twice) is essential:
+    # each mirrored clutter member must have its own physical prim.
     left = scene.banana
-    right = copy.deepcopy(scene.banana)
+    right = scene.banana_right
     left.init_state.pos = tuple(BASE_POSITIONS["banana_left"])
     right.init_state.pos = tuple(BASE_POSITIONS["banana_right"])
-    scene.banana_right = right
     scene.banana_right.init_state.pos = tuple(BASE_POSITIONS["banana_right"])
     scene.bowl.init_state.pos = tuple(BASE_POSITIONS["bowl"])
     scene.rubiks_cube.init_state.pos = tuple(BASE_POSITIONS["rubiks_cube"])

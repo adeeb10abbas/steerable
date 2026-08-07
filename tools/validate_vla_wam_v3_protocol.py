@@ -43,6 +43,10 @@ REQUIRED = {
     "phase_c_nano_smoke_integrity": f"{V3}/phase_c/four_phrasings_v3c001/smoke/cosmos3_nano_policy_droid/seed8500_integrity_validation.json",
     "phase_c_nano_smoke_evidence": f"{V3}/phase_c/four_phrasings_v3c001/smoke/cosmos3_nano_policy_droid/evidence_manifest.json",
     "phase_c_cosmos_retained_finalizer": "tools/finalize_v3c_cosmos_retained_seed.py",
+    "phase_c_publication_media_builder": "tools/build_v3c_phase_c_publication_media.py",
+    "phase_c_groot_publication_media": "media/vla_wam/v3/phase_c/v3c001/groot_n17_droid_vla/groot_n17_droid_vla_v3c001_publication_media_manifest.json",
+    "phase_c_edge_publication_media": "media/vla_wam/v3/phase_c/v3c001/cosmos3_edge_policy_droid/cosmos3_edge_policy_droid_v3c001_publication_media_manifest.json",
+    "phase_c_nano_publication_media": "media/vla_wam/v3/phase_c/v3c001/cosmos3_nano_policy_droid/cosmos3_nano_policy_droid_v3c001_publication_media_manifest.json",
     "stochastic": f"{V3}/stochastic_rollout_registry.json",
     "confound_calibration": f"{V3}/confound_fixture_calibration_registry.json",
     "phase_a_queue": f"{V3}/phase_a_cells.jsonl",
@@ -1735,6 +1739,11 @@ def validate(root: Path) -> list[str]:
     phase_c_nano_smoke_repair = load(paths["phase_c_nano_smoke_repair"])
     phase_c_nano_smoke_integrity = load(paths["phase_c_nano_smoke_integrity"])
     phase_c_nano_smoke_evidence = load(paths["phase_c_nano_smoke_evidence"])
+    phase_c_publication_media = {
+        "groot_n17_droid_vla": load(paths["phase_c_groot_publication_media"]),
+        "cosmos3_edge_policy_droid": load(paths["phase_c_edge_publication_media"]),
+        "cosmos3_nano_policy_droid": load(paths["phase_c_nano_publication_media"]),
+    }
     stochastic_registry = load(paths["stochastic"])
     calibration_registry = load(paths["confound_calibration"])
     phase_a_manifest = load(paths["phase_a_manifest"])
@@ -4099,6 +4108,64 @@ def validate(root: Path) -> list[str]:
         )
         == sha256(paths["phase_c_cosmos_retained_finalizer"]),
         "Nano Phase-C smoke is complete, hash-bound, and repaired without new inference",
+        checks,
+    )
+    phase_c_media_valid = set(phase_c_publication_media) == set(WORDING_MODELS)
+    phase_c_media_asset_paths: set[str] = set()
+    for model_id, media_manifest in phase_c_publication_media.items():
+        media_groups = media_manifest.get("media", [])
+        has_predictions = model_id != "groot_n17_droid_vla"
+        phase_c_media_valid &= (
+            media_manifest.get("schema_version")
+            == "vla-wam-shared-v3c-phase-c-publication-media-v1"
+            and media_manifest.get("status") == "complete_bounded_outcome_independent_seed"
+            and media_manifest.get("experiment_id") == "V3-C001"
+            and media_manifest.get("model_id") == model_id
+            and media_manifest.get("seed") == 8500
+            and media_manifest.get("selection", {}).get("prompt_family_count") == 4
+            and media_manifest.get("selection", {}).get("selected_cell_count") == 8
+            and media_manifest.get("selection", {}).get("outcome_used_for_selection") is False
+            and media_manifest.get("media_semantics", {}).get("browser_encoding")
+            == "H.264/yuv420p/faststart/no audio"
+            and len(media_groups) == 4
+            and media_manifest.get("source_registration", {}).get("sha256")
+            == sha256(paths["phase_c_cells"])
+            and media_manifest.get("renderer", {}).get("sha256")
+            == sha256(paths["phase_c_publication_media_builder"])
+        )
+        by_family = {item.get("prompt_family"): item for item in media_groups}
+        phase_c_media_valid &= set(by_family) == set(EXACT_V2_WORDINGS)
+        for family, item in by_family.items():
+            phase_c_media_valid &= (
+                item.get("selection_rule")
+                == "Lowest preregistered seed; both matched directions; outcome not used."
+                and item.get("left_exact_prompt") == EXACT_V2_WORDINGS[family]["left"]
+                and item.get("right_exact_prompt") == EXACT_V2_WORDINGS[family]["right"]
+                and item.get("left_registered_cell_id")
+                == f"v3c001:droid:{model_id}:seed8500:{family}:left"
+                and item.get("right_registered_cell_id")
+                == f"v3c001:droid:{model_id}:seed8500:{family}:right"
+                and ("prediction_video" in item) is has_predictions
+                and ("prediction_poster" in item) is has_predictions
+            )
+            asset_keys = ["actual_video", "actual_poster"]
+            if has_predictions:
+                asset_keys.extend(["prediction_video", "prediction_poster"])
+            for key in asset_keys:
+                asset = item.get(key, {})
+                asset_path = asset.get("path", "")
+                publication_path = root / asset_path
+                phase_c_media_valid &= (
+                    asset_path.startswith(f"media/vla_wam/v3/phase_c/v3c001/{model_id}/")
+                    and asset_path not in phase_c_media_asset_paths
+                    and publication_path.is_file()
+                    and publication_path.stat().st_size == asset.get("bytes")
+                    and sha256(publication_path) == asset.get("sha256")
+                )
+                phase_c_media_asset_paths.add(asset_path)
+    require(
+        phase_c_media_valid and len(phase_c_media_asset_paths) == 40,
+        "V3-C001 publication media hash-binds all four exact prompt families, matched directions, complete rollouts, and Cosmos local horizons",
         checks,
     )
     block = phases["D_16_rollout_stochastic_block"]

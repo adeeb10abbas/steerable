@@ -345,7 +345,63 @@ def _factor_contrasts(
                     "exact_permutation_test": _binary_test(binary),
                 },
             }
-    return {"direction_contrast_by_factor_level": by_arm, "pairwise_factor_interactions": contrasts}
+    result: dict[str, Any] = {
+        "direction_contrast_by_factor_level": by_arm,
+        "pairwise_factor_interactions": contrasts,
+    }
+    if release.amendment_id == "V3-B008":
+        first_seed = release.config["seed_range"][0]
+        cell_by_arm = {
+            cell.arm: cell
+            for cell in release.cells
+            if cell.seed == first_seed and cell.relation == "left"
+        }
+        level_by_arm = {
+            arm: float(cell_by_arm[arm].row["fixture_positions_robot_base_m"]["rubiks_cube"][1])
+            - float(cell_by_arm[arm].row["fixture_positions_robot_base_m"]["bowl"][1])
+            for arm in arms
+        }
+        ordered_arms = tuple(sorted(arms, key=level_by_arm.__getitem__))
+        x = np.asarray([level_by_arm[arm] for arm in ordered_arms], dtype=np.float64)
+        centered = x - x.mean()
+        denominator = float(np.dot(centered, centered))
+        if denominator <= 0.0 or not np.all(np.diff(x) > 0.0):
+            _fail("V3-B008 released start-side levels are not strictly ordered")
+
+        def slopes(field: str) -> list[float]:
+            return [
+                float(np.dot(
+                    centered,
+                    np.asarray([float(pairs[(seed, arm)][field]) for arm in ordered_arms])
+                    - np.mean([float(pairs[(seed, arm)][field]) for arm in ordered_arms]),
+                ) / denominator)
+                for seed in seeds
+            ]
+
+        result["ordered_start_side_trend"] = {
+            "factor": "initial target-minus-reference lateral offset in robot-base meters",
+            "factor_levels_m": {arm: level_by_arm[arm] for arm in arms},
+            "endpoint_redirection_D_slope_per_m": _summarize(
+                slopes("endpoint_redirection_D_m"),
+                label=f"{release.amendment_id}:ordered_start_side:D_slope",
+                replicates=replicates,
+                seed=bootstrap_seed,
+            ),
+            "requested_side_depth_B_slope_per_m": _summarize(
+                slopes("requested_side_depth_contrast_B_m"),
+                label=f"{release.amendment_id}:ordered_start_side:B_slope",
+                replicates=replicates,
+                seed=bootstrap_seed,
+            ),
+            "binary_direction_gap_slope_per_m": _summarize(
+                slopes("right_minus_left_success"),
+                label=f"{release.amendment_id}:ordered_start_side:success_gap_slope",
+                replicates=replicates,
+                seed=bootstrap_seed,
+            ),
+            "interpretation": "Linear three-level trend across the exact released fixture; pairwise contrasts remain reported without assuming linearity.",
+        }
+    return result
 
 
 def analyze(

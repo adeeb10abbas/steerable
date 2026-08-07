@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from experiments.v3.cosmos_nano_tier_b.analyze_results import _factor_contrasts
 from experiments.v3.cosmos_nano_tier_b.runtime_contract import load_release
 
@@ -71,6 +73,13 @@ def test_start_side_emits_all_three_pairwise_interactions() -> None:
         bootstrap_seed=3_104_159,
     )
     assert len(result["pairwise_factor_interactions"]) == 3
+    trend = result["ordered_start_side_trend"]
+    assert trend["factor_levels_m"] == {
+        "target_start_left": 0.1,
+        "target_start_center": 0.0,
+        "target_start_right": -0.1,
+    }
+    assert trend["endpoint_redirection_D_slope_per_m"]["mean_m"] == pytest.approx(-10.0)
     extreme = result["pairwise_factor_interactions"][
         "target_start_right_minus_target_start_left"
     ]

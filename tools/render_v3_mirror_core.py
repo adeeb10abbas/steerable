@@ -153,10 +153,20 @@ def _cell_line(success: dict[str, Any]) -> str:
 
 def render(models: list[dict[str, Any]]) -> list[Path]:
     _configure_style()
+    negative_significant = sum(
+        float(model["depth_summary"]["mean_bootstrap_95"]["upper"]) < 0.0
+        for model in models
+    )
+    if negative_significant == 3:
+        headline = "Position reflection shifts the directional depth advantage in all three checkpoints"
+    elif negative_significant == 2:
+        headline = "Position reflection shifts the directional depth advantage in two of three checkpoints"
+    else:
+        headline = "Position reflection reveals checkpoint-specific geometric sensitivity"
     fig, axes = plt.subplots(3, 2, figsize=(15.2, 10.6), sharex="col")
     fig.subplots_adjust(left=0.09, right=0.965, top=0.76, bottom=0.12, hspace=0.72, wspace=0.18)
     fig.suptitle(
-        "Reflecting object positions reverses the directional depth advantage",
+        headline,
         x=0.055,
         y=0.972,
         ha="left",

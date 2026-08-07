@@ -51,8 +51,10 @@ EQUIVALENCE_MARGIN = {
 SYMMETRIC_POSITIONS = {
     "bowl": [0.44258353114128113, 0.0, 0.07732785493135452],
     "rubiks_cube": [0.303364634513855, 0.0, 0.08113233000040054],
-    "banana_left": [0.538878858089447, -0.07555567473173141, 0.0684281587600708],
-    "banana_right": [0.538878858089447, 0.07555567473173141, 0.0684281587600708],
+    # The duplicated YCB payloads must be separated enough to avoid contact
+    # at reset; the pair remains exactly mirrored about the robot midline.
+    "banana_left": [0.538878858089447, -0.22, 0.0684281587600708],
+    "banana_right": [0.538878858089447, 0.22, 0.0684281587600708],
 }
 
 

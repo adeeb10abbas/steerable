@@ -248,7 +248,8 @@ class StateCaptureProxy:
         rquat = robot.root_quat_w[0].detach().cpu().numpy()
         errors = []
         for name, target in expected.items():
-            world = self._env.scene[name].data.root_pos_w[0].detach().cpu().numpy()
+            actual_name = "banana" if name == "banana_left" else name
+            world = self._env.scene[actual_name].data.root_pos_w[0].detach().cpu().numpy()
             observed = _inverse_rotate(rquat, world-rpos)
             errors.append(float(np.max(np.abs(observed-np.asarray(target, dtype=float)))))
         return max(errors) <= .003

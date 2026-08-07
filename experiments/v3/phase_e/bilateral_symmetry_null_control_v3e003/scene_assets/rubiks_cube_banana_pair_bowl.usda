@@ -85,7 +85,7 @@ def Xform "World"
         vector3f physics:velocity = (-0.00073417404, -0.0005390328, 0.0024819425)
         quatf xformOp:orient = (0.9999781, -0.0026653102, -0.006052945, 0.00014542625)
         float3 xformOp:scale = (1, 1, 1)
-        double3 xformOp:translate = (0.538878858089447, -0.07555567473173141, 0.0684281587600708)
+        double3 xformOp:translate = (0.538878858089447, -0.22, 0.0684281587600708)
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
     }
 
@@ -94,7 +94,7 @@ def Xform "World"
     )
     {
         quatf xformOp:orient = (0.9999781, -0.0026653102, -0.006052945, 0.00014542625)
-        double3 xformOp:translate = (0.538878858089447, 0.07555567473173141, 0.0684281587600708)
+        double3 xformOp:translate = (0.538878858089447, 0.22, 0.0684281587600708)
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
     }
 
@@ -156,4 +156,3 @@ def Xform "World"
         }
     }
 }
-

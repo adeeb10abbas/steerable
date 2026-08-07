@@ -1,0 +1,87 @@
+{
+  "schema_version": "vla-wam-shared-v3b005-nano-results-manifest-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B005",
+  "model_id": "cosmos3_nano_policy_droid",
+  "status": "complete_hash_closed_do_not_rerun",
+  "population": {
+    "behavioral_cells": 210,
+    "matched_pairs": 105,
+    "matched_seeds": 15,
+    "lateral_levels": 7,
+    "model_requests": 1423,
+    "decoded_futures": 1423,
+    "infrastructure_invalid_cells": 0
+  },
+  "registered_results": {
+    "primary_depth_slope_m_per_m": {
+      "mean": 1.1247301174859916,
+      "bootstrap_95_ci": [0.7189605736750224, 1.562330189504705],
+      "median": 1.2092121477637972,
+      "exact_two_sided_sign_p": 0.00738525390625
+    },
+    "binary_success_gap_slope_per_m": {
+      "mean": 1.8253968253968256,
+      "bootstrap_95_ci": [0.5555555555555556, 3.253968253968254],
+      "median": 0.0,
+      "exact_two_sided_sign_p": 0.0703125
+    },
+    "success_counts": {"left": "93/105", "right": "99/105"}
+  },
+  "hash_roots": [
+    {
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/nano_v3b005_dose_response_report.json",
+      "bytes": 16128,
+      "sha256": "a65c659cc5eb24e03baafc8101473f63307a549764090b6403eed5d1405ba999"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/nano_v3b005_dose_response_report.json.manifest.json",
+      "bytes": 80562,
+      "sha256": "31a897d74403522a8a8cb8f4e6d04cdeb87bc8c61c21074263d4d9af7edd83ff"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/final_integrity_audit.json",
+      "bytes": 2656,
+      "sha256": "a0024d47d8b83297ac4b6ca079e40eb0b60394055682cdd35470dd03a13c15dc"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/figures/manifest.json",
+      "bytes": 1500,
+      "sha256": "4ee5099c651061ee93e5821e1faf75b887206f9debdcb4e2708a78853f19fbad"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/publication_media/nano_v3b005_publication_media_manifest.json",
+      "bytes": 31389,
+      "sha256": "d27d2d9787777298551f2897b9c73ea3a098682df9cfae9ff46f59652be28991"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/gates/behavioral_release_gate.json",
+      "bytes": 2462,
+      "sha256": "4a1524b773db9b64a78e8cc81105d81ec2ece76755162d52501d6b9fe4a44b39"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/gates/runtime_identity.json",
+      "bytes": 3236,
+      "sha256": "ee567560bde972aebb873c8a4b2f2596e7d75413ec80622053c376dc2445788a"
+    },
+    {
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/gates/concurrency_isolation_audit.json",
+      "bytes": 5055,
+      "sha256": "11e907d9e45c9bab2a4744c04049180647c51faab59bb465fc6870df8d04cbcf"
+    },
+    {
+      "path": "tools/render_nano_v3b005_dose_response.py",
+      "bytes": 14493,
+      "sha256": "f7d95991dd4ba5cb5c60a7ee63b4f4828792beb31378ed246aa195f603f8ee7c"
+    },
+    {
+      "path": "tools/build_nano_v3b005_publication_media.py",
+      "bytes": 16696,
+      "sha256": "9e13181e4e51d78658d0c14401a82e45969825df62e1a175b0088c963e6e0741"
+    }
+  ],
+  "raw_evidence": {
+    "path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/lateral_sweep_v3b005",
+    "policy": "PVC only; checkpoints, raw rollouts, and unbounded media are not committed"
+  }
+}

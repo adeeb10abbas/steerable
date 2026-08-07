@@ -174,6 +174,17 @@ REQUIRED = {
     "nano_lateral_sweep_v3b005_physical_gate": f"{V3}/phase_b/nano_lateral_sweep_v3b005/model_blind_lateral_calibration_report.json",
     "nano_lateral_sweep_v3b005_cells": f"{V3}/phase_b/nano_lateral_sweep_v3b005/nano_lateral_v3b005_cells.jsonl",
     "nano_lateral_sweep_v3b005_manifest": f"{V3}/phase_b/nano_lateral_sweep_v3b005/nano_lateral_v3b005_manifest.json",
+    "nano_lateral_sweep_v3b005_release_gate": f"{V3}/phase_b/nano_lateral_sweep_v3b005/gates/behavioral_release_gate.json",
+    "nano_lateral_sweep_v3b005_runtime_identity": f"{V3}/phase_b/nano_lateral_sweep_v3b005/gates/runtime_identity.json",
+    "nano_lateral_sweep_v3b005_concurrency_audit": f"{V3}/phase_b/nano_lateral_sweep_v3b005/gates/concurrency_isolation_audit.json",
+    "nano_lateral_sweep_v3b005_result_report": f"{V3}/phase_b/nano_lateral_sweep_v3b005/results/nano_v3b005_dose_response_report.json",
+    "nano_lateral_sweep_v3b005_result_source_manifest": f"{V3}/phase_b/nano_lateral_sweep_v3b005/results/nano_v3b005_dose_response_report.json.manifest.json",
+    "nano_lateral_sweep_v3b005_final_audit": f"{V3}/phase_b/nano_lateral_sweep_v3b005/results/final_integrity_audit.json",
+    "nano_lateral_sweep_v3b005_result_manifest": f"{V3}/phase_b/nano_lateral_sweep_v3b005/results/nano_v3b005_results_manifest.json",
+    "nano_lateral_sweep_v3b005_figure_manifest": f"{V3}/phase_b/nano_lateral_sweep_v3b005/results/figures/manifest.json",
+    "nano_lateral_sweep_v3b005_media_manifest": f"{V3}/phase_b/nano_lateral_sweep_v3b005/results/publication_media/nano_v3b005_publication_media_manifest.json",
+    "nano_lateral_sweep_v3b005_figure_renderer": "tools/render_nano_v3b005_dose_response.py",
+    "nano_lateral_sweep_v3b005_media_builder": "tools/build_nano_v3b005_publication_media.py",
     "nano_lateral_sweep_v3b005_queue_builder": "tools/build_nano_v3b005_queue.py",
     "nano_lateral_sweep_v3b005_queue_test": "tests/test_build_nano_v3b005_queue.py",
     "nano_lateral_sweep_calibration_driver": "experiments/v3/cosmos_nano_lateral_sweep/model_blind_lateral_calibration.py",
@@ -1803,6 +1814,33 @@ def validate(root: Path) -> list[str]:
     )
     nano_lateral_sweep_v3b005_manifest = load(
         paths["nano_lateral_sweep_v3b005_manifest"]
+    )
+    nano_lateral_sweep_v3b005_release_gate = load(
+        paths["nano_lateral_sweep_v3b005_release_gate"]
+    )
+    nano_lateral_sweep_v3b005_runtime_identity = load(
+        paths["nano_lateral_sweep_v3b005_runtime_identity"]
+    )
+    nano_lateral_sweep_v3b005_concurrency_audit = load(
+        paths["nano_lateral_sweep_v3b005_concurrency_audit"]
+    )
+    nano_lateral_sweep_v3b005_result_report = load(
+        paths["nano_lateral_sweep_v3b005_result_report"]
+    )
+    nano_lateral_sweep_v3b005_result_source_manifest = load(
+        paths["nano_lateral_sweep_v3b005_result_source_manifest"]
+    )
+    nano_lateral_sweep_v3b005_final_audit = load(
+        paths["nano_lateral_sweep_v3b005_final_audit"]
+    )
+    nano_lateral_sweep_v3b005_result_manifest = load(
+        paths["nano_lateral_sweep_v3b005_result_manifest"]
+    )
+    nano_lateral_sweep_v3b005_figure_manifest = load(
+        paths["nano_lateral_sweep_v3b005_figure_manifest"]
+    )
+    nano_lateral_sweep_v3b005_media_manifest = load(
+        paths["nano_lateral_sweep_v3b005_media_manifest"]
     )
 
     require(
@@ -3564,6 +3602,209 @@ def validate(root: Path) -> list[str]:
         "Nano V3-B005 queue remains behaviorally unreleased pending its fresh runtime gate",
         checks,
     )
+    require(
+        nano_lateral_sweep_v3b005_release_gate.get("schema_version")
+        == "vla-wam-shared-v3b005-nano-behavioral-release-v1"
+        and nano_lateral_sweep_v3b005_release_gate.get("behavioral_release") is True
+        and nano_lateral_sweep_v3b005_release_gate.get(
+            "authorized_behavioral_cell_count"
+        )
+        == 210
+        and nano_lateral_sweep_v3b005_release_gate.get(
+            "behavioral_episode_count_before_release"
+        )
+        == 0
+        and nano_lateral_sweep_v3b005_release_gate.get(
+            "model_request_count_before_release"
+        )
+        == 9
+        and nano_lateral_sweep_v3b005_release_gate.get("runtime_identity_sha256")
+        == nano_lateral_sweep_v3b005_runtime_identity.get(
+            "runtime_identity_sha256"
+        )
+        == "2aa9a2dbefa2fd24596fd97e5ac9084ed0745201be4ec801f3899a9c2982c022",
+        "Nano V3-B005 passed its fresh nine-request runtime gate before behavior",
+        checks,
+    )
+    concurrency_response = nano_lateral_sweep_v3b005_concurrency_audit.get(
+        "response_attribution_audit", {}
+    )
+    require(
+        nano_lateral_sweep_v3b005_concurrency_audit.get("schema_version")
+        == "vla-wam-shared-v3b005-nano-concurrency-isolation-audit-v1"
+        and nano_lateral_sweep_v3b005_concurrency_audit.get("verdict")
+        == "pass_client_session_stateless_for_registered_history_length_1_behavior_requests"
+        and nano_lateral_sweep_v3b005_concurrency_audit.get(
+            "denominator_disposition"
+        )
+        == "retain_both_lanes_as_behaviorally_valid"
+        and concurrency_response.get("complete_behavioral_cells") == 55
+        and concurrency_response.get("model_requests") == 366
+        and concurrency_response.get("mismatch_count") == 0,
+        "Nano V3-B005 two-lane live isolation audit preserves exact response attribution",
+        checks,
+    )
+    primary_dose = nano_lateral_sweep_v3b005_result_report.get(
+        "primary_depth_dose_response", {}
+    )
+    primary_slope = primary_dose.get("slope_m_per_m", {})
+    binary_slope = nano_lateral_sweep_v3b005_result_report.get(
+        "binary_success_secondary", {}
+    ).get("paired_gap_slope_per_m", {})
+    by_level = nano_lateral_sweep_v3b005_result_report.get("by_level", [])
+    require(
+        nano_lateral_sweep_v3b005_result_report.get("schema_version")
+        == "vla-wam-shared-v3b005-nano-dose-response-report-v1"
+        and nano_lateral_sweep_v3b005_result_report.get("population")
+        == {
+            "behavioral_episode_count": 210,
+            "infrastructure_attempts_included": False,
+            "level_count": 7,
+            "matched_pair_count": 105,
+            "matched_seed_count": 15,
+            "missing_value_imputation": "none",
+            "valid_behavioral_failures_included": True,
+        }
+        and primary_slope.get("mean") == 1.1247301174859916
+        and primary_slope.get("ci95")
+        == [0.7189605736750224, 1.562330189504705]
+        and primary_slope.get("median") == 1.2092121477637972
+        and primary_slope.get("replicates") == 20000
+        and primary_slope.get("sign_test", {}).get("positive") == 13
+        and primary_slope.get("sign_test", {}).get("negative") == 2
+        and primary_slope.get("sign_test", {}).get("two_sided_p")
+        == 0.00738525390625
+        and primary_dose.get("population_linear_zero_crossing", {}).get(
+            "in_registered_support"
+        )
+        is False
+        and binary_slope.get("mean") == 1.8253968253968256
+        and binary_slope.get("ci95")
+        == [0.5555555555555556, 3.253968253968254]
+        and binary_slope.get("sign_test", {}).get("two_sided_p") == 0.0703125
+        and [row.get("binary_success", {}).get("left", {}).get("successes") for row in by_level]
+        == [15, 14, 15, 14, 13, 12, 10]
+        and [row.get("binary_success", {}).get("right", {}).get("successes") for row in by_level]
+        == [13, 15, 14, 15, 14, 13, 15]
+        and nano_lateral_sweep_v3b005_result_report.get(
+            "failure_taxonomy_counts", {}
+        ).get("6", {}).get("left", {}).get("transport_failed")
+        == 5,
+        "Nano V3-B005 reports the registered continuous depth dose response and secondary binary result",
+        checks,
+    )
+    require(
+        nano_lateral_sweep_v3b005_result_source_manifest.get("schema_version")
+        == "vla-wam-shared-v3b005-nano-dose-response-report-manifest-v1"
+        and nano_lateral_sweep_v3b005_result_source_manifest.get("sha256")
+        == sha256(paths["nano_lateral_sweep_v3b005_result_report"])
+        and nano_lateral_sweep_v3b005_result_source_manifest.get("bytes")
+        == paths["nano_lateral_sweep_v3b005_result_report"].stat().st_size
+        and len(
+            nano_lateral_sweep_v3b005_result_source_manifest.get(
+                "episode_sources", []
+            )
+        )
+        == 210
+        and len(
+            nano_lateral_sweep_v3b005_result_source_manifest.get(
+                "pair_sources", []
+            )
+        )
+        == 105,
+        "Nano V3-B005 result manifest hash-binds all episode and matched-pair sources",
+        checks,
+    )
+    final_population = nano_lateral_sweep_v3b005_final_audit.get("population", {})
+    require(
+        nano_lateral_sweep_v3b005_final_audit.get("schema_version")
+        == "vla-wam-shared-v3b005-nano-final-integrity-audit-v1"
+        and nano_lateral_sweep_v3b005_final_audit.get("verdict") == "pass"
+        and final_population.get("behavioral_cells") == 210
+        and final_population.get("matched_pairs") == 105
+        and final_population.get("model_requests") == 1423
+        and final_population.get("decoded_futures") == 1423
+        and final_population.get("bridge_failure_count") == 0
+        and nano_lateral_sweep_v3b005_final_audit.get(
+            "hash_and_decode_audit", {}
+        ).get("mismatch_count")
+        == 0
+        and nano_lateral_sweep_v3b005_final_audit.get("server_release", {}).get(
+            "status"
+        )
+        == "released",
+        "Nano V3-B005 final audit closes 210 cells, 1,423 requests, retained videos, and server release",
+        checks,
+    )
+    result_hash_roots = nano_lateral_sweep_v3b005_result_manifest.get(
+        "hash_roots", []
+    )
+    require(
+        nano_lateral_sweep_v3b005_result_manifest.get("schema_version")
+        == "vla-wam-shared-v3b005-nano-results-manifest-v1"
+        and nano_lateral_sweep_v3b005_result_manifest.get("status")
+        == "complete_hash_closed_do_not_rerun"
+        and nano_lateral_sweep_v3b005_result_manifest.get("population", {}).get(
+            "behavioral_cells"
+        )
+        == 210
+        and len(result_hash_roots) == 10
+        and all(
+            (root / record.get("path", "")).is_file()
+            and (root / record["path"]).stat().st_size == record.get("bytes")
+            and sha256(root / record["path"]) == record.get("sha256")
+            for record in result_hash_roots
+        ),
+        "Nano V3-B005 compact result root verifies every committed evidence root and renderer",
+        checks,
+    )
+    figure_outputs = nano_lateral_sweep_v3b005_figure_manifest.get("outputs", [])
+    require(
+        nano_lateral_sweep_v3b005_figure_manifest.get("schema_version")
+        == "vla-wam-shared-v3b005-nano-dose-response-figure-manifest-v1"
+        and nano_lateral_sweep_v3b005_figure_manifest.get("source_report", {}).get(
+            "sha256"
+        )
+        == sha256(paths["nano_lateral_sweep_v3b005_result_report"])
+        and len(figure_outputs) == 5
+        and all(
+            (root / record.get("path", "")).is_file()
+            and (root / record["path"]).stat().st_size == record.get("bytes")
+            and sha256(root / record["path"]) == record.get("sha256")
+            for record in figure_outputs
+        ),
+        "Nano V3-B005 figure manifest verifies publication figures and plot data",
+        checks,
+    )
+    selected_media = nano_lateral_sweep_v3b005_media_manifest.get(
+        "selected_media", []
+    )
+    require(
+        nano_lateral_sweep_v3b005_media_manifest.get("schema_version")
+        == "vla-wam-shared-v3b005-nano-dose-response-publication-media-v1"
+        and nano_lateral_sweep_v3b005_media_manifest.get("selection", {}).get(
+            "all_exposed_prediction_frames_retained"
+        )
+        is True
+        and len(selected_media) == 6
+        and {row.get("level_index") for row in selected_media} == {0, 3, 6}
+        and {row.get("requested_relation") for row in selected_media}
+        == {"left", "right"}
+        and {row.get("exact_prompt") for row in selected_media}
+        == set(EXACT_V2_WORDINGS["direct_command"].values())
+        and all(
+            all(
+                (root / record.get("path", "")).is_file()
+                and (root / record["path"]).stat().st_size
+                == record.get("bytes")
+                and sha256(root / record["path"]) == record.get("sha256")
+                for record in (row.get("publication_video", {}), row.get("poster", {}))
+            )
+            for row in selected_media
+        ),
+        "Nano V3-B005 media manifest verifies six exact-prompt actual-versus-local-prediction videos",
+        checks,
+    )
     queue_builder_source = paths["nano_lateral_sweep_v3b005_queue_builder"].read_text(
         encoding="utf-8"
     )
@@ -3715,36 +3956,60 @@ def validate(root: Path) -> list[str]:
         "V3 continuation records the zero-behavior DreamZero V3-B003 release boundary",
         checks,
     )
-    nano_lateral_registered = phase_b_state.get("registered_not_released", {}).get(
-        "nano_v3b005"
-    )
+    nano_lateral_complete = released_phase_b.get("nano_v3b005", {})
+    nano_lateral_science = nano_lateral_complete.get("scientific_result", {})
     require(
-        nano_lateral_registered.get("amendment_id") == "V3-B005"
-        and nano_lateral_registered.get("model_id")
+        nano_lateral_complete.get("amendment_id") == "V3-B005"
+        and nano_lateral_complete.get("model_id")
         == "cosmos3_nano_policy_droid"
-        and nano_lateral_registered.get("matched_seeds") == 15
-        and nano_lateral_registered.get("planned_lateral_levels") == 7
-        and nano_lateral_registered.get("planned_behavioral_cells_after_gate")
-        == 210
-        and nano_lateral_registered.get("numeric_levels_frozen") is True
-        and nano_lateral_registered.get("physical_gate_passed") is True
-        and nano_lateral_registered.get("physical_gate", {}).get("sha256")
-        == sha256(paths["nano_lateral_sweep_v3b005_physical_gate"])
-        and nano_lateral_registered.get("cells", {}).get("sha256")
-        == sha256(paths["nano_lateral_sweep_v3b005_cells"])
-        and nano_lateral_registered.get("cells", {}).get("row_count") == 210
-        and nano_lateral_registered.get("manifest", {}).get("sha256")
-        == sha256(paths["nano_lateral_sweep_v3b005_manifest"])
-        and nano_lateral_registered.get("model_requests_after_registration") == 0
-        and nano_lateral_registered.get("behavioral_episodes_after_registration")
-        == 0
-        and nano_lateral_registered.get("amendment", {}).get("sha256")
-        == sha256(paths["nano_lateral_sweep_v3b005_amendment"])
-        and nano_lateral_registered.get("prospective_safe_distractor_fixture", {}).get(
+        and nano_lateral_complete.get("status")
+        == "complete_hash_closed_15_seed_210_episode_result_no_rerun"
+        and nano_lateral_complete.get("matched_seeds") == 15
+        and nano_lateral_complete.get("lateral_levels") == 7
+        and nano_lateral_complete.get("released_behavioral_cells") == 210
+        and nano_lateral_complete.get("completed_behavioral_cells") == 210
+        and nano_lateral_complete.get("matched_pairs") == 105
+        and nano_lateral_complete.get("model_requests") == 1423
+        and nano_lateral_complete.get("decoded_futures") == 1423
+        and nano_lateral_complete.get("infrastructure_invalid_cells") == 0
+        and nano_lateral_complete.get("runtime_identity_sha256")
+        == "2aa9a2dbefa2fd24596fd97e5ac9084ed0745201be4ec801f3899a9c2982c022"
+        and nano_lateral_complete.get("release_gate", {}).get("sha256")
+        == sha256(paths["nano_lateral_sweep_v3b005_release_gate"])
+        and nano_lateral_complete.get("concurrency_isolation_audit", {}).get(
             "sha256"
         )
-        == sha256(paths["nano_lateral_sweep_v3b005_fixture"]),
-        "V3 continuation preserves the zero-request Nano V3-B005 physical-gate boundary",
+        == sha256(paths["nano_lateral_sweep_v3b005_concurrency_audit"])
+        and nano_lateral_complete.get("results_manifest", {}).get("sha256")
+        == sha256(paths["nano_lateral_sweep_v3b005_result_manifest"])
+        and nano_lateral_complete.get("report", {}).get("sha256")
+        == sha256(paths["nano_lateral_sweep_v3b005_result_report"])
+        and nano_lateral_complete.get("source_manifest", {}).get("sha256")
+        == sha256(paths["nano_lateral_sweep_v3b005_result_source_manifest"])
+        and nano_lateral_complete.get("final_integrity_audit", {}).get("sha256")
+        == sha256(paths["nano_lateral_sweep_v3b005_final_audit"])
+        and nano_lateral_complete.get("figure_manifest", {}).get("sha256")
+        == sha256(paths["nano_lateral_sweep_v3b005_figure_manifest"])
+        and nano_lateral_complete.get("publication_media_manifest", {}).get(
+            "sha256"
+        )
+        == sha256(paths["nano_lateral_sweep_v3b005_media_manifest"])
+        and nano_lateral_science.get("primary_depth_slope_m_per_m")
+        == 1.1247301174859916
+        and nano_lateral_science.get("primary_exact_sign_p")
+        == 0.00738525390625
+        and nano_lateral_science.get(
+            "linear_zero_crossing_in_registered_support"
+        )
+        is False
+        and nano_lateral_science.get("binary_success_left") == "93/105"
+        and nano_lateral_science.get("binary_success_right") == "99/105"
+        and nano_lateral_science.get("binary_gap_slope_exact_sign_p")
+        == 0.0703125
+        and nano_lateral_complete.get("rerun_policy")
+        == "do_not_rerun_any_valid_v3b005_cell"
+        and phase_b_state.get("registered_not_released", {}) == {},
+        "V3 continuation hash-closes the complete Nano V3-B005 dose response and forbids reruns",
         checks,
     )
     nano_lateral_failed = phase_b_state.get("failed_closed", {}).get("nano_v3b004")

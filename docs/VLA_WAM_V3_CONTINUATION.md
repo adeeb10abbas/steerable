@@ -406,7 +406,7 @@ and retained the official reset decode. The hash-bound
 has SHA-256 `7e30e618ee233ea04675d556f48621f6ff7de84f4ac9033460d0d9531a234dd6`.
 All 108 registered cells are authorized; none was complete at this checkpoint.
 
-### Nano lateral-position dose response: V3-B004 failed closed; V3-B005 registered
+### Nano lateral-position dose response: V3-B004 failed closed; V3-B005 complete
 
 The original V3-B004 physical gate found a decisive model-blind geometry
 failure before any inference. At the registered `-30 mm` bowl level, the
@@ -462,8 +462,54 @@ seed 9514 uses the preregistered SHA-256 order. The
 has SHA-256 `a770ae94274eaa85591a3ecd1f0f919b85dadc1c0ac3197c363b31659cb6b132`;
 the [`manifest`](../artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/nano_lateral_v3b005_manifest.json)
 has SHA-256 `47c426f13146591d1a0bde60136e124eb5818cd8d44ef312f0f8fa82ad1623a1`.
-Behavior remains unreleased until a fresh Nano runtime and fixed-observation
-exact-repeat/prompt-sensitivity gate pass.
+The fresh Nano runtime and fixed-observation release gate passed before any
+behavioral episode. The runtime identity is `2aa9a2dbefa2fd24596fd97e5ac9084ed0745201be4ec801f3899a9c2982c022`;
+the [`behavioral release gate`](../artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/gates/behavioral_release_gate.json)
+has SHA-256 `4a1524b773db9b64a78e8cc81105d81ec2ece76755162d52501d6b9fe4a44b39`.
+A live two-lane isolation audit then verified 55 concurrent cells and 366
+requests with no response-attribution mismatch; its hash is
+`11e907d9e45c9bab2a4744c04049180647c51faab59bb465fc6870df8d04cbcf`.
+
+All **210/210 registered behavioral cells** are complete: 15 matched seeds ×
+seven bowl positions × two exact directions, giving 105 matched pairs. The
+final audit covers 1,423 model requests and 1,423 exposed local futures, all
+210 simulator videos, 4,843 unique retained files (47.9 GB), and 41,467
+decoded viewport frames. It found no hash mismatch, bridge failure,
+infrastructure-invalid cell, partial cell, or missing registered cell. V3-B005
+is therefore hash-closed and **must not be rerun**.
+
+The primary registered quantity changed continuously with reference-object
+position. The mean within-seed slope of requested-side depth contrast was
+`1.125 m/m` (20,000-resample 95% bootstrap CI `0.719` to `1.562`; median
+`1.209`; 13 positive, 2 negative; exact two-sided sign-test `p=0.00739`). The
+estimated linear zero crossing was `0.0188 m`, outside the registered support
+[`0.0366`, `0.2166`] m, so no in-support reversal is claimed. This supports a
+geometry-linked modulation of directional margin over the tested workspace;
+it does not identify geometry as the sole cause of language sensitivity.
+
+![Nano V3-B005 dose response](../artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/figures/figure3_nano_lateral_dose_response.png)
+
+Binary completion was secondary and noisier: the paired RIGHT-minus-LEFT
+success-gap slope was `1.825 per m` (95% bootstrap CI `0.556` to `3.254`;
+median `0`; 7 positive, 1 negative, 7 ties; exact sign-test `p=0.0703`). Across
+the sweep, LEFT succeeded in 93/105 episodes and RIGHT in 99/105. At the most
+positive registered position, LEFT fell to 10/15 while RIGHT remained 15/15;
+all five LEFT failures there were transport failures. This pattern is
+consistent with a geometry-dependent competence penalty but is not an
+independently significant exact binary result at the 0.05 threshold.
+
+![Nano V3-B005 failures by level](../artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/figures/nano_v3b005_failure_taxonomy_by_level.png)
+
+Compact evidence roots:
+
+| File | Purpose |
+| --- | --- |
+| [`machine-readable report`](../artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/nano_v3b005_dose_response_report.json) | Registered primary and secondary statistics |
+| [`source manifest`](../artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/nano_v3b005_dose_response_report.json.manifest.json) | Hashes for all 210 episode rows and 105 pair diagnostics |
+| [`final integrity audit`](../artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/final_integrity_audit.json) | Complete cell/request/file/video audit and resource release |
+| [`figure manifest`](../artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/figures/manifest.json) | Hashes for publication figures and plot data |
+| [`publication-media manifest`](../artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/publication_media/nano_v3b005_publication_media_manifest.json) | Six selected actual-rollout versus local-prediction videos with exact prompts |
+| [`result-root manifest`](../artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/nano_v3b005_results_manifest.json) | Compact hash root for the complete release |
 
 ## Exact intervention
 

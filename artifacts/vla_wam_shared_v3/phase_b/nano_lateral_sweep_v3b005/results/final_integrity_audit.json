@@ -1,0 +1,66 @@
+{
+  "schema_version": "vla-wam-shared-v3b005-nano-final-integrity-audit-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B005",
+  "model_id": "cosmos3_nano_policy_droid",
+  "audit_timestamp_utc": "2026-08-07T04:46:41Z",
+  "verdict": "pass",
+  "population": {
+    "behavioral_cells": 210,
+    "matched_pairs": 105,
+    "registered_seeds": 15,
+    "registered_levels": 7,
+    "directions_per_seed_level": 2,
+    "model_requests": 1423,
+    "decoded_futures": 1423,
+    "bridge_failure_count": 0
+  },
+  "lane_cell_counts": {
+    "b7ec6369-2ab7-42d6-a4ef-3fc549ca652a": 98,
+    "d5b0405a-a9b1-4baa-a802-d5171e03c228": 112
+  },
+  "queue_completion": {
+    "lane0_completed_cells": 112,
+    "lane1_completed_cells": 98,
+    "both_queue_processes_exited": true,
+    "retained_partial_or_infrastructure_invalid_cells": 0
+  },
+  "hash_and_decode_audit": {
+    "unique_files_hashed": 4843,
+    "unique_bytes_hashed": 47916574277,
+    "viewport_frames_opened": 41467,
+    "mismatch_count": 0,
+    "checks": [
+      "exact_registered_cell_set",
+      "unique_registered_cell_id",
+      "one_row_raw_jsonl_and_batch_manifest_hash",
+      "behavioral_validity_and_runtime_identity",
+      "behavioral_release_gate_hash",
+      "all_recorded_artifact_byte_counts_and_sha256",
+      "viewport_video_open_and_first_frame_decode",
+      "reset_attestation_cell_seed_and_zero_prior_model_requests",
+      "action_future_trace_cell_prompt_seed_reset_runtime_and_gate_attribution",
+      "contiguous_request_indices",
+      "all_returned_action_and_decoded_future_hashes",
+      "exact_105_pair_set",
+      "pair_source_jsonl_hashes_and_success_flags"
+    ]
+  },
+  "concurrency_isolation_audit": {
+    "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/gates/concurrency_isolation_audit.json",
+    "sha256": "11e907d9e45c9bab2a4744c04049180647c51faab59bb465fc6870df8d04cbcf"
+  },
+  "registered_report": {
+    "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/nano_v3b005_dose_response_report.json",
+    "sha256": "a65c659cc5eb24e03baafc8101473f63307a549764090b6403eed5d1405ba999"
+  },
+  "raw_evidence_location": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/lateral_sweep_v3b005",
+  "server_release": {
+    "original_pid_pgid": 2590,
+    "termination_signal": "SIGTERM",
+    "port_18011_listening_after_release": false,
+    "gpu_compute_process_present_after_release": false,
+    "status": "released"
+  },
+  "denominator_policy": "All 210 valid behavioral outcomes, including failures, remain in the denominator. No infrastructure attempt is included and no missing value is imputed."
+}

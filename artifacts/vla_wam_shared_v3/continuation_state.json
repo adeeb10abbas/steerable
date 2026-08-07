@@ -804,7 +804,7 @@
       "recovery_command": "git -C /home/ali/openpi-robolab bundle create /tmp/openpi-robolab-all.bundle --all && git -C /home/ali/projects/RoboLab bundle create /tmp/robolab-all.bundle --all"
     },
     "phase_b_confounds": {
-      "status": "nano_v3b001_and_pi05_v3b002_complete_dreamzero_v3b003_released_nano_v3b005_registered_not_released_v3b004_failed_closed",
+      "status": "nano_v3b001_pi05_v3b002_and_nano_v3b005_complete_dreamzero_v3b003_released_v3b004_failed_closed",
       "released": {
         "nano_v3b001": {
           "amendment_id": "V3-B001",
@@ -830,28 +830,43 @@
           "behavioral_episodes_before_release": 0,
           "release_gate": {"path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/gates/release_gate.json", "sha256": "7e30e618ee233ea04675d556f48621f6ff7de84f4ac9033460d0d9531a234dd6"},
           "release_condition": "Released only after four distinct ali RTX lanes each passed 12 fresh-process physical/reset/renderer/writer attestations and the fresh DreamZero s=2 server passed exact-repeat and LEFT/RIGHT action/latent sensitivity. The 108 registered cells are authorized but not yet complete."
-        }
-      },
-      "registered_not_released": {
+        },
         "nano_v3b005": {
           "amendment_id": "V3-B005",
           "model_id": "cosmos3_nano_policy_droid",
           "factor": "reference_object_initial_lateral_position_y_m",
+          "status": "complete_hash_closed_15_seed_210_episode_result_no_rerun",
           "matched_seeds": 15,
-          "planned_lateral_levels": 7,
-          "planned_behavioral_cells_after_gate": 210,
-          "numeric_levels_frozen": true,
-          "physical_gate_passed": true,
-          "physical_gate": {"path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/model_blind_lateral_calibration_report.json", "sha256": "60a065f24f76b0fe007a2455bf674dcde33204beb2f00dac1d930edd8f6542bf"},
-          "cells": {"path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/nano_lateral_v3b005_cells.jsonl", "sha256": "a770ae94274eaa85591a3ecd1f0f919b85dadc1c0ac3197c363b31659cb6b132", "row_count": 210},
-          "manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/nano_lateral_v3b005_manifest.json", "sha256": "47c426f13146591d1a0bde60136e124eb5818cd8d44ef312f0f8fa82ad1623a1"},
-          "model_requests_after_registration": 0,
-          "behavioral_episodes_after_registration": 0,
-          "amendment": {"path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/post_result_nano_lateral_sweep_v3b005_amendment.json", "sha256": "ff23475b53791c42715938d51a303e0ab82de88b1b8a7a30758c008c9919a47b"},
-          "prospective_safe_distractor_fixture": {"path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/prospective_safe_distractor_fixture.json", "sha256": "87ff070be25b61538ead16ddbe06d2e9c155698ec2ea8acecbc30bd20b0197a5"},
-          "next_gate": "Run a fresh hash-bound Nano runtime and fixed-observation exact-repeat/prompt-sensitivity gate. The 210 cells remain behaviorally unreleased."
+          "lateral_levels": 7,
+          "released_behavioral_cells": 210,
+          "completed_behavioral_cells": 210,
+          "matched_pairs": 105,
+          "model_requests": 1423,
+          "decoded_futures": 1423,
+          "infrastructure_invalid_cells": 0,
+          "runtime_identity_sha256": "2aa9a2dbefa2fd24596fd97e5ac9084ed0745201be4ec801f3899a9c2982c022",
+          "release_gate": {"path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/gates/behavioral_release_gate.json", "sha256": "4a1524b773db9b64a78e8cc81105d81ec2ece76755162d52501d6b9fe4a44b39"},
+          "concurrency_isolation_audit": {"path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/gates/concurrency_isolation_audit.json", "sha256": "11e907d9e45c9bab2a4744c04049180647c51faab59bb465fc6870df8d04cbcf"},
+          "results_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/nano_v3b005_results_manifest.json", "sha256": "f97fcb57f72dc5fe1c63c1cad6155ebab6247bccb9a2dad55e31ea84770fe67d"},
+          "report": {"path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/nano_v3b005_dose_response_report.json", "sha256": "a65c659cc5eb24e03baafc8101473f63307a549764090b6403eed5d1405ba999"},
+          "source_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/nano_v3b005_dose_response_report.json.manifest.json", "sha256": "31a897d74403522a8a8cb8f4e6d04cdeb87bc8c61c21074263d4d9af7edd83ff"},
+          "final_integrity_audit": {"path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/final_integrity_audit.json", "sha256": "a0024d47d8b83297ac4b6ca079e40eb0b60394055682cdd35470dd03a13c15dc"},
+          "figure_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/figures/manifest.json", "sha256": "4ee5099c651061ee93e5821e1faf75b887206f9debdcb4e2708a78853f19fbad"},
+          "publication_media_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/publication_media/nano_v3b005_publication_media_manifest.json", "sha256": "d27d2d9787777298551f2897b9c73ea3a098682df9cfae9ff46f59652be28991"},
+          "scientific_result": {
+            "primary_depth_slope_m_per_m": 1.1247301174859916,
+            "primary_bootstrap_95_ci": [0.7189605736750224, 1.562330189504705],
+            "primary_exact_sign_p": 0.00738525390625,
+            "linear_zero_crossing_in_registered_support": false,
+            "binary_success_left": "93/105",
+            "binary_success_right": "99/105",
+            "binary_gap_slope_exact_sign_p": 0.0703125,
+            "claim": "Reference-object position continuously modulated requested-side depth over the tested support; binary completion was directionally consistent but secondary and not exact-sign-test significant at 0.05."
+          },
+          "rerun_policy": "do_not_rerun_any_valid_v3b005_cell"
         }
       },
+      "registered_not_released": {},
       "failed_closed": {
         "nano_v3b004": {
           "amendment_id": "V3-B004",
@@ -865,7 +880,7 @@
           "denominator_effect": "none"
         }
       },
-      "unreleased": "Nano V3-B005 is hash-bound but not behaviorally released. DreamZero V3-B003 passed its independent release gate and its 108 cells are authorized but incomplete. V3-B004 failed closed before inference. Every other Phase-B confound ablation beyond completed Nano V3-B001 and pi0.5 V3-B002 requires its own frozen independent release path."
+      "unreleased": "DreamZero V3-B003 passed its independent release gate and its 108 cells are authorized but incomplete. V3-B004 failed closed before inference. Nano V3-B005 is complete and must not be rerun. Every other Phase-B confound ablation beyond completed Nano V3-B001, pi0.5 V3-B002, and Nano V3-B005 requires its own frozen independent release path."
     },
     "phase_c_four_phrasings": {
       "status": "all_three_models_released_seed8500_smokes_valid_remaining_queues_active",
@@ -975,7 +990,7 @@
       ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
       "git diff --check"
     ],
-    "inference_authority": "Do not rerun any valid Phase-A, V3-A002, Nano V3-B001, pi0.5 V3-B002, or Phase-C seed-8500 cell. DreamZero V3-B003 passed its hash-bound four-lane physical and fresh fixed-observation release gate; run only its exact 108 registered cells and preserve whole-seed order. Nano V3-B004 failed closed with zero model requests and must never be run. Nano V3-B005 passed all 42 model-blind physical rows and its exact 210-cell queue is hash-bound; continue only its active exact queue. Phase C is released only for the already active GR00T, Cosmos3 Edge, and Cosmos3 Nano seed-8501-8519 queues. Preserve whole-seed serial execution; each Cosmos model additionally requires one client per server and exact echoed sampling seeds. Do not rerun the complete Nano seed-8500 behavior after its zero-inference packaging repair. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or Phase C.",
+    "inference_authority": "Do not rerun any valid Phase-A, V3-A002, Nano V3-B001, pi0.5 V3-B002, Nano V3-B005, or Phase-C seed-8500 cell. DreamZero V3-B003 passed its hash-bound four-lane physical and fresh fixed-observation release gate; run only its exact 108 registered cells and preserve whole-seed order. Nano V3-B004 failed closed with zero model requests and must never be run. Nano V3-B005 is complete at 210/210 valid cells and is hash-closed. Phase C is released only for the already active GR00T, Cosmos3 Edge, and Cosmos3 Nano seed-8501-8519 queues. Preserve whole-seed serial execution; each Cosmos model additionally requires one client per server and exact echoed sampling seeds. Do not rerun the complete Nano seed-8500 behavior after its zero-inference packaging repair. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or Phase C.",
     "publication_note": "Use the compact result summaries and evidence manifests for analysis. Do not infer current study state from the older V2 article, gallery, figures, or chat history."
   }
 }

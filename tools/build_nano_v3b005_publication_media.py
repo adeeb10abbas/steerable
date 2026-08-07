@@ -21,11 +21,11 @@ import cv2
 import imageio_ffmpeg
 import numpy as np
 
-from experiments.v3.cosmos_nano_lateral_sweep.analyze_results import REPORT_SCHEMA
 from experiments.v3.cosmos_nano_lateral_sweep.runtime_adapter import LEVELS, SEEDS
 
 
 OUTPUT_FPS = 15.0
+REPORT_SCHEMA = "vla-wam-shared-v3b005-nano-dose-response-report-v1"
 SELECTED_LEVELS = (0, 3, 6)
 CANVAS_WIDTH = 1280
 CANVAS_HEIGHT = 720

@@ -129,6 +129,13 @@ def _save(fig: plt.Figure, stem: Path) -> list[Path]:
     svg = stem.with_suffix(".svg")
     png = stem.with_suffix(".png")
     fig.savefig(svg, bbox_inches="tight", pad_inches=0.16, metadata={"Date": None})
+    # Matplotlib emits spaces before newlines in SVG path data. Normalize the
+    # generated text so the committed publication artifact passes diff checks.
+    svg.write_text(
+        "\n".join(line.rstrip() for line in svg.read_text(encoding="utf-8").splitlines())
+        + "\n",
+        encoding="utf-8",
+    )
     fig.savefig(
         png,
         dpi=240,
@@ -166,7 +173,7 @@ def render_dose_response(report: Mapping[str, Any], output_dir: Path) -> list[Pa
     fig, axes = plt.subplots(2, 1, figsize=(12.8, 10.0), sharex=True)
     fig.subplots_adjust(left=0.105, right=0.975, bottom=0.105, top=0.79, hspace=0.36)
     fig.suptitle(
-        "A continuous geometry sweep tests where directional advantage comes from",
+        "Directional margin changes continuously with reference-object position",
         x=0.055,
         y=0.973,
         ha="left",

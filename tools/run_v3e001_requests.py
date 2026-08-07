@@ -25,6 +25,56 @@ RIGHT = "Put the Rubik's cube to the right of the bowl."
 SEEDS = range(9400, 9427)
 
 
+class DreamZeroWebsocketClient:
+    """Small adapter for DreamZero's msgpack server contract.
+
+    DreamZero is not an OpenPI websocket server: it returns a msgpack ndarray
+    and requires an explicit reset to finalize the retained future manifest.
+    Presenting that contract as ``infer`` keeps the request ledger shared with
+    the OpenPI clients without coercing an ndarray into ``dict(...)``.
+    """
+
+    def __init__(self, host: str, port: int) -> None:
+        import websockets.sync.client
+        from policies.dreamzero.client import MsgPackNumpy
+
+        self._packer = MsgPackNumpy()
+        self._connection = websockets.sync.client.connect(
+            f"ws://{host}:{port}", compression=None, max_size=None,
+            open_timeout=300, ping_interval=60, ping_timeout=600,
+        )
+        # The first frame is server metadata. Retain it for the raw ledger.
+        self.metadata = self._packer.unpack(self._connection.recv(timeout=300))
+
+    def infer(self, request: dict[str, Any]) -> dict[str, Any]:
+        self._connection.send(self._packer.pack(request))
+        raw = self._connection.recv(timeout=600)
+        if isinstance(raw, str):
+            raise RuntimeError(f"DreamZero server error: {raw}")
+        value = self._packer.unpack(raw)
+        if isinstance(value, dict):
+            actions = value.get("actions", value.get("action"))
+        else:
+            actions = value
+        if actions is None:
+            raise RuntimeError("DreamZero response did not contain actions")
+        # Reset is part of the retained-future protocol and does not execute
+        # an action in the simulator.
+        session_id = request.get("session_id")
+        self._connection.send(self._packer.pack({"endpoint": "reset", "session_ids": [session_id]}))
+        reset = self._connection.recv(timeout=600)
+        if isinstance(reset, str) and reset.lower().startswith("error"):
+            raise RuntimeError(f"DreamZero reset failed: {reset}")
+        if not isinstance(reset, str):
+            reset_value = self._packer.unpack(reset)
+            if isinstance(reset_value, dict) and reset_value.get("error"):
+                raise RuntimeError(f"DreamZero reset failed: {reset_value['error']}")
+        return {"actions": np.asarray(actions, dtype=np.float32), "server_metadata": self.metadata}
+
+    def close(self) -> None:
+        self._connection.close()
+
+
 def sha(value: Any) -> str:
     if isinstance(value, np.ndarray):
         payload = np.ascontiguousarray(value).tobytes()
@@ -151,8 +201,11 @@ def main() -> None:
     ap.add_argument("--seed-start", type=int, default=9400)
     ap.add_argument("--seed-end", type=int, default=9426)
     args = ap.parse_args()
-    from openpi_client.websocket_client_policy import WebsocketClientPolicy
-    client = WebsocketClientPolicy(args.host, args.port)
+    if args.model == "dreamzero":
+        client = DreamZeroWebsocketClient(args.host, args.port)
+    else:
+        from openpi_client.websocket_client_policy import WebsocketClientPolicy
+        client = WebsocketClientPolicy(args.host, args.port)
     paths = {
         ("control", "left"): args.control_left,
         ("control", "right"): args.control_right,
@@ -184,6 +237,8 @@ def main() -> None:
         if args.only_exact_repeats:
             for layout in ("control", "position_mirrored"):
                 issue(layout, "left", 9400, repeat=True)
+    if hasattr(client, "close"):
+        client.close()
 
 
 if __name__ == "__main__":

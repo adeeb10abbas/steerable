@@ -1,0 +1,102 @@
+{
+  "schema_version": "vla-wam-shared-v3b005-nano-concurrency-isolation-audit-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B005",
+  "model_id": "cosmos3_nano_policy_droid",
+  "audit_timestamp_utc": "2026-08-07T02:41:31Z",
+  "audit_scope": "Two interleaved RoboLab clients sharing one Cosmos3-Nano-Policy-DROID behavior server",
+  "verdict": "pass_client_session_stateless_for_registered_history_length_1_behavior_requests",
+  "denominator_disposition": "retain_both_lanes_as_behaviorally_valid",
+  "server_binding": {
+    "pod_uid": "ae6fe330-7efc-45a2-9666-95dadde0b706",
+    "port": 18011,
+    "runtime_identity_sha256": "2aa9a2dbefa2fd24596fd97e5ac9084ed0745201be4ec801f3899a9c2982c022",
+    "behavioral_release_gate_sha256": "4a1524b773db9b64a78e8cc81105d81ec2ece76755162d52501d6b9fe4a44b39",
+    "history_length": 1,
+    "use_state": true
+  },
+  "source_audit": {
+    "registered_wrapper": {
+      "path": "experiments/v3/cosmos_nano_lateral_sweep/serve_nano.py",
+      "sha256": "030e9720040441b1dcfff2f165ce482fc3f4837f02c03ef98f471c63e220bce6",
+      "proof": [
+        "One outer threading.Lock spans request authorization, the complete official inference call, and the per-cell request-counter update (lines 72 and 88-121).",
+        "A ContextVar carries only the current registered cell seed and is set and reset around the official inference call (lines 69 and 112-116).",
+        "The only mutable behavior-mode wrapper state is a counter keyed by immutable registered_cell_id; it authorizes the next request index and is not part of model input, action, future, history, or reset state."
+      ]
+    },
+    "official_server": {
+      "path": "/data/users/ali/vla_wam/external/cosmos-framework-411d25b/cosmos_framework/scripts/action_policy_server_robolab.py",
+      "revision": "411d25b",
+      "sha256": "024a6d19048a6ac732ca0b23e741b5da6d38424223783b944bf539b2b6bd9a24",
+      "proof": [
+        "_build_sample constructs video, action, and any history_action tensors from the current observation only (lines 490-555).",
+        "With history_length=1 and use_state=true, num_history_rows is zero; no history_action tensor or cross-request temporal buffer is used (lines 504-524).",
+        "The official RNG object is bypassed for registered requests by the wrapper's _next_seed monkeypatch; the request-local registered seed is passed to generation.",
+        "Generated actions and decoded futures are local outputs of the current sample (lines 557-600).",
+        "No reset, temporal-history, client-session, action-cache, or future-cache field exists on the service."
+      ]
+    }
+  },
+  "live_interleaving": {
+    "observed": true,
+    "evidence": "The append-only behavior-server log alternated registered seeds 9503 and 9504 while both queue clients were active; every line retained the current prompt and registered seed.",
+    "server_log_path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/lateral_sweep_v3b005/gates/behavior_server_attempt01/server.log"
+  },
+  "response_attribution_audit": {
+    "query_timestamp_utc": "2026-08-07T02:39:00Z",
+    "complete_behavioral_cells": 55,
+    "unique_registered_cell_ids": 55,
+    "duplicate_registered_cell_ids": 0,
+    "model_requests": 366,
+    "mismatch_count": 0,
+    "lane_cell_counts": {
+      "b7ec6369-2ab7-42d6-a4ef-3fc549ca652a": 20,
+      "d5b0405a-a9b1-4baa-a802-d5171e03c228": 35
+    },
+    "seeds_and_complete_cell_counts": {
+      "9500": 14,
+      "9501": 14,
+      "9502": 14,
+      "9503": 6,
+      "9504": 7
+    },
+    "per_request_fields_checked": [
+      "request_index_contiguous_from_zero",
+      "registered_cell_id",
+      "prompt",
+      "sampling_seed",
+      "server_sampling_seed",
+      "requested_sampling_seed",
+      "reset_fingerprint_sha256",
+      "runtime_identity_sha256",
+      "behavioral_release_gate_sha256"
+    ],
+    "per_episode_fields_checked": [
+      "action_future_trace_sha256",
+      "registered_cell_id_unique",
+      "environment_seed_bound_to_cell_id",
+      "reset_attestation_registered_cell_id",
+      "reset_attestation_sampling_seed",
+      "model_request_count_before_attestation_equals_zero",
+      "lane_pod_uid"
+    ]
+  },
+  "state_classification": {
+    "shared_immutable_or_inference_safe": [
+      "loaded_model_weights_in_eval_mode",
+      "frozen_transform_and_configuration"
+    ],
+    "shared_mutable_authorization_only": [
+      "registered_cell_id_to_next_request_index_counter"
+    ],
+    "absent": [
+      "client_session_history",
+      "temporal_observation_buffer",
+      "reset_buffer",
+      "cross_request_action_buffer",
+      "cross_request_future_buffer"
+    ]
+  },
+  "interpretation": "The two clients overlap only at transport and authorization boundaries. Complete inference is serialized, all model inputs are request-local, history_length=1 creates no history buffer, and live responses remain exactly attributed to their registered cell, seed, prompt, and reset. The overlap therefore does not create an infrastructure-invalid behavioral cell."
+}

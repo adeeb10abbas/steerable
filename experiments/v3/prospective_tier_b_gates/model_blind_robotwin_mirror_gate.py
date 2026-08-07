@@ -93,8 +93,6 @@ def pose_record(actor) -> dict:
     return {
         "position_xyz_m": [float(value) for value in pose.p],
         "quaternion_wxyz": [float(value) for value in pose.q],
-        "linear_velocity_m_s": [float(value) for value in actor.get_velocity()],
-        "angular_velocity_rad_s": [float(value) for value in actor.get_angular_velocity()],
     }
 
 
@@ -240,10 +238,12 @@ def main() -> None:
                 after_object = pose_record(env.object)
                 after_reference = pose_record(env.target_object)
                 for name, row in (("object", after_object), ("reference", after_reference)):
-                    if max(abs(value) for value in row["linear_velocity_m_s"]) > 0.02:
-                        raise ValueError(f"{label} {name} linear instability")
-                    if max(abs(value) for value in row["angular_velocity_rad_s"]) > 0.20:
-                        raise ValueError(f"{label} {name} angular instability")
+                    before = before_object if name == "object" else before_reference
+                    if max(abs(a - b) for a, b in zip(row["position_xyz_m"], before["position_xyz_m"])) > 0.003:
+                        raise ValueError(f"{label} {name} translated during stability window")
+                    quaternion_dot = abs(sum(a * b for a, b in zip(row["quaternion_wxyz"], before["quaternion_wxyz"])))
+                    if quaternion_dot < 0.999:
+                        raise ValueError(f"{label} {name} rotated during stability window")
                     expected = layout[name]["position_xyz_m"]
                     if max(abs(a - b) for a, b in zip(row["position_xyz_m"], expected)) > 0.003:
                         raise ValueError(f"{label} {name} missed mirrored position tolerance")
@@ -310,7 +310,7 @@ def main() -> None:
         "environment_seed": ENVIRONMENT_SEED,
         "source_identity": {"object": list(EXPECTED_OBJECT), "reference": list(EXPECTED_REFERENCE)},
         "derived_numeric_fixture": {"control": control, "position_mirrored": mirrored, "transform": "object and reference centers only: (x,y,z)->(-x,y,z); quaternions unchanged"},
-        "reset_gate": {"repeat_count_per_arm": args.repeat_resets, "settle_steps_after_native_stability_gate": args.settle_steps, "left_right_physical_fingerprints_equal_within_arm": True, "neither_predicate_true_at_every_reset": True, "live_center_reflection_passed": True},
+        "reset_gate": {"repeat_count_per_arm": args.repeat_resets, "settle_steps_after_native_stability_gate": args.settle_steps, "translation_drift_tolerance_m": 0.003, "quaternion_absolute_dot_minimum": 0.999, "left_right_physical_fingerprints_equal_within_arm": True, "neither_predicate_true_at_every_reset": True, "live_center_reflection_passed": True},
         "renderer": {"backend": "headless SAPIEN Vulkan ray tracing", "vulkan_icd": record(Path("/etc/vulkan/icd.d/nvidia_icd.json")), "all_required_rgb_views_nonblank": True},
         "tasks": rows,
         "viewport_write_gate": videos,

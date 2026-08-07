@@ -367,6 +367,9 @@ class StateCaptureProxy:
             "behavioral_result_valid_candidate": success or action_count == 450,
             "partial_attempt_reason": None if success or action_count == 450 else "ended_before_success_or_cap",
         }
+        bootstrap.state_capture_dir.mkdir(parents=True, exist_ok=True)
+        if output.exists():
+            raise FileExistsError(f"refusing to overwrite V3-B003 state capture: {output}")
         output.write_text(json.dumps(capture, indent=2, sort_keys=True) + "\n")
         self._written = True
         return output

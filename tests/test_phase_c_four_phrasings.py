@@ -501,6 +501,17 @@ def test_cosmos_live_client_requires_registered_seed_echo() -> None:
     assert '"sampling_seed": seed' in overlay
 
 
+def test_cosmos_live_client_uses_frozen_base_horizon_without_bad_kwarg() -> None:
+    source = (
+        ROOT / "experiments/v3/phase_c_four_phrasings/cosmos_live_bridge.py"
+    ).read_text()
+    make_client_source = source.split("def make_client", 1)[1].split(
+        "def _event_timeline", 1
+    )[0]
+    assert "open_loop_horizon=" not in make_client_source
+    assert "bootstrap.open_loop_horizon != 32" in source
+
+
 def test_committed_materialization_matches_builder() -> None:
     committed = ROOT / OUTPUT_RELATIVE
     cells = [json.loads(line) for line in (committed / "phase_c_v3c001_cells.jsonl").read_text().splitlines()]

@@ -456,7 +456,6 @@ def make_client(_: argparse.Namespace) -> PhaseCCosmosClient:
         cell=active_cell,
         remote_host=bootstrap.remote_host,
         remote_port=bootstrap.remote_port,
-        open_loop_horizon=bootstrap.open_loop_horizon,
         sampling_seed_base=bridge["seed"],
     )
     clients[active_cell["registered_cell_id"]] = client
@@ -650,6 +649,12 @@ def main() -> None:
         run_evaluation(args_cli, policy=policy_id, client_factory=make_client)
         report = _finalize()
         print(json.dumps(report, indent=2, sort_keys=True))
+    except Exception as error:
+        # Isaac may terminate cleanly during close, so print the original
+        # infrastructure error before closing the application.
+        print(f"[Cosmos V3-C001 live bridge] infrastructure failure: {error}")
+        traceback.print_exc()
+        raise
     finally:
         for client in clients.values():
             client._write_trace()
@@ -657,9 +662,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    try:
-        main()
-    except Exception as error:
-        print(f"[Cosmos V3-C001 live bridge] infrastructure failure: {error}")
-        traceback.print_exc()
-        raise
+    main()

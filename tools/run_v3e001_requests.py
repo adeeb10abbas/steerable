@@ -181,6 +181,9 @@ def main() -> None:
                 issue(layout, "left", 9400, repeat=True)
         for layout in ("control", "position_mirrored"):
             issue(layout, "right", 9400, repeat=True)
+        if args.only_exact_repeats:
+            for layout in ("control", "position_mirrored"):
+                issue(layout, "left", 9400, repeat=True)
 
 
 if __name__ == "__main__":

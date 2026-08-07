@@ -1,0 +1,160 @@
+{
+  "amendment_id": "V3-E001",
+  "design": {
+    "behavioral_episode_count": 0,
+    "exact_repeat_requests_per_model_layout": 2,
+    "no_action_execution": true,
+    "preflight_per_model_layout": [
+      "left_seed9400",
+      "left_seed9400_exact_repeat",
+      "right_seed9400"
+    ],
+    "requests_per_model_layout": 54,
+    "same_nonlanguage_observation_required": true,
+    "same_sampling_seed_for_matched_prompt_pair": true,
+    "total_model_requests": 336
+  },
+  "environment_seed_range": [
+    9400,
+    9426
+  ],
+  "invalidity_policy": "Infrastructure-invalid requests are retained separately and excluded from behavioral denominators; there are no behavioral episodes in E001.",
+  "layouts": [
+    "control",
+    "position_mirrored"
+  ],
+  "measurements": {
+    "exact_repeat": [
+      "bit_identity",
+      "rms"
+    ],
+    "layout_interaction": [
+      "mean",
+      "median",
+      "paired_bootstrap_95_ci",
+      "exact_two_sided_sign_test",
+      "all_seed_effects"
+    ],
+    "prompt_effect": [
+      "raw_rms",
+      "per_dimension_rms",
+      "exceeds_noise_p95_fraction"
+    ],
+    "same_prompt_noise": [
+      "median",
+      "mean",
+      "p05",
+      "p95",
+      "maximum",
+      "common_prefix_action_rms"
+    ],
+    "semantic_fk": "only_if_verified_native_action_frame_mapping_is_available"
+  },
+  "models": {
+    "cosmos3_nano_policy_droid": {
+      "action_shape": [
+        32,
+        8
+      ],
+      "interface": "actions_plus_decoded_future"
+    },
+    "dreamzero_droid_action_cfg": {
+      "action_shape": [
+        1,
+        8
+      ],
+      "interface": "actions_plus_native_future"
+    },
+    "pi05_current_stack_droid": {
+      "action_shape": [
+        15,
+        8
+      ],
+      "interface": "actions_only"
+    }
+  },
+  "parent_bindings": [
+    {
+      "bytes": 1618,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_manifest.json",
+      "sha256": "5c82268739feb41281435a51dcd848b575218cd9fbe5839d9ad130d1a7888830"
+    },
+    {
+      "bytes": 242838,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_cells.jsonl",
+      "sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a"
+    },
+    {
+      "bytes": 17702,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/post_result_nano_mirror_v3b001_amendment.json",
+      "sha256": "9d88c29733fa3b24a154977bc25d04d2d77df5be59e3213f0c3a6cfbe3edc6a0"
+    },
+    {
+      "bytes": 1550,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/pi05_mirror_v3b002_manifest.json",
+      "sha256": "8aaaa38302f6a654090250b3e12cd8735fab28a74027d50193325ffa9d0dddea"
+    },
+    {
+      "bytes": 382104,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/pi05_mirror_v3b002_cells.jsonl",
+      "sha256": "0db680a3aee04c991bcc78904cb572b7d962971e04fbc879e828354da30dafee"
+    },
+    {
+      "bytes": 5941,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/post_result_pi05_mirror_v3b002_amendment.json",
+      "sha256": "8e56365fdc306adbef2d2f2f8357653d1a683ff17f879f624d7eefd4acb1abb6"
+    },
+    {
+      "bytes": 1551,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/dreamzero_mirror_v3b003_manifest.json",
+      "sha256": "efe50df701193e48b981c025ea3b4d27a80e3bdf83216e38a98a63e27061cb23"
+    },
+    {
+      "bytes": 291384,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/dreamzero_mirror_v3b003_cells.jsonl",
+      "sha256": "a6d0f0a5d4c7cdfa5d3de95d44d7b11f42750a76a603ff8c2e44848e34b8f70d"
+    },
+    {
+      "bytes": 7807,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/post_result_dreamzero_mirror_v3b003_amendment.json",
+      "sha256": "ba22681ae4d7f748e375617617d9e130e6f1bd5bc0af1e7a995365b145a470fc"
+    }
+  ],
+  "policy_sampling_seeds": [
+    9400,
+    9401,
+    9402,
+    9403,
+    9404,
+    9405,
+    9406,
+    9407,
+    9408,
+    9409,
+    9410,
+    9411,
+    9412,
+    9413,
+    9414,
+    9415,
+    9416,
+    9417,
+    9418,
+    9419,
+    9420,
+    9421,
+    9422,
+    9423,
+    9424,
+    9425,
+    9426
+  ],
+  "prompts": {
+    "left": "Put the Rubik's cube to the left of the bowl.",
+    "right": "Put the Rubik's cube to the right of the bowl."
+  },
+  "question": "At an identical observation, does changing only the directional prompt produce an action effect larger than same-prompt policy-sampling variation?",
+  "schema_version": "vla-wam-shared-v3e001-registration-v1",
+  "status": "registered_before_inference",
+  "study_id": "vla_wam_language_steerability_v3"
+}

@@ -1,0 +1,2171 @@
+{
+  "amendment_id": "V3-E002",
+  "arms": [
+    "control",
+    "position_mirrored"
+  ],
+  "candidate_target_depths_m": [
+    0.075,
+    0.1,
+    0.15,
+    0.2
+  ],
+  "environment_seed_range": [
+    9400,
+    9426
+  ],
+  "expected_behavioral_episodes": 108,
+  "learned_model_request_count": 0,
+  "metrics": [
+    "planner_ik_success",
+    "task_success",
+    "pickup",
+    "requested_region_entry",
+    "detached_release",
+    "requested_side_depth",
+    "endpoint_error",
+    "task_space_path_length",
+    "joint_space_path_length",
+    "max_joint_velocity",
+    "min_joint_limit_margin",
+    "min_manipulability",
+    "min_collision_clearance",
+    "execution_duration",
+    "failure_taxonomy"
+  ],
+  "model_blind": true,
+  "parent_bindings": [
+    {
+      "bytes": 1618,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_manifest.json",
+      "sha256": "5c82268739feb41281435a51dcd848b575218cd9fbe5839d9ad130d1a7888830"
+    },
+    {
+      "bytes": 17702,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/post_result_nano_mirror_v3b001_amendment.json",
+      "sha256": "9d88c29733fa3b24a154977bc25d04d2d77df5be59e3213f0c3a6cfbe3edc6a0"
+    },
+    {
+      "bytes": 1550,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/pi05_mirror_v3b002_manifest.json",
+      "sha256": "8aaaa38302f6a654090250b3e12cd8735fab28a74027d50193325ffa9d0dddea"
+    },
+    {
+      "bytes": 5941,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/post_result_pi05_mirror_v3b002_amendment.json",
+      "sha256": "8e56365fdc306adbef2d2f2f8357653d1a683ff17f879f624d7eefd4acb1abb6"
+    },
+    {
+      "bytes": 1551,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/dreamzero_mirror_v3b003_manifest.json",
+      "sha256": "efe50df701193e48b981c025ea3b4d27a80e3bdf83216e38a98a63e27061cb23"
+    },
+    {
+      "bytes": 7807,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/post_result_dreamzero_mirror_v3b003_amendment.json",
+      "sha256": "ba22681ae4d7f748e375617617d9e130e6f1bd5bc0af1e7a995365b145a470fc"
+    }
+  ],
+  "question": "Are LEFT and RIGHT placements under the control and reflected fixtures mechanically feasible under one verified symmetric reference controller?",
+  "queue": [
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9400:control:left",
+      "environment_seed": 9400,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9400:control:right",
+      "environment_seed": 9400,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9400:position_mirrored:left",
+      "environment_seed": 9400,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9400:position_mirrored:right",
+      "environment_seed": 9400,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9401:control:left",
+      "environment_seed": 9401,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9401:control:right",
+      "environment_seed": 9401,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9401:position_mirrored:left",
+      "environment_seed": 9401,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9401:position_mirrored:right",
+      "environment_seed": 9401,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9402:control:left",
+      "environment_seed": 9402,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9402:control:right",
+      "environment_seed": 9402,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9402:position_mirrored:left",
+      "environment_seed": 9402,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9402:position_mirrored:right",
+      "environment_seed": 9402,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9403:control:left",
+      "environment_seed": 9403,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9403:control:right",
+      "environment_seed": 9403,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9403:position_mirrored:left",
+      "environment_seed": 9403,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9403:position_mirrored:right",
+      "environment_seed": 9403,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9404:control:left",
+      "environment_seed": 9404,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9404:control:right",
+      "environment_seed": 9404,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9404:position_mirrored:left",
+      "environment_seed": 9404,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9404:position_mirrored:right",
+      "environment_seed": 9404,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9405:control:left",
+      "environment_seed": 9405,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9405:control:right",
+      "environment_seed": 9405,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9405:position_mirrored:left",
+      "environment_seed": 9405,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9405:position_mirrored:right",
+      "environment_seed": 9405,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9406:control:left",
+      "environment_seed": 9406,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9406:control:right",
+      "environment_seed": 9406,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9406:position_mirrored:left",
+      "environment_seed": 9406,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9406:position_mirrored:right",
+      "environment_seed": 9406,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9407:control:left",
+      "environment_seed": 9407,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9407:control:right",
+      "environment_seed": 9407,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9407:position_mirrored:left",
+      "environment_seed": 9407,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9407:position_mirrored:right",
+      "environment_seed": 9407,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9408:control:left",
+      "environment_seed": 9408,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9408:control:right",
+      "environment_seed": 9408,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9408:position_mirrored:left",
+      "environment_seed": 9408,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9408:position_mirrored:right",
+      "environment_seed": 9408,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9409:control:left",
+      "environment_seed": 9409,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9409:control:right",
+      "environment_seed": 9409,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9409:position_mirrored:left",
+      "environment_seed": 9409,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9409:position_mirrored:right",
+      "environment_seed": 9409,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9410:control:left",
+      "environment_seed": 9410,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9410:control:right",
+      "environment_seed": 9410,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9410:position_mirrored:left",
+      "environment_seed": 9410,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9410:position_mirrored:right",
+      "environment_seed": 9410,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9411:control:left",
+      "environment_seed": 9411,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9411:control:right",
+      "environment_seed": 9411,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9411:position_mirrored:left",
+      "environment_seed": 9411,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9411:position_mirrored:right",
+      "environment_seed": 9411,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9412:control:left",
+      "environment_seed": 9412,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9412:control:right",
+      "environment_seed": 9412,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9412:position_mirrored:left",
+      "environment_seed": 9412,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9412:position_mirrored:right",
+      "environment_seed": 9412,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9413:control:left",
+      "environment_seed": 9413,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9413:control:right",
+      "environment_seed": 9413,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9413:position_mirrored:left",
+      "environment_seed": 9413,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9413:position_mirrored:right",
+      "environment_seed": 9413,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9414:control:left",
+      "environment_seed": 9414,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9414:control:right",
+      "environment_seed": 9414,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9414:position_mirrored:left",
+      "environment_seed": 9414,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9414:position_mirrored:right",
+      "environment_seed": 9414,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9415:control:left",
+      "environment_seed": 9415,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9415:control:right",
+      "environment_seed": 9415,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9415:position_mirrored:left",
+      "environment_seed": 9415,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9415:position_mirrored:right",
+      "environment_seed": 9415,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9416:control:left",
+      "environment_seed": 9416,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9416:control:right",
+      "environment_seed": 9416,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9416:position_mirrored:left",
+      "environment_seed": 9416,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9416:position_mirrored:right",
+      "environment_seed": 9416,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9417:control:left",
+      "environment_seed": 9417,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9417:control:right",
+      "environment_seed": 9417,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9417:position_mirrored:left",
+      "environment_seed": 9417,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9417:position_mirrored:right",
+      "environment_seed": 9417,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9418:control:left",
+      "environment_seed": 9418,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9418:control:right",
+      "environment_seed": 9418,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9418:position_mirrored:left",
+      "environment_seed": 9418,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9418:position_mirrored:right",
+      "environment_seed": 9418,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9419:control:left",
+      "environment_seed": 9419,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9419:control:right",
+      "environment_seed": 9419,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9419:position_mirrored:left",
+      "environment_seed": 9419,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9419:position_mirrored:right",
+      "environment_seed": 9419,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9420:control:left",
+      "environment_seed": 9420,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9420:control:right",
+      "environment_seed": 9420,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9420:position_mirrored:left",
+      "environment_seed": 9420,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9420:position_mirrored:right",
+      "environment_seed": 9420,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9421:control:left",
+      "environment_seed": 9421,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9421:control:right",
+      "environment_seed": 9421,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9421:position_mirrored:left",
+      "environment_seed": 9421,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9421:position_mirrored:right",
+      "environment_seed": 9421,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9422:control:left",
+      "environment_seed": 9422,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9422:control:right",
+      "environment_seed": 9422,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9422:position_mirrored:left",
+      "environment_seed": 9422,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9422:position_mirrored:right",
+      "environment_seed": 9422,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9423:control:left",
+      "environment_seed": 9423,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9423:control:right",
+      "environment_seed": 9423,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9423:position_mirrored:left",
+      "environment_seed": 9423,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9423:position_mirrored:right",
+      "environment_seed": 9423,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9424:control:left",
+      "environment_seed": 9424,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9424:control:right",
+      "environment_seed": 9424,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9424:position_mirrored:left",
+      "environment_seed": 9424,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9424:position_mirrored:right",
+      "environment_seed": 9424,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9425:control:left",
+      "environment_seed": 9425,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9425:control:right",
+      "environment_seed": 9425,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9425:position_mirrored:left",
+      "environment_seed": 9425,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9425:position_mirrored:right",
+      "environment_seed": 9425,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9426:control:left",
+      "environment_seed": 9426,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "control",
+      "cell_id": "v3e002:reference_controller:seed9426:control:right",
+      "environment_seed": 9426,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9426:position_mirrored:left",
+      "environment_seed": 9426,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "relation": "left",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    },
+    {
+      "amendment_id": "V3-E002",
+      "arm": "position_mirrored",
+      "cell_id": "v3e002:reference_controller:seed9426:position_mirrored:right",
+      "environment_seed": 9426,
+      "fixture_source": "phase_b_positions_only_reflection_fixture",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "relation": "right",
+      "required_outputs": [
+        "viewport_video",
+        "raw_episode_jsonl",
+        "final_state",
+        "controller_metrics"
+      ],
+      "schema_version": "vla-wam-shared-v3e002-cell-v1",
+      "study_id": "vla_wam_language_steerability_v3",
+      "success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+      "valid_failure_policy": "retain_all_behavioral_failures"
+    }
+  ],
+  "relations": [
+    "left",
+    "right"
+  ],
+  "schema_version": "vla-wam-shared-v3e002-registration-v1",
+  "seeds": [
+    9400,
+    9401,
+    9402,
+    9403,
+    9404,
+    9405,
+    9406,
+    9407,
+    9408,
+    9409,
+    9410,
+    9411,
+    9412,
+    9413,
+    9414,
+    9415,
+    9416,
+    9417,
+    9418,
+    9419,
+    9420,
+    9421,
+    9422,
+    9423,
+    9424,
+    9425,
+    9426
+  ],
+  "selection_rule": "Select the largest candidate passing all four arm/relation conditions using static IK, collision, joint-limit, frame, predicate, and symmetric-waypoint gates before behavior.",
+  "status": "registered_before_inference",
+  "study_id": "vla_wam_language_steerability_v3",
+  "waypoint_recipe": [
+    "pre_grasp",
+    "grasp",
+    "close_dwell",
+    "vertical_lift",
+    "symmetric_pre_place",
+    "selected_depth",
+    "release",
+    "open_dwell"
+  ]
+}

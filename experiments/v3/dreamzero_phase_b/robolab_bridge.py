@@ -420,39 +420,42 @@ def main() -> None:
             run_evaluation(args_cli, policy="dreamzero_v2", client_factory=make_client)
         except BaseException as error:
             failure = error
+        finally:
+            for client_instance in clients:
+                client_instance.write_trace()
+            for proxy in proxies:
+                proxy.write_capture()
+        if failure is not None:
+            raise failure
+        videos = [
+            str(path.resolve())
+            for path in bootstrap.output_dir.rglob("*.mp4")
+            if path.is_file() and path.stat().st_size > 0
+        ]
+        if len(videos) != 1:
+            raise RuntimeError(f"expected one V3-B003 viewport video, found {videos}")
+        capture_path = bootstrap.state_capture_dir / "capture.json"
+        trace_path = bootstrap.action_trace_dir / f"seed{cell.seed}_{cell.relation}_executed_actions.json"
+        if not capture_path.is_file() or not trace_path.is_file():
+            raise RuntimeError("V3-B003 state capture or action trace is missing")
+        capture = json.loads(capture_path.read_text())
+        if capture.get("behavioral_result_valid_candidate") is not True:
+            raise RuntimeError("partial V3-B003 attempt cannot emit a behavioral export")
+        # Isaac can terminate the process from its close path.  Make the exact
+        # denominator-eligibility export durable before closing the app.
+        bootstrap.simulator_export.parent.mkdir(parents=True, exist_ok=True)
+        bootstrap.simulator_export.write_text(json.dumps({
+            "schema_version": "vla-wam-shared-v3b-dreamzero-simulator-export-v1",
+            "registered_cell_id": cell.cell_id,
+            "capture_path": str(capture_path.resolve()),
+            "trace_manifest_path": str(trace_path.resolve()),
+            "viewport_video_path": videos[0],
+            "reset_attestation_path": str(bootstrap.reset_attestation.resolve()),
+            "runtime_identity_path": str(bootstrap.runtime_identity.resolve()),
+            "release_gate_path": str(bootstrap.release_gate.resolve()),
+        }, indent=2, sort_keys=True) + "\n")
     finally:
-        for client_instance in clients:
-            client_instance.write_trace()
-        for proxy in proxies:
-            proxy.write_capture()
         simulation_app.close()
-    if failure is not None:
-        raise failure
-    videos = [
-        str(path.resolve())
-        for path in bootstrap.output_dir.rglob("*.mp4")
-        if path.is_file() and path.stat().st_size > 0
-    ]
-    if len(videos) != 1:
-        raise RuntimeError(f"expected one V3-B003 viewport video, found {videos}")
-    capture_path = bootstrap.state_capture_dir / "capture.json"
-    trace_path = bootstrap.action_trace_dir / f"seed{cell.seed}_{cell.relation}_executed_actions.json"
-    if not capture_path.is_file() or not trace_path.is_file():
-        raise RuntimeError("V3-B003 state capture or action trace is missing")
-    capture = json.loads(capture_path.read_text())
-    if capture.get("behavioral_result_valid_candidate") is not True:
-        raise RuntimeError("partial V3-B003 attempt cannot emit a behavioral export")
-    bootstrap.simulator_export.parent.mkdir(parents=True, exist_ok=True)
-    bootstrap.simulator_export.write_text(json.dumps({
-        "schema_version": "vla-wam-shared-v3b-dreamzero-simulator-export-v1",
-        "registered_cell_id": cell.cell_id,
-        "capture_path": str(capture_path.resolve()),
-        "trace_manifest_path": str(trace_path.resolve()),
-        "viewport_video_path": videos[0],
-        "reset_attestation_path": str(bootstrap.reset_attestation.resolve()),
-        "runtime_identity_path": str(bootstrap.runtime_identity.resolve()),
-        "release_gate_path": str(bootstrap.release_gate.resolve()),
-    }, indent=2, sort_keys=True) + "\n")
 
 
 if __name__ == "__main__":

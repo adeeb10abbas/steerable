@@ -341,6 +341,92 @@ def draw_result_table(report: Report, data: dict[str, Any]) -> None:
     para(c, "The π0-FAST public compatibility checkpoint is retained as separately labeled compatibility evidence; it is not silently merged into the five expanded DROID cohorts.", MARGIN, y2 - 18, PAGE_W - 2 * MARGIN, SMALL)
 
 
+def _ci_text(summary: dict[str, Any], *, scale: float = 1.0, digits: int = 2) -> str:
+    interval = summary.get("mean_bootstrap_95", summary)
+    return f"[{interval['lower'] * scale:.{digits}f}, {interval['upper'] * scale:.{digits}f}]"
+
+
+def draw_tier_b_controls(report: Report, data: dict[str, Any]) -> None:
+    """Summarize the registered controls that do not belong in Figures 1–7."""
+
+    top = report.new_page(
+        "Registered controls refine—and limit—the mechanism claim",
+        "Supplementary Tier B evidence",
+        "The controls below test stochasticity, scene factors, and cross-arena generality without pooling their estimands.",
+    )
+    c = report.canvas
+    robotwin = data["robotwin_mirror"]
+    start = data["start_side"]
+    role = data["role_swap"]
+    stochastic = data["stochastic_repeats"]
+
+    robotwin_depth = robotwin["full_sample_primary"]["requested_side_depth_interaction"]
+    start_trend = start["factor_analysis"]["ordered_start_side_trend"]
+    start_depth = start_trend["requested_side_depth_B_slope_per_m"]
+    start_binary = start_trend["binary_direction_gap_slope_per_m"]
+    role_effect = role["factor_analysis"]["pairwise_factor_interactions"][
+        "bowl_target_cube_reference_minus_cube_target_bowl_reference"
+    ]
+    role_depth = role_effect["requested_side_depth_interaction_m"]
+    role_binary = role_effect["binary_success_interaction"]
+    stochastic_success = stochastic["success"]
+    stochastic_gap = stochastic_success["directional_gap"]
+    stochastic_left = stochastic_success["by_direction"]["left"]
+    stochastic_right = stochastic_success["by_direction"]["right"]
+
+    cards = [
+        (
+            "ROBOTTWIN POSITION REFLECTION",
+            "FastWAM reverses under reflected movable-object positions",
+            f"Requested-depth interaction {robotwin_depth['mean_m']:+.2f} m, 95% CI {_ci_text(robotwin_depth)}, exact sign p={robotwin_depth['paired_sign_test']['p_value']:.3g}. Binary success DiD {robotwin['binary_success_difference_in_differences']['mean']:+.2f}, exact p={robotwin['binary_success_difference_in_differences']['exact_permutation_test']['p_value']:.3g}.",
+            "This is cross-arena replication of geometry dependence, not a pooled success estimate: RoboTwin uses a different controller, scenes, and success predicate.",
+        ),
+        (
+            "TARGET START-SIDE",
+            "Initial target position changes the directional contrast",
+            f"Across the three prespecified target-start levels, the requested-depth contrast has a linear slope of {start_depth['mean_m']:+.2f} m/m (95% CI {_ci_text(start_depth)}; sign p={start_depth['paired_sign_test']['p_value']:.3g}). The binary-gap slope is {start_binary['mean_m']:+.2f} per meter.",
+            "This factor changes geometry, reachability, and the policy state together. Pairwise contrasts remain primary if the three-level response is not linear.",
+        ),
+        (
+            "TARGET / REFERENCE ROLE SWAP",
+            "Object roles alter the magnitude of directional steering",
+            f"Swapping cube and bowl roles changes requested-depth contrast by {role_depth['mean_m']:+.2f} m (95% CI {_ci_text(role_depth)}; p={role_depth['paired_sign_test']['p_value']:.3g}). The binary interaction is {role_binary['mean']:+.2f}, exact p={role_binary['exact_permutation_test']['p_value']:.3g}.",
+            "Continuous redirection changes clearly; the binary interaction narrowly misses 0.05. Object semantics and physical affordances change together, so this is not language-only evidence.",
+        ),
+        (
+            "FIXED-SCENE STOCHASTIC REPEATS",
+            "Repeated policy samples separate scene effects from policy noise",
+            f"Across 27 fixed scenes × 8 policy samples per direction, LEFT succeeds {stochastic_left['successes']}/{stochastic_left['episodes']} and RIGHT {stochastic_right['successes']}/{stochastic_right['episodes']}. The seed-level mean p(RIGHT)−p(LEFT) is {stochastic_gap['mean']:+.2f} (95% cluster-bootstrap CI {_ci_text(stochastic_gap['environment_seed_cluster_bootstrap_95'])}).",
+            "The environment seed is the inferential unit; 432 episodes are nested repeats, not 432 independent scenes. Wilson intervals over episodes are descriptive only.",
+        ),
+    ]
+
+    gap = 12
+    card_w = (PAGE_W - 2 * MARGIN - gap) / 2
+    card_h = 177
+    y_positions = (top - card_h, top - 2 * card_h - gap)
+    for index, (label, heading, result, boundary) in enumerate(cards):
+        row, column = divmod(index, 2)
+        x = MARGIN + column * (card_w + gap)
+        y = y_positions[row]
+        rounded_card(c, x, y, card_w, card_h)
+        c.setFillColor((TEAL, PURPLE, RIGHT, LEFT)[index])
+        c.setFont("Arial-Bold", 7.2)
+        c.drawString(x + 14, y + card_h - 20, label)
+        text_top = para(c, heading, x + 14, y + card_h - 30, card_w - 28, H2) - 6
+        text_top = para(c, result, x + 14, text_top, card_w - 28, NOTE) - 8
+        para(c, f"<b>Boundary:</b> {boundary}", x + 14, text_top, card_w - 28, SMALL)
+
+    para(
+        c,
+        "<b>Base-rotation control:</b> failed closed before behavioral inference because the wrist camera inherits the robot-base transform, violating the registered fixed-camera contract. No behavioral denominator or null result was created.",
+        MARGIN,
+        y_positions[1] - 13,
+        PAGE_W - 2 * MARGIN,
+        SMALL,
+    )
+
+
 def draw_methods(report: Report, data: dict[str, Any], sources: list[Path]) -> None:
     top = report.new_page(
         "Methods, inference, and claim boundary",
@@ -476,6 +562,7 @@ def build(output: Path) -> tuple[Path, Path]:
         boundary="Phase C is exploratory. The four prompt forms share seeds, and raw rates are not 80 independent scenes. Endpoint movement and task success are reported separately.",
     )
     draw_result_table(report, data)
+    draw_tier_b_controls(report, data)
     source_paths = list(SOURCES.values()) + list(FIGURES.values()) + phase_c_summary_paths
     draw_methods(report, data, source_paths)
     report.finish()

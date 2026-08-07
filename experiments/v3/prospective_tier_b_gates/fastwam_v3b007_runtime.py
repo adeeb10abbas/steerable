@@ -156,12 +156,12 @@ def fingerprint(initial: dict) -> str:
 def validate_video(path: Path) -> None:
     if not path.is_file() or path.stat().st_size == 0:
         raise ValueError(f"missing simulator video: {path}")
-    value = subprocess.check_output(
-        ["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", "stream=nb_frames", "-of", "default=nw=1:nk=1", str(path)],
-        text=True,
-    ).strip()
-    if not value or value == "N/A" or int(value) < 1:
-        raise ValueError(f"simulator video does not decode: {path}")
+    subprocess.run(
+        ["ffmpeg", "-v", "error", "-i", str(path), "-map", "0:v:0", "-f", "null", "-"],
+        check=True,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.PIPE,
+    )
 
 
 def main() -> None:

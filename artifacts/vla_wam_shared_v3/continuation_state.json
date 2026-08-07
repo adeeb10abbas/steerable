@@ -1,10 +1,5 @@
 {
-  "schema_version": "vla-wam-shared-v3-continuation-v1",
-  "study_id": "vla_wam_language_steerability_v3",
-  "updated_at_utc": "2026-08-07T08:59:24Z",
-  "active_branch": "main",
-  "evidence_head": "bd86ecb7018678da75ff26eb5390bd09b39ea257",
-  "status": "phase_c_all_three_complete_480_valid_behavioral_episodes",
+  "active_branch": "ablation/v3e-fixed-state-reference-control",
   "authoritative_files": [
     "docs/VLA_WAM_V3_CONTINUATION.md",
     "docs/VLA_WAM_STEERABILITY_V3_PROTOCOL.md",
@@ -148,666 +143,535 @@
     "artifacts/vla_wam_shared_v3/prospective_tier_b/checkpoint_provenance/checkpoint_provenance_table.md",
     "tools/build_v3_checkpoint_provenance.py",
     "tools/validate_v3_checkpoint_provenance.py",
-    "tests/test_v3_checkpoint_provenance.py"
+    "tests/test_v3_checkpoint_provenance.py",
+    "artifacts/vla_wam_shared_v3/phase_e/fixed_observation_prompt_noise_v3e001/registration.json",
+    "artifacts/vla_wam_shared_v3/phase_e/fixed_observation_prompt_noise_v3e001/results/compiled_results.json",
+    "artifacts/vla_wam_shared_v3/phase_e/fixed_observation_prompt_noise_v3e001/DECISION_MEMO.md",
+    "artifacts/vla_wam_shared_v3/phase_e/reference_controller_symmetry_v3e002/registration.json",
+    "artifacts/vla_wam_shared_v3/phase_e/reference_controller_symmetry_v3e002/model_blind_gate/ik_gate_control_final.json",
+    "artifacts/vla_wam_shared_v3/phase_e/reference_controller_symmetry_v3e002/results.json",
+    "artifacts/vla_wam_shared_v3/phase_e/reference_controller_symmetry_v3e002/evidence_manifest.json",
+    "artifacts/vla_wam_shared_v3/phase_e/reference_controller_symmetry_v3e002/DECISION_MEMO.md",
+    "artifacts/vla_wam_shared_v3/phase_e/V3E_PUBLICATION_DECISION.md",
+    "tools/run_v3e001_requests.py",
+    "tools/compile_v3e001_prompt_noise.py",
+    "experiments/v3/phase_e/model_blind_ik_gate.py",
+    "tools/compile_v3e002_reference_controller.py",
+    "experiments/v3/phase_e/reference_controller_runner.py"
   ],
-  "validation": {
-    "v3": {
-      "command": ".venv/bin/python tools/validate_vla_wam_v3_protocol.py",
-      "status": "valid",
-      "check_count": 628
+  "blocked_and_unreleased": {
+    "phase_b_confounds": {
+      "failed_closed": {
+        "nano_v3b004": {
+          "amendment_id": "V3-B004",
+          "behavioral_episode_count": 0,
+          "denominator_effect": "none",
+          "factor": "reference_object_initial_lateral_position_y_m",
+          "failure": "The original fixed banana collides with the bowl by the registered -30 mm level, so every allowed symmetric half-range r >= 90 mm is infeasible.",
+          "failure_report": {
+            "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b004/model_blind_calibration_failure_report.json",
+            "sha256": "d3441b899dfd21adf5421ddb00d829f588b25d5e630af1ca18821b6494c985ca"
+          },
+          "model_id": "cosmos3_nano_policy_droid",
+          "model_request_count": 0,
+          "status": "failed_closed_before_any_model_request_or_behavioral_episode"
+        }
+      },
+      "registered_not_released": {},
+      "released": {
+        "dreamzero_v3b003": {
+          "amendment_id": "V3-B003",
+          "behavioral_episodes_before_release": 0,
+          "completed_behavioral_cells": 108,
+          "fixed_observation_model_requests_before_release": 3,
+          "identity_binding": "V2-A015:dreamzero_action_cfg_s2",
+          "model_id": "dreamzero_droid_action_cfg",
+          "release_condition": "Released only after four distinct ali RTX lanes each passed 12 fresh-process physical/reset/renderer/writer attestations and the fresh DreamZero s=2 server passed exact-repeat and LEFT/RIGHT action/latent sensitivity. The 108 registered cells are complete and hash-closed; do not rerun.",
+          "release_gate": {
+            "path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/gates/release_gate.json",
+            "sha256": "7e30e618ee233ea04675d556f48621f6ff7de84f4ac9033460d0d9531a234dd6"
+          },
+          "released_behavioral_cells": 108
+        },
+        "nano_v3b001": {
+          "amendment_id": "V3-B001",
+          "completed_behavioral_cells": 108,
+          "model_id": "cosmos3_nano_policy_droid",
+          "release_condition": "Released only after the hash-bound model-blind positions-only calibration. The prespecified 27-seed, four-cell-per-seed cohort is complete and hash-closed.",
+          "released_behavioral_cells": 108
+        },
+        "nano_v3b005": {
+          "amendment_id": "V3-B005",
+          "completed_behavioral_cells": 210,
+          "concurrency_isolation_audit": {
+            "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/gates/concurrency_isolation_audit.json",
+            "sha256": "11e907d9e45c9bab2a4744c04049180647c51faab59bb465fc6870df8d04cbcf"
+          },
+          "decoded_futures": 1423,
+          "factor": "reference_object_initial_lateral_position_y_m",
+          "figure_manifest": {
+            "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/figures/manifest.json",
+            "sha256": "bc04bcb7ecfa756be1641a8731ac9ab6c66ae13eeb37eb582f1fc05c3ad6ffb1"
+          },
+          "final_integrity_audit": {
+            "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/final_integrity_audit.json",
+            "sha256": "a0024d47d8b83297ac4b6ca079e40eb0b60394055682cdd35470dd03a13c15dc"
+          },
+          "infrastructure_invalid_cells": 0,
+          "lateral_levels": 7,
+          "matched_pairs": 105,
+          "matched_seeds": 15,
+          "model_id": "cosmos3_nano_policy_droid",
+          "model_requests": 1423,
+          "publication_media_manifest": {
+            "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/publication_media/nano_v3b005_publication_media_manifest.json",
+            "sha256": "d27d2d9787777298551f2897b9c73ea3a098682df9cfae9ff46f59652be28991"
+          },
+          "release_gate": {
+            "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/gates/behavioral_release_gate.json",
+            "sha256": "4a1524b773db9b64a78e8cc81105d81ec2ece76755162d52501d6b9fe4a44b39"
+          },
+          "released_behavioral_cells": 210,
+          "report": {
+            "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/nano_v3b005_dose_response_report.json",
+            "sha256": "a65c659cc5eb24e03baafc8101473f63307a549764090b6403eed5d1405ba999"
+          },
+          "rerun_policy": "do_not_rerun_any_valid_v3b005_cell",
+          "results_manifest": {
+            "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/nano_v3b005_results_manifest.json",
+            "sha256": "abef596b2f4b471a6595c2983737c63f319a27de9e3b8452385f11914b8db52a"
+          },
+          "runtime_identity_sha256": "2aa9a2dbefa2fd24596fd97e5ac9084ed0745201be4ec801f3899a9c2982c022",
+          "scientific_result": {
+            "binary_gap_slope_exact_sign_p": 0.0703125,
+            "binary_success_left": "93/105",
+            "binary_success_right": "99/105",
+            "claim": "Reference-object position continuously modulated requested-side depth over the tested support; binary completion was directionally consistent but secondary and not exact-sign-test significant at 0.05.",
+            "linear_zero_crossing_in_registered_support": false,
+            "primary_bootstrap_95_ci": [
+              0.7189605736750224,
+              1.562330189504705
+            ],
+            "primary_depth_slope_m_per_m": 1.1247301174859916,
+            "primary_exact_sign_p": 0.00738525390625
+          },
+          "source_manifest": {
+            "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/nano_v3b005_dose_response_report.json.manifest.json",
+            "sha256": "31a897d74403522a8a8cb8f4e6d04cdeb87bc8c61c21074263d4d9af7edd83ff"
+          },
+          "status": "complete_hash_closed_15_seed_210_episode_result_no_rerun"
+        },
+        "pi05_v3b002": {
+          "amendment_id": "V3-B002",
+          "completed_behavioral_cells": 108,
+          "model_id": "pi05_current_stack_droid",
+          "release_condition": "Released only after the hash-bound model-blind physical and fixed-observation exact-repeat and prompt-sensitivity gates. The prespecified 27-seed, four-cell-per-seed cohort is complete and hash-closed.",
+          "released_behavioral_cells": 108
+        }
+      },
+      "status": "nano_v3b001_pi05_v3b002_dreamzero_v3b003_and_nano_v3b005_complete_v3b004_failed_closed",
+      "unreleased": "V3-B004 failed closed before inference. DreamZero V3-B003 and Nano V3-B005 are complete and must not be rerun. Every other Phase-B confound ablation beyond completed Nano V3-B001, pi0.5 V3-B002, DreamZero V3-B003, and Nano V3-B005 requires its own frozen independent release path."
     },
-    "v2": {
-      "command": ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
-      "status": "valid",
-      "check_count": 994
+    "phase_c_four_phrasings": {
+      "completed_valid_behavioral_episode_count": 480,
+      "figure_manifest": {
+        "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/figures/phase_c_figure_manifest.json",
+        "sha256": "34799e1d97cfd79bd5f184a160f65d2ea8b26bf419cfdbd424bc3aa64c1c0bfe"
+      },
+      "interpretation_boundary": "GR00T N1.7, Cosmos3 Edge, and Cosmos3 Nano are each complete at 160/160 prospectively registered behavioral episodes, for 480/480 total. Their four prompt forms share 20 scenes per model and must not be treated as 80 independent scenes. Success and endpoint redirection remain separate diagnostics. DROID is never pooled with RoboTwin.",
+      "model_status": {
+        "cosmos3_edge_policy_droid": {
+          "behavioral_release": true,
+          "compact_result": {
+            "episodes": {
+              "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_edge_policy_droid/cosmos3_edge_policy_droid_phase_c_episodes.jsonl",
+              "sha256": "317aa9e7eb18c5ef77b9445483128a7621df5b777835d8eb9e383939acf0a1f5"
+            },
+            "evidence_manifest": {
+              "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_edge_policy_droid/cosmos3_edge_policy_droid_phase_c_evidence_manifest.json",
+              "sha256": "2c72c90b71c5ea0001d917ce4464a3207faa1c6ae62b1e0200926d435c90c97a"
+            },
+            "interpretation": "Exploratory wording result over 20 shared seeds. The four prompt forms repeat each scene and are not 80 independent scenes.",
+            "successes_by_condition": {
+              "desired_plus_negated_opposite:left": 10,
+              "desired_plus_negated_opposite:right": 18,
+              "direct_command:left": 18,
+              "direct_command:right": 20,
+              "goal_as_outcome:left": 15,
+              "goal_as_outcome:right": 18,
+              "short_command:left": 5,
+              "short_command:right": 19
+            },
+            "summary": {
+              "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_edge_policy_droid/cosmos3_edge_policy_droid_phase_c_summary.json",
+              "sha256": "06a8fd1ff425bce10cbdbeb4b73e9a8ca5ff31da0c5e389ae85f5b64bc451861"
+            }
+          },
+          "completed_queue": {
+            "execution": "one_client_per_server_serial",
+            "pid": 556502,
+            "pod": "vla-wam-rtx-nano-ali",
+            "queue_log": "/data/users/ali/vla_wam/raw/v3c/phase_c_v3c001/cosmos3_edge_policy_droid/queue_seed8501_8519_attempt02.log",
+            "status": "natural_exit_after_complete_20_seed_queue"
+          },
+          "completed_seed_blocks": [
+            8500,
+            8501,
+            8502,
+            8503,
+            8504,
+            8505,
+            8506,
+            8507,
+            8508,
+            8509,
+            8510,
+            8511,
+            8512,
+            8513,
+            8514,
+            8515,
+            8516,
+            8517,
+            8518,
+            8519
+          ],
+          "completed_valid_behavioral_episodes": 160,
+          "model_requests": 1365,
+          "release": {
+            "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/gates/cosmos3_edge_policy_droid/release.json",
+            "sha256": "3d59285b364ab338224f8085770440f09f69f466b82024769a842d2f0ec6f1ae"
+          },
+          "seed8500_decoded_futures_retained": 74,
+          "seed8500_model_requests": 74,
+          "seed8500_requested_successes": 7,
+          "seed8500_valid_failures": 1,
+          "smoke_evidence": {
+            "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/smoke/cosmos3_edge_policy_droid/evidence_manifest.json",
+            "sha256": "9aa043e1d2a88818f847d0719f9c3c4d8bb120532147db75bc3de9a12af52513"
+          },
+          "valid_behavioral_failures": 37,
+          "viewport_videos": 160
+        },
+        "cosmos3_nano_policy_droid": {
+          "behavioral_release": true,
+          "compact_result": {
+            "episodes": {
+              "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_nano_policy_droid/cosmos3_nano_policy_droid_phase_c_episodes.jsonl",
+              "sha256": "d7016c592e492c028d072eab2d191f139f4966cfc08f2222ed954cfdfb02c0f5"
+            },
+            "evidence_manifest": {
+              "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_nano_policy_droid/cosmos3_nano_policy_droid_phase_c_evidence_manifest.json",
+              "sha256": "16f2bcb1e7de10d9a5adb692a433809845517bee1466fb34589200f6bb9be530"
+            },
+            "interpretation": "Exploratory wording result over 20 shared seeds. Nano remains strong under direct, shortened, and goal-statement prompts, but contrastive wording reduces success for both directions; the four forms are repeated measures, not 80 independent scenes.",
+            "successes_by_condition": {
+              "desired_plus_negated_opposite:left": 11,
+              "desired_plus_negated_opposite:right": 10,
+              "direct_command:left": 20,
+              "direct_command:right": 19,
+              "goal_as_outcome:left": 18,
+              "goal_as_outcome:right": 17,
+              "short_command:left": 20,
+              "short_command:right": 19
+            },
+            "summary": {
+              "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_nano_policy_droid/cosmos3_nano_policy_droid_phase_c_summary.json",
+              "sha256": "0f134044065dc0f1501a91a69d8e9b10d0a13e9a4065a7c4d33f7854bab73ee9"
+            }
+          },
+          "completed_queue": {
+            "client_pod": "vla-wam-fastwam-expansion-ali",
+            "execution": "one_client_per_server_serial",
+            "pid": 262829,
+            "queue_log": "/data/users/ali/vla_wam/raw/v3c/phase_c_v3c001/cosmos3_nano_policy_droid/queue_seed8501_8519_attempt01.log",
+            "server_pod": "lerobot-b200-4gpu-1-ali",
+            "status": "natural_exit_after_complete_20_seed_queue"
+          },
+          "completed_seed_blocks": [
+            8500,
+            8501,
+            8502,
+            8503,
+            8504,
+            8505,
+            8506,
+            8507,
+            8508,
+            8509,
+            8510,
+            8511,
+            8512,
+            8513,
+            8514,
+            8515,
+            8516,
+            8517,
+            8518,
+            8519
+          ],
+          "completed_valid_behavioral_episodes": 160,
+          "model_requests": 1234,
+          "release": {
+            "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/gates/cosmos3_nano_policy_droid/release.json",
+            "sha256": "33096c0d1b2efa01d07a7020e3213b27b5de15ac05668faf09a8d9e4a2805cf8"
+          },
+          "seed8500_decoded_futures_retained": 54,
+          "seed8500_finalization_repair": {
+            "actions_executed_during_repair": 0,
+            "behavioral_rerun": false,
+            "inference_requests_during_repair": 0,
+            "reason": "All eight trajectories and raw artifacts were complete; only deterministic JSONL/report packaging was repaired after the isolated source bundle omitted the shared schema module."
+          },
+          "seed8500_model_requests": 54,
+          "seed8500_requested_successes": 7,
+          "seed8500_valid_failures": 1,
+          "smoke_evidence": {
+            "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/smoke/cosmos3_nano_policy_droid/evidence_manifest.json",
+            "sha256": "5c2ca8e13e0529022acff53c232d5d2fa11873683d3be8f6bb97f2fec5473240"
+          },
+          "valid_behavioral_failures": 26,
+          "viewport_videos": 160
+        },
+        "groot_n17_droid_vla": {
+          "behavioral_release": true,
+          "compact_result": {
+            "episodes": {
+              "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/groot_n17_droid_vla/groot_n17_droid_vla_phase_c_episodes.jsonl",
+              "sha256": "fc73ba5e331d75a192971543f9c4c58ca127c60dc01c4df53b2824c7e899c3b0"
+            },
+            "evidence_manifest": {
+              "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/groot_n17_droid_vla/groot_n17_droid_vla_phase_c_evidence_manifest.json",
+              "sha256": "2e10bbdd192823e52e3625aac36870fccf9ff400a4d8207530f2f26ca2a0b522"
+            },
+            "failure_taxonomy": {
+              "correct": 10,
+              "pick_failed": 143,
+              "release_failed": 0,
+              "transport_failed": 6,
+              "wrong_side": 1
+            },
+            "interpretation": "Exploratory wording result over 20 shared seeds. Every matched first-ten-action prefix differed and endpoint ordering followed the request in 14/20 direct, 15/20 shortened, 17/20 goal-statement, and 9/20 contrastive pairs, but only 10/160 episodes succeeded and 143/160 failed at pickup. The four forms are repeated measures, not 80 independent scenes.",
+            "successes_by_condition": {
+              "desired_plus_negated_opposite:left": 1,
+              "desired_plus_negated_opposite:right": 0,
+              "direct_command:left": 1,
+              "direct_command:right": 0,
+              "goal_as_outcome:left": 0,
+              "goal_as_outcome:right": 0,
+              "short_command:left": 2,
+              "short_command:right": 6
+            },
+            "summary": {
+              "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/groot_n17_droid_vla/groot_n17_droid_vla_phase_c_summary.json",
+              "sha256": "bbf3f69eeef579c01151ca9c30fcc757773904faccd9c7edd0a5376f56f4c755"
+            }
+          },
+          "completed_queue": {
+            "execution": "whole_seed_serial",
+            "pid": 884463,
+            "pod": "lerobot-b200-4gpu-1-ali",
+            "queue_log": "/data/users/ali/vla_wam/raw/v3c/phase_c_v3c001/groot_n17_droid_vla/queue_seed8501_8519_attempt01.log",
+            "status": "natural_exit_after_complete_20_seed_queue"
+          },
+          "completed_seed_blocks": [
+            8500,
+            8501,
+            8502,
+            8503,
+            8504,
+            8505,
+            8506,
+            8507,
+            8508,
+            8509,
+            8510,
+            8511,
+            8512,
+            8513,
+            8514,
+            8515,
+            8516,
+            8517,
+            8518,
+            8519
+          ],
+          "completed_valid_behavioral_episodes": 160,
+          "model_requests": 0,
+          "release": {
+            "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/gates/groot_n17_droid_vla/release.json",
+            "sha256": "bf564307b27f40b02e18b8e7dc930c697ace004918f52e3e9c1f7ab3b44470fa"
+          },
+          "seed8500_requested_successes": 2,
+          "seed8500_valid_failures": 6,
+          "smoke_evidence": {
+            "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/smoke/groot_n17_droid_vla/evidence_manifest.json",
+            "sha256": "ad3e823edc73a3a3c833d4138a1710dee74f4f675131d50319e260c7111136c9"
+          },
+          "valid_behavioral_failures": 150,
+          "viewport_videos": 160
+        }
+      },
+      "registered_episode_count": 480,
+      "released_episode_count": 480,
+      "status": "all_three_models_complete_hash_closed"
     },
-    "focused_tests": {
-      "command": ".venv/bin/python -m pytest -q tests/test_v3_robotwin_wams_launcher.py tests/test_validate_vla_wam_v3_protocol.py tests/test_nano_v3b004_calibration_design.py",
-      "status": "passed",
-      "test_count": 27
+    "phase_d_stochastic_rollouts": {
+      "completed_release": {
+        "analysis_unit": "environment seed; the eight policy samples are nested repeated measurements",
+        "arena": "droid_robolab",
+        "compact_result": {
+          "episodes": {
+            "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3d001/pi05_v3d001_episodes.jsonl",
+            "sha256": "2586bdc4f963a610ea26f5fbe609f9a8c133d85e9f83b58ac6dfe3dd4c798976"
+          },
+          "evidence_manifest": {
+            "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3d001/evidence_manifest.json",
+            "sha256": "bdbff6a3a18d1894158dc731df245173405c5f4508bf5da4a9031d5cb975309c"
+          },
+          "matched_pairs": {
+            "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3d001/pi05_v3d001_matched_pairs.jsonl",
+            "sha256": "084372fc623c2c23622a54b72e13e21cc8d4247aafcf124757a5a8b362fa1e0a"
+          },
+          "nonbehavioral_attempts": {
+            "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3d001/pi05_v3d001_invalid_attempts.jsonl",
+            "sha256": "0a1940fb87bf4c546c59d1e271d6f80f0f0e9e2823cd3944a33cea0acf87385e"
+          },
+          "summary": {
+            "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3d001/pi05_v3d001_summary.json",
+            "sha256": "f05c23a0d40eb33e87deef5138e442ae230914e23f4986e2ddd45caddc2cd9e0"
+          }
+        },
+        "design": "27 fixed environment seeds x 8 stochastic policy samples x 2 exact directions",
+        "environment_seed_count": 27,
+        "exact_prompts": {
+          "left": "Put the Rubik's cube to the left of the bowl.",
+          "right": "Put the Rubik's cube to the right of the bowl."
+        },
+        "failure_taxonomy": {
+          "left": {
+            "correct": 41,
+            "pick_failed": 57,
+            "release_failed": 0,
+            "transport_failed": 104,
+            "wrong_side": 14
+          },
+          "right": {
+            "correct": 197,
+            "pick_failed": 3,
+            "release_failed": 2,
+            "transport_failed": 10,
+            "wrong_side": 4
+          }
+        },
+        "interpretation_boundary": "All 27 fixed scenes favored RIGHT over LEFT in estimated success probability across eight stochastic policy samples. The large directional gap therefore is not explained by one deterministic sample or a few exceptional scenes. The repeats estimate policy variability conditional on the fixed registered scenes; they do not identify the causal source of the asymmetry.",
+        "matched_left_right_policy_sampling_pairs": 216,
+        "matched_pair_response": {
+          "action_distinct": {
+            "pairs": 216,
+            "total": 216
+          },
+          "endpoint_ordering_aligned": {
+            "pairs": 198,
+            "total": 216
+          },
+          "endpoint_redirection_left_minus_right_m": {
+            "environment_seed_cluster_bootstrap_95": [
+              0.17644619543638396,
+              0.2101811269515666
+            ],
+            "exact_sign_test_p": 1.4901161193847656e-08,
+            "mean_of_seed_means": 0.19366720872629364,
+            "negative_seeds": 0,
+            "positive_seeds": 27
+          }
+        },
+        "model_id": "pi05_current_stack_droid",
+        "policy_sampling_rollouts_per_seed_direction": 8,
+        "raw_storage": "/data/users/ali/vla_wam/raw/v3d/v3d001_behavior",
+        "registration_id": "V3-D001",
+        "success": {
+          "left": {
+            "environment_seed_cluster_bootstrap_95": [
+              0.14351851851851852,
+              0.24074074074074073
+            ],
+            "episodes": 216,
+            "estimated_probability": 0.18981481481481483,
+            "successes": 41
+          },
+          "right": {
+            "environment_seed_cluster_bootstrap_95": [
+              0.8796296296296297,
+              0.9444444444444444
+            ],
+            "episodes": 216,
+            "estimated_probability": 0.9120370370370371,
+            "successes": 197
+          },
+          "seed_level_directional_gap_right_minus_left": {
+            "environment_seed_cluster_bootstrap_95": [
+              0.6759259259259259,
+              0.7685185185185185
+            ],
+            "exact_sign_test_p": 1.4901161193847656e-08,
+            "mean": 0.7222222222222222,
+            "median": 0.75,
+            "negative_seeds": 0,
+            "positive_seeds": 27,
+            "ties": 0
+          }
+        },
+        "valid_behavioral_episodes": 432
+      },
+      "other_checkpoints": "not_released_without_independent_exact-runtime stochastic-seed eligibility; deterministic or seed-insensitive runtimes are ineligible rather than padded",
+      "status": "pi05_v3d001_complete"
     },
-    "retrospective_analysis_tests": {
-      "command": ".venv/bin/python -m unittest tools/test_analyze_v3_failure_mode_split.py tools/test_analyze_v3_gap_vs_competence.py",
-      "status": "passed",
-      "test_count": 6
-    },
-    "dreamzero_v3b003_registration_tests": {
-      "command": ".venv/bin/python -m unittest tests.test_build_dreamzero_v3b003_registration",
-      "status": "passed",
-      "test_count": 4
-    },
-    "phase_c_behavioral_bridge_tests": {
-      "command": ".venv/bin/python -m pytest -q tests/test_compile_v3c_phase_c_results.py tests/test_render_v3c_phase_c_results.py tests/test_phase_c_four_phrasings.py",
-      "status": "passed",
-      "test_count": 22
-    },
-    "checkpoint_provenance_tests": {
-      "command": ".venv/bin/python -m unittest tests.test_v3_checkpoint_provenance",
-      "status": "passed",
-      "test_count": 4
+    "pi0_fast_phase_a": {
+      "blocked_new_cells": 40,
+      "blocked_new_pairs": 20,
+      "blocked_seed_range": [
+        8310,
+        8329
+      ],
+      "blocker": "Both exact historical integration commits remain unavailable. V2-A008 current-stack LEFT/RIGHT prompt sensitivity failed with action RMS 0.0. The completed V3-A002 public old-name-config bridge is a separate cohort, not exact historical recovery.",
+      "denominator_effect": "none",
+      "historical_identity_v3_behavioral_episode_count": 0,
+      "model_load_attempt_count": 0,
+      "preserved_v2_cells": 20,
+      "preserved_v2_pairs": 10,
+      "recovery_command": "git -C /home/ali/openpi-robolab bundle create /tmp/openpi-robolab-all.bundle --all && git -C /home/ali/projects/RoboLab bundle create /tmp/robolab-all.bundle --all",
+      "required_openpi_commit": "9e46d3aea26417bfb564227734b95d010aa827e5",
+      "required_robolab_commit": "11142d4319e44401e0464866bb5fedf7ec8a8927",
+      "separate_bridge": {
+        "behavioral_episodes": 40,
+        "matched_pairs": 20,
+        "model_id": "pi0_fast_old_name_config_v3a002",
+        "pooled_with_historical": false
+      },
+      "status": "historical_identity_still_blocked_separate_v3a002_bridge_complete"
     }
-  },
-  "measurement_coverage_audit": {
-    "path": "artifacts/vla_wam_shared_v3/measurement_coverage_audit.json",
-    "sha256": "86b3ded424bba2d697b406ea7b1c8bfc147dba8413363ae0190b4d151e76d4ea",
-    "bytes": 23602,
-    "unique_behavioral_episodes": 982,
-    "requested_side_margin_available": "982/982",
-    "signed_final_lateral_offset_available": "982/982",
-    "legacy_measurement_rerun_required": false,
-    "groot_phase_a": "already_complete_27_matched_pairs_do_not_rerun"
   },
   "checkpoint_provenance_c1": {
-    "status": "complete",
+    "caption_exposure": "not_auditable for every identity",
+    "identity_boundary": "historical pi0_fast_droid_vla remains distinct from pi0_fast_old_name_config_v3a002",
     "identity_count": 10,
-    "schema_path": "artifacts/vla_wam_shared_v3/prospective_tier_b/checkpoint_provenance.schema.json",
     "manifest_path": "artifacts/vla_wam_shared_v3/prospective_tier_b/checkpoint_provenance/checkpoint_provenance_manifest.json",
     "manifest_sha256": "0b154a99f4f0b291269cc99c52f6ccca8afe240deab213254962c8e3e321f0b4",
+    "preprocessing_boundary": "inference-time adapters are recorded; training preprocessing remains not_disclosed",
+    "schema_path": "artifacts/vla_wam_shared_v3/prospective_tier_b/checkpoint_provenance.schema.json",
+    "status": "complete",
     "table_path": "artifacts/vla_wam_shared_v3/prospective_tier_b/checkpoint_provenance/checkpoint_provenance_table.json",
     "table_sha256": "b84717ecbf2fd2fbd8f501f6cc4625d297aae251fb817d0975eb5d6d95c61ace",
-    "training_episode_multisets": "partially_disclosed target-domain labels only; exact episode membership and sampling are not disclosed",
-    "caption_exposure": "not_auditable for every identity",
-    "preprocessing_boundary": "inference-time adapters are recorded; training preprocessing remains not_disclosed",
-    "identity_boundary": "historical pi0_fast_droid_vla remains distinct from pi0_fast_old_name_config_v3a002"
+    "training_episode_multisets": "partially_disclosed target-domain labels only; exact episode membership and sampling are not disclosed"
   },
-  "nonnegotiable_boundaries": {
-    "arena_separation": "DROID/RoboLab and RoboTwin raw successes, failures, denominators, and intervals are never pooled.",
-    "historical_separation": "Preserved V2 cells remain separate coverage layers and are never merged into a V3 behavioral denominator.",
-    "pairing": "LEFT and RIGHT share an identical registered reset and seed; only the static prompt and requested-relation predicate change.",
-    "valid_failures": "Every valid behavioral failure remains in its model denominator; infrastructure and operational records remain outside it.",
-    "future_evidence": "Decoded, latent-only, and action-only interfaces remain distinct; missing or latent-only futures are never converted into zeros."
-  },
-  "phase_a_accounting": {
-    "frozen_queue_rows": 780,
-    "launch_authorized_new_cells": 648,
-    "completed_valid_new_cells": 648,
-    "droid_completed_new_cells": 270,
-    "robotwin_completed_new_cells": 378,
-    "blocked_pi0_fast_cells": 40,
-    "post_result_bridge_completed_matched_pairs": 20,
-    "post_result_bridge_completed_cells": 40,
-    "droid_preserved_candidate_cells": 50,
-    "robotwin_preserved_r0_cells": 42,
-    "completion_statement": "Every row marked authorized_new in the frozen Phase-A queue is complete valid evidence. Its 40 blocked_pi0 source rows remain immutable and were not relaunched under the historical identity. Post-result amendment V3-A002 separately authorized 40 distinct pi0_fast_old_name_config_v3a002 cells on the same registered seeds; all are complete valid evidence."
-  },
-  "phase_b_releases": {
-    "nano_position_reflection_v3b001": {
-      "status": "complete_hash_closed_27_seed_108_episode_result",
-      "amendment_id": "V3-B001",
-      "model_id": "cosmos3_nano_policy_droid",
-      "arena": "droid_robolab",
-      "factor": "movable_object_center_position_reflection_about_robot_sagittal_plane",
-      "claim_boundary": "Only movable-object center positions are reflected about the robot sagittal plane. The robot, cameras, and nonmovable geometry remain fixed; this is a positions-only movable-object intervention, not a full-scene mirror.",
-      "seed_range_inclusive": [
-        9400,
-        9426
-      ],
-      "prespecified_matched_seed_count": 27,
-      "arms": [
-        "control",
-        "position_mirrored"
-      ],
-      "directions": [
-        "left",
-        "right"
-      ],
-      "cells_per_seed": 4,
-      "released_behavioral_cell_count": 108,
-      "completed_behavioral_cell_count": 108,
-      "completed_behavioral_cell_count_scope": "complete_prespecified_cohort",
-      "committed_complete_seed_blocks": [9400, 9401, 9402, 9403, 9404, 9405, 9406, 9407, 9408, 9409, 9410, 9411, 9412, 9413, 9414, 9415, 9416, 9417, 9418, 9419, 9420, 9421, 9422, 9423, 9424, 9425, 9426],
-      "live_queue_may_be_ahead_of_committed_snapshot": false,
-      "pre_release_counts": {
-        "model_requests": 0,
-        "behavioral_episodes": 0
-      },
-      "exact_prompts": {
-        "left": "Put the Rubik's cube to the left of the bowl.",
-        "right": "Put the Rubik's cube to the right of the bowl."
-      },
-      "analysis_plan": {
-        "primary": "Full-sample signed_final_lateral_offset_m analysis across seeds with four valid behavioral cells; every valid behavioral failure remains included and no missing value is imputed.",
-        "success_conditional_secondary": "Analyze final_requested_signed_margin_m only on complete-case subset nano_v3b001_all_four_cells_correct, requiring frozen requested-success passes in control LEFT, control RIGHT, position-mirrored LEFT, and position-mirrored RIGHT; report realized n and never mix unmatched successful cells."
-      },
-      "artifacts": {
-        "calibration": {
-          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/model_blind_calibration_report.json",
-          "sha256": "112716acada89050561c9488d93a333a300b1675c2305329c8e5aceeb4e6da71"
-        },
-        "cells": {
-          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_cells.jsonl",
-          "sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a"
-        },
-        "manifest": {
-          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_manifest.json",
-          "sha256": "5c82268739feb41281435a51dcd848b575218cd9fbe5839d9ad130d1a7888830"
-        },
-        "amendment": {
-          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/post_result_nano_mirror_v3b001_amendment.json",
-          "sha256": "9d88c29733fa3b24a154977bc25d04d2d77df5be59e3213f0c3a6cfbe3edc6a0"
-        },
-        "live_infrastructure_ledger": {
-          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_infrastructure_ledger.json",
-          "sha256": "33c83da878782f77aca60a95d0c7382982af33b2210403d96c17637d41cc0418"
-        },
-        "live_reset_semantics_correction": {
-          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_reset_semantics_correction.json",
-          "sha256": "167494ff48b075c41ff64fce4c18c78ae6650d1bcfd63d0646cf386a0a82875b"
-        },
-        "live_reset_preflight_report": {
-          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_reset_preflight_report.json",
-          "sha256": "075a3d78fff99a74bfbb3981e77c20b6de20a9d5123e5ed4f6dea10ee2f61bc9"
-        },
-        "live_queue_snapshot": {
-          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_queue_snapshot.json",
-          "sha256": "bfd8f0e095fc83dd2d09ba254c0860d8c2d8bbdf02205173369c50e56013e52c"
-        },
-        "final_results_manifest": {
-          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/nano_v3b001_results_manifest.json",
-          "sha256": "ab9b9849e04bc15e65ed9d8d55d13e8aad62dbef5f5e2fa16b8eaf486a6ea517"
-        },
-        "final_summary": {
-          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/nano_v3b001_summary.json",
-          "sha256": "f43636a03caade5f3dc65de6736808c8257c78eacb07ba4cb963bfc6a0e36578"
-        },
-        "final_evidence_manifest": {
-          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/nano_v3b001_final_evidence_manifest.json",
-          "sha256": "ed16c120f58b89fe67227c544a7ac7b20610e802a0a19276fcb0f7796cef5270"
-        },
-        "publication_media_manifest": {
-          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/publication_media/nano_v3b001_publication_media_manifest.json",
-          "sha256": "2a9023b976b6a877b2da266ce1333f6639d89a971a4e082f50a7af1f0cf246ea"
-        }
-      },
-      "final_result": {
-        "valid_behavioral_cells": 108,
-        "matched_seed_count": 27,
-        "valid_model_sampler_requests": 738,
-        "executed_actions": 21972,
-        "runtime_identity_sha256": "2c5e314a62926a3d3c9b84fa73cff634c378b6140d390cbef6407ac9c633e64e",
-        "condition_successes": {
-          "control:left": "26/27",
-          "control:right": "26/27",
-          "position_mirrored:left": "27/27",
-          "position_mirrored:right": "23/27"
-        },
-        "failure_taxonomy": {"correct": 102, "pick_failed": 0, "transport_failed": 5, "wrong_side": 0, "release_failed": 1},
-        "endpoint_redirection": {
-          "control_D_median_m": 0.4667481780052185,
-          "control_positive_seeds": "27/27",
-          "position_mirrored_D_median_m": 0.4373619556427002,
-          "position_mirrored_positive_seeds": "27/27",
-          "reflection_interaction_J_median_m": 0.007228171452879906,
-          "reflection_interaction_sign_test_p": 0.7011080384254456
-        },
-        "requested_depth": {
-          "control_B_median_m": 0.14758701622486115,
-          "position_mirrored_B_median_m": -0.08814282715320587,
-          "reflection_interaction_I_median_m": -0.2463150918483734,
-          "reflection_interaction_negative_seeds": "24/27",
-          "reflection_interaction_sign_test_p": 4.9233436584472656e-05
-        },
-        "success_conditional_secondary": {
-          "subset_id": "nano_v3b001_all_four_cells_correct",
-          "matched_seed_count": 21,
-          "reflection_interaction_G_median_m": -0.2282327301800251,
-          "reflection_interaction_negative_seeds": "18/21",
-          "reflection_interaction_sign_test_p": 0.0014896392822265625,
-          "failures_as_zero": false
-        }
-      },
-      "live_runtime": {
-        "status": "queue_complete_historical_live_prefix_details_retained_below",
-        "model_request_count": 39,
-        "model_request_count_semantics": "prior_model_sampler_requests_retained_as_infrastructure_evidence; zero-sampling transport-handshake packets excluded",
-        "valid_model_sampler_request_count_in_committed_snapshot": 90,
-        "behavioral_episode_count": 12,
-        "completed_behavioral_cell_count": 12,
-        "infrastructure_invalid_complete_behavior_attempt_count": 4,
-        "behavioral_denominator": 12,
-        "live_bound_runtime_identity": {
-          "runtime_identity_sha256": "2c5e314a62926a3d3c9b84fa73cff634c378b6140d390cbef6407ac9c633e64e",
-          "manifest_path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/runtime_attempt08/runtime_identity.json",
-          "manifest_bytes": 2910,
-          "manifest_file_sha256": "a609300c4cbb826115692db8fecac7e14d7578e0ded00f63c06f5153619c2136",
-          "study_head": "39f19b57d5f5e68d0f03e4e4c7569350cb9a467f",
-          "source_state": "pushed_synced_clean",
-          "preflight_status": "passed_both_physical_layouts_zero_sampling",
-          "behavior_resume_policy": "same_runtime_identity_only"
-        },
-        "invalidated_runtime_attempt06": {
-          "runtime_identity_sha256": "fa962d1783a506abb2e0c11c5129087be62a9f698bd2a3bec2a97dddba9b6a71",
-          "manifest_file_sha256": "41b31bd7fab0c69d5e7f7deafe041177ffe97a7727003c17bdf85bb24cb07875",
-          "study_head": "a42ae3d3f8549ee4fac9704a59ee3c103bac5494",
-          "reason": "The first compiled row is invalidated before analysis because the bridge source is changing and the aggregate requires one runtime identity across all 108 cells."
-        },
-        "registration_context_diagnostic": {
-          "status": "registration_context_hypothesis_falsified_as_sufficient",
-          "model_requests": 0,
-          "behavioral_episodes": 0,
-          "report_path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/diagnostic_server_unloaded_attempt01/live_gate/model_blind_calibration_report.json",
-          "report_sha256": "b15b3249647dbf468e745727e2d7677df9c74d919b399a3148be17312951ca04",
-          "boundary": "This diagnostic did not reproduce the pinned runner's episode-length mutation order and did not isolate reset ordinal."
-        },
-        "reset_semantics_correction": {
-          "artifact_path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_reset_semantics_correction.json",
-          "artifact_sha256": "167494ff48b075c41ff64fce4c18c78ae6650d1bcfd63d0646cf386a0a82875b",
-          "status": "prospective_operational_correction_before_any_valid_phase_b_behavior",
-          "registration_context_hypothesis": "falsified_as_the_sufficient_root_cause",
-          "calibration_repeat_semantics": "Repeat 0 was a fresh physical reset plus 75 model-blind steps; repeats 1 and 2 saw ep_len=75 and entered the post-step freeze path before active_ids, so they were stability observations rather than fresh physical resets.",
-          "pre_fix_live_semantics": "After runner reset call 1 the proxy zeroed episode_length_buf, so call 2 saw ep_len=0, entered artifact_ids, and performed a fresh second physical reset.",
-          "attempt10_provisional_right": {
-            "actions_executed": 169,
-            "requested_success": true,
-            "raw_episode_sha256": "a51380c97cc6426332e3c8915d2950fb7785adabd13e5cab44ec34311141ce27",
-            "viewport_video_sha256": "92e26891c9ec1871d1c167d3914f22aa3fe90fc6fecc6af95a55684b8de2e1db",
-            "batch_manifest_sha256": "bca5342cbe6ccbf8a88d8c68b9900e7a1b6a79f1d39ececd6100ba667e244962",
-            "disposition": "invalidated_before_analysis"
-          },
-          "attempt10_control_left": {
-            "model_requests": 0,
-            "fixture_match_sha256": "573f1df5892d1137147945a2d8f531af9d59d1d60c744c717f396f0b17e4e276",
-            "settle_stability_sha256": "588297f9d058bb9997346f0c0c71e6420381ad5d9fae70687854adc4f76d4ef9",
-            "bridge_failure_sha256": "1f921e18c520dc6daa2d415cfe39f0f70903adc5a2b8c90e7c4e9f72db998519"
-          },
-          "attempt08_bridge_failure_sha256": "247d772c6895aa8fc69c7908bea11514b78c0643e29e7ed5ab020beb566dbc86",
-          "attempt09_bridge_failure_sha256": "ff2159bf3b5bec3f12d9a73eb6697ae2e5d1d52dfb7a28ea31b6251cc1a609ef"
-        },
-        "passed_reset_preflight": {
-          "artifact_path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_reset_preflight_report.json",
-          "artifact_sha256": "075a3d78fff99a74bfbb3981e77c20b6de20a9d5123e5ed4f6dea10ee2f61bc9",
-          "status": "passed_behavior_ready_under_same_runtime_identity",
-          "layouts_passed": [
-            "v3b001:nano:seed9400:position_mirrored:right",
-            "v3b001:nano:seed9400:control:left"
-          ],
-          "runner_pre_action_reset_calls": 2,
-          "physical_reset_calls": 1,
-          "settle_gate_runs": 1,
-          "duplicate_second_reset_idempotent": true,
-          "episode_length_buf_transition": "[75] -> [0]",
-          "model_request_count_during_gate": 0,
-          "model_sample_count": 0,
-          "behavioral_action_count": 0,
-          "behavioral_denominator": 0
-        },
-        "preflight_exact_next_cell": {
-          "cell_id": "v3b001:nano:seed9400:position_mirrored:right",
-          "environment_seed": 9400,
-          "arm": "position_mirrored",
-          "relation": "right",
-          "prompt": "Put the Rubik's cube to the right of the bowl.",
-          "completion_status": "completed_valid_in_committed_live_queue_snapshot"
-        },
-        "committed_live_queue_snapshot": {
-          "artifact_path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_queue_snapshot.json",
-          "artifact_sha256": "bfd8f0e095fc83dd2d09ba254c0860d8c2d8bbdf02205173369c50e56013e52c",
-          "snapshot_at_utc": "2026-08-06T07:15:17Z",
-          "complete_seed_blocks": [9400, 9401, 9402],
-          "last_fully_compiled_seed_block": 9402,
-          "valid_behavioral_cells": 12,
-          "behavioral_denominator": 12,
-          "correct": 10,
-          "failure_taxonomy": {"correct": 10, "release_failed": 1, "transport_failed": 1},
-          "queue_may_be_ahead": true
-        },
-        "model_blind_reset_gate": {
-          "runner_pre_action_reset_calls": 2,
-          "physical_reset_calls": 1,
-          "settle_gate_runs": 1,
-          "duplicate_second_reset_idempotent": true,
-          "call1_evidence": "provisional_not_persisted",
-          "call2_evidence": "final_persisted_attestation",
-          "settle_steps": 60,
-          "stability_window_steps": 15,
-          "episode_length_buf_before_reset": [75],
-          "episode_length_buf_after_reset": [0],
-          "model_request_count_before_attestation": 0,
-          "frozen_flags_after_duplicate_reset": false,
-          "linear_speed_threshold_m_s": 0.02,
-          "angular_speed_threshold_rad_s": 0.2,
-          "counter_reset_required_before_model_request": true
-        },
-        "execution_contract": {
-          "global_released_order_required": true,
-          "retained_output_overwrite_prohibited": true,
-          "partial_attempts_outside_behavioral_denominator": true,
-          "static_prompt_only": true,
-          "omniverse_eula_acceptance": "OMNI_KIT_ACCEPT_EULA=YES",
-          "thermal_guard": "not_used",
-          "full_calibration_registration_context_retained": true,
-          "split_policy_server_preferred_for_simulator_load_isolation": true,
-          "persistent_caches": "ali_owned_pvc",
-          "temporary_directory": "pod_local_tmpdir"
-        },
-        "execution_topology": {
-          "simulator_pod": {
-            "name": "vla-wam-rtx-nano-ali",
-            "uid": "30b51054-f277-480d-831d-337581e1cc49",
-            "owner": "ali",
-            "gpu_uuid": "GPU-37425604-6c72-a77a-f635-392439431707",
-            "gpu_product": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
-            "driver_version": "580.105.08"
-          },
-          "split_policy_server_pod": {
-            "name": "raytrace-rtxpro6000-ali",
-            "uid": "d5b0405a-a9b1-4baa-a802-d5171e03c228",
-            "owner": "ali",
-            "pod_ip": "10.244.222.28",
-            "gpu_uuid": "GPU-f28bd513-a38a-b768-7589-d2959f814ae8",
-            "gpu_product": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
-            "driver_version": "580.105.08"
-          },
-          "claim_boundary": "Split pods remain preferred for load isolation without treating GPU placement as a scientific intervention. Registration context is falsified as the sufficient cause; the demonstrated defect is the runner/proxy episode-length and reset-ordinal interaction."
-        },
-        "source_bindings": {
-          "runtime_adapter": {"path": "experiments/v3/cosmos_nano_phase_b/runtime_adapter.py", "sha256": "dadac7a84dd31fe762a3bf52b41201164ae71155bbec9ac8d34ffc5ca20d1bda"},
-          "compiler": {"path": "experiments/v3/cosmos_nano_phase_b/compile_cell.py", "sha256": "468bb9231316c4670a2dc3388ab7eb6f2ef5f42afc8fb04b16faca7b823f2a75"},
-          "live_support": {"path": "experiments/v3/cosmos_nano_phase_b/live_support.py", "sha256": "445176755c89d34a597e83ed23fa0444922a4736e276117a5242335a2aa76590"},
-          "live_client": {"path": "experiments/v3/cosmos_nano_phase_b/live_client.py", "sha256": "39efa19151039f8243cf452713bbaf13b3e955ccd590055d462c1ea66cac0a28"},
-          "live_server": {"path": "experiments/v3/cosmos_nano_phase_b/serve_nano.py", "sha256": "caa2c7ca1ea8bc3dd831a0564c3f37f63c64dc90ddf104b1ae0281ae61e7e1cc"},
-          "live_bridge": {"path": "experiments/v3/cosmos_nano_phase_b/robolab_bridge.py", "sha256": "d93ceb145430764341640c9925830fc10dce1329626a5076b52196f8b2d3a62b"},
-          "queue_launcher": {"path": "experiments/v3/cosmos_nano_phase_b/queue_launcher.py", "sha256": "52a4132fb9f6dfff3e9e4bbb17862c682c3e0cc1fbdfc11e6c73e08316b87c4d"},
-          "runtime_test": {"path": "tests/test_v3b_nano_runtime_adapter.py", "sha256": "ef763451067bce15f880f19457dbeee232b9cd2501941f396b85bae783a35f2b"},
-          "live_queue_test": {"path": "tests/test_v3b_nano_live_queue.py", "sha256": "b0e29b0999223f88ec7782b66360dcd6b01dff48f89c917ff02f79da82303c0f"}
-        }
-      }
-    },
-    "pi05_position_reflection_v3b002": {
-      "status": "complete_hash_closed_27_seed_108_episode_result_no_rerun",
-      "amendment_id": "V3-B002",
-      "model_id": "pi05_current_stack_droid",
-      "arena": "droid_robolab",
-      "factor": "movable_object_center_position_reflection_about_robot_sagittal_plane",
-      "claim_boundary": "This is an exact scene-matched replication of Nano V3-B001 on pi0.5. Only movable-object center positions are reflected; robot base, cameras, nonmovable geometry, prompt bytes, controller, cone, and success predicate remain fixed.",
-      "seed_range_inclusive": [9400, 9426],
-      "prespecified_matched_seed_count": 27,
-      "cells_per_seed": 4,
-      "registered_behavioral_cell_count": 108,
-      "completed_behavioral_cell_count": 108,
-      "completed_behavioral_cell_count_scope": "complete_prespecified_cohort",
-      "committed_complete_seed_blocks": [9400, 9401, 9402, 9403, 9404, 9405, 9406, 9407, 9408, 9409, 9410, 9411, 9412, 9413, 9414, 9415, 9416, 9417, 9418, 9419, 9420, 9421, 9422, 9423, 9424, 9425, 9426],
-      "rerun_policy": "do_not_rerun_any_valid_v3b002_cell",
-      "pre_registration_counts": {"model_requests": 0, "behavioral_episodes": 0},
-      "source_v3b001": {
-        "cells_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
-        "manifest_sha256": "5c82268739feb41281435a51dcd848b575218cd9fbe5839d9ad130d1a7888830",
-        "reuse": "Exact seeds, fixtures, arm/relation assignments, and within-seed execution order are copied without resampling."
-      },
-      "exact_prompts": {
-        "left": "Put the Rubik's cube to the left of the bowl.",
-        "right": "Put the Rubik's cube to the right of the bowl."
-      },
-      "registered_predictions": {
-        "H1": "Endpoint-redirection interaction J is approximately zero; Nano mean was +0.0046802502 m with exact sign-test p=0.701108.",
-        "H2": "Requested-side-depth interaction I is strongly negative; Nano mean was -0.2476671935 m with exact sign-test p=4.9233437e-05.",
-        "H3": "Two-sided exact within-seed test of whether reflection changes pi0.5's Phase-A RIGHT-over-LEFT binary success gap of 24/27 versus 5/27; no post-registration directional outcome was specified."
-      },
-      "analysis": {
-        "continuous": "20,000 matched-seed bootstrap resamples using master seed 3104159; exact paired sign tests with ties excluded and sign counts reported.",
-        "binary_success": "Per-seed DiD=(R-L)_reflected-(R-L)_control, reported on {-2,-1,0,1,2}, with exact two-sided within-seed label permutation and the 2x2 cell table.",
-        "failure_mode_split": {
-          "status": "complete_retrospective_existing_phase_a_logs_no_new_inference",
-          "pi05": {"left_counts_correct_pick_transport_wrong_side_release": [5, 6, 11, 5, 0], "right_counts_correct_pick_transport_wrong_side_release": [24, 0, 3, 0, 0], "failure_only_exact_p": 0.38217391304347825},
-          "dreamzero": {"left_counts_correct_pick_transport_wrong_side_release": [3, 10, 14, 0, 0], "right_counts_correct_pick_transport_wrong_side_release": [17, 10, 0, 0, 0], "failure_only_exact_p": 0.0017219568583829528},
-          "cosmos3_edge": {"left_counts_correct_pick_transport_wrong_side_release": [18, 1, 6, 2, 0], "right_counts_correct_pick_transport_wrong_side_release": [25, 1, 1, 0, 0], "failure_only_exact_p": 0.6181818181818182},
-          "interpretation": "DreamZero rejects the same-shape failure account in this cohort. pi0.5 and Edge do not reject it, but their RIGHT failure rows contain only three and two episodes, so this is not evidence of equivalence."
-        }
-      },
-      "final_result": {
-        "valid_behavioral_cells": 108,
-        "matched_seed_count": 27,
-        "matched_left_right_pairs": 54,
-        "condition_successes": {
-          "control:left": "4/27",
-          "control:right": "25/27",
-          "position_mirrored:left": "25/27",
-          "position_mirrored:right": "9/27"
-        },
-        "failure_taxonomy": {"correct": 63, "pick_failed": 14, "transport_failed": 27, "wrong_side": 3, "release_failed": 1},
-        "H1_endpoint_redirection": {
-          "control": {"mean_m": 0.1923219714037798, "mean_bootstrap_95_ci_m": [0.1388966723879868, 0.24622209011404597], "median_m": 0.1992722526192665, "positive_seeds": 25, "negative_seeds": 2, "exact_sign_test_p": 0.000005647540092468262},
-          "position_mirrored": {"mean_m": 0.1811391442531237, "mean_bootstrap_95_ci_m": [0.14240442923166685, 0.21632550195187192], "median_m": 0.18465766310691833, "positive_seeds": 26, "negative_seeds": 1, "exact_sign_test_p": 4.172325134277344e-7},
-          "reflected_minus_control_interaction": {"mean_m": -0.011182827150656117, "mean_bootstrap_95_ci_m": [-0.07806737236074965, 0.056768431604184294], "median_m": -0.03668234497308731, "positive_seeds": 12, "negative_seeds": 15, "ties": 0, "exact_sign_test_p": 0.7011080384254456}
-        },
-        "H2_requested_side_depth": {
-          "control": {"mean_m": 0.20747016584155736, "mean_bootstrap_95_ci_m": [0.16311462804571622, 0.25385589400237357], "median_m": 0.16943219676613808, "positive_seeds": 26, "negative_seeds": 1, "exact_sign_test_p": 4.172325134277344e-7},
-          "position_mirrored": {"mean_m": -0.13844854567475892, "mean_bootstrap_95_ci_m": [-0.1787812586735796, -0.09580974440797473], "median_m": -0.150082528591156, "positive_seeds": 3, "negative_seeds": 24, "exact_sign_test_p": 0.000049233436584472656},
-          "reflected_minus_control_interaction": {"mean_m": -0.3459187115163163, "mean_bootstrap_95_ci_m": [-0.4138348317118707, -0.2845569996077016], "median_m": -0.3503093309700489, "positive_seeds": 0, "negative_seeds": 27, "ties": 0, "exact_sign_test_p": 1.4901161193847656e-8}
-        },
-        "H3_binary_success": {
-          "per_seed_DiD_distribution": {"-2": 12, "-1": 13, "0": 2, "1": 0, "2": 0},
-          "mean_DiD": -1.3703703703703705,
-          "median_DiD": -1.0,
-          "exact_two_sided_within_seed_permutation_p": 5.960464477539063e-8
-        },
-        "infrastructure": {"excluded_attempt_count": 18, "included_in_behavioral_denominator": false},
-        "scientific_interpretation": "Position reflection left the endpoint-redirection interaction near zero while reversing requested-side depth and the binary success asymmetry. This supports geometry or layout as a major competence confound for pi0.5 under this simulator setup, while not attributing all language steering to geometry or identifying training distribution as the mechanism."
-      },
-      "runtime_binding": {
-        "runtime_identity_sha256": "6e5e500f5efee2d7576d090a8ec544f28e47af4db6e797c1bb514a16a43fc944",
-        "runtime_identity_file_sha256": "928af903ff99b02dd753b21eca2f6243142aced320a31166645bb1a0427a0f89",
-        "release_gate_file_sha256": "450fcac935b4ff570d53f7d2c844ee10e9c4f2bba8f151692a49fd6de25bc07e",
-        "gate_manifest_file_sha256": "bf050c7301d3fbc621bb13ca271c1280839bb1a9e83c214b4f7f7da597d3dd1d",
-        "release_gate": "passed_model_blind_physical_and_fixed_observation_exact_repeat_prompt_sensitivity"
-      },
-      "artifacts": {
-        "amendment": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/post_result_pi05_mirror_v3b002_amendment.json", "sha256": "8e56365fdc306adbef2d2f2f8357653d1a683ff17f879f624d7eefd4acb1abb6"},
-        "cells": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/pi05_mirror_v3b002_cells.jsonl", "sha256": "0db680a3aee04c991bcc78904cb572b7d962971e04fbc879e828354da30dafee"},
-        "manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/pi05_mirror_v3b002_manifest.json", "sha256": "8aaaa38302f6a654090250b3e12cd8735fab28a74027d50193325ffa9d0dddea"},
-        "failure_mode_episodes": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_episodes.jsonl", "sha256": "94d078c16d579019c216a7d05c0e4748d049d4bc91ab1879ca38b8bc78da8735"},
-        "failure_mode_report": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_report.json", "sha256": "f6289333d77538ed9235a567cb98d70333dd50549f7e52d13bfe5d34a10bdf96"},
-        "failure_mode_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_manifest.json", "sha256": "5a0e95af238536dbbcf7a6c81bf721f095cea1a5e178ddfbaecda8105a1e06ab"},
-        "gate_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/gate_manifest.json", "sha256": "bf050c7301d3fbc621bb13ca271c1280839bb1a9e83c214b4f7f7da597d3dd1d"},
-        "runtime_identity": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/runtime_identity.json", "sha256": "928af903ff99b02dd753b21eca2f6243142aced320a31166645bb1a0427a0f89"},
-        "release_gate": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/release_gate.json", "sha256": "450fcac935b4ff570d53f7d2c844ee10e9c4f2bba8f151692a49fd6de25bc07e"},
-        "fixed_observation_gate": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/fixed_observation_gate.json", "sha256": "baf8e9744bb3baa03748521dd72aed88283cbccb613ad0805c6ecbf89e7cdf06"},
-        "episodes": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_episodes.jsonl", "sha256": "7b89287a2b75e40cffc97cd6d2fea58c4189a09d2dc5a0fb9a6427df3d726e70"},
-        "episodes_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_episodes.jsonl.manifest.json", "sha256": "e9df91032e6e1ec12983377f018c899b103681cffdc3166e4c89b064114cce54"},
-        "pairs": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_pairs.jsonl", "sha256": "5812383a6ca7beddd95e69c7ded380b605c34a2f56d6ecbf887365a9720d6447"},
-        "pairs_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_pairs.jsonl.manifest.json", "sha256": "2c1c12cfd3d5b9a65d00dd05be1e66b69d146b08f3a12735a54decdf1e4cce92"},
-        "infrastructure_attempts": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_infrastructure_attempts.jsonl", "sha256": "0159426cf6456a440e79419c6fde857d76fb35bd7ad8d38a6a9891de838f5da8"},
-        "infrastructure_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_infrastructure_attempts.jsonl.manifest.json", "sha256": "5b1589f3c1d0f3e5e28e6a1e57d933b66779ffd70952eb343d5d04d530f184e7"},
-        "report": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_report.json", "sha256": "32ffa99f720906abe8679b0791be3f12d3c91dfce0274d85457a6d2ba59d2b71"},
-        "output_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_output_manifest.json", "sha256": "523a6a2625dc0b67c1f425220006bdca6edea32e554f826f2b6f616c57393090"}
-      },
-      "release_boundary": "Satisfied before inference: the hash-bound pi0.5 runtime passed exact-source, zero-request fixture/reset/renderer/writer, deterministic-repeat, and prompt-sensitivity gates. The complete cohort is hash-closed and must not be rerun."
-    },
-    "dreamzero_position_reflection_v3b003": {
-      "status": "complete_hash_closed_27_seed_108_episode_result_no_rerun",
-      "amendment_id": "V3-B003",
-      "model_id": "dreamzero_droid_action_cfg",
-      "identity_binding": "V2-A015:dreamzero_action_cfg_s2",
-      "arena": "droid_robolab",
-      "factor": "movable_object_center_position_reflection_about_robot_sagittal_plane",
-      "claim_boundary": "Only movable-object center positions were reflected. Robot base, cameras, nonmovable geometry, exact prompt bytes, controller, cone, and success predicate remained fixed. The model-noise seed was constant at 1140 and is not stochastic replication.",
-      "seed_range_inclusive": [9400, 9426],
-      "prespecified_matched_seed_count": 27,
-      "cells_per_seed": 4,
-      "registered_behavioral_cell_count": 108,
-      "completed_behavioral_cell_count": 108,
-      "matched_left_right_pair_count": 54,
-      "rerun_policy": "do_not_rerun_any_valid_v3b003_cell",
-      "exact_prompts": {
-        "left": "Put the Rubik's cube to the left of the bowl.",
-        "right": "Put the Rubik's cube to the right of the bowl."
-      },
-      "condition_successes": {
-        "control:left": "5/27",
-        "control:right": "8/27",
-        "position_mirrored:left": "25/27",
-        "position_mirrored:right": "25/27"
-      },
-      "failure_taxonomy": {"correct": 63, "pick_failed": 26, "transport_failed": 17, "wrong_side": 1, "release_failed": 1},
-      "registered_results": {
-        "endpoint_redirection_interaction_mean_m": 0.254698321947621,
-        "endpoint_redirection_interaction_bootstrap_95_ci_m": [0.20200158464204934, 0.3071430931988828],
-        "endpoint_redirection_interaction_exact_sign_p": 4.172325134277344e-7,
-        "requested_depth_interaction_mean_m": -0.14091859030088894,
-        "requested_depth_interaction_bootstrap_95_ci_m": [-0.19924238286567506, -0.08190082595511176],
-        "requested_depth_interaction_exact_sign_p": 0.000310748815536499,
-        "binary_success_DiD_mean": -0.1111111111111111,
-        "binary_success_DiD_distribution": {"-2": 0, "-1": 8, "0": 14, "1": 5, "2": 0},
-        "binary_success_exact_permutation_p": 0.5810546875,
-        "interpretation": "Reflection strongly improved overall competence and changed continuous endpoint/depth interactions, but the binary directional-success gap did not significantly reverse in this cohort."
-      },
-      "retained_taxonomy_packaging_repair": {
-        "registered_cell_id": "v3b003:dreamzero:seed9411:position_mirrored:right",
-        "before_taxonomy": "release_failed",
-        "after_taxonomy": "transport_failed",
-        "behavioral_episode_rerun": false,
-        "model_inference_requests": 0,
-        "actions_executed": 0,
-        "original_preserved": true,
-        "report": {"path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/retained_taxonomy_packaging_repair/repair_report.json", "sha256": "aa2b2779d87f9d0e63f0fa0b1e97a999c08dce92a61fdd68b4a9ff09c87e7922"}
-      },
-      "artifacts": {
-        "summary": {"path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/dreamzero_v3b003_summary.json", "sha256": "f45ab7d11281b994592948cdc11ea5d0fe24837d75d21a8a7dd42ff63b9c5817"},
-        "episodes": {"path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/dreamzero_v3b003_episodes.jsonl", "sha256": "31f0715c3cbc682f90e5cc6420b9f45f49622f876734d43ba7c8cb6545b80f34"},
-        "matched_pairs": {"path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/dreamzero_v3b003_matched_pairs.jsonl", "sha256": "bb88b62e9137f292a2a1739bd4976daf0d641d242876e921ed4f21d605d9e2a7"},
-        "evidence_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/evidence_manifest.json", "sha256": "a24278ee01624971877afd7c3db1b7f4377957c3f7d58b9fadc9bd6a70b6fd35"}
-      }
-    }
-  },
-  "prospective_tier_b_results": {
-    "v3b008_nano_start_side": {
-      "status": "complete_hash_closed_27_seed_162_episode_result_no_rerun",
-      "amendment_id": "V3-B008",
-      "model_id": "cosmos3_nano_policy_droid",
-      "arena": "droid_robolab",
-      "factor": "initial_target_start_side",
-      "matched_seed_count": 27,
-      "behavioral_episode_count": 162,
-      "matched_left_right_pair_count": 81,
-      "valid_behavioral_failures_included": true,
-      "infrastructure_attempts_included": false,
-      "retained_infrastructure_attempt": {
-        "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/gates/v3b008/model_specific/parallel_lane_infrastructure_failure.json",
-        "sha256": "517ed05d51920b2f8cd121b806350d4cd868c782d355e5ba15f909b344eec64e",
-        "denominator_eligible": false
-      },
-      "rerun_policy": "do_not_rerun_any_valid_v3b008_cell",
-      "exact_prompts": {
-        "left": "Put the Rubik's cube to the left of the bowl.",
-        "right": "Put the Rubik's cube to the right of the bowl."
-      },
-      "condition_successes": {
-        "target_start_left:left": "26/27",
-        "target_start_left:right": "22/27",
-        "target_start_center:left": "26/27",
-        "target_start_center:right": "26/27",
-        "target_start_right:left": "23/27",
-        "target_start_right:right": "27/27"
-      },
-      "outer_level_interaction": {
-        "definition": "direction contrast for target-start-right minus target-start-left",
-        "endpoint_redirection_mean_m": 0.07316158677416819,
-        "endpoint_redirection_bootstrap_95_ci_m": [
-          0.0024705777910572512,
-          0.15123524502851068
-        ],
-        "requested_side_depth_mean_m": 0.07890166556117711,
-        "requested_side_depth_bootstrap_95_ci_m": [
-          0.01240853934928223,
-          0.14696746939379307
-        ],
-        "binary_success_mean": 0.2962962962962963,
-        "binary_success_exact_permutation_p": 0.015625
-      },
-      "claim_boundary": "The target's initial lateral side significantly changes Nano's binary LEFT/RIGHT success gap and shifts the continuous direction contrasts. This supports a geometry/reachability/state-dependence account; it does not isolate training distribution or a language-only mechanism.",
-      "artifacts": {
-        "summary": {
-          "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b008/v3b008_summary.json",
-          "sha256": "dc64212c3252a8da27ad5d43c97d7d5061ec7cf8f8b79796e334c5be2889c99a"
-        },
-        "episodes": {
-          "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b008/v3b008_episodes.jsonl",
-          "sha256": "7775f19524d13409bc2da9e9d30d660e068fe735e0ce3d69f21fdbc0a3fe69e6"
-        },
-        "matched_pairs": {
-          "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b008/v3b008_matched_pairs.jsonl",
-          "sha256": "797cf2d43bf60921032c3940d82ec1e8803645684272f02b187915d5ab7f06f6"
-        },
-        "evidence_manifest": {
-          "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b008/evidence_manifest.json",
-          "sha256": "fa22f230ca87d5a382f089871da566c0be8534e34d67565b92c12bffd0497293"
-        }
-      }
-    },
-    "v3b009_nano_role_swap": {
-      "status": "complete_hash_closed_27_seed_108_episode_result_no_rerun",
-      "amendment_id": "V3-B009",
-      "model_id": "cosmos3_nano_policy_droid",
-      "arena": "droid_robolab",
-      "factor": "target_reference_role_swap",
-      "matched_seed_count": 27,
-      "behavioral_episode_count": 108,
-      "matched_left_right_pair_count": 54,
-      "valid_behavioral_failures_included": true,
-      "infrastructure_attempts_included": false,
-      "rerun_policy": "do_not_rerun_any_valid_v3b009_cell",
-      "exact_prompts": {
-        "cube_target_bowl_reference:left": "Put the Rubik's cube to the left of the bowl.",
-        "cube_target_bowl_reference:right": "Put the Rubik's cube to the right of the bowl.",
-        "bowl_target_cube_reference:left": "Put the bowl to the left of the Rubik's cube.",
-        "bowl_target_cube_reference:right": "Put the bowl to the right of the Rubik's cube."
-      },
-      "condition_successes": {
-        "cube_target_bowl_reference:left": "24/27",
-        "cube_target_bowl_reference:right": "24/27",
-        "bowl_target_cube_reference:left": "19/27",
-        "bowl_target_cube_reference:right": "27/27"
-      },
-      "factor_interaction": {
-        "definition": "direction contrast for bowl-target/cube-reference minus cube-target/bowl-reference",
-        "endpoint_redirection_mean_m": 0.13604958762449246,
-        "endpoint_redirection_bootstrap_95_ci_m": [0.06872670275021206, 0.2052499706305011],
-        "endpoint_redirection_exact_sign_p": 0.0015137195587158203,
-        "requested_side_depth_mean_m": 0.13021075249546105,
-        "requested_side_depth_bootstrap_95_ci_m": [0.05630933923336367, 0.20567010303062416],
-        "requested_side_depth_exact_sign_p": 0.0015137195587158203,
-        "binary_success_mean": 0.2962962962962963,
-        "binary_success_exact_permutation_p": 0.0556640625
-      },
-      "claim_boundary": "Role swap changed target/reference semantics and physical affordance together. It significantly modulated continuous endpoint redirection and requested-side depth, while its prespecified binary success interaction narrowly missed 0.05; this is not a language-only effect.",
-      "artifacts": {
-        "summary": {"path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b009/v3b009_summary.json", "sha256": "9548f4e97898cbfe9fab26d2bdd42e3a1f5e28122476154e73f71e4834aac12a"},
-        "episodes": {"path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b009/v3b009_episodes.jsonl", "sha256": "cc71a7bb85cd2ba5f9e5692b67009ebafbad2a73726b090602a9c71be96010ef"},
-        "matched_pairs": {"path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b009/v3b009_matched_pairs.jsonl", "sha256": "b9d0b63aad8e36cc3a0a1066fc82fc9c402121e96c161ecd296b4b6af9e4619b"},
-        "evidence_manifest": {"path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b009/evidence_manifest.json", "sha256": "3dc9aa7ccb52deb4c57ff6e3f1d7c41c0fb28f9548a130bbcf39ec823be25dc3"}
-      }
-    }
-  },
-  "retrospective_mechanism_diagnostics": {
-    "status": "complete_no_new_model_compute",
-    "failure_mode_split_a1": {
-      "scope": "Separate 27-seed DROID Phase-A cohorts for pi0.5, DreamZero, and Cosmos3 Edge; direction by five-category frozen outcome table with a failure-only exact Fisher-Freeman-Halton test.",
-      "pi05": {"left_failures": 22, "right_failures": 3, "failure_only_exact_p": 0.38217391304347825, "interpretation": "No shape difference detected; the three-episode RIGHT failure row is too sparse to establish equivalence."},
-      "dreamzero": {"left_failures": 24, "right_failures": 10, "failure_only_exact_p": 0.0017219568583829528, "interpretation": "Failure composition differs by direction; a rate-only difficulty account is rejected in this cohort."},
-      "cosmos3_edge": {"left_failures": 9, "right_failures": 2, "failure_only_exact_p": 0.6181818181818182, "interpretation": "No shape difference detected; the two-episode RIGHT failure row is too sparse to establish equivalence."},
-      "source_report": {"path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_report.json", "sha256": "f6289333d77538ed9235a567cb98d70333dd50549f7e52d13bfe5d34a10bdf96"}
-    },
-    "gap_versus_competence_b1": {
-      "scope": "Five separate 54-episode DROID Phase-A cohorts; overall success versus RIGHT-minus-LEFT success-rate gap.",
-      "spearman_signed_gap": {"rho": 0.1, "exact_permutation_p": 0.95},
-      "spearman_absolute_gap": {"rho": -0.3, "exact_permutation_p": 0.6833333333333333},
-      "interpretation": "No monotonic relationship is detected. Overall success mechanically bounds the largest observable binary directional gap through 2*min(success,1-success), but does not determine the gap's sign or mechanism.",
-      "source_report": {"path": "artifacts/vla_wam_shared_v3/analysis/mechanism/gap_vs_competence_report.json", "sha256": "c392c796c37193905d5824fda80b66737b39248a500134b973977bf67abe32f3"}
-    },
-    "figures": {
-      "gap_versus_competence_png": {"path": "artifacts/vla_wam_shared_v3/analysis/mechanism/figures/figure4_gap_vs_competence.png", "sha256": "511c5a27ade085594a783b16e55209ed55ab4ac5aed77a2076aeb537572df371"},
-      "failure_taxonomy_png": {"path": "artifacts/vla_wam_shared_v3/analysis/mechanism/figures/figure6_failure_taxonomy_by_direction.png", "sha256": "b457f1a1b47107143c4bbb87e4c45903fd20096b58badc32806a4d69adb865b1"},
-      "manifest": {"path": "artifacts/vla_wam_shared_v3/analysis/mechanism/figures/mechanism_figure_manifest.json", "sha256": "0733fcaf39b6e3e1a70999d656938df8bc4ec1d05a33bdc095038b86f6cac327"}
-    },
-    "decision": "The universal same-shape difficulty account does not survive A1, and competence alone does not explain directional gap in B1. Preserve DreamZero as the third reflection checkpoint and the lateral-position dose-response as the next mechanism tests. They remain unreleased until independent model-blind registration and runtime gates are committed."
-  },
+  "evidence_head": "pending_compact_phase_e_commit",
   "exact_prompts": {
     "droid_robolab": {
       "left": "Put the Rubik's cube to the left of the bowl.",
       "right": "Put the Rubik's cube to the right of the bowl."
     },
     "robotwin": {
-      "source": "artifacts/vla_wam_shared_v3/phase_a_cells.jsonl",
       "pair03": {
         "left": "Put the small woodenblock to the left of the red playingcards box.",
         "right": "Put the small woodenblock to the right of the red playingcards box."
@@ -835,109 +699,375 @@
       "pair09": {
         "left": "Put the rubikscube to the left of the brown woodenblock.",
         "right": "Put the rubikscube to the right of the brown woodenblock."
-      }
+      },
+      "source": "artifacts/vla_wam_shared_v3/phase_a_cells.jsonl"
     }
+  },
+  "measurement_coverage_audit": {
+    "bytes": 23602,
+    "groot_phase_a": "already_complete_27_matched_pairs_do_not_rerun",
+    "legacy_measurement_rerun_required": false,
+    "path": "artifacts/vla_wam_shared_v3/measurement_coverage_audit.json",
+    "requested_side_margin_available": "982/982",
+    "sha256": "86b3ded424bba2d697b406ea7b1c8bfc147dba8413363ae0190b4d151e76d4ea",
+    "signed_final_lateral_offset_available": "982/982",
+    "unique_behavioral_episodes": 982
+  },
+  "next_agent": {
+    "inference_authority": "Do not rerun any valid Phase-A, V3-A002, Nano V3-B001, pi0.5 V3-B002, DreamZero V3-B003, Nano V3-B005, Nano V3-B008, Nano V3-B009, pi0.5 V3-D001, GR00T V3-C001, Cosmos3 Edge V3-C001, or Cosmos3 Nano V3-C001 cell. V3-D001 is complete and hash-closed at 432/432 valid episodes and 216/216 matched pairs. All three Phase-C models are complete at 160/160 valid cells and hash-closed. DreamZero V3-B003, Nano V3-B005, Nano V3-B008, and Nano V3-B009 are complete and hash-closed. Nano V3-B004 failed closed with zero model requests and must never be run. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or another Phase-C model.",
+    "publication_note": "Use the compact result summaries and evidence manifests for analysis. Do not infer current study state from the older V2 article, gallery, figures, or chat history.",
+    "safe_first_commands": [
+      "git status --short",
+      ".venv/bin/python tools/validate_vla_wam_v3_protocol.py",
+      ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
+      "git diff --check"
+    ]
+  },
+  "nonnegotiable_boundaries": {
+    "arena_separation": "DROID/RoboLab and RoboTwin raw successes, failures, denominators, and intervals are never pooled.",
+    "future_evidence": "Decoded, latent-only, and action-only interfaces remain distinct; missing or latent-only futures are never converted into zeros.",
+    "historical_separation": "Preserved V2 cells remain separate coverage layers and are never merged into a V3 behavioral denominator.",
+    "pairing": "LEFT and RIGHT share an identical registered reset and seed; only the static prompt and requested-relation predicate change.",
+    "valid_failures": "Every valid behavioral failure remains in its model denominator; infrastructure and operational records remain outside it."
+  },
+  "phase_a_accounting": {
+    "blocked_pi0_fast_cells": 40,
+    "completed_valid_new_cells": 648,
+    "completion_statement": "Every row marked authorized_new in the frozen Phase-A queue is complete valid evidence. Its 40 blocked_pi0 source rows remain immutable and were not relaunched under the historical identity. Post-result amendment V3-A002 separately authorized 40 distinct pi0_fast_old_name_config_v3a002 cells on the same registered seeds; all are complete valid evidence.",
+    "droid_completed_new_cells": 270,
+    "droid_preserved_candidate_cells": 50,
+    "frozen_queue_rows": 780,
+    "launch_authorized_new_cells": 648,
+    "post_result_bridge_completed_cells": 40,
+    "post_result_bridge_completed_matched_pairs": 20,
+    "robotwin_completed_new_cells": 378,
+    "robotwin_preserved_r0_cells": 42
   },
   "phase_a_results": {
     "droid_robolab": {
       "denominator_policy": "Each completed checkpoint has 27 new matched pairs / 54 valid V3 episodes at seeds 8303-8329. Seeds 8300-8302 remain separate V2 evidence because their complete V3 runtime identity could not be established; they were not rerun or substituted.",
       "models": {
-        "pi05_current_stack_droid": {
-          "status": "complete_27_new_matched_pairs",
-          "success_by_direction": {"left": "5/27", "right": "24/27"},
-          "success_discordance": {"both": 4, "left_only": 1, "right_only": 20, "neither": 2},
-          "endpoint_ordering": {"aligned": 25, "anti_aligned": 2, "ties": 0},
-          "distinct_executed_action_pairs": "27/27",
-          "failure_taxonomy": {"correct": 29, "pick_failed": 6, "transport_failed": 14, "wrong_side": 5, "release_failed": 0},
-          "future_interface": "action_only_no_generated_future",
-          "infrastructure": {"excluded_phase_a_attempt_entries": 2, "queue_infrastructure_invalid": 0, "runtime_interventions": 0},
-          "summary": {"path": "artifacts/vla_wam_shared_v3/results/pi05_current_stack_droid_phase_a_summary.json", "sha256": "5c6d07fca7a0d20ab8b757f028d469f864c78a1c43ffedc3d257a16caef2a02b"},
-          "evidence_manifest": {"path": "artifacts/vla_wam_shared_v3/results/pi05_current_stack_droid_phase_a_evidence_hash_manifest.json", "sha256": "dca633cfa74ff93926cb1d010d5a329908a02d81181f23cca4969c5d5f1f3cfd"},
-          "infrastructure_ledger": {"path": "artifacts/vla_wam_shared_v3/results/pi05_current_stack_droid_phase_a_infrastructure_ledger.json", "sha256": "909f6744d78fe9582715a20d7886f48dab51699ba5e36749f35c7c8bc8d813d5"}
-        },
-        "groot_n17_droid_vla": {
-          "status": "complete_27_new_matched_pairs",
-          "success_by_direction": {"left": "3/27", "right": "0/27"},
-          "success_discordance": {"both": 0, "left_only": 3, "right_only": 0, "neither": 24},
-          "endpoint_ordering": {"aligned": 21, "anti_aligned": 6, "ties": 0},
-          "distinct_executed_action_pairs": "27/27",
-          "failure_taxonomy": {"correct": 3, "pick_failed": 49, "transport_failed": 2, "wrong_side": 0, "release_failed": 0},
-          "future_interface": "action_only_no_generated_future",
-          "infrastructure": {"excluded_attempt_entries": 4, "queue_infrastructure_invalid": 0, "runtime_interventions": 0},
-          "summary": {"path": "artifacts/vla_wam_shared_v3/results/groot_n17_droid_phase_a_summary.json", "sha256": "0db751e94a48caa5815aa6d656ff8cf062283eba47b3048c7c2ac37744581486"},
-          "evidence_manifest": {"path": "artifacts/vla_wam_shared_v3/results/groot_n17_droid_phase_a_evidence_hash_manifest.json", "sha256": "c7ebddea0413090b18cec6e2044251e929aeef77d24fa0102fdd4f9ac63c09bd"},
-          "infrastructure_ledger": {"path": "artifacts/vla_wam_shared_v3/results/groot_n17_droid_phase_a_infrastructure_ledger.json", "sha256": "404e1332f13c1e6cf28d9ed4ca69a9d5a6338dc0cbc21f20a2e9cde5810ced02"}
-        },
         "cosmos3_edge_policy_droid": {
-          "status": "complete_27_new_matched_pairs",
-          "success_by_direction": {"left": "18/27", "right": "25/27"},
-          "success_discordance": {"both": 16, "left_only": 2, "right_only": 9, "neither": 0, "exact_two_sided_mcnemar_p": 0.0654296875},
-          "endpoint_ordering": {"aligned": 27, "anti_aligned": 0, "ties": 0},
           "distinct_executed_action_pairs": "27/27",
-          "failure_taxonomy": {"correct": 43, "pick_failed": 2, "transport_failed": 7, "wrong_side": 2, "release_failed": 0},
-          "future_interface": {"kind": "decoded_future_video", "retained_decoded_futures": 452, "missing_scored_as_zero": false},
-          "infrastructure": {"excluded_phase_a_attempt_entries": 3, "queue_infrastructure_invalid": 1, "runtime_interventions": 0},
-          "summary": {"path": "artifacts/vla_wam_shared_v3/results/cosmos3_edge_policy_droid_phase_a_summary.json", "sha256": "fc93b6518185641068ce51a4d81882dd1828ebeb9227b44c4ffc21a07b526c87"},
-          "evidence_manifest": {"path": "artifacts/vla_wam_shared_v3/results/cosmos3_edge_policy_droid_phase_a_evidence_hash_manifest.json", "sha256": "e37213a684ff07d379edc46754cb3167c476663921039f47e8f6ee3ff8c9556d"},
-          "infrastructure_ledger": {"path": "artifacts/vla_wam_shared_v3/results/cosmos3_edge_policy_droid_phase_a_infrastructure_ledger.json", "sha256": "b08ca70374cf36b6a8f6c75da2163aba1a62297815a5beb506e81ee3b65225a0"}
+          "endpoint_ordering": {
+            "aligned": 27,
+            "anti_aligned": 0,
+            "ties": 0
+          },
+          "evidence_manifest": {
+            "path": "artifacts/vla_wam_shared_v3/results/cosmos3_edge_policy_droid_phase_a_evidence_hash_manifest.json",
+            "sha256": "e37213a684ff07d379edc46754cb3167c476663921039f47e8f6ee3ff8c9556d"
+          },
+          "failure_taxonomy": {
+            "correct": 43,
+            "pick_failed": 2,
+            "release_failed": 0,
+            "transport_failed": 7,
+            "wrong_side": 2
+          },
+          "future_interface": {
+            "kind": "decoded_future_video",
+            "missing_scored_as_zero": false,
+            "retained_decoded_futures": 452
+          },
+          "infrastructure": {
+            "excluded_phase_a_attempt_entries": 3,
+            "queue_infrastructure_invalid": 1,
+            "runtime_interventions": 0
+          },
+          "infrastructure_ledger": {
+            "path": "artifacts/vla_wam_shared_v3/results/cosmos3_edge_policy_droid_phase_a_infrastructure_ledger.json",
+            "sha256": "b08ca70374cf36b6a8f6c75da2163aba1a62297815a5beb506e81ee3b65225a0"
+          },
+          "status": "complete_27_new_matched_pairs",
+          "success_by_direction": {
+            "left": "18/27",
+            "right": "25/27"
+          },
+          "success_discordance": {
+            "both": 16,
+            "exact_two_sided_mcnemar_p": 0.0654296875,
+            "left_only": 2,
+            "neither": 0,
+            "right_only": 9
+          },
+          "summary": {
+            "path": "artifacts/vla_wam_shared_v3/results/cosmos3_edge_policy_droid_phase_a_summary.json",
+            "sha256": "fc93b6518185641068ce51a4d81882dd1828ebeb9227b44c4ffc21a07b526c87"
+          }
         },
         "cosmos3_nano_policy_droid": {
-          "status": "complete_27_new_matched_pairs",
-          "success_by_direction": {"left": "26/27", "right": "25/27"},
-          "success_discordance": {"both": 24, "left_only": 2, "right_only": 1, "neither": 0},
-          "endpoint_ordering": {"aligned": 27, "anti_aligned": 0, "ties": 0},
           "distinct_executed_action_pairs": "27/27",
-          "failure_taxonomy": {"correct": 51, "pick_failed": 0, "transport_failed": 1, "wrong_side": 0, "release_failed": 2},
-          "future_interface": {"kind": "decoded_future_video", "retained_decoded_futures": 349, "returned_action_chunks": 349, "missing_scored_as_zero": false},
-          "infrastructure": {"excluded_attempt_entries": 2, "post_queue_operational_events": 1, "queue_infrastructure_invalid": 0, "runtime_interventions": 0},
-          "summary": {"path": "artifacts/vla_wam_shared_v3/results/cosmos3_nano_policy_droid_phase_a_summary.json", "sha256": "677c62845ff72bceb35b0c5e3e5b259a5c24da407648fe50f475656fe86cbcea"},
-          "evidence_manifest": {"path": "artifacts/vla_wam_shared_v3/results/cosmos3_nano_policy_droid_phase_a_evidence_hash_manifest.json", "sha256": "16c4d8afc40fa2f2417dbe128aff929642cf05d44d52c4687a6923de647aab64"},
-          "infrastructure_ledger": {"path": "artifacts/vla_wam_shared_v3/results/cosmos3_nano_policy_droid_phase_a_infrastructure_ledger.json", "sha256": "0ce81ac664c5187b69f96106c25a0b6f30852fa738aa6decfaef09fd8d51bd5c"}
+          "endpoint_ordering": {
+            "aligned": 27,
+            "anti_aligned": 0,
+            "ties": 0
+          },
+          "evidence_manifest": {
+            "path": "artifacts/vla_wam_shared_v3/results/cosmos3_nano_policy_droid_phase_a_evidence_hash_manifest.json",
+            "sha256": "16c4d8afc40fa2f2417dbe128aff929642cf05d44d52c4687a6923de647aab64"
+          },
+          "failure_taxonomy": {
+            "correct": 51,
+            "pick_failed": 0,
+            "release_failed": 2,
+            "transport_failed": 1,
+            "wrong_side": 0
+          },
+          "future_interface": {
+            "kind": "decoded_future_video",
+            "missing_scored_as_zero": false,
+            "retained_decoded_futures": 349,
+            "returned_action_chunks": 349
+          },
+          "infrastructure": {
+            "excluded_attempt_entries": 2,
+            "post_queue_operational_events": 1,
+            "queue_infrastructure_invalid": 0,
+            "runtime_interventions": 0
+          },
+          "infrastructure_ledger": {
+            "path": "artifacts/vla_wam_shared_v3/results/cosmos3_nano_policy_droid_phase_a_infrastructure_ledger.json",
+            "sha256": "0ce81ac664c5187b69f96106c25a0b6f30852fa738aa6decfaef09fd8d51bd5c"
+          },
+          "status": "complete_27_new_matched_pairs",
+          "success_by_direction": {
+            "left": "26/27",
+            "right": "25/27"
+          },
+          "success_discordance": {
+            "both": 24,
+            "left_only": 2,
+            "neither": 0,
+            "right_only": 1
+          },
+          "summary": {
+            "path": "artifacts/vla_wam_shared_v3/results/cosmos3_nano_policy_droid_phase_a_summary.json",
+            "sha256": "677c62845ff72bceb35b0c5e3e5b259a5c24da407648fe50f475656fe86cbcea"
+          }
         },
         "dreamzero_droid_action_cfg": {
-          "status": "complete_27_new_matched_pairs",
-          "success_by_direction": {"left": "3/27", "right": "17/27"},
-          "success_discordance": {"both": 1, "left_only": 2, "right_only": 16, "neither": 8, "exact_two_sided_mcnemar_p": 0.001312255859375},
-          "endpoint_ordering": {"aligned": 25, "anti_aligned": 2, "ties": 0},
           "distinct_executed_action_pairs": "27/27",
-          "failure_taxonomy": {"correct": 20, "pick_failed": 20, "transport_failed": 14, "wrong_side": 0, "release_failed": 0},
-          "future_interface": {"kind": "official_decoded_imagination_plus_latent_future", "actual_rollout_videos": 54, "official_full_reset_decodes": 54, "retained_latent_futures": 2554, "missing_scored_as_zero": false},
-          "infrastructure": {"excluded_attempt_count": 4, "runtime_interventions": 0, "server_shutdown": "graceful_complete"},
-          "summary": {"path": "artifacts/vla_wam_shared_v3/results/dreamzero_droid_action_cfg_phase_a_summary.json", "sha256": "50ec800009b1f128ce8fe877c186b08a47ec3021feaa7cf4f8baab984549b120"},
-          "evidence_manifest": {"path": "artifacts/vla_wam_shared_v3/results/dreamzero_droid_action_cfg_phase_a_evidence_hash_manifest.json", "sha256": "0150afb2145cc2e1d18bc16bd34b4af404c7fabb77486d197af78776fcd93427"},
-          "infrastructure_ledger": {"path": "artifacts/vla_wam_shared_v3/results/dreamzero_droid_action_cfg_phase_a_infrastructure_ledger.json", "sha256": "97305ed45b616306788f64be692be4fba77824ce3ef88816d6cd67f15f3b28da"}
+          "endpoint_ordering": {
+            "aligned": 25,
+            "anti_aligned": 2,
+            "ties": 0
+          },
+          "evidence_manifest": {
+            "path": "artifacts/vla_wam_shared_v3/results/dreamzero_droid_action_cfg_phase_a_evidence_hash_manifest.json",
+            "sha256": "0150afb2145cc2e1d18bc16bd34b4af404c7fabb77486d197af78776fcd93427"
+          },
+          "failure_taxonomy": {
+            "correct": 20,
+            "pick_failed": 20,
+            "release_failed": 0,
+            "transport_failed": 14,
+            "wrong_side": 0
+          },
+          "future_interface": {
+            "actual_rollout_videos": 54,
+            "kind": "official_decoded_imagination_plus_latent_future",
+            "missing_scored_as_zero": false,
+            "official_full_reset_decodes": 54,
+            "retained_latent_futures": 2554
+          },
+          "infrastructure": {
+            "excluded_attempt_count": 4,
+            "runtime_interventions": 0,
+            "server_shutdown": "graceful_complete"
+          },
+          "infrastructure_ledger": {
+            "path": "artifacts/vla_wam_shared_v3/results/dreamzero_droid_action_cfg_phase_a_infrastructure_ledger.json",
+            "sha256": "97305ed45b616306788f64be692be4fba77824ce3ef88816d6cd67f15f3b28da"
+          },
+          "status": "complete_27_new_matched_pairs",
+          "success_by_direction": {
+            "left": "3/27",
+            "right": "17/27"
+          },
+          "success_discordance": {
+            "both": 1,
+            "exact_two_sided_mcnemar_p": 0.001312255859375,
+            "left_only": 2,
+            "neither": 8,
+            "right_only": 16
+          },
+          "summary": {
+            "path": "artifacts/vla_wam_shared_v3/results/dreamzero_droid_action_cfg_phase_a_summary.json",
+            "sha256": "50ec800009b1f128ce8fe877c186b08a47ec3021feaa7cf4f8baab984549b120"
+          }
+        },
+        "groot_n17_droid_vla": {
+          "distinct_executed_action_pairs": "27/27",
+          "endpoint_ordering": {
+            "aligned": 21,
+            "anti_aligned": 6,
+            "ties": 0
+          },
+          "evidence_manifest": {
+            "path": "artifacts/vla_wam_shared_v3/results/groot_n17_droid_phase_a_evidence_hash_manifest.json",
+            "sha256": "c7ebddea0413090b18cec6e2044251e929aeef77d24fa0102fdd4f9ac63c09bd"
+          },
+          "failure_taxonomy": {
+            "correct": 3,
+            "pick_failed": 49,
+            "release_failed": 0,
+            "transport_failed": 2,
+            "wrong_side": 0
+          },
+          "future_interface": "action_only_no_generated_future",
+          "infrastructure": {
+            "excluded_attempt_entries": 4,
+            "queue_infrastructure_invalid": 0,
+            "runtime_interventions": 0
+          },
+          "infrastructure_ledger": {
+            "path": "artifacts/vla_wam_shared_v3/results/groot_n17_droid_phase_a_infrastructure_ledger.json",
+            "sha256": "404e1332f13c1e6cf28d9ed4ca69a9d5a6338dc0cbc21f20a2e9cde5810ced02"
+          },
+          "status": "complete_27_new_matched_pairs",
+          "success_by_direction": {
+            "left": "3/27",
+            "right": "0/27"
+          },
+          "success_discordance": {
+            "both": 0,
+            "left_only": 3,
+            "neither": 24,
+            "right_only": 0
+          },
+          "summary": {
+            "path": "artifacts/vla_wam_shared_v3/results/groot_n17_droid_phase_a_summary.json",
+            "sha256": "0db751e94a48caa5815aa6d656ff8cf062283eba47b3048c7c2ac37744581486"
+          }
+        },
+        "pi05_current_stack_droid": {
+          "distinct_executed_action_pairs": "27/27",
+          "endpoint_ordering": {
+            "aligned": 25,
+            "anti_aligned": 2,
+            "ties": 0
+          },
+          "evidence_manifest": {
+            "path": "artifacts/vla_wam_shared_v3/results/pi05_current_stack_droid_phase_a_evidence_hash_manifest.json",
+            "sha256": "dca633cfa74ff93926cb1d010d5a329908a02d81181f23cca4969c5d5f1f3cfd"
+          },
+          "failure_taxonomy": {
+            "correct": 29,
+            "pick_failed": 6,
+            "release_failed": 0,
+            "transport_failed": 14,
+            "wrong_side": 5
+          },
+          "future_interface": "action_only_no_generated_future",
+          "infrastructure": {
+            "excluded_phase_a_attempt_entries": 2,
+            "queue_infrastructure_invalid": 0,
+            "runtime_interventions": 0
+          },
+          "infrastructure_ledger": {
+            "path": "artifacts/vla_wam_shared_v3/results/pi05_current_stack_droid_phase_a_infrastructure_ledger.json",
+            "sha256": "909f6744d78fe9582715a20d7886f48dab51699ba5e36749f35c7c8bc8d813d5"
+          },
+          "status": "complete_27_new_matched_pairs",
+          "success_by_direction": {
+            "left": "5/27",
+            "right": "24/27"
+          },
+          "success_discordance": {
+            "both": 4,
+            "left_only": 1,
+            "neither": 2,
+            "right_only": 20
+          },
+          "summary": {
+            "path": "artifacts/vla_wam_shared_v3/results/pi05_current_stack_droid_phase_a_summary.json",
+            "sha256": "5c6d07fca7a0d20ab8b757f028d469f864c78a1c43ffedc3d257a16caef2a02b"
+          }
         }
       },
       "post_result_bridge_cohorts": {
         "pi0_fast_old_name_config_v3a002": {
-          "status": "complete_20_matched_pairs_40_behavioral_episodes",
-          "cohort": "V3-A002_public_old_name_config_bridge",
-          "source_queue_boundary": "The original 40 blocked_pi0 rows remain frozen under pi0_fast_droid_vla; V3-A002 created a distinct model identity and denominator.",
-          "historical_pooling_prohibited": true,
-          "pooled_with_historical_pi0_fast": false,
-          "environment_seeds_inclusive": [8310, 8329],
-          "matched_pairs": 20,
           "behavioral_episodes": 40,
+          "cohort": "V3-A002_public_old_name_config_bridge",
+          "common_prefix_action_rms": {
+            "mean": 0.3350799604456891,
+            "median": 0.3411288586217518,
+            "nonzero_pairs": "20/20",
+            "unit": "descriptive_mixed_native_action_coordinates"
+          },
+          "contact_measurement": "instrumentation_unavailable_in_all_40_episodes_not_encoded_as_zero",
+          "endpoint_ordering": {
+            "aligned": 16,
+            "anti_aligned": 3,
+            "exact_two_sided_sign_test_p_excluding_ties": 0.004425048828125,
+            "ties": 1
+          },
+          "environment_seeds_inclusive": [
+            8310,
+            8329
+          ],
+          "evidence_manifest": {
+            "path": "artifacts/vla_wam_shared_v3/results/pi0_fast_old_name_config_v3a002_evidence_hash_manifest.json",
+            "sha256": "74f27b27bca8011c5dfacde41a8d78f73665111fcf016619186dc975235530d0"
+          },
+          "failure_taxonomy": {
+            "correct": 12,
+            "pick_failed": 22,
+            "release_failed": 2,
+            "transport_failed": 4,
+            "wrong_side": 0
+          },
+          "future_interface": "action_only_no_generated_future",
+          "historical_pooling_prohibited": true,
+          "infrastructure": {
+            "excluded_attempt_pairs": 0,
+            "retained_thermal_ledgers": 20,
+            "runtime_interventions": 0
+          },
+          "infrastructure_ledger": {
+            "path": "artifacts/vla_wam_shared_v3/results/pi0_fast_old_name_config_v3a002_infrastructure_ledger.json",
+            "sha256": "b926fa2774d6e220764f5a6a083a690645e818ae478057eff3d4c07680a107a3"
+          },
+          "matched_pairs": 20,
+          "pooled_with_historical_pi0_fast": false,
+          "publication_media": {
+            "kind": "actual_simulator_execution_action_only",
+            "manifest_path": "artifacts/vla_wam_shared_v3/media/pi0_fast_old_name_config_v3a002/media_manifest.json",
+            "manifest_sha256": "cd0e99ae1559eeb6f0c08adb24bc7d4d37578e4d0f099f1e27833a6c14ad08d1",
+            "selected_seed": 8311
+          },
+          "release_gate": {
+            "path": "artifacts/vla_wam_shared_v3/results/pi0_fast_old_name_config_v3a002_release_gate.json",
+            "sha256": "b4d7deff192c855b8077598c60c5fb2ec545edf54c7af97da4e724f9c4fb4269"
+          },
+          "right_minus_left_endpoint_shift_m": {
+            "mean": -0.1655462902970612,
+            "median": -0.1968926303088665
+          },
           "runtime_identity": {
             "openpi_commit": "235044ed8a1502c0a18338eedc5d7adfe705af05",
-            "openpi_tree": "03a4387bedbc0fa1467c367c60fc24e28b61ec6c",
             "openpi_config": "pi0_fast_droid_jointpos",
+            "openpi_tree": "03a4387bedbc0fa1467c367c60fc24e28b61ec6c",
             "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17"
           },
-          "success_by_direction": {"left": "0/20", "right": "12/20"},
-          "success_discordance": {"both": 0, "left_only": 0, "right_only": 12, "neither": 8, "exact_two_sided_mcnemar_p": 0.00048828125},
-          "endpoint_ordering": {"aligned": 16, "anti_aligned": 3, "ties": 1, "exact_two_sided_sign_test_p_excluding_ties": 0.004425048828125},
-          "right_minus_left_endpoint_shift_m": {"mean": -0.1655462902970612, "median": -0.1968926303088665},
-          "common_prefix_action_rms": {"nonzero_pairs": "20/20", "mean": 0.3350799604456891, "median": 0.3411288586217518, "unit": "descriptive_mixed_native_action_coordinates"},
-          "failure_taxonomy": {"correct": 12, "pick_failed": 22, "transport_failed": 4, "wrong_side": 0, "release_failed": 2},
-          "future_interface": "action_only_no_generated_future",
-          "contact_measurement": "instrumentation_unavailable_in_all_40_episodes_not_encoded_as_zero",
-          "infrastructure": {"excluded_attempt_pairs": 0, "runtime_interventions": 0, "retained_thermal_ledgers": 20},
-          "release_gate": {"path": "artifacts/vla_wam_shared_v3/results/pi0_fast_old_name_config_v3a002_release_gate.json", "sha256": "b4d7deff192c855b8077598c60c5fb2ec545edf54c7af97da4e724f9c4fb4269"},
-          "summary": {"path": "artifacts/vla_wam_shared_v3/results/pi0_fast_old_name_config_v3a002_summary.json", "sha256": "72df6398030199afd2ffc6f305c3a9b879801a07c42ff078a2c51f9c6090599a"},
-          "evidence_manifest": {"path": "artifacts/vla_wam_shared_v3/results/pi0_fast_old_name_config_v3a002_evidence_hash_manifest.json", "sha256": "74f27b27bca8011c5dfacde41a8d78f73665111fcf016619186dc975235530d0"},
-          "infrastructure_ledger": {"path": "artifacts/vla_wam_shared_v3/results/pi0_fast_old_name_config_v3a002_infrastructure_ledger.json", "sha256": "b926fa2774d6e220764f5a6a083a690645e818ae478057eff3d4c07680a107a3"},
-          "publication_media": {"manifest_path": "artifacts/vla_wam_shared_v3/media/pi0_fast_old_name_config_v3a002/media_manifest.json", "manifest_sha256": "cd0e99ae1559eeb6f0c08adb24bc7d4d37578e4d0f099f1e27833a6c14ad08d1", "selected_seed": 8311, "kind": "actual_simulator_execution_action_only"}
+          "source_queue_boundary": "The original 40 blocked_pi0 rows remain frozen under pi0_fast_droid_vla; V3-A002 created a distinct model identity and denominator.",
+          "status": "complete_20_matched_pairs_40_behavioral_episodes",
+          "success_by_direction": {
+            "left": "0/20",
+            "right": "12/20"
+          },
+          "success_discordance": {
+            "both": 0,
+            "exact_two_sided_mcnemar_p": 0.00048828125,
+            "left_only": 0,
+            "neither": 8,
+            "right_only": 12
+          },
+          "summary": {
+            "path": "artifacts/vla_wam_shared_v3/results/pi0_fast_old_name_config_v3a002_summary.json",
+            "sha256": "72df6398030199afd2ffc6f305c3a9b879801a07c42ff078a2c51f9c6090599a"
+          }
         }
       }
     },
@@ -945,326 +1075,1187 @@
       "denominator_policy": "Each model has 63 new matched pairs / 126 valid V3 episodes: pairs03-09, sampling replicates r01-r09. The 7 preserved V2 r00 pairs / 14 cells are a separate historical coverage layer and are not pooled with V3.",
       "models": {
         "efficient_wam_rt_robotwin": {
-          "status": "complete_63_new_matched_pairs",
-          "success_by_direction": {"left": "26/63", "right": "28/63"},
-          "success_discordance": {"both": 7, "left_only": 19, "right_only": 21, "neither": 16},
-          "endpoint_ordering": {"aligned": 42, "anti_aligned": 21, "ties": 0},
           "distinct_executed_action_pairs": "63/63",
-          "failure_taxonomy": {"correct": 54, "pick_failed": 28, "transport_failed": 38, "wrong_side": 6, "release_failed": 0},
-          "future_interface": {"kind": "decoded_future_video", "episodes_with_exposed_future": 126, "decoded_future_files": 126, "missing_scored_as_zero": false},
-          "historical_v2_r0": {"matched_pairs": 7, "valid_cells": 14, "left": "3/7", "right": "2/7", "pooled_with_v3": false},
-          "infrastructure": {"technical_invalid_pair_attempts": 1, "technical_invalid_cell_rows": 2, "intentional_operational_boundaries": 1, "runtime_interventions": 0},
-          "summary": {"path": "artifacts/vla_wam_shared_v3/results/efficient_wam_rt_robotwin_phase_a_summary.json", "sha256": "5796bdbedde6124b9a849fa4ab9785171c0caddd5fd18d28e67706e30ed554e5"},
-          "evidence_manifest": {"path": "artifacts/vla_wam_shared_v3/results/efficient_wam_rt_robotwin_phase_a_evidence_hash_manifest.json", "sha256": "217d91ae52acc3771d7cc397a93043fa2a34a13df83cc35dee15f4554a6326bb"},
-          "infrastructure_ledger": {"path": "artifacts/vla_wam_shared_v3/results/efficient_wam_rt_robotwin_phase_a_infrastructure_ledger.json", "sha256": "c890a4016f3bf17c9e378c6c13ef8e814c4039712e8b916a0162028caa4b6cf1"}
+          "endpoint_ordering": {
+            "aligned": 42,
+            "anti_aligned": 21,
+            "ties": 0
+          },
+          "evidence_manifest": {
+            "path": "artifacts/vla_wam_shared_v3/results/efficient_wam_rt_robotwin_phase_a_evidence_hash_manifest.json",
+            "sha256": "217d91ae52acc3771d7cc397a93043fa2a34a13df83cc35dee15f4554a6326bb"
+          },
+          "failure_taxonomy": {
+            "correct": 54,
+            "pick_failed": 28,
+            "release_failed": 0,
+            "transport_failed": 38,
+            "wrong_side": 6
+          },
+          "future_interface": {
+            "decoded_future_files": 126,
+            "episodes_with_exposed_future": 126,
+            "kind": "decoded_future_video",
+            "missing_scored_as_zero": false
+          },
+          "historical_v2_r0": {
+            "left": "3/7",
+            "matched_pairs": 7,
+            "pooled_with_v3": false,
+            "right": "2/7",
+            "valid_cells": 14
+          },
+          "infrastructure": {
+            "intentional_operational_boundaries": 1,
+            "runtime_interventions": 0,
+            "technical_invalid_cell_rows": 2,
+            "technical_invalid_pair_attempts": 1
+          },
+          "infrastructure_ledger": {
+            "path": "artifacts/vla_wam_shared_v3/results/efficient_wam_rt_robotwin_phase_a_infrastructure_ledger.json",
+            "sha256": "c890a4016f3bf17c9e378c6c13ef8e814c4039712e8b916a0162028caa4b6cf1"
+          },
+          "status": "complete_63_new_matched_pairs",
+          "success_by_direction": {
+            "left": "26/63",
+            "right": "28/63"
+          },
+          "success_discordance": {
+            "both": 7,
+            "left_only": 19,
+            "neither": 16,
+            "right_only": 21
+          },
+          "summary": {
+            "path": "artifacts/vla_wam_shared_v3/results/efficient_wam_rt_robotwin_phase_a_summary.json",
+            "sha256": "5796bdbedde6124b9a849fa4ab9785171c0caddd5fd18d28e67706e30ed554e5"
+          }
         },
         "fastwam_robotwin": {
-          "status": "complete_63_new_matched_pairs",
-          "success_by_direction": {"left": "24/63", "right": "20/63"},
-          "success_discordance": {"both": 1, "left_only": 23, "right_only": 19, "neither": 20},
-          "endpoint_ordering": {"aligned": 39, "anti_aligned": 24, "ties": 0},
           "distinct_executed_action_pairs": "63/63",
-          "failure_taxonomy": {"correct": 44, "pick_failed": 31, "transport_failed": 36, "wrong_side": 15, "release_failed": 0},
-          "future_interface": {"kind": "action_only_not_applicable", "episodes_with_exposed_future": 0, "missing_scored_as_zero": false},
-          "historical_v2_r0": {"matched_pairs": 7, "valid_cells": 14, "left": "1/7", "right": "1/7", "pooled_with_v3": false},
-          "infrastructure": {"technical_invalid_pair_attempts": 1, "technical_invalid_cell_rows": 2, "prebehavior_repair_gate_failures": 2, "intentional_operational_boundaries": 1, "prospective_nonactivation_events": 1, "runtime_interventions": 0},
-          "summary": {"path": "artifacts/vla_wam_shared_v3/results/fastwam_robotwin_phase_a_summary.json", "sha256": "da76cf534907714c1b9e74e096ed39578b308642504e145f40e834ff4ba65b4e"},
-          "evidence_manifest": {"path": "artifacts/vla_wam_shared_v3/results/fastwam_robotwin_phase_a_evidence_hash_manifest.json", "sha256": "096695c110e294be2d9471494cda49ad21de0e985a30c363bd62971301cd3c1b"},
-          "infrastructure_ledger": {"path": "artifacts/vla_wam_shared_v3/results/fastwam_robotwin_phase_a_infrastructure_ledger.json", "sha256": "cbabfe043c121890bc49631ec40bb0cf12961f98bc85e2bd859168e434039501"}
+          "endpoint_ordering": {
+            "aligned": 39,
+            "anti_aligned": 24,
+            "ties": 0
+          },
+          "evidence_manifest": {
+            "path": "artifacts/vla_wam_shared_v3/results/fastwam_robotwin_phase_a_evidence_hash_manifest.json",
+            "sha256": "096695c110e294be2d9471494cda49ad21de0e985a30c363bd62971301cd3c1b"
+          },
+          "failure_taxonomy": {
+            "correct": 44,
+            "pick_failed": 31,
+            "release_failed": 0,
+            "transport_failed": 36,
+            "wrong_side": 15
+          },
+          "future_interface": {
+            "episodes_with_exposed_future": 0,
+            "kind": "action_only_not_applicable",
+            "missing_scored_as_zero": false
+          },
+          "historical_v2_r0": {
+            "left": "1/7",
+            "matched_pairs": 7,
+            "pooled_with_v3": false,
+            "right": "1/7",
+            "valid_cells": 14
+          },
+          "infrastructure": {
+            "intentional_operational_boundaries": 1,
+            "prebehavior_repair_gate_failures": 2,
+            "prospective_nonactivation_events": 1,
+            "runtime_interventions": 0,
+            "technical_invalid_cell_rows": 2,
+            "technical_invalid_pair_attempts": 1
+          },
+          "infrastructure_ledger": {
+            "path": "artifacts/vla_wam_shared_v3/results/fastwam_robotwin_phase_a_infrastructure_ledger.json",
+            "sha256": "cbabfe043c121890bc49631ec40bb0cf12961f98bc85e2bd859168e434039501"
+          },
+          "status": "complete_63_new_matched_pairs",
+          "success_by_direction": {
+            "left": "24/63",
+            "right": "20/63"
+          },
+          "success_discordance": {
+            "both": 1,
+            "left_only": 23,
+            "neither": 20,
+            "right_only": 19
+          },
+          "summary": {
+            "path": "artifacts/vla_wam_shared_v3/results/fastwam_robotwin_phase_a_summary.json",
+            "sha256": "da76cf534907714c1b9e74e096ed39578b308642504e145f40e834ff4ba65b4e"
+          }
         },
         "lingbot_va_robotwin": {
-          "status": "complete_63_new_matched_pairs",
-          "success_by_direction": {"left": "19/63", "right": "19/63"},
-          "success_discordance": {"both": 1, "left_only": 18, "right_only": 18, "neither": 26},
-          "endpoint_ordering": {"aligned": 47, "anti_aligned": 16, "ties": 0},
           "distinct_executed_action_pairs": "63/63",
-          "failure_taxonomy": {"correct": 38, "pick_failed": 9, "transport_failed": 64, "wrong_side": 15, "release_failed": 0},
-          "future_interface": {"kind": "latent_only_future_not_decodable", "episodes_with_exposed_future": 126, "latent_future_files": 126, "latent_shape": [1, 48, 2, 24, 20], "decoded_future_videos": 0, "missing_or_latent_only_scored_as_zero": false},
-          "historical_v2_r0": {"matched_pairs": 7, "valid_cells": 14, "left": "3/7", "right": "4/7", "pooled_with_v3": false},
-          "infrastructure": {"technical_invalid_pair_attempts": 0, "technical_invalid_cell_rows": 0, "intentional_operational_boundaries": 5, "atomic_no_model_reservations": 2, "superseded_prelaunch_nonactivations": 1, "runtime_interventions": 0},
-          "summary": {"path": "artifacts/vla_wam_shared_v3/results/lingbot_va_robotwin_phase_a_summary.json", "sha256": "ebffedaeaf42fb8916449136f617aaa9dab149645caad45aa461dec7aef878e3"},
-          "evidence_manifest": {"path": "artifacts/vla_wam_shared_v3/results/lingbot_va_robotwin_phase_a_evidence_hash_manifest.json", "sha256": "34ec6bf63ef825706f4ccc8bbf2b1d57854ebaa485879b54875b697ddea96cc4"},
-          "infrastructure_ledger": {"path": "artifacts/vla_wam_shared_v3/results/lingbot_va_robotwin_phase_a_infrastructure_ledger.json", "sha256": "4ae4ba45d3e8fa7fa10d3c1fbe475f6fbad1b0d1c1e64a43cc7c295347cdc7d2"}
+          "endpoint_ordering": {
+            "aligned": 47,
+            "anti_aligned": 16,
+            "ties": 0
+          },
+          "evidence_manifest": {
+            "path": "artifacts/vla_wam_shared_v3/results/lingbot_va_robotwin_phase_a_evidence_hash_manifest.json",
+            "sha256": "34ec6bf63ef825706f4ccc8bbf2b1d57854ebaa485879b54875b697ddea96cc4"
+          },
+          "failure_taxonomy": {
+            "correct": 38,
+            "pick_failed": 9,
+            "release_failed": 0,
+            "transport_failed": 64,
+            "wrong_side": 15
+          },
+          "future_interface": {
+            "decoded_future_videos": 0,
+            "episodes_with_exposed_future": 126,
+            "kind": "latent_only_future_not_decodable",
+            "latent_future_files": 126,
+            "latent_shape": [
+              1,
+              48,
+              2,
+              24,
+              20
+            ],
+            "missing_or_latent_only_scored_as_zero": false
+          },
+          "historical_v2_r0": {
+            "left": "3/7",
+            "matched_pairs": 7,
+            "pooled_with_v3": false,
+            "right": "4/7",
+            "valid_cells": 14
+          },
+          "infrastructure": {
+            "atomic_no_model_reservations": 2,
+            "intentional_operational_boundaries": 5,
+            "runtime_interventions": 0,
+            "superseded_prelaunch_nonactivations": 1,
+            "technical_invalid_cell_rows": 0,
+            "technical_invalid_pair_attempts": 0
+          },
+          "infrastructure_ledger": {
+            "path": "artifacts/vla_wam_shared_v3/results/lingbot_va_robotwin_phase_a_infrastructure_ledger.json",
+            "sha256": "4ae4ba45d3e8fa7fa10d3c1fbe475f6fbad1b0d1c1e64a43cc7c295347cdc7d2"
+          },
+          "status": "complete_63_new_matched_pairs",
+          "success_by_direction": {
+            "left": "19/63",
+            "right": "19/63"
+          },
+          "success_discordance": {
+            "both": 1,
+            "left_only": 18,
+            "neither": 26,
+            "right_only": 18
+          },
+          "summary": {
+            "path": "artifacts/vla_wam_shared_v3/results/lingbot_va_robotwin_phase_a_summary.json",
+            "sha256": "ebffedaeaf42fb8916449136f617aaa9dab149645caad45aa461dec7aef878e3"
+          }
         }
       }
     }
   },
-  "blocked_and_unreleased": {
-    "pi0_fast_phase_a": {
-      "status": "historical_identity_still_blocked_separate_v3a002_bridge_complete",
-      "preserved_v2_pairs": 10,
-      "preserved_v2_cells": 20,
-      "blocked_new_pairs": 20,
-      "blocked_new_cells": 40,
-      "blocked_seed_range": [8310, 8329],
-      "required_openpi_commit": "9e46d3aea26417bfb564227734b95d010aa827e5",
-      "required_robolab_commit": "11142d4319e44401e0464866bb5fedf7ec8a8927",
-      "blocker": "Both exact historical integration commits remain unavailable. V2-A008 current-stack LEFT/RIGHT prompt sensitivity failed with action RMS 0.0. The completed V3-A002 public old-name-config bridge is a separate cohort, not exact historical recovery.",
-      "model_load_attempt_count": 0,
-      "historical_identity_v3_behavioral_episode_count": 0,
-      "separate_bridge": {"model_id": "pi0_fast_old_name_config_v3a002", "matched_pairs": 20, "behavioral_episodes": 40, "pooled_with_historical": false},
-      "denominator_effect": "none",
-      "recovery_command": "git -C /home/ali/openpi-robolab bundle create /tmp/openpi-robolab-all.bundle --all && git -C /home/ali/projects/RoboLab bundle create /tmp/robolab-all.bundle --all"
+  "phase_b_releases": {
+    "dreamzero_position_reflection_v3b003": {
+      "amendment_id": "V3-B003",
+      "arena": "droid_robolab",
+      "artifacts": {
+        "episodes": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/dreamzero_v3b003_episodes.jsonl",
+          "sha256": "31f0715c3cbc682f90e5cc6420b9f45f49622f876734d43ba7c8cb6545b80f34"
+        },
+        "evidence_manifest": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/evidence_manifest.json",
+          "sha256": "a24278ee01624971877afd7c3db1b7f4377957c3f7d58b9fadc9bd6a70b6fd35"
+        },
+        "matched_pairs": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/dreamzero_v3b003_matched_pairs.jsonl",
+          "sha256": "bb88b62e9137f292a2a1739bd4976daf0d641d242876e921ed4f21d605d9e2a7"
+        },
+        "summary": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/dreamzero_v3b003_summary.json",
+          "sha256": "f45ab7d11281b994592948cdc11ea5d0fe24837d75d21a8a7dd42ff63b9c5817"
+        }
+      },
+      "cells_per_seed": 4,
+      "claim_boundary": "Only movable-object center positions were reflected. Robot base, cameras, nonmovable geometry, exact prompt bytes, controller, cone, and success predicate remained fixed. The model-noise seed was constant at 1140 and is not stochastic replication.",
+      "completed_behavioral_cell_count": 108,
+      "condition_successes": {
+        "control:left": "5/27",
+        "control:right": "8/27",
+        "position_mirrored:left": "25/27",
+        "position_mirrored:right": "25/27"
+      },
+      "exact_prompts": {
+        "left": "Put the Rubik's cube to the left of the bowl.",
+        "right": "Put the Rubik's cube to the right of the bowl."
+      },
+      "factor": "movable_object_center_position_reflection_about_robot_sagittal_plane",
+      "failure_taxonomy": {
+        "correct": 63,
+        "pick_failed": 26,
+        "release_failed": 1,
+        "transport_failed": 17,
+        "wrong_side": 1
+      },
+      "identity_binding": "V2-A015:dreamzero_action_cfg_s2",
+      "matched_left_right_pair_count": 54,
+      "model_id": "dreamzero_droid_action_cfg",
+      "prespecified_matched_seed_count": 27,
+      "registered_behavioral_cell_count": 108,
+      "registered_results": {
+        "binary_success_DiD_distribution": {
+          "-1": 8,
+          "-2": 0,
+          "0": 14,
+          "1": 5,
+          "2": 0
+        },
+        "binary_success_DiD_mean": -0.1111111111111111,
+        "binary_success_exact_permutation_p": 0.5810546875,
+        "endpoint_redirection_interaction_bootstrap_95_ci_m": [
+          0.20200158464204934,
+          0.3071430931988828
+        ],
+        "endpoint_redirection_interaction_exact_sign_p": 4.172325134277344e-07,
+        "endpoint_redirection_interaction_mean_m": 0.254698321947621,
+        "interpretation": "Reflection strongly improved overall competence and changed continuous endpoint/depth interactions, but the binary directional-success gap did not significantly reverse in this cohort.",
+        "requested_depth_interaction_bootstrap_95_ci_m": [
+          -0.19924238286567506,
+          -0.08190082595511176
+        ],
+        "requested_depth_interaction_exact_sign_p": 0.000310748815536499,
+        "requested_depth_interaction_mean_m": -0.14091859030088894
+      },
+      "rerun_policy": "do_not_rerun_any_valid_v3b003_cell",
+      "retained_taxonomy_packaging_repair": {
+        "actions_executed": 0,
+        "after_taxonomy": "transport_failed",
+        "before_taxonomy": "release_failed",
+        "behavioral_episode_rerun": false,
+        "model_inference_requests": 0,
+        "original_preserved": true,
+        "registered_cell_id": "v3b003:dreamzero:seed9411:position_mirrored:right",
+        "report": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/retained_taxonomy_packaging_repair/repair_report.json",
+          "sha256": "aa2b2779d87f9d0e63f0fa0b1e97a999c08dce92a61fdd68b4a9ff09c87e7922"
+        }
+      },
+      "seed_range_inclusive": [
+        9400,
+        9426
+      ],
+      "status": "complete_hash_closed_27_seed_108_episode_result_no_rerun"
     },
-    "phase_b_confounds": {
-      "status": "nano_v3b001_pi05_v3b002_dreamzero_v3b003_and_nano_v3b005_complete_v3b004_failed_closed",
-      "released": {
-        "nano_v3b001": {
-          "amendment_id": "V3-B001",
-          "model_id": "cosmos3_nano_policy_droid",
-          "released_behavioral_cells": 108,
-          "completed_behavioral_cells": 108,
-          "release_condition": "Released only after the hash-bound model-blind positions-only calibration. The prespecified 27-seed, four-cell-per-seed cohort is complete and hash-closed."
+    "nano_position_reflection_v3b001": {
+      "amendment_id": "V3-B001",
+      "analysis_plan": {
+        "primary": "Full-sample signed_final_lateral_offset_m analysis across seeds with four valid behavioral cells; every valid behavioral failure remains included and no missing value is imputed.",
+        "success_conditional_secondary": "Analyze final_requested_signed_margin_m only on complete-case subset nano_v3b001_all_four_cells_correct, requiring frozen requested-success passes in control LEFT, control RIGHT, position-mirrored LEFT, and position-mirrored RIGHT; report realized n and never mix unmatched successful cells."
+      },
+      "arena": "droid_robolab",
+      "arms": [
+        "control",
+        "position_mirrored"
+      ],
+      "artifacts": {
+        "amendment": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/post_result_nano_mirror_v3b001_amendment.json",
+          "sha256": "9d88c29733fa3b24a154977bc25d04d2d77df5be59e3213f0c3a6cfbe3edc6a0"
         },
-        "pi05_v3b002": {
-          "amendment_id": "V3-B002",
-          "model_id": "pi05_current_stack_droid",
-          "released_behavioral_cells": 108,
-          "completed_behavioral_cells": 108,
-          "release_condition": "Released only after the hash-bound model-blind physical and fixed-observation exact-repeat and prompt-sensitivity gates. The prespecified 27-seed, four-cell-per-seed cohort is complete and hash-closed."
+        "calibration": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/model_blind_calibration_report.json",
+          "sha256": "112716acada89050561c9488d93a333a300b1675c2305329c8e5aceeb4e6da71"
         },
-        "dreamzero_v3b003": {
-          "amendment_id": "V3-B003",
-          "model_id": "dreamzero_droid_action_cfg",
-          "identity_binding": "V2-A015:dreamzero_action_cfg_s2",
-          "released_behavioral_cells": 108,
-          "completed_behavioral_cells": 108,
-          "fixed_observation_model_requests_before_release": 3,
-          "behavioral_episodes_before_release": 0,
-          "release_gate": {"path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/gates/release_gate.json", "sha256": "7e30e618ee233ea04675d556f48621f6ff7de84f4ac9033460d0d9531a234dd6"},
-          "release_condition": "Released only after four distinct ali RTX lanes each passed 12 fresh-process physical/reset/renderer/writer attestations and the fresh DreamZero s=2 server passed exact-repeat and LEFT/RIGHT action/latent sensitivity. The 108 registered cells are complete and hash-closed; do not rerun."
+        "cells": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_cells.jsonl",
+          "sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a"
         },
-        "nano_v3b005": {
-          "amendment_id": "V3-B005",
-          "model_id": "cosmos3_nano_policy_droid",
-          "factor": "reference_object_initial_lateral_position_y_m",
-          "status": "complete_hash_closed_15_seed_210_episode_result_no_rerun",
-          "matched_seeds": 15,
-          "lateral_levels": 7,
-          "released_behavioral_cells": 210,
-          "completed_behavioral_cells": 210,
-          "matched_pairs": 105,
-          "model_requests": 1423,
-          "decoded_futures": 1423,
-          "infrastructure_invalid_cells": 0,
-          "runtime_identity_sha256": "2aa9a2dbefa2fd24596fd97e5ac9084ed0745201be4ec801f3899a9c2982c022",
-          "release_gate": {"path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/gates/behavioral_release_gate.json", "sha256": "4a1524b773db9b64a78e8cc81105d81ec2ece76755162d52501d6b9fe4a44b39"},
-          "concurrency_isolation_audit": {"path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/gates/concurrency_isolation_audit.json", "sha256": "11e907d9e45c9bab2a4744c04049180647c51faab59bb465fc6870df8d04cbcf"},
-          "results_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/nano_v3b005_results_manifest.json", "sha256": "abef596b2f4b471a6595c2983737c63f319a27de9e3b8452385f11914b8db52a"},
-          "report": {"path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/nano_v3b005_dose_response_report.json", "sha256": "a65c659cc5eb24e03baafc8101473f63307a549764090b6403eed5d1405ba999"},
-          "source_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/nano_v3b005_dose_response_report.json.manifest.json", "sha256": "31a897d74403522a8a8cb8f4e6d04cdeb87bc8c61c21074263d4d9af7edd83ff"},
-          "final_integrity_audit": {"path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/final_integrity_audit.json", "sha256": "a0024d47d8b83297ac4b6ca079e40eb0b60394055682cdd35470dd03a13c15dc"},
-          "figure_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/figures/manifest.json", "sha256": "bc04bcb7ecfa756be1641a8731ac9ab6c66ae13eeb37eb582f1fc05c3ad6ffb1"},
-          "publication_media_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/publication_media/nano_v3b005_publication_media_manifest.json", "sha256": "d27d2d9787777298551f2897b9c73ea3a098682df9cfae9ff46f59652be28991"},
-          "scientific_result": {
-            "primary_depth_slope_m_per_m": 1.1247301174859916,
-            "primary_bootstrap_95_ci": [0.7189605736750224, 1.562330189504705],
-            "primary_exact_sign_p": 0.00738525390625,
-            "linear_zero_crossing_in_registered_support": false,
-            "binary_success_left": "93/105",
-            "binary_success_right": "99/105",
-            "binary_gap_slope_exact_sign_p": 0.0703125,
-            "claim": "Reference-object position continuously modulated requested-side depth over the tested support; binary completion was directionally consistent but secondary and not exact-sign-test significant at 0.05."
+        "final_evidence_manifest": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/nano_v3b001_final_evidence_manifest.json",
+          "sha256": "ed16c120f58b89fe67227c544a7ac7b20610e802a0a19276fcb0f7796cef5270"
+        },
+        "final_results_manifest": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/nano_v3b001_results_manifest.json",
+          "sha256": "ab9b9849e04bc15e65ed9d8d55d13e8aad62dbef5f5e2fa16b8eaf486a6ea517"
+        },
+        "final_summary": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/nano_v3b001_summary.json",
+          "sha256": "f43636a03caade5f3dc65de6736808c8257c78eacb07ba4cb963bfc6a0e36578"
+        },
+        "live_infrastructure_ledger": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_infrastructure_ledger.json",
+          "sha256": "33c83da878782f77aca60a95d0c7382982af33b2210403d96c17637d41cc0418"
+        },
+        "live_queue_snapshot": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_queue_snapshot.json",
+          "sha256": "bfd8f0e095fc83dd2d09ba254c0860d8c2d8bbdf02205173369c50e56013e52c"
+        },
+        "live_reset_preflight_report": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_reset_preflight_report.json",
+          "sha256": "075a3d78fff99a74bfbb3981e77c20b6de20a9d5123e5ed4f6dea10ee2f61bc9"
+        },
+        "live_reset_semantics_correction": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_reset_semantics_correction.json",
+          "sha256": "167494ff48b075c41ff64fce4c18c78ae6650d1bcfd63d0646cf386a0a82875b"
+        },
+        "manifest": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_manifest.json",
+          "sha256": "5c82268739feb41281435a51dcd848b575218cd9fbe5839d9ad130d1a7888830"
+        },
+        "publication_media_manifest": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/publication_media/nano_v3b001_publication_media_manifest.json",
+          "sha256": "2a9023b976b6a877b2da266ce1333f6639d89a971a4e082f50a7af1f0cf246ea"
+        }
+      },
+      "cells_per_seed": 4,
+      "claim_boundary": "Only movable-object center positions are reflected about the robot sagittal plane. The robot, cameras, and nonmovable geometry remain fixed; this is a positions-only movable-object intervention, not a full-scene mirror.",
+      "committed_complete_seed_blocks": [
+        9400,
+        9401,
+        9402,
+        9403,
+        9404,
+        9405,
+        9406,
+        9407,
+        9408,
+        9409,
+        9410,
+        9411,
+        9412,
+        9413,
+        9414,
+        9415,
+        9416,
+        9417,
+        9418,
+        9419,
+        9420,
+        9421,
+        9422,
+        9423,
+        9424,
+        9425,
+        9426
+      ],
+      "completed_behavioral_cell_count": 108,
+      "completed_behavioral_cell_count_scope": "complete_prespecified_cohort",
+      "directions": [
+        "left",
+        "right"
+      ],
+      "exact_prompts": {
+        "left": "Put the Rubik's cube to the left of the bowl.",
+        "right": "Put the Rubik's cube to the right of the bowl."
+      },
+      "factor": "movable_object_center_position_reflection_about_robot_sagittal_plane",
+      "final_result": {
+        "condition_successes": {
+          "control:left": "26/27",
+          "control:right": "26/27",
+          "position_mirrored:left": "27/27",
+          "position_mirrored:right": "23/27"
+        },
+        "endpoint_redirection": {
+          "control_D_median_m": 0.4667481780052185,
+          "control_positive_seeds": "27/27",
+          "position_mirrored_D_median_m": 0.4373619556427002,
+          "position_mirrored_positive_seeds": "27/27",
+          "reflection_interaction_J_median_m": 0.007228171452879906,
+          "reflection_interaction_sign_test_p": 0.7011080384254456
+        },
+        "executed_actions": 21972,
+        "failure_taxonomy": {
+          "correct": 102,
+          "pick_failed": 0,
+          "release_failed": 1,
+          "transport_failed": 5,
+          "wrong_side": 0
+        },
+        "matched_seed_count": 27,
+        "requested_depth": {
+          "control_B_median_m": 0.14758701622486115,
+          "position_mirrored_B_median_m": -0.08814282715320587,
+          "reflection_interaction_I_median_m": -0.2463150918483734,
+          "reflection_interaction_negative_seeds": "24/27",
+          "reflection_interaction_sign_test_p": 4.9233436584472656e-05
+        },
+        "runtime_identity_sha256": "2c5e314a62926a3d3c9b84fa73cff634c378b6140d390cbef6407ac9c633e64e",
+        "success_conditional_secondary": {
+          "failures_as_zero": false,
+          "matched_seed_count": 21,
+          "reflection_interaction_G_median_m": -0.2282327301800251,
+          "reflection_interaction_negative_seeds": "18/21",
+          "reflection_interaction_sign_test_p": 0.0014896392822265625,
+          "subset_id": "nano_v3b001_all_four_cells_correct"
+        },
+        "valid_behavioral_cells": 108,
+        "valid_model_sampler_requests": 738
+      },
+      "live_queue_may_be_ahead_of_committed_snapshot": false,
+      "live_runtime": {
+        "behavioral_denominator": 12,
+        "behavioral_episode_count": 12,
+        "committed_live_queue_snapshot": {
+          "artifact_path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_queue_snapshot.json",
+          "artifact_sha256": "bfd8f0e095fc83dd2d09ba254c0860d8c2d8bbdf02205173369c50e56013e52c",
+          "behavioral_denominator": 12,
+          "complete_seed_blocks": [
+            9400,
+            9401,
+            9402
+          ],
+          "correct": 10,
+          "failure_taxonomy": {
+            "correct": 10,
+            "release_failed": 1,
+            "transport_failed": 1
           },
-          "rerun_policy": "do_not_rerun_any_valid_v3b005_cell"
-        }
-      },
-      "registered_not_released": {},
-      "failed_closed": {
-        "nano_v3b004": {
-          "amendment_id": "V3-B004",
-          "model_id": "cosmos3_nano_policy_droid",
-          "factor": "reference_object_initial_lateral_position_y_m",
-          "status": "failed_closed_before_any_model_request_or_behavioral_episode",
-          "model_request_count": 0,
-          "behavioral_episode_count": 0,
-          "failure": "The original fixed banana collides with the bowl by the registered -30 mm level, so every allowed symmetric half-range r >= 90 mm is infeasible.",
-          "failure_report": {"path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b004/model_blind_calibration_failure_report.json", "sha256": "d3441b899dfd21adf5421ddb00d829f588b25d5e630af1ca18821b6494c985ca"},
-          "denominator_effect": "none"
-        }
-      },
-      "unreleased": "V3-B004 failed closed before inference. DreamZero V3-B003 and Nano V3-B005 are complete and must not be rerun. Every other Phase-B confound ablation beyond completed Nano V3-B001, pi0.5 V3-B002, DreamZero V3-B003, and Nano V3-B005 requires its own frozen independent release path."
-    },
-    "phase_c_four_phrasings": {
-      "status": "all_three_models_complete_hash_closed",
-      "registered_episode_count": 480,
-      "released_episode_count": 480,
-      "completed_valid_behavioral_episode_count": 480,
-      "model_status": {
-        "groot_n17_droid_vla": {
-          "behavioral_release": true,
-          "completed_valid_behavioral_episodes": 160,
-          "completed_seed_blocks": [8500, 8501, 8502, 8503, 8504, 8505, 8506, 8507, 8508, 8509, 8510, 8511, 8512, 8513, 8514, 8515, 8516, 8517, 8518, 8519],
-          "valid_behavioral_failures": 150,
-          "viewport_videos": 160,
+          "last_fully_compiled_seed_block": 9402,
+          "queue_may_be_ahead": true,
+          "snapshot_at_utc": "2026-08-06T07:15:17Z",
+          "valid_behavioral_cells": 12
+        },
+        "completed_behavioral_cell_count": 12,
+        "execution_contract": {
+          "full_calibration_registration_context_retained": true,
+          "global_released_order_required": true,
+          "omniverse_eula_acceptance": "OMNI_KIT_ACCEPT_EULA=YES",
+          "partial_attempts_outside_behavioral_denominator": true,
+          "persistent_caches": "ali_owned_pvc",
+          "retained_output_overwrite_prohibited": true,
+          "split_policy_server_preferred_for_simulator_load_isolation": true,
+          "static_prompt_only": true,
+          "temporary_directory": "pod_local_tmpdir",
+          "thermal_guard": "not_used"
+        },
+        "execution_topology": {
+          "claim_boundary": "Split pods remain preferred for load isolation without treating GPU placement as a scientific intervention. Registration context is falsified as the sufficient cause; the demonstrated defect is the runner/proxy episode-length and reset-ordinal interaction.",
+          "simulator_pod": {
+            "driver_version": "580.105.08",
+            "gpu_product": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+            "gpu_uuid": "GPU-37425604-6c72-a77a-f635-392439431707",
+            "name": "vla-wam-rtx-nano-ali",
+            "owner": "ali",
+            "uid": "30b51054-f277-480d-831d-337581e1cc49"
+          },
+          "split_policy_server_pod": {
+            "driver_version": "580.105.08",
+            "gpu_product": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+            "gpu_uuid": "GPU-f28bd513-a38a-b768-7589-d2959f814ae8",
+            "name": "raytrace-rtxpro6000-ali",
+            "owner": "ali",
+            "pod_ip": "10.244.222.28",
+            "uid": "d5b0405a-a9b1-4baa-a802-d5171e03c228"
+          }
+        },
+        "infrastructure_invalid_complete_behavior_attempt_count": 4,
+        "invalidated_runtime_attempt06": {
+          "manifest_file_sha256": "41b31bd7fab0c69d5e7f7deafe041177ffe97a7727003c17bdf85bb24cb07875",
+          "reason": "The first compiled row is invalidated before analysis because the bridge source is changing and the aggregate requires one runtime identity across all 108 cells.",
+          "runtime_identity_sha256": "fa962d1783a506abb2e0c11c5129087be62a9f698bd2a3bec2a97dddba9b6a71",
+          "study_head": "a42ae3d3f8549ee4fac9704a59ee3c103bac5494"
+        },
+        "live_bound_runtime_identity": {
+          "behavior_resume_policy": "same_runtime_identity_only",
+          "manifest_bytes": 2910,
+          "manifest_file_sha256": "a609300c4cbb826115692db8fecac7e14d7578e0ded00f63c06f5153619c2136",
+          "manifest_path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/runtime_attempt08/runtime_identity.json",
+          "preflight_status": "passed_both_physical_layouts_zero_sampling",
+          "runtime_identity_sha256": "2c5e314a62926a3d3c9b84fa73cff634c378b6140d390cbef6407ac9c633e64e",
+          "source_state": "pushed_synced_clean",
+          "study_head": "39f19b57d5f5e68d0f03e4e4c7569350cb9a467f"
+        },
+        "model_blind_reset_gate": {
+          "angular_speed_threshold_rad_s": 0.2,
+          "call1_evidence": "provisional_not_persisted",
+          "call2_evidence": "final_persisted_attestation",
+          "counter_reset_required_before_model_request": true,
+          "duplicate_second_reset_idempotent": true,
+          "episode_length_buf_after_reset": [
+            0
+          ],
+          "episode_length_buf_before_reset": [
+            75
+          ],
+          "frozen_flags_after_duplicate_reset": false,
+          "linear_speed_threshold_m_s": 0.02,
+          "model_request_count_before_attestation": 0,
+          "physical_reset_calls": 1,
+          "runner_pre_action_reset_calls": 2,
+          "settle_gate_runs": 1,
+          "settle_steps": 60,
+          "stability_window_steps": 15
+        },
+        "model_request_count": 39,
+        "model_request_count_semantics": "prior_model_sampler_requests_retained_as_infrastructure_evidence; zero-sampling transport-handshake packets excluded",
+        "passed_reset_preflight": {
+          "artifact_path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_reset_preflight_report.json",
+          "artifact_sha256": "075a3d78fff99a74bfbb3981e77c20b6de20a9d5123e5ed4f6dea10ee2f61bc9",
+          "behavioral_action_count": 0,
+          "behavioral_denominator": 0,
+          "duplicate_second_reset_idempotent": true,
+          "episode_length_buf_transition": "[75] -> [0]",
+          "layouts_passed": [
+            "v3b001:nano:seed9400:position_mirrored:right",
+            "v3b001:nano:seed9400:control:left"
+          ],
+          "model_request_count_during_gate": 0,
+          "model_sample_count": 0,
+          "physical_reset_calls": 1,
+          "runner_pre_action_reset_calls": 2,
+          "settle_gate_runs": 1,
+          "status": "passed_behavior_ready_under_same_runtime_identity"
+        },
+        "preflight_exact_next_cell": {
+          "arm": "position_mirrored",
+          "cell_id": "v3b001:nano:seed9400:position_mirrored:right",
+          "completion_status": "completed_valid_in_committed_live_queue_snapshot",
+          "environment_seed": 9400,
+          "prompt": "Put the Rubik's cube to the right of the bowl.",
+          "relation": "right"
+        },
+        "registration_context_diagnostic": {
+          "behavioral_episodes": 0,
+          "boundary": "This diagnostic did not reproduce the pinned runner's episode-length mutation order and did not isolate reset ordinal.",
           "model_requests": 0,
-          "seed8500_requested_successes": 2,
-          "seed8500_valid_failures": 6,
-          "release": {
-            "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/gates/groot_n17_droid_vla/release.json",
-            "sha256": "bf564307b27f40b02e18b8e7dc930c697ace004918f52e3e9c1f7ab3b44470fa"
+          "report_path": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/mirror/diagnostic_server_unloaded_attempt01/live_gate/model_blind_calibration_report.json",
+          "report_sha256": "b15b3249647dbf468e745727e2d7677df9c74d919b399a3148be17312951ca04",
+          "status": "registration_context_hypothesis_falsified_as_sufficient"
+        },
+        "reset_semantics_correction": {
+          "artifact_path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/live_reset_semantics_correction.json",
+          "artifact_sha256": "167494ff48b075c41ff64fce4c18c78ae6650d1bcfd63d0646cf386a0a82875b",
+          "attempt08_bridge_failure_sha256": "247d772c6895aa8fc69c7908bea11514b78c0643e29e7ed5ab020beb566dbc86",
+          "attempt09_bridge_failure_sha256": "ff2159bf3b5bec3f12d9a73eb6697ae2e5d1d52dfb7a28ea31b6251cc1a609ef",
+          "attempt10_control_left": {
+            "bridge_failure_sha256": "1f921e18c520dc6daa2d415cfe39f0f70903adc5a2b8c90e7c4e9f72db998519",
+            "fixture_match_sha256": "573f1df5892d1137147945a2d8f531af9d59d1d60c744c717f396f0b17e4e276",
+            "model_requests": 0,
+            "settle_stability_sha256": "588297f9d058bb9997346f0c0c71e6420381ad5d9fae70687854adc4f76d4ef9"
           },
-          "smoke_evidence": {
-            "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/smoke/groot_n17_droid_vla/evidence_manifest.json",
-            "sha256": "ad3e823edc73a3a3c833d4138a1710dee74f4f675131d50319e260c7111136c9"
+          "attempt10_provisional_right": {
+            "actions_executed": 169,
+            "batch_manifest_sha256": "bca5342cbe6ccbf8a88d8c68b9900e7a1b6a79f1d39ececd6100ba667e244962",
+            "disposition": "invalidated_before_analysis",
+            "raw_episode_sha256": "a51380c97cc6426332e3c8915d2950fb7785adabd13e5cab44ec34311141ce27",
+            "requested_success": true,
+            "viewport_video_sha256": "92e26891c9ec1871d1c167d3914f22aa3fe90fc6fecc6af95a55684b8de2e1db"
           },
-          "completed_queue": {
-            "pod": "lerobot-b200-4gpu-1-ali",
-            "pid": 884463,
-            "execution": "whole_seed_serial",
-            "queue_log": "/data/users/ali/vla_wam/raw/v3c/phase_c_v3c001/groot_n17_droid_vla/queue_seed8501_8519_attempt01.log",
-            "status": "natural_exit_after_complete_20_seed_queue"
+          "calibration_repeat_semantics": "Repeat 0 was a fresh physical reset plus 75 model-blind steps; repeats 1 and 2 saw ep_len=75 and entered the post-step freeze path before active_ids, so they were stability observations rather than fresh physical resets.",
+          "pre_fix_live_semantics": "After runner reset call 1 the proxy zeroed episode_length_buf, so call 2 saw ep_len=0, entered artifact_ids, and performed a fresh second physical reset.",
+          "registration_context_hypothesis": "falsified_as_the_sufficient_root_cause",
+          "status": "prospective_operational_correction_before_any_valid_phase_b_behavior"
+        },
+        "source_bindings": {
+          "compiler": {
+            "path": "experiments/v3/cosmos_nano_phase_b/compile_cell.py",
+            "sha256": "468bb9231316c4670a2dc3388ab7eb6f2ef5f42afc8fb04b16faca7b823f2a75"
           },
-          "compact_result": {
-            "episodes": {"path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/groot_n17_droid_vla/groot_n17_droid_vla_phase_c_episodes.jsonl", "sha256": "fc73ba5e331d75a192971543f9c4c58ca127c60dc01c4df53b2824c7e899c3b0"},
-            "summary": {"path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/groot_n17_droid_vla/groot_n17_droid_vla_phase_c_summary.json", "sha256": "bbf3f69eeef579c01151ca9c30fcc757773904faccd9c7edd0a5376f56f4c755"},
-            "evidence_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/groot_n17_droid_vla/groot_n17_droid_vla_phase_c_evidence_manifest.json", "sha256": "2e10bbdd192823e52e3625aac36870fccf9ff400a4d8207530f2f26ca2a0b522"},
-            "successes_by_condition": {"direct_command:left": 1, "direct_command:right": 0, "short_command:left": 2, "short_command:right": 6, "goal_as_outcome:left": 0, "goal_as_outcome:right": 0, "desired_plus_negated_opposite:left": 1, "desired_plus_negated_opposite:right": 0},
-            "failure_taxonomy": {"correct": 10, "pick_failed": 143, "transport_failed": 6, "wrong_side": 1, "release_failed": 0},
-            "interpretation": "Exploratory wording result over 20 shared seeds. Every matched first-ten-action prefix differed and endpoint ordering followed the request in 14/20 direct, 15/20 shortened, 17/20 goal-statement, and 9/20 contrastive pairs, but only 10/160 episodes succeeded and 143/160 failed at pickup. The four forms are repeated measures, not 80 independent scenes."
+          "live_bridge": {
+            "path": "experiments/v3/cosmos_nano_phase_b/robolab_bridge.py",
+            "sha256": "d93ceb145430764341640c9925830fc10dce1329626a5076b52196f8b2d3a62b"
+          },
+          "live_client": {
+            "path": "experiments/v3/cosmos_nano_phase_b/live_client.py",
+            "sha256": "39efa19151039f8243cf452713bbaf13b3e955ccd590055d462c1ea66cac0a28"
+          },
+          "live_queue_test": {
+            "path": "tests/test_v3b_nano_live_queue.py",
+            "sha256": "b0e29b0999223f88ec7782b66360dcd6b01dff48f89c917ff02f79da82303c0f"
+          },
+          "live_server": {
+            "path": "experiments/v3/cosmos_nano_phase_b/serve_nano.py",
+            "sha256": "caa2c7ca1ea8bc3dd831a0564c3f37f63c64dc90ddf104b1ae0281ae61e7e1cc"
+          },
+          "live_support": {
+            "path": "experiments/v3/cosmos_nano_phase_b/live_support.py",
+            "sha256": "445176755c89d34a597e83ed23fa0444922a4736e276117a5242335a2aa76590"
+          },
+          "queue_launcher": {
+            "path": "experiments/v3/cosmos_nano_phase_b/queue_launcher.py",
+            "sha256": "52a4132fb9f6dfff3e9e4bbb17862c682c3e0cc1fbdfc11e6c73e08316b87c4d"
+          },
+          "runtime_adapter": {
+            "path": "experiments/v3/cosmos_nano_phase_b/runtime_adapter.py",
+            "sha256": "dadac7a84dd31fe762a3bf52b41201164ae71155bbec9ac8d34ffc5ca20d1bda"
+          },
+          "runtime_test": {
+            "path": "tests/test_v3b_nano_runtime_adapter.py",
+            "sha256": "ef763451067bce15f880f19457dbeee232b9cd2501941f396b85bae783a35f2b"
           }
         },
-        "cosmos3_edge_policy_droid": {
-          "behavioral_release": true,
-          "completed_valid_behavioral_episodes": 160,
-          "completed_seed_blocks": [8500, 8501, 8502, 8503, 8504, 8505, 8506, 8507, 8508, 8509, 8510, 8511, 8512, 8513, 8514, 8515, 8516, 8517, 8518, 8519],
-          "valid_behavioral_failures": 37,
-          "viewport_videos": 160,
-          "model_requests": 1365,
-          "seed8500_requested_successes": 7,
-          "seed8500_valid_failures": 1,
-          "seed8500_model_requests": 74,
-          "seed8500_decoded_futures_retained": 74,
-          "release": {
-            "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/gates/cosmos3_edge_policy_droid/release.json",
-            "sha256": "3d59285b364ab338224f8085770440f09f69f466b82024769a842d2f0ec6f1ae"
+        "status": "queue_complete_historical_live_prefix_details_retained_below",
+        "valid_model_sampler_request_count_in_committed_snapshot": 90
+      },
+      "model_id": "cosmos3_nano_policy_droid",
+      "pre_release_counts": {
+        "behavioral_episodes": 0,
+        "model_requests": 0
+      },
+      "prespecified_matched_seed_count": 27,
+      "released_behavioral_cell_count": 108,
+      "seed_range_inclusive": [
+        9400,
+        9426
+      ],
+      "status": "complete_hash_closed_27_seed_108_episode_result"
+    },
+    "pi05_position_reflection_v3b002": {
+      "amendment_id": "V3-B002",
+      "analysis": {
+        "binary_success": "Per-seed DiD=(R-L)_reflected-(R-L)_control, reported on {-2,-1,0,1,2}, with exact two-sided within-seed label permutation and the 2x2 cell table.",
+        "continuous": "20,000 matched-seed bootstrap resamples using master seed 3104159; exact paired sign tests with ties excluded and sign counts reported.",
+        "failure_mode_split": {
+          "cosmos3_edge": {
+            "failure_only_exact_p": 0.6181818181818182,
+            "left_counts_correct_pick_transport_wrong_side_release": [
+              18,
+              1,
+              6,
+              2,
+              0
+            ],
+            "right_counts_correct_pick_transport_wrong_side_release": [
+              25,
+              1,
+              1,
+              0,
+              0
+            ]
           },
-          "smoke_evidence": {
-            "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/smoke/cosmos3_edge_policy_droid/evidence_manifest.json",
-            "sha256": "9aa043e1d2a88818f847d0719f9c3c4d8bb120532147db75bc3de9a12af52513"
+          "dreamzero": {
+            "failure_only_exact_p": 0.0017219568583829528,
+            "left_counts_correct_pick_transport_wrong_side_release": [
+              3,
+              10,
+              14,
+              0,
+              0
+            ],
+            "right_counts_correct_pick_transport_wrong_side_release": [
+              17,
+              10,
+              0,
+              0,
+              0
+            ]
           },
-          "completed_queue": {
-            "pod": "vla-wam-rtx-nano-ali",
-            "pid": 556502,
-            "execution": "one_client_per_server_serial",
-            "queue_log": "/data/users/ali/vla_wam/raw/v3c/phase_c_v3c001/cosmos3_edge_policy_droid/queue_seed8501_8519_attempt02.log",
-            "status": "natural_exit_after_complete_20_seed_queue"
+          "interpretation": "DreamZero rejects the same-shape failure account in this cohort. pi0.5 and Edge do not reject it, but their RIGHT failure rows contain only three and two episodes, so this is not evidence of equivalence.",
+          "pi05": {
+            "failure_only_exact_p": 0.38217391304347825,
+            "left_counts_correct_pick_transport_wrong_side_release": [
+              5,
+              6,
+              11,
+              5,
+              0
+            ],
+            "right_counts_correct_pick_transport_wrong_side_release": [
+              24,
+              0,
+              3,
+              0,
+              0
+            ]
           },
-          "compact_result": {
-            "episodes": {"path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_edge_policy_droid/cosmos3_edge_policy_droid_phase_c_episodes.jsonl", "sha256": "317aa9e7eb18c5ef77b9445483128a7621df5b777835d8eb9e383939acf0a1f5"},
-            "summary": {"path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_edge_policy_droid/cosmos3_edge_policy_droid_phase_c_summary.json", "sha256": "06a8fd1ff425bce10cbdbeb4b73e9a8ca5ff31da0c5e389ae85f5b64bc451861"},
-            "evidence_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_edge_policy_droid/cosmos3_edge_policy_droid_phase_c_evidence_manifest.json", "sha256": "2c72c90b71c5ea0001d917ce4464a3207faa1c6ae62b1e0200926d435c90c97a"},
-            "successes_by_condition": {"direct_command:left": 18, "direct_command:right": 20, "short_command:left": 5, "short_command:right": 19, "goal_as_outcome:left": 15, "goal_as_outcome:right": 18, "desired_plus_negated_opposite:left": 10, "desired_plus_negated_opposite:right": 18},
-            "interpretation": "Exploratory wording result over 20 shared seeds. The four prompt forms repeat each scene and are not 80 independent scenes."
-          }
-        },
-        "cosmos3_nano_policy_droid": {
-          "behavioral_release": true,
-          "completed_valid_behavioral_episodes": 160,
-          "completed_seed_blocks": [8500, 8501, 8502, 8503, 8504, 8505, 8506, 8507, 8508, 8509, 8510, 8511, 8512, 8513, 8514, 8515, 8516, 8517, 8518, 8519],
-          "valid_behavioral_failures": 26,
-          "viewport_videos": 160,
-          "model_requests": 1234,
-          "seed8500_requested_successes": 7,
-          "seed8500_valid_failures": 1,
-          "seed8500_model_requests": 54,
-          "seed8500_decoded_futures_retained": 54,
-          "release": {
-            "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/gates/cosmos3_nano_policy_droid/release.json",
-            "sha256": "33096c0d1b2efa01d07a7020e3213b27b5de15ac05668faf09a8d9e4a2805cf8"
-          },
-          "smoke_evidence": {
-            "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/smoke/cosmos3_nano_policy_droid/evidence_manifest.json",
-            "sha256": "5c2ca8e13e0529022acff53c232d5d2fa11873683d3be8f6bb97f2fec5473240"
-          },
-          "completed_queue": {
-            "client_pod": "vla-wam-fastwam-expansion-ali",
-            "server_pod": "lerobot-b200-4gpu-1-ali",
-            "pid": 262829,
-            "execution": "one_client_per_server_serial",
-            "queue_log": "/data/users/ali/vla_wam/raw/v3c/phase_c_v3c001/cosmos3_nano_policy_droid/queue_seed8501_8519_attempt01.log",
-            "status": "natural_exit_after_complete_20_seed_queue"
-          },
-          "compact_result": {
-            "episodes": {"path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_nano_policy_droid/cosmos3_nano_policy_droid_phase_c_episodes.jsonl", "sha256": "d7016c592e492c028d072eab2d191f139f4966cfc08f2222ed954cfdfb02c0f5"},
-            "summary": {"path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_nano_policy_droid/cosmos3_nano_policy_droid_phase_c_summary.json", "sha256": "0f134044065dc0f1501a91a69d8e9b10d0a13e9a4065a7c4d33f7854bab73ee9"},
-            "evidence_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_nano_policy_droid/cosmos3_nano_policy_droid_phase_c_evidence_manifest.json", "sha256": "16f2bcb1e7de10d9a5adb692a433809845517bee1466fb34589200f6bb9be530"},
-            "successes_by_condition": {"direct_command:left": 20, "direct_command:right": 19, "short_command:left": 20, "short_command:right": 19, "goal_as_outcome:left": 18, "goal_as_outcome:right": 17, "desired_plus_negated_opposite:left": 11, "desired_plus_negated_opposite:right": 10},
-            "interpretation": "Exploratory wording result over 20 shared seeds. Nano remains strong under direct, shortened, and goal-statement prompts, but contrastive wording reduces success for both directions; the four forms are repeated measures, not 80 independent scenes."
-          },
-          "seed8500_finalization_repair": {
-            "behavioral_rerun": false,
-            "inference_requests_during_repair": 0,
-            "actions_executed_during_repair": 0,
-            "reason": "All eight trajectories and raw artifacts were complete; only deterministic JSONL/report packaging was repaired after the isolated source bundle omitted the shared schema module."
-          }
+          "status": "complete_retrospective_existing_phase_a_logs_no_new_inference"
         }
       },
-      "figure_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/figures/phase_c_figure_manifest.json", "sha256": "34799e1d97cfd79bd5f184a160f65d2ea8b26bf419cfdbd424bc3aa64c1c0bfe"},
-      "interpretation_boundary": "GR00T N1.7, Cosmos3 Edge, and Cosmos3 Nano are each complete at 160/160 prospectively registered behavioral episodes, for 480/480 total. Their four prompt forms share 20 scenes per model and must not be treated as 80 independent scenes. Success and endpoint redirection remain separate diagnostics. DROID is never pooled with RoboTwin."
-    },
-    "phase_d_stochastic_rollouts": {
-      "status": "pi05_v3d001_complete",
-      "completed_release": {
-        "registration_id": "V3-D001",
-        "model_id": "pi05_current_stack_droid",
-        "arena": "droid_robolab",
-        "design": "27 fixed environment seeds x 8 stochastic policy samples x 2 exact directions",
-        "valid_behavioral_episodes": 432,
-        "matched_left_right_policy_sampling_pairs": 216,
-        "environment_seed_count": 27,
-        "policy_sampling_rollouts_per_seed_direction": 8,
-        "analysis_unit": "environment seed; the eight policy samples are nested repeated measurements",
-        "exact_prompts": {
-          "left": "Put the Rubik's cube to the left of the bowl.",
-          "right": "Put the Rubik's cube to the right of the bowl."
+      "arena": "droid_robolab",
+      "artifacts": {
+        "amendment": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/post_result_pi05_mirror_v3b002_amendment.json",
+          "sha256": "8e56365fdc306adbef2d2f2f8357653d1a683ff17f879f624d7eefd4acb1abb6"
         },
-        "success": {
-          "left": {"successes": 41, "episodes": 216, "estimated_probability": 0.18981481481481483, "environment_seed_cluster_bootstrap_95": [0.14351851851851852, 0.24074074074074073]},
-          "right": {"successes": 197, "episodes": 216, "estimated_probability": 0.9120370370370371, "environment_seed_cluster_bootstrap_95": [0.8796296296296297, 0.9444444444444444]},
-          "seed_level_directional_gap_right_minus_left": {"mean": 0.7222222222222222, "median": 0.75, "environment_seed_cluster_bootstrap_95": [0.6759259259259259, 0.7685185185185185], "positive_seeds": 27, "negative_seeds": 0, "ties": 0, "exact_sign_test_p": 1.4901161193847656e-8}
+        "cells": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/pi05_mirror_v3b002_cells.jsonl",
+          "sha256": "0db680a3aee04c991bcc78904cb572b7d962971e04fbc879e828354da30dafee"
+        },
+        "episodes": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_episodes.jsonl",
+          "sha256": "7b89287a2b75e40cffc97cd6d2fea58c4189a09d2dc5a0fb9a6427df3d726e70"
+        },
+        "episodes_manifest": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_episodes.jsonl.manifest.json",
+          "sha256": "e9df91032e6e1ec12983377f018c899b103681cffdc3166e4c89b064114cce54"
+        },
+        "failure_mode_episodes": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_episodes.jsonl",
+          "sha256": "94d078c16d579019c216a7d05c0e4748d049d4bc91ab1879ca38b8bc78da8735"
+        },
+        "failure_mode_manifest": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_manifest.json",
+          "sha256": "5a0e95af238536dbbcf7a6c81bf721f095cea1a5e178ddfbaecda8105a1e06ab"
+        },
+        "failure_mode_report": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_report.json",
+          "sha256": "f6289333d77538ed9235a567cb98d70333dd50549f7e52d13bfe5d34a10bdf96"
+        },
+        "fixed_observation_gate": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/fixed_observation_gate.json",
+          "sha256": "baf8e9744bb3baa03748521dd72aed88283cbccb613ad0805c6ecbf89e7cdf06"
+        },
+        "gate_manifest": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/gate_manifest.json",
+          "sha256": "bf050c7301d3fbc621bb13ca271c1280839bb1a9e83c214b4f7f7da597d3dd1d"
+        },
+        "infrastructure_attempts": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_infrastructure_attempts.jsonl",
+          "sha256": "0159426cf6456a440e79419c6fde857d76fb35bd7ad8d38a6a9891de838f5da8"
+        },
+        "infrastructure_manifest": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_infrastructure_attempts.jsonl.manifest.json",
+          "sha256": "5b1589f3c1d0f3e5e28e6a1e57d933b66779ffd70952eb343d5d04d530f184e7"
+        },
+        "manifest": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/pi05_mirror_v3b002_manifest.json",
+          "sha256": "8aaaa38302f6a654090250b3e12cd8735fab28a74027d50193325ffa9d0dddea"
+        },
+        "output_manifest": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_output_manifest.json",
+          "sha256": "523a6a2625dc0b67c1f425220006bdca6edea32e554f826f2b6f616c57393090"
+        },
+        "pairs": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_pairs.jsonl",
+          "sha256": "5812383a6ca7beddd95e69c7ded380b605c34a2f56d6ecbf887365a9720d6447"
+        },
+        "pairs_manifest": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_pairs.jsonl.manifest.json",
+          "sha256": "2c1c12cfd3d5b9a65d00dd05be1e66b69d146b08f3a12735a54decdf1e4cce92"
+        },
+        "release_gate": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/release_gate.json",
+          "sha256": "450fcac935b4ff570d53f7d2c844ee10e9c4f2bba8f151692a49fd6de25bc07e"
+        },
+        "report": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_report.json",
+          "sha256": "32ffa99f720906abe8679b0791be3f12d3c91dfce0274d85457a6d2ba59d2b71"
+        },
+        "runtime_identity": {
+          "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/runtime_identity.json",
+          "sha256": "928af903ff99b02dd753b21eca2f6243142aced320a31166645bb1a0427a0f89"
+        }
+      },
+      "cells_per_seed": 4,
+      "claim_boundary": "This is an exact scene-matched replication of Nano V3-B001 on pi0.5. Only movable-object center positions are reflected; robot base, cameras, nonmovable geometry, prompt bytes, controller, cone, and success predicate remain fixed.",
+      "committed_complete_seed_blocks": [
+        9400,
+        9401,
+        9402,
+        9403,
+        9404,
+        9405,
+        9406,
+        9407,
+        9408,
+        9409,
+        9410,
+        9411,
+        9412,
+        9413,
+        9414,
+        9415,
+        9416,
+        9417,
+        9418,
+        9419,
+        9420,
+        9421,
+        9422,
+        9423,
+        9424,
+        9425,
+        9426
+      ],
+      "completed_behavioral_cell_count": 108,
+      "completed_behavioral_cell_count_scope": "complete_prespecified_cohort",
+      "exact_prompts": {
+        "left": "Put the Rubik's cube to the left of the bowl.",
+        "right": "Put the Rubik's cube to the right of the bowl."
+      },
+      "factor": "movable_object_center_position_reflection_about_robot_sagittal_plane",
+      "final_result": {
+        "H1_endpoint_redirection": {
+          "control": {
+            "exact_sign_test_p": 5.647540092468262e-06,
+            "mean_bootstrap_95_ci_m": [
+              0.1388966723879868,
+              0.24622209011404597
+            ],
+            "mean_m": 0.1923219714037798,
+            "median_m": 0.1992722526192665,
+            "negative_seeds": 2,
+            "positive_seeds": 25
+          },
+          "position_mirrored": {
+            "exact_sign_test_p": 4.172325134277344e-07,
+            "mean_bootstrap_95_ci_m": [
+              0.14240442923166685,
+              0.21632550195187192
+            ],
+            "mean_m": 0.1811391442531237,
+            "median_m": 0.18465766310691833,
+            "negative_seeds": 1,
+            "positive_seeds": 26
+          },
+          "reflected_minus_control_interaction": {
+            "exact_sign_test_p": 0.7011080384254456,
+            "mean_bootstrap_95_ci_m": [
+              -0.07806737236074965,
+              0.056768431604184294
+            ],
+            "mean_m": -0.011182827150656117,
+            "median_m": -0.03668234497308731,
+            "negative_seeds": 15,
+            "positive_seeds": 12,
+            "ties": 0
+          }
+        },
+        "H2_requested_side_depth": {
+          "control": {
+            "exact_sign_test_p": 4.172325134277344e-07,
+            "mean_bootstrap_95_ci_m": [
+              0.16311462804571622,
+              0.25385589400237357
+            ],
+            "mean_m": 0.20747016584155736,
+            "median_m": 0.16943219676613808,
+            "negative_seeds": 1,
+            "positive_seeds": 26
+          },
+          "position_mirrored": {
+            "exact_sign_test_p": 4.9233436584472656e-05,
+            "mean_bootstrap_95_ci_m": [
+              -0.1787812586735796,
+              -0.09580974440797473
+            ],
+            "mean_m": -0.13844854567475892,
+            "median_m": -0.150082528591156,
+            "negative_seeds": 24,
+            "positive_seeds": 3
+          },
+          "reflected_minus_control_interaction": {
+            "exact_sign_test_p": 1.4901161193847656e-08,
+            "mean_bootstrap_95_ci_m": [
+              -0.4138348317118707,
+              -0.2845569996077016
+            ],
+            "mean_m": -0.3459187115163163,
+            "median_m": -0.3503093309700489,
+            "negative_seeds": 27,
+            "positive_seeds": 0,
+            "ties": 0
+          }
+        },
+        "H3_binary_success": {
+          "exact_two_sided_within_seed_permutation_p": 5.960464477539063e-08,
+          "mean_DiD": -1.3703703703703705,
+          "median_DiD": -1.0,
+          "per_seed_DiD_distribution": {
+            "-1": 13,
+            "-2": 12,
+            "0": 2,
+            "1": 0,
+            "2": 0
+          }
+        },
+        "condition_successes": {
+          "control:left": "4/27",
+          "control:right": "25/27",
+          "position_mirrored:left": "25/27",
+          "position_mirrored:right": "9/27"
         },
         "failure_taxonomy": {
-          "left": {"correct": 41, "pick_failed": 57, "transport_failed": 104, "wrong_side": 14, "release_failed": 0},
-          "right": {"correct": 197, "pick_failed": 3, "transport_failed": 10, "wrong_side": 4, "release_failed": 2}
+          "correct": 63,
+          "pick_failed": 14,
+          "release_failed": 1,
+          "transport_failed": 27,
+          "wrong_side": 3
         },
-        "matched_pair_response": {
-          "action_distinct": {"pairs": 216, "total": 216},
-          "endpoint_ordering_aligned": {"pairs": 198, "total": 216},
-          "endpoint_redirection_left_minus_right_m": {"mean_of_seed_means": 0.19366720872629364, "environment_seed_cluster_bootstrap_95": [0.17644619543638396, 0.2101811269515666], "positive_seeds": 27, "negative_seeds": 0, "exact_sign_test_p": 1.4901161193847656e-8}
+        "infrastructure": {
+          "excluded_attempt_count": 18,
+          "included_in_behavioral_denominator": false
         },
-        "compact_result": {
-          "episodes": {"path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3d001/pi05_v3d001_episodes.jsonl", "sha256": "2586bdc4f963a610ea26f5fbe609f9a8c133d85e9f83b58ac6dfe3dd4c798976"},
-          "matched_pairs": {"path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3d001/pi05_v3d001_matched_pairs.jsonl", "sha256": "084372fc623c2c23622a54b72e13e21cc8d4247aafcf124757a5a8b362fa1e0a"},
-          "nonbehavioral_attempts": {"path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3d001/pi05_v3d001_invalid_attempts.jsonl", "sha256": "0a1940fb87bf4c546c59d1e271d6f80f0f0e9e2823cd3944a33cea0acf87385e"},
-          "summary": {"path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3d001/pi05_v3d001_summary.json", "sha256": "f05c23a0d40eb33e87deef5138e442ae230914e23f4986e2ddd45caddc2cd9e0"},
-          "evidence_manifest": {"path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3d001/evidence_manifest.json", "sha256": "bdbff6a3a18d1894158dc731df245173405c5f4508bf5da4a9031d5cb975309c"}
-        },
-        "raw_storage": "/data/users/ali/vla_wam/raw/v3d/v3d001_behavior",
-        "interpretation_boundary": "All 27 fixed scenes favored RIGHT over LEFT in estimated success probability across eight stochastic policy samples. The large directional gap therefore is not explained by one deterministic sample or a few exceptional scenes. The repeats estimate policy variability conditional on the fixed registered scenes; they do not identify the causal source of the asymmetry."
+        "matched_left_right_pairs": 54,
+        "matched_seed_count": 27,
+        "scientific_interpretation": "Position reflection left the endpoint-redirection interaction near zero while reversing requested-side depth and the binary success asymmetry. This supports geometry or layout as a major competence confound for pi0.5 under this simulator setup, while not attributing all language steering to geometry or identifying training distribution as the mechanism.",
+        "valid_behavioral_cells": 108
       },
-      "other_checkpoints": "not_released_without_independent_exact-runtime stochastic-seed eligibility; deterministic or seed-insensitive runtimes are ineligible rather than padded"
+      "model_id": "pi05_current_stack_droid",
+      "pre_registration_counts": {
+        "behavioral_episodes": 0,
+        "model_requests": 0
+      },
+      "prespecified_matched_seed_count": 27,
+      "registered_behavioral_cell_count": 108,
+      "registered_predictions": {
+        "H1": "Endpoint-redirection interaction J is approximately zero; Nano mean was +0.0046802502 m with exact sign-test p=0.701108.",
+        "H2": "Requested-side-depth interaction I is strongly negative; Nano mean was -0.2476671935 m with exact sign-test p=4.9233437e-05.",
+        "H3": "Two-sided exact within-seed test of whether reflection changes pi0.5's Phase-A RIGHT-over-LEFT binary success gap of 24/27 versus 5/27; no post-registration directional outcome was specified."
+      },
+      "release_boundary": "Satisfied before inference: the hash-bound pi0.5 runtime passed exact-source, zero-request fixture/reset/renderer/writer, deterministic-repeat, and prompt-sensitivity gates. The complete cohort is hash-closed and must not be rerun.",
+      "rerun_policy": "do_not_rerun_any_valid_v3b002_cell",
+      "runtime_binding": {
+        "gate_manifest_file_sha256": "bf050c7301d3fbc621bb13ca271c1280839bb1a9e83c214b4f7f7da597d3dd1d",
+        "release_gate": "passed_model_blind_physical_and_fixed_observation_exact_repeat_prompt_sensitivity",
+        "release_gate_file_sha256": "450fcac935b4ff570d53f7d2c844ee10e9c4f2bba8f151692a49fd6de25bc07e",
+        "runtime_identity_file_sha256": "928af903ff99b02dd753b21eca2f6243142aced320a31166645bb1a0427a0f89",
+        "runtime_identity_sha256": "6e5e500f5efee2d7576d090a8ec544f28e47af4db6e797c1bb514a16a43fc944"
+      },
+      "seed_range_inclusive": [
+        9400,
+        9426
+      ],
+      "source_v3b001": {
+        "cells_sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a",
+        "manifest_sha256": "5c82268739feb41281435a51dcd848b575218cd9fbe5839d9ad130d1a7888830",
+        "reuse": "Exact seeds, fixtures, arm/relation assignments, and within-seed execution order are copied without resampling."
+      },
+      "status": "complete_hash_closed_27_seed_108_episode_result_no_rerun"
     }
   },
+  "prospective_tier_b_results": {
+    "v3b008_nano_start_side": {
+      "amendment_id": "V3-B008",
+      "arena": "droid_robolab",
+      "artifacts": {
+        "episodes": {
+          "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b008/v3b008_episodes.jsonl",
+          "sha256": "7775f19524d13409bc2da9e9d30d660e068fe735e0ce3d69f21fdbc0a3fe69e6"
+        },
+        "evidence_manifest": {
+          "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b008/evidence_manifest.json",
+          "sha256": "fa22f230ca87d5a382f089871da566c0be8534e34d67565b92c12bffd0497293"
+        },
+        "matched_pairs": {
+          "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b008/v3b008_matched_pairs.jsonl",
+          "sha256": "797cf2d43bf60921032c3940d82ec1e8803645684272f02b187915d5ab7f06f6"
+        },
+        "summary": {
+          "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b008/v3b008_summary.json",
+          "sha256": "dc64212c3252a8da27ad5d43c97d7d5061ec7cf8f8b79796e334c5be2889c99a"
+        }
+      },
+      "behavioral_episode_count": 162,
+      "claim_boundary": "The target's initial lateral side significantly changes Nano's binary LEFT/RIGHT success gap and shifts the continuous direction contrasts. This supports a geometry/reachability/state-dependence account; it does not isolate training distribution or a language-only mechanism.",
+      "condition_successes": {
+        "target_start_center:left": "26/27",
+        "target_start_center:right": "26/27",
+        "target_start_left:left": "26/27",
+        "target_start_left:right": "22/27",
+        "target_start_right:left": "23/27",
+        "target_start_right:right": "27/27"
+      },
+      "exact_prompts": {
+        "left": "Put the Rubik's cube to the left of the bowl.",
+        "right": "Put the Rubik's cube to the right of the bowl."
+      },
+      "factor": "initial_target_start_side",
+      "infrastructure_attempts_included": false,
+      "matched_left_right_pair_count": 81,
+      "matched_seed_count": 27,
+      "model_id": "cosmos3_nano_policy_droid",
+      "outer_level_interaction": {
+        "binary_success_exact_permutation_p": 0.015625,
+        "binary_success_mean": 0.2962962962962963,
+        "definition": "direction contrast for target-start-right minus target-start-left",
+        "endpoint_redirection_bootstrap_95_ci_m": [
+          0.0024705777910572512,
+          0.15123524502851068
+        ],
+        "endpoint_redirection_mean_m": 0.07316158677416819,
+        "requested_side_depth_bootstrap_95_ci_m": [
+          0.01240853934928223,
+          0.14696746939379307
+        ],
+        "requested_side_depth_mean_m": 0.07890166556117711
+      },
+      "rerun_policy": "do_not_rerun_any_valid_v3b008_cell",
+      "retained_infrastructure_attempt": {
+        "denominator_eligible": false,
+        "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/gates/v3b008/model_specific/parallel_lane_infrastructure_failure.json",
+        "sha256": "517ed05d51920b2f8cd121b806350d4cd868c782d355e5ba15f909b344eec64e"
+      },
+      "status": "complete_hash_closed_27_seed_162_episode_result_no_rerun",
+      "valid_behavioral_failures_included": true
+    },
+    "v3b009_nano_role_swap": {
+      "amendment_id": "V3-B009",
+      "arena": "droid_robolab",
+      "artifacts": {
+        "episodes": {
+          "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b009/v3b009_episodes.jsonl",
+          "sha256": "cc71a7bb85cd2ba5f9e5692b67009ebafbad2a73726b090602a9c71be96010ef"
+        },
+        "evidence_manifest": {
+          "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b009/evidence_manifest.json",
+          "sha256": "3dc9aa7ccb52deb4c57ff6e3f1d7c41c0fb28f9548a130bbcf39ec823be25dc3"
+        },
+        "matched_pairs": {
+          "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b009/v3b009_matched_pairs.jsonl",
+          "sha256": "b9d0b63aad8e36cc3a0a1066fc82fc9c402121e96c161ecd296b4b6af9e4619b"
+        },
+        "summary": {
+          "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b009/v3b009_summary.json",
+          "sha256": "9548f4e97898cbfe9fab26d2bdd42e3a1f5e28122476154e73f71e4834aac12a"
+        }
+      },
+      "behavioral_episode_count": 108,
+      "claim_boundary": "Role swap changed target/reference semantics and physical affordance together. It significantly modulated continuous endpoint redirection and requested-side depth, while its prespecified binary success interaction narrowly missed 0.05; this is not a language-only effect.",
+      "condition_successes": {
+        "bowl_target_cube_reference:left": "19/27",
+        "bowl_target_cube_reference:right": "27/27",
+        "cube_target_bowl_reference:left": "24/27",
+        "cube_target_bowl_reference:right": "24/27"
+      },
+      "exact_prompts": {
+        "bowl_target_cube_reference:left": "Put the bowl to the left of the Rubik's cube.",
+        "bowl_target_cube_reference:right": "Put the bowl to the right of the Rubik's cube.",
+        "cube_target_bowl_reference:left": "Put the Rubik's cube to the left of the bowl.",
+        "cube_target_bowl_reference:right": "Put the Rubik's cube to the right of the bowl."
+      },
+      "factor": "target_reference_role_swap",
+      "factor_interaction": {
+        "binary_success_exact_permutation_p": 0.0556640625,
+        "binary_success_mean": 0.2962962962962963,
+        "definition": "direction contrast for bowl-target/cube-reference minus cube-target/bowl-reference",
+        "endpoint_redirection_bootstrap_95_ci_m": [
+          0.06872670275021206,
+          0.2052499706305011
+        ],
+        "endpoint_redirection_exact_sign_p": 0.0015137195587158203,
+        "endpoint_redirection_mean_m": 0.13604958762449246,
+        "requested_side_depth_bootstrap_95_ci_m": [
+          0.05630933923336367,
+          0.20567010303062416
+        ],
+        "requested_side_depth_exact_sign_p": 0.0015137195587158203,
+        "requested_side_depth_mean_m": 0.13021075249546105
+      },
+      "infrastructure_attempts_included": false,
+      "matched_left_right_pair_count": 54,
+      "matched_seed_count": 27,
+      "model_id": "cosmos3_nano_policy_droid",
+      "rerun_policy": "do_not_rerun_any_valid_v3b009_cell",
+      "status": "complete_hash_closed_27_seed_108_episode_result_no_rerun",
+      "valid_behavioral_failures_included": true
+    }
+  },
+  "retrospective_mechanism_diagnostics": {
+    "decision": "The universal same-shape difficulty account does not survive A1, and competence alone does not explain directional gap in B1. Preserve DreamZero as the third reflection checkpoint and the lateral-position dose-response as the next mechanism tests. They remain unreleased until independent model-blind registration and runtime gates are committed.",
+    "failure_mode_split_a1": {
+      "cosmos3_edge": {
+        "failure_only_exact_p": 0.6181818181818182,
+        "interpretation": "No shape difference detected; the two-episode RIGHT failure row is too sparse to establish equivalence.",
+        "left_failures": 9,
+        "right_failures": 2
+      },
+      "dreamzero": {
+        "failure_only_exact_p": 0.0017219568583829528,
+        "interpretation": "Failure composition differs by direction; a rate-only difficulty account is rejected in this cohort.",
+        "left_failures": 24,
+        "right_failures": 10
+      },
+      "pi05": {
+        "failure_only_exact_p": 0.38217391304347825,
+        "interpretation": "No shape difference detected; the three-episode RIGHT failure row is too sparse to establish equivalence.",
+        "left_failures": 22,
+        "right_failures": 3
+      },
+      "scope": "Separate 27-seed DROID Phase-A cohorts for pi0.5, DreamZero, and Cosmos3 Edge; direction by five-category frozen outcome table with a failure-only exact Fisher-Freeman-Halton test.",
+      "source_report": {
+        "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_report.json",
+        "sha256": "f6289333d77538ed9235a567cb98d70333dd50549f7e52d13bfe5d34a10bdf96"
+      }
+    },
+    "figures": {
+      "failure_taxonomy_png": {
+        "path": "artifacts/vla_wam_shared_v3/analysis/mechanism/figures/figure6_failure_taxonomy_by_direction.png",
+        "sha256": "b457f1a1b47107143c4bbb87e4c45903fd20096b58badc32806a4d69adb865b1"
+      },
+      "gap_versus_competence_png": {
+        "path": "artifacts/vla_wam_shared_v3/analysis/mechanism/figures/figure4_gap_vs_competence.png",
+        "sha256": "511c5a27ade085594a783b16e55209ed55ab4ac5aed77a2076aeb537572df371"
+      },
+      "manifest": {
+        "path": "artifacts/vla_wam_shared_v3/analysis/mechanism/figures/mechanism_figure_manifest.json",
+        "sha256": "0733fcaf39b6e3e1a70999d656938df8bc4ec1d05a33bdc095038b86f6cac327"
+      }
+    },
+    "gap_versus_competence_b1": {
+      "interpretation": "No monotonic relationship is detected. Overall success mechanically bounds the largest observable binary directional gap through 2*min(success,1-success), but does not determine the gap's sign or mechanism.",
+      "scope": "Five separate 54-episode DROID Phase-A cohorts; overall success versus RIGHT-minus-LEFT success-rate gap.",
+      "source_report": {
+        "path": "artifacts/vla_wam_shared_v3/analysis/mechanism/gap_vs_competence_report.json",
+        "sha256": "c392c796c37193905d5824fda80b66737b39248a500134b973977bf67abe32f3"
+      },
+      "spearman_absolute_gap": {
+        "exact_permutation_p": 0.6833333333333333,
+        "rho": -0.3
+      },
+      "spearman_signed_gap": {
+        "exact_permutation_p": 0.95,
+        "rho": 0.1
+      }
+    },
+    "status": "complete_no_new_model_compute"
+  },
+  "schema_version": "vla-wam-shared-v3-continuation-v1",
   "scientific_claim_boundary": {
-    "supported": "Across every completed checkpoint, matched LEFT/RIGHT prompts changed executed traces; endpoint ordering was often aligned, but requested task completion and failure mode remained strongly checkpoint- and direction-dependent. In the separate V3-A002 public old-name-config bridge, all 20 common action prefixes differed and 16/20 endpoints aligned, yet success was 0/20 LEFT versus 12/20 RIGHT. Nano V3-B001, pi0.5 V3-B002, and DreamZero V3-B003 are completed scene-matched positions-only ablations. For pi0.5, reflection left endpoint redirection nearly unchanged (interaction mean -1.12 cm, 95% CI -7.81 to +5.68 cm, sign-test p=0.701) but reversed requested-side depth (interaction mean -34.59 cm, 95% CI -41.38 to -28.46 cm; 27/27 negative, p=1.49e-08) and binary success from control 4/27 LEFT versus 25/27 RIGHT to reflected 25/27 LEFT versus 9/27 RIGHT (mean DiD -1.370, exact p=5.96e-08). DreamZero reflection improved total success from 13/54 to 50/54 and changed depth (interaction mean -14.09 cm, 95% CI -19.92 to -8.19 cm, sign-test p=0.000311), while its binary success-gap DiD was not significant (p=0.581). In V3-D001, pi0.5 succeeded in 41/216 LEFT and 197/216 RIGHT stochastic rollouts; every one of 27 fixed scenes had a positive estimated p(RIGHT)-p(LEFT) gap (mean +0.722, 95% environment-seed cluster-bootstrap CI +0.676 to +0.769, exact sign-test p=1.49e-08).",
     "not_supported": "The three completed registered movable-object center-position reflections support geometry or layout as a major competence confound under this simulator setup. They do not imply that all prompt-conditioned endpoint steering is geometric, identify training-distribution bias as the mechanism, or isolate reachability from other downstream physical mediators. V3-B009 tests an object-role swap, not a full-scene mirror or base rotation, and changes semantics and affordances together. V3-B008 tests target start side without rotating the robot base. An exposed or decoded future also does not establish successful control.",
+    "supported": "Across every completed checkpoint, matched LEFT/RIGHT prompts changed executed traces; endpoint ordering was often aligned, but requested task completion and failure mode remained strongly checkpoint- and direction-dependent. In the separate V3-A002 public old-name-config bridge, all 20 common action prefixes differed and 16/20 endpoints aligned, yet success was 0/20 LEFT versus 12/20 RIGHT. Nano V3-B001, pi0.5 V3-B002, and DreamZero V3-B003 are completed scene-matched positions-only ablations. For pi0.5, reflection left endpoint redirection nearly unchanged (interaction mean -1.12 cm, 95% CI -7.81 to +5.68 cm, sign-test p=0.701) but reversed requested-side depth (interaction mean -34.59 cm, 95% CI -41.38 to -28.46 cm; 27/27 negative, p=1.49e-08) and binary success from control 4/27 LEFT versus 25/27 RIGHT to reflected 25/27 LEFT versus 9/27 RIGHT (mean DiD -1.370, exact p=5.96e-08). DreamZero reflection improved total success from 13/54 to 50/54 and changed depth (interaction mean -14.09 cm, 95% CI -19.92 to -8.19 cm, sign-test p=0.000311), while its binary success-gap DiD was not significant (p=0.581). In V3-D001, pi0.5 succeeded in 41/216 LEFT and 197/216 RIGHT stochastic rollouts; every one of 27 fixed scenes had a positive estimated p(RIGHT)-p(LEFT) gap (mean +0.722, 95% environment-seed cluster-bootstrap CI +0.676 to +0.769, exact sign-test p=1.49e-08).",
     "unit_warning": "RoboTwin sampling replicates are nested within seven scenes; they are not 63 independent scenes. V3-D001's 432 pi0.5 episodes are eight repeated policy samples nested within 54 fixed scene-direction conditions; the primary inferential unit is the 27 environment seeds."
   },
+  "status": "phase_e_e001_336_valid_requests_e002_108_valid_model_blind_diagnostics",
   "storage": {
-    "raw_pvc_root": "/data/users/ali/vla_wam/raw/v3",
     "checkpoints_root": "/data/users/ali/vla_wam/checkpoints",
     "environments_root": "/data/users/ali/vla_wam/envs",
-    "policy": "Raw rollouts, checkpoints, environments, and unbounded media stay on the ali-owned PVC outside ordinary Git."
+    "policy": "Raw rollouts, checkpoints, environments, and unbounded media stay on the ali-owned PVC outside ordinary Git.",
+    "raw_pvc_root": "/data/users/ali/vla_wam/raw/v3"
   },
-  "next_agent": {
-    "safe_first_commands": [
-      "git status --short",
-      ".venv/bin/python tools/validate_vla_wam_v3_protocol.py",
-      ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
-      "git diff --check"
-    ],
-    "inference_authority": "Do not rerun any valid Phase-A, V3-A002, Nano V3-B001, pi0.5 V3-B002, DreamZero V3-B003, Nano V3-B005, Nano V3-B008, Nano V3-B009, pi0.5 V3-D001, GR00T V3-C001, Cosmos3 Edge V3-C001, or Cosmos3 Nano V3-C001 cell. V3-D001 is complete and hash-closed at 432/432 valid episodes and 216/216 matched pairs. All three Phase-C models are complete at 160/160 valid cells and hash-closed. DreamZero V3-B003, Nano V3-B005, Nano V3-B008, and Nano V3-B009 are complete and hash-closed. Nano V3-B004 failed closed with zero model requests and must never be run. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or another Phase-C model.",
-    "publication_note": "Use the compact result summaries and evidence manifests for analysis. Do not infer current study state from the older V2 article, gallery, figures, or chat history."
+  "study_id": "vla_wam_language_steerability_v3",
+  "updated_at_utc": "2026-08-07T18:28:12Z",
+  "validation": {
+    "checkpoint_provenance_tests": {
+      "command": ".venv/bin/python -m unittest tests.test_v3_checkpoint_provenance",
+      "status": "passed",
+      "test_count": 4
+    },
+    "dreamzero_v3b003_registration_tests": {
+      "command": ".venv/bin/python -m unittest tests.test_build_dreamzero_v3b003_registration",
+      "status": "passed",
+      "test_count": 4
+    },
+    "focused_tests": {
+      "command": ".venv/bin/python -m pytest -q tests/test_v3_robotwin_wams_launcher.py tests/test_validate_vla_wam_v3_protocol.py tests/test_nano_v3b004_calibration_design.py",
+      "status": "passed",
+      "test_count": 27
+    },
+    "phase_c_behavioral_bridge_tests": {
+      "command": ".venv/bin/python -m pytest -q tests/test_compile_v3c_phase_c_results.py tests/test_render_v3c_phase_c_results.py tests/test_phase_c_four_phrasings.py",
+      "status": "passed",
+      "test_count": 22
+    },
+    "retrospective_analysis_tests": {
+      "command": ".venv/bin/python -m unittest tools/test_analyze_v3_failure_mode_split.py tools/test_analyze_v3_gap_vs_competence.py",
+      "status": "passed",
+      "test_count": 6
+    },
+    "v2": {
+      "check_count": 994,
+      "command": ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
+      "status": "valid"
+    },
+    "v3": {
+      "check_count": 628,
+      "command": ".venv/bin/python tools/validate_vla_wam_v3_protocol.py",
+      "status": "valid"
+    }
   }
 }

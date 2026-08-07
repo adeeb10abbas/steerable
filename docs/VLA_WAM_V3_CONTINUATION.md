@@ -1022,3 +1022,15 @@ summary/evidence-manifest/infrastructure-ledger triplets plus the separate
 V3-A002 triplet under `artifacts/vla_wam_shared_v3/results/` for earlier
 completed-result analysis. Do not infer current experiment state from the older
 article, website, gallery, figures, or chat.
+
+## Phase E — fixed-state prompt/noise and model-blind controller controls
+
+Phase E is now closed on the registered branch. V3-E001 completed 336/336
+valid fixed-observation model requests across π0.5, Cosmos3 Nano Policy DROID,
+and DreamZero (two layouts, 27 matched sampling seeds, and exact repeats),
+with zero action executions. V3-E002 completed 108/108 valid model-blind
+absolute-IK controller episodes and zero learned-model requests. The selected
+static relation-gate depth was 0.100 m; the deterministic waypoint recipe
+produced `pick_failed` in every episode, so E002 is a negative controller
+diagnostic and not a mechanical-feasibility claim. See the two Phase-E
+decision memos and `V3E_PUBLICATION_DECISION.md` for exact claim boundaries.

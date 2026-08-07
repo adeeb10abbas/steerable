@@ -1,31 +1,40 @@
 # V3-E001 decision memo
 
-Status: **blocked before request zero**. No E001 model request was issued and
-no behavioral episode was created.
+Status: **complete (336 valid fixed-observation requests; zero behavioral episodes).**
 
-The registered design requires one byte-identical settled observation for each
-of the two V3-B001 layouts, then 336 requests across π0.5, Cosmos Nano, and
-DreamZero. The PVC contains older fixed-observation artifacts, but none is a
-hash-bound E001 pair for the registered V3-B001 control and position-mirrored
-fixtures. The existing B001 raw records retain state traces and videos, not the
-complete model-input arrays needed to prove byte identity. Reusing a V2/V3-D
-fixture or extracting a video frame would change the intervention and is
-therefore not valid evidence.
+At each registered settled observation, the only intervention was the exact
+static prompt: “Put the Rubik's cube to the left of the bowl.” versus “Put the
+Rubik's cube to the right of the bowl.”. The four observation arrays are
+hash-bound to the V3-B001 control and position-mirrored fixtures. π0.5, Cosmos3
+Nano Policy DROID, and DreamZero each supplied 27 matched LEFT/RIGHT pairs per
+layout plus the registered exact repeats. No returned action was executed.
 
-The currently visible policy listeners are historical endpoints on ali-owned
-pods, not an E001-isolated runtime identity. They were not queried.
+The compact compiler reports 27/27 matched prompt effects for every model and
+layout, exact-repeat bit identity for all six model/layout cells, and retains
+the raw request-file hashes. Nano decoded futures remain on the PVC; the
+compact report retains action summaries only. DreamZero's first pass (112
+infrastructure-invalid rows caused by an incorrect OpenPI-style client
+coercion) is preserved separately and excluded from the denominator.
 
 ## Counts
 
 | quantity | registered | completed |
 |---|---:|---:|
-| model requests | 336 | 0 |
+| model requests | 336 | 336 valid |
 | behavioral episodes | 0 | 0 |
-| infrastructure-invalid requests | — | 0 |
+| infrastructure-invalid attempts | — | 224 retained, excluded |
 
-## Safe restart condition
+## Primary interpretation
 
-Capture and hash fresh control/reflected observations from the exact B001
-fixture in a model-blind RTX/Vulkan gate; bind those hashes and the isolated
-server contracts in a post-registration runtime manifest; then run the
-registered three-request preflight before the 336-request queue.
+This is evidence for a fixed-state prompt intervention, not a task-success
+claim. The safe manuscript sentence is: “At an identical observation,
+changing only the directional prompt produced a reproducible action change in
+all 27 matched sampling seeds for each tested checkpoint and layout; the
+effect must be interpreted relative to the measured same-prompt cross-seed
+variation in the compact report.”
+
+## Evidence
+
+`results/compiled_results.json` is the compact hash-bearing report. Raw
+requests, decoded Nano futures, and DreamZero retained futures remain on the
+PVC under the registered Phase-E raw root and are not committed.

@@ -1,33 +1,37 @@
 # V3-E002 decision memo
 
-Status: **blocked at the model-blind renderer/controller gate**. No learned
-model request and no behavioral episode was issued.
+Status: **complete model-blind diagnostic (108 valid episodes; zero learned-model requests).**
 
-The exact ali-owned RTX PRO 6000 pod was visible and the pinned RoboLab
-checkout was clean. Isaac Sim accepted the EULA after an explicit terminal
-acceptance, but the zero-request preflight did not produce a valid renderer or
-controller gate. The captured log reports missing `libGL.so.1` and
-`libXt.so.6`, failed RTX plugin loading, Warp CUDA error 36, and PhysX's
-“no suitable CUDA GPU” diagnostic. `nvidia-smi` could see the GPU, but that is
-not sufficient for the required Vulkan/Isaac capture and verified planning
-stack. The attempt was stopped without launching the queue.
+The corrected RTX/Isaac runtime uses the pinned RoboLab checkout and the
+verified absolute-IK action contract. The static gate evaluated 0.075, 0.100,
+0.150, and 0.200 m signed lateral targets across control and
+position-mirrored layouts. Under the frozen 45-degree relation criterion,
+0.075 and 0.100 m were feasible; the largest selected depth was 0.100 m.
 
-Attempt log on the PVC:
-
-`/data/users/ali/vla_wam/raw/v3e/reference_controller_symmetry_v3e002/model_blind_gate/attempt02/run.log`
-
-SHA-256: `864c553971623a5e1ea144d7ca886a3412fe52dd204f64c797e7530317683758`
+All four matched 27-seed controller queues completed. The deterministic
+waypoint recipe did not pick up the cube in any condition (0/27 each); these
+are valid behavioral failures, not infrastructure exclusions. The resulting
+diagnostic therefore does not establish controller competence or symmetry.
+It does establish that this particular model-blind recipe is not a positive
+control for the learned-policy claim. The selected-depth gate and all raw
+episode rows are retained.
 
 ## Counts
 
 | quantity | registered | completed |
 |---|---:|---:|
-| model-blind episodes | 108 | 0 |
+| model-blind behavioral episodes | 108 | 108 valid |
 | learned-model requests | 0 | 0 |
-| infrastructure-invalid attempts | — | 1 gate attempt |
+| infrastructure-invalid attempts | — | 0 |
 
-## Safe restart condition
+## Claim boundary
 
-Repair or select an ali-owned image with the required GL/X11 runtime libraries
-and CUDA/Vulkan-compatible Isaac stack, rerun the zero-request static planning
-gate, and only then enable the deterministic reference-controller queue.
+Do not use these episodes to claim that the physical task is mechanically
+easy. The controller's all-`pick_failed` outcome and endpoint errors show that
+the present absolute-IK waypoint recipe is not a calibrated competence
+baseline. The appropriate result is a failed model-blind competence control,
+not evidence for a learned-policy direction effect.
+
+`results.json` contains cell summaries, paired contrasts, gate provenance, and
+source hashes. The raw JSONL episode ledgers remain committed here because
+they are small and are the machine-readable evidence for this diagnostic.

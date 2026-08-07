@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 from pathlib import Path
 import sys
 import time
@@ -63,6 +64,14 @@ if (
     or sha256_file(bootstrap.fixture_candidate) != FIXTURE_CANDIDATE_SHA256
 ):
     BOOTSTRAP.error("DreamZero V3-B003 fixture candidate changed")
+# The reused, hash-pinned RoboLab task module loads the registered fixture at
+# import time.  Bind the already-validated path and digest before any Isaac or
+# task imports so the behavioral bridge uses exactly the model-blind gate's
+# immutable object coordinates.
+os.environ["VLA_WAM_V3B_FIXTURE_CANDIDATE"] = str(
+    bootstrap.fixture_candidate.resolve()
+)
+os.environ["VLA_WAM_V3B_FIXTURE_SHA256"] = bootstrap.fixture_candidate_sha256
 if bootstrap.open_loop_horizon != 8 or bootstrap.remote_port == 5000:
     BOOTSTRAP.error("DreamZero V3-B003 requires horizon 8 and an isolated non-5000 port")
 runtime_identity = validate_runtime_identity(

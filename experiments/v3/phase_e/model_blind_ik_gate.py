@@ -73,7 +73,10 @@ def main():
                     command_quat = quat_mul(eef_quat, offset_inv)
                     command = np.concatenate([target, command_quat, [0.0]]).astype(np.float32)
                     finite=True; limit_margin=float("inf"); errors=[]
-                    for _ in range(5):
+                    # RoboLab's verified absolute-IK demo uses a 30-step hold
+                    # before measuring tracking error; five steps only measures
+                    # transient convergence and is not a feasibility gate.
+                    for _ in range(30):
                         obs,_,term,trunc,_=env.step(torch.from_numpy(command).to(env.device).reshape(1,-1))
                         joints=arr(obs["proprio_obs"]["arm_joint_pos"])[0]
                         finite = finite and bool(np.isfinite(joints).all()); limit_margin=min(limit_margin,float(np.min(np.abs(joints))))

@@ -1,0 +1,89 @@
+{
+  "amendment_id": "V3-B008",
+  "arena": "droid_robolab",
+  "arms": [
+    "target_start_right",
+    "target_start_center",
+    "target_start_left"
+  ],
+  "authorized_behavioral_cells": 162,
+  "completed_behavioral_cells_at_release": 0,
+  "exact_prompts": {
+    "left": "Put the Rubik's cube to the left of the bowl.",
+    "right": "Put the Rubik's cube to the right of the bowl."
+  },
+  "fixture_candidate": {
+    "bytes": 3449,
+    "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/droid_gate_candidate_v3b008_v3b009.json",
+    "sha256": "8820932c3768ca9324e1dce8b6e18c4c7847126cc4388aad6f305f7088b14f27"
+  },
+  "frozen_rules": [
+    "one static direct-command prompt per episode",
+    "same seed and reset fixture for all six cells in a matched block",
+    "frozen DROID success predicate, 45-degree cone, controller, and action cap",
+    "simulator viewport video and raw per-episode JSONL for every valid episode",
+    "behavioral failures stay in denominators; infrastructure failures remain separate",
+    "never pool DROID with RoboTwin"
+  ],
+  "launched_behavioral_cells_at_release": 0,
+  "matched_seeds": [
+    9700,
+    9701,
+    9702,
+    9703,
+    9704,
+    9705,
+    9706,
+    9707,
+    9708,
+    9709,
+    9710,
+    9711,
+    9712,
+    9713,
+    9714,
+    9715,
+    9716,
+    9717,
+    9718,
+    9719,
+    9720,
+    9721,
+    9722,
+    9723,
+    9724,
+    9725,
+    9726
+  ],
+  "model_blind_gate": {
+    "bytes": 56076,
+    "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/gates/v3b008/model_blind_gate_report.json",
+    "sha256": "a256113c8a53186ad2842555804a491a2bc759f22bdb14bc5c89a44b1d88cb46"
+  },
+  "model_blind_gate_manifest": {
+    "bytes": 2228,
+    "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/gates/v3b008/evidence_manifest.json",
+    "sha256": "220fa90cc851c0743593e983bda4624ca35dd96655da827ad70ec2f2c9ecb1d5"
+  },
+  "model_id": "cosmos3_nano_policy_droid",
+  "queue": {
+    "bytes": 162891,
+    "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/releases/v3b008/v3b008_cells.jsonl",
+    "sha256": "2ccc9eaa787dac0f6f5f94b2e3c91d09952daa5692da48effe55bd638032a311"
+  },
+  "recorded_at_utc": "2026-08-07T03:23:00Z",
+  "registration": {
+    "bytes": 3076,
+    "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/nano_start_side_v3b008.json",
+    "sha256": "8cd7c3bda7db0c3b9097e72c54d74fe0b81fd8a3d1909b6ec4aea00748c854c2"
+  },
+  "relations": [
+    "left",
+    "right"
+  ],
+  "runtime_boundary": "Reuse the exact hash-gated Nano policy/RoboLab stack only after the active V3-B005 and V3-C001 server schedules permit a new isolated serial owner. This amendment does not displace them or start a server.",
+  "schema_version": "vla-wam-shared-v3b008-release-amendment-v1",
+  "selected_symmetric_cube_minus_bowl_lateral_offset_m": 0.1,
+  "status": "released_after_model_blind_gate_behavior_deferred_for_server_scheduling",
+  "study_id": "vla_wam_language_steerability_v3"
+}

@@ -33,7 +33,9 @@ def arr(x):
     return np.asarray(x, dtype=np.float64)
 
 def main():
-    args.output.parent.mkdir(parents=True, exist_ok=False)
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    if args.output.exists():
+        raise FileExistsError(f"refusing to overwrite retained IK gate: {args.output}")
     task_root = root / "experiments/v3/pi05_phase_b/task_files"
     auto_register_droid_abs_ik_envs(task=[str(task_root / v[0]) for v in TASKS.values()], cameras=WRIST_LEFT_RIGHT_HEAD)
     rows=[]

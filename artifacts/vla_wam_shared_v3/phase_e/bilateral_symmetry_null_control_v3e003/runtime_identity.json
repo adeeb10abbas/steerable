@@ -1,0 +1,58 @@
+{
+  "action_cap": 450,
+  "action_chunk_shape": [
+    15,
+    8
+  ],
+  "action_space": "joint_position_8d",
+  "amendment_id": "V3-E003",
+  "base_runtime_identity_sha256": "de55b8a73e8f27e0b67faf841595002578fcc1b3d7b583a151171114efead15f",
+  "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+  "checkpoint_sha256": "b193b28b05f9755e24d44a6f5cf3185ca23c2ad3da6c5913370379c82570fbf6",
+  "environment_lock_sha256": "8ab95005e08716a16eefb18846bb57bf436e71a3a102d428cb38df1f30ddb29b",
+  "external_repository_diff_hash": "9cb1e3c8adc8fbeb420c605f07c472eb7c210fc61cc91f6b7aec9e88ca3d559f",
+  "future_interface": "actions_only",
+  "instruction_controller": "static_episode_prompt",
+  "live_topology": {
+    "policy_server": {
+      "driver_version": "580.105.08",
+      "gpu_index": 2,
+      "gpu_model": "NVIDIA B200",
+      "gpu_uuid": "GPU-4ca76921-a7d2-e920-8555-47e0e8f105f7",
+      "model_request_count_at_capture": 0,
+      "owner": "ali",
+      "pod": "lerobot-b200-4gpu-1-ali",
+      "pod_ip": "10.244.103.110",
+      "pod_uid": "1e0f438c-6041-4cc3-af32-0c118963e54c",
+      "port": 8001
+    },
+    "schema_version": "vla-wam-shared-v3b-pi05-live-topology-v1",
+    "simulator_lanes": [
+      {
+        "driver_version": "580.105.08",
+        "gpu_model": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+        "gpu_uuid": "GPU-f28bd513-a38a-b768-7589-d2959f814ae8",
+        "owner": "ali",
+        "pod": "raytrace-rtxpro6000-ali",
+        "pod_ip": "10.244.222.28",
+        "pod_uid": "d5b0405a-a9b1-4baa-a802-d5171e03c228"
+      }
+    ]
+  },
+  "live_topology_sha256": "5dd54031c1a0d45ab262d1055ce7502d46de11ee5bd864f43ceccf3b26eec8cf",
+  "missing_future_policy": "action_only_interface_not_applicable_never_zero",
+  "model_id": "pi05_current_stack_droid",
+  "open_loop_horizon": 15,
+  "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+  "openpi_config": "pi05_droid_jointpos_polaris",
+  "openpi_dir_status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "release_manifest_sha256": "0634a87eadfc28b3eeed614a1a5960a06f97e9ba52ab307b73b9934c7a6d8110",
+  "renderer_backend": "Isaac Sim viewport realtime RTX Vulkan balanced",
+  "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+  "robolab_dir_status_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "runtime_identity_sha256": "bc446c7da063f54b4ab144c52b9b60bf31a0ce67a805d8fe81f008949c74a03e",
+  "schema_version": "vla-wam-shared-v3e003-runtime-identity-v1",
+  "simulator_version": "Isaac Sim 5.0.0.0 / Isaac Lab 2.2.0 / RoboLab 0.2.1",
+  "study_git_commit": "5b74ace45efef3082d57e02e039e5b75fef54bb2",
+  "study_id": "vla_wam_language_steerability_v3"
+}

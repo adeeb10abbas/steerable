@@ -52,7 +52,16 @@ FIGURES = {
 }
 
 SOURCES = {
+    "pi05_phase_a": ROOT / "artifacts/vla_wam_shared_v3/results/pi05_current_stack_droid_phase_a_summary.json",
+    "groot_phase_a": ROOT / "artifacts/vla_wam_shared_v3/results/groot_n17_droid_phase_a_summary.json",
+    "edge_phase_a": ROOT / "artifacts/vla_wam_shared_v3/results/cosmos3_edge_policy_droid_phase_a_summary.json",
     "nano_phase_a": ROOT / "artifacts/vla_wam_shared_v3/results/cosmos3_nano_policy_droid_phase_a_summary.json",
+    "dream_phase_a": ROOT / "artifacts/vla_wam_shared_v3/results/dreamzero_droid_action_cfg_phase_a_summary.json",
+    "pi0_compatibility": ROOT / "artifacts/vla_wam_shared_v3/results/pi0_fast_old_name_config_v3a002_summary.json",
+    "efficient_robotwin": ROOT / "artifacts/vla_wam_shared_v3/results/efficient_wam_rt_robotwin_phase_a_summary.json",
+    "fast_robotwin": ROOT / "artifacts/vla_wam_shared_v3/results/fastwam_robotwin_phase_a_summary.json",
+    "lingbot_robotwin": ROOT / "artifacts/vla_wam_shared_v3/results/lingbot_va_robotwin_phase_a_summary.json",
+    "bounded_checkpoint_table": ROOT / "artifacts/vla_wam_shared_v2/results/direct_command_cross_model_comparison.json",
     "coverage": ROOT / "artifacts/vla_wam_shared_v3/measurement_coverage_audit.json",
     "nano_mirror": ROOT / "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/nano_v3b001_summary.json",
     "pi05_mirror": ROOT / "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_report.json",
@@ -67,6 +76,21 @@ SOURCES = {
     "stochastic_repeats": ROOT / "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3d001/pi05_v3d001_summary.json",
     "base_rotation_gate": ROOT / "artifacts/vla_wam_shared_v3/prospective_tier_b/gates/v3b006/model_blind_structural_gate_failure.json",
 }
+
+REQUIRED_MANIFESTS = (
+    ROOT / "artifacts/vla_wam_shared_v3/analysis/paper_figures/figure1_nano_instrument_sensitivity.manifest.json",
+    ROOT / "artifacts/vla_wam_shared_v3/analysis/paper_figures/figure2_three_checkpoint_position_reflection.manifest.json",
+    ROOT / "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/figures/manifest.json",
+    ROOT / "artifacts/vla_wam_shared_v3/analysis/mechanism/figures/mechanism_figure_manifest.json",
+    ROOT / "artifacts/vla_wam_shared_v3/analysis/paper_figures/figure5_cross_arena_directional_success.manifest.json",
+    ROOT / "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/figures/phase_c_figure_manifest.json",
+    ROOT / "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/evidence_manifest.json",
+    ROOT / "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/nano_v3b005_results_manifest.json",
+    ROOT / "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b007/evidence_hash_manifest.json",
+    ROOT / "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b008/evidence_manifest.json",
+    ROOT / "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b009/evidence_manifest.json",
+    ROOT / "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3d001/evidence_manifest.json",
+)
 
 PHASE_C_DIR = ROOT / "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results"
 
@@ -89,6 +113,75 @@ def file_record(path: Path) -> dict[str, Any]:
     return {"path": str(path.relative_to(ROOT)), "bytes": path.stat().st_size, "sha256": sha256(path)}
 
 
+def _verify_manifest_records(value: Any, *, manifest: Path, verified: list[Path]) -> None:
+    """Verify every repository-local path/bytes/SHA record exposed by a manifest."""
+
+    if isinstance(value, dict):
+        if {"path", "bytes", "sha256"}.issubset(value):
+            declared = Path(str(value["path"]))
+            if declared.is_absolute():
+                candidate = manifest.parent / declared.name
+                if not candidate.is_file():
+                    candidate = None
+            else:
+                candidate = ROOT / declared
+                if not candidate.is_file():
+                    candidate = manifest.parent / declared
+            if candidate is not None:
+                if not candidate.is_file():
+                    raise FileNotFoundError(f"manifest-bound file is missing: {declared} ({manifest})")
+                if candidate.stat().st_size != int(value["bytes"]) or sha256(candidate) != value["sha256"]:
+                    raise ValueError(f"manifest-bound file changed: {declared} ({manifest})")
+                verified.append(candidate.resolve())
+        for name, nested in value.items():
+            if (
+                isinstance(nested, dict)
+                and "path" not in nested
+                and {"bytes", "sha256"}.issubset(nested)
+            ):
+                candidate = manifest.parent / str(name)
+                if candidate.is_file():
+                    if candidate.stat().st_size != int(nested["bytes"]) or sha256(candidate) != nested["sha256"]:
+                        raise ValueError(f"manifest-bound file changed: {candidate} ({manifest})")
+                    verified.append(candidate.resolve())
+            _verify_manifest_records(nested, manifest=manifest, verified=verified)
+    elif isinstance(value, list):
+        for nested in value:
+            _verify_manifest_records(nested, manifest=manifest, verified=verified)
+
+
+def verify_required_manifests() -> list[Path]:
+    verified: list[Path] = []
+    for manifest in REQUIRED_MANIFESTS:
+        if not manifest.is_file():
+            raise FileNotFoundError(f"required evidence manifest is missing: {manifest}")
+        _verify_manifest_records(read_json(manifest), manifest=manifest, verified=verified)
+        verified.append(manifest.resolve())
+    return sorted(set(verified))
+
+
+def validate_closed_evidence(data: dict[str, Any], phase_c: list[dict[str, Any]]) -> None:
+    for key in ("pi05_phase_a", "groot_phase_a", "edge_phase_a", "nano_phase_a", "dream_phase_a"):
+        summary = data[key]
+        if len(summary.get("pairs", [])) != 27:
+            raise ValueError(f"{key} is not the closed 27-pair expanded DROID cohort")
+    for key in ("efficient_robotwin", "fast_robotwin", "lingbot_robotwin"):
+        primary = data[key].get("v3_primary_results", {})
+        if primary.get("valid_episodes") != 126 or primary.get("matched_pairs") != 63:
+            raise ValueError(f"{key} is not the closed 126-episode RoboTwin cohort")
+    if data["robotwin_mirror"].get("status") != "complete_27_matched_seeds_108_valid_episodes":
+        raise ValueError("V3-B007 is not closed")
+    for key, expected_episodes, expected_pairs in (("start_side", 162, 81), ("role_swap", 108, 54)):
+        population = data[key].get("population", {})
+        if population.get("behavioral_episode_count") != expected_episodes or population.get("matched_left_right_pair_count") != expected_pairs:
+            raise ValueError(f"{key} is not closed")
+    stochastic = data["stochastic_repeats"]
+    if stochastic.get("status") != "complete_exact_release_analyzed" or stochastic.get("population", {}).get("valid_behavioral_episodes") != 432:
+        raise ValueError("V3-D001 is not closed")
+    if len(phase_c) != 3 or any(summary.get("status") != "complete_20_seed_160_behavioral_episode_result" for summary in phase_c):
+        raise ValueError("Phase C is not closed for all three checkpoints")
+
+
 def register_fonts() -> None:
     candidates = {
         "Georgia": "/System/Library/Fonts/Supplemental/Georgia.ttf",
@@ -108,7 +201,7 @@ def register_fonts() -> None:
         if Path(path).is_file():
             pdfmetrics.registerFont(TTFont(name, path))
         elif name not in pdfmetrics.getRegisteredFontNames():
-            pdfmetrics.registerFont(pdfmetrics.getFont(fallbacks[name]))
+            pdfmetrics.registerFont(pdfmetrics.Font(name, fallbacks[name], "WinAnsiEncoding"))
 
 
 BODY = ParagraphStyle("body", fontName="Arial", fontSize=9.5, leading=13.6, textColor=INK, spaceAfter=5)
@@ -117,6 +210,9 @@ NOTE = ParagraphStyle("note", parent=BODY, fontSize=8.4, leading=12.0, textColor
 H1 = ParagraphStyle("h1", fontName="Georgia-Bold", fontSize=23, leading=26, textColor=INK)
 H2 = ParagraphStyle("h2", fontName="Georgia-Bold", fontSize=15.5, leading=19, textColor=INK)
 LABEL = ParagraphStyle("label", fontName="Arial-Bold", fontSize=7.2, leading=9, textColor=MUTED)
+TABLE_TEXT = ParagraphStyle("table_text", parent=BODY, fontSize=6.6, leading=8.2, textColor=INK)
+TABLE_BOLD = ParagraphStyle("table_bold", parent=TABLE_TEXT, fontName="Arial-Bold")
+TABLE_HEAD = ParagraphStyle("table_head", parent=TABLE_BOLD, textColor=colors.white)
 
 
 def para(c: canvas.Canvas, text: str, x: float, top: float, width: float, style: ParagraphStyle = BODY, max_height: float = 1000) -> float:
@@ -144,7 +240,16 @@ def fit_image(c: canvas.Canvas, path: Path, x: float, y: float, w: float, h: flo
 class Report:
     def __init__(self, output: Path):
         output.parent.mkdir(parents=True, exist_ok=True)
-        self.canvas = canvas.Canvas(str(output), pagesize=(PAGE_W, PAGE_H), pageCompression=1)
+        self.canvas = canvas.Canvas(
+            str(output),
+            pagesize=(PAGE_W, PAGE_H),
+            pageCompression=1,
+            invariant=1,
+        )
+        self.canvas.setTitle("Language Sensitivity Is Not Directional Control")
+        self.canvas.setSubject("Matched spatial-language interventions in robot policies")
+        self.canvas.setAuthor("Steerable VLA/WAM study")
+        self.canvas.setCreator("tools/build_v3_scientific_report.py")
         self.page = 0
 
     def new_page(self, title: str, kicker: str, subtitle: str = "") -> float:
@@ -172,7 +277,16 @@ class Report:
 
 
 def prompt_line() -> str:
-    return "<b>LEFT condition:</b> “Put the Rubik’s cube to the left of the bowl.”<br/><b>RIGHT condition:</b> “Put the Rubik’s cube to the right of the bowl.”"
+    return "<b>LEFT condition:</b> \"Put the Rubik's cube to the left of the bowl.\"<br/><b>RIGHT condition:</b> \"Put the Rubik's cube to the right of the bowl.\""
+
+
+def phase_c_prompt_lines() -> str:
+    return (
+        "<b>Direct:</b> \"Put the Rubik's cube to the {left|right} of the bowl.\"<br/>"
+        "<b>Shortened:</b> \"Put the cube {left|right} of the bowl.\"<br/>"
+        "<b>Goal:</b> \"The Rubik's cube should end up to the {left|right} of the bowl.\"<br/>"
+        "<b>Contrastive:</b> \"Put the Rubik's cube to the {left|right} of the bowl, not to the {right|left} of the bowl.\""
+    )
 
 
 def draw_cover(report: Report, data: dict[str, Any]) -> None:
@@ -193,7 +307,7 @@ def draw_cover(report: Report, data: dict[str, Any]) -> None:
     top = para(c, "<b>Answer</b>", MARGIN + 18, top - 17, left_w - 36, H2)
     top = para(
         c,
-        "Executed actions and endpoints often changed with the instruction, but binary task success remained direction-, layout-, phrasing-, and checkpoint-dependent. Position reflection and a seven-level lateral sweep show that scene geometry changes the directional advantage. The effect therefore cannot be summarized as either language control or a fixed model bias.",
+        "Executed actions and endpoints often changed with the instruction, but binary task success remained direction-, layout-, and checkpoint-dependent; an exploratory block also showed descriptive variation across four prompt forms. Position reflection and a seven-level lateral sweep show that scene geometry changes the directional advantage. The effect therefore cannot be summarized as either language control or a fixed model bias.",
         MARGIN + 18,
         top - 7,
         left_w - 36,
@@ -203,11 +317,13 @@ def draw_cover(report: Report, data: dict[str, Any]) -> None:
     audit = data["coverage"]["nano_phase_a_margin_sensitivity_reproduction"]
     dose = data["dose"]["primary_depth_dose_response"]["slope_m_per_m"]
     failure = {row["model_id"]: row for row in data["failure"]["results"]}
+    competence = data["competence"]["descriptive_associations"]["competence_vs_signed_gap"]["spearman"]
+    dream_p = failure["dreamzero_droid_action_cfg"]["failure_only_exact_test"]["p_value"]
     bullets = [
-        ("12.4 cm", f"Nano RIGHT-minus-LEFT requested-depth gap; exact p={audit['exact_two_sided_sign_test_p_excluding_ties']:.3g}."),
-        ("+1.12 m/m", f"Dose-response slope across reference-object position; 95% CI [{dose['ci95'][0]:.2f}, {dose['ci95'][1]:.2f}]."),
-        ("p = 0.00172", "DreamZero’s failure composition differs by requested direction; a rate-only difficulty account is insufficient there."),
-        ("ρ = 0.10", "Success gap is not monotonic in overall competence across five DROID checkpoints; exact p=0.95."),
+        (f"{audit['right_minus_left_mean_margin_gap_m']*100:.1f} cm", f"Nano RIGHT-minus-LEFT requested-depth gap; exact p={audit['exact_two_sided_sign_test_p_excluding_ties']:.3g}."),
+        (f"{dose['mean']:+.2f} m/m", f"Dose-response slope across reference-object position; 95% CI [{dose['ci95'][0]:.2f}, {dose['ci95'][1]:.2f}]."),
+        (f"p = {dream_p:.3g}", "DreamZero’s failure composition differs by requested direction; a rate-only difficulty account is insufficient there."),
+        (f"ρ = {competence['coefficient']:.2f}", f"No monotonic success-gap association is detected across five DROID checkpoints; exact p={competence['two_sided_exact_permutation_p']:.2f}."),
     ]
     top = y - 18
     for value, text_value in bullets:
@@ -228,6 +344,7 @@ def draw_figure_page(
     interpretation: str,
     boundary: str,
     prompt: bool = False,
+    prompt_text: str | None = None,
 ) -> None:
     top = report.new_page(title, f"Figure {number}", subtitle)
     c = report.canvas
@@ -240,8 +357,8 @@ def draw_figure_page(
     fit_image(c, FIGURES[number], figure_x + 8, bottom + 8, figure_w - 16, figure_h - 16)
     rounded_card(c, side_x, bottom, side_w, figure_h)
     y = top - 17
-    if prompt:
-        y = para(c, prompt_line(), side_x + 14, y, side_w - 28, SMALL) - 12
+    if prompt or prompt_text:
+        y = para(c, prompt_text or prompt_line(), side_x + 14, y, side_w - 28, SMALL) - 12
     for label, text_value, color in (
         ("FINDING", finding, TEAL),
         ("INTERPRETATION", interpretation, PURPLE),
@@ -251,6 +368,43 @@ def draw_figure_page(
         c.setFont("Arial-Bold", 7.1)
         c.drawString(side_x + 14, y, label)
         y = para(c, text_value, side_x + 14, y - 7, side_w - 28, NOTE) - 13
+
+
+def draw_phase_c_page(report: Report, phase_c: list[dict[str, Any]]) -> None:
+    finding, interpretation = phase_c_findings(phase_c)
+    top = report.new_page(
+        "Directional outcomes vary across four prompt forms",
+        "Figure 7",
+        "Exploratory: four frozen static prompt forms are crossed with direction at 20 matched seeds on three checkpoints.",
+    )
+    c = report.canvas
+    figure_bottom = 178
+    rounded_card(c, MARGIN, figure_bottom, PAGE_W - 2 * MARGIN, top - figure_bottom)
+    fit_image(
+        c,
+        FIGURES[7],
+        MARGIN + 8,
+        figure_bottom + 8,
+        PAGE_W - 2 * MARGIN - 16,
+        top - figure_bottom - 16,
+    )
+    gap = 12
+    prompt_w = 468
+    card_h = 116
+    rounded_card(c, MARGIN, 49, prompt_w, card_h)
+    c.setFillColor(PURPLE)
+    c.setFont("Arial-Bold", 7.1)
+    c.drawString(MARGIN + 14, 147, "THE FOUR STATIC PROMPT TEMPLATES")
+    para(c, phase_c_prompt_lines(), MARGIN + 14, 137, prompt_w - 28, SMALL)
+    right_x = MARGIN + prompt_w + gap
+    right_w = PAGE_W - MARGIN - right_x
+    rounded_card(c, right_x, 49, right_w, card_h)
+    c.setFillColor(TEAL)
+    c.setFont("Arial-Bold", 7.1)
+    c.drawString(right_x + 14, 147, "READING")
+    y = para(c, f"<b>Finding:</b> {finding}", right_x + 14, 137, right_w - 28, SMALL) - 3
+    y = para(c, "<b>Interpretation:</b> Outcomes differ descriptively across prompt forms; this is compatible with a language contribution layered over geometry, not a confirmatory phrasing effect.", right_x + 14, y, right_w - 28, SMALL) - 3
+    para(c, "<b>Boundary:</b> The same 20 seeds are reused; redirection and completion remain separate.", right_x + 14, y, right_w - 28, SMALL)
 
 
 def _dream_reflection_text(dream: dict[str, Any]) -> tuple[str, str]:
@@ -284,61 +438,151 @@ def phase_c_findings(summaries: list[dict[str, Any]]) -> tuple[str, str]:
             gaps.append((abs(right - left), right - left, labels[summary["model_id"]], family_names[family], left, right))
     _, signed, label, family, left, right = max(gaps)
     finding = f"The largest descriptive direction gap is {label} under the {family} prompt: LEFT {left}/20 versus RIGHT {right}/20 ({signed:+d} episodes)."
-    interpretation = "Phrasing is not a cosmetic variable: it can change both task success and endpoint response. The language contribution therefore sits on top of, rather than replacing, the geometric mechanism."
+    interpretation = "Observed success and endpoint-response patterns differ across the four prompt forms. This exploratory result is compatible with a language contribution layered over geometry, but it is not a registered confirmatory phrasing effect."
     return finding, interpretation
 
 
-def draw_result_table(report: Report, data: dict[str, Any]) -> None:
-    top = report.new_page(
-        "Checkpoint results are reported by direction and arena",
-        "Result table",
-        "Binary success is only one layer of evidence; figures 1–4 report the continuous and matched diagnostics.",
-    )
-    c = report.canvas
-    droid = data["competence"]["results"]
-    droid_rows = [["DROID checkpoint", "Family", "LEFT", "RIGHT", "Overall", "RIGHT − LEFT"]]
-    families = {"π0.5": "VLA", "GR00T N1.7": "VLA", "Cosmos3 Edge": "WAM", "Cosmos3 Nano": "WAM", "DreamZero": "WAM"}
-    for row in droid:
-        droid_rows.append(
-            [
-                row["display_name"],
-                families[row["display_name"]],
-                f"{row['left_successes']}/{row['left_trials']}",
-                f"{row['right_successes']}/{row['right_trials']}",
-                f"{row['overall_success_rate']*100:.1f}%",
-                f"{row['directional_gap_right_minus_left']*100:+.1f} pp",
-            ]
-        )
-    table = Table(droid_rows, colWidths=[151, 55, 64, 64, 72, 85], rowHeights=28)
-    table.setStyle(
-        TableStyle(
-            [
-                ("BACKGROUND", (0, 0), (-1, 0), INK),
-                ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
-                ("FONTNAME", (0, 0), (-1, 0), "Arial-Bold"),
-                ("FONTNAME", (0, 1), (0, -1), "Arial-Bold"),
-                ("FONTNAME", (1, 1), (-1, -1), "Arial"),
-                ("FONTSIZE", (0, 0), (-1, -1), 8.2),
-                ("ALIGN", (1, 0), (-1, -1), "CENTER"),
-                ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
-                ("GRID", (0, 0), (-1, -1), 0.5, LINE),
-                ("BACKGROUND", (0, 1), (-1, -1), CARD),
-            ]
-        )
-    )
-    table.wrapOn(c, 491, 200)
-    table.drawOn(c, MARGIN, top - 178)
-    side_x = 550
-    rounded_card(c, side_x, top - 178, PAGE_W - MARGIN - side_x, 178)
-    y = top - 17
-    y = para(c, "<b>How to read this table</b>", side_x + 15, y, PAGE_W - MARGIN - side_x - 30, H2)
-    y = para(c, "A large success gap does not by itself establish semantic control, and a small gap can be mechanically compressed at floor or ceiling. Read it together with endpoint redirection, requested-side depth, and failure taxonomy.", side_x + 15, y - 7, PAGE_W - MARGIN - side_x - 30, NOTE)
-    y = para(c, "<b>Matched design</b>", side_x + 15, y - 18, PAGE_W - MARGIN - side_x - 30, H2)
-    para(c, "Every DROID row uses 27 prespecified seeds per direction with an identical reset inside each pair. Valid failures remain in the denominator.", side_x + 15, y - 7, PAGE_W - MARGIN - side_x - 30, NOTE)
+def _taxonomy(raw: dict[str, Any]) -> dict[str, int]:
+    return {key: int(raw.get(key, 0)) for key in ("correct", "pick_failed", "transport_failed", "wrong_side", "release_failed")}
 
-    y2 = top - 220
-    y2 = para(c, "<b>RoboTwin is a separate arena.</b> Figure 5 reports Efficient-WAM-RT, FastWAM, and LingBot-VA without pooling their success rates with DROID. RoboTwin uses scene-specific object nouns and its own frozen success predicate.", MARGIN, y2, PAGE_W - 2 * MARGIN, BODY)
-    para(c, "The π0-FAST public compatibility checkpoint is retained as separately labeled compatibility evidence; it is not silently merged into the five expanded DROID cohorts.", MARGIN, y2 - 18, PAGE_W - 2 * MARGIN, SMALL)
+
+def _droid_table_row(summary: dict[str, Any], *, label: str, family: str, future: str) -> dict[str, Any]:
+    left, right = summary["directional"]["left"], summary["directional"]["right"]
+    pairs = len(summary["pairs"])
+    shift = summary.get("right_minus_left_endpoint_shift_m") or summary["right_minus_left_raw_robot_y_shift_m"]
+    action = summary["action_rms_common_prefix"]
+    distinct = pairs if action.get("all_pairs_actions_differ") or (action.get("observed_count") == pairs and action.get("minimum", 0) > 0) else 0
+    return {
+        "label": label,
+        "family": family,
+        "n": int(left.get("valid_denominator", left.get("trials"))) + int(right.get("valid_denominator", right.get("trials"))),
+        "left": f"{left['successes']}/{left.get('valid_denominator', left.get('trials'))}",
+        "right": f"{right['successes']}/{right.get('valid_denominator', right.get('trials'))}",
+        "aligned": f"{summary['endpoint_ordering_counts']['aligned']}/{pairs}",
+        "actions": f"{distinct}/{pairs}",
+        "shift": f"{-100*shift['mean']:+.1f} / {-100*shift['median']:+.1f} cm",
+        "taxonomy": _taxonomy(summary["overall_failure_taxonomy_counts"]),
+        "future": future,
+    }
+
+
+def _pi0_table_row(summary: dict[str, Any]) -> dict[str, Any]:
+    shift = summary["right_minus_left_endpoint_shift_m"]
+    return {
+        "label": "π0-FAST public compatibility",
+        "family": "VLA",
+        "n": summary["behavioral_episodes"],
+        "left": f"{summary['success_by_direction']['left']['successes']}/{summary['success_by_direction']['left']['episodes']}",
+        "right": f"{summary['success_by_direction']['right']['successes']}/{summary['success_by_direction']['right']['episodes']}",
+        "aligned": f"{summary['endpoint_ordering']['aligned']}/{summary['behavioral_matched_pairs']}",
+        "actions": f"{summary['distinct_executed_action_pairs']['count']}/{summary['behavioral_matched_pairs']}",
+        "shift": f"{-100*shift['mean']:+.1f} / {-100*shift['median']:+.1f} cm",
+        "taxonomy": _taxonomy(summary["failure_taxonomy"]),
+        "future": "action-only",
+    }
+
+
+def _robotwin_table_row(summary: dict[str, Any], *, label: str, future: str) -> dict[str, Any]:
+    primary = summary["v3_primary_results"]
+    left, right = primary["by_direction"]["left"], primary["by_direction"]["right"]
+    endpoint, action = primary["paired_endpoint_response"], primary["paired_action_response"]
+    shift = endpoint["left_minus_right_shift_summary_m"]
+    return {
+        "label": label,
+        "family": "WAM",
+        "n": primary["valid_episodes"],
+        "left": f"{left['successes']}/{left['valid_episodes']}",
+        "right": f"{right['successes']}/{right['valid_episodes']}",
+        "aligned": f"{endpoint['aligned']}/{primary['matched_pairs']}",
+        "actions": f"{action['distinct_trace_pairs']}/{primary['matched_pairs']}",
+        "shift": f"{100*shift['mean']:+.1f} / {100*shift['median']:+.1f} cm",
+        "taxonomy": _taxonomy(primary["failure_taxonomy_counts"]),
+        "future": future,
+    }
+
+
+def _bounded_robotwin_row(comparison: dict[str, Any], model_id: str) -> dict[str, Any]:
+    source = next(row for row in comparison["rows"] if row["model_id"] == model_id)
+    pair_n = source["paired_endpoint_alignment"]["trials"]
+    action = source["paired_action_distinctness"]
+    action_text = "NR" if action["status"] != "measured" else f"{action['count']}/{action['trials']}"
+    return {
+        "label": "BOUNDED V2: " + source["model"],
+        "family": source["model_class"],
+        "n": source["valid_n"],
+        "left": f"{source['left_success']['count']}/{source['left_success']['trials']}",
+        "right": f"{source['right_success']['count']}/{source['right_success']['trials']}",
+        "aligned": f"{source['paired_endpoint_alignment']['count']}/{pair_n}",
+        "actions": action_text,
+        "shift": "NR",
+        "taxonomy": None,
+        "future": source["future_interface"].replace("_", " "),
+    }
+
+
+def _draw_checkpoint_table(report: Report, *, title: str, kicker: str, subtitle: str, rows: list[dict[str, Any]], note: str) -> None:
+    top = report.new_page(title, kicker, subtitle)
+    c = report.canvas
+    values: list[list[Any]] = [["Checkpoint / cohort", "Type", "Episodes", "LEFT", "RIGHT", "Aligned", "Actions", "Mean / median shift", "C/P/T/W/R", "Future interface"]]
+    for row in rows:
+        taxonomy = "not harmonized" if row["taxonomy"] is None else "/".join(str(row["taxonomy"][key]) for key in ("correct", "pick_failed", "transport_failed", "wrong_side", "release_failed"))
+        values.append([row["label"], row["family"], row["n"], row["left"], row["right"], row["aligned"], row["actions"], row["shift"], taxonomy, row["future"]])
+    wrapped = [
+        [Paragraph(str(value), TABLE_HEAD if row_index == 0 else (TABLE_BOLD if column == 0 else TABLE_TEXT)) for column, value in enumerate(row)]
+        for row_index, row in enumerate(values)
+    ]
+    widths = [128, 34, 45, 42, 42, 49, 49, 84, 91, 182]
+    row_height = 51 if len(rows) >= 6 else 57
+    table = Table(wrapped, colWidths=widths, rowHeights=[32] + [row_height] * len(rows))
+    table.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), INK),
+        ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+        ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+        ("ALIGN", (1, 0), (8, -1), "CENTER"),
+        ("GRID", (0, 0), (-1, -1), 0.45, LINE),
+        ("ROWBACKGROUNDS", (0, 1), (-1, -1), [CARD, colors.HexColor("#F1EDE5")]),
+        ("LEFTPADDING", (0, 0), (-1, -1), 5),
+        ("RIGHTPADDING", (0, 0), (-1, -1), 5),
+    ]))
+    table_height = 32 + row_height * len(rows)
+    table.wrapOn(c, sum(widths), table_height)
+    table.drawOn(c, MARGIN, top - table_height)
+    rounded_card(c, MARGIN, 49, PAGE_W - 2 * MARGIN, max(70, top - table_height - 62))
+    para(c, note, MARGIN + 15, top - table_height - 17, PAGE_W - 2 * MARGIN - 30, SMALL)
+
+
+def draw_result_tables(report: Report, data: dict[str, Any]) -> None:
+    droid_rows = [
+        _droid_table_row(data["pi05_phase_a"], label="π0.5 current stack", family="VLA", future="action-only"),
+        _droid_table_row(data["groot_phase_a"], label="GR00T N1.7", family="VLA", future="action-only"),
+        _droid_table_row(data["edge_phase_a"], label="Cosmos3 Edge", family="WAM", future="452 decoded local futures"),
+        _droid_table_row(data["nano_phase_a"], label="Cosmos3 Nano", family="WAM", future="349 decoded local futures"),
+        _droid_table_row(data["dream_phase_a"], label="DreamZero", family="WAM", future="54 full-reset decodes + latent futures"),
+        _pi0_table_row(data["pi0_compatibility"]),
+    ]
+    _draw_checkpoint_table(
+        report,
+        title="Complete checkpoint table · DROID / RoboLab",
+        kicker="11-checkpoint result table · 6 DROID identities",
+        subtitle="Expanded direct-command cohorts and the separate π0-FAST compatibility cohort; no RoboTwin row is pooled here.",
+        rows=droid_rows,
+        note="<b>Reading:</b> shift is requested-oriented endpoint redirection; positive follows the requested LEFT→RIGHT ordering. C/P/T/W/R = correct, pick, transport, wrong-side, release. The older frozen π0-FAST 20-episode reference remains a separate historical cohort and is not merged with public-compatibility evidence.",
+    )
+    robotwin_rows = [
+        _robotwin_table_row(data["efficient_robotwin"], label="Efficient-WAM-RT", future="126 decoded coarse futures"),
+        _robotwin_table_row(data["fast_robotwin"], label="FastWAM", future="action-only at test time"),
+        _robotwin_table_row(data["lingbot_robotwin"], label="LingBot-VA", future="126 latent-only futures"),
+        _bounded_robotwin_row(data["bounded_checkpoint_table"], "lingbot_vla_4b_robotwin"),
+        _bounded_robotwin_row(data["bounded_checkpoint_table"], "light_wam_robotwin"),
+    ]
+    _draw_checkpoint_table(
+        report,
+        title="Complete checkpoint table · RoboTwin",
+        kicker="11-checkpoint result table · 5 RoboTwin identities",
+        subtitle="Expanded 63-pair replicate cohorts and two bounded references; DROID success rules are not used here.",
+        rows=robotwin_rows,
+        note="<b>Reading:</b> shift is requested-oriented endpoint redirection; positive follows the requested LEFT→RIGHT ordering. C/P/T/W/R = correct, pick, transport, wrong-side, release. Efficient-WAM-RT's negative mean but positive median reflects a small reverse-tail of large shifts, not a transcription error. <b>Nesting:</b> each expanded WAM has 63 pairs from nine policy seeds within seven scenes. NR is never converted to zero.",
+    )
 
 
 def _ci_text(summary: dict[str, Any], *, scale: float = 1.0, digits: int = 2) -> str:
@@ -361,9 +605,12 @@ def draw_tier_b_controls(report: Report, data: dict[str, Any]) -> None:
     stochastic = data["stochastic_repeats"]
 
     robotwin_depth = robotwin["full_sample_primary"]["requested_side_depth_interaction"]
-    start_trend = start["factor_analysis"]["ordered_start_side_trend"]
-    start_depth = start_trend["requested_side_depth_B_slope_per_m"]
-    start_binary = start_trend["binary_direction_gap_slope_per_m"]
+    start_outer = start["factor_analysis"]["pairwise_factor_interactions"][
+        "target_start_right_minus_target_start_left"
+    ]
+    start_depth = start_outer["requested_side_depth_interaction_m"]
+    start_binary = start_outer["binary_success_interaction"]
+    start_cells = start["success_table"]
     role_effect = role["factor_analysis"]["pairwise_factor_interactions"][
         "bowl_target_cube_reference_minus_cube_target_bowl_reference"
     ]
@@ -383,9 +630,9 @@ def draw_tier_b_controls(report: Report, data: dict[str, Any]) -> None:
         ),
         (
             "TARGET START-SIDE",
-            "Initial target position changes the directional contrast",
-            f"Across the three prespecified target-start levels, the requested-depth contrast has a linear slope of {start_depth['mean_m']:+.2f} m/m (95% CI {_ci_text(start_depth)}; sign p={start_depth['paired_sign_test']['p_value']:.3g}). The binary-gap slope is {start_binary['mean_m']:+.2f} per meter.",
-            "This factor changes geometry, reachability, and the policy state together. Pairwise contrasts remain primary if the three-level response is not linear.",
+            "The success advantage follows the target’s initial side",
+            f"Target starts LEFT: L {start_cells['target_start_left']['left']['successes']}/27, R {start_cells['target_start_left']['right']['successes']}/27. Target starts RIGHT: L {start_cells['target_start_right']['left']['successes']}/27, R {start_cells['target_start_right']['right']['successes']}/27. The outer binary-gap interaction is {start_binary['mean']:+.3f} (exact p={start_binary['exact_permutation_test']['p_value']:.4f}). Depth changes by {start_depth['mean_m']:+.3f} m, 95% CI {_ci_text(start_depth, digits=3)}.",
+            f"The binary interaction is clear; the continuous-depth mean CI excludes zero but its sign test is p={start_depth['paired_sign_test']['p_value']:.3f}, so sign consistency is not claimed. Start side changes geometry, reachability, and policy state together.",
         ),
         (
             "TARGET / REFERENCE ROLE SWAP",
@@ -441,11 +688,11 @@ def draw_methods(report: Report, data: dict[str, Any], sources: list[Path]) -> N
         ),
         (
             "OUTCOMES",
-            "Correct requires pickup, transport into the requested 45° cone, sustained entry, and detached release. Continuous fields include signed final lateral offset, requested-side depth, cone-entry step, episode length, first contact, path length, and peak lateral excursion where exposed.",
+            "For DROID/RoboLab, correct requires pickup, transport into the requested 45° cone, sustained entry, and detached release. RoboTwin retains its own frozen arena predicate. Continuous fields include signed lateral offset, requested-side depth, timing, and path diagnostics where exposed.",
         ),
         (
             "INFERENCE",
-            "Marginal proportions use Wilson intervals. Continuous matched contrasts use at least 20,000 seed-level bootstrap resamples plus exact two-sided sign tests. Binary reflection effects use exact within-seed layout-label permutation. Phase C is exploratory.",
+            "Marginal proportions use Wilson intervals. Continuous matched contrasts use 10,000–20,000 seed-level bootstrap resamples, as preregistered per cohort, plus exact two-sided sign tests. Binary reflection effects use exact within-seed layout-label permutation. Phase C is exploratory.",
         ),
     ]
     card_w = (PAGE_W - 2 * MARGIN - 24) / 3
@@ -458,7 +705,7 @@ def draw_methods(report: Report, data: dict[str, Any], sources: list[Path]) -> N
         para(c, text_value, x + 14, top - 33, card_w - 28, NOTE)
     y = top - 210
     y = para(c, "<b>What the evidence supports</b>", MARGIN, y, 240, H2)
-    para(c, "Language frequently perturbs executed behavior. Geometry can reverse the directional competence advantage. Phrasing can further modulate that advantage. Sensitivity, requested endpoint ordering, and task completion are therefore distinct estimands.", MARGIN, y - 9, 240, BODY)
+    para(c, "Language frequently perturbs executed behavior. Geometry can reverse the directional competence advantage. Outcomes also vary descriptively across prompt forms in the exploratory block. Sensitivity, requested endpoint ordering, and task completion are therefore distinct estimands.", MARGIN, y - 9, 240, BODY)
     x = MARGIN + 270
     y2 = top - 210
     y2 = para(c, "<b>What it does not identify</b>", x, y2, 240, H2)
@@ -474,7 +721,7 @@ def draw_methods(report: Report, data: dict[str, Any], sources: list[Path]) -> N
 
 def build(output: Path) -> tuple[Path, Path]:
     register_fonts()
-    missing = [path for path in list(FIGURES.values()) + list(SOURCES.values()) if not path.is_file()]
+    missing = [path for path in list(FIGURES.values()) + list(SOURCES.values()) + list(REQUIRED_MANIFESTS) if not path.is_file()]
     if missing:
         raise FileNotFoundError("report refuses partial evidence; missing:\n" + "\n".join(str(path) for path in missing))
     phase_c_summary_paths = sorted(PHASE_C_DIR.glob("*/**/*_phase_c_summary.json")) + sorted(PHASE_C_DIR.glob("*_phase_c_summary.json"))
@@ -483,8 +730,8 @@ def build(output: Path) -> tuple[Path, Path]:
         raise FileNotFoundError(f"report requires exactly three complete Phase-C summaries, found {len(phase_c_summary_paths)}")
     data = {name: read_json(path) for name, path in SOURCES.items()}
     phase_c = [read_json(path) for path in phase_c_summary_paths]
-    if any(summary.get("status") != "complete_20_seed_160_behavioral_episode_result" for summary in phase_c):
-        raise ValueError("report refuses partial Phase-C summaries")
+    manifest_inputs = verify_required_manifests()
+    validate_closed_evidence(data, phase_c)
 
     report = Report(output)
     draw_cover(report, data)
@@ -503,7 +750,7 @@ def build(output: Path) -> tuple[Path, Path]:
     draw_figure_page(
         report,
         number=2,
-        title="Position reflection changes which requested direction is easier",
+        title="Position reflection shifts the directional depth advantage",
         subtitle="The same 27 seeds and four cells are repeated on Nano, π0.5, and DreamZero.",
         finding=f"Nano and π0.5 show strongly negative depth interactions after reflecting movable-object positions. {dream_stat}",
         interpretation=f"{dream_cells} Across three checkpoints, the directional competence gap is layout-dependent rather than a fixed property of the words alone.",
@@ -514,10 +761,10 @@ def build(output: Path) -> tuple[Path, Path]:
     draw_figure_page(
         report,
         number=3,
-        title="The geometric effect varies continuously with reference position",
+        title="Seven reference positions reveal a positive dose-response",
         subtitle="A seven-level sweep converts the reflection result from a binary reversal into a dose-response relationship.",
         finding=f"The requested-depth gap changes by {slope['mean']:.2f} m per meter of bowl displacement (95% bootstrap CI [{slope['ci95'][0]:.2f}, {slope['ci95'][1]:.2f}]); 13/15 seed-level slopes are positive, exact p={slope['sign_test']['two_sided_p']:.3g}.",
-        interpretation="Reference-object position continuously changes the relative headroom available to the two requested directions. Binary completion is less sensitive because Nano is close to ceiling.",
+        interpretation="Across the seven sampled positions, relocating the reference object and requested regions changes the depth contrast. Binary completion is less sensitive because Nano is close to ceiling.",
         boundary="The fitted zero crossing lies outside the registered support, so no in-support crossing is claimed. The curve is descriptive over the seven tested positions.",
         prompt=True,
     )
@@ -525,10 +772,10 @@ def build(output: Path) -> tuple[Path, Path]:
     draw_figure_page(
         report,
         number=4,
-        title="Overall competence does not determine the sign of the gap",
+        title="No monotonic gap–competence relation is detected",
         subtitle="Five separate 54-episode DROID cohorts test the proposed difficulty × competence explanation descriptively.",
         finding=f"There is no monotonic association with the signed gap (Spearman ρ={comp['competence_vs_signed_gap']['spearman']['coefficient']:.2f}, exact p={comp['competence_vs_signed_gap']['spearman']['two_sided_exact_permutation_p']:.2f}) or its magnitude (ρ={comp['competence_vs_absolute_gap']['spearman']['coefficient']:.2f}, p={comp['competence_vs_absolute_gap']['spearman']['two_sided_exact_permutation_p']:.2f}).",
-        interpretation="Floor and ceiling mechanically limit the largest observable binary gap. Intermediate competence permits a gap, but neither fixes its sign nor explains its mechanism.",
+        interpretation="Floor and ceiling mechanically limit the largest observable binary gap. Across these five fixed checkpoints, the observed gaps are non-monotonic; this does not identify their mechanism.",
         boundary="Five checkpoints are too few for a population-level model. The figure is a descriptive constraint, not evidence that competence is irrelevant.",
     )
     draw_figure_page(
@@ -537,8 +784,13 @@ def build(output: Path) -> tuple[Path, Path]:
         title="Directional success remains checkpoint- and arena-specific",
         subtitle="Success counts and Wilson intervals provide context for the matched continuous diagnostics.",
         finding="DROID checkpoints span near-floor to near-ceiling performance and include both positive and negative directional gaps. RoboTwin likewise varies across the three WAMs.",
-        interpretation="A family label does not predict reliable semantic control. The meaningful unit is a checkpoint, arena, prompt, and frozen success predicate.",
+        interpretation="These data do not support a family-level ranking. The meaningful unit is a checkpoint, arena, prompt, and frozen success predicate.",
         boundary="DROID/RoboLab and RoboTwin have different tasks and success rules. Their rates are faceted and never pooled; Wilson intervals are marginal, not paired tests.",
+        prompt_text=(
+            '<b>DROID direct prompt:</b> "Put the Rubik\'s cube to the {left|right} of the bowl."<br/>'
+            '<b>RoboTwin template:</b> "Put the &lt;movable object&gt; to the {left|right} of the &lt;reference object&gt;." '
+            'The registry fixes all seven scene-specific noun pairs.'
+        ),
     )
     failure_rows = {row["model_id"]: row for row in data["failure"]["results"]}
     draw_figure_page(
@@ -551,19 +803,10 @@ def build(output: Path) -> tuple[Path, Path]:
         boundary="Nondetection is not equivalence; the smaller direction-specific failure rows are sparse. The exact tests compare marginal failure composition, not a paired transition model.",
         prompt=True,
     )
-    phase_finding, phase_interpretation = phase_c_findings(phase_c)
-    draw_figure_page(
-        report,
-        number=7,
-        title="Phrasing modulates the direction effect",
-        subtitle="Four frozen static prompt forms are crossed with direction at 20 matched seeds on three checkpoints.",
-        finding=phase_finding,
-        interpretation=phase_interpretation,
-        boundary="Phase C is exploratory. The four prompt forms share seeds, and raw rates are not 80 independent scenes. Endpoint movement and task success are reported separately.",
-    )
-    draw_result_table(report, data)
+    draw_phase_c_page(report, phase_c)
+    draw_result_tables(report, data)
     draw_tier_b_controls(report, data)
-    source_paths = list(SOURCES.values()) + list(FIGURES.values()) + phase_c_summary_paths
+    source_paths = sorted(set(list(SOURCES.values()) + list(FIGURES.values()) + phase_c_summary_paths + manifest_inputs))
     draw_methods(report, data, source_paths)
     report.finish()
     manifest = {

@@ -103,7 +103,7 @@ def _style_axis(axis: plt.Axes) -> None:
     axis.set_facecolor(BACKGROUND)
     axis.spines[["top", "right", "left"]].set_visible(False)
     axis.spines["bottom"].set_color(GRID)
-    axis.tick_params(colors=INK, labelsize=9, length=0)
+    axis.tick_params(colors=INK, labelsize=10.5, length=0)
     axis.grid(axis="x", color=GRID, linewidth=0.8, alpha=0.7, zorder=0)
 
 
@@ -117,57 +117,53 @@ def render_scope_figure(summary_by_model: dict[str, Any], output: Path) -> None:
     ]
     shift_limit = max(0.12, max(abs(value) for value in all_shifts) * 1.1)
     figure, axes = plt.subplots(
-        3,
         2,
-        figsize=(14.2, 12.0),
-        gridspec_kw={"width_ratios": [1.0, 1.15], "hspace": 0.56, "wspace": 0.23},
+        3,
+        figsize=(15.8, 7.4),
+        gridspec_kw={"height_ratios": [1.0, 1.0], "hspace": 0.64, "wspace": 0.30},
         facecolor=BACKGROUND,
     )
-    figure.subplots_adjust(top=0.77, bottom=0.10, left=0.16, right=0.97)
+    figure.subplots_adjust(top=0.76, bottom=0.14, left=0.135, right=0.985)
     figure.suptitle(
-        "Phrasing modulates directional competence;\nendpoint response is a separate diagnostic",
+        "Directional outcomes vary across four prompt forms",
         x=0.06,
         y=0.985,
         ha="left",
-        fontsize=20,
+        fontsize=21,
         fontfamily="DejaVu Serif",
         fontweight="semibold",
         color=INK,
     )
     figure.text(
         0.06,
-        0.915,
-        "Same 20 seeds in every cell. Only the static instruction changes; LEFT and RIGHT always begin from an identical reset.",
+        0.918,
+        "Exploratory wording block · same 20 seeds per cell · identical reset within each LEFT/RIGHT pair · endpoint response is a separate diagnostic.",
         ha="left",
-        fontsize=11.5,
+        fontsize=11.2,
         color="#4C585D",
     )
-    prompt_text = (
-        'DIRECT  “Put the Rubik\'s cube to the {left|right} of the bowl.”   ·   '
-        'SHORTENED  “Put the cube {left|right} of the bowl.”\n'
-        'GOAL  “The Rubik\'s cube should end up to the {left|right} of the bowl.”   ·   '
-        'CONTRASTIVE  “Put the Rubik\'s cube to the {left|right} of the bowl, not to the {right|left} of the bowl.”'
-    )
-    figure.text(
-        0.06,
-        0.875,
-        prompt_text,
-        ha="left",
-        va="top",
-        fontsize=9.3,
-        linespacing=1.5,
-        color=INK,
-        bbox={"boxstyle": "round,pad=0.65", "facecolor": "#FBF9F4", "edgecolor": GRID},
+    figure.legend(
+        handles=[
+            Line2D([0], [0], marker="o", color=COLORS["left"], label="Prompt requests LEFT", linestyle="none"),
+            Line2D([0], [0], marker="o", color=COLORS["right"], label="Prompt requests RIGHT", linestyle="none"),
+            Line2D([0], [0], marker="o", color=COLORS["shift"], label="One matched seed", linestyle="none"),
+            Line2D([0], [0], marker="D", color=COLORS["median"], label="Median shift", linestyle="none"),
+        ],
+        loc="upper left",
+        bbox_to_anchor=(0.055, 0.875),
+        ncol=4,
+        frameon=False,
+        fontsize=9.6,
     )
     y = np.arange(len(PROMPT_FAMILIES))
-    offsets = {"left": -0.12, "right": 0.12}
-    for row_index, model_id in enumerate(model_order):
+    offsets = {"left": -0.17, "right": 0.17}
+    for column_index, model_id in enumerate(model_order):
         summary = summary_by_model[model_id]
-        success_axis, shift_axis = axes[row_index]
+        success_axis, shift_axis = axes[0, column_index], axes[1, column_index]
         _style_axis(success_axis)
         _style_axis(shift_axis)
         success_axis.set_title(
-            MODEL_LABELS[model_id], loc="left", fontsize=14, fontweight="bold", color=INK, pad=10
+            MODEL_LABELS[model_id], loc="left", fontsize=14, fontweight="bold", color=INK, pad=9
         )
         for relation in RELATIONS:
             values = []
@@ -192,26 +188,28 @@ def render_scope_figure(summary_by_model: dict[str, Any], output: Path) -> None:
             )
             for family_index, family in enumerate(PROMPT_FAMILIES):
                 result = summary["success_by_condition"][f"{family}:{relation}"]
-                x = min(0.94, result["success_rate"] + 0.045)
-                ha = "left"
-                if result["success_rate"] > 0.9:
-                    x = result["success_rate"] - 0.045
-                    ha = "right"
+                x = min(0.93, max(0.07, result["success_rate"]))
                 success_axis.text(
                     x,
-                    family_index + offsets[relation],
+                    family_index + (-0.29 if relation == "left" else 0.29),
                     f'{result["successes"]}/20',
-                    ha=ha,
+                    ha="center",
                     va="center",
-                    fontsize=8.2,
+                    fontsize=10.4,
                     color=COLORS[relation],
                     fontweight="bold",
+                    bbox={"facecolor": BACKGROUND, "edgecolor": "none", "pad": 0.7, "alpha": 1.0},
                 )
         success_axis.set_xlim(-0.02, 1.02)
         success_axis.set_xticks([0, 0.25, 0.5, 0.75, 1.0], ["0", "25", "50", "75", "100"])
-        success_axis.set_yticks(y, [FAMILY_LABELS[family] for family in PROMPT_FAMILIES])
+        success_axis.set_yticks(
+            y,
+            [FAMILY_LABELS[family] for family in PROMPT_FAMILIES]
+            if column_index == 0
+            else [],
+        )
         success_axis.invert_yaxis()
-        success_axis.set_xlabel("Requested-task success (%) · Wilson 95% interval", color=INK, fontsize=9.5)
+        success_axis.set_xlabel("Requested-task success (%) · Wilson 95% CI", color=INK, fontsize=9.5)
         for family_index, family in enumerate(PROMPT_FAMILIES):
             shifts = summary["paired_diagnostics_by_prompt_family"][family]["right_minus_left_endpoint_shift_m"]
             jitter = np.linspace(-0.13, 0.13, len(shifts))
@@ -241,7 +239,7 @@ def render_scope_figure(summary_by_model: dict[str, Any], output: Path) -> None:
                 f'{paired["endpoint_ordering_aligned"]}/20 aligned',
                 ha="right",
                 va="center",
-                fontsize=8.2,
+                fontsize=8.6,
                 color=INK,
                 transform=shift_axis.get_yaxis_transform(),
                 bbox={"facecolor": BACKGROUND, "edgecolor": "none", "pad": 1.0, "alpha": 0.9},
@@ -249,41 +247,23 @@ def render_scope_figure(summary_by_model: dict[str, Any], output: Path) -> None:
             )
         shift_axis.axvline(0, color=INK, linewidth=1.1, zorder=1)
         shift_axis.set_xlim(-shift_limit, shift_limit)
-        shift_axis.set_yticks(y, [])
+        shift_axis.set_yticks(
+            y,
+            [FAMILY_LABELS[family] for family in PROMPT_FAMILIES]
+            if column_index == 0
+            else [],
+        )
         shift_axis.invert_yaxis()
         shift_axis.set_xlabel(
-            "Matched endpoint shift: RIGHT prompt − LEFT prompt (m; negative = requested ordering)",
+            "RIGHT − LEFT endpoint (m)\nnegative = requested ordering",
             color=INK,
             fontsize=9.5,
         )
-    axes[0, 0].legend(
-        handles=[
-            Line2D([0], [0], marker="o", color=COLORS["left"], label="Prompt requests LEFT", linestyle="none"),
-            Line2D([0], [0], marker="o", color=COLORS["right"], label="Prompt requests RIGHT", linestyle="none"),
-        ],
-        loc="lower left",
-        bbox_to_anchor=(0.0, 1.18),
-        ncol=2,
-        frameon=False,
-        fontsize=9.5,
-    )
-    axes[0, 1].legend(
-        handles=[
-            Line2D([0], [0], marker="o", color=COLORS["shift"], label="One matched seed", linestyle="none"),
-            Line2D([0], [0], marker="D", color=COLORS["median"], label="Median", linestyle="none"),
-        ],
-        loc="lower left",
-        bbox_to_anchor=(0.0, 1.18),
-        ncol=2,
-        frameon=False,
-        fontsize=9.5,
-    )
     figure.text(
         0.06,
         0.035,
-        "Success requires pickup, transport into the requested 45° cone, and detached release. Negative RIGHT-minus-LEFT endpoint shift follows the requested LEFT→RIGHT ordering;\n"
-        "it measures redirection, not completion. Phase C is exploratory; DROID and RoboTwin are never pooled.",
-        fontsize=9.3,
+        "Success requires pickup, transport into the requested 45° cone, and detached release. Endpoint shift measures redirection, not completion. Phase C is exploratory.",
+        fontsize=9.2,
         color="#4C585D",
         ha="left",
     )
@@ -380,13 +360,16 @@ def render_failure_figure(rows_by_model: dict[str, list[dict[str, Any]]], output
 
 def render(*, summaries: list[Path], episodes: list[Path], output_dir: Path) -> dict[str, Any]:
     summary_by_model, rows_by_model = _load_inputs(summaries, episodes)
-    output_dir.mkdir(parents=True, exist_ok=False)
+    output_dir.mkdir(parents=True, exist_ok=True)
     outputs = []
     for suffix in ("png", "svg"):
         scope = output_dir / f"figure7_phase_c_phrasing_direction.{suffix}"
         failure = output_dir / f"figure7_phase_c_failure_taxonomy.{suffix}"
         render_scope_figure(summary_by_model, scope)
         render_failure_figure(rows_by_model, failure)
+        if suffix == "svg":
+            for path in (scope, failure):
+                path.write_text("\n".join(line.rstrip() for line in path.read_text().splitlines()) + "\n")
         outputs.extend([scope, failure])
     manifest = {
         "schema_version": "vla-wam-shared-v3c-figure-manifest-v1",

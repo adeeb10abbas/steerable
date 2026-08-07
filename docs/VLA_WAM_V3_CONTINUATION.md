@@ -16,6 +16,21 @@ The
 machine-readable source of truth is
 [`continuation_state.json`](../artifacts/vla_wam_shared_v3/continuation_state.json).
 
+## Canonical sharing artifact
+
+The figure-led [scientific report](../output/pdf/language_sensitivity_geometry_scientific_report.pdf)
+is the compact reader-facing synthesis. Its 12 pages place each plot beside its
+scientific interpretation, reproduce the frozen prompts, separate DROID/RoboLab
+from RoboTwin, include the complete 11-checkpoint table, and distinguish
+redirection, failure composition, and task completion. The report refuses to
+build unless every completed cohort and required evidence manifest is present
+and hash-consistent.
+
+| Sharing artifact | SHA-256 |
+| --- | --- |
+| [`language_sensitivity_geometry_scientific_report.pdf`](../output/pdf/language_sensitivity_geometry_scientific_report.pdf) | `4343fb136b086fc8e84feb28713393161b65013f60aced6cae81f4a803670a70` |
+| [`language_sensitivity_geometry_scientific_report.manifest.json`](../output/pdf/language_sensitivity_geometry_scientific_report.manifest.json) | `6978813f28c11ae807114e8051f138e73d06870ac96b99e72e9656616298b3a6` |
+
 ## Status
 
 All **648 cells marked `authorized_new`** in the frozen Phase-A queue are
@@ -856,7 +871,7 @@ episodes. Both are DROID-only and must never be pooled with RoboTwin.
 | [`Phrasing × direction SVG`](../artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/figures/figure7_phase_c_phrasing_direction.svg) | `c7c64405ec94a6964d9c28bf07522a4dd4cfc06edcfac0334a4ff7854da7e893` |
 | [`Failure taxonomy PNG`](../artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/figures/figure7_phase_c_failure_taxonomy.png) | `df0f00fa1d57361e4d3fd7a601bc4c41ba55e0519dcc7488f9ae4d1a3617f3bf` |
 | [`Failure taxonomy SVG`](../artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/figures/figure7_phase_c_failure_taxonomy.svg) | `b12d3611462fc8ec453f4818b79f30096d71134eb8d7b0e9b28d90bc0dff1015` |
-| [`Figure manifest`](../artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/figures/phase_c_figure_manifest.json) | `8405934c172096c1a380957fddc17535a774641fc2810b52b21ced55dca4106c` |
+| [`Figure manifest`](../artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/figures/phase_c_figure_manifest.json) | `34799e1d97cfd79bd5f184a160f65d2ea8b26bf419cfdbd424bc3aa64c1c0bfe` |
 
 At seed 8500, GR00T completed **8/8 valid cells** with two requested successes
 and six valid failures. Cosmos3 Edge completed **8/8 valid cells** with seven

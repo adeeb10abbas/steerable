@@ -173,7 +173,7 @@ def render_dose_response(report: Mapping[str, Any], output_dir: Path) -> list[Pa
     fig, axes = plt.subplots(2, 1, figsize=(12.8, 10.0), sharex=True)
     fig.subplots_adjust(left=0.105, right=0.975, bottom=0.105, top=0.79, hspace=0.36)
     fig.suptitle(
-        "Directional margin changes continuously with reference-object position",
+        "Seven reference-object positions reveal a positive depth response",
         x=0.055,
         y=0.973,
         ha="left",

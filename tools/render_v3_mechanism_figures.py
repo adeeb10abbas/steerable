@@ -83,6 +83,7 @@ def save_figure(fig: plt.Figure, stem: Path) -> list[Path]:
     svg = stem.with_suffix(".svg")
     png = stem.with_suffix(".png")
     fig.savefig(svg, bbox_inches="tight", pad_inches=0.14, metadata={"Date": None})
+    svg.write_text("\n".join(line.rstrip() for line in svg.read_text().splitlines()) + "\n")
     fig.savefig(
         png,
         dpi=220,
@@ -198,7 +199,7 @@ def render_gap_vs_competence(report: dict[str, Any], output_dir: Path) -> list[P
     fig, ax = plt.subplots(figsize=(12.7, 8.0))
     fig.subplots_adjust(left=0.115, right=0.965, top=0.81, bottom=0.17)
     fig.suptitle(
-        "Competence limits the possible gap; it does not explain its sign",
+        "Observed directional gaps are non-monotonic across five checkpoints",
         x=0.055,
         y=0.965,
         ha="left",
@@ -290,7 +291,7 @@ def render_gap_vs_competence(report: dict[str, Any], output_dir: Path) -> list[P
     fig.text(
         0.055,
         0.045,
-        "The relationship is not monotonic. Floor and ceiling compress the observable gap; intermediate competence permits a gap but does not determine its direction or cause.",
+        "No monotonic association is detected in this five-checkpoint descriptive sample. Floor and ceiling compress the observable binary gap.",
         ha="left",
         color=INK,
         fontsize=11.7,

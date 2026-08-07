@@ -1,0 +1,434 @@
+{
+  "builder": {
+    "bytes": 50310,
+    "path": "tools/build_v3_scientific_report.py",
+    "sha256": "32000efe8c3d4c492410aeae35b98f40d21fdcf24f55aa5c9f8121a3ef2bc4ea"
+  },
+  "claim_boundary": "DROID/RoboLab and RoboTwin remain separate; futures are never scored as executions; partial and infrastructure-invalid attempts are excluded from behavioral denominators.",
+  "inputs": [
+    {
+      "bytes": 19673,
+      "path": "artifacts/vla_wam_shared_v2/results/direct_command_cross_model_comparison.json",
+      "sha256": "fd17e9c01239752b7850746bc7ab7e27ec681899be08c4935f88f79bb9a3f17f"
+    },
+    {
+      "bytes": 319418,
+      "path": "artifacts/vla_wam_shared_v3/analysis/mechanism/figures/figure4_gap_vs_competence.png",
+      "sha256": "202e2e2b56563ea3af2353c3a14bf451bf0763e69a999835fa169fbf6661c37c"
+    },
+    {
+      "bytes": 42677,
+      "path": "artifacts/vla_wam_shared_v3/analysis/mechanism/figures/figure4_gap_vs_competence.svg",
+      "sha256": "edaaede834d8ada2f18afe8fad4a0ecf39c0c7e3214a6031ae93980aed050804"
+    },
+    {
+      "bytes": 298358,
+      "path": "artifacts/vla_wam_shared_v3/analysis/mechanism/figures/figure6_failure_taxonomy_by_direction.png",
+      "sha256": "b457f1a1b47107143c4bbb87e4c45903fd20096b58badc32806a4d69adb865b1"
+    },
+    {
+      "bytes": 30372,
+      "path": "artifacts/vla_wam_shared_v3/analysis/mechanism/figures/figure6_failure_taxonomy_by_direction.svg",
+      "sha256": "54db08fe060badead9934606b92ccd05263f4db64536d39bc6bcece1477bff63"
+    },
+    {
+      "bytes": 2084,
+      "path": "artifacts/vla_wam_shared_v3/analysis/mechanism/figures/mechanism_figure_manifest.json",
+      "sha256": "f062db1c36d980be07ec11a7cb9984bdf6dc7889a69f523df373b451b47e8d8b"
+    },
+    {
+      "bytes": 7035,
+      "path": "artifacts/vla_wam_shared_v3/analysis/mechanism/gap_vs_competence_report.json",
+      "sha256": "c392c796c37193905d5824fda80b66737b39248a500134b973977bf67abe32f3"
+    },
+    {
+      "bytes": 1585,
+      "path": "artifacts/vla_wam_shared_v3/analysis/paper_figures/figure1_nano_instrument_sensitivity.manifest.json",
+      "sha256": "2de95f1b322228d61228a47b8be575cda005cb42792ba711e27521fb602095a7"
+    },
+    {
+      "bytes": 353892,
+      "path": "artifacts/vla_wam_shared_v3/analysis/paper_figures/figure1_nano_instrument_sensitivity.png",
+      "sha256": "d1a270dc7a1ed488dd715e6738d26196477140fed109a4a7f0abac22253e2e19"
+    },
+    {
+      "bytes": 29729,
+      "path": "artifacts/vla_wam_shared_v3/analysis/paper_figures/figure1_nano_instrument_sensitivity.svg",
+      "sha256": "d7223d3d501d27072e322cd63c944fc0288ee79ce7d3a1811b16e040eb44cfc9"
+    },
+    {
+      "bytes": 1778,
+      "path": "artifacts/vla_wam_shared_v3/analysis/paper_figures/figure2_three_checkpoint_position_reflection.manifest.json",
+      "sha256": "7ddd56b4d6cef46650952d3f85a861de196734cca9636e9902615cba4762ba2b"
+    },
+    {
+      "bytes": 408207,
+      "path": "artifacts/vla_wam_shared_v3/analysis/paper_figures/figure2_three_checkpoint_position_reflection.png",
+      "sha256": "1b0cd30b2487cb4f77c264b086319a96b2c95d448645aa6a682bca47b6588ce9"
+    },
+    {
+      "bytes": 60397,
+      "path": "artifacts/vla_wam_shared_v3/analysis/paper_figures/figure2_three_checkpoint_position_reflection.svg",
+      "sha256": "b6a801ebb2fa3673381cee6099b5e41435c89bb0f824b2dc78975c2a0d807098"
+    },
+    {
+      "bytes": 2759,
+      "path": "artifacts/vla_wam_shared_v3/analysis/paper_figures/figure5_cross_arena_directional_success.manifest.json",
+      "sha256": "fdeaf1aae3ef139221481cd0b66903b46d11bb6efbe5653ea1ca60873eded37f"
+    },
+    {
+      "bytes": 329707,
+      "path": "artifacts/vla_wam_shared_v3/analysis/paper_figures/figure5_cross_arena_directional_success.png",
+      "sha256": "e2e02c63025cb07a327d5cedcf0f059dc33034afe515db6db8d9e3e02265e68b"
+    },
+    {
+      "bytes": 31154,
+      "path": "artifacts/vla_wam_shared_v3/analysis/paper_figures/figure5_cross_arena_directional_success.svg",
+      "sha256": "fb8d3e6e93c75c708f5e4e2e3f564faea2df0f9fbf29853c55a31b2a2403b0a0"
+    },
+    {
+      "bytes": 23602,
+      "path": "artifacts/vla_wam_shared_v3/measurement_coverage_audit.json",
+      "sha256": "86b3ded424bba2d697b406ea7b1c8bfc147dba8413363ae0190b4d151e76d4ea"
+    },
+    {
+      "bytes": 281813,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/dreamzero_v3b003_episodes.jsonl",
+      "sha256": "31f0715c3cbc682f90e5cc6420b9f45f49622f876734d43ba7c8cb6545b80f34"
+    },
+    {
+      "bytes": 53597,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/dreamzero_v3b003_matched_pairs.jsonl",
+      "sha256": "bb88b62e9137f292a2a1739bd4976daf0d641d242876e921ed4f21d605d9e2a7"
+    },
+    {
+      "bytes": 124097,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/dreamzero_v3b003_summary.json",
+      "sha256": "f45ab7d11281b994592948cdc11ea5d0fe24837d75d21a8a7dd42ff63b9c5817"
+    },
+    {
+      "bytes": 29355,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/evidence_manifest.json",
+      "sha256": "a24278ee01624971877afd7c3db1b7f4377957c3f7d58b9fadc9bd6a70b6fd35"
+    },
+    {
+      "bytes": 2462,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/gates/behavioral_release_gate.json",
+      "sha256": "4a1524b773db9b64a78e8cc81105d81ec2ece76755162d52501d6b9fe4a44b39"
+    },
+    {
+      "bytes": 5055,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/gates/concurrency_isolation_audit.json",
+      "sha256": "11e907d9e45c9bab2a4744c04049180647c51faab59bb465fc6870df8d04cbcf"
+    },
+    {
+      "bytes": 3236,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/gates/runtime_identity.json",
+      "sha256": "ee567560bde972aebb873c8a4b2f2596e7d75413ec80622053c376dc2445788a"
+    },
+    {
+      "bytes": 497130,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/figures/figure3_nano_lateral_dose_response.png",
+      "sha256": "f72e8174435bf4b2d4eaa1be8153f949150b4552703feb89032edf8c732f212f"
+    },
+    {
+      "bytes": 43351,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/figures/figure3_nano_lateral_dose_response.svg",
+      "sha256": "8624365f57c84ec58e6388b6238da1a6ef74ea55f05f4d86d3eedf758be92a8d"
+    },
+    {
+      "bytes": 1500,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/figures/manifest.json",
+      "sha256": "bc04bcb7ecfa756be1641a8731ac9ab6c66ae13eeb37eb582f1fc05c3ad6ffb1"
+    },
+    {
+      "bytes": 199923,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/figures/nano_v3b005_failure_taxonomy_by_level.png",
+      "sha256": "bc1f0c05389d87e4426f64df14261656f41f2dc8d54086fd4f6533d645902afd"
+    },
+    {
+      "bytes": 36917,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/figures/nano_v3b005_failure_taxonomy_by_level.svg",
+      "sha256": "34d9a1c983007a81e0dcb5cefbb98ae53456ccfb60075940bc8cbf539e778c89"
+    },
+    {
+      "bytes": 8706,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/figures/nano_v3b005_plot_data.json",
+      "sha256": "29931fc25c48ac32aa817fc0aa73ae9a05d6d6b5a87b7146c69b6c6ca9b9dfe8"
+    },
+    {
+      "bytes": 2656,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/final_integrity_audit.json",
+      "sha256": "a0024d47d8b83297ac4b6ca079e40eb0b60394055682cdd35470dd03a13c15dc"
+    },
+    {
+      "bytes": 16128,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/nano_v3b005_dose_response_report.json",
+      "sha256": "a65c659cc5eb24e03baafc8101473f63307a549764090b6403eed5d1405ba999"
+    },
+    {
+      "bytes": 80562,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/nano_v3b005_dose_response_report.json.manifest.json",
+      "sha256": "31a897d74403522a8a8cb8f4e6d04cdeb87bc8c61c21074263d4d9af7edd83ff"
+    },
+    {
+      "bytes": 3500,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/nano_v3b005_results_manifest.json",
+      "sha256": "abef596b2f4b471a6595c2983737c63f319a27de9e3b8452385f11914b8db52a"
+    },
+    {
+      "bytes": 31389,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/publication_media/nano_v3b005_publication_media_manifest.json",
+      "sha256": "d27d2d9787777298551f2897b9c73ea3a098682df9cfae9ff46f59652be28991"
+    },
+    {
+      "bytes": 72705,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/nano_v3b001_summary.json",
+      "sha256": "f43636a03caade5f3dc65de6736808c8257c78eacb07ba4cb963bfc6a0e36578"
+    },
+    {
+      "bytes": 17074,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_report.json",
+      "sha256": "f6289333d77538ed9235a567cb98d70333dd50549f7e52d13bfe5d34a10bdf96"
+    },
+    {
+      "bytes": 23134,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_report.json",
+      "sha256": "32ffa99f720906abe8679b0791be3f12d3c91dfce0274d85457a6d2ba59d2b71"
+    },
+    {
+      "bytes": 592184,
+      "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_edge_policy_droid/cosmos3_edge_policy_droid_phase_c_episodes.jsonl",
+      "sha256": "317aa9e7eb18c5ef77b9445483128a7621df5b777835d8eb9e383939acf0a1f5"
+    },
+    {
+      "bytes": 6531,
+      "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_edge_policy_droid/cosmos3_edge_policy_droid_phase_c_summary.json",
+      "sha256": "06a8fd1ff425bce10cbdbeb4b73e9a8ca5ff31da0c5e389ae85f5b64bc451861"
+    },
+    {
+      "bytes": 592172,
+      "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_nano_policy_droid/cosmos3_nano_policy_droid_phase_c_episodes.jsonl",
+      "sha256": "d7016c592e492c028d072eab2d191f139f4966cfc08f2222ed954cfdfb02c0f5"
+    },
+    {
+      "bytes": 6478,
+      "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_nano_policy_droid/cosmos3_nano_policy_droid_phase_c_summary.json",
+      "sha256": "0f134044065dc0f1501a91a69d8e9b10d0a13e9a4065a7c4d33f7854bab73ee9"
+    },
+    {
+      "bytes": 227921,
+      "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/figures/figure7_phase_c_failure_taxonomy.png",
+      "sha256": "df0f00fa1d57361e4d3fd7a601bc4c41ba55e0519dcc7488f9ae4d1a3617f3bf"
+    },
+    {
+      "bytes": 139107,
+      "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/figures/figure7_phase_c_failure_taxonomy.svg",
+      "sha256": "fa36a33f555be1848154762f16ed2443c117deb50736bf18857b2466d6a5cf61"
+    },
+    {
+      "bytes": 421432,
+      "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/figures/figure7_phase_c_phrasing_direction.png",
+      "sha256": "daad11c92f18214bced39609fbeb1b15a9b11ac77048f532695eb479b76d5402"
+    },
+    {
+      "bytes": 233458,
+      "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/figures/figure7_phase_c_phrasing_direction.svg",
+      "sha256": "4207c47cd70af918111d3a7daf9a8e39eaabe4e3ce80e7cc7a3ec0d9547444b2"
+    },
+    {
+      "bytes": 2609,
+      "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/figures/phase_c_figure_manifest.json",
+      "sha256": "34799e1d97cfd79bd5f184a160f65d2ea8b26bf419cfdbd424bc3aa64c1c0bfe"
+    },
+    {
+      "bytes": 542418,
+      "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/groot_n17_droid_vla/groot_n17_droid_vla_phase_c_episodes.jsonl",
+      "sha256": "fc73ba5e331d75a192971543f9c4c58ca127c60dc01c4df53b2824c7e899c3b0"
+    },
+    {
+      "bytes": 6449,
+      "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/groot_n17_droid_vla/groot_n17_droid_vla_phase_c_summary.json",
+      "sha256": "bbf3f69eeef579c01151ca9c30fcc757773904faccd9c7edd0a5376f56f4c755"
+    },
+    {
+      "bytes": 8391,
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/checkpoint_provenance/checkpoint_provenance_table.json",
+      "sha256": "b84717ecbf2fd2fbd8f501f6cc4625d297aae251fb817d0975eb5d6d95c61ace"
+    },
+    {
+      "bytes": 2114,
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/gates/v3b006/model_blind_structural_gate_failure.json",
+      "sha256": "888076f1354fdd4e139e1ede0459ea4427bc31298cece7e5cc1ae48423737cb8"
+    },
+    {
+      "bytes": 131800,
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b007/evidence_hash_manifest.json",
+      "sha256": "722687c49dd2329c032946e9912807d12717563414dad7c59cb05a33c4bb0e9e"
+    },
+    {
+      "bytes": 240226,
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b007/fastwam_v3b007_episodes.jsonl",
+      "sha256": "9c31a283607558e1003407ea5415124490fe13d6d33de9779750034fedc230db"
+    },
+    {
+      "bytes": 19568,
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b007/fastwam_v3b007_pairs.jsonl",
+      "sha256": "73b873a199c797791523580fd1bb12469f502ab8658a08834ebfb9f0b8946a72"
+    },
+    {
+      "bytes": 8655,
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b007/fastwam_v3b007_summary.json",
+      "sha256": "1b9f91a0fb24ca5853ae0fe20f48dc3b784003d2169b6eae0b563d320d867d48"
+    },
+    {
+      "bytes": 825,
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b008/evidence_manifest.json",
+      "sha256": "fa22f230ca87d5a382f089871da566c0be8534e34d67565b92c12bffd0497293"
+    },
+    {
+      "bytes": 336386,
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b008/v3b008_episodes.jsonl",
+      "sha256": "7775f19524d13409bc2da9e9d30d660e068fe735e0ce3d69f21fdbc0a3fe69e6"
+    },
+    {
+      "bytes": 72216,
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b008/v3b008_matched_pairs.jsonl",
+      "sha256": "797cf2d43bf60921032c3940d82ec1e8803645684272f02b187915d5ab7f06f6"
+    },
+    {
+      "bytes": 43266,
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b008/v3b008_summary.json",
+      "sha256": "dc64212c3252a8da27ad5d43c97d7d5061ec7cf8f8b79796e334c5be2889c99a"
+    },
+    {
+      "bytes": 825,
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b009/evidence_manifest.json",
+      "sha256": "3dc9aa7ccb52deb4c57ff6e3f1d7c41c0fb28f9548a130bbcf39ec823be25dc3"
+    },
+    {
+      "bytes": 228176,
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b009/v3b009_episodes.jsonl",
+      "sha256": "cc71a7bb85cd2ba5f9e5692b67009ebafbad2a73726b090602a9c71be96010ef"
+    },
+    {
+      "bytes": 49307,
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b009/v3b009_matched_pairs.jsonl",
+      "sha256": "b9d0b63aad8e36cc3a0a1066fc82fc9c402121e96c161ecd296b4b6af9e4619b"
+    },
+    {
+      "bytes": 18713,
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b009/v3b009_summary.json",
+      "sha256": "9548f4e97898cbfe9fab26d2bdd42e3a1f5e28122476154e73f71e4834aac12a"
+    },
+    {
+      "bytes": 1147,
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3d001/evidence_manifest.json",
+      "sha256": "bdbff6a3a18d1894158dc731df245173405c5f4508bf5da4a9031d5cb975309c"
+    },
+    {
+      "bytes": 1719784,
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3d001/pi05_v3d001_episodes.jsonl",
+      "sha256": "2586bdc4f963a610ea26f5fbe609f9a8c133d85e9f83b58ac6dfe3dd4c798976"
+    },
+    {
+      "bytes": 28494,
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3d001/pi05_v3d001_invalid_attempts.jsonl",
+      "sha256": "0a1940fb87bf4c546c59d1e271d6f80f0f0e9e2823cd3944a33cea0acf87385e"
+    },
+    {
+      "bytes": 510188,
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3d001/pi05_v3d001_matched_pairs.jsonl",
+      "sha256": "084372fc623c2c23622a54b72e13e21cc8d4247aafcf124757a5a8b362fa1e0a"
+    },
+    {
+      "bytes": 35767,
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3d001/pi05_v3d001_summary.json",
+      "sha256": "f05c23a0d40eb33e87deef5138e442ae230914e23f4986e2ddd45caddc2cd9e0"
+    },
+    {
+      "bytes": 197084,
+      "path": "artifacts/vla_wam_shared_v3/results/cosmos3_edge_policy_droid_phase_a_summary.json",
+      "sha256": "fc93b6518185641068ce51a4d81882dd1828ebeb9227b44c4ffc21a07b526c87"
+    },
+    {
+      "bytes": 210426,
+      "path": "artifacts/vla_wam_shared_v3/results/cosmos3_nano_policy_droid_phase_a_summary.json",
+      "sha256": "677c62845ff72bceb35b0c5e3e5b259a5c24da407648fe50f475656fe86cbcea"
+    },
+    {
+      "bytes": 375241,
+      "path": "artifacts/vla_wam_shared_v3/results/dreamzero_droid_action_cfg_phase_a_summary.json",
+      "sha256": "50ec800009b1f128ce8fe877c186b08a47ec3021feaa7cf4f8baab984549b120"
+    },
+    {
+      "bytes": 684315,
+      "path": "artifacts/vla_wam_shared_v3/results/efficient_wam_rt_robotwin_phase_a_summary.json",
+      "sha256": "5796bdbedde6124b9a849fa4ab9785171c0caddd5fd18d28e67706e30ed554e5"
+    },
+    {
+      "bytes": 616899,
+      "path": "artifacts/vla_wam_shared_v3/results/fastwam_robotwin_phase_a_summary.json",
+      "sha256": "da76cf534907714c1b9e74e096ed39578b308642504e145f40e834ff4ba65b4e"
+    },
+    {
+      "bytes": 201245,
+      "path": "artifacts/vla_wam_shared_v3/results/groot_n17_droid_phase_a_summary.json",
+      "sha256": "0db751e94a48caa5815aa6d656ff8cf062283eba47b3048c7c2ac37744581486"
+    },
+    {
+      "bytes": 789610,
+      "path": "artifacts/vla_wam_shared_v3/results/lingbot_va_robotwin_phase_a_summary.json",
+      "sha256": "ebffedaeaf42fb8916449136f617aaa9dab149645caad45aa461dec7aef878e3"
+    },
+    {
+      "bytes": 128505,
+      "path": "artifacts/vla_wam_shared_v3/results/pi05_current_stack_droid_phase_a_summary.json",
+      "sha256": "5c6d07fca7a0d20ab8b757f028d469f864c78a1c43ffedc3d257a16caef2a02b"
+    },
+    {
+      "bytes": 19799,
+      "path": "artifacts/vla_wam_shared_v3/results/pi0_fast_old_name_config_v3a002_summary.json",
+      "sha256": "72df6398030199afd2ffc6f305c3a9b879801a07c42ff078a2c51f9c6090599a"
+    },
+    {
+      "bytes": 16696,
+      "path": "tools/build_nano_v3b005_publication_media.py",
+      "sha256": "9e13181e4e51d78658d0c14401a82e45969825df62e1a175b0088c963e6e0741"
+    },
+    {
+      "bytes": 14488,
+      "path": "tools/render_nano_v3b005_dose_response.py",
+      "sha256": "fadba660709b4d67e52c566c2d437fc260296e9f2010013027de3c7fbd4fb314"
+    },
+    {
+      "bytes": 10098,
+      "path": "tools/render_v3_cross_arena_success.py",
+      "sha256": "ff7ab8678c240fb1e4777a6d0124cfbcf28389522b7a9f04e9ae60ad16a5b422"
+    },
+    {
+      "bytes": 12919,
+      "path": "tools/render_v3_mechanism_figures.py",
+      "sha256": "44c49f31f72d3b1097a42b03e581af97dce185cb6495ad6a00e4b411518cf978"
+    },
+    {
+      "bytes": 14591,
+      "path": "tools/render_v3_mirror_core.py",
+      "sha256": "9997456f2e36a19b1151678884f459593dcf832d563d40ddbc9710df35d7f25c"
+    },
+    {
+      "bytes": 12678,
+      "path": "tools/render_v3_nano_instrument.py",
+      "sha256": "516013b00fd0e9eec119bb29418215e2ae9ae73fb887d2c1d502794d99399c16"
+    }
+  ],
+  "output": {
+    "bytes": 2846188,
+    "path": "output/pdf/language_sensitivity_geometry_scientific_report.pdf",
+    "sha256": "4343fb136b086fc8e84feb28713393161b65013f60aced6cae81f4a803670a70"
+  },
+  "page_count": 12,
+  "schema_version": "vla-wam-shared-v3-scientific-pdf-manifest-v1",
+  "status": "complete_figure_led_scientific_report",
+  "study_id": "vla_wam_language_steerability_v3"
+}

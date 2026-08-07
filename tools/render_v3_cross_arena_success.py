@@ -201,7 +201,7 @@ def render(droid: list[dict[str, Any]], robotwin: list[dict[str, Any]]) -> list[
         axes[0],
         droid,
         "DROID / RoboLab",
-        "Exact prompts: “Put the Rubik’s cube to the left/right of the bowl.”",
+        "Prompt template (relation token substituted): \"Put the Rubik's cube to the {left|right} of the bowl.\"",
     )
     draw_panel(
         axes[1],
@@ -227,6 +227,7 @@ def render(droid: list[dict[str, Any]], robotwin: list[dict[str, Any]]) -> list[
     svg = stem.with_suffix(".svg")
     png = stem.with_suffix(".png")
     fig.savefig(svg, bbox_inches="tight", pad_inches=0.14, metadata={"Date": None})
+    svg.write_text("\n".join(line.rstrip() for line in svg.read_text().splitlines()) + "\n")
     fig.savefig(png, dpi=240, bbox_inches="tight", pad_inches=0.14, metadata={"Software": "steerable V3 cross-arena renderer"})
     plt.close(fig)
     outputs.extend((svg, png))

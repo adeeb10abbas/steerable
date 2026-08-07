@@ -46,6 +46,14 @@ not overwrite or masquerade as evidence; it then retains the second reset,
 every post-action state, exact-prompt action chunks/modalities, a decodable
 viewport MP4, and one validated v3 behavioral JSONL row per cell.
 
+After seed 8500 passes this whole-block smoke, `run_groot_phase_c_queue.sh`
+runs the remaining registered seeds without weakening those gates.  Each seed
+first receives a fresh zero-action Isaac task-registration check, then all
+eight behavioral cells run in their frozen randomized order.  The queue stops
+on the first infrastructure error and refuses every pre-existing registration,
+runner, cell, or launch-evidence path; completed blocks are therefore retained
+without being silently rerun or overwritten.
+
 Every release assertion must name its retained proof path and SHA-256. The runner recomputes those hashes, including the runtime-identity file, before it will produce a plan.
 
 The wording block remains exploratory under the committed V3 analysis plan. Confirmatory wording claims require a later prospective power and inference amendment made before Phase-C behavioral inference.

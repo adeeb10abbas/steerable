@@ -1,0 +1,83 @@
+{
+  "amendment_id": "V3-B007",
+  "arena": "robotwin",
+  "arena_boundary": "RoboTwin results remain separate from every DROID denominator and success rate.",
+  "arms": [
+    "control",
+    "position_mirrored"
+  ],
+  "authorized_behavioral_cells": 108,
+  "completed_behavioral_cells_at_release": 0,
+  "exact_prompts": {
+    "left": "Put the small woodenblock to the left of the red playingcards box.",
+    "right": "Put the small woodenblock to the right of the red playingcards box."
+  },
+  "frozen_rules": [
+    "same environment and sampling seed for all four cells in a matched block",
+    "static exact direct-command prompt only",
+    "center-position x reflection only; quaternions, robot, cameras, and nonmovable geometry unchanged",
+    "RoboTwin relation-aware predicate, controller, and 400-action cap unchanged",
+    "simulator video, raw action trace, trajectory, and per-episode JSONL retained",
+    "valid failures stay in denominators; infrastructure failures remain separate"
+  ],
+  "launched_behavioral_cells_at_release": 0,
+  "matched_seeds": [
+    9900,
+    9901,
+    9902,
+    9903,
+    9904,
+    9905,
+    9906,
+    9907,
+    9908,
+    9909,
+    9910,
+    9911,
+    9912,
+    9913,
+    9914,
+    9915,
+    9916,
+    9917,
+    9918,
+    9919,
+    9920,
+    9921,
+    9922,
+    9923,
+    9924,
+    9925,
+    9926
+  ],
+  "model_blind_gate": {
+    "bytes": 15648,
+    "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/gates/v3b007/model_blind_gate_report.json",
+    "sha256": "e092917893591490f1b1ee2ab2f9c6bd4cd9cc560fa5702d49dd6974a301d6ad"
+  },
+  "model_blind_gate_manifest": {
+    "bytes": 2196,
+    "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/gates/v3b007/evidence_manifest.json",
+    "sha256": "f7690a3afcb72ccf71c01833c5408cf63c28b05a0de2069eaa704847d0abb2ed"
+  },
+  "model_id": "fastwam_robotwin",
+  "queue": {
+    "bytes": 128142,
+    "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/releases/v3b007/v3b007_cells.jsonl",
+    "sha256": "2ffe2f99e4d6c4b3d80c24fab7276b21bb83de86d92b8a3438ce38a7ba9e1ae3"
+  },
+  "recorded_at_utc": "2026-08-07T03:27:00Z",
+  "registration": {
+    "bytes": 3585,
+    "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/fastwam_robotwin_mirror_v3b007.json",
+    "sha256": "84d14a5c6a02c5f6655384d2ed1ef6e3cdaab05341136d81a3b0e727268ecc8e"
+  },
+  "relations": [
+    "left",
+    "right"
+  ],
+  "runtime_boundary": "Use FastWAM@068d3fd70c89df3726c09893f47b75a624b20c02, its frozen checkpoint/runtime, SAPIEN renderer, and the architecture-compatible curobo-fastwam-rtxpro-sm120-torch27 build on an isolated ali lane. No behavior was launched by this amendment.",
+  "schema_version": "vla-wam-shared-v3b007-release-amendment-v1",
+  "status": "released_after_model_blind_gate_behavior_deferred_for_lane_scheduling",
+  "study_id": "vla_wam_language_steerability_v3"
+}

@@ -1,0 +1,27 @@
+{
+  "schema_version": "vla-wam-shared-v3b006-model-blind-structural-gate-failure-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B006",
+  "model_id": "cosmos3_nano_policy_droid",
+  "arena": "droid_robolab",
+  "recorded_at_utc": "2026-08-07T03:29:00Z",
+  "status": "failed_closed_before_reset_renderer_or_model_request",
+  "passed": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "registered_candidates_evaluated_structurally_degrees": [45, 30, 15],
+  "blocking_requirement": "The registration holds all camera world poses and intrinsics fixed while rotating the robot base about world vertical.",
+  "exact_runtime_fact": {
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "source_path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/robolab/robots/droid.py",
+    "source_bytes": 16098,
+    "source_sha256": "3c43b562cc22476135b7cd82c9c4c01ed361350eda25f3ef6669408ffce53e5d",
+    "robot_prim": "{ENV_REGEX_NS}/robot",
+    "robot_initial_rotation_source_lines": [80, 82],
+    "policy_wrist_camera_prim": "{ENV_REGEX_NS}/robot/Gripper/Robotiq_2F_85/base_link/wrist_cam",
+    "policy_wrist_camera_source_lines": [40, 58]
+  },
+  "reason": "The policy-calibrated wrist camera is a descendant of the robot articulation prim. Every registered nonzero base-yaw candidate therefore changes that camera's world pose. Holding its world pose fixed would require detaching or counter-transforming the camera, which changes the frozen policy sensor/extrinsic contract. Thus no registered 45, 30, or 15 degree candidate can satisfy the intervention definition.",
+  "failure_rule_applied": "V3-B006 fails closed because no preregistered nonzero yaw can pass all held-fixed requirements. No smaller angle is invented, no camera contract is weakened, and no behavioral queue is generated.",
+  "next_command": "None under V3-B006. A scientifically distinct future amendment could explicitly permit wrist-camera extrinsics to rotate with the base or replace the intervention with a scene-frame transform, but that would not be this registered experiment."
+}

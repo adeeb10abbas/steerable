@@ -8,9 +8,9 @@ V3-B002 scene-matched replication is also complete and hash-closed at 108/108
 valid episodes; its existing-log failure-mode split is complete. The
 five-checkpoint gap-versus-competence diagnostic is also complete and adds no
 new model inference. Phase C is behaviorally released for GR00T N1.7, Cosmos3
-Edge, and Cosmos3 Nano Policy DROID. Edge is complete and hash-closed at
-160/160 episodes; GR00T and Nano continue their remaining prospectively
-registered seeds in independent model lanes. The
+Edge, and Cosmos3 Nano Policy DROID. Edge and Nano are each complete and
+hash-closed at 160/160 episodes; GR00T continues its remaining prospectively
+registered seeds in its independent model lane. The
 machine-readable source of truth is
 [`continuation_state.json`](../artifacts/vla_wam_shared_v3/continuation_state.json).
 
@@ -645,8 +645,8 @@ must remain separate. It is complete and must not be rerun.
   ablation remains unreleased.
 - Phase C: GR00T N1.7, Cosmos3 Edge, and Cosmos3 Nano each passed their independent
   byte-hash, raw-writer, exact-repeat, and four-form prompt-sensitivity gates.
-  Edge is complete at 160/160 valid episodes; GR00T and Nano continue in
-  separate serial queues.
+  Edge and Nano are each complete at 160/160 valid episodes; GR00T continues
+  in its separate serial queue.
 - Phase D: not released; it requires an effective stochastic-seed probe for
   each exact runtime.
 
@@ -685,6 +685,30 @@ population claim.
 | [`Summary`](../artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_edge_policy_droid/cosmos3_edge_policy_droid_phase_c_summary.json) | `06a8fd1ff425bce10cbdbeb4b73e9a8ca5ff31da0c5e389ae85f5b64bc451861` |
 | [`Evidence manifest`](../artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_edge_policy_droid/cosmos3_edge_policy_droid_phase_c_evidence_manifest.json) | `2c72c90b71c5ea0001d917ce4464a3207faa1c6ae62b1e0200926d435c90c97a` |
 
+Cosmos3 Nano is also complete across 20 shared seeds and 160 valid behavioral
+episodes, with 160 viewport videos and no infrastructure episode in the
+denominator. Its pattern differs from Edge: direct instruction was **20/20
+LEFT versus 19/20 RIGHT**, shortened instruction was **20/20 versus 19/20**,
+and goal statement was **18/20 versus 17/20**, while the contrastive instruction
+dropped to **11/20 versus 10/20**. Thus Nano's principal exploratory scope
+signal is wording sensitivity affecting both requested directions, rather than
+an Edge-like rightward success advantage. Across repeated forms the descriptive
+totals are 69/80 LEFT and 65/80 RIGHT; again, these are four measurements on
+each of 20 scenes, not 80 independent scenes.
+
+Nano's endpoint ordering followed the request in 20/20 direct, 20/20
+shortened, 20/20 goal-statement, and 15/20 contrastive pairs. Every first-ten
+action prefix differed. Its failure taxonomy was 134 correct, 2 pick failures,
+18 transport failures, 6 wrong-side failures, and no release failures. The
+contrastive prompt therefore reduced full-task completion and weakened, but did
+not eliminate, matched endpoint redirection.
+
+| Complete Cosmos3 Nano Phase-C evidence | SHA-256 |
+| --- | --- |
+| [`Episodes`](../artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_nano_policy_droid/cosmos3_nano_policy_droid_phase_c_episodes.jsonl) | `d7016c592e492c028d072eab2d191f139f4966cfc08f2222ed954cfdfb02c0f5` |
+| [`Summary`](../artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_nano_policy_droid/cosmos3_nano_policy_droid_phase_c_summary.json) | `0f134044065dc0f1501a91a69d8e9b10d0a13e9a4065a7c4d33f7854bab73ee9` |
+| [`Evidence manifest`](../artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_nano_policy_droid/cosmos3_nano_policy_droid_phase_c_evidence_manifest.json) | `16f2bcb1e7de10d9a5adb692a433809845517bee1466fb34589200f6bb9be530` |
+
 At seed 8500, GR00T completed **8/8 valid cells** with two requested successes
 and six valid failures. Cosmos3 Edge completed **8/8 valid cells** with seven
 requested successes and one `transport_failed` shortened-LEFT episode. Edge
@@ -693,9 +717,10 @@ viewport videos, and retained all 74 exposed 33-frame decoded futures. Nano
 also completed **8/8 valid cells**, with seven requested successes and one
 `transport_failed` contrastive-LEFT episode. It issued 54 model requests,
 executed 1,581 actions, retained eight decodable viewport videos, and retained
-all 54 exposed 33-frame decoded futures with exact seed echoes. These are
-bridge-validation smokes only: they do not support population-level claims
-about phrasing or requested direction before seeds 8501–8519 finish.
+all 54 exposed 33-frame decoded futures with exact seed echoes. These retained
+seed-8500 records remain bridge-validation smokes and do not support
+population-level claims alone; the complete Edge and Nano cohorts above support
+their exploratory scope analyses. GR00T's population result remains pending.
 
 Nano's live bridge completed all eight trajectories before deterministic
 packaging failed because the isolated source bundle omitted the shared JSONL

@@ -1,10 +1,10 @@
 {
   "schema_version": "vla-wam-shared-v3-continuation-v1",
   "study_id": "vla_wam_language_steerability_v3",
-  "updated_at_utc": "2026-08-07T07:01:44Z",
+  "updated_at_utc": "2026-08-07T07:33:36Z",
   "active_branch": "main",
-  "evidence_head": "ed7e00e9de0a90af227180cf9e4e13ff1ddb5801",
-  "status": "phase_c_edge_complete_groot_and_nano_queues_active",
+  "evidence_head": "b3c1188dc371106833868545909bb6cd1a3aa116",
+  "status": "phase_c_edge_and_nano_complete_groot_queue_active",
   "authoritative_files": [
     "docs/VLA_WAM_V3_CONTINUATION.md",
     "docs/VLA_WAM_STEERABILITY_V3_PROTOCOL.md",
@@ -118,6 +118,9 @@
     "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_edge_policy_droid/cosmos3_edge_policy_droid_phase_c_episodes.jsonl",
     "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_edge_policy_droid/cosmos3_edge_policy_droid_phase_c_summary.json",
     "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_edge_policy_droid/cosmos3_edge_policy_droid_phase_c_evidence_manifest.json",
+    "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_nano_policy_droid/cosmos3_nano_policy_droid_phase_c_episodes.jsonl",
+    "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_nano_policy_droid/cosmos3_nano_policy_droid_phase_c_summary.json",
+    "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_nano_policy_droid/cosmos3_nano_policy_droid_phase_c_evidence_manifest.json",
     "experiments/v3/phase_c_four_phrasings/run_groot_phase_c_queue.sh",
     "experiments/v3/phase_c_four_phrasings/run_cosmos_phase_c_queue.sh",
     "tools/finalize_v3c_cosmos_retained_seed.py",
@@ -911,10 +914,10 @@
       "unreleased": "DreamZero V3-B003 passed its independent release gate and its 108 cells are authorized but incomplete. V3-B004 failed closed before inference. Nano V3-B005 is complete and must not be rerun. Every other Phase-B confound ablation beyond completed Nano V3-B001, pi0.5 V3-B002, and Nano V3-B005 requires its own frozen independent release path."
     },
     "phase_c_four_phrasings": {
-      "status": "cosmos3_edge_complete_groot_and_nano_queues_active",
+      "status": "cosmos3_edge_and_nano_complete_groot_queue_active",
       "registered_episode_count": 480,
       "released_episode_count": 480,
-      "completed_valid_behavioral_episode_count": 176,
+      "completed_valid_behavioral_episode_count": 328,
       "model_status": {
         "groot_n17_droid_vla": {
           "behavioral_release": true,
@@ -973,9 +976,11 @@
         },
         "cosmos3_nano_policy_droid": {
           "behavioral_release": true,
-          "completed_valid_behavioral_episodes": 8,
-          "completed_seed_blocks": [8500],
-          "active_seed_range": [8501, 8519],
+          "completed_valid_behavioral_episodes": 160,
+          "completed_seed_blocks": [8500, 8501, 8502, 8503, 8504, 8505, 8506, 8507, 8508, 8509, 8510, 8511, 8512, 8513, 8514, 8515, 8516, 8517, 8518, 8519],
+          "valid_behavioral_failures": 26,
+          "viewport_videos": 160,
+          "model_requests": 1234,
           "seed8500_requested_successes": 7,
           "seed8500_valid_failures": 1,
           "seed8500_model_requests": 54,
@@ -988,12 +993,20 @@
             "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/smoke/cosmos3_nano_policy_droid/evidence_manifest.json",
             "sha256": "5c2ca8e13e0529022acff53c232d5d2fa11873683d3be8f6bb97f2fec5473240"
           },
-          "active_queue": {
+          "completed_queue": {
             "client_pod": "vla-wam-fastwam-expansion-ali",
             "server_pod": "lerobot-b200-4gpu-1-ali",
             "pid": 262829,
             "execution": "one_client_per_server_serial",
-            "queue_log": "/data/users/ali/vla_wam/raw/v3c/phase_c_v3c001/cosmos3_nano_policy_droid/queue_seed8501_8519_attempt01.log"
+            "queue_log": "/data/users/ali/vla_wam/raw/v3c/phase_c_v3c001/cosmos3_nano_policy_droid/queue_seed8501_8519_attempt01.log",
+            "status": "natural_exit_after_complete_20_seed_queue"
+          },
+          "compact_result": {
+            "episodes": {"path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_nano_policy_droid/cosmos3_nano_policy_droid_phase_c_episodes.jsonl", "sha256": "d7016c592e492c028d072eab2d191f139f4966cfc08f2222ed954cfdfb02c0f5"},
+            "summary": {"path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_nano_policy_droid/cosmos3_nano_policy_droid_phase_c_summary.json", "sha256": "0f134044065dc0f1501a91a69d8e9b10d0a13e9a4065a7c4d33f7854bab73ee9"},
+            "evidence_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_nano_policy_droid/cosmos3_nano_policy_droid_phase_c_evidence_manifest.json", "sha256": "16f2bcb1e7de10d9a5adb692a433809845517bee1466fb34589200f6bb9be530"},
+            "successes_by_condition": {"direct_command:left": 20, "direct_command:right": 19, "short_command:left": 20, "short_command:right": 19, "goal_as_outcome:left": 18, "goal_as_outcome:right": 17, "desired_plus_negated_opposite:left": 11, "desired_plus_negated_opposite:right": 10},
+            "interpretation": "Exploratory wording result over 20 shared seeds. Nano remains strong under direct, shortened, and goal-statement prompts, but contrastive wording reduces success for both directions; the four forms are repeated measures, not 80 independent scenes."
           },
           "seed8500_finalization_repair": {
             "behavioral_rerun": false,
@@ -1003,7 +1016,7 @@
           }
         }
       },
-      "interpretation_boundary": "Cosmos3 Edge is complete at 160/160 prospectively registered behavioral episodes. Its four prompt forms share 20 scenes and must not be treated as 80 independent scenes. GR00T and Nano remain active; do not infer their population-level phrasing results until their complete compact cohorts are hash-closed. DROID is never pooled with RoboTwin."
+      "interpretation_boundary": "Cosmos3 Edge and Cosmos3 Nano are each complete at 160/160 prospectively registered behavioral episodes. Their four prompt forms share 20 scenes per model and must not be treated as 80 independent scenes. GR00T remains active; do not infer its population-level phrasing result until its complete compact cohort is hash-closed. DROID is never pooled with RoboTwin."
     },
     "phase_d_stochastic_rollouts": {
       "status": "not_released",
@@ -1028,7 +1041,7 @@
       ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
       "git diff --check"
     ],
-    "inference_authority": "Do not rerun any valid Phase-A, V3-A002, Nano V3-B001, pi0.5 V3-B002, Nano V3-B005, or Cosmos3 Edge V3-C001 cell. DreamZero V3-B003 passed its hash-bound four-lane physical and fresh fixed-observation release gate; run only its exact 108 registered cells and preserve whole-seed order. Nano V3-B004 failed closed with zero model requests and must never be run. Nano V3-B005 is complete at 210/210 valid cells and is hash-closed. Phase C remains active only for the already running GR00T and Cosmos3 Nano seed-8501-8519 queues. Preserve whole-seed serial execution; Nano additionally requires one client per server and exact echoed sampling seeds. Do not rerun complete seed blocks. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or another Phase-C model.",
+    "inference_authority": "Do not rerun any valid Phase-A, V3-A002, Nano V3-B001, pi0.5 V3-B002, Nano V3-B005, Cosmos3 Edge V3-C001, or Cosmos3 Nano V3-C001 cell. DreamZero V3-B003 passed its hash-bound four-lane physical and fresh fixed-observation release gate; run only its exact 108 registered cells and preserve whole-seed order. Nano V3-B004 failed closed with zero model requests and must never be run. Nano V3-B005 is complete at 210/210 valid cells and is hash-closed. Phase C remains active only for the already running GR00T seed-8501-8519 queue. Preserve whole-seed serial execution and do not rerun complete seed blocks. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or another Phase-C model.",
     "publication_note": "Use the compact result summaries and evidence manifests for analysis. Do not infer current study state from the older V2 article, gallery, figures, or chat history."
   }
 }

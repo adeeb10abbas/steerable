@@ -13,6 +13,10 @@ matched LEFT/RIGHT action effects and bit-identical exact repeats. The safe
 claim is reproducible prompt-conditioned action change at the same observation,
 qualified by the same-prompt cross-seed distributions in
 `fixed_observation_prompt_noise_v3e001/results/compiled_results.json`.
+The effect-to-noise relation is not uniform: π0.5 is below measured sampling
+variation, Nano is mixed by layout, and DreamZero has zero measured
+same-prompt variation (ratio recorded as null/unbounded rather than assigned
+an epsilon).
 
 ## V3-E002 — model-blind reference controller
 

@@ -42,6 +42,12 @@ from experiments.v3.phase_c_four_phrasings.groot_behavioral_contract import (
     validate_live_task_registration,
     validate_task_sources,
 )
+from experiments.v3.phase_c_four_phrasings.cosmos_behavioral_contract import (
+    validate_seed_block as validate_cosmos_seed_block,
+    validate_live_output_contract as validate_cosmos_live_output_contract,
+    validate_live_task_registration as validate_cosmos_live_task_registration,
+)
+from experiments.v3.phase_c_four_phrasings.runner import build_plan
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -270,6 +276,87 @@ def test_groot_live_registration_and_output_paths_fail_closed(tmp_path: Path) ->
         )
 
 
+def test_cosmos_live_registration_and_future_paths_fail_closed(tmp_path: Path) -> None:
+    model_id = "cosmos3_edge_policy_droid"
+    cells = []
+    registration_cells = []
+    for order, ((form, relation), (filename, task_name)) in enumerate(TASK_SPECS.items(), 1):
+        raw = tmp_path / f"cosmos-cell-{order}"
+        prompt = PROMPTS[form][relation]
+        cell = {
+            "registered_cell_id": f"v3c001:droid:{model_id}:seed8500:{form}:{relation}",
+            "within_seed_execution_order": order,
+            "task_name": task_name,
+            "task_file": str(
+                ROOT / "experiments/v3/phase_c_four_phrasings/groot_task_files" / filename
+            ),
+            "prompt": prompt,
+            "prompt_family": form,
+            "relation": relation,
+            "raw_cell_directory": str(raw),
+            "required_outputs": {
+                "behavioral_jsonl": str(raw / "episode.jsonl"),
+                "executed_actions": str(raw / "executed_actions.npy"),
+                "simulator_viewport_video": str(raw / "viewport.mp4"),
+                "state_trace": str(raw / "state_trace.jsonl"),
+                "decoded_future": "required_when_exposed_by_runtime",
+            },
+        }
+        cells.append(cell)
+        registration_cells.append({
+            "registered_cell_id": cell["registered_cell_id"],
+            "within_seed_execution_order": order,
+            "task_name": task_name,
+            "prompt": prompt,
+            "left_predicate_at_reset": False,
+            "right_predicate_at_reset": False,
+            "model_requests": 0,
+            "actions_executed": 0,
+        })
+        outputs = validate_cosmos_live_output_contract(cell)
+        assert outputs["decoded_future_directory"] == raw / "decoded_futures"
+        assert outputs["action_future_metadata"] == raw / "action_future_trace.json"
+
+    bridge_path = tmp_path / "cosmos-bridge.json"
+    bridge_path.write_bytes(canonical_json_bytes({
+        "model_id": model_id,
+        "seed": 8500,
+        "cells": cells,
+    }))
+    registration_path = tmp_path / "cosmos-registration.json"
+    registration_path.write_bytes(canonical_json_bytes({
+        "schema_version": "vla-wam-shared-v3c-cosmos-live-task-registration-v1",
+        "experiment_id": EXPERIMENT_ID,
+        "model_id": model_id,
+        "seed": 8500,
+        "passed": True,
+        "model_request_count": 0,
+        "behavioral_episode_count": 0,
+        "executed_action_count": 0,
+        "renderer_initialized": True,
+        "matched_reset_tolerance_m": 0.003,
+        "max_cube_position_spread_m": 0.0,
+        "max_bowl_position_spread_m": 0.0,
+        "bridge_preflight": {
+            "path": str(bridge_path),
+            "sha256": sha256_file(bridge_path),
+        },
+        "cells": registration_cells,
+    }))
+    validate_cosmos_live_task_registration(
+        bridge_preflight_path=bridge_path,
+        task_registration_path=registration_path,
+    )
+    bad = json.loads(registration_path.read_text())
+    bad["max_cube_position_spread_m"] = 0.01
+    registration_path.write_bytes(canonical_json_bytes(bad))
+    with pytest.raises(ContractError, match="resets are not matched"):
+        validate_cosmos_live_task_registration(
+            bridge_preflight_path=bridge_path,
+            task_registration_path=registration_path,
+        )
+
+
 def _release(
     model_id: str,
     registration_sha: str,
@@ -339,6 +426,65 @@ def test_release_contract_fails_closed_and_lanes_keep_seed_blocks(tmp_path: Path
     counts = Counter(row["seed"] for row in selected)
     assert counts and set(counts.values()) == {8}
     assert not any(row["model_id"] != model_id for row in selected)
+
+
+def test_cosmos_seed_preflight_consumes_one_complete_released_block(tmp_path: Path) -> None:
+    model_id = "cosmos3_edge_policy_droid"
+    registration_manifest = ROOT / OUTPUT_RELATIVE / "phase_c_v3c001_manifest.json"
+    registration_sha = sha256_file(registration_manifest)
+    proof_path = tmp_path / "retained-proof.json"
+    proof_path.write_text("{}\n")
+    release_path = tmp_path / "release.json"
+    release_path.write_bytes(
+        canonical_json_bytes(_release(model_id, registration_sha, proof_path))
+    )
+    plan = build_plan(
+        cells_path=ROOT / OUTPUT_RELATIVE / "phase_c_v3c001_cells.jsonl",
+        registration_manifest_path=registration_manifest,
+        release_manifest_path=release_path,
+        raw_root=tmp_path / "raw",
+        model_id=model_id,
+        lane_index=0,
+        lane_count=1,
+    )
+    plan_path = tmp_path / "plan.json"
+    plan_path.write_bytes(canonical_json_bytes(plan))
+    report = validate_cosmos_seed_block(
+        study_root=ROOT,
+        execution_plan=plan_path,
+        release_manifest=release_path,
+        registration_manifest=registration_manifest,
+        model_id=model_id,
+        seed=8500,
+    )
+    assert report["passed"] is True
+    assert len(report["cells"]) == 8
+    assert [
+        (cell["prompt_family"], cell["relation"]) for cell in report["cells"]
+    ] == randomized_conditions(model_id, 8500)
+    Path(report["cells"][0]["raw_cell_directory"]).mkdir(parents=True)
+    with pytest.raises(ContractError, match="refusing to overwrite"):
+        validate_cosmos_seed_block(
+            study_root=ROOT,
+            execution_plan=plan_path,
+            release_manifest=release_path,
+            registration_manifest=registration_manifest,
+            model_id=model_id,
+            seed=8500,
+        )
+
+
+def test_cosmos_queue_is_single_client_and_serial() -> None:
+    source = (
+        ROOT
+        / "experiments/v3/phase_c_four_phrasings/run_cosmos_phase_c_queue.sh"
+    ).read_text()
+    assert 'single_client_lock="$gate_root/single_client_server.lock"' in source
+    assert 'if ! mkdir "$single_client_lock"' in source
+    assert 'trap cleanup_single_client_lock EXIT' in source
+    assert "trap 'exit 130' INT TERM" in source
+    assert 'for seed in $(seq "$seed_start" "$seed_end"); do' in source
+    assert not any(line.rstrip().endswith(" &") for line in source.splitlines())
 
 
 def test_committed_materialization_matches_builder() -> None:

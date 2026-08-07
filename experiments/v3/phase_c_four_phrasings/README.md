@@ -54,6 +54,22 @@ on the first infrastructure error and refuses every pre-existing registration,
 runner, cell, or launch-evidence path; completed blocks are therefore retained
 without being silently rerun or overwritten.
 
+The Cosmos path uses the same task subclasses and state/video writer but a
+separate `cosmos_behavioral_bridge.py` contract and `cosmos_live_bridge.py`
+client.  Edge and Nano each require their own released execution plan, runtime
+identity, server port, raw root, task-registration proof, and whole-seed launch
+evidence.  Every returned `[32,8]` action chunk and exposed 33-frame decoded
+future is retained on the PVC with a content hash.  `run_cosmos_phase_c_queue.sh`
+keeps the two model queues separate and stops on the first missing future,
+partial cell, identity mismatch, or pre-existing path.  Nano additionally uses
+`serve_phase_c_nano.py` to authorize only seeds 8500–8519 and the eight exact
+registered prompt strings while preserving the official inference method.
+Each Cosmos server has exactly one serial client queue.  An atomic per-model
+server lock refuses a second queue and is deliberately left stale after an
+unclean exit for fail-closed diagnosis.  Parallel clients remain prohibited
+unless code-level session isolation and an interleaved exact-repeat gate are
+separately implemented and released.
+
 Every release assertion must name its retained proof path and SHA-256. The runner recomputes those hashes, including the runtime-identity file, before it will produce a plan.
 
 The wording block remains exploratory under the committed V3 analysis plan. Confirmatory wording claims require a later prospective power and inference amendment made before Phase-C behavioral inference.

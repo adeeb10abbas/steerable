@@ -64,6 +64,10 @@ def sha256_file(path: Path) -> str:
     return h.hexdigest()
 
 
+def sha256_bytes(payload: bytes) -> str:
+    return hashlib.sha256(payload).hexdigest()
+
+
 def canonical_json_bytes(value: Any) -> bytes:
     return json.dumps(value, allow_nan=False, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
 

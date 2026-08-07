@@ -27,6 +27,7 @@ BOOTSTRAP.add_argument("--state-capture-dir", type=Path, required=True)
 BOOTSTRAP.add_argument("--action-trace-dir", type=Path, required=True)
 BOOTSTRAP.add_argument("--reset-attestation", type=Path, required=True)
 BOOTSTRAP.add_argument("--simulator-export", type=Path, required=True)
+BOOTSTRAP.add_argument("--output-dir", type=Path, required=True)
 BOOTSTRAP.add_argument("--remote-host", required=True)
 BOOTSTRAP.add_argument("--remote-port", type=int, required=True)
 BOOTSTRAP.add_argument("--lane-pod-uid", required=True)
@@ -180,6 +181,10 @@ class StateCaptureProxy:
         self._samples: list[dict[str, Any]] = []
         self._started = time.monotonic()
         self._written = False
+        self._runner_pre_action_reset_calls = 0
+        self._physical_reset_calls = 0
+        self._cached_reset_result: tuple[Any, Any] | None = None
+        self._reset_attestation_payload: dict[str, Any] | None = None
         self._partial = bootstrap.state_capture_dir / "states.partial.jsonl"
 
     def __getattr__(self, name: str) -> Any:
@@ -202,8 +207,33 @@ class StateCaptureProxy:
             handle.write(json.dumps(sample, sort_keys=True, separators=(",", ":")) + "\n")
 
     def reset(self, *args: Any, **kwargs: Any) -> Any:
-        if self._partial.exists() or bootstrap.reset_attestation.exists():
-            raise FileExistsError("refusing to overwrite V3-B003 reset/state evidence")
+        if self._partial.exists() or len(self._samples) > 1:
+            raise RuntimeError("reset attempted after V3-B003 behavioral authorization")
+        self._runner_pre_action_reset_calls += 1
+        if self._runner_pre_action_reset_calls == 2:
+            if (
+                self._cached_reset_result is None
+                or self._physical_reset_calls != 1
+                or self._reset_attestation_payload is None
+                or len(self._samples) != 1
+                or bootstrap.reset_attestation.exists()
+            ):
+                raise RuntimeError("duplicate reset preceded the completed V3-B003 physical reset")
+            self._reset_attestation_payload.update({
+                "runner_pre_action_reset_calls": 2,
+                "physical_reset_calls": 1,
+                "duplicate_second_reset_idempotent": True,
+            })
+            bootstrap.reset_attestation.parent.mkdir(parents=True, exist_ok=True)
+            bootstrap.reset_attestation.write_text(
+                json.dumps(self._reset_attestation_payload, indent=2, sort_keys=True) + "\n"
+            )
+            return self._cached_reset_result
+        if self._runner_pre_action_reset_calls != 1:
+            raise RuntimeError("frozen RoboLab runner must call reset exactly twice before actions")
+        if bootstrap.reset_attestation.exists():
+            raise FileExistsError("refusing to overwrite V3-B003 reset attestation")
+        self._physical_reset_calls += 1
         counter = getattr(self._env, "episode_length_buf", None)
         if counter is None or not hasattr(counter, "zero_"):
             raise RuntimeError("RoboLab reset counter is unavailable")
@@ -224,10 +254,7 @@ class StateCaptureProxy:
         )
         if maximum_error > 0.005:
             raise RuntimeError(f"V3-B003 reset missed the fixture by {maximum_error} m")
-        bootstrap.state_capture_dir.mkdir(parents=True, exist_ok=False)
-        self._partial.touch(exist_ok=False)
-        bootstrap.reset_attestation.parent.mkdir(parents=True, exist_ok=True)
-        bootstrap.reset_attestation.write_text(json.dumps({
+        self._reset_attestation_payload = {
             "schema_version": "vla-wam-shared-v3b-dreamzero-reset-attestation-v1",
             "passed": True,
             "registered_cell_id": cell.cell_id,
@@ -240,13 +267,26 @@ class StateCaptureProxy:
             "positions_robot_base_m": positions,
             "maximum_fixture_position_error_m": maximum_error,
             "fixture_candidate_sha256": FIXTURE_CANDIDATE_SHA256,
-        }, indent=2, sort_keys=True) + "\n")
+            "runner_pre_action_reset_calls": 1,
+            "physical_reset_calls": 1,
+            "duplicate_second_reset_idempotent": False,
+        }
         self._samples = []
         self._started = time.monotonic()
         self._sample(0)
-        return result
+        if not isinstance(result, tuple) or len(result) != 2:
+            raise RuntimeError("RoboLab reset did not return (observation, info)")
+        self._cached_reset_result = result
+        return self._cached_reset_result
 
     def step(self, action: Any) -> Any:
+        if not bootstrap.reset_attestation.exists():
+            raise RuntimeError("V3-B003 action occurred before reset attestation")
+        if not self._partial.exists():
+            bootstrap.state_capture_dir.mkdir(parents=True, exist_ok=True)
+            self._partial.write_text(
+                json.dumps(self._samples[0], sort_keys=True, separators=(",", ":")) + "\n"
+            )
         result = self._env.step(action)
         self._sample(len(self._samples))
         return result
@@ -371,30 +411,45 @@ def make_client(_: argparse.Namespace) -> V3B003DreamZeroClient:
 
 
 def main() -> None:
+    failure: BaseException | None = None
     try:
-        run_evaluation(args_cli, policy="dreamzero_v2", client_factory=make_client)
+        try:
+            run_evaluation(args_cli, policy="dreamzero_v2", client_factory=make_client)
+        except BaseException as error:
+            failure = error
     finally:
         for client_instance in clients:
             client_instance.write_trace()
         for proxy in proxies:
             proxy.write_capture()
-        videos = [str(path.resolve()) for path in Path(args_cli.output_dir).rglob("*.mp4")]
-        if len(videos) != 1:
-            raise RuntimeError(f"expected one V3-B003 viewport video, found {videos}")
-        capture_path = bootstrap.state_capture_dir / "capture.json"
-        trace_path = bootstrap.action_trace_dir / f"seed{cell.seed}_{cell.relation}_executed_actions.json"
-        bootstrap.simulator_export.parent.mkdir(parents=True, exist_ok=True)
-        bootstrap.simulator_export.write_text(json.dumps({
-            "schema_version": "vla-wam-shared-v3b-dreamzero-simulator-export-v1",
-            "registered_cell_id": cell.cell_id,
-            "capture_path": str(capture_path.resolve()),
-            "trace_manifest_path": str(trace_path.resolve()),
-            "viewport_video_path": videos[0],
-            "reset_attestation_path": str(bootstrap.reset_attestation.resolve()),
-            "runtime_identity_path": str(bootstrap.runtime_identity.resolve()),
-            "release_gate_path": str(bootstrap.release_gate.resolve()),
-        }, indent=2, sort_keys=True) + "\n")
         simulation_app.close()
+    if failure is not None:
+        raise failure
+    videos = [
+        str(path.resolve())
+        for path in bootstrap.output_dir.rglob("*.mp4")
+        if path.is_file() and path.stat().st_size > 0
+    ]
+    if len(videos) != 1:
+        raise RuntimeError(f"expected one V3-B003 viewport video, found {videos}")
+    capture_path = bootstrap.state_capture_dir / "capture.json"
+    trace_path = bootstrap.action_trace_dir / f"seed{cell.seed}_{cell.relation}_executed_actions.json"
+    if not capture_path.is_file() or not trace_path.is_file():
+        raise RuntimeError("V3-B003 state capture or action trace is missing")
+    capture = json.loads(capture_path.read_text())
+    if capture.get("behavioral_result_valid_candidate") is not True:
+        raise RuntimeError("partial V3-B003 attempt cannot emit a behavioral export")
+    bootstrap.simulator_export.parent.mkdir(parents=True, exist_ok=True)
+    bootstrap.simulator_export.write_text(json.dumps({
+        "schema_version": "vla-wam-shared-v3b-dreamzero-simulator-export-v1",
+        "registered_cell_id": cell.cell_id,
+        "capture_path": str(capture_path.resolve()),
+        "trace_manifest_path": str(trace_path.resolve()),
+        "viewport_video_path": videos[0],
+        "reset_attestation_path": str(bootstrap.reset_attestation.resolve()),
+        "runtime_identity_path": str(bootstrap.runtime_identity.resolve()),
+        "release_gate_path": str(bootstrap.release_gate.resolve()),
+    }, indent=2, sort_keys=True) + "\n")
 
 
 if __name__ == "__main__":

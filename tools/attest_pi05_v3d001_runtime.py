@@ -9,7 +9,6 @@ import json
 from pathlib import Path
 import platform
 import subprocess
-import sys
 
 from experiments.pi05_current_stack.v2a010_serve_policy import verify_checkpoint
 from experiments.v3.pi05_stochastic_probe import (
@@ -64,7 +63,16 @@ def main() -> None:
     gpu_uuid, gpu_model, driver, memory_total, memory_free = [part.strip() for part in gpu_query.split(",")]
     if not gpu_uuid.startswith("GPU-"):
         raise ValueError("GPU UUID discovery failed")
-    freeze = command(sys.executable, "-m", "pip", "freeze")
+    environment_inventory = []
+    for name in ("uv.lock", "pyproject.toml"):
+        path = openpi / name
+        if not path.is_file():
+            raise ValueError(f"OpenPI environment lock source is missing: {path}")
+        environment_inventory.append({
+            "path": name,
+            "sha256": sha256_file(path),
+            "bytes": path.stat().st_size,
+        })
     payload = {
         "schema_version": RUNTIME_SCHEMA,
         "study_id": STUDY_ID,
@@ -88,7 +96,8 @@ def main() -> None:
         "gpu_memory_total_mib": int(memory_total),
         "gpu_memory_free_before_model_load_mib": int(memory_free),
         "python": platform.python_version(),
-        "environment_lock_sha256": sha256_bytes((freeze + "\n").encode()),
+        "environment_lock_sources": environment_inventory,
+        "environment_lock_sha256": sha256_bytes(canonical_json_bytes(environment_inventory)),
         "model_request_count": 0,
         "behavioral_episode_count": 0,
     }

@@ -487,6 +487,14 @@ def analyze(
         indexed[key]["compact"]
         for key in sorted(indexed, key=lambda value: (value[0], value[1], value[2]))
     ]
+    condition_outcomes = {
+        f"{arm}:{relation}": {
+            **success_table[arm][relation],
+            "failure_taxonomy_counts": failure_table[arm][relation],
+        }
+        for arm in cfg["arms"]
+        for relation in cfg["relations"]
+    }
     report = {
         "schema_version": REPORT_SCHEMA,
         "study_id": STUDY_ID,
@@ -512,8 +520,10 @@ def analyze(
             f"{cell.arm}:{cell.relation}": cell.row["prompt"] for cell in release.cells[: len(cfg["arms"]) * 2]
         },
         "success_table": success_table,
+        "condition_outcomes": condition_outcomes,
         "failure_taxonomy_counts": failure_table,
         "factor_analysis": factor,
+        "full_sample_primary": factor,
         "action_diagnostics": {
             "distinct_pairs": sum(int(row["action_distinct"]) for row in pair_rows),
             "pairs": len(pair_rows),

@@ -1,0 +1,349 @@
+{
+  "amendment_id": "V3-B008",
+  "behavioral_episode_count": 0,
+  "cells_sha256": "2ccc9eaa787dac0f6f5f94b2e3c91d09952daa5692da48effe55bd638032a311",
+  "claim_boundary": "Deterministic repeatability and prompt sensitivity only; no robot behavior or success evidence.",
+  "metrics": {
+    "target_start_center": {
+      "byte_identical_observations_within_arm": true,
+      "left_exact_repeat_action_array_equal": true,
+      "left_exact_repeat_action_rms": 0.0,
+      "left_exact_repeat_future_array_equal": true,
+      "left_exact_repeat_future_pixel_mae": 0.0,
+      "left_right_action_rms": 0.03253091690159954,
+      "left_right_future_pixel_mae": 5.814187447390572,
+      "passed": true
+    },
+    "target_start_left": {
+      "byte_identical_observations_within_arm": true,
+      "left_exact_repeat_action_array_equal": true,
+      "left_exact_repeat_action_rms": 0.0,
+      "left_exact_repeat_future_array_equal": true,
+      "left_exact_repeat_future_pixel_mae": 0.0,
+      "left_right_action_rms": 0.018392908598216007,
+      "left_right_future_pixel_mae": 5.382819106070172,
+      "passed": true
+    },
+    "target_start_right": {
+      "byte_identical_observations_within_arm": true,
+      "left_exact_repeat_action_array_equal": true,
+      "left_exact_repeat_action_rms": 0.0,
+      "left_exact_repeat_future_array_equal": true,
+      "left_exact_repeat_future_pixel_mae": 0.0,
+      "left_right_action_rms": 0.021325458360783624,
+      "left_right_future_pixel_mae": 5.533699207988981,
+      "passed": true
+    }
+  },
+  "model_blind_gate_sha256": "a256113c8a53186ad2842555804a491a2bc759f22bdb14bc5c89a44b1d88cb46",
+  "model_id": "cosmos3_nano_policy_droid",
+  "model_request_count": 9,
+  "observation_sources": {
+    "target_start_center": {
+      "bytes": 1037620,
+      "path": "/data/users/ali/vla_wam/raw/v3b/tier_b/v3b008/fixed_observation_attempt03/target_start_center.npz",
+      "sha256": "4bcc5bcf2d8b08dbf9ed37312dc4a25fc05ae8ceecf98e056de3919116edfa01"
+    },
+    "target_start_left": {
+      "bytes": 1037620,
+      "path": "/data/users/ali/vla_wam/raw/v3b/tier_b/v3b008/fixed_observation_attempt03/target_start_left.npz",
+      "sha256": "060af9d9033fbb42d288ab3ed1d0c8200267a69419b75858edd590a896e4d8d8"
+    },
+    "target_start_right": {
+      "bytes": 1037620,
+      "path": "/data/users/ali/vla_wam/raw/v3b/tier_b/v3b008/fixed_observation_attempt03/target_start_right.npz",
+      "sha256": "a69b8ed4d652f75e2a7f85600b39f018aa6f0e886c905a038238668c60f913c7"
+    }
+  },
+  "probe_only": true,
+  "probe_order": [
+    [
+      "target_start_left",
+      "left"
+    ],
+    [
+      "target_start_left",
+      "left_exact_repeat"
+    ],
+    [
+      "target_start_left",
+      "right"
+    ],
+    [
+      "target_start_center",
+      "left"
+    ],
+    [
+      "target_start_center",
+      "left_exact_repeat"
+    ],
+    [
+      "target_start_center",
+      "right"
+    ],
+    [
+      "target_start_right",
+      "left"
+    ],
+    [
+      "target_start_right",
+      "left_exact_repeat"
+    ],
+    [
+      "target_start_right",
+      "right"
+    ]
+  ],
+  "records": [
+    {
+      "action_array_sha256": "c2ad07cdd22d782049366b895f3feefdcb1a6b347b15c45f2866bbde6ba318cd",
+      "action_shape": [
+        32,
+        8
+      ],
+      "arm": "target_start_left",
+      "condition": "left",
+      "future_array_sha256": "90d4ffba3d050c50f615ac009c3ac64d440bba5bb0902f89e580b1f8681e3eeb",
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "observation_hashes": {
+        "observation/gripper_position": "c383d0eb37e29b3fcb7f2dca0759f89e66765bc05a834b9cce580a653ddf4c47",
+        "observation/image": "4cb26851a7f43b8a25ef76e668c2548222efd59a576aefd12133f2cea3cfaf5f",
+        "observation/joint_position": "17f11ee528817a68fde03b9059fcfc17817bc1156c95d4063265568bdfa30166"
+      },
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "registered_cell_id": "v3b008:nano:start_side:seed9700:target_start_left:left",
+      "relation": "left",
+      "request_index": 0,
+      "sampling_seed": 9700,
+      "wall_time_s": 12.622303785989061
+    },
+    {
+      "action_array_sha256": "c2ad07cdd22d782049366b895f3feefdcb1a6b347b15c45f2866bbde6ba318cd",
+      "action_shape": [
+        32,
+        8
+      ],
+      "arm": "target_start_left",
+      "condition": "left_exact_repeat",
+      "future_array_sha256": "90d4ffba3d050c50f615ac009c3ac64d440bba5bb0902f89e580b1f8681e3eeb",
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "observation_hashes": {
+        "observation/gripper_position": "c383d0eb37e29b3fcb7f2dca0759f89e66765bc05a834b9cce580a653ddf4c47",
+        "observation/image": "4cb26851a7f43b8a25ef76e668c2548222efd59a576aefd12133f2cea3cfaf5f",
+        "observation/joint_position": "17f11ee528817a68fde03b9059fcfc17817bc1156c95d4063265568bdfa30166"
+      },
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "registered_cell_id": "v3b008:nano:start_side:seed9700:target_start_left:left",
+      "relation": "left",
+      "request_index": 1,
+      "sampling_seed": 9700,
+      "wall_time_s": 1.3680179021321237
+    },
+    {
+      "action_array_sha256": "735a9bc0c7668996cfddc871a3474ca5b94d335def08c3a20a34ca4519d6aa26",
+      "action_shape": [
+        32,
+        8
+      ],
+      "arm": "target_start_left",
+      "condition": "right",
+      "future_array_sha256": "1683b05b3d4ef3f8fa575e1038b7be400117d0eac5e19ded794b179d6c68170b",
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "observation_hashes": {
+        "observation/gripper_position": "c383d0eb37e29b3fcb7f2dca0759f89e66765bc05a834b9cce580a653ddf4c47",
+        "observation/image": "4cb26851a7f43b8a25ef76e668c2548222efd59a576aefd12133f2cea3cfaf5f",
+        "observation/joint_position": "17f11ee528817a68fde03b9059fcfc17817bc1156c95d4063265568bdfa30166"
+      },
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "registered_cell_id": "v3b008:nano:start_side:seed9700:target_start_left:right",
+      "relation": "right",
+      "request_index": 2,
+      "sampling_seed": 9700,
+      "wall_time_s": 1.3439676738344133
+    },
+    {
+      "action_array_sha256": "b951b6b32e7c6fbd8ed7698a557c506b0945234d1d73e04ac5523fb06f071d22",
+      "action_shape": [
+        32,
+        8
+      ],
+      "arm": "target_start_center",
+      "condition": "left",
+      "future_array_sha256": "bc941e7872ba8aa564319e1f86881674881ed48ada0f14f8b7a01069a1461f15",
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "observation_hashes": {
+        "observation/gripper_position": "c383d0eb37e29b3fcb7f2dca0759f89e66765bc05a834b9cce580a653ddf4c47",
+        "observation/image": "72499a8dc1c31021a926145c9e76b57596ea42b91bcec5fd4646093b3e3fbb67",
+        "observation/joint_position": "17f11ee528817a68fde03b9059fcfc17817bc1156c95d4063265568bdfa30166"
+      },
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "registered_cell_id": "v3b008:nano:start_side:seed9700:target_start_center:left",
+      "relation": "left",
+      "request_index": 3,
+      "sampling_seed": 9700,
+      "wall_time_s": 1.3990010269917548
+    },
+    {
+      "action_array_sha256": "b951b6b32e7c6fbd8ed7698a557c506b0945234d1d73e04ac5523fb06f071d22",
+      "action_shape": [
+        32,
+        8
+      ],
+      "arm": "target_start_center",
+      "condition": "left_exact_repeat",
+      "future_array_sha256": "bc941e7872ba8aa564319e1f86881674881ed48ada0f14f8b7a01069a1461f15",
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "observation_hashes": {
+        "observation/gripper_position": "c383d0eb37e29b3fcb7f2dca0759f89e66765bc05a834b9cce580a653ddf4c47",
+        "observation/image": "72499a8dc1c31021a926145c9e76b57596ea42b91bcec5fd4646093b3e3fbb67",
+        "observation/joint_position": "17f11ee528817a68fde03b9059fcfc17817bc1156c95d4063265568bdfa30166"
+      },
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "registered_cell_id": "v3b008:nano:start_side:seed9700:target_start_center:left",
+      "relation": "left",
+      "request_index": 4,
+      "sampling_seed": 9700,
+      "wall_time_s": 1.390914852032438
+    },
+    {
+      "action_array_sha256": "a90ed1c24d25f0d54d7dc476223d1d0ea52143661b5bc3f61c706c49fc93fe53",
+      "action_shape": [
+        32,
+        8
+      ],
+      "arm": "target_start_center",
+      "condition": "right",
+      "future_array_sha256": "07b3cb6da1f29d59103a537d91aac39a082610edcd4935f854284565d33bd366",
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "observation_hashes": {
+        "observation/gripper_position": "c383d0eb37e29b3fcb7f2dca0759f89e66765bc05a834b9cce580a653ddf4c47",
+        "observation/image": "72499a8dc1c31021a926145c9e76b57596ea42b91bcec5fd4646093b3e3fbb67",
+        "observation/joint_position": "17f11ee528817a68fde03b9059fcfc17817bc1156c95d4063265568bdfa30166"
+      },
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "registered_cell_id": "v3b008:nano:start_side:seed9700:target_start_center:right",
+      "relation": "right",
+      "request_index": 5,
+      "sampling_seed": 9700,
+      "wall_time_s": 1.37323375698179
+    },
+    {
+      "action_array_sha256": "ddab82032ca1ef4c39542a462597ccc293d14cc40edc2f6ec60a1a7651cb6f82",
+      "action_shape": [
+        32,
+        8
+      ],
+      "arm": "target_start_right",
+      "condition": "left",
+      "future_array_sha256": "b409e81060f9bedaa460890aa84c75f3434e9c60285c997549764bd4696ff240",
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "observation_hashes": {
+        "observation/gripper_position": "c383d0eb37e29b3fcb7f2dca0759f89e66765bc05a834b9cce580a653ddf4c47",
+        "observation/image": "59a374237dd4578c3a984d02880279be9cdbafcef80dd44343b408a5e5c1aa67",
+        "observation/joint_position": "17f11ee528817a68fde03b9059fcfc17817bc1156c95d4063265568bdfa30166"
+      },
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "registered_cell_id": "v3b008:nano:start_side:seed9700:target_start_right:left",
+      "relation": "left",
+      "request_index": 6,
+      "sampling_seed": 9700,
+      "wall_time_s": 1.447320690145716
+    },
+    {
+      "action_array_sha256": "ddab82032ca1ef4c39542a462597ccc293d14cc40edc2f6ec60a1a7651cb6f82",
+      "action_shape": [
+        32,
+        8
+      ],
+      "arm": "target_start_right",
+      "condition": "left_exact_repeat",
+      "future_array_sha256": "b409e81060f9bedaa460890aa84c75f3434e9c60285c997549764bd4696ff240",
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "observation_hashes": {
+        "observation/gripper_position": "c383d0eb37e29b3fcb7f2dca0759f89e66765bc05a834b9cce580a653ddf4c47",
+        "observation/image": "59a374237dd4578c3a984d02880279be9cdbafcef80dd44343b408a5e5c1aa67",
+        "observation/joint_position": "17f11ee528817a68fde03b9059fcfc17817bc1156c95d4063265568bdfa30166"
+      },
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "registered_cell_id": "v3b008:nano:start_side:seed9700:target_start_right:left",
+      "relation": "left",
+      "request_index": 7,
+      "sampling_seed": 9700,
+      "wall_time_s": 2.2553238850086927
+    },
+    {
+      "action_array_sha256": "1b1a44fa4060e57f85dd5e96ad0ab9427f6421e9fa0ed244c16fff43d1403e34",
+      "action_shape": [
+        32,
+        8
+      ],
+      "arm": "target_start_right",
+      "condition": "right",
+      "future_array_sha256": "a93acef2ccfdaaf484eb4032953e2540c83db9e8ee2bd6cf145be7ff9ae77080",
+      "future_shape": [
+        33,
+        528,
+        640,
+        3
+      ],
+      "observation_hashes": {
+        "observation/gripper_position": "c383d0eb37e29b3fcb7f2dca0759f89e66765bc05a834b9cce580a653ddf4c47",
+        "observation/image": "59a374237dd4578c3a984d02880279be9cdbafcef80dd44343b408a5e5c1aa67",
+        "observation/joint_position": "17f11ee528817a68fde03b9059fcfc17817bc1156c95d4063265568bdfa30166"
+      },
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "registered_cell_id": "v3b008:nano:start_side:seed9700:target_start_right:right",
+      "relation": "right",
+      "request_index": 8,
+      "sampling_seed": 9700,
+      "wall_time_s": 1.3465322100091726
+    }
+  ],
+  "release_gate_passed": true,
+  "release_manifest_sha256": "93026ce05b0b68f2d054a6b7d26c41cb711ec29bc6f92f5a1a40cd49ef26ad4d",
+  "runtime_identity_sha256": "a01e76ea2fc453718c11bab22b6fa93b3828430e5eef3b6a94817b267ba6b25b",
+  "schema_version": "vla-wam-shared-v3b008-v3b009-nano-fixed-observation-v1",
+  "server_port": 18018,
+  "status": "passed",
+  "study_id": "vla_wam_language_steerability_v3"
+}

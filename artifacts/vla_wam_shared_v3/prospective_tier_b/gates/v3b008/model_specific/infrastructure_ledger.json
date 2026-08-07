@@ -1,0 +1,56 @@
+{
+  "schema_version": "vla-wam-shared-v3b008-nano-live-infrastructure-ledger-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B008",
+  "model_id": "cosmos3_nano_policy_droid",
+  "behavioral_denominator_contribution": 0,
+  "attempts": [
+    {
+      "attempt": "runtime_bind_attempt01",
+      "status": "infrastructure_invalid_before_process_launch",
+      "classification": "completed_v3b005_runtime_checked_against_nonmatching_controller_checkout",
+      "model_request_count": 0,
+      "behavioral_episode_count": 0,
+      "denominator_eligible": false,
+      "resolution": "Bind from the verified Phase-A runtime identity in the exact 27f3d1e controller checkout."
+    },
+    {
+      "attempt": "fixed_observation_capture_attempt01",
+      "status": "infrastructure_invalid_before_environment_creation",
+      "classification": "warp_cache_defaulted_to_unwritable_home",
+      "model_request_count": 0,
+      "behavioral_episode_count": 0,
+      "denominator_eligible": false,
+      "raw_root": "/data/users/ali/vla_wam/raw/v3b/tier_b/v3b008/fixed_observation_attempt01",
+      "resolution": "Use attempt-scoped XDG, Warp, temporary, and Matplotlib caches on the ali PVC."
+    },
+    {
+      "attempt": "fixed_observation_capture_attempt02",
+      "status": "infrastructure_invalid_before_environment_creation",
+      "classification": "missing_model_blind_candidate_environment_binding",
+      "model_request_count": 0,
+      "behavioral_episode_count": 0,
+      "denominator_eligible": false,
+      "raw_root": "/data/users/ali/vla_wam/raw/v3b/tier_b/v3b008/fixed_observation_attempt02",
+      "resolution": "Export the exact committed candidate path and SHA-256, then use a fresh capture root."
+    },
+    {
+      "attempt": "fixed_observation_capture_attempt03",
+      "status": "passed_zero_request_capture",
+      "model_request_count": 0,
+      "behavioral_episode_count": 0,
+      "denominator_eligible": false,
+      "raw_root": "/data/users/ali/vla_wam/raw/v3b/tier_b/v3b008/fixed_observation_attempt03"
+    },
+    {
+      "attempt": "probe_server_attempt01",
+      "status": "passed_fixed_observation_gate",
+      "model_request_count": 9,
+      "behavioral_episode_count": 0,
+      "denominator_eligible": false,
+      "raw_log": "/data/users/ali/vla_wam/raw/v3b/tier_b/v3b008/server_probe_attempt01/server.log",
+      "raw_log_sha256": "76c81bb01e66949557a56293c96599710a6375dbd5f139b5584d33df9529ff8d",
+      "shutdown": "The dedicated probe-only process was stopped after the gate; no behavior request was sent."
+    }
+  ]
+}

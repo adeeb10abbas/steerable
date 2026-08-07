@@ -1,0 +1,81 @@
+{
+  "amendment_id": "V3-B008",
+  "arm": "target_start_left",
+  "array_fingerprints": {
+    "gripper_position": {
+      "dtype": "float32",
+      "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
+      "shape": [
+        1
+      ]
+    },
+    "image": {
+      "dtype": "uint8",
+      "sha256": "45d419b8688c66ae77bd8a3009f8b3bbb9be7937a4ce726748ee43351c705e9f",
+      "shape": [
+        540,
+        640,
+        3
+      ]
+    },
+    "joint_position": {
+      "dtype": "float32",
+      "sha256": "6661cda587dce95d7e39db70d98bbed73498aecc82f0a1407ea41bf3fd839b85",
+      "shape": [
+        7
+      ]
+    }
+  },
+  "behavioral_episode_count": 0,
+  "environment_seed": 9700,
+  "gpu_uuid": "GPU-f28bd513-a38a-b768-7589-d2959f814ae8",
+  "hold_action": [
+    0.0,
+    -0.6283185482025146,
+    0.0,
+    -2.5132741928100586,
+    0.0,
+    1.884955644607544,
+    0.0,
+    0.0
+  ],
+  "max_abs_position_errors_m": {
+    "banana": 0.0002443939447402954,
+    "bowl": 2.1748244762420654e-05,
+    "rubiks_cube": 0.002033054828643799
+  },
+  "model_blind_gate_sha256": "a256113c8a53186ad2842555804a491a2bc759f22bdb14bc5c89a44b1d88cb46",
+  "model_request_count": 0,
+  "neutral_reset": true,
+  "observation_npz": {
+    "bytes": 1037620,
+    "path": "/data/users/ali/vla_wam/raw/v3b/tier_b/v3b008/fixed_observation_attempt03/target_start_left.npz",
+    "sha256": "060af9d9033fbb42d288ab3ed1d0c8200267a69419b75858edd590a896e4d8d8"
+  },
+  "observed_positions_robot_base_m": {
+    "banana": [
+      0.5390510559082031,
+      -0.07562603801488876,
+      0.0681837648153305
+    ],
+    "bowl": [
+      0.44257834553718567,
+      0.126600980758667,
+      0.07734960317611694
+    ],
+    "rubiks_cube": [
+      0.3053976893424988,
+      0.22469380497932434,
+      0.08110585808753967
+    ]
+  },
+  "pod": "raytrace-rtxpro6000-ali",
+  "pod_uid": "d5b0405a-a9b1-4baa-a802-d5171e03c228",
+  "prompt_used_for_official_packing": "Put the Rubik's cube to the left of the bowl.",
+  "registered_cell_id": "v3b008:nano:start_side:seed9700:target_start_left:left",
+  "release_manifest_sha256": "93026ce05b0b68f2d054a6b7d26c41cb711ec29bc6f92f5a1a40cd49ef26ad4d",
+  "schema_version": "vla-wam-shared-v3b008-v3b009-nano-fixed-observation-capture-v1",
+  "settle_steps": 60,
+  "stable_window_steps": 15,
+  "study_id": "vla_wam_language_steerability_v3"
+}

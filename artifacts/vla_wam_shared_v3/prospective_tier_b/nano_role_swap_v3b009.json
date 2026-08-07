@@ -1,0 +1,55 @@
+{
+  "schema_version": "vla-wam-shared-v3b-nano-role-swap-registration-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B009",
+  "recorded_at_utc": "2026-08-07T02:45:00Z",
+  "status": "prospectively_registered_not_released_before_model_blind_role_gate",
+  "model_id": "cosmos3_nano_policy_droid",
+  "arena": "droid_robolab",
+  "question": "Does the direction gap persist when target and reference object roles are exchanged without moving their initial poses?",
+  "design": {
+    "factor": "target_reference_semantic_and_scoring_role",
+    "arms": ["cube_target_bowl_reference", "bowl_target_cube_reference"],
+    "matched_seeds": [9800, 9801, 9802, 9803, 9804, 9805, 9806, 9807, 9808, 9809, 9810, 9811, 9812, 9813, 9814, 9815, 9816, 9817, 9818, 9819, 9820, 9821, 9822, 9823, 9824, 9825, 9826],
+    "relations": ["left", "right"],
+    "behavioral_episode_ceiling_after_release": 108,
+    "exact_prompts": {
+      "cube_target_bowl_reference:left": "Put the Rubik's cube to the left of the bowl.",
+      "cube_target_bowl_reference:right": "Put the Rubik's cube to the right of the bowl.",
+      "bowl_target_cube_reference:left": "Put the bowl to the left of the Rubik's cube.",
+      "bowl_target_cube_reference:right": "Put the bowl to the right of the Rubik's cube."
+    },
+    "held_fixed": [
+      "all object full initial poses",
+      "robot base, cameras, and all nonmovable geometry",
+      "checkpoint, preprocessing, controller, 45-degree cone, and action cap",
+      "environment and sampling seed within each four-cell block"
+    ],
+    "changed_by_design": [
+      "language names the target and reference in the opposite semantic roles",
+      "pickup, transport, cone, and detached-release scoring follows the named target/reference roles"
+    ]
+  },
+  "model_blind_gate": {
+    "model_requests": 0,
+    "behavioral_episodes": 0,
+    "requirements": [
+      "both named target objects are physically movable and scoreable",
+      "fresh role-specific resets are collision-free and stable",
+      "neither requested relation is true at reset in either role arm",
+      "LEFT/RIGHT physical fingerprints are identical within role arm",
+      "all required views and raw writers persist"
+    ],
+    "failure_rule": "If bowl-as-target is not physically executable under the frozen controller/scorer contract, V3-B009 fails closed; do not substitute another object after behavior."
+  },
+  "analysis_plan": {
+    "primary": "Per-seed role-by-direction interaction for requested success and requested-side depth.",
+    "secondary": "Endpoint redirection, path and timing measures, exact paired tests, and failure taxonomy.",
+    "claim_boundary": "Role swap intentionally changes object affordance as well as semantic role; any interaction is a combined role-affordance result unless a later object-matched study separates them."
+  },
+  "release_boundary": {
+    "behavioral_release": false,
+    "model_server_may_start": false,
+    "next_action": "Pass and hash the zero-model-request role feasibility gate, then generate the exact randomized 108-row queue."
+  }
+}

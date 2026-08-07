@@ -1,0 +1,67 @@
+{
+  "schema_version": "vla-wam-shared-v3-prospective-tier-b-registry-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "recorded_at_utc": "2026-08-07T02:46:00Z",
+  "status": "five_designs_and_one_provenance_schema_registered_zero_behavioral_release",
+  "behavioral_cells_authorized_by_this_registry": 0,
+  "model_requests_authorized_by_this_registry": 0,
+  "registrations": [
+    {
+      "id": "V3-D001",
+      "kind": "pi0.5 stochastic-seed eligibility probe",
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/pi05_stochastic_eligibility_v3d001.json",
+      "bytes": 2585,
+      "sha256": "899a52c79355919210d56fa8f31d944f8a373e1e184650ee8974d62acfd6c788",
+      "next_gate": "exact-runtime fixed-observation effective-seed probe"
+    },
+    {
+      "id": "V3-B006",
+      "kind": "Nano symmetric base-yaw interaction",
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/nano_base_rotation_v3b006.json",
+      "bytes": 3398,
+      "sha256": "4e157931a1f2cbaa6f51b5e93d49caa0420787621452e791e7a4569f4be14fd6",
+      "next_gate": "zero-model-request symmetric base-yaw feasibility calibration"
+    },
+    {
+      "id": "V3-B007",
+      "kind": "FastWAM RoboTwin position-mirror negative control",
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/fastwam_robotwin_mirror_v3b007.json",
+      "bytes": 3585,
+      "sha256": "84d14a5c6a02c5f6655384d2ed1ef6e3cdaab05341136d81a3b0e727268ecc8e",
+      "next_gate": "zero-model-request pair03 mirrored-scene feasibility calibration"
+    },
+    {
+      "id": "V3-B008",
+      "kind": "Nano target start-side interaction",
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/nano_start_side_v3b008.json",
+      "bytes": 2954,
+      "sha256": "5ea79f01933672da5948863295bf7b8e61a510d0f469b5375d0f67298ab446ce",
+      "next_gate": "zero-model-request symmetric target-position calibration"
+    },
+    {
+      "id": "V3-B009",
+      "kind": "Nano target/reference role swap",
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/nano_role_swap_v3b009.json",
+      "bytes": 3102,
+      "sha256": "b6128c0ace0982980f1e650186324644cd89b896c2c1bb01c807adba584c1108",
+      "next_gate": "zero-model-request bowl-as-target role feasibility calibration"
+    },
+    {
+      "id": "checkpoint_provenance_v1",
+      "kind": "checkpoint training-multiset, preprocessing, and caption-exposure disclosure schema",
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/checkpoint_provenance.schema.json",
+      "bytes": 4374,
+      "sha256": "dc058dd11e09e70d5437d79db385910e6d5151642fc46829eb036b78e7fc8ddc",
+      "next_gate": "populate one hash-bound disclosure per reported checkpoint"
+    }
+  ],
+  "shared_rules": [
+    "No design is behaviorally released by registration alone.",
+    "Every physical intervention requires its own model-blind fresh-reset feasibility gate and exact runtime/fixed-observation release.",
+    "Prompts remain static; no coaching, prompt switching, oracle action, or progress-conditioned language is allowed.",
+    "Frozen success predicates, relation cones, controllers, and failure taxonomy may not be changed.",
+    "All valid behavioral failures remain in denominators; infrastructure-invalid and partial attempts remain separate.",
+    "DROID and RoboTwin are never pooled."
+  ],
+  "active_queue_noninterference": "These prospective registrations do not alter, expand, or release the active DreamZero V3-B003 queue or Nano V3-B005 queue."
+}

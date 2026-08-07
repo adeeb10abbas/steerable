@@ -1,0 +1,60 @@
+{
+  "schema_version": "vla-wam-shared-v3b-nano-base-rotation-registration-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B006",
+  "recorded_at_utc": "2026-08-07T02:45:00Z",
+  "status": "prospectively_registered_not_released_before_model_blind_calibration",
+  "model_id": "cosmos3_nano_policy_droid",
+  "arena": "droid_robolab",
+  "question": "Does the directional gap track robot-base orientation when the object layout remains fixed in world coordinates?",
+  "known_result_disclosure": {
+    "phase_a_summary_sha256": "677c62845ff72bceb35b0c5e3e5b259a5c24da407648fe50f475656fe86cbcea",
+    "nano_mirror_manifest_sha256": "5c82268739feb41281435a51dcd848b575218cd9fbe5839d9ad130d1a7888830"
+  },
+  "design": {
+    "factor": "robot_base_yaw_about_world_vertical_axis",
+    "candidate_absolute_yaw_degrees_in_gate_order": [45, 30, 15],
+    "selection_rule": "Select the first candidate for which negative-yaw, zero-yaw, and positive-yaw layouts all pass every model-blind feasibility row; otherwise fail closed.",
+    "registered_arms_after_gate": ["negative_yaw", "zero_yaw", "positive_yaw"],
+    "matched_seeds": [9600, 9601, 9602, 9603, 9604, 9605, 9606, 9607, 9608, 9609, 9610, 9611, 9612, 9613, 9614, 9615, 9616, 9617, 9618, 9619, 9620, 9621, 9622, 9623, 9624, 9625, 9626],
+    "relations": ["left", "right"],
+    "behavioral_episode_ceiling_after_release": 162,
+    "exact_prompts": {
+      "left": "Put the Rubik's cube to the left of the bowl.",
+      "right": "Put the Rubik's cube to the right of the bowl."
+    },
+    "held_fixed_in_world_coordinates": [
+      "rubiks_cube, bowl, and banana full poses",
+      "all nonmovable scene geometry",
+      "all camera world poses and intrinsics"
+    ],
+    "held_fixed_across_cells": [
+      "success predicate and requested 45-degree cone definition in the registered robot frame",
+      "static prompt bytes, controller, action cap, checkpoint, preprocessing, and renderer",
+      "environment and sampling seed within each six-cell matched block"
+    ]
+  },
+  "model_blind_gate": {
+    "model_requests": 0,
+    "behavioral_episodes": 0,
+    "requirements": [
+      "fresh reset for every arm and direction",
+      "no requested predicate true at reset",
+      "collision-free settled scene and robot configuration",
+      "target and reference reachable under the frozen controller limits",
+      "nonblank required camera views and persistent viewport write",
+      "LEFT and RIGHT physical fingerprints equal within each yaw arm"
+    ],
+    "failure_rule": "If no preregistered absolute yaw passes symmetrically, V3-B006 fails closed; do not invent a smaller angle."
+  },
+  "analysis_plan": {
+    "primary": "Within each seed and yaw arm, compute signed endpoint redirection and requested-side-depth contrasts; estimate the direction-by-signed-yaw interaction.",
+    "secondary": "Report the arm-by-direction binary success table, per-seed paired contrasts, exact sign tests, and failure taxonomy.",
+    "claim_boundary": "Rotating only the base changes embodiment-to-scene geometry and visible robot pose; it is not a pure training-data intervention."
+  },
+  "release_boundary": {
+    "behavioral_release": false,
+    "model_server_may_start": false,
+    "next_action": "Run the exact zero-model-request symmetric yaw feasibility gate and freeze its numeric output and hashes in a new release amendment."
+  }
+}

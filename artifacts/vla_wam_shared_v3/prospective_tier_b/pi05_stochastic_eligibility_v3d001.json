@@ -1,0 +1,47 @@
+{
+  "schema_version": "vla-wam-shared-v3d-pi05-stochastic-eligibility-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "registration_id": "V3-D001",
+  "recorded_at_utc": "2026-08-07T02:45:00Z",
+  "status": "prospectively_registered_not_released_zero_new_behavioral_episodes",
+  "model_id": "pi05_current_stack_droid",
+  "arena": "droid_robolab",
+  "question": "Does the exact released pi0.5 runtime expose an effective policy-sampling seed, so repeated outcomes can be separated from fixed-scene effects?",
+  "known_result_disclosure": {
+    "phase_a_summary": "artifacts/vla_wam_shared_v3/results/pi05_current_stack_droid_phase_a_summary.json",
+    "phase_a_summary_sha256": "5c6d07fca7a0d20ab8b757f028d469f864c78a1c43ffedc3d257a16caef2a02b",
+    "phase_d_registry_sha256": "e319f8dcaefa6803ca46989313ba737834eef1dd531c1898aeee5fa816a28ad9"
+  },
+  "eligibility_probe": {
+    "behavioral_episode_count": 0,
+    "probe_type": "fixed_observation_raw_policy_sample_only",
+    "shared_candidate_sampling_seed_indices": [0, 1, 2, 3, 4, 5, 6, 7],
+    "exact_prompts": {
+      "left": "Put the Rubik's cube to the left of the bowl.",
+      "right": "Put the Rubik's cube to the right of the bowl."
+    },
+    "held_fixed": [
+      "exact checkpoint and runtime identity",
+      "one hash-bound post-reset observation tensor for every camera and proprioceptive input",
+      "prompt bytes within each direction",
+      "preprocessing, action representation, and controller configuration"
+    ],
+    "pass_rule": "For each direction, at least two registered seed indices must produce bitwise-distinct raw policy samples while exact repeats at the same index remain bitwise identical.",
+    "failure_rule": "If the runtime has no exposed seed input, ignores it, or fails exact-repeat stability, pi0.5 is ineligible; do not manufacture repeated behavioral rollouts."
+  },
+  "post_probe_boundary": {
+    "if_eligible": "Generate and hash a separate Phase-D behavioral cell registry using the already frozen sixteen shared Phase-D sampling-seed indices before any rollout.",
+    "if_ineligible": "Publish the ineligibility result with zero stochastic behavioral cells.",
+    "eight_probe_samples_are_behavioral_rollouts": false
+  },
+  "release_gate": {
+    "behavioral_release": false,
+    "model_request_release": false,
+    "requirements": [
+      "exact current-stack pi0.5 runtime identity revalidated",
+      "fixed observation captured model-blind after a fresh reset",
+      "append-only raw sample hashes and probe manifest",
+      "independent protocol-validator pass"
+    ]
+  }
+}

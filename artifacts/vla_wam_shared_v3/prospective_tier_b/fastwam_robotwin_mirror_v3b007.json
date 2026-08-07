@@ -1,0 +1,63 @@
+{
+  "schema_version": "vla-wam-shared-v3b-fastwam-robotwin-mirror-registration-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B007",
+  "recorded_at_utc": "2026-08-07T02:45:00Z",
+  "status": "prospectively_registered_not_released_before_model_blind_mirror_gate",
+  "model_id": "fastwam_robotwin",
+  "arena": "robotwin",
+  "prospective_checkpoint_selection": {
+    "rule": "Use the completed checkpoint whose preserved seven-scene direct gate has the smallest absolute LEFT/RIGHT success gap; ties break by the frozen Phase-A model order.",
+    "selected_checkpoint": "fastwam_robotwin",
+    "known_direct_gate": {
+      "left": "1/7",
+      "right": "1/7",
+      "scope": "preserved V2 r0 coverage layer; descriptive checkpoint-selection evidence only"
+    },
+    "source_summary_sha256": "da76cf534907714c1b9e74e096ed39578b308642504e145f40e834ff4ba65b4e",
+    "robotwin_registry_sha256": "2a840a6eaa418980f8237f5f8ab522028d4b4453fc2133dd0c0180ac9d6be8b5"
+  },
+  "design": {
+    "factor": "movable_object_center_position_reflection_about_robot_sagittal_plane",
+    "anchor_scene": "pair03 / place_a2b_right",
+    "target_object": "small woodenblock",
+    "reference_object": "red playingcards box",
+    "arms": ["control", "position_mirrored"],
+    "matched_seeds": [9900, 9901, 9902, 9903, 9904, 9905, 9906, 9907, 9908, 9909, 9910, 9911, 9912, 9913, 9914, 9915, 9916, 9917, 9918, 9919, 9920, 9921, 9922, 9923, 9924, 9925, 9926],
+    "relations": ["left", "right"],
+    "behavioral_episode_ceiling_after_release": 108,
+    "exact_prompts": {
+      "left": "Put the small woodenblock to the left of the red playingcards box.",
+      "right": "Put the small woodenblock to the right of the red playingcards box."
+    },
+    "pairing": "For each seed, all four arm-by-direction cells begin from hash-identical arm-specific resets; only the registered center-position reflection and prompt direction differ.",
+    "held_fixed": [
+      "robot base, cameras, object orientations, and all nonmovable geometry",
+      "FastWAM checkpoint/runtime identity and action-only test interface",
+      "RoboTwin relation-aware success predicate, controller, and action cap",
+      "environment and sampling seed within each four-cell block"
+    ]
+  },
+  "model_blind_gate": {
+    "model_requests": 0,
+    "behavioral_episodes": 0,
+    "requirements": [
+      "the exact pair03 target/reference center positions reflect across the robot sagittal plane",
+      "control and reflected scenes settle collision-free and neither requested relation is true at reset",
+      "LEFT and RIGHT fingerprints are identical within arm",
+      "required SAPIEN/Vulkan views and raw writers persist on the ali PVC"
+    ],
+    "failure_rule": "Any failed mirrored-scene feasibility row fails V3-B007 closed; do not substitute another scene after seeing behavior."
+  },
+  "analysis_plan": {
+    "primary": "Per-seed reflected-minus-control interaction in signed endpoint redirection.",
+    "secondary": "Requested-side depth, binary success DiD, exact paired tests, and failure taxonomy.",
+    "negative_control_interpretation": "A null interaction would bound mirror sensitivity for this checkpoint and arena; it would not prove absence of geometry effects generally.",
+    "arena_boundary": "Never pool these RoboTwin outcomes with DROID."
+  },
+  "release_boundary": {
+    "behavioral_release": false,
+    "model_server_may_start": false,
+    "next_action": "Run the 27-seed-capable model-blind mirrored-scene feasibility gate, then bind the exact 108-row queue before inference."
+  }
+}

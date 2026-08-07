@@ -1,0 +1,124 @@
+{
+  "schema_version": "vla-wam-shared-v3b-dreamzero-global-state-incident-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B003",
+  "model_id": "dreamzero_droid_action_cfg",
+  "recorded_at_utc": "2026-08-07T02:36:00Z",
+  "status": "multi_client_attempts_excluded_isolated_serial_queue_active",
+  "root_cause": {
+    "summary": "The released DreamZero server accepts session identifiers but the official ARDroidRoboarenaPolicy keeps one global temporal video_across_time buffer and one _current_session_id. Switching among concurrent clients resets that shared temporal state. The measurement wrapper also keeps one global _measurement_records buffer until reset.",
+    "scientific_effect": "Concurrent clients changed one another's model temporal context. Exact request attribution and returned-action equality prove artifact ownership but cannot restore the counterfactual action sequence from an isolated temporal state. Therefore every behavioral session that overlapped another client is infrastructure-invalid.",
+    "official_source_path": "/data/users/ali/vla_wam/external/DreamZero-v2a015-action-cfg/socket_test_optimized_AR.py",
+    "official_source_sha256": "7ef17f66064bac8defafc1a84551089b124546729a98be8c0515b33d2e159d48",
+    "instrumented_server_path": "/data/users/ali/vla_wam/src/steerable/experiments/dreamzero_droid/v2a015_instrumented_server.py",
+    "instrumented_server_sha256": "5f9932acc77fe8fc80157622ef3e1db5b552bd31f322768330f2000f9af7d09d",
+    "action_patch_sha256": "de2b82a1c9f81ee4751fb384158775865f5e5e8fb622134cae3b2c4e8b2a2cc0"
+  },
+  "server_evidence": {
+    "future_root": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/server_attempt03/futures",
+    "single_client_prefix": {
+      "episodes": [3, 4, 5, 6],
+      "unique_sessions_per_episode": 1,
+      "request_session_transitions_per_episode": 0,
+      "registered_cells": 4
+    },
+    "first_proven_interleaving": {
+      "episode": 7,
+      "request_count": 176,
+      "unique_sessions": 4,
+      "request_session_transitions": 175
+    },
+    "two_lane_proof_reinterpreted": {
+      "episodes": [11, 12],
+      "episode_11_request_count": 36,
+      "episode_11_unique_sessions": 2,
+      "episode_11_request_session_transitions": 35,
+      "conclusion": "The earlier proof established artifact attribution only; its behavioral cells are excluded because the official temporal state was not isolated."
+    },
+    "terminal_failure": {
+      "registered_cell_id": "v3b003:dreamzero:seed9412:position_mirrored:left",
+      "session_id": "7a9a0fe5-a8af-444a-9845-8968694d42af",
+      "request_count": 23,
+      "request_distribution": {
+        "episode_034": 7,
+        "episode_035": 16
+      },
+      "episode_036_request_count": 0,
+      "episode_036_official_reset_decode_count": 0,
+      "returned_action_chunks_sha256": "accb55b59d1feb7b994c490445092a22afd77e4e4e4734c780b9caa411516292",
+      "executed_actions_sha256": "5432277b9bc5990dc387a63f015defc3f4e4267b43b39a0e3696b5e318f60d28"
+    }
+  },
+  "denominator_protection": {
+    "prior_attempt_root": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/behavioral_smoke_lane0_attempt02/raw",
+    "proven_valid_single_client_cells": 4,
+    "excluded_prior_attempts": 39,
+    "excluded_prior_attempts_with_compiled_behavioral_jsonl": 35,
+    "excluded_interrupted_partial_attempts": 4,
+    "behavioral_denominator_policy": "Only the four proven non-overlap seed-9400 cells and cells produced by the isolated serial queue may enter the V3-B003 behavioral denominator.",
+    "raw_retention_policy": "No prior artifact was deleted or overwritten. Excluded compiled rows and partial attempts remain on the ali-owned PVC as infrastructure evidence."
+  },
+  "proven_valid_carryover": [
+    "v3b003:dreamzero:seed9400:control:left",
+    "v3b003:dreamzero:seed9400:control:right",
+    "v3b003:dreamzero:seed9400:position_mirrored:left",
+    "v3b003:dreamzero:seed9400:position_mirrored:right"
+  ],
+  "excluded_prior_attempts": [
+    "v3b003:dreamzero:seed9401:control:left",
+    "v3b003:dreamzero:seed9401:control:right",
+    "v3b003:dreamzero:seed9401:position_mirrored:left",
+    "v3b003:dreamzero:seed9401:position_mirrored:right",
+    "v3b003:dreamzero:seed9402:control:left",
+    "v3b003:dreamzero:seed9402:control:right",
+    "v3b003:dreamzero:seed9402:position_mirrored:left",
+    "v3b003:dreamzero:seed9402:position_mirrored:right",
+    "v3b003:dreamzero:seed9403:control:left",
+    "v3b003:dreamzero:seed9403:control:right",
+    "v3b003:dreamzero:seed9403:position_mirrored:left",
+    "v3b003:dreamzero:seed9403:position_mirrored:right",
+    "v3b003:dreamzero:seed9404:control:left",
+    "v3b003:dreamzero:seed9404:control:right",
+    "v3b003:dreamzero:seed9404:position_mirrored:left",
+    "v3b003:dreamzero:seed9404:position_mirrored:right",
+    "v3b003:dreamzero:seed9405:control:left",
+    "v3b003:dreamzero:seed9405:control:right",
+    "v3b003:dreamzero:seed9405:position_mirrored:left",
+    "v3b003:dreamzero:seed9405:position_mirrored:right",
+    "v3b003:dreamzero:seed9406:control:left",
+    "v3b003:dreamzero:seed9406:control:right",
+    "v3b003:dreamzero:seed9406:position_mirrored:left",
+    "v3b003:dreamzero:seed9406:position_mirrored:right",
+    "v3b003:dreamzero:seed9407:control:left",
+    "v3b003:dreamzero:seed9407:control:right",
+    "v3b003:dreamzero:seed9407:position_mirrored:left",
+    "v3b003:dreamzero:seed9407:position_mirrored:right",
+    "v3b003:dreamzero:seed9408:control:left",
+    "v3b003:dreamzero:seed9408:control:right",
+    "v3b003:dreamzero:seed9408:position_mirrored:left",
+    "v3b003:dreamzero:seed9408:position_mirrored:right",
+    "v3b003:dreamzero:seed9409:control:right",
+    "v3b003:dreamzero:seed9409:position_mirrored:right",
+    "v3b003:dreamzero:seed9410:control:right",
+    "v3b003:dreamzero:seed9411:control:right",
+    "v3b003:dreamzero:seed9411:position_mirrored:left",
+    "v3b003:dreamzero:seed9411:position_mirrored:right",
+    "v3b003:dreamzero:seed9412:position_mirrored:left"
+  ],
+  "isolated_serial_resume": {
+    "launched_at_utc": "2026-08-07T02:35:50Z",
+    "runtime_checkout_git_sha": "166530db86de6a986c5f9d90b5664093f6227382",
+    "pod": "vla-wam-lingbot-expansion-ali",
+    "pod_uid": "7110c8d4-db9e-401a-ba85-58ba5e0dfcb3",
+    "gpu_uuid": "GPU-dc8db249-3b4c-1d36-0e9d-435a6d5f01c0",
+    "server_pod": "lerobot-b200-4gpu-1-ali",
+    "server_endpoint": "10.244.103.110:18021",
+    "launcher_pid": 217430,
+    "lane_count": 1,
+    "fresh_raw_root": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/behavioral_isolated_attempt03/raw",
+    "carried_over_cells": 4,
+    "new_cells_required": 104,
+    "first_new_cell": "v3b003:dreamzero:seed9401:position_mirrored:left",
+    "next_monitor_command": "kubectl --context prod-dcwi-warrenq1-vmkub007 -n 211247-prod exec vla-wam-lingbot-expansion-ali -- sh -lc 'find /data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/behavioral_isolated_attempt03/raw -name raw_episode.jsonl.manifest.json | wc -l; tail -40 /data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/behavioral_isolated_attempt03/queue.log'"
+  }
+}

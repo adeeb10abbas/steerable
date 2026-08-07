@@ -487,6 +487,20 @@ def test_cosmos_queue_is_single_client_and_serial() -> None:
     assert not any(line.rstrip().endswith(" &") for line in source.splitlines())
 
 
+def test_cosmos_live_client_requires_registered_seed_echo() -> None:
+    source = (
+        ROOT / "experiments/v3/phase_c_four_phrasings/cosmos_live_bridge.py"
+    ).read_text()
+    assert 'if server_seed != bridge["seed"]:' in source
+    assert "server did not echo the registered Phase-C sampling seed" in source
+    overlay = (
+        ROOT / "experiments/v3/phase_c_four_phrasings/serve_phase_c_cosmos.py"
+    ).read_text()
+    assert "with _request_lock:" in overlay
+    assert 'seed = obs.get("sampling_seed")' in overlay
+    assert '"sampling_seed": seed' in overlay
+
+
 def test_committed_materialization_matches_builder() -> None:
     committed = ROOT / OUTPUT_RELATIVE
     cells = [json.loads(line) for line in (committed / "phase_c_v3c001_cells.jsonl").read_text().splitlines()]

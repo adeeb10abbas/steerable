@@ -354,10 +354,8 @@ class PhaseCCosmosClient(V2Cosmos3Client):
     def _unpack_response(self, response: dict[str, Any]) -> np.ndarray:
         action = super()._unpack_response(response)
         server_seed = response.get("sampling_seed")
-        if MODEL_ID == "cosmos3_nano_policy_droid" and server_seed != bridge["seed"]:
-            raise ValueError("Nano server did not echo the registered Phase-C sampling seed")
-        if server_seed is not None and server_seed != bridge["seed"]:
-            raise ValueError("Cosmos server returned an unexpected sampling seed")
+        if server_seed != bridge["seed"]:
+            raise ValueError("Cosmos server did not echo the registered Phase-C sampling seed")
         self.request_records[-1].update(
             experiment_id=EXPERIMENT_ID,
             registered_cell_id=self.cell["registered_cell_id"],

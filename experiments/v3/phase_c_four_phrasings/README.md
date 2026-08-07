@@ -62,8 +62,11 @@ evidence.  Every returned `[32,8]` action chunk and exposed 33-frame decoded
 future is retained on the PVC with a content hash.  `run_cosmos_phase_c_queue.sh`
 keeps the two model queues separate and stops on the first missing future,
 partial cell, identity mismatch, or pre-existing path.  Nano additionally uses
-`serve_phase_c_nano.py` to authorize only seeds 8500–8519 and the eight exact
-registered prompt strings while preserving the official inference method.
+`serve_phase_c_cosmos.py` (with `serve_phase_c_nano.py` retained as a compatible
+entry point) to authorize only seeds 8500–8519 and the eight exact registered
+prompt strings while preserving the official inference method.  Edge and Nano
+must both echo the registered seed on every response; a process-start seed is
+not accepted as a substitute.
 Each Cosmos server has exactly one serial client queue.  An atomic per-model
 server lock refuses a second queue and is deliberately left stale after an
 unclean exit for fail-closed diagnosis.  Parallel clients remain prohibited

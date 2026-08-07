@@ -453,6 +453,36 @@ The compact result set is the
 [`matched-pair JSONL`](../artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/dreamzero_v3b003_matched_pairs.jsonl),
 and [`evidence manifest`](../artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/evidence_manifest.json).
 
+### Cosmos3 Nano target/reference role swap complete (V3-B009)
+
+The role-swap cohort is complete at **108/108 valid episodes**: 27 matched
+seeds, two target/reference assignments, and both exact directions. Behavioral
+failures remain in the denominator; no infrastructure attempt is included.
+All 54 matched LEFT/RIGHT action traces differed.
+
+| Target and reference | Exact LEFT prompt | Exact RIGHT prompt | LEFT | RIGHT |
+| --- | --- | --- | ---: | ---: |
+| Cube target, bowl reference | “Put the Rubik's cube to the left of the bowl.” | “Put the Rubik's cube to the right of the bowl.” | 24/27 | 24/27 |
+| Bowl target, cube reference | “Put the bowl to the left of the Rubik's cube.” | “Put the bowl to the right of the Rubik's cube.” | 19/27 | 27/27 |
+
+Changing which object was manipulated significantly altered the continuous
+direction contrasts. Bowl-target minus cube-target endpoint redirection was
+`+0.1360 m` (95% matched-seed bootstrap CI `[+0.0687, +0.2052]`; 22/27
+positive; exact sign-test `p = 0.00151`). The corresponding requested-side
+depth interaction was `+0.1302 m` (95% CI `[+0.0563, +0.2057]`; 22/27
+positive; `p = 0.00151`). The binary success interaction was `+0.296` per seed
+but did not cross the prespecified 0.05 threshold (`p = 0.0557`).
+
+This is evidence that target/reference assignment modulates Nano's physical
+response to the direction probe. It does not isolate language: swapping roles
+also changes object semantics, geometry, grasp affordance, and transport
+dynamics. The compact [`summary`](../artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b009/v3b009_summary.json),
+[`episodes`](../artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b009/v3b009_episodes.jsonl),
+[`pairs`](../artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b009/v3b009_matched_pairs.jsonl),
+and [`evidence manifest`](../artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b009/evidence_manifest.json)
+are hash-closed. Do not rerun a valid V3-B009 cell. V3-B008 start-side remains
+active in its separate queue.
+
 ### Nano lateral-position dose response: V3-B004 failed closed; V3-B005 complete
 
 The original V3-B004 physical gate found a decisive model-blind geometry
@@ -686,10 +716,10 @@ returned identical LEFT/RIGHT actions (RMS 0.0), so it is not a substitute.
 The completed V3-A002 compatibility cohort is also not historical recovery and
 must remain separate. It is complete and must not be rerun.
 
-- Phase B: Nano V3-B001 and π0.5 V3-B002 are each complete and hash-closed at
-  108/108 exact cells. DreamZero V3-B003 passed its independent release gate;
-  its 108 exact cells are authorized but incomplete. Every other Phase-B
-  ablation remains unreleased.
+- Phase B: Nano V3-B001, π0.5 V3-B002, DreamZero V3-B003, and Nano role-swap
+  V3-B009 are complete and hash-closed at 108/108 exact cells. Nano V3-B005 is
+  complete at 210/210. V3-B008 start-side remains active in its separate exact
+  queue; every other Phase-B ablation remains unreleased.
 - Phase C: GR00T N1.7, Cosmos3 Edge, and Cosmos3 Nano each passed their independent
   byte-hash, raw-writer, exact-repeat, and four-form prompt-sensitivity gates.
   Edge and Nano are each complete at 160/160 valid episodes; GR00T continues

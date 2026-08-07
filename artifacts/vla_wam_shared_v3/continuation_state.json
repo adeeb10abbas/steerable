@@ -1,7 +1,7 @@
 {
   "schema_version": "vla-wam-shared-v3-continuation-v1",
   "study_id": "vla_wam_language_steerability_v3",
-  "updated_at_utc": "2026-08-07T07:48:51Z",
+  "updated_at_utc": "2026-08-07T08:01:00Z",
   "active_branch": "main",
   "evidence_head": "b3c1188dc371106833868545909bb6cd1a3aa116",
   "status": "phase_c_edge_and_nano_complete_groot_queue_active",
@@ -146,7 +146,7 @@
     "v3": {
       "command": ".venv/bin/python tools/validate_vla_wam_v3_protocol.py",
       "status": "valid",
-      "check_count": 600
+      "check_count": 609
     },
     "v2": {
       "command": ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
@@ -661,6 +661,51 @@
       }
     }
   },
+  "prospective_tier_b_results": {
+    "v3b009_nano_role_swap": {
+      "status": "complete_hash_closed_27_seed_108_episode_result_no_rerun",
+      "amendment_id": "V3-B009",
+      "model_id": "cosmos3_nano_policy_droid",
+      "arena": "droid_robolab",
+      "factor": "target_reference_role_swap",
+      "matched_seed_count": 27,
+      "behavioral_episode_count": 108,
+      "matched_left_right_pair_count": 54,
+      "valid_behavioral_failures_included": true,
+      "infrastructure_attempts_included": false,
+      "rerun_policy": "do_not_rerun_any_valid_v3b009_cell",
+      "exact_prompts": {
+        "cube_target_bowl_reference:left": "Put the Rubik's cube to the left of the bowl.",
+        "cube_target_bowl_reference:right": "Put the Rubik's cube to the right of the bowl.",
+        "bowl_target_cube_reference:left": "Put the bowl to the left of the Rubik's cube.",
+        "bowl_target_cube_reference:right": "Put the bowl to the right of the Rubik's cube."
+      },
+      "condition_successes": {
+        "cube_target_bowl_reference:left": "24/27",
+        "cube_target_bowl_reference:right": "24/27",
+        "bowl_target_cube_reference:left": "19/27",
+        "bowl_target_cube_reference:right": "27/27"
+      },
+      "factor_interaction": {
+        "definition": "direction contrast for bowl-target/cube-reference minus cube-target/bowl-reference",
+        "endpoint_redirection_mean_m": 0.13604958762449246,
+        "endpoint_redirection_bootstrap_95_ci_m": [0.06872670275021206, 0.2052499706305011],
+        "endpoint_redirection_exact_sign_p": 0.0015137195587158203,
+        "requested_side_depth_mean_m": 0.13021075249546105,
+        "requested_side_depth_bootstrap_95_ci_m": [0.05630933923336367, 0.20567010303062416],
+        "requested_side_depth_exact_sign_p": 0.0015137195587158203,
+        "binary_success_mean": 0.2962962962962963,
+        "binary_success_exact_permutation_p": 0.0556640625
+      },
+      "claim_boundary": "Role swap changed target/reference semantics and physical affordance together. It significantly modulated continuous endpoint redirection and requested-side depth, while its prespecified binary success interaction narrowly missed 0.05; this is not a language-only effect.",
+      "artifacts": {
+        "summary": {"path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b009/v3b009_summary.json", "sha256": "9548f4e97898cbfe9fab26d2bdd42e3a1f5e28122476154e73f71e4834aac12a"},
+        "episodes": {"path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b009/v3b009_episodes.jsonl", "sha256": "cc71a7bb85cd2ba5f9e5692b67009ebafbad2a73726b090602a9c71be96010ef"},
+        "matched_pairs": {"path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b009/v3b009_matched_pairs.jsonl", "sha256": "b9d0b63aad8e36cc3a0a1066fc82fc9c402121e96c161ecd296b4b6af9e4619b"},
+        "evidence_manifest": {"path": "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b009/evidence_manifest.json", "sha256": "3dc9aa7ccb52deb4c57ff6e3f1d7c41c0fb28f9548a130bbcf39ec823be25dc3"}
+      }
+    }
+  },
   "retrospective_mechanism_diagnostics": {
     "status": "complete_no_new_model_compute",
     "failure_mode_split_a1": {
@@ -1080,7 +1125,7 @@
   },
   "scientific_claim_boundary": {
     "supported": "Across every completed checkpoint, matched LEFT/RIGHT prompts changed executed traces; endpoint ordering was often aligned, but requested task completion and failure mode remained strongly checkpoint- and direction-dependent. In the separate V3-A002 public old-name-config bridge, all 20 common action prefixes differed and 16/20 endpoints aligned, yet success was 0/20 LEFT versus 12/20 RIGHT. Nano V3-B001, pi0.5 V3-B002, and DreamZero V3-B003 are completed scene-matched positions-only ablations. For pi0.5, reflection left endpoint redirection nearly unchanged (interaction mean -1.12 cm, 95% CI -7.81 to +5.68 cm, sign-test p=0.701) but reversed requested-side depth (interaction mean -34.59 cm, 95% CI -41.38 to -28.46 cm; 27/27 negative, p=1.49e-08) and binary success from control 4/27 LEFT versus 25/27 RIGHT to reflected 25/27 LEFT versus 9/27 RIGHT (mean DiD -1.370, exact p=5.96e-08). DreamZero reflection improved total success from 13/54 to 50/54 and changed depth (interaction mean -14.09 cm, 95% CI -19.92 to -8.19 cm, sign-test p=0.000311), while its binary success-gap DiD was not significant (p=0.581).",
-    "not_supported": "The three completed registered movable-object center-position reflections support geometry or layout as a major competence confound under this simulator setup. They do not imply that all prompt-conditioned endpoint steering is geometric, identify training-distribution bias as the mechanism, isolate reachability from other downstream physical mediators, or test a full-scene mirror, base rotation, start-side interaction, or role swap. An exposed or decoded future also does not establish successful control.",
+    "not_supported": "The three completed registered movable-object center-position reflections support geometry or layout as a major competence confound under this simulator setup. They do not imply that all prompt-conditioned endpoint steering is geometric, identify training-distribution bias as the mechanism, or isolate reachability from other downstream physical mediators. V3-B009 tests an object-role swap, not a full-scene mirror or base rotation, and changes semantics and affordances together. Start-side V3-B008 remains active. An exposed or decoded future also does not establish successful control.",
     "unit_warning": "RoboTwin sampling replicates are nested within seven scenes; they are not 63 independent scenes."
   },
   "storage": {
@@ -1096,7 +1141,7 @@
       ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
       "git diff --check"
     ],
-    "inference_authority": "Do not rerun any valid Phase-A, V3-A002, Nano V3-B001, pi0.5 V3-B002, DreamZero V3-B003, Nano V3-B005, Cosmos3 Edge V3-C001, or Cosmos3 Nano V3-C001 cell. DreamZero V3-B003 is complete at 108/108 valid cells and hash-closed. Nano V3-B004 failed closed with zero model requests and must never be run. Nano V3-B005 is complete at 210/210 valid cells and is hash-closed. Phase C remains active only for the already running GR00T seed-8501-8519 queue. Preserve whole-seed serial execution and do not rerun complete seed blocks. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or another Phase-C model.",
+    "inference_authority": "Do not rerun any valid Phase-A, V3-A002, Nano V3-B001, pi0.5 V3-B002, DreamZero V3-B003, Nano V3-B005, Nano V3-B009, Cosmos3 Edge V3-C001, or Cosmos3 Nano V3-C001 cell. DreamZero V3-B003 and Nano V3-B009 are complete and hash-closed. Nano V3-B004 failed closed with zero model requests and must never be run. Nano V3-B005 is complete at 210/210 valid cells and is hash-closed. Continue only missing exact V3-B008 cells in its existing queue and the already running GR00T Phase-C queue. Preserve whole-seed serial execution and do not rerun complete seed blocks. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or another Phase-C model.",
     "publication_note": "Use the compact result summaries and evidence manifests for analysis. Do not infer current study state from the older V2 article, gallery, figures, or chat history."
   }
 }

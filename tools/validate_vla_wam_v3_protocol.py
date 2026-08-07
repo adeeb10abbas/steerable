@@ -94,6 +94,12 @@ REQUIRED = {
     "pi05_v3d001_sequential_supervisor": "experiments/v3/pi05_stochastic_v3d001/sequential_supervisor.py",
     "pi05_v3d001_readme": "experiments/v3/pi05_stochastic_v3d001/README.md",
     "pi05_v3d001_test": "tests/test_pi05_v3d001_runtime.py",
+    "nano_tier_b_analyzer": "experiments/v3/cosmos_nano_tier_b/analyze_results.py",
+    "nano_tier_b_analysis_test": "tests/test_cosmos_nano_tier_b_analysis.py",
+    "nano_v3b009_result_summary": f"{V3}/prospective_tier_b/results/v3b009/v3b009_summary.json",
+    "nano_v3b009_result_episodes": f"{V3}/prospective_tier_b/results/v3b009/v3b009_episodes.jsonl",
+    "nano_v3b009_result_pairs": f"{V3}/prospective_tier_b/results/v3b009/v3b009_matched_pairs.jsonl",
+    "nano_v3b009_result_manifest": f"{V3}/prospective_tier_b/results/v3b009/evidence_manifest.json",
     "document": "docs/VLA_WAM_STEERABILITY_V3_PROTOCOL.md",
     "continuation": f"{V3}/continuation_state.json",
     "continuation_document": "docs/VLA_WAM_V3_CONTINUATION.md",
@@ -1860,6 +1866,10 @@ def validate(root: Path) -> list[str]:
     dreamzero_mirror_taxonomy_repair_manifest = load(
         paths["dreamzero_mirror_taxonomy_repair_manifest"]
     )
+    nano_v3b009_result_summary = load(paths["nano_v3b009_result_summary"])
+    nano_v3b009_result_episodes = load_jsonl(paths["nano_v3b009_result_episodes"])
+    nano_v3b009_result_pairs = load_jsonl(paths["nano_v3b009_result_pairs"])
+    nano_v3b009_result_manifest = load(paths["nano_v3b009_result_manifest"])
     nano_lateral_sweep_amendment = load(paths["nano_lateral_sweep_amendment"])
     nano_lateral_sweep_neutrality_correction = load(
         paths["nano_lateral_sweep_neutrality_correction"]
@@ -3501,6 +3511,74 @@ def validate(root: Path) -> list[str]:
         "DreamZero V3-B003 taxonomy repair is hash-bound, packaging-only, zero-inference, and preserves the original",
         checks,
     )
+    nano_v3b009_population = nano_v3b009_result_summary.get("population", {})
+    nano_v3b009_conditions = nano_v3b009_result_summary.get("condition_outcomes", {})
+    nano_v3b009_factor = nano_v3b009_result_summary.get("factor_analysis", {}).get(
+        "pairwise_factor_interactions", {}
+    ).get("bowl_target_cube_reference_minus_cube_target_bowl_reference", {})
+    nano_v3b009_files = {
+        Path(row.get("path", "")).name: row
+        for row in nano_v3b009_result_manifest.get("files", [])
+    }
+    require(
+        nano_v3b009_result_summary.get("schema_version")
+        == "vla-wam-shared-v3b-nano-factor-results-v1"
+        and nano_v3b009_result_summary.get("amendment_id") == "V3-B009"
+        and nano_v3b009_population
+        == {
+            "behavioral_episode_count": 108,
+            "infrastructure_attempts_included": False,
+            "matched_left_right_pair_count": 54,
+            "matched_seed_count": 27,
+            "missing_value_imputation": "none",
+            "valid_behavioral_failures_included": True,
+        }
+        and len(nano_v3b009_result_episodes) == 108
+        and len(nano_v3b009_result_pairs) == 54
+        and nano_v3b009_result_summary.get("action_diagnostics")
+        == {"distinct_pairs": 54, "pairs": 54}
+        and {
+            key: (value.get("successes"), value.get("episodes"))
+            for key, value in nano_v3b009_conditions.items()
+        }
+        == {
+            "cube_target_bowl_reference:left": (24, 27),
+            "cube_target_bowl_reference:right": (24, 27),
+            "bowl_target_cube_reference:left": (19, 27),
+            "bowl_target_cube_reference:right": (27, 27),
+        }
+        and nano_v3b009_factor.get("endpoint_redirection_interaction_m", {})
+        .get("paired_sign_test", {})
+        .get("p_value")
+        == 0.0015137195587158203
+        and nano_v3b009_factor.get("requested_side_depth_interaction_m", {})
+        .get("paired_sign_test", {})
+        .get("p_value")
+        == 0.0015137195587158203
+        and nano_v3b009_factor.get("binary_success_interaction", {})
+        .get("exact_permutation_test", {})
+        .get("p_value")
+        == 0.0556640625
+        and nano_v3b009_files.get("v3b009_summary.json", {}).get("sha256")
+        == sha256(paths["nano_v3b009_result_summary"])
+        and nano_v3b009_files.get("v3b009_episodes.jsonl", {}).get("sha256")
+        == sha256(paths["nano_v3b009_result_episodes"])
+        and nano_v3b009_files.get("v3b009_matched_pairs.jsonl", {}).get("sha256")
+        == sha256(paths["nano_v3b009_result_pairs"]),
+        "Nano V3-B009 binds all 108 role-swap episodes, 54 pairs, exact outcomes, and registered interaction tests",
+        checks,
+    )
+    nano_tier_b_analysis_source = paths["nano_tier_b_analyzer"].read_text(
+        encoding="utf-8"
+    )
+    require(
+        "exact_two_sided_within_seed_factor_label_sign_flip_permutation"
+        in nano_tier_b_analysis_source
+        and "valid_behavioral_failures_included" in nano_tier_b_analysis_source
+        and "refusing to overwrite" in nano_tier_b_analysis_source,
+        "Nano Tier-B analyzer preserves matched-seed statistics, failures, and immutable output boundaries",
+        checks,
+    )
     lateral_design = nano_lateral_sweep_amendment.get("design", {})
     lateral_calibration = nano_lateral_sweep_amendment.get(
         "model_blind_numeric_calibration", {}
@@ -4082,6 +4160,35 @@ def validate(root: Path) -> list[str]:
         .get("sha256")
         == sha256(paths["dreamzero_mirror_taxonomy_repair"]),
         "V3 continuation records the complete no-rerun DreamZero V3-B003 result and hash roots",
+        checks,
+    )
+    nano_v3b009_state = continuation.get("prospective_tier_b_results", {}).get(
+        "v3b009_nano_role_swap", {}
+    )
+    nano_v3b009_state_artifacts = nano_v3b009_state.get("artifacts", {})
+    require(
+        nano_v3b009_state.get("status")
+        == "complete_hash_closed_27_seed_108_episode_result_no_rerun"
+        and nano_v3b009_state.get("behavioral_episode_count") == 108
+        and nano_v3b009_state.get("matched_left_right_pair_count") == 54
+        and nano_v3b009_state.get("rerun_policy")
+        == "do_not_rerun_any_valid_v3b009_cell"
+        and nano_v3b009_state.get("condition_successes")
+        == {
+            "cube_target_bowl_reference:left": "24/27",
+            "cube_target_bowl_reference:right": "24/27",
+            "bowl_target_cube_reference:left": "19/27",
+            "bowl_target_cube_reference:right": "27/27",
+        }
+        and nano_v3b009_state_artifacts.get("summary", {}).get("sha256")
+        == sha256(paths["nano_v3b009_result_summary"])
+        and nano_v3b009_state_artifacts.get("episodes", {}).get("sha256")
+        == sha256(paths["nano_v3b009_result_episodes"])
+        and nano_v3b009_state_artifacts.get("matched_pairs", {}).get("sha256")
+        == sha256(paths["nano_v3b009_result_pairs"])
+        and nano_v3b009_state_artifacts.get("evidence_manifest", {}).get("sha256")
+        == sha256(paths["nano_v3b009_result_manifest"]),
+        "V3 continuation records the complete no-rerun Nano V3-B009 result and hash roots",
         checks,
     )
     phase_b_state = continuation.get("blocked_and_unreleased", {}).get(

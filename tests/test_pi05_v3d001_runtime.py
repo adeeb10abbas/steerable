@@ -71,6 +71,7 @@ class V3D001RuntimeTest(unittest.TestCase):
         self.assertIn("native_process_group_thermal_guard.py", " ".join(plan["bridge_command"]))
         self.assertIn(str(cell.sampling_seed_base), plan["bridge_command"])
         self.assertEqual(plan["environment"]["OMNI_KIT_ACCEPT_EULA"], "YES")
+        self.assertIn("/data/users/ali/glvnd/lib", plan["environment"]["LD_LIBRARY_PATH"])
         self.assertEqual(plan["matched_stochastic_block_id"], cell.block_id)
         self.assertTrue(plan["attempt_dir"].endswith("attempt02"))
         self.assertTrue(plan["environment"]["TMPDIR"].endswith("attempt02"))

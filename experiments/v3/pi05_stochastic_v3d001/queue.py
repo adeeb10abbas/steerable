@@ -20,6 +20,13 @@ from tools.vla_wam_v3_episode_schema import parse_jsonl_record
 
 
 FROZEN_VK_ICD = "/etc/vulkan/icd.d/nvidia_icd.json"
+FROZEN_LD_LIBRARY_PATH = (
+    "/data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/"
+    "usr/lib/x86_64-linux-gnu:"
+    "/data/users/ali/glvnd/lib:"
+    "/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:"
+    "/usr/lib/x86_64-linux-gnu"
+)
 
 
 def _object(path: Path) -> dict[str, Any]:
@@ -92,6 +99,7 @@ def cell_plan(*, repo_root: Path, release_manifest: Path, runtime_identity: Path
         "environment": {
             "OMNI_KIT_ACCEPT_EULA": "YES", "NVIDIA_DRIVER_CAPABILITIES": "all",
             "VK_ICD_FILENAMES": FROZEN_VK_ICD,
+            "LD_LIBRARY_PATH": FROZEN_LD_LIBRARY_PATH,
             "XDG_CACHE_HOME": str(attempt/"cache/xdg"),
             "WARP_CACHE_PATH": str(attempt/"cache/warp"),
             "MPLCONFIGDIR": str(attempt/"cache/matplotlib"),
@@ -139,6 +147,9 @@ def run_cell(plan: dict[str, Any]) -> dict[str, Any]:
         raise FileExistsError(f"partial V3-D001 attempt preserved outside denominator: {attempt}")
     if not Path(FROZEN_VK_ICD).is_file():
         raise ContractError(f"Vulkan ICD missing: {FROZEN_VK_ICD}")
+    for directory in FROZEN_LD_LIBRARY_PATH.split(":"):
+        if not Path(directory).is_dir():
+            raise ContractError(f"frozen native-library directory missing: {directory}")
     attempt.mkdir(parents=True, exist_ok=False)
     for key in ("XDG_CACHE_HOME", "WARP_CACHE_PATH", "MPLCONFIGDIR", "TMPDIR"):
         Path(plan["environment"][key]).mkdir(parents=True, exist_ok=False)

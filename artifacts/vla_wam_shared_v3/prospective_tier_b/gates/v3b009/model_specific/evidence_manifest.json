@@ -1,0 +1,49 @@
+{
+  "schema_version": "vla-wam-shared-v3b009-nano-live-gate-evidence-manifest-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B009",
+  "model_id": "cosmos3_nano_policy_droid",
+  "status": "passed_behavioral_release_gate_zero_behavior_launched",
+  "release_manifest_sha256": "940dc170865dc9df338590687dba658c33eb645ca2b80294c4862bf6ba18efa0",
+  "cells_sha256": "ab2cda86e5cebfab23b1e2b683f023f5e94682e67041a5c304f0f435d10c52ad",
+  "model_blind_gate_sha256": "d102e99cda8a38d1c936488c886fe2317cddf5cf13cf7eca149a010de97314b0",
+  "runtime_identity_sha256": "a60c0f91f68548f88b75367c0b4d171d7d501a832f017ac8f3dc12d695cb187e",
+  "runtime_identity": {
+    "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/gates/v3b009/model_specific/runtime_identity.json",
+    "sha256": "839911cd38c28f8b873d4e7acf53983fa0778f6b13a4553a030735ea8fdefba7"
+  },
+  "fixed_observation_gate": {
+    "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/gates/v3b009/model_specific/fixed_observation_report.json",
+    "sha256": "fa850d67a0e7a8aaa50206913c233371e93a76ff7be6eae2935bcd50e9be385c",
+    "status": "passed",
+    "model_request_count": 6,
+    "behavioral_episode_count": 0
+  },
+  "behavioral_release_gate": {
+    "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/gates/v3b009/model_specific/behavioral_release_gate.json",
+    "sha256": "b9f03e8fbe45f58869a3c413f483a79a19e3ffbeb605a10dd75c0febf8e0ba36",
+    "behavioral_release": true,
+    "authorized_behavioral_cells": 108,
+    "launched_behavioral_cells": 0
+  },
+  "fixed_observations": [
+    {
+      "arm": "cube_target_bowl_reference",
+      "capture_report": "artifacts/vla_wam_shared_v3/prospective_tier_b/gates/v3b009/model_specific/captures/cube_target_bowl_reference.capture.json",
+      "capture_report_sha256": "ef95a70700ffc23a8fb78c446e0226c7ad05eb09bfb3e62ec7206a1aa1f5eb05",
+      "raw_npz_sha256": "a6f1dac1589ef64fb88db9a0eeebf59784c6131ca6bdb74f0a15c19bd903e80d"
+    },
+    {
+      "arm": "bowl_target_cube_reference",
+      "capture_report": "artifacts/vla_wam_shared_v3/prospective_tier_b/gates/v3b009/model_specific/captures/bowl_target_cube_reference.capture.json",
+      "capture_report_sha256": "6dce59f55bfce1a23d3be29650ec333d6cb8ae38bb77b8ab35d9f3e0f4bcdc78",
+      "raw_npz_sha256": "0b3a718678d2176673f49527691b15aa34841ffd0b98b22ff51be3c52aabbc6a"
+    }
+  ],
+  "infrastructure_ledger": {
+    "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/gates/v3b009/model_specific/infrastructure_ledger.json",
+    "sha256": "b20568ce910669012386767411347eacf92035ea6076a835313bc5a0f888506f"
+  },
+  "raw_evidence_policy": "NPZ observations, returned arrays, decoded futures, server logs, checkpoints, simulator states, and videos remain on the ali PVC and are not committed to Git.",
+  "claim_boundary": "This gate demonstrates deterministic exact-repeat behavior and prompt-sensitive actions and decoded futures for both role assignments. It is not behavioral success evidence."
+}

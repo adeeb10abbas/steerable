@@ -1,0 +1,81 @@
+{
+  "amendment_id": "V3-B009",
+  "arm": "bowl_target_cube_reference",
+  "array_fingerprints": {
+    "gripper_position": {
+      "dtype": "float32",
+      "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
+      "shape": [
+        1
+      ]
+    },
+    "image": {
+      "dtype": "uint8",
+      "sha256": "3b5048c21d61c7c1022d2671cf91756d6be117eaf0d8c7255ef47d4eae851985",
+      "shape": [
+        540,
+        640,
+        3
+      ]
+    },
+    "joint_position": {
+      "dtype": "float32",
+      "sha256": "6661cda587dce95d7e39db70d98bbed73498aecc82f0a1407ea41bf3fd839b85",
+      "shape": [
+        7
+      ]
+    }
+  },
+  "behavioral_episode_count": 0,
+  "environment_seed": 9800,
+  "gpu_uuid": "GPU-c2407ba3-cc0f-2456-5df4-8c968bfb8435",
+  "hold_action": [
+    0.0,
+    -0.6283185482025146,
+    0.0,
+    -2.5132741928100586,
+    0.0,
+    1.884955644607544,
+    0.0,
+    0.0
+  ],
+  "max_abs_position_errors_m": {
+    "banana": 0.00024374574422836304,
+    "bowl": 2.1666288375854492e-05,
+    "rubiks_cube": 0.0027577579021453857
+  },
+  "model_blind_gate_sha256": "d102e99cda8a38d1c936488c886fe2317cddf5cf13cf7eca149a010de97314b0",
+  "model_request_count": 0,
+  "neutral_reset": true,
+  "observation_npz": {
+    "bytes": 1037620,
+    "path": "/data/users/ali/vla_wam/raw/v3b/tier_b/v3b009/fixed_observation_attempt02/bowl_target_cube_reference.npz",
+    "sha256": "0b3a718678d2176673f49527691b15aa34841ffd0b98b22ff51be3c52aabbc6a"
+  },
+  "observed_positions_robot_base_m": {
+    "banana": [
+      0.5390522480010986,
+      -0.07562565803527832,
+      0.06818441301584244
+    ],
+    "bowl": [
+      0.44257843494415283,
+      0.12660099565982819,
+      0.07734952121973038
+    ],
+    "rubiks_cube": [
+      0.30612239241600037,
+      0.12127771228551865,
+      0.08110532909631729
+    ]
+  },
+  "pod": "vla-wam-rtx-cosmos-ali",
+  "pod_uid": "b7ec6369-2ab7-42d6-a4ef-3fc549ca652a",
+  "prompt_used_for_official_packing": "Put the bowl to the left of the Rubik's cube.",
+  "registered_cell_id": "v3b009:nano:role_swap:seed9800:bowl_target_cube_reference:left",
+  "release_manifest_sha256": "940dc170865dc9df338590687dba658c33eb645ca2b80294c4862bf6ba18efa0",
+  "schema_version": "vla-wam-shared-v3b008-v3b009-nano-fixed-observation-capture-v1",
+  "settle_steps": 60,
+  "stable_window_steps": 15,
+  "study_id": "vla_wam_language_steerability_v3"
+}

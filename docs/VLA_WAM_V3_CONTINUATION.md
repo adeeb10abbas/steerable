@@ -392,12 +392,15 @@ tests remain two-sided.
 | [`dreamzero_mirror_v3b003_cells.jsonl`](../artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/dreamzero_mirror_v3b003_cells.jsonl) | `a6d0f0a5d4c7cdfa5d3de95d44d7b11f42750a76a603ff8c2e44848e34b8f70d` |
 | [`dreamzero_mirror_v3b003_manifest.json`](../artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/dreamzero_mirror_v3b003_manifest.json) | `efe50df701193e48b981c025ea3b4d27a80e3bdf83216e38a98a63e27061cb23` |
 
-Registration is not behavioral release. Model-request and behavioral counts
-remain zero. Release requires a fresh DreamZero `s=2` runtime identity,
-model-blind physical/reset/RTX-renderer/writer evidence on every used lane, an
-exact behavioral-bridge reset attestation with no inference, and an exact-repeat
-plus LEFT/RIGHT prompt-sensitivity gate that retains actions, latent futures,
-and an official reset decode.
+The independent release gate has now passed. Four distinct ali RTX lanes each
+passed all 12 condition-by-reset attestations in fresh Isaac processes (48/48
+total), with zero model requests and zero behavioral episodes. The fresh
+DreamZero `s=2` server also produced bit-identical repeat actions and latents,
+while LEFT versus RIGHT differed (action RMS `0.02782`; latent RMS `0.16755`),
+and retained the official reset decode. The hash-bound
+[`release gate`](../artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/gates/release_gate.json)
+has SHA-256 `7e30e618ee233ea04675d556f48621f6ff7de84f4ac9033460d0d9531a234dd6`.
+All 108 registered cells are authorized; none was complete at this checkpoint.
 
 ### Nano lateral-position dose response: V3-B004 failed closed; V3-B005 registered
 
@@ -587,9 +590,9 @@ The completed V3-A002 compatibility cohort is also not historical recovery and
 must remain separate. It is complete and must not be rerun.
 
 - Phase B: Nano V3-B001 and π0.5 V3-B002 are each complete and hash-closed at
-  108/108 exact cells. DreamZero V3-B003 has 108 hash-bound registered cells but
-  remains unreleased pending its fresh gates. Every other Phase-B ablation
-  remains unreleased.
+  108/108 exact cells. DreamZero V3-B003 passed its independent release gate;
+  its 108 exact cells are authorized but incomplete. Every other Phase-B
+  ablation remains unreleased.
 - Phase C: 480 registered episodes, not released; each wording requires its
   independent byte-hash, repeat, and prompt-sensitivity gates.
 - Phase D: not released; it requires an effective stochastic-seed probe for
@@ -608,12 +611,13 @@ git status --short
 git diff --check
 ```
 
-Do not rerun a valid Phase-A, V3-A002, Nano V3-B001, or π0.5 V3-B002 cell. Both
-Phase-B reflection cohorts are complete at 108/108 valid episodes; Nano's
-three-block live snapshot is historical only. Use each cohort's final report,
+Do not rerun a valid Phase-A, V3-A002, Nano V3-B001, or π0.5 V3-B002 cell. Nano
+and π0.5 reflection cohorts are complete at 108/108 valid episodes; DreamZero
+V3-B003 is released but incomplete. Nano's three-block live snapshot is
+historical only. Use each completed cohort's final report,
 aggregate JSONL, and hash manifest for analysis. All other Phase-B, Phase-C,
-and Phase-D cells remain unreleased. DreamZero V3-B003 is registered but not
-released; do not send a model request until its fresh gates pass. Use the eight original committed
+and Phase-D cells remain unreleased. Run DreamZero only through the exact
+hash-bound V3-B003 queue and release gate. Use the eight original committed
 summary/evidence-manifest/infrastructure-ledger triplets plus the separate
 V3-A002 triplet under `artifacts/vla_wam_shared_v3/results/` for earlier
 completed-result analysis. Do not infer current experiment state from the older

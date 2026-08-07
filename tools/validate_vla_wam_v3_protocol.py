@@ -126,6 +126,13 @@ REQUIRED = {
     "dreamzero_mirror_amendment": f"{V3}/phase_b/dreamzero_mirror_v3b003/post_result_dreamzero_mirror_v3b003_amendment.json",
     "dreamzero_mirror_cells": f"{V3}/phase_b/dreamzero_mirror_v3b003/dreamzero_mirror_v3b003_cells.jsonl",
     "dreamzero_mirror_manifest": f"{V3}/phase_b/dreamzero_mirror_v3b003/dreamzero_mirror_v3b003_manifest.json",
+    "dreamzero_mirror_gate_release": f"{V3}/phase_b/dreamzero_mirror_v3b003/gates/release_gate.json",
+    "dreamzero_mirror_gate_fixed": f"{V3}/phase_b/dreamzero_mirror_v3b003/gates/fixed_observation_probe.json",
+    "dreamzero_mirror_gate_server": f"{V3}/phase_b/dreamzero_mirror_v3b003/gates/server_contract.json",
+    "dreamzero_mirror_gate_lane0": f"{V3}/phase_b/dreamzero_mirror_v3b003/gates/model_blind_lane0.json",
+    "dreamzero_mirror_gate_lane1": f"{V3}/phase_b/dreamzero_mirror_v3b003/gates/model_blind_lane1.json",
+    "dreamzero_mirror_gate_lane2": f"{V3}/phase_b/dreamzero_mirror_v3b003/gates/model_blind_lane2.json",
+    "dreamzero_mirror_gate_lane3": f"{V3}/phase_b/dreamzero_mirror_v3b003/gates/model_blind_lane3.json",
     "dreamzero_mirror_registration_builder": "tools/build_dreamzero_v3b003_registration.py",
     "dreamzero_mirror_registration_test": "tests/test_build_dreamzero_v3b003_registration.py",
     "dreamzero_mirror_runtime_contract": "experiments/v3/dreamzero_phase_b/contract.py",
@@ -135,6 +142,7 @@ REQUIRED = {
     "dreamzero_mirror_runtime_queue": "experiments/v3/dreamzero_phase_b/queue.py",
     "dreamzero_mirror_release_builder": "tools/build_dreamzero_v3b003_release_gate.py",
     "dreamzero_mirror_preflight_merger": "tools/merge_dreamzero_v3b003_preflight.py",
+    "dreamzero_mirror_preflight_lane_runner": "tools/run_dreamzero_v3b003_preflight_lane.py",
     "dreamzero_mirror_runtime_test": "tests/test_dreamzero_v3b003_runtime.py",
     "nano_lateral_sweep_amendment": f"{V3}/phase_b/nano_lateral_sweep_v3b004/post_result_nano_lateral_sweep_v3b004_amendment.json",
     "nano_lateral_sweep_neutrality_correction": f"{V3}/phase_b/nano_lateral_sweep_v3b004/prospective_neutrality_correction.json",
@@ -1727,6 +1735,11 @@ def validate(root: Path) -> list[str]:
     dreamzero_mirror_amendment = load(paths["dreamzero_mirror_amendment"])
     dreamzero_mirror_cells = load_jsonl(paths["dreamzero_mirror_cells"])
     dreamzero_mirror_manifest = load(paths["dreamzero_mirror_manifest"])
+    dreamzero_mirror_gate_release = load(paths["dreamzero_mirror_gate_release"])
+    dreamzero_mirror_gate_fixed = load(paths["dreamzero_mirror_gate_fixed"])
+    dreamzero_mirror_gate_lanes = [
+        load(paths[f"dreamzero_mirror_gate_lane{index}"]) for index in range(4)
+    ]
     nano_lateral_sweep_amendment = load(paths["nano_lateral_sweep_amendment"])
     nano_lateral_sweep_neutrality_correction = load(
         paths["nano_lateral_sweep_neutrality_correction"]
@@ -3247,6 +3260,32 @@ def validate(root: Path) -> list[str]:
         "DreamZero V3-B003 implementation gates first inference on reset, retains continuous/failure evidence, and preserves whole-seed guarded execution",
         checks,
     )
+    released_lane_hashes = {
+        row.get("sha256") for row in dreamzero_mirror_gate_release.get("model_blind_lanes", [])
+    }
+    require(
+        dreamzero_mirror_gate_release.get("schema_version")
+        == "vla-wam-shared-v3b-dreamzero-release-gate-v1"
+        and dreamzero_mirror_gate_release.get("behavioral_release") is True
+        and dreamzero_mirror_gate_release.get("behavioral_episode_count_before_release") == 0
+        and dreamzero_mirror_gate_release.get("model_request_count_before_release") == 3
+        and dreamzero_mirror_gate_release.get("fixed_observation_release_passed") is True
+        and dreamzero_mirror_gate_release.get("all_model_blind_lanes_passed") is True
+        and len(dreamzero_mirror_gate_release.get("model_blind_lanes", [])) == 4
+        and released_lane_hashes
+        == {sha256(paths[f"dreamzero_mirror_gate_lane{index}"]) for index in range(4)}
+        and all(
+            lane.get("passed") is True
+            and lane.get("fresh_process_count") == 12
+            and len(lane.get("tasks", [])) == 4
+            and lane.get("model_request_count") == 0
+            and lane.get("behavioral_episode_count") == 0
+            for lane in dreamzero_mirror_gate_lanes
+        )
+        and dreamzero_mirror_gate_fixed.get("release_gate_passed") is True,
+        "DreamZero V3-B003 release binds four 12-process RTX lanes and the passed fresh fixed-observation gate",
+        checks,
+    )
     lateral_design = nano_lateral_sweep_amendment.get("design", {})
     lateral_calibration = nano_lateral_sweep_amendment.get(
         "model_blind_numeric_calibration", {}
@@ -3510,7 +3549,8 @@ def validate(root: Path) -> list[str]:
     require(
         "cover every runtime simulator lane exactly once" in pi05_runtime_source
         and '"model_request_count": 0' in pi05_preflight_source
-        and "for repeat in range(3)" in pi05_preflight_source
+        and "range(3)" in pi05_preflight_source
+        and "--repeat-index" in pi05_preflight_source
         and "object_grabbed" in pi05_bridge_source
         and "no verified physical contact stream" in pi05_bridge_source
         and "native_process_group_thermal_guard.py" in pi05_queue_source
@@ -3600,31 +3640,22 @@ def validate(root: Path) -> list[str]:
             and completed_pi05_phase_b.get("completed_behavioral_cells") == 108
             and "27-seed" in completed_pi05_phase_b.get("release_condition", "")
             and "hash-closed" in completed_pi05_phase_b.get("release_condition", "")
-            and "DreamZero V3-B003"
-            in phase_b_state.get("unreleased", "")
-            and "not behaviorally released"
-            in phase_b_state.get("unreleased", ""),
-            "V3 continuation marks V3-B002 complete while keeping V3-B003 unreleased",
+            and released_phase_b.get("dreamzero_v3b003", {}).get("released_behavioral_cells") == 108,
+            "V3 continuation marks V3-B002 complete and V3-B003 independently released",
             checks,
         )
-    registered_not_released = phase_b_state.get("registered_not_released", {}).get(
-        "dreamzero_v3b003"
+    dreamzero_released = released_phase_b.get("dreamzero_v3b003", {})
+    require(
+        dreamzero_released.get("amendment_id") == "V3-B003"
+        and dreamzero_released.get("released_behavioral_cells") == 108
+        and dreamzero_released.get("completed_behavioral_cells") == 0
+        and dreamzero_released.get("fixed_observation_model_requests_before_release") == 3
+        and dreamzero_released.get("behavioral_episodes_before_release") == 0
+        and dreamzero_released.get("release_gate", {}).get("sha256")
+        == sha256(paths["dreamzero_mirror_gate_release"]),
+        "V3 continuation records the zero-behavior DreamZero V3-B003 release boundary",
+        checks,
     )
-    if registered_not_released:
-        require(
-            registered_not_released.get("amendment_id") == "V3-B003"
-            and registered_not_released.get("registered_behavioral_cells") == 108
-            and registered_not_released.get("model_requests_after_registration") == 0
-            and registered_not_released.get("behavioral_episodes_after_registration") == 0
-            and registered_not_released.get("amendment", {}).get("sha256")
-            == sha256(paths["dreamzero_mirror_amendment"])
-            and registered_not_released.get("cells", {}).get("sha256")
-            == sha256(paths["dreamzero_mirror_cells"])
-            and registered_not_released.get("manifest", {}).get("sha256")
-            == sha256(paths["dreamzero_mirror_manifest"]),
-            "V3 continuation preserves the unreleased zero-request DreamZero V3-B003 registration",
-            checks,
-        )
     nano_lateral_registered = phase_b_state.get("registered_not_released", {}).get(
         "nano_v3b005"
     )

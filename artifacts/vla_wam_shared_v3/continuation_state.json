@@ -788,7 +788,7 @@
       "recovery_command": "git -C /home/ali/openpi-robolab bundle create /tmp/openpi-robolab-all.bundle --all && git -C /home/ali/projects/RoboLab bundle create /tmp/robolab-all.bundle --all"
     },
     "phase_b_confounds": {
-      "status": "nano_v3b001_and_pi05_v3b002_complete_dreamzero_v3b003_and_nano_v3b005_registered_not_released_v3b004_failed_closed",
+      "status": "nano_v3b001_and_pi05_v3b002_complete_dreamzero_v3b003_released_nano_v3b005_registered_not_released_v3b004_failed_closed",
       "released": {
         "nano_v3b001": {
           "amendment_id": "V3-B001",
@@ -803,22 +803,20 @@
           "released_behavioral_cells": 108,
           "completed_behavioral_cells": 108,
           "release_condition": "Released only after the hash-bound model-blind physical and fixed-observation exact-repeat and prompt-sensitivity gates. The prespecified 27-seed, four-cell-per-seed cohort is complete and hash-closed."
-        }
-      },
-      "registered_not_released": {
+        },
         "dreamzero_v3b003": {
           "amendment_id": "V3-B003",
           "model_id": "dreamzero_droid_action_cfg",
           "identity_binding": "V2-A015:dreamzero_action_cfg_s2",
-          "registered_behavioral_cells": 108,
-          "matched_seeds": 27,
-          "model_requests_after_registration": 0,
-          "behavioral_episodes_after_registration": 0,
-          "amendment": {"path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/post_result_dreamzero_mirror_v3b003_amendment.json", "sha256": "ba22681ae4d7f748e375617617d9e130e6f1bd5bc0af1e7a995365b145a470fc"},
-          "cells": {"path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/dreamzero_mirror_v3b003_cells.jsonl", "sha256": "a6d0f0a5d4c7cdfa5d3de95d44d7b11f42750a76a603ff8c2e44848e34b8f70d"},
-          "manifest": {"path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/dreamzero_mirror_v3b003_manifest.json", "sha256": "efe50df701193e48b981c025ea3b4d27a80e3bdf83216e38a98a63e27061cb23"},
-          "release_condition": "Fresh DreamZero s=2 runtime identity, model-blind physical/reset/renderer/writer gate, exact bridge-reset attestation, and fixed-observation repeat/prompt-sensitivity/future-retention gate."
-        },
+          "released_behavioral_cells": 108,
+          "completed_behavioral_cells": 0,
+          "fixed_observation_model_requests_before_release": 3,
+          "behavioral_episodes_before_release": 0,
+          "release_gate": {"path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/gates/release_gate.json", "sha256": "7e30e618ee233ea04675d556f48621f6ff7de84f4ac9033460d0d9531a234dd6"},
+          "release_condition": "Released only after four distinct ali RTX lanes each passed 12 fresh-process physical/reset/renderer/writer attestations and the fresh DreamZero s=2 server passed exact-repeat and LEFT/RIGHT action/latent sensitivity. The 108 registered cells are authorized but not yet complete."
+        }
+      },
+      "registered_not_released": {
         "nano_v3b005": {
           "amendment_id": "V3-B005",
           "model_id": "cosmos3_nano_policy_droid",
@@ -851,7 +849,7 @@
           "denominator_effect": "none"
         }
       },
-      "unreleased": "DreamZero V3-B003 and Nano V3-B005 are hash-bound but not behaviorally released. V3-B004 failed closed before inference. Every other Phase-B confound ablation beyond completed Nano V3-B001 and pi0.5 V3-B002 requires its own frozen independent release path."
+      "unreleased": "Nano V3-B005 is hash-bound but not behaviorally released. DreamZero V3-B003 passed its independent release gate and its 108 cells are authorized but incomplete. V3-B004 failed closed before inference. Every other Phase-B confound ablation beyond completed Nano V3-B001 and pi0.5 V3-B002 requires its own frozen independent release path."
     },
     "phase_c_four_phrasings": {
       "status": "not_released",
@@ -881,7 +879,7 @@
       ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
       "git diff --check"
     ],
-    "inference_authority": "Do not rerun any valid Phase-A, V3-A002, Nano V3-B001, or pi0.5 V3-B002 cell. DreamZero V3-B003 remains behaviorally unreleased until its fresh runtime, four physical/reset/renderer/writer lanes, bridge reset, repeat, prompt-sensitivity, and future-retention gates are hash-bound. Nano V3-B004 failed closed with zero model requests and must never be run. Nano V3-B005 passed all 42 model-blind physical rows and its exact 210-cell queue is hash-bound; run only its fresh Nano runtime and fixed-observation release gate next, with no behavioral cells before that gate passes. No other Phase-B, Phase-C, or Phase-D cell is released. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or Phase C.",
+    "inference_authority": "Do not rerun any valid Phase-A, V3-A002, Nano V3-B001, or pi0.5 V3-B002 cell. DreamZero V3-B003 passed its hash-bound four-lane physical and fresh fixed-observation release gate; run only its exact 108 registered cells and preserve whole-seed order. Nano V3-B004 failed closed with zero model requests and must never be run. Nano V3-B005 passed all 42 model-blind physical rows and its exact 210-cell queue is hash-bound; run only its fresh Nano runtime and fixed-observation release gate next, with no behavioral cells before that gate passes. No other Phase-B, Phase-C, or Phase-D cell is released. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or Phase C.",
     "publication_note": "Use the compact result summaries and evidence manifests for analysis. Do not infer current study state from the older V2 article, gallery, figures, or chat history."
   }
 }

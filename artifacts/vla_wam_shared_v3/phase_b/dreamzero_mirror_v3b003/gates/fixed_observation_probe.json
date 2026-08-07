@@ -1,0 +1,196 @@
+{
+  "action_cfg_style_scale": 2.0,
+  "amendment_id": "V2-A015",
+  "comparison": {
+    "equality_required": false,
+    "status": "not_provided"
+  },
+  "comparison_gate_passed": true,
+  "contract": {
+    "action_shape": [
+      24,
+      8
+    ],
+    "clean_unique_session_per_request": true,
+    "negative_branch_caveat": "This is CFG-style negative-branch action guidance, not strict empty-text classifier-free guidance and not an official DreamZero action-CFG feature.",
+    "prompt_difference_latent_rms_is_descriptive": true,
+    "prompt_difference_requires_nonzero_action_rms": true,
+    "repeat_requires_bit_exact_action_and_latent": true,
+    "reset_after_every_request": true,
+    "returned_action_preservation_verified": true,
+    "scale_1_requires_archived_official_action_and_latent_equivalence": true,
+    "scale_2_comparison_equality_required": false
+  },
+  "effective_official_model_noise_seed": 1140,
+  "fixture_manifest": "/data/users/ali/vla_wam/raw/dreamzero_droid/v2_a007/renderer_reset_gate_attempt08/fixed_observation_manifest.json",
+  "fixture_sha256": "a566910fdff05014aed6bd108dd5d0ff5ff5546f206f7143352831cecc83baf4",
+  "future_root": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/server_attempt03/futures",
+  "internal_gate_passed": true,
+  "metrics": {
+    "all_actions_finite_shape_24x8": true,
+    "all_latents_finite": true,
+    "left_exact_repeat_action_array_equal": true,
+    "left_exact_repeat_action_max_abs": 0.0,
+    "left_exact_repeat_action_rms": 0.0,
+    "left_exact_repeat_latent_max_abs": 0.0,
+    "left_exact_repeat_latent_rms": 0.0,
+    "left_exact_repeat_latent_tensor_equal": true,
+    "left_vs_right_action_max_abs": 0.07904189825057983,
+    "left_vs_right_action_rms": 0.02782265988762979,
+    "left_vs_right_latent_max_abs": 2.36328125,
+    "left_vs_right_latent_rms": 0.16755296326331692
+  },
+  "records": {
+    "left_a": {
+      "action_data_sha256": "caae3c0b543e914a25cb822b42d8f6ab9fd5bc9c5f37d21c757b03c6331aa9ab",
+      "action_path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/server_attempt03/fixed_observation_gate/left_a_returned_action.npy",
+      "action_sha256": "23affa3ec37663ddc0d7f0e1f4fb044a9c489d5d806cea010deb45718899c743",
+      "clean_session": true,
+      "condition_role": "primary",
+      "dtype": "float32",
+      "effective_official_model_noise_seed": 1140,
+      "future_manifest": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/server_attempt03/futures/episode_000/future_manifest.json",
+      "future_manifest_sha256": "aa267836fd6252f1827ac38e757862150c04743b63b2ec94b2a2ef04dccf6968",
+      "latent_data_sha256": "74f26a87f4592d08b9ed09e0b4f46c9580856b463b9701b13404a7d6831ffb4b",
+      "latent_dtype": "torch.bfloat16",
+      "latent_path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/server_attempt03/futures/episode_000/request_0000_latent_video.pt",
+      "latent_sha256": "71c4dadd9ffe0eb0597933bc21f3d7954d4125635aecf9a9f4147b372d06e83c",
+      "latent_shape": [
+        1,
+        16,
+        3,
+        44,
+        80
+      ],
+      "official_decode_count": 1,
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "requested_relation": "left",
+      "returned_action": {
+        "definition": "Action tensor returned by the V2-A015 derived guidance path before the unchanged client normalization and eight-action execution horizon.",
+        "dtype": "float32",
+        "path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/server_attempt03/futures/episode_000/request_0000_official_action.npy",
+        "sha256": "23affa3ec37663ddc0d7f0e1f4fb044a9c489d5d806cea010deb45718899c743",
+        "shape": [
+          24,
+          8
+        ]
+      },
+      "sampling_seed_label": 8300,
+      "session_id": "dreamzero-v2-a015-s2-fixed-left_a",
+      "shape": [
+        24,
+        8
+      ]
+    },
+    "left_b": {
+      "action_data_sha256": "caae3c0b543e914a25cb822b42d8f6ab9fd5bc9c5f37d21c757b03c6331aa9ab",
+      "action_path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/server_attempt03/fixed_observation_gate/left_b_returned_action.npy",
+      "action_sha256": "23affa3ec37663ddc0d7f0e1f4fb044a9c489d5d806cea010deb45718899c743",
+      "clean_session": true,
+      "condition_role": "exact_repeat",
+      "dtype": "float32",
+      "effective_official_model_noise_seed": 1140,
+      "future_manifest": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/server_attempt03/futures/episode_001/future_manifest.json",
+      "future_manifest_sha256": "393559c044e79ad561764af7d725c506b83578eb4c3150b6196438ac05816625",
+      "latent_data_sha256": "74f26a87f4592d08b9ed09e0b4f46c9580856b463b9701b13404a7d6831ffb4b",
+      "latent_dtype": "torch.bfloat16",
+      "latent_path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/server_attempt03/futures/episode_001/request_0000_latent_video.pt",
+      "latent_sha256": "71c4dadd9ffe0eb0597933bc21f3d7954d4125635aecf9a9f4147b372d06e83c",
+      "latent_shape": [
+        1,
+        16,
+        3,
+        44,
+        80
+      ],
+      "official_decode_count": 1,
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "requested_relation": "left",
+      "returned_action": {
+        "definition": "Action tensor returned by the V2-A015 derived guidance path before the unchanged client normalization and eight-action execution horizon.",
+        "dtype": "float32",
+        "path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/server_attempt03/futures/episode_001/request_0000_official_action.npy",
+        "sha256": "23affa3ec37663ddc0d7f0e1f4fb044a9c489d5d806cea010deb45718899c743",
+        "shape": [
+          24,
+          8
+        ]
+      },
+      "sampling_seed_label": 8300,
+      "session_id": "dreamzero-v2-a015-s2-fixed-left_b",
+      "shape": [
+        24,
+        8
+      ]
+    },
+    "right": {
+      "action_data_sha256": "0b5784602cba783ef1d09c97a069d0426f64451780da07273185bc0636135e3e",
+      "action_path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/server_attempt03/fixed_observation_gate/right_returned_action.npy",
+      "action_sha256": "c396bddc23306b8506d953702de5be38feff49b6a6194b451783bfc6b7d6a0ac",
+      "clean_session": true,
+      "condition_role": "primary",
+      "dtype": "float32",
+      "effective_official_model_noise_seed": 1140,
+      "future_manifest": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/server_attempt03/futures/episode_002/future_manifest.json",
+      "future_manifest_sha256": "3796c24b881edf089459a4635d0f5cbe23fe0d578fd027f9c11602226b88acf2",
+      "latent_data_sha256": "c6b9a9f170ea3c20208e491ba86c5e29b8b24c77467f9bf5a08d4f72c1179b20",
+      "latent_dtype": "torch.bfloat16",
+      "latent_path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/server_attempt03/futures/episode_002/request_0000_latent_video.pt",
+      "latent_sha256": "6fd0c9a7c1dcf54498d55abc5e3693c5d07d3407415475ab35978d286bbcdf53",
+      "latent_shape": [
+        1,
+        16,
+        3,
+        44,
+        80
+      ],
+      "official_decode_count": 1,
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "requested_relation": "right",
+      "returned_action": {
+        "definition": "Action tensor returned by the V2-A015 derived guidance path before the unchanged client normalization and eight-action execution horizon.",
+        "dtype": "float32",
+        "path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/server_attempt03/futures/episode_002/request_0000_official_action.npy",
+        "sha256": "c396bddc23306b8506d953702de5be38feff49b6a6194b451783bfc6b7d6a0ac",
+        "shape": [
+          24,
+          8
+        ]
+      },
+      "sampling_seed_label": 8300,
+      "session_id": "dreamzero-v2-a015-s2-fixed-right",
+      "shape": [
+        24,
+        8
+      ]
+    }
+  },
+  "release_gate_passed": true,
+  "remote_host": "127.0.0.1",
+  "remote_port": 18021,
+  "sampling_seed_label": 8300,
+  "schema_version": "vla-wam-shared-v2-dreamzero-v2a015-fixed-observation-probe-v1",
+  "server_contract": {
+    "action_cfg_style_scale": 2.0,
+    "base_instrumented_server_sha256": "2b0a83e21ee921527a2d0fc5cb9344d0b1f5950ff88906fd441fac2421c5a95f",
+    "derived_instrumented_server_sha256": "5f9932acc77fe8fc80157622ef3e1db5b552bd31f322768330f2000f9af7d09d",
+    "patched_action_head_sha256": "65dc9873aef37563dedf3787fd7b59e0a6d50e575775e38b70edd9e38489f9b8",
+    "path": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/server_attempt03/futures/server_contract.json",
+    "schema_version": "vla-wam-shared-v2-dreamzero-v2a015-server-contract-v1",
+    "sha256": "3ecf45b2ba7ba8bd1623f71acad77db04e25ac959787e37f9215924592b07c70",
+    "source_patch_sha256": "de2b82a1c9f81ee4751fb384158775865f5e5e8fb622134cae3b2c4e8b2a2cc0"
+  },
+  "server_metadata": {
+    "action_space": "joint_position",
+    "image_resolution": [
+      180,
+      320
+    ],
+    "n_external_cameras": 2,
+    "needs_session_id": true,
+    "needs_stereo_camera": false,
+    "needs_wrist_camera": true
+  },
+  "status": "passed",
+  "video_cfg_scale": 5.0
+}

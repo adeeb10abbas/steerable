@@ -1,0 +1,30 @@
+{
+  "action_cfg_style_scale": 2.0,
+  "amendment_id": "V2-A015",
+  "base_instrumented_server_sha256": "2b0a83e21ee921527a2d0fc5cb9344d0b1f5950ff88906fd441fac2421c5a95f",
+  "derived_instrumented_server": "/data/users/ali/vla_wam/src/steerable/experiments/dreamzero_droid/v2a015_instrumented_server.py",
+  "derived_instrumented_server_sha256": "5f9932acc77fe8fc80157622ef3e1db5b552bd31f322768330f2000f9af7d09d",
+  "enable_dit_cache": true,
+  "evaluated_dit_steps_with_cache": 8,
+  "future_root": "/data/users/ali/vla_wam/raw/v3b/dreamzero_droid_action_cfg/mirror/server_attempt03/futures",
+  "guidance_branch": "released_fixed_visual_quality_negative_prompt",
+  "guidance_formula": "negative_action + scale * (conditional_action - negative_action)",
+  "model_path": "/data/users/ali/vla_wam/checkpoints/DreamZero-DROID-96ad344",
+  "negative_branch_caveat": "This is CFG-style negative-branch action guidance, not strict empty-text classifier-free guidance and not an official DreamZero action-CFG feature.",
+  "official_noise_seed": 1140,
+  "official_repository_commit": "ab790c198fbce33503358efbbd4187ce9a89adf3",
+  "patched_action_head": "/data/users/ali/vla_wam/external/DreamZero-v2a015-action-cfg/groot/vla/model/dreamzero/action_head/wan_flow_matching_action_tf.py",
+  "patched_action_head_sha256": "65dc9873aef37563dedf3787fd7b59e0a6d50e575775e38b70edd9e38489f9b8",
+  "port": 18021,
+  "runtime_num_inference_steps": 16,
+  "schema_version": "vla-wam-shared-v2-dreamzero-v2a015-server-contract-v1",
+  "source_patch": "/data/users/ali/vla_wam/src/steerable/experiments/dreamzero_droid/v2a015_action_cfg.patch",
+  "source_patch_sha256": "de2b82a1c9f81ee4751fb384158775865f5e5e8fb622134cae3b2c4e8b2a2cc0",
+  "tokenizer_path": "/data/users/ali/vla_wam/checkpoints/umt5-xxl-tokenizer-66cb9e7",
+  "video_cfg_scale": 5.0,
+  "visible_device_names": [
+    "NVIDIA B200",
+    "NVIDIA B200"
+  ],
+  "world_size": 2
+}

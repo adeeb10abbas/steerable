@@ -77,3 +77,26 @@ def test_dreamzero_registered_analysis_reuses_the_exact_mirror_design(tmp_path: 
     assert table["position_mirrored"]["left"]["successes"] == 27
     assert table["position_mirrored"]["right"]["successes"] == 27
     assert report["requested_margin_secondary"]["realized_seed_n"] == 0
+    assert report["condition_outcomes"]["control:left"] == {
+        "episodes": 27,
+        "successes": 0,
+        "failure_taxonomy_counts": {"transport_failed": 27},
+    }
+    primary = report["full_sample_primary"]
+    assert set(primary) == {
+        "population",
+        "formulas",
+        "D_by_arm",
+        "B_by_arm",
+        "J_redirection_interaction",
+        "I_position_reflection_interaction",
+        "binary_success_DiD",
+    }
+    assert primary["binary_success_DiD"]["cell_success_table_2x2"] == table
+    assert report["failure_taxonomy_counts"] == {
+        "correct": 81,
+        "pick_failed": 0,
+        "transport_failed": 27,
+        "wrong_side": 0,
+        "release_failed": 0,
+    }

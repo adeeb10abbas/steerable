@@ -1,0 +1,52 @@
+{
+  "schema_version": "vla-wam-shared-v3b005-nano-full-queue-launch-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B005",
+  "model_id": "cosmos3_nano_policy_droid",
+  "launched_at_utc": "2026-08-07T02:07:30Z",
+  "status_at_utc": "2026-08-07T02:10:43Z",
+  "status": "running_two_whole_seed_partitions",
+  "runtime_identity_sha256": "2aa9a2dbefa2fd24596fd97e5ac9084ed0745201be4ec801f3899a9c2982c022",
+  "behavioral_release_gate_sha256": "4a1524b773db9b64a78e8cc81105d81ec2ece76755162d52501d6b9fe4a44b39",
+  "behavior_server": {
+    "pod": "vla-wam-b200-single-ali",
+    "pod_uid": "ae6fe330-7efc-45a2-9666-95dadde0b706",
+    "pod_ip": "10.244.103.72",
+    "port": 18011,
+    "pid": 2590,
+    "process_group_id": 2590,
+    "mode": "behavior_only"
+  },
+  "progress_at_record": {
+    "compiled_valid_cells": 16,
+    "registered_cells": 210,
+    "bridge_failures": 0,
+    "whole_seed_smoke_cells": 14,
+    "remaining_cells_at_launch": 196
+  },
+  "lanes": [
+    {
+      "lane_index": 0,
+      "lane_count": 2,
+      "pod": "raytrace-rtxpro6000-ali",
+      "pod_uid": "d5b0405a-a9b1-4baa-a802-d5171e03c228",
+      "gpu_uuid": "GPU-f28bd513-a38a-b768-7589-d2959f814ae8",
+      "queue_pid": 286992,
+      "queue_process_group_id": 286992,
+      "assigned_seeds": [9500, 9502, 9504, 9506, 9508, 9510, 9512, 9514],
+      "resume_policy": "seed9500 cells are hash-validated and skipped; remaining assigned seeds run in complete 14-cell blocks"
+    },
+    {
+      "lane_index": 1,
+      "lane_count": 2,
+      "pod": "vla-wam-rtx-cosmos-ali",
+      "pod_uid": "b7ec6369-2ab7-42d6-a4ef-3fc549ca652a",
+      "gpu_uuid": "GPU-c2407ba3-cc0f-2456-5df4-8c968bfb8435",
+      "queue_pid": 310992,
+      "queue_process_group_id": 310992,
+      "assigned_seeds": [9501, 9503, 9505, 9507, 9509, 9511, 9513],
+      "resume_policy": "all assigned seeds run in complete 14-cell blocks"
+    }
+  ],
+  "raw_pvc_root": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/lateral_sweep_v3b005/behavior"
+}

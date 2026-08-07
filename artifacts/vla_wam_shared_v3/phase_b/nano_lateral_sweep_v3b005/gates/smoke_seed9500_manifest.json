@@ -1,0 +1,49 @@
+{
+  "schema_version": "vla-wam-shared-v3b005-nano-whole-seed-smoke-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B005",
+  "model_id": "cosmos3_nano_policy_droid",
+  "seed": 9500,
+  "status": "passed_full_seed_behavioral_smoke",
+  "runtime_identity_sha256": "2aa9a2dbefa2fd24596fd97e5ac9084ed0745201be4ec801f3899a9c2982c022",
+  "release_manifest_sha256": "47c426f13146591d1a0bde60136e124eb5818cd8d44ef312f0f8fa82ad1623a1",
+  "behavioral_release_gate_sha256": "4a1524b773db9b64a78e8cc81105d81ec2ece76755162d52501d6b9fe4a44b39",
+  "counts": {
+    "registered_cells": 14,
+    "valid_behavioral_cells": 14,
+    "valid_matched_pairs": 7,
+    "infrastructure_failures": 0,
+    "retained_future_requests": 107,
+    "retained_future_bytes": 3579600256,
+    "playable_viewport_videos": 14
+  },
+  "behavioral_summary": {
+    "left_success": "6/7",
+    "right_success": "7/7",
+    "failure_categories": {
+      "correct": 13,
+      "transport_failed": 1
+    },
+    "mean_requested_side_depth_m": {
+      "left": 0.12890147683875902,
+      "right": 0.26564555561968256
+    },
+    "action_distinct_pairs": "7/7",
+    "requested_endpoint_ordering_pairs": "7/7"
+  },
+  "video_validation": {
+    "decoder": "OpenCV VideoCapture",
+    "minimum_duration_s": 6.133,
+    "maximum_duration_s": 29.933,
+    "all_first_frames_decoded": true
+  },
+  "integrity": {
+    "episode_inventory_sha256": "d575c036226790ff14d839b911947ed66c8c10a7d9206732d32875e6cbdc6dab",
+    "pair_inventory_sha256": "c050d1efdc6f3f11b56c2d078f277694d95d5dec5da729a07480972b25ee098b",
+    "episode_inventory_definition": "Canonical JSON of sorted cell_id, raw JSONL SHA-256, batch-manifest SHA-256, reset-attestation SHA-256, and viewport-video SHA-256 records.",
+    "pair_inventory_definition": "Canonical JSON of sorted level_index and matched-pair-diagnostic SHA-256 records.",
+    "reset_action_future_hashes_verified": true
+  },
+  "raw_pvc_root": "/data/users/ali/vla_wam/raw/v3b/cosmos3_nano_policy_droid/lateral_sweep_v3b005/behavior",
+  "raw_evidence_policy": "Raw JSONL, action arrays, decoded futures, simulator state, and videos remain on the ali PVC and are not committed to Git."
+}

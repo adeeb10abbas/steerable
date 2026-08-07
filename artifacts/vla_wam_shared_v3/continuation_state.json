@@ -1,10 +1,10 @@
 {
   "schema_version": "vla-wam-shared-v3-continuation-v1",
   "study_id": "vla_wam_language_steerability_v3",
-  "updated_at_utc": "2026-08-06T22:54:57Z",
+  "updated_at_utc": "2026-08-07T03:11:00Z",
   "active_branch": "main",
-  "evidence_head": "011431f59465176cd5f73cdc0e14d67624315023",
-  "status": "nano_v3b005_physical_gate_passed_queue_hash_bound_runtime_gate_next_dreamzero_v3b003_gates_running",
+  "evidence_head": "dd967c30199b0ea208607f71a290fe2690953653",
+  "status": "phase_c_groot_and_edge_seed8500_smokes_valid_remaining_seed_queues_active_nano_unreleased",
   "authoritative_files": [
     "docs/VLA_WAM_V3_CONTINUATION.md",
     "docs/VLA_WAM_STEERABILITY_V3_PROTOCOL.md",
@@ -107,6 +107,14 @@
     "experiments/v3/cosmos_nano_lateral_sweep/model_blind_lateral_calibration.py",
     "tests/test_nano_v3b004_calibration_design.py",
     "handoff/k8s/vla-wam-nano-dose-ali.yaml",
+    "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/phase_c_v3c001_cells.jsonl",
+    "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/phase_c_v3c001_manifest.json",
+    "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/gates/groot_n17_droid_vla/release.json",
+    "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/gates/cosmos3_edge_policy_droid/release.json",
+    "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/smoke/groot_n17_droid_vla/evidence_manifest.json",
+    "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/smoke/cosmos3_edge_policy_droid/evidence_manifest.json",
+    "experiments/v3/phase_c_four_phrasings/run_groot_phase_c_queue.sh",
+    "experiments/v3/phase_c_four_phrasings/run_cosmos_phase_c_queue.sh",
     "tools/normalize_pi05_v3b002_infrastructure.py",
     "experiments/v3/pi05_phase_b/contract.py",
     "experiments/v3/pi05_phase_b/runtime.py",
@@ -122,7 +130,7 @@
     "v3": {
       "command": ".venv/bin/python tools/validate_vla_wam_v3_protocol.py",
       "status": "valid",
-      "check_count": 442
+      "check_count": 501
     },
     "v2": {
       "command": ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
@@ -143,6 +151,11 @@
       "command": ".venv/bin/python -m unittest tests.test_build_dreamzero_v3b003_registration",
       "status": "passed",
       "test_count": 4
+    },
+    "phase_c_behavioral_bridge_tests": {
+      "command": ".venv/bin/python -m pytest -q tests/test_phase_c_four_phrasings.py",
+      "status": "passed",
+      "test_count": 18
     }
   },
   "measurement_coverage_audit": {
@@ -852,9 +865,63 @@
       "unreleased": "Nano V3-B005 is hash-bound but not behaviorally released. DreamZero V3-B003 passed its independent release gate and its 108 cells are authorized but incomplete. V3-B004 failed closed before inference. Every other Phase-B confound ablation beyond completed Nano V3-B001 and pi0.5 V3-B002 requires its own frozen independent release path."
     },
     "phase_c_four_phrasings": {
-      "status": "not_released",
+      "status": "groot_and_edge_released_seed8500_smokes_valid_remaining_queues_active_nano_not_released",
       "registered_episode_count": 480,
-      "reason": "The wording block has independent byte-hash, repeat, and prompt-sensitivity release gates. Phase A does not release Phase C."
+      "released_episode_count": 320,
+      "completed_valid_behavioral_episode_count": 16,
+      "model_status": {
+        "groot_n17_droid_vla": {
+          "behavioral_release": true,
+          "completed_valid_behavioral_episodes": 8,
+          "completed_seed_blocks": [8500],
+          "active_seed_range": [8501, 8519],
+          "seed8500_requested_successes": 2,
+          "seed8500_valid_failures": 6,
+          "release": {
+            "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/gates/groot_n17_droid_vla/release.json",
+            "sha256": "bf564307b27f40b02e18b8e7dc930c697ace004918f52e3e9c1f7ab3b44470fa"
+          },
+          "smoke_evidence": {
+            "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/smoke/groot_n17_droid_vla/evidence_manifest.json",
+            "sha256": "ad3e823edc73a3a3c833d4138a1710dee74f4f675131d50319e260c7111136c9"
+          },
+          "active_queue": {
+            "pod": "lerobot-b200-4gpu-1-ali",
+            "pid": 884463,
+            "execution": "whole_seed_serial"
+          }
+        },
+        "cosmos3_edge_policy_droid": {
+          "behavioral_release": true,
+          "completed_valid_behavioral_episodes": 8,
+          "completed_seed_blocks": [8500],
+          "active_seed_range": [8501, 8519],
+          "seed8500_requested_successes": 7,
+          "seed8500_valid_failures": 1,
+          "seed8500_model_requests": 74,
+          "seed8500_decoded_futures_retained": 74,
+          "release": {
+            "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/gates/cosmos3_edge_policy_droid/release.json",
+            "sha256": "3d59285b364ab338224f8085770440f09f69f466b82024769a842d2f0ec6f1ae"
+          },
+          "smoke_evidence": {
+            "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/smoke/cosmos3_edge_policy_droid/evidence_manifest.json",
+            "sha256": "9aa043e1d2a88818f847d0719f9c3c4d8bb120532147db75bc3de9a12af52513"
+          },
+          "active_queue": {
+            "pod": "vla-wam-rtx-nano-ali",
+            "pid": 546011,
+            "execution": "one_client_per_server_serial",
+            "queue_log": "/data/users/ali/vla_wam/raw/v3c/phase_c_v3c001/cosmos3_edge_policy_droid/queue_seed8501_8519_attempt01.log"
+          }
+        },
+        "cosmos3_nano_policy_droid": {
+          "behavioral_release": false,
+          "completed_valid_behavioral_episodes": 0,
+          "reason": "Its 160 registered cells require an independent byte-hash, writer, repeat, and prompt-sensitivity release gate. Neither GR00T nor Edge release transfers to Nano."
+        }
+      },
+      "interpretation_boundary": "The complete seed-8500 blocks validate the two live behavioral bridges and are descriptive only. Population-level phrasing and direction inference requires the prospectively registered seeds 8501-8519."
     },
     "phase_d_stochastic_rollouts": {
       "status": "not_released",
@@ -879,7 +946,7 @@
       ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
       "git diff --check"
     ],
-    "inference_authority": "Do not rerun any valid Phase-A, V3-A002, Nano V3-B001, or pi0.5 V3-B002 cell. DreamZero V3-B003 passed its hash-bound four-lane physical and fresh fixed-observation release gate; run only its exact 108 registered cells and preserve whole-seed order. Nano V3-B004 failed closed with zero model requests and must never be run. Nano V3-B005 passed all 42 model-blind physical rows and its exact 210-cell queue is hash-bound; run only its fresh Nano runtime and fixed-observation release gate next, with no behavioral cells before that gate passes. No other Phase-B, Phase-C, or Phase-D cell is released. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or Phase C.",
+    "inference_authority": "Do not rerun any valid Phase-A, V3-A002, Nano V3-B001, pi0.5 V3-B002, or Phase-C seed-8500 cell. DreamZero V3-B003 passed its hash-bound four-lane physical and fresh fixed-observation release gate; run only its exact 108 registered cells and preserve whole-seed order. Nano V3-B004 failed closed with zero model requests and must never be run. Nano V3-B005 passed all 42 model-blind physical rows and its exact 210-cell queue is hash-bound; run only its fresh Nano runtime and fixed-observation release gate next, with no behavioral cells before that gate passes. Phase C is released only for the already active GR00T and Cosmos3 Edge seed-8501-8519 queues. Preserve whole-seed serial execution; Edge additionally requires one client per server and exact echoed sampling seeds. Cosmos3 Nano Phase C and all Phase D cells remain unreleased. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or Phase C.",
     "publication_note": "Use the compact result summaries and evidence manifests for analysis. Do not infer current study state from the older V2 article, gallery, figures, or chat history."
   }
 }

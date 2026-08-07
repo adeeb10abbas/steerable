@@ -7,7 +7,10 @@ position-reflection ablation were compiled. The separately preregistered π0.5
 V3-B002 scene-matched replication is also complete and hash-closed at 108/108
 valid episodes; its existing-log failure-mode split is complete. The
 five-checkpoint gap-versus-competence diagnostic is also complete and adds no
-new model inference. The
+new model inference. Phase C is now behaviorally released for GR00T N1.7 and
+Cosmos3 Edge. Each passed a complete seed-8500 behavioral smoke, and the
+remaining prospectively registered seeds 8501–8519 are running in independent
+model lanes. The
 machine-readable source of truth is
 [`continuation_state.json`](../artifacts/vla_wam_shared_v3/continuation_state.json).
 
@@ -593,10 +596,42 @@ must remain separate. It is complete and must not be rerun.
   108/108 exact cells. DreamZero V3-B003 passed its independent release gate;
   its 108 exact cells are authorized but incomplete. Every other Phase-B
   ablation remains unreleased.
-- Phase C: 480 registered episodes, not released; each wording requires its
-  independent byte-hash, repeat, and prompt-sensitivity gates.
+- Phase C: GR00T N1.7 and Cosmos3 Edge each passed their independent
+  byte-hash, raw-writer, exact-repeat, and four-form prompt-sensitivity gates.
+  Their complete seed-8500 behavioral smokes are valid evidence (eight exact
+  cells each), and seeds 8501–8519 are active in separate serial queues.
+  Cosmos3 Nano's 160 registered cells remain unreleased pending its own gate.
 - Phase D: not released; it requires an effective stochastic-seed probe for
   each exact runtime.
+
+### Phase-C live behavioral milestone (V3-C001)
+
+The wording experiment retains the four frozen prompt forms and both requested
+directions at each seed. GR00T and Edge were released separately and neither
+release transfers to Nano. Every seed is executed as one eight-cell block from
+an identical reset; failures remain behavioral evidence, and infrastructure
+attempts remain outside denominators.
+
+At seed 8500, GR00T completed **8/8 valid cells** with two requested successes
+and six valid failures. Cosmos3 Edge completed **8/8 valid cells** with seven
+requested successes and one `transport_failed` shortened-LEFT episode. Edge
+issued 74 model requests, executed 2,178 actions, retained eight decodable
+viewport videos, and retained all 74 exposed 33-frame decoded futures. These
+are bridge-validation smokes only: they do not support population-level claims
+about phrasing or requested direction before seeds 8501–8519 finish.
+
+| Phase-C smoke evidence | SHA-256 |
+| --- | --- |
+| [`GR00T smoke evidence manifest`](../artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/smoke/groot_n17_droid_vla/evidence_manifest.json) | `ad3e823edc73a3a3c833d4138a1710dee74f4f675131d50319e260c7111136c9` |
+| [`Cosmos3 Edge bridge preflight`](../artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/smoke/cosmos3_edge_policy_droid/behavioral_bridge_preflight_seed8500.json) | `653cc4b9f97f2dd3483a25c3e45c1aada9d34811fde413966e9488afc304baa1` |
+| [`Cosmos3 Edge task registration`](../artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/smoke/cosmos3_edge_policy_droid/live_task_registration_seed8500.json) | `18ed350c1bae953bf8e6c81f24218fc9c830c3f842cba8ae0cfacb2aa8aa321d` |
+| [`Cosmos3 Edge whole-seed smoke`](../artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/smoke/cosmos3_edge_policy_droid/whole_seed_smoke_seed8500.json) | `3b6c4946a21225249bbd441597062bb1444e26613e3ec417ee18cbbe8501533b` |
+| [`Cosmos3 Edge smoke evidence manifest`](../artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/smoke/cosmos3_edge_policy_droid/evidence_manifest.json) | `9aa043e1d2a88818f847d0719f9c3c4d8bb120532147db75bc3de9a12af52513` |
+
+The Edge queue runs exactly one client against its server at a time. Its atomic
+lock, echoed per-request seed, and retained action/future traces prevent
+cross-seed or concurrent-client mixing. Raw rollouts remain on the ali-owned
+PVC under `/data/users/ali/vla_wam/raw/v3c`; they are not committed to Git.
 
 ## Restart checklist
 
@@ -615,9 +650,11 @@ Do not rerun a valid Phase-A, V3-A002, Nano V3-B001, or π0.5 V3-B002 cell. Nano
 and π0.5 reflection cohorts are complete at 108/108 valid episodes; DreamZero
 V3-B003 is released but incomplete. Nano's three-block live snapshot is
 historical only. Use each completed cohort's final report,
-aggregate JSONL, and hash manifest for analysis. All other Phase-B, Phase-C,
-and Phase-D cells remain unreleased. Run DreamZero only through the exact
-hash-bound V3-B003 queue and release gate. Use the eight original committed
+aggregate JSONL, and hash manifest for analysis. All other Phase-B and Phase-D
+cells remain unreleased. For Phase C, continue only the already active GR00T
+and Cosmos3 Edge seed-8501–8519 queues; do not rerun either valid seed-8500
+block, and do not run Nano before its independent release gate. Run DreamZero
+only through the exact hash-bound V3-B003 queue and release gate. Use the eight original committed
 summary/evidence-manifest/infrastructure-ledger triplets plus the separate
 V3-A002 triplet under `artifacts/vla_wam_shared_v3/results/` for earlier
 completed-result analysis. Do not infer current experiment state from the older

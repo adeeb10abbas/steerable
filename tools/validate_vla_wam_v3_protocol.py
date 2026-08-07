@@ -4211,7 +4211,9 @@ def validate(root: Path) -> list[str]:
         "not historical recovery" in continuation_doc
         and "must remain separate" in continuation_doc
         and "must not be rerun" in continuation_doc
-        and "Phase C: 480 registered episodes, not released" in continuation_doc,
+        and "Phase C: GR00T N1.7 and Cosmos3 Edge" in continuation_doc
+        and "Cosmos3 Nano's 160 registered cells remain unreleased" in continuation_doc
+        and "do not support population-level claims" in continuation_doc,
         "V3 continuation preserves non-pooling, no-rerun, historical-blocker, and Phase-C boundaries",
         checks,
     )

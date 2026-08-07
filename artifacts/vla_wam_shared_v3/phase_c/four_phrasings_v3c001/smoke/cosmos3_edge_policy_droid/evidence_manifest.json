@@ -1,0 +1,129 @@
+{
+  "schema_version": "vla-wam-shared-v3c-cosmos-behavioral-smoke-evidence-v1",
+  "experiment_id": "V3-C001",
+  "model_id": "cosmos3_edge_policy_droid",
+  "seed": 8500,
+  "status": "whole_seed_behavioral_smoke_passed_remaining_seed_queue_released",
+  "counts": {
+    "registered_cells": 8,
+    "behavioral_episodes": 8,
+    "infrastructure_episodes": 0,
+    "requested_successes": 7,
+    "valid_behavioral_failures": 1,
+    "model_requests": 74,
+    "executed_actions": 2178,
+    "simulator_videos": 8,
+    "decoded_future_arrays": 74
+  },
+  "success_by_prompt_family": {
+    "short_command": {
+      "left": 0,
+      "right": 1
+    },
+    "direct_command": {
+      "left": 1,
+      "right": 1
+    },
+    "goal_as_outcome": {
+      "left": 1,
+      "right": 1
+    },
+    "desired_plus_negated_opposite": {
+      "left": 1,
+      "right": 1
+    }
+  },
+  "failure_taxonomy": {
+    "correct": 7,
+    "pick_failed": 0,
+    "transport_failed": 1,
+    "wrong_side": 0,
+    "release_failed": 0
+  },
+  "matched_reset": {
+    "initial_state_sha256": "d45adfd460a7e915189b9676b16fc081d125768a60f18ffdce17dd8b4da8bb0a",
+    "task_registration_cube_spread_m": 0.0,
+    "task_registration_bowl_spread_m": 0.0,
+    "left_predicate_at_reset": false,
+    "right_predicate_at_reset": false
+  },
+  "runtime_binding": {
+    "release_manifest_sha256": "3d59285b364ab338224f8085770440f09f69f466b82024769a842d2f0ec6f1ae",
+    "execution_plan_sha256": "65d5be917d23beeaae07727e6eeb2900df66bb4ac381abebba9dd7f395cad38d",
+    "runtime_identity_sha256": "f7fbd253a1719cf7243fd8fad9070060d2a9b31624c5e3ce4593d879a0d52b97",
+    "one_client_per_server": true,
+    "client_execution": "serial"
+  },
+  "raw_validation": {
+    "all_episode_jsonl_rows_schema_valid": true,
+    "all_action_arrays_shape_n_by_8": true,
+    "all_state_trace_rows_equal_actions_plus_one": true,
+    "all_viewport_videos_decodable": true,
+    "video_frame_counts": [
+      175,
+      256,
+      449,
+      229,
+      260,
+      337,
+      363,
+      101
+    ],
+    "action_counts": [
+      176,
+      257,
+      450,
+      230,
+      261,
+      338,
+      364,
+      102
+    ],
+    "decoded_future_count": 74,
+    "decoded_future_shape": [
+      33,
+      528,
+      640,
+      3
+    ],
+    "all_decoded_future_hashes_and_shapes_match_trace": true
+  },
+  "compact_files": {
+    "behavioral_bridge_preflight_seed8500.json": "653cc4b9f97f2dd3483a25c3e45c1aada9d34811fde413966e9488afc304baa1",
+    "live_task_registration_seed8500.json": "18ed350c1bae953bf8e6c81f24218fc9c830c3f842cba8ae0cfacb2aa8aa321d",
+    "whole_seed_smoke_seed8500.json": "3b6c4946a21225249bbd441597062bb1444e26613e3ec417ee18cbbe8501533b"
+  },
+  "raw_retention": {
+    "behavioral_root": "/data/users/ali/vla_wam/raw/v3c/behavioral/v3-c001/cosmos3_edge_policy_droid/seed8500",
+    "guard_root": "/data/users/ali/vla_wam/raw/v3c/phase_c_v3c001/cosmos3_edge_policy_droid/behavioral_seed8500_attempt03",
+    "retained_on_pvc": true,
+    "committed_to_git": false,
+    "contents": [
+      "eight viewport MP4s",
+      "eight executed-action arrays",
+      "seventy-four complete returned action chunks",
+      "seventy-four complete 33-frame decoded future arrays",
+      "eight complete state traces",
+      "eight schema-validated behavioral JSONL rows",
+      "thermal-process-group event log"
+    ]
+  },
+  "infrastructure_attempts": [
+    {
+      "attempt": "behavioral_seed8500_attempt01",
+      "behavioral_episode": false,
+      "included_in_denominator": false,
+      "blocker": "The initial client passed an unsupported open_loop_horizon constructor keyword to the pinned Cosmos base client and exited before any model request or action.",
+      "thermal_events_sha256": "ba3af8f0ba5789b0aa9c64b8444270841bc50fcea3721494ffe628275308af0c"
+    },
+    {
+      "attempt": "behavioral_seed8500_attempt02",
+      "behavioral_episode": false,
+      "included_in_denominator": false,
+      "blocker": "The same pre-request client-construction failure was preserved while Isaac shutdown obscured the originating exception; diagnostic output was repaired before the valid retry.",
+      "thermal_events_sha256": "30a4b00e8f70d26acd14ca60ec200d83bb52ea0c35dca3e323c0769f973375e2",
+      "single_client_lock_repair_sha256": "df50ed0075c3fb52d80e2577bf2b66da5a514dde024456b0745fda00d9afe3c7"
+    }
+  ],
+  "interpretation_boundary": "This one-seed smoke validates the serial prompt-aware action/future bridge and preserves descriptive outcomes. It does not support a population-level phrasing or direction claim; the prospectively registered seeds 8501-8519 remain required."
+}

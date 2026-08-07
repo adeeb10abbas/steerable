@@ -38,6 +38,8 @@ from experiments.v3.phase_c_four_phrasings.raw_write_preflight import run as run
 from experiments.v3.phase_c_four_phrasings.groot_behavioral_contract import (
     TASK_SPECS,
     prompt_condition,
+    validate_live_output_contract,
+    validate_live_task_registration,
     validate_task_sources,
 )
 
@@ -186,6 +188,82 @@ def test_groot_prompt_routing_uses_exact_bytes_and_retains_all_task_sources() ->
         prompt_condition("Put it left, not right.")
     hashes = validate_task_sources(ROOT)
     assert len(hashes) == 8 and all(len(value) == 64 for value in hashes.values())
+
+
+def test_groot_live_registration_and_output_paths_fail_closed(tmp_path: Path) -> None:
+    cells = []
+    registration_cells = []
+    for order, ((form, relation), (filename, task_name)) in enumerate(TASK_SPECS.items(), 1):
+        raw = tmp_path / f"cell-{order}"
+        prompt = PROMPTS[form][relation]
+        cell = {
+            "registered_cell_id": f"v3c001:droid:groot_n17_droid_vla:seed8500:{form}:{relation}",
+            "within_seed_execution_order": order,
+            "task_name": task_name,
+            "task_file": str(ROOT / "experiments/v3/phase_c_four_phrasings/groot_task_files" / filename),
+            "prompt": prompt,
+            "prompt_family": form,
+            "relation": relation,
+            "raw_cell_directory": str(raw),
+            "required_outputs": {
+                "behavioral_jsonl": str(raw / "episode.jsonl"),
+                "executed_actions": str(raw / "executed_actions.npy"),
+                "simulator_viewport_video": str(raw / "viewport.mp4"),
+                "state_trace": str(raw / "state_trace.jsonl"),
+                "decoded_future": "required_when_exposed_by_runtime",
+            },
+        }
+        cells.append(cell)
+        registration_cells.append({
+            "registered_cell_id": cell["registered_cell_id"],
+            "within_seed_execution_order": order,
+            "task_name": task_name,
+            "prompt": prompt,
+            "left_predicate_at_reset": False,
+            "right_predicate_at_reset": False,
+            "model_requests": 0,
+            "actions_executed": 0,
+        })
+        assert validate_live_output_contract(cell) == {
+            "behavioral_jsonl": raw / "episode.jsonl",
+            "executed_actions": raw / "executed_actions.npy",
+            "simulator_viewport_video": raw / "viewport.mp4",
+            "state_trace": raw / "state_trace.jsonl",
+        }
+    bridge_path = tmp_path / "bridge.json"
+    bridge_path.write_bytes(canonical_json_bytes({"seed": 8500, "cells": cells}))
+    registration_path = tmp_path / "registration.json"
+    registration_path.write_bytes(canonical_json_bytes({
+        "schema_version": "vla-wam-shared-v3c-groot-live-task-registration-v1",
+        "experiment_id": EXPERIMENT_ID,
+        "model_id": "groot_n17_droid_vla",
+        "seed": 8500,
+        "passed": True,
+        "model_request_count": 0,
+        "behavioral_episode_count": 0,
+        "executed_action_count": 0,
+        "renderer_initialized": True,
+        "matched_reset_tolerance_m": 0.003,
+        "max_cube_position_spread_m": 0.0,
+        "max_bowl_position_spread_m": 0.0,
+        "bridge_preflight": {
+            "path": str(bridge_path),
+            "sha256": sha256_file(bridge_path),
+        },
+        "cells": registration_cells,
+    }))
+    validate_live_task_registration(
+        bridge_preflight_path=bridge_path,
+        task_registration_path=registration_path,
+    )
+    bad = json.loads(registration_path.read_text())
+    bad["cells"][0]["prompt"] += " changed"
+    registration_path.write_bytes(canonical_json_bytes(bad))
+    with pytest.raises(ContractError, match="cell mismatch"):
+        validate_live_task_registration(
+            bridge_preflight_path=bridge_path,
+            task_registration_path=registration_path,
+        )
 
 
 def _release(

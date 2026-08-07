@@ -31,6 +31,20 @@ which contain both words.  It validates one indivisible randomized eight-cell
 seed block and the eight scorer-preserving task subclasses.  This slice still
 issues zero model requests: live execution remains fail-closed until the
 prompt-aware action/state/video writer is validated against that preflight.
+`groot_task_registration_preflight.py` is the next zero-action gate: it starts
+the real Isaac renderer, registers all eight task subclasses, performs only the
+two frozen initialization resets, verifies the exact prompt exposed by every
+environment, checks neutral/matched geometry, and closes without contacting the
+policy server.
+
+`groot_live_bridge.py` consumes both zero-request preflights and revalidates
+the release, execution-plan, runtime-repository, checkpoint, task-source, and
+fresh-output identities before Isaac starts.  It executes one indivisible
+eight-cell seed block in its registered order.  The writer defers opening a
+state stream until the first action so RoboLab's two initialization resets do
+not overwrite or masquerade as evidence; it then retains the second reset,
+every post-action state, exact-prompt action chunks/modalities, a decodable
+viewport MP4, and one validated v3 behavioral JSONL row per cell.
 
 Every release assertion must name its retained proof path and SHA-256. The runner recomputes those hashes, including the runtime-identity file, before it will produce a plan.
 

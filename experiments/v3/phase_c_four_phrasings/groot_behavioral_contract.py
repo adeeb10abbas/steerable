@@ -139,3 +139,90 @@ def validate_seed_block(
         "cells": task_rows,
         "execution_status": "prompt_aware_bridge_contract_ready_live_zero_action_registration_pending",
     }
+
+
+def validate_live_task_registration(
+    *, bridge_preflight_path: Path, task_registration_path: Path
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Validate the real-Isaac, zero-action task-registration gate."""
+
+    bridge = json.loads(bridge_preflight_path.read_text())
+    registration = json.loads(task_registration_path.read_text())
+    required_registration = {
+        "schema_version": "vla-wam-shared-v3c-groot-live-task-registration-v1",
+        "experiment_id": EXPERIMENT_ID,
+        "model_id": MODEL_ID,
+        "seed": bridge.get("seed"),
+        "passed": True,
+        "model_request_count": 0,
+        "behavioral_episode_count": 0,
+        "executed_action_count": 0,
+        "renderer_initialized": True,
+    }
+    for key, expected in required_registration.items():
+        if registration.get(key) != expected:
+            raise ContractError(f"GR00T live task-registration mismatch for {key}")
+    proof = registration.get("bridge_preflight", {})
+    if (
+        proof.get("path") != str(bridge_preflight_path)
+        or proof.get("sha256") != sha256_file(bridge_preflight_path)
+    ):
+        raise ContractError("GR00T live task-registration bridge proof changed")
+    if registration.get("max_cube_position_spread_m", 1.0) > registration.get(
+        "matched_reset_tolerance_m", 0.0
+    ) or registration.get("max_bowl_position_spread_m", 1.0) > registration.get(
+        "matched_reset_tolerance_m", 0.0
+    ):
+        raise ContractError("GR00T live task-registration resets are not matched")
+    bridge_cells = bridge.get("cells", [])
+    registration_cells = registration.get("cells", [])
+    if len(bridge_cells) != 8 or len(registration_cells) != 8:
+        raise ContractError("GR00T live task-registration requires all eight cells")
+    registered_by_id = {
+        row.get("registered_cell_id"): row for row in registration_cells
+    }
+    if len(registered_by_id) != 8:
+        raise ContractError("GR00T live task-registration contains duplicate cells")
+    for cell in bridge_cells:
+        observed = registered_by_id.get(cell.get("registered_cell_id"))
+        if observed is None:
+            raise ContractError("GR00T live task-registration is missing a planned cell")
+        expected = {
+            "within_seed_execution_order": cell["within_seed_execution_order"],
+            "task_name": cell["task_name"],
+            "prompt": cell["prompt"],
+            "left_predicate_at_reset": False,
+            "right_predicate_at_reset": False,
+            "model_requests": 0,
+            "actions_executed": 0,
+        }
+        for key, value in expected.items():
+            if observed.get(key) != value:
+                raise ContractError(
+                    f"GR00T live task-registration cell mismatch for "
+                    f"{cell['registered_cell_id']}.{key}"
+                )
+    return bridge, registration
+
+
+def validate_live_output_contract(cell: dict[str, Any], *, fresh: bool = True) -> dict[str, Path]:
+    """Resolve the four bounded raw outputs and reject path substitution."""
+
+    raw_dir = Path(cell["raw_cell_directory"])
+    required = cell.get("required_outputs", {})
+    expected = {
+        "behavioral_jsonl": raw_dir / "episode.jsonl",
+        "executed_actions": raw_dir / "executed_actions.npy",
+        "simulator_viewport_video": raw_dir / "viewport.mp4",
+        "state_trace": raw_dir / "state_trace.jsonl",
+    }
+    for key, path in expected.items():
+        if required.get(key) != str(path):
+            raise ContractError(
+                f"GR00T Phase-C output path changed for {cell['registered_cell_id']}.{key}"
+            )
+    if required.get("decoded_future") != "required_when_exposed_by_runtime":
+        raise ContractError("GR00T Phase-C future-retention contract changed")
+    if fresh and (raw_dir.exists() or any(path.exists() for path in expected.values())):
+        raise ContractError(f"refusing to overwrite retained Phase-C cell: {raw_dir}")
+    return expected

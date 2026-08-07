@@ -1,10 +1,10 @@
 {
   "schema_version": "vla-wam-shared-v3-continuation-v1",
   "study_id": "vla_wam_language_steerability_v3",
-  "updated_at_utc": "2026-08-07T08:01:00Z",
+  "updated_at_utc": "2026-08-07T08:59:24Z",
   "active_branch": "main",
-  "evidence_head": "b3c1188dc371106833868545909bb6cd1a3aa116",
-  "status": "phase_c_edge_and_nano_complete_groot_queue_active",
+  "evidence_head": "bd86ecb7018678da75ff26eb5390bd09b39ea257",
+  "status": "phase_c_all_three_complete_480_valid_behavioral_episodes",
   "authoritative_files": [
     "docs/VLA_WAM_V3_CONTINUATION.md",
     "docs/VLA_WAM_STEERABILITY_V3_PROTOCOL.md",
@@ -121,6 +121,14 @@
     "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_nano_policy_droid/cosmos3_nano_policy_droid_phase_c_episodes.jsonl",
     "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_nano_policy_droid/cosmos3_nano_policy_droid_phase_c_summary.json",
     "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_nano_policy_droid/cosmos3_nano_policy_droid_phase_c_evidence_manifest.json",
+    "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/groot_n17_droid_vla/groot_n17_droid_vla_phase_c_episodes.jsonl",
+    "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/groot_n17_droid_vla/groot_n17_droid_vla_phase_c_summary.json",
+    "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/groot_n17_droid_vla/groot_n17_droid_vla_phase_c_evidence_manifest.json",
+    "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/figures/phase_c_figure_manifest.json",
+    "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/figures/figure7_phase_c_phrasing_direction.png",
+    "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/figures/figure7_phase_c_phrasing_direction.svg",
+    "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/figures/figure7_phase_c_failure_taxonomy.png",
+    "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/figures/figure7_phase_c_failure_taxonomy.svg",
     "experiments/v3/phase_c_four_phrasings/run_groot_phase_c_queue.sh",
     "experiments/v3/phase_c_four_phrasings/run_cosmos_phase_c_queue.sh",
     "tools/finalize_v3c_cosmos_retained_seed.py",
@@ -146,7 +154,7 @@
     "v3": {
       "command": ".venv/bin/python tools/validate_vla_wam_v3_protocol.py",
       "status": "valid",
-      "check_count": 609
+      "check_count": 620
     },
     "v2": {
       "command": ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
@@ -169,9 +177,9 @@
       "test_count": 4
     },
     "phase_c_behavioral_bridge_tests": {
-      "command": ".venv/bin/python -m pytest -q tests/test_phase_c_four_phrasings.py",
+      "command": ".venv/bin/python -m pytest -q tests/test_compile_v3c_phase_c_results.py tests/test_render_v3c_phase_c_results.py tests/test_phase_c_four_phrasings.py",
       "status": "passed",
-      "test_count": 18
+      "test_count": 22
     },
     "checkpoint_provenance_tests": {
       "command": ".venv/bin/python -m unittest tests.test_v3_checkpoint_provenance",
@@ -1014,16 +1022,18 @@
       "unreleased": "V3-B004 failed closed before inference. DreamZero V3-B003 and Nano V3-B005 are complete and must not be rerun. Every other Phase-B confound ablation beyond completed Nano V3-B001, pi0.5 V3-B002, DreamZero V3-B003, and Nano V3-B005 requires its own frozen independent release path."
     },
     "phase_c_four_phrasings": {
-      "status": "cosmos3_edge_and_nano_complete_groot_queue_active",
+      "status": "all_three_models_complete_hash_closed",
       "registered_episode_count": 480,
       "released_episode_count": 480,
-      "completed_valid_behavioral_episode_count": 328,
+      "completed_valid_behavioral_episode_count": 480,
       "model_status": {
         "groot_n17_droid_vla": {
           "behavioral_release": true,
-          "completed_valid_behavioral_episodes": 8,
-          "completed_seed_blocks": [8500],
-          "active_seed_range": [8501, 8519],
+          "completed_valid_behavioral_episodes": 160,
+          "completed_seed_blocks": [8500, 8501, 8502, 8503, 8504, 8505, 8506, 8507, 8508, 8509, 8510, 8511, 8512, 8513, 8514, 8515, 8516, 8517, 8518, 8519],
+          "valid_behavioral_failures": 150,
+          "viewport_videos": 160,
+          "model_requests": 0,
           "seed8500_requested_successes": 2,
           "seed8500_valid_failures": 6,
           "release": {
@@ -1034,10 +1044,20 @@
             "path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/smoke/groot_n17_droid_vla/evidence_manifest.json",
             "sha256": "ad3e823edc73a3a3c833d4138a1710dee74f4f675131d50319e260c7111136c9"
           },
-          "active_queue": {
+          "completed_queue": {
             "pod": "lerobot-b200-4gpu-1-ali",
             "pid": 884463,
-            "execution": "whole_seed_serial"
+            "execution": "whole_seed_serial",
+            "queue_log": "/data/users/ali/vla_wam/raw/v3c/phase_c_v3c001/groot_n17_droid_vla/queue_seed8501_8519_attempt01.log",
+            "status": "natural_exit_after_complete_20_seed_queue"
+          },
+          "compact_result": {
+            "episodes": {"path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/groot_n17_droid_vla/groot_n17_droid_vla_phase_c_episodes.jsonl", "sha256": "fc73ba5e331d75a192971543f9c4c58ca127c60dc01c4df53b2824c7e899c3b0"},
+            "summary": {"path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/groot_n17_droid_vla/groot_n17_droid_vla_phase_c_summary.json", "sha256": "bbf3f69eeef579c01151ca9c30fcc757773904faccd9c7edd0a5376f56f4c755"},
+            "evidence_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/groot_n17_droid_vla/groot_n17_droid_vla_phase_c_evidence_manifest.json", "sha256": "2e10bbdd192823e52e3625aac36870fccf9ff400a4d8207530f2f26ca2a0b522"},
+            "successes_by_condition": {"direct_command:left": 1, "direct_command:right": 0, "short_command:left": 2, "short_command:right": 6, "goal_as_outcome:left": 0, "goal_as_outcome:right": 0, "desired_plus_negated_opposite:left": 1, "desired_plus_negated_opposite:right": 0},
+            "failure_taxonomy": {"correct": 10, "pick_failed": 143, "transport_failed": 6, "wrong_side": 1, "release_failed": 0},
+            "interpretation": "Exploratory wording result over 20 shared seeds. Every matched first-ten-action prefix differed and endpoint ordering followed the request in 14/20 direct, 15/20 shortened, 17/20 goal-statement, and 9/20 contrastive pairs, but only 10/160 episodes succeeded and 143/160 failed at pickup. The four forms are repeated measures, not 80 independent scenes."
           }
         },
         "cosmos3_edge_policy_droid": {
@@ -1116,7 +1136,8 @@
           }
         }
       },
-      "interpretation_boundary": "Cosmos3 Edge and Cosmos3 Nano are each complete at 160/160 prospectively registered behavioral episodes. Their four prompt forms share 20 scenes per model and must not be treated as 80 independent scenes. GR00T remains active; do not infer its population-level phrasing result until its complete compact cohort is hash-closed. DROID is never pooled with RoboTwin."
+      "figure_manifest": {"path": "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/figures/phase_c_figure_manifest.json", "sha256": "8405934c172096c1a380957fddc17535a774641fc2810b52b21ced55dca4106c"},
+      "interpretation_boundary": "GR00T N1.7, Cosmos3 Edge, and Cosmos3 Nano are each complete at 160/160 prospectively registered behavioral episodes, for 480/480 total. Their four prompt forms share 20 scenes per model and must not be treated as 80 independent scenes. Success and endpoint redirection remain separate diagnostics. DROID is never pooled with RoboTwin."
     },
     "phase_d_stochastic_rollouts": {
       "status": "not_released",
@@ -1141,7 +1162,7 @@
       ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
       "git diff --check"
     ],
-    "inference_authority": "Do not rerun any valid Phase-A, V3-A002, Nano V3-B001, pi0.5 V3-B002, DreamZero V3-B003, Nano V3-B005, Nano V3-B009, Cosmos3 Edge V3-C001, or Cosmos3 Nano V3-C001 cell. DreamZero V3-B003 and Nano V3-B009 are complete and hash-closed. Nano V3-B004 failed closed with zero model requests and must never be run. Nano V3-B005 is complete at 210/210 valid cells and is hash-closed. Continue only missing exact V3-B008 cells in its existing queue and the already running GR00T Phase-C queue. Preserve whole-seed serial execution and do not rerun complete seed blocks. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or another Phase-C model.",
+    "inference_authority": "Do not rerun any valid Phase-A, V3-A002, Nano V3-B001, pi0.5 V3-B002, DreamZero V3-B003, Nano V3-B005, Nano V3-B009, GR00T V3-C001, Cosmos3 Edge V3-C001, or Cosmos3 Nano V3-C001 cell. All three Phase-C models are complete at 160/160 valid cells and hash-closed. DreamZero V3-B003 and Nano V3-B009 are complete and hash-closed. Nano V3-B004 failed closed with zero model requests and must never be run. Nano V3-B005 is complete at 210/210 valid cells and is hash-closed. Continue only missing exact V3-B008 cells in its existing queue. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or another Phase-C model.",
     "publication_note": "Use the compact result summaries and evidence manifests for analysis. Do not infer current study state from the older V2 article, gallery, figures, or chat history."
   }
 }

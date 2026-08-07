@@ -7,10 +7,10 @@ position-reflection ablation were compiled. The separately preregistered π0.5
 V3-B002 scene-matched replication is also complete and hash-closed at 108/108
 valid episodes; its existing-log failure-mode split is complete. The
 five-checkpoint gap-versus-competence diagnostic is also complete and adds no
-new model inference. Phase C is behaviorally released for GR00T N1.7, Cosmos3
-Edge, and Cosmos3 Nano Policy DROID. Edge and Nano are each complete and
-hash-closed at 160/160 episodes; GR00T continues its remaining prospectively
-registered seeds in its independent model lane. The
+new model inference. Phase C is complete for GR00T N1.7, Cosmos3 Edge, and
+Cosmos3 Nano Policy DROID: all three independently released cohorts are
+hash-closed at 160/160 valid episodes, for 480/480 total prospectively
+registered Phase-C cells. The
 machine-readable source of truth is
 [`continuation_state.json`](../artifacts/vla_wam_shared_v3/continuation_state.json).
 
@@ -722,8 +722,8 @@ must remain separate. It is complete and must not be rerun.
   queue; every other Phase-B ablation remains unreleased.
 - Phase C: GR00T N1.7, Cosmos3 Edge, and Cosmos3 Nano each passed their independent
   byte-hash, raw-writer, exact-repeat, and four-form prompt-sensitivity gates.
-  Edge and Nano are each complete at 160/160 valid episodes; GR00T continues
-  in its separate serial queue.
+  All three cohorts are complete and hash-closed at 160/160 valid episodes;
+  none may be rerun.
 - Phase D: not released; it requires an effective stochastic-seed probe for
   each exact runtime.
 
@@ -786,6 +786,45 @@ not eliminate, matched endpoint redirection.
 | [`Summary`](../artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_nano_policy_droid/cosmos3_nano_policy_droid_phase_c_summary.json) | `0f134044065dc0f1501a91a69d8e9b10d0a13e9a4065a7c4d33f7854bab73ee9` |
 | [`Evidence manifest`](../artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_nano_policy_droid/cosmos3_nano_policy_droid_phase_c_evidence_manifest.json) | `16f2bcb1e7de10d9a5adb692a433809845517bee1466fb34589200f6bb9be530` |
 
+GR00T N1.7 is complete across the same 20 shared seeds and 160 valid
+behavioral episodes, with 160 viewport videos and no infrastructure episode in
+the denominator. Full-task competence remained near floor: direct instruction
+was **1/20 LEFT versus 0/20 RIGHT**; shortened instruction was **2/20 versus
+6/20**; goal statement was **0/20 versus 0/20**; and contrastive instruction
+was **1/20 versus 0/20**. Across the four repeated forms the descriptive totals
+are 4/80 LEFT and 6/80 RIGHT, not 80 independent scenes. The failure taxonomy
+localizes the dominant limitation: 143/160 episodes failed at pickup, with 10
+correct, 6 transport failures, 1 wrong-side failure, and no release failures.
+
+Language sensitivity nevertheless appeared in the actions and endpoints.
+Every first-ten-action prefix differed between matched LEFT and RIGHT
+conditions. Endpoint ordering followed the requested direction in 14/20
+direct pairs, 15/20 shortened pairs, 17/20 goal-statement pairs, and 9/20
+contrastive pairs. The corresponding median RIGHT-minus-LEFT endpoint shifts
+were -2.25 cm, -3.09 cm, -3.44 cm, and +1.08 cm; negative is aligned under the
+frozen sign convention. These diagnostics support prompt-conditioned behavior
+despite low task competence. They do not support a broad claim that GR00T
+reliably completed the requested placements.
+
+| Complete GR00T N1.7 Phase-C evidence | SHA-256 |
+| --- | --- |
+| [`Episodes`](../artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/groot_n17_droid_vla/groot_n17_droid_vla_phase_c_episodes.jsonl) | `fc73ba5e331d75a192971543f9c4c58ca127c60dc01c4df53b2824c7e899c3b0` |
+| [`Summary`](../artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/groot_n17_droid_vla/groot_n17_droid_vla_phase_c_summary.json) | `bbf3f69eeef579c01151ca9c30fcc757773904faccd9c7edd0a5376f56f4c755` |
+| [`Evidence manifest`](../artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/groot_n17_droid_vla/groot_n17_droid_vla_phase_c_evidence_manifest.json) | `2e10bbdd192823e52e3625aac36870fccf9ff400a4d8207530f2f26ca2a0b522` |
+
+The final three-checkpoint figure separates binary task success from paired
+endpoint response, prints the exact four prompt templates, and retains Wilson
+intervals. Its companion failure-taxonomy figure decomposes all 480 valid
+episodes. Both are DROID-only and must never be pooled with RoboTwin.
+
+| Phase-C final figures | SHA-256 |
+| --- | --- |
+| [`Phrasing × direction PNG`](../artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/figures/figure7_phase_c_phrasing_direction.png) | `41a2522e7b588e32266f4982aa753acb88139b6d81d266a85a988adb013eea2c` |
+| [`Phrasing × direction SVG`](../artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/figures/figure7_phase_c_phrasing_direction.svg) | `c7c64405ec94a6964d9c28bf07522a4dd4cfc06edcfac0334a4ff7854da7e893` |
+| [`Failure taxonomy PNG`](../artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/figures/figure7_phase_c_failure_taxonomy.png) | `df0f00fa1d57361e4d3fd7a601bc4c41ba55e0519dcc7488f9ae4d1a3617f3bf` |
+| [`Failure taxonomy SVG`](../artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/figures/figure7_phase_c_failure_taxonomy.svg) | `b12d3611462fc8ec453f4818b79f30096d71134eb8d7b0e9b28d90bc0dff1015` |
+| [`Figure manifest`](../artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/figures/phase_c_figure_manifest.json) | `8405934c172096c1a380957fddc17535a774641fc2810b52b21ced55dca4106c` |
+
 At seed 8500, GR00T completed **8/8 valid cells** with two requested successes
 and six valid failures. Cosmos3 Edge completed **8/8 valid cells** with seven
 requested successes and one `transport_failed` shortened-LEFT episode. Edge
@@ -796,8 +835,8 @@ also completed **8/8 valid cells**, with seven requested successes and one
 executed 1,581 actions, retained eight decodable viewport videos, and retained
 all 54 exposed 33-frame decoded futures with exact seed echoes. These retained
 seed-8500 records remain bridge-validation smokes and do not support
-population-level claims alone; the complete Edge and Nano cohorts above support
-their exploratory scope analyses. GR00T's population result remains pending.
+population-level claims alone; the complete GR00T, Edge, and Nano cohorts above
+support their exploratory scope analyses.
 
 Nano's live bridge completed all eight trajectories before deterministic
 packaging failed because the isolated source bundle omitted the shared JSONL
@@ -817,9 +856,10 @@ made zero model requests, executed zero actions, and did not rerun behavior.
 | [`Cosmos3 Nano whole-seed smoke`](../artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/smoke/cosmos3_nano_policy_droid/whole_seed_smoke_seed8500.json) | `8bf4d516bc0a7f2ef27a2f79546d1bcac4135343f2fa57181ae41ea8755370cd` |
 | [`Cosmos3 Nano smoke evidence manifest`](../artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/smoke/cosmos3_nano_policy_droid/evidence_manifest.json) | `5c2ca8e13e0529022acff53c232d5d2fa11873683d3be8f6bb97f2fec5473240` |
 
-The Edge and Nano queues each run exactly one client against their own server.
-Their atomic locks, echoed per-request seeds, and retained action/future traces
-prevent cross-seed or concurrent-client mixing. Raw rollouts remain on the
+The Edge and Nano queues each ran exactly one client against their own server;
+GR00T ran whole-seed serial blocks. Atomic locks, echoed per-request seeds for
+Cosmos, and retained action/future traces prevent cross-seed or concurrent-
+client mixing. Raw rollouts remain on the
 ali-owned PVC under `/data/users/ali/vla_wam/raw/v3c`; they are not committed
 to Git.
 
@@ -873,9 +913,9 @@ DreamZero V3-B003 cell. All three reflection cohorts are complete at 108/108
 valid episodes. Nano's three-block live snapshot is
 historical only. Use each completed cohort's final report,
 aggregate JSONL, and hash manifest for analysis. All other Phase-B and Phase-D
-cells remain unreleased. For Phase C, continue only the already active GR00T,
-Cosmos3 Edge, and Cosmos3 Nano seed-8501–8519 queues; do not rerun any valid
-seed-8500 block. Use the eight original committed
+cells remain unreleased. Phase C is complete at 480/480 valid episodes; do not
+rerun any GR00T, Cosmos3 Edge, or Cosmos3 Nano V3-C001 cell. Use the eight
+original committed
 summary/evidence-manifest/infrastructure-ledger triplets plus the separate
 V3-A002 triplet under `artifacts/vla_wam_shared_v3/results/` for earlier
 completed-result analysis. Do not infer current experiment state from the older

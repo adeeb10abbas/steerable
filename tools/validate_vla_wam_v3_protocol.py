@@ -48,6 +48,7 @@ REQUIRED = {
     "phase_c_test": "tests/test_phase_c_four_phrasings.py",
     "phase_c_edge_release": f"{V3}/phase_c/four_phrasings_v3c001/gates/cosmos3_edge_policy_droid/release.json",
     "phase_c_nano_release": f"{V3}/phase_c/four_phrasings_v3c001/gates/cosmos3_nano_policy_droid/release.json",
+    "phase_c_groot_release": f"{V3}/phase_c/four_phrasings_v3c001/gates/groot_n17_droid_vla/release.json",
     "phase_c_nano_smoke_preflight": f"{V3}/phase_c/four_phrasings_v3c001/smoke/cosmos3_nano_policy_droid/behavioral_bridge_preflight_seed8500.json",
     "phase_c_nano_smoke_registration": f"{V3}/phase_c/four_phrasings_v3c001/smoke/cosmos3_nano_policy_droid/live_task_registration_seed8500.json",
     "phase_c_nano_smoke_report": f"{V3}/phase_c/four_phrasings_v3c001/smoke/cosmos3_nano_policy_droid/whole_seed_smoke_seed8500.json",
@@ -65,6 +66,10 @@ REQUIRED = {
     "phase_c_nano_result_episodes": f"{V3}/phase_c/four_phrasings_v3c001/results/cosmos3_nano_policy_droid/cosmos3_nano_policy_droid_phase_c_episodes.jsonl",
     "phase_c_nano_result_summary": f"{V3}/phase_c/four_phrasings_v3c001/results/cosmos3_nano_policy_droid/cosmos3_nano_policy_droid_phase_c_summary.json",
     "phase_c_nano_result_manifest": f"{V3}/phase_c/four_phrasings_v3c001/results/cosmos3_nano_policy_droid/cosmos3_nano_policy_droid_phase_c_evidence_manifest.json",
+    "phase_c_groot_result_episodes": f"{V3}/phase_c/four_phrasings_v3c001/results/groot_n17_droid_vla/groot_n17_droid_vla_phase_c_episodes.jsonl",
+    "phase_c_groot_result_summary": f"{V3}/phase_c/four_phrasings_v3c001/results/groot_n17_droid_vla/groot_n17_droid_vla_phase_c_summary.json",
+    "phase_c_groot_result_manifest": f"{V3}/phase_c/four_phrasings_v3c001/results/groot_n17_droid_vla/groot_n17_droid_vla_phase_c_evidence_manifest.json",
+    "phase_c_figure_manifest": f"{V3}/phase_c/four_phrasings_v3c001/results/figures/phase_c_figure_manifest.json",
     "stochastic": f"{V3}/stochastic_rollout_registry.json",
     "confound_calibration": f"{V3}/confound_fixture_calibration_registry.json",
     "phase_a_queue": f"{V3}/phase_a_cells.jsonl",
@@ -1820,6 +1825,10 @@ def validate(root: Path) -> list[str]:
     phase_c_nano_result_episodes = load_jsonl(paths["phase_c_nano_result_episodes"])
     phase_c_nano_result_summary = load(paths["phase_c_nano_result_summary"])
     phase_c_nano_result_manifest = load(paths["phase_c_nano_result_manifest"])
+    phase_c_groot_result_episodes = load_jsonl(paths["phase_c_groot_result_episodes"])
+    phase_c_groot_result_summary = load(paths["phase_c_groot_result_summary"])
+    phase_c_groot_result_manifest = load(paths["phase_c_groot_result_manifest"])
+    phase_c_figure_manifest = load(paths["phase_c_figure_manifest"])
     stochastic_registry = load(paths["stochastic"])
     calibration_registry = load(paths["confound_calibration"])
     phase_a_manifest = load(paths["phase_a_manifest"])
@@ -5028,6 +5037,248 @@ def validate(root: Path) -> list[str]:
         )
         is False,
         "Cosmos3 Nano V3-C001 evidence manifest hash-binds the compact outputs and all 20 PVC-retained seed reports",
+        checks,
+    )
+    phase_c_groot_condition_counts = Counter(
+        (row.get("prompt_family"), row.get("relation"))
+        for row in phase_c_groot_result_episodes
+    )
+    phase_c_groot_episode_ids = {
+        row.get("registered_cell_id") for row in phase_c_groot_result_episodes
+    }
+    phase_c_groot_rows_valid = all(
+        row.get("schema_version") == "vla-wam-shared-v3c-compiled-episode-v1"
+        and row.get("experiment_id") == "V3-C001"
+        and row.get("model_id") == "groot_n17_droid_vla"
+        and row.get("seed") in range(8500, 8520)
+        and row.get("prompt_family") in EXACT_V2_WORDINGS
+        and row.get("relation") in {"left", "right"}
+        and row.get("prompt")
+        == EXACT_V2_WORDINGS[row["prompt_family"]][row["relation"]]
+        and row.get("failure_taxonomy")
+        in {"correct", "pick_failed", "transport_failed", "wrong_side", "release_failed"}
+        and row.get("requested_success")
+        == (row.get("failure_taxonomy") == "correct")
+        and row.get("initial_state_sha256")
+        == "d45adfd460a7e915189b9676b16fc081d125768a60f18ffdce17dd8b4da8bb0a"
+        and row.get("model_request_count") in {None, 0}
+        and row.get("decoded_future_shapes") == []
+        and row.get("video", {}).get("frame_count", 0) > 0
+        and {
+            "behavioral_jsonl",
+            "executed_actions",
+            "state_trace",
+            "viewport_video",
+        }.issubset(row.get("artifacts", {}))
+        and "decoded_future_trace" not in row.get("artifacts", {})
+        and all(
+            artifact.get("path", "").startswith("/data/users/ali/vla_wam/raw/v3c/")
+            and len(artifact.get("sha256", "")) == 64
+            and artifact.get("bytes", 0) > 0
+            for artifact in row.get("artifacts", {}).values()
+        )
+        for row in phase_c_groot_result_episodes
+    )
+    require(
+        len(phase_c_groot_result_episodes) == 160
+        and len(phase_c_groot_episode_ids) == 160
+        and phase_c_groot_condition_counts
+        == Counter(
+            {
+                (family, relation): 20
+                for family in EXACT_V2_WORDINGS
+                for relation in ("left", "right")
+            }
+        )
+        and phase_c_groot_rows_valid,
+        "GR00T N1.7 V3-C001 compact episodes preserve all 160 registered behavioral cells, exact prompts, raw hashes, actions, and videos",
+        checks,
+    )
+    phase_c_groot_expected_success = {
+        "desired_plus_negated_opposite:left": 1,
+        "desired_plus_negated_opposite:right": 0,
+        "direct_command:left": 1,
+        "direct_command:right": 0,
+        "goal_as_outcome:left": 0,
+        "goal_as_outcome:right": 0,
+        "short_command:left": 2,
+        "short_command:right": 6,
+    }
+    require(
+        phase_c_groot_result_summary.get("schema_version")
+        == "vla-wam-shared-v3c-model-summary-v1"
+        and phase_c_groot_result_summary.get("status")
+        == "complete_20_seed_160_behavioral_episode_result"
+        and phase_c_groot_result_summary.get("counts")
+        == {
+            "directions": 2,
+            "infrastructure_episodes_in_denominator": 0,
+            "matched_seeds": 20,
+            "model_requests": 0,
+            "prompt_families": 4,
+            "valid_behavioral_episodes": 160,
+            "valid_behavioral_failures": 150,
+            "viewport_videos": 160,
+        }
+        and {
+            condition: result.get("successes")
+            for condition, result in phase_c_groot_result_summary.get(
+                "success_by_condition", {}
+            ).items()
+        }
+        == phase_c_groot_expected_success
+        and phase_c_groot_result_summary.get("failure_taxonomy_overall")
+        == {
+            "correct": 10,
+            "pick_failed": 143,
+            "release_failed": 0,
+            "transport_failed": 6,
+            "wrong_side": 1,
+        }
+        and all(
+            paired.get("matched_seed_count") == 20
+            and paired.get("endpoint_shift_definition")
+            == "RIGHT-condition signed final lateral offset minus LEFT-condition signed final lateral offset; signed lateral is positive toward robot LEFT"
+            and paired.get("endpoint_ordering_aligned", 0)
+            + paired.get("endpoint_ordering_anti_aligned", 0)
+            + paired.get("endpoint_ordering_ties", 0)
+            == 20
+            and paired.get("first_10_executed_actions_distinct") == 20
+            for paired in phase_c_groot_result_summary.get(
+                "paired_diagnostics_by_prompt_family", {}
+            ).values()
+        ),
+        "GR00T N1.7 V3-C001 summary preserves the exploratory four-form success, failure, and matched-response statistics",
+        checks,
+    )
+    phase_c_groot_manifest_outputs = phase_c_groot_result_manifest.get(
+        "outputs", {}
+    )
+    phase_c_groot_report_provenance = phase_c_groot_result_manifest.get(
+        "source_whole_seed_reports", []
+    )
+    require(
+        phase_c_groot_result_manifest.get("schema_version")
+        == "vla-wam-shared-v3c-model-evidence-manifest-v1"
+        and phase_c_groot_result_manifest.get("status")
+        == "complete_20_seed_160_behavioral_episode_result"
+        and phase_c_groot_result_manifest.get("model_id") == "groot_n17_droid_vla"
+        and phase_c_groot_result_manifest.get("runtime_identity_sha256")
+        == "1c9515daaae3b7298310694bd5b9eb0ecdbffb5c71df747f5e1cb0d0e711be64"
+        and phase_c_groot_result_manifest.get("release_manifest_sha256")
+        == sha256(paths["phase_c_groot_release"])
+        and phase_c_groot_result_manifest.get("matched_initial_state_sha256")
+        == "d45adfd460a7e915189b9676b16fc081d125768a60f18ffdce17dd8b4da8bb0a"
+        and phase_c_groot_result_manifest.get("registration", {}).get("sha256")
+        == sha256(paths["phase_c_cells"])
+        and phase_c_groot_manifest_outputs.get(
+            paths["phase_c_groot_result_episodes"].name, {}
+        ).get("sha256")
+        == sha256(paths["phase_c_groot_result_episodes"])
+        and phase_c_groot_manifest_outputs.get(
+            paths["phase_c_groot_result_summary"].name, {}
+        ).get("sha256")
+        == sha256(paths["phase_c_groot_result_summary"])
+        and len(phase_c_groot_report_provenance) == 20
+        and {item.get("seed") for item in phase_c_groot_report_provenance}
+        == set(range(8500, 8520))
+        and all(
+            item.get("path", "").startswith(
+                "/data/users/ali/vla_wam/raw/v3c/phase_c_v3c001/groot_n17_droid_vla/"
+            )
+            and len(item.get("sha256", "")) == 64
+            and item.get("bytes", 0) > 0
+            for item in phase_c_groot_report_provenance
+        )
+        and phase_c_groot_result_manifest.get("raw_retention", {}).get(
+            "raw_outputs_retained_on_pvc"
+        )
+        is True
+        and phase_c_groot_result_manifest.get("raw_retention", {}).get(
+            "raw_outputs_committed_to_git"
+        )
+        is False,
+        "GR00T N1.7 V3-C001 evidence manifest hash-binds the compact outputs and all 20 PVC-retained seed reports",
+        checks,
+    )
+    phase_c_figure_inputs = (
+        phase_c_figure_manifest.get("input_episode_files", [])
+        + phase_c_figure_manifest.get("input_summaries", [])
+    )
+    phase_c_figure_outputs = phase_c_figure_manifest.get("outputs", [])
+    phase_c_figure_expected_outputs = {
+        f"{V3}/phase_c/four_phrasings_v3c001/results/figures/figure7_phase_c_phrasing_direction.png",
+        f"{V3}/phase_c/four_phrasings_v3c001/results/figures/figure7_phase_c_phrasing_direction.svg",
+        f"{V3}/phase_c/four_phrasings_v3c001/results/figures/figure7_phase_c_failure_taxonomy.png",
+        f"{V3}/phase_c/four_phrasings_v3c001/results/figures/figure7_phase_c_failure_taxonomy.svg",
+    }
+    require(
+        phase_c_figure_manifest.get("schema_version")
+        == "vla-wam-shared-v3c-figure-manifest-v1"
+        and phase_c_figure_manifest.get("experiment_id") == "V3-C001"
+        and len(phase_c_figure_manifest.get("input_episode_files", [])) == 3
+        and len(phase_c_figure_manifest.get("input_summaries", [])) == 3
+        and all(
+            (root / item.get("path", "")).is_file()
+            and item.get("sha256") == sha256(root / item["path"])
+            and item.get("bytes") == (root / item["path"]).stat().st_size
+            for item in phase_c_figure_inputs
+        )
+        and {item.get("path") for item in phase_c_figure_outputs}
+        == phase_c_figure_expected_outputs
+        and all(
+            (root / item.get("path", "")).is_file()
+            and item.get("sha256") == sha256(root / item["path"])
+            and item.get("bytes") == (root / item["path"]).stat().st_size
+            for item in phase_c_figure_outputs
+        )
+        and "separate diagnostics"
+        in phase_c_figure_manifest.get("interpretation_boundary", "")
+        and "never pooled"
+        in phase_c_figure_manifest.get("interpretation_boundary", ""),
+        "V3-C001 Figure 7 and failure taxonomy bind all three complete DROID cohorts and every PNG/SVG output",
+        checks,
+    )
+    phase_c_continuation = continuation.get("blocked_and_unreleased", {}).get(
+        "phase_c_four_phrasings", {}
+    )
+    phase_c_continuation_models = phase_c_continuation.get("model_status", {})
+    require(
+        continuation.get("status")
+        == "phase_c_all_three_complete_480_valid_behavioral_episodes"
+        and phase_c_continuation.get("status")
+        == "all_three_models_complete_hash_closed"
+        and phase_c_continuation.get("registered_episode_count") == 480
+        and phase_c_continuation.get("released_episode_count") == 480
+        and phase_c_continuation.get("completed_valid_behavioral_episode_count")
+        == 480
+        and all(
+            phase_c_continuation_models.get(model_id, {}).get(
+                "completed_valid_behavioral_episodes"
+            )
+            == 160
+            for model_id in (
+                "groot_n17_droid_vla",
+                "cosmos3_edge_policy_droid",
+                "cosmos3_nano_policy_droid",
+            )
+        )
+        and phase_c_continuation.get("figure_manifest", {}).get("sha256")
+        == sha256(paths["phase_c_figure_manifest"]),
+        "V3 continuation records Phase C complete and hash-closed at 480/480 valid behavioral episodes",
+        checks,
+    )
+    require(
+        all(
+            REQUIRED[name] in continuation.get("authoritative_files", [])
+            for name in (
+                "phase_c_groot_result_episodes",
+                "phase_c_groot_result_summary",
+                "phase_c_groot_result_manifest",
+                "phase_c_figure_manifest",
+            )
+        ),
+        "V3 continuation registers the complete GR00T cohort and final Phase-C figure manifest as authoritative",
         checks,
     )
     block = phases["D_16_rollout_stochastic_block"]

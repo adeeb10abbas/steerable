@@ -17,8 +17,12 @@ def main()->None:
  base=a.raw_root.resolve()/'V3-E003_pi05_symmetric'; results=[]
  for row in cells:
   cid=row['cell_id']; attempt=base/cid.replace(':','__')/'attempt01'
+  # A valid result may live in attempt02+ after retained infrastructure
+  # failures. Never rerun a registered cell merely because attempt01 exists.
+  valid_attempts=sorted((base/cid.replace(':','__')).glob('attempt*/raw_episode.jsonl'))
+  if valid_attempts:
+   results.append({'cell_id':cid,'status':'already_compiled','source':str(valid_attempts[0])}); continue
   if attempt.exists():
-   if (attempt/'raw_episode.jsonl').is_file(): results.append({'cell_id':cid,'status':'already_compiled'}); continue
    # Retain an infrastructure-invalid partial and advance to a fresh attempt.
    # A partial is never relabeled as a behavioral failure or overwritten.
    n=2

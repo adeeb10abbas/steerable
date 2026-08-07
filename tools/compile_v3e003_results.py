@@ -33,7 +33,11 @@ def main():
         except Exception: continue
         if not v.get("behavioral_result_valid"): continue
         v["source_raw_episode_sha256"]=sha(p); v["source_raw_episode_path"]=str(p); rows.append(v); sources.append({"path":str(p),"sha256":v["source_raw_episode_sha256"],"bytes":p.stat().st_size})
-    rows.sort(key=lambda x:(x["environment_seed"],x["requested_relation"]))
+    # Keep one registered cell only. Duplicate valid artifacts are retained as
+    # audit material but are excluded from denominators by first-attempt order.
+    unique={}
+    for v in sorted(rows,key=lambda x:(x["registered_cell_id"],x.get("source_raw_episode_path",""))): unique.setdefault(v["registered_cell_id"],v)
+    rows=list(unique.values()); rows.sort(key=lambda x:(x["environment_seed"],x["requested_relation"]))
     by={int(v["environment_seed"]):{} for v in rows}
     for v in rows: by[int(v["environment_seed"])][v["requested_relation"]]=v
     pairs=[by[s] for s in sorted(by) if set(by[s])=={"left","right"}]

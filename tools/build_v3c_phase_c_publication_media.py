@@ -160,7 +160,10 @@ def _base_canvas(
             -1,
         )
         put_text(canvas, f"PROMPT REQUESTS {relation}", (x0 + 18, 78), 0.42, color, 1)
-        lines = wrap_text(f'“{registered["prompt"]}”', PANEL_WIDTH - 36, 0.47, 1)
+        # OpenCV's built-in font is ASCII-only.  Render the registered prompt
+        # byte-for-byte without decorative Unicode quotation marks so the
+        # publication frame never substitutes visible replacement glyphs.
+        lines = wrap_text(registered["prompt"], PANEL_WIDTH - 36, 0.47, 1)
         require(len(lines) <= 3, f"prompt does not fit publication header: {registered['prompt']}")
         for line_index, line in enumerate(lines):
             put_text(canvas, line, (x0 + 18, 105 + 25 * line_index), 0.47, (27, 34, 37), 1)

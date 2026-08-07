@@ -14,6 +14,7 @@ from PIL import Image
 
 MANIFESTS = (
     "artifacts/vla_wam_shared_v3/analysis/paper_figures/figure1_nano_instrument_sensitivity.manifest.json",
+    "artifacts/vla_wam_shared_v3/analysis/paper_figures/figure2_three_checkpoint_position_reflection.manifest.json",
     "artifacts/vla_wam_shared_v3/analysis/paper_figures/figure5_cross_arena_directional_success.manifest.json",
 )
 

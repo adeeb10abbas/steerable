@@ -2,8 +2,8 @@
 """Build the compact, figure-led scientific report for the V3 study.
 
 The builder is intentionally fail-closed: it requires the completed three-model
-reflection figure and the completed three-model phrasing figure.  It never
-substitutes historical plots or partial experiment outputs.
+reflection and phrasing figures plus the released Tier-B stochastic and factor
+ablations. It never substitutes historical plots or partial experiment outputs.
 """
 
 from __future__ import annotations
@@ -61,6 +61,11 @@ SOURCES = {
     "failure": ROOT / "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/analysis/failure_mode_split_report.json",
     "competence": ROOT / "artifacts/vla_wam_shared_v3/analysis/mechanism/gap_vs_competence_report.json",
     "provenance": ROOT / "artifacts/vla_wam_shared_v3/prospective_tier_b/checkpoint_provenance/checkpoint_provenance_table.json",
+    "robotwin_mirror": ROOT / "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b007/fastwam_v3b007_summary.json",
+    "start_side": ROOT / "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b008/v3b008_summary.json",
+    "role_swap": ROOT / "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b009/v3b009_summary.json",
+    "stochastic_repeats": ROOT / "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3d001/pi05_v3d001_summary.json",
+    "base_rotation_gate": ROOT / "artifacts/vla_wam_shared_v3/prospective_tier_b/gates/v3b006/model_blind_structural_gate_failure.json",
 }
 
 PHASE_C_DIR = ROOT / "artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results"

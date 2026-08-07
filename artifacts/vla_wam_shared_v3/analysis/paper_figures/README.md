@@ -61,7 +61,8 @@ The adjacent manifest records every source, output, and renderer SHA-256.
 
 The compact landscape report uses Figures 1–7 in paper order and places each
 plot beside its finding, interpretation, and claim boundary. It fails closed
-until Figure 2 and all three 160-episode Phase-C summaries are complete:
+until Figure 2, all three 160-episode Phase-C summaries, and the released
+Tier-B stochastic/start-side/role-swap result bundles are complete:
 
 ```bash
 tmp/pdfs/.venv/bin/python tools/build_v3_scientific_report.py

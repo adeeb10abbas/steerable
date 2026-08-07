@@ -14,6 +14,14 @@ Before a model can run behavioral cells, its exact registered runtime must indep
 
 `fixed_observation_gate.py` evaluates retained probe responses. GR00T is action-only; Edge and Nano must repeat and change both actions and their exposed decoded futures. `runner.py` accepts only a complete model-specific release manifest and emits a whole-seed execution plan. A model-specific live bridge must consume that plan and preserve its order; this package deliberately does not retrofit the seed-8303 Phase-A adapters.
 
+`live_fixed_observation.py` is the zero-behavior live collector.  Its GR00T
+backend consumes the exact Phase-A neutral-observation NPZ; its Cosmos backend
+consumes the exact grounded image and source plan.  All returned arrays remain
+on the PVC as hash-bound `.npy` files.  The compact JSONL contains artifact
+references, never unbounded decoded-future pixels.  Evaluate that JSONL with
+`fixed_observation_gate.py`, then use `build_release.py`; the latter still
+requires an independent, zero-request raw video/action/state/JSONL write proof.
+
 Every release assertion must name its retained proof path and SHA-256. The runner recomputes those hashes, including the runtime-identity file, before it will produce a plan.
 
 The wording block remains exploratory under the committed V3 analysis plan. Confirmatory wording claims require a later prospective power and inference amendment made before Phase-C behavioral inference.

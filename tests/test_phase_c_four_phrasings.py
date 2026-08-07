@@ -31,6 +31,7 @@ from experiments.v3.phase_c_four_phrasings.fixed_observation_gate import (
     GateError,
     evaluate_records,
 )
+from experiments.v3.phase_c_four_phrasings.live_fixed_observation import _array_record
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -126,6 +127,16 @@ def test_cosmos_future_gate_is_mandatory_but_groot_is_action_only() -> None:
         evaluate_records(cosmos, model_id="cosmos3_edge_policy_droid")
     groot = _gate_records("groot_n17_droid_vla")
     assert evaluate_records(groot, model_id="groot_n17_droid_vla")["passed"] is True
+
+
+def test_fixed_observation_gate_accepts_hash_bound_npy_artifacts(tmp_path: Path) -> None:
+    records = _gate_records("cosmos3_edge_policy_droid")
+    for index, record in enumerate(records):
+        actions = tmp_path / f"actions-{index}.npy"
+        future = tmp_path / f"future-{index}.npy"
+        record["actions"] = _array_record(actions, __import__("numpy").asarray(record["actions"], dtype="float32"))
+        record["decoded_future"] = _array_record(future, __import__("numpy").asarray(record["decoded_future"], dtype="uint8"))
+    assert evaluate_records(records, model_id="cosmos3_edge_policy_droid")["passed"] is True
 
 
 def _release(

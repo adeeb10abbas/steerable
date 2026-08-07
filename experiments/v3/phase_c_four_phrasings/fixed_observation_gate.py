@@ -4,10 +4,13 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 from pathlib import Path
 from typing import Any, Iterable
+
+import numpy as np
 
 from .contract import (
     EXPERIMENT_ID,
@@ -26,7 +29,42 @@ class GateError(ValueError):
     """Raised when fixed-observation evidence is incomplete or malformed."""
 
 
+def _artifact_array(value: Any) -> np.ndarray | None:
+    """Load a hash-bound numeric ``.npy`` artifact when one is referenced.
+
+    Cosmos futures are tens of millions of pixels.  Requiring those arrays to
+    be copied into JSONL made the prospective gate needlessly large.  The live
+    collectors instead retain each array on the PVC and put its path, hash,
+    shape, and dtype in the compact response row.  Inline nested lists remain
+    supported for tests and small action-only probes.
+    """
+
+    if not isinstance(value, dict):
+        return None
+    required = {"path", "sha256", "shape", "dtype"}
+    if set(value) < required:
+        raise GateError("array artifact must name path, sha256, shape, and dtype")
+    path = Path(value["path"])
+    if not path.is_file():
+        raise GateError(f"retained array is missing: {path}")
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    if digest != value["sha256"]:
+        raise GateError(f"retained array hash mismatch: {path}")
+    try:
+        array = np.load(path, allow_pickle=False)
+    except Exception as error:  # pragma: no cover - numpy supplies details
+        raise GateError(f"cannot load retained array {path}: {error}") from error
+    if list(array.shape) != value["shape"] or str(array.dtype) != value["dtype"]:
+        raise GateError(f"retained array metadata mismatch: {path}")
+    if array.dtype.kind not in "fiu" or not np.isfinite(array).all():
+        raise GateError(f"retained array must contain finite numeric values: {path}")
+    return array
+
+
 def _flatten_numeric(value: Any) -> list[float]:
+    artifact = _artifact_array(value)
+    if artifact is not None:
+        return artifact.astype(np.float64, copy=False).ravel().tolist()
     if isinstance(value, bool) or not isinstance(value, (list, tuple)):
         raise GateError("response arrays must be nested lists of finite numbers")
     output: list[float] = []
@@ -147,4 +185,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

@@ -15,6 +15,10 @@ the raw request-file hashes. Nano decoded futures remain on the PVC; the
 compact report retains action summaries only. DreamZero's first pass (112
 infrastructure-invalid rows caused by an incorrect OpenPI-style client
 coercion) is preserved separately and excluded from the denominator.
+The prompt-to-noise diagnostic is checkpoint-specific: DreamZero's measured
+same-prompt cross-seed RMS is zero (so the relative ratio is unbounded), while
+π0.5 and Nano report nonzero same-prompt variation and their ratios are listed
+without pooling action scales across model families.
 
 ## Counts
 

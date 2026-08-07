@@ -157,7 +157,8 @@
     "tools/compile_v3e001_prompt_noise.py",
     "experiments/v3/phase_e/model_blind_ik_gate.py",
     "tools/compile_v3e002_reference_controller.py",
-    "experiments/v3/phase_e/reference_controller_runner.py"
+    "experiments/v3/phase_e/reference_controller_runner.py",
+    "artifacts/vla_wam_shared_v3/phase_e/fixed_observation_prompt_noise_v3e001/evidence_manifest.json"
   ],
   "blocked_and_unreleased": {
     "phase_b_confounds": {
@@ -2020,6 +2021,7 @@
       "status": "complete_hash_closed_27_seed_108_episode_result_no_rerun"
     }
   },
+  "phase_e_status": "phase_e_e001_336_valid_requests_e002_108_valid_model_blind_diagnostics",
   "prospective_tier_b_results": {
     "v3b008_nano_start_side": {
       "amendment_id": "V3-B008",
@@ -2212,7 +2214,7 @@
     "supported": "Across every completed checkpoint, matched LEFT/RIGHT prompts changed executed traces; endpoint ordering was often aligned, but requested task completion and failure mode remained strongly checkpoint- and direction-dependent. In the separate V3-A002 public old-name-config bridge, all 20 common action prefixes differed and 16/20 endpoints aligned, yet success was 0/20 LEFT versus 12/20 RIGHT. Nano V3-B001, pi0.5 V3-B002, and DreamZero V3-B003 are completed scene-matched positions-only ablations. For pi0.5, reflection left endpoint redirection nearly unchanged (interaction mean -1.12 cm, 95% CI -7.81 to +5.68 cm, sign-test p=0.701) but reversed requested-side depth (interaction mean -34.59 cm, 95% CI -41.38 to -28.46 cm; 27/27 negative, p=1.49e-08) and binary success from control 4/27 LEFT versus 25/27 RIGHT to reflected 25/27 LEFT versus 9/27 RIGHT (mean DiD -1.370, exact p=5.96e-08). DreamZero reflection improved total success from 13/54 to 50/54 and changed depth (interaction mean -14.09 cm, 95% CI -19.92 to -8.19 cm, sign-test p=0.000311), while its binary success-gap DiD was not significant (p=0.581). In V3-D001, pi0.5 succeeded in 41/216 LEFT and 197/216 RIGHT stochastic rollouts; every one of 27 fixed scenes had a positive estimated p(RIGHT)-p(LEFT) gap (mean +0.722, 95% environment-seed cluster-bootstrap CI +0.676 to +0.769, exact sign-test p=1.49e-08).",
     "unit_warning": "RoboTwin sampling replicates are nested within seven scenes; they are not 63 independent scenes. V3-D001's 432 pi0.5 episodes are eight repeated policy samples nested within 54 fixed scene-direction conditions; the primary inferential unit is the 27 environment seeds."
   },
-  "status": "phase_e_e001_336_valid_requests_e002_108_valid_model_blind_diagnostics",
+  "status": "phase_c_all_three_complete_480_valid_behavioral_episodes",
   "storage": {
     "checkpoints_root": "/data/users/ali/vla_wam/checkpoints",
     "environments_root": "/data/users/ali/vla_wam/envs",

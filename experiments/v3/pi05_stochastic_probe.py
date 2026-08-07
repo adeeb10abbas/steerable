@@ -25,6 +25,7 @@ REGISTRATION_ID = "V3-D001"
 MODEL_ID = "pi05_current_stack_droid"
 REGISTRATION_SHA256 = "899a52c79355919210d56fa8f31d944f8a373e1e184650ee8974d62acfd6c788"
 PHASE_D_REGISTRY_SHA256 = "e319f8dcaefa6803ca46989313ba737834eef1dd531c1898aeee5fa816a28ad9"
+SCOPE_CORRECTION_SHA256 = "b8969639a1c45f5fd8981c5e053f170a8a6ddac5ae7ffd2185e08ff40f751b9e"
 RUNTIME_SCHEMA = "vla-wam-shared-v3d001-pi05-runtime-attestation-v1"
 ACTION_SHAPE = (15, 8)
 SEED_INDICES = tuple(range(8))
@@ -68,10 +69,13 @@ def validate_inputs(args: argparse.Namespace) -> tuple[dict[str, np.ndarray], di
     root = args.study_root.resolve()
     registration_path = root / "artifacts/vla_wam_shared_v3/prospective_tier_b/pi05_stochastic_eligibility_v3d001.json"
     phase_d_path = root / "artifacts/vla_wam_shared_v3/stochastic_rollout_registry.json"
+    correction_path = root / "artifacts/vla_wam_shared_v3/prospective_tier_b/pi05_stochastic_v3d001_eight_repeat_correction.json"
     if sha256_file(registration_path) != REGISTRATION_SHA256:
         raise ProbeError("V3-D001 registration hash changed")
     if sha256_file(phase_d_path) != PHASE_D_REGISTRY_SHA256:
         raise ProbeError("Phase-D stochastic registry hash changed")
+    if sha256_file(correction_path) != SCOPE_CORRECTION_SHA256:
+        raise ProbeError("V3-D001 eight-repeat correction hash changed")
     registration = load_json(registration_path, "V3-D001 registration")
     if (
         registration.get("registration_id") != REGISTRATION_ID
@@ -95,6 +99,7 @@ def validate_inputs(args: argparse.Namespace) -> tuple[dict[str, np.ndarray], di
         "checkpoint_hash_gate_passed": True,
         "registration_sha256": REGISTRATION_SHA256,
         "phase_d_registry_sha256": PHASE_D_REGISTRY_SHA256,
+        "scope_correction_sha256": SCOPE_CORRECTION_SHA256,
     }
     for key, wanted in expected_runtime.items():
         if runtime.get(key) != wanted:
@@ -237,6 +242,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "behavioral_episode_count": 0,
         "registration_sha256": REGISTRATION_SHA256,
         "phase_d_registry_sha256": PHASE_D_REGISTRY_SHA256,
+        "scope_correction_sha256": SCOPE_CORRECTION_SHA256,
         "runtime_attestation": {
             "path": str(args.runtime_attestation.resolve()),
             "sha256": args.runtime_attestation_sha256,
@@ -260,7 +266,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "rows": request_index,
         },
         "release_boundary": (
-            "Eligible result permits construction of a separate hash-bound 16-rollout-per-condition registry; this probe itself releases and executes zero behavior."
+            "Eligible result permits construction of a separate hash-bound 8-rollout-per-condition, 432-cell registry; this probe itself releases and executes zero behavior."
             if passed else
             "Ineligible result permanently closes V3-D001 behavior at zero stochastic episodes."
         ),

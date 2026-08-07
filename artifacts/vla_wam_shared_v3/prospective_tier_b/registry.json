@@ -2,7 +2,7 @@
   "schema_version": "vla-wam-shared-v3-prospective-tier-b-registry-v1",
   "study_id": "vla_wam_language_steerability_v3",
   "recorded_at_utc": "2026-08-07T02:46:00Z",
-  "status": "five_designs_and_one_provenance_schema_registered_zero_behavioral_release",
+  "status": "five_designs_one_scope_correction_and_one_provenance_schema_registered_zero_behavioral_release",
   "behavioral_cells_authorized_by_this_registry": 0,
   "model_requests_authorized_by_this_registry": 0,
   "registrations": [
@@ -13,6 +13,14 @@
       "bytes": 2585,
       "sha256": "899a52c79355919210d56fa8f31d944f8a373e1e184650ee8974d62acfd6c788",
       "next_gate": "exact-runtime fixed-observation effective-seed probe"
+    },
+    {
+      "id": "V3-D001-scope-correction-001",
+      "kind": "pi0.5 checkpoint-specific eight-repeat correction",
+      "path": "artifacts/vla_wam_shared_v3/prospective_tier_b/pi05_stochastic_v3d001_eight_repeat_correction.json",
+      "bytes": 2516,
+      "sha256": "b8969639a1c45f5fd8981c5e053f170a8a6ddac5ae7ffd2185e08ff40f751b9e",
+      "next_gate": "regenerate zero-request runtime attestation, then run the exact 32-request effective-seed probe"
     },
     {
       "id": "V3-B006",

@@ -1,0 +1,41 @@
+{
+  "schema_version": "vla-wam-shared-v3d001-pi05-stochastic-eight-repeat-correction-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "registration_id": "V3-D001",
+  "recorded_at_utc": "2026-08-07T04:25:00Z",
+  "status": "prospective_scope_correction_before_any_model_request_or_behavior",
+  "reason": "The latest user-authored Tier-B brief explicitly requires eight stochastic rollouts per fixed (scene, direction) condition. The older global Phase-D registry specifies sixteen. This checkpoint-specific correction gives the latest explicit brief precedence without rewriting either historical artifact.",
+  "supersedes_for_pi05_only": {
+    "source": "artifacts/vla_wam_shared_v3/stochastic_rollout_registry.json",
+    "source_sha256": "e319f8dcaefa6803ca46989313ba737834eef1dd531c1898aeee5fa816a28ad9",
+    "field": "shared_sampling_seed_indices",
+    "old_value": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+    "new_value": [0, 1, 2, 3, 4, 5, 6, 7]
+  },
+  "corrected_conditional_release": {
+    "model_id": "pi05_current_stack_droid",
+    "arena": "droid_robolab",
+    "phase_a_scene_seed_count": 27,
+    "directions_per_scene": 2,
+    "stochastic_rollouts_per_fixed_scene_direction": 8,
+    "behavioral_episode_ceiling_if_effective_seed_gate_passes": 432,
+    "shared_policy_sampling_seed_indices": [0, 1, 2, 3, 4, 5, 6, 7],
+    "analysis_unit": "Policy-sampling rollout nested within fixed (scene, direction); never an independent scene."
+  },
+  "unchanged": [
+    "V3-D001 uses eight candidate seed indices for the fixed-observation effectiveness probe",
+    "same scene/reset, prompt bytes, runtime, controller, scorer, and artifact contract within every condition",
+    "every valid behavioral failure stays in the denominator",
+    "infrastructure-invalid and partial attempts remain separate",
+    "DROID and RoboTwin remain separate"
+  ],
+  "accounting_at_correction": {
+    "pi05_model_requests": 0,
+    "pi05_behavioral_episodes": 0,
+    "pi05_behavioral_cells_released": 0,
+    "invalid_runtime_attestation_attempts": 2,
+    "valid_runtime_attestations": 1,
+    "note": "The valid pre-load attestation is superseded and must be regenerated after this correction is hash-bound; it did not load the model or issue a request."
+  },
+  "release_boundary": "No pi0.5 stochastic behavior is released by this correction. The exact-runtime effective-seed probe must pass in both full prompt directions, after which a separate 432-cell queue release may be generated and hash-validated."
+}

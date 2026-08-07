@@ -7,6 +7,7 @@ from tools.release_pi05_v3d001_stochastic_queue import (
     PHASE_D_SHA256,
     PROMPTS,
     REGISTRATION_SHA256,
+    SCOPE_CORRECTION_SHA256,
     build,
     sha256_file,
 )
@@ -22,7 +23,7 @@ class Args:
     output_dir: Path
 
 
-def test_exact_phase_d_queue_is_27_by_2_by_16(tmp_path: Path) -> None:
+def test_corrected_phase_d_queue_is_27_by_2_by_8(tmp_path: Path) -> None:
     report = {
         "schema_version": "vla-wam-shared-v3d001-pi05-stochastic-eligibility-result-v1",
         "study_id": "vla_wam_language_steerability_v3",
@@ -34,6 +35,7 @@ def test_exact_phase_d_queue_is_27_by_2_by_16(tmp_path: Path) -> None:
         "behavioral_episode_count": 0,
         "registration_sha256": REGISTRATION_SHA256,
         "phase_d_registry_sha256": PHASE_D_SHA256,
+        "scope_correction_sha256": SCOPE_CORRECTION_SHA256,
         "sampling_seed_indices": list(range(8)),
         "exact_prompts": PROMPTS,
         "direction_metrics": {"left": {"passed": True}, "right": {"passed": True}},
@@ -56,10 +58,9 @@ def test_exact_phase_d_queue_is_27_by_2_by_16(tmp_path: Path) -> None:
     args.output_dir = tmp_path / "release"
     result = build(args)
     rows = [json.loads(line) for line in Path(result["queue"]).read_text().splitlines()]
-    assert len(rows) == 864
-    assert len({row["cell_id"] for row in rows}) == 864
+    assert len(rows) == 432
+    assert len({row["cell_id"] for row in rows}) == 432
     assert {row["environment_seed"] for row in rows} == set(range(8303, 8330))
-    assert {row["shared_policy_sampling_seed_index"] for row in rows} == set(range(16))
+    assert {row["shared_policy_sampling_seed_index"] for row in rows} == set(range(8))
     assert {row["requested_relation"] for row in rows} == {"left", "right"}
     assert all(row["behavioral_status"] == "authorized_not_launched" for row in rows)
-

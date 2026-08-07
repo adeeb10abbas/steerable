@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Release the exact 864-cell pi0.5 Phase-D queue after V3-D001 passes."""
+"""Release the corrected exact 432-cell pi0.5 stochastic queue after V3-D001."""
 
 from __future__ import annotations
 
@@ -14,13 +14,14 @@ STUDY_ID = "vla_wam_language_steerability_v3"
 MODEL_ID = "pi05_current_stack_droid"
 REGISTRATION_SHA256 = "899a52c79355919210d56fa8f31d944f8a373e1e184650ee8974d62acfd6c788"
 PHASE_D_SHA256 = "e319f8dcaefa6803ca46989313ba737834eef1dd531c1898aeee5fa816a28ad9"
+SCOPE_CORRECTION_SHA256 = "b8969639a1c45f5fd8981c5e053f170a8a6ddac5ae7ffd2185e08ff40f751b9e"
 PHASE_A_SUMMARY_SHA256 = "5c6d07fca7a0d20ab8b757f028d469f864c78a1c43ffedc3d257a16caef2a02b"
 PROMPTS = {
     "left": "Put the Rubik's cube to the left of the bowl.",
     "right": "Put the Rubik's cube to the right of the bowl.",
 }
 SEEDS = tuple(range(8303, 8330))
-SAMPLING_INDICES = tuple(range(16))
+SAMPLING_INDICES = tuple(range(8))
 
 
 class ReleaseError(ValueError):
@@ -64,6 +65,7 @@ def validate_eligibility(report_path: Path, manifest_path: Path) -> tuple[dict[s
         "behavioral_episode_count": 0,
         "registration_sha256": REGISTRATION_SHA256,
         "phase_d_registry_sha256": PHASE_D_SHA256,
+        "scope_correction_sha256": SCOPE_CORRECTION_SHA256,
         "sampling_seed_indices": list(range(8)),
         "exact_prompts": PROMPTS,
     }
@@ -115,8 +117,13 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
     root = args.study_root.resolve()
     registration = root / "artifacts/vla_wam_shared_v3/prospective_tier_b/pi05_stochastic_eligibility_v3d001.json"
     phase_d = root / "artifacts/vla_wam_shared_v3/stochastic_rollout_registry.json"
+    correction = root / "artifacts/vla_wam_shared_v3/prospective_tier_b/pi05_stochastic_v3d001_eight_repeat_correction.json"
     summary_path = root / "artifacts/vla_wam_shared_v3/results/pi05_current_stack_droid_phase_a_summary.json"
-    if sha256_file(registration) != REGISTRATION_SHA256 or sha256_file(phase_d) != PHASE_D_SHA256:
+    if (
+        sha256_file(registration) != REGISTRATION_SHA256
+        or sha256_file(phase_d) != PHASE_D_SHA256
+        or sha256_file(correction) != SCOPE_CORRECTION_SHA256
+    ):
         raise ReleaseError("prospective V3-D001/Phase-D binding changed")
     report, manifest = validate_eligibility(args.eligibility_report.resolve(), args.eligibility_manifest.resolve())
     sources = phase_a_cells(summary_path)
@@ -155,36 +162,38 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
                     "eligibility_manifest_sha256": sha256_file(args.eligibility_manifest),
                     "registration_sha256": REGISTRATION_SHA256,
                     "phase_d_registry_sha256": PHASE_D_SHA256,
+                    "scope_correction_sha256": SCOPE_CORRECTION_SHA256,
                     "phase_a_summary_sha256": PHASE_A_SUMMARY_SHA256,
                     "behavioral_status": "authorized_not_launched",
                     "analysis_unit": "policy-sampling rollout nested within condition; not an independent scene",
                 }
                 row["cell_sha256"] = sha256_bytes(canonical_json_bytes(row))
                 rows.append(row)
-    if len(rows) != 864 or len({row["cell_id"] for row in rows}) != 864:
-        raise ReleaseError("Phase-D release must contain exactly 864 unique cells")
+    if len(rows) != 432 or len({row["cell_id"] for row in rows}) != 432:
+        raise ReleaseError("Corrected Phase-D release must contain exactly 432 unique cells")
     queue_path = args.output_dir / "pi05_v3d001_stochastic_cells.jsonl"
     queue_path.write_text("".join(json.dumps(row, allow_nan=False, sort_keys=True, separators=(",", ":")) + "\n" for row in rows), encoding="utf-8")
     amendment = {
-        "schema_version": "vla-wam-shared-v3d001-pi05-stochastic-release-v1",
+        "schema_version": "vla-wam-shared-v3d001-pi05-stochastic-eight-repeat-release-v1",
         "study_id": STUDY_ID,
         "registration_id": "V3-D001",
         "model_id": MODEL_ID,
         "status": "released_after_effective_seed_probe_zero_behavior_launched",
         "behavioral_release": True,
-        "authorized_behavioral_cells": 864,
+        "authorized_behavioral_cells": 432,
         "launched_behavioral_cells_at_release": 0,
         "completed_behavioral_cells_at_release": 0,
         "conditions": 54,
-        "rollouts_per_condition": 16,
+        "rollouts_per_condition": 8,
         "matched_scene_pairs": 27,
         "directions": 2,
         "eligibility_report": {"path": str(args.eligibility_report.resolve()), "sha256": sha256_file(args.eligibility_report)},
         "eligibility_manifest": {"path": str(args.eligibility_manifest.resolve()), "sha256": sha256_file(args.eligibility_manifest)},
-        "queue": {"path": str(queue_path.resolve()), "sha256": sha256_file(queue_path), "bytes": queue_path.stat().st_size, "rows": 864},
+        "queue": {"path": str(queue_path.resolve()), "sha256": sha256_file(queue_path), "bytes": queue_path.stat().st_size, "rows": 432},
         "source_phase_a_summary_sha256": PHASE_A_SUMMARY_SHA256,
         "registration_sha256": REGISTRATION_SHA256,
         "phase_d_registry_sha256": PHASE_D_SHA256,
+        "scope_correction_sha256": SCOPE_CORRECTION_SHA256,
         "invariants": [
             "same environment seed and reset within every original condition",
             "only shared effective policy-sampling seed index changes across repeats",
@@ -197,11 +206,11 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
     amendment_path = args.output_dir / "release_amendment.json"
     amendment_path.write_text(json.dumps(amendment, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     release_manifest = {
-        "schema_version": "vla-wam-shared-v3d001-pi05-stochastic-release-manifest-v1",
+        "schema_version": "vla-wam-shared-v3d001-pi05-stochastic-eight-repeat-release-manifest-v1",
         "study_id": STUDY_ID,
         "registration_id": "V3-D001",
-        "status": "exact_864_cell_queue_released_zero_behavior_launched",
-        "counts": {"cells": 864, "conditions": 54, "environment_seeds": 27, "directions": 2, "sampling_seed_indices": 16, "launched": 0},
+        "status": "exact_432_cell_queue_released_zero_behavior_launched",
+        "counts": {"cells": 432, "conditions": 54, "environment_seeds": 27, "directions": 2, "sampling_seed_indices": 8, "launched": 0},
         "files": [
             {"path": str(queue_path.resolve()), "sha256": sha256_file(queue_path), "bytes": queue_path.stat().st_size},
             {"path": str(amendment_path.resolve()), "sha256": sha256_file(amendment_path), "bytes": amendment_path.stat().st_size},
@@ -211,7 +220,7 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
     }
     manifest_path = args.output_dir / "release_manifest.json"
     manifest_path.write_text(json.dumps(release_manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    return {"queue": str(queue_path), "queue_sha256": sha256_file(queue_path), "release_amendment": str(amendment_path), "release_amendment_sha256": sha256_file(amendment_path), "release_manifest": str(manifest_path), "release_manifest_sha256": sha256_file(manifest_path), "authorized_behavioral_cells": 864, "launched": 0}
+    return {"queue": str(queue_path), "queue_sha256": sha256_file(queue_path), "release_amendment": str(amendment_path), "release_amendment_sha256": sha256_file(amendment_path), "release_manifest": str(manifest_path), "release_manifest_sha256": sha256_file(manifest_path), "authorized_behavioral_cells": 432, "launched": 0}
 
 
 def main() -> None:
@@ -226,4 +235,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = ROOT / "artifacts/vla_wam_shared_v3/prospective_tier_b/registry.json"
 EXPECTED = {
     "pi05_stochastic_eligibility_v3d001.json": (2585, "899a52c79355919210d56fa8f31d944f8a373e1e184650ee8974d62acfd6c788"),
+    "pi05_stochastic_v3d001_eight_repeat_correction.json": (2516, "b8969639a1c45f5fd8981c5e053f170a8a6ddac5ae7ffd2185e08ff40f751b9e"),
     "nano_base_rotation_v3b006.json": (3398, "4e157931a1f2cbaa6f51b5e93d49caa0420787621452e791e7a4569f4be14fd6"),
     "fastwam_robotwin_mirror_v3b007.json": (3585, "84d14a5c6a02c5f6655384d2ed1ef6e3cdaab05341136d81a3b0e727268ecc8e"),
     "nano_start_side_v3b008.json": (3076, "8cd7c3bda7db0c3b9097e72c54d74fe0b81fd8a3d1909b6ec4aea00748c854c2"),
@@ -44,7 +45,7 @@ def main() -> None:
     require(registry.get("behavioral_cells_authorized_by_this_registry") == 0, "registry released behavior")
     require(registry.get("model_requests_authorized_by_this_registry") == 0, "registry released model requests")
     rows = registry.get("registrations")
-    require(isinstance(rows, list) and len(rows) == 6, "registry must bind six prospective records")
+    require(isinstance(rows, list) and len(rows) == 7, "registry must bind seven prospective records")
     bound = {Path(row["path"]).name: row for row in rows}
     require(set(bound) == set(EXPECTED), "registry file set changed")
     base = REGISTRY.parent
@@ -58,6 +59,30 @@ def main() -> None:
     require(pi05["eligibility_probe"]["behavioral_episode_count"] == 0, "eligibility probe became behavioral")
     require(pi05["eligibility_probe"]["shared_candidate_sampling_seed_indices"] == list(range(8)), "probe seeds changed")
     require(pi05["eligibility_probe"]["exact_prompts"] == {"left": LEFT, "right": RIGHT}, "pi0.5 prompts changed")
+    correction = load(base / "pi05_stochastic_v3d001_eight_repeat_correction.json")
+    require(
+        correction["status"] == "prospective_scope_correction_before_any_model_request_or_behavior",
+        "pi0.5 correction is not prospective",
+    )
+    require(
+        correction["corrected_conditional_release"] == {
+            "model_id": "pi05_current_stack_droid",
+            "arena": "droid_robolab",
+            "phase_a_scene_seed_count": 27,
+            "directions_per_scene": 2,
+            "stochastic_rollouts_per_fixed_scene_direction": 8,
+            "behavioral_episode_ceiling_if_effective_seed_gate_passes": 432,
+            "shared_policy_sampling_seed_indices": list(range(8)),
+            "analysis_unit": "Policy-sampling rollout nested within fixed (scene, direction); never an independent scene.",
+        },
+        "pi0.5 corrected eight-repeat scope changed",
+    )
+    require(
+        correction["accounting_at_correction"]["pi05_model_requests"] == 0
+        and correction["accounting_at_correction"]["pi05_behavioral_episodes"] == 0
+        and correction["accounting_at_correction"]["pi05_behavioral_cells_released"] == 0,
+        "pi0.5 scope correction occurred after inference",
+    )
 
     expected_counts = {
         "nano_base_rotation_v3b006.json": (27, 162),
@@ -86,7 +111,7 @@ def main() -> None:
     require(set(provenance["required"]) >= {
         "checkpoint_identity", "training_episode_multiset", "preprocessing", "caption_exposure", "evidence"
     }, "provenance schema lost a required disclosure")
-    print("Prospective Tier-B registry validation passed: 6 records, 0 released cells")
+    print("Prospective Tier-B registry validation passed: 7 records, 0 released cells")
 
 
 if __name__ == "__main__":

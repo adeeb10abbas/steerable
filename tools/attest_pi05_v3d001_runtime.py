@@ -17,6 +17,7 @@ from experiments.v3.pi05_stochastic_probe import (
     REGISTRATION_ID,
     REGISTRATION_SHA256,
     RUNTIME_SCHEMA,
+    SCOPE_CORRECTION_SHA256,
     STUDY_ID,
     canonical_json_bytes,
     sha256_bytes,
@@ -47,8 +48,13 @@ def main() -> None:
         raise ValueError("OpenPI tracked checkout is dirty")
     registration = study / "artifacts/vla_wam_shared_v3/prospective_tier_b/pi05_stochastic_eligibility_v3d001.json"
     phase_d = study / "artifacts/vla_wam_shared_v3/stochastic_rollout_registry.json"
+    correction = study / "artifacts/vla_wam_shared_v3/prospective_tier_b/pi05_stochastic_v3d001_eight_repeat_correction.json"
     server_source = study / "experiments/pi05_current_stack/v2a010_serve_policy.py"
-    if sha256_file(registration) != REGISTRATION_SHA256 or sha256_file(phase_d) != PHASE_D_REGISTRY_SHA256:
+    if (
+        sha256_file(registration) != REGISTRATION_SHA256
+        or sha256_file(phase_d) != PHASE_D_REGISTRY_SHA256
+        or sha256_file(correction) != SCOPE_CORRECTION_SHA256
+    ):
         raise ValueError("prospective V3-D001 binding changed")
     if sha256_file(server_source) != "cd415e3a98da977f395242c24bb8f3d3187eb4cc3bf53c5dc659d190e6934051":
         raise ValueError("pi0.5 seeded server source changed")
@@ -86,6 +92,7 @@ def main() -> None:
         "checkpoint_hash_gate_passed": True,
         "registration_sha256": REGISTRATION_SHA256,
         "phase_d_registry_sha256": PHASE_D_REGISTRY_SHA256,
+        "scope_correction_sha256": SCOPE_CORRECTION_SHA256,
         "pod": args.pod,
         "pod_uid": args.pod_uid,
         "owner": "ali",

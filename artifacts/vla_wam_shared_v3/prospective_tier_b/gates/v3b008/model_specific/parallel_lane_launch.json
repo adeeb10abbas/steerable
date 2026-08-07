@@ -1,0 +1,86 @@
+{
+  "schema_version": "vla-wam-shared-v3b008-parallel-lane-launch-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-B008",
+  "model_id": "cosmos3_nano_policy_droid",
+  "recorded_at_utc": "2026-08-07T08:25:00Z",
+  "status": "second_lane_hash_bound_before_its_first_behavioral_cell",
+  "reason": "V3-B009 completed 108/108 and released its ali-owned RTX client. A second V3-B008 lane is restricted to two still-missing whole seed blocks while the original healthy lane continues without interruption.",
+  "registered_evidence": {
+    "release_manifest_sha256": "93026ce05b0b68f2d054a6b7d26c41cb711ec29bc6f92f5a1a40cd49ef26ad4d",
+    "cells_sha256": "2ccc9eaa787dac0f6f5f94b2e3c91d09952daa5692da48effe55bd638032a311",
+    "behavioral_release_gate_sha256": "55de05ac78541553baf79abe2da12db1aa8ae04ba4abd6133c5ac5614dedcdcc",
+    "queue_source_sha256": "30ad0e7dbca56b76e601796419929b11a9b5d6ea83960b692dc978bfbb94e36c",
+    "runtime_identity_sha256": "a01e76ea2fc453718c11bab22b6fa93b3828430e5eef3b6a94817b267ba6b25b"
+  },
+  "original_lane_snapshot": {
+    "pod": "raytrace-rtxpro6000-ali",
+    "pod_uid": "d5b0405a-a9b1-4baa-a802-d5171e03c228",
+    "gpu_uuid": "GPU-f28bd513-a38a-b768-7589-d2959f814ae8",
+    "queue_pid": 470976,
+    "completed_valid_cells_observed": 128,
+    "authorized_cells": 162,
+    "status": "healthy_untouched"
+  },
+  "second_server": {
+    "pod": "lerobot-b200-4gpu-1-ali",
+    "pod_uid": "1e0f438c-6041-4cc3-af32-0c118963e54c",
+    "pod_ip": "10.244.103.110",
+    "port": 18018,
+    "pid": 144982,
+    "gpu_index_inside_pod": 2,
+    "gpu_uuid": "GPU-4ca76921-a7d2-e920-8555-47e0e8f105f7",
+    "health_before_behavior": "OK",
+    "log_path": "/data/users/ali/vla_wam/raw/v3b/tier_b/v3b008/server_behavior_parallel_attempt02/server.log"
+  },
+  "retained_server_infrastructure_attempt": {
+    "attempt": 1,
+    "behavioral_requests": 0,
+    "denominator_effect": "none",
+    "failure": "The inherited container PATH selected an incompatible uvx invocation before model readiness. Attempt 2 explicitly uses the pinned environment PATH and passed health readiness.",
+    "log_path": "/data/users/ali/vla_wam/raw/v3b/tier_b/v3b008/server_behavior_parallel_attempt01/server.log",
+    "log_sha256": "a29c95af671bf292cef7cc01fb3f9e1eacb02c8c40b16aef19ae128ba3d0a20c"
+  },
+  "second_client_lane": {
+    "pod": "vla-wam-rtx-cosmos-ali",
+    "pod_uid": "b7ec6369-2ab7-42d6-a4ef-3fc549ca652a",
+    "gpu_uuid": "GPU-c2407ba3-cc0f-2456-5df4-8c968bfb8435",
+    "gpu_memory_used_mib_before_launch": 0,
+    "gpu_memory_free_mib_before_launch": 97251,
+    "vulkan_icd": "/etc/vulkan/icd.d/nvidia_icd.json",
+    "vulkan_icd_present": true,
+    "native_library_gate": "passed",
+    "raw_root": "/data/users/ali/vla_wam/raw/v3b/tier_b/v3b008/behavioral_attempt01",
+    "queue_log": "/data/users/ali/vla_wam/raw/v3b/tier_b/v3b008/parallel_lane_attempt01/queue.log",
+    "launched_behavioral_cells_at_freeze": 0
+  },
+  "partition": {
+    "assigned_seeds": [9724, 9726],
+    "assigned_cell_count": 12,
+    "execution": "whole_seed_serial_in_registered_within_seed_order",
+    "cell_ids": [
+      "v3b008:nano:start_side:seed9724:target_start_center:right",
+      "v3b008:nano:start_side:seed9724:target_start_right:left",
+      "v3b008:nano:start_side:seed9724:target_start_left:right",
+      "v3b008:nano:start_side:seed9724:target_start_center:left",
+      "v3b008:nano:start_side:seed9724:target_start_left:left",
+      "v3b008:nano:start_side:seed9724:target_start_right:right",
+      "v3b008:nano:start_side:seed9726:target_start_left:right",
+      "v3b008:nano:start_side:seed9726:target_start_center:left",
+      "v3b008:nano:start_side:seed9726:target_start_left:left",
+      "v3b008:nano:start_side:seed9726:target_start_right:right",
+      "v3b008:nano:start_side:seed9726:target_start_center:right",
+      "v3b008:nano:start_side:seed9726:target_start_right:left"
+    ]
+  },
+  "concurrency_safety": {
+    "original_lane_interrupted": false,
+    "same_server_process": false,
+    "same_client_process": false,
+    "same_seed_concurrently_assigned": false,
+    "completed_cell_behavior": "The frozen queue validates both JSONL and post-close manifest and skips a valid retained cell; it never overwrites evidence.",
+    "partial_attempt_behavior": "Any retained partial attempt fails closed outside the behavioral denominator.",
+    "behavioral_failures_remain_in_denominator": true,
+    "infrastructure_failures_remain_separate": true
+  }
+}

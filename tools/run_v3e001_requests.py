@@ -148,6 +148,8 @@ def main() -> None:
     ap.add_argument("--mirror-right", type=Path, required=True)
     ap.add_argument("--output", type=Path, required=True)
     ap.add_argument("--only-exact-repeats", action="store_true")
+    ap.add_argument("--seed-start", type=int, default=9400)
+    ap.add_argument("--seed-end", type=int, default=9426)
     args = ap.parse_args()
     from openpi_client.websocket_client_policy import WebsocketClientPolicy
     client = WebsocketClientPolicy(args.host, args.port)
@@ -172,7 +174,7 @@ def main() -> None:
         # Full matched queue (108 requests) plus the two exact repeats per
         # layout required by the registration (4 requests).
         if not args.only_exact_repeats:
-            for seed in SEEDS:
+            for seed in range(args.seed_start, args.seed_end + 1):
                 for layout, relation in (("control","left"),("control","right"),("position_mirrored","left"),("position_mirrored","right")):
                     issue(layout, relation, seed)
             for layout in ("control", "position_mirrored"):

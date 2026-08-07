@@ -73,6 +73,7 @@ class V3D001RuntimeTest(unittest.TestCase):
         self.assertEqual(plan["environment"]["OMNI_KIT_ACCEPT_EULA"], "YES")
         self.assertEqual(plan["matched_stochastic_block_id"], cell.block_id)
         self.assertTrue(plan["attempt_dir"].endswith("attempt02"))
+        self.assertTrue(plan["environment"]["TMPDIR"].endswith("attempt02"))
 
 
 if __name__ == "__main__":

@@ -95,7 +95,8 @@ def cell_plan(*, repo_root: Path, release_manifest: Path, runtime_identity: Path
             "XDG_CACHE_HOME": str(attempt/"cache/xdg"),
             "WARP_CACHE_PATH": str(attempt/"cache/warp"),
             "MPLCONFIGDIR": str(attempt/"cache/matplotlib"),
-            "TMPDIR": str(Path("/tmp")/"vla_wam_v3d001"/lane_pod_uid/cell.cell_id.replace(":", "__")),
+            "TMPDIR": str(Path("/tmp")/"vla_wam_v3d001"/lane_pod_uid/
+                          cell.cell_id.replace(":", "__")/f"attempt{attempt_index:02d}"),
         },
     }
 

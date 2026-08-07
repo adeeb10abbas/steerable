@@ -26,7 +26,7 @@ python -m experiments.v3.pi05_stochastic_v3d001.queue run-queue \
   --raw-root /data/users/ali/vla_wam/raw/v3 \
   --remote-host PI05_POLICY_HOST --remote-port 8001 \
   --lane-pod-uid ALI_SIMULATOR_POD_UID --lane-gpu-uuid ALI_SIMULATOR_GPU_UUID \
-  --lane-index 0 --lane-count 1 --attempt-index 2 --limit-blocks 1
+  --lane-index 0 --lane-count 1 --attempt-index 3 --limit-blocks 1
 ```
 
 The bridge and compiler both revalidate every committed release/gate hash and

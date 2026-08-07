@@ -29,6 +29,18 @@ def sha(value: Any) -> str:
     return hashlib.sha256(payload).hexdigest()
 
 
+def jsonable(value: Any) -> Any:
+    if isinstance(value, np.ndarray):
+        return value.tolist()
+    if isinstance(value, (np.integer, np.floating, np.bool_)):
+        return value.item()
+    if isinstance(value, dict):
+        return {str(k): jsonable(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [jsonable(v) for v in value]
+    return value
+
+
 def resize_pad(image: np.ndarray, h: int, w: int) -> np.ndarray:
     scale = min(w / image.shape[1], h / image.shape[0])
     nw, nh = max(1, round(image.shape[1] * scale)), max(1, round(image.shape[0] * scale))
@@ -115,7 +127,7 @@ def model_request(model: str, z: dict[str, np.ndarray], prompt: str, seed: int, 
         response["future_shape"] = list(arr.shape)
         response["future_sha256"] = sha(arr)
         response["video"] = arr.tolist()
-    return {"request_hashes": req_hashes, "request_shapes": {k: list(np.asarray(v).shape) for k,v in req.items() if k != "prompt"}}, response
+    return {"request_hashes": req_hashes, "request_shapes": {k: list(np.asarray(v).shape) for k,v in req.items() if k != "prompt"}}, jsonable(response)
 
 
 def main() -> None:
@@ -148,7 +160,7 @@ def main() -> None:
                 rec.update(rh, response=response)
             except Exception as exc:
                 rec.update(status="infrastructure_invalid", error_type=type(exc).__name__, error=str(exc))
-            out.write(json.dumps(rec, sort_keys=True, separators=(",", ":")) + "\n"); out.flush()
+            out.write(json.dumps(jsonable(rec), sort_keys=True, separators=(",", ":")) + "\n"); out.flush()
         # Full matched queue (108 requests) plus the two exact repeats per
         # layout required by the registration (4 requests).
         for seed in SEEDS:

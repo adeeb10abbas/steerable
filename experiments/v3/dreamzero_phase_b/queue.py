@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -95,7 +96,12 @@ def main() -> None:
             "XDG_CACHE_HOME": attempt / "cache/xdg",
             "WARP_CACHE_PATH": attempt / "cache/warp",
             "MPLCONFIGDIR": attempt / "cache/matplotlib",
-            "TMPDIR": Path("/tmp") / "v3b003" / args.lane_pod_uid / cell.cell_id.replace(":", "__"),
+            "TMPDIR": (
+                Path("/tmp")
+                / "v3b003"
+                / args.lane_pod_uid
+                / hashlib.sha256(str(attempt).encode("utf-8")).hexdigest()[:16]
+            ),
         }
         for path in caches.values():
             path.mkdir(parents=True, exist_ok=False)

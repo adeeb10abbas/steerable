@@ -1,0 +1,51 @@
+{
+  "schema_version": "vla-wam-shared-v3e003-evidence-manifest-v1",
+  "amendment_id": "V3-E003",
+  "status": "hash_closed_compact_evidence",
+  "registration": {
+    "path": "registration.json",
+    "sha256": "2e56b779580a65285017041590bd1aa6f17f8d3220ef93bc1b1859cf20e22c64"
+  },
+  "symmetry_candidate": {
+    "path": "symmetry_gate/candidate.json",
+    "sha256": "8c82ffe9f1a067e6ec85db98633b515e2bbe73a83f351aa2d549b5a7075785fa",
+    "max_residual_m": 0.0
+  },
+  "runtime_identity": {
+    "path": "runtime_identity.json",
+    "sha256": "8bd98308f01f9c430d7a22f3dca50c17ce5b22e87f8a24e019d3cea7b4623ccc"
+  },
+  "release_gate": {
+    "path": "release_gate.json",
+    "sha256": "a9af428c16d9a4ed9b526493db28d39f5ac24d13dbc88f401256c501bfe28d3a"
+  },
+  "results": {
+    "path": "results.json",
+    "sha256": "06f61682bc296972c521e46d87972eae8cbab2840c97de9d9f1e9306dc2689a0",
+    "valid_behavioral_episodes": 54,
+    "unique_registered_cells": 54,
+    "raw_source_entries": 56,
+    "raw_source_hashes": "embedded in results.json; duplicate valid artifacts retained for audit and excluded by registered cell ID"
+  },
+  "decision_memo": {
+    "path": "DECISION_MEMO.md",
+    "sha256": "7cba893eca8dd2732829b3a225345768ef9bbb4d48cd9e6ae5c4e379be69431d"
+  },
+  "runner": {
+    "path": "experiments/v3/phase_e/bilateral_symmetry_null_control_v3e003/run_queue.py",
+    "sha256": "5429f55cde579024383f911886cbf0b23ff8907d3de8f5fa8b9f46099ed710d6",
+    "lane": "raytrace-rtxpro6000-ali",
+    "gpu_uuid": "GPU-f28bd513-a38a-b768-7589-d2959f814ae8",
+    "invocation": "run_queue.py with registered 54-cell queue, static prompts, 450-action cap, one environment per process"
+  },
+  "compiler": {
+    "path": "tools/compile_v3e003_results.py",
+    "sha256": "92b4b9438c4c6124e953b1fa5becd21594aebbd4ebb9a3e4a642add79a00c5f3"
+  },
+  "validator": {
+    "path": "tools/validate_v3e003.py",
+    "sha256": "92abd9118085e4376f30e85af372ace8e94d126544636937c05b129ff12c4278"
+  },
+  "study_git_commit": "5b755a1caa737f73b83415514a37e759402b8c31",
+  "raw_policy": "Full raw JSONL, videos, state captures, and action traces remain on the ali-owned PVC; only compact hash-bearing evidence is committed."
+}

@@ -1034,3 +1034,13 @@ static relation-gate depth was 0.100 m; the deterministic waypoint recipe
 produced `pick_failed` in every episode, so E002 is a negative controller
 diagnostic and not a mechanical-feasibility claim. See the two Phase-E
 decision memos and `V3E_PUBLICATION_DECISION.md` for exact claim boundaries.
+
+V3-E003 then completed its registered bilateral-symmetry object-layout null
+control: π₀.₅, 54/54 valid episodes, 27 matched seeds per prompt, with zero
+symmetry residual. LEFT succeeded 13/27 and RIGHT 25/27 (exact paired
+McNemar p=0.00183); requested-side depth remained +6.18 cm RIGHT−LEFT and
+endpoint redirection remained +23.77 cm LEFT−RIGHT. The preregistered small
+gap/equivalence interpretation is not supported. This is evidence that object
+layout alone does not account for the complete directional gap, not evidence
+for a symmetric robot or a unique policy-data mechanism. See
+`artifacts/vla_wam_shared_v3/phase_e/bilateral_symmetry_null_control_v3e003/`.

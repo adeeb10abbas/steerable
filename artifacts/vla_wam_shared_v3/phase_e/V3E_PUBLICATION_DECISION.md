@@ -4,6 +4,24 @@ Both registered controls now have hash-bearing outputs. Their claim boundaries
 remain separate: E001 is a fixed-observation model diagnostic; E002 is a
 model-blind controller diagnostic and not a learned-policy baseline.
 
+## V3-E003 — bilateral-symmetry null control
+
+The registered π₀.₅ cohort completed **54/54 valid episodes** (27 matched
+seeds × exact LEFT/RIGHT prompts). The symmetric-object layout had zero
+measured symmetry residual, but the task-success gap remained: LEFT 13/27
+(48.1%, Wilson 95% CI 30.7–66.0%) versus RIGHT 25/27 (92.6%, CI
+76.6–97.9%). The paired McNemar discordance was 13 LEFT-failure/RIGHT-success
+versus 1 in the opposite direction (exact p=0.00183). Requested-side depth
+was +6.18 cm RIGHT−LEFT (20,000-resample CI +3.29 to +9.15 cm; sign test
+22+/5−, p=0.00151), while endpoint redirection remained strong (LEFT−RIGHT
+=23.77 cm). The preregistered small-gap interpretation is therefore not
+supported; the experiment shows that object layout alone does not explain the
+full directional gap. It does not identify the remaining contribution of
+embodiment, camera placement, controller calibration, or policy distribution.
+The complete memo and hash manifest are in
+`bilateral_symmetry_null_control_v3e003/DECISION_MEMO.md` and
+`bilateral_symmetry_null_control_v3e003/evidence_manifest.json`.
+
 ## V3-E001 — fixed observation, prompt versus sampling noise
 
 Three checkpoints × two layouts × 27 matched sampling seeds plus the four
@@ -67,6 +85,8 @@ Run after the final compact reports are copied:
 python3 tools/validate_vla_wam_v3_protocol.py
 python3 tools/validate_v3e001.py
 python3 tools/validate_v3e002.py
+python3 tools/validate_v3e003_symmetry_gate.py
+python3 tools/validate_v3e003.py
 git diff --check
 ```
 

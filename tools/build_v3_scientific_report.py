@@ -430,6 +430,25 @@ def build(output: Path) -> tuple[Path, Path]:
         boundary="The fitted zero crossing lies outside the registered support, so no in-support crossing is claimed. The curve is descriptive over the seven tested positions.",
         prompt=True,
     )
+    comp = data["competence"]["descriptive_associations"]
+    draw_figure_page(
+        report,
+        number=4,
+        title="Overall competence does not determine the sign of the gap",
+        subtitle="Five separate 54-episode DROID cohorts test the proposed difficulty × competence explanation descriptively.",
+        finding=f"There is no monotonic association with the signed gap (Spearman ρ={comp['competence_vs_signed_gap']['spearman']['coefficient']:.2f}, exact p={comp['competence_vs_signed_gap']['spearman']['two_sided_exact_permutation_p']:.2f}) or its magnitude (ρ={comp['competence_vs_absolute_gap']['spearman']['coefficient']:.2f}, p={comp['competence_vs_absolute_gap']['spearman']['two_sided_exact_permutation_p']:.2f}).",
+        interpretation="Floor and ceiling mechanically limit the largest observable binary gap. Intermediate competence permits a gap, but neither fixes its sign nor explains its mechanism.",
+        boundary="Five checkpoints are too few for a population-level model. The figure is a descriptive constraint, not evidence that competence is irrelevant.",
+    )
+    draw_figure_page(
+        report,
+        number=5,
+        title="Directional success remains checkpoint- and arena-specific",
+        subtitle="Success counts and Wilson intervals provide context for the matched continuous diagnostics.",
+        finding="DROID checkpoints span near-floor to near-ceiling performance and include both positive and negative directional gaps. RoboTwin likewise varies across the three WAMs.",
+        interpretation="A family label does not predict reliable semantic control. The meaningful unit is a checkpoint, arena, prompt, and frozen success predicate.",
+        boundary="DROID/RoboLab and RoboTwin have different tasks and success rules. Their rates are faceted and never pooled; Wilson intervals are marginal, not paired tests.",
+    )
     failure_rows = {row["model_id"]: row for row in data["failure"]["results"]}
     draw_figure_page(
         report,
@@ -450,25 +469,6 @@ def build(output: Path) -> tuple[Path, Path]:
         finding=phase_finding,
         interpretation=phase_interpretation,
         boundary="Phase C is exploratory. The four prompt forms share seeds, and raw rates are not 80 independent scenes. Endpoint movement and task success are reported separately.",
-    )
-    comp = data["competence"]["descriptive_associations"]
-    draw_figure_page(
-        report,
-        number=4,
-        title="Overall competence does not determine the sign of the gap",
-        subtitle="Five separate 54-episode DROID cohorts test the proposed difficulty × competence explanation descriptively.",
-        finding=f"There is no monotonic association with the signed gap (Spearman ρ={comp['competence_vs_signed_gap']['spearman']['coefficient']:.2f}, exact p={comp['competence_vs_signed_gap']['spearman']['two_sided_exact_permutation_p']:.2f}) or its magnitude (ρ={comp['competence_vs_absolute_gap']['spearman']['coefficient']:.2f}, p={comp['competence_vs_absolute_gap']['spearman']['two_sided_exact_permutation_p']:.2f}).",
-        interpretation="Floor and ceiling mechanically limit the largest observable binary gap. Intermediate competence permits a gap, but neither fixes its sign nor explains its mechanism.",
-        boundary="Five checkpoints are too few for a population-level model. The figure is a descriptive constraint, not evidence that competence is irrelevant.",
-    )
-    draw_figure_page(
-        report,
-        number=5,
-        title="Directional success remains checkpoint- and arena-specific",
-        subtitle="Success counts and Wilson intervals provide context for the matched continuous diagnostics.",
-        finding="DROID checkpoints span near-floor to near-ceiling performance and include both positive and negative directional gaps. RoboTwin likewise varies across the three WAMs.",
-        interpretation="A family label does not predict reliable semantic control. The meaningful unit is a checkpoint, arena, prompt, and frozen success predicate.",
-        boundary="DROID/RoboLab and RoboTwin have different tasks and success rules. Their rates are faceted and never pooled; Wilson intervals are marginal, not paired tests.",
     )
     draw_result_table(report, data)
     source_paths = list(SOURCES.values()) + list(FIGURES.values()) + phase_c_summary_paths

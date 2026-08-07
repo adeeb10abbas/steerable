@@ -24,6 +24,14 @@ requires an independent, zero-request raw video/action/state/JSONL write proof.
 `raw_write_preflight.py` supplies that model-blind PVC/format proof and binds
 it to the separately retained Phase-A simulator-release evidence.
 
+The GR00T behavioral path starts with `groot_behavioral_bridge.py
+--preflight-only`.  It resolves prompts by exact registered bytes rather than
+searching for the words LEFT or RIGHT; this matters for the contrastive prompts,
+which contain both words.  It validates one indivisible randomized eight-cell
+seed block and the eight scorer-preserving task subclasses.  This slice still
+issues zero model requests: live execution remains fail-closed until the
+prompt-aware action/state/video writer is validated against that preflight.
+
 Every release assertion must name its retained proof path and SHA-256. The runner recomputes those hashes, including the runtime-identity file, before it will produce a plan.
 
 The wording block remains exploratory under the committed V3 analysis plan. Confirmatory wording claims require a later prospective power and inference amendment made before Phase-C behavioral inference.

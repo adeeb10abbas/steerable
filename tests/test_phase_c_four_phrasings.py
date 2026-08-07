@@ -35,6 +35,11 @@ from experiments.v3.phase_c_four_phrasings.fixed_observation_gate import (
 )
 from experiments.v3.phase_c_four_phrasings.live_fixed_observation import _array_record
 from experiments.v3.phase_c_four_phrasings.raw_write_preflight import run as run_write_preflight
+from experiments.v3.phase_c_four_phrasings.groot_behavioral_contract import (
+    TASK_SPECS,
+    prompt_condition,
+    validate_task_sources,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -169,6 +174,18 @@ def test_raw_write_preflight_is_model_blind_and_fail_closed(tmp_path: Path, monk
     }
     with pytest.raises(ValueError, match="already exists"):
         run_write_preflight(model_id="groot_n17_droid_vla", output_dir=output)
+
+
+def test_groot_prompt_routing_uses_exact_bytes_and_retains_all_task_sources() -> None:
+    assert {
+        prompt_condition(PROMPTS[form][relation])
+        for form in PROMPT_FORMS
+        for relation in ("left", "right")
+    } == set(TASK_SPECS)
+    with pytest.raises(ContractError, match="not one exact"):
+        prompt_condition("Put it left, not right.")
+    hashes = validate_task_sources(ROOT)
+    assert len(hashes) == 8 and all(len(value) == 64 for value in hashes.values())
 
 
 def _release(

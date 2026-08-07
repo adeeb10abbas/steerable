@@ -1,0 +1,62 @@
+{
+  "schema_version": "vla-wam-shared-v3c-four-phrasings-gate-evidence-v1",
+  "experiment_id": "V3-C001",
+  "model_id": "groot_n17_droid_vla",
+  "status": "model_specific_release_passed_behavioral_bridge_not_implemented",
+  "counts": {
+    "fixed_observation_model_requests": 12,
+    "behavioral_episodes": 0,
+    "executed_actions": 0,
+    "prompt_forms_passed": 4
+  },
+  "fixed_observation_result": {
+    "exact_repeat_passed": true,
+    "prompt_only_sensitivity_passed": true,
+    "action_left_right_rms": {
+      "direct_command": 0.0812102366690962,
+      "short_command": 0.03648140773189995,
+      "goal_as_outcome": 0.13067002499068464,
+      "desired_plus_negated_opposite": 0.016426343313116584
+    },
+    "action_exact_repeat_rms": {
+      "direct_command": 0.0,
+      "short_command": 0.0,
+      "goal_as_outcome": 0.0,
+      "desired_plus_negated_opposite": 0.0
+    }
+  },
+  "runtime_identity": {
+    "checkpoint": "nvidia/GR00T-N1.7-DROID",
+    "checkpoint_revision": "05e7cc97e40dbd33b0890c35cc0214fcb0547ab5",
+    "semantic_sha256": "1c9515daaae3b7298310694bd5b9eb0ecdbffb5c71df747f5e1cb0d0e711be64",
+    "pod": "lerobot-b200-4gpu-1-ali",
+    "pod_uid": "1e0f438c-6041-4cc3-af32-0c118963e54c",
+    "pod_ip": "10.244.103.110",
+    "gpu_index": 1,
+    "gpu_uuid": "GPU-80848a6b-9e3b-6cb3-e1ed-3edbb9ea2cfa",
+    "policy_server_pid": 160718,
+    "policy_server_pgid": 160718,
+    "gate_study_commit": "2775541f4021303296098c6c839fb8cd42799044",
+    "write_preflight_commit": "3b87bde2a9dcc36f6288963e7333f99a3d4712b8"
+  },
+  "observation": {
+    "path": "/data/users/ali/vla_wam/raw/v3/groot_n17_droid/preflight/seed8303_attempt02/fixture/seed8303_fixed_observation.npz",
+    "sha256": "dddb62a0ffac5ee04bc0929e32f498d84e2b1df61d105cb9d84123305e2a8b01",
+    "sampling_seed": 8500,
+    "byte_identical_across_all_requests": true
+  },
+  "compact_files": {
+    "fixed_observation_report.json": "8490616eb4dacc093a17694e549442de60ce28951339f151c93b182f0cfc37f8",
+    "prompt_byte_report.json": "2f70f792b7751e53b7642a0e34a13c4a7247e834fbfcc1d336d79adc6ab4aa42",
+    "raw_write_preflight.json": "55eb137a4167b45cf2fe90d1d10f27e29b30af72d6b4cd4ad6ea52173e2bb953",
+    "release.json": "bf564307b27f40b02e18b8e7dc930c697ace004918f52e3e9c1f7ab3b44470fa",
+    "responses.jsonl": "f2f5d070d80cd3fa82b48e5799c75fd53343431abee1419d8c33484433714b93"
+  },
+  "raw_array_policy": {
+    "root": "/data/users/ali/vla_wam/raw/v3c/phase_c_v3c001/groot_n17_droid_vla/fixed_observation_attempt01",
+    "retained_on_pvc": true,
+    "committed_to_git": false,
+    "hashes_recorded_in": "responses.jsonl"
+  },
+  "remaining_prerequisite": "Implement and validate a V3-C001 GR00T behavioral bridge that consumes the released whole-seed plan, applies each of the eight registered static prompts without changing the frozen reset, scorer, controller, or action contract, and writes the four required raw outputs. Gate passage alone does not launch or validate any behavioral episode."
+}

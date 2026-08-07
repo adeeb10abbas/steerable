@@ -7,10 +7,10 @@ position-reflection ablation were compiled. The separately preregistered π0.5
 V3-B002 scene-matched replication is also complete and hash-closed at 108/108
 valid episodes; its existing-log failure-mode split is complete. The
 five-checkpoint gap-versus-competence diagnostic is also complete and adds no
-new model inference. Phase C is now behaviorally released for GR00T N1.7,
-Cosmos3 Edge, and Cosmos3 Nano Policy DROID. Each passed a complete seed-8500
-behavioral smoke, and the remaining prospectively registered seeds 8501–8519
-are running in independent model lanes. The
+new model inference. Phase C is behaviorally released for GR00T N1.7, Cosmos3
+Edge, and Cosmos3 Nano Policy DROID. Edge is complete and hash-closed at
+160/160 episodes; GR00T and Nano continue their remaining prospectively
+registered seeds in independent model lanes. The
 machine-readable source of truth is
 [`continuation_state.json`](../artifacts/vla_wam_shared_v3/continuation_state.json).
 
@@ -645,8 +645,8 @@ must remain separate. It is complete and must not be rerun.
   ablation remains unreleased.
 - Phase C: GR00T N1.7, Cosmos3 Edge, and Cosmos3 Nano each passed their independent
   byte-hash, raw-writer, exact-repeat, and four-form prompt-sensitivity gates.
-  Their complete seed-8500 behavioral smokes are valid evidence (eight exact
-  cells each), and seeds 8501–8519 are active in separate serial queues.
+  Edge is complete at 160/160 valid episodes; GR00T and Nano continue in
+  separate serial queues.
 - Phase D: not released; it requires an effective stochastic-seed probe for
   each exact runtime.
 
@@ -657,6 +657,33 @@ directions at each seed. GR00T, Edge, and Nano were released independently;
 no release transfers between models. Every seed is executed as one eight-cell
 block from an identical reset; failures remain behavioral evidence, and
 infrastructure attempts remain outside denominators.
+
+Cosmos3 Edge is complete across all 20 shared seeds and 160 valid behavioral
+episodes, with 160 viewport videos and no infrastructure episode in the
+denominator. Requested-task success remained direction- and wording-dependent:
+direct instruction was **18/20 LEFT versus 20/20 RIGHT**; shortened instruction
+was **5/20 versus 19/20**; goal statement was **15/20 versus 18/20**; and the
+contrastive instruction was **10/20 versus 18/20**. Across the four repeated
+forms this is descriptively 48/80 LEFT versus 75/80 RIGHT, but those totals are
+not 80 independent scenes. The paired shortened-instruction discordance was 0
+LEFT-only versus 14 RIGHT-only (exact two-sided McNemar p = 0.000122); the
+contrastive discordance was 1 versus 9 (p = 0.0215).
+
+Endpoint redirection was present even when task completion differed. With the
+frozen sign convention (+lateral is robot LEFT), a negative RIGHT-minus-LEFT
+endpoint shift follows the requested ordering. Edge followed that ordering in
+20/20 direct pairs, 17/20 shortened pairs, 20/20 goal-statement pairs, and 17/20
+contrastive pairs; all 20 first-ten-action prefixes differed in every wording
+family. The failure taxonomy was 123 correct, 11 pick failures, 14 transport
+failures, 12 wrong-side failures, and no release failures. This supports an
+exploratory phrasing-by-direction scope claim, not an independent 80-scene
+population claim.
+
+| Complete Cosmos3 Edge Phase-C evidence | SHA-256 |
+| --- | --- |
+| [`Episodes`](../artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_edge_policy_droid/cosmos3_edge_policy_droid_phase_c_episodes.jsonl) | `317aa9e7eb18c5ef77b9445483128a7621df5b777835d8eb9e383939acf0a1f5` |
+| [`Summary`](../artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_edge_policy_droid/cosmos3_edge_policy_droid_phase_c_summary.json) | `06a8fd1ff425bce10cbdbeb4b73e9a8ca5ff31da0c5e389ae85f5b64bc451861` |
+| [`Evidence manifest`](../artifacts/vla_wam_shared_v3/phase_c/four_phrasings_v3c001/results/cosmos3_edge_policy_droid/cosmos3_edge_policy_droid_phase_c_evidence_manifest.json) | `2c72c90b71c5ea0001d917ce4464a3207faa1c6ae62b1e0200926d435c90c97a` |
 
 At seed 8500, GR00T completed **8/8 valid cells** with two requested successes
 and six valid failures. Cosmos3 Edge completed **8/8 valid cells** with seven

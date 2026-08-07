@@ -1,0 +1,37 @@
+{
+  "schema_version": "vla-wam-shared-v3c-live-infrastructure-ledger-v1",
+  "experiment_id": "V3-C001",
+  "model_id": "cosmos3_edge_policy_droid",
+  "behavioral_denominator_effect": "none",
+  "attempts": [
+    {
+      "attempt_id": "seed8501_task_registration_attempt01",
+      "seed": 8501,
+      "stage": "zero_action_live_task_registration",
+      "classification": "infrastructure_invalid_before_behavior",
+      "model_request_count": 0,
+      "behavioral_episode_count": 0,
+      "executed_action_count": 0,
+      "behavioral_files_created": 0,
+      "root_cause": "The queue launcher propagated an empty LD_LIBRARY_PATH. Isaac could not load libGL.so.1, libX11.so.6, or libXt.so.6, Vulkan returned ERROR_INCOMPATIBLE_DRIVER, and no GPU device or renderer was created.",
+      "intervention": "After retained logs established the zero-request renderer failure, only worker process group 546021 was terminated. The guard recorded worker exit -15, the queue exited, and its atomic single-client lock was released.",
+      "repair": "Require and explicitly pass the known ali-owned RoboLab, GLVND, and system native-library path before retrying seed 8501 under attempt02.",
+      "raw": {
+        "queue_log": {
+          "path": "/data/users/ali/vla_wam/raw/v3c/phase_c_v3c001/cosmos3_edge_policy_droid/queue_seed8501_8519_attempt01.log",
+          "bytes": 528803,
+          "sha256": "b318ed2eb1f432376aa1433629c2a15ce60ce71d999d11532b4579c4d752257f"
+        },
+        "thermal_events": {
+          "path": "/data/users/ali/vla_wam/raw/v3c/phase_c_v3c001/cosmos3_edge_policy_droid/task_registration_seed8501_attempt01/thermal_events.jsonl",
+          "bytes": 497663,
+          "sha256": "9e3bfa59562fbf41cf4d130cefa4e9696bd64fb2f2768ec041e7dcf7cb4628b1"
+        },
+        "bridge_preflight": {
+          "path": "/data/users/ali/vla_wam/raw/v3c/phase_c_v3c001/cosmos3_edge_policy_droid/behavioral_bridge_preflight_seed8501_attempt01.json",
+          "sha256": "8ff09b868e77b0cb1f03ac49bc8bccad4884520ef85bb90a59373a480b5fc4c4"
+        }
+      }
+    }
+  ]
+}

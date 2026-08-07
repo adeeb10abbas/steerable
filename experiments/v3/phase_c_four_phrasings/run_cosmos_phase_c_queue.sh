@@ -12,7 +12,7 @@ usage() {
   echo "usage: $0 --study-root PATH --model-id MODEL --execution-plan PATH \\
     --release-manifest PATH --registration-manifest PATH --raw-root PATH \\
     --runtime-python PATH --thermal-guard PATH --gpu-index INDEX \\
-    --remote-port PORT [--remote-host HOST] [--seed-start N] \\
+    --remote-port PORT --native-library-path PATH [--remote-host HOST] [--seed-start N] \\
     [--seed-end N] [--attempt N]" >&2
 }
 
@@ -27,6 +27,7 @@ thermal_guard=
 gpu_index=
 remote_host=127.0.0.1
 remote_port=
+native_library_path=${LD_LIBRARY_PATH:-}
 seed_start=8501
 seed_end=8519
 attempt=1
@@ -44,6 +45,7 @@ while [[ $# -gt 0 ]]; do
     --gpu-index) gpu_index=$2; shift 2 ;;
     --remote-host) remote_host=$2; shift 2 ;;
     --remote-port) remote_port=$2; shift 2 ;;
+    --native-library-path) native_library_path=$2; shift 2 ;;
     --seed-start) seed_start=$2; shift 2 ;;
     --seed-end) seed_end=$2; shift 2 ;;
     --attempt) attempt=$2; shift 2 ;;
@@ -51,7 +53,7 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-for required in study_root model_id execution_plan release_manifest registration_manifest raw_root runtime_python thermal_guard gpu_index remote_port; do
+for required in study_root model_id execution_plan release_manifest registration_manifest raw_root runtime_python thermal_guard gpu_index remote_port native_library_path; do
   if [[ -z ${!required} ]]; then
     usage
     exit 2
@@ -109,7 +111,7 @@ run_guarded() {
       CUDA_VISIBLE_DEVICES="$gpu_index" \
       OMNI_KIT_ACCEPT_EULA=YES \
       VK_ICD_FILENAMES=/etc/vulkan/icd.d/nvidia_icd.json \
-      LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}" \
+      LD_LIBRARY_PATH="$native_library_path" \
       PYTHONPATH="$study_root${PYTHONPATH:+:$PYTHONPATH}" \
       OV_CACHE_ROOT="$attempt_root/cache/ov" \
       ISAACSIM_CACHE_PATH="$attempt_root/cache/isaac" \

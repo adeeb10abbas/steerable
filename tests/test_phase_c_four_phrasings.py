@@ -483,6 +483,10 @@ def test_cosmos_queue_is_single_client_and_serial() -> None:
     assert 'if ! mkdir "$single_client_lock"' in source
     assert 'trap cleanup_single_client_lock EXIT' in source
     assert "trap 'exit 130' INT TERM" in source
+    assert 'native_library_path=${LD_LIBRARY_PATH:-}' in source
+    assert 'LD_LIBRARY_PATH="$native_library_path"' in source
+    required = source.split("for required in ", 1)[1].split("; do", 1)[0]
+    assert "native_library_path" in required
     assert 'for seed in $(seq "$seed_start" "$seed_end"); do' in source
     assert not any(line.rstrip().endswith(" &") for line in source.splitlines())
 

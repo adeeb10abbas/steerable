@@ -131,8 +131,12 @@ def main() -> None:
             sys.executable, str(args.repo_root / "tools/native_process_group_thermal_guard.py"),
             "--launch", "--gpu-index", "0",
             "--output", str(attempt / "thermal_events.jsonl"),
-            "--ledger-output", str(attempt / "runtime_interventions_dreamzero.json"),
-            "--invalid-attempts-output", str(attempt / "invalid_attempts_dreamzero.json"),
+            "--ledger-output", str(
+                attempt / "runtime_interventions_dreamzero_droid_action_cfg.json"
+            ),
+            "--invalid-attempts-output", str(
+                attempt / "invalid_attempts_dreamzero_droid_action_cfg.json"
+            ),
             "--model-id", "dreamzero_droid_action_cfg",
             "--pair-id", f"{cell.row['matched_block_id']}:{cell.arm}",
             "--environment-seed", str(cell.seed), "--sampling-seed", str(cell.seed),

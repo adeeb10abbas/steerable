@@ -272,6 +272,7 @@ def build_episode_record(*, export: Mapping[str, Any], bundle: E004RuntimeBundle
         contact_reason = CONTACT_UNAVAILABLE
     grasp = next((index for index, step in enumerate(steps) if step["object_grabbed"]), None)
     final = float(lateral[-1])
+    requested = [_cone(step, cell.relation) for step in steps]
     failure = _failure_category(success=success, steps=steps, relation=cell.relation, detached_release=detached)
     output_path = Path(output_path).resolve()
     record = {

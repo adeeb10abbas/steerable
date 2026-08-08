@@ -1,0 +1,101 @@
+{
+  "H1_design_limitation": "The confirmatory s0-to-s1 contrast includes the registered same-asset companion activation.",
+  "H3_primary_levels": [
+    0.25,
+    0.5,
+    0.75,
+    1.0
+  ],
+  "arm_reset_pose_status": "pending_live_settled_reset",
+  "behavioral_episode_count": 0,
+  "camera_gate_status": "pending_live_camera_geometry_or_instance_segmentation",
+  "candidate_sha256": "c82fd4f42a17ee3d279a09f91fb6373760b7ea101e29b358f274732149d6cdfd",
+  "inventory_transition_disclosed": true,
+  "levels": [
+    {
+      "active_inventory": [
+        "banana",
+        "bowl",
+        "rubiks_cube"
+      ],
+      "analytic_residuals": {
+        "midline_residual_m": 0.12658219039440155,
+        "orientation_residual_rad": 0.0,
+        "position_residual_m": 0.0
+      },
+      "asymmetry_metric_A": 3.852271898988405,
+      "inventory_transition": false,
+      "symmetry_level_s": 0.0
+    },
+    {
+      "active_inventory": [
+        "banana",
+        "banana_right",
+        "bowl",
+        "rubiks_cube"
+      ],
+      "analytic_residuals": {
+        "midline_residual_m": 0.09493664279580116,
+        "orientation_residual_rad": 0.0004846193655931863,
+        "position_residual_m": 0.11333351209759712
+      },
+      "asymmetry_metric_A": 2.8892039242413037,
+      "inventory_transition": true,
+      "symmetry_level_s": 0.25
+    },
+    {
+      "active_inventory": [
+        "banana",
+        "banana_right",
+        "bowl",
+        "rubiks_cube"
+      ],
+      "analytic_residuals": {
+        "midline_residual_m": 0.06329109519720078,
+        "orientation_residual_rad": 0.0003230795770621242,
+        "position_residual_m": 0.07555567473173141
+      },
+      "asymmetry_metric_A": 1.9261359494942025,
+      "inventory_transition": true,
+      "symmetry_level_s": 0.5
+    },
+    {
+      "active_inventory": [
+        "banana",
+        "banana_right",
+        "bowl",
+        "rubiks_cube"
+      ],
+      "analytic_residuals": {
+        "midline_residual_m": 0.03164554759860039,
+        "orientation_residual_rad": 0.0001615397885310621,
+        "position_residual_m": 0.037777837365865735
+      },
+      "asymmetry_metric_A": 0.9630679747471014,
+      "inventory_transition": true,
+      "symmetry_level_s": 0.75
+    },
+    {
+      "active_inventory": [
+        "banana",
+        "banana_right",
+        "bowl",
+        "rubiks_cube"
+      ],
+      "analytic_residuals": {
+        "midline_residual_m": 0.0,
+        "orientation_residual_rad": 0.0,
+        "position_residual_m": 2.7755575615628914e-17
+      },
+      "asymmetry_metric_A": 2.7755575615628914e-16,
+      "inventory_transition": true,
+      "symmetry_level_s": 1.0
+    }
+  ],
+  "model_request_count": 0,
+  "passed": true,
+  "release_boundary": "Analytic pose checks do not release inference; every used level still requires a live camera, reset-pose, stability, and runtime gate.",
+  "s0_exact_control_inventory": true,
+  "schema_version": "vla-wam-shared-v3e004-static-layout-gate-v1",
+  "status": "passed_model_blind_analytic_not_released_for_inference"
+}

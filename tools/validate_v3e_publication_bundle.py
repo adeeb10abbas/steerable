@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the frozen V3 validator and both Phase-E evidence validators."""
+"""Run the frozen V3 validator and all registered Phase-E validators."""
 from __future__ import annotations
 
 import json
@@ -15,6 +15,8 @@ def main() -> None:
         [sys.executable, str(ROOT / "tools/validate_vla_wam_v3_protocol.py")],
         [sys.executable, str(ROOT / "tools/validate_v3e001.py")],
         [sys.executable, str(ROOT / "tools/validate_v3e002.py")],
+        [sys.executable, str(ROOT / "tools/validate_v3e003.py")],
+        [sys.executable, str(ROOT / "tools/validate_v3e004.py")],
     ]
     outputs = []
     for command in commands:

@@ -1,0 +1,319 @@
+{
+  "amendment_id": "V3-E004",
+  "analysis_plan": {
+    "dose_response": "Per-seed slope on realised A for pi05/Nano inventory-matched positive levels, seed bootstrap CI, and slope signs.",
+    "equivalence": "TOST with registered margin, paired 90% CI, bootstrap 95% CI, achieved MDE, and explicit comparison to control effect. Underpowered rows cannot support equivalence wording.",
+    "failures": "Direction/level taxonomy plus seed-clustered wrong-side-share trend with within-seed level-label permutation; zero-failure cells are unavailable, not zero.",
+    "interaction": "Seed-matched s1-minus-s0 bootstrap CI plus exact 2^27 within-seed layout-label permutation on the historical core; augmented endpoints are used for TOST/CI only.",
+    "missingness": "Infrastructure-invalid attempts are separate; behavioral failures remain in denominators; NR is never imputed.",
+    "per_cell": [
+      "LEFT/RIGHT counts and Wilson 95% intervals",
+      "exact McNemar with discordant counts",
+      "paired requested-depth mean/median with 20,000 seed bootstrap CI and exact sign test",
+      "paired endpoint shift with bootstrap CI and sign test"
+    ]
+  },
+  "behavioral_episode_count_before_registration": 0,
+  "design": {
+    "core_seed_source": "exact V3-B001 seed list",
+    "core_seeds": [
+      9400,
+      9401,
+      9402,
+      9403,
+      9404,
+      9405,
+      9406,
+      9407,
+      9408,
+      9409,
+      9410,
+      9411,
+      9412,
+      9413,
+      9414,
+      9415,
+      9416,
+      9417,
+      9418,
+      9419,
+      9420,
+      9421,
+      9422,
+      9423,
+      9424,
+      9425,
+      9426
+    ],
+    "droid_and_robotwin_never_pooled": true,
+    "extension_seed_boundary": "Seeds above 9426 are matched within E004 but are not historical B001 matches; closed geometry ablations are not rerun.",
+    "model_levels_and_pairs": {
+      "cosmos3_edge_policy_droid": {
+        "0.00": 27,
+        "1.00": 27
+      },
+      "cosmos3_nano_policy_droid": {
+        "0.00": 521,
+        "0.25": 27,
+        "0.50": 27,
+        "0.75": 27,
+        "1.00": 521
+      },
+      "dreamzero_droid_action_cfg": {
+        "0.00": 27,
+        "1.00": 27
+      },
+      "fastwam_robotwin": {
+        "0.00": 27,
+        "1.00": 27
+      },
+      "pi05_current_stack_droid": {
+        "0.00": 341,
+        "0.25": 27,
+        "0.50": 27,
+        "0.75": 27,
+        "1.00": 341
+      }
+    },
+    "new_behavioral_cells": 3934,
+    "preserved_closed_control_cells": 162,
+    "total_evidence_cells": 4096
+  },
+  "estimands": {
+    "binary_gap": "Y_i,l = success_RIGHT_i,l - success_LEFT_i,l",
+    "endpoint_redirection": "D_i,l = signed_endpoint_LEFT_i,l - signed_endpoint_RIGHT_i,l",
+    "interaction": "mean(seed-level estimand at s=1 minus same-seed estimand at s=0)",
+    "requested_depth_gap": "B_i,l = (-signed_endpoint_RIGHT_i,l) - signed_endpoint_LEFT_i,l"
+  },
+  "exact_prompts": {
+    "droid": {
+      "left": "Put the Rubik's cube to the left of the bowl.",
+      "right": "Put the Rubik's cube to the right of the bowl."
+    },
+    "robotwin": {
+      "left": "Put the small woodenblock to the left of the red playingcards box.",
+      "right": "Put the small woodenblock to the right of the red playingcards box."
+    }
+  },
+  "layout": {
+    "arm_reset_pose_required": true,
+    "asymmetry_metric": {
+      "definition": "dimensionless RSS of registered pose-to-mirror constraints over all movable objects",
+      "use_realised_A_not_one_minus_s": true,
+      "weights": {
+        "orientation_inverse_rad": 1.0,
+        "position_inverse_m": 10.0
+      }
+    },
+    "builder_input_path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/layout/builder_input.json",
+    "builder_input_sha256": "5dade7cfc720642693c9828c89be1358f01a536f8266927fccbaf2c5ba1417b2",
+    "candidate_path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/layout/candidate.json",
+    "candidate_sha256": "c82fd4f42a17ee3d279a09f91fb6373760b7ea101e29b358f274732149d6cdfd",
+    "inventory_transition": {
+      "H1_s0_to_s1": "confirmatory_with_inventory-transition limitation",
+      "H3_primary_levels": [
+        0.25,
+        0.5,
+        0.75,
+        1.0
+      ],
+      "inventory_transition": true,
+      "s0": "companions absent; exact hash-bound B001 control inventory",
+      "s_gt_0": "same-asset companions active at registered interpolated SE(2) poses",
+      "undeclared_inventory_change": "fail_closed"
+    },
+    "name": "graded symmetric object layout relative to robot midline",
+    "not_symmetric_robot_or_embodiment": true,
+    "s1_tolerances": {
+      "midline_residual_m_strict_upper": 0.001,
+      "occlusion_check_required_false_all_cameras": true,
+      "orientation_residual_deg_strict_upper": 0.5,
+      "orientation_residual_rad_strict_upper": 0.008726646259971648,
+      "position_residual_m_strict_upper": 0.001,
+      "realisation_orientation_rad": 0.03490658503988659,
+      "realisation_position_m": 0.003
+    },
+    "target_visibility_rule": "cube is in front of bowl and bowl must not lie between any registered camera and cube; target segmentation must be visible in every view"
+  },
+  "model_request_count_before_registration": 0,
+  "power_registration": {
+    "alpha_one_sided": 0.05,
+    "formula": "MDE80(n)=(z_0.95+z_0.80)*sigma_plan/sqrt(n); strict gate MDE80 <= 0.5*(0.20*abs(control effect))",
+    "policy_deviation": "DreamZero, Edge, and FastWAM require thousands of matched pairs under the prespecified half-margin MDE gate. Their 27-pair cores test positive interactions but cannot support H2 equivalence. No nonsignificant result from those rows will be called equivalent.",
+    "power": 0.8,
+    "rows": [
+      {
+        "control_effect": 0.7777777778,
+        "estimand": "binary_R_minus_L",
+        "margin": 0.1555555556,
+        "mde_n27": 0.2763,
+        "model_id": "pi05_current_stack_droid",
+        "sigma_plan": 0.5773502692,
+        "status": "strictly_powered_at_endpoints",
+        "strict_n": 341,
+        "target_n": 341
+      },
+      {
+        "control_effect": 0.2074701658,
+        "estimand": "depth_R_minus_L_m",
+        "margin": 0.0414940332,
+        "mde_n27": 0.0587,
+        "model_id": "pi05_current_stack_droid",
+        "sigma_plan": 0.1226599828,
+        "status": "strictly_powered_at_endpoints",
+        "strict_n": 217,
+        "target_n": 341
+      },
+      {
+        "control_effect": 0.0,
+        "estimand": "binary_R_minus_L",
+        "margin": 0.0,
+        "mde_n27": 0.1732,
+        "model_id": "cosmos3_nano_policy_droid",
+        "sigma_plan": 0.362,
+        "status": "margin_zero_equivalence_not_defined_test_emergence_only",
+        "strict_n": null,
+        "target_n": 521
+      },
+      {
+        "control_effect": 0.1476625642,
+        "estimand": "depth_R_minus_L_m",
+        "margin": 0.0295325128,
+        "mde_n27": 0.06482,
+        "model_id": "cosmos3_nano_policy_droid",
+        "sigma_plan": 0.1354508319,
+        "status": "strictly_powered_at_endpoints",
+        "strict_n": 521,
+        "target_n": 521
+      },
+      {
+        "control_effect": 0.1111111111,
+        "estimand": "binary_R_minus_L",
+        "margin": 0.0222222222,
+        "mde_n27": 0.3065,
+        "model_id": "dreamzero_droid_action_cfg",
+        "sigma_plan": 0.6405,
+        "status": "underpowered_no_equivalence_claim",
+        "strict_n": 20546,
+        "target_n": 27
+      },
+      {
+        "control_effect": 0.02295332,
+        "estimand": "depth_R_minus_L_m",
+        "margin": 0.004590664,
+        "mde_n27": 0.06097,
+        "model_id": "dreamzero_droid_action_cfg",
+        "sigma_plan": 0.1274,
+        "status": "underpowered_no_equivalence_claim",
+        "strict_n": 19051,
+        "target_n": 27
+      },
+      {
+        "control_effect": 0.2592592593,
+        "estimand": "binary_R_minus_L",
+        "margin": 0.0518518519,
+        "mde_n27": 0.2844,
+        "model_id": "cosmos3_edge_policy_droid",
+        "sigma_plan": 0.5944,
+        "status": "underpowered_no_equivalence_claim",
+        "strict_n": 3250,
+        "target_n": 27
+      },
+      {
+        "control_effect": 0.23731777,
+        "estimand": "depth_R_minus_L_m",
+        "margin": 0.047463554,
+        "mde_n27": 0.08844,
+        "model_id": "cosmos3_edge_policy_droid",
+        "sigma_plan": 0.1848,
+        "status": "underpowered_no_equivalence_claim",
+        "strict_n": 375,
+        "target_n": 27
+      },
+      {
+        "control_effect": 0.1481481481,
+        "estimand": "binary_R_minus_L",
+        "margin": 0.0296296296,
+        "mde_n27": 0.2299,
+        "model_id": "fastwam_robotwin",
+        "sigma_plan": 0.4804,
+        "status": "underpowered_no_equivalence_claim_stretch",
+        "strict_n": 6501,
+        "target_n": 27
+      },
+      {
+        "control_effect": 0.353,
+        "estimand": "depth_R_minus_L_m",
+        "margin": 0.0706,
+        "mde_n27": 0.103,
+        "model_id": "fastwam_robotwin",
+        "sigma_plan": 0.2152,
+        "status": "underpowered_no_equivalence_claim_stretch",
+        "strict_n": 230,
+        "target_n": 27
+      }
+    ],
+    "variance_policy": "maximum seed-level SD among committed prior layouts for checkpoint and estimand",
+    "z_sum": 2.48647
+  },
+  "prior_evidence_policy": "V3-E003 retained as a superseded first pass; no prior file or predicate is modified",
+  "queue": {
+    "bytes": 9028463,
+    "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/queue.jsonl",
+    "rows": 4096,
+    "sha256": "3c284b2dd5538da8717a736fede58fea7861fb25227f571f8c36d084c229076c"
+  },
+  "registered_at_utc": "2026-08-08T22:17:16Z",
+  "registered_predictions": {
+    "H1_interaction": "Within checkpoint, the directional binary/depth gap shrinks from s=0 to s=1; Nano binary and DreamZero binary instead test prospectively named gap emergence because control is at ceiling/near floor.",
+    "H2_equivalence": "At s=1, compare binary and depth gaps against 0.20 times each checkpoint's committed control effect. Equivalence is claimed only for rows whose preregistered strict MDE gate is met.",
+    "H3_dose_response": "For pi05 and Nano, gap-versus-realised-A slope is positive when A decreases toward symmetry; primary slope uses inventory-matched s=.25,.50,.75,1, with s=0 shown as anchored reference.",
+    "H4_positive_control": "Endpoint redirection remains positive at every level. Failure closes that checkpoint/level against an equalisation interpretation.",
+    "H5_failure_signature": "Among failures, wrong-side share increases as symmetry rises while pick/transport share decreases."
+  },
+  "release_boundary": "No E004 model request or new behavioral episode is authorized until this registration/candidate/queue commit is pushed and the model-blind static, live camera/reset, raw-write, renderer, and exact runtime gates pass for that lane.",
+  "schema_version": "vla-wam-shared-v3e004-registration-v1",
+  "sign_convention": "+Y = robot-left",
+  "source_bindings": {
+    "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/dreamzero_mirror_v3b003_cells.jsonl": {
+      "bytes": 291384,
+      "sha256": "a6d0f0a5d4c7cdfa5d3de95d44d7b11f42750a76a603ff8c2e44848e34b8f70d"
+    },
+    "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/dreamzero_v3b003_summary.json": {
+      "bytes": 124097,
+      "sha256": "f45ab7d11281b994592948cdc11ea5d0fe24837d75d21a8a7dd42ff63b9c5817"
+    },
+    "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/nano_mirror_v3b001_cells.jsonl": {
+      "bytes": 242838,
+      "sha256": "018b8b6ae76ac46f2f89eef83c4b16d7a4ff3d1ff15d91527b96fb56b5432c5a"
+    },
+    "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/nano_v3b001_summary.json": {
+      "bytes": 72705,
+      "sha256": "f43636a03caade5f3dc65de6736808c8257c78eacb07ba4cb963bfc6a0e36578"
+    },
+    "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/pi05_mirror_v3b002_cells.jsonl": {
+      "bytes": 382104,
+      "sha256": "0db680a3aee04c991bcc78904cb572b7d962971e04fbc879e828354da30dafee"
+    },
+    "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_report.json": {
+      "bytes": 23134,
+      "sha256": "32ffa99f720906abe8679b0791be3f12d3c91dfce0274d85457a6d2ba59d2b71"
+    },
+    "artifacts/vla_wam_shared_v3/phase_e/bilateral_symmetry_null_control_v3e003/results.json": {
+      "bytes": 22122,
+      "sha256": "06f61682bc296972c521e46d87972eae8cbab2840c97de9d9f1e9306dc2689a0"
+    },
+    "artifacts/vla_wam_shared_v3/prospective_tier_b/results/v3b007/fastwam_v3b007_summary.json": {
+      "bytes": 8655,
+      "sha256": "1b9f91a0fb24ca5853ae0fe20f48dc3b784003d2169b6eae0b563d320d867d48"
+    },
+    "artifacts/vla_wam_shared_v3/results/cosmos3_edge_policy_droid_phase_a_summary.json": {
+      "bytes": 197084,
+      "sha256": "fc93b6518185641068ce51a4d81882dd1828ebeb9227b44c4ffc21a07b526c87"
+    }
+  },
+  "status": "prospectively_registered_zero_e004_model_requests_or_behavioral_episodes",
+  "study_id": "vla_wam_language_steerability_v3",
+  "success_predicates_frozen": true,
+  "supersedes": "V3-E003"
+}

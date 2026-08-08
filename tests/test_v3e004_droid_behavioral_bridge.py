@@ -12,7 +12,11 @@ from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.droid_behavioral_cont
     model_spec,
     simulator_export_envelope,
 )
-from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.episode_compiler import EXPORT_SCHEMA
+from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.episode_compiler import (
+    EXPORT_SCHEMA,
+    _first_sustained,
+    frozen_requested_success,
+)
 from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.runtime_contract import (
     RuntimeContractError,
     load_runtime_bundle,
@@ -157,3 +161,12 @@ def test_lazy_cosmos_wrapper_delegates_robolab_batch_inference_after_ensure() ->
     delegated = [call for call in calls if call.func.attr == "infer_batch"]
     assert len(delegated) == 1
     assert any(keyword.arg == "env_ids" for keyword in delegated[0].keywords)
+
+
+def test_frozen_b001_success_does_not_add_sustained_entry_requirement() -> None:
+    steps = [
+        {"object_xyz": [0.0, 0.0, 0.1], "reference_xyz": [0.0, 0.0, 0.1]},
+        {"object_xyz": [0.0, 0.2, 0.1], "reference_xyz": [0.0, 0.0, 0.1]},
+    ]
+    assert frozen_requested_success(steps, "left", detached_release=True)
+    assert _first_sustained([False, True]) is None

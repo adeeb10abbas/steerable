@@ -73,6 +73,9 @@ from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.droid_behavioral_cont
     model_spec,
     simulator_export_envelope,
 )
+from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.episode_compiler import (  # noqa: E402
+    frozen_requested_success,
+)
 from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.live_snapshot_adapter import (  # noqa: E402
     ModelBlindLiveGateAdapter,
     bind_camera_row,
@@ -162,6 +165,7 @@ add_common_eval_args(parser)
 AppLauncher.add_app_launcher_args(parser)
 args_cli, _ = parser.parse_known_args()
 args_cli.enable_cameras = True
+args_cli.output_folder_name = str(bootstrap.output_dir.resolve())
 if args_cli.video_mode != "viewport" or args_cli.num_envs != 1 or args_cli.num_runs != 1:
     parser.error("E004 requires one environment, one run, and viewport video")
 if args_cli.enable_subtask or args_cli.instruction_type != "default":
@@ -516,9 +520,8 @@ class StateCaptureProxy:
         actions = len(self.samples) - 1
         if actions != self.adapter.behavioral_action_count:
             raise RuntimeError("live gate action counter differs from captured state transitions")
-        requested = [_cone(sample, cell.relation) for sample in self.samples]
         detached = bool(object_dropped(self._env, object="rubiks_cube", env_id=0))
-        success = len(requested) >= 3 and all(requested[-3:]) and detached
+        success = frozen_requested_success(self.samples, cell.relation, detached)
         valid = success or actions == spec.action_cap
         value = {
             "schema_version": "vla-wam-shared-v3e004-droid-state-capture-v1",

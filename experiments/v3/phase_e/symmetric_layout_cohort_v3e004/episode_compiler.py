@@ -92,6 +92,18 @@ def _first_sustained(mask: list[bool], width: int = 3) -> int | None:
     return None
 
 
+def frozen_requested_success(
+    steps: list[Mapping[str, Any]], relation: str, detached_release: bool
+) -> bool:
+    """Apply the frozen B001 behavioral success predicate.
+
+    B001 terminates on a detached release in the requested 45-degree cone.
+    Three-step sustained cone entry is retained as a separate trajectory
+    diagnostic; it is not an additional binary-success requirement.
+    """
+    return bool(steps and _cone(steps[-1], relation) and detached_release)
+
+
 def _normalize_steps(value: Any) -> list[dict[str, Any]]:
     _require(isinstance(value, list) and len(value) >= 2, "state capture requires initial plus post-action states")
     output: list[dict[str, Any]] = []
@@ -226,9 +238,10 @@ def build_episode_record(*, export: Mapping[str, Any], bundle: E004RuntimeBundle
     success, right_censored = export.get("requested_success"), export.get("right_censored")
     detached = export.get("final_detached_release")
     _require(type(success) is bool and type(right_censored) is bool and type(detached) is bool, "scorer booleans are invalid")
-    requested = [_cone(step, cell.relation) for step in steps]
-    final_sustained = len(requested) >= 3 and all(requested[-3:])
-    _require(success == (final_sustained and detached), "requested_success differs from the frozen sustained-cone plus detached-release predicate")
+    _require(
+        success == frozen_requested_success(steps, cell.relation, detached),
+        "requested_success differs from the frozen B001 detached-release-in-cone predicate",
+    )
     _require(not success or not right_censored, "successful episode cannot be right-censored")
     _require(not right_censored or (not success and actions_executed == action_cap), "right-censored failure must reach action cap")
     actions_artifact = _file_record(export.get("executed_action_trace"), "executed action trace")

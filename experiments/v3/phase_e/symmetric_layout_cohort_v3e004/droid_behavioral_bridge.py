@@ -768,6 +768,23 @@ class _LazyE004CosmosClient:
         inner = self._ensure()
         return inner.infer(obs, instruction, env_id=env_id)
 
+    def infer_batch(
+        self,
+        observations: Any,
+        instructions: Any,
+        *,
+        env_ids: Any,
+    ) -> Any:
+        """Delegate RoboLab's native first-request batch surface lazily.
+
+        RoboLab invokes ``infer_batch`` even for the single E004 environment.
+        Keeping the delegation on the lazy wrapper preserves the pre-request
+        reset/camera gate in ``_ensure`` while leaving the released Cosmos
+        client's native batching and request accounting unchanged.
+        """
+        inner = self._ensure()
+        return inner.infer_batch(observations, instructions, env_ids=env_ids)
+
     def reset(self, *, env_id: int | None = None) -> None:
         if self.inner is not None:
             self.inner.reset(env_id=env_id)

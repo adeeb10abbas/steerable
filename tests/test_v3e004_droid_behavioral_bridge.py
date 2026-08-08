@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 import json
 from pathlib import Path
 
@@ -126,3 +127,33 @@ def test_canonical_export_preserves_exact_prompt_and_raw_fields() -> None:
 def test_every_droid_model_has_one_dispatch_spec() -> None:
     bundle = _bundle()
     assert {cell.model_id for cell in bundle.cells if cell.row["arena"] == "droid_robolab"} == set(MODEL_SPECS)
+
+
+def test_lazy_cosmos_wrapper_delegates_robolab_batch_inference_after_ensure() -> None:
+    """Guard the exact interface RoboLab uses for its first policy request."""
+    source_path = (
+        ROOT
+        / "experiments/v3/phase_e/symmetric_layout_cohort_v3e004"
+        / "droid_behavioral_bridge.py"
+    )
+    module = ast.parse(source_path.read_text(encoding="utf-8"))
+    wrapper = next(
+        node
+        for node in module.body
+        if isinstance(node, ast.ClassDef) and node.name == "_LazyE004CosmosClient"
+    )
+    method = next(
+        node
+        for node in wrapper.body
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+        and node.name == "infer_batch"
+    )
+    calls = [
+        node
+        for node in ast.walk(method)
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
+    ]
+    assert any(call.func.attr == "_ensure" for call in calls)
+    delegated = [call for call in calls if call.func.attr == "infer_batch"]
+    assert len(delegated) == 1
+    assert any(keyword.arg == "env_ids" for keyword in delegated[0].keywords)

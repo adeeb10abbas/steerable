@@ -178,8 +178,16 @@ def validate_settle_stability(value: Mapping[str, Any]) -> dict[str, Any]:
         _require(isinstance(row, Mapping), f"stability row is invalid for {name}")
         linear = float(row.get("linear_speed_m_s"))
         angular = float(row.get("angular_speed_rad_s"))
-        _require(math.isfinite(linear) and 0.0 <= linear <= LINEAR_SPEED_TOLERANCE_M_S, f"{name} failed linear stability")
-        _require(math.isfinite(angular) and 0.0 <= angular <= ANGULAR_SPEED_TOLERANCE_RAD_S, f"{name} failed angular stability")
+        _require(
+            math.isfinite(linear) and 0.0 <= linear <= LINEAR_SPEED_TOLERANCE_M_S,
+            f"{name} failed linear stability: observed={linear:.9g} m/s, "
+            f"limit={LINEAR_SPEED_TOLERANCE_M_S:.9g} m/s",
+        )
+        _require(
+            math.isfinite(angular) and 0.0 <= angular <= ANGULAR_SPEED_TOLERANCE_RAD_S,
+            f"{name} failed angular stability: observed={angular:.9g} rad/s, "
+            f"limit={ANGULAR_SPEED_TOLERANCE_RAD_S:.9g} rad/s",
+        )
         normalized[str(name)] = {"linear_speed_m_s": linear, "angular_speed_rad_s": angular}
     return {
         "settle_steps": SETTLE_STEPS,

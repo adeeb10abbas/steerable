@@ -110,6 +110,10 @@ REQUEST_METADATA_FIELDS = frozenset({
 })
 
 RESPONSE_METADATA_FIELDS = frozenset({
+    # OpenPI's websocket layer appends this after the policy has returned and
+    # the model-output digest has been computed.  It is transport timing, not
+    # native model output.
+    "server_timing",
     "v3e004_live_stack",
     "study_id",
     "amendment_id",

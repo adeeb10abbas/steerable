@@ -242,6 +242,24 @@ def test_request_response_hashes_bind_cell_session_input_and_output(tmp_path: Pa
         pending_request=request,
     )
     assert cr.hash_value(verified) == response["model_output_sha256"]
+
+    # The OpenPI websocket transport injects timing only after the policy
+    # response has been hash-bound.  Transport metadata must not change the
+    # native model-output digest observed by the client.
+    transported = {
+        **response,
+        "server_timing": {"infer_ms": 12.5, "prev_total_ms": 13.0},
+    }
+    transported_verified = cr.validate_response_envelope(
+        transported,
+        cell=cell,
+        runtime=runtime,
+        session=session,
+        pending_request=request,
+    )
+    assert transported_verified == verified
+    assert cr.hash_value(transported_verified) == response["model_output_sha256"]
+
     response["action"][0, 0] = 1.0
     with pytest.raises(cr.CosmosRuntimeError, match="model_output_sha256"):
         cr.validate_response_envelope(

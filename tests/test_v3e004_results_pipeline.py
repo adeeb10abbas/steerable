@@ -31,6 +31,10 @@ def queue_rows() -> list[dict]:
 def raw_row(queue: dict, *, success: bool) -> dict:
     category = "correct" if success else "wrong_side"
     sign = 1.0 if queue["relation"] == "left" else -1.0
+    expected_A = queue["registered_expected_asymmetry_A"]
+    if expected_A is None:
+        fastwam_candidate = json.loads((SOURCE / "layout/fastwam_robotwin_candidate.json").read_text())
+        expected_A = fastwam_candidate["derived"][f"{float(queue['symmetry_level_s']):.2f}"]["asymmetry_metric_A"]
     return {
         "schema_version": "vla-wam-shared-v3e004-droid-behavioral-episode-v1",
         "record_type": "behavioral_episode",
@@ -59,7 +63,7 @@ def raw_row(queue: dict, *, success: bool) -> dict:
         "cumulative_lateral_path": 0.3,
         "peak_lateral_excursion": 0.15,
         "symmetry_level_s": queue["symmetry_level_s"],
-        "asymmetry_metric_A": queue["registered_expected_asymmetry_A"],
+        "asymmetry_metric_A": expected_A,
         "position_residual": 0.0,
         "orientation_residual": 0.0,
         "midline_residual": 0.0,
@@ -69,7 +73,7 @@ def raw_row(queue: dict, *, success: bool) -> dict:
         "initial_state_sha256": "1" * 64,
         "registration_sha256": sha256_file(SOURCE / "registration.json"),
         "queue_sha256": sha256_file(SOURCE / "queue.jsonl"),
-        "candidate_sha256": sha256_file(SOURCE / "layout/candidate.json"),
+        "candidate_sha256": queue["layout_candidate_sha256"],
     }
 
 
@@ -154,8 +158,42 @@ def test_conflicting_valid_duplicate_fails_closed(tmp_path: Path):
             queue_rows=registered,
             registration_sha256=sha256_file(SOURCE / "registration.json"),
             queue_sha256=sha256_file(SOURCE / "queue.jsonl"),
-            candidate_sha256=sha256_file(SOURCE / "layout/candidate.json"),
+            candidate_sha256_by_arena={
+                "droid_robolab": sha256_file(SOURCE / "layout/candidate.json"),
+                "robotwin": sha256_file(SOURCE / "layout/fastwam_robotwin_candidate.json"),
+            },
         )
+
+
+def test_fastwam_rows_use_the_registered_robotwin_candidate(tmp_path: Path):
+    rows = [
+        row
+        for row in queue_rows()
+        if row["model_id"] == "fastwam_robotwin"
+        and row["environment_seed"] == 9400
+        and row["symmetry_level_s"] == 0.0
+    ]
+    assert {row["layout_candidate_sha256"] for row in rows} == {
+        sha256_file(SOURCE / "layout/fastwam_robotwin_candidate.json")
+    }
+    raw_root = tmp_path / "raw"
+    for row in rows:
+        write_raw(raw_root / row["relation"] / "e004_episode.json", raw_row(row, success=False))
+    base = prepare_base(tmp_path)
+    report = compile_outputs(
+        registration_path=base / "registration.json",
+        queue_path=base / "queue.jsonl",
+        raw_roots=[raw_root],
+        output_root=base,
+        resamples=10_000,
+        require_complete=False,
+    )
+    assert report["valid_behavioral_episodes"] == 2
+    compact = [json.loads(line) for line in (base / "results/episodes.jsonl").read_text().splitlines()]
+    assert {row["arena"] for row in compact} == {"robotwin"}
+    assert {row["candidate_sha256"] for row in compact} == {
+        sha256_file(SOURCE / "layout/fastwam_robotwin_candidate.json")
+    }
 
 
 def test_claim_gate_never_calls_underpowered_null_equivalent():

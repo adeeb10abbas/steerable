@@ -447,7 +447,7 @@ def load_valid_episodes(
     queue_rows: Mapping[str, Mapping[str, Any]],
     registration_sha256: str,
     queue_sha256: str,
-    candidate_sha256: str,
+    candidate_sha256_by_arena: Mapping[str, str],
     excluded: Sequence[Path] = (),
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
     chosen: dict[str, dict[str, Any]] = {}
@@ -461,9 +461,17 @@ def load_valid_episodes(
                 continue
             cell_id = str(_row_value(raw, "cell_id"))
             require(cell_id in queue_rows, f"unregistered E004 behavioral result: {cell_id}")
+            queue_row = queue_rows[cell_id]
+            arena = str(queue_row.get("arena"))
+            require(arena in candidate_sha256_by_arena, f"{cell_id}: no registered candidate for arena {arena}")
+            candidate_sha256 = candidate_sha256_by_arena[arena]
+            require(
+                queue_row.get("layout_candidate_sha256") == candidate_sha256,
+                f"{cell_id}: queue candidate differs from registered arena candidate",
+            )
             compact = normalize_episode(
                 raw,
-                queue_row=queue_rows[cell_id],
+                queue_row=queue_row,
                 source_path=path,
                 source_sha256=digest,
                 source_line=line_number,
@@ -887,14 +895,17 @@ def compile_outputs(
     require(len(queue_by_id) == len(queue), "registered queue has duplicate cell ids")
     registration_sha = sha256_file(registration_path)
     queue_sha = sha256_file(queue_path)
-    candidate_sha = registration["layout"]["candidate_sha256"]
+    candidate_sha_by_arena = {
+        "droid_robolab": registration["layout"]["candidate_sha256"],
+        "robotwin": registration["layout"]["robotwin_stretch_candidate_sha256"],
+    }
     results_dir = Path(output_root) / "results"
     episodes, ledger, duplicates = load_valid_episodes(
         raw_roots,
         queue_rows=queue_by_id,
         registration_sha256=registration_sha,
         queue_sha256=queue_sha,
-        candidate_sha256=candidate_sha,
+        candidate_sha256_by_arena=candidate_sha_by_arena,
         excluded=(results_dir,),
     )
     episodes, pair_rows = materialize_pair_fields(episodes)

@@ -1,0 +1,56 @@
+{
+  "amendment_id": "V3-E004-R001",
+  "candidate_sha256": "7e270419cdbd2a00e36c47a6a5e3d10c7affb225f118e536cc43917da960ba33",
+  "effective_scope": {
+    "arenas": [
+      "droid_robolab"
+    ],
+    "models": [
+      "pi05_current_stack_droid",
+      "cosmos3_nano_policy_droid",
+      "dreamzero_droid_action_cfg",
+      "cosmos3_edge_policy_droid"
+    ],
+    "request_index": 0
+  },
+  "frozen_procedure": {
+    "closed_loop_after_request0": "All observations after the first executed action are native live simulator observations. No later frame is replayed.",
+    "left_capture": "After the registered settle and live camera/reset gate, losslessly retain the complete non-language LEFT policy observation before request zero, including every image and proprioceptive tensor leaf with dtype, shape, byte length, and SHA-256.",
+    "pair_order": "For this runtime amendment only, execute the LEFT cell before its matched RIGHT cell so the prospective cache exists. The committed queue bytes and registered cells are unchanged.",
+    "physical_reset_gate": "Before RIGHT request zero, require the live RIGHT robot articulation, rigid-object states, camera extrinsics/intrinsics, observation structure, tensor dtypes, and tensor shapes to be bit-identical to the retained LEFT reset contract. Native live RGB content hashes remain separately retained and are not substituted for this gate.",
+    "right_replay": "Only after the physical reset gate passes, replace the RIGHT request-zero non-language observation with the exact losslessly retained LEFT bytes. The registered RIGHT prompt remains native and is the only request-zero difference.",
+    "source_of_truth": "The cache, reset contract, replay attestation, and their SHA-256 bindings are raw evidence. Missing or changed artifacts fail closed before a model request.",
+    "zero_request_preflight": "Each released DROID lane must capture a LEFT cache and prove a RIGHT replay round trip with zero model requests and zero behavioral actions before behavioral execution."
+  },
+  "invalid_discovery_attempts": [
+    {
+      "behavioral_use": "individual raw episode retained; excluded from all matched-pair denominators",
+      "cell_id": "v3e004:nano:seed9400:s100:left",
+      "episode_jsonl_sha256": "0cd1b70adb17c99637cea7d53d7cfb2bc396e9f82b792e031bafdace5defdd1f",
+      "native_initial_state_sha256": "860583fd824f7213b7f3e9bcd3bc1832a647cffa59fdf0324295a7d5b74a7199"
+    },
+    {
+      "behavioral_use": "individual raw episode retained; excluded from all matched-pair denominators",
+      "cell_id": "v3e004:nano:seed9400:s100:right",
+      "episode_jsonl_sha256": "83c256b3d9132d29410c657627b6f3b3441701801e12307817c4b3c72b1d9f8f",
+      "native_initial_state_sha256": "b7424552287d116a6550d037c8942fe0de360fe6b6aa852502d7b13db79c6dd9"
+    }
+  ],
+  "motivation": "The first live Nano LEFT/RIGHT smoke had bit-identical registered simulator state, robot state, object state, and camera geometry, but independent realtime RTX startups produced different RGB bytes in all four policy views. The precommitted RGB-byte guard correctly rejected the pair after behavior. This prospective runtime amendment preserves that guard by making the complete request-zero non-language input byte-identical rather than weakening the comparison.",
+  "no_other_change": [
+    "registration.json is unchanged",
+    "queue.jsonl is unchanged",
+    "layout candidate is unchanged",
+    "prompts and prompt hashes are unchanged",
+    "success predicate and failure taxonomy are unchanged",
+    "sampling and environment seeds are unchanged",
+    "controller and action contracts are unchanged",
+    "renderer and camera configuration are unchanged"
+  ],
+  "queue_sha256": "af6acdb298b773575a0ddc3d16be0544c7e2430f0d62d92fe231f75e1b2f7a57",
+  "registered_before_new_request": true,
+  "registration_commit": "59227386aa97b42cc16dbe8d90418af7e9cd8c73",
+  "registration_sha256": "3e3786510ebba933d0c7a4606afa51627ea6bf706f9e64b34cfd74b29e318db2",
+  "schema_version": "vla-wam-shared-v3e004-request0-observation-replay-amendment-v1",
+  "study_id": "vla_wam_language_steerability_v3"
+}

@@ -37,6 +37,7 @@ from .fastwam_robotwin import (
     ORIENTATION_TOLERANCE_RAD,
     POSITION_TOLERANCE_M,
     PROMPTS,
+    RELATIONS,
     SOURCE_FIXTURE_ENVIRONMENT_SEED,
     ActorPose,
     asymmetry_A,

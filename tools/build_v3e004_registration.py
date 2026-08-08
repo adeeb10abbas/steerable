@@ -24,6 +24,10 @@ from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.layout_contract impor
     PoseSE2,
     canonical_json_bytes,
 )
+from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.fastwam_robotwin import (  # noqa: E402
+    candidate_payload as fastwam_candidate_payload,
+    canonical_json_bytes as fastwam_canonical_json_bytes,
+)
 
 
 OUT = ROOT / "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004"
@@ -229,7 +233,9 @@ def load_closed_controls(path: str) -> dict[tuple[int, str], dict[str, Any]]:
     return selected
 
 
-def queue_rows(candidate: dict[str, Any], candidate_sha256: str) -> list[dict[str, Any]]:
+def queue_rows(
+    candidate: dict[str, Any], candidate_sha256: str, fastwam_candidate_sha256: str
+) -> list[dict[str, Any]]:
     historical_comparators: dict[str, dict[tuple[int, str], dict[str, Any]]] = {}
     for model_id, config in MODELS.items():
         if config.get("preserved_s0_source"):
@@ -266,7 +272,11 @@ def queue_rows(candidate: dict[str, Any], candidate_sha256: str) -> list[dict[st
                         "execution_mode": "new_behavioral_episode",
                         "runtime_identity_requirement": config["runtime"],
                         "success_predicate_id": SUCCESS_PREDICATE if config["arena"] == "droid_robolab" else "frozen_v3b007_robotwin_relation_aware_success",
-                        "layout_candidate_sha256": candidate_sha256 if config["arena"] == "droid_robolab" else None,
+                        "layout_candidate_sha256": (
+                            candidate_sha256
+                            if config["arena"] == "droid_robolab"
+                            else fastwam_candidate_sha256
+                        ),
                         "registered_expected_asymmetry_A": candidate["levels"][f"{level:.2f}"]["asymmetry_metric_A"] if config["arena"] == "droid_robolab" else None,
                         "required_raw_outputs": ["simulator_video", "executed_action_trace", "raw_episode_jsonl", "final_state", "realised_object_poses", "arm_reset_pose"],
                         "required_episode_fields": ["success", "failure_category", "signed_final_lateral_offset", "requested_side_depth", "cone_entry_step", "cone_entry_sustained", "endpoint_shift", "action_distinct", "episode_length", "time_to_first_contact", "grasp_step", "cumulative_lateral_path", "peak_lateral_excursion", "symmetry_level_s", "asymmetry_metric_A", "position_residual", "orientation_residual", "midline_residual", "occlusion_check", "realised_object_poses", "arm_reset_pose"],
@@ -308,7 +318,9 @@ def main() -> None:
     candidate = build_from_spec(spec, repo_root=ROOT)
     candidate_payload = canonical_json_bytes(candidate)
     candidate_sha256 = sha256_bytes(candidate_payload)
-    rows = queue_rows(candidate, candidate_sha256)
+    fastwam_candidate_bytes = fastwam_canonical_json_bytes(fastwam_candidate_payload())
+    fastwam_candidate_sha256 = sha256_bytes(fastwam_candidate_bytes)
+    rows = queue_rows(candidate, candidate_sha256, fastwam_candidate_sha256)
     queue_payload = jsonl_bytes(rows)
     queue_sha256 = sha256_bytes(queue_payload)
 
@@ -368,6 +380,10 @@ def main() -> None:
             "arm_reset_pose_required": True,
             "candidate_path": str((OUT / "layout/candidate.json").relative_to(ROOT)),
             "candidate_sha256": candidate_sha256,
+            "robotwin_stretch_candidate_path": str(
+                (OUT / "layout/fastwam_robotwin_candidate.json").relative_to(ROOT)
+            ),
+            "robotwin_stretch_candidate_sha256": fastwam_candidate_sha256,
             "builder_input_path": str((OUT / "layout/builder_input.json").relative_to(ROOT)),
             "builder_input_sha256": sha256_bytes(spec_payload),
             "asymmetry_metric": candidate["asymmetry_metric"],
@@ -404,6 +420,7 @@ def main() -> None:
 
     write_bytes(OUT / "layout/builder_input.json", spec_payload)
     write_bytes(OUT / "layout/candidate.json", candidate_payload)
+    write_bytes(OUT / "layout/fastwam_robotwin_candidate.json", fastwam_candidate_bytes)
     write_bytes(OUT / "queue.jsonl", queue_payload)
     write_bytes(OUT / "registration.json", canonical_json_bytes(registration))
     print(json.dumps({"registration": str(OUT / "registration.json"), "candidate_sha256": candidate_sha256, "queue_sha256": queue_sha256, "evidence_cells": total, "new_behavioral_cells": new_count}, indent=2, sort_keys=True))

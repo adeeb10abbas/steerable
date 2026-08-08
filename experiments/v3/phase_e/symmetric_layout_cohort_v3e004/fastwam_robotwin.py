@@ -205,6 +205,21 @@ def canonical_json_bytes(value: Any) -> bytes:
     ).encode("utf-8")
 
 
+def canonicalize_candidate_floats(value: Any) -> Any:
+    """Remove cross-libm last-bit drift before hashing the FastWAM fixture."""
+
+    if isinstance(value, bool) or value is None or isinstance(value, (str, int)):
+        return value
+    if isinstance(value, float):
+        _require(math.isfinite(value), "FastWAM candidate contains a non-finite float")
+        return float(format(value, ".15g"))
+    if isinstance(value, dict):
+        return {key: canonicalize_candidate_floats(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [canonicalize_candidate_floats(item) for item in value]
+    raise FastWAME004Error(f"unsupported FastWAM candidate value: {type(value).__name__}")
+
+
 def candidate_payload() -> dict[str, Any]:
     payload = {
         "schema_version": "vla-wam-shared-v3e004-fastwam-robotwin-layout-candidate-v1",
@@ -265,7 +280,7 @@ def candidate_payload() -> dict[str, Any]:
     full = residuals(SYMMETRIC_FIXTURE)
     _require(full["midline_residual_m"] < POSITION_TOLERANCE_M, "s1 midline residual fails")
     _require(full["orientation_residual_rad"] < ORIENTATION_TOLERANCE_RAD, "s1 yaw residual fails")
-    return payload
+    return canonicalize_candidate_floats(payload)
 
 
 def candidate_sha256() -> str:

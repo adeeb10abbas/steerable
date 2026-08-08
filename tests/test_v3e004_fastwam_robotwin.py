@@ -25,6 +25,7 @@ from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.fastwam_robotwin impo
     FastWAME004Error,
     asymmetry_A,
     candidate_payload,
+    canonicalize_candidate_floats,
     canonical_json_bytes,
     layout_for_level,
     load_candidate,
@@ -83,6 +84,13 @@ def test_fastwam_candidate_is_strict_hash_bound_and_preserves_arena_boundary(tmp
     path.write_bytes(path.read_bytes().replace(b'"target_count":1', b'"target_count":2'))
     with pytest.raises(FastWAME004Error, match="SHA-256"):
         load_candidate(path, digest)
+
+
+def test_fastwam_candidate_float_hash_is_cross_libm_stable():
+    variants = [0.00022248008525882487, 0.0002224800852588249]
+    assert len({canonicalize_candidate_floats(value) for value in variants}) == 1
+    variants = [-0.0002222756212954535, -0.00022227562129545353]
+    assert len({canonicalize_candidate_floats(value) for value in variants}) == 1
 
 
 def test_registered_fastwam_queue_is_exact_108_cell_9400_series():

@@ -17,6 +17,9 @@ sys.path.insert(0, str(ROOT))
 from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.layout_contract import (  # noqa: E402
     load_candidate,
 )
+from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.fastwam_robotwin import (  # noqa: E402
+    load_candidate as load_fastwam_candidate,
+)
 
 BASE = ROOT / "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004"
 CORE_SEEDS = set(range(9400, 9427))
@@ -69,8 +72,15 @@ def validate_registration() -> dict[str, Any]:
     registration_path = BASE / "registration.json"
     queue_path = BASE / "queue.jsonl"
     candidate_path = BASE / "layout/candidate.json"
+    fastwam_candidate_path = BASE / "layout/fastwam_robotwin_candidate.json"
     static_gate_path = BASE / "gates/static_layout_gate.json"
-    for path in (registration_path, queue_path, candidate_path, static_gate_path):
+    for path in (
+        registration_path,
+        queue_path,
+        candidate_path,
+        fastwam_candidate_path,
+        static_gate_path,
+    ):
         require(path.is_file(), f"missing E004 preregistration file: {path}")
 
     registration = finite_json(registration_path)
@@ -87,6 +97,12 @@ def validate_registration() -> dict[str, Any]:
     candidate_record = registration.get("layout", {})
     require(candidate_record.get("candidate_sha256") == sha256_file(candidate_path), "candidate hash mismatch")
     candidate = load_candidate(candidate_path, candidate_record["candidate_sha256"])
+    fastwam_sha256 = candidate_record.get("robotwin_stretch_candidate_sha256")
+    require(
+        fastwam_sha256 == sha256_file(fastwam_candidate_path),
+        "FastWAM stretch candidate hash mismatch",
+    )
+    load_fastwam_candidate(fastwam_candidate_path, fastwam_sha256)
 
     rows = jsonl(queue_path)
     require(len(rows) == 4096, "queue is not the registered 4,096 cells")
@@ -107,6 +123,11 @@ def validate_registration() -> dict[str, Any]:
             require(row["layout_candidate_sha256"] == candidate_record["candidate_sha256"], "DROID candidate binding changed")
             expected_A = candidate.to_json()["levels"][f"{level:.2f}"]["asymmetry_metric_A"]
             require(math.isclose(row["registered_expected_asymmetry_A"], expected_A, abs_tol=1e-15), "registered A changed")
+        else:
+            require(
+                row["layout_candidate_sha256"] == fastwam_sha256,
+                "FastWAM candidate binding changed",
+            )
         counts[(model, level, relation)] += 1
         seed_sets[(model, level, relation)].add(int(row["environment_seed"]))
         require(row["environment_seed"] == row["sampling_seed"], "environment/sampling seed mismatch")

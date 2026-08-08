@@ -99,6 +99,9 @@ def _camera_rows(candidate, poses):
             "target_instance_visible_pixels": 100,
             "segmentation_source_sha256": "a" * 64,
             "target_projected_pixel_uv": [320.0, 240.0],
+            "rgb_source_sha256": (name.encode("utf-8").hex() + "0" * 64)[:64],
+            "rgb_source_shape": [480, 640, 3],
+            "rgb_source_dtype": "uint8",
         }
         rows[name] = bind_camera_row(row)
     return rows

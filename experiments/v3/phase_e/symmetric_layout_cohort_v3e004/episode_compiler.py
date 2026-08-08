@@ -127,7 +127,9 @@ def _failure_category(*, success: bool, steps: list[dict[str, Any]], relation: s
     return "transport_failed"
 
 
-def _validate_live_gate(record: Any, *, bundle: E004RuntimeBundle, cell: E004Cell) -> tuple[dict[str, Any], dict[str, Any]]:
+def _validate_live_gate(
+    record: Any, *, bundle: E004RuntimeBundle, cell: E004Cell
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, dict[str, Any]]]:
     artifact = _file_record(record, "bound live scene gate")
     value = _finite_json(Path(artifact["path"]))
     _require(isinstance(value, dict) and value.get("schema_version") == BOUND_GATE_SCHEMA, "live scene gate schema changed")
@@ -149,7 +151,43 @@ def _validate_live_gate(record: Any, *, bundle: E004RuntimeBundle, cell: E004Cel
     _require(math.isclose(float(scene.get("symmetry_level_s")), cell.symmetry_level_s, abs_tol=1e-12), "live gate symmetry level differs from queue")
     _require(all(value is False for value in scene.get("occlusion_check", {}).values()), "live gate retained an occluded camera")
     _require(all(value is True for value in scene.get("target_visible", {}).values()), "live gate retained an invisible target camera")
-    return artifact, scene
+    snapshot_artifact = _file_record(value.get("snapshot"), "live scene snapshot")
+    snapshot = _finite_json(Path(snapshot_artifact["path"]))
+    _require(
+        isinstance(snapshot, dict)
+        and snapshot.get("schema_version") == "vla-wam-shared-v3e004-live-scene-snapshot-v1",
+        "live scene snapshot schema changed",
+    )
+    for key, wanted in (
+        ("registered_cell_id", cell.cell_id),
+        ("registered_cell_sha256", cell.row_sha256),
+        ("registration_sha256", bundle.registration_sha256),
+        ("queue_sha256", bundle.queue_sha256),
+        ("candidate_sha256", bundle.candidate_sha256),
+    ):
+        _require(snapshot.get(key) == wanted, f"live scene snapshot differs for {key}")
+    cameras = snapshot.get("cameras")
+    _require(isinstance(cameras, dict) and cameras, "live scene snapshot has no cameras")
+    camera_identity: dict[str, dict[str, Any]] = {}
+    for name, camera in sorted(cameras.items()):
+        _require(isinstance(camera, dict), f"camera record is invalid: {name}")
+        rgb_sha = camera.get("rgb_source_sha256")
+        rgb_shape = camera.get("rgb_source_shape")
+        rgb_dtype = camera.get("rgb_source_dtype")
+        _require(isinstance(rgb_sha, str) and len(rgb_sha) == 64, f"camera RGB hash is missing: {name}")
+        _require(
+            isinstance(rgb_shape, list)
+            and len(rgb_shape) == 3
+            and all(type(value) is int and value > 0 for value in rgb_shape),
+            f"camera RGB shape is invalid: {name}",
+        )
+        _require(isinstance(rgb_dtype, str) and rgb_dtype, f"camera RGB dtype is missing: {name}")
+        camera_identity[str(name)] = {
+            "rgb_source_sha256": rgb_sha,
+            "rgb_source_shape": rgb_shape,
+            "rgb_source_dtype": rgb_dtype,
+        }
+    return artifact, scene, camera_identity
 
 
 def build_episode_record(*, export: Mapping[str, Any], bundle: E004RuntimeBundle, cell: E004Cell, output_path: Path) -> dict[str, Any]:
@@ -177,7 +215,9 @@ def build_episode_record(*, export: Mapping[str, Any], bundle: E004RuntimeBundle
     }
     for key, wanted in expected.items():
         _require(export.get(key) == wanted, f"simulator export differs for {key}")
-    live_gate_artifact, scene = _validate_live_gate(export.get("live_scene_gate"), bundle=bundle, cell=cell)
+    live_gate_artifact, scene, camera_identity = _validate_live_gate(
+        export.get("live_scene_gate"), bundle=bundle, cell=cell
+    )
     steps = _normalize_steps(export.get("steps"))
     actions_executed = len(steps) - 1
     action_cap = int(cell.row["runtime_identity_requirement"]["action_cap"])
@@ -207,6 +247,7 @@ def build_episode_record(*, export: Mapping[str, Any], bundle: E004RuntimeBundle
         "grippers_open": steps[0]["grippers_open"],
         "realised_object_poses": scene["realised_object_poses"],
         "arm_reset_pose": scene["arm_reset_pose"],
+        "initial_rgb_views": camera_identity,
     }
     first_contact: int | None
     contact_reason: str | None

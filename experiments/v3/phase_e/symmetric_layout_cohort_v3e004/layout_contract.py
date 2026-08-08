@@ -513,8 +513,12 @@ def candidate_from_json(value: Mapping[str, Any]) -> E004Candidate:
         realisation_position_tolerance_m=value.get("tolerances", {}).get("realisation_position_m"),
         realisation_orientation_tolerance_rad=value.get("tolerances", {}).get("realisation_orientation_rad"),
     )
-    # The serialized derived layouts/A values are part of the hash-bound
-    # contract and must be byte-semantically identical to recomputation.
+    # The serialized derived layouts/A values are part of the byte-hashed
+    # contract.  Recalculation on the pod may differ by one floating-point ULP
+    # across Python/libm builds, so semantic verification uses a far tighter
+    # tolerance than any registered physical gate rather than demanding that
+    # two independent arithmetic implementations serialize identical last
+    # bits.  The candidate file itself remains SHA-256 bound by load_candidate.
     expected = candidate.to_json()
     for field in (
         "levels",
@@ -524,8 +528,29 @@ def candidate_from_json(value: Mapping[str, Any]) -> E004Candidate:
         "s0_frozen_control_attestation",
         "companion_activation_policy",
     ):
-        _require(value.get(field) == expected[field], f"candidate derived field changed: {field}")
+        _require(
+            _json_semantically_equal(value.get(field), expected[field]),
+            f"candidate derived field changed: {field}",
+        )
     return candidate
+
+
+def _json_semantically_equal(left: Any, right: Any) -> bool:
+    """Compare derived finite JSON, allowing only cross-libm roundoff."""
+
+    if isinstance(left, bool) or isinstance(right, bool):
+        return type(left) is type(right) and left == right
+    if isinstance(left, (int, float)) and isinstance(right, (int, float)):
+        return math.isclose(float(left), float(right), rel_tol=1e-14, abs_tol=1e-14)
+    if isinstance(left, Mapping) and isinstance(right, Mapping):
+        return set(left) == set(right) and all(
+            _json_semantically_equal(left[key], right[key]) for key in left
+        )
+    if isinstance(left, (list, tuple)) and isinstance(right, (list, tuple)):
+        return len(left) == len(right) and all(
+            _json_semantically_equal(a, b) for a, b in zip(left, right)
+        )
+    return type(left) is type(right) and left == right
 
 
 def canonical_json_bytes(value: Any) -> bytes:

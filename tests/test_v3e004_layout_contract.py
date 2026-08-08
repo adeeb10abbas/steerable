@@ -118,6 +118,19 @@ def test_candidate_round_trip_is_hash_bound(tmp_path):
         load_candidate(path, digest)
 
 
+def test_candidate_accepts_only_machine_epsilon_derived_roundoff():
+    payload = make_candidate().to_json()
+    payload["levels"]["0.50"]["asymmetry_metric_A"] += 4e-16
+    # Hash verification is performed by load_candidate; this unit isolates
+    # cross-Python semantic reconstruction of an already hash-bound payload.
+    from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.layout_contract import candidate_from_json
+
+    assert candidate_from_json(payload).to_json()["levels"]["0.50"]["symmetry_level_s"] == 0.5
+    payload["levels"]["0.50"]["asymmetry_metric_A"] += 1e-10
+    with pytest.raises(LayoutContractError, match="derived field changed"):
+        candidate_from_json(payload)
+
+
 def test_full_pose_symmetry_catches_copied_yaw():
     candidate = make_candidate()
     poses = candidate.layout(1.0)

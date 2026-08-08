@@ -243,7 +243,17 @@ def _validate_attempt(bundle: E004RuntimeBundle, spec: RecoverySpec) -> tuple[di
     detached = bool(steps[-1].get("grippers_open") is True and steps[-1].get("object_grabbed") is False)
     _require(capture.get("final_detached_release") is detached, "detached-release flag differs from final raw state")
     success = frozen_requested_success(steps, cell.relation, detached)
-    _require(capture.get("requested_success") is success, "stored score differs from recomputed frozen B001 predicate")
+    if capture.get("requested_success") is not success:
+        # The retained pre-fix π0.5 attempt used the accidental three-step
+        # sustained-cone scorer.  Recovery is expressly required to rescore
+        # those immutable steps with B001's one-step final-release predicate.
+        _require(
+            spec.name == "pi05_s100_left"
+            and spec.source_code_commit == "2742ec0ad32a152652a9e5c9d0fcb7ebd1449e8e"
+            and capture.get("requested_success") is False
+            and success is True,
+            "stored score differs from recomputed frozen B001 predicate outside the exact pre-fix pi05 allowance",
+        )
     right_censored = bool(not success and actions == int(capture["action_cap"]))
     _require(capture.get("right_censored") is right_censored, "right-censor flag differs from immutable step count")
     return attempt, infra, capture

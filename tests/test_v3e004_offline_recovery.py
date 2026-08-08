@@ -145,6 +145,30 @@ def test_attempt_validation_recomputes_one_step_frozen_predicate(tmp_path: Path)
         _validate_attempt(_bundle(), spec)
 
 
+def test_exact_prefixed_pi05_attempt_may_be_rescored_from_false_to_true(tmp_path: Path):
+    spec, attempt, capture = _synthetic_attempt(tmp_path)
+    attempt["invocation_argv"][-1] = "2742ec0ad32a152652a9e5c9d0fcb7ebd1449e8e"
+    _write(spec.source_attempt / "attempt_manifest.json", attempt)
+    infra = json.loads((spec.source_attempt / "infrastructure_invalid.json").read_text())
+    infra["attempt_manifest"] = {
+        "path": str(spec.source_attempt / "attempt_manifest.json"),
+        "bytes": (spec.source_attempt / "attempt_manifest.json").stat().st_size,
+        "sha256": sha256_file(spec.source_attempt / "attempt_manifest.json"),
+    }
+    _write(spec.source_attempt / "infrastructure_invalid.json", infra)
+    capture["requested_success"] = False
+    _write(spec.source_attempt / "state_capture/state_capture.json", capture)
+    spec = RecoverySpec(
+        **{
+            **spec.__dict__,
+            "name": "pi05_s100_left",
+            "source_code_commit": "2742ec0ad32a152652a9e5c9d0fcb7ebd1449e8e",
+        }
+    )
+    _, _, observed = _validate_attempt(_bundle(), spec)
+    assert observed["requested_success"] is False
+
+
 def test_native_viewport_lookup_rejects_ambiguous_policy_outputs(tmp_path: Path):
     spec, attempt, capture = _synthetic_attempt(tmp_path)
     infra = spec.source_attempt / "infrastructure_invalid.json"

@@ -99,13 +99,11 @@ SYMMETRIC = {
     "rubiks_cube": PoseSE2(0.303364634513855, 0.0, 0.08113233000040054, 0.0, ASSET_CUBE),
 }
 COMPANION = {
-    "banana_right": PoseSE2(
-        CONTROL["banana"].x_m,
-        CONTROL["banana"].y_m,
-        CONTROL["banana"].z_m,
-        CONTROL["banana"].yaw_rad,
-        ASSET_BANANA,
-    )
+    # The companion does not exist at s=0, so its interpolation anchor is a
+    # registered counterfactual.  Anchor it at the collision-free symmetric
+    # endpoint rather than on top of the sole B001 banana.  The earlier anchor
+    # was rejected by the zero-request live gate before inference.
+    "banana_right": SYMMETRIC["banana_right"]
 }
 
 
@@ -129,6 +127,7 @@ def layout_spec() -> dict[str, Any]:
         "control_poses": {name: pose_json(pose) for name, pose in sorted(CONTROL.items())},
         "symmetric_poses": {name: pose_json(pose) for name, pose in sorted(SYMMETRIC.items())},
         "companion_counterfactual_s0_poses": {name: pose_json(pose) for name, pose in sorted(COMPANION.items())},
+        "orientation_invariant_objects": ["bowl"],
         "mirror_pairs": [["banana", "banana_right"]],
         "midline_objects": ["rubiks_cube", "bowl"],
         "target_object": "rubiks_cube",
@@ -136,7 +135,7 @@ def layout_spec() -> dict[str, Any]:
         "expected_cameras": ["head_camera", "over_shoulder_left_camera", "over_shoulder_right_camera", "wrist_cam"],
         "robot_base_xy_m": [0.0, 0.0],
         "asymmetry_weights": {"position_inverse_m": 10.0, "orientation_inverse_rad": 1.0},
-        "realisation_position_tolerance_m": 0.003,
+        "realisation_position_tolerance_m": 0.005,
         "realisation_orientation_tolerance_rad": math.radians(2.0),
         "s0_frozen_control_attestation": {
             "inventory_policy": "exact_b001_inventory_and_poses",
@@ -333,6 +332,20 @@ def main() -> None:
             "behavioral_episodes_before_correction": 0,
             "reason": "Closed B001/B002/B003 controls lack E004 realised poses, A, residuals, camera occlusion, and arm-reset fields. They remain historical comparators but cannot satisfy the new raw logging contract.",
             "effect": "All 4,096 registered E004 cells are new behavioral measurements; no missing historical field is imputed or encoded as zero.",
+        },
+        "pre_inference_layout_gate_correction": {
+            "recorded_at_utc": "2026-08-08T23:04:33Z",
+            "model_requests_before_correction": 0,
+            "behavioral_episodes_before_correction": 0,
+            "reason": "Zero-request Isaac gates showed that the provisional s>0 companion anchor placed the two identical bananas in contact at intermediate levels (peak residual speeds 0.184799552 m/s at s=.25 and 0.100256555 m/s at s=.50), while the exact B001 control settled 4.253151 mm from its commanded pose. The circular bowl also changed yaw by 0.114287321 rad under settling although its yaw is physically and visually invariant.",
+            "effect": "The absent companion's counterfactual interpolation anchor is frozen at its collision-free s=1 pose; the live position-realisation tolerance is prospectively set to 5 mm; bowl yaw is explicitly orientation-invariant. Full-symmetry residual gates remain position <1 mm, mirrored-clutter orientation <0.5 degrees, midline <1 mm, and no target occlusion in every camera.",
+            "failed_gate_evidence": [
+                {"path": "/data/users/ali/vla_wam/raw/v3e004/gates/nano_seed9400_s000_left_smoke_attempt02.log", "sha256": "d6565bb7d8367c7277f8629cc4fd68af90edb2c619c721e8cf55d216e36901df"},
+                {"path": "/data/users/ali/vla_wam/raw/v3e004/gates/nano_seed9400_s025_left_smoke_attempt03.log", "sha256": "ba6730fbc792b037d122fa2b6a580b94246d0e592f8f27ff1af844a30369b1c3"},
+                {"path": "/data/users/ali/vla_wam/raw/v3e004/gates/nano_seed9400_s050_left_smoke_attempt03.log", "sha256": "dc1e970c695b4e7ebf5c3ee261655feb5a53d787282a10c29427c4b560b858a8"},
+                {"path": "/data/users/ali/vla_wam/raw/v3e004/gates/nano_seed9400_s075_left_smoke_attempt03.log", "sha256": "3825da54cd8ebf93105bbf1bdcf9e3e5b40bcf959a228b08cd597f9dcc011be0"},
+                {"path": "/data/users/ali/vla_wam/raw/v3e004/gates/nano_seed9400_s100_left_smoke_attempt01/model_blind_gate_report.json", "sha256": "13f09a907505dffd5c4a8525728a7d2c60cec079687bc2ee1464ee103bce1083"}
+            ],
         },
         "model_request_count_before_registration": 0,
         "behavioral_episode_count_before_registration": 0,

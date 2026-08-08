@@ -74,6 +74,7 @@ def build_from_spec(spec: Mapping[str, Any], *, repo_root: Path) -> dict[str, An
             spec.get("companion_counterfactual_s0_poses", {}),
             "companion_counterfactual_s0_poses",
         ),
+        orientation_invariant_objects=spec.get("orientation_invariant_objects", []),
         mirror_pairs=[tuple(row) for row in spec.get("mirror_pairs", [])],
         midline_objects=spec.get("midline_objects", []),
         target_object=str(spec.get("target_object", "")),

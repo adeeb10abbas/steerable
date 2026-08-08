@@ -47,14 +47,16 @@ def make_candidate():
     }
     companions = {
         # This is a registered counterfactual interpolation anchor only.  The
-        # companion is physically absent from the exact s=0 control.
-        "banana_right": PoseSE2(0.539, 0.076, 0.068, -0.35, ASSET_BANANA)
+        # companion is physically absent from the exact s=0 control.  Keeping
+        # its anchor at the s=1 endpoint avoids an intermediate collision.
+        "banana_right": PoseSE2(0.539, 0.22, 0.068, -0.35, ASSET_BANANA)
     }
     control_digest = pose_map_sha256(control)
     return build_candidate(
         control_poses=control,
         symmetric_poses=symmetric,
         companion_counterfactual_s0_poses=companions,
+        orientation_invariant_objects=["bowl"],
         mirror_pairs=[("banana", "banana_right")],
         midline_objects=["rubiks_cube", "bowl"],
         target_object="rubiks_cube",
@@ -142,7 +144,7 @@ def test_full_pose_symmetry_catches_copied_yaw():
     residual = symmetry_residuals(
         broken, [("banana", "banana_right")], ["rubiks_cube", "bowl"]
     )
-    assert residual["position_residual_m"] == 0.0
+    assert residual["position_residual_m"] == pytest.approx(0.0, abs=1e-15)
     assert residual["orientation_residual_rad"] == pytest.approx(0.7)
 
 
@@ -172,6 +174,42 @@ def test_live_s1_gate_logs_A_residuals_and_arm_pose():
     assert row["orientation_residual_rad"] == pytest.approx(0.0)
     assert row["object_layout_symmetric_not_embodiment"] is True
     assert len(row["arm_reset_pose"]["arm_joint_positions_rad"]) == 7
+
+
+def test_circular_reference_yaw_is_invariant_but_clutter_yaw_is_not():
+    candidate = make_candidate()
+    cameras = {name: False for name in candidate.expected_cameras}
+    visible = {name: True for name in candidate.expected_cameras}
+    poses = dict(candidate.layout(0.0))
+    bowl = poses["bowl"]
+    poses["bowl"] = PoseSE2(
+        bowl.x_m, bowl.y_m, bowl.z_m, bowl.yaw_rad + 0.5, bowl.asset_identity
+    )
+    evaluate_layout(
+        candidate,
+        symmetry_level_s=0.0,
+        realised_object_poses=poses,
+        occlusion_check_by_camera=cameras,
+        target_visible_by_camera=visible,
+        arm_reset_pose=arm_pose(),
+    )
+    banana = poses["banana"]
+    poses["banana"] = PoseSE2(
+        banana.x_m,
+        banana.y_m,
+        banana.z_m,
+        banana.yaw_rad + 0.5,
+        banana.asset_identity,
+    )
+    with pytest.raises(LayoutContractError, match="orientation differs"):
+        evaluate_layout(
+            candidate,
+            symmetry_level_s=0.0,
+            realised_object_poses=poses,
+            occlusion_check_by_camera=cameras,
+            target_visible_by_camera=visible,
+            arm_reset_pose=arm_pose(),
+        )
 
 
 def test_live_gate_rejects_undeclared_inventory_and_missing_camera():

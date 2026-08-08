@@ -106,9 +106,9 @@
       }
     },
     "builder_input_path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/layout/builder_input.json",
-    "builder_input_sha256": "5dade7cfc720642693c9828c89be1358f01a536f8266927fccbaf2c5ba1417b2",
+    "builder_input_sha256": "6b19f10a76fc747ce07723c519f2761e961102cdb1cb11a912299d7bed1f3aa2",
     "candidate_path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/layout/candidate.json",
-    "candidate_sha256": "c82fd4f42a17ee3d279a09f91fb6373760b7ea101e29b358f274732149d6cdfd",
+    "candidate_sha256": "7e270419cdbd2a00e36c47a6a5e3d10c7affb225f118e536cc43917da960ba33",
     "inventory_transition": {
       "H1_s0_to_s1": "confirmatory_with_inventory-transition limitation",
       "H3_primary_levels": [
@@ -117,7 +117,9 @@
         0.75,
         1.0
       ],
+      "counterfactual_anchor": "absent companion is anchored at its collision-free s=1 pose",
       "inventory_transition": true,
+      "minimum_pair_center_separation_m": 0.3,
       "s0": "companions absent; exact hash-bound B001 control inventory",
       "s_gt_0": "same-asset companions active at registered interpolated SE(2) poses",
       "undeclared_inventory_change": "fail_closed"
@@ -131,7 +133,7 @@
       "orientation_residual_rad_strict_upper": 0.008726646259971648,
       "position_residual_m_strict_upper": 0.001,
       "realisation_orientation_rad": 0.03490658503988659,
-      "realisation_position_m": 0.003
+      "realisation_position_m": 0.005
     },
     "target_visibility_rule": "cube is in front of bowl and bowl must not lie between any registered camera and cube; target segmentation must be visible in every view"
   },
@@ -263,12 +265,41 @@
     "reason": "Closed B001/B002/B003 controls lack E004 realised poses, A, residuals, camera occlusion, and arm-reset fields. They remain historical comparators but cannot satisfy the new raw logging contract.",
     "recorded_at_utc": "2026-08-08T22:28:21Z"
   },
+  "pre_inference_layout_gate_correction": {
+    "behavioral_episodes_before_correction": 0,
+    "effect": "The absent companion's counterfactual interpolation anchor is frozen at its collision-free s=1 pose; the live position-realisation tolerance is prospectively set to 5 mm; bowl yaw is explicitly orientation-invariant. Full-symmetry residual gates remain position <1 mm, mirrored-clutter orientation <0.5 degrees, midline <1 mm, and no target occlusion in every camera.",
+    "failed_gate_evidence": [
+      {
+        "path": "/data/users/ali/vla_wam/raw/v3e004/gates/nano_seed9400_s000_left_smoke_attempt02.log",
+        "sha256": "d6565bb7d8367c7277f8629cc4fd68af90edb2c619c721e8cf55d216e36901df"
+      },
+      {
+        "path": "/data/users/ali/vla_wam/raw/v3e004/gates/nano_seed9400_s025_left_smoke_attempt03.log",
+        "sha256": "ba6730fbc792b037d122fa2b6a580b94246d0e592f8f27ff1af844a30369b1c3"
+      },
+      {
+        "path": "/data/users/ali/vla_wam/raw/v3e004/gates/nano_seed9400_s050_left_smoke_attempt03.log",
+        "sha256": "dc1e970c695b4e7ebf5c3ee261655feb5a53d787282a10c29427c4b560b858a8"
+      },
+      {
+        "path": "/data/users/ali/vla_wam/raw/v3e004/gates/nano_seed9400_s075_left_smoke_attempt03.log",
+        "sha256": "3825da54cd8ebf93105bbf1bdcf9e3e5b40bcf959a228b08cd597f9dcc011be0"
+      },
+      {
+        "path": "/data/users/ali/vla_wam/raw/v3e004/gates/nano_seed9400_s100_left_smoke_attempt01/model_blind_gate_report.json",
+        "sha256": "13f09a907505dffd5c4a8525728a7d2c60cec079687bc2ee1464ee103bce1083"
+      }
+    ],
+    "model_requests_before_correction": 0,
+    "reason": "Zero-request Isaac gates showed that the provisional s>0 companion anchor placed the two identical bananas in contact at intermediate levels (peak residual speeds 0.184799552 m/s at s=.25 and 0.100256555 m/s at s=.50), while the exact B001 control settled 4.253151 mm from its commanded pose. The circular bowl also changed yaw by 0.114287321 rad under settling although its yaw is physically and visually invariant.",
+    "recorded_at_utc": "2026-08-08T23:04:33Z"
+  },
   "prior_evidence_policy": "V3-E003 retained as a superseded first pass; no prior file or predicate is modified",
   "queue": {
-    "bytes": 9061403,
+    "bytes": 9026487,
     "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/queue.jsonl",
     "rows": 4096,
-    "sha256": "eab9656ebd6f6aba5bd833c5cabe2decc992519f50303b82253d8c759afdb7ac"
+    "sha256": "38326de947e796ec49e38eec235511cc9e4ef51bd4f86c62ca0a2f081026bff3"
   },
   "registered_at_utc": "2026-08-08T22:17:16Z",
   "registered_predictions": {

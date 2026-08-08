@@ -31,6 +31,7 @@ ORIENTATION_TOLERANCE_RAD = math.radians(0.5)
 MIDLINE_TOLERANCE_M = 0.001
 DEFAULT_REALISATION_POSITION_TOLERANCE_M = 0.003
 DEFAULT_REALISATION_ORIENTATION_TOLERANCE_RAD = math.radians(2.0)
+MINIMUM_MIRROR_PAIR_CENTER_SEPARATION_M = 0.30
 
 
 class LayoutContractError(ValueError):
@@ -254,6 +255,7 @@ class E004Candidate:
     weights: SymmetryWeights
     s0_frozen_control_attestation: Mapping[str, Any]
     companion_counterfactual_s0_poses: Mapping[str, PoseSE2]
+    orientation_invariant_objects: tuple[str, ...] = ()
     realisation_position_tolerance_m: float = DEFAULT_REALISATION_POSITION_TOLERANCE_M
     realisation_orientation_tolerance_rad: float = DEFAULT_REALISATION_ORIENTATION_TOLERANCE_RAD
 
@@ -261,10 +263,16 @@ class E004Candidate:
         control_inventory = set(self.control_poses)
         symmetric_inventory = set(self.symmetric_poses)
         companion_inventory = set(self.companion_counterfactual_s0_poses)
+        orientation_invariant = set(self.orientation_invariant_objects)
         _require(control_inventory < symmetric_inventory, "E004 requires an explicit s>0 companion inventory transition")
         _require(
             symmetric_inventory - control_inventory == companion_inventory,
             "every s>0-only object needs one registered counterfactual s=0 pose",
+        )
+        _require(
+            len(orientation_invariant) == len(self.orientation_invariant_objects)
+            and orientation_invariant <= control_inventory,
+            "orientation-invariant objects must be unique members of the frozen control inventory",
         )
         _require(
             _finite(self.realisation_position_tolerance_m, "realisation_position_tolerance_m") > 0.0,
@@ -331,6 +339,18 @@ class E004Candidate:
                 self.symmetric_poses[left].asset_identity == self.symmetric_poses[right].asset_identity,
                 f"companion pair {left}/{right} is not the same asset",
             )
+        for level in ASYMMETRY_LEVELS[1:]:
+            poses = self.layout(level)
+            for left, right in self.mirror_pairs:
+                distance = math.sqrt(
+                    (poses[left].x_m - poses[right].x_m) ** 2
+                    + (poses[left].y_m - poses[right].y_m) ** 2
+                    + (poses[left].z_m - poses[right].z_m) ** 2
+                )
+                _require(
+                    distance >= MINIMUM_MIRROR_PAIR_CENTER_SEPARATION_M,
+                    f"active companion pair overlaps its registered clearance at s={level}",
+                )
 
         # Validate the full symmetric endpoint before any candidate can be
         # serialized.  Visibility remains a live camera gate.
@@ -405,6 +425,7 @@ class E004Candidate:
             "companion_counterfactual_s0_poses": {
                 name: pose.to_json() for name, pose in sorted(self.companion_counterfactual_s0_poses.items())
             },
+            "orientation_invariant_objects": list(self.orientation_invariant_objects),
             "mirror_pairs": [list(pair) for pair in self.mirror_pairs],
             "midline_objects": list(self.midline_objects),
             "target_object": self.target_object,
@@ -421,6 +442,8 @@ class E004Candidate:
                 "inventory_transition": True,
                 "s0": "companions absent; exact hash-bound B001 control inventory",
                 "s_gt_0": "same-asset companions active at registered interpolated SE(2) poses",
+                "counterfactual_anchor": "absent companion is anchored at its collision-free s=1 pose",
+                "minimum_pair_center_separation_m": MINIMUM_MIRROR_PAIR_CENTER_SEPARATION_M,
                 "undeclared_inventory_change": "fail_closed",
                 "H1_s0_to_s1": "confirmatory_with_inventory-transition limitation",
                 "H3_primary_levels": [0.25, 0.5, 0.75, 1.0],
@@ -452,6 +475,7 @@ def build_candidate(
     weights: SymmetryWeights,
     s0_frozen_control_attestation: Mapping[str, Any],
     companion_counterfactual_s0_poses: Mapping[str, PoseSE2],
+    orientation_invariant_objects: Iterable[str] = (),
     realisation_position_tolerance_m: float = DEFAULT_REALISATION_POSITION_TOLERANCE_M,
     realisation_orientation_tolerance_rad: float = DEFAULT_REALISATION_ORIENTATION_TOLERANCE_RAD,
 ) -> E004Candidate:
@@ -468,6 +492,7 @@ def build_candidate(
         weights=weights,
         s0_frozen_control_attestation=dict(s0_frozen_control_attestation),
         companion_counterfactual_s0_poses=dict(companion_counterfactual_s0_poses),
+        orientation_invariant_objects=tuple(orientation_invariant_objects),
         realisation_position_tolerance_m=_finite(
             realisation_position_tolerance_m, "realisation_position_tolerance_m"
         ),
@@ -510,6 +535,7 @@ def candidate_from_json(value: Mapping[str, Any]) -> E004Candidate:
         weights=SymmetryWeights.from_json(metric.get("weights", {})),
         s0_frozen_control_attestation=value.get("s0_frozen_control_attestation", {}),
         companion_counterfactual_s0_poses=companions,
+        orientation_invariant_objects=value.get("orientation_invariant_objects", []),
         realisation_position_tolerance_m=value.get("tolerances", {}).get("realisation_position_m"),
         realisation_orientation_tolerance_rad=value.get("tolerances", {}).get("realisation_orientation_rad"),
     )
@@ -649,12 +675,17 @@ def evaluate_layout(
         orientation_error = abs(wrap_angle(pose.yaw_rad - target.yaw_rad))
         _require(
             position_error <= candidate.realisation_position_tolerance_m,
-            f"live pose position differs from requested s for {name}",
+            f"live pose position differs from requested s for {name}: "
+            f"observed={position_error:.9g} m, "
+            f"limit={candidate.realisation_position_tolerance_m:.9g} m",
         )
-        _require(
-            orientation_error <= candidate.realisation_orientation_tolerance_rad,
-            f"live pose orientation differs from requested s for {name}",
-        )
+        if name not in candidate.orientation_invariant_objects:
+            _require(
+                orientation_error <= candidate.realisation_orientation_tolerance_rad,
+                f"live pose orientation differs from requested s for {name}: "
+                f"observed={orientation_error:.9g} rad, "
+                f"limit={candidate.realisation_orientation_tolerance_rad:.9g} rad",
+            )
     residual = candidate.residuals(realised_object_poses)
     if math.isclose(s, 1.0, abs_tol=1e-12):
         _require(residual["position_residual_m"] < POSITION_TOLERANCE_M, "live s=1 position residual fails")

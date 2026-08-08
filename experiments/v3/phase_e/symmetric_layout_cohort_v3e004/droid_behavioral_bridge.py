@@ -742,7 +742,16 @@ class _LazyE004CosmosClient:
             initial_state_sha256=proxy.initial_state_sha256,
         )
         _write_new_json(self.session_manifest_path, session)
-        self.inner = E004CosmosClient(
+        class AuthorizedE004CosmosClient(E004CosmosClient):
+            """Authorize at the native network-request seam, not per action."""
+
+            def _pack_request(
+                self, extracted_obs: dict[str, Any], instruction: str
+            ) -> dict[str, Any]:
+                _proxy().authorize_request()
+                return super()._pack_request(extracted_obs, instruction)
+
+        self.inner = AuthorizedE004CosmosClient(
             bundle=cosmos_bundle,
             cell=cosmos_cell,
             runtime=runtime,
@@ -757,7 +766,6 @@ class _LazyE004CosmosClient:
 
     def infer(self, obs: Any, instruction: str, *, env_id: int = 0) -> dict[str, Any]:
         inner = self._ensure()
-        _proxy().authorize_request()
         return inner.infer(obs, instruction, env_id=env_id)
 
     def reset(self, *, env_id: int | None = None) -> None:

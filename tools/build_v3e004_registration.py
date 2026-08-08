@@ -231,10 +231,10 @@ def load_closed_controls(path: str) -> dict[tuple[int, str], dict[str, Any]]:
 
 
 def queue_rows(candidate: dict[str, Any], candidate_sha256: str) -> list[dict[str, Any]]:
-    preserved: dict[str, dict[tuple[int, str], dict[str, Any]]] = {}
+    historical_comparators: dict[str, dict[tuple[int, str], dict[str, Any]]] = {}
     for model_id, config in MODELS.items():
         if config.get("preserved_s0_source"):
-            preserved[model_id] = load_closed_controls(config["preserved_s0_source"])
+            historical_comparators[model_id] = load_closed_controls(config["preserved_s0_source"])
 
     rows: list[dict[str, Any]] = []
     for model_id, config in MODELS.items():
@@ -243,7 +243,11 @@ def queue_rows(candidate: dict[str, Any], candidate_sha256: str) -> list[dict[st
             seeds = range(9400, 9400 + count)
             for seed in seeds:
                 for relation in RELATIONS:
-                    is_preserved = level == 0.0 and seed in CORE_SEEDS and model_id in preserved
+                    has_historical_comparator = (
+                        level == 0.0
+                        and seed in CORE_SEEDS
+                        and model_id in historical_comparators
+                    )
                     level_code = f"{int(round(level * 100)):03d}"
                     row: dict[str, Any] = {
                         "schema_version": "vla-wam-shared-v3e004-cell-v1",
@@ -260,7 +264,7 @@ def queue_rows(candidate: dict[str, Any], candidate_sha256: str) -> list[dict[st
                         "prompt": prompts[relation],
                         "prompt_sha256": sha256_bytes(prompts[relation].encode("utf-8")),
                         "static_episode_prompt": True,
-                        "execution_mode": "preserved_closed_control_evidence" if is_preserved else "new_behavioral_episode",
+                        "execution_mode": "new_behavioral_episode",
                         "runtime_identity_requirement": config["runtime"],
                         "success_predicate_id": SUCCESS_PREDICATE if config["arena"] == "droid_robolab" else "frozen_v3b007_robotwin_relation_aware_success",
                         "layout_candidate_sha256": candidate_sha256 if config["arena"] == "droid_robolab" else None,
@@ -272,19 +276,19 @@ def queue_rows(candidate: dict[str, Any], candidate_sha256: str) -> list[dict[st
                         "missing_measurement_policy": "NR remains null and is never converted to zero",
                         "release_status": "not_released_pending_registration_commit_and_all_model_blind_runtime_gates",
                     }
-                    if is_preserved:
-                        source = preserved[model_id][(seed, relation)]
-                        row["source_closed_cell_id"] = source["cell_id"]
-                        row["source_closed_fixture_sha256"] = source["fixture_sha256"]
-                        row["source_queue_sha256"] = SOURCE_BINDINGS[config["preserved_s0_source"]]
+                    if has_historical_comparator:
+                        source = historical_comparators[model_id][(seed, relation)]
+                        row["historical_control_comparator_cell_id"] = source["cell_id"]
+                        row["historical_control_comparator_fixture_sha256"] = source["fixture_sha256"]
+                        row["historical_control_comparator_queue_sha256"] = SOURCE_BINDINGS[config["preserved_s0_source"]]
+                        row["historical_control_comparator_not_an_e004_cell"] = True
                     rows.append(row)
 
     # Prespecify deterministic execution order within every model/seed for new
     # cells only.  Preserved controls already have immutable historical order.
     buckets: dict[tuple[str, int], list[dict[str, Any]]] = {}
     for row in rows:
-        if row["execution_mode"] == "new_behavioral_episode":
-            buckets.setdefault((row["model_id"], row["environment_seed"]), []).append(row)
+        buckets.setdefault((row["model_id"], row["environment_seed"]), []).append(row)
     for key, bucket in buckets.items():
         bucket.sort(key=lambda row: sha256_bytes(f"v3e004-order-v1:{row['cell_id']}".encode("utf-8")))
         for index, row in enumerate(bucket, 1):
@@ -310,10 +314,10 @@ def main() -> None:
     queue_sha256 = sha256_bytes(queue_payload)
 
     total = len(rows)
-    preserved_count = sum(row["execution_mode"] == "preserved_closed_control_evidence" for row in rows)
-    new_count = total - preserved_count
-    if (total, preserved_count, new_count) != (4096, 162, 3934):
-        raise RuntimeError(f"unexpected queue counts: {(total, preserved_count, new_count)}")
+    comparator_count = sum("historical_control_comparator_cell_id" in row for row in rows)
+    new_count = sum(row["execution_mode"] == "new_behavioral_episode" for row in rows)
+    if (total, comparator_count, new_count) != (4096, 162, 4096):
+        raise RuntimeError(f"unexpected queue counts: {(total, comparator_count, new_count)}")
 
     registration = {
         "schema_version": "vla-wam-shared-v3e004-registration-v1",
@@ -323,6 +327,13 @@ def main() -> None:
         "prior_evidence_policy": "V3-E003 retained as a superseded first pass; no prior file or predicate is modified",
         "status": "prospectively_registered_zero_e004_model_requests_or_behavioral_episodes",
         "registered_at_utc": REGISTERED_AT,
+        "pre_inference_correction": {
+            "recorded_at_utc": "2026-08-08T22:28:21Z",
+            "model_requests_before_correction": 0,
+            "behavioral_episodes_before_correction": 0,
+            "reason": "Closed B001/B002/B003 controls lack E004 realised poses, A, residuals, camera occlusion, and arm-reset fields. They remain historical comparators but cannot satisfy the new raw logging contract.",
+            "effect": "All 4,096 registered E004 cells are new behavioral measurements; no missing historical field is imputed or encoded as zero.",
+        },
         "model_request_count_before_registration": 0,
         "behavioral_episode_count_before_registration": 0,
         "exact_prompts": {"droid": PROMPTS, "robotwin": ROBOTWIN_PROMPTS},
@@ -334,7 +345,7 @@ def main() -> None:
             "extension_seed_boundary": "Seeds above 9426 are matched within E004 but are not historical B001 matches; closed geometry ablations are not rerun.",
             "model_levels_and_pairs": {model_id: {f"{level:.2f}": count for level, count in config["levels"].items()} for model_id, config in MODELS.items()},
             "total_evidence_cells": total,
-            "preserved_closed_control_cells": preserved_count,
+            "historical_control_comparator_links_not_e004_cells": comparator_count,
             "new_behavioral_cells": new_count,
             "droid_and_robotwin_never_pooled": True,
         },

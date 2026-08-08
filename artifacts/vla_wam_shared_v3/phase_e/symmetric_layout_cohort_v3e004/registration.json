@@ -47,6 +47,7 @@
     ],
     "droid_and_robotwin_never_pooled": true,
     "extension_seed_boundary": "Seeds above 9426 are matched within E004 but are not historical B001 matches; closed geometry ablations are not rerun.",
+    "historical_control_comparator_links_not_e004_cells": 162,
     "model_levels_and_pairs": {
       "cosmos3_edge_policy_droid": {
         "0.00": 27,
@@ -75,8 +76,7 @@
         "1.00": 341
       }
     },
-    "new_behavioral_cells": 3934,
-    "preserved_closed_control_cells": 162,
+    "new_behavioral_cells": 4096,
     "total_evidence_cells": 4096
   },
   "estimands": {
@@ -256,12 +256,19 @@
     "variance_policy": "maximum seed-level SD among committed prior layouts for checkpoint and estimand",
     "z_sum": 2.48647
   },
+  "pre_inference_correction": {
+    "behavioral_episodes_before_correction": 0,
+    "effect": "All 4,096 registered E004 cells are new behavioral measurements; no missing historical field is imputed or encoded as zero.",
+    "model_requests_before_correction": 0,
+    "reason": "Closed B001/B002/B003 controls lack E004 realised poses, A, residuals, camera occlusion, and arm-reset fields. They remain historical comparators but cannot satisfy the new raw logging contract.",
+    "recorded_at_utc": "2026-08-08T22:28:21Z"
+  },
   "prior_evidence_policy": "V3-E003 retained as a superseded first pass; no prior file or predicate is modified",
   "queue": {
-    "bytes": 9028463,
+    "bytes": 9061403,
     "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/queue.jsonl",
     "rows": 4096,
-    "sha256": "3c284b2dd5538da8717a736fede58fea7861fb25227f571f8c36d084c229076c"
+    "sha256": "eab9656ebd6f6aba5bd833c5cabe2decc992519f50303b82253d8c759afdb7ac"
   },
   "registered_at_utc": "2026-08-08T22:17:16Z",
   "registered_predictions": {

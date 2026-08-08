@@ -20,7 +20,7 @@ def load_validator():
 def test_registration_validator_passes():
     report = load_validator().validate_registration()
     assert report["queue_rows"] == 4096
-    assert report["new_behavioral_cells"] == 3934
+    assert report["new_behavioral_cells"] == 4096
 
 
 def test_registration_keeps_arena_boundary_and_power_boundary():
@@ -34,13 +34,14 @@ def test_registration_keeps_arena_boundary_and_power_boundary():
     )["strict_n"] is None
 
 
-def test_s0_controls_are_reused_not_rerun():
+def test_s0_controls_are_linked_as_comparators_but_newly_measured():
     rows = [json.loads(line) for line in (BASE / "queue.jsonl").read_text().splitlines()]
-    preserved = [row for row in rows if row["execution_mode"] == "preserved_closed_control_evidence"]
-    assert len(preserved) == 162
-    assert {row["model_id"] for row in preserved} == {
+    linked = [row for row in rows if "historical_control_comparator_cell_id" in row]
+    assert len(linked) == 162
+    assert {row["model_id"] for row in linked} == {
         "pi05_current_stack_droid",
         "cosmos3_nano_policy_droid",
         "dreamzero_droid_action_cfg",
     }
-    assert all(row["symmetry_level_s"] == 0.0 for row in preserved)
+    assert all(row["symmetry_level_s"] == 0.0 for row in linked)
+    assert all(row["execution_mode"] == "new_behavioral_episode" for row in rows)

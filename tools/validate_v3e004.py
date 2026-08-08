@@ -91,8 +91,8 @@ def validate_registration() -> dict[str, Any]:
     rows = jsonl(queue_path)
     require(len(rows) == 4096, "queue is not the registered 4,096 cells")
     require(len({row["cell_id"] for row in rows}) == len(rows), "duplicate cell id")
-    require(sum(row["execution_mode"] == "preserved_closed_control_evidence" for row in rows) == 162, "preserved count changed")
-    require(sum(row["execution_mode"] == "new_behavioral_episode" for row in rows) == 3934, "new episode count changed")
+    require(sum("historical_control_comparator_cell_id" in row for row in rows) == 162, "historical comparator links changed")
+    require(sum(row["execution_mode"] == "new_behavioral_episode" for row in rows) == 4096, "new episode count changed")
 
     counts: Counter[tuple[str, float, str]] = Counter()
     seed_sets: defaultdict[tuple[str, float, str], set[int]] = defaultdict(set)
@@ -110,9 +110,10 @@ def validate_registration() -> dict[str, Any]:
         counts[(model, level, relation)] += 1
         seed_sets[(model, level, relation)].add(int(row["environment_seed"]))
         require(row["environment_seed"] == row["sampling_seed"], "environment/sampling seed mismatch")
-        if row["execution_mode"] == "preserved_closed_control_evidence":
-            require(level == 0.0 and int(row["environment_seed"]) in CORE_SEEDS, "invalid preserved control")
-            require(row.get("source_closed_cell_id"), "preserved cell lacks source binding")
+        if "historical_control_comparator_cell_id" in row:
+            require(level == 0.0 and int(row["environment_seed"]) in CORE_SEEDS, "invalid historical comparator link")
+            require(row.get("historical_control_comparator_not_an_e004_cell") is True, "comparator is mislabeled as E004 evidence")
+        require(row["execution_mode"] == "new_behavioral_episode", "E004 queue contains a non-new episode")
 
     for model, levels in EXPECTED.items():
         for level, pairs in levels.items():
@@ -155,8 +156,8 @@ def validate_registration() -> dict[str, Any]:
     return {
         "registration": str(registration_path),
         "queue_rows": len(rows),
-        "preserved_cells": 162,
-        "new_behavioral_cells": 3934,
+        "historical_comparator_links": 162,
+        "new_behavioral_cells": 4096,
         "candidate_sha256": candidate_record["candidate_sha256"],
         "static_gate_sha256": sha256_file(static_gate_path),
     }

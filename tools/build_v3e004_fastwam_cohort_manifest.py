@@ -82,6 +82,21 @@ def canonical_bytes(value: Any) -> bytes:
     ).encode("utf-8")
 
 
+def validate_progress_closed(progress: Sequence[Mapping[str, Any]], expected_seeds: Sequence[int], *, root: Path) -> None:
+    """Accept direct completion or a manifest-only resume over closed markers.
+
+    The split runner is interrupted only after the seed-9414 completion marker.
+    Re-entering the runtime with ``--resume`` and the bounded seed slice writes
+    ``seed_reused`` as its final progress event while producing the canonical
+    slice manifest.  That event is evidence of a closed marker, not a partial
+    behavioral cell, so it is valid only for the last requested seed.
+    """
+    require(bool(progress), f"queue progress is empty: {root}")
+    tail = progress[-1]
+    require(tail.get("event") in {"seed_complete", "seed_reused"}, f"queue progress is not closed: {root}")
+    require(tail.get("seed") == expected_seeds[-1], f"queue progress closes the wrong seed: {root}")
+
+
 def _validate_slice(
     root: Path,
     *,
@@ -185,7 +200,7 @@ def _validate_slice(
             require(len({item["initial_physical_fingerprint_sha256"] for item in pair}) == 1, f"seed {seed} s={level}: LEFT/RIGHT reset differs")
 
     progress = load_jsonl(progress_path)
-    require(progress and progress[-1].get("event") == "seed_complete", f"queue progress is not closed: {root}")
+    validate_progress_closed(progress, expected_seeds, root=root)
     slice_record = {
         "root": str(root),
         "requested_seeds": list(expected_seeds),

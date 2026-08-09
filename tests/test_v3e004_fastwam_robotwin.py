@@ -36,6 +36,7 @@ from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.fastwam_robotwin impo
 from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.fastwam_runtime import (
     episode_measures,
 )
+from tools.build_v3e004_fastwam_cohort_manifest import Invalid, validate_progress_closed
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -227,3 +228,23 @@ def test_fastwam_episode_measurement_keeps_unavailable_contact_null_and_uses_nor
     assert row["time_to_first_contact"] is None
     assert row["cone_entry_step"] == 1
     assert row["cone_entry_sustained"] is True
+
+
+def test_fastwam_cohort_closer_accepts_bounded_resume_tail_but_not_partial_progress(tmp_path):
+    validate_progress_closed(
+        [{"event": "seed_complete", "seed": 9413}, {"event": "seed_reused", "seed": 9414}],
+        list(range(9401, 9415)),
+        root=tmp_path,
+    )
+    with pytest.raises(Invalid, match="not closed"):
+        validate_progress_closed(
+            [{"event": "seed_started", "seed": 9414}],
+            list(range(9401, 9415)),
+            root=tmp_path,
+        )
+    with pytest.raises(Invalid, match="wrong seed"):
+        validate_progress_closed(
+            [{"event": "seed_reused", "seed": 9413}],
+            list(range(9401, 9415)),
+            root=tmp_path,
+        )

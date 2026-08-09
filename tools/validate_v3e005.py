@@ -9,6 +9,11 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
+try:
+    from tools.validate_v3e005_evidence import validate as validate_compact_evidence
+except ModuleNotFoundError:  # Direct ``python tools/validate_v3e005.py`` invocation.
+    from validate_v3e005_evidence import validate as validate_compact_evidence
+
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = ROOT / "artifacts/vla_wam_shared_v3/phase_e/cross_arena_geometry_v3e005"
@@ -106,6 +111,8 @@ def validate_results(registration: dict[str, Any], queue: list[dict[str, Any]]) 
     manifest = load_json(BASE / "evidence_manifest.json")
     require(manifest["registration_sha256"] == digest(BASE / "registration.json"), "manifest registration mismatch")
     require(manifest["results_sha256"] == digest(results_path), "manifest results mismatch")
+    compact = validate_compact_evidence(BASE, require_complete=True, verify_raw_sources=False)
+    require(compact["status"] == "valid_complete", "compact evidence validator did not close E005")
 
 
 def main() -> None:

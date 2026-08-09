@@ -18,6 +18,13 @@ def main() -> None:
         [sys.executable, str(ROOT / "tools/validate_v3e003.py")],
         [sys.executable, str(ROOT / "tools/validate_v3e004.py")],
     ]
+    e005 = [sys.executable, str(ROOT / "tools/validate_v3e005.py")]
+    if (
+        ROOT
+        / "artifacts/vla_wam_shared_v3/phase_e/cross_arena_geometry_v3e005/results/results.json"
+    ).is_file():
+        e005.append("--require-results")
+    commands.append(e005)
     outputs = []
     for command in commands:
         completed = subprocess.run(command, cwd=ROOT, text=True, capture_output=True)

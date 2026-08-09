@@ -51,6 +51,12 @@ def record(path: Path) -> dict[str, Any]:
     return {"path": str(path), "bytes": path.stat().st_size, "sha256": sha256(path)}
 
 
+def record_allow_empty(path: Path) -> dict[str, Any]:
+    path = Path(path).resolve()
+    require(path.is_file(), f"missing evidence file: {path}")
+    return {"path": str(path), "bytes": path.stat().st_size, "sha256": sha256(path)}
+
+
 def load_json(path: Path) -> Any:
     return json.loads(
         Path(path).read_text(encoding="utf-8"),
@@ -202,6 +208,7 @@ def build(
     source_roots: Sequence[Path],
     runner_paths: Sequence[Path],
     setup_invalid_logs: Sequence[Path],
+    infrastructure_invalid_logs: Sequence[Path] = (),
 ) -> dict[str, Any]:
     registration = load_json(registration_path)
     queue_rows = load_jsonl(queue_path)
@@ -278,6 +285,26 @@ def build(
             }
         )
 
+    acceleration_reasons = {
+        "rtx_model_blind_gate_attempt01.log": "prelaunch_unbound_shell_variable_before_gate",
+        "rtx_model_blind_gate_attempt02.log": "frozen_curobo_binary_has_no_blackwell_kernel_image",
+    }
+    infrastructure_invalid_records: list[dict[str, Any]] = []
+    for path in sorted(map(Path, infrastructure_invalid_logs)):
+        require(path.name in acceleration_reasons, f"unrecognized infrastructure-invalid log: {path}")
+        text = path.read_text(encoding="utf-8", errors="replace")
+        if path.name.endswith("attempt02.log"):
+            require("no kernel image is available" in text, f"acceleration blocker differs: {path}")
+        infrastructure_invalid_records.append(
+            {
+                "status": "infrastructure_invalid_excluded_from_behavioral_denominator",
+                "reason": acceleration_reasons[path.name],
+                "model_action_requests": 0,
+                "behavioral_episodes": 0,
+                "log": record_allow_empty(path),
+            }
+        )
+
     require(runner_paths, "at least one runtime implementation path is required")
     runner_records = [record(path) for path in runner_paths]
     require(len({item["sha256"] for item in runner_records}) == 1, "split cohort used different FastWAM runtime bytes")
@@ -306,6 +333,7 @@ def build(
         "source_slices": sorted(source_slices, key=lambda item: item["requested_seeds"][0]),
         "episodes": sorted(episode_records, key=lambda row: (row["environment_seed"], row["symmetry_level_s"], row["relation"])),
         "setup_invalid_attempts": invalid_records,
+        "infrastructure_invalid_attempts": infrastructure_invalid_records,
         "claim_boundary": {
             "robotwin_only_never_pooled_with_droid": True,
             "all_behavioral_failures_retained": True,
@@ -326,6 +354,7 @@ def main() -> None:
     parser.add_argument("--source-root", type=Path, action="append", required=True)
     parser.add_argument("--runner", type=Path, action="append", required=True)
     parser.add_argument("--setup-invalid-log", type=Path, action="append", required=True)
+    parser.add_argument("--infrastructure-invalid-log", type=Path, action="append", default=[])
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     try:
@@ -338,6 +367,7 @@ def main() -> None:
             source_roots=args.source_root,
             runner_paths=args.runner,
             setup_invalid_logs=args.setup_invalid_log,
+            infrastructure_invalid_logs=args.infrastructure_invalid_log,
         )
     except (Invalid, OSError, ValueError, KeyError, TypeError) as exc:
         print(json.dumps({"status": "invalid", "error": str(exc)}, indent=2, sort_keys=True))

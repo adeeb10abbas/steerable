@@ -163,6 +163,59 @@ def validate_geometry_summary(model: str, checkpoint: dict[str, Any], episodes: 
         require(passed, f"s1 geometry gate failed closed: {model}")
 
 
+def validate_power_audit(model: str, checkpoint: dict[str, Any], registration: dict[str, Any]) -> None:
+    analysis = checkpoint.get("analysis")
+    if analysis is None:
+        return
+    rows = {
+        row["estimand"]: row
+        for row in registration["power_registration"]["rows"]
+        if row["model_id"] == model
+    }
+    require(set(rows) == {"binary_R_minus_L", "depth_R_minus_L_m"}, f"registered power rows differ: {model}")
+    s1_n = int(analysis["levels"]["1.00"]["pairs"])
+    z_sum = float(registration["power_registration"]["z_sum"])
+    mappings = {
+        "binary_gap": ("binary_R_minus_L", "binary_gap_R_minus_L"),
+        "depth_gap_m": ("depth_R_minus_L_m", "requested_depth_gap_R_minus_L_m"),
+    }
+    for result_name, (registered_name, level_name) in mappings.items():
+        registered = rows[registered_name]
+        result = analysis["equivalence_at_s1"][result_name]
+        audit = result.get("registered_power_and_control_audit", {})
+        expected_mde = z_sum * float(registered["sigma_plan"]) / math.sqrt(s1_n)
+        require(audit.get("valid_s1_pairs") == s1_n, f"achieved MDE n differs: {model}/{result_name}")
+        for audit_name, registered_name_in_row in (
+            ("registered_control_effect", "control_effect"),
+            ("registered_equivalence_margin", "margin"),
+            ("registered_sigma_plan", "sigma_plan"),
+            ("registered_mde_n27", "mde_n27"),
+            ("registered_strict_n", "strict_n"),
+            ("registered_target_n", "target_n"),
+            ("registered_power_status", "status"),
+        ):
+            require(audit.get(audit_name) == registered[registered_name_in_row], f"registered power byte differs: {model}/{result_name}/{audit_name}")
+        require(audit.get("mde_formula") == registration["power_registration"]["formula"], f"MDE formula differs: {model}/{result_name}")
+        require(math.isclose(audit.get("mde_z_sum"), z_sum, abs_tol=1e-15), f"MDE z differs: {model}/{result_name}")
+        require(
+            math.isclose(audit.get("achieved_design_mde80_at_valid_s1_n"), expected_mde, rel_tol=1e-12),
+            f"achieved MDE differs: {model}/{result_name}",
+        )
+        control = float(registered["control_effect"])
+        s1_estimate = float(analysis["levels"]["1.00"][level_name]["mean"])
+        require(math.isclose(audit.get("s1_estimated_gap"), s1_estimate, abs_tol=1e-15), f"s1 gap audit differs: {model}/{result_name}")
+        require(
+            math.isclose(audit.get("s1_minus_registered_control_effect"), s1_estimate - control, abs_tol=1e-15),
+            f"control comparison differs: {model}/{result_name}",
+        )
+        margin = float(registered["margin"])
+        expected_power_gate = margin > 0.0 and expected_mde <= 0.5 * margin + 1e-12
+        require(
+            audit.get("achieved_mde_within_strict_half_margin_gate") is expected_power_gate,
+            f"achieved MDE gate differs: {model}/{result_name}",
+        )
+
+
 def validate(base: Path, *, require_complete: bool, verify_raw_sources: bool) -> dict[str, Any]:
     base = Path(base).resolve()
     results_path = base / "results/results.json"
@@ -190,6 +243,7 @@ def validate(base: Path, *, require_complete: bool, verify_raw_sources: bool) ->
     discovery = load_jsonl(discovery_path)
     ledger = load_jsonl(source_ledger_path)
     manifest = load_json(manifest_path)
+    registration = load_json(base / "registration.json")
     require(results.get("amendment_id") == "V3-E004", "wrong result amendment")
     require(len(episodes) == results.get("valid_behavioral_episodes"), "episode/result count differs")
     require(len({row.get("cell_id") for row in episodes}) == len(episodes), "duplicate compact episode cell")
@@ -274,6 +328,7 @@ def validate(base: Path, *, require_complete: bool, verify_raw_sources: bool) ->
             )
     for model, checkpoint in results["checkpoints"].items():
         validate_geometry_summary(model, checkpoint, episodes)
+        validate_power_audit(model, checkpoint, registration)
         gate = checkpoint["claim_gate"]
         if not complete:
             require(gate.get("publication_claims_enabled") is False, f"partial checkpoint claim enabled: {model}")
@@ -281,7 +336,14 @@ def validate(base: Path, *, require_complete: bool, verify_raw_sources: bool) ->
         require(gate.get("publication_claims_enabled") is True, f"complete checkpoint claim gate disabled: {model}")
         for estimand, item in gate["equivalence_claims"].items():
             if item["publication_equivalence_claim_allowed"]:
-                require(item["registered_power_gate_passed"] and item["margin_defined"] and item["interval_within_registered_margin"], f"invalid equivalence claim: {model}/{estimand}")
+                require(
+                    item["registered_power_status_permits_equivalence"]
+                    and item["achieved_mde_gate_passed"]
+                    and item["registered_power_gate_passed"]
+                    and item["margin_defined"]
+                    and item["interval_within_registered_margin"],
+                    f"invalid equivalence claim: {model}/{estimand}",
+                )
             if model in {"dreamzero_droid_action_cfg", "cosmos3_edge_policy_droid", "fastwam_robotwin"}:
                 require(item["publication_equivalence_claim_allowed"] is False, f"underpowered equivalence claim: {model}/{estimand}")
         for level, positive in gate["H4_endpoint_positive_control_by_level"].items():

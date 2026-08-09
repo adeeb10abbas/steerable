@@ -13,6 +13,7 @@ from tools.compile_v3e004_results import (
     _claim_gate,
     _failure_signature,
     _geometry_summary,
+    _attach_power_audit,
     compile_outputs,
     load_infrastructure_invalid,
     load_valid_episodes,
@@ -337,13 +338,49 @@ def test_claim_gate_never_calls_underpowered_null_equivalent():
     analysis = {
         "levels": {"1.00": {"endpoint_redirection_LEFT_minus_RIGHT_m": {"bootstrap_mean95": {"low": 0.01}}}},
         "equivalence_at_s1": {
-            "binary_gap": {"power_status": "underpowered_no_equivalence_claim", "equivalent": True, "margin": 0.2},
-            "depth_gap_m": {"power_status": "strictly_powered_at_endpoints", "equivalent": True, "margin": 0.05},
+            "binary_gap": {
+                "power_status": "underpowered_no_equivalence_claim",
+                "equivalent": True,
+                "margin": 0.2,
+                "registered_power_and_control_audit": {"achieved_mde_within_strict_half_margin_gate": False},
+            },
+            "depth_gap_m": {
+                "power_status": "strictly_powered_at_endpoints",
+                "equivalent": True,
+                "margin": 0.05,
+                "registered_power_and_control_audit": {"achieved_mde_within_strict_half_margin_gate": True},
+            },
         },
     }
     gate = _claim_gate(analysis, globally_complete=True)
     assert gate["equivalence_claims"]["binary_gap"]["publication_equivalence_claim_allowed"] is False
     assert gate["equivalence_claims"]["depth_gap_m"]["publication_equivalence_claim_allowed"] is True
+
+
+def test_power_audit_reports_achieved_mde_and_control_comparison():
+    registration = json.loads((SOURCE / "registration.json").read_text())
+    analysis = {
+        "levels": {
+            "1.00": {
+                "pairs": 341,
+                "binary_gap_R_minus_L": {"mean": 0.2},
+                "requested_depth_gap_R_minus_L_m": {"mean": 0.03},
+            }
+        },
+        "equivalence_at_s1": {
+            "binary_gap": {"margin": 0.1555555556},
+            "depth_gap_m": {"margin": 0.0414940332},
+        },
+    }
+    _attach_power_audit(analysis, registration=registration, model_id="pi05_current_stack_droid")
+    binary = analysis["equivalence_at_s1"]["binary_gap"]["registered_power_and_control_audit"]
+    assert binary["valid_s1_pairs"] == 341
+    assert binary["registered_control_effect"] == pytest.approx(0.7777777778)
+    assert binary["s1_minus_registered_control_effect"] == pytest.approx(0.2 - 0.7777777778)
+    assert binary["achieved_design_mde80_at_valid_s1_n"] == pytest.approx(
+        2.48647 * 0.5773502692 / np.sqrt(341)
+    )
+    assert binary["achieved_mde_within_strict_half_margin_gate"] is True
 
 
 def test_failure_signature_keeps_zero_failure_level_unavailable():

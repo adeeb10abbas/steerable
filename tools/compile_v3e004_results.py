@@ -649,16 +649,71 @@ def _coverage(queue: Sequence[Mapping[str, Any]], episodes: Sequence[Mapping[str
     }
 
 
-def _power_maps(registration: Mapping[str, Any], model_id: str) -> tuple[dict[str, float], dict[str, str]]:
+def _power_rows(registration: Mapping[str, Any], model_id: str) -> dict[str, Mapping[str, Any]]:
     rows = [row for row in registration["power_registration"]["rows"] if row["model_id"] == model_id]
     require(len(rows) == 2, f"power registration is incomplete for {model_id}")
-    by_estimand = {row["estimand"]: row for row in rows}
+    return {str(row["estimand"]): row for row in rows}
+
+
+def _power_maps(registration: Mapping[str, Any], model_id: str) -> tuple[dict[str, float], dict[str, str]]:
+    by_estimand = _power_rows(registration, model_id)
     binary = by_estimand["binary_R_minus_L"]
     depth = by_estimand["depth_R_minus_L_m"]
     return (
         {"binary_gap": float(binary["margin"]), "depth_gap_m": float(depth["margin"])},
         {"binary_gap": str(binary["status"]), "depth_gap_m": str(depth["status"])},
     )
+
+
+def _attach_power_audit(
+    analysis: dict[str, Any],
+    *,
+    registration: Mapping[str, Any],
+    model_id: str,
+) -> dict[str, Any]:
+    """Attach the preregistered control, margin, and achieved-MDE audit."""
+
+    power = _power_rows(registration, model_id)
+    z_sum = float(registration["power_registration"]["z_sum"])
+    s1_pairs = int(analysis["levels"]["1.00"]["pairs"])
+    require(s1_pairs > 0, f"{model_id}: cannot compute achieved MDE without s=1 pairs")
+    mappings = {
+        "binary_gap": ("binary_R_minus_L", "binary_gap_R_minus_L"),
+        "depth_gap_m": ("depth_R_minus_L_m", "requested_depth_gap_R_minus_L_m"),
+    }
+    for result_name, (registered_name, level_name) in mappings.items():
+        registered = power[registered_name]
+        margin = float(registered["margin"])
+        control_effect = float(registered["control_effect"])
+        achieved_mde = z_sum * float(registered["sigma_plan"]) / math.sqrt(s1_pairs)
+        s1_estimate = float(analysis["levels"]["1.00"][level_name]["mean"])
+        result = analysis["equivalence_at_s1"][result_name]
+        result["registered_power_and_control_audit"] = {
+            "valid_s1_pairs": s1_pairs,
+            "registered_control_effect": control_effect,
+            "registered_equivalence_margin": margin,
+            "registered_margin_fraction_of_absolute_control": (
+                None if control_effect == 0.0 else margin / abs(control_effect)
+            ),
+            "registered_sigma_plan": float(registered["sigma_plan"]),
+            "registered_mde_n27": float(registered["mde_n27"]),
+            "registered_strict_n": registered["strict_n"],
+            "registered_target_n": int(registered["target_n"]),
+            "registered_power_status": str(registered["status"]),
+            "mde_formula": str(registration["power_registration"]["formula"]),
+            "mde_z_sum": z_sum,
+            "achieved_design_mde80_at_valid_s1_n": achieved_mde,
+            "strict_half_margin_mde_gate": None if margin == 0.0 else 0.5 * margin,
+            "achieved_mde_within_strict_half_margin_gate": (
+                False if margin == 0.0 else achieved_mde <= 0.5 * margin + 1e-12
+            ),
+            "s1_estimated_gap": s1_estimate,
+            "s1_minus_registered_control_effect": s1_estimate - control_effect,
+            "absolute_s1_fraction_of_absolute_control_effect": (
+                None if control_effect == 0.0 else abs(s1_estimate) / abs(control_effect)
+            ),
+        }
+    return analysis
 
 
 def _paired_rows(rows: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
@@ -899,10 +954,16 @@ def _claim_gate(
         }
     equivalence: dict[str, Any] = {}
     for estimand, result in checkpoint["equivalence_at_s1"].items():
-        powered = result["power_status"] == "strictly_powered_at_endpoints"
+        registered_powered = result["power_status"] == "strictly_powered_at_endpoints"
+        achieved_powered = bool(
+            result["registered_power_and_control_audit"]["achieved_mde_within_strict_half_margin_gate"]
+        )
+        powered = registered_powered and achieved_powered
         defined = result.get("status") != "margin_zero_equivalence_not_defined"
         equivalent = bool(result.get("equivalent", False))
         equivalence[estimand] = {
+            "registered_power_status_permits_equivalence": registered_powered,
+            "achieved_mde_gate_passed": achieved_powered,
             "registered_power_gate_passed": powered,
             "margin_defined": defined,
             "interval_within_registered_margin": equivalent,
@@ -978,6 +1039,7 @@ def compile_report(
                 )
             except AnalysisError as exc:
                 raise CompileError(f"{model_id} inferential compilation failed: {exc}") from exc
+            analysis = _attach_power_audit(analysis, registration=registration, model_id=model_id)
             row["analysis"] = analysis
             row["claim_gate"] = _claim_gate(analysis, globally_complete=coverage["complete"])
         else:
@@ -1140,6 +1202,36 @@ def decision_memo(report: Mapping[str, Any]) -> str:
                 f"{depth['mean']:+.3f} [{depth['bootstrap_mean95']['low']:+.3f}, {depth['bootstrap_mean95']['high']:+.3f}] | "
                 f"{'pass' if positive else 'fail closed'} | {', '.join(claims) if claims else 'none'} |"
             )
+        lines.extend(
+            [
+                "",
+                "## H2 — power and equivalence audit",
+                "",
+                "The achieved MDE is the preregistered 80%-power design MDE evaluated at the valid s=1 pair count. Equivalence is authorized only when the registered power status permits it and the paired 90% interval lies wholly inside the registered margin; a nonsignificant difference is never treated as equivalence.",
+                "",
+                "| Checkpoint / estimand | Control effect | s=1 estimate | Margin | Achieved MDE (n) | Paired 90% CI | TOST bootstrap p (lower / upper) | Decision |",
+                "| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |",
+            ]
+        )
+        for item in report["checkpoints"].values():
+            for estimand, label in (("binary_gap", "binary R−L"), ("depth_gap_m", "depth R−L, m")):
+                result = item["analysis"]["equivalence_at_s1"][estimand]
+                audit = result["registered_power_and_control_audit"]
+                ci = result.get("ci90")
+                ci_text = "NR — zero margin" if ci is None else f"[{ci['low']:+.3f}, {ci['high']:+.3f}]"
+                tost_text = (
+                    "NR"
+                    if ci is None
+                    else f"{result['tost_bootstrap_p_lower']:.4g} / {result['tost_bootstrap_p_upper']:.4g}"
+                )
+                gate = item["claim_gate"]["equivalence_claims"][estimand]
+                lines.append(
+                    f"| {item['model_id']} / {label} | {audit['registered_control_effect']:+.3f} | "
+                    f"{audit['s1_estimated_gap']:+.3f} | {audit['registered_equivalence_margin']:.3f} | "
+                    f"{audit['achieved_design_mde80_at_valid_s1_n']:.3f} ({audit['valid_s1_pairs']}) | "
+                    f"{ci_text} | {tost_text} | "
+                    f"{gate['interpretation']} ({audit['registered_power_status']}) |"
+                )
         lines.extend(
             [
                 "",

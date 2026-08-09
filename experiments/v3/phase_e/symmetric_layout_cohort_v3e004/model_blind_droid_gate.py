@@ -44,6 +44,17 @@ BOOTSTRAP.add_argument("--gpu-uuid", required=True)
 BOOTSTRAP.add_argument("--expected-study-commit", required=True)
 BOOTSTRAP.add_argument("--expected-robolab-commit", default="0aef241fb088ca21bb4ebd24448940ed56620d17")
 BOOTSTRAP.add_argument("--minimum-visible-target-pixels", type=int, default=32)
+BOOTSTRAP.add_argument("--request0-replay-amendment", type=Path, required=True)
+BOOTSTRAP.add_argument("--request0-replay-amendment-sha256", required=True)
+BOOTSTRAP.add_argument("--request0-mode", choices=("capture_left", "replay_right"), required=True)
+BOOTSTRAP.add_argument("--request0-observation-cache", type=Path, required=True)
+BOOTSTRAP.add_argument("--request0-observation-manifest", type=Path, required=True)
+BOOTSTRAP.add_argument("--request0-reset-contract", type=Path, required=True)
+BOOTSTRAP.add_argument("--request0-native-reset-contract", type=Path, required=True)
+BOOTSTRAP.add_argument("--request0-attestation", type=Path, required=True)
+BOOTSTRAP.add_argument("--request0-observation-cache-sha256")
+BOOTSTRAP.add_argument("--request0-observation-manifest-sha256")
+BOOTSTRAP.add_argument("--request0-reset-contract-sha256")
 bootstrap, _ = BOOTSTRAP.parse_known_args()
 
 study_root = bootstrap.study_root.resolve()
@@ -60,6 +71,14 @@ from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.runtime_contract impo
     load_runtime_bundle,
     sha256_file,
 )
+from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.request0_replay import (  # noqa: E402
+    build_reset_contract,
+    capture_left_observation,
+    evidence_envelope,
+    load_amendment,
+    replay_left_observation_for_right,
+    write_capture_attestation,
+)
 
 
 bundle = load_runtime_bundle(
@@ -73,6 +92,36 @@ bundle = load_runtime_bundle(
 cell = bundle.cell(bootstrap.cell_id)
 if cell.row["arena"] != "droid_robolab" or cell.row["execution_mode"] != "new_behavioral_episode":
     BOOTSTRAP.error("standalone live gate accepts only new E004 DROID cells")
+load_amendment(bootstrap.request0_replay_amendment, bootstrap.request0_replay_amendment_sha256)
+if (cell.relation, bootstrap.request0_mode) not in {
+    ("left", "capture_left"),
+    ("right", "replay_right"),
+}:
+    BOOTSTRAP.error("request-zero preflight mode differs from registered relation")
+if bootstrap.request0_mode == "capture_left":
+    if bootstrap.request0_native_reset_contract.resolve() != bootstrap.request0_reset_contract.resolve():
+        BOOTSTRAP.error("LEFT preflight native reset contract must equal the retained LEFT contract")
+    for path in (
+        bootstrap.request0_observation_cache,
+        bootstrap.request0_observation_manifest,
+        bootstrap.request0_reset_contract,
+        bootstrap.request0_attestation,
+    ):
+        if path.exists():
+            BOOTSTRAP.error(f"refusing to overwrite request-zero preflight evidence: {path}")
+else:
+    if bootstrap.request0_native_reset_contract.resolve() == bootstrap.request0_reset_contract.resolve():
+        BOOTSTRAP.error("RIGHT preflight native reset contract must be retained separately from LEFT")
+    for label, path, expected in (
+        ("observation cache", bootstrap.request0_observation_cache, bootstrap.request0_observation_cache_sha256),
+        ("observation manifest", bootstrap.request0_observation_manifest, bootstrap.request0_observation_manifest_sha256),
+        ("LEFT reset contract", bootstrap.request0_reset_contract, bootstrap.request0_reset_contract_sha256),
+    ):
+        if not expected or not path.is_file() or sha256_file(path) != expected:
+            BOOTSTRAP.error(f"RIGHT request-zero preflight {label} binding is missing or changed")
+    for path in (bootstrap.request0_native_reset_contract, bootstrap.request0_attestation):
+        if path.exists():
+            BOOTSTRAP.error(f"refusing to overwrite RIGHT request-zero preflight evidence: {path}")
 try:
     scene_mapping = json.loads(bootstrap.scene_object_mapping)
 except json.JSONDecodeError as exc:
@@ -238,6 +287,9 @@ def _camera_rows(env: Any, obs: Mapping[str, Any], target_physical: str, referen
             "reference_bounds_world": bounds,
             "target_instance_visible_pixels": None,
             "segmentation_source_sha256": None,
+            "rgb_source_sha256": hashlib.sha256(frame.tobytes(order="C")).hexdigest(),
+            "rgb_source_shape": list(frame.shape),
+            "rgb_source_dtype": str(frame.dtype),
         }
         row["target_projected_pixel_uv"] = list(
             project_world_target_to_pixel(
@@ -356,22 +408,91 @@ def main() -> None:
             gate_path=output_dir / "live_scene_gate.json",
             minimum_visible_target_pixels=bootstrap.minimum_visible_target_pixels,
         )
+        camera_rows = _camera_rows(env, obs, scene_mapping["rubiks_cube"], scene_mapping["bowl"])
         gate = adapter.capture_and_compile(
             env=env,
             observation=obs,
             scene_object_mapping=scene_mapping,
-            camera_rows=_camera_rows(env, obs, scene_mapping["rubiks_cube"], scene_mapping["bowl"]),
+            camera_rows=camera_rows,
             settle_stability={"settle_steps": 60, "stability_window_steps": 15, "maxima_by_object": stability},
         )
+        reset_contract = build_reset_contract(
+            env=env,
+            physical_object_names=physical_names,
+            camera_rows=camera_rows,
+            observation=obs,
+        )
+        if bootstrap.request0_mode == "capture_left":
+            request0 = capture_left_observation(
+                observation=obs,
+                reset_contract=reset_contract,
+                amendment_path=bootstrap.request0_replay_amendment,
+                amendment_sha256=bootstrap.request0_replay_amendment_sha256,
+                cell_id=cell.cell_id,
+                matched_pair_id=cell.matched_pair_id,
+                cache_path=bootstrap.request0_observation_cache,
+                manifest_path=bootstrap.request0_observation_manifest,
+                reset_contract_path=bootstrap.request0_reset_contract,
+            )
+            write_capture_attestation(
+                amendment_path=bootstrap.request0_replay_amendment,
+                amendment_sha256=bootstrap.request0_replay_amendment_sha256,
+                cell_id=cell.cell_id,
+                matched_pair_id=cell.matched_pair_id,
+                cache_path=bootstrap.request0_observation_cache,
+                manifest_path=bootstrap.request0_observation_manifest,
+                reset_contract_path=bootstrap.request0_reset_contract,
+                observation_payload_sha256=request0["observation_payload_sha256"],
+                reset_contract_payload_sha256=request0["reset_contract"]["payload_sha256"],
+                attestation_path=bootstrap.request0_attestation,
+            )
+            observation_payload_sha = request0["observation_payload_sha256"]
+            reset_payload_sha = request0["reset_contract"]["payload_sha256"]
+            native_reset_path = bootstrap.request0_reset_contract
+        else:
+            _, request0 = replay_left_observation_for_right(
+                native_observation=obs,
+                native_reset_contract=reset_contract,
+                amendment_path=bootstrap.request0_replay_amendment,
+                amendment_sha256=bootstrap.request0_replay_amendment_sha256,
+                cell_id=cell.cell_id,
+                matched_pair_id=cell.matched_pair_id,
+                cache_path=bootstrap.request0_observation_cache,
+                cache_sha256=str(bootstrap.request0_observation_cache_sha256),
+                manifest_path=bootstrap.request0_observation_manifest,
+                manifest_sha256=str(bootstrap.request0_observation_manifest_sha256),
+                reset_contract_path=bootstrap.request0_reset_contract,
+                reset_contract_file_sha256=str(bootstrap.request0_reset_contract_sha256),
+                native_reset_contract_path=bootstrap.request0_native_reset_contract,
+                attestation_path=bootstrap.request0_attestation,
+            )
+            observation_payload_sha = request0["request0_observation_payload_sha256"]
+            reset_payload_sha = request0["right_reset_contract_sha256"]
+            native_reset_path = bootstrap.request0_native_reset_contract
+        request0_evidence = evidence_envelope(
+            mode=bootstrap.request0_mode,
+            amendment_path=bootstrap.request0_replay_amendment,
+            cache_path=bootstrap.request0_observation_cache,
+            manifest_path=bootstrap.request0_observation_manifest,
+            reset_contract_path=bootstrap.request0_reset_contract,
+            native_reset_contract_path=native_reset_path,
+            attestation_path=bootstrap.request0_attestation,
+            observation_payload_sha256=observation_payload_sha,
+            reset_contract_payload_sha256=reset_payload_sha,
+        )
         report = {
-            "schema_version": "vla-wam-shared-v3e004-standalone-model-blind-droid-gate-v1",
+            "schema_version": "vla-wam-shared-v3e004-standalone-model-blind-droid-gate-v2",
             "study_id": cell.row["study_id"],
             "amendment_id": cell.row["amendment_id"],
             "status": "passed_model_blind_preflight_not_a_behavioral_release",
             "passed": True,
             "model_request_count": 0,
             "behavioral_episode_count": 0,
+            "behavioral_action_count": 0,
+            "fixture_setup_hold_action_count": 75,
             "registered_cell_id": cell.cell_id,
+            "matched_pair_id": cell.matched_pair_id,
+            "model_id": cell.model_id,
             "registration_sha256": bundle.registration_sha256,
             "queue_sha256": bundle.queue_sha256,
             "candidate_sha256": bundle.candidate_sha256,
@@ -383,6 +504,7 @@ def main() -> None:
             "task_prompt": env_cfg.instruction,
             "live_scene_gate": {"path": gate["gate_path"], "sha256": gate["gate_sha256"], "bytes": Path(gate["gate_path"]).stat().st_size},
             "viewport_video": {"path": str(video), "sha256": sha256_file(video), "bytes": video.stat().st_size},
+            "request0_replay": request0_evidence,
             "release_boundary": "Behavioral bridges must repeat this gate in the same simulator process immediately before model request zero.",
         }
         report_path = output_dir / "model_blind_gate_report.json"

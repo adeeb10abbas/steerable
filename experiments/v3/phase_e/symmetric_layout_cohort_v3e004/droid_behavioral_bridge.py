@@ -60,6 +60,17 @@ BOOTSTRAP.add_argument(
 BOOTSTRAP.add_argument("--minimum-visible-target-pixels", type=int, default=32)
 BOOTSTRAP.add_argument("--dreamzero-server-contract", type=Path)
 BOOTSTRAP.add_argument("--dreamzero-future-root", type=Path)
+BOOTSTRAP.add_argument("--request0-replay-amendment", type=Path, required=True)
+BOOTSTRAP.add_argument("--request0-replay-amendment-sha256", required=True)
+BOOTSTRAP.add_argument("--request0-mode", choices=("capture_left", "replay_right"), required=True)
+BOOTSTRAP.add_argument("--request0-observation-cache", type=Path, required=True)
+BOOTSTRAP.add_argument("--request0-observation-manifest", type=Path, required=True)
+BOOTSTRAP.add_argument("--request0-reset-contract", type=Path, required=True)
+BOOTSTRAP.add_argument("--request0-native-reset-contract", type=Path, required=True)
+BOOTSTRAP.add_argument("--request0-replay-attestation", type=Path, required=True)
+BOOTSTRAP.add_argument("--request0-observation-cache-sha256")
+BOOTSTRAP.add_argument("--request0-observation-manifest-sha256")
+BOOTSTRAP.add_argument("--request0-reset-contract-sha256")
 bootstrap, _ = BOOTSTRAP.parse_known_args()
 
 study_root = bootstrap.study_root.resolve()
@@ -91,6 +102,15 @@ from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.runtime_contract impo
     load_runtime_bundle,
     sha256_file,
     validate_lane_release,
+)
+from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.request0_replay import (  # noqa: E402
+    build_reset_contract,
+    capture_left_observation,
+    evidence_envelope,
+    load_amendment,
+    replay_left_observation_for_right,
+    validate_lane_preflight,
+    write_capture_attestation,
 )
 
 
@@ -129,6 +149,49 @@ if scene_mapping.get("rubiks_cube") != "rubiks_cube" or scene_mapping.get("bowl"
 for path in (bootstrap.control_scene_asset, bootstrap.paired_scene_asset, bootstrap.runtime_manifest):
     if not path.is_file() or path.stat().st_size <= 0:
         BOOTSTRAP.error(f"required live input is missing: {path}")
+load_amendment(
+    bootstrap.request0_replay_amendment,
+    bootstrap.request0_replay_amendment_sha256,
+)
+validate_lane_preflight(
+    lane_release,
+    amendment_sha256=bootstrap.request0_replay_amendment_sha256,
+    model_id=cell.model_id,
+    lane_pod_uid=bootstrap.lane_pod_uid,
+    lane_gpu_uuid=bootstrap.lane_gpu_uuid,
+)
+if cell.relation == "left" and bootstrap.request0_mode != "capture_left":
+    BOOTSTRAP.error("registered LEFT cells must capture the request-zero observation")
+if cell.relation == "right" and bootstrap.request0_mode != "replay_right":
+    BOOTSTRAP.error("registered RIGHT cells must replay the matched LEFT request-zero observation")
+if bootstrap.request0_mode == "capture_left":
+    if bootstrap.request0_native_reset_contract.resolve() != bootstrap.request0_reset_contract.resolve():
+        BOOTSTRAP.error("LEFT native reset contract must be the retained LEFT reset contract")
+    for path in (
+        bootstrap.request0_observation_cache,
+        bootstrap.request0_observation_manifest,
+        bootstrap.request0_reset_contract,
+        bootstrap.request0_native_reset_contract,
+        bootstrap.request0_replay_attestation,
+    ):
+        if path.exists():
+            BOOTSTRAP.error(f"refusing to overwrite request-zero evidence: {path}")
+else:
+    if bootstrap.request0_native_reset_contract.resolve() == bootstrap.request0_reset_contract.resolve():
+        BOOTSTRAP.error("RIGHT native reset contract must be retained separately from LEFT")
+    for name, path, expected in (
+        ("observation cache", bootstrap.request0_observation_cache, bootstrap.request0_observation_cache_sha256),
+        ("observation manifest", bootstrap.request0_observation_manifest, bootstrap.request0_observation_manifest_sha256),
+        ("reset contract", bootstrap.request0_reset_contract, bootstrap.request0_reset_contract_sha256),
+    ):
+        if not expected or not path.is_file() or sha256_file(path) != expected:
+            BOOTSTRAP.error(f"RIGHT replay {name} binding is missing or changed")
+    if bootstrap.request0_replay_attestation.exists():
+        BOOTSTRAP.error(f"refusing to overwrite request-zero replay attestation: {bootstrap.request0_replay_attestation}")
+    if bootstrap.request0_native_reset_contract.exists():
+        BOOTSTRAP.error(
+            f"refusing to overwrite RIGHT native request-zero reset contract: {bootstrap.request0_native_reset_contract}"
+        )
 for path in (bootstrap.live_snapshot, bootstrap.live_gate, bootstrap.simulator_export):
     if path.exists():
         BOOTSTRAP.error(f"refusing to overwrite retained evidence: {path}")
@@ -404,6 +467,8 @@ class StateCaptureProxy:
             minimum_visible_target_pixels=bootstrap.minimum_visible_target_pixels,
         )
         self.initial_state_sha256: str | None = None
+        self.request0_pair_identity_sha256: str | None = None
+        self.request0_evidence: dict[str, Any] | None = None
 
     def __getattr__(self, name: str) -> Any:
         return getattr(self._env, name)
@@ -467,11 +532,12 @@ class StateCaptureProxy:
             raise RuntimeError("live reset is not neutral under the frozen LEFT/RIGHT predicates")
         self._env.episode_length_buf.zero_()
         self.samples = [self._sample(0)]
-        gate = self.adapter.capture_and_compile(
+        camera_rows = _camera_rows(self._env, obs)
+        self.adapter.capture_and_compile(
             env=self._env,
             observation=obs,
             scene_object_mapping=scene_mapping,
-            camera_rows=_camera_rows(self._env, obs),
+            camera_rows=camera_rows,
             settle_stability={
                 "settle_steps": 60,
                 "stability_window_steps": 15,
@@ -488,12 +554,92 @@ class StateCaptureProxy:
         self.initial_state_sha256 = hashlib.sha256(
             json.dumps(initial_payload, allow_nan=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
         ).hexdigest()
+        reset_contract = build_reset_contract(
+            env=self._env,
+            physical_object_names=PHYSICAL_OBJECTS,
+            camera_rows=camera_rows,
+            observation=obs,
+        )
+        if bootstrap.request0_mode == "capture_left":
+            request0 = capture_left_observation(
+                observation=obs,
+                reset_contract=reset_contract,
+                amendment_path=bootstrap.request0_replay_amendment,
+                amendment_sha256=bootstrap.request0_replay_amendment_sha256,
+                cell_id=cell.cell_id,
+                matched_pair_id=cell.matched_pair_id,
+                cache_path=bootstrap.request0_observation_cache,
+                manifest_path=bootstrap.request0_observation_manifest,
+                reset_contract_path=bootstrap.request0_reset_contract,
+            )
+            write_capture_attestation(
+                amendment_path=bootstrap.request0_replay_amendment,
+                amendment_sha256=bootstrap.request0_replay_amendment_sha256,
+                cell_id=cell.cell_id,
+                matched_pair_id=cell.matched_pair_id,
+                cache_path=bootstrap.request0_observation_cache,
+                manifest_path=bootstrap.request0_observation_manifest,
+                reset_contract_path=bootstrap.request0_reset_contract,
+                observation_payload_sha256=request0["observation_payload_sha256"],
+                reset_contract_payload_sha256=request0["reset_contract"]["payload_sha256"],
+                attestation_path=bootstrap.request0_replay_attestation,
+            )
+            effective_obs = obs
+        else:
+            effective_obs, request0 = replay_left_observation_for_right(
+                native_observation=obs,
+                native_reset_contract=reset_contract,
+                amendment_path=bootstrap.request0_replay_amendment,
+                amendment_sha256=bootstrap.request0_replay_amendment_sha256,
+                cell_id=cell.cell_id,
+                matched_pair_id=cell.matched_pair_id,
+                cache_path=bootstrap.request0_observation_cache,
+                cache_sha256=str(bootstrap.request0_observation_cache_sha256),
+                manifest_path=bootstrap.request0_observation_manifest,
+                manifest_sha256=str(bootstrap.request0_observation_manifest_sha256),
+                reset_contract_path=bootstrap.request0_reset_contract,
+                reset_contract_file_sha256=str(bootstrap.request0_reset_contract_sha256),
+                native_reset_contract_path=bootstrap.request0_native_reset_contract,
+                attestation_path=bootstrap.request0_replay_attestation,
+            )
+        observation_payload_sha = str(
+            request0["observation_payload_sha256"]
+            if bootstrap.request0_mode == "capture_left"
+            else request0["request0_observation_payload_sha256"]
+        )
+        reset_payload_sha = str(
+            request0["reset_contract"]["payload_sha256"]
+            if bootstrap.request0_mode == "capture_left"
+            else request0["right_reset_contract_sha256"]
+        )
+        self.request0_evidence = evidence_envelope(
+            mode=bootstrap.request0_mode,
+            amendment_path=bootstrap.request0_replay_amendment,
+            cache_path=bootstrap.request0_observation_cache,
+            manifest_path=bootstrap.request0_observation_manifest,
+            reset_contract_path=bootstrap.request0_reset_contract,
+            native_reset_contract_path=(
+                bootstrap.request0_reset_contract
+                if bootstrap.request0_mode == "capture_left"
+                else bootstrap.request0_native_reset_contract
+            ),
+            attestation_path=bootstrap.request0_replay_attestation,
+            observation_payload_sha256=observation_payload_sha,
+            reset_contract_payload_sha256=reset_payload_sha,
+        )
+        self.request0_pair_identity_sha256 = self.request0_evidence["pair_identity_sha256"]
         self.started = time.monotonic()
-        self.cached_reset = (obs, info)
+        self.cached_reset = (effective_obs, info)
         return self.cached_reset
 
     def authorize_request(self) -> str:
-        if self.runner_resets != 2 or self.physical_resets != 1 or self.initial_state_sha256 is None:
+        if (
+            self.runner_resets != 2
+            or self.physical_resets != 1
+            or self.initial_state_sha256 is None
+            or self.request0_pair_identity_sha256 is None
+            or self.request0_evidence is None
+        ):
             raise RuntimeError("model request attempted before the complete live reset gate")
         return self.adapter.authorize_model_request()
 
@@ -543,6 +689,8 @@ class StateCaptureProxy:
             "runner_pre_action_reset_calls": self.runner_resets,
             "physical_reset_calls": self.physical_resets,
             "initial_state_sha256": self.initial_state_sha256,
+            "request0_pair_identity_sha256": self.request0_pair_identity_sha256,
+            "request0_replay": self.request0_evidence,
             "steps": self.samples,
             "wall_time_s": time.monotonic() - self.started,
             "behavioral_result_valid_candidate": valid,
@@ -714,7 +862,12 @@ class _LazyE004CosmosClient:
         if self.inner is not None:
             return self.inner
         proxy = _proxy()
-        if proxy.runner_resets != 2 or proxy.initial_state_sha256 is None or not bootstrap.live_gate.is_file():
+        if (
+            proxy.runner_resets != 2
+            or proxy.initial_state_sha256 is None
+            or proxy.request0_pair_identity_sha256 is None
+            or not bootstrap.live_gate.is_file()
+        ):
             raise RuntimeError("Cosmos client construction preceded the live reset gate")
         from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.cosmos_client import E004CosmosClient
         from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.cosmos_runtime import (
@@ -742,7 +895,7 @@ class _LazyE004CosmosClient:
                 "raw_write": bootstrap.lane_release,
                 "renderer": bootstrap.lane_release,
             },
-            initial_state_sha256=proxy.initial_state_sha256,
+            initial_state_sha256=proxy.request0_pair_identity_sha256,
         )
         _write_new_json(self.session_manifest_path, session)
         class AuthorizedE004CosmosClient(E004CosmosClient):
@@ -925,6 +1078,7 @@ def _write_export() -> Path:
         viewport_video=_file_record(_viewport_video()),
         future_evidence=future_evidence,
         future_evidence_status=future_status,
+        request0_replay=proxies[0].request0_evidence,
     )
     export.update(
         {

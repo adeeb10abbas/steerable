@@ -74,12 +74,14 @@ def validate_registration() -> dict[str, Any]:
     candidate_path = BASE / "layout/candidate.json"
     fastwam_candidate_path = BASE / "layout/fastwam_robotwin_candidate.json"
     static_gate_path = BASE / "gates/static_layout_gate.json"
+    request0_amendment_path = BASE / "request0_observation_replay_amendment.json"
     for path in (
         registration_path,
         queue_path,
         candidate_path,
         fastwam_candidate_path,
         static_gate_path,
+        request0_amendment_path,
     ):
         require(path.is_file(), f"missing E004 preregistration file: {path}")
 
@@ -90,6 +92,32 @@ def validate_registration() -> dict[str, Any]:
     require(registration.get("behavioral_episode_count_before_registration") == 0, "registration follows episode")
     require(registration.get("success_predicates_frozen") is True, "predicate is not frozen")
     require(registration.get("design", {}).get("droid_and_robotwin_never_pooled") is True, "arena pooling boundary missing")
+    request0_amendment = finite_json(request0_amendment_path)
+    require(
+        request0_amendment.get("schema_version")
+        == "vla-wam-shared-v3e004-request0-observation-replay-amendment-v1",
+        "R001 request-zero amendment schema changed",
+    )
+    require(request0_amendment.get("registered_before_new_request") is True, "R001 was not registered prospectively")
+    require(request0_amendment.get("registration_sha256") == sha256_file(registration_path), "R001 registration binding changed")
+    require(request0_amendment.get("queue_sha256") == sha256_file(queue_path), "R001 queue binding changed")
+    require(request0_amendment.get("candidate_sha256") == sha256_file(candidate_path), "R001 candidate binding changed")
+    invalid_discovery = request0_amendment.get("invalid_discovery_attempts", [])
+    require(len(invalid_discovery) == 4, "R001 pre-amendment exclusion inventory changed")
+    require(
+        {row.get("cell_id") for row in invalid_discovery}
+        == {
+            "v3e004:pi05:seed9400:s100:left",
+            "v3e004:dreamzero:seed9400:s100:left",
+            "v3e004:nano:seed9400:s100:left",
+            "v3e004:nano:seed9400:s100:right",
+        },
+        "R001 excluded cell inventory changed",
+    )
+    require(
+        all("excluded from all matched-pair denominators" in row.get("behavioral_use", "") for row in invalid_discovery),
+        "R001 pre-amendment rows are not excluded from matched analyses",
+    )
 
     queue_record = registration.get("queue", {})
     require(queue_record.get("sha256") == sha256_file(queue_path), "queue hash mismatch")
@@ -181,6 +209,7 @@ def validate_registration() -> dict[str, Any]:
         "new_behavioral_cells": 4096,
         "candidate_sha256": candidate_record["candidate_sha256"],
         "static_gate_sha256": sha256_file(static_gate_path),
+        "request0_amendment_sha256": sha256_file(request0_amendment_path),
     }
 
 
@@ -205,6 +234,16 @@ def validate_results() -> dict[str, Any]:
     }
     for row in episodes:
         require(required <= set(row), f"episode fields missing: {row.get('cell_id')}")
+        if row.get("arena") == "droid_robolab":
+            require(
+                row.get("request0_replay", {}).get("schema_version")
+                == "vla-wam-shared-v3e004-request0-evidence-envelope-v1",
+                f"DROID episode lacks R001 evidence: {row.get('cell_id')}",
+            )
+            require(
+                isinstance(row.get("request0_pair_identity_sha256"), str),
+                f"DROID episode lacks request-zero pair identity: {row.get('cell_id')}",
+            )
         if float(row["symmetry_level_s"]) == 1.0:
             require(row["position_residual"] < 0.001, "completed s=1 position residual fails")
             require(row["orientation_residual"] < math.radians(0.5), "completed s=1 yaw residual fails")

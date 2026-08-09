@@ -20,6 +20,15 @@ from typing import Any, Mapping
 import numpy as np
 
 from .live_snapshot_adapter import BOUND_GATE_SCHEMA
+from .request0_replay import (
+    AMENDMENT_SCHEMA,
+    CACHE_MANIFEST_SCHEMA,
+    CAPTURE_ATTESTATION_SCHEMA,
+    EVIDENCE_ENVELOPE_SCHEMA,
+    REPLAY_ATTESTATION_SCHEMA,
+    RESET_CONTRACT_SCHEMA,
+    canonical_json_sha256,
+)
 from .runtime_contract import E004Cell, E004RuntimeBundle, RuntimeContractError, load_runtime_bundle, sha256_file
 
 
@@ -31,6 +40,7 @@ CONTACT_UNAVAILABLE = (
     "and detached release but no verified physical contact stream; grasp is not "
     "substituted for contact."
 )
+REQUEST0_ENVELOPE_SCHEMA = EVIDENCE_ENVELOPE_SCHEMA
 
 
 def _require(condition: bool, message: str) -> None:
@@ -202,6 +212,133 @@ def _validate_live_gate(
     return artifact, scene, camera_identity
 
 
+def _digest(value: Any, label: str) -> str:
+    _require(
+        isinstance(value, str)
+        and len(value) == 64
+        and all(character in "0123456789abcdef" for character in value),
+        f"{label} must be a lowercase SHA-256 digest",
+    )
+    return value
+
+
+def _same_artifact(binding: Any, artifact: Mapping[str, Any], label: str) -> None:
+    _require(isinstance(binding, Mapping), f"{label} binding is missing")
+    for key in ("path", "bytes", "sha256"):
+        _require(binding.get(key) == artifact.get(key), f"{label} binding differs for {key}")
+
+
+def _validated_reset_contract(artifact: Mapping[str, Any], label: str) -> tuple[dict[str, Any], str]:
+    value = _finite_json(Path(str(artifact["path"])))
+    _require(isinstance(value, dict) and value.get("schema_version") == RESET_CONTRACT_SCHEMA, f"{label} schema changed")
+    payload_sha = _digest(value.get("reset_contract_sha256"), f"{label} payload")
+    unsigned = {key: child for key, child in value.items() if key != "reset_contract_sha256"}
+    _require(payload_sha == canonical_json_sha256(unsigned), f"{label} self-digest changed")
+    return value, payload_sha
+
+
+def _validate_request0_replay(
+    record: Any,
+    *,
+    bundle: E004RuntimeBundle,
+    cell: E004Cell,
+) -> dict[str, Any]:
+    """Require prospective R001 evidence for every matched E004 DROID row."""
+
+    _require(isinstance(record, Mapping), "R001 request-zero evidence is missing")
+    _require(record.get("schema_version") == REQUEST0_ENVELOPE_SCHEMA, "R001 evidence envelope schema changed")
+    expected_mode = "capture_left" if cell.relation == "left" else "replay_right"
+    _require(record.get("mode") == expected_mode, "R001 evidence mode differs from registered relation")
+    _require(
+        record.get("closed_loop_observation_policy") == "native_after_first_executed_action",
+        "R001 closed-loop observation policy changed",
+    )
+    artifacts = {
+        name: _file_record(record.get(name), f"R001 {name.replace('_', ' ')}")
+        for name in (
+            "amendment",
+            "cache_manifest",
+            "observation_cache",
+            "reset_contract",
+            "native_reset_contract",
+            "attestation",
+        )
+    }
+    amendment = _finite_json(Path(artifacts["amendment"]["path"]))
+    _require(isinstance(amendment, dict) and amendment.get("schema_version") == AMENDMENT_SCHEMA, "R001 amendment schema changed")
+    _require(amendment.get("registered_before_new_request") is True, "R001 amendment was not prospective")
+    for key, wanted in (
+        ("study_id", cell.row["study_id"]),
+        ("registration_sha256", bundle.registration_sha256),
+        ("queue_sha256", bundle.queue_sha256),
+        ("candidate_sha256", bundle.candidate_sha256),
+    ):
+        _require(amendment.get(key) == wanted, f"R001 amendment differs for {key}")
+    manifest = _finite_json(Path(artifacts["cache_manifest"]["path"]))
+    _require(isinstance(manifest, dict) and manifest.get("schema_version") == CACHE_MANIFEST_SCHEMA, "R001 cache manifest schema changed")
+    _require(manifest.get("source_relation") == "left", "R001 cache was not captured from LEFT")
+    _require(manifest.get("source_cell_id") == f"{cell.matched_pair_id}:left", "R001 cache source cell differs from matched LEFT")
+    _require(manifest.get("matched_pair_id") == cell.matched_pair_id, "R001 cache matched-pair identity changed")
+    _require(manifest.get("model_request_count_at_capture") == 0, "R001 cache was captured after a model request")
+    _require(manifest.get("behavioral_action_count_at_capture") == 0, "R001 cache was captured after a behavioral action")
+    _same_artifact(manifest.get("amendment"), artifacts["amendment"], "R001 amendment")
+    _same_artifact(manifest.get("observation_cache"), artifacts["observation_cache"], "R001 observation cache")
+    _same_artifact(manifest.get("reset_contract"), artifacts["reset_contract"], "R001 LEFT reset contract")
+    left_contract, left_reset_sha = _validated_reset_contract(artifacts["reset_contract"], "R001 LEFT reset contract")
+    _require(manifest.get("reset_contract", {}).get("payload_sha256") == left_reset_sha, "R001 reset payload binding changed")
+    observation_sha = _digest(manifest.get("observation_payload_sha256"), "R001 observation payload")
+    _require(record.get("observation_payload_sha256") == observation_sha, "R001 observation payload differs from cache")
+    _require(record.get("reset_contract_payload_sha256") == left_reset_sha, "R001 reset payload differs from LEFT cache")
+    native_contract, native_reset_sha = _validated_reset_contract(
+        artifacts["native_reset_contract"], "R001 native reset contract"
+    )
+    _require(native_contract == left_contract and native_reset_sha == left_reset_sha, "R001 native reset contract differs from LEFT")
+    identity = canonical_json_sha256(
+        {
+            "observation_payload_sha256": observation_sha,
+            "reset_contract_sha256": left_reset_sha,
+        }
+    )
+    _require(record.get("pair_identity_sha256") == identity, "R001 request-zero pair identity changed")
+    attestation = _finite_json(Path(artifacts["attestation"]["path"]))
+    _require(isinstance(attestation, dict), "R001 attestation is not an object")
+    _require(attestation.get("matched_pair_id") == cell.matched_pair_id, "R001 attestation pair changed")
+    _require(attestation.get("model_request_count_at_attestation") == 0, "R001 attestation followed a model request")
+    _require(attestation.get("behavioral_action_count_at_attestation") == 0, "R001 attestation followed a behavioral action")
+    _same_artifact(attestation.get("amendment"), artifacts["amendment"], "R001 attested amendment")
+    _same_artifact(attestation.get("cache_manifest"), artifacts["cache_manifest"], "R001 attested cache manifest")
+    _same_artifact(attestation.get("observation_cache"), artifacts["observation_cache"], "R001 attested observation cache")
+    if expected_mode == "capture_left":
+        _require(attestation.get("schema_version") == CAPTURE_ATTESTATION_SCHEMA, "R001 LEFT capture attestation schema changed")
+        _require(attestation.get("registered_cell_id") == cell.cell_id, "R001 LEFT capture cell changed")
+        _require(attestation.get("mode") == "capture_left", "R001 LEFT attestation mode changed")
+        _same_artifact(attestation.get("reset_contract"), artifacts["reset_contract"], "R001 attested LEFT reset contract")
+        _require(attestation.get("observation_payload_sha256") == observation_sha, "R001 captured observation payload changed")
+        _require(attestation.get("reset_contract_payload_sha256") == left_reset_sha, "R001 captured reset payload changed")
+    else:
+        _require(attestation.get("schema_version") == REPLAY_ATTESTATION_SCHEMA, "R001 RIGHT replay attestation schema changed")
+        _require(attestation.get("target_cell_id") == cell.cell_id, "R001 RIGHT replay cell changed")
+        _require(attestation.get("target_relation") == "right", "R001 replay relation changed")
+        _require(attestation.get("physical_state_and_camera_contract_bit_identical") is True, "R001 physical reset gate did not pass")
+        _require(attestation.get("request0_non_language_bytes_bit_identical") is True, "R001 request-zero bytes were not identical")
+        _require(attestation.get("request0_observation_payload_sha256") == observation_sha, "R001 replayed payload changed")
+        _require(attestation.get("right_reset_contract_sha256") == left_reset_sha, "R001 RIGHT reset payload changed")
+        _require(attestation.get("closed_loop_observation_policy") == "native_after_first_executed_action", "R001 replay scope changed")
+        _same_artifact(attestation.get("left_reset_contract"), artifacts["reset_contract"], "R001 attested LEFT reset contract")
+        right_binding = attestation.get("right_native_reset_contract")
+        _same_artifact(right_binding, artifacts["native_reset_contract"], "R001 attested RIGHT reset contract")
+        _require(right_binding.get("payload_sha256") == left_reset_sha, "R001 attested RIGHT reset payload changed")
+    return {
+        "schema_version": REQUEST0_ENVELOPE_SCHEMA,
+        "mode": expected_mode,
+        "pair_identity_sha256": identity,
+        "observation_payload_sha256": observation_sha,
+        "reset_contract_payload_sha256": left_reset_sha,
+        "closed_loop_observation_policy": "native_after_first_executed_action",
+        "artifacts": artifacts,
+    }
+
+
 def build_episode_record(*, export: Mapping[str, Any], bundle: E004RuntimeBundle, cell: E004Cell, output_path: Path) -> dict[str, Any]:
     expected = {
         "schema_version": EXPORT_SCHEMA,
@@ -230,6 +367,7 @@ def build_episode_record(*, export: Mapping[str, Any], bundle: E004RuntimeBundle
     live_gate_artifact, scene, camera_identity = _validate_live_gate(
         export.get("live_scene_gate"), bundle=bundle, cell=cell
     )
+    request0 = _validate_request0_replay(export.get("request0_replay"), bundle=bundle, cell=cell)
     steps = _normalize_steps(export.get("steps"))
     actions_executed = len(steps) - 1
     action_cap = int(cell.row["runtime_identity_requirement"]["action_cap"])
@@ -275,6 +413,7 @@ def build_episode_record(*, export: Mapping[str, Any], bundle: E004RuntimeBundle
     requested = [_cone(step, cell.relation) for step in steps]
     failure = _failure_category(success=success, steps=steps, relation=cell.relation, detached_release=detached)
     output_path = Path(output_path).resolve()
+    native_initial_state_sha256 = _sha256_json(initial_state)
     record = {
         "schema_version": EPISODE_SCHEMA,
         "record_type": "behavioral_episode",
@@ -325,7 +464,14 @@ def build_episode_record(*, export: Mapping[str, Any], bundle: E004RuntimeBundle
         "realised_object_poses": scene["realised_object_poses"],
         "arm_reset_pose": scene["arm_reset_pose"],
         "object_layout_symmetric_not_embodiment": True,
-        "initial_state_sha256": _sha256_json(initial_state),
+        "initial_state_sha256": native_initial_state_sha256,
+        "native_initial_state_sha256": native_initial_state_sha256,
+        "native_initial_rgb_views": camera_identity,
+        "request0_pair_identity_sha256": request0["pair_identity_sha256"],
+        "request0_observation_payload_sha256": request0["observation_payload_sha256"],
+        "request0_reset_contract_sha256": request0["reset_contract_payload_sha256"],
+        "request0_replay_mode": request0["mode"],
+        "request0_replay": request0,
         "final_detached_release": detached,
         "right_censored": right_censored,
         "actions_executed": actions_executed,
@@ -339,6 +485,7 @@ def build_episode_record(*, export: Mapping[str, Any], bundle: E004RuntimeBundle
             "executed_action_trace": actions_artifact,
             "live_scene_gate": live_gate_artifact,
             "runtime_identity": runtime_artifact,
+            "request0_replay": request0["artifacts"],
             "raw_episode_jsonl": {"path": str(output_path), "integrity_scope": "post_close_manifest"},
         },
         "future_evidence": export.get("future_evidence"),
@@ -395,7 +542,14 @@ def compile_pair(*, left_jsonl: Path, right_jsonl: Path, output: Path) -> dict[s
     _require(left["requested_relation"] == "left" and right["requested_relation"] == "right", "pair directions are not LEFT/RIGHT")
     for key in ("matched_pair_id", "model_id", "arena", "environment_seed", "sampling_seed", "symmetry_level_s", "registration_sha256", "queue_sha256", "candidate_sha256"):
         _require(left[key] == right[key], f"matched pair differs for {key}")
-    _require(left["initial_state_sha256"] == right["initial_state_sha256"], "matched directions do not share an identical reset")
+    for key in (
+        "request0_pair_identity_sha256",
+        "request0_observation_payload_sha256",
+        "request0_reset_contract_sha256",
+    ):
+        _require(left.get(key) == right.get(key), f"matched directions differ for {key}")
+    _require(left.get("request0_replay_mode") == "capture_left", "matched LEFT row lacks R001 capture attestation")
+    _require(right.get("request0_replay_mode") == "replay_right", "matched RIGHT row lacks R001 replay attestation")
     left_actions = np.load(left["artifacts"]["executed_action_trace"]["path"], allow_pickle=False)
     right_actions = np.load(right["artifacts"]["executed_action_trace"]["path"], allow_pickle=False)
     _require(left_actions.ndim == 2 and right_actions.ndim == 2 and left_actions.shape[1:] == right_actions.shape[1:], "matched action dimensions differ")
@@ -416,8 +570,17 @@ def compile_pair(*, left_jsonl: Path, right_jsonl: Path, output: Path) -> dict[s
         "symmetry_level_s": left["symmetry_level_s"],
         "asymmetry_metric_A_left": left["asymmetry_metric_A"],
         "asymmetry_metric_A_right": right["asymmetry_metric_A"],
-        "identical_reset": True,
-        "initial_state_sha256": left["initial_state_sha256"],
+        "r001_request0_identity_verified": True,
+        "r001_physical_state_and_camera_contract_identical": True,
+        "identical_policy_request0_non_language_bytes": True,
+        "request0_pair_identity_sha256": left["request0_pair_identity_sha256"],
+        "request0_observation_payload_sha256": left["request0_observation_payload_sha256"],
+        "request0_reset_contract_sha256": left["request0_reset_contract_sha256"],
+        "native_initial_rgb_bytes_identical": left["native_initial_rgb_views"] == right["native_initial_rgb_views"],
+        "left_native_initial_state_sha256": left["native_initial_state_sha256"],
+        "right_native_initial_state_sha256": right["native_initial_state_sha256"],
+        "left_native_initial_rgb_views": left["native_initial_rgb_views"],
+        "right_native_initial_rgb_views": right["native_initial_rgb_views"],
         "left_registered_cell_id": left["registered_cell_id"],
         "right_registered_cell_id": right["registered_cell_id"],
         "left_success": left["success"],

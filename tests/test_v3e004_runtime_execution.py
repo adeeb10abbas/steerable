@@ -26,6 +26,21 @@ from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.runtime_contract impo
     sha256_file,
     shard_cells,
 )
+from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.request0_replay import (
+    RESET_CONTRACT_SCHEMA,
+    canonical_json_sha256,
+    capture_left_observation,
+    evidence_envelope,
+    replay_left_observation_for_right,
+    write_capture_attestation,
+)
+from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.run_droid_queue import (
+    _bridge_command,
+    _existing_valid_episode,
+    _left_first,
+    _validate_existing_r001_artifacts,
+    _validate_resumed_left_cache,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -142,8 +157,110 @@ def test_runtime_bundle_selects_only_new_droid_rows_and_whole_pair_shards():
     for cell in shard:
         grouped.setdefault(cell.matched_pair_id, set()).add(cell.relation)
     assert grouped and set(map(frozenset, grouped.values())) == {frozenset({"left", "right"})}
+    left_first = _left_first(list(shard))
+    assert all(
+        left_first[index].relation == "left"
+        and left_first[index + 1].relation == "right"
+        and left_first[index].matched_pair_id == left_first[index + 1].matched_pair_id
+        for index in range(0, len(left_first), 2)
+    )
     with pytest.raises(RuntimeContractError, match="shard_index"):
         shard_cells(cells, shard_index=4, shard_count=4)
+
+
+def test_right_bridge_command_carries_exact_left_cache_digests(tmp_path: Path) -> None:
+    bundle = _bundle()
+    cell = bundle.cell("v3e004:nano:seed9400:s100:right")
+    pair_root = tmp_path / "pair"
+    pair_root.mkdir()
+    retained = {
+        "--request0-observation-cache-sha256": pair_root / "left_request0_observation.npz",
+        "--request0-observation-manifest-sha256": pair_root / "left_request0_observation.manifest.json",
+        "--request0-reset-contract-sha256": pair_root / "left_request0_reset_contract.json",
+    }
+    for index, path in enumerate(retained.values()):
+        path.write_bytes(f"retained-{index}".encode("utf-8"))
+    args = SimpleNamespace(
+        bridge_module="example.bridge",
+        repo_root=ROOT,
+        registration=ARTIFACT / "registration.json",
+        queue=ARTIFACT / "queue.jsonl",
+        candidate=ARTIFACT / "layout/candidate.json",
+        lane_release=tmp_path / "release.json",
+        lane_pod_uid="pod-uid",
+        lane_gpu_uuid="GPU-uuid",
+        model_endpoint_host="127.0.0.1",
+        model_endpoint_port=18011,
+        request0_replay_amendment=ARTIFACT / "request0_observation_replay_amendment.json",
+        request0_replay_amendment_sha256=sha256_file(
+            ARTIFACT / "request0_observation_replay_amendment.json"
+        ),
+        bridge_arg=[],
+    )
+    command = _bridge_command(
+        args=args,
+        cell=cell,
+        attempt=tmp_path / "attempt",
+        registration_sha256=bundle.registration_sha256,
+        queue_sha256=bundle.queue_sha256,
+        candidate_sha256=bundle.candidate_sha256,
+        lane_release_sha256="0" * 64,
+        request0_pair_root=pair_root,
+    )
+    for flag, path in retained.items():
+        index = command.index(flag)
+        assert command[index + 1] == sha256_file(path)
+    assert command[command.index("--request0-mode") + 1] == "replay_right"
+
+
+def test_resume_never_reruns_existing_left_when_pair_cache_is_missing(tmp_path: Path) -> None:
+    pair_root = tmp_path / "request0_pairs" / "pair"
+    pair_root.mkdir(parents=True)
+    named_paths = {
+        "amendment": pair_root / "amendment.json",
+        "cache_manifest": pair_root / "left_request0_observation.manifest.json",
+        "observation_cache": pair_root / "left_request0_observation.npz",
+        "reset_contract": pair_root / "left_request0_reset_contract.json",
+        "native_reset_contract": pair_root / "left_request0_reset_contract.json",
+        "attestation": pair_root / "left.attestation.json",
+    }
+    for index, path in enumerate(dict.fromkeys(named_paths.values())):
+        path.write_bytes(f"artifact-{index}".encode("utf-8"))
+    artifacts = {
+        name: {"path": str(path.resolve()), "sha256": sha256_file(path), "bytes": path.stat().st_size}
+        for name, path in named_paths.items()
+    }
+    cell_root = tmp_path / "cells" / "left"
+    attempt = cell_root / "attempt001"
+    attempt.mkdir(parents=True)
+    episode = attempt / "raw_episode.jsonl"
+    episode.write_text(
+        json.dumps(
+            {
+                "requested_relation": "left",
+                "request0_pair_identity_sha256": "a" * 64,
+                "request0_replay": {
+                    "schema_version": "vla-wam-shared-v3e004-request0-evidence-envelope-v1",
+                    "artifacts": artifacts,
+                },
+            },
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    manifest = episode.with_name(episode.name + ".manifest.json")
+    manifest.write_text(
+        json.dumps({"row_count": 1, "jsonl_sha256": sha256_file(episode)}),
+        encoding="utf-8",
+    )
+    assert _existing_valid_episode(cell_root) == episode.resolve()
+    _validate_existing_r001_artifacts(episode)
+    _validate_resumed_left_cache(episode, pair_root)
+    named_paths["observation_cache"].unlink()
+    assert _existing_valid_episode(cell_root) == episode.resolve()
+    with pytest.raises(RuntimeContractError, match="missing or changed"):
+        _validate_existing_r001_artifacts(episode)
 
 
 def test_live_adapter_extracts_full_pose_and_blocks_request_until_gate(tmp_path: Path):
@@ -175,7 +292,93 @@ def test_live_adapter_extracts_full_pose_and_blocks_request_until_gate(tmp_path:
     adapter.authorize_behavioral_action()
 
 
-def _export(tmp_path: Path, *, bundle, cell, gate, relation: str):
+def _request0_evidence(tmp_path: Path, *, cell, relation: str):
+    amendment = ARTIFACT / "request0_observation_replay_amendment.json"
+    amendment_sha = sha256_file(amendment)
+    pair_root = tmp_path / "request0"
+    cache = pair_root / "left.npz"
+    manifest = pair_root / "left.manifest.json"
+    reset_path = pair_root / "left.reset.json"
+    observation = {
+        "image_obs": {"head": np.arange(18, dtype=np.uint8).reshape(1, 2, 3, 3)},
+        "proprio_obs": {"joint": np.asarray([[0.1, 0.2]], dtype=np.float32)},
+    }
+    reset = {
+        "schema_version": RESET_CONTRACT_SCHEMA,
+        "robot": {"joint_position": [0.1, 0.2]},
+        "rigid_objects": {"cube": [0.3, 0.0, 0.08]},
+        "cameras": {"head": {"shape": [2, 3, 3], "dtype": "uint8"}},
+        "observation_contract": {"version": 1},
+    }
+    reset["reset_contract_sha256"] = canonical_json_sha256(reset)
+    if relation == "left":
+        captured = capture_left_observation(
+            observation=observation,
+            reset_contract=reset,
+            amendment_path=amendment,
+            amendment_sha256=amendment_sha,
+            cell_id=cell.cell_id,
+            matched_pair_id=cell.matched_pair_id,
+            cache_path=cache,
+            manifest_path=manifest,
+            reset_contract_path=reset_path,
+        )
+        attestation = pair_root / "left.attestation.json"
+        write_capture_attestation(
+            amendment_path=amendment,
+            amendment_sha256=amendment_sha,
+            cell_id=cell.cell_id,
+            matched_pair_id=cell.matched_pair_id,
+            cache_path=cache,
+            manifest_path=manifest,
+            reset_contract_path=reset_path,
+            observation_payload_sha256=captured["observation_payload_sha256"],
+            reset_contract_payload_sha256=captured["reset_contract"]["payload_sha256"],
+            attestation_path=attestation,
+        )
+        observation_sha = captured["observation_payload_sha256"]
+        reset_sha = captured["reset_contract"]["payload_sha256"]
+        native_reset = reset_path
+        mode = "capture_left"
+    else:
+        attestation = pair_root / "right.attestation.json"
+        native_reset = pair_root / "right.reset.json"
+        _, replayed = replay_left_observation_for_right(
+            native_observation={
+                "image_obs": {"head": np.full((1, 2, 3, 3), 99, dtype=np.uint8)},
+                "proprio_obs": {"joint": np.asarray([[0.1, 0.2]], dtype=np.float32)},
+            },
+            native_reset_contract=reset,
+            amendment_path=amendment,
+            amendment_sha256=amendment_sha,
+            cell_id=cell.cell_id,
+            matched_pair_id=cell.matched_pair_id,
+            cache_path=cache,
+            cache_sha256=sha256_file(cache),
+            manifest_path=manifest,
+            manifest_sha256=sha256_file(manifest),
+            reset_contract_path=reset_path,
+            reset_contract_file_sha256=sha256_file(reset_path),
+            native_reset_contract_path=native_reset,
+            attestation_path=attestation,
+        )
+        observation_sha = replayed["request0_observation_payload_sha256"]
+        reset_sha = replayed["right_reset_contract_sha256"]
+        mode = "replay_right"
+    return evidence_envelope(
+        mode=mode,
+        amendment_path=amendment,
+        cache_path=cache,
+        manifest_path=manifest,
+        reset_contract_path=reset_path,
+        native_reset_contract_path=native_reset,
+        attestation_path=attestation,
+        observation_payload_sha256=observation_sha,
+        reset_contract_payload_sha256=reset_sha,
+    )
+
+
+def _export(tmp_path: Path, *, bundle, cell, gate, relation: str, request0):
     actions = tmp_path / f"{relation}.npy"
     np.save(actions, np.zeros((3, 8), dtype=np.float32), allow_pickle=False)
     video = tmp_path / f"{relation}.mp4"
@@ -210,6 +413,7 @@ def _export(tmp_path: Path, *, bundle, cell, gate, relation: str):
         "executed_action_trace": {"path": str(actions), "sha256": sha256_file(actions), "bytes": actions.stat().st_size},
         "viewport_video": {"path": str(video), "sha256": sha256_file(video), "bytes": video.stat().st_size},
         "runtime_identity": {"path": str(runtime), "sha256": sha256_file(runtime), "bytes": runtime.stat().st_size},
+        "request0_replay": request0,
     }
 
 
@@ -223,14 +427,35 @@ def test_episode_and_pair_compiler_preserve_raw_metrics(tmp_path: Path):
         gate_dir.mkdir(parents=True)
         _, gate = _gate(gate_dir, by_relation[relation])
         row = build_episode_record(
-            export=_export(tmp_path / relation, bundle=bundle, cell=by_relation[relation], gate=gate, relation=relation),
+            export=_export(
+                tmp_path / relation,
+                bundle=bundle,
+                cell=by_relation[relation],
+                gate=gate,
+                relation=relation,
+                request0=_request0_evidence(tmp_path, cell=by_relation[relation], relation=relation),
+            ),
             bundle=bundle, cell=by_relation[relation], output_path=tmp_path / relation / "raw_episode.jsonl",
         )
         assert row["success"] is True and row["cone_entry_sustained"] is True
         assert row["endpoint_shift"] is None and row["action_distinct"] is None
+        if relation == "right":
+            row["native_initial_rgb_views"] = {
+                **row["native_initial_rgb_views"],
+                "head_camera": {
+                    **row["native_initial_rgb_views"]["head_camera"],
+                    "rgb_source_sha256": "f" * 64,
+                },
+            }
+            row["native_initial_state_sha256"] = "e" * 64
+            row["initial_state_sha256"] = "e" * 64
         episode_paths[relation] = tmp_path / relation / "raw_episode.jsonl"
         write_episode(record=row, output=episode_paths[relation])
     pair = compile_pair(left_jsonl=episode_paths["left"], right_jsonl=episode_paths["right"], output=tmp_path / "pair.jsonl")
     assert pair["endpoint_redirection_left_minus_right_m"] == pytest.approx(0.4)
     assert pair["endpoint_shift_right_minus_left_m"] == pytest.approx(-0.4)
     assert pair["action_distinct"] is False
+    assert pair["identical_policy_request0_non_language_bytes"] is True
+    assert pair["request0_pair_identity_sha256"]
+    assert pair["native_initial_rgb_bytes_identical"] is False
+    assert pair["left_native_initial_state_sha256"] != pair["right_native_initial_state_sha256"]

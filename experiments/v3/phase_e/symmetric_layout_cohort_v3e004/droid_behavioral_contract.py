@@ -167,6 +167,7 @@ def simulator_export_envelope(
     viewport_video: Mapping[str, Any],
     future_evidence: Any,
     future_evidence_status: str,
+    request0_replay: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Build the identity-complete export consumed by ``episode_compiler``."""
 
@@ -202,4 +203,5 @@ def simulator_export_envelope(
         "viewport_video": dict(viewport_video),
         "future_evidence": future_evidence,
         "future_evidence_status": future_evidence_status,
+        "request0_replay": dict(request0_replay) if request0_replay is not None else None,
     }

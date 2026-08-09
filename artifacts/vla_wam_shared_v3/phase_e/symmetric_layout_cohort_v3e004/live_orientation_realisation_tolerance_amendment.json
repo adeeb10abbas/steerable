@@ -1,0 +1,142 @@
+{
+  "amendment_id": "V3-E004-R002",
+  "candidate_sha256": "7e270419cdbd2a00e36c47a6a5e3d10c7affb225f118e536cc43917da960ba33",
+  "created_utc": "2026-08-09T00:44:07Z",
+  "disclosure": "This is a post-registration instrumentation-tolerance and source-provenance correction. The 0.04 rad tolerance was selected only from model-blind, zero-request live-settle measurements. The control-asset correction follows only from attempt-manifest provenance, without conditioning on behavioral outcomes, policy actions, or model outputs.",
+  "effective_scope": {
+    "arenas": [
+      "droid_robolab"
+    ],
+    "layouts": "all registered V3-E004 DROID layouts",
+    "models": [
+      "pi05_current_stack_droid",
+      "cosmos3_nano_policy_droid",
+      "dreamzero_droid_action_cfg",
+      "cosmos3_edge_policy_droid"
+    ]
+  },
+  "frozen_change": {
+    "corrected_live_orientation_realisation_tolerance_rad": 0.04,
+    "measurement": "absolute quaternion geodesic residual between each requested movable-object orientation and its settled live orientation",
+    "original_live_orientation_realisation_tolerance_rad": 0.03490658503988659,
+    "runtime_rule": "For prospective R002 DROID attempts only, the live layout gate applies the 0.04 rad tolerance uniformly to every registered movable object, direction, layout, seed, and model.",
+    "selection_rule": "The round 0.04 rad bound was selected prospectively after the same deterministic 0.0353741686 rad cube settle residual exceeded the original bound across independent ali-owned simulator lanes and environment seeds before request zero."
+  },
+  "control_asset_binding": {
+    "audit_rule": "Every DROID s=0 attempt manifest is audited. A behavioral row is denominator-eligible only if --control-scene-asset resolves to the exact original control USDA below and the file bytes match its SHA-256.",
+    "incorrect_substituted_asset": {
+      "bytes": 6021,
+      "path_suffix": "experiments/v3/phase_e/bilateral_symmetry_null_control_v3e003/scene_assets/rubiks_cube_banana_pair_bowl.usda",
+      "sha256": "73ac533ccf505f9d71124b3da9aee328d3ebd32fffbd75bc88f32f0d15b20eec"
+    },
+    "required_original_control_asset": {
+      "bytes": 5373,
+      "path_suffix": "assets/scenes/rubiks_cube_banana_bowl.usda",
+      "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+      "sha256": "22b95d601defb9252a448a1b37d0548e1f2dc3bfb0c3d86a04c2ef5c4cc817a0"
+    },
+    "scientific_reason": "Although active-object selection can hide the extra paired-clutter prim, the deterministic settled state differs across these USDA source paths. The substituted asset is therefore not evidence-equivalent to the registered control fixture.",
+    "s0_runtime_rule": "Every fresh R002 s=0 attempt must bind the original control USDA as --control-scene-asset. The paired-clutter USDA remains available only as --paired-scene-asset for nonzero registered layouts."
+  },
+  "excluded_s0_behavioral_rows_with_substituted_control_asset": [
+    {
+      "attempt_manifest_sha256": "f5ba87426a64cbc7b611d688d7e1ff8e83c2f9edacc5a832418d0658911c4a45",
+      "cell_id": "v3e004:pi05:seed9400:s000:left",
+      "episode_jsonl_sha256": "69e8c0c10c2478b8ac9fadc43662969664d452938eedb04af5faff656160dcfe"
+    },
+    {
+      "attempt_manifest_sha256": "e41bf5ba3b213062074899649c9b665fb863bd7b3bb481be323c7f737d168db7",
+      "cell_id": "v3e004:pi05:seed9400:s000:right",
+      "episode_jsonl_sha256": "5befc542c7a1aa1211aac22d8f2f511a453cf68ce40610a2557297ec85f8d54b"
+    },
+    {
+      "attempt_manifest_sha256": "b7f99b16e1a30a68f68e9d4225d0abf9009f3481b8c31c5b287640bb0c29e35e",
+      "cell_id": "v3e004:edge:seed9400:s000:left",
+      "episode_jsonl_sha256": "6a85c9a7f1c95fd80802ccdae5eb476503524b171a17d6e71ba2163d11d771d9"
+    },
+    {
+      "attempt_manifest_sha256": "14e865f991eb37efed5a024703926e39ea4809807a077542ee6274f67e5ab5c5",
+      "cell_id": "v3e004:edge:seed9400:s000:right",
+      "episode_jsonl_sha256": "a5514043e4b87578102e45d6a9225a446b56012d023f13fcc5fd382e8370416b"
+    },
+    {
+      "attempt_manifest_sha256": "7088326088caca0f30d0db9ad8bd711ec2515d97e5f705baf226cd35b8700240",
+      "cell_id": "v3e004:edge:seed9401:s000:left",
+      "episode_jsonl_sha256": "591be222d8c63e1f08d3268e440e5df39c58b9573b2e5fa3cccce5432baaca84"
+    },
+    {
+      "attempt_manifest_sha256": "7ac3917fadf7a8b1fe4655abbe07952072c8470bb08e659981c617d6e17bdeb3",
+      "cell_id": "v3e004:edge:seed9401:s000:right",
+      "episode_jsonl_sha256": "f22db67da29f5a3f154e6133c4b51d99be192427c38bbcd22da15c642c75fd83"
+    },
+    {
+      "attempt_manifest_sha256": "32264a44a774fd9bf6a6a9dbb2c600fb83efd05234007e484ac275a4d372e238",
+      "cell_id": "v3e004:dreamzero:seed9400:s000:left",
+      "episode_jsonl_sha256": "dafcdbc4b7c5368693b56073a951323ea98da15e39a3d3759eb75d935ac536fa"
+    },
+    {
+      "attempt_manifest_sha256": "36835631d565b515c8b7749ac2f272e587ac33ad6d216ac9f5d74cda0a3fcff9",
+      "cell_id": "v3e004:dreamzero:seed9400:s000:right",
+      "episode_jsonl_sha256": "0ec988ff1fa223b311e5925e661789688471affd2d1fb79489a2f83032132d03"
+    }
+  ],
+  "invalid_discovery_attempts": [
+    {
+      "attempt_manifest_sha256": "caf0f92de64bd6b8c890ba6b756a75b0e9b6c55c48a44ae1fe09ae250bfec349",
+      "behavioral_use": "infrastructure-invalid; excluded from every behavioral and matched-pair denominator; fresh R002 LEFT and RIGHT attempts required",
+      "bridge_failure_path": "/data/users/ali/vla_wam/raw/v3e004/servers/nano/v3e004-a100-server-01/attempt04/sessions/final-851e009/droid/cosmos3_nano_policy_droid/shard-000-of-008/cells/v3e004__nano__seed9400__s000__left/attempt001/bridge_failure.json",
+      "bridge_failure_sha256": "bf122acddeef82454b21d61c1a187c05212136a798abb88a0e290384ab77ab70",
+      "cell_id": "v3e004:nano:seed9400:s000:left",
+      "model_request_count": 0,
+      "observed_orientation_residual_rad": 0.0353741686
+    },
+    {
+      "attempt_manifest_sha256": "4926019c3ada19bbd07483ebade506f5e45f0c5d9d4b140c386a69c2e94ee45f",
+      "behavioral_use": "authorized deterministic infrastructure retry; infrastructure-invalid; excluded from every behavioral and matched-pair denominator; fresh R002 LEFT and RIGHT attempts required",
+      "bridge_failure_path": "/data/users/ali/vla_wam/raw/v3e004/servers/nano/v3e004-a100-server-01/attempt04/sessions/final-851e009-r001-retry02/droid/cosmos3_nano_policy_droid/shard-000-of-008/cells/v3e004__nano__seed9400__s000__left/attempt001/bridge_failure.json",
+      "bridge_failure_sha256": "bf122acddeef82454b21d61c1a187c05212136a798abb88a0e290384ab77ab70",
+      "cell_id": "v3e004:nano:seed9400:s000:left",
+      "model_request_count": 0,
+      "observed_orientation_residual_rad": 0.0353741686
+    },
+    {
+      "attempt_manifest_sha256": "a14486f637c45f1cfd976a9c3ca710b28766c8fb388b58bf89c54db05c317cb6",
+      "behavioral_use": "infrastructure-invalid; excluded from every behavioral and matched-pair denominator; fresh R002 LEFT and RIGHT attempts required",
+      "bridge_failure_path": "/data/users/ali/vla_wam/raw/v3e004/servers/nano/vla-wam-rtx-nano/attempt04/sessions/final-851e009/droid/cosmos3_nano_policy_droid/shard-004-of-008/cells/v3e004__nano__seed9404__s000__left/attempt001/bridge_failure.json",
+      "bridge_failure_sha256": "5cdfca0c962acd13c37c7797d3a6f1523b9552cc8dacfe92912aa1dc4111be2b",
+      "cell_id": "v3e004:nano:seed9404:s000:left",
+      "model_request_count": 0,
+      "observed_orientation_residual_rad": 0.0353741686
+    },
+    {
+      "attempt_manifest_sha256": "a825b94f05ce9187c19fd9766db0250abfa021bd7d59e1a81881193847f6c2ff",
+      "behavioral_use": "infrastructure-invalid; excluded from every behavioral and matched-pair denominator; fresh R002 LEFT and RIGHT attempts required",
+      "bridge_failure_path": "/data/users/ali/vla_wam/raw/v3e004/servers/nano/v3e004-a100-server-04/attempt04/sessions/final-851e009/droid/cosmos3_nano_policy_droid/shard-002-of-008/cells/v3e004__nano__seed9402__s000__left/attempt001/bridge_failure.json",
+      "bridge_failure_sha256": "6a50143b1102b9a65d189036436321097ca47e2f350eceac3edd17a4851fd36f",
+      "cell_id": "v3e004:nano:seed9402:s000:left",
+      "model_request_count": 0,
+      "observed_orientation_residual_rad": 0.0353741686
+    }
+  ],
+  "no_other_change": [
+    "registration.json, queue.jsonl, and both layout candidates are unchanged",
+    "registered object poses and scene definitions are unchanged; R002 corrects the s=0 runtime asset binding to the original registered control USDA",
+    "prompts and prompt hashes are unchanged",
+    "success predicate, cone definition, sustained-entry diagnostic, and failure taxonomy are unchanged",
+    "position, midline, symmetry, camera, occlusion, arm-reset, renderer, and raw-write gates are unchanged",
+    "simulator, robot, controller, action contract, sampling seeds, and environment seeds are unchanged",
+    "R001 request-zero observation capture/replay remains mandatory and unchanged"
+  ],
+  "prospective_application": {
+    "asset_exclusion_rule": "Any DROID s=0 row, including a row produced while R002 is being registered or implemented, is discovery-only and excluded when its attempt manifest binds the substituted paired-clutter USDA as --control-scene-asset. This rule is outcome-blind.",
+    "pre_r002_rule": "Every DROID s=0 attempt made before an R002 implementation commit remains infrastructure-invalid even when its residual would pass 0.04 rad. No pre-R002 attempt may be reclassified.",
+    "retry_rule": "Each affected matched pair requires a fresh LEFT capture and matched RIGHT replay under R001 plus R002; no cached pre-R002 LEFT observation may seed the new pair.",
+    "transition_rule": "Non-s=0 attempts already running under the immutable pre-R002 runtime may complete. Any s=0 attempt they reject remains outside denominators and must be rerun prospectively under R002."
+  },
+  "queue_sha256": "af6acdb298b773575a0ddc3d16be0544c7e2430f0d62d92fe231f75e1b2f7a57",
+  "registered_before_new_s0_request": true,
+  "registration_commit": "59227386aa97b42cc16dbe8d90418af7e9cd8c73",
+  "registration_sha256": "3e3786510ebba933d0c7a4606afa51627ea6bf706f9e64b34cfd74b29e318db2",
+  "schema_version": "vla-wam-shared-v3e004-live-orientation-realisation-tolerance-amendment-v1",
+  "study_id": "vla_wam_language_steerability_v3"
+}

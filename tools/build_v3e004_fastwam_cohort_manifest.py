@@ -97,6 +97,24 @@ def validate_progress_closed(progress: Sequence[Mapping[str, Any]], expected_see
     require(tail.get("seed") == expected_seeds[-1], f"queue progress closes the wrong seed: {root}")
 
 
+def controlled_handoff_record(*, watchdog_log: Path, runtime_log: Path) -> dict[str, Any]:
+    """Bind the marker-triggered split without calling it behavioral evidence."""
+    require(watchdog_log.name == "runner10_stop_after_9414_watchdog.log", "unexpected handoff watchdog log")
+    require(runtime_log.name == "behavioral_attempt01.log", "unexpected handoff runtime log")
+    watchdog_text = watchdog_log.read_text(encoding="utf-8", errors="replace")
+    runtime_text = runtime_log.read_text(encoding="utf-8", errors="replace")
+    require("seed_9414_marker_observed" in watchdog_text and "sigint_sent" in watchdog_text, "handoff watchdog did not close at the registered marker")
+    require("KeyboardInterrupt" in runtime_text and "env.setup_demo" in runtime_text, "runtime log does not show the post-marker setup interruption")
+    return {
+        "status": "controlled_seed_boundary_handoff_excluded_from_behavioral_denominator",
+        "last_accepted_seed": 9414,
+        "next_seed_environment_setup_interrupted": 9415,
+        "additional_completed_behavioral_cells": 0,
+        "watchdog_log": record(watchdog_log),
+        "runtime_log": record(runtime_log),
+    }
+
+
 def _validate_slice(
     root: Path,
     *,
@@ -224,6 +242,8 @@ def build(
     runner_paths: Sequence[Path],
     setup_invalid_logs: Sequence[Path],
     infrastructure_invalid_logs: Sequence[Path] = (),
+    controlled_handoff_watchdog_log: Path,
+    controlled_handoff_runtime_log: Path,
 ) -> dict[str, Any]:
     registration = load_json(registration_path)
     queue_rows = load_jsonl(queue_path)
@@ -323,6 +343,10 @@ def build(
     require(runner_paths, "at least one runtime implementation path is required")
     runner_records = [record(path) for path in runner_paths]
     require(len({item["sha256"] for item in runner_records}) == 1, "split cohort used different FastWAM runtime bytes")
+    handoff = controlled_handoff_record(
+        watchdog_log=controlled_handoff_watchdog_log,
+        runtime_log=controlled_handoff_runtime_log,
+    )
     return {
         "schema_version": "vla-wam-shared-v3e004-fastwam-full-cohort-manifest-v1",
         "study_id": "vla_wam_language_steerability_v3",
@@ -331,7 +355,13 @@ def build(
         "arena": ARENA,
         "status": "complete_hash_closed_108_registered_behavioral_cells",
         "created_at_utc": utc_now(),
-        "behavioral_denominator": {"registered": 108, "valid": 108, "setup_invalid_excluded": 2},
+        "behavioral_denominator": {
+            "registered": 108,
+            "valid": 108,
+            "setup_invalid_excluded": 2,
+            "infrastructure_invalid_excluded": len(infrastructure_invalid_records),
+            "controlled_seed_boundary_handoffs_excluded": 1,
+        },
         "registered_bindings": {
             "registration": record(registration_path),
             "queue": record(queue_path),
@@ -349,6 +379,7 @@ def build(
         "episodes": sorted(episode_records, key=lambda row: (row["environment_seed"], row["symmetry_level_s"], row["relation"])),
         "setup_invalid_attempts": invalid_records,
         "infrastructure_invalid_attempts": infrastructure_invalid_records,
+        "controlled_seed_boundary_handoff": handoff,
         "claim_boundary": {
             "robotwin_only_never_pooled_with_droid": True,
             "all_behavioral_failures_retained": True,
@@ -370,6 +401,8 @@ def main() -> None:
     parser.add_argument("--runner", type=Path, action="append", required=True)
     parser.add_argument("--setup-invalid-log", type=Path, action="append", required=True)
     parser.add_argument("--infrastructure-invalid-log", type=Path, action="append", default=[])
+    parser.add_argument("--controlled-handoff-watchdog-log", type=Path, required=True)
+    parser.add_argument("--controlled-handoff-runtime-log", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     try:
@@ -383,6 +416,8 @@ def main() -> None:
             runner_paths=args.runner,
             setup_invalid_logs=args.setup_invalid_log,
             infrastructure_invalid_logs=args.infrastructure_invalid_log,
+            controlled_handoff_watchdog_log=args.controlled_handoff_watchdog_log,
+            controlled_handoff_runtime_log=args.controlled_handoff_runtime_log,
         )
     except (Invalid, OSError, ValueError, KeyError, TypeError) as exc:
         print(json.dumps({"status": "invalid", "error": str(exc)}, indent=2, sort_keys=True))

@@ -36,7 +36,11 @@ from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.fastwam_robotwin impo
 from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.fastwam_runtime import (
     episode_measures,
 )
-from tools.build_v3e004_fastwam_cohort_manifest import Invalid, validate_progress_closed
+from tools.build_v3e004_fastwam_cohort_manifest import (
+    Invalid,
+    controlled_handoff_record,
+    validate_progress_closed,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -248,3 +252,14 @@ def test_fastwam_cohort_closer_accepts_bounded_resume_tail_but_not_partial_progr
             list(range(9401, 9415)),
             root=tmp_path,
         )
+
+
+def test_fastwam_cohort_closer_binds_controlled_seed_boundary_handoff(tmp_path):
+    watchdog = tmp_path / "runner10_stop_after_9414_watchdog.log"
+    runtime = tmp_path / "behavioral_attempt01.log"
+    watchdog.write_text("seed_9414_marker_observed\nsigint_sent target_pid=1\n")
+    runtime.write_text("KeyboardInterrupt\n  value = super().setup_demo(*args, **kwargs)\n  env.setup_demo\n")
+    row = controlled_handoff_record(watchdog_log=watchdog, runtime_log=runtime)
+    assert row["last_accepted_seed"] == 9414
+    assert row["next_seed_environment_setup_interrupted"] == 9415
+    assert row["additional_completed_behavioral_cells"] == 0

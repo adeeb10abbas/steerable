@@ -195,6 +195,12 @@ def test_right_bridge_command_carries_exact_left_cache_digests(tmp_path: Path) -
         request0_replay_amendment_sha256=sha256_file(
             ARTIFACT / "request0_observation_replay_amendment.json"
         ),
+        live_orientation_tolerance_amendment=(
+            ARTIFACT / "live_orientation_realisation_tolerance_amendment.json"
+        ),
+        live_orientation_tolerance_amendment_sha256=sha256_file(
+            ARTIFACT / "live_orientation_realisation_tolerance_amendment.json"
+        ),
         bridge_arg=[],
     )
     command = _bridge_command(
@@ -238,6 +244,7 @@ def test_resume_never_reruns_existing_left_when_pair_cache_is_missing(tmp_path: 
         json.dumps(
             {
                 "requested_relation": "left",
+                "symmetry_level_s": 1.0,
                 "request0_pair_identity_sha256": "a" * 64,
                 "request0_replay": {
                     "schema_version": "vla-wam-shared-v3e004-request0-evidence-envelope-v1",
@@ -254,11 +261,21 @@ def test_resume_never_reruns_existing_left_when_pair_cache_is_missing(tmp_path: 
         json.dumps({"row_count": 1, "jsonl_sha256": sha256_file(episode)}),
         encoding="utf-8",
     )
-    assert _existing_valid_episode(cell_root) == episode.resolve()
+    assert _existing_valid_episode(
+        cell_root,
+        amendment_sha256=sha256_file(
+            ARTIFACT / "live_orientation_realisation_tolerance_amendment.json"
+        ),
+    ) == episode.resolve()
     _validate_existing_r001_artifacts(episode)
     _validate_resumed_left_cache(episode, pair_root)
     named_paths["observation_cache"].unlink()
-    assert _existing_valid_episode(cell_root) == episode.resolve()
+    assert _existing_valid_episode(
+        cell_root,
+        amendment_sha256=sha256_file(
+            ARTIFACT / "live_orientation_realisation_tolerance_amendment.json"
+        ),
+    ) == episode.resolve()
     with pytest.raises(RuntimeContractError, match="missing or changed"):
         _validate_existing_r001_artifacts(episode)
 

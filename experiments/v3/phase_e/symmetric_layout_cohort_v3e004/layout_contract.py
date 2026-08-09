@@ -652,12 +652,19 @@ def evaluate_layout(
     occlusion_check_by_camera: Mapping[str, bool],
     target_visible_by_camera: Mapping[str, bool],
     arm_reset_pose: Mapping[str, Any],
+    realisation_orientation_tolerance_rad: float | None = None,
 ) -> dict[str, Any]:
     """Validate one settled live scene and return its per-scene gate record."""
 
     s = _finite(symmetry_level_s, "symmetry_level_s")
     _require(any(math.isclose(s, level, abs_tol=1e-12) for level in ASYMMETRY_LEVELS), "unregistered symmetry level")
     expected = candidate.layout(s)
+    orientation_tolerance = (
+        candidate.realisation_orientation_tolerance_rad
+        if realisation_orientation_tolerance_rad is None
+        else _finite(realisation_orientation_tolerance_rad, "realisation_orientation_tolerance_rad")
+    )
+    _require(orientation_tolerance > 0.0, "realisation orientation tolerance must be positive")
     _require(set(realised_object_poses) == set(expected), "live movable-object inventory changed")
     for name, pose in realised_object_poses.items():
         _require(pose.asset_identity == expected[name].asset_identity, f"live asset identity changed for {name}")
@@ -681,10 +688,10 @@ def evaluate_layout(
         )
         if name not in candidate.orientation_invariant_objects:
             _require(
-                orientation_error <= candidate.realisation_orientation_tolerance_rad,
+                orientation_error <= orientation_tolerance,
                 f"live pose orientation differs from requested s for {name}: "
                 f"observed={orientation_error:.9g} rad, "
-                f"limit={candidate.realisation_orientation_tolerance_rad:.9g} rad",
+                f"limit={orientation_tolerance:.9g} rad",
             )
     residual = candidate.residuals(realised_object_poses)
     if math.isclose(s, 1.0, abs_tol=1e-12):
@@ -693,6 +700,7 @@ def evaluate_layout(
         _require(residual["midline_residual_m"] < MIDLINE_TOLERANCE_M, "live s=1 midline residual fails")
     return {
         "symmetry_level_s": s,
+        "live_orientation_realisation_tolerance_rad": orientation_tolerance,
         "asymmetry_metric_A": candidate.asymmetry_A(realised_object_poses),
         "inventory_transition": not math.isclose(s, 0.0, abs_tol=1e-12),
         **residual,

@@ -46,6 +46,8 @@ BOOTSTRAP.add_argument("--expected-robolab-commit", default="0aef241fb088ca21bb4
 BOOTSTRAP.add_argument("--minimum-visible-target-pixels", type=int, default=32)
 BOOTSTRAP.add_argument("--request0-replay-amendment", type=Path, required=True)
 BOOTSTRAP.add_argument("--request0-replay-amendment-sha256", required=True)
+BOOTSTRAP.add_argument("--live-orientation-tolerance-amendment", type=Path, required=True)
+BOOTSTRAP.add_argument("--live-orientation-tolerance-amendment-sha256", required=True)
 BOOTSTRAP.add_argument("--request0-mode", choices=("capture_left", "replay_right"), required=True)
 BOOTSTRAP.add_argument("--request0-observation-cache", type=Path, required=True)
 BOOTSTRAP.add_argument("--request0-observation-manifest", type=Path, required=True)
@@ -79,6 +81,10 @@ from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.request0_replay impor
     replay_left_observation_for_right,
     write_capture_attestation,
 )
+from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.r002_orientation_tolerance import (  # noqa: E402
+    build_runtime_attestation as build_r002_runtime_attestation,
+    load_amendment as load_r002_amendment,
+)
 
 
 bundle = load_runtime_bundle(
@@ -93,6 +99,21 @@ cell = bundle.cell(bootstrap.cell_id)
 if cell.row["arena"] != "droid_robolab" or cell.row["execution_mode"] != "new_behavioral_episode":
     BOOTSTRAP.error("standalone live gate accepts only new E004 DROID cells")
 load_amendment(bootstrap.request0_replay_amendment, bootstrap.request0_replay_amendment_sha256)
+r002_amendment = load_r002_amendment(
+    bootstrap.live_orientation_tolerance_amendment,
+    bootstrap.live_orientation_tolerance_amendment_sha256,
+    registration_sha256=bundle.registration_sha256,
+    queue_sha256=bundle.queue_sha256,
+    candidate_sha256=bundle.candidate_sha256,
+)
+r002_attestation = build_r002_runtime_attestation(
+    amendment=r002_amendment,
+    amendment_path=bootstrap.live_orientation_tolerance_amendment,
+    amendment_sha256=bootstrap.live_orientation_tolerance_amendment_sha256,
+    control_scene_asset=bootstrap.control_scene_asset,
+    paired_scene_asset=bootstrap.paired_scene_asset,
+    symmetry_level_s=cell.symmetry_level_s,
+)
 if (cell.relation, bootstrap.request0_mode) not in {
     ("left", "capture_left"),
     ("right", "replay_right"),
@@ -407,6 +428,7 @@ def main() -> None:
             snapshot_path=output_dir / "live_scene_snapshot.json",
             gate_path=output_dir / "live_scene_gate.json",
             minimum_visible_target_pixels=bootstrap.minimum_visible_target_pixels,
+            orientation_tolerance_attestation=r002_attestation,
         )
         camera_rows = _camera_rows(env, obs, scene_mapping["rubiks_cube"], scene_mapping["bowl"])
         gate = adapter.capture_and_compile(
@@ -505,6 +527,7 @@ def main() -> None:
             "live_scene_gate": {"path": gate["gate_path"], "sha256": gate["gate_sha256"], "bytes": Path(gate["gate_path"]).stat().st_size},
             "viewport_video": {"path": str(video), "sha256": sha256_file(video), "bytes": video.stat().st_size},
             "request0_replay": request0_evidence,
+            "live_orientation_realisation_tolerance_amendment": r002_attestation,
             "release_boundary": "Behavioral bridges must repeat this gate in the same simulator process immediately before model request zero.",
         }
         report_path = output_dir / "model_blind_gate_report.json"

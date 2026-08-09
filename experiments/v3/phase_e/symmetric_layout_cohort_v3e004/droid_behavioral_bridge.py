@@ -62,6 +62,8 @@ BOOTSTRAP.add_argument("--dreamzero-server-contract", type=Path)
 BOOTSTRAP.add_argument("--dreamzero-future-root", type=Path)
 BOOTSTRAP.add_argument("--request0-replay-amendment", type=Path, required=True)
 BOOTSTRAP.add_argument("--request0-replay-amendment-sha256", required=True)
+BOOTSTRAP.add_argument("--live-orientation-tolerance-amendment", type=Path, required=True)
+BOOTSTRAP.add_argument("--live-orientation-tolerance-amendment-sha256", required=True)
 BOOTSTRAP.add_argument("--request0-mode", choices=("capture_left", "replay_right"), required=True)
 BOOTSTRAP.add_argument("--request0-observation-cache", type=Path, required=True)
 BOOTSTRAP.add_argument("--request0-observation-manifest", type=Path, required=True)
@@ -112,6 +114,10 @@ from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.request0_replay impor
     validate_lane_preflight,
     write_capture_attestation,
 )
+from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.r002_orientation_tolerance import (  # noqa: E402
+    build_runtime_attestation as build_r002_runtime_attestation,
+    load_amendment as load_r002_amendment,
+)
 
 
 bundle = load_runtime_bundle(
@@ -149,6 +155,21 @@ if scene_mapping.get("rubiks_cube") != "rubiks_cube" or scene_mapping.get("bowl"
 for path in (bootstrap.control_scene_asset, bootstrap.paired_scene_asset, bootstrap.runtime_manifest):
     if not path.is_file() or path.stat().st_size <= 0:
         BOOTSTRAP.error(f"required live input is missing: {path}")
+r002_amendment = load_r002_amendment(
+    bootstrap.live_orientation_tolerance_amendment,
+    bootstrap.live_orientation_tolerance_amendment_sha256,
+    registration_sha256=bundle.registration_sha256,
+    queue_sha256=bundle.queue_sha256,
+    candidate_sha256=bundle.candidate_sha256,
+)
+r002_attestation = build_r002_runtime_attestation(
+    amendment=r002_amendment,
+    amendment_path=bootstrap.live_orientation_tolerance_amendment,
+    amendment_sha256=bootstrap.live_orientation_tolerance_amendment_sha256,
+    control_scene_asset=bootstrap.control_scene_asset,
+    paired_scene_asset=bootstrap.paired_scene_asset,
+    symmetry_level_s=cell.symmetry_level_s,
+)
 load_amendment(
     bootstrap.request0_replay_amendment,
     bootstrap.request0_replay_amendment_sha256,
@@ -465,6 +486,7 @@ class StateCaptureProxy:
             snapshot_path=bootstrap.live_snapshot,
             gate_path=bootstrap.live_gate,
             minimum_visible_target_pixels=bootstrap.minimum_visible_target_pixels,
+            orientation_tolerance_attestation=r002_attestation,
         )
         self.initial_state_sha256: str | None = None
         self.request0_pair_identity_sha256: str | None = None
@@ -1086,6 +1108,7 @@ def _write_export() -> Path:
             "action_trace_metadata": _file_record(trace_path),
             "model_request_count": proxies[0].adapter.model_request_count,
             "live_gate_behavioral_action_count": proxies[0].adapter.behavioral_action_count,
+            "live_orientation_realisation_tolerance_amendment": r002_attestation,
         }
     )
     return _write_new_json(bootstrap.simulator_export, export)

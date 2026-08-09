@@ -209,6 +209,7 @@ class ModelBlindLiveGateAdapter:
         snapshot_path: Path,
         gate_path: Path,
         minimum_visible_target_pixels: int,
+        orientation_tolerance_attestation: Mapping[str, Any] | None = None,
     ) -> None:
         _require(cell.row["arena"] == "droid_robolab", "live adapter is DROID-only")
         _require(cell.row["execution_mode"] == "new_behavioral_episode", "preserved evidence cannot enter a live runner")
@@ -217,6 +218,11 @@ class ModelBlindLiveGateAdapter:
         self.snapshot_path = Path(snapshot_path).resolve()
         self.gate_path = Path(gate_path).resolve()
         self.minimum_visible_target_pixels = minimum_visible_target_pixels
+        self.orientation_tolerance_attestation = (
+            dict(orientation_tolerance_attestation)
+            if orientation_tolerance_attestation is not None
+            else None
+        )
         self._gate_sha256: str | None = None
         self._model_request_count = 0
         self._behavioral_action_count = 0
@@ -256,6 +262,7 @@ class ModelBlindLiveGateAdapter:
             "arm_reset_pose": extract_arm_reset_pose(observation),
             "cameras": bound_cameras,
             "settle_stability": validate_settle_stability(settle_stability),
+            "orientation_tolerance_attestation": self.orientation_tolerance_attestation,
             "scope_caveat": "Object symmetry is relative to the robot midline; robot kinematics, reset arm pose, cameras, and embodiment are not asserted symmetric.",
         }
         self.snapshot_path.parent.mkdir(parents=True, exist_ok=True)
@@ -267,6 +274,14 @@ class ModelBlindLiveGateAdapter:
             snapshot_path=self.snapshot_path,
             snapshot_sha256=snapshot_sha,
             minimum_visible_target_pixels=self.minimum_visible_target_pixels,
+            realisation_orientation_tolerance_rad=(
+                self.orientation_tolerance_attestation[
+                    "effective_live_orientation_realisation_tolerance_rad"
+                ]
+                if self.orientation_tolerance_attestation is not None
+                else None
+            ),
+            orientation_tolerance_attestation=self.orientation_tolerance_attestation,
         )
         bound = {
             "schema_version": BOUND_GATE_SCHEMA,
@@ -281,6 +296,7 @@ class ModelBlindLiveGateAdapter:
             "candidate_sha256": self.bundle.candidate_sha256,
             "snapshot": {"path": str(self.snapshot_path), "sha256": snapshot_sha, "bytes": self.snapshot_path.stat().st_size},
             "compiled_gate": compiled,
+            "orientation_tolerance_attestation": self.orientation_tolerance_attestation,
         }
         self.gate_path.parent.mkdir(parents=True, exist_ok=True)
         self.gate_path.write_bytes(canonical_json_bytes(bound))

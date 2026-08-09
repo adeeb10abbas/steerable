@@ -29,6 +29,10 @@ from .request0_replay import (
     RESET_CONTRACT_SCHEMA,
     canonical_json_sha256,
 )
+from .r002_orientation_tolerance import (
+    AMENDMENT_SHA256 as R002_AMENDMENT_SHA256,
+    validate_runtime_attestation as validate_r002_runtime_attestation,
+)
 from .runtime_contract import E004Cell, E004RuntimeBundle, RuntimeContractError, load_runtime_bundle, sha256_file
 
 
@@ -212,6 +216,44 @@ def _validate_live_gate(
     return artifact, scene, camera_identity
 
 
+def _validate_r002(
+    record: Any,
+    *,
+    live_gate_artifact: Mapping[str, Any],
+    symmetry_level_s: float,
+) -> dict[str, Any] | None:
+    """Require R002 for s=0 while retaining eligible pre-R002 non-s0 rows."""
+
+    if record is None:
+        _require(not math.isclose(symmetry_level_s, 0.0, abs_tol=1e-12), "s=0 episode lacks prospective R002 evidence")
+        return None
+    attestation = validate_r002_runtime_attestation(
+        record,
+        amendment_sha256=R002_AMENDMENT_SHA256,
+        symmetry_level_s=symmetry_level_s,
+    )
+    gate = _finite_json(Path(str(live_gate_artifact["path"])))
+    _require(
+        gate.get("orientation_tolerance_attestation") == attestation,
+        "bound live gate and simulator export differ for R002",
+    )
+    compiled = gate.get("compiled_gate", {})
+    _require(
+        compiled.get("orientation_tolerance_attestation") == attestation,
+        "compiled live gate and simulator export differ for R002",
+    )
+    scene = compiled.get("scene", {})
+    _require(
+        math.isclose(
+            float(scene.get("live_orientation_realisation_tolerance_rad")),
+            float(attestation["effective_live_orientation_realisation_tolerance_rad"]),
+            abs_tol=1e-15,
+        ),
+        "compiled live scene did not apply the R002 tolerance",
+    )
+    return attestation
+
+
 def _digest(value: Any, label: str) -> str:
     _require(
         isinstance(value, str)
@@ -367,6 +409,11 @@ def build_episode_record(*, export: Mapping[str, Any], bundle: E004RuntimeBundle
     live_gate_artifact, scene, camera_identity = _validate_live_gate(
         export.get("live_scene_gate"), bundle=bundle, cell=cell
     )
+    r002 = _validate_r002(
+        export.get("live_orientation_realisation_tolerance_amendment"),
+        live_gate_artifact=live_gate_artifact,
+        symmetry_level_s=cell.symmetry_level_s,
+    )
     request0 = _validate_request0_replay(export.get("request0_replay"), bundle=bundle, cell=cell)
     steps = _normalize_steps(export.get("steps"))
     actions_executed = len(steps) - 1
@@ -472,6 +519,7 @@ def build_episode_record(*, export: Mapping[str, Any], bundle: E004RuntimeBundle
         "request0_reset_contract_sha256": request0["reset_contract_payload_sha256"],
         "request0_replay_mode": request0["mode"],
         "request0_replay": request0,
+        "live_orientation_realisation_tolerance_amendment": r002,
         "final_detached_release": detached,
         "right_censored": right_censored,
         "actions_executed": actions_executed,
@@ -486,6 +534,9 @@ def build_episode_record(*, export: Mapping[str, Any], bundle: E004RuntimeBundle
             "live_scene_gate": live_gate_artifact,
             "runtime_identity": runtime_artifact,
             "request0_replay": request0["artifacts"],
+            "live_orientation_realisation_tolerance_amendment": (
+                r002["amendment"] if r002 is not None else None
+            ),
             "raw_episode_jsonl": {"path": str(output_path), "integrity_scope": "post_close_manifest"},
         },
         "future_evidence": export.get("future_evidence"),
@@ -548,6 +599,18 @@ def compile_pair(*, left_jsonl: Path, right_jsonl: Path, output: Path) -> dict[s
         "request0_reset_contract_sha256",
     ):
         _require(left.get(key) == right.get(key), f"matched directions differ for {key}")
+    if math.isclose(float(left["symmetry_level_s"]), 0.0, abs_tol=1e-12):
+        left_r002 = validate_r002_runtime_attestation(
+            left.get("live_orientation_realisation_tolerance_amendment"),
+            amendment_sha256=R002_AMENDMENT_SHA256,
+            symmetry_level_s=0.0,
+        )
+        right_r002 = validate_r002_runtime_attestation(
+            right.get("live_orientation_realisation_tolerance_amendment"),
+            amendment_sha256=R002_AMENDMENT_SHA256,
+            symmetry_level_s=0.0,
+        )
+        _require(left_r002 == right_r002, "matched s=0 directions differ for R002 runtime binding")
     _require(left.get("request0_replay_mode") == "capture_left", "matched LEFT row lacks R001 capture attestation")
     _require(right.get("request0_replay_mode") == "replay_right", "matched RIGHT row lacks R001 replay attestation")
     left_actions = np.load(left["artifacts"]["executed_action_trace"]["path"], allow_pickle=False)
@@ -571,6 +634,12 @@ def compile_pair(*, left_jsonl: Path, right_jsonl: Path, output: Path) -> dict[s
         "asymmetry_metric_A_left": left["asymmetry_metric_A"],
         "asymmetry_metric_A_right": right["asymmetry_metric_A"],
         "r001_request0_identity_verified": True,
+        "r002_live_orientation_and_control_asset_verified": (
+            True if math.isclose(float(left["symmetry_level_s"]), 0.0, abs_tol=1e-12) else None
+        ),
+        "live_orientation_realisation_tolerance_amendment": left.get(
+            "live_orientation_realisation_tolerance_amendment"
+        ),
         "r001_physical_state_and_camera_contract_identical": True,
         "identical_policy_request0_non_language_bytes": True,
         "request0_pair_identity_sha256": left["request0_pair_identity_sha256"],

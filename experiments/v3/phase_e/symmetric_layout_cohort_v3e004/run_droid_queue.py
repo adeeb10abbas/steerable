@@ -35,6 +35,10 @@ from .runtime_contract import (
     shard_cells,
     validate_lane_release,
 )
+from .r002_orientation_tolerance import (
+    load_amendment as load_r002_amendment,
+    validate_runtime_attestation as validate_r002_runtime_attestation,
+)
 
 
 FIXED_SHARD_COUNTS = {
@@ -67,7 +71,34 @@ def _next_attempt(cell_root: Path) -> Path:
     return cell_root / f"attempt{number:03d}"
 
 
-def _existing_valid_episode(cell_root: Path) -> Path | None:
+def _r002_eligible_row(row: dict[str, Any], amendment_sha256: str) -> bool:
+    """Keep pre-R002 non-s0 rows, but never reuse an uncorrected s0 row."""
+
+    try:
+        level = float(row.get("symmetry_level_s"))
+        if not abs(level) <= 1e-12:
+            return True
+        validate_r002_runtime_attestation(
+            row.get("live_orientation_realisation_tolerance_amendment"),
+            amendment_sha256=amendment_sha256,
+            symmetry_level_s=level,
+        )
+    except (RuntimeContractError, OSError, TypeError, ValueError):
+        return False
+    return True
+
+
+def _next_r002_recovery_manifest(shard_root: Path, *, level: float, suffix: str) -> Path:
+    token = f"{level:.2f}".replace(".", "")
+    number = 1
+    while True:
+        path = shard_root / f"r002_recovery_manifest_s{token}_{suffix}_attempt-{number:03d}.json"
+        if not path.exists():
+            return path
+        number += 1
+
+
+def _existing_valid_episode(cell_root: Path, *, amendment_sha256: str) -> Path | None:
     matches = []
     for path in cell_root.glob("attempt*/raw_episode.jsonl"):
         manifest = path.with_name(path.name + ".manifest.json")
@@ -86,6 +117,7 @@ def _existing_valid_episode(cell_root: Path) -> Path | None:
         if (
             row.get("request0_replay", {}).get("schema_version") == EVIDENCE_ENVELOPE_SCHEMA
             and isinstance(row.get("request0_pair_identity_sha256"), str)
+            and _r002_eligible_row(row, amendment_sha256)
         ):
             matches.append(path.resolve())
     _require(len(matches) <= 1, f"multiple valid behavioral episodes exist for {cell_root.name}")
@@ -240,6 +272,10 @@ def _bridge_command(
         str(args.request0_replay_amendment.resolve()),
         "--request0-replay-amendment-sha256",
         args.request0_replay_amendment_sha256,
+        "--live-orientation-tolerance-amendment",
+        str(args.live_orientation_tolerance_amendment.resolve()),
+        "--live-orientation-tolerance-amendment-sha256",
+        args.live_orientation_tolerance_amendment_sha256,
         "--request0-mode",
         mode,
         "--request0-observation-cache",
@@ -308,6 +344,11 @@ def _attempt_manifest(
             "mode": "capture_left" if cell.relation == "left" else "replay_right",
             "pair_root": str(request0_pair_root.resolve()),
         },
+        "live_orientation_realisation_tolerance_amendment": {
+            "path": str(args.live_orientation_tolerance_amendment.resolve()),
+            "sha256": args.live_orientation_tolerance_amendment_sha256,
+            "bytes": args.live_orientation_tolerance_amendment.stat().st_size,
+        },
     }
 
 
@@ -354,7 +395,13 @@ def _infra_failure(*, cell: E004Cell, attempt: Path, stage: str, exc: BaseExcept
     return {**value, "path": str(path), "sha256": sha256_file(path)}
 
 
-def _pair_inputs(raw_root: Path, model_id: str, pair_id: str) -> tuple[Path, Path] | None:
+def _pair_inputs(
+    raw_root: Path,
+    model_id: str,
+    pair_id: str,
+    *,
+    amendment_sha256: str,
+) -> tuple[Path, Path] | None:
     found: dict[str, Path] = {}
     model_root = raw_root / model_id
     for path in model_root.glob("shard-*-of-*/cells/*/attempt*/raw_episode.jsonl"):
@@ -365,6 +412,7 @@ def _pair_inputs(raw_root: Path, model_id: str, pair_id: str) -> tuple[Path, Pat
         if (
             row.get("matched_pair_id") == pair_id
             and row.get("request0_replay", {}).get("schema_version") == EVIDENCE_ENVELOPE_SCHEMA
+            and _r002_eligible_row(row, amendment_sha256)
         ):
             relation = row.get("requested_relation")
             _require(relation in {"left", "right"} and relation not in found, f"duplicate valid pair direction for {pair_id}")
@@ -392,6 +440,13 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         ("candidate_sha256", candidate_sha256),
     ):
         _require(amendment.get(key) == wanted, f"request-zero amendment differs for {key}")
+    r002_amendment = load_r002_amendment(
+        args.live_orientation_tolerance_amendment,
+        args.live_orientation_tolerance_amendment_sha256,
+        registration_sha256=registration_sha256,
+        queue_sha256=queue_sha256,
+        candidate_sha256=candidate_sha256,
+    )
     bundle = load_runtime_bundle(
         registration_path=args.registration,
         registration_sha256=registration_sha256,
@@ -430,17 +485,30 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             )
         )
     )
+    if args.symmetry_level_only is not None:
+        wanted_level = float(args.symmetry_level_only)
+        _require(wanted_level in {0.0, 0.25, 0.5, 0.75, 1.0}, "unregistered symmetry-level filter")
+        selected = [cell for cell in selected if abs(cell.symmetry_level_s - wanted_level) <= 1e-12]
+        _require(selected, "symmetry-level filter selected no cells")
     if args.limit is not None:
         _require(args.limit >= 0, "limit must be nonnegative")
         # Limits preserve pair integrity.
         pair_limit = args.limit // 2
         selected = selected[: pair_limit * 2]
     shard_root = args.raw_root.resolve() / args.model_id / f"shard-{args.shard_index:03d}-of-{args.shard_count:03d}"
-    shard_manifest_path = (
-        shard_root / "shard_manifest.json"
-        if args.limit is None
-        else shard_root / f"partial_shard_manifest_limit-{args.limit:04d}.json"
-    )
+    if args.symmetry_level_only is not None:
+        suffix = "full" if args.limit is None else f"limit-{args.limit:04d}"
+        shard_manifest_path = _next_r002_recovery_manifest(
+            shard_root,
+            level=float(args.symmetry_level_only),
+            suffix=suffix,
+        )
+    else:
+        shard_manifest_path = (
+            shard_root / "shard_manifest.json"
+            if args.limit is None
+            else shard_root / f"partial_shard_manifest_limit-{args.limit:04d}.json"
+        )
     _require(not shard_manifest_path.exists(), f"shard already closed: {shard_manifest_path}")
     results: list[dict[str, Any]] = []
     infrastructure: list[dict[str, Any]] = []
@@ -458,8 +526,16 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             )
             continue
         cell_root = shard_root / "cells" / _safe(cell.cell_id)
-        request0_pair_root = shard_root / "request0_pairs" / _safe(cell.matched_pair_id)
-        existing = _existing_valid_episode(cell_root)
+        pair_root_name = (
+            f"request0_pairs_r002_{args.live_orientation_tolerance_amendment_sha256[:8]}"
+            if abs(cell.symmetry_level_s) <= 1e-12
+            else "request0_pairs"
+        )
+        request0_pair_root = shard_root / pair_root_name / _safe(cell.matched_pair_id)
+        existing = _existing_valid_episode(
+            cell_root,
+            amendment_sha256=args.live_orientation_tolerance_amendment_sha256,
+        )
         if existing is not None:
             try:
                 _validate_existing_r001_artifacts(existing)
@@ -495,8 +571,18 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 continue
             results.append({"cell_id": cell.cell_id, "status": "already_compiled", "raw_episode": str(existing)})
             if cell.relation == "right":
-                pair = _pair_inputs(args.raw_root.resolve(), args.model_id, cell.matched_pair_id)
-                pair_path = shard_root / "matched_pairs" / (_safe(cell.matched_pair_id) + ".jsonl")
+                pair = _pair_inputs(
+                    args.raw_root.resolve(),
+                    args.model_id,
+                    cell.matched_pair_id,
+                    amendment_sha256=args.live_orientation_tolerance_amendment_sha256,
+                )
+                pair_dir = (
+                    f"matched_pairs_r002_{args.live_orientation_tolerance_amendment_sha256[:8]}"
+                    if abs(cell.symmetry_level_s) <= 1e-12
+                    else "matched_pairs"
+                )
+                pair_path = shard_root / pair_dir / (_safe(cell.matched_pair_id) + ".jsonl")
                 if pair is not None and not pair_path.exists():
                     try:
                         compile_pair(left_jsonl=pair[0], right_jsonl=pair[1], output=pair_path)
@@ -557,9 +643,19 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 output=attempt / "raw_episode.jsonl",
             )
             results.append({"cell_id": cell.cell_id, "status": "compiled_valid_behavioral_cell", **result})
-            pair = _pair_inputs(args.raw_root.resolve(), args.model_id, cell.matched_pair_id)
+            pair = _pair_inputs(
+                args.raw_root.resolve(),
+                args.model_id,
+                cell.matched_pair_id,
+                amendment_sha256=args.live_orientation_tolerance_amendment_sha256,
+            )
             if pair is not None:
-                pair_path = shard_root / "matched_pairs" / (_safe(cell.matched_pair_id) + ".jsonl")
+                pair_dir = (
+                    f"matched_pairs_r002_{args.live_orientation_tolerance_amendment_sha256[:8]}"
+                    if abs(cell.symmetry_level_s) <= 1e-12
+                    else "matched_pairs"
+                )
+                pair_path = shard_root / pair_dir / (_safe(cell.matched_pair_id) + ".jsonl")
                 if not pair_path.exists():
                     try:
                         compile_pair(left_jsonl=pair[0], right_jsonl=pair[1], output=pair_path)
@@ -618,6 +714,13 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "sha256": args.request0_replay_amendment_sha256,
             "bytes": args.request0_replay_amendment.stat().st_size,
         },
+        "live_orientation_realisation_tolerance_amendment": {
+            "path": str(args.live_orientation_tolerance_amendment.resolve()),
+            "sha256": args.live_orientation_tolerance_amendment_sha256,
+            "bytes": args.live_orientation_tolerance_amendment.stat().st_size,
+            "amendment_id": r002_amendment["amendment_id"],
+        },
+        "symmetry_level_only": args.symmetry_level_only,
         "closed_unix_s": time.time(),
     }
     _write_new_json(shard_manifest_path, shard_manifest)
@@ -637,6 +740,8 @@ def main() -> None:
     parser.add_argument("--lane-release-sha256", required=True)
     parser.add_argument("--request0-replay-amendment", type=Path, required=True)
     parser.add_argument("--request0-replay-amendment-sha256", required=True)
+    parser.add_argument("--live-orientation-tolerance-amendment", type=Path, required=True)
+    parser.add_argument("--live-orientation-tolerance-amendment-sha256", required=True)
     parser.add_argument("--model-id", required=True)
     parser.add_argument("--raw-root", type=Path, required=True)
     parser.add_argument("--bridge-module", required=True)
@@ -649,6 +754,7 @@ def main() -> None:
     parser.add_argument("--shard-index", type=int, required=True)
     parser.add_argument("--shard-count", type=int, required=True)
     parser.add_argument("--limit", type=int)
+    parser.add_argument("--symmetry-level-only", type=float)
     parser.add_argument("--fail-fast", action="store_true")
     parser.add_argument("--skip-live-gpu-query-for-test", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()

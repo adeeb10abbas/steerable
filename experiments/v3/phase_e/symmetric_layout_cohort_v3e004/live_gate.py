@@ -45,6 +45,8 @@ def compile_live_gate(
     snapshot_path: Path,
     snapshot_sha256: str,
     minimum_visible_target_pixels: int,
+    realisation_orientation_tolerance_rad: float | None = None,
+    orientation_tolerance_attestation: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     candidate = load_candidate(candidate_path, candidate_sha256)
     if _sha(snapshot_path) != snapshot_sha256:
@@ -118,6 +120,7 @@ def compile_live_gate(
         occlusion_check_by_camera={name: row["occlusion_check"] for name, row in camera_gate.items()},
         target_visible_by_camera={name: row["target_visible"] for name, row in camera_gate.items()},
         arm_reset_pose=snapshot.get("arm_reset_pose", {}),
+        realisation_orientation_tolerance_rad=realisation_orientation_tolerance_rad,
     )
     return {
         "schema_version": "vla-wam-shared-v3e004-live-scene-gate-v1",
@@ -128,6 +131,11 @@ def compile_live_gate(
         "candidate_sha256": candidate_sha256,
         "snapshot_sha256": snapshot_sha256,
         "minimum_visible_target_pixels": minimum_visible_target_pixels,
+        "orientation_tolerance_attestation": (
+            dict(orientation_tolerance_attestation)
+            if orientation_tolerance_attestation is not None
+            else None
+        ),
         "scene": scene,
         "cameras": camera_gate,
         "scope_caveat": "The object layout is assessed relative to the robot midline; arm reset and camera/embodiment symmetry are not assumed.",

@@ -20,6 +20,13 @@ from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.layout_contract impor
 from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.fastwam_robotwin import (  # noqa: E402
     load_candidate as load_fastwam_candidate,
 )
+from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.r002_orientation_tolerance import (  # noqa: E402
+    AMENDMENT_SHA256 as R002_AMENDMENT_SHA256,
+    ATTESTATION_SCHEMA as R002_ATTESTATION_SCHEMA,
+    CORRECTED_TOLERANCE_RAD as R002_TOLERANCE_RAD,
+    ORIGINAL_CONTROL_ASSET_SHA256,
+    load_amendment as load_r002_amendment,
+)
 
 BASE = ROOT / "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004"
 CORE_SEEDS = set(range(9400, 9427))
@@ -75,6 +82,7 @@ def validate_registration() -> dict[str, Any]:
     fastwam_candidate_path = BASE / "layout/fastwam_robotwin_candidate.json"
     static_gate_path = BASE / "gates/static_layout_gate.json"
     request0_amendment_path = BASE / "request0_observation_replay_amendment.json"
+    r002_amendment_path = BASE / "live_orientation_realisation_tolerance_amendment.json"
     for path in (
         registration_path,
         queue_path,
@@ -82,6 +90,7 @@ def validate_registration() -> dict[str, Any]:
         fastwam_candidate_path,
         static_gate_path,
         request0_amendment_path,
+        r002_amendment_path,
     ):
         require(path.is_file(), f"missing E004 preregistration file: {path}")
 
@@ -117,6 +126,43 @@ def validate_registration() -> dict[str, Any]:
     require(
         all("excluded from all matched-pair denominators" in row.get("behavioral_use", "") for row in invalid_discovery),
         "R001 pre-amendment rows are not excluded from matched analyses",
+    )
+    require(sha256_file(r002_amendment_path) == R002_AMENDMENT_SHA256, "R002 registration artifact changed")
+    r002_amendment = load_r002_amendment(
+        r002_amendment_path,
+        R002_AMENDMENT_SHA256,
+        registration_sha256=sha256_file(registration_path),
+        queue_sha256=sha256_file(queue_path),
+        candidate_sha256=sha256_file(candidate_path),
+    )
+    require(
+        math.isclose(
+            r002_amendment["frozen_change"]["corrected_live_orientation_realisation_tolerance_rad"],
+            R002_TOLERANCE_RAD,
+            abs_tol=1e-15,
+        ),
+        "R002 corrected tolerance changed",
+    )
+    excluded_s0 = r002_amendment.get("excluded_s0_behavioral_rows_with_substituted_control_asset", [])
+    require(len(excluded_s0) == 8, "R002 substituted-control exclusion inventory changed")
+    require(
+        {row.get("cell_id") for row in excluded_s0}
+        == {
+            "v3e004:pi05:seed9400:s000:left",
+            "v3e004:pi05:seed9400:s000:right",
+            "v3e004:edge:seed9400:s000:left",
+            "v3e004:edge:seed9400:s000:right",
+            "v3e004:edge:seed9401:s000:left",
+            "v3e004:edge:seed9401:s000:right",
+            "v3e004:dreamzero:seed9400:s000:left",
+            "v3e004:dreamzero:seed9400:s000:right",
+        },
+        "R002 substituted-control cell inventory changed",
+    )
+    require(
+        r002_amendment["control_asset_binding"]["required_original_control_asset"]["sha256"]
+        == ORIGINAL_CONTROL_ASSET_SHA256,
+        "R002 original control asset binding changed",
     )
 
     queue_record = registration.get("queue", {})
@@ -210,6 +256,7 @@ def validate_registration() -> dict[str, Any]:
         "candidate_sha256": candidate_record["candidate_sha256"],
         "static_gate_sha256": sha256_file(static_gate_path),
         "request0_amendment_sha256": sha256_file(request0_amendment_path),
+        "r002_amendment_sha256": sha256_file(r002_amendment_path),
     }
 
 
@@ -244,6 +291,20 @@ def validate_results() -> dict[str, Any]:
                 isinstance(row.get("request0_pair_identity_sha256"), str),
                 f"DROID episode lacks request-zero pair identity: {row.get('cell_id')}",
             )
+            if math.isclose(float(row["symmetry_level_s"]), 0.0, abs_tol=1e-12):
+                r002 = row.get("live_orientation_realisation_tolerance_amendment", {})
+                require(
+                    r002.get("schema_version") == R002_ATTESTATION_SCHEMA,
+                    f"DROID s=0 episode lacks R002 evidence: {row.get('cell_id')}",
+                )
+                require(
+                    r002.get("amendment", {}).get("sha256") == R002_AMENDMENT_SHA256,
+                    f"DROID s=0 episode binds the wrong R002 amendment: {row.get('cell_id')}",
+                )
+                require(
+                    r002.get("control_scene_asset", {}).get("sha256") == ORIGINAL_CONTROL_ASSET_SHA256,
+                    f"DROID s=0 episode used a substituted control asset: {row.get('cell_id')}",
+                )
         if float(row["symmetry_level_s"]) == 1.0:
             require(row["position_residual"] < 0.001, "completed s=1 position residual fails")
             require(row["orientation_residual"] < math.radians(0.5), "completed s=1 yaw residual fails")

@@ -436,7 +436,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         pair_limit = args.limit // 2
         selected = selected[: pair_limit * 2]
     shard_root = args.raw_root.resolve() / args.model_id / f"shard-{args.shard_index:03d}-of-{args.shard_count:03d}"
-    shard_manifest_path = shard_root / "shard_manifest.json"
+    shard_manifest_path = (
+        shard_root / "shard_manifest.json"
+        if args.limit is None
+        else shard_root / f"partial_shard_manifest_limit-{args.limit:04d}.json"
+    )
     _require(not shard_manifest_path.exists(), f"shard already closed: {shard_manifest_path}")
     results: list[dict[str, Any]] = []
     infrastructure: list[dict[str, Any]] = []
@@ -599,6 +603,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         "shard_count": args.shard_count,
         "selected_cell_count": len(selected),
         "selected_pair_count": len(selected) // 2,
+        "queue_complete": args.limit is None,
+        "partial_smoke_limit": args.limit,
         "selected_cell_ids": [cell.cell_id for cell in selected],
         "selected_cells_sha256": canonical_json_sha256([cell.row for cell in selected]),
         "results": results,

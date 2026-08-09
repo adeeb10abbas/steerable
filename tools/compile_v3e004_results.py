@@ -451,6 +451,19 @@ def normalize_episode(
         "missing_measurement_policy": "NR remains null and is never converted to zero",
     }
     compact["raw_artifacts"] = raw_artifacts
+    if row["arena"] == "droid_robolab":
+        request0_replay = row.get("request0_replay")
+        require(
+            isinstance(request0_replay, Mapping)
+            and request0_replay.get("schema_version")
+            == "vla-wam-shared-v3e004-request0-evidence-envelope-v1",
+            f"{cell_id}: R001 request-zero evidence envelope is absent or invalid",
+        )
+        compact["request0_replay"] = dict(request0_replay)
+        if math.isclose(level, 0.0, abs_tol=1e-12):
+            compact["live_orientation_realisation_tolerance_amendment"] = row[
+                "live_orientation_realisation_tolerance_amendment"
+            ]
     if row.get("future_evidence") is not None:
         compact["future_evidence"] = row["future_evidence"]
     return compact

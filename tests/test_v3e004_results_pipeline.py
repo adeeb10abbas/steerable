@@ -102,6 +102,13 @@ def raw_row(queue: dict, *, success: bool) -> dict:
                 "request0_observation_payload_sha256": "3" * 64,
                 "request0_reset_contract_sha256": "4" * 64,
                 "request0_replay_mode": "capture_left" if queue["relation"] == "left" else "replay_right",
+                "request0_replay": {
+                    "schema_version": "vla-wam-shared-v3e004-request0-evidence-envelope-v1",
+                    "mode": "capture_left" if queue["relation"] == "left" else "replay_right",
+                    "pair_identity_sha256": "2" * 64,
+                    "observation_payload_sha256": "3" * 64,
+                    "reset_contract_payload_sha256": "4" * 64,
+                },
             }
         )
     return result

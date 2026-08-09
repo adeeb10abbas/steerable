@@ -1,5 +1,5 @@
 {
-  "active_branch": "ablation/v3e-fixed-state-reference-control",
+  "active_branch": "experiment/v3e004-symmetric-layout-cohort",
   "authoritative_files": [
     "docs/VLA_WAM_V3_CONTINUATION.md",
     "docs/VLA_WAM_STEERABILITY_V3_PROTOCOL.md",
@@ -175,6 +175,13 @@
     "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/slices/fastwam_robotwin/figures/figure_manifest.json",
     "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/slices/fastwam_robotwin/media/media_manifest.json",
     "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/slices/fastwam_robotwin/FASTWAM_SLICE_MEMO.md",
+    "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/results/results.json",
+    "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/results/episodes.jsonl",
+    "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/results/pairs.jsonl",
+    "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/results/source_ledger.jsonl",
+    "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/results/figures/figure_manifest.json",
+    "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/DECISION_MEMO.md",
+    "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/evidence_manifest.json",
     "tools/build_v3e004_fastwam_cohort_manifest.py",
     "tools/compile_v3e004_results.py",
     "tools/render_v3e004_fastwam_slice.py",
@@ -687,7 +694,7 @@
     "table_sha256": "b84717ecbf2fd2fbd8f501f6cc4625d297aae251fb817d0975eb5d6d95c61ace",
     "training_episode_multisets": "partially_disclosed target-domain labels only; exact episode membership and sampling are not disclosed"
   },
-  "evidence_head": "9e3ccbd",
+  "evidence_head": "78eb21191394b10b2e6cb85ded7224eec7cacea5",
   "exact_prompts": {
     "droid_robolab": {
       "left": "Put the Rubik's cube to the left of the bowl.",
@@ -736,7 +743,7 @@
     "unique_behavioral_episodes": 982
   },
   "next_agent": {
-    "inference_authority": "Do not rerun any valid Phase-A, V3-A002, Nano V3-B001, pi0.5 V3-B002, DreamZero V3-B003, Nano V3-B005, Nano V3-B008, Nano V3-B009, pi0.5 V3-D001, GR00T V3-C001, Cosmos3 Edge V3-C001, or Cosmos3 Nano V3-C001 cell. V3-D001 is complete and hash-closed at 432/432 valid episodes and 216/216 matched pairs. All three Phase-C models are complete at 160/160 valid cells and hash-closed. DreamZero V3-B003, Nano V3-B005, Nano V3-B008, and Nano V3-B009 are complete and hash-closed. Nano V3-B004 failed closed with zero model requests and must never be run. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or another Phase-C model.",
+    "inference_authority": "Do not rerun any valid Phase-A, V3-A002, Nano V3-B001, pi0.5 V3-B002, DreamZero V3-B003, Nano V3-B005, Nano V3-B008, Nano V3-B009, pi0.5 V3-D001, GR00T V3-C001, Cosmos3 Edge V3-C001, Cosmos3 Nano V3-C001, or V3-E004 cell. V3-E004 is complete and hash-closed at 4096/4096 valid episodes and 2048 matched pairs. V3-D001 is complete and hash-closed at 432/432 valid episodes and 216/216 matched pairs. All three Phase-C models are complete at 160/160 valid cells and hash-closed. DreamZero V3-B003, Nano V3-B005, Nano V3-B008, and Nano V3-B009 are complete and hash-closed. Nano V3-B004 failed closed with zero model requests and must never be run. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or another Phase-C model.",
     "publication_note": "Use the compact result summaries and evidence manifests for analysis. Do not infer current study state from the older V2 article, gallery, figures, or chat history.",
     "safe_first_commands": [
       "git status --short",
@@ -2044,7 +2051,61 @@
   },
   "phase_e_v3e004": {
     "amendment_id": "V3-E004",
-    "global_status": "active_other_registered_checkpoints_incomplete_no_cross_model_publication_claim",
+    "global_status": "complete_hash_closed_4096_of_4096_no_arena_pooling",
+    "final_bundle": {
+      "behavioral_episode_count": 4096,
+      "claim_boundary": "Object-layout symmetry substantially attenuated the directional performance gap, but no checkpoint satisfied every preregistered equivalence and positive-control gate. Geometry is a major causal contributor, not a complete explanation. This does not identify training distribution as the residual mechanism or make the robot, cameras, wrist mounting, or embodiment bilaterally symmetric.",
+      "decision_memo": {
+        "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/DECISION_MEMO.md",
+        "sha256": "3dc30eb019d8a4a64ce042159a3a0300dd809682f0b2fc787ce134ce19995cd1"
+      },
+      "discovery_only_behavioral_artifacts_excluded": 79,
+      "evidence_manifest": {
+        "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/evidence_manifest.json",
+        "sha256": "21db6089f67533f270064047e62123e2c69389783aeb314f7a24164a688290d5"
+      },
+      "figure_manifest": {
+        "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/results/figures/figure_manifest.json",
+        "sha256": "37ac39794fc7f4caf90f70e67f90eb0d5cb8f6743cf347b653894d357d58bb71"
+      },
+      "infrastructure_invalid_attempts_excluded": 627,
+      "matched_left_right_pair_count": 2048,
+      "model_episode_counts": {
+        "cosmos3_edge_policy_droid": 108,
+        "cosmos3_nano_policy_droid": 2246,
+        "dreamzero_droid_action_cfg": 108,
+        "fastwam_robotwin": 108,
+        "pi05_current_stack_droid": 1526
+      },
+      "pi05_primary_result": {
+        "endpoint_redirection_s1_LEFT_minus_RIGHT_m": 0.239,
+        "registered_binary_interaction_s1_minus_s0_bootstrap_95_ci": [
+          -0.815,
+          -0.222
+        ],
+        "registered_binary_interaction_s1_minus_s0_mean": -0.519,
+        "registered_depth_interaction_s1_minus_s0_bootstrap_95_ci_m": [
+          -0.197,
+          -0.049
+        ],
+        "registered_depth_interaction_s1_minus_s0_mean_m": -0.124,
+        "s0_binary_gap_R_minus_L": 0.742,
+        "s1_binary_gap_R_minus_L": 0.202,
+        "s1_binary_equivalence_claim": false,
+        "s1_depth_equivalence_claim": false
+      },
+      "raw_source_validation": {
+        "raw_sources_verified": true,
+        "source_ledger_rows": 4283,
+        "status": "valid_complete"
+      },
+      "rerun_policy": "do_not_rerun_any_valid_v3e004_cell",
+      "results": {
+        "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/results/results.json",
+        "sha256": "be8cd0c9a2458a7eefec0ed7760d1e6f6f19e4162d8c427f12f8a113d3290493"
+      },
+      "status": "complete_hash_closed"
+    },
     "fastwam_robotwin_slice": {
       "arena": "robotwin",
       "behavioral_episode_count": 108,
@@ -2105,7 +2166,7 @@
       "status": "complete_hash_closed_27_seed_108_episode_arena_slice_descriptive_only"
     }
   },
-  "phase_e_status": "phase_e_e001_repaired_336_unique_valid_12_exact_repeats_112_unique_invalid_e002_provenance_bound_108_valid_model_blind_diagnostics_e003_bilateral_symmetric_layout_54_valid_e004_active_fastwam_robotwin_slice_108_valid_descriptive_only",
+  "phase_e_status": "phase_e_e001_repaired_336_unique_valid_e002_provenance_bound_108_valid_model_blind_diagnostics_e003_bilateral_symmetric_layout_54_valid_e004_complete_hash_closed_4096_valid_2048_pairs",
   "prospective_tier_b_results": {
     "v3b008_nano_start_side": {
       "amendment_id": "V3-B008",
@@ -2306,7 +2367,7 @@
     "raw_pvc_root": "/data/users/ali/vla_wam/raw/v3"
   },
   "study_id": "vla_wam_language_steerability_v3",
-  "updated_at_utc": "2026-08-09T01:14:52Z",
+  "updated_at_utc": "2026-08-09T12:27:01Z",
   "validation": {
     "checkpoint_provenance_tests": {
       "command": ".venv/bin/python -m unittest tests.test_v3_checkpoint_provenance",
@@ -2341,6 +2402,16 @@
       ],
       "focused_test_count": 17,
       "status": "valid_complete_arena_slice_descriptive_only"
+    },
+    "v3e004_complete_bundle": {
+      "commands": [
+        "PYTHONPATH=. uv run --with numpy --with scipy --with matplotlib python tools/validate_v3e004.py --require-results",
+        "PYTHONPATH=. uv run --with numpy --with scipy --with matplotlib python tools/validate_v3e004_evidence.py --base artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004 --require-complete",
+        "PYTHONPATH=. uv run --with numpy --with scipy --with matplotlib --with pytest pytest -q tests/test_v3e004_*.py"
+      ],
+      "focused_test_result": "86 passed, 1 local-only torch skip; pinned RoboLab Torch replay tests previously passed 5/5",
+      "raw_source_validation": "valid_complete_4096_raw_sources_verified_true",
+      "status": "valid_complete"
     },
     "v2": {
       "check_count": 994,

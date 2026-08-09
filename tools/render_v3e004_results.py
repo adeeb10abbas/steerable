@@ -56,6 +56,16 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def display_path(path: Path) -> str:
+    """Keep committed figure manifests portable across checkouts."""
+
+    resolved = Path(path).resolve()
+    try:
+        return str(resolved.relative_to(ROOT))
+    except ValueError:
+        return str(resolved)
+
+
 def configure() -> None:
     plt.rcParams.update(
         {
@@ -83,9 +93,14 @@ def save_figure(fig: plt.Figure, output_dir: Path, stem: str, caption: str, clai
     for suffix in ("png", "svg"):
         path = output_dir / f"{stem}.{suffix}"
         fig.savefig(path, dpi=220 if suffix == "png" else None, bbox_inches="tight")
+        if suffix == "svg":
+            # Matplotlib emits spaces before newlines in SVG path data. Strip
+            # them so generated publication assets pass repository diff checks.
+            lines = path.read_text(encoding="utf-8").splitlines()
+            path.write_text("\n".join(line.rstrip() for line in lines) + "\n", encoding="utf-8")
         records.append(
             {
-                "path": str(path),
+                "path": display_path(path),
                 "format": suffix,
                 "bytes": path.stat().st_size,
                 "sha256": sha256(path),
@@ -418,7 +433,11 @@ def render(results_path: Path, output_dir: Path) -> dict[str, Any]:
     manifest = {
         "schema_version": "vla-wam-shared-v3e004-figure-manifest-v1",
         "amendment_id": "V3-E004",
-        "results": {"path": str(results_path), "bytes": results_path.stat().st_size, "sha256": sha256(results_path)},
+        "results": {
+            "path": display_path(results_path),
+            "bytes": results_path.stat().st_size,
+            "sha256": sha256(results_path),
+        },
         "status": "complete_figures" if report["coverage"]["complete"] else "partial_progress_figure_only",
         "figures": records,
         "scientific_boundaries": {

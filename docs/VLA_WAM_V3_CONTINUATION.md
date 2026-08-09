@@ -12,9 +12,10 @@ Cosmos3 Nano Policy DROID: all three independently released cohorts are
 hash-closed at 160/160 valid episodes, for 480/480 total prospectively
 registered Phase-C cells. π0.5 V3-D001 is complete and hash-closed at 432/432
 valid stochastic episodes and 216/216 matched LEFT/RIGHT policy-sampling pairs.
-V3-E004 remains active across the registered checkpoints; its arena-separated
-FastWAM RoboTwin stretch slice is complete and hash-closed at 108/108 valid
-episodes, with cross-model publication claims still withheld. The
+V3-E004 is complete and hash-closed at **4,096/4,096 registered behavioral
+episodes** across five checkpoints. Its arena-separated FastWAM RoboTwin
+stretch slice remains descriptive; DROID/RoboLab and RoboTwin are never pooled.
+The
 machine-readable source of truth is
 [`continuation_state.json`](../artifacts/vla_wam_shared_v3/continuation_state.json).
 
@@ -1025,10 +1026,11 @@ V3-A002 triplet under `artifacts/vla_wam_shared_v3/results/` for earlier
 completed-result analysis. Do not infer current experiment state from the older
 article, website, gallery, figures, or chat.
 
-Do not rerun any of the 108 hash-closed V3-E004 FastWAM RoboTwin cells. The
-seed-9400 smoke is part of that denominator; seeds 9401–9414 and 9415–9426 are
-immutable split-runner shards. Continue other E004 checkpoints only from their
-registered queue and live release gates.
+Do not rerun any of the **4,096 hash-closed V3-E004 cells**. The accepted smoke
+rows and migrated shards are already part of the frozen denominator. Use the
+complete compact result, decision memo, figures, and evidence manifest; the 79
+discovery-only behavioral artifacts and 627 infrastructure-invalid attempts
+remain outside behavioral denominators.
 
 ## Phase E — fixed-state prompt/noise and model-blind controller controls
 
@@ -1103,3 +1105,49 @@ The compact [slice memo](../artifacts/vla_wam_shared_v3/phase_e/symmetric_layout
 places the exact prompts, estimates, claim boundary, figure, and four selected
 actual-rollout videos together. Full raw rollouts and unselected videos remain
 on the ali-owned PVC.
+
+### V3-E004 complete symmetric-object-layout cohort
+
+The full registered cohort is complete at **4,096/4,096 valid episodes and
+2,048 matched LEFT/RIGHT pairs**: π0.5 1,526 episodes, Cosmos3 Nano Policy
+DROID 2,246, Cosmos3 Edge 108, DreamZero 108, and the separate FastWAM
+RoboTwin stretch slice 108. The source-ledger audit retained 79 discovery-only
+behavioral artifacts and 627 infrastructure-invalid attempts outside the
+denominator, then rehashed every selected raw source on the ali-owned PVC.
+
+The central result is not a binary claim that geometry either matters or does
+not. For π0.5, bilateral object-layout symmetry reduced the RIGHT-minus-LEFT
+success gap from **74.2 percentage points** at the asymmetric reference layout
+(59/341 LEFT, 312/341 RIGHT) to **20.2 points** at the symmetric layout
+(224/341 LEFT, 293/341 RIGHT). The registered 27-seed interaction was −51.9
+points (95% paired-bootstrap CI −81.5 to −22.2; exact p=0.00786). Requested-side
+depth showed the same attenuation, from +17.0 cm to +5.75 cm; the registered
+interaction was −12.4 cm (95% CI −19.7 to −4.88; p=0.00348). Yet the symmetric
+layout did **not** satisfy either preregistered equivalence margin: the binary
+90% CI was +15.0 to +25.2 points, and the depth 90% CI was +4.85 to +6.66 cm.
+Endpoint redirection remained a strong positive control (+23.9 cm at s=1,
+335/341 positive pairs).
+
+Across checkpoints, layout symmetry substantially changed the directional
+depth contrast, but no checkpoint earned a publication-level equivalence claim.
+FastWAM additionally failed the endpoint-redirection positive control, so its
+large depth reversal remains descriptive. The supported interpretation is
+therefore that object geometry is a major causal contributor to directional
+performance asymmetry, while a residual direction-dependent component remains.
+The experiment does not isolate that residual as training-distribution bias,
+nor does it make the robot, camera rig, wrist mounting, or embodiment
+bilaterally symmetric.
+
+| Complete V3-E004 compact evidence | SHA-256 |
+| --- | --- |
+| [`Compiled results`](../artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/results/results.json) | `be8cd0c9a2458a7eefec0ed7760d1e6f6f19e4162d8c427f12f8a113d3290493` |
+| [`Compact episodes`](../artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/results/episodes.jsonl) | `3f5528a686f0f1f04767ba97414429ef0aff30576edc3d440d611facd363f328` |
+| [`Matched pairs`](../artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/results/pairs.jsonl) | `fe2d7d8879314122a48aa269374118a45d13f204c9c83691735920e917d68bcc` |
+| [`Evidence manifest`](../artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/evidence_manifest.json) | `21db6089f67533f270064047e62123e2c69389783aeb314f7a24164a688290d5` |
+| [`Figure manifest`](../artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/results/figures/figure_manifest.json) | `37ac39794fc7f4caf90f70e67f90eb0d5cb8f6743cf347b653894d357d58bb71` |
+| [`Decision memo`](../artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/DECISION_MEMO.md) | `3dc30eb019d8a4a64ce042159a3a0300dd809682f0b2fc787ce134ce19995cd1` |
+
+The raw-source validator reports `valid_complete`, 4,096 eligible episodes,
+4,283 source-ledger rows, and `raw_sources_verified=true`. Full rollouts,
+request payloads, action traces, and unselected videos remain hash-bound on the
+ali-owned PVC rather than being committed to Git.

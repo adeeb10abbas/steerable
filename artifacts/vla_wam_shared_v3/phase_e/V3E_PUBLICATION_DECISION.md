@@ -1,8 +1,10 @@
 # Phase-E publication decision
 
-Both registered controls now have hash-bearing outputs. Their claim boundaries
-remain separate: E001 is a fixed-observation model diagnostic; E002 is a
-model-blind controller diagnostic and not a learned-policy baseline.
+The registered Phase-E controls and the V3-E004 symmetric-object-layout cohort
+now have hash-bearing outputs. Their claim boundaries remain separate: E001 is
+a fixed-observation model diagnostic; E002 is a model-blind controller
+diagnostic and not a learned-policy baseline; E003 is the original 27-seed
+π0.5 null-control cohort; and E004 is the powered, five-checkpoint extension.
 
 ## V3-E003 — bilateral-symmetry null control
 
@@ -93,3 +95,57 @@ git diff --check
 The compact reports include SHA-256 hashes of the PVC raw request/episode
 files and the static-gate source. Checkpoints, environments, decoded future
 videos, and full Nano request payloads remain outside Git on the PVC.
+
+## V3-E004 — symmetric-object-layout cohort
+
+V3-E004 completed **4,096/4,096 registered behavioral episodes and 2,048
+matched LEFT/RIGHT pairs** across π0.5, Cosmos3 Nano Policy DROID, Cosmos3
+Edge, DreamZero, and the separately analyzed FastWAM RoboTwin stretch slice.
+The final source audit retained 79 discovery-only behavioral artifacts and 627
+infrastructure-invalid attempts outside the denominator and rehashed all 4,096
+selected raw episode sources.
+
+The powered π0.5 result gives the cleanest interpretation. Object-layout
+symmetry reduced the RIGHT-minus-LEFT binary-success gap from 74.2 percentage
+points at s=0 to 20.2 points at s=1. On the registered 27-seed contrast, the
+interaction was −51.9 points (95% paired-bootstrap CI −81.5 to −22.2; exact
+p=0.00786). The requested-side-depth gap fell from +17.0 cm to +5.75 cm, with
+a registered interaction of −12.4 cm (95% CI −19.7 to −4.88; p=0.00348).
+Endpoint redirection remained intact (+23.9 cm at s=1; 335/341 positive pairs),
+so the symmetric scene did not simply break prompt-conditioned motion.
+
+The residual gap is scientifically important. Neither π0.5 equivalence test
+passed: its s=1 binary 90% CI was +15.0 to +25.2 points against a ±15.56-point
+margin, and its depth 90% CI was +4.85 to +6.66 cm against ±4.15 cm. No other
+checkpoint earned an equivalence claim. FastWAM also failed the registered
+endpoint-redirection positive control, so its large depth reversal is
+descriptive rather than evidence of reliable language steering.
+
+**Main paper:** report π0.5's powered attenuation and residual gap, with the
+endpoint positive control and preregistered equivalence failure. The safe
+headline is: *bilateral object-layout symmetry removed most, but not all, of
+the directional performance asymmetry.*
+
+**Supplement:** report the complete checkpoint table, graded Nano/π0.5
+dose-response estimates, geometry/visibility gates, failure taxonomy, and the
+arena-separated FastWAM stretch result.
+
+**Omit:** claims that object layout fully explains the gap; that the remaining
+effect is uniquely caused by training data; that object symmetry makes the
+robot, cameras, or embodiment symmetric; or that a nonsignificant interaction
+establishes equivalence.
+
+### Exact manuscript replacement text
+
+“Across 4,096 prospectively registered episodes, bilateral object-layout
+symmetry substantially attenuated direction-dependent task performance while
+preserving prompt-conditioned endpoint redirection in the powered π0.5 cohort.
+For π0.5, the RIGHT-minus-LEFT success gap fell from 74.2 to 20.2 percentage
+points, and the requested-side-depth gap fell from 17.0 to 5.75 cm. However,
+neither residual contrast satisfied its preregistered equivalence margin.
+Object geometry is therefore a major causal contributor to the observed
+directional asymmetry, but it is not a complete explanation.”
+
+The complete machine-readable result, figures, decision memo, and evidence
+manifest are under `symmetric_layout_cohort_v3e004/`. DROID/RoboLab and
+RoboTwin remain separate and are never pooled.

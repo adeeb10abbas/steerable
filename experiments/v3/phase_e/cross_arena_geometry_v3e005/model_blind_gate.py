@@ -329,6 +329,15 @@ def _per_scene_id(actor: Any) -> int:
 
 
 def target_visibility_pixels(env: Any, target_actor: Any) -> dict[str, int]:
+    """Return target segmentation pixels as a diagnostic, not an occlusion gate.
+
+    The registered check is specifically whether the reference object blocks
+    the camera-to-target segment.  A zero segmentation count can instead mean
+    that a wrist camera's current field of view does not contain the target,
+    so treating it as reference occlusion would enforce a stronger,
+    unregistered condition.
+    """
+
     target_id = _per_scene_id(target_actor)
     output: dict[str, int] = {}
     for name, camera in registered_camera_components(env).items():
@@ -338,7 +347,6 @@ def target_visibility_pixels(env: Any, target_actor: Any) -> dict[str, int]:
             f"{name}: malformed actor segmentation buffer",
         )
         count = int(np.count_nonzero(segmentation[..., 1].astype(np.int64) == target_id))
-        require(count > 0, f"target is not visible in {name}")
         output[name] = count
     return output
 

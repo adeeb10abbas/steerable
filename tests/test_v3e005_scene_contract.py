@@ -243,5 +243,8 @@ def test_target_visibility_requires_actor_pixels_in_every_registered_camera():
         "right_camera": 4,
     }
     Env.cameras.right_camera = Camera(visible=False)
-    with pytest.raises(E005ContractError, match="not visible"):
-        target_visibility_pixels(Env(), Actor())
+    assert target_visibility_pixels(Env(), Actor()) == {
+        "head_camera": 4,
+        "left_camera": 4,
+        "right_camera": 0,
+    }

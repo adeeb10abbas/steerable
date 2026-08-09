@@ -227,6 +227,27 @@ def test_setup_invalid_attempt_is_retained_outside_behavioral_denominator(tmp_pa
     assert rows[0]["attempt"]["status"] == "setup_invalid_zero_request"
 
 
+def test_bridge_failure_is_retained_outside_behavioral_denominator(tmp_path: Path):
+    raw_root = tmp_path / "raw"
+    bridge_failure = raw_root / "cell/bridge_failure.json"
+    bridge_failure.parent.mkdir(parents=True)
+    bridge_failure.write_text(
+        json.dumps(
+            {
+                "schema_version": "vla-wam-shared-v3e004-bridge-failure-v1",
+                "record_type": "infrastructure_invalid_attempt",
+                "model_request_count": 0,
+                "behavioral_episode_count": 0,
+            }
+        )
+        + "\n"
+    )
+    rows = load_infrastructure_invalid([raw_root])
+    assert len(rows) == 1
+    assert rows[0]["behavioral_denominator_included"] is False
+    assert rows[0]["attempt"]["record_type"] == "infrastructure_invalid_attempt"
+
+
 def test_fastwam_rows_use_the_registered_robotwin_candidate(tmp_path: Path):
     rows = [
         row

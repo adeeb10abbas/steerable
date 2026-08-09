@@ -868,6 +868,33 @@ def _geometry_summary(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     }
 
 
+def _reset_pose_memo_summary(pose: Mapping[str, Any]) -> str:
+    """Render a readable pose summary while results.json retains exact vectors."""
+
+    if isinstance(pose.get("arm_joint_positions_rad"), list):
+        joints = [float(value) for value in pose["arm_joint_positions_rad"]]
+        gripper = pose.get("gripper_position")
+        return (
+            f"arm q ({len(joints)} joints) = "
+            f"[{', '.join(f'{value:+.4f}' for value in joints)}] rad; "
+            f"gripper = {json.dumps(gripper, allow_nan=False, separators=(',', ':'))}"
+        )
+    robots = pose.get("robots")
+    if isinstance(robots, Mapping) and robots:
+        parts = []
+        for name, item in sorted(robots.items()):
+            joints = np.asarray(item.get("joint_positions_rad", []), dtype=np.float64)
+            if joints.size == 0 or not np.isfinite(joints).all():
+                parts.append(f"{name}: unavailable")
+                continue
+            parts.append(
+                f"{name}: {joints.size} joints, ||q||₂={np.linalg.norm(joints):.6f} rad, "
+                f"range=[{np.min(joints):+.6f}, {np.max(joints):+.6f}] rad"
+            )
+        return "; ".join(parts) + "; exact vectors retained in results.json"
+    return "exact reset-pose object retained in results.json"
+
+
 def _failure_signature(rows: Sequence[Mapping[str, Any]], *, resamples: int) -> dict[str, Any]:
     by_level: defaultdict[float, list[Mapping[str, Any]]] = defaultdict(list)
     for row in rows:
@@ -1155,9 +1182,9 @@ def decision_memo(report: Mapping[str, Any]) -> str:
             continue
         displayed = sorted(identities, key=lambda value: (-value["episodes"], value["sha256"]))[:3]
         for identity in displayed:
-            compact_pose = json.dumps(identity["pose"], allow_nan=False, sort_keys=True, separators=(",", ":"))
             lines.append(
-                f"- **{item['model_id']}**: `{identity['sha256']}` across {identity['episodes']} episodes; `{compact_pose}`"
+                f"- **{item['model_id']}**: `{identity['sha256']}` across {identity['episodes']} episodes; "
+                f"{_reset_pose_memo_summary(identity['pose'])}."
             )
         if len(identities) > len(displayed):
             lines.append(

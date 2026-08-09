@@ -14,6 +14,7 @@ from tools.compile_v3e004_results import (
     _failure_signature,
     _geometry_summary,
     _attach_power_audit,
+    _reset_pose_memo_summary,
     compile_outputs,
     load_infrastructure_invalid,
     load_valid_episodes,
@@ -455,6 +456,19 @@ def test_geometry_summary_does_not_vacuously_pass_without_s1_rows():
     result = _geometry_summary([row])
     assert result["s1_gate"]["status"] == "unavailable_no_valid_s1_episodes"
     assert result["s1_gate"]["all_observed_s1_rows_pass"] is None
+
+
+def test_reset_pose_memo_summary_is_readable_without_dumping_long_vectors():
+    droid = _reset_pose_memo_summary(
+        {"arm_joint_positions_rad": [0.0, -0.6, 0.0, -2.5, 0.0, 1.9, 0.0], "gripper_position": [0.0]}
+    )
+    assert "7 joints" in droid and "-2.5000" in droid and "gripper" in droid
+    robotwin = _reset_pose_memo_summary(
+        {"robots": {"robot.left": {"joint_positions_rad": [0.0] * 38}}}
+    )
+    assert "38 joints" in robotwin
+    assert "exact vectors retained in results.json" in robotwin
+    assert robotwin.count("0.0000") < 10
 
 
 def test_geometry_figure_reports_residuals_occlusion_and_reset_identity(tmp_path: Path):

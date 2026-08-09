@@ -17,7 +17,7 @@ from tools.compile_v3e004_results import (
     load_valid_episodes,
     sha256_file,
 )
-from tools.render_v3e004_results import render
+from tools.render_v3e004_results import render, render_failures
 from tools.validate_v3e004_evidence import validate
 
 
@@ -361,3 +361,23 @@ def test_failure_signature_keeps_zero_failure_level_unavailable():
     assert result["levels"]["1.00"]["wrong_side_share_among_failures"] is None
     assert result["levels"]["1.00"]["availability"] == "unavailable_no_failures"
     assert result["trend"]["status"].startswith("unavailable")
+
+
+def test_failure_figure_separates_directions_and_names_exact_prompts(tmp_path: Path):
+    taxonomy = {
+        "left": {"correct": 1, "pick_failed": 1, "transport_failed": 0, "wrong_side": 0, "release_failed": 0},
+        "right": {"correct": 0, "pick_failed": 0, "transport_failed": 1, "wrong_side": 1, "release_failed": 0},
+    }
+    report = {
+        "publication_claim_status": "synthetic_test_only",
+        "checkpoints": {
+            "fastwam_robotwin": {
+                "analysis": {"levels": {"0.00": {"pairs": 2, "failure_taxonomy": taxonomy}}}
+            }
+        },
+    }
+    records = render_failures(report, tmp_path)
+    assert len(records) == 2
+    assert all(Path(record["path"]).stat().st_size > 0 for record in records)
+    assert "Put the Rubik's cube to the left of the bowl." in records[0]["caption"]
+    assert "Put the Rubik's cube to the right of the bowl." in records[0]["caption"]

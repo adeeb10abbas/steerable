@@ -12,6 +12,7 @@ import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
+from matplotlib.patches import Patch  # noqa: E402
 import numpy as np  # noqa: E402
 
 
@@ -119,8 +120,8 @@ def render_progress(report: Mapping[str, Any], output_dir: Path) -> list[dict[st
     valid = [item["valid_episodes"] for item in items]
     fig, ax = plt.subplots(figsize=(10, 4.8), constrained_layout=True)
     positions = np.arange(len(items))
-    ax.bar(positions, registered, color="#DEE2E6", label="registered")
-    ax.bar(positions, valid, color=[COLORS[item["model_id"]] for item in items], label="valid")
+    ax.bar(positions, registered, color="#DEE2E6", label="registered total")
+    ax.bar(positions, valid, color="#2A6F97", label="valid and hash-bound")
     ax.set_xticks(positions, [LABELS[item["model_id"]] for item in items], rotation=18, ha="right")
     ax.set_ylabel("Behavioral episodes")
     ax.set_title("V3-E004 queue progress — estimates are not publication claims", loc="left", fontweight="bold")
@@ -250,38 +251,64 @@ def render_endpoint_control(report: Mapping[str, Any], output_dir: Path) -> list
 
 
 def render_failures(report: Mapping[str, Any], output_dir: Path) -> list[dict[str, Any]]:
-    checkpoints = [
-        report["checkpoints"][model]
-        for model in MODEL_ORDER
-        if model in report["checkpoints"] and report["checkpoints"][model]["failure_signature"]["levels"]
-    ]
-    if not checkpoints:
+    analyses = _analysis(report)
+    models = list(analyses)
+    if not models:
         return []
-    fig, axes = plt.subplots(len(checkpoints), 1, figsize=(11, 2.25 * len(checkpoints) + 1.2), squeeze=False, constrained_layout=True)
+    fig, axes = plt.subplots(len(models), 1, figsize=(12, 2.45 * len(models) + 2.3), squeeze=False)
     categories = ("correct", "pick_failed", "transport_failed", "wrong_side", "release_failed")
-    for ax, item in zip(axes[:, 0], checkpoints):
-        level_items = item["failure_signature"]["levels"]
-        labels = list(level_items)
-        x = np.arange(len(labels))
-        bottom = np.zeros(len(labels))
-        for category in categories:
-            values = np.asarray(
-                [level_items[label]["failure_taxonomy"][category] / level_items[label]["episodes"] for label in labels]
-            )
-            ax.bar(x, values, bottom=bottom, color=FAILURE_COLORS[category], label=category.replace("_", " "))
-            bottom += values
+    relations = (("left", ""), ("right", "///"))
+    for ax, model in zip(axes[:, 0], models):
+        level_items = analyses[model]["levels"]
+        labels = sorted(level_items, key=float)
+        x = np.arange(len(labels), dtype=float)
+        width = 0.34
+        for relation_index, (relation, hatch) in enumerate(relations):
+            positions = x + (relation_index - 0.5) * width
+            bottom = np.zeros(len(labels))
+            for category in categories:
+                values = np.asarray(
+                    [level_items[label]["failure_taxonomy"][relation][category] / level_items[label]["pairs"] for label in labels]
+                )
+                ax.bar(
+                    positions,
+                    values,
+                    width=width * 0.92,
+                    bottom=bottom,
+                    color=FAILURE_COLORS[category],
+                    edgecolor="#FFFEFA" if relation == "left" else "#343A40",
+                    linewidth=0.45,
+                    hatch=hatch,
+                )
+                bottom += values
+            for position in positions:
+                ax.text(position, -0.075, relation.upper(), ha="center", va="top", fontsize=7.5, color="#495057")
         ax.set_ylim(0, 1)
         ax.set_yticks((0, 0.5, 1.0), ("0%", "50%", "100%"))
         ax.set_xticks(x, [f"s={label}" for label in labels])
-        ax.set_title(f"{LABELS[item['model_id']]} — outcome composition", loc="left", fontsize=10.5, fontweight="bold")
+        ax.tick_params(axis="x", pad=14)
+        ax.set_title(f"{LABELS[model]} — outcome composition by requested direction", loc="left", fontsize=10.5, fontweight="bold")
         ax.grid(axis="y")
-    axes[0, 0].legend(frameon=False, ncol=5, loc="upper center", bbox_to_anchor=(0.5, 1.45))
-    fig.suptitle("Where does competence fail as object-layout asymmetry is removed?", x=0.02, ha="left", fontweight="bold")
+    category_handles = [Patch(facecolor=FAILURE_COLORS[item], label=item.replace("_", " ")) for item in categories]
+    direction_handles = [
+        Patch(facecolor="#FFFEFA", edgecolor="#343A40", label="LEFT prompt"),
+        Patch(facecolor="#FFFEFA", edgecolor="#343A40", hatch="///", label="RIGHT prompt"),
+    ]
+    fig.legend(
+        handles=category_handles + direction_handles,
+        frameon=False,
+        ncol=7,
+        loc="upper center",
+        bbox_to_anchor=(0.5, 0.947),
+        fontsize=8.5,
+    )
+    fig.suptitle("Where does competence fail as object-layout asymmetry is removed?", x=0.02, y=0.992, ha="left", fontweight="bold")
+    fig.subplots_adjust(top=0.77 if len(models) == 1 else 0.885, bottom=0.12, hspace=0.72)
     return save_figure(
         fig,
         output_dir,
         "v3e004_failure_taxonomy",
-        "Outcome composition by checkpoint and symmetry level. Behavioral failures remain in denominators; a wrong-side share is unavailable, not zero, when a cell has no failures.",
+        "Outcome composition by checkpoint, symmetry level, and requested direction. LEFT uses the exact prompt “Put the Rubik's cube to the left of the bowl.”; RIGHT uses “Put the Rubik's cube to the right of the bowl.” Behavioral failures remain in denominators.",
         report["publication_claim_status"],
     )
 

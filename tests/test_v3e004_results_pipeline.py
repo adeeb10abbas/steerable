@@ -35,7 +35,7 @@ def raw_row(queue: dict, *, success: bool) -> dict:
     if expected_A is None:
         fastwam_candidate = json.loads((SOURCE / "layout/fastwam_robotwin_candidate.json").read_text())
         expected_A = fastwam_candidate["derived"][f"{float(queue['symmetry_level_s']):.2f}"]["asymmetry_metric_A"]
-    return {
+    result = {
         "schema_version": "vla-wam-shared-v3e004-droid-behavioral-episode-v1",
         "record_type": "behavioral_episode",
         "behavioral_result_valid": True,
@@ -75,6 +75,16 @@ def raw_row(queue: dict, *, success: bool) -> dict:
         "queue_sha256": sha256_file(SOURCE / "queue.jsonl"),
         "candidate_sha256": queue["layout_candidate_sha256"],
     }
+    if queue["arena"] == "droid_robolab":
+        result.update(
+            {
+                "request0_pair_identity_sha256": "2" * 64,
+                "request0_observation_payload_sha256": "3" * 64,
+                "request0_reset_contract_sha256": "4" * 64,
+                "request0_replay_mode": "capture_left" if queue["relation"] == "left" else "replay_right",
+            }
+        )
+    return result
 
 
 def write_raw(path: Path, row: dict) -> None:
@@ -105,7 +115,7 @@ def test_partial_pipeline_withholds_claims_and_hash_closes_progress(tmp_path: Pa
         for row in queue_rows()
         if row["model_id"] == "cosmos3_edge_policy_droid"
         and row["environment_seed"] == 9400
-        and row["symmetry_level_s"] == 0.0
+        and row["symmetry_level_s"] == 1.0
     ]
     raw_root = tmp_path / "raw"
     for row in rows:
@@ -128,6 +138,7 @@ def test_partial_pipeline_withholds_claims_and_hash_closes_progress(tmp_path: Pa
     assert all(row["endpoint_shift"] == pytest.approx(-0.24) for row in compact)
     assert all(row["action_distinct"] is False for row in compact)
     assert len((base / "results/pairs.jsonl").read_text().splitlines()) == 1
+    assert (base / "results/discovery_only.jsonl").read_text() == ""
     figure_manifest = render(base / "results/results.json", base / "results/figures")
     assert figure_manifest["status"] == "partial_progress_figure_only"
     assert len(figure_manifest["figures"]) == 2
@@ -145,7 +156,7 @@ def test_conflicting_valid_duplicate_fails_closed(tmp_path: Path):
         for row in queue_rows()
         if row["model_id"] == "cosmos3_edge_policy_droid"
         and row["environment_seed"] == 9400
-        and row["symmetry_level_s"] == 0.0
+        and row["symmetry_level_s"] == 1.0
         and row["relation"] == "left"
     )
     raw_root = tmp_path / "raw"
@@ -163,6 +174,35 @@ def test_conflicting_valid_duplicate_fails_closed(tmp_path: Path):
                 "robotwin": sha256_file(SOURCE / "layout/fastwam_robotwin_candidate.json"),
             },
         )
+
+
+def test_pre_r002_droid_s0_is_retained_discovery_only(tmp_path: Path):
+    queue = next(
+        row
+        for row in queue_rows()
+        if row["model_id"] == "cosmos3_edge_policy_droid"
+        and row["environment_seed"] == 9400
+        and row["symmetry_level_s"] == 0.0
+        and row["relation"] == "left"
+    )
+    raw_root = tmp_path / "raw"
+    write_raw(raw_root / "raw_episode.jsonl", raw_row(queue, success=True))
+    registered = {row["cell_id"]: row for row in queue_rows()}
+    episodes, ledger, duplicates, discovery = load_valid_episodes(
+        [raw_root],
+        queue_rows=registered,
+        registration_sha256=sha256_file(SOURCE / "registration.json"),
+        queue_sha256=sha256_file(SOURCE / "queue.jsonl"),
+        candidate_sha256_by_arena={
+            "droid_robolab": sha256_file(SOURCE / "layout/candidate.json"),
+            "robotwin": sha256_file(SOURCE / "layout/fastwam_robotwin_candidate.json"),
+        },
+    )
+    assert episodes == []
+    assert duplicates == []
+    assert len(ledger) == len(discovery) == 1
+    assert discovery[0]["behavioral_denominator_included"] is False
+    assert discovery[0]["reason"] == "pre_r002_s0_missing_prospective_attestation"
 
 
 def test_fastwam_rows_use_the_registered_robotwin_candidate(tmp_path: Path):

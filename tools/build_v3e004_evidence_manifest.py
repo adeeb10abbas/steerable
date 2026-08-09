@@ -37,6 +37,7 @@ def build(base: Path, output: Path) -> dict[str, Any]:
     episodes_path = base / "results/episodes.jsonl"
     pairs_path = base / "results/pairs.jsonl"
     invalid_path = base / "results/infrastructure_invalid.jsonl"
+    discovery_path = base / "results/discovery_only.jsonl"
     ledger_path = base / "results/source_ledger.jsonl"
     memo_path = base / "DECISION_MEMO.md"
     required = (
@@ -48,6 +49,7 @@ def build(base: Path, output: Path) -> dict[str, Any]:
         episodes_path,
         pairs_path,
         invalid_path,
+        discovery_path,
         ledger_path,
         memo_path,
     )
@@ -99,6 +101,9 @@ def build(base: Path, output: Path) -> dict[str, Any]:
         "valid_behavioral_episodes": results["valid_behavioral_episodes"],
         "registered_behavioral_cells": results["registered_behavioral_cells"],
         "infrastructure_invalid_attempts": results["infrastructure_invalid_attempts"],
+        "discovery_only_behavioral_artifacts": results[
+            "discovery_only_behavioral_artifacts_excluded_from_denominators"
+        ],
         "publication_claim_status": results["publication_claim_status"],
         "compact_files": [record(path) for path in sorted(set(compact_paths))],
         "implementation_files": [record(path) for path in sorted(set(code_paths))],

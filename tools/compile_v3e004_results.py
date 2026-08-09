@@ -30,6 +30,13 @@ from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.analysis import (  # 
     compile_checkpoint,
     seed_from_label,
 )
+from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.r002_orientation_tolerance import (  # noqa: E402
+    AMENDMENT_SHA256 as R002_AMENDMENT_SHA256,
+    validate_runtime_attestation as validate_r002_runtime_attestation,
+)
+from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.runtime_contract import (  # noqa: E402
+    RuntimeContractError,
+)
 
 
 BASE = ROOT / "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004"
@@ -306,6 +313,10 @@ def normalize_episode(
         "arm_reset_pose": row["arm_reset_pose"],
         "object_layout_symmetric_not_embodiment": True,
         "initial_state_sha256": row.get("initial_state_sha256", nested_reset_sha256),
+        "request0_pair_identity_sha256": row.get("request0_pair_identity_sha256"),
+        "request0_observation_payload_sha256": row.get("request0_observation_payload_sha256"),
+        "request0_reset_contract_sha256": row.get("request0_reset_contract_sha256"),
+        "request0_replay_mode": row.get("request0_replay_mode"),
         "registration_sha256": registration_sha256,
         "queue_sha256": queue_sha256,
         "candidate_sha256": candidate_sha256,
@@ -361,10 +372,30 @@ def materialize_pair_fields(episodes: Sequence[Mapping[str, Any]]) -> tuple[list
         for key in ("model_id", "arena", "environment_seed", "sampling_seed", "symmetry_level_s", "asymmetry_metric_A"):
             require(left[key] == right[key], f"{pair_id}: matched pair differs for {key}")
         left_reset, right_reset = left.get("initial_state_sha256"), right.get("initial_state_sha256")
-        require(
-            isinstance(left_reset, str) and len(left_reset) == 64 and left_reset == right_reset,
-            f"{pair_id}: identical reset fingerprint is absent or differs",
-        )
+        if left["arena"] == "droid_robolab":
+            for key in (
+                "request0_pair_identity_sha256",
+                "request0_observation_payload_sha256",
+                "request0_reset_contract_sha256",
+            ):
+                left_value, right_value = left.get(key), right.get(key)
+                require(
+                    isinstance(left_value, str)
+                    and len(left_value) == 64
+                    and left_value == right_value,
+                    f"{pair_id}: R001 {key} is absent or differs",
+                )
+            require(left.get("request0_replay_mode") == "capture_left", f"{pair_id}: LEFT lacks R001 capture")
+            require(right.get("request0_replay_mode") == "replay_right", f"{pair_id}: RIGHT lacks R001 replay")
+            identical_reset = True
+            reset_definition = "R001 identical request0 observation bytes and reset-contract payload"
+        else:
+            require(
+                isinstance(left_reset, str) and len(left_reset) == 64 and left_reset == right_reset,
+                f"{pair_id}: identical reset fingerprint is absent or differs",
+            )
+            identical_reset = True
+            reset_definition = "arena-native initial physical fingerprint"
         endpoint_shift = float(right["signed_final_lateral_offset"]) - float(left["signed_final_lateral_offset"])
         reported = (left.get("action_distinct"), right.get("action_distinct"))
         if all(type(value) is bool for value in reported):
@@ -393,8 +424,14 @@ def materialize_pair_fields(episodes: Sequence[Mapping[str, Any]]) -> tuple[list
                 "sampling_seed": left["sampling_seed"],
                 "symmetry_level_s": left["symmetry_level_s"],
                 "asymmetry_metric_A": left["asymmetry_metric_A"],
-                "identical_reset": True,
-                "initial_state_sha256": left_reset,
+                "identical_reset": identical_reset,
+                "identical_reset_definition": reset_definition,
+                "initial_state_sha256": left_reset if left_reset == right_reset else None,
+                "native_initial_state_sha256_left": left_reset,
+                "native_initial_state_sha256_right": right_reset,
+                "request0_pair_identity_sha256": left.get("request0_pair_identity_sha256"),
+                "request0_observation_payload_sha256": left.get("request0_observation_payload_sha256"),
+                "request0_reset_contract_sha256": left.get("request0_reset_contract_sha256"),
                 "left_cell_id": left["cell_id"],
                 "right_cell_id": right["cell_id"],
                 "left_success": left["success"],
@@ -449,11 +486,12 @@ def load_valid_episodes(
     queue_sha256: str,
     candidate_sha256_by_arena: Mapping[str, str],
     excluded: Sequence[Path] = (),
-) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
     chosen: dict[str, dict[str, Any]] = {}
     fingerprints: dict[str, str] = {}
     source_ledger: list[dict[str, Any]] = []
     duplicates: list[dict[str, Any]] = []
+    discovery_only: list[dict[str, Any]] = []
     for path in discover_paths(roots, EPISODE_PATTERNS, excluded):
         digest = sha256_file(path)
         for line_number, raw in enumerate(_rows_from_path(path), 1):
@@ -469,6 +507,35 @@ def load_valid_episodes(
                 queue_row.get("layout_candidate_sha256") == candidate_sha256,
                 f"{cell_id}: queue candidate differs from registered arena candidate",
             )
+            record = {
+                "path": str(path),
+                "line": line_number,
+                "bytes": path.stat().st_size,
+                "sha256": digest,
+                "cell_id": cell_id,
+            }
+            level = float(queue_row["symmetry_level_s"])
+            if arena == "droid_robolab" and math.isclose(level, 0.0, abs_tol=1e-12):
+                r002 = raw.get("live_orientation_realisation_tolerance_amendment")
+                if r002 is None:
+                    record.update(
+                        {
+                            "disposition": "discovery_only_excluded_from_behavioral_denominator",
+                            "reason": "pre_r002_s0_missing_prospective_attestation",
+                            "behavioral_denominator_included": False,
+                        }
+                    )
+                    discovery_only.append(dict(record))
+                    source_ledger.append(record)
+                    continue
+                try:
+                    validate_r002_runtime_attestation(
+                        r002,
+                        amendment_sha256=R002_AMENDMENT_SHA256,
+                        symmetry_level_s=0.0,
+                    )
+                except RuntimeContractError as exc:
+                    raise CompileError(f"{cell_id}: invalid R002 s=0 attestation: {exc}") from exc
             compact = normalize_episode(
                 raw,
                 queue_row=queue_row,
@@ -480,7 +547,6 @@ def load_valid_episodes(
                 candidate_sha256=candidate_sha256,
             )
             fingerprint = scientific_fingerprint(compact)
-            record = {"path": str(path), "line": line_number, "bytes": path.stat().st_size, "sha256": digest, "cell_id": cell_id}
             if cell_id in chosen:
                 require(fingerprints[cell_id] == fingerprint, f"conflicting valid duplicate for {cell_id}")
                 record["disposition"] = "duplicate_valid_excluded_from_denominator"
@@ -494,7 +560,7 @@ def load_valid_episodes(
         chosen.values(),
         key=lambda row: (row["arena"], row["model_id"], row["symmetry_level_s"], row["environment_seed"], row["relation"]),
     )
-    return rows, source_ledger, duplicates
+    return rows, source_ledger, duplicates, discovery_only
 
 
 def load_infrastructure_invalid(roots: Sequence[Path], *, excluded: Sequence[Path] = ()) -> list[dict[str, Any]]:
@@ -704,6 +770,7 @@ def compile_report(
     episodes: Sequence[Mapping[str, Any]],
     invalid_attempts: Sequence[Mapping[str, Any]],
     duplicates: Sequence[Mapping[str, Any]],
+    discovery_only: Sequence[Mapping[str, Any]],
     source_ledger: Sequence[Mapping[str, Any]],
     resamples: int,
 ) -> dict[str, Any]:
@@ -775,6 +842,7 @@ def compile_report(
         "valid_behavioral_episodes": len(episodes),
         "infrastructure_invalid_attempts": len(invalid_attempts),
         "valid_duplicate_artifacts_excluded_from_denominators": len(duplicates),
+        "discovery_only_behavioral_artifacts_excluded_from_denominators": len(discovery_only),
         "coverage": coverage,
         "checkpoints": checkpoint_reports,
         "arenas": arenas,
@@ -791,6 +859,7 @@ def compile_report(
             "droid_and_robotwin_never_pooled": True,
             "behavioral_failures_remain_in_denominators": True,
             "infrastructure_invalid_attempts_excluded": True,
+            "pre_r002_droid_s0_artifacts_excluded_as_discovery_only": True,
             "missing_measurements_never_encoded_as_zero": True,
             "s0_to_s1_inventory_transition_disclosed": True,
             "object_layout_symmetry_is_not_robot_or_embodiment_symmetry": True,
@@ -810,6 +879,7 @@ def decision_memo(report: Mapping[str, Any]) -> str:
         "",
         f"Valid behavioral evidence: **{report['valid_behavioral_episodes']}/{report['registered_behavioral_cells']}** registered cells. "
         f"Infrastructure-invalid attempts: **{report['infrastructure_invalid_attempts']}**, excluded from behavioral denominators.",
+        f"Pre-R002 DROID s=0 artifacts retained as discovery-only: **{report['discovery_only_behavioral_artifacts_excluded_from_denominators']}**, excluded from behavioral denominators.",
         "",
         "This experiment manipulates object-layout symmetry. It does not make the robot, reset posture, camera rig, wrist mounting, or embodiment bilaterally symmetric. DROID/RoboLab and RoboTwin remain separate and are never pooled.",
         "",
@@ -900,7 +970,7 @@ def compile_outputs(
         "robotwin": registration["layout"]["robotwin_stretch_candidate_sha256"],
     }
     results_dir = Path(output_root) / "results"
-    episodes, ledger, duplicates = load_valid_episodes(
+    episodes, ledger, duplicates, discovery_only = load_valid_episodes(
         raw_roots,
         queue_rows=queue_by_id,
         registration_sha256=registration_sha,
@@ -916,6 +986,7 @@ def compile_outputs(
         episodes=episodes,
         invalid_attempts=invalid,
         duplicates=duplicates,
+        discovery_only=discovery_only,
         source_ledger=ledger,
         resamples=resamples,
     )
@@ -924,6 +995,7 @@ def compile_outputs(
     atomic_write(results_dir / "episodes.jsonl", b"".join(canonical_bytes(row) for row in episodes))
     atomic_write(results_dir / "pairs.jsonl", b"".join(canonical_bytes(row) for row in pair_rows))
     atomic_write(results_dir / "infrastructure_invalid.jsonl", b"".join(canonical_bytes(row) for row in invalid))
+    atomic_write(results_dir / "discovery_only.jsonl", b"".join(canonical_bytes(row) for row in discovery_only))
     atomic_write(results_dir / "source_ledger.jsonl", b"".join(canonical_bytes(row) for row in ledger))
     atomic_write(results_dir / "results.json", json.dumps(report, allow_nan=False, indent=2, sort_keys=True).encode("utf-8") + b"\n")
     atomic_write(Path(output_root) / "DECISION_MEMO.md", decision_memo(report).encode("utf-8"))

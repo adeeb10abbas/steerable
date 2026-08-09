@@ -60,14 +60,25 @@ def validate(base: Path, *, require_complete: bool, verify_raw_sources: bool) ->
     episodes_path = base / "results/episodes.jsonl"
     pairs_path = base / "results/pairs.jsonl"
     invalid_path = base / "results/infrastructure_invalid.jsonl"
+    discovery_path = base / "results/discovery_only.jsonl"
     source_ledger_path = base / "results/source_ledger.jsonl"
     manifest_path = base / "evidence_manifest.json"
-    for path in (results_path, episodes_path, pairs_path, invalid_path, source_ledger_path, manifest_path, base / "DECISION_MEMO.md"):
+    for path in (
+        results_path,
+        episodes_path,
+        pairs_path,
+        invalid_path,
+        discovery_path,
+        source_ledger_path,
+        manifest_path,
+        base / "DECISION_MEMO.md",
+    ):
         require(path.is_file(), f"missing compact E004 evidence: {path}")
     results = load_json(results_path)
     episodes = load_jsonl(episodes_path)
     pairs = load_jsonl(pairs_path)
     invalid = load_jsonl(invalid_path)
+    discovery = load_jsonl(discovery_path)
     ledger = load_jsonl(source_ledger_path)
     manifest = load_json(manifest_path)
     require(results.get("amendment_id") == "V3-E004", "wrong result amendment")
@@ -76,6 +87,21 @@ def validate(base: Path, *, require_complete: bool, verify_raw_sources: bool) ->
     require(len({row.get("matched_pair_id") for row in pairs}) == len(pairs), "duplicate compact matched pair")
     require(len(pairs) == sum(item["complete_pairs"] for item in results["checkpoints"].values()), "pair/result count differs")
     require(len(invalid) == results.get("infrastructure_invalid_attempts"), "invalid-attempt count differs")
+    require(
+        len(discovery)
+        == results.get("discovery_only_behavioral_artifacts_excluded_from_denominators"),
+        "discovery-only count differs",
+    )
+    for row in discovery:
+        require(
+            row.get("disposition") == "discovery_only_excluded_from_behavioral_denominator"
+            and row.get("behavioral_denominator_included") is False,
+            "discovery-only row is denominator-eligible",
+        )
+        require(
+            row.get("reason") == "pre_r002_s0_missing_prospective_attestation",
+            "unknown discovery-only exclusion reason",
+        )
     require(results.get("coverage", {}).get("valid_cells") == len(episodes), "coverage count differs")
     complete = results.get("coverage", {}).get("complete") is True
     require(
@@ -106,12 +132,27 @@ def validate(base: Path, *, require_complete: bool, verify_raw_sources: bool) ->
             require(not isinstance(value, bool) and isinstance(value, (int, float)) and math.isfinite(float(value)), f"invalid {field}")
         source = row.get("source_raw_episode", {})
         require(isinstance(source.get("sha256"), str) and len(source["sha256"]) == 64, "source digest missing")
+        if row.get("arena") == "droid_robolab":
+            for field in (
+                "request0_pair_identity_sha256",
+                "request0_observation_payload_sha256",
+                "request0_reset_contract_sha256",
+            ):
+                require(isinstance(row.get(field), str) and len(row[field]) == 64, f"missing R001 {field}")
+            require(row.get("request0_replay_mode") in {"capture_left", "replay_right"}, "invalid R001 replay mode")
         if verify_raw_sources:
             path = Path(source["path"])
             require(path.is_file(), f"raw source unavailable: {path}")
             require(path.stat().st_size == source["bytes"] and sha256(path) == source["sha256"], f"raw source changed: {path}")
         if row.get("pair_fields_status") == "derived_after_both_hash_bound_directions_exist":
             require(type(row.get("action_distinct")) is bool and isinstance(row.get("endpoint_shift"), (int, float)), "materialized pair fields invalid")
+    for row in pairs:
+        if row.get("arena") == "droid_robolab":
+            require(
+                row.get("identical_reset_definition")
+                == "R001 identical request0 observation bytes and reset-contract payload",
+                "DROID pair uses an obsolete native-reset identity definition",
+            )
     for model, checkpoint in results["checkpoints"].items():
         gate = checkpoint["claim_gate"]
         if not complete:
@@ -131,6 +172,10 @@ def validate(base: Path, *, require_complete: bool, verify_raw_sources: bool) ->
     require(manifest.get("episodes_sha256") == sha256(episodes_path), "manifest episodes hash differs")
     require(manifest.get("pairs_sha256") == sha256(pairs_path), "manifest pairs hash differs")
     require(
+        manifest.get("discovery_only_behavioral_artifacts") == len(discovery),
+        "manifest discovery-only count differs",
+    )
+    require(
         manifest.get("status")
         == ("hash_closed_compact_evidence" if complete else "partial_progress_not_publication_evidence"),
         "manifest status differs",
@@ -144,6 +189,7 @@ def validate(base: Path, *, require_complete: bool, verify_raw_sources: bool) ->
         "status": "valid_complete" if complete else "valid_partial_no_publication_claims",
         "valid_behavioral_episodes": len(episodes),
         "infrastructure_invalid_attempts": len(invalid),
+        "discovery_only_behavioral_artifacts": len(discovery),
         "source_ledger_rows": len(ledger),
         "raw_sources_verified": verify_raw_sources,
     }

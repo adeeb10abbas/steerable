@@ -18,7 +18,7 @@ from tools.compile_v3e004_results import (
     load_valid_episodes,
     sha256_file,
 )
-from tools.render_v3e004_results import render, render_failures
+from tools.render_v3e004_results import render, render_failures, render_geometry_quality
 from tools.validate_v3e004_evidence import validate
 
 
@@ -418,6 +418,37 @@ def test_geometry_summary_does_not_vacuously_pass_without_s1_rows():
     result = _geometry_summary([row])
     assert result["s1_gate"]["status"] == "unavailable_no_valid_s1_episodes"
     assert result["s1_gate"]["all_observed_s1_rows_pass"] is None
+
+
+def test_geometry_figure_reports_residuals_occlusion_and_reset_identity(tmp_path: Path):
+    summary = _geometry_summary(
+        [
+            {
+                "cell_id": "left",
+                "symmetry_level_s": 1.0,
+                "asymmetry_metric_A": 0.01,
+                "position_residual": 0.0004,
+                "orientation_residual": np.deg2rad(0.2),
+                "midline_residual": 0.0003,
+                "occlusion_check": {"base_camera": False, "left_wrist_camera": False},
+                "arm_reset_pose": {"arm_joint_positions_rad": [0.0] * 7, "gripper_position": [0.0]},
+            }
+        ]
+    )
+    report = {
+        "publication_claim_status": "synthetic_test_only",
+        "checkpoints": {
+            "pi05_current_stack_droid": {
+                "model_id": "pi05_current_stack_droid",
+                "geometry_quality": summary,
+            }
+        },
+    }
+    records = render_geometry_quality(report, tmp_path)
+    assert len(records) == 2
+    assert all(Path(record["path"]).stat().st_size > 0 for record in records)
+    assert "object-layout gate" in records[0]["caption"]
+    assert "embodiment symmetry" in records[0]["caption"]
 
 
 def test_failure_figure_separates_directions_and_names_exact_prompts(tmp_path: Path):

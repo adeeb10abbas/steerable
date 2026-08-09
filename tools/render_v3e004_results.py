@@ -250,6 +250,91 @@ def render_endpoint_control(report: Mapping[str, Any], output_dir: Path) -> list
     )
 
 
+def render_geometry_quality(report: Mapping[str, Any], output_dir: Path) -> list[dict[str, Any]]:
+    """Show the full-symmetry quality gate without implying robot symmetry."""
+
+    checkpoints = [
+        report["checkpoints"][model]
+        for model in MODEL_ORDER
+        if model in report["checkpoints"]
+        and report["checkpoints"][model].get("geometry_quality", {}).get("levels", {}).get("1.00")
+    ]
+    if not checkpoints:
+        return []
+    fig, (ax, notes) = plt.subplots(
+        1,
+        2,
+        figsize=(11.8, 5.7),
+        gridspec_kw={"width_ratios": (3.5, 1.55)},
+        constrained_layout=True,
+    )
+    metrics = (
+        ("position_residual_m", 0.001, "Position\nlimit 1 mm"),
+        ("orientation_residual_rad", np.deg2rad(0.5), "Orientation\nlimit 0.5°"),
+        ("midline_residual_m", 0.001, "Midline\nlimit 1 mm"),
+    )
+    maxima = np.asarray(
+        [
+            [item["geometry_quality"]["levels"]["1.00"][field]["maximum"] for field, _, _ in metrics]
+            for item in checkpoints
+        ],
+        dtype=float,
+    )
+    tolerances = np.asarray([tolerance for _, tolerance, _ in metrics], dtype=float)
+    ratios = maxima / tolerances
+    heatmap = ax.imshow(ratios, vmin=0.0, vmax=1.0, cmap="RdYlGn_r", aspect="auto")
+    ax.set_xticks(np.arange(len(metrics)), [label for _, _, label in metrics])
+    ax.set_yticks(np.arange(len(checkpoints)), [LABELS[item["model_id"]] for item in checkpoints])
+    ax.tick_params(axis="both", length=0)
+    ax.set_title("Full-symmetry object-layout quality control", loc="left", fontweight="bold", pad=14)
+    for row_index in range(len(checkpoints)):
+        for column_index, (field, _, _) in enumerate(metrics):
+            maximum = maxima[row_index, column_index]
+            display = f"{maximum * 1000:.3f} mm" if field != "orientation_residual_rad" else f"{np.rad2deg(maximum):.3f}°"
+            ax.text(
+                column_index,
+                row_index,
+                f"{display}\n{ratios[row_index, column_index]:.0%} of limit",
+                ha="center",
+                va="center",
+                fontsize=8.5,
+                color="#212529",
+            )
+    colorbar = fig.colorbar(heatmap, ax=ax, orientation="horizontal", fraction=0.07, pad=0.13)
+    colorbar.set_label("Fraction of preregistered strict upper bound (1.0 = fail boundary)")
+
+    notes.axis("off")
+    notes.set_title("Visibility and embodiment", loc="left", fontweight="bold", pad=14)
+    note_lines = []
+    for item in checkpoints:
+        geometry = item["geometry_quality"]
+        s1 = geometry["levels"]["1.00"]
+        visibility = s1["occlusion_check"]
+        note_lines.extend(
+            [
+                LABELS[item["model_id"]],
+                f"  {visibility['occluded_camera_checks']} / {visibility['camera_checks']} camera checks occluded",
+                f"  {geometry['arm_reset_pose_identity_count']} reset-pose identit"
+                f"{'y' if geometry['arm_reset_pose_identity_count'] == 1 else 'ies'}",
+                "",
+            ]
+        )
+    note_lines.extend(
+        [
+            "Scope",
+            "This verifies the object layout relative to the robot midline. It does not assert bilateral symmetry of the robot, reset posture, camera rig, wrist mounting, or embodiment.",
+        ]
+    )
+    notes.text(0.0, 1.0, "\n".join(note_lines), va="top", fontsize=8.8, color="#495057", wrap=True, linespacing=1.25)
+    return save_figure(
+        fig,
+        output_dir,
+        "v3e004_geometry_quality",
+        "Maximum full-symmetry position, mirrored-orientation, and midline residuals relative to their preregistered strict bounds, plus per-camera occlusion and reset-pose identity counts. Passing this object-layout gate does not establish bilateral robot, camera-rig, or embodiment symmetry.",
+        report["publication_claim_status"],
+    )
+
+
 def render_failures(report: Mapping[str, Any], output_dir: Path) -> list[dict[str, Any]]:
     analyses = _analysis(report)
     models = list(analyses)
@@ -326,6 +411,7 @@ def render(results_path: Path, output_dir: Path) -> dict[str, Any]:
         records.extend(render_interactions(report, output_dir))
         records.extend(render_dose_response(report, output_dir))
         records.extend(render_endpoint_control(report, output_dir))
+        records.extend(render_geometry_quality(report, output_dir))
         records.extend(render_failures(report, output_dir))
     else:
         records.extend(render_progress(report, output_dir))

@@ -22,6 +22,12 @@ from tools.compile_v3e004_results import (
 )
 from tools.render_v3e004_results import render, render_failures, render_geometry_quality
 from tools.validate_v3e004_evidence import validate
+from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.layout_contract import candidate_from_json
+from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.fastwam_robotwin import (
+    asymmetry_A as fastwam_asymmetry_A,
+    layout_for_level as fastwam_layout_for_level,
+    residuals as fastwam_residuals,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -35,10 +41,20 @@ def queue_rows() -> list[dict]:
 def raw_row(queue: dict, *, success: bool) -> dict:
     category = "correct" if success else "wrong_side"
     sign = 1.0 if queue["relation"] == "left" else -1.0
-    expected_A = queue["registered_expected_asymmetry_A"]
-    if expected_A is None:
-        fastwam_candidate = json.loads((SOURCE / "layout/fastwam_robotwin_candidate.json").read_text())
-        expected_A = fastwam_candidate["derived"][f"{float(queue['symmetry_level_s']):.2f}"]["asymmetry_metric_A"]
+    level = float(queue["symmetry_level_s"])
+    if queue["arena"] == "droid_robolab":
+        candidate = candidate_from_json(json.loads((SOURCE / "layout/candidate.json").read_text()))
+        poses = candidate.layout(level)
+        realised = {name: pose.to_json() for name, pose in poses.items()}
+        residual = candidate.residuals(poses)
+        expected_A = candidate.asymmetry_A(poses)
+        occlusion = {name: False for name in candidate.expected_cameras}
+    else:
+        poses = fastwam_layout_for_level(level)
+        realised = {name: pose.to_json() for name, pose in poses.items()}
+        residual = fastwam_residuals(poses)
+        expected_A = fastwam_asymmetry_A(poses)
+        occlusion = {"head_camera": False, "left_camera": False, "right_camera": False}
     result = {
         "schema_version": "vla-wam-shared-v3e004-droid-behavioral-episode-v1",
         "record_type": "behavioral_episode",
@@ -68,11 +84,11 @@ def raw_row(queue: dict, *, success: bool) -> dict:
         "peak_lateral_excursion": 0.15,
         "symmetry_level_s": queue["symmetry_level_s"],
         "asymmetry_metric_A": expected_A,
-        "position_residual": 0.0,
-        "orientation_residual": 0.0,
-        "midline_residual": 0.0,
-        "occlusion_check": {"base_camera": False, "left_wrist_camera": False, "right_wrist_camera": False},
-        "realised_object_poses": {"rubiks_cube": {"position_xyz_m": [0.3, 0.0, 0.08]}},
+        "position_residual": residual["position_residual_m"],
+        "orientation_residual": residual["orientation_residual_rad"],
+        "midline_residual": residual["midline_residual_m"],
+        "occlusion_check": occlusion,
+        "realised_object_poses": realised,
         "arm_reset_pose": {"arm_joint_positions_rad": [0.0] * 7},
         "initial_state_sha256": "1" * 64,
         "registration_sha256": sha256_file(SOURCE / "registration.json"),
@@ -333,6 +349,33 @@ def test_fastwam_rows_use_the_registered_robotwin_candidate(tmp_path: Path):
     assert {row["candidate_sha256"] for row in compact} == {
         sha256_file(SOURCE / "layout/fastwam_robotwin_candidate.json")
     }
+
+
+def test_realised_pose_tamper_fails_closed(tmp_path: Path):
+    queue = next(
+        row
+        for row in queue_rows()
+        if row["model_id"] == "cosmos3_edge_policy_droid"
+        and row["environment_seed"] == 9400
+        and row["symmetry_level_s"] == 1.0
+        and row["relation"] == "left"
+    )
+    tampered = raw_row(queue, success=True)
+    tampered["realised_object_poses"]["rubiks_cube"]["y_m"] += 0.01
+    raw_root = tmp_path / "raw"
+    write_raw(raw_root / "raw_episode.jsonl", tampered)
+    registered = {row["cell_id"]: row for row in queue_rows()}
+    with pytest.raises(CompileError, match="realised position differs from requested s"):
+        load_valid_episodes(
+            [raw_root],
+            queue_rows=registered,
+            registration_sha256=sha256_file(SOURCE / "registration.json"),
+            queue_sha256=sha256_file(SOURCE / "queue.jsonl"),
+            candidate_sha256_by_arena={
+                "droid_robolab": sha256_file(SOURCE / "layout/candidate.json"),
+                "robotwin": sha256_file(SOURCE / "layout/fastwam_robotwin_candidate.json"),
+            },
+        )
 
 
 def test_claim_gate_never_calls_underpowered_null_equivalent():

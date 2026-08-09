@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 from collections import Counter, defaultdict
 import datetime as dt
+from functools import lru_cache
 import hashlib
 from itertools import permutations
 import json
@@ -32,7 +33,24 @@ from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.analysis import (  # 
 )
 from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.r002_orientation_tolerance import (  # noqa: E402
     AMENDMENT_SHA256 as R002_AMENDMENT_SHA256,
+    CORRECTED_TOLERANCE_RAD as R002_CORRECTED_ORIENTATION_TOLERANCE_RAD,
     validate_runtime_attestation as validate_r002_runtime_attestation,
+)
+from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.layout_contract import (  # noqa: E402
+    LayoutContractError,
+    PoseSE2,
+    candidate_from_json as droid_candidate_from_json,
+    wrap_angle as droid_wrap_angle,
+)
+from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.fastwam_robotwin import (  # noqa: E402
+    ActorPose as FastWAMActorPose,
+    FastWAME004Error,
+    LIVE_ORIENTATION_TOLERANCE_RAD as FASTWAM_LIVE_ORIENTATION_TOLERANCE_RAD,
+    LIVE_POSITION_TOLERANCE_M as FASTWAM_LIVE_POSITION_TOLERANCE_M,
+    asymmetry_A as fastwam_asymmetry_A,
+    layout_for_level as fastwam_layout_for_level,
+    residuals as fastwam_residuals,
+    wrap_angle as fastwam_wrap_angle,
 )
 from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.runtime_contract import (  # noqa: E402
     RuntimeContractError,
@@ -143,6 +161,104 @@ def _finite_number(value: Any, label: str) -> float:
     return result
 
 
+@lru_cache(maxsize=1)
+def _droid_layout_candidate() -> Any:
+    return droid_candidate_from_json(load_json(BASE / "layout/candidate.json"))
+
+
+def _validate_reported_geometry(
+    row: Mapping[str, Any],
+    *,
+    cell_id: str,
+    level: float,
+) -> None:
+    """Recompute layout fields from immutable realised poses, independently."""
+
+    realised = row.get("realised_object_poses")
+    require(isinstance(realised, Mapping) and realised, f"{cell_id}: missing realised pose map")
+    try:
+        if row["arena"] == "droid_robolab":
+            candidate = _droid_layout_candidate()
+            poses = {
+                str(name): PoseSE2.from_json(pose, f"{cell_id}.realised_object_poses.{name}")
+                for name, pose in realised.items()
+            }
+            expected = candidate.layout(level)
+            require(set(poses) == set(expected), f"{cell_id}: realised DROID inventory differs from registered s")
+            orientation_tolerance = (
+                R002_CORRECTED_ORIENTATION_TOLERANCE_RAD
+                if math.isclose(level, 0.0, abs_tol=1e-12)
+                else candidate.realisation_orientation_tolerance_rad
+            )
+            for name, pose in poses.items():
+                target = expected[name]
+                require(pose.asset_identity == target.asset_identity, f"{cell_id}: asset identity differs for {name}")
+                position_error = math.sqrt(
+                    (pose.x_m - target.x_m) ** 2
+                    + (pose.y_m - target.y_m) ** 2
+                    + (pose.z_m - target.z_m) ** 2
+                )
+                require(
+                    position_error <= candidate.realisation_position_tolerance_m + 1e-12,
+                    f"{cell_id}: realised position differs from requested s for {name}",
+                )
+                if name not in candidate.orientation_invariant_objects:
+                    orientation_error = abs(droid_wrap_angle(pose.yaw_rad - target.yaw_rad))
+                    require(
+                        orientation_error <= orientation_tolerance + 1e-12,
+                        f"{cell_id}: realised orientation differs from requested s for {name}",
+                    )
+            recomputed_residuals = candidate.residuals(poses)
+            recomputed_A = candidate.asymmetry_A(poses)
+            expected_cameras = set(candidate.expected_cameras)
+        elif row["arena"] == "robotwin":
+            poses = {
+                str(name): FastWAMActorPose.from_json(pose)
+                for name, pose in realised.items()
+            }
+            expected = fastwam_layout_for_level(level)
+            require(set(poses) == set(expected), f"{cell_id}: realised RoboTwin inventory differs from registered s")
+            for name, pose in poses.items():
+                target = expected[name]
+                require(pose.asset_identity == target.asset_identity, f"{cell_id}: FastWAM asset identity differs for {name}")
+                position_error = math.sqrt(
+                    sum((observed - registered) ** 2 for observed, registered in zip(pose.position_xyz_m, target.position_xyz_m))
+                )
+                require(
+                    position_error <= FASTWAM_LIVE_POSITION_TOLERANCE_M + 1e-12,
+                    f"{cell_id}: FastWAM realised position differs from requested s for {name}",
+                )
+                require(
+                    abs(fastwam_wrap_angle(pose.yaw_rad - target.yaw_rad))
+                    <= FASTWAM_LIVE_ORIENTATION_TOLERANCE_RAD + 1e-12,
+                    f"{cell_id}: FastWAM realised orientation differs from requested s for {name}",
+                )
+            recomputed_residuals = fastwam_residuals(poses)
+            recomputed_A = fastwam_asymmetry_A(poses)
+            expected_cameras = {"head_camera", "left_camera", "right_camera"}
+        else:
+            raise CompileError(f"{cell_id}: unsupported arena for geometry validation")
+    except (LayoutContractError, FastWAME004Error, KeyError, TypeError, ValueError) as exc:
+        raise CompileError(f"{cell_id}: realised geometry validation failed: {exc}") from exc
+
+    reported = {
+        "position_residual_m": float(row["position_residual"]),
+        "orientation_residual_rad": float(row["orientation_residual"]),
+        "midline_residual_m": float(row["midline_residual"]),
+    }
+    for name, value in recomputed_residuals.items():
+        require(
+            math.isclose(reported[name], float(value), rel_tol=1e-9, abs_tol=1e-9),
+            f"{cell_id}: reported {name} differs from realised poses",
+        )
+    require(
+        math.isclose(float(row["asymmetry_metric_A"]), float(recomputed_A), rel_tol=1e-9, abs_tol=1e-9),
+        f"{cell_id}: reported asymmetry A differs from realised poses",
+    )
+    occlusion = row["occlusion_check"]
+    require(set(occlusion) == expected_cameras, f"{cell_id}: occlusion camera inventory differs")
+
+
 def _row_value(row: Mapping[str, Any], name: str) -> Any:
     aliases = {
         "cell_id": ("cell_id", "registered_cell_id"),
@@ -249,6 +365,7 @@ def normalize_episode(
     require(all(value is False for value in occlusion.values()), f"{cell_id}: occluded camera retained")
     require(isinstance(row.get("realised_object_poses"), dict) and row["realised_object_poses"], f"{cell_id}: missing realised poses")
     require(isinstance(row.get("arm_reset_pose"), dict) and row["arm_reset_pose"], f"{cell_id}: missing arm reset pose")
+    _validate_reported_geometry(row, cell_id=cell_id, level=level)
     if level == 1.0:
         require(float(row["position_residual"]) < 0.001, f"{cell_id}: s1 position residual fails")
         require(float(row["orientation_residual"]) < math.radians(0.5), f"{cell_id}: s1 orientation residual fails")

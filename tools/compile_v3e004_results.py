@@ -50,6 +50,8 @@ INVALID_PATTERNS = (
     "**/infrastructure_invalid*.json",
     "**/infrastructure_failures*.jsonl",
     "**/infrastructure_failures*.json",
+    "**/setup_invalid*.jsonl",
+    "**/setup_invalid*.json",
 )
 REQUIRED_MEASUREMENTS = (
     "success",

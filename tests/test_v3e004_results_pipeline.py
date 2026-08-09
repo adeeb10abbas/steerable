@@ -13,6 +13,7 @@ from tools.compile_v3e004_results import (
     _claim_gate,
     _failure_signature,
     compile_outputs,
+    load_infrastructure_invalid,
     load_valid_episodes,
     sha256_file,
 )
@@ -203,6 +204,27 @@ def test_pre_r002_droid_s0_is_retained_discovery_only(tmp_path: Path):
     assert len(ledger) == len(discovery) == 1
     assert discovery[0]["behavioral_denominator_included"] is False
     assert discovery[0]["reason"] == "pre_r002_s0_missing_prospective_attestation"
+
+
+def test_setup_invalid_attempt_is_retained_outside_behavioral_denominator(tmp_path: Path):
+    raw_root = tmp_path / "raw"
+    setup_invalid = raw_root / "gate/setup_invalid_zero_request.json"
+    setup_invalid.parent.mkdir(parents=True)
+    setup_invalid.write_text(
+        json.dumps(
+            {
+                "schema_version": "vla-wam-shared-v3e004-setup-invalid-v1",
+                "status": "setup_invalid_zero_request",
+                "model_request_count": 0,
+                "behavioral_episode_count": 0,
+            }
+        )
+        + "\n"
+    )
+    rows = load_infrastructure_invalid([raw_root])
+    assert len(rows) == 1
+    assert rows[0]["behavioral_denominator_included"] is False
+    assert rows[0]["attempt"]["status"] == "setup_invalid_zero_request"
 
 
 def test_fastwam_rows_use_the_registered_robotwin_candidate(tmp_path: Path):

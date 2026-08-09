@@ -1,5 +1,5 @@
 {
-  "active_branch": "experiment/v3e004-symmetric-layout-cohort",
+  "active_branch": "experiment/v3e005-cross-arena-geometry",
   "authoritative_files": [
     "docs/VLA_WAM_V3_CONTINUATION.md",
     "docs/VLA_WAM_STEERABILITY_V3_PROTOCOL.md",
@@ -182,6 +182,17 @@
     "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/results/figures/figure_manifest.json",
     "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/DECISION_MEMO.md",
     "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/evidence_manifest.json",
+    "artifacts/vla_wam_shared_v3/phase_e/cross_arena_geometry_v3e005/registration.json",
+    "artifacts/vla_wam_shared_v3/phase_e/cross_arena_geometry_v3e005/queue.jsonl",
+    "artifacts/vla_wam_shared_v3/phase_e/cross_arena_geometry_v3e005/layout/scene_candidate.json",
+    "artifacts/vla_wam_shared_v3/phase_e/cross_arena_geometry_v3e005/results/results.json",
+    "artifacts/vla_wam_shared_v3/phase_e/cross_arena_geometry_v3e005/results/episodes.jsonl",
+    "artifacts/vla_wam_shared_v3/phase_e/cross_arena_geometry_v3e005/results/pairs.jsonl",
+    "artifacts/vla_wam_shared_v3/phase_e/cross_arena_geometry_v3e005/results/figures/figure_manifest.json",
+    "artifacts/vla_wam_shared_v3/phase_e/cross_arena_geometry_v3e005/DECISION_MEMO.md",
+    "artifacts/vla_wam_shared_v3/phase_e/cross_arena_geometry_v3e005/V3E005_PUBLICATION_DECISION.md",
+    "artifacts/vla_wam_shared_v3/phase_e/cross_arena_geometry_v3e005/evidence_manifest.json",
+    "artifacts/vla_wam_shared_v3/phase_e/cross_arena_geometry_v3e005/setup_failures/v3e005_gate_failure_ledger_v006.json",
     "tools/build_v3e004_fastwam_cohort_manifest.py",
     "tools/compile_v3e004_results.py",
     "tools/render_v3e004_fastwam_slice.py",
@@ -743,10 +754,12 @@
     "unique_behavioral_episodes": 982
   },
   "next_agent": {
-    "inference_authority": "Do not rerun any valid Phase-A, V3-A002, Nano V3-B001, pi0.5 V3-B002, DreamZero V3-B003, Nano V3-B005, Nano V3-B008, Nano V3-B009, pi0.5 V3-D001, GR00T V3-C001, Cosmos3 Edge V3-C001, Cosmos3 Nano V3-C001, or V3-E004 cell. V3-E004 is complete and hash-closed at 4096/4096 valid episodes and 2048 matched pairs. V3-D001 is complete and hash-closed at 432/432 valid episodes and 216/216 matched pairs. All three Phase-C models are complete at 160/160 valid cells and hash-closed. DreamZero V3-B003, Nano V3-B005, Nano V3-B008, and Nano V3-B009 are complete and hash-closed. Nano V3-B004 failed closed with zero model requests and must never be run. Exact historical pi0-FAST recovery remains blocked, and V3-A002 direct success does not release historical wording or another Phase-C model.",
-    "publication_note": "Use the compact result summaries and evidence manifests for analysis. Do not infer current study state from the older V2 article, gallery, figures, or chat history.",
+    "inference_authority": "Do not rerun any valid Phase-A, V3-A002, Nano V3-B001, pi0.5 V3-B002, DreamZero V3-B003, Nano V3-B005, Nano V3-B008, Nano V3-B009, pi0.5 V3-D001, GR00T V3-C001, Cosmos3 Edge V3-C001, Cosmos3 Nano V3-C001, V3-E004, or V3-E005 cell. V3-E005 is complete and hash-closed at 108/108 valid RoboTwin episodes and 54 matched pairs. Its preregistered H4 endpoint-redirection hard gate failed, so H1-H3 remain withheld, the reflected stage is not authorized, and no replacement checkpoint may be run post hoc. V3-E004 is complete at 4096/4096 valid episodes and 2048 pairs. Nano V3-B004 failed closed with zero model requests and must never be run. Exact historical pi0-FAST recovery remains blocked.",
+    "publication_note": "Use the compact result summaries and evidence manifests for analysis. V3-E005 belongs in the supplement as a positive-control failure; do not print, graph, or interpret H1-H3, and never pool its RoboTwin outcomes with DROID. Do not infer current study state from the older V2 article, gallery, figures, or chat history.",
     "safe_first_commands": [
       "git status --short",
+      ".venv/bin/python tools/validate_v3e005.py --require-results",
+      ".venv/bin/python tools/validate_v3e005_evidence.py --require-complete",
       ".venv/bin/python tools/validate_vla_wam_v3_protocol.py",
       ".venv/bin/python tools/validate_vla_wam_v2_protocol.py",
       "git diff --check"
@@ -2166,7 +2179,101 @@
       "status": "complete_hash_closed_27_seed_108_episode_arena_slice_descriptive_only"
     }
   },
-  "phase_e_status": "phase_e_e001_repaired_336_unique_valid_e002_provenance_bound_108_valid_model_blind_diagnostics_e003_bilateral_symmetric_layout_54_valid_e004_complete_hash_closed_4096_valid_2048_pairs",
+  "phase_e_v3e005": {
+    "amendment_id": "V3-E005",
+    "arena": "robotwin",
+    "behavioral_episode_count": 108,
+    "bootstrap_resamples": 20000,
+    "claim_boundary": "The preregistered LingBot-VA endpoint-redirection positive control failed at both layouts. H1-H3 are withheld and must not be printed, graphed, or interpreted. This result does not show that geometry has no effect; it shows that this checkpoint/layout did not establish the directional language steering required to interpret the downstream geometry hypotheses. RoboTwin and DROID are never pooled.",
+    "complete_matched_pair_count": 54,
+    "decision_memo": {
+      "path": "artifacts/vla_wam_shared_v3/phase_e/cross_arena_geometry_v3e005/DECISION_MEMO.md",
+      "sha256": "3393e4708c15aaa661b53d9a823272e11b12b9fceec304ce39be9d2082ce62c7"
+    },
+    "evidence_manifest": {
+      "path": "artifacts/vla_wam_shared_v3/phase_e/cross_arena_geometry_v3e005/evidence_manifest.json",
+      "sha256": "09ac73651f3367e35aaadbb4e31c8c7a4d8405cc846ca13ddc4ff21c59f2ada2"
+    },
+    "figure_manifest": {
+      "path": "artifacts/vla_wam_shared_v3/phase_e/cross_arena_geometry_v3e005/results/figures/figure_manifest.json",
+      "sha256": "7d041aa50fc76990ab074902ddf55afb59b2d14e4cf19262e464ceec6c3127b7"
+    },
+    "h4_endpoint_redirection_LEFT_minus_RIGHT": {
+      "s0": {
+        "exact_two_sided_sign_p": 0.12207812070846558,
+        "mean_m": 0.02348804732577668,
+        "median_m": 0.0690615177154541,
+        "positive_negative_zero_signs": [
+          18,
+          9,
+          0
+        ],
+        "scene_clustered_bootstrap_95_ci_m": [
+          -0.17794089268893004,
+          0.16636786856023328
+        ],
+        "status": "fail"
+      },
+      "s1": {
+        "exact_two_sided_sign_p": 0.7011080384254456,
+        "mean_m": -0.08208484013538576,
+        "median_m": -0.005778283873951295,
+        "positive_negative_zero_signs": [
+          12,
+          15,
+          0
+        ],
+        "scene_clustered_bootstrap_95_ci_m": [
+          -0.2132212398590197,
+          0.03396152947957139
+        ],
+        "status": "fail"
+      },
+      "threshold_rule": "At each level mean > 0.05 m and scene-clustered 95% CI low > 0."
+    },
+    "h4_outcome": "fail",
+    "h4_recorded_before_h1_h3": true,
+    "hypothesis_disposition": {
+      "H1": "withheld_due_h4_failure",
+      "H2": "withheld_due_h4_failure",
+      "H3": "withheld_due_h4_failure"
+    },
+    "infrastructure": {
+      "accepted_behavioral_roots_infrastructure_invalid": 0,
+      "excluded_zero_request_setup_attempts": 12,
+      "latest_setup_failure_ledger": {
+        "path": "artifacts/vla_wam_shared_v3/phase_e/cross_arena_geometry_v3e005/setup_failures/v3e005_gate_failure_ledger_v006.json",
+        "sha256": "bbafa5c736f9b5663c6f723d0bb840f4cf21280ed79847e2cb48537b74c81911"
+      }
+    },
+    "model_id": "lingbot_va_robotwin",
+    "publication_decision": {
+      "path": "artifacts/vla_wam_shared_v3/phase_e/cross_arena_geometry_v3e005/V3E005_PUBLICATION_DECISION.md",
+      "recommendation": "supplement_h1_h3_omitted",
+      "sha256": "69e227451127b2b564aa8a5240f883b70ff9f4e66a4ce96119ae79c054137f84"
+    },
+    "raw_source_validation": {
+      "required_source_artifact_bytes": 178775631,
+      "required_source_artifacts": 540,
+      "raw_episode_count": 108,
+      "raw_sources_verified": true,
+      "shard_manifests": 6,
+      "status": "valid_complete",
+      "whole_seed_manifests": 27,
+      "whole_seed_pair_files": 54
+    },
+    "reflected_stage_authorized": false,
+    "rerun_policy": "do_not_rerun_any_valid_v3e005_cell_or_substitute_another_checkpoint_post_h4_failure",
+    "results": {
+      "episodes_sha256": "0fa93eb6244ca080741984653afa6b8840c2b03097e6e3ad907db5b10223e308",
+      "pairs_sha256": "282cabc3dc7e212fb7d5cd18a16105c70ebe9e62b7b65ba3f94fd7e6110be06a",
+      "path": "artifacts/vla_wam_shared_v3/phase_e/cross_arena_geometry_v3e005/results/results.json",
+      "sha256": "8a0c0d80cd3c10e1c5920dc36d7adf812666bf937b6736298e8ffe6dcc82edf2"
+    },
+    "scene_cluster_count": 7,
+    "status": "complete_hash_closed_h4_fail_h1_h3_withheld"
+  },
+  "phase_e_status": "phase_e_e001_repaired_336_unique_valid_e002_provenance_bound_108_valid_model_blind_diagnostics_e003_bilateral_symmetric_layout_54_valid_e004_complete_hash_closed_4096_valid_2048_pairs_e005_complete_hash_closed_108_valid_54_pairs_h4_fail_h1_h3_withheld",
   "prospective_tier_b_results": {
     "v3b008_nano_start_side": {
       "amendment_id": "V3-B008",
@@ -2367,7 +2474,7 @@
     "raw_pvc_root": "/data/users/ali/vla_wam/raw/v3"
   },
   "study_id": "vla_wam_language_steerability_v3",
-  "updated_at_utc": "2026-08-09T12:27:01Z",
+  "updated_at_utc": "2026-08-09T17:07:27Z",
   "validation": {
     "checkpoint_provenance_tests": {
       "command": ".venv/bin/python -m unittest tests.test_v3_checkpoint_provenance",
@@ -2412,6 +2519,17 @@
       "focused_test_result": "86 passed, 1 local-only torch skip; pinned RoboLab Torch replay tests previously passed 5/5",
       "raw_source_validation": "valid_complete_4096_raw_sources_verified_true",
       "status": "valid_complete"
+    },
+    "v3e005_complete_bundle": {
+      "commands": [
+        ".venv/bin/python tools/validate_v3e005.py --require-results",
+        ".venv/bin/python tools/validate_v3e005_evidence.py --require-complete",
+        ".venv/bin/python tools/validate_v3e005_evidence.py --require-complete --verify-raw-sources",
+        "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 .venv/bin/python -m pytest -q tests/test_v3e005_*.py"
+      ],
+      "focused_test_result": "passed",
+      "raw_source_validation": "valid_complete_108_raw_episodes_540_required_source_artifacts_verified_true",
+      "status": "valid_complete_h4_fail_h1_h3_withheld"
     },
     "v2": {
       "check_count": 994,

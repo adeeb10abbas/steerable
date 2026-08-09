@@ -1,0 +1,401 @@
+{
+  "amendment_id": "V3-E005",
+  "analysis_order": [
+    "H4"
+  ],
+  "arena": "robotwin",
+  "arena_boundary": "RoboTwin-only estimands; DROID is never imported or pooled.",
+  "bootstrap_resamples": 20000,
+  "complete_matched_pairs": 54,
+  "coverage": {
+    "complete": true,
+    "missing_cell_ids": [],
+    "missing_cells": 0
+  },
+  "failure_taxonomy": [
+    "correct",
+    "pick_failed",
+    "transport_failed",
+    "wrong_side",
+    "release_failed"
+  ],
+  "h4_gate": {
+    "h1_h3_disposition": "withheld_due_h4_failure",
+    "hard_gate_passed": false,
+    "levels": {
+      "0.00": {
+        "exact_sign_test": {
+          "exact_two_sided_p": 0.12207812070846558,
+          "negative": 9,
+          "positive": 18,
+          "zero": 0
+        },
+        "mean_m": 0.02348804732577668,
+        "median_m": 0.0690615177154541,
+        "pairs": 27,
+        "pass": false,
+        "scene_clustered_bootstrap_mean95": {
+          "cluster_unit": "scene_cluster_id",
+          "clusters": 7,
+          "confidence": 0.95,
+          "high": 0.16636786856023328,
+          "low": -0.17794089268893004,
+          "point": 0.02348804732577668,
+          "resamples": 20000,
+          "seed": 16846636689014429791,
+          "statistic": "mean"
+        },
+        "seed_level_effects": [
+          {
+            "effect_m": -0.0034911856055259705,
+            "environment_seed": 9400,
+            "scene_cluster_id": "robotwin_pair_03"
+          },
+          {
+            "effect_m": -0.08112220466136932,
+            "environment_seed": 9401,
+            "scene_cluster_id": "robotwin_pair_04"
+          },
+          {
+            "effect_m": 0.2582538574934006,
+            "environment_seed": 9402,
+            "scene_cluster_id": "robotwin_pair_05"
+          },
+          {
+            "effect_m": 0.10522051900625229,
+            "environment_seed": 9403,
+            "scene_cluster_id": "robotwin_pair_06"
+          },
+          {
+            "effect_m": 0.05533016100525856,
+            "environment_seed": 9404,
+            "scene_cluster_id": "robotwin_pair_07"
+          },
+          {
+            "effect_m": 0.17968452721834183,
+            "environment_seed": 9405,
+            "scene_cluster_id": "robotwin_pair_08"
+          },
+          {
+            "effect_m": -0.7459509745240211,
+            "environment_seed": 9406,
+            "scene_cluster_id": "robotwin_pair_09"
+          },
+          {
+            "effect_m": -0.04599867761135101,
+            "environment_seed": 9407,
+            "scene_cluster_id": "robotwin_pair_03"
+          },
+          {
+            "effect_m": 0.19790774211287498,
+            "environment_seed": 9408,
+            "scene_cluster_id": "robotwin_pair_04"
+          },
+          {
+            "effect_m": 0.3119950443506241,
+            "environment_seed": 9409,
+            "scene_cluster_id": "robotwin_pair_05"
+          },
+          {
+            "effect_m": -0.0434744730591774,
+            "environment_seed": 9410,
+            "scene_cluster_id": "robotwin_pair_06"
+          },
+          {
+            "effect_m": 0.007730182260274887,
+            "environment_seed": 9411,
+            "scene_cluster_id": "robotwin_pair_07"
+          },
+          {
+            "effect_m": 0.2184256762266159,
+            "environment_seed": 9412,
+            "scene_cluster_id": "robotwin_pair_08"
+          },
+          {
+            "effect_m": 0.08079652860760689,
+            "environment_seed": 9413,
+            "scene_cluster_id": "robotwin_pair_09"
+          },
+          {
+            "effect_m": 0.0005628466606140137,
+            "environment_seed": 9414,
+            "scene_cluster_id": "robotwin_pair_03"
+          },
+          {
+            "effect_m": -0.022093821316957474,
+            "environment_seed": 9415,
+            "scene_cluster_id": "robotwin_pair_04"
+          },
+          {
+            "effect_m": 0.0690615177154541,
+            "environment_seed": 9416,
+            "scene_cluster_id": "robotwin_pair_05"
+          },
+          {
+            "effect_m": -0.23890025168657303,
+            "environment_seed": 9417,
+            "scene_cluster_id": "robotwin_pair_06"
+          },
+          {
+            "effect_m": -0.05237945169210434,
+            "environment_seed": 9418,
+            "scene_cluster_id": "robotwin_pair_07"
+          },
+          {
+            "effect_m": 0.5483077168464661,
+            "environment_seed": 9419,
+            "scene_cluster_id": "robotwin_pair_08"
+          },
+          {
+            "effect_m": -1.2043073028326035,
+            "environment_seed": 9420,
+            "scene_cluster_id": "robotwin_pair_09"
+          },
+          {
+            "effect_m": 0.2475480968132615,
+            "environment_seed": 9421,
+            "scene_cluster_id": "robotwin_pair_03"
+          },
+          {
+            "effect_m": 0.12089602649211884,
+            "environment_seed": 9422,
+            "scene_cluster_id": "robotwin_pair_04"
+          },
+          {
+            "effect_m": 0.2498909756541252,
+            "environment_seed": 9423,
+            "scene_cluster_id": "robotwin_pair_05"
+          },
+          {
+            "effect_m": 0.2078289743512869,
+            "environment_seed": 9424,
+            "scene_cluster_id": "robotwin_pair_06"
+          },
+          {
+            "effect_m": 0.025339335203170776,
+            "environment_seed": 9425,
+            "scene_cluster_id": "robotwin_pair_07"
+          },
+          {
+            "effect_m": 0.1871158927679062,
+            "environment_seed": 9426,
+            "scene_cluster_id": "robotwin_pair_08"
+          }
+        ],
+        "threshold_m": 0.05
+      },
+      "1.00": {
+        "exact_sign_test": {
+          "exact_two_sided_p": 0.7011080384254456,
+          "negative": 15,
+          "positive": 12,
+          "zero": 0
+        },
+        "mean_m": -0.08208484013538576,
+        "median_m": -0.005778283873951295,
+        "pairs": 27,
+        "pass": false,
+        "scene_clustered_bootstrap_mean95": {
+          "cluster_unit": "scene_cluster_id",
+          "clusters": 7,
+          "confidence": 0.95,
+          "high": 0.03396152947957139,
+          "low": -0.2132212398590197,
+          "point": -0.08208484013538576,
+          "resamples": 20000,
+          "seed": 3650864807127013487,
+          "statistic": "mean"
+        },
+        "seed_level_effects": [
+          {
+            "effect_m": -0.3145771398412762,
+            "environment_seed": 9400,
+            "scene_cluster_id": "robotwin_pair_03"
+          },
+          {
+            "effect_m": 0.0396367609500885,
+            "environment_seed": 9401,
+            "scene_cluster_id": "robotwin_pair_04"
+          },
+          {
+            "effect_m": -0.28530509369329593,
+            "environment_seed": 9402,
+            "scene_cluster_id": "robotwin_pair_05"
+          },
+          {
+            "effect_m": 0.0832339997868985,
+            "environment_seed": 9403,
+            "scene_cluster_id": "robotwin_pair_06"
+          },
+          {
+            "effect_m": -1.5735263946153282,
+            "environment_seed": 9404,
+            "scene_cluster_id": "robotwin_pair_07"
+          },
+          {
+            "effect_m": 0.29110931348986924,
+            "environment_seed": 9405,
+            "scene_cluster_id": "robotwin_pair_08"
+          },
+          {
+            "effect_m": -0.009881755337119102,
+            "environment_seed": 9406,
+            "scene_cluster_id": "robotwin_pair_09"
+          },
+          {
+            "effect_m": -0.23502523591196223,
+            "environment_seed": 9407,
+            "scene_cluster_id": "robotwin_pair_03"
+          },
+          {
+            "effect_m": 0.033964769620979496,
+            "environment_seed": 9408,
+            "scene_cluster_id": "robotwin_pair_04"
+          },
+          {
+            "effect_m": -0.2665058395380129,
+            "environment_seed": 9409,
+            "scene_cluster_id": "robotwin_pair_05"
+          },
+          {
+            "effect_m": 0.01803942283277138,
+            "environment_seed": 9410,
+            "scene_cluster_id": "robotwin_pair_06"
+          },
+          {
+            "effect_m": -4.0181043004849926e-05,
+            "environment_seed": 9411,
+            "scene_cluster_id": "robotwin_pair_07"
+          },
+          {
+            "effect_m": -0.10882927477359772,
+            "environment_seed": 9412,
+            "scene_cluster_id": "robotwin_pair_08"
+          },
+          {
+            "effect_m": 0.003977569751441479,
+            "environment_seed": 9413,
+            "scene_cluster_id": "robotwin_pair_09"
+          },
+          {
+            "effect_m": -0.24672586259475793,
+            "environment_seed": 9414,
+            "scene_cluster_id": "robotwin_pair_03"
+          },
+          {
+            "effect_m": 0.23080560564994812,
+            "environment_seed": 9415,
+            "scene_cluster_id": "robotwin_pair_04"
+          },
+          {
+            "effect_m": 0.2451123297214508,
+            "environment_seed": 9416,
+            "scene_cluster_id": "robotwin_pair_05"
+          },
+          {
+            "effect_m": 0.1658670702663585,
+            "environment_seed": 9417,
+            "scene_cluster_id": "robotwin_pair_06"
+          },
+          {
+            "effect_m": -0.005778283873951295,
+            "environment_seed": 9418,
+            "scene_cluster_id": "robotwin_pair_07"
+          },
+          {
+            "effect_m": -0.23384594754315913,
+            "environment_seed": 9419,
+            "scene_cluster_id": "robotwin_pair_08"
+          },
+          {
+            "effect_m": -0.013112514279782772,
+            "environment_seed": 9420,
+            "scene_cluster_id": "robotwin_pair_09"
+          },
+          {
+            "effect_m": 0.013974952299577126,
+            "environment_seed": 9421,
+            "scene_cluster_id": "robotwin_pair_03"
+          },
+          {
+            "effect_m": -0.03750093357211881,
+            "environment_seed": 9422,
+            "scene_cluster_id": "robotwin_pair_04"
+          },
+          {
+            "effect_m": -0.2400685722768685,
+            "environment_seed": 9423,
+            "scene_cluster_id": "robotwin_pair_05"
+          },
+          {
+            "effect_m": 0.11090310756117105,
+            "environment_seed": 9424,
+            "scene_cluster_id": "robotwin_pair_06"
+          },
+          {
+            "effect_m": -0.02578625321984873,
+            "environment_seed": 9425,
+            "scene_cluster_id": "robotwin_pair_07"
+          },
+          {
+            "effect_m": 0.14359369652811438,
+            "environment_seed": 9426,
+            "scene_cluster_id": "robotwin_pair_08"
+          }
+        ],
+        "threshold_m": 0.05
+      }
+    },
+    "outcome": "fail",
+    "recorded_before_h1_h3": true,
+    "role": "positive_control_hard_gate_evaluated_first",
+    "threshold_m": 0.05
+  },
+  "hypotheses": {
+    "H1": {
+      "estimands_reported": false,
+      "status": "withheld_due_h4_failure"
+    },
+    "H2": {
+      "estimands_reported": false,
+      "status": "withheld_due_h4_failure"
+    },
+    "H3": {
+      "estimands_reported": false,
+      "status": "withheld_due_h4_failure"
+    }
+  },
+  "infrastructure_invalid_attempts": 0,
+  "margins": {
+    "binary": {
+      "historical_control_effect": 0.0,
+      "margin": 0.0,
+      "mde80_n27": 0.3646343647921233,
+      "sigma_plan": 0.762000762001143,
+      "status": "zero_margin_tost_undefined_underpowered_no_equivalence_claim"
+    },
+    "level": 1.0,
+    "margin_rule": "0.20 * abs(LingBot-VA committed Phase-A control effect)",
+    "mde_rule": "(z_0.95 + z_0.80) * observed paired seed SD / sqrt(27), z sum 2.48647486",
+    "nondetection_is_not_equivalence": true,
+    "requested_depth_m": {
+      "historical_control_effect": 0.02582497987157059,
+      "margin": 0.0051649959743141185,
+      "mde80_n27": 0.47591192743266003,
+      "sigma_plan": 0.9945449095448322,
+      "status": "mde_exceeds_half_margin_underpowered_no_equivalence_claim"
+    }
+  },
+  "missing_measurement_policy": "NR remains null and is never converted to zero",
+  "model_id": "lingbot_va_robotwin",
+  "publication_claim_status": "h1_h3_withheld_due_h4_failure",
+  "queue_sha256": "bba7df41b6f5ee23f6460f910b1eac64f0bf20bf734b5546f2b4275b95b01786",
+  "registered_behavioral_cells": 108,
+  "registration_sha256": "6886dae4bfcc6dc5f2bcefa1e0788dccf0a9ef1cde89000998b0e63c30c745c9",
+  "scene_cluster_count": 7,
+  "scene_cluster_warning": "27 seed replicates are nested within seven scenes and are not independent environments.",
+  "schema_version": "vla-wam-shared-v3e005-results-v1",
+  "status": "complete_hash_closed",
+  "study_id": "vla_wam_language_steerability_v3",
+  "valid_behavioral_episodes": 108
+}

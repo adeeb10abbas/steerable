@@ -77,6 +77,17 @@ def _seed_manifests(raw_roots: Sequence[Path]) -> list[Path]:
     )
 
 
+def _shard_manifests(raw_roots: Sequence[Path]) -> list[Path]:
+    return sorted(
+        {
+            path.resolve()
+            for root in raw_roots
+            for path in [Path(root) / "shard_manifest.json"]
+            if path.is_file()
+        }
+    )
+
+
 def build(base: Path, output: Path, *, raw_roots: Sequence[Path] = ()) -> dict[str, Any]:
     base = Path(base).resolve()
     results_dir = base / "results"
@@ -163,12 +174,14 @@ def build(base: Path, output: Path, *, raw_roots: Sequence[Path] = ()) -> dict[s
         episode_hashes = marker.get("episode_sha256")
         if not isinstance(episode_hashes, dict):
             raise ValueError(f"whole-seed manifest lacks episode hashes: {path}")
-        compact_paths = marker.get("compact_episode_paths")
+        compact_episode_paths = marker.get("compact_episode_paths")
         expected_paths = {
             str(Path(episode_by_id[cell_id]["source_raw_episode"]["path"]).resolve())
             for cell_id in cell_ids
         }
-        if not isinstance(compact_paths, list) or {str(Path(value).resolve()) for value in compact_paths} != expected_paths:
+        if not isinstance(compact_episode_paths, list) or {
+            str(Path(value).resolve()) for value in compact_episode_paths
+        } != expected_paths:
             raise ValueError(f"whole-seed manifest episode-path binding differs: {path}")
         for cell_id in cell_ids:
             source = episode_by_id[cell_id]["source_raw_episode"]
@@ -202,6 +215,43 @@ def build(base: Path, output: Path, *, raw_roots: Sequence[Path] = ()) -> dict[s
         missing_seeds = sorted(set(range(9400, 9427)) - set(seeds))
         raise FileNotFoundError(f"complete E005 evidence requires 27 whole-seed manifests; missing {missing_seeds}")
 
+    shard_manifests: dict[int, dict[str, Any]] = {}
+    for path in _shard_manifests(raw_roots):
+        marker = load_json(path)
+        if marker.get("amendment_id") != "V3-E005":
+            continue
+        if marker.get("schema_version") != "vla-wam-shared-v3e005-lingbot-shard-manifest-v1":
+            raise ValueError(f"wrong E005 shard-manifest schema: {path}")
+        shard_index = int(marker["shard_index"])
+        if shard_index in shard_manifests:
+            raise ValueError(f"conflicting E005 shard manifests: {shard_index}")
+        expected_cells = 20 if shard_index < 3 else 16
+        if (
+            marker.get("status") != "requested_shard_complete"
+            or marker.get("shard_count") != 6
+            or marker.get("behavioral_episode_count") != expected_cells
+            or marker.get("matched_pair_count") != expected_cells // 2
+            or marker.get("infrastructure_failure_count") != 0
+            or marker.get("whole_seed_atomic") is not True
+        ):
+            raise ValueError(f"incomplete E005 shard manifest: {path}")
+        if marker.get("registration_sha256") != sha256(base / "registration.json"):
+            raise ValueError(f"shard-manifest registration binding differs: {path}")
+        if marker.get("queue_sha256") != sha256(base / "queue.jsonl"):
+            raise ValueError(f"shard-manifest queue binding differs: {path}")
+        marker_payload = dict(marker)
+        marker_digest = marker_payload.pop("manifest_sha256", None)
+        if marker_digest != canonical_sha256(marker_payload):
+            raise ValueError(f"shard-manifest self-hash differs: {path}")
+        shard_manifests[shard_index] = {"shard_index": shard_index, **record(path)}
+    if complete and shard_manifests and set(shard_manifests) != set(range(6)):
+        missing_shards = sorted(set(range(6)) - set(shard_manifests))
+        raise FileNotFoundError(f"complete E005 evidence requires six shard manifests; missing {missing_shards}")
+
+    setup_failure_paths = sorted((base / "setup_failures").glob("v3e005_gate_failure_ledger_v*.json"))
+    setup_failure_ledgers = [record(path) for path in setup_failure_paths if path.is_file()]
+    compact_paths.extend(setup_failure_paths)
+
     manifest = {
         "schema_version": "vla-wam-shared-v3e005-evidence-manifest-v1",
         "study_id": "vla_wam_language_steerability_v3",
@@ -233,6 +283,10 @@ def build(base: Path, output: Path, *, raw_roots: Sequence[Path] = ()) -> dict[s
         "whole_seed_manifests": [seeds[seed] for seed in sorted(seeds)],
         "whole_seed_pair_file_count": len(seed_pair_files),
         "whole_seed_pair_files": [seed_pair_files[path] for path in sorted(seed_pair_files)],
+        "shard_manifest_count": len(shard_manifests),
+        "shard_manifests": [shard_manifests[index] for index in sorted(shard_manifests)],
+        "zero_request_setup_failure_ledger_count": len(setup_failure_ledgers),
+        "zero_request_setup_failure_ledgers": setup_failure_ledgers,
         "raw_evidence_policy": (
             "Full RoboTwin videos, action traces, trajectories, runner results, and whole-seed manifests remain "
             "on the execution volume. Each compact behavioral row retains the immutable raw_episode path, byte "

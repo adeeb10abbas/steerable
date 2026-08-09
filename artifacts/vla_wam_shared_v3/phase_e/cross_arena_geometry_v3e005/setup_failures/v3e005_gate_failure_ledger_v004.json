@@ -1,0 +1,94 @@
+{
+  "schema_version": "vla-wam-shared-v3e005-zero-request-gate-and-smoke-failure-ledger-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-E005",
+  "status": "hash_closed_zero_request_setup_failures_outside_behavioral_denominator",
+  "created_at_utc": "2026-08-09T15:15:50Z",
+  "previous_ledger": {
+    "path": "/data/users/ali/vla_wam/raw/v3e005/gates/failure_ledger/v3e005_gate_failure_ledger_v003.json",
+    "sha256": "814f7fed329ff0d42f3e04b4fe138276233f31fca4a0bc24b3f9811e08d3ab8e",
+    "attempt_roots": 8,
+    "model_requests": 0,
+    "actions": 0,
+    "behavioral_episodes": 0,
+    "behavioral_denominator_cells": 0
+  },
+  "registration_sha256": "6886dae4bfcc6dc5f2bcefa1e0788dccf0a9ef1cde89000998b0e63c30c745c9",
+  "queue_sha256": "bba7df41b6f5ee23f6460f910b1eac64f0bf20bf734b5546f2b4275b95b01786",
+  "layout_candidate_sha256": "dc2da04e051c8646a2ed851c51c2f24f12d4434b57ee434916f42652f2765cd6",
+  "new_attempts": [
+    {
+      "study_commit": "6977e4c76534aba2008b0f635af881a8d2edcbed",
+      "attempt_id": "v3e005-lingbot-expansion-shard0-attempt03",
+      "attempt_root": "/data/users/ali/vla_wam/raw/v3e005/behavior/6977e4c/lingbot_va_robotwin/shard-000-of-006-attempt03",
+      "cell_id": "v3e005:lingbot:seed9400:scene03:s000:left",
+      "pod": "vla-wam-lingbot-expansion-ali",
+      "pod_uid": "7110c8d4-db9e-401a-ba85-58ba5e0dfcb3",
+      "gpu_uuid": "GPU-dc8db249-3b4c-1d36-0e9d-435a6d5f01c0",
+      "node": "dcwipphrtx0005.edc.nam.gm.com",
+      "model_blind_gate_sha256": "4da882906a5f5f86b08a76f9d0a904d28d5b3eecacf8ccb224b77c9fc2034084",
+      "compatibility_release_sha256": "eca00ef4d53bb689f05855e7a502f53935657b3c30765ffd80b43c8d74901d13",
+      "classification": "setup_invalid_pre_request_segmentation_schema_mismatch_target_visible_pixels",
+      "stage": "environment_setup_before_policy_request_or_action",
+      "exact_error": "V3-E005 fail-closed: robotwin_pair_03: malformed target segmentation diagnostic in head_camera",
+      "diagnosed_schema_field": "target_visible_pixels",
+      "frozen_curobo_checkout_verified": "/data/users/ali/vla_wam/external/curobo-lingbot-rtxpro-sm120-torch211/src",
+      "generic_curobo_checkout_absent": true,
+      "frozen_kinematics_sha256_prefix": "0c47816a",
+      "real_cuda_gate_sha256_prefix": "181b7151",
+      "infrastructure_record_sha256": "f2e925ee53d5cc86abc2de6f6e7cbc086dda4289e4267eb985ba169336aedb8d",
+      "infrastructure_stream_sha256": "f99bf249638f03dd4773aea6c765a3d46d384b28240db5061cd9b9a9ea2dd9c4",
+      "retained_file_count": 6,
+      "retained_total_bytes": 71282,
+      "retained_inventory_algorithm": "SHA-256 of sorted sha256sum records over every retained file",
+      "retained_inventory_sha256": "0798b2409fabbfa19b8c15d6491cdb69aa3c9ff7a9199ff7d9e5a9530aeace6d",
+      "retained_files": [
+        {
+          "path": "/data/users/ali/vla_wam/raw/v3e005/behavior/6977e4c/lingbot_va_robotwin/shard-000-of-006-attempt03/cells/v3e005__lingbot__seed9400__scene03__s000__left.invalid_attempts_lingbot_va_robotwin.json",
+          "bytes": 1486,
+          "sha256": "ea3e4961ba8f3fed895e60663de0e2fd56103280312b3a2d15c878512d50e4eb"
+        },
+        {
+          "path": "/data/users/ali/vla_wam/raw/v3e005/behavior/6977e4c/lingbot_va_robotwin/shard-000-of-006-attempt03/cells/v3e005__lingbot__seed9400__scene03__s000__left.stderr.log",
+          "bytes": 1714,
+          "sha256": "4a03a2bfb405cf8a84ba22a6100aa75398e09a6f4628ca40d9f22b73cbeda89d"
+        },
+        {
+          "path": "/data/users/ali/vla_wam/raw/v3e005/behavior/6977e4c/lingbot_va_robotwin/shard-000-of-006-attempt03/cells/v3e005__lingbot__seed9400__scene03__s000__left.stdout.log",
+          "bytes": 32882,
+          "sha256": "b6ca85bf4a21d45d67966454c8071f4ec816b4c866a8af132058e2218630a54c"
+        },
+        {
+          "path": "/data/users/ali/vla_wam/raw/v3e005/behavior/6977e4c/lingbot_va_robotwin/shard-000-of-006-attempt03/cells/v3e005__lingbot__seed9400__scene03__s000__left.thermal_events.jsonl",
+          "bytes": 32624,
+          "sha256": "a48070bd895d1ffdee6579bb4637f8407d89ff86b1fcf4cc4e0f7d5ba3e03719"
+        },
+        {
+          "path": "/data/users/ali/vla_wam/raw/v3e005/behavior/6977e4c/lingbot_va_robotwin/shard-000-of-006-attempt03/infrastructure_attempts.jsonl",
+          "bytes": 2493,
+          "sha256": "f99bf249638f03dd4773aea6c765a3d46d384b28240db5061cd9b9a9ea2dd9c4"
+        },
+        {
+          "path": "/data/users/ali/vla_wam/raw/v3e005/behavior/6977e4c/lingbot_va_robotwin/shard-000-of-006-attempt03/queue_progress.jsonl",
+          "bytes": 83,
+          "sha256": "7a9f00fb306b0531ebd7d7b76e869efa25024fa1e4b081a0bbaaf1e354bdb674"
+        }
+      ],
+      "model_request_count": 0,
+      "action_count": 0,
+      "behavioral_episode_count": 0,
+      "raw_episode_count": 0,
+      "whole_seed_manifest_count": 0,
+      "behavioral_denominator_included": false,
+      "zero_request_basis": "The fail-closed segmentation diagnostic occurred during environment setup after the exact frozen RTX CuRobo stack loaded and before the policy sampling loop, action execution, or behavioral scoring."
+    }
+  ],
+  "cumulative_summary": {
+    "attempt_roots": 9,
+    "model_requests": 0,
+    "actions": 0,
+    "behavioral_episodes": 0,
+    "behavioral_denominator_cells": 0
+  },
+  "scientific_disposition": "H4 and H1-H3 remain unevaluated; no valid behavioral cell exists. Attempt 03 verified the registered RTX runtime binding but failed closed on a pre-request head-camera segmentation diagnostic. No retry is eligible until the narrow runtime fix is separately bound and validated."
+}

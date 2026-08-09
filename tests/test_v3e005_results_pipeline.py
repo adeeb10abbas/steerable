@@ -221,6 +221,19 @@ def test_complete_h4_pass_enables_h1_h3_after_gate(tmp_path: Path):
     with pytest.raises(FileNotFoundError, match="27 whole-seed manifests"):
         build_manifest(base, base / "evidence_manifest.json")
     build_manifest(base, base / "evidence_manifest.json", raw_roots=[raw_root])
+    manifest = json.loads((base / "evidence_manifest.json").read_text())
+    compact_names = {Path(item["path"]).name for item in manifest["compact_files"]}
+    assert {
+        "registration.json",
+        "queue.jsonl",
+        "results.json",
+        "episodes.jsonl",
+        "pairs.jsonl",
+        "infrastructure_invalid.jsonl",
+        "DECISION_MEMO.md",
+        "V3E005_PUBLICATION_DECISION.md",
+        "figure_manifest.json",
+    } <= compact_names
     checked = validate(base, require_complete=True, verify_raw_sources=True)
     assert checked == {
         "status": "valid_complete",

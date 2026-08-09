@@ -1,0 +1,95 @@
+{
+  "schema_version": "vla-wam-shared-v3e005-zero-request-gate-and-smoke-failure-ledger-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-E005",
+  "status": "hash_closed_zero_request_setup_failures_outside_behavioral_denominator",
+  "created_at_utc": "2026-08-09T15:34:00Z",
+  "previous_ledger": {
+    "path": "/data/users/ali/vla_wam/raw/v3e005/gates/failure_ledger/v3e005_gate_failure_ledger_v005.json",
+    "sha256": "18f09c1e36e72bce3923b752a3f2cded6edce7de144e0ab52539851897143a90",
+    "attempt_roots": 11,
+    "model_requests": 0,
+    "actions": 0,
+    "behavioral_episodes": 0,
+    "behavioral_denominator_cells": 0
+  },
+  "registration_sha256": "6886dae4bfcc6dc5f2bcefa1e0788dccf0a9ef1cde89000998b0e63c30c745c9",
+  "queue_sha256": "bba7df41b6f5ee23f6460f910b1eac64f0bf20bf734b5546f2b4275b95b01786",
+  "layout_candidate_sha256": "dc2da04e051c8646a2ed851c51c2f24f12d4434b57ee434916f42652f2765cd6",
+  "new_attempts": [
+    {
+      "study_commit": "0575532d7a218fd9cb3d15c60b0583ce337a6fe2",
+      "attempt_id": "v3e005-lingbot-expansion-shard0-0575532-attempt04",
+      "attempt_root": "/data/users/ali/vla_wam/raw/v3e005/behavior/0575532/lingbot_va_robotwin/shard-000-of-006-attempt04",
+      "cell_id": "v3e005:lingbot:seed9400:scene03:s000:left",
+      "pod": "vla-wam-lingbot-expansion-ali",
+      "pod_uid": "7110c8d4-db9e-401a-ba85-58ba5e0dfcb3",
+      "gpu_uuid": "GPU-dc8db249-3b4c-1d36-0e9d-435a6d5f01c0",
+      "node": "dcwipphrtx0005.edc.nam.gm.com",
+      "model_blind_gate_sha256": "b659c91d6e9229153bd8ecd1134b3de8c0ce835f069cf417326270394a65756a",
+      "classification": "setup_invalid_pre_request_ffmpeg_missing_from_path",
+      "stage": "environment_setup_before_policy_request_or_action",
+      "exact_error": "V3-E005 fail-closed: [Errno 2] No such file or directory: 'ffmpeg'",
+      "infrastructure_record_sha256": "5a364bd0ebb2dfb333a7224202e66345b1c7fe05739746222bbc4a547c458a0a",
+      "infrastructure_stream_sha256": "f93af7c7378b97511b1f3696e4f7689e781d91edc5688fcf52b7711915231542",
+      "retained_file_count": 6,
+      "retained_total_bytes": 75458,
+      "retained_inventory_algorithm": "SHA-256 of sorted sha256sum records over every retained file",
+      "retained_inventory_sha256": "b9f46c4995bfd25584ea1f1bebe444e48d834934a05bfbecabeb8f781b5ade39",
+      "retained_files": [
+        {
+          "path": "/data/users/ali/vla_wam/raw/v3e005/behavior/0575532/lingbot_va_robotwin/shard-000-of-006-attempt04/cells/v3e005__lingbot__seed9400__scene03__s000__left.invalid_attempts_lingbot_va_robotwin.json",
+          "bytes": 1488,
+          "sha256": "93820b5725c2c95c9689118b8e0d43a5a909c244d73db81da58fc3e603b110ed"
+        },
+        {
+          "path": "/data/users/ali/vla_wam/raw/v3e005/behavior/0575532/lingbot_va_robotwin/shard-000-of-006-attempt04/cells/v3e005__lingbot__seed9400__scene03__s000__left.stderr.log",
+          "bytes": 2530,
+          "sha256": "10de9966cbc6e427cad221c292d300c4aeb1061fe4ed64061d5159bc6b6560c1"
+        },
+        {
+          "path": "/data/users/ali/vla_wam/raw/v3e005/behavior/0575532/lingbot_va_robotwin/shard-000-of-006-attempt04/cells/v3e005__lingbot__seed9400__scene03__s000__left.stdout.log",
+          "bytes": 34557,
+          "sha256": "7dfdc80f3cef17cd55a16707b1a658e94658ff70fb6db140c6370696f14559ad"
+        },
+        {
+          "path": "/data/users/ali/vla_wam/raw/v3e005/behavior/0575532/lingbot_va_robotwin/shard-000-of-006-attempt04/cells/v3e005__lingbot__seed9400__scene03__s000__left.thermal_events.jsonl",
+          "bytes": 34299,
+          "sha256": "8ca5080e9a78e27189573d96fd6ebdf832b571e28e3151277b6bea1ef0873a69"
+        },
+        {
+          "path": "/data/users/ali/vla_wam/raw/v3e005/behavior/0575532/lingbot_va_robotwin/shard-000-of-006-attempt04/infrastructure_attempts.jsonl",
+          "bytes": 2499,
+          "sha256": "f93af7c7378b97511b1f3696e4f7689e781d91edc5688fcf52b7711915231542"
+        },
+        {
+          "path": "/data/users/ali/vla_wam/raw/v3e005/behavior/0575532/lingbot_va_robotwin/shard-000-of-006-attempt04/queue_progress.jsonl",
+          "bytes": 85,
+          "sha256": "075a46432058289a0b0307e1bec4df2a6fda808b3cb1b8fd3eff934305f27848"
+        }
+      ],
+      "prospective_environment_only_fix": {
+        "path_prepend": "/data/users/ali/vla_wam/envs/lingbot-va-b200/bin",
+        "ffmpeg_path": "/data/users/ali/vla_wam/envs/lingbot-va-b200/bin/ffmpeg",
+        "ffmpeg_bytes": 124,
+        "ffmpeg_sha256": "e7e7fb30477f717e6f55f9180a70386c62677ef8a4d4d1a5d948f4098aa3eb99",
+        "ffmpeg_version": "7.0.2-static"
+      },
+      "model_request_count": 0,
+      "action_count": 0,
+      "behavioral_episode_count": 0,
+      "raw_episode_count": 0,
+      "whole_seed_manifest_count": 0,
+      "behavioral_denominator_included": false,
+      "zero_request_basis": "The worker failed while resolving the already-installed ffmpeg binary before any policy request, action, or behavioral scoring."
+    }
+  ],
+  "cumulative_summary": {
+    "attempt_roots": 12,
+    "model_requests": 0,
+    "actions": 0,
+    "behavioral_episodes": 0,
+    "behavioral_denominator_cells": 0
+  },
+  "scientific_disposition": "H4 and H1-H3 remain unevaluated. Attempt 04 is an environment-PATH setup failure outside every denominator. A fresh attempt05 may prepend the exact frozen environment bin only after the ffmpeg hash/version preflight passes."
+}

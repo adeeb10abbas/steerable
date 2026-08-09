@@ -233,6 +233,10 @@ def validate(base: Path, *, require_complete: bool, verify_raw_sources: bool) ->
     if complete:
         require(len(seed_records) == 27 and {item.get("seed") for item in seed_records} == set(range(9400, 9427)), "complete whole-seed coverage differs")
     for item in seed_records:
+        require(isinstance(item.get("sha256"), str) and len(item["sha256"]) == 64, "whole-seed digest missing")
+        require(isinstance(item.get("bytes"), int) and item["bytes"] > 0, "whole-seed bytes missing")
+        if not verify_raw_sources:
+            continue
         path = resolve(item["path"], base=base)
         require(path.is_file(), f"whole-seed manifest missing: {path}")
         require(path.stat().st_size == item["bytes"] and sha256(path) == item["sha256"], f"whole-seed manifest changed: {path}")
@@ -249,6 +253,10 @@ def validate(base: Path, *, require_complete: bool, verify_raw_sources: bool) ->
     if complete:
         require(len(pair_file_records) == 54, "complete whole-seed pair-file coverage differs")
     for item in pair_file_records:
+        require(isinstance(item.get("sha256"), str) and len(item["sha256"]) == 64, "whole-seed pair digest missing")
+        require(isinstance(item.get("bytes"), int) and item["bytes"] > 0, "whole-seed pair bytes missing")
+        if not verify_raw_sources:
+            continue
         path = resolve(item["path"], base=base)
         require(path.is_file(), f"whole-seed pair file missing: {path}")
         require(path.stat().st_size == item["bytes"] and sha256(path) == item["sha256"], f"whole-seed pair file changed: {path}")
@@ -256,6 +264,44 @@ def validate(base: Path, *, require_complete: bool, verify_raw_sources: bool) ->
         require(pair.get("schema_version") == "vla-wam-shared-v3e005-lingbot-robotwin-pair-v1", "whole-seed pair schema differs")
         pair_sha = pair.pop("pair_sha256", None)
         require(pair_sha == canonical_sha256(pair), "whole-seed pair self-hash differs")
+    shard_records = manifest.get("shard_manifests", [])
+    require(manifest.get("shard_manifest_count") == len(shard_records), "shard-manifest count differs")
+    if complete and shard_records:
+        require(len(shard_records) == 6, "complete shard-manifest coverage differs")
+        require({item.get("shard_index") for item in shard_records} == set(range(6)), "shard indexes differ")
+    for item in shard_records:
+        require(isinstance(item.get("sha256"), str) and len(item["sha256"]) == 64, "shard-manifest digest missing")
+        require(isinstance(item.get("bytes"), int) and item["bytes"] > 0, "shard-manifest bytes missing")
+        if not verify_raw_sources:
+            continue
+        path = resolve(item["path"], base=base)
+        require(path.is_file(), f"shard manifest missing: {path}")
+        require(path.stat().st_size == item["bytes"] and sha256(path) == item["sha256"], f"shard manifest changed: {path}")
+        shard = load_json(path)
+        require(shard.get("schema_version") == "vla-wam-shared-v3e005-lingbot-shard-manifest-v1", "shard schema differs")
+        require(shard.get("status") == "requested_shard_complete", "shard status differs")
+        require(shard.get("infrastructure_failure_count") == 0, "accepted shard has infrastructure failures")
+        shard_sha = shard.pop("manifest_sha256", None)
+        require(shard_sha == canonical_sha256(shard), "shard self-hash differs")
+    failure_ledgers = manifest.get("zero_request_setup_failure_ledgers", [])
+    require(
+        manifest.get("zero_request_setup_failure_ledger_count") == len(failure_ledgers),
+        "zero-request setup-failure ledger count differs",
+    )
+    for item in failure_ledgers:
+        path = resolve(item["path"], base=base)
+        require(path.is_file(), f"setup-failure ledger missing: {path}")
+        require(path.stat().st_size == item["bytes"] and sha256(path) == item["sha256"], f"setup-failure ledger changed: {path}")
+        ledger = load_json(path)
+        require(ledger.get("amendment_id") == "V3-E005", "setup-failure ledger amendment differs")
+        require(
+            ledger.get("status") == "hash_closed_zero_request_setup_failures_outside_behavioral_denominator",
+            "setup-failure ledger status differs",
+        )
+        summary = ledger.get("cumulative_summary", ledger.get("summary", {}))
+        require(summary.get("model_requests", 0) == 0, "setup-failure ledger contains model requests")
+        require(summary.get("actions", 0) == 0, "setup-failure ledger contains actions")
+        require(summary.get("behavioral_episodes", 0) == 0, "setup-failure ledger contains behavioral episodes")
     for item in manifest.get("compact_files", []) + manifest.get("implementation_files", []):
         path = resolve(item["path"], base=base)
         require(path.is_file(), f"manifested file missing: {path}")

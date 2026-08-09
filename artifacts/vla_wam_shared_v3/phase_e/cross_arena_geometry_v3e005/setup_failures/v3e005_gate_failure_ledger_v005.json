@@ -1,0 +1,93 @@
+{
+  "schema_version": "vla-wam-shared-v3e005-zero-request-gate-and-smoke-failure-ledger-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-E005",
+  "status": "hash_closed_zero_request_setup_failures_outside_behavioral_denominator",
+  "created_at_utc": "2026-08-09T15:23:04Z",
+  "previous_ledger": {
+    "path": "/data/users/ali/vla_wam/raw/v3e005/gates/failure_ledger/v3e005_gate_failure_ledger_v004.json",
+    "sha256": "4e5531fee9c4f69553339c934335ff05153dd1ca6e097016f40e3e6be99ffff8",
+    "attempt_roots": 9,
+    "model_requests": 0,
+    "actions": 0,
+    "behavioral_episodes": 0,
+    "behavioral_denominator_cells": 0
+  },
+  "registration_sha256": "6886dae4bfcc6dc5f2bcefa1e0788dccf0a9ef1cde89000998b0e63c30c745c9",
+  "queue_sha256": "bba7df41b6f5ee23f6460f910b1eac64f0bf20bf734b5546f2b4275b95b01786",
+  "layout_candidate_sha256": "dc2da04e051c8646a2ed851c51c2f24f12d4434b57ee434916f42652f2765cd6",
+  "new_attempts": [
+    {
+      "study_commit": "0575532d7a218fd9cb3d15c60b0583ce337a6fe2",
+      "attempt_id": "v3e005-raytrace-gate-attempt05",
+      "attempt_root": "/data/users/ali/vla_wam/raw/v3e005/gates/0575532/raytrace-rtxpro6000-ali-attempt05",
+      "pod": "raytrace-rtxpro6000-ali",
+      "pod_uid": "d5b0405a-a9b1-4baa-a802-d5171e03c228",
+      "gpu_uuid": "GPU-f28bd513-a38a-b768-7589-d2959f814ae8",
+      "node": "dcwipphrtx0005.edc.nam.gm.com",
+      "classification": "setup_invalid_pre_reset_unwritable_warp_cache",
+      "stage": "model_blind_gate_environment_setup_before_first_reset",
+      "exact_error": "PermissionError: [Errno 13] Permission denied: '/home/ali-lerobot'",
+      "attempt_root_file_count": 0,
+      "attempt_root_total_bytes": 0,
+      "attempt_root_inventory_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_external_files": [
+        {
+          "path": "/data/users/ali/vla_wam/raw/v3e005/orchestration/raytrace-rtxpro6000-ali-gate-0575532-attempt05.log",
+          "bytes": 3151,
+          "sha256": "89fd8daf99852d1f951dd2933cdc2de0045fc8d70ff9f2bbaeb20e61a594c335"
+        }
+      ],
+      "model_request_count": 0,
+      "action_count": 0,
+      "behavioral_episode_count": 0,
+      "raw_episode_count": 0,
+      "whole_seed_manifest_count": 0,
+      "behavioral_denominator_included": false,
+      "zero_request_basis": "Warp cache initialization failed before any model-blind reset, policy request, action, or behavioral episode."
+    },
+    {
+      "study_commit": "0575532d7a218fd9cb3d15c60b0583ce337a6fe2",
+      "attempt_id": "v3e005-raytrace-gate-attempt06",
+      "attempt_root": "/data/users/ali/vla_wam/raw/v3e005/gates/0575532/raytrace-rtxpro6000-ali-attempt06",
+      "pod": "raytrace-rtxpro6000-ali",
+      "pod_uid": "d5b0405a-a9b1-4baa-a802-d5171e03c228",
+      "gpu_uuid": "GPU-f28bd513-a38a-b768-7589-d2959f814ae8",
+      "node": "dcwipphrtx0005.edc.nam.gm.com",
+      "classification": "setup_invalid_cli_output_directory_precreated",
+      "stage": "model_blind_gate_cli_contract_before_simulator_start",
+      "exact_error": "E005ContractError: refusing to overwrite /data/users/ali/vla_wam/raw/v3e005/gates/0575532/raytrace-rtxpro6000-ali-attempt06",
+      "attempt_root_file_count": 0,
+      "attempt_root_total_bytes": 0,
+      "attempt_root_inventory_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retained_external_files": [
+        {
+          "path": "/data/users/ali/vla_wam/raw/v3e005/orchestration/raytrace-rtxpro6000-ali-gate-0575532-attempt06.log",
+          "bytes": 910,
+          "sha256": "2beb8b8ada772502aeed282b874e7ee896d08cab436c80f82c3e898da1fd729f"
+        },
+        {
+          "path": "/data/users/ali/vla_wam/raw/v3e005/gates/0575532/raytrace-rtxpro6000-ali-attempt06-warp-cache-preflight.json",
+          "bytes": 520,
+          "sha256": "40b6c7755bb2f98b75eac47b4593ee0f053457899ee8175b070a58a48b139a4f",
+          "disposition": "successful writable-cache setup preflight; not a behavioral or model request"
+        }
+      ],
+      "model_request_count": 0,
+      "action_count": 0,
+      "behavioral_episode_count": 0,
+      "raw_episode_count": 0,
+      "whole_seed_manifest_count": 0,
+      "behavioral_denominator_included": false,
+      "zero_request_basis": "The no-overwrite CLI contract rejected the precreated output directory before simulator initialization, model request, action, or behavioral episode."
+    }
+  ],
+  "cumulative_summary": {
+    "attempt_roots": 11,
+    "model_requests": 0,
+    "actions": 0,
+    "behavioral_episodes": 0,
+    "behavioral_denominator_cells": 0
+  },
+  "scientific_disposition": "H4 and H1-H3 remain unevaluated. These two gate setup failures are retained outside every behavioral denominator. A fresh attempt07 with the immutable 0575532 checkout and writable task-specific cache is the only active gate candidate."
+}

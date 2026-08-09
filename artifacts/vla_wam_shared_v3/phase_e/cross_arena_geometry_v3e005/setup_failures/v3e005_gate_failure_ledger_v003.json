@@ -1,0 +1,93 @@
+{
+  "schema_version": "vla-wam-shared-v3e005-zero-request-gate-and-smoke-failure-ledger-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "amendment_id": "V3-E005",
+  "status": "hash_closed_zero_request_setup_failures_outside_behavioral_denominator",
+  "created_at_utc": "2026-08-09T15:15:00Z",
+  "previous_ledger": {
+    "path": "/data/users/ali/vla_wam/raw/v3e005/gates/failure_ledger/v3e005_gate_failure_ledger_v002.json",
+    "sha256": "fc9a709d96e8091d74272d94d53f82aceba1847bb8d1d0ba47652b51f1d10547",
+    "attempt_roots": 7,
+    "model_requests": 0,
+    "actions": 0,
+    "behavioral_episodes": 0,
+    "behavioral_denominator_cells": 0
+  },
+  "registration_sha256": "6886dae4bfcc6dc5f2bcefa1e0788dccf0a9ef1cde89000998b0e63c30c745c9",
+  "queue_sha256": "bba7df41b6f5ee23f6460f910b1eac64f0bf20bf734b5546f2b4275b95b01786",
+  "layout_candidate_sha256": "dc2da04e051c8646a2ed851c51c2f24f12d4434b57ee434916f42652f2765cd6",
+  "new_attempts": [
+    {
+      "study_commit": "6977e4c76534aba2008b0f635af881a8d2edcbed",
+      "attempt_id": "v3e005-lingbot-expansion-shard0-attempt02",
+      "attempt_root": "/data/users/ali/vla_wam/raw/v3e005/behavior/6977e4c/lingbot_va_robotwin/shard-000-of-006-attempt02",
+      "cell_id": "v3e005:lingbot:seed9400:scene03:s000:left",
+      "pod": "vla-wam-lingbot-expansion-ali",
+      "pod_uid": "7110c8d4-db9e-401a-ba85-58ba5e0dfcb3",
+      "gpu_uuid": "GPU-dc8db249-3b4c-1d36-0e9d-435a6d5f01c0",
+      "node": "dcwipphrtx0005.edc.nam.gm.com",
+      "model_blind_gate_sha256": "4da882906a5f5f86b08a76f9d0a904d28d5b3eecacf8ccb224b77c9fc2034084",
+      "compatibility_release_sha256": "eca00ef4d53bb689f05855e7a502f53935657b3c30765ffd80b43c8d74901d13",
+      "classification": "setup_invalid_pre_request_wrong_curobo_checkout_bound",
+      "stage": "environment_setup_before_policy_request_or_action",
+      "exact_error": "torch.AcceleratorError: CUDA error: no kernel image is available for execution on the device",
+      "observed_curobo_checkout": "/data/users/ali/vla_wam/external/curobo-0.7.8",
+      "required_frozen_curobo_checkout": "/data/users/ali/vla_wam/external/curobo-lingbot-rtxpro-sm120-torch211/src",
+      "required_frozen_curobo_commit": "d64c4b",
+      "required_frozen_kinematics_sha256_prefix": "0c47816a",
+      "required_real_cuda_gate_sha256_prefix": "181b7151",
+      "infrastructure_record_sha256": "d61eef058151a693333321ab83e15c2da2d9df91a8d55e5523ee2a6e1b1d58d7",
+      "retained_file_count": 6,
+      "retained_total_bytes": 69562,
+      "retained_inventory_algorithm": "SHA-256 of sorted sha256sum records over every retained file",
+      "retained_inventory_sha256": "4218f23f9f53775aa9d5965c2ed75cf10cb7ac0deb5a04b7f12b4152a28370c3",
+      "retained_files": [
+        {
+          "path": "/data/users/ali/vla_wam/raw/v3e005/behavior/6977e4c/lingbot_va_robotwin/shard-000-of-006-attempt02/cells/v3e005__lingbot__seed9400__scene03__s000__left.invalid_attempts_lingbot_va_robotwin.json",
+          "bytes": 1486,
+          "sha256": "6f21d7a42db89ceaf923daf83dc5b4be039b5c22e2b59d7ffc275c42d2a30f9c"
+        },
+        {
+          "path": "/data/users/ali/vla_wam/raw/v3e005/behavior/6977e4c/lingbot_va_robotwin/shard-000-of-006-attempt02/cells/v3e005__lingbot__seed9400__scene03__s000__left.stderr.log",
+          "bytes": 6555,
+          "sha256": "e5426855213c0ea8188ec9cc3984cf00e7908aad483eb3cbc57962a7caa5a9b3"
+        },
+        {
+          "path": "/data/users/ali/vla_wam/raw/v3e005/behavior/6977e4c/lingbot_va_robotwin/shard-000-of-006-attempt02/cells/v3e005__lingbot__seed9400__scene03__s000__left.stdout.log",
+          "bytes": 29500,
+          "sha256": "7b10bdd16796663381e8ae08074848a40c94178475ee249a50b74ed474a8371d"
+        },
+        {
+          "path": "/data/users/ali/vla_wam/raw/v3e005/behavior/6977e4c/lingbot_va_robotwin/shard-000-of-006-attempt02/cells/v3e005__lingbot__seed9400__scene03__s000__left.thermal_events.jsonl",
+          "bytes": 29445,
+          "sha256": "10b986b76b3b57676e23d767ae2ff1b4dec438d4bd0cedafcbca182d9e2c766a"
+        },
+        {
+          "path": "/data/users/ali/vla_wam/raw/v3e005/behavior/6977e4c/lingbot_va_robotwin/shard-000-of-006-attempt02/infrastructure_attempts.jsonl",
+          "bytes": 2493,
+          "sha256": "40d205464a40ee4c509823e6e5bb4fcf16b31d32afe7b11d32769bf98f237b8e"
+        },
+        {
+          "path": "/data/users/ali/vla_wam/raw/v3e005/behavior/6977e4c/lingbot_va_robotwin/shard-000-of-006-attempt02/queue_progress.jsonl",
+          "bytes": 83,
+          "sha256": "44a5e5fabdad2d10a45cbc415b8fae07a7c46a94882fdfb7f959756b9f6ca6a6"
+        }
+      ],
+      "model_request_count": 0,
+      "action_count": 0,
+      "behavioral_episode_count": 0,
+      "raw_episode_count": 0,
+      "whole_seed_manifest_count": 0,
+      "behavioral_denominator_included": false,
+      "zero_request_basis": "The traceback terminates in CuRobo kinematics during env.setup_demo, before the policy sampling loop, action execution, or behavioral scoring. The failure was caused by binding the generic curobo-0.7.8 checkout instead of the registered RTX sm120 environment-lock checkout; it is not evidence of an arena or frozen-runtime incompatibility."
+    }
+  ],
+  "cumulative_summary": {
+    "attempt_roots": 8,
+    "model_requests": 0,
+    "actions": 0,
+    "behavioral_episodes": 0,
+    "behavioral_denominator_cells": 0
+  },
+  "scientific_disposition": "H4 and H1-H3 remain unevaluated; no valid behavioral cell exists. The passed RTX model-blind geometry gates remain pre-inference gates only. A fresh RTX attempt must verify the exact frozen CuRobo checkout, registered renderer, and runtime identity before any behavioral request."
+}

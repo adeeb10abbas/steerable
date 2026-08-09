@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from collections import Counter
 import hashlib
 import json
 import math
@@ -91,6 +92,12 @@ def validate(base: Path, *, require_complete: bool, verify_raw_sources: bool) ->
         len(discovery)
         == results.get("discovery_only_behavioral_artifacts_excluded_from_denominators"),
         "discovery-only count differs",
+    )
+    expected_discovery_by_reason = Counter(str(row.get("reason")) for row in discovery)
+    require(
+        results.get("discovery_only_behavioral_artifacts_by_reason")
+        == {reason: expected_discovery_by_reason[reason] for reason in sorted(expected_discovery_by_reason)},
+        "discovery-only reason counts differ",
     )
     for row in discovery:
         require(

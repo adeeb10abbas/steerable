@@ -870,6 +870,7 @@ def compile_report(
             "pooled_success_rate": None,
             "pooling_status": "prohibited_across_models_and_arenas_for_inference",
         }
+    discovery_by_reason = Counter(str(row.get("reason")) for row in discovery_only)
     status = "complete_hash_closed" if coverage["complete"] else "partial_progress_no_publication_claims"
     return {
         "schema_version": "vla-wam-shared-v3e004-results-v1",
@@ -882,6 +883,9 @@ def compile_report(
         "infrastructure_invalid_attempts": len(invalid_attempts),
         "valid_duplicate_artifacts_excluded_from_denominators": len(duplicates),
         "discovery_only_behavioral_artifacts_excluded_from_denominators": len(discovery_only),
+        "discovery_only_behavioral_artifacts_by_reason": {
+            reason: discovery_by_reason[reason] for reason in sorted(discovery_by_reason)
+        },
         "coverage": coverage,
         "checkpoints": checkpoint_reports,
         "arenas": arenas,
@@ -918,7 +922,9 @@ def decision_memo(report: Mapping[str, Any]) -> str:
         "",
         f"Valid behavioral evidence: **{report['valid_behavioral_episodes']}/{report['registered_behavioral_cells']}** registered cells. "
         f"Infrastructure-invalid attempts: **{report['infrastructure_invalid_attempts']}**, excluded from behavioral denominators.",
-        f"Pre-R002 DROID s=0 artifacts retained as discovery-only: **{report['discovery_only_behavioral_artifacts_excluded_from_denominators']}**, excluded from behavioral denominators.",
+        f"Discovery-only behavioral artifacts: **{report['discovery_only_behavioral_artifacts_excluded_from_denominators']}**, excluded from behavioral denominators.",
+        f"- Pre-R002 DROID s=0 artifacts without prospective R002 attestation: **{report['discovery_only_behavioral_artifacts_by_reason'].get('pre_r002_s0_missing_prospective_attestation', 0)}**.",
+        f"- Pre-R001 DROID artifacts without fixed-observation pair identity: **{report['discovery_only_behavioral_artifacts_by_reason'].get('pre_r001_missing_request0_pair_identity', 0)}**.",
         "",
         "This experiment manipulates object-layout symmetry. It does not make the robot, reset posture, camera rig, wrist mounting, or embodiment bilaterally symmetric. DROID/RoboLab and RoboTwin remain separate and are never pooled.",
         "",

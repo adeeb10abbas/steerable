@@ -133,6 +133,7 @@ def test_partial_pipeline_withholds_claims_and_hash_closes_progress(tmp_path: Pa
     assert report["status"] == "partial_progress_no_publication_claims"
     assert report["valid_behavioral_episodes"] == 2
     assert report["publication_claim_status"] == "withheld_until_all_registered_cells_are_valid"
+    assert report["discovery_only_behavioral_artifacts_by_reason"] == {}
     assert all(item["claim_gate"]["publication_claims_enabled"] is False for item in report["checkpoints"].values())
     compact = [json.loads(line) for line in (base / "results/episodes.jsonl").read_text().splitlines()]
     assert all(row["pair_fields_status"] == "derived_after_both_hash_bound_directions_exist" for row in compact)

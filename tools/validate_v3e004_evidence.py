@@ -8,6 +8,7 @@ import hashlib
 import json
 import math
 from pathlib import Path
+import statistics
 from typing import Any
 
 
@@ -53,6 +54,113 @@ def resolve(path: str, *, base: Path) -> Path:
         return value
     repository = ROOT / value
     return repository if repository.exists() else base / value
+
+
+def canonical_bytes(value: Any) -> bytes:
+    return (
+        json.dumps(value, allow_nan=False, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+        + "\n"
+    ).encode("utf-8")
+
+
+def validate_geometry_summary(model: str, checkpoint: dict[str, Any], episodes: list[dict[str, Any]]) -> None:
+    model_rows = [row for row in episodes if row["model_id"] == model]
+    summary = checkpoint.get("geometry_quality")
+    require(isinstance(summary, dict), f"geometry summary missing: {model}")
+    require(summary.get("episodes") == len(model_rows), f"geometry episode count differs: {model}")
+    require(
+        summary.get("four_registered_layout_quality_checks")
+        == ["position_residual_m", "orientation_residual_rad", "midline_residual_m", "occlusion_check_by_camera"],
+        f"registered geometry checks differ: {model}",
+    )
+    expected_pose_counts = Counter(
+        hashlib.sha256(canonical_bytes(row["arm_reset_pose"])).hexdigest() for row in model_rows
+    )
+    identities = summary.get("arm_reset_pose_identities")
+    require(isinstance(identities, list), f"arm reset identities missing: {model}")
+    actual_pose_counts: dict[str, int] = {}
+    for identity in identities:
+        digest = identity.get("sha256")
+        require(
+            isinstance(digest, str)
+            and digest == hashlib.sha256(canonical_bytes(identity.get("pose"))).hexdigest(),
+            f"arm reset identity hash differs: {model}",
+        )
+        require(digest not in actual_pose_counts, f"duplicate arm reset identity: {model}/{digest}")
+        actual_pose_counts[digest] = identity.get("episodes")
+    require(actual_pose_counts == dict(expected_pose_counts), f"arm reset identity counts differ: {model}")
+    require(summary.get("arm_reset_pose_identity_count") == len(expected_pose_counts), f"arm reset identity total differs: {model}")
+
+    by_level: dict[float, list[dict[str, Any]]] = {}
+    for row in model_rows:
+        by_level.setdefault(float(row["symmetry_level_s"]), []).append(row)
+    levels = summary.get("levels")
+    require(isinstance(levels, dict) and set(levels) == {f"{level:.2f}" for level in by_level}, f"geometry levels differ: {model}")
+    for level, rows in by_level.items():
+        item = levels[f"{level:.2f}"]
+        require(item.get("episodes") == len(rows), f"geometry level count differs: {model}/{level}")
+        fields = {
+            "realised_asymmetry_A": "asymmetry_metric_A",
+            "position_residual_m": "position_residual",
+            "orientation_residual_rad": "orientation_residual",
+            "midline_residual_m": "midline_residual",
+        }
+        for output_name, episode_name in fields.items():
+            values = [float(row[episode_name]) for row in rows]
+            observed = item.get(output_name, {})
+            require(observed.get("count") == len(values), f"geometry statistic count differs: {model}/{level}/{output_name}")
+            require(math.isclose(observed.get("minimum"), min(values), abs_tol=1e-15), f"geometry minimum differs: {model}/{level}/{output_name}")
+            require(math.isclose(observed.get("maximum"), max(values), abs_tol=1e-15), f"geometry maximum differs: {model}/{level}/{output_name}")
+            require(math.isclose(observed.get("mean"), statistics.fmean(values), rel_tol=1e-12, abs_tol=1e-15), f"geometry mean differs: {model}/{level}/{output_name}")
+            require(math.isclose(observed.get("median"), statistics.median(values), rel_tol=1e-12, abs_tol=1e-15), f"geometry median differs: {model}/{level}/{output_name}")
+        require(
+            math.isclose(
+                item.get("orientation_residual_deg_maximum"),
+                math.degrees(max(float(row["orientation_residual"]) for row in rows)),
+                rel_tol=1e-12,
+                abs_tol=1e-15,
+            ),
+            f"orientation degree maximum differs: {model}/{level}",
+        )
+        occluded = sum(
+            value is True
+            for row in rows
+            for value in row["occlusion_check"].values()
+        )
+        occlusion = item.get("occlusion_check", {})
+        expected_cameras = sorted({name for row in rows for name in row["occlusion_check"]})
+        require(occlusion.get("camera_names") == expected_cameras, f"occlusion camera inventory differs: {model}/{level}")
+        require(occlusion.get("camera_checks") == sum(len(row["occlusion_check"]) for row in rows), f"occlusion count differs: {model}/{level}")
+        require(occlusion.get("occluded_camera_checks") == occluded, f"occluded camera count differs: {model}/{level}")
+        require(
+            occlusion.get("episodes_with_any_occlusion")
+            == sum(any(row["occlusion_check"].values()) for row in rows),
+            f"occluded episode count differs: {model}/{level}",
+        )
+        require(occlusion.get("all_observed_checks_clear") is (occluded == 0), f"occlusion status differs: {model}/{level}")
+        expected_level_pose_hashes = sorted(
+            {hashlib.sha256(canonical_bytes(row["arm_reset_pose"])).hexdigest() for row in rows}
+        )
+        require(item.get("arm_reset_pose_sha256") == expected_level_pose_hashes, f"level reset identities differ: {model}/{level}")
+    s1_rows = by_level.get(1.0, [])
+    s1_gate = summary.get("s1_gate", {})
+    if not s1_rows:
+        require(
+            s1_gate.get("status") == "unavailable_no_valid_s1_episodes"
+            and s1_gate.get("all_observed_s1_rows_pass") is None,
+            f"empty s1 geometry gate is misleading: {model}",
+        )
+    else:
+        passed = all(
+            row["position_residual"] < 0.001
+            and row["orientation_residual"] < math.radians(0.5)
+            and row["midline_residual"] < 0.001
+            and not any(row["occlusion_check"].values())
+            for row in s1_rows
+        )
+        require(s1_gate.get("episodes") == len(s1_rows), f"s1 geometry count differs: {model}")
+        require(s1_gate.get("all_observed_s1_rows_pass") is passed, f"s1 geometry gate differs: {model}")
+        require(passed, f"s1 geometry gate failed closed: {model}")
 
 
 def validate(base: Path, *, require_complete: bool, verify_raw_sources: bool) -> dict[str, Any]:
@@ -165,6 +273,7 @@ def validate(base: Path, *, require_complete: bool, verify_raw_sources: bool) ->
                 "DROID pair uses an obsolete native-reset identity definition",
             )
     for model, checkpoint in results["checkpoints"].items():
+        validate_geometry_summary(model, checkpoint, episodes)
         gate = checkpoint["claim_gate"]
         if not complete:
             require(gate.get("publication_claims_enabled") is False, f"partial checkpoint claim enabled: {model}")

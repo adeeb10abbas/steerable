@@ -12,6 +12,7 @@ from tools.compile_v3e004_results import (
     CompileError,
     _claim_gate,
     _failure_signature,
+    _geometry_summary,
     compile_outputs,
     load_infrastructure_invalid,
     load_valid_episodes,
@@ -362,6 +363,61 @@ def test_failure_signature_keeps_zero_failure_level_unavailable():
     assert result["levels"]["1.00"]["wrong_side_share_among_failures"] is None
     assert result["levels"]["1.00"]["availability"] == "unavailable_no_failures"
     assert result["trend"]["status"].startswith("unavailable")
+
+
+def test_geometry_summary_reports_every_registered_check_and_reset_pose():
+    rows = [
+        {
+            "cell_id": "left",
+            "symmetry_level_s": 1.0,
+            "asymmetry_metric_A": 0.01,
+            "position_residual": 0.0004,
+            "orientation_residual": np.deg2rad(0.2),
+            "midline_residual": 0.0003,
+            "occlusion_check": {"base_camera": False, "left_wrist_camera": False},
+            "arm_reset_pose": {"arm_joint_positions_rad": [0.0] * 7, "gripper_position": [0.0]},
+        },
+        {
+            "cell_id": "right",
+            "symmetry_level_s": 1.0,
+            "asymmetry_metric_A": 0.02,
+            "position_residual": 0.0005,
+            "orientation_residual": np.deg2rad(0.3),
+            "midline_residual": 0.0002,
+            "occlusion_check": {"base_camera": False, "left_wrist_camera": False},
+            "arm_reset_pose": {"arm_joint_positions_rad": [0.0] * 7, "gripper_position": [0.0]},
+        },
+    ]
+    result = _geometry_summary(rows)
+    assert result["four_registered_layout_quality_checks"] == [
+        "position_residual_m",
+        "orientation_residual_rad",
+        "midline_residual_m",
+        "occlusion_check_by_camera",
+    ]
+    assert result["levels"]["1.00"]["position_residual_m"]["maximum"] == pytest.approx(0.0005)
+    assert result["levels"]["1.00"]["orientation_residual_deg_maximum"] == pytest.approx(0.3)
+    assert result["levels"]["1.00"]["occlusion_check"]["camera_checks"] == 4
+    assert result["levels"]["1.00"]["occlusion_check"]["occluded_camera_checks"] == 0
+    assert result["s1_gate"]["all_observed_s1_rows_pass"] is True
+    assert result["arm_reset_pose_identity_count"] == 1
+    assert result["arm_reset_pose_identities"][0]["episodes"] == 2
+
+
+def test_geometry_summary_does_not_vacuously_pass_without_s1_rows():
+    row = {
+        "cell_id": "left",
+        "symmetry_level_s": 0.0,
+        "asymmetry_metric_A": 3.0,
+        "position_residual": 0.1,
+        "orientation_residual": 0.2,
+        "midline_residual": 0.1,
+        "occlusion_check": {"base_camera": False},
+        "arm_reset_pose": {"status": "available", "robots": {}},
+    }
+    result = _geometry_summary([row])
+    assert result["s1_gate"]["status"] == "unavailable_no_valid_s1_episodes"
+    assert result["s1_gate"]["all_observed_s1_rows_pass"] is None
 
 
 def test_failure_figure_separates_directions_and_names_exact_prompts(tmp_path: Path):

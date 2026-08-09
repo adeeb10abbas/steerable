@@ -689,6 +689,130 @@ def _descriptive_progress(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     }
 
 
+def _numeric_summary(values: Sequence[float]) -> dict[str, Any]:
+    """Return finite, JSON-safe descriptive statistics without inferential meaning."""
+
+    require(bool(values), "cannot summarize an empty numeric sequence")
+    array = np.asarray(values, dtype=np.float64)
+    require(array.ndim == 1 and np.isfinite(array).all(), "geometry summary contains a non-finite value")
+    return {
+        "count": int(array.size),
+        "minimum": float(np.min(array)),
+        "mean": float(np.mean(array)),
+        "median": float(np.median(array)),
+        "maximum": float(np.max(array)),
+    }
+
+
+def _geometry_summary(rows: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    """Summarize every registered layout-quality field and reset-pose identity.
+
+    These are quality-control measurements, not behavioral estimands.  The
+    complete per-scene values remain in episodes.jsonl; this summary makes the
+    preregistered residual, visibility, and embodiment boundary auditable from
+    results.json and the decision memo.
+    """
+
+    by_level: defaultdict[float, list[Mapping[str, Any]]] = defaultdict(list)
+    reset_poses: dict[str, dict[str, Any]] = {}
+    reset_counts: Counter[str] = Counter()
+    for row in rows:
+        by_level[float(row["symmetry_level_s"])].append(row)
+        pose = row["arm_reset_pose"]
+        pose_sha256 = hashlib.sha256(canonical_bytes(pose)).hexdigest()
+        reset_poses.setdefault(pose_sha256, dict(pose))
+        reset_counts[pose_sha256] += 1
+
+    level_summaries: dict[str, Any] = {}
+    for level, items in sorted(by_level.items()):
+        camera_names = sorted({name for row in items for name in row["occlusion_check"]})
+        occluded_checks = [
+            {"cell_id": row["cell_id"], "camera": camera}
+            for row in items
+            for camera, occluded in sorted(row["occlusion_check"].items())
+            if occluded is True
+        ]
+        level_pose_hashes = sorted(
+            {
+                hashlib.sha256(canonical_bytes(row["arm_reset_pose"])).hexdigest()
+                for row in items
+            }
+        )
+        level_summaries[f"{level:.2f}"] = {
+            "episodes": len(items),
+            "realised_asymmetry_A": _numeric_summary([float(row["asymmetry_metric_A"]) for row in items]),
+            "position_residual_m": _numeric_summary([float(row["position_residual"]) for row in items]),
+            "orientation_residual_rad": _numeric_summary([float(row["orientation_residual"]) for row in items]),
+            "orientation_residual_deg_maximum": math.degrees(
+                max(float(row["orientation_residual"]) for row in items)
+            ),
+            "midline_residual_m": _numeric_summary([float(row["midline_residual"]) for row in items]),
+            "occlusion_check": {
+                "camera_names": camera_names,
+                "camera_checks": sum(len(row["occlusion_check"]) for row in items),
+                "episodes_with_any_occlusion": sum(any(row["occlusion_check"].values()) for row in items),
+                "occluded_camera_checks": len(occluded_checks),
+                "occluded_checks": occluded_checks,
+                "all_observed_checks_clear": not occluded_checks,
+            },
+            "arm_reset_pose_sha256": level_pose_hashes,
+        }
+
+    s1 = level_summaries.get("1.00")
+    if s1 is None:
+        s1_gate: dict[str, Any] = {
+            "status": "unavailable_no_valid_s1_episodes",
+            "episodes": 0,
+            "all_observed_s1_rows_pass": None,
+        }
+    else:
+        passed = bool(
+            s1["position_residual_m"]["maximum"] < 0.001
+            and s1["orientation_residual_rad"]["maximum"] < math.radians(0.5)
+            and s1["midline_residual_m"]["maximum"] < 0.001
+            and s1["occlusion_check"]["all_observed_checks_clear"]
+        )
+        s1_gate = {
+            "status": "pass_for_all_observed_s1_episodes" if passed else "fail_closed",
+            "episodes": s1["episodes"],
+            "all_observed_s1_rows_pass": passed,
+        }
+
+    return {
+        "status": "available" if rows else "unavailable_no_valid_episodes",
+        "episodes": len(rows),
+        "four_registered_layout_quality_checks": [
+            "position_residual_m",
+            "orientation_residual_rad",
+            "midline_residual_m",
+            "occlusion_check_by_camera",
+        ],
+        "levels": level_summaries,
+        "s1_registered_tolerances": {
+            "position_residual_m_strict_upper": 0.001,
+            "orientation_residual_rad_strict_upper": math.radians(0.5),
+            "orientation_residual_deg_strict_upper": 0.5,
+            "midline_residual_m_strict_upper": 0.001,
+            "occlusion_check_required_false_all_cameras": True,
+        },
+        "s1_gate": s1_gate,
+        "arm_reset_pose_identity_count": len(reset_poses),
+        "arm_reset_pose_identities": [
+            {
+                "sha256": digest,
+                "episodes": reset_counts[digest],
+                "pose": reset_poses[digest],
+            }
+            for digest in sorted(reset_poses)
+        ],
+        "scope_caveat": (
+            "The object layout is measured relative to the robot midline; the robot joint configuration, "
+            "arm reset pose, camera rig, wrist mounting, and embodiment are not asserted bilaterally symmetric."
+        ),
+        "per_scene_values_retained_in": "results/episodes.jsonl",
+    }
+
+
 def _failure_signature(rows: Sequence[Mapping[str, Any]], *, resamples: int) -> dict[str, Any]:
     by_level: defaultdict[float, list[Mapping[str, Any]]] = defaultdict(list)
     for row in rows:
@@ -838,6 +962,7 @@ def compile_report(
             "complete_pairs": len(paired) // 2,
             "descriptive_progress": _descriptive_progress(model_rows),
             "core_s0_s1_complete": core_cells == expected_core,
+            "geometry_quality": _geometry_summary(model_rows),
             "failure_signature": _failure_signature(model_rows, resamples=resamples),
         }
         if core_cells == expected_core:
@@ -928,7 +1053,55 @@ def decision_memo(report: Mapping[str, Any]) -> str:
         "",
         "This experiment manipulates object-layout symmetry. It does not make the robot, reset posture, camera rig, wrist mounting, or embodiment bilaterally symmetric. DROID/RoboLab and RoboTwin remain separate and are never pooled.",
         "",
+        "## Geometry and visibility quality control",
+        "",
+        "The four registered scene checks are position residual, mirrored-orientation residual, midline residual, and the per-camera occlusion check. The complete per-episode values remain in `results/episodes.jsonl`; the maxima below summarize only currently valid s=1 episodes.",
+        "",
+        "| Checkpoint | Valid s=1 episodes | Max position residual, mm | Max orientation residual, deg | Max midline residual, mm | Occluded camera checks | Reset-pose identities |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | ---: |",
     ]
+    for item in report["checkpoints"].values():
+        geometry = item["geometry_quality"]
+        s1 = geometry["levels"].get("1.00")
+        if s1 is None:
+            values = (0, "NR", "NR", "NR", "NR")
+        else:
+            values = (
+                s1["episodes"],
+                f"{1000.0 * s1['position_residual_m']['maximum']:.3f}",
+                f"{s1['orientation_residual_deg_maximum']:.3f}",
+                f"{1000.0 * s1['midline_residual_m']['maximum']:.3f}",
+                str(s1["occlusion_check"]["occluded_camera_checks"]),
+            )
+        lines.append(
+            f"| {item['model_id']} | {values[0]} | {values[1]} | {values[2]} | {values[3]} | {values[4]} | "
+            f"{geometry['arm_reset_pose_identity_count']} |"
+        )
+    lines.extend(
+        [
+            "",
+            "### Recorded arm reset poses",
+            "",
+            "Each identity below hashes the complete recorded reset-pose object, including its measurement provenance. Multiple identities are retained rather than averaged away; if more than three occur, this memo shows the three most frequent and `results.json` retains the complete list.",
+            "",
+        ]
+    )
+    for item in report["checkpoints"].values():
+        identities = item["geometry_quality"]["arm_reset_pose_identities"]
+        if not identities:
+            lines.append(f"- **{item['model_id']}**: NR — no valid episode is available yet.")
+            continue
+        displayed = sorted(identities, key=lambda value: (-value["episodes"], value["sha256"]))[:3]
+        for identity in displayed:
+            compact_pose = json.dumps(identity["pose"], allow_nan=False, sort_keys=True, separators=(",", ":"))
+            lines.append(
+                f"- **{item['model_id']}**: `{identity['sha256']}` across {identity['episodes']} episodes; `{compact_pose}`"
+            )
+        if len(identities) > len(displayed):
+            lines.append(
+                f"- **{item['model_id']}**: {len(identities) - len(displayed)} additional reset-pose identities are retained in `results.json`."
+            )
+    lines.extend(["", "Passing these object-layout checks does not establish bilateral robot or embodiment symmetry.", ""])
     if not complete:
         lines.extend(
             [
@@ -966,6 +1139,52 @@ def decision_memo(report: Mapping[str, Any]) -> str:
                 f"| {item['model_id']} | {binary['mean']:+.3f} [{binary['bootstrap_mean95']['low']:+.3f}, {binary['bootstrap_mean95']['high']:+.3f}] | "
                 f"{depth['mean']:+.3f} [{depth['bootstrap_mean95']['low']:+.3f}, {depth['bootstrap_mean95']['high']:+.3f}] | "
                 f"{'pass' if positive else 'fail closed'} | {', '.join(claims) if claims else 'none'} |"
+            )
+        lines.extend(
+            [
+                "",
+                "## H3 — inventory-matched dose response",
+                "",
+                "A is the realised object-layout asymmetry (0 = symmetric). The registered primary slope excludes s=0 because the s=0→s>0 transition changes companion-object inventory.",
+                "",
+                "| Checkpoint | Binary-gap slope per A (95% CI) | Depth-gap slope per A, m (95% CI) | Per-seed binary slope signs (+/−/0) |",
+                "| --- | ---: | ---: | ---: |",
+            ]
+        )
+        for item in report["checkpoints"].values():
+            dose = item["analysis"]["dose_response_on_realised_A"]
+            if dose is None:
+                lines.append(f"| {item['model_id']} | NR — only two registered levels | NR | NR |")
+                continue
+            binary_dose, depth_dose = dose["binary_gap"], dose["depth_gap_m"]
+            signs = binary_dose["sign"]
+            lines.append(
+                f"| {item['model_id']} | {binary_dose['mean_slope']:+.3f} "
+                f"[{binary_dose['bootstrap_mean95']['low']:+.3f}, {binary_dose['bootstrap_mean95']['high']:+.3f}] | "
+                f"{depth_dose['mean_slope']:+.3f} "
+                f"[{depth_dose['bootstrap_mean95']['low']:+.3f}, {depth_dose['bootstrap_mean95']['high']:+.3f}] | "
+                f"{signs['positive']}/{signs['negative']}/{signs['zero']} |"
+            )
+        lines.extend(
+            [
+                "",
+                "## H5 — failure signature",
+                "",
+                "The preregistered diagnostic is the within-seed slope of wrong-side share among behavioral failures versus realised A. A negative slope means wrong-side failures become more prominent as the object layout approaches symmetry. A level with no failures remains unavailable and is never imputed as zero.",
+                "",
+                "| Checkpoint | Seed clusters | Mean slope | Median slope | Two-sided permutation p | Status |",
+                "| --- | ---: | ---: | ---: | ---: | --- |",
+            ]
+        )
+        for item in report["checkpoints"].values():
+            trend = item["failure_signature"]["trend"]
+            if trend["status"] != "available":
+                lines.append(f"| {item['model_id']} | NR | NR | NR | NR | {trend['status']} |")
+                continue
+            lines.append(
+                f"| {item['model_id']} | {trend['seed_cluster_count']} | {trend['mean_seed_slope']:+.3f} | "
+                f"{trend['median_seed_slope']:+.3f} | "
+                f"{trend['within_seed_level_label_permutation']['two_sided_p']:.4g} | available |"
             )
         lines.extend(
             [

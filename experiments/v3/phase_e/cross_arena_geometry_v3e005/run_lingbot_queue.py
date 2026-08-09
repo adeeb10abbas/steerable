@@ -48,6 +48,7 @@ from .runtime_contract import (
     validate_bound_artifact,
     validate_candidate_binding,
     validate_model_blind_gate_binding,
+    verify_git_identity,
     verify_runtime_identity,
 )
 
@@ -63,6 +64,48 @@ MODEL_BLIND_GATE_MODULE = (
 
 def utc_now() -> str:
     return dt.datetime.now(dt.timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def _frozen_curobo_source(runtime: Mapping[str, Any]) -> Path:
+    """Resolve and rehash the CuRobo checkout frozen by the runtime lock.
+
+    The LingBot repository also vendors a generic CuRobo checkout.  It is not
+    the released RTX PRO 6000 build and must never win import precedence.
+    """
+
+    environment = runtime.get("environment")
+    require(isinstance(environment, Mapping), "runtime environment identity is missing")
+    lock_record = environment.get("lock_artifact")
+    require(isinstance(lock_record, Mapping), "runtime environment lock record is missing")
+    lock_path = Path(str(lock_record.get("path", ""))).expanduser().resolve()
+    require(lock_path.is_file(), "runtime environment lock artifact is missing")
+    require(
+        sha256_file(lock_path) == lock_record.get("sha256"),
+        "runtime environment lock artifact hash drift",
+    )
+    lock = load_object(lock_path)
+    repository = lock.get("curobo_repository")
+    require(isinstance(repository, Mapping), "runtime lock lacks frozen CuRobo repository")
+    repository_path = Path(str(repository.get("path", ""))).expanduser().resolve()
+    commit = str(repository.get("commit", ""))
+    verify_git_identity(repository_path, commit)
+    source = repository_path / "src"
+    require((source / "curobo" / "__init__.py").is_file(), "frozen CuRobo source is missing")
+    extensions = repository.get("extensions")
+    require(isinstance(extensions, list) and extensions, "runtime lock lacks CuRobo extensions")
+    for record in extensions:
+        require(isinstance(record, Mapping), "invalid CuRobo extension record")
+        path = Path(str(record.get("path", ""))).expanduser().resolve()
+        require(path.is_file(), f"frozen CuRobo extension is missing: {path}")
+        require(path.stat().st_size == record.get("bytes"), f"CuRobo extension byte drift: {path}")
+        require(sha256_file(path) == record.get("sha256"), f"CuRobo extension hash drift: {path}")
+    device_gate = repository.get("device_gate")
+    require(
+        isinstance(device_gate, Mapping)
+        and device_gate.get("status") == "passed_real_cuda_kernel_execution",
+        "frozen CuRobo lacks its registered real-CUDA release gate",
+    )
+    return source
 
 
 def atomic_write(path: Path, payload: bytes) -> None:
@@ -225,6 +268,7 @@ def _scene_runtime_modules() -> tuple[Any, Any]:
         "collision_bounding_radius",
         "reference_occludes_target",
         "rgb_views",
+        "target_visibility_pixels",
     ):
         require(hasattr(geometry, name), f"model-blind gate lacks required runtime API {name}")
     return scene, geometry
@@ -343,6 +387,11 @@ def _runtime_task_with_snapshot(
                 ),
             }
             views = geometry.rgb_views(self.get_obs())
+            target_pixels = geometry.target_visibility_pixels(self, self.object)
+            require(
+                set(target_pixels) == set(scene.CAMERAS),
+                "runtime target segmentation camera inventory drift",
+            )
             centers = geometry.camera_centers(self)
             reference_radius = geometry.collision_bounding_radius(self.target_object)
             camera_checks = {
@@ -375,6 +424,7 @@ def _runtime_task_with_snapshot(
                         "shape": list(image.shape),
                         "dtype": str(image.dtype),
                         "pixel_range": int(image.max()) - int(image.min()),
+                        "target_visible_pixels": int(target_pixels[name]),
                     }
                     for name, image in views.items()
                 },
@@ -434,16 +484,22 @@ def run_worker(args: argparse.Namespace) -> int:
 
     external = Path(args.external_repository).expanduser().resolve()
     simulator = Path(args.simulator_repository).expanduser().resolve()
+    frozen_curobo = _frozen_curobo_source(runtime)
     runner_dir = external / "experiments/lingbot_language_gate"
     sys.path[:0] = [
         str(runner_dir),
+        str(frozen_curobo),
         str(external / "src"),
         str(simulator),
-        str(external / "third_party/curobo/src"),
         str(external),
     ]
     os.chdir(simulator)
     gate = importlib.import_module("closed_loop_language_gate")
+    curobo = importlib.import_module("curobo")
+    require(
+        Path(str(curobo.__file__)).resolve().is_relative_to(frozen_curobo),
+        "worker imported CuRobo outside the frozen runtime checkout",
+    )
     torch = importlib.import_module("torch")
     scene, geometry = _scene_runtime_modules()
     # The scene module performs semantic reconstruction as well as byte-hash

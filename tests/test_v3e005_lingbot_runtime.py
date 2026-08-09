@@ -27,6 +27,7 @@ from experiments.v3.phase_e.cross_arena_geometry_v3e005.runtime_contract import 
 from experiments.v3.phase_e.cross_arena_geometry_v3e005.run_lingbot_queue import (
     STUDY_ROOT_DEFAULT,
     _bound_gate_scene,
+    _frozen_curobo_source,
     _guard_command,
     _normalise_runtime_snapshot,
     _runtime_task_with_snapshot,
@@ -41,6 +42,54 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def test_e005_runner_default_resolves_repository_root() -> None:
     assert STUDY_ROOT_DEFAULT == ROOT
+
+
+def test_e005_worker_uses_hash_bound_runtime_curobo_checkout(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repository = tmp_path / "curobo-frozen"
+    source = repository / "src"
+    (source / "curobo").mkdir(parents=True)
+    (source / "curobo" / "__init__.py").write_text("\n")
+    extension = source / "curobo" / "curobolib" / "kinematics.so"
+    extension.parent.mkdir()
+    extension.write_bytes(b"registered-sm120-extension")
+    extension_sha = hashlib.sha256(extension.read_bytes()).hexdigest()
+    lock = tmp_path / "environment_lock.json"
+    lock.write_text(
+        json.dumps(
+            {
+                "curobo_repository": {
+                    "path": str(repository),
+                    "commit": "d" * 40,
+                    "device_gate": {"status": "passed_real_cuda_kernel_execution"},
+                    "extensions": [
+                        {
+                            "path": str(extension),
+                            "bytes": extension.stat().st_size,
+                            "sha256": extension_sha,
+                        }
+                    ],
+                }
+            }
+        )
+    )
+    monkeypatch.setattr(
+        "experiments.v3.phase_e.cross_arena_geometry_v3e005.run_lingbot_queue.verify_git_identity",
+        lambda *args, **kwargs: None,
+    )
+    runtime = {
+        "environment": {
+            "lock_artifact": {
+                "path": str(lock),
+                "sha256": hashlib.sha256(lock.read_bytes()).hexdigest(),
+            }
+        }
+    }
+    assert _frozen_curobo_source(runtime) == source
+    extension.write_bytes(b"drift")
+    with pytest.raises(E005ContractError, match="extension byte drift"):
+        _frozen_curobo_source(runtime)
 
 
 def test_e005_lingbot_shards_preserve_all_27_whole_four_cell_seed_blocks() -> None:
@@ -282,6 +331,9 @@ def test_e005_runtime_capture_keeps_snapshot_fields_at_one_top_level() -> None:
         rgb_views=lambda observation: {
             camera: np.zeros((2, 2, 3), dtype=np.uint8) for camera in cameras
         },
+        target_visibility_pixels=lambda env, actor: {
+            camera: 0 for camera in cameras
+        },
         camera_centers=lambda env: {camera: (0.0, 0.0, 1.0) for camera in cameras},
         collision_bounding_radius=lambda actor: 0.05,
         reference_occludes_target=lambda *args: False,
@@ -306,6 +358,9 @@ def test_e005_runtime_capture_keeps_snapshot_fields_at_one_top_level() -> None:
     assert snapshot is not None
     assert set(snapshot["realised_object_poses"]) == {"target", "reference"}
     assert snapshot["asset_contract"] == assets
+    assert all(
+        row["target_visible_pixels"] == 0 for row in snapshot["views"].values()
+    )
 
 
 def _native_state(dx: float, z: float, relation: str, open_: bool) -> dict:

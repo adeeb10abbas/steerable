@@ -1,0 +1,147 @@
+{
+  "amendment_id": "V3-E004",
+  "arena": "robotwin",
+  "claim_boundary": {
+    "raw_videos_are_actual_simulator_execution_not_imagination": true,
+    "robotwin_never_pooled_with_droid": true,
+    "selection_is_not_a_success_rate": true
+  },
+  "model_id": "fastwam_robotwin",
+  "schema_version": "vla-wam-shared-v3e004-fastwam-selected-video-manifest-v1",
+  "selection_reason": "Seed 9413 provides a matched four-cell layout-by-prompt comparison: both s=0 cells failed, while s=1 LEFT succeeded and s=1 RIGHT failed. Selection is illustrative and is not the statistical denominator.",
+  "status": "four_source_bound_faststart_selected_publication_clips",
+  "videos": [
+    {
+      "bytes": 110203,
+      "cell_id": "v3e004:fastwam:seed9413:s000:left",
+      "derivation": {
+        "command_contract": "ffmpeg 7.0.2 -map 0:v:0 -c copy -movflags +faststart",
+        "decoded_frames_reencoded": false,
+        "operation": "video-stream copy with MP4 moov atom moved before mdat"
+      },
+      "environment_seed": 9413,
+      "exact_prompt": "Put the small woodenblock to the left of the red playingcards box.",
+      "failure_category": "pick_failed",
+      "layout": "asymmetric_registered_s0_fixture",
+      "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/slices/fastwam_robotwin/media/seed9413_asymmetric_left.mp4",
+      "publication_container": {
+        "atom_offsets": {
+          "avc1": 24,
+          "ftyp": 4,
+          "mdat": 5641,
+          "moov": 36
+        },
+        "codec": "H.264/avc1",
+        "fast_start": true
+      },
+      "relation": "left",
+      "sha256": "f8a1a749ef7030105aba7a7d6af4bffabe82c80105e9b7393df22d165bbce8b5",
+      "source_video": {
+        "bytes": 110203,
+        "path": "/data/users/ali/vla_wam/raw/v3e004/fastwam_robotwin/behavioral_attempt01/v3e004_fastwam_s000/environment_seed_9413/sampling_seed_9413/s000__left/simulator.mp4",
+        "sha256": "f6f1f5c9b148481af4861cd2a1476c3859db5dec0685de4def657643592f533a"
+      },
+      "success": false,
+      "symmetry_level_s": 0.0
+    },
+    {
+      "bytes": 119158,
+      "cell_id": "v3e004:fastwam:seed9413:s000:right",
+      "derivation": {
+        "command_contract": "ffmpeg 7.0.2 -map 0:v:0 -c copy -movflags +faststart",
+        "decoded_frames_reencoded": false,
+        "operation": "video-stream copy with MP4 moov atom moved before mdat"
+      },
+      "environment_seed": 9413,
+      "exact_prompt": "Put the small woodenblock to the right of the red playingcards box.",
+      "failure_category": "pick_failed",
+      "layout": "asymmetric_registered_s0_fixture",
+      "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/slices/fastwam_robotwin/media/seed9413_asymmetric_right.mp4",
+      "publication_container": {
+        "atom_offsets": {
+          "avc1": 24,
+          "ftyp": 4,
+          "mdat": 5645,
+          "moov": 36
+        },
+        "codec": "H.264/avc1",
+        "fast_start": true
+      },
+      "relation": "right",
+      "sha256": "7ac0f3ca8f4ee5f8e43cc6c432a8c034dc7bb28f1f9b8ab29010f87c5fc0a41d",
+      "source_video": {
+        "bytes": 119158,
+        "path": "/data/users/ali/vla_wam/raw/v3e004/fastwam_robotwin/behavioral_attempt01/v3e004_fastwam_s000/environment_seed_9413/sampling_seed_9413/s000__right/simulator.mp4",
+        "sha256": "8201e44c0c7559b7d818d5eb8e0c35129f25d0f8f9d77219d02f0e0ba36bdad8"
+      },
+      "success": false,
+      "symmetry_level_s": 0.0
+    },
+    {
+      "bytes": 110565,
+      "cell_id": "v3e004:fastwam:seed9413:s100:left",
+      "derivation": {
+        "command_contract": "ffmpeg 7.0.2 -map 0:v:0 -c copy -movflags +faststart",
+        "decoded_frames_reencoded": false,
+        "operation": "video-stream copy with MP4 moov atom moved before mdat"
+      },
+      "environment_seed": 9413,
+      "exact_prompt": "Put the small woodenblock to the left of the red playingcards box.",
+      "failure_category": "correct",
+      "layout": "symmetric_object_layout_s1_not_symmetric_robot",
+      "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/slices/fastwam_robotwin/media/seed9413_symmetric_left.mp4",
+      "publication_container": {
+        "atom_offsets": {
+          "avc1": 24,
+          "ftyp": 4,
+          "mdat": 4909,
+          "moov": 36
+        },
+        "codec": "H.264/avc1",
+        "fast_start": true
+      },
+      "relation": "left",
+      "sha256": "91892adc6f8c728cd2138c53033ea14322f812a1a520c17681bb2b0e814ca5f5",
+      "source_video": {
+        "bytes": 110565,
+        "path": "/data/users/ali/vla_wam/raw/v3e004/fastwam_robotwin/behavioral_attempt01/v3e004_fastwam_s100/environment_seed_9413/sampling_seed_9413/s100__left/simulator.mp4",
+        "sha256": "02a699d01a8c4c3006b10e22199114a2b43e1b60c5d2a0ac64849d8a801c77b8"
+      },
+      "success": true,
+      "symmetry_level_s": 1.0
+    },
+    {
+      "bytes": 121814,
+      "cell_id": "v3e004:fastwam:seed9413:s100:right",
+      "derivation": {
+        "command_contract": "ffmpeg 7.0.2 -map 0:v:0 -c copy -movflags +faststart",
+        "decoded_frames_reencoded": false,
+        "operation": "video-stream copy with MP4 moov atom moved before mdat"
+      },
+      "environment_seed": 9413,
+      "exact_prompt": "Put the small woodenblock to the right of the red playingcards box.",
+      "failure_category": "pick_failed",
+      "layout": "symmetric_object_layout_s1_not_symmetric_robot",
+      "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/slices/fastwam_robotwin/media/seed9413_symmetric_right.mp4",
+      "publication_container": {
+        "atom_offsets": {
+          "avc1": 24,
+          "ftyp": 4,
+          "mdat": 5645,
+          "moov": 36
+        },
+        "codec": "H.264/avc1",
+        "fast_start": true
+      },
+      "relation": "right",
+      "sha256": "d70d4b6495ececeaf4cdfde95fba25156db05e4c3019513e7ecc2dca00afd91f",
+      "source_video": {
+        "bytes": 121814,
+        "path": "/data/users/ali/vla_wam/raw/v3e004/fastwam_robotwin/behavioral_attempt01/v3e004_fastwam_s100/environment_seed_9413/sampling_seed_9413/s100__right/simulator.mp4",
+        "sha256": "79933e3d80d5c79e21b574ac5a27d0031e4d1c1f9a54f8e32b8e054a527b8d52"
+      },
+      "success": false,
+      "symmetry_level_s": 1.0
+    }
+  ]
+}

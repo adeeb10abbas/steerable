@@ -163,7 +163,23 @@
     "tests/test_v3e002_evidence_contract.py",
     "tools/validate_v3e_publication_bundle.py",
     "experiments/v3/phase_e/reference_controller_runner.py",
-    "artifacts/vla_wam_shared_v3/phase_e/fixed_observation_prompt_noise_v3e001/evidence_manifest.json"
+    "artifacts/vla_wam_shared_v3/phase_e/fixed_observation_prompt_noise_v3e001/evidence_manifest.json",
+    "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/registration.json",
+    "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/queue.jsonl",
+    "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/layout/fastwam_robotwin_candidate.json",
+    "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/slices/fastwam_robotwin/raw_cohort_manifest.json",
+    "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/slices/fastwam_robotwin/results/results.json",
+    "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/slices/fastwam_robotwin/results/episodes.jsonl",
+    "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/slices/fastwam_robotwin/results/pairs.jsonl",
+    "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/slices/fastwam_robotwin/evidence_manifest.json",
+    "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/slices/fastwam_robotwin/figures/figure_manifest.json",
+    "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/slices/fastwam_robotwin/media/media_manifest.json",
+    "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/slices/fastwam_robotwin/FASTWAM_SLICE_MEMO.md",
+    "tools/build_v3e004_fastwam_cohort_manifest.py",
+    "tools/compile_v3e004_results.py",
+    "tools/render_v3e004_fastwam_slice.py",
+    "tools/build_v3e004_fastwam_slice_bundle.py",
+    "tools/validate_v3e004_fastwam_slice.py"
   ],
   "blocked_and_unreleased": {
     "phase_b_confounds": {
@@ -2026,7 +2042,70 @@
       "status": "complete_hash_closed_27_seed_108_episode_result_no_rerun"
     }
   },
-  "phase_e_status": "phase_e_e001_repaired_336_unique_valid_12_exact_repeats_112_unique_invalid_e002_provenance_bound_108_valid_model_blind_diagnostics_e003_bilateral_symmetric_layout_54_valid_residual_zero_directional_gap_retained",
+  "phase_e_v3e004": {
+    "amendment_id": "V3-E004",
+    "global_status": "active_other_registered_checkpoints_incomplete_no_cross_model_publication_claim",
+    "fastwam_robotwin_slice": {
+      "arena": "robotwin",
+      "behavioral_episode_count": 108,
+      "canonical_raw_manifest": {
+        "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/slices/fastwam_robotwin/raw_cohort_manifest.json",
+        "sha256": "6fe5cc00c07aa88ce6b1828f52a51e5d762a75d922927fa08e5b7b92bf63f515"
+      },
+      "claim_boundary": "Complete arena-separated stretch slice only. The depth contrast changed strongly with object-layout symmetry, but binary competence was near floor and the endpoint-redirection positive control failed. Equivalence, reliable language steering, DROID/RoboTwin pooling, and cross-model claims are not supported.",
+      "condition_successes": {
+        "s0:left": "0/27",
+        "s0:right": "0/27",
+        "s1:left": "1/27",
+        "s1:right": "2/27"
+      },
+      "evidence_manifest": {
+        "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/slices/fastwam_robotwin/evidence_manifest.json",
+        "sha256": "999534a7f382d5ff3aba15f0bbd71c517de7e6ab46f21d3f78f4557454f84e14"
+      },
+      "exact_prompts": {
+        "left": "Put the small woodenblock to the left of the red playingcards box.",
+        "right": "Put the small woodenblock to the right of the red playingcards box."
+      },
+      "failure_taxonomy": {
+        "correct": 3,
+        "pick_failed": 100,
+        "release_failed": 0,
+        "transport_failed": 1,
+        "wrong_side": 4
+      },
+      "matched_left_right_pair_count": 54,
+      "matched_seed_count": 27,
+      "model_id": "fastwam_robotwin",
+      "primary_descriptive_estimands": {
+        "depth_gap_R_minus_L_s0_m": 0.319608759548929,
+        "depth_gap_R_minus_L_s1_m": -0.062100115706824804,
+        "depth_interaction_s1_minus_s0_bootstrap_95_ci_m": [
+          -0.445409929596694,
+          -0.3202121405331171
+        ],
+        "depth_interaction_s1_minus_s0_exact_p": 1.4901161193847656e-08,
+        "depth_interaction_s1_minus_s0_mean_m": -0.3817088752557538,
+        "endpoint_redirection_LEFT_minus_RIGHT_s0_bootstrap_95_ci_m": [
+          -0.0289654800530385,
+          0.06183424293994895
+        ],
+        "endpoint_redirection_LEFT_minus_RIGHT_s0_mean_m": 0.012757385770479837,
+        "endpoint_redirection_LEFT_minus_RIGHT_s1_bootstrap_95_ci_m": [
+          -0.041978012662604695,
+          0.056438263994674366
+        ],
+        "endpoint_redirection_LEFT_minus_RIGHT_s1_mean_m": 0.006009714381805141
+      },
+      "rerun_policy": "do_not_rerun_any_valid_fastwam_v3e004_cell",
+      "selected_video_manifest": {
+        "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/slices/fastwam_robotwin/media/media_manifest.json",
+        "sha256": "9ed67a2a9e7cba30cc1ef2917662715526791404424195ec86c152618b168e19"
+      },
+      "status": "complete_hash_closed_27_seed_108_episode_arena_slice_descriptive_only"
+    }
+  },
+  "phase_e_status": "phase_e_e001_repaired_336_unique_valid_12_exact_repeats_112_unique_invalid_e002_provenance_bound_108_valid_model_blind_diagnostics_e003_bilateral_symmetric_layout_54_valid_e004_active_fastwam_robotwin_slice_108_valid_descriptive_only",
   "prospective_tier_b_results": {
     "v3b008_nano_start_side": {
       "amendment_id": "V3-B008",
@@ -2227,7 +2306,7 @@
     "raw_pvc_root": "/data/users/ali/vla_wam/raw/v3"
   },
   "study_id": "vla_wam_language_steerability_v3",
-  "updated_at_utc": "2026-08-07T23:26:56Z",
+  "updated_at_utc": "2026-08-09T01:14:52Z",
   "validation": {
     "checkpoint_provenance_tests": {
       "command": ".venv/bin/python -m unittest tests.test_v3_checkpoint_provenance",
@@ -2253,6 +2332,15 @@
       "command": ".venv/bin/python -m unittest tools/test_analyze_v3_failure_mode_split.py tools/test_analyze_v3_gap_vs_competence.py",
       "status": "passed",
       "test_count": 6
+    },
+    "v3e004_fastwam_slice": {
+      "commands": [
+        ".venv/bin/python -m pytest -q tests/test_v3e004_fastwam_robotwin.py tests/test_v3e004_results_pipeline.py",
+        ".venv/bin/python tools/validate_v3e004_fastwam_slice.py",
+        ".venv/bin/python tools/validate_v3e004.py"
+      ],
+      "focused_test_count": 17,
+      "status": "valid_complete_arena_slice_descriptive_only"
     },
     "v2": {
       "check_count": 994,

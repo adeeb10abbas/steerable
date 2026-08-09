@@ -1,6 +1,6 @@
 # VLA/WAM v3 expansion continuation
 
-Updated: 7 August 2026, after the complete Phase-A launch-authorized queue, the
+Updated: 8 August 2026, after the complete Phase-A launch-authorized queue, the
 separately authorized π0-FAST compatibility bridge, the cross-version
 measurement-coverage audit, and the completed 27-seed Nano V3-B001
 position-reflection ablation were compiled. The separately preregistered π0.5
@@ -12,7 +12,9 @@ Cosmos3 Nano Policy DROID: all three independently released cohorts are
 hash-closed at 160/160 valid episodes, for 480/480 total prospectively
 registered Phase-C cells. π0.5 V3-D001 is complete and hash-closed at 432/432
 valid stochastic episodes and 216/216 matched LEFT/RIGHT policy-sampling pairs.
-The
+V3-E004 remains active across the registered checkpoints; its arena-separated
+FastWAM RoboTwin stretch slice is complete and hash-closed at 108/108 valid
+episodes, with cross-model publication claims still withheld. The
 machine-readable source of truth is
 [`continuation_state.json`](../artifacts/vla_wam_shared_v3/continuation_state.json).
 
@@ -1023,9 +1025,14 @@ V3-A002 triplet under `artifacts/vla_wam_shared_v3/results/` for earlier
 completed-result analysis. Do not infer current experiment state from the older
 article, website, gallery, figures, or chat.
 
+Do not rerun any of the 108 hash-closed V3-E004 FastWAM RoboTwin cells. The
+seed-9400 smoke is part of that denominator; seeds 9401–9414 and 9415–9426 are
+immutable split-runner shards. Continue other E004 checkpoints only from their
+registered queue and live release gates.
+
 ## Phase E — fixed-state prompt/noise and model-blind controller controls
 
-Phase E is now closed on the registered branch. V3-E001 completed 336/336
+V3-E001 through V3-E003 are closed on the registered branch. V3-E001 completed 336/336
 valid fixed-observation model requests across π0.5, Cosmos3 Nano Policy DROID,
 and DreamZero (two layouts, 27 matched sampling seeds, and exact repeats),
 with zero action executions. V3-E002 completed 108/108 valid model-blind
@@ -1044,3 +1051,55 @@ gap/equivalence interpretation is not supported. This is evidence that object
 layout alone does not account for the complete directional gap, not evidence
 for a symmetric robot or a unique policy-data mechanism. See
 `artifacts/vla_wam_shared_v3/phase_e/bilateral_symmetry_null_control_v3e003/`.
+
+### V3-E004 FastWAM RoboTwin stretch slice — complete, descriptive only
+
+The registered V3-E004 symmetric-object-layout cohort remains in progress for
+the DROID checkpoints. Its FastWAM RoboTwin stretch slice is independently
+complete: **27 matched seeds × two object layouts × two exact static prompts =
+108/108 valid behavioral episodes**. The split-runner sources form an exact,
+nonoverlapping partition: seed 9400 is the accepted smoke; runner10 contributes
+9401–9414; runner09 contributes 9415–9426. The canonical closer verified every
+cell, reset fingerprint, source result, action trace, and simulator video. Two
+setup-invalid smoke attempts, two failed RTX acceleration gates, and the
+controlled post-seed-9414 handoff remain separately hash-bound outside the
+behavioral denominator.
+
+The frozen RoboTwin prompts are:
+
+> Put the small woodenblock to the left of the red playingcards box.
+
+> Put the small woodenblock to the right of the red playingcards box.
+
+Binary success remained near floor: s=0 was 0/27 LEFT and 0/27 RIGHT; s=1 was
+1/27 LEFT and 2/27 RIGHT. The continuous RIGHT-minus-LEFT requested-depth gap
+changed from **+32.0 cm** at s=0 (95% paired-bootstrap CI +27.9 to +36.4 cm) to
+**−6.2 cm** at s=1 (95% CI −10.7 to −1.7 cm). The paired s=1-minus-s=0
+interaction was **−38.2 cm** (95% CI −44.5 to −32.0 cm; exact layout-label
+permutation p=1.49e-08).
+
+That reversal does not pass the registered equalisation interpretation. The
+endpoint-redirection positive control was not detectably positive at either
+layout: LEFT-minus-RIGHT endpoint redirection was +1.3 cm (95% CI −2.9 to +6.2)
+at s=0 and +0.6 cm (95% CI −4.2 to +5.6) at s=1. Both FastWAM equivalence
+estimands are preregistered as underpowered stretch analyses. The safe result is
+therefore narrower: the object-layout intervention strongly changed FastWAM's
+continuous depth contrast in this RoboTwin slice, while near-zero competence
+and a failed prompt-redirection positive control prevent attributing that change
+to reliable language steering. No DROID/RoboTwin pooling or cross-model claim
+is made.
+
+| FastWAM V3-E004 compact evidence | SHA-256 |
+| --- | --- |
+| [`Raw cohort manifest`](../artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/slices/fastwam_robotwin/raw_cohort_manifest.json) | `6fe5cc00c07aa88ce6b1828f52a51e5d762a75d922927fa08e5b7b92bf63f515` |
+| [`Compiled results`](../artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/slices/fastwam_robotwin/results/results.json) | `a93a11efd2364fd94645a365b2d18bd9bc70a24d0213d4592106b4ba551b1b35` |
+| [`Compact episodes`](../artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/slices/fastwam_robotwin/results/episodes.jsonl) | `403b31d5fd07aea4ba8c3620d552f06143be7909c3b94c27bd30e380c9247da4` |
+| [`Matched pairs`](../artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/slices/fastwam_robotwin/results/pairs.jsonl) | `8d6a224f9a9950580cfb26200acaa252439c7b8a2bd02ea3ecc24376128d4d63` |
+| [`Evidence manifest`](../artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/slices/fastwam_robotwin/evidence_manifest.json) | `999534a7f382d5ff3aba15f0bbd71c517de7e6ab46f21d3f78f4557454f84e14` |
+| [`Figure manifest`](../artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/slices/fastwam_robotwin/figures/figure_manifest.json) | `b49a4b752b18f73962421fcda8044eb42f20060097656c1877092778bbfcf197` |
+| [`Selected-video manifest`](../artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/slices/fastwam_robotwin/media/media_manifest.json) | `9ed67a2a9e7cba30cc1ef2917662715526791404424195ec86c152618b168e19` |
+
+The compact [slice memo](../artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/slices/fastwam_robotwin/FASTWAM_SLICE_MEMO.md)
+places the exact prompts, estimates, claim boundary, figure, and four selected
+actual-rollout videos together. Full raw rollouts and unselected videos remain
+on the ali-owned PVC.

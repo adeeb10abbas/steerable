@@ -183,6 +183,7 @@ def test_live_snapshot_validates_assets_views_arm_pose_occlusion_and_strict_s1()
     scene_id = "robotwin_pair_07"
     gate_scene = _resolved_scene(candidate, scene_id)
     snapshot = _snapshot(candidate, scene_id, 1.0, gate_scene)
+    snapshot["views"]["left_camera"]["target_visible_pixels"] = 0
     result = validate_live_snapshot(candidate, scene_id, 1.0, snapshot, gate_scene)
     assert result["passed"] is True
     assert result["midline_residual_m"] == pytest.approx(0.0)

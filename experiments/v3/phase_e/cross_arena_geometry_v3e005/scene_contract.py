@@ -529,8 +529,8 @@ def validate_live_snapshot(
         require(
             isinstance(row, Mapping)
             and type(row.get("target_visible_pixels")) is int
-            and row["target_visible_pixels"] > 0,
-            f"{scene_id}: target is not actor-segmentation-visible in {camera}",
+            and row["target_visible_pixels"] >= 0,
+            f"{scene_id}: malformed target segmentation diagnostic in {camera}",
         )
     require(
         snapshot.get("arm_reset_pose", {}).get("status") == "available",

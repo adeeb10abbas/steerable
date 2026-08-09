@@ -99,7 +99,11 @@ def validate(base: Path, *, require_complete: bool, verify_raw_sources: bool) ->
             "discovery-only row is denominator-eligible",
         )
         require(
-            row.get("reason") == "pre_r002_s0_missing_prospective_attestation",
+            row.get("reason")
+            in {
+                "pre_r001_missing_request0_pair_identity",
+                "pre_r002_s0_missing_prospective_attestation",
+            },
             "unknown discovery-only exclusion reason",
         )
     require(results.get("coverage", {}).get("valid_cells") == len(episodes), "coverage count differs")

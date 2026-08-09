@@ -540,6 +540,23 @@ def load_valid_episodes(
                     )
                 except RuntimeContractError as exc:
                     raise CompileError(f"{cell_id}: invalid R002 s=0 attestation: {exc}") from exc
+            if arena == "droid_robolab":
+                required_r001 = (
+                    raw.get("request0_pair_identity_sha256"),
+                    raw.get("request0_observation_payload_sha256"),
+                    raw.get("request0_reset_contract_sha256"),
+                )
+                if not all(isinstance(value, str) and len(value) == 64 for value in required_r001):
+                    record.update(
+                        {
+                            "disposition": "discovery_only_excluded_from_behavioral_denominator",
+                            "reason": "pre_r001_missing_request0_pair_identity",
+                            "behavioral_denominator_included": False,
+                        }
+                    )
+                    discovery_only.append(dict(record))
+                    source_ledger.append(record)
+                    continue
             compact = normalize_episode(
                 raw,
                 queue_row=queue_row,
@@ -570,7 +587,25 @@ def load_valid_episodes(
 def load_infrastructure_invalid(roots: Sequence[Path], *, excluded: Sequence[Path] = ()) -> list[dict[str, Any]]:
     output: list[dict[str, Any]] = []
     for path in discover_paths(roots, INVALID_PATTERNS, excluded):
+        # Prior partial compiles live under ``results/`` and contain a derived
+        # infrastructure ledger. They are not raw attempts and must never be
+        # recursively re-ingested when a broad PVC root is compiled.
+        if path.parent.name == "results" and (path.parent / "results.json").is_file():
+            continue
         digest = sha256_file(path)
+        if path.stat().st_size == 0:
+            output.append(
+                {
+                    "schema_version": "vla-wam-shared-v3e004-infrastructure-invalid-reference-v1",
+                    "behavioral_denominator_included": False,
+                    "source": {"path": str(path), "line": None, "bytes": 0, "sha256": digest},
+                    "attempt": {
+                        "status": "empty_infrastructure_invalid_marker",
+                        "parse_status": "empty_file_no_machine_readable_payload",
+                    },
+                }
+            )
+            continue
         for line_number, row in enumerate(_rows_from_path(path), 1):
             output.append(
                 {

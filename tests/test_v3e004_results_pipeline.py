@@ -206,6 +206,42 @@ def test_pre_r002_droid_s0_is_retained_discovery_only(tmp_path: Path):
     assert discovery[0]["reason"] == "pre_r002_s0_missing_prospective_attestation"
 
 
+def test_pre_r001_droid_non_s0_is_retained_discovery_only(tmp_path: Path):
+    queue = next(
+        row
+        for row in queue_rows()
+        if row["model_id"] == "dreamzero_droid_action_cfg"
+        and row["environment_seed"] == 9400
+        and row["symmetry_level_s"] == 1.0
+        and row["relation"] == "left"
+    )
+    old_row = raw_row(queue, success=True)
+    for field in (
+        "request0_pair_identity_sha256",
+        "request0_observation_payload_sha256",
+        "request0_reset_contract_sha256",
+        "request0_replay_mode",
+    ):
+        old_row.pop(field)
+    raw_root = tmp_path / "raw"
+    write_raw(raw_root / "raw_episode.jsonl", old_row)
+    registered = {row["cell_id"]: row for row in queue_rows()}
+    episodes, ledger, duplicates, discovery = load_valid_episodes(
+        [raw_root],
+        queue_rows=registered,
+        registration_sha256=sha256_file(SOURCE / "registration.json"),
+        queue_sha256=sha256_file(SOURCE / "queue.jsonl"),
+        candidate_sha256_by_arena={
+            "droid_robolab": sha256_file(SOURCE / "layout/candidate.json"),
+            "robotwin": sha256_file(SOURCE / "layout/fastwam_robotwin_candidate.json"),
+        },
+    )
+    assert episodes == []
+    assert duplicates == []
+    assert len(ledger) == len(discovery) == 1
+    assert discovery[0]["reason"] == "pre_r001_missing_request0_pair_identity"
+
+
 def test_setup_invalid_attempt_is_retained_outside_behavioral_denominator(tmp_path: Path):
     raw_root = tmp_path / "raw"
     setup_invalid = raw_root / "gate/setup_invalid_zero_request.json"
@@ -225,6 +261,22 @@ def test_setup_invalid_attempt_is_retained_outside_behavioral_denominator(tmp_pa
     assert len(rows) == 1
     assert rows[0]["behavioral_denominator_included"] is False
     assert rows[0]["attempt"]["status"] == "setup_invalid_zero_request"
+
+
+def test_empty_raw_invalid_marker_is_retained_but_derived_ledgers_are_not(tmp_path: Path):
+    raw_root = tmp_path / "raw"
+    empty_raw = raw_root / "gate/infrastructure_invalid.json"
+    empty_raw.parent.mkdir(parents=True)
+    empty_raw.write_bytes(b"")
+    derived = raw_root / "old_compile/results/infrastructure_invalid.jsonl"
+    derived.parent.mkdir(parents=True)
+    derived.write_bytes(b"")
+    (derived.parent / "results.json").write_text("{}\n", encoding="utf-8")
+    rows = load_infrastructure_invalid([raw_root])
+    assert len(rows) == 1
+    assert rows[0]["source"]["path"] == str(empty_raw.resolve())
+    assert rows[0]["source"]["bytes"] == 0
+    assert rows[0]["attempt"]["status"] == "empty_infrastructure_invalid_marker"
 
 
 def test_bridge_failure_is_retained_outside_behavioral_denominator(tmp_path: Path):

@@ -89,6 +89,16 @@ def main() -> None:
             raise AssertionError("preflight launch schema differs")
         if result.get("schema_version") != "vla-wam-shared-v3e006-zero-model-preflight-harness-result-v1":
             raise AssertionError("preflight result schema differs")
+        verify_binding(launch["harness_source"], verify_raw=True)
+        verify_binding(result["harness_source"], verify_raw=True)
+        if result["harness_source"] != launch["harness_source"]:
+            raise AssertionError("preflight harness source binding differs")
+        if not isinstance(launch.get("outer_argv"), list) or len(launch["outer_argv"]) < 20:
+            raise AssertionError("complete outer preflight invocation is missing")
+        for binding_row in launch.get("input_bindings", {}).values():
+            verify_binding(binding_row, verify_raw=True)
+        for binding_row in launch.get("diagnostic_inputs", []):
+            verify_binding(binding_row, verify_raw=True)
         for key in ("model_request_count", "behavioral_episode_count", "state_candidate_count"):
             if result.get(key) != 0:
                 raise AssertionError(f"preflight has nonzero {key}")
@@ -101,6 +111,11 @@ def main() -> None:
             child = json.loads(Path(result["child_report"]["path"]).read_text(encoding="utf-8"))
             if child.get("status") != "passed_generic_zero_model_cuda_vulkan_isaac_physics_render_health_preflight":
                 raise AssertionError("child preflight status differs")
+            verify_binding(child["source"], verify_raw=True)
+            for binding_row in child.get("bound_inputs", {}).values():
+                verify_binding(binding_row, verify_raw=True)
+            for binding_row in child.get("diagnostic_inputs", []):
+                verify_binding(binding_row, verify_raw=True)
         elif result.get("status") != "infrastructure_invalid_zero_model_health_preflight":
             raise AssertionError("failed preflight lacks invalid status")
         preflight_status = result["status"]

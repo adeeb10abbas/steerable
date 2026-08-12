@@ -100,10 +100,35 @@
       "reason": "bind and use the installed Isaac 5 single-prim pose API for the health probe",
       "role": "prospective_replacement",
       "sha": "200ee962ddfabd61629eba5ec1a0e573e5ee2640"
+    },
+    {
+      "reason": "retain model-blind state-construction failures before simulator shutdown",
+      "role": "prospective_replacement",
+      "sha": "262363f3af9231795ddd6a9c52e00e875224edec"
+    },
+    {
+      "reason": "require passed zero-model health semantics before state construction",
+      "role": "prospective_replacement",
+      "sha": "e0344ea11347cab53db92d5927b91753ba4a78a3"
+    },
+    {
+      "reason": "resolve only the deterministic single-environment bowl prim before frozen bounds math",
+      "role": "prospective_replacement",
+      "sha": "7aee1d04fb0f60f2abe74ced3313df68901975b0"
+    },
+    {
+      "reason": "normalize scalar types only at the frozen camera-boundary interface",
+      "role": "prospective_replacement",
+      "sha": "4a57bbafc5da33b460922b55e7a238c7c0243de6"
+    },
+    {
+      "reason": "retain every fixed candidate-gate payload for the final deterministic evaluation",
+      "role": "final_model_blind_candidate_evaluation",
+      "sha": "59b9fba8e5310b4c2b3cd65e242fd859c1337d0d"
     }
   ],
   "final_source_push_rule": "Registration, queue, state release, lane release and runtime evidence must bind the same final prospective implementation commit pushed to origin before request zero.",
   "model_request_count": 0,
   "schema_version": "vla-wam-shared-v3e006-source-lineage-v1",
-  "status": "prospective_lineage_before_registration_or_model_request"
+  "status": "closed_before_registration_or_model_request_after_candidate_gate_failure"
 }

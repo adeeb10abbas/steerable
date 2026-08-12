@@ -1,0 +1,87 @@
+{
+  "amendment_id": "V3-E006",
+  "arena": "droid_robolab",
+  "behavioral_episode_count": 0,
+  "behavioral_hypotheses_evaluated": false,
+  "canonical_grasp_gate": {
+    "camera": {
+      "all_policy_conditioning_feeds_retained": true,
+      "passed": true
+    },
+    "companion_pose": {
+      "observed": {
+        "banana_orientation_error_rad": 0.0014594041212236952,
+        "banana_position_error_m": 0.00025210291359092376,
+        "banana_right_orientation_error_rad": 0.00015091076780304746,
+        "banana_right_position_error_m": 0.00025860431537410525,
+        "bowl_orientation_error_rad": 0.056576865447999225,
+        "bowl_position_error_m": 0.013634213486022747
+      },
+      "orientation_tolerance_rad_strict": 0.03490658503988659,
+      "passed": false,
+      "position_tolerance_m_strict": 0.005
+    },
+    "ood": {
+      "maximum_distance_inclusive": 7.662705332771899,
+      "normalized_distance": 9.72209345017337,
+      "passed": false
+    },
+    "passed": false,
+    "physics": {
+      "checks": {
+        "arm_joint_speed": false,
+        "cube_angular_speed": false,
+        "cube_gripper_relative_drift": true,
+        "cube_linear_speed": false,
+        "cube_midline": false,
+        "intended_cube_gripper_contact_force": false,
+        "no_unintended_contacts": false,
+        "normal_gripper_contact": false
+      },
+      "observed": {
+        "max_arm_joint_speed_rad_s": 0.9488397836685181,
+        "max_cube_angular_speed_rad_s": 1.0404364571725355,
+        "max_cube_gripper_relative_drift_m": 0.0002239562543833045,
+        "max_cube_linear_speed_m_s": 0.023268634949982506,
+        "max_cube_midline_residual_m": 0.006768157705664635,
+        "rubiks_cube_table_contact_force_n": 1.6328938220879219,
+        "minimum_intended_cube_gripper_contact_force_n": 0.0,
+        "object_grabbed_all_steps": false
+      },
+      "passed": false,
+      "thresholds": {
+        "arm_joint_speed_rad_s_strict": 0.01,
+        "cube_angular_speed_rad_s_strict": 0.05,
+        "cube_gripper_relative_drift_m_strict": 0.002,
+        "cube_linear_speed_m_s_strict": 0.01,
+        "cube_midline_residual_m_strict": 0.001,
+        "unintended_contact_force_n_inclusive": 1.0
+      }
+    }
+  },
+  "final_candidate_attempt": {
+    "failure_report": {
+      "bytes": 52604,
+      "path": "/data/users/ali/vla_wam/raw/v3e006/model_blind_gate/candidate-59b9fba-a40r06-attempt06/state_construction_failure.json",
+      "sha256": "94941437781d31d42cfd43d3b7088c405c09239ffb01c8bcab74c8c8b327cc49"
+    },
+    "runtime_log": {
+      "bytes": 21704,
+      "path": "/data/users/ali/vla_wam/raw/v3e006/model_blind_gate/candidate-59b9fba-a40r06-attempt06-inputs/runtime.log",
+      "sha256": "52d980edfc4b1071eaef02295755da10c09f032161d057ad78129c69c55d9f2a"
+    },
+    "study_commit": "59b9fba8e5310b4c2b3cd65e242fd859c1337d0d"
+  },
+  "full_reset_gate": {
+    "camera_passed": true,
+    "companion_pose_passed": true,
+    "exact_e004_reset_comparison_passed": true,
+    "passed": true
+  },
+  "model_request_count": 0,
+  "publication_claim": "canonical-stage localization remained inconclusive because no valid canonical-grasp state passed the preregistered model-blind gate",
+  "registration_created": false,
+  "schema_version": "vla-wam-shared-v3e006-gate-stop-results-v1",
+  "state_candidate_count": 0,
+  "status": "gate_failed_no_valid_candidate_stop_before_registration"
+}

@@ -71,8 +71,8 @@ def main() -> None:
     candidate_rows = [
         json.loads(line) for line in candidate_ledger_path.read_text(encoding="utf-8").splitlines() if line.strip()
     ]
-    if len(candidate_rows) != 5:
-        raise AssertionError("expected the five retained candidate/prelaunch invalid attempts")
+    if len(candidate_rows) != 6:
+        raise AssertionError("expected the six retained candidate/prelaunch invalid attempts")
     for row in candidate_rows:
         if row.get("schema_version") != "vla-wam-shared-v3e006-model-blind-candidate-infrastructure-invalid-v1":
             raise AssertionError("invalid candidate infrastructure schema")

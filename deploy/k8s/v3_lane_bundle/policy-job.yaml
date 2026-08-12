@@ -1,0 +1,176 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "v3-lane00-attempt01-02ba520f60-policy"
+  namespace: "211247-prod"
+  labels:
+    v3-lane-id: "lane00"
+    v3-attempt-id: "attempt01"
+    v3-config-sha: "02ba520f60d3541d857f7cec358bdba8"
+    v3-lane-role: "policy"
+spec:
+  completions: 1
+  parallelism: 1
+  backoffLimit: 0
+  template:
+    metadata:
+      labels:
+        v3-lane-id: "lane00"
+        v3-attempt-id: "attempt01"
+        v3-config-sha: "02ba520f60d3541d857f7cec358bdba8"
+        v3-lane-role: "policy"
+      annotations:
+        v3-image-digest: "sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c"
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 300
+      nodeSelector:
+        node-role.kubernetes.io/worker-gpu: ""
+        nvidia.com/gpu.product: "NVIDIA-A100-SXM4-80GB"
+      tolerations:
+        - key: nvidia.com/gpu
+          operator: Equal
+          value: "present"
+          effect: NoSchedule
+      securityContext:
+        fsGroup: 2518800
+        supplementalGroups: [2518800]
+        seccompProfile:
+          type: RuntimeDefault
+      imagePullSecrets:
+        - name: "artifactory-ci-pull-secret"
+      containers:
+        - name: policy
+          image: "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c"
+          imagePullPolicy: IfNotPresent
+          command:
+            - "/data/users/ali/vla_wam/envs/openpi-c23745b-pi05-v3-py311/bin/python"
+            - "/data/users/ali/vla_wam/src/steerable/deploy/k8s/v3_lane_bundle/scripts/lane_entrypoint.py"
+          resources:
+            requests:
+              cpu: "16"
+              memory: 64Gi
+              nvidia.com/gpu: 1
+            limits:
+              cpu: "64"
+              memory: 128Gi
+              nvidia.com/gpu: 1
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 816149040
+            runAsGroup: 2518800
+            capabilities:
+              drop: [ALL]
+          env:
+            - name: POD_UID
+              valueFrom:
+                fieldRef:
+                  fieldPath: "metadata.uid"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: "metadata.name"
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: "metadata.namespace"
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: "status.podIP"
+            - name: IMAGE_DIGEST_EXPECTED
+              valueFrom:
+                configMapKeyRef:
+                  name: "v3-lane00-attempt01-02ba520f60-launch"
+                  key: "image.digest"
+            - name: LANE_ROLE
+              value: "policy"
+            - name: LANE_ID
+              value: "lane00"
+            - name: ATTEMPT_ID
+              value: "attempt01"
+            - name: OUTPUT_PARENT
+              value: "/data/users/ali/vla_wam/raw"
+            - name: LANE_LAUNCH_CONFIG
+              value: "/opt/v3-lane/config/policy-launch.json"
+            - name: LANE_LAUNCH_CONFIG_SHA256
+              value: "153944f37eba42372ad132d697bc10b44b6d746038e4cad33bc198f41ce88efb"
+            - name: HOME
+              value: "/lane-runtime/home"
+            - name: XDG_CACHE_HOME
+              value: "/lane-runtime/xdg/cache"
+            - name: XDG_CONFIG_HOME
+              value: "/lane-runtime/xdg/config"
+            - name: XDG_RUNTIME_DIR
+              value: "/lane-runtime/xdg/runtime"
+            - name: WARP_CACHE_PATH
+              value: "/lane-runtime/warp"
+            - name: MPLCONFIGDIR
+              value: "/lane-runtime/matplotlib"
+            - name: TMPDIR
+              value: "/lane-runtime/tmp"
+            - name: VK_ICD_FILENAMES
+              value: "/etc/vulkan/icd.d/nvidia_icd.json"
+            - name: LD_LIBRARY_PATH
+              value: "/data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu"
+            - name: PYTHONPATH
+              value: "/data/users/ali/vla_wam/external/openpi-pi05-v3-c23745b:/data/users/ali/vla_wam/src/steerable/deploy/k8s/v3_lane_bundle/scripts"
+            - name: PYTHON_BIN
+              value: "/data/users/ali/vla_wam/envs/openpi-c23745b-pi05-v3-py311/bin/python"
+            - name: FFMPEG_BIN
+              value: "/data/users/ali/vla_wam/envs/lingbot-va-b200/bin/ffmpeg"
+            - name: NVIDIA_DRIVER_CAPABILITIES
+              value: "compute,graphics,utility"
+            - name: DISPLAY
+              value: ""
+            - name: LD_PRELOAD
+              value: ""
+            - name: OMNI_KIT_ACCEPT_EULA
+              value: "YES"
+            - name: POLICY_PORT
+              value: "8100"
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: lane-runtime
+              mountPath: /lane-runtime
+            - name: dshm
+              mountPath: /dev/shm
+            - name: launch-config
+              mountPath: /opt/v3-lane/config
+              readOnly: true
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - "/data/users/ali/vla_wam/envs/openpi-c23745b-pi05-v3-py311/bin/python"
+                  - "/data/users/ali/vla_wam/src/steerable/deploy/k8s/v3_lane_bundle/scripts/lane_entrypoint.py"
+                  - --prestop
+          readinessProbe:
+            exec:
+              command:
+                - "/data/users/ali/vla_wam/envs/openpi-c23745b-pi05-v3-py311/bin/python"
+                - "/data/users/ali/vla_wam/src/steerable/deploy/k8s/v3_lane_bundle/scripts/check_policy_ready.py"
+                - --checkpoint-loaded
+                - --mode
+                - tcp
+                - --port
+                - "8100"
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 4
+            failureThreshold: 180
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: "211247-prod-pvc"
+        - name: lane-runtime
+          emptyDir: {}
+        - name: dshm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 96Gi
+        - name: launch-config
+          configMap:
+            name: "v3-lane00-attempt01-02ba520f60-launch"

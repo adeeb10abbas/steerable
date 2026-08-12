@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: "v3-lane00-attempt01-02ba520f60-policy"
+  namespace: "211247-prod"
+  labels:
+    v3-lane-id: "lane00"
+    v3-attempt-id: "attempt01"
+    v3-config-sha: "02ba520f60d3541d857f7cec358bdba8"
+    v3-lane-role: "policy"
+spec:
+  publishNotReadyAddresses: false
+  selector:
+    v3-lane-id: "lane00"
+    v3-attempt-id: "attempt01"
+    v3-config-sha: "02ba520f60d3541d857f7cec358bdba8"
+    v3-lane-role: "policy"
+  ports:
+    - name: policy
+      port: 8100
+      targetPort: 8100
+      protocol: TCP

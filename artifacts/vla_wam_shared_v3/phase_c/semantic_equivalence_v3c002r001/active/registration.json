@@ -157,7 +157,7 @@
     "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/active/queue.jsonl",
     "sha256": "c7003f05b1302ab52d30fd9f6c50244a8df1e143c8411c436eb2817abc312a50"
   },
-  "registered_at_utc": "2026-08-12T20:12:11.254620Z",
+  "registered_at_utc": "2026-08-12T20:13:50.605339Z",
   "release_sequence": [
     "pushed repair implementation and registration",
     "eight fresh same-process zero-request physical/runtime gates",
@@ -172,7 +172,7 @@
   "runtime": {
     "exact_behavior_adapter_source_commit": "e2d9ae3904b4a08e549c784903c167a4213d3d47",
     "exact_parent_e004_pi05_contract_sha256": "4497e82136e6440df45cc075a683319ecf63ac2827fb582dcb5c1549030e4cfd",
-    "repair_wrapper_implementation_commit": "55faf710f76ba043cbf6341e9731385ebec5aeec"
+    "repair_wrapper_implementation_commit": "dc41e311b1e850297d2306a2b7c331cc92e07334"
   },
   "schema_version": "vla-wam-shared-v3c002r001-repair-registration-v1",
   "source_bindings": {
@@ -222,9 +222,9 @@
       "sha256": "4c37dfc7a6eede340308b026f1ffb8166ca53c13e9fdad8d974ee060ba5aeb2d"
     },
     "tools/build_v3c002r001_registration.py": {
-      "bytes": 15636,
+      "bytes": 16227,
       "path": "tools/build_v3c002r001_registration.py",
-      "sha256": "d429bf3e53aceb494e96ecc8e6dde42af7e06970f15198598541ff6271bbd7d4"
+      "sha256": "685bc8edcaa83d3627163958c681f2740be1ac076c77afec8c6df0f808cb3bd5"
     },
     "tools/compile_v3c002r001_physical_gate.py": {
       "bytes": 7409,
@@ -252,9 +252,9 @@
       "sha256": "9de1cf9fb183d02fbcb56a5de35faa1ac4394504c5d76db4d76052bac04bbdfd"
     },
     "tools/validate_v3c002r001.py": {
-      "bytes": 4047,
+      "bytes": 4282,
       "path": "tools/validate_v3c002r001.py",
-      "sha256": "16925086d9a5d5db9a0a5864f6ab117d9c1a49132ad156db225c2089f75b6707"
+      "sha256": "d63785807d4e424cd945e5bac79aa8d2de08d1c1c5e639754e7a031971fad7c3"
     },
     "tools/validate_v3c002r001_publication_bundle.py": {
       "bytes": 1272,
@@ -268,6 +268,15 @@
     }
   },
   "status": "registered_prospective_post_gate_repair",
+  "superseded_unexecuted_repair_registrations": [
+    {
+      "behavioral_episode_count": 0,
+      "model_request_count": 0,
+      "reason": "The preregistration validator handled only the pending-source lifecycle state and would reject its own later pushed-source/publication state. This prospective replacement makes the validator lifecycle-aware before any repair request.",
+      "registration_commit": "f88d2dc39b076ee87aef2a961f7cf4d1663549a2",
+      "registration_sha256": "f5f64e804fe9ccf4f38c90d041e8f338a62bed8fca70cff3a63c2324f46b53de"
+    }
+  ],
   "technical_gate_plan": {
     "global_excluded_smoke_lane_slot": "repair-lane-00",
     "global_excluded_smoke_seed": 12000,

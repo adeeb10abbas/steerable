@@ -27,6 +27,10 @@ BOOTSTRAP.add_argument("--e004-candidate", type=Path, required=True)
 BOOTSTRAP.add_argument("--e004-candidate-sha256", required=True)
 BOOTSTRAP.add_argument("--ood-freeze", type=Path, required=True)
 BOOTSTRAP.add_argument("--ood-freeze-sha256", required=True)
+BOOTSTRAP.add_argument("--e004-reset-reference", type=Path, required=True)
+BOOTSTRAP.add_argument("--e004-reset-reference-sha256", required=True)
+BOOTSTRAP.add_argument("--runtime-bindings", type=Path, required=True)
+BOOTSTRAP.add_argument("--runtime-bindings-sha256", required=True)
 BOOTSTRAP.add_argument("--control-scene-asset", type=Path, required=True)
 BOOTSTRAP.add_argument("--paired-scene-asset", type=Path, required=True)
 BOOTSTRAP.add_argument("--output-dir", type=Path, required=True)
@@ -59,7 +63,12 @@ def _sha(path: Path) -> str:
     return digest.hexdigest()
 
 
-for path, digest in ((args.e004_candidate, args.e004_candidate_sha256), (args.ood_freeze, args.ood_freeze_sha256)):
+for path, digest in (
+    (args.e004_candidate, args.e004_candidate_sha256),
+    (args.ood_freeze, args.ood_freeze_sha256),
+    (args.e004_reset_reference, args.e004_reset_reference_sha256),
+    (args.runtime_bindings, args.runtime_bindings_sha256),
+):
     if not path.is_file() or _sha(path) != digest:
         BOOTSTRAP.error(f"hash-bound input is missing or changed: {path}")
 if args.output_dir.exists():
@@ -100,6 +109,7 @@ from experiments.v3.phase_e.canonical_stage_localization_v3e006.ood_reference im
 )
 from experiments.v3.phase_e.canonical_stage_localization_v3e006.state_contract import (  # noqa: E402
     canonical_bytes,
+    compare_full_reset_to_e004,
     normalized_state_sha256,
     settled_gate,
     stage_ood,
@@ -118,6 +128,23 @@ MOVABLE = ("banana", "banana_right", "bowl", "rubiks_cube")
 PERMITTED_CONTACTS = {
     "gripper__rubiks_cube",
     "banana__table",
+    "banana_right__table",
+    "bowl__table",
+}
+EXPECTED_CONTACT_SENSORS = {
+    "gripper__rubiks_cube",
+    "gripper__banana",
+    "gripper__banana_right",
+    "gripper__bowl",
+    "gripper__table",
+    "banana__rubiks_cube",
+    "banana_right__rubiks_cube",
+    "bowl__rubiks_cube",
+    "rubiks_cube__table",
+    "banana__banana_right",
+    "banana__bowl",
+    "banana__table",
+    "banana_right__bowl",
     "banana_right__table",
     "bowl__table",
 }
@@ -171,6 +198,29 @@ def _contact_forces(env: Any) -> dict[str, float]:
     return rows
 
 
+def _contact_coverage(env: Any) -> dict[str, Any]:
+    inventory = sorted(name for name in get_contact_sensors(env.scene) if not name.endswith("__all_objs"))
+    missing = sorted(EXPECTED_CONTACT_SENSORS - set(inventory))
+    extra = sorted(set(inventory) - EXPECTED_CONTACT_SENSORS)
+    checks = {
+        "complete_pairwise_sensor_inventory": not missing,
+        "cube_gripper_sensor_present": "gripper__rubiks_cube" in inventory,
+        "companion_table_sensors_present": {"banana__table", "banana_right__table"} <= set(inventory),
+        "all_sensor_force_streams_live": set(_contact_forces(env)) == set(inventory),
+    }
+    if not all(checks.values()):
+        raise RuntimeError(f"contact-sensor coverage failed closed: missing={missing}, extra={extra}")
+    return {
+        "inventory": inventory,
+        "expected_inventory": sorted(EXPECTED_CONTACT_SENSORS),
+        "missing": missing,
+        "extra": extra,
+        "checks": checks,
+        "passed": True,
+        "force_threshold_n": 1.0,
+    }
+
+
 def _sample(env: Any, frames: Any, eef_index: int) -> dict[str, Any]:
     cube = env.scene["rubiks_cube"].data
     robot = env.scene["robot"].data
@@ -185,7 +235,15 @@ def _sample(env: Any, frames: Any, eef_index: int) -> dict[str, Any]:
     }
 
 
-def _capture_state(env: Any, frames: Any, eef_index: int) -> dict[str, Any]:
+def _capture_state(
+    env: Any,
+    frames: Any,
+    eef_index: int,
+    *,
+    gripper_command: float,
+    contact_coverage: Mapping[str, Any],
+    contact_samples: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
     robot = env.scene["robot"].data
     objects: dict[str, Any] = {}
     for name in MOVABLE:
@@ -198,17 +256,30 @@ def _capture_state(env: Any, frames: Any, eef_index: int) -> dict[str, Any]:
         }
     return {
         "robot": {
+            "joint_names": [str(name) for name in env.scene["robot"].joint_names],
             "root_position_world_m": _host(robot.root_pos_w[0]),
             "root_quaternion_world_wxyz": _host(robot.root_quat_w[0]),
             "root_linear_velocity_m_s": _host(robot.root_lin_vel_w[0]),
             "root_angular_velocity_rad_s": _host(robot.root_ang_vel_w[0]),
             "joint_position_rad": _host(robot.joint_pos[0]),
             "joint_velocity_rad_s": _host(robot.joint_vel[0]),
+            "gripper": {
+                "joint_names": [str(name) for name in env.scene["robot"].joint_names[7:]],
+                "joint_position_rad": _host(robot.joint_pos[0])[7:],
+                "joint_velocity_rad_s": _host(robot.joint_vel[0])[7:],
+                "normal_binary_command": float(gripper_command),
+                "object_grabbed": bool(object_grabbed(env, object="rubiks_cube", env_id=0)),
+            },
         },
         "objects": objects,
         "eef": {
             "position_world_m": _host(frames.data.target_pos_w[0, eef_index]),
             "quaternion_world_wxyz": _host(frames.data.target_quat_w[0, eef_index]),
+        },
+        "contact_evidence": {
+            "coverage": dict(contact_coverage),
+            "settled_force_snapshots_n": [dict(row["contact_force_n"]) for row in contact_samples],
+            "object_grabbed_by_step": [bool(row["object_grabbed"]) for row in contact_samples],
         },
     }
 
@@ -258,6 +329,11 @@ def _save_camera_evidence(env: Any, obs: Mapping[str, Any], stage: str, root: Pa
             "camera_quaternion_world_wxyz_ros": quaternion,
             "intrinsic_matrix_3x3": intrinsic,
             "image_size_wh": [int(image.shape[1]), int(image.shape[0])],
+            "extrinsics": {
+                "translation_world_m": center,
+                "quaternion_world_wxyz_ros": quaternion,
+                "convention": "ROS camera axes: +X right, +Y down, +Z forward",
+            },
         }
         geometry_sha = hashlib.sha256(canonical_bytes(geometry)).hexdigest()
         pixel = project_world_target_to_pixel(
@@ -284,7 +360,18 @@ def _save_camera_evidence(env: Any, obs: Mapping[str, Any], stage: str, root: Pa
             "rgb_nonblank": True,
         }
     gate = evaluate_all_cameras(evidence, expected_cameras=CAMERAS, minimum_visible_target_pixels=32)
-    return {"bindings": bindings, "gate": gate, "passed": all(row["gate_passed"] for row in gate.values())}
+    return {
+        "bindings": bindings,
+        "gate": gate,
+        "policy_conditioning_camera_feeds": {
+            "observation/exterior_image_1_left": "over_shoulder_left_camera",
+            "observation/wrist_image_left": "wrist_cam",
+        },
+        "all_policy_conditioning_feeds_retained": all(
+            name in bindings for name in ("over_shoulder_left_camera", "wrist_cam")
+        ),
+        "passed": all(row["gate_passed"] for row in gate.values()),
+    }
 
 
 def _companion_gate(state: Mapping[str, Any], candidate: Any) -> dict[str, Any]:
@@ -327,6 +414,8 @@ def main() -> None:
     args.output_dir.mkdir(parents=True)
     set_output_dir(str((args.output_dir / "native").resolve()))
     ood = json.loads(args.ood_freeze.read_text(encoding="utf-8"))
+    reset_reference = json.loads(args.e004_reset_reference.read_text(encoding="utf-8"))
+    runtime_bindings = json.loads(args.runtime_bindings.read_text(encoding="utf-8"))
     candidate = load_candidate(args.e004_candidate, args.e004_candidate_sha256)
     task_file = study_root / "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/task_files/left.py"
     auto_register_droid_abs_ik_envs(task=[str(task_file)], cameras=WRIST_LEFT_RIGHT_HEAD)
@@ -344,22 +433,46 @@ def main() -> None:
     started = time.time()
     try:
         obs, _ = env.reset()
-        obs, _ = env.reset()
         frames = env.scene["frames"]
         eef_index = frames.data.target_frame_names.index("eef_frame")
+        contact_coverage = _contact_coverage(env)
         reset_position = _host(frames.data.target_pos_w[0, eef_index])
         reset_quaternion = _host(frames.data.target_quat_w[0, eef_index])
         action = _command(reset_position, reset_quaternion, 0.0, env.device)
+        reset_samples: list[dict[str, Any]] = []
         for step in range(75):
             obs, _, terminated, truncated, _ = env.step(action)
             if bool(terminated[0]) or bool(truncated[0]):
                 raise RuntimeError("environment terminated during E004 reset settle")
             if step % 6 == 0:
                 video_frames.append(np.asarray(obs["image_obs"]["head_camera"][0].detach().cpu().numpy(), dtype=np.uint8))
-        full_reset = _capture_state(env, frames, eef_index)
+            if step >= 65:
+                reset_samples.append(_sample(env, frames, eef_index))
+        full_reset = _capture_state(
+            env,
+            frames,
+            eef_index,
+            gripper_command=0.0,
+            contact_coverage=contact_coverage,
+            contact_samples=reset_samples,
+        )
         full_reset["normalized_state_sha256"] = normalized_state_sha256(full_reset)
         full_reset["camera_evidence"] = _save_camera_evidence(env, obs, "full_reset", args.output_dir / "cameras")
         full_reset["companion_pose_gate"] = _companion_gate(full_reset, candidate)
+        full_reset["e004_full_reset_comparison"] = compare_full_reset_to_e004(
+            full_reset,
+            reference=reset_reference,
+            reference_file_sha256=args.e004_reset_reference_sha256,
+        )
+        if not all(
+            (
+                full_reset["camera_evidence"]["passed"],
+                full_reset["companion_pose_gate"]["passed"],
+                full_reset["e004_full_reset_comparison"]["passed"],
+                contact_coverage["passed"],
+            )
+        ):
+            raise RuntimeError("full_reset differs from the retained E004 s=1 reset contract")
 
         cube_initial = np.asarray(full_reset["objects"]["rubiks_cube"]["position_world_m"], dtype=np.float64)
         cube_quaternion = np.asarray(full_reset["objects"]["rubiks_cube"]["quaternion_world_wxyz"], dtype=np.float64)
@@ -398,7 +511,14 @@ def main() -> None:
                     video_frames.append(np.asarray(obs["image_obs"]["head_camera"][0].detach().cpu().numpy(), dtype=np.uint8))
             sensor_names = set(_contact_forces(env))
             unintended = sorted(sensor_names - PERMITTED_CONTACTS)
-            state = _capture_state(env, frames, eef_index)
+            state = _capture_state(
+                env,
+                frames,
+                eef_index,
+                gripper_command=0.7853981633974483,
+                contact_coverage=contact_coverage,
+                contact_samples=settled,
+            )
             state["physics_gate"] = settled_gate(settled, unintended_contact_pairs=unintended)
             state["ood_gate"] = stage_ood(state, stage_reference=reference)
             state["camera_evidence"] = _save_camera_evidence(env, obs, stage, args.output_dir / "cameras")
@@ -437,12 +557,21 @@ def main() -> None:
             "construction_prompt_exposure": "environment task prompt exists in the simulator config but is never read by or supplied to the deterministic controller",
             "task_prompt": cfg.instruction,
             "ood_freeze": {"path": str(args.ood_freeze.resolve()), "sha256": args.ood_freeze_sha256, "bytes": args.ood_freeze.stat().st_size},
+            "construction_source": {
+                "path": str(Path(__file__).resolve()),
+                "sha256": _sha(Path(__file__).resolve()),
+                "bytes": Path(__file__).stat().st_size,
+                "study_commit": args.expected_study_commit,
+            },
+            "e004_full_reset_reference": {"path": str(args.e004_reset_reference.resolve()), "sha256": args.e004_reset_reference_sha256, "bytes": args.e004_reset_reference.stat().st_size},
+            "frozen_e004_runtime_bindings": {"path": str(args.runtime_bindings.resolve()), "sha256": args.runtime_bindings_sha256, "bytes": args.runtime_bindings.stat().st_size, "value": runtime_bindings},
             "e004_candidate": {"path": str(args.e004_candidate.resolve()), "sha256": args.e004_candidate_sha256, "bytes": args.e004_candidate.stat().st_size},
             "scene_assets": {
                 "control": {"path": str(args.control_scene_asset.resolve()), "sha256": _sha(args.control_scene_asset), "bytes": args.control_scene_asset.stat().st_size},
                 "paired": {"path": str(args.paired_scene_asset.resolve()), "sha256": _sha(args.paired_scene_asset), "bytes": args.paired_scene_asset.stat().st_size},
             },
             "environment": {"pod": args.pod, "pod_uid": args.pod_uid, "gpu_uuid": args.gpu_uuid, "device": args.device},
+            "contact_sensor_coverage": contact_coverage,
             "construction_seconds": time.time() - started,
             "stages": stages,
             "video": {"path": str(video_path.resolve()), "sha256": _sha(video_path), "bytes": video_path.stat().st_size},

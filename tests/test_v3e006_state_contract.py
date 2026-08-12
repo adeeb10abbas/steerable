@@ -1,10 +1,14 @@
 from __future__ import annotations
 
 import unittest
+import json
+import copy
+from pathlib import Path
 
 from experiments.v3.phase_e.canonical_stage_localization_v3e006.state_contract import (
     StateContractError,
     normalized_state_sha256,
+    compare_full_reset_to_e004,
     settled_gate,
 )
 
@@ -30,12 +34,42 @@ class StateContractTests(unittest.TestCase):
             "arm_joint_velocity_rad_s": [0.0] * 7,
             "cube_linear_velocity_m_s": [0.0] * 3,
             "cube_angular_velocity_rad_s": [0.0] * 3,
-            "contact_force_n": {"gripper__bowl": 0.0},
+            "contact_force_n": {"gripper__bowl": 0.0, "gripper__rubiks_cube": 2.0},
             "object_grabbed": True,
         }
         self.assertTrue(settled_gate([sample] * 10, unintended_contact_pairs=("gripper__bowl",))["passed"])
         with self.assertRaises(StateContractError):
             settled_gate([sample] * 9, unintended_contact_pairs=("gripper__bowl",))
+
+    def test_retained_e004_reset_reference_round_trip(self) -> None:
+        path = Path(
+            "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/"
+            "e004_full_reset_reference.json"
+        )
+        reference = json.loads(path.read_text(encoding="utf-8"))
+        robot = reference["robot"]
+        objects = reference["rigid_objects"]
+        state = {
+            "robot": {
+                "joint_position_rad": copy.deepcopy(robot["joint_position"]["values"]),
+                "joint_velocity_rad_s": robot["joint_velocity"]["values"],
+                "root_position_world_m": robot["root_position"]["values"],
+                "root_quaternion_world_wxyz": robot["root_quaternion_wxyz"]["values"],
+            },
+            "objects": {
+                name: {
+                    "position_world_m": row["root_position"]["values"],
+                    "quaternion_world_wxyz": row["root_quaternion_wxyz"]["values"],
+                    "linear_velocity_m_s": row["root_linear_velocity"]["values"],
+                    "angular_velocity_rad_s": row["root_angular_velocity"]["values"],
+                }
+                for name, row in objects.items()
+            },
+        }
+        result = compare_full_reset_to_e004(state, reference=reference, reference_file_sha256="0" * 64)
+        self.assertTrue(result["passed"])
+        state["robot"]["joint_position_rad"][0] = 0.1
+        self.assertFalse(compare_full_reset_to_e004(state, reference=reference, reference_file_sha256="0" * 64)["passed"])
 
 
 if __name__ == "__main__":

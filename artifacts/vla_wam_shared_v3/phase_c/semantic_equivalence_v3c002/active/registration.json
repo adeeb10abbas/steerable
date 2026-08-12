@@ -28,7 +28,7 @@
   "attestation_receipt_order": {
     "bytes": 1123,
     "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/active/attestation_receipt_order.json",
-    "sha256": "4e2019064083beb1a92f2a5818295b94878bc1777131c91e16f2bacec53987de"
+    "sha256": "a435fa2c59b5716759e52ae3e90b753ae477b4841d28edc746541d61e67ae66d"
   },
   "behavioral_episode_count_before_registration": 0,
   "behavioral_episodes_authorized": false,
@@ -408,7 +408,7 @@
       "runtime": "cf89444f7dac4b8a073a202535eb38da15e958cdf2f372c52e9d1b049a8443da",
       "scorer": "be8263bb4b865d0a561384bf6aa6074e40adfcb67550fd0368cdd49bd2d9f551"
     },
-    "contract_sha256": "94af8a1b043a032eb0fb77df4670491af9585d60e0d23a7459df9f1a0e0728ec",
+    "contract_sha256": "146268873004aa29114efe39526abdded51e66dce5ad345e5957cd213916f1f0",
     "dependency_bindings": {
       "action_interface": [
         {
@@ -548,7 +548,7 @@
       "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
       "runtime_identity_source_sha256": "6e5e500f5efee2d7576d090a8ec544f28e47af4db6e797c1bb514a16a43fc944",
       "simulator_identity": "Isaac Sim 5.0.0.0 / Isaac Lab 2.2.0 / RoboLab 0.2.1",
-      "source_commit": "dc0f1d6772785c634fb22d1a7cdd460bf85496a2"
+      "source_commit": "a26109d877a11a99bdea549ce8e997456dab8b14"
     },
     "schema_version": "vla-wam-shared-v3c002-exact-e004-pi05-runtime-contract-v1",
     "source_amendment": "V3-E004",
@@ -558,21 +558,21 @@
   "model_request_count_before_registration": 0,
   "model_requests_authorized": false,
   "pre_registration_draft": {
-    "bytes": 26708,
-    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/draft_v6/registration.json",
-    "sha256": "44cf0650df680dd3450084268defdaba43ef4844454604e4b6fb02894a507bb4"
+    "bytes": 27124,
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/draft_v7/registration.json",
+    "sha256": "8ef6eeeb77e8eae5af2328c489d6dd4a14d78f08834cfde72d7becf05cd55232"
   },
   "pre_registration_wording_gate": {
     "bytes": 753,
-    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/draft_v6/wording_gate.json",
-    "sha256": "37fc8cdc4c99aa48c8d76b0bc57bb7a8cca33b0f568066e5de7c6b0e614d0e14"
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/draft_v7/wording_gate.json",
+    "sha256": "ae24f075d5c87580d3a934b07ddc151dea7178ffb3426b51076ec498ae08f282"
   },
   "queue": {
     "bytes": 4362072,
     "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/active/queue.jsonl",
-    "sha256": "3420a96ec8c96cc85655a89c5a7aa9d3b1b7e8382b9cb03899f4235675dda685"
+    "sha256": "0f27e2936577ee5010ca303bd37aa3204d6f3ab8ada7bf4f0274230f6337d6f8"
   },
-  "registered_at_utc": "2026-08-12T15:55:11Z",
+  "registered_at_utc": "2026-08-12T16:00:59Z",
   "registered_prompts": {
     "canonical_left": {
       "condition": "canonical_left",
@@ -732,24 +732,29 @@
       "sha256": "99f893e82119f6b123c08a9e2b07d127d3390e9b23f48b821832ac25bad4f003"
     },
     "tests/test_v3c002_semantic_equivalence.py": {
-      "bytes": 25649,
+      "bytes": 26445,
       "path": "tests/test_v3c002_semantic_equivalence.py",
-      "sha256": "af0002232729424deca11d6cc0d60b90030e9f911273acaaa0973c4435b92946"
+      "sha256": "62493d44d4e90068f84be79f4ccc18a1a655f50a2663a75d3dccc373a0d428e0"
     },
     "tools/build_v3c002_registration.py": {
-      "bytes": 23515,
+      "bytes": 24268,
       "path": "tools/build_v3c002_registration.py",
-      "sha256": "0a402aad2369ab3ae0627adf4231a75f3759b32d41f4f047265df4a16327740d"
+      "sha256": "5c92357b7e50d4bf979a5093f1a6609de6f5b3b4552e7cf1d545c6923662e1ac"
     },
     "tools/finalize_v3c002_registration.py": {
-      "bytes": 6561,
+      "bytes": 6567,
       "path": "tools/finalize_v3c002_registration.py",
-      "sha256": "72f105e8a7a5207ed329f3ed03ca62d6e9c1fdb2a3318feb2e736c1870b04cf8"
+      "sha256": "f9d73f04a111cbe2b85d05717f2fbb4842ed43a715d679bd85cf58e7d034a4d8"
     },
     "tools/validate_v3c002.py": {
-      "bytes": 8325,
+      "bytes": 8545,
       "path": "tools/validate_v3c002.py",
-      "sha256": "f421e7ff28697b37ed42db348dccf79013353f8a13475827118122d70713b4fb"
+      "sha256": "c8b56f899e25e32b727db8249fd57c6b7e68192990d9a86cd4e2a6572284e8c7"
+    },
+    "tools/validate_v3c002_active.py": {
+      "bytes": 4287,
+      "path": "tools/validate_v3c002_active.py",
+      "sha256": "16d2f4309fb3ad58c3d752e927e809ed22e33480abc7ffd375e974aa9b7f5b21"
     },
     "tools/validate_v3c002_results.py": {
       "bytes": 5302,
@@ -781,17 +786,22 @@
       "path": "tools/validate_v3c002_v5_historical.py",
       "sha256": "b419378102902622c133788a3622627d22b15c2d280f4dd19a5c300a91441327"
     },
+    "tools/validate_v3c002_v6_historical.py": {
+      "bytes": 2340,
+      "path": "tools/validate_v3c002_v6_historical.py",
+      "sha256": "49fa3410129695b862a64d21806e3d5e05d7c288064a0417063e61e2d47724a9"
+    },
     "tools/validate_v3e_publication_bundle.py": {
-      "bytes": 1784,
+      "bytes": 2273,
       "path": "tools/validate_v3e_publication_bundle.py",
-      "sha256": "33cfdb3d426f41d0757b579c9aaaa2f167da7109c1501df07b7cc2e3025cc7a6"
+      "sha256": "8e9d692634f1959edba65ea015634e4500915e1e5307d6634623d3a042a050e4"
     }
   },
   "source_lineage": {
     "behavioral_episodes_at_recording": 0,
     "model_requests_at_recording": 0,
     "recorded_before_any_model_request": true,
-    "replacement_commit": "dc0f1d6772785c634fb22d1a7cdd460bf85496a2",
+    "replacement_commit": "a26109d877a11a99bdea549ce8e997456dab8b14",
     "replacement_reason": "Prospective C002 implementation and pre-run audit hardening were committed after the mandated clean base; no prior definition or experiment was changed.",
     "required_base_commit": "18a2bf0200183647291cc7aeb1fe89997b3fb82f"
   },
@@ -800,7 +810,7 @@
   "wording_gate": {
     "bytes": 1975,
     "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/active/wording_gate.json",
-    "sha256": "5023d346c90ad2ce44fd90e274334b1003b843d771bb211ac46db85dd88ec2c5"
+    "sha256": "c16a7c5918707dad4eed6dd95315140d99e9a730d4e09632284ff3fc8b32b46f"
   },
   "wording_gate_requirement": "Two distinct authorized readers must independently mark both blinded pairs same_physical_endpoint before this draft can become a behavioral registration."
 }

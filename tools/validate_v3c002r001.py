@@ -11,7 +11,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from experiments.v3.phase_c_semantic_equivalence_v3c002.contract import sha256_file, validate_file_binding
-from experiments.v3.phase_c_semantic_equivalence_v3c002r001.contract import REPO_ROOT, load_repair, require, validate_assignment
+from experiments.v3.phase_c_semantic_equivalence_v3c002r001.contract import REPO_ROOT, load_repair, require, validate_assignment, verify_pushed_gate
 
 
 ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/active"
@@ -44,11 +44,18 @@ def main() -> None:
     require(repair.get("original_c002_excluded_request_count_before_repair") == 30, "original excluded request count changed")
     release = json.loads((ROOT / "release_gate.json").read_text(encoding="utf-8"))
     require(release.get("passed") is False and release.get("behavioral_episodes_authorized") is False, "repair is prematurely released")
-    source = json.loads((ROOT / "source_push_gate.json").read_text(encoding="utf-8"))
-    require(source.get("passed") is False and source.get("pushed") is False, "pending source gate changed")
-    require(not (ROOT / "source_push_gate.released.json").exists(), "released source gate exists before prospective push finalization")
+    released_source = ROOT / "source_push_gate.released.json"
+    if released_source.exists():
+        source = json.loads(released_source.read_text(encoding="utf-8"))
+        verify_pushed_gate(source, repair)
+        phase = "pushed_pending_technical_gates"
+    else:
+        source = json.loads((ROOT / "source_push_gate.json").read_text(encoding="utf-8"))
+        require(source.get("passed") is False and source.get("pushed") is False, "pending source gate changed")
+        phase = "registered_pending_source_push"
     print(json.dumps({
         "status": "valid_registered_v3c002r001_blocked_before_technical_requests",
+        "phase": phase,
         "queue_cells": len(cells),
         "seed_blocks": 341,
         "lane_slots": 8,

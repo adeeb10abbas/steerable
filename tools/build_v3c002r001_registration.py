@@ -143,6 +143,13 @@ def main() -> None:
         "repair_model_requests_before_registration": 0,
         "original_c002_excluded_request_count_before_repair": 30,
         "parent_behavioral_episode_count": 0,
+        "superseded_unexecuted_repair_registrations": [{
+            "registration_sha256": "f5f64e804fe9ccf4f38c90d041e8f338a62bed8fca70cff3a63c2324f46b53de",
+            "registration_commit": "f88d2dc39b076ee87aef2a961f7cf4d1663549a2",
+            "model_request_count": 0,
+            "behavioral_episode_count": 0,
+            "reason": "The preregistration validator handled only the pending-source lifecycle state and would reject its own later pushed-source/publication state. This prospective replacement makes the validator lifecycle-aware before any repair request.",
+        }],
         "parent_registration": repo_binding(PARENT / "registration.json"),
         "parent_queue": repo_binding(PARENT / "queue.jsonl"),
         "queue": repo_binding(queue_path),

@@ -53,8 +53,8 @@ def main() -> None:
     if not isinstance(draft, dict) or draft.get("schema_version") != REGISTRATION_SCHEMA or draft.get("registration_status") != "pre_registration_draft_pending_two_human_wording_agreements":
         raise ContractError("only the untouched fail-closed C002 draft may be activated")
     supersession = read_finite_json(draft_root / "supersession.json")
-    if not isinstance(supersession, dict) or supersession.get("status") != "prospective_v5_supersedes_unexecuted_v1_v2_v3_v4_drafts" or supersession.get("v1_v2_v3_v4_must_never_be_activated") is not True:
-        raise ContractError("only the disclosed V5 superseding draft may be activated")
+    if not isinstance(supersession, dict) or supersession.get("status") != "prospective_v6_supersedes_unexecuted_v1_v2_v3_v4_v5_drafts" or supersession.get("v1_v2_v3_v4_v5_must_never_be_activated") is not True:
+        raise ContractError("only the disclosed V6 superseding draft may be activated")
     active_queue = activation_root / "queue.jsonl"
     infrastructure = activation_root / "infrastructure_attempts.jsonl"
     for path in (active_queue, infrastructure):
@@ -65,10 +65,22 @@ def main() -> None:
     for record, source in zip(wording_gate["reader_attestations"], args.reader_attestation):
         record["attestation"] = repo_file_binding(source)
     wording_gate["draft_registration"] = repo_file_binding(draft_registration)
+    receipt_order = {
+        "schema_version": "vla-wam-shared-v3c002-attestation-receipt-order-v1",
+        "status": "recorded_before_registration_activation",
+        "received_before_registration": True,
+        "receipt_source": "Codex task response",
+        "registration_activation_at_utc": args.registered_at_utc,
+        "attestations": [repo_file_binding(source) for source in args.reader_attestation],
+        "timestamp_limitation": "Reader attestations supplied calendar dates but no time-of-day. Their bytes are preserved exactly; this record establishes receipt/validation order only and does not invent reader attestation times.",
+        "model_requests_before_receipt_record": 0,
+        "behavioral_episodes_before_receipt_record": 0,
+    }
     activation_root.mkdir(parents=True, exist_ok=True)
     active_queue.write_bytes(queue.read_bytes())
     infrastructure.write_bytes(b"")
     wording_gate["queue"] = repo_file_binding(active_queue)
+    _write_new(activation_root / "attestation_receipt_order.json", receipt_order)
     _write_new(activation_root / "wording_gate.json", wording_gate)
     active = dict(draft)
     active.update(
@@ -79,6 +91,7 @@ def main() -> None:
             "behavioral_episodes_authorized": False,
             "pre_registration_draft": repo_file_binding(draft_registration),
             "wording_gate": repo_file_binding(activation_root / "wording_gate.json"),
+            "attestation_receipt_order": repo_file_binding(activation_root / "attestation_receipt_order.json"),
             "queue": repo_file_binding(active_queue),
             "release_boundary": "Wording gate passed and queue is registered, but no model request or behavioral episode is authorized until the source commit is pushed and exact model-blind physical/runtime/raw-writer/renderer/fixed-observation/two-lane-isolation gates are passed and bound in a new release_gate.json.",
         }
@@ -93,6 +106,7 @@ def main() -> None:
         "registration": repo_file_binding(activation_root / "registration.json"),
         "queue": repo_file_binding(active_queue),
         "wording_gate": repo_file_binding(activation_root / "wording_gate.json"),
+        "attestation_receipt_order": repo_file_binding(activation_root / "attestation_receipt_order.json"),
         "required_remaining_gates": [
             "committed_and_pushed_source_commit_bound_to_release",
             "model_blind_exact_e004_s1_physical_reset_camera_raw_writer_renderer_gate",

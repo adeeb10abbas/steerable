@@ -23,6 +23,7 @@ from tools.validate_v3c002_v1_historical import validate as validate_v1_historic
 from tools.validate_v3c002_v2_historical import validate as validate_v2_historical
 from tools.validate_v3c002_v3_historical import validate as validate_v3_historical
 from tools.validate_v3c002_v4_historical import validate as validate_v4_historical
+from tools.validate_v3c002_v5_historical import validate as validate_v5_historical
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -65,6 +66,31 @@ class V3C002SemanticEquivalenceTests(unittest.TestCase):
             second.write_text(json.dumps(payload), encoding="utf-8")
             with self.assertRaisesRegex(ContractError, "not independent"):
                 validate_attestations(sheet_path=sheet, attestation_paths=[first, second])
+
+    def test_finalizer_records_date_only_attestation_receipt_order_without_inventing_times(self) -> None:
+        with __import__("tempfile").TemporaryDirectory(dir=ROOT) as directory:
+            tmp_path = Path(directory); draft = tmp_path / "draft"; active = tmp_path / "active"
+            subprocess.run([sys.executable, "tools/build_v3c002_registration.py", "--output-root", str(draft)], cwd=ROOT, check=True)
+            sheet_sha = __import__("hashlib").sha256((draft / "prompt_comprehension_sheet.json").read_bytes()).hexdigest()
+            attestations = []
+            for reader in ("reader-a", "reader-b"):
+                path = tmp_path / f"{reader}.json"
+                _write_json(path, {
+                    "schema_version": "vla-wam-shared-v3c002-human-prompt-attestation-v1", "sheet_sha256": sheet_sha,
+                    "reader_id": reader, "authorization_reference": f"auth:{reader}", "attested_at_utc": "2026-08-12",
+                    "signature_or_record_reference": f"record:{reader}",
+                    "responses": [{"reader_pair_id": "pair_kestrel", "decision": "same_physical_endpoint"}, {"reader_pair_id": "pair_orchid", "decision": "same_physical_endpoint"}],
+                }); attestations.append(path)
+            subprocess.run([
+                sys.executable, "tools/finalize_v3c002_registration.py", "--draft-root", str(draft),
+                "--reader-attestation", str(attestations[0]), "--reader-attestation", str(attestations[1]),
+                "--registered-at-utc", "2026-08-12T16:00:00Z", "--activation-root", str(active),
+            ], cwd=ROOT, check=True)
+            receipt = json.loads((active / "attestation_receipt_order.json").read_text(encoding="utf-8"))
+            self.assertTrue(receipt["received_before_registration"])
+            self.assertEqual(receipt["receipt_source"], "Codex task response")
+            self.assertIn("no time-of-day", receipt["timestamp_limitation"])
+            self.assertEqual(json.loads(attestations[0].read_text())["attested_at_utc"], "2026-08-12")
 
     def test_primary_analysis_uses_registered_physical_goal_and_requires_both_directions(self) -> None:
         pairs, result = compile_results(_episodes(), registration_sha256="d" * 64, queue_sha256="e" * 64)
@@ -115,6 +141,11 @@ class V3C002SemanticEquivalenceTests(unittest.TestCase):
     def test_historical_v4_draft_remains_independently_verifiable_and_unexecuted(self) -> None:
         result = validate_v4_historical()
         self.assertEqual(result["status"], "valid_immutable_unexecuted_superseded_v4_draft")
+        self.assertEqual(result["queue_rows"], 1364)
+
+    def test_historical_v5_draft_remains_independently_verifiable_and_unexecuted(self) -> None:
+        result = validate_v5_historical()
+        self.assertEqual(result["status"], "valid_immutable_unexecuted_superseded_v5_draft")
         self.assertEqual(result["queue_rows"], 1364)
 
     def test_release_gate_requires_and_hash_checks_all_pre_request_evidence(self) -> None:

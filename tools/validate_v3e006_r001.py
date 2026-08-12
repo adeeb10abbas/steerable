@@ -139,7 +139,7 @@ def validate_package(root: Path) -> dict[str, Any]:
                 for key in ("raw_episode", "state_capture", "hdf5_trace"):
                     bound = source["provenance"][key]
                     require(set(bound) >= {"path", "bytes", "sha256"}, f"source {key} lacks binding")
-    source_gate_path = repair_root / "source_push_gate_v3.json"
+    source_gate_path = repair_root / "source_push_gate_v4.json"
     source_gate_result = None
     if source_gate_path.is_file():
         source_gate = load(source_gate_path)
@@ -155,9 +155,9 @@ def validate_package(root: Path) -> dict[str, Any]:
             relative = Path(str(row.get("path", "")))
             require(not relative.is_absolute() and ".." not in relative.parts, f"unsafe source-push path: {relative}")
             verify_binding(row, path=root / relative, ignore_path=True)
-        prior_gate_path = repair_root / "source_push_gate_v2.json"
+        prior_gate_path = repair_root / "source_push_gate_v3.json"
         prior_gate = source_gate.get("supersedes")
-        require(isinstance(prior_gate, Mapping), "latest source-push gate lacks v1 supersession binding")
+        require(isinstance(prior_gate, Mapping), "latest source-push gate lacks v3 supersession binding")
         verify_binding(prior_gate, path=prior_gate_path, ignore_path=True)
         prior_value = load(prior_gate_path)
         require(prior_value.get("status") == "passed_before_any_r001_candidate_or_model_request", "superseded source-push gate did not pass")
@@ -165,15 +165,36 @@ def validate_package(root: Path) -> dict[str, Any]:
         prior_commit = str(prior_value.get("implementation_commit", ""))
         require(bool(prior_commit), "superseded source-push implementation commit is absent")
         require(not subprocess.run(["git", "-C", str(root), "merge-base", "--is-ancestor", prior_commit, implementation_commit], check=False).returncode, "source-push ancestry differs")
-        v1_binding = prior_value.get("supersedes")
-        require(isinstance(v1_binding, Mapping), "v2 source-push gate lacks v1 binding")
+        v2_binding = prior_value.get("supersedes")
+        require(isinstance(v2_binding, Mapping), "v3 source-push gate lacks corrected-v2 binding")
+        v2_path = repair_root / "source_push_gate_v2.json"
+        verify_binding(v2_binding, path=v2_path, ignore_path=True)
+        v2_value = load(v2_path)
+        require(v2_value.get("model_request_count") == v2_value.get("behavioral_episode_count") == v2_value.get("repair_candidate_evaluation_count") == 0, "corrected-v2 source-push counts are nonzero")
+        v2_commit = str(v2_value.get("implementation_commit", ""))
+        require(bool(v2_commit) and not subprocess.run(["git", "-C", str(root), "merge-base", "--is-ancestor", v2_commit, prior_commit], check=False).returncode, "corrected-v2→v3 source ancestry differs")
+        v1_binding = v2_value.get("supersedes")
+        require(isinstance(v1_binding, Mapping), "corrected-v2 source-push gate lacks v1 binding")
         v1_path = repair_root / "source_push_gate.json"
         verify_binding(v1_binding, path=v1_path, ignore_path=True)
         v1_value = load(v1_path)
         require(v1_value.get("model_request_count") == v1_value.get("behavioral_episode_count") == v1_value.get("repair_candidate_evaluation_count") == 0, "v1 source-push counts are nonzero")
         v1_commit = str(v1_value.get("implementation_commit", ""))
-        require(bool(v1_commit) and not subprocess.run(["git", "-C", str(root), "merge-base", "--is-ancestor", v1_commit, prior_commit], check=False).returncode, "v1→v2 source ancestry differs")
-        source_gate_result = {"sha256": sha256(source_gate_path), "implementation_commit": implementation_commit, "files": len(inventory), "status": "latest_source_gate_verified"}
+        require(bool(v1_commit) and not subprocess.run(["git", "-C", str(root), "merge-base", "--is-ancestor", v1_commit, v2_commit], check=False).returncode, "v1→corrected-v2 source ancestry differs")
+        archive_binding = source_gate.get("original_pushed_v2_archive")
+        archive_path = repair_root / "source_push_gate_v2_superseded_invalid.json"
+        require(isinstance(archive_binding, Mapping), "v4 lacks original pushed v2 archive binding")
+        verify_binding(archive_binding, path=archive_path, ignore_path=True)
+        require(archive_binding.get("sha256") == "c63645794688d155254373387f5fcf284911e7ab55235442ae23b45f9fff0c23", "original pushed v2 archive digest differs")
+        archived_v2 = load(archive_path)
+        require(archived_v2.get("model_request_count") == archived_v2.get("behavioral_episode_count") == archived_v2.get("repair_candidate_evaluation_count") == 0, "archived original-v2 counts are nonzero")
+        archive_commit = str(archived_v2.get("implementation_commit", ""))
+        require(archive_commit == v2_commit, "archived and corrected v2 implementation commits differ")
+        bad_v1_binding = archived_v2.get("supersedes")
+        require(isinstance(bad_v1_binding, Mapping) and bad_v1_binding.get("sha256") == sha256(v1_path), "archived original-v2 v1 digest differs")
+        require(bad_v1_binding.get("bytes") == 3322 and v1_path.stat().st_size == 2851, "archived original-v2 defect is not the registered sole byte-count mismatch")
+        require(source_gate.get("archived_v2_defect") == "superseded v1 byte count recorded as 3322 instead of actual 2851; v1 SHA-256 and all zero counts were correct", "v4 archived-v2 defect statement differs")
+        source_gate_result = {"sha256": sha256(source_gate_path), "implementation_commit": implementation_commit, "files": len(inventory), "status": "latest_source_gate_and_original_freeze_archive_verified"}
     return {
         "passed": True,
         "repair_registration_sha256": sha256(registration_path),

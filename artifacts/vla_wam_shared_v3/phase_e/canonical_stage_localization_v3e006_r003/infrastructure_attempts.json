@@ -1,0 +1,57 @@
+{
+  "attempt_count": 1,
+  "attempts": [
+    {
+      "app_launcher_started": false,
+      "behavioral_denominator_included": false,
+      "behavioral_episode_count": 0,
+      "candidate_denominator_included": false,
+      "candidate_pair_evaluation_count": 0,
+      "detected_at_stage": "pre_AppLauncher_R002_compact_closure_semantic_validation",
+      "detected_at_utc": "2026-08-12T23:49:48.619741Z",
+      "diagnostic_evaluation_count": 0,
+      "exact_cause": "The prospective R003 loader required a nonexistent candidate_budget field in the immutable compact R002 closure. The closure instead records candidate_pair_count=8 and stage_solve_count=16.",
+      "exact_error": "R002 predecessor was not a zero-request finite exhaustion",
+      "excluded_from_all_scientific_denominators": true,
+      "model_request_count": 0,
+      "output_root": "/data/users/ali/vla_wam/raw/v3e006_r003/state_repair/689545c-a40r06-attempt01",
+      "raw_bindings": {
+        "expanded_invocation": {
+          "bytes": 5749,
+          "path": "/data/users/ali/vla_wam/tmp/v3e006_r003_689545c_a40r06_attempt01_invocation.json",
+          "sha256": "2c24849450ab388015ec057680ade47f4a6b1ddc693c702379d5701da84bd876"
+        },
+        "harness_result": {
+          "bytes": 5303,
+          "path": "/data/users/ali/vla_wam/raw/v3e006_r003/state_repair/689545c-a40r06-attempt01/harness_result.json",
+          "sha256": "2f5b9741768c08ead6803db7bfee7227ce4cdb02fb7846d7fdde70a66cfc55b0"
+        },
+        "launch": {
+          "bytes": 18101,
+          "path": "/data/users/ali/vla_wam/raw/v3e006_r003/state_repair/689545c-a40r06-attempt01/launch.json",
+          "sha256": "edcee7c0934a4d0f36d1222a3144d2bbabfb70464ca1a8c94ad2670230d72ff3"
+        },
+        "runtime_log": {
+          "bytes": 3991,
+          "path": "/data/users/ali/vla_wam/raw/v3e006_r003/state_repair/689545c-a40r06-attempt01/runtime.log",
+          "sha256": "0d2ebef90fa60a03b7f008fadfa496612668a1f2f9a534efba0bf048e07af708"
+        },
+        "wrapper_log": {
+          "bytes": 5406,
+          "path": "/data/users/ali/vla_wam/tmp/v3e006_r003_689545c_a40r06_attempt01_wrapper.log",
+          "sha256": "87cede0a42126be38ea387b64f2a5966967361092adec0200179e5efdda9b93a"
+        }
+      },
+      "repair_candidate_count": 0,
+      "schema_mismatch_repair_scope": "Replace only the erroneous compact-closure field check with exact validation of the already committed R002 compact schema, its 16 rank-stage rows, all raw-evidence bindings, and the frozen raw-result SHA. No R003 schedule, solver, threshold, target, candidate, or scientific gate changes.",
+      "state_candidate_count": 0,
+      "status": "infrastructure_invalid_pre_AppLauncher_no_diagnostic_or_candidate",
+      "study_commit": "689545cf78c787d4adb3fe16dbc577a36b174725"
+    }
+  ],
+  "behavioral_episode_count": 0,
+  "model_request_count": 0,
+  "repair_amendment_id": "V3-E006-R003",
+  "schema_version": "vla-wam-shared-v3e006-r003-infrastructure-attempt-ledger-v1",
+  "state_candidate_count": 0
+}

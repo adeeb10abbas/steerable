@@ -210,14 +210,22 @@ try:
     predecessor_result = json.loads(args.predecessor_closure_binding.read_text(encoding="utf-8"))
 except (OSError, json.JSONDecodeError) as exc:
     BOOTSTRAP.error(f"R002 predecessor result is unreadable: {exc}")
-if (
-    predecessor_result.get("status") != "r002_candidate_budget_exhausted_no_valid_state_pair"
-    or predecessor_result.get("model_request_count") != 0
-    or predecessor_result.get("behavioral_episode_count") != 0
-    or predecessor_result.get("candidate_budget") != 8
-    or predecessor_result.get("accepted_candidate_rank") is not None
-):
-    BOOTSTRAP.error("R002 predecessor was not a zero-request finite exhaustion")
+from experiments.v3.phase_e.canonical_stage_localization_v3e006_r003.predecessor_contract import (
+    validate_r002_exhaustion,
+)
+
+try:
+    validate_r002_exhaustion(predecessor_result)
+except ValueError as exc:
+    BOOTSTRAP.error(str(exc))
+for label, expected in predecessor_result["raw_evidence"].items():
+    raw_path = Path(str(expected["path"]))
+    if (
+        not raw_path.is_file()
+        or raw_path.stat().st_size != expected["bytes"]
+        or _sha(raw_path) != expected["sha256"]
+    ):
+        BOOTSTRAP.error(f"R002 predecessor raw evidence changed: {label}")
 if source_push_gate.get("status") != "passed_before_first_r003_live_diagnostic_candidate_or_model_request":
     BOOTSTRAP.error("R003 source-push gate did not pass prospectively")
 implementation_commit = str(source_push_gate.get("implementation_commit", ""))
@@ -233,9 +241,20 @@ if (
     or source_push_gate.get("r003_live_candidate_evaluation_count") != 0
     or source_push_gate.get("completed_candidate_pair_count") != 0
     or source_push_gate.get("accepted_state_candidate_count") != 0
-    or source_push_gate.get("infrastructure_invalid_search_attempt_count") != 0
+    or source_push_gate.get("infrastructure_invalid_search_attempt_count") not in (0, 1)
 ):
     BOOTSTRAP.error("R003 source-push history counts differ")
+if source_push_gate.get("infrastructure_invalid_search_attempt_count") == 1:
+    invalid_binding = source_push_gate.get("infrastructure_attempts")
+    if not isinstance(invalid_binding, Mapping):
+        BOOTSTRAP.error("R003 source-push gate lacks the retained invalid-attempt ledger")
+    invalid_path = study_root / Path(str(invalid_binding.get("path", "")))
+    if (
+        not invalid_path.is_file()
+        or invalid_path.stat().st_size != invalid_binding.get("bytes")
+        or _sha(invalid_path) != invalid_binding.get("sha256")
+    ):
+        BOOTSTRAP.error("R003 invalid-attempt ledger changed")
 implementation_files = source_push_gate.get("implementation_files")
 if not isinstance(implementation_files, list) or not implementation_files:
     BOOTSTRAP.error("source-push gate has no implementation-file inventory")

@@ -159,9 +159,20 @@ def main() -> None:
         or source_gate.get("r003_live_candidate_evaluation_count") != 0
         or source_gate.get("completed_candidate_pair_count") != 0
         or source_gate.get("accepted_state_candidate_count") != 0
-        or source_gate.get("infrastructure_invalid_search_attempt_count") != 0
+        or source_gate.get("infrastructure_invalid_search_attempt_count") not in (0, 1)
     ):
         parser.error("lifecycle-repair source-push history counts differ")
+    if source_gate.get("infrastructure_invalid_search_attempt_count") == 1:
+        invalid_binding = source_gate.get("infrastructure_attempts")
+        if not isinstance(invalid_binding, dict):
+            parser.error("source-push gate lacks the retained invalid-attempt ledger")
+        invalid_path = study_root / Path(str(invalid_binding.get("path", "")))
+        if (
+            not invalid_path.is_file()
+            or invalid_path.stat().st_size != invalid_binding.get("bytes")
+            or sha256(invalid_path) != invalid_binding.get("sha256")
+        ):
+            parser.error("retained invalid-attempt ledger changed")
     implementation_commit = str(source_gate.get("implementation_commit", ""))
     if not implementation_commit or subprocess.run(
         ["git", "-C", str(study_root), "merge-base", "--is-ancestor", implementation_commit, args.expected_study_commit],

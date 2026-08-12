@@ -14,6 +14,9 @@ from tools.validate_v3e006_r003 import (
     shortest_slerp,
     validate_scientific_selection,
 )
+from experiments.v3.phase_e.canonical_stage_localization_v3e006_r003.predecessor_contract import (
+    validate_r002_exhaustion,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -235,3 +238,34 @@ def test_diagnostic_failure_is_terminal_only_before_any_candidate() -> None:
     bad["attempts"] = [{"candidate_rank": 1}]
     with pytest.raises(ValidationError):
         validate_scientific_selection(bad, harness)
+
+
+def test_real_compact_r002_exhaustion_contract_and_negative_mutations() -> None:
+    path = (
+        ROOT
+        / "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r002/results/results.json"
+    )
+    compact = json.loads(path.read_text(encoding="utf-8"))
+    assert "candidate_budget" not in compact
+    validate_r002_exhaustion(compact)
+
+    for key, value in (
+        ("candidate_pair_count", 7),
+        ("stage_solve_count", 15),
+        ("accepted_candidate_rank", 1),
+        ("model_request_count", 1),
+        ("behavioral_activation_released", True),
+    ):
+        bad = deepcopy(compact)
+        bad[key] = value
+        with pytest.raises(ValueError):
+            validate_r002_exhaustion(bad)
+
+    bad = deepcopy(compact)
+    bad["stage_solves"][0]["stage"] = "canonical_carry"
+    with pytest.raises(ValueError):
+        validate_r002_exhaustion(bad)
+    bad = deepcopy(compact)
+    bad["raw_evidence"]["result"]["sha256"] = "0" * 64
+    with pytest.raises(ValueError):
+        validate_r002_exhaustion(bad)

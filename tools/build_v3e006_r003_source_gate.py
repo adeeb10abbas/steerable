@@ -15,8 +15,10 @@ from typing import Any
 BRANCH = "experiment/v3e006-r003-state-repair"
 FILES = (
     "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r003/gates/candidate_schedule.json",
+    "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r003/infrastructure_attempts.json",
     "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r003/repair_registration.json",
     "experiments/v3/phase_e/canonical_stage_localization_v3e006_r003/__init__.py",
+    "experiments/v3/phase_e/canonical_stage_localization_v3e006_r003/predecessor_contract.py",
     "experiments/v3/phase_e/canonical_stage_localization_v3e006_r003/state_repair_gate.py",
     "tests/test_v3e006_r003.py",
     "tools/build_v3e006_r003_freeze.py",
@@ -59,10 +61,22 @@ def main() -> None:
     if len(remote) != 2 or remote[0] != head:
         parser.error("remote R003 branch is not equal to implementation checkout")
     inventory = [bind(root, relative) for relative in FILES]
-    registration = root / FILES[1]
+    registration = root / FILES[2]
     schedule = root / FILES[0]
+    predecessor_gate = root / "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r003/source_push_gate.json"
+    infrastructure_attempts = root / FILES[1]
+    if not predecessor_gate.is_file():
+        parser.error("immutable R003 source-push gate v1 is missing")
+    ledger = json.loads(infrastructure_attempts.read_text(encoding="utf-8"))
+    if (
+        ledger.get("attempt_count") != 1
+        or ledger.get("model_request_count") != 0
+        or ledger.get("behavioral_episode_count") != 0
+        or ledger.get("state_candidate_count") != 0
+    ):
+        parser.error("R003 invalid-attempt ledger differs")
     result = {
-        "schema_version": "vla-wam-shared-v3e006-r003-source-push-gate-v1",
+        "schema_version": "vla-wam-shared-v3e006-r003-source-push-gate-v2",
         "repair_amendment_id": "V3-E006-R003",
         "created_at_utc": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "status": "passed_before_first_r003_live_diagnostic_candidate_or_model_request",
@@ -76,8 +90,11 @@ def main() -> None:
         "r003_live_candidate_evaluation_count": 0,
         "completed_candidate_pair_count": 0,
         "accepted_state_candidate_count": 0,
-        "infrastructure_invalid_search_attempt_count": 0,
-        "repair_registration": bind(root, FILES[1]),
+        "infrastructure_invalid_search_attempt_count": 1,
+        "infrastructure_attempts": bind(root, FILES[1]),
+        "supersedes_source_push_gate_v1": bind(root, str(predecessor_gate.relative_to(root))),
+        "supersession_reason": "The first cleared launch failed before AppLauncher because its loader queried a field absent from the immutable compact R002 closure. V2 binds the retained zero-count failure and the exact compact-schema validation repair; no registered solver, schedule, target, threshold, or scientific gate changed.",
+        "repair_registration": bind(root, FILES[2]),
         "candidate_schedule": bind(root, FILES[0]),
         "implementation_files": inventory,
         "implementation_file_count": len(inventory),

@@ -10,9 +10,18 @@ import json
 import math
 from pathlib import Path
 import subprocess
+import sys
 from typing import Any, Mapping
 
 import numpy as np
+
+REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
+if str(REPOSITORY_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPOSITORY_ROOT))
+
+from experiments.v3.phase_e.canonical_stage_localization_v3e006_r003.predecessor_contract import (
+    validate_r002_exhaustion,
+)
 
 
 R002_CLOSURE_COMMIT = "27d1bfd844808f7f336bbb4e25552a9c859fd08a"
@@ -204,13 +213,17 @@ def validate_scientific_selection(report: Mapping[str, Any], harness: Mapping[st
     require(harness.get("child_status") == report.get("status"), "harness child status differs")
 
 
-def validate_static(root: Path, *, require_source_gate: bool = True) -> dict[str, Any]:
+def validate_static(
+    root: Path, *, require_source_gate: bool = True, verify_raw: bool = False
+) -> dict[str, Any]:
     root = root.resolve()
     relative = Path("artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r003")
     artifact = root / relative
     registration_path = artifact / "repair_registration.json"
     schedule_path = artifact / "gates/candidate_schedule.json"
-    source_gate_path = artifact / "source_push_gate.json"
+    source_gate_v1_path = artifact / "source_push_gate.json"
+    source_gate_v2_path = artifact / "source_push_gate_v2.json"
+    source_gate_path = source_gate_v2_path if source_gate_v2_path.is_file() else source_gate_v1_path
     registration = load(registration_path)
     schedule = load(schedule_path)
 
@@ -253,6 +266,11 @@ def validate_static(root: Path, *, require_source_gate: bool = True) -> dict[str
         if not path.is_absolute():
             path = root / path
         verify_binding(path, row, f"R002 predecessor {name}")
+    r002_results = load(root / schedule["r002_predecessor"]["results"]["path"])
+    try:
+        validate_r002_exhaustion(r002_results)
+    except ValueError as exc:
+        raise ValidationError(str(exc)) from exc
     require(schedule.get("r002_closure_commit") == R002_CLOSURE_COMMIT, "R002 closure commit differs")
     require(
         schedule.get("r002_raw_result", {}).get("sha256")
@@ -387,6 +405,59 @@ def validate_static(root: Path, *, require_source_gate: bool = True) -> dict[str
         source_gate = load(source_gate_path)
         require(source_gate.get("status") == SOURCE_GATE_STATUS, "source-push status differs")
         require(source_gate.get("model_request_count") == source_gate.get("behavioral_episode_count") == source_gate.get("r003_live_candidate_evaluation_count") == source_gate.get("r003_live_diagnostic_count") == 0, "source-push counts differ")
+        if source_gate_path == source_gate_v2_path:
+            require(source_gate.get("schema_version") == "vla-wam-shared-v3e006-r003-source-push-gate-v2", "source-push v2 schema differs")
+            require(source_gate.get("infrastructure_invalid_search_attempt_count") == 1, "source-push invalid-attempt count differs")
+            verify_binding(source_gate_v1_path, source_gate["supersedes_source_push_gate_v1"], "source-push v1 predecessor")
+            ledger_binding = source_gate.get("infrastructure_attempts")
+            require(isinstance(ledger_binding, Mapping), "source-push infrastructure ledger binding absent")
+            ledger_path = root / str(ledger_binding["path"])
+            verify_binding(ledger_path, ledger_binding, "source-push infrastructure ledger")
+            ledger = load(ledger_path)
+            require(ledger.get("attempt_count") == 1, "infrastructure ledger attempt count differs")
+            require(ledger.get("model_request_count") == ledger.get("behavioral_episode_count") == ledger.get("state_candidate_count") == 0, "infrastructure ledger counts differ")
+            attempt = ledger.get("attempts", [{}])[0]
+            require(attempt.get("status") == "infrastructure_invalid_pre_AppLauncher_no_diagnostic_or_candidate", "invalid-attempt status differs")
+            require(attempt.get("app_launcher_started") is False, "invalid attempt passed AppLauncher boundary")
+            require(attempt.get("model_request_count") == attempt.get("behavioral_episode_count") == attempt.get("diagnostic_evaluation_count") == attempt.get("candidate_pair_evaluation_count") == attempt.get("state_candidate_count") == 0, "invalid-attempt counts differ")
+            raw_bindings = attempt.get("raw_bindings")
+            require(
+                isinstance(raw_bindings, Mapping)
+                and set(raw_bindings)
+                == {"expanded_invocation", "wrapper_log", "launch", "harness_result", "runtime_log"},
+                "invalid-attempt raw binding inventory differs",
+            )
+            expected_attempt_hashes = {
+                "expanded_invocation": "2c24849450ab388015ec057680ade47f4a6b1ddc693c702379d5701da84bd876",
+                "wrapper_log": "87cede0a42126be38ea387b64f2a5966967361092adec0200179e5efdda9b93a",
+                "launch": "edcee7c0934a4d0f36d1222a3144d2bbabfb70464ca1a8c94ad2670230d72ff3",
+                "harness_result": "2f5b9741768c08ead6803db7bfee7227ce4cdb02fb7846d7fdde70a66cfc55b0",
+                "runtime_log": "0d2ebef90fa60a03b7f008fadfa496612668a1f2f9a534efba0bf048e07af708",
+            }
+            require(
+                {name: row.get("sha256") for name, row in raw_bindings.items()}
+                == expected_attempt_hashes,
+                "invalid-attempt raw hashes differ",
+            )
+            output_root = Path(str(attempt.get("output_root", "")))
+            require(
+                raw_bindings["launch"]["path"] == str(output_root / "launch.json")
+                and raw_bindings["harness_result"]["path"]
+                == str(output_root / "harness_result.json")
+                and raw_bindings["runtime_log"]["path"] == str(output_root / "runtime.log"),
+                "invalid-attempt output-root bindings differ",
+            )
+            if verify_raw:
+                for name, row in raw_bindings.items():
+                    verify_binding(Path(str(row["path"])), row, f"invalid-attempt raw {name}")
+                invalid_receipt = validate_candidate_root(root, output_root)
+                require(
+                    invalid_receipt.get("status")
+                    == "retained_infrastructure_invalid_before_AppLauncher",
+                    "invalid-attempt raw receipt status differs",
+                )
+        else:
+            require(source_gate.get("infrastructure_invalid_search_attempt_count") == 0, "source-push v1 invalid count differs")
         implementation_commit = str(source_gate.get("implementation_commit", ""))
         require(
             subprocess.run(["git", "-C", str(root), "cat-file", "-e", f"{implementation_commit}^{{commit}}"], check=False).returncode == 0,
@@ -423,8 +494,39 @@ def validate_candidate_root(root: Path, candidate_root: Path) -> dict[str, Any]:
     require(harness.get("model_request_count") == harness.get("behavioral_episode_count") == 0, "raw harness counts differ")
     verify_binding(launch_path, harness["launch"], "raw harness launch")
     verify_binding(runtime_path, harness["runtime_log"], "raw harness runtime log")
+    for name, expected in launch.get("input_bindings", {}).items():
+        verify_binding(Path(str(expected["path"])), expected, f"raw launch input {name}")
+    for name, expected in launch.get("formal_health_preflight", {}).items():
+        verify_binding(Path(str(expected["path"])), expected, f"raw formal health {name}")
+    verify_binding(Path(str(launch["harness_source"]["path"])), launch["harness_source"], "raw harness source")
     report_binding = harness.get("child_report")
-    require(isinstance(report_binding, Mapping), "raw harness lacks child report")
+    if report_binding is None:
+        require(harness.get("status") == "infrastructure_invalid_r003_state_repair", "pre-child harness status differs")
+        require(harness.get("process_completed") is False, "pre-child harness cannot be complete")
+        require(harness.get("scientific_gate_passed") is False, "pre-child harness cannot pass science")
+        require(harness.get("process_exit_code") == 2, "pre-child bootstrap exit code differs")
+        require(harness.get("child_status") is None, "pre-child harness has a child status")
+        require(harness.get("r003_live_diagnostic_count") == harness.get("repair_candidate_evaluation_count") == 0, "pre-child harness counts differ")
+        require(
+            "R002 predecessor was not a zero-request finite exhaustion"
+            in str(harness.get("failure_log_tail", "")),
+            "pre-child bootstrap cause differs",
+        )
+        require(not (candidate_root / "raw").exists(), "pre-child attempt unexpectedly created raw child evidence")
+        return {
+            "passed": True,
+            "candidate_root": str(candidate_root),
+            "status": "retained_infrastructure_invalid_before_AppLauncher",
+            "launch": binding(launch_path),
+            "harness": binding(harness_path),
+            "runtime_log": binding(runtime_path),
+            "child_report": None,
+            "model_request_count": 0,
+            "behavioral_episode_count": 0,
+            "r003_live_diagnostic_count": 0,
+            "repair_candidate_evaluation_count": 0,
+        }
+    require(isinstance(report_binding, Mapping), "raw harness child binding differs")
     report_path = Path(str(report_binding["path"]))
     verify_binding(report_path, report_binding, "raw child report")
     report = load(report_path)
@@ -477,11 +579,6 @@ def validate_candidate_root(root: Path, candidate_root: Path) -> dict[str, Any]:
         require(report.get("model_request_count") == report.get("behavioral_episode_count") == report.get("state_candidate_count") == 0, "invalid child counts differ")
         for artifact in report.get("available_raw_artifacts", {}).values():
             verify_binding(Path(str(artifact["path"])), artifact, "invalid available artifact")
-    for name, expected in launch.get("input_bindings", {}).items():
-        verify_binding(Path(str(expected["path"])), expected, f"raw launch input {name}")
-    for name, expected in launch.get("formal_health_preflight", {}).items():
-        verify_binding(Path(str(expected["path"])), expected, f"raw formal health {name}")
-    verify_binding(Path(str(launch["harness_source"]["path"])), launch["harness_source"], "raw harness source")
     child_evidence = report.get("execution_evidence", report)
     require(isinstance(child_evidence, Mapping), "child execution evidence is absent")
     for name, expected in child_evidence.get("input_bindings", {}).items():
@@ -522,8 +619,13 @@ def main() -> None:
     parser.add_argument("--study-root", type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument("--pre-source-gate", action="store_true")
     parser.add_argument("--candidate-root", type=Path)
+    parser.add_argument("--verify-raw", action="store_true")
     args = parser.parse_args()
-    result = validate_static(args.study_root, require_source_gate=not args.pre_source_gate)
+    result = validate_static(
+        args.study_root,
+        require_source_gate=not args.pre_source_gate,
+        verify_raw=args.verify_raw,
+    )
     if args.candidate_root is not None:
         result["candidate_evidence"] = validate_candidate_root(args.study_root, args.candidate_root)
     print(json.dumps(result, allow_nan=False, indent=2, sort_keys=True))

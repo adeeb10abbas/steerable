@@ -126,6 +126,18 @@ def main() -> None:
                 verify_binding(binding_row, verify_raw=True)
             for binding_row in child.get("diagnostic_inputs", []):
                 verify_binding(binding_row, verify_raw=True)
+            runtime_path = Path(launch["input_bindings"]["runtime_contract"]["path"])
+            runtime_contract = json.loads(runtime_path.read_text(encoding="utf-8"))
+            renderer = runtime_contract["components"]["renderer"]["contract"]
+            if child.get("runtime_contract_observation", {}).get("canonical_contract_sha256") != runtime_contract.get("canonical_contract_sha256"):
+                raise AssertionError("child runtime observation differs from the frozen exact E004 contract")
+            if child.get("app_launcher_runtime") != {
+                "renderer": renderer["renderer"],
+                "rendering_mode": renderer["rendering_type"],
+                "device": renderer["device"],
+                "headless": renderer["headless"],
+            }:
+                raise AssertionError("child AppLauncher runtime differs from the frozen E004 renderer contract")
         elif result.get("status") != "infrastructure_invalid_zero_model_health_preflight":
             raise AssertionError("failed preflight lacks invalid status")
         preflight_status = result["status"]

@@ -14,6 +14,15 @@ import sys
 from typing import Any
 
 
+E004_APP_LAUNCHER_ARGV = (
+    "--num-envs", "1",
+    "--headless",
+    "--rendering_mode", "balanced",
+    "--device", "cuda:0",
+    "--kit_args=--/rtx/verifyDriverVersion/enabled=false",
+)
+
+
 def sha256(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as handle:
@@ -132,12 +141,7 @@ def main() -> None:
         "--container-image", args.container_image,
         "--container-id", args.container_id,
         "--driver-version", args.driver_version,
-        "--num-envs", "1",
-        "--headless",
-        "--renderer", "realtime",
-        "--rendering-type", "balanced",
-        "--device", "cuda:0",
-        "--kit_args=--/rtx/verifyDriverVersion/enabled=false",
+        *E004_APP_LAUNCHER_ARGV,
     ]
     native = (
         "/data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:"

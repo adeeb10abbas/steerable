@@ -23,6 +23,19 @@ def test_harness_retains_unique_writable_home() -> None:
     assert 'launch.get("environment", {}).get("HOME") != expected_home' in validator
 
 
+def test_generated_app_launcher_argv_uses_accepted_e004_runtime_flags() -> None:
+    argv = HARNESS.E004_APP_LAUNCHER_ARGV
+    assert argv == (
+        "--num-envs", "1",
+        "--headless",
+        "--rendering_mode", "balanced",
+        "--device", "cuda:0",
+        "--kit_args=--/rtx/verifyDriverVersion/enabled=false",
+    )
+    assert "--renderer" not in argv
+    assert "--rendering-type" not in argv
+
+
 def test_interpreter_binding_preserves_venv_symlink_path(tmp_path: Path) -> None:
     target = tmp_path / "python-build" / "python3.11"
     target.parent.mkdir()

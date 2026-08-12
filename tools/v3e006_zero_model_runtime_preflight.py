@@ -57,7 +57,7 @@ if args.output.exists():
     parser.error(f"refusing to overwrite preflight evidence: {args.output}")
 if args.num_envs != 1 or not args.headless:
     parser.error("preflight requires one headless environment")
-if args.renderer != "realtime" or args.rendering_type != "balanced" or args.device != "cuda:0":
+if args.rendering_mode != "balanced" or args.device != "cuda:0":
     parser.error("preflight requires the E004 realtime/balanced/cuda:0 runtime")
 
 study_root = args.study_root.resolve()
@@ -105,7 +105,7 @@ if os.environ.get("VK_ICD_FILENAMES") != "/etc/vulkan/icd.d/nvidia_icd.json":
     parser.error("Vulkan ICD differs from the proven E004 runtime")
 if os.environ.get("LD_LIBRARY_PATH") != expected_ld_library_path:
     parser.error("native-library path differs from the proven E004 runtime")
-for key in ("XDG_CACHE_HOME", "WARP_CACHE_PATH", "MPLCONFIGDIR", "TMPDIR"):
+for key in ("HOME", "XDG_CACHE_HOME", "WARP_CACHE_PATH", "MPLCONFIGDIR", "TMPDIR"):
     value = os.environ.get(key)
     if not value or not Path(value).is_dir() or not os.access(value, os.W_OK):
         parser.error(f"isolated writable runtime directory is invalid: {key}")
@@ -168,6 +168,7 @@ try:
             "NVIDIA_DRIVER_CAPABILITIES",
             "VK_ICD_FILENAMES",
             "LD_LIBRARY_PATH",
+            "HOME",
             "XDG_CACHE_HOME",
             "WARP_CACHE_PATH",
             "MPLCONFIGDIR",
@@ -186,6 +187,12 @@ try:
         "source": _binding(source),
         "bound_inputs": bound_inputs,
         "runtime_contract_observation": runtime_observation,
+        "app_launcher_runtime": {
+            "renderer": "realtime",
+            "rendering_mode": args.rendering_mode,
+            "device": args.device,
+            "headless": args.headless,
+        },
         "diagnostic_inputs": [_binding(path) for path in args.diagnostic_input],
         "invocation": sys.argv,
         "environment": environment,

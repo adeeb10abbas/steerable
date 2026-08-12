@@ -111,6 +111,27 @@ def main() -> None:
     health_harness = json.loads((args.health_preflight_root / "harness_result.json").read_text(encoding="utf-8"))
     if health_harness.get("status") != "passed_generic_zero_model_health_preflight" or health_harness.get("passed") is not True:
         parser.error("bound formal health preflight did not pass")
+    source_gate = json.loads(args.source_push_gate.read_text(encoding="utf-8"))
+    if source_gate.get("status") != "passed_before_any_r001_candidate_or_model_request":
+        parser.error("source-push gate did not pass prospectively")
+    if source_gate.get("model_request_count") != 0 or source_gate.get("behavioral_episode_count") != 0 or source_gate.get("repair_candidate_evaluation_count") != 0:
+        parser.error("source-push gate has nonzero prerelease counts")
+    implementation_commit = str(source_gate.get("implementation_commit", ""))
+    if not implementation_commit or subprocess.run(
+        ["git", "-C", str(study_root), "merge-base", "--is-ancestor", implementation_commit, args.expected_study_commit],
+        check=False,
+    ).returncode:
+        parser.error("source-push implementation commit is not an ancestor of runtime checkout")
+    implementation_files = source_gate.get("implementation_files")
+    if not isinstance(implementation_files, list) or not implementation_files:
+        parser.error("source-push gate has no implementation inventory")
+    for row in implementation_files:
+        relative = Path(str(row.get("path", "")))
+        if relative.is_absolute() or ".." in relative.parts:
+            parser.error(f"unsafe source-push path: {relative}")
+        actual = study_root / relative
+        if not actual.is_file() or actual.stat().st_size != row.get("bytes") or sha256(actual) != row.get("sha256"):
+            parser.error(f"source-push implementation file changed: {relative}")
 
     output_root.mkdir(parents=True)
     child_output = output_root / "raw"

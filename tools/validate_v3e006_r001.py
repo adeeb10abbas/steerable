@@ -139,6 +139,23 @@ def validate_package(root: Path) -> dict[str, Any]:
                 for key in ("raw_episode", "state_capture", "hdf5_trace"):
                     bound = source["provenance"][key]
                     require(set(bound) >= {"path", "bytes", "sha256"}, f"source {key} lacks binding")
+    source_gate_path = repair_root / "source_push_gate.json"
+    source_gate_result = None
+    if source_gate_path.is_file():
+        source_gate = load(source_gate_path)
+        require(source_gate.get("schema_version") == "vla-wam-shared-v3e006-r001-source-push-gate-v1", "wrong source-push schema")
+        require(source_gate.get("status") == "passed_before_any_r001_candidate_or_model_request", "source-push gate did not pass")
+        require(source_gate.get("model_request_count") == source_gate.get("behavioral_episode_count") == source_gate.get("repair_candidate_evaluation_count") == 0, "source-push counts are nonzero")
+        implementation_commit = str(source_gate.get("implementation_commit", ""))
+        require(bool(implementation_commit), "source-push implementation commit is absent")
+        subprocess.run(["git", "-C", str(root), "cat-file", "-e", f"{implementation_commit}^{{commit}}"], check=True)
+        inventory = source_gate.get("implementation_files")
+        require(isinstance(inventory, list) and inventory, "source-push implementation inventory is absent")
+        for row in inventory:
+            relative = Path(str(row.get("path", "")))
+            require(not relative.is_absolute() and ".." not in relative.parts, f"unsafe source-push path: {relative}")
+            verify_binding(row, path=root / relative, ignore_path=True)
+        source_gate_result = {"sha256": sha256(source_gate_path), "implementation_commit": implementation_commit, "files": len(inventory)}
     return {
         "passed": True,
         "repair_registration_sha256": sha256(registration_path),
@@ -146,6 +163,7 @@ def validate_package(root: Path) -> dict[str, Any]:
         "original_closure_binding_sha256": sha256(closure_path),
         "candidate_pairs": len(pairs),
         "original_files_verified": len(files),
+        "source_push_gate": source_gate_result,
     }
 
 

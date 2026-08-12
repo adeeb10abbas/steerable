@@ -199,6 +199,16 @@ if not implementation_commit or subprocess.run(
     BOOTSTRAP.error("source-push implementation commit is not an ancestor of runtime checkout")
 if source_push_gate.get("model_request_count") != 0 or source_push_gate.get("repair_candidate_evaluation_count") != 0:
     BOOTSTRAP.error("source-push gate has nonzero prerelease counts")
+implementation_files = source_push_gate.get("implementation_files")
+if not isinstance(implementation_files, list) or not implementation_files:
+    BOOTSTRAP.error("source-push gate has no implementation-file inventory")
+for row in implementation_files:
+    relative = Path(str(row.get("path", "")))
+    if relative.is_absolute() or ".." in relative.parts:
+        BOOTSTRAP.error(f"source-push gate contains unsafe path: {relative}")
+    actual = study_root / relative
+    if not actual.is_file() or actual.stat().st_size != row.get("bytes") or _sha(actual) != row.get("sha256"):
+        BOOTSTRAP.error(f"source-push implementation file changed: {relative}")
 
 mapping = {name: name for name in ("banana", "banana_right", "bowl", "rubiks_cube")}
 os.environ.update(

@@ -48,6 +48,7 @@ parser.add_argument("--gpu-uuid", required=True)
 parser.add_argument("--container-image", required=True)
 parser.add_argument("--container-id", required=True)
 parser.add_argument("--driver-version", required=True)
+parser.add_argument("--num-envs", type=int, default=1)
 AppLauncher.add_app_launcher_args(parser)
 args = parser.parse_args()
 args.enable_cameras = True

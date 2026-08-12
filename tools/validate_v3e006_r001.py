@@ -282,6 +282,35 @@ def validate_package(root: Path) -> dict[str, Any]:
         require(bad_v1_binding.get("bytes") == 3322 and v1_path.stat().st_size == 2851, "archived original-v2 defect is not the registered sole byte-count mismatch")
         require(archive_owner.get("archived_v2_defect") == "superseded v1 byte count recorded as 3322 instead of actual 2851; v1 SHA-256 and all zero counts were correct", "v4 archived-v2 defect statement differs")
         source_gate_result = {"sha256": sha256(source_gate_path), "implementation_commit": implementation_commit, "files": len(inventory), "status": "latest_source_gate_and_original_freeze_archive_verified"}
+    exhaustion_result = None
+    results_path = repair_root / "results/results.json"
+    evidence_path = repair_root / "results/evidence_manifest.json"
+    memo_path = repair_root / "results/DECISION_MEMO.md"
+    if results_path.is_file() or evidence_path.is_file() or memo_path.is_file():
+        results = load(results_path)
+        evidence = load(evidence_path)
+        require(memo_path.is_file(), "R001 exhaustion memo is absent")
+        require(results.get("status") == "r001_candidate_budget_exhausted_no_valid_state_pair", "R001 exhaustion status differs")
+        require(results.get("candidate_gate_passed") is False and results.get("accepted_candidate_rank") is None, "R001 exhaustion was incorrectly marked passed")
+        require(results.get("candidate_budget") == results.get("completed_candidate_pair_count") == results.get("repair_candidate_evaluation_count") == 8, "R001 exhaustion count differs")
+        require(results.get("model_request_count") == results.get("behavioral_episode_count") == 0, "R001 exhaustion model/behavior count is nonzero")
+        require(results.get("first_passing_rule_obeyed") is True, "R001 stopping rule differs")
+        require(evidence.get("status") == "hash_bound_r001_finite_exhaustion_zero_model_zero_behavior", "R001 evidence status differs")
+        require(evidence.get("candidate_gate_passed") is False, "R001 evidence was marked passed")
+        require(evidence.get("model_request_count") == evidence.get("behavioral_episode_count") == 0, "R001 evidence model/behavior count is nonzero")
+        for name, row in evidence["registered_inputs"].items():
+            verify_binding(row, path=root / row["path"], ignore_path=True)
+        require(evidence["raw_attempt"]["result"] == results["raw_result"], "R001 compact/raw result binding differs")
+        require("No policy request or behavioral episode ran" in memo_path.read_text(encoding="utf-8"), "R001 memo conclusion differs")
+        exhaustion_result = {
+            "results_sha256": sha256(results_path),
+            "evidence_manifest_sha256": sha256(evidence_path),
+            "decision_memo_sha256": sha256(memo_path),
+            "completed_candidate_pairs": 8,
+            "accepted_candidate_rank": None,
+            "model_request_count": 0,
+            "behavioral_episode_count": 0,
+        }
     return {
         "passed": True,
         "repair_registration_sha256": sha256(registration_path),
@@ -292,6 +321,7 @@ def validate_package(root: Path) -> dict[str, Any]:
         "infrastructure_attempts_retained": len(infrastructure_rows),
         "runtime_lifecycle_repair_sha256": sha256(lifecycle_path),
         "source_push_gate": source_gate_result,
+        "exhaustion": exhaustion_result,
     }
 
 

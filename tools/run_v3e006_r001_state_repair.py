@@ -26,6 +26,10 @@ E004_APP_LAUNCHER_ARGV = (
     "--disable-subtask",
     "--kit_args=--/rtx/verifyDriverVersion/enabled=false",
 )
+COMPLETED_CHILD_STATUSES = {
+    "passed_r001_state_repair_not_released_for_behavior": True,
+    "r001_candidate_budget_exhausted_no_valid_state_pair": False,
+}
 
 
 def sha256(path: Path) -> str:
@@ -49,6 +53,22 @@ def require(path: Path, expected: str) -> dict[str, Any]:
 
 def utcnow() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def child_process_completed(returncode: int, report_path: Path | None, payload: Any) -> bool:
+    """Accept only an exact normal R001 terminal report, never a failure report."""
+
+    if returncode != 0 or report_path is None or report_path.name != "state_repair_result.json":
+        return False
+    if not isinstance(payload, dict):
+        return False
+    expected_passed = COMPLETED_CHILD_STATUSES.get(str(payload.get("status")))
+    if expected_passed is None or payload.get("passed") is not expected_passed:
+        return False
+    if payload.get("model_request_count") != 0 or payload.get("behavioral_episode_count") != 0:
+        return False
+    count = payload.get("repair_candidate_evaluation_count")
+    return isinstance(count, int) and not isinstance(count, bool) and 1 <= count <= 8
 
 
 def main() -> None:
@@ -225,7 +245,7 @@ def main() -> None:
     failure_path = child_output / "state_construction_failure.json"
     child_report = result_path if result_path.is_file() else failure_path if failure_path.is_file() else None
     child_payload = json.loads(child_report.read_text(encoding="utf-8")) if child_report else None
-    passed_process = returncode == 0 and child_payload is not None
+    passed_process = child_process_completed(returncode, child_report, child_payload)
     result = {
         "schema_version": "vla-wam-shared-v3e006-r001-state-repair-harness-result-v1",
         "created_at_utc": utcnow(),

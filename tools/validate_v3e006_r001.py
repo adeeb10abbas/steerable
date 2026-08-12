@@ -18,6 +18,12 @@ ORIGINAL_COMMIT = "e13e7b22b048075bf0d3cf44a892c70853ce8a7e"
 STATE_CONTRACT_SHA256 = "2476b28d2867c1b87f477fd5f89e545616be00d860d4144f8cbdb70af10f3c18"
 OOD_REFERENCE_SHA256 = "4df1ebf0061096a74b5eccd10b2a144e840f52fd50469b8bdae9369d1696fd04"
 OOD_FREEZE_SHA256 = "4d3a02c1d96be1ddd98f47a15cf41ad1d2a6c54c3007f3846742cfcbf31873f4"
+ATTEMPT01_BINDINGS = {
+    "launch": (16931, "94bb3b07c824665b35fdfe16c73a801ecd8c78e8fd0cfe5b4a609f425f3e80c2"),
+    "harness_result": (1482, "b96715b562d0e1865fe71f3249dc69fb92fb00ec722781f7bc5561f07f6eb64f"),
+    "runtime_log": (21997, "cc188cfb6edc86f423e0cecd6c27b9ce1acf23240a7be85d3d9e511fa8503363"),
+    "child_failure": (61209, "ad0dad25fc081bcadcf888a2c3c057546948216ec7abac6313e507452fa556dd"),
+}
 
 
 def sha256(path: Path) -> str:
@@ -110,6 +116,55 @@ def validate_package(root: Path) -> dict[str, Any]:
     require(frozen["ood_reference"]["sha256"] == OOD_REFERENCE_SHA256, "OOD implementation hash differs")
     require(frozen["ood_freeze"]["sha256"] == OOD_FREEZE_SHA256, "OOD freeze hash differs")
 
+    lifecycle_path = repair_root / "gates/runtime_lifecycle_repair_v1.json"
+    lifecycle = load(lifecycle_path)
+    require(
+        lifecycle.get("schema_version")
+        == "vla-wam-shared-v3e006-r001-prospective-runtime-lifecycle-repair-v1",
+        "wrong runtime lifecycle repair schema",
+    )
+    require(
+        lifecycle.get("status")
+        == "prospectively_frozen_after_infrastructure_invalid_attempt01_before_any_retry_or_model_request",
+        "runtime lifecycle repair was not frozen prospectively",
+    )
+    require(
+        lifecycle.get("counts_at_freeze")
+        == {
+            "model_requests": 0,
+            "behavioral_episodes": 0,
+            "accepted_state_candidates": 0,
+            "completed_candidate_pairs": 0,
+            "infrastructure_invalid_search_attempts": 1,
+        },
+        "runtime lifecycle repair counts differ",
+    )
+    lifecycle_frozen = lifecycle["frozen_scientific_contracts"]
+    require(lifecycle_frozen.get("repair_registration_sha256") == sha256(registration_path), "lifecycle repair registration binding differs")
+    require(lifecycle_frozen.get("candidate_schedule_sha256") == sha256(schedule_path), "lifecycle repair schedule binding differs")
+    require(lifecycle_frozen.get("original_closure_binding_sha256") == sha256(closure_path), "lifecycle repair closure binding differs")
+    require(lifecycle_frozen.get("state_contract_sha256") == STATE_CONTRACT_SHA256, "lifecycle repair state gate differs")
+    require(lifecycle_frozen.get("ood_reference_sha256") == OOD_REFERENCE_SHA256, "lifecycle repair OOD code differs")
+    require(lifecycle_frozen.get("ood_freeze_sha256") == OOD_FREEZE_SHA256, "lifecycle repair OOD freeze differs")
+    require(lifecycle_frozen.get("candidate_budget") == 8, "lifecycle repair candidate budget differs")
+
+    infrastructure_path = repair_root / "infrastructure_attempts.jsonl"
+    infrastructure_rows = [
+        json.loads(line)
+        for line in infrastructure_path.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
+    require(len(infrastructure_rows) == 1, "R001 infrastructure ledger must retain exactly attempt01 before retry")
+    infrastructure = infrastructure_rows[0]
+    require(infrastructure.get("attempt_id") == "v3e006-r001-state-repair-attempt01", "wrong R001 infrastructure attempt ID")
+    require(infrastructure.get("model_request_count") == infrastructure.get("behavioral_episode_count") == 0, "attempt01 counts are nonzero")
+    require(infrastructure.get("state_candidate_count") == infrastructure.get("completed_candidate_pair_count") == 0, "attempt01 was incorrectly counted as a candidate")
+    require(infrastructure.get("behavioral_denominator_included") is False and infrastructure.get("candidate_denominator_included") is False, "attempt01 entered a denominator")
+    require(infrastructure.get("harness_misclassification", {}).get("scientific_completion") is False, "attempt01 harness defect was not disclosed")
+    for name, (expected_bytes, expected_sha) in ATTEMPT01_BINDINGS.items():
+        row = infrastructure["raw_bindings"][name]
+        require(row.get("bytes") == expected_bytes and row.get("sha256") == expected_sha, f"attempt01 {name} binding differs")
+
     require(schedule.get("schema_version") == "vla-wam-shared-v3e006-r001-matched-direction-candidate-schedule-v1", "wrong schedule schema")
     require(schedule.get("status") == "frozen_before_any_live_repair_candidate_or_new_model_request", "wrong schedule status")
     require(schedule.get("model_request_count") == schedule.get("repair_behavioral_episode_count") == 0, "schedule counts are nonzero")
@@ -139,7 +194,8 @@ def validate_package(root: Path) -> dict[str, Any]:
                 for key in ("raw_episode", "state_capture", "hdf5_trace"):
                     bound = source["provenance"][key]
                     require(set(bound) >= {"path", "bytes", "sha256"}, f"source {key} lacks binding")
-    source_gate_path = repair_root / "source_push_gate_v4.json"
+    v5_path = repair_root / "source_push_gate_v5.json"
+    source_gate_path = v5_path if v5_path.is_file() else repair_root / "source_push_gate_v4.json"
     source_gate_result = None
     if source_gate_path.is_file():
         source_gate = load(source_gate_path)
@@ -155,9 +211,10 @@ def validate_package(root: Path) -> dict[str, Any]:
             relative = Path(str(row.get("path", "")))
             require(not relative.is_absolute() and ".." not in relative.parts, f"unsafe source-push path: {relative}")
             verify_binding(row, path=root / relative, ignore_path=True)
-        prior_gate_path = repair_root / "source_push_gate_v3.json"
+        is_lifecycle_gate = source_gate_path == v5_path
+        prior_gate_path = repair_root / ("source_push_gate_v4.json" if is_lifecycle_gate else "source_push_gate_v3.json")
         prior_gate = source_gate.get("supersedes")
-        require(isinstance(prior_gate, Mapping), "latest source-push gate lacks v3 supersession binding")
+        require(isinstance(prior_gate, Mapping), "latest source-push gate lacks supersession binding")
         verify_binding(prior_gate, path=prior_gate_path, ignore_path=True)
         prior_value = load(prior_gate_path)
         require(prior_value.get("status") == "passed_before_any_r001_candidate_or_model_request", "superseded source-push gate did not pass")
@@ -165,6 +222,30 @@ def validate_package(root: Path) -> dict[str, Any]:
         prior_commit = str(prior_value.get("implementation_commit", ""))
         require(bool(prior_commit), "superseded source-push implementation commit is absent")
         require(not subprocess.run(["git", "-C", str(root), "merge-base", "--is-ancestor", prior_commit, implementation_commit], check=False).returncode, "source-push ancestry differs")
+        archive_owner = source_gate
+        if is_lifecycle_gate:
+            lifecycle_binding = source_gate.get("runtime_lifecycle_repair")
+            infrastructure_binding = source_gate.get("attempt01_infrastructure_ledger")
+            require(isinstance(lifecycle_binding, Mapping), "v5 lacks lifecycle repair binding")
+            require(isinstance(infrastructure_binding, Mapping), "v5 lacks attempt01 ledger binding")
+            verify_binding(lifecycle_binding, path=lifecycle_path, ignore_path=True)
+            verify_binding(infrastructure_binding, path=infrastructure_path, ignore_path=True)
+            require(
+                source_gate.get("prospective_change_scope")
+                == "runtime lifecycle isolation, terminal diagnostics, and failure classification only; candidate schedule and all scientific gates remain unchanged",
+                "v5 prospective lifecycle scope differs",
+            )
+            archive_owner = prior_value
+            v3_path = repair_root / "source_push_gate_v3.json"
+            v3_binding = prior_value.get("supersedes")
+            require(isinstance(v3_binding, Mapping), "v4 source-push gate lacks v3 binding")
+            verify_binding(v3_binding, path=v3_path, ignore_path=True)
+            v3_value = load(v3_path)
+            require(v3_value.get("model_request_count") == v3_value.get("behavioral_episode_count") == v3_value.get("repair_candidate_evaluation_count") == 0, "v3 source-push counts are nonzero")
+            v3_commit = str(v3_value.get("implementation_commit", ""))
+            require(bool(v3_commit) and not subprocess.run(["git", "-C", str(root), "merge-base", "--is-ancestor", v3_commit, prior_commit], check=False).returncode, "v3→v4 source ancestry differs")
+            prior_value = v3_value
+            prior_commit = v3_commit
         v2_binding = prior_value.get("supersedes")
         require(isinstance(v2_binding, Mapping), "v3 source-push gate lacks corrected-v2 binding")
         v2_path = repair_root / "source_push_gate_v2.json"
@@ -181,7 +262,7 @@ def validate_package(root: Path) -> dict[str, Any]:
         require(v1_value.get("model_request_count") == v1_value.get("behavioral_episode_count") == v1_value.get("repair_candidate_evaluation_count") == 0, "v1 source-push counts are nonzero")
         v1_commit = str(v1_value.get("implementation_commit", ""))
         require(bool(v1_commit) and not subprocess.run(["git", "-C", str(root), "merge-base", "--is-ancestor", v1_commit, v2_commit], check=False).returncode, "v1→corrected-v2 source ancestry differs")
-        archive_binding = source_gate.get("original_pushed_v2_archive")
+        archive_binding = archive_owner.get("original_pushed_v2_archive")
         archive_path = repair_root / "source_push_gate_v2_superseded_invalid.json"
         require(isinstance(archive_binding, Mapping), "v4 lacks original pushed v2 archive binding")
         verify_binding(archive_binding, path=archive_path, ignore_path=True)
@@ -193,7 +274,7 @@ def validate_package(root: Path) -> dict[str, Any]:
         bad_v1_binding = archived_v2.get("supersedes")
         require(isinstance(bad_v1_binding, Mapping) and bad_v1_binding.get("sha256") == sha256(v1_path), "archived original-v2 v1 digest differs")
         require(bad_v1_binding.get("bytes") == 3322 and v1_path.stat().st_size == 2851, "archived original-v2 defect is not the registered sole byte-count mismatch")
-        require(source_gate.get("archived_v2_defect") == "superseded v1 byte count recorded as 3322 instead of actual 2851; v1 SHA-256 and all zero counts were correct", "v4 archived-v2 defect statement differs")
+        require(archive_owner.get("archived_v2_defect") == "superseded v1 byte count recorded as 3322 instead of actual 2851; v1 SHA-256 and all zero counts were correct", "v4 archived-v2 defect statement differs")
         source_gate_result = {"sha256": sha256(source_gate_path), "implementation_commit": implementation_commit, "files": len(inventory), "status": "latest_source_gate_and_original_freeze_archive_verified"}
     return {
         "passed": True,
@@ -202,6 +283,8 @@ def validate_package(root: Path) -> dict[str, Any]:
         "original_closure_binding_sha256": sha256(closure_path),
         "candidate_pairs": len(pairs),
         "original_files_verified": len(files),
+        "infrastructure_attempts_retained": len(infrastructure_rows),
+        "runtime_lifecycle_repair_sha256": sha256(lifecycle_path),
         "source_push_gate": source_gate_result,
     }
 
@@ -218,6 +301,43 @@ def validate_candidate_root(root: Path) -> dict[str, Any]:
     child = load(Path(harness["child_report"]["path"]))
     require(child.get("amendment_id") == "V3-E006-R001", "child amendment differs")
     require(child.get("model_request_count") == child.get("behavioral_episode_count") == 0, "child behavioral/model counts are nonzero")
+    if child.get("status") == "infrastructure_invalid_r001_state_repair":
+        require(child.get("passed") is False and child.get("candidate_gate_passed") is False, "infrastructure child was marked passed")
+        require(child.get("state_candidate_count") == 0, "infrastructure child counted a state candidate")
+        require(child.get("behavioral_denominator_included") is False, "infrastructure child entered behavioral denominator")
+        require(Path(harness["child_report"]["path"]).name == "state_construction_failure.json", "infrastructure child has wrong report name")
+        for row in child.get("input_bindings", {}).values():
+            verify_binding(row, ignore_path=False)
+        for row in child.get("passed_health_preflight", {}).values():
+            verify_binding(row, ignore_path=False)
+        verify_binding(child["construction_source"], ignore_path=False)
+        for row in child.get("available_raw_artifacts", {}).values():
+            verify_binding(row, ignore_path=False)
+        historical_attempt01 = sha256(harness_path) == ATTEMPT01_BINDINGS["harness_result"][1]
+        if historical_attempt01:
+            require(sha256(launch_path) == ATTEMPT01_BINDINGS["launch"][1], "attempt01 launch digest differs")
+            require(sha256(Path(harness["runtime_log"]["path"])) == ATTEMPT01_BINDINGS["runtime_log"][1], "attempt01 log digest differs")
+            require(sha256(Path(harness["child_report"]["path"])) == ATTEMPT01_BINDINGS["child_failure"][1], "attempt01 child digest differs")
+            require(harness.get("status") == "completed_r001_candidate_search" and harness.get("process_completed") is True and harness.get("process_exit_code") == 0, "attempt01 historical harness defect differs")
+            classification = "verified_historical_attempt01_infrastructure_with_disclosed_outer_harness_misclassification"
+        else:
+            require(harness.get("status") == "infrastructure_invalid_r001_state_repair", "new infrastructure failure was misclassified")
+            require(harness.get("process_completed") is False, "new infrastructure failure marked process complete")
+            require(isinstance(harness.get("process_exit_code"), int) and harness["process_exit_code"] != 0, "new failed child did not exit nonzero")
+            classification = "verified_infrastructure_invalid_zero_model_zero_behavior"
+        return {
+            "passed": True,
+            "scientific_gate_passed": False,
+            "evidence_classification": classification,
+            "harness_sha256": sha256(harness_path),
+            "child_sha256": sha256(Path(harness["child_report"]["path"])),
+            "repair_candidate_evaluations": child.get("repair_candidate_evaluation_count"),
+            "model_request_count": 0,
+            "behavioral_episode_count": 0,
+            "state_candidate_count": 0,
+        }
+    require(harness.get("status") == "completed_r001_candidate_search" and harness.get("process_completed") is True, "normal search result was not process-complete")
+    require(child.get("status") in {"passed_r001_state_repair_not_released_for_behavior", "r001_candidate_budget_exhausted_no_valid_state_pair"}, "wrong normal child status")
     require(child.get("candidate_budget") == 8, "child candidate budget differs")
     attempts = child.get("attempts")
     require(isinstance(attempts, list) and 1 <= len(attempts) <= 8, "child candidate attempts differ")
@@ -229,9 +349,17 @@ def validate_candidate_root(root: Path) -> dict[str, Any]:
         require(attempt.get("model_request_count") == attempt.get("behavioral_episode_count") == 0, "attempt counts are nonzero")
         require(set(attempt["stages"]) == {"canonical_grasp", "canonical_carry"}, "attempt stage set differs")
         for stage in attempt["stages"].values():
+            lifecycle = stage["environment_lifecycle"]
+            require(lifecycle.get("created") is True, "stage did not create a dedicated environment")
+            require(lifecycle.get("contact_sensors_initialized_in_this_environment") is True, "stage did not initialize local contacts")
+            require(lifecycle.get("fresh_reset_completed_in_this_environment") is True, "stage did not complete its fresh reset")
+            require(lifecycle.get("closed_before_next_stage") is True, "stage environment was not closed")
             require(stage["fresh_reset"]["passed"] is True, "fresh reset gate failed")
             state = stage["candidate_state"]
             require(all(key in state for key in ("physics_gate", "ood_gate", "camera_evidence", "companion_pose_gate", "normalized_state_sha256")), "candidate state lacks gate/hash evidence")
+    lifecycle = child.get("environment_lifecycle")
+    require(isinstance(lifecycle, list) and len(lifecycle) == 2 * len(attempts) <= 16, "dedicated environment lifecycle count differs")
+    require([row["environment_ordinal"] for row in lifecycle] == list(range(1, len(lifecycle) + 1)), "environment lifecycle order differs")
     return {
         "passed": True,
         "harness_sha256": sha256(harness_path),

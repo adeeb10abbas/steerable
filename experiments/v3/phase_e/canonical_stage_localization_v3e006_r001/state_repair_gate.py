@@ -8,6 +8,7 @@ request and selects only with the unchanged physical/OOD/camera gates.
 from __future__ import annotations
 
 import argparse
+import gc
 import hashlib
 import json
 import math
@@ -226,6 +227,8 @@ simulation_app = AppLauncher(args).app
 CURRENT_STAGE = "app_launcher_started"
 LAST_REFERENCE_BOUNDS_EVIDENCE: dict[str, Any] | None = None
 LAST_PARTIAL_STAGES: dict[str, Any] = {}
+LAST_TERMINATION_EVIDENCE: dict[str, Any] | None = None
+ENVIRONMENT_LIFECYCLE: list[dict[str, Any]] = []
 CANDIDATE_EVALUATION_COUNT = 0
 
 import omni.usd  # noqa: E402
@@ -361,6 +364,8 @@ def _base_evidence(*, candidate_gate_passed: bool = False, state_candidate_count
         },
         "last_reference_bounds_evidence": LAST_REFERENCE_BOUNDS_EVIDENCE,
         "partial_stage_evidence": LAST_PARTIAL_STAGES,
+        "last_termination_evidence": LAST_TERMINATION_EVIDENCE,
+        "environment_lifecycle": ENVIRONMENT_LIFECYCLE,
     }
 
 
@@ -374,6 +379,11 @@ def _write_failure(exc: BaseException) -> Path:
         **_base_evidence(),
         "status": "infrastructure_invalid_r001_state_repair",
         "passed": False,
+        "failure_exit_policy": (
+            "after this report is atomically closed and streams are flushed, the failed child exits "
+            "nonzero without SimulationApp.close; attempt01 proved that close can terminate Kit with "
+            "status zero before Python propagates the retained exception"
+        ),
         "error": {
             "type": type(exc).__name__,
             "message": str(exc),
@@ -393,6 +403,55 @@ def _host(value: Any) -> list[float]:
     while array.ndim > 1 and array.shape[0] == 1:
         array = array[0]
     return [float(item) for item in array.reshape(-1)]
+
+
+def _bool_host(value: Any) -> list[bool]:
+    if hasattr(value, "detach"):
+        value = value.detach().cpu().numpy()
+    return [bool(item) for item in np.asarray(value).reshape(-1)]
+
+
+def _record_termination(
+    env: Any,
+    *,
+    label: str,
+    phase: str,
+    phase_step_zero_based: int,
+    terminated: Any,
+    truncated: Any,
+    extras: Any,
+) -> dict[str, Any]:
+    """Retain exact terminal signals before raising an infrastructure error."""
+
+    global LAST_TERMINATION_EVIDENCE
+    manager = getattr(env, "termination_manager", None)
+    terms: dict[str, list[bool]] = {}
+    if manager is not None:
+        for name, values in manager.get_active_iterable_terms(env_idx=0):
+            terms[str(name)] = [bool(value) for value in values]
+    episode_length = getattr(env, "episode_length_buf", None)
+    reset_buf = getattr(env, "reset_buf", None)
+    snapshot = {
+        "label": label,
+        "phase": phase,
+        "phase_step_zero_based": phase_step_zero_based,
+        "phase_step_one_based": phase_step_zero_based + 1,
+        "terminated_return": _bool_host(terminated),
+        "truncated_return": _bool_host(truncated),
+        "termination_terms": terms,
+        "episode_length_buf_after_step_and_automatic_reset": (
+            _host(episode_length) if episode_length is not None else None
+        ),
+        "reset_buf_after_step": _bool_host(reset_buf) if reset_buf is not None else None,
+        "max_episode_length": int(getattr(env, "max_episode_length", -1)),
+        "common_step_counter": int(getattr(env, "common_step_counter", -1)),
+        "physics_dt_s": float(env.physics_dt) if hasattr(env, "physics_dt") else None,
+        "step_dt_s": float(env.step_dt) if hasattr(env, "step_dt") else None,
+        "extras_keys": sorted(str(key) for key in extras) if isinstance(extras, Mapping) else [],
+    }
+    LAST_TERMINATION_EVIDENCE = snapshot
+    LAST_PARTIAL_STAGES["termination_event"] = snapshot
+    return snapshot
 
 
 def _qmul(left: Sequence[float], right: Sequence[float]) -> np.ndarray:
@@ -729,9 +788,21 @@ def _fresh_reset_and_gate(
     reset_action = _command(reset_position, reset_quaternion, 0.0, env.device)
     reset_samples: list[dict[str, Any]] = []
     for step in range(75):
-        obs, _, terminated, truncated, _ = env.step(reset_action)
+        obs, _, terminated, truncated, extras = env.step(reset_action)
         if bool(terminated[0]) or bool(truncated[0]):
-            raise RuntimeError(f"environment terminated during {label} E004 reset settle")
+            evidence = _record_termination(
+                env,
+                label=label,
+                phase="fresh_e004_reset_settle",
+                phase_step_zero_based=step,
+                terminated=terminated,
+                truncated=truncated,
+                extras=extras,
+            )
+            raise RuntimeError(
+                f"environment terminated during {label} E004 reset settle; "
+                f"terminal evidence retained at step {evidence['phase_step_one_based']}"
+            )
         if step % 12 == 0:
             video_frames.append(np.asarray(obs["image_obs"]["head_camera"][0].detach().cpu().numpy(), dtype=np.uint8))
         if step >= 65:
@@ -815,9 +886,21 @@ def _materialize_and_gate_stage(
     obs: Mapping[str, Any] | None = None
     CURRENT_STAGE = f"{label}_closed_hold_160"
     for step in range(160):
-        obs, _, terminated, truncated, _ = env.step(hold_action)
+        obs, _, terminated, truncated, extras = env.step(hold_action)
         if bool(terminated[0]) or bool(truncated[0]):
-            raise RuntimeError(f"environment terminated during {label} closed hold")
+            evidence = _record_termination(
+                env,
+                label=label,
+                phase="closed_hold_160",
+                phase_step_zero_based=step,
+                terminated=terminated,
+                truncated=truncated,
+                extras=extras,
+            )
+            raise RuntimeError(
+                f"environment terminated during {label} closed hold; "
+                f"terminal evidence retained at step {evidence['phase_step_one_based']}"
+            )
         if step % 10 == 0:
             video_frames.append(np.asarray(obs["image_obs"]["head_camera"][0].detach().cpu().numpy(), dtype=np.uint8))
         if step >= 150:
@@ -870,7 +953,6 @@ def main() -> None:
     global CURRENT_STAGE, LAST_PARTIAL_STAGES, CANDIDATE_EVALUATION_COUNT
     CURRENT_STAGE = "load_hash_bound_r001_contracts"
     args.output_dir.mkdir(parents=True)
-    set_output_dir(str((args.output_dir / "native").resolve()))
     ood = json.loads(args.ood_freeze.read_text(encoding="utf-8"))
     reset_reference = json.loads(args.e004_reset_reference.read_text(encoding="utf-8"))
     runtime_bindings = load_runtime_contract(
@@ -883,44 +965,77 @@ def main() -> None:
     CURRENT_STAGE = "register_exact_e004_environment"
     task_file = study_root / "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/task_files/left.py"
     auto_register_droid_abs_ik_envs(task=[str(task_file)], cameras=WRIST_LEFT_RIGHT_HEAD)
-    env = None
-    primary_failure: BaseException | None = None
-    try:
-        env, cfg = create_env(
-            "V3E004DroidLeftTask",
-            device=args.device,
-            seed=13000,
-            num_envs=1,
-            instruction_type="default",
-            policy="v3e006_r001_behavior_blind_state_repair",
-            renderer=args.renderer,
-            rendering_mode=args.rendering_type,
-        )
-        started = time.time()
-        video_frames: list[np.ndarray] = []
-        frames = env.scene["frames"]
-        eef_index = frames.data.target_frame_names.index("eef_frame")
-        CURRENT_STAGE = "pre_candidate_contact_sensor_initialization_reset"
-        env.reset()
-        CURRENT_STAGE = "contact_sensor_coverage"
-        contact_coverage = _contact_coverage(env)
-        attempts: list[dict[str, Any]] = []
-        accepted: dict[str, Any] | None = None
+    started = time.time()
+    video_frames: list[np.ndarray] = []
+    attempts: list[dict[str, Any]] = []
+    accepted: dict[str, Any] | None = None
+    task_prompt: str | None = None
+    contact_coverage_by_stage: dict[str, Any] = {}
 
-        for candidate_pair in candidate_schedule["candidate_pairs"]:
-            rank = int(candidate_pair["candidate_rank"])
-            CANDIDATE_EVALUATION_COUNT = rank
-            rank_attempt: dict[str, Any] = {
+    for candidate_pair in candidate_schedule["candidate_pairs"]:
+        rank = int(candidate_pair["candidate_rank"])
+        CANDIDATE_EVALUATION_COUNT = rank
+        rank_attempt: dict[str, Any] = {
+            "candidate_rank": rank,
+            "model_request_count": 0,
+            "behavioral_episode_count": 0,
+            "stages": {},
+        }
+        LAST_PARTIAL_STAGES = {"candidate_rank": rank}
+        for stage_name in ("canonical_grasp", "canonical_carry"):
+            label = f"rank{rank:02d}__{stage_name}"
+            stage_env = None
+            stage_failure: BaseException | None = None
+            native_output = (args.output_dir / "native" / label).resolve()
+            lifecycle: dict[str, Any] = {
+                "environment_ordinal": len(ENVIRONMENT_LIFECYCLE) + 1,
                 "candidate_rank": rank,
-                "model_request_count": 0,
-                "behavioral_episode_count": 0,
-                "stages": {},
+                "stage": stage_name,
+                "label": label,
+                "construction": "new create_env instance dedicated to exactly one candidate rank and stage",
+                "seed": 13000,
+                "native_output_dir": str(native_output),
+                "created": False,
+                "contact_sensors_initialized_in_this_environment": False,
+                "fresh_reset_completed_in_this_environment": False,
+                "closed_before_next_stage": False,
             }
-            LAST_PARTIAL_STAGES = {"candidate_rank": rank}
-            for stage_name in ("canonical_grasp", "canonical_carry"):
-                label = f"rank{rank:02d}__{stage_name}"
+            ENVIRONMENT_LIFECYCLE.append(lifecycle)
+            try:
+                CURRENT_STAGE = f"{label}_create_new_environment"
+                set_output_dir(str(native_output))
+                stage_env, cfg = create_env(
+                    "V3E004DroidLeftTask",
+                    device=args.device,
+                    seed=13000,
+                    num_envs=1,
+                    instruction_type="default",
+                    policy="v3e006_r001_behavior_blind_state_repair",
+                    renderer=args.renderer,
+                    rendering_mode=args.rendering_type,
+                )
+                lifecycle["created"] = True
+                lifecycle["python_object_id"] = id(stage_env)
+                if task_prompt is None:
+                    task_prompt = str(cfg.instruction)
+                elif str(cfg.instruction) != task_prompt:
+                    raise RuntimeError("fresh stage environment task prompt differs from the exact E004 task")
+
+                frames = stage_env.scene["frames"]
+                eef_index = frames.data.target_frame_names.index("eef_frame")
+                CURRENT_STAGE = f"{label}_contact_sensor_initialization_reset"
+                stage_env.reset()
+                lifecycle["episode_length_after_sensor_initialization_reset"] = _host(
+                    stage_env.episode_length_buf
+                )
+                CURRENT_STAGE = f"{label}_stage_local_contact_sensor_coverage"
+                contact_coverage = _contact_coverage(stage_env)
+                lifecycle["contact_sensors_initialized_in_this_environment"] = True
+                lifecycle["contact_sensor_coverage_passed"] = contact_coverage["passed"]
+                contact_coverage_by_stage[label] = contact_coverage
+
                 _obs, reset_state = _fresh_reset_and_gate(
-                    env,
+                    stage_env,
                     candidate=candidate,
                     reset_reference=reset_reference,
                     contact_coverage=contact_coverage,
@@ -929,10 +1044,18 @@ def main() -> None:
                     label=label,
                     video_frames=video_frames,
                 )
+                lifecycle["fresh_reset_completed_in_this_environment"] = True
+                stage_entry: dict[str, Any] = {
+                    "environment_lifecycle": lifecycle,
+                    "fresh_reset": reset_state,
+                }
+                rank_attempt["stages"][stage_name] = stage_entry
+                LAST_PARTIAL_STAGES[stage_name] = stage_entry
+
                 schedule_stage = dict(candidate_pair[stage_name])
                 schedule_stage["candidate_rank"] = rank
                 _obs, state = _materialize_and_gate_stage(
-                    env,
+                    stage_env,
                     stage_name=stage_name,
                     schedule_stage=schedule_stage,
                     stage_reference=ood["stages"][stage_name],
@@ -943,25 +1066,49 @@ def main() -> None:
                     label=label,
                     video_frames=video_frames,
                 )
-                rank_attempt["stages"][stage_name] = {
-                    "fresh_reset": reset_state,
-                    "candidate_state": state,
-                }
-                LAST_PARTIAL_STAGES[stage_name] = rank_attempt["stages"][stage_name]
-            rank_attempt["passed"] = all(
-                row["candidate_state"]["passed"] for row in rank_attempt["stages"].values()
-            )
-            attempts.append(rank_attempt)
-            if rank_attempt["passed"]:
-                accepted = rank_attempt
-                break
+                stage_entry["candidate_state"] = state
+                LAST_PARTIAL_STAGES[stage_name] = stage_entry
+            except BaseException as exc:
+                stage_failure = exc
+                lifecycle["failure"] = {"type": type(exc).__name__, "message": str(exc)}
+                raise
+            finally:
+                if stage_env is not None:
+                    CURRENT_STAGE = f"{label}_close_dedicated_environment"
+                    try:
+                        stage_env.close()
+                        lifecycle["closed_before_next_stage"] = True
+                    except BaseException as close_error:
+                        lifecycle["close_error"] = {
+                            "type": type(close_error).__name__,
+                            "message": str(close_error),
+                        }
+                        if stage_failure is None:
+                            raise
+                        print(
+                            f"environment close raised after retained R001 failure: "
+                            f"{type(close_error).__name__}: {close_error}",
+                            file=sys.stderr,
+                        )
+                    finally:
+                        del stage_env
+                        gc.collect()
+        rank_attempt["passed"] = all(
+            row["candidate_state"]["passed"] for row in rank_attempt["stages"].values()
+        )
+        attempts.append(rank_attempt)
+        if rank_attempt["passed"]:
+            accepted = rank_attempt
+            break
 
-        CURRENT_STAGE = "retain_r001_candidate_search"
-        video_path = args.output_dir / "videos" / "v3e006_r001_state_repair_search.mp4"
-        video_path.parent.mkdir(parents=True)
-        _write_video(video_path, video_frames)
-        passed = accepted is not None
-        report = {
+    CURRENT_STAGE = "retain_r001_candidate_search"
+    video_path = args.output_dir / "videos" / "v3e006_r001_state_repair_search.mp4"
+    video_path.parent.mkdir(parents=True)
+    _write_video(video_path, video_frames)
+    passed = accepted is not None
+    if task_prompt is None:
+        raise RuntimeError("R001 candidate search created no exact E004 stage environment")
+    report = {
             "schema_version": "vla-wam-shared-v3e006-r001-state-repair-result-v1",
             "study_id": "vla_wam_language_steerability_v3",
             "amendment_id": "V3-E006-R001",
@@ -1000,9 +1147,10 @@ def main() -> None:
                 "historical_policy_provenance_disclosure"
             ],
             "construction_prompt_exposure": "the exact E004 environment task prompt exists in cfg but is never read by or supplied to the repair controller",
-            "task_prompt_retained_for_audit": cfg.instruction,
+            "task_prompt_retained_for_audit": task_prompt,
             "selection_rule": repair_registration["candidate_search"],
-            "contact_sensor_coverage": contact_coverage,
+            "environment_lifecycle": ENVIRONMENT_LIFECYCLE,
+            "contact_sensor_coverage_by_stage": contact_coverage_by_stage,
             "attempts": attempts,
             "accepted_states": accepted["stages"] if accepted else None,
             "execution_evidence": _base_evidence(
@@ -1012,37 +1160,23 @@ def main() -> None:
             "construction_seconds": time.time() - started,
             "video": _binding(video_path),
             "release_boundary": "behavioral registration, queue, smoke/isolation, and release remain prohibited until this result is independently validated and committed",
-        }
-        report_path = args.output_dir / "state_repair_result.json"
-        report_path.write_bytes(canonical_bytes(report))
-        print(
-            json.dumps(
-                {
-                    "passed": passed,
-                    "output": str(report_path),
-                    "sha256": _sha(report_path),
-                    "bytes": report_path.stat().st_size,
-                    "candidate_evaluations": len(attempts),
-                    "accepted_candidate_rank": report["accepted_candidate_rank"],
-                },
-                indent=2,
-                sort_keys=True,
-            )
+    }
+    report_path = args.output_dir / "state_repair_result.json"
+    report_path.write_bytes(canonical_bytes(report))
+    print(
+        json.dumps(
+            {
+                "passed": passed,
+                "output": str(report_path),
+                "sha256": _sha(report_path),
+                "bytes": report_path.stat().st_size,
+                "candidate_evaluations": len(attempts),
+                "accepted_candidate_rank": report["accepted_candidate_rank"],
+            },
+            indent=2,
+            sort_keys=True,
         )
-    except BaseException as exc:
-        primary_failure = exc
-        raise
-    finally:
-        if env is not None:
-            try:
-                env.close()
-            except BaseException as close_error:
-                if primary_failure is None:
-                    raise
-                print(
-                    f"environment close raised after retained R001 failure: {type(close_error).__name__}: {close_error}",
-                    file=sys.stderr,
-                )
+    )
 
 
 if __name__ == "__main__":
@@ -1060,15 +1194,20 @@ if __name__ == "__main__":
             file=sys.stderr,
         )
         traceback.print_exc()
-    finally:
+    if construction_failure is not None:
+        print(
+            "retained R001 failure; exiting child nonzero before SimulationApp.close to prevent "
+            "Kit from replacing the failure status",
+            file=sys.stderr,
+        )
+        sys.stdout.flush()
+        sys.stderr.flush()
+        os._exit(1)
+    else:
         try:
             simulation_app.close()
         except BaseException as close_error:
-            if construction_failure is None:
-                raise
-            print(
-                f"SimulationApp.close raised after retained construction failure: {type(close_error).__name__}: {close_error}",
-                file=sys.stderr,
-            )
-    if construction_failure is not None:
-        raise construction_failure.with_traceback(construction_failure.__traceback__)
+            raise RuntimeError(
+                f"SimulationApp.close raised after completed R001 search: "
+                f"{type(close_error).__name__}: {close_error}"
+            ) from close_error

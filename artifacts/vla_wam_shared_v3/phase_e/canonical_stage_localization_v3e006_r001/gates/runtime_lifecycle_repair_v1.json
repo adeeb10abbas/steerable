@@ -1,0 +1,62 @@
+{
+  "schema_version": "vla-wam-shared-v3e006-r001-prospective-runtime-lifecycle-repair-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "repair_amendment_id": "V3-E006-R001",
+  "registered_at_utc": "2026-08-12T20:36:10Z",
+  "status": "prospectively_frozen_after_infrastructure_invalid_attempt01_before_any_retry_or_model_request",
+  "user_authorized_scope": "continue the already registered R001 repair and solve infrastructure blockers without changing its scientific gates, candidate order, or finite budget",
+  "counts_at_freeze": {
+    "model_requests": 0,
+    "behavioral_episodes": 0,
+    "accepted_state_candidates": 0,
+    "completed_candidate_pairs": 0,
+    "infrastructure_invalid_search_attempts": 1
+  },
+  "frozen_scientific_contracts": {
+    "repair_registration_sha256": "b2b69304bba25dcd777fe6955ee31f9f2b7fa9d25b95958b94ac6d5d60052845",
+    "candidate_schedule_sha256": "022b9b65b58758a192dd77ac32a79d463f8638c9be162a7f6b1e3d5270d9d04f",
+    "original_closure_binding_sha256": "de81ed6987d3cfcb8d7194304e1f84c248d4f2ad1f7a5915b13df3ae0045e1cf",
+    "state_contract_sha256": "2476b28d2867c1b87f477fd5f89e545616be00d860d4144f8cbdb70af10f3c18",
+    "ood_reference_sha256": "4df1ebf0061096a74b5eccd10b2a144e840f52fd50469b8bdae9369d1696fd04",
+    "ood_freeze_sha256": "4d3a02c1d96be1ddd98f47a15cf41ad1d2a6c54c3007f3846742cfcbf31873f4",
+    "candidate_budget": 8,
+    "candidate_order": "byte-identical candidate_schedule ranks 1 through 8",
+    "stopping_rule": "evaluate sequentially and stop at the first pair whose grasp and carry both pass every unchanged registered gate; otherwise exhaust exactly eight pairs"
+  },
+  "attempt01": {
+    "raw_root": "/data/users/ali/vla_wam/raw/v3e006_r001/state_repair/87e121b-a40r06-attempt01",
+    "study_commit": "87e121b71149e71234e08bc604b89d3b7f9063e4",
+    "launch_sha256": "94bb3b07c824665b35fdfe16c73a801ecd8c78e8fd0cfe5b4a609f425f3e80c2",
+    "harness_result_sha256": "b96715b562d0e1865fe71f3249dc69fb92fb00ec722781f7bc5561f07f6eb64f",
+    "child_failure_sha256": "ad0dad25fc081bcadcf888a2c3c057546948216ec7abac6313e507452fa556dd",
+    "runtime_log_sha256": "cc188cfb6edc86f423e0cecd6c27b9ce1acf23240a7be85d3d9e511fa8503363",
+    "model_request_count": 0,
+    "behavioral_episode_count": 0,
+    "accepted_state_candidate_count": 0,
+    "disposition": "infrastructure_invalid_excluded_from_behavioral_and_candidate_denominators",
+    "failure_stage": "rank01__canonical_carry_fresh_e004_reset",
+    "failure": "the reused environment returned a terminal signal during the carry-stage reset settle, so the registered finite search did not complete rank 1 and did not reach ranks 2 through 8",
+    "harness_classification_defect": "the child retained infrastructure_invalid_r001_state_repair but Kit returned process code zero during shutdown; the old outer harness classified any code-zero JSON report as completed"
+  },
+  "engineering_inference_not_scientific_outcome": "the failure occurred only after one environment instance was reused across grasp materialization and the next stage reset; eliminate cross-stage episode, termination, contact-sensor, and simulator-state leakage by constructing a genuinely new environment for every rank and stage",
+  "prospective_runtime_only_repair": {
+    "environment_lifecycle": "for each rank in frozen order and each stage in grasp-then-carry order, call create_env for a new exact E004 environment, perform contact-sensor initialization and the exact fresh-reset gate within that environment, materialize and evaluate only that stage, then close and garbage-collect it before the next stage",
+    "maximum_new_environment_instances": 16,
+    "stage_local_contact_sensor_inventory": true,
+    "fresh_reset_per_rank_and_stage": true,
+    "termination_diagnostics": "on any terminal step retain the exact terminated and truncated vectors, active term values, one-based and zero-based phase step, episode counter after automatic reset, max episode length, and common step counter before failing closed",
+    "process_classification": "only state_repair_result.json with one of the two registered normal terminal statuses and zero counts can be completed; state_construction_failure.json is always infrastructure-invalid even if Kit returns code zero",
+    "failed_child_exit": "after atomically retaining a failure report and flushing streams, exit nonzero before SimulationApp.close because attempt01 proved Kit shutdown can replace the retained Python failure with status zero",
+    "retry": "restart the same frozen rank-1-through-rank-8 search from rank 1; attempt01 was incomplete infrastructure evidence and its rank-1 grasp diagnostic is not used to alter order, construction, thresholds, or acceptance"
+  },
+  "explicitly_unchanged": [
+    "candidate generation and pairwise midpoint arithmetic",
+    "candidate ranks and eight-pair budget",
+    "first-passing and exhaustion rules",
+    "160-step closed normal-contact hold and final ten-step gate window",
+    "physics, normal-contact, OOD, camera, companion, and exact-E004 reset gates and every threshold",
+    "controller, action interface, layout, camera feeds, prompt registry, horizon, predicate, scorer, and raw writer",
+    "zero policy/model requests during state construction"
+  ],
+  "release_gate": "the lifecycle implementation, this freeze, attempt01 ledger, validator, and tests must be committed, pushed, remote-equal, and bound by a new zero-count source-push gate before the single retry"
+}

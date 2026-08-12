@@ -33,6 +33,20 @@ def require(path: Path, expected: str) -> dict[str, Any]:
     return binding(path)
 
 
+def require_interpreter(path: Path) -> dict[str, Any]:
+    """Retain the invoked venv path; resolving it disables venv discovery."""
+    if not path.is_absolute():
+        raise ValueError(f"Python interpreter path must be absolute: {path}")
+    if not path.is_file() or not os.access(path, os.X_OK):
+        raise ValueError(f"Python interpreter is missing or not executable: {path}")
+    return {
+        "path": str(path),
+        "resolved_path": str(path.resolve()),
+        "bytes": path.stat().st_size,
+        "sha256": sha256(path),
+    }
+
+
 def utcnow() -> str:
     return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
 
@@ -88,6 +102,7 @@ def main() -> None:
         if not path.is_file():
             parser.error(f"diagnostic input is missing: {path}")
         diagnostics.append(binding(path))
+    interpreter = require_interpreter(args.python)
 
     output_root.mkdir(parents=True)
     cache = {name: output_root / "cache" / name for name in ("xdg", "warp", "matplotlib", "tmp")}
@@ -95,7 +110,7 @@ def main() -> None:
         path.mkdir(parents=True)
     child_output = output_root / "preflight_result.json"
     child_argv = [
-        str(args.python.resolve()),
+        interpreter["path"],
         str(args.preflight_source.resolve()),
         "--study-root", str(study_root),
         "--robolab-root", str(robolab_root),
@@ -174,6 +189,7 @@ def main() -> None:
         "state_candidate_count_before_launch": 0,
         "scope": "generic zero-model runtime health only",
         "harness_source": binding(Path(__file__)),
+        "python_interpreter": interpreter,
         "outer_argv": sys.argv,
         "input_bindings": inputs,
         "diagnostic_inputs": diagnostics,

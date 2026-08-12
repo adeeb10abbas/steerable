@@ -90,6 +90,11 @@ def main() -> None:
         if result.get("schema_version") != "vla-wam-shared-v3e006-zero-model-preflight-harness-result-v1":
             raise AssertionError("preflight result schema differs")
         verify_binding(launch["harness_source"], verify_raw=True)
+        verify_binding(launch["python_interpreter"], verify_raw=True)
+        if launch.get("child_argv", [None])[0] != launch["python_interpreter"]["path"]:
+            raise AssertionError("child argv does not preserve the registered Python interpreter path")
+        if Path(launch["python_interpreter"]["path"]).resolve() != Path(launch["python_interpreter"]["resolved_path"]):
+            raise AssertionError("registered Python interpreter target differs")
         verify_binding(result["harness_source"], verify_raw=True)
         if result["harness_source"] != launch["harness_source"]:
             raise AssertionError("preflight harness source binding differs")

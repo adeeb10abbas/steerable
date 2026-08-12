@@ -16,7 +16,7 @@ from experiments.v3.phase_c_semantic_equivalence_v3c002.compiler import (  # noq
     _read_jsonl, compile_episode, compile_results, decision_memo, manuscript_insert,
 )
 from experiments.v3.phase_c_semantic_equivalence_v3c002.contract import (  # noqa: E402
-    ContractError, load_cells, read_finite_json, sha256_file, validate_file_binding,
+    ContractError, load_cells, read_finite_json, require_released_gate, sha256_file, validate_file_binding,
 )
 
 
@@ -26,12 +26,14 @@ ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c
 def validate(root: Path = ROOT) -> dict:
     root = Path(root).resolve(); results_root = root / "results"
     registration_path, queue_path = root / "registration.json", root / "queue.jsonl"
+    release_path = root / "release_gate.released.json"
     raw_path, infra_path = root / "raw/episodes.jsonl", root / "infrastructure_attempts.jsonl"
     episodes_path, pairs_path, results_path = results_root / "episodes.jsonl", results_root / "pairs.jsonl", results_root / "results.json"
     memo_path, evidence_path, insert_path = results_root / "DECISION_MEMO.md", results_root / "evidence_manifest.json", root / "MANUSCRIPT_INSERT.md"
-    for path in (registration_path, queue_path, raw_path, infra_path, episodes_path, pairs_path, results_path, memo_path, evidence_path, insert_path):
+    for path in (registration_path, queue_path, release_path, raw_path, infra_path, episodes_path, pairs_path, results_path, memo_path, evidence_path, insert_path):
         if not path.is_file(): raise ContractError(f"required final C002 artifact is missing: {path}")
     registration, cells = load_cells(registration_path=registration_path, queue_path=queue_path)
+    require_released_gate(registration_path=registration_path, queue_path=queue_path, release_gate_path=release_path)
     if registration.get("registration_status") != "registered_after_two_human_wording_agreements": raise ContractError("final registration is inactive")
     raw_rows = _read_jsonl(raw_path); cell_map = {cell.cell_id: cell for cell in cells}
     if len(raw_rows) != 1364 or {str(row.get("cell_id")) for row in raw_rows} != set(cell_map): raise ContractError("raw behavioral coverage differs from queue")
@@ -48,7 +50,7 @@ def validate(root: Path = ROOT) -> dict:
     if manuscript_insert(results) != insert_path.read_text(encoding="utf-8"): raise ContractError("manuscript insert differs from results")
     manifest = read_finite_json(evidence_path)
     if not isinstance(manifest, dict) or manifest.get("status") != "complete_hash_bound_results": raise ContractError("evidence manifest is incomplete")
-    for label, record in (("registration", manifest.get("registration")), ("queue", manifest.get("queue")), ("raw episodes", manifest.get("raw_episodes")), ("infrastructure attempts", manifest.get("infrastructure_attempts"))):
+    for label, record in (("registration", manifest.get("registration")), ("queue", manifest.get("queue")), ("release gate", manifest.get("release_gate")), ("raw episodes", manifest.get("raw_episodes")), ("infrastructure attempts", manifest.get("infrastructure_attempts"))):
         validate_file_binding(record, label)
     outputs = manifest.get("compiled_outputs")
     if not isinstance(outputs, dict): raise ContractError("compiled output bindings are missing")

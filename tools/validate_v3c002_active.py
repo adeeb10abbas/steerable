@@ -8,7 +8,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT))
 from experiments.v3.phase_c_semantic_equivalence_v3c002.contract import (  # noqa: E402
     RELEASE_GATE_SCHEMA, WORDING_GATE_SCHEMA, ContractError, load_cells, read_finite_json,
-    sha256_file, validate_file_binding,
+    require_released_gate, sha256_file, validate_file_binding,
 )
 ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/active"
 FINAL_RELATIVE = (
@@ -27,7 +27,8 @@ def validate(root: Path = ROOT) -> dict:
     if not isinstance(receipt, dict) or receipt.get("received_before_registration") is not True or receipt.get("receipt_source") != "Codex task response": raise ContractError("attestation receipt order is missing")
     if "does not invent reader attestation times" not in str(receipt.get("timestamp_limitation")): raise ContractError("date-only attestation limitation is not disclosed")
     for record in receipt.get("attestations", []): validate_file_binding(record, "received human attestation")
-    release = read_finite_json(root / "release_gate.json")
+    release_path = root / "release_gate.released.json" if (root / "release_gate.released.json").is_file() else root / "release_gate.json"
+    release = read_finite_json(release_path)
     if not isinstance(release, dict) or release.get("schema_version") != RELEASE_GATE_SCHEMA: raise ContractError("active release schema changed")
     for label, source in (("registration", registration_path), ("queue", queue_path), ("wording_gate", root / "wording_gate.json"), ("attestation_receipt_order", root / "attestation_receipt_order.json")):
         record = release.get(label); validate_file_binding(record, f"active release {label}")
@@ -40,6 +41,7 @@ def validate(root: Path = ROOT) -> dict:
         if present: raise ContractError("results exist before behavioral release")
         if registration.get("model_requests_authorized") is not False or registration.get("behavioral_episodes_authorized") is not False: raise ContractError("blocked active registration authorizes behavior")
         return {"status": "valid_registered_pending_preflight_release", "queue_cells": len(cells), "result_artifacts_present": 0, "infrastructure_ledger_bytes": infra.stat().st_size}
+    require_released_gate(registration_path=registration_path, queue_path=queue_path, release_gate_path=release_path)
     return {"status": "valid_registered_released", "queue_cells": len(cells), "result_artifacts_present": len(present), "infrastructure_ledger_bytes": infra.stat().st_size}
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__); parser.add_argument("--root", type=Path, default=ROOT); args = parser.parse_args()

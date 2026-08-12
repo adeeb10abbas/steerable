@@ -45,6 +45,7 @@ from .contract import (
     load_cells,
     repo_file_binding,
     require,
+    require_released_gate,
     sha256_file,
     validate_exact_runtime_contract,
 )
@@ -402,6 +403,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--registration", type=Path, required=True)
     parser.add_argument("--queue", type=Path, required=True)
+    parser.add_argument("--release-gate", type=Path, required=True)
     parser.add_argument("--raw-episodes", type=Path, required=True)
     parser.add_argument("--episodes-output", type=Path, required=True)
     parser.add_argument("--pairs-output", type=Path, required=True)
@@ -413,6 +415,7 @@ def main() -> None:
     args = parser.parse_args()
     registration, cells = load_cells(registration_path=args.registration, queue_path=args.queue)
     require(registration.get("registration_status") == "registered_after_two_human_wording_agreements", "C002 is not behaviorally registered")
+    require_released_gate(registration_path=args.registration, queue_path=args.queue, release_gate_path=args.release_gate)
     registration_sha = sha256_file(args.registration)
     queue_sha = sha256_file(args.queue)
     cell_map = {cell.cell_id: cell for cell in cells}
@@ -439,6 +442,7 @@ def main() -> None:
         "status": "complete_hash_bound_results",
         "registration": repo_file_binding(args.registration),
         "queue": repo_file_binding(args.queue),
+        "release_gate": repo_file_binding(args.release_gate),
         "raw_episodes": _artifact({"path": str(args.raw_episodes.resolve()), "bytes": args.raw_episodes.stat().st_size, "sha256": sha256_file(args.raw_episodes)}, "raw episodes"),
         "infrastructure_attempts": _artifact({"path": str(args.infrastructure_attempts.resolve()), "bytes": args.infrastructure_attempts.stat().st_size, "sha256": sha256_file(args.infrastructure_attempts)}, "infrastructure attempts"),
         "compiled_outputs": {

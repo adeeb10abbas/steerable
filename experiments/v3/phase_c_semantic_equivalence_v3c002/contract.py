@@ -21,6 +21,7 @@ RELEASE_GATE_SCHEMA = "vla-wam-shared-v3c002-release-gate-v4"
 SOURCE_PUSH_GATE_SCHEMA = "vla-wam-shared-v3c002-source-push-gate-v1"
 PHYSICAL_GATE_SCHEMA = "vla-wam-shared-v3c002-model-blind-physical-gate-v1"
 SMOKE_GATE_SCHEMA = "vla-wam-shared-v3c002-excluded-smoke-gate-v1"
+SMOKE_AUTHORIZATION_SCHEMA = "vla-wam-shared-v3c002-smoke-authorization-v2"
 ISOLATION_GATE_SCHEMA = "vla-wam-shared-v3c002-two-lane-isolation-gate-v1"
 LANE_GATE_SCHEMA = "vla-wam-shared-v3c002-lane-release-manifest-v1"
 ARENA = "droid_robolab"
@@ -201,6 +202,32 @@ class C002Cell:
         return int(self.row["episode_seed"])
 
     @property
+    def model_id(self) -> str:
+        return str(self.row["model_id"])
+
+    @property
+    def relation(self) -> str:
+        """Frozen physical goal; this is never recovered from prompt text."""
+
+        return self.physical_goal
+
+    @property
+    def symmetry_level_s(self) -> float:
+        return float(self.row["symmetry_level_s"])
+
+    @property
+    def environment_seed(self) -> int:
+        return self.seed
+
+    @property
+    def sampling_seed(self) -> int:
+        return self.seed
+
+    @property
+    def matched_pair_id(self) -> str:
+        return self.block_id
+
+    @property
     def condition(self) -> str:
         return str(self.row["prompt_condition"])
 
@@ -342,9 +369,19 @@ def require_released_gate(
     require(physical.get("exact_runtime_contract_sha256") == registration["exact_e004_pi05_runtime"]["contract_sha256"], "physical gate runtime contract changed")
     smoke = _bound_json(gate.get("excluded_smoke_gate"), "excluded smoke gate", schema=SMOKE_GATE_SCHEMA, status="passed_excluded_four_cell_smoke")
     require(smoke.get("excluded_from_behavioral_denominators") is True and smoke.get("completed_cells") == 4, "smoke was not an excluded four-cell block")
+    require(type(smoke.get("model_request_count")) is int and smoke["model_request_count"] >= 4 and smoke.get("behavioral_episode_count") == 0, "smoke request/denominator counts are invalid")
+    smoke_rows = smoke.get("raw_episode_bindings")
+    require(isinstance(smoke_rows, list) and len(smoke_rows) == 4, "smoke lacks four retained raw episode bindings")
+    for index, record in enumerate(smoke_rows):
+        validate_file_binding(record, f"excluded smoke raw episode {index}")
     isolation = _bound_json(gate.get("two_lane_isolation_gate"), "two-lane isolation gate", schema=ISOLATION_GATE_SCHEMA, status="passed_two_lane_fixed_observation_isolation")
     require(isolation.get("fixed_observation_equal") is True and isolation.get("fixed_prompt_equal") is True and isolation.get("request_seed_equal") is True, "isolation inputs differed")
     require(isolation.get("outputs_match") is True and isolation.get("lane_state_isolated") is True, "two-lane isolation did not pass")
+    require(isolation.get("model_request_count") == 2 and isolation.get("behavioral_episode_count") == 0 and isolation.get("excluded_from_behavioral_denominators") is True, "two-lane isolation counts/exclusion changed")
+    isolation_rows = isolation.get("lane_responses")
+    require(isinstance(isolation_rows, list) and len(isolation_rows) == 2, "two-lane isolation lacks two response bindings")
+    for index, record in enumerate(isolation_rows):
+        validate_file_binding(record, f"two-lane isolation response {index}")
     lanes = gate.get("lane_manifests")
     require(isinstance(lanes, list) and len(lanes) >= 2, "release gate lacks exact lane manifests")
     lane_values = [_bound_json(record, f"lane manifest {index}", schema=LANE_GATE_SCHEMA, status="passed_lane_release") for index, record in enumerate(lanes)]
@@ -367,6 +404,40 @@ def require_released_gate(
     allocated_gpu_uuids = [value[key] for value in lane_values for key in ("simulator_gpu_uuid", "policy_server_gpu_uuid")]
     require(len(set(allocated_gpu_uuids)) == len(allocated_gpu_uuids), "a GPU UUID is shared across C002 lane roles")
     return registration, cells, gate
+
+
+def require_smoke_authorization(
+    *, registration_path: Path, queue_path: Path, authorization_path: Path
+) -> tuple[dict[str, Any], list[C002Cell], dict[str, Any]]:
+    """Authorize only one excluded four-cell smoke block, never behavior."""
+
+    registration, cells = load_cells(registration_path=registration_path, queue_path=queue_path)
+    require(registration.get("registration_status") == "registered_after_two_human_wording_agreements", "behavioral registration is not active")
+    gate = read_finite_json(authorization_path)
+    require(isinstance(gate, dict) and gate.get("schema_version") == SMOKE_AUTHORIZATION_SCHEMA, "smoke authorization schema changed")
+    require(gate.get("passed") is True and gate.get("status") == "passed_pre_request_excluded_smoke_authorization", "excluded smoke is not authorized")
+    for key, path in (("registration", registration_path), ("queue", queue_path)):
+        binding = validate_file_binding(gate.get(key), f"smoke {key}")
+        require(binding["sha256"] == sha256_file(path), f"smoke {key} digest mismatch")
+    source_gate = _bound_json(gate.get("source_push_gate"), "smoke source push gate", schema=SOURCE_PUSH_GATE_SCHEMA, status="passed_source_commit_pushed")
+    require(source_gate.get("pushed") is True and source_gate.get("registration_sha256") == sha256_file(registration_path), "smoke source push identity changed")
+    _verify_pushed_source_commit(source_gate)
+    lineage = registration.get("source_lineage")
+    require(isinstance(lineage, dict) and lineage.get("replacement_commit") == source_gate.get("source_commit"), "smoke source commit differs from registration")
+    physical = _bound_json(gate.get("physical_gate"), "smoke model-blind physical gate", schema=PHYSICAL_GATE_SCHEMA, status="passed_exact_e004_model_blind_physical_preflight")
+    for key in ("physical_scene", "full_reset", "policy_cameras", "raw_writer", "renderer"):
+        require(physical.get(key) is True, f"smoke physical gate lacks passed {key}")
+    require(physical.get("model_requests") == 0 and physical.get("behavioral_episodes") == 0, "smoke physical gate was not model blind")
+    require(physical.get("exact_runtime_contract_sha256") == registration["exact_e004_pi05_runtime"]["contract_sha256"], "smoke physical runtime contract changed")
+    seed = gate.get("excluded_smoke_seed")
+    require(seed == SEED_START, "excluded smoke seed changed")
+    block = [cell for cell in cells if cell.seed == seed]
+    require(len(block) == 4, "excluded smoke block is incomplete")
+    ordered = [cell.cell_id for cell in sorted(block, key=lambda value: int(value.row["execution_order_index"]))]
+    require(gate.get("ordered_cell_ids") == ordered, "excluded smoke order differs from the registered queue")
+    require(gate.get("excluded_from_behavioral_denominators") is True, "smoke denominator exclusion changed")
+    require(gate.get("model_requests_before_smoke") == 0 and gate.get("behavioral_episodes_before_smoke") == 0, "smoke authorization was not prospective")
+    return registration, block, gate
 
 
 def grouped_shard(cells: Sequence[C002Cell], *, shard_index: int, shard_count: int) -> list[C002Cell]:

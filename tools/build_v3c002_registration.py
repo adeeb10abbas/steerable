@@ -43,7 +43,7 @@ from experiments.v3.phase_c_semantic_equivalence_v3c002.wording_gate import (  #
 
 
 BASE_COMMIT = "18a2bf0200183647291cc7aeb1fe89997b3fb82f"
-ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/draft_v7"
+ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/draft_v8"
 E004_ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004"
 V1_ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002"
 V2_ROOT = V1_ROOT / "draft_v2"
@@ -51,8 +51,10 @@ V3_ROOT = V1_ROOT / "draft_v3"
 V4_ROOT = V1_ROOT / "draft_v4"
 V5_ROOT = V1_ROOT / "draft_v5"
 V6_ROOT = V1_ROOT / "draft_v6"
+V7_ROOT = V1_ROOT / "draft_v7"
 V5_ACTIVATION_ROOT = V1_ROOT / "superseded_activation_v5"
 V6_ACTIVATION_ROOT = V1_ROOT / "superseded_activation_v6"
+V7_ACTIVATION_ROOT = V1_ROOT / "superseded_activation_v7"
 
 DEPENDENCY_PATHS = {
     "checkpoint": ("artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_checkpoint_manifest.json",),
@@ -65,6 +67,10 @@ DEPENDENCY_PATHS = {
     "controller": (
         "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/droid_behavioral_bridge.py",
         "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/run_droid_queue.py",
+        "experiments/v3/phase_c_semantic_equivalence_v3c002/droid_behavioral_adapter.py",
+        "experiments/v3/phase_c_semantic_equivalence_v3c002/runner.py",
+        "experiments/v3/phase_c_semantic_equivalence_v3c002/task_files/left.py",
+        "experiments/v3/phase_c_semantic_equivalence_v3c002/task_files/right.py",
     ),
     "action_interface": ("experiments/v3/phase_e/symmetric_layout_cohort_v3e004/droid_behavioral_contract.py",),
     "camera_configuration": (
@@ -77,7 +83,11 @@ DEPENDENCY_PATHS = {
         "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/runtime_contract.py",
         "artifacts/vla_wam_shared_v3/failure_taxonomy.json",
     ),
-    "raw_writer": ("experiments/v3/phase_e/symmetric_layout_cohort_v3e004/run_droid_queue.py",),
+    "raw_writer": (
+        "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/run_droid_queue.py",
+        "experiments/v3/phase_c_semantic_equivalence_v3c002/droid_behavioral_adapter.py",
+        "experiments/v3/phase_c_semantic_equivalence_v3c002/runner.py",
+    ),
     "renderer": (
         "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/live_snapshot_adapter.py",
         "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/runtime_identity.json",
@@ -287,8 +297,18 @@ def main() -> None:
             "experiments/v3/phase_c_semantic_equivalence_v3c002/runtime.py",
             "experiments/v3/phase_c_semantic_equivalence_v3c002/runner.py",
             "experiments/v3/phase_c_semantic_equivalence_v3c002/compiler.py",
+            "experiments/v3/phase_c_semantic_equivalence_v3c002/droid_behavioral_adapter.py",
+            "experiments/v3/phase_c_semantic_equivalence_v3c002/fixed_observation_isolation.py",
+            "experiments/v3/phase_c_semantic_equivalence_v3c002/task_files/left.py",
+            "experiments/v3/phase_c_semantic_equivalence_v3c002/task_files/right.py",
             "tools/build_v3c002_registration.py",
             "tools/finalize_v3c002_registration.py",
+            "tools/build_v3c002_physical_gate.py",
+            "tools/authorize_v3c002_smoke.py",
+            "tools/compile_v3c002_smoke_gate.py",
+            "tools/compile_v3c002_isolation_gate.py",
+            "tools/build_v3c002_lane_manifest.py",
+            "tools/release_v3c002_behavior.py",
             "tools/validate_v3c002.py",
             "tools/validate_v3c002_active.py",
             "tools/validate_v3c002_v1_historical.py",
@@ -297,6 +317,7 @@ def main() -> None:
             "tools/validate_v3c002_v4_historical.py",
             "tools/validate_v3c002_v5_historical.py",
             "tools/validate_v3c002_v6_historical.py",
+            "tools/validate_v3c002_v7_historical.py",
             "tools/validate_v3c002_results.py",
             "tools/validate_v3e_publication_bundle.py",
             "tests/test_v3c002_semantic_equivalence.py",
@@ -311,7 +332,7 @@ def main() -> None:
         "source_lineage": {
             "required_base_commit": BASE_COMMIT,
             "replacement_commit": source_commit,
-            "replacement_reason": "Prospective C002 implementation and pre-run audit hardening were committed after the mandated clean base; no prior definition or experiment was changed.",
+            "replacement_reason": "Prospective C002 implementation and pre-run audit hardening were committed after the mandated clean base. V8 adds the previously absent exact simulator behavioral adapter, four-cell excluded-smoke/resume runner, and hash-bound request-zero/runtime gates; no prior definition or experiment was changed and V7 was never released.",
             "recorded_before_any_model_request": True,
             "model_requests_at_recording": 0,
             "behavioral_episodes_at_recording": 0,
@@ -368,7 +389,7 @@ def main() -> None:
             "no_sample_extension_after_results": True,
         },
         "required_outputs": [
-            "registration.json", "queue.jsonl", "release_gate.json", "infrastructure_attempts.jsonl",
+            "registration.json", "queue.jsonl", "release_gate.json", "release_gate.released.json", "infrastructure_attempts.jsonl",
             "results/episodes.jsonl", "results/pairs.jsonl", "results/results.json", "results/DECISION_MEMO.md",
             "results/evidence_manifest.json", "MANUSCRIPT_INSERT.md",
         ],
@@ -380,7 +401,7 @@ def main() -> None:
     _write_new(output_root / "registration.json", registration)
     if V1_ROOT != output_root:
         superseded_bindings = {}
-        for revision, prior_root in (("v1", V1_ROOT), ("v2", V2_ROOT), ("v3", V3_ROOT), ("v4", V4_ROOT), ("v5", V5_ROOT), ("v6", V6_ROOT)):
+        for revision, prior_root in (("v1", V1_ROOT), ("v2", V2_ROOT), ("v3", V3_ROOT), ("v4", V4_ROOT), ("v5", V5_ROOT), ("v6", V6_ROOT), ("v7", V7_ROOT)):
             revision_bindings = {}
             for name in ("registration.json", "queue.jsonl", "release_gate.json"):
                 path = prior_root / name
@@ -391,8 +412,8 @@ def main() -> None:
         _write_new(
             output_root / "supersession.json",
             {
-                "schema_version": "vla-wam-shared-v3c002-preregistration-supersession-v6",
-                "status": "prospective_v7_supersedes_unexecuted_v1_v2_v3_v4_v5_v6_drafts",
+                "schema_version": "vla-wam-shared-v3c002-preregistration-supersession-v8",
+                "status": "prospective_v8_supersedes_unexecuted_v1_v2_v3_v4_v5_v6_v7_packages",
                 "superseded_draft_bindings": superseded_bindings,
                 "superseded_v5_activation_bindings": {
                     name: _relative_binding(V5_ACTIVATION_ROOT / name)
@@ -404,8 +425,13 @@ def main() -> None:
                     for name in ("registration.json", "queue.jsonl", "release_gate.json", "wording_gate.json", "attestation_receipt_order.json", "infrastructure_attempts.jsonl")
                     if (V6_ACTIVATION_ROOT / name).is_file()
                 },
+                "superseded_v7_activation_bindings": {
+                    name: _relative_binding(V7_ACTIVATION_ROOT / name)
+                    for name in ("registration.json", "queue.jsonl", "release_gate.json", "wording_gate.json", "attestation_receipt_order.json", "source_push_gate.json", "infrastructure_attempts.jsonl")
+                    if (V7_ACTIVATION_ROOT / name).is_file()
+                },
                 "superseding_registration": _relative_binding(output_root / "registration.json"),
-                "reason": "Independent pre-run audits required exact E004 scorer normalization/evaluation and checkout-portable committed evidence paths after V2 was already hash-bound.",
+                "reason": "The unreleased V7 package lacked an executable C002 simulator adapter and complete four-cell excluded-smoke/resume path. V8 prospectively binds the exact E004 s=1 reset/request-zero machinery, explicit physical-goal scoring, immutable block output, and fail-closed runtime authorization before any model request.",
                 "v1_model_requests": 0,
                 "v1_behavioral_episodes": 0,
                 "v2_model_requests": 0,
@@ -418,9 +444,12 @@ def main() -> None:
                 "v5_behavioral_episodes": 0,
                 "v6_model_requests": 0,
                 "v6_behavioral_episodes": 0,
+                "v7_model_requests": 0,
+                "v7_behavioral_episodes": 0,
                 "v5_activation_was_never_behaviorally_released": True,
                 "v6_activation_was_never_behaviorally_released": True,
-                "v1_v2_v3_v4_v5_v6_must_never_be_activated": True,
+                "v7_activation_was_never_behaviorally_released": True,
+                "v1_v2_v3_v4_v5_v6_v7_must_never_be_activated": True,
             },
         )
     release_gate = {

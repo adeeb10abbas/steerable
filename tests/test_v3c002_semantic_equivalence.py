@@ -6,6 +6,7 @@ import subprocess
 import sys
 import unittest
 from unittest import mock
+from types import SimpleNamespace
 
 from experiments.v3.phase_c_semantic_equivalence_v3c002.compiler import compile_episode, compile_results, decision_memo, manuscript_insert
 from experiments.v3.phase_c_semantic_equivalence_v3c002.contract import (
@@ -16,6 +17,7 @@ from experiments.v3.phase_c_semantic_equivalence_v3c002.contract import (
     load_cells,
     registered_prompts,
     require_released_gate,
+    require_smoke_authorization,
 )
 from experiments.v3.phase_c_semantic_equivalence_v3c002.wording_gate import build_blinded_sheet, validate_attestations
 from experiments.v3.phase_c_semantic_equivalence_v3c002.runtime import bind_runtime
@@ -25,13 +27,27 @@ from tools.validate_v3c002_v3_historical import validate as validate_v3_historic
 from tools.validate_v3c002_v4_historical import validate as validate_v4_historical
 from tools.validate_v3c002_v5_historical import validate as validate_v5_historical
 from tools.validate_v3c002_v6_historical import validate as validate_v6_historical
+from tools.validate_v3c002_v7_historical import validate as validate_v7_historical
 from tools.validate_v3c002_active import validate as validate_active
+from experiments.v3.phase_c_semantic_equivalence_v3c002.runner import _dispatch_block
 
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 class V3C002SemanticEquivalenceTests(unittest.TestCase):
+    def test_behavioral_adapter_is_pi05_only_and_scores_explicit_physical_goal_with_exact_e004_functions(self) -> None:
+        source = (ROOT / "experiments/v3/phase_c_semantic_equivalence_v3c002/droid_behavioral_adapter.py").read_text(encoding="utf-8")
+        self.assertIn("frozen_normalize_steps", source)
+        self.assertIn("frozen_requested_success(normalized_steps, cell.physical_goal", source)
+        self.assertIn("frozen_failure_category", source)
+        self.assertNotIn("CosmosClient", source)
+        self.assertNotIn("dreamzero", source.lower())
+        for direction in ("left", "right"):
+            task = (ROOT / f"experiments/v3/phase_c_semantic_equivalence_v3c002/task_files/{direction}.py").read_text(encoding="utf-8")
+            self.assertIn('os.environ["VLA_WAM_V3C002_PROMPT"]', task)
+            self.assertIn(f"fixture._{direction.title()}Termination", task)
+
     def test_builds_exactly_one_complete_four_condition_block_per_registered_seed(self) -> None:
         with __import__("tempfile").TemporaryDirectory() as directory:
             tmp_path = Path(directory)
@@ -159,6 +175,67 @@ class V3C002SemanticEquivalenceTests(unittest.TestCase):
         result = validate_v6_historical()
         self.assertEqual(result["status"], "valid_immutable_unexecuted_superseded_v6_draft")
         self.assertEqual(result["queue_rows"], 1364)
+
+    def test_historical_v7_activation_remains_independently_verifiable_and_unexecuted(self) -> None:
+        result = validate_v7_historical()
+        self.assertEqual(result["status"], "valid_immutable_unexecuted_superseded_v7_activation")
+        self.assertEqual(result["queue_rows"], 1364)
+
+    def test_excluded_smoke_authorization_cannot_bypass_physical_gate(self) -> None:
+        with __import__("tempfile").TemporaryDirectory() as directory:
+            tmp = Path(directory); draft = tmp / "draft"
+            subprocess.run([sys.executable, "tools/build_v3c002_registration.py", "--output-root", str(draft)], cwd=ROOT, check=True)
+            registration = json.loads((draft / "registration.json").read_text(encoding="utf-8"))
+            registration["registration_status"] = "registered_after_two_human_wording_agreements"
+            registration_path = tmp / "registration.json"; _write_json(registration_path, registration)
+            queue = draft / "queue.jsonl"; source = tmp / "source.json"; physical = tmp / "physical.json"
+            _write_json(source, {"schema_version": "vla-wam-shared-v3c002-source-push-gate-v1", "status": "passed_source_commit_pushed", "passed": True, "pushed": True, "source_commit": registration["source_lineage"]["replacement_commit"], "branch": "test", "remote": "origin", "registration_sha256": __import__("hashlib").sha256(registration_path.read_bytes()).hexdigest()})
+            _write_json(physical, {"schema_version": "vla-wam-shared-v3c002-model-blind-physical-gate-v1", "status": "passed_exact_e004_model_blind_physical_preflight", "passed": True, "physical_scene": True, "full_reset": True, "policy_cameras": True, "raw_writer": True, "renderer": True, "model_requests": 0, "behavioral_episodes": 0, "exact_runtime_contract_sha256": registration["exact_e004_pi05_runtime"]["contract_sha256"]})
+            _, cells = load_cells(registration_path=registration_path, queue_path=queue)
+            block = sorted([cell for cell in cells if cell.seed == 12000], key=lambda cell: int(cell.row["execution_order_index"]))
+            auth = tmp / "auth.json"
+            _write_json(auth, {"schema_version": "vla-wam-shared-v3c002-smoke-authorization-v2", "status": "passed_pre_request_excluded_smoke_authorization", "passed": True, "registration": file_binding(registration_path), "queue": file_binding(queue), "source_push_gate": file_binding(source), "physical_gate": file_binding(physical), "excluded_smoke_seed": 12000, "ordered_cell_ids": [cell.cell_id for cell in block], "excluded_from_behavioral_denominators": True, "model_requests_before_smoke": 0, "behavioral_episodes_before_smoke": 0})
+            with mock.patch("experiments.v3.phase_c_semantic_equivalence_v3c002.contract._verify_pushed_source_commit"):
+                require_smoke_authorization(registration_path=registration_path, queue_path=queue, authorization_path=auth)
+            physical.write_text(physical.read_text(encoding="utf-8") + "\n", encoding="utf-8")
+            with mock.patch("experiments.v3.phase_c_semantic_equivalence_v3c002.contract._verify_pushed_source_commit"):
+                with self.assertRaisesRegex(ContractError, "physical gate artifact byte count changed"):
+                    require_smoke_authorization(registration_path=registration_path, queue_path=queue, authorization_path=auth)
+
+    def test_block_dispatch_runs_registered_order_once_and_resumes_only_completed_block(self) -> None:
+        with __import__("tempfile").TemporaryDirectory() as directory:
+            tmp = Path(directory); draft = tmp / "draft"
+            subprocess.run([sys.executable, "tools/build_v3c002_registration.py", "--output-root", str(draft)], cwd=ROOT, check=True)
+            _, cells = load_cells(registration_path=draft / "registration.json", queue_path=draft / "queue.jsonl")
+            block = [cell for cell in cells if cell.seed == 12000]
+            args = SimpleNamespace(
+                raw_root=str(tmp / "raw"), authorization_mode="excluded_smoke", resume=False,
+                adapter_command=["adapter"], registration=draft / "registration.json", queue=draft / "queue.jsonl",
+                authorization_gate=tmp / "auth.json", runtime_manifest=tmp / "runtime.json", runtime_manifest_sha256="a" * 64,
+                lane_pod_uid="sim-pod", lane_gpu_uuid="GPU-sim", policy_server_pod_uid="policy-pod", policy_server_gpu_uuid="GPU-policy",
+                lane_id="lane-a", container_identity="container", runtime_identity="runtime", server_process_identity="pid", server_lock_identity="lock",
+                server_port=18001, infrastructure_ledger=str(tmp / "infra.jsonl"),
+            )
+            args.authorization_gate.write_text("{}", encoding="utf-8"); args.runtime_manifest.write_text("{}", encoding="utf-8")
+            invoked = []
+            def fake_run(command: list[str], check: bool) -> None:
+                invoked.append(command)
+                values = {command[index]: command[index + 1] for index in range(len(command) - 1) if command[index].startswith("--")}
+                if values["--request0-mode"] == "capture_block":
+                    for name in ("--request0-observation-cache", "--request0-observation-manifest", "--request0-reset-contract"):
+                        path = Path(values[name]); path.parent.mkdir(parents=True, exist_ok=True); path.write_bytes(b"bound")
+                cell_id = values["--cell-id"]; cell = next(item for item in block if item.cell_id == cell_id)
+                raw = Path(values["--simulator-export"]); raw.parent.mkdir(parents=True, exist_ok=True)
+                raw.write_text(json.dumps({"schema_version": "vla-wam-shared-v3c002-raw-episode-v1", "cell_id": cell.cell_id, "cell_sha256": cell.row_sha256, "authorization_mode": "excluded_smoke", "excluded_from_behavioral_denominators": True}) + "\n", encoding="utf-8")
+            with mock.patch("experiments.v3.phase_c_semantic_equivalence_v3c002.runner.subprocess.run", side_effect=fake_run):
+                _dispatch_block(block=block, args=args, registration_sha="b" * 64, queue_sha="c" * 64)
+            expected = [cell.cell_id for cell in sorted(block, key=lambda cell: int(cell.row["execution_order_index"]))]
+            self.assertEqual([command[command.index("--cell-id") + 1] for command in invoked], expected)
+            self.assertEqual(sum("capture_block" in command for command in invoked), 1)
+            args.resume = True
+            with mock.patch("experiments.v3.phase_c_semantic_equivalence_v3c002.runner.subprocess.run") as run_again:
+                _dispatch_block(block=block, args=args, registration_sha="b" * 64, queue_sha="c" * 64)
+                run_again.assert_not_called()
 
     def test_release_gate_requires_and_hash_checks_all_pre_request_evidence(self) -> None:
         with __import__("tempfile").TemporaryDirectory() as directory:
@@ -379,15 +456,23 @@ def _release_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
         "model_requests": 0, "behavioral_episodes": 0, "exact_runtime_contract_sha256": exact_sha,
     })
     smoke = tmp_path / "smoke.json"
+    smoke_raw = []
+    for index in range(4):
+        path = tmp_path / f"smoke-raw-{index}.jsonl"; path.write_text("{}\n", encoding="utf-8"); smoke_raw.append(file_binding(path))
     _write_json(smoke, {
         "schema_version": "vla-wam-shared-v3c002-excluded-smoke-gate-v1", "status": "passed_excluded_four_cell_smoke",
         "passed": True, "excluded_from_behavioral_denominators": True, "completed_cells": 4,
+        "model_request_count": 4, "behavioral_episode_count": 0, "raw_episode_bindings": smoke_raw,
     })
     isolation = tmp_path / "isolation.json"
+    isolation_rows = []
+    for index in range(2):
+        path = tmp_path / f"isolation-{index}.json"; _write_json(path, {"lane": index}); isolation_rows.append(file_binding(path))
     _write_json(isolation, {
         "schema_version": "vla-wam-shared-v3c002-two-lane-isolation-gate-v1", "status": "passed_two_lane_fixed_observation_isolation",
         "passed": True, "fixed_observation_equal": True, "fixed_prompt_equal": True, "request_seed_equal": True,
-        "outputs_match": True, "lane_state_isolated": True,
+        "outputs_match": True, "lane_state_isolated": True, "model_request_count": 2, "behavioral_episode_count": 0,
+        "excluded_from_behavioral_denominators": True, "lane_responses": isolation_rows,
     })
     lane_bindings = []
     for index in range(2):

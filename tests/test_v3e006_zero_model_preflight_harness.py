@@ -6,6 +6,8 @@ from pathlib import Path
 
 import pytest
 
+from experiments.v3.phase_e.canonical_stage_localization_v3e006.preflight_pose import scalar_z_from_world_pose
+
 
 SOURCE = Path(__file__).parents[1] / "tools/run_v3e006_zero_model_preflight.py"
 SPEC = importlib.util.spec_from_file_location("v3e006_preflight_harness", SOURCE)
@@ -46,6 +48,23 @@ def test_child_failure_is_retained_before_simulator_close() -> None:
     assert '"model_request_count": 0' in child_source
     assert '"behavioral_episode_count": 0' in child_source
     assert '"state_candidate_count": 0' in child_source
+
+
+def test_single_prim_world_pose_z_is_normalized_without_batch_assumption() -> None:
+    class Scalar:
+        def detach(self):
+            return self
+
+        def cpu(self):
+            return self
+
+        def item(self):
+            return 0.625
+
+    assert scalar_z_from_world_pose(([1.0, 2.0, Scalar()], [1.0, 0.0, 0.0, 0.0])) == 0.625
+    child_source = (SOURCE.parent / "v3e006_zero_model_runtime_preflight.py").read_text(encoding="utf-8")
+    assert child_source.count("cube.get_world_pose()") == 2
+    assert "cube.get_world_poses()" not in child_source
 
 
 def test_interpreter_binding_preserves_venv_symlink_path(tmp_path: Path) -> None:

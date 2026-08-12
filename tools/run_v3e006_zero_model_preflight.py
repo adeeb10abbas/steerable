@@ -105,6 +105,16 @@ def main() -> None:
         "ood_freeze": require(args.ood_freeze, args.ood_freeze_sha256),
         "e004_reset_reference": require(args.e004_reset_reference, args.e004_reset_reference_sha256),
         "runtime_contract": require(args.runtime_contract, args.runtime_contract_sha256),
+        "pose_helper_source": binding(
+            study_root / "experiments/v3/phase_e/canonical_stage_localization_v3e006/preflight_pose.py"
+        ),
+        "installed_pose_api_source": require(
+            Path(
+                "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/"
+                "isaacsim/exts/isaacsim.core.prims/isaacsim/core/prims/impl/single_prim_wrapper.py"
+            ),
+            "30cad6463a0ffa514ec357640f3fcff2fe076d241179c809f5f05e2b85b41333",
+        ),
     }
     diagnostics = []
     for path in args.diagnostic_input:

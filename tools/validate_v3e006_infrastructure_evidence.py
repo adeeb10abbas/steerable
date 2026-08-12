@@ -122,6 +122,12 @@ def main() -> None:
             if child.get("status") != "passed_generic_zero_model_cuda_vulkan_isaac_physics_render_health_preflight":
                 raise AssertionError("child preflight status differs")
             verify_binding(child["source"], verify_raw=True)
+            verify_binding(child["pose_helper_source"], verify_raw=True)
+            verify_binding(child["installed_pose_api_source"], verify_raw=True)
+            if child["pose_helper_source"] != launch["input_bindings"]["pose_helper_source"]:
+                raise AssertionError("child pose helper differs from launch binding")
+            if child["installed_pose_api_source"] != launch["input_bindings"]["installed_pose_api_source"]:
+                raise AssertionError("child installed pose API differs from launch binding")
             for binding_row in child.get("bound_inputs", {}).values():
                 verify_binding(binding_row, verify_raw=True)
             for binding_row in child.get("diagnostic_inputs", []):
@@ -150,6 +156,13 @@ def main() -> None:
                     if child.get(key) != 0:
                         raise AssertionError(f"failed child preflight has nonzero {key}")
                 verify_binding(child["source"], verify_raw=True)
+                verify_binding(child["pose_helper_source"], verify_raw=True)
+                if child["pose_helper_source"] != launch["input_bindings"]["pose_helper_source"]:
+                    raise AssertionError("failed child pose helper differs from launch binding")
+                if child.get("installed_pose_api_source") is not None:
+                    verify_binding(child["installed_pose_api_source"], verify_raw=True)
+                    if child["installed_pose_api_source"] != launch["input_bindings"]["installed_pose_api_source"]:
+                        raise AssertionError("failed child installed pose API differs from launch binding")
                 for binding_row in child.get("bound_inputs", {}).values():
                     verify_binding(binding_row, verify_raw=True)
                 for binding_row in child.get("diagnostic_inputs", []):

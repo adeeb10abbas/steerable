@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import inspect
 import json
 import os
 from pathlib import Path
@@ -67,6 +68,10 @@ sys.path.insert(0, str(study_root))
 from experiments.v3.phase_e.canonical_stage_localization_v3e006.runtime_contract import (  # noqa: E402
     expected_observation,
     load_runtime_contract,
+)
+from experiments.v3.phase_e.canonical_stage_localization_v3e006 import preflight_pose  # noqa: E402
+from experiments.v3.phase_e.canonical_stage_localization_v3e006.preflight_pose import (  # noqa: E402
+    scalar_z_from_world_pose,
 )
 
 study_commit = subprocess.check_output(["git", "-C", str(study_root), "rev-parse", "HEAD"], text=True).strip()
@@ -137,6 +142,7 @@ base_report = {
     "study_commit": study_commit,
     "robolab_commit": robolab_commit,
     "source": _binding(source),
+    "pose_helper_source": _binding(Path(preflight_pose.__file__).resolve()),
     "bound_inputs": bound_inputs,
     "runtime_contract_observation": runtime_observation,
     "app_launcher_runtime": {
@@ -159,6 +165,7 @@ base_report = {
     },
 }
 health_failure: BaseException | None = None
+pose_api_source: dict[str, object] | None = None
 
 try:
     import numpy as np
@@ -169,6 +176,15 @@ try:
     from isaacsim.core.api.world import World
     from isaacsim.core.prims import SingleGeometryPrim, SingleRigidPrim
     from pxr import UsdGeom
+
+    pose_api_path = Path(inspect.getsourcefile(SingleRigidPrim.get_world_pose) or "").resolve()
+    pose_api_source = _binding(pose_api_path)
+    if pose_api_source != {
+        "path": str(pose_api_path),
+        "bytes": 16979,
+        "sha256": "30cad6463a0ffa514ec357640f3fcff2fe076d241179c809f5f05e2b85b41333",
+    }:
+        raise RuntimeError("installed Isaac single-prim pose API source differs")
 
     if not torch.cuda.is_available():
         raise RuntimeError("torch CUDA unavailable")
@@ -197,11 +213,11 @@ try:
     rgb.attach(render_product)
 
     world.reset()
-    z_initial = float(cube.get_world_poses()[0][0, 2].cpu())
+    z_initial = scalar_z_from_world_pose(cube.get_world_pose())
     for _ in range(60):
         world.step(render=True)
     frame = np.asarray(rgb.get_data())
-    z_final = float(cube.get_world_poses()[0][0, 2].cpu())
+    z_final = scalar_z_from_world_pose(cube.get_world_pose())
     if z_final >= z_initial - 0.05:
         raise RuntimeError("minimal rigid-body physics did not advance")
     if frame.shape[:2] != (120, 160) or frame.size == 0 or int(np.count_nonzero(frame)) == 0:
@@ -211,6 +227,7 @@ try:
         **base_report,
         "status": "passed_generic_zero_model_cuda_vulkan_isaac_physics_render_health_preflight",
         "passed": True,
+        "installed_pose_api_source": pose_api_source,
         "cuda": {
             "available": True,
             "device_name": torch.cuda.get_device_name(0),
@@ -233,6 +250,7 @@ except BaseException as exc:
         **base_report,
         "status": "infrastructure_invalid_zero_model_runtime_health_preflight",
         "passed": False,
+        "installed_pose_api_source": pose_api_source,
         "error": {
             "type": type(exc).__name__,
             "message": str(exc),

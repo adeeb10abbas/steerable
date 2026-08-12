@@ -42,6 +42,13 @@ def same_target_binding(record: object, local_path: Path, label: str) -> None:
     require(record.get("sha256") == sha256_file(local_path), f"{label} digest changed")
 
 
+def same_repo_binding(record: object, local_path: Path, label: str) -> None:
+    require(isinstance(record, dict), f"{label} binding is absent")
+    expected = local_path.relative_to(REPO_ROOT).as_posix()
+    require(record.get("path") == expected, f"{label} path changed")
+    same_target_binding(record, local_path, label)
+
+
 def main() -> None:
     gates = ACTIVE / "gates"
     report_path = gates / "isolation_failure_report.json"
@@ -151,6 +158,11 @@ def main() -> None:
 
     closure = (ACTIVE / "ISOLATION_CLOSURE_MEMO.md").read_text(encoding="utf-8")
     routing = (ACTIVE / "C002_MANUSCRIPT_ROUTING.md").read_text(encoding="utf-8")
+    closure_dir = ACTIVE / "closure"
+    insert_path = closure_dir / "MANUSCRIPT_INSERT.md"
+    manifest_path = closure_dir / "evidence_manifest.json"
+    insert = insert_path.read_text(encoding="utf-8")
+    manifest = read_json(manifest_path)
     for phrase in (
         "not a semantic result",
         "No behavioral episode was run",
@@ -159,6 +171,78 @@ def main() -> None:
         require(phrase in closure, f"closure memo omits: {phrase}")
     for phrase in ("was not behaviorally executed", "not a semantic result", "never launched"):
         require(phrase in routing, f"manuscript routing omits: {phrase}")
+    for phrase in (
+        "no manuscript result",
+        "no behavioral episodes were run",
+        "methods or limitations",
+        "It is not a semantic result",
+        sha256_file(report_path),
+        sha256_file(receipt_path),
+    ):
+        require(phrase in insert, f"manuscript insert omits: {phrase}")
+    require("|" not in insert, "manuscript insert must not contain a result table")
+
+    require(
+        manifest.get("schema_version")
+        == "vla-wam-shared-v3c002-prebehavior-isolation-closure-evidence-manifest-v1"
+        and manifest.get("status") == "closed_before_behavior_after_failed_registered_isolation",
+        "closure evidence manifest schema or status changed",
+    )
+    require(
+        manifest.get("semantic_result") is False
+        and manifest.get("behavioral_execution_status") == "not_executed"
+        and manifest.get("behavioral_episode_count") == 0
+        and manifest.get("excluded_model_request_count") == 2
+        and manifest.get("full_queue_launched") is False
+        and manifest.get("release_authorized") is False
+        and manifest.get("retry_performed") is False,
+        "closure evidence manifest counts or authorization changed",
+    )
+    require(
+        manifest.get("source_commit") == "e2d9ae3904b4a08e549c784903c167a4213d3d47",
+        "closure evidence manifest source commit changed",
+    )
+    publication = manifest.get("publication_routing")
+    require(
+        isinstance(publication, dict)
+        and publication.get("main_results_insert_authorized") is False
+        and publication.get("result_table_authorized") is False
+        and publication.get("semantic_claim_authorized") is False
+        and publication.get("allowed_scope")
+        == "methods_or_limitations_failed_pre_release_infrastructure_check_only",
+        "closure evidence manifest publication routing changed",
+    )
+    raw_rehash = manifest.get("raw_evidence_rehash")
+    require(
+        isinstance(raw_rehash, dict)
+        and raw_rehash.get("receipt") == "isolation_target_raw_rehash_receipt"
+        and raw_rehash.get("unique_raw_bindings_rehashed") == 81
+        and raw_rehash.get("raw_bytes_rehashed") == 26_518_210
+        and raw_rehash.get("passed") is True,
+        "closure evidence manifest raw rehash summary changed",
+    )
+    artifacts = manifest.get("closure_artifacts")
+    require(isinstance(artifacts, dict), "closure evidence manifest bindings are absent")
+    bound_paths = {
+        "registration": ACTIVE / "registration.json",
+        "queue": ACTIVE / "queue.jsonl",
+        "release_gate": ACTIVE / "release_gate.json",
+        "physical_gate": gates / "model_blind_physical_gate.json",
+        "excluded_smoke_gate": gates / "excluded_smoke_gate.json",
+        "isolation_failure_report": report_path,
+        "isolation_target_raw_rehash_receipt": receipt_path,
+        "isolation_prelaunch_invalid_attempts": ledger_path,
+        "infrastructure_attempts": ACTIVE / "infrastructure_attempts.jsonl",
+        "closure_memo": ACTIVE / "ISOLATION_CLOSURE_MEMO.md",
+        "manuscript_routing": ACTIVE / "C002_MANUSCRIPT_ROUTING.md",
+        "manuscript_insert": insert_path,
+        "frozen_publication_bundle_validator": REPO_ROOT / "tools/validate_v3e_publication_bundle.py",
+        "closure_validator": REPO_ROOT / "tools/validate_v3c002_isolation_closure.py",
+        "additive_publication_bundle_validator": REPO_ROOT / "tools/validate_v3c002_publication_bundle.py",
+    }
+    require(set(artifacts) == set(bound_paths), "closure evidence manifest binding set changed")
+    for label, path in bound_paths.items():
+        same_repo_binding(artifacts.get(label), path, label)
 
     print(
         json.dumps(
@@ -168,6 +252,8 @@ def main() -> None:
                 "behavioral_episodes": 0,
                 "failure_report_sha256": sha256_file(report_path),
                 "target_raw_rehash_receipt_sha256": sha256_file(receipt_path),
+                "evidence_manifest_sha256": sha256_file(manifest_path),
+                "manuscript_insert_sha256": sha256_file(insert_path),
                 "full_queue_launched": False,
                 "semantic_result": False,
             },

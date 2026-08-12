@@ -142,6 +142,7 @@ os.environ.update(
 simulation_app = AppLauncher(args).app
 CURRENT_STAGE = "app_launcher_started"
 LAST_REFERENCE_BOUNDS_EVIDENCE: dict[str, Any] | None = None
+LAST_PARTIAL_STAGES: dict[str, Any] = {}
 
 import omni.usd  # noqa: E402
 from pxr import Usd, UsdGeom  # noqa: E402
@@ -270,6 +271,7 @@ def _base_evidence(*, candidate_gate_passed: bool = False, state_candidate_count
             "python": sys.executable,
         },
         "last_reference_bounds_evidence": LAST_REFERENCE_BOUNDS_EVIDENCE,
+        "partial_stage_evidence": LAST_PARTIAL_STAGES,
     }
 
 
@@ -687,6 +689,7 @@ def main() -> None:
             reference=reset_reference,
             reference_file_sha256=args.e004_reset_reference_sha256,
         )
+        LAST_PARTIAL_STAGES["full_reset"] = full_reset
         if not all(
             (
                 full_reset["camera_evidence"]["passed"],
@@ -746,9 +749,13 @@ def main() -> None:
                 contact_samples=settled,
             )
             state["physics_gate"] = settled_gate(settled, unintended_contact_pairs=unintended)
+            LAST_PARTIAL_STAGES[stage] = state
             state["ood_gate"] = stage_ood(state, stage_reference=reference)
+            LAST_PARTIAL_STAGES[stage] = state
             state["camera_evidence"] = _save_camera_evidence(env, obs, stage, args.output_dir / "cameras")
+            LAST_PARTIAL_STAGES[stage] = state
             state["companion_pose_gate"] = _companion_gate(state, candidate)
+            LAST_PARTIAL_STAGES[stage] = state
             state["construction_target"] = {
                 "method": "deterministic RoboLab absolute differential IK plus normal gripper contact; no weld or learned-model request",
                 "cube_position_world_m": desired_cube.tolist(),
@@ -765,6 +772,7 @@ def main() -> None:
                 )
             )
             stages[stage] = state
+            LAST_PARTIAL_STAGES[stage] = state
             if not state["passed"]:
                 raise RuntimeError(f"{stage} candidate failed a preregistered state gate")
 

@@ -33,6 +33,22 @@ def test_state_gate_retains_failure_before_closing_simulator() -> None:
         assert field in source
 
 
+def test_state_gate_retains_each_partial_gate_before_failure() -> None:
+    source_path = Path(__file__).parents[1] / "experiments/v3/phase_e/canonical_stage_localization_v3e006/state_construction_gate.py"
+    source = source_path.read_text(encoding="utf-8")
+    assert '"partial_stage_evidence": LAST_PARTIAL_STAGES' in source
+    for assignment in (
+        'state["physics_gate"] =',
+        'state["ood_gate"] =',
+        'state["camera_evidence"] =',
+        'state["companion_pose_gate"] =',
+    ):
+        assigned_at = source.index(assignment)
+        retained_at = source.index("LAST_PARTIAL_STAGES[stage] = state", assigned_at)
+        next_gate = source.find('state["', assigned_at + len(assignment))
+        assert next_gate == -1 or retained_at < next_gate
+
+
 def test_health_semantics_are_checked_before_app_launcher() -> None:
     source_path = Path(__file__).parents[1] / "experiments/v3/phase_e/canonical_stage_localization_v3e006/state_construction_gate.py"
     source = source_path.read_text(encoding="utf-8")

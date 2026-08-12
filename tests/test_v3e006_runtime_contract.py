@@ -9,6 +9,7 @@ import pytest
 from experiments.v3.phase_e.canonical_stage_localization_v3e006.runtime_contract import (
     RuntimeContractError,
     assert_observed_runtime,
+    expected_observation,
     load_runtime_contract,
 )
 
@@ -27,11 +28,7 @@ def test_frozen_runtime_contract_round_trip() -> None:
 
 def test_observed_runtime_fails_closed() -> None:
     value = json.loads(PATH.read_text())
-    observed = {key: value[key] for key in (
-        "canonical_contract_sha256", "model_id", "checkpoint_manifest_sha256", "checkpoint_payload_sha256",
-        "openpi_commit", "robolab_commit", "action_chunk_shape", "open_loop_horizon", "action_cap", "policy_id",
-        "renderer_contract",
-    )}
+    observed = expected_observation(value)
     assert_observed_runtime(observed, value)
     observed["open_loop_horizon"] = 14
     with pytest.raises(RuntimeContractError):

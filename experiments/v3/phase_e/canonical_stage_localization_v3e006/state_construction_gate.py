@@ -418,7 +418,12 @@ def main() -> None:
     set_output_dir(str((args.output_dir / "native").resolve()))
     ood = json.loads(args.ood_freeze.read_text(encoding="utf-8"))
     reset_reference = json.loads(args.e004_reset_reference.read_text(encoding="utf-8"))
-    runtime_bindings = load_runtime_contract(args.runtime_bindings, args.runtime_bindings_sha256)
+    runtime_bindings = load_runtime_contract(
+        args.runtime_bindings,
+        args.runtime_bindings_sha256,
+        study_root=study_root,
+        external_roots=(robolab_root,),
+    )
     candidate = load_candidate(args.e004_candidate, args.e004_candidate_sha256)
     task_file = study_root / "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/task_files/left.py"
     auto_register_droid_abs_ik_envs(task=[str(task_file)], cameras=WRIST_LEFT_RIGHT_HEAD)

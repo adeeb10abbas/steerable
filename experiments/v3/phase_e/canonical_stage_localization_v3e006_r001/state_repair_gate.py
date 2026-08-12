@@ -190,16 +190,23 @@ rank_one_observed = {
 }
 if rank_one_observed != {"grasp": (9521, 30, 104, 31, 105), "carry": (9442, 39, 113, 38, 112)}:
     BOOTSTRAP.error("rank-one matched-direction anchors differ from registration")
-if source_push_gate.get("status") != "passed_before_any_r001_candidate_or_model_request":
-    BOOTSTRAP.error("source-push gate did not pass prospectively")
+if source_push_gate.get("status") != "passed_after_attempt01_infrastructure_invalid_before_single_retry_or_model_request":
+    BOOTSTRAP.error("lifecycle-repair source-push gate did not pass prospectively")
 implementation_commit = str(source_push_gate.get("implementation_commit", ""))
 if not implementation_commit or subprocess.run(
     ["git", "-C", str(study_root), "merge-base", "--is-ancestor", implementation_commit, args.expected_study_commit],
     check=False,
 ).returncode:
     BOOTSTRAP.error("source-push implementation commit is not an ancestor of runtime checkout")
-if source_push_gate.get("model_request_count") != 0 or source_push_gate.get("repair_candidate_evaluation_count") != 0:
-    BOOTSTRAP.error("source-push gate has nonzero prerelease counts")
+if (
+    source_push_gate.get("model_request_count") != 0
+    or source_push_gate.get("behavioral_episode_count") != 0
+    or source_push_gate.get("repair_candidate_evaluation_count") != 1
+    or source_push_gate.get("completed_candidate_pair_count") != 0
+    or source_push_gate.get("accepted_state_candidate_count") != 0
+    or source_push_gate.get("infrastructure_invalid_search_attempt_count") != 1
+):
+    BOOTSTRAP.error("lifecycle-repair source-push history counts differ")
 implementation_files = source_push_gate.get("implementation_files")
 if not isinstance(implementation_files, list) or not implementation_files:
     BOOTSTRAP.error("source-push gate has no implementation-file inventory")
@@ -1074,6 +1081,7 @@ def main() -> None:
                 raise
             finally:
                 if stage_env is not None:
+                    stage_before_close = CURRENT_STAGE
                     CURRENT_STAGE = f"{label}_close_dedicated_environment"
                     try:
                         stage_env.close()
@@ -1093,6 +1101,8 @@ def main() -> None:
                     finally:
                         del stage_env
                         gc.collect()
+                        if stage_failure is not None:
+                            CURRENT_STAGE = stage_before_close
         rank_attempt["passed"] = all(
             row["candidate_state"]["passed"] for row in rank_attempt["stages"].values()
         )

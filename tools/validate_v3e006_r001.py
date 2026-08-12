@@ -199,9 +199,16 @@ def validate_package(root: Path) -> dict[str, Any]:
     source_gate_result = None
     if source_gate_path.is_file():
         source_gate = load(source_gate_path)
+        is_lifecycle_gate = source_gate_path == v5_path
         require(source_gate.get("schema_version") == "vla-wam-shared-v3e006-r001-source-push-gate-v1", "wrong source-push schema")
-        require(source_gate.get("status") == "passed_before_any_r001_candidate_or_model_request", "source-push gate did not pass")
-        require(source_gate.get("model_request_count") == source_gate.get("behavioral_episode_count") == source_gate.get("repair_candidate_evaluation_count") == 0, "source-push counts are nonzero")
+        if is_lifecycle_gate:
+            require(source_gate.get("status") == "passed_after_attempt01_infrastructure_invalid_before_single_retry_or_model_request", "lifecycle source-push gate did not pass")
+            require(source_gate.get("model_request_count") == source_gate.get("behavioral_episode_count") == 0, "lifecycle source-push model/behavior counts are nonzero")
+            require(source_gate.get("repair_candidate_evaluation_count") == source_gate.get("infrastructure_invalid_search_attempt_count") == 1, "lifecycle source-push attempt history differs")
+            require(source_gate.get("completed_candidate_pair_count") == source_gate.get("accepted_state_candidate_count") == 0, "lifecycle source-push incorrectly counts a completed/accepted candidate")
+        else:
+            require(source_gate.get("status") == "passed_before_any_r001_candidate_or_model_request", "source-push gate did not pass")
+            require(source_gate.get("model_request_count") == source_gate.get("behavioral_episode_count") == source_gate.get("repair_candidate_evaluation_count") == 0, "source-push counts are nonzero")
         implementation_commit = str(source_gate.get("implementation_commit", ""))
         require(bool(implementation_commit), "source-push implementation commit is absent")
         subprocess.run(["git", "-C", str(root), "cat-file", "-e", f"{implementation_commit}^{{commit}}"], check=True)
@@ -211,7 +218,6 @@ def validate_package(root: Path) -> dict[str, Any]:
             relative = Path(str(row.get("path", "")))
             require(not relative.is_absolute() and ".." not in relative.parts, f"unsafe source-push path: {relative}")
             verify_binding(row, path=root / relative, ignore_path=True)
-        is_lifecycle_gate = source_gate_path == v5_path
         prior_gate_path = repair_root / ("source_push_gate_v4.json" if is_lifecycle_gate else "source_push_gate_v3.json")
         prior_gate = source_gate.get("supersedes")
         require(isinstance(prior_gate, Mapping), "latest source-push gate lacks supersession binding")

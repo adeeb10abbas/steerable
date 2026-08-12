@@ -137,10 +137,17 @@ def main() -> None:
     if health_harness.get("status") != "passed_generic_zero_model_health_preflight" or health_harness.get("passed") is not True:
         parser.error("bound formal health preflight did not pass")
     source_gate = json.loads(args.source_push_gate.read_text(encoding="utf-8"))
-    if source_gate.get("status") != "passed_before_any_r001_candidate_or_model_request":
-        parser.error("source-push gate did not pass prospectively")
-    if source_gate.get("model_request_count") != 0 or source_gate.get("behavioral_episode_count") != 0 or source_gate.get("repair_candidate_evaluation_count") != 0:
-        parser.error("source-push gate has nonzero prerelease counts")
+    if source_gate.get("status") != "passed_after_attempt01_infrastructure_invalid_before_single_retry_or_model_request":
+        parser.error("lifecycle-repair source-push gate did not pass prospectively")
+    if (
+        source_gate.get("model_request_count") != 0
+        or source_gate.get("behavioral_episode_count") != 0
+        or source_gate.get("repair_candidate_evaluation_count") != 1
+        or source_gate.get("completed_candidate_pair_count") != 0
+        or source_gate.get("accepted_state_candidate_count") != 0
+        or source_gate.get("infrastructure_invalid_search_attempt_count") != 1
+    ):
+        parser.error("lifecycle-repair source-push history counts differ")
     implementation_commit = str(source_gate.get("implementation_commit", ""))
     if not implementation_commit or subprocess.run(
         ["git", "-C", str(study_root), "merge-base", "--is-ancestor", implementation_commit, args.expected_study_commit],
@@ -219,7 +226,10 @@ def main() -> None:
         "schema_version": "vla-wam-shared-v3e006-r001-state-repair-launch-v1",
         "created_at_utc": utcnow(), "status": "launched_after_prospective_source_push_gate",
         "model_request_count_before_launch": 0, "behavioral_episode_count_before_launch": 0,
-        "repair_candidate_evaluation_count_before_launch": 0,
+        "repair_candidate_evaluation_count_before_launch": 1,
+        "completed_candidate_pair_count_before_launch": 0,
+        "accepted_state_candidate_count_before_launch": 0,
+        "infrastructure_invalid_search_attempt_count_before_launch": 1,
         "study_commit": args.expected_study_commit, "robolab_commit": args.expected_robolab_commit,
         "remote_branch_equality": {"remote": "origin", "ref": "refs/heads/experiment/v3e006-r001-state-repair", "commit": remote_head[0]},
         "harness_source": binding(Path(__file__)), "outer_argv": sys.argv,

@@ -1,0 +1,110 @@
+{
+  "accepted_state_candidate_count": 0,
+  "behavioral_episode_count": 0,
+  "candidate_schedule": {
+    "bytes": 161264,
+    "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r003/gates/candidate_schedule.json",
+    "sha256": "250d193336f5d802a0fde4ad514d985ff3fa2b40b021d2a5dfcb3020f615efb7"
+  },
+  "completed_candidate_pair_count": 0,
+  "created_at_utc": "2026-08-12T23:58:49.235927Z",
+  "implementation_commit": "dcb412a2603d085a8959bb17c17c55fa7f6c3170",
+  "implementation_file_count": 11,
+  "implementation_files": [
+    {
+      "bytes": 161264,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r003/gates/candidate_schedule.json",
+      "sha256": "250d193336f5d802a0fde4ad514d985ff3fa2b40b021d2a5dfcb3020f615efb7"
+    },
+    {
+      "bytes": 3025,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r003/infrastructure_attempts.json",
+      "sha256": "b3b9c51cd5cdfa8887d162a52af4b14fb4f7d128c58a0a38d4d52438b1b34fa9"
+    },
+    {
+      "bytes": 12159,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r003/repair_registration.json",
+      "sha256": "103f3da335a23569e5e6e68c0e4b561f3b9d4573bdb82e317a5bbe7b8fac19ac"
+    },
+    {
+      "bytes": 77,
+      "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r003/__init__.py",
+      "sha256": "a50690a955db78e54275786fb248a9c33873eba3f129d3a2e67cb710158befa4"
+    },
+    {
+      "bytes": 3474,
+      "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r003/predecessor_contract.py",
+      "sha256": "651e3d657f1ac160ee779181f57b44805adfd20491cd8546cf8732fd066fe26c"
+    },
+    {
+      "bytes": 103950,
+      "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r003/state_repair_gate.py",
+      "sha256": "5cb0d9a1f5cc46fe1da0c632c71013309423f4ac39f72e8f7930e9ee6b944ff3"
+    },
+    {
+      "bytes": 12247,
+      "path": "tests/test_v3e006_r003.py",
+      "sha256": "a52a658714e233f61adb0f5b1c2b180a061d258f155fe5d706719c86d9bd29c2"
+    },
+    {
+      "bytes": 23517,
+      "path": "tools/build_v3e006_r003_freeze.py",
+      "sha256": "dbf2a0f9868fc8ce3ed5ef89431e93f769b330198c326571fcc0f46d19ddb114"
+    },
+    {
+      "bytes": 6001,
+      "path": "tools/build_v3e006_r003_source_gate.py",
+      "sha256": "1590ae2e57c6fb5c15c1faf40f62ac615440bcccd30613d60fe543e5edf1efff"
+    },
+    {
+      "bytes": 17568,
+      "path": "tools/run_v3e006_r003_state_repair.py",
+      "sha256": "a4de1bbea9033aa892ccc18e371c5a8fe7417f00daa4cf56d301f9bcfc54831e"
+    },
+    {
+      "bytes": 37341,
+      "path": "tools/validate_v3e006_r003.py",
+      "sha256": "36c1d689379057bf3900d9e3af7267dbba5b9538bab633a36cfc83bdb1a3b28b"
+    }
+  ],
+  "infrastructure_attempts": {
+    "bytes": 3025,
+    "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r003/infrastructure_attempts.json",
+    "sha256": "b3b9c51cd5cdfa8887d162a52af4b14fb4f7d128c58a0a38d4d52438b1b34fa9"
+  },
+  "infrastructure_invalid_search_attempt_count": 1,
+  "model_request_count": 0,
+  "r002_exhaustion_closure_commit": "27d1bfd844808f7f336bbb4e25552a9c859fd08a",
+  "r003_live_candidate_evaluation_count": 0,
+  "r003_live_diagnostic_count": 0,
+  "release_boundary": "Four frozen zero-model reachability diagnostics followed conditionally by one finite sequential zero-model R003 candidate search; behavior and inference remain blocked.",
+  "remote_equality": {
+    "commit": "dcb412a2603d085a8959bb17c17c55fa7f6c3170",
+    "ref": "refs/heads/experiment/v3e006-r003-state-repair",
+    "remote": "origin"
+  },
+  "repair_amendment_id": "V3-E006-R003",
+  "repair_registration": {
+    "bytes": 12159,
+    "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r003/repair_registration.json",
+    "sha256": "103f3da335a23569e5e6e68c0e4b561f3b9d4573bdb82e317a5bbe7b8fac19ac"
+  },
+  "required_repository_base": "18a2bf0200183647291cc7aeb1fe89997b3fb82f",
+  "schema_version": "vla-wam-shared-v3e006-r003-source-push-gate-v2",
+  "source_push_assertions": {
+    "behavior_and_model_release_prohibited": true,
+    "finite_rank_order_and_first_pass_frozen": true,
+    "known_reachable_diagnostic_frozen_before_live_evaluation": true,
+    "original_r001_and_r002_predecessors_preserved": true,
+    "registration_and_schedule_predate_live_candidate": true,
+    "remote_ref_equals_implementation_commit": true,
+    "unchanged_scientific_gate_sources_bound": true
+  },
+  "status": "passed_before_first_r003_live_diagnostic_candidate_or_model_request",
+  "supersedes_source_push_gate_v1": {
+    "bytes": 3864,
+    "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r003/source_push_gate.json",
+    "sha256": "c3303b3d09827e4e92e9d8cf6182f4bc2c4afe3bda351fe5f5c3f9ad6c05a41a"
+  },
+  "supersession_reason": "The first cleared launch failed before AppLauncher because its loader queried a field absent from the immutable compact R002 closure. V2 binds the retained zero-count failure and the exact compact-schema validation repair; no registered solver, schedule, target, threshold, or scientific gate changed."
+}

@@ -6,12 +6,12 @@
   ],
   "amendment_id": "V3-E006",
   "behavioral_episode_count": 0,
-  "canonical_contract_sha256": "56df47cdf83f6830df3702958e9d012712d2d3987bc810957a86c716079da127",
+  "canonical_contract_sha256": "97c1fb8965d2c6b96a210b2f28ebad28357c5c273ac2d880377dcaaee3c4432e",
   "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
   "checkpoint_payload_sha256": "b193b28b05f9755e24d44a6f5cf3185ca23c2ad3da6c5913370379c82570fbf6",
   "components": {
     "action_controller": {
-      "canonical_sha256": "5e3179cf1e9e798ba3b83f3dce66c1ea9ed0040b34b992a81d2dc2f800b5f82d",
+      "canonical_sha256": "3558a3ff24635db9e3fd497a352e010c6b62bbf5580bdc7c18d0da882ccd531b",
       "contract": {
         "action_cap": 450,
         "chunk_shape": [
@@ -19,6 +19,11 @@
           8
         ],
         "controller": "native RoboLab DROID joint-position controller",
+        "e004_action_dispatch": {
+          "bytes": 8126,
+          "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/droid_behavioral_contract.py",
+          "sha256": "dc26825b7f5ae53895fd7c2b6ea4e8f13e60270c5e61e28b5bb3deca156ffac3"
+        },
         "open_loop_horizon": 15,
         "registration": {
           "bytes": 5708,
@@ -29,8 +34,13 @@
       }
     },
     "cameras": {
-      "canonical_sha256": "5611d98f166c3460761343db3ba0fe06c721a1f3b270f016c8bf513c907a3bbb",
+      "canonical_sha256": "996821ca0957fded0a42bfa641c2689ca63049dd324be0eb4fe9dc60e3081c3d",
       "contract": {
+        "e004_live_snapshot_adapter": {
+          "bytes": 15334,
+          "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/live_snapshot_adapter.py",
+          "sha256": "a5e21ea25443f266d676e7f6d7d6341b61b49acbffcffc5d727947e80c202241"
+        },
         "environment_preset_order": [
           "over_shoulder_left_camera",
           "over_shoulder_right_camera",
@@ -116,12 +126,17 @@
       }
     },
     "raw_writer": {
-      "canonical_sha256": "f04ca5b7d2af974d63a2bb5dc1f5d25fc30c9540c2cbcd1804679c700d479669",
+      "canonical_sha256": "5083cf513a5acaa2703498f0a7f3a47cf75dbd60230dac2df5e0babd14b644c2",
       "contract": {
         "bridge": {
           "bytes": 53612,
           "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/droid_behavioral_bridge.py",
           "sha256": "58d0269f7e890fee1e8ffc9d8d25c57068220229d9221ccb885732f3501d24b3"
+        },
+        "e004_queue_run_loop": {
+          "bytes": 33129,
+          "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/run_droid_queue.py",
+          "sha256": "6bee8003fbac8dca4965c3d13baefdf69eb548c5992333e6859c32f1d7f3ae93"
         },
         "missing_measurement_policy": "missing measurements never encoded as zero",
         "native_runtime": {
@@ -179,5 +194,10 @@
     "bytes": 4775,
     "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/e004_runtime_bindings.json",
     "sha256": "4d6333ead6f055409400b54f38600584e6b058921c9ee0b7b16c25e9f011295e"
+  },
+  "supersedes_contract": {
+    "canonical_contract_sha256": "56df47cdf83f6830df3702958e9d012712d2d3987bc810957a86c716079da127",
+    "file_sha256": "e6a3bec6e6eaec616fd8c865881c13bf9d33f32c843dfb2a429e798a6fb7ee06",
+    "reason": "bind remaining exact E004 action-dispatch, live-camera adapter, and queue-run-loop dependencies before any V3-E006 request"
   }
 }

@@ -1,0 +1,49 @@
+{
+  "amendment_id": "V3-E006",
+  "behavioral_episode_count": 0,
+  "commits": [
+    {
+      "role": "required_user_base",
+      "sha": "18a2bf0200183647291cc7aeb1fe89997b3fb82f"
+    },
+    {
+      "reason": "freeze historical OOD method before candidate construction",
+      "role": "prospective_implementation",
+      "sha": "90737f31fc31fe4837f41c8d751f4b56af62d783"
+    },
+    {
+      "reason": "bind frozen OOD thresholds before candidate construction",
+      "role": "prospective_implementation",
+      "sha": "83e073d8c0ea07381c9e717ee16b2861d87b5036"
+    },
+    {
+      "reason": "add model-blind state-construction code before execution",
+      "role": "prospective_implementation",
+      "sha": "e5193754b5a8282d4b3900de6546aa12fa876cdc"
+    },
+    {
+      "reason": "add exact E004 reset/contact/camera/runtime evidence bindings before candidate evaluation",
+      "role": "prospective_replacement",
+      "sha": "b98d2ce230ac199fc289788bbeb15d8e293cb7b2"
+    },
+    {
+      "reason": "normalize package whitespace only",
+      "role": "prospective_replacement",
+      "sha": "011e61396d7831001e9614f3929108a0202535fc"
+    },
+    {
+      "reason": "freeze exact pi0.5 checkpoint and component runtime contract",
+      "role": "prospective_replacement",
+      "sha": "8a691cd4e203f1ac04c95cbf03ac19a4f8b3565c"
+    },
+    {
+      "reason": "require external source rehash and full observed runtime equality",
+      "role": "prospective_replacement",
+      "sha": "fef046cfd4516dd07b2509e4478090991dae6e4a"
+    }
+  ],
+  "final_source_push_rule": "Registration, queue, state release, lane release and runtime evidence must bind the same final prospective implementation commit pushed to origin before request zero.",
+  "model_request_count": 0,
+  "schema_version": "vla-wam-shared-v3e006-source-lineage-v1",
+  "status": "prospective_lineage_before_registration_or_model_request"
+}

@@ -12,6 +12,7 @@ from pathlib import Path
 import subprocess
 import sys
 import time
+import traceback
 from typing import Any, Mapping, Sequence
 
 import cv2
@@ -41,6 +42,15 @@ BOOTSTRAP.add_argument("--expected-study-commit", required=True)
 BOOTSTRAP.add_argument("--expected-robolab-commit", default="0aef241fb088ca21bb4ebd24448940ed56620d17")
 BOOTSTRAP.add_argument("--construction-seed", type=int, default=13000)
 BOOTSTRAP.add_argument("--steps-per-waypoint", type=int, default=80)
+BOOTSTRAP.add_argument("--health-preflight-root", type=Path, required=True)
+BOOTSTRAP.add_argument("--health-harness-sha256", required=True)
+BOOTSTRAP.add_argument("--health-launch-sha256", required=True)
+BOOTSTRAP.add_argument("--health-child-sha256", required=True)
+BOOTSTRAP.add_argument("--health-runtime-log-sha256", required=True)
+BOOTSTRAP.add_argument("--runtime-log", type=Path, required=True)
+BOOTSTRAP.add_argument("--container-image", required=True)
+BOOTSTRAP.add_argument("--container-id", required=True)
+BOOTSTRAP.add_argument("--driver-version", required=True)
 from robolab.eval.runner import add_common_eval_args
 
 add_common_eval_args(BOOTSTRAP)
@@ -63,14 +73,24 @@ def _sha(path: Path) -> str:
     return digest.hexdigest()
 
 
+health_files = {
+    "harness_result": (args.health_preflight_root / "harness_result.json", args.health_harness_sha256),
+    "preflight_launch": (args.health_preflight_root / "preflight_launch.json", args.health_launch_sha256),
+    "preflight_result": (args.health_preflight_root / "preflight_result.json", args.health_child_sha256),
+    "runtime_log": (args.health_preflight_root / "runtime.log", args.health_runtime_log_sha256),
+}
 for path, digest in (
     (args.e004_candidate, args.e004_candidate_sha256),
     (args.ood_freeze, args.ood_freeze_sha256),
     (args.e004_reset_reference, args.e004_reset_reference_sha256),
     (args.runtime_bindings, args.runtime_bindings_sha256),
+    *(health_files.values()),
 ):
     if not path.is_file() or _sha(path) != digest:
         BOOTSTRAP.error(f"hash-bound input is missing or changed: {path}")
+for path in (args.control_scene_asset, args.paired_scene_asset):
+    if not path.is_file():
+        BOOTSTRAP.error(f"scene input is missing: {path}")
 if args.output_dir.exists():
     BOOTSTRAP.error(f"refusing to overwrite state-construction evidence: {args.output_dir}")
 if subprocess.check_output(["git", "-C", str(study_root), "rev-parse", "HEAD"], text=True).strip() != args.expected_study_commit:
@@ -91,6 +111,7 @@ os.environ.update(
 )
 
 simulation_app = AppLauncher(args).app
+CURRENT_STAGE = "app_launcher_started"
 
 import omni.usd  # noqa: E402
 from pxr import Usd, UsdGeom  # noqa: E402
@@ -151,6 +172,93 @@ EXPECTED_CONTACT_SENSORS = {
     "banana_right__table",
     "bowl__table",
 }
+
+
+def _binding(path: Path) -> dict[str, Any]:
+    resolved = path.resolve()
+    return {"path": str(resolved), "bytes": resolved.stat().st_size, "sha256": _sha(resolved)}
+
+
+def _retained_environment() -> dict[str, str | None]:
+    return {
+        key: os.environ.get(key)
+        for key in (
+            "CUDA_VISIBLE_DEVICES",
+            "NVIDIA_VISIBLE_DEVICES",
+            "NVIDIA_DRIVER_CAPABILITIES",
+            "VK_ICD_FILENAMES",
+            "LD_LIBRARY_PATH",
+            "HOME",
+            "XDG_CACHE_HOME",
+            "WARP_CACHE_PATH",
+            "MPLCONFIGDIR",
+            "TMPDIR",
+            "PYTHONPATH",
+        )
+    }
+
+
+def _base_evidence(*, candidate_gate_passed: bool = False, state_candidate_count: int = 0) -> dict[str, Any]:
+    source = Path(__file__).resolve()
+    return {
+        "schema_version": "vla-wam-shared-v3e006-state-construction-attempt-v1",
+        "study_id": "vla_wam_language_steerability_v3",
+        "amendment_id": "V3-E006",
+        "model_request_count": 0,
+        "behavioral_episode_count": 0,
+        "state_candidate_count": state_candidate_count,
+        "behavioral_denominator_included": False,
+        "candidate_gate_passed": candidate_gate_passed,
+        "failure_stage": CURRENT_STAGE,
+        "invocation": sys.argv,
+        "construction_source": {**_binding(source), "study_commit": args.expected_study_commit},
+        "input_bindings": {
+            "e004_candidate": _binding(args.e004_candidate),
+            "ood_freeze": _binding(args.ood_freeze),
+            "e004_full_reset_reference": _binding(args.e004_reset_reference),
+            "runtime_contract": _binding(args.runtime_bindings),
+            "control_scene_asset": _binding(args.control_scene_asset),
+            "paired_scene_asset": _binding(args.paired_scene_asset),
+        },
+        "passed_health_preflight": {name: _binding(path) for name, (path, _digest) in health_files.items()},
+        "runtime_log": {
+            "path": str(args.runtime_log.resolve()),
+            "binding_status": "rehash_after_process_exit_by_outer_ledger",
+        },
+        "environment": _retained_environment(),
+        "lane": {
+            "pod": args.pod,
+            "pod_uid": args.pod_uid,
+            "gpu_uuid": args.gpu_uuid,
+            "container_image": args.container_image,
+            "container_id": args.container_id,
+            "driver_version": args.driver_version,
+            "device": args.device,
+            "python": sys.executable,
+        },
+    }
+
+
+def _write_failure(exc: BaseException) -> Path:
+    args.output_dir.mkdir(parents=True, exist_ok=True)
+    available = {}
+    for path in sorted(args.output_dir.rglob("*")):
+        if path.is_file() and path.name != "state_construction_failure.json":
+            available[str(path.relative_to(args.output_dir))] = _binding(path)
+    report = {
+        **_base_evidence(),
+        "status": "infrastructure_invalid_model_blind_state_construction",
+        "passed": False,
+        "error": {
+            "type": type(exc).__name__,
+            "message": str(exc),
+            "traceback": traceback.format_exc(),
+        },
+        "available_raw_artifacts": available,
+    }
+    path = args.output_dir / "state_construction_failure.json"
+    path.write_bytes(canonical_bytes(report))
+    return path
 
 
 def _host(value: Any) -> list[float]:
@@ -414,6 +522,8 @@ def _write_video(path: Path, frames: list[np.ndarray]) -> None:
 
 
 def main() -> None:
+    global CURRENT_STAGE
+    CURRENT_STAGE = "load_hash_bound_contracts"
     args.output_dir.mkdir(parents=True)
     set_output_dir(str((args.output_dir / "native").resolve()))
     ood = json.loads(args.ood_freeze.read_text(encoding="utf-8"))
@@ -425,29 +535,35 @@ def main() -> None:
         external_roots=(robolab_root,),
     )
     candidate = load_candidate(args.e004_candidate, args.e004_candidate_sha256)
+    CURRENT_STAGE = "register_exact_e004_environment"
     task_file = study_root / "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/task_files/left.py"
     auto_register_droid_abs_ik_envs(task=[str(task_file)], cameras=WRIST_LEFT_RIGHT_HEAD)
-    env, cfg = create_env(
-        "V3E004DroidLeftTask",
-        device=args.device,
-        seed=args.construction_seed,
-        num_envs=1,
-        instruction_type="default",
-        policy="v3e006_model_blind_state_construction",
-        renderer=args.renderer,
-        rendering_mode=args.rendering_type,
-    )
-    video_frames: list[np.ndarray] = []
-    started = time.time()
+    env = None
+    primary_failure: BaseException | None = None
     try:
+        env, cfg = create_env(
+            "V3E004DroidLeftTask",
+            device=args.device,
+            seed=args.construction_seed,
+            num_envs=1,
+            instruction_type="default",
+            policy="v3e006_model_blind_state_construction",
+            renderer=args.renderer,
+            rendering_mode=args.rendering_type,
+        )
+        video_frames: list[np.ndarray] = []
+        started = time.time()
+        CURRENT_STAGE = "full_reset"
         obs, _ = env.reset()
         frames = env.scene["frames"]
         eef_index = frames.data.target_frame_names.index("eef_frame")
+        CURRENT_STAGE = "contact_sensor_coverage"
         contact_coverage = _contact_coverage(env)
         reset_position = _host(frames.data.target_pos_w[0, eef_index])
         reset_quaternion = _host(frames.data.target_quat_w[0, eef_index])
         action = _command(reset_position, reset_quaternion, 0.0, env.device)
         reset_samples: list[dict[str, Any]] = []
+        CURRENT_STAGE = "full_reset_settle"
         for step in range(75):
             obs, _, terminated, truncated, _ = env.step(action)
             if bool(terminated[0]) or bool(truncated[0]):
@@ -456,6 +572,7 @@ def main() -> None:
                 video_frames.append(np.asarray(obs["image_obs"]["head_camera"][0].detach().cpu().numpy(), dtype=np.uint8))
             if step >= 65:
                 reset_samples.append(_sample(env, frames, eef_index))
+        CURRENT_STAGE = "full_reset_capture_and_gates"
         full_reset = _capture_state(
             env,
             frames,
@@ -486,6 +603,7 @@ def main() -> None:
         cube_quaternion = np.asarray(full_reset["objects"]["rubiks_cube"]["quaternion_world_wxyz"], dtype=np.float64)
         stages: dict[str, Any] = {"full_reset": full_reset}
         for stage, lift in (("canonical_grasp", 0.008), ("canonical_carry", 0.055)):
+            CURRENT_STAGE = f"{stage}_construction"
             reference = ood["stages"][stage]
             relative_translation = np.asarray(reference["direction_balanced_center"][7:10], dtype=np.float64)
             relative_rotation = _rotvec_to_quat(reference["direction_balanced_center"][10:13])
@@ -508,6 +626,7 @@ def main() -> None:
                         raise RuntimeError(f"environment terminated constructing {stage}")
                     if step % 5 == 0:
                         video_frames.append(np.asarray(obs["image_obs"]["head_camera"][0].detach().cpu().numpy(), dtype=np.uint8))
+            CURRENT_STAGE = f"{stage}_settle"
             settled: list[dict[str, Any]] = []
             for step in range(80):
                 obs, _, terminated, truncated, _ = env.step(action)
@@ -519,6 +638,7 @@ def main() -> None:
                     video_frames.append(np.asarray(obs["image_obs"]["head_camera"][0].detach().cpu().numpy(), dtype=np.uint8))
             sensor_names = set(_contact_forces(env))
             unintended = sorted(sensor_names - PERMITTED_CONTACTS)
+            CURRENT_STAGE = f"{stage}_capture_and_gates"
             state = _capture_state(
                 env,
                 frames,
@@ -550,6 +670,7 @@ def main() -> None:
             if not state["passed"]:
                 raise RuntimeError(f"{stage} candidate failed a preregistered state gate")
 
+        CURRENT_STAGE = "write_candidate_video"
         video_path = args.output_dir / "videos" / "model_blind_state_construction.mp4"
         video_path.parent.mkdir(parents=True)
         _write_video(video_path, video_frames)
@@ -561,6 +682,7 @@ def main() -> None:
             "passed": True,
             "model_request_count": 0,
             "behavioral_episode_count": 0,
+            "state_candidate_count": 1,
             "construction_seed": args.construction_seed,
             "construction_prompt_exposure": "environment task prompt exists in the simulator config but is never read by or supplied to the deterministic controller",
             "task_prompt": cfg.instruction,
@@ -579,6 +701,7 @@ def main() -> None:
                 "paired": {"path": str(args.paired_scene_asset.resolve()), "sha256": _sha(args.paired_scene_asset), "bytes": args.paired_scene_asset.stat().st_size},
             },
             "environment": {"pod": args.pod, "pod_uid": args.pod_uid, "gpu_uuid": args.gpu_uuid, "device": args.device},
+            "execution_evidence": _base_evidence(candidate_gate_passed=True, state_candidate_count=1),
             "contact_sensor_coverage": contact_coverage,
             "construction_seconds": time.time() - started,
             "stages": stages,
@@ -586,14 +709,49 @@ def main() -> None:
             "release_boundary": "registration, queue, tests, and an explicit smoke/isolation release must be committed and pushed before request zero",
         }
         output_path = args.output_dir / "state_candidate.json"
+        CURRENT_STAGE = "write_passed_candidate"
         output_path.write_bytes(canonical_bytes(output))
         print(json.dumps({"passed": True, "output": str(output_path), "sha256": _sha(output_path), "bytes": output_path.stat().st_size}, indent=2))
+    except BaseException as exc:
+        primary_failure = exc
+        raise
     finally:
-        env.close()
+        if env is not None:
+            try:
+                env.close()
+            except BaseException as close_error:
+                if primary_failure is None:
+                    raise
+                print(
+                    f"environment close raised after retained construction failure: {type(close_error).__name__}: {close_error}",
+                    file=sys.stderr,
+                )
 
 
 if __name__ == "__main__":
+    construction_failure: BaseException | None = None
     try:
         main()
+    except BaseException as exc:
+        construction_failure = exc
+        failure_path = _write_failure(exc)
+        print(
+            json.dumps(
+                {"passed": False, "failure": str(failure_path), "sha256": _sha(failure_path)},
+                sort_keys=True,
+            ),
+            file=sys.stderr,
+        )
+        traceback.print_exc()
     finally:
-        simulation_app.close()
+        try:
+            simulation_app.close()
+        except BaseException as close_error:
+            if construction_failure is None:
+                raise
+            print(
+                f"SimulationApp.close raised after retained construction failure: {type(close_error).__name__}: {close_error}",
+                file=sys.stderr,
+            )
+    if construction_failure is not None:
+        raise construction_failure.with_traceback(construction_failure.__traceback__)

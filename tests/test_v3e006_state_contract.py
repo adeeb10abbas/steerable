@@ -13,6 +13,23 @@ from experiments.v3.phase_e.canonical_stage_localization_v3e006.state_contract i
 )
 
 
+def test_state_gate_retains_failure_before_closing_simulator() -> None:
+    source_path = Path(__file__).parents[1] / "experiments/v3/phase_e/canonical_stage_localization_v3e006/state_construction_gate.py"
+    source = source_path.read_text(encoding="utf-8")
+    retained = source.index("failure_path = _write_failure(exc)")
+    close = source.index("simulation_app.close()")
+    reraise = source.index("raise construction_failure.with_traceback")
+    assert retained < close < reraise
+    for field in (
+        '"model_request_count": 0',
+        '"behavioral_episode_count": 0',
+        '"candidate_gate_passed": candidate_gate_passed',
+        '"passed_health_preflight"',
+        '"traceback": traceback.format_exc()',
+    ):
+        assert field in source
+
+
 class StateContractTests(unittest.TestCase):
     def test_hash_ignores_evidence_but_binds_physics(self) -> None:
         state = {

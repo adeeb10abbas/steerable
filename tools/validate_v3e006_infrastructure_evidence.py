@@ -37,6 +37,7 @@ def main() -> None:
     parser.add_argument("--repo-root", type=Path, default=Path.cwd())
     parser.add_argument("--verify-raw", action="store_true")
     parser.add_argument("--preflight-root", type=Path)
+    parser.add_argument("--candidate-root", type=Path)
     args = parser.parse_args()
     root = args.repo_root.resolve()
     artifact = root / "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/model_blind_infrastructure_invalid.jsonl"
@@ -65,6 +66,32 @@ def main() -> None:
         "0c733d29b36dbadd4eba4009a1c3887ef50367a8",
     }:
         raise AssertionError("retained infrastructure commit set differs")
+
+    candidate_ledger_path = root / "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/model_blind_candidate_infrastructure_invalid.jsonl"
+    candidate_rows = [
+        json.loads(line) for line in candidate_ledger_path.read_text(encoding="utf-8").splitlines() if line.strip()
+    ]
+    if len(candidate_rows) != 2:
+        raise AssertionError("expected the two retained 200ee96 candidate/prelaunch invalid attempts")
+    for row in candidate_rows:
+        if row.get("schema_version") != "vla-wam-shared-v3e006-model-blind-candidate-infrastructure-invalid-v1":
+            raise AssertionError("invalid candidate infrastructure schema")
+        for key in ("model_request_count", "behavioral_episode_count", "state_candidate_count"):
+            if row.get(key) != 0:
+                raise AssertionError(f"candidate infrastructure attempt has nonzero {key}")
+        if row.get("behavioral_denominator_included") is not False or row.get("candidate_gate_passed") is not False:
+            raise AssertionError("invalid candidate attempt entered a scientific denominator")
+        verify_binding(row["invocation"]["exact_argv_text"], verify_raw=args.verify_raw)
+        if args.verify_raw:
+            invocation_text = Path(row["invocation"]["exact_argv_text"]["path"]).read_text(encoding="utf-8")
+            if "canonical_stage_localization_v3e006.state_construction_gate" not in invocation_text:
+                raise AssertionError("candidate invalid exact argv differs")
+        for binding_row in row.get("raw_sources", {}).values():
+            verify_binding(binding_row, verify_raw=args.verify_raw)
+        if "construction_source" in row:
+            verify_binding(row["construction_source"], verify_raw=args.verify_raw)
+    if "robolab/assets/scenes" not in candidate_rows[0]["invocation"]["wrong_path"]:
+        raise AssertionError("prelaunch-invalid wrong path is not retained")
 
     lineage_path = root / "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/source_lineage.json"
     lineage = json.loads(lineage_path.read_text(encoding="utf-8"))
@@ -191,7 +218,69 @@ def main() -> None:
                 if result.get("child_status") != child["status"]:
                     raise AssertionError("outer result does not bind the failed child status")
         preflight_status = result["status"]
-    print(json.dumps({"passed": True, "retained_attempts": len(rows), "verified_raw": args.verify_raw, "preflight_status": preflight_status}, sort_keys=True))
+    candidate_status = None
+    candidate_runtime_log = None
+    if args.candidate_root is not None:
+        candidate_root = args.candidate_root.resolve()
+        failure_path = candidate_root / "state_construction_failure.json"
+        passed_path = candidate_root / "state_candidate.json"
+        if failure_path.is_file() == passed_path.is_file():
+            raise AssertionError("candidate root must contain exactly one passed/failure report")
+        report_path = passed_path if passed_path.is_file() else failure_path
+        report = json.loads(report_path.read_text(encoding="utf-8"))
+        evidence = report["execution_evidence"] if passed_path.is_file() else report
+        expected_status = (
+            "passed_model_blind_state_construction_not_released_for_inference"
+            if passed_path.is_file()
+            else "infrastructure_invalid_model_blind_state_construction"
+        )
+        if report.get("status") != expected_status:
+            raise AssertionError("state-construction report status differs")
+        if report.get("model_request_count") != 0 or report.get("behavioral_episode_count") != 0:
+            raise AssertionError("state-construction report has a model/behavior count")
+        if passed_path.is_file():
+            if report.get("passed") is not True or report.get("state_candidate_count") != 1:
+                raise AssertionError("passed candidate count/status differs")
+            if evidence.get("candidate_gate_passed") is not True:
+                raise AssertionError("passed candidate execution gate differs")
+        else:
+            if report.get("passed") is not False or report.get("state_candidate_count") != 0:
+                raise AssertionError("failed candidate count/status differs")
+            if report.get("candidate_gate_passed") is not False:
+                raise AssertionError("failed candidate entered candidate denominator")
+            if not report.get("error", {}).get("type") or not report.get("error", {}).get("traceback"):
+                raise AssertionError("failed state construction lacks exact traceback")
+        verify_binding(evidence["construction_source"], verify_raw=True)
+        for binding_row in evidence.get("input_bindings", {}).values():
+            verify_binding(binding_row, verify_raw=True)
+        for binding_row in evidence.get("passed_health_preflight", {}).values():
+            verify_binding(binding_row, verify_raw=True)
+        health = json.loads(Path(evidence["passed_health_preflight"]["harness_result"]["path"]).read_text(encoding="utf-8"))
+        if health.get("status") != "passed_generic_zero_model_health_preflight" or health.get("passed") is not True:
+            raise AssertionError("candidate is not bound to the passed formal health preflight")
+        runtime_path = Path(evidence["runtime_log"]["path"])
+        if not runtime_path.is_file():
+            raise AssertionError("candidate runtime log is missing")
+        candidate_runtime_log = {
+            "path": str(runtime_path),
+            "bytes": runtime_path.stat().st_size,
+            "sha256": sha256(runtime_path),
+        }
+        candidate_status = report["status"]
+    print(
+        json.dumps(
+            {
+                "passed": True,
+                "retained_attempts": len(rows),
+                "retained_candidate_attempts": len(candidate_rows),
+                "verified_raw": args.verify_raw,
+                "preflight_status": preflight_status,
+                "candidate_status": candidate_status,
+                "candidate_runtime_log": candidate_runtime_log,
+            },
+            sort_keys=True,
+        )
+    )
 
 
 if __name__ == "__main__":

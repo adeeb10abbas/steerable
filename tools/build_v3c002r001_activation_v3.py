@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from copy import deepcopy
+import argparse
 from datetime import datetime, timezone
 import hashlib
 import json
@@ -55,6 +56,9 @@ def v2_identity() -> dict:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--lane-dir", type=Path, required=True)
+    args = parser.parse_args()
     if V3.exists():
         raise SystemExit(f"refusing overwrite: {V3}")
     implementation = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=REPO_ROOT, text=True).strip()
@@ -68,6 +72,11 @@ def main() -> None:
     for name in ("queue.jsonl", "assignment.jsonl", "original_c002_tree_manifest.json"):
         shutil.copyfile(V2 / name, V3 / name)
     write(V3 / "activation_v2_identity.json", v2_identity())
+    lane_root = V3 / "gates/lanes"
+    shutil.copytree(args.lane_dir, lane_root)
+    lane_manifests = sorted(lane_root.glob("*/lane_manifest.json"))
+    if len(lane_manifests) != 8:
+        raise SystemExit("activation-v3 requires exactly eight inherited lane manifests")
     v2 = read_finite_json(V2 / "registration.json")
     registration = deepcopy(v2)
     registration.update({
@@ -83,6 +92,8 @@ def main() -> None:
         "inherited_excluded_smoke_gate": repo_binding(REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/active/gates/excluded_smoke_gate.json"),
         "inherited_corrected_repeat_gates": [repo_binding(path) for path in sorted((V2 / "gates/repeat").glob("*.json"))],
         "inherited_corrected_repeat_target_receipts": [repo_binding(path) for path in sorted((V2 / "gates/repeat_receipts").glob("*.json"))],
+        "inherited_lane_manifests": [repo_binding(path) for path in lane_manifests],
+        "failed_repeat_attempt001_target_receipt": v2["failed_repeat_attempt001_target_receipt"],
         "release_accounting_correction": {"science_changed": False, "queue_changed": False, "assignment_changed": False, "analysis_changed": False, "gates_repeated": False, "correct_total_excluded_requests": 102, "breakdown": {"global_smoke": 70, "retained_invalid_attempt001": 8, "corrected_repeat_attempt002": 24}, "reason": "activation-v2 release tool omitted the eight retained infrastructure-invalid attempt001 requests and did not bind all target repeat receipts"},
         "runtime": {**v2["runtime"], "repair_wrapper_implementation_commit": implementation},
         "source_bindings": {relative: repo_binding(REPO_ROOT / relative) for relative in sources},

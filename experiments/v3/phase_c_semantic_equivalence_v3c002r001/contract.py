@@ -188,6 +188,9 @@ def require_released_gate(*, registration_path: Path, queue_path: Path, release_
     receipt_bindings = gate.get("single_server_repeat_target_receipts")
     require(isinstance(receipt_bindings, list) and len(receipt_bindings) == 8, "repair release lacks eight repeat target receipts")
     receipts = [bound_json(record, f"repair repeat target receipt {index}", schema="vla-wam-shared-v3c002r001-repeat-target-raw-rehash-v1", status="passed_corrected_repeat_target_raw_rehash") for index, record in enumerate(receipt_bindings)]
+    failed_binding = validate_file_binding(gate.get("failed_repeat_attempt001_target_receipt"), "failed repeat attempt001 target receipt")
+    failed_receipt = read_finite_json(Path(failed_binding["path"]))
+    require(isinstance(failed_receipt, dict) and failed_receipt.get("schema_version") == "vla-wam-shared-v3c002r001-failed-repeat-target-rehash-v1" and failed_receipt.get("status") == "retained_eight_infrastructure_invalid_flat_cache_requests" and failed_receipt.get("passed") is True and failed_receipt.get("model_request_count") == 8 and failed_receipt.get("successful_response_count") == 0 and failed_receipt.get("action_array_count") == 0 and failed_receipt.get("behavioral_episode_count") == 0, "failed repeat attempt001 receipt changed")
     require(all(all(physical.get(key) == 0 for key in ("model_request_count", "behavioral_episode_count", "behavioral_action_count", "query_server_entry_count")) for physical in physicals), "repair physical gate contains behavior")
     require(smoke.get("completed_cells") == 4 and smoke.get("behavioral_episode_count") == 0 and smoke.get("excluded_from_behavioral_denominators") is True and smoke.get("lane_slot") == "repair-lane-00", "repair smoke changed")
     smoke_fixture = validate_file_binding(smoke.get("repeat_fixture"), "repair smoke repeat fixture")
@@ -201,6 +204,7 @@ def require_released_gate(*, registration_path: Path, queue_path: Path, release_
         require(receipt.get("repeat_gate", {}).get("sha256") == validate_file_binding(repeat_bindings[[item.get("lane_slot") for item in repeats].index(slot)], "repair repeat gate binding")["sha256"], "repair receipt binds another repeat gate")
         require(receipt.get("repeat_response", {}).get("sha256") == repeat.get("repeat_response", {}).get("sha256"), "repair receipt binds another repeat response")
     require(gate.get("repair_excluded_request_count_before_release") == 102 and gate.get("repair_excluded_request_breakdown") == {"global_smoke": 70, "retained_invalid_attempt001": 8, "corrected_repeat_attempt002": 24}, "repair excluded request accounting changed")
+    require(gate.get("behavioral_episodes_authorized") is True and gate.get("full_queue_launched") is False, "repair release authorization/launch state changed")
     require(all(repeat.get("fixture_sha256") == smoke_fixture["sha256"] and repeat.get("fixture", {}).get("sha256") == smoke_fixture["sha256"] for repeat in repeats), "repair lanes did not share the retained smoke fixture")
     repeat_manifest_shas = [repeat.get("fixture_manifest_sha256") for repeat in repeats]
     require(

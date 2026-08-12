@@ -20,6 +20,14 @@ from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.request0_replay impor
 
 
 class RepairContractTests(unittest.TestCase):
+    def test_release_source_requires_failed_receipt_and_correct_accounting(self) -> None:
+        source = Path(__file__).resolve().parents[1] / "tools/release_v3c002r001_behavior.py"
+        text = source.read_text(encoding="utf-8")
+        self.assertIn("--failed-repeat-attempt001-receipt", text)
+        self.assertIn('"retained_invalid_attempt001": 8', text)
+        self.assertIn('"behavioral_episodes_authorized"] = True', text)
+        self.assertIn('"full_queue_launched"] = False', text)
+
     def test_assignment_is_exact_balanced_and_complete(self) -> None:
         rows = assignment_rows()
         self.assertEqual(len(rows), 341)

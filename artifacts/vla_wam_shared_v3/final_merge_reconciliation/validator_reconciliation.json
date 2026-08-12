@@ -1,0 +1,76 @@
+{
+  "schema_version": "vla-wam-shared-v3-final-merge-validator-reconciliation-v1",
+  "status": "requires_nonmutating_parent_blob_validation",
+  "purpose": "Reconcile the sole shared validator-path conflict after V3-C002 and V3-E006 merged without rewriting either frozen experiment manifest, source, or artifact.",
+  "required_base_commit": "18a2bf0200183647291cc7aeb1fe89997b3fb82f",
+  "allowed_cross_experiment_changed_path_intersection": [
+    "tools/validate_v3e_publication_bundle.py"
+  ],
+  "canonical_resolution": {
+    "path": "tools/validate_v3e_publication_bundle.py",
+    "source_commit": "18a2bf0200183647291cc7aeb1fe89997b3fb82f",
+    "bytes": 1473,
+    "sha256": "f1c1648e47f67f0a39830821682374d46130a5df10aaf10464490f0dde975712",
+    "reason": "The pre-experiment mainline blob is retained at the shared path so neither experiment's distinct frozen publication-bundle bytes are silently preferred."
+  },
+  "experiments": [
+    {
+      "experiment_id": "V3-C002",
+      "branch_tip_commit": "4269fd5a17e565beb36beb4e81920af038abc353",
+      "frozen_validator_source_commit": "e2d9ae3904b4a08e549c784903c167a4213d3d47",
+      "frozen_validator": {
+        "canonical_path": "tools/validate_v3e_publication_bundle.py",
+        "bytes": 2273,
+        "sha256": "8e9d692634f1959edba65ea015634e4500915e1e5307d6634623d3a042a050e4",
+        "archival_copy": {
+          "path": "artifacts/vla_wam_shared_v3/final_merge_reconciliation/frozen_sources/v3c002/validate_v3e_publication_bundle.e2d9ae3.py",
+          "bytes": 2273,
+          "sha256": "8e9d692634f1959edba65ea015634e4500915e1e5307d6634623d3a042a050e4"
+        }
+      },
+      "frozen_manifests": [
+        "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/active/registration.json",
+        "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/active/closure/evidence_manifest.json"
+      ],
+      "overlay_commands": [
+        "tools/validate_v3c002_isolation_closure.py",
+        "tools/validate_v3c002_publication_bundle.py"
+      ]
+    },
+    {
+      "experiment_id": "V3-E006",
+      "branch_tip_commit": "e13e7b22b048075bf0d3cf44a892c70853ce8a7e",
+      "frozen_validator_source_commit": "e13e7b22b048075bf0d3cf44a892c70853ce8a7e",
+      "frozen_validator": {
+        "canonical_path": "tools/validate_v3e_publication_bundle.py",
+        "bytes": 1551,
+        "sha256": "7e63a154afb5d2099a4d98582e22b0a315f76cd9924bfa160080409cd4ec0d3b",
+        "archival_copy": {
+          "path": "artifacts/vla_wam_shared_v3/final_merge_reconciliation/frozen_sources/v3e006/validate_v3e_publication_bundle.e13e7b22.py",
+          "bytes": 1551,
+          "sha256": "7e63a154afb5d2099a4d98582e22b0a315f76cd9924bfa160080409cd4ec0d3b"
+        }
+      },
+      "frozen_manifests": [
+        "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/results/evidence_manifest.json"
+      ],
+      "overlay_commands": [
+        "tools/validate_v3e006.py",
+        "tools/validate_v3e006_infrastructure_evidence.py",
+        "tools/validate_v3e_publication_bundle.py"
+      ]
+    }
+  ],
+  "merge_validation_contract": {
+    "canonical_path_is_not_an_experiment_substitute": true,
+    "archival_copies_are_exact_git_blob_preservation_only": true,
+    "overlay_worktrees_are_detached_temporary_checkouts_removed_in_finally": true,
+    "verify_raw_requires_target_pvc": true,
+    "forbidden_actions": [
+      "rewrite_frozen_experiment_manifest",
+      "rewrite_frozen_experiment_source",
+      "rewrite_frozen_experiment_artifact",
+      "launch_model_or_behavioral_execution"
+    ]
+  }
+}

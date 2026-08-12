@@ -22,6 +22,7 @@ from experiments.v3.phase_c_semantic_equivalence_v3c002.runtime import bind_runt
 from tools.validate_v3c002_v1_historical import validate as validate_v1_historical
 from tools.validate_v3c002_v2_historical import validate as validate_v2_historical
 from tools.validate_v3c002_v3_historical import validate as validate_v3_historical
+from tools.validate_v3c002_v4_historical import validate as validate_v4_historical
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -109,6 +110,11 @@ class V3C002SemanticEquivalenceTests(unittest.TestCase):
     def test_historical_v3_draft_remains_independently_verifiable_and_unexecuted(self) -> None:
         result = validate_v3_historical()
         self.assertEqual(result["status"], "valid_immutable_unexecuted_superseded_v3_draft")
+        self.assertEqual(result["queue_rows"], 1364)
+
+    def test_historical_v4_draft_remains_independently_verifiable_and_unexecuted(self) -> None:
+        result = validate_v4_historical()
+        self.assertEqual(result["status"], "valid_immutable_unexecuted_superseded_v4_draft")
         self.assertEqual(result["queue_rows"], 1364)
 
     def test_release_gate_requires_and_hash_checks_all_pre_request_evidence(self) -> None:

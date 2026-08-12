@@ -53,14 +53,22 @@ def main() -> None:
     if not isinstance(draft, dict) or draft.get("schema_version") != REGISTRATION_SCHEMA or draft.get("registration_status") != "pre_registration_draft_pending_two_human_wording_agreements":
         raise ContractError("only the untouched fail-closed C002 draft may be activated")
     supersession = read_finite_json(draft_root / "supersession.json")
-    if not isinstance(supersession, dict) or supersession.get("status") != "prospective_v4_supersedes_unexecuted_v1_v2_v3_drafts" or supersession.get("v1_v2_v3_must_never_be_activated") is not True:
-        raise ContractError("only the disclosed V4 superseding draft may be activated")
+    if not isinstance(supersession, dict) or supersession.get("status") != "prospective_v5_supersedes_unexecuted_v1_v2_v3_v4_drafts" or supersession.get("v1_v2_v3_v4_must_never_be_activated") is not True:
+        raise ContractError("only the disclosed V5 superseding draft may be activated")
+    active_queue = activation_root / "queue.jsonl"
+    infrastructure = activation_root / "infrastructure_attempts.jsonl"
+    for path in (active_queue, infrastructure):
+        if path.exists():
+            raise ContractError(f"refusing to overwrite activation evidence: {path}")
     wording_gate = validate_attestations(sheet_path=sheet, attestation_paths=args.reader_attestation)
     wording_gate["sheet"] = repo_file_binding(sheet)
     for record, source in zip(wording_gate["reader_attestations"], args.reader_attestation):
         record["attestation"] = repo_file_binding(source)
     wording_gate["draft_registration"] = repo_file_binding(draft_registration)
-    wording_gate["queue"] = repo_file_binding(queue)
+    activation_root.mkdir(parents=True, exist_ok=True)
+    active_queue.write_bytes(queue.read_bytes())
+    infrastructure.write_bytes(b"")
+    wording_gate["queue"] = repo_file_binding(active_queue)
     _write_new(activation_root / "wording_gate.json", wording_gate)
     active = dict(draft)
     active.update(
@@ -71,6 +79,7 @@ def main() -> None:
             "behavioral_episodes_authorized": False,
             "pre_registration_draft": repo_file_binding(draft_registration),
             "wording_gate": repo_file_binding(activation_root / "wording_gate.json"),
+            "queue": repo_file_binding(active_queue),
             "release_boundary": "Wording gate passed and queue is registered, but no model request or behavioral episode is authorized until the source commit is pushed and exact model-blind physical/runtime/raw-writer/renderer/fixed-observation/two-lane-isolation gates are passed and bound in a new release_gate.json.",
         }
     )
@@ -82,7 +91,7 @@ def main() -> None:
         "status": "blocked_pending_committed_source_and_runtime_preflight_gates",
         "passed": False,
         "registration": repo_file_binding(activation_root / "registration.json"),
-        "queue": repo_file_binding(queue),
+        "queue": repo_file_binding(active_queue),
         "wording_gate": repo_file_binding(activation_root / "wording_gate.json"),
         "required_remaining_gates": [
             "committed_and_pushed_source_commit_bound_to_release",

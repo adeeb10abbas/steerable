@@ -43,11 +43,12 @@ from experiments.v3.phase_c_semantic_equivalence_v3c002.wording_gate import (  #
 
 
 BASE_COMMIT = "18a2bf0200183647291cc7aeb1fe89997b3fb82f"
-ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/draft_v4"
+ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/draft_v5"
 E004_ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004"
 V1_ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002"
 V2_ROOT = V1_ROOT / "draft_v2"
 V3_ROOT = V1_ROOT / "draft_v3"
+V4_ROOT = V1_ROOT / "draft_v4"
 
 DEPENDENCY_PATHS = {
     "checkpoint": ("artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_checkpoint_manifest.json",),
@@ -288,6 +289,7 @@ def main() -> None:
             "tools/validate_v3c002_v1_historical.py",
             "tools/validate_v3c002_v2_historical.py",
             "tools/validate_v3c002_v3_historical.py",
+            "tools/validate_v3c002_v4_historical.py",
             "tools/validate_v3c002_results.py",
             "tools/validate_v3e_publication_bundle.py",
             "tests/test_v3c002_semantic_equivalence.py",
@@ -371,7 +373,7 @@ def main() -> None:
     _write_new(output_root / "registration.json", registration)
     if V1_ROOT != output_root:
         superseded_bindings = {}
-        for revision, prior_root in (("v1", V1_ROOT), ("v2", V2_ROOT), ("v3", V3_ROOT)):
+        for revision, prior_root in (("v1", V1_ROOT), ("v2", V2_ROOT), ("v3", V3_ROOT), ("v4", V4_ROOT)):
             revision_bindings = {}
             for name in ("registration.json", "queue.jsonl", "release_gate.json"):
                 path = prior_root / name
@@ -382,8 +384,8 @@ def main() -> None:
         _write_new(
             output_root / "supersession.json",
             {
-                "schema_version": "vla-wam-shared-v3c002-preregistration-supersession-v3",
-                "status": "prospective_v4_supersedes_unexecuted_v1_v2_v3_drafts",
+                "schema_version": "vla-wam-shared-v3c002-preregistration-supersession-v4",
+                "status": "prospective_v5_supersedes_unexecuted_v1_v2_v3_v4_drafts",
                 "superseded_draft_bindings": superseded_bindings,
                 "superseding_registration": _relative_binding(output_root / "registration.json"),
                 "reason": "Independent pre-run audits required exact E004 scorer normalization/evaluation and checkout-portable committed evidence paths after V2 was already hash-bound.",
@@ -393,7 +395,9 @@ def main() -> None:
                 "v2_behavioral_episodes": 0,
                 "v3_model_requests": 0,
                 "v3_behavioral_episodes": 0,
-                "v1_v2_v3_must_never_be_activated": True,
+                "v4_model_requests": 0,
+                "v4_behavioral_episodes": 0,
+                "v1_v2_v3_v4_must_never_be_activated": True,
             },
         )
     release_gate = {

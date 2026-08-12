@@ -190,6 +190,12 @@ def require_released_gate(*, registration_path: Path, queue_path: Path, release_
     smoke_fixture = validate_file_binding(smoke.get("repeat_fixture"), "repair smoke repeat fixture")
     require(all(repeat.get("model_request_count") == 3 and repeat.get("behavioral_episode_count") == 0 and repeat.get("first_final_repeat_exact") is True and repeat.get("prompt_sensitivity_distinct") is True for repeat in repeats), "repair repeat gate changed")
     require(all(repeat.get("fixture_sha256") == smoke_fixture["sha256"] and repeat.get("fixture", {}).get("sha256") == smoke_fixture["sha256"] for repeat in repeats), "repair lanes did not share the retained smoke fixture")
+    repeat_manifest_shas = [repeat.get("fixture_manifest_sha256") for repeat in repeats]
+    require(
+        len(set(repeat_manifest_shas)) == 1
+        and all(repeat.get("fixture_manifest", {}).get("sha256") == repeat_manifest_shas[0] for repeat in repeats),
+        "repair lanes did not share one hash-bound smoke fixture manifest",
+    )
     lanes = gate.get("lane_manifests")
     require(isinstance(lanes, list) and len(lanes) == 8, "repair release must have exactly eight lanes")
     lane_values = [bound_json(record, f"repair lane {index}", schema=LANE_SCHEMA, status="passed_single_lane_release") for index, record in enumerate(lanes)]

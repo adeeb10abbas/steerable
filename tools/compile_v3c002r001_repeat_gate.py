@@ -14,6 +14,12 @@ import numpy as np
 
 from experiments.v3.phase_c_semantic_equivalence_v3c002.contract import read_finite_json, sha256_file, validate_file_binding
 from experiments.v3.phase_c_semantic_equivalence_v3c002r001.contract import ContractError, repo_binding
+from experiments.v3.phase_c_semantic_equivalence_v3c002r001.single_server_repeat import (
+    FROZEN_PI05_CLIENT_SHA256,
+    FROZEN_ROBOLAB_COMMIT,
+    REQUIRED_PACKED_KEYS,
+    reconstruct_native_fixture,
+)
 
 
 def validate_repeat_evidence(response: object, physical: object, lane_slot: str) -> list[np.ndarray]:
@@ -32,6 +38,8 @@ def validate_repeat_evidence(response: object, physical: object, lane_slot: str)
         array = np.load(Path(bound["path"]), allow_pickle=False)
         if array.shape != (15, 8) or not np.isfinite(array).all() or record.get("seed_echo") != response.get("probe_seed"):
             raise ContractError("repeat action array/seed is invalid")
+        if set(record.get("packed_request_keys", [])) != REQUIRED_PACKED_KEYS:
+            raise ContractError("repeat packed request keys changed")
         actions.append(array)
     exact = bool(np.array_equal(actions[0], actions[2])); sensitive = bool(not np.array_equal(actions[0], actions[1]))
     if not exact or not sensitive or response.get("first_final_repeat_exact") is not exact or response.get("prompt_sensitivity_distinct") is not sensitive:
@@ -39,6 +47,12 @@ def validate_repeat_evidence(response: object, physical: object, lane_slot: str)
     fixture = validate_file_binding(response.get("fixture"), "repeat fixture")
     if response.get("fixture_sha256") != fixture["sha256"]:
         raise ContractError("repeat fixture digest claim changed")
+    manifest = validate_file_binding(response.get("fixture_manifest"), "repeat fixture manifest")
+    if response.get("fixture_manifest_sha256") != manifest["sha256"]:
+        raise ContractError("repeat fixture manifest digest claim changed")
+    _, manifest_value = reconstruct_native_fixture(Path(fixture["path"]), Path(manifest["path"]))
+    if response.get("fixture_observation_payload_sha256") != manifest_value.get("observation_payload_sha256"):
+        raise ContractError("repeat fixture payload claim changed")
     server_keys = ("policy_server_pod_uid", "policy_server_gpu_uuid", "server_port", "server_process_identity", "server_lock_identity")
     if any(response.get(key) != physical.get(key) for key in server_keys):
         raise ContractError("repeat response used a different policy server")
@@ -58,6 +72,9 @@ def main() -> None:
     response = read_finite_json(args.repeat_response)
     physical = read_finite_json(args.physical_gate)
     validate_repeat_evidence(response, physical, args.lane_slot)
+    client = validate_file_binding(response.get("robolab_client"), "frozen RoboLab π0.5 client")
+    if client["sha256"] != FROZEN_PI05_CLIENT_SHA256 or response.get("robolab_commit") != FROZEN_ROBOLAB_COMMIT:
+        raise ContractError("repeat RoboLab client source/commit changed")
     value = {
         "schema_version": "vla-wam-shared-v3c002r001-single-server-repeat-gate-v1",
         "repair_id": "V3-C002-R001",
@@ -76,6 +93,11 @@ def main() -> None:
         "probe_seed": response["probe_seed"],
         "fixture_sha256": response["fixture_sha256"],
         "fixture": response["fixture"],
+        "fixture_manifest_sha256": response["fixture_manifest_sha256"],
+        "fixture_manifest": response["fixture_manifest"],
+        "fixture_observation_payload_sha256": response["fixture_observation_payload_sha256"],
+        "robolab_client": response["robolab_client"],
+        "robolab_commit": response["robolab_commit"],
     }
     for key in ("policy_server_pod_uid", "policy_server_gpu_uuid", "server_port", "server_process_identity", "server_lock_identity"):
         value[key] = response[key]

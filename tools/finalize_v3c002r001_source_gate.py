@@ -47,8 +47,8 @@ def main() -> None:
         "repair_registration_sha256": sha256_file(args.root / "registration.json"),
         "queue": repo_binding(args.root / "queue.jsonl"),
         "assignment_manifest": repo_binding(args.root / "assignment.jsonl"),
-        "behavioral_episodes_before_gate": 0,
-        "repair_model_requests_before_gate": 0,
+        "behavioral_episodes_before_gate": json.loads((args.root / "registration.json").read_text(encoding="utf-8"))["behavioral_episodes_before_registration"],
+        "repair_model_requests_before_gate": json.loads((args.root / "registration.json").read_text(encoding="utf-8"))["repair_model_requests_before_registration"],
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(value, allow_nan=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")

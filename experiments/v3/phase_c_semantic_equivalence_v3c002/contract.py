@@ -14,10 +14,10 @@ from typing import Any, Mapping, Sequence
 
 STUDY_ID = "vla_wam_language_steerability_v3"
 AMENDMENT_ID = "V3-C002"
-REGISTRATION_SCHEMA = "vla-wam-shared-v3c002-registration-v3"
-CELL_SCHEMA = "vla-wam-shared-v3c002-cell-v3"
+REGISTRATION_SCHEMA = "vla-wam-shared-v3c002-registration-v4"
+CELL_SCHEMA = "vla-wam-shared-v3c002-cell-v4"
 WORDING_GATE_SCHEMA = "vla-wam-shared-v3c002-wording-gate-v1"
-RELEASE_GATE_SCHEMA = "vla-wam-shared-v3c002-release-gate-v3"
+RELEASE_GATE_SCHEMA = "vla-wam-shared-v3c002-release-gate-v4"
 SOURCE_PUSH_GATE_SCHEMA = "vla-wam-shared-v3c002-source-push-gate-v1"
 PHYSICAL_GATE_SCHEMA = "vla-wam-shared-v3c002-model-blind-physical-gate-v1"
 SMOKE_GATE_SCHEMA = "vla-wam-shared-v3c002-excluded-smoke-gate-v1"
@@ -303,7 +303,14 @@ def _verify_pushed_source_commit(source_gate: Mapping[str, Any]) -> None:
     local = subprocess.run(["git", "rev-parse", commit], cwd=REPO_ROOT, check=True, capture_output=True, text=True).stdout.strip()
     require(local == commit, "source gate commit is unavailable locally")
     remote_rows = subprocess.run(["git", "ls-remote", "--heads", remote, branch], cwd=REPO_ROOT, check=True, capture_output=True, text=True).stdout.splitlines()
-    require(any(row.split()[0] == commit for row in remote_rows if row.split()), "source gate commit is not pushed at the bound remote branch")
+    heads = [row.split()[0] for row in remote_rows if row.split()]
+    require(len(heads) == 1, "bound remote branch is missing or ambiguous")
+    head = heads[0]
+    available = subprocess.run(["git", "cat-file", "-e", f"{head}^{{commit}}"], cwd=REPO_ROOT, capture_output=True).returncode == 0
+    if not available:
+        subprocess.run(["git", "fetch", "--no-tags", remote, branch], cwd=REPO_ROOT, check=True, capture_output=True)
+    ancestor = subprocess.run(["git", "merge-base", "--is-ancestor", commit, head], cwd=REPO_ROOT).returncode == 0
+    require(ancestor, "source gate commit is not contained in the pushed remote branch")
 
 
 def require_released_gate(

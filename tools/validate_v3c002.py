@@ -24,9 +24,10 @@ from experiments.v3.phase_c_semantic_equivalence_v3c002.contract import (  # noq
 )
 from tools.validate_v3c002_v1_historical import validate as validate_v1_historical  # noqa: E402
 from tools.validate_v3c002_v2_historical import validate as validate_v2_historical  # noqa: E402
+from tools.validate_v3c002_v3_historical import validate as validate_v3_historical  # noqa: E402
 
 
-ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/draft_v3"
+ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/draft_v4"
 
 
 def _resolve(binding: dict, *, root: Path) -> Path:
@@ -79,14 +80,14 @@ def validate(root: Path = ROOT) -> dict:
         _check_binding(binding, root=REPO_ROOT, label=f"source {source}", checks=checks)
     supersession_path = root / "supersession.json"
     supersession = read_finite_json(supersession_path)
-    if not isinstance(supersession, dict) or supersession.get("status") != "prospective_v3_supersedes_unexecuted_v1_and_v2_drafts":
-        raise ContractError("V3 supersession disclosure is missing")
-    if any(supersession.get(key) != 0 for key in ("v1_model_requests", "v1_behavioral_episodes", "v2_model_requests", "v2_behavioral_episodes")) or supersession.get("v1_and_v2_must_never_be_activated") is not True:
-        raise ContractError("V1/V2 were not immutably retired before inference")
+    if not isinstance(supersession, dict) or supersession.get("status") != "prospective_v4_supersedes_unexecuted_v1_v2_v3_drafts":
+        raise ContractError("V4 supersession disclosure is missing")
+    if any(supersession.get(key) != 0 for key in ("v1_model_requests", "v1_behavioral_episodes", "v2_model_requests", "v2_behavioral_episodes", "v3_model_requests", "v3_behavioral_episodes")) or supersession.get("v1_v2_v3_must_never_be_activated") is not True:
+        raise ContractError("V1/V2/V3 were not immutably retired before inference")
     for revision, records in supersession.get("superseded_draft_bindings", {}).items():
         for name, binding in records.items():
             _check_binding(binding, root=REPO_ROOT, label=f"superseded {revision} {name}", checks=checks)
-    checks.append("V1 and V2 drafts remain immutable, unexecuted, and permanently superseded")
+    checks.append("V1, V2, and V3 drafts remain immutable, unexecuted, and permanently superseded")
     gate = read_finite_json(gate_path)
     if not isinstance(gate, dict) or gate.get("amendment_id") != AMENDMENT_ID:
         raise ContractError("wording gate is invalid")
@@ -112,8 +113,9 @@ def validate(root: Path = ROOT) -> dict:
     checks.append("no fabricated human agreement, model request, or behavioral authorization")
     historical_v1 = validate_v1_historical()
     historical_v2 = validate_v2_historical()
-    checks.append("independent historical validators confirm immutable unexecuted fail-closed V1/V2 drafts")
-    return {"status": "valid_superseding_v3_pre_registration_draft_blocked_pending_external_human_wording_gate", "check_count": len(checks), "checks": checks, "queue_sha256": sha256_file(queue_path), "historical_v1": historical_v1, "historical_v2": historical_v2}
+    historical_v3 = validate_v3_historical()
+    checks.append("independent historical validators confirm immutable unexecuted fail-closed V1/V2/V3 drafts")
+    return {"status": "valid_superseding_v4_pre_registration_draft_blocked_pending_external_human_wording_gate", "check_count": len(checks), "checks": checks, "queue_sha256": sha256_file(queue_path), "historical_v1": historical_v1, "historical_v2": historical_v2, "historical_v3": historical_v3}
 
 
 def main() -> None:

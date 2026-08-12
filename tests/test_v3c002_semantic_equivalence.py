@@ -21,6 +21,7 @@ from experiments.v3.phase_c_semantic_equivalence_v3c002.wording_gate import buil
 from experiments.v3.phase_c_semantic_equivalence_v3c002.runtime import bind_runtime
 from tools.validate_v3c002_v1_historical import validate as validate_v1_historical
 from tools.validate_v3c002_v2_historical import validate as validate_v2_historical
+from tools.validate_v3c002_v3_historical import validate as validate_v3_historical
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -103,6 +104,11 @@ class V3C002SemanticEquivalenceTests(unittest.TestCase):
     def test_historical_v2_draft_remains_independently_verifiable_and_unexecuted(self) -> None:
         result = validate_v2_historical()
         self.assertEqual(result["status"], "valid_immutable_unexecuted_superseded_v2_draft")
+        self.assertEqual(result["queue_rows"], 1364)
+
+    def test_historical_v3_draft_remains_independently_verifiable_and_unexecuted(self) -> None:
+        result = validate_v3_historical()
+        self.assertEqual(result["status"], "valid_immutable_unexecuted_superseded_v3_draft")
         self.assertEqual(result["queue_rows"], 1364)
 
     def test_release_gate_requires_and_hash_checks_all_pre_request_evidence(self) -> None:
@@ -349,7 +355,7 @@ def _release_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
         lane_bindings.append(file_binding(lane))
     gate = tmp_path / "release.json"
     _write_json(gate, {
-        "schema_version": "vla-wam-shared-v3c002-release-gate-v3", "status": "passed_pre_request_release", "passed": True,
+        "schema_version": "vla-wam-shared-v3c002-release-gate-v4", "status": "passed_pre_request_release", "passed": True,
         "registration": file_binding(active), "queue": file_binding(queue), "wording_gate": file_binding(wording),
         "source_push_gate": file_binding(source), "physical_gate": file_binding(physical), "excluded_smoke_gate": file_binding(smoke),
         "two_lane_isolation_gate": file_binding(isolation), "lane_manifests": lane_bindings,

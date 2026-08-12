@@ -53,8 +53,8 @@ def main() -> None:
     if not isinstance(draft, dict) or draft.get("schema_version") != REGISTRATION_SCHEMA or draft.get("registration_status") != "pre_registration_draft_pending_two_human_wording_agreements":
         raise ContractError("only the untouched fail-closed C002 draft may be activated")
     supersession = read_finite_json(draft_root / "supersession.json")
-    if not isinstance(supersession, dict) or supersession.get("status") != "prospective_v3_supersedes_unexecuted_v1_and_v2_drafts" or supersession.get("v1_and_v2_must_never_be_activated") is not True:
-        raise ContractError("only the disclosed V3 superseding draft may be activated")
+    if not isinstance(supersession, dict) or supersession.get("status") != "prospective_v4_supersedes_unexecuted_v1_v2_v3_drafts" or supersession.get("v1_v2_v3_must_never_be_activated") is not True:
+        raise ContractError("only the disclosed V4 superseding draft may be activated")
     wording_gate = validate_attestations(sheet_path=sheet, attestation_paths=args.reader_attestation)
     wording_gate["sheet"] = repo_file_binding(sheet)
     for record, source in zip(wording_gate["reader_attestations"], args.reader_attestation):

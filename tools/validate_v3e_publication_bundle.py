@@ -19,6 +19,9 @@ def main() -> None:
         [sys.executable, str(ROOT / "tools/validate_v3e003.py")],
         [sys.executable, str(ROOT / "tools/validate_v3e004.py")],
     ]
+    c002_active = ROOT / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/active"
+    if c002_active.exists():
+        commands.append([sys.executable, str(ROOT / "tools/validate_v3c002_results.py"), "--root", str(c002_active)])
     e005 = [sys.executable, str(ROOT / "tools/validate_v3e005.py")]
     if (
         ROOT

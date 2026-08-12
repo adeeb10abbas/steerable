@@ -20,6 +20,8 @@ sys.path.insert(0, str(REPO_ROOT))
 from experiments.v3.phase_c_semantic_equivalence_v3c002.contract import (  # noqa: E402
     AMENDMENT_ID,
     ContractError,
+    REGISTRATION_SCHEMA,
+    RELEASE_GATE_SCHEMA,
     file_binding,
     read_finite_json,
     sha256_file,
@@ -47,8 +49,11 @@ def main() -> None:
     queue = draft_root / "queue.jsonl"
     sheet = draft_root / "prompt_comprehension_sheet.json"
     draft = read_finite_json(draft_registration)
-    if not isinstance(draft, dict) or draft.get("registration_status") != "pre_registration_draft_pending_two_human_wording_agreements":
+    if not isinstance(draft, dict) or draft.get("schema_version") != REGISTRATION_SCHEMA or draft.get("registration_status") != "pre_registration_draft_pending_two_human_wording_agreements":
         raise ContractError("only the untouched fail-closed C002 draft may be activated")
+    supersession = read_finite_json(draft_root / "supersession.json")
+    if not isinstance(supersession, dict) or supersession.get("status") != "prospective_v2_supersedes_unexecuted_v1_draft" or supersession.get("v1_must_never_be_activated") is not True:
+        raise ContractError("only the disclosed V2 superseding draft may be activated")
     wording_gate = validate_attestations(sheet_path=sheet, attestation_paths=args.reader_attestation)
     wording_gate["draft_registration"] = file_binding(draft_registration)
     wording_gate["queue"] = file_binding(queue)
@@ -67,7 +72,7 @@ def main() -> None:
     )
     _write_new(activation_root / "registration.json", active)
     release = {
-        "schema_version": "vla-wam-shared-v3c002-release-gate-v1",
+        "schema_version": RELEASE_GATE_SCHEMA,
         "study_id": active["study_id"],
         "amendment_id": AMENDMENT_ID,
         "status": "blocked_pending_committed_source_and_runtime_preflight_gates",

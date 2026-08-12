@@ -20,10 +20,12 @@ from experiments.v3.phase_c_semantic_equivalence_v3c002.contract import (  # noq
     load_cells,
     read_finite_json,
     sha256_file,
+    validate_exact_runtime_contract,
 )
+from tools.validate_v3c002_v1_historical import validate as validate_v1_historical  # noqa: E402
 
 
-ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002"
+ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/draft_v2"
 
 
 def _resolve(binding: dict, *, root: Path) -> Path:
@@ -60,6 +62,10 @@ def validate(root: Path = ROOT) -> dict:
     if any(cell.row["runtime_identity_requirement"].get("action_dim") != 8 for cell in cells):
         raise ContractError("C002 action interface changed")
     checks.append("π0.5 E004 checkpoint and 8D/15-step action contract are exact")
+    runtime_sha = validate_exact_runtime_contract(registration.get("exact_e004_pi05_runtime"))
+    if any(cell.row.get("exact_runtime_contract_sha256") != runtime_sha for cell in cells):
+        raise ContractError("a queue cell differs from the exact E004 runtime contract")
+    checks.append("controller, cameras, horizon, scorer, raw writer, renderer, checkpoint, runtime, and policy server are path/byte/SHA bound and equality checked")
     layout = registration.get("e004_s1_layout")
     if not isinstance(layout, dict) or layout.get("symmetry_level_s") != 1.0:
         raise ContractError("C002 does not require E004 s=1 layout")
@@ -68,6 +74,15 @@ def validate(root: Path = ROOT) -> dict:
         raise ContractError("E004 candidate digest changed")
     for source, binding in sorted(registration.get("source_bindings", {}).items()):
         _check_binding(binding, root=REPO_ROOT, label=f"source {source}", checks=checks)
+    supersession_path = root / "supersession.json"
+    supersession = read_finite_json(supersession_path)
+    if not isinstance(supersession, dict) or supersession.get("status") != "prospective_v2_supersedes_unexecuted_v1_draft":
+        raise ContractError("V2 supersession disclosure is missing")
+    if supersession.get("v1_model_requests") != 0 or supersession.get("v1_behavioral_episodes") != 0 or supersession.get("v1_must_never_be_activated") is not True:
+        raise ContractError("V1 was not immutably retired before inference")
+    for name, binding in supersession.get("superseded_v1_bindings", {}).items():
+        _check_binding(binding, root=REPO_ROOT, label=f"superseded V1 {name}", checks=checks)
+    checks.append("V1 draft remains immutable, unexecuted, and permanently superseded")
     gate = read_finite_json(gate_path)
     if not isinstance(gate, dict) or gate.get("amendment_id") != AMENDMENT_ID:
         raise ContractError("wording gate is invalid")
@@ -78,6 +93,9 @@ def validate(root: Path = ROOT) -> dict:
     _check_binding(release.get("registration"), root=REPO_ROOT, label="draft registration", checks=checks)
     _check_binding(release.get("queue"), root=REPO_ROOT, label="draft queue", checks=checks)
     _check_binding(release.get("wording_gate"), root=REPO_ROOT, label="pending wording gate", checks=checks)
+    required = set(release.get("required_bound_artifacts", []))
+    if required != {"source_push_gate", "physical_gate", "excluded_smoke_gate", "two_lane_isolation_gate", "lane_manifests"}:
+        raise ContractError("blocked release gate does not enumerate every hard release artifact")
     status = registration.get("registration_status")
     if status != "pre_registration_draft_pending_two_human_wording_agreements":
         raise ContractError("no unverified registration status is permitted")
@@ -88,7 +106,9 @@ def validate(root: Path = ROOT) -> dict:
     if (root / "infrastructure_attempts.jsonl").read_text(encoding="utf-8") != "":
         raise ContractError("no infrastructure attempt may be recorded before release")
     checks.append("no fabricated human agreement, model request, or behavioral authorization")
-    return {"status": "valid_pre_registration_draft_blocked_pending_external_human_wording_gate", "check_count": len(checks), "checks": checks, "queue_sha256": sha256_file(queue_path)}
+    historical_v1 = validate_v1_historical()
+    checks.append("independent historical V1 validator confirms immutable unexecuted fail-closed draft")
+    return {"status": "valid_superseding_v2_pre_registration_draft_blocked_pending_external_human_wording_gate", "check_count": len(checks), "checks": checks, "queue_sha256": sha256_file(queue_path), "historical_v1": historical_v1}
 
 
 def main() -> None:

@@ -12,7 +12,7 @@ import sys
 import time
 from typing import Any
 
-from .contract import ContractError, grouped_shard, require_released_gate, sha256_file
+from .contract import ContractError, grouped_shard, require_released_gate, resolve_binding_path, sha256_file
 from .runtime import validate_runtime_manifest
 
 
@@ -39,13 +39,22 @@ class LaneLock:
             self.handle.close()
 
 
-def _plan(cells: list[Any], *, shard_index: int, shard_count: int, pod_uid: str, gpu_uuid: str) -> dict[str, Any]:
+def _plan(cells: list[Any], *, shard_index: int, shard_count: int, args: Any) -> dict[str, Any]:
     return {
         "schema_version": "vla-wam-shared-v3c002-lane-plan-v1",
         "shard_index": shard_index,
         "shard_count": shard_count,
-        "pod_uid": pod_uid,
-        "gpu_uuid": gpu_uuid,
+        "lane_id": args.lane_id,
+        "simulator_pod_uid": args.lane_pod_uid,
+        "simulator_gpu_uuid": args.lane_gpu_uuid,
+        "policy_server_pod_uid": args.policy_server_pod_uid,
+        "policy_server_gpu_uuid": args.policy_server_gpu_uuid,
+        "server_port": args.server_port,
+        "raw_root": args.raw_root,
+        "container_identity": args.container_identity,
+        "runtime_identity": args.runtime_identity,
+        "server_process_identity": args.server_process_identity,
+        "server_lock_identity": args.server_lock_identity,
         "execution_policy": "one serial client queue, one independent policy server, one independent simulator, and all four conditions from every seed block on this lane",
         "seed_blocks": sorted({cell.seed for cell in cells}),
         "cell_ids": [cell.cell_id for cell in cells],
@@ -61,6 +70,15 @@ def main() -> None:
     parser.add_argument("--shard-count", type=int, required=True)
     parser.add_argument("--lane-pod-uid", required=True)
     parser.add_argument("--lane-gpu-uuid", required=True)
+    parser.add_argument("--policy-server-pod-uid", required=True)
+    parser.add_argument("--policy-server-gpu-uuid", required=True)
+    parser.add_argument("--server-port", type=int, required=True)
+    parser.add_argument("--raw-root", required=True)
+    parser.add_argument("--container-identity", required=True)
+    parser.add_argument("--runtime-identity", required=True)
+    parser.add_argument("--lane-id", required=True)
+    parser.add_argument("--server-process-identity", required=True)
+    parser.add_argument("--server-lock-identity", required=True)
     parser.add_argument("--lane-lock", type=Path, required=True)
     parser.add_argument("--plan-output", type=Path, required=True)
     parser.add_argument("--runtime-manifest", type=Path)
@@ -68,9 +86,9 @@ def main() -> None:
     parser.add_argument("--execute", action="store_true")
     parser.add_argument("--adapter-command", nargs=argparse.REMAINDER, help="External exact-runtime adapter after --execute")
     args = parser.parse_args()
-    registration, cells, _gate = require_released_gate(registration_path=args.registration, queue_path=args.queue, release_gate_path=args.release_gate)
+    registration, cells, gate = require_released_gate(registration_path=args.registration, queue_path=args.queue, release_gate_path=args.release_gate)
     selected = grouped_shard(cells, shard_index=args.shard_index, shard_count=args.shard_count)
-    plan = _plan(selected, shard_index=args.shard_index, shard_count=args.shard_count, pod_uid=args.lane_pod_uid, gpu_uuid=args.lane_gpu_uuid)
+    plan = _plan(selected, shard_index=args.shard_index, shard_count=args.shard_count, args=args)
     if args.plan_output.exists():
         raise ContractError(f"refusing to overwrite lane plan: {args.plan_output}")
     args.plan_output.parent.mkdir(parents=True, exist_ok=True)
@@ -81,7 +99,7 @@ def main() -> None:
         raise ContractError("--execute requires an independent exact-runtime adapter command")
     if args.runtime_manifest is None or args.runtime_manifest_sha256 is None:
         raise ContractError("--execute requires a hash-bound exact-runtime lane manifest")
-    validate_runtime_manifest(
+    runtime_manifest = validate_runtime_manifest(
         args.runtime_manifest,
         args.runtime_manifest_sha256,
         registration_path=args.registration,
@@ -89,6 +107,21 @@ def main() -> None:
         pod_uid=args.lane_pod_uid,
         gpu_uuid=args.lane_gpu_uuid,
     )
+    lane_records = []
+    for binding in gate["lane_manifests"]:
+        value = json.loads(resolve_binding_path(binding).read_text(encoding="utf-8"))
+        if value.get("lane_id") == args.lane_id:
+            lane_records.append(value)
+    require(len(lane_records) == 1, "release gate does not contain exactly one manifest for this lane")
+    lane_record = lane_records[0]
+    for key, expected in (
+        ("simulator_pod_uid", args.lane_pod_uid), ("simulator_gpu_uuid", args.lane_gpu_uuid),
+        ("policy_server_pod_uid", args.policy_server_pod_uid), ("policy_server_gpu_uuid", args.policy_server_gpu_uuid),
+        ("server_port", args.server_port), ("raw_root", args.raw_root), ("container_identity", args.container_identity),
+        ("runtime_identity", args.runtime_identity), ("server_process_identity", args.server_process_identity),
+        ("server_lock_identity", args.server_lock_identity),
+    ):
+        require(lane_record.get(key) == expected and runtime_manifest["runtime_identity"].get(key) == expected, f"lane/runtime identity differs for {key}")
     with LaneLock(args.lane_lock, pod_uid=args.lane_pod_uid, gpu_uuid=args.lane_gpu_uuid):
         for seed in sorted({cell.seed for cell in selected}):
             block = [cell for cell in selected if cell.seed == seed]
@@ -103,6 +136,17 @@ def main() -> None:
                     "--queue-sha256", sha256_file(args.queue),
                     "--lane-pod-uid", args.lane_pod_uid,
                     "--lane-gpu-uuid", args.lane_gpu_uuid,
+                    "--policy-server-pod-uid", args.policy_server_pod_uid,
+                    "--policy-server-gpu-uuid", args.policy_server_gpu_uuid,
+                    "--server-port", str(args.server_port),
+                    "--raw-root", args.raw_root,
+                    "--container-identity", args.container_identity,
+                    "--runtime-identity", args.runtime_identity,
+                    "--lane-id", args.lane_id,
+                    "--server-process-identity", args.server_process_identity,
+                    "--server-lock-identity", args.server_lock_identity,
+                    "--runtime-manifest", str(args.runtime_manifest.resolve()),
+                    "--runtime-manifest-sha256", args.runtime_manifest_sha256,
                 ]
                 subprocess.run(command, check=True)
 

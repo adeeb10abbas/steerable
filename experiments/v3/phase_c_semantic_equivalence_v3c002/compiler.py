@@ -22,6 +22,7 @@ from .contract import (
     load_cells,
     require,
     sha256_file,
+    validate_exact_runtime_contract,
 )
 
 
@@ -112,7 +113,8 @@ def _validate_request_seeds(raw: Mapping[str, Any], cell: C002Cell) -> list[int]
     return result
 
 
-def compile_episode(raw: Mapping[str, Any], *, cell: C002Cell, registration_sha256: str, queue_sha256: str) -> dict[str, Any]:
+def compile_episode(raw: Mapping[str, Any], *, cell: C002Cell, registration_sha256: str, queue_sha256: str, exact_runtime_contract: Mapping[str, Any]) -> dict[str, Any]:
+    exact_sha = validate_exact_runtime_contract(exact_runtime_contract)
     require(raw.get("schema_version") == RAW_SCHEMA, "raw episode schema changed")
     for key, expected in (
         ("study_id", STUDY_ID),
@@ -123,7 +125,9 @@ def compile_episode(raw: Mapping[str, Any], *, cell: C002Cell, registration_sha2
         ("queue_sha256", queue_sha256),
         ("model_id", MODEL_ID),
         ("physical_goal", cell.physical_goal),
+        ("surface_direction_word", cell.row["surface_direction_word"]),
         ("prompt", cell.row["prompt"]),
+        ("prompt_utf8_hex", cell.row["prompt_utf8_hex"]),
         ("prompt_sha256", cell.row["prompt_sha256"]),
     ):
         require(raw.get(key) == expected, f"raw episode differs from registered cell for {key}")
@@ -140,15 +144,26 @@ def compile_episode(raw: Mapping[str, Any], *, cell: C002Cell, registration_sha2
     require(isinstance(state_hash, str) and len(state_hash) == 64, "initial state hash is missing")
     runtime = raw.get("runtime_identity")
     require(isinstance(runtime, dict), "runtime identity is missing")
-    for key in ("checkpoint_digest", "controller_digest", "action_interface_digest", "camera_configuration_digest", "horizon_digest", "scorer_digest"):
-        value = runtime.get(key)
-        require(isinstance(value, str) and len(value) == 64, f"runtime identity lacks {key}")
+    expected_identity = exact_runtime_contract["identity_values"]
+    for key in ("checkpoint_digest", "source_commit", "simulator_identity", "renderer_backend", "policy_cameras"):
+        require(runtime.get(key) == expected_identity[key], f"runtime identity differs for {key}")
+    require(runtime.get("exact_runtime_contract_sha256") == exact_sha, "runtime exact E004 contract changed")
+    require(runtime.get("component_digests") == exact_runtime_contract["component_digests"], "runtime component digests changed")
+    require(runtime.get("dependency_bindings") == exact_runtime_contract["dependency_bindings"], "runtime source path/hash bindings changed")
+    for key in ("lane_id", "simulator_pod_uid", "simulator_gpu_uuid", "policy_server_pod_uid", "policy_server_gpu_uuid", "raw_root", "container_identity", "runtime_identity", "server_process_identity", "server_lock_identity"):
+        require(isinstance(runtime.get(key), str) and runtime.get(key), f"runtime identity lacks {key}")
+    require(type(runtime.get("server_port")) is int and 1024 <= runtime["server_port"] <= 65535, "runtime server port is invalid")
+    require(runtime.get("full_reset") is True and runtime.get("stage_identifier") == "full_reset", "episode reset/stage identifier changed")
     raw_artifacts = raw.get("raw_artifacts")
     require(isinstance(raw_artifacts, dict), "raw artifact map is missing")
     artifacts = {
         name: _artifact(raw_artifacts.get(name), name.replace("_", " "))
         for name in ("simulator_video", "executed_action_trace", "raw_episode_jsonl", "final_state", "state_trace")
     }
+    camera_artifacts = raw_artifacts.get("policy_camera_images")
+    require(isinstance(camera_artifacts, dict) and set(camera_artifacts) == set(expected_identity["policy_cameras"]), "policy camera image artifacts are incomplete")
+    bound_cameras = {name: _artifact(record, f"policy camera image {name}") for name, record in camera_artifacts.items()}
+    require(runtime.get("policy_camera_image_artifact_hashes") == {name: record["sha256"] for name, record in bound_cameras.items()}, "runtime camera/image hashes differ from retained artifacts")
     outcome = _failure_category(raw.get("state_trace"), cell.physical_goal, detached, success)
     reported = raw.get("reported_failure_category")
     require(reported == outcome, "raw failure category differs from frozen taxonomy")
@@ -181,6 +196,21 @@ def compile_episode(raw: Mapping[str, Any], *, cell: C002Cell, registration_sha2
         "endpoint_value": signed,
         "action_trace_sha256": artifacts["executed_action_trace"]["sha256"],
         "runtime_identity": runtime,
+        "lane_id": runtime["lane_id"],
+        "server_port": runtime["server_port"],
+        "raw_root": runtime["raw_root"],
+        "simulator_pod_uid": runtime["simulator_pod_uid"],
+        "simulator_gpu_uuid": runtime["simulator_gpu_uuid"],
+        "policy_server_pod_uid": runtime["policy_server_pod_uid"],
+        "policy_server_gpu_uuid": runtime["policy_server_gpu_uuid"],
+        "container_identity": runtime["container_identity"],
+        "runtime_identity_label": runtime["runtime_identity"],
+        "source_commit": runtime["source_commit"],
+        "checkpoint_digest": runtime["checkpoint_digest"],
+        "full_reset": runtime["full_reset"],
+        "stage_identifier": runtime["stage_identifier"],
+        "exact_runtime_contract_sha256": exact_sha,
+        "policy_camera_image_artifacts": bound_cameras,
         "raw_artifacts": artifacts,
         "infrastructure_status": "valid_behavioral_episode",
     }
@@ -261,6 +291,16 @@ def _pair_rows(episodes: Iterable[Mapping[str, Any]]) -> list[dict[str, Any]]:
 
 
 def compile_results(episodes: list[dict[str, Any]], *, registration_sha256: str, queue_sha256: str) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    lanes: dict[str, dict[str, Any]] = {}
+    for episode in episodes:
+        lane_id = str(episode["lane_id"])
+        identity = {key: episode[key] for key in ("server_port", "raw_root", "simulator_pod_uid", "simulator_gpu_uuid", "policy_server_pod_uid", "policy_server_gpu_uuid", "container_identity", "runtime_identity_label", "source_commit", "checkpoint_digest")}
+        if lane_id in lanes:
+            require(lanes[lane_id] == identity, f"lane {lane_id} infrastructure identity changed between episodes")
+        lanes[lane_id] = identity
+    require(len(lanes) >= 2, "compiled cohort lacks two retained execution lanes")
+    for key in ("server_port", "raw_root", "simulator_pod_uid", "simulator_gpu_uuid", "policy_server_pod_uid", "policy_server_gpu_uuid"):
+        require(len({identity[key] for identity in lanes.values()}) == len(lanes), f"lane {key} allocations are not unique")
     pairs = _pair_rows(episodes)
     analyses = {}
     for goal in ("left", "right"):
@@ -301,6 +341,7 @@ def compile_results(episodes: list[dict[str, Any]], *, registration_sha256: str,
         }
     depth_claim = all(analyses[goal]["depth_inverse_minus_canonical_m"]["equivalent"] for goal in ("left", "right"))
     inverse_control = positive_controls["inverse_reference"]["positive_with_ci_excluding_zero"]
+    semantic_claim = bool(depth_claim and inverse_control)
     return pairs, {
         "schema_version": RESULT_SCHEMA,
         "study_id": STUDY_ID,
@@ -313,8 +354,11 @@ def compile_results(episodes: list[dict[str, Any]], *, registration_sha256: str,
         "primary_requested_side_depth_equivalence": analyses,
         "positive_controls": positive_controls,
         "semantic_redirection_supported": inverse_control,
-        "model_level_semantic_depth_equivalence_claim_authorized": depth_claim,
-        "claim_rule": "Both physical goals must pass primary depth equivalence. If inverse-reference endpoint redirection fails, semantic redirection is unsupported and prompt equivalence must not be reinterpreted as grounding.",
+        "descriptive_directional_depth_form_equivalence": depth_claim,
+        "model_level_semantic_depth_equivalence_claim_authorized": semantic_claim,
+        "model_level_semantic_depth_equivalence_claim_withheld": not semantic_claim,
+        "claim_gate_components": {"directional_depth_tost_conjunction": depth_claim, "inverse_reference_endpoint_positive_control": inverse_control},
+        "claim_rule": "Model-level semantic depth equivalence requires both directional depth TOSTs AND the inverse-reference endpoint positive control. Otherwise the semantic claim is explicitly withheld; descriptive form equivalence remains reportable.",
     }
 
 
@@ -350,7 +394,7 @@ def main() -> None:
     require(len(raw_rows) == 1364, "raw source must contain exactly 1,364 behavioral episodes")
     require(len({str(row.get("cell_id")) for row in raw_rows}) == 1364, "raw source has duplicate cells")
     require({str(row.get("cell_id")) for row in raw_rows} == set(cell_map), "raw source does not exactly cover the queue")
-    episodes = [compile_episode(row, cell=cell_map[str(row["cell_id"])], registration_sha256=registration_sha, queue_sha256=queue_sha) for row in raw_rows]
+    episodes = [compile_episode(row, cell=cell_map[str(row["cell_id"])], registration_sha256=registration_sha, queue_sha256=queue_sha, exact_runtime_contract=registration["exact_e004_pi05_runtime"]) for row in raw_rows]
     pairs, results = compile_results(episodes, registration_sha256=registration_sha, queue_sha256=queue_sha)
     _write_jsonl(args.episodes_output, episodes)
     _write_jsonl(args.pairs_output, pairs)

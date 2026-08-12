@@ -43,8 +43,38 @@ from experiments.v3.phase_c_semantic_equivalence_v3c002.wording_gate import (  #
 
 
 BASE_COMMIT = "18a2bf0200183647291cc7aeb1fe89997b3fb82f"
-ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002"
+ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/draft_v2"
 E004_ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004"
+V1_ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002"
+
+DEPENDENCY_PATHS = {
+    "checkpoint": ("artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_checkpoint_manifest.json",),
+    "runtime": (
+        "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/runtime_identity.json",
+        "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/registration.json",
+        "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/queue.jsonl",
+    ),
+    "policy_server": ("experiments/pi05_current_stack/v2a010_serve_policy.py",),
+    "controller": (
+        "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/droid_behavioral_bridge.py",
+        "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/run_droid_queue.py",
+    ),
+    "action_interface": ("experiments/v3/phase_e/symmetric_layout_cohort_v3e004/droid_behavioral_contract.py",),
+    "camera_configuration": (
+        "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/live_snapshot_adapter.py",
+        "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/layout/candidate.json",
+    ),
+    "horizon": ("artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/runtime_identity.json",),
+    "scorer": (
+        "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/episode_compiler.py",
+        "artifacts/vla_wam_shared_v3/failure_taxonomy.json",
+    ),
+    "raw_writer": ("experiments/v3/phase_e/symmetric_layout_cohort_v3e004/run_droid_queue.py",),
+    "renderer": (
+        "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/live_snapshot_adapter.py",
+        "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/runtime_identity.json",
+    ),
+}
 
 
 def _relative_binding(path: Path) -> dict[str, Any]:
@@ -72,7 +102,51 @@ def _write_new_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
     path.write_text("".join(json.dumps(row, allow_nan=False, ensure_ascii=False, sort_keys=True) + "\n" for row in rows), encoding="utf-8")
 
 
-def _queue(candidate_sha256: str, runtime_requirement: dict[str, Any]) -> list[dict[str, Any]]:
+def _exact_runtime_contract(*, e004_cell: dict[str, Any], source_commit: str) -> dict[str, Any]:
+    inherited_path = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/runtime_identity.json"
+    inherited = json.loads(inherited_path.read_text(encoding="utf-8"))
+    dependencies = {
+        group: [_relative_binding(REPO_ROOT / path) for path in paths]
+        for group, paths in DEPENDENCY_PATHS.items()
+    }
+    values = {
+        "model_id": MODEL_ID,
+        "arena": ARENA,
+        "checkpoint": e004_cell["runtime_identity_requirement"]["checkpoint"],
+        "checkpoint_manifest_sha256": e004_cell["runtime_identity_requirement"]["checkpoint_manifest_sha256"],
+        "checkpoint_digest": inherited["checkpoint_sha256"],
+        "openpi_commit": e004_cell["runtime_identity_requirement"]["openpi_commit"],
+        "robolab_commit": e004_cell["runtime_identity_requirement"]["robolab_commit"],
+        "source_commit": source_commit,
+        "action_dim": e004_cell["runtime_identity_requirement"]["action_dim"],
+        "action_horizon": e004_cell["runtime_identity_requirement"]["action_horizon"],
+        "action_cap": e004_cell["runtime_identity_requirement"]["action_cap"],
+        "action_interface": {
+            "action_dim": e004_cell["runtime_identity_requirement"]["action_dim"],
+            "action_horizon": e004_cell["runtime_identity_requirement"]["action_horizon"],
+            "action_cap": e004_cell["runtime_identity_requirement"]["action_cap"],
+            "action_chunk_shape": inherited["action_chunk_shape"],
+            "action_space": inherited["action_space"],
+        },
+        "policy_cameras": ["head_camera", "over_shoulder_left_camera", "over_shoulder_right_camera", "wrist_cam"],
+        "simulator_identity": inherited["simulator_version"],
+        "renderer_backend": inherited["renderer_backend"],
+        "runtime_identity_source_sha256": inherited["runtime_identity_sha256"],
+        "policy_io_mode": inherited["future_interface"],
+        "prompt_mode": inherited["instruction_controller"],
+    }
+    unsigned = {
+        "schema_version": "vla-wam-shared-v3c002-exact-e004-pi05-runtime-contract-v1",
+        "source_amendment": "V3-E004",
+        "symmetry_level_s": 1.0,
+        "identity_values": values,
+        "dependency_bindings": dependencies,
+        "component_digests": {group: canonical_json_sha256(records) for group, records in dependencies.items()},
+    }
+    return {**unsigned, "contract_sha256": canonical_json_sha256(unsigned)}
+
+
+def _queue(candidate_sha256: str, runtime_contract: dict[str, Any]) -> list[dict[str, Any]]:
     prompts = registered_prompts()
     rows: list[dict[str, Any]] = []
     for seed in SEEDS:
@@ -110,8 +184,9 @@ def _queue(candidate_sha256: str, runtime_requirement: dict[str, Any]) -> list[d
                     "layout_source_amendment": "V3-E004",
                     "symmetry_level_s": LAYOUT_LEVEL,
                     "layout_candidate_sha256": candidate_sha256,
+                    "exact_runtime_contract_sha256": runtime_contract["contract_sha256"],
                     "success_predicate_id": SUCCESS_PREDICATE_ID,
-                    "runtime_identity_requirement": runtime_requirement,
+                    "runtime_identity_requirement": runtime_contract["identity_values"],
                     "behavioral_failure_policy": "retain_in_denominator",
                     "infrastructure_failure_policy": "separate_stream_excluded_from_behavioral_denominator",
                     "missing_measurement_policy": "NR remains null and is never converted to zero",
@@ -147,6 +222,10 @@ def main() -> None:
         raise SystemExit("cannot locate the E004 π0.5 s=1 runtime contract")
     candidate_sha = sha256_file(candidate)
     runtime_requirement = dict(e004_cell["runtime_identity_requirement"])
+    source_commit = __import__("subprocess").run(
+        ["git", "rev-parse", "HEAD"], cwd=REPO_ROOT, check=True, capture_output=True, text=True
+    ).stdout.strip()
+    runtime_contract = _exact_runtime_contract(e004_cell=e004_cell, source_commit=source_commit)
     sheet_path = output_root / "prompt_comprehension_sheet.json"
     _write_new(sheet_path, build_blinded_sheet())
     response_template = {
@@ -172,7 +251,7 @@ def main() -> None:
         ),
     )
     queue_path = output_root / "queue.jsonl"
-    rows = _queue(candidate_sha, runtime_requirement)
+    rows = _queue(candidate_sha, runtime_contract)
     _write_new_jsonl(queue_path, rows)
     sources = {
         rel: _relative_binding(REPO_ROOT / rel)
@@ -185,6 +264,12 @@ def main() -> None:
             "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/droid_behavioral_contract.py",
             "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/episode_compiler.py",
             "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/runtime_contract.py",
+            "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/run_droid_queue.py",
+            "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/live_snapshot_adapter.py",
+            "experiments/pi05_current_stack/v2a010_serve_policy.py",
+            "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_checkpoint_manifest.json",
+            "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/runtime_identity.json",
+            "artifacts/vla_wam_shared_v3/failure_taxonomy.json",
             "experiments/v3/phase_c_semantic_equivalence_v3c002/__init__.py",
             "experiments/v3/phase_c_semantic_equivalence_v3c002/contract.py",
             "experiments/v3/phase_c_semantic_equivalence_v3c002/wording_gate.py",
@@ -194,11 +279,12 @@ def main() -> None:
             "tools/build_v3c002_registration.py",
             "tools/finalize_v3c002_registration.py",
             "tools/validate_v3c002.py",
+            "tools/validate_v3c002_v1_historical.py",
             "tests/test_v3c002_semantic_equivalence.py",
         )
     }
     registration = {
-        "schema_version": "vla-wam-shared-v3c002-registration-v1",
+        "schema_version": "vla-wam-shared-v3c002-registration-v2",
         "study_id": STUDY_ID,
         "amendment_id": AMENDMENT_ID,
         "title": "Semantically equivalent prompt control",
@@ -236,26 +322,14 @@ def main() -> None:
             "symmetry_level_s": 1.0,
             "scope": "fully symmetric object layout only; robot, reset posture, camera rig, wrist mounting, and embodiment are not asserted bilaterally symmetric",
         },
-        "runtime_identity_requirement": {
-            "model_id": MODEL_ID,
-            "arena": ARENA,
-            "checkpoint": runtime_requirement["checkpoint"],
-            "checkpoint_manifest_sha256": runtime_requirement["checkpoint_manifest_sha256"],
-            "openpi_commit": runtime_requirement["openpi_commit"],
-            "robolab_commit": runtime_requirement["robolab_commit"],
-            "controller": "exact E004 π0.5 controller",
-            "action_interface": {"action_dim": runtime_requirement["action_dim"], "action_horizon": runtime_requirement["action_horizon"], "action_cap": runtime_requirement["action_cap"]},
-            "camera_configuration": "exact E004 DROID policy camera configuration",
-            "horizon": runtime_requirement["action_cap"],
-            "scorer": "frozen E004/B001 DROID 45-degree requested-relation success predicate",
-        },
+        "exact_e004_pi05_runtime": runtime_contract,
         "analysis_plan": {
             "primary": {
                 "estimand": "inverse-reference minus canonical requested-side depth, independently for each registered physical goal",
                 "margin_m": 0.0415,
                 "bootstrap": {"resamples": 20000, "confidence_level": 0.90, "cluster": "seed block"},
                 "tost": "paired two one-sided test against [-0.0415,+0.0415] m",
-                "claim_rule": "Both LEFT and RIGHT must pass; a failure in either direction blocks the model-level equivalence claim.",
+                "claim_rule": "Both LEFT and RIGHT depth TOSTs and the inverse-reference endpoint positive control must pass; any failure withholds the model-level semantic equivalence claim.",
             },
             "secondary_binary": {"margin_probability": 0.1556, "interval": "paired seed-clustered 90% bootstrap", "claim_rule": "Both directional intervals must lie strictly inside the registered margin."},
             "positive_controls": {
@@ -271,8 +345,27 @@ def main() -> None:
         "release_boundary": "No model request, action, or behavioral episode is authorized until the independent wording gate passes, this registration is activated with real attestations, the registration/queue/code are committed and pushed, and exact E004 runtime/lane/preflight gates pass.",
     }
     _write_new(output_root / "registration.json", registration)
+    if V1_ROOT != output_root:
+        v1_bindings = {}
+        for name in ("registration.json", "queue.jsonl", "release_gate.json"):
+            path = V1_ROOT / name
+            if path.is_file():
+                v1_bindings[name] = _relative_binding(path)
+        _write_new(
+            output_root / "supersession.json",
+            {
+                "schema_version": "vla-wam-shared-v3c002-preregistration-supersession-v1",
+                "status": "prospective_v2_supersedes_unexecuted_v1_draft",
+                "superseded_v1_bindings": v1_bindings,
+                "superseding_registration": _relative_binding(output_root / "registration.json"),
+                "reason": "Independent pre-run audit required exact E004 runtime file/hash equality and stronger release/claim gates.",
+                "v1_model_requests": 0,
+                "v1_behavioral_episodes": 0,
+                "v1_must_never_be_activated": True,
+            },
+        )
     release_gate = {
-        "schema_version": "vla-wam-shared-v3c002-release-gate-v1",
+        "schema_version": "vla-wam-shared-v3c002-release-gate-v2",
         "study_id": STUDY_ID,
         "amendment_id": AMENDMENT_ID,
         "status": "blocked_pre_registration_wording_gate",
@@ -280,6 +373,7 @@ def main() -> None:
         "registration": _relative_binding(output_root / "registration.json"),
         "queue": _relative_binding(queue_path),
         "wording_gate": _relative_binding(wording_gate_path),
+        "required_bound_artifacts": ["source_push_gate", "physical_gate", "excluded_smoke_gate", "two_lane_isolation_gate", "lane_manifests"],
         "reason": "No authorized two-reader agreements are present. No runtime, lane, smoke, isolation, model request, or behavioral episode is authorized.",
     }
     _write_new(output_root / "release_gate.json", release_gate)

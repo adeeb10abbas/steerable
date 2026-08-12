@@ -8,7 +8,10 @@ import json
 from pathlib import Path
 import shutil
 import subprocess
+import sys
 from typing import Any
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from experiments.v3.phase_c_semantic_equivalence_v3c002.contract import sha256_file
 from experiments.v3.phase_c_semantic_equivalence_v3c002r001.contract import REPO_ROOT, repo_binding

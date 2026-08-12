@@ -6,6 +6,9 @@ from __future__ import annotations
 import json
 from pathlib import Path
 import subprocess
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from experiments.v3.phase_c_semantic_equivalence_v3c002.contract import sha256_file, validate_file_binding
 from experiments.v3.phase_c_semantic_equivalence_v3c002r001.contract import REPO_ROOT, load_repair, require, validate_assignment

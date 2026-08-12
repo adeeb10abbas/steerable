@@ -6,6 +6,9 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from experiments.v3.phase_c_semantic_equivalence_v3c002.contract import read_finite_json, sha256_file
 from experiments.v3.phase_c_semantic_equivalence_v3c002.runtime import validate_runtime_manifest

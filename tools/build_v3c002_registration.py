@@ -43,14 +43,16 @@ from experiments.v3.phase_c_semantic_equivalence_v3c002.wording_gate import (  #
 
 
 BASE_COMMIT = "18a2bf0200183647291cc7aeb1fe89997b3fb82f"
-ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/draft_v6"
+ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/draft_v7"
 E004_ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004"
 V1_ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002"
 V2_ROOT = V1_ROOT / "draft_v2"
 V3_ROOT = V1_ROOT / "draft_v3"
 V4_ROOT = V1_ROOT / "draft_v4"
 V5_ROOT = V1_ROOT / "draft_v5"
+V6_ROOT = V1_ROOT / "draft_v6"
 V5_ACTIVATION_ROOT = V1_ROOT / "superseded_activation_v5"
+V6_ACTIVATION_ROOT = V1_ROOT / "superseded_activation_v6"
 
 DEPENDENCY_PATHS = {
     "checkpoint": ("artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_checkpoint_manifest.json",),
@@ -288,11 +290,13 @@ def main() -> None:
             "tools/build_v3c002_registration.py",
             "tools/finalize_v3c002_registration.py",
             "tools/validate_v3c002.py",
+            "tools/validate_v3c002_active.py",
             "tools/validate_v3c002_v1_historical.py",
             "tools/validate_v3c002_v2_historical.py",
             "tools/validate_v3c002_v3_historical.py",
             "tools/validate_v3c002_v4_historical.py",
             "tools/validate_v3c002_v5_historical.py",
+            "tools/validate_v3c002_v6_historical.py",
             "tools/validate_v3c002_results.py",
             "tools/validate_v3e_publication_bundle.py",
             "tests/test_v3c002_semantic_equivalence.py",
@@ -376,7 +380,7 @@ def main() -> None:
     _write_new(output_root / "registration.json", registration)
     if V1_ROOT != output_root:
         superseded_bindings = {}
-        for revision, prior_root in (("v1", V1_ROOT), ("v2", V2_ROOT), ("v3", V3_ROOT), ("v4", V4_ROOT), ("v5", V5_ROOT)):
+        for revision, prior_root in (("v1", V1_ROOT), ("v2", V2_ROOT), ("v3", V3_ROOT), ("v4", V4_ROOT), ("v5", V5_ROOT), ("v6", V6_ROOT)):
             revision_bindings = {}
             for name in ("registration.json", "queue.jsonl", "release_gate.json"):
                 path = prior_root / name
@@ -387,13 +391,18 @@ def main() -> None:
         _write_new(
             output_root / "supersession.json",
             {
-                "schema_version": "vla-wam-shared-v3c002-preregistration-supersession-v5",
-                "status": "prospective_v6_supersedes_unexecuted_v1_v2_v3_v4_v5_drafts",
+                "schema_version": "vla-wam-shared-v3c002-preregistration-supersession-v6",
+                "status": "prospective_v7_supersedes_unexecuted_v1_v2_v3_v4_v5_v6_drafts",
                 "superseded_draft_bindings": superseded_bindings,
                 "superseded_v5_activation_bindings": {
                     name: _relative_binding(V5_ACTIVATION_ROOT / name)
                     for name in ("registration.json", "queue.jsonl", "release_gate.json", "wording_gate.json", "infrastructure_attempts.jsonl")
                     if (V5_ACTIVATION_ROOT / name).is_file()
+                },
+                "superseded_v6_activation_bindings": {
+                    name: _relative_binding(V6_ACTIVATION_ROOT / name)
+                    for name in ("registration.json", "queue.jsonl", "release_gate.json", "wording_gate.json", "attestation_receipt_order.json", "infrastructure_attempts.jsonl")
+                    if (V6_ACTIVATION_ROOT / name).is_file()
                 },
                 "superseding_registration": _relative_binding(output_root / "registration.json"),
                 "reason": "Independent pre-run audits required exact E004 scorer normalization/evaluation and checkout-portable committed evidence paths after V2 was already hash-bound.",
@@ -407,8 +416,11 @@ def main() -> None:
                 "v4_behavioral_episodes": 0,
                 "v5_model_requests": 0,
                 "v5_behavioral_episodes": 0,
+                "v6_model_requests": 0,
+                "v6_behavioral_episodes": 0,
                 "v5_activation_was_never_behaviorally_released": True,
-                "v1_v2_v3_v4_v5_must_never_be_activated": True,
+                "v6_activation_was_never_behaviorally_released": True,
+                "v1_v2_v3_v4_v5_v6_must_never_be_activated": True,
             },
         )
     release_gate = {

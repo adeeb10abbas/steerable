@@ -24,6 +24,8 @@ from tools.validate_v3c002_v2_historical import validate as validate_v2_historic
 from tools.validate_v3c002_v3_historical import validate as validate_v3_historical
 from tools.validate_v3c002_v4_historical import validate as validate_v4_historical
 from tools.validate_v3c002_v5_historical import validate as validate_v5_historical
+from tools.validate_v3c002_v6_historical import validate as validate_v6_historical
+from tools.validate_v3c002_active import validate as validate_active
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -91,6 +93,11 @@ class V3C002SemanticEquivalenceTests(unittest.TestCase):
             self.assertEqual(receipt["receipt_source"], "Codex task response")
             self.assertIn("no time-of-day", receipt["timestamp_limitation"])
             self.assertEqual(json.loads(attestations[0].read_text())["attested_at_utc"], "2026-08-12")
+            self.assertEqual(validate_active(active)["status"], "valid_registered_pending_preflight_release")
+            (active / "results").mkdir()
+            _write_json(active / "results/results.json", {"partial": True})
+            with self.assertRaisesRegex(ContractError, "partial C002 final result bundle"):
+                validate_active(active)
 
     def test_primary_analysis_uses_registered_physical_goal_and_requires_both_directions(self) -> None:
         pairs, result = compile_results(_episodes(), registration_sha256="d" * 64, queue_sha256="e" * 64)
@@ -146,6 +153,11 @@ class V3C002SemanticEquivalenceTests(unittest.TestCase):
     def test_historical_v5_draft_remains_independently_verifiable_and_unexecuted(self) -> None:
         result = validate_v5_historical()
         self.assertEqual(result["status"], "valid_immutable_unexecuted_superseded_v5_draft")
+        self.assertEqual(result["queue_rows"], 1364)
+
+    def test_historical_v6_draft_remains_independently_verifiable_and_unexecuted(self) -> None:
+        result = validate_v6_historical()
+        self.assertEqual(result["status"], "valid_immutable_unexecuted_superseded_v6_draft")
         self.assertEqual(result["queue_rows"], 1364)
 
     def test_release_gate_requires_and_hash_checks_all_pre_request_evidence(self) -> None:

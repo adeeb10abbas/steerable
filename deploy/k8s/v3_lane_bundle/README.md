@@ -85,10 +85,13 @@ and launch/config hash.  The simulator is pinned to one logical `cuda:0` on an
 
 Kubernetes does not sequence Jobs through a readiness probe.  The policy
 Service selects only the current lane/attempt/config identity, and the simulator
-preflight waits for that Service.  For the frozen π0.5 server, a TCP listener is
-valid readiness evidence because the hash-bound server verifies and loads its
-checkpoint before binding.  The policy preflight separately binds the exact
-checkpoint and launch config.  Servers with an audited metadata endpoint may
+preflight waits for that Service. For the frozen π0.5 server, both the policy
+probe and simulator send a valid HTTP/1.1 `GET /healthz` and require status 200
+with body `OK`; raw TCP connects are forbidden because they create invalid
+WebSocket-handshake noise. The hash-bound server exposes health only after its
+checkpoint is loaded. The imported OpenPI health-server source itself is an
+exact file binding, while the policy preflight separately binds the checkpoint
+and launch config. Servers with an audited metadata endpoint may
 instead use `metadata_jsonl` readiness.
 
 Inspect live state without entering the containers:
@@ -146,9 +149,11 @@ attempt ID and preserve the failed attempt.
 `restartPolicy: Never`, `backoffLimit: 0`, and the absence of a TTL preserve
 failed Jobs and their logs.  The finite simulator Job exits naturally.  A
 policy-server Job is long-lived, so after the simulator has completed and its
-raw/evidence files have been verified, terminate the policy Job deliberately;
-its `preStop` hook writes a PVC marker and the termination grace period allows
-the process to close cleanly.
+raw/evidence files have been verified, terminate the policy Job deliberately.
+Its `preStop` hook writes and fsyncs a PVC marker, sends SIGINT to policy PID 1,
+then polls PID 1 boundedly (120 seconds by default, within the 300-second grace)
+so the asyncio server can close before Kubernetes sends SIGTERM. The simulator
+hook writes its marker but does not signal PID 1.
 
 Before removing any cluster object, retain Kubernetes-side evidence outside the
 objects themselves:

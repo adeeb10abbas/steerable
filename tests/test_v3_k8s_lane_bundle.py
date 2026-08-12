@@ -113,6 +113,12 @@ def _job(role: str) -> str:
                       value: /usr/bin/ffmpeg
                     - name: PYTHON_BIN
                       value: /usr/bin/python3
+                    - name: PYTHONNOUSERSITE
+                      value: "1"
+                    - name: PYTHONUNBUFFERED
+                      value: "1"
+                    - name: PRESTOP_WAIT_SECONDS
+                      value: "120"
                     - name: NVIDIA_DRIVER_CAPABILITIES
                       value: compute,graphics,utility
                     - name: DISPLAY
@@ -163,6 +169,8 @@ def _job(role: str) -> str:
                   - /usr/bin/python3
                   - /opt/v3-lane/scripts/check_policy_ready.py
                   - --checkpoint-loaded
+                  - --mode
+                  - http_healthz
               periodSeconds: 2
             """
         ).lstrip().rstrip(),
@@ -185,8 +193,8 @@ def _write_valid_bundle(root: Path) -> None:
               name: v3-lane-launch
             immutable: true
             data:
-              policy.launch.json: '{{"role":"policy","experiment_argv":["/data/bin/policy-server","--checkpoint","/data/checkpoint"],"checkpoint_path":"/data/checkpoint","expected_gpu_name":"NVIDIA A100-SXM4-80GB","expected_driver_version":"580.95.05","readiness_contract":"tcp_bind_after_checkpoint_load","file_bindings":[{{"path":"/opt/v3-lane/scripts/lane_entrypoint.py","bytes":1,"sha256":"{CHECKPOINT_DIGEST}"}},{{"path":"/opt/v3-lane/scripts/startup_preflight.py","bytes":1,"sha256":"{CHECKPOINT_DIGEST}"}},{{"path":"/opt/v3-lane/scripts/check_policy_ready.py","bytes":1,"sha256":"{CHECKPOINT_DIGEST}"}},{{"path":"/data/checkpoint","bytes":1,"sha256":"{CHECKPOINT_DIGEST}"}}]}}'
-              simulator.launch.json: '{{"role":"simulator","experiment_argv":["/data/bin/simulator-runner","--queue","/data/queue.jsonl"],"checkpoint_path":"/data/checkpoint","expected_gpu_name":"NVIDIA A40","expected_driver_version":"580.95.05","vulkan_contract":"isaac_app_launcher_rtx_frame_under_bound_vk_icd","render_probe_argv":["/data/bin/render-probe","{{rendered_frame}}"],"policy_wait":{{"mode":"tcp","service_identity":{{"vla-wam/lane-id":"lane00","vla-wam/attempt-id":"attempt01","vla-wam/config-sha256":"{CONFIG_DIGEST}","v3-lane-role":"policy","service_name":"v3-lane-policy-lane00-attempt01"}}}},"file_bindings":[{{"path":"/opt/v3-lane/scripts/lane_entrypoint.py","bytes":1,"sha256":"{CHECKPOINT_DIGEST}"}},{{"path":"/opt/v3-lane/scripts/startup_preflight.py","bytes":1,"sha256":"{CHECKPOINT_DIGEST}"}},{{"path":"/opt/v3-lane/scripts/isaac_render_probe.py","bytes":1,"sha256":"{CHECKPOINT_DIGEST}"}},{{"path":"/data/checkpoint","bytes":1,"sha256":"{CHECKPOINT_DIGEST}"}}]}}'
+              policy.launch.json: '{{"role":"policy","experiment_argv":["/data/bin/policy-server","--openpi-root","/data/openpi","--checkpoint","/data/checkpoint"],"checkpoint_path":"/data/checkpoint","expected_gpu_name":"NVIDIA A100-SXM4-80GB","expected_driver_version":"580.95.05","readiness_contract":"http_healthz_after_checkpoint_load","file_bindings":[{{"path":"/opt/v3-lane/scripts/lane_entrypoint.py","bytes":1,"sha256":"{CHECKPOINT_DIGEST}"}},{{"path":"/opt/v3-lane/scripts/startup_preflight.py","bytes":1,"sha256":"{CHECKPOINT_DIGEST}"}},{{"path":"/opt/v3-lane/scripts/check_policy_ready.py","bytes":1,"sha256":"{CHECKPOINT_DIGEST}"}},{{"path":"/data/openpi/src/openpi/serving/websocket_policy_server.py","bytes":3051,"sha256":"1370d345e6c3c5b8f15573050e485e60a5b423d1df33e24b237805e6b442b026"}},{{"path":"/data/checkpoint","bytes":1,"sha256":"{CHECKPOINT_DIGEST}"}}]}}'
+              simulator.launch.json: '{{"role":"simulator","experiment_argv":["/data/bin/simulator-runner","--queue","/data/queue.jsonl"],"checkpoint_path":"/data/checkpoint","expected_gpu_name":"NVIDIA A40","expected_driver_version":"580.95.05","vulkan_contract":"isaac_app_launcher_rtx_frame_under_bound_vk_icd","render_probe_argv":["/data/bin/render-probe","{{rendered_frame}}"],"policy_wait":{{"mode":"http_healthz","service_identity":{{"vla-wam/lane-id":"lane00","vla-wam/attempt-id":"attempt01","vla-wam/config-sha256":"{CONFIG_DIGEST}","v3-lane-role":"policy","service_name":"v3-lane-policy-lane00-attempt01"}}}},"file_bindings":[{{"path":"/opt/v3-lane/scripts/lane_entrypoint.py","bytes":1,"sha256":"{CHECKPOINT_DIGEST}"}},{{"path":"/opt/v3-lane/scripts/startup_preflight.py","bytes":1,"sha256":"{CHECKPOINT_DIGEST}"}},{{"path":"/opt/v3-lane/scripts/isaac_render_probe.py","bytes":1,"sha256":"{CHECKPOINT_DIGEST}"}},{{"path":"/data/checkpoint","bytes":1,"sha256":"{CHECKPOINT_DIGEST}"}}]}}'
               policy.argv.json: '["policy-server", "--checkpoint", "/data/checkpoint"]'
               simulator.argv.json: '["simulator-runner", "--queue", "/data/queue.jsonl"]'
               checkpoint.sha256: "{CHECKPOINT_DIGEST}"
@@ -238,6 +246,8 @@ def _write_valid_bundle(root: Path) -> None:
         textwrap.dedent(
             '''
             import os
+            import signal
+            import time
 
             # Concrete proof names retained in runtime-preflight.json:
             # torch.cuda kernel on cuda:0; vulkaninfo; rendered_frame.png;
@@ -264,6 +274,16 @@ def _write_valid_bundle(root: Path) -> None:
             from startup_preflight import run_preflight
 
             IMAGE_DIGEST_EXPECTED = os.environ.get("IMAGE_DIGEST_EXPECTED")
+
+            def pre_stop():
+                wait = float(os.environ.get("PRESTOP_WAIT_SECONDS", "120"))
+                os.kill(1, signal.SIGINT)
+                deadline = time.monotonic() + wait
+                while time.monotonic() < deadline:
+                    try:
+                        os.kill(1, 0)
+                    except ProcessLookupError:
+                        return
 
             def main():
                 run_preflight()
@@ -315,6 +335,12 @@ def test_valid_lane_bundle_passes(bundle: Path) -> None:
             "/opt/v3-lane/scripts/check_policy_ready.py",
             "/opt/v3-lane/scripts/missing_ready.py",
             "omit required runtime inputs",
+        ),
+        (
+            "configmap.yaml",
+            "/data/openpi/src/openpi/serving/websocket_policy_server.py",
+            "/data/openpi/src/openpi/serving/unbound_server.py",
+            "omit HTTP health server semantics",
         ),
     ],
 )

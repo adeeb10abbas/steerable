@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import hashlib
 import json
 from pathlib import Path
 
@@ -45,7 +46,7 @@ def test_renderer_is_deterministic_and_refuses_overwrite(tmp_path: Path) -> None
     configmap = (first / "configmap.yaml").read_text(encoding="utf-8")
     assert "immutable: true" in configmap
     assert '"file_bindings"' in configmap
-    assert '"tcp_bind_after_checkpoint_load"' in configmap
+    assert '"http_healthz_after_checkpoint_load"' in configmap
     assert '"infrastructure_qualification_only_no_scientific_behavior"' in configmap
     assert "--checkpoint-loaded" in (first / "policy-job.yaml").read_text(encoding="utf-8")
     with pytest.raises(RENDERER.RenderError, match="refusing to overwrite"):
@@ -79,6 +80,26 @@ def test_renderer_rejects_missing_required_runtime_binding(tmp_path: Path) -> No
     spec_path.write_text(json.dumps(spec) + "\n", encoding="utf-8")
     with pytest.raises(RENDERER.RenderError, match="omit required runtime inputs"):
         RENDERER.render(spec_path, tmp_path / "bad")
+
+
+def test_http_health_contract_requires_bound_server_semantics(tmp_path: Path) -> None:
+    spec_path = _replace_sources(ROOT / "deploy/k8s/v3_lane_bundle/spec.example.json", tmp_path)
+    spec = json.loads(spec_path.read_text(encoding="utf-8"))
+    spec["policy"]["file_bindings"] = [
+        row
+        for row in spec["policy"]["file_bindings"]
+        if not row["path"].endswith("/src/openpi/serving/websocket_policy_server.py")
+    ]
+    spec_path.write_text(json.dumps(spec) + "\n", encoding="utf-8")
+    with pytest.raises(RENDERER.RenderError, match="omit HTTP health server semantics"):
+        RENDERER.render(spec_path, tmp_path / "bad")
+
+
+def test_vendored_openpi_health_server_is_exact_c23745b_source() -> None:
+    source = ROOT / "deploy/k8s/v3_lane_bundle/frozen_sources/openpi_websocket_policy_server.c23745b.py"
+    payload = source.read_bytes()
+    assert len(payload) == 3051
+    assert hashlib.sha256(payload).hexdigest() == "1370d345e6c3c5b8f15573050e485e60a5b423d1df33e24b237805e6b442b026"
 
 
 def test_render_probe_preserves_failure_across_isaac_shutdown() -> None:

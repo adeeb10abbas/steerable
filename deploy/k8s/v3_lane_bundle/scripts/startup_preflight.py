@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import fcntl
 import hashlib
+import http.client
 import json
 import os
 from pathlib import Path
@@ -258,6 +259,9 @@ def verify_runtime_directories() -> dict[str, Any]:
     for key in ("DISPLAY", "LD_PRELOAD"):
         if os.environ.get(key) not in (None, ""):
             raise PreflightError(f"headless runtime requires empty {key}")
+    for key in ("PYTHONNOUSERSITE", "PYTHONUNBUFFERED"):
+        if os.environ.get(key) != "1":
+            raise PreflightError(f"isolated runtime requires {key}=1")
     rows: dict[str, Any] = {}
     for key in RUNTIME_DIRECTORY_KEYS:
         raw = os.environ.get(key)
@@ -374,7 +378,7 @@ def verify_imports(config: Mapping[str, Any], *, require_curobo: bool = True) ->
 
 def verify_policy_readiness_contract(config: Mapping[str, Any]) -> dict[str, Any]:
     contract = _require_string(config, "readiness_contract")
-    allowed = {"tcp_bind_after_checkpoint_load", "metadata_jsonl_after_checkpoint_load"}
+    allowed = {"http_healthz_after_checkpoint_load", "metadata_jsonl_after_checkpoint_load"}
     if contract not in allowed:
         raise PreflightError(f"unsupported policy readiness contract: {contract!r}")
     return {"contract": contract, "checkpoint_loaded_before_ready": True}
@@ -509,6 +513,27 @@ def query_gpu_identity(config: Mapping[str, Any]) -> dict[str, Any]:
     return {"gpu_uuid": parts[0], "gpu_name": parts[1], "driver_version": parts[2]}
 
 
+def probe_http_healthz(host: str, port: int, timeout_seconds: float) -> dict[str, Any]:
+    connection = http.client.HTTPConnection(host, port, timeout=timeout_seconds)
+    try:
+        connection.request(
+            "GET",
+            "/healthz",
+            headers={"Accept": "text/plain", "Connection": "close"},
+        )
+        response = connection.getresponse()
+        payload = response.read(4097)
+    except (OSError, http.client.HTTPException) as exc:
+        raise PreflightError(f"HTTP /healthz request failed: {type(exc).__name__}: {exc}") from exc
+    finally:
+        connection.close()
+    if response.status != 200:
+        raise PreflightError(f"HTTP /healthz returned status {response.status}, expected 200")
+    if len(payload) > 4096 or payload.strip() != b"OK":
+        raise PreflightError(f"HTTP /healthz returned invalid body: {payload[:256]!r}")
+    return {"method": "GET", "path": "/healthz", "status": 200, "body": "OK"}
+
+
 def wait_for_policy(config: Mapping[str, Any]) -> dict[str, Any] | None:
     wait = config.get("policy_wait")
     if wait is None:
@@ -517,9 +542,9 @@ def wait_for_policy(config: Mapping[str, Any]) -> dict[str, Any] | None:
         raise PreflightError("policy_wait must be an object")
     host = _require_string(wait, "host")
     port = int(wait.get("port", 0))
-    mode = wait.get("mode", "tcp")
-    if mode not in {"tcp", "metadata_jsonl"}:
-        raise PreflightError("policy_wait.mode must be tcp or metadata_jsonl")
+    mode = wait.get("mode", "http_healthz")
+    if mode not in {"http_healthz", "metadata_jsonl"}:
+        raise PreflightError("policy_wait.mode must be http_healthz or metadata_jsonl")
     service_identity = wait.get("service_identity")
     if not isinstance(service_identity, dict) or not service_identity:
         raise PreflightError("policy_wait.service_identity must bind the unique Service selector")
@@ -533,15 +558,16 @@ def wait_for_policy(config: Mapping[str, Any]) -> dict[str, Any] | None:
     last_error = "not attempted"
     while time.monotonic() < deadline:
         try:
+            if mode == "http_healthz":
+                health = probe_http_healthz(host, port, 5.0)
+                return {
+                    "mode": mode,
+                    "host": host,
+                    "port": port,
+                    "health": health,
+                    "service_identity": service_identity,
+                }
             with socket.create_connection((host, port), timeout=5.0) as connection:
-                if mode == "tcp":
-                    return {
-                        "mode": mode,
-                        "host": host,
-                        "port": port,
-                        "tcp_connected": True,
-                        "service_identity": service_identity,
-                    }
                 connection.sendall(json.dumps(request, sort_keys=True).encode("utf-8") + b"\n")
                 connection.settimeout(5.0)
                 payload = b""
@@ -565,7 +591,7 @@ def wait_for_policy(config: Mapping[str, Any]) -> dict[str, Any] | None:
                 "matched": True,
                 "service_identity": service_identity,
             }
-        except (OSError, ValueError, json.JSONDecodeError) as exc:
+        except (OSError, ValueError, json.JSONDecodeError, PreflightError) as exc:
             last_error = f"{type(exc).__name__}: {exc}"
             time.sleep(float(wait.get("poll_seconds", 2)))
     raise PreflightError(f"policy readiness/metadata handshake timed out: {last_error}")

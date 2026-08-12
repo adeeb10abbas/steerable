@@ -219,12 +219,17 @@ def _validate_launch_json(data: dict[str, str]) -> dict[str, dict[str, Any]]:
                 isinstance(binding.get("bytes"), int) and binding["bytes"] >= 0,
                 f"{role} file binding lacks an exact byte count",
             )
-    _require(
-        documents["policy"].get("readiness_contract") == "tcp_bind_after_checkpoint_load",
-        "policy launch JSON must bind tcp_bind_after_checkpoint_load",
-    )
+    readiness_contract = documents["policy"].get("readiness_contract")
+    allowed_readiness = {
+        "http_healthz_after_checkpoint_load": "http_healthz",
+        "metadata_jsonl_after_checkpoint_load": "metadata_jsonl",
+    }
+    _require(readiness_contract in allowed_readiness, "policy launch JSON has an unsupported readiness contract")
     policy_wait = _mapping(documents["simulator"].get("policy_wait"), "simulator policy_wait")
-    _require(policy_wait.get("mode") in {"tcp", "metadata_jsonl"}, "simulator policy_wait mode is invalid")
+    _require(
+        policy_wait.get("mode") == allowed_readiness[readiness_contract],
+        "simulator policy_wait mode differs from the policy readiness contract",
+    )
     service_identity = _mapping(policy_wait.get("service_identity"), "simulator policy_wait.service_identity")
     _require(service_identity, "simulator policy_wait must bind unique Service identity")
     identity_keys = "\n".join(service_identity).lower()
@@ -397,6 +402,13 @@ def _validate_job(
         )
     for name in ("DISPLAY", "LD_PRELOAD"):
         _require(name in env and env[name].get("value") == "", f"{role} must explicitly clear {name}")
+    for name in ("PYTHONNOUSERSITE", "PYTHONUNBUFFERED"):
+        _require(name in env and env[name].get("value") == "1", f"{role} must set {name}=1")
+    prestop_wait = env.get("PRESTOP_WAIT_SECONDS", {}).get("value")
+    _require(
+        isinstance(prestop_wait, str) and prestop_wait.isdigit() and 1 <= int(prestop_wait) <= 240,
+        f"{role} must bind PRESTOP_WAIT_SECONDS in [1, 240]",
+    )
     capabilities = env.get("NVIDIA_DRIVER_CAPABILITIES", {}).get("value", "")
     _require(
         all(token in capabilities.split(",") for token in ("compute", "graphics", "utility")),
@@ -416,6 +428,8 @@ def _validate_job(
             "checkpoint" in readiness_text or "loaded" in readiness_text or "policy-ready" in readiness_text,
             "policy readiness probe does not prove checkpoint load",
         )
+        _require("http_healthz" in readiness_text, "policy readiness probe must perform HTTP /healthz")
+        _require(" tcp" not in f" {readiness_text}", "policy readiness probe must not use raw TCP")
 
     # These are source-wide by design: scripts are mounted into both Jobs from
     # one immutable bundle, so either role must be covered by the same audit.
@@ -526,6 +540,14 @@ def _validate_scripts(root: Path, source: str) -> dict[str, Any]:
         "simulator startup does not wait for policy readiness and metadata",
     )
     _require("image_digest_expected" in lowered, "entrypoint does not require IMAGE_DIGEST_EXPECTED")
+    for token in (
+        "PRESTOP_WAIT_SECONDS",
+        "os.kill(1, signal.SIGINT)",
+        "os.kill(1, 0)",
+        "ProcessLookupError",
+        "time.monotonic()",
+    ):
+        _require(token in source, f"policy preStop lacks bounded PID-1 shutdown logic: {token}")
     _require(
         "def acquire_attempt_lock" in lowered and "os.o_excl" in lowered,
         "attempt lock is not created exclusively",
@@ -594,6 +616,17 @@ def _validate_bound_runtime_inputs(
         )
         missing = sorted(required - binding_paths)
         _require(not missing, f"{role} file_bindings omit required runtime inputs: {missing}")
+        if role == "policy" and document.get("readiness_contract") == "http_healthz_after_checkpoint_load":
+            argv = _list(document.get("experiment_argv"), "policy experiment_argv")
+            root_flags = [index for index, item in enumerate(argv[:-1]) if item == "--openpi-root"]
+            _require(len(root_flags) == 1, "HTTP health readiness requires one exact --openpi-root")
+            openpi_root = argv[root_flags[0] + 1]
+            _require(_is_absolute_path(openpi_root), "policy --openpi-root must be exact and absolute")
+            health_server = str(Path(openpi_root) / "src/openpi/serving/websocket_policy_server.py")
+            _require(
+                health_server in binding_paths,
+                f"policy file_bindings omit HTTP health server semantics: {health_server}",
+            )
 
 
 def _validate_kustomization(path: Path) -> None:

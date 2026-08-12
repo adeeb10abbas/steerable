@@ -9,6 +9,7 @@ from pathlib import Path
 import re
 import signal
 import sys
+import time
 import traceback
 from typing import Any
 
@@ -128,9 +129,16 @@ def required_environment() -> dict[str, str]:
 
 
 def pre_stop() -> int:
+    env = required_environment()
+    wait_seconds_raw = os.environ.get("PRESTOP_WAIT_SECONDS", "120")
+    try:
+        wait_seconds = float(wait_seconds_raw)
+    except ValueError as exc:
+        raise PreflightError("PRESTOP_WAIT_SECONDS must be numeric") from exc
+    if not 0 < wait_seconds <= 240:
+        raise PreflightError("PRESTOP_WAIT_SECONDS must be in (0, 240]")
     marker = os.environ.get("PRESTOP_MARKER")
     if not marker:
-        env = required_environment()
         marker = str(
             Path(env["OUTPUT_PARENT"])
             / ".lane-runtime"
@@ -142,18 +150,42 @@ def pre_stop() -> int:
         )
     path = Path(marker)
     path.parent.mkdir(parents=True, exist_ok=True)
+    policy_signal = env["LANE_ROLE"] == "policy"
     payload = json.dumps(
-        {"schema_version": "vla-wam-v3-k8s-lane-prestop-v1", "received_at_utc": utc_now(), "pid": os.getpid()},
+        {
+            "schema_version": "vla-wam-v3-k8s-lane-prestop-v1",
+            "received_at_utc": utc_now(),
+            "hook_pid": os.getpid(),
+            "lane_role": env["LANE_ROLE"],
+            "signal_after_fsync": "SIGINT" if policy_signal else None,
+            "signal_target_pid": 1 if policy_signal else None,
+            "post_signal_wait_seconds": wait_seconds if policy_signal else None,
+        },
         sort_keys=True,
     ) + "\n"
     try:
         fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o640)
     except FileExistsError:
-        return 0
-    with os.fdopen(fd, "w", encoding="utf-8") as handle:
-        handle.write(payload)
-        handle.flush()
-        os.fsync(handle.fileno())
+        pass
+    else:
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            handle.write(payload)
+            handle.flush()
+            os.fsync(handle.fileno())
+    if policy_signal:
+        if os.getpid() == 1:
+            raise PreflightError("policy preStop hook must execute separately from PID 1")
+        # The marker is durable before the signal. The frozen asyncio WebSocket
+        # server handles SIGINT cleanly, whereas SIGTERM left JAX alive until
+        # Kubernetes exhausted the grace period and issued SIGKILL.
+        os.kill(1, signal.SIGINT)
+        deadline = time.monotonic() + wait_seconds
+        while time.monotonic() < deadline:
+            try:
+                os.kill(1, 0)
+            except ProcessLookupError:
+                return 0
+            time.sleep(0.25)
     return 0
 
 

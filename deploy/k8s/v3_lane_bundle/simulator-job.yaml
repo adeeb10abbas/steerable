@@ -1,12 +1,12 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: "v3-lane00-attempt01-02ba520f60-sim"
+  name: "v3-lane00-attempt01-3378afe177-sim"
   namespace: "211247-prod"
   labels:
     v3-lane-id: "lane00"
     v3-attempt-id: "attempt01"
-    v3-config-sha: "02ba520f60d3541d857f7cec358bdba8"
+    v3-config-sha: "3378afe177431ea3af449f78f48c8cdf"
     v3-lane-role: "simulator"
 spec:
   completions: 1
@@ -17,7 +17,7 @@ spec:
       labels:
         v3-lane-id: "lane00"
         v3-attempt-id: "attempt01"
-        v3-config-sha: "02ba520f60d3541d857f7cec358bdba8"
+        v3-config-sha: "3378afe177431ea3af449f78f48c8cdf"
         v3-lane-role: "simulator"
       annotations:
         v3-image-digest: "sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c"
@@ -82,7 +82,7 @@ spec:
             - name: IMAGE_DIGEST_EXPECTED
               valueFrom:
                 configMapKeyRef:
-                  name: "v3-lane00-attempt01-02ba520f60-launch"
+                  name: "v3-lane00-attempt01-3378afe177-launch"
                   key: "image.digest"
             - name: LANE_ROLE
               value: "simulator"
@@ -95,7 +95,7 @@ spec:
             - name: LANE_LAUNCH_CONFIG
               value: "/opt/v3-lane/config/simulator-launch.json"
             - name: LANE_LAUNCH_CONFIG_SHA256
-              value: "eb2fa85c270d086af474bb548ca4c7b62ddf82fc6ddbe1f2cc293f3476e15ddf"
+              value: "5ad399b635535b565d2a6c5479bf19b20bec05e5a2935aafbcef7a9f32e59d7f"
             - name: HOME
               value: "/lane-runtime/home"
             - name: XDG_CACHE_HOME
@@ -120,6 +120,12 @@ spec:
               value: "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python"
             - name: FFMPEG_BIN
               value: "/data/users/ali/vla_wam/envs/lingbot-va-b200/bin/ffmpeg"
+            - name: PYTHONNOUSERSITE
+              value: "1"
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: PRESTOP_WAIT_SECONDS
+              value: "120"
             - name: NVIDIA_DRIVER_CAPABILITIES
               value: "compute,graphics,utility"
             - name: DISPLAY
@@ -157,4 +163,4 @@ spec:
             sizeLimit: 96Gi
         - name: launch-config
           configMap:
-            name: "v3-lane00-attempt01-02ba520f60-launch"
+            name: "v3-lane00-attempt01-3378afe177-launch"

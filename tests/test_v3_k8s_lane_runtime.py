@@ -4,6 +4,7 @@ import importlib.util
 import json
 import os
 from pathlib import Path
+import signal
 import socket
 import stat
 import subprocess
@@ -19,6 +20,11 @@ SPEC = importlib.util.spec_from_file_location("startup_preflight", SCRIPTS / "st
 assert SPEC is not None and SPEC.loader is not None
 PREFLIGHT = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(PREFLIGHT)
+sys.modules.setdefault("startup_preflight", PREFLIGHT)
+ENTRY_SPEC = importlib.util.spec_from_file_location("lane_entrypoint", SCRIPTS / "lane_entrypoint.py")
+assert ENTRY_SPEC is not None and ENTRY_SPEC.loader is not None
+ENTRYPOINT = importlib.util.module_from_spec(ENTRY_SPEC)
+ENTRY_SPEC.loader.exec_module(ENTRYPOINT)
 
 
 def _executable(path: Path, source: str) -> Path:
@@ -117,7 +123,7 @@ def test_preflight_checks_are_role_specific(tmp_path: Path, monkeypatch: pytest.
     monkeypatch.setattr(
         PREFLIGHT,
         "wait_for_policy",
-        lambda config: calls.append(("policy_wait", True)) or {"tcp_connected": True},
+        lambda config: calls.append(("policy_wait", True)) or {"health": {"status": 200, "body": "OK"}},
     )
 
     output_parent = tmp_path / "output"
@@ -138,7 +144,7 @@ def test_preflight_checks_are_role_specific(tmp_path: Path, monkeypatch: pytest.
     policy_evidence = tmp_path / "policy-evidence"
     policy_evidence.mkdir()
     policy = PREFLIGHT.run_preflight(
-        config={"readiness_contract": "tcp_bind_after_checkpoint_load"},
+        config={"readiness_contract": "http_healthz_after_checkpoint_load"},
         evidence_dir=policy_evidence,
         role="policy",
         **common,
@@ -173,17 +179,30 @@ def test_policy_port_probe_releases_socket_and_stale_lock_fails(tmp_path: Path, 
     handle.close()
 
 
-def test_tcp_policy_wait_records_service_identity() -> None:
+def test_http_healthz_policy_wait_sends_valid_request_and_records_identity() -> None:
+    received: list[bytes] = []
     with socket.socket() as server:
         server.bind(("127.0.0.1", 0))
         server.listen(1)
         host, port = server.getsockname()
-        thread = threading.Thread(target=lambda: server.accept()[0].close(), daemon=True)
+
+        def respond() -> None:
+            connection, _ = server.accept()
+            with connection:
+                request = b""
+                while b"\r\n\r\n" not in request:
+                    request += connection.recv(4096)
+                received.append(request)
+                connection.sendall(
+                    b"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: 3\r\nConnection: close\r\n\r\nOK\n"
+                )
+
+        thread = threading.Thread(target=respond, daemon=True)
         thread.start()
         result = PREFLIGHT.wait_for_policy(
             {
                 "policy_wait": {
-                    "mode": "tcp",
+                    "mode": "http_healthz",
                     "host": host,
                     "port": port,
                     "service_identity": {"lane": "lane00", "attempt": "attempt01", "config_hash": "abc"},
@@ -193,8 +212,37 @@ def test_tcp_policy_wait_records_service_identity() -> None:
             }
         )
         thread.join(timeout=1)
-    assert result is not None and result["tcp_connected"] is True
+    assert result is not None and result["health"] == {
+        "method": "GET",
+        "path": "/healthz",
+        "status": 200,
+        "body": "OK",
+    }
     assert result["service_identity"]["attempt"] == "attempt01"
+    assert received and received[0].startswith(b"GET /healthz HTTP/1.1\r\n")
+    assert b"\r\nHost: " in received[0]
+
+
+def test_http_healthz_rejects_non_ok_body() -> None:
+    with socket.socket() as server:
+        server.bind(("127.0.0.1", 0))
+        server.listen(1)
+        host, port = server.getsockname()
+
+        def respond() -> None:
+            connection, _ = server.accept()
+            with connection:
+                while b"\r\n\r\n" not in connection.recv(4096):
+                    pass
+                connection.sendall(
+                    b"HTTP/1.1 200 OK\r\nContent-Length: 3\r\nConnection: close\r\n\r\nNO!"
+                )
+
+        thread = threading.Thread(target=respond, daemon=True)
+        thread.start()
+        with pytest.raises(PREFLIGHT.PreflightError, match="invalid body"):
+            PREFLIGHT.probe_http_healthz(host, port, 2.0)
+        thread.join(timeout=1)
 
 
 def test_absolute_path_contract_and_episode_output_is_not_created(tmp_path: Path) -> None:
@@ -225,6 +273,34 @@ def test_readiness_probe_requires_explicit_checkpoint_loaded_flag() -> None:
     )
     assert explicit.returncode != 0
     assert "unrecognized arguments" not in explicit.stdout + explicit.stderr
+
+
+@pytest.mark.parametrize(("role", "expected_signal"), [("policy", True), ("simulator", False)])
+def test_prestop_fsyncs_marker_before_policy_sigint(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    role: str,
+    expected_signal: bool,
+) -> None:
+    marker = tmp_path / f"{role}-prestop.json"
+    monkeypatch.setenv("PRESTOP_MARKER", str(marker))
+    monkeypatch.setattr(ENTRYPOINT, "required_environment", lambda: {"LANE_ROLE": role})
+    signals: list[tuple[int, int]] = []
+
+    def record_signal(pid: int, sent: int) -> None:
+        assert marker.is_file()
+        payload = json.loads(marker.read_text(encoding="utf-8"))
+        assert payload["signal_after_fsync"] == "SIGINT"
+        signals.append((pid, sent))
+        if sent == 0:
+            raise ProcessLookupError("PID 1 exited after SIGINT")
+
+    monkeypatch.setattr(ENTRYPOINT.os, "kill", record_signal)
+    assert ENTRYPOINT.pre_stop() == 0
+    payload = json.loads(marker.read_text(encoding="utf-8"))
+    assert payload["lane_role"] == role
+    assert payload["post_signal_wait_seconds"] == (120.0 if expected_signal else None)
+    assert signals == ([(1, signal.SIGINT), (1, 0)] if expected_signal else [])
 
 
 def test_headless_runtime_rejects_display_or_preload(monkeypatch: pytest.MonkeyPatch) -> None:

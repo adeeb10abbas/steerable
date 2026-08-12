@@ -18,7 +18,8 @@ TOKEN_RE = re.compile(r"[a-z0-9](?:[-a-z0-9]*[a-z0-9])?")
 TOP_LEVEL_KEYS = {
     "schema_version", "qualification_only", "namespace", "lane_id", "attempt_id",
     "policy_port", "expected_driver_version", "image_repository", "image_sha256",
-    "image_pull_secret", "pvc", "output_parent", "entrypoint", "runtime", "policy", "simulator",
+    "image_pull_secret", "pvc", "output_parent", "entrypoint", "prestop_wait_seconds",
+    "runtime", "policy", "simulator",
 }
 RUNTIME_KEYS = {"python_bin", "ffmpeg_bin", "vk_icd_filenames", "ld_library_path", "pythonpath"}
 ROLE_KEYS = {
@@ -173,11 +174,11 @@ def launch_document(
             "policy experiment argv port differs from policy_port",
         )
         document["policy_port"] = policy_port
-        document["readiness_contract"] = "tcp_bind_after_checkpoint_load"
+        document["readiness_contract"] = "http_healthz_after_checkpoint_load"
         document.pop("policy_wait", None)
     else:
         document["policy_wait"] = {
-            "mode": "tcp",
+            "mode": "http_healthz",
             "host": policy_service,
             "port": policy_port,
             "timeout_seconds": 900,
@@ -202,6 +203,15 @@ def launch_document(
             required_bindings.add(item)
     missing = sorted(required_bindings - binding_paths)
     require(not missing, f"{role} file_bindings omit required runtime inputs: {missing}")
+    if role == "policy" and document.get("readiness_contract") == "http_healthz_after_checkpoint_load":
+        openpi_flags = [index for index, item in enumerate(argv[:-1]) if item == "--openpi-root"]
+        require(len(openpi_flags) == 1, "HTTP health readiness requires one exact --openpi-root")
+        openpi_root = absolute(argv[openpi_flags[0] + 1], "policy --openpi-root")
+        health_server = str(Path(openpi_root) / "src/openpi/serving/websocket_policy_server.py")
+        require(
+            health_server in binding_paths,
+            f"policy file_bindings omit HTTP health server semantics: {health_server}",
+        )
     return document
 
 
@@ -244,6 +254,7 @@ def render_configmap(
 def common_env(
     *, role: str, lane: str, attempt: str, output_parent: str, launch_path: str,
     launch_sha: str, image_digest: str, runtime: Mapping[str, Any], configmap: str,
+    prestop_wait_seconds: int,
 ) -> list[dict[str, Any]]:
     values = {
         "LANE_ROLE": role,
@@ -264,6 +275,9 @@ def common_env(
         "PYTHONPATH": runtime["pythonpath"],
         "PYTHON_BIN": runtime["python_bin"],
         "FFMPEG_BIN": runtime["ffmpeg_bin"],
+        "PYTHONNOUSERSITE": "1",
+        "PYTHONUNBUFFERED": "1",
+        "PRESTOP_WAIT_SECONDS": str(prestop_wait_seconds),
         "NVIDIA_DRIVER_CAPABILITIES": "compute,graphics,utility",
         "DISPLAY": "",
         "LD_PRELOAD": "",
@@ -302,11 +316,13 @@ def render_job(
     lane: str, attempt: str, output_parent: str, launch_sha: str,
     runtime: Mapping[str, Any], policy_port: int, pvc: str, image_pull_secret: str,
     entrypoint: str,
+    prestop_wait_seconds: int,
 ) -> str:
     env = common_env(
         role=role, lane=lane, attempt=attempt, output_parent=output_parent,
         launch_path=f"/opt/v3-lane/config/{role}-launch.json", launch_sha=launch_sha,
         image_digest=image_digest, runtime=runtime, configmap=configmap,
+        prestop_wait_seconds=prestop_wait_seconds,
     )
     if role == "policy":
         env.append({"name": "POLICY_PORT", "value": str(policy_port)})
@@ -330,7 +346,7 @@ def render_job(
     if role == "policy":
         probe = runtime["python_bin"]
         ready = str(Path(entrypoint).with_name("check_policy_ready.py"))
-        rows += ["          readinessProbe:", "            exec:", "              command:", f"                - {yaml_scalar(probe)}", f"                - {yaml_scalar(ready)}", "                - --checkpoint-loaded", "                - --mode", "                - tcp", "                - --port", f"                - {yaml_scalar(str(policy_port))}", "            initialDelaySeconds: 5", "            periodSeconds: 5", "            timeoutSeconds: 4", "            failureThreshold: 180"]
+        rows += ["          readinessProbe:", "            exec:", "              command:", f"                - {yaml_scalar(probe)}", f"                - {yaml_scalar(ready)}", "                - --checkpoint-loaded", "                - --mode", "                - http_healthz", "                - --port", f"                - {yaml_scalar(str(policy_port))}", "            initialDelaySeconds: 5", "            periodSeconds: 5", "            timeoutSeconds: 4", "            failureThreshold: 180"]
     rows += ["      volumes:", "        - name: data", "          persistentVolumeClaim:", f"            claimName: {yaml_scalar(pvc)}", "        - name: lane-runtime", "          emptyDir: {}", "        - name: dshm", "          emptyDir:", "            medium: Memory", "            sizeLimit: 96Gi", "        - name: launch-config", "          configMap:", f"            name: {yaml_scalar(configmap)}"]
     return "\n".join(rows) + "\n"
 
@@ -352,6 +368,8 @@ def render(spec_path: Path, output_root: Path) -> dict[str, str]:
     attempt = token(spec.get("attempt_id"), "attempt_id")
     policy_port = int(spec.get("policy_port", 0))
     require(1 <= policy_port <= 65535, "invalid policy_port")
+    prestop_wait_seconds = int(spec.get("prestop_wait_seconds", 120))
+    require(1 <= prestop_wait_seconds <= 240, "prestop_wait_seconds must be in [1, 240]")
     image_digest_hex = digest(spec.get("image_sha256"), "image_sha256")
     image_repository = spec.get("image_repository")
     require(isinstance(image_repository, str) and image_repository and "@" not in image_repository, "invalid image_repository")
@@ -424,9 +442,9 @@ def render(spec_path: Path, output_root: Path) -> dict[str, str]:
     bundle_sha = sha256_bytes((policy_sha + simulator_sha + immutable_identity_sha).encode())
     files = {
         "configmap.yaml": render_configmap(name=configmap, namespace=namespace, common_labels=common_labels, policy_json=policy_json, simulator_json=simulator_json, image_digest=image_digest, spec_sha=spec_sha, renderer_sha=renderer_sha, immutable_identity_sha=immutable_identity_sha, bundle_sha=bundle_sha),
-        "policy-job.yaml": render_job(role="policy", name=policy_job, namespace=namespace, common_labels=policy_labels, configmap=configmap, image=image, image_digest=image_digest, gpu_product="NVIDIA-A100-SXM4-80GB", lane=lane, attempt=attempt, output_parent=output_parent, launch_sha=policy_sha, runtime=runtime["policy"], policy_port=policy_port, pvc=pvc, image_pull_secret=image_pull_secret, entrypoint=entrypoint),
+        "policy-job.yaml": render_job(role="policy", name=policy_job, namespace=namespace, common_labels=policy_labels, configmap=configmap, image=image, image_digest=image_digest, gpu_product="NVIDIA-A100-SXM4-80GB", lane=lane, attempt=attempt, output_parent=output_parent, launch_sha=policy_sha, runtime=runtime["policy"], policy_port=policy_port, pvc=pvc, image_pull_secret=image_pull_secret, entrypoint=entrypoint, prestop_wait_seconds=prestop_wait_seconds),
         "policy-service.yaml": render_service(name=policy_service, namespace=namespace, common_labels=policy_labels, port=policy_port),
-        "simulator-job.yaml": render_job(role="simulator", name=simulator_job, namespace=namespace, common_labels=simulator_labels, configmap=configmap, image=image, image_digest=image_digest, gpu_product="NVIDIA-A40", lane=lane, attempt=attempt, output_parent=output_parent, launch_sha=simulator_sha, runtime=runtime["simulator"], policy_port=policy_port, pvc=pvc, image_pull_secret=image_pull_secret, entrypoint=entrypoint),
+        "simulator-job.yaml": render_job(role="simulator", name=simulator_job, namespace=namespace, common_labels=simulator_labels, configmap=configmap, image=image, image_digest=image_digest, gpu_product="NVIDIA-A40", lane=lane, attempt=attempt, output_parent=output_parent, launch_sha=simulator_sha, runtime=runtime["simulator"], policy_port=policy_port, pvc=pvc, image_pull_secret=image_pull_secret, entrypoint=entrypoint, prestop_wait_seconds=prestop_wait_seconds),
         "kustomization.yaml": "apiVersion: kustomize.config.k8s.io/v1beta1\nkind: Kustomization\nresources:\n  - configmap.yaml\n  - policy-service.yaml\n  - policy-job.yaml\n  - simulator-job.yaml\n",
     }
     canonical_scripts = sorted((DEFAULT_ROOT / "scripts").glob("*.py"))

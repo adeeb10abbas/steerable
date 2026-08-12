@@ -5,6 +5,7 @@
   "lane_id": "lane00",
   "attempt_id": "attempt01",
   "policy_port": 8100,
+  "prestop_wait_seconds": 120,
   "expected_driver_version": "580.95.05",
   "image_repository": "artifactory-ci.gm.com/docker-approved/devcontainers/base",
   "image_sha256": "03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
@@ -61,6 +62,7 @@
       {"source": "scripts/lane_entrypoint.py", "path": "/data/users/ali/vla_wam/src/steerable/deploy/k8s/v3_lane_bundle/scripts/lane_entrypoint.py"},
       {"source": "scripts/startup_preflight.py", "path": "/data/users/ali/vla_wam/src/steerable/deploy/k8s/v3_lane_bundle/scripts/startup_preflight.py"},
       {"source": "scripts/check_policy_ready.py", "path": "/data/users/ali/vla_wam/src/steerable/deploy/k8s/v3_lane_bundle/scripts/check_policy_ready.py"},
+      {"source": "frozen_sources/openpi_websocket_policy_server.c23745b.py", "path": "/data/users/ali/vla_wam/external/openpi-pi05-v3-c23745b/src/openpi/serving/websocket_policy_server.py"},
       {"source": "../../../experiments/pi05_current_stack/v2a010_serve_policy.py", "path": "/data/users/ali/vla_wam/src/steerable/experiments/pi05_current_stack/v2a010_serve_policy.py"},
       {"source": "../../../artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_checkpoint_manifest.json", "path": "/data/users/ali/vla_wam/src/steerable/artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_checkpoint_manifest.json"}
     ]

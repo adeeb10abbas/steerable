@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Policy readiness: immutable local proof plus post-load TCP availability."""
+"""Policy readiness: immutable local proof plus a valid HTTP health check."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ import os
 from pathlib import Path
 import socket
 
-from startup_preflight import load_launch_config
+from startup_preflight import PreflightError, load_launch_config, probe_http_healthz
 
 
 def _runtime_report_path() -> Path:
@@ -31,7 +31,7 @@ def main() -> None:
         action="store_true",
         help="Required explicit assertion that this probe is the post-checkpoint-load readiness gate.",
     )
-    parser.add_argument("--mode", choices=("tcp", "metadata_jsonl"), default="tcp")
+    parser.add_argument("--mode", choices=("http_healthz", "metadata_jsonl"), default="http_healthz")
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int)
     parser.add_argument("--launch-config", type=Path)
@@ -46,8 +46,10 @@ def main() -> None:
     config, _ = load_launch_config(config_path, launch_sha256)
     if config.get("role") != "policy":
         raise SystemExit("readiness launch config is not for a policy lane")
-    if args.mode == "tcp" and config.get("readiness_contract") != "tcp_bind_after_checkpoint_load":
-        raise SystemExit("TCP readiness is not authorized by the immutable launch contract")
+    if args.mode == "http_healthz" and config.get("readiness_contract") != "http_healthz_after_checkpoint_load":
+        raise SystemExit("HTTP /healthz readiness is not authorized by the immutable launch contract")
+    if args.mode == "metadata_jsonl" and config.get("readiness_contract") != "metadata_jsonl_after_checkpoint_load":
+        raise SystemExit("metadata readiness is not authorized by the immutable launch contract")
     port = args.port or int(config.get("policy_port", 0))
 
     report = json.loads(_runtime_report_path().read_text(encoding="utf-8"))
@@ -58,14 +60,15 @@ def main() -> None:
     if report.get("launch_config", {}).get("sha256") != launch_sha256:
         raise SystemExit("policy preflight launch-config digest differs")
 
+    if args.mode == "http_healthz":
+        try:
+            probe_http_healthz(args.host, port, args.timeout_seconds)
+        except PreflightError as exc:
+            raise SystemExit(str(exc)) from exc
+        return
+
     request = {"type": "lane_metadata"}
     with socket.create_connection((args.host, port), timeout=args.timeout_seconds) as connection:
-        # The frozen π0.5 server constructs/binds its TCP listener only after
-        # checkpoint digest verification and policy loading.  This contract is
-        # explicitly hash-bound above; a successful connection therefore means
-        # checkpoint-loaded readiness without inventing a metadata protocol.
-        if args.mode == "tcp":
-            return
         connection.sendall(json.dumps(request, sort_keys=True).encode("utf-8") + b"\n")
         connection.settimeout(args.timeout_seconds)
         payload = b""

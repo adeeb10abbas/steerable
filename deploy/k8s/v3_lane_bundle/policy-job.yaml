@@ -1,12 +1,12 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: "v3-lane00-attempt01-02ba520f60-policy"
+  name: "v3-lane00-attempt01-3378afe177-policy"
   namespace: "211247-prod"
   labels:
     v3-lane-id: "lane00"
     v3-attempt-id: "attempt01"
-    v3-config-sha: "02ba520f60d3541d857f7cec358bdba8"
+    v3-config-sha: "3378afe177431ea3af449f78f48c8cdf"
     v3-lane-role: "policy"
 spec:
   completions: 1
@@ -17,7 +17,7 @@ spec:
       labels:
         v3-lane-id: "lane00"
         v3-attempt-id: "attempt01"
-        v3-config-sha: "02ba520f60d3541d857f7cec358bdba8"
+        v3-config-sha: "3378afe177431ea3af449f78f48c8cdf"
         v3-lane-role: "policy"
       annotations:
         v3-image-digest: "sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c"
@@ -82,7 +82,7 @@ spec:
             - name: IMAGE_DIGEST_EXPECTED
               valueFrom:
                 configMapKeyRef:
-                  name: "v3-lane00-attempt01-02ba520f60-launch"
+                  name: "v3-lane00-attempt01-3378afe177-launch"
                   key: "image.digest"
             - name: LANE_ROLE
               value: "policy"
@@ -95,7 +95,7 @@ spec:
             - name: LANE_LAUNCH_CONFIG
               value: "/opt/v3-lane/config/policy-launch.json"
             - name: LANE_LAUNCH_CONFIG_SHA256
-              value: "153944f37eba42372ad132d697bc10b44b6d746038e4cad33bc198f41ce88efb"
+              value: "8e7eb9347b17c51acad884688449a65078c3f0a5743f0d7ce9f901a3c2a656a3"
             - name: HOME
               value: "/lane-runtime/home"
             - name: XDG_CACHE_HOME
@@ -120,6 +120,12 @@ spec:
               value: "/data/users/ali/vla_wam/envs/openpi-c23745b-pi05-v3-py311/bin/python"
             - name: FFMPEG_BIN
               value: "/data/users/ali/vla_wam/envs/lingbot-va-b200/bin/ffmpeg"
+            - name: PYTHONNOUSERSITE
+              value: "1"
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: PRESTOP_WAIT_SECONDS
+              value: "120"
             - name: NVIDIA_DRIVER_CAPABILITIES
               value: "compute,graphics,utility"
             - name: DISPLAY
@@ -154,7 +160,7 @@ spec:
                 - "/data/users/ali/vla_wam/src/steerable/deploy/k8s/v3_lane_bundle/scripts/check_policy_ready.py"
                 - --checkpoint-loaded
                 - --mode
-                - tcp
+                - http_healthz
                 - --port
                 - "8100"
             initialDelaySeconds: 5
@@ -173,4 +179,4 @@ spec:
             sizeLimit: 96Gi
         - name: launch-config
           configMap:
-            name: "v3-lane00-attempt01-02ba520f60-launch"
+            name: "v3-lane00-attempt01-3378afe177-launch"

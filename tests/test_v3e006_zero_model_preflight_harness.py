@@ -14,6 +14,15 @@ HARNESS = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(HARNESS)
 
 
+def test_harness_retains_unique_writable_home() -> None:
+    source = SOURCE.read_text(encoding="utf-8")
+    assert '("home", "xdg", "warp", "matplotlib", "tmp")' in source
+    assert '"HOME": str(cache["home"])' in source
+    assert '\n            "HOME",\n' in source
+    validator = (SOURCE.parent / "validate_v3e006_infrastructure_evidence.py").read_text(encoding="utf-8")
+    assert 'launch.get("environment", {}).get("HOME") != expected_home' in validator
+
+
 def test_interpreter_binding_preserves_venv_symlink_path(tmp_path: Path) -> None:
     target = tmp_path / "python-build" / "python3.11"
     target.parent.mkdir()

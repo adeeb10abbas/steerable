@@ -100,6 +100,11 @@ def main() -> None:
             raise AssertionError("preflight harness source binding differs")
         if not isinstance(launch.get("outer_argv"), list) or len(launch["outer_argv"]) < 20:
             raise AssertionError("complete outer preflight invocation is missing")
+        expected_home = str(preflight_root / "cache" / "home")
+        if launch.get("environment", {}).get("HOME") != expected_home:
+            raise AssertionError("preflight did not retain its unique writable HOME")
+        if args.verify_raw and not Path(expected_home).is_dir():
+            raise AssertionError("preflight writable HOME is missing")
         for binding_row in launch.get("input_bindings", {}).values():
             verify_binding(binding_row, verify_raw=True)
         for binding_row in launch.get("diagnostic_inputs", []):

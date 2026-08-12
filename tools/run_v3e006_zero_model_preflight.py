@@ -105,7 +105,7 @@ def main() -> None:
     interpreter = require_interpreter(args.python)
 
     output_root.mkdir(parents=True)
-    cache = {name: output_root / "cache" / name for name in ("xdg", "warp", "matplotlib", "tmp")}
+    cache = {name: output_root / "cache" / name for name in ("home", "xdg", "warp", "matplotlib", "tmp")}
     for path in cache.values():
         path.mkdir(parents=True)
     child_output = output_root / "preflight_result.json"
@@ -155,6 +155,7 @@ def main() -> None:
             "PYTHONUNBUFFERED": "1",
             "VK_ICD_FILENAMES": "/etc/vulkan/icd.d/nvidia_icd.json",
             "LD_LIBRARY_PATH": native,
+            "HOME": str(cache["home"]),
             "XDG_CACHE_HOME": str(cache["xdg"]),
             "WARP_CACHE_PATH": str(cache["warp"]),
             "MPLCONFIGDIR": str(cache["matplotlib"]),
@@ -172,6 +173,7 @@ def main() -> None:
             "PYTHONUNBUFFERED",
             "VK_ICD_FILENAMES",
             "LD_LIBRARY_PATH",
+            "HOME",
             "XDG_CACHE_HOME",
             "WARP_CACHE_PATH",
             "MPLCONFIGDIR",

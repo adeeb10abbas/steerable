@@ -1,0 +1,51 @@
+{
+  "amendment_id": "V3-C002",
+  "blinding": {
+    "allowed_decisions": [
+      "same_physical_endpoint",
+      "different_physical_endpoint",
+      "unclear"
+    ],
+    "reader_task": "For each pair, decide whether the two sentences specify the same physical final placement of the Rubik's cube relative to the bowl.",
+    "withheld_from_readers": [
+      "canonical_or_inverse_label",
+      "registered_physical_goal",
+      "surface_direction_word",
+      "expected_answer"
+    ]
+  },
+  "pairs": [
+    {
+      "reader_pair_id": "pair_kestrel",
+      "sentence_a": "Place the Rubik's cube so that the bowl is to the left of the Rubik's cube.",
+      "sentence_a_sha256": "3c36eb09d55cf3875d3d5e49abd4571bdedddb069b328fcb62abd08fc6a515b0",
+      "sentence_a_utf8_hex": "506c6163652074686520527562696b2773206375626520736f20746861742074686520626f776c20697320746f20746865206c656674206f662074686520527562696b277320637562652e",
+      "sentence_b": "Put the Rubik's cube to the right of the bowl.",
+      "sentence_b_sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+      "sentence_b_utf8_hex": "5075742074686520527562696b2773206375626520746f20746865207269676874206f662074686520626f776c2e"
+    },
+    {
+      "reader_pair_id": "pair_orchid",
+      "sentence_a": "Put the Rubik's cube to the left of the bowl.",
+      "sentence_a_sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "sentence_a_utf8_hex": "5075742074686520527562696b2773206375626520746f20746865206c656674206f662074686520626f776c2e",
+      "sentence_b": "Place the Rubik's cube so that the bowl is to the right of the Rubik's cube.",
+      "sentence_b_sha256": "6ed00a80ed714a034daa682371ddf42c2e576e40ccc4345fa73053833b4e2d39",
+      "sentence_b_utf8_hex": "506c6163652074686520527562696b2773206375626520736f20746861742074686520626f776c20697320746f20746865207269676874206f662074686520527562696b277320637562652e"
+    }
+  ],
+  "purpose": "Independent wording-validity check only; this sheet is not a behavioral experiment.",
+  "response_contract": {
+    "independence_requirement": "Two distinct authorized readers must attest independently, with no shared response file.",
+    "reader_identity_policy": "Record a reviewer-provided pseudonymous reader ID and a separate authorization reference; do not invent either.",
+    "required_fields_per_response": [
+      "reader_id",
+      "authorization_reference",
+      "attested_at_utc",
+      "responses",
+      "signature_or_record_reference"
+    ]
+  },
+  "schema_version": "vla-wam-shared-v3c002-blinded-prompt-comprehension-sheet-v1",
+  "study_id": "vla_wam_language_steerability_v3"
+}

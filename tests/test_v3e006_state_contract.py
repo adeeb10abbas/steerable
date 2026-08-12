@@ -51,6 +51,45 @@ def test_health_semantics_are_checked_before_app_launcher() -> None:
         assert required in fn_source
 
 
+def test_single_env_prim_regex_materialization_is_narrow_and_fail_closed() -> None:
+    source_path = Path(__file__).parents[1] / "experiments/v3/phase_e/canonical_stage_localization_v3e006/state_construction_gate.py"
+    source = source_path.read_text(encoding="utf-8")
+    tree = ast.parse(source)
+    fn = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "_materialize_single_env_prim_path")
+    namespace: dict[str, object] = {}
+    exec(compile(ast.Module(body=[fn], type_ignores=[]), str(source_path), "exec"), namespace)
+    materialize = namespace["_materialize_single_env_prim_path"]
+    assert callable(materialize)
+    assert materialize("/World/envs/env_.*/scene/bowl", num_envs=1) == "/World/envs/env_0/scene/bowl"
+    assert materialize("/World/envs/env_0/scene/bowl", num_envs=1) == "/World/envs/env_0/scene/bowl"
+    with unittest.TestCase().assertRaises(RuntimeError):
+        materialize("/World/envs/env_.*/scene/bowl", num_envs=2)
+    with unittest.TestCase().assertRaises(RuntimeError):
+        materialize("/World/.*/bowl", num_envs=1)
+
+
+def test_bounds_math_tracks_frozen_e004_and_retains_raw_values() -> None:
+    repo = Path(__file__).parents[1]
+    state_source = (repo / "experiments/v3/phase_e/canonical_stage_localization_v3e006/state_construction_gate.py").read_text(encoding="utf-8")
+    frozen_source = (repo / "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/model_blind_droid_gate.py").read_text(encoding="utf-8")
+    for operation in (
+        "ComputeLocalBound(prim)",
+        "ComputeAlignedRange()",
+        "(minimum[index] + maximum[index]) * 0.5",
+        "(maximum[index] - minimum[index]) * 0.5",
+    ):
+        assert operation in frozen_source
+    for evidence_field in (
+        '"raw_prim_path"',
+        '"resolved_prim_path"',
+        '"local_minimum_m"',
+        '"local_maximum_m"',
+        '"local_center_m"',
+        '"half_extents_m"',
+    ):
+        assert evidence_field in state_source
+
+
 class StateContractTests(unittest.TestCase):
     def test_hash_ignores_evidence_but_binds_physics(self) -> None:
         state = {

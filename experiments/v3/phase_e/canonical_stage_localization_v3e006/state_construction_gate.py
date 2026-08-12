@@ -141,6 +141,7 @@ os.environ.update(
 
 simulation_app = AppLauncher(args).app
 CURRENT_STAGE = "app_launcher_started"
+LAST_REFERENCE_BOUNDS_EVIDENCE: dict[str, Any] | None = None
 
 import omni.usd  # noqa: E402
 from pxr import Usd, UsdGeom  # noqa: E402
@@ -248,6 +249,9 @@ def _base_evidence(*, candidate_gate_passed: bool = False, state_candidate_count
             "runtime_contract": _binding(args.runtime_bindings),
             "control_scene_asset": _binding(args.control_scene_asset),
             "paired_scene_asset": _binding(args.paired_scene_asset),
+            "frozen_e004_bounds_source": _binding(
+                study_root / "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/model_blind_droid_gate.py"
+            ),
         },
         "passed_health_preflight": {name: _binding(path) for name, (path, _digest) in health_files.items()},
         "runtime_log": {
@@ -265,6 +269,7 @@ def _base_evidence(*, candidate_gate_passed: bool = False, state_candidate_count
             "device": args.device,
             "python": sys.executable,
         },
+        "last_reference_bounds_evidence": LAST_REFERENCE_BOUNDS_EVIDENCE,
     }
 
 
@@ -432,18 +437,77 @@ def _physical_prim_path(asset: Any) -> str:
     return str(asset.cfg.prim_path).replace("{ENV_REGEX_NS}", "/World/envs/env_0")
 
 
+def _materialize_single_env_prim_path(raw_path: str, *, num_envs: int) -> str:
+    """Resolve RoboLab's single-environment regex without changing geometry."""
+    if num_envs != 1:
+        raise RuntimeError("bowl prim-path materialization is defined only for num_envs=1")
+    if raw_path.count("env_.*/") > 1:
+        raise RuntimeError(f"ambiguous environment regex in prim path: {raw_path}")
+    if ".*" in raw_path and "/World/envs/env_.*/" not in raw_path:
+        raise RuntimeError(f"unsupported environment regex in prim path: {raw_path}")
+    resolved = raw_path.replace("/World/envs/env_.*/", "/World/envs/env_0/")
+    if ".*" in resolved or "{" in resolved or "}" in resolved:
+        raise RuntimeError(f"unresolved/ambiguous prim path: {raw_path}")
+    return resolved
+
+
 def _reference_bounds(env: Any) -> YawOrientedBox:
+    global LAST_REFERENCE_BOUNDS_EVIDENCE
     asset = env.scene["bowl"]
-    prim = omni.usd.get_context().get_stage().GetPrimAtPath(_physical_prim_path(asset))
-    bound = UsdGeom.BBoxCache(Usd.TimeCode.Default(), [UsdGeom.Tokens.default_]).ComputeLocalBound(prim).ComputeAlignedRange()
-    minimum, maximum = bound.GetMin(), bound.GetMax()
-    local_center = np.asarray([(minimum[i] + maximum[i]) * 0.5 for i in range(3)], dtype=np.float64)
-    half = tuple(float((maximum[i] - minimum[i]) * 0.5) for i in range(3))
+    raw_path = _physical_prim_path(asset)
+    prim_path = _materialize_single_env_prim_path(raw_path, num_envs=args.num_envs)
+    stage = omni.usd.get_context().get_stage()
+    prim = stage.GetPrimAtPath(prim_path)
+    matches = [path for path in (prim_path,) if stage.GetPrimAtPath(path) and stage.GetPrimAtPath(path).IsValid()]
+    if matches != [prim_path] or not prim or not prim.IsValid():
+        LAST_REFERENCE_BOUNDS_EVIDENCE = {
+            "raw_prim_path": raw_path,
+            "resolved_prim_path": prim_path,
+            "valid_matches": matches,
+            "passed": False,
+        }
+        raise RuntimeError(f"expected exactly one valid bowl prim, found {matches}")
+    local_bound = UsdGeom.BBoxCache(Usd.TimeCode.Default(), [UsdGeom.Tokens.default_]).ComputeLocalBound(prim)
+    local_range = local_bound.ComputeAlignedRange()
+    minimum, maximum = local_range.GetMin(), local_range.GetMax()
+    minimum_values = [float(minimum[index]) for index in range(3)]
+    maximum_values = [float(maximum[index]) for index in range(3)]
+    local_center = np.asarray(
+        [(minimum_values[index] + maximum_values[index]) * 0.5 for index in range(3)], dtype=np.float64
+    )
+    half = tuple((maximum_values[index] - minimum_values[index]) * 0.5 for index in range(3))
+    LAST_REFERENCE_BOUNDS_EVIDENCE = {
+        "method": "frozen E004 _reference_bounds_world math after deterministic num_envs=1 regex materialization",
+        "frozen_e004_source": _binding(
+            study_root / "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/model_blind_droid_gate.py"
+        ),
+        "raw_prim_path": raw_path,
+        "resolved_prim_path": prim_path,
+        "valid_matches": matches,
+        "local_minimum_m": minimum_values,
+        "local_maximum_m": maximum_values,
+        "local_center_m": local_center.tolist(),
+        "half_extents_m": list(half),
+        "passed": False,
+    }
+    if not all(math.isfinite(value) for value in (*minimum_values, *maximum_values, *local_center)):
+        raise RuntimeError("bowl USD local range/center is nonfinite")
+    if not all(math.isfinite(value) and value > 0 for value in half):
+        raise RuntimeError("bowl USD local bound is invalid")
     position = np.asarray(_host(asset.data.root_pos_w[0]))
     quaternion = _host(asset.data.root_quat_w[0])
     center = position + _qrotate(quaternion, local_center)
+    if not np.all(np.isfinite(center)):
+        raise RuntimeError("bowl USD world center is nonfinite")
     w, x, y, z = _quat_normalize_wxyz(quaternion)
     yaw = math.atan2(2 * (w * z + x * y), 1 - 2 * (y * y + z * z))
+    LAST_REFERENCE_BOUNDS_EVIDENCE.update(
+        {
+            "center_world_m": center.tolist(),
+            "yaw_world_rad": yaw,
+            "passed": True,
+        }
+    )
     return YawOrientedBox(tuple(center), half, yaw)
 
 
@@ -502,6 +566,7 @@ def _save_camera_evidence(env: Any, obs: Mapping[str, Any], stage: str, root: Pa
     gate = evaluate_all_cameras(evidence, expected_cameras=CAMERAS, minimum_visible_target_pixels=32)
     return {
         "bindings": bindings,
+        "reference_bounds_evidence": LAST_REFERENCE_BOUNDS_EVIDENCE,
         "gate": gate,
         "policy_conditioning_camera_feeds": {
             "observation/exterior_image_1_left": "over_shoulder_left_camera",

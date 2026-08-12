@@ -36,6 +36,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--repo-root", type=Path, default=Path.cwd())
     parser.add_argument("--verify-raw", action="store_true")
+    parser.add_argument("--preflight-root", type=Path)
     args = parser.parse_args()
     root = args.repo_root.resolve()
     artifact = root / "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/model_blind_infrastructure_invalid.jsonl"
@@ -75,7 +76,35 @@ def main() -> None:
         )
         if completed.returncode:
             raise AssertionError(f"source-lineage SHA is not a commit: {row['sha']}")
-    print(json.dumps({"passed": True, "retained_attempts": len(rows), "verified_raw": args.verify_raw}, sort_keys=True))
+    preflight_status = None
+    if args.preflight_root is not None:
+        preflight_root = args.preflight_root.resolve()
+        launch_path = preflight_root / "preflight_launch.json"
+        result_path = preflight_root / "harness_result.json"
+        if not launch_path.is_file() or not result_path.is_file():
+            raise AssertionError("preflight launch/result evidence incomplete")
+        launch = json.loads(launch_path.read_text(encoding="utf-8"))
+        result = json.loads(result_path.read_text(encoding="utf-8"))
+        if launch.get("schema_version") != "vla-wam-shared-v3e006-zero-model-preflight-launch-v1":
+            raise AssertionError("preflight launch schema differs")
+        if result.get("schema_version") != "vla-wam-shared-v3e006-zero-model-preflight-harness-result-v1":
+            raise AssertionError("preflight result schema differs")
+        for key in ("model_request_count", "behavioral_episode_count", "state_candidate_count"):
+            if result.get(key) != 0:
+                raise AssertionError(f"preflight has nonzero {key}")
+        if result.get("behavioral_denominator_included") is not False or result.get("candidate_denominator_included") is not False:
+            raise AssertionError("preflight entered a scientific denominator")
+        verify_binding(result["launch"], verify_raw=True)
+        verify_binding(result["runtime_log"], verify_raw=True)
+        if result.get("passed") is True:
+            verify_binding(result["child_report"], verify_raw=True)
+            child = json.loads(Path(result["child_report"]["path"]).read_text(encoding="utf-8"))
+            if child.get("status") != "passed_generic_zero_model_cuda_vulkan_isaac_physics_render_health_preflight":
+                raise AssertionError("child preflight status differs")
+        elif result.get("status") != "infrastructure_invalid_zero_model_health_preflight":
+            raise AssertionError("failed preflight lacks invalid status")
+        preflight_status = result["status"]
+    print(json.dumps({"passed": True, "retained_attempts": len(rows), "verified_raw": args.verify_raw, "preflight_status": preflight_status}, sort_keys=True))
 
 
 if __name__ == "__main__":

@@ -1,0 +1,73 @@
+{
+  "behavioral_action_count": 0,
+  "behavioral_episode_count": 0,
+  "fixture": {
+    "bytes": 12306198,
+    "path": "/data/users/ali/vla_wam/raw/v3c002r001/smoke/global01-lane00-seed12000/excluded_smoke/seed12000/attempt001/request0/observation_cache.npz",
+    "sha256": "41ab5159b0a66548fee59ccdd8f19a85796e90e925dacf001f59133883504fcf"
+  },
+  "fixture_manifest": {
+    "bytes": 6490,
+    "path": "/data/users/ali/vla_wam/raw/v3c002r001/smoke/global01-lane00-seed12000/excluded_smoke/seed12000/attempt001/request0/observation_manifest.json",
+    "sha256": "3d82f1986443212112f2c50fbd1148aafe8f9f463f1dd2d28ee06442a87a9fdd"
+  },
+  "model_request_count": 0,
+  "observation_leaf_count": 11,
+  "observation_payload_sha256": "24961b86802752ea50fa64042eeed7e5a0f93c00cea16baf682337f5bef4411b",
+  "observation_structure_sha256": "6f276165c8abdf441746e2c186bd830dc3da5de94d72846bc250658b7f34d61a",
+  "packed_array_bindings": {
+    "observation/exterior_image_1_left": {
+      "bytes": 150528,
+      "dtype": "|u1",
+      "sha256": "b0b3216e635210629ee283b4ac505961b282146ce6a60c3f7af9ea03f82da043",
+      "shape": [
+        224,
+        224,
+        3
+      ]
+    },
+    "observation/gripper_position": {
+      "bytes": 4,
+      "dtype": "<f4",
+      "sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
+      "shape": [
+        1
+      ]
+    },
+    "observation/joint_position": {
+      "bytes": 28,
+      "dtype": "<f4",
+      "sha256": "6661cda587dce95d7e39db70d98bbed73498aecc82f0a1407ea41bf3fd839b85",
+      "shape": [
+        7
+      ]
+    },
+    "observation/wrist_image_left": {
+      "bytes": 150528,
+      "dtype": "|u1",
+      "sha256": "b5e57d1bb91af3872105e5576764a126ae46673c8b7e6db46b0ec0f617cfbd0e",
+      "shape": [
+        224,
+        224,
+        3
+      ]
+    }
+  },
+  "packed_request_keys": [
+    "observation/exterior_image_1_left",
+    "observation/gripper_position",
+    "observation/joint_position",
+    "observation/wrist_image_left",
+    "prompt"
+  ],
+  "passed": true,
+  "robolab_client": {
+    "bytes": 5972,
+    "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/policies/pi0_family/client.py",
+    "sha256": "2386e6230ca4e2bbf163159ff0692780f5027a6b158b510b206700d54a4a29a3"
+  },
+  "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+  "schema_version": "vla-wam-shared-v3c002r001-repeat-fixture-target-rehash-v1",
+  "status": "passed_native_tree_reconstruction_and_exact_pi05_request_pack",
+  "successful_response_count": 0
+}

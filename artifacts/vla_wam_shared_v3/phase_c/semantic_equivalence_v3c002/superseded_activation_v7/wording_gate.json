@@ -1,0 +1,49 @@
+{
+  "amendment_id": "V3-C002",
+  "draft_registration": {
+    "bytes": 27124,
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/draft_v7/registration.json",
+    "sha256": "8ef6eeeb77e8eae5af2328c489d6dd4a14d78f08834cfde72d7becf05cd55232"
+  },
+  "paired_endpoint_interpretation": "Both blinded pairs were independently judged to specify the same physical endpoint.",
+  "passed": true,
+  "queue": {
+    "bytes": 4362072,
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/active/queue.jsonl",
+    "sha256": "0f27e2936577ee5010ca303bd37aa3204d6f3ab8ada7bf4f0274230f6337d6f8"
+  },
+  "reader_attestations": [
+    {
+      "attestation": {
+        "bytes": 559,
+        "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/human_attestations/reader-aa-v3c002-attestation.json",
+        "sha256": "fa7890a11d7ee551bc5e8c993b914147f3a93cee6d6869e15b65ea92dc917ef0"
+      },
+      "reader_id": "aa",
+      "responses": {
+        "pair_kestrel": "same_physical_endpoint",
+        "pair_orchid": "same_physical_endpoint"
+      }
+    },
+    {
+      "attestation": {
+        "bytes": 531,
+        "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/human_attestations/reader-aya-v3c002-attestation.json",
+        "sha256": "8dea26871fa1af275c48e84c51d38f1d7a000df20120d12b9da5891a7a9bf714"
+      },
+      "reader_id": "aya",
+      "responses": {
+        "pair_kestrel": "same_physical_endpoint",
+        "pair_orchid": "same_physical_endpoint"
+      }
+    }
+  ],
+  "schema_version": "vla-wam-shared-v3c002-wording-gate-v1",
+  "sheet": {
+    "bytes": 2653,
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/draft_v7/prompt_comprehension_sheet.json",
+    "sha256": "e80605e240fe56844383e642811932de948095bac63c829d3656a69749b20042"
+  },
+  "status": "passed_two_authorized_independent_human_readers_agree_same_endpoint",
+  "study_id": "vla_wam_language_steerability_v3"
+}

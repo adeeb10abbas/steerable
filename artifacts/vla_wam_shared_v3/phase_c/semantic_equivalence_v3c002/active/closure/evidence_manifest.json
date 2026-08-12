@@ -1,0 +1,102 @@
+{
+  "schema_version": "vla-wam-shared-v3c002-prebehavior-isolation-closure-evidence-manifest-v1",
+  "status": "closed_before_behavior_after_failed_registered_isolation",
+  "experiment_id": "V3-C002",
+  "semantic_result": false,
+  "behavioral_execution_status": "not_executed",
+  "behavioral_episode_count": 0,
+  "excluded_model_request_count": 2,
+  "full_queue_launched": false,
+  "release_authorized": false,
+  "retry_performed": false,
+  "source_commit": "e2d9ae3904b4a08e549c784903c167a4213d3d47",
+  "closure_artifacts": {
+    "registration": {
+      "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/active/registration.json",
+      "bytes": 32480,
+      "sha256": "ef1c40d4d288b195d59b4af90fa587eeae17b130ee26a604e1ed70c60cbcaa73"
+    },
+    "queue": {
+      "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/active/queue.jsonl",
+      "bytes": 4362072,
+      "sha256": "c7003f05b1302ab52d30fd9f6c50244a8df1e143c8411c436eb2817abc312a50"
+    },
+    "release_gate": {
+      "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/active/release_gate.json",
+      "bytes": 1487,
+      "sha256": "3b7316a09a69e01027a536d3c783e17c3824b9df83455fdaaf10a1b0f498bac3"
+    },
+    "physical_gate": {
+      "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/active/gates/model_blind_physical_gate.json",
+      "bytes": 2483,
+      "sha256": "740ba50788cb2a9ef97d8534aa129e07ba3abf3c969deb0de6ec686b313a1642"
+    },
+    "excluded_smoke_gate": {
+      "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/active/gates/excluded_smoke_gate.json",
+      "bytes": 3014,
+      "sha256": "672e1e944628da92bc9ac7d007f46ea3a1728dec064ec1e40286466c1f310582"
+    },
+    "isolation_failure_report": {
+      "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/active/gates/isolation_failure_report.json",
+      "bytes": 11194,
+      "sha256": "337bd20e62d3ddb608a677b3cfb7d4e2c3c353f11bbb54b4560008096d025c4e"
+    },
+    "isolation_target_raw_rehash_receipt": {
+      "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/active/gates/isolation_target_raw_rehash_receipt.json",
+      "bytes": 1970,
+      "sha256": "ba6658afcc5d790fb21f1c440f983176f21d9a9545b359de7b526986d770137c"
+    },
+    "isolation_prelaunch_invalid_attempts": {
+      "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/active/gates/isolation_prelaunch_invalid_attempts.jsonl",
+      "bytes": 7032,
+      "sha256": "16b53ec76b58422a29a9f3207937b56406b6988e0fe269949a351f76f3709973"
+    },
+    "infrastructure_attempts": {
+      "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/active/infrastructure_attempts.jsonl",
+      "bytes": 10542,
+      "sha256": "468076ecc149a04e36961a029908c48f6b7ca67ff997bdbd5f45f0d9d7264631"
+    },
+    "closure_memo": {
+      "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/active/ISOLATION_CLOSURE_MEMO.md",
+      "bytes": 1733,
+      "sha256": "41a35192d67c7cb9618772259bdf0cad2399d4ac7007577388ccbc798d749053"
+    },
+    "manuscript_routing": {
+      "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/active/C002_MANUSCRIPT_ROUTING.md",
+      "bytes": 636,
+      "sha256": "f5516044e9de9b13a8e7df20d884543562667af5111695a8691a0f43007dd2ad"
+    },
+    "manuscript_insert": {
+      "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/active/closure/MANUSCRIPT_INSERT.md",
+      "bytes": 1196,
+      "sha256": "c29afd3da0d62cb2230910cd21b5e6fc773784d9018aa0c213bb664c45de0076"
+    },
+    "frozen_publication_bundle_validator": {
+      "path": "tools/validate_v3e_publication_bundle.py",
+      "bytes": 2273,
+      "sha256": "8e9d692634f1959edba65ea015634e4500915e1e5307d6634623d3a042a050e4"
+    },
+    "closure_validator": {
+      "path": "tools/validate_v3c002_isolation_closure.py",
+      "bytes": 11363,
+      "sha256": "3525381f862cc2683a005e963a5f660cde64b9fcfebd327ef0d2c87e54cfdb22"
+    },
+    "additive_publication_bundle_validator": {
+      "path": "tools/validate_v3c002_publication_bundle.py",
+      "bytes": 1309,
+      "sha256": "972c8bdcc5ef9672322a87bde32bf89c925502a0fc423a374b53782114513a56"
+    }
+  },
+  "raw_evidence_rehash": {
+    "receipt": "isolation_target_raw_rehash_receipt",
+    "unique_raw_bindings_rehashed": 81,
+    "raw_bytes_rehashed": 26518210,
+    "passed": true
+  },
+  "publication_routing": {
+    "main_results_insert_authorized": false,
+    "result_table_authorized": false,
+    "semantic_claim_authorized": false,
+    "allowed_scope": "methods_or_limitations_failed_pre_release_infrastructure_check_only"
+  }
+}

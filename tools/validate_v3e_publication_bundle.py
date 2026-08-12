@@ -12,12 +12,23 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def main() -> None:
     commands = [
+        [sys.executable, str(ROOT / "tools/validate_v3c002.py")],
         [sys.executable, str(ROOT / "tools/validate_vla_wam_v3_protocol.py")],
         [sys.executable, str(ROOT / "tools/validate_v3e001.py")],
         [sys.executable, str(ROOT / "tools/validate_v3e002.py")],
         [sys.executable, str(ROOT / "tools/validate_v3e003.py")],
         [sys.executable, str(ROOT / "tools/validate_v3e004.py")],
     ]
+    c002_active = ROOT / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/active"
+    if c002_active.exists():
+        commands.append([sys.executable, str(ROOT / "tools/validate_v3c002_active.py"), "--root", str(c002_active)])
+        final_paths = (
+            c002_active / "results/episodes.jsonl", c002_active / "results/pairs.jsonl",
+            c002_active / "results/results.json", c002_active / "results/DECISION_MEMO.md",
+            c002_active / "results/evidence_manifest.json", c002_active / "MANUSCRIPT_INSERT.md",
+        )
+        if any(path.exists() for path in final_paths):
+            commands.append([sys.executable, str(ROOT / "tools/validate_v3c002_results.py"), "--root", str(c002_active)])
     e005 = [sys.executable, str(ROOT / "tools/validate_v3e005.py")]
     if (
         ROOT

@@ -1,0 +1,45 @@
+{
+  "amendment_id": "V3-E006",
+  "artifact": {
+    "bytes": 707097,
+    "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/ood_reference_freeze.json",
+    "sha256": "4d3a02c1d96be1ddd98f47a15cf41ad1d2a6c54c3007f3846742cfcbf31873f4"
+  },
+  "behavioral_episode_count": 0,
+  "candidate_evaluation_count": 0,
+  "created_at_utc": "2026-08-12T14:57:27Z",
+  "environment": {
+    "cluster_namespace": "211247-prod",
+    "gpu": {
+      "driver_version": "580.95.05",
+      "name": "NVIDIA A40",
+      "uuid": "GPU-738deba4-99b9-f756-a246-6395a8a2c720"
+    },
+    "h5py": "3.16.0",
+    "node": "dcwipphhgc190.edc.nam.gm.com",
+    "numpy": "1.26.0",
+    "pod": "v3e004-a40-runner-01-ali",
+    "pod_uid": "6db84ed0-231a-463d-ad22-6e89015e179b",
+    "python": "3.11.13",
+    "scipy": "1.15.3",
+    "torch": "2.7.0+cu128"
+  },
+  "execution": {
+    "checkout": "/data/users/ali/vla_wam/src/steerable-v3e006-90737f3",
+    "invocation": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python experiments/v3/phase_e/canonical_stage_localization_v3e006/ood_reference.py --episodes artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/results/episodes.jsonl --source-root /data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid --output /data/users/ali/vla_wam/raw/v3e006/registration_inputs/ood_reference_freeze.json",
+    "method_commit": "90737f31fc31fe4837f41c8d751f4b56af62d783",
+    "method_path": "experiments/v3/phase_e/canonical_stage_localization_v3e006/ood_reference.py",
+    "method_sha256": "4df1ebf0061096a74b5eccd10b2a144e840f52fd50469b8bdae9369d1696fd04"
+  },
+  "freeze_order": "metric and threshold computed from existing successful E004 pi0.5 s=1 trajectories before any V3-E006 candidate construction, candidate evaluation, or model request",
+  "model_request_count": 0,
+  "schema_version": "vla-wam-shared-v3e006-ood-reference-manifest-v1",
+  "source_summary": {
+    "canonical_carry_reference_count": 357,
+    "canonical_carry_threshold_inclusive": 8.016370279516725,
+    "canonical_grasp_reference_count": 454,
+    "canonical_grasp_threshold_inclusive": 7.662705332771899,
+    "successful_e004_episode_count": 517
+  },
+  "status": "frozen_before_candidate_construction"
+}

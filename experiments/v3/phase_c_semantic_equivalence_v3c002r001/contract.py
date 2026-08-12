@@ -185,10 +185,22 @@ def require_released_gate(*, registration_path: Path, queue_path: Path, release_
     repeat_bindings = gate.get("single_server_repeat_gates")
     require(isinstance(repeat_bindings, list) and len(repeat_bindings) == 8, "repair release lacks eight repeat gates")
     repeats = [bound_json(record, f"repair repeat gate {index}", schema=REPEAT_GATE_SCHEMA, status="passed_single_server_interleaved_exact_repeat") for index, record in enumerate(repeat_bindings)]
+    receipt_bindings = gate.get("single_server_repeat_target_receipts")
+    require(isinstance(receipt_bindings, list) and len(receipt_bindings) == 8, "repair release lacks eight repeat target receipts")
+    receipts = [bound_json(record, f"repair repeat target receipt {index}", schema="vla-wam-shared-v3c002r001-repeat-target-raw-rehash-v1", status="passed_corrected_repeat_target_raw_rehash") for index, record in enumerate(receipt_bindings)]
     require(all(all(physical.get(key) == 0 for key in ("model_request_count", "behavioral_episode_count", "behavioral_action_count", "query_server_entry_count")) for physical in physicals), "repair physical gate contains behavior")
     require(smoke.get("completed_cells") == 4 and smoke.get("behavioral_episode_count") == 0 and smoke.get("excluded_from_behavioral_denominators") is True and smoke.get("lane_slot") == "repair-lane-00", "repair smoke changed")
     smoke_fixture = validate_file_binding(smoke.get("repeat_fixture"), "repair smoke repeat fixture")
     require(all(repeat.get("model_request_count") == 3 and repeat.get("behavioral_episode_count") == 0 and repeat.get("first_final_repeat_exact") is True and repeat.get("prompt_sensitivity_distinct") is True for repeat in repeats), "repair repeat gate changed")
+    require(all(receipt.get("model_request_count") == 3 and receipt.get("successful_response_count") == 3 and receipt.get("action_array_count") == 3 and receipt.get("behavioral_action_count") == 0 and receipt.get("behavioral_episode_count") == 0 for receipt in receipts), "repair repeat target receipt counts changed")
+    repeats_by_slot = {repeat.get("lane_slot"): repeat for repeat in repeats}
+    receipts_by_slot = {receipt.get("lane_slot"): receipt for receipt in receipts}
+    require(set(repeats_by_slot) == set(receipts_by_slot) == {f"repair-lane-{index:02d}" for index in range(8)}, "repair repeat receipt lane set changed")
+    for slot, receipt in receipts_by_slot.items():
+        repeat = repeats_by_slot[slot]
+        require(receipt.get("repeat_gate", {}).get("sha256") == validate_file_binding(repeat_bindings[[item.get("lane_slot") for item in repeats].index(slot)], "repair repeat gate binding")["sha256"], "repair receipt binds another repeat gate")
+        require(receipt.get("repeat_response", {}).get("sha256") == repeat.get("repeat_response", {}).get("sha256"), "repair receipt binds another repeat response")
+    require(gate.get("repair_excluded_request_count_before_release") == 102 and gate.get("repair_excluded_request_breakdown") == {"global_smoke": 70, "retained_invalid_attempt001": 8, "corrected_repeat_attempt002": 24}, "repair excluded request accounting changed")
     require(all(repeat.get("fixture_sha256") == smoke_fixture["sha256"] and repeat.get("fixture", {}).get("sha256") == smoke_fixture["sha256"] for repeat in repeats), "repair lanes did not share the retained smoke fixture")
     repeat_manifest_shas = [repeat.get("fixture_manifest_sha256") for repeat in repeats]
     require(
@@ -200,7 +212,6 @@ def require_released_gate(*, registration_path: Path, queue_path: Path, release_
     require(isinstance(lanes, list) and len(lanes) == 8, "repair release must have exactly eight lanes")
     lane_values = [bound_json(record, f"repair lane {index}", schema=LANE_SCHEMA, status="passed_single_lane_release") for index, record in enumerate(lanes)]
     server_keys = ("policy_server_pod_uid", "policy_server_gpu_uuid", "server_port", "server_process_identity", "server_lock_identity")
-    repeats_by_slot = {repeat.get("lane_slot"): repeat for repeat in repeats}
     physicals_by_slot = {physical.get("lane_slot"): physical for physical in physicals}
     require(len(repeats_by_slot) == 8, "repair repeat lane slots are not unique")
     require(len(physicals_by_slot) == 8, "repair physical lane slots are not unique")

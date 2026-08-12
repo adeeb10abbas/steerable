@@ -1,0 +1,791 @@
+{
+  "amendment_id": "V3-C002",
+  "analysis_plan": {
+    "descriptive": "Exact equality or inequality of action traces is descriptive only, not the primary grounding test.",
+    "no_sample_extension_after_results": true,
+    "positive_controls": {
+      "canonical": "canonical physical LEFT minus canonical physical RIGHT endpoint redirection remains positive",
+      "failure_rule": "If inverse-reference positive control fails, semantic redirection is unsupported; do not reinterpret the result as prompt equivalence.",
+      "inverse_reference": "inverse physical LEFT minus inverse physical RIGHT endpoint redirection remains positive when scored by registered physical goal"
+    },
+    "primary": {
+      "bootstrap": {
+        "cluster": "seed block",
+        "confidence_level": 0.9,
+        "resamples": 20000
+      },
+      "claim_rule": "Both LEFT and RIGHT depth TOSTs and the inverse-reference endpoint positive control must pass; any failure withholds the model-level semantic equivalence claim.",
+      "estimand": "inverse-reference minus canonical requested-side depth, independently for each registered physical goal",
+      "margin_m": 0.0415,
+      "tost": "paired two one-sided test against [-0.0415,+0.0415] m"
+    },
+    "secondary_binary": {
+      "claim_rule": "Both directional intervals must lie strictly inside the registered margin.",
+      "interval": "paired seed-clustered 90% bootstrap",
+      "margin_probability": 0.1556
+    }
+  },
+  "behavioral_episode_count_before_registration": 0,
+  "behavioral_episodes_authorized": false,
+  "design": {
+    "block_integrity": "Each of the four prompt conditions stays on one serial execution lane and is never split across shards.",
+    "conditions_per_seed_block": 4,
+    "execution_order": "SHA-256 ranked deterministic four-condition order, frozen in queue.jsonl.",
+    "new_behavioral_episodes": 1364,
+    "no_reuse_of_e004_behavioral_outcomes": true,
+    "request_seed": "episode_seed * 1000 + replan_index",
+    "seed_block_count": 341,
+    "seed_blocks": [
+      12000,
+      12001,
+      12002,
+      12003,
+      12004,
+      12005,
+      12006,
+      12007,
+      12008,
+      12009,
+      12010,
+      12011,
+      12012,
+      12013,
+      12014,
+      12015,
+      12016,
+      12017,
+      12018,
+      12019,
+      12020,
+      12021,
+      12022,
+      12023,
+      12024,
+      12025,
+      12026,
+      12027,
+      12028,
+      12029,
+      12030,
+      12031,
+      12032,
+      12033,
+      12034,
+      12035,
+      12036,
+      12037,
+      12038,
+      12039,
+      12040,
+      12041,
+      12042,
+      12043,
+      12044,
+      12045,
+      12046,
+      12047,
+      12048,
+      12049,
+      12050,
+      12051,
+      12052,
+      12053,
+      12054,
+      12055,
+      12056,
+      12057,
+      12058,
+      12059,
+      12060,
+      12061,
+      12062,
+      12063,
+      12064,
+      12065,
+      12066,
+      12067,
+      12068,
+      12069,
+      12070,
+      12071,
+      12072,
+      12073,
+      12074,
+      12075,
+      12076,
+      12077,
+      12078,
+      12079,
+      12080,
+      12081,
+      12082,
+      12083,
+      12084,
+      12085,
+      12086,
+      12087,
+      12088,
+      12089,
+      12090,
+      12091,
+      12092,
+      12093,
+      12094,
+      12095,
+      12096,
+      12097,
+      12098,
+      12099,
+      12100,
+      12101,
+      12102,
+      12103,
+      12104,
+      12105,
+      12106,
+      12107,
+      12108,
+      12109,
+      12110,
+      12111,
+      12112,
+      12113,
+      12114,
+      12115,
+      12116,
+      12117,
+      12118,
+      12119,
+      12120,
+      12121,
+      12122,
+      12123,
+      12124,
+      12125,
+      12126,
+      12127,
+      12128,
+      12129,
+      12130,
+      12131,
+      12132,
+      12133,
+      12134,
+      12135,
+      12136,
+      12137,
+      12138,
+      12139,
+      12140,
+      12141,
+      12142,
+      12143,
+      12144,
+      12145,
+      12146,
+      12147,
+      12148,
+      12149,
+      12150,
+      12151,
+      12152,
+      12153,
+      12154,
+      12155,
+      12156,
+      12157,
+      12158,
+      12159,
+      12160,
+      12161,
+      12162,
+      12163,
+      12164,
+      12165,
+      12166,
+      12167,
+      12168,
+      12169,
+      12170,
+      12171,
+      12172,
+      12173,
+      12174,
+      12175,
+      12176,
+      12177,
+      12178,
+      12179,
+      12180,
+      12181,
+      12182,
+      12183,
+      12184,
+      12185,
+      12186,
+      12187,
+      12188,
+      12189,
+      12190,
+      12191,
+      12192,
+      12193,
+      12194,
+      12195,
+      12196,
+      12197,
+      12198,
+      12199,
+      12200,
+      12201,
+      12202,
+      12203,
+      12204,
+      12205,
+      12206,
+      12207,
+      12208,
+      12209,
+      12210,
+      12211,
+      12212,
+      12213,
+      12214,
+      12215,
+      12216,
+      12217,
+      12218,
+      12219,
+      12220,
+      12221,
+      12222,
+      12223,
+      12224,
+      12225,
+      12226,
+      12227,
+      12228,
+      12229,
+      12230,
+      12231,
+      12232,
+      12233,
+      12234,
+      12235,
+      12236,
+      12237,
+      12238,
+      12239,
+      12240,
+      12241,
+      12242,
+      12243,
+      12244,
+      12245,
+      12246,
+      12247,
+      12248,
+      12249,
+      12250,
+      12251,
+      12252,
+      12253,
+      12254,
+      12255,
+      12256,
+      12257,
+      12258,
+      12259,
+      12260,
+      12261,
+      12262,
+      12263,
+      12264,
+      12265,
+      12266,
+      12267,
+      12268,
+      12269,
+      12270,
+      12271,
+      12272,
+      12273,
+      12274,
+      12275,
+      12276,
+      12277,
+      12278,
+      12279,
+      12280,
+      12281,
+      12282,
+      12283,
+      12284,
+      12285,
+      12286,
+      12287,
+      12288,
+      12289,
+      12290,
+      12291,
+      12292,
+      12293,
+      12294,
+      12295,
+      12296,
+      12297,
+      12298,
+      12299,
+      12300,
+      12301,
+      12302,
+      12303,
+      12304,
+      12305,
+      12306,
+      12307,
+      12308,
+      12309,
+      12310,
+      12311,
+      12312,
+      12313,
+      12314,
+      12315,
+      12316,
+      12317,
+      12318,
+      12319,
+      12320,
+      12321,
+      12322,
+      12323,
+      12324,
+      12325,
+      12326,
+      12327,
+      12328,
+      12329,
+      12330,
+      12331,
+      12332,
+      12333,
+      12334,
+      12335,
+      12336,
+      12337,
+      12338,
+      12339,
+      12340
+    ]
+  },
+  "e004_s1_layout": {
+    "candidate": {
+      "bytes": 12706,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/layout/candidate.json",
+      "sha256": "7e270419cdbd2a00e36c47a6a5e3d10c7affb225f118e536cc43917da960ba33"
+    },
+    "candidate_sha256": "7e270419cdbd2a00e36c47a6a5e3d10c7affb225f118e536cc43917da960ba33",
+    "scope": "fully symmetric object layout only; robot, reset posture, camera rig, wrist mounting, and embodiment are not asserted bilaterally symmetric",
+    "source_amendment": "V3-E004",
+    "symmetry_level_s": 1.0
+  },
+  "exact_e004_pi05_runtime": {
+    "component_digests": {
+      "action_interface": "55282dcd3b2e9773416ac601cc87846c798789757ab1885c0f6b924354edceff",
+      "camera_configuration": "033a95d39b7af077f3e9a940155339a2e35682386addacf1026b384150a5daf6",
+      "checkpoint": "fb6135c0bc2c5506387eef7c73327b6cce7b3e2723ab20326c367e6c0e52e59e",
+      "controller": "f8e4950d462176238b2d3c7574a5b169dfb2e88c079f66e7b7df43ed95e6aca0",
+      "horizon": "dfc17a186770a6a73fb3f639ef8ea0b0a3a89ea657159a18be52f0a66424d79e",
+      "policy_server": "58e0a2517eb109b54e5b8acbd222fb5ec6375207bae5cf13e3245ecb4d5a4297",
+      "raw_writer": "cd932c7337c8eefea16b97f600a158976b5e5b2ff496128adaefb1c342be45e3",
+      "renderer": "bbd6721ef28bdc95e8384121f1701a15c6dc613e70ef12c2ba7bc1d6309fef21",
+      "runtime": "cf89444f7dac4b8a073a202535eb38da15e958cdf2f372c52e9d1b049a8443da",
+      "scorer": "be8263bb4b865d0a561384bf6aa6074e40adfcb67550fd0368cdd49bd2d9f551"
+    },
+    "contract_sha256": "94af8a1b043a032eb0fb77df4670491af9585d60e0d23a7459df9f1a0e0728ec",
+    "dependency_bindings": {
+      "action_interface": [
+        {
+          "bytes": 8126,
+          "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/droid_behavioral_contract.py",
+          "sha256": "dc26825b7f5ae53895fd7c2b6ea4e8f13e60270c5e61e28b5bb3deca156ffac3"
+        }
+      ],
+      "camera_configuration": [
+        {
+          "bytes": 15334,
+          "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/live_snapshot_adapter.py",
+          "sha256": "a5e21ea25443f266d676e7f6d7d6341b61b49acbffcffc5d727947e80c202241"
+        },
+        {
+          "bytes": 12706,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/layout/candidate.json",
+          "sha256": "7e270419cdbd2a00e36c47a6a5e3d10c7affb225f118e536cc43917da960ba33"
+        }
+      ],
+      "checkpoint": [
+        {
+          "bytes": 4856,
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_checkpoint_manifest.json",
+          "sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca"
+        }
+      ],
+      "controller": [
+        {
+          "bytes": 53612,
+          "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/droid_behavioral_bridge.py",
+          "sha256": "58d0269f7e890fee1e8ffc9d8d25c57068220229d9221ccb885732f3501d24b3"
+        },
+        {
+          "bytes": 33129,
+          "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/run_droid_queue.py",
+          "sha256": "6bee8003fbac8dca4965c3d13baefdf69eb548c5992333e6859c32f1d7f3ae93"
+        }
+      ],
+      "horizon": [
+        {
+          "bytes": 4670,
+          "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/runtime_identity.json",
+          "sha256": "928af903ff99b02dd753b21eca2f6243142aced320a31166645bb1a0427a0f89"
+        }
+      ],
+      "policy_server": [
+        {
+          "bytes": 3738,
+          "path": "experiments/pi05_current_stack/v2a010_serve_policy.py",
+          "sha256": "cd415e3a98da977f395242c24bb8f3d3187eb4cc3bf53c5dc659d190e6934051"
+        }
+      ],
+      "raw_writer": [
+        {
+          "bytes": 33129,
+          "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/run_droid_queue.py",
+          "sha256": "6bee8003fbac8dca4965c3d13baefdf69eb548c5992333e6859c32f1d7f3ae93"
+        }
+      ],
+      "renderer": [
+        {
+          "bytes": 15334,
+          "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/live_snapshot_adapter.py",
+          "sha256": "a5e21ea25443f266d676e7f6d7d6341b61b49acbffcffc5d727947e80c202241"
+        },
+        {
+          "bytes": 4670,
+          "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/runtime_identity.json",
+          "sha256": "928af903ff99b02dd753b21eca2f6243142aced320a31166645bb1a0427a0f89"
+        }
+      ],
+      "runtime": [
+        {
+          "bytes": 4670,
+          "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/runtime_identity.json",
+          "sha256": "928af903ff99b02dd753b21eca2f6243142aced320a31166645bb1a0427a0f89"
+        },
+        {
+          "bytes": 16100,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/registration.json",
+          "sha256": "3e3786510ebba933d0c7a4606afa51627ea6bf706f9e64b34cfd74b29e318db2"
+        },
+        {
+          "bytes": 9033183,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/queue.jsonl",
+          "sha256": "af6acdb298b773575a0ddc3d16be0544c7e2430f0d62d92fe231f75e1b2f7a57"
+        }
+      ],
+      "scorer": [
+        {
+          "bytes": 39262,
+          "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/episode_compiler.py",
+          "sha256": "cd704db68fa840b6800836f0c2225fb8fe74ac2fd59d962f25bcdc5f1d5d661d"
+        },
+        {
+          "bytes": 11739,
+          "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/runtime_contract.py",
+          "sha256": "99f893e82119f6b123c08a9e2b07d127d3390e9b23f48b821832ac25bad4f003"
+        },
+        {
+          "bytes": 5366,
+          "path": "artifacts/vla_wam_shared_v3/failure_taxonomy.json",
+          "sha256": "48631b155721351460716a4fc7a69a8aa1b9a584ee78390ae6b332ccb39d76d9"
+        }
+      ]
+    },
+    "identity_values": {
+      "action_cap": 450,
+      "action_dim": 8,
+      "action_horizon": 15,
+      "action_interface": {
+        "action_cap": 450,
+        "action_chunk_shape": [
+          15,
+          8
+        ],
+        "action_dim": 8,
+        "action_horizon": 15,
+        "action_space": "joint_position_8d"
+      },
+      "arena": "droid_robolab",
+      "checkpoint": "pi05_droid_jointpos_polaris",
+      "checkpoint_digest": "b193b28b05f9755e24d44a6f5cf3185ca23c2ad3da6c5913370379c82570fbf6",
+      "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+      "model_id": "pi05_current_stack_droid",
+      "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+      "policy_cameras": [
+        "head_camera",
+        "over_shoulder_left_camera",
+        "over_shoulder_right_camera",
+        "wrist_cam"
+      ],
+      "policy_io_mode": "actions_only",
+      "prompt_mode": "static_episode_prompt",
+      "renderer_backend": "Isaac Sim viewport realtime RTX Vulkan balanced; NVIDIA ICD /etc/vulkan/icd.d/nvidia_icd.json; RTX driver 580.105.08",
+      "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+      "runtime_identity_source_sha256": "6e5e500f5efee2d7576d090a8ec544f28e47af4db6e797c1bb514a16a43fc944",
+      "simulator_identity": "Isaac Sim 5.0.0.0 / Isaac Lab 2.2.0 / RoboLab 0.2.1",
+      "source_commit": "dc0f1d6772785c634fb22d1a7cdd460bf85496a2"
+    },
+    "schema_version": "vla-wam-shared-v3c002-exact-e004-pi05-runtime-contract-v1",
+    "source_amendment": "V3-E004",
+    "symmetry_level_s": 1.0
+  },
+  "final_validation_requirement": "The committed final validator must reconstruct every count and estimand, rehash every retained raw artifact, verify infrastructure exclusion, and compare memo/manuscript claims to results.json.",
+  "model_request_count_before_registration": 0,
+  "model_requests_authorized": false,
+  "pre_registration_wording_gate": {
+    "bytes": 753,
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/draft_v6/wording_gate.json",
+    "sha256": "37fc8cdc4c99aa48c8d76b0bc57bb7a8cca33b0f568066e5de7c6b0e614d0e14"
+  },
+  "queue": {
+    "bytes": 4362072,
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/draft_v6/queue.jsonl",
+    "sha256": "3420a96ec8c96cc85655a89c5a7aa9d3b1b7e8382b9cb03899f4235675dda685"
+  },
+  "registered_at_utc": null,
+  "registered_prompts": {
+    "canonical_left": {
+      "condition": "canonical_left",
+      "physical_goal": "left",
+      "prompt": "Put the Rubik's cube to the left of the bowl.",
+      "prompt_sha256": "7a9010154f1b73764e6fec767eff0563dfe95807babb6369e7cd6de60ec7aa92",
+      "prompt_utf8_hex": "5075742074686520527562696b2773206375626520746f20746865206c656674206f662074686520626f776c2e",
+      "surface_direction_word": "left"
+    },
+    "canonical_right": {
+      "condition": "canonical_right",
+      "physical_goal": "right",
+      "prompt": "Put the Rubik's cube to the right of the bowl.",
+      "prompt_sha256": "61d9185096c89b210dc3e920914c889cf2292bed07f1265521658c5a5988e7f4",
+      "prompt_utf8_hex": "5075742074686520527562696b2773206375626520746f20746865207269676874206f662074686520626f776c2e",
+      "surface_direction_word": "right"
+    },
+    "inverse_reference_left": {
+      "condition": "inverse_reference_left",
+      "physical_goal": "left",
+      "prompt": "Place the Rubik's cube so that the bowl is to the right of the Rubik's cube.",
+      "prompt_sha256": "6ed00a80ed714a034daa682371ddf42c2e576e40ccc4345fa73053833b4e2d39",
+      "prompt_utf8_hex": "506c6163652074686520527562696b2773206375626520736f20746861742074686520626f776c20697320746f20746865207269676874206f662074686520527562696b277320637562652e",
+      "surface_direction_word": "right"
+    },
+    "inverse_reference_right": {
+      "condition": "inverse_reference_right",
+      "physical_goal": "right",
+      "prompt": "Place the Rubik's cube so that the bowl is to the left of the Rubik's cube.",
+      "prompt_sha256": "3c36eb09d55cf3875d3d5e49abd4571bdedddb069b328fcb62abd08fc6a515b0",
+      "prompt_utf8_hex": "506c6163652074686520527562696b2773206375626520736f20746861742074686520626f776c20697320746f20746865206c656674206f662074686520527562696b277320637562652e",
+      "surface_direction_word": "left"
+    }
+  },
+  "registration_status": "pre_registration_draft_pending_two_human_wording_agreements",
+  "release_boundary": "No model request, action, or behavioral episode is authorized until the independent wording gate passes, this registration is activated with real attestations, the registration/queue/code are committed and pushed, and exact E004 runtime/lane/preflight gates pass.",
+  "required_outputs": [
+    "registration.json",
+    "queue.jsonl",
+    "release_gate.json",
+    "infrastructure_attempts.jsonl",
+    "results/episodes.jsonl",
+    "results/pairs.jsonl",
+    "results/results.json",
+    "results/DECISION_MEMO.md",
+    "results/evidence_manifest.json",
+    "MANUSCRIPT_INSERT.md"
+  ],
+  "required_source_base_commit": "18a2bf0200183647291cc7aeb1fe89997b3fb82f",
+  "schema_version": "vla-wam-shared-v3c002-registration-v4",
+  "scoring": {
+    "frozen_success_predicate_id": "v2_frozen_droid_robolab_release_inside_45deg_requested_relation",
+    "physical_goal_is_explicit_metadata": true,
+    "prompt_parsing_prohibited": true,
+    "requested_side_depth": "+signed final lateral offset for physical LEFT; negative signed final lateral offset for physical RIGHT",
+    "sign_convention": "+Y = robot-left"
+  },
+  "source_bindings": {
+    "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_checkpoint_manifest.json": {
+      "bytes": 4856,
+      "path": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_checkpoint_manifest.json",
+      "sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca"
+    },
+    "artifacts/vla_wam_shared_v3/failure_taxonomy.json": {
+      "bytes": 5366,
+      "path": "artifacts/vla_wam_shared_v3/failure_taxonomy.json",
+      "sha256": "48631b155721351460716a4fc7a69a8aa1b9a584ee78390ae6b332ccb39d76d9"
+    },
+    "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/runtime_identity.json": {
+      "bytes": 4670,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/runtime_identity.json",
+      "sha256": "928af903ff99b02dd753b21eca2f6243142aced320a31166645bb1a0427a0f89"
+    },
+    "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/layout/candidate.json": {
+      "bytes": 12706,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/layout/candidate.json",
+      "sha256": "7e270419cdbd2a00e36c47a6a5e3d10c7affb225f118e536cc43917da960ba33"
+    },
+    "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/queue.jsonl": {
+      "bytes": 9033183,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/queue.jsonl",
+      "sha256": "af6acdb298b773575a0ddc3d16be0544c7e2430f0d62d92fe231f75e1b2f7a57"
+    },
+    "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/registration.json": {
+      "bytes": 16100,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/registration.json",
+      "sha256": "3e3786510ebba933d0c7a4606afa51627ea6bf706f9e64b34cfd74b29e318db2"
+    },
+    "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/results/results.json": {
+      "bytes": 212799,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/results/results.json",
+      "sha256": "be8cd0c9a2458a7eefec0ed7760d1e6f6f19e4162d8c427f12f8a113d3290493"
+    },
+    "experiments/pi05_current_stack/v2a010_serve_policy.py": {
+      "bytes": 3738,
+      "path": "experiments/pi05_current_stack/v2a010_serve_policy.py",
+      "sha256": "cd415e3a98da977f395242c24bb8f3d3187eb4cc3bf53c5dc659d190e6934051"
+    },
+    "experiments/v3/phase_c_semantic_equivalence_v3c002/__init__.py": {
+      "bytes": 257,
+      "path": "experiments/v3/phase_c_semantic_equivalence_v3c002/__init__.py",
+      "sha256": "271df5a1b79898696face286ded9746a1fb9b316402a4cc372c17e7b4f5fa318"
+    },
+    "experiments/v3/phase_c_semantic_equivalence_v3c002/compiler.py": {
+      "bytes": 27259,
+      "path": "experiments/v3/phase_c_semantic_equivalence_v3c002/compiler.py",
+      "sha256": "e383fd867b94d00aae435b46e6a02b0830bac2280d9b65b29a3900b2ccc82156"
+    },
+    "experiments/v3/phase_c_semantic_equivalence_v3c002/contract.py": {
+      "bytes": 22600,
+      "path": "experiments/v3/phase_c_semantic_equivalence_v3c002/contract.py",
+      "sha256": "768b440f0903b5c2c5c13d95bcad709eba3040d04b212025bf2a58ca46dfb6d9"
+    },
+    "experiments/v3/phase_c_semantic_equivalence_v3c002/runner.py": {
+      "bytes": 8234,
+      "path": "experiments/v3/phase_c_semantic_equivalence_v3c002/runner.py",
+      "sha256": "faf8a075922170c54aef0bfce938755aed52c5e4b8cc0d00537f5b4e2b5115c3"
+    },
+    "experiments/v3/phase_c_semantic_equivalence_v3c002/runtime.py": {
+      "bytes": 8815,
+      "path": "experiments/v3/phase_c_semantic_equivalence_v3c002/runtime.py",
+      "sha256": "76ceb1a4ddb9bd8e7d0dfbbd1705602ad5a35a2cf82761213b2cd2f14557cfdb"
+    },
+    "experiments/v3/phase_c_semantic_equivalence_v3c002/wording_gate.py": {
+      "bytes": 6932,
+      "path": "experiments/v3/phase_c_semantic_equivalence_v3c002/wording_gate.py",
+      "sha256": "48c3785389de876e0878b96b0a670c39a414eb80c3a45cd506f1a80a9164bd48"
+    },
+    "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/droid_behavioral_bridge.py": {
+      "bytes": 53612,
+      "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/droid_behavioral_bridge.py",
+      "sha256": "58d0269f7e890fee1e8ffc9d8d25c57068220229d9221ccb885732f3501d24b3"
+    },
+    "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/droid_behavioral_contract.py": {
+      "bytes": 8126,
+      "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/droid_behavioral_contract.py",
+      "sha256": "dc26825b7f5ae53895fd7c2b6ea4e8f13e60270c5e61e28b5bb3deca156ffac3"
+    },
+    "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/episode_compiler.py": {
+      "bytes": 39262,
+      "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/episode_compiler.py",
+      "sha256": "cd704db68fa840b6800836f0c2225fb8fe74ac2fd59d962f25bcdc5f1d5d661d"
+    },
+    "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/live_snapshot_adapter.py": {
+      "bytes": 15334,
+      "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/live_snapshot_adapter.py",
+      "sha256": "a5e21ea25443f266d676e7f6d7d6341b61b49acbffcffc5d727947e80c202241"
+    },
+    "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/run_droid_queue.py": {
+      "bytes": 33129,
+      "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/run_droid_queue.py",
+      "sha256": "6bee8003fbac8dca4965c3d13baefdf69eb548c5992333e6859c32f1d7f3ae93"
+    },
+    "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/runtime_contract.py": {
+      "bytes": 11739,
+      "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/runtime_contract.py",
+      "sha256": "99f893e82119f6b123c08a9e2b07d127d3390e9b23f48b821832ac25bad4f003"
+    },
+    "tests/test_v3c002_semantic_equivalence.py": {
+      "bytes": 25649,
+      "path": "tests/test_v3c002_semantic_equivalence.py",
+      "sha256": "af0002232729424deca11d6cc0d60b90030e9f911273acaaa0973c4435b92946"
+    },
+    "tools/build_v3c002_registration.py": {
+      "bytes": 23515,
+      "path": "tools/build_v3c002_registration.py",
+      "sha256": "0a402aad2369ab3ae0627adf4231a75f3759b32d41f4f047265df4a16327740d"
+    },
+    "tools/finalize_v3c002_registration.py": {
+      "bytes": 6561,
+      "path": "tools/finalize_v3c002_registration.py",
+      "sha256": "72f105e8a7a5207ed329f3ed03ca62d6e9c1fdb2a3318feb2e736c1870b04cf8"
+    },
+    "tools/validate_v3c002.py": {
+      "bytes": 8325,
+      "path": "tools/validate_v3c002.py",
+      "sha256": "f421e7ff28697b37ed42db348dccf79013353f8a13475827118122d70713b4fb"
+    },
+    "tools/validate_v3c002_results.py": {
+      "bytes": 5302,
+      "path": "tools/validate_v3c002_results.py",
+      "sha256": "11c0298c936f61da757975508abbc68d3aa00d7ba24f4d4b85f961ad7ad458b7"
+    },
+    "tools/validate_v3c002_v1_historical.py": {
+      "bytes": 3469,
+      "path": "tools/validate_v3c002_v1_historical.py",
+      "sha256": "ddb267fdee0c40e87d2d952c34a75fcc3749d20a122d510088c035879289c95e"
+    },
+    "tools/validate_v3c002_v2_historical.py": {
+      "bytes": 2429,
+      "path": "tools/validate_v3c002_v2_historical.py",
+      "sha256": "985564ee8c5ee0f1f8d6e0362c900b45645e9156e2d366ea8e954eb86b72569a"
+    },
+    "tools/validate_v3c002_v3_historical.py": {
+      "bytes": 2346,
+      "path": "tools/validate_v3c002_v3_historical.py",
+      "sha256": "b5fde2deb969cc8f89320ee9dfd04f80185a113514f207893f93ad8902c545e2"
+    },
+    "tools/validate_v3c002_v4_historical.py": {
+      "bytes": 2340,
+      "path": "tools/validate_v3c002_v4_historical.py",
+      "sha256": "63f12b151d8e3b92773845b75ef7443d162765332701ddebcfa4f58a861affde"
+    },
+    "tools/validate_v3c002_v5_historical.py": {
+      "bytes": 2340,
+      "path": "tools/validate_v3c002_v5_historical.py",
+      "sha256": "b419378102902622c133788a3622627d22b15c2d280f4dd19a5c300a91441327"
+    },
+    "tools/validate_v3e_publication_bundle.py": {
+      "bytes": 1784,
+      "path": "tools/validate_v3e_publication_bundle.py",
+      "sha256": "33cfdb3d426f41d0757b579c9aaaa2f167da7109c1501df07b7cc2e3025cc7a6"
+    }
+  },
+  "source_lineage": {
+    "behavioral_episodes_at_recording": 0,
+    "model_requests_at_recording": 0,
+    "recorded_before_any_model_request": true,
+    "replacement_commit": "dc0f1d6772785c634fb22d1a7cdd460bf85496a2",
+    "replacement_reason": "Prospective C002 implementation and pre-run audit hardening were committed after the mandated clean base; no prior definition or experiment was changed.",
+    "required_base_commit": "18a2bf0200183647291cc7aeb1fe89997b3fb82f"
+  },
+  "study_id": "vla_wam_language_steerability_v3",
+  "title": "Semantically equivalent prompt control",
+  "wording_gate_requirement": "Two distinct authorized readers must independently mark both blinded pairs same_physical_endpoint before this draft can become a behavioral registration."
+}

@@ -43,9 +43,10 @@ from experiments.v3.phase_c_semantic_equivalence_v3c002.wording_gate import (  #
 
 
 BASE_COMMIT = "18a2bf0200183647291cc7aeb1fe89997b3fb82f"
-ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/draft_v2"
+ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/draft_v3"
 E004_ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004"
 V1_ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002"
+V2_ROOT = V1_ROOT / "draft_v2"
 
 DEPENDENCY_PATHS = {
     "checkpoint": ("artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_checkpoint_manifest.json",),
@@ -67,6 +68,7 @@ DEPENDENCY_PATHS = {
     "horizon": ("artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/runtime_identity.json",),
     "scorer": (
         "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/episode_compiler.py",
+        "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/runtime_contract.py",
         "artifacts/vla_wam_shared_v3/failure_taxonomy.json",
     ),
     "raw_writer": ("experiments/v3/phase_e/symmetric_layout_cohort_v3e004/run_droid_queue.py",),
@@ -245,10 +247,13 @@ def main() -> None:
     wording_gate_path = output_root / "wording_gate.json"
     _write_new(
         wording_gate_path,
-        pending_gate(
+        {
+            **pending_gate(
             sheet_path=sheet_path,
             reason="Repository search found no existing authorized independent human-reader evidence. Two real signed/record-referenced attestations are required before behavioral registration.",
-        ),
+            ),
+            "sheet": _relative_binding(sheet_path),
+        },
     )
     queue_path = output_root / "queue.jsonl"
     rows = _queue(candidate_sha, runtime_contract)
@@ -280,15 +285,26 @@ def main() -> None:
             "tools/finalize_v3c002_registration.py",
             "tools/validate_v3c002.py",
             "tools/validate_v3c002_v1_historical.py",
+            "tools/validate_v3c002_v2_historical.py",
+            "tools/validate_v3c002_results.py",
+            "tools/validate_v3e_publication_bundle.py",
             "tests/test_v3c002_semantic_equivalence.py",
         )
     }
     registration = {
-        "schema_version": "vla-wam-shared-v3c002-registration-v2",
+        "schema_version": "vla-wam-shared-v3c002-registration-v3",
         "study_id": STUDY_ID,
         "amendment_id": AMENDMENT_ID,
         "title": "Semantically equivalent prompt control",
         "required_source_base_commit": BASE_COMMIT,
+        "source_lineage": {
+            "required_base_commit": BASE_COMMIT,
+            "replacement_commit": source_commit,
+            "replacement_reason": "Prospective C002 implementation and pre-run audit hardening were committed after the mandated clean base; no prior definition or experiment was changed.",
+            "recorded_before_any_model_request": True,
+            "model_requests_at_recording": 0,
+            "behavioral_episodes_at_recording": 0,
+        },
         "registration_status": "pre_registration_draft_pending_two_human_wording_agreements",
         "registered_at_utc": None,
         "model_request_count_before_registration": 0,
@@ -340,32 +356,44 @@ def main() -> None:
             "descriptive": "Exact equality or inequality of action traces is descriptive only, not the primary grounding test.",
             "no_sample_extension_after_results": True,
         },
+        "required_outputs": [
+            "registration.json", "queue.jsonl", "release_gate.json", "infrastructure_attempts.jsonl",
+            "results/episodes.jsonl", "results/pairs.jsonl", "results/results.json", "results/DECISION_MEMO.md",
+            "results/evidence_manifest.json", "MANUSCRIPT_INSERT.md",
+        ],
+        "final_validation_requirement": "The committed final validator must reconstruct every count and estimand, rehash every retained raw artifact, verify infrastructure exclusion, and compare memo/manuscript claims to results.json.",
         "queue": _relative_binding(queue_path),
         "source_bindings": sources,
         "release_boundary": "No model request, action, or behavioral episode is authorized until the independent wording gate passes, this registration is activated with real attestations, the registration/queue/code are committed and pushed, and exact E004 runtime/lane/preflight gates pass.",
     }
     _write_new(output_root / "registration.json", registration)
     if V1_ROOT != output_root:
-        v1_bindings = {}
-        for name in ("registration.json", "queue.jsonl", "release_gate.json"):
-            path = V1_ROOT / name
-            if path.is_file():
-                v1_bindings[name] = _relative_binding(path)
+        superseded_bindings = {}
+        for revision, prior_root in (("v1", V1_ROOT), ("v2", V2_ROOT)):
+            revision_bindings = {}
+            for name in ("registration.json", "queue.jsonl", "release_gate.json"):
+                path = prior_root / name
+                if path.is_file():
+                    revision_bindings[name] = _relative_binding(path)
+            if revision_bindings:
+                superseded_bindings[revision] = revision_bindings
         _write_new(
             output_root / "supersession.json",
             {
-                "schema_version": "vla-wam-shared-v3c002-preregistration-supersession-v1",
-                "status": "prospective_v2_supersedes_unexecuted_v1_draft",
-                "superseded_v1_bindings": v1_bindings,
+                "schema_version": "vla-wam-shared-v3c002-preregistration-supersession-v2",
+                "status": "prospective_v3_supersedes_unexecuted_v1_and_v2_drafts",
+                "superseded_draft_bindings": superseded_bindings,
                 "superseding_registration": _relative_binding(output_root / "registration.json"),
-                "reason": "Independent pre-run audit required exact E004 runtime file/hash equality and stronger release/claim gates.",
+                "reason": "Independent pre-run audits required exact E004 scorer normalization/evaluation and checkout-portable committed evidence paths after V2 was already hash-bound.",
                 "v1_model_requests": 0,
                 "v1_behavioral_episodes": 0,
-                "v1_must_never_be_activated": True,
+                "v2_model_requests": 0,
+                "v2_behavioral_episodes": 0,
+                "v1_and_v2_must_never_be_activated": True,
             },
         )
     release_gate = {
-        "schema_version": "vla-wam-shared-v3c002-release-gate-v2",
+        "schema_version": "vla-wam-shared-v3c002-release-gate-v3",
         "study_id": STUDY_ID,
         "amendment_id": AMENDMENT_ID,
         "status": "blocked_pre_registration_wording_gate",

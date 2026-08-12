@@ -7,7 +7,7 @@ import sys
 import unittest
 from unittest import mock
 
-from experiments.v3.phase_c_semantic_equivalence_v3c002.compiler import compile_episode, compile_results
+from experiments.v3.phase_c_semantic_equivalence_v3c002.compiler import compile_episode, compile_results, decision_memo, manuscript_insert
 from experiments.v3.phase_c_semantic_equivalence_v3c002.contract import (
     ContractError,
     REPO_ROOT as CONTRACT_REPO_ROOT,
@@ -20,6 +20,7 @@ from experiments.v3.phase_c_semantic_equivalence_v3c002.contract import (
 from experiments.v3.phase_c_semantic_equivalence_v3c002.wording_gate import build_blinded_sheet, validate_attestations
 from experiments.v3.phase_c_semantic_equivalence_v3c002.runtime import bind_runtime
 from tools.validate_v3c002_v1_historical import validate as validate_v1_historical
+from tools.validate_v3c002_v2_historical import validate as validate_v2_historical
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -81,6 +82,15 @@ class V3C002SemanticEquivalenceTests(unittest.TestCase):
         self.assertFalse(result["positive_controls"]["inverse_reference"]["positive_with_ci_excluding_zero"])
         self.assertFalse(result["model_level_semantic_depth_equivalence_claim_authorized"])
         self.assertTrue(result["model_level_semantic_depth_equivalence_claim_withheld"])
+        self.assertIn("claim authorized: False", decision_memo(result))
+        self.assertIn("| withheld |", manuscript_insert(result))
+
+    def test_complete_claim_output_and_partial_block_rejection(self) -> None:
+        _, result = compile_results(_episodes(), registration_sha256="d" * 64, queue_sha256="e" * 64)
+        self.assertIn("claim authorized: True", decision_memo(result))
+        self.assertIn("| authorized |", manuscript_insert(result))
+        with self.assertRaisesRegex(ContractError, "lacks a complete block"):
+            compile_results(_episodes()[:-1], registration_sha256="d" * 64, queue_sha256="e" * 64)
 
     def test_contract_repo_root_resolves_the_active_worktree(self) -> None:
         self.assertEqual(CONTRACT_REPO_ROOT, ROOT)
@@ -88,6 +98,11 @@ class V3C002SemanticEquivalenceTests(unittest.TestCase):
     def test_historical_v1_draft_remains_independently_verifiable_and_unexecuted(self) -> None:
         result = validate_v1_historical()
         self.assertEqual(result["status"], "valid_immutable_unexecuted_superseded_v1_draft")
+        self.assertEqual(result["queue_rows"], 1364)
+
+    def test_historical_v2_draft_remains_independently_verifiable_and_unexecuted(self) -> None:
+        result = validate_v2_historical()
+        self.assertEqual(result["status"], "valid_immutable_unexecuted_superseded_v2_draft")
         self.assertEqual(result["queue_rows"], 1364)
 
     def test_release_gate_requires_and_hash_checks_all_pre_request_evidence(self) -> None:
@@ -210,6 +225,14 @@ class V3C002SemanticEquivalenceTests(unittest.TestCase):
             episode = compile_episode(raw, cell=cell, registration_sha256=raw["registration_sha256"], queue_sha256=raw["queue_sha256"], exact_runtime_contract=exact)
             self.assertEqual(episode["physical_goal"], "left")
             self.assertEqual(episode["requested_side_depth"], 0.10)
+            malformed = json.loads(json.dumps(raw))
+            malformed["state_trace"][1]["action_step"] = 3
+            with self.assertRaisesRegex(ContractError, "exact frozen E004 normalizer"):
+                compile_episode(malformed, cell=cell, registration_sha256=raw["registration_sha256"], queue_sha256=raw["queue_sha256"], exact_runtime_contract=exact)
+            nonfinite = json.loads(json.dumps(raw))
+            nonfinite["state_trace"][1]["object_xyz"][0] = float("nan")
+            with self.assertRaisesRegex(ContractError, "exact frozen E004 normalizer"):
+                compile_episode(nonfinite, cell=cell, registration_sha256=raw["registration_sha256"], queue_sha256=raw["queue_sha256"], exact_runtime_contract=exact)
 
 
 def _episodes() -> list[dict]:
@@ -326,7 +349,7 @@ def _release_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
         lane_bindings.append(file_binding(lane))
     gate = tmp_path / "release.json"
     _write_json(gate, {
-        "schema_version": "vla-wam-shared-v3c002-release-gate-v2", "status": "passed_pre_request_release", "passed": True,
+        "schema_version": "vla-wam-shared-v3c002-release-gate-v3", "status": "passed_pre_request_release", "passed": True,
         "registration": file_binding(active), "queue": file_binding(queue), "wording_gate": file_binding(wording),
         "source_push_gate": file_binding(source), "physical_gate": file_binding(physical), "excluded_smoke_gate": file_binding(smoke),
         "two_lane_isolation_gate": file_binding(isolation), "lane_manifests": lane_bindings,

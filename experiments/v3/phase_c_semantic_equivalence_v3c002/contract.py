@@ -14,10 +14,10 @@ from typing import Any, Mapping, Sequence
 
 STUDY_ID = "vla_wam_language_steerability_v3"
 AMENDMENT_ID = "V3-C002"
-REGISTRATION_SCHEMA = "vla-wam-shared-v3c002-registration-v2"
-CELL_SCHEMA = "vla-wam-shared-v3c002-cell-v2"
+REGISTRATION_SCHEMA = "vla-wam-shared-v3c002-registration-v3"
+CELL_SCHEMA = "vla-wam-shared-v3c002-cell-v3"
 WORDING_GATE_SCHEMA = "vla-wam-shared-v3c002-wording-gate-v1"
-RELEASE_GATE_SCHEMA = "vla-wam-shared-v3c002-release-gate-v2"
+RELEASE_GATE_SCHEMA = "vla-wam-shared-v3c002-release-gate-v3"
 SOURCE_PUSH_GATE_SCHEMA = "vla-wam-shared-v3c002-source-push-gate-v1"
 PHYSICAL_GATE_SCHEMA = "vla-wam-shared-v3c002-model-blind-physical-gate-v1"
 SMOKE_GATE_SCHEMA = "vla-wam-shared-v3c002-excluded-smoke-gate-v1"
@@ -82,6 +82,15 @@ def file_binding(path: Path) -> dict[str, Any]:
     path = Path(path).resolve()
     require(path.is_file(), f"required source file does not exist: {path}")
     return {"path": str(path), "bytes": path.stat().st_size, "sha256": sha256_file(path)}
+
+
+def repo_file_binding(path: Path) -> dict[str, Any]:
+    binding = file_binding(path)
+    try:
+        binding["path"] = str(Path(path).resolve().relative_to(REPO_ROOT))
+    except ValueError as exc:
+        raise ContractError(f"committed evidence must be inside the repository: {path}") from exc
+    return binding
 
 
 def resolve_binding_path(record: Mapping[str, Any]) -> Path:
@@ -255,6 +264,11 @@ def load_cells(*, registration_path: Path, queue_path: Path) -> tuple[dict[str, 
     candidate_sha256 = layout.get("candidate_sha256")
     require(isinstance(candidate_sha256, str) and _SHA256.fullmatch(candidate_sha256), "candidate digest is invalid")
     runtime_contract_sha256 = validate_exact_runtime_contract(registration.get("exact_e004_pi05_runtime"))
+    lineage = registration.get("source_lineage")
+    require(isinstance(lineage, dict), "prospective source lineage is missing")
+    require(lineage.get("required_base_commit") == "18a2bf0200183647291cc7aeb1fe89997b3fb82f", "required source base changed")
+    require(lineage.get("recorded_before_any_model_request") is True and lineage.get("model_requests_at_recording") == 0 and lineage.get("behavioral_episodes_at_recording") == 0, "source lineage was not recorded prospectively")
+    require(lineage.get("replacement_commit") == registration["exact_e004_pi05_runtime"]["identity_values"]["source_commit"], "replacement/runtime source commits differ")
     rows = []
     for number, line in enumerate(Path(queue_path).read_text(encoding="utf-8").splitlines(), 1):
         require(line.strip(), f"queue has a blank line at {number}")
@@ -310,6 +324,10 @@ def require_released_gate(
     source_gate = _bound_json(gate.get("source_push_gate"), "source push gate", schema=SOURCE_PUSH_GATE_SCHEMA, status="passed_source_commit_pushed")
     require(source_gate.get("pushed") is True and source_gate.get("registration_sha256") == sha256_file(registration_path), "source push gate identity changed")
     _verify_pushed_source_commit(source_gate)
+    lineage = registration.get("source_lineage")
+    require(isinstance(lineage, dict) and lineage.get("recorded_before_any_model_request") is True, "source lineage is missing or retrospective")
+    require(lineage.get("required_base_commit") == "18a2bf0200183647291cc7aeb1fe89997b3fb82f", "required source base changed")
+    require(lineage.get("replacement_commit") == source_gate.get("source_commit") == registration["exact_e004_pi05_runtime"]["identity_values"]["source_commit"], "runtime/source-push/replacement commit differs")
     physical = _bound_json(gate.get("physical_gate"), "model-blind physical gate", schema=PHYSICAL_GATE_SCHEMA, status="passed_exact_e004_model_blind_physical_preflight")
     for key in ("physical_scene", "full_reset", "policy_cameras", "raw_writer", "renderer"):
         require(physical.get(key) is True, f"physical gate lacks passed {key}")

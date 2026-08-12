@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def main() -> None:
+    subprocess.run([sys.executable, str(ROOT / "tools/validate_v3c002.py")], check=True)
     commands = [
         [sys.executable, str(ROOT / "tools/validate_vla_wam_v3_protocol.py")],
         [sys.executable, str(ROOT / "tools/validate_v3e001.py")],

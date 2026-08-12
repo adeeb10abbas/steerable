@@ -7,9 +7,32 @@ import hashlib
 import json
 import math
 import random
+import sys
+import types
 from pathlib import Path
 from statistics import NormalDist, fmean, stdev
 from typing import Any, Iterable, Mapping
+
+try:
+    from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.episode_compiler import (
+        _failure_category as e004_failure_category,
+        _normalize_steps as e004_normalize_steps,
+        frozen_requested_success as e004_frozen_requested_success,
+    )
+except ModuleNotFoundError as exc:
+    # The three exact frozen scorer functions do not use NumPy. Permit
+    # registration/validator hosts without NumPy to import their defining E004
+    # module; execution images retain the pinned real NumPy environment.
+    if exc.name != "numpy":
+        raise
+    sys.modules["numpy"] = types.ModuleType("numpy")
+    from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.episode_compiler import (
+        _failure_category as e004_failure_category,
+        _normalize_steps as e004_normalize_steps,
+        frozen_requested_success as e004_frozen_requested_success,
+    )
+    del sys.modules["numpy"]
+from experiments.v3.phase_e.symmetric_layout_cohort_v3e004.runtime_contract import RuntimeContractError
 
 from .contract import (
     AMENDMENT_ID,
@@ -20,6 +43,7 @@ from .contract import (
     canonical_json_sha256,
     finite_number,
     load_cells,
+    repo_file_binding,
     require,
     sha256_file,
     validate_exact_runtime_contract,
@@ -57,50 +81,6 @@ def _artifact(record: Any, label: str) -> dict[str, Any]:
     return {"path": str(path.resolve()), "bytes": path.stat().st_size, "sha256": record["sha256"]}
 
 
-def _cone(step: Mapping[str, Any], relation: str) -> bool:
-    """Literal pure-Python transcription of E004's frozen 45-degree scorer."""
-
-    object_xyz, reference_xyz = step.get("object_xyz"), step.get("reference_xyz")
-    require(isinstance(object_xyz, list) and isinstance(reference_xyz, list) and len(object_xyz) == len(reference_xyz) == 3, "frozen scorer needs two 3-vectors")
-    forward = float(object_xyz[0]) - float(reference_xyz[0])
-    lateral = float(object_xyz[1]) - float(reference_xyz[1])
-    radius = math.hypot(forward, lateral)
-    margin = lateral if relation == "left" else -lateral
-    return radius > 1e-8 and margin / radius >= math.cos(math.radians(45.0))
-
-
-def _first_sustained(mask: list[bool], width: int = 3) -> int | None:
-    run = 0
-    for index, value in enumerate(mask):
-        run = run + 1 if value else 0
-        if run == width:
-            return index - width + 1
-    return None
-
-
-def _frozen_success(steps: Any, physical_goal: str, detached_release: bool) -> bool:
-    """Exact E004/B001 binary predicate, kept dependency-free for lane tests."""
-
-    require(isinstance(steps, list) and steps, "raw state trace is missing")
-    return bool(_cone(steps[-1], physical_goal) and detached_release)
-
-
-def _failure_category(steps: Any, physical_goal: str, detached_release: bool, success: bool) -> str:
-    """Exact E004 taxonomy precedence, using physical-goal metadata only."""
-
-    require(isinstance(steps, list), "raw state trace is missing")
-    if success:
-        return "correct"
-    if not any(bool(step.get("object_grabbed")) for step in steps):
-        return "pick_failed"
-    opposite = "right" if physical_goal == "left" else "left"
-    if _first_sustained([_cone(step, opposite) for step in steps]) is not None and all(_cone(step, opposite) for step in steps[-3:]):
-        return "wrong_side"
-    if _first_sustained([_cone(step, physical_goal) for step in steps]) is not None and all(_cone(step, physical_goal) for step in steps[-3:]) and not detached_release:
-        return "release_failed"
-    return "transport_failed"
-
-
 def _validate_request_seeds(raw: Mapping[str, Any], cell: C002Cell) -> list[int]:
     events = raw.get("request_events")
     require(isinstance(events, list) and events, "raw request events are missing")
@@ -133,7 +113,11 @@ def compile_episode(raw: Mapping[str, Any], *, cell: C002Cell, registration_sha2
         require(raw.get(key) == expected, f"raw episode differs from registered cell for {key}")
     detached = raw.get("final_detached_release")
     require(type(detached) is bool, "detached-release flag is invalid")
-    success = _frozen_success(raw.get("state_trace"), cell.physical_goal, detached)
+    try:
+        steps = e004_normalize_steps(raw.get("state_trace"))
+    except RuntimeContractError as exc:
+        raise ContractError(f"state trace violates exact frozen E004 normalizer: {exc}") from exc
+    success = e004_frozen_requested_success(steps, cell.physical_goal, detached)
     require(raw.get("reported_frozen_task_success") is success, "raw frozen success differs from frozen scorer")
     signed = finite_number(raw.get("signed_final_lateral_offset"), "signed final lateral offset")
     depth = finite_number(raw.get("requested_side_depth"), "requested-side depth")
@@ -164,7 +148,7 @@ def compile_episode(raw: Mapping[str, Any], *, cell: C002Cell, registration_sha2
     require(isinstance(camera_artifacts, dict) and set(camera_artifacts) == set(expected_identity["policy_cameras"]), "policy camera image artifacts are incomplete")
     bound_cameras = {name: _artifact(record, f"policy camera image {name}") for name, record in camera_artifacts.items()}
     require(runtime.get("policy_camera_image_artifact_hashes") == {name: record["sha256"] for name, record in bound_cameras.items()}, "runtime camera/image hashes differ from retained artifacts")
-    outcome = _failure_category(raw.get("state_trace"), cell.physical_goal, detached, success)
+    outcome = e004_failure_category(success=success, steps=steps, relation=cell.physical_goal, detached_release=detached)
     reported = raw.get("reported_failure_category")
     require(reported == outcome, "raw failure category differs from frozen taxonomy")
     return {
@@ -376,6 +360,44 @@ def _write_jsonl(path: Path, rows: Iterable[Mapping[str, Any]]) -> None:
     path.write_text("".join(json.dumps(row, allow_nan=False, sort_keys=True) + "\n" for row in rows), encoding="utf-8")
 
 
+def _write_text(path: Path, value: str) -> None:
+    if path.exists():
+        raise ContractError(f"refusing to overwrite retained output: {path}")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(value, encoding="utf-8")
+
+
+def decision_memo(results: Mapping[str, Any]) -> str:
+    left = results["primary_requested_side_depth_equivalence"]["left"]["depth_inverse_minus_canonical_m"]
+    right = results["primary_requested_side_depth_equivalence"]["right"]["depth_inverse_minus_canonical_m"]
+    authorized = bool(results["model_level_semantic_depth_equivalence_claim_authorized"])
+    return (
+        "# V3-C002 decision memo\n\n"
+        f"Valid episodes: {results['valid_behavioral_episodes']}; complete seed blocks: {results['complete_seed_blocks']}.\n\n"
+        f"LEFT inverse-minus-canonical depth: {left['mean']:.6f} m, 90% CI [{left['bootstrap_90_ci'][0]:.6f}, {left['bootstrap_90_ci'][1]:.6f}], TOST/equivalence: {left['equivalent']}.\n\n"
+        f"RIGHT inverse-minus-canonical depth: {right['mean']:.6f} m, 90% CI [{right['bootstrap_90_ci'][0]:.6f}, {right['bootstrap_90_ci'][1]:.6f}], TOST/equivalence: {right['equivalent']}.\n\n"
+        f"Inverse-reference endpoint positive control passed: {results['semantic_redirection_supported']}.\n\n"
+        f"Model-level semantic depth-equivalence claim authorized: {authorized}. "
+        "This claim is π0.5-specific and limited to the registered symmetric-object-layout DROID cohort.\n"
+    )
+
+
+def manuscript_insert(results: Mapping[str, Any]) -> str:
+    left = results["primary_requested_side_depth_equivalence"]["left"]["depth_inverse_minus_canonical_m"]
+    right = results["primary_requested_side_depth_equivalence"]["right"]["depth_inverse_minus_canonical_m"]
+    decision = "authorized" if results["model_level_semantic_depth_equivalence_claim_authorized"] else "withheld"
+    return (
+        "# V3-C002 manuscript insert\n\n"
+        "| Model/layout | LEFT Δ depth (90% CI), TOST | RIGHT Δ depth (90% CI), TOST | Semantic claim |\n"
+        "|---|---:|---:|---|\n"
+        f"| π0.5, E004 s=1 symmetric object layout | {left['mean']:.4f} m [{left['bootstrap_90_ci'][0]:.4f}, {left['bootstrap_90_ci'][1]:.4f}], {left['equivalent']} | "
+        f"{right['mean']:.4f} m [{right['bootstrap_90_ci'][0]:.4f}, {right['bootstrap_90_ci'][1]:.4f}], {right['equivalent']} | {decision} |\n\n"
+        f"Across matched prompts, directional depth form-equivalence was {results['descriptive_directional_depth_form_equivalence']}. "
+        f"The inverse-reference endpoint control was {results['semantic_redirection_supported']}, so the registered semantic claim was {decision}.\n\n"
+        "Claim boundary: π0.5 only, exact registered E004 s=1 symmetric object layout in DROID; robot embodiment and cameras are not claimed symmetric.\n"
+    )
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--registration", type=Path, required=True)
@@ -384,6 +406,10 @@ def main() -> None:
     parser.add_argument("--episodes-output", type=Path, required=True)
     parser.add_argument("--pairs-output", type=Path, required=True)
     parser.add_argument("--results-output", type=Path, required=True)
+    parser.add_argument("--decision-memo-output", type=Path, required=True)
+    parser.add_argument("--evidence-manifest-output", type=Path, required=True)
+    parser.add_argument("--manuscript-insert-output", type=Path, required=True)
+    parser.add_argument("--infrastructure-attempts", type=Path, required=True)
     args = parser.parse_args()
     registration, cells = load_cells(registration_path=args.registration, queue_path=args.queue)
     require(registration.get("registration_status") == "registered_after_two_human_wording_agreements", "C002 is not behaviorally registered")
@@ -391,6 +417,8 @@ def main() -> None:
     queue_sha = sha256_file(args.queue)
     cell_map = {cell.cell_id: cell for cell in cells}
     raw_rows = _read_jsonl(args.raw_episodes)
+    infrastructure_rows = _read_jsonl(args.infrastructure_attempts) if args.infrastructure_attempts.stat().st_size else []
+    require(all(row.get("infrastructure_status") == "infrastructure_invalid_excluded" for row in infrastructure_rows), "infrastructure ledger contains a non-excluded row")
     require(len(raw_rows) == 1364, "raw source must contain exactly 1,364 behavioral episodes")
     require(len({str(row.get("cell_id")) for row in raw_rows}) == 1364, "raw source has duplicate cells")
     require({str(row.get("cell_id")) for row in raw_rows} == set(cell_map), "raw source does not exactly cover the queue")
@@ -399,6 +427,36 @@ def main() -> None:
     _write_jsonl(args.episodes_output, episodes)
     _write_jsonl(args.pairs_output, pairs)
     _write_json(args.results_output, results)
+    memo = decision_memo(results)
+    insert = manuscript_insert(results)
+    _write_text(args.decision_memo_output, memo)
+    _write_text(args.manuscript_insert_output, insert)
+    raw_bindings = [record for episode in episodes for record in list(episode["raw_artifacts"].values()) + list(episode["policy_camera_image_artifacts"].values())]
+    manifest = {
+        "schema_version": "vla-wam-shared-v3c002-evidence-manifest-v1",
+        "study_id": STUDY_ID,
+        "amendment_id": AMENDMENT_ID,
+        "status": "complete_hash_bound_results",
+        "registration": repo_file_binding(args.registration),
+        "queue": repo_file_binding(args.queue),
+        "raw_episodes": _artifact({"path": str(args.raw_episodes.resolve()), "bytes": args.raw_episodes.stat().st_size, "sha256": sha256_file(args.raw_episodes)}, "raw episodes"),
+        "infrastructure_attempts": _artifact({"path": str(args.infrastructure_attempts.resolve()), "bytes": args.infrastructure_attempts.stat().st_size, "sha256": sha256_file(args.infrastructure_attempts)}, "infrastructure attempts"),
+        "compiled_outputs": {
+            name: repo_file_binding(path)
+            for name, path in (("episodes", args.episodes_output), ("pairs", args.pairs_output), ("results", args.results_output), ("decision_memo", args.decision_memo_output), ("manuscript_insert", args.manuscript_insert_output))
+        },
+        "raw_source_artifact_count_rehashed": len(raw_bindings),
+        "raw_source_bytes_rehashed": sum(record["bytes"] for record in raw_bindings),
+        "raw_source_unique_sha256_count": len({record["sha256"] for record in raw_bindings}),
+        "raw_arrays_and_videos_retained_on_pvc": True,
+        "infrastructure_attempt_count_excluded": len(infrastructure_rows),
+        "valid_behavioral_episode_count": len(episodes),
+        "source_lineage": registration["source_lineage"],
+        "exact_runtime_contract_sha256": registration["exact_e004_pi05_runtime"]["contract_sha256"],
+        "compiler": repo_file_binding(Path(__file__)),
+        "invocation": [sys.executable, *sys.argv],
+    }
+    _write_json(args.evidence_manifest_output, manifest)
 
 
 if __name__ == "__main__":

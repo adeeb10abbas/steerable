@@ -24,6 +24,7 @@ from experiments.v3.phase_c_semantic_equivalence_v3c002.contract import (  # noq
     RELEASE_GATE_SCHEMA,
     file_binding,
     read_finite_json,
+    repo_file_binding,
     sha256_file,
 )
 from experiments.v3.phase_c_semantic_equivalence_v3c002.wording_gate import validate_attestations  # noqa: E402
@@ -52,11 +53,14 @@ def main() -> None:
     if not isinstance(draft, dict) or draft.get("schema_version") != REGISTRATION_SCHEMA or draft.get("registration_status") != "pre_registration_draft_pending_two_human_wording_agreements":
         raise ContractError("only the untouched fail-closed C002 draft may be activated")
     supersession = read_finite_json(draft_root / "supersession.json")
-    if not isinstance(supersession, dict) or supersession.get("status") != "prospective_v2_supersedes_unexecuted_v1_draft" or supersession.get("v1_must_never_be_activated") is not True:
-        raise ContractError("only the disclosed V2 superseding draft may be activated")
+    if not isinstance(supersession, dict) or supersession.get("status") != "prospective_v3_supersedes_unexecuted_v1_and_v2_drafts" or supersession.get("v1_and_v2_must_never_be_activated") is not True:
+        raise ContractError("only the disclosed V3 superseding draft may be activated")
     wording_gate = validate_attestations(sheet_path=sheet, attestation_paths=args.reader_attestation)
-    wording_gate["draft_registration"] = file_binding(draft_registration)
-    wording_gate["queue"] = file_binding(queue)
+    wording_gate["sheet"] = repo_file_binding(sheet)
+    for record, source in zip(wording_gate["reader_attestations"], args.reader_attestation):
+        record["attestation"] = repo_file_binding(source)
+    wording_gate["draft_registration"] = repo_file_binding(draft_registration)
+    wording_gate["queue"] = repo_file_binding(queue)
     _write_new(activation_root / "wording_gate.json", wording_gate)
     active = dict(draft)
     active.update(
@@ -65,8 +69,8 @@ def main() -> None:
             "registered_at_utc": args.registered_at_utc,
             "model_requests_authorized": False,
             "behavioral_episodes_authorized": False,
-            "pre_registration_draft": file_binding(draft_registration),
-            "wording_gate": file_binding(activation_root / "wording_gate.json"),
+            "pre_registration_draft": repo_file_binding(draft_registration),
+            "wording_gate": repo_file_binding(activation_root / "wording_gate.json"),
             "release_boundary": "Wording gate passed and queue is registered, but no model request or behavioral episode is authorized until the source commit is pushed and exact model-blind physical/runtime/raw-writer/renderer/fixed-observation/two-lane-isolation gates are passed and bound in a new release_gate.json.",
         }
     )
@@ -77,9 +81,9 @@ def main() -> None:
         "amendment_id": AMENDMENT_ID,
         "status": "blocked_pending_committed_source_and_runtime_preflight_gates",
         "passed": False,
-        "registration": file_binding(activation_root / "registration.json"),
-        "queue": file_binding(queue),
-        "wording_gate": file_binding(activation_root / "wording_gate.json"),
+        "registration": repo_file_binding(activation_root / "registration.json"),
+        "queue": repo_file_binding(queue),
+        "wording_gate": repo_file_binding(activation_root / "wording_gate.json"),
         "required_remaining_gates": [
             "committed_and_pushed_source_commit_bound_to_release",
             "model_blind_exact_e004_s1_physical_reset_camera_raw_writer_renderer_gate",

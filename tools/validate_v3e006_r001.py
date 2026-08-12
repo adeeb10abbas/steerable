@@ -304,9 +304,52 @@ def validate_candidate_root(root: Path) -> dict[str, Any]:
     verify_binding(harness["launch"], path=launch_path, ignore_path=True)
     verify_binding(harness["runtime_log"], ignore_path=False)
     verify_binding(harness["child_report"], ignore_path=False)
+    verify_binding(launch["harness_source"], ignore_path=False)
+    require(harness.get("harness_source") == launch.get("harness_source"), "harness source differs from launch")
+    for row in launch.get("input_bindings", {}).values():
+        verify_binding(row, ignore_path=False)
+    for row in launch.get("formal_health_preflight", {}).values():
+        verify_binding(row, ignore_path=False)
     child = load(Path(harness["child_report"]["path"]))
     require(child.get("amendment_id") == "V3-E006-R001", "child amendment differs")
     require(child.get("model_request_count") == child.get("behavioral_episode_count") == 0, "child behavioral/model counts are nonzero")
+    child_evidence = child.get("execution_evidence", child)
+    require(isinstance(child_evidence, Mapping), "child execution evidence is absent")
+    verify_binding(child["construction_source"], ignore_path=False)
+    require(
+        child["construction_source"]["sha256"] == launch["input_bindings"]["repair_source"]["sha256"]
+        and child["construction_source"]["bytes"] == launch["input_bindings"]["repair_source"]["bytes"],
+        "child construction source differs from launch",
+    )
+    require(child["construction_source"].get("study_commit") == launch.get("study_commit"), "child study commit differs from launch")
+    input_name_map = {
+        "e004_candidate": "e004_candidate",
+        "ood_freeze": "ood_freeze",
+        "e004_full_reset_reference": "e004_reset_reference",
+        "runtime_contract": "runtime_contract",
+        "repair_registration": "repair_registration",
+        "candidate_schedule": "candidate_schedule",
+        "original_v3e006_closure_binding": "original_closure_binding",
+        "source_push_gate": "source_push_gate",
+        "control_scene_asset": "control_scene_asset",
+        "paired_scene_asset": "paired_scene_asset",
+    }
+    for child_name, launch_name in input_name_map.items():
+        child_row = child_evidence["input_bindings"][child_name]
+        launch_row = launch["input_bindings"][launch_name]
+        require(
+            child_row["bytes"] == launch_row["bytes"] and child_row["sha256"] == launch_row["sha256"],
+            f"child {child_name} binding differs from launch",
+        )
+    require(child_evidence.get("passed_health_preflight") == launch.get("formal_health_preflight"), "child formal-health bundle differs from launch")
+    child_lane = child_evidence.get("lane", {})
+    for key in ("pod", "pod_uid", "gpu_uuid", "container_image", "container_id", "driver_version"):
+        require(child_lane.get(key) == launch.get("lane", {}).get(key), f"child lane {key} differs from launch")
+    require(child_evidence.get("runtime_log", {}).get("path") == harness["runtime_log"]["path"], "child runtime-log path differs from harness")
+    invocation = child_evidence.get("invocation")
+    child_argv = launch.get("child_argv")
+    require(isinstance(invocation, list) and isinstance(child_argv, list) and len(child_argv) >= 4, "child invocation evidence is absent")
+    require(invocation[1:] == child_argv[3:], "child observed argv differs from launch argv")
     if child.get("status") == "infrastructure_invalid_r001_state_repair":
         require(child.get("passed") is False and child.get("candidate_gate_passed") is False, "infrastructure child was marked passed")
         require(child.get("state_candidate_count") == 0, "infrastructure child counted a state candidate")
@@ -345,6 +388,30 @@ def validate_candidate_root(root: Path) -> dict[str, Any]:
     require(harness.get("status") == "completed_r001_candidate_search" and harness.get("process_completed") is True, "normal search result was not process-complete")
     require(child.get("status") in {"passed_r001_state_repair_not_released_for_behavior", "r001_candidate_budget_exhausted_no_valid_state_pair"}, "wrong normal child status")
     require(child.get("candidate_budget") == 8, "child candidate budget differs")
+    for key, launch_name in (
+        ("repair_registration", "repair_registration"),
+        ("candidate_schedule", "candidate_schedule"),
+        ("source_push_gate", "source_push_gate"),
+        ("original_v3e006_closure_binding", "original_closure_binding"),
+        ("ood_freeze", "ood_freeze"),
+        ("e004_full_reset_reference", "e004_reset_reference"),
+        ("e004_candidate", "e004_candidate"),
+    ):
+        verify_binding(child[key], ignore_path=False)
+        require(
+            child[key]["bytes"] == launch["input_bindings"][launch_name]["bytes"]
+            and child[key]["sha256"] == launch["input_bindings"][launch_name]["sha256"],
+            f"normal child {key} differs from launch",
+        )
+    verify_binding(child["frozen_e004_runtime_bindings"], ignore_path=False)
+    for key, launch_name in (("control", "control_scene_asset"), ("paired", "paired_scene_asset")):
+        verify_binding(child["scene_assets"][key], ignore_path=False)
+        require(
+            child["scene_assets"][key]["bytes"] == launch["input_bindings"][launch_name]["bytes"]
+            and child["scene_assets"][key]["sha256"] == launch["input_bindings"][launch_name]["sha256"],
+            f"normal child {key} scene differs from launch",
+        )
+    verify_binding(child["video"], ignore_path=False)
     attempts = child.get("attempts")
     require(isinstance(attempts, list) and 1 <= len(attempts) <= 8, "child candidate attempts differ")
     require([row["candidate_rank"] for row in attempts] == list(range(1, len(attempts) + 1)), "child candidate attempts are not sequential")
@@ -361,8 +428,12 @@ def validate_candidate_root(root: Path) -> dict[str, Any]:
             require(lifecycle.get("fresh_reset_completed_in_this_environment") is True, "stage did not complete its fresh reset")
             require(lifecycle.get("closed_before_next_stage") is True, "stage environment was not closed")
             require(stage["fresh_reset"]["passed"] is True, "fresh reset gate failed")
+            for row in stage["fresh_reset"]["camera_evidence"]["bindings"].values():
+                verify_binding(row["rgb"], ignore_path=False)
             state = stage["candidate_state"]
             require(all(key in state for key in ("physics_gate", "ood_gate", "camera_evidence", "companion_pose_gate", "normalized_state_sha256")), "candidate state lacks gate/hash evidence")
+            for row in state["camera_evidence"]["bindings"].values():
+                verify_binding(row["rgb"], ignore_path=False)
     lifecycle = child.get("environment_lifecycle")
     require(isinstance(lifecycle, list) and len(lifecycle) == 2 * len(attempts) <= 16, "dedicated environment lifecycle count differs")
     require([row["environment_ordinal"] for row in lifecycle] == list(range(1, len(lifecycle) + 1)), "environment lifecycle order differs")

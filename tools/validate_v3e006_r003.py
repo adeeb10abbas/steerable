@@ -488,6 +488,21 @@ def validate_candidate_root(root: Path, candidate_root: Path) -> dict[str, Any]:
         verify_binding(Path(str(expected["path"])), expected, f"child input {name}")
     for name, expected in child_evidence.get("passed_health_preflight", {}).items():
         verify_binding(Path(str(expected["path"])), expected, f"child formal health {name}")
+    historical = child_evidence.get("historical_source_verification_before_AppLauncher")
+    require(isinstance(historical, Mapping) and historical, "child historical sources absent")
+    for source_name, source in historical.items():
+        for artifact_name, expected in source.get("bindings", {}).items():
+            verify_binding(
+                Path(str(expected["path"])),
+                expected,
+                f"child historical source {source_name}/{artifact_name}",
+            )
+    controller_sources = child_evidence.get("controller_source_verification_before_AppLauncher")
+    require(isinstance(controller_sources, Mapping) and controller_sources, "child controller sources absent")
+    for source_name, expected in controller_sources.items():
+        verify_binding(
+            Path(str(expected["path"])), expected, f"child controller source {source_name}"
+        )
     require(child_evidence.get("passed_health_preflight") == launch.get("formal_health_preflight"), "child health differs from launch")
     require(child_evidence.get("lane") == {**launch.get("lane", {}), "device": child_evidence.get("lane", {}).get("device"), "python": child_evidence.get("lane", {}).get("python")}, "child lane differs from launch")
     return {

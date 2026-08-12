@@ -664,14 +664,18 @@ def _base_link_body_index(env: Any) -> int:
 def _base_link_pose(env: Any) -> tuple[list[float], list[float]]:
     robot = env.scene["robot"].data
     index = _base_link_body_index(env)
-    return _host(robot.body_pos_w[0, index]), _host(robot.body_quat_w[0, index])
+    world_position = np.asarray(_host(robot.body_pos_w[0, index]), dtype=np.float64)
+    env_origin = np.asarray(_host(env.scene.env_origins[0]), dtype=np.float64)
+    return (world_position - env_origin).tolist(), _host(robot.body_quat_w[0, index])
 
 
 def _frame_identity_evidence(env: Any, frames: Any, eef_index: int) -> dict[str, Any]:
     base_position, base_quaternion = _base_link_pose(env)
-    live_eef_position = np.asarray(
+    live_eef_position_world = np.asarray(
         _host(frames.data.target_pos_w[0, eef_index]), dtype=np.float64
     )
+    env_origin = np.asarray(_host(env.scene.env_origins[0]), dtype=np.float64)
+    live_eef_position = live_eef_position_world - env_origin
     live_eef_quaternion = _host(frames.data.target_quat_w[0, eef_index])
     expected_eef_position = np.asarray(base_position, dtype=np.float64) + _qrotate(
         base_quaternion, EEF_OFFSET_POS
@@ -696,6 +700,8 @@ def _frame_identity_evidence(env: Any, frames: Any, eef_index: int) -> dict[str,
         "position_residual_m_inclusive": 1e-6,
         "orientation_residual_deg_inclusive": 1e-4,
         "passed": passed,
+        "position_semantics": "env-local world-axis coordinates, matching RoboLab recorder subtraction of scene.env_origins",
+        "scene_env_origin_world_m": env_origin.tolist(),
     }
 
 

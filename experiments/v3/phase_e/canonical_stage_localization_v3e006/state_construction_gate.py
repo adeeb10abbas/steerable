@@ -73,6 +73,31 @@ def _sha(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _verify_passed_health_preflight(files: Mapping[str, tuple[Path, str]]) -> None:
+    harness_path, _ = files["harness_result"]
+    child_path, _ = files["preflight_result"]
+    try:
+        harness = json.loads(harness_path.read_text(encoding="utf-8"))
+        child = json.loads(child_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ValueError("formal health preflight JSON is missing or invalid") from exc
+    if harness.get("status") != "passed_generic_zero_model_health_preflight" or harness.get("passed") is not True:
+        raise ValueError("formal health harness did not pass")
+    if child.get("status") != "passed_generic_zero_model_cuda_vulkan_isaac_physics_render_health_preflight" or child.get("passed") is not True:
+        raise ValueError("formal health child did not pass exact runtime checks")
+    for label, payload in (("harness", harness), ("child", child)):
+        for key in ("model_request_count", "behavioral_episode_count", "state_candidate_count"):
+            if payload.get(key) != 0:
+                raise ValueError(f"formal health {label} has nonzero {key}")
+    binding = harness.get("child_report")
+    if not isinstance(binding, Mapping) or binding != {
+        "path": str(child_path.resolve()),
+        "bytes": child_path.stat().st_size,
+        "sha256": _sha(child_path),
+    }:
+        raise ValueError("formal health harness child binding differs")
+
+
 health_files = {
     "harness_result": (args.health_preflight_root / "harness_result.json", args.health_harness_sha256),
     "preflight_launch": (args.health_preflight_root / "preflight_launch.json", args.health_launch_sha256),
@@ -88,6 +113,10 @@ for path, digest in (
 ):
     if not path.is_file() or _sha(path) != digest:
         BOOTSTRAP.error(f"hash-bound input is missing or changed: {path}")
+try:
+    _verify_passed_health_preflight(health_files)
+except ValueError as exc:
+    BOOTSTRAP.error(str(exc))
 for path in (args.control_scene_asset, args.paired_scene_asset):
     if not path.is_file():
         BOOTSTRAP.error(f"scene input is missing: {path}")

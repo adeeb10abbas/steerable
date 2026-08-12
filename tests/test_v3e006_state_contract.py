@@ -4,6 +4,7 @@ import unittest
 import json
 import copy
 from pathlib import Path
+import ast
 
 from experiments.v3.phase_e.canonical_stage_localization_v3e006.state_contract import (
     StateContractError,
@@ -28,6 +29,26 @@ def test_state_gate_retains_failure_before_closing_simulator() -> None:
         '"traceback": traceback.format_exc()',
     ):
         assert field in source
+
+
+def test_health_semantics_are_checked_before_app_launcher() -> None:
+    source_path = Path(__file__).parents[1] / "experiments/v3/phase_e/canonical_stage_localization_v3e006/state_construction_gate.py"
+    source = source_path.read_text(encoding="utf-8")
+    verified = source.index("_verify_passed_health_preflight(health_files)")
+    launcher = source.index("simulation_app = AppLauncher(args).app")
+    assert verified < launcher
+    tree = ast.parse(source)
+    fn = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "_verify_passed_health_preflight")
+    fn_source = ast.get_source_segment(source, fn) or ""
+    for required in (
+        "passed_generic_zero_model_health_preflight",
+        "passed_generic_zero_model_cuda_vulkan_isaac_physics_render_health_preflight",
+        '"model_request_count"',
+        '"behavioral_episode_count"',
+        '"state_candidate_count"',
+        '"child_report"',
+    ):
+        assert required in fn_source
 
 
 class StateContractTests(unittest.TestCase):

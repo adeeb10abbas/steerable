@@ -53,8 +53,8 @@ def main() -> None:
     if not isinstance(draft, dict) or draft.get("schema_version") != REGISTRATION_SCHEMA or draft.get("registration_status") != "pre_registration_draft_pending_two_human_wording_agreements":
         raise ContractError("only the untouched fail-closed C002 draft may be activated")
     supersession = read_finite_json(draft_root / "supersession.json")
-    if not isinstance(supersession, dict) or supersession.get("status") != "prospective_v8_supersedes_unexecuted_v1_v2_v3_v4_v5_v6_v7_packages" or supersession.get("v1_v2_v3_v4_v5_v6_v7_must_never_be_activated") is not True:
-        raise ContractError("only the disclosed V8 superseding draft may be activated")
+    if not isinstance(supersession, dict) or supersession.get("status") != "prospective_v9_supersedes_unexecuted_v1_through_v8_packages" or supersession.get("v1_through_v8_must_never_be_activated") is not True:
+        raise ContractError("only the disclosed V9 superseding draft may be activated")
     active_queue = activation_root / "queue.jsonl"
     infrastructure = activation_root / "infrastructure_attempts.jsonl"
     for path in (active_queue, infrastructure):

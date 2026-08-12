@@ -20,6 +20,8 @@ WORDING_GATE_SCHEMA = "vla-wam-shared-v3c002-wording-gate-v1"
 RELEASE_GATE_SCHEMA = "vla-wam-shared-v3c002-release-gate-v4"
 SOURCE_PUSH_GATE_SCHEMA = "vla-wam-shared-v3c002-source-push-gate-v1"
 PHYSICAL_GATE_SCHEMA = "vla-wam-shared-v3c002-model-blind-physical-gate-v1"
+MODEL_BLIND_ADAPTER_GATE_SCHEMA = "vla-wam-shared-v3c002-same-process-model-blind-adapter-gate-v1"
+TARGET_RAW_REHASH_SCHEMA = "vla-wam-shared-v3c002-target-raw-rehash-receipt-v1"
 SMOKE_GATE_SCHEMA = "vla-wam-shared-v3c002-excluded-smoke-gate-v1"
 SMOKE_AUTHORIZATION_SCHEMA = "vla-wam-shared-v3c002-smoke-authorization-v2"
 ISOLATION_GATE_SCHEMA = "vla-wam-shared-v3c002-two-lane-isolation-gate-v1"
@@ -340,6 +342,52 @@ def _verify_pushed_source_commit(source_gate: Mapping[str, Any]) -> None:
     require(ancestor, "source gate commit is not contained in the pushed remote branch")
 
 
+def require_model_blind_preflight_authorization(
+    *, registration_path: Path, queue_path: Path, source_push_gate_path: Path
+) -> tuple[dict[str, Any], list[C002Cell], dict[str, Any]]:
+    """Authorize a zero-request adapter-process proof, never inference."""
+
+    registration, cells = load_cells(registration_path=registration_path, queue_path=queue_path)
+    require(registration.get("registration_status") == "registered_after_two_human_wording_agreements", "model-blind registration is not active")
+    require(registration.get("model_requests_authorized") is False, "model-blind preflight cannot use a behavior-authorized registration")
+    source_gate = read_finite_json(source_push_gate_path)
+    require(isinstance(source_gate, dict) and source_gate.get("schema_version") == SOURCE_PUSH_GATE_SCHEMA, "model-blind source gate schema changed")
+    require(source_gate.get("status") == "passed_source_commit_pushed" and source_gate.get("passed") is True and source_gate.get("pushed") is True, "model-blind source gate did not pass")
+    require(source_gate.get("registration_sha256") == sha256_file(registration_path), "model-blind source gate registration changed")
+    lineage = registration.get("source_lineage")
+    require(isinstance(lineage, dict) and lineage.get("replacement_commit") == source_gate.get("source_commit"), "model-blind source commit differs from registration")
+    require(lineage.get("recorded_before_any_model_request") is True and lineage.get("model_requests_at_recording") == 0, "model-blind source lineage is retrospective")
+    _verify_pushed_source_commit(source_gate)
+    return registration, cells, source_gate
+
+
+def _require_same_process_physical_proof(physical: Mapping[str, Any], *, label: str) -> None:
+    require(physical.get("same_process_gate_must_repeat_before_request_zero") is True, f"{label} does not require the same-process gate before request zero")
+    same_process = _bound_json(
+        physical.get("same_process_adapter_report"),
+        f"{label} same-process adapter report",
+        schema=MODEL_BLIND_ADAPTER_GATE_SCHEMA,
+        status="passed_same_process_gate_stopped_before_query_server",
+    )
+    require(
+        same_process.get("model_request_count") == 0
+        and same_process.get("behavioral_episode_count") == 0
+        and same_process.get("behavioral_action_count") == 0
+        and same_process.get("query_server_entry_count") == 0,
+        f"{label} same-process adapter proof was not model blind",
+    )
+    require(same_process.get("same_process_gate_completed_before_query_server") is True, f"{label} same-process ordering proof is absent")
+    receipt = _bound_json(
+        physical.get("target_raw_rehash_receipt"),
+        f"{label} target raw rehash receipt",
+        schema=TARGET_RAW_REHASH_SCHEMA,
+        status="passed_target_side_raw_rehash",
+    )
+    require(receipt.get("passed") is True and receipt.get("model_requests") == 0 and receipt.get("behavioral_episodes") == 0, f"{label} target raw rehash receipt is invalid")
+    require(receipt.get("same_process_adapter_report_sha256") == physical["same_process_adapter_report"]["sha256"], f"{label} raw receipt does not bind the same-process report")
+    require(receipt.get("standalone_report_sha256") == physical["standalone_report"]["sha256"], f"{label} raw receipt does not bind the standalone report")
+
+
 def require_released_gate(
     *, registration_path: Path, queue_path: Path, release_gate_path: Path
 ) -> tuple[dict[str, Any], list[C002Cell], dict[str, Any]]:
@@ -366,6 +414,7 @@ def require_released_gate(
     for key in ("physical_scene", "full_reset", "policy_cameras", "raw_writer", "renderer"):
         require(physical.get(key) is True, f"physical gate lacks passed {key}")
     require(physical.get("model_requests") == 0 and physical.get("behavioral_episodes") == 0, "physical gate was not model blind")
+    _require_same_process_physical_proof(physical, label="physical gate")
     require(physical.get("exact_runtime_contract_sha256") == registration["exact_e004_pi05_runtime"]["contract_sha256"], "physical gate runtime contract changed")
     smoke = _bound_json(gate.get("excluded_smoke_gate"), "excluded smoke gate", schema=SMOKE_GATE_SCHEMA, status="passed_excluded_four_cell_smoke")
     require(smoke.get("excluded_from_behavioral_denominators") is True and smoke.get("completed_cells") == 4, "smoke was not an excluded four-cell block")
@@ -428,6 +477,7 @@ def require_smoke_authorization(
     for key in ("physical_scene", "full_reset", "policy_cameras", "raw_writer", "renderer"):
         require(physical.get(key) is True, f"smoke physical gate lacks passed {key}")
     require(physical.get("model_requests") == 0 and physical.get("behavioral_episodes") == 0, "smoke physical gate was not model blind")
+    _require_same_process_physical_proof(physical, label="smoke physical gate")
     require(physical.get("exact_runtime_contract_sha256") == registration["exact_e004_pi05_runtime"]["contract_sha256"], "smoke physical runtime contract changed")
     seed = gate.get("excluded_smoke_seed")
     require(seed == SEED_START, "excluded smoke seed changed")

@@ -28,6 +28,7 @@ from tools.validate_v3c002_v4_historical import validate as validate_v4_historic
 from tools.validate_v3c002_v5_historical import validate as validate_v5_historical
 from tools.validate_v3c002_v6_historical import validate as validate_v6_historical
 from tools.validate_v3c002_v7_historical import validate as validate_v7_historical
+from tools.validate_v3c002_v8_historical import validate as validate_v8_historical
 from tools.validate_v3c002_active import validate as validate_active
 from experiments.v3.phase_c_semantic_equivalence_v3c002.runner import _dispatch_block
 
@@ -181,6 +182,11 @@ class V3C002SemanticEquivalenceTests(unittest.TestCase):
         self.assertEqual(result["status"], "valid_immutable_unexecuted_superseded_v7_activation")
         self.assertEqual(result["queue_rows"], 1364)
 
+    def test_historical_v8_activation_and_provisional_smoke_authorization_remain_nonoperative(self) -> None:
+        result = validate_v8_historical()
+        self.assertEqual(result["status"], "valid_immutable_unexecuted_superseded_v8_activation")
+        self.assertTrue(result["provisional_smoke_authorization_nonoperative"])
+
     def test_excluded_smoke_authorization_cannot_bypass_physical_gate(self) -> None:
         with __import__("tempfile").TemporaryDirectory() as directory:
             tmp = Path(directory); draft = tmp / "draft"
@@ -190,13 +196,32 @@ class V3C002SemanticEquivalenceTests(unittest.TestCase):
             registration_path = tmp / "registration.json"; _write_json(registration_path, registration)
             queue = draft / "queue.jsonl"; source = tmp / "source.json"; physical = tmp / "physical.json"
             _write_json(source, {"schema_version": "vla-wam-shared-v3c002-source-push-gate-v1", "status": "passed_source_commit_pushed", "passed": True, "pushed": True, "source_commit": registration["source_lineage"]["replacement_commit"], "branch": "test", "remote": "origin", "registration_sha256": __import__("hashlib").sha256(registration_path.read_bytes()).hexdigest()})
-            _write_json(physical, {"schema_version": "vla-wam-shared-v3c002-model-blind-physical-gate-v1", "status": "passed_exact_e004_model_blind_physical_preflight", "passed": True, "physical_scene": True, "full_reset": True, "policy_cameras": True, "raw_writer": True, "renderer": True, "model_requests": 0, "behavioral_episodes": 0, "exact_runtime_contract_sha256": registration["exact_e004_pi05_runtime"]["contract_sha256"]})
+            standalone = tmp / "standalone.json"; standalone.write_text("{}\n", encoding="utf-8")
+            same_process = tmp / "same-process.json"
+            _write_json(same_process, {"schema_version": "vla-wam-shared-v3c002-same-process-model-blind-adapter-gate-v1", "status": "passed_same_process_gate_stopped_before_query_server", "passed": True, "model_request_count": 0, "behavioral_episode_count": 0, "behavioral_action_count": 0, "query_server_entry_count": 0, "same_process_gate_completed_before_query_server": True})
+            receipt = tmp / "receipt.json"
+            _write_json(receipt, {"schema_version": "vla-wam-shared-v3c002-target-raw-rehash-receipt-v1", "status": "passed_target_side_raw_rehash", "passed": True, "model_requests": 0, "behavioral_episodes": 0, "standalone_report_sha256": __import__("hashlib").sha256(standalone.read_bytes()).hexdigest(), "same_process_adapter_report_sha256": __import__("hashlib").sha256(same_process.read_bytes()).hexdigest()})
+            _write_json(physical, {"schema_version": "vla-wam-shared-v3c002-model-blind-physical-gate-v1", "status": "passed_exact_e004_model_blind_physical_preflight", "passed": True, "physical_scene": True, "full_reset": True, "policy_cameras": True, "raw_writer": True, "renderer": True, "model_requests": 0, "behavioral_episodes": 0, "same_process_gate_must_repeat_before_request_zero": True, "standalone_report": file_binding(standalone), "same_process_adapter_report": file_binding(same_process), "target_raw_rehash_receipt": file_binding(receipt), "exact_runtime_contract_sha256": registration["exact_e004_pi05_runtime"]["contract_sha256"]})
             _, cells = load_cells(registration_path=registration_path, queue_path=queue)
             block = sorted([cell for cell in cells if cell.seed == 12000], key=lambda cell: int(cell.row["execution_order_index"]))
             auth = tmp / "auth.json"
             _write_json(auth, {"schema_version": "vla-wam-shared-v3c002-smoke-authorization-v2", "status": "passed_pre_request_excluded_smoke_authorization", "passed": True, "registration": file_binding(registration_path), "queue": file_binding(queue), "source_push_gate": file_binding(source), "physical_gate": file_binding(physical), "excluded_smoke_seed": 12000, "ordered_cell_ids": [cell.cell_id for cell in block], "excluded_from_behavioral_denominators": True, "model_requests_before_smoke": 0, "behavioral_episodes_before_smoke": 0})
             with mock.patch("experiments.v3.phase_c_semantic_equivalence_v3c002.contract._verify_pushed_source_commit"):
                 require_smoke_authorization(registration_path=registration_path, queue_path=queue, authorization_path=auth)
+            physical_value = json.loads(physical.read_text(encoding="utf-8")); physical_value["same_process_gate_must_repeat_before_request_zero"] = False
+            _write_json(tmp / "physical-false.json", physical_value)
+            auth_value = json.loads(auth.read_text(encoding="utf-8")); auth_value["physical_gate"] = file_binding(tmp / "physical-false.json")
+            _write_json(tmp / "auth-false.json", auth_value)
+            with mock.patch("experiments.v3.phase_c_semantic_equivalence_v3c002.contract._verify_pushed_source_commit"):
+                with self.assertRaisesRegex(ContractError, "does not require the same-process gate"):
+                    require_smoke_authorization(registration_path=registration_path, queue_path=queue, authorization_path=tmp / "auth-false.json")
+            del physical_value["same_process_gate_must_repeat_before_request_zero"]
+            _write_json(tmp / "physical-missing.json", physical_value)
+            auth_value["physical_gate"] = file_binding(tmp / "physical-missing.json")
+            _write_json(tmp / "auth-missing.json", auth_value)
+            with mock.patch("experiments.v3.phase_c_semantic_equivalence_v3c002.contract._verify_pushed_source_commit"):
+                with self.assertRaisesRegex(ContractError, "does not require the same-process gate"):
+                    require_smoke_authorization(registration_path=registration_path, queue_path=queue, authorization_path=tmp / "auth-missing.json")
             physical.write_text(physical.read_text(encoding="utf-8") + "\n", encoding="utf-8")
             with mock.patch("experiments.v3.phase_c_semantic_equivalence_v3c002.contract._verify_pushed_source_commit"):
                 with self.assertRaisesRegex(ContractError, "physical gate artifact byte count changed"):
@@ -249,6 +274,21 @@ class V3C002SemanticEquivalenceTests(unittest.TestCase):
             with mock.patch("experiments.v3.phase_c_semantic_equivalence_v3c002.contract._verify_pushed_source_commit"):
                 with self.assertRaisesRegex(ContractError, "physical gate artifact byte count changed"):
                     require_released_gate(registration_path=registration, queue_path=queue, release_gate_path=gate)
+
+    def test_behavioral_release_rejects_false_same_process_repeat_flag(self) -> None:
+        with __import__("tempfile").TemporaryDirectory() as directory:
+            tmp_path = Path(directory)
+            registration, queue, gate = _release_fixture(tmp_path)
+            release = json.loads(gate.read_text(encoding="utf-8"))
+            physical_path = Path(release["physical_gate"]["path"])
+            physical = json.loads(physical_path.read_text(encoding="utf-8"))
+            physical["same_process_gate_must_repeat_before_request_zero"] = False
+            changed = tmp_path / "physical-false-release.json"; _write_json(changed, physical)
+            release["physical_gate"] = file_binding(changed)
+            changed_gate = tmp_path / "release-false.json"; _write_json(changed_gate, release)
+            with mock.patch("experiments.v3.phase_c_semantic_equivalence_v3c002.contract._verify_pushed_source_commit"):
+                with self.assertRaisesRegex(ContractError, "does not require the same-process gate"):
+                    require_released_gate(registration_path=registration, queue_path=queue, release_gate_path=changed_gate)
 
     def test_hand_authored_passed_release_cannot_bypass_missing_isolation_artifact(self) -> None:
         with __import__("tempfile").TemporaryDirectory() as directory:
@@ -450,10 +490,26 @@ def _release_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
         "registration_sha256": registration_sha,
     })
     physical = tmp_path / "physical.json"
+    standalone = tmp_path / "standalone.json"
+    _write_json(standalone, {"passed": True})
+    same_process = tmp_path / "same-process.json"
+    _write_json(same_process, {
+        "schema_version": "vla-wam-shared-v3c002-same-process-model-blind-adapter-gate-v1", "status": "passed_same_process_gate_stopped_before_query_server",
+        "passed": True, "model_request_count": 0, "behavioral_episode_count": 0, "behavioral_action_count": 0,
+        "query_server_entry_count": 0, "same_process_gate_completed_before_query_server": True,
+    })
+    receipt = tmp_path / "receipt.json"
+    _write_json(receipt, {
+        "schema_version": "vla-wam-shared-v3c002-target-raw-rehash-receipt-v1", "status": "passed_target_side_raw_rehash", "passed": True,
+        "model_requests": 0, "behavioral_episodes": 0, "standalone_report_sha256": __import__("hashlib").sha256(standalone.read_bytes()).hexdigest(),
+        "same_process_adapter_report_sha256": __import__("hashlib").sha256(same_process.read_bytes()).hexdigest(),
+    })
     _write_json(physical, {
         "schema_version": "vla-wam-shared-v3c002-model-blind-physical-gate-v1", "status": "passed_exact_e004_model_blind_physical_preflight",
         "passed": True, "physical_scene": True, "full_reset": True, "policy_cameras": True, "raw_writer": True, "renderer": True,
-        "model_requests": 0, "behavioral_episodes": 0, "exact_runtime_contract_sha256": exact_sha,
+        "model_requests": 0, "behavioral_episodes": 0, "same_process_gate_must_repeat_before_request_zero": True,
+        "standalone_report": file_binding(standalone), "same_process_adapter_report": file_binding(same_process), "target_raw_rehash_receipt": file_binding(receipt),
+        "exact_runtime_contract_sha256": exact_sha,
     })
     smoke = tmp_path / "smoke.json"
     smoke_raw = []

@@ -29,9 +29,10 @@ from tools.validate_v3c002_v4_historical import validate as validate_v4_historic
 from tools.validate_v3c002_v5_historical import validate as validate_v5_historical  # noqa: E402
 from tools.validate_v3c002_v6_historical import validate as validate_v6_historical  # noqa: E402
 from tools.validate_v3c002_v7_historical import validate as validate_v7_historical  # noqa: E402
+from tools.validate_v3c002_v8_historical import validate as validate_v8_historical  # noqa: E402
 
 
-ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/draft_v8"
+ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/draft_v9"
 
 
 def _resolve(binding: dict, *, root: Path) -> Path:
@@ -84,14 +85,14 @@ def validate(root: Path = ROOT) -> dict:
         _check_binding(binding, root=REPO_ROOT, label=f"source {source}", checks=checks)
     supersession_path = root / "supersession.json"
     supersession = read_finite_json(supersession_path)
-    if not isinstance(supersession, dict) or supersession.get("status") != "prospective_v8_supersedes_unexecuted_v1_v2_v3_v4_v5_v6_v7_packages":
-        raise ContractError("V8 supersession disclosure is missing")
-    if any(supersession.get(key) != 0 for key in ("v1_model_requests", "v1_behavioral_episodes", "v2_model_requests", "v2_behavioral_episodes", "v3_model_requests", "v3_behavioral_episodes", "v4_model_requests", "v4_behavioral_episodes", "v5_model_requests", "v5_behavioral_episodes", "v6_model_requests", "v6_behavioral_episodes", "v7_model_requests", "v7_behavioral_episodes")) or supersession.get("v1_v2_v3_v4_v5_v6_v7_must_never_be_activated") is not True:
-        raise ContractError("V1 through V7 were not immutably retired before inference")
+    if not isinstance(supersession, dict) or supersession.get("status") != "prospective_v9_supersedes_unexecuted_v1_through_v8_packages":
+        raise ContractError("V9 supersession disclosure is missing")
+    if any(supersession.get(key) != 0 for key in ("v1_model_requests", "v1_behavioral_episodes", "v2_model_requests", "v2_behavioral_episodes", "v3_model_requests", "v3_behavioral_episodes", "v4_model_requests", "v4_behavioral_episodes", "v5_model_requests", "v5_behavioral_episodes", "v6_model_requests", "v6_behavioral_episodes", "v7_model_requests", "v7_behavioral_episodes", "v8_model_requests", "v8_behavioral_episodes")) or supersession.get("v1_through_v8_must_never_be_activated") is not True:
+        raise ContractError("V1 through V8 were not immutably retired before inference")
     for revision, records in supersession.get("superseded_draft_bindings", {}).items():
         for name, binding in records.items():
             _check_binding(binding, root=REPO_ROOT, label=f"superseded {revision} {name}", checks=checks)
-    checks.append("V1 through V7 packages remain immutable, unexecuted, and permanently superseded")
+    checks.append("V1 through V8 packages remain immutable, unexecuted, and permanently superseded")
     gate = read_finite_json(gate_path)
     if not isinstance(gate, dict) or gate.get("amendment_id") != AMENDMENT_ID:
         raise ContractError("wording gate is invalid")
@@ -122,8 +123,9 @@ def validate(root: Path = ROOT) -> dict:
     historical_v5 = validate_v5_historical()
     historical_v6 = validate_v6_historical()
     historical_v7 = validate_v7_historical()
-    checks.append("independent historical validators confirm immutable unexecuted fail-closed V1 through V7 packages")
-    return {"status": "valid_superseding_v8_pre_registration_draft_blocked_pending_activation", "check_count": len(checks), "checks": checks, "queue_sha256": sha256_file(queue_path), "historical_v1": historical_v1, "historical_v2": historical_v2, "historical_v3": historical_v3, "historical_v4": historical_v4, "historical_v5": historical_v5, "historical_v6": historical_v6, "historical_v7": historical_v7}
+    historical_v8 = validate_v8_historical()
+    checks.append("independent historical validators confirm immutable unexecuted fail-closed V1 through V8 packages")
+    return {"status": "valid_superseding_v9_pre_registration_draft_blocked_pending_activation", "check_count": len(checks), "checks": checks, "queue_sha256": sha256_file(queue_path), "historical_v1": historical_v1, "historical_v2": historical_v2, "historical_v3": historical_v3, "historical_v4": historical_v4, "historical_v5": historical_v5, "historical_v6": historical_v6, "historical_v7": historical_v7, "historical_v8": historical_v8}
 
 
 def main() -> None:

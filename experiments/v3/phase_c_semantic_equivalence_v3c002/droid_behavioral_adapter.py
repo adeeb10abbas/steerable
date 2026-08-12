@@ -37,7 +37,7 @@ BOOTSTRAP.add_argument("--runtime-manifest", type=Path, required=True)
 BOOTSTRAP.add_argument("--runtime-manifest-sha256", required=True)
 BOOTSTRAP.add_argument("--authorization-gate", type=Path, required=True)
 BOOTSTRAP.add_argument("--authorization-gate-sha256", required=True)
-BOOTSTRAP.add_argument("--authorization-mode", choices=("excluded_smoke", "behavioral"), required=True)
+BOOTSTRAP.add_argument("--authorization-mode", choices=("model_blind_preflight", "excluded_smoke", "behavioral"), required=True)
 BOOTSTRAP.add_argument("--cell-id", required=True)
 BOOTSTRAP.add_argument("--lane-pod-uid", required=True)
 BOOTSTRAP.add_argument("--lane-gpu-uuid", required=True)
@@ -95,6 +95,7 @@ from experiments.v3.phase_c_semantic_equivalence_v3c002.contract import (  # noq
     STUDY_ID,
     ContractError,
     load_cells,
+    require_model_blind_preflight_authorization,
     require_released_gate,
     require_smoke_authorization,
     sha256_file,
@@ -184,13 +185,21 @@ if bootstrap.authorization_mode == "behavioral":
         queue_path=bootstrap.queue,
         release_gate_path=bootstrap.authorization_gate,
     )[2]
-else:
+elif bootstrap.authorization_mode == "excluded_smoke":
     if not bootstrap.authorization_gate.is_file() or sha256_file(bootstrap.authorization_gate) != bootstrap.authorization_gate_sha256:
         raise ContractError("excluded-smoke authorization binding changed")
     authorization = require_smoke_authorization(
         registration_path=bootstrap.registration,
         queue_path=bootstrap.queue,
         authorization_path=bootstrap.authorization_gate,
+    )[2]
+else:
+    if not bootstrap.authorization_gate.is_file() or sha256_file(bootstrap.authorization_gate) != bootstrap.authorization_gate_sha256:
+        raise ContractError("model-blind source-push gate binding changed")
+    authorization = require_model_blind_preflight_authorization(
+        registration_path=bootstrap.registration,
+        queue_path=bootstrap.queue,
+        source_push_gate_path=bootstrap.authorization_gate,
     )[2]
 runtime_manifest = validate_runtime_manifest(
     bootstrap.runtime_manifest,
@@ -529,6 +538,32 @@ def _retain_policy_camera_images(obs: Mapping[str, Any]) -> dict[str, dict[str, 
     return records
 
 
+def _write_model_blind_camera_video(obs: Mapping[str, Any]) -> Path:
+    path = bootstrap.state_capture_dir / "model_blind_policy_camera_montage.mp4"
+    if path.exists():
+        raise FileExistsError(f"refusing to overwrite model-blind renderer proof: {path}")
+    frames = [_rgb(obs, name) for name in CAMERAS]
+    height = min(frame.shape[0] for frame in frames)
+    resized = [cv2.resize(frame, (round(frame.shape[1] * height / frame.shape[0]), height)) for frame in frames]
+    montage = np.concatenate(resized, axis=1)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    writer = cv2.VideoWriter(str(path), cv2.VideoWriter_fourcc(*"mp4v"), 2.0, (montage.shape[1], montage.shape[0]))
+    if not writer.isOpened():
+        raise RuntimeError("model-blind RTX video writer did not open")
+    try:
+        for _ in range(4):
+            writer.write(cv2.cvtColor(montage, cv2.COLOR_RGB2BGR))
+    finally:
+        writer.release()
+    capture = cv2.VideoCapture(str(path))
+    okay, decoded = capture.read()
+    count = int(capture.get(cv2.CAP_PROP_FRAME_COUNT))
+    capture.release()
+    if not okay or decoded is None or count < 1:
+        raise RuntimeError("model-blind RTX renderer proof does not decode")
+    return path
+
+
 def _hold_action(obs: Mapping[str, Any], device: str) -> torch.Tensor:
     arm = obs["proprio_obs"]["arm_joint_pos"].detach().to(device)
     gripper = obs["proprio_obs"]["gripper_pos"].detach().to(device)
@@ -563,6 +598,7 @@ class StateCaptureProxy:
         self.request0_pair_identity_sha256: str | None = None
         self.request0_evidence: dict[str, Any] | None = None
         self.policy_camera_images: dict[str, dict[str, Any]] | None = None
+        self.model_blind_camera_video: Path | None = None
 
     def __getattr__(self, name: str) -> Any:
         return getattr(self._env, name)
@@ -743,6 +779,8 @@ class StateCaptureProxy:
         # retained for infrastructure diagnostics.
         self.initial_state_sha256 = self.request0_pair_identity_sha256
         self.policy_camera_images = _retain_policy_camera_images(effective_obs)
+        if bootstrap.authorization_mode == "model_blind_preflight":
+            self.model_blind_camera_video = _write_model_blind_camera_video(effective_obs)
         self.started = time.monotonic()
         self.cached_reset = (effective_obs, info)
         return self.cached_reset
@@ -816,7 +854,8 @@ class StateCaptureProxy:
         return _write_new_json(self.capture_path, value)
 
     def close(self) -> Any:
-        self.write_capture()
+        if bootstrap.authorization_mode != "model_blind_preflight":
+            self.write_capture()
         return self._env.close()
 
 
@@ -894,8 +933,11 @@ class _C002Pi05Client:
                 self.returned_chunks: list[np.ndarray] = []
                 self.executed_actions: list[np.ndarray] = []
                 self.trace_path: Path | None = None
+                self.query_server_entry_count = 0
+                self.model_blind_boundary_count = 0
 
             def _query_server(self, request: dict[str, Any]) -> dict[str, Any]:
+                self.query_server_entry_count += 1
                 _proxy().authorize_request()
                 request_seed = cell.sampling_seed * 1000 + self.request_index
                 # Preserve the frozen V2-A010 native request exactly.  The
@@ -918,6 +960,12 @@ class _C002Pi05Client:
             def infer(self, obs: Any, instruction: str, *, env_id: int = 0) -> dict[str, Any]:
                 if instruction != self.prompt:
                     raise RuntimeError("π0.5 episode-static prompt changed")
+                if bootstrap.authorization_mode == "model_blind_preflight":
+                    proxy = _proxy()
+                    if proxy.runner_resets != 2 or proxy.physical_resets != 1 or proxy.request0_evidence is None:
+                        raise RuntimeError("model-blind boundary reached before the complete C002 reset/request-zero gate")
+                    self.model_blind_boundary_count += 1
+                    raise ModelBlindBoundaryReached("stopped before _query_server by registered model-blind adapter mode")
                 result = super().infer(obs, instruction, env_id=env_id)
                 action = np.asarray(result["action"], dtype=np.float32)
                 if action.shape != (8,) or not np.isfinite(action).all():
@@ -973,6 +1021,74 @@ def make_client(_: argparse.Namespace) -> Any:
     client = _C002Pi05Client()
     clients.append(client)
     return client
+
+
+class ModelBlindBoundaryReached(RuntimeError):
+    """Expected zero-request stop immediately before the policy query boundary."""
+
+
+def _write_model_blind_report() -> Path:
+    if len(proxies) != 1 or len(clients) != 1:
+        raise RuntimeError("model-blind proof requires exactly one C002 proxy and client")
+    proxy, client = proxies[0], clients[0]
+    if (
+        proxy.runner_resets != 2
+        or proxy.physical_resets != 1
+        or proxy.adapter.model_request_count != 0
+        or proxy.adapter.behavioral_action_count != 0
+        or len(proxy.samples) != 1
+        or client.query_server_entry_count != 0
+        or client.model_blind_boundary_count != 1
+        or proxy.request0_evidence is None
+        or proxy.policy_camera_images is None
+        or proxy.model_blind_camera_video is None
+    ):
+        raise RuntimeError("C002 model-blind same-process proof counters or retained evidence are invalid")
+    bootstrap.raw_event_stream.parent.mkdir(parents=True, exist_ok=True)
+    with bootstrap.raw_event_stream.open("x", encoding="utf-8") as handle:
+        handle.write(json.dumps({
+            "record_type": "model_blind_pre_request_boundary",
+            "cell_id": cell.cell_id,
+            "model_request_count": 0,
+            "behavioral_action_count": 0,
+            "behavioral_episode_count": 0,
+            "stopped_before": "_query_server",
+        }, allow_nan=False, sort_keys=True, separators=(",", ":")) + "\n")
+    report = {
+        "schema_version": "vla-wam-shared-v3c002-same-process-model-blind-adapter-gate-v1",
+        "status": "passed_same_process_gate_stopped_before_query_server",
+        "passed": True,
+        "study_id": STUDY_ID,
+        "amendment_id": AMENDMENT_ID,
+        "model_id": MODEL_ID,
+        "cell_id": cell.cell_id,
+        "cell_sha256": cell.row_sha256,
+        "source_commit": study_commit,
+        "robolab_commit": robolab_commit,
+        "registration_sha256": bootstrap.registration_sha256,
+        "queue_sha256": bootstrap.queue_sha256,
+        "runtime_manifest": _file_record(bootstrap.runtime_manifest),
+        "candidate": _file_record(bootstrap.candidate),
+        "live_scene_snapshot": _file_record(bootstrap.live_snapshot),
+        "live_scene_gate": _file_record(bootstrap.live_gate),
+        "request0_replay": proxy.request0_evidence,
+        "policy_camera_images": proxy.policy_camera_images,
+        "renderer_video": _file_record(proxy.model_blind_camera_video),
+        "raw_writer_probe": _file_record(bootstrap.raw_event_stream),
+        "full_reset": True,
+        "physical_scene": True,
+        "policy_cameras": True,
+        "raw_writer": True,
+        "renderer": True,
+        "same_process_gate_completed_before_query_server": True,
+        "query_server_entry_count": 0,
+        "model_request_count": 0,
+        "behavioral_action_count": 0,
+        "behavioral_episode_count": 0,
+        "excluded_from_behavioral_denominators": True,
+        "scope": "C002 adapter-process model-blind proof only; no inference or behavior authorized",
+    }
+    return _write_new_json(bootstrap.simulator_export, report)
 
 
 def _viewport_video() -> Path:
@@ -1111,21 +1227,27 @@ def _write_export() -> Path:
 def main() -> None:
     failure: BaseException | None = None
     try:
+        model_blind_stop = False
         try:
             run_evaluation(args_cli, policy=spec.policy_id, client_factory=make_client)
+        except ModelBlindBoundaryReached:
+            if bootstrap.authorization_mode != "model_blind_preflight":
+                raise
+            model_blind_stop = True
         except BaseException as exc:
             failure = exc
         finally:
-            for client in clients:
-                try:
-                    client.write_trace()
-                except BaseException as exc:
-                    failure = failure or exc
-            for proxy in proxies:
-                try:
-                    proxy.write_capture()
-                except BaseException as exc:
-                    failure = failure or exc
+            if bootstrap.authorization_mode != "model_blind_preflight":
+                for client in clients:
+                    try:
+                        client.write_trace()
+                    except BaseException as exc:
+                        failure = failure or exc
+                for proxy in proxies:
+                    try:
+                        proxy.write_capture()
+                    except BaseException as exc:
+                        failure = failure or exc
         if failure is not None:
             failure_path = bootstrap.simulator_export.with_name("bridge_failure.json")
             _write_new_json(
@@ -1150,7 +1272,12 @@ def main() -> None:
                 },
             )
             raise failure
-        _write_export()
+        if bootstrap.authorization_mode == "model_blind_preflight":
+            if not model_blind_stop:
+                raise RuntimeError("model-blind adapter did not stop before _query_server")
+            _write_model_blind_report()
+        else:
+            _write_export()
     finally:
         simulation_app.close()
 

@@ -43,7 +43,7 @@ from experiments.v3.phase_c_semantic_equivalence_v3c002.wording_gate import (  #
 
 
 BASE_COMMIT = "18a2bf0200183647291cc7aeb1fe89997b3fb82f"
-ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/draft_v8"
+ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/draft_v9"
 E004_ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004"
 V1_ROOT = REPO_ROOT / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002"
 V2_ROOT = V1_ROOT / "draft_v2"
@@ -52,9 +52,11 @@ V4_ROOT = V1_ROOT / "draft_v4"
 V5_ROOT = V1_ROOT / "draft_v5"
 V6_ROOT = V1_ROOT / "draft_v6"
 V7_ROOT = V1_ROOT / "draft_v7"
+V8_ROOT = V1_ROOT / "draft_v8"
 V5_ACTIVATION_ROOT = V1_ROOT / "superseded_activation_v5"
 V6_ACTIVATION_ROOT = V1_ROOT / "superseded_activation_v6"
 V7_ACTIVATION_ROOT = V1_ROOT / "superseded_activation_v7"
+V8_ACTIVATION_ROOT = V1_ROOT / "superseded_activation_v8"
 
 DEPENDENCY_PATHS = {
     "checkpoint": ("artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_checkpoint_manifest.json",),
@@ -304,6 +306,7 @@ def main() -> None:
             "tools/build_v3c002_registration.py",
             "tools/finalize_v3c002_registration.py",
             "tools/build_v3c002_physical_gate.py",
+            "tools/validate_v3c002_target_raw_preflight.py",
             "tools/authorize_v3c002_smoke.py",
             "tools/compile_v3c002_smoke_gate.py",
             "tools/compile_v3c002_isolation_gate.py",
@@ -318,6 +321,7 @@ def main() -> None:
             "tools/validate_v3c002_v5_historical.py",
             "tools/validate_v3c002_v6_historical.py",
             "tools/validate_v3c002_v7_historical.py",
+            "tools/validate_v3c002_v8_historical.py",
             "tools/validate_v3c002_results.py",
             "tools/validate_v3e_publication_bundle.py",
             "tests/test_v3c002_semantic_equivalence.py",
@@ -332,7 +336,7 @@ def main() -> None:
         "source_lineage": {
             "required_base_commit": BASE_COMMIT,
             "replacement_commit": source_commit,
-            "replacement_reason": "Prospective C002 implementation and pre-run audit hardening were committed after the mandated clean base. V8 adds the previously absent exact simulator behavioral adapter, four-cell excluded-smoke/resume runner, and hash-bound request-zero/runtime gates; no prior definition or experiment was changed and V7 was never released.",
+            "replacement_reason": "Prospective C002 implementation and pre-run audit hardening were committed after the mandated clean base. V9 adds an exact same-process model-blind adapter mode that stops before _query_server, target-side raw rehash, and fail-closed enforcement of the required same-process repeat. V8 was never released or executed.",
             "recorded_before_any_model_request": True,
             "model_requests_at_recording": 0,
             "behavioral_episodes_at_recording": 0,
@@ -401,7 +405,7 @@ def main() -> None:
     _write_new(output_root / "registration.json", registration)
     if V1_ROOT != output_root:
         superseded_bindings = {}
-        for revision, prior_root in (("v1", V1_ROOT), ("v2", V2_ROOT), ("v3", V3_ROOT), ("v4", V4_ROOT), ("v5", V5_ROOT), ("v6", V6_ROOT), ("v7", V7_ROOT)):
+        for revision, prior_root in (("v1", V1_ROOT), ("v2", V2_ROOT), ("v3", V3_ROOT), ("v4", V4_ROOT), ("v5", V5_ROOT), ("v6", V6_ROOT), ("v7", V7_ROOT), ("v8", V8_ROOT)):
             revision_bindings = {}
             for name in ("registration.json", "queue.jsonl", "release_gate.json"):
                 path = prior_root / name
@@ -412,8 +416,8 @@ def main() -> None:
         _write_new(
             output_root / "supersession.json",
             {
-                "schema_version": "vla-wam-shared-v3c002-preregistration-supersession-v8",
-                "status": "prospective_v8_supersedes_unexecuted_v1_v2_v3_v4_v5_v6_v7_packages",
+                "schema_version": "vla-wam-shared-v3c002-preregistration-supersession-v9",
+                "status": "prospective_v9_supersedes_unexecuted_v1_through_v8_packages",
                 "superseded_draft_bindings": superseded_bindings,
                 "superseded_v5_activation_bindings": {
                     name: _relative_binding(V5_ACTIVATION_ROOT / name)
@@ -430,8 +434,13 @@ def main() -> None:
                     for name in ("registration.json", "queue.jsonl", "release_gate.json", "wording_gate.json", "attestation_receipt_order.json", "source_push_gate.json", "infrastructure_attempts.jsonl")
                     if (V7_ACTIVATION_ROOT / name).is_file()
                 },
+                "superseded_v8_activation_bindings": {
+                    name: _relative_binding(V8_ACTIVATION_ROOT / name)
+                    for name in ("registration.json", "queue.jsonl", "release_gate.json", "wording_gate.json", "attestation_receipt_order.json", "source_push_gate.json", "infrastructure_attempts.jsonl", "gates/model_blind_physical_gate.json", "gates/excluded_smoke_authorization.json")
+                    if (V8_ACTIVATION_ROOT / name).is_file()
+                },
                 "superseding_registration": _relative_binding(output_root / "registration.json"),
-                "reason": "The unreleased V7 package lacked an executable C002 simulator adapter and complete four-cell excluded-smoke/resume path. V8 prospectively binds the exact E004 s=1 reset/request-zero machinery, explicit physical-goal scoring, immutable block output, and fail-closed runtime authorization before any model request.",
+                "reason": "V8 remained unreleased and its provisional smoke authorization was never used. It did not yet require an exact C002 adapter-process zero-request proof, target-side raw rehash receipt, or enforce same_process_gate_must_repeat_before_request_zero in both smoke and behavioral release paths. V9 adds those fail-closed prerequisites prospectively.",
                 "v1_model_requests": 0,
                 "v1_behavioral_episodes": 0,
                 "v2_model_requests": 0,
@@ -446,10 +455,14 @@ def main() -> None:
                 "v6_behavioral_episodes": 0,
                 "v7_model_requests": 0,
                 "v7_behavioral_episodes": 0,
+                "v8_model_requests": 0,
+                "v8_behavioral_episodes": 0,
                 "v5_activation_was_never_behaviorally_released": True,
                 "v6_activation_was_never_behaviorally_released": True,
                 "v7_activation_was_never_behaviorally_released": True,
-                "v1_v2_v3_v4_v5_v6_v7_must_never_be_activated": True,
+                "v8_activation_was_never_behaviorally_released": True,
+                "v8_provisional_smoke_authorization_was_never_executed": True,
+                "v1_through_v8_must_never_be_activated": True,
             },
         )
     release_gate = {

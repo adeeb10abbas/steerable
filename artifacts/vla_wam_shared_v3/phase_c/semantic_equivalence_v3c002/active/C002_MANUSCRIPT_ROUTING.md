@@ -1,0 +1,3 @@
+# V3-C002 manuscript routing
+
+V3-C002 was not behaviorally executed and is not a semantic result. The preregistered two-lane fixed-observation release check failed because identical fixture, prompt, and sampling-seed inputs produced non-identical action arrays across isolated runtime lanes. Only two excluded pre-release requests were made; the registered 1,364-episode cohort was never launched. Accordingly, the paper must not report an estimate, equivalence test, or language-semantic conclusion from V3-C002. If disclosed, route this item to the methods or limitations material as a fail-closed pre-release infrastructure outcome.

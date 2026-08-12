@@ -5,10 +5,12 @@ import hashlib
 import json
 from pathlib import Path
 import subprocess
+from copy import deepcopy
 
 import numpy as np
 
 from experiments.v3.phase_e.canonical_stage_localization_v3e006_r002 import candidate_schedule as schedule_code
+from tools.validate_v3e006_r002 import ValidationError, validate_scientific_selection
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -158,3 +160,89 @@ def test_outer_launcher_keeps_exact_successful_r001_e004_launcher_contract() -> 
         "--instruction-type", "default", "--disable-subtask",
         "--kit_args=--/rtx/verifyDriverVersion/enabled=false",
     )
+
+
+def _selection_fixture(*, passed: bool) -> tuple[dict, dict]:
+    gate = lambda value: {"passed": value}
+    state = {
+        "passed": passed,
+        "physics_gate": gate(passed),
+        "ood_gate": gate(True),
+        "camera_evidence": gate(True),
+        "companion_pose_gate": gate(True),
+    }
+    attempts = [
+        {
+            "candidate_rank": 1,
+            "stages": {
+                "canonical_grasp": {"candidate_state": deepcopy(state)},
+                "canonical_carry": {"candidate_state": deepcopy(state)},
+            },
+            "passed": passed,
+        }
+    ]
+    report = {
+        "status": "passed_r002_state_repair_not_released_for_behavior",
+        "passed": True,
+        "repair_candidate_evaluation_count": 1,
+        "candidate_budget": 8,
+        "accepted_candidate_rank": 1,
+        "accepted_states": deepcopy(attempts[0]["stages"]),
+        "first_passing_rule_obeyed": True,
+        "attempts": attempts,
+    }
+    harness = {
+        "repair_candidate_evaluation_count": 1,
+        "process_completed": True,
+        "status": "completed_r002_candidate_search",
+        "scientific_gate_passed": True,
+        "child_status": report["status"],
+    }
+    return report, harness
+
+
+def test_raw_selection_recomputed_and_rejects_stage_or_rank_misreport() -> None:
+    report, harness = _selection_fixture(passed=True)
+    validate_scientific_selection(report, harness)
+    bad_stage = deepcopy(report)
+    bad_stage["attempts"][0]["stages"]["canonical_grasp"]["candidate_state"]["physics_gate"]["passed"] = False
+    import pytest
+    with pytest.raises(ValidationError):
+        validate_scientific_selection(bad_stage, harness)
+    bad_rank = deepcopy(report)
+    bad_rank["attempts"][0]["passed"] = False
+    with pytest.raises(ValidationError):
+        validate_scientific_selection(bad_rank, harness)
+
+
+def test_raw_selection_rejects_false_exhaustion_and_harness_disagreement() -> None:
+    report, harness = _selection_fixture(passed=True)
+    false_exhaustion = deepcopy(report)
+    false_exhaustion.update(
+        {
+            "status": "r002_candidate_budget_exhausted_no_valid_state_pair",
+            "passed": False,
+            "accepted_candidate_rank": None,
+            "accepted_states": None,
+        }
+    )
+    false_exhaustion["attempts"] = [
+        {**deepcopy(false_exhaustion["attempts"][0]), "candidate_rank": rank}
+        for rank in range(1, 9)
+    ]
+    false_exhaustion["repair_candidate_evaluation_count"] = 8
+    bad_harness = deepcopy(harness)
+    bad_harness.update(
+        {
+            "repair_candidate_evaluation_count": 8,
+            "scientific_gate_passed": False,
+            "child_status": false_exhaustion["status"],
+        }
+    )
+    import pytest
+    with pytest.raises(ValidationError):
+        validate_scientific_selection(false_exhaustion, bad_harness)
+    wrong_harness = deepcopy(harness)
+    wrong_harness["scientific_gate_passed"] = False
+    with pytest.raises(ValidationError):
+        validate_scientific_selection(report, wrong_harness)

@@ -64,6 +64,64 @@ def function_ast(path: Path, name: str) -> str:
     return ast.dump(nodes[0], include_attributes=False)
 
 
+def validate_scientific_selection(report: Mapping[str, Any], harness: Mapping[str, Any]) -> None:
+    """Recompute the complete first-pass/exhaustion decision from raw stages."""
+
+    require(report.get("status") in TERMINAL_STATUSES, "child terminal status differs")
+    expected_terminal_pass = TERMINAL_STATUSES[str(report["status"])]
+    require(report.get("passed") is expected_terminal_pass, "child pass boolean differs")
+    attempts = report.get("attempts")
+    require(isinstance(attempts, list) and 1 <= len(attempts) <= 8, "child attempt count differs")
+    require([row.get("candidate_rank") for row in attempts] == list(range(1, len(attempts) + 1)), "child rank order differs")
+    require(report.get("repair_candidate_evaluation_count") == len(attempts), "child evaluated count differs")
+    require(harness.get("repair_candidate_evaluation_count") == len(attempts), "harness evaluated count differs")
+    recomputed_rank_passes: list[bool] = []
+    for attempt in attempts:
+        require(set(attempt.get("stages", {})) == {"canonical_grasp", "canonical_carry"}, "child stages differ")
+        stage_passes: list[bool] = []
+        for stage in ("canonical_grasp", "canonical_carry"):
+            row = attempt["stages"][stage]
+            state = row.get("candidate_state")
+            require(isinstance(state, Mapping), f"{stage} candidate state is absent")
+            evaluated = all(
+                isinstance(state.get(name), Mapping)
+                for name in ("physics_gate", "ood_gate", "camera_evidence", "companion_pose_gate")
+            )
+            if evaluated:
+                expected_stage_pass = all(
+                    state[name].get("passed") is True
+                    for name in ("physics_gate", "ood_gate", "camera_evidence", "companion_pose_gate")
+                )
+                require(state.get("passed") is expected_stage_pass, f"{stage} stage pass differs from gates")
+            else:
+                require(state.get("passed") is False, f"unevaluated {stage} stage was marked passed")
+                require(isinstance(state.get("candidate_rejection"), str), f"unevaluated {stage} lacks rejection")
+                expected_stage_pass = False
+            stage_passes.append(expected_stage_pass)
+        expected_rank_pass = all(stage_passes)
+        require(attempt.get("passed") is expected_rank_pass, "rank pass differs from both stages")
+        recomputed_rank_passes.append(expected_rank_pass)
+
+    passing_indices = [index for index, value in enumerate(recomputed_rank_passes) if value]
+    require(len(passing_indices) <= 1, "more than one rank passed after first-pass stopping")
+    if expected_terminal_pass:
+        require(passing_indices == [len(attempts) - 1], "passing rank was not the last/first passing rank")
+        accepted_rank = len(attempts)
+        require(report.get("accepted_candidate_rank") == accepted_rank, "accepted rank differs")
+        require(report.get("accepted_states") == attempts[-1]["stages"], "accepted states differ from passing rank")
+        require(all(not value for value in recomputed_rank_passes[:-1]), "a prior rank passed")
+    else:
+        require(len(attempts) == report.get("candidate_budget") == 8, "exhaustion did not complete all eight ranks")
+        require(not any(recomputed_rank_passes), "exhaustion contains a passing rank")
+        require(report.get("accepted_candidate_rank") is None, "exhaustion has accepted rank")
+        require(report.get("accepted_states") is None, "exhaustion has accepted states")
+    require(report.get("first_passing_rule_obeyed") is True, "first-pass rule flag differs")
+    require(harness.get("process_completed") is True, "normal search was not process complete")
+    require(harness.get("status") == "completed_r002_candidate_search", "normal harness status differs")
+    require(harness.get("scientific_gate_passed") is expected_terminal_pass, "harness scientific flag differs")
+    require(harness.get("child_status") == report.get("status"), "harness child status differs")
+
+
 def validate_static(root: Path, *, require_source_gate: bool = True) -> dict[str, Any]:
     root = root.resolve()
     relative = Path("artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r002")
@@ -184,27 +242,53 @@ def validate_candidate_root(root: Path, candidate_root: Path) -> dict[str, Any]:
     report = load(report_path)
     if harness.get("process_completed") is True:
         require(report_path.name == "state_repair_result.json", "completed child report filename differs")
-        require(report.get("status") in TERMINAL_STATUSES, "child terminal status differs")
-        require(report.get("passed") is TERMINAL_STATUSES[report["status"]], "child pass boolean differs")
         require(report.get("model_request_count") == report.get("behavioral_episode_count") == 0, "child counts differ")
-        attempts = report.get("attempts")
-        require(isinstance(attempts, list) and 1 <= len(attempts) <= 8, "child attempt count differs")
-        require([row["candidate_rank"] for row in attempts] == list(range(1, len(attempts) + 1)), "child rank order differs")
-        require(report.get("repair_candidate_evaluation_count") == len(attempts), "child evaluated count differs")
+        validate_scientific_selection(report, harness)
+        attempts = report["attempts"]
         for attempt in attempts:
-            require(set(attempt["stages"]) == {"canonical_grasp", "canonical_carry"}, "child stages differ")
             for stage in attempt["stages"].values():
                 require(stage["ik_solve_environment"]["fresh_reset"]["passed"] is True, "IK reset failed")
                 require(stage["ik_solve_environment"]["environment_lifecycle"]["closed_before_next_environment"] is True, "IK env not closed")
+                for camera in stage["ik_solve_environment"]["fresh_reset"]["camera_evidence"]["bindings"].values():
+                    verify_binding(Path(str(camera["rgb"]["path"])), camera["rgb"], "IK reset camera")
                 if stage["ik_solution"]["passed"]:
                     require(stage["materialization_environment"]["fresh_reset"]["passed"] is True, "material reset failed")
                     require(stage["materialization_environment"]["environment_lifecycle"]["closed_before_next_environment"] is True, "material env not closed")
+                    for camera in stage["materialization_environment"]["fresh_reset"]["camera_evidence"]["bindings"].values():
+                        verify_binding(Path(str(camera["rgb"]["path"])), camera["rgb"], "material reset camera")
+                    state = stage["candidate_state"]
+                    if "camera_evidence" in state:
+                        for camera in state["camera_evidence"]["bindings"].values():
+                            verify_binding(Path(str(camera["rgb"]["path"])), camera["rgb"], "candidate camera")
+        for key in ("repair_registration", "candidate_schedule", "source_push_gate",
+                    "original_v3e006_closure_binding", "ood_freeze", "e004_full_reset_reference",
+                    "e004_candidate", "construction_source", "video"):
+            verify_binding(Path(str(report[key]["path"])), report[key], f"normal report {key}")
+        verify_binding(
+            Path(str(report["frozen_e004_runtime_bindings"]["path"])),
+            report["frozen_e004_runtime_bindings"], "normal report runtime contract",
+        )
+        for scene in report["scene_assets"].values():
+            verify_binding(Path(str(scene["path"])), scene, "normal report scene")
     else:
         require(report_path.name == "state_construction_failure.json", "invalid child report filename differs")
         require(report.get("status") == "infrastructure_invalid_r002_state_repair", "invalid child status differs")
         require(report.get("model_request_count") == report.get("behavioral_episode_count") == report.get("state_candidate_count") == 0, "invalid child counts differ")
+        for artifact in report.get("available_raw_artifacts", {}).values():
+            verify_binding(Path(str(artifact["path"])), artifact, "invalid available artifact")
     for name, expected in launch.get("input_bindings", {}).items():
         verify_binding(Path(str(expected["path"])), expected, f"raw launch input {name}")
+    for name, expected in launch.get("formal_health_preflight", {}).items():
+        verify_binding(Path(str(expected["path"])), expected, f"raw formal health {name}")
+    verify_binding(Path(str(launch["harness_source"]["path"])), launch["harness_source"], "raw harness source")
+    child_evidence = report.get("execution_evidence", report)
+    require(isinstance(child_evidence, Mapping), "child execution evidence is absent")
+    for name, expected in child_evidence.get("input_bindings", {}).items():
+        verify_binding(Path(str(expected["path"])), expected, f"child input {name}")
+    for name, expected in child_evidence.get("passed_health_preflight", {}).items():
+        verify_binding(Path(str(expected["path"])), expected, f"child formal health {name}")
+    require(child_evidence.get("passed_health_preflight") == launch.get("formal_health_preflight"), "child health differs from launch")
+    require(child_evidence.get("lane") == {**launch.get("lane", {}), "device": child_evidence.get("lane", {}).get("device"), "python": child_evidence.get("lane", {}).get("python")}, "child lane differs from launch")
     return {
         "passed": True,
         "candidate_root": str(candidate_root),

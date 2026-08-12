@@ -900,6 +900,8 @@ def main() -> None:
         video_frames: list[np.ndarray] = []
         frames = env.scene["frames"]
         eef_index = frames.data.target_frame_names.index("eef_frame")
+        CURRENT_STAGE = "pre_candidate_contact_sensor_initialization_reset"
+        env.reset()
         CURRENT_STAGE = "contact_sensor_coverage"
         contact_coverage = _contact_coverage(env)
         attempts: list[dict[str, Any]] = []

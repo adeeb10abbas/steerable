@@ -8,6 +8,7 @@ import pytest
 
 from experiments.v3.phase_e.canonical_stage_localization_v3e006_r001 import candidate_schedule as schedule
 from tools.validate_v3e006_r001 import validate_package
+from tools.run_v3e006_r001_state_repair import E004_APP_LAUNCHER_ARGV
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -70,3 +71,19 @@ def test_build_rejects_mutated_candidate_search_contract(tmp_path: Path) -> None
             original_study_root=ROOT,
             output=tmp_path / "out.json",
         )
+
+
+def test_outer_launcher_uses_exact_working_e004_runtime_flags() -> None:
+    assert E004_APP_LAUNCHER_ARGV == (
+        "--headless",
+        "--device", "cuda:0",
+        "--num-envs", "1",
+        "--num-runs", "1",
+        "--renderer", "realtime",
+        "--rendering-type", "balanced",
+        "--video-mode", "viewport",
+        "--instruction-type", "default",
+        "--disable-subtask",
+        "--kit_args=--/rtx/verifyDriverVersion/enabled=false",
+    )
+    assert "--rendering_mode" not in E004_APP_LAUNCHER_ARGV

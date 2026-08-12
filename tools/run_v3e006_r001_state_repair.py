@@ -15,10 +15,15 @@ from typing import Any
 
 
 E004_APP_LAUNCHER_ARGV = (
-    "--num-envs", "1",
     "--headless",
-    "--rendering_mode", "balanced",
     "--device", "cuda:0",
+    "--num-envs", "1",
+    "--num-runs", "1",
+    "--renderer", "realtime",
+    "--rendering-type", "balanced",
+    "--video-mode", "viewport",
+    "--instruction-type", "default",
+    "--disable-subtask",
     "--kit_args=--/rtx/verifyDriverVersion/enabled=false",
 )
 

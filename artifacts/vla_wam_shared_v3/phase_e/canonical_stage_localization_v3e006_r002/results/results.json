@@ -1,0 +1,572 @@
+{
+  "accepted_candidate_rank": null,
+  "amendment_id": "V3-E006-R002",
+  "behavioral_activation_released": false,
+  "behavioral_episode_count": 0,
+  "candidate_pair_count": 8,
+  "diagnostic_scope": "All sixteen stage attempts failed at the frozen IK convergence boundary before physical/OOD/camera/companion evaluation. The retained metrics may motivate a solver-only amendment; they do not authorize threshold changes.",
+  "first_passing_rule_obeyed": true,
+  "model_request_count": 0,
+  "passed": false,
+  "raw_evidence": {
+    "harness": {
+      "bytes": 1489,
+      "path": "/data/users/ali/vla_wam/raw/v3e006_r002/state_repair/39b18d9-a40r06-attempt01/harness_result.json",
+      "sha256": "98c60a2a6d90511daa40e99b61daab9729d941b55ba82f4c425ffcdf4f03e93f"
+    },
+    "launch": {
+      "bytes": 18104,
+      "path": "/data/users/ali/vla_wam/raw/v3e006_r002/state_repair/39b18d9-a40r06-attempt01/launch.json",
+      "sha256": "905c85d2ba91067572389f1f8bb65d083ffac1438604848224a5005be29de68c"
+    },
+    "result": {
+      "bytes": 7103108,
+      "path": "/data/users/ali/vla_wam/raw/v3e006_r002/state_repair/39b18d9-a40r06-attempt01/raw/state_repair_result.json",
+      "sha256": "afb8c3ba2b53f1513bd22fd6135b16cbfe3e4dd9de3fe3d818ac05e458311fe7"
+    },
+    "runtime_log": {
+      "bytes": 179362,
+      "path": "/data/users/ali/vla_wam/raw/v3e006_r002/state_repair/39b18d9-a40r06-attempt01/runtime.log",
+      "sha256": "04c2f6e5d879a1aa89b8f9466ab1e8930fa87c2755cdb3ffb307e9feb6ee2fdf"
+    },
+    "target_validation_receipt": {
+      "bytes": 2348,
+      "path": "/data/users/ali/vla_wam/raw/v3e006_r002/state_repair/39b18d9-a40r06-attempt01/target_validation_receipt.json",
+      "sha256": "847fb2d75a4e0158c9412e93da1963f38f7df5375ccb149c22b2bd082112538c"
+    }
+  },
+  "schema_version": "vla-wam-shared-v3e006-r002-state-repair-closure-v1",
+  "scientific_gate_thresholds_unchanged": true,
+  "selection_rule": {
+    "acceptance": "A candidate rank passes only if independently constructed canonical_grasp and canonical_carry states both pass every unchanged scientific, OOD, camera, companion, contact, reset, runtime, and source gate.",
+    "algorithm_version": "contact-consistent-balanced-se3-search-v1",
+    "exhaustion": "If ranks 1 through 8 all fail, close R002 with zero model requests and zero behavioral episodes. Never add candidates, reorder candidates, change a construction parameter, or relax a gate after live inspection.",
+    "first_pass_rule": "Evaluate ranks 1 through 8 serially and stop at the first complete passing pair.",
+    "maximum_candidate_pairs": 8,
+    "order_rationale": "The lower-intervention direct initialization family precedes the independently prespecified normal-contact approach fallback. Within each family cross-anchored LEFT/reflected-RIGHT combinations precede same-anchor combinations. This order is frozen before live evaluation and does not use an R002 gate result.",
+    "source_rows": {
+      "canonical_carry": "E004 seed 9442 LEFT state_capture 39/HDF5 113 and RIGHT state_capture 38/HDF5 112",
+      "canonical_grasp": "E004 seed 9521 LEFT state_capture 30/HDF5 104 and RIGHT state_capture 31/HDF5 105",
+      "requirements": "both bound historical rows have object_grabbed=true, closing action component exactly 1.0, and raw episode/state_capture/HDF5 byte counts and SHA-256 reverified in the target environment before AppLauncher"
+    },
+    "variant_order": [
+      {
+        "carry_contact": "reflected_right_observed",
+        "grasp_contact": "left_observed",
+        "method": "direct_contact_initialization",
+        "rank": 1
+      },
+      {
+        "carry_contact": "left_observed",
+        "grasp_contact": "reflected_right_observed",
+        "method": "direct_contact_initialization",
+        "rank": 2
+      },
+      {
+        "carry_contact": "left_observed",
+        "grasp_contact": "left_observed",
+        "method": "direct_contact_initialization",
+        "rank": 3
+      },
+      {
+        "carry_contact": "reflected_right_observed",
+        "grasp_contact": "reflected_right_observed",
+        "method": "direct_contact_initialization",
+        "rank": 4
+      },
+      {
+        "carry_contact": "reflected_right_observed",
+        "grasp_contact": "left_observed",
+        "method": "open_approach_close_lift",
+        "rank": 5
+      },
+      {
+        "carry_contact": "left_observed",
+        "grasp_contact": "reflected_right_observed",
+        "method": "open_approach_close_lift",
+        "rank": 6
+      },
+      {
+        "carry_contact": "left_observed",
+        "grasp_contact": "left_observed",
+        "method": "open_approach_close_lift",
+        "rank": 7
+      },
+      {
+        "carry_contact": "reflected_right_observed",
+        "grasp_contact": "reflected_right_observed",
+        "method": "open_approach_close_lift",
+        "rank": 8
+      }
+    ]
+  },
+  "stage_solve_count": 16,
+  "stage_solves": [
+    {
+      "achieved_consecutive_steps": 0,
+      "candidate_rank": 1,
+      "completed_steps": 240,
+      "construction_method": "direct_contact_initialization",
+      "failure_reason": "ik_did_not_reach_ten_consecutive_registered_tolerance_steps",
+      "final_orientation_error_deg": 63.44637620227559,
+      "final_position_error_m": 0.1217686621049841,
+      "minimum_orientation_error_deg": 27.10693286674114,
+      "minimum_orientation_error_step": 4,
+      "minimum_position_error_m": 0.028172831649890838,
+      "minimum_position_error_step": 5,
+      "orientation_error_at_minimum_position_deg": 28.82962365800086,
+      "position_error_at_minimum_orientation_m": 0.07082909209002354,
+      "solution_finite": true,
+      "solution_inside_soft_joint_limits": false,
+      "stage": "canonical_grasp",
+      "target_position_world_m": [
+        0.368970953978774,
+        0.024702419415491332,
+        0.2380291551914043
+      ],
+      "target_quaternion_world_wxyz": [
+        0.528551890863286,
+        0.0146001031023842,
+        0.8487291217809436,
+        0.00886642516421981
+      ]
+    },
+    {
+      "achieved_consecutive_steps": 0,
+      "candidate_rank": 1,
+      "completed_steps": 240,
+      "construction_method": "direct_contact_initialization",
+      "failure_reason": "ik_did_not_reach_ten_consecutive_registered_tolerance_steps",
+      "final_orientation_error_deg": 51.936307561132296,
+      "final_position_error_m": 0.12147827053491812,
+      "minimum_orientation_error_deg": 36.61571703770266,
+      "minimum_orientation_error_step": 4,
+      "minimum_position_error_m": 0.0672667170179724,
+      "minimum_position_error_step": 5,
+      "orientation_error_at_minimum_position_deg": 43.51514338138136,
+      "position_error_at_minimum_orientation_m": 0.07227411342720474,
+      "solution_finite": true,
+      "solution_inside_soft_joint_limits": false,
+      "stage": "canonical_carry",
+      "target_position_world_m": [
+        0.3183138371614531,
+        -0.025278396987904243,
+        0.28342455260767774
+      ],
+      "target_quaternion_world_wxyz": [
+        0.6877530983576733,
+        0.014184866701185288,
+        0.7249211474602384,
+        -0.035830088208398884
+      ]
+    },
+    {
+      "achieved_consecutive_steps": 0,
+      "candidate_rank": 2,
+      "completed_steps": 240,
+      "construction_method": "direct_contact_initialization",
+      "failure_reason": "ik_did_not_reach_ten_consecutive_registered_tolerance_steps",
+      "final_orientation_error_deg": 46.1128476444359,
+      "final_position_error_m": 0.10990906927551046,
+      "minimum_orientation_error_deg": 33.06843668580615,
+      "minimum_orientation_error_step": 4,
+      "minimum_position_error_m": 0.06139006980326732,
+      "minimum_position_error_step": 5,
+      "orientation_error_at_minimum_position_deg": 39.133605699578,
+      "position_error_at_minimum_orientation_m": 0.07355134311516076,
+      "solution_finite": true,
+      "solution_inside_soft_joint_limits": false,
+      "stage": "canonical_grasp",
+      "target_position_world_m": [
+        0.32394493364001853,
+        -0.02173179540414674,
+        0.2501426966501729
+      ],
+      "target_quaternion_world_wxyz": [
+        0.6566797057885383,
+        -0.023041909743751393,
+        0.7537533849619963,
+        -0.009832042472042824
+      ]
+    },
+    {
+      "achieved_consecutive_steps": 0,
+      "candidate_rank": 2,
+      "completed_steps": 240,
+      "construction_method": "direct_contact_initialization",
+      "failure_reason": "ik_did_not_reach_ten_consecutive_registered_tolerance_steps",
+      "final_orientation_error_deg": 50.146775425268636,
+      "final_position_error_m": 0.14462420201823242,
+      "minimum_orientation_error_deg": 28.67104225086729,
+      "minimum_orientation_error_step": 4,
+      "minimum_position_error_m": 0.028176046555394588,
+      "minimum_position_error_step": 5,
+      "orientation_error_at_minimum_position_deg": 33.589526477227075,
+      "position_error_at_minimum_orientation_m": 0.04917059537613651,
+      "solution_finite": true,
+      "solution_inside_soft_joint_limits": true,
+      "stage": "canonical_carry",
+      "target_position_world_m": [
+        0.3524788694133758,
+        0.025101415048987417,
+        0.28115920175833486
+      ],
+      "target_quaternion_world_wxyz": [
+        0.6064243543051592,
+        -0.019267422571008486,
+        0.7934006792292051,
+        0.04892474968435709
+      ]
+    },
+    {
+      "achieved_consecutive_steps": 0,
+      "candidate_rank": 3,
+      "completed_steps": 240,
+      "construction_method": "direct_contact_initialization",
+      "failure_reason": "ik_did_not_reach_ten_consecutive_registered_tolerance_steps",
+      "final_orientation_error_deg": 63.44637620227559,
+      "final_position_error_m": 0.1217686621049841,
+      "minimum_orientation_error_deg": 27.10693286674114,
+      "minimum_orientation_error_step": 4,
+      "minimum_position_error_m": 0.028172831649890838,
+      "minimum_position_error_step": 5,
+      "orientation_error_at_minimum_position_deg": 28.82962365800086,
+      "position_error_at_minimum_orientation_m": 0.07082909209002354,
+      "solution_finite": true,
+      "solution_inside_soft_joint_limits": false,
+      "stage": "canonical_grasp",
+      "target_position_world_m": [
+        0.368970953978774,
+        0.024702419415491332,
+        0.2380291551914043
+      ],
+      "target_quaternion_world_wxyz": [
+        0.528551890863286,
+        0.0146001031023842,
+        0.8487291217809436,
+        0.00886642516421981
+      ]
+    },
+    {
+      "achieved_consecutive_steps": 0,
+      "candidate_rank": 3,
+      "completed_steps": 240,
+      "construction_method": "direct_contact_initialization",
+      "failure_reason": "ik_did_not_reach_ten_consecutive_registered_tolerance_steps",
+      "final_orientation_error_deg": 50.146775425268636,
+      "final_position_error_m": 0.14462420201823242,
+      "minimum_orientation_error_deg": 28.67104225086729,
+      "minimum_orientation_error_step": 4,
+      "minimum_position_error_m": 0.028176046555394588,
+      "minimum_position_error_step": 5,
+      "orientation_error_at_minimum_position_deg": 33.589526477227075,
+      "position_error_at_minimum_orientation_m": 0.04917059537613651,
+      "solution_finite": true,
+      "solution_inside_soft_joint_limits": true,
+      "stage": "canonical_carry",
+      "target_position_world_m": [
+        0.3524788694133758,
+        0.025101415048987417,
+        0.28115920175833486
+      ],
+      "target_quaternion_world_wxyz": [
+        0.6064243543051592,
+        -0.019267422571008486,
+        0.7934006792292051,
+        0.04892474968435709
+      ]
+    },
+    {
+      "achieved_consecutive_steps": 0,
+      "candidate_rank": 4,
+      "completed_steps": 240,
+      "construction_method": "direct_contact_initialization",
+      "failure_reason": "ik_did_not_reach_ten_consecutive_registered_tolerance_steps",
+      "final_orientation_error_deg": 46.1128476444359,
+      "final_position_error_m": 0.10990906927551046,
+      "minimum_orientation_error_deg": 33.06843668580615,
+      "minimum_orientation_error_step": 4,
+      "minimum_position_error_m": 0.06139006980326732,
+      "minimum_position_error_step": 5,
+      "orientation_error_at_minimum_position_deg": 39.133605699578,
+      "position_error_at_minimum_orientation_m": 0.07355134311516076,
+      "solution_finite": true,
+      "solution_inside_soft_joint_limits": false,
+      "stage": "canonical_grasp",
+      "target_position_world_m": [
+        0.32394493364001853,
+        -0.02173179540414674,
+        0.2501426966501729
+      ],
+      "target_quaternion_world_wxyz": [
+        0.6566797057885383,
+        -0.023041909743751393,
+        0.7537533849619963,
+        -0.009832042472042824
+      ]
+    },
+    {
+      "achieved_consecutive_steps": 0,
+      "candidate_rank": 4,
+      "completed_steps": 240,
+      "construction_method": "direct_contact_initialization",
+      "failure_reason": "ik_did_not_reach_ten_consecutive_registered_tolerance_steps",
+      "final_orientation_error_deg": 51.936307561132296,
+      "final_position_error_m": 0.12147827053491812,
+      "minimum_orientation_error_deg": 36.61571703770266,
+      "minimum_orientation_error_step": 4,
+      "minimum_position_error_m": 0.0672667170179724,
+      "minimum_position_error_step": 5,
+      "orientation_error_at_minimum_position_deg": 43.51514338138136,
+      "position_error_at_minimum_orientation_m": 0.07227411342720474,
+      "solution_finite": true,
+      "solution_inside_soft_joint_limits": false,
+      "stage": "canonical_carry",
+      "target_position_world_m": [
+        0.3183138371614531,
+        -0.025278396987904243,
+        0.28342455260767774
+      ],
+      "target_quaternion_world_wxyz": [
+        0.6877530983576733,
+        0.014184866701185288,
+        0.7249211474602384,
+        -0.035830088208398884
+      ]
+    },
+    {
+      "achieved_consecutive_steps": 0,
+      "candidate_rank": 5,
+      "completed_steps": 240,
+      "construction_method": "open_approach_close_lift",
+      "failure_reason": "ik_did_not_reach_ten_consecutive_registered_tolerance_steps",
+      "final_orientation_error_deg": 63.44637620227559,
+      "final_position_error_m": 0.1217686621049841,
+      "minimum_orientation_error_deg": 27.10693286674114,
+      "minimum_orientation_error_step": 4,
+      "minimum_position_error_m": 0.028172831649890838,
+      "minimum_position_error_step": 5,
+      "orientation_error_at_minimum_position_deg": 28.82962365800086,
+      "position_error_at_minimum_orientation_m": 0.07082909209002354,
+      "solution_finite": true,
+      "solution_inside_soft_joint_limits": false,
+      "stage": "canonical_grasp",
+      "target_position_world_m": [
+        0.368970953978774,
+        0.024702419415491332,
+        0.2380291551914043
+      ],
+      "target_quaternion_world_wxyz": [
+        0.528551890863286,
+        0.0146001031023842,
+        0.8487291217809436,
+        0.00886642516421981
+      ]
+    },
+    {
+      "achieved_consecutive_steps": 0,
+      "candidate_rank": 5,
+      "completed_steps": 240,
+      "construction_method": "open_approach_close_lift",
+      "failure_reason": "ik_did_not_reach_ten_consecutive_registered_tolerance_steps",
+      "final_orientation_error_deg": 51.936307561132296,
+      "final_position_error_m": 0.12147827053491812,
+      "minimum_orientation_error_deg": 36.61571703770266,
+      "minimum_orientation_error_step": 4,
+      "minimum_position_error_m": 0.0672667170179724,
+      "minimum_position_error_step": 5,
+      "orientation_error_at_minimum_position_deg": 43.51514338138136,
+      "position_error_at_minimum_orientation_m": 0.07227411342720474,
+      "solution_finite": true,
+      "solution_inside_soft_joint_limits": false,
+      "stage": "canonical_carry",
+      "target_position_world_m": [
+        0.3183138371614531,
+        -0.025278396987904243,
+        0.28342455260767774
+      ],
+      "target_quaternion_world_wxyz": [
+        0.6877530983576733,
+        0.014184866701185288,
+        0.7249211474602384,
+        -0.035830088208398884
+      ]
+    },
+    {
+      "achieved_consecutive_steps": 0,
+      "candidate_rank": 6,
+      "completed_steps": 240,
+      "construction_method": "open_approach_close_lift",
+      "failure_reason": "ik_did_not_reach_ten_consecutive_registered_tolerance_steps",
+      "final_orientation_error_deg": 46.1128476444359,
+      "final_position_error_m": 0.10990906927551046,
+      "minimum_orientation_error_deg": 33.06843668580615,
+      "minimum_orientation_error_step": 4,
+      "minimum_position_error_m": 0.06139006980326732,
+      "minimum_position_error_step": 5,
+      "orientation_error_at_minimum_position_deg": 39.133605699578,
+      "position_error_at_minimum_orientation_m": 0.07355134311516076,
+      "solution_finite": true,
+      "solution_inside_soft_joint_limits": false,
+      "stage": "canonical_grasp",
+      "target_position_world_m": [
+        0.32394493364001853,
+        -0.02173179540414674,
+        0.2501426966501729
+      ],
+      "target_quaternion_world_wxyz": [
+        0.6566797057885383,
+        -0.023041909743751393,
+        0.7537533849619963,
+        -0.009832042472042824
+      ]
+    },
+    {
+      "achieved_consecutive_steps": 0,
+      "candidate_rank": 6,
+      "completed_steps": 240,
+      "construction_method": "open_approach_close_lift",
+      "failure_reason": "ik_did_not_reach_ten_consecutive_registered_tolerance_steps",
+      "final_orientation_error_deg": 50.146775425268636,
+      "final_position_error_m": 0.14462420201823242,
+      "minimum_orientation_error_deg": 28.67104225086729,
+      "minimum_orientation_error_step": 4,
+      "minimum_position_error_m": 0.028176046555394588,
+      "minimum_position_error_step": 5,
+      "orientation_error_at_minimum_position_deg": 33.589526477227075,
+      "position_error_at_minimum_orientation_m": 0.04917059537613651,
+      "solution_finite": true,
+      "solution_inside_soft_joint_limits": true,
+      "stage": "canonical_carry",
+      "target_position_world_m": [
+        0.3524788694133758,
+        0.025101415048987417,
+        0.28115920175833486
+      ],
+      "target_quaternion_world_wxyz": [
+        0.6064243543051592,
+        -0.019267422571008486,
+        0.7934006792292051,
+        0.04892474968435709
+      ]
+    },
+    {
+      "achieved_consecutive_steps": 0,
+      "candidate_rank": 7,
+      "completed_steps": 240,
+      "construction_method": "open_approach_close_lift",
+      "failure_reason": "ik_did_not_reach_ten_consecutive_registered_tolerance_steps",
+      "final_orientation_error_deg": 63.44637620227559,
+      "final_position_error_m": 0.1217686621049841,
+      "minimum_orientation_error_deg": 27.10693286674114,
+      "minimum_orientation_error_step": 4,
+      "minimum_position_error_m": 0.028172831649890838,
+      "minimum_position_error_step": 5,
+      "orientation_error_at_minimum_position_deg": 28.82962365800086,
+      "position_error_at_minimum_orientation_m": 0.07082909209002354,
+      "solution_finite": true,
+      "solution_inside_soft_joint_limits": false,
+      "stage": "canonical_grasp",
+      "target_position_world_m": [
+        0.368970953978774,
+        0.024702419415491332,
+        0.2380291551914043
+      ],
+      "target_quaternion_world_wxyz": [
+        0.528551890863286,
+        0.0146001031023842,
+        0.8487291217809436,
+        0.00886642516421981
+      ]
+    },
+    {
+      "achieved_consecutive_steps": 0,
+      "candidate_rank": 7,
+      "completed_steps": 240,
+      "construction_method": "open_approach_close_lift",
+      "failure_reason": "ik_did_not_reach_ten_consecutive_registered_tolerance_steps",
+      "final_orientation_error_deg": 50.146775425268636,
+      "final_position_error_m": 0.14462420201823242,
+      "minimum_orientation_error_deg": 28.67104225086729,
+      "minimum_orientation_error_step": 4,
+      "minimum_position_error_m": 0.028176046555394588,
+      "minimum_position_error_step": 5,
+      "orientation_error_at_minimum_position_deg": 33.589526477227075,
+      "position_error_at_minimum_orientation_m": 0.04917059537613651,
+      "solution_finite": true,
+      "solution_inside_soft_joint_limits": true,
+      "stage": "canonical_carry",
+      "target_position_world_m": [
+        0.3524788694133758,
+        0.025101415048987417,
+        0.28115920175833486
+      ],
+      "target_quaternion_world_wxyz": [
+        0.6064243543051592,
+        -0.019267422571008486,
+        0.7934006792292051,
+        0.04892474968435709
+      ]
+    },
+    {
+      "achieved_consecutive_steps": 0,
+      "candidate_rank": 8,
+      "completed_steps": 240,
+      "construction_method": "open_approach_close_lift",
+      "failure_reason": "ik_did_not_reach_ten_consecutive_registered_tolerance_steps",
+      "final_orientation_error_deg": 46.1128476444359,
+      "final_position_error_m": 0.10990906927551046,
+      "minimum_orientation_error_deg": 33.06843668580615,
+      "minimum_orientation_error_step": 4,
+      "minimum_position_error_m": 0.06139006980326732,
+      "minimum_position_error_step": 5,
+      "orientation_error_at_minimum_position_deg": 39.133605699578,
+      "position_error_at_minimum_orientation_m": 0.07355134311516076,
+      "solution_finite": true,
+      "solution_inside_soft_joint_limits": false,
+      "stage": "canonical_grasp",
+      "target_position_world_m": [
+        0.32394493364001853,
+        -0.02173179540414674,
+        0.2501426966501729
+      ],
+      "target_quaternion_world_wxyz": [
+        0.6566797057885383,
+        -0.023041909743751393,
+        0.7537533849619963,
+        -0.009832042472042824
+      ]
+    },
+    {
+      "achieved_consecutive_steps": 0,
+      "candidate_rank": 8,
+      "completed_steps": 240,
+      "construction_method": "open_approach_close_lift",
+      "failure_reason": "ik_did_not_reach_ten_consecutive_registered_tolerance_steps",
+      "final_orientation_error_deg": 51.936307561132296,
+      "final_position_error_m": 0.12147827053491812,
+      "minimum_orientation_error_deg": 36.61571703770266,
+      "minimum_orientation_error_step": 4,
+      "minimum_position_error_m": 0.0672667170179724,
+      "minimum_position_error_step": 5,
+      "orientation_error_at_minimum_position_deg": 43.51514338138136,
+      "position_error_at_minimum_orientation_m": 0.07227411342720474,
+      "solution_finite": true,
+      "solution_inside_soft_joint_limits": false,
+      "stage": "canonical_carry",
+      "target_position_world_m": [
+        0.3183138371614531,
+        -0.025278396987904243,
+        0.28342455260767774
+      ],
+      "target_quaternion_world_wxyz": [
+        0.6877530983576733,
+        0.014184866701185288,
+        0.7249211474602384,
+        -0.035830088208398884
+      ]
+    }
+  ],
+  "status": "r002_candidate_budget_exhausted_no_valid_state_pair",
+  "study_id": "vla_wam_language_steerability_v3"
+}

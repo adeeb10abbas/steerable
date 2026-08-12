@@ -55,13 +55,16 @@ class StateContractTests(unittest.TestCase):
                 "joint_velocity_rad_s": robot["joint_velocity"]["values"],
                 "root_position_world_m": robot["root_position"]["values"],
                 "root_quaternion_world_wxyz": robot["root_quaternion_wxyz"]["values"],
+                "root_linear_velocity_m_s": robot["root_linear_velocity"]["values"],
+                "root_angular_velocity_rad_s": robot["root_angular_velocity"]["values"],
+                "gripper": {"joint_position_rad": robot["joint_position"]["values"][7:]},
             },
             "objects": {
                 name: {
                     "position_world_m": row["root_position"]["values"],
                     "quaternion_world_wxyz": row["root_quaternion_wxyz"]["values"],
-                    "linear_velocity_m_s": row["root_linear_velocity"]["values"],
-                    "angular_velocity_rad_s": row["root_angular_velocity"]["values"],
+                    "linear_velocity_m_s": copy.deepcopy(row["root_linear_velocity"]["values"]),
+                    "angular_velocity_rad_s": copy.deepcopy(row["root_angular_velocity"]["values"]),
                 }
                 for name, row in objects.items()
             },
@@ -69,6 +72,9 @@ class StateContractTests(unittest.TestCase):
         result = compare_full_reset_to_e004(state, reference=reference, reference_file_sha256="0" * 64)
         self.assertTrue(result["passed"])
         state["robot"]["joint_position_rad"][0] = 0.1
+        self.assertFalse(compare_full_reset_to_e004(state, reference=reference, reference_file_sha256="0" * 64)["passed"])
+        state["robot"]["joint_position_rad"][0] = robot["joint_position"]["values"][0]
+        state["objects"]["rubiks_cube"]["linear_velocity_m_s"][0] += 0.1
         self.assertFalse(compare_full_reset_to_e004(state, reference=reference, reference_file_sha256="0" * 64)["passed"])
 
 

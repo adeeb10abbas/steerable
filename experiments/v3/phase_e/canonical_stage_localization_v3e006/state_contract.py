@@ -190,6 +190,15 @@ def compare_full_reset_to_e004(
     root_orientation_delta = _quaternion_distance(
         robot["root_quaternion_world_wxyz"], _source_values(robot_source, "root_quaternion_wxyz")
     )
+    root_linear_velocity_delta = float(
+        np.linalg.norm(np.asarray(robot["root_linear_velocity_m_s"], dtype=np.float64) - _source_values(robot_source, "root_linear_velocity"))
+    )
+    root_angular_velocity_delta = float(
+        np.linalg.norm(np.asarray(robot["root_angular_velocity_rad_s"], dtype=np.float64) - _source_values(robot_source, "root_angular_velocity"))
+    )
+    gripper_joint_delta = float(
+        np.max(np.abs(np.asarray(robot["gripper"]["joint_position_rad"], dtype=np.float64) - _source_values(robot_source, "joint_position")[7:]))
+    )
     object_rows: dict[str, Any] = {}
     for name, actual in sorted(state["objects"].items()):
         source = reference["rigid_objects"][name]
@@ -222,16 +231,26 @@ def compare_full_reset_to_e004(
         "max_joint_velocity_delta_rad_s_inclusive": 1e-6,
         "max_robot_root_position_delta_m_inclusive": 1e-9,
         "max_robot_root_orientation_delta_rad_inclusive": 1e-9,
+        "max_robot_root_linear_velocity_delta_m_s_inclusive": 1e-6,
+        "max_robot_root_angular_velocity_delta_rad_s_inclusive": 1e-6,
+        "max_gripper_joint_position_delta_rad_inclusive": 1e-6,
         "max_object_position_delta_m_inclusive": 0.005,
         "max_object_orientation_delta_rad_inclusive": math.radians(2.0),
+        "max_object_linear_velocity_delta_m_s_inclusive": 0.01,
+        "max_object_angular_velocity_delta_rad_s_inclusive": 0.05,
     }
     passed = (
         joint_delta <= thresholds["max_joint_position_delta_rad_inclusive"]
         and joint_velocity_delta <= thresholds["max_joint_velocity_delta_rad_s_inclusive"]
         and root_position_delta <= thresholds["max_robot_root_position_delta_m_inclusive"]
         and root_orientation_delta <= thresholds["max_robot_root_orientation_delta_rad_inclusive"]
+        and root_linear_velocity_delta <= thresholds["max_robot_root_linear_velocity_delta_m_s_inclusive"]
+        and root_angular_velocity_delta <= thresholds["max_robot_root_angular_velocity_delta_rad_s_inclusive"]
+        and gripper_joint_delta <= thresholds["max_gripper_joint_position_delta_rad_inclusive"]
         and all(row["position_delta_m"] <= thresholds["max_object_position_delta_m_inclusive"] for row in object_rows.values())
         and all(row["orientation_delta_rad"] <= thresholds["max_object_orientation_delta_rad_inclusive"] for row in object_rows.values())
+        and all(row["linear_velocity_delta_m_s"] <= thresholds["max_object_linear_velocity_delta_m_s_inclusive"] for row in object_rows.values())
+        and all(row["angular_velocity_delta_rad_s"] <= thresholds["max_object_angular_velocity_delta_rad_s_inclusive"] for row in object_rows.values())
     )
     return {
         "reference_file_sha256": reference_file_sha256,
@@ -242,6 +261,9 @@ def compare_full_reset_to_e004(
             "max_joint_velocity_delta_rad_s": joint_velocity_delta,
             "robot_root_position_delta_m": root_position_delta,
             "robot_root_orientation_delta_rad": root_orientation_delta,
+            "robot_root_linear_velocity_delta_m_s": root_linear_velocity_delta,
+            "robot_root_angular_velocity_delta_rad_s": root_angular_velocity_delta,
+            "gripper_joint_position_delta_rad": gripper_joint_delta,
             "objects": object_rows,
         },
         "thresholds": thresholds,

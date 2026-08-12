@@ -1,0 +1,183 @@
+{
+  "action_cap": 450,
+  "action_chunk_shape": [
+    15,
+    8
+  ],
+  "amendment_id": "V3-E006",
+  "behavioral_episode_count": 0,
+  "canonical_contract_sha256": "56df47cdf83f6830df3702958e9d012712d2d3987bc810957a86c716079da127",
+  "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+  "checkpoint_payload_sha256": "b193b28b05f9755e24d44a6f5cf3185ca23c2ad3da6c5913370379c82570fbf6",
+  "components": {
+    "action_controller": {
+      "canonical_sha256": "5e3179cf1e9e798ba3b83f3dce66c1ea9ed0040b34b992a81d2dc2f800b5f82d",
+      "contract": {
+        "action_cap": 450,
+        "chunk_shape": [
+          15,
+          8
+        ],
+        "controller": "native RoboLab DROID joint-position controller",
+        "open_loop_horizon": 15,
+        "registration": {
+          "bytes": 5708,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/robolab/registrations/droid/auto_env_registrations_jointpos.py",
+          "sha256": "7c0796681408af17b940b3d85f68157962715d3f31576ef64fba1398d62935fb"
+        },
+        "space": "joint_position_8d"
+      }
+    },
+    "cameras": {
+      "canonical_sha256": "5611d98f166c3460761343db3ba0fe06c721a1f3b270f016c8bf513c907a3bbb",
+      "contract": {
+        "environment_preset_order": [
+          "over_shoulder_left_camera",
+          "over_shoulder_right_camera",
+          "head_camera",
+          "wrist_cam"
+        ],
+        "policy_feeds": {
+          "observation/exterior_image_1_left": "over_shoulder_left_camera",
+          "observation/wrist_image_left": "wrist_cam"
+        },
+        "preset": "WRIST_LEFT_RIGHT_HEAD",
+        "preset_source": {
+          "bytes": 1428,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/robolab/registrations/droid/camera_presets.py",
+          "sha256": "06ce41334a5264718e0fdd1c7d7f7a5de3b6281c20bb97a9379fc4d80d83f64c"
+        }
+      }
+    },
+    "checkpoint": {
+      "canonical_sha256": "756e462aa568e124946d85f0e0b64a1e387cbf27ee492f2d32bdcec5a31eb012",
+      "contract": {
+        "checkpoint_root": "/data/users/ali/vla_wam/checkpoints/pi05_droid_jointpos_polaris",
+        "manifest": {
+          "bytes": 4856,
+          "path": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_checkpoint_manifest.json",
+          "sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca"
+        },
+        "openpi_config": "pi05_droid_jointpos_polaris",
+        "payload_bytes": 12434530510,
+        "payload_file_count": 26,
+        "payload_manifest_canonical_sha256": "b193b28b05f9755e24d44a6f5cf3185ca23c2ad3da6c5913370379c82570fbf6"
+      }
+    },
+    "layout": {
+      "canonical_sha256": "ad61cd365b2203853e3c1b4588c015f3d78452900d6c12d226e66d34d3c5153c",
+      "contract": {
+        "candidate": {
+          "bytes": 12706,
+          "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/layout/candidate.json",
+          "sha256": "7e270419cdbd2a00e36c47a6a5e3d10c7affb225f118e536cc43917da960ba33"
+        },
+        "fixture": {
+          "bytes": 5032,
+          "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/fixture_tasks.py",
+          "sha256": "a82746edfdf2efcff52d91c30b8e67757de19e69b5d1329e8512f89b3ef6af0e"
+        },
+        "left_task": {
+          "bytes": 827,
+          "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/task_files/left.py",
+          "sha256": "ab9888a6d503df883a94f07d22a4f902f6113b11767b104d43962f2a406393da"
+        },
+        "right_task": {
+          "bytes": 831,
+          "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/task_files/right.py",
+          "sha256": "e3e0edaebbc0e3c5f8fb0729168733e545a912d275226be02baab5e67cb6241b"
+        },
+        "symmetry_level_s": 1.0
+      }
+    },
+    "policy_client": {
+      "canonical_sha256": "7f65e7e405837c3143ecc0d141643f18cdbfde643a8f7740546317646fd1633e",
+      "contract": {
+        "bytes": 5972,
+        "class": "Pi0DroidJointposClient",
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/policies/pi0_family/client.py",
+        "policy_id": "pi05_v2a010_current",
+        "sha256": "2386e6230ca4e2bbf163159ff0692780f5027a6b158b510b206700d54a4a29a3",
+        "variant": "pi05"
+      }
+    },
+    "policy_server": {
+      "canonical_sha256": "3f56fae468fdaa643b77c2d8bcb03ba035c30ab153ec5403958576d3d090afac",
+      "contract": {
+        "launcher": {
+          "bytes": 3738,
+          "path": "experiments/pi05_current_stack/v2a010_serve_policy.py",
+          "sha256": "cd415e3a98da977f395242c24bb8f3d3187eb4cc3bf53c5dc659d190e6934051"
+        },
+        "launcher_sha256": "cd415e3a98da977f395242c24bb8f3d3187eb4cc3bf53c5dc659d190e6934051",
+        "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+        "port": 8001,
+        "sampling_seed_rule": "request_seed = experiment_seed * 1000 + replan_index"
+      }
+    },
+    "raw_writer": {
+      "canonical_sha256": "f04ca5b7d2af974d63a2bb5dc1f5d25fc30c9540c2cbcd1804679c700d479669",
+      "contract": {
+        "bridge": {
+          "bytes": 53612,
+          "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/droid_behavioral_bridge.py",
+          "sha256": "58d0269f7e890fee1e8ffc9d8d25c57068220229d9221ccb885732f3501d24b3"
+        },
+        "missing_measurement_policy": "missing measurements never encoded as zero",
+        "native_runtime": {
+          "bytes": 12644,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/robolab/core/environments/runtime.py",
+          "sha256": "ffa43f43b3e3d1f3c87a8b1da34addbfc9279209fe17209a0eb187b0904e145b"
+        }
+      }
+    },
+    "renderer": {
+      "canonical_sha256": "dac89d44235dc8a6e3dd4715229ad9aa06c9bc5a17906a0ebe944abda565aae9",
+      "contract": {
+        "device": "cuda:0",
+        "headless": true,
+        "renderer": "realtime",
+        "renderer_backend": "Isaac Sim viewport realtime RTX Vulkan balanced",
+        "rendering_type": "balanced",
+        "simulator_version": "Isaac Sim 5.0.0.0 / Isaac Lab 2.2.0 / RoboLab 0.2.1",
+        "video_mode": "viewport"
+      }
+    },
+    "success_predicate_and_scorer": {
+      "canonical_sha256": "2e38d6f9c02c127abee84eb24221d6e50de30058cba606aa3c8144493056e03c",
+      "contract": {
+        "compiler": {
+          "bytes": 39262,
+          "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/episode_compiler.py",
+          "sha256": "cd704db68fa840b6800836f0c2225fb8fe74ac2fd59d962f25bcdc5f1d5d661d"
+        },
+        "predicate": "requested relation in frozen 45-degree robot-frame cone with detached release",
+        "robolab_predicates": {
+          "bytes": 47262,
+          "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/robolab/core/task/conditionals.py",
+          "sha256": "ff267b76c06aad6bed11842671373176d14222d9e158a139bf77d2588f4ae7f1"
+        },
+        "success_predicate_ids": [
+          "droid_left_of_bowl_v3_frozen",
+          "droid_right_of_bowl_v3_frozen"
+        ]
+      }
+    }
+  },
+  "equality_rule": "Every V3-E006 release and live lane must reproduce this canonical contract SHA and each component SHA before request zero; any mismatch fails closed.",
+  "model_id": "pi05_current_stack_droid",
+  "model_request_count": 0,
+  "open_loop_horizon": 15,
+  "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+  "policy_id": "pi05_v2a010_current",
+  "renderer_contract": "Isaac Sim viewport realtime RTX Vulkan balanced; headless; cuda:0",
+  "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+  "schema_version": "vla-wam-shared-v3e006-exact-pi05-runtime-contract-v1",
+  "status": "prospectively_frozen_before_v3e006_registration_or_model_request",
+  "study_id": "vla_wam_language_steerability_v3",
+  "supersedes": {
+    "bytes": 4775,
+    "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/e004_runtime_bindings.json",
+    "sha256": "4d6333ead6f055409400b54f38600584e6b058921c9ee0b7b16c25e9f011295e"
+  }
+}

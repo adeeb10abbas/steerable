@@ -107,6 +107,9 @@ from experiments.v3.phase_e.canonical_stage_localization_v3e006.ood_reference im
     _quat_multiply_wxyz,
     _quat_normalize_wxyz,
 )
+from experiments.v3.phase_e.canonical_stage_localization_v3e006.runtime_contract import (  # noqa: E402
+    load_runtime_contract,
+)
 from experiments.v3.phase_e.canonical_stage_localization_v3e006.state_contract import (  # noqa: E402
     canonical_bytes,
     compare_full_reset_to_e004,
@@ -415,7 +418,7 @@ def main() -> None:
     set_output_dir(str((args.output_dir / "native").resolve()))
     ood = json.loads(args.ood_freeze.read_text(encoding="utf-8"))
     reset_reference = json.loads(args.e004_reset_reference.read_text(encoding="utf-8"))
-    runtime_bindings = json.loads(args.runtime_bindings.read_text(encoding="utf-8"))
+    runtime_bindings = load_runtime_contract(args.runtime_bindings, args.runtime_bindings_sha256)
     candidate = load_candidate(args.e004_candidate, args.e004_candidate_sha256)
     task_file = study_root / "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/task_files/left.py"
     auto_register_droid_abs_ik_envs(task=[str(task_file)], cameras=WRIST_LEFT_RIGHT_HEAD)

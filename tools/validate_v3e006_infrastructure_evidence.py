@@ -138,8 +138,45 @@ def main() -> None:
                 "headless": renderer["headless"],
             }:
                 raise AssertionError("child AppLauncher runtime differs from the frozen E004 renderer contract")
-        elif result.get("status") != "infrastructure_invalid_zero_model_health_preflight":
-            raise AssertionError("failed preflight lacks invalid status")
+        else:
+            if result.get("status") != "infrastructure_invalid_zero_model_health_preflight":
+                raise AssertionError("failed preflight lacks invalid status")
+            if result.get("child_report") is not None:
+                verify_binding(result["child_report"], verify_raw=True)
+                child = json.loads(Path(result["child_report"]["path"]).read_text(encoding="utf-8"))
+                if child.get("status") != "infrastructure_invalid_zero_model_runtime_health_preflight" or child.get("passed") is not False:
+                    raise AssertionError("failed child report lacks infrastructure-invalid status")
+                for key in ("model_request_count", "behavioral_episode_count", "state_candidate_count"):
+                    if child.get(key) != 0:
+                        raise AssertionError(f"failed child preflight has nonzero {key}")
+                verify_binding(child["source"], verify_raw=True)
+                for binding_row in child.get("bound_inputs", {}).values():
+                    verify_binding(binding_row, verify_raw=True)
+                for binding_row in child.get("diagnostic_inputs", []):
+                    verify_binding(binding_row, verify_raw=True)
+                runtime_path = Path(launch["input_bindings"]["runtime_contract"]["path"])
+                runtime_contract = json.loads(runtime_path.read_text(encoding="utf-8"))
+                renderer = runtime_contract["components"]["renderer"]["contract"]
+                if child.get("runtime_contract_observation", {}).get("canonical_contract_sha256") != runtime_contract.get("canonical_contract_sha256"):
+                    raise AssertionError("failed child runtime observation differs from frozen E004")
+                if child.get("app_launcher_runtime") != {
+                    "renderer": renderer["renderer"],
+                    "rendering_mode": renderer["rendering_type"],
+                    "device": renderer["device"],
+                    "headless": renderer["headless"],
+                }:
+                    raise AssertionError("failed child AppLauncher runtime differs from frozen E004")
+                if not isinstance(child.get("invocation"), list) or len(child["invocation"]) < 20:
+                    raise AssertionError("failed child invocation is incomplete")
+                child_environment = child.get("environment", {})
+                if not child_environment or any(
+                    value != launch.get("environment", {}).get(key) for key, value in child_environment.items()
+                ):
+                    raise AssertionError("failed child environment differs from retained launch")
+                if not child.get("error", {}).get("type") or not child.get("error", {}).get("traceback"):
+                    raise AssertionError("failed child report lacks retained exception evidence")
+                if result.get("child_status") != child["status"]:
+                    raise AssertionError("outer result does not bind the failed child status")
         preflight_status = result["status"]
     print(json.dumps({"passed": True, "retained_attempts": len(rows), "verified_raw": args.verify_raw, "preflight_status": preflight_status}, sort_keys=True))
 

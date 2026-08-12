@@ -225,9 +225,9 @@ def main() -> None:
             log.write((launch_error + "\n").encode("utf-8", errors="replace"))
         returncode = 127
     child_binding = binding(child_output) if child_output.is_file() else None
+    child = json.loads(child_output.read_text(encoding="utf-8")) if child_binding is not None else None
     passed = returncode == 0 and child_binding is not None
     if passed:
-        child = json.loads(child_output.read_text(encoding="utf-8"))
         passed = (
             child.get("status") == "passed_generic_zero_model_cuda_vulkan_isaac_physics_render_health_preflight"
             and child.get("model_request_count") == 0
@@ -250,6 +250,7 @@ def main() -> None:
         "launch": binding(launch_path),
         "runtime_log": binding(log_path),
         "child_report": child_binding,
+        "child_status": child.get("status") if child is not None else None,
         "failure_log_tail": None if passed else log_path.read_text(encoding="utf-8", errors="replace")[-8192:],
     }
     result_path = output_root / "harness_result.json"

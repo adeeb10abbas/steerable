@@ -10,6 +10,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import traceback
 
 from isaaclab.app import AppLauncher
 
@@ -111,6 +112,53 @@ for key in ("HOME", "XDG_CACHE_HOME", "WARP_CACHE_PATH", "MPLCONFIGDIR", "TMPDIR
         parser.error(f"isolated writable runtime directory is invalid: {key}")
 
 simulation_app = AppLauncher(args).app
+source = Path(__file__).resolve()
+environment = {
+    key: os.environ.get(key)
+    for key in (
+        "CUDA_VISIBLE_DEVICES",
+        "NVIDIA_VISIBLE_DEVICES",
+        "NVIDIA_DRIVER_CAPABILITIES",
+        "VK_ICD_FILENAMES",
+        "LD_LIBRARY_PATH",
+        "HOME",
+        "XDG_CACHE_HOME",
+        "WARP_CACHE_PATH",
+        "MPLCONFIGDIR",
+        "TMPDIR",
+    )
+}
+base_report = {
+    "schema_version": "vla-wam-shared-v3e006-zero-model-runtime-preflight-v1",
+    "scope": "generic runtime health only; not a state candidate, E004 scene validation, or behavioral release",
+    "model_request_count": 0,
+    "behavioral_episode_count": 0,
+    "state_candidate_count": 0,
+    "study_commit": study_commit,
+    "robolab_commit": robolab_commit,
+    "source": _binding(source),
+    "bound_inputs": bound_inputs,
+    "runtime_contract_observation": runtime_observation,
+    "app_launcher_runtime": {
+        "renderer": "realtime",
+        "rendering_mode": args.rendering_mode,
+        "device": args.device,
+        "headless": args.headless,
+    },
+    "diagnostic_inputs": [_binding(path) for path in args.diagnostic_input],
+    "invocation": sys.argv,
+    "environment": environment,
+    "lane": {
+        "pod": args.pod,
+        "pod_uid": args.pod_uid,
+        "gpu_uuid": args.gpu_uuid,
+        "container_image": args.container_image,
+        "container_id": args.container_id,
+        "driver_version": args.driver_version,
+        "python": sys.executable,
+    },
+}
+health_failure: BaseException | None = None
 
 try:
     import numpy as np
@@ -159,52 +207,10 @@ try:
     if frame.shape[:2] != (120, 160) or frame.size == 0 or int(np.count_nonzero(frame)) == 0:
         raise RuntimeError(f"minimal RTX camera capture invalid: {frame.shape}")
 
-    source = Path(__file__).resolve()
-    environment = {
-        key: os.environ.get(key)
-        for key in (
-            "CUDA_VISIBLE_DEVICES",
-            "NVIDIA_VISIBLE_DEVICES",
-            "NVIDIA_DRIVER_CAPABILITIES",
-            "VK_ICD_FILENAMES",
-            "LD_LIBRARY_PATH",
-            "HOME",
-            "XDG_CACHE_HOME",
-            "WARP_CACHE_PATH",
-            "MPLCONFIGDIR",
-            "TMPDIR",
-        )
-    }
     report = {
-        "schema_version": "vla-wam-shared-v3e006-zero-model-runtime-preflight-v1",
+        **base_report,
         "status": "passed_generic_zero_model_cuda_vulkan_isaac_physics_render_health_preflight",
-        "scope": "generic runtime health only; not a state candidate, E004 scene validation, or behavioral release",
-        "model_request_count": 0,
-        "behavioral_episode_count": 0,
-        "state_candidate_count": 0,
-        "study_commit": study_commit,
-        "robolab_commit": robolab_commit,
-        "source": _binding(source),
-        "bound_inputs": bound_inputs,
-        "runtime_contract_observation": runtime_observation,
-        "app_launcher_runtime": {
-            "renderer": "realtime",
-            "rendering_mode": args.rendering_mode,
-            "device": args.device,
-            "headless": args.headless,
-        },
-        "diagnostic_inputs": [_binding(path) for path in args.diagnostic_input],
-        "invocation": sys.argv,
-        "environment": environment,
-        "lane": {
-            "pod": args.pod,
-            "pod_uid": args.pod_uid,
-            "gpu_uuid": args.gpu_uuid,
-            "container_image": args.container_image,
-            "container_id": args.container_id,
-            "driver_version": args.driver_version,
-            "python": sys.executable,
-        },
+        "passed": True,
         "cuda": {
             "available": True,
             "device_name": torch.cuda.get_device_name(0),
@@ -221,5 +227,28 @@ try:
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, allow_nan=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps({"output": str(args.output.resolve()), "sha256": _sha256(args.output)}, sort_keys=True))
+except BaseException as exc:
+    health_failure = exc
+    failure_report = {
+        **base_report,
+        "status": "infrastructure_invalid_zero_model_runtime_health_preflight",
+        "passed": False,
+        "error": {
+            "type": type(exc).__name__,
+            "message": str(exc),
+            "traceback": traceback.format_exc(),
+        },
+    }
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(json.dumps(failure_report, allow_nan=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    traceback.print_exc()
 finally:
-    simulation_app.close()
+    try:
+        simulation_app.close()
+    except BaseException as close_error:
+        if health_failure is None:
+            raise
+        print(f"SimulationApp.close raised after retained health failure: {type(close_error).__name__}: {close_error}", file=sys.stderr)
+
+if health_failure is not None:
+    raise health_failure.with_traceback(health_failure.__traceback__)

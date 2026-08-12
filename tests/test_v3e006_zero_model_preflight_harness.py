@@ -36,6 +36,18 @@ def test_generated_app_launcher_argv_uses_accepted_e004_runtime_flags() -> None:
     assert "--rendering-type" not in argv
 
 
+def test_child_failure_is_retained_before_simulator_close() -> None:
+    child_source = (SOURCE.parent / "v3e006_zero_model_runtime_preflight.py").read_text(encoding="utf-8")
+    retained = child_source.index('"status": "infrastructure_invalid_zero_model_runtime_health_preflight"')
+    close = child_source.index("simulation_app.close()")
+    reraise = child_source.index("raise health_failure.with_traceback")
+    assert retained < close < reraise
+    assert '"traceback": traceback.format_exc()' in child_source
+    assert '"model_request_count": 0' in child_source
+    assert '"behavioral_episode_count": 0' in child_source
+    assert '"state_candidate_count": 0' in child_source
+
+
 def test_interpreter_binding_preserves_venv_symlink_path(tmp_path: Path) -> None:
     target = tmp_path / "python-build" / "python3.11"
     target.parent.mkdir()

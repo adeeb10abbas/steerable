@@ -45,6 +45,7 @@ def final_paths(root: Path) -> dict[str, Path]:
     results = root / "results"
     return {
         "raw_episodes": root / "raw/episodes.jsonl",
+        "aggregation_receipt": root / "raw/aggregation_receipt.json",
         "infrastructure_attempts": root / "infrastructure_attempts.jsonl",
         "episodes": results / "episodes.jsonl",
         "pairs": results / "pairs.jsonl",
@@ -334,6 +335,27 @@ def _aggregate_lane_evidence(root: Path) -> dict[str, dict[str, Any]]:
     _binding_at(manifest.get("release_gate"), root / "release_gate.released.json", "activation-v3 manifest release gate")
     _binding_at(manifest.get("raw_episodes"), paths["raw_episodes"], "activation-v3 manifest raw episodes")
     _binding_at(manifest.get("infrastructure_attempts"), paths["infrastructure_attempts"], "activation-v3 manifest infrastructure attempts")
+
+    aggregation = read_finite_json(paths["aggregation_receipt"])
+    require(
+        isinstance(aggregation, dict)
+        and aggregation.get("schema_version") == "vla-wam-shared-v3c002r001-activation-v3-raw-aggregation-receipt-v1"
+        and aggregation.get("status") == "complete_structural_raw_aggregation"
+        and aggregation.get("structural_only_no_outcome_aggregate") is True
+        and aggregation.get("behavioral_raw_episode_count") == 1364
+        and aggregation.get("completed_seed_block_count") == 341,
+        "activation-v3 raw aggregation receipt changed",
+    )
+    _binding_at(aggregation.get("registration"), root / "registration.json", "activation-v3 aggregation registration")
+    _binding_at(aggregation.get("queue"), root / "queue.jsonl", "activation-v3 aggregation queue")
+    _binding_at(aggregation.get("assignment_manifest"), root / "assignment.jsonl", "activation-v3 aggregation assignment")
+    _binding_at(aggregation.get("release_gate"), root / "release_gate.released.json", "activation-v3 aggregation release gate")
+    combined = aggregation.get("combined_outputs")
+    require(isinstance(combined, Mapping), "activation-v3 aggregation combined outputs are missing")
+    _binding_at(combined.get("raw_episodes"), paths["raw_episodes"], "activation-v3 aggregation raw episodes")
+    _binding_at(combined.get("infrastructure_attempts"), paths["infrastructure_attempts"], "activation-v3 aggregation infrastructure attempts")
+    receipt_lanes = aggregation.get("lane_evidence")
+    require(isinstance(receipt_lanes, Mapping) and set(receipt_lanes) == set(LANE_SLOTS), "activation-v3 aggregation lane evidence is incomplete")
     compiled = manifest.get("compiled_outputs")
     require(isinstance(compiled, Mapping), "activation-v3 manifest compiled outputs are missing")
     for name in ("episodes", "pairs", "results", "decision_memo"):
@@ -446,6 +468,24 @@ def _aggregate_lane_evidence(root: Path) -> dict[str, dict[str, Any]]:
             "infrastructure_attempt_count": value["infrastructure_attempt_count"],
             "infrastructure_cell_ids": sorted(value["infrastructure_cell_ids"]),
         }
+        receipt_lane = receipt_lanes[slot]
+        require(
+            isinstance(receipt_lane, Mapping)
+            and receipt_lane.get("completed_marker_count") == value["assigned_seed_blocks"]
+            and receipt_lane.get("raw_episode_count") == value["expected_behavioral_cells"]
+            and receipt_lane.get("provenance_sidecar_count") == value["expected_behavioral_cells"]
+            and receipt_lane.get("infrastructure_attempt_count") == value["infrastructure_attempt_count"],
+            f"activation-v3 aggregation receipt counts changed for {slot}",
+        )
+        for label, records in (
+            ("completed marker", receipt_lane.get("completed_markers")),
+            ("raw episode", receipt_lane.get("raw_episode_bindings")),
+            ("provenance sidecar", receipt_lane.get("provenance_sidecars")),
+            ("infrastructure ledger", receipt_lane.get("infrastructure_ledgers")),
+        ):
+            require(isinstance(records, list), f"activation-v3 aggregation {label} bindings missing for {slot}")
+            for index, record in enumerate(records):
+                validate_file_binding(record, f"activation-v3 aggregation {label} {slot} {index}")
     return normalized
 
 

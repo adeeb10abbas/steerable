@@ -1,0 +1,112 @@
+{
+  "amendment_id": "V3-E006",
+  "e004_registration": {
+    "bytes": 16100,
+    "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/registration.json",
+    "sha256": "3e3786510ebba933d0c7a4606afa51627ea6bf706f9e64b34cfd74b29e318db2"
+  },
+  "frozen_configuration": {
+    "action": {
+      "action_dimension": 8,
+      "action_horizon": 15,
+      "action_limit": 450,
+      "controller": "native RoboLab DROID joint-position controller",
+      "open_loop": true
+    },
+    "camera": {
+      "environment_preset_order": [
+        "over_shoulder_left_camera",
+        "over_shoulder_right_camera",
+        "head_camera",
+        "wrist_cam"
+      ],
+      "policy_conditioning_feeds": {
+        "observation/exterior_image_1_left": "over_shoulder_left_camera",
+        "observation/wrist_image_left": "wrist_cam"
+      },
+      "preset": "WRIST_LEFT_RIGHT_HEAD"
+    },
+    "policy_id": "pi05_v2a010_current",
+    "raw_writer": "E004 StateCaptureProxy plus native RoboLab HDF5 recorder; missing raw measurements are never converted to zero",
+    "renderer": {
+      "device": "cuda:0",
+      "headless": true,
+      "renderer": "realtime",
+      "rendering_type": "balanced",
+      "video_mode": "viewport"
+    },
+    "scorer": "frozen E004/DROID requested relation, 45-degree robot-frame cone, detached release"
+  },
+  "repository_sources": {
+    "action_horizon_and_policy_dispatch": {
+      "bytes": 8126,
+      "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/droid_behavioral_contract.py",
+      "sha256": "dc26825b7f5ae53895fd7c2b6ea4e8f13e60270c5e61e28b5bb3deca156ffac3"
+    },
+    "e004_layout_candidate": {
+      "bytes": 12706,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/layout/candidate.json",
+      "sha256": "7e270419cdbd2a00e36c47a6a5e3d10c7affb225f118e536cc43917da960ba33"
+    },
+    "left_task": {
+      "bytes": 827,
+      "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/task_files/left.py",
+      "sha256": "ab9888a6d503df883a94f07d22a4f902f6113b11767b104d43962f2a406393da"
+    },
+    "layout_and_predicate_definition": {
+      "bytes": 5032,
+      "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/fixture_tasks.py",
+      "sha256": "a82746edfdf2efcff52d91c30b8e67757de19e69b5d1329e8512f89b3ef6af0e"
+    },
+    "raw_writer_renderer_and_policy_bridge": {
+      "bytes": 53612,
+      "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/droid_behavioral_bridge.py",
+      "sha256": "58d0269f7e890fee1e8ffc9d8d25c57068220229d9221ccb885732f3501d24b3"
+    },
+    "right_task": {
+      "bytes": 831,
+      "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/task_files/right.py",
+      "sha256": "e3e0edaebbc0e3c5f8fb0729168733e545a912d275226be02baab5e67cb6241b"
+    },
+    "scorer_and_raw_episode_compiler": {
+      "bytes": 39262,
+      "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/episode_compiler.py",
+      "sha256": "cd704db68fa840b6800836f0c2225fb8fe74ac2fd59d962f25bcdc5f1d5d661d"
+    }
+  },
+  "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+  "robolab_sources": {
+    "camera_preset": {
+      "bytes": 1428,
+      "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/robolab/registrations/droid/camera_presets.py",
+      "sha256": "06ce41334a5264718e0fdd1c7d7f7a5de3b6281c20bb97a9379fc4d80d83f64c"
+    },
+    "environment_and_native_recorder": {
+      "bytes": 12644,
+      "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/robolab/core/environments/runtime.py",
+      "sha256": "ffa43f43b3e3d1f3c87a8b1da34addbfc9279209fe17209a0eb187b0904e145b"
+    },
+    "frozen_predicates": {
+      "bytes": 47262,
+      "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/robolab/core/task/conditionals.py",
+      "sha256": "ff267b76c06aad6bed11842671373176d14222d9e158a139bf77d2588f4ae7f1"
+    },
+    "joint_position_controller_registration": {
+      "bytes": 5708,
+      "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/robolab/registrations/droid/auto_env_registrations_jointpos.py",
+      "sha256": "7c0796681408af17b940b3d85f68157962715d3f31576ef64fba1398d62935fb"
+    },
+    "native_runner": {
+      "bytes": 13429,
+      "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/robolab/eval/runner.py",
+      "sha256": "d3069b1fe16788c319540c0a9de9fbcdec0d1afae2ab976d710941636c7358c4"
+    },
+    "pi05_droid_client": {
+      "bytes": 5972,
+      "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/policies/pi0_family/client.py",
+      "sha256": "2386e6230ca4e2bbf163159ff0692780f5027a6b158b510b206700d54a4a29a3"
+    }
+  },
+  "schema_version": "vla-wam-shared-v3e006-e004-runtime-bindings-v1",
+  "status": "frozen_before_v3e006_candidate_evaluation_or_model_request"
+}

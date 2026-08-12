@@ -36,6 +36,7 @@ def main() -> None:
     ).is_file():
         e005.append("--require-results")
     commands.append(e005)
+    commands.append([sys.executable, str(ROOT / "tools/validate_v3e006.py")])
     outputs = []
     for command in commands:
         completed = subprocess.run(command, cwd=ROOT, text=True, capture_output=True)

@@ -508,7 +508,11 @@ def _reference_bounds(env: Any) -> YawOrientedBox:
             "passed": True,
         }
     )
-    return YawOrientedBox(tuple(center), half, yaw)
+    return YawOrientedBox(
+        tuple(float(value) for value in center),
+        tuple(float(value) for value in half),
+        float(yaw),
+    )
 
 
 def _save_camera_evidence(env: Any, obs: Mapping[str, Any], stage: str, root: Path) -> dict[str, Any]:

@@ -6,6 +6,8 @@ import copy
 from pathlib import Path
 import ast
 
+import numpy as np
+
 from experiments.v3.phase_e.canonical_stage_localization_v3e006.state_contract import (
     StateContractError,
     normalized_state_sha256,
@@ -88,6 +90,31 @@ def test_bounds_math_tracks_frozen_e004_and_retains_raw_values() -> None:
         '"half_extents_m"',
     ):
         assert evidence_field in state_source
+
+
+def test_bounds_boundary_normalizes_only_scalar_types_without_changing_values() -> None:
+    source_path = Path(__file__).parents[1] / "experiments/v3/phase_e/canonical_stage_localization_v3e006/state_construction_gate.py"
+    source = source_path.read_text(encoding="utf-8")
+    tree = ast.parse(source)
+    fn = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "_reference_bounds")
+    box_return = next(
+        node
+        for node in ast.walk(fn)
+        if isinstance(node, ast.Return)
+        and isinstance(node.value, ast.Call)
+        and isinstance(node.value.func, ast.Name)
+        and node.value.func.id == "YawOrientedBox"
+    )
+    center = np.asarray([0.8850742737042376, 0.12666125471719836, 0.1549786306324369], dtype=np.float64)
+    half = tuple(np.float64(value) for value in (0.0807566887, 0.0805766839, 0.0275467021))
+    yaw = np.float64(4.745085247498086e-07)
+    namespace = {"center": center, "half": half, "yaw": yaw}
+    normalized = tuple(
+        eval(compile(ast.Expression(argument), str(source_path), "eval"), namespace)
+        for argument in box_return.value.args
+    )
+    assert normalized == (tuple(center), half, yaw)
+    assert all(type(value) is float for value in (*normalized[0], *normalized[1], normalized[2]))
 
 
 class StateContractTests(unittest.TestCase):

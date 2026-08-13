@@ -42,6 +42,15 @@ class PostPublicationClosureTests(unittest.TestCase):
             "complete_seed_blocks": 341, "prompt_form_pairs": 682,
             "infrastructure_attempts_excluded": 14, "bindings": receipt_bindings,
         }
+        for index, name in enumerate((
+            "raw_episodes", "prelaunch_receipt", "script", "invocation_argv",
+            "invocation_environment", "invocation_checkout_head", "invocation_checkout_status",
+            "invocation_remote_head", "invocation_script_sha", "invocation_prelaunch_sha", "invocation_exit_code",
+        ), start=100):
+            path = root / "retained" / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(f"retained-{index}\n", encoding="utf-8")
+            receipt_bindings[name] = closure._binding(path)
         receipt_path = root / final / "finalization_execution_receipt.json"
         receipt_path.write_text(json.dumps(receipt), encoding="utf-8")
         return final, bindings, receipt
@@ -61,6 +70,10 @@ class PostPublicationClosureTests(unittest.TestCase):
                 (root / final / "finalization_execution_receipt.json").write_text(json.dumps(receipt), encoding="utf-8")
                 with self.assertRaisesRegex(ContractError, "execution receipt changed"):
                     closure.validate_execution_receipt(bindings)
+
+    def test_frozen_validator_and_source_hashes_are_pinned(self):
+        self.assertEqual(closure.HISTORICAL_VALIDATOR_SHA256, "ae9aced8d3cd75ed515a966d8d4c8503e631645c75c06ae561ce6d2cbea85193")
+        self.assertEqual(closure.SOURCE_GATE_SHA256, "1eee9f34fd585a8dedfc4eac1f69c4a428b13cc7c36ec5cdf8ef0436dc0fd0cf")
 
 
 if __name__ == "__main__":

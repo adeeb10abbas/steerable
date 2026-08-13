@@ -26,6 +26,9 @@ from experiments.v3.phase_c_semantic_equivalence_v3c002.contract import Contract
 SOURCE_COMMIT = "785ea96419df51b92249ef7cdd1b5dbd59ff0a50"
 RESULTS_COMMIT = "700a1f76a2f8ec2ac8e19db669c9afe3668f8a85"
 IMPLEMENTATION_COMMIT = "9def5c605c04d070e32b4069578e6378dcf21cd7"
+REGISTRATION_COMMIT = "42703eb998cda35f04701def31a428d9c4281f01"
+SOURCE_GATE_SHA256 = "1eee9f34fd585a8dedfc4eac1f69c4a428b13cc7c36ec5cdf8ef0436dc0fd0cf"
+HISTORICAL_VALIDATOR_SHA256 = "ae9aced8d3cd75ed515a966d8d4c8503e631645c75c06ae561ce6d2cbea85193"
 CANONICAL_REMOTE = "https://github.com/adeeb10abbas/steerable.git"
 CANONICAL_BRANCH = "experiment/v3c002-semantic-equivalence"
 BASE = Path("artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001")
@@ -71,6 +74,7 @@ def validate_publication_tree() -> dict[str, dict[str, Any]]:
     for commit in (SOURCE_COMMIT, RESULTS_COMMIT, IMPLEMENTATION_COMMIT):
         require(_git(REPO_ROOT, "cat-file", "-t", commit) == "commit", f"missing pinned commit {commit}")
     _git(REPO_ROOT, "merge-base", "--is-ancestor", SOURCE_COMMIT, RESULTS_COMMIT)
+    require(_git(REPO_ROOT, "rev-parse", f"{RESULTS_COMMIT}^") == SOURCE_COMMIT, "results commit is not the direct evidence-only child of the frozen source head")
     _git(REPO_ROOT, "merge-base", "--is-ancestor", RESULTS_COMMIT, head)
     remote = _git(REPO_ROOT, "remote", "get-url", "origin")
     require(remote == CANONICAL_REMOTE, "post-publication canonical remote changed")
@@ -95,10 +99,12 @@ def validate_historical_source(source_checkout: Path) -> dict[str, Any]:
     require(_git(source_checkout, "rev-parse", "HEAD") == SOURCE_COMMIT, "historical execution checkout head changed")
     require(_git(source_checkout, "status", "--porcelain") == "", "historical execution checkout is not clean")
     source_path = source_checkout / FINAL / "source_push_gate.released.json"
+    require(_binding(source_path)["sha256"] == SOURCE_GATE_SHA256, "historical source-gate blob changed")
     source = json.loads(source_path.read_text(encoding="utf-8"))
     require(
         source.get("passed") is True and source.get("pushed") is True
         and source.get("implementation_commit") == IMPLEMENTATION_COMMIT
+        and source.get("registration_commit") == REGISTRATION_COMMIT
         and source.get("remote_head_at_gate") == source.get("registration_commit"),
         "historical final-analysis source admission changed",
     )
@@ -107,6 +113,10 @@ def validate_historical_source(source_checkout: Path) -> dict[str, Any]:
     for relative, binding in inventory.items():
         data = _bytes_at(IMPLEMENTATION_COMMIT, Path(relative))
         require(len(data) == binding.get("bytes") and hashlib.sha256(data).hexdigest() == binding.get("sha256"), f"historical implementation inventory changed: {relative}")
+    _git(source_checkout, "merge-base", "--is-ancestor", IMPLEMENTATION_COMMIT, REGISTRATION_COMMIT)
+    _git(source_checkout, "merge-base", "--is-ancestor", REGISTRATION_COMMIT, SOURCE_COMMIT)
+    registration = source_checkout / FINAL / "registration.json"
+    require(_binding(registration)["sha256"] == source.get("registration_sha256"), "historical registration blob changed")
     return _binding(source_path)
 
 
@@ -131,6 +141,18 @@ def validate_execution_receipt(bindings: dict[str, dict[str, Any]]) -> dict[str,
         expected = bindings[relative.as_posix()]
         actual = receipt["bindings"][name]
         require(actual.get("bytes") == expected["bytes"] and actual.get("sha256") == expected["sha256"], f"execution receipt binding changed: {name}")
+    # Every remaining invocation/raw admission binding is checked at its exact
+    # retained absolute path.  These are never relocated into the repository.
+    for name in (
+        "raw_episodes", "prelaunch_receipt", "script", "invocation_argv",
+        "invocation_environment", "invocation_checkout_head", "invocation_checkout_status",
+        "invocation_remote_head", "invocation_script_sha", "invocation_prelaunch_sha",
+        "invocation_exit_code",
+    ):
+        actual = receipt["bindings"].get(name)
+        require(isinstance(actual, dict) and Path(str(actual.get("path", ""))).is_absolute(), f"execution receipt durable binding missing: {name}")
+        retained = _binding(Path(actual["path"]))
+        require(retained["bytes"] == actual.get("bytes") and retained["sha256"] == actual.get("sha256"), f"execution receipt retained binding changed: {name}")
     return receipt
 
 
@@ -138,6 +160,8 @@ def regenerate(*, source_checkout: Path, raw_root: Path) -> dict[str, Any]:
     require(raw_root.is_absolute(), "raw root must remain an exact absolute PVC path")
     source = source_checkout / BASE
     published = REPO_ROOT / FINAL / "results"
+    historical_validator = source_checkout / "experiments/v3/phase_c_semantic_equivalence_v3c002r001/activation_v4_finalizer/validator.py"
+    require(_binding(historical_validator)["sha256"] == HISTORICAL_VALIDATOR_SHA256, "frozen historical validator source changed")
     # Import and execute the untouched validator from the exact historical
     # source checkout so its relocation of committed artifact bindings is
     # identical to execution time.  The sole monkeypatch is a process-local
@@ -216,6 +240,7 @@ def main() -> None:
         "historical_source_gate": historical_source, "published_files": bindings,
         "execution_receipt_sha256": bindings[(FINAL / "finalization_execution_receipt.json").as_posix()]["sha256"],
         "independent_raw_regeneration_passed": args.verify_raw,
+        "historical_validator_sha256": HISTORICAL_VALIDATOR_SHA256,
         "frozen_validator_historical_remote_overlay_disclosure": "The untouched frozen validator passed 17.46 GB raw regeneration when its temporary remote view was pinned to execution-time head 785ea964; the overlay was removed. The durable post-publication validator instead proves commit ancestry and uses the exact retained execution checkout paths.",
         "claim_authorized": results.get("model_level_semantic_depth_equivalence_claim_authorized") if results else execution.get("result_claim_authorized"),
         "claim_withheld": results.get("model_level_semantic_depth_equivalence_claim_withheld") if results else execution.get("result_claim_withheld"),

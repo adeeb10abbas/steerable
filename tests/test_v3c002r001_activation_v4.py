@@ -15,6 +15,13 @@ class ActivationV4Test(unittest.TestCase):
         from experiments.v3.phase_c_semantic_equivalence_v3c002r001 import activation_v4_continuation_runner
         self.assertTrue(callable(activation_v4_continuation_runner._remaining))
 
+    def test_exact_adapter_binding(self) -> None:
+        from pathlib import Path
+        from experiments.v3.phase_c_semantic_equivalence_v3c002.contract import sha256_file
+        from experiments.v3.phase_c_semantic_equivalence_v3c002r001.activation_v4_retry_runner import ADAPTER_SHA
+        path = Path(__file__).parents[1] / "experiments/v3/phase_c_semantic_equivalence_v3c002r001/activation_v4_replacement_adapter.py"
+        self.assertEqual(sha256_file(path), ADAPTER_SHA)
+
 
 if __name__ == "__main__":
     unittest.main()

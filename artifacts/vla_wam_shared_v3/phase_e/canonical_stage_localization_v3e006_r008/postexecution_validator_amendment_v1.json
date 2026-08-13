@@ -1,0 +1,106 @@
+{
+  "accepted_state_candidate_count": 0,
+  "behavioral_episode_count": 0,
+  "corrected_validator_inventory": {
+    "focused_regression_test": {
+      "bytes": 4673,
+      "path": "tests/test_v3e006_r008_postexecution.py",
+      "sha256": "2185423909bf854ea6acc970deb53f2c62592f35b3feefd7b9a8006a83bfc9af"
+    },
+    "postexecution_validator": {
+      "bytes": 13335,
+      "path": "tools/validate_v3e006_r008_postexecution.py",
+      "sha256": "e770851b4d25c3c303c2605cad9377c23fded5717f8bf503cf687b2745631f5a"
+    }
+  },
+  "correction": {
+    "corrected_expectation": "canonicalize the recomputed expected quaternion with the exact frozen runtime helper before float32 action comparison",
+    "frozen_validator_defect": "compared noncanonical recomputed quaternion components directly with canonical runtime action components",
+    "raw_evidence_change": false,
+    "runtime_path": "_command_base_link applies frozen _quat_normalize_wxyz before float32 action dispatch",
+    "scientific_execution_change": false,
+    "so3_command_changed": false
+  },
+  "correction_implementation_commit": "9fed0b79f38d3bb2559854b692234392efbe14a4",
+  "created_at_utc": "2026-08-13T07:23:50Z",
+  "failed_frozen_target_validation_receipt": {
+    "bytes": 0,
+    "path": "/data/users/ali/vla_wam/raw/v3e006_r008/state_repair/ae06a1f-a40r06-attempt01/target_validation_receipt.json",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "frozen_execution_inventory": {
+    "experiments/v3/phase_e/canonical_stage_localization_v3e006_r008/object_servo.py": {
+      "bytes": 7238,
+      "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r008/object_servo.py",
+      "sha256": "54e91bfa62699a7310b5d871422a91845e05b3e57aa9503673f4b34672409639"
+    },
+    "experiments/v3/phase_e/canonical_stage_localization_v3e006_r008/state_repair_gate.py": {
+      "bytes": 132476,
+      "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r008/state_repair_gate.py",
+      "sha256": "b93907f0df640efcff97cb4acbe31fb3df1b217b79a43d852755575b379072b8"
+    },
+    "tests/test_v3e006_r008.py": {
+      "bytes": 16227,
+      "path": "tests/test_v3e006_r008.py",
+      "sha256": "da28979081e4c4e7356f09e06f9e1731eda99473fc1139f61caa4bb23821d25e"
+    },
+    "tools/validate_v3e006_r008.py": {
+      "bytes": 30535,
+      "path": "tools/validate_v3e006_r008.py",
+      "sha256": "797aac116f9b6c9fb0fd607249a9ebeaa7d57af84672bb27c594e6c97fd77d2f"
+    }
+  },
+  "frozen_source_push_gate": {
+    "bytes": 4882,
+    "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r008/source_push_gate.json",
+    "sha256": "946f8f5eb7cdf0a2308f5925a41532e89267e222ee32629b586b1398e7d1c79b"
+  },
+  "model_request_count": 0,
+  "observed_antipode_mismatch_counts": [
+    0,
+    301,
+    295,
+    263,
+    0,
+    263,
+    295,
+    301
+  ],
+  "observed_other_mismatch_count": 0,
+  "raw_evidence_mutation_count": 0,
+  "raw_harness": {
+    "bytes": 1515,
+    "path": "/data/users/ali/vla_wam/raw/v3e006_r008/state_repair/ae06a1f-a40r06-attempt01/harness_result.json",
+    "sha256": "e2220e633d6489b8988598f02cbd21db3ecd6d240327db4c2e909ec6a91fcb8a"
+  },
+  "raw_launch": {
+    "bytes": 17738,
+    "path": "/data/users/ali/vla_wam/raw/v3e006_r008/state_repair/ae06a1f-a40r06-attempt01/launch.json",
+    "sha256": "6ebd12dc9fe844cae043151ee4162cf8ec0391818addd07ffafdba666204915f"
+  },
+  "raw_result": {
+    "bytes": 64704588,
+    "path": "/data/users/ali/vla_wam/raw/v3e006_r008/state_repair/ae06a1f-a40r06-attempt01/raw/state_repair_result.json",
+    "sha256": "58f8e54994348634d8793f0448c49144b35ab3b601065ab4be298cbd9ebc6548"
+  },
+  "raw_runtime_log": {
+    "bytes": 137425,
+    "path": "/data/users/ali/vla_wam/raw/v3e006_r008/state_repair/ae06a1f-a40r06-attempt01/runtime.log",
+    "sha256": "05a03e264df5a5b59e00418f83f90a6941db7a08dcbac05dbab776b9d4622934"
+  },
+  "repair_amendment_id": "V3-E006-R008",
+  "runtime_quaternion_canonicalizer_source": {
+    "bytes": 18461,
+    "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006/ood_reference.py",
+    "sha256": "4df1ebf0061096a74b5eccd10b2a144e840f52fd50469b8bdae9369d1696fd04"
+  },
+  "schema_version": "vla-wam-shared-v3e006-r008-postexecution-validator-amendment-v1",
+  "scientific_execution_change_count": 0,
+  "scientific_outcome": {
+    "accepted_candidate_rank": null,
+    "candidate_pair_count": 4,
+    "diagnostic_count": 4,
+    "status": "r008_candidate_budget_exhausted_no_valid_state_pair"
+  },
+  "status": "validator_only_quaternion_representative_correction_after_execution_before_r008_closure_or_behavior"
+}

@@ -13,10 +13,6 @@ from experiments.v3.phase_c_semantic_equivalence_v3c002.contract import (
     sha256_file,
     validate_file_binding,
 )
-from experiments.v3.phase_c_semantic_equivalence_v3c002r001.activation_v3_lane_replacement_runner import (
-    SCHEMA as A003_SCHEMA,
-    require_released_replacement_gate,
-)
 from experiments.v3.phase_c_semantic_equivalence_v3c002r001.contract import (
     LANE_SCHEMA,
     RELEASE_SCHEMA as ORIGINAL_RELEASE_SCHEMA,
@@ -26,6 +22,7 @@ from experiments.v3.phase_c_semantic_equivalence_v3c002r001.contract import (
 
 
 CONTINUATION_SCHEMA = "vla-wam-shared-v3c002r001-activation-v4-continuation-gate-v1"
+A003_SCHEMA = "vla-wam-shared-v3c002r001-activation-v3-lane-replacement-gate-v1"
 ORIGINAL_RELEASE_SHA = "28ee96e3fcda4637302aadef6e90233574101a75e5c7af75fa1d9e4b1c060a7d"
 A003_SHA = "7b0835c2bb76631add47f5e13c6db4d5be40379d234e90c4b401a5214ec2463d"
 ALL_SLOTS = tuple(f"repair-lane-{index:02d}" for index in range(8))
@@ -133,11 +130,16 @@ def require_a004_gate(*, registration_path: Path, queue_path: Path, release_gate
             release_gate_path=path,
         )
     if kind == "a003":
-        return require_released_replacement_gate(
-            registration_path=registration_path,
-            queue_path=queue_path,
-            release_gate_path=path,
-        )
+        parent, cells = load_cells(registration_path=registration_path, queue_path=queue_path)
+        gate = _gate(path)
+        require(gate.get("queue", {}).get("sha256") == sha256_file(queue_path), "A003 queue changed")
+        require(gate.get("activation_v3_registration", {}).get("sha256") == sha256_file(registration_path), "A003 parent registration changed")
+        validate_file_binding(gate.get("replacement_registration"), "A003 replacement registration")
+        validate_file_binding(gate.get("source_push_gate"), "A003 source gate")
+        validate_assignment(gate.get("assignment_manifest"))
+        require(gate.get("retry_seed_by_lane") == {"repair-lane-00": 12060, "repair-lane-01": 12101} and gate.get("no_cross_lane_failover") is True and gate.get("completed_blocks_never_rerun") is True, "A003 retry scope changed")
+        lane_records(gate)
+        return parent, cells, gate
     gate = _gate(path)
     parent, cells = load_cells(registration_path=registration_path, queue_path=queue_path)
     _verify_continuation(gate, queue_path=queue_path)

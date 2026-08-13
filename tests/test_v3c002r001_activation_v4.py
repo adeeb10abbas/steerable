@@ -17,8 +17,10 @@ class ActivationV4Test(unittest.TestCase):
         })
 
     def test_a004_sources_import(self) -> None:
-        from experiments.v3.phase_c_semantic_equivalence_v3c002r001 import activation_v4_continuation_runner
+        from experiments.v3.phase_c_semantic_equivalence_v3c002r001 import activation_v4_continuation_runner, activation_v4_retry_runner
         self.assertTrue(callable(activation_v4_continuation_runner._remaining))
+        self.assertEqual(activation_v4_retry_runner._dispatch.__module__, "experiments.v3.phase_c_semantic_equivalence_v3c002r001.runner")
+        self.assertNotIn("activation_v3_lane_replacement_runner", activation_v4_retry_runner._dispatch.__module__)
 
     def test_exact_adapter_binding(self) -> None:
         from pathlib import Path

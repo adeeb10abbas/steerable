@@ -1,0 +1,200 @@
+{
+  "candidate_search": {
+    "acceptance": "The lowest numeric complete pair whose grasp and carry both pass every unchanged gate is accepted.",
+    "algorithm_version": "historical-q-seeded-abs-ik-waypoint-repair-v1",
+    "exhaustion": "Four valid rejected pairs close R003 at zero model requests and zero behavioral episodes. Infrastructure-invalid attempts are retried identically and are not rank rejection. No seed, waypoint, target, contact transform, solver parameter, or gate may be changed after the diagnostic or candidate run begins.",
+    "first_pass_rule": "Evaluate complete ranks 1 through 4 serially; stop only after both stages of the first passing rank.",
+    "maximum_complete_candidate_pairs": 4,
+    "rank_order": [
+      {
+        "carry_contact": "reflected_right_observed",
+        "grasp_contact": "left_observed",
+        "rank": 1
+      },
+      {
+        "carry_contact": "left_observed",
+        "grasp_contact": "reflected_right_observed",
+        "rank": 2
+      },
+      {
+        "carry_contact": "left_observed",
+        "grasp_contact": "left_observed",
+        "rank": 3
+      },
+      {
+        "carry_contact": "reflected_right_observed",
+        "grasp_contact": "reflected_right_observed",
+        "rank": 4
+      }
+    ]
+  },
+  "counts_at_registration": {
+    "behavioral_episodes": 0,
+    "model_requests": 0,
+    "r003_live_candidate_evaluations": 0,
+    "r003_live_diagnostics": 0
+  },
+  "downstream_behavioral_design_if_and_only_if_state_pair_passes": "unchanged original 341 seeds x 3 stages x 2 directions = 2046; exact E004 pi0.5 runtime/prompts/scorer; no behavior authorized here",
+  "engineering_rationale_only": "R002 direct reset-to-final commands reached neither the position nor orientation target and often saturated soft limits. Source audit then established that RoboLab's HDF5 ee_pose field is base_link, while R002 labeled and commanded it as the offset eef_frame. R003 corrects only this frame semantics plus historical-q waypoint initialization; it does not motivate any world cube target or scientific-threshold change.",
+  "frozen_inputs": {
+    "e004_candidate": {
+      "bytes": 12706,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/layout/candidate.json",
+      "sha256": "7e270419cdbd2a00e36c47a6a5e3d10c7affb225f118e536cc43917da960ba33"
+    },
+    "e004_full_reset_reference": {
+      "bytes": 17364,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/e004_full_reset_reference.json",
+      "sha256": "568fd7aae9ee325ae5c1b59e2905f099e7b3a2c9b0d8679c815bff4354d5ea73"
+    },
+    "ood_freeze": {
+      "bytes": 707097,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/ood_reference_freeze.json",
+      "sha256": "4d3a02c1d96be1ddd98f47a15cf41ad1d2a6c54c3007f3846742cfcbf31873f4"
+    },
+    "ood_reference": {
+      "bytes": 18461,
+      "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006/ood_reference.py",
+      "sha256": "4df1ebf0061096a74b5eccd10b2a144e840f52fd50469b8bdae9369d1696fd04"
+    },
+    "original_v3e006_closure_binding": {
+      "bytes": 6457,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r001/gates/original_v3e006_closure_binding.json",
+      "sha256": "de81ed6987d3cfcb8d7194304e1f84c248d4f2ad1f7a5915b13df3ae0045e1cf"
+    },
+    "r002_candidate_schedule": {
+      "bytes": 192812,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r002/gates/candidate_schedule.json",
+      "sha256": "26f0124831253b347da1396ef13e1a1810d513b454d4316f1107135bef67bc73"
+    },
+    "r002_decision_memo": {
+      "bytes": 649,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r002/results/DECISION_MEMO.md",
+      "sha256": "bfa0478e67d2e66f2e157303cd2b450a1735709a0f18dadbc7aadf61756a8161"
+    },
+    "r002_evidence_manifest": {
+      "bytes": 3037,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r002/results/evidence_manifest.json",
+      "sha256": "a2afe620d3831ddcdfd87bc77e311aa8b3020b1f340129b190be80cac39b0377"
+    },
+    "r002_registration": {
+      "bytes": 14993,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r002/repair_registration.json",
+      "sha256": "691426d0fd70350c03c4b41ec8fabe9230d9f5465f13af847d123a54a5529057"
+    },
+    "r002_results": {
+      "bytes": 22756,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r002/results/results.json",
+      "sha256": "c9f5dd2d1e8a707bdf14645533b43790ee9015bc7c248cb89bb68a0f58931280"
+    },
+    "runtime_contract": {
+      "bytes": 9131,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/exact_pi05_runtime_contract.json",
+      "sha256": "df0b126fdf3ad3919a7074d04c1a539dc1ddd28f8bd780fe934ed30001f7d6c4"
+    },
+    "state_contract": {
+      "bytes": 12944,
+      "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006/state_contract.py",
+      "sha256": "2476b28d2867c1b87f477fd5f89e545616be00d860d4144f8cbdb70af10f3c18"
+    }
+  },
+  "known_reachable_diagnostic": {
+    "acceptance": "all four anchors must be finite, inside live soft joint limits, nonterminal, and inside <=1mm and <=1deg for each of the final 10 consecutive steps",
+    "anchors": "canonical_grasp and canonical_carry, LEFT and RIGHT: exact hash-bound historical 13-joint q, cube pose, and recorded base_link pose from the HDF5 ee_pose group",
+    "controller_hold": "command the recorded base_link pose directly as the DroidIKActionCfg absolute quaternion for 30 physics steps; separately assert live eef_frame pose equals base_link pose composed with EEF_OFFSET_POS/EEF_OFFSET_ROT",
+    "failure": "any diagnostic failure closes R003 diagnostic as failed and prohibits candidate evaluation; no adaptive edit/retry under this registration",
+    "required_before_candidate_rank_one": true,
+    "state_write": "fresh exact E004 environment; atomically write exact historical robot q and cube pose with zero velocities, set joint targets, forward without integration; normal gripper command remains closed"
+  },
+  "original_amendment_id": "V3-E006",
+  "predecessor_outcomes": {
+    "claim_boundary": "No predecessor canonical-state gate passed; every predecessor artifact remains immutable.",
+    "original_v3e006": "failed canonical construction; no model request",
+    "r001": "eight candidate pairs exhausted; no model request",
+    "r002": "eight candidate pairs/16 stages all failed the frozen IK convergence boundary before scientific gate evaluation; no model request"
+  },
+  "predecessor_repair_amendment_id": "V3-E006-R002",
+  "registered_at_utc": "2026-08-12T23:28:16Z",
+  "release_boundary": "One zero-model diagnostic plus conditional finite R003 search only after final pushed source gate and independent audit. No model request, smoke, isolation, registration activation, or inference is authorized.",
+  "repair_amendment_id": "V3-E006-R003",
+  "schema_version": "vla-wam-shared-v3e006-r003-prospective-construction-repair-registration-v1",
+  "solver_contract": {
+    "actuator_gains": {
+      "panda_joints_1_4": {
+        "damping": 80.0,
+        "stiffness": 400.0
+      },
+      "panda_joints_5_7": {
+        "damping": 80.0,
+        "stiffness": 400.0
+      }
+    },
+    "controller": "RoboLab DroidIKActionCfg absolute pose, scale 1.0, body base_link; command quaternion is direct WXYZ with no EEF offset conversion",
+    "controller_source_bindings": {
+      "isaaclab_differential_ik": {
+        "bytes": 10808,
+        "path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/isaaclab/source/isaaclab/isaaclab/controllers/differential_ik.py",
+        "sha256": "307dde7c76b4b9d0834361cf8d53f8653b538c15041da1df725c3bd6d32666c4"
+      },
+      "isaaclab_differential_ik_config": {
+        "bytes": 2955,
+        "path": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/lib/python3.11/site-packages/isaaclab/source/isaaclab/isaaclab/controllers/differential_ik_cfg.py",
+        "sha256": "3e8fc09c6d428c4880f9badbc7ac8f82fe19362ef6c472e74d8db1c35dca0f08"
+      },
+      "robolab_abs_ik_demo": {
+        "bytes": 10177,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/examples/run_abs_ik_demo.py",
+        "sha256": "c18ab8b4174d342e33ff4f8d2d0a9a913dd5af7daeb2ca2e731b44b82f3d9778"
+      },
+      "robolab_droid_action_config": {
+        "bytes": 16098,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/robolab/robots/droid.py",
+        "sha256": "3c43b562cc22476135b7cd82c9c4c01ed361350eda25f3ef6669408ffce53e5d"
+      },
+      "robolab_post_step_end_effector_pose_recorder": {
+        "bytes": 15427,
+        "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/robolab/core/events/basic_recorders.py",
+        "semantic_assertion": "PostStepEndEffectorPoseRecorderCfg.ee_body_name defaults to base_link and the ee_pose HDF5 group records robot.data.body_pos_w/body_quat_w for that body",
+        "sha256": "84944e9eedb664ba8f34eee40e2b0efe064d5460a942eecb68ad7d491a5ffacd"
+      }
+    },
+    "dls_lambda": 0.01,
+    "fresh_lifecycle": "one diagnostic environment per anchor and one solve plus separate materialization environment per candidate rank/stage; every environment starts from verified E004 reset and closes before the next",
+    "initialization": "selected exact historical 13-joint q and cube pose, all velocities zero, closed normal gripper; recorded HDF5 ee_pose is explicitly base_link; no policy action/prompt history",
+    "method": "damped least squares",
+    "waypoint_acceptance": "each waypoint requires its final 10 consecutive steps at <=1mm position and <=1deg geodesic orientation error; any termination, nonfinite state, or soft-limit violation rejects that stage",
+    "waypoints": "8 exact base_link-pose fractions 1/8..8/8; world position linear interpolation and WXYZ shortest-arc quaternion SLERP, flipping target sign iff dot<0; each held 30 steps"
+  },
+  "status": "prospectively_registered_before_any_r003_live_diagnostic_candidate_or_model_request",
+  "study_id": "vla_wam_language_steerability_v3",
+  "target_and_contact_contract": "R002 direct ranks1-4 world target cube poses and rank order are unchanged. Numerically unchanged HDF5 ee_pose-derived contacts/targets are prospectively relabeled as cube-in-base_link/base_link target transforms; direct normal-contact materialization is unchanged.",
+  "unchanged_scientific_gate": {
+    "ood_freeze": {
+      "bytes": 707097,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/ood_reference_freeze.json",
+      "sha256": "4d3a02c1d96be1ddd98f47a15cf41ad1d2a6c54c3007f3846742cfcbf31873f4"
+    },
+    "ood_source": {
+      "bytes": 18461,
+      "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006/ood_reference.py",
+      "sha256": "4df1ebf0061096a74b5eccd10b2a144e840f52fd50469b8bdae9369d1696fd04"
+    },
+    "other": "exact unchanged E004 reset comparison, contact inventory, camera/visibility gate, companion pose gate, and stage OOD thresholds. Live base_link pose is supplied to the historically named state.eef OOD feature because the frozen reference's HDF5 ee_pose was base_link; both frames and the exact offset residual are retained.",
+    "source": {
+      "bytes": 12944,
+      "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006/state_contract.py",
+      "sha256": "2476b28d2867c1b87f477fd5f89e545616be00d860d4144f8cbdb70af10f3c18"
+    },
+    "thresholds": {
+      "arm_speed_rad_s": "<0.01",
+      "cube_abs_y_m": "<0.001",
+      "cube_angular_speed_rad_s": "<0.05",
+      "cube_linear_speed_m_s": "<0.01",
+      "intended_contact_n": ">1.0",
+      "relative_drift_m": "<0.002",
+      "unintended_contact_n": "<=1.0"
+    },
+    "window_steps": 10
+  },
+  "user_authorized_override": "The user explicitly directed the team to solve construction gates and run E006. R003 is a new prospective solver-only repair after the byte-preserved R002 finite search exhausted."
+}

@@ -1,0 +1,60 @@
+{
+  "accepted_state_candidate_count": 0,
+  "behavioral_episode_count": 0,
+  "corrected_validator": {
+    "bytes": 6664,
+    "path": "tools/validate_v3e006_r012_postexecution.py",
+    "sha256": "c33fa0669c3d332aad8ee5b47b5a2cb9a7156b2ff664a27bf068b7a8af2bf9d3"
+  },
+  "correction": {
+    "corrected_semantics": "require supplied origin bitwise equals retained live_tensor_pose.scene_env_origin_world_m, then delegate frozen geometry checks",
+    "frozen_helper_signature": "_validate_live_tensor_geometry(value, static, *, label)",
+    "frozen_preflight_call": "_validate_live_tensor_geometry(value, static, origin=origin, label=label)",
+    "raw_evidence_change": false,
+    "scientific_execution_change": false
+  },
+  "correction_implementation_commit": "96aa28c406ed92a27422c9530629baeaf9a7000c",
+  "correction_test": {
+    "bytes": 1928,
+    "path": "tests/test_v3e006_r012_postexecution.py",
+    "sha256": "2deef2205c4c9b158d458e33fc0262568215482c2c7af4e7ec852e079673cd60"
+  },
+  "failed_target_validation": {
+    "bytes": 0,
+    "path": "/data/users/ali/vla_wam/raw/v3e006_r012/state_repair/219c7a2-a40r06-attempt01/target_validation.json",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "frozen_source_push_gate": {
+    "bytes": 5201,
+    "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r012/source_push_gate.json",
+    "sha256": "149358af6c730ac1b1fc87c52b4540aad8cb011787331a695195b18b521168e5"
+  },
+  "frozen_validator": {
+    "bytes": 121355,
+    "path": "tools/validate_v3e006_r012.py",
+    "sha256": "940b07d697ba2e6d9e6506926e41f4b501cd8f02bfee4d70667c1120d77d27f4"
+  },
+  "model_request_count": 0,
+  "raw_harness": {
+    "bytes": 1560,
+    "path": "/data/users/ali/vla_wam/raw/v3e006_r012/state_repair/219c7a2-a40r06-attempt01/harness_result.json",
+    "sha256": "43a211b972f082e6e6329614c02eece6f9add2188783450f22aa1a012f2a8d62"
+  },
+  "raw_launch": {
+    "bytes": 17736,
+    "path": "/data/users/ali/vla_wam/raw/v3e006_r012/state_repair/219c7a2-a40r06-attempt01/launch.json",
+    "sha256": "0a16950b8a664a9f811e4100590ab9593b5e53826eb08c315a860f451f2f1d95"
+  },
+  "raw_result": {
+    "bytes": 462260724,
+    "path": "/data/users/ali/vla_wam/raw/v3e006_r012/state_repair/219c7a2-a40r06-attempt01/raw/state_repair_result.json",
+    "sha256": "a556be5fb67e95687ba390b689c3f7f676b20d21475fd2357ae1429c7b424c56"
+  },
+  "raw_runtime_log": {
+    "bytes": 147842,
+    "path": "/data/users/ali/vla_wam/raw/v3e006_r012/state_repair/219c7a2-a40r06-attempt01/runtime.log",
+    "sha256": "3f6ec5a45c046364aed7f5e5af6f21364d298050b91eb65ee19bedeee8daf875"
+  },
+  "schema_version": "vla-wam-shared-v3e006-r012-postexecution-validator-amendment-v1",
+  "status": "validator_only_origin_argument_correction_after_execution_before_r012_closure"
+}

@@ -1,0 +1,89 @@
+{
+  "accepted_state_candidate_count": 0,
+  "behavioral_episode_count": 0,
+  "candidate_schedule": {
+    "bytes": 161264,
+    "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r003/gates/candidate_schedule.json",
+    "sha256": "250d193336f5d802a0fde4ad514d985ff3fa2b40b021d2a5dfcb3020f615efb7"
+  },
+  "completed_candidate_pair_count": 0,
+  "created_at_utc": "2026-08-12T23:41:58.228888Z",
+  "implementation_commit": "1c96a7d706bce8decc4b469b6f9cfc5edd78295b",
+  "implementation_file_count": 9,
+  "implementation_files": [
+    {
+      "bytes": 161264,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r003/gates/candidate_schedule.json",
+      "sha256": "250d193336f5d802a0fde4ad514d985ff3fa2b40b021d2a5dfcb3020f615efb7"
+    },
+    {
+      "bytes": 12159,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r003/repair_registration.json",
+      "sha256": "103f3da335a23569e5e6e68c0e4b561f3b9d4573bdb82e317a5bbe7b8fac19ac"
+    },
+    {
+      "bytes": 77,
+      "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r003/__init__.py",
+      "sha256": "a50690a955db78e54275786fb248a9c33873eba3f129d3a2e67cb710158befa4"
+    },
+    {
+      "bytes": 103181,
+      "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r003/state_repair_gate.py",
+      "sha256": "e46772fcbb8dcfb90e0f7edcde24348be74595e76d3b8ebc47f3f0bae2772283"
+    },
+    {
+      "bytes": 11064,
+      "path": "tests/test_v3e006_r003.py",
+      "sha256": "22de92675eba2c2d2aafacb125f507a760fd7f2db78fd698b31188062feaf82c"
+    },
+    {
+      "bytes": 23517,
+      "path": "tools/build_v3e006_r003_freeze.py",
+      "sha256": "dbf2a0f9868fc8ce3ed5ef89431e93f769b330198c326571fcc0f46d19ddb114"
+    },
+    {
+      "bytes": 4668,
+      "path": "tools/build_v3e006_r003_source_gate.py",
+      "sha256": "ee68d2909476561d39df8eb226d77027aff55f59f0c5f7710742be4dd686fb81"
+    },
+    {
+      "bytes": 16923,
+      "path": "tools/run_v3e006_r003_state_repair.py",
+      "sha256": "674b93a3895903584494f150b897c11c26c25ea7935e21448bfd521cf2bd63b2"
+    },
+    {
+      "bytes": 31068,
+      "path": "tools/validate_v3e006_r003.py",
+      "sha256": "82cd099858ce29dd098cc09d43858559bdc1244a98db93e7e1e2b07cc3bf258d"
+    }
+  ],
+  "infrastructure_invalid_search_attempt_count": 0,
+  "model_request_count": 0,
+  "r002_exhaustion_closure_commit": "27d1bfd844808f7f336bbb4e25552a9c859fd08a",
+  "r003_live_candidate_evaluation_count": 0,
+  "r003_live_diagnostic_count": 0,
+  "release_boundary": "Four frozen zero-model reachability diagnostics followed conditionally by one finite sequential zero-model R003 candidate search; behavior and inference remain blocked.",
+  "remote_equality": {
+    "commit": "1c96a7d706bce8decc4b469b6f9cfc5edd78295b",
+    "ref": "refs/heads/experiment/v3e006-r003-state-repair",
+    "remote": "origin"
+  },
+  "repair_amendment_id": "V3-E006-R003",
+  "repair_registration": {
+    "bytes": 12159,
+    "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r003/repair_registration.json",
+    "sha256": "103f3da335a23569e5e6e68c0e4b561f3b9d4573bdb82e317a5bbe7b8fac19ac"
+  },
+  "required_repository_base": "18a2bf0200183647291cc7aeb1fe89997b3fb82f",
+  "schema_version": "vla-wam-shared-v3e006-r003-source-push-gate-v1",
+  "source_push_assertions": {
+    "behavior_and_model_release_prohibited": true,
+    "finite_rank_order_and_first_pass_frozen": true,
+    "known_reachable_diagnostic_frozen_before_live_evaluation": true,
+    "original_r001_and_r002_predecessors_preserved": true,
+    "registration_and_schedule_predate_live_candidate": true,
+    "remote_ref_equals_implementation_commit": true,
+    "unchanged_scientific_gate_sources_bound": true
+  },
+  "status": "passed_before_first_r003_live_diagnostic_candidate_or_model_request"
+}

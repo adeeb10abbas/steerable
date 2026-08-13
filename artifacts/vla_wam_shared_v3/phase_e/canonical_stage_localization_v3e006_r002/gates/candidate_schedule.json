@@ -1,0 +1,5290 @@
+{
+  "behavioral_episode_count": 0,
+  "candidate_budget": 8,
+  "candidate_pairs": [
+    {
+      "candidate_rank": 1,
+      "canonical_carry": {
+        "both_direction_sources": {
+          "left": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.5131728598158335,
+              0.021578607003983605,
+              -0.8565833294617771,
+              -0.04952756158325698
+            ],
+            "cube_in_eef_translation_m": [
+              0.1523796287077066,
+              -0.02970647897716383,
+              0.0005706169971631467
+            ],
+            "cube_pose_world_wxyz": [
+              0.31528258323669434,
+              0.014132175594568253,
+              0.1305873543024063,
+              0.9819121360778809,
+              0.08619152009487152,
+              -0.160787895321846,
+              0.05066255107522011
+            ],
+            "eef_position_world_m": [
+              0.33487486839294434,
+              0.02057412639260292,
+              0.2844606637954712
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.6409696340560913,
+              -0.028317278251051903,
+              0.7532155513763428,
+              0.14499101042747498
+            ],
+            "hdf5_index": 113,
+            "joint_position_rad": [
+              0.08477386087179184,
+              -0.3936332166194916,
+              -0.05187808722257614,
+              -2.8127219676971436,
+              0.16669578850269318,
+              2.2391085624694824,
+              -0.3240370750427246,
+              0.2693465054035187,
+              0.2689701020717621,
+              -0.2736985683441162,
+              0.2771983742713928,
+              -0.26654598116874695,
+              -0.26655447483062744
+            ],
+            "ood_distance": 0.8828459802691598,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9442:s100:left",
+              "environment_seed": 9442,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 237936,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__left/attempt001/simulator/V3E004DroidLeftTask/run_0.hdf5",
+                "sha256": "27d042399d28dc4aac3509283b260cc57ca9f75d3798fd9eb375c8b01123e702"
+              },
+              "raw_episode": {
+                "bytes": 27759,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__left/attempt001/raw_episode.jsonl",
+                "sha256": "a1a0e0c24956ca78e4ce9b2a0dd07749723ada4c834f4e637b508e2cead51534"
+              },
+              "requested_relation": "left",
+              "selected_state_indices": {
+                "canonical_carry": 39,
+                "canonical_grasp": 37
+              },
+              "state_capture": {
+                "bytes": 27434,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__left/attempt001/state_capture/state_capture.json",
+                "sha256": "c50362c6b0f882dce7f594034789847e5ae085248760422964c32eacbc099c8e"
+              }
+            },
+            "state_capture_index": 39
+          },
+          "right": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.6023331143767254,
+              0.0020589347126104777,
+              -0.7973564340333488,
+              -0.03759384548973123
+            ],
+            "cube_in_eef_translation_m": [
+              0.15008919292192352,
+              -0.02990335218672422,
+              0.0031595179926684064
+            ],
+            "cube_pose_world_wxyz": [
+              0.31573086977005005,
+              -0.01460377499461174,
+              0.13437381386756897,
+              0.9933522343635559,
+              0.07463955134153366,
+              -0.06225203350186348,
+              0.06168375164270401
+            ],
+            "eef_position_world_m": [
+              0.3319876790046692,
+              -0.01045914925634861,
+              0.28652340173721313
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.6458008289337158,
+              -0.008611604571342468,
+              0.7516264319419861,
+              0.1338842660188675
+            ],
+            "hdf5_index": 112,
+            "joint_position_rad": [
+              0.03923485800623894,
+              -0.41125035285949707,
+              -0.1040627509355545,
+              -2.8198866844177246,
+              0.13939645886421204,
+              2.2294602394104004,
+              -0.35119080543518066,
+              0.2747841477394104,
+              0.2743447422981262,
+              -0.27738019824028015,
+              0.2839648425579071,
+              -0.2709866464138031,
+              -0.27218765020370483
+            ],
+            "ood_distance": 0.8204209328632562,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9442:s100:right",
+              "environment_seed": 9442,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 239767,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__right/attempt001/simulator/V3E004DroidRightTask/run_0.hdf5",
+                "sha256": "3bf51e655a73c4cfd323cbc12d6ad4dde4b3bd0b6115c52c81957a90bd1ec47d"
+              },
+              "raw_episode": {
+                "bytes": 28730,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__right/attempt001/raw_episode.jsonl",
+                "sha256": "15a7148754fe3bf0ac7a7c092e05fed8d10d789bc9e54b061e70424011ba6e84"
+              },
+              "requested_relation": "right",
+              "selected_state_indices": {
+                "canonical_carry": 38,
+                "canonical_grasp": 37
+              },
+              "state_capture": {
+                "bytes": 28848,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__right/attempt001/state_capture/state_capture.json",
+                "sha256": "6c1a8fad7bd00b8a26449971272a34dc46121100b01ba13c3ab4d193043e3f21"
+              }
+            },
+            "state_capture_index": 38
+          }
+        },
+        "centerline_constrained_eef_ik_target": {
+          "position_world_m": [
+            0.3183138371614531,
+            -0.025278396987904243,
+            0.28342455260767774
+          ],
+          "quaternion_world_wxyz": [
+            0.6877530983576733,
+            0.014184866701185288,
+            0.7249211474602384,
+            -0.035830088208398884
+          ]
+        },
+        "contact_transform_selector": "reflected_right_observed",
+        "historical_source_runtime_assertions": {
+          "hdf5_action_last_component_exact": 1.0,
+          "source_raw_hdf5_and_state_capture_rehashed_before_AppLauncher": true,
+          "state_capture_object_grabbed": true
+        },
+        "open_approach_targets": {
+          "approach_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.340653914999779,
+              -0.02345094611544261,
+              0.2878291949671247
+            ],
+            "quaternion_world_wxyz": [
+              0.6015818747570144,
+              0.002228915966315518,
+              0.7978851712673223,
+              -0.03838663008349012
+            ]
+          },
+          "contact_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.340653914999779,
+              -0.02345094611544261,
+              0.22782919496712473
+            ],
+            "quaternion_world_wxyz": [
+              0.6015818747570144,
+              0.002228915966315518,
+              0.7978851712673223,
+              -0.03838663008349012
+            ]
+          },
+          "world_vertical_clearance_m": 0.06
+        },
+        "reflection_definition": {
+          "matrix_M": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "orientation": "R_reflected = M @ R @ M",
+          "position": "p_reflected = M @ p",
+          "right_world_cube_reflected": {
+            "position_world_m": [
+              0.31573086977005005,
+              0.01460377499461174,
+              0.13437381386756897
+            ],
+            "quaternion_world_wxyz": [
+              0.993352271598686,
+              -0.07463955413934624,
+              -0.06225203583533843,
+              -0.0616837539548773
+            ]
+          },
+          "right_world_eef_reflected": {
+            "position_world_m": [
+              0.3319876790046692,
+              0.01045914925634861,
+              0.28652340173721313
+            ],
+            "quaternion_world_wxyz": [
+              0.6458007771837581,
+              0.008611603881268762,
+              0.751626371711905,
+              -0.13388425529031958
+            ]
+          }
+        },
+        "se3_reconstruction": {
+          "cube_midline_residual_m": 4.336808689942018e-18,
+          "position_residual_m": 4.336808689942018e-18,
+          "reconstructed_cube_pose": {
+            "position_world_m": [
+              0.3155067265033722,
+              4.336808689942018e-18,
+              0.13248058408498764
+            ],
+            "quaternion_world_wxyz": [
+              0.9936532032647135,
+              0.005811198454139198,
+              -0.11219983744927511,
+              -0.005544194319899566
+            ]
+          },
+          "rotation_matrix_frobenius_residual": 2.6391752527064137e-16
+        },
+        "selected_historical_gripper_joint_position_rad": [
+          0.2747841477394104,
+          0.2743447422981262,
+          -0.27738019824028015,
+          0.2839648425579071,
+          -0.2709866464138031,
+          -0.27218765020370483
+        ],
+        "selected_historical_source_side": "right",
+        "selected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.6023331143767252,
+            -0.0020589347126104686,
+            -0.7973564340333489,
+            0.03759384548973129
+          ],
+          "translation_m": [
+            0.1500891929219236,
+            0.02990335218672424,
+            0.0031595179926683925
+          ]
+        },
+        "source_environment_seed": 9442,
+        "stage": "canonical_carry",
+        "target_cube_pose": {
+          "position_world_m": [
+            0.3155067265033722,
+            0.0,
+            0.13248058408498764
+          ],
+          "quaternion_world_wxyz": [
+            0.9936532032647135,
+            0.005811198454139196,
+            -0.1121998374492751,
+            -0.005544194319899571
+          ]
+        },
+        "unselected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.5131728598158335,
+            0.02157860700398359,
+            -0.8565833294617772,
+            -0.049527561583256934
+          ],
+          "translation_m": [
+            0.1523796287077065,
+            -0.02970647897716383,
+            0.0005706169971630981
+          ]
+        }
+      },
+      "canonical_grasp": {
+        "both_direction_sources": {
+          "left": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.4157448657700955,
+              0.004340723967841887,
+              -0.908315202313503,
+              -0.04583511696745464
+            ],
+            "cube_in_eef_translation_m": [
+              0.1453349620905313,
+              -0.029682729908705314,
+              0.002718581250503331
+            ],
+            "cube_pose_world_wxyz": [
+              0.30513930320739746,
+              -0.00037736259400844574,
+              0.10587427765130997,
+              0.9766427278518677,
+              -0.03896859660744667,
+              -0.20629535615444183,
+              -0.04574409872293472
+            ],
+            "eef_position_world_m": [
+              0.34574049711227417,
+              0.028477955609560013,
+              0.2456226944923401
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.5953429937362671,
+              0.011654159054160118,
+              0.8033179640769958,
+              -0.010544581338763237
+            ],
+            "hdf5_index": 104,
+            "joint_position_rad": [
+              0.04376550018787384,
+              -0.21796050667762756,
+              0.03538530692458153,
+              -2.752713441848755,
+              0.046218421310186386,
+              2.2404754161834717,
+              0.07485701888799667,
+              0.2688394784927368,
+              0.268536239862442,
+              -0.2709777057170868,
+              0.2757294774055481,
+              -0.2644253969192505,
+              -0.2657843828201294
+            ],
+            "ood_distance": 1.0810613670702562,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9521:s100:left",
+              "environment_seed": 9521,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 282379,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__left/attempt001/simulator/V3E004DroidLeftTask/run_0.hdf5",
+                "sha256": "53216527c2250cf8c2042f11681b24b76687caa40eae94c261253020d999e3d8"
+              },
+              "raw_episode": {
+                "bytes": 51907,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__left/attempt001/raw_episode.jsonl",
+                "sha256": "03d3b8415358146ba723d2d04d2b5f03ba4cacd71f29bf1d3f1943dcc822df33"
+              },
+              "requested_relation": "left",
+              "selected_state_indices": {
+                "canonical_grasp": 30
+              },
+              "state_capture": {
+                "bytes": 64675,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__left/attempt001/state_capture/state_capture.json",
+                "sha256": "fea5c0b7733b317d6f473c44cd820c56b177e07a21090baf21b01be44cb5fbb5"
+              }
+            },
+            "state_capture_index": 30
+          },
+          "right": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.5562839151935741,
+              -0.03756879828952432,
+              -0.8294156076344039,
+              0.034735297673145774
+            ],
+            "cube_in_eef_translation_m": [
+              0.14434814054997389,
+              -0.02859482452666407,
+              0.003295537417902547
+            ],
+            "cube_pose_world_wxyz": [
+              0.3086285889148712,
+              -0.0005029924213886261,
+              0.10526366531848907,
+              0.9985092878341675,
+              0.005843814462423325,
+              -0.0458889938890934,
+              0.028968242928385735
+            ],
+            "eef_position_world_m": [
+              0.3490164577960968,
+              0.02600378356873989,
+              0.24430006742477417
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.5943024158477783,
+              0.01833087019622326,
+              0.8039432168006897,
+              -0.011998005211353302
+            ],
+            "hdf5_index": 105,
+            "joint_position_rad": [
+              0.04437673091888428,
+              -0.20462659001350403,
+              0.02545449137687683,
+              -2.743105173110962,
+              0.05162767693400383,
+              2.2421841621398926,
+              0.07375045120716095,
+              0.26011112332344055,
+              0.25982794165611267,
+              -0.2640582025051117,
+              0.26614639163017273,
+              -0.25677037239074707,
+              -0.2574363648891449
+            ],
+            "ood_distance": 0.8745899927957682,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9521:s100:right",
+              "environment_seed": 9521,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 261744,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__right/attempt001/simulator/V3E004DroidRightTask/run_0.hdf5",
+                "sha256": "1931e6d64005cf3231c3ff7e3c2398bd76c36cbeca4fc7a1611791b3cf0cb5ee"
+              },
+              "raw_episode": {
+                "bytes": 40067,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__right/attempt001/raw_episode.jsonl",
+                "sha256": "20308b26c1f423dc263c9ba174a52d1a7511a8494a846c489f2dd8aeda18f418"
+              },
+              "requested_relation": "right",
+              "selected_state_indices": {
+                "canonical_carry": 72,
+                "canonical_grasp": 30
+              },
+              "state_capture": {
+                "bytes": 46319,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__right/attempt001/state_capture/state_capture.json",
+                "sha256": "85436f2bea98efe4fd9f3175af12e2887f4369446625eb0886091beb4f55b363"
+              }
+            },
+            "state_capture_index": 31
+          }
+        },
+        "centerline_constrained_eef_ik_target": {
+          "position_world_m": [
+            0.368970953978774,
+            0.024702419415491332,
+            0.2380291551914043
+          ],
+          "quaternion_world_wxyz": [
+            0.528551890863286,
+            0.0146001031023842,
+            0.8487291217809436,
+            0.00886642516421981
+          ]
+        },
+        "contact_transform_selector": "left_observed",
+        "historical_source_runtime_assertions": {
+          "hdf5_action_last_component_exact": 1.0,
+          "source_raw_hdf5_and_state_capture_rehashed_before_AppLauncher": true,
+          "state_capture_object_grabbed": true
+        },
+        "open_approach_targets": {
+          "approach_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.39563230891983453,
+              0.024689934978640447,
+              0.25486663706520707
+            ],
+            "quaternion_world_wxyz": [
+              0.4149426504302433,
+              -0.003928706456199985,
+              0.9087200586760764,
+              0.045111163576816465
+            ]
+          },
+          "contact_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.39563230891983453,
+              0.024689934978640447,
+              0.19486663706520707
+            ],
+            "quaternion_world_wxyz": [
+              0.4149426504302433,
+              -0.003928706456199985,
+              0.9087200586760764,
+              0.045111163576816465
+            ]
+          },
+          "world_vertical_clearance_m": 0.06
+        },
+        "reflection_definition": {
+          "matrix_M": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "orientation": "R_reflected = M @ R @ M",
+          "position": "p_reflected = M @ p",
+          "right_world_cube_reflected": {
+            "position_world_m": [
+              0.3086285889148712,
+              0.0005029924213886261,
+              0.10526366531848907
+            ],
+            "quaternion_world_wxyz": [
+              0.9985093343062514,
+              -0.005843814734403004,
+              -0.04588899602483435,
+              -0.028968244276610166
+            ]
+          },
+          "right_world_eef_reflected": {
+            "position_world_m": [
+              0.3490164577960968,
+              -0.02600378356873989,
+              0.24430006742477417
+            ],
+            "quaternion_world_wxyz": [
+              0.5943024068578998,
+              -0.01833086991893633,
+              0.8039432046396224,
+              0.01199800502986219
+            ]
+          }
+        },
+        "se3_reconstruction": {
+          "cube_midline_residual_m": 2.6020852139652106e-18,
+          "position_residual_m": 2.6020852139652106e-18,
+          "reconstructed_cube_pose": {
+            "position_world_m": [
+              0.30688394606113434,
+              -2.6020852139652106e-18,
+              0.10556897148489952
+            ],
+            "quaternion_world_wxyz": [
+              0.9909993174963224,
+              -0.022483874038230045,
+              -0.12652925873502688,
+              -0.037485661445688934
+            ]
+          },
+          "rotation_matrix_frobenius_residual": 2.5476231888929306e-16
+        },
+        "selected_historical_gripper_joint_position_rad": [
+          0.2688394784927368,
+          0.268536239862442,
+          -0.2709777057170868,
+          0.2757294774055481,
+          -0.2644253969192505,
+          -0.2657843828201294
+        ],
+        "selected_historical_source_side": "left",
+        "selected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.4157448657700955,
+            0.004340723967841884,
+            -0.908315202313503,
+            -0.045835116967454625
+          ],
+          "translation_m": [
+            0.14533496209053123,
+            -0.029682729908705303,
+            0.0027185812505032825
+          ]
+        },
+        "source_environment_seed": 9521,
+        "stage": "canonical_grasp",
+        "target_cube_pose": {
+          "position_world_m": [
+            0.30688394606113434,
+            0.0,
+            0.10556897148489952
+          ],
+          "quaternion_world_wxyz": [
+            0.9909993174963224,
+            -0.02248387403823005,
+            -0.12652925873502688,
+            -0.037485661445688934
+          ]
+        },
+        "unselected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.5562839151935741,
+            0.03756879828952433,
+            -0.8294156076344039,
+            -0.0347352976731458
+          ],
+          "translation_m": [
+            0.14434814054997386,
+            0.028594824526664064,
+            0.0032955374179026165
+          ]
+        }
+      },
+      "construction_method": "direct_contact_initialization"
+    },
+    {
+      "candidate_rank": 2,
+      "canonical_carry": {
+        "both_direction_sources": {
+          "left": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.5131728598158335,
+              0.021578607003983605,
+              -0.8565833294617771,
+              -0.04952756158325698
+            ],
+            "cube_in_eef_translation_m": [
+              0.1523796287077066,
+              -0.02970647897716383,
+              0.0005706169971631467
+            ],
+            "cube_pose_world_wxyz": [
+              0.31528258323669434,
+              0.014132175594568253,
+              0.1305873543024063,
+              0.9819121360778809,
+              0.08619152009487152,
+              -0.160787895321846,
+              0.05066255107522011
+            ],
+            "eef_position_world_m": [
+              0.33487486839294434,
+              0.02057412639260292,
+              0.2844606637954712
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.6409696340560913,
+              -0.028317278251051903,
+              0.7532155513763428,
+              0.14499101042747498
+            ],
+            "hdf5_index": 113,
+            "joint_position_rad": [
+              0.08477386087179184,
+              -0.3936332166194916,
+              -0.05187808722257614,
+              -2.8127219676971436,
+              0.16669578850269318,
+              2.2391085624694824,
+              -0.3240370750427246,
+              0.2693465054035187,
+              0.2689701020717621,
+              -0.2736985683441162,
+              0.2771983742713928,
+              -0.26654598116874695,
+              -0.26655447483062744
+            ],
+            "ood_distance": 0.8828459802691598,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9442:s100:left",
+              "environment_seed": 9442,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 237936,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__left/attempt001/simulator/V3E004DroidLeftTask/run_0.hdf5",
+                "sha256": "27d042399d28dc4aac3509283b260cc57ca9f75d3798fd9eb375c8b01123e702"
+              },
+              "raw_episode": {
+                "bytes": 27759,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__left/attempt001/raw_episode.jsonl",
+                "sha256": "a1a0e0c24956ca78e4ce9b2a0dd07749723ada4c834f4e637b508e2cead51534"
+              },
+              "requested_relation": "left",
+              "selected_state_indices": {
+                "canonical_carry": 39,
+                "canonical_grasp": 37
+              },
+              "state_capture": {
+                "bytes": 27434,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__left/attempt001/state_capture/state_capture.json",
+                "sha256": "c50362c6b0f882dce7f594034789847e5ae085248760422964c32eacbc099c8e"
+              }
+            },
+            "state_capture_index": 39
+          },
+          "right": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.6023331143767254,
+              0.0020589347126104777,
+              -0.7973564340333488,
+              -0.03759384548973123
+            ],
+            "cube_in_eef_translation_m": [
+              0.15008919292192352,
+              -0.02990335218672422,
+              0.0031595179926684064
+            ],
+            "cube_pose_world_wxyz": [
+              0.31573086977005005,
+              -0.01460377499461174,
+              0.13437381386756897,
+              0.9933522343635559,
+              0.07463955134153366,
+              -0.06225203350186348,
+              0.06168375164270401
+            ],
+            "eef_position_world_m": [
+              0.3319876790046692,
+              -0.01045914925634861,
+              0.28652340173721313
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.6458008289337158,
+              -0.008611604571342468,
+              0.7516264319419861,
+              0.1338842660188675
+            ],
+            "hdf5_index": 112,
+            "joint_position_rad": [
+              0.03923485800623894,
+              -0.41125035285949707,
+              -0.1040627509355545,
+              -2.8198866844177246,
+              0.13939645886421204,
+              2.2294602394104004,
+              -0.35119080543518066,
+              0.2747841477394104,
+              0.2743447422981262,
+              -0.27738019824028015,
+              0.2839648425579071,
+              -0.2709866464138031,
+              -0.27218765020370483
+            ],
+            "ood_distance": 0.8204209328632562,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9442:s100:right",
+              "environment_seed": 9442,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 239767,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__right/attempt001/simulator/V3E004DroidRightTask/run_0.hdf5",
+                "sha256": "3bf51e655a73c4cfd323cbc12d6ad4dde4b3bd0b6115c52c81957a90bd1ec47d"
+              },
+              "raw_episode": {
+                "bytes": 28730,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__right/attempt001/raw_episode.jsonl",
+                "sha256": "15a7148754fe3bf0ac7a7c092e05fed8d10d789bc9e54b061e70424011ba6e84"
+              },
+              "requested_relation": "right",
+              "selected_state_indices": {
+                "canonical_carry": 38,
+                "canonical_grasp": 37
+              },
+              "state_capture": {
+                "bytes": 28848,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__right/attempt001/state_capture/state_capture.json",
+                "sha256": "6c1a8fad7bd00b8a26449971272a34dc46121100b01ba13c3ab4d193043e3f21"
+              }
+            },
+            "state_capture_index": 38
+          }
+        },
+        "centerline_constrained_eef_ik_target": {
+          "position_world_m": [
+            0.3524788694133758,
+            0.025101415048987417,
+            0.28115920175833486
+          ],
+          "quaternion_world_wxyz": [
+            0.6064243543051592,
+            -0.019267422571008486,
+            0.7934006792292051,
+            0.04892474968435709
+          ]
+        },
+        "contact_transform_selector": "left_observed",
+        "historical_source_runtime_assertions": {
+          "hdf5_action_last_component_exact": 1.0,
+          "source_raw_hdf5_and_state_capture_rehashed_before_AppLauncher": true,
+          "state_capture_object_grabbed": true
+        },
+        "open_approach_targets": {
+          "approach_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.37287676347297055,
+              0.02717345937701864,
+              0.27737145577900835
+            ],
+            "quaternion_world_wxyz": [
+              0.5124113897817906,
+              -0.021245850447850226,
+              0.8570900623075997,
+              0.04878326100412533
+            ]
+          },
+          "contact_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.37287676347297055,
+              0.02717345937701864,
+              0.21737145577900835
+            ],
+            "quaternion_world_wxyz": [
+              0.5124113897817906,
+              -0.021245850447850226,
+              0.8570900623075997,
+              0.04878326100412533
+            ]
+          },
+          "world_vertical_clearance_m": 0.06
+        },
+        "reflection_definition": {
+          "matrix_M": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "orientation": "R_reflected = M @ R @ M",
+          "position": "p_reflected = M @ p",
+          "right_world_cube_reflected": {
+            "position_world_m": [
+              0.31573086977005005,
+              0.01460377499461174,
+              0.13437381386756897
+            ],
+            "quaternion_world_wxyz": [
+              0.993352271598686,
+              -0.07463955413934624,
+              -0.06225203583533843,
+              -0.0616837539548773
+            ]
+          },
+          "right_world_eef_reflected": {
+            "position_world_m": [
+              0.3319876790046692,
+              0.01045914925634861,
+              0.28652340173721313
+            ],
+            "quaternion_world_wxyz": [
+              0.6458007771837581,
+              0.008611603881268762,
+              0.751626371711905,
+              -0.13388425529031958
+            ]
+          }
+        },
+        "se3_reconstruction": {
+          "cube_midline_residual_m": 5.204170427930421e-18,
+          "position_residual_m": 2.823925224926892e-17,
+          "reconstructed_cube_pose": {
+            "position_world_m": [
+              0.3155067265033722,
+              5.204170427930421e-18,
+              0.13248058408498767
+            ],
+            "quaternion_world_wxyz": [
+              0.9936532032647135,
+              0.0058111984541391925,
+              -0.11219983744927507,
+              -0.005544194319899571
+            ]
+          },
+          "rotation_matrix_frobenius_residual": 1.6245386658735255e-16
+        },
+        "selected_historical_gripper_joint_position_rad": [
+          0.2693465054035187,
+          0.2689701020717621,
+          -0.2736985683441162,
+          0.2771983742713928,
+          -0.26654598116874695,
+          -0.26655447483062744
+        ],
+        "selected_historical_source_side": "left",
+        "selected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.5131728598158335,
+            0.02157860700398359,
+            -0.8565833294617772,
+            -0.049527561583256934
+          ],
+          "translation_m": [
+            0.1523796287077065,
+            -0.02970647897716383,
+            0.0005706169971630981
+          ]
+        },
+        "source_environment_seed": 9442,
+        "stage": "canonical_carry",
+        "target_cube_pose": {
+          "position_world_m": [
+            0.3155067265033722,
+            0.0,
+            0.13248058408498764
+          ],
+          "quaternion_world_wxyz": [
+            0.9936532032647135,
+            0.005811198454139196,
+            -0.1121998374492751,
+            -0.005544194319899571
+          ]
+        },
+        "unselected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.6023331143767252,
+            -0.0020589347126104686,
+            -0.7973564340333489,
+            0.03759384548973129
+          ],
+          "translation_m": [
+            0.1500891929219236,
+            0.02990335218672424,
+            0.0031595179926683925
+          ]
+        }
+      },
+      "canonical_grasp": {
+        "both_direction_sources": {
+          "left": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.4157448657700955,
+              0.004340723967841887,
+              -0.908315202313503,
+              -0.04583511696745464
+            ],
+            "cube_in_eef_translation_m": [
+              0.1453349620905313,
+              -0.029682729908705314,
+              0.002718581250503331
+            ],
+            "cube_pose_world_wxyz": [
+              0.30513930320739746,
+              -0.00037736259400844574,
+              0.10587427765130997,
+              0.9766427278518677,
+              -0.03896859660744667,
+              -0.20629535615444183,
+              -0.04574409872293472
+            ],
+            "eef_position_world_m": [
+              0.34574049711227417,
+              0.028477955609560013,
+              0.2456226944923401
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.5953429937362671,
+              0.011654159054160118,
+              0.8033179640769958,
+              -0.010544581338763237
+            ],
+            "hdf5_index": 104,
+            "joint_position_rad": [
+              0.04376550018787384,
+              -0.21796050667762756,
+              0.03538530692458153,
+              -2.752713441848755,
+              0.046218421310186386,
+              2.2404754161834717,
+              0.07485701888799667,
+              0.2688394784927368,
+              0.268536239862442,
+              -0.2709777057170868,
+              0.2757294774055481,
+              -0.2644253969192505,
+              -0.2657843828201294
+            ],
+            "ood_distance": 1.0810613670702562,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9521:s100:left",
+              "environment_seed": 9521,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 282379,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__left/attempt001/simulator/V3E004DroidLeftTask/run_0.hdf5",
+                "sha256": "53216527c2250cf8c2042f11681b24b76687caa40eae94c261253020d999e3d8"
+              },
+              "raw_episode": {
+                "bytes": 51907,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__left/attempt001/raw_episode.jsonl",
+                "sha256": "03d3b8415358146ba723d2d04d2b5f03ba4cacd71f29bf1d3f1943dcc822df33"
+              },
+              "requested_relation": "left",
+              "selected_state_indices": {
+                "canonical_grasp": 30
+              },
+              "state_capture": {
+                "bytes": 64675,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__left/attempt001/state_capture/state_capture.json",
+                "sha256": "fea5c0b7733b317d6f473c44cd820c56b177e07a21090baf21b01be44cb5fbb5"
+              }
+            },
+            "state_capture_index": 30
+          },
+          "right": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.5562839151935741,
+              -0.03756879828952432,
+              -0.8294156076344039,
+              0.034735297673145774
+            ],
+            "cube_in_eef_translation_m": [
+              0.14434814054997389,
+              -0.02859482452666407,
+              0.003295537417902547
+            ],
+            "cube_pose_world_wxyz": [
+              0.3086285889148712,
+              -0.0005029924213886261,
+              0.10526366531848907,
+              0.9985092878341675,
+              0.005843814462423325,
+              -0.0458889938890934,
+              0.028968242928385735
+            ],
+            "eef_position_world_m": [
+              0.3490164577960968,
+              0.02600378356873989,
+              0.24430006742477417
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.5943024158477783,
+              0.01833087019622326,
+              0.8039432168006897,
+              -0.011998005211353302
+            ],
+            "hdf5_index": 105,
+            "joint_position_rad": [
+              0.04437673091888428,
+              -0.20462659001350403,
+              0.02545449137687683,
+              -2.743105173110962,
+              0.05162767693400383,
+              2.2421841621398926,
+              0.07375045120716095,
+              0.26011112332344055,
+              0.25982794165611267,
+              -0.2640582025051117,
+              0.26614639163017273,
+              -0.25677037239074707,
+              -0.2574363648891449
+            ],
+            "ood_distance": 0.8745899927957682,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9521:s100:right",
+              "environment_seed": 9521,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 261744,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__right/attempt001/simulator/V3E004DroidRightTask/run_0.hdf5",
+                "sha256": "1931e6d64005cf3231c3ff7e3c2398bd76c36cbeca4fc7a1611791b3cf0cb5ee"
+              },
+              "raw_episode": {
+                "bytes": 40067,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__right/attempt001/raw_episode.jsonl",
+                "sha256": "20308b26c1f423dc263c9ba174a52d1a7511a8494a846c489f2dd8aeda18f418"
+              },
+              "requested_relation": "right",
+              "selected_state_indices": {
+                "canonical_carry": 72,
+                "canonical_grasp": 30
+              },
+              "state_capture": {
+                "bytes": 46319,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__right/attempt001/state_capture/state_capture.json",
+                "sha256": "85436f2bea98efe4fd9f3175af12e2887f4369446625eb0886091beb4f55b363"
+              }
+            },
+            "state_capture_index": 31
+          }
+        },
+        "centerline_constrained_eef_ik_target": {
+          "position_world_m": [
+            0.32394493364001853,
+            -0.02173179540414674,
+            0.2501426966501729
+          ],
+          "quaternion_world_wxyz": [
+            0.6566797057885383,
+            -0.023041909743751393,
+            0.7537533849619963,
+            -0.009832042472042824
+          ]
+        },
+        "contact_transform_selector": "reflected_right_observed",
+        "historical_source_runtime_assertions": {
+          "hdf5_action_last_component_exact": 1.0,
+          "source_raw_hdf5_and_state_capture_rehashed_before_AppLauncher": true,
+          "state_capture_object_grabbed": true
+        },
+        "open_approach_targets": {
+          "approach_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.35839153863823336,
+              -0.025524718962581336,
+              0.27540514379115905
+            ],
+            "quaternion_world_wxyz": [
+              0.5555296111009305,
+              -0.03728883833279588,
+              0.8299644271871451,
+              0.03399181268708008
+            ]
+          },
+          "contact_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.35839153863823336,
+              -0.025524718962581336,
+              0.21540514379115905
+            ],
+            "quaternion_world_wxyz": [
+              0.5555296111009305,
+              -0.03728883833279588,
+              0.8299644271871451,
+              0.03399181268708008
+            ]
+          },
+          "world_vertical_clearance_m": 0.06
+        },
+        "reflection_definition": {
+          "matrix_M": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "orientation": "R_reflected = M @ R @ M",
+          "position": "p_reflected = M @ p",
+          "right_world_cube_reflected": {
+            "position_world_m": [
+              0.3086285889148712,
+              0.0005029924213886261,
+              0.10526366531848907
+            ],
+            "quaternion_world_wxyz": [
+              0.9985093343062514,
+              -0.005843814734403004,
+              -0.04588899602483435,
+              -0.028968244276610166
+            ]
+          },
+          "right_world_eef_reflected": {
+            "position_world_m": [
+              0.3490164577960968,
+              -0.02600378356873989,
+              0.24430006742477417
+            ],
+            "quaternion_world_wxyz": [
+              0.5943024068578998,
+              -0.01833086991893633,
+              0.8039432046396224,
+              0.01199800502986219
+            ]
+          }
+        },
+        "se3_reconstruction": {
+          "cube_midline_residual_m": 6.071532165918825e-18,
+          "position_residual_m": 2.841188977517478e-17,
+          "reconstructed_cube_pose": {
+            "position_world_m": [
+              0.30688394606113434,
+              6.071532165918825e-18,
+              0.10556897148489955
+            ],
+            "quaternion_world_wxyz": [
+              0.9909993174963224,
+              -0.022483874038230055,
+              -0.12652925873502688,
+              -0.037485661445688934
+            ]
+          },
+          "rotation_matrix_frobenius_residual": 1.601968055516711e-16
+        },
+        "selected_historical_gripper_joint_position_rad": [
+          0.26011112332344055,
+          0.25982794165611267,
+          -0.2640582025051117,
+          0.26614639163017273,
+          -0.25677037239074707,
+          -0.2574363648891449
+        ],
+        "selected_historical_source_side": "right",
+        "selected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.5562839151935741,
+            0.03756879828952433,
+            -0.8294156076344039,
+            -0.0347352976731458
+          ],
+          "translation_m": [
+            0.14434814054997386,
+            0.028594824526664064,
+            0.0032955374179026165
+          ]
+        },
+        "source_environment_seed": 9521,
+        "stage": "canonical_grasp",
+        "target_cube_pose": {
+          "position_world_m": [
+            0.30688394606113434,
+            0.0,
+            0.10556897148489952
+          ],
+          "quaternion_world_wxyz": [
+            0.9909993174963224,
+            -0.02248387403823005,
+            -0.12652925873502688,
+            -0.037485661445688934
+          ]
+        },
+        "unselected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.4157448657700955,
+            0.004340723967841884,
+            -0.908315202313503,
+            -0.045835116967454625
+          ],
+          "translation_m": [
+            0.14533496209053123,
+            -0.029682729908705303,
+            0.0027185812505032825
+          ]
+        }
+      },
+      "construction_method": "direct_contact_initialization"
+    },
+    {
+      "candidate_rank": 3,
+      "canonical_carry": {
+        "both_direction_sources": {
+          "left": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.5131728598158335,
+              0.021578607003983605,
+              -0.8565833294617771,
+              -0.04952756158325698
+            ],
+            "cube_in_eef_translation_m": [
+              0.1523796287077066,
+              -0.02970647897716383,
+              0.0005706169971631467
+            ],
+            "cube_pose_world_wxyz": [
+              0.31528258323669434,
+              0.014132175594568253,
+              0.1305873543024063,
+              0.9819121360778809,
+              0.08619152009487152,
+              -0.160787895321846,
+              0.05066255107522011
+            ],
+            "eef_position_world_m": [
+              0.33487486839294434,
+              0.02057412639260292,
+              0.2844606637954712
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.6409696340560913,
+              -0.028317278251051903,
+              0.7532155513763428,
+              0.14499101042747498
+            ],
+            "hdf5_index": 113,
+            "joint_position_rad": [
+              0.08477386087179184,
+              -0.3936332166194916,
+              -0.05187808722257614,
+              -2.8127219676971436,
+              0.16669578850269318,
+              2.2391085624694824,
+              -0.3240370750427246,
+              0.2693465054035187,
+              0.2689701020717621,
+              -0.2736985683441162,
+              0.2771983742713928,
+              -0.26654598116874695,
+              -0.26655447483062744
+            ],
+            "ood_distance": 0.8828459802691598,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9442:s100:left",
+              "environment_seed": 9442,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 237936,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__left/attempt001/simulator/V3E004DroidLeftTask/run_0.hdf5",
+                "sha256": "27d042399d28dc4aac3509283b260cc57ca9f75d3798fd9eb375c8b01123e702"
+              },
+              "raw_episode": {
+                "bytes": 27759,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__left/attempt001/raw_episode.jsonl",
+                "sha256": "a1a0e0c24956ca78e4ce9b2a0dd07749723ada4c834f4e637b508e2cead51534"
+              },
+              "requested_relation": "left",
+              "selected_state_indices": {
+                "canonical_carry": 39,
+                "canonical_grasp": 37
+              },
+              "state_capture": {
+                "bytes": 27434,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__left/attempt001/state_capture/state_capture.json",
+                "sha256": "c50362c6b0f882dce7f594034789847e5ae085248760422964c32eacbc099c8e"
+              }
+            },
+            "state_capture_index": 39
+          },
+          "right": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.6023331143767254,
+              0.0020589347126104777,
+              -0.7973564340333488,
+              -0.03759384548973123
+            ],
+            "cube_in_eef_translation_m": [
+              0.15008919292192352,
+              -0.02990335218672422,
+              0.0031595179926684064
+            ],
+            "cube_pose_world_wxyz": [
+              0.31573086977005005,
+              -0.01460377499461174,
+              0.13437381386756897,
+              0.9933522343635559,
+              0.07463955134153366,
+              -0.06225203350186348,
+              0.06168375164270401
+            ],
+            "eef_position_world_m": [
+              0.3319876790046692,
+              -0.01045914925634861,
+              0.28652340173721313
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.6458008289337158,
+              -0.008611604571342468,
+              0.7516264319419861,
+              0.1338842660188675
+            ],
+            "hdf5_index": 112,
+            "joint_position_rad": [
+              0.03923485800623894,
+              -0.41125035285949707,
+              -0.1040627509355545,
+              -2.8198866844177246,
+              0.13939645886421204,
+              2.2294602394104004,
+              -0.35119080543518066,
+              0.2747841477394104,
+              0.2743447422981262,
+              -0.27738019824028015,
+              0.2839648425579071,
+              -0.2709866464138031,
+              -0.27218765020370483
+            ],
+            "ood_distance": 0.8204209328632562,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9442:s100:right",
+              "environment_seed": 9442,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 239767,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__right/attempt001/simulator/V3E004DroidRightTask/run_0.hdf5",
+                "sha256": "3bf51e655a73c4cfd323cbc12d6ad4dde4b3bd0b6115c52c81957a90bd1ec47d"
+              },
+              "raw_episode": {
+                "bytes": 28730,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__right/attempt001/raw_episode.jsonl",
+                "sha256": "15a7148754fe3bf0ac7a7c092e05fed8d10d789bc9e54b061e70424011ba6e84"
+              },
+              "requested_relation": "right",
+              "selected_state_indices": {
+                "canonical_carry": 38,
+                "canonical_grasp": 37
+              },
+              "state_capture": {
+                "bytes": 28848,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__right/attempt001/state_capture/state_capture.json",
+                "sha256": "6c1a8fad7bd00b8a26449971272a34dc46121100b01ba13c3ab4d193043e3f21"
+              }
+            },
+            "state_capture_index": 38
+          }
+        },
+        "centerline_constrained_eef_ik_target": {
+          "position_world_m": [
+            0.3524788694133758,
+            0.025101415048987417,
+            0.28115920175833486
+          ],
+          "quaternion_world_wxyz": [
+            0.6064243543051592,
+            -0.019267422571008486,
+            0.7934006792292051,
+            0.04892474968435709
+          ]
+        },
+        "contact_transform_selector": "left_observed",
+        "historical_source_runtime_assertions": {
+          "hdf5_action_last_component_exact": 1.0,
+          "source_raw_hdf5_and_state_capture_rehashed_before_AppLauncher": true,
+          "state_capture_object_grabbed": true
+        },
+        "open_approach_targets": {
+          "approach_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.37287676347297055,
+              0.02717345937701864,
+              0.27737145577900835
+            ],
+            "quaternion_world_wxyz": [
+              0.5124113897817906,
+              -0.021245850447850226,
+              0.8570900623075997,
+              0.04878326100412533
+            ]
+          },
+          "contact_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.37287676347297055,
+              0.02717345937701864,
+              0.21737145577900835
+            ],
+            "quaternion_world_wxyz": [
+              0.5124113897817906,
+              -0.021245850447850226,
+              0.8570900623075997,
+              0.04878326100412533
+            ]
+          },
+          "world_vertical_clearance_m": 0.06
+        },
+        "reflection_definition": {
+          "matrix_M": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "orientation": "R_reflected = M @ R @ M",
+          "position": "p_reflected = M @ p",
+          "right_world_cube_reflected": {
+            "position_world_m": [
+              0.31573086977005005,
+              0.01460377499461174,
+              0.13437381386756897
+            ],
+            "quaternion_world_wxyz": [
+              0.993352271598686,
+              -0.07463955413934624,
+              -0.06225203583533843,
+              -0.0616837539548773
+            ]
+          },
+          "right_world_eef_reflected": {
+            "position_world_m": [
+              0.3319876790046692,
+              0.01045914925634861,
+              0.28652340173721313
+            ],
+            "quaternion_world_wxyz": [
+              0.6458007771837581,
+              0.008611603881268762,
+              0.751626371711905,
+              -0.13388425529031958
+            ]
+          }
+        },
+        "se3_reconstruction": {
+          "cube_midline_residual_m": 5.204170427930421e-18,
+          "position_residual_m": 2.823925224926892e-17,
+          "reconstructed_cube_pose": {
+            "position_world_m": [
+              0.3155067265033722,
+              5.204170427930421e-18,
+              0.13248058408498767
+            ],
+            "quaternion_world_wxyz": [
+              0.9936532032647135,
+              0.0058111984541391925,
+              -0.11219983744927507,
+              -0.005544194319899571
+            ]
+          },
+          "rotation_matrix_frobenius_residual": 1.6245386658735255e-16
+        },
+        "selected_historical_gripper_joint_position_rad": [
+          0.2693465054035187,
+          0.2689701020717621,
+          -0.2736985683441162,
+          0.2771983742713928,
+          -0.26654598116874695,
+          -0.26655447483062744
+        ],
+        "selected_historical_source_side": "left",
+        "selected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.5131728598158335,
+            0.02157860700398359,
+            -0.8565833294617772,
+            -0.049527561583256934
+          ],
+          "translation_m": [
+            0.1523796287077065,
+            -0.02970647897716383,
+            0.0005706169971630981
+          ]
+        },
+        "source_environment_seed": 9442,
+        "stage": "canonical_carry",
+        "target_cube_pose": {
+          "position_world_m": [
+            0.3155067265033722,
+            0.0,
+            0.13248058408498764
+          ],
+          "quaternion_world_wxyz": [
+            0.9936532032647135,
+            0.005811198454139196,
+            -0.1121998374492751,
+            -0.005544194319899571
+          ]
+        },
+        "unselected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.6023331143767252,
+            -0.0020589347126104686,
+            -0.7973564340333489,
+            0.03759384548973129
+          ],
+          "translation_m": [
+            0.1500891929219236,
+            0.02990335218672424,
+            0.0031595179926683925
+          ]
+        }
+      },
+      "canonical_grasp": {
+        "both_direction_sources": {
+          "left": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.4157448657700955,
+              0.004340723967841887,
+              -0.908315202313503,
+              -0.04583511696745464
+            ],
+            "cube_in_eef_translation_m": [
+              0.1453349620905313,
+              -0.029682729908705314,
+              0.002718581250503331
+            ],
+            "cube_pose_world_wxyz": [
+              0.30513930320739746,
+              -0.00037736259400844574,
+              0.10587427765130997,
+              0.9766427278518677,
+              -0.03896859660744667,
+              -0.20629535615444183,
+              -0.04574409872293472
+            ],
+            "eef_position_world_m": [
+              0.34574049711227417,
+              0.028477955609560013,
+              0.2456226944923401
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.5953429937362671,
+              0.011654159054160118,
+              0.8033179640769958,
+              -0.010544581338763237
+            ],
+            "hdf5_index": 104,
+            "joint_position_rad": [
+              0.04376550018787384,
+              -0.21796050667762756,
+              0.03538530692458153,
+              -2.752713441848755,
+              0.046218421310186386,
+              2.2404754161834717,
+              0.07485701888799667,
+              0.2688394784927368,
+              0.268536239862442,
+              -0.2709777057170868,
+              0.2757294774055481,
+              -0.2644253969192505,
+              -0.2657843828201294
+            ],
+            "ood_distance": 1.0810613670702562,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9521:s100:left",
+              "environment_seed": 9521,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 282379,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__left/attempt001/simulator/V3E004DroidLeftTask/run_0.hdf5",
+                "sha256": "53216527c2250cf8c2042f11681b24b76687caa40eae94c261253020d999e3d8"
+              },
+              "raw_episode": {
+                "bytes": 51907,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__left/attempt001/raw_episode.jsonl",
+                "sha256": "03d3b8415358146ba723d2d04d2b5f03ba4cacd71f29bf1d3f1943dcc822df33"
+              },
+              "requested_relation": "left",
+              "selected_state_indices": {
+                "canonical_grasp": 30
+              },
+              "state_capture": {
+                "bytes": 64675,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__left/attempt001/state_capture/state_capture.json",
+                "sha256": "fea5c0b7733b317d6f473c44cd820c56b177e07a21090baf21b01be44cb5fbb5"
+              }
+            },
+            "state_capture_index": 30
+          },
+          "right": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.5562839151935741,
+              -0.03756879828952432,
+              -0.8294156076344039,
+              0.034735297673145774
+            ],
+            "cube_in_eef_translation_m": [
+              0.14434814054997389,
+              -0.02859482452666407,
+              0.003295537417902547
+            ],
+            "cube_pose_world_wxyz": [
+              0.3086285889148712,
+              -0.0005029924213886261,
+              0.10526366531848907,
+              0.9985092878341675,
+              0.005843814462423325,
+              -0.0458889938890934,
+              0.028968242928385735
+            ],
+            "eef_position_world_m": [
+              0.3490164577960968,
+              0.02600378356873989,
+              0.24430006742477417
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.5943024158477783,
+              0.01833087019622326,
+              0.8039432168006897,
+              -0.011998005211353302
+            ],
+            "hdf5_index": 105,
+            "joint_position_rad": [
+              0.04437673091888428,
+              -0.20462659001350403,
+              0.02545449137687683,
+              -2.743105173110962,
+              0.05162767693400383,
+              2.2421841621398926,
+              0.07375045120716095,
+              0.26011112332344055,
+              0.25982794165611267,
+              -0.2640582025051117,
+              0.26614639163017273,
+              -0.25677037239074707,
+              -0.2574363648891449
+            ],
+            "ood_distance": 0.8745899927957682,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9521:s100:right",
+              "environment_seed": 9521,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 261744,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__right/attempt001/simulator/V3E004DroidRightTask/run_0.hdf5",
+                "sha256": "1931e6d64005cf3231c3ff7e3c2398bd76c36cbeca4fc7a1611791b3cf0cb5ee"
+              },
+              "raw_episode": {
+                "bytes": 40067,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__right/attempt001/raw_episode.jsonl",
+                "sha256": "20308b26c1f423dc263c9ba174a52d1a7511a8494a846c489f2dd8aeda18f418"
+              },
+              "requested_relation": "right",
+              "selected_state_indices": {
+                "canonical_carry": 72,
+                "canonical_grasp": 30
+              },
+              "state_capture": {
+                "bytes": 46319,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__right/attempt001/state_capture/state_capture.json",
+                "sha256": "85436f2bea98efe4fd9f3175af12e2887f4369446625eb0886091beb4f55b363"
+              }
+            },
+            "state_capture_index": 31
+          }
+        },
+        "centerline_constrained_eef_ik_target": {
+          "position_world_m": [
+            0.368970953978774,
+            0.024702419415491332,
+            0.2380291551914043
+          ],
+          "quaternion_world_wxyz": [
+            0.528551890863286,
+            0.0146001031023842,
+            0.8487291217809436,
+            0.00886642516421981
+          ]
+        },
+        "contact_transform_selector": "left_observed",
+        "historical_source_runtime_assertions": {
+          "hdf5_action_last_component_exact": 1.0,
+          "source_raw_hdf5_and_state_capture_rehashed_before_AppLauncher": true,
+          "state_capture_object_grabbed": true
+        },
+        "open_approach_targets": {
+          "approach_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.39563230891983453,
+              0.024689934978640447,
+              0.25486663706520707
+            ],
+            "quaternion_world_wxyz": [
+              0.4149426504302433,
+              -0.003928706456199985,
+              0.9087200586760764,
+              0.045111163576816465
+            ]
+          },
+          "contact_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.39563230891983453,
+              0.024689934978640447,
+              0.19486663706520707
+            ],
+            "quaternion_world_wxyz": [
+              0.4149426504302433,
+              -0.003928706456199985,
+              0.9087200586760764,
+              0.045111163576816465
+            ]
+          },
+          "world_vertical_clearance_m": 0.06
+        },
+        "reflection_definition": {
+          "matrix_M": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "orientation": "R_reflected = M @ R @ M",
+          "position": "p_reflected = M @ p",
+          "right_world_cube_reflected": {
+            "position_world_m": [
+              0.3086285889148712,
+              0.0005029924213886261,
+              0.10526366531848907
+            ],
+            "quaternion_world_wxyz": [
+              0.9985093343062514,
+              -0.005843814734403004,
+              -0.04588899602483435,
+              -0.028968244276610166
+            ]
+          },
+          "right_world_eef_reflected": {
+            "position_world_m": [
+              0.3490164577960968,
+              -0.02600378356873989,
+              0.24430006742477417
+            ],
+            "quaternion_world_wxyz": [
+              0.5943024068578998,
+              -0.01833086991893633,
+              0.8039432046396224,
+              0.01199800502986219
+            ]
+          }
+        },
+        "se3_reconstruction": {
+          "cube_midline_residual_m": 2.6020852139652106e-18,
+          "position_residual_m": 2.6020852139652106e-18,
+          "reconstructed_cube_pose": {
+            "position_world_m": [
+              0.30688394606113434,
+              -2.6020852139652106e-18,
+              0.10556897148489952
+            ],
+            "quaternion_world_wxyz": [
+              0.9909993174963224,
+              -0.022483874038230045,
+              -0.12652925873502688,
+              -0.037485661445688934
+            ]
+          },
+          "rotation_matrix_frobenius_residual": 2.5476231888929306e-16
+        },
+        "selected_historical_gripper_joint_position_rad": [
+          0.2688394784927368,
+          0.268536239862442,
+          -0.2709777057170868,
+          0.2757294774055481,
+          -0.2644253969192505,
+          -0.2657843828201294
+        ],
+        "selected_historical_source_side": "left",
+        "selected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.4157448657700955,
+            0.004340723967841884,
+            -0.908315202313503,
+            -0.045835116967454625
+          ],
+          "translation_m": [
+            0.14533496209053123,
+            -0.029682729908705303,
+            0.0027185812505032825
+          ]
+        },
+        "source_environment_seed": 9521,
+        "stage": "canonical_grasp",
+        "target_cube_pose": {
+          "position_world_m": [
+            0.30688394606113434,
+            0.0,
+            0.10556897148489952
+          ],
+          "quaternion_world_wxyz": [
+            0.9909993174963224,
+            -0.02248387403823005,
+            -0.12652925873502688,
+            -0.037485661445688934
+          ]
+        },
+        "unselected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.5562839151935741,
+            0.03756879828952433,
+            -0.8294156076344039,
+            -0.0347352976731458
+          ],
+          "translation_m": [
+            0.14434814054997386,
+            0.028594824526664064,
+            0.0032955374179026165
+          ]
+        }
+      },
+      "construction_method": "direct_contact_initialization"
+    },
+    {
+      "candidate_rank": 4,
+      "canonical_carry": {
+        "both_direction_sources": {
+          "left": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.5131728598158335,
+              0.021578607003983605,
+              -0.8565833294617771,
+              -0.04952756158325698
+            ],
+            "cube_in_eef_translation_m": [
+              0.1523796287077066,
+              -0.02970647897716383,
+              0.0005706169971631467
+            ],
+            "cube_pose_world_wxyz": [
+              0.31528258323669434,
+              0.014132175594568253,
+              0.1305873543024063,
+              0.9819121360778809,
+              0.08619152009487152,
+              -0.160787895321846,
+              0.05066255107522011
+            ],
+            "eef_position_world_m": [
+              0.33487486839294434,
+              0.02057412639260292,
+              0.2844606637954712
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.6409696340560913,
+              -0.028317278251051903,
+              0.7532155513763428,
+              0.14499101042747498
+            ],
+            "hdf5_index": 113,
+            "joint_position_rad": [
+              0.08477386087179184,
+              -0.3936332166194916,
+              -0.05187808722257614,
+              -2.8127219676971436,
+              0.16669578850269318,
+              2.2391085624694824,
+              -0.3240370750427246,
+              0.2693465054035187,
+              0.2689701020717621,
+              -0.2736985683441162,
+              0.2771983742713928,
+              -0.26654598116874695,
+              -0.26655447483062744
+            ],
+            "ood_distance": 0.8828459802691598,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9442:s100:left",
+              "environment_seed": 9442,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 237936,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__left/attempt001/simulator/V3E004DroidLeftTask/run_0.hdf5",
+                "sha256": "27d042399d28dc4aac3509283b260cc57ca9f75d3798fd9eb375c8b01123e702"
+              },
+              "raw_episode": {
+                "bytes": 27759,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__left/attempt001/raw_episode.jsonl",
+                "sha256": "a1a0e0c24956ca78e4ce9b2a0dd07749723ada4c834f4e637b508e2cead51534"
+              },
+              "requested_relation": "left",
+              "selected_state_indices": {
+                "canonical_carry": 39,
+                "canonical_grasp": 37
+              },
+              "state_capture": {
+                "bytes": 27434,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__left/attempt001/state_capture/state_capture.json",
+                "sha256": "c50362c6b0f882dce7f594034789847e5ae085248760422964c32eacbc099c8e"
+              }
+            },
+            "state_capture_index": 39
+          },
+          "right": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.6023331143767254,
+              0.0020589347126104777,
+              -0.7973564340333488,
+              -0.03759384548973123
+            ],
+            "cube_in_eef_translation_m": [
+              0.15008919292192352,
+              -0.02990335218672422,
+              0.0031595179926684064
+            ],
+            "cube_pose_world_wxyz": [
+              0.31573086977005005,
+              -0.01460377499461174,
+              0.13437381386756897,
+              0.9933522343635559,
+              0.07463955134153366,
+              -0.06225203350186348,
+              0.06168375164270401
+            ],
+            "eef_position_world_m": [
+              0.3319876790046692,
+              -0.01045914925634861,
+              0.28652340173721313
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.6458008289337158,
+              -0.008611604571342468,
+              0.7516264319419861,
+              0.1338842660188675
+            ],
+            "hdf5_index": 112,
+            "joint_position_rad": [
+              0.03923485800623894,
+              -0.41125035285949707,
+              -0.1040627509355545,
+              -2.8198866844177246,
+              0.13939645886421204,
+              2.2294602394104004,
+              -0.35119080543518066,
+              0.2747841477394104,
+              0.2743447422981262,
+              -0.27738019824028015,
+              0.2839648425579071,
+              -0.2709866464138031,
+              -0.27218765020370483
+            ],
+            "ood_distance": 0.8204209328632562,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9442:s100:right",
+              "environment_seed": 9442,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 239767,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__right/attempt001/simulator/V3E004DroidRightTask/run_0.hdf5",
+                "sha256": "3bf51e655a73c4cfd323cbc12d6ad4dde4b3bd0b6115c52c81957a90bd1ec47d"
+              },
+              "raw_episode": {
+                "bytes": 28730,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__right/attempt001/raw_episode.jsonl",
+                "sha256": "15a7148754fe3bf0ac7a7c092e05fed8d10d789bc9e54b061e70424011ba6e84"
+              },
+              "requested_relation": "right",
+              "selected_state_indices": {
+                "canonical_carry": 38,
+                "canonical_grasp": 37
+              },
+              "state_capture": {
+                "bytes": 28848,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__right/attempt001/state_capture/state_capture.json",
+                "sha256": "6c1a8fad7bd00b8a26449971272a34dc46121100b01ba13c3ab4d193043e3f21"
+              }
+            },
+            "state_capture_index": 38
+          }
+        },
+        "centerline_constrained_eef_ik_target": {
+          "position_world_m": [
+            0.3183138371614531,
+            -0.025278396987904243,
+            0.28342455260767774
+          ],
+          "quaternion_world_wxyz": [
+            0.6877530983576733,
+            0.014184866701185288,
+            0.7249211474602384,
+            -0.035830088208398884
+          ]
+        },
+        "contact_transform_selector": "reflected_right_observed",
+        "historical_source_runtime_assertions": {
+          "hdf5_action_last_component_exact": 1.0,
+          "source_raw_hdf5_and_state_capture_rehashed_before_AppLauncher": true,
+          "state_capture_object_grabbed": true
+        },
+        "open_approach_targets": {
+          "approach_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.340653914999779,
+              -0.02345094611544261,
+              0.2878291949671247
+            ],
+            "quaternion_world_wxyz": [
+              0.6015818747570144,
+              0.002228915966315518,
+              0.7978851712673223,
+              -0.03838663008349012
+            ]
+          },
+          "contact_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.340653914999779,
+              -0.02345094611544261,
+              0.22782919496712473
+            ],
+            "quaternion_world_wxyz": [
+              0.6015818747570144,
+              0.002228915966315518,
+              0.7978851712673223,
+              -0.03838663008349012
+            ]
+          },
+          "world_vertical_clearance_m": 0.06
+        },
+        "reflection_definition": {
+          "matrix_M": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "orientation": "R_reflected = M @ R @ M",
+          "position": "p_reflected = M @ p",
+          "right_world_cube_reflected": {
+            "position_world_m": [
+              0.31573086977005005,
+              0.01460377499461174,
+              0.13437381386756897
+            ],
+            "quaternion_world_wxyz": [
+              0.993352271598686,
+              -0.07463955413934624,
+              -0.06225203583533843,
+              -0.0616837539548773
+            ]
+          },
+          "right_world_eef_reflected": {
+            "position_world_m": [
+              0.3319876790046692,
+              0.01045914925634861,
+              0.28652340173721313
+            ],
+            "quaternion_world_wxyz": [
+              0.6458007771837581,
+              0.008611603881268762,
+              0.751626371711905,
+              -0.13388425529031958
+            ]
+          }
+        },
+        "se3_reconstruction": {
+          "cube_midline_residual_m": 4.336808689942018e-18,
+          "position_residual_m": 4.336808689942018e-18,
+          "reconstructed_cube_pose": {
+            "position_world_m": [
+              0.3155067265033722,
+              4.336808689942018e-18,
+              0.13248058408498764
+            ],
+            "quaternion_world_wxyz": [
+              0.9936532032647135,
+              0.005811198454139198,
+              -0.11219983744927511,
+              -0.005544194319899566
+            ]
+          },
+          "rotation_matrix_frobenius_residual": 2.6391752527064137e-16
+        },
+        "selected_historical_gripper_joint_position_rad": [
+          0.2747841477394104,
+          0.2743447422981262,
+          -0.27738019824028015,
+          0.2839648425579071,
+          -0.2709866464138031,
+          -0.27218765020370483
+        ],
+        "selected_historical_source_side": "right",
+        "selected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.6023331143767252,
+            -0.0020589347126104686,
+            -0.7973564340333489,
+            0.03759384548973129
+          ],
+          "translation_m": [
+            0.1500891929219236,
+            0.02990335218672424,
+            0.0031595179926683925
+          ]
+        },
+        "source_environment_seed": 9442,
+        "stage": "canonical_carry",
+        "target_cube_pose": {
+          "position_world_m": [
+            0.3155067265033722,
+            0.0,
+            0.13248058408498764
+          ],
+          "quaternion_world_wxyz": [
+            0.9936532032647135,
+            0.005811198454139196,
+            -0.1121998374492751,
+            -0.005544194319899571
+          ]
+        },
+        "unselected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.5131728598158335,
+            0.02157860700398359,
+            -0.8565833294617772,
+            -0.049527561583256934
+          ],
+          "translation_m": [
+            0.1523796287077065,
+            -0.02970647897716383,
+            0.0005706169971630981
+          ]
+        }
+      },
+      "canonical_grasp": {
+        "both_direction_sources": {
+          "left": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.4157448657700955,
+              0.004340723967841887,
+              -0.908315202313503,
+              -0.04583511696745464
+            ],
+            "cube_in_eef_translation_m": [
+              0.1453349620905313,
+              -0.029682729908705314,
+              0.002718581250503331
+            ],
+            "cube_pose_world_wxyz": [
+              0.30513930320739746,
+              -0.00037736259400844574,
+              0.10587427765130997,
+              0.9766427278518677,
+              -0.03896859660744667,
+              -0.20629535615444183,
+              -0.04574409872293472
+            ],
+            "eef_position_world_m": [
+              0.34574049711227417,
+              0.028477955609560013,
+              0.2456226944923401
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.5953429937362671,
+              0.011654159054160118,
+              0.8033179640769958,
+              -0.010544581338763237
+            ],
+            "hdf5_index": 104,
+            "joint_position_rad": [
+              0.04376550018787384,
+              -0.21796050667762756,
+              0.03538530692458153,
+              -2.752713441848755,
+              0.046218421310186386,
+              2.2404754161834717,
+              0.07485701888799667,
+              0.2688394784927368,
+              0.268536239862442,
+              -0.2709777057170868,
+              0.2757294774055481,
+              -0.2644253969192505,
+              -0.2657843828201294
+            ],
+            "ood_distance": 1.0810613670702562,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9521:s100:left",
+              "environment_seed": 9521,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 282379,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__left/attempt001/simulator/V3E004DroidLeftTask/run_0.hdf5",
+                "sha256": "53216527c2250cf8c2042f11681b24b76687caa40eae94c261253020d999e3d8"
+              },
+              "raw_episode": {
+                "bytes": 51907,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__left/attempt001/raw_episode.jsonl",
+                "sha256": "03d3b8415358146ba723d2d04d2b5f03ba4cacd71f29bf1d3f1943dcc822df33"
+              },
+              "requested_relation": "left",
+              "selected_state_indices": {
+                "canonical_grasp": 30
+              },
+              "state_capture": {
+                "bytes": 64675,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__left/attempt001/state_capture/state_capture.json",
+                "sha256": "fea5c0b7733b317d6f473c44cd820c56b177e07a21090baf21b01be44cb5fbb5"
+              }
+            },
+            "state_capture_index": 30
+          },
+          "right": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.5562839151935741,
+              -0.03756879828952432,
+              -0.8294156076344039,
+              0.034735297673145774
+            ],
+            "cube_in_eef_translation_m": [
+              0.14434814054997389,
+              -0.02859482452666407,
+              0.003295537417902547
+            ],
+            "cube_pose_world_wxyz": [
+              0.3086285889148712,
+              -0.0005029924213886261,
+              0.10526366531848907,
+              0.9985092878341675,
+              0.005843814462423325,
+              -0.0458889938890934,
+              0.028968242928385735
+            ],
+            "eef_position_world_m": [
+              0.3490164577960968,
+              0.02600378356873989,
+              0.24430006742477417
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.5943024158477783,
+              0.01833087019622326,
+              0.8039432168006897,
+              -0.011998005211353302
+            ],
+            "hdf5_index": 105,
+            "joint_position_rad": [
+              0.04437673091888428,
+              -0.20462659001350403,
+              0.02545449137687683,
+              -2.743105173110962,
+              0.05162767693400383,
+              2.2421841621398926,
+              0.07375045120716095,
+              0.26011112332344055,
+              0.25982794165611267,
+              -0.2640582025051117,
+              0.26614639163017273,
+              -0.25677037239074707,
+              -0.2574363648891449
+            ],
+            "ood_distance": 0.8745899927957682,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9521:s100:right",
+              "environment_seed": 9521,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 261744,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__right/attempt001/simulator/V3E004DroidRightTask/run_0.hdf5",
+                "sha256": "1931e6d64005cf3231c3ff7e3c2398bd76c36cbeca4fc7a1611791b3cf0cb5ee"
+              },
+              "raw_episode": {
+                "bytes": 40067,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__right/attempt001/raw_episode.jsonl",
+                "sha256": "20308b26c1f423dc263c9ba174a52d1a7511a8494a846c489f2dd8aeda18f418"
+              },
+              "requested_relation": "right",
+              "selected_state_indices": {
+                "canonical_carry": 72,
+                "canonical_grasp": 30
+              },
+              "state_capture": {
+                "bytes": 46319,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__right/attempt001/state_capture/state_capture.json",
+                "sha256": "85436f2bea98efe4fd9f3175af12e2887f4369446625eb0886091beb4f55b363"
+              }
+            },
+            "state_capture_index": 31
+          }
+        },
+        "centerline_constrained_eef_ik_target": {
+          "position_world_m": [
+            0.32394493364001853,
+            -0.02173179540414674,
+            0.2501426966501729
+          ],
+          "quaternion_world_wxyz": [
+            0.6566797057885383,
+            -0.023041909743751393,
+            0.7537533849619963,
+            -0.009832042472042824
+          ]
+        },
+        "contact_transform_selector": "reflected_right_observed",
+        "historical_source_runtime_assertions": {
+          "hdf5_action_last_component_exact": 1.0,
+          "source_raw_hdf5_and_state_capture_rehashed_before_AppLauncher": true,
+          "state_capture_object_grabbed": true
+        },
+        "open_approach_targets": {
+          "approach_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.35839153863823336,
+              -0.025524718962581336,
+              0.27540514379115905
+            ],
+            "quaternion_world_wxyz": [
+              0.5555296111009305,
+              -0.03728883833279588,
+              0.8299644271871451,
+              0.03399181268708008
+            ]
+          },
+          "contact_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.35839153863823336,
+              -0.025524718962581336,
+              0.21540514379115905
+            ],
+            "quaternion_world_wxyz": [
+              0.5555296111009305,
+              -0.03728883833279588,
+              0.8299644271871451,
+              0.03399181268708008
+            ]
+          },
+          "world_vertical_clearance_m": 0.06
+        },
+        "reflection_definition": {
+          "matrix_M": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "orientation": "R_reflected = M @ R @ M",
+          "position": "p_reflected = M @ p",
+          "right_world_cube_reflected": {
+            "position_world_m": [
+              0.3086285889148712,
+              0.0005029924213886261,
+              0.10526366531848907
+            ],
+            "quaternion_world_wxyz": [
+              0.9985093343062514,
+              -0.005843814734403004,
+              -0.04588899602483435,
+              -0.028968244276610166
+            ]
+          },
+          "right_world_eef_reflected": {
+            "position_world_m": [
+              0.3490164577960968,
+              -0.02600378356873989,
+              0.24430006742477417
+            ],
+            "quaternion_world_wxyz": [
+              0.5943024068578998,
+              -0.01833086991893633,
+              0.8039432046396224,
+              0.01199800502986219
+            ]
+          }
+        },
+        "se3_reconstruction": {
+          "cube_midline_residual_m": 6.071532165918825e-18,
+          "position_residual_m": 2.841188977517478e-17,
+          "reconstructed_cube_pose": {
+            "position_world_m": [
+              0.30688394606113434,
+              6.071532165918825e-18,
+              0.10556897148489955
+            ],
+            "quaternion_world_wxyz": [
+              0.9909993174963224,
+              -0.022483874038230055,
+              -0.12652925873502688,
+              -0.037485661445688934
+            ]
+          },
+          "rotation_matrix_frobenius_residual": 1.601968055516711e-16
+        },
+        "selected_historical_gripper_joint_position_rad": [
+          0.26011112332344055,
+          0.25982794165611267,
+          -0.2640582025051117,
+          0.26614639163017273,
+          -0.25677037239074707,
+          -0.2574363648891449
+        ],
+        "selected_historical_source_side": "right",
+        "selected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.5562839151935741,
+            0.03756879828952433,
+            -0.8294156076344039,
+            -0.0347352976731458
+          ],
+          "translation_m": [
+            0.14434814054997386,
+            0.028594824526664064,
+            0.0032955374179026165
+          ]
+        },
+        "source_environment_seed": 9521,
+        "stage": "canonical_grasp",
+        "target_cube_pose": {
+          "position_world_m": [
+            0.30688394606113434,
+            0.0,
+            0.10556897148489952
+          ],
+          "quaternion_world_wxyz": [
+            0.9909993174963224,
+            -0.02248387403823005,
+            -0.12652925873502688,
+            -0.037485661445688934
+          ]
+        },
+        "unselected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.4157448657700955,
+            0.004340723967841884,
+            -0.908315202313503,
+            -0.045835116967454625
+          ],
+          "translation_m": [
+            0.14533496209053123,
+            -0.029682729908705303,
+            0.0027185812505032825
+          ]
+        }
+      },
+      "construction_method": "direct_contact_initialization"
+    },
+    {
+      "candidate_rank": 5,
+      "canonical_carry": {
+        "both_direction_sources": {
+          "left": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.5131728598158335,
+              0.021578607003983605,
+              -0.8565833294617771,
+              -0.04952756158325698
+            ],
+            "cube_in_eef_translation_m": [
+              0.1523796287077066,
+              -0.02970647897716383,
+              0.0005706169971631467
+            ],
+            "cube_pose_world_wxyz": [
+              0.31528258323669434,
+              0.014132175594568253,
+              0.1305873543024063,
+              0.9819121360778809,
+              0.08619152009487152,
+              -0.160787895321846,
+              0.05066255107522011
+            ],
+            "eef_position_world_m": [
+              0.33487486839294434,
+              0.02057412639260292,
+              0.2844606637954712
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.6409696340560913,
+              -0.028317278251051903,
+              0.7532155513763428,
+              0.14499101042747498
+            ],
+            "hdf5_index": 113,
+            "joint_position_rad": [
+              0.08477386087179184,
+              -0.3936332166194916,
+              -0.05187808722257614,
+              -2.8127219676971436,
+              0.16669578850269318,
+              2.2391085624694824,
+              -0.3240370750427246,
+              0.2693465054035187,
+              0.2689701020717621,
+              -0.2736985683441162,
+              0.2771983742713928,
+              -0.26654598116874695,
+              -0.26655447483062744
+            ],
+            "ood_distance": 0.8828459802691598,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9442:s100:left",
+              "environment_seed": 9442,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 237936,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__left/attempt001/simulator/V3E004DroidLeftTask/run_0.hdf5",
+                "sha256": "27d042399d28dc4aac3509283b260cc57ca9f75d3798fd9eb375c8b01123e702"
+              },
+              "raw_episode": {
+                "bytes": 27759,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__left/attempt001/raw_episode.jsonl",
+                "sha256": "a1a0e0c24956ca78e4ce9b2a0dd07749723ada4c834f4e637b508e2cead51534"
+              },
+              "requested_relation": "left",
+              "selected_state_indices": {
+                "canonical_carry": 39,
+                "canonical_grasp": 37
+              },
+              "state_capture": {
+                "bytes": 27434,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__left/attempt001/state_capture/state_capture.json",
+                "sha256": "c50362c6b0f882dce7f594034789847e5ae085248760422964c32eacbc099c8e"
+              }
+            },
+            "state_capture_index": 39
+          },
+          "right": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.6023331143767254,
+              0.0020589347126104777,
+              -0.7973564340333488,
+              -0.03759384548973123
+            ],
+            "cube_in_eef_translation_m": [
+              0.15008919292192352,
+              -0.02990335218672422,
+              0.0031595179926684064
+            ],
+            "cube_pose_world_wxyz": [
+              0.31573086977005005,
+              -0.01460377499461174,
+              0.13437381386756897,
+              0.9933522343635559,
+              0.07463955134153366,
+              -0.06225203350186348,
+              0.06168375164270401
+            ],
+            "eef_position_world_m": [
+              0.3319876790046692,
+              -0.01045914925634861,
+              0.28652340173721313
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.6458008289337158,
+              -0.008611604571342468,
+              0.7516264319419861,
+              0.1338842660188675
+            ],
+            "hdf5_index": 112,
+            "joint_position_rad": [
+              0.03923485800623894,
+              -0.41125035285949707,
+              -0.1040627509355545,
+              -2.8198866844177246,
+              0.13939645886421204,
+              2.2294602394104004,
+              -0.35119080543518066,
+              0.2747841477394104,
+              0.2743447422981262,
+              -0.27738019824028015,
+              0.2839648425579071,
+              -0.2709866464138031,
+              -0.27218765020370483
+            ],
+            "ood_distance": 0.8204209328632562,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9442:s100:right",
+              "environment_seed": 9442,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 239767,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__right/attempt001/simulator/V3E004DroidRightTask/run_0.hdf5",
+                "sha256": "3bf51e655a73c4cfd323cbc12d6ad4dde4b3bd0b6115c52c81957a90bd1ec47d"
+              },
+              "raw_episode": {
+                "bytes": 28730,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__right/attempt001/raw_episode.jsonl",
+                "sha256": "15a7148754fe3bf0ac7a7c092e05fed8d10d789bc9e54b061e70424011ba6e84"
+              },
+              "requested_relation": "right",
+              "selected_state_indices": {
+                "canonical_carry": 38,
+                "canonical_grasp": 37
+              },
+              "state_capture": {
+                "bytes": 28848,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__right/attempt001/state_capture/state_capture.json",
+                "sha256": "6c1a8fad7bd00b8a26449971272a34dc46121100b01ba13c3ab4d193043e3f21"
+              }
+            },
+            "state_capture_index": 38
+          }
+        },
+        "centerline_constrained_eef_ik_target": {
+          "position_world_m": [
+            0.3183138371614531,
+            -0.025278396987904243,
+            0.28342455260767774
+          ],
+          "quaternion_world_wxyz": [
+            0.6877530983576733,
+            0.014184866701185288,
+            0.7249211474602384,
+            -0.035830088208398884
+          ]
+        },
+        "contact_transform_selector": "reflected_right_observed",
+        "historical_source_runtime_assertions": {
+          "hdf5_action_last_component_exact": 1.0,
+          "source_raw_hdf5_and_state_capture_rehashed_before_AppLauncher": true,
+          "state_capture_object_grabbed": true
+        },
+        "open_approach_targets": {
+          "approach_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.340653914999779,
+              -0.02345094611544261,
+              0.2878291949671247
+            ],
+            "quaternion_world_wxyz": [
+              0.6015818747570144,
+              0.002228915966315518,
+              0.7978851712673223,
+              -0.03838663008349012
+            ]
+          },
+          "contact_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.340653914999779,
+              -0.02345094611544261,
+              0.22782919496712473
+            ],
+            "quaternion_world_wxyz": [
+              0.6015818747570144,
+              0.002228915966315518,
+              0.7978851712673223,
+              -0.03838663008349012
+            ]
+          },
+          "world_vertical_clearance_m": 0.06
+        },
+        "reflection_definition": {
+          "matrix_M": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "orientation": "R_reflected = M @ R @ M",
+          "position": "p_reflected = M @ p",
+          "right_world_cube_reflected": {
+            "position_world_m": [
+              0.31573086977005005,
+              0.01460377499461174,
+              0.13437381386756897
+            ],
+            "quaternion_world_wxyz": [
+              0.993352271598686,
+              -0.07463955413934624,
+              -0.06225203583533843,
+              -0.0616837539548773
+            ]
+          },
+          "right_world_eef_reflected": {
+            "position_world_m": [
+              0.3319876790046692,
+              0.01045914925634861,
+              0.28652340173721313
+            ],
+            "quaternion_world_wxyz": [
+              0.6458007771837581,
+              0.008611603881268762,
+              0.751626371711905,
+              -0.13388425529031958
+            ]
+          }
+        },
+        "se3_reconstruction": {
+          "cube_midline_residual_m": 4.336808689942018e-18,
+          "position_residual_m": 4.336808689942018e-18,
+          "reconstructed_cube_pose": {
+            "position_world_m": [
+              0.3155067265033722,
+              4.336808689942018e-18,
+              0.13248058408498764
+            ],
+            "quaternion_world_wxyz": [
+              0.9936532032647135,
+              0.005811198454139198,
+              -0.11219983744927511,
+              -0.005544194319899566
+            ]
+          },
+          "rotation_matrix_frobenius_residual": 2.6391752527064137e-16
+        },
+        "selected_historical_gripper_joint_position_rad": [
+          0.2747841477394104,
+          0.2743447422981262,
+          -0.27738019824028015,
+          0.2839648425579071,
+          -0.2709866464138031,
+          -0.27218765020370483
+        ],
+        "selected_historical_source_side": "right",
+        "selected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.6023331143767252,
+            -0.0020589347126104686,
+            -0.7973564340333489,
+            0.03759384548973129
+          ],
+          "translation_m": [
+            0.1500891929219236,
+            0.02990335218672424,
+            0.0031595179926683925
+          ]
+        },
+        "source_environment_seed": 9442,
+        "stage": "canonical_carry",
+        "target_cube_pose": {
+          "position_world_m": [
+            0.3155067265033722,
+            0.0,
+            0.13248058408498764
+          ],
+          "quaternion_world_wxyz": [
+            0.9936532032647135,
+            0.005811198454139196,
+            -0.1121998374492751,
+            -0.005544194319899571
+          ]
+        },
+        "unselected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.5131728598158335,
+            0.02157860700398359,
+            -0.8565833294617772,
+            -0.049527561583256934
+          ],
+          "translation_m": [
+            0.1523796287077065,
+            -0.02970647897716383,
+            0.0005706169971630981
+          ]
+        }
+      },
+      "canonical_grasp": {
+        "both_direction_sources": {
+          "left": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.4157448657700955,
+              0.004340723967841887,
+              -0.908315202313503,
+              -0.04583511696745464
+            ],
+            "cube_in_eef_translation_m": [
+              0.1453349620905313,
+              -0.029682729908705314,
+              0.002718581250503331
+            ],
+            "cube_pose_world_wxyz": [
+              0.30513930320739746,
+              -0.00037736259400844574,
+              0.10587427765130997,
+              0.9766427278518677,
+              -0.03896859660744667,
+              -0.20629535615444183,
+              -0.04574409872293472
+            ],
+            "eef_position_world_m": [
+              0.34574049711227417,
+              0.028477955609560013,
+              0.2456226944923401
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.5953429937362671,
+              0.011654159054160118,
+              0.8033179640769958,
+              -0.010544581338763237
+            ],
+            "hdf5_index": 104,
+            "joint_position_rad": [
+              0.04376550018787384,
+              -0.21796050667762756,
+              0.03538530692458153,
+              -2.752713441848755,
+              0.046218421310186386,
+              2.2404754161834717,
+              0.07485701888799667,
+              0.2688394784927368,
+              0.268536239862442,
+              -0.2709777057170868,
+              0.2757294774055481,
+              -0.2644253969192505,
+              -0.2657843828201294
+            ],
+            "ood_distance": 1.0810613670702562,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9521:s100:left",
+              "environment_seed": 9521,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 282379,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__left/attempt001/simulator/V3E004DroidLeftTask/run_0.hdf5",
+                "sha256": "53216527c2250cf8c2042f11681b24b76687caa40eae94c261253020d999e3d8"
+              },
+              "raw_episode": {
+                "bytes": 51907,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__left/attempt001/raw_episode.jsonl",
+                "sha256": "03d3b8415358146ba723d2d04d2b5f03ba4cacd71f29bf1d3f1943dcc822df33"
+              },
+              "requested_relation": "left",
+              "selected_state_indices": {
+                "canonical_grasp": 30
+              },
+              "state_capture": {
+                "bytes": 64675,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__left/attempt001/state_capture/state_capture.json",
+                "sha256": "fea5c0b7733b317d6f473c44cd820c56b177e07a21090baf21b01be44cb5fbb5"
+              }
+            },
+            "state_capture_index": 30
+          },
+          "right": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.5562839151935741,
+              -0.03756879828952432,
+              -0.8294156076344039,
+              0.034735297673145774
+            ],
+            "cube_in_eef_translation_m": [
+              0.14434814054997389,
+              -0.02859482452666407,
+              0.003295537417902547
+            ],
+            "cube_pose_world_wxyz": [
+              0.3086285889148712,
+              -0.0005029924213886261,
+              0.10526366531848907,
+              0.9985092878341675,
+              0.005843814462423325,
+              -0.0458889938890934,
+              0.028968242928385735
+            ],
+            "eef_position_world_m": [
+              0.3490164577960968,
+              0.02600378356873989,
+              0.24430006742477417
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.5943024158477783,
+              0.01833087019622326,
+              0.8039432168006897,
+              -0.011998005211353302
+            ],
+            "hdf5_index": 105,
+            "joint_position_rad": [
+              0.04437673091888428,
+              -0.20462659001350403,
+              0.02545449137687683,
+              -2.743105173110962,
+              0.05162767693400383,
+              2.2421841621398926,
+              0.07375045120716095,
+              0.26011112332344055,
+              0.25982794165611267,
+              -0.2640582025051117,
+              0.26614639163017273,
+              -0.25677037239074707,
+              -0.2574363648891449
+            ],
+            "ood_distance": 0.8745899927957682,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9521:s100:right",
+              "environment_seed": 9521,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 261744,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__right/attempt001/simulator/V3E004DroidRightTask/run_0.hdf5",
+                "sha256": "1931e6d64005cf3231c3ff7e3c2398bd76c36cbeca4fc7a1611791b3cf0cb5ee"
+              },
+              "raw_episode": {
+                "bytes": 40067,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__right/attempt001/raw_episode.jsonl",
+                "sha256": "20308b26c1f423dc263c9ba174a52d1a7511a8494a846c489f2dd8aeda18f418"
+              },
+              "requested_relation": "right",
+              "selected_state_indices": {
+                "canonical_carry": 72,
+                "canonical_grasp": 30
+              },
+              "state_capture": {
+                "bytes": 46319,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__right/attempt001/state_capture/state_capture.json",
+                "sha256": "85436f2bea98efe4fd9f3175af12e2887f4369446625eb0886091beb4f55b363"
+              }
+            },
+            "state_capture_index": 31
+          }
+        },
+        "centerline_constrained_eef_ik_target": {
+          "position_world_m": [
+            0.368970953978774,
+            0.024702419415491332,
+            0.2380291551914043
+          ],
+          "quaternion_world_wxyz": [
+            0.528551890863286,
+            0.0146001031023842,
+            0.8487291217809436,
+            0.00886642516421981
+          ]
+        },
+        "contact_transform_selector": "left_observed",
+        "historical_source_runtime_assertions": {
+          "hdf5_action_last_component_exact": 1.0,
+          "source_raw_hdf5_and_state_capture_rehashed_before_AppLauncher": true,
+          "state_capture_object_grabbed": true
+        },
+        "open_approach_targets": {
+          "approach_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.39563230891983453,
+              0.024689934978640447,
+              0.25486663706520707
+            ],
+            "quaternion_world_wxyz": [
+              0.4149426504302433,
+              -0.003928706456199985,
+              0.9087200586760764,
+              0.045111163576816465
+            ]
+          },
+          "contact_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.39563230891983453,
+              0.024689934978640447,
+              0.19486663706520707
+            ],
+            "quaternion_world_wxyz": [
+              0.4149426504302433,
+              -0.003928706456199985,
+              0.9087200586760764,
+              0.045111163576816465
+            ]
+          },
+          "world_vertical_clearance_m": 0.06
+        },
+        "reflection_definition": {
+          "matrix_M": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "orientation": "R_reflected = M @ R @ M",
+          "position": "p_reflected = M @ p",
+          "right_world_cube_reflected": {
+            "position_world_m": [
+              0.3086285889148712,
+              0.0005029924213886261,
+              0.10526366531848907
+            ],
+            "quaternion_world_wxyz": [
+              0.9985093343062514,
+              -0.005843814734403004,
+              -0.04588899602483435,
+              -0.028968244276610166
+            ]
+          },
+          "right_world_eef_reflected": {
+            "position_world_m": [
+              0.3490164577960968,
+              -0.02600378356873989,
+              0.24430006742477417
+            ],
+            "quaternion_world_wxyz": [
+              0.5943024068578998,
+              -0.01833086991893633,
+              0.8039432046396224,
+              0.01199800502986219
+            ]
+          }
+        },
+        "se3_reconstruction": {
+          "cube_midline_residual_m": 2.6020852139652106e-18,
+          "position_residual_m": 2.6020852139652106e-18,
+          "reconstructed_cube_pose": {
+            "position_world_m": [
+              0.30688394606113434,
+              -2.6020852139652106e-18,
+              0.10556897148489952
+            ],
+            "quaternion_world_wxyz": [
+              0.9909993174963224,
+              -0.022483874038230045,
+              -0.12652925873502688,
+              -0.037485661445688934
+            ]
+          },
+          "rotation_matrix_frobenius_residual": 2.5476231888929306e-16
+        },
+        "selected_historical_gripper_joint_position_rad": [
+          0.2688394784927368,
+          0.268536239862442,
+          -0.2709777057170868,
+          0.2757294774055481,
+          -0.2644253969192505,
+          -0.2657843828201294
+        ],
+        "selected_historical_source_side": "left",
+        "selected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.4157448657700955,
+            0.004340723967841884,
+            -0.908315202313503,
+            -0.045835116967454625
+          ],
+          "translation_m": [
+            0.14533496209053123,
+            -0.029682729908705303,
+            0.0027185812505032825
+          ]
+        },
+        "source_environment_seed": 9521,
+        "stage": "canonical_grasp",
+        "target_cube_pose": {
+          "position_world_m": [
+            0.30688394606113434,
+            0.0,
+            0.10556897148489952
+          ],
+          "quaternion_world_wxyz": [
+            0.9909993174963224,
+            -0.02248387403823005,
+            -0.12652925873502688,
+            -0.037485661445688934
+          ]
+        },
+        "unselected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.5562839151935741,
+            0.03756879828952433,
+            -0.8294156076344039,
+            -0.0347352976731458
+          ],
+          "translation_m": [
+            0.14434814054997386,
+            0.028594824526664064,
+            0.0032955374179026165
+          ]
+        }
+      },
+      "construction_method": "open_approach_close_lift"
+    },
+    {
+      "candidate_rank": 6,
+      "canonical_carry": {
+        "both_direction_sources": {
+          "left": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.5131728598158335,
+              0.021578607003983605,
+              -0.8565833294617771,
+              -0.04952756158325698
+            ],
+            "cube_in_eef_translation_m": [
+              0.1523796287077066,
+              -0.02970647897716383,
+              0.0005706169971631467
+            ],
+            "cube_pose_world_wxyz": [
+              0.31528258323669434,
+              0.014132175594568253,
+              0.1305873543024063,
+              0.9819121360778809,
+              0.08619152009487152,
+              -0.160787895321846,
+              0.05066255107522011
+            ],
+            "eef_position_world_m": [
+              0.33487486839294434,
+              0.02057412639260292,
+              0.2844606637954712
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.6409696340560913,
+              -0.028317278251051903,
+              0.7532155513763428,
+              0.14499101042747498
+            ],
+            "hdf5_index": 113,
+            "joint_position_rad": [
+              0.08477386087179184,
+              -0.3936332166194916,
+              -0.05187808722257614,
+              -2.8127219676971436,
+              0.16669578850269318,
+              2.2391085624694824,
+              -0.3240370750427246,
+              0.2693465054035187,
+              0.2689701020717621,
+              -0.2736985683441162,
+              0.2771983742713928,
+              -0.26654598116874695,
+              -0.26655447483062744
+            ],
+            "ood_distance": 0.8828459802691598,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9442:s100:left",
+              "environment_seed": 9442,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 237936,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__left/attempt001/simulator/V3E004DroidLeftTask/run_0.hdf5",
+                "sha256": "27d042399d28dc4aac3509283b260cc57ca9f75d3798fd9eb375c8b01123e702"
+              },
+              "raw_episode": {
+                "bytes": 27759,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__left/attempt001/raw_episode.jsonl",
+                "sha256": "a1a0e0c24956ca78e4ce9b2a0dd07749723ada4c834f4e637b508e2cead51534"
+              },
+              "requested_relation": "left",
+              "selected_state_indices": {
+                "canonical_carry": 39,
+                "canonical_grasp": 37
+              },
+              "state_capture": {
+                "bytes": 27434,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__left/attempt001/state_capture/state_capture.json",
+                "sha256": "c50362c6b0f882dce7f594034789847e5ae085248760422964c32eacbc099c8e"
+              }
+            },
+            "state_capture_index": 39
+          },
+          "right": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.6023331143767254,
+              0.0020589347126104777,
+              -0.7973564340333488,
+              -0.03759384548973123
+            ],
+            "cube_in_eef_translation_m": [
+              0.15008919292192352,
+              -0.02990335218672422,
+              0.0031595179926684064
+            ],
+            "cube_pose_world_wxyz": [
+              0.31573086977005005,
+              -0.01460377499461174,
+              0.13437381386756897,
+              0.9933522343635559,
+              0.07463955134153366,
+              -0.06225203350186348,
+              0.06168375164270401
+            ],
+            "eef_position_world_m": [
+              0.3319876790046692,
+              -0.01045914925634861,
+              0.28652340173721313
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.6458008289337158,
+              -0.008611604571342468,
+              0.7516264319419861,
+              0.1338842660188675
+            ],
+            "hdf5_index": 112,
+            "joint_position_rad": [
+              0.03923485800623894,
+              -0.41125035285949707,
+              -0.1040627509355545,
+              -2.8198866844177246,
+              0.13939645886421204,
+              2.2294602394104004,
+              -0.35119080543518066,
+              0.2747841477394104,
+              0.2743447422981262,
+              -0.27738019824028015,
+              0.2839648425579071,
+              -0.2709866464138031,
+              -0.27218765020370483
+            ],
+            "ood_distance": 0.8204209328632562,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9442:s100:right",
+              "environment_seed": 9442,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 239767,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__right/attempt001/simulator/V3E004DroidRightTask/run_0.hdf5",
+                "sha256": "3bf51e655a73c4cfd323cbc12d6ad4dde4b3bd0b6115c52c81957a90bd1ec47d"
+              },
+              "raw_episode": {
+                "bytes": 28730,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__right/attempt001/raw_episode.jsonl",
+                "sha256": "15a7148754fe3bf0ac7a7c092e05fed8d10d789bc9e54b061e70424011ba6e84"
+              },
+              "requested_relation": "right",
+              "selected_state_indices": {
+                "canonical_carry": 38,
+                "canonical_grasp": 37
+              },
+              "state_capture": {
+                "bytes": 28848,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__right/attempt001/state_capture/state_capture.json",
+                "sha256": "6c1a8fad7bd00b8a26449971272a34dc46121100b01ba13c3ab4d193043e3f21"
+              }
+            },
+            "state_capture_index": 38
+          }
+        },
+        "centerline_constrained_eef_ik_target": {
+          "position_world_m": [
+            0.3524788694133758,
+            0.025101415048987417,
+            0.28115920175833486
+          ],
+          "quaternion_world_wxyz": [
+            0.6064243543051592,
+            -0.019267422571008486,
+            0.7934006792292051,
+            0.04892474968435709
+          ]
+        },
+        "contact_transform_selector": "left_observed",
+        "historical_source_runtime_assertions": {
+          "hdf5_action_last_component_exact": 1.0,
+          "source_raw_hdf5_and_state_capture_rehashed_before_AppLauncher": true,
+          "state_capture_object_grabbed": true
+        },
+        "open_approach_targets": {
+          "approach_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.37287676347297055,
+              0.02717345937701864,
+              0.27737145577900835
+            ],
+            "quaternion_world_wxyz": [
+              0.5124113897817906,
+              -0.021245850447850226,
+              0.8570900623075997,
+              0.04878326100412533
+            ]
+          },
+          "contact_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.37287676347297055,
+              0.02717345937701864,
+              0.21737145577900835
+            ],
+            "quaternion_world_wxyz": [
+              0.5124113897817906,
+              -0.021245850447850226,
+              0.8570900623075997,
+              0.04878326100412533
+            ]
+          },
+          "world_vertical_clearance_m": 0.06
+        },
+        "reflection_definition": {
+          "matrix_M": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "orientation": "R_reflected = M @ R @ M",
+          "position": "p_reflected = M @ p",
+          "right_world_cube_reflected": {
+            "position_world_m": [
+              0.31573086977005005,
+              0.01460377499461174,
+              0.13437381386756897
+            ],
+            "quaternion_world_wxyz": [
+              0.993352271598686,
+              -0.07463955413934624,
+              -0.06225203583533843,
+              -0.0616837539548773
+            ]
+          },
+          "right_world_eef_reflected": {
+            "position_world_m": [
+              0.3319876790046692,
+              0.01045914925634861,
+              0.28652340173721313
+            ],
+            "quaternion_world_wxyz": [
+              0.6458007771837581,
+              0.008611603881268762,
+              0.751626371711905,
+              -0.13388425529031958
+            ]
+          }
+        },
+        "se3_reconstruction": {
+          "cube_midline_residual_m": 5.204170427930421e-18,
+          "position_residual_m": 2.823925224926892e-17,
+          "reconstructed_cube_pose": {
+            "position_world_m": [
+              0.3155067265033722,
+              5.204170427930421e-18,
+              0.13248058408498767
+            ],
+            "quaternion_world_wxyz": [
+              0.9936532032647135,
+              0.0058111984541391925,
+              -0.11219983744927507,
+              -0.005544194319899571
+            ]
+          },
+          "rotation_matrix_frobenius_residual": 1.6245386658735255e-16
+        },
+        "selected_historical_gripper_joint_position_rad": [
+          0.2693465054035187,
+          0.2689701020717621,
+          -0.2736985683441162,
+          0.2771983742713928,
+          -0.26654598116874695,
+          -0.26655447483062744
+        ],
+        "selected_historical_source_side": "left",
+        "selected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.5131728598158335,
+            0.02157860700398359,
+            -0.8565833294617772,
+            -0.049527561583256934
+          ],
+          "translation_m": [
+            0.1523796287077065,
+            -0.02970647897716383,
+            0.0005706169971630981
+          ]
+        },
+        "source_environment_seed": 9442,
+        "stage": "canonical_carry",
+        "target_cube_pose": {
+          "position_world_m": [
+            0.3155067265033722,
+            0.0,
+            0.13248058408498764
+          ],
+          "quaternion_world_wxyz": [
+            0.9936532032647135,
+            0.005811198454139196,
+            -0.1121998374492751,
+            -0.005544194319899571
+          ]
+        },
+        "unselected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.6023331143767252,
+            -0.0020589347126104686,
+            -0.7973564340333489,
+            0.03759384548973129
+          ],
+          "translation_m": [
+            0.1500891929219236,
+            0.02990335218672424,
+            0.0031595179926683925
+          ]
+        }
+      },
+      "canonical_grasp": {
+        "both_direction_sources": {
+          "left": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.4157448657700955,
+              0.004340723967841887,
+              -0.908315202313503,
+              -0.04583511696745464
+            ],
+            "cube_in_eef_translation_m": [
+              0.1453349620905313,
+              -0.029682729908705314,
+              0.002718581250503331
+            ],
+            "cube_pose_world_wxyz": [
+              0.30513930320739746,
+              -0.00037736259400844574,
+              0.10587427765130997,
+              0.9766427278518677,
+              -0.03896859660744667,
+              -0.20629535615444183,
+              -0.04574409872293472
+            ],
+            "eef_position_world_m": [
+              0.34574049711227417,
+              0.028477955609560013,
+              0.2456226944923401
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.5953429937362671,
+              0.011654159054160118,
+              0.8033179640769958,
+              -0.010544581338763237
+            ],
+            "hdf5_index": 104,
+            "joint_position_rad": [
+              0.04376550018787384,
+              -0.21796050667762756,
+              0.03538530692458153,
+              -2.752713441848755,
+              0.046218421310186386,
+              2.2404754161834717,
+              0.07485701888799667,
+              0.2688394784927368,
+              0.268536239862442,
+              -0.2709777057170868,
+              0.2757294774055481,
+              -0.2644253969192505,
+              -0.2657843828201294
+            ],
+            "ood_distance": 1.0810613670702562,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9521:s100:left",
+              "environment_seed": 9521,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 282379,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__left/attempt001/simulator/V3E004DroidLeftTask/run_0.hdf5",
+                "sha256": "53216527c2250cf8c2042f11681b24b76687caa40eae94c261253020d999e3d8"
+              },
+              "raw_episode": {
+                "bytes": 51907,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__left/attempt001/raw_episode.jsonl",
+                "sha256": "03d3b8415358146ba723d2d04d2b5f03ba4cacd71f29bf1d3f1943dcc822df33"
+              },
+              "requested_relation": "left",
+              "selected_state_indices": {
+                "canonical_grasp": 30
+              },
+              "state_capture": {
+                "bytes": 64675,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__left/attempt001/state_capture/state_capture.json",
+                "sha256": "fea5c0b7733b317d6f473c44cd820c56b177e07a21090baf21b01be44cb5fbb5"
+              }
+            },
+            "state_capture_index": 30
+          },
+          "right": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.5562839151935741,
+              -0.03756879828952432,
+              -0.8294156076344039,
+              0.034735297673145774
+            ],
+            "cube_in_eef_translation_m": [
+              0.14434814054997389,
+              -0.02859482452666407,
+              0.003295537417902547
+            ],
+            "cube_pose_world_wxyz": [
+              0.3086285889148712,
+              -0.0005029924213886261,
+              0.10526366531848907,
+              0.9985092878341675,
+              0.005843814462423325,
+              -0.0458889938890934,
+              0.028968242928385735
+            ],
+            "eef_position_world_m": [
+              0.3490164577960968,
+              0.02600378356873989,
+              0.24430006742477417
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.5943024158477783,
+              0.01833087019622326,
+              0.8039432168006897,
+              -0.011998005211353302
+            ],
+            "hdf5_index": 105,
+            "joint_position_rad": [
+              0.04437673091888428,
+              -0.20462659001350403,
+              0.02545449137687683,
+              -2.743105173110962,
+              0.05162767693400383,
+              2.2421841621398926,
+              0.07375045120716095,
+              0.26011112332344055,
+              0.25982794165611267,
+              -0.2640582025051117,
+              0.26614639163017273,
+              -0.25677037239074707,
+              -0.2574363648891449
+            ],
+            "ood_distance": 0.8745899927957682,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9521:s100:right",
+              "environment_seed": 9521,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 261744,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__right/attempt001/simulator/V3E004DroidRightTask/run_0.hdf5",
+                "sha256": "1931e6d64005cf3231c3ff7e3c2398bd76c36cbeca4fc7a1611791b3cf0cb5ee"
+              },
+              "raw_episode": {
+                "bytes": 40067,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__right/attempt001/raw_episode.jsonl",
+                "sha256": "20308b26c1f423dc263c9ba174a52d1a7511a8494a846c489f2dd8aeda18f418"
+              },
+              "requested_relation": "right",
+              "selected_state_indices": {
+                "canonical_carry": 72,
+                "canonical_grasp": 30
+              },
+              "state_capture": {
+                "bytes": 46319,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__right/attempt001/state_capture/state_capture.json",
+                "sha256": "85436f2bea98efe4fd9f3175af12e2887f4369446625eb0886091beb4f55b363"
+              }
+            },
+            "state_capture_index": 31
+          }
+        },
+        "centerline_constrained_eef_ik_target": {
+          "position_world_m": [
+            0.32394493364001853,
+            -0.02173179540414674,
+            0.2501426966501729
+          ],
+          "quaternion_world_wxyz": [
+            0.6566797057885383,
+            -0.023041909743751393,
+            0.7537533849619963,
+            -0.009832042472042824
+          ]
+        },
+        "contact_transform_selector": "reflected_right_observed",
+        "historical_source_runtime_assertions": {
+          "hdf5_action_last_component_exact": 1.0,
+          "source_raw_hdf5_and_state_capture_rehashed_before_AppLauncher": true,
+          "state_capture_object_grabbed": true
+        },
+        "open_approach_targets": {
+          "approach_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.35839153863823336,
+              -0.025524718962581336,
+              0.27540514379115905
+            ],
+            "quaternion_world_wxyz": [
+              0.5555296111009305,
+              -0.03728883833279588,
+              0.8299644271871451,
+              0.03399181268708008
+            ]
+          },
+          "contact_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.35839153863823336,
+              -0.025524718962581336,
+              0.21540514379115905
+            ],
+            "quaternion_world_wxyz": [
+              0.5555296111009305,
+              -0.03728883833279588,
+              0.8299644271871451,
+              0.03399181268708008
+            ]
+          },
+          "world_vertical_clearance_m": 0.06
+        },
+        "reflection_definition": {
+          "matrix_M": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "orientation": "R_reflected = M @ R @ M",
+          "position": "p_reflected = M @ p",
+          "right_world_cube_reflected": {
+            "position_world_m": [
+              0.3086285889148712,
+              0.0005029924213886261,
+              0.10526366531848907
+            ],
+            "quaternion_world_wxyz": [
+              0.9985093343062514,
+              -0.005843814734403004,
+              -0.04588899602483435,
+              -0.028968244276610166
+            ]
+          },
+          "right_world_eef_reflected": {
+            "position_world_m": [
+              0.3490164577960968,
+              -0.02600378356873989,
+              0.24430006742477417
+            ],
+            "quaternion_world_wxyz": [
+              0.5943024068578998,
+              -0.01833086991893633,
+              0.8039432046396224,
+              0.01199800502986219
+            ]
+          }
+        },
+        "se3_reconstruction": {
+          "cube_midline_residual_m": 6.071532165918825e-18,
+          "position_residual_m": 2.841188977517478e-17,
+          "reconstructed_cube_pose": {
+            "position_world_m": [
+              0.30688394606113434,
+              6.071532165918825e-18,
+              0.10556897148489955
+            ],
+            "quaternion_world_wxyz": [
+              0.9909993174963224,
+              -0.022483874038230055,
+              -0.12652925873502688,
+              -0.037485661445688934
+            ]
+          },
+          "rotation_matrix_frobenius_residual": 1.601968055516711e-16
+        },
+        "selected_historical_gripper_joint_position_rad": [
+          0.26011112332344055,
+          0.25982794165611267,
+          -0.2640582025051117,
+          0.26614639163017273,
+          -0.25677037239074707,
+          -0.2574363648891449
+        ],
+        "selected_historical_source_side": "right",
+        "selected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.5562839151935741,
+            0.03756879828952433,
+            -0.8294156076344039,
+            -0.0347352976731458
+          ],
+          "translation_m": [
+            0.14434814054997386,
+            0.028594824526664064,
+            0.0032955374179026165
+          ]
+        },
+        "source_environment_seed": 9521,
+        "stage": "canonical_grasp",
+        "target_cube_pose": {
+          "position_world_m": [
+            0.30688394606113434,
+            0.0,
+            0.10556897148489952
+          ],
+          "quaternion_world_wxyz": [
+            0.9909993174963224,
+            -0.02248387403823005,
+            -0.12652925873502688,
+            -0.037485661445688934
+          ]
+        },
+        "unselected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.4157448657700955,
+            0.004340723967841884,
+            -0.908315202313503,
+            -0.045835116967454625
+          ],
+          "translation_m": [
+            0.14533496209053123,
+            -0.029682729908705303,
+            0.0027185812505032825
+          ]
+        }
+      },
+      "construction_method": "open_approach_close_lift"
+    },
+    {
+      "candidate_rank": 7,
+      "canonical_carry": {
+        "both_direction_sources": {
+          "left": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.5131728598158335,
+              0.021578607003983605,
+              -0.8565833294617771,
+              -0.04952756158325698
+            ],
+            "cube_in_eef_translation_m": [
+              0.1523796287077066,
+              -0.02970647897716383,
+              0.0005706169971631467
+            ],
+            "cube_pose_world_wxyz": [
+              0.31528258323669434,
+              0.014132175594568253,
+              0.1305873543024063,
+              0.9819121360778809,
+              0.08619152009487152,
+              -0.160787895321846,
+              0.05066255107522011
+            ],
+            "eef_position_world_m": [
+              0.33487486839294434,
+              0.02057412639260292,
+              0.2844606637954712
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.6409696340560913,
+              -0.028317278251051903,
+              0.7532155513763428,
+              0.14499101042747498
+            ],
+            "hdf5_index": 113,
+            "joint_position_rad": [
+              0.08477386087179184,
+              -0.3936332166194916,
+              -0.05187808722257614,
+              -2.8127219676971436,
+              0.16669578850269318,
+              2.2391085624694824,
+              -0.3240370750427246,
+              0.2693465054035187,
+              0.2689701020717621,
+              -0.2736985683441162,
+              0.2771983742713928,
+              -0.26654598116874695,
+              -0.26655447483062744
+            ],
+            "ood_distance": 0.8828459802691598,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9442:s100:left",
+              "environment_seed": 9442,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 237936,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__left/attempt001/simulator/V3E004DroidLeftTask/run_0.hdf5",
+                "sha256": "27d042399d28dc4aac3509283b260cc57ca9f75d3798fd9eb375c8b01123e702"
+              },
+              "raw_episode": {
+                "bytes": 27759,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__left/attempt001/raw_episode.jsonl",
+                "sha256": "a1a0e0c24956ca78e4ce9b2a0dd07749723ada4c834f4e637b508e2cead51534"
+              },
+              "requested_relation": "left",
+              "selected_state_indices": {
+                "canonical_carry": 39,
+                "canonical_grasp": 37
+              },
+              "state_capture": {
+                "bytes": 27434,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__left/attempt001/state_capture/state_capture.json",
+                "sha256": "c50362c6b0f882dce7f594034789847e5ae085248760422964c32eacbc099c8e"
+              }
+            },
+            "state_capture_index": 39
+          },
+          "right": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.6023331143767254,
+              0.0020589347126104777,
+              -0.7973564340333488,
+              -0.03759384548973123
+            ],
+            "cube_in_eef_translation_m": [
+              0.15008919292192352,
+              -0.02990335218672422,
+              0.0031595179926684064
+            ],
+            "cube_pose_world_wxyz": [
+              0.31573086977005005,
+              -0.01460377499461174,
+              0.13437381386756897,
+              0.9933522343635559,
+              0.07463955134153366,
+              -0.06225203350186348,
+              0.06168375164270401
+            ],
+            "eef_position_world_m": [
+              0.3319876790046692,
+              -0.01045914925634861,
+              0.28652340173721313
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.6458008289337158,
+              -0.008611604571342468,
+              0.7516264319419861,
+              0.1338842660188675
+            ],
+            "hdf5_index": 112,
+            "joint_position_rad": [
+              0.03923485800623894,
+              -0.41125035285949707,
+              -0.1040627509355545,
+              -2.8198866844177246,
+              0.13939645886421204,
+              2.2294602394104004,
+              -0.35119080543518066,
+              0.2747841477394104,
+              0.2743447422981262,
+              -0.27738019824028015,
+              0.2839648425579071,
+              -0.2709866464138031,
+              -0.27218765020370483
+            ],
+            "ood_distance": 0.8204209328632562,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9442:s100:right",
+              "environment_seed": 9442,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 239767,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__right/attempt001/simulator/V3E004DroidRightTask/run_0.hdf5",
+                "sha256": "3bf51e655a73c4cfd323cbc12d6ad4dde4b3bd0b6115c52c81957a90bd1ec47d"
+              },
+              "raw_episode": {
+                "bytes": 28730,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__right/attempt001/raw_episode.jsonl",
+                "sha256": "15a7148754fe3bf0ac7a7c092e05fed8d10d789bc9e54b061e70424011ba6e84"
+              },
+              "requested_relation": "right",
+              "selected_state_indices": {
+                "canonical_carry": 38,
+                "canonical_grasp": 37
+              },
+              "state_capture": {
+                "bytes": 28848,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__right/attempt001/state_capture/state_capture.json",
+                "sha256": "6c1a8fad7bd00b8a26449971272a34dc46121100b01ba13c3ab4d193043e3f21"
+              }
+            },
+            "state_capture_index": 38
+          }
+        },
+        "centerline_constrained_eef_ik_target": {
+          "position_world_m": [
+            0.3524788694133758,
+            0.025101415048987417,
+            0.28115920175833486
+          ],
+          "quaternion_world_wxyz": [
+            0.6064243543051592,
+            -0.019267422571008486,
+            0.7934006792292051,
+            0.04892474968435709
+          ]
+        },
+        "contact_transform_selector": "left_observed",
+        "historical_source_runtime_assertions": {
+          "hdf5_action_last_component_exact": 1.0,
+          "source_raw_hdf5_and_state_capture_rehashed_before_AppLauncher": true,
+          "state_capture_object_grabbed": true
+        },
+        "open_approach_targets": {
+          "approach_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.37287676347297055,
+              0.02717345937701864,
+              0.27737145577900835
+            ],
+            "quaternion_world_wxyz": [
+              0.5124113897817906,
+              -0.021245850447850226,
+              0.8570900623075997,
+              0.04878326100412533
+            ]
+          },
+          "contact_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.37287676347297055,
+              0.02717345937701864,
+              0.21737145577900835
+            ],
+            "quaternion_world_wxyz": [
+              0.5124113897817906,
+              -0.021245850447850226,
+              0.8570900623075997,
+              0.04878326100412533
+            ]
+          },
+          "world_vertical_clearance_m": 0.06
+        },
+        "reflection_definition": {
+          "matrix_M": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "orientation": "R_reflected = M @ R @ M",
+          "position": "p_reflected = M @ p",
+          "right_world_cube_reflected": {
+            "position_world_m": [
+              0.31573086977005005,
+              0.01460377499461174,
+              0.13437381386756897
+            ],
+            "quaternion_world_wxyz": [
+              0.993352271598686,
+              -0.07463955413934624,
+              -0.06225203583533843,
+              -0.0616837539548773
+            ]
+          },
+          "right_world_eef_reflected": {
+            "position_world_m": [
+              0.3319876790046692,
+              0.01045914925634861,
+              0.28652340173721313
+            ],
+            "quaternion_world_wxyz": [
+              0.6458007771837581,
+              0.008611603881268762,
+              0.751626371711905,
+              -0.13388425529031958
+            ]
+          }
+        },
+        "se3_reconstruction": {
+          "cube_midline_residual_m": 5.204170427930421e-18,
+          "position_residual_m": 2.823925224926892e-17,
+          "reconstructed_cube_pose": {
+            "position_world_m": [
+              0.3155067265033722,
+              5.204170427930421e-18,
+              0.13248058408498767
+            ],
+            "quaternion_world_wxyz": [
+              0.9936532032647135,
+              0.0058111984541391925,
+              -0.11219983744927507,
+              -0.005544194319899571
+            ]
+          },
+          "rotation_matrix_frobenius_residual": 1.6245386658735255e-16
+        },
+        "selected_historical_gripper_joint_position_rad": [
+          0.2693465054035187,
+          0.2689701020717621,
+          -0.2736985683441162,
+          0.2771983742713928,
+          -0.26654598116874695,
+          -0.26655447483062744
+        ],
+        "selected_historical_source_side": "left",
+        "selected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.5131728598158335,
+            0.02157860700398359,
+            -0.8565833294617772,
+            -0.049527561583256934
+          ],
+          "translation_m": [
+            0.1523796287077065,
+            -0.02970647897716383,
+            0.0005706169971630981
+          ]
+        },
+        "source_environment_seed": 9442,
+        "stage": "canonical_carry",
+        "target_cube_pose": {
+          "position_world_m": [
+            0.3155067265033722,
+            0.0,
+            0.13248058408498764
+          ],
+          "quaternion_world_wxyz": [
+            0.9936532032647135,
+            0.005811198454139196,
+            -0.1121998374492751,
+            -0.005544194319899571
+          ]
+        },
+        "unselected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.6023331143767252,
+            -0.0020589347126104686,
+            -0.7973564340333489,
+            0.03759384548973129
+          ],
+          "translation_m": [
+            0.1500891929219236,
+            0.02990335218672424,
+            0.0031595179926683925
+          ]
+        }
+      },
+      "canonical_grasp": {
+        "both_direction_sources": {
+          "left": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.4157448657700955,
+              0.004340723967841887,
+              -0.908315202313503,
+              -0.04583511696745464
+            ],
+            "cube_in_eef_translation_m": [
+              0.1453349620905313,
+              -0.029682729908705314,
+              0.002718581250503331
+            ],
+            "cube_pose_world_wxyz": [
+              0.30513930320739746,
+              -0.00037736259400844574,
+              0.10587427765130997,
+              0.9766427278518677,
+              -0.03896859660744667,
+              -0.20629535615444183,
+              -0.04574409872293472
+            ],
+            "eef_position_world_m": [
+              0.34574049711227417,
+              0.028477955609560013,
+              0.2456226944923401
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.5953429937362671,
+              0.011654159054160118,
+              0.8033179640769958,
+              -0.010544581338763237
+            ],
+            "hdf5_index": 104,
+            "joint_position_rad": [
+              0.04376550018787384,
+              -0.21796050667762756,
+              0.03538530692458153,
+              -2.752713441848755,
+              0.046218421310186386,
+              2.2404754161834717,
+              0.07485701888799667,
+              0.2688394784927368,
+              0.268536239862442,
+              -0.2709777057170868,
+              0.2757294774055481,
+              -0.2644253969192505,
+              -0.2657843828201294
+            ],
+            "ood_distance": 1.0810613670702562,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9521:s100:left",
+              "environment_seed": 9521,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 282379,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__left/attempt001/simulator/V3E004DroidLeftTask/run_0.hdf5",
+                "sha256": "53216527c2250cf8c2042f11681b24b76687caa40eae94c261253020d999e3d8"
+              },
+              "raw_episode": {
+                "bytes": 51907,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__left/attempt001/raw_episode.jsonl",
+                "sha256": "03d3b8415358146ba723d2d04d2b5f03ba4cacd71f29bf1d3f1943dcc822df33"
+              },
+              "requested_relation": "left",
+              "selected_state_indices": {
+                "canonical_grasp": 30
+              },
+              "state_capture": {
+                "bytes": 64675,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__left/attempt001/state_capture/state_capture.json",
+                "sha256": "fea5c0b7733b317d6f473c44cd820c56b177e07a21090baf21b01be44cb5fbb5"
+              }
+            },
+            "state_capture_index": 30
+          },
+          "right": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.5562839151935741,
+              -0.03756879828952432,
+              -0.8294156076344039,
+              0.034735297673145774
+            ],
+            "cube_in_eef_translation_m": [
+              0.14434814054997389,
+              -0.02859482452666407,
+              0.003295537417902547
+            ],
+            "cube_pose_world_wxyz": [
+              0.3086285889148712,
+              -0.0005029924213886261,
+              0.10526366531848907,
+              0.9985092878341675,
+              0.005843814462423325,
+              -0.0458889938890934,
+              0.028968242928385735
+            ],
+            "eef_position_world_m": [
+              0.3490164577960968,
+              0.02600378356873989,
+              0.24430006742477417
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.5943024158477783,
+              0.01833087019622326,
+              0.8039432168006897,
+              -0.011998005211353302
+            ],
+            "hdf5_index": 105,
+            "joint_position_rad": [
+              0.04437673091888428,
+              -0.20462659001350403,
+              0.02545449137687683,
+              -2.743105173110962,
+              0.05162767693400383,
+              2.2421841621398926,
+              0.07375045120716095,
+              0.26011112332344055,
+              0.25982794165611267,
+              -0.2640582025051117,
+              0.26614639163017273,
+              -0.25677037239074707,
+              -0.2574363648891449
+            ],
+            "ood_distance": 0.8745899927957682,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9521:s100:right",
+              "environment_seed": 9521,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 261744,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__right/attempt001/simulator/V3E004DroidRightTask/run_0.hdf5",
+                "sha256": "1931e6d64005cf3231c3ff7e3c2398bd76c36cbeca4fc7a1611791b3cf0cb5ee"
+              },
+              "raw_episode": {
+                "bytes": 40067,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__right/attempt001/raw_episode.jsonl",
+                "sha256": "20308b26c1f423dc263c9ba174a52d1a7511a8494a846c489f2dd8aeda18f418"
+              },
+              "requested_relation": "right",
+              "selected_state_indices": {
+                "canonical_carry": 72,
+                "canonical_grasp": 30
+              },
+              "state_capture": {
+                "bytes": 46319,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__right/attempt001/state_capture/state_capture.json",
+                "sha256": "85436f2bea98efe4fd9f3175af12e2887f4369446625eb0886091beb4f55b363"
+              }
+            },
+            "state_capture_index": 31
+          }
+        },
+        "centerline_constrained_eef_ik_target": {
+          "position_world_m": [
+            0.368970953978774,
+            0.024702419415491332,
+            0.2380291551914043
+          ],
+          "quaternion_world_wxyz": [
+            0.528551890863286,
+            0.0146001031023842,
+            0.8487291217809436,
+            0.00886642516421981
+          ]
+        },
+        "contact_transform_selector": "left_observed",
+        "historical_source_runtime_assertions": {
+          "hdf5_action_last_component_exact": 1.0,
+          "source_raw_hdf5_and_state_capture_rehashed_before_AppLauncher": true,
+          "state_capture_object_grabbed": true
+        },
+        "open_approach_targets": {
+          "approach_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.39563230891983453,
+              0.024689934978640447,
+              0.25486663706520707
+            ],
+            "quaternion_world_wxyz": [
+              0.4149426504302433,
+              -0.003928706456199985,
+              0.9087200586760764,
+              0.045111163576816465
+            ]
+          },
+          "contact_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.39563230891983453,
+              0.024689934978640447,
+              0.19486663706520707
+            ],
+            "quaternion_world_wxyz": [
+              0.4149426504302433,
+              -0.003928706456199985,
+              0.9087200586760764,
+              0.045111163576816465
+            ]
+          },
+          "world_vertical_clearance_m": 0.06
+        },
+        "reflection_definition": {
+          "matrix_M": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "orientation": "R_reflected = M @ R @ M",
+          "position": "p_reflected = M @ p",
+          "right_world_cube_reflected": {
+            "position_world_m": [
+              0.3086285889148712,
+              0.0005029924213886261,
+              0.10526366531848907
+            ],
+            "quaternion_world_wxyz": [
+              0.9985093343062514,
+              -0.005843814734403004,
+              -0.04588899602483435,
+              -0.028968244276610166
+            ]
+          },
+          "right_world_eef_reflected": {
+            "position_world_m": [
+              0.3490164577960968,
+              -0.02600378356873989,
+              0.24430006742477417
+            ],
+            "quaternion_world_wxyz": [
+              0.5943024068578998,
+              -0.01833086991893633,
+              0.8039432046396224,
+              0.01199800502986219
+            ]
+          }
+        },
+        "se3_reconstruction": {
+          "cube_midline_residual_m": 2.6020852139652106e-18,
+          "position_residual_m": 2.6020852139652106e-18,
+          "reconstructed_cube_pose": {
+            "position_world_m": [
+              0.30688394606113434,
+              -2.6020852139652106e-18,
+              0.10556897148489952
+            ],
+            "quaternion_world_wxyz": [
+              0.9909993174963224,
+              -0.022483874038230045,
+              -0.12652925873502688,
+              -0.037485661445688934
+            ]
+          },
+          "rotation_matrix_frobenius_residual": 2.5476231888929306e-16
+        },
+        "selected_historical_gripper_joint_position_rad": [
+          0.2688394784927368,
+          0.268536239862442,
+          -0.2709777057170868,
+          0.2757294774055481,
+          -0.2644253969192505,
+          -0.2657843828201294
+        ],
+        "selected_historical_source_side": "left",
+        "selected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.4157448657700955,
+            0.004340723967841884,
+            -0.908315202313503,
+            -0.045835116967454625
+          ],
+          "translation_m": [
+            0.14533496209053123,
+            -0.029682729908705303,
+            0.0027185812505032825
+          ]
+        },
+        "source_environment_seed": 9521,
+        "stage": "canonical_grasp",
+        "target_cube_pose": {
+          "position_world_m": [
+            0.30688394606113434,
+            0.0,
+            0.10556897148489952
+          ],
+          "quaternion_world_wxyz": [
+            0.9909993174963224,
+            -0.02248387403823005,
+            -0.12652925873502688,
+            -0.037485661445688934
+          ]
+        },
+        "unselected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.5562839151935741,
+            0.03756879828952433,
+            -0.8294156076344039,
+            -0.0347352976731458
+          ],
+          "translation_m": [
+            0.14434814054997386,
+            0.028594824526664064,
+            0.0032955374179026165
+          ]
+        }
+      },
+      "construction_method": "open_approach_close_lift"
+    },
+    {
+      "candidate_rank": 8,
+      "canonical_carry": {
+        "both_direction_sources": {
+          "left": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.5131728598158335,
+              0.021578607003983605,
+              -0.8565833294617771,
+              -0.04952756158325698
+            ],
+            "cube_in_eef_translation_m": [
+              0.1523796287077066,
+              -0.02970647897716383,
+              0.0005706169971631467
+            ],
+            "cube_pose_world_wxyz": [
+              0.31528258323669434,
+              0.014132175594568253,
+              0.1305873543024063,
+              0.9819121360778809,
+              0.08619152009487152,
+              -0.160787895321846,
+              0.05066255107522011
+            ],
+            "eef_position_world_m": [
+              0.33487486839294434,
+              0.02057412639260292,
+              0.2844606637954712
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.6409696340560913,
+              -0.028317278251051903,
+              0.7532155513763428,
+              0.14499101042747498
+            ],
+            "hdf5_index": 113,
+            "joint_position_rad": [
+              0.08477386087179184,
+              -0.3936332166194916,
+              -0.05187808722257614,
+              -2.8127219676971436,
+              0.16669578850269318,
+              2.2391085624694824,
+              -0.3240370750427246,
+              0.2693465054035187,
+              0.2689701020717621,
+              -0.2736985683441162,
+              0.2771983742713928,
+              -0.26654598116874695,
+              -0.26655447483062744
+            ],
+            "ood_distance": 0.8828459802691598,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9442:s100:left",
+              "environment_seed": 9442,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 237936,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__left/attempt001/simulator/V3E004DroidLeftTask/run_0.hdf5",
+                "sha256": "27d042399d28dc4aac3509283b260cc57ca9f75d3798fd9eb375c8b01123e702"
+              },
+              "raw_episode": {
+                "bytes": 27759,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__left/attempt001/raw_episode.jsonl",
+                "sha256": "a1a0e0c24956ca78e4ce9b2a0dd07749723ada4c834f4e637b508e2cead51534"
+              },
+              "requested_relation": "left",
+              "selected_state_indices": {
+                "canonical_carry": 39,
+                "canonical_grasp": 37
+              },
+              "state_capture": {
+                "bytes": 27434,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__left/attempt001/state_capture/state_capture.json",
+                "sha256": "c50362c6b0f882dce7f594034789847e5ae085248760422964c32eacbc099c8e"
+              }
+            },
+            "state_capture_index": 39
+          },
+          "right": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.6023331143767254,
+              0.0020589347126104777,
+              -0.7973564340333488,
+              -0.03759384548973123
+            ],
+            "cube_in_eef_translation_m": [
+              0.15008919292192352,
+              -0.02990335218672422,
+              0.0031595179926684064
+            ],
+            "cube_pose_world_wxyz": [
+              0.31573086977005005,
+              -0.01460377499461174,
+              0.13437381386756897,
+              0.9933522343635559,
+              0.07463955134153366,
+              -0.06225203350186348,
+              0.06168375164270401
+            ],
+            "eef_position_world_m": [
+              0.3319876790046692,
+              -0.01045914925634861,
+              0.28652340173721313
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.6458008289337158,
+              -0.008611604571342468,
+              0.7516264319419861,
+              0.1338842660188675
+            ],
+            "hdf5_index": 112,
+            "joint_position_rad": [
+              0.03923485800623894,
+              -0.41125035285949707,
+              -0.1040627509355545,
+              -2.8198866844177246,
+              0.13939645886421204,
+              2.2294602394104004,
+              -0.35119080543518066,
+              0.2747841477394104,
+              0.2743447422981262,
+              -0.27738019824028015,
+              0.2839648425579071,
+              -0.2709866464138031,
+              -0.27218765020370483
+            ],
+            "ood_distance": 0.8204209328632562,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9442:s100:right",
+              "environment_seed": 9442,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 239767,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__right/attempt001/simulator/V3E004DroidRightTask/run_0.hdf5",
+                "sha256": "3bf51e655a73c4cfd323cbc12d6ad4dde4b3bd0b6115c52c81957a90bd1ec47d"
+              },
+              "raw_episode": {
+                "bytes": 28730,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__right/attempt001/raw_episode.jsonl",
+                "sha256": "15a7148754fe3bf0ac7a7c092e05fed8d10d789bc9e54b061e70424011ba6e84"
+              },
+              "requested_relation": "right",
+              "selected_state_indices": {
+                "canonical_carry": 38,
+                "canonical_grasp": 37
+              },
+              "state_capture": {
+                "bytes": 28848,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-004-of-006/cells/v3e004__pi05__seed9442__s100__right/attempt001/state_capture/state_capture.json",
+                "sha256": "6c1a8fad7bd00b8a26449971272a34dc46121100b01ba13c3ab4d193043e3f21"
+              }
+            },
+            "state_capture_index": 38
+          }
+        },
+        "centerline_constrained_eef_ik_target": {
+          "position_world_m": [
+            0.3183138371614531,
+            -0.025278396987904243,
+            0.28342455260767774
+          ],
+          "quaternion_world_wxyz": [
+            0.6877530983576733,
+            0.014184866701185288,
+            0.7249211474602384,
+            -0.035830088208398884
+          ]
+        },
+        "contact_transform_selector": "reflected_right_observed",
+        "historical_source_runtime_assertions": {
+          "hdf5_action_last_component_exact": 1.0,
+          "source_raw_hdf5_and_state_capture_rehashed_before_AppLauncher": true,
+          "state_capture_object_grabbed": true
+        },
+        "open_approach_targets": {
+          "approach_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.340653914999779,
+              -0.02345094611544261,
+              0.2878291949671247
+            ],
+            "quaternion_world_wxyz": [
+              0.6015818747570144,
+              0.002228915966315518,
+              0.7978851712673223,
+              -0.03838663008349012
+            ]
+          },
+          "contact_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.340653914999779,
+              -0.02345094611544261,
+              0.22782919496712473
+            ],
+            "quaternion_world_wxyz": [
+              0.6015818747570144,
+              0.002228915966315518,
+              0.7978851712673223,
+              -0.03838663008349012
+            ]
+          },
+          "world_vertical_clearance_m": 0.06
+        },
+        "reflection_definition": {
+          "matrix_M": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "orientation": "R_reflected = M @ R @ M",
+          "position": "p_reflected = M @ p",
+          "right_world_cube_reflected": {
+            "position_world_m": [
+              0.31573086977005005,
+              0.01460377499461174,
+              0.13437381386756897
+            ],
+            "quaternion_world_wxyz": [
+              0.993352271598686,
+              -0.07463955413934624,
+              -0.06225203583533843,
+              -0.0616837539548773
+            ]
+          },
+          "right_world_eef_reflected": {
+            "position_world_m": [
+              0.3319876790046692,
+              0.01045914925634861,
+              0.28652340173721313
+            ],
+            "quaternion_world_wxyz": [
+              0.6458007771837581,
+              0.008611603881268762,
+              0.751626371711905,
+              -0.13388425529031958
+            ]
+          }
+        },
+        "se3_reconstruction": {
+          "cube_midline_residual_m": 4.336808689942018e-18,
+          "position_residual_m": 4.336808689942018e-18,
+          "reconstructed_cube_pose": {
+            "position_world_m": [
+              0.3155067265033722,
+              4.336808689942018e-18,
+              0.13248058408498764
+            ],
+            "quaternion_world_wxyz": [
+              0.9936532032647135,
+              0.005811198454139198,
+              -0.11219983744927511,
+              -0.005544194319899566
+            ]
+          },
+          "rotation_matrix_frobenius_residual": 2.6391752527064137e-16
+        },
+        "selected_historical_gripper_joint_position_rad": [
+          0.2747841477394104,
+          0.2743447422981262,
+          -0.27738019824028015,
+          0.2839648425579071,
+          -0.2709866464138031,
+          -0.27218765020370483
+        ],
+        "selected_historical_source_side": "right",
+        "selected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.6023331143767252,
+            -0.0020589347126104686,
+            -0.7973564340333489,
+            0.03759384548973129
+          ],
+          "translation_m": [
+            0.1500891929219236,
+            0.02990335218672424,
+            0.0031595179926683925
+          ]
+        },
+        "source_environment_seed": 9442,
+        "stage": "canonical_carry",
+        "target_cube_pose": {
+          "position_world_m": [
+            0.3155067265033722,
+            0.0,
+            0.13248058408498764
+          ],
+          "quaternion_world_wxyz": [
+            0.9936532032647135,
+            0.005811198454139196,
+            -0.1121998374492751,
+            -0.005544194319899571
+          ]
+        },
+        "unselected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.5131728598158335,
+            0.02157860700398359,
+            -0.8565833294617772,
+            -0.049527561583256934
+          ],
+          "translation_m": [
+            0.1523796287077065,
+            -0.02970647897716383,
+            0.0005706169971630981
+          ]
+        }
+      },
+      "canonical_grasp": {
+        "both_direction_sources": {
+          "left": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.4157448657700955,
+              0.004340723967841887,
+              -0.908315202313503,
+              -0.04583511696745464
+            ],
+            "cube_in_eef_translation_m": [
+              0.1453349620905313,
+              -0.029682729908705314,
+              0.002718581250503331
+            ],
+            "cube_pose_world_wxyz": [
+              0.30513930320739746,
+              -0.00037736259400844574,
+              0.10587427765130997,
+              0.9766427278518677,
+              -0.03896859660744667,
+              -0.20629535615444183,
+              -0.04574409872293472
+            ],
+            "eef_position_world_m": [
+              0.34574049711227417,
+              0.028477955609560013,
+              0.2456226944923401
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.5953429937362671,
+              0.011654159054160118,
+              0.8033179640769958,
+              -0.010544581338763237
+            ],
+            "hdf5_index": 104,
+            "joint_position_rad": [
+              0.04376550018787384,
+              -0.21796050667762756,
+              0.03538530692458153,
+              -2.752713441848755,
+              0.046218421310186386,
+              2.2404754161834717,
+              0.07485701888799667,
+              0.2688394784927368,
+              0.268536239862442,
+              -0.2709777057170868,
+              0.2757294774055481,
+              -0.2644253969192505,
+              -0.2657843828201294
+            ],
+            "ood_distance": 1.0810613670702562,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9521:s100:left",
+              "environment_seed": 9521,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 282379,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__left/attempt001/simulator/V3E004DroidLeftTask/run_0.hdf5",
+                "sha256": "53216527c2250cf8c2042f11681b24b76687caa40eae94c261253020d999e3d8"
+              },
+              "raw_episode": {
+                "bytes": 51907,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__left/attempt001/raw_episode.jsonl",
+                "sha256": "03d3b8415358146ba723d2d04d2b5f03ba4cacd71f29bf1d3f1943dcc822df33"
+              },
+              "requested_relation": "left",
+              "selected_state_indices": {
+                "canonical_grasp": 30
+              },
+              "state_capture": {
+                "bytes": 64675,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__left/attempt001/state_capture/state_capture.json",
+                "sha256": "fea5c0b7733b317d6f473c44cd820c56b177e07a21090baf21b01be44cb5fbb5"
+              }
+            },
+            "state_capture_index": 30
+          },
+          "right": {
+            "cube_in_eef_quaternion_wxyz": [
+              0.5562839151935741,
+              -0.03756879828952432,
+              -0.8294156076344039,
+              0.034735297673145774
+            ],
+            "cube_in_eef_translation_m": [
+              0.14434814054997389,
+              -0.02859482452666407,
+              0.003295537417902547
+            ],
+            "cube_pose_world_wxyz": [
+              0.3086285889148712,
+              -0.0005029924213886261,
+              0.10526366531848907,
+              0.9985092878341675,
+              0.005843814462423325,
+              -0.0458889938890934,
+              0.028968242928385735
+            ],
+            "eef_position_world_m": [
+              0.3490164577960968,
+              0.02600378356873989,
+              0.24430006742477417
+            ],
+            "eef_quaternion_world_wxyz": [
+              0.5943024158477783,
+              0.01833087019622326,
+              0.8039432168006897,
+              -0.011998005211353302
+            ],
+            "hdf5_index": 105,
+            "joint_position_rad": [
+              0.04437673091888428,
+              -0.20462659001350403,
+              0.02545449137687683,
+              -2.743105173110962,
+              0.05162767693400383,
+              2.2421841621398926,
+              0.07375045120716095,
+              0.26011112332344055,
+              0.25982794165611267,
+              -0.2640582025051117,
+              0.26614639163017273,
+              -0.25677037239074707,
+              -0.2574363648891449
+            ],
+            "ood_distance": 0.8745899927957682,
+            "provenance": {
+              "cell_id": "v3e004:pi05:seed9521:s100:right",
+              "environment_seed": 9521,
+              "hdf5_to_state_capture_offset": 74,
+              "hdf5_trace": {
+                "bytes": 261744,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__right/attempt001/simulator/V3E004DroidRightTask/run_0.hdf5",
+                "sha256": "1931e6d64005cf3231c3ff7e3c2398bd76c36cbeca4fc7a1611791b3cf0cb5ee"
+              },
+              "raw_episode": {
+                "bytes": 40067,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__right/attempt001/raw_episode.jsonl",
+                "sha256": "20308b26c1f423dc263c9ba174a52d1a7511a8494a846c489f2dd8aeda18f418"
+              },
+              "requested_relation": "right",
+              "selected_state_indices": {
+                "canonical_carry": 72,
+                "canonical_grasp": 30
+              },
+              "state_capture": {
+                "bytes": 46319,
+                "path": "/data/users/ali/vla_wam/raw/v3e004/final-851e009/droid/pi05_current_stack_droid/shard-000-of-006/cells/v3e004__pi05__seed9521__s100__right/attempt001/state_capture/state_capture.json",
+                "sha256": "85436f2bea98efe4fd9f3175af12e2887f4369446625eb0886091beb4f55b363"
+              }
+            },
+            "state_capture_index": 31
+          }
+        },
+        "centerline_constrained_eef_ik_target": {
+          "position_world_m": [
+            0.32394493364001853,
+            -0.02173179540414674,
+            0.2501426966501729
+          ],
+          "quaternion_world_wxyz": [
+            0.6566797057885383,
+            -0.023041909743751393,
+            0.7537533849619963,
+            -0.009832042472042824
+          ]
+        },
+        "contact_transform_selector": "reflected_right_observed",
+        "historical_source_runtime_assertions": {
+          "hdf5_action_last_component_exact": 1.0,
+          "source_raw_hdf5_and_state_capture_rehashed_before_AppLauncher": true,
+          "state_capture_object_grabbed": true
+        },
+        "open_approach_targets": {
+          "approach_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.35839153863823336,
+              -0.025524718962581336,
+              0.27540514379115905
+            ],
+            "quaternion_world_wxyz": [
+              0.5555296111009305,
+              -0.03728883833279588,
+              0.8299644271871451,
+              0.03399181268708008
+            ]
+          },
+          "contact_eef_at_exact_e004_reset_cube": {
+            "position_world_m": [
+              0.35839153863823336,
+              -0.025524718962581336,
+              0.21540514379115905
+            ],
+            "quaternion_world_wxyz": [
+              0.5555296111009305,
+              -0.03728883833279588,
+              0.8299644271871451,
+              0.03399181268708008
+            ]
+          },
+          "world_vertical_clearance_m": 0.06
+        },
+        "reflection_definition": {
+          "matrix_M": [
+            [
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "orientation": "R_reflected = M @ R @ M",
+          "position": "p_reflected = M @ p",
+          "right_world_cube_reflected": {
+            "position_world_m": [
+              0.3086285889148712,
+              0.0005029924213886261,
+              0.10526366531848907
+            ],
+            "quaternion_world_wxyz": [
+              0.9985093343062514,
+              -0.005843814734403004,
+              -0.04588899602483435,
+              -0.028968244276610166
+            ]
+          },
+          "right_world_eef_reflected": {
+            "position_world_m": [
+              0.3490164577960968,
+              -0.02600378356873989,
+              0.24430006742477417
+            ],
+            "quaternion_world_wxyz": [
+              0.5943024068578998,
+              -0.01833086991893633,
+              0.8039432046396224,
+              0.01199800502986219
+            ]
+          }
+        },
+        "se3_reconstruction": {
+          "cube_midline_residual_m": 6.071532165918825e-18,
+          "position_residual_m": 2.841188977517478e-17,
+          "reconstructed_cube_pose": {
+            "position_world_m": [
+              0.30688394606113434,
+              6.071532165918825e-18,
+              0.10556897148489955
+            ],
+            "quaternion_world_wxyz": [
+              0.9909993174963224,
+              -0.022483874038230055,
+              -0.12652925873502688,
+              -0.037485661445688934
+            ]
+          },
+          "rotation_matrix_frobenius_residual": 1.601968055516711e-16
+        },
+        "selected_historical_gripper_joint_position_rad": [
+          0.26011112332344055,
+          0.25982794165611267,
+          -0.2640582025051117,
+          0.26614639163017273,
+          -0.25677037239074707,
+          -0.2574363648891449
+        ],
+        "selected_historical_source_side": "right",
+        "selected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.5562839151935741,
+            0.03756879828952433,
+            -0.8294156076344039,
+            -0.0347352976731458
+          ],
+          "translation_m": [
+            0.14434814054997386,
+            0.028594824526664064,
+            0.0032955374179026165
+          ]
+        },
+        "source_environment_seed": 9521,
+        "stage": "canonical_grasp",
+        "target_cube_pose": {
+          "position_world_m": [
+            0.30688394606113434,
+            0.0,
+            0.10556897148489952
+          ],
+          "quaternion_world_wxyz": [
+            0.9909993174963224,
+            -0.02248387403823005,
+            -0.12652925873502688,
+            -0.037485661445688934
+          ]
+        },
+        "unselected_observed_cube_in_eef_transform": {
+          "quaternion_wxyz": [
+            0.4157448657700955,
+            0.004340723967841884,
+            -0.908315202313503,
+            -0.045835116967454625
+          ],
+          "translation_m": [
+            0.14533496209053123,
+            -0.029682729908705303,
+            0.0027185812505032825
+          ]
+        }
+      },
+      "construction_method": "open_approach_close_lift"
+    }
+  ],
+  "construction_contract": {
+    "deterministic_ik": {
+      "controller": "exact E004 absolute differential-IK action interface and EEF offset",
+      "gripper_command_during_solve": 0.0,
+      "initial_state": "exact E004 s=1 reset; no prompt/action history is retained",
+      "maximum_steps": 240,
+      "orientation_geodesic_error_deg_inclusive": 1.0,
+      "position_error_m_inclusive": 0.001,
+      "required_final_consecutive_steps": 10,
+      "seed": 13000,
+      "target": "registered centerline-constrained EEF target",
+      "verification": "finite solution, exact FK residual log, and every solved joint inside the environment-provided soft joint limits"
+    },
+    "direct_contact_initialization": {
+      "hold": "Command the fixed registered EEF target with normal binary close action 1.0 for exactly 260 physics steps; evaluate the final 10 consecutive steps.",
+      "prohibitions": "no weld, attachment, collision suppression, force injection, learned policy, prompt-conditioned action, or physics step before the normal closed hold",
+      "write_order": "In the fresh materialization environment after exact reset validation, atomically write solved seven arm joints, selected exact historical six gripper joints, target cube pose reconstructed from selected T_eef_cube, and zero robot/cube velocities; set joint targets; write scene; forward without a physics integration step."
+    },
+    "fresh_environment_lifecycle": "For each candidate rank and stage, use one exact-reset IK-solve environment and a separate exact-reset materialization environment; close both before the next stage. Contact sensors are initialized and coverage-checked in the materialization environment.",
+    "history": "All construction actions, resets, and environment state are logged and excluded from behavior. A later behavioral runner must restore the accepted normalized state into a fresh environment, verify its exact registered state hash before request zero, and start fresh sampling/prompt history.",
+    "open_approach_close_lift": {
+      "approach": "command the registered contact EEF pose plus 0.060 m world-z clearance, gripper 0.0, for 50 steps",
+      "close": "hold contact EEF pose with normal binary close action 1.0 for 60 steps",
+      "descent": "linearly interpolate world position over 50 steps to the exact contact EEF pose at the reset cube while holding registered orientation and gripper 0.0",
+      "initial_state": "fresh exact E004 reset; cube and every companion remain at reset",
+      "lift": "linearly interpolate world position and shortest-arc orientation over 60 steps to the registered final EEF target while holding close action 1.0",
+      "prohibitions": "no direct cube write, weld, attachment, collision suppression, force injection, learned policy, or prompt-conditioned action",
+      "settle": "hold the registered final EEF target with close action 1.0 for 100 steps; evaluate the final 10 consecutive steps"
+    },
+    "velocities": "direct initialization writes every robot joint velocity and cube linear/angular velocity to exact zero; open construction uses normal physics only"
+  },
+  "e004_full_reset_reference": {
+    "bytes": 17364,
+    "path": "/Users/SZ5VJY/steerable-v3e006/artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/e004_full_reset_reference.json",
+    "sha256": "568fd7aae9ee325ae5c1b59e2905f099e7b3a2c9b0d8679c815bff4354d5ea73"
+  },
+  "historical_policy_provenance_disclosure": "Both-direction source transforms are from committed successful historical E004 pi0.5 trajectories. R002 schedule generation is repair-behavior-blind and makes no new model request; it is not model-blind provenance unqualified.",
+  "model_request_count": 0,
+  "original_v3e006_closure_binding": {
+    "bytes": 6457,
+    "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r001/gates/original_v3e006_closure_binding.json",
+    "sha256": "de81ed6987d3cfcb8d7194304e1f84c248d4f2ad1f7a5915b13df3ae0045e1cf"
+  },
+  "r001_predecessor": {
+    "candidate_schedule": {
+      "bytes": 148949,
+      "path": "/Users/SZ5VJY/steerable-v3e006/artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r001/gates/candidate_schedule.json",
+      "sha256": "022b9b65b58758a192dd77ac32a79d463f8638c9be162a7f6b1e3d5270d9d04f"
+    },
+    "closure_binding": {
+      "bytes": 6028,
+      "path": "/Users/SZ5VJY/steerable-v3e006/artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r002/gates/predecessor_closure_binding.json",
+      "sha256": "1f93f864912544de990d7f9c1e6ac4dda8eb48126e130459dc30270253d1fdeb"
+    },
+    "evidence_manifest": {
+      "bytes": 2997,
+      "path": "/Users/SZ5VJY/steerable-v3e006/artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r001/results/evidence_manifest.json",
+      "sha256": "e9da859976c6f0f66b1a98a315cbe08e05336b64b4b8eb79388399162d8769f4"
+    },
+    "outcome": "finite_r001_budget_exhausted_without_valid_state_pair",
+    "results": {
+      "bytes": 758,
+      "path": "/Users/SZ5VJY/steerable-v3e006/artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r001/results/results.json",
+      "sha256": "a9881bb0b35d45073438cb50b94e05854dc2c2698676851414c8e51ce2d23cb7"
+    }
+  },
+  "r002_live_candidate_evaluation_count": 0,
+  "repair_amendment_id": "V3-E006-R002",
+  "repair_registration": {
+    "bytes": 14993,
+    "path": "/Users/SZ5VJY/steerable-v3e006/artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r002/repair_registration.json",
+    "sha256": "691426d0fd70350c03c4b41ec8fabe9230d9f5465f13af847d123a54a5529057"
+  },
+  "schedule_canonical_sha256": "283d083e0cca06f69d97da9d94083d5111087cfec360f1de3de31eb16a0bb698",
+  "schema_version": "vla-wam-shared-v3e006-r002-contact-consistent-candidate-schedule-v1",
+  "selection_rule": {
+    "acceptance": "A candidate rank passes only if independently constructed canonical_grasp and canonical_carry states both pass every unchanged scientific, OOD, camera, companion, contact, reset, runtime, and source gate.",
+    "algorithm_version": "contact-consistent-balanced-se3-search-v1",
+    "exhaustion": "If ranks 1 through 8 all fail, close R002 with zero model requests and zero behavioral episodes. Never add candidates, reorder candidates, change a construction parameter, or relax a gate after live inspection.",
+    "first_pass_rule": "Evaluate ranks 1 through 8 serially and stop at the first complete passing pair.",
+    "maximum_candidate_pairs": 8,
+    "order_rationale": "The lower-intervention direct initialization family precedes the independently prespecified normal-contact approach fallback. Within each family cross-anchored LEFT/reflected-RIGHT combinations precede same-anchor combinations. This order is frozen before live evaluation and does not use an R002 gate result.",
+    "source_rows": {
+      "canonical_carry": "E004 seed 9442 LEFT state_capture 39/HDF5 113 and RIGHT state_capture 38/HDF5 112",
+      "canonical_grasp": "E004 seed 9521 LEFT state_capture 30/HDF5 104 and RIGHT state_capture 31/HDF5 105",
+      "requirements": "both bound historical rows have object_grabbed=true, closing action component exactly 1.0, and raw episode/state_capture/HDF5 byte counts and SHA-256 reverified in the target environment before AppLauncher"
+    },
+    "variant_order": [
+      {
+        "carry_contact": "reflected_right_observed",
+        "grasp_contact": "left_observed",
+        "method": "direct_contact_initialization",
+        "rank": 1
+      },
+      {
+        "carry_contact": "left_observed",
+        "grasp_contact": "reflected_right_observed",
+        "method": "direct_contact_initialization",
+        "rank": 2
+      },
+      {
+        "carry_contact": "left_observed",
+        "grasp_contact": "left_observed",
+        "method": "direct_contact_initialization",
+        "rank": 3
+      },
+      {
+        "carry_contact": "reflected_right_observed",
+        "grasp_contact": "reflected_right_observed",
+        "method": "direct_contact_initialization",
+        "rank": 4
+      },
+      {
+        "carry_contact": "reflected_right_observed",
+        "grasp_contact": "left_observed",
+        "method": "open_approach_close_lift",
+        "rank": 5
+      },
+      {
+        "carry_contact": "left_observed",
+        "grasp_contact": "reflected_right_observed",
+        "method": "open_approach_close_lift",
+        "rank": 6
+      },
+      {
+        "carry_contact": "left_observed",
+        "grasp_contact": "left_observed",
+        "method": "open_approach_close_lift",
+        "rank": 7
+      },
+      {
+        "carry_contact": "reflected_right_observed",
+        "grasp_contact": "reflected_right_observed",
+        "method": "open_approach_close_lift",
+        "rank": 8
+      }
+    ]
+  },
+  "status": "frozen_before_any_r002_live_candidate_or_model_request",
+  "unchanged_gate_bindings": {
+    "ood_freeze": {
+      "bytes": 707097,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/ood_reference_freeze.json",
+      "sha256": "4d3a02c1d96be1ddd98f47a15cf41ad1d2a6c54c3007f3846742cfcbf31873f4"
+    },
+    "ood_reference": {
+      "bytes": 18461,
+      "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006/ood_reference.py",
+      "sha256": "4df1ebf0061096a74b5eccd10b2a144e840f52fd50469b8bdae9369d1696fd04"
+    },
+    "state_contract": {
+      "bytes": 12944,
+      "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006/state_contract.py",
+      "sha256": "2476b28d2867c1b87f477fd5f89e545616be00d860d4144f8cbdb70af10f3c18"
+    }
+  }
+}

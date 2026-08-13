@@ -1,0 +1,93 @@
+{
+  "accepted_candidate_rank": null,
+  "amendment_id": "V3-E006-R003",
+  "behavioral_activation_released": false,
+  "behavioral_episode_count": 0,
+  "candidate_pair_evaluation_count": 0,
+  "closed_at_utc": "2026-08-13T00:07:20Z",
+  "diagnostic_budget": 4,
+  "diagnostic_evaluation_count": 1,
+  "diagnostic_failure": {
+    "all_arm_states_inside_live_soft_joint_limits": true,
+    "all_base_link_to_eef_frame_identity_checks_passed": true,
+    "all_states_finite": true,
+    "camera_evidence_passed": true,
+    "completed_steps": 30,
+    "diagnostic_index_one_based": 1,
+    "environment_closed_before_next_environment": true,
+    "failure_reason": "final_ten_steps_outside_registered_pose_tolerance",
+    "final_orientation_geodesic_error_deg": 0.2210353088374109,
+    "final_position_error_m": 0.0012277967696529603,
+    "final_window_passed": false,
+    "fresh_reset_passed": true,
+    "historical_state_atomic_write_orientation_error_deg": 0.0,
+    "historical_state_atomic_write_position_error_m": 0.0,
+    "last_ten_orientation_error_max_deg": 0.22103669198909875,
+    "last_ten_orientation_error_min_deg": 0.22079476333925926,
+    "last_ten_position_error_max_m": 0.001227943828715584,
+    "last_ten_position_error_min_m": 0.0012274963710895805,
+    "orientation_tolerance_deg_inclusive": 1.0,
+    "position_tolerance_m_inclusive": 0.001,
+    "source_side": "left",
+    "stage": "canonical_grasp",
+    "termination": null
+  },
+  "first_passing_rule_obeyed": true,
+  "model_request_count": 0,
+  "passed": false,
+  "raw_evidence": {
+    "harness": {
+      "bytes": 1534,
+      "path": "/data/users/ali/vla_wam/raw/v3e006_r003/state_repair/72dbd1e-a40r06-attempt02/harness_result.json",
+      "sha256": "ac580168fd5a89148d996281932eda9dabba6f7a2a0cf0b9f4c789ca8128529f"
+    },
+    "launch": {
+      "bytes": 18110,
+      "path": "/data/users/ali/vla_wam/raw/v3e006_r003/state_repair/72dbd1e-a40r06-attempt02/launch.json",
+      "sha256": "e8ad0c5171567f937a8a52f4ac2ea480ad25265ddbfc9ce63c8b6edf00ac18f8"
+    },
+    "result": {
+      "bytes": 349923,
+      "path": "/data/users/ali/vla_wam/raw/v3e006_r003/state_repair/72dbd1e-a40r06-attempt02/raw/state_repair_result.json",
+      "sha256": "0bac94d3d1e5b93f3eb00f94f1c4a6cc989cbe54d01f2b9247ed6f5ecf5a9392"
+    },
+    "runtime_log": {
+      "bytes": 21076,
+      "path": "/data/users/ali/vla_wam/raw/v3e006_r003/state_repair/72dbd1e-a40r06-attempt02/runtime.log",
+      "sha256": "68ce3b92465387b6ea7bee8fb8ffa551166503992a31e5b7af53a1126c450bfb"
+    },
+    "target_validation_receipt": {
+      "bytes": 2317,
+      "path": "/data/users/ali/vla_wam/raw/v3e006_r003/state_repair/72dbd1e-a40r06-attempt02/target_validation_receipt.json",
+      "sha256": "ceb2d4da2f95a2e5cc4abcf680c24d7a1682979e162396a0121f58c2a06d2840"
+    },
+    "video": {
+      "bytes": 109388,
+      "path": "/data/users/ali/vla_wam/raw/v3e006_r003/state_repair/72dbd1e-a40r06-attempt02/raw/videos/v3e006_r003_known_reachable_diagnostic_failed.mp4",
+      "sha256": "d1f949cc9ebefa8638b914be77ef8cd56dd0cc006daa3a283cac1854c157b5d4"
+    }
+  },
+  "registration": {
+    "bytes": 12159,
+    "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r003/repair_registration.json",
+    "sha256": "103f3da335a23569e5e6e68c0e4b561f3b9d4573bdb82e317a5bbe7b8fac19ac"
+  },
+  "registered_candidate_budget": 4,
+  "registered_schedule": {
+    "bytes": 161264,
+    "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r003/gates/candidate_schedule.json",
+    "sha256": "250d193336f5d802a0fde4ad514d985ff3fa2b40b021d2a5dfcb3020f615efb7"
+  },
+  "release_boundary": "R003 candidate evaluation and every behavioral/model request remain prohibited because the first registered hard-gate diagnostic failed.",
+  "schema_version": "vla-wam-shared-v3e006-r003-diagnostic-closure-v1",
+  "scientific_gate_thresholds_unchanged": true,
+  "source_commit": "72dbd1e97fce1e2873307aecb69ada9bf43c91b9",
+  "source_push_gate_v2": {
+    "bytes": 5171,
+    "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r003/source_push_gate_v2.json",
+    "sha256": "53a9611fa0da9a9d959ce37725b8bc89b59a45117b6bb85b11b3d077d65aa319"
+  },
+  "state_candidate_count": 0,
+  "status": "r003_known_reachable_diagnostic_failed_candidates_not_evaluated",
+  "study_id": "vla_wam_language_steerability_v3"
+}

@@ -1,0 +1,78 @@
+{
+  "accepted_state_candidate_count": 0,
+  "behavioral_episode_count": 0,
+  "corrected_validator_inventory": {
+    "focused_regression_test": {
+      "bytes": 1706,
+      "path": "tests/test_v3e006_r007_postexecution.py",
+      "sha256": "b29d5c01151bc789f38d353e471a5d3a82bf34910800fbc62b7cdc764e6b92ec"
+    },
+    "postexecution_validator": {
+      "bytes": 7731,
+      "path": "tools/validate_v3e006_r007_postexecution.py",
+      "sha256": "78e7dac571b29428d97df360d9e346c18f86786f118f5fd5ae734c67406bc039"
+    }
+  },
+  "correction": {
+    "corrected_expectation": "retained_stage_schedule == {**frozen_stage_schedule, candidate_rank: enclosing_rank}",
+    "frozen_validator_defect": "compared annotated retained mapping to unannotated frozen stage mapping",
+    "raw_evidence_change": false,
+    "retained_runtime_field": "construction.registered_stage_schedule.candidate_rank",
+    "runtime_semantics": "exact redundant copy of enclosing candidate_rank",
+    "scientific_execution_change": false
+  },
+  "correction_implementation_commit": "848fe8b3f794c60c17b55d8597e58e2299fd1dc2",
+  "created_at_utc": "2026-08-13T05:33:15Z",
+  "frozen_execution_inventory": {
+    "experiments/v3/phase_e/canonical_stage_localization_v3e006_r007/state_repair_gate.py": {
+      "bytes": 125924,
+      "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r007/state_repair_gate.py",
+      "sha256": "71c21ce04706f27c0edf99fef6f25e9f34ccdc7b374975d53ad4b12b928d2fa8"
+    },
+    "tests/test_v3e006_r007.py": {
+      "bytes": 13515,
+      "path": "tests/test_v3e006_r007.py",
+      "sha256": "ad8ea5900783f37b8c842dfcde69f612704b70a53af04805df55d0549e35776d"
+    },
+    "tools/validate_v3e006_r007.py": {
+      "bytes": 47707,
+      "path": "tools/validate_v3e006_r007.py",
+      "sha256": "a2f0a4047e81de6be53b4b88df38fd736bf2038c290d6776c815ce52cb58637c"
+    }
+  },
+  "frozen_source_push_gate_v2": {
+    "bytes": 5295,
+    "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r007/source_push_gate_v2.json",
+    "sha256": "386cc701d3a184988b3fd42cbd83ade886b9f89b7aad49a773ef18c80f4a1307"
+  },
+  "model_request_count": 0,
+  "raw_harness": {
+    "bytes": 1515,
+    "path": "/data/users/ali/vla_wam/raw/v3e006_r007/state_repair/2c7c528-a40r06-attempt01/harness_result.json",
+    "sha256": "82241d3329803db2165437b4099478085def99467ffd1990fe302c118fc229f5"
+  },
+  "raw_launch": {
+    "bytes": 17747,
+    "path": "/data/users/ali/vla_wam/raw/v3e006_r007/state_repair/2c7c528-a40r06-attempt01/launch.json",
+    "sha256": "63b024c2b5492df60d8dcfb1f363831f759ec040bba9ee34f0e2a7344e1e0458"
+  },
+  "raw_result": {
+    "bytes": 25886628,
+    "path": "/data/users/ali/vla_wam/raw/v3e006_r007/state_repair/2c7c528-a40r06-attempt01/raw/state_repair_result.json",
+    "sha256": "f20314dcd32d9d6503dd5c2bd3777a08563fea3ca2a47c5f91bc26f4483a5cd6"
+  },
+  "raw_runtime_log": {
+    "bytes": 137388,
+    "path": "/data/users/ali/vla_wam/raw/v3e006_r007/state_repair/2c7c528-a40r06-attempt01/runtime.log",
+    "sha256": "2bbdfe8d91a12def67856d1a4b3f9c3c8ca9c5cbb5b5c191ed9fa013d49832ba"
+  },
+  "repair_amendment_id": "V3-E006-R007",
+  "schema_version": "vla-wam-shared-v3e006-r007-postexecution-validator-amendment-v1",
+  "scientific_outcome": {
+    "accepted_candidate_rank": null,
+    "candidate_pair_count": 4,
+    "diagnostic_count": 4,
+    "status": "r007_candidate_budget_exhausted_no_valid_state_pair"
+  },
+  "status": "validator_only_correction_after_execution_before_r007_closure_or_behavior"
+}

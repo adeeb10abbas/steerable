@@ -1,0 +1,102 @@
+{
+  "accepted_state_candidate_count": 0,
+  "behavioral_episode_count": 0,
+  "candidate_schedule": {
+    "bytes": 192812,
+    "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r002/gates/candidate_schedule.json",
+    "sha256": "26f0124831253b347da1396ef13e1a1810d513b454d4316f1107135bef67bc73"
+  },
+  "completed_candidate_pair_count": 0,
+  "created_at_utc": "2026-08-12T22:33:49.601666Z",
+  "implementation_commit": "01121991474228a0344c5f7c351ad687b0d4e0dc",
+  "implementation_file_count": 11,
+  "implementation_files": [
+    {
+      "bytes": 192812,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r002/gates/candidate_schedule.json",
+      "sha256": "26f0124831253b347da1396ef13e1a1810d513b454d4316f1107135bef67bc73"
+    },
+    {
+      "bytes": 6028,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r002/gates/predecessor_closure_binding.json",
+      "sha256": "1f93f864912544de990d7f9c1e6ac4dda8eb48126e130459dc30270253d1fdeb"
+    },
+    {
+      "bytes": 14993,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r002/repair_registration.json",
+      "sha256": "691426d0fd70350c03c4b41ec8fabe9230d9f5465f13af847d123a54a5529057"
+    },
+    {
+      "bytes": 77,
+      "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r002/__init__.py",
+      "sha256": "9daebd1ee3a50f4ad79dbe82908d4142217cf2aa88558a7d2231b42530f8397d"
+    },
+    {
+      "bytes": 19972,
+      "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r002/candidate_schedule.py",
+      "sha256": "7617fac53cc54be5b41bd9d292126847457ff6e873a8d05149525b1cb0a5f4a4"
+    },
+    {
+      "bytes": 81006,
+      "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r002/state_repair_gate.py",
+      "sha256": "0b9cc1a44d5f7f7efa19ff926acbe443b9580281046452cc672ac48e83a45d65"
+    },
+    {
+      "bytes": 11137,
+      "path": "tests/test_v3e006_r002.py",
+      "sha256": "ddaf27436b38ee6a64c7385d26d12a1d0ad3321333689b615d97f8a1c6b2284d"
+    },
+    {
+      "bytes": 3645,
+      "path": "tools/build_v3e006_r002_predecessor_binding.py",
+      "sha256": "fc1cf3a4df3ef72aacd4309bf67c7b5c79ca4c913d9010065bdb17f102d62135"
+    },
+    {
+      "bytes": 4788,
+      "path": "tools/build_v3e006_r002_source_gate.py",
+      "sha256": "93e38166c505674b6a90394a4d588ad21ad02a9718afc64a5592f240aa62c82c"
+    },
+    {
+      "bytes": 16206,
+      "path": "tools/run_v3e006_r002_state_repair.py",
+      "sha256": "b12c4f0bc340f0238671fb30a085cf3ffbbcd47c1fcff0191cb27656a8f11044"
+    },
+    {
+      "bytes": 19833,
+      "path": "tools/validate_v3e006_r002.py",
+      "sha256": "86f7b85d2bebd03cd07ea168cc25bc5af8b965b05dd68aa73732a3b9b8549e3c"
+    }
+  ],
+  "infrastructure_invalid_search_attempt_count": 0,
+  "model_request_count": 0,
+  "predecessor_closure_binding": {
+    "bytes": 6028,
+    "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r002/gates/predecessor_closure_binding.json",
+    "sha256": "1f93f864912544de990d7f9c1e6ac4dda8eb48126e130459dc30270253d1fdeb"
+  },
+  "r001_exhaustion_closure_commit": "bbabac55dfd54f7a0b7d8a2693673a4b06409f21",
+  "r002_live_candidate_evaluation_count": 0,
+  "release_boundary": "One finite sequential zero-model R002 candidate search only; behavior and inference remain blocked.",
+  "remote_equality": {
+    "commit": "01121991474228a0344c5f7c351ad687b0d4e0dc",
+    "ref": "refs/heads/experiment/v3e006-r002-state-repair",
+    "remote": "origin"
+  },
+  "repair_amendment_id": "V3-E006-R002",
+  "repair_registration": {
+    "bytes": 14993,
+    "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r002/repair_registration.json",
+    "sha256": "691426d0fd70350c03c4b41ec8fabe9230d9f5465f13af847d123a54a5529057"
+  },
+  "required_repository_base": "18a2bf0200183647291cc7aeb1fe89997b3fb82f",
+  "schema_version": "vla-wam-shared-v3e006-r002-source-push-gate-v1",
+  "source_push_assertions": {
+    "behavior_and_model_release_prohibited": true,
+    "finite_rank_order_and_first_pass_frozen": true,
+    "original_and_r001_predecessors_preserved": true,
+    "registration_and_schedule_predate_live_candidate": true,
+    "remote_ref_equals_implementation_commit": true,
+    "unchanged_scientific_gate_sources_bound": true
+  },
+  "status": "passed_before_first_r002_live_candidate_or_model_request"
+}

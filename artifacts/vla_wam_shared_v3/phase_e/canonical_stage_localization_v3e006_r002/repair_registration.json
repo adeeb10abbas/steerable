@@ -1,0 +1,186 @@
+{
+  "schema_version": "vla-wam-shared-v3e006-r002-prospective-construction-repair-registration-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "repair_amendment_id": "V3-E006-R002",
+  "predecessor_repair_amendment_id": "V3-E006-R001",
+  "original_amendment_id": "V3-E006",
+  "registered_at_utc": "2026-08-12T22:10:52Z",
+  "status": "prospectively_registered_before_any_r002_live_candidate_or_model_request",
+  "user_authorized_override": "The user explicitly directed the team to solve the canonical-state construction gate and run the experiment after the original V3-E006 and R001 finite candidate searches stopped. This is a new prospective construction-only amendment; it does not rewrite either predecessor or claim either predecessor passed.",
+  "counts_at_registration": {
+    "r002_live_candidate_evaluations": 0,
+    "model_requests": 0,
+    "behavioral_episodes": 0
+  },
+  "source_ancestry": {
+    "required_repository_base": "18a2bf0200183647291cc7aeb1fe89997b3fb82f",
+    "original_v3e006_closure_commit": "e13e7b22b048075bf0d3cf44a892c70853ce8a7e",
+    "r001_exhaustion_closure_commit": "bbabac55dfd54f7a0b7d8a2693673a4b06409f21",
+    "r002_registration_parent_commit": "bbabac55dfd54f7a0b7d8a2693673a4b06409f21",
+    "r002_implementation_commit": "PENDING_PROSPECTIVE_SOURCE_PUSH_GATE",
+    "reason_for_later_commit": "R002 requires a new contact-consistent SE(3) constructor, finite schedule, failure-retaining launcher, and validator. A separate source-push gate must bind the final pushed implementation commit before the first live R002 candidate evaluation."
+  },
+  "predecessor_outcomes": {
+    "original_v3e006": "canonical state construction failed strict gates with zero model requests and zero behavioral episodes",
+    "v3e006_r001": "all eight prospectively ordered joint-midpoint candidate pairs exhausted; no pair passed; zero model requests and zero behavioral episodes",
+    "claim_boundary": "Neither predecessor candidate gate passed. R002 cannot alter, replace, or reinterpret predecessor artifacts or results."
+  },
+  "engineering_rationale_only": "R001 retained evidence showed that cameras, exact reset, and companion gates generally passed while independently averaging robot joints and cube poses produced unstable contact, excessive velocities, and/or OOD states. This motivates contact-consistent SE(3) construction only. No R001 policy behavior exists, and no R001 failed metric is used to change a scientific threshold.",
+  "frozen_inputs": {
+    "predecessor_closure_binding": {
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r002/gates/predecessor_closure_binding.json",
+      "bytes": 6028,
+      "sha256": "1f93f864912544de990d7f9c1e6ac4dda8eb48126e130459dc30270253d1fdeb"
+    },
+    "r001_candidate_schedule": {
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r001/gates/candidate_schedule.json",
+      "bytes": 148949,
+      "sha256": "022b9b65b58758a192dd77ac32a79d463f8638c9be162a7f6b1e3d5270d9d04f"
+    },
+    "r001_results": {
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r001/results/results.json",
+      "bytes": 758,
+      "sha256": "a9881bb0b35d45073438cb50b94e05854dc2c2698676851414c8e51ce2d23cb7"
+    },
+    "r001_evidence_manifest": {
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r001/results/evidence_manifest.json",
+      "bytes": 2997,
+      "sha256": "e9da859976c6f0f66b1a98a315cbe08e05336b64b4b8eb79388399162d8769f4"
+    },
+    "r001_decision_memo": {
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r001/results/DECISION_MEMO.md",
+      "bytes": 858,
+      "sha256": "3ea06012ed7bd6805d8a45f8fbfd6dff1fd7ad95179047a11f970c0dd3f9a622"
+    },
+    "original_v3e006_closure_binding": {
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r001/gates/original_v3e006_closure_binding.json",
+      "bytes": 6457,
+      "sha256": "de81ed6987d3cfcb8d7194304e1f84c248d4f2ad1f7a5915b13df3ae0045e1cf"
+    },
+    "state_contract": {
+      "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006/state_contract.py",
+      "bytes": 12944,
+      "sha256": "2476b28d2867c1b87f477fd5f89e545616be00d860d4144f8cbdb70af10f3c18"
+    },
+    "ood_reference": {
+      "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006/ood_reference.py",
+      "bytes": 18461,
+      "sha256": "4df1ebf0061096a74b5eccd10b2a144e840f52fd50469b8bdae9369d1696fd04"
+    },
+    "ood_freeze": {
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/ood_reference_freeze.json",
+      "bytes": 707097,
+      "sha256": "4d3a02c1d96be1ddd98f47a15cf41ad1d2a6c54c3007f3846742cfcbf31873f4"
+    },
+    "e004_full_reset_reference": {
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/e004_full_reset_reference.json",
+      "bytes": 17364,
+      "sha256": "568fd7aae9ee325ae5c1b59e2905f099e7b3a2c9b0d8679c815bff4354d5ea73"
+    },
+    "e004_candidate": {
+      "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/layout/candidate.json",
+      "bytes": 12706,
+      "sha256": "7e270419cdbd2a00e36c47a6a5e3d10c7affb225f118e536cc43917da960ba33"
+    },
+    "runtime_contract": {
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006/gates/exact_pi05_runtime_contract.json",
+      "bytes": 9131,
+      "sha256": "df0b126fdf3ad3919a7074d04c1a539dc1ddd28f8bd780fe934ed30001f7d6c4"
+    }
+  },
+  "unchanged_scientific_gate": {
+    "source": "experiments/v3/phase_e/canonical_stage_localization_v3e006/state_contract.py",
+    "source_sha256": "2476b28d2867c1b87f477fd5f89e545616be00d860d4144f8cbdb70af10f3c18",
+    "window_steps": 10,
+    "strict_checks": {
+      "absolute_cube_lateral_coordinate_m": "< 0.001",
+      "cube_gripper_relative_position_drift_m": "< 0.002",
+      "maximum_arm_joint_speed_rad_s": "< 0.01",
+      "maximum_cube_linear_speed_m_s": "< 0.01",
+      "maximum_cube_angular_speed_rad_s": "< 0.05",
+      "normal_gripper_contact": true,
+      "minimum_intended_cube_gripper_contact_force_n": "> 1.0"
+    },
+    "inclusive_check": {
+      "every_unintended_contact_force_n": "<= 1.0"
+    },
+    "ood": "exact frozen canonical_grasp/canonical_carry normalized distance and inclusive maximum thresholds from ood_reference_freeze.json",
+    "other": "byte-identical reset comparison; exact E004 camera geometry and visibility gate; exact companion pose tolerances; complete contact-sensor inventory"
+  },
+  "candidate_search": {
+    "algorithm_version": "contact-consistent-balanced-se3-search-v1",
+    "maximum_candidate_pairs": 8,
+    "variant_order": [
+      {"rank": 1, "method": "direct_contact_initialization", "grasp_contact": "left_observed", "carry_contact": "reflected_right_observed"},
+      {"rank": 2, "method": "direct_contact_initialization", "grasp_contact": "reflected_right_observed", "carry_contact": "left_observed"},
+      {"rank": 3, "method": "direct_contact_initialization", "grasp_contact": "left_observed", "carry_contact": "left_observed"},
+      {"rank": 4, "method": "direct_contact_initialization", "grasp_contact": "reflected_right_observed", "carry_contact": "reflected_right_observed"},
+      {"rank": 5, "method": "open_approach_close_lift", "grasp_contact": "left_observed", "carry_contact": "reflected_right_observed"},
+      {"rank": 6, "method": "open_approach_close_lift", "grasp_contact": "reflected_right_observed", "carry_contact": "left_observed"},
+      {"rank": 7, "method": "open_approach_close_lift", "grasp_contact": "left_observed", "carry_contact": "left_observed"},
+      {"rank": 8, "method": "open_approach_close_lift", "grasp_contact": "reflected_right_observed", "carry_contact": "reflected_right_observed"}
+    ],
+    "source_rows": {
+      "canonical_grasp": "E004 seed 9521 LEFT state_capture 30/HDF5 104 and RIGHT state_capture 31/HDF5 105",
+      "canonical_carry": "E004 seed 9442 LEFT state_capture 39/HDF5 113 and RIGHT state_capture 38/HDF5 112",
+      "requirements": "both bound historical rows have object_grabbed=true, closing action component exactly 1.0, and raw episode/state_capture/HDF5 byte counts and SHA-256 reverified in the target environment before AppLauncher"
+    },
+    "order_rationale": "The lower-intervention direct initialization family precedes the independently prespecified normal-contact approach fallback. Within each family cross-anchored LEFT/reflected-RIGHT combinations precede same-anchor combinations. This order is frozen before live evaluation and does not use an R002 gate result.",
+    "acceptance": "A candidate rank passes only if independently constructed canonical_grasp and canonical_carry states both pass every unchanged scientific, OOD, camera, companion, contact, reset, runtime, and source gate.",
+    "first_pass_rule": "Evaluate ranks 1 through 8 serially and stop at the first complete passing pair.",
+    "exhaustion": "If ranks 1 through 8 all fail, close R002 with zero model requests and zero behavioral episodes. Never add candidates, reorder candidates, change a construction parameter, or relax a gate after live inspection."
+  },
+  "geometry_contract": {
+    "reflection": "For M=diag(1,-1,1), reflect both RIGHT world poses as p'=M p and R'=M R M, then recompute T_eef_cube=inv(T_world_eef') T_world_cube'. Never reflect a local relative vector directly.",
+    "direction_balanced_target_cube": "x and z are arithmetic midpoints of LEFT and reflected-RIGHT source cube positions; y is exactly 0; orientation is the shortest-arc SO(3) geodesic midpoint of LEFT and reflected-RIGHT source cube orientations with deterministic canonical-quaternion tie handling.",
+    "contact_transform": "Each variant preserves exactly either the observed LEFT T_eef_cube or the correctly world-reflected RIGHT T_eef_cube. It never averages robot joints independently of the cube and never averages contact transforms.",
+    "centerline_constrained_eef_target": "Derive T_world_eef = T_world_cube_target @ inv(T_eef_cube_selected). The scientific midline constraint applies to the reconstructed cube, not the EEF. Record target/achieved EEF and reconstructed cube plus SE(3) residuals."
+  },
+  "construction_contract": {
+    "fresh_environment_lifecycle": "For each candidate rank and stage, use one exact-reset IK-solve environment and a separate exact-reset materialization environment; close both before the next stage. Contact sensors are initialized and coverage-checked in the materialization environment.",
+    "deterministic_ik": {
+      "controller": "exact E004 absolute differential-IK action interface and EEF offset",
+      "seed": 13000,
+      "initial_state": "exact E004 s=1 reset; no prompt/action history is retained",
+      "target": "registered centerline-constrained EEF target",
+      "gripper_command_during_solve": 0.0,
+      "maximum_steps": 240,
+      "required_final_consecutive_steps": 10,
+      "position_error_m_inclusive": 0.001,
+      "orientation_geodesic_error_deg_inclusive": 1.0,
+      "verification": "finite solution, exact FK residual log, and every solved joint inside the environment-provided soft joint limits"
+    },
+    "direct_contact_initialization": {
+      "write_order": "In the fresh materialization environment after exact reset validation, atomically write solved seven arm joints, selected exact historical six gripper joints, target cube pose reconstructed from selected T_eef_cube, and zero robot/cube velocities; set joint targets; write scene; forward without a physics integration step.",
+      "hold": "Command the fixed registered EEF target with normal binary close action 1.0 for exactly 260 physics steps; evaluate the final 10 consecutive steps.",
+      "prohibitions": "no weld, attachment, collision suppression, force injection, learned policy, prompt-conditioned action, or physics step before the normal closed hold"
+    },
+    "open_approach_close_lift": {
+      "initial_state": "fresh exact E004 reset; cube and every companion remain at reset",
+      "approach": "command the registered contact EEF pose plus 0.060 m world-z clearance, gripper 0.0, for 50 steps",
+      "descent": "linearly interpolate world position over 50 steps to the exact contact EEF pose at the reset cube while holding registered orientation and gripper 0.0",
+      "close": "hold contact EEF pose with normal binary close action 1.0 for 60 steps",
+      "lift": "linearly interpolate world position and shortest-arc orientation over 60 steps to the registered final EEF target while holding close action 1.0",
+      "settle": "hold the registered final EEF target with close action 1.0 for 100 steps; evaluate the final 10 consecutive steps",
+      "prohibitions": "no direct cube write, weld, attachment, collision suppression, force injection, learned policy, or prompt-conditioned action"
+    },
+    "velocities": "direct initialization writes every robot joint velocity and cube linear/angular velocity to exact zero; open construction uses normal physics only",
+    "history": "All construction actions, resets, and environment state are logged and excluded from behavior. A later behavioral runner must restore the accepted normalized state into a fresh environment, verify its exact registered state hash before request zero, and start fresh sampling/prompt history."
+  },
+  "downstream_behavioral_design_if_and_only_if_state_pair_passes": {
+    "release_status": "blocked until independently validated R002 state pair and a later prospective behavior registration, queue, runner, compiler, tests, and release gate are committed and pushed",
+    "model_id": "pi05_current_stack_droid",
+    "arena": "droid_robolab",
+    "layout": "exact hash-bound E004 s=1",
+    "prompts": "existing frozen canonical LEFT and RIGHT prompts only",
+    "stages": ["full_reset", "canonical_grasp", "canonical_carry"],
+    "seeds": "13000-13340 inclusive",
+    "cells": "341 complete seed blocks x 3 stages x 2 directions = 2046",
+    "request_seed": "episode_seed * 1000 + replan_index",
+    "pairing": "all six conditions of one seed stay on one serial isolated lane",
+    "checkpoint_controller_action_cameras_horizon_predicate_scorer": "exact frozen E004 pi0.5 runtime contract",
+    "analysis_margins": {"binary_probability": 0.1556, "requested_side_depth_m": 0.0415},
+    "registered_estimands_and_inference": "unchanged from the original V3-E006 attachment: stage directional gaps, paired stage interactions, 20,000 seed-clustered bootstrap intervals, exact within-seed permutations, positive controls, and existing failure taxonomy"
+  },
+  "release_boundary": "This registration authorizes only one finite zero-model R002 state-candidate search after a final pushed source gate and independent audit. It does not authorize a model request, smoke test, isolation test, behavioral registration, queue, or inference."
+}

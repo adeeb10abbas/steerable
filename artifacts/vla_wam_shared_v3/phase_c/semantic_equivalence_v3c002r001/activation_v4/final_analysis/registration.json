@@ -1,0 +1,127 @@
+{
+  "a003_release7b08": {
+    "bytes": 14840,
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v3/lane_replacement_a003/release_gate.released.json",
+    "sha256": "7b0835c2bb76631add47f5e13c6db4d5be40379d234e90c4b401a5214ec2463d"
+  },
+  "activation_id": "V3-C002-R001-A004-final-analysis",
+  "final_analysis_output_files_before_registration": 0,
+  "final_analysis_raw_behavioral_rows_read_before_registration": 0,
+  "final_analysis_result_compilations_before_registration": 0,
+  "frozen_analysis_contract": {
+    "actual_identity_episode_output": true,
+    "analysis_only_deep_identity_normalization": true,
+    "bootstrap_resamples": 20000,
+    "infrastructure_attempt_count_excluded": 14,
+    "pair_rows_must_equal_before_after_normalization": true,
+    "parent_compile_episode": "experiments/v3/phase_c_semantic_equivalence_v3c002/compiler.py:compile_episode",
+    "parent_compile_results": "experiments/v3/phase_c_semantic_equivalence_v3c002/compiler.py:compile_results",
+    "parent_pair_rows": "experiments/v3/phase_c_semantic_equivalence_v3c002/compiler.py:_pair_rows",
+    "r001_lane_and_leave_one_out_diagnostics_preserved": true
+  },
+  "original_release28ee": {
+    "bytes": 10479,
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v3/release_gate.released.json",
+    "sha256": "28ee96e3fcda4637302aadef6e90233574101a75e5c7af75fa1d9e4b1c060a7d"
+  },
+  "parent_registration": {
+    "bytes": 32480,
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/active/registration.json",
+    "sha256": "ef1c40d4d288b195d59b4af90fa587eeae17b130ee26a604e1ed70c60cbcaa73"
+  },
+  "prospective_order": [
+    "commit_and_push_this_registration_and_its_source_gate",
+    "perform_outcome_blind_mixed_epoch_raw_aggregation",
+    "compile_actual_identity_episodes_with_frozen_parent_compiler",
+    "analyze_only_a_deep_identity_normalized_copy_after_pair_row_equality",
+    "validate_the_complete_bundle_by_regeneration"
+  ],
+  "queue": {
+    "bytes": 4362072,
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v3/queue.jsonl",
+    "sha256": "c7003f05b1302ab52d30fd9f6c50244a8df1e143c8411c436eb2817abc312a50"
+  },
+  "registered_at_utc": "2026-08-13T03:48:39Z",
+  "repair_id": "V3-C002-R001",
+  "repair_registration": {
+    "bytes": 28569,
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v3/registration.json",
+    "sha256": "2323b8b4094598ae5584cacfb43abcf2f9607a241428106972c3d0c736303579"
+  },
+  "schema_version": "vla-wam-shared-v3c002r001-a004-final-analysis-registration-v1",
+  "source_gate_schema_required": "vla-wam-shared-v3c002r001-a004-final-analysis-source-gate-v1",
+  "source_inventory": {
+    "experiments/v3/phase_c_semantic_equivalence_v3c002/compiler.py": {
+      "bytes": 27539,
+      "path": "experiments/v3/phase_c_semantic_equivalence_v3c002/compiler.py",
+      "sha256": "68aeaf3e02bfdd5c2279b090557f70c6ed3b4c6f2d4bd6c69bbc38e9c8e1d461"
+    },
+    "experiments/v3/phase_c_semantic_equivalence_v3c002/contract.py": {
+      "bytes": 31026,
+      "path": "experiments/v3/phase_c_semantic_equivalence_v3c002/contract.py",
+      "sha256": "80a60aa62ac78a20e9135c24e20ec8d40e6a486f0c573340ec0aa3fc10b838e8"
+    },
+    "experiments/v3/phase_c_semantic_equivalence_v3c002r001/activation_v4_finalizer/finalizer.py": {
+      "bytes": 43148,
+      "path": "experiments/v3/phase_c_semantic_equivalence_v3c002r001/activation_v4_finalizer/finalizer.py",
+      "sha256": "2adda9caa97d05643d8faed1b43b7990640a2f4a27b43386e40209aca4bd9430"
+    },
+    "experiments/v3/phase_c_semantic_equivalence_v3c002r001/activation_v4_finalizer/registration.py": {
+      "bytes": 6450,
+      "path": "experiments/v3/phase_c_semantic_equivalence_v3c002r001/activation_v4_finalizer/registration.py",
+      "sha256": "24113c014a983858ea5a25e97b0fca2400faa1ea7bca6727c64cc976c1639088"
+    },
+    "experiments/v3/phase_c_semantic_equivalence_v3c002r001/activation_v4_finalizer/source_gate.py": {
+      "bytes": 9704,
+      "path": "experiments/v3/phase_c_semantic_equivalence_v3c002r001/activation_v4_finalizer/source_gate.py",
+      "sha256": "3302c3befa167e8884639f95a82edfd43e5c89d142ff9239316931aa3ea1bd15"
+    },
+    "experiments/v3/phase_c_semantic_equivalence_v3c002r001/activation_v4_finalizer/validator.py": {
+      "bytes": 17172,
+      "path": "experiments/v3/phase_c_semantic_equivalence_v3c002r001/activation_v4_finalizer/validator.py",
+      "sha256": "ae9aced8d3cd75ed515a966d8d4c8503e631645c75c06ae561ce6d2cbea85193"
+    },
+    "experiments/v3/phase_c_semantic_equivalence_v3c002r001/compiler.py": {
+      "bytes": 10232,
+      "path": "experiments/v3/phase_c_semantic_equivalence_v3c002r001/compiler.py",
+      "sha256": "f34c446d6f786039fdac329ea8b6d2f22968d2a6524578f0d82696c360fdc8ea"
+    },
+    "experiments/v3/phase_c_semantic_equivalence_v3c002r001/contract.py": {
+      "bytes": 21849,
+      "path": "experiments/v3/phase_c_semantic_equivalence_v3c002r001/contract.py",
+      "sha256": "b33e8683ffa36d1c7e7dbabcf07d06377d30640bdb20b18c6852f515f4b12f75"
+    },
+    "tests/test_aggregate_v3c002r001_activation_v4_raw.py": {
+      "bytes": 2913,
+      "path": "tests/test_aggregate_v3c002r001_activation_v4_raw.py",
+      "sha256": "da3adec099451b1b025432413032e3c04578cc5d62e43028d7d7f5056defec3c"
+    },
+    "tests/test_v3c002r001_activation_v4_finalizer.py": {
+      "bytes": 9459,
+      "path": "tests/test_v3c002r001_activation_v4_finalizer.py",
+      "sha256": "27b6730bfbfe5c3899061eec64ec6ecbdf4d0acb4f073bd69247ee3945e2a622"
+    },
+    "tools/aggregate_v3c002r001_activation_v4_raw.py": {
+      "bytes": 16760,
+      "path": "tools/aggregate_v3c002r001_activation_v4_raw.py",
+      "sha256": "7564734b8ab38972326248ef9345c33fa7d1dac6e261c430bf89bc50b8018829"
+    }
+  },
+  "status": "registered_prospective_final_analysis_before_raw_aggregation_or_result_read",
+  "study_id": "vla_wam_language_steerability_v3",
+  "v10_continuation_gate": {
+    "bytes": 42897,
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v4/v10/continuation_gate.released.json",
+    "sha256": "f898a52148fd39f6b5178aa7200d3539ec243ce2ed412356e2bf62e3e28139a8"
+  },
+  "v11_registration": {
+    "bytes": 3937,
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v4/v11/registration.json",
+    "sha256": "05c128c9f60714cc0f5b852f027cd522d4a13bfa2ac66513848ee107cc6949a2"
+  },
+  "v11_source_gate": {
+    "bytes": 3946,
+    "path": "/Users/SZ5VJY/steerable-v3c002-semantic/artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v4/v11/source_push_gate.released.json",
+    "sha256": "6b4b770a5f0666c2db8b6a59f00710a4c8616b50906e45a047adcdd98a7f898b"
+  }
+}

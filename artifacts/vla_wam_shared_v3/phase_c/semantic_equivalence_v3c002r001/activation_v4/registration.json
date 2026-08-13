@@ -1,0 +1,56 @@
+{
+  "schema_version": "vla-wam-shared-v3c002r001-activation-v4-registration-v1",
+  "study_id": "vla_wam_language_steerability_v3",
+  "repair_id": "V3-C002-R001",
+  "activation_id": "V3-C002-R001-A004",
+  "status": "registered_prospective_gate-schema-adapter-repair",
+  "registered_at_utc": "2026-08-13T01:42:00Z",
+  "implementation_commit": "d74b7dbbe0dde80e08941c629f4d82862e357050",
+  "reason": "A003 was not behaviorally launched: the retry runner accepted A003 but its child adapter still admitted only the original R001 release schema. A004 changes gate admission only and preserves all simulator, model, scorer, queue, assignment, prompt, seed, and analysis bytes.",
+  "a003_behavioral_episode_count_before_a004": 0,
+  "a003_behavioral_action_count_before_a004": 0,
+  "a003_retry_block_count_before_a004": 0,
+  "a003_release": {
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v3/lane_replacement_a003/release_gate.released.json",
+    "bytes": 14840,
+    "sha256": "7b0835c2bb76631add47f5e13c6db4d5be40379d234e90c4b401a5214ec2463d"
+  },
+  "queue": {
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v3/queue.jsonl",
+    "bytes": 4362072,
+    "sha256": "c7003f05b1302ab52d30fd9f6c50244a8df1e143c8411c436eb2817abc312a50"
+  },
+  "assignment": {
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v3/assignment.jsonl",
+    "bytes": 145156,
+    "sha256": "d9ce17feb3ecaca08180ca6b175fe0bf35469191f531276ce319daa7355e326f"
+  },
+  "execution_contract": {
+    "retry_phase": "exactly seed12060 on repair-lane-00 and seed12101 on repair-lane-01; all four cells into attempt002; no partial resume",
+    "continuation_phase": "only after each retry marker binds four attempt002 raw cells; resume original frozen slot assignment; completed blocks never rerun",
+    "no_cross_lane_failover": true,
+    "science_unchanged": true
+  },
+  "source_bindings": {
+    "experiments/v3/phase_c_semantic_equivalence_v3c002r001/activation_v4_replacement_adapter.py": {
+      "path": "experiments/v3/phase_c_semantic_equivalence_v3c002r001/activation_v4_replacement_adapter.py",
+      "bytes": 592,
+      "sha256": "8a4618a56d298d599496372294e593b40e582823d5c524ee170c8f43300ef7e5"
+    },
+    "experiments/v3/phase_c_semantic_equivalence_v3c002r001/activation_v4_continuation_runner.py": {
+      "path": "experiments/v3/phase_c_semantic_equivalence_v3c002r001/activation_v4_continuation_runner.py",
+      "bytes": 2375,
+      "sha256": "3f975cd7ea59d2500cb0cf0a633d0ac23a681db500374173ef4ac383086d8e99"
+    },
+    "experiments/v3/phase_c_semantic_equivalence_v3c002r001/activation_v3_lane_replacement_runner.py": {
+      "path": "experiments/v3/phase_c_semantic_equivalence_v3c002r001/activation_v3_lane_replacement_runner.py",
+      "bytes": 8500,
+      "sha256": "5113fb7de769d279d668b82b784a2df4bc9769a1429eb166999b86fe43e1a2ac"
+    },
+    "tests/test_v3c002r001_activation_v4.py": {
+      "path": "tests/test_v3c002r001_activation_v4.py",
+      "bytes": 705,
+      "sha256": "8b579073f79d5a6c60dea77a959c8a21170cbc2c152435a6e259e0df260333ae"
+    }
+  }
+}

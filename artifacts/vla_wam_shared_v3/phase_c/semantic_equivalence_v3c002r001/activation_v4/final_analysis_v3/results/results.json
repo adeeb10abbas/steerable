@@ -1,0 +1,186 @@
+{
+  "amendment_id": "V3-C002",
+  "claim_gate_components": {
+    "directional_depth_tost_conjunction": false,
+    "inverse_reference_endpoint_positive_control": false
+  },
+  "claim_rule": "Model-level semantic depth equivalence requires both directional depth TOSTs AND the inverse-reference endpoint positive control. Otherwise the semantic claim is explicitly withheld; descriptive form equivalence remains reportable.",
+  "complete_seed_blocks": 341,
+  "cross_lane_numerical_tolerance_used": false,
+  "descriptive_directional_depth_form_equivalence": false,
+  "lane_diagnostics_descriptive_only": {
+    "repair-lane-00": {
+      "left_depth_inverse_minus_canonical_mean_m": -0.10878510807023578,
+      "right_depth_inverse_minus_canonical_mean_m": -0.13366085322313878,
+      "seed_blocks": 43
+    },
+    "repair-lane-01": {
+      "left_depth_inverse_minus_canonical_mean_m": -0.1153770416858606,
+      "right_depth_inverse_minus_canonical_mean_m": -0.1394841784210659,
+      "seed_blocks": 43
+    },
+    "repair-lane-02": {
+      "left_depth_inverse_minus_canonical_mean_m": -0.0810669039912132,
+      "right_depth_inverse_minus_canonical_mean_m": -0.13285361435859963,
+      "seed_blocks": 43
+    },
+    "repair-lane-03": {
+      "left_depth_inverse_minus_canonical_mean_m": -0.08453530003181334,
+      "right_depth_inverse_minus_canonical_mean_m": -0.1385849496054593,
+      "seed_blocks": 43
+    },
+    "repair-lane-04": {
+      "left_depth_inverse_minus_canonical_mean_m": -0.08937004870778426,
+      "right_depth_inverse_minus_canonical_mean_m": -0.13700359472246884,
+      "seed_blocks": 43
+    },
+    "repair-lane-05": {
+      "left_depth_inverse_minus_canonical_mean_m": -0.10914526523196227,
+      "right_depth_inverse_minus_canonical_mean_m": -0.11804334495987166,
+      "seed_blocks": 42
+    },
+    "repair-lane-06": {
+      "left_depth_inverse_minus_canonical_mean_m": -0.08257030653684135,
+      "right_depth_inverse_minus_canonical_mean_m": -0.12876843646656544,
+      "seed_blocks": 42
+    },
+    "repair-lane-07": {
+      "left_depth_inverse_minus_canonical_mean_m": -0.11203845583562118,
+      "right_depth_inverse_minus_canonical_mean_m": -0.13580737391436873,
+      "seed_blocks": 42
+    }
+  },
+  "leave_one_lane_out_diagnostics_descriptive_only": {
+    "repair-lane-00": {
+      "left": -0.09625063362182118,
+      "right": -0.13298938597295426
+    },
+    "repair-lane-01": {
+      "left": -0.09529944856990216,
+      "right": -0.132149107504797
+    },
+    "repair-lane-02": {
+      "left": -0.10025024025067343,
+      "right": -0.13310586674870992
+    },
+    "repair-lane-03": {
+      "left": -0.09974976699649288,
+      "right": -0.13227886199832412
+    },
+    "repair-lane-04": {
+      "left": -0.09905213547613466,
+      "right": -0.13250704407875563
+    },
+    "repair-lane-05": {
+      "left": -0.0962419643029446,
+      "right": -0.13518539538535362
+    },
+    "repair-lane-06": {
+      "left": -0.09997490164473416,
+      "right": -0.1336788607924401
+    },
+    "repair-lane-07": {
+      "left": -0.0958355629472467,
+      "right": -0.1326901137261935
+    }
+  },
+  "model_level_semantic_depth_equivalence_claim_authorized": false,
+  "model_level_semantic_depth_equivalence_claim_withheld": true,
+  "original_cross_lane_gate_remains_failed": true,
+  "positive_controls": {
+    "canonical": {
+      "bootstrap_95_ci": [
+        0.21886097101435012,
+        0.2455552327406696
+      ],
+      "definition": "mean(signed endpoint LEFT physical-goal condition minus RIGHT physical-goal condition)",
+      "mean_m": 0.23281234921119381,
+      "positive_with_ci_excluding_zero": true
+    },
+    "inverse_reference": {
+      "bootstrap_95_ci": [
+        -0.00884347894906918,
+        0.012719609577344785
+      ],
+      "definition": "mean(signed endpoint LEFT physical-goal condition minus RIGHT physical-goal condition)",
+      "mean_m": 0.0019070642409351848,
+      "positive_with_ci_excluding_zero": false
+    }
+  },
+  "primary_requested_side_depth_equivalence": {
+    "left": {
+      "action_equality_descriptive": {
+        "distinct_pairs": 341,
+        "exactly_equal_pairs": 0,
+        "not_a_primary_grounding_test": true
+      },
+      "depth_inverse_minus_canonical_m": {
+        "bootstrap_90_ci": [
+          -0.10922742379226558,
+          -0.08585685273900232
+        ],
+        "equivalent": false,
+        "margin_m": 0.0415,
+        "mean": -0.0978312271739673,
+        "tost": {
+          "lower_test_p": 0.9999999999999984,
+          "margin": 0.0415,
+          "method": "paired_two_one_sided_normal_approximation",
+          "pass_alpha_0_05": false,
+          "upper_test_p": 0.0
+        }
+      },
+      "pair_count": 341,
+      "success_inverse_minus_canonical": {
+        "bootstrap_90_ci": [
+          -0.2316715542521994,
+          -0.11436950146627566
+        ],
+        "equivalent_by_interval": false,
+        "margin_probability": 0.1556,
+        "mean_risk_difference": -0.17302052785923755
+      }
+    },
+    "right": {
+      "action_equality_descriptive": {
+        "distinct_pairs": 341,
+        "exactly_equal_pairs": 0,
+        "not_a_primary_grounding_test": true
+      },
+      "depth_inverse_minus_canonical_m": {
+        "bootstrap_90_ci": [
+          -0.14073867141934013,
+          -0.12544804845564136
+        ],
+        "equivalent": false,
+        "margin_m": 0.0415,
+        "mean": -0.1330740577962913,
+        "tost": {
+          "lower_test_p": 1.0,
+          "margin": 0.0415,
+          "method": "paired_two_one_sided_normal_approximation",
+          "pass_alpha_0_05": false,
+          "upper_test_p": 0.0
+        }
+      },
+      "pair_count": 341,
+      "success_inverse_minus_canonical": {
+        "bootstrap_90_ci": [
+          -0.21700879765395895,
+          -0.11730205278592376
+        ],
+        "equivalent_by_interval": false,
+        "margin_probability": 0.1556,
+        "mean_risk_difference": -0.16715542521994134
+      }
+    }
+  },
+  "prompt_form_pairs": 682,
+  "queue_sha256": "c7003f05b1302ab52d30fd9f6c50244a8df1e143c8411c436eb2817abc312a50",
+  "registration_sha256": "ef1c40d4d288b195d59b4af90fa587eeae17b130ee26a604e1ed70c60cbcaa73",
+  "repair_id": "V3-C002-R001",
+  "schema_version": "vla-wam-shared-v3c002-results-v1",
+  "semantic_redirection_supported": false,
+  "study_id": "vla_wam_language_steerability_v3",
+  "valid_behavioral_episodes": 1364
+}

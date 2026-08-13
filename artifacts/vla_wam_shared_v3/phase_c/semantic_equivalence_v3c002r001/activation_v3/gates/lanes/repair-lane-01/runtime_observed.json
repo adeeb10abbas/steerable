@@ -1,0 +1,209 @@
+{
+  "action_cap": 450,
+  "action_dim": 8,
+  "action_horizon": 15,
+  "action_interface": {
+    "action_cap": 450,
+    "action_chunk_shape": [
+      15,
+      8
+    ],
+    "action_dim": 8,
+    "action_horizon": 15,
+    "action_space": "joint_position_8d"
+  },
+  "arena": "droid_robolab",
+  "behavioral_actions": 0,
+  "behavioral_episodes": 0,
+  "checkpoint": "pi05_droid_jointpos_polaris",
+  "checkpoint_digest": "b193b28b05f9755e24d44a6f5cf3185ca23c2ad3da6c5913370379c82570fbf6",
+  "checkpoint_manifest_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+  "component_digests": {
+    "action_interface": "55282dcd3b2e9773416ac601cc87846c798789757ab1885c0f6b924354edceff",
+    "camera_configuration": "033a95d39b7af077f3e9a940155339a2e35682386addacf1026b384150a5daf6",
+    "checkpoint": "fb6135c0bc2c5506387eef7c73327b6cce7b3e2723ab20326c367e6c0e52e59e",
+    "controller": "b4d1b60547d6fc4ee3d738a6b82454a8235fb9c9db9f52be51889b24268a7a06",
+    "horizon": "dfc17a186770a6a73fb3f639ef8ea0b0a3a89ea657159a18be52f0a66424d79e",
+    "policy_server": "58e0a2517eb109b54e5b8acbd222fb5ec6375207bae5cf13e3245ecb4d5a4297",
+    "raw_writer": "8de3dbaed550739754b6c8fc21f0549d355273d7da08a784eade5bc5f1c67aa7",
+    "renderer": "bbd6721ef28bdc95e8384121f1701a15c6dc613e70ef12c2ba7bc1d6309fef21",
+    "runtime": "cf89444f7dac4b8a073a202535eb38da15e958cdf2f372c52e9d1b049a8443da",
+    "scorer": "be8263bb4b865d0a561384bf6aa6074e40adfcb67550fd0368cdd49bd2d9f551"
+  },
+  "container_identity": "simulator=containerd://32de738b2b3d2d9ac98023055fba76c4ef117c6eb19440e8a6b15e2ce6503b44;policy=containerd://15f2d1094d8c7e64a78a442f718c850f4a0e776447b48db19e7044008b7b8ada",
+  "dependency_bindings": {
+    "action_interface": [
+      {
+        "bytes": 8126,
+        "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/droid_behavioral_contract.py",
+        "sha256": "dc26825b7f5ae53895fd7c2b6ea4e8f13e60270c5e61e28b5bb3deca156ffac3"
+      }
+    ],
+    "camera_configuration": [
+      {
+        "bytes": 15334,
+        "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/live_snapshot_adapter.py",
+        "sha256": "a5e21ea25443f266d676e7f6d7d6341b61b49acbffcffc5d727947e80c202241"
+      },
+      {
+        "bytes": 12706,
+        "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/layout/candidate.json",
+        "sha256": "7e270419cdbd2a00e36c47a6a5e3d10c7affb225f118e536cc43917da960ba33"
+      }
+    ],
+    "checkpoint": [
+      {
+        "bytes": 4856,
+        "path": "artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_checkpoint_manifest.json",
+        "sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca"
+      }
+    ],
+    "controller": [
+      {
+        "bytes": 53612,
+        "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/droid_behavioral_bridge.py",
+        "sha256": "58d0269f7e890fee1e8ffc9d8d25c57068220229d9221ccb885732f3501d24b3"
+      },
+      {
+        "bytes": 33129,
+        "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/run_droid_queue.py",
+        "sha256": "6bee8003fbac8dca4965c3d13baefdf69eb548c5992333e6859c32f1d7f3ae93"
+      },
+      {
+        "bytes": 62540,
+        "path": "experiments/v3/phase_c_semantic_equivalence_v3c002/droid_behavioral_adapter.py",
+        "sha256": "d1c85641b060bccd9267e2e12516b43f0576519aabd281b83f5e1c923777c47d"
+      },
+      {
+        "bytes": 16418,
+        "path": "experiments/v3/phase_c_semantic_equivalence_v3c002/runner.py",
+        "sha256": "55a34bba783005067669355006e150bdc049ddbefaae132a9d05c42dddba9ad6"
+      },
+      {
+        "bytes": 1191,
+        "path": "experiments/v3/phase_c_semantic_equivalence_v3c002/task_files/left.py",
+        "sha256": "6d38d7c26c9eb476a2ca5b0ea5ccb0264adc6c31477c871c5dea7857d402e7a3"
+      },
+      {
+        "bytes": 1195,
+        "path": "experiments/v3/phase_c_semantic_equivalence_v3c002/task_files/right.py",
+        "sha256": "2aa72c89f8a3a25d9889ff5e4300fd15dd7b92dafc70326dae3d5a0f8a3edecb"
+      }
+    ],
+    "horizon": [
+      {
+        "bytes": 4670,
+        "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/runtime_identity.json",
+        "sha256": "928af903ff99b02dd753b21eca2f6243142aced320a31166645bb1a0427a0f89"
+      }
+    ],
+    "policy_server": [
+      {
+        "bytes": 3738,
+        "path": "experiments/pi05_current_stack/v2a010_serve_policy.py",
+        "sha256": "cd415e3a98da977f395242c24bb8f3d3187eb4cc3bf53c5dc659d190e6934051"
+      }
+    ],
+    "raw_writer": [
+      {
+        "bytes": 33129,
+        "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/run_droid_queue.py",
+        "sha256": "6bee8003fbac8dca4965c3d13baefdf69eb548c5992333e6859c32f1d7f3ae93"
+      },
+      {
+        "bytes": 62540,
+        "path": "experiments/v3/phase_c_semantic_equivalence_v3c002/droid_behavioral_adapter.py",
+        "sha256": "d1c85641b060bccd9267e2e12516b43f0576519aabd281b83f5e1c923777c47d"
+      },
+      {
+        "bytes": 16418,
+        "path": "experiments/v3/phase_c_semantic_equivalence_v3c002/runner.py",
+        "sha256": "55a34bba783005067669355006e150bdc049ddbefaae132a9d05c42dddba9ad6"
+      }
+    ],
+    "renderer": [
+      {
+        "bytes": 15334,
+        "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/live_snapshot_adapter.py",
+        "sha256": "a5e21ea25443f266d676e7f6d7d6341b61b49acbffcffc5d727947e80c202241"
+      },
+      {
+        "bytes": 4670,
+        "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/runtime_identity.json",
+        "sha256": "928af903ff99b02dd753b21eca2f6243142aced320a31166645bb1a0427a0f89"
+      }
+    ],
+    "runtime": [
+      {
+        "bytes": 4670,
+        "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/gates/runtime_identity.json",
+        "sha256": "928af903ff99b02dd753b21eca2f6243142aced320a31166645bb1a0427a0f89"
+      },
+      {
+        "bytes": 16100,
+        "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/registration.json",
+        "sha256": "3e3786510ebba933d0c7a4606afa51627ea6bf706f9e64b34cfd74b29e318db2"
+      },
+      {
+        "bytes": 9033183,
+        "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/queue.jsonl",
+        "sha256": "af6acdb298b773575a0ddc3d16be0544c7e2430f0d62d92fe231f75e1b2f7a57"
+      }
+    ],
+    "scorer": [
+      {
+        "bytes": 39262,
+        "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/episode_compiler.py",
+        "sha256": "cd704db68fa840b6800836f0c2225fb8fe74ac2fd59d962f25bcdc5f1d5d661d"
+      },
+      {
+        "bytes": 11739,
+        "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/runtime_contract.py",
+        "sha256": "99f893e82119f6b123c08a9e2b07d127d3390e9b23f48b821832ac25bad4f003"
+      },
+      {
+        "bytes": 5366,
+        "path": "artifacts/vla_wam_shared_v3/failure_taxonomy.json",
+        "sha256": "48631b155721351460716a4fc7a69a8aa1b9a584ee78390ae6b332ccb39d76d9"
+      }
+    ]
+  },
+  "exact_runtime_contract_sha256": "4497e82136e6440df45cc075a683319ecf63ac2827fb582dcb5c1549030e4cfd",
+  "full_reset": true,
+  "lane_id": "v3c002r001-repair-lane-01",
+  "model_id": "pi05_current_stack_droid",
+  "model_requests": 0,
+  "observed_policy_driver": "580.95.05",
+  "observed_simulator_driver": "580.95.05",
+  "openpi_commit": "c23745b5ad24e98f66967ea795a07b2588ed6c79",
+  "policy_camera_image_artifact_hashes": {
+    "head_camera": "c1569c08f40f199ffe16a9ca2020f617d82acb57a4f8f3b731d190aeb78d30d9",
+    "over_shoulder_left_camera": "9e7113f98137b96a4a22c043648884de4be5b17953784b5739450a2774916c36",
+    "over_shoulder_right_camera": "24705dd587d0c0f671ab0c9837c37f92deeb428501059c935a1ef5b67d267104",
+    "wrist_cam": "a987855a58826862bb5d68660969de017377a0701efad75bda8b00878a87304a"
+  },
+  "policy_cameras": [
+    "head_camera",
+    "over_shoulder_left_camera",
+    "over_shoulder_right_camera",
+    "wrist_cam"
+  ],
+  "policy_io_mode": "actions_only",
+  "policy_server_gpu_uuid": "GPU-15a5bdaf-6213-6e5c-cec2-9cd41909b6ef",
+  "policy_server_pod_uid": "3ef42755-cf45-4aad-9375-386cc51c39b4",
+  "prompt_mode": "static_episode_prompt",
+  "raw_root": "/data/users/ali/vla_wam/raw/v3c002r001/behavioral/repair-lane-01",
+  "registered_renderer_contract_distinct_from_observed_driver": true,
+  "renderer_backend": "Isaac Sim viewport realtime RTX Vulkan balanced; NVIDIA ICD /etc/vulkan/icd.d/nvidia_icd.json; RTX driver 580.105.08",
+  "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+  "runtime_identity": "isaac5-robolab0aef-openpi-c23745b-pi05-v3c002r001-a001-repair-lane-01",
+  "runtime_identity_source_sha256": "6e5e500f5efee2d7576d090a8ec544f28e47af4db6e797c1bb514a16a43fc944",
+  "server_lock_identity": "/data/users/ali/vla_wam/raw/v3c002r001/servers/v3e004-a100-server-02-ali/epoch01/server.lock#sha256=abc33e7477c53727edb26f04acd4299067bac8e5e92faaa1ff13b81bcf130f1c",
+  "server_port": 8101,
+  "server_process_identity": "/data/users/ali/vla_wam/raw/v3c002r001/servers/v3e004-a100-server-02-ali/epoch01/server_process_identity.txt#sha256=854fbbc98c1face70123020b4443d097a95ec6bd20fb4bc55174521d91847d0b",
+  "simulator_gpu_uuid": "GPU-3124e4ef-2dcb-06d8-72d5-b65b932a5642",
+  "simulator_identity": "Isaac Sim 5.0.0.0 / Isaac Lab 2.2.0 / RoboLab 0.2.1",
+  "simulator_pod_uid": "576757a4-14c4-40c6-b9f0-764fcb2b4a4b",
+  "source_commit": "e2d9ae3904b4a08e549c784903c167a4213d3d47",
+  "stage_identifier": "full_reset"
+}

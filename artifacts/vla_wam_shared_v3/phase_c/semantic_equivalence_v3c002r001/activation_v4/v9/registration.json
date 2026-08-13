@@ -1,0 +1,47 @@
+{
+  "schema_version": "vla-wam-shared-v3c002r001-activation-v4-registration-v9",
+  "status": "registered_prospective_slots00-01_a003-registration-admission-repair",
+  "study_id": "vla_wam_language_steerability_v3",
+  "repair_id": "V3-C002-R001",
+  "activation_id": "V3-C002-R001-A004-v9",
+  "registered_at_utc": "2026-08-13T02:29:15Z",
+  "implementation_commit": "58f539dac20a208ca824fc8faf49241c034d5734",
+  "scope": ["repair-lane-00", "repair-lane-01"],
+  "supersedes_future_dated_unexecuted_registrations": {
+    "v6": {"path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v4/v6/registration.json", "bytes": 3222, "sha256": "bf069d5c7fcf2f2f5d161ab57a6bde3ccd9e063a64709795d2ae2c297867af16"},
+    "v7": {"path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v4/v7/registration.json", "bytes": 3222, "sha256": "bf069d5c7fcf2f2f5d161ab57a6bde3ccd9e063a64709795d2ae2c297867af16"},
+    "v8": {"path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v4/v8/registration.json", "bytes": 3872, "sha256": "a02b4a81ea5febc7e610d4f8178287087fe2b3edaa2ff2b289e6044015c88f49"},
+    "model_requests": 0,
+    "behavioral_actions": 0,
+    "raw_episodes": 0,
+    "reason": "v6/v7/v8 were future-dated and never eligible for activation"
+  },
+  "v9_model_requests_before_registration": 0,
+  "v9_behavioral_episodes_before_registration": 0,
+  "other_six_lanes_running_under_v5": true,
+  "no_change_to_running_lanes": true,
+  "superseded_v5": {
+    "registration": {"path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v4/v5/registration.json", "bytes": 8399, "sha256": "514b16c4e2821d29a242aceb3fe58dd8652132d4ac78a669f1c21adbd6278b71"},
+    "source_gate": {"path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v4/v5/source_push_gate.released.json", "bytes": 3261, "sha256": "e8d7aea5e2690d88b948aa0fdb0843216dfcacbed8adad0139a79aa2168594e7"},
+    "reason": "A003 activation-v3/repair registration is SHA2323 while replacement registration is a714; both are independent of base C002 ef1c"
+  },
+  "retry03_predispatch_invalid": {
+    "receipt": {"path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v4/v6/retry03_invalid_receipt.json", "bytes": 3568, "sha256": "9b81f4e77eb1a952fe044ae8ed4c5c7d4ae66ce03f6c550d728b84267e5eef00"},
+    "model_requests": 0,
+    "behavioral_actions": 0,
+    "raw_episodes": 0
+  },
+  "exact_registration_identities": {
+    "base_c002": "ef1c40d4d288b195d59b4af90fa587eeae17b130ee26a604e1ed70c60cbcaa73",
+    "activation_v3_and_repair": "2323b8b4094598ae5584cacfb43abcf2f9607a241428106972c3d0c736303579",
+    "replacement": "a71429f8c8313e1b1981e842b914a72ef25219410c952558fc4bd16d56718cdf"
+  },
+  "retry_seed_by_lane": {"repair-lane-00": 12060, "repair-lane-01": 12101},
+  "a003_release": {"path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v3/lane_replacement_a003/release_gate.released.json", "bytes": 14840, "sha256": "7b0835c2bb76631add47f5e13c6db4d5be40379d234e90c4b401a5214ec2463d"},
+  "queue": {"path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v3/queue.jsonl", "bytes": 4362072, "sha256": "c7003f05b1302ab52d30fd9f6c50244a8df1e143c8411c436eb2817abc312a50"},
+  "assignment": {"path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v3/assignment.jsonl", "bytes": 145156, "sha256": "d9ce17feb3ecaca08180ca6b175fe0bf35469191f531276ce319daa7355e326f"},
+  "science_unchanged": true,
+  "no_cross_lane_failover": true,
+  "source_override": {"path": "experiments/v3/phase_c_semantic_equivalence_v3c002r001/activation_v4_contract.py", "bytes": 9677, "sha256": "e09f76f3636c88cd9fb16658746f52b74587558af1a1ab3104aa608c0c112088"},
+  "inherited_source_inventory": {"path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v4/v5/registration.json", "bytes": 8399, "sha256": "514b16c4e2821d29a242aceb3fe58dd8652132d4ac78a669f1c21adbd6278b71"}
+}

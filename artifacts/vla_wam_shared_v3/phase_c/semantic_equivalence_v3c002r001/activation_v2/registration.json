@@ -1,0 +1,423 @@
+{
+  "activation_id": "V3-C002-R001-A001",
+  "activation_v1_identity": {
+    "bytes": 4806,
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v2/activation_v1_identity.json",
+    "sha256": "fc8d9416880d0dd5ce0336b480feb3893fabef9852d009899912dde3ac9b79d6"
+  },
+  "activation_v1_registration": {
+    "bytes": 14338,
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/active/registration.json",
+    "sha256": "c581d8a52e1b26c58354faaa8350774f625514a0d3dede71c641cb1c1becd0fb"
+  },
+  "activation_v1_source_push_gate": {
+    "bytes": 1302,
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/active/source_push_gate.released.json",
+    "sha256": "f4931a1572dd700165a1428ac2314a2127c32bf8aa25922c5806c24844b3e793"
+  },
+  "analysis_plan": {
+    "descriptive": "Exact equality or inequality of action traces is descriptive only, not the primary grounding test.",
+    "no_sample_extension_after_results": true,
+    "positive_controls": {
+      "canonical": "canonical physical LEFT minus canonical physical RIGHT endpoint redirection remains positive",
+      "failure_rule": "If inverse-reference positive control fails, semantic redirection is unsupported; do not reinterpret the result as prompt equivalence.",
+      "inverse_reference": "inverse physical LEFT minus inverse physical RIGHT endpoint redirection remains positive when scored by registered physical goal"
+    },
+    "primary": {
+      "bootstrap": {
+        "cluster": "seed block",
+        "confidence_level": 0.9,
+        "resamples": 20000
+      },
+      "claim_rule": "Both LEFT and RIGHT depth TOSTs and the inverse-reference endpoint positive control must pass; any failure withholds the model-level semantic equivalence claim.",
+      "estimand": "inverse-reference minus canonical requested-side depth, independently for each registered physical goal",
+      "margin_m": 0.0415,
+      "tost": "paired two one-sided test against [-0.0415,+0.0415] m"
+    },
+    "secondary_binary": {
+      "claim_rule": "Both directional intervals must lie strictly inside the registered margin.",
+      "interval": "paired seed-clustered 90% bootstrap",
+      "margin_probability": 0.1556
+    }
+  },
+  "assignment_manifest": {
+    "bytes": 145156,
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v2/assignment.jsonl",
+    "sha256": "d9ce17feb3ecaca08180ca6b175fe0bf35469191f531276ce319daa7355e326f"
+  },
+  "behavioral_episodes_before_registration": 0,
+  "diagnosis": {
+    "actions_exactly_equal": false,
+    "cause_identified": false,
+    "different_policy_server_processes": true,
+    "max_absolute_action_difference": 0.0013794898986816406,
+    "mean_absolute_action_difference": 0.0002258223103126511,
+    "same_fixture_prompt_and_seed": true,
+    "supported_scope": "cross-server policy execution numerical variation or hidden process-state difference; retained evidence does not distinguish causes"
+  },
+  "diagnostic_analysis_additions": {
+    "confirmatory_estimands_unchanged": true,
+    "diagnostic_only_not_claim_gates": true,
+    "lane_wise_paired_differences": true,
+    "leave_one_lane_out_paired_differences": true
+  },
+  "execution_topology": {
+    "all_four_conditions_same_lane": true,
+    "assignment": "SHA-256 rank all 341 registered seed blocks under V3-C002-R001|balanced-lane-rank-v1, then round-robin ranks across sorted lane slots",
+    "assignment_count_imbalance_max": 1,
+    "completed_block_rerun_prohibited": true,
+    "cross_lane_action_equality_required": false,
+    "cross_server_tolerance": null,
+    "exact_identical_input_prompt_seed_repeat_within_each_server": true,
+    "incomplete_block_retry_same_lane_only": true,
+    "lane_count": 8,
+    "lane_slots": [
+      "repair-lane-00",
+      "repair-lane-01",
+      "repair-lane-02",
+      "repair-lane-03",
+      "repair-lane-04",
+      "repair-lane-05",
+      "repair-lane-06",
+      "repair-lane-07"
+    ],
+    "no_failover_within_block": true,
+    "one_serial_client_and_one_policy_server_per_lane": true,
+    "policy": "eight_homogeneous_block_local_lanes_with_exact_within_server_repeat",
+    "within_block_request0_bytes_matched": true
+  },
+  "failed_repeat_attempt001_target_receipt": {
+    "bytes": 31370,
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v2/gates/failed_repeat_attempt001_target_rehash_receipt.json",
+    "sha256": "c010572e71280032c0038d46aa6f45299a485ccf460f4a366241ef1e534d7d03"
+  },
+  "homogeneity_contract": {
+    "distinct_across_lanes": [
+      "simulator_pod_uid",
+      "simulator_gpu_uuid",
+      "policy_server_pod_uid",
+      "policy_server_gpu_uuid",
+      "server_port",
+      "raw_root",
+      "server_process_identity",
+      "server_lock_identity"
+    ],
+    "equal_across_lanes": [
+      "simulator_gpu_model",
+      "simulator_driver",
+      "policy_gpu_model",
+      "policy_driver",
+      "runtime_stack_sha256",
+      "container_image_digest",
+      "checkpoint_digest",
+      "renderer_backend"
+    ],
+    "expected": {
+      "checkpoint_digest": "b193b28b05f9755e24d44a6f5cf3185ca23c2ad3da6c5913370379c82570fbf6",
+      "policy_driver": "580.95.05",
+      "policy_gpu_model": "NVIDIA A100-SXM4-80GB",
+      "renderer_backend": "Isaac Sim viewport realtime RTX Vulkan balanced; NVIDIA ICD /etc/vulkan/icd.d/nvidia_icd.json; RTX driver 580.105.08",
+      "simulator_driver": "580.95.05",
+      "simulator_gpu_model": "NVIDIA A40"
+    }
+  },
+  "human_attestation_receipt_inherited_unchanged": {
+    "bytes": 1123,
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/active/attestation_receipt_order.json",
+    "sha256": "2d4a1804a175c63917e19f9663f966292ddec242146ae0b7f9e6694b977af46a"
+  },
+  "inherited_excluded_smoke_gate": {
+    "bytes": 3460,
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/active/gates/excluded_smoke_gate.json",
+    "sha256": "60806978c2c8e6af0523b70aa9de5d598cfae871bcc8ee3573e5167bc9cc5b57"
+  },
+  "inherited_excluded_smoke_target_receipt": {
+    "bytes": 5186,
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/active/gates/excluded_smoke_target_raw_rehash_receipt.json",
+    "sha256": "6f5e7ab4231e90042418f4096f9d0ae890df7a6e3806db5029cd6efa99566f4c"
+  },
+  "inherited_physical_gates": [
+    {
+      "bytes": 3445,
+      "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/active/gates/physical/repair-lane-00.json",
+      "sha256": "8c391b99ec88dc8593be944e60eb8264fcdbe557cd6e66e128420116b121c0d1"
+    },
+    {
+      "bytes": 3445,
+      "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/active/gates/physical/repair-lane-01.json",
+      "sha256": "1f0ce8d426934a8b65a9b55745595c6470eb063da85355e7d2499aaf7f7588f4"
+    },
+    {
+      "bytes": 3445,
+      "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/active/gates/physical/repair-lane-02.json",
+      "sha256": "937e04ae8c04e2f5d88c6d00b39f348bb1ed7a33664e12e28dfdde3bec90e084"
+    },
+    {
+      "bytes": 3445,
+      "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/active/gates/physical/repair-lane-03.json",
+      "sha256": "a88eb0cf4d7764bf26a126f93502b3f8614299fe6b6290ecc86094e265ad913d"
+    },
+    {
+      "bytes": 3445,
+      "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/active/gates/physical/repair-lane-04.json",
+      "sha256": "2c240a5ae7e3da0209e1bd68f84cee5e11e8acc287328425421ec8208ef705a0"
+    },
+    {
+      "bytes": 3445,
+      "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/active/gates/physical/repair-lane-05.json",
+      "sha256": "b1b76974339fc18639c7581eef04fa4641f5353feec691cf72c01aa70dc901d8"
+    },
+    {
+      "bytes": 3445,
+      "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/active/gates/physical/repair-lane-06.json",
+      "sha256": "b51d924a3ad286a3a1e91ea2cba7b92213cae61c98bdc8f1a0869062ed9e8b45"
+    },
+    {
+      "bytes": 3445,
+      "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/active/gates/physical/repair-lane-07.json",
+      "sha256": "3fc5c11d79deb2c43825f902fc3fed6d08ed9262736ba9411e3ee524c2e48791"
+    }
+  ],
+  "original_c002_excluded_request_count_before_repair": 30,
+  "original_failed_isolation_closure": {
+    "evidence_manifest": {
+      "bytes": 4689,
+      "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/active/closure/evidence_manifest.json",
+      "sha256": "d7f2517b510b564cd22d195ea4935076c842d2ecc845bd105cad764bfa1627ac"
+    },
+    "failure_report": {
+      "bytes": 11194,
+      "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/active/gates/isolation_failure_report.json",
+      "sha256": "337bd20e62d3ddb608a677b3cfb7d4e2c3c353f11bbb54b4560008096d025c4e"
+    },
+    "target_raw_rehash_receipt": {
+      "bytes": 1970,
+      "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/active/gates/isolation_target_raw_rehash_receipt.json",
+      "sha256": "ba6658afcc5d790fb21f1c440f983176f21d9a9545b359de7b526986d770137c"
+    }
+  },
+  "original_tree_identity": {
+    "bytes": 29300,
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v2/original_c002_tree_manifest.json",
+    "sha256": "4a986dd3d989637d1b0c9f3b6e470d5a0c9c936326282598dd365e2719aee9d0"
+  },
+  "override_record": "Codex user message after immutable C002 closure: solve the issues and run the full experiment",
+  "parent_behavioral_episode_count": 0,
+  "parent_experiment_id": "V3-C002",
+  "parent_queue": {
+    "bytes": 4362072,
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/active/queue.jsonl",
+    "sha256": "c7003f05b1302ab52d30fd9f6c50244a8df1e143c8411c436eb2817abc312a50"
+  },
+  "parent_registration": {
+    "bytes": 32480,
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/active/registration.json",
+    "sha256": "ef1c40d4d288b195d59b4af90fa587eeae17b130ee26a604e1ed70c60cbcaa73"
+  },
+  "prospective_change": {
+    "analysis_changed": false,
+    "no_numerical_tolerance_added": true,
+    "original_two_lane_gate_remains_failed": true,
+    "prompts_changed": false,
+    "rationale": "The four-condition estimands are paired wholly within seed blocks. Cross-server byte identity is not an estimand and no prior protocol supplies a cross-GPU tolerance. R001 therefore requires exact repeatability within every actual server process and keeps each complete block on one homogeneous lane.",
+    "sample_size_changed": false,
+    "scientific_estimands_changed": false,
+    "seeds_changed": false
+  },
+  "publication_routing": "Report as V3-C002-R001 post-gate operational repair; preserve original C002 failed isolation as methods/limitations evidence; never state the original gate passed.",
+  "queue": {
+    "bytes": 4362072,
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v2/queue.jsonl",
+    "sha256": "c7003f05b1302ab52d30fd9f6c50244a8df1e143c8411c436eb2817abc312a50"
+  },
+  "registered_at_utc": "2026-08-12T22:28:50.058007Z",
+  "release_sequence": [
+    "pushed repair implementation and registration",
+    "eight fresh same-process zero-request physical/runtime gates",
+    "one global excluded complete four-cell smoke block on repair-lane-00",
+    "eight fixed-observation interleaved exact-repeat and prompt-sensitivity gates",
+    "eight homogeneous lane manifests and frozen assignment binding",
+    "behavioral release before any denominator-eligible request"
+  ],
+  "release_status": "blocked_pending_activation_v2_source_push_and_eight_repeat_gates",
+  "repair_id": "V3-C002-R001",
+  "repair_model_requests_before_registration": 78,
+  "repeat_fixture": {
+    "bytes": 12306198,
+    "path": "/data/users/ali/vla_wam/raw/v3c002r001/smoke/global01-lane00-seed12000/excluded_smoke/seed12000/attempt001/request0/observation_cache.npz",
+    "sha256": "41ab5159b0a66548fee59ccdd8f19a85796e90e925dacf001f59133883504fcf"
+  },
+  "repeat_fixture_manifest": {
+    "bytes": 6490,
+    "path": "/data/users/ali/vla_wam/raw/v3c002r001/smoke/global01-lane00-seed12000/excluded_smoke/seed12000/attempt001/request0/observation_manifest.json",
+    "sha256": "3d82f1986443212112f2c50fbd1148aafe8f9f463f1dd2d28ee06442a87a9fdd"
+  },
+  "repeat_fixture_target_receipt": {
+    "bytes": 2495,
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v2/gates/repeat_fixture_target_rehash_receipt.json",
+    "sha256": "2cf0cb395d295a5b3f75e083828d2061e91c16254e37a001315e2ffc6466ec45"
+  },
+  "runtime": {
+    "exact_behavior_adapter_source_commit": "e2d9ae3904b4a08e549c784903c167a4213d3d47",
+    "exact_parent_e004_pi05_contract_sha256": "4497e82136e6440df45cc075a683319ecf63ac2827fb582dcb5c1549030e4cfd",
+    "repair_wrapper_implementation_commit": "26922cdac5e8bb496a1ce37e65e82cff0a3c3021"
+  },
+  "schema_version": "vla-wam-shared-v3c002r001-repair-registration-v1",
+  "source_bindings": {
+    "experiments/v3/phase_c_semantic_equivalence_v3c002r001/__init__.py": {
+      "bytes": 73,
+      "path": "experiments/v3/phase_c_semantic_equivalence_v3c002r001/__init__.py",
+      "sha256": "e29a77ea56c03bb39db1b497f5d816bae308fc3eed2cabba07284e3a8212afdd"
+    },
+    "experiments/v3/phase_c_semantic_equivalence_v3c002r001/compiler.py": {
+      "bytes": 10232,
+      "path": "experiments/v3/phase_c_semantic_equivalence_v3c002r001/compiler.py",
+      "sha256": "f34c446d6f786039fdac329ea8b6d2f22968d2a6524578f0d82696c360fdc8ea"
+    },
+    "experiments/v3/phase_c_semantic_equivalence_v3c002r001/contract.py": {
+      "bytes": 19167,
+      "path": "experiments/v3/phase_c_semantic_equivalence_v3c002r001/contract.py",
+      "sha256": "f3625ec17a5b53a2c0890ad15e6d2e28a72f00988e7e80ad38e80a30abad6efe"
+    },
+    "experiments/v3/phase_c_semantic_equivalence_v3c002r001/droid_behavioral_adapter.py": {
+      "bytes": 742,
+      "path": "experiments/v3/phase_c_semantic_equivalence_v3c002r001/droid_behavioral_adapter.py",
+      "sha256": "741c42f6417154b21fd6987b86e0afba366eae144b425afa24056e2a911bc817"
+    },
+    "experiments/v3/phase_c_semantic_equivalence_v3c002r001/runner.py": {
+      "bytes": 5463,
+      "path": "experiments/v3/phase_c_semantic_equivalence_v3c002r001/runner.py",
+      "sha256": "2f5d0fdcd93ad3159e7d669a59bc77acc636b8f95ee9efb6250585bced7626f2"
+    },
+    "experiments/v3/phase_c_semantic_equivalence_v3c002r001/single_server_repeat.py": {
+      "bytes": 14150,
+      "path": "experiments/v3/phase_c_semantic_equivalence_v3c002r001/single_server_repeat.py",
+      "sha256": "58f6112c1b188116ba1994397ac3802f3fb25dff8951645ee8b6a6392a322cbc"
+    },
+    "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/request0_replay.py": {
+      "bytes": 26985,
+      "path": "experiments/v3/phase_e/symmetric_layout_cohort_v3e004/request0_replay.py",
+      "sha256": "4746a8c37e621f8262aac9fdeca54108c493e184e0e345cec017e184546d19b7"
+    },
+    "tests/test_v3c002r001_repair.py": {
+      "bytes": 7514,
+      "path": "tests/test_v3c002r001_repair.py",
+      "sha256": "6afe3a2cee2b22af5c89381405e911326d06a2677bf66ef170c50380fc72bc61"
+    },
+    "tools/authorize_v3c002r001_smoke.py": {
+      "bytes": 2753,
+      "path": "tools/authorize_v3c002r001_smoke.py",
+      "sha256": "c241a9e68527154fe55ee56ab18f45fbaabd90b4cf4cb550a38151fd938210b2"
+    },
+    "tools/build_v3c002r001_activation_v2.py": {
+      "bytes": 9641,
+      "path": "tools/build_v3c002r001_activation_v2.py",
+      "sha256": "686f72d444a21210551f291854a4e5257d2b8f54256c2a3f745a98e6ea64cbf4"
+    },
+    "tools/build_v3c002r001_lane_manifest.py": {
+      "bytes": 6310,
+      "path": "tools/build_v3c002r001_lane_manifest.py",
+      "sha256": "4c37dfc7a6eede340308b026f1ffb8166ca53c13e9fdad8d974ee060ba5aeb2d"
+    },
+    "tools/build_v3c002r001_registration.py": {
+      "bytes": 16227,
+      "path": "tools/build_v3c002r001_registration.py",
+      "sha256": "685bc8edcaa83d3627163958c681f2740be1ac076c77afec8c6df0f808cb3bd5"
+    },
+    "tools/compile_v3c002r001_physical_gate.py": {
+      "bytes": 7409,
+      "path": "tools/compile_v3c002r001_physical_gate.py",
+      "sha256": "3e20a174a4e0db30de3ad0d86a6eb0641d5031342fc72c6beffb2aea52ef8472"
+    },
+    "tools/compile_v3c002r001_repeat_gate.py": {
+      "bytes": 6947,
+      "path": "tools/compile_v3c002r001_repeat_gate.py",
+      "sha256": "225d36784142c2f86e9fd9af4421be2c3275e621b753d861fcca761356ab19cc"
+    },
+    "tools/compile_v3c002r001_smoke_gate.py": {
+      "bytes": 5589,
+      "path": "tools/compile_v3c002r001_smoke_gate.py",
+      "sha256": "ce938182722ded5db47d0dd81dae1b44540f00cec3c62633f74aa14a4918543d"
+    },
+    "tools/finalize_v3c002r001_source_gate.py": {
+      "bytes": 2966,
+      "path": "tools/finalize_v3c002r001_source_gate.py",
+      "sha256": "43d312e26bce6c779086aa259e2699b679fe3ff714a02842bb488087c128aeda"
+    },
+    "tools/release_v3c002r001_behavior.py": {
+      "bytes": 3233,
+      "path": "tools/release_v3c002r001_behavior.py",
+      "sha256": "9de1cf9fb183d02fbcb56a5de35faa1ac4394504c5d76db4d76052bac04bbdfd"
+    },
+    "tools/validate_v3c002r001.py": {
+      "bytes": 7001,
+      "path": "tools/validate_v3c002r001.py",
+      "sha256": "5e52cf552d435c4ea9812ab60fea3b72d5b435019c57e5083f15303bdd69bdce"
+    },
+    "tools/validate_v3c002r001_failed_repeat_attempts.py": {
+      "bytes": 3435,
+      "path": "tools/validate_v3c002r001_failed_repeat_attempts.py",
+      "sha256": "5be3fd854480e5517b0d342b95070c58c4d845996ce7240d471932ea97263f20"
+    },
+    "tools/validate_v3c002r001_publication_bundle.py": {
+      "bytes": 1272,
+      "path": "tools/validate_v3c002r001_publication_bundle.py",
+      "sha256": "a503464128e1522d5bf79e8266797d83dd223039065e9e5c9917a01812ea04bb"
+    },
+    "tools/validate_v3c002r001_repeat_fixture.py": {
+      "bytes": 3329,
+      "path": "tools/validate_v3c002r001_repeat_fixture.py",
+      "sha256": "56e8c79cdd170d5c9e0aa7386e5c9b7106e244fbab0583746e67e8687daafe8d"
+    },
+    "tools/validate_v3c002r001_results.py": {
+      "bytes": 6864,
+      "path": "tools/validate_v3c002r001_results.py",
+      "sha256": "e35bcf1ac9a1a8798e60ea56d8a83b882f5084ff34f968bc897e1149fb634d1d"
+    }
+  },
+  "status": "registered_prospective_post_gate_repair",
+  "superseded_unexecuted_repair_registrations": [
+    {
+      "behavioral_episode_count": 0,
+      "model_request_count": 0,
+      "reason": "The preregistration validator handled only the pending-source lifecycle state and would reject its own later pushed-source/publication state. This prospective replacement makes the validator lifecycle-aware before any repair request.",
+      "registration_commit": "f88d2dc39b076ee87aef2a961f7cf4d1663549a2",
+      "registration_sha256": "f5f64e804fe9ccf4f38c90d041e8f338a62bed8fca70cff3a63c2324f46b53de"
+    }
+  ],
+  "technical_gate_plan": {
+    "global_excluded_smoke_lane_slot": "repair-lane-00",
+    "global_excluded_smoke_seed": 12000,
+    "per_lane_physical_gate_count": 8,
+    "per_lane_repeat_gate_count": 8,
+    "repeat_fixture_source": "exact retained request0 observation_cache.npz from the global excluded smoke",
+    "repeat_sequence": [
+      "canonical_left",
+      "canonical_right",
+      "canonical_left"
+    ],
+    "smoke_assignment_scope": "technical_excluded_only; behavioral assignment manifest remains unchanged"
+  },
+  "title": "Prospective activation-v2 transport correction after retained flat-cache client failure",
+  "transport_correction": {
+    "activation_v1_attempt001_action_arrays": 0,
+    "activation_v1_attempt001_classification": "infrastructure_invalid",
+    "activation_v1_attempt001_model_requests": 8,
+    "activation_v1_attempt001_successful_responses": 0,
+    "activation_v1_behavioral_episodes": 0,
+    "analysis_changed": false,
+    "assignment_changed": false,
+    "cause": "activation-v1 repeat client sent flattened cache storage keys instead of the exact E004 native observation tree and frozen Pi0DroidJointposClient packed request",
+    "correction": "hash-validate manifest/cache, restore native leaf kinds and tree, then call exact source-bound Pi0DroidJointposClient._extract_observation and _pack_request before dispatch",
+    "one_retry_authorized_after_pushed_activation_v2": true,
+    "queue_changed": false,
+    "repeat_sequence_changed": false,
+    "science_changed": false
+  },
+  "user_authorized_protocol_override": true,
+  "wording_gate_inherited_unchanged": {
+    "bytes": 1975,
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/active/wording_gate.json",
+    "sha256": "df02c4f0a86968d2432e816c12b06c346e70f178a004e03bd97cded4b8b9c6ac"
+  }
+}

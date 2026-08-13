@@ -1,0 +1,70 @@
+{
+  "schema_version": "vla-wam-shared-v3c002r001-activation-v4-registration-v3",
+  "study_id": "vla_wam_language_steerability_v3",
+  "repair_id": "V3-C002-R001",
+  "activation_id": "V3-C002-R001-A004-v3",
+  "status": "registered_prospective_universal_pinned-receipt_retry-and-continuation",
+  "registered_at_utc": "2026-08-13T02:10:00Z",
+  "implementation_commit": "a970a638b0904f3e53918d9612d2d32ebf239f89",
+  "supersedes_unexecuted_a004": {
+    "v1_registration": {"path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v4/registration.json", "bytes": 3166, "sha256": "d1b0200a148082d46e323d2191e844f5c094ee96b5cc0dd4e07d68832ec63315"},
+    "v1_source_gate": {"path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v4/source_push_gate.released.json", "bytes": 1241, "sha256": "c249403e9646483e776057a8fbbe061a9681e5620627a1fdd70ffaf10494ed57"},
+    "held_implementation_commit": "5ca22ae5952e01bc58de68f27442f0dc9d9144b9",
+    "model_requests": 0,
+    "behavioral_episodes": 0
+  },
+  "parent_behavioral_data_exists": true,
+  "parent_completed_block_count_at_registration": 124,
+  "parent_completed_behavioral_cell_count_at_registration": 496,
+  "a004_model_requests_before_registration": 0,
+  "a004_behavioral_episodes_before_registration": 0,
+  "excluded_evidence_accounting": {
+    "prior_gate_and_probe_model_requests": 108,
+    "infrastructure_invalid_partial_attempt_count": 14,
+    "successful_request_events_in_invalid_action_traces": 392,
+    "invalid_action_trace_count": 28,
+    "raw_completed_cells_in_invalidated_blocks": 27,
+    "invalidated_whole_blocks": 14,
+    "current_marker_absent_blocks_requiring_retry": 8,
+    "current_denominator_cells_excluded": 32,
+    "failed_transport_attempts": "retained in bound infrastructure ledgers; not silently converted into successful model requests"
+  },
+  "science_unchanged": {"queue": true, "assignment": true, "prompts": true, "seeds": true, "model": true, "simulator": true, "controller": true, "scorer": true, "analysis": true, "thresholds": true},
+  "queue": {"path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v3/queue.jsonl", "bytes": 4362072, "sha256": "c7003f05b1302ab52d30fd9f6c50244a8df1e143c8411c436eb2817abc312a50"},
+  "assignment": {"path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v3/assignment.jsonl", "bytes": 145156, "sha256": "d9ce17feb3ecaca08180ca6b175fe0bf35469191f531276ce319daa7355e326f"},
+  "original_release": {"path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v3/release_gate.released.json", "bytes": 10479, "sha256": "28ee96e3fcda4637302aadef6e90233574101a75e5c7af75fa1d9e4b1c060a7d"},
+  "a003_release": {"path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v3/lane_replacement_a003/release_gate.released.json", "bytes": 14840, "sha256": "7b0835c2bb76631add47f5e13c6db4d5be40379d234e90c4b401a5214ec2463d"},
+  "retry_seed_by_lane": {"repair-lane-00": 12060, "repair-lane-01": 12101, "repair-lane-02": 12128, "repair-lane-03": 12177, "repair-lane-04": 12156, "repair-lane-05": 12107, "repair-lane-06": 12176, "repair-lane-07": 12112},
+  "lane_snapshot_bindings": [
+    {"path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v4/v3/snapshots/repair-lane-00.json", "bytes": 28261, "sha256": "3ff05515779f1c15be2488d1013a702a5aecd60f6be18aa326e2658227d6d12d"},
+    {"path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v4/v3/snapshots/repair-lane-01.json", "bytes": 19348, "sha256": "8f79ac9a0b00ce44b70248e9477a319890d62aa011e16cdb7e275fc2e64e798b"},
+    {"path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v4/v3/snapshots/repair-lane-02.json", "bytes": 53047, "sha256": "aa7adc88feb0737a99f7693c8c434538c54441b79023bc2d481d0e0b5a9707d3"},
+    {"path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v4/v3/snapshots/repair-lane-03.json", "bytes": 60279, "sha256": "45565b617ea253b1bcaeeca8fb1301e53660e0a8ee8f7338682b1bcfb10f70a9"},
+    {"path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v4/v3/snapshots/repair-lane-04.json", "bytes": 60304, "sha256": "78c832ec920928e20474f16f90b09e24f0f253e2cbc27dfb0257cb3f95d070a7"},
+    {"path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v4/v3/snapshots/repair-lane-05.json", "bytes": 47007, "sha256": "f03daba7a494defee5b4caf12c56b9b74551e598e1173c264da1494143802373"},
+    {"path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v4/v3/snapshots/repair-lane-06.json", "bytes": 26652, "sha256": "84fe379d70d0d3bb3cc751ab71c738e24e6f035619e32aacb1dfcd6393e491ce"},
+    {"path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v4/v3/snapshots/repair-lane-07.json", "bytes": 53379, "sha256": "277f61430589d32ac65246aa4da8b37c5f5bc609793782ba3d3205339c556ff6"}
+  ],
+  "execution_contract": {
+    "universal_retry": "all eight marker-absent attempt001 blocks rerun all four cells into absent attempt002 on the same frozen lane",
+    "continuation": "compiled after all eight retry markers pass structurally; remaining=frozen assignment minus every completed marker; outcomes are never read",
+    "remote_verification": "no network or moving branch at cell dispatch; byte-pinned orchestrator receipt plus locally retained commit ancestry and source hashes",
+    "no_cross_lane_failover": true,
+    "completed_blocks_never_rerun": true
+  },
+  "source_bindings": {
+    "experiments/v3/phase_c_semantic_equivalence_v3c002r001/activation_v4_contract.py": {"bytes": 5812, "sha256": "841a1126c1105e973b1ba4d6d994841c732d5467ee01b60ea434d3a6f5c45d22"},
+    "experiments/v3/phase_c_semantic_equivalence_v3c002r001/activation_v4_pinned_push.py": {"bytes": 5165, "sha256": "39d871d052d5a0771026fdb61ab33e606a2d9355f3769e5e801b5607bb9298c8"},
+    "experiments/v3/phase_c_semantic_equivalence_v3c002r001/activation_v4_replacement_adapter.py": {"bytes": 1878, "sha256": "30b5cbb15035ff362a14b7ecf28df3ec9b5f7c675262c2f4b383c490d192135f"},
+    "experiments/v3/phase_c_semantic_equivalence_v3c002r001/activation_v4_retry_runner.py": {"bytes": 3665, "sha256": "90bb8c6e2684c0d27a901b083238028ed45d4d618a4c6965a5bdbe20b835f6e1"},
+    "experiments/v3/phase_c_semantic_equivalence_v3c002r001/activation_v4_continuation_runner.py": {"bytes": 1800, "sha256": "564420de333517d18c01ac2bdd58b3608ab3c0862524dc17717eff108f008508"},
+    "tools/compile_v3c002r001_activation_v4_continuation.py": {"bytes": 4311, "sha256": "5da522d3d859a708221115a00d4e2351fa2c23299aa792ae4305cd38107af791"},
+    "tools/snapshot_v3c002r001_activation_v4_lane.py": {"bytes": 4545, "sha256": "d01442f847e9206f0f92ce3f2824e3cdacf2e7c7ba904c9070f2c1bb94dd74d0"},
+    "tests/test_v3c002r001_activation_v4.py": {"bytes": 2008, "sha256": "6f0bf9ad5797f00a4775bb8fa825eb668752282a963e9b5e42332b06ef1c6c2a"},
+    "exact_e2_adapter": {"path": "experiments/v3/phase_c_semantic_equivalence_v3c002/droid_behavioral_adapter.py", "bytes": 62540, "sha256": "d1c85641b060bccd9267e2e12516b43f0576519aabd281b83f5e1c923777c47d"},
+    "exact_e2_runner": {"path": "experiments/v3/phase_c_semantic_equivalence_v3c002/runner.py", "bytes": 16418, "sha256": "55a34bba783005067669355006e150bdc049ddbefaae132a9d05c42dddba9ad6"},
+    "exact_e2_contract": {"path": "experiments/v3/phase_c_semantic_equivalence_v3c002/contract.py", "bytes": 31026, "sha256": "80a60aa62ac78a20e9135c24e20ec8d40e6a486f0c573340ec0aa3fc10b838e8"},
+    "frozen_r001_runner": {"path": "experiments/v3/phase_c_semantic_equivalence_v3c002r001/runner.py", "bytes": 5463, "sha256": "2f5d0fdcd93ad3159e7d669a59bc77acc636b8f95ee9efb6250585bced7626f2"},
+    "frozen_r001_contract": {"path": "experiments/v3/phase_c_semantic_equivalence_v3c002r001/contract.py", "bytes": 21849, "sha256": "b33e8683ffa36d1c7e7dbabcf07d06377d30640bdb20b18c6852f515f4b12f75"}
+  }
+}

@@ -76,7 +76,95 @@ def main() -> None:
     output.mkdir(parents=True, exist_ok=False)
     result_copy = output / "results.json"
     receipt_copy = output / "target_validation_receipt.json"
-    result_copy.write_bytes(child_path.read_bytes())
+    diagnostics = result.get("known_reachable_diagnostics")
+    attempts = result.get("attempts")
+    require(isinstance(diagnostics, list), "R005 diagnostics are absent")
+    require(isinstance(attempts, list), "R005 candidate attempts are absent")
+    diagnostic_summary = [
+        {
+            "diagnostic_index_one_based": row.get("diagnostic_index_one_based"),
+            "stage": row.get("stage"),
+            "source_side": row.get("source_side"),
+            "passed": row.get("passed"),
+        }
+        for row in diagnostics
+    ]
+    attempt_summary: list[dict[str, Any]] = []
+    for attempt in attempts:
+        stages = attempt.get("stages")
+        require(isinstance(stages, Mapping), "R005 attempt lacks stages")
+        stage_summary: dict[str, Any] = {}
+        for stage_name, stage_row in stages.items():
+            require(isinstance(stage_row, Mapping), "R005 stage row is invalid")
+            state = stage_row.get("candidate_state")
+            require(isinstance(state, Mapping), "R005 stage lacks candidate state")
+            physics = state.get("physics_gate")
+            require(isinstance(physics, Mapping), "R005 stage lacks physics gate")
+            construction = state.get("construction")
+            post_write = None
+            if isinstance(construction, Mapping):
+                atomic_write = construction.get("atomic_write")
+                if isinstance(atomic_write, Mapping):
+                    post_write = atomic_write.get("post_write_fk")
+            stage_summary[str(stage_name)] = {
+                "passed": state.get("passed"),
+                "physics_gate": physics,
+                "ood_gate_passed": (
+                    state.get("ood_gate", {}).get("passed")
+                    if isinstance(state.get("ood_gate"), Mapping)
+                    else None
+                ),
+                "camera_gate_passed": (
+                    state.get("camera_evidence", {}).get("passed")
+                    if isinstance(state.get("camera_evidence"), Mapping)
+                    else None
+                ),
+                "companion_gate_passed": (
+                    state.get("companion_pose_gate", {}).get("passed")
+                    if isinstance(state.get("companion_pose_gate"), Mapping)
+                    else None
+                ),
+                "post_write_fk": post_write,
+                "normalized_state_sha256": state.get("normalized_state_sha256"),
+            }
+        attempt_summary.append({
+            "candidate_rank": attempt.get("candidate_rank"),
+            "passed": attempt.get("passed"),
+            "model_request_count": attempt.get("model_request_count"),
+            "behavioral_episode_count": attempt.get("behavioral_episode_count"),
+            "stages": stage_summary,
+        })
+    compact_result = {
+        "schema_version": "vla-wam-shared-v3e006-r005-state-repair-closure-v2",
+        "amendment_id": "V3-E006-R005",
+        "status": result["status"],
+        "passed": bool(result.get("passed")),
+        "accepted_candidate_rank": result.get("accepted_candidate_rank"),
+        "accepted_state_hashes": None,
+        "registered_diagnostic_budget": int(result.get("diagnostic_budget")),
+        "diagnostic_evaluation_count": len(diagnostics),
+        "diagnostics_all_passed": all(row.get("passed") is True for row in diagnostics),
+        "known_reachable_diagnostics": diagnostic_summary,
+        "registered_candidate_budget": int(result.get("candidate_budget")),
+        "candidate_pair_evaluation_count": len(attempts),
+        "candidate_attempts": attempt_summary,
+        "first_passing_rule_obeyed": result.get("first_passing_rule_obeyed"),
+        "selection_rule": result.get("selection_rule"),
+        "model_request_count": 0,
+        "behavioral_episode_count": 0,
+        "behavioral_activation_released": False,
+        "release_boundary": result.get("release_boundary"),
+        "raw_result": binding(child_path),
+        "raw_harness": binding(harness_path),
+        "raw_launch": binding(launch_path),
+        "raw_runtime_log": binding(runtime_path),
+        "raw_target_validation_receipt": binding(args.target_validation_receipt),
+        "registration": result.get("repair_registration"),
+        "candidate_schedule": result.get("candidate_schedule"),
+        "source_push_gate": result.get("source_push_gate"),
+        "source_commit_at_execution": launch.get("study_commit"),
+    }
+    result_copy.write_bytes(canonical_bytes(compact_result))
     receipt_copy.write_bytes(args.target_validation_receipt.read_bytes())
     memo = (
         "# V3-E006-R005 state-construction decision\n\n"

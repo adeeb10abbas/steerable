@@ -1,0 +1,5 @@
+# V3-E006-R011 final state-construction decision
+
+R011 completed its one registered zero-model scene-specific attachment preflight and failed closed before every diagnostic, candidate, or construction action. No state was accepted; behavioral activation and inference remain blocked.
+
+The verified current/initial USD stage, unique `/physicsScene`, StageCache identity, structured path-integer call arguments, persistent update-to-USD setting, and exact single scene-specific writeback all passed their registered checks. Nevertheless, all three USD owner poses and all five collision AABBs disagreed with the simultaneous live tensors. Owner position errors ranged from 0.001765683293343 to 0.126931875944138 m; collision AABB errors ranged from 0.000949123838173 to 0.126914104029213 m. The cube owner discrepancy was about 126.9 mm. Thus the relative-bound attachment and controller were never evaluated. This is the final infrastructure blocker, not a scientific candidate exhaustion; no R012, B001 activation, model request, or behavioral episode is authorized.

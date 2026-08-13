@@ -139,13 +139,11 @@ def test_outer_launcher_uses_the_registered_remote_branch() -> None:
 
 def _synthetic_valid_open_contact_state() -> tuple[dict, dict]:
     stage = load(ART / "gates/candidate_schedule.json")["candidate_pairs"][0]["canonical_grasp"]
-    retained_stage = deepcopy(stage)
-    retained_stage["candidate_rank"] = 1
     construction = {
         "method": "exact_reset_open_approach_normal_close_lift",
         "stage": "canonical_grasp",
         "candidate_rank": 1,
-        "registered_stage_schedule": retained_stage,
+        "registered_stage_schedule": stage,
         "registered_targets": stage["r007_open_contact_targets"],
         "phase_steps": {
             "open_approach": 120, "open_descent": 120, "normal_close": 90,
@@ -230,8 +228,6 @@ def test_raw_open_contact_trace_recomputed_and_mutations_rejected() -> None:
     mutations.append(bad_action)
     bad_schedule = deepcopy(state); bad_schedule["construction"]["registered_stage_schedule"]["candidate_rank"] = 4
     mutations.append(bad_schedule)
-    missing_retained_rank = deepcopy(state); missing_retained_rank["construction"]["registered_stage_schedule"].pop("candidate_rank")
-    mutations.append(missing_retained_rank)
     bad_rank = deepcopy(state); bad_rank["construction"]["candidate_rank"] = 2
     mutations.append(bad_rank)
     bad_trace_state = deepcopy(state); bad_trace_state["construction"]["construction_action_trace"][42]["joint_velocity_rad_s"][0] = float("nan")

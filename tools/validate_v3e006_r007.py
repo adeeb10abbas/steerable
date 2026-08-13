@@ -433,10 +433,8 @@ def validate_open_contact_state(
     require(construction.get("method") == "exact_reset_open_approach_normal_close_lift", f"{label} method differs")
     require(construction.get("stage") == label, f"{label} construction stage differs")
     require(construction.get("candidate_rank") == candidate_rank, f"{label} candidate rank differs")
-    expected_retained_stage_schedule = dict(expected_stage)
-    expected_retained_stage_schedule["candidate_rank"] = candidate_rank
     require(
-        construction.get("registered_stage_schedule") == expected_retained_stage_schedule,
+        construction.get("registered_stage_schedule") == expected_stage,
         f"{label} registered stage schedule differs",
     )
     require(

@@ -59,8 +59,8 @@ AGGREGATION_SCHEMA = "vla-wam-shared-v3c002r001-activation-v4-raw-aggregation-v1
 CONTINUATION_SCHEMA = "vla-wam-shared-v3c002r001-activation-v4-continuation-gate-v1"
 PROVENANCE_SCHEMA = "vla-wam-shared-v3c002r001-raw-provenance-v1"
 FINALIZER_SCHEMA = "vla-wam-shared-v3c002r001-a004-finalizer-manifest-v2"
-FINAL_ANALYSIS_REGISTRATION_SCHEMA = "vla-wam-shared-v3c002r001-a004-final-analysis-registration-v1"
-FINAL_ANALYSIS_SOURCE_SCHEMA = "vla-wam-shared-v3c002r001-a004-final-analysis-source-gate-v1"
+FINAL_ANALYSIS_REGISTRATION_SCHEMA = "vla-wam-shared-v3c002r001-a004-final-analysis-registration-v2"
+FINAL_ANALYSIS_SOURCE_SCHEMA = "vla-wam-shared-v3c002r001-a004-final-analysis-source-gate-v2"
 REPO_ROOT = Path(__file__).resolve().parents[4]
 CANONICAL_REMOTE = "https://github.com/adeeb10abbas/steerable.git"
 CANONICAL_BRANCH = "experiment/v3c002-semantic-equivalence"
@@ -143,7 +143,7 @@ def validate_finalization_admission(
     require(
         isinstance(registration, dict)
         and registration.get("schema_version") == FINAL_ANALYSIS_REGISTRATION_SCHEMA
-        and registration.get("status") == "registered_prospective_final_analysis_before_raw_aggregation_or_result_read"
+        and registration.get("status") == "registered_prospective_corrected_final_analysis_before_raw_aggregation_or_result_read"
         and all(registration.get(key) == 0 for key in (
             "final_analysis_raw_behavioral_rows_read_before_registration",
             "final_analysis_result_compilations_before_registration",
@@ -151,6 +151,15 @@ def validate_finalization_admission(
         )),
         "A004 final analysis was not registered before aggregation/result reading",
     )
+    superseded = registration.get("superseded_v1_final_analysis")
+    require(
+        isinstance(superseded, dict)
+        and superseded.get("status") == "superseded_unexecuted_before_any_outcome_aggregation_or_result_read"
+        and all(superseded.get(key) == 0 for key in ("raw_behavioral_rows_read", "result_compilations", "output_files")),
+        "A004 final-analysis v1 supersession is not a zero-read correction",
+    )
+    _validate_checkout_binding(superseded.get("registration"), "superseded final-analysis v1 registration")
+    _validate_checkout_binding(superseded.get("source_gate"), "superseded final-analysis v1 source gate")
     expected = {
         "parent_registration": parent_registration,
         "queue": queue,
@@ -567,17 +576,17 @@ def add_r001_diagnostics(results: dict[str, Any], pairs: Iterable[Mapping[str, A
         lane_diagnostics[slot] = {
             "seed_blocks": len({pair["episode_seed"] for pair in slot_pairs}),
             "left_depth_inverse_minus_canonical_mean_m": fmean(
-                pair["depth_inverse_minus_canonical_m"] for pair in slot_pairs if pair["physical_goal"] == "left"
+                pair["depth_difference_inverse_minus_canonical_m"] for pair in slot_pairs if pair["physical_goal"] == "left"
             ),
             "right_depth_inverse_minus_canonical_mean_m": fmean(
-                pair["depth_inverse_minus_canonical_m"] for pair in slot_pairs if pair["physical_goal"] == "right"
+                pair["depth_difference_inverse_minus_canonical_m"] for pair in slot_pairs if pair["physical_goal"] == "right"
             ),
         }
     leave_one_out = {}
     for omitted in sorted(SLOTS):
         subset = [pair for pair in pair_rows if assignment[int(pair["episode_seed"])] != omitted]
         leave_one_out[omitted] = {
-            goal: fmean(pair["depth_inverse_minus_canonical_m"] for pair in subset if pair["physical_goal"] == goal)
+            goal: fmean(pair["depth_difference_inverse_minus_canonical_m"] for pair in subset if pair["physical_goal"] == goal)
             for goal in ("left", "right")
         }
     results["repair_id"] = "V3-C002-R001"

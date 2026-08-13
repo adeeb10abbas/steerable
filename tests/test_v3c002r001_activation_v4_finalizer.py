@@ -17,6 +17,7 @@ from experiments.v3.phase_c_semantic_equivalence_v3c002r001.activation_v4_finali
     SLOTS,
     _released_lanes,
     build_exact_routing,
+    add_r001_diagnostics,
     identity_normalized_copy,
     validate_infrastructure,
     validate_finalization_admission,
@@ -142,6 +143,31 @@ class A004FinalizerTests(unittest.TestCase):
         self.assertEqual(normalized[-1]["server_port"], "first-server_port")
         normalized[-1]["runtime_identity"]["nested"] = "changed-only-in-copy"
         self.assertNotEqual(actual[-1]["runtime_identity"]["nested"], "changed-only-in-copy")
+
+    def test_r001_diagnostics_consume_exact_parent_pair_schema(self):
+        episodes = []
+        assignment = {}
+        for seed in range(12000, 12341):
+            slot = SLOTS[(seed - 12000) % len(SLOTS)]
+            assignment[seed] = slot
+            for index, (condition, goal) in enumerate((
+                ("canonical_left", "left"), ("inverse_reference_left", "left"),
+                ("canonical_right", "right"), ("inverse_reference_right", "right"),
+            )):
+                episodes.append({
+                    "cell_id": f"cell-{seed}-{condition}", "episode_seed": seed,
+                    "prompt_condition": condition, "physical_goal": goal,
+                    "initial_state_sha256": f"state-{seed}",
+                    "requested_side_depth": float(index), "success": True,
+                    "action_trace_sha256": f"trace-{seed}-{condition}",
+                })
+        pairs = parent._pair_rows(episodes)
+        self.assertIn("depth_difference_inverse_minus_canonical_m", pairs[0])
+        self.assertNotIn("depth_inverse_minus_canonical_m", pairs[0])
+        results = {}
+        add_r001_diagnostics(results, pairs, assignment)
+        self.assertEqual(set(results["lane_diagnostics_descriptive_only"]), set(SLOTS))
+        self.assertEqual(set(results["leave_one_lane_out_diagnostics_descriptive_only"]), set(SLOTS))
 
     def test_all_fourteen_infrastructure_rows_are_mandatory(self):
         @dataclass(frozen=True)

@@ -123,7 +123,7 @@ def main() -> None:
     require(
         isinstance(registration, dict)
         and registration.get("schema_version") == REGISTRATION_SCHEMA
-        and registration.get("status") == "registered_prospective_final_analysis_before_raw_aggregation_or_result_read"
+        and registration.get("status") == "registered_prospective_corrected_final_analysis_before_raw_aggregation_or_result_read"
         and all(registration.get(key) == 0 for key in (
             "final_analysis_raw_behavioral_rows_read_before_registration",
             "final_analysis_result_compilations_before_registration",

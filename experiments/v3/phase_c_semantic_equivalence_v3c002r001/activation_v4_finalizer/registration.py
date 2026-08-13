@@ -26,8 +26,8 @@ from experiments.v3.phase_c_semantic_equivalence_v3c002.contract import (
 from .finalizer import A003_RELEASE_SHA, ORIGINAL_RELEASE_SHA
 
 
-SCHEMA = "vla-wam-shared-v3c002r001-a004-final-analysis-registration-v1"
-SOURCE_SCHEMA = "vla-wam-shared-v3c002r001-a004-final-analysis-source-gate-v1"
+SCHEMA = "vla-wam-shared-v3c002r001-a004-final-analysis-registration-v2"
+SOURCE_SCHEMA = "vla-wam-shared-v3c002r001-a004-final-analysis-source-gate-v2"
 V10_CONTINUATION_SHA = "f898a52148fd39f6b5178aa7200d3539ec243ce2ed412356e2bf62e3e28139a8"
 
 
@@ -49,6 +49,8 @@ def main() -> None:
     parser.add_argument("--v10-continuation-gate", type=Path, required=True)
     parser.add_argument("--v11-registration", type=Path, required=True)
     parser.add_argument("--v11-source-gate", type=Path, required=True)
+    parser.add_argument("--superseded-registration", type=Path, required=True)
+    parser.add_argument("--superseded-source-gate", type=Path, required=True)
     args = parser.parse_args()
     require(sha256_file(args.original_release) == ORIGINAL_RELEASE_SHA, "original release28ee bytes changed")
     require(sha256_file(args.a003_release) == A003_RELEASE_SHA, "A003 release7b08 bytes changed")
@@ -73,7 +75,7 @@ def main() -> None:
     inventory = {str(path.relative_to(root)): repo_file_binding(path) for path in inventory_paths}
     value = {
         "schema_version": SCHEMA,
-        "status": "registered_prospective_final_analysis_before_raw_aggregation_or_result_read",
+        "status": "registered_prospective_corrected_final_analysis_before_raw_aggregation_or_result_read",
         "study_id": "vla_wam_language_steerability_v3",
         "repair_id": "V3-C002-R001",
         "activation_id": "V3-C002-R001-A004-final-analysis",
@@ -81,6 +83,15 @@ def main() -> None:
         "final_analysis_raw_behavioral_rows_read_before_registration": 0,
         "final_analysis_result_compilations_before_registration": 0,
         "final_analysis_output_files_before_registration": 0,
+        "superseded_v1_final_analysis": {
+            "registration": repo_file_binding(args.superseded_registration),
+            "source_gate": repo_file_binding(args.superseded_source_gate),
+            "status": "superseded_unexecuted_before_any_outcome_aggregation_or_result_read",
+            "raw_behavioral_rows_read": 0,
+            "result_compilations": 0,
+            "output_files": 0,
+            "reason": "The additive lane diagnostics referenced a nonexistent pair-row field name. The frozen parent emits depth_difference_inverse_minus_canonical_m; this v2 prospectively corrects only that additive diagnostic reader and adds a real parent-pair regression.",
+        },
         "prospective_order": [
             "commit_and_push_this_registration_and_its_source_gate",
             "perform_outcome_blind_mixed_epoch_raw_aggregation",

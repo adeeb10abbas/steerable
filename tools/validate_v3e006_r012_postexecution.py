@@ -8,6 +8,7 @@ import hashlib
 import importlib.util
 import json
 from pathlib import Path
+import subprocess
 import sys
 from typing import Any, Mapping
 
@@ -106,8 +107,30 @@ def validate_amendment(root: Path) -> dict[str, Any]:
     )
     source_gate = verify_binding(root, value["frozen_source_push_gate"], "frozen source gate")
     frozen.require(sha256(source_gate) == FROZEN_SOURCE_GATE_SHA256, "frozen source gate digest differs")
+    verify_binding(root, value["frozen_validator"], "frozen validator")
+    verify_binding(root, value["corrected_validator"], "corrected validator")
+    verify_binding(root, value["correction_test"], "correction test")
     for label in ("raw_result", "raw_harness", "raw_launch", "raw_runtime_log", "failed_target_validation"):
         verify_binding(root, value[label], label)
+    implementation = str(value.get("correction_implementation_commit", ""))
+    frozen.require(
+        subprocess.run(
+            ["git", "-C", str(root), "cat-file", "-e", f"{implementation}^{{commit}}"],
+            check=False,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        ).returncode == 0,
+        "correction implementation commit absent",
+    )
+    frozen.require(
+        subprocess.run(
+            ["git", "-C", str(root), "merge-base", "--is-ancestor", implementation, "HEAD"],
+            check=False,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        ).returncode == 0,
+        "correction implementation is not an ancestor",
+    )
     return {"passed": True, "amendment": binding(AMENDMENT)}
 
 

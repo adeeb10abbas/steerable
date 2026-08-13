@@ -36,6 +36,20 @@ def verify(root: Path, row: Mapping[str, Any], label: str) -> Path:
     return path
 
 
+def gate_summary(state: Mapping[str, Any]) -> dict[str, Any]:
+    physics = state.get("physics_gate")
+    require(isinstance(physics, Mapping), "raw stage lacks physics gate")
+    return {
+        "passed": state.get("passed"),
+        "normalized_state_sha256": state.get("normalized_state_sha256"),
+        "physics_gate": physics,
+        "ood_gate": state.get("ood_gate"),
+        "camera_gate_passed": state.get("camera_evidence", {}).get("passed"),
+        "companion_gate": state.get("companion_pose_gate"),
+        "frame_identity_passed": state.get("base_link_to_eef_frame_identity", {}).get("passed"),
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--study-root", type=Path, default=ROOT)
@@ -67,10 +81,60 @@ def main() -> None:
     amendment = results.get("postexecution_validator_amendment")
     require(amendment == manifest.get("postexecution_validator_amendment"), "validator amendment differs")
     if args.verify_raw:
+        raw_paths = {}
         for name, row in manifest["raw_evidence"].items():
             path = verify(root, row, f"raw {name}")
+            raw_paths[name] = path
             if name == "failed_zero_byte_postexecution_validation":
                 require(path.stat().st_size == 0, "failed wrapper receipt is not zero bytes")
+        correspondence = {
+            "raw_result": "child_result",
+            "raw_harness": "harness",
+            "raw_launch": "launch",
+            "raw_runtime_log": "runtime_log",
+            "interim_target_validation_receipt": "interim_validation",
+            "failed_zero_byte_postexecution_receipt": "failed_zero_byte_postexecution_validation",
+            "authoritative_target_validation_receipt": "authoritative_validation",
+        }
+        for result_key, manifest_key in correspondence.items():
+            require(results.get(result_key) == manifest["raw_evidence"][manifest_key], f"raw cross-binding differs: {result_key}")
+        raw = json.loads(raw_paths["child_result"].read_text(encoding="utf-8"))
+        harness = json.loads(raw_paths["harness"].read_text(encoding="utf-8"))
+        authoritative = json.loads(raw_paths["authoritative_validation"].read_text(encoding="utf-8"))
+        require(raw.get("status") == harness.get("child_status") == TERMINAL, "raw terminal status differs")
+        require(harness.get("process_completed") is True and harness.get("scientific_gate_passed") is False, "raw harness completion differs")
+        require(raw.get("passed") is False and raw.get("accepted_candidate_rank") is None and raw.get("accepted_states") is None, "raw acceptance differs")
+        require(raw.get("model_request_count") == raw.get("behavioral_episode_count") == 0, "raw model/behavior counts differ")
+        require(results.get("first_passing_rule_obeyed") == raw.get("first_passing_rule_obeyed"), "first-pass rule differs")
+        require(results.get("selection_rule") == raw.get("selection_rule"), "selection rule differs")
+        diagnostics = raw.get("known_reachable_diagnostics")
+        attempts = raw.get("attempts")
+        require(isinstance(diagnostics, list) and len(diagnostics) == 4 and all(row.get("passed") is True for row in diagnostics), "raw diagnostics differ")
+        require(isinstance(attempts, list) and [row.get("candidate_rank") for row in attempts] == [1, 2, 3, 4], "raw rank order differs")
+        regenerated = []
+        for attempt in attempts:
+            require(attempt.get("passed") is False, "raw attempt unexpectedly passed")
+            stages = attempt.get("stages")
+            require(isinstance(stages, Mapping), "raw stage mapping absent")
+            regenerated.append({
+                "candidate_rank": attempt["candidate_rank"],
+                "passed": False,
+                "stages": {
+                    stage: gate_summary(stages[stage]["candidate_state"])
+                    for stage in ("canonical_grasp", "canonical_carry")
+                },
+            })
+        require(regenerated == results.get("candidate_attempts"), "compact gate summaries do not regenerate from raw")
+        evidence = authoritative.get("candidate_evidence", {})
+        require(authoritative.get("passed") is True and evidence.get("passed") is True, "authoritative receipt did not pass")
+        require(evidence.get("child_report") == manifest["raw_evidence"]["child_result"], "authoritative receipt binds another child")
+        require(authoritative.get("postexecution_validator_amendment", {}).get("amendment") == amendment, "authoritative amendment binding differs")
+        repo_receipt = verify(root, manifest["repo_target_validation_receipt"], "repo receipt")
+        require(repo_receipt.read_bytes() == raw_paths["authoritative_validation"].read_bytes(), "repo receipt is not authoritative receipt")
+        amendment_path = verify(root, amendment, "postexecution validator amendment")
+        amendment_value = json.loads(amendment_path.read_text(encoding="utf-8"))
+        require(amendment_value.get("raw_result") == manifest["raw_evidence"]["child_result"], "amendment raw result differs")
+        require(amendment_value.get("model_request_count") == amendment_value.get("behavioral_episode_count") == 0, "amendment counts differ")
     print(json.dumps({"passed": True, "results": manifest["repo_result"], "manifest_sha256": sha256(closure / "evidence_manifest.json"), "status": TERMINAL}, indent=2, sort_keys=True))
 
 

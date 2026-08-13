@@ -13,15 +13,25 @@ from __future__ import annotations
 import argparse
 from copy import deepcopy
 import hashlib
+import importlib.util
 import json
 from pathlib import Path
 import subprocess
+import sys
 from typing import Any, Mapping
 
-from tools import validate_v3e006_r007 as frozen
-
-
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+_FROZEN_PATH = ROOT / "tools/validate_v3e006_r007.py"
+_FROZEN_SPEC = importlib.util.spec_from_file_location(
+    "v3e006_r007_frozen_validator", _FROZEN_PATH
+)
+if _FROZEN_SPEC is None or _FROZEN_SPEC.loader is None:
+    raise RuntimeError(f"cannot load frozen validator: {_FROZEN_PATH}")
+frozen = importlib.util.module_from_spec(_FROZEN_SPEC)
+_FROZEN_SPEC.loader.exec_module(frozen)
+
 AMENDMENT = (
     ROOT
     / "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r007"

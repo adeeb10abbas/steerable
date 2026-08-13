@@ -5,9 +5,6 @@ from copy import deepcopy
 import pytest
 
 from tools import validate_v3e006_r007_postexecution as corrected
-from tools.validate_v3e006_r007 import ValidationError
-
-
 def test_exact_runtime_rank_annotation_is_required_and_normalized(monkeypatch) -> None:
     expected_stage = {"stage": "canonical_carry", "target": {"x": 1}}
     state = {
@@ -45,7 +42,7 @@ def test_exact_runtime_rank_annotation_is_required_and_normalized(monkeypatch) -
     ):
         bad = deepcopy(state)
         bad["construction"]["registered_stage_schedule"] = retained
-        with pytest.raises(ValidationError):
+        with pytest.raises(corrected.frozen.ValidationError):
             corrected.validate_open_contact_state(
                 bad, "canonical_carry", expected_stage, candidate_rank=3
             )

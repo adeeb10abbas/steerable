@@ -9,7 +9,7 @@ from pathlib import Path
 import subprocess
 import sys
 
-from experiments.v3.phase_c_semantic_equivalence_v3c002r001.activation_v4_contract import require_a004_gate
+from experiments.v3.phase_c_semantic_equivalence_v3c002r001.activation_v4_contract import admitted_slots, lane_records, require_a004_gate
 from experiments.v3.phase_c_semantic_equivalence_v3c002r001.activation_v4_pinned_push import install_contract_monkeypatches
 
 
@@ -33,6 +33,11 @@ if subprocess.check_output(["git", "-C", str(study_root), "rev-parse", "HEAD"], 
 if not target.is_file() or _sha256(target) != E2_ADAPTER_SHA256:
     raise RuntimeError("A004 exact e2d9 adapter bytes changed")
 install_contract_monkeypatches()
+gate_path = Path(_value("--authorization-gate")).resolve()
+lane_id = _value("--lane-id")
+lane_matches = [(slot, value) for slot, (_, value) in lane_records(__import__("json").loads(gate_path.read_text())).items() if value.get("lane_id") == lane_id]
+if len(lane_matches) != 1 or lane_matches[0][0] not in admitted_slots(gate_path):
+    raise RuntimeError("A004 request-zero lane identity is not admitted by its exact gate")
 for name in list(sys.modules):
     if name.startswith("experiments.v3.phase_c_semantic_equivalence_v3c002") and "v3c002r001" not in name:
         del sys.modules[name]

@@ -14,6 +14,8 @@ from experiments.v3.phase_c_semantic_equivalence_v3c002.contract import Contract
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 PINNED_RECEIPT_SCHEMA = "vla-wam-shared-v3c002r001-activation-v4-source-gate-v3"
+IMPLEMENTATION_COMMIT = "__IMPLEMENTATION_COMMIT__"
+REGISTRATION_SHA256 = "__REGISTRATION_SHA256__"
 _RECEIPT: dict[str, Any] | None = None
 
 
@@ -31,6 +33,13 @@ def install_from_environment() -> dict[str, Any]:
     require(path.is_file() and sha256_file(path) == expected, "A004 pinned receipt bytes changed")
     value = json.loads(path.read_text(encoding="utf-8"))
     require(isinstance(value, dict) and value.get("schema_version") == PINNED_RECEIPT_SCHEMA and value.get("status") == "passed_universal_a004_source_and_registration_pushed_before_behavior" and value.get("passed") is True and value.get("pushed") is True, "A004 pinned receipt did not pass")
+    require(value.get("remote") == "https://github.com/adeeb10abbas/steerable.git" and value.get("branch") == "experiment/v3c002-semantic-equivalence", "A004 pinned remote/branch changed")
+    require(value.get("implementation_commit") == IMPLEMENTATION_COMMIT and value.get("registration_sha256") == REGISTRATION_SHA256, "A004 pinned implementation/registration lineage changed")
+    inventory = value.get("source_inventory")
+    require(isinstance(inventory, dict) and inventory, "A004 pinned source inventory missing")
+    for relative, expected_source in inventory.items():
+        source = REPO_ROOT / relative
+        require(source.is_file() and isinstance(expected_source, dict) and source.stat().st_size == expected_source.get("bytes") and sha256_file(source) == expected_source.get("sha256"), f"A004 pinned source inventory changed: {relative}")
     require(value.get("a004_model_requests_before_registration") == 0 and value.get("a004_behavioral_episodes_before_registration") == 0, "A004 pinned receipt is retrospective")
     head = value.get("remote_head_at_gate")
     require(isinstance(head, str) and re.fullmatch(r"[0-9a-f]{40}", head) is not None, "A004 pinned remote head is invalid")

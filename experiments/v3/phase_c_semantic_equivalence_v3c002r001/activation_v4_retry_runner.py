@@ -13,7 +13,7 @@ from experiments.v3.phase_c_semantic_equivalence_v3c002r001.activation_v4_pinned
 
 
 ADAPTER_MODULE = "experiments.v3.phase_c_semantic_equivalence_v3c002r001.activation_v4_replacement_adapter"
-ADAPTER_SHA = "30b5cbb15035ff362a14b7ecf28df3ec9b5f7c675262c2f4b383c490d192135f"
+ADAPTER_SHA = "ca3bed4c272533e69b3264c6219577dd76a2de1e9d16ac56753c826c24e078f3"
 RETRY = {
     "repair-lane-00": 12060, "repair-lane-01": 12101,
     "repair-lane-02": 12128, "repair-lane-03": 12177,

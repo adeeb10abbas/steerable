@@ -89,6 +89,37 @@ def _verify_continuation(gate: Mapping[str, Any], *, queue_path: Path) -> None:
             expected[slot] = binding["sha256"]
     actual = {slot: binding["sha256"] for slot, (binding, _) in lane_records(gate).items()}
     require(actual == expected, "A004 continuation lane identity is not A003[00,01] plus release28ee[02..07]")
+    repair_registration = validate_file_binding(gate.get("repair_registration"), "A004 repair registration")
+    require(repair_registration["sha256"] == "2323b8b4094598ae5584cacfb43abcf2f9607a241428106972c3d0c736303579", "A004 repair registration changed")
+    rows = validate_assignment(gate.get("assignment_manifest"))
+    assigned: dict[str, set[int]] = {slot: set() for slot in ALL_SLOTS}
+    for row in rows:
+        assigned[str(row["lane_slot"])].add(int(row["episode_seed"]))
+    retry = gate.get("retry_markers")
+    all_markers = gate.get("all_completed_markers_by_lane")
+    remaining = gate.get("remaining_seed_blocks_by_lane")
+    require(isinstance(retry, dict) and set(retry) == set(ALL_SLOTS) and isinstance(all_markers, dict) and set(all_markers) == set(ALL_SLOTS) and isinstance(remaining, dict) and set(remaining) == set(ALL_SLOTS), "A004 continuation slot coverage changed")
+    retry_seeds = {"repair-lane-00": 12060, "repair-lane-01": 12101, "repair-lane-02": 12128, "repair-lane-03": 12177, "repair-lane-04": 12156, "repair-lane-05": 12107, "repair-lane-06": 12176, "repair-lane-07": 12112}
+    for slot in ALL_SLOTS:
+        seen: set[int] = set()
+        bindings = all_markers[slot]
+        require(isinstance(bindings, list), f"A004 markers invalid for {slot}")
+        for binding in bindings:
+            validated = validate_file_binding(binding, f"A004 completed marker {slot}")
+            marker_path = Path(validated["path"])
+            marker = read_finite_json(marker_path)
+            seed = marker.get("episode_seed")
+            require(marker.get("schema_version") == "vla-wam-shared-v3c002-completed-block-v1" and marker.get("status") == "completed_behavioral_block" and isinstance(seed, int) and marker_path.parent.name == f"seed{seed}" and seed in assigned[slot] and seed not in seen, f"A004 marker identity changed for {slot}")
+            raws = marker.get("raw_episodes")
+            require(isinstance(raws, list) and len(raws) == 4, "A004 completed marker is partial")
+            for raw in raws:
+                validate_file_binding(raw, "A004 completed raw")
+            seen.add(seed)
+        retry_binding = validate_file_binding(retry[slot], f"A004 retry marker {slot}")
+        retry_marker = read_finite_json(Path(retry_binding["path"]))
+        require(retry_marker.get("episode_seed") == retry_seeds[slot] and retry_seeds[slot] in seen and str(retry_marker.get("attempt_root", "")).endswith("/attempt002"), "A004 retry marker changed")
+        expected_remaining = sorted(assigned[slot] - seen)
+        require(remaining[slot] == expected_remaining, f"A004 remaining seeds were not recomputed for {slot}")
 
 
 def require_a004_gate(*, registration_path: Path, queue_path: Path, release_gate_path: Path):

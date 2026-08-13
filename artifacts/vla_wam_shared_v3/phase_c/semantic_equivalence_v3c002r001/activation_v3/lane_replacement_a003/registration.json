@@ -1,0 +1,110 @@
+{
+  "activation_id": "V3-C002-R001-A003",
+  "assignment_manifest": {
+    "bytes": 145156,
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v3/assignment.jsonl",
+    "sha256": "d9ce17feb3ecaca08180ca6b175fe0bf35469191f531276ce319daa7355e326f"
+  },
+  "existing_activation_completed_behavioral_block_count": 101,
+  "parent_activation_v3_registration": {
+    "bytes": 28569,
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v3/registration.json",
+    "sha256": "2323b8b4094598ae5584cacfb43abcf2f9607a241428106972c3d0c736303579"
+  },
+  "parent_release_gate": {
+    "bytes": 10479,
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v3/release_gate.released.json",
+    "sha256": "28ee96e3fcda4637302aadef6e90233574101a75e5c7af75fa1d9e4b1c060a7d"
+  },
+  "pre_replacement_activation_progress": {
+    "bytes": 51384,
+    "path": "/data/users/ali/vla_wam/raw/v3c002r001/replacement/pre_registration/progress_snapshot.json",
+    "sha256": "ebcbf8571952deb62335366762888b32ab3c38c21679f4b226f9af15a265158a"
+  },
+  "queue": {
+    "bytes": 4362072,
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v3/queue.jsonl",
+    "sha256": "c7003f05b1302ab52d30fd9f6c50244a8df1e143c8411c436eb2817abc312a50"
+  },
+  "registered_at_utc": "2026-08-13T00:56:13.963902Z",
+  "release_status": "blocked_pending_committed_pushed_source_and_replacement_evidence",
+  "repair_id": "V3-C002-R001",
+  "replacement_gate_behavioral_episodes_before_registration": 0,
+  "replacement_gate_model_requests_before_registration": 0,
+  "replacement_scope": {
+    "completed_blocks_never_rerun": true,
+    "fresh_policy_servers_only": true,
+    "lane_slots": [
+      "repair-lane-00",
+      "repair-lane-01"
+    ],
+    "no_cross_lane_failover": true,
+    "retry_only_incomplete_seed": true,
+    "retry_seed_by_lane": {
+      "repair-lane-00": 12060,
+      "repair-lane-01": 12101
+    },
+    "same_simulator_lanes": true
+  },
+  "retained_deleted_policy_pod_evidence": {
+    "bytes": 1446,
+    "path": "/data/users/ali/vla_wam/raw/v3c002r001/replacement/deleted_policy_pods.json",
+    "sha256": "4c57fd6f54ae68c23e4804d4ccd2b4d710931663399ab6886efcde8ce214275e"
+  },
+  "schema_version": "vla-wam-shared-v3c002r001-activation-v3-lane-replacement-registration-v1",
+  "science_unchanged": {
+    "analysis": true,
+    "assignment": true,
+    "frozen_definitions": true,
+    "predicates": true,
+    "queue": true
+  },
+  "source_bindings": {
+    "experiments/v3/phase_c_semantic_equivalence_v3c002/runner.py": {
+      "bytes": 16418,
+      "path": "experiments/v3/phase_c_semantic_equivalence_v3c002/runner.py",
+      "sha256": "55a34bba783005067669355006e150bdc049ddbefaae132a9d05c42dddba9ad6"
+    },
+    "experiments/v3/phase_c_semantic_equivalence_v3c002r001/activation_v3_lane_replacement_runner.py": {
+      "bytes": 8500,
+      "path": "experiments/v3/phase_c_semantic_equivalence_v3c002r001/activation_v3_lane_replacement_runner.py",
+      "sha256": "5113fb7de769d279d668b82b784a2df4bc9769a1429eb166999b86fe43e1a2ac"
+    },
+    "experiments/v3/phase_c_semantic_equivalence_v3c002r001/contract.py": {
+      "bytes": 21849,
+      "path": "experiments/v3/phase_c_semantic_equivalence_v3c002r001/contract.py",
+      "sha256": "b33e8683ffa36d1c7e7dbabcf07d06377d30640bdb20b18c6852f515f4b12f75"
+    },
+    "experiments/v3/phase_c_semantic_equivalence_v3c002r001/runner.py": {
+      "bytes": 5463,
+      "path": "experiments/v3/phase_c_semantic_equivalence_v3c002r001/runner.py",
+      "sha256": "2f5d0fdcd93ad3159e7d669a59bc77acc636b8f95ee9efb6250585bced7626f2"
+    },
+    "tests/test_v3c002r001_activation_v3_lane_replacement.py": {
+      "bytes": 6288,
+      "path": "tests/test_v3c002r001_activation_v3_lane_replacement.py",
+      "sha256": "d8d32ed80732af408623db2672129704e7a36386831242dcc1772dbaee11c668"
+    },
+    "tools/build_v3c002r001_activation_v3_lane_replacement_registration.py": {
+      "bytes": 9164,
+      "path": "tools/build_v3c002r001_activation_v3_lane_replacement_registration.py",
+      "sha256": "8ae90deeb59daae34f64dee18f3c80747f62d929f819cdbb6b9fec94b0c25302"
+    },
+    "tools/compile_v3c002r001_activation_v3_lane_replacement.py": {
+      "bytes": 27717,
+      "path": "tools/compile_v3c002r001_activation_v3_lane_replacement.py",
+      "sha256": "d7ce1c41d835ea2e890c48a51132175ecc1f2949aa500aec32bc10f18cf16e9e"
+    },
+    "tools/compile_v3c002r001_activation_v3_lane_replacement_source_gate.py": {
+      "bytes": 4082,
+      "path": "tools/compile_v3c002r001_activation_v3_lane_replacement_source_gate.py",
+      "sha256": "a6267353467e59ded98f59695565e04996480cd82c9110d927b0aaa45f7067d9"
+    },
+    "tools/snapshot_v3c002r001_activation_v3_pre_replacement_progress.py": {
+      "bytes": 7178,
+      "path": "tools/snapshot_v3c002r001_activation_v3_pre_replacement_progress.py",
+      "sha256": "9e42349ac56e9c61f7ff5b234d17d8b37d92132ebf3aac159ef2e7e91706b20d"
+    }
+  },
+  "status": "registered_prospective_activation_v3_lane_replacement"
+}

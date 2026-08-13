@@ -1,0 +1,99 @@
+{
+  "accepted_state_candidate_count": 0,
+  "behavioral_episode_count": 0,
+  "candidate_schedule": {
+    "bytes": 114468,
+    "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r004/gates/candidate_schedule.json",
+    "sha256": "46ae56c0d49d6f51ca2f10f1aaf1b38d8c98c9120d30a206ac90e99773186423"
+  },
+  "completed_candidate_pair_count": 0,
+  "created_at_utc": "2026-08-13T00:29:07.271005Z",
+  "implementation_commit": "56c74d5dc5fe3c9770da51fe00eb148d701dda46",
+  "implementation_file_count": 11,
+  "implementation_files": [
+    {
+      "bytes": 114468,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r004/gates/candidate_schedule.json",
+      "sha256": "46ae56c0d49d6f51ca2f10f1aaf1b38d8c98c9120d30a206ac90e99773186423"
+    },
+    {
+      "bytes": 9750,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r004/repair_registration.json",
+      "sha256": "0989c4e7052bce85dc44b653690ee61b4cbb298dcc97a3285d1d982c52b9365c"
+    },
+    {
+      "bytes": 77,
+      "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r004/__init__.py",
+      "sha256": "55e48f4f805f52bcbbbcdc31ca5b35b6f40b8a9da4a6eabc2e3faa1069960c58"
+    },
+    {
+      "bytes": 2926,
+      "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r004/predecessor_contract.py",
+      "sha256": "1cfbc7726bdf08a83e5e8767e89aaf35d8ec40ffa8bb68c58b54b77490c4ed50"
+    },
+    {
+      "bytes": 4867,
+      "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r004/residual_correction.py",
+      "sha256": "0276e936f364ac8186e520727c0463a58e69d998fd3fdec16ec756139120b009"
+    },
+    {
+      "bytes": 110168,
+      "path": "experiments/v3/phase_e/canonical_stage_localization_v3e006_r004/state_repair_gate.py",
+      "sha256": "78a83b46537dd5dcbfc9b96431bda31e02ed8d28909cea827880ec1574efb87f"
+    },
+    {
+      "bytes": 14628,
+      "path": "tests/test_v3e006_r004.py",
+      "sha256": "a9e8c19a3d269dace80bc485fbbf83eac2bd690ff9d04c53101b2f75a9126d4f"
+    },
+    {
+      "bytes": 12455,
+      "path": "tools/build_v3e006_r004_freeze.py",
+      "sha256": "9f7ab34c2f8af54813ccdec4a1a8ce832ae9586b3ff5229b8829f61c61fd46a1"
+    },
+    {
+      "bytes": 6440,
+      "path": "tools/build_v3e006_r004_source_gate.py",
+      "sha256": "cb654dd446326ec5afc9df824b03d36c14cadaf4b5fe2a7787d8244a4547ec55"
+    },
+    {
+      "bytes": 16923,
+      "path": "tools/run_v3e006_r004_state_repair.py",
+      "sha256": "31179ae5ba26cf171f815af48cb19e7cf5f28e555dfb94f8a6e3cec864ec3391"
+    },
+    {
+      "bytes": 32460,
+      "path": "tools/validate_v3e006_r004.py",
+      "sha256": "c00e7f783ea36e9f9996d28b7736cec8a414e3158a73dd38206c3a529779a70f"
+    }
+  ],
+  "infrastructure_invalid_search_attempt_count": 0,
+  "model_request_count": 0,
+  "r003_diagnostic_closure_commit": "fc2f23a915a98f368181dd897994b67d64a35eeb",
+  "r004_live_candidate_evaluation_count": 0,
+  "r004_live_diagnostic_count": 0,
+  "release_boundary": "Four frozen zero-model reachability diagnostics followed conditionally by one finite sequential zero-model R004 candidate search; behavior and inference remain blocked.",
+  "remote_equality": {
+    "commit": "56c74d5dc5fe3c9770da51fe00eb148d701dda46",
+    "ref": "refs/heads/experiment/v3e006-r004-state-repair",
+    "remote": "origin"
+  },
+  "repair_amendment_id": "V3-E006-R004",
+  "repair_registration": {
+    "bytes": 9750,
+    "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r004/repair_registration.json",
+    "sha256": "0989c4e7052bce85dc44b653690ee61b4cbb298dcc97a3285d1d982c52b9365c"
+  },
+  "required_repository_base": "18a2bf0200183647291cc7aeb1fe89997b3fb82f",
+  "schema_version": "vla-wam-shared-v3e006-r004-source-push-gate-v1",
+  "source_push_assertions": {
+    "behavior_and_model_release_prohibited": true,
+    "original_r001_r002_and_r003_predecessors_preserved": true,
+    "r003_targets_and_candidate_order_unchanged": true,
+    "registration_and_schedule_predate_first_r004_live_diagnostic": true,
+    "remote_ref_equals_implementation_commit": true,
+    "symmetric_residual_correction_frozen_for_every_pose_hold": true,
+    "unchanged_scientific_gate_sources_bound": true
+  },
+  "status": "passed_before_first_r004_live_diagnostic_candidate_or_model_request"
+}

@@ -23,6 +23,7 @@ from tools.validate_v3e006_r005 import (
     validate_pose_hold,
     validate_scientific_selection,
     validate_static,
+    validate_terminal_selection_rule,
 )
 
 
@@ -333,6 +334,47 @@ def test_runtime_topology_uses_one_correction_function_for_diagnostic_and_waypoi
     for caller in ("_run_known_reachable_diagnostic", "_solve_registered_ik"):
         assert "_run_registered_pose_hold" in ast.dump(functions[caller], include_attributes=False)
     assert "requests.post" not in text and "httpx" not in text and "policy_server" not in text
+
+
+def test_real_registration_terminal_selection_and_incremental_retention() -> None:
+    registration, schedule = load(REGISTRATION), load(SCHEDULE)
+    assert "candidate_search" not in registration
+    assert schedule["selection_rule"]["maximum_complete_candidate_pairs"] == 4
+    validate_terminal_selection_rule({"selection_rule": schedule["selection_rule"]}, schedule)
+    with pytest.raises(ValidationError):
+        validate_terminal_selection_rule({"selection_rule": {"mutated": True}}, schedule)
+    source = ROOT / "experiments/v3/phase_e/canonical_stage_localization_v3e006_r005/state_repair_gate.py"
+    tree = ast.parse(source.read_text(encoding="utf-8"))
+    main = next(
+        row for row in tree.body if isinstance(row, ast.FunctionDef) and row.name == "main"
+    )
+    main_dump = ast.dump(main, include_attributes=False)
+    subscripts = [row for row in ast.walk(main) if isinstance(row, ast.Subscript)]
+    assert not any(
+        isinstance(row.value, ast.Name)
+        and row.value.id == "repair_registration"
+        and isinstance(row.slice, ast.Constant)
+        and row.slice.value == "candidate_search"
+        for row in subscripts
+    )
+    assert any(
+        isinstance(row.value, ast.Name)
+        and row.value.id == "candidate_schedule"
+        and isinstance(row.slice, ast.Constant)
+        and row.slice.value == "selection_rule"
+        for row in subscripts
+    )
+    assert main_dump.count("_persist_completed_evidence") == 2
+    assert main_dump.index("COMPLETED_DIAGNOSTICS") < main_dump.index(
+        "r005_known_reachable_diagnostic_failed_candidates_not_evaluated"
+    )
+    assert main_dump.index("COMPLETED_ATTEMPTS") < main_dump.index(
+        "retain_r005_candidate_search"
+    )
+
+    closer = (ROOT / "tools/close_v3e006_r005.py").read_text(encoding="utf-8")
+    assert "r005_candidate_budget_exhausted_no_valid_state_pair" in closer
+    assert "r005_candidate_schedule_exhausted_no_valid_state_pair" not in closer
 
 
 def test_unchanged_scientific_helpers_match_r004_ast() -> None:

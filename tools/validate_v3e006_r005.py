@@ -28,6 +28,11 @@ from experiments.v3.phase_e.canonical_stage_localization_v3e006_r005.residual_co
     normalize_quaternion,
     validate_contract,
 )
+from experiments.v3.phase_e.canonical_stage_localization_v3e006_r005.source_gate_contract import (
+    V2_SCHEMA,
+    V2_STATUS,
+    validate_retry_source_gate,
+)
 
 
 BASE = "18a2bf0200183647291cc7aeb1fe89997b3fb82f"
@@ -37,7 +42,7 @@ R004_RAW_RESULT_SHA256 = "54c2335c5c4339037bd5f7e7e76ab15c5485191d82de253cc61d27
 REGISTRATION_STATUS = (
     "prospectively_registered_before_any_r005_live_diagnostic_candidate_or_model_request"
 )
-SOURCE_GATE_STATUS = "passed_before_first_r005_live_diagnostic_candidate_or_model_request"
+SOURCE_GATE_STATUS = V2_STATUS
 TERMINAL_STATUSES = {
     "passed_r005_state_repair_not_released_for_behavior": True,
     "r005_candidate_budget_exhausted_no_valid_state_pair": False,
@@ -341,12 +346,23 @@ def validate_scientific_selection(report: Mapping[str, Any], harness: Mapping[st
     require(harness.get("child_status") == report.get("status"), "harness child status differs")
 
 
-def validate_static(root: Path, *, require_source_gate: bool = True) -> dict[str, Any]:
+def validate_terminal_selection_rule(
+    report: Mapping[str, Any], schedule: Mapping[str, Any]
+) -> None:
+    require(
+        report.get("selection_rule") == schedule.get("selection_rule"),
+        "terminal selection rule is not the exact frozen candidate schedule",
+    )
+
+
+def validate_static(
+    root: Path, *, require_source_gate: bool = True, verify_retry_history: bool = False
+) -> dict[str, Any]:
     root = root.resolve()
     artifact = root / "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r005"
     registration_path = artifact / "repair_registration.json"
     schedule_path = artifact / "gates/candidate_schedule.json"
-    source_gate_path = artifact / "source_push_gate.json"
+    source_gate_path = artifact / "source_push_gate_v2.json"
     registration, schedule = load(registration_path), load(schedule_path)
     require(registration.get("repair_amendment_id") == "V3-E006-R005", "registration ID differs")
     require(registration.get("status") == REGISTRATION_STATUS, "registration status differs")
@@ -450,20 +466,25 @@ def validate_static(root: Path, *, require_source_gate: bool = True) -> dict[str
     if require_source_gate:
         require(source_gate_path.is_file(), "R005 source-push gate missing")
         source_gate = load(source_gate_path)
-        require(source_gate.get("schema_version") == "vla-wam-shared-v3e006-r005-source-push-gate-v1", "source-gate schema differs")
+        require(source_gate.get("schema_version") == V2_SCHEMA, "source-gate schema differs")
         require(source_gate.get("status") == SOURCE_GATE_STATUS, "source-gate status differs")
-        require(all(source_gate.get(key) == 0 for key in (
-            "model_request_count", "behavioral_episode_count", "r005_live_diagnostic_count",
-            "r005_live_candidate_evaluation_count", "completed_candidate_pair_count",
-            "accepted_state_candidate_count", "infrastructure_invalid_search_attempt_count",
-        )), "source-gate counts differ")
+        try:
+            validate_retry_source_gate(
+                source_gate, study_root=root, verify_raw_history=verify_retry_history
+            )
+        except ValueError as exc:
+            raise ValidationError(str(exc)) from exc
         implementation = str(source_gate.get("implementation_commit", ""))
         require(subprocess.run(
             ["git", "-C", str(root), "cat-file", "-e", f"{implementation}^{{commit}}"],
             check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
         ).returncode == 0, "implementation commit absent")
         inventory = source_gate.get("implementation_files")
-        require(isinstance(inventory, list) and len(inventory) == source_gate.get("implementation_file_count") == 11, "source inventory differs")
+        require(
+            isinstance(inventory, list)
+            and len(inventory) == source_gate.get("implementation_file_count") == 15,
+            "source inventory differs",
+        )
         for row in inventory:
             relative = Path(str(row.get("path", "")))
             require(not relative.is_absolute() and ".." not in relative.parts, "unsafe source path")
@@ -505,6 +526,11 @@ def validate_candidate_root(root: Path, candidate_root: Path) -> dict[str, Any]:
     report = load(report_path)
     if harness.get("process_completed") is True:
         require(report_path.name == "state_repair_result.json", "terminal report filename differs")
+        schedule = load(
+            root
+            / "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r005/gates/candidate_schedule.json"
+        )
+        validate_terminal_selection_rule(report, schedule)
         validate_scientific_selection(report, harness)
         for diagnostic in report["known_reachable_diagnostics"]:
             validate_construction_horizon_activation(
@@ -568,7 +594,11 @@ def main() -> None:
     parser.add_argument("--candidate-root", type=Path)
     parser.add_argument("--verify-raw", action="store_true")
     args = parser.parse_args()
-    result = validate_static(args.study_root, require_source_gate=not args.pre_source_gate)
+    result = validate_static(
+        args.study_root,
+        require_source_gate=not args.pre_source_gate,
+        verify_retry_history=args.verify_raw,
+    )
     if args.candidate_root is not None:
         require(args.verify_raw, "--candidate-root requires --verify-raw")
         result["candidate_evidence"] = validate_candidate_root(args.study_root, args.candidate_root)

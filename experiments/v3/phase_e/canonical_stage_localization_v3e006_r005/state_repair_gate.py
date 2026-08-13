@@ -273,24 +273,22 @@ for label, expected in predecessor_result["raw_evidence"].items():
         or _sha(raw_path) != expected["sha256"]
     ):
         BOOTSTRAP.error(f"R004 predecessor raw evidence changed: {label}")
-if source_push_gate.get("status") != "passed_before_first_r005_live_diagnostic_candidate_or_model_request":
-    BOOTSTRAP.error("R005 source-push gate did not pass prospectively")
+from experiments.v3.phase_e.canonical_stage_localization_v3e006_r005.source_gate_contract import (
+    validate_retry_source_gate,
+)
+
+try:
+    validate_retry_source_gate(
+        source_push_gate, study_root=study_root, verify_raw_history=True
+    )
+except ValueError as exc:
+    BOOTSTRAP.error(str(exc))
 implementation_commit = str(source_push_gate.get("implementation_commit", ""))
 if not implementation_commit or subprocess.run(
     ["git", "-C", str(study_root), "merge-base", "--is-ancestor", implementation_commit, args.expected_study_commit],
     check=False,
 ).returncode:
     BOOTSTRAP.error("source-push implementation commit is not an ancestor of runtime checkout")
-if (
-    source_push_gate.get("model_request_count") != 0
-    or source_push_gate.get("behavioral_episode_count") != 0
-    or source_push_gate.get("r005_live_diagnostic_count") != 0
-    or source_push_gate.get("r005_live_candidate_evaluation_count") != 0
-    or source_push_gate.get("completed_candidate_pair_count") != 0
-    or source_push_gate.get("accepted_state_candidate_count") != 0
-    or source_push_gate.get("infrastructure_invalid_search_attempt_count") != 0
-):
-    BOOTSTRAP.error("R005 source-push history counts differ")
 implementation_files = source_push_gate.get("implementation_files")
 if not isinstance(implementation_files, list) or not implementation_files:
     BOOTSTRAP.error("source-push gate has no implementation-file inventory")
@@ -438,6 +436,8 @@ LAST_TERMINATION_EVIDENCE: dict[str, Any] | None = None
 ENVIRONMENT_LIFECYCLE: list[dict[str, Any]] = []
 CANDIDATE_EVALUATION_COUNT = 0
 DIAGNOSTIC_EVALUATION_COUNT = 0
+COMPLETED_DIAGNOSTICS: list[dict[str, Any]] = []
+COMPLETED_ATTEMPTS: list[dict[str, Any]] = []
 
 import omni.usd  # noqa: E402
 from pxr import Usd, UsdGeom  # noqa: E402
@@ -612,6 +612,31 @@ def _write_failure(exc: BaseException) -> Path:
     }
     path = args.output_dir / "state_construction_failure.json"
     path.write_bytes(canonical_bytes(report))
+    return path
+
+
+def _persist_completed_evidence(
+    *, diagnostics: list[dict[str, Any]], attempts: list[dict[str, Any]]
+) -> Path:
+    """Atomically retain completed zero-model work without changing selection."""
+
+    path = args.output_dir / "completed_evidence.partial.json"
+    temporary = path.with_suffix(".json.tmp")
+    payload = {
+        "schema_version": "vla-wam-shared-v3e006-r005-completed-evidence-v1",
+        "amendment_id": "V3-E006-R005",
+        "status": "diagnostic_only_incremental_retention_not_a_terminal_result",
+        "model_request_count": 0,
+        "behavioral_episode_count": 0,
+        "candidate_gate_passed": False,
+        "selection_rule": candidate_schedule["selection_rule"],
+        "completed_diagnostic_count": len(diagnostics),
+        "completed_candidate_pair_count": len(attempts),
+        "known_reachable_diagnostics": diagnostics,
+        "attempts": attempts,
+    }
+    temporary.write_bytes(canonical_bytes(payload))
+    os.replace(temporary, path)
     return path
 
 
@@ -2061,7 +2086,7 @@ def _direct_materialize_and_gate(
 
 def main() -> None:
     global CURRENT_STAGE, LAST_PARTIAL_STAGES, CANDIDATE_EVALUATION_COUNT
-    global DIAGNOSTIC_EVALUATION_COUNT
+    global DIAGNOSTIC_EVALUATION_COUNT, COMPLETED_DIAGNOSTICS, COMPLETED_ATTEMPTS
     CURRENT_STAGE = "load_hash_bound_r005_contracts"
     args.output_dir.mkdir(parents=True)
     ood = json.loads(args.ood_freeze.read_text(encoding="utf-8"))
@@ -2230,6 +2255,8 @@ def main() -> None:
                     retained_failure=diagnostic_failure,
                 )
                 del diagnostic_env
+        COMPLETED_DIAGNOSTICS = diagnostics.copy()
+        _persist_completed_evidence(diagnostics=diagnostics, attempts=attempts)
         if not diagnostics[-1]["passed"]:
             CURRENT_STAGE = "r005_known_reachable_diagnostic_failed_blocking_candidates"
             video_path = (
@@ -2417,6 +2444,8 @@ def main() -> None:
             row["candidate_state"]["passed"] for row in rank_attempt["stages"].values()
         )
         attempts.append(rank_attempt)
+        COMPLETED_ATTEMPTS = attempts.copy()
+        _persist_completed_evidence(diagnostics=diagnostics, attempts=attempts)
         if rank_attempt["passed"]:
             accepted = rank_attempt
             break
@@ -2472,7 +2501,7 @@ def main() -> None:
             ],
             "construction_prompt_exposure": "the exact E004 environment task prompt exists in cfg but is never read by or supplied to the repair controller",
             "task_prompt_retained_for_audit": task_prompt,
-            "selection_rule": repair_registration["candidate_search"],
+            "selection_rule": candidate_schedule["selection_rule"],
             "environment_lifecycle": ENVIRONMENT_LIFECYCLE,
             "contact_sensor_coverage_by_stage": contact_coverage_by_stage,
             "attempts": attempts,

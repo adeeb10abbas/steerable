@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_OUTPUT = ROOT / "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r005/results"
 TERMINAL = {
     "passed_r005_state_repair_not_released_for_behavior",
-    "r005_candidate_schedule_exhausted_no_valid_state_pair",
+    "r005_candidate_budget_exhausted_no_valid_state_pair",
     "r005_known_reachable_diagnostic_failed_candidates_not_evaluated",
 }
 

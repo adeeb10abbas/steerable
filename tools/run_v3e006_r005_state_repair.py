@@ -114,6 +114,8 @@ def main() -> None:
 
     study_root = args.study_root.resolve()
     robolab_root = args.robolab_root.resolve()
+    if str(study_root) not in sys.path:
+        sys.path.insert(0, str(study_root))
     output_root = args.output_root.absolute()
     if output_root.exists():
         parser.error(f"refusing to overwrite R005 attempt: {output_root}")
@@ -150,18 +152,16 @@ def main() -> None:
     if health_harness.get("status") != "passed_generic_zero_model_health_preflight" or health_harness.get("passed") is not True:
         parser.error("bound formal health preflight did not pass")
     source_gate = json.loads(args.source_push_gate.read_text(encoding="utf-8"))
-    if source_gate.get("status") != "passed_before_first_r005_live_diagnostic_candidate_or_model_request":
-        parser.error("R005 source-push gate did not pass prospectively")
-    if (
-        source_gate.get("model_request_count") != 0
-        or source_gate.get("behavioral_episode_count") != 0
-        or source_gate.get("r005_live_diagnostic_count") != 0
-        or source_gate.get("r005_live_candidate_evaluation_count") != 0
-        or source_gate.get("completed_candidate_pair_count") != 0
-        or source_gate.get("accepted_state_candidate_count") != 0
-        or source_gate.get("infrastructure_invalid_search_attempt_count") != 0
-    ):
-        parser.error("lifecycle-repair source-push history counts differ")
+    from experiments.v3.phase_e.canonical_stage_localization_v3e006_r005.source_gate_contract import (
+        validate_retry_source_gate,
+    )
+
+    try:
+        validate_retry_source_gate(
+            source_gate, study_root=study_root, verify_raw_history=True
+        )
+    except ValueError as exc:
+        parser.error(str(exc))
     implementation_commit = str(source_gate.get("implementation_commit", ""))
     if not implementation_commit or subprocess.run(
         ["git", "-C", str(study_root), "merge-base", "--is-ancestor", implementation_commit, args.expected_study_commit],

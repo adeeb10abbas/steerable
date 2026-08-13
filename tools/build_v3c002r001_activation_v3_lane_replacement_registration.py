@@ -25,6 +25,28 @@ V3 = ROOT / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001
 SCHEMA = "vla-wam-shared-v3c002r001-activation-v3-lane-replacement-registration-v1"
 SNAPSHOT_SCHEMA = "vla-wam-shared-v3c002r001-activation-v3-pre-replacement-progress-snapshot-v1"
 SLOTS = {"repair-lane-00": 12060, "repair-lane-01": 12101}
+REQUIRED_SOURCE_PATHS = {
+    "experiments/v3/phase_c_semantic_equivalence_v3c002/runner.py",
+    "experiments/v3/phase_c_semantic_equivalence_v3c002r001/contract.py",
+    "experiments/v3/phase_c_semantic_equivalence_v3c002r001/runner.py",
+    "experiments/v3/phase_c_semantic_equivalence_v3c002r001/activation_v3_lane_replacement_runner.py",
+    "tools/snapshot_v3c002r001_activation_v3_pre_replacement_progress.py",
+    "tools/build_v3c002r001_activation_v3_lane_replacement_registration.py",
+    "tools/compile_v3c002r001_activation_v3_lane_replacement_source_gate.py",
+    "tools/compile_v3c002r001_activation_v3_lane_replacement.py",
+    "tests/test_v3c002r001_activation_v3_lane_replacement.py",
+}
+
+
+def _source_bindings(raw_values: list[str]) -> dict[str, dict]:
+    require(set(raw_values) == REQUIRED_SOURCE_PATHS and len(raw_values) == len(REQUIRED_SOURCE_PATHS), "replacement registration requires the exact frozen source set")
+    sources: dict[str, dict] = {}
+    for raw in raw_values:
+        path = (ROOT / raw).resolve()
+        require(path.is_file() and path.is_relative_to(ROOT), f"replacement source is not a repository file: {raw}")
+        relative = path.relative_to(ROOT).as_posix()
+        sources[relative] = repo_binding(path)
+    return sources
 
 
 def main() -> None:
@@ -71,13 +93,7 @@ def main() -> None:
     deleted_binding = file_binding(args.deleted_policy_pod_evidence)
     deleted = read_finite_json(args.deleted_policy_pod_evidence)
     require(isinstance(deleted, dict) and deleted.get("schema_version") == "vla-wam-shared-v3c002r001-deleted-policy-pod-evidence-v1", "deleted policy pod evidence schema changed")
-    sources: dict[str, dict] = {}
-    for raw in args.source:
-        path = (ROOT / raw).resolve()
-        require(path.is_file() and path.is_relative_to(ROOT), f"replacement source is not a repository file: {raw}")
-        relative = path.relative_to(ROOT).as_posix()
-        require(relative not in sources, f"duplicate replacement source: {relative}")
-        sources[relative] = repo_binding(path)
+    sources = _source_bindings(args.source)
     value = {
         "schema_version": SCHEMA,
         "repair_id": "V3-C002-R001",

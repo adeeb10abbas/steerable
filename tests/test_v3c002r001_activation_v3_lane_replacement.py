@@ -14,6 +14,10 @@ from tools.compile_v3c002r001_activation_v3_lane_replacement import (
     _require_completion_index,
     _require_termination,
 )
+from tools.build_v3c002r001_activation_v3_lane_replacement_registration import (
+    REQUIRED_SOURCE_PATHS,
+    _source_bindings,
+)
 from experiments.v3.phase_c_semantic_equivalence_v3c002r001.activation_v3_lane_replacement_runner import _replacement_attempt_root
 from experiments.v3.phase_c_semantic_equivalence_v3c002r001.activation_v3_lane_replacement_runner import (
     _replacement_attempt_root,
@@ -115,6 +119,17 @@ class ActivationV3LaneReplacementTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as raw:
             with self.assertRaises(ContractError):
                 _replacement_attempt_root(Path(raw), 12060)
+
+    def test_replacement_registration_rejects_omitted_runner_source(self) -> None:
+        missing = sorted(REQUIRED_SOURCE_PATHS - {
+            "experiments/v3/phase_c_semantic_equivalence_v3c002r001/activation_v3_lane_replacement_runner.py"
+        })
+        with self.assertRaises(ContractError):
+            _source_bindings(missing)
+
+    def test_replacement_registration_accepts_exact_source_set(self) -> None:
+        bindings = _source_bindings(sorted(REQUIRED_SOURCE_PATHS))
+        self.assertEqual(set(bindings), REQUIRED_SOURCE_PATHS)
 
 
 if __name__ == "__main__":

@@ -130,6 +130,13 @@ def test_runtime_dispatches_only_open_contact_candidate_path() -> None:
     assert "state = _direct_materialize_and_gate(" not in source
 
 
+def test_outer_launcher_uses_the_registered_remote_branch() -> None:
+    path = ROOT / "tools/run_v3e006_r007_state_repair.py"
+    source = path.read_text(encoding="utf-8")
+    assert 'REMOTE_BRANCH = "experiment/v3e006-r007-open-contact-repair"' in source
+    assert "experiment/v3e006-r007-state-repair" not in source
+
+
 def _synthetic_valid_open_contact_state() -> tuple[dict, dict]:
     stage = load(ART / "gates/candidate_schedule.json")["candidate_pairs"][0]["canonical_grasp"]
     construction = {

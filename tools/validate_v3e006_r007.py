@@ -558,7 +558,7 @@ def validate_static(
     artifact = root / "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r007"
     registration_path = artifact / "repair_registration.json"
     schedule_path = artifact / "gates/candidate_schedule.json"
-    source_gate_path = artifact / "source_push_gate.json"
+    source_gate_path = artifact / "source_push_gate_v2.json"
     registration, schedule = load(registration_path), load(schedule_path)
     require(registration.get("repair_amendment_id") == "V3-E006-R007", "registration ID differs")
     require(registration.get("status") == REGISTRATION_STATUS, "registration status differs")

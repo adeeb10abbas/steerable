@@ -8,8 +8,9 @@ from pathlib import Path
 from typing import Any, Mapping
 
 
-SCHEMA = "vla-wam-shared-v3e006-r007-source-push-gate-v1"
+SCHEMA = "vla-wam-shared-v3e006-r007-source-push-gate-v2"
 STATUS = "passed_before_first_r007_live_diagnostic_candidate_or_model_request"
+SUPERSEDED_V1_SHA256 = "0a420bfa99a37b0aad6f8d79184e8c229ea60e615d8d194f30d2f61da5a91d39"
 
 
 def _sha256(path: Path) -> str:
@@ -38,6 +39,15 @@ def validate_source_gate(
 ) -> None:
     if value.get("schema_version") != SCHEMA or value.get("status") != STATUS:
         raise ValueError("R007 source-push gate identity/status differs")
+    superseded = value.get("supersedes_source_push_gate_v1", {})
+    if superseded.get("sha256") != SUPERSEDED_V1_SHA256:
+        raise ValueError("R007 superseded source-push gate digest differs")
+    _verify(study_root, superseded, "R007 superseded source-push gate v1")
+    if value.get("supersession_reason") != (
+        "The pushed v1 implementation used a stale remote-ref spelling in the outer launcher; "
+        "this was detected before any R007 live diagnostic or candidate evaluation."
+    ):
+        raise ValueError("R007 source-gate supersession reason differs")
     for key in (
         "model_request_count", "behavioral_episode_count",
         "r007_live_diagnostic_count", "r007_live_candidate_evaluation_count",

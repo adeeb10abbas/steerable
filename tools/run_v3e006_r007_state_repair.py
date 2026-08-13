@@ -26,6 +26,7 @@ E004_APP_LAUNCHER_ARGV = (
     "--disable-subtask",
     "--kit_args=--/rtx/verifyDriverVersion/enabled=false",
 )
+REMOTE_BRANCH = "experiment/v3e006-r007-open-contact-repair"
 COMPLETED_CHILD_STATUSES = {
     "passed_r007_state_repair_not_released_for_behavior": True,
     "r007_candidate_budget_exhausted_no_valid_state_pair": False,
@@ -126,7 +127,7 @@ def main() -> None:
     if subprocess.check_output(["git", "-C", str(study_root), "status", "--porcelain"], text=True):
         parser.error("study checkout is not clean")
     remote_head = subprocess.check_output(
-        ["git", "-C", str(study_root), "ls-remote", "origin", "refs/heads/experiment/v3e006-r007-state-repair"],
+        ["git", "-C", str(study_root), "ls-remote", "origin", f"refs/heads/{REMOTE_BRANCH}"],
         text=True,
     ).strip().split()
     if len(remote_head) != 2 or remote_head[0] != args.expected_study_commit:
@@ -247,7 +248,7 @@ def main() -> None:
         "accepted_state_candidate_count_before_launch": 0,
         "infrastructure_invalid_search_attempt_count_before_launch": 0,
         "study_commit": args.expected_study_commit, "robolab_commit": args.expected_robolab_commit,
-        "remote_branch_equality": {"remote": "origin", "ref": "refs/heads/experiment/v3e006-r007-state-repair", "commit": remote_head[0]},
+        "remote_branch_equality": {"remote": "origin", "ref": f"refs/heads/{REMOTE_BRANCH}", "commit": remote_head[0]},
         "harness_source": binding(Path(__file__)), "outer_argv": sys.argv,
         "child_argv": child_argv, "input_bindings": bound, "formal_health_preflight": health,
         "python_interpreter": {"path": str(args.python), "resolved_path": str(args.python.resolve())},

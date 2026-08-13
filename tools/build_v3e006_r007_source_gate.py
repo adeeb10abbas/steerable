@@ -16,6 +16,10 @@ BRANCH = "experiment/v3e006-r007-open-contact-repair"
 BASE = "18a2bf0200183647291cc7aeb1fe89997b3fb82f"
 R006_CLOSURE_COMMIT = "125e8f0d231ebd2e3c7d0d9b54dce83e1080cea1"
 R006_RESULTS_SHA256 = "3c58721d11f669243690aaf3619121d1c348bf788ca56aacd2a009f727065e63"
+SUPERSEDED_GATE = (
+    "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r007/"
+    "source_push_gate.json"
+)
 FILES = (
     "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r007/gates/candidate_schedule.json",
     "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r007/repair_registration.json",
@@ -82,7 +86,7 @@ def main() -> None:
     if (root / FILES[2]).read_bytes() != b"":
         parser.error("R007 infrastructure ledger is not empty before first attempt")
     value = {
-        "schema_version": "vla-wam-shared-v3e006-r007-source-push-gate-v1",
+        "schema_version": "vla-wam-shared-v3e006-r007-source-push-gate-v2",
         "repair_amendment_id": "V3-E006-R007",
         "created_at_utc": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "status": "passed_before_first_r007_live_diagnostic_candidate_or_model_request",
@@ -91,6 +95,11 @@ def main() -> None:
         "required_repository_base": BASE,
         "r006_closure_commit": R006_CLOSURE_COMMIT,
         "r006_results_sha256": R006_RESULTS_SHA256,
+        "supersedes_source_push_gate_v1": bind(root, SUPERSEDED_GATE),
+        "supersession_reason": (
+            "The pushed v1 implementation used a stale remote-ref spelling in the outer launcher; "
+            "this was detected before any R007 live diagnostic or candidate evaluation."
+        ),
         "model_request_count": 0, "behavioral_episode_count": 0,
         "r007_live_diagnostic_count": 0, "r007_live_candidate_evaluation_count": 0,
         "accepted_state_candidate_count": 0, "infrastructure_invalid_attempt_count": 0,

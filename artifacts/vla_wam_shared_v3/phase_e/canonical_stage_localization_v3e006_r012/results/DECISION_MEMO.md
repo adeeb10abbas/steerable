@@ -1,0 +1,5 @@
+# V3-E006-R012 state-construction decision
+
+All four registered reachable-pose diagnostics passed. All four registered grasp/carry candidate pairs failed at least one unchanged gate, so no state was accepted. Across the eight evaluated stages, physics passed 0/8, OOD passed 8/8, camera passed 8/8, companion passed 8/8, and frame identity passed 8/8. The exact unchanged check pass counts are {'arm_joint_speed': 8, 'cube_angular_speed': 0, 'cube_gripper_relative_drift': 8, 'cube_linear_speed': 8, 'cube_midline': 6, 'intended_cube_gripper_contact_force': 2, 'no_unintended_contacts': 0, 'normal_gripper_contact': 2}.
+
+R012 made zero model requests and zero behavioral episodes. Behavioral activation remains blocked. The frozen validator initially passed the already-validated scene origin as an unsupported helper keyword. An additive post-execution amendment requires that supplied origin to equal the retained tensor-pose origin, then delegates every remaining check to the frozen validator; the untouched raw result passed target revalidation. The zero-byte failed receipt and authoritative receipt are both retained.

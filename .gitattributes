@@ -8,3 +8,7 @@ artifacts/res1/visual_audit/index.html -whitespace
 
 # Publication PDFs are binary release artifacts; do not text-diff or normalize them.
 *.pdf binary
+
+# R012 publication bundle and retained video are stored through Git LFS.
+artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r012/publication/*.tar.gz filter=lfs diff=lfs merge=lfs -text
+artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r012/publication/*.mp4 filter=lfs diff=lfs merge=lfs -text

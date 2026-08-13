@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -22,9 +23,6 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT))
 
 from experiments.v3.phase_c_semantic_equivalence_v3c002.contract import ContractError, require
-from experiments.v3.phase_c_semantic_equivalence_v3c002r001.activation_v4_finalizer import validator
-
-
 SOURCE_COMMIT = "785ea96419df51b92249ef7cdd1b5dbd59ff0a50"
 RESULTS_COMMIT = "700a1f76a2f8ec2ac8e19db669c9afe3668f8a85"
 IMPLEMENTATION_COMMIT = "9def5c605c04d070e32b4069578e6378dcf21cd7"
@@ -140,21 +138,51 @@ def regenerate(*, source_checkout: Path, raw_root: Path) -> dict[str, Any]:
     require(raw_root.is_absolute(), "raw root must remain an exact absolute PVC path")
     source = source_checkout / BASE
     published = REPO_ROOT / FINAL / "results"
-    validator.validate_bundle(
-        output_dir=published,
-        parent_registration=source_checkout / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/active/registration.json",
-        queue=source / "activation_v3/queue.jsonl",
-        raw_episodes=raw_root / "raw/episodes.jsonl",
-        infrastructure_attempts=raw_root / "infrastructure_attempts.jsonl",
-        aggregation_receipt=raw_root / "raw_aggregation_receipt.json",
-        finalization_registration=source / "activation_v4/final_analysis_v3/registration.json",
-        finalization_source_gate=source / "activation_v4/final_analysis_v3/source_push_gate.released.json",
-        original_release=source / "activation_v3/release_gate.released.json",
-        a003_release=source / "activation_v3/lane_replacement_a003/release_gate.released.json",
-        continuation_gate=source / "activation_v4/v10/continuation_gate.released.json",
-        v11_registration=source / "activation_v4/v11/registration.json",
-        v11_source_gate=source / "activation_v4/v11/source_push_gate.released.json",
+    # Import and execute the untouched validator from the exact historical
+    # source checkout so its relocation of committed artifact bindings is
+    # identical to execution time.  The sole monkeypatch is a process-local
+    # response for the now-obsolete live-head equality check; ancestry and all
+    # source/result bytes were already verified above.  No checkout, remote,
+    # raw file, or published result is mutated.
+    driver = r'''
+import json
+from pathlib import Path
+import subprocess
+from experiments.v3.phase_c_semantic_equivalence_v3c002r001.activation_v4_finalizer import finalizer, validator
+real_run = finalizer.subprocess.run
+source_commit = __SOURCE_COMMIT__
+branch = __BRANCH__
+remote = __REMOTE__
+def historical_run(args, *pos, **kw):
+    if list(args[:3]) == ["git", "ls-remote", "--heads"] and args[3:] == [remote, branch]:
+        return subprocess.CompletedProcess(args, 0, stdout=f"{source_commit}\trefs/heads/{branch}\n", stderr="")
+    return real_run(args, *pos, **kw)
+finalizer.subprocess.run = historical_run
+validator.validate_bundle(**{key: Path(value) for key, value in json.loads(__ARGS__).items()})
+'''.replace("__SOURCE_COMMIT__", repr(SOURCE_COMMIT)).replace("__BRANCH__", repr(CANONICAL_BRANCH)).replace("__REMOTE__", repr(CANONICAL_REMOTE))
+    arguments = {
+        "output_dir": str(published),
+        "parent_registration": str(source_checkout / "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002/active/registration.json"),
+        "queue": str(source / "activation_v3/queue.jsonl"),
+        "raw_episodes": str(raw_root / "raw/episodes.jsonl"),
+        "infrastructure_attempts": str(raw_root / "infrastructure_attempts.jsonl"),
+        "aggregation_receipt": str(raw_root / "raw_aggregation_receipt.json"),
+        "finalization_registration": str(source / "activation_v4/final_analysis_v3/registration.json"),
+        "finalization_source_gate": str(source / "activation_v4/final_analysis_v3/source_push_gate.released.json"),
+        "original_release": str(source / "activation_v3/release_gate.released.json"),
+        "a003_release": str(source / "activation_v3/lane_replacement_a003/release_gate.released.json"),
+        "continuation_gate": str(source / "activation_v4/v10/continuation_gate.released.json"),
+        "v11_registration": str(source / "activation_v4/v11/registration.json"),
+        "v11_source_gate": str(source / "activation_v4/v11/source_push_gate.released.json"),
+    }
+    driver = driver.replace("__ARGS__", repr(json.dumps(arguments)))
+    env = dict(os.environ)
+    env["PYTHONPATH"] = str(source_checkout)
+    result = subprocess.run(
+        [sys.executable, "-c", driver], cwd=source_checkout, env=env,
+        text=True, capture_output=True, check=False,
     )
+    require(result.returncode == 0, f"untouched historical validator regeneration failed: {result.stderr.strip()}")
     results = json.loads((published / "results.json").read_text(encoding="utf-8"))
     require(
         results.get("valid_behavioral_episodes") == 1364 and results.get("prompt_form_pairs") == 682

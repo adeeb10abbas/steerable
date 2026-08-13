@@ -1,0 +1,42 @@
+{
+  "schema_version": "vla-wam-shared-v3c002r001-activation-v4-registration-v11",
+  "status": "registered_prospective_continuation_retry-hook-import-repair",
+  "study_id": "vla_wam_language_steerability_v3",
+  "repair_id": "V3-C002-R001",
+  "activation_id": "V3-C002-R001-A004-v11",
+  "registered_at_utc": "2026-08-13T02:56:32Z",
+  "implementation_commit": "247d111e057bb9aa0e4a315fdc0a6633d16ef1d6",
+  "scope": ["repair-lane-00", "repair-lane-01", "repair-lane-02", "repair-lane-03", "repair-lane-04", "repair-lane-05", "repair-lane-06", "repair-lane-07"],
+  "reason": "The frozen continuation-v1 runner imported the retry-only runner to reuse an adapter check; that import installed retry-only dispatch and attempt-allocation hooks and rejected the first ordinary continuation seed on all eight lanes before child adapter or model dispatch. The v2 runner duplicates the exact adapter check, never imports the retry runner, retains the frozen R001 provenance dispatch, and retains the parent runner's ordinary attempt allocator.",
+  "continuation01_predispatch_invalid": {
+    "path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v4/v11/continuation01_predispatch_invalid_receipt.json",
+    "bytes": 17454,
+    "sha256": "7b374a9755218791c5fb3c3845655f70454f269dd4ab75d11dd580d55e86a555",
+    "model_requests": 0,
+    "behavioral_actions": 0,
+    "raw_episodes": 0,
+    "denominator_cells": 0
+  },
+  "v11_model_requests_before_registration": 0,
+  "v11_behavioral_actions_before_registration": 0,
+  "v11_raw_episodes_before_registration": 0,
+  "v10_registration": {"path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v4/v10/registration.json", "bytes": 4358, "sha256": "71cc5ab5b4cd5e29bb287633340fe7668151ffc26a072b99f54e22752b3469e6"},
+  "v10_source_gate": {"path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v4/v10/source_push_gate.released.json", "bytes": 3262, "sha256": "19636aa7fe37f6578c604f4fc7538e656edaf821955f7259c8464a1a8b1288ba"},
+  "continuation_gate": {"path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v4/v10/continuation_gate.released.json", "bytes": 42897, "sha256": "f898a52148fd39f6b5178aa7200d3539ec243ce2ed412356e2bf62e3e28139a8"},
+  "retry_marker_structural_rehash": {"path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v4/v10/retry_marker_structural_rehash.json", "bytes": 14538, "sha256": "279d2e460579eb02ec59a5e5922a33386810cbf18f50ce72064d4f7efb89307d"},
+  "queue": {"path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v3/queue.jsonl", "bytes": 4362072, "sha256": "c7003f05b1302ab52d30fd9f6c50244a8df1e143c8411c436eb2817abc312a50"},
+  "assignment": {"path": "artifacts/vla_wam_shared_v3/phase_c/semantic_equivalence_v3c002r001/activation_v3/assignment.jsonl", "bytes": 145156, "sha256": "d9ce17feb3ecaca08180ca6b175fe0bf35469191f531276ce319daa7355e326f"},
+  "remaining_seed_block_count": 209,
+  "remaining_seed_blocks_by_lane": {"repair-lane-00": 33, "repair-lane-01": 32, "repair-lane-02": 25, "repair-lane-03": 23, "repair-lane-04": 23, "repair-lane-05": 25, "repair-lane-06": 24, "repair-lane-07": 24},
+  "source_inventory": {
+    "experiments/v3/phase_c_semantic_equivalence_v3c002r001/activation_v4_continuation_runner_v2.py": {"bytes": 2702, "sha256": "673853a08f070448237785987a2a19214a23c15dfdd6b927f4fbc3769bcb4ce6"},
+    "tests/test_v3c002r001_activation_v4_continuation_v2.py": {"bytes": 1036, "sha256": "10afe9f227e8483143fa37a9a72b0838b0a5fbfa199f5ef348aaf76caa2660ba"}
+  },
+  "underlying_science_and_adapter": "byte-identical to the v10 source gate and continuation gate",
+  "science_unchanged": true,
+  "sample_size_unchanged": true,
+  "analysis_unchanged": true,
+  "no_cross_lane_failover": true,
+  "completed_blocks_never_rerun": true,
+  "continuation02_launched": false
+}

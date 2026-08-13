@@ -43,10 +43,13 @@ def load(path: Path) -> dict[str, Any]:
     return value
 
 
-def binding(path: Path) -> dict[str, Any]:
+def binding(path: Path, *, repo_relative: bool = False) -> dict[str, Any]:
     path = path.resolve()
     require(path.is_file(), f"missing bound file: {path}")
-    return {"path": str(path), "bytes": path.stat().st_size, "sha256": sha256_file(path)}
+    bound_path = str(path)
+    if repo_relative:
+        bound_path = str(path.relative_to(ROOT))
+    return {"path": bound_path, "bytes": path.stat().st_size, "sha256": sha256_file(path)}
 
 
 def main() -> None:
@@ -191,9 +194,9 @@ def main() -> None:
         "accepted_state_hashes": state_hashes,
         "model_request_count": 0,
         "behavioral_episode_count": 0,
-        "repo_result": binding(result_copy),
-        "repo_target_validation_receipt": binding(receipt_copy),
-        "decision_memo": binding(memo_path),
+        "repo_result": binding(result_copy, repo_relative=True),
+        "repo_target_validation_receipt": binding(receipt_copy, repo_relative=True),
+        "decision_memo": binding(memo_path, repo_relative=True),
         "raw_evidence": {
             "launch": binding(launch_path), "harness": binding(harness_path),
             "child_result": binding(child_path), "runtime_log": binding(runtime_path),
@@ -202,7 +205,7 @@ def main() -> None:
         "registration": binding(Path(str(result["repair_registration"]["path"]))),
         "candidate_schedule": binding(Path(str(result["candidate_schedule"]["path"]))),
         "source_push_gate": binding(Path(str(result["source_push_gate"]["path"]))),
-        "closure_tool": binding(Path(__file__)),
+        "closure_tool": binding(Path(__file__), repo_relative=True),
         "source_commit": subprocess.check_output(["git", "-C", str(ROOT), "rev-parse", "HEAD"], text=True).strip(),
         "invocation": [sys.executable, *sys.argv],
     }

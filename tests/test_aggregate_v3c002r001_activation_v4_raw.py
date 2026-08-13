@@ -1,8 +1,11 @@
 """Focused static tests for A004 mixed-epoch raw routing."""
 
 import unittest
+from dataclasses import dataclass
 from pathlib import Path
+import tempfile
 
+from experiments.v3.phase_c_semantic_equivalence_v3c002.contract import ContractError
 from tools.aggregate_v3c002r001_activation_v4_raw import (
     A003_RELEASE_SHA256,
     RETRY,
@@ -10,10 +13,17 @@ from tools.aggregate_v3c002r001_activation_v4_raw import (
     _expected_epoch,
     _lane_bindings,
     _same_bound_bytes,
+    _require_within,
+    _validate_marker_attempt_structure,
 )
 
 
 class A004RawAggregationTests(unittest.TestCase):
+    @dataclass(frozen=True)
+    class Cell:
+        cell_id: str
+        condition: str
+
     def test_retry_map_and_slots_are_frozen(self):
         self.assertEqual(len(SLOTS), 8)
         self.assertEqual(RETRY["repair-lane-00"], 12060)
@@ -49,6 +59,42 @@ class A004RawAggregationTests(unittest.TestCase):
         )
         self.assertEqual(set(values), set(SLOTS))
         self.assertEqual(bindings["repair-lane-00"]["sha256"], "7cb1121b3f8bcd6527c1a484376b0d51330f771de788a701324c47938ab6891f")
+
+    def _marker_fixture(self, directory: Path):
+        lane = directory.resolve() / "repair-lane-00"
+        seed_root = lane / "behavioral" / "seed12000"
+        attempt = seed_root / "attempt002"
+        attempt.mkdir(parents=True)
+        marker_path = seed_root / "completed_block.json"
+        cells = [self.Cell(f"cell-{index}", name) for index, name in enumerate(("a", "b", "c", "d"))]
+        records = [{"cell_id": cell.cell_id, "path": str(attempt / f"cell{index}" / "raw_episode.jsonl")} for index, cell in enumerate(cells)]
+        marker = {
+            "schema_version": "vla-wam-shared-v3c002-completed-block-v1",
+            "seed_block_id": "v3c002:seed12000", "attempt_root": str(attempt.resolve()),
+            "execution_order": [cell.condition for cell in cells],
+        }
+        return lane, marker_path, attempt, cells, records, marker
+
+    def test_marker_requires_exact_registered_order(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            lane, marker_path, _, cells, records, marker = self._marker_fixture(Path(tmp))
+            self.assertTrue(_validate_marker_attempt_structure(marker_path=marker_path, marker=marker, records=records, expected_cells=cells, lane_raw_root=lane, slot="repair-lane-00", seed=12000).name.startswith("attempt"))
+            marker["execution_order"] = list(reversed(marker["execution_order"]))
+            with self.assertRaises(ContractError):
+                _validate_marker_attempt_structure(marker_path=marker_path, marker=marker, records=records, expected_cells=cells, lane_raw_root=lane, slot="repair-lane-00", seed=12000)
+            marker["execution_order"] = [cell.condition for cell in cells]
+            records[1], records[2] = records[2], records[1]
+            with self.assertRaises(ContractError):
+                _validate_marker_attempt_structure(marker_path=marker_path, marker=marker, records=records, expected_cells=cells, lane_raw_root=lane, slot="repair-lane-00", seed=12000)
+
+    def test_marker_rejects_cross_attempt_raw_and_sidecar_paths(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            lane, marker_path, attempt, cells, records, marker = self._marker_fixture(Path(tmp))
+            records[2]["path"] = str(attempt.parent / "attempt001" / "cell2" / "raw_episode.jsonl")
+            with self.assertRaises(ContractError):
+                _validate_marker_attempt_structure(marker_path=marker_path, marker=marker, records=records, expected_cells=cells, lane_raw_root=lane, slot="repair-lane-00", seed=12000)
+            with self.assertRaises(ContractError):
+                _require_within(attempt.parent / "attempt001" / "cell2" / "r001_provenance.json", attempt, "R001 provenance sidecar")
 
 
 if __name__ == "__main__": unittest.main()

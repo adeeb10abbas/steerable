@@ -12,6 +12,7 @@ import argparse
 import json
 import os
 from pathlib import Path
+import re
 import tempfile
 from typing import Any, Mapping
 import sys
@@ -123,6 +124,39 @@ def _write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
         handle.flush(); os.fsync(handle.fileno())
 
 
+def _require_within(path: Path, root: Path, label: str) -> None:
+    require(path.resolve().is_relative_to(root.resolve()), f"{label} is outside the completed marker attempt root")
+
+
+def _validate_marker_attempt_structure(
+    *, marker_path: Path, marker: Mapping[str, Any], records: list[Mapping[str, Any]],
+    expected_cells: list[Any], lane_raw_root: Path, slot: str, seed: int,
+) -> Path:
+    """Prove a block marker is one ordered four-cell attempt, not a splice."""
+
+    expected_ids = [cell.cell_id for cell in expected_cells]
+    expected_order = [cell.condition for cell in expected_cells]
+    attempt_text = marker.get("attempt_root")
+    require(isinstance(attempt_text, str) and Path(attempt_text).is_absolute(), "marker attempt root is not absolute")
+    attempt_root = Path(attempt_text).resolve()
+    seed_root = (lane_raw_root / "behavioral" / f"seed{seed}").resolve()
+    require(attempt_text == str(attempt_root), "marker attempt root is not a canonical absolute path")
+    require(attempt_root.parent == seed_root and re.fullmatch(r"attempt[0-9]{3}", attempt_root.name) is not None, "marker attempt root differs from its assigned lane/seed")
+    require(marker_path.resolve() == seed_root / "completed_block.json", "marker path differs from its assigned lane/seed")
+    require(
+        marker.get("schema_version") == "vla-wam-shared-v3c002-completed-block-v1"
+        and marker.get("seed_block_id") == f"v3c002:seed{seed}"
+        and marker.get("execution_order") == expected_order,
+        f"marker block/order changed for {slot} seed {seed}",
+    )
+    require([record.get("cell_id") for record in records] == expected_ids, "marker raw bindings are not in exact registered execution order")
+    for record in records:
+        raw_path = Path(str(record.get("path", "")))
+        require(raw_path.is_absolute(), "marker raw binding path is not absolute")
+        _require_within(raw_path, attempt_root, "marker raw binding")
+    return attempt_root
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--finalization-registration", type=Path, required=True)
@@ -209,7 +243,16 @@ def main() -> None:
             )
             records = marker.get("raw_episodes")
             require(isinstance(records, list) and len(records) == 4, "marker is not a complete block")
-            expected_ids = {cell.cell_id for cell in cells if cell.seed == seed}
+            expected_cells = sorted(
+                (cell for cell in cells if cell.seed == seed),
+                key=lambda cell: int(cell.row["execution_order_index"]),
+            )
+            require(len(expected_cells) == 4, "registered block does not contain four cells")
+            attempt_root = _validate_marker_attempt_structure(
+                marker_path=marker_path, marker=marker, records=records,
+                expected_cells=expected_cells, lane_raw_root=roots[slot], slot=slot, seed=seed,
+            )
+            expected_ids = {cell.cell_id for cell in expected_cells}
             cell_ids = set()
             for record in records:
                 raw_binding = validate_file_binding(record, "A004 marker raw")
@@ -218,10 +261,16 @@ def main() -> None:
                 row = rows[0]; cell_id = row.get("cell_id")
                 require(cell_id == record.get("cell_id") and cell_id in expected_ids and cell_id not in raw_by_id, "A004 raw cell coverage changed")
                 request_stream = validate_file_binding(row.get("raw_artifacts", {}).get("raw_episode_jsonl"), "A004 request stream")
+                _require_within(Path(raw_binding["path"]), attempt_root, "validated parent raw")
+                _require_within(Path(request_stream["path"]), attempt_root, "validated request stream")
                 sidecar_path = Path(request_stream["path"]).with_name("r001_provenance.json")
+                _require_within(sidecar_path, attempt_root, "R001 provenance sidecar")
                 provenance = read_finite_json(sidecar_path)
                 require(provenance.get("cell_id") == cell_id and provenance.get("episode_seed") == seed and provenance.get("lane_slot") == slot and provenance.get("lane_id") == lane["lane_id"] and provenance.get("block_indivisible") is True, "A004 provenance identity changed")
-                require(_same_bound_bytes(validate_file_binding(provenance.get("parent_raw_episode"), "A004 provenance parent raw"), raw_binding), "A004 provenance parent raw differs from marker")
+                provenance_parent = validate_file_binding(provenance.get("parent_raw_episode"), "A004 provenance parent raw")
+                require(_same_bound_bytes(provenance_parent, raw_binding), "A004 provenance parent raw differs from marker")
+                require(Path(provenance_parent["path"]).resolve() == Path(raw_binding["path"]).resolve(), "A004 provenance parent raw path differs from marker")
+                _require_within(Path(provenance_parent["path"]), attempt_root, "provenance parent raw")
                 require(_same_bound_bytes(validate_file_binding(provenance.get("authorization_gate"), "A004 provenance gate"), gate_binding), "A004 provenance authorization epoch changed")
                 require(_same_bound_bytes(validate_file_binding(provenance.get("released_lane_manifest"), "A004 provenance lane"), lane_binding), "A004 provenance lane epoch changed")
                 runtime = row.get("runtime_identity", {})
@@ -236,15 +285,28 @@ def main() -> None:
         for row in infra:
             cell_id = row.get("cell_id")
             require(row.get("infrastructure_status") == "infrastructure_invalid_excluded" and row.get("denominator_eligible") is False and cell_id in cells_by_id and assignment[cells_by_id[cell_id].seed] == slot, "A004 infrastructure row is denominator eligible or misassigned")
+            attempt_text = row.get("attempt_root")
+            require(isinstance(attempt_text, str) and Path(attempt_text).is_absolute(), "A004 infrastructure attempt root is not absolute")
+            attempt_root = Path(attempt_text).resolve()
+            require(
+                attempt_text == str(attempt_root)
+                and attempt_root.parent == (roots[slot] / "behavioral" / f"seed{cells_by_id[cell_id].seed}").resolve()
+                and re.fullmatch(r"attempt[0-9]{3}", attempt_root.name) is not None,
+                "A004 infrastructure attempt root differs from its assigned lane/seed",
+            )
         all_infra.extend(infra)
         lane_receipts[slot] = {"raw_root": str(roots[slot]), "completed_markers": marker_bindings, "provenance_sidecars": sidecar_bindings, "infrastructure_ledger": file_binding(infra_path) if infra_path.is_file() else None, "infrastructure_attempt_count": len(infra)}
     require(len(raw_by_id) == 1364 and set(raw_by_id) == set(cells_by_id), "A004 does not contain all 1,364 registered cells")
     require(len(all_infra) == 14, "A004 must retain exactly fourteen excluded infrastructure attempts")
+    canonical_infra = [json.dumps(row, allow_nan=False, sort_keys=True, separators=(",", ":")) for row in all_infra]
+    attempt_roots = [row.get("attempt_root") for row in all_infra]
+    require(len(set(canonical_infra)) == 14 and len(set(attempt_roots)) == 14, "A004 infrastructure ledger contains duplicate rows or attempt roots")
+    require(all(isinstance(root, str) and Path(root).is_absolute() for root in attempt_roots), "A004 infrastructure attempt roots are not absolute")
     ordered = [raw_by_id[cell.cell_id] for cell in cells]
     for path in (args.raw_output, args.infrastructure_output, args.receipt_output): path.parent.mkdir(parents=True, exist_ok=True)
     _write_jsonl(args.raw_output, ordered); _write_jsonl(args.infrastructure_output, all_infra)
     receipt = {
-        "schema_version": "vla-wam-shared-v3c002r001-activation-v4-raw-aggregation-v1",
+        "schema_version": "vla-wam-shared-v3c002r001-activation-v4-raw-aggregation-v2",
         "status": "complete_outcome_blind_mixed_epoch_raw_aggregation", "passed": True,
         "outcome_fields_read": False, "repair_id": "V3-C002-R001", "behavioral_episode_count": 1364,
         "complete_seed_block_count": 341, "infrastructure_attempt_count_excluded": 14,

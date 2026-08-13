@@ -175,21 +175,72 @@ class A004FinalizerTests(unittest.TestCase):
             seed: int
             block_id: str
 
-        cell = Cell(seed=12000, block_id="v3c002:seed12000")
-        row = {
-            "schema_version": "vla-wam-shared-v3c002-infrastructure-attempt-v1",
-            "record_type": "infrastructure_attempt",
-            "infrastructure_status": "infrastructure_invalid_excluded",
-            "denominator_eligible": False,
-            "authorization_mode": "behavioral",
-            "cell_id": "cell", "seed_block_id": cell.block_id, "attempt_root": "/retained/repair-lane-00/attempt001",
+        cells = {
+            f"cell-{index}": Cell(seed=12000 + index, block_id=f"v3c002:seed{12000 + index}")
+            for index in range(14)
         }
+        assignment = {12000 + index: "repair-lane-00" for index in range(14)}
+        rows = [
+            {
+                "schema_version": "vla-wam-shared-v3c002-infrastructure-attempt-v1",
+                "record_type": "infrastructure_attempt",
+                "infrastructure_status": "infrastructure_invalid_excluded",
+                "denominator_eligible": False,
+                "authorization_mode": "behavioral",
+                "cell_id": cell_id,
+                "seed_block_id": cell.block_id,
+                "attempt_root": f"/retained/repair-lane-00/behavioral/seed{cell.seed}/attempt001",
+                "error_type": "SyntheticFailure",
+                "error": f"synthetic-{index}",
+            }
+            for index, (cell_id, cell) in enumerate(cells.items())
+        ]
         with self.assertRaises(ContractError):
-            validate_infrastructure([row] * 13, cells_by_id={"cell": cell}, assignment={12000: "repair-lane-00"})
+            validate_infrastructure(rows[:13], cells_by_id=cells, assignment=assignment)
         self.assertEqual(
-            len(validate_infrastructure([row] * 14, cells_by_id={"cell": cell}, assignment={12000: "repair-lane-00"})),
+            len(validate_infrastructure(rows, cells_by_id=cells, assignment=assignment)),
             14,
         )
+
+    def test_infrastructure_rejects_duplicate_canonical_rows_and_reused_attempt_root(self):
+        @dataclass(frozen=True)
+        class Cell:
+            seed: int
+            block_id: str
+
+        cells = {
+            f"cell-{index}": Cell(seed=12000 + index, block_id=f"v3c002:seed{12000 + index}")
+            for index in range(14)
+        }
+        assignment = {12000 + index: "repair-lane-00" for index in range(14)}
+        rows = [
+            {
+                "schema_version": "vla-wam-shared-v3c002-infrastructure-attempt-v1",
+                "record_type": "infrastructure_attempt",
+                "infrastructure_status": "infrastructure_invalid_excluded",
+                "denominator_eligible": False,
+                "authorization_mode": "behavioral",
+                "cell_id": cell_id,
+                "seed_block_id": cell.block_id,
+                "attempt_root": f"/retained/repair-lane-00/behavioral/seed{cell.seed}/attempt001",
+                "error_type": "SyntheticFailure",
+                "error": f"synthetic-{index}",
+            }
+            for index, (cell_id, cell) in enumerate(cells.items())
+        ]
+        canonical_duplicate = rows[:13] + [dict(rows[0])]
+        with self.assertRaisesRegex(ContractError, "duplicate canonical row"):
+            validate_infrastructure(canonical_duplicate, cells_by_id=cells, assignment=assignment)
+        reused_root = [dict(row) for row in rows]
+        reused_root[-1]["cell_id"] = reused_root[0]["cell_id"]
+        reused_root[-1]["seed_block_id"] = reused_root[0]["seed_block_id"]
+        reused_root[-1]["attempt_root"] = reused_root[0]["attempt_root"]
+        with self.assertRaisesRegex(ContractError, "reuses an attempt root"):
+            validate_infrastructure(reused_root, cells_by_id=cells, assignment=assignment)
+        noncanonical_root = [dict(row) for row in rows]
+        noncanonical_root[0]["attempt_root"] += "/.."
+        with self.assertRaisesRegex(ContractError, "stable canonical absolute identity"):
+            validate_infrastructure(noncanonical_root, cells_by_id=cells, assignment=assignment)
 
 
 if __name__ == "__main__":

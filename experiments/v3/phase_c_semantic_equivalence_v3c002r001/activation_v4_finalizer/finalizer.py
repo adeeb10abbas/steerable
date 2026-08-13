@@ -17,6 +17,7 @@ from collections import defaultdict
 import copy
 import json
 from pathlib import Path
+import re
 import subprocess
 from statistics import fmean
 import sys
@@ -26,6 +27,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
 
 from experiments.v3.phase_c_semantic_equivalence_v3c002 import compiler as parent
 from experiments.v3.phase_c_semantic_equivalence_v3c002.contract import (
+    canonical_json_sha256,
     ContractError,
     file_binding,
     load_cells,
@@ -55,12 +57,12 @@ RETRY = {
     "repair-lane-04": 12156, "repair-lane-05": 12107,
     "repair-lane-06": 12176, "repair-lane-07": 12112,
 }
-AGGREGATION_SCHEMA = "vla-wam-shared-v3c002r001-activation-v4-raw-aggregation-v1"
+AGGREGATION_SCHEMA = "vla-wam-shared-v3c002r001-activation-v4-raw-aggregation-v2"
 CONTINUATION_SCHEMA = "vla-wam-shared-v3c002r001-activation-v4-continuation-gate-v1"
 PROVENANCE_SCHEMA = "vla-wam-shared-v3c002r001-raw-provenance-v1"
-FINALIZER_SCHEMA = "vla-wam-shared-v3c002r001-a004-finalizer-manifest-v2"
-FINAL_ANALYSIS_REGISTRATION_SCHEMA = "vla-wam-shared-v3c002r001-a004-final-analysis-registration-v2"
-FINAL_ANALYSIS_SOURCE_SCHEMA = "vla-wam-shared-v3c002r001-a004-final-analysis-source-gate-v2"
+FINALIZER_SCHEMA = "vla-wam-shared-v3c002r001-a004-finalizer-manifest-v3"
+FINAL_ANALYSIS_REGISTRATION_SCHEMA = "vla-wam-shared-v3c002r001-a004-final-analysis-registration-v3"
+FINAL_ANALYSIS_SOURCE_SCHEMA = "vla-wam-shared-v3c002r001-a004-final-analysis-source-gate-v3"
 REPO_ROOT = Path(__file__).resolve().parents[4]
 CANONICAL_REMOTE = "https://github.com/adeeb10abbas/steerable.git"
 CANONICAL_BRANCH = "experiment/v3c002-semantic-equivalence"
@@ -151,15 +153,44 @@ def validate_finalization_admission(
         )),
         "A004 final analysis was not registered before aggregation/result reading",
     )
-    superseded = registration.get("superseded_v1_final_analysis")
+    superseded = registration.get("superseded_prior_final_analysis")
     require(
         isinstance(superseded, dict)
         and superseded.get("status") == "superseded_unexecuted_before_any_outcome_aggregation_or_result_read"
         and all(superseded.get(key) == 0 for key in ("raw_behavioral_rows_read", "result_compilations", "output_files")),
-        "A004 final-analysis v1 supersession is not a zero-read correction",
+        "A004 prior final-analysis supersession is not a zero-read correction",
     )
-    _validate_checkout_binding(superseded.get("registration"), "superseded final-analysis v1 registration")
-    _validate_checkout_binding(superseded.get("source_gate"), "superseded final-analysis v1 source gate")
+    prior_registration_binding = _validate_checkout_binding(superseded.get("registration"), "superseded prior final-analysis registration")
+    prior_source_binding = _validate_checkout_binding(superseded.get("source_gate"), "superseded prior final-analysis source gate")
+    prior_registration = read_finite_json(Path(prior_registration_binding["path"]))
+    prior_source = read_finite_json(Path(prior_source_binding["path"]))
+    require(
+        isinstance(prior_registration, dict)
+        and prior_registration.get("schema_version") == "vla-wam-shared-v3c002r001-a004-final-analysis-registration-v2"
+        and prior_registration.get("status") == "registered_prospective_corrected_final_analysis_before_raw_aggregation_or_result_read"
+        and all(prior_registration.get(key) == 0 for key in (
+            "final_analysis_raw_behavioral_rows_read_before_registration", "final_analysis_result_compilations_before_registration", "final_analysis_output_files_before_registration",
+        )),
+        "A004 superseded v2 registration is not the prospective zero-read revision",
+    )
+    embedded_v1 = prior_registration.get("superseded_v1_final_analysis")
+    require(
+        isinstance(embedded_v1, dict)
+        and embedded_v1.get("status") == "superseded_unexecuted_before_any_outcome_aggregation_or_result_read"
+        and all(embedded_v1.get(key) == 0 for key in ("raw_behavioral_rows_read", "result_compilations", "output_files")),
+        "A004 superseded v2 registration does not preserve v1 zero-read lineage",
+    )
+    _validate_checkout_binding(embedded_v1.get("registration"), "superseded final-analysis v1 registration")
+    _validate_checkout_binding(embedded_v1.get("source_gate"), "superseded final-analysis v1 source gate")
+    require(
+        isinstance(prior_source, dict)
+        and prior_source.get("schema_version") == "vla-wam-shared-v3c002r001-a004-final-analysis-source-gate-v2"
+        and prior_source.get("status") == "passed_final_analysis_source_and_registration_pushed_before_raw_aggregation"
+        and prior_source.get("passed") is True
+        and prior_source.get("pushed") is True,
+        "A004 superseded v2 source gate is not the pushed zero-read revision",
+    )
+    _same_binding(prior_source.get("final_analysis_registration"), prior_registration_binding, "superseded v2 source/registration")
     expected = {
         "parent_registration": parent_registration,
         "queue": queue,
@@ -459,7 +490,15 @@ def validate_infrastructure(
 ) -> list[dict[str, Any]]:
     rows = list(rows)
     require(len(rows) == INFRA_COUNT, "A004 finalization requires all 14 infrastructure-invalid attempts")
+    canonical_rows: set[str] = set()
+    attempt_roots: set[str] = set()
     for row in rows:
+        # A repeated JSONL row would falsely inflate the excluded-attempt
+        # count.  Canonical hashing removes irrelevant source key order while
+        # preserving every retained attempt field.
+        row_identity = canonical_json_sha256(dict(row))
+        require(row_identity not in canonical_rows, "A004 infrastructure ledger contains a duplicate canonical row")
+        canonical_rows.add(row_identity)
         cell_id = row.get("cell_id")
         require(
             row.get("schema_version") == "vla-wam-shared-v3c002-infrastructure-attempt-v1"
@@ -475,6 +514,18 @@ def validate_infrastructure(
         )
         attempt_root = row.get("attempt_root")
         require(isinstance(attempt_root, str) and Path(attempt_root).is_absolute(), "A004 infrastructure attempt root is not retained as an absolute lane-local path")
+        canonical_root = str(Path(attempt_root).resolve())
+        require(attempt_root == canonical_root, "A004 infrastructure attempt root is not a stable canonical absolute identity")
+        root = Path(canonical_root)
+        require(
+            re.fullmatch(r"attempt[0-9]{3}", root.name) is not None
+            and root.parent.name == f"seed{cells_by_id[cell_id].seed}"
+            and root.parent.parent.name == "behavioral",
+            "A004 infrastructure attempt root does not identify its registered behavioral seed attempt",
+        )
+        require(canonical_root not in attempt_roots, "A004 infrastructure ledger reuses an attempt root")
+        attempt_roots.add(canonical_root)
+    require(len(canonical_rows) == INFRA_COUNT and len(attempt_roots) == INFRA_COUNT, "A004 infrastructure attempt identities are not one-to-one")
     return rows
 
 
@@ -527,6 +578,7 @@ def validate_aggregation_receipt(
     infrastructure_rows = list(infrastructure_rows)
     validate_infrastructure(infrastructure_rows, cells_by_id=cells_by_id, assignment=assignment)
     roots_by_slot: dict[str, str] = {}
+    source_ledger_rows: dict[str, list[dict[str, Any]]] = {}
     for slot, item in lane_evidence.items():
         require(isinstance(item, dict) and isinstance(item.get("raw_root"), str) and Path(item["raw_root"]).is_absolute(), f"A004 aggregation raw root missing for {slot}")
         roots_by_slot[slot] = item["raw_root"]
@@ -534,17 +586,24 @@ def validate_aggregation_receipt(
         count = item.get("infrastructure_attempt_count")
         require(type(count) is int and count >= 0, f"A004 aggregation ledger count invalid for {slot}")
         if count:
-            validate_file_binding(ledger, f"A004 aggregation infrastructure ledger {slot}")
+            ledger_binding = validate_file_binding(ledger, f"A004 aggregation infrastructure ledger {slot}")
+            source_ledger_rows[slot] = _jsonl(Path(ledger_binding["path"]))
+            require(len(source_ledger_rows[slot]) == count, f"A004 aggregation bound ledger row count changed for {slot}")
         else:
             require(ledger is None, f"A004 aggregation empty ledger binding should be null for {slot}")
+            source_ledger_rows[slot] = []
     by_slot = defaultdict(list)
     for row in infrastructure_rows:
         cell_id = str(row["cell_id"])
         slot = assignment[cells_by_id[cell_id].seed]
         by_slot[slot].append(row)
-        require(str(row["attempt_root"]).startswith(roots_by_slot[slot]), "A004 infrastructure attempt root is outside its retained assigned lane root")
+        require(
+            Path(str(row["attempt_root"])).resolve().is_relative_to(Path(roots_by_slot[slot]).resolve()),
+            "A004 infrastructure attempt root is outside its retained assigned lane root",
+        )
     for slot in SLOTS:
         require(len(by_slot[slot]) == lane_evidence[slot]["infrastructure_attempt_count"], f"A004 aggregation infrastructure lane count disagrees for {slot}")
+        require(by_slot[slot] == source_ledger_rows[slot], f"A004 combined infrastructure rows do not reproduce the exact bound source ledger for {slot}")
     expected_counts = defaultdict(int)
     for route in routing.values():
         expected_counts[str(route["epoch"])] += 4

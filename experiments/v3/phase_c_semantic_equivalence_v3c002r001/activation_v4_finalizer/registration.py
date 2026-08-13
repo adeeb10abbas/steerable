@@ -26,8 +26,8 @@ from experiments.v3.phase_c_semantic_equivalence_v3c002.contract import (
 from .finalizer import A003_RELEASE_SHA, ORIGINAL_RELEASE_SHA
 
 
-SCHEMA = "vla-wam-shared-v3c002r001-a004-final-analysis-registration-v2"
-SOURCE_SCHEMA = "vla-wam-shared-v3c002r001-a004-final-analysis-source-gate-v2"
+SCHEMA = "vla-wam-shared-v3c002r001-a004-final-analysis-registration-v3"
+SOURCE_SCHEMA = "vla-wam-shared-v3c002r001-a004-final-analysis-source-gate-v3"
 V10_CONTINUATION_SHA = "f898a52148fd39f6b5178aa7200d3539ec243ce2ed412356e2bf62e3e28139a8"
 
 
@@ -83,14 +83,14 @@ def main() -> None:
         "final_analysis_raw_behavioral_rows_read_before_registration": 0,
         "final_analysis_result_compilations_before_registration": 0,
         "final_analysis_output_files_before_registration": 0,
-        "superseded_v1_final_analysis": {
+        "superseded_prior_final_analysis": {
             "registration": repo_file_binding(args.superseded_registration),
             "source_gate": repo_file_binding(args.superseded_source_gate),
             "status": "superseded_unexecuted_before_any_outcome_aggregation_or_result_read",
             "raw_behavioral_rows_read": 0,
             "result_compilations": 0,
             "output_files": 0,
-            "reason": "The additive lane diagnostics referenced a nonexistent pair-row field name. The frozen parent emits depth_difference_inverse_minus_canonical_m; this v2 prospectively corrects only that additive diagnostic reader and adds a real parent-pair regression.",
+            "reason": "V2 was never executed. V3 prospectively requires fourteen unique infrastructure rows and attempt roots, exact registered four-cell marker order, and same-attempt containment for every marker raw/request/provenance artifact before any outcome aggregation.",
         },
         "prospective_order": [
             "commit_and_push_this_registration_and_its_source_gate",

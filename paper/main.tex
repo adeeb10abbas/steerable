@@ -1,0 +1,57 @@
+% Compile main.tex. For an RA-L submission, place the official ieeeconf.cls
+% from PaperCept in this directory. IEEEtran is a local preview fallback only.
+\IfFileExists{ieeeconf.cls}{%
+  \documentclass[letterpaper,10pt,conference]{ieeeconf}%
+}{%
+  \documentclass[letterpaper,10pt,conference]{IEEEtran}%
+}
+
+\newif\ifanonymous
+\anonymoustrue % Initial review submission; switch to \anonymousfalse for camera-ready.
+
+\IEEEoverridecommandlockouts % <--- MUST KEEP THIS
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{siunitx}
+\usepackage{microtype}
+\usepackage{xcolor}
+\usepackage{cite}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+
+\input{macros}
+\input{metadata}
+
+\makeatletter
+\@ifundefined{overrideIEEEmargins}{}{\overrideIEEEmargins}
+\makeatother
+
+\title{Success Is Not Grounding: A Causal Audit of\\
+Language-Conditioned Manipulation Benchmarks}
+\author{%
+\ifanonymous
+Anonymous Authors%
+\else
+\AuthorBlock%
+\fi
+}
+
+\begin{document}
+\maketitle
+\input{sections/abstract}
+\input{sections/introduction}
+\input{sections/related_work}
+\input{sections/method}
+\input{sections/language_response}
+\input{sections/reflection}
+\input{sections/graded_scene_factors}
+\input{sections/symmetry}
+\input{sections/discussion}
+\input{sections/limitations}
+\input{sections/conclusion}
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+\end{document}

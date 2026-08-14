@@ -1,0 +1,24 @@
+\section{Evaluation Design}
+\label{sec:method}
+
+\tightparagraph{Canonical token intervention.}
+For each registered reset $s_i$, a policy is executed under prompts $\ell_i^L$ and $\ell_i^R$ that differ only in the relation token. Scene state, checkpoint, controller, environment seed, policy-sampling seed, action interface, and horizon are held fixed. The instruction is issued once at reset; oracle actions, prompt switching, and progress-conditioned language are prohibited. DROID/RoboLab uses a Rubik's cube and bowl, while RoboTwin uses a wooden block and playing-card box. Both require placement and release in the requested relational region. The canonical screen contains five DROID/RoboLab checkpoints with 27 matched pairs each and three RoboTwin checkpoints with 63 matched pairs each, for 324 pairs total; arena-specific tasks and predicates are never pooled.
+
+\tightparagraph{Reference inversion.}
+The canonical contrast changes the surface token and physical goal together. C002 instead holds the physical relation fixed while changing its linguistic frame: ``cube left of bowl'' becomes ``bowl right of cube,'' and conversely. Thus the direction word flips but the intended relation does not. The registered $\pi_{0.5}$ study uses 341 reset blocks in one symmetric DROID/RoboLab scene, with both forms of both physical goals sharing reset and sampling state, for 1,364 episodes. An initial execution failed isolation and is excluded; the prospective rerun uses exact within-server repeatability and block-local homogeneous lanes. Its seeds 12000--12340 are independent of the E004 cohort at 9400--9740.
+
+\tightparagraph{Behavioral measurements.}
+Let $a^L_{1:T_L}$ and $a^R_{1:T_R}$ be the executed action sequences in a canonical pair, and let $y_i^L,y_i^R$ be the final target-minus-reference lateral offsets in robot coordinates, where positive is robot-left. We report
+\begin{align}
+A_i &= \mathbb{1}\!\left[a^L_{1:T}\neq a^R_{1:T}\right], \quad T=\min(T_L,T_R), \\
+D_i &= y_i^L-y_i^R, \\
+S_i^d &= \mathbb{1}[\text{frozen task predicate is satisfied for }d], \\
+M_i^d &= \begin{cases}y_i^d,&d=L,\\-y_i^d,&d=R.\end{cases}
+\end{align}
+$A_i$ uses bitwise inequality on the complete common executed prefix. Positive $D_i$ means the canonical endpoints have the requested ordering. $S_i^d$ is task completion, and requested-side depth $M_i^d$ retains how far the target moved toward the physical goal. For reference inversion, $M$ is signed by the physical goal rather than the word appearing in the prompt. Action distinctness tests response, not semantics: stochastic executions can differ even under an unchanged prompt.
+
+\tightparagraph{Geometry interventions.}
+We use three registered scene interventions. Reflection mirrors the centers of all movable objects about the robot sagittal plane while leaving the robot and fixed scene unchanged. A seven-level sweep moves only the reference object laterally. The symmetric-scene cohort sets the registered object-layout residual to zero while preserving robot, cameras, wrist mounting, reset posture, prompt, seed, and controller. Its registered scene package also changes companion-object inventory, so it is not a position-only intervention and does not imply bilateral embodiment symmetry. Each causal scene comparison requires the canonical endpoint-redirection positive control to pass; rows failing it are reported but excluded from equalization claims.
+
+\tightparagraph{Scoring and inference.}
+The original task predicate is never relaxed. Each valid episode receives one precedence class: pick failed, transport failed, wrong side, release failed, or correct. Behavioral failures remain in their registered denominators; infrastructure-invalid attempts are ledgered separately. Marginal binary rates use Wilson intervals. Paired continuous contrasts use seed-clustered percentile bootstraps with 20,000 resamples and exact sign tests; layout interactions use exact within-seed label permutations. Absence claims require two one-sided equivalence tests (TOST) against preregistered margins, rather than nonsignificance~\cite{wilson1927interval,efron1994bootstrap,schuirmann1987tost}. Prompts, seeds, predicates, estimands, margins, and failure precedence are frozen before their affected runs.

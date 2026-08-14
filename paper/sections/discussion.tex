@@ -1,0 +1,11 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\tightparagraph{The benchmark can be wrong in both directions.}
+The experiments expose two distinct evaluation errors. A \emph{false failure} occurs when a canonical direction token redirects behavior, but the sampled scene makes one requested placement harder to complete. Reflection, displacement, start-side, role-swap, and the symmetric scene all demonstrate this possibility. A \emph{false pass} occurs when relation-consistent behavior under a familiar canonical construction is treated as evidence of grounding even though the same physical goal does not transfer under reference inversion. In C002, relation preservation and simple canonical-scale token mirroring predict opposite-signed endpoint contrasts, yet the observed inverted contrast is near zero. Together, these interventions show that a canonical success score can understate language-conditioned control or overstate semantic transfer.
+
+\tightparagraph{Success remains necessary, but not diagnostic.}
+The frozen success predicate is still the correct final test of whether the robot completed the task. The problem is using that predicate alone to infer \emph{why} it succeeded or failed. A single layout can make scene geometry and language interpretation observationally indistinguishable. A ceiling can also hide a 10--20\,cm change in placement quality. Conversely, an action trace can change without expressing the intended relation. The four behavioral measurements answer different questions, and the reference-inversion control adds a fifth: whether the response follows the physical goal rather than the surface token.
+
+\tightparagraph{A minimum directional-grounding protocol.}
+For relational placement, we recommend: (i) matched canonical LEFT/RIGHT prompts under identical reset and policy seeds; (ii) action distinctness and a direction-signed endpoint measure; (iii) continuous requested-side depth alongside the frozen success predicate; (iv) same-prompt repeats where stochasticity is material; (v) at least one matched scene intervention with a preserved endpoint-redirection positive control; and (vi) a reference inversion that preserves the physical goal. Claims that an effect disappeared should use equivalence tests, not a nonsignificant difference.

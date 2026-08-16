@@ -1,0 +1,304 @@
+{
+  "amendment_id": "V3-E007",
+  "analysis_character": "disclosed_post_result_mechanism_analysis",
+  "behavioral_episode_count": 0,
+  "gpu_required": false,
+  "ik": {
+    "chain": "seven revolute panda joints plus panda_joint8 and panda_hand_joint fixed frames read directly from USD",
+    "collision_scope": "joint-limit pose IK only; no collision, contact, dynamics, or policy inference",
+    "deterministic_starts": 17,
+    "joint_limits": "exact USD revolute limits",
+    "known_pose_fk_validation": "all four R005 known-reachable diagnostic source q/base-link poses must reproduce within 1e-5 m and 1e-3 degree before voxel solving",
+    "max_function_evaluations_per_start": 200,
+    "orientation_error_deg_inclusive": 1.0,
+    "position_error_m_inclusive": 0.001,
+    "robolab_robot_source": {
+      "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/robolab/robots/droid.py",
+      "sha256": "3c43b562cc22476135b7cd82c9c4c01ed361350eda25f3ef6669408ffce53e5d"
+    },
+    "robot_asset": {
+      "bytes": 14156362,
+      "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/robots/franka_robotiq_2f_85_flattened.usd",
+      "sha256": "f555695465687548a1bd31b5e3f30385182d476a67c17080b7820ad0ef747e41"
+    },
+    "solver": "scipy.optimize.least_squares bounded TRF",
+    "start_rule": "frozen reset q plus 16 unscrambled Halton points mapped to the interior 90 percent of the exact joint-limit box"
+  },
+  "layouts": [
+    {
+      "family": "reflection",
+      "layout_id": "reflection_control",
+      "level": "control",
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.12658219039440155,
+        0.07732785493135452
+      ]
+    },
+    {
+      "family": "reflection",
+      "layout_id": "reflection_mirrored",
+      "level": "position_mirrored",
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        -0.12658219039440155,
+        0.07732785493135452
+      ]
+    },
+    {
+      "family": "nano_lateral_sweep",
+      "layout_id": "nano_sweep_level_0",
+      "level": 0,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.03658219039440155,
+        0.07732785493135452
+      ]
+    },
+    {
+      "family": "nano_lateral_sweep",
+      "layout_id": "nano_sweep_level_1",
+      "level": 1,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.06658219039440155,
+        0.07732785493135452
+      ]
+    },
+    {
+      "family": "nano_lateral_sweep",
+      "layout_id": "nano_sweep_level_2",
+      "level": 2,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.09658219039440155,
+        0.07732785493135452
+      ]
+    },
+    {
+      "family": "nano_lateral_sweep",
+      "layout_id": "nano_sweep_level_3",
+      "level": 3,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.12658219039440155,
+        0.07732785493135452
+      ]
+    },
+    {
+      "family": "nano_lateral_sweep",
+      "layout_id": "nano_sweep_level_4",
+      "level": 4,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.15658219039440155,
+        0.07732785493135452
+      ]
+    },
+    {
+      "family": "nano_lateral_sweep",
+      "layout_id": "nano_sweep_level_5",
+      "level": 5,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.18658219039440155,
+        0.07732785493135452
+      ]
+    },
+    {
+      "family": "nano_lateral_sweep",
+      "layout_id": "nano_sweep_level_6",
+      "level": 6,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.21658219039440155,
+        0.07732785493135452
+      ]
+    },
+    {
+      "family": "symmetric_scene",
+      "layout_id": "symmetry_s_0_00",
+      "level": 0.0,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.12658219039440155,
+        0.07732785493135452
+      ]
+    },
+    {
+      "family": "symmetric_scene",
+      "layout_id": "symmetry_s_0_25",
+      "level": 0.25,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.09493664279580116,
+        0.07732785493135452
+      ]
+    },
+    {
+      "family": "symmetric_scene",
+      "layout_id": "symmetry_s_0_50",
+      "level": 0.5,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.06329109519720078,
+        0.07732785493135452
+      ]
+    },
+    {
+      "family": "symmetric_scene",
+      "layout_id": "symmetry_s_0_75",
+      "level": 0.75,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.03164554759860039,
+        0.07732785493135452
+      ]
+    },
+    {
+      "family": "symmetric_scene",
+      "layout_id": "symmetry_s_1_00",
+      "level": 1.0,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.0,
+        0.07732785493135452
+      ]
+    }
+  ],
+  "learned_model_request_count": 0,
+  "outcome_blind_analysis_rules": {
+    "claim_rule": "name kinematic reachability as a supported mechanism only if signs align in both reflection layouts and the graded volume contrast covaries positively with Nano depth contrast; otherwise scope the paper to scene configuration without a kinematic-cause claim",
+    "graded_sweep_test": "Spearman correlation over the seven registered levels, with exact two-sided permutation p over 7! level permutations",
+    "policy_favorite_primary": "mean requested-side depth RIGHT minus LEFT within model and layout",
+    "policy_favorite_secondary": "binary success rate RIGHT minus LEFT within model and layout",
+    "primary_layout_statistic": "right_feasible_volume_m3 - left_feasible_volume_m3",
+    "reflection_test": "sign concordance between feasible-volume advantage and requested-depth advantage for every model-layout row; ties reported",
+    "symmetric_scene_test": "report whether absolute feasible-volume asymmetry and absolute policy depth disparity both decrease from s=0 to s=1; residuals retained",
+    "volume_per_voxel": "product of the three registered edge spacings"
+  },
+  "prohibitions": [
+    "no policy server, checkpoint load, model request, or behavioral episode",
+    "no adjustment of grid, IK tolerance, start set, or claim rule after reading computed alignment",
+    "no pooling DROID and RoboTwin outcomes",
+    "no interpretation of IK feasibility as collision-free execution or task success"
+  ],
+  "question": "Does the side with more strict IK-feasible placement-target volume match the side favored by the policy in each registered layout?",
+  "registered_at_utc": "2026-08-16T12:58:51.408726Z",
+  "schema_version": "vla-wam-shared-v3e007-zero-model-reachability-registration-v1",
+  "source_bindings": [
+    {
+      "bytes": 6835,
+      "path": "experiments/v3/phase_e/model_blind_ik_gate.py",
+      "sha256": "5acd0f03de10313bd81625289770cf198d05856d5438f8f2ccdb3ebcb5e95e7e"
+    },
+    {
+      "bytes": 13286,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/reference_controller_symmetry_v3e002/model_blind_gate/ik_gate_control_final.json",
+      "sha256": "938b9d3903df3736cb162542281c3a46e9d7aec9a4c83791e076613f05231027"
+    },
+    {
+      "bytes": 118513,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/canonical_stage_localization_v3e006_r005/gates/candidate_schedule.json",
+      "sha256": "f730c91987451d32f0a8814d27d9ec7bfad1a455bf3adae6a8381df7d62f5709"
+    },
+    {
+      "bytes": 12706,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/layout/candidate.json",
+      "sha256": "7e270419cdbd2a00e36c47a6a5e3d10c7affb225f118e536cc43917da960ba33"
+    },
+    {
+      "bytes": 7776,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/model_blind_lateral_calibration_report.json",
+      "sha256": "60a065f24f76b0fe007a2455bf674dcde33204beb2f00dac1d930edd8f6542bf"
+    },
+    {
+      "bytes": 7552700,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/pi05_mirror_v3b002/results/pi05_v3b002_episodes.jsonl",
+      "sha256": "7b89287a2b75e40cffc97cd6d2fea58c4189a09d2dc5a0fb9a6427df3d726e70"
+    },
+    {
+      "bytes": 5822218,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_mirror_v3b001/results/nano_v3b001_episodes.jsonl",
+      "sha256": "ce67aecb2705394e8161fa4b65df7130e62648e2f6d8b6a93408c8da685a7207"
+    },
+    {
+      "bytes": 281813,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/dreamzero_mirror_v3b003/results/dreamzero_v3b003_episodes.jsonl",
+      "sha256": "31f0715c3cbc682f90e5cc6420b9f45f49622f876734d43ba7c8cb6545b80f34"
+    },
+    {
+      "bytes": 16128,
+      "path": "artifacts/vla_wam_shared_v3/phase_b/nano_lateral_sweep_v3b005/results/nano_v3b005_dose_response_report.json",
+      "sha256": "a65c659cc5eb24e03baafc8101473f63307a549764090b6403eed5d1405ba999"
+    },
+    {
+      "bytes": 78300627,
+      "path": "artifacts/vla_wam_shared_v3/phase_e/symmetric_layout_cohort_v3e004/results/episodes.jsonl",
+      "sha256": "3f5528a686f0f1f04767ba97414429ef0aff30576edc3d440d611facd363f328"
+    }
+  ],
+  "status": "frozen_before_reachability_computation",
+  "study_id": "vla_wam_language_steerability_v3",
+  "workspace": {
+    "coordinate_frame": "robot-root world axes; +Y is robot LEFT",
+    "reference_relative_domain_m": {
+      "absolute_lateral_y_edges": [
+        0.075,
+        0.1,
+        0.125,
+        0.15,
+        0.175,
+        0.2
+      ],
+      "basis": "E002 depths 0.075-0.200 m; E002 height 0.120 m plus/minus approximately one measured cube half-extent; symmetric forward span",
+      "forward_x_edges": [
+        -0.1,
+        -0.075,
+        -0.05,
+        -0.025,
+        0.0,
+        0.025,
+        0.05,
+        0.075,
+        0.1
+      ],
+      "left_rule": "+absolute_lateral_y_center",
+      "relation_filter": "abs(forward_x_center) <= absolute_lateral_y_center (closed 45-degree cone)",
+      "right_rule": "-absolute_lateral_y_center",
+      "vertical_z_edges": [
+        0.09,
+        0.105,
+        0.12,
+        0.135,
+        0.15
+      ],
+      "voxel_centers": "midpoints of consecutive edges"
+    },
+    "reset_arm_joint_position_rad": [
+      0.0,
+      -0.6283185307179586,
+      0.0,
+      -2.5132741228718345,
+      0.0,
+      1.8849555921538759,
+      0.0
+    ],
+    "target_body": "Robotiq_2F_85/base_link",
+    "target_orientation": "exact FK orientation of the frozen RoboLab reset joint vector; identical for every voxel and layout"
+  }
+}

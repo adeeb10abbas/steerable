@@ -101,6 +101,13 @@ def paired_advantages(rows: Iterable[dict[str, Any]], family: str, layout_map) -
 
 
 def exact_spearman_permutation(x: list[float], y: list[float]) -> dict[str, Any]:
+    if len(set(x)) < 2 or len(set(y)) < 2:
+        return {
+            "rho": None,
+            "permutations": 0,
+            "two_sided_p": None,
+            "undefined_reason": "constant_input",
+        }
     observed = float(spearmanr(x, y).statistic)
     statistics = [
         float(spearmanr(x, permutation).statistic)
@@ -133,6 +140,18 @@ def make_figure(results: dict[str, Any], png: Path, pdf: Path) -> None:
         ax.set_ylabel("Feasible volume R-L (cm³)", color="#106c69")
         ax.tick_params(axis="y", colors="#106c69")
         ax.set_title(title, loc="left", fontweight="bold")
+        if all(abs(value) < 1e-12 for value in volumes):
+            ax.text(
+                0.5,
+                0.92,
+                "160/160 feasible per side",
+                transform=ax.transAxes,
+                ha="center",
+                va="top",
+                color="#106c69",
+                fontsize=7,
+                fontweight="bold",
+            )
         twin = ax.twinx()
         for model in models:
             rows = [
@@ -175,7 +194,6 @@ def make_figure(results: dict[str, Any], png: Path, pdf: Path) -> None:
         "c  Symmetry package",
     )
     axes[2].set_xlabel("Symmetry level s")
-    handles, labels = axes[2].get_shared_y_axes(), None
     # One compact model legend above the figure; volume is identified by axis color.
     model_handles = [
         plt.Line2D([0], [0], color=colors[model], marker="o", linewidth=1, markersize=3, label=model)
@@ -321,7 +339,11 @@ def main() -> None:
         )
 
     reflection_all_align = bool(reflection_non_ties) and len(reflection_non_ties) == len(reflection_rows) and all(row["depth_sign_alignment"] for row in reflection_non_ties)
-    mechanism_supported = bool(reflection_all_align and sweep_test["rho"] > 0.0)
+    mechanism_supported = bool(
+        reflection_all_align
+        and sweep_test["rho"] is not None
+        and sweep_test["rho"] > 0.0
+    )
     results = {
         "schema_version": "vla-wam-shared-v3e007-zero-model-reachability-results-v1",
         "amendment_id": "V3-E007",
@@ -376,14 +398,20 @@ def main() -> None:
     pdf = args.output_root / "v3e007_reachability_mechanism.pdf"
     make_figure(results, png, pdf)
     memo = args.output_root / "DECISION_MEMO.md"
+    sweep_sentence = (
+        f"The seven-level Nano sweep had Spearman rho={sweep_test['rho']:.3f} "
+        f"(exact two-sided p={sweep_test['two_sided_p']:.4g}).\n\n"
+        if sweep_test["rho"] is not None
+        else "The seven-level volume contrast was constant, so rank correlation is undefined.\n\n"
+    )
     memo.write_text(
         "# V3-E007 zero-model reachability result\n\n"
-        f"The frozen mechanism rule is **{'supported' if mechanism_supported else 'not supported'}**. "
-        f"Reflection depth-sign concordance was {results['tests']['reflection_depth_sign_concordance']['aligned_non_tied_rows']}/"
-        f"{results['tests']['reflection_depth_sign_concordance']['non_tied_rows']}; the seven-level Nano sweep had "
-        f"Spearman rho={sweep_test['rho']:.3f} (exact two-sided p={sweep_test['two_sided_p']:.4g}).\n\n"
-        "This is a disclosed post-result CPU-only calculation with zero model requests and zero behavioral episodes. "
-        "It measures strict joint-limit pose-IK volume, not collision-free task feasibility, contact, or dynamics.\n",
+        + f"The frozen mechanism rule is **{'supported' if mechanism_supported else 'not supported'}**. "
+        + f"Reflection depth-sign concordance was {results['tests']['reflection_depth_sign_concordance']['aligned_non_tied_rows']}/"
+        + f"{results['tests']['reflection_depth_sign_concordance']['non_tied_rows']}. "
+        + sweep_sentence
+        + "This is a disclosed post-result CPU-only calculation with zero model requests and zero behavioral episodes. "
+        + "It measures strict joint-limit pose-IK volume, not collision-free task feasibility, contact, or dynamics.\n",
         encoding="utf-8",
     )
     manifest_paths = [results_path, csv_path, png, pdf, memo]
@@ -404,4 +432,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

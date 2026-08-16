@@ -1,0 +1,495 @@
+{
+  "amendment_id": "V3-E007",
+  "behavioral_episode_count": 0,
+  "claim_boundary": "Strict joint-limit pose-IK volume only; no collision, dynamics, policy, or task-success inference.",
+  "fk_validation": [
+    {
+      "diagnostic_index_one_based": 1,
+      "orientation_error_deg": 2.7833616873513814e-05,
+      "passed": true,
+      "position_error_m": 3.6946247504279423e-07
+    },
+    {
+      "diagnostic_index_one_based": 2,
+      "orientation_error_deg": 2.4466788075488093e-05,
+      "passed": true,
+      "position_error_m": 2.4144068486015705e-07
+    },
+    {
+      "diagnostic_index_one_based": 3,
+      "orientation_error_deg": 3.608790815096665e-05,
+      "passed": true,
+      "position_error_m": 3.471179556871716e-07
+    },
+    {
+      "diagnostic_index_one_based": 4,
+      "orientation_error_deg": 3.5657002491342643e-05,
+      "passed": true,
+      "position_error_m": 1.428114316224826e-07
+    }
+  ],
+  "layouts": [
+    {
+      "family": "reflection",
+      "layout_id": "reflection_control",
+      "level": "control",
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.12658219039440155,
+        0.07732785493135452
+      ],
+      "right_minus_left_feasible_fraction": 0.0,
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "sides": {
+        "left": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.23908207143583407,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.21447194434174124,
+          "voxel_count": 160
+        },
+        "right": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.15953100758886624,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.20188735693513465,
+          "voxel_count": 160
+        }
+      }
+    },
+    {
+      "family": "reflection",
+      "layout_id": "reflection_mirrored",
+      "level": "position_mirrored",
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        -0.12658219039440155,
+        0.07732785493135452
+      ],
+      "right_minus_left_feasible_fraction": 0.0,
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "sides": {
+        "left": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.16102514343580127,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.19839085374326046,
+          "voxel_count": 160
+        },
+        "right": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.21549057855033324,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.2187142632488156,
+          "voxel_count": 160
+        }
+      }
+    },
+    {
+      "family": "nano_lateral_sweep",
+      "layout_id": "nano_sweep_level_0",
+      "level": 0,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.03658219039440155,
+        0.07732785493135452
+      ],
+      "right_minus_left_feasible_fraction": 0.0,
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "sides": {
+        "left": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.19944254453916985,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.20243369506797534,
+          "voxel_count": 160
+        },
+        "right": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.1609672447308448,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.21336591296451385,
+          "voxel_count": 160
+        }
+      }
+    },
+    {
+      "family": "nano_lateral_sweep",
+      "layout_id": "nano_sweep_level_1",
+      "level": 1,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.06658219039440155,
+        0.07732785493135452
+      ],
+      "right_minus_left_feasible_fraction": 0.0,
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "sides": {
+        "left": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.21078274567149996,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.2065489879806474,
+          "voxel_count": 160
+        },
+        "right": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.15369874394520788,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.2133752664581685,
+          "voxel_count": 160
+        }
+      }
+    },
+    {
+      "family": "nano_lateral_sweep",
+      "layout_id": "nano_sweep_level_2",
+      "level": 2,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.09658219039440155,
+        0.07732785493135452
+      ],
+      "right_minus_left_feasible_fraction": 0.0,
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "sides": {
+        "left": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.23046848780680004,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.2056677293282067,
+          "voxel_count": 160
+        },
+        "right": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.15160610865927968,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.2170071349587602,
+          "voxel_count": 160
+        }
+      }
+    },
+    {
+      "family": "nano_lateral_sweep",
+      "layout_id": "nano_sweep_level_3",
+      "level": 3,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.12658219039440155,
+        0.07732785493135452
+      ],
+      "right_minus_left_feasible_fraction": 0.0,
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "sides": {
+        "left": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.23908207143583407,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.21447194434174124,
+          "voxel_count": 160
+        },
+        "right": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.15953100758886624,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.20188735693513465,
+          "voxel_count": 160
+        }
+      }
+    },
+    {
+      "family": "nano_lateral_sweep",
+      "layout_id": "nano_sweep_level_4",
+      "level": 4,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.15658219039440155,
+        0.07732785493135452
+      ],
+      "right_minus_left_feasible_fraction": 0.0,
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "sides": {
+        "left": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.2556185043687985,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.22253602821271418,
+          "voxel_count": 160
+        },
+        "right": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.1499493522624045,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.19991622982645502,
+          "voxel_count": 160
+        }
+      }
+    },
+    {
+      "family": "nano_lateral_sweep",
+      "layout_id": "nano_sweep_level_5",
+      "level": 5,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.18658219039440155,
+        0.07732785493135452
+      ],
+      "right_minus_left_feasible_fraction": 0.0,
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "sides": {
+        "left": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.2718366987450753,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.22949027498456642,
+          "voxel_count": 160
+        },
+        "right": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.1572612144283423,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.19622477865709181,
+          "voxel_count": 160
+        }
+      }
+    },
+    {
+      "family": "nano_lateral_sweep",
+      "layout_id": "nano_sweep_level_6",
+      "level": 6,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.21658219039440155,
+        0.07732785493135452
+      ],
+      "right_minus_left_feasible_fraction": 0.0,
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "sides": {
+        "left": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.2891819524375793,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.22842506583805539,
+          "voxel_count": 160
+        },
+        "right": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.16515408572107254,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.18901170789803806,
+          "voxel_count": 160
+        }
+      }
+    },
+    {
+      "family": "symmetric_scene",
+      "layout_id": "symmetry_s_0_00",
+      "level": 0.0,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.12658219039440155,
+        0.07732785493135452
+      ],
+      "right_minus_left_feasible_fraction": 0.0,
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "sides": {
+        "left": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.23908207143583407,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.21447194434174124,
+          "voxel_count": 160
+        },
+        "right": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.15953100758886624,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.20188735693513465,
+          "voxel_count": 160
+        }
+      }
+    },
+    {
+      "family": "symmetric_scene",
+      "layout_id": "symmetry_s_0_25",
+      "level": 0.25,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.09493664279580116,
+        0.07732785493135452
+      ],
+      "right_minus_left_feasible_fraction": 0.0,
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "sides": {
+        "left": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.22716765030317423,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.2055598140120753,
+          "voxel_count": 160
+        },
+        "right": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.15616542677772327,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.21494808447898706,
+          "voxel_count": 160
+        }
+      }
+    },
+    {
+      "family": "symmetric_scene",
+      "layout_id": "symmetry_s_0_50",
+      "level": 0.5,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.06329109519720078,
+        0.07732785493135452
+      ],
+      "right_minus_left_feasible_fraction": 0.0,
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "sides": {
+        "left": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.2116082623279505,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.20200250230233008,
+          "voxel_count": 160
+        },
+        "right": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.15502890530539773,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.21287568404979007,
+          "voxel_count": 160
+        }
+      }
+    },
+    {
+      "family": "symmetric_scene",
+      "layout_id": "symmetry_s_0_75",
+      "level": 0.75,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.03164554759860039,
+        0.07732785493135452
+      ],
+      "right_minus_left_feasible_fraction": 0.0,
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "sides": {
+        "left": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.1964400802014409,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.19930555590834792,
+          "voxel_count": 160
+        },
+        "right": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.17707687331379496,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.20736678483901286,
+          "voxel_count": 160
+        }
+      }
+    },
+    {
+      "family": "symmetric_scene",
+      "layout_id": "symmetry_s_1_00",
+      "level": 1.0,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.0,
+        0.07732785493135452
+      ],
+      "right_minus_left_feasible_fraction": 0.0,
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "sides": {
+        "left": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.18220250553890116,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.19865170574420982,
+          "voxel_count": 160
+        },
+        "right": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.17415669449314694,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.20812999378693892,
+          "voxel_count": 160
+        }
+      }
+    }
+  ],
+  "learned_model_request_count": 0,
+  "point_count": 4480,
+  "raw_points": {
+    "bytes": 3602997,
+    "path": "/data/users/ali/vla_wam/raw/v3e007_reachability/6a4154b-attempt01/workspace_points.jsonl",
+    "sha256": "e8d852062c7c30ea0cafb41a1ebbb815daea7f726cf4478a4864b31dd91c79f1"
+  },
+  "registration_sha256": "ded9842301634e958844f3a2fda3abda04b0c92524da381a7e20eaf7d9ed8067",
+  "reset_base_link_pose_world_wxyz": [
+    0.3597031640769029,
+    1.7338313776558447e-09,
+    0.47176719456267213,
+    0.7071067033093181,
+    8.01366068571581e-08,
+    0.7071068590637636,
+    -1.5621008889816936e-08
+  ],
+  "robot_usd_sha256": "f555695465687548a1bd31b5e3f30385182d476a67c17080b7820ad0ef747e41",
+  "runtime": {
+    "cuda_visible_devices": "",
+    "isaaclab_imported": false,
+    "isaacsim_imported": false,
+    "python": "3.11.13 (main, Aug 14 2025, 16:25:01) [Clang 20.1.4 ]",
+    "torch_imported": false,
+    "workers": 32
+  },
+  "schema_version": "vla-wam-shared-v3e007-zero-model-reachability-raw-summary-v1",
+  "voxel_volume_m3": 9.375000000000006e-06
+}

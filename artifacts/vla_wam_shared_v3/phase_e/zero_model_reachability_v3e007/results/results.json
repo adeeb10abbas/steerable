@@ -1,0 +1,1235 @@
+{
+  "amendment_id": "V3-E007",
+  "analysis_character": "disclosed_post_result_mechanism_analysis",
+  "behavioral_episode_count": 0,
+  "claim_boundary": "Post-result deterministic joint-limit pose IK. It tests a mechanism without policy inference, but does not include collision, contact, dynamics, or prove that IK volume fully mediates behavioral outcomes.",
+  "interpretation": "The frozen IK analysis does not support kinematic reachability as the common mechanism; scope the claim to scene configuration.",
+  "learned_model_request_count": 0,
+  "mechanism_supported_under_frozen_rule": false,
+  "policy_layout_rows": [
+    {
+      "binary_success": {
+        "left": [
+          4,
+          27
+        ],
+        "right": [
+          25,
+          27
+        ]
+      },
+      "depth_sign_alignment": null,
+      "episodes_per_relation": [
+        27,
+        27
+      ],
+      "family": "reflection",
+      "layout_id": "reflection_control",
+      "mean_requested_side_depth_m": {
+        "left": -0.007574097218888777,
+        "right": 0.1998960686226686
+      },
+      "model_id": "pi05_current_stack_droid",
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "right_minus_left_requested_depth_m": 0.20747016584155736,
+      "right_minus_left_success_rate": 0.7777777777777778,
+      "success_sign_alignment": null
+    },
+    {
+      "binary_success": {
+        "left": [
+          25,
+          27
+        ],
+        "right": [
+          9,
+          27
+        ]
+      },
+      "depth_sign_alignment": null,
+      "episodes_per_relation": [
+        27,
+        27
+      ],
+      "family": "reflection",
+      "layout_id": "reflection_mirrored",
+      "mean_requested_side_depth_m": {
+        "left": 0.1597938449639413,
+        "right": 0.02134529928918238
+      },
+      "model_id": "pi05_current_stack_droid",
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "right_minus_left_requested_depth_m": -0.13844854567475892,
+      "right_minus_left_success_rate": -0.5925925925925926,
+      "success_sign_alignment": null
+    },
+    {
+      "binary_success": {
+        "left": [
+          26,
+          27
+        ],
+        "right": [
+          26,
+          27
+        ]
+      },
+      "depth_sign_alignment": null,
+      "episodes_per_relation": [
+        27,
+        27
+      ],
+      "family": "reflection",
+      "layout_id": "reflection_control",
+      "mean_requested_side_depth_m": {
+        "left": 0.15019709092599373,
+        "right": 0.29785965514127855
+      },
+      "model_id": "cosmos3_nano_policy_droid",
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "right_minus_left_requested_depth_m": 0.14766256421528481,
+      "right_minus_left_success_rate": 0.0,
+      "success_sign_alignment": null
+    },
+    {
+      "binary_success": {
+        "left": [
+          27,
+          27
+        ],
+        "right": [
+          23,
+          27
+        ]
+      },
+      "depth_sign_alignment": null,
+      "episodes_per_relation": [
+        27,
+        27
+      ],
+      "family": "reflection",
+      "layout_id": "reflection_mirrored",
+      "mean_requested_side_depth_m": {
+        "left": 0.2763708127938487,
+        "right": 0.17636618349287245
+      },
+      "model_id": "cosmos3_nano_policy_droid",
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "right_minus_left_requested_depth_m": -0.10000462930097623,
+      "right_minus_left_success_rate": -0.14814814814814814,
+      "success_sign_alignment": null
+    },
+    {
+      "binary_success": {
+        "left": [
+          5,
+          27
+        ],
+        "right": [
+          8,
+          27
+        ]
+      },
+      "depth_sign_alignment": null,
+      "episodes_per_relation": [
+        27,
+        27
+      ],
+      "family": "reflection",
+      "layout_id": "reflection_control",
+      "mean_requested_side_depth_m": {
+        "left": 0.04936212549606959,
+        "right": 0.07231544717042535
+      },
+      "model_id": "dreamzero_droid_action_cfg",
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "right_minus_left_requested_depth_m": 0.022953321674355757,
+      "right_minus_left_success_rate": 0.1111111111111111,
+      "success_sign_alignment": null
+    },
+    {
+      "binary_success": {
+        "left": [
+          25,
+          27
+        ],
+        "right": [
+          25,
+          27
+        ]
+      },
+      "depth_sign_alignment": null,
+      "episodes_per_relation": [
+        27,
+        27
+      ],
+      "family": "reflection",
+      "layout_id": "reflection_mirrored",
+      "mean_requested_side_depth_m": {
+        "left": 0.24717058162032454,
+        "right": 0.12920531299379137
+      },
+      "model_id": "dreamzero_droid_action_cfg",
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "right_minus_left_requested_depth_m": -0.11796526862653317,
+      "right_minus_left_success_rate": 0.0,
+      "success_sign_alignment": null
+    },
+    {
+      "binary_success": {
+        "left": [
+          15,
+          15
+        ],
+        "right": [
+          13,
+          15
+        ]
+      },
+      "depth_sign_alignment": null,
+      "episodes_per_relation": [
+        15,
+        15
+      ],
+      "family": "nano_lateral_sweep",
+      "layout_id": "nano_sweep_level_0",
+      "mean_requested_side_depth_m": null,
+      "model_id": "cosmos3_nano_policy_droid",
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "right_minus_left_requested_depth_m": 0.013066606099406878,
+      "right_minus_left_success_rate": -0.1333333333333333,
+      "success_sign_alignment": null
+    },
+    {
+      "binary_success": {
+        "left": [
+          14,
+          15
+        ],
+        "right": [
+          15,
+          15
+        ]
+      },
+      "depth_sign_alignment": null,
+      "episodes_per_relation": [
+        15,
+        15
+      ],
+      "family": "nano_lateral_sweep",
+      "layout_id": "nano_sweep_level_1",
+      "mean_requested_side_depth_m": null,
+      "model_id": "cosmos3_nano_policy_droid",
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "right_minus_left_requested_depth_m": 0.09222178235650062,
+      "right_minus_left_success_rate": 0.06666666666666665,
+      "success_sign_alignment": null
+    },
+    {
+      "binary_success": {
+        "left": [
+          15,
+          15
+        ],
+        "right": [
+          14,
+          15
+        ]
+      },
+      "depth_sign_alignment": null,
+      "episodes_per_relation": [
+        15,
+        15
+      ],
+      "family": "nano_lateral_sweep",
+      "layout_id": "nano_sweep_level_2",
+      "mean_requested_side_depth_m": null,
+      "model_id": "cosmos3_nano_policy_droid",
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "right_minus_left_requested_depth_m": 0.10299765734622876,
+      "right_minus_left_success_rate": -0.06666666666666665,
+      "success_sign_alignment": null
+    },
+    {
+      "binary_success": {
+        "left": [
+          14,
+          15
+        ],
+        "right": [
+          15,
+          15
+        ]
+      },
+      "depth_sign_alignment": null,
+      "episodes_per_relation": [
+        15,
+        15
+      ],
+      "family": "nano_lateral_sweep",
+      "layout_id": "nano_sweep_level_3",
+      "mean_requested_side_depth_m": null,
+      "model_id": "cosmos3_nano_policy_droid",
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "right_minus_left_requested_depth_m": 0.09795385127266248,
+      "right_minus_left_success_rate": 0.06666666666666665,
+      "success_sign_alignment": null
+    },
+    {
+      "binary_success": {
+        "left": [
+          13,
+          15
+        ],
+        "right": [
+          14,
+          15
+        ]
+      },
+      "depth_sign_alignment": null,
+      "episodes_per_relation": [
+        15,
+        15
+      ],
+      "family": "nano_lateral_sweep",
+      "layout_id": "nano_sweep_level_4",
+      "mean_requested_side_depth_m": null,
+      "model_id": "cosmos3_nano_policy_droid",
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "right_minus_left_requested_depth_m": 0.09205955316623052,
+      "right_minus_left_success_rate": 0.06666666666666665,
+      "success_sign_alignment": null
+    },
+    {
+      "binary_success": {
+        "left": [
+          12,
+          15
+        ],
+        "right": [
+          13,
+          15
+        ]
+      },
+      "depth_sign_alignment": null,
+      "episodes_per_relation": [
+        15,
+        15
+      ],
+      "family": "nano_lateral_sweep",
+      "layout_id": "nano_sweep_level_5",
+      "mean_requested_side_depth_m": null,
+      "model_id": "cosmos3_nano_policy_droid",
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "right_minus_left_requested_depth_m": 0.17177735889951387,
+      "right_minus_left_success_rate": 0.06666666666666665,
+      "success_sign_alignment": null
+    },
+    {
+      "binary_success": {
+        "left": [
+          10,
+          15
+        ],
+        "right": [
+          15,
+          15
+        ]
+      },
+      "depth_sign_alignment": null,
+      "episodes_per_relation": [
+        15,
+        15
+      ],
+      "family": "nano_lateral_sweep",
+      "layout_id": "nano_sweep_level_6",
+      "mean_requested_side_depth_m": null,
+      "model_id": "cosmos3_nano_policy_droid",
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "right_minus_left_requested_depth_m": 0.2786000226934751,
+      "right_minus_left_success_rate": 0.33333333333333337,
+      "success_sign_alignment": null
+    },
+    {
+      "binary_success": {
+        "left": [
+          18,
+          27
+        ],
+        "right": [
+          23,
+          27
+        ]
+      },
+      "depth_sign_alignment": null,
+      "episodes_per_relation": [
+        27,
+        27
+      ],
+      "family": "symmetric_scene",
+      "layout_id": "symmetry_s_0_00",
+      "mean_requested_side_depth_m": {
+        "left": 0.07883637343291883,
+        "right": 0.34262188496413054
+      },
+      "model_id": "cosmos3_edge_policy_droid",
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "right_minus_left_requested_depth_m": 0.2637855115312117,
+      "right_minus_left_success_rate": 0.18518518518518523,
+      "success_sign_alignment": null
+    },
+    {
+      "binary_success": {
+        "left": [
+          25,
+          27
+        ],
+        "right": [
+          26,
+          27
+        ]
+      },
+      "depth_sign_alignment": null,
+      "episodes_per_relation": [
+        27,
+        27
+      ],
+      "family": "symmetric_scene",
+      "layout_id": "symmetry_s_1_00",
+      "mean_requested_side_depth_m": {
+        "left": 0.1610930868105411,
+        "right": 0.23310168259949596
+      },
+      "model_id": "cosmos3_edge_policy_droid",
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "right_minus_left_requested_depth_m": 0.07200859578895485,
+      "right_minus_left_success_rate": 0.03703703703703698,
+      "success_sign_alignment": null
+    },
+    {
+      "binary_success": {
+        "left": [
+          485,
+          521
+        ],
+        "right": [
+          489,
+          521
+        ]
+      },
+      "depth_sign_alignment": null,
+      "episodes_per_relation": [
+        521,
+        521
+      ],
+      "family": "symmetric_scene",
+      "layout_id": "symmetry_s_0_00",
+      "mean_requested_side_depth_m": {
+        "left": 0.134537115657341,
+        "right": 0.27640879137134056
+      },
+      "model_id": "cosmos3_nano_policy_droid",
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "right_minus_left_requested_depth_m": 0.14187167571399956,
+      "right_minus_left_success_rate": 0.007677543186180413,
+      "success_sign_alignment": null
+    },
+    {
+      "binary_success": {
+        "left": [
+          27,
+          27
+        ],
+        "right": [
+          24,
+          27
+        ]
+      },
+      "depth_sign_alignment": null,
+      "episodes_per_relation": [
+        27,
+        27
+      ],
+      "family": "symmetric_scene",
+      "layout_id": "symmetry_s_0_25",
+      "mean_requested_side_depth_m": {
+        "left": 0.15350778152545294,
+        "right": 0.2453763445287391
+      },
+      "model_id": "cosmos3_nano_policy_droid",
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "right_minus_left_requested_depth_m": 0.09186856300328616,
+      "right_minus_left_success_rate": -0.11111111111111116,
+      "success_sign_alignment": null
+    },
+    {
+      "binary_success": {
+        "left": [
+          27,
+          27
+        ],
+        "right": [
+          25,
+          27
+        ]
+      },
+      "depth_sign_alignment": null,
+      "episodes_per_relation": [
+        27,
+        27
+      ],
+      "family": "symmetric_scene",
+      "layout_id": "symmetry_s_0_50",
+      "mean_requested_side_depth_m": {
+        "left": 0.16485948971024267,
+        "right": 0.2535775386624866
+      },
+      "model_id": "cosmos3_nano_policy_droid",
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "right_minus_left_requested_depth_m": 0.08871804895224394,
+      "right_minus_left_success_rate": -0.07407407407407407,
+      "success_sign_alignment": null
+    },
+    {
+      "binary_success": {
+        "left": [
+          25,
+          27
+        ],
+        "right": [
+          27,
+          27
+        ]
+      },
+      "depth_sign_alignment": null,
+      "episodes_per_relation": [
+        27,
+        27
+      ],
+      "family": "symmetric_scene",
+      "layout_id": "symmetry_s_0_75",
+      "mean_requested_side_depth_m": {
+        "left": 0.16587045816359697,
+        "right": 0.2334893954296907
+      },
+      "model_id": "cosmos3_nano_policy_droid",
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "right_minus_left_requested_depth_m": 0.06761893726609372,
+      "right_minus_left_success_rate": 0.07407407407407407,
+      "success_sign_alignment": null
+    },
+    {
+      "binary_success": {
+        "left": [
+          510,
+          521
+        ],
+        "right": [
+          487,
+          521
+        ]
+      },
+      "depth_sign_alignment": null,
+      "episodes_per_relation": [
+        521,
+        521
+      ],
+      "family": "symmetric_scene",
+      "layout_id": "symmetry_s_1_00",
+      "mean_requested_side_depth_m": {
+        "left": 0.1772284500574382,
+        "right": 0.21019500096347773
+      },
+      "model_id": "cosmos3_nano_policy_droid",
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "right_minus_left_requested_depth_m": 0.03296655090603953,
+      "right_minus_left_success_rate": -0.04414587332053743,
+      "success_sign_alignment": null
+    },
+    {
+      "binary_success": {
+        "left": [
+          3,
+          27
+        ],
+        "right": [
+          17,
+          27
+        ]
+      },
+      "depth_sign_alignment": null,
+      "episodes_per_relation": [
+        27,
+        27
+      ],
+      "family": "symmetric_scene",
+      "layout_id": "symmetry_s_0_00",
+      "mean_requested_side_depth_m": {
+        "left": 0.03662755837043127,
+        "right": 0.14031014215477086
+      },
+      "model_id": "dreamzero_droid_action_cfg",
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "right_minus_left_requested_depth_m": 0.10368258378433959,
+      "right_minus_left_success_rate": 0.5185185185185186,
+      "success_sign_alignment": null
+    },
+    {
+      "binary_success": {
+        "left": [
+          26,
+          27
+        ],
+        "right": [
+          25,
+          27
+        ]
+      },
+      "depth_sign_alignment": null,
+      "episodes_per_relation": [
+        27,
+        27
+      ],
+      "family": "symmetric_scene",
+      "layout_id": "symmetry_s_1_00",
+      "mean_requested_side_depth_m": {
+        "left": 0.1506870276881037,
+        "right": 0.13002093545920043
+      },
+      "model_id": "dreamzero_droid_action_cfg",
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "right_minus_left_requested_depth_m": -0.020666092228903254,
+      "right_minus_left_success_rate": -0.03703703703703698,
+      "success_sign_alignment": null
+    },
+    {
+      "binary_success": {
+        "left": [
+          59,
+          341
+        ],
+        "right": [
+          312,
+          341
+        ]
+      },
+      "depth_sign_alignment": null,
+      "episodes_per_relation": [
+        341,
+        341
+      ],
+      "family": "symmetric_scene",
+      "layout_id": "symmetry_s_0_00",
+      "mean_requested_side_depth_m": {
+        "left": 0.00563937831257642,
+        "right": 0.1756036641070062
+      },
+      "model_id": "pi05_current_stack_droid",
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "right_minus_left_requested_depth_m": 0.1699642857944298,
+      "right_minus_left_success_rate": 0.7419354838709677,
+      "success_sign_alignment": null
+    },
+    {
+      "binary_success": {
+        "left": [
+          5,
+          27
+        ],
+        "right": [
+          26,
+          27
+        ]
+      },
+      "depth_sign_alignment": null,
+      "episodes_per_relation": [
+        27,
+        27
+      ],
+      "family": "symmetric_scene",
+      "layout_id": "symmetry_s_0_25",
+      "mean_requested_side_depth_m": {
+        "left": 0.012705254782405164,
+        "right": 0.17521775258636033
+      },
+      "model_id": "pi05_current_stack_droid",
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "right_minus_left_requested_depth_m": 0.16251249780395516,
+      "right_minus_left_success_rate": 0.7777777777777777,
+      "success_sign_alignment": null
+    },
+    {
+      "binary_success": {
+        "left": [
+          12,
+          27
+        ],
+        "right": [
+          22,
+          27
+        ]
+      },
+      "depth_sign_alignment": null,
+      "episodes_per_relation": [
+        27,
+        27
+      ],
+      "family": "symmetric_scene",
+      "layout_id": "symmetry_s_0_50",
+      "mean_requested_side_depth_m": {
+        "left": 0.04502573561061312,
+        "right": 0.14461764237946934
+      },
+      "model_id": "pi05_current_stack_droid",
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "right_minus_left_requested_depth_m": 0.09959190676885621,
+      "right_minus_left_success_rate": 0.37037037037037035,
+      "success_sign_alignment": null
+    },
+    {
+      "binary_success": {
+        "left": [
+          12,
+          27
+        ],
+        "right": [
+          24,
+          27
+        ]
+      },
+      "depth_sign_alignment": null,
+      "episodes_per_relation": [
+        27,
+        27
+      ],
+      "family": "symmetric_scene",
+      "layout_id": "symmetry_s_0_75",
+      "mean_requested_side_depth_m": {
+        "left": 0.06511729093337501,
+        "right": 0.15268111035779672
+      },
+      "model_id": "pi05_current_stack_droid",
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "right_minus_left_requested_depth_m": 0.08756381942442171,
+      "right_minus_left_success_rate": 0.4444444444444444,
+      "success_sign_alignment": null
+    },
+    {
+      "binary_success": {
+        "left": [
+          224,
+          341
+        ],
+        "right": [
+          293,
+          341
+        ]
+      },
+      "depth_sign_alignment": null,
+      "episodes_per_relation": [
+        341,
+        341
+      ],
+      "family": "symmetric_scene",
+      "layout_id": "symmetry_s_1_00",
+      "mean_requested_side_depth_m": {
+        "left": 0.09093303114511728,
+        "right": 0.14843764677001955
+      },
+      "model_id": "pi05_current_stack_droid",
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "right_minus_left_requested_depth_m": 0.05750461562490228,
+      "right_minus_left_success_rate": 0.20234604105571852,
+      "success_sign_alignment": null
+    }
+  ],
+  "raw_summary": {
+    "bytes": 17739,
+    "path": "/data/users/ali/vla_wam/raw/v3e007_reachability/6a4154b-attempt01/workspace_summary.json",
+    "sha256": "85a688917a94f946c397d9ee9cd3e4cb6952ba81a40c5b3873e71e172d975906"
+  },
+  "registration_sha256": "ded9842301634e958844f3a2fda3abda04b0c92524da381a7e20eaf7d9ed8067",
+  "schema_version": "vla-wam-shared-v3e007-zero-model-reachability-results-v1",
+  "status": "complete",
+  "tests": {
+    "nano_sweep_exact_spearman": {
+      "permutations": 0,
+      "rho": null,
+      "two_sided_p": null,
+      "undefined_reason": "constant_input"
+    },
+    "reflection_depth_sign_concordance": {
+      "aligned_non_tied_rows": 0,
+      "all_align": false,
+      "all_rows_non_tied": false,
+      "non_tied_rows": 0
+    },
+    "symmetric_scene": {
+      "absolute_volume_asymmetry_s0_m3": 0.0,
+      "absolute_volume_asymmetry_s1_m3": 0.0,
+      "policy_depth_attenuation": [
+        {
+          "absolute_depth_disparity_s0_m": 0.2637855115312117,
+          "absolute_depth_disparity_s1_m": 0.07200859578895485,
+          "depth_disparity_decreased": true,
+          "model_id": "cosmos3_edge_policy_droid"
+        },
+        {
+          "absolute_depth_disparity_s0_m": 0.14187167571399956,
+          "absolute_depth_disparity_s1_m": 0.03296655090603953,
+          "depth_disparity_decreased": true,
+          "model_id": "cosmos3_nano_policy_droid"
+        },
+        {
+          "absolute_depth_disparity_s0_m": 0.10368258378433959,
+          "absolute_depth_disparity_s1_m": 0.020666092228903254,
+          "depth_disparity_decreased": true,
+          "model_id": "dreamzero_droid_action_cfg"
+        },
+        {
+          "absolute_depth_disparity_s0_m": 0.1699642857944298,
+          "absolute_depth_disparity_s1_m": 0.05750461562490228,
+          "depth_disparity_decreased": true,
+          "model_id": "pi05_current_stack_droid"
+        }
+      ],
+      "volume_asymmetry_decreased": false
+    }
+  },
+  "workspace_layouts": [
+    {
+      "family": "reflection",
+      "layout_id": "reflection_control",
+      "level": "control",
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.12658219039440155,
+        0.07732785493135452
+      ],
+      "right_minus_left_feasible_fraction": 0.0,
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "sides": {
+        "left": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.23908207143583407,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.21447194434174124,
+          "voxel_count": 160
+        },
+        "right": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.15953100758886624,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.20188735693513465,
+          "voxel_count": 160
+        }
+      }
+    },
+    {
+      "family": "reflection",
+      "layout_id": "reflection_mirrored",
+      "level": "position_mirrored",
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        -0.12658219039440155,
+        0.07732785493135452
+      ],
+      "right_minus_left_feasible_fraction": 0.0,
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "sides": {
+        "left": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.16102514343580127,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.19839085374326046,
+          "voxel_count": 160
+        },
+        "right": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.21549057855033324,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.2187142632488156,
+          "voxel_count": 160
+        }
+      }
+    },
+    {
+      "family": "nano_lateral_sweep",
+      "layout_id": "nano_sweep_level_0",
+      "level": 0,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.03658219039440155,
+        0.07732785493135452
+      ],
+      "right_minus_left_feasible_fraction": 0.0,
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "sides": {
+        "left": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.19944254453916985,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.20243369506797534,
+          "voxel_count": 160
+        },
+        "right": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.1609672447308448,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.21336591296451385,
+          "voxel_count": 160
+        }
+      }
+    },
+    {
+      "family": "nano_lateral_sweep",
+      "layout_id": "nano_sweep_level_1",
+      "level": 1,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.06658219039440155,
+        0.07732785493135452
+      ],
+      "right_minus_left_feasible_fraction": 0.0,
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "sides": {
+        "left": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.21078274567149996,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.2065489879806474,
+          "voxel_count": 160
+        },
+        "right": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.15369874394520788,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.2133752664581685,
+          "voxel_count": 160
+        }
+      }
+    },
+    {
+      "family": "nano_lateral_sweep",
+      "layout_id": "nano_sweep_level_2",
+      "level": 2,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.09658219039440155,
+        0.07732785493135452
+      ],
+      "right_minus_left_feasible_fraction": 0.0,
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "sides": {
+        "left": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.23046848780680004,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.2056677293282067,
+          "voxel_count": 160
+        },
+        "right": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.15160610865927968,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.2170071349587602,
+          "voxel_count": 160
+        }
+      }
+    },
+    {
+      "family": "nano_lateral_sweep",
+      "layout_id": "nano_sweep_level_3",
+      "level": 3,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.12658219039440155,
+        0.07732785493135452
+      ],
+      "right_minus_left_feasible_fraction": 0.0,
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "sides": {
+        "left": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.23908207143583407,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.21447194434174124,
+          "voxel_count": 160
+        },
+        "right": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.15953100758886624,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.20188735693513465,
+          "voxel_count": 160
+        }
+      }
+    },
+    {
+      "family": "nano_lateral_sweep",
+      "layout_id": "nano_sweep_level_4",
+      "level": 4,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.15658219039440155,
+        0.07732785493135452
+      ],
+      "right_minus_left_feasible_fraction": 0.0,
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "sides": {
+        "left": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.2556185043687985,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.22253602821271418,
+          "voxel_count": 160
+        },
+        "right": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.1499493522624045,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.19991622982645502,
+          "voxel_count": 160
+        }
+      }
+    },
+    {
+      "family": "nano_lateral_sweep",
+      "layout_id": "nano_sweep_level_5",
+      "level": 5,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.18658219039440155,
+        0.07732785493135452
+      ],
+      "right_minus_left_feasible_fraction": 0.0,
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "sides": {
+        "left": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.2718366987450753,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.22949027498456642,
+          "voxel_count": 160
+        },
+        "right": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.1572612144283423,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.19622477865709181,
+          "voxel_count": 160
+        }
+      }
+    },
+    {
+      "family": "nano_lateral_sweep",
+      "layout_id": "nano_sweep_level_6",
+      "level": 6,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.21658219039440155,
+        0.07732785493135452
+      ],
+      "right_minus_left_feasible_fraction": 0.0,
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "sides": {
+        "left": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.2891819524375793,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.22842506583805539,
+          "voxel_count": 160
+        },
+        "right": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.16515408572107254,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.18901170789803806,
+          "voxel_count": 160
+        }
+      }
+    },
+    {
+      "family": "symmetric_scene",
+      "layout_id": "symmetry_s_0_00",
+      "level": 0.0,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.12658219039440155,
+        0.07732785493135452
+      ],
+      "right_minus_left_feasible_fraction": 0.0,
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "sides": {
+        "left": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.23908207143583407,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.21447194434174124,
+          "voxel_count": 160
+        },
+        "right": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.15953100758886624,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.20188735693513465,
+          "voxel_count": 160
+        }
+      }
+    },
+    {
+      "family": "symmetric_scene",
+      "layout_id": "symmetry_s_0_25",
+      "level": 0.25,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.09493664279580116,
+        0.07732785493135452
+      ],
+      "right_minus_left_feasible_fraction": 0.0,
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "sides": {
+        "left": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.22716765030317423,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.2055598140120753,
+          "voxel_count": 160
+        },
+        "right": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.15616542677772327,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.21494808447898706,
+          "voxel_count": 160
+        }
+      }
+    },
+    {
+      "family": "symmetric_scene",
+      "layout_id": "symmetry_s_0_50",
+      "level": 0.5,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.06329109519720078,
+        0.07732785493135452
+      ],
+      "right_minus_left_feasible_fraction": 0.0,
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "sides": {
+        "left": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.2116082623279505,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.20200250230233008,
+          "voxel_count": 160
+        },
+        "right": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.15502890530539773,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.21287568404979007,
+          "voxel_count": 160
+        }
+      }
+    },
+    {
+      "family": "symmetric_scene",
+      "layout_id": "symmetry_s_0_75",
+      "level": 0.75,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.03164554759860039,
+        0.07732785493135452
+      ],
+      "right_minus_left_feasible_fraction": 0.0,
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "sides": {
+        "left": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.1964400802014409,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.19930555590834792,
+          "voxel_count": 160
+        },
+        "right": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.17707687331379496,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.20736678483901286,
+          "voxel_count": 160
+        }
+      }
+    },
+    {
+      "family": "symmetric_scene",
+      "layout_id": "symmetry_s_1_00",
+      "level": 1.0,
+      "reference_object": "bowl",
+      "reference_position_world_m": [
+        0.44258353114128113,
+        0.0,
+        0.07732785493135452
+      ],
+      "right_minus_left_feasible_fraction": 0.0,
+      "right_minus_left_feasible_volume_m3": 0.0,
+      "sides": {
+        "left": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.18220250553890116,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.19865170574420982,
+          "voxel_count": 160
+        },
+        "right": {
+          "feasible_fraction": 1.0,
+          "feasible_volume_m3": 0.001500000000000001,
+          "feasible_voxel_count": 160,
+          "median_minimum_normalized_joint_limit_margin": 0.17415669449314694,
+          "median_minimum_translational_jacobian_singular_value_m_per_rad": 0.20812999378693892,
+          "voxel_count": 160
+        }
+      }
+    }
+  ]
+}

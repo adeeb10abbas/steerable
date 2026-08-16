@@ -216,8 +216,7 @@ def make_figure(results: dict[str, Any], png: Path, pdf: Path) -> None:
     ]
     fig.legend(
         handles=model_handles,
-        loc="upper center",
-        bbox_to_anchor=(0.5, 1.08),
+        loc="outside upper center",
         ncol=min(4, len(model_handles)),
         frameon=False,
         title="Observed policy depth contrast",

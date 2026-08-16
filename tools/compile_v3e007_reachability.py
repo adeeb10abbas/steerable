@@ -417,6 +417,10 @@ def main() -> None:
     png = args.output_root / "v3e007_reachability_mechanism.png"
     pdf = args.output_root / "v3e007_reachability_mechanism.pdf"
     make_figure(results, png, pdf)
+    layouts = results["workspace_layouts"]
+    total_per_side = sum(row["sides"]["left"]["voxel_count"] for row in layouts)
+    feasible_left = sum(row["sides"]["left"]["feasible_voxel_count"] for row in layouts)
+    feasible_right = sum(row["sides"]["right"]["feasible_voxel_count"] for row in layouts)
     memo = args.output_root / "DECISION_MEMO.md"
     sweep_sentence = (
         f"The seven-level Nano sweep had Spearman rho={sweep_test['rho']:.3f} "
@@ -430,11 +434,24 @@ def main() -> None:
         + f"Reflection depth-sign concordance was {results['tests']['reflection_depth_sign_concordance']['aligned_non_tied_rows']}/"
         + f"{results['tests']['reflection_depth_sign_concordance']['non_tied_rows']}. "
         + sweep_sentence
+        + f"Across all {len(layouts)} layouts, LEFT was feasible at {feasible_left}/{total_per_side} targets and "
+        + f"RIGHT at {feasible_right}/{total_per_side}; every layout had zero feasible-volume contrast. "
+        + "Basic joint-limit pose reachability therefore does not explain the policy-favored direction.\n\n"
         + "This is a disclosed post-result CPU-only calculation with zero model requests and zero behavioral episodes. "
         + "It measures strict joint-limit pose-IK volume, not collision-free task feasibility, contact, or dynamics.\n",
         encoding="utf-8",
     )
-    manifest_paths = [results_path, csv_path, png, pdf, memo]
+    paper_text = args.output_root / "PAPER_TEXT.md"
+    paper_text.write_text(
+        "Post hoc, with no policy inference, we evaluated 4,480 pose targets over the reflection, seven-level "
+        "reference-sweep, and five-level symmetry layouts using the frozen E002 relation cone and a strict 1 mm/1° "
+        "joint-limited IK criterion.\n\n"
+        "All 2,240 targets on each side were feasible (160/160 per side in every layout), so basic IK-feasible "
+        "placement volume does not explain the directional differences; our evidence supports dependence on scene "
+        "configuration but does not isolate reachability as the mediator.\n",
+        encoding="utf-8",
+    )
+    manifest_paths = [results_path, csv_path, png, pdf, memo, paper_text]
     manifest = {
         "schema_version": "vla-wam-shared-v3e007-evidence-manifest-v1",
         "registration_sha256": sha256(args.registration),

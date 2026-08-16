@@ -129,6 +129,12 @@ def make_figure(results: dict[str, Any], png: Path, pdf: Path) -> None:
         for row in results["workspace_layouts"]
     }
     models = sorted({row["model_id"] for row in results["policy_layout_rows"]})
+    model_labels = {
+        "cosmos3_edge_policy_droid": "Edge",
+        "cosmos3_nano_policy_droid": "Nano",
+        "dreamzero_droid_action_cfg": "DreamZero",
+        "pi05_current_stack_droid": "π0.5",
+    }
     colors = dict(zip(models, plt.cm.tab10(np.linspace(0.05, 0.85, len(models))), strict=True))
 
     def panel(ax, family: str, layout_ids: list[str], labels: list[str], title: str) -> None:
@@ -137,6 +143,7 @@ def make_figure(results: dict[str, Any], png: Path, pdf: Path) -> None:
         ax.bar(x, volumes, color="#158f8b", alpha=0.82, width=0.58, label="IK volume R-L")
         ax.axhline(0.0, color="0.25", linewidth=0.7)
         ax.set_xticks(x, labels)
+        ax.tick_params(axis="x", labelsize=7)
         ax.set_ylabel("Feasible volume R-L (cm³)", color="#106c69")
         ax.tick_params(axis="y", colors="#106c69")
         ax.set_title(title, loc="left", fontweight="bold")
@@ -196,11 +203,25 @@ def make_figure(results: dict[str, Any], png: Path, pdf: Path) -> None:
     axes[2].set_xlabel("Symmetry level s")
     # One compact model legend above the figure; volume is identified by axis color.
     model_handles = [
-        plt.Line2D([0], [0], color=colors[model], marker="o", linewidth=1, markersize=3, label=model)
+        plt.Line2D(
+            [0],
+            [0],
+            color=colors[model],
+            marker="o",
+            linewidth=1,
+            markersize=3,
+            label=model_labels.get(model, model),
+        )
         for model in models
     ]
-    fig.legend(handles=model_handles, loc="outside upper center", ncol=min(4, len(model_handles)), frameon=False)
-    fig.suptitle("Zero-model reachability and observed directional advantage", y=1.08, fontsize=10, fontweight="bold")
+    fig.legend(
+        handles=model_handles,
+        loc="upper center",
+        bbox_to_anchor=(0.5, 1.08),
+        ncol=min(4, len(model_handles)),
+        frameon=False,
+        title="Observed policy depth contrast",
+    )
     png.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(png, dpi=300, bbox_inches="tight")
     fig.savefig(pdf, bbox_inches="tight")

@@ -74,6 +74,9 @@ def _sample_reset_registry(*, env_seed: int = 2100000045) -> dict:
     return {
         "schema_version": "v4-droid-horizontal-reset-registry-v1",
         "fixture_id": "horizontal",
+        "status": "model_blind_candidate_not_released_for_inference",
+        "model_request_count": 0,
+        "behavioral_episode_count": 0,
         "scene_asset": SCENE_ASSET,
         "scene_metadata_sha256": SCENE_METADATA_SHA256,
         "contact_objects": ["rubiks_cube", "banana", "bowl", "table"],

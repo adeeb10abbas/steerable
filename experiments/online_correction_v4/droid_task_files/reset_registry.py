@@ -27,6 +27,13 @@ class ResetRegistryError(ValueError):
     """Raised when the reset registry is missing, stale, or incomplete."""
 
 
+MODEL_BLIND_CANDIDATE_STATUS = "model_blind_candidate_not_released_for_inference"
+RELEASED_FOR_POLICY_STATUS = "released_for_policy_inference"
+KNOWN_REGISTRY_STATUSES = frozenset(
+    {MODEL_BLIND_CANDIDATE_STATUS, RELEASED_FOR_POLICY_STATUS}
+)
+
+
 @dataclass(frozen=True)
 class ObjectRoleBinding:
     role: str
@@ -38,6 +45,9 @@ class ObjectRoleBinding:
 class ResetRegistry:
     schema_version: str
     fixture_id: str
+    status: str
+    model_request_count: int
+    behavioral_episode_count: int
     scene_asset: str
     scene_metadata_sha256: str
     contact_objects: tuple[str, ...]
@@ -74,6 +84,7 @@ def load_reset_registry(
     *,
     registry_path: str | None = None,
     registry_sha256: str | None = None,
+    required_status: str | None = None,
 ) -> ResetRegistry:
     raw_path = registry_path or os.environ.get(ENV_RESET_REGISTRY)
     expected_hash = registry_sha256 or os.environ.get(ENV_RESET_REGISTRY_SHA256)
@@ -96,6 +107,18 @@ def load_reset_registry(
         _fail("reset registry schema mismatch")
     if payload.get("fixture_id") != "horizontal":
         _fail("reset registry fixture_id must be horizontal")
+    status = payload.get("status")
+    if status not in KNOWN_REGISTRY_STATUSES:
+        _fail("reset registry status is missing or unrecognized")
+    if required_status is not None and status != required_status:
+        _fail(
+            f"reset registry status {status!r} differs from required "
+            f"{required_status!r}"
+        )
+    if payload.get("model_request_count") != 0:
+        _fail("reset registry must be built without model requests")
+    if payload.get("behavioral_episode_count") != 0:
+        _fail("reset registry must not contain behavioral episodes")
     if payload.get("scene_asset") != SCENE_ASSET:
         _fail("reset registry scene_asset mismatch")
     if payload.get("scene_metadata_sha256") != SCENE_METADATA_SHA256:
@@ -148,6 +171,9 @@ def load_reset_registry(
     return ResetRegistry(
         schema_version=str(payload["schema_version"]),
         fixture_id=str(payload["fixture_id"]),
+        status=str(status),
+        model_request_count=0,
+        behavioral_episode_count=0,
         scene_asset=str(payload["scene_asset"]),
         scene_metadata_sha256=str(payload["scene_metadata_sha256"]),
         contact_objects=tuple(str(item) for item in contact_objects),

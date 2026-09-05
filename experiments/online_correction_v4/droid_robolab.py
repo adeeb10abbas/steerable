@@ -36,6 +36,10 @@ from experiments.online_correction_v4.droid_task_files.registry import (
     blocked_fixture_ids,
     resolve_active_registration,
 )
+from experiments.online_correction_v4.droid_task_files.reset_registry import (
+    MODEL_BLIND_CANDIDATE_STATUS,
+    RELEASED_FOR_POLICY_STATUS,
+)
 from experiments.online_correction_v4.droid_reset_verify import (
     load_bound_reset_registry,
     verify_measured_native_dt,
@@ -52,6 +56,15 @@ class RoboLabBootstrapError(RuntimeError):
     """Raised when live RoboLab construction fails before attestation."""
 
 
+@dataclass(frozen=True)
+class ResetFixtureBinding:
+    """Minimal fixture binding allowed for zero-inference reset qualification."""
+
+    fixture_id: str
+    reset_registry_sha256: str
+    reset_registry_uri: str
+
+
 @dataclass
 class LiveRoboLabConfig:
     episode_id: str
@@ -60,7 +73,7 @@ class LiveRoboLabConfig:
     prompt_text: str
     prompt_sha256: str
     policy_id: str
-    fixture: FixtureRuntimeBinding
+    fixture: FixtureRuntimeBinding | ResetFixtureBinding
     queue_row_path: Path
     queue_row_sha256: str
     output_dir: Path | None = None
@@ -147,7 +160,7 @@ def close_live_droid_stack(*, policy: Any = None) -> None:
 
 def build_live_robolab_env(
     *,
-    fixture: FixtureRuntimeBinding,
+    fixture: FixtureRuntimeBinding | ResetFixtureBinding,
     env_seed: int,
     episode_id: str,
     goal: str,
@@ -264,6 +277,11 @@ def _create_live_env(config: LiveRoboLabConfig, modules: dict[str, Any]) -> Live
     registry = load_bound_reset_registry(
         registry_path=state.reset_registry_path or "",
         registry_sha256=config.fixture.reset_registry_sha256,
+        required_status=(
+            MODEL_BLIND_CANDIDATE_STATUS
+            if isinstance(config.fixture, ResetFixtureBinding)
+            else RELEASED_FOR_POLICY_STATUS
+        ),
     )
 
     def _attestation_validator(_attestation: dict[str, Any], physical: Mapping[str, Any]) -> None:
@@ -426,6 +444,61 @@ class LiveRoboLabBackend:
             "robot_quaternion_world_wxyz": robot_quat.tolist(),
             "measured_native_control_dt_s": self.control_dt_s,
         }
+
+    def camera_geometry_payload(
+        self, camera_names: tuple[str, ...]
+    ) -> dict[str, dict[str, Any]]:
+        """Return live ROS-camera geometry for model-blind axis projection."""
+        rows: dict[str, dict[str, Any]] = {}
+        raw_observation = self.latest_raw_observation()
+        image_obs = raw_observation.get("image_obs", {})
+        for name in camera_names:
+            try:
+                sensor = self.env.scene[name]
+            except (KeyError, TypeError):
+                sensors = getattr(self.env.scene, "sensors", {})
+                if name not in sensors:
+                    raise RoboLabBootstrapError(
+                        f"live camera sensor is unavailable: {name}"
+                    )
+                sensor = sensors[name]
+            data = sensor.data
+
+            def _host(value: Any) -> list[float]:
+                if hasattr(value, "detach"):
+                    value = value.detach().cpu().tolist()
+                return [float(item) for item in value]
+
+            center = _host(data.pos_w[0])
+            quaternion = _host(data.quat_w_ros[0])
+            intrinsic_raw = data.intrinsic_matrices[0]
+            if hasattr(intrinsic_raw, "detach"):
+                intrinsic_raw = intrinsic_raw.detach().cpu().tolist()
+            intrinsic = [
+                [float(item) for item in row] for row in intrinsic_raw
+            ]
+            frame = image_obs.get(name)
+            if hasattr(frame, "detach"):
+                frame = frame.detach().cpu().numpy()
+            import numpy as np
+
+            frame_array = np.asarray(frame)
+            if frame_array.ndim == 4 and frame_array.shape[0] == 1:
+                frame_array = frame_array[0]
+            if frame_array.ndim != 3 or frame_array.shape[-1] != 3:
+                raise RoboLabBootstrapError(
+                    f"camera {name} has no HxWx3 frame for geometry binding"
+                )
+            rows[name] = {
+                "camera_center_world_m": center,
+                "camera_quaternion_world_wxyz_ros": quaternion,
+                "intrinsic_matrix_3x3": intrinsic,
+                "image_size_wh": [
+                    int(frame_array.shape[1]),
+                    int(frame_array.shape[0]),
+                ],
+            }
+        return rows
 
     def zero_episode_length_buf(self) -> tuple[list[float], list[int]]:
         counter = getattr(self.env, "episode_length_buf", None)

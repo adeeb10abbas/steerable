@@ -51,6 +51,18 @@ def bound_instruction_for_active_episode() -> BoundEpisodeInstruction:
     return load_bound_instruction(expected_fixture="horizontal", expected_goal=active_goal())
 
 
+def bound_instruction_for_relation(relation: str) -> BoundEpisodeInstruction:
+    """Load one explicitly registered relation without changing prompt bytes."""
+    return load_bound_instruction(
+        expected_fixture="horizontal",
+        expected_goal=relation,
+    )
+
+
+def instruction_dict_for_relation(relation: str) -> dict[str, str]:
+    return bound_instruction_for_relation(relation).instruction
+
+
 def scene_for_env_seed(env_seed: int):
     registry = _reset_registry()
     if env_seed not in registry.positions_by_env_seed:
@@ -85,6 +97,10 @@ def task_attributes_for_active_episode() -> list[str]:
     return task_attributes(active_goal())
 
 
+def task_attributes_for_relation(relation: str) -> list[str]:
+    return task_attributes(relation)
+
+
 def timeout_only_termination():
     return _TimeoutOnlyTermination
 
@@ -94,9 +110,13 @@ __all__ = [
     "EPISODE_LENGTH_S",
     "active_goal",
     "bound_instruction_for_active_episode",
+    "bound_instruction_for_relation",
     "instruction_for_active_episode",
+    "instruction_dict_for_relation",
     "scene_for_active_episode",
     "scene_for_env_seed",
+    "task_attributes",
     "task_attributes_for_active_episode",
+    "task_attributes_for_relation",
     "timeout_only_termination",
 ]

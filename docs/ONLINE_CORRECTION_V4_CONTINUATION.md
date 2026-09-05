@@ -46,6 +46,56 @@ Semantic prompt identity is **`prompt_id`**, not `prompt_sha256`. Under C2 refer
 | Policy episodes executed | `0` |
 | Confirmatory queue rows | `17664` |
 
+### Infrastructure qualification on 2026-09-05
+
+- The π0.5 A100-policy/A40-simulator lane passed startup qualification under
+  driver `580.95.05`: checkpoint and source hashes, CUDA, Isaac RTX rendering,
+  ffmpeg encode/decode, policy `/healthz`, pinned imports, and persistent
+  storage checks all passed.
+- The π0.5 B200 policy role passed the same policy-side checks. Its paired B200
+  simulator did not schedule because all five B200 nodes reported insufficient
+  GPU capacity, so no B200 lane qualification is claimed.
+- Two earlier attempts are retained as infrastructure-invalid packaging
+  failures. They exposed and led to fixing the missing runtime-script mount;
+  no policy request or behavioral episode ran in any qualification attempt.
+- Compact hashes and raw persistent-storage receipt URIs are recorded in
+  `artifacts/online_correction_v4/qualification/20260905_pi05_lane_qualification.json`.
+  All temporary Jobs, Services, and ConfigMaps were removed after evidence
+  capture.
+
+This clears only one infrastructure stratum. Runtime, geometry, trigger,
+scorer, visibility/contact-sensor, prefix-replay, pilot, and miniature-campaign
+gates remain unreleased.
+
+### Current model-blind G2 preparation
+
+`artifacts/online_correction_v4/setup/horizontal_reset_registry.candidate.json`
+now prospectively binds all 128 registered horizontal reset seeds. It starts
+from the committed zero-request V3 base-fixture calibration and applies an
+independent seed-derived common x/y scene translation bounded to ±15 mm,
+preserving all movable-object relative geometry. The candidate contains zero
+model requests and zero behavioral episodes.
+
+`tools/run_v4_horizontal_g2_seed.py` and
+`experiments/online_correction_v4/model_blind_g2.py` implement the per-seed
+two-reset/one-physical-reset, settle/stability, native-dt, neutral-layout,
+policy-camera, and numeric task-frame checks. Each live seed also binds exact
+camera intrinsics/extrinsics, projects left/front/up from the measured task
+frame, and writes lossless source camera PNGs plus an annotated axis montage.
+`tools/render_v4_horizontal_g2_k8s_jobs.py` renders 128 immutable
+simulator-only A40 Jobs and no policy Service; its validator checks complete
+seed coverage, commit/dt bindings, one-GPU isolation, and zero policy
+endpoints. A complete G2 claim still requires all 128 live receipts and an
+explicit review of an actual rendered axis montage.
+
+After inspecting the montage,
+`tools/record_v4_horizontal_g2_axis_review.py` records the four explicit
+orientation assertions. `tools/compile_v4_horizontal_g2_aggregate.py` then
+verifies every seed receipt, referenced artifact, runtime stratum, registry
+hash, and axis review before producing the aggregate receipt. Even a passing
+aggregate authorizes G2 only: the candidate reset registry remains
+unreleased for policy use until G3 and the later gates pass.
+
 ### Family disposition
 
 | Family | Disposition | Status |
@@ -60,6 +110,16 @@ Every queue row is a **registered new episode**. `reuse_episode_ids` are compari
 
 ```bash
 python3 tools/online_correction_v4.py validate
+python3 tools/build_v4_horizontal_reset_registry.py
+export V4_G2_RENDER_ROOT=/tmp/v4-g2-rendered
+python3 tools/render_v4_horizontal_g2_k8s_jobs.py \
+  --spec deploy/k8s/v4_lane_bundle/g2-horizontal-spec.example.json \
+  --output-root "$V4_G2_RENDER_ROOT"
+# Set V4_G2_BUNDLE_ROOT to the bundle_root printed above.
+python3 tools/validate_v4_horizontal_g2_k8s_jobs.py \
+  --root "$V4_G2_BUNDLE_ROOT"
+kubectl --context prod-dcwi-warrenq1-vmkub007 \
+  create -k "$V4_G2_BUNDLE_ROOT"
 python3 tools/build_online_correction_v4_freeze.py --out artifacts/online_correction_v4
 python3 tools/validate_online_correction_v4.py
 python3 tools/compile_online_correction_v4_ledger.py \
@@ -73,6 +133,48 @@ python3 tools/analyze_online_correction_v4.py \
 python3 -m unittest discover -s tests -p 'test_online_correction_v4*.py'
 python3 tools/validate_vla_wam_v2_protocol.py
 python3 tools/validate_vla_wam_v3_protocol.py
+```
+
+The live G2 seed entrypoint is supported only inside a fresh qualified
+simulator Job at a clean pushed checkout:
+
+```bash
+python3 tools/run_v4_horizontal_g2_seed.py \
+  --study-root "$STUDY_ROOT" \
+  --robolab-root "$ROBOLAB_ROOT" \
+  --reset-registry "$RESET_REGISTRY" \
+  --reset-registry-sha256 "$RESET_REGISTRY_SHA256" \
+  --environment-seed "$ENV_SEED" \
+  --output-dir "$WRITE_ONCE_OUTPUT" \
+  --expected-study-commit "$EXPECTED_STUDY_COMMIT" \
+  --expected-driver-version "$EXPECTED_DRIVER_VERSION" \
+  --gpu-uuid "$GPU_UUID" \
+  --pod "$POD_NAME" \
+  --pod-uid "$POD_UID"
+```
+
+Each invocation covers one registered seed and explicitly remains incomplete
+for G2 until aggregate seed coverage and rendered-axis review pass.
+
+After all Jobs finish, inspect one hash-bound `axis_overlay_montage.png`, then
+record and compile:
+
+```bash
+python3 tools/record_v4_horizontal_g2_axis_review.py \
+  --seed-receipt "$G2_SEED_RECEIPT" \
+  --axis-overlay "$G2_AXIS_MONTAGE" \
+  --reviewer-identity "$REVIEWER_IDENTITY" \
+  --left-axis-matches-fixed-robot-viewpoint \
+  --front-axis-points-toward-robot \
+  --up-axis-opposes-gravity \
+  --labels-and-arrow-origins-visible \
+  --out "$G2_AXIS_REVIEW"
+python3 tools/compile_v4_horizontal_g2_aggregate.py \
+  --reset-registry artifacts/online_correction_v4/setup/horizontal_reset_registry.candidate.json \
+  --reset-registry-sha256 0c5fd649739cd19b74ec1874f306cf345a70fb110047294204295f9f53ced328 \
+  --receipts-root "$G2_RECEIPTS_ROOT" \
+  --axis-review "$G2_AXIS_REVIEW" \
+  --out "$G2_AGGREGATE_RECEIPT"
 ```
 
 ## Freeze artifact index

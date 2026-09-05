@@ -162,14 +162,22 @@ class TaskFrame:
 
     def __post_init__(self) -> None:
         for name, axis in (("u_left", self.u_left), ("u_front", self.u_front), ("u_up", self.u_up)):
-            if not math.isfinite(_norm(axis)):
-                raise ValueError(f"{name} must be finite and nonzero")
+            norm = _norm(axis)
+            if not math.isfinite(norm) or abs(norm - 1.0) > 1e-9:
+                raise ValueError(f"{name} must be a finite unit vector")
         if abs(_dot(self.u_left, self.u_front)) > 1e-9:
             raise ValueError("u_left and u_front must be orthogonal")
         if abs(_dot(self.u_left, self.u_up)) > 1e-9:
             raise ValueError("u_left and u_up must be orthogonal")
         if abs(_dot(self.u_front, self.u_up)) > 1e-9:
             raise ValueError("u_front and u_up must be orthogonal")
+        cross = (
+            self.u_left[1] * self.u_front[2] - self.u_left[2] * self.u_front[1],
+            self.u_left[2] * self.u_front[0] - self.u_left[0] * self.u_front[2],
+            self.u_left[0] * self.u_front[1] - self.u_left[1] * self.u_front[0],
+        )
+        if any(abs(actual - expected) > 1e-9 for actual, expected in zip(cross, self.u_up)):
+            raise ValueError("task frame must be right-handed: u_left × u_front = u_up")
 
     @classmethod
     def identity(cls) -> TaskFrame:

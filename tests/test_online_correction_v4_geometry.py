@@ -21,6 +21,20 @@ class TaskFrameTests(unittest.TestCase):
         for a, b in zip(p, back):
             self.assertAlmostEqual(a, b, places=9)
 
+    def test_rejects_non_unit_or_left_handed_basis(self):
+        with self.assertRaises(ValueError):
+            geom.TaskFrame(
+                u_left=(2.0, 0.0, 0.0),
+                u_front=(0.0, 1.0, 0.0),
+                u_up=(0.0, 0.0, 1.0),
+            )
+        with self.assertRaises(ValueError):
+            geom.TaskFrame(
+                u_left=(1.0, 0.0, 0.0),
+                u_front=(0.0, -1.0, 0.0),
+                u_up=(0.0, 0.0, 1.0),
+            )
+
     def test_moving_reference_changes_relative_not_world_object(self):
         frame = geom.TaskFrame.identity()
         p_obj = (0.20, 0.10, 0.03)

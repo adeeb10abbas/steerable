@@ -447,6 +447,74 @@ def validate_continuation_artifact_hashes(
         errors.append("continuation_state authoritative_files must include continuation_state.json")
 
 
+def validate_qualification_receipts(continuation: dict, errors: list[str]) -> None:
+    authoritative = continuation.get("authoritative_files", [])
+    receipts = continuation.get("qualification_receipts", [])
+    if not isinstance(receipts, list):
+        errors.append("continuation_state qualification_receipts must be a list")
+        return
+    for index, receipt in enumerate(receipts):
+        if not isinstance(receipt, dict):
+            errors.append(f"qualification_receipts[{index}] must be an object")
+            continue
+        relative = receipt.get("path")
+        expected = receipt.get("sha256")
+        if not isinstance(relative, str) or not relative.startswith(
+            "artifacts/online_correction_v4/qualification/"
+        ):
+            errors.append(f"qualification_receipts[{index}] has invalid path")
+            continue
+        if relative not in authoritative:
+            errors.append(f"qualification receipt missing from authoritative_files: {relative}")
+        path = ROOT / relative
+        if not path.is_file():
+            errors.append(f"qualification receipt does not exist: {relative}")
+            continue
+        actual = hashlib.sha256(path.read_bytes()).hexdigest()
+        if expected != actual:
+            errors.append(f"qualification receipt hash mismatch: {relative}")
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        if payload.get("qualification_scope") == "infrastructure_only_no_scientific_behavior":
+            if payload.get("behavioral_episode_count") != 0:
+                errors.append(f"infrastructure-only receipt records behavioral episodes: {relative}")
+            if payload.get("authorizes_behavioral_inference") is not False:
+                errors.append(f"infrastructure-only receipt authorizes behavioral inference: {relative}")
+
+
+def validate_model_blind_candidates(continuation: dict, errors: list[str]) -> None:
+    authoritative = continuation.get("authoritative_files", [])
+    candidates = continuation.get("model_blind_candidates", [])
+    if not isinstance(candidates, list):
+        errors.append("continuation_state model_blind_candidates must be a list")
+        return
+    for index, candidate in enumerate(candidates):
+        if not isinstance(candidate, dict):
+            errors.append(f"model_blind_candidates[{index}] must be an object")
+            continue
+        relative = candidate.get("path")
+        if not isinstance(relative, str) or not relative.startswith(
+            "artifacts/online_correction_v4/setup/"
+        ):
+            errors.append(f"model_blind_candidates[{index}] has invalid path")
+            continue
+        if relative not in authoritative:
+            errors.append(f"model-blind candidate missing from authoritative_files: {relative}")
+        path = ROOT / relative
+        if not path.is_file():
+            errors.append(f"model-blind candidate does not exist: {relative}")
+            continue
+        actual = hashlib.sha256(path.read_bytes()).hexdigest()
+        if candidate.get("sha256") != actual:
+            errors.append(f"model-blind candidate hash mismatch: {relative}")
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        if payload.get("model_request_count") != 0:
+            errors.append(f"model-blind candidate records model requests: {relative}")
+        if payload.get("behavioral_episode_count") != 0:
+            errors.append(f"model-blind candidate records behavioral episodes: {relative}")
+        if payload.get("status") != "model_blind_candidate_not_released_for_inference":
+            errors.append(f"model-blind candidate has unsafe release status: {relative}")
+
+
 def validate_prompt_identity_semantics(prompt_manifest: dict, frozen_analysis: dict, errors: list[str]) -> None:
     semantics = prompt_manifest.get("prompt_identity_semantics", {})
     if semantics.get("primary_key") != "prompt_id":
@@ -712,6 +780,8 @@ def validate_online_correction_v4(
     validate_unreleased_stubs(artifact_dir, errors)
     validate_freeze_manifest(freeze_manifest, artifact_dir, errors)
     validate_continuation_artifact_hashes(continuation, freeze_manifest, artifact_dir, errors)
+    validate_qualification_receipts(continuation, errors)
+    validate_model_blind_candidates(continuation, errors)
 
     expected_normalized: dict[str, dict] = {}
     for name in builder.GENERATION_PARENT_COMMIT_ARTIFACTS:

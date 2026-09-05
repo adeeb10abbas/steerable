@@ -898,6 +898,53 @@ def build_launch_matrix_stub(config: dict) -> dict[str, Any]:
     }
 
 
+def discover_qualification_receipts() -> list[dict[str, Any]]:
+    receipt_dir = DEFAULT_OUT / "qualification"
+    if not receipt_dir.is_dir():
+        return []
+    receipts: list[dict[str, Any]] = []
+    for path in sorted(receipt_dir.glob("*.json")):
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(payload, dict):
+            raise ValueError(f"qualification receipt must be an object: {path}")
+        receipts.append(
+            {
+                "path": str(path.relative_to(ROOT)),
+                "sha256": file_sha256(path),
+                "compiled_at_utc": payload.get("compiled_at_utc"),
+                "qualification_scope": payload.get("qualification_scope"),
+                "behavioral_episode_count": payload.get("behavioral_episode_count"),
+                "completed_lane_status": (payload.get("completed_lane") or {}).get("status"),
+                "partial_lane_status": (payload.get("partial_b200_lane") or {}).get("status"),
+            }
+        )
+    return receipts
+
+
+def discover_model_blind_candidates() -> list[dict[str, Any]]:
+    setup_dir = DEFAULT_OUT / "setup"
+    if not setup_dir.is_dir():
+        return []
+    candidates: list[dict[str, Any]] = []
+    for path in sorted(setup_dir.glob("*.candidate.json")):
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(payload, dict):
+            raise ValueError(f"model-blind candidate must be an object: {path}")
+        candidates.append(
+            {
+                "path": str(path.relative_to(ROOT)),
+                "sha256": file_sha256(path),
+                "schema_version": payload.get("schema_version"),
+                "fixture_id": payload.get("fixture_id"),
+                "status": payload.get("status"),
+                "model_request_count": payload.get("model_request_count"),
+                "behavioral_episode_count": payload.get("behavioral_episode_count"),
+                "registered_env_seed_count": payload.get("registered_env_seed_count"),
+            }
+        )
+    return candidates
+
+
 def build_continuation_state(
     config: dict,
     generation_parent_commit: str,
@@ -905,7 +952,17 @@ def build_continuation_state(
     planning_manifest_sha256: str,
     frozen_queue_sha256: str,
     gate_report: dict[str, Any],
+    qualification_receipts: list[dict[str, Any]],
+    model_blind_candidates: list[dict[str, Any]],
 ) -> dict[str, Any]:
+    qualification_paths = [row["path"] for row in qualification_receipts]
+    candidate_paths = [row["path"] for row in model_blind_candidates]
+    cluster_blocker = (
+        "Additional model-blind and behavioral qualification gates remain pending; "
+        "completed infrastructure-only strata are listed in qualification_receipts."
+        if qualification_receipts
+        else "Runtime lock, geometry receipts, checkpoint identity, and cluster qualification remain pending."
+    )
     return {
         "schema_version": 1,
         "campaign_id": config["campaign_id"],
@@ -941,8 +998,10 @@ def build_continuation_state(
             "artifacts/online_correction_v4/runtime_manifest.json",
             "artifacts/online_correction_v4/setup_manifest.json",
             "artifacts/online_correction_v4/launch_matrix.json",
-        ],
+        ] + qualification_paths + candidate_paths,
         "artifact_sha256": artifact_hashes,
+        "qualification_receipts": qualification_receipts,
+        "model_blind_candidates": model_blind_candidates,
         "planning_manifest_sha256": planning_manifest_sha256,
         "frozen_queue_sha256": frozen_queue_sha256,
         "policy_episodes_executed": 0,
@@ -952,10 +1011,13 @@ def build_continuation_state(
         "active_blockers": [
             C8_BLOCK_REASON,
             C2_BLOCK_REASON,
-            "Runtime lock, geometry receipts, checkpoint identity, and cluster qualification remain pending.",
+            cluster_blocker,
         ],
         "next_commands": [
             "python3 tools/online_correction_v4.py validate",
+            "python3 tools/build_v4_horizontal_reset_registry.py",
+            "python3 tools/render_v4_horizontal_g2_k8s_jobs.py --spec deploy/k8s/v4_lane_bundle/g2-horizontal-spec.example.json --output-root \"$V4_G2_RENDER_ROOT\"",
+            "python3 tools/validate_v4_horizontal_g2_k8s_jobs.py --root \"$V4_G2_BUNDLE_ROOT\"",
             "python3 tools/build_online_correction_v4_freeze.py --out artifacts/online_correction_v4",
             "python3 tools/validate_online_correction_v4.py",
             "python3 -m unittest discover -s tests -p 'test_online_correction_v4*.py'",
@@ -1080,6 +1142,8 @@ def build_freeze(
             planning_manifest_sha256,
             frozen_queue_sha256,
             gate_report,
+            discover_qualification_receipts(),
+            discover_model_blind_candidates(),
         ),
     )
     freeze_index = {

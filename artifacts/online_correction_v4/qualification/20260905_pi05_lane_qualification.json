@@ -1,0 +1,125 @@
+{
+  "schema_version": "vla-wam-v4-infrastructure-qualification-receipt-v1",
+  "campaign_id": "online_correction_v4",
+  "compiled_at_utc": "2026-09-05T16:01:23Z",
+  "repository_commit": "6f22bb324c9a4ce9cdadef0579048bda7683ffd5",
+  "kube_context": "prod-dcwi-warrenq1-vmkub007",
+  "namespace": "211247-prod",
+  "qualification_scope": "infrastructure_only_no_scientific_behavior",
+  "behavioral_episode_count": 0,
+  "policy_inference_executed": false,
+  "authorizes_behavioral_inference": false,
+  "cluster_object_snapshot_sha256_before_teardown": "f49f1b6376a4b0c173ae9ad83cd07679a98320f0f68dbf265e97f049125e40a8",
+  "completed_lane": {
+    "lane_id": "q-pi05-a100-a40",
+    "attempt_id": "q20260905c",
+    "status": "passed_infrastructure_qualification",
+    "render_spec_sha256": "74e207925d04130beb2ee88bc3112bcc98ce95185153981348d275c03df28326",
+    "immutable_identity_sha256": "d75b0af0db4fad80be54d2eb460446be4d068cac78c72d6e197885ab20c98106",
+    "policy": {
+      "gpu_product": "NVIDIA-A100-SXM4-80GB",
+      "gpu_name": "NVIDIA A100-SXM4-80GB",
+      "driver_version": "580.95.05",
+      "checkpoint_sha256": "f5a56d9565f9381ccdeeaa165b0495dab6d17a81836cc7b01c5fbc6ab89e74ca",
+      "runtime_preflight_uri": "/data/users/ali/vla_wam/raw/.lane-runtime/8b9cc4b0-1deb-4023-8abf-a8f36e855333/lane-q-pi05-a100-a40/attempt-q20260905c/policy/runtime-preflight.json",
+      "runtime_preflight_sha256": "9c846fc6f7621722756dbcfd67e88bdc62cc78d72828072329af48c2193ef217",
+      "job_log_sha256": "eddbdb11effe7f8973ec702075b4f61bf67c244b2ce7898b1c5296e8f54a215d",
+      "passed_checks": [
+        "cuda_kernel",
+        "ffmpeg_encode_decode",
+        "file_bindings",
+        "checkpoint_digest",
+        "python_imports",
+        "policy_readiness_contract",
+        "writable_parent"
+      ]
+    },
+    "simulator": {
+      "gpu_product": "NVIDIA-A40",
+      "gpu_name": "NVIDIA A40",
+      "driver_version": "580.95.05",
+      "runtime_preflight_uri": "/data/users/ali/vla_wam/raw/.lane-runtime/5549c613-4b54-4c76-90b9-2259c016fe74/lane-q-pi05-a100-a40/attempt-q20260905c/simulator/runtime-preflight.json",
+      "runtime_preflight_sha256": "a4f83e17f11d74c668a31d79170d9698952629a7eaf26f7885cb6763e4b9a8b5",
+      "job_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rendered_frame_sha256": "84a71be7db8ccbdc1eb537809fa8d8304051b3bbb7dced4b7cdcc622a3381ad6",
+      "policy_health_check": {
+        "method": "GET",
+        "path": "/healthz",
+        "status": 200,
+        "body": "OK"
+      },
+      "passed_checks": [
+        "cuda_kernel",
+        "vulkan_and_rendered_frame",
+        "ffmpeg_encode_decode",
+        "file_bindings",
+        "checkpoint_digest",
+        "python_imports",
+        "policy_readiness",
+        "writable_parent"
+      ]
+    },
+    "rendered_bundle_sha256": {
+      "configmap.yaml": "126595d56efc53a8a86002d74c569842851aa1661c17d35ff2ff37239edc0348",
+      "scripts-configmap.yaml": "477025a861dff58bc47481c24503e34dce5dd95a66ed7f2271ec1ab2cb212556",
+      "policy-job.yaml": "b0bf9b3a78827e073c4cc8658448b32d22082e21e906c10fa4157b2d43647fbd",
+      "simulator-job.yaml": "23e455bb17c85a66bea31d358e70055c7dc8881e32e785f0707040a90ecbf649",
+      "policy-service.yaml": "05776843b6b3353215ee9112902ce4653154559492993d3dab1c573871bb4b7e",
+      "kustomization.yaml": "d1db648c140ea4feac48e104e0ea2da1161773708085dba4761b2a00bc5fe1d3"
+    }
+  },
+  "partial_b200_lane": {
+    "lane_id": "q-pi05-b200",
+    "attempt_id": "q20260905d",
+    "status": "incomplete_capacity_blocked",
+    "render_spec_sha256": "5f5e84cafd3cda12518aa837b4a38fae238b8e0ba4a1f6896cf1ee1af98204ac",
+    "policy_role": {
+      "status": "passed_startup_preflight",
+      "gpu_product": "NVIDIA-B200",
+      "gpu_name": "NVIDIA B200",
+      "driver_version": "580.95.05",
+      "runtime_preflight_uri": "/data/users/ali/vla_wam/raw/.lane-runtime/66a1b406-e255-46e4-b405-c06f464654ae/lane-q-pi05-b200/attempt-q20260905d/policy/runtime-preflight.json",
+      "runtime_preflight_sha256": "0f68983c603d8d0e88435bb1619eeeb07eccb60d7b7b1e763906eb7e1980e0ca",
+      "job_log_sha256": "859f9b2316b8bc21059b488e4b61962fa699dfa7912cbad35a727146afdf3537"
+    },
+    "simulator_role": {
+      "status": "not_scheduled",
+      "scheduler_reason": "0/118 nodes available: five NVIDIA-B200 nodes had insufficient nvidia.com/gpu; no preemption victims found"
+    },
+    "disposition": "No B200 lane qualification claim; retry only under a fresh attempt when two B200 GPUs are schedulable."
+  },
+  "invalid_packaging_attempts": [
+    {
+      "attempt_id": "q20260905a",
+      "lane_id": "q-pi05-a100-a40",
+      "status": "infrastructure_invalid",
+      "reason": "Jobs referenced a V4 lane_entrypoint.py path absent from the mounted PVC checkout.",
+      "behavioral_episode_count": 0
+    },
+    {
+      "attempt_id": "q20260905b",
+      "lane_id": "q-pi05-b200",
+      "status": "infrastructure_invalid",
+      "reason": "Jobs referenced a V4 lane_entrypoint.py path absent from the mounted PVC checkout.",
+      "behavioral_episode_count": 0
+    }
+  ],
+  "corrective_action": {
+    "commit": "e5a54bb",
+    "description": "Runtime scripts are embedded in a second immutable ConfigMap, mounted read-only at /opt/v4-lane/scripts, and hash-checked against launch bindings."
+  },
+  "teardown": {
+    "completed_at_utc": "2026-09-05T16:01:23Z",
+    "policy_servers_stopped": true,
+    "simulators_stopped": true,
+    "services_removed": true,
+    "configmaps_removed": true,
+    "remaining_objects_with_attempt_labels": []
+  },
+  "scientific_disposition": {
+    "runtime_lock_release_status": "NOT_RELEASED",
+    "launch_matrix_release_status": "NOT_RELEASED",
+    "families_released": [],
+    "note": "This receipt establishes one infrastructure stratum only. It does not satisfy model-blind geometry, trigger, scorer, prefix-replay, engineering-pilot, or miniature-campaign gates."
+  }
+}

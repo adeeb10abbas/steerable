@@ -6,7 +6,10 @@ import math
 from typing import Any, Mapping
 
 from experiments.online_correction_v4.droid_reset import ResetAttestationError
-from experiments.online_correction_v4.droid_task_files.reset_registry import ResetRegistry, load_reset_registry
+from experiments.online_correction_v4.droid_task_files.reset_registry import (
+    ResetRegistry,
+    load_reset_registry,
+)
 
 
 NEUTRAL_COSINE_THRESHOLD = math.cos(math.radians(45.0))
@@ -14,8 +17,17 @@ POSITION_TOLERANCE_M = 0.003
 NATIVE_DT_TOLERANCE_S = 1e-6
 
 
-def load_bound_reset_registry(*, registry_path: str, registry_sha256: str) -> ResetRegistry:
-    return load_reset_registry(registry_path=registry_path, registry_sha256=registry_sha256)
+def load_bound_reset_registry(
+    *,
+    registry_path: str,
+    registry_sha256: str,
+    required_status: str,
+) -> ResetRegistry:
+    return load_reset_registry(
+        registry_path=registry_path,
+        registry_sha256=registry_sha256,
+        required_status=required_status,
+    )
 
 
 def verify_physical_reset_against_registry(

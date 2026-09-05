@@ -504,6 +504,9 @@ class DroidReviewFixTests(unittest.TestCase):
         registry = ResetRegistry(
             schema_version="v4-droid-horizontal-reset-registry-v1",
             fixture_id="horizontal",
+            status="model_blind_candidate_not_released_for_inference",
+            model_request_count=0,
+            behavioral_episode_count=0,
             scene_asset="scene",
             scene_metadata_sha256="m" * 64,
             contact_objects=("rubiks_cube", "banana", "bowl"),

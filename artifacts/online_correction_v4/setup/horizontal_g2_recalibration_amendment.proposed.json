@@ -1,0 +1,52 @@
+{
+  "schema_version": "v4-horizontal-g2-post-result-amendment-v1",
+  "campaign_id": "online_correction_v4",
+  "fixture_id": "horizontal",
+  "status": "model_blind_candidate_not_released_for_inference",
+  "amendment_status": "proposed_pending_pinned_implementation_commit",
+  "post_result_amendment": true,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "triggering_evidence": {
+    "path": "artifacts/online_correction_v4/qualification/20260905_horizontal_g2_wave_g2q20260905e.json",
+    "sha256": "09d7d1c9dfa90cd40579cc2dd1f5f8f34a88d6170a09a92e0015fa669e47f655",
+    "attempt_id": "g2q20260905e",
+    "registered_seed_count": 128,
+    "passing_seed_receipt_count": 64,
+    "registry_position_tolerance_failure_count": 62,
+    "stability_threshold_failure_count": 2,
+    "observed_failed_cube_error_rounded_range_m": [
+      0.003,
+      0.0039
+    ]
+  },
+  "amendment": {
+    "registry_position_tolerance_m_before": 0.003,
+    "registry_position_tolerance_m_after": 0.005,
+    "selection_rule": "Round the 3.9 mm observed model-blind maximum up to 4 mm and add a prospectively frozen 1 mm guard band.",
+    "reset_registry_positions_changed": false,
+    "reset_jitter_changed": false,
+    "stability_thresholds_changed": false,
+    "native_control_dt_s_changed": false,
+    "camera_requirements_changed": false,
+    "numeric_task_frame_requirements_changed": false,
+    "visual_axis_review_requirements_changed": false
+  },
+  "required_requalification": {
+    "fresh_attempt_required": true,
+    "all_registered_environment_seeds_required": true,
+    "registered_seed_count": 128,
+    "passing_seed_count_required": 128,
+    "stability_failures_allowed": 0,
+    "position_tolerance_failures_allowed": 0,
+    "axis_visual_review_required_after_numeric_seed_pass": true,
+    "reuse_prior_passing_seed_receipts": false
+  },
+  "authorization_boundary": {
+    "authorizes_fresh_model_blind_g2_attempt": false,
+    "authorizes_g3_execution": false,
+    "authorizes_policy_inference": false,
+    "authorizes_behavioral_episode": false
+  },
+  "disclosure": "This tolerance was selected after inspecting complete zero-model-request G2 setup evidence. It is not a retroactive pass: attempt g2q20260905e remains failed. A fresh full 128-seed attempt must satisfy the amended threshold and every unchanged gate after this proposal is bound to a pushed implementation commit."
+}

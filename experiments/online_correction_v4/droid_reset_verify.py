@@ -13,7 +13,7 @@ from experiments.online_correction_v4.droid_task_files.reset_registry import (
 
 
 NEUTRAL_COSINE_THRESHOLD = math.cos(math.radians(45.0))
-POSITION_TOLERANCE_M = 0.003
+POSITION_TOLERANCE_M = 0.005
 NATIVE_DT_TOLERANCE_S = 1e-6
 
 

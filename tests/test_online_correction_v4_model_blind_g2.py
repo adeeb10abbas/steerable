@@ -160,6 +160,7 @@ class ModelBlindG2Tests(unittest.TestCase):
         self.assertTrue(receipt["passed_reset_and_camera"])
         self.assertFalse(receipt["g2_complete"])
         self.assertEqual(receipt["model_request_count"], 0)
+        self.assertEqual(receipt["registry_position_tolerance_m"], 0.005)
 
     def test_seed_receipt_rejects_missing_policy_camera(self) -> None:
         episode_id = "online-correction-v4-g2-horizontal-2100000000"

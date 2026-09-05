@@ -12,6 +12,7 @@ from experiments.online_correction_v4.droid_reset import (
     validate_reset_attestation_payload,
 )
 from experiments.online_correction_v4.droid_reset_verify import (
+    POSITION_TOLERANCE_M,
     verify_measured_native_dt,
     verify_neutral_horizontal_layout,
     verify_physical_reset_against_registry,
@@ -392,6 +393,7 @@ def compile_seed_receipt(
         "model_request_count": 0,
         "behavioral_episode_count": 0,
         "reset_registry_sha256": registry.registry_sha256,
+        "registry_position_tolerance_m": POSITION_TOLERANCE_M,
         "position_max_error_m_by_object": position_errors,
         "native_control_dt_s": measured_dt,
         "reset_attestation": dict(reset_attestation),

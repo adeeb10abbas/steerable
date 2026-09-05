@@ -1,0 +1,89 @@
+{
+  "schema_version": "v4-horizontal-g2-wave-disposition-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "horizontal",
+  "attempt_id": "g2q20260905f",
+  "compiled_at_utc": "2026-09-05T17:45:33Z",
+  "qualification_scope": "infrastructure_only_no_scientific_behavior",
+  "status": "failed_model_blind_setup_gate",
+  "g2_complete": false,
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "started_at_utc": "2026-09-05T17:30:21Z",
+  "completed_at_utc": "2026-09-05T17:45:15Z",
+  "registered_seed_count": 128,
+  "observed_seed_count": 128,
+  "passing_seed_receipt_count": 126,
+  "failure_marker_count": 2,
+  "outcomes": {
+    "passed_reset_camera_and_numeric_frame_pending_axis_visual_review": 126,
+    "registry_position_tolerance_failure": {
+      "count": 0,
+      "amended_position_tolerance_m": 0.005
+    },
+    "released_stability_threshold_failure": {
+      "count": 2,
+      "by_seed": {
+        "2100000052": "banana",
+        "2100000101": "rubiks_cube"
+      },
+      "repeated_same_seed_and_object_from_attempt_g2q20260905e": true
+    }
+  },
+  "amendment_receipt": {
+    "path": "artifacts/online_correction_v4/setup/horizontal_g2_recalibration_amendment.candidate.json",
+    "implementation_commit": "54101be67cc1d51ec1144ac3a50a166c570079d4",
+    "position_tolerance_change_succeeded": true,
+    "stability_thresholds_were_unchanged": true
+  },
+  "runtime_identity": {
+    "study_commit": "54101be67cc1d51ec1144ac3a50a166c570079d4",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "driver_version": "580.95.05",
+    "gpu_product": "NVIDIA A40",
+    "native_control_dt_s": 0.06666666666666667,
+    "reset_registry_sha256": "0c5fd649739cd19b74ec1874f306cf345a70fb110047294204295f9f53ced328",
+    "bundle_manifest_sha256": "df8a502d3aa9c8eb92d65d5985420ad62d85b39a7858383f9339a9e16212bcd3"
+  },
+  "resource_use": {
+    "pod_count": 128,
+    "node_count": 13,
+    "pods_by_node": {
+      "dcwipphhgc184.edc.nam.gm.com": 14,
+      "dcwipphhgc185.edc.nam.gm.com": 2,
+      "dcwipphhgc187.edc.nam.gm.com": 12,
+      "dcwipphhgc189.edc.nam.gm.com": 13,
+      "dcwipphhgc190.edc.nam.gm.com": 13,
+      "dcwipphhgc192.edc.nam.gm.com": 6,
+      "dcwipphhgc194.edc.nam.gm.com": 13,
+      "dcwipphhgc195.edc.nam.gm.com": 7,
+      "dcwipphhgc197.edc.nam.gm.com": 14,
+      "dcwipphhgc198.edc.nam.gm.com": 7,
+      "dcwipphhgc199.edc.nam.gm.com": 13,
+      "dcwipphhgc200.edc.nam.gm.com": 7,
+      "dcwipphhgc201.edc.nam.gm.com": 7
+    }
+  },
+  "preservation": {
+    "raw_root": "file:///data/users/ali/vla_wam/raw",
+    "attempt_snapshot_root": "file:///data/users/ali/vla_wam/raw/v4/g2-horizontal/attempt-g2q20260905f-completed-wave",
+    "seed_outcome_index": {
+      "path": "file:///data/users/ali/vla_wam/raw/v4/g2-horizontal/attempt-g2q20260905f-completed-wave/seed-outcome-index.json",
+      "bytes": 62847,
+      "sha256": "e4e590ce94d357cfe2ee9d7fc1c804d00d204c92fd6823c5d1e118955554b17b"
+    },
+    "files_sha256": {
+      "bundle-manifest.json": "df8a502d3aa9c8eb92d65d5985420ad62d85b39a7858383f9339a9e16212bcd3",
+      "combined-logs.txt": "9ece0f4730fddce29e09cf8b0b4d1871d757d52b5449c329c338ed337af30a87",
+      "objects.json": "4ad9a411a915bd43e183bf522880328bab75c355b070f91c9cd3fc446ef2765c",
+      "render-report.json": "3415912036c7a885e51b010d6f106f2a3a9f531aec4941f130355b03d8814007",
+      "validation-report.json": "15cdc797f28434e71c88891e9091f8dc18a500d26ac1494fc9492bd5175547ff"
+    },
+    "job_and_configmap_objects_deleted_after_preservation": true,
+    "all_raw_episode_outputs_retained": true
+  },
+  "disposition": "The amended full registered model-blind wave failed G2 solely because two seed-specific object-stability failures reproduced exactly. Do not weaken stability thresholds. Passing per-seed receipts remain valid setup evidence, but incomplete seed coverage blocks axis-review completion, G3, reset-registry release, and every policy request. The failed seeds must be replaced or the setup geometry corrected under a new disclosed model-blind amendment before any fresh G2 attempt."
+}

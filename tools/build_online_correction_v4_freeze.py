@@ -966,12 +966,27 @@ def build_continuation_state(
         and row.get("status") == "failed_model_blind_setup_gate"
         for row in qualification_receipts
     )
+    g2_requalification_failed = any(
+        row.get("gate") == "G2"
+        and row.get("attempt_id") == "g2q20260905f"
+        and row.get("status") == "failed_model_blind_setup_gate"
+        for row in qualification_receipts
+    )
     g2_requalification_frozen = any(
         row.get("schema_version") == "v4-horizontal-g2-post-result-amendment-v1"
         and row.get("amendment_status") == "frozen_for_model_blind_requalification"
         for row in model_blind_candidates
     )
-    if g2_setup_failed and g2_requalification_frozen:
+    if g2_requalification_failed:
+        cluster_blocker = (
+            "BLOCKED_SETUP: amended complete horizontal G2 attempt "
+            "g2q20260905f passed 126/128 seeds, while seeds 2100000052 and "
+            "2100000101 reproduced object-stability failures. Freeze a new "
+            "model-blind seed-substitution or setup-geometry amendment before "
+            "another G2 attempt. Do not weaken stability thresholds; G3 and "
+            "policy inference remain prohibited."
+        )
+    elif g2_setup_failed and g2_requalification_frozen:
         cluster_blocker = (
             "REQUALIFICATION_PENDING: complete horizontal G2 attempt "
             "g2q20260905e remains failed. A disclosed zero-model-request amendment "
@@ -997,7 +1012,8 @@ def build_continuation_state(
         )
     g2_setup_commands = (
         []
-        if g2_setup_failed and not g2_requalification_frozen
+        if g2_requalification_failed
+        or (g2_setup_failed and not g2_requalification_frozen)
         else [
             "python3 tools/build_v4_horizontal_reset_registry.py",
             "python3 tools/build_v4_horizontal_g3_plan.py",

@@ -470,8 +470,17 @@ def validate_deterministic_rebuild(
     errors: list[str],
 ) -> None:
     try:
+        frozen_protocol = json.loads((artifact_dir / "protocol.json").read_text())
+        frozen_parent = frozen_protocol.get("generation_parent_commit")
+        if not isinstance(frozen_parent, str) or not frozen_parent:
+            errors.append("protocol generation_parent_commit is required for deterministic rebuild")
+            return
         with tempfile.TemporaryDirectory() as tmp:
-            rebuilt = builder.build_freeze(config_path, Path(tmp))
+            rebuilt = builder.build_freeze(
+                config_path,
+                Path(tmp),
+                generation_parent_commit=frozen_parent,
+            )
             rebuilt_hashes = rebuilt["artifact_sha256"]
             for name in builder.DETERMINISTIC_ARTIFACT_NAMES:
                 expected = expected_hashes.get(name)

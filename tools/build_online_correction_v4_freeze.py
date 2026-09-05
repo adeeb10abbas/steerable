@@ -1015,12 +1015,17 @@ GENERATION_PARENT_COMMIT_ARTIFACTS = (
 FREEZE_MANIFEST_SELF_HASH_EXCLUDED = "freeze_manifest.json"
 
 
-def build_freeze(config_path: Path, out_dir: Path) -> dict[str, Any]:
+def build_freeze(
+    config_path: Path,
+    out_dir: Path,
+    *,
+    generation_parent_commit: str | None = None,
+) -> dict[str, Any]:
     config, config_sha256 = v4.load_json(config_path)
     errors = v4.config_errors(config)
     if errors:
         raise ValueError("; ".join(errors))
-    generation_parent_commit = repo_head_commit()
+    generation_parent_commit = generation_parent_commit or repo_head_commit()
     base_rows = v4.build_manifest(config, config_sha256)
     planning_bytes = v4.manifest_bytes(base_rows)
     planning_manifest_sha256 = v4.digest_bytes(planning_bytes)

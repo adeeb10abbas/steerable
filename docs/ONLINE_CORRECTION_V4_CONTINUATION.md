@@ -103,6 +103,15 @@ hashes are in
 `artifacts/online_correction_v4/qualification/20260905_horizontal_g2_attempt_g2q20260905a.json`.
 No G2 seed, policy episode, or behavioral failure is claimed from this attempt.
 
+The fresh one-seed smoke attempt `g2q20260905b` verified the parent checker:
+the Pod exited 1 and Kubernetes marked the Job failed. Environment creation
+passed the repaired renderer call, then reset failed because the live adapter
+attempted to pass a CUDA world-pose tensor directly to NumPy. All pose and
+velocity reads now explicitly detach and transfer to CPU first. The Job/Pod
+objects, log, raw marker, and hashes are preserved under the compact receipt
+`artifacts/online_correction_v4/qualification/20260905_horizontal_g2_smoke_g2q20260905b.json`.
+This also remains infrastructure-only evidence with no passing G2 seed.
+
 After inspecting the montage,
 `tools/record_v4_horizontal_g2_axis_review.py` records the four explicit
 orientation assertions. `tools/compile_v4_horizontal_g2_aggregate.py` then

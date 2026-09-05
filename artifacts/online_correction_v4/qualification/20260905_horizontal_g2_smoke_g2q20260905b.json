@@ -1,0 +1,46 @@
+{
+  "schema_version": "v4-horizontal-g2-attempt-disposition-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "horizontal",
+  "attempt_id": "g2q20260905b",
+  "compiled_at_utc": "2026-09-05T16:49:20Z",
+  "qualification_scope": "infrastructure_only_no_scientific_behavior",
+  "status": "infrastructure_invalid",
+  "authorizes_behavioral_inference": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "created_at_utc": "2026-09-05T16:46:31Z",
+  "environment_seed": 2100000000,
+  "passing_seed_receipt_count": 0,
+  "infrastructure_failure_marker_count": 1,
+  "pod_outcome": {
+    "phase": "Failed",
+    "container_exit_code": 1,
+    "marker_check_worked": true
+  },
+  "root_cause": {
+    "study_commit": "2403de063dcd0e2ab40f9610a7a93c5a02b438f0",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "error_type": "TypeError",
+    "error": "can't convert cuda:0 device type tensor to numpy. Use Tensor.cpu() to copy the tensor to host memory first.",
+    "trace_location": "experiments/online_correction_v4/droid_robolab.py:_anchor_reference_motion"
+  },
+  "finding": "The repaired renderer contract allowed the live environment to initialize. The first reset then exposed a direct NumPy conversion of a CUDA world-pose tensor. The non-Isaac parent correctly rejected the infrastructure marker and forced Kubernetes failure instead of the false success seen in attempt g2q20260905a.",
+  "remediation": "Normalize all live RoboLab world-pose and velocity values through detach, CPU transfer, and NumPy conversion before numeric processing.",
+  "preservation": {
+    "raw_root": "file:///data/users/ali/vla_wam/raw",
+    "attempt_snapshot_root": "file:///data/users/ali/vla_wam/raw/v4/g2-horizontal/attempt-g2q20260905b-infrastructure-invalid",
+    "episode_failure_marker": "file:///data/users/ali/vla_wam/raw/b27911a4-6de2-46f3-bd7c-caacd0876848/lane-g2h-s000/attempt-g2q20260905b/episodes/infrastructure_failure.json",
+    "files_sha256": {
+      "bundle-manifest.json": "ed54d6e554302e6cdfc7f934628d8252d4729a22653cfaf0d3cfb4ecb1672fb5",
+      "combined-logs.txt": "88c7c6c8bb2b987bc11b147c3d2cba87b09c5b4a98276b3d36594daf47d7bb90",
+      "objects.json": "be4994184396d1f90a81e1ae93916b477374107958a65af8d4c7e7539f3537cd",
+      "render-report.json": "b337488b0131287f3c741bc83d6e15bc03e53f1411ed9fe04bab911a93484603",
+      "validation-report.json": "60c1493c1631fb1cd73bec831be92d466295c5a833dabbb78abe9d5eb36d1ce6"
+    },
+    "job_and_configmap_objects_deleted_after_preservation": true,
+    "raw_episode_output_retained": true
+  },
+  "disposition": "No G2 seed passed. This smoke test is infrastructure evidence only and must not be counted as a behavioral or G2 failure."
+}

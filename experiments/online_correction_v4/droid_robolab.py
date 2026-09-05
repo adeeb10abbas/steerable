@@ -408,7 +408,7 @@ class LiveRoboLabBackend:
         world = get_world(self.env)
         maxima: dict[str, Any] = {}
         for name in SETTLE_OBJECTS:
-            velocity = np.asarray(world.get_velocity(name, env_id=0), dtype=float)
+            velocity = _host_numpy(world.get_velocity(name, env_id=0))
             maxima[name] = {
                 "max_linear_component_speed_m_s": float(np.max(np.abs(velocity[:3]))),
                 "max_angular_component_speed_rad_s": float(np.max(np.abs(velocity[3:]))),
@@ -416,18 +416,16 @@ class LiveRoboLabBackend:
         return maxima
 
     def physical_reset_payload(self) -> dict[str, Any]:
-        import numpy as np
-
         get_world = self.modules["get_world"]
         world = get_world(self.env)
         robot_pos, robot_quat = world.get_pose("robot", env_id=0)
-        robot_pos = np.asarray(robot_pos, dtype=float)
-        robot_quat = np.asarray(robot_quat, dtype=float)
+        robot_pos = _host_numpy(robot_pos)
+        robot_quat = _host_numpy(robot_quat)
         objects: dict[str, Any] = {}
         for name in SETTLE_OBJECTS:
             pos, quat = world.get_pose(name, env_id=0)
-            pos = np.asarray(pos, dtype=float)
-            quat_obj = np.asarray(quat, dtype=float)
+            pos = _host_numpy(pos)
+            quat_obj = _host_numpy(quat)
             objects[name] = {
                 "position_world_xyz_m": pos.tolist(),
                 "position_robot_xyz_m": _quat_inverse_rotate(robot_quat, pos - robot_pos).tolist(),
@@ -585,8 +583,6 @@ class LiveRoboLabBackend:
         return None
 
     def object_kinematic_state(self) -> ObjectKinematicState:
-        import numpy as np
-
         get_world = self.modules["get_world"]
         object_dropped = self.modules["object_dropped"]
         object_grabbed = self.modules["object_grabbed"]
@@ -594,9 +590,9 @@ class LiveRoboLabBackend:
         obj_pos, _ = world.get_pose(TARGET_OBJECT, env_id=0)
         ref_pos, _ = world.get_pose(REFERENCE_OBJECT, env_id=0)
         robot_pos, _ = world.get_pose("robot", env_id=0)
-        obj_pos = np.asarray(obj_pos, dtype=float)
-        ref_pos = np.asarray(ref_pos, dtype=float)
-        robot_pos = np.asarray(robot_pos, dtype=float)
+        obj_pos = _host_numpy(obj_pos)
+        ref_pos = _host_numpy(ref_pos)
+        robot_pos = _host_numpy(robot_pos)
         sim_time = self.control_tick * self.control_dt_s
         if self._initial_supported_z == 0.0:
             self._initial_supported_z = float(obj_pos[2])
@@ -657,12 +653,10 @@ class LiveRoboLabBackend:
         self.last_hold_action = action
 
     def anchor_passive_settling_baseline(self, snapshot: SimulatorSnapshot | None = None) -> None:
-        import numpy as np
-
         get_world = self.modules["get_world"]
         pos, quat = get_world(self.env).get_pose(TARGET_OBJECT, env_id=0)
-        pos = np.asarray(pos, dtype=float)
-        quat = np.asarray(quat, dtype=float)
+        pos = _host_numpy(pos)
+        quat = _host_numpy(quat)
         self._settling_baseline_position = (float(pos[0]), float(pos[1]), float(pos[2]))
         self._settling_baseline_orientation_wxyz = (
             float(quat[0]),
@@ -702,9 +696,9 @@ class LiveRoboLabBackend:
         object_dropped = self.modules["object_dropped"]
         world = get_world(self.env)
         obj_pos, obj_quat = world.get_pose(TARGET_OBJECT, env_id=0)
-        obj_pos = np.asarray(obj_pos, dtype=float)
-        obj_quat = np.asarray(obj_quat, dtype=float)
-        velocity = np.asarray(world.get_velocity(TARGET_OBJECT, env_id=0), dtype=float)
+        obj_pos = _host_numpy(obj_pos)
+        obj_quat = _host_numpy(obj_quat)
+        velocity = _host_numpy(world.get_velocity(TARGET_OBJECT, env_id=0))
         linear_speed = float(np.linalg.norm(velocity[:3]))
         angular_speed = float(np.linalg.norm(velocity[3:]))
         detached = bool(object_dropped(self.env, object=TARGET_OBJECT, env_id=0))
@@ -737,20 +731,16 @@ class LiveRoboLabBackend:
         return self._latest_raw_obs
 
     def reference_position_world(self) -> tuple[float, float, float]:
-        import numpy as np
-
         get_world = self.modules["get_world"]
         pos, _ = get_world(self.env).get_pose(REFERENCE_OBJECT, env_id=0)
-        pos = np.asarray(pos, dtype=float)
+        pos = _host_numpy(pos)
         return (float(pos[0]), float(pos[1]), float(pos[2]))
 
     def _anchor_reference_motion(self) -> None:
-        import numpy as np
-
         get_world = self.modules["get_world"]
         pos, quat = get_world(self.env).get_pose(REFERENCE_OBJECT, env_id=0)
-        pos = np.asarray(pos, dtype=float)
-        quat = np.asarray(quat, dtype=float)
+        pos = _host_numpy(pos)
+        quat = _host_numpy(quat)
         self._reference_baseline_pose = tuple(float(v) for v in [*pos, *quat])
 
     def _action_tensor(self, action: tuple[float, ...] | None) -> Any:
@@ -852,11 +842,23 @@ def write_queue_row(
     return path, sha256_bytes(path.read_bytes())
 
 
+def _host_numpy(value: Any, *, dtype: Any = float) -> Any:
+    import numpy as np
+
+    if hasattr(value, "detach"):
+        value = value.detach()
+    if hasattr(value, "cpu"):
+        value = value.cpu()
+    if hasattr(value, "numpy"):
+        value = value.numpy()
+    return np.asarray(value) if dtype is None else np.asarray(value, dtype=dtype)
+
+
 def _quat_inverse_rotate(quaternion: Any, vector: Any) -> Any:
     import numpy as np
 
-    q = np.asarray(quaternion, dtype=float)
-    v = np.asarray(vector, dtype=float)
+    q = _host_numpy(quaternion)
+    v = _host_numpy(vector)
     norm = np.linalg.norm(q)
     if norm <= 0:
         raise RoboLabBootstrapError("robot quaternion is invalid during reset verification")
@@ -873,8 +875,8 @@ def _quat_inverse_rotate(quaternion: Any, vector: Any) -> Any:
 def _quat_rotate(quaternion: Any, vector: Any) -> Any:
     import numpy as np
 
-    q = np.asarray(quaternion, dtype=float)
-    v = np.asarray(vector, dtype=float)
+    q = _host_numpy(quaternion)
+    v = _host_numpy(vector)
     norm = np.linalg.norm(q)
     if norm <= 0:
         raise RoboLabBootstrapError(

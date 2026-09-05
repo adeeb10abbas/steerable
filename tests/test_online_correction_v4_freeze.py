@@ -106,8 +106,10 @@ class FreezeBuilderTests(unittest.TestCase):
             self.assertEqual(
                 {Path(row["path"]).name for row in receipts},
                 {
-                    "20260905_horizontal_g2_attempt_g2q20260905a.json",
-                    "20260905_pi05_lane_qualification.json",
+                    path.name
+                    for path in (
+                        ROOT / "artifacts/online_correction_v4/qualification"
+                    ).glob("*.json")
                 },
             )
             for receipt in receipts:

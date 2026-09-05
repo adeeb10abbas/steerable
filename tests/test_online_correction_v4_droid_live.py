@@ -90,6 +90,30 @@ class DroidLiveImportTests(unittest.TestCase):
         self.assertTrue(hasattr(scorer, "build_terminal_scorer"))
         self.assertTrue(hasattr(transport, "build_live_transport"))
 
+    def test_live_world_tensor_conversion_moves_data_to_cpu(self) -> None:
+        import numpy as np
+
+        from experiments.online_correction_v4.droid_robolab import _host_numpy
+
+        calls: list[str] = []
+
+        class _CudaLikeTensor:
+            def detach(self):
+                calls.append("detach")
+                return self
+
+            def cpu(self):
+                calls.append("cpu")
+                return self
+
+            def numpy(self):
+                calls.append("numpy")
+                return np.asarray([1.0, 2.0, 3.0], dtype=np.float32)
+
+        converted = _host_numpy(_CudaLikeTensor())
+        self.assertEqual(calls, ["detach", "cpu", "numpy"])
+        self.assertEqual(converted.tolist(), [1.0, 2.0, 3.0])
+
     def test_horizontal_fixture_registry(self) -> None:
         self.assertEqual(supported_fixture_ids(), ("horizontal",))
         reg = resolve_fixture_registration("horizontal", relation="left")

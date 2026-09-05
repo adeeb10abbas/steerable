@@ -12,7 +12,7 @@
     "launch_matrix.json": "8276675d06e2684bfc688dd5c0ebe355aef90c0095b771eb26149a7a5baa049d",
     "motion_manifest.json": "c5a6b3f637b009fadbb1615a79863c76a096d5a33f9a39f36150707269c3df67",
     "prompt_manifest.json": "20e464b06576fd7e860ec86d35d9f148673066874e3441ba1483f4b81fdf59b3",
-    "protocol.json": "f0aae2ac8eddcedd34dbfc968c8f763532ebf63931056e275be59eaa166e852b",
+    "protocol.json": "853b7b5ce8b35c0174ed261e335f46e562ca4ac2c04de50cdead71d7dec83511",
     "queue.jsonl": "5852cff36cc4c134cb4ebb9e1509dae400020e9767de69ff030064ba87010d43",
     "queue_manifest.json": "6cb7f8edc3cde9da1e4c3674589e17b0dadcbcc90375856b8870d3915e1a7080",
     "runtime_manifest.json": "e48684453f7e3c19934f6f1fde13e0d5ec4021b6a1274050a7ee8e9307e9a305",
@@ -40,6 +40,7 @@
     "artifacts/online_correction_v4/setup_manifest.json",
     "artifacts/online_correction_v4/launch_matrix.json",
     "artifacts/online_correction_v4/qualification/20260905_horizontal_g2_attempt_g2q20260905a.json",
+    "artifacts/online_correction_v4/qualification/20260905_horizontal_g2_smoke_g2q20260905b.json",
     "artifacts/online_correction_v4/qualification/20260905_pi05_lane_qualification.json",
     "artifacts/online_correction_v4/setup/horizontal_g3_plan.candidate.json",
     "artifacts/online_correction_v4/setup/horizontal_reset_registry.candidate.json"
@@ -48,7 +49,7 @@
   "completed_groups": [],
   "design_source_commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
   "frozen_queue_sha256": "5852cff36cc4c134cb4ebb9e1509dae400020e9767de69ff030064ba87010d43",
-  "generation_parent_commit": "20133d5ac8555db35afe29b755f4517adc89d90e",
+  "generation_parent_commit": "e798536c138ade5ca4b4b8d67d6daf6ad767de39",
   "generation_parent_commit_meaning": "Git HEAD when freeze builder last ran; not the commit containing freeze artifacts.",
   "git_receipt": {
     "meaning": "Record freeze_commit after the commit containing artifacts/online_correction_v4/ lands.",
@@ -118,6 +119,18 @@
       "path": "artifacts/online_correction_v4/qualification/20260905_horizontal_g2_attempt_g2q20260905a.json",
       "qualification_scope": "infrastructure_only_no_scientific_behavior",
       "sha256": "eecdf216762e60331a8568f571735199f5605df1779b7b77aa80cfe2a2b601f2",
+      "status": "infrastructure_invalid"
+    },
+    {
+      "attempt_id": "g2q20260905b",
+      "behavioral_episode_count": 0,
+      "compiled_at_utc": "2026-09-05T16:49:20Z",
+      "completed_lane_status": null,
+      "gate": "G2",
+      "partial_lane_status": null,
+      "path": "artifacts/online_correction_v4/qualification/20260905_horizontal_g2_smoke_g2q20260905b.json",
+      "qualification_scope": "infrastructure_only_no_scientific_behavior",
+      "sha256": "b120afa24bc9436e07c46b9b5a5c0fe0ec12e8b730a0970a68d6bb2fa7f2fd97",
       "status": "infrastructure_invalid"
     },
     {

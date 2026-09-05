@@ -1,0 +1,58 @@
+{
+  "schema_version": "v4-horizontal-g2-seed-substitution-amendment-v1",
+  "campaign_id": "online_correction_v4",
+  "fixture_id": "horizontal",
+  "status": "model_blind_candidate_not_released_for_inference",
+  "amendment_status": "proposed_pending_pinned_implementation_commit",
+  "post_result_amendment": true,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "triggering_evidence": {
+    "path": "artifacts/online_correction_v4/qualification/20260905_horizontal_g2_wave_g2q20260905f.json",
+    "sha256": "db01d74735b63678f277007fea9889fc08697f793ee2ab66a016f0df06d1565e",
+    "attempt_id": "g2q20260905f",
+    "registered_seed_count": 128,
+    "passing_seed_receipt_count": 126,
+    "reproducible_stability_failure_count": 2
+  },
+  "substitutions": [
+    {
+      "fixture": "horizontal",
+      "block_id": 52,
+      "retired_seed": 2100000052,
+      "replacement_seed": 2100000128,
+      "failed_object": "banana"
+    },
+    {
+      "fixture": "horizontal",
+      "block_id": 101,
+      "retired_seed": 2100000101,
+      "replacement_seed": 2100000129,
+      "failed_object": "rubiks_cube"
+    }
+  ],
+  "selection_rule": "Replace each reproducibly unstable registered environment seed with the next unused seed in the same fixture namespace, ordered by ascending retired block index. Preserve the original block, counterbalance state, prompts, policy seeds, and all gate thresholds.",
+  "unchanged_requirements": {
+    "registered_horizontal_block_count": 128,
+    "registry_position_tolerance_m": 0.005,
+    "stability_thresholds_changed": false,
+    "reset_jitter_algorithm_changed": false,
+    "native_control_dt_s_changed": false,
+    "camera_requirements_changed": false,
+    "numeric_task_frame_requirements_changed": false,
+    "visual_axis_review_requirements_changed": false
+  },
+  "required_requalification": {
+    "fresh_attempt_required": true,
+    "all_registered_environment_seeds_required": true,
+    "passing_seed_count_required": 128,
+    "reuse_prior_passing_seed_receipts": false
+  },
+  "authorization_boundary": {
+    "authorizes_fresh_model_blind_g2_attempt": false,
+    "authorizes_g3_execution": false,
+    "authorizes_policy_inference": false,
+    "authorizes_behavioral_episode": false
+  },
+  "disclosure": "The substitutions were selected only from repeatable zero-model-request setup failures. They do not retroactively alter attempts e or f. The proposal must be bound to a pushed implementation and rebuilt queue/reset registry before it can authorize another G2 attempt."
+}

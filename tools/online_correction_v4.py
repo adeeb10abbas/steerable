@@ -57,6 +57,21 @@ def _family_values(family: dict, key: str) -> list:
     return family.get("factors", {}).get(key, [family.get("fixed", {}).get(key)])
 
 
+def seed_substitution_map(config: dict) -> dict[tuple[str, int], dict[str, Any]]:
+    rows = config.get("seed_reservation", {}).get(
+        "post_result_environment_seed_substitutions", []
+    )
+    if not isinstance(rows, list):
+        return {}
+    return {
+        (row["fixture"], row["block_id"]): row
+        for row in rows
+        if isinstance(row, dict)
+        and isinstance(row.get("fixture"), str)
+        and type(row.get("block_id")) is int
+    }
+
+
 def config_errors(config: dict) -> list[str]:
     """Validate allocation and declared dependency structure before expansion."""
     errors = []
@@ -140,6 +155,90 @@ def config_errors(config: dict) -> list[str]:
         errors.append("environment seed allocation exceeds signed 32-bit range")
     if not seed.get("policy_seed_namespace"):
         errors.append("policy_seed_namespace is required")
+    substitutions = seed.get("post_result_environment_seed_substitutions", [])
+    if not isinstance(substitutions, list):
+        errors.append("post-result environment seed substitutions must be a list")
+        substitutions = []
+    required_substitution_keys = {
+        "fixture",
+        "block_id",
+        "retired_seed",
+        "replacement_seed",
+        "reason",
+        "evidence_path",
+    }
+    blocks_by_fixture = {
+        fixture: max(
+            (
+                family.get("blocks", 0)
+                for family in families
+                if family.get("fixture") == fixture
+                and type(family.get("blocks")) is int
+            ),
+            default=0,
+        )
+        for fixture in fixtures
+    }
+    nominal_seeds = {
+        base + fixture["seed_slot"] * stride + block
+        for fixture_id, fixture in fixtures.items()
+        for block in range(blocks_by_fixture[fixture_id])
+    } if type(base) is int and type(stride) is int else set()
+    seen_substitution_keys: set[tuple[str, int]] = set()
+    seen_replacements: set[int] = set()
+    for index, substitution in enumerate(substitutions):
+        label = f"post-result environment seed substitution {index}"
+        if not isinstance(substitution, dict):
+            errors.append(f"{label} must be an object")
+            continue
+        if set(substitution) != required_substitution_keys:
+            errors.append(f"{label} must contain exactly {sorted(required_substitution_keys)}")
+            continue
+        fixture = substitution["fixture"]
+        block = substitution["block_id"]
+        retired = substitution["retired_seed"]
+        replacement = substitution["replacement_seed"]
+        if (
+            fixture not in fixtures
+            or type(block) is not int
+            or block < 0
+            or block >= blocks_by_fixture.get(fixture, 0)
+        ):
+            errors.append(f"{label} identifies an invalid fixture/block")
+            continue
+        key = (fixture, block)
+        if key in seen_substitution_keys:
+            errors.append(f"{label} duplicates fixture/block {key}")
+        seen_substitution_keys.add(key)
+        expected_retired = (
+            base + fixtures[fixture]["seed_slot"] * stride + block
+            if type(base) is int and type(stride) is int
+            else None
+        )
+        if type(retired) is not int or retired != expected_retired:
+            errors.append(f"{label} retired_seed does not match the original allocation")
+        if (
+            type(replacement) is not int
+            or replacement < 0
+            or replacement >= 2**31
+        ):
+            errors.append(f"{label} replacement_seed must be a signed 32-bit integer")
+        else:
+            fixture_start = base + fixtures[fixture]["seed_slot"] * stride
+            if not fixture_start <= replacement < fixture_start + stride:
+                errors.append(f"{label} replacement_seed leaves the fixture seed namespace")
+            if replacement in nominal_seeds:
+                errors.append(f"{label} replacement_seed collides with an original allocation")
+            if replacement in seen_replacements:
+                errors.append(f"{label} replacement_seed is duplicated")
+            seen_replacements.add(replacement)
+        if not isinstance(substitution["reason"], str) or not substitution["reason"].strip():
+            errors.append(f"{label} requires a nonempty reason")
+        if (
+            not isinstance(substitution["evidence_path"], str)
+            or not substitution["evidence_path"].strip()
+        ):
+            errors.append(f"{label} requires a nonempty evidence_path")
     cb = config.get("counterbalance", {})
     if cb.get("cycle_blocks") != 16 or cb.get("phase_index") != "block_index % 4" or cb.get("state_index") != "(block_index // 4) % 4":
         errors.append("counterbalance must use the declared 16-block phase/state cycle")
@@ -238,6 +337,7 @@ def build_manifest(config: dict, config_sha256: str | None = None) -> list[dict]
     config_sha256 = config_sha256 or digest(config)
     campaign = config["campaign_id"]
     seed = config["seed_reservation"]
+    substitutions = seed_substitution_map(config)
     rows = []
     by_source = defaultdict(list)
     families = {f["id"]: f for f in config["families"]}
@@ -245,7 +345,17 @@ def build_manifest(config: dict, config_sha256: str | None = None) -> list[dict]
         names = sorted(family["factors"])
         fixture = family["fixture"]
         for block in range(family["blocks"]):
-            env_seed = seed["environment_base"] + config["fixtures"][fixture]["seed_slot"] * seed["fixture_stride"] + block
+            nominal_env_seed = (
+                seed["environment_base"]
+                + config["fixtures"][fixture]["seed_slot"] * seed["fixture_stride"]
+                + block
+            )
+            substitution = substitutions.get((fixture, block))
+            env_seed = (
+                substitution["replacement_seed"]
+                if substitution is not None
+                else nominal_env_seed
+            )
             for values in itertools.product(*(family["factors"][name] for name in names)):
                 factors = dict(family["fixed"], **dict(zip(names, values)))
                 policy_seed = int(digest([seed["policy_seed_namespace"], factors["policy"], fixture, block])[:16], 16) % (2**31)
@@ -270,6 +380,13 @@ def build_manifest(config: dict, config_sha256: str | None = None) -> list[dict]
                     "config_sha256": config_sha256,
                     "reuse_episode_ids": [],
                 }
+                if substitution is not None:
+                    row["env_seed_substitution"] = {
+                        "retired_seed": substitution["retired_seed"],
+                        "replacement_seed": substitution["replacement_seed"],
+                        "reason": substitution["reason"],
+                        "evidence_path": substitution["evidence_path"],
+                    }
                 row["counterbalance"] = _counterbalance(config, fixture, block)
                 row["prompt_recipe"] = _prompt_recipe(config, fixture, factors, row["counterbalance"])
                 rows.append(row)

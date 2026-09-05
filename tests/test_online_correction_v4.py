@@ -50,6 +50,36 @@ class CampaignInventoryTests(unittest.TestCase):
         self.assertNotEqual(destination["prefix_group_id"], original[0]["prefix_group_id"])
         self.assertEqual(len({r["execution_order_key"] for r in original}), len(original))
 
+    def test_model_blind_unstable_seed_substitutions_preserve_blocks(self):
+        expected = {
+            52: (2100000052, 2100000128),
+            101: (2100000101, 2100000129),
+        }
+        for block_id, (retired, replacement) in expected.items():
+            rows = [
+                row
+                for row in self.rows
+                if row["fixture"] == "horizontal" and row["block_id"] == block_id
+            ]
+            self.assertTrue(rows)
+            self.assertEqual({row["env_seed"] for row in rows}, {replacement})
+            self.assertEqual(
+                {
+                    (
+                        row["env_seed_substitution"]["retired_seed"],
+                        row["env_seed_substitution"]["replacement_seed"],
+                    )
+                    for row in rows
+                },
+                {(retired, replacement)},
+            )
+        horizontal_seeds = {
+            row["env_seed"] for row in self.rows if row["fixture"] == "horizontal"
+        }
+        self.assertNotIn(2100000052, horizontal_seeds)
+        self.assertNotIn(2100000101, horizontal_seeds)
+        self.assertEqual(len(horizontal_seeds), 128)
+
     def test_counterbalance_is_equal_across_treatments_and_completes_cycle(self):
         reference_rows = [r for r in self.rows if r["family"] == "C2" and r["block_id"] < 16
                           and r["factors"]["policy"] == "cosmos3_nano_droid"]
@@ -73,6 +103,13 @@ class CampaignInventoryTests(unittest.TestCase):
         changed = copy.deepcopy(self.config)
         changed["fixtures"]["reference_binding"]["seed_slot"] = 0
         self.assertTrue(any("seed_slot" in e for e in v4.config_errors(changed)))
+        changed = copy.deepcopy(self.config)
+        changed["seed_reservation"]["post_result_environment_seed_substitutions"][1][
+            "replacement_seed"
+        ] = 2100000128
+        self.assertTrue(
+            any("replacement_seed is duplicated" in e for e in v4.config_errors(changed))
+        )
 
     def test_manifest_audit_catches_seed_leakage_and_wrong_control(self):
         changed = copy.deepcopy(self.rows)

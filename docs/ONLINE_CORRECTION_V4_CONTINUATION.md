@@ -163,6 +163,17 @@ seed-substitution or setup-geometry amendment is required. Full raw evidence
 and compact hashes are recorded in
 `artifacts/online_correction_v4/qualification/20260905_horizontal_g2_wave_g2q20260905f.json`.
 
+The next disclosed proposal,
+`artifacts/online_correction_v4/setup/horizontal_g2_seed_substitution_amendment.proposed.json`,
+retires only those two reproducibly unstable environment seeds and assigns the
+next unused horizontal-namespace seeds: block 52 uses `2100000128` and block
+101 uses `2100000129`. The 128 block identities, counterbalance, prompts,
+policy seeds, 5 mm position tolerance, and all stability thresholds are
+unchanged. The queue, seed manifest, reset registry, and G3 plan have been
+deterministically rebuilt with the substitutions, but the proposal does not
+authorize a launch until it is bound to a pushed implementation commit and
+promoted to a frozen candidate.
+
 After inspecting the montage,
 `tools/record_v4_horizontal_g2_axis_review.py` records the four explicit
 orientation assertions. `tools/compile_v4_horizontal_g2_aggregate.py` then

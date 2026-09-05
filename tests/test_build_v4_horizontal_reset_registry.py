@@ -42,8 +42,16 @@ class HorizontalResetRegistryBuilderTests(unittest.TestCase):
         payload = self.build()
         self.assertEqual(payload["registered_env_seed_count"], 128)
         self.assertEqual(payload["registered_env_seed_min"], 2100000000)
-        self.assertEqual(payload["registered_env_seed_max"], 2100000127)
+        self.assertEqual(payload["registered_env_seed_max"], 2100000129)
         self.assertEqual(len(payload["resets_by_env_seed"]), 128)
+        self.assertNotIn("2100000052", payload["resets_by_env_seed"])
+        self.assertNotIn("2100000101", payload["resets_by_env_seed"])
+        self.assertEqual(
+            payload["resets_by_env_seed"]["2100000128"]["block_index"], 52
+        )
+        self.assertEqual(
+            payload["resets_by_env_seed"]["2100000129"]["block_index"], 101
+        )
         self.assertEqual(payload["model_request_count"], 0)
         self.assertEqual(payload["behavioral_episode_count"], 0)
 
@@ -102,7 +110,7 @@ class HorizontalResetRegistryBuilderTests(unittest.TestCase):
             for line in builder.DEFAULT_QUEUE.read_text(encoding="utf-8").splitlines()
             if line.strip()
         ]
-        rows = [row for row in rows if row.get("env_seed") != 2100000127]
+        rows = [row for row in rows if row.get("env_seed") != 2100000129]
         with tempfile.TemporaryDirectory() as tmp:
             queue = Path(tmp) / "queue.jsonl"
             queue.write_text(

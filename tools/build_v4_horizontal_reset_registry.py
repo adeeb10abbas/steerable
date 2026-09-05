@@ -107,14 +107,17 @@ def horizontal_env_seeds(
     slot = fixture_cfg.get("seed_slot")
     if type(base) is not int or type(stride) is not int or type(slot) is not int:
         raise ResetRegistryBuildError("campaign horizontal seed parameters must be integers")
-    seeds = sorted(
-        {
-            row.get("env_seed")
-            for row in queue_rows
-            if row.get("fixture") == "horizontal" and type(row.get("env_seed")) is int
-        }
-    )
-    if not seeds:
+    seeds_by_block: dict[int, set[int]] = {}
+    for row in queue_rows:
+        block = row.get("block_id")
+        env_seed = row.get("env_seed")
+        if (
+            row.get("fixture") == "horizontal"
+            and type(block) is int
+            and type(env_seed) is int
+        ):
+            seeds_by_block.setdefault(block, set()).add(env_seed)
+    if not seeds_by_block:
         raise ResetRegistryBuildError("queue has no horizontal environment seeds")
     families = campaign.get("families")
     if not isinstance(families, list):
@@ -126,14 +129,31 @@ def horizontal_env_seeds(
     ]
     if not block_counts or any(type(count) is not int or count <= 0 for count in block_counts):
         raise ResetRegistryBuildError("campaign lacks valid horizontal block counts")
-    expected = list(
-        range(base + stride * slot, base + stride * slot + max(block_counts))
-    )
-    if seeds != expected:
+    block_count = max(block_counts)
+    if set(seeds_by_block) != set(range(block_count)) or any(
+        len(values) != 1 for values in seeds_by_block.values()
+    ):
         raise ResetRegistryBuildError(
-            "horizontal environment seeds are not the contiguous registered block range"
+            "horizontal queue does not bind exactly one environment seed per block"
         )
-    return tuple(seeds)
+    substitutions = seed_cfg.get("post_result_environment_seed_substitutions", [])
+    if not isinstance(substitutions, list):
+        raise ResetRegistryBuildError("campaign seed substitutions must be a list")
+    replacement_by_block = {
+        row["block_id"]: row["replacement_seed"]
+        for row in substitutions
+        if isinstance(row, Mapping) and row.get("fixture") == "horizontal"
+    }
+    expected = tuple(
+        replacement_by_block.get(block, base + stride * slot + block)
+        for block in range(block_count)
+    )
+    observed = tuple(next(iter(seeds_by_block[block])) for block in range(block_count))
+    if observed != expected or len(set(observed)) != block_count:
+        raise ResetRegistryBuildError(
+            "horizontal environment seeds differ from registered block substitutions"
+        )
+    return observed
 
 
 def base_positions_from_v3_report(report: Mapping[str, Any]) -> dict[str, list[float]]:
@@ -209,7 +229,7 @@ def build_registry(
         return f"{scene_asset}::{name}@{scene_metadata_sha256}"
 
     resets: dict[str, Any] = {}
-    for env_seed in seeds:
+    for block_index, env_seed in enumerate(seeds):
         dx = deterministic_axis_jitter(
             env_seed=env_seed, axis="x", half_range_m=JITTER_HALF_RANGE_X_M
         )
@@ -225,7 +245,7 @@ def build_registry(
             for name in MOVABLE_OBJECTS
         }
         resets[str(env_seed)] = {
-            "block_index": env_seed - seeds[0],
+            "block_index": block_index,
             "jitter_robot_base_xy_m": [dx, dy],
             "positions_robot_base_m": positions,
         }

@@ -9,7 +9,25 @@
     "fixture_stride": 10000,
     "pilot_base": 2110000000,
     "policy_seed_namespace": "steerable-online-correction-v4-2026-09-05",
-    "historical_collision_audit_required": true
+    "historical_collision_audit_required": true,
+    "post_result_environment_seed_substitutions": [
+      {
+        "fixture": "horizontal",
+        "block_id": 52,
+        "retired_seed": 2100000052,
+        "replacement_seed": 2100000128,
+        "reason": "banana stability threshold failed reproducibly in model-blind G2 attempts g2q20260905e and g2q20260905f",
+        "evidence_path": "artifacts/online_correction_v4/qualification/20260905_horizontal_g2_wave_g2q20260905f.json"
+      },
+      {
+        "fixture": "horizontal",
+        "block_id": 101,
+        "retired_seed": 2100000101,
+        "replacement_seed": 2100000129,
+        "reason": "rubiks_cube stability threshold failed reproducibly in model-blind G2 attempts g2q20260905e and g2q20260905f",
+        "evidence_path": "artifacts/online_correction_v4/qualification/20260905_horizontal_g2_wave_g2q20260905f.json"
+      }
+    ]
   },
   "policies": {
     "cosmos3_nano_droid": {

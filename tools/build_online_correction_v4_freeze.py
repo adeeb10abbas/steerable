@@ -375,11 +375,17 @@ def build_scoring_manifest(config: dict) -> dict[str, Any]:
 def _v4_reserved_env_seeds(config: dict) -> set[int]:
     seed = config["seed_reservation"]
     base, stride = seed["environment_base"], seed["fixture_stride"]
+    substitutions = v4.seed_substitution_map(config)
     reserved: set[int] = set()
     for fixture_id, fixture in config["fixtures"].items():
         blocks = max(f["blocks"] for f in config["families"] if f["fixture"] == fixture_id)
         for block in range(blocks):
-            reserved.add(base + fixture["seed_slot"] * stride + block)
+            substitution = substitutions.get((fixture_id, block))
+            reserved.add(
+                substitution["replacement_seed"]
+                if substitution is not None
+                else base + fixture["seed_slot"] * stride + block
+            )
     return reserved
 
 
@@ -451,6 +457,8 @@ def _v4_reserved_policy_seeds(rows: list[dict]) -> set[int]:
 def build_seed_manifest(config: dict, rows: list[dict]) -> dict[str, Any]:
     seed_cfg = config["seed_reservation"]
     reserved_env = _v4_reserved_env_seeds(config)
+    substitutions = seed_cfg.get("post_result_environment_seed_substitutions", [])
+    retired_env = {row["retired_seed"] for row in substitutions}
     reserved_policy = _v4_reserved_policy_seeds(rows)
     confirmatory = sorted(
         (
@@ -474,7 +482,7 @@ def build_seed_manifest(config: dict, rows: list[dict]) -> dict[str, Any]:
     )
     historical_env = {int(k): v for k, v in scan["env"].items()}
     historical_policy = {int(k): v for k, v in scan["policy"].items()}
-    v4_env_all = reserved_env | pilot_env
+    v4_env_all = reserved_env | retired_env | pilot_env
 
     def _collisions(reserved: set[int], historical: dict[int, list[str]], namespace: str) -> list[dict]:
         out = []
@@ -499,6 +507,8 @@ def build_seed_manifest(config: dict, rows: list[dict]) -> dict[str, Any]:
         "reservation": seed_cfg,
         "confirmatory_env_seed_count": len(reserved_env),
         "confirmatory_unique_env_seeds": sorted(reserved_env),
+        "retired_model_blind_setup_env_seeds": sorted(retired_env),
+        "post_result_environment_seed_substitutions": substitutions,
         "confirmatory_unique_policy_seeds": sorted(reserved_policy),
         "confirmatory_rows": confirmatory,
         "engineering_pilot_groups": PILOT_GROUPS,

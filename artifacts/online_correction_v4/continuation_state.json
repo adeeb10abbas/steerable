@@ -2,7 +2,7 @@
   "active_blockers": [
     "BLOCKED_RUNTIME: GR00T N1.7 Bridge/WidowX checkpoint URI, integration commit, adapter, native control period, and SimplerEnv fixture object names are not verified on cluster workers; second-stack geometry and scoring receipts remain pending.",
     "Primary reference-selectivity (H) requires verified common-prefix replay within each prompt; deterministic fresh-session replay and qualified full-state snapshot are not yet demonstrated on the target runtime.",
-    "REQUALIFICATION_PENDING: complete horizontal G2 attempts g2q20260905e/f remain failed. A disclosed zero-model-request amendment replaces reproducibly unstable seeds 2100000052 and 2100000101 with 2100000128 and 2100000129 and authorizes only a fresh full G2 attempt; G3 and policy inference remain prohibited."
+    "AXIS_REVIEW_PENDING: all 128 replacement-seed horizontal G2 reset/camera/numeric-frame checks passed with zero model requests. A human must record all four assertions against the hash-pinned axis montage and the aggregate compiler must pass before G2 completes. G3 and policy inference remain prohibited."
   ],
   "active_branch": "research/online-correction-v4",
   "artifact_sha256": {
@@ -12,7 +12,7 @@
     "launch_matrix.json": "8276675d06e2684bfc688dd5c0ebe355aef90c0095b771eb26149a7a5baa049d",
     "motion_manifest.json": "c5a6b3f637b009fadbb1615a79863c76a096d5a33f9a39f36150707269c3df67",
     "prompt_manifest.json": "20e464b06576fd7e860ec86d35d9f148673066874e3441ba1483f4b81fdf59b3",
-    "protocol.json": "be9379945be4f3eec1db562b7a11970c75a62594761b7291eac9a1b8e2de42a9",
+    "protocol.json": "1880ccfbbb61929bf029c50b4f7423f664fbabb24883e91e7b138ab5595aee4f",
     "queue.jsonl": "41f982a5dbf8cf3b0a0bee3a8ba329fdde16d375f8c2249a3e96280ad70e9d50",
     "queue_manifest.json": "1f8c5c54ea98d3659d460e51b2ad45e8185865531b59fd9c9e60a44f99b328c8",
     "runtime_manifest.json": "e48684453f7e3c19934f6f1fde13e0d5ec4021b6a1274050a7ee8e9307e9a305",
@@ -45,6 +45,7 @@
     "artifacts/online_correction_v4/qualification/20260905_horizontal_g2_smoke_g2q20260905d.json",
     "artifacts/online_correction_v4/qualification/20260905_horizontal_g2_wave_g2q20260905e.json",
     "artifacts/online_correction_v4/qualification/20260905_horizontal_g2_wave_g2q20260905f.json",
+    "artifacts/online_correction_v4/qualification/20260905_horizontal_g2_wave_g2q20260905g.json",
     "artifacts/online_correction_v4/qualification/20260905_pi05_lane_qualification.json",
     "artifacts/online_correction_v4/setup/horizontal_g2_recalibration_amendment.candidate.json",
     "artifacts/online_correction_v4/setup/horizontal_g2_seed_substitution_amendment.candidate.json",
@@ -55,7 +56,7 @@
   "completed_groups": [],
   "design_source_commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
   "frozen_queue_sha256": "41f982a5dbf8cf3b0a0bee3a8ba329fdde16d375f8c2249a3e96280ad70e9d50",
-  "generation_parent_commit": "289ad39f4f718b43e13ddacb06ebf49b56549bbc",
+  "generation_parent_commit": "5865beb0f7ff90b907ab894875aec2e7c00f92d5",
   "generation_parent_commit_meaning": "Git HEAD when freeze builder last ran; not the commit containing freeze artifacts.",
   "git_receipt": {
     "meaning": "Record freeze_commit after the commit containing artifacts/online_correction_v4/ lands.",
@@ -118,10 +119,6 @@
   ],
   "next_commands": [
     "python3 tools/online_correction_v4.py validate",
-    "python3 tools/build_v4_horizontal_reset_registry.py",
-    "python3 tools/build_v4_horizontal_g3_plan.py",
-    "python3 tools/render_v4_horizontal_g2_k8s_jobs.py --spec deploy/k8s/v4_lane_bundle/g2-horizontal-spec.example.json --output-root \"$V4_G2_RENDER_ROOT\"",
-    "python3 tools/validate_v4_horizontal_g2_k8s_jobs.py --root \"$V4_G2_BUNDLE_ROOT\"",
     "python3 tools/build_online_correction_v4_freeze.py --out artifacts/online_correction_v4",
     "python3 tools/validate_online_correction_v4.py",
     "python3 -m unittest discover -s tests -p 'test_online_correction_v4*.py'",
@@ -210,6 +207,18 @@
       "qualification_scope": "infrastructure_only_no_scientific_behavior",
       "sha256": "db01d74735b63678f277007fea9889fc08697f793ee2ab66a016f0df06d1565e",
       "status": "failed_model_blind_setup_gate"
+    },
+    {
+      "attempt_id": "g2q20260905g",
+      "behavioral_episode_count": 0,
+      "compiled_at_utc": "2026-09-05T18:10:57Z",
+      "completed_lane_status": null,
+      "gate": "G2",
+      "partial_lane_status": null,
+      "path": "artifacts/online_correction_v4/qualification/20260905_horizontal_g2_wave_g2q20260905g.json",
+      "qualification_scope": "infrastructure_only_no_scientific_behavior",
+      "sha256": "05729c857e864087ca094514efe3a3b4fb4591e1f31d950bea1a29cb88051cb4",
+      "status": "passed_machine_checks_pending_axis_visual_review"
     },
     {
       "attempt_id": null,

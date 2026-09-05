@@ -1,0 +1,104 @@
+{
+  "schema_version": "v4-horizontal-g2-wave-disposition-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "horizontal",
+  "attempt_id": "g2q20260905g",
+  "compiled_at_utc": "2026-09-05T18:10:57Z",
+  "qualification_scope": "infrastructure_only_no_scientific_behavior",
+  "status": "passed_machine_checks_pending_axis_visual_review",
+  "g2_machine_seed_checks_complete": true,
+  "g2_complete": false,
+  "axis_visual_review_status": "pending_human_review",
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "started_at_utc": "2026-09-05T17:57:47Z",
+  "completed_at_utc": "2026-09-05T18:10:41Z",
+  "registered_seed_count": 128,
+  "observed_seed_count": 128,
+  "passing_seed_receipt_count": 128,
+  "failure_marker_count": 0,
+  "outcomes": {
+    "passed_reset_camera_and_numeric_frame_pending_axis_visual_review": 128,
+    "registry_position_tolerance_failure_count": 0,
+    "released_stability_threshold_failure_count": 0,
+    "position_max_error_m_by_object_across_seeds": {
+      "banana": 0.00019898797979378546,
+      "bowl": 0.0009954731871661404,
+      "rubiks_cube": 0.0039103177290124025
+    }
+  },
+  "seed_substitution_receipt": {
+    "path": "artifacts/online_correction_v4/setup/horizontal_g2_seed_substitution_amendment.candidate.json",
+    "implementation_commit": "289ad39f4f718b43e13ddacb06ebf49b56549bbc",
+    "retired_seeds": [
+      2100000052,
+      2100000101
+    ],
+    "replacement_seeds": [
+      2100000128,
+      2100000129
+    ],
+    "replacement_seed_checks_passed": true
+  },
+  "axis_review_source": {
+    "environment_seed": 2100000000,
+    "path": "file:///data/users/ali/vla_wam/raw/aec083f1-82d8-4099-900b-52c8673fb4e7/lane-g2h-s000/attempt-g2q20260905g/episodes/axis_overlay_montage.png",
+    "sha256": "b40bdf0bb440ff9169eaeaf64cf4c294b73061f6642986a1ca6dfc9c03b01056",
+    "bytes": 3821157,
+    "axes_drawn": [
+      "front",
+      "left",
+      "up"
+    ]
+  },
+  "runtime_identity": {
+    "study_commit": "289ad39f4f718b43e13ddacb06ebf49b56549bbc",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "driver_version": "580.95.05",
+    "gpu_product": "NVIDIA A40",
+    "native_control_dt_s": 0.06666666666666667,
+    "registry_position_tolerance_m": 0.005,
+    "reset_registry_sha256": "75164b2d6bfd2b4c1962557221e69d78449805bd65d31acc6859fd94d2129742",
+    "bundle_manifest_sha256": "6792a1a6c34a2312eb6c80e119e132865e6e3aaee4f590da3a0a2e4327be9020"
+  },
+  "resource_use": {
+    "pod_count": 128,
+    "node_count": 12,
+    "pods_by_node": {
+      "dcwipphhgc184.edc.nam.gm.com": 13,
+      "dcwipphhgc187.edc.nam.gm.com": 14,
+      "dcwipphhgc189.edc.nam.gm.com": 13,
+      "dcwipphhgc190.edc.nam.gm.com": 12,
+      "dcwipphhgc192.edc.nam.gm.com": 7,
+      "dcwipphhgc194.edc.nam.gm.com": 14,
+      "dcwipphhgc195.edc.nam.gm.com": 7,
+      "dcwipphhgc197.edc.nam.gm.com": 14,
+      "dcwipphhgc198.edc.nam.gm.com": 7,
+      "dcwipphhgc199.edc.nam.gm.com": 13,
+      "dcwipphhgc200.edc.nam.gm.com": 7,
+      "dcwipphhgc201.edc.nam.gm.com": 7
+    }
+  },
+  "preservation": {
+    "raw_root": "file:///data/users/ali/vla_wam/raw",
+    "attempt_snapshot_root": "file:///data/users/ali/vla_wam/raw/v4/g2-horizontal/attempt-g2q20260905g-completed-wave",
+    "seed_outcome_index": {
+      "path": "file:///data/users/ali/vla_wam/raw/v4/g2-horizontal/attempt-g2q20260905g-completed-wave/seed-outcome-index.json",
+      "bytes": 62812,
+      "sha256": "b62a399b6c417f70edda76642be6c02b3fe2ae599e3160df948a73790191b751"
+    },
+    "files_sha256": {
+      "bundle-manifest.json": "6792a1a6c34a2312eb6c80e119e132865e6e3aaee4f590da3a0a2e4327be9020",
+      "combined-logs.txt": "dc2c4f33f6a8152c87e3ee41bd2ca5c2cac2f21216591e7de5257e4ef57f43a2",
+      "objects.json": "0d4c98183df48bae8a821d20f62b3d40b80362c9a2d2293e8e4e5d9dd86c3e8a",
+      "render-report.json": "7beb322f8546511192f638fc6ec5a7499b183eb7fccc05f53fa34d93c6e2ada6",
+      "validation-report.json": "377c29af09f92e3de30036a1d83f0ada55ee4a1739e7dff5ba379df0c4a2a560"
+    },
+    "job_and_configmap_objects_deleted_after_preservation": true,
+    "all_raw_episode_outputs_retained": true
+  },
+  "disposition": "All 128 registered replacement-seed reset/camera/numeric-frame checks passed with zero model requests. G2 is not complete and no later gate is authorized until a human reviewer records all four required assertions against the hash-pinned axis montage and the aggregate compiler validates every seed receipt plus that review."
+}

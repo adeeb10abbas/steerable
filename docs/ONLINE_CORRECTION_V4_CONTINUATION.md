@@ -112,6 +112,14 @@ objects, log, raw marker, and hashes are preserved under the compact receipt
 `artifacts/online_correction_v4/qualification/20260905_horizontal_g2_smoke_g2q20260905b.json`.
 This also remains infrastructure-only evidence with no passing G2 seed.
 
+Smoke attempt `g2q20260905c` progressed into the model-blind settling loop and
+exposed one more adapter boundary: the settle proxy supplied an already-batched
+1x8 hold tensor to a converter that expected a Python tuple. The converter now
+accepts either form while preserving the exact shape/device/dtype check. The
+exit-1 Job and raw evidence are recorded in
+`artifacts/online_correction_v4/qualification/20260905_horizontal_g2_smoke_g2q20260905c.json`;
+it likewise contains no passing G2 seed or behavioral activity.
+
 After inspecting the montage,
 `tools/record_v4_horizontal_g2_axis_review.py` records the four explicit
 orientation assertions. `tools/compile_v4_horizontal_g2_aggregate.py` then

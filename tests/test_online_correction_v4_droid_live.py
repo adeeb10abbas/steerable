@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import json
+import sys
 import tempfile
 import unittest
 from dataclasses import replace
 from pathlib import Path
+from types import SimpleNamespace
 from unittest import mock
 
 from experiments.online_correction_v4 import geometry as geom
@@ -113,6 +115,33 @@ class DroidLiveImportTests(unittest.TestCase):
         converted = _host_numpy(_CudaLikeTensor())
         self.assertEqual(calls, ["detach", "cpu", "numpy"])
         self.assertEqual(converted.tolist(), [1.0, 2.0, 3.0])
+
+    def test_live_action_converter_accepts_batched_hold_tensor(self) -> None:
+        from experiments.online_correction_v4.droid_robolab import LiveRoboLabBackend
+
+        calls: list[tuple[str, object, object]] = []
+
+        class _Tensor:
+            shape = (1, 8)
+
+            def detach(self):
+                calls.append(("detach", None, None))
+                return self
+
+            def to(self, *, device, dtype):
+                calls.append(("to", device, dtype))
+                return self
+
+        fake_torch = SimpleNamespace(Tensor=_Tensor, float32="float32")
+        backend = object.__new__(LiveRoboLabBackend)
+        backend.env = SimpleNamespace(device="cuda:0")
+        action = _Tensor()
+        with mock.patch.dict(sys.modules, {"torch": fake_torch}):
+            self.assertIs(backend._action_tensor(action), action)
+        self.assertEqual(
+            calls,
+            [("detach", None, None), ("to", "cuda:0", "float32")],
+        )
 
     def test_horizontal_fixture_registry(self) -> None:
         self.assertEqual(supported_fixture_ids(), ("horizontal",))

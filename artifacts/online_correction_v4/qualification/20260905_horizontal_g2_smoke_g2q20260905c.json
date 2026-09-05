@@ -1,0 +1,46 @@
+{
+  "schema_version": "v4-horizontal-g2-attempt-disposition-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "horizontal",
+  "attempt_id": "g2q20260905c",
+  "compiled_at_utc": "2026-09-05T16:55:59Z",
+  "qualification_scope": "infrastructure_only_no_scientific_behavior",
+  "status": "infrastructure_invalid",
+  "authorizes_behavioral_inference": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "created_at_utc": "2026-09-05T16:53:43Z",
+  "environment_seed": 2100000000,
+  "passing_seed_receipt_count": 0,
+  "infrastructure_failure_marker_count": 1,
+  "pod_outcome": {
+    "phase": "Failed",
+    "container_exit_code": 1,
+    "marker_check_worked": true
+  },
+  "root_cause": {
+    "study_commit": "7784347fa7cde983395bf881c9f98d94025baf06",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "error_type": "ValueError",
+    "error": "only one element tensors can be converted to Python scalars",
+    "trace_location": "experiments/online_correction_v4/droid_robolab.py:_action_tensor"
+  },
+  "finding": "The live reset progressed through environment creation and CUDA world-pose conversion. The settle proxy then passed its already-batched hold tensor back through an action converter that only handled Python tuples. The parent checker again forced an exit-1 Job failure.",
+  "remediation": "Accept an already-batched torch.Tensor in the live action converter, detach it, move it to the bound device and dtype, and retain the exact 1x8 shape check.",
+  "preservation": {
+    "raw_root": "file:///data/users/ali/vla_wam/raw",
+    "attempt_snapshot_root": "file:///data/users/ali/vla_wam/raw/v4/g2-horizontal/attempt-g2q20260905c-infrastructure-invalid",
+    "episode_failure_marker": "file:///data/users/ali/vla_wam/raw/cb2bf323-4bfc-48d8-8490-035bc05b8e5b/lane-g2h-s000/attempt-g2q20260905c/episodes/infrastructure_failure.json",
+    "files_sha256": {
+      "bundle-manifest.json": "677dc0dae2901492bc184555807840e3eb4984943dfb6326dd6455522b96ea44",
+      "combined-logs.txt": "4bc620535e1d87628ef7b11fc4fdbd700f857432245ee85dec5db388c5e5376c",
+      "objects.json": "701b41217272d533d2abeaa37e2ee0afa5708232cad73754384baeec03804311",
+      "render-report.json": "7c6e15376f21e9595cd85c71351da130775ec1a1d691deddad30ea65989b4c92",
+      "validation-report.json": "99a5e6655305332bb342048ba7b92159ba464731333903dc8d78a57a026e1bbe"
+    },
+    "job_and_configmap_objects_deleted_after_preservation": true,
+    "raw_episode_output_retained": true
+  },
+  "disposition": "No G2 seed passed. This smoke test is infrastructure evidence only and must not be counted as a behavioral or G2 failure."
+}

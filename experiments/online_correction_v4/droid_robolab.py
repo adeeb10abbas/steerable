@@ -379,7 +379,7 @@ class LiveRoboLabBackend:
         self._anchor_reference_motion()
         return obs, info
 
-    def step(self, action: tuple[float, ...] | None) -> tuple[dict[str, Any], dict[str, Any]]:
+    def step(self, action: Any) -> tuple[dict[str, Any], dict[str, Any]]:
         tensor_action = self._action_tensor(action)
         obs, reward, terminated, truncated, info = self.env.step(tensor_action)
         self._latest_raw_obs = obs
@@ -743,12 +743,22 @@ class LiveRoboLabBackend:
         quat = _host_numpy(quat)
         self._reference_baseline_pose = tuple(float(v) for v in [*pos, *quat])
 
-    def _action_tensor(self, action: tuple[float, ...] | None) -> Any:
+    def _action_tensor(self, action: Any) -> Any:
         import torch
 
         if action is None:
             return self.hold_action_tensor()
-        tensor = torch.as_tensor([list(action)], dtype=torch.float32, device=self.env.device)
+        if isinstance(action, torch.Tensor):
+            tensor = action.detach().to(
+                device=self.env.device,
+                dtype=torch.float32,
+            )
+        else:
+            tensor = torch.as_tensor(
+                [list(action)],
+                dtype=torch.float32,
+                device=self.env.device,
+            )
         if tuple(tensor.shape) != (1, ACTION_DIM):
             raise RoboLabBootstrapError(f"unexpected action shape: {tuple(tensor.shape)}")
         return tensor

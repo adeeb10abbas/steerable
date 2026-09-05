@@ -3,7 +3,7 @@
   "campaign_id": "online_correction_v4",
   "fixture_id": "horizontal",
   "status": "model_blind_candidate_not_released_for_inference",
-  "amendment_status": "proposed_pending_pinned_implementation_commit",
+  "amendment_status": "frozen_for_model_blind_requalification",
   "post_result_amendment": true,
   "model_request_count": 0,
   "behavioral_episode_count": 0,
@@ -14,6 +14,17 @@
     "registered_seed_count": 128,
     "passing_seed_receipt_count": 126,
     "reproducible_stability_failure_count": 2
+  },
+  "implementation": {
+    "study_commit": "289ad39f4f718b43e13ddacb06ebf49b56549bbc",
+    "campaign_sha256": "96cddbe18598adba70ee245d48d61e10677c10088a10baeb9eb2c6bd1766bc11",
+    "planner_path": "tools/online_correction_v4.py",
+    "planner_sha256": "77a8be0c4731e9c66ab30978792efc9118e722cb625cf2bd93d18f19edf15402",
+    "freeze_builder_path": "tools/build_online_correction_v4_freeze.py",
+    "freeze_builder_sha256": "b04c1a7ffcaeb30aaff2c50717aa9cc016fcc3f3f517b124f6bbad38018ea34b",
+    "reset_registry_builder_path": "tools/build_v4_horizontal_reset_registry.py",
+    "reset_registry_builder_sha256": "9c70183530636160f006860da334f4395eb55c6145a6fbe12505e2fb8d0705cc",
+    "reset_registry_sha256": "75164b2d6bfd2b4c1962557221e69d78449805bd65d31acc6859fd94d2129742"
   },
   "substitutions": [
     {
@@ -49,10 +60,10 @@
     "reuse_prior_passing_seed_receipts": false
   },
   "authorization_boundary": {
-    "authorizes_fresh_model_blind_g2_attempt": false,
+    "authorizes_fresh_model_blind_g2_attempt": true,
     "authorizes_g3_execution": false,
     "authorizes_policy_inference": false,
     "authorizes_behavioral_episode": false
   },
-  "disclosure": "The substitutions were selected only from repeatable zero-model-request setup failures. They do not retroactively alter attempts e or f. The proposal must be bound to a pushed implementation and rebuilt queue/reset registry before it can authorize another G2 attempt."
+  "disclosure": "The substitutions were selected only from repeatable zero-model-request setup failures. They do not retroactively alter attempts e or f. A fresh full 128-seed G2 attempt must qualify the rebuilt registry before any later gate."
 }

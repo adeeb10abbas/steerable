@@ -987,7 +987,21 @@ def build_continuation_state(
         and row.get("amendment_status") == "frozen_for_model_blind_requalification"
         for row in model_blind_candidates
     )
-    if g2_requalification_failed:
+    g2_seed_substitution_frozen = any(
+        row.get("schema_version")
+        == "v4-horizontal-g2-seed-substitution-amendment-v1"
+        and row.get("amendment_status") == "frozen_for_model_blind_requalification"
+        for row in model_blind_candidates
+    )
+    if g2_requalification_failed and g2_seed_substitution_frozen:
+        cluster_blocker = (
+            "REQUALIFICATION_PENDING: complete horizontal G2 attempts "
+            "g2q20260905e/f remain failed. A disclosed zero-model-request "
+            "amendment replaces reproducibly unstable seeds 2100000052 and "
+            "2100000101 with 2100000128 and 2100000129 and authorizes only a "
+            "fresh full G2 attempt; G3 and policy inference remain prohibited."
+        )
+    elif g2_requalification_failed:
         cluster_blocker = (
             "BLOCKED_SETUP: amended complete horizontal G2 attempt "
             "g2q20260905f passed 126/128 seeds, while seeds 2100000052 and "
@@ -1022,8 +1036,10 @@ def build_continuation_state(
         )
     g2_setup_commands = (
         []
-        if g2_requalification_failed
-        or (g2_setup_failed and not g2_requalification_frozen)
+        if (
+            (g2_requalification_failed and not g2_seed_substitution_frozen)
+            or (g2_setup_failed and not g2_requalification_frozen)
+        )
         else [
             "python3 tools/build_v4_horizontal_reset_registry.py",
             "python3 tools/build_v4_horizontal_g3_plan.py",

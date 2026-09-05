@@ -124,6 +124,7 @@ class FreezeBuilderTests(unittest.TestCase):
                 {Path(row["path"]).name for row in candidates},
                 {
                     "horizontal_g2_recalibration_amendment.candidate.json",
+                    "horizontal_g2_seed_substitution_amendment.candidate.json",
                     "horizontal_g3_plan.candidate.json",
                     "horizontal_reset_registry.candidate.json",
                 },

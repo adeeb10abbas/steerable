@@ -163,16 +163,16 @@ seed-substitution or setup-geometry amendment is required. Full raw evidence
 and compact hashes are recorded in
 `artifacts/online_correction_v4/qualification/20260905_horizontal_g2_wave_g2q20260905f.json`.
 
-The next disclosed proposal,
-`artifacts/online_correction_v4/setup/horizontal_g2_seed_substitution_amendment.proposed.json`,
+The next disclosed amendment,
+`artifacts/online_correction_v4/setup/horizontal_g2_seed_substitution_amendment.candidate.json`,
 retires only those two reproducibly unstable environment seeds and assigns the
 next unused horizontal-namespace seeds: block 52 uses `2100000128` and block
 101 uses `2100000129`. The 128 block identities, counterbalance, prompts,
 policy seeds, 5 mm position tolerance, and all stability thresholds are
 unchanged. The queue, seed manifest, reset registry, and G3 plan have been
-deterministically rebuilt with the substitutions, but the proposal does not
-authorize a launch until it is bound to a pushed implementation commit and
-promoted to a frozen candidate.
+deterministically rebuilt with the substitutions at pushed implementation
+commit `289ad39f4f718b43e13ddacb06ebf49b56549bbc`. This amendment authorizes
+only a fresh full zero-model-request G2 attempt.
 
 After inspecting the montage,
 `tools/record_v4_horizontal_g2_axis_review.py` records the four explicit
@@ -206,13 +206,21 @@ Every queue row is a **registered new episode**. `reuse_episode_ids` are compari
 
 ## Exact next commands
 
-No fresh cluster launch is authorized from the current artifacts. First freeze
-a new disclosed model-blind amendment that replaces the two reproducibly
-unstable reset seeds or corrects their setup geometry. G3, reset-registry
-release, policy inference, and behavioral episodes remain prohibited.
+Only the fresh seed-substituted model-blind G2 attempt is authorized. G3,
+reset-registry release, policy inference, and behavioral episodes remain
+prohibited.
 
 ```bash
 python3 tools/online_correction_v4.py validate
+export V4_G2_RENDER_ROOT=/tmp/v4-g2-rendered-g2q20260905g
+python3 tools/render_v4_horizontal_g2_k8s_jobs.py \
+  --spec deploy/k8s/v4_lane_bundle/g2-horizontal-spec.example.json \
+  --output-root "$V4_G2_RENDER_ROOT"
+# Set V4_G2_BUNDLE_ROOT to the bundle_root printed above.
+python3 tools/validate_v4_horizontal_g2_k8s_jobs.py \
+  --root "$V4_G2_BUNDLE_ROOT"
+kubectl --context prod-dcwi-warrenq1-vmkub007 \
+  create -k "$V4_G2_BUNDLE_ROOT"
 python3 tools/build_online_correction_v4_freeze.py --out artifacts/online_correction_v4
 python3 tools/validate_online_correction_v4.py
 python3 -m unittest discover -s tests -p 'test_online_correction_v4*.py'

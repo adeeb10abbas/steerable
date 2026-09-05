@@ -37,6 +37,7 @@ def test_renderer_is_deterministic_and_refuses_overwrite(tmp_path: Path) -> None
     assert hashes_a == hashes_b
     assert {
         "configmap.yaml",
+        "scripts-configmap.yaml",
         "policy-job.yaml",
         "policy-service.yaml",
         "simulator-job.yaml",
@@ -47,6 +48,7 @@ def test_renderer_is_deterministic_and_refuses_overwrite(tmp_path: Path) -> None
     assert "immutable: true" in configmap
     assert "kube.context:" in configmap
     assert "v4-lane-id" in (first / "policy-job.yaml").read_text(encoding="utf-8")
+    assert "/opt/v4-lane/scripts/lane_entrypoint.py" in (first / "policy-job.yaml").read_text(encoding="utf-8")
     assert '"file_bindings"' in configmap
     assert '"http_healthz_after_checkpoint_load"' in configmap
     assert '"infrastructure_qualification_only_no_scientific_behavior"' in configmap

@@ -13,21 +13,21 @@
   "image_pull_secret": "artifactory-ci-pull-secret",
   "pvc": "211247-prod-pvc",
   "output_parent": "/data/users/ali/vla_wam/raw",
-  "entrypoint": "/data/users/ali/vla_wam/src/steerable/deploy/k8s/v4_lane_bundle/scripts/lane_entrypoint.py",
+  "entrypoint": "/opt/v4-lane/scripts/lane_entrypoint.py",
   "runtime": {
     "policy": {
       "python_bin": "/data/users/ali/vla_wam/envs/openpi-c23745b-pi05-v3-py311/bin/python",
       "ffmpeg_bin": "/data/users/ali/vla_wam/envs/lingbot-va-b200/bin/ffmpeg",
       "vk_icd_filenames": "/etc/vulkan/icd.d/nvidia_icd.json",
       "ld_library_path": "/data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu",
-      "pythonpath": "/data/users/ali/vla_wam/external/openpi-pi05-v3-c23745b:/data/users/ali/vla_wam/src/steerable/deploy/k8s/v4_lane_bundle/scripts"
+      "pythonpath": "/data/users/ali/vla_wam/external/openpi-pi05-v3-c23745b:/opt/v4-lane/scripts"
     },
     "simulator": {
       "python_bin": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python",
       "ffmpeg_bin": "/data/users/ali/vla_wam/envs/lingbot-va-b200/bin/ffmpeg",
       "vk_icd_filenames": "/etc/vulkan/icd.d/nvidia_icd.json",
       "ld_library_path": "/data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu",
-      "pythonpath": "/data/users/ali/vla_wam/src/steerable:/data/users/ali/vla_wam/external/RoboLab-11142d4:/data/users/ali/RoboTwin/envs/curobo/src:/data/users/ali/vla_wam/src/steerable/deploy/k8s/v4_lane_bundle/scripts"
+      "pythonpath": "/data/users/ali/vla_wam/src/steerable:/data/users/ali/vla_wam/external/RoboLab-11142d4:/data/users/ali/RoboTwin/envs/curobo/src:/opt/v4-lane/scripts"
     }
   },
   "policy": {
@@ -62,9 +62,9 @@
       "import jax; import jax.numpy as jnp; d=jax.devices(); assert len(d)==1 and d[0].platform=='gpu', d; x=(jnp.arange(4096,dtype=jnp.float32)**2).sum(); x.block_until_ready(); assert float(x)>0"
     ],
     "file_bindings": [
-      {"source": "scripts/lane_entrypoint.py", "path": "/data/users/ali/vla_wam/src/steerable/deploy/k8s/v4_lane_bundle/scripts/lane_entrypoint.py"},
-      {"source": "scripts/startup_preflight.py", "path": "/data/users/ali/vla_wam/src/steerable/deploy/k8s/v4_lane_bundle/scripts/startup_preflight.py"},
-      {"source": "scripts/check_policy_ready.py", "path": "/data/users/ali/vla_wam/src/steerable/deploy/k8s/v4_lane_bundle/scripts/check_policy_ready.py"},
+      {"source": "scripts/lane_entrypoint.py", "path": "/opt/v4-lane/scripts/lane_entrypoint.py"},
+      {"source": "scripts/startup_preflight.py", "path": "/opt/v4-lane/scripts/startup_preflight.py"},
+      {"source": "scripts/check_policy_ready.py", "path": "/opt/v4-lane/scripts/check_policy_ready.py"},
       {"source": "frozen_sources/openpi_websocket_policy_server.c23745b.py", "path": "/data/users/ali/vla_wam/external/openpi-pi05-v3-c23745b/src/openpi/serving/websocket_policy_server.py"},
       {"source": "../../../experiments/pi05_current_stack/v2a010_serve_policy.py", "path": "/data/users/ali/vla_wam/src/steerable/experiments/pi05_current_stack/v2a010_serve_policy.py"},
       {"source": "../../../artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_checkpoint_manifest.json", "path": "/data/users/ali/vla_wam/src/steerable/artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_checkpoint_manifest.json"}
@@ -83,7 +83,7 @@
     "python_imports": ["json", "torch", "curobo"],
     "render_probe_argv": [
       "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python",
-      "/data/users/ali/vla_wam/src/steerable/deploy/k8s/v4_lane_bundle/scripts/isaac_render_probe.py",
+      "/opt/v4-lane/scripts/isaac_render_probe.py",
       "--output",
       "{rendered_frame}",
       "--num-envs",
@@ -96,9 +96,9 @@
       "--kit_args=--/rtx/verifyDriverVersion/enabled=false"
     ],
     "file_bindings": [
-      {"source": "scripts/lane_entrypoint.py", "path": "/data/users/ali/vla_wam/src/steerable/deploy/k8s/v4_lane_bundle/scripts/lane_entrypoint.py"},
-      {"source": "scripts/startup_preflight.py", "path": "/data/users/ali/vla_wam/src/steerable/deploy/k8s/v4_lane_bundle/scripts/startup_preflight.py"},
-      {"source": "scripts/isaac_render_probe.py", "path": "/data/users/ali/vla_wam/src/steerable/deploy/k8s/v4_lane_bundle/scripts/isaac_render_probe.py"},
+      {"source": "scripts/lane_entrypoint.py", "path": "/opt/v4-lane/scripts/lane_entrypoint.py"},
+      {"source": "scripts/startup_preflight.py", "path": "/opt/v4-lane/scripts/startup_preflight.py"},
+      {"source": "scripts/isaac_render_probe.py", "path": "/opt/v4-lane/scripts/isaac_render_probe.py"},
       {"source": "../../../artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_checkpoint_manifest.json", "path": "/data/users/ali/vla_wam/src/steerable/artifacts/vla_wam_shared_v2/pilot/expansion/pi05_current_stack_checkpoint_manifest.json"}
     ]
   }

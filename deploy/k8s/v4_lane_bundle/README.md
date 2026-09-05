@@ -34,9 +34,13 @@ Unlike the historical V3 bundle, V4 does **not** substitute GPU labels. Configur
 A40/A100/B200/H100 (or any authorized product string) in the spec; changing
 hardware stratum requires a new spec and fresh qualification, not a label edit.
 
-The rendered launch ConfigMap is `immutable: true`. Do not hand-edit rendered YAML
-or transcribe argv/hashes into an interactive command. Re-render under a new
-attempt/config identity when any input changes.
+The rendered launch ConfigMap is `immutable: true`. A sibling immutable
+`scripts-configmap.yaml` embeds the exact canonical runtime script bytes and is
+mounted read-only at `/opt/v4-lane/scripts` with mode `0555`. Job command,
+readiness, and preStop paths must reference that mount; they must not depend on
+repo checkout paths under `/data/users/.../deploy/k8s/v4_lane_bundle/scripts`.
+Do not hand-edit rendered YAML or transcribe argv/hashes into an interactive
+command. Re-render under a new attempt/config identity when any input changes.
 
 Before cluster creation, run local checks (dry-run safe—no cluster mutation):
 

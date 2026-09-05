@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 from pathlib import Path
 import shutil
@@ -146,6 +147,9 @@ def _job(role: str) -> str:
                     - name: launch-config
                       mountPath: /opt/v4-lane/config
                       readOnly: true
+                    - name: lane-scripts
+                      mountPath: /opt/v4-lane/scripts
+                      readOnly: true
                   lifecycle:
                     preStop:
                       exec:
@@ -157,6 +161,10 @@ def _job(role: str) -> str:
                 - name: launch-config
                   configMap:
                     name: v4-lane-launch
+                - name: lane-scripts
+                  configMap:
+                    name: v4-lane-scripts
+                    defaultMode: 0555
         """
     ).lstrip()
     port_env = "" if role == "simulator" else '            - name: POLICY_PORT\n              value: "8100"'
@@ -185,35 +193,192 @@ def _job(role: str) -> str:
     )
 
 
+def _binding(path: str, payload: bytes) -> dict[str, object]:
+    return {"path": path, "bytes": len(payload), "sha256": hashlib.sha256(payload).hexdigest()}
+
+
 def _write_valid_bundle(root: Path) -> None:
     scripts = root / "scripts"
     scripts.mkdir(parents=True)
-    (root / "configmap.yaml").write_text(
-        textwrap.dedent(
-            f"""
-            apiVersion: v1
-            kind: ConfigMap
-            metadata:
-              name: v4-lane-launch
-              labels:
-                v4-lane-id: lane00
-                v4-attempt-id: attempt01
-                v4-config-sha: {CONFIG_DIGEST}
-            immutable: true
-            data:
-              policy.launch.json: '{{"role":"policy","experiment_argv":["/usr/bin/python3","/data/bin/policy-server","--openpi-root","/data/openpi","--checkpoint","/data/checkpoint"],"checkpoint_path":"/data/checkpoint","gpu_product":"NVIDIA-A100-SXM4-80GB","expected_gpu_name":"NVIDIA A100-SXM4-80GB","expected_driver_version":"580.95.05","policy_port":8100,"readiness_contract":"http_healthz_after_checkpoint_load","launch_scope":"infrastructure_qualification_only_no_scientific_behavior","file_bindings":[{{"path":"{ENTRYPOINT}","bytes":1,"sha256":"{CHECKPOINT_DIGEST}"}},{{"path":"/opt/v4-lane/scripts/startup_preflight.py","bytes":1,"sha256":"{CHECKPOINT_DIGEST}"}},{{"path":"/opt/v4-lane/scripts/check_policy_ready.py","bytes":1,"sha256":"{CHECKPOINT_DIGEST}"}},{{"path":"/data/openpi/src/openpi/serving/websocket_policy_server.py","bytes":3051,"sha256":"1370d345e6c3c5b8f15573050e485e60a5b423d1df33e24b237805e6b442b026"}},{{"path":"/data/checkpoint","bytes":1,"sha256":"{CHECKPOINT_DIGEST}"}}]}}'
-              simulator.launch.json: '{{"role":"simulator","experiment_argv":["/usr/bin/true"],"checkpoint_path":"/data/checkpoint","gpu_product":"NVIDIA-A40","expected_gpu_name":"NVIDIA A40","expected_driver_version":"580.95.05","launch_scope":"infrastructure_qualification_only_no_scientific_behavior","vulkan_contract":"isaac_app_launcher_rtx_frame_under_bound_vk_icd","render_probe_argv":["/data/bin/render-probe","{{rendered_frame}}"],"policy_wait":{{"mode":"http_healthz","host":"v4-lane-policy-lane00-attempt01","port":8100,"service_identity":{{"v4-lane-id":"lane00","v4-attempt-id":"attempt01","v4-config-sha":"{CONFIG_DIGEST}","v4-lane-role":"policy","service_name":"v4-lane-policy-lane00-attempt01"}}}},"file_bindings":[{{"path":"{ENTRYPOINT}","bytes":1,"sha256":"{CHECKPOINT_DIGEST}"}},{{"path":"/opt/v4-lane/scripts/startup_preflight.py","bytes":1,"sha256":"{CHECKPOINT_DIGEST}"}},{{"path":"/opt/v4-lane/scripts/isaac_render_probe.py","bytes":1,"sha256":"{CHECKPOINT_DIGEST}"}},{{"path":"/data/checkpoint","bytes":1,"sha256":"{CHECKPOINT_DIGEST}"}}]}}'
-              kube.context: "test-context"
-              policy.argv.json: '["policy-server", "--checkpoint", "/data/checkpoint"]'
-              simulator.argv.json: '["simulator-runner", "--queue", "/data/queue.jsonl"]'
-              checkpoint.sha256: "{CHECKPOINT_DIGEST}"
-              launch-config.sha256: "{CONFIG_DIGEST}"
-              kube.context: "test-context"
-              image.digest: "sha256:{IMAGE_DIGEST}"
-            """
+    script_sources = {
+        "startup_preflight.py": textwrap.dedent(
+            '''
+            import os
+            import signal
+            import time
+
+            # Concrete proof names retained in runtime-preflight.json:
+            # torch.cuda kernel on cuda:0; vulkaninfo; rendered_frame.png;
+            # import curobo; ffmpeg_encode encoded.mp4; ffmpeg_decode decoded.raw;
+            # checkpoint_sha256; writable_parent; O_EXCL port_lock.
+            # Runtime-startup fields: effective_environment, gpu_uuid,
+            # image_digest, argv, checkpoint_sha256.
+            def acquire_attempt_lock():
+                os.open("attempt-lock", os.O_CREAT | os.O_EXCL)
+
+            def reserve_policy_port(port):
+                os.open("port_lock", os.O_CREAT | os.O_EXCL)
+                return None, "port_lock"
+
+            def run_preflight():
+                required = ("POD_UID", "LANE_ID", "ATTEMPT_ID")
+                attempt = f"{os.environ['POD_UID']}/lane-{os.environ['LANE_ID']}/attempt-{os.environ['ATTEMPT_ID']}"
+                # simulator policy_wait: wait_for_policy readiness and policy_metadata runtime-startup.json
+                assert required and attempt
+            '''
         ).lstrip(),
-        encoding="utf-8",
+        "lane_entrypoint.py": textwrap.dedent(
+            '''
+            import os
+            import signal
+            import time
+            from startup_preflight import run_preflight
+
+            IMAGE_DIGEST_EXPECTED = os.environ.get("IMAGE_DIGEST_EXPECTED")
+
+            def pre_stop():
+                wait = float(os.environ.get("PRESTOP_WAIT_SECONDS", "120"))
+                os.kill(1, signal.SIGINT)
+                deadline = time.monotonic() + wait
+                while time.monotonic() < deadline:
+                    try:
+                        os.kill(1, 0)
+                    except ProcessLookupError:
+                        return
+
+            def main():
+                run_preflight()
+                os.execvp("experiment", ["experiment"])
+
+            if __name__ == "__main__":
+                main()
+            '''
+        ).lstrip(),
+        "check_policy_ready.py": textwrap.dedent(
+            '''
+            # checkpoint-loaded policy-ready marker must exist
+            # launch_config sha256 verification against preflight evidence
+            report.get("launch_config", {}).get("sha256")
+            '''
+        ).lstrip(),
+        "isaac_render_probe.py": "# render probe stub\n",
+    }
+    script_payloads: dict[str, bytes] = {}
+    for name, body in script_sources.items():
+        payload = body.encode("utf-8")
+        script_payloads[name] = payload
+        (scripts / name).write_bytes(payload)
+
+    scripts_cm_lines = [
+        "apiVersion: v1",
+        "kind: ConfigMap",
+        "metadata:",
+        "  name: v4-lane-scripts",
+        "  labels:",
+        f"    v4-lane-id: lane00",
+        f"    v4-attempt-id: attempt01",
+        f"    v4-config-sha: {CONFIG_DIGEST}",
+        "immutable: true",
+        "data:",
+    ]
+    for name in sorted(script_payloads):
+        scripts_cm_lines.append(f"  {name}: |")
+        for line in script_payloads[name].decode("utf-8").splitlines():
+            scripts_cm_lines.append(f"    {line}")
+    (root / "scripts-configmap.yaml").write_text("\n".join(scripts_cm_lines) + "\n", encoding="utf-8")
+
+    checkpoint_binding = _binding("/data/checkpoint", b"x")
+    policy_bindings = [
+        _binding(ENTRYPOINT, script_payloads["lane_entrypoint.py"]),
+        _binding("/opt/v4-lane/scripts/startup_preflight.py", script_payloads["startup_preflight.py"]),
+        _binding("/opt/v4-lane/scripts/check_policy_ready.py", script_payloads["check_policy_ready.py"]),
+        {
+            "path": "/data/openpi/src/openpi/serving/websocket_policy_server.py",
+            "bytes": 3051,
+            "sha256": "1370d345e6c3c5b8f15573050e485e60a5b423d1df33e24b237805e6b442b026",
+        },
+        checkpoint_binding,
+    ]
+    simulator_bindings = [
+        _binding(ENTRYPOINT, script_payloads["lane_entrypoint.py"]),
+        _binding("/opt/v4-lane/scripts/startup_preflight.py", script_payloads["startup_preflight.py"]),
+        _binding("/opt/v4-lane/scripts/isaac_render_probe.py", script_payloads["isaac_render_probe.py"]),
+        checkpoint_binding,
+    ]
+    import json
+
+    policy_launch = {
+        "role": "policy",
+        "experiment_argv": [
+            "/usr/bin/python3",
+            "/data/bin/policy-server",
+            "--openpi-root",
+            "/data/openpi",
+            "--checkpoint",
+            "/data/checkpoint",
+        ],
+        "checkpoint_path": "/data/checkpoint",
+        "gpu_product": "NVIDIA-A100-SXM4-80GB",
+        "expected_gpu_name": "NVIDIA A100-SXM4-80GB",
+        "expected_driver_version": "580.95.05",
+        "policy_port": 8100,
+        "readiness_contract": "http_healthz_after_checkpoint_load",
+        "launch_scope": "infrastructure_qualification_only_no_scientific_behavior",
+        "file_bindings": policy_bindings,
+    }
+    simulator_launch = {
+        "role": "simulator",
+        "experiment_argv": ["/usr/bin/true"],
+        "checkpoint_path": "/data/checkpoint",
+        "gpu_product": "NVIDIA-A40",
+        "expected_gpu_name": "NVIDIA A40",
+        "expected_driver_version": "580.95.05",
+        "launch_scope": "infrastructure_qualification_only_no_scientific_behavior",
+        "vulkan_contract": "isaac_app_launcher_rtx_frame_under_bound_vk_icd",
+        "render_probe_argv": ["/data/bin/render-probe", "{rendered_frame}"],
+        "policy_wait": {
+            "mode": "http_healthz",
+            "host": "v4-lane-policy-lane00-attempt01",
+            "port": 8100,
+            "service_identity": {
+                "v4-lane-id": "lane00",
+                "v4-attempt-id": "attempt01",
+                "v4-config-sha": CONFIG_DIGEST,
+                "v4-lane-role": "policy",
+                "service_name": "v4-lane-policy-lane00-attempt01",
+            },
+        },
+        "file_bindings": simulator_bindings,
+    }
+    policy_json = json.dumps(policy_launch, indent=2, sort_keys=True) + "\n"
+    simulator_json = json.dumps(simulator_launch, indent=2, sort_keys=True) + "\n"
+    configmap_lines = [
+        "apiVersion: v1",
+        "kind: ConfigMap",
+        "metadata:",
+        "  name: v4-lane-launch",
+        "  labels:",
+        "    v4-lane-id: lane00",
+        "    v4-attempt-id: attempt01",
+        f"    v4-config-sha: {CONFIG_DIGEST}",
+        "immutable: true",
+        "data:",
+        "  policy-launch.json: |",
+    ]
+    configmap_lines.extend(f"    {line}" for line in policy_json.splitlines())
+    configmap_lines.append("  simulator-launch.json: |")
+    configmap_lines.extend(f"    {line}" for line in simulator_json.splitlines())
+    configmap_lines.extend(
+        [
+            '  kube.context: "test-context"',
+            '  policy.argv.json: \'["policy-server", "--checkpoint", "/data/checkpoint"]\'',
+            '  simulator.argv.json: \'["simulator-runner", "--queue", "/data/queue.jsonl"]\'',
+            f'  checkpoint.sha256: "{CHECKPOINT_DIGEST}"',
+            f'  launch-config.sha256: "{CONFIG_DIGEST}"',
+            f'  image.digest: "sha256:{IMAGE_DIGEST}"',
+        ]
     )
+    (root / "configmap.yaml").write_text("\n".join(configmap_lines) + "\n", encoding="utf-8")
     (root / "policy-job.yaml").write_text(_job("policy"), encoding="utf-8")
     (root / "simulator-job.yaml").write_text(_job("simulator"), encoding="utf-8")
     (root / "policy-service.yaml").write_text(
@@ -250,6 +415,7 @@ def _write_valid_bundle(root: Path) -> None:
             kind: Kustomization
             resources:
               - configmap.yaml
+              - scripts-configmap.yaml
               - policy-job.yaml
               - policy-service.yaml
               - simulator-job.yaml
@@ -257,76 +423,6 @@ def _write_valid_bundle(root: Path) -> None:
         ).lstrip(),
         encoding="utf-8",
     )
-    (scripts / "startup_preflight.py").write_text(
-        textwrap.dedent(
-            '''
-            import os
-            import signal
-            import time
-
-            # Concrete proof names retained in runtime-preflight.json:
-            # torch.cuda kernel on cuda:0; vulkaninfo; rendered_frame.png;
-            # import curobo; ffmpeg_encode encoded.mp4; ffmpeg_decode decoded.raw;
-            # checkpoint_sha256; writable_parent; O_EXCL port_lock.
-            # Runtime-startup fields: effective_environment, gpu_uuid,
-            # image_digest, argv, checkpoint_sha256.
-            def acquire_attempt_lock():
-                os.open("attempt-lock", os.O_CREAT | os.O_EXCL)
-
-            def reserve_policy_port(port):
-                os.open("port_lock", os.O_CREAT | os.O_EXCL)
-                return None, "port_lock"
-
-            def run_preflight():
-                required = ("POD_UID", "LANE_ID", "ATTEMPT_ID")
-                attempt = f"{os.environ['POD_UID']}/lane-{os.environ['LANE_ID']}/attempt-{os.environ['ATTEMPT_ID']}"
-                # simulator policy_wait: wait_for_policy readiness and policy_metadata runtime-startup.json
-                assert required and attempt
-            '''
-        ).lstrip(),
-        encoding="utf-8",
-    )
-    (scripts / "lane_entrypoint.py").write_text(
-        textwrap.dedent(
-            '''
-            import os
-            import signal
-            import time
-            from startup_preflight import run_preflight
-
-            IMAGE_DIGEST_EXPECTED = os.environ.get("IMAGE_DIGEST_EXPECTED")
-
-            def pre_stop():
-                wait = float(os.environ.get("PRESTOP_WAIT_SECONDS", "120"))
-                os.kill(1, signal.SIGINT)
-                deadline = time.monotonic() + wait
-                while time.monotonic() < deadline:
-                    try:
-                        os.kill(1, 0)
-                    except ProcessLookupError:
-                        return
-
-            def main():
-                run_preflight()
-                os.execvp("experiment", ["experiment"])
-
-            if __name__ == "__main__":
-                main()
-            '''
-        ).lstrip(),
-        encoding="utf-8",
-    )
-    (scripts / "check_policy_ready.py").write_text(
-        textwrap.dedent(
-            '''
-            # checkpoint-loaded policy-ready marker must exist
-            # launch_config sha256 verification against preflight evidence
-            report.get("launch_config", {}).get("sha256")
-            '''
-        ).lstrip(),
-        encoding="utf-8",
-    )
-    (scripts / "isaac_render_probe.py").write_text("# render probe stub\n", encoding="utf-8")
 
 
 @pytest.fixture()
@@ -362,7 +458,7 @@ def test_valid_lane_bundle_passes(bundle: Path) -> None:
             "configmap.yaml",
             "/opt/v4-lane/scripts/check_policy_ready.py",
             "/opt/v4-lane/scripts/missing_ready.py",
-            "omit required runtime inputs",
+            "scripts ConfigMap lacks embedded runtime script missing_ready.py",
         ),
         (
             "configmap.yaml",
@@ -432,7 +528,11 @@ def test_bundle_rejects_missing_readiness_launch_config_binding(bundle: Path) ->
 def test_bundle_rejects_qualification_scope_with_behavioral_argv(bundle: Path) -> None:
     path = bundle / "configmap.yaml"
     path.write_text(
-        path.read_text(encoding="utf-8").replace('["/usr/bin/true"]', '["/usr/bin/python3","/data/run_online_correction_v4_episodes.py"]', 1),
+        path.read_text(encoding="utf-8").replace(
+            '      "/usr/bin/true"',
+            '      "/usr/bin/python3",\n      "/data/run_online_correction_v4_episodes.py"',
+            1,
+        ),
         encoding="utf-8",
     )
     with pytest.raises(VALIDATOR.LaneBundleValidationError, match="qualification-only simulator"):

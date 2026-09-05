@@ -32,6 +32,14 @@ QUALIFICATION_SCOPE = "infrastructure_qualification_only_no_scientific_behavior"
 NOOP_RUNNERS = frozenset({"/usr/bin/true", "/bin/true"})
 V4_RUNNER_MARKER = "online_correction_v4"
 REQUIRED_IDENTITY_LABELS = ("v4-lane-id", "v4-attempt-id", "v4-config-sha")
+SCRIPTS_MOUNT = "/opt/v4-lane/scripts"
+DEFAULT_ENTRYPOINT = f"{SCRIPTS_MOUNT}/lane_entrypoint.py"
+RUNTIME_SCRIPT_NAMES = (
+    "lane_entrypoint.py",
+    "startup_preflight.py",
+    "check_policy_ready.py",
+    "isaac_render_probe.py",
+)
 
 
 class RenderError(ValueError):
@@ -311,7 +319,10 @@ def metadata_lines(name: str, namespace: str, common_labels: Mapping[str, str], 
 
 def block(value: str, indent: int) -> str:
     prefix = " " * indent
-    return "\n".join(prefix + line for line in value.rstrip("\n").splitlines())
+    return "\n".join(
+        prefix + line if line else ""
+        for line in value.rstrip("\n").splitlines()
+    )
 
 
 def render_configmap(
@@ -330,6 +341,31 @@ def render_configmap(
         f"  immutable-identity.sha256: {yaml_scalar(immutable_identity_sha)}",
         f"  bundle-config.sha256: {yaml_scalar(bundle_sha)}",
     ]
+    return "\n".join(rows) + "\n"
+
+
+def load_runtime_scripts(script_root: Path) -> dict[str, bytes]:
+    scripts: dict[str, bytes] = {}
+    for name in RUNTIME_SCRIPT_NAMES:
+        source = script_root / name
+        require(source.is_file(), f"canonical runtime script is missing: {source}")
+        scripts[name] = source.read_bytes()
+    return scripts
+
+
+def render_scripts_configmap(
+    *,
+    name: str,
+    namespace: str,
+    common_labels: Mapping[str, str],
+    scripts: Mapping[str, bytes],
+) -> str:
+    rows = ["apiVersion: v1", "kind: ConfigMap", "metadata:"]
+    rows += metadata_lines(name, namespace, common_labels, "  ")
+    rows += ["immutable: true", "data:"]
+    for filename in sorted(scripts):
+        rows.append(f"  {filename}: |")
+        rows.append(block(scripts[filename].decode("utf-8"), 4))
     return "\n".join(rows) + "\n"
 
 
@@ -395,7 +431,7 @@ def yaml_env(rows: list[dict[str, Any]], indent: int) -> list[str]:
 
 def render_job(
     *, role: str, name: str, namespace: str, common_labels: Mapping[str, str],
-    configmap: str, image: str, image_digest: str, gpu_product_value: str,
+    configmap: str, scripts_configmap: str, image: str, image_digest: str, gpu_product_value: str,
     lane: str, attempt: str, output_parent: str, launch_sha: str,
     runtime: Mapping[str, Any], policy_port: int, pvc: str, image_pull_secret: str,
     entrypoint: str,
@@ -425,13 +461,45 @@ def render_job(
     rows += ["          command:", f"            - {yaml_scalar(runtime['python_bin'])}", f"            - {yaml_scalar(entrypoint)}", "          resources:", "            requests:", '              cpu: "16"', "              memory: 64Gi", "              nvidia.com/gpu: 1", "            limits:", '              cpu: "64"', "              memory: 128Gi", "              nvidia.com/gpu: 1"]
     rows += ["          securityContext:", "            allowPrivilegeEscalation: false", "            runAsNonRoot: true", "            runAsUser: 816149040", "            runAsGroup: 2518800", "            capabilities:", "              drop: [ALL]", "          env:"]
     rows += yaml_env(env, 12)
-    rows += ["          volumeMounts:", "            - name: data", "              mountPath: /data", "            - name: lane-runtime", "              mountPath: /lane-runtime", "            - name: dshm", "              mountPath: /dev/shm", "            - name: launch-config", "              mountPath: /opt/v4-lane/config", "              readOnly: true"]
+    rows += [
+        "          volumeMounts:",
+        "            - name: data",
+        "              mountPath: /data",
+        "            - name: lane-runtime",
+        "              mountPath: /lane-runtime",
+        "            - name: dshm",
+        "              mountPath: /dev/shm",
+        "            - name: launch-config",
+        "              mountPath: /opt/v4-lane/config",
+        "              readOnly: true",
+        "            - name: lane-scripts",
+        f"              mountPath: {yaml_scalar(SCRIPTS_MOUNT)}",
+        "              readOnly: true",
+    ]
     rows += ["          lifecycle:", "            preStop:", "              exec:", "                command:", f"                  - {yaml_scalar(runtime['python_bin'])}", f"                  - {yaml_scalar(entrypoint)}", "                  - --prestop"]
     if role == "policy":
         probe = runtime["python_bin"]
         ready = str(Path(entrypoint).with_name("check_policy_ready.py"))
         rows += ["          readinessProbe:", "            exec:", "              command:", f"                - {yaml_scalar(probe)}", f"                - {yaml_scalar(ready)}", "                - --checkpoint-loaded", "                - --mode", "                - http_healthz", "                - --launch-config", "                - /opt/v4-lane/config/policy-launch.json", "                - --port", f"                - {yaml_scalar(str(policy_port))}", "            initialDelaySeconds: 5", "            periodSeconds: 5", "            timeoutSeconds: 4", "            failureThreshold: 180"]
-    rows += ["      volumes:", "        - name: data", "          persistentVolumeClaim:", f"            claimName: {yaml_scalar(pvc)}", "        - name: lane-runtime", "          emptyDir: {}", "        - name: dshm", "          emptyDir:", "            medium: Memory", "            sizeLimit: 96Gi", "        - name: launch-config", "          configMap:", f"            name: {yaml_scalar(configmap)}"]
+    rows += [
+        "      volumes:",
+        "        - name: data",
+        "          persistentVolumeClaim:",
+        f"            claimName: {yaml_scalar(pvc)}",
+        "        - name: lane-runtime",
+        "          emptyDir: {}",
+        "        - name: dshm",
+        "          emptyDir:",
+        "            medium: Memory",
+        "            sizeLimit: 96Gi",
+        "        - name: launch-config",
+        "          configMap:",
+        f"            name: {yaml_scalar(configmap)}",
+        "        - name: lane-scripts",
+        "          configMap:",
+        f"            name: {yaml_scalar(scripts_configmap)}",
+        "            defaultMode: 0555",
+    ]
     return "\n".join(rows) + "\n"
 
 
@@ -463,6 +531,7 @@ def render(spec_path: Path, output_root: Path) -> dict[str, str]:
     pvc = token(spec.get("pvc"), "pvc")
     image_pull_secret = token(spec.get("image_pull_secret"), "image_pull_secret")
     entrypoint = absolute(spec.get("entrypoint"), "entrypoint")
+    require(entrypoint == DEFAULT_ENTRYPOINT, f"entrypoint must be the mounted runtime script {DEFAULT_ENTRYPOINT}")
     runtime = spec.get("runtime")
     require(isinstance(runtime, dict), "runtime must be an object")
     for role in ("policy", "simulator"):
@@ -501,9 +570,13 @@ def render(spec_path: Path, output_root: Path) -> dict[str, str]:
         simulator_doc["launch_scope"] = QUALIFICATION_SCOPE
 
     renderer_sha = sha256_file(Path(__file__).resolve())
+    runtime_scripts = load_runtime_scripts(DEFAULT_ROOT / "scripts")
     identity_input = {
         "render_spec_sha256": spec_sha,
         "renderer_sha256": renderer_sha,
+        "runtime_scripts": sorted(
+            (name, sha256_bytes(content)) for name, content in runtime_scripts.items()
+        ),
         "bindings": sorted(
             (
                 role,
@@ -523,6 +596,7 @@ def render(spec_path: Path, output_root: Path) -> dict[str, str]:
     stem = f"v4-{lane}-{attempt}-{immutable_identity_sha[:10]}"
     require(len(stem) <= 48, "lane/attempt make immutable names too long")
     configmap = f"{stem}-launch"
+    scripts_configmap = f"{stem}-scripts"
     policy_job = f"{stem}-policy"
     simulator_job = f"{stem}-sim"
     policy_service = f"{stem}-policy"
@@ -534,27 +608,42 @@ def render(spec_path: Path, output_root: Path) -> dict[str, str]:
     bundle_sha = sha256_bytes((policy_sha + simulator_sha + immutable_identity_sha).encode())
     files = {
         "configmap.yaml": render_configmap(name=configmap, namespace=namespace, common_labels=common_labels, policy_json=policy_json, simulator_json=simulator_json, image_digest=image_digest, spec_sha=spec_sha, renderer_sha=renderer_sha, immutable_identity_sha=immutable_identity_sha, bundle_sha=bundle_sha, kube_context=kube_context),
-        "policy-job.yaml": render_job(role="policy", name=policy_job, namespace=namespace, common_labels=policy_labels, configmap=configmap, image=image, image_digest=image_digest, gpu_product_value=policy_doc["gpu_product"], lane=lane, attempt=attempt, output_parent=output_parent, launch_sha=policy_sha, runtime=runtime["policy"], policy_port=policy_port, pvc=pvc, image_pull_secret=image_pull_secret, entrypoint=entrypoint, prestop_wait_seconds=prestop_wait_seconds, kube_context=kube_context),
+        "scripts-configmap.yaml": render_scripts_configmap(
+            name=scripts_configmap,
+            namespace=namespace,
+            common_labels=common_labels,
+            scripts=runtime_scripts,
+        ),
+        "policy-job.yaml": render_job(role="policy", name=policy_job, namespace=namespace, common_labels=policy_labels, configmap=configmap, scripts_configmap=scripts_configmap, image=image, image_digest=image_digest, gpu_product_value=policy_doc["gpu_product"], lane=lane, attempt=attempt, output_parent=output_parent, launch_sha=policy_sha, runtime=runtime["policy"], policy_port=policy_port, pvc=pvc, image_pull_secret=image_pull_secret, entrypoint=entrypoint, prestop_wait_seconds=prestop_wait_seconds, kube_context=kube_context),
         "policy-service.yaml": render_service(name=policy_service, namespace=namespace, common_labels=policy_labels, port=policy_port),
-        "simulator-job.yaml": render_job(role="simulator", name=simulator_job, namespace=namespace, common_labels=simulator_labels, configmap=configmap, image=image, image_digest=image_digest, gpu_product_value=simulator_doc["gpu_product"], lane=lane, attempt=attempt, output_parent=output_parent, launch_sha=simulator_sha, runtime=runtime["simulator"], policy_port=policy_port, pvc=pvc, image_pull_secret=image_pull_secret, entrypoint=entrypoint, prestop_wait_seconds=prestop_wait_seconds, kube_context=kube_context),
-        "kustomization.yaml": "apiVersion: kustomize.config.k8s.io/v1beta1\nkind: Kustomization\nresources:\n  - configmap.yaml\n  - policy-service.yaml\n  - policy-job.yaml\n  - simulator-job.yaml\n",
+        "simulator-job.yaml": render_job(role="simulator", name=simulator_job, namespace=namespace, common_labels=simulator_labels, configmap=configmap, scripts_configmap=scripts_configmap, image=image, image_digest=image_digest, gpu_product_value=simulator_doc["gpu_product"], lane=lane, attempt=attempt, output_parent=output_parent, launch_sha=simulator_sha, runtime=runtime["simulator"], policy_port=policy_port, pvc=pvc, image_pull_secret=image_pull_secret, entrypoint=entrypoint, prestop_wait_seconds=prestop_wait_seconds, kube_context=kube_context),
+        "kustomization.yaml": "apiVersion: kustomize.config.k8s.io/v1beta1\nkind: Kustomization\nresources:\n  - configmap.yaml\n  - scripts-configmap.yaml\n  - policy-service.yaml\n  - policy-job.yaml\n  - simulator-job.yaml\n",
     }
     canonical_scripts = sorted((DEFAULT_ROOT / "scripts").glob("*.py"))
     require(canonical_scripts, "canonical lane runtime scripts are missing")
     output_root.mkdir(parents=True, exist_ok=True)
     existing = [name for name in files if (output_root / name).exists()]
-    existing += [f"scripts/{path.name}" for path in canonical_scripts if (output_root / "scripts" / path.name).exists()]
     require(not existing, f"refusing to overwrite rendered manifests: {existing}")
     for name, content in files.items():
         path = output_root / name
         with path.open("x", encoding="utf-8") as handle:
             handle.write(content)
     script_output = output_root / "scripts"
-    script_output.mkdir(mode=0o755)
+    script_output.mkdir(mode=0o755, exist_ok=True)
     hashes = {name: sha256_bytes(content.encode()) for name, content in files.items()}
     for source in canonical_scripts:
         destination = script_output / source.name
         content = source.read_bytes()
+        if destination.resolve() == source.resolve():
+            hashes[f"scripts/{source.name}"] = sha256_bytes(content)
+            continue
+        if destination.exists():
+            require(
+                destination.read_bytes() == content,
+                f"refusing to overwrite mismatched canonical script: {source.name}",
+            )
+            hashes[f"scripts/{source.name}"] = sha256_bytes(content)
+            continue
         with destination.open("xb") as handle:
             handle.write(content)
         hashes[f"scripts/{source.name}"] = sha256_bytes(content)

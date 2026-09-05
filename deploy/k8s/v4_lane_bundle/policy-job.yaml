@@ -1,12 +1,12 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: "v4-lane00-attempt01-de3862f718-policy"
+  name: "v4-lane00-attempt01-f66a50d032-policy"
   namespace: "211247-prod"
   labels:
     v4-lane-id: "lane00"
     v4-attempt-id: "attempt01"
-    v4-config-sha: "de3862f718e570c4a63af589e57631f9"
+    v4-config-sha: "f66a50d0323a32d1a25b4c3f42a81345"
     v4-lane-role: "policy"
 spec:
   completions: 1
@@ -17,7 +17,7 @@ spec:
       labels:
         v4-lane-id: "lane00"
         v4-attempt-id: "attempt01"
-        v4-config-sha: "de3862f718e570c4a63af589e57631f9"
+        v4-config-sha: "f66a50d0323a32d1a25b4c3f42a81345"
         v4-lane-role: "policy"
       annotations:
         v4-image-digest: "sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c"
@@ -45,7 +45,7 @@ spec:
           imagePullPolicy: IfNotPresent
           command:
             - "/data/users/ali/vla_wam/envs/openpi-c23745b-pi05-v3-py311/bin/python"
-            - "/data/users/ali/vla_wam/src/steerable/deploy/k8s/v4_lane_bundle/scripts/lane_entrypoint.py"
+            - "/opt/v4-lane/scripts/lane_entrypoint.py"
           resources:
             requests:
               cpu: "16"
@@ -82,7 +82,7 @@ spec:
             - name: IMAGE_DIGEST_EXPECTED
               valueFrom:
                 configMapKeyRef:
-                  name: "v4-lane00-attempt01-de3862f718-launch"
+                  name: "v4-lane00-attempt01-f66a50d032-launch"
                   key: "image.digest"
             - name: LANE_ROLE
               value: "policy"
@@ -97,7 +97,7 @@ spec:
             - name: LANE_LAUNCH_CONFIG
               value: "/opt/v4-lane/config/policy-launch.json"
             - name: LANE_LAUNCH_CONFIG_SHA256
-              value: "5a74814c00bb413965a6ed5689ff490956703cd3e3b43061483d59432b212651"
+              value: "58432f49868c70be3d5a6b1b8cb17d05179ab2a3fbdb6c15cca9aed1394f02b2"
             - name: HOME
               value: "/lane-runtime/home"
             - name: XDG_CACHE_HOME
@@ -117,7 +117,7 @@ spec:
             - name: LD_LIBRARY_PATH
               value: "/data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu"
             - name: PYTHONPATH
-              value: "/data/users/ali/vla_wam/external/openpi-pi05-v3-c23745b:/data/users/ali/vla_wam/src/steerable/deploy/k8s/v4_lane_bundle/scripts"
+              value: "/data/users/ali/vla_wam/external/openpi-pi05-v3-c23745b:/opt/v4-lane/scripts"
             - name: PYTHON_BIN
               value: "/data/users/ali/vla_wam/envs/openpi-c23745b-pi05-v3-py311/bin/python"
             - name: FFMPEG_BIN
@@ -148,18 +148,21 @@ spec:
             - name: launch-config
               mountPath: /opt/v4-lane/config
               readOnly: true
+            - name: lane-scripts
+              mountPath: "/opt/v4-lane/scripts"
+              readOnly: true
           lifecycle:
             preStop:
               exec:
                 command:
                   - "/data/users/ali/vla_wam/envs/openpi-c23745b-pi05-v3-py311/bin/python"
-                  - "/data/users/ali/vla_wam/src/steerable/deploy/k8s/v4_lane_bundle/scripts/lane_entrypoint.py"
+                  - "/opt/v4-lane/scripts/lane_entrypoint.py"
                   - --prestop
           readinessProbe:
             exec:
               command:
                 - "/data/users/ali/vla_wam/envs/openpi-c23745b-pi05-v3-py311/bin/python"
-                - "/data/users/ali/vla_wam/src/steerable/deploy/k8s/v4_lane_bundle/scripts/check_policy_ready.py"
+                - "/opt/v4-lane/scripts/check_policy_ready.py"
                 - --checkpoint-loaded
                 - --mode
                 - http_healthz
@@ -183,4 +186,8 @@ spec:
             sizeLimit: 96Gi
         - name: launch-config
           configMap:
-            name: "v4-lane00-attempt01-de3862f718-launch"
+            name: "v4-lane00-attempt01-f66a50d032-launch"
+        - name: lane-scripts
+          configMap:
+            name: "v4-lane00-attempt01-f66a50d032-scripts"
+            defaultMode: 0555

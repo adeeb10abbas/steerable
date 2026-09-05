@@ -1,12 +1,12 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: "v4-lane00-attempt01-de3862f718-sim"
+  name: "v4-lane00-attempt01-f66a50d032-sim"
   namespace: "211247-prod"
   labels:
     v4-lane-id: "lane00"
     v4-attempt-id: "attempt01"
-    v4-config-sha: "de3862f718e570c4a63af589e57631f9"
+    v4-config-sha: "f66a50d0323a32d1a25b4c3f42a81345"
     v4-lane-role: "simulator"
 spec:
   completions: 1
@@ -17,7 +17,7 @@ spec:
       labels:
         v4-lane-id: "lane00"
         v4-attempt-id: "attempt01"
-        v4-config-sha: "de3862f718e570c4a63af589e57631f9"
+        v4-config-sha: "f66a50d0323a32d1a25b4c3f42a81345"
         v4-lane-role: "simulator"
       annotations:
         v4-image-digest: "sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c"
@@ -45,7 +45,7 @@ spec:
           imagePullPolicy: IfNotPresent
           command:
             - "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python"
-            - "/data/users/ali/vla_wam/src/steerable/deploy/k8s/v4_lane_bundle/scripts/lane_entrypoint.py"
+            - "/opt/v4-lane/scripts/lane_entrypoint.py"
           resources:
             requests:
               cpu: "16"
@@ -82,7 +82,7 @@ spec:
             - name: IMAGE_DIGEST_EXPECTED
               valueFrom:
                 configMapKeyRef:
-                  name: "v4-lane00-attempt01-de3862f718-launch"
+                  name: "v4-lane00-attempt01-f66a50d032-launch"
                   key: "image.digest"
             - name: LANE_ROLE
               value: "simulator"
@@ -97,7 +97,7 @@ spec:
             - name: LANE_LAUNCH_CONFIG
               value: "/opt/v4-lane/config/simulator-launch.json"
             - name: LANE_LAUNCH_CONFIG_SHA256
-              value: "2fc2c2d0a2dcbeb3266de4280b6710c98ce1b2369d4eb3e326b0765118d39b7c"
+              value: "9c0bc967bbd74ef6c93e20a42d31b71c1a1ec98f6759317c7dc7a0fc926510aa"
             - name: HOME
               value: "/lane-runtime/home"
             - name: XDG_CACHE_HOME
@@ -117,7 +117,7 @@ spec:
             - name: LD_LIBRARY_PATH
               value: "/data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu"
             - name: PYTHONPATH
-              value: "/data/users/ali/vla_wam/src/steerable:/data/users/ali/vla_wam/external/RoboLab-11142d4:/data/users/ali/RoboTwin/envs/curobo/src:/data/users/ali/vla_wam/src/steerable/deploy/k8s/v4_lane_bundle/scripts"
+              value: "/data/users/ali/vla_wam/src/steerable:/data/users/ali/vla_wam/external/RoboLab-11142d4:/data/users/ali/RoboTwin/envs/curobo/src:/opt/v4-lane/scripts"
             - name: PYTHON_BIN
               value: "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python"
             - name: FFMPEG_BIN
@@ -146,12 +146,15 @@ spec:
             - name: launch-config
               mountPath: /opt/v4-lane/config
               readOnly: true
+            - name: lane-scripts
+              mountPath: "/opt/v4-lane/scripts"
+              readOnly: true
           lifecycle:
             preStop:
               exec:
                 command:
                   - "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python"
-                  - "/data/users/ali/vla_wam/src/steerable/deploy/k8s/v4_lane_bundle/scripts/lane_entrypoint.py"
+                  - "/opt/v4-lane/scripts/lane_entrypoint.py"
                   - --prestop
       volumes:
         - name: data
@@ -165,4 +168,8 @@ spec:
             sizeLimit: 96Gi
         - name: launch-config
           configMap:
-            name: "v4-lane00-attempt01-de3862f718-launch"
+            name: "v4-lane00-attempt01-f66a50d032-launch"
+        - name: lane-scripts
+          configMap:
+            name: "v4-lane00-attempt01-f66a50d032-scripts"
+            defaultMode: 0555

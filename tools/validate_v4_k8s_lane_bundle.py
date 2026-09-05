@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 """Fail-closed validation for the prospective V4 Kubernetes lane bundle.
 
-The bundle deliberately has a small, inspectable surface: one immutable
-ConfigMap, one policy Job, one simulator Job, a kustomization, and startup
-scripts.  Kubernetes' own client-side decoder is used instead of adding a
-second YAML implementation to the study environment.
+The bundle deliberately has a small, inspectable surface: one immutable launch
+ConfigMap, one immutable runtime-scripts ConfigMap, one policy Job, one simulator
+Job, a kustomization, and startup scripts embedded in-cluster at
+`/opt/v4-lane/scripts`.  Kubernetes' own client-side decoder is used instead of
+adding a second YAML implementation to the study environment.
 """
 from __future__ import annotations
 
 import argparse
 import ast
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -18,13 +20,14 @@ import shutil
 import subprocess
 import sys
 import tempfile
-from typing import Any, Iterable
+from typing import Any, Iterable, Mapping
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_ROOT = REPO_ROOT / "deploy/k8s/v4_lane_bundle"
 REQUIRED_FILES = (
     "configmap.yaml",
+    "scripts-configmap.yaml",
     "policy-job.yaml",
     "policy-service.yaml",
     "simulator-job.yaml",
@@ -59,6 +62,14 @@ NOOP_RUNNERS = frozenset({"/usr/bin/true", "/bin/true"})
 V4_RUNNER_MARKER = "online_correction_v4"
 REQUIRED_IDENTITY_LABELS = ("v4-lane-id", "v4-attempt-id", "v4-config-sha")
 POLICY_LAUNCH_CONFIG_MOUNT = "/opt/v4-lane/config/policy-launch.json"
+SCRIPTS_MOUNT = "/opt/v4-lane/scripts"
+DEFAULT_ENTRYPOINT = f"{SCRIPTS_MOUNT}/lane_entrypoint.py"
+RUNTIME_SCRIPT_NAMES = (
+    "lane_entrypoint.py",
+    "startup_preflight.py",
+    "check_policy_ready.py",
+    "isaac_render_probe.py",
+)
 
 
 class LaneBundleValidationError(ValueError):
@@ -295,6 +306,7 @@ def _label_identity(raw: Mapping[str, Any], label: str) -> dict[str, str]:
 def _validate_unique_lane_identity(
     *,
     configmap: dict[str, Any],
+    scripts_configmap: dict[str, Any],
     policy_job: dict[str, Any],
     simulator_job: dict[str, Any],
     service: dict[str, Any],
@@ -302,6 +314,8 @@ def _validate_unique_lane_identity(
     service_selector: Mapping[str, str],
 ) -> dict[str, str]:
     expected = _label_identity(configmap, "ConfigMap")
+    scripts_labels = _label_identity(scripts_configmap, "scripts ConfigMap")
+    _require(scripts_labels == expected, "scripts ConfigMap labels differ from launch ConfigMap lane/attempt/config identity")
     for obj, name in ((policy_job, "policy Job"), (simulator_job, "simulator Job"), (service, "policy Service")):
         labels = _label_identity(obj, name)
         _require(labels == expected, f"{name} labels differ from ConfigMap lane/attempt/config identity")
@@ -313,6 +327,119 @@ def _validate_unique_lane_identity(
         "policy Job name must embed lane and attempt identity",
     )
     return expected
+
+
+def _validate_scripts_configmap(scripts_configmap: dict[str, Any]) -> tuple[str, dict[str, str]]:
+    _require(scripts_configmap.get("apiVersion") == "v1", "scripts ConfigMap apiVersion must be v1")
+    _require(scripts_configmap.get("kind") == "ConfigMap", "scripts-configmap.yaml must be a ConfigMap")
+    _require(scripts_configmap.get("immutable") is True, "scripts ConfigMap must set immutable: true")
+    metadata = _mapping(scripts_configmap.get("metadata"), "scripts ConfigMap metadata")
+    name = metadata.get("name")
+    _require(isinstance(name, str) and name, "scripts ConfigMap metadata.name is missing")
+    raw_data = _mapping(scripts_configmap.get("data"), "scripts ConfigMap data")
+    data: dict[str, str] = {}
+    for key, value in raw_data.items():
+        _require(isinstance(key, str) and isinstance(value, str), "scripts ConfigMap data must be strings")
+        data[key] = value
+    _require(set(data) == set(RUNTIME_SCRIPT_NAMES), "scripts ConfigMap must embed the exact canonical runtime script set")
+    return name, data
+
+
+def _validate_scripts_mount(
+    *,
+    role: str,
+    pod_spec: dict[str, Any],
+    container: dict[str, Any],
+    scripts_configmap_name: str,
+    command_paths: Iterable[str],
+) -> None:
+    volumes = _list(pod_spec.get("volumes"), f"{role} volumes")
+    scripts_volume = None
+    for raw in volumes:
+        volume = _mapping(raw, f"{role} volume")
+        if volume.get("name") != "lane-scripts":
+            continue
+        ref = _mapping(volume.get("configMap"), "lane-scripts configMap")
+        _require(ref.get("name") == scripts_configmap_name, f"{role} lane-scripts volume must bind the immutable scripts ConfigMap")
+        default_mode = ref.get("defaultMode")
+        _require(default_mode in (493, "493", 0o555), f"{role} lane-scripts volume must set defaultMode 0555")
+        scripts_volume = volume
+    _require(scripts_volume is not None, f"{role} Job must mount immutable runtime scripts from ConfigMap")
+
+    mounts = _list(container.get("volumeMounts"), f"{role} volumeMounts")
+    scripts_mount = None
+    for raw in mounts:
+        mount = _mapping(raw, f"{role} volumeMount")
+        if mount.get("name") != "lane-scripts":
+            continue
+        _require(mount.get("mountPath") == SCRIPTS_MOUNT, f"{role} lane-scripts mountPath must be {SCRIPTS_MOUNT}")
+        _require(mount.get("readOnly") is True, f"{role} lane-scripts mount must be readOnly")
+        scripts_mount = mount
+    _require(scripts_mount is not None, f"{role} Job must mount lane-scripts at {SCRIPTS_MOUNT}")
+
+    for path in command_paths:
+        if not isinstance(path, str) or not path.startswith(f"{SCRIPTS_MOUNT}/"):
+            continue
+        filename = Path(path).name
+        _require(filename in RUNTIME_SCRIPT_NAMES, f"{role} command references non-canonical runtime script {path}")
+
+
+def _validate_scripts_content_matches_bindings(
+    scripts_data: Mapping[str, str],
+    documents: Mapping[str, dict[str, Any]],
+) -> None:
+    mounted_script_paths = {
+        str(_mapping(raw, "file binding")["path"])
+        for document in documents.values()
+        for raw in _list(document.get("file_bindings"), "file_bindings")
+        if str(_mapping(raw, "file binding")["path"]).startswith(f"{SCRIPTS_MOUNT}/")
+    }
+    _require(mounted_script_paths, "launch JSON must bind runtime scripts under the mounted scripts directory")
+    for path in mounted_script_paths:
+        filename = Path(path).name
+        _require(filename in scripts_data, f"scripts ConfigMap lacks embedded runtime script {filename}")
+        payload = scripts_data[filename].encode("utf-8")
+        digest = hashlib.sha256(payload).hexdigest()
+        binding_rows = [
+            _mapping(raw, "file binding")
+            for document in documents.values()
+            for raw in _list(document.get("file_bindings"), "file_bindings")
+            if str(_mapping(raw, "file binding")["path"]) == path
+        ]
+        _require(binding_rows, f"launch JSON lacks file_binding for mounted runtime script {path}")
+        for binding in binding_rows:
+            _require(
+                str(binding.get("sha256")) == digest,
+                f"scripts ConfigMap bytes for {filename} differ from launch JSON file_binding sha256",
+            )
+            _require(
+                int(binding.get("bytes")) == len(payload),
+                f"scripts ConfigMap bytes for {filename} differ from launch JSON file_binding byte count",
+            )
+
+
+def _collect_command_script_paths(container: Mapping[str, Any]) -> list[str]:
+    paths: list[str] = []
+    for part in _list(container.get("command"), "command") + _list(container.get("args") or [], "args"):
+        if isinstance(part, str) and part.startswith(f"{SCRIPTS_MOUNT}/"):
+            paths.append(part)
+    lifecycle = container.get("lifecycle")
+    if isinstance(lifecycle, dict):
+        pre_stop = lifecycle.get("preStop")
+        if isinstance(pre_stop, dict):
+            exec_hook = pre_stop.get("exec")
+            if isinstance(exec_hook, dict):
+                for part in _list(exec_hook.get("command"), "preStop command"):
+                    if isinstance(part, str) and part.startswith(f"{SCRIPTS_MOUNT}/"):
+                        paths.append(part)
+    readiness = container.get("readinessProbe")
+    if isinstance(readiness, dict):
+        exec_probe = readiness.get("exec")
+        if isinstance(exec_probe, dict):
+            for part in _list(exec_probe.get("command"), "readiness command"):
+                if isinstance(part, str) and part.startswith(f"{SCRIPTS_MOUNT}/"):
+                    paths.append(part)
+    return paths
 
 
 def _validate_policy_port_isolation(
@@ -415,6 +542,7 @@ def _validate_job(
     *,
     role: str,
     configmap_name: str,
+    scripts_configmap_name: str,
     bundle_source: str,
     launch_document: dict[str, Any],
 ) -> dict[str, Any]:
@@ -477,9 +605,10 @@ def _validate_job(
     _require("lane_entrypoint.py" in command_text, f"{role} must start through the audited lane_entrypoint.py")
     entrypoints = [part for part in command if isinstance(part, str) and Path(part).name == "lane_entrypoint.py"]
     _require(
-        len(entrypoints) == 1 and _is_absolute_path(entrypoints[0]),
-        f"{role} command must contain one exact absolute lane_entrypoint.py path",
+        len(entrypoints) == 1 and entrypoints[0] == DEFAULT_ENTRYPOINT,
+        f"{role} command must invoke the mounted runtime entrypoint {DEFAULT_ENTRYPOINT}",
     )
+    command_script_paths = _collect_command_script_paths(container)
 
     lifecycle = _mapping(container.get("lifecycle"), f"{role} lifecycle")
     pre_stop = _mapping(lifecycle.get("preStop"), f"{role} lifecycle.preStop")
@@ -562,7 +691,15 @@ def _validate_job(
 
     references = _configmap_references(pod_spec)
     _require(configmap_name in references, f"{role} Job does not reference immutable launch ConfigMap")
+    _require(scripts_configmap_name in references, f"{role} Job does not reference immutable scripts ConfigMap")
     _require(not pod_spec.get("initContainers"), f"{role} preflight must run synchronously in the experiment container")
+    _validate_scripts_mount(
+        role=role,
+        pod_spec=pod_spec,
+        container=container,
+        scripts_configmap_name=scripts_configmap_name,
+        command_paths=command_script_paths,
+    )
 
     if role == "policy":
         readiness = _mapping(container.get("readinessProbe"), "policy readinessProbe")
@@ -842,13 +979,30 @@ def validate(
     _require(not BACKGROUND_RE.search(source), "bundle contains kubectl exec or a background/stale-process launcher")
 
     configmap = _decode_with_kubectl(root / "configmap.yaml")
+    scripts_configmap_obj = _decode_with_kubectl(root / "scripts-configmap.yaml")
     policy = _decode_with_kubectl(root / "policy-job.yaml")
     service = _decode_with_kubectl(root / "policy-service.yaml")
     simulator = _decode_with_kubectl(root / "simulator-job.yaml")
     configmap_name, config_data, launch_documents = _validate_configmap(configmap)
+    scripts_configmap_name, scripts_data = _validate_scripts_configmap(scripts_configmap_obj)
+    _validate_scripts_content_matches_bindings(scripts_data, launch_documents)
     jobs = {
-        "policy": _validate_job(policy, role="policy", configmap_name=configmap_name, bundle_source=source, launch_document=launch_documents["policy"]),
-        "simulator": _validate_job(simulator, role="simulator", configmap_name=configmap_name, bundle_source=source, launch_document=launch_documents["simulator"]),
+        "policy": _validate_job(
+            policy,
+            role="policy",
+            configmap_name=configmap_name,
+            scripts_configmap_name=scripts_configmap_name,
+            bundle_source=source,
+            launch_document=launch_documents["policy"],
+        ),
+        "simulator": _validate_job(
+            simulator,
+            role="simulator",
+            configmap_name=configmap_name,
+            scripts_configmap_name=scripts_configmap_name,
+            bundle_source=source,
+            launch_document=launch_documents["simulator"],
+        ),
     }
     _require(jobs["policy"]["name"] != jobs["simulator"]["name"], "policy and simulator Job names collide")
     image_config_values = [value for key, value in config_data.items() if "image" in key.lower() and "digest" in key.lower()]
@@ -858,6 +1012,7 @@ def validate(
     service_summary = _validate_service(service, jobs["policy"])
     lane_identity = _validate_unique_lane_identity(
         configmap=configmap,
+        scripts_configmap=scripts_configmap_obj,
         policy_job=policy,
         simulator_job=simulator,
         service=service,
@@ -897,6 +1052,7 @@ def validate(
         "status": "valid_v4_k8s_lane_bundle",
         "root": str(root),
         "configmap": configmap_name,
+        "scripts_configmap": scripts_configmap_name,
         "config_keys": sorted(config_data),
         "launch_roles": sorted(launch_documents),
         "jobs": jobs,

@@ -34,7 +34,7 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--gpu-uuid")
     parser.add_argument("--pod")
     parser.add_argument("--pod-uid")
-    parser.add_argument("--native-control-dt-s", type=float, default=0.05)
+    parser.add_argument("--native-control-dt-s", type=float, required=True)
     return parser
 
 

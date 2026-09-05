@@ -120,6 +120,15 @@ exit-1 Job and raw evidence are recorded in
 `artifacts/online_correction_v4/qualification/20260905_horizontal_g2_smoke_g2q20260905c.json`;
 it likewise contains no passing G2 seed or behavioral activity.
 
+Smoke attempt `g2q20260905d` then reached native-period attestation and measured
+the pinned horizontal RoboLab task at `0.06666666666666667` s (1/15 s), not the
+provisional `0.05` s in the render spec. The exact-equality gate rejected the
+attempt as intended. This model-blind post-result calibration is disclosed in
+`artifacts/online_correction_v4/qualification/20260905_horizontal_g2_smoke_g2q20260905d.json`.
+The live G2 CLI now requires an explicit native period, and the next fresh
+attempt binds the measured value; no tolerance was relaxed and no G2 pass is
+claimed from the calibration attempt.
+
 After inspecting the montage,
 `tools/record_v4_horizontal_g2_axis_review.py` records the four explicit
 orientation assertions. `tools/compile_v4_horizontal_g2_aggregate.py` then
@@ -195,6 +204,7 @@ python3 tools/run_v4_horizontal_g2_seed.py \
   --output-dir "$WRITE_ONCE_OUTPUT" \
   --expected-study-commit "$EXPECTED_STUDY_COMMIT" \
   --expected-driver-version "$EXPECTED_DRIVER_VERSION" \
+  --native-control-dt-s "$NATIVE_CONTROL_DT_S" \
   --gpu-uuid "$GPU_UUID" \
   --pod "$POD_NAME" \
   --pod-uid "$POD_UID"

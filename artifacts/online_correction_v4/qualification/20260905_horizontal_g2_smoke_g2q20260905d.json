@@ -1,0 +1,52 @@
+{
+  "schema_version": "v4-horizontal-g2-attempt-disposition-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "horizontal",
+  "attempt_id": "g2q20260905d",
+  "compiled_at_utc": "2026-09-05T17:00:10Z",
+  "qualification_scope": "infrastructure_only_no_scientific_behavior",
+  "status": "infrastructure_invalid_expected_period_mismatch",
+  "authorizes_behavioral_inference": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "created_at_utc": "2026-09-05T16:57:41Z",
+  "environment_seed": 2100000000,
+  "passing_seed_receipt_count": 0,
+  "infrastructure_failure_marker_count": 1,
+  "pod_outcome": {
+    "phase": "Failed",
+    "container_exit_code": 1,
+    "marker_check_worked": true
+  },
+  "model_blind_native_period_observation": {
+    "provisional_expected_native_control_dt_s": 0.05,
+    "measured_native_control_dt_s": 0.06666666666666667,
+    "exact_interpretation": "1/15 second",
+    "accepted_in_attempt": false
+  },
+  "root_cause": {
+    "study_commit": "23d01b3e6b3e368b40dbb937fe6e076db27b8ef1",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "error_type": "ResetAttestationError",
+    "error": "measured native dt 0.06666666666666667 != locked native dt 0.05",
+    "trace_location": "experiments/online_correction_v4/droid_reset_verify.py:verify_measured_native_dt"
+  },
+  "finding": "The smoke run passed environment creation, CUDA world-value conversion, repeated reset, and model-blind settling far enough to measure the pinned RoboLab task's native control period. The provisional 0.05-second render-spec value was wrong; V4 runtime manifests had intentionally left this field unresolved.",
+  "remediation": "Disclose this post-result model-blind measurement, require the value explicitly at the G2 CLI boundary, and bind the next fresh attempt to 0.06666666666666667 without changing the exact-equality attestation.",
+  "preservation": {
+    "raw_root": "file:///data/users/ali/vla_wam/raw",
+    "attempt_snapshot_root": "file:///data/users/ali/vla_wam/raw/v4/g2-horizontal/attempt-g2q20260905d-infrastructure-invalid",
+    "episode_failure_marker": "file:///data/users/ali/vla_wam/raw/f239bf6c-2355-4831-b57c-b28852b0848c/lane-g2h-s000/attempt-g2q20260905d/episodes/infrastructure_failure.json",
+    "files_sha256": {
+      "bundle-manifest.json": "a58a415d838618ddb5527ee7f4c63eb0c8cdd6283af0edf5175d883b52e1d391",
+      "combined-logs.txt": "bbca2b9511dc8794f119701f60d8bb5c23afb5afb3d8ce3307e61d4428b6a0ee",
+      "objects.json": "1a5dc06f24591dfd56f64e69c5f60e70ebbac1e72c2e9e5aacd4ac1397404d59",
+      "render-report.json": "a795cec970c0d9c4878d45d632779416ba581861935e48fc3ccb92d4ac07f366",
+      "validation-report.json": "8fb3bbf3adf13620ca39e6ce52131038c9e5ccbd8d4d0a7b87e718e39fa0be0e"
+    },
+    "job_and_configmap_objects_deleted_after_preservation": true,
+    "raw_episode_output_retained": true
+  },
+  "disposition": "No G2 seed passed. This is model-blind infrastructure calibration evidence only and must not be counted as behavioral or G2 failure."
+}

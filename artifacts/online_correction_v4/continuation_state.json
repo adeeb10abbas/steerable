@@ -12,7 +12,7 @@
     "launch_matrix.json": "8276675d06e2684bfc688dd5c0ebe355aef90c0095b771eb26149a7a5baa049d",
     "motion_manifest.json": "c5a6b3f637b009fadbb1615a79863c76a096d5a33f9a39f36150707269c3df67",
     "prompt_manifest.json": "20e464b06576fd7e860ec86d35d9f148673066874e3441ba1483f4b81fdf59b3",
-    "protocol.json": "6c4e1b66da2f22951db5d1a7b721c28428532b06d7158426497accda35ccb048",
+    "protocol.json": "110fa910bdf7e2a1e34ba2e0b05685c42ed6d61bcfd5744be6270923ccaf473e",
     "queue.jsonl": "5852cff36cc4c134cb4ebb9e1509dae400020e9767de69ff030064ba87010d43",
     "queue_manifest.json": "6cb7f8edc3cde9da1e4c3674589e17b0dadcbcc90375856b8870d3915e1a7080",
     "runtime_manifest.json": "e48684453f7e3c19934f6f1fde13e0d5ec4021b6a1274050a7ee8e9307e9a305",
@@ -42,6 +42,7 @@
     "artifacts/online_correction_v4/qualification/20260905_horizontal_g2_attempt_g2q20260905a.json",
     "artifacts/online_correction_v4/qualification/20260905_horizontal_g2_smoke_g2q20260905b.json",
     "artifacts/online_correction_v4/qualification/20260905_horizontal_g2_smoke_g2q20260905c.json",
+    "artifacts/online_correction_v4/qualification/20260905_horizontal_g2_smoke_g2q20260905d.json",
     "artifacts/online_correction_v4/qualification/20260905_pi05_lane_qualification.json",
     "artifacts/online_correction_v4/setup/horizontal_g3_plan.candidate.json",
     "artifacts/online_correction_v4/setup/horizontal_reset_registry.candidate.json"
@@ -50,7 +51,7 @@
   "completed_groups": [],
   "design_source_commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
   "frozen_queue_sha256": "5852cff36cc4c134cb4ebb9e1509dae400020e9767de69ff030064ba87010d43",
-  "generation_parent_commit": "c9c8904ec3e9feb1598dd51284c597e7d1ca1463",
+  "generation_parent_commit": "9c50bc928c197fa47d53ab1057b8c9df7d0aab9e",
   "generation_parent_commit_meaning": "Git HEAD when freeze builder last ran; not the commit containing freeze artifacts.",
   "git_receipt": {
     "meaning": "Record freeze_commit after the commit containing artifacts/online_correction_v4/ lands.",
@@ -145,6 +146,18 @@
       "qualification_scope": "infrastructure_only_no_scientific_behavior",
       "sha256": "62c7008f0d31e728eb1a163416fc8c9b823cfdd013292d34c9106c8deec9eb8e",
       "status": "infrastructure_invalid"
+    },
+    {
+      "attempt_id": "g2q20260905d",
+      "behavioral_episode_count": 0,
+      "compiled_at_utc": "2026-09-05T17:00:10Z",
+      "completed_lane_status": null,
+      "gate": "G2",
+      "partial_lane_status": null,
+      "path": "artifacts/online_correction_v4/qualification/20260905_horizontal_g2_smoke_g2q20260905d.json",
+      "qualification_scope": "infrastructure_only_no_scientific_behavior",
+      "sha256": "e39045687ae0e0b111962d923e2f113b542fc925208467730d90c1684031cb8f",
+      "status": "infrastructure_invalid_expected_period_mismatch"
     },
     {
       "attempt_id": null,

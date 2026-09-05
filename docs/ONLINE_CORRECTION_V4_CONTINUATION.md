@@ -129,6 +129,20 @@ The live G2 CLI now requires an explicit native period, and the next fresh
 attempt binds the measured value; no tolerance was relaxed and no G2 pass is
 claimed from the calibration attempt.
 
+The complete registered attempt `g2q20260905e` then ran all 128 model-blind
+seeds on 12 A40 nodes with zero model requests. Exactly 64 seeds wrote passing
+reset/camera/numeric-frame receipts and 64 failed the setup gate. Of the
+failures, 62 exceeded the provisional 3 mm settled-position tolerance only at
+the cube (observed rounded range 3.0–3.9 mm), one banana and one cube failed
+the released stability threshold. Therefore G2 failed and remains incomplete:
+do not record the visual-axis review as completing G2, do not execute G3, and
+do not release the reset registry or policy inference. All raw seed outputs,
+Job/Pod objects, logs, and an outcome index were retained before cluster
+cleanup; compact hashes and disposition are in
+`artifacts/online_correction_v4/qualification/20260905_horizontal_g2_wave_g2q20260905e.json`.
+The 64 passing seed receipts remain valid model-blind setup evidence, while
+none of the 64 failed seeds are behavioral failures.
+
 After inspecting the montage,
 `tools/record_v4_horizontal_g2_axis_review.py` records the four explicit
 orientation assertions. `tools/compile_v4_horizontal_g2_aggregate.py` then
@@ -161,29 +175,14 @@ Every queue row is a **registered new episode**. `reuse_episode_ids` are compari
 
 ## Exact next commands
 
+No fresh cluster launch is authorized from the current artifacts. First freeze
+a disclosed post-result model-blind amendment for the failed reset/settling
+gate; do not rerun the unchanged 3 mm candidate.
+
 ```bash
 python3 tools/online_correction_v4.py validate
-python3 tools/build_v4_horizontal_reset_registry.py
-python3 tools/build_v4_horizontal_g3_plan.py
-export V4_G2_RENDER_ROOT=/tmp/v4-g2-rendered
-python3 tools/render_v4_horizontal_g2_k8s_jobs.py \
-  --spec deploy/k8s/v4_lane_bundle/g2-horizontal-spec.example.json \
-  --output-root "$V4_G2_RENDER_ROOT"
-# Set V4_G2_BUNDLE_ROOT to the bundle_root printed above.
-python3 tools/validate_v4_horizontal_g2_k8s_jobs.py \
-  --root "$V4_G2_BUNDLE_ROOT"
-kubectl --context prod-dcwi-warrenq1-vmkub007 \
-  create -k "$V4_G2_BUNDLE_ROOT"
 python3 tools/build_online_correction_v4_freeze.py --out artifacts/online_correction_v4
 python3 tools/validate_online_correction_v4.py
-python3 tools/compile_online_correction_v4_ledger.py \
-  --manifest artifacts/online_correction_v4/queue.jsonl \
-  --attempts-root "$V4_ATTEMPTS_ROOT" \
-  --out artifacts/online_correction_v4/compiled_ledger
-python3 tools/analyze_online_correction_v4.py \
-  --manifest artifacts/online_correction_v4/queue.jsonl \
-  --results artifacts/online_correction_v4/compiled_ledger/accepted_ledger.jsonl \
-  --out artifacts/online_correction_v4/analysis_tables
 python3 -m unittest discover -s tests -p 'test_online_correction_v4*.py'
 python3 tools/validate_vla_wam_v2_protocol.py
 python3 tools/validate_vla_wam_v3_protocol.py

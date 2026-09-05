@@ -960,12 +960,34 @@ def build_continuation_state(
 ) -> dict[str, Any]:
     qualification_paths = [row["path"] for row in qualification_receipts]
     candidate_paths = [row["path"] for row in model_blind_candidates]
-    cluster_blocker = (
-        "Additional model-blind and behavioral qualification gates remain pending; "
-        "completed infrastructure-only strata are listed in qualification_receipts."
-        if qualification_receipts
-        else "Runtime lock, geometry receipts, checkpoint identity, and cluster qualification remain pending."
+    g2_setup_failed = any(
+        row.get("gate") == "G2"
+        and row.get("status") == "failed_model_blind_setup_gate"
+        for row in qualification_receipts
     )
+    if g2_setup_failed:
+        cluster_blocker = (
+            "BLOCKED_SETUP: complete horizontal G2 attempt g2q20260905e failed "
+            "with 64/128 passing seeds; freeze a disclosed model-blind reset/"
+            "settling amendment before any fresh G2 attempt. G3 and policy inference "
+            "remain prohibited."
+        )
+    elif qualification_receipts:
+        cluster_blocker = (
+            "Additional model-blind and behavioral qualification gates remain pending; "
+            "completed infrastructure-only strata are listed in qualification_receipts."
+        )
+    else:
+        cluster_blocker = (
+            "Runtime lock, geometry receipts, checkpoint identity, and cluster "
+            "qualification remain pending."
+        )
+    g2_setup_commands = [] if g2_setup_failed else [
+        "python3 tools/build_v4_horizontal_reset_registry.py",
+        "python3 tools/build_v4_horizontal_g3_plan.py",
+        "python3 tools/render_v4_horizontal_g2_k8s_jobs.py --spec deploy/k8s/v4_lane_bundle/g2-horizontal-spec.example.json --output-root \"$V4_G2_RENDER_ROOT\"",
+        "python3 tools/validate_v4_horizontal_g2_k8s_jobs.py --root \"$V4_G2_BUNDLE_ROOT\"",
+    ]
     return {
         "schema_version": 1,
         "campaign_id": config["campaign_id"],
@@ -1018,10 +1040,7 @@ def build_continuation_state(
         ],
         "next_commands": [
             "python3 tools/online_correction_v4.py validate",
-            "python3 tools/build_v4_horizontal_reset_registry.py",
-            "python3 tools/build_v4_horizontal_g3_plan.py",
-            "python3 tools/render_v4_horizontal_g2_k8s_jobs.py --spec deploy/k8s/v4_lane_bundle/g2-horizontal-spec.example.json --output-root \"$V4_G2_RENDER_ROOT\"",
-            "python3 tools/validate_v4_horizontal_g2_k8s_jobs.py --root \"$V4_G2_BUNDLE_ROOT\"",
+        ] + g2_setup_commands + [
             "python3 tools/build_online_correction_v4_freeze.py --out artifacts/online_correction_v4",
             "python3 tools/validate_online_correction_v4.py",
             "python3 -m unittest discover -s tests -p 'test_online_correction_v4*.py'",

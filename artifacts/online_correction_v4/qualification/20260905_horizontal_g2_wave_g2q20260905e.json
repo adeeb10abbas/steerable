@@ -1,0 +1,83 @@
+{
+  "schema_version": "v4-horizontal-g2-wave-disposition-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "horizontal",
+  "attempt_id": "g2q20260905e",
+  "compiled_at_utc": "2026-09-05T17:17:03Z",
+  "qualification_scope": "infrastructure_only_no_scientific_behavior",
+  "status": "failed_model_blind_setup_gate",
+  "g2_complete": false,
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "started_at_utc": "2026-09-05T17:01:49Z",
+  "completed_at_utc": "2026-09-05T17:17:01Z",
+  "registered_seed_count": 128,
+  "observed_seed_count": 128,
+  "passing_seed_receipt_count": 64,
+  "failure_marker_count": 64,
+  "outcomes": {
+    "passed_reset_camera_and_numeric_frame_pending_axis_visual_review": 64,
+    "registry_position_tolerance_failure": {
+      "count": 62,
+      "provisional_position_tolerance_m": 0.003,
+      "observed_rubiks_cube_error_min_m": 0.003,
+      "observed_rubiks_cube_error_max_m": 0.0039
+    },
+    "released_stability_threshold_failure": {
+      "count": 2,
+      "by_object": {
+        "banana": 1,
+        "rubiks_cube": 1
+      }
+    }
+  },
+  "runtime_identity": {
+    "study_commit": "a7a6d377f175e5896cccd46293ce987db638a9cd",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "driver_version": "580.95.05",
+    "gpu_product": "NVIDIA A40",
+    "native_control_dt_s": 0.06666666666666667,
+    "reset_registry_sha256": "0c5fd649739cd19b74ec1874f306cf345a70fb110047294204295f9f53ced328",
+    "bundle_manifest_sha256": "07cd2f2cd7261ee5aa1df689c0bd4bd4fba8abbcea681376f674e56daba228dd"
+  },
+  "resource_use": {
+    "pod_count": 128,
+    "node_count": 12,
+    "pods_by_node": {
+      "dcwipphhgc184.edc.nam.gm.com": 14,
+      "dcwipphhgc187.edc.nam.gm.com": 13,
+      "dcwipphhgc189.edc.nam.gm.com": 13,
+      "dcwipphhgc190.edc.nam.gm.com": 15,
+      "dcwipphhgc192.edc.nam.gm.com": 6,
+      "dcwipphhgc194.edc.nam.gm.com": 13,
+      "dcwipphhgc195.edc.nam.gm.com": 7,
+      "dcwipphhgc197.edc.nam.gm.com": 14,
+      "dcwipphhgc198.edc.nam.gm.com": 6,
+      "dcwipphhgc199.edc.nam.gm.com": 13,
+      "dcwipphhgc200.edc.nam.gm.com": 7,
+      "dcwipphhgc201.edc.nam.gm.com": 7
+    }
+  },
+  "preservation": {
+    "raw_root": "file:///data/users/ali/vla_wam/raw",
+    "attempt_snapshot_root": "file:///data/users/ali/vla_wam/raw/v4/g2-horizontal/attempt-g2q20260905e-completed-wave",
+    "seed_outcome_index": {
+      "path": "file:///data/users/ali/vla_wam/raw/v4/g2-horizontal/attempt-g2q20260905e-completed-wave/seed-outcome-index.json",
+      "bytes": 61809,
+      "sha256": "83b3fb7cc6e4bcfd93a02bdabef575d3e1a04b814fa7a012ce70e4bf8745db56"
+    },
+    "files_sha256": {
+      "bundle-manifest.json": "07cd2f2cd7261ee5aa1df689c0bd4bd4fba8abbcea681376f674e56daba228dd",
+      "combined-logs.txt": "e886f5c0b9a5d9f71ffe1e3cb362fb7bacb00ddb3e431f6dac31dbee5f5284f1",
+      "objects.json": "315555a31a19aacf7244b17aa24f8eaf7a4ad49a0248e2499b32bab41866d4e6",
+      "render-report.json": "5619eb11833991f4e1aac459a9e9816f017b2345c9f63c94fe695670f47b99ed",
+      "validation-report.json": "0b15701f07af46d5a7803b81230e763d2327d593cce9536df5951e7bab5fe466"
+    },
+    "job_and_configmap_objects_deleted_after_preservation": true,
+    "all_raw_episode_outputs_retained": true
+  },
+  "disposition": "The complete registered model-blind seed wave failed G2. Passing per-seed receipts remain valid setup evidence, but incomplete seed coverage and two stability failures block axis-review completion, G3, reset-registry release, and all policy inference. These results must not be counted as behavioral failures."
+}

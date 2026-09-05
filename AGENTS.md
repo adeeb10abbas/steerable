@@ -1,5 +1,39 @@
 # Agent operating contract
 
+## Prospective V4 online-correction campaign
+
+For the newly requested test-time scene-movement campaign, start with
+`docs/online_correction_v4/README.md` and its numbered experiment, measurement,
+execution, paper, and review documents. `campaign.json` is the planning
+allocation; `runtime_lock.template.json` is intentionally NOT a released
+runtime. Record implementation and execution state in a new
+`artifacts/online_correction_v4/continuation_state.json` and a V4 continuation
+document when those are created. No V4 inference runner or completed results
+are implied by the design package.
+
+V4 is a separately identified prospective study authorized by the user's
+request to extend the existing work with online scene movement. Its scheduler
+may use simulator state for the registered natural-grasp trigger, external
+reference trajectories, physical feasibility checks, and scoring. This is a
+scoped V4 exception to the historical post-action-only state rule below.
+Privileged state, future reference paths, oracle goals, and scoring outputs
+must never enter the tested policy; weights and the episode prompt stay fixed.
+
+For V4, direct-command and pilot gates establish technical interface validity
+and report baseline behavior. They do not require a positive language effect
+or minimum success rate. Preserve valid no-grasp, no-event, no-response, and
+wrong-placement outcomes. Qualified families may proceed automatically under
+the recorded release lock; unqualified families remain explicitly blocked.
+C2 requires verified common prefixes. The current release schema releases
+whole families, including all assigned policies, with control dependencies.
+
+All historical V2/V3 rules, closed queues, protocols, and evidence below remain
+unchanged for those versions. Do not reopen or rewrite them to implement V4.
+Keep large raw arrays, videos, and checkpoints outside ordinary Git; commit
+compact V4 code, manifests, hashes, audit reports, and paper exports.
+
+## Historical V2/V3 continuation
+
 This repository contains multiple research tracks. The active track is the
 VLA/WAM language-steerability study. V3 is now the current expansion; V2 is
 immutable historical evidence. Start every continuation by reading:

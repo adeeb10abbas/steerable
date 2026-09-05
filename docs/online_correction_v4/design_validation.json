@@ -1,0 +1,47 @@
+{
+  "status": "DESIGN_VALIDATED_RUNTIME_NOT_RELEASED",
+  "source_commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+  "config_sha256": "75c33439630d4fb95bb0aa3a3df0e7cb9f5d126e2db0e31e690ceaeea6242981",
+  "planning_manifest_sha256": "8b840901bee267634854a73494cd7d22bdcbdc4c31d529d34fe675ef9029cafe",
+  "new_policy_episode_count": 17664,
+  "new_episodes_by_family": {
+    "C1": 6144,
+    "C2": 4096,
+    "C3": 1536,
+    "C4": 2048,
+    "C5": 1536,
+    "C6": 768,
+    "C7": 768,
+    "C8": 768
+  },
+  "unique_reused_controls_by_family": {
+    "C3": 1024,
+    "C4": 2048
+  },
+  "excluded_engineering_policy_pilots": 240,
+  "scripted_controller_checks_per_final_geometry_candidate": 644,
+  "checks": {
+    "unit_tests": {
+      "passed": 13,
+      "failed": 0,
+      "command": "python -m unittest discover -s tests -p 'test_online_correction_v4.py'"
+    },
+    "markdown_links_and_fences": {
+      "files_checked": 7,
+      "errors": 0
+    },
+    "unreleased_template": {
+      "correctly_rejected": true
+    },
+    "historical_protocol_artifacts_modified": false
+  },
+  "runtime_checks_performed": false,
+  "policy_episodes_executed_by_design_author": 0,
+  "limitations": [
+    "Manifest is a deterministic planning inventory; exact object names, geometry, runtime, and qualification receipts remain to be bound.",
+    "Structural checks do not verify remote evidence content, physical feasibility, simulator timing, policy behavior, or statistical implementation.",
+    "No V4 runtime, cluster launch, scorer, or completed empirical analysis is claimed."
+  ],
+  "helper_sha256": "ad21dc536c16518d4a58bb2e87c91144eab4a73ebaec248558f0a855d5dc7479",
+  "tests_sha256": "91384110144044eee44e5fd35b4828a59d1379b161df98874f324b87d057d92d"
+}

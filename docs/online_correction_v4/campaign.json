@@ -1,0 +1,583 @@
+{
+  "schema_version": 1,
+  "campaign_id": "online_correction_v4",
+  "status": "DESIGN_ONLY_RUNTIME_NOT_RELEASED",
+  "source_repository": "https://github.com/adeeb10abbas/steerable",
+  "source_commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+  "seed_reservation": {
+    "environment_base": 2100000000,
+    "fixture_stride": 10000,
+    "pilot_base": 2110000000,
+    "policy_seed_namespace": "steerable-online-correction-v4-2026-09-05",
+    "historical_collision_audit_required": true
+  },
+  "policies": {
+    "cosmos3_nano_droid": {
+      "short_name": "Nano",
+      "stack": "robolab_droid",
+      "access": "public",
+      "fixture_ids": [
+        "horizontal",
+        "reference_binding",
+        "vertical",
+        "containment",
+        "object_pair"
+      ]
+    },
+    "pi05_droid": {
+      "short_name": "pi0.5",
+      "stack": "robolab_droid",
+      "access": "existing_nonpublic_polaris_artifact",
+      "fixture_ids": [
+        "horizontal",
+        "reference_binding",
+        "vertical",
+        "containment"
+      ]
+    },
+    "groot_bridge_widowx": {
+      "short_name": "GR00T N1.7 Bridge",
+      "stack": "simplerenv_bridge_widowx",
+      "access": "release_and_adapter_must_be_verified",
+      "fixture_ids": [
+        "second_stack"
+      ]
+    }
+  },
+  "fixtures": {
+    "horizontal": {
+      "seed_slot": 0,
+      "moving_object": "cube",
+      "reference": "bowl",
+      "nominal_translation_m": 0.12,
+      "goal_geometry": "direction_halfspace_intersect_supported_workspace"
+    },
+    "reference_binding": {
+      "seed_slot": 1,
+      "moving_object": "cube",
+      "reference": "named_colored_bowl",
+      "nominal_translation_m": 0.12,
+      "goal_geometry": "direction_halfspace_intersect_supported_workspace",
+      "motion_direction": "block_balanced_diagonal_identical_across_named_references_and_goals"
+    },
+    "vertical": {
+      "seed_slot": 2,
+      "moving_object": "cube",
+      "reference": "middle_shelf_bowl",
+      "nominal_translation_m": 0.12,
+      "goal_geometry": "supported_top_or_bottom_shelf_with_declared_horizontal_overlap",
+      "reference_motion_axis": "horizontal_only"
+    },
+    "containment": {
+      "seed_slot": 3,
+      "moving_object": "cube",
+      "reference": "bowl",
+      "nominal_translation_m": 0.08,
+      "goal_geometry": "full_3d_eroded_container_interior"
+    },
+    "object_pair": {
+      "seed_slot": 4,
+      "moving_object": "sponge",
+      "reference": "tray",
+      "nominal_translation_m": 0.12,
+      "goal_geometry": "direction_halfspace_intersect_supported_workspace"
+    },
+    "second_stack": {
+      "seed_slot": 5,
+      "moving_object": "fixed_bridge_manipulated_object",
+      "reference": "fixed_bridge_reference",
+      "nominal_translation_m": 0.08,
+      "goal_geometry": "direction_halfspace_intersect_supported_workspace"
+    }
+  },
+  "timing": {
+    "clock": "controlled_simulated_time",
+    "emulated_observation_action_delay_s": 0.1,
+    "standard_query_period_s": 0.5,
+    "fast_query_period_s": 0.25,
+    "quantization": "ceil_to_native_control_ticks",
+    "episode_cap_s": 60.0,
+    "trigger_deadline_s": 40.0,
+    "post_event_cap_s": 20.0,
+    "event_phase_fractions": [
+      0.0,
+      0.25,
+      0.5,
+      0.75
+    ],
+    "primary_response_horizon_s": 2.0,
+    "secondary_response_horizons_s": [
+      1.0,
+      4.0
+    ],
+    "release_detection_dwell_ticks": 2,
+    "release_settling_s": 1.0,
+    "release_rule": "first_detachment_after_verified_carry_ends_policy_at_confirmation_tick_and_freezes_reference_then_passive_settling",
+    "natural_grasp_min_lift_m": 0.04,
+    "natural_grasp_dwell_s": 0.2,
+    "kinematic_grasp_relative_drift_max_m": 0.01,
+    "response_displacement_threshold_m": 0.01,
+    "response_sensitivity_thresholds_m": [
+      0.005,
+      0.02
+    ],
+    "changed_observation_reference_displacement_m": 0.001,
+    "changed_observation_visibility_rule": "at_least_one_moved_object_pixel_in_an_actual_policy_input_camera_frame; record_mask_area; no_policy_mask_input",
+    "event_phase_anchor": "next_standard_query_boundary_after_natural_grasp_plus_phase_of_standard_period_even_for_fast_schedule",
+    "settling_outside_active_cap": true,
+    "primary_response_anchor": "planned_event_onset_even_if_release_prevents_observation_or_motion"
+  },
+  "motion": {
+    "primitive": "minimum_jerk_translation",
+    "move_stop_duration_s": 0.5,
+    "slow_drift_duration_s": 4.0,
+    "fast_drift_duration_s": 1.0,
+    "reversal_waypoints": [
+      {
+        "time_s": 0.0,
+        "displacement_units": 0.0
+      },
+      {
+        "time_s": 2.0,
+        "displacement_units": 1.0
+      },
+      {
+        "time_s": 4.0,
+        "displacement_units": -0.5
+      }
+    ],
+    "calibration_scale_candidates": [
+      2.0,
+      1.5,
+      1.0,
+      0.75,
+      0.5
+    ],
+    "calibration_selection_rule": "largest_jointly_geometrically_feasible_scale_before_policy_inference",
+    "policy_dependent_scale_selection_forbidden": true,
+    "primary_horizontal_minimum_shrinking_goal_area_fraction": 0.2,
+    "goal_area_gate_fixtures": [
+      "horizontal",
+      "reference_binding"
+    ],
+    "goal_area_gate_aggregation": "for every registered reset and named-reference/goal case whose signed motion shrinks the directional halfspace, removed legal planar area / original legal planar area >=0.20; expanding cases reported without gate"
+  },
+  "wording": {
+    "carrier": "Place the {object} so that {clause}.",
+    "frame_suffix_horizontal": " Use the robot's fixed viewpoint for left, right, front, and behind.",
+    "horizontal_direct": {
+      "left": "the {object} is left of the {reference}",
+      "right": "the {object} is right of the {reference}",
+      "front": "the {object} is in front of the {reference}",
+      "behind": "the {object} is behind the {reference}"
+    },
+    "horizontal_inverse": {
+      "left": "the {reference} is right of the {object}",
+      "right": "the {reference} is left of the {object}",
+      "front": "the {reference} is behind the {object}",
+      "behind": "the {reference} is in front of the {object}"
+    },
+    "vertical_direct": {
+      "above": "the {object} is above the {reference}",
+      "below": "the {object} is below the {reference}"
+    },
+    "vertical_inverse": {
+      "above": "the {reference} is below the {object}",
+      "below": "the {reference} is above the {object}"
+    },
+    "containment_direct": {
+      "inside": "the {object} is inside the {reference}"
+    },
+    "containment_inverse": {
+      "inside": "the {reference} contains the {object}"
+    }
+  },
+  "families": [
+    {
+      "id": "C1",
+      "name": "horizontal_wording_and_reference_movement",
+      "fixture": "horizontal",
+      "blocks": 128,
+      "seed_group": "horizontal",
+      "fixed": {
+        "schedule": "standard",
+        "named_reference": "single"
+      },
+      "factors": {
+        "policy": [
+          "cosmos3_nano_droid",
+          "pi05_droid"
+        ],
+        "goal": [
+          "left",
+          "right",
+          "front",
+          "behind"
+        ],
+        "wording": [
+          "direct",
+          "inverse"
+        ],
+        "scenario": [
+          "original_sham",
+          "move_stop",
+          "destination_static"
+        ]
+      },
+      "expected_new_episodes": 6144,
+      "priority": "primary"
+    },
+    {
+      "id": "C2",
+      "name": "same_motion_reference_selectivity",
+      "fixture": "reference_binding",
+      "blocks": 128,
+      "seed_group": "reference_binding",
+      "fixed": {
+        "schedule": "standard",
+        "wording": "direct"
+      },
+      "factors": {
+        "policy": [
+          "cosmos3_nano_droid",
+          "pi05_droid"
+        ],
+        "goal": [
+          "left",
+          "right",
+          "front",
+          "behind"
+        ],
+        "named_reference": [
+          "A",
+          "B"
+        ],
+        "scenario": [
+          "original_sham",
+          "move_A"
+        ]
+      },
+      "expected_new_episodes": 4096,
+      "priority": "primary"
+    },
+    {
+      "id": "C3",
+      "name": "continued_movement_profiles",
+      "fixture": "horizontal",
+      "blocks": 64,
+      "seed_group": "horizontal",
+      "fixed": {
+        "schedule": "standard",
+        "wording": "direct",
+        "named_reference": "single"
+      },
+      "factors": {
+        "policy": [
+          "cosmos3_nano_droid",
+          "pi05_droid"
+        ],
+        "goal": [
+          "left",
+          "right",
+          "front",
+          "behind"
+        ],
+        "scenario": [
+          "slow_drift",
+          "fast_drift",
+          "reversal"
+        ]
+      },
+      "reuses": [
+        {
+          "family": "C1",
+          "where": {
+            "wording": "direct",
+            "scenario": [
+              "original_sham",
+              "move_stop"
+            ]
+          },
+          "block_limit": 64
+        }
+      ],
+      "expected_new_episodes": 1536,
+      "priority": "secondary"
+    },
+    {
+      "id": "C4",
+      "name": "execution_cadence",
+      "fixture": "horizontal",
+      "blocks": 64,
+      "seed_group": "horizontal",
+      "fixed": {
+        "schedule": "fast_after_grasp",
+        "wording": "direct",
+        "named_reference": "single"
+      },
+      "factors": {
+        "policy": [
+          "cosmos3_nano_droid",
+          "pi05_droid"
+        ],
+        "goal": [
+          "left",
+          "right",
+          "front",
+          "behind"
+        ],
+        "scenario": [
+          "original_sham",
+          "move_stop",
+          "fast_drift",
+          "reversal"
+        ]
+      },
+      "reuses": [
+        {
+          "family": "C1",
+          "where": {
+            "wording": "direct",
+            "scenario": [
+              "original_sham",
+              "move_stop"
+            ]
+          },
+          "block_limit": 64
+        },
+        {
+          "family": "C3",
+          "where": {
+            "scenario": [
+              "fast_drift",
+              "reversal"
+            ]
+          },
+          "block_limit": 64
+        }
+      ],
+      "expected_new_episodes": 2048,
+      "priority": "secondary"
+    },
+    {
+      "id": "C5",
+      "name": "vertical_relation_bridge",
+      "fixture": "vertical",
+      "blocks": 64,
+      "seed_group": "vertical",
+      "fixed": {
+        "schedule": "standard",
+        "named_reference": "single"
+      },
+      "factors": {
+        "policy": [
+          "cosmos3_nano_droid",
+          "pi05_droid"
+        ],
+        "goal": [
+          "above",
+          "below"
+        ],
+        "wording": [
+          "direct",
+          "inverse"
+        ],
+        "scenario": [
+          "original_sham",
+          "move_stop",
+          "destination_static"
+        ]
+      },
+      "expected_new_episodes": 1536,
+      "priority": "secondary"
+    },
+    {
+      "id": "C6",
+      "name": "containment_task_bridge",
+      "fixture": "containment",
+      "blocks": 64,
+      "seed_group": "containment",
+      "fixed": {
+        "schedule": "standard",
+        "goal": "inside",
+        "named_reference": "single"
+      },
+      "factors": {
+        "policy": [
+          "cosmos3_nano_droid",
+          "pi05_droid"
+        ],
+        "wording": [
+          "direct",
+          "inverse"
+        ],
+        "scenario": [
+          "original_sham",
+          "move_stop",
+          "destination_static"
+        ]
+      },
+      "expected_new_episodes": 768,
+      "priority": "secondary"
+    },
+    {
+      "id": "C7",
+      "name": "object_pair_bridge",
+      "fixture": "object_pair",
+      "blocks": 64,
+      "seed_group": "object_pair",
+      "fixed": {
+        "policy": "cosmos3_nano_droid",
+        "schedule": "standard",
+        "wording": "direct",
+        "named_reference": "single"
+      },
+      "factors": {
+        "goal": [
+          "left",
+          "right",
+          "front",
+          "behind"
+        ],
+        "scenario": [
+          "original_sham",
+          "move_stop",
+          "destination_static"
+        ]
+      },
+      "expected_new_episodes": 768,
+      "priority": "secondary"
+    },
+    {
+      "id": "C8",
+      "name": "second_stack_bridge",
+      "fixture": "second_stack",
+      "blocks": 64,
+      "seed_group": "second_stack",
+      "fixed": {
+        "policy": "groot_bridge_widowx",
+        "schedule": "standard",
+        "wording": "direct",
+        "named_reference": "single"
+      },
+      "factors": {
+        "goal": [
+          "left",
+          "right",
+          "front",
+          "behind"
+        ],
+        "scenario": [
+          "original_sham",
+          "move_stop",
+          "destination_static"
+        ]
+      },
+      "expected_new_episodes": 768,
+      "priority": "secondary"
+    }
+  ],
+  "engineering_pilots": {
+    "stationary_per_policy_fixture": 16,
+    "motion_per_policy_fixture": 8,
+    "expected_policy_fixture_groups": 10,
+    "expected_policy_episodes": 240,
+    "exclude_from_confirmatory": true
+  },
+  "expected_confirmatory_episodes": 17664,
+  "required_release_receipts": [
+    "source_and_checkpoint_identity",
+    "historical_seed_collision_audit",
+    "geometry_and_scripted_feasibility",
+    "prompt_and_frame_review",
+    "natural_trigger_and_first_release",
+    "controlled_clock_and_queue",
+    "prefix_replay_or_declared_fallback",
+    "trace_video_and_atomic_storage",
+    "scorer_independent_cases",
+    "cluster_lane_qualification",
+    "engineering_pilots_complete",
+    "frozen_analysis_and_inventory"
+  ],
+  "counterbalance": {
+    "cycle_blocks": 16,
+    "phase_index": "block_index % 4",
+    "state_index": "(block_index // 4) % 4",
+    "physical_signs": [
+      1,
+      -1,
+      1,
+      -1
+    ],
+    "C2_diagonal_signs": [
+      [
+        1,
+        1
+      ],
+      [
+        1,
+        -1
+      ],
+      [
+        -1,
+        1
+      ],
+      [
+        -1,
+        -1
+      ]
+    ],
+    "C2_A_colors": [
+      "blue",
+      "yellow",
+      "blue",
+      "yellow"
+    ],
+    "C2_A_start_sides": [
+      "left",
+      "left",
+      "right",
+      "right"
+    ],
+    "note": "marginally balanced; color-position-direction interactions not separately identifiable"
+  },
+  "analysis": {
+    "primary_contrasts": [
+      "C1_wording_x_motion_success_per_main_policy",
+      "C2_reference_x_motion_goal_improvement_per_main_policy"
+    ],
+    "primary_tests": 4,
+    "alpha": 0.05,
+    "multiplicity": "Holm",
+    "bootstrap_resamples": 10000,
+    "analysis_rng_seed": 20260905,
+    "resampling_unit": "independent_reset_block_with_all_conditions_and_eligibility_preserved",
+    "no_equivalence_claims": true,
+    "fixed_sample_size": true,
+    "primary_null": "zero_effect_two_sided",
+    "primary_test": "studentized_reset_block_bootstrap_null_test",
+    "standard_error": "delete_one_reset_block_jackknife",
+    "confidence_interval": "pointwise_95_percentile_reset_block_bootstrap",
+    "bootstrap_pvalue": "(1 + count(abs(T_star) >= abs(T_observed))) / (B + 1)",
+    "studentized_T_star": "(theta_bootstrap - theta_observed) / SE_bootstrap",
+    "unestimable_rule": "zero observed SE or undefined SE/estimator in any required resample => p_value null with reason; no invented finite p_value",
+    "primary_C2_aggregation": "equal_weight_mean_of_four_goal_specific_matched_eligible_means; preserve eligibility under whole_block_resampling",
+    "holm_missing_test_rule": "keep four slots; unestimable p treated as 1 only in adjustment bookkeeping, displayed as null"
+  },
+  "model_blind_validation": {
+    "reset_cases_per_fixture": 9,
+    "goal_cases_by_fixture": {
+      "horizontal": 4,
+      "reference_binding": 8,
+      "vertical": 2,
+      "containment": 1,
+      "object_pair": 4,
+      "second_stack": 4
+    },
+    "stationary_layout_positions": 3,
+    "stationary_controller_checks_per_final_geometry_candidate": 621,
+    "moving_controller_checks_per_final_geometry_candidate": 23,
+    "total_controller_checks_per_final_geometry_candidate": 644,
+    "failed_candidate_attempts_preserved_and_counted_separately": true
+  }
+}

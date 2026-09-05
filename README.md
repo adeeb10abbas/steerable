@@ -1,5 +1,12 @@
 # Steerable robotics research
 
+The prospective **V4 online spatial-correction campaign** has a detailed
+[agent handoff](docs/online_correction_v4/README.md): eight experiment families,
+fixed allocation, metrics and analysis, cluster execution gates, and paper
+tables/figures. It preserves the completed static evidence below. The package
+is a reviewed design and planning helper; V4 robot execution remains pending
+runtime implementation and qualification.
+
 Start with the concise, shareable
 [`VLA/WAM research blog`](docs/VLA_WAM_RESEARCH_BLOG.md) and the
 [`video gallery`](docs/VLA_WAM_STEERABILITY_VIDEO_GALLERY.html). The

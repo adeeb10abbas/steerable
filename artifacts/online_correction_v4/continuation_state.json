@@ -1,0 +1,67 @@
+{
+  "active_blockers": [
+    "BLOCKED_RUNTIME: GR00T N1.7 Bridge/WidowX checkpoint URI, integration commit, adapter, native control period, and SimplerEnv fixture object names are not verified on cluster workers; second-stack geometry and scoring receipts remain pending.",
+    "Primary reference-selectivity (H) requires verified common-prefix replay within each prompt; deterministic fresh-session replay and qualified full-state snapshot are not yet demonstrated on the target runtime.",
+    "Runtime lock, geometry receipts, checkpoint identity, and cluster qualification remain pending."
+  ],
+  "active_branch": "research/online-correction-v4",
+  "artifact_sha256": {
+    "frozen_analysis_manifest.json": "550d6e4ccc843af4ab2855b291fe78c3fa5d8eabfd2f8b97c184c2d498cd1383",
+    "gate_report.json": "df9b751242da688b9adb8e8e046ff13cd347c22c29f02dcfb4f1b8fcb93607f6",
+    "historical_protocol_ledger.json": "2c4b123112333e458f4d7eb975b4535ceb6dce2c9093a03ab880a9ae21cb4b5e",
+    "motion_manifest.json": "c5a6b3f637b009fadbb1615a79863c76a096d5a33f9a39f36150707269c3df67",
+    "prompt_manifest.json": "c11d5d7a5ab3ea928ef4e857babb84dd701ea30fc8b674b320272cfa5f11dd47",
+    "protocol.json": "e15703a8e496da098eb04f3640d423573e200155677b6ec7db34812bb23de89f",
+    "queue.jsonl": "65ff36d6ae62ea37e76ca9b94cda3410a56344e437638d7206eb56f8b2687df5",
+    "queue_manifest.json": "69cc0047517ca7488eb2f97cda699c48d1dec20d3390fcfa281a1dae339bd0da",
+    "scoring_manifest.json": "672ec104b77f60458a6afa7bb2df270c969e7ef233704461d4fb065262281fc7",
+    "seed_manifest.json": "2a67399cd8c43e5e9f317258a0a0c0da54357fbf2b7d0b813f16c71c8526df6a"
+  },
+  "authoritative_files": [
+    "docs/online_correction_v4/README.md",
+    "docs/online_correction_v4/campaign.json",
+    "docs/ONLINE_CORRECTION_V4_CONTINUATION.md",
+    "artifacts/online_correction_v4/protocol.json",
+    "artifacts/online_correction_v4/queue.jsonl",
+    "artifacts/online_correction_v4/queue_manifest.json",
+    "artifacts/online_correction_v4/prompt_manifest.json",
+    "artifacts/online_correction_v4/motion_manifest.json",
+    "artifacts/online_correction_v4/scoring_manifest.json",
+    "artifacts/online_correction_v4/seed_manifest.json",
+    "artifacts/online_correction_v4/frozen_analysis_manifest.json",
+    "artifacts/online_correction_v4/gate_report.json",
+    "artifacts/online_correction_v4/historical_protocol_ledger.json"
+  ],
+  "blocked_families": {
+    "C1": "Prospective freeze only: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+    "C2": "Primary reference-selectivity (H) requires verified common-prefix replay within each prompt; deterministic fresh-session replay and qualified full-state snapshot are not yet demonstrated on the target runtime.",
+    "C3": "Prospective freeze only: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+    "C4": "Prospective freeze only: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+    "C5": "Prospective freeze only: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+    "C6": "Prospective freeze only: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+    "C7": "Prospective freeze only: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+    "C8": "BLOCKED_RUNTIME: GR00T N1.7 Bridge/WidowX checkpoint URI, integration commit, adapter, native control period, and SimplerEnv fixture object names are not verified on cluster workers; second-stack geometry and scoring receipts remain pending."
+  },
+  "campaign_id": "online_correction_v4",
+  "completed_groups": [],
+  "design_source_commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
+  "freeze_commit": "e498274f81f12d4798c4a37442072f849eabba15",
+  "implementation_status": "IMPLEMENTING",
+  "limitations": [
+    "Prospective design freeze only; no V4 policy inference has been run.",
+    "Launch-critical runtime manifests remain unreleased until qualification receipts pass."
+  ],
+  "next_commands": [
+    "python3 tools/online_correction_v4.py validate",
+    "python3 tools/build_online_correction_v4_freeze.py --out artifacts/online_correction_v4",
+    "python3 tools/validate_online_correction_v4.py",
+    "python3 -m unittest discover -s tests -p 'test_online_correction_v4*.py'",
+    "python3 tools/validate_vla_wam_v2_protocol.py",
+    "python3 tools/validate_vla_wam_v3_protocol.py"
+  ],
+  "policy_episodes_executed": 0,
+  "queue_sha256": "65ff36d6ae62ea37e76ca9b94cda3410a56344e437638d7206eb56f8b2687df5",
+  "release_status": "NOT_RELEASED",
+  "schema_version": 1,
+  "status": "QUALIFYING"
+}

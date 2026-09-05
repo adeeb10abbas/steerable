@@ -1,0 +1,48 @@
+{
+  "C2_prefix_requirement": {
+    "block_reason": "Primary reference-selectivity (H) requires verified common-prefix replay within each prompt; deterministic fresh-session replay and qualified full-state snapshot are not yet demonstrated on the target runtime.",
+    "required_modes": [
+      "deterministic_fresh_session_replay",
+      "qualified_full_state_snapshot"
+    ],
+    "status": "blocked_pending_verification"
+  },
+  "alpha": 0.05,
+  "analysis_module": "experiments/online_correction_v4/analysis.py",
+  "analysis_rng_seed": 20260905,
+  "bootstrap_pvalue": "(1 + count(abs(T_star) >= abs(T_observed))) / (B + 1)",
+  "bootstrap_resamples": 10000,
+  "campaign_id": "online_correction_v4",
+  "confidence_interval": "pointwise_95_percentile_reset_block_bootstrap",
+  "fixed_sample_size": true,
+  "holm_missing_test_rule": "keep four slots; unestimable p treated as 1 only in adjustment bookkeeping, displayed as null",
+  "multiplicity": "Holm",
+  "no_equivalence_claims": true,
+  "primary_C2_aggregation": "equal_weight_mean_of_four_goal_specific_matched_eligible_means; preserve eligibility under whole_block_resampling",
+  "primary_contrasts": [
+    "C1_wording_x_motion_success_per_main_policy",
+    "C2_reference_x_motion_goal_improvement_per_main_policy"
+  ],
+  "primary_null": "zero_effect_two_sided",
+  "primary_test": "studentized_reset_block_bootstrap_null_test",
+  "primary_tests": 4,
+  "required_derived_exports": [
+    "coverage_by_cell.csv",
+    "episode_outcomes.parquet",
+    "event_outcomes.parquet",
+    "paired_contrasts.parquet",
+    "primary_results.csv",
+    "scope_replications.csv",
+    "wording_results.csv",
+    "failure_composition.csv",
+    "timing_and_motion.csv",
+    "audit_report.json",
+    "results_manifest.json"
+  ],
+  "resampling_unit": "independent_reset_block_with_all_conditions_and_eligibility_preserved",
+  "schema_version": 1,
+  "standard_error": "delete_one_reset_block_jackknife",
+  "status": "implementation_present_confirmatory_inputs_pending",
+  "studentized_T_star": "(theta_bootstrap - theta_observed) / SE_bootstrap",
+  "unestimable_rule": "zero observed SE or undefined SE/estimator in any required resample => p_value null with reason; no invented finite p_value"
+}

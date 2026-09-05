@@ -1,0 +1,55 @@
+{
+  "D_cap_m_by_fixture": {
+    "containment": null,
+    "horizontal": null,
+    "object_pair": null,
+    "reference_binding": null,
+    "second_stack": null,
+    "vertical": null
+  },
+  "campaign_id": "online_correction_v4",
+  "changed_observation": {
+    "reference_displacement_m": 0.001,
+    "visibility_rule": "at_least_one_moved_object_pixel_in_an_actual_policy_input_camera_frame; record_mask_area; no_policy_mask_input"
+  },
+  "episode_active_cap_s": 60.0,
+  "failure_taxonomy_source": "docs/online_correction_v4/02_METRICS_AND_ANALYSIS.md section 8",
+  "goal_violation_cap_rule": "min(distance_to_goal_set, D_cap); D_cap pending per-fixture geometry receipt",
+  "multiplicity": {
+    "alpha": 0.05,
+    "analysis_rng_seed": 20260905,
+    "bootstrap_resamples": 10000,
+    "family": "Holm",
+    "primary_test": "studentized_reset_block_bootstrap_null_test",
+    "primary_tests": 4
+  },
+  "natural_grasp": {
+    "dwell_s": 0.2,
+    "min_lift_m": 0.04,
+    "relative_drift_max_m": 0.01
+  },
+  "post_event_cap_s": 20.0,
+  "primary_contrasts": [
+    "C1_wording_x_motion_success_per_main_policy",
+    "C2_reference_x_motion_goal_improvement_per_main_policy"
+  ],
+  "primary_response_anchor": "planned_event_onset_even_if_release_prevents_observation_or_motion",
+  "primary_response_horizon_s": 2.0,
+  "response_detection": {
+    "dwell_control_ticks": 2,
+    "primary_displacement_threshold_m": 0.01,
+    "sensitivity_thresholds_m": [
+      0.005,
+      0.02
+    ]
+  },
+  "schema_version": 1,
+  "scorer_implementation_status": "code_present_geometry_receipts_pending",
+  "secondary_response_horizons_s": [
+    1.0,
+    4.0
+  ],
+  "settling_interval_s": 1.0,
+  "terminal_rule": "first_detachment_after_verified_carry_with_two_tick_confirmation",
+  "trigger_deadline_s": 40.0
+}

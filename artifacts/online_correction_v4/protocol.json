@@ -1,0 +1,129 @@
+{
+  "campaign_id": "online_correction_v4",
+  "config_sha256": "75c33439630d4fb95bb0aa3a3df0e7cb9f5d126e2db0e31e690ceaeea6242981",
+  "excluded_engineering_policy_pilots": 240,
+  "expected_confirmatory_episodes": 17664,
+  "failure_taxonomy": "preserved_valid_failures_distinguish_infra_physics_no_trigger",
+  "families": [
+    {
+      "blocks": 128,
+      "expected_new_episodes": 6144,
+      "fixture": "horizontal",
+      "id": "C1",
+      "priority": "primary",
+      "reuses": []
+    },
+    {
+      "blocks": 128,
+      "expected_new_episodes": 4096,
+      "fixture": "reference_binding",
+      "id": "C2",
+      "priority": "primary",
+      "reuses": []
+    },
+    {
+      "blocks": 64,
+      "expected_new_episodes": 1536,
+      "fixture": "horizontal",
+      "id": "C3",
+      "priority": "secondary",
+      "reuses": [
+        {
+          "block_limit": 64,
+          "family": "C1",
+          "where": {
+            "scenario": [
+              "original_sham",
+              "move_stop"
+            ],
+            "wording": "direct"
+          }
+        }
+      ]
+    },
+    {
+      "blocks": 64,
+      "expected_new_episodes": 2048,
+      "fixture": "horizontal",
+      "id": "C4",
+      "priority": "secondary",
+      "reuses": [
+        {
+          "block_limit": 64,
+          "family": "C1",
+          "where": {
+            "scenario": [
+              "original_sham",
+              "move_stop"
+            ],
+            "wording": "direct"
+          }
+        },
+        {
+          "block_limit": 64,
+          "family": "C3",
+          "where": {
+            "scenario": [
+              "fast_drift",
+              "reversal"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "blocks": 64,
+      "expected_new_episodes": 1536,
+      "fixture": "vertical",
+      "id": "C5",
+      "priority": "secondary",
+      "reuses": []
+    },
+    {
+      "blocks": 64,
+      "expected_new_episodes": 768,
+      "fixture": "containment",
+      "id": "C6",
+      "priority": "secondary",
+      "reuses": []
+    },
+    {
+      "blocks": 64,
+      "expected_new_episodes": 768,
+      "fixture": "object_pair",
+      "id": "C7",
+      "priority": "secondary",
+      "reuses": []
+    },
+    {
+      "blocks": 64,
+      "expected_new_episodes": 768,
+      "fixture": "second_stack",
+      "id": "C8",
+      "priority": "secondary",
+      "reuses": []
+    }
+  ],
+  "freeze_commit": "e498274f81f12d4798c4a37442072f849eabba15",
+  "historical_protocol_immutability": "artifacts/vla_wam_shared_v2/protocol.json and artifacts/vla_wam_shared_v3/protocol.json byte-for-byte",
+  "independent_unit": "randomized_reset_block",
+  "policy_input_rule": "static_prompt_and_released_observation_interface_only",
+  "primary_outcomes": [
+    "success",
+    "goal_violation_capped_m",
+    "reference_selectivity_m"
+  ],
+  "protocol_id": "online_correction_v4",
+  "queue_sha256": "65ff36d6ae62ea37e76ca9b94cda3410a56344e437638d7206eb56f8b2687df5",
+  "research_questions": [
+    "Does online correction depend on the spatial goal and named reference?",
+    "How consistently does behavior survive equivalent wording and focused relation/object/stack changes?",
+    "Does shortening the executed action prefix improve correction under the same controlled observation-to-action delay?"
+  ],
+  "schema_version": 1,
+  "shared_control_rules": "C3/C4 reuse explicit C1/C3 episode IDs; no silent reruns",
+  "simulator_state_extension": "external_reference_motion_for_trigger_feasibility_scoring_only",
+  "source_commit_design": "ce561e66f82e95055e39d3d7711691982f6b2086",
+  "status": "PROSPECTIVE_FROZEN_DESIGN_NOT_RELEASED",
+  "stopping_rule": "every_planned_episode_accepted_blocked_or_infra_resolved_with_reason"
+}

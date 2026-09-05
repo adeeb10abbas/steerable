@@ -1,0 +1,93 @@
+{
+  "calibration": {
+    "policy_dependent_scale_selection_forbidden": true,
+    "scale_candidates": [
+      2.0,
+      1.5,
+      1.0,
+      0.75,
+      0.5
+    ],
+    "selected_scale_by_fixture": {
+      "containment": null,
+      "horizontal": null,
+      "object_pair": null,
+      "reference_binding": null,
+      "second_stack": null,
+      "vertical": null
+    },
+    "selection_rule": "largest_jointly_geometrically_feasible_scale_before_policy_inference",
+    "status": "pending_model_blind_geometry_gate"
+  },
+  "campaign_id": "online_correction_v4",
+  "event_onset": "next_standard_query_boundary_after_natural_grasp_plus_phase_of_standard_period_even_for_fast_schedule",
+  "fixture_nominal_translation_m": {
+    "containment": 0.08,
+    "horizontal": 0.12,
+    "object_pair": 0.12,
+    "reference_binding": 0.12,
+    "second_stack": 0.08,
+    "vertical": 0.12
+  },
+  "interpolation": "minimum_jerk_scalar S(u)=10u^3-15u^4+6u^5 clipped to [0,1]",
+  "path_equation": "p_ref(t)=p_ref(0)+e*D*S(t/T)",
+  "profiles": [
+    {
+      "interpretation": "Primary finite perturbation",
+      "nominal_duration_s": 0.5,
+      "primitive": "minimum_jerk_translation",
+      "scenario": "move_stop"
+    },
+    {
+      "interpretation": "Longer exposure",
+      "nominal_duration_s": 4.0,
+      "primitive": "minimum_jerk_translation",
+      "scenario": "slow_drift"
+    },
+    {
+      "interpretation": "Intermediate speed-duration",
+      "nominal_duration_s": 1.0,
+      "primitive": "minimum_jerk_translation",
+      "scenario": "fast_drift"
+    },
+    {
+      "interpretation": "Direction change with non-original endpoint",
+      "primitive": "minimum_jerk_translation",
+      "scenario": "reversal",
+      "waypoints": [
+        {
+          "displacement_units": 0.0,
+          "time_s": 0.0
+        },
+        {
+          "displacement_units": 1.0,
+          "time_s": 2.0
+        },
+        {
+          "displacement_units": -0.5,
+          "time_s": 4.0
+        }
+      ]
+    },
+    {
+      "nominal_duration_s": 0.5,
+      "primitive": "minimum_jerk_translation",
+      "scenario": "original_sham",
+      "translation": "identity_pose_update_with_scheduler_overhead"
+    },
+    {
+      "primitive": "minimum_jerk_translation",
+      "scenario": "destination_static",
+      "translation": "reference_at_planned_destination_from_reset"
+    },
+    {
+      "motion_direction": "block_balanced_diagonal_identical_across_named_references",
+      "nominal_duration_s": 0.5,
+      "primitive": "minimum_jerk_translation",
+      "scenario": "move_A"
+    }
+  ],
+  "release_freeze_rule": "first_detachment_after_verified_carry_ends_policy_at_confirmation_tick_and_freezes_reference_then_passive_settling",
+  "schema_version": 1,
+  "truncation_rule": "first_placement_confirmation_or_active_timeout"
+}

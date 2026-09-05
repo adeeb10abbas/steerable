@@ -3,7 +3,7 @@
   "campaign_id": "online_correction_v4",
   "fixture_id": "horizontal",
   "status": "model_blind_candidate_not_released_for_inference",
-  "amendment_status": "proposed_pending_pinned_implementation_commit",
+  "amendment_status": "frozen_for_model_blind_requalification",
   "post_result_amendment": true,
   "model_request_count": 0,
   "behavioral_episode_count": 0,
@@ -19,6 +19,13 @@
       0.003,
       0.0039
     ]
+  },
+  "implementation": {
+    "study_commit": "54101be67cc1d51ec1144ac3a50a166c570079d4",
+    "position_verifier_path": "experiments/online_correction_v4/droid_reset_verify.py",
+    "position_verifier_sha256": "7c5b57d649e89a9b20e2005a29088e2b3bec44b74762ad0cd6c363a7b76f2314",
+    "seed_receipt_core_path": "experiments/online_correction_v4/model_blind_g2.py",
+    "seed_receipt_core_sha256": "be0e014ac27989a2e340858b2d0604420effb15da48ef83ee9c1ecb606805c72"
   },
   "amendment": {
     "registry_position_tolerance_m_before": 0.003,
@@ -43,10 +50,10 @@
     "reuse_prior_passing_seed_receipts": false
   },
   "authorization_boundary": {
-    "authorizes_fresh_model_blind_g2_attempt": false,
+    "authorizes_fresh_model_blind_g2_attempt": true,
     "authorizes_g3_execution": false,
     "authorizes_policy_inference": false,
     "authorizes_behavioral_episode": false
   },
-  "disclosure": "This tolerance was selected after inspecting complete zero-model-request G2 setup evidence. It is not a retroactive pass: attempt g2q20260905e remains failed. A fresh full 128-seed attempt must satisfy the amended threshold and every unchanged gate after this proposal is bound to a pushed implementation commit."
+  "disclosure": "This tolerance was selected after inspecting complete zero-model-request G2 setup evidence. It is not a retroactive pass: attempt g2q20260905e remains failed. A fresh full 128-seed attempt must satisfy the amended threshold and every unchanged gate."
 }

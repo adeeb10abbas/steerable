@@ -940,6 +940,7 @@ def discover_model_blind_candidates() -> list[dict[str, Any]]:
                 "schema_version": payload.get("schema_version"),
                 "fixture_id": payload.get("fixture_id"),
                 "status": payload.get("status"),
+                "amendment_status": payload.get("amendment_status"),
                 "model_request_count": payload.get("model_request_count"),
                 "behavioral_episode_count": payload.get("behavioral_episode_count"),
                 "registered_env_seed_count": payload.get("registered_env_seed_count"),

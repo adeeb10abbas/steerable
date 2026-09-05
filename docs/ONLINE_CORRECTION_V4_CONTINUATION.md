@@ -143,6 +143,16 @@ cleanup; compact hashes and disposition are in
 The 64 passing seed receipts remain valid model-blind setup evidence, while
 none of the 64 failed seeds are behavioral failures.
 
+The disclosed post-result amendment
+`artifacts/online_correction_v4/setup/horizontal_g2_recalibration_amendment.candidate.json`
+freezes a 5 mm registry-position tolerance for a fresh full attempt. This is
+the observed 3.9 mm model-blind maximum rounded up to 4 mm plus a frozen 1 mm
+guard band. The registry positions, jitter, native period, camera/frame
+requirements, and all stability thresholds remain unchanged. Attempt
+`g2q20260905e` remains failed; the amendment authorizes only a new 128-seed
+zero-model-request G2 qualification at the pushed implementation commit
+`54101be67cc1d51ec1144ac3a50a166c570079d4`.
+
 After inspecting the montage,
 `tools/record_v4_horizontal_g2_axis_review.py` records the four explicit
 orientation assertions. `tools/compile_v4_horizontal_g2_aggregate.py` then
@@ -175,12 +185,20 @@ Every queue row is a **registered new episode**. `reuse_episode_ids` are compari
 
 ## Exact next commands
 
-No fresh cluster launch is authorized from the current artifacts. First freeze
-a disclosed post-result model-blind amendment for the failed reset/settling
-gate; do not rerun the unchanged 3 mm candidate.
+Only the fresh amended model-blind G2 launch is authorized. G3, reset-registry
+release, policy inference, and behavioral episodes remain prohibited.
 
 ```bash
 python3 tools/online_correction_v4.py validate
+export V4_G2_RENDER_ROOT=/tmp/v4-g2-rendered-g2q20260905f
+python3 tools/render_v4_horizontal_g2_k8s_jobs.py \
+  --spec deploy/k8s/v4_lane_bundle/g2-horizontal-spec.example.json \
+  --output-root "$V4_G2_RENDER_ROOT"
+# Set V4_G2_BUNDLE_ROOT to the bundle_root printed above.
+python3 tools/validate_v4_horizontal_g2_k8s_jobs.py \
+  --root "$V4_G2_BUNDLE_ROOT"
+kubectl --context prod-dcwi-warrenq1-vmkub007 \
+  create -k "$V4_G2_BUNDLE_ROOT"
 python3 tools/build_online_correction_v4_freeze.py --out artifacts/online_correction_v4
 python3 tools/validate_online_correction_v4.py
 python3 -m unittest discover -s tests -p 'test_online_correction_v4*.py'

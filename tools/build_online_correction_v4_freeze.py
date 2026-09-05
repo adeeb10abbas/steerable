@@ -913,6 +913,9 @@ def discover_qualification_receipts() -> list[dict[str, Any]]:
                 "sha256": file_sha256(path),
                 "compiled_at_utc": payload.get("compiled_at_utc"),
                 "qualification_scope": payload.get("qualification_scope"),
+                "gate": payload.get("gate"),
+                "attempt_id": payload.get("attempt_id"),
+                "status": payload.get("status"),
                 "behavioral_episode_count": payload.get("behavioral_episode_count"),
                 "completed_lane_status": (payload.get("completed_lane") or {}).get("status"),
                 "partial_lane_status": (payload.get("partial_b200_lane") or {}).get("status"),
@@ -1016,6 +1019,7 @@ def build_continuation_state(
         "next_commands": [
             "python3 tools/online_correction_v4.py validate",
             "python3 tools/build_v4_horizontal_reset_registry.py",
+            "python3 tools/build_v4_horizontal_g3_plan.py",
             "python3 tools/render_v4_horizontal_g2_k8s_jobs.py --spec deploy/k8s/v4_lane_bundle/g2-horizontal-spec.example.json --output-root \"$V4_G2_RENDER_ROOT\"",
             "python3 tools/validate_v4_horizontal_g2_k8s_jobs.py --root \"$V4_G2_BUNDLE_ROOT\"",
             "python3 tools/build_online_correction_v4_freeze.py --out artifacts/online_correction_v4",

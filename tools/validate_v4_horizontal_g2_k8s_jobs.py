@@ -115,6 +115,9 @@ def validate(root: Path) -> dict[str, Any]:
     expected_study_commit = manifest.get("expected_study_commit")
     expected_robolab_commit = manifest.get("expected_robolab_commit")
     native_control_dt_s = manifest.get("native_control_dt_s")
+    marker_wrapper_sha256 = manifest.get("marker_wrapper_sha256")
+    runner_sha256 = manifest.get("runner_sha256")
+    gate_core_sha256 = manifest.get("gate_core_sha256")
     require(
         isinstance(expected_study_commit, str) and len(expected_study_commit) == 40,
         "G2 manifest lacks expected study commit",
@@ -130,6 +133,22 @@ def validate(root: Path) -> dict[str, Any]:
         and float(native_control_dt_s) > 0,
         "G2 manifest lacks native control dt",
     )
+    require(
+        isinstance(marker_wrapper_sha256, str)
+        and len(marker_wrapper_sha256) == 64
+        and all(char in "0123456789abcdef" for char in marker_wrapper_sha256),
+        "G2 manifest lacks the marker-wrapper SHA-256",
+    )
+    for label, value in (
+        ("runner", runner_sha256),
+        ("gate core", gate_core_sha256),
+    ):
+        require(
+            isinstance(value, str)
+            and len(value) == 64
+            and all(char in "0123456789abcdef" for char in value),
+            f"G2 manifest lacks the {label} SHA-256",
+        )
     require(len(jobs) == seed_count, "G2 Job count differs from registered seed count")
     require(
         len(configmaps) == seed_count + 1,
@@ -158,8 +177,47 @@ def validate(root: Path) -> dict[str, Any]:
             argv = launch.get("experiment_argv")
             require(
                 isinstance(argv, list)
-                and any(str(item).endswith("run_v4_horizontal_g2_seed.py") for item in argv),
-                "G2 launch does not invoke the frozen G2 seed runner",
+                and len(argv) >= 8
+                and str(argv[1]).endswith("run_v4_g2_checked.py")
+                and argv[2] == "--expected-environment-seed"
+                and argv[4] == "--"
+                and argv[0] == argv[5]
+                and str(argv[6]).endswith("run_v4_horizontal_g2_seed.py"),
+                "G2 launch does not invoke the seed runner through the marker-check wrapper",
+            )
+            file_bindings = launch.get("file_bindings") or []
+            wrapper_bindings = [
+                binding
+                for binding in file_bindings
+                if isinstance(binding, dict) and binding.get("path") == argv[1]
+            ]
+            require(
+                len(wrapper_bindings) == 1
+                and wrapper_bindings[0].get("sha256") == marker_wrapper_sha256,
+                "G2 marker-check wrapper binding differs from the manifest",
+            )
+            runner_bindings = [
+                binding
+                for binding in file_bindings
+                if isinstance(binding, dict) and binding.get("path") == argv[6]
+            ]
+            require(
+                len(runner_bindings) == 1
+                and runner_bindings[0].get("sha256") == runner_sha256,
+                "G2 seed-runner binding differs from the manifest",
+            )
+            gate_bindings = [
+                binding
+                for binding in file_bindings
+                if isinstance(binding, dict)
+                and str(binding.get("path", "")).endswith(
+                    "experiments/online_correction_v4/model_blind_g2.py"
+                )
+            ]
+            require(
+                len(gate_bindings) == 1
+                and gate_bindings[0].get("sha256") == gate_core_sha256,
+                "G2 gate-core binding differs from the manifest",
             )
             lowered = " ".join(str(item).lower() for item in argv)
             require(
@@ -178,6 +236,11 @@ def validate(root: Path) -> dict[str, Any]:
                 for index in range(len(argv) - 1)
                 if str(argv[index]).startswith("--")
             }
+            require(
+                option_values.get("--expected-environment-seed")
+                == option_values.get("--environment-seed"),
+                "G2 wrapper and child environment-seed bindings differ",
+            )
             require(
                 option_values.get("--expected-study-commit")
                 == expected_study_commit,

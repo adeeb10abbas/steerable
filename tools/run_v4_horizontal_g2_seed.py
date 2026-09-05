@@ -401,8 +401,8 @@ def main(argv: list[str] | None = None) -> int:
             reset_registry_sha256=args.reset_registry_sha256,
             reset_registry_uri=f"file://{registry_path}",
         )
-        os.environ["V4_DROID_RENDERER"] = "RayTracedLighting"
-        os.environ["V4_DROID_RENDERING_TYPE"] = "balanced"
+        os.environ["V4_DROID_RENDERER"] = "realtime"
+        os.environ["V4_DROID_RENDERING_MODE"] = "balanced"
         os.environ["ONLINE_CORRECTION_V4_OUTPUT_DIR"] = str(
             (output_dir / "robolab_native").resolve()
         )

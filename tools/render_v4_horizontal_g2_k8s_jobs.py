@@ -41,6 +41,8 @@ TOP_LEVEL_KEYS = {
     "robolab_root",
     "expected_robolab_commit",
     "native_control_dt_s",
+    "marker_wrapper_source",
+    "marker_wrapper_path",
     "runner_source",
     "runner_path",
     "gate_core_source",
@@ -148,6 +150,9 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
     output_parent = _absolute(spec.get("output_parent"), "output_parent")
     study_root = _absolute(spec.get("study_root"), "study_root")
     robolab_root = _absolute(spec.get("robolab_root"), "robolab_root")
+    marker_wrapper_path = _absolute(
+        spec.get("marker_wrapper_path"), "marker_wrapper_path"
+    )
     runner_path = _absolute(spec.get("runner_path"), "runner_path")
     gate_core_path = _absolute(spec.get("gate_core_path"), "gate_core_path")
     reset_registry_path = _absolute(
@@ -207,6 +212,11 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
         "python_imports must include curobo",
     )
 
+    marker_wrapper_source = _source(
+        spec.get("marker_wrapper_source"),
+        spec_dir=spec_path.parent,
+        label="marker_wrapper_source",
+    )
     runner_source = _source(
         spec.get("runner_source"), spec_dir=spec_path.parent, label="runner_source"
     )
@@ -295,6 +305,7 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
             "v4-seed-index": f"{index:03d}",
         }
         bindings = [
+            _binding(marker_wrapper_source, marker_wrapper_path),
             _binding(runner_source, runner_path),
             _binding(gate_core_source, gate_core_path),
             _binding(reset_registry_source, reset_registry_path),
@@ -312,6 +323,11 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
             ),
         ]
         argv = [
+            runtime["python_bin"],
+            marker_wrapper_path,
+            "--expected-environment-seed",
+            str(seed),
+            "--",
             runtime["python_bin"],
             runner_path,
             "--study-root",
@@ -428,6 +444,9 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
         "render_spec_sha256": spec_sha256,
         "renderer_sha256": renderer_sha,
         "runtime_scripts_sha256": scripts_identity,
+        "marker_wrapper_sha256": lane.sha256_file(marker_wrapper_source),
+        "runner_sha256": lane.sha256_file(runner_source),
+        "gate_core_sha256": lane.sha256_file(gate_core_source),
         "reset_registry_sha256": reset_sha,
         "files_sha256": file_hashes,
         "seed_identities": seed_identities,

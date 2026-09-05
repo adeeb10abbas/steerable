@@ -229,23 +229,24 @@ class ReferenceMotionController:
         physical_sign: int,
         diagonal_signs: Optional[tuple[int, int]] = None,
     ) -> tuple[float, float]:
-        """Return a unit direction in task-plane coordinates for registered fixtures."""
+        """Return ``(u_left, u_front)`` unit coefficients for a registered path.
+
+        The physical sign is balanced independently of the requested side, so
+        left/right share one axis and front/behind share the orthogonal axis.
+        """
         if fixture == "reference_binding" and diagonal_signs is not None:
             left, front = diagonal_signs
             norm = math.sqrt(2.0)
             return (left / norm, front / norm)
-        axis_map = {
-            "left": (-1.0, 0.0),
-            "right": (1.0, 0.0),
-            "front": (0.0, 1.0),
-            "behind": (0.0, -1.0),
-        }
-        if goal not in axis_map:
+        if goal in {"left", "right"}:
+            return (float(physical_sign), 0.0)
+        if goal in {"front", "behind"}:
+            return (0.0, float(physical_sign))
+        if goal not in {"left", "right", "front", "behind"}:
             if fixture in ("vertical", "containment"):
                 return (float(physical_sign), 0.0)
             raise ValueError(f"unsupported goal direction {goal!r}")
-        dx, dy = axis_map[goal]
-        return (dx * physical_sign, dy * physical_sign)
+        raise AssertionError("unreachable")
 
     @staticmethod
     def resolve_live_direction(

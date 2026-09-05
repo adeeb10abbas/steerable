@@ -88,6 +88,21 @@ seed coverage, commit/dt bindings, one-GPU isolation, and zero policy
 endpoints. A complete G2 claim still requires all 128 live receipts and an
 explicit review of an actual rendered axis montage.
 
+Attempt `g2q20260905a` launched all 128 registered seed Jobs and was stopped
+as infrastructure-invalid before any seed passed. The preserved attempt
+contains 86 write-once infrastructure-failure markers and 42 Pods that never
+created an episode output. Every one of the 66 Pods that Kubernetes marked
+`Succeeded` had actually written the same failure:
+`create_env() got an unexpected keyword argument 'rendering_type'`. The pinned
+RoboLab factory requires `rendering_mode`, `renderer=realtime`; Isaac teardown
+then masked the runner's failure return code with process exit 0. The adapter
+now uses the pinned render contract, and each seed runs below
+`tools/run_v4_g2_checked.py`, a non-Isaac parent that rejects a failure marker
+or a missing/nonpassing seed receipt. Compact disposition and raw snapshot
+hashes are in
+`artifacts/online_correction_v4/qualification/20260905_horizontal_g2_attempt_g2q20260905a.json`.
+No G2 seed, policy episode, or behavioral failure is claimed from this attempt.
+
 After inspecting the montage,
 `tools/record_v4_horizontal_g2_axis_review.py` records the four explicit
 orientation assertions. `tools/compile_v4_horizontal_g2_aggregate.py` then
@@ -95,6 +110,18 @@ verifies every seed receipt, referenced artifact, runtime stratum, registry
 hash, and axis review before producing the aggregate receipt. Even a passing
 aggregate authorizes G2 only: the candidate reset registry remains
 unreleased for policy use until G3 and the later gates pass.
+
+`artifacts/online_correction_v4/setup/horizontal_g3_plan.candidate.json`
+formula-closes the next model-blind gate without executing it. It binds all
+128 reset seeds, the five descending scale candidates, 3,072 live path checks
+per scale (15,360 maximum), and the 112 horizontal scripted checks required
+for a final geometry candidate. The nine scripted reset cases are selected
+from xy-jitter extrema while covering each counterbalance state twice. The
+plan also freezes task-frame motion directions so left/right share one
+physical axis and front/behind share the other; requested goal polarity does
+not determine the independently balanced physical motion sign. Live G3
+collision, support, reachable-workspace, and scripted grasp/place evidence is
+still pending and cannot be replaced by this plan.
 
 ### Family disposition
 
@@ -111,6 +138,7 @@ Every queue row is a **registered new episode**. `reuse_episode_ids` are compari
 ```bash
 python3 tools/online_correction_v4.py validate
 python3 tools/build_v4_horizontal_reset_registry.py
+python3 tools/build_v4_horizontal_g3_plan.py
 export V4_G2_RENDER_ROOT=/tmp/v4-g2-rendered
 python3 tools/render_v4_horizontal_g2_k8s_jobs.py \
   --spec deploy/k8s/v4_lane_bundle/g2-horizontal-spec.example.json \
@@ -139,6 +167,8 @@ The live G2 seed entrypoint is supported only inside a fresh qualified
 simulator Job at a clean pushed checkout:
 
 ```bash
+python3 tools/run_v4_g2_checked.py \
+  --expected-environment-seed "$ENV_SEED" -- \
 python3 tools/run_v4_horizontal_g2_seed.py \
   --study-root "$STUDY_ROOT" \
   --robolab-root "$ROBOLAB_ROOT" \

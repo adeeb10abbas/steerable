@@ -1,0 +1,66 @@
+{
+  "schema_version": "v4-horizontal-g2-attempt-disposition-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "horizontal",
+  "attempt_id": "g2q20260905a",
+  "compiled_at_utc": "2026-09-05T16:37:31Z",
+  "qualification_scope": "infrastructure_only_no_scientific_behavior",
+  "status": "infrastructure_invalid",
+  "authorizes_behavioral_inference": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "created_at_utc": {
+    "first_job": "2026-09-05T16:28:18Z",
+    "last_job": "2026-09-05T16:28:28Z"
+  },
+  "stopped_at_utc": "2026-09-05T16:34:47.977Z",
+  "registered_seed_job_count": 128,
+  "snapshot_before_stop": {
+    "job_status": {
+      "active": 62,
+      "complete": 66
+    },
+    "pod_phase": {
+      "Pending": 43,
+      "Running": 19,
+      "Succeeded": 66
+    }
+  },
+  "preserved_outcome_markers": {
+    "passing_seed_receipt_count": 0,
+    "infrastructure_failure_marker_count": 86,
+    "pod_phase_by_marker_presence": {
+      "Pending_marker": 1,
+      "Pending_none": 42,
+      "Running_marker": 19,
+      "Succeeded_marker": 66
+    },
+    "error_type": "TypeError",
+    "error": "create_env() got an unexpected keyword argument 'rendering_type'"
+  },
+  "false_success_finding": {
+    "affected_succeeded_pod_count": 66,
+    "finding": "Every pod marked Succeeded in the preserved snapshot also wrote an infrastructure_failure.json marker. Isaac application teardown terminated the child process with exit status 0 after the runner selected its failure return code.",
+    "remediation": "Run the Isaac seed runner as a child of a non-Isaac marker-check process; the parent requires a passing g2_seed_receipt.json, rejects any infrastructure_failure.json, and propagates failure independently of Isaac teardown."
+  },
+  "root_cause": {
+    "study_commit": "cb893a0a42011e38f2a22f5d69ee8d8d1000dd11",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "detail": "The V4 adapter used the unsupported keyword rendering_type and the RTX mode value RayTracedLighting. The pinned RoboLab create_env contract requires rendering_mode and renderer=realtime."
+  },
+  "preservation": {
+    "raw_root": "file:///data/users/ali/vla_wam/raw",
+    "attempt_snapshot_root": "file:///data/users/ali/vla_wam/raw/v4/g2-horizontal/attempt-g2q20260905a-infrastructure-invalid",
+    "files_sha256": {
+      "bundle-manifest.json": "45ab75348c20597fb3159ab8da75e34fedb0fe30852c3a118ed259443c54a4e0",
+      "combined-logs.txt": "a3002446594da084976cf41a5557cd617776609934f9e8330d403f39d6c80f1e",
+      "objects.json": "2fdca1d19b53fcf83a33b6690f82ead8ce1729c1eeb5e6debadabad8c48cfd25",
+      "render-report.json": "2086aecd936327cc384a7c712cfc2fa90aaaab739feff9e4f4ac3e5a77480327",
+      "validation-report.json": "51b4e11bc2556a49e53ba9291c7769e2501c3f035c4b44a5a2059c9b35a0fbd8"
+    },
+    "job_and_configmap_objects_deleted_after_preservation": true,
+    "raw_episode_outputs_retained": true
+  },
+  "disposition": "No G2 seed passed. The attempt is retained as infrastructure evidence only and must not be counted as behavioral failure or G2 completion."
+}

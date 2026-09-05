@@ -110,8 +110,12 @@ class MotionProfileTests(unittest.TestCase):
         left_neg = ReferenceMotionController.displacement_vector(
             goal="left", fixture="horizontal", physical_sign=-1
         )
-        self.assertLess(left_pos[0], 0.0)
-        self.assertGreater(left_neg[0], 0.0)
+        right_pos = ReferenceMotionController.displacement_vector(
+            goal="right", fixture="horizontal", physical_sign=1
+        )
+        self.assertGreater(left_pos[0], 0.0)
+        self.assertLess(left_neg[0], 0.0)
+        self.assertEqual(left_pos, right_pos)
 
     def test_reversal_reaches_negative_half_displacement(self):
         motion_cfg = json.loads(CONFIG_PATH.read_text())["motion"]

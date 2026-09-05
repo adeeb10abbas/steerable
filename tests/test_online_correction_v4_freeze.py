@@ -103,20 +103,36 @@ class FreezeBuilderTests(unittest.TestCase):
             self.assertIn("artifacts/online_correction_v4/freeze_manifest.json", files)
             self.assertIn("artifacts/online_correction_v4/continuation_state.json", files)
             receipts = continuation["qualification_receipts"]
-            self.assertEqual(len(receipts), 1)
-            receipt_path = ROOT / receipts[0]["path"]
-            self.assertIn(receipts[0]["path"], files)
-            self.assertEqual(receipts[0]["sha256"], builder.file_sha256(receipt_path))
-            self.assertEqual(receipts[0]["behavioral_episode_count"], 0)
-            candidates = continuation["model_blind_candidates"]
-            self.assertEqual(len(candidates), 1)
-            candidate_path = ROOT / candidates[0]["path"]
-            self.assertIn(candidates[0]["path"], files)
             self.assertEqual(
-                candidates[0]["sha256"],
-                builder.file_sha256(candidate_path),
+                {Path(row["path"]).name for row in receipts},
+                {
+                    "20260905_horizontal_g2_attempt_g2q20260905a.json",
+                    "20260905_pi05_lane_qualification.json",
+                },
             )
-            self.assertEqual(candidates[0]["model_request_count"], 0)
+            for receipt in receipts:
+                receipt_path = ROOT / receipt["path"]
+                self.assertIn(receipt["path"], files)
+                self.assertEqual(
+                    receipt["sha256"], builder.file_sha256(receipt_path)
+                )
+                self.assertEqual(receipt["behavioral_episode_count"], 0)
+            candidates = continuation["model_blind_candidates"]
+            self.assertEqual(
+                {Path(row["path"]).name for row in candidates},
+                {
+                    "horizontal_g3_plan.candidate.json",
+                    "horizontal_reset_registry.candidate.json",
+                },
+            )
+            for candidate in candidates:
+                candidate_path = ROOT / candidate["path"]
+                self.assertIn(candidate["path"], files)
+                self.assertEqual(
+                    candidate["sha256"],
+                    builder.file_sha256(candidate_path),
+                )
+                self.assertEqual(candidate["model_request_count"], 0)
 
     def test_prompt_sha256_may_map_to_multiple_prompt_ids(self):
         with tempfile.TemporaryDirectory() as tmp:

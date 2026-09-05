@@ -257,8 +257,8 @@ def _create_live_env(config: LiveRoboLabConfig, modules: dict[str, Any]) -> Live
         num_envs=1,
         instruction_type="default",
         policy="online_correction_v4_droid",
-        renderer=os.environ.get("V4_DROID_RENDERER", "RayTracedLighting"),
-        rendering_type=os.environ.get("V4_DROID_RENDERING_TYPE", "quality"),
+        renderer=os.environ.get("V4_DROID_RENDERER", "realtime"),
+        rendering_mode=os.environ.get("V4_DROID_RENDERING_MODE", "balanced"),
     )
     backend = LiveRoboLabBackend(
         env=env,
@@ -620,16 +620,33 @@ class LiveRoboLabBackend:
     def set_reference_kinematic_offset(
         self, displacement_m: float, direction: tuple[float, float]
     ) -> None:
+        import numpy as np
         import torch
 
         self.reference_displacement_m = float(displacement_m)
         self.reference_direction = direction
         if self._reference_baseline_pose is None:
             raise RoboLabBootstrapError("reference baseline pose is not anchored")
-        dx = float(direction[0]) * float(displacement_m)
-        dy = float(direction[1]) * float(displacement_m)
+        task_left, task_front = (float(direction[0]), float(direction[1]))
+        norm = float(np.linalg.norm([task_left, task_front]))
+        if abs(norm - 1.0) > 1e-6:
+            raise RoboLabBootstrapError(
+                "reference direction must be a unit vector in task coordinates"
+            )
+        get_world = self.modules["get_world"]
+        _robot_pos, robot_quaternion = get_world(self.env).get_pose(
+            "robot", env_id=0
+        )
+        # Frozen DROID task frame: robot +Y is left and robot -X is front.
+        offset_robot = np.asarray(
+            [-task_front, task_left, 0.0], dtype=float
+        ) * float(displacement_m)
+        offset_world = _quat_rotate(robot_quaternion, offset_robot)
+        dx = float(offset_world[0])
+        dy = float(offset_world[1])
+        dz = float(offset_world[2])
         x0, y0, z0, qw, qx, qy, qz = self._reference_baseline_pose
-        pose = (x0 + dx, y0 + dy, z0, qw, qx, qy, qz)
+        pose = (x0 + dx, y0 + dy, z0 + dz, qw, qx, qy, qz)
         asset = self.env.scene[REFERENCE_OBJECT].data
         pose_tensor = torch.tensor([pose], dtype=torch.float32, device=self.env.device)
         velocity_tensor = torch.zeros((1, 6), dtype=torch.float32, device=self.env.device)
@@ -850,4 +867,23 @@ def _quat_inverse_rotate(quaternion: Any, vector: Any) -> Any:
         2.0 * np.dot(inverse_xyz, v) * inverse_xyz
         + (w * w - np.dot(inverse_xyz, inverse_xyz)) * v
         + 2.0 * w * np.cross(inverse_xyz, v)
+    )
+
+
+def _quat_rotate(quaternion: Any, vector: Any) -> Any:
+    import numpy as np
+
+    q = np.asarray(quaternion, dtype=float)
+    v = np.asarray(vector, dtype=float)
+    norm = np.linalg.norm(q)
+    if norm <= 0:
+        raise RoboLabBootstrapError(
+            "robot quaternion is invalid during task-frame motion"
+        )
+    q = q / norm
+    w, xyz = q[0], q[1:]
+    return (
+        2.0 * np.dot(xyz, v) * xyz
+        + (w * w - np.dot(xyz, xyz)) * v
+        + 2.0 * w * np.cross(xyz, v)
     )

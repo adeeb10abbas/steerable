@@ -67,9 +67,22 @@ class MotionDirectionTests(unittest.TestCase):
             goal="left",
             counterbalance={"physical_translation_sign": -1},
         )
-        self.assertAlmostEqual(positive[0], -1.0 / math.sqrt(1.0))
-        self.assertAlmostEqual(negative[0], 1.0 / math.sqrt(1.0))
+        self.assertAlmostEqual(positive[0], 1.0 / math.sqrt(1.0))
+        self.assertAlmostEqual(negative[0], -1.0 / math.sqrt(1.0))
         self.assertNotEqual(positive, negative)
+
+    def test_requested_side_does_not_determine_physical_motion_sign(self) -> None:
+        left = ReferenceMotionController.resolve_live_direction(
+            fixture="horizontal",
+            goal="left",
+            counterbalance={"physical_translation_sign": 1},
+        )
+        right = ReferenceMotionController.resolve_live_direction(
+            fixture="horizontal",
+            goal="right",
+            counterbalance={"physical_translation_sign": 1},
+        )
+        self.assertEqual(left, right)
 
     def test_diagonal_reference_binding_uses_counterbalance_signs(self) -> None:
         direction = ReferenceMotionController.resolve_live_direction(

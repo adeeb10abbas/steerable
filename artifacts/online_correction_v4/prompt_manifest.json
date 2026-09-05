@@ -3,27 +3,23 @@
   "carrier_template": "Place the {object} so that {clause}.",
   "fixture_name_binding": {
     "containment": {
-      "object": "the cube",
+      "object": "cube",
       "physical_resolution": "symbolic_fixture_roles_pending_runtime_lock",
-      "reference": "the bowl"
+      "reference": "bowl"
     },
     "horizontal": {
-      "object": "the cube",
+      "object": "cube",
       "physical_resolution": "symbolic_fixture_roles_pending_runtime_lock",
-      "reference": "the bowl"
+      "reference": "bowl"
     },
     "object_pair": {
-      "object": "the sponge",
+      "object": "sponge",
       "physical_resolution": "symbolic_fixture_roles_pending_runtime_lock",
-      "reference": "the tray"
+      "reference": "tray"
     },
     "reference_binding": {
-      "object": "the cube",
-      "physical_resolution": "symbolic_color_labels_pending_runtime_lock",
-      "reference_by_named": {
-        "A": "the blue bowl",
-        "B": "the yellow bowl"
-      }
+      "object": "cube",
+      "physical_resolution": "symbolic_color_labels_pending_runtime_lock"
     },
     "second_stack": {
       "object": null,
@@ -31,25 +27,62 @@
       "reference": null
     },
     "vertical": {
-      "object": "the cube",
+      "object": "cube",
       "physical_resolution": "symbolic_fixture_roles_pending_runtime_lock",
-      "reference": "the bowl"
+      "reference": "bowl"
     }
   },
   "frame_suffix_horizontal": " Use the robot's fixed viewpoint for left, right, front, and behind.",
+  "name_resolution_rule": "bare_nouns_in_templates; carrier_and_clauses_supply_articles",
+  "prompt_identity_semantics": {
+    "analysis_forbidden_primary_keys": [
+      "prompt_sha256"
+    ],
+    "c2_counterbalance_in_prompt_id": true,
+    "episode_binding_fields": [
+      "prompt_id",
+      "prompt_text",
+      "prompt_sha256"
+    ],
+    "primary_key": "prompt_id",
+    "prompt_sha256_may_map_to_multiple_prompt_ids": true,
+    "prompt_sha256_must_be_unique_when_text_differs": true,
+    "prompt_sha256_rule": "sha256(utf8(prompt_text)); identical iff byte-identical resolved text",
+    "reason": "Identical UTF-8 prompt text can name different physical A/B bowl identities under C2 counterbalance. Semantic identity is prompt_id plus queue episode binding, never prompt_sha256 alone. prompt_sha256 is a content hash only: same resolved bytes share one hash; different bytes must not."
+  },
+  "prompt_sha256_shared_by_prompt_id_count": 8,
   "prompts": [
+    {
+      "fixture_ids": [
+        "reference_binding"
+      ],
+      "goal": "front",
+      "launch_critical_names_resolved": true,
+      "named_reference": "A",
+      "object_text": "cube",
+      "physical_A_color": "blue",
+      "physical_resolution": "symbolic_color_labels_pending_runtime_lock",
+      "prompt_id": "065d0e7d4d308ac3d14bd215",
+      "prompt_sha256": "c5c29f157de4d82454d8bfb8609423e80b358745f72a08bbccab646e9dae48ba",
+      "prompt_text": "Place the cube so that the cube is in front of the blue bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
+      "reference_color": "blue",
+      "reference_text": "blue bowl",
+      "relation_group": "horizontal",
+      "wording": "direct"
+    },
     {
       "fixture_ids": [
         "horizontal"
       ],
       "goal": "behind",
       "launch_critical_names_resolved": true,
-      "object_text": "the cube",
+      "named_reference": "single",
+      "object_text": "cube",
       "physical_resolution": "symbolic_fixture_roles_pending_runtime_lock",
       "prompt_id": "09981a68ca90dd9d4eb42e5d",
-      "prompt_sha256": "346f7d1267e14defdde4307a8578342bee04e7b446e921203db0d0a63168af76",
-      "prompt_text": "Place the the cube so that the the bowl is in front of the the cube. Use the robot's fixed viewpoint for left, right, front, and behind.",
-      "reference_text": "the bowl",
+      "prompt_sha256": "c4deb101af71d96d7cc2ffdcc8d83810fd610fc20273a4916b21473c1edfd0be",
+      "prompt_text": "Place the cube so that the bowl is in front of the cube. Use the robot's fixed viewpoint for left, right, front, and behind.",
+      "reference_text": "bowl",
       "relation_group": "horizontal",
       "wording": "inverse"
     },
@@ -57,14 +90,17 @@
       "fixture_ids": [
         "reference_binding"
       ],
-      "goal": "left",
+      "goal": "behind",
       "launch_critical_names_resolved": true,
-      "object_text": "the cube",
+      "named_reference": "B",
+      "object_text": "cube",
+      "physical_A_color": "blue",
       "physical_resolution": "symbolic_color_labels_pending_runtime_lock",
-      "prompt_id": "17b3ec940278025cc1a966ba",
-      "prompt_sha256": "054556e28c5235840a6d969cccabaec828f15cdd1858f316161a9644ab2921df",
-      "prompt_text": "Place the the cube so that the the cube is left of the the yellow bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
-      "reference_text": "the yellow bowl",
+      "prompt_id": "0da575e6bfe63b0a611a590e",
+      "prompt_sha256": "6ddc9a6fc2ac3dd3f9c8c6eb0b777c38c97aa6d7301a59308e4569094d04a5d2",
+      "prompt_text": "Place the cube so that the cube is behind the yellow bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
+      "reference_color": "yellow",
+      "reference_text": "yellow bowl",
       "relation_group": "horizontal",
       "wording": "direct"
     },
@@ -74,14 +110,33 @@
       ],
       "goal": "left",
       "launch_critical_names_resolved": true,
-      "object_text": "the cube",
+      "named_reference": "single",
+      "object_text": "cube",
       "physical_resolution": "symbolic_fixture_roles_pending_runtime_lock",
       "prompt_id": "1cc14f7cb95b355cea79c4cf",
-      "prompt_sha256": "850140a76c392f541497e4650c71c4d1b1909d05e3219fe80001ee6d5680cdf5",
-      "prompt_text": "Place the the cube so that the the bowl is right of the the cube. Use the robot's fixed viewpoint for left, right, front, and behind.",
-      "reference_text": "the bowl",
+      "prompt_sha256": "5514bce703053721f15c0f1bdd5f0d16bf0c0b6ba73f5f38fff9de5bf9e0e748",
+      "prompt_text": "Place the cube so that the bowl is right of the cube. Use the robot's fixed viewpoint for left, right, front, and behind.",
+      "reference_text": "bowl",
       "relation_group": "horizontal",
       "wording": "inverse"
+    },
+    {
+      "fixture_ids": [
+        "reference_binding"
+      ],
+      "goal": "left",
+      "launch_critical_names_resolved": true,
+      "named_reference": "A",
+      "object_text": "cube",
+      "physical_A_color": "blue",
+      "physical_resolution": "symbolic_color_labels_pending_runtime_lock",
+      "prompt_id": "1e1c59d9a6af16b743ca65c9",
+      "prompt_sha256": "762c0ba5ae2a39ac404f80326d67e1c09a202dbbf0a957ce27ddbe058ece7d91",
+      "prompt_text": "Place the cube so that the cube is left of the blue bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
+      "reference_color": "blue",
+      "reference_text": "blue bowl",
+      "relation_group": "horizontal",
+      "wording": "direct"
     },
     {
       "fixture_ids": [
@@ -89,12 +144,13 @@
       ],
       "goal": "above",
       "launch_critical_names_resolved": true,
-      "object_text": "the cube",
+      "named_reference": "single",
+      "object_text": "cube",
       "physical_resolution": "symbolic_fixture_roles_pending_runtime_lock",
       "prompt_id": "21af2d8200fb53661c9515be",
-      "prompt_sha256": "25d1b4ab29158d4074093d68c30def1a0e1aa702ae23aec0856318efa9c8b6d1",
-      "prompt_text": "Place the the cube so that the the bowl is below the the cube.",
-      "reference_text": "the bowl",
+      "prompt_sha256": "65b7dbe74da3b960b65c0624f5e435ea113397671de72b6dbb613c6145eca6b4",
+      "prompt_text": "Place the cube so that the bowl is below the cube.",
+      "reference_text": "bowl",
       "relation_group": "vertical",
       "wording": "inverse"
     },
@@ -104,14 +160,33 @@
       ],
       "goal": "inside",
       "launch_critical_names_resolved": true,
-      "object_text": "the cube",
+      "named_reference": "single",
+      "object_text": "cube",
       "physical_resolution": "symbolic_fixture_roles_pending_runtime_lock",
       "prompt_id": "22b77013ccfa9990924c98f5",
-      "prompt_sha256": "f009b9cabfdaffcace94fc327c8fc04975674e1bd8415518bb4d679c20a756a1",
-      "prompt_text": "Place the the cube so that the the bowl contains the the cube.",
-      "reference_text": "the bowl",
+      "prompt_sha256": "6555ee92bd0b130227e9ee290306589b98cb00340c5fe66242ab09197066ed76",
+      "prompt_text": "Place the cube so that the bowl contains the cube.",
+      "reference_text": "bowl",
       "relation_group": "containment",
       "wording": "inverse"
+    },
+    {
+      "fixture_ids": [
+        "reference_binding"
+      ],
+      "goal": "behind",
+      "launch_critical_names_resolved": true,
+      "named_reference": "A",
+      "object_text": "cube",
+      "physical_A_color": "blue",
+      "physical_resolution": "symbolic_color_labels_pending_runtime_lock",
+      "prompt_id": "231abb919f98be27ee9a1936",
+      "prompt_sha256": "2a130d1a148b7fa7c5d863524ba5fe4df65e9c1df6e9c985b7978857eb2ace57",
+      "prompt_text": "Place the cube so that the cube is behind the blue bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
+      "reference_color": "blue",
+      "reference_text": "blue bowl",
+      "relation_group": "horizontal",
+      "wording": "direct"
     },
     {
       "fixture_ids": [
@@ -119,6 +194,7 @@
       ],
       "goal": "front",
       "launch_critical_names_resolved": false,
+      "named_reference": "single",
       "object_text": "{UNRESOLVED_MANIPULATED_OBJECT}",
       "physical_resolution": "UNRESOLVED_PENDING_BRIDGE_FIXTURE_LOCK",
       "prompt_id": "298722f129d4445a10a6df08",
@@ -130,32 +206,36 @@
     },
     {
       "fixture_ids": [
-        "reference_binding"
-      ],
-      "goal": "right",
-      "launch_critical_names_resolved": true,
-      "object_text": "the cube",
-      "physical_resolution": "symbolic_color_labels_pending_runtime_lock",
-      "prompt_id": "2e60d72a43fab84253bf549e",
-      "prompt_sha256": "3246e7bbe11cc1c072a2a6594f2c561acfbb4058b4c94dd2c1aa867134050777",
-      "prompt_text": "Place the the cube so that the the cube is right of the the blue bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
-      "reference_text": "the blue bowl",
-      "relation_group": "horizontal",
-      "wording": "direct"
-    },
-    {
-      "fixture_ids": [
         "vertical"
       ],
       "goal": "above",
       "launch_critical_names_resolved": true,
-      "object_text": "the cube",
+      "named_reference": "single",
+      "object_text": "cube",
       "physical_resolution": "symbolic_fixture_roles_pending_runtime_lock",
       "prompt_id": "37019f29cb0d26a20bdfbe1d",
-      "prompt_sha256": "e56ae0e4d0dcb6154591230df9c550fc2a61d1679c6c00629d9bbfcb3b176e65",
-      "prompt_text": "Place the the cube so that the the cube is above the the bowl.",
-      "reference_text": "the bowl",
+      "prompt_sha256": "9b9282d89cdaf9c80e2539466fa6dcbdea21ed0aa4e0e995ff3350d42dd63809",
+      "prompt_text": "Place the cube so that the cube is above the bowl.",
+      "reference_text": "bowl",
       "relation_group": "vertical",
+      "wording": "direct"
+    },
+    {
+      "fixture_ids": [
+        "reference_binding"
+      ],
+      "goal": "right",
+      "launch_critical_names_resolved": true,
+      "named_reference": "B",
+      "object_text": "cube",
+      "physical_A_color": "blue",
+      "physical_resolution": "symbolic_color_labels_pending_runtime_lock",
+      "prompt_id": "3dc6a2e885de4d471c36135f",
+      "prompt_sha256": "2e98674ed9d38172270e5d8e5b8573d6d0ddc0ab1531a8458d08046458a570ae",
+      "prompt_text": "Place the cube so that the cube is right of the yellow bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
+      "reference_color": "yellow",
+      "reference_text": "yellow bowl",
+      "relation_group": "horizontal",
       "wording": "direct"
     },
     {
@@ -164,27 +244,13 @@
       ],
       "goal": "left",
       "launch_critical_names_resolved": true,
-      "object_text": "the sponge",
+      "named_reference": "single",
+      "object_text": "sponge",
       "physical_resolution": "symbolic_fixture_roles_pending_runtime_lock",
       "prompt_id": "4067cea056309e3803942792",
-      "prompt_sha256": "77253400d6bfb7193cc8b3d12e6ec933cf5daaf418af2e947968b7fdc0b12d5a",
-      "prompt_text": "Place the the sponge so that the the sponge is left of the the tray. Use the robot's fixed viewpoint for left, right, front, and behind.",
-      "reference_text": "the tray",
-      "relation_group": "horizontal",
-      "wording": "direct"
-    },
-    {
-      "fixture_ids": [
-        "reference_binding"
-      ],
-      "goal": "front",
-      "launch_critical_names_resolved": true,
-      "object_text": "the cube",
-      "physical_resolution": "symbolic_color_labels_pending_runtime_lock",
-      "prompt_id": "43215ac5f172d063e3212a8c",
-      "prompt_sha256": "3cb90f161e2498e2d35adc688ea103c38d746a3b10f120de74181f5d2cfd1e7a",
-      "prompt_text": "Place the the cube so that the the cube is in front of the the blue bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
-      "reference_text": "the blue bowl",
+      "prompt_sha256": "08b35b526212f980580d4863b8a2c118f1f45b7403f4c06bbe480663b8b4c485",
+      "prompt_text": "Place the sponge so that the sponge is left of the tray. Use the robot's fixed viewpoint for left, right, front, and behind.",
+      "reference_text": "tray",
       "relation_group": "horizontal",
       "wording": "direct"
     },
@@ -194,12 +260,13 @@
       ],
       "goal": "right",
       "launch_critical_names_resolved": true,
-      "object_text": "the sponge",
+      "named_reference": "single",
+      "object_text": "sponge",
       "physical_resolution": "symbolic_fixture_roles_pending_runtime_lock",
       "prompt_id": "539d3c49237c45c5c144c69a",
-      "prompt_sha256": "e192c2dc223758c93256b568ef45085e802e4de4bb5415fbaae4288184b35da4",
-      "prompt_text": "Place the the sponge so that the the sponge is right of the the tray. Use the robot's fixed viewpoint for left, right, front, and behind.",
-      "reference_text": "the tray",
+      "prompt_sha256": "9992aa08c51a2c23bb753a94b3e823f8cb3a0917cd516529ebd20954dba15784",
+      "prompt_text": "Place the sponge so that the sponge is right of the tray. Use the robot's fixed viewpoint for left, right, front, and behind.",
+      "reference_text": "tray",
       "relation_group": "horizontal",
       "wording": "direct"
     },
@@ -209,12 +276,13 @@
       ],
       "goal": "left",
       "launch_critical_names_resolved": true,
-      "object_text": "the cube",
+      "named_reference": "single",
+      "object_text": "cube",
       "physical_resolution": "symbolic_fixture_roles_pending_runtime_lock",
       "prompt_id": "55d5edb4587eac3c9cf660e3",
-      "prompt_sha256": "884e2b50109521b8d7a03c3622b5e826ad75a48e6225499fb5cf861a893b45db",
-      "prompt_text": "Place the the cube so that the the cube is left of the the bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
-      "reference_text": "the bowl",
+      "prompt_sha256": "055126d349587049fd17e76ff9ce43f8a87d342e5fd5d017e091f2bdb769416c",
+      "prompt_text": "Place the cube so that the cube is left of the bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
+      "reference_text": "bowl",
       "relation_group": "horizontal",
       "wording": "direct"
     },
@@ -224,6 +292,7 @@
       ],
       "goal": "behind",
       "launch_critical_names_resolved": false,
+      "named_reference": "single",
       "object_text": "{UNRESOLVED_MANIPULATED_OBJECT}",
       "physical_resolution": "UNRESOLVED_PENDING_BRIDGE_FIXTURE_LOCK",
       "prompt_id": "640905492e21bd2437fd1e60",
@@ -235,18 +304,21 @@
     },
     {
       "fixture_ids": [
-        "horizontal"
+        "reference_binding"
       ],
       "goal": "front",
       "launch_critical_names_resolved": true,
-      "object_text": "the cube",
-      "physical_resolution": "symbolic_fixture_roles_pending_runtime_lock",
-      "prompt_id": "7272e04772d1fbb0e3435748",
-      "prompt_sha256": "eb5ee10274680234fe81bd5678ad8ab6fcc8d090c03da524742835e6fc29d644",
-      "prompt_text": "Place the the cube so that the the bowl is behind the the cube. Use the robot's fixed viewpoint for left, right, front, and behind.",
-      "reference_text": "the bowl",
+      "named_reference": "B",
+      "object_text": "cube",
+      "physical_A_color": "blue",
+      "physical_resolution": "symbolic_color_labels_pending_runtime_lock",
+      "prompt_id": "69a05cf024047ac4df41df70",
+      "prompt_sha256": "69c758094febcf37d9d26abb89be096aa9075acf196b1d9b81b03ce5058291f1",
+      "prompt_text": "Place the cube so that the cube is in front of the yellow bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
+      "reference_color": "yellow",
+      "reference_text": "yellow bowl",
       "relation_group": "horizontal",
-      "wording": "inverse"
+      "wording": "direct"
     },
     {
       "fixture_ids": [
@@ -254,12 +326,31 @@
       ],
       "goal": "front",
       "launch_critical_names_resolved": true,
-      "object_text": "the cube",
+      "named_reference": "single",
+      "object_text": "cube",
       "physical_resolution": "symbolic_fixture_roles_pending_runtime_lock",
-      "prompt_id": "88a5e3dee9bba7b739962140",
-      "prompt_sha256": "ab6488c19761654a21ad5948b7edf03f35d024f52ff576c61662a4612aff3f4b",
-      "prompt_text": "Place the the cube so that the the cube is in front of the the bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
-      "reference_text": "the bowl",
+      "prompt_id": "7272e04772d1fbb0e3435748",
+      "prompt_sha256": "3fc4b818f3257013073200c7483bbe8e7e2a8bd038580387d6918a6ea4783490",
+      "prompt_text": "Place the cube so that the bowl is behind the cube. Use the robot's fixed viewpoint for left, right, front, and behind.",
+      "reference_text": "bowl",
+      "relation_group": "horizontal",
+      "wording": "inverse"
+    },
+    {
+      "fixture_ids": [
+        "reference_binding"
+      ],
+      "goal": "behind",
+      "launch_critical_names_resolved": true,
+      "named_reference": "A",
+      "object_text": "cube",
+      "physical_A_color": "yellow",
+      "physical_resolution": "symbolic_color_labels_pending_runtime_lock",
+      "prompt_id": "733601d779f1e61574ba04bf",
+      "prompt_sha256": "6ddc9a6fc2ac3dd3f9c8c6eb0b777c38c97aa6d7301a59308e4569094d04a5d2",
+      "prompt_text": "Place the cube so that the cube is behind the yellow bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
+      "reference_color": "yellow",
+      "reference_text": "yellow bowl",
       "relation_group": "horizontal",
       "wording": "direct"
     },
@@ -267,14 +358,33 @@
       "fixture_ids": [
         "reference_binding"
       ],
-      "goal": "left",
+      "goal": "behind",
       "launch_critical_names_resolved": true,
-      "object_text": "the cube",
+      "named_reference": "B",
+      "object_text": "cube",
+      "physical_A_color": "yellow",
       "physical_resolution": "symbolic_color_labels_pending_runtime_lock",
-      "prompt_id": "89d172d04deacdbfaaeaf963",
-      "prompt_sha256": "5bef8a1754f739402cf229a25e728516529bdc365466a2d0673b5125c58a7b69",
-      "prompt_text": "Place the the cube so that the the cube is left of the the blue bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
-      "reference_text": "the blue bowl",
+      "prompt_id": "785d0f861f04084dbffc77d9",
+      "prompt_sha256": "2a130d1a148b7fa7c5d863524ba5fe4df65e9c1df6e9c985b7978857eb2ace57",
+      "prompt_text": "Place the cube so that the cube is behind the blue bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
+      "reference_color": "blue",
+      "reference_text": "blue bowl",
+      "relation_group": "horizontal",
+      "wording": "direct"
+    },
+    {
+      "fixture_ids": [
+        "horizontal"
+      ],
+      "goal": "front",
+      "launch_critical_names_resolved": true,
+      "named_reference": "single",
+      "object_text": "cube",
+      "physical_resolution": "symbolic_fixture_roles_pending_runtime_lock",
+      "prompt_id": "88a5e3dee9bba7b739962140",
+      "prompt_sha256": "2f91aa418f6ccaf76c630aafcd1fce630fcb6a2f4a3dde71354461ea59eb038a",
+      "prompt_text": "Place the cube so that the cube is in front of the bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
+      "reference_text": "bowl",
       "relation_group": "horizontal",
       "wording": "direct"
     },
@@ -284,12 +394,13 @@
       ],
       "goal": "behind",
       "launch_critical_names_resolved": true,
-      "object_text": "the sponge",
+      "named_reference": "single",
+      "object_text": "sponge",
       "physical_resolution": "symbolic_fixture_roles_pending_runtime_lock",
       "prompt_id": "8c1b621a321f2b46081b782e",
-      "prompt_sha256": "d08f6ccf424acce8b538e5f8f26acd777e6c0f2de6ec04acb060887da68396e7",
-      "prompt_text": "Place the the sponge so that the the sponge is behind the the tray. Use the robot's fixed viewpoint for left, right, front, and behind.",
-      "reference_text": "the tray",
+      "prompt_sha256": "fbaee7628ebe2e33f0aa02bf9d0cec1ec0f2a70a4b86ff7e2e51f5bc9f9cec54",
+      "prompt_text": "Place the sponge so that the sponge is behind the tray. Use the robot's fixed viewpoint for left, right, front, and behind.",
+      "reference_text": "tray",
       "relation_group": "horizontal",
       "wording": "direct"
     },
@@ -299,6 +410,7 @@
       ],
       "goal": "left",
       "launch_critical_names_resolved": false,
+      "named_reference": "single",
       "object_text": "{UNRESOLVED_MANIPULATED_OBJECT}",
       "physical_resolution": "UNRESOLVED_PENDING_BRIDGE_FIXTURE_LOCK",
       "prompt_id": "93e25521b81615a15c98fac1",
@@ -312,14 +424,17 @@
       "fixture_ids": [
         "reference_binding"
       ],
-      "goal": "behind",
+      "goal": "left",
       "launch_critical_names_resolved": true,
-      "object_text": "the cube",
+      "named_reference": "A",
+      "object_text": "cube",
+      "physical_A_color": "yellow",
       "physical_resolution": "symbolic_color_labels_pending_runtime_lock",
-      "prompt_id": "a3118cd6e385daacbb770faf",
-      "prompt_sha256": "bd686f954a678cc3a45f96334a031d850dec43a29d4e66f2200541897b4c0d6d",
-      "prompt_text": "Place the the cube so that the the cube is behind the the yellow bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
-      "reference_text": "the yellow bowl",
+      "prompt_id": "97ae1aa4ac7f0791c3bc1a6e",
+      "prompt_sha256": "f3f99c0df53aa84ecbb88cb26d05cdd39e934ddb13cafac0a2fe0554b19df59c",
+      "prompt_text": "Place the cube so that the cube is left of the yellow bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
+      "reference_color": "yellow",
+      "reference_text": "yellow bowl",
       "relation_group": "horizontal",
       "wording": "direct"
     },
@@ -329,6 +444,7 @@
       ],
       "goal": "right",
       "launch_critical_names_resolved": false,
+      "named_reference": "single",
       "object_text": "{UNRESOLVED_MANIPULATED_OBJECT}",
       "physical_resolution": "UNRESOLVED_PENDING_BRIDGE_FIXTURE_LOCK",
       "prompt_id": "aedae824a3c9e95966b439df",
@@ -344,12 +460,13 @@
       ],
       "goal": "below",
       "launch_critical_names_resolved": true,
-      "object_text": "the cube",
+      "named_reference": "single",
+      "object_text": "cube",
       "physical_resolution": "symbolic_fixture_roles_pending_runtime_lock",
       "prompt_id": "c086eaf6efd6561f2b88c184",
-      "prompt_sha256": "d10d3d22228a433a0b965c2334c9df4d225fd22cb1f0aaba49f18ada404bfed9",
-      "prompt_text": "Place the the cube so that the the bowl is above the the cube.",
-      "reference_text": "the bowl",
+      "prompt_sha256": "ff84a8582c38c8ea815f10b421fc6d32a309ab4563e72486ee5712fd2ac96b2c",
+      "prompt_text": "Place the cube so that the bowl is above the cube.",
+      "reference_text": "bowl",
       "relation_group": "vertical",
       "wording": "inverse"
     },
@@ -359,12 +476,13 @@
       ],
       "goal": "behind",
       "launch_critical_names_resolved": true,
-      "object_text": "the cube",
+      "named_reference": "single",
+      "object_text": "cube",
       "physical_resolution": "symbolic_fixture_roles_pending_runtime_lock",
       "prompt_id": "c176e29c1a96d26a02075da2",
-      "prompt_sha256": "babc42748a2c00c713cc5d07bc9213c515ef0f29df92d927ab55e83c8c54f808",
-      "prompt_text": "Place the the cube so that the the cube is behind the the bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
-      "reference_text": "the bowl",
+      "prompt_sha256": "34b822c3e21dbdc787c00d96a59c4db91fc3a6c16ee211544ccdfb2b0a6e90fb",
+      "prompt_text": "Place the cube so that the cube is behind the bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
+      "reference_text": "bowl",
       "relation_group": "horizontal",
       "wording": "direct"
     },
@@ -374,12 +492,31 @@
       ],
       "goal": "right",
       "launch_critical_names_resolved": true,
-      "object_text": "the cube",
+      "named_reference": "single",
+      "object_text": "cube",
       "physical_resolution": "symbolic_fixture_roles_pending_runtime_lock",
       "prompt_id": "c70d2e3554b7316197369fc1",
-      "prompt_sha256": "119c1bdbd39c4647cc513c1ab4b258fddf216cb7f9843f17c82a2f9bb449028c",
-      "prompt_text": "Place the the cube so that the the cube is right of the the bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
-      "reference_text": "the bowl",
+      "prompt_sha256": "a20047dfbcc4307d6fb12d01970f4246445710a17c6d6ed9c1174ff982fdd019",
+      "prompt_text": "Place the cube so that the cube is right of the bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
+      "reference_text": "bowl",
+      "relation_group": "horizontal",
+      "wording": "direct"
+    },
+    {
+      "fixture_ids": [
+        "reference_binding"
+      ],
+      "goal": "right",
+      "launch_critical_names_resolved": true,
+      "named_reference": "A",
+      "object_text": "cube",
+      "physical_A_color": "yellow",
+      "physical_resolution": "symbolic_color_labels_pending_runtime_lock",
+      "prompt_id": "cac5e93085dbbcd23c43bc88",
+      "prompt_sha256": "2e98674ed9d38172270e5d8e5b8573d6d0ddc0ab1531a8458d08046458a570ae",
+      "prompt_text": "Place the cube so that the cube is right of the yellow bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
+      "reference_color": "yellow",
+      "reference_text": "yellow bowl",
       "relation_group": "horizontal",
       "wording": "direct"
     },
@@ -389,12 +526,13 @@
       ],
       "goal": "right",
       "launch_critical_names_resolved": true,
-      "object_text": "the cube",
+      "named_reference": "single",
+      "object_text": "cube",
       "physical_resolution": "symbolic_fixture_roles_pending_runtime_lock",
       "prompt_id": "cad9f53a6b2b7f9cc4ebb92e",
-      "prompt_sha256": "ea450414dccf851c9584843e60aac7dfc90456519588e0fba1e81161c6ab1950",
-      "prompt_text": "Place the the cube so that the the bowl is left of the the cube. Use the robot's fixed viewpoint for left, right, front, and behind.",
-      "reference_text": "the bowl",
+      "prompt_sha256": "c2bfea26d7e287828d27533817f890db0c5ee8e514e5c88555a55d6e6d562e52",
+      "prompt_text": "Place the cube so that the bowl is left of the cube. Use the robot's fixed viewpoint for left, right, front, and behind.",
+      "reference_text": "bowl",
       "relation_group": "horizontal",
       "wording": "inverse"
     },
@@ -404,12 +542,13 @@
       ],
       "goal": "below",
       "launch_critical_names_resolved": true,
-      "object_text": "the cube",
+      "named_reference": "single",
+      "object_text": "cube",
       "physical_resolution": "symbolic_fixture_roles_pending_runtime_lock",
       "prompt_id": "cce402f5997c5dc84daf152d",
-      "prompt_sha256": "85fc6c4dda50f1a4c5a107ec41d53fb3e8468f149e81f1dd02c035ddc5cc35ff",
-      "prompt_text": "Place the the cube so that the the cube is below the the bowl.",
-      "reference_text": "the bowl",
+      "prompt_sha256": "73f3f108e51af804cd097c7a81b0059be494e39246a974b2f6e96f12f27647fa",
+      "prompt_text": "Place the cube so that the cube is below the bowl.",
+      "reference_text": "bowl",
       "relation_group": "vertical",
       "wording": "direct"
     },
@@ -419,57 +558,31 @@
       ],
       "goal": "inside",
       "launch_critical_names_resolved": true,
-      "object_text": "the cube",
+      "named_reference": "single",
+      "object_text": "cube",
       "physical_resolution": "symbolic_fixture_roles_pending_runtime_lock",
       "prompt_id": "d0b47b31b821fee7b6b441d7",
-      "prompt_sha256": "8468237d2752fa2b7107f4453b6dcb0e019f1c9c5158bb3ddedbb0039aaaf1d3",
-      "prompt_text": "Place the the cube so that the the cube is inside the the bowl.",
-      "reference_text": "the bowl",
+      "prompt_sha256": "9707ccb9c5e80671a17887a4d8a54dbd27481cc925124e8c754feea66014006c",
+      "prompt_text": "Place the cube so that the cube is inside the bowl.",
+      "reference_text": "bowl",
       "relation_group": "containment",
       "wording": "direct"
     },
     {
       "fixture_ids": [
-        "object_pair"
-      ],
-      "goal": "front",
-      "launch_critical_names_resolved": true,
-      "object_text": "the sponge",
-      "physical_resolution": "symbolic_fixture_roles_pending_runtime_lock",
-      "prompt_id": "db07b99d6da69aee529b77a1",
-      "prompt_sha256": "60b61695c2f8067a52d2bbff578a31de43e6fc08a6d89c1dc258f189ff85a999",
-      "prompt_text": "Place the the sponge so that the the sponge is in front of the the tray. Use the robot's fixed viewpoint for left, right, front, and behind.",
-      "reference_text": "the tray",
-      "relation_group": "horizontal",
-      "wording": "direct"
-    },
-    {
-      "fixture_ids": [
-        "reference_binding"
-      ],
-      "goal": "behind",
-      "launch_critical_names_resolved": true,
-      "object_text": "the cube",
-      "physical_resolution": "symbolic_color_labels_pending_runtime_lock",
-      "prompt_id": "ebf6a53c3556b50ff9c4e4a0",
-      "prompt_sha256": "26532fa02e400ca82a1859961b553e6035203e21184320d71eed499a95ff010f",
-      "prompt_text": "Place the the cube so that the the cube is behind the the blue bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
-      "reference_text": "the blue bowl",
-      "relation_group": "horizontal",
-      "wording": "direct"
-    },
-    {
-      "fixture_ids": [
         "reference_binding"
       ],
       "goal": "front",
       "launch_critical_names_resolved": true,
-      "object_text": "the cube",
+      "named_reference": "B",
+      "object_text": "cube",
+      "physical_A_color": "yellow",
       "physical_resolution": "symbolic_color_labels_pending_runtime_lock",
-      "prompt_id": "f0a193fff17657cf5e7fd367",
-      "prompt_sha256": "e8b8ff70761267477d0c40cae0097e0452293c78d45cebcb2db1d59757adf8a7",
-      "prompt_text": "Place the the cube so that the the cube is in front of the the yellow bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
-      "reference_text": "the yellow bowl",
+      "prompt_id": "d7f5b19796fe8160f900236c",
+      "prompt_sha256": "c5c29f157de4d82454d8bfb8609423e80b358745f72a08bbccab646e9dae48ba",
+      "prompt_text": "Place the cube so that the cube is in front of the blue bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
+      "reference_color": "blue",
+      "reference_text": "blue bowl",
       "relation_group": "horizontal",
       "wording": "direct"
     },
@@ -479,19 +592,110 @@
       ],
       "goal": "right",
       "launch_critical_names_resolved": true,
-      "object_text": "the cube",
+      "named_reference": "B",
+      "object_text": "cube",
+      "physical_A_color": "yellow",
       "physical_resolution": "symbolic_color_labels_pending_runtime_lock",
-      "prompt_id": "fe3ac91cb034865ed3a8662b",
-      "prompt_sha256": "56bb8b027b1fcaffec27b2263ea6f1d846bf8927d54b4f01dd1d65fa508dc0e6",
-      "prompt_text": "Place the the cube so that the the cube is right of the the yellow bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
-      "reference_text": "the yellow bowl",
+      "prompt_id": "d95c8fb551528b4724d59223",
+      "prompt_sha256": "a7b2ab0f3f767812c999ac9294c2f891d040b87679b73e77bd939b6abc4776c3",
+      "prompt_text": "Place the cube so that the cube is right of the blue bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
+      "reference_color": "blue",
+      "reference_text": "blue bowl",
+      "relation_group": "horizontal",
+      "wording": "direct"
+    },
+    {
+      "fixture_ids": [
+        "object_pair"
+      ],
+      "goal": "front",
+      "launch_critical_names_resolved": true,
+      "named_reference": "single",
+      "object_text": "sponge",
+      "physical_resolution": "symbolic_fixture_roles_pending_runtime_lock",
+      "prompt_id": "db07b99d6da69aee529b77a1",
+      "prompt_sha256": "be50fd0169c3ec786c7eee8b49233b1442c74d265ef1ee88ddcd6b2c8f66c7f6",
+      "prompt_text": "Place the sponge so that the sponge is in front of the tray. Use the robot's fixed viewpoint for left, right, front, and behind.",
+      "reference_text": "tray",
+      "relation_group": "horizontal",
+      "wording": "direct"
+    },
+    {
+      "fixture_ids": [
+        "reference_binding"
+      ],
+      "goal": "left",
+      "launch_critical_names_resolved": true,
+      "named_reference": "B",
+      "object_text": "cube",
+      "physical_A_color": "yellow",
+      "physical_resolution": "symbolic_color_labels_pending_runtime_lock",
+      "prompt_id": "df94eda917603d654fc9e206",
+      "prompt_sha256": "762c0ba5ae2a39ac404f80326d67e1c09a202dbbf0a957ce27ddbe058ece7d91",
+      "prompt_text": "Place the cube so that the cube is left of the blue bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
+      "reference_color": "blue",
+      "reference_text": "blue bowl",
+      "relation_group": "horizontal",
+      "wording": "direct"
+    },
+    {
+      "fixture_ids": [
+        "reference_binding"
+      ],
+      "goal": "front",
+      "launch_critical_names_resolved": true,
+      "named_reference": "A",
+      "object_text": "cube",
+      "physical_A_color": "yellow",
+      "physical_resolution": "symbolic_color_labels_pending_runtime_lock",
+      "prompt_id": "ed5458e7c829cddf8719f989",
+      "prompt_sha256": "69c758094febcf37d9d26abb89be096aa9075acf196b1d9b81b03ce5058291f1",
+      "prompt_text": "Place the cube so that the cube is in front of the yellow bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
+      "reference_color": "yellow",
+      "reference_text": "yellow bowl",
+      "relation_group": "horizontal",
+      "wording": "direct"
+    },
+    {
+      "fixture_ids": [
+        "reference_binding"
+      ],
+      "goal": "left",
+      "launch_critical_names_resolved": true,
+      "named_reference": "B",
+      "object_text": "cube",
+      "physical_A_color": "blue",
+      "physical_resolution": "symbolic_color_labels_pending_runtime_lock",
+      "prompt_id": "ee41267ad54bfddac330a9ca",
+      "prompt_sha256": "f3f99c0df53aa84ecbb88cb26d05cdd39e934ddb13cafac0a2fe0554b19df59c",
+      "prompt_text": "Place the cube so that the cube is left of the yellow bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
+      "reference_color": "yellow",
+      "reference_text": "yellow bowl",
+      "relation_group": "horizontal",
+      "wording": "direct"
+    },
+    {
+      "fixture_ids": [
+        "reference_binding"
+      ],
+      "goal": "right",
+      "launch_critical_names_resolved": true,
+      "named_reference": "A",
+      "object_text": "cube",
+      "physical_A_color": "blue",
+      "physical_resolution": "symbolic_color_labels_pending_runtime_lock",
+      "prompt_id": "fe87563fb539b1abc5df052b",
+      "prompt_sha256": "a7b2ab0f3f767812c999ac9294c2f891d040b87679b73e77bd939b6abc4776c3",
+      "prompt_text": "Place the cube so that the cube is right of the blue bowl. Use the robot's fixed viewpoint for left, right, front, and behind.",
+      "reference_color": "blue",
+      "reference_text": "blue bowl",
       "relation_group": "horizontal",
       "wording": "direct"
     }
   ],
   "runtime_manifest_binding_required": true,
   "schema_version": 1,
-  "unique_prompt_count": 30,
+  "unique_prompt_count": 38,
   "unresolved_physical_name_fixtures": [
     "second_stack"
   ]

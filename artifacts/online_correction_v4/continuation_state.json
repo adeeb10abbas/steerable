@@ -6,21 +6,26 @@
   ],
   "active_branch": "research/online-correction-v4",
   "artifact_sha256": {
-    "frozen_analysis_manifest.json": "550d6e4ccc843af4ab2855b291fe78c3fa5d8eabfd2f8b97c184c2d498cd1383",
-    "gate_report.json": "df9b751242da688b9adb8e8e046ff13cd347c22c29f02dcfb4f1b8fcb93607f6",
+    "frozen_analysis_manifest.json": "6c4370ffb83316be119d7e2938045d96fd8409cd3e36a9e16bff36b848fd1f46",
+    "gate_report.json": "346c624d95c266de209eb62f763ea51ba0e1896d65d7f9d855b3c61924bccb11",
     "historical_protocol_ledger.json": "2c4b123112333e458f4d7eb975b4535ceb6dce2c9093a03ab880a9ae21cb4b5e",
+    "launch_matrix.json": "8276675d06e2684bfc688dd5c0ebe355aef90c0095b771eb26149a7a5baa049d",
     "motion_manifest.json": "c5a6b3f637b009fadbb1615a79863c76a096d5a33f9a39f36150707269c3df67",
-    "prompt_manifest.json": "c11d5d7a5ab3ea928ef4e857babb84dd701ea30fc8b674b320272cfa5f11dd47",
-    "protocol.json": "e15703a8e496da098eb04f3640d423573e200155677b6ec7db34812bb23de89f",
-    "queue.jsonl": "65ff36d6ae62ea37e76ca9b94cda3410a56344e437638d7206eb56f8b2687df5",
-    "queue_manifest.json": "69cc0047517ca7488eb2f97cda699c48d1dec20d3390fcfa281a1dae339bd0da",
+    "prompt_manifest.json": "20e464b06576fd7e860ec86d35d9f148673066874e3441ba1483f4b81fdf59b3",
+    "protocol.json": "4ad24ddf962a0680b783e36d8925cb3fe6f718608f240b8b8368280387cda422",
+    "queue.jsonl": "5852cff36cc4c134cb4ebb9e1509dae400020e9767de69ff030064ba87010d43",
+    "queue_manifest.json": "6cb7f8edc3cde9da1e4c3674589e17b0dadcbcc90375856b8870d3915e1a7080",
+    "runtime_manifest.json": "e48684453f7e3c19934f6f1fde13e0d5ec4021b6a1274050a7ee8e9307e9a305",
     "scoring_manifest.json": "672ec104b77f60458a6afa7bb2df270c969e7ef233704461d4fb065262281fc7",
-    "seed_manifest.json": "2a67399cd8c43e5e9f317258a0a0c0da54357fbf2b7d0b813f16c71c8526df6a"
+    "seed_manifest.json": "a218e1b4ba5010edcceefc5719559437663d3c5189bc8babad4080ab442f3022",
+    "setup_manifest.json": "04bfb53fdae68ee2e64d16a1eeb929b208e6bcaaf348229abe042d8719e82b64"
   },
   "authoritative_files": [
     "docs/online_correction_v4/README.md",
     "docs/online_correction_v4/campaign.json",
     "docs/ONLINE_CORRECTION_V4_CONTINUATION.md",
+    "artifacts/online_correction_v4/freeze_manifest.json",
+    "artifacts/online_correction_v4/continuation_state.json",
     "artifacts/online_correction_v4/protocol.json",
     "artifacts/online_correction_v4/queue.jsonl",
     "artifacts/online_correction_v4/queue_manifest.json",
@@ -30,22 +35,25 @@
     "artifacts/online_correction_v4/seed_manifest.json",
     "artifacts/online_correction_v4/frozen_analysis_manifest.json",
     "artifacts/online_correction_v4/gate_report.json",
-    "artifacts/online_correction_v4/historical_protocol_ledger.json"
+    "artifacts/online_correction_v4/historical_protocol_ledger.json",
+    "artifacts/online_correction_v4/runtime_manifest.json",
+    "artifacts/online_correction_v4/setup_manifest.json",
+    "artifacts/online_correction_v4/launch_matrix.json"
   ],
-  "blocked_families": {
-    "C1": "Prospective freeze only: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
-    "C2": "Primary reference-selectivity (H) requires verified common-prefix replay within each prompt; deterministic fresh-session replay and qualified full-state snapshot are not yet demonstrated on the target runtime.",
-    "C3": "Prospective freeze only: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
-    "C4": "Prospective freeze only: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
-    "C5": "Prospective freeze only: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
-    "C6": "Prospective freeze only: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
-    "C7": "Prospective freeze only: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
-    "C8": "BLOCKED_RUNTIME: GR00T N1.7 Bridge/WidowX checkpoint URI, integration commit, adapter, native control period, and SimplerEnv fixture object names are not verified on cluster workers; second-stack geometry and scoring receipts remain pending."
-  },
   "campaign_id": "online_correction_v4",
   "completed_groups": [],
   "design_source_commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
-  "freeze_commit": "e498274f81f12d4798c4a37442072f849eabba15",
+  "frozen_queue_sha256": "5852cff36cc4c134cb4ebb9e1509dae400020e9767de69ff030064ba87010d43",
+  "generation_parent_commit": "172ef9c752f44ffd9c50dc0f72da6a270cfb7628",
+  "generation_parent_commit_meaning": "Git HEAD when freeze builder last ran; not the commit containing freeze artifacts.",
+  "git_receipt": {
+    "meaning": "Record freeze_commit after the commit containing artifacts/online_correction_v4/ lands.",
+    "status": "pending"
+  },
+  "hard_blocked_families": {
+    "C2": "Primary reference-selectivity (H) requires verified common-prefix replay within each prompt; deterministic fresh-session replay and qualified full-state snapshot are not yet demonstrated on the target runtime.",
+    "C8": "BLOCKED_RUNTIME: GR00T N1.7 Bridge/WidowX checkpoint URI, integration commit, adapter, native control period, and SimplerEnv fixture object names are not verified on cluster workers; second-stack geometry and scoring receipts remain pending."
+  },
   "implementation_status": "IMPLEMENTING",
   "limitations": [
     "Prospective design freeze only; no V4 policy inference has been run.",
@@ -59,8 +67,16 @@
     "python3 tools/validate_vla_wam_v2_protocol.py",
     "python3 tools/validate_vla_wam_v3_protocol.py"
   ],
+  "pending_not_released_families": {
+    "C1": "NOT_RELEASED: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+    "C3": "NOT_RELEASED: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+    "C4": "NOT_RELEASED: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+    "C5": "NOT_RELEASED: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+    "C6": "NOT_RELEASED: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+    "C7": "NOT_RELEASED: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed."
+  },
+  "planning_manifest_sha256": "8b840901bee267634854a73494cd7d22bdcbdc4c31d529d34fe675ef9029cafe",
   "policy_episodes_executed": 0,
-  "queue_sha256": "65ff36d6ae62ea37e76ca9b94cda3410a56344e437638d7206eb56f8b2687df5",
   "release_status": "NOT_RELEASED",
   "schema_version": 1,
   "status": "QUALIFYING"

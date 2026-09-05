@@ -28,34 +28,29 @@ v4 = importlib.util.module_from_spec(SPEC)
 assert SPEC.loader is not None
 SPEC.loader.exec_module(v4)
 
-SEED_FIELD_RE = re.compile(
-    r'"(?:environment_seed|env_seed|reset_seed|policy_seed|sampling_seed)"\s*:\s*(\d+)'
-)
-
 FIXTURE_PROMPT_NAMES: dict[str, dict[str, Any]] = {
     "horizontal": {
-        "object": "the cube",
-        "reference": "the bowl",
+        "object": "cube",
+        "reference": "bowl",
         "physical_resolution": "symbolic_fixture_roles_pending_runtime_lock",
     },
     "reference_binding": {
-        "object": "the cube",
-        "reference_by_named": {"A": "the blue bowl", "B": "the yellow bowl"},
+        "object": "cube",
         "physical_resolution": "symbolic_color_labels_pending_runtime_lock",
     },
     "vertical": {
-        "object": "the cube",
-        "reference": "the bowl",
+        "object": "cube",
+        "reference": "bowl",
         "physical_resolution": "symbolic_fixture_roles_pending_runtime_lock",
     },
     "containment": {
-        "object": "the cube",
-        "reference": "the bowl",
+        "object": "cube",
+        "reference": "bowl",
         "physical_resolution": "symbolic_fixture_roles_pending_runtime_lock",
     },
     "object_pair": {
-        "object": "the sponge",
-        "reference": "the tray",
+        "object": "sponge",
+        "reference": "tray",
         "physical_resolution": "symbolic_fixture_roles_pending_runtime_lock",
     },
     "second_stack": {
@@ -77,10 +72,13 @@ C8_BLOCK_REASON = (
     "workers; second-stack geometry and scoring receipts remain pending."
 )
 
-DEFAULT_FAMILY_BLOCK = (
-    "Prospective freeze only: runner, simulator fixtures, geometry receipts, checkpoint "
-    "identity, and qualification gates are not yet bound or passed."
+DEFAULT_FAMILY_PENDING = (
+    "NOT_RELEASED: runner, simulator fixtures, geometry receipts, checkpoint identity, "
+    "and qualification gates are not yet bound or passed."
 )
+
+PENDING_FAMILY_IDS = ("C1", "C3", "C4", "C5", "C6", "C7")
+HARD_BLOCKED_FAMILY_IDS = ("C2", "C8")
 
 PILOT_GROUPS = [
     ("cosmos3_nano_droid", "horizontal"),
@@ -144,23 +142,44 @@ def historical_protocol_ledger() -> dict[str, Any]:
     }
 
 
-def _reference_name(fixture: str, named_reference: str) -> tuple[str, str]:
+def _reference_name(
+    fixture: str,
+    named_reference: str,
+    counterbalance: dict | None = None,
+) -> tuple[str, str, dict[str, Any]]:
     spec = FIXTURE_PROMPT_NAMES[fixture]
+    extra: dict[str, Any] = {}
     if fixture == "reference_binding":
-        ref = spec["reference_by_named"][named_reference]
-        return spec["object"], ref
+        if counterbalance is None:
+            raise ValueError("reference_binding prompts require counterbalance")
+        color_a = counterbalance["physical_A_color"]
+        color_b = "yellow" if color_a == "blue" else "blue"
+        if named_reference == "A":
+            ref = f"{color_a} bowl"
+            extra["reference_color"] = color_a
+            extra["physical_A_color"] = color_a
+        else:
+            ref = f"{color_b} bowl"
+            extra["reference_color"] = color_b
+            extra["physical_A_color"] = color_a
+        return spec["object"], ref, extra
     if fixture == "second_stack":
-        return "{UNRESOLVED_MANIPULATED_OBJECT}", "{UNRESOLVED_REFERENCE_OBJECT}"
-    return spec["object"], spec["reference"]
+        return "{UNRESOLVED_MANIPULATED_OBJECT}", "{UNRESOLVED_REFERENCE_OBJECT}", extra
+    return spec["object"], spec["reference"], extra
 
 
-def resolve_prompt_text(config: dict, fixture: str, factors: dict) -> tuple[str, dict]:
+def resolve_prompt_text(
+    config: dict,
+    fixture: str,
+    factors: dict,
+    counterbalance: dict | None = None,
+) -> tuple[str, dict]:
     goal, wording = factors["goal"], factors["wording"]
     relation_group = (
         "containment" if goal == "inside" else "vertical" if goal in ("above", "below") else "horizontal"
     )
     clause_template = config["wording"][f"{relation_group}_{wording}"][goal]
-    obj, ref = _reference_name(fixture, factors.get("named_reference", "single"))
+    obj, ref, ref_extra = _reference_name(fixture, factors.get("named_reference", "single"), counterbalance)
     clause = clause_template.format(object=obj, reference=ref)
     prompt = config["wording"]["carrier"].format(object=obj, clause=clause)
     if relation_group == "horizontal":
@@ -171,24 +190,34 @@ def resolve_prompt_text(config: dict, fixture: str, factors: dict) -> tuple[str,
         "relation_group": relation_group,
         "goal": goal,
         "wording": wording,
+        "named_reference": factors.get("named_reference"),
         "physical_resolution": FIXTURE_PROMPT_NAMES[fixture]["physical_resolution"],
         "launch_critical_names_resolved": fixture != "second_stack",
+        **ref_extra,
     }
     return prompt, meta
 
 
+def prompt_identity(config: dict, row: dict) -> dict[str, Any]:
+    """Stable prompt_id inputs; C2 includes block counterbalance color binding."""
+    identity: dict[str, Any] = {
+        "fixture": row["fixture"],
+        "goal": row["factors"]["goal"],
+        "wording": row["factors"]["wording"],
+        "named_reference": row["factors"]["named_reference"],
+    }
+    if row["fixture"] == "reference_binding":
+        cb = row["counterbalance"]
+        identity["physical_A_color"] = cb["physical_A_color"]
+        identity["named_reference"] = row["factors"]["named_reference"]
+    return identity
+
+
 def build_prompt_manifest(config: dict, rows: list[dict]) -> dict[str, Any]:
-    prompts: dict[str, dict] = {}
+    prompts: dict[tuple[str, str], dict] = {}
     for row in rows:
-        text, meta = resolve_prompt_text(config, row["fixture"], row["factors"])
-        prompt_id = v4.digest(
-            {
-                "fixture": row["fixture"],
-                "goal": row["factors"]["goal"],
-                "wording": row["factors"]["wording"],
-                "named_reference": row["factors"]["named_reference"],
-            }
-        )[:24]
+        text, meta = resolve_prompt_text(config, row["fixture"], row["factors"], row.get("counterbalance"))
+        prompt_id = v4.digest(prompt_identity(config, row))[:24]
         key = (prompt_id, text)
         if key not in prompts:
             prompts[key] = {
@@ -203,12 +232,32 @@ def build_prompt_manifest(config: dict, rows: list[dict]) -> dict[str, Any]:
     ordered = [prompts[k] for k in sorted(prompts)]
     for item in ordered:
         item["fixture_ids"] = sorted(item["fixture_ids"])
+    sha_to_ids: dict[str, list[str]] = defaultdict(list)
+    for item in ordered:
+        sha_to_ids[item["prompt_sha256"]].append(item["prompt_id"])
+    shared_sha = {sha: ids for sha, ids in sha_to_ids.items() if len(ids) > 1}
     return {
         "schema_version": 1,
         "campaign_id": config["campaign_id"],
         "carrier_template": config["wording"]["carrier"],
         "frame_suffix_horizontal": config["wording"]["frame_suffix_horizontal"],
         "fixture_name_binding": FIXTURE_PROMPT_NAMES,
+        "name_resolution_rule": "bare_nouns_in_templates; carrier_and_clauses_supply_articles",
+        "prompt_identity_semantics": {
+            "primary_key": "prompt_id",
+            "episode_binding_fields": ["prompt_id", "prompt_text", "prompt_sha256"],
+            "c2_counterbalance_in_prompt_id": True,
+            "prompt_sha256_rule": "sha256(utf8(prompt_text)); identical iff byte-identical resolved text",
+            "prompt_sha256_may_map_to_multiple_prompt_ids": True,
+            "prompt_sha256_must_be_unique_when_text_differs": True,
+            "analysis_forbidden_primary_keys": ["prompt_sha256"],
+            "reason": (
+                "Identical UTF-8 prompt text can name different physical A/B bowl identities under C2 "
+                "counterbalance. Semantic identity is prompt_id plus queue episode binding, never prompt_sha256 alone. "
+                "prompt_sha256 is a content hash only: same resolved bytes share one hash; different bytes must not."
+            ),
+        },
+        "prompt_sha256_shared_by_prompt_id_count": len(shared_sha),
         "prompts": ordered,
         "unique_prompt_count": len(ordered),
         "unresolved_physical_name_fixtures": ["second_stack"],
@@ -355,8 +404,21 @@ def _v4_pilot_env_seeds(config: dict) -> list[dict]:
     return rows
 
 
-def scan_historical_seeds(artifacts_root: Path, *, exclude_prefixes: tuple[str, ...] = ()) -> dict[str, Any]:
-    historical: dict[int, list[str]] = defaultdict(list)
+def scan_historical_seeds(
+    artifacts_root: Path,
+    *,
+    exclude_prefixes: tuple[str, ...] = (),
+) -> dict[str, Any]:
+    """Best-effort scan of committed artifact JSON/JSONL under artifacts_root.
+
+    This is not an exhaustive repository-wide seed registry audit. It regex-scans
+    selected seed field names in artifact files only, excluding configured prefixes.
+    """
+    historical_env: dict[int, list[str]] = defaultdict(list)
+    historical_policy: dict[int, list[str]] = defaultdict(list)
+    env_re = re.compile(r'"(?:environment_seed|env_seed|reset_seed)"\s*:\s*(\d+)')
+    policy_re = re.compile(r'"(?:policy_seed|sampling_seed)"\s*:\s*(\d+)')
+    files_scanned = 0
     for pattern in ("*.json", "*.jsonl"):
         for path in artifacts_root.rglob(pattern):
             rel = str(path.relative_to(ROOT))
@@ -366,16 +428,30 @@ def scan_historical_seeds(artifacts_root: Path, *, exclude_prefixes: tuple[str, 
                 text = path.read_text(encoding="utf-8", errors="ignore")
             except OSError:
                 continue
-            for match in SEED_FIELD_RE.finditer(text):
+            files_scanned += 1
+            for match in env_re.finditer(text):
                 value = int(match.group(1))
-                if rel not in historical[value]:
-                    historical[value].append(rel)
-    return {str(k): v for k, v in sorted(historical.items())}
+                if rel not in historical_env[value]:
+                    historical_env[value].append(rel)
+            for match in policy_re.finditer(text):
+                value = int(match.group(1))
+                if rel not in historical_policy[value]:
+                    historical_policy[value].append(rel)
+    return {
+        "env": {str(k): v for k, v in sorted(historical_env.items())},
+        "policy": {str(k): v for k, v in sorted(historical_policy.items())},
+        "files_scanned": files_scanned,
+    }
+
+
+def _v4_reserved_policy_seeds(rows: list[dict]) -> set[int]:
+    return {row["policy_seed"] for row in rows}
 
 
 def build_seed_manifest(config: dict, rows: list[dict]) -> dict[str, Any]:
     seed_cfg = config["seed_reservation"]
     reserved_env = _v4_reserved_env_seeds(config)
+    reserved_policy = _v4_reserved_policy_seeds(rows)
     confirmatory = sorted(
         (
             {
@@ -392,54 +468,103 @@ def build_seed_manifest(config: dict, rows: list[dict]) -> dict[str, Any]:
     )
     pilot_rows = _v4_pilot_env_seeds(config)
     pilot_env = {row["env_seed"] for row in pilot_rows}
-    historical = scan_historical_seeds(
+    scan = scan_historical_seeds(
         ROOT / "artifacts",
         exclude_prefixes=("artifacts/online_correction_v4/",),
     )
-    historical_int = {int(k): v for k, v in historical.items()}
-    v4_all = reserved_env | pilot_env
-    collisions = []
-    for value in sorted(v4_all):
-        if value in historical_int:
-            collisions.append(
-                {
-                    "seed": value,
-                    "v4_namespace": "confirmatory" if value in reserved_env else "engineering_pilot",
-                    "historical_paths": historical_int[value][:20],
-                    "historical_path_count": len(historical_int[value]),
-                }
-            )
+    historical_env = {int(k): v for k, v in scan["env"].items()}
+    historical_policy = {int(k): v for k, v in scan["policy"].items()}
+    v4_env_all = reserved_env | pilot_env
+
+    def _collisions(reserved: set[int], historical: dict[int, list[str]], namespace: str) -> list[dict]:
+        out = []
+        for value in sorted(reserved):
+            if value in historical:
+                out.append(
+                    {
+                        "seed": value,
+                        "seed_kind": namespace,
+                        "historical_paths": historical[value][:20],
+                        "historical_path_count": len(historical[value]),
+                    }
+                )
+        return out
+
+    env_collisions = _collisions(v4_env_all, historical_env, "environment")
+    policy_collisions = _collisions(reserved_policy, historical_policy, "policy")
+    collisions = env_collisions + policy_collisions
     return {
         "schema_version": 1,
         "campaign_id": config["campaign_id"],
         "reservation": seed_cfg,
         "confirmatory_env_seed_count": len(reserved_env),
         "confirmatory_unique_env_seeds": sorted(reserved_env),
+        "confirmatory_unique_policy_seeds": sorted(reserved_policy),
         "confirmatory_rows": confirmatory,
         "engineering_pilot_groups": PILOT_GROUPS,
         "engineering_pilot_seeds": pilot_rows,
         "policy_seed_derivation": "sha256(policy_seed_namespace, policy, fixture, block) mod 2^31",
         "historical_collision_audit": {
             "required": seed_cfg["historical_collision_audit_required"],
-            "artifacts_root": "artifacts/",
-            "historical_unique_seed_count": len(historical),
-            "v4_reserved_seed_count": len(v4_all),
+            "method": "regex_scan_of_artifact_json_and_jsonl_under_artifacts/",
+            "scope": "committed_artifact_tree_only_not_handoff_or_external_outputs",
+            "excluded_prefixes": ["artifacts/online_correction_v4/"],
+            "files_scanned": scan["files_scanned"],
+            "historical_unique_env_seed_count": len(historical_env),
+            "historical_unique_policy_seed_count": len(historical_policy),
+            "v4_reserved_env_seed_count": len(v4_env_all),
+            "v4_reserved_policy_seed_count": len(reserved_policy),
+            "env_collisions": env_collisions,
+            "policy_collisions": policy_collisions,
             "collisions": collisions,
             "passed": len(collisions) == 0,
+            "limitations": [
+                "Scan is best-effort over artifact JSON fields; it is not a complete repository seed registry.",
+                "Seeds appearing only in code, handoff bundles, or cluster storage outside artifacts/ are not scanned.",
+            ],
         },
     }
 
 
-def build_protocol(config: dict, config_sha256: str, queue_sha256: str, head_commit: str) -> dict[str, Any]:
+def build_protocol(
+    config: dict,
+    config_sha256: str,
+    planning_manifest_sha256: str,
+    frozen_queue_sha256: str,
+    generation_parent_commit: str,
+) -> dict[str, Any]:
+    design_validation_path = ROOT / "docs/online_correction_v4/design_validation.json"
+    design_validation_sha256 = file_sha256(design_validation_path) if design_validation_path.is_file() else None
+    design_validation = json.loads(design_validation_path.read_text()) if design_validation_path.is_file() else {}
     return {
         "schema_version": 1,
         "protocol_id": "online_correction_v4",
         "campaign_id": config["campaign_id"],
         "status": "PROSPECTIVE_FROZEN_DESIGN_NOT_RELEASED",
         "source_commit_design": config["source_commit"],
-        "freeze_commit": head_commit,
+        "generation_parent_commit": generation_parent_commit,
+        "generation_parent_commit_meaning": (
+            "Git HEAD when the freeze builder last ran; parent commit of the working tree. "
+            "This is NOT the commit containing freeze artifacts and cannot self-reference the freeze commit."
+        ),
+        "git_receipt": {
+            "status": "pending",
+            "meaning": "Populate after merge with the commit SHA that contains this freeze directory.",
+            "expected_fields": ["freeze_commit", "freeze_commit_message", "parent_commit"],
+        },
         "config_sha256": config_sha256,
-        "queue_sha256": queue_sha256,
+        "planning_manifest_sha256": planning_manifest_sha256,
+        "frozen_queue_sha256": frozen_queue_sha256,
+        "hash_semantics": {
+            "planning_manifest_sha256": "Pre-enrichment rows from tools/online_correction_v4.py build_manifest (matches docs/online_correction_v4/design_validation.json planning_manifest_sha256 when campaign unchanged).",
+            "frozen_queue_sha256": "Enriched queue.jsonl bytes including prompt_text, prompt_sha256, and queue_row_kind.",
+        },
+        "design_validation_reference": {
+            "path": "docs/online_correction_v4/design_validation.json",
+            "sha256": design_validation_sha256,
+            "planning_manifest_sha256": design_validation.get("planning_manifest_sha256"),
+            "planning_manifest_sha256_matches": design_validation.get("planning_manifest_sha256") == planning_manifest_sha256,
+        },
         "research_questions": [
             "Does online correction depend on the spatial goal and named reference?",
             "How consistently does behavior survive equivalent wording and focused relation/object/stack changes?",
@@ -499,6 +624,16 @@ def build_frozen_analysis_manifest(config: dict) -> dict[str, Any]:
             "status": "blocked_pending_verification",
             "block_reason": C2_BLOCK_REASON,
         },
+        "semantic_prompt_binding": {
+            "primary_key": "prompt_id",
+            "forbidden_semantic_primary_keys": ["prompt_sha256"],
+            "episode_level_fields": ["episode_id", "prompt_id", "prompt_text", "prompt_sha256"],
+            "note": (
+                "C2 may reuse identical prompt_sha256 across distinct prompt_id values when counterbalance "
+                "assigns the same words to different physical A/B identities. Never aggregate or join analysis "
+                "rows on prompt_sha256 alone."
+            ),
+        },
         "required_derived_exports": [
             "coverage_by_cell.csv",
             "episode_outcomes.parquet",
@@ -521,21 +656,58 @@ def family_gate_status(family_id: str) -> dict[str, str]:
             "lifecycle_status": "BLOCKED_RUNTIME",
             "release_state": "NOT_RELEASED",
             "block_reason": C8_BLOCK_REASON,
+            "disposition": "hard_blocked",
         }
     if family_id == "C2":
         return {
             "lifecycle_status": "BLOCKED_SETUP",
             "release_state": "NOT_RELEASED",
             "block_reason": C2_BLOCK_REASON,
+            "disposition": "hard_blocked",
         }
     return {
         "lifecycle_status": "IMPLEMENTING",
         "release_state": "NOT_RELEASED",
-        "block_reason": DEFAULT_FAMILY_BLOCK,
+        "block_reason": DEFAULT_FAMILY_PENDING,
+        "disposition": "pending_qualification",
     }
 
 
-def build_gate_report(config: dict) -> dict[str, Any]:
+def build_historical_seed_receipt(seed_manifest: dict, seed_manifest_sha256: str) -> dict[str, Any]:
+    audit = seed_manifest.get("historical_collision_audit", {})
+    passed = audit.get("passed") is True
+    env_n = len(audit.get("env_collisions", []))
+    policy_n = len(audit.get("policy_collisions", []))
+    if passed:
+        reason = "No collision between reserved V4 env/policy seeds and scanned repository artifact seeds."
+        status = "passed_at_freeze_build"
+    else:
+        reason = (
+            f"Reserved V4 seeds collide with scanned artifact seeds "
+            f"(env={env_n}, policy={policy_n})."
+        )
+        status = "failed_at_freeze_build"
+    return {
+        "passed": passed,
+        "status": status,
+        "family_ids": [],
+        "uri": "artifacts/online_correction_v4/seed_manifest.json",
+        "sha256": seed_manifest_sha256,
+        "reason": reason,
+        "derived_from": "seed_manifest.historical_collision_audit",
+        "audit_summary": {
+            "env_collision_count": env_n,
+            "policy_collision_count": policy_n,
+            "files_scanned": audit.get("files_scanned"),
+        },
+    }
+
+
+def build_gate_report(
+    config: dict,
+    seed_manifest: dict,
+    seed_manifest_sha256: str,
+) -> dict[str, Any]:
     receipts = {
         name: {
             "passed": False,
@@ -547,15 +719,12 @@ def build_gate_report(config: dict) -> dict[str, Any]:
         }
         for name in config["required_release_receipts"]
     }
-    receipts["historical_seed_collision_audit"] = {
-        "passed": True,
-        "status": "passed_at_freeze_build",
-        "family_ids": [f["id"] for f in config["families"]],
-        "uri": "artifacts/online_correction_v4/seed_manifest.json",
-        "sha256": None,
-        "reason": "No collision between reserved V4 seeds and scanned repository artifact seeds.",
-    }
+    seed_receipt = build_historical_seed_receipt(seed_manifest, seed_manifest_sha256)
+    seed_receipt["family_ids"] = [f["id"] for f in config["families"]]
+    receipts["historical_seed_collision_audit"] = seed_receipt
     families = {}
+    hard_blocked: dict[str, str] = {}
+    pending_not_released: dict[str, str] = {}
     for family in config["families"]:
         fid = family["id"]
         gate = family_gate_status(fid)
@@ -575,13 +744,19 @@ def build_gate_report(config: dict) -> dict[str, Any]:
                 "G8_miniature_campaign": "pending",
             },
         }
+        if gate["disposition"] == "hard_blocked":
+            hard_blocked[fid] = gate["block_reason"]
+        else:
+            pending_not_released[fid] = gate["block_reason"]
     return {
         "schema_version": 1,
         "campaign_id": config["campaign_id"],
         "overall_status": "QUALIFYING",
         "release_status": "NOT_RELEASED",
         "released_families": [],
-        "blocked_families": {f["id"]: family_gate_status(f["id"])["block_reason"] for f in config["families"]},
+        "hard_blocked_families": hard_blocked,
+        "pending_not_released_families": pending_not_released,
+        "blocked_families": {**hard_blocked, **pending_not_released},
         "families": families,
         "required_release_receipts": receipts,
         "runtime_lock_status": "template_only_not_released",
@@ -591,15 +766,8 @@ def build_gate_report(config: dict) -> dict[str, Any]:
 def enrich_queue_rows(config: dict, rows: list[dict]) -> list[dict]:
     enriched = []
     for row in rows:
-        text, meta = resolve_prompt_text(config, row["fixture"], row["factors"])
-        prompt_id = v4.digest(
-            {
-                "fixture": row["fixture"],
-                "goal": row["factors"]["goal"],
-                "wording": row["factors"]["wording"],
-                "named_reference": row["factors"]["named_reference"],
-            }
-        )[:24]
+        text, meta = resolve_prompt_text(config, row["fixture"], row["factors"], row.get("counterbalance"))
+        prompt_id = v4.digest(prompt_identity(config, row))[:24]
         enriched.append(
             {
                 **row,
@@ -608,38 +776,135 @@ def enrich_queue_rows(config: dict, rows: list[dict]) -> list[dict]:
                 "prompt_sha256": v4.digest_bytes(text.encode("utf-8")),
                 "prompt_physical_resolution": meta["physical_resolution"],
                 "launch_critical_names_resolved": meta["launch_critical_names_resolved"],
+                "reference_color": meta.get("reference_color"),
+                "physical_A_color": meta.get("physical_A_color"),
                 "queue_row_kind": "new_episode",
+                "reuse_episode_ids_meaning": (
+                    "comparison_control_links_only; this row remains a registered new episode "
+                    "and is never a reuse-only alias."
+                ),
             }
         )
     return enriched
 
 
-def build_queue_manifest(config: dict, rows: list[dict], queue_sha256: str) -> dict[str, Any]:
+def build_queue_manifest(
+    config: dict,
+    rows: list[dict],
+    planning_manifest_sha256: str,
+    frozen_queue_sha256: str,
+) -> dict[str, Any]:
     by_family = Counter(row["family"] for row in rows)
     by_policy_fixture = Counter(row["execution_group"] for row in rows)
-    reuse_counts = Counter()
+    edge_counts: Counter[str] = Counter()
+    unique_refs: dict[str, set[str]] = defaultdict(set)
     for row in rows:
-        reuse_counts[row["family"]] += len(row.get("reuse_episode_ids", []))
+        edge_counts[row["family"]] += len(row.get("reuse_episode_ids", []))
+        unique_refs[row["family"]].update(row.get("reuse_episode_ids", []))
     return {
         "schema_version": 1,
         "campaign_id": config["campaign_id"],
         "queue_path": "artifacts/online_correction_v4/queue.jsonl",
         "row_count": len(rows),
-        "queue_sha256": queue_sha256,
+        "planning_manifest_sha256": planning_manifest_sha256,
+        "frozen_queue_sha256": frozen_queue_sha256,
+        "queue_sha256": frozen_queue_sha256,
+        "hash_semantics": {
+            "planning_manifest_sha256": "Pre-enrichment planning inventory from build_manifest.",
+            "frozen_queue_sha256": "Enriched queue.jsonl bytes written by the freeze builder.",
+        },
         "expected_confirmatory_episodes": config["expected_confirmatory_episodes"],
-        "rows_by_family": dict(sorted(by_family.items())),
+        "registered_new_episodes_by_family": dict(sorted(by_family.items())),
         "rows_by_execution_group": dict(sorted(by_policy_fixture.items())),
-        "unique_reused_control_references_by_family": dict(sorted(reuse_counts.items())),
+        "total_control_reference_edges_by_family": dict(sorted(edge_counts.items())),
+        "unique_referenced_control_episode_ids_by_family": {
+            family: len(ids) for family, ids in sorted(unique_refs.items())
+        },
+        "reuse_semantics": (
+            "Every queue row is a registered new episode. reuse_episode_ids link to prior "
+            "control episode IDs for analysis pairing; C3/C4 rows remain new episodes even when "
+            "they reference C1/C3 controls. C4 fast-schedule sham/move rows are new because schedule differs."
+        ),
         "excluded_engineering_policy_pilots": config["engineering_pilots"]["expected_policy_episodes"],
         "release_status": "NOT_RELEASED",
     }
 
 
+def build_runtime_manifest_stub(config: dict) -> dict[str, Any]:
+    return {
+        "schema_version": 1,
+        "campaign_id": config["campaign_id"],
+        "release_status": "NOT_RELEASED",
+        "runner": {
+            "entrypoint": None,
+            "commit": None,
+            "sha256": None,
+        },
+        "policies": {
+            policy_id: {
+                "checkpoint_uri": None,
+                "checkpoint_sha256": None,
+                "runtime_image_digest": None,
+                "integration_commit": None,
+                "native_control_dt_s": None,
+                "achieved_delay_s": None,
+                "achieved_standard_query_period_s": None,
+                "achieved_fast_query_period_s": None,
+                "prediction_horizon_actions": None,
+            }
+            for policy_id in config["policies"]
+        },
+        "limitations": [
+            "Launch-critical runtime fields remain null until qualification receipts pass.",
+        ],
+    }
+
+
+def build_setup_manifest_stub(config: dict) -> dict[str, Any]:
+    return {
+        "schema_version": 1,
+        "campaign_id": config["campaign_id"],
+        "release_status": "NOT_RELEASED",
+        "fixtures": {
+            fixture_id: {
+                "geometry_uri": None,
+                "geometry_sha256": None,
+                "frame_transform_uri": None,
+                "reset_registry_uri": None,
+                "calibration_scale": None,
+                "D_cap_m": None,
+            }
+            for fixture_id in config["fixtures"]
+        },
+        "limitations": [
+            "Task geometry, transforms, and reset registries remain unbound before model-blind gates.",
+        ],
+    }
+
+
+def build_launch_matrix_stub(config: dict) -> dict[str, Any]:
+    return {
+        "schema_version": 1,
+        "campaign_id": config["campaign_id"],
+        "release_status": "NOT_RELEASED",
+        "cluster_context": None,
+        "namespace": None,
+        "lane_bundle_identity": None,
+        "resource_budget": None,
+        "qualified_lanes": [],
+        "limitations": [
+            "Cluster mapping and immutable lane specs remain pending infrastructure qualification.",
+        ],
+    }
+
+
 def build_continuation_state(
     config: dict,
-    head_commit: str,
+    generation_parent_commit: str,
     artifact_hashes: dict[str, str],
-    queue_sha256: str,
+    planning_manifest_sha256: str,
+    frozen_queue_sha256: str,
+    gate_report: dict[str, Any],
 ) -> dict[str, Any]:
     return {
         "schema_version": 1,
@@ -648,12 +913,21 @@ def build_continuation_state(
         "implementation_status": "IMPLEMENTING",
         "release_status": "NOT_RELEASED",
         "active_branch": "research/online-correction-v4",
-        "freeze_commit": head_commit,
+        "generation_parent_commit": generation_parent_commit,
+        "generation_parent_commit_meaning": (
+            "Git HEAD when freeze builder last ran; not the commit containing freeze artifacts."
+        ),
+        "git_receipt": {
+            "status": "pending",
+            "meaning": "Record freeze_commit after the commit containing artifacts/online_correction_v4/ lands.",
+        },
         "design_source_commit": config["source_commit"],
         "authoritative_files": [
             "docs/online_correction_v4/README.md",
             "docs/online_correction_v4/campaign.json",
             "docs/ONLINE_CORRECTION_V4_CONTINUATION.md",
+            "artifacts/online_correction_v4/freeze_manifest.json",
+            "artifacts/online_correction_v4/continuation_state.json",
             "artifacts/online_correction_v4/protocol.json",
             "artifacts/online_correction_v4/queue.jsonl",
             "artifacts/online_correction_v4/queue_manifest.json",
@@ -664,12 +938,17 @@ def build_continuation_state(
             "artifacts/online_correction_v4/frozen_analysis_manifest.json",
             "artifacts/online_correction_v4/gate_report.json",
             "artifacts/online_correction_v4/historical_protocol_ledger.json",
+            "artifacts/online_correction_v4/runtime_manifest.json",
+            "artifacts/online_correction_v4/setup_manifest.json",
+            "artifacts/online_correction_v4/launch_matrix.json",
         ],
         "artifact_sha256": artifact_hashes,
-        "queue_sha256": queue_sha256,
+        "planning_manifest_sha256": planning_manifest_sha256,
+        "frozen_queue_sha256": frozen_queue_sha256,
         "policy_episodes_executed": 0,
         "completed_groups": [],
-        "blocked_families": build_gate_report(config)["blocked_families"],
+        "hard_blocked_families": gate_report["hard_blocked_families"],
+        "pending_not_released_families": gate_report["pending_not_released_families"],
         "active_blockers": [
             C8_BLOCK_REASON,
             C2_BLOCK_REASON,
@@ -690,23 +969,72 @@ def build_continuation_state(
     }
 
 
+# Every artifact emitted by build_freeze; validator fails closed if any name is uncovered.
+ALL_GENERATED_FREEZE_ARTIFACTS = (
+    "historical_protocol_ledger.json",
+    "protocol.json",
+    "prompt_manifest.json",
+    "motion_manifest.json",
+    "scoring_manifest.json",
+    "seed_manifest.json",
+    "queue.jsonl",
+    "queue_manifest.json",
+    "frozen_analysis_manifest.json",
+    "runtime_manifest.json",
+    "setup_manifest.json",
+    "launch_matrix.json",
+    "gate_report.json",
+    "continuation_state.json",
+    "freeze_manifest.json",
+)
+
+# Artifact file names whose raw bytes must match across deterministic rebuilds.
+DETERMINISTIC_ARTIFACT_NAMES = (
+    "historical_protocol_ledger.json",
+    "prompt_manifest.json",
+    "motion_manifest.json",
+    "scoring_manifest.json",
+    "seed_manifest.json",
+    "queue.jsonl",
+    "queue_manifest.json",
+    "frozen_analysis_manifest.json",
+    "runtime_manifest.json",
+    "setup_manifest.json",
+    "launch_matrix.json",
+    "gate_report.json",
+)
+
+# JSON artifacts that also embed generation_parent_commit and are compared normalized.
+GENERATION_PARENT_COMMIT_ARTIFACTS = (
+    "protocol.json",
+    "continuation_state.json",
+    "freeze_manifest.json",
+)
+
+# freeze_manifest.json cannot include its own hash inside artifact_sha256 (self-reference).
+FREEZE_MANIFEST_SELF_HASH_EXCLUDED = "freeze_manifest.json"
+
+
 def build_freeze(config_path: Path, out_dir: Path) -> dict[str, Any]:
     config, config_sha256 = v4.load_json(config_path)
     errors = v4.config_errors(config)
     if errors:
         raise ValueError("; ".join(errors))
-    head_commit = repo_head_commit()
+    generation_parent_commit = repo_head_commit()
     base_rows = v4.build_manifest(config, config_sha256)
+    planning_bytes = v4.manifest_bytes(base_rows)
+    planning_manifest_sha256 = v4.digest_bytes(planning_bytes)
     rows = enrich_queue_rows(config, base_rows)
     queue_bytes = v4.manifest_bytes(rows)
-    queue_sha256 = v4.digest_bytes(queue_bytes)
+    frozen_queue_sha256 = v4.digest_bytes(queue_bytes)
 
     artifact_hashes: dict[str, str] = {}
     artifact_hashes["historical_protocol_ledger.json"] = write_json(
         out_dir / "historical_protocol_ledger.json", historical_protocol_ledger()
     )
     artifact_hashes["protocol.json"] = write_json(
-        out_dir / "protocol.json", build_protocol(config, config_sha256, queue_sha256, head_commit)
+        out_dir / "protocol.json",
+        build_protocol(config, config_sha256, planning_manifest_sha256, frozen_queue_sha256, generation_parent_commit),
     )
     artifact_hashes["prompt_manifest.json"] = write_json(
         out_dir / "prompt_manifest.json", build_prompt_manifest(config, rows)
@@ -721,26 +1049,45 @@ def build_freeze(config_path: Path, out_dir: Path) -> dict[str, Any]:
     artifact_hashes["seed_manifest.json"] = write_json(out_dir / "seed_manifest.json", seed_manifest)
     artifact_hashes["queue.jsonl"] = write_bytes(out_dir / "queue.jsonl", queue_bytes)
     artifact_hashes["queue_manifest.json"] = write_json(
-        out_dir / "queue_manifest.json", build_queue_manifest(config, rows, queue_sha256)
+        out_dir / "queue_manifest.json",
+        build_queue_manifest(config, rows, planning_manifest_sha256, frozen_queue_sha256),
     )
     artifact_hashes["frozen_analysis_manifest.json"] = write_json(
         out_dir / "frozen_analysis_manifest.json", build_frozen_analysis_manifest(config)
     )
-    gate_report = build_gate_report(config)
-    gate_report["required_release_receipts"]["historical_seed_collision_audit"]["sha256"] = artifact_hashes[
-        "seed_manifest.json"
-    ]
+    artifact_hashes["runtime_manifest.json"] = write_json(
+        out_dir / "runtime_manifest.json", build_runtime_manifest_stub(config)
+    )
+    artifact_hashes["setup_manifest.json"] = write_json(
+        out_dir / "setup_manifest.json", build_setup_manifest_stub(config)
+    )
+    artifact_hashes["launch_matrix.json"] = write_json(
+        out_dir / "launch_matrix.json", build_launch_matrix_stub(config)
+    )
+    gate_report = build_gate_report(config, seed_manifest, artifact_hashes["seed_manifest.json"])
     artifact_hashes["gate_report.json"] = write_json(out_dir / "gate_report.json", gate_report)
     artifact_hashes["continuation_state.json"] = write_json(
         out_dir / "continuation_state.json",
-        build_continuation_state(config, head_commit, artifact_hashes, queue_sha256),
+        build_continuation_state(
+            config,
+            generation_parent_commit,
+            artifact_hashes,
+            planning_manifest_sha256,
+            frozen_queue_sha256,
+            gate_report,
+        ),
     )
     freeze_index = {
         "schema_version": 1,
         "campaign_id": config["campaign_id"],
-        "build_commit": head_commit,
+        "generation_parent_commit": generation_parent_commit,
+        "generation_parent_commit_meaning": (
+            "Git HEAD when builder ran; not the commit containing these freeze artifacts."
+        ),
+        "git_receipt": {"status": "pending"},
         "config_sha256": config_sha256,
-        "queue_sha256": queue_sha256,
+        "planning_manifest_sha256": planning_manifest_sha256,
+        "frozen_queue_sha256": frozen_queue_sha256,
         "release_status": "NOT_RELEASED",
         "artifact_sha256": artifact_hashes,
     }
@@ -748,9 +1095,11 @@ def build_freeze(config_path: Path, out_dir: Path) -> dict[str, Any]:
     return {
         "ok": True,
         "out_dir": str(out_dir),
-        "build_commit": head_commit,
+        "generation_parent_commit": generation_parent_commit,
         "config_sha256": config_sha256,
-        "queue_sha256": queue_sha256,
+        "planning_manifest_sha256": planning_manifest_sha256,
+        "frozen_queue_sha256": frozen_queue_sha256,
+        "queue_sha256": frozen_queue_sha256,
         "row_count": len(rows),
         "seed_collision_audit_passed": seed_manifest["historical_collision_audit"]["passed"],
         "artifact_sha256": artifact_hashes,

@@ -41,6 +41,19 @@
   ],
   "resampling_unit": "independent_reset_block_with_all_conditions_and_eligibility_preserved",
   "schema_version": 1,
+  "semantic_prompt_binding": {
+    "episode_level_fields": [
+      "episode_id",
+      "prompt_id",
+      "prompt_text",
+      "prompt_sha256"
+    ],
+    "forbidden_semantic_primary_keys": [
+      "prompt_sha256"
+    ],
+    "note": "C2 may reuse identical prompt_sha256 across distinct prompt_id values when counterbalance assigns the same words to different physical A/B identities. Never aggregate or join analysis rows on prompt_sha256 alone.",
+    "primary_key": "prompt_id"
+  },
   "standard_error": "delete_one_reset_block_jackknife",
   "status": "implementation_present_confirmatory_inputs_pending",
   "studentized_T_star": "(theta_bootstrap - theta_observed) / SE_bootstrap",

@@ -1,6 +1,12 @@
 {
   "campaign_id": "online_correction_v4",
   "config_sha256": "75c33439630d4fb95bb0aa3a3df0e7cb9f5d126e2db0e31e690ceaeea6242981",
+  "design_validation_reference": {
+    "path": "docs/online_correction_v4/design_validation.json",
+    "planning_manifest_sha256": "8b840901bee267634854a73494cd7d22bdcbdc4c31d529d34fe675ef9029cafe",
+    "planning_manifest_sha256_matches": true,
+    "sha256": "3b0bc2e48e375cfa2f66c422bfe5995bbf11a93447de0bf01142b8c825b37638"
+  },
   "excluded_engineering_policy_pilots": 240,
   "expected_confirmatory_episodes": 17664,
   "failure_taxonomy": "preserved_valid_failures_distinguish_infra_physics_no_trigger",
@@ -104,9 +110,25 @@
       "reuses": []
     }
   ],
-  "freeze_commit": "e498274f81f12d4798c4a37442072f849eabba15",
+  "frozen_queue_sha256": "5852cff36cc4c134cb4ebb9e1509dae400020e9767de69ff030064ba87010d43",
+  "generation_parent_commit": "172ef9c752f44ffd9c50dc0f72da6a270cfb7628",
+  "generation_parent_commit_meaning": "Git HEAD when the freeze builder last ran; parent commit of the working tree. This is NOT the commit containing freeze artifacts and cannot self-reference the freeze commit.",
+  "git_receipt": {
+    "expected_fields": [
+      "freeze_commit",
+      "freeze_commit_message",
+      "parent_commit"
+    ],
+    "meaning": "Populate after merge with the commit SHA that contains this freeze directory.",
+    "status": "pending"
+  },
+  "hash_semantics": {
+    "frozen_queue_sha256": "Enriched queue.jsonl bytes including prompt_text, prompt_sha256, and queue_row_kind.",
+    "planning_manifest_sha256": "Pre-enrichment rows from tools/online_correction_v4.py build_manifest (matches docs/online_correction_v4/design_validation.json planning_manifest_sha256 when campaign unchanged)."
+  },
   "historical_protocol_immutability": "artifacts/vla_wam_shared_v2/protocol.json and artifacts/vla_wam_shared_v3/protocol.json byte-for-byte",
   "independent_unit": "randomized_reset_block",
+  "planning_manifest_sha256": "8b840901bee267634854a73494cd7d22bdcbdc4c31d529d34fe675ef9029cafe",
   "policy_input_rule": "static_prompt_and_released_observation_interface_only",
   "primary_outcomes": [
     "success",
@@ -114,7 +136,6 @@
     "reference_selectivity_m"
   ],
   "protocol_id": "online_correction_v4",
-  "queue_sha256": "65ff36d6ae62ea37e76ca9b94cda3410a56344e437638d7206eb56f8b2687df5",
   "research_questions": [
     "Does online correction depend on the spatial goal and named reference?",
     "How consistently does behavior survive equivalent wording and focused relation/object/stack changes?",

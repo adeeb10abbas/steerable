@@ -2,9 +2,26 @@
   "campaign_id": "online_correction_v4",
   "excluded_engineering_policy_pilots": 240,
   "expected_confirmatory_episodes": 17664,
+  "frozen_queue_sha256": "5852cff36cc4c134cb4ebb9e1509dae400020e9767de69ff030064ba87010d43",
+  "hash_semantics": {
+    "frozen_queue_sha256": "Enriched queue.jsonl bytes written by the freeze builder.",
+    "planning_manifest_sha256": "Pre-enrichment planning inventory from build_manifest."
+  },
+  "planning_manifest_sha256": "8b840901bee267634854a73494cd7d22bdcbdc4c31d529d34fe675ef9029cafe",
   "queue_path": "artifacts/online_correction_v4/queue.jsonl",
-  "queue_sha256": "65ff36d6ae62ea37e76ca9b94cda3410a56344e437638d7206eb56f8b2687df5",
+  "queue_sha256": "5852cff36cc4c134cb4ebb9e1509dae400020e9767de69ff030064ba87010d43",
+  "registered_new_episodes_by_family": {
+    "C1": 6144,
+    "C2": 4096,
+    "C3": 1536,
+    "C4": 2048,
+    "C5": 1536,
+    "C6": 768,
+    "C7": 768,
+    "C8": 768
+  },
   "release_status": "NOT_RELEASED",
+  "reuse_semantics": "Every queue row is a registered new episode. reuse_episode_ids link to prior control episode IDs for analysis pairing; C3/C4 rows remain new episodes even when they reference C1/C3 controls. C4 fast-schedule sham/move rows are new because schedule differs.",
   "row_count": 17664,
   "rows_by_execution_group": {
     "cosmos3_nano_droid:containment": 384,
@@ -18,22 +35,22 @@
     "pi05_droid:reference_binding": 2048,
     "pi05_droid:vertical": 768
   },
-  "rows_by_family": {
-    "C1": 6144,
-    "C2": 4096,
-    "C3": 1536,
-    "C4": 2048,
-    "C5": 1536,
-    "C6": 768,
-    "C7": 768,
-    "C8": 768
-  },
   "schema_version": 1,
-  "unique_reused_control_references_by_family": {
+  "total_control_reference_edges_by_family": {
     "C1": 0,
     "C2": 0,
     "C3": 3072,
     "C4": 8192,
+    "C5": 0,
+    "C6": 0,
+    "C7": 0,
+    "C8": 0
+  },
+  "unique_referenced_control_episode_ids_by_family": {
+    "C1": 0,
+    "C2": 0,
+    "C3": 1024,
+    "C4": 2048,
     "C5": 0,
     "C6": 0,
     "C7": 0,

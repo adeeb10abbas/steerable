@@ -1,18 +1,19 @@
 {
   "blocked_families": {
-    "C1": "Prospective freeze only: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+    "C1": "NOT_RELEASED: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
     "C2": "Primary reference-selectivity (H) requires verified common-prefix replay within each prompt; deterministic fresh-session replay and qualified full-state snapshot are not yet demonstrated on the target runtime.",
-    "C3": "Prospective freeze only: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
-    "C4": "Prospective freeze only: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
-    "C5": "Prospective freeze only: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
-    "C6": "Prospective freeze only: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
-    "C7": "Prospective freeze only: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+    "C3": "NOT_RELEASED: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+    "C4": "NOT_RELEASED: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+    "C5": "NOT_RELEASED: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+    "C6": "NOT_RELEASED: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+    "C7": "NOT_RELEASED: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
     "C8": "BLOCKED_RUNTIME: GR00T N1.7 Bridge/WidowX checkpoint URI, integration commit, adapter, native control period, and SimplerEnv fixture object names are not verified on cluster workers; second-stack geometry and scoring receipts remain pending."
   },
   "campaign_id": "online_correction_v4",
   "families": {
     "C1": {
-      "block_reason": "Prospective freeze only: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+      "block_reason": "NOT_RELEASED: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+      "disposition": "pending_qualification",
       "expected_new_episodes": 6144,
       "lifecycle_status": "IMPLEMENTING",
       "priority": "primary",
@@ -31,6 +32,7 @@
     },
     "C2": {
       "block_reason": "Primary reference-selectivity (H) requires verified common-prefix replay within each prompt; deterministic fresh-session replay and qualified full-state snapshot are not yet demonstrated on the target runtime.",
+      "disposition": "hard_blocked",
       "expected_new_episodes": 4096,
       "lifecycle_status": "BLOCKED_SETUP",
       "priority": "primary",
@@ -48,7 +50,8 @@
       "release_state": "NOT_RELEASED"
     },
     "C3": {
-      "block_reason": "Prospective freeze only: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+      "block_reason": "NOT_RELEASED: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+      "disposition": "pending_qualification",
       "expected_new_episodes": 1536,
       "lifecycle_status": "IMPLEMENTING",
       "priority": "secondary",
@@ -66,7 +69,8 @@
       "release_state": "NOT_RELEASED"
     },
     "C4": {
-      "block_reason": "Prospective freeze only: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+      "block_reason": "NOT_RELEASED: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+      "disposition": "pending_qualification",
       "expected_new_episodes": 2048,
       "lifecycle_status": "IMPLEMENTING",
       "priority": "secondary",
@@ -84,7 +88,8 @@
       "release_state": "NOT_RELEASED"
     },
     "C5": {
-      "block_reason": "Prospective freeze only: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+      "block_reason": "NOT_RELEASED: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+      "disposition": "pending_qualification",
       "expected_new_episodes": 1536,
       "lifecycle_status": "IMPLEMENTING",
       "priority": "secondary",
@@ -102,7 +107,8 @@
       "release_state": "NOT_RELEASED"
     },
     "C6": {
-      "block_reason": "Prospective freeze only: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+      "block_reason": "NOT_RELEASED: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+      "disposition": "pending_qualification",
       "expected_new_episodes": 768,
       "lifecycle_status": "IMPLEMENTING",
       "priority": "secondary",
@@ -120,7 +126,8 @@
       "release_state": "NOT_RELEASED"
     },
     "C7": {
-      "block_reason": "Prospective freeze only: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+      "block_reason": "NOT_RELEASED: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+      "disposition": "pending_qualification",
       "expected_new_episodes": 768,
       "lifecycle_status": "IMPLEMENTING",
       "priority": "secondary",
@@ -139,6 +146,7 @@
     },
     "C8": {
       "block_reason": "BLOCKED_RUNTIME: GR00T N1.7 Bridge/WidowX checkpoint URI, integration commit, adapter, native control period, and SimplerEnv fixture object names are not verified on cluster workers; second-stack geometry and scoring receipts remain pending.",
+      "disposition": "hard_blocked",
       "expected_new_episodes": 768,
       "lifecycle_status": "BLOCKED_RUNTIME",
       "priority": "secondary",
@@ -156,7 +164,19 @@
       "release_state": "NOT_RELEASED"
     }
   },
+  "hard_blocked_families": {
+    "C2": "Primary reference-selectivity (H) requires verified common-prefix replay within each prompt; deterministic fresh-session replay and qualified full-state snapshot are not yet demonstrated on the target runtime.",
+    "C8": "BLOCKED_RUNTIME: GR00T N1.7 Bridge/WidowX checkpoint URI, integration commit, adapter, native control period, and SimplerEnv fixture object names are not verified on cluster workers; second-stack geometry and scoring receipts remain pending."
+  },
   "overall_status": "QUALIFYING",
+  "pending_not_released_families": {
+    "C1": "NOT_RELEASED: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+    "C3": "NOT_RELEASED: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+    "C4": "NOT_RELEASED: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+    "C5": "NOT_RELEASED: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+    "C6": "NOT_RELEASED: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed.",
+    "C7": "NOT_RELEASED: runner, simulator fixtures, geometry receipts, checkpoint identity, and qualification gates are not yet bound or passed."
+  },
   "release_status": "NOT_RELEASED",
   "released_families": [],
   "required_release_receipts": {
@@ -201,6 +221,12 @@
       "uri": null
     },
     "historical_seed_collision_audit": {
+      "audit_summary": {
+        "env_collision_count": 0,
+        "files_scanned": 1797,
+        "policy_collision_count": 0
+      },
+      "derived_from": "seed_manifest.historical_collision_audit",
       "family_ids": [
         "C1",
         "C2",
@@ -212,8 +238,8 @@
         "C8"
       ],
       "passed": true,
-      "reason": "No collision between reserved V4 seeds and scanned repository artifact seeds.",
-      "sha256": "2a67399cd8c43e5e9f317258a0a0c0da54357fbf2b7d0b813f16c71c8526df6a",
+      "reason": "No collision between reserved V4 env/policy seeds and scanned repository artifact seeds.",
+      "sha256": "a218e1b4ba5010edcceefc5719559437663d3c5189bc8babad4080ab442f3022",
       "status": "passed_at_freeze_build",
       "uri": "artifacts/online_correction_v4/seed_manifest.json"
     },

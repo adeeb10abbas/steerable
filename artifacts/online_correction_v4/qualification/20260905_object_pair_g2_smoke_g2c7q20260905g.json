@@ -1,0 +1,39 @@
+{
+  "schema_version": "v4-object-pair-g2-smoke-disposition-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "attempt_id": "g2c7q20260905g",
+  "environment_seed": 2100040004,
+  "compiled_at_utc": "2026-09-06T03:02:00Z",
+  "qualification_scope": "single_seed_post_native_cuboid_model_blind_smoke",
+  "status": "infrastructure_invalid",
+  "g2_complete": false,
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "amendment_receipt": "artifacts/online_correction_v4/setup/object_pair_g2_native_cuboid_amendment.candidate.json",
+  "released_stability_thresholds_changed": false,
+  "measurement": {
+    "object": "sponge",
+    "linear_component_max_m_s": 775326400.0,
+    "linear_component_limit_m_s": 0.02,
+    "angular_component_max_rad_s": 46.501159668,
+    "angular_component_limit_rad_s": 0.2
+  },
+  "runtime_identity": {
+    "study_commit": "2e30f9dfe8bde98c822f50a9feb27712063c4786",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "driver_version": "580.95.05",
+    "gpu_product": "NVIDIA A40",
+    "native_control_dt_s": 0.06666666666666667,
+    "reset_registry_sha256": "8da28eed5372d2ee00d48bad893275c10e61bfc56978288fe020def599b6b1ca"
+  },
+  "preservation": {
+    "raw_failure_marker": "file:///data/users/ali/vla_wam/raw/v4/g2-object-pair/smoke-g2c7q20260905g-s004/episodes/infrastructure_failure.json",
+    "bytes": 1533,
+    "sha256": "545cfd818ba16a831097d29428ef310be468f15bf243dececc0ee42d3f9704ce"
+  },
+  "disposition": "Replacing both dynamic objects with Isaac Lab native cuboids did not prevent the same launch, so object construction is not causal. The trace's extreme robot-table force now points to the one material scene difference from the qualified horizontal base: this candidate authored the table as kinematic. Restore the exact qualified horizontal table and ground configuration before another same-seed replay."
+}

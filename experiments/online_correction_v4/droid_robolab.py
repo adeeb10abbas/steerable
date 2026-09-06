@@ -881,14 +881,13 @@ class LiveRoboLabBackend:
 
     def capture_viewport_frame(self) -> Any:
         from experiments.online_correction_v4.viewport_video import (
-            ViewportCapture,
             attest_viewport_capture,
             capture_from_ndarray,
         )
 
         recorder = getattr(self.env, "viewport_recorder", None)
         if recorder is None:
-            return None
+            return self._capture_observation_viewport_frame()
 
         def _read_attr(name: str) -> Any:
             value = getattr(recorder, name, None)
@@ -939,7 +938,40 @@ class LiveRoboLabBackend:
                         channels=int(channels),
                     )
                 return attest_viewport_capture(payload, format_kind="encoded_image")
-        return None
+        return self._capture_observation_viewport_frame()
+
+    def _capture_observation_viewport_frame(self) -> Any:
+        from experiments.online_correction_v4.viewport_video import (
+            capture_from_ndarray,
+        )
+
+        raw = self.latest_raw_observation()
+        group = raw.get("viewport_cam") if isinstance(raw, Mapping) else None
+        if isinstance(group, Mapping):
+            frame = group.get("egocentric_mirrored_camera")
+            if frame is None:
+                frame = next(iter(group.values()), None)
+        else:
+            frame = group
+        if frame is None:
+            return None
+        if hasattr(frame, "detach"):
+            frame = frame.detach().cpu().numpy()
+        import numpy as np
+
+        image = np.asarray(frame)
+        if image.ndim == 4 and image.shape[0] == 1:
+            image = image[0]
+        if image.ndim != 3 or image.shape[-1] != 3:
+            raise RoboLabBootstrapError(
+                "viewport_cam observation is not an HxWx3 frame"
+            )
+        if image.dtype != np.uint8:
+            image = np.asarray(image, dtype=np.float32)
+            if image.size and float(np.nanmax(image)) <= 1.0:
+                image = image * 255.0
+            image = np.clip(image, 0.0, 255.0).astype(np.uint8)
+        return capture_from_ndarray(image, format_kind="raw_rgb24")
 
     def object_kinematic_state(self) -> ObjectKinematicState:
         get_world = self.modules["get_world"]

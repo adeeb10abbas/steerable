@@ -270,10 +270,165 @@ class AxisAlignedBox:
 
 
 @dataclass(frozen=True)
+class ConvexPolygonPrism:
+    """Closed convex XY polygon with a task-frame vertical interval."""
+
+    vertices_xy: tuple[tuple[float, float], ...]
+    z_min: float
+    z_max: float
+
+    def __post_init__(self) -> None:
+        if len(self.vertices_xy) < 3:
+            raise ValueError("convex polygon requires at least three vertices")
+        if any(
+            not math.isfinite(value)
+            for point in self.vertices_xy
+            for value in point
+        ):
+            raise ValueError("convex polygon vertices must be finite")
+        if self.z_min > self.z_max:
+            raise ValueError("convex polygon prism vertical interval is empty")
+        signs = []
+        for first, second, third in zip(
+            self.vertices_xy,
+            self.vertices_xy[1:] + self.vertices_xy[:1],
+            self.vertices_xy[2:] + self.vertices_xy[:2],
+        ):
+            cross = (
+                (second[0] - first[0]) * (third[1] - second[1])
+                - (second[1] - first[1]) * (third[0] - second[0])
+            )
+            if abs(cross) > 1e-12:
+                signs.append(math.copysign(1.0, cross))
+        if not signs or min(signs) != max(signs):
+            raise ValueError("polygon vertices must define a nondegenerate convex region")
+
+    def is_empty(self) -> bool:
+        return False
+
+    def point_inside(self, p: Vec3, tol: float = 0.0) -> bool:
+        if not self.z_min - tol <= p[2] <= self.z_max + tol:
+            return False
+        orientation = _polygon_orientation(self.vertices_xy)
+        for first, second in zip(
+            self.vertices_xy,
+            self.vertices_xy[1:] + self.vertices_xy[:1],
+        ):
+            edge_x = second[0] - first[0]
+            edge_y = second[1] - first[1]
+            cross = edge_x * (p[1] - first[1]) - edge_y * (p[0] - first[0])
+            if orientation * cross < -tol * math.hypot(edge_x, edge_y):
+                return False
+        return True
+
+    def distance_to_point(self, p: Vec3) -> float:
+        nearest = self.nearest_point(p)
+        return math.dist(p, nearest)
+
+    def nearest_point(self, p: Vec3) -> Vec3:
+        z = min(max(p[2], self.z_min), self.z_max)
+        planar = (p[0], p[1], z)
+        if self.point_inside(planar):
+            return planar
+        nearest_xy = min(
+            (
+                _nearest_point_on_segment_xy((p[0], p[1]), first, second)
+                for first, second in zip(
+                    self.vertices_xy,
+                    self.vertices_xy[1:] + self.vertices_xy[:1],
+                )
+            ),
+            key=lambda point: math.hypot(point[0] - p[0], point[1] - p[1]),
+        )
+        return (nearest_xy[0], nearest_xy[1], z)
+
+
+def _polygon_orientation(vertices: tuple[tuple[float, float], ...]) -> float:
+    twice_area = sum(
+        first[0] * second[1] - first[1] * second[0]
+        for first, second in zip(vertices, vertices[1:] + vertices[:1])
+    )
+    return 1.0 if twice_area > 0.0 else -1.0
+
+
+def _nearest_point_on_segment_xy(
+    point: tuple[float, float],
+    first: tuple[float, float],
+    second: tuple[float, float],
+) -> tuple[float, float]:
+    delta_x = second[0] - first[0]
+    delta_y = second[1] - first[1]
+    denominator = delta_x * delta_x + delta_y * delta_y
+    if denominator <= 0.0:
+        return first
+    fraction = (
+        (point[0] - first[0]) * delta_x
+        + (point[1] - first[1]) * delta_y
+    ) / denominator
+    fraction = min(max(fraction, 0.0), 1.0)
+    return (
+        first[0] + fraction * delta_x,
+        first[1] + fraction * delta_y,
+    )
+
+
+def _clip_polygon_axis(
+    region: ConvexPolygonPrism,
+    *,
+    axis: str,
+    min_value: float | None,
+    max_value: float | None,
+) -> ConvexPolygonPrism | None:
+    vertices = list(region.vertices_xy)
+    axis_index = 0 if axis == "x" else 1
+    for threshold, keep_greater in (
+        (min_value, True),
+        (max_value, False),
+    ):
+        if threshold is None:
+            continue
+        result: list[tuple[float, float]] = []
+        for first, second in zip(vertices, vertices[1:] + vertices[:1]):
+            first_delta = first[axis_index] - threshold
+            second_delta = second[axis_index] - threshold
+            first_inside = first_delta >= -1e-12 if keep_greater else first_delta <= 1e-12
+            second_inside = second_delta >= -1e-12 if keep_greater else second_delta <= 1e-12
+            if first_inside:
+                result.append(first)
+            if first_inside != second_inside:
+                fraction = first_delta / (first_delta - second_delta)
+                result.append(
+                    (
+                        first[0] + fraction * (second[0] - first[0]),
+                        first[1] + fraction * (second[1] - first[1]),
+                    )
+                )
+        vertices = result
+        if len(vertices) < 3:
+            return None
+    return ConvexPolygonPrism(tuple(vertices), region.z_min, region.z_max)
+
+
+@dataclass(frozen=True)
 class PlanarRelationSpec:
     relation: RelationKind
     clearance_m: float
     workspace: AxisAlignedBox
+    object_footprint: ObjectFootprint
+    reference_footprint: ObjectFootprint
+
+    def __post_init__(self) -> None:
+        if self.relation not in HORIZONTAL_RELATIONS:
+            raise ValueError(f"unsupported planar relation {self.relation!r}")
+        if self.clearance_m < 0.0 or not math.isfinite(self.clearance_m):
+            raise ValueError("clearance_m must be finite and nonnegative")
+
+
+@dataclass(frozen=True)
+class PolygonPlanarRelationSpec:
+    relation: RelationKind
+    clearance_m: float
+    workspace: ConvexPolygonPrism
     object_footprint: ObjectFootprint
     reference_footprint: ObjectFootprint
 
@@ -325,7 +480,7 @@ class ContainmentSpec:
 
 @dataclass(frozen=True)
 class GoalSetResult:
-    region: AxisAlignedBox | None
+    region: AxisAlignedBox | ConvexPolygonPrism | None
     empty: bool
     empty_cause: str | None
     projection_kind: ProjectionKind
@@ -409,7 +564,7 @@ def _apply_center_constraint(
 
 def build_planar_goal_set(
     frame: TaskFrame,
-    spec: PlanarRelationSpec,
+    spec: PlanarRelationSpec | PolygonPlanarRelationSpec,
     p_ref_world: Vec3,
     *,
     projection_kind: ProjectionKind = "terminal",
@@ -422,8 +577,21 @@ def build_planar_goal_set(
         spec.object_footprint,
         spec.clearance_m,
     )
-    region = _apply_center_constraint(spec.workspace, axis, min_value, max_value)
-    if region.is_empty():
+    if isinstance(spec.workspace, ConvexPolygonPrism):
+        region = _clip_polygon_axis(
+            spec.workspace,
+            axis=axis,
+            min_value=min_value,
+            max_value=max_value,
+        )
+    else:
+        region = _apply_center_constraint(
+            spec.workspace,
+            axis,
+            min_value,
+            max_value,
+        )
+    if region is None or region.is_empty():
         return GoalSetResult(
             region=None,
             empty=True,
@@ -571,7 +739,20 @@ def build_containment_goal_set(
     )
 
 
-def _projection_box(region: AxisAlignedBox, projection_kind: ProjectionKind) -> AxisAlignedBox:
+def _projection_region(
+    region: AxisAlignedBox | ConvexPolygonPrism,
+    projection_kind: ProjectionKind,
+) -> AxisAlignedBox | ConvexPolygonPrism:
+    if isinstance(region, ConvexPolygonPrism):
+        if projection_kind == "response_planar":
+            return ConvexPolygonPrism(
+                region.vertices_xy,
+                -math.inf,
+                math.inf,
+            )
+        if projection_kind == "response_opening":
+            return ConvexPolygonPrism(region.vertices_xy, 0.0, 0.0)
+        return region
     if projection_kind == "response_planar":
         return AxisAlignedBox(region.x_min, region.x_max, region.y_min, region.y_max, -math.inf, math.inf)
     if projection_kind == "response_opening":
@@ -600,11 +781,15 @@ def goal_distance(
             projection_kind=goal.projection_kind,
         )
     center = _object_center_task(frame, p_obj_world)
-    region = _projection_box(goal.region, goal.projection_kind)
+    region = _projection_region(goal.region, goal.projection_kind)
     distance = region.distance_to_point(center)
     cap_applied = distance > d_cap_m or not math.isfinite(distance)
     capped = min(distance, d_cap_m) if math.isfinite(distance) else d_cap_m
-    nearest = _nearest_point_on_box(center, region)
+    nearest = (
+        region.nearest_point(center)
+        if isinstance(region, ConvexPolygonPrism)
+        else _nearest_point_on_box(center, region)
+    )
     return DistanceResult(
         distance_m=distance,
         capped_distance_m=capped,
@@ -651,7 +836,11 @@ def point_in_goal_set(frame: TaskFrame, p_obj_world: Vec3, goal: GoalSetResult, 
     if goal.empty or goal.region is None:
         return False
     center = _object_center_task(frame, p_obj_world)
-    region = goal.region if goal.projection_kind == "terminal" else _projection_box(goal.region, goal.projection_kind)
+    region = (
+        goal.region
+        if goal.projection_kind == "terminal"
+        else _projection_region(goal.region, goal.projection_kind)
+    )
     return region.point_inside(center, tol=tol)
 
 

@@ -122,6 +122,61 @@ class PlanarGoalSetTests(unittest.TestCase):
         self.assertEqual(dist.capped_distance_m, 0.05)
         self.assertTrue(dist.cap_applied)
 
+    def test_convex_workspace_is_clipped_without_axis_aligned_overreach(self):
+        workspace = geom.ConvexPolygonPrism(
+            vertices_xy=((0.0, 1.0), (-1.0, 0.0), (0.0, -1.0), (1.0, 0.0)),
+            z_min=0.04,
+            z_max=0.04,
+        )
+        spec = geom.PolygonPlanarRelationSpec(
+            relation="left",
+            clearance_m=0.0,
+            workspace=workspace,
+            object_footprint=geom.ObjectFootprint(0.1, 0.1, 0.0),
+            reference_footprint=geom.ObjectFootprint(0.1, 0.1, 0.0),
+        )
+        goal = geom.build_planar_goal_set(self.frame, spec, self.p_ref)
+        self.assertTrue(
+            geom.point_in_goal_set(self.frame, (0.3, 0.0, 0.04), goal)
+        )
+        self.assertFalse(
+            geom.point_in_goal_set(self.frame, (0.8, 0.8, 0.04), goal)
+        )
+        distance = geom.goal_distance(
+            self.frame,
+            (0.8, 0.8, 0.04),
+            goal,
+            d_cap_m=1.0,
+        )
+        self.assertAlmostEqual(distance.distance_m, math.sqrt(0.18))
+
+    def test_convex_workspace_response_projection_ignores_height(self):
+        workspace = geom.ConvexPolygonPrism(
+            vertices_xy=((0.0, 1.0), (-1.0, 0.0), (0.0, -1.0), (1.0, 0.0)),
+            z_min=0.04,
+            z_max=0.04,
+        )
+        spec = geom.PolygonPlanarRelationSpec(
+            relation="left",
+            clearance_m=0.0,
+            workspace=workspace,
+            object_footprint=geom.ObjectFootprint(0.1, 0.1, 0.0),
+            reference_footprint=geom.ObjectFootprint(0.1, 0.1, 0.0),
+        )
+        goal = geom.build_planar_goal_set(
+            self.frame,
+            spec,
+            self.p_ref,
+            projection_kind="response_planar",
+        )
+        distance = geom.goal_distance(
+            self.frame,
+            (0.3, 0.0, 10.0),
+            goal,
+            d_cap_m=1.0,
+        )
+        self.assertEqual(distance.distance_m, 0.0)
+
 
 class ShelfGoalTests(unittest.TestCase):
     def setUp(self):

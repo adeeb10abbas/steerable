@@ -67,10 +67,14 @@ class TerminalEvidence:
 class ScoringContext:
     frame: geom.TaskFrame
     d_cap_m: float
-    planar_spec: geom.PlanarRelationSpec | None = None
+    planar_spec: (
+        geom.PlanarRelationSpec | geom.PolygonPlanarRelationSpec | None
+    ) = None
     shelf_spec: geom.ShelfRelationSpec | None = None
     containment_spec: geom.ContainmentSpec | None = None
-    other_planar_spec: geom.PlanarRelationSpec | None = None
+    other_planar_spec: (
+        geom.PlanarRelationSpec | geom.PolygonPlanarRelationSpec | None
+    ) = None
     geometric_tol_m: float = 0.0
 
 

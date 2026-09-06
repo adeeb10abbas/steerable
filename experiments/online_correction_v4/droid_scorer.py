@@ -76,14 +76,31 @@ def load_scoring_context(
     workspace_raw = payload.get("workspace")
     if not isinstance(workspace_raw, dict):
         raise TerminalScorerError("geometry workspace is required")
-    workspace = geom.AxisAlignedBox(
-        float(workspace_raw["x_min"]),
-        float(workspace_raw["x_max"]),
-        float(workspace_raw["y_min"]),
-        float(workspace_raw["y_max"]),
-        float(workspace_raw["z_min"]),
-        float(workspace_raw["z_max"]),
-    )
+    vertices_raw = workspace_raw.get("vertices_xy")
+    if vertices_raw is not None:
+        if not isinstance(vertices_raw, list):
+            raise TerminalScorerError(
+                "geometry workspace vertices_xy must be a list"
+            )
+        workspace: geom.AxisAlignedBox | geom.ConvexPolygonPrism = (
+            geom.ConvexPolygonPrism(
+                vertices_xy=tuple(
+                    (float(point[0]), float(point[1]))
+                    for point in vertices_raw
+                ),
+                z_min=float(workspace_raw["z_min"]),
+                z_max=float(workspace_raw["z_max"]),
+            )
+        )
+    else:
+        workspace = geom.AxisAlignedBox(
+            float(workspace_raw["x_min"]),
+            float(workspace_raw["x_max"]),
+            float(workspace_raw["y_min"]),
+            float(workspace_raw["y_max"]),
+            float(workspace_raw["z_min"]),
+            float(workspace_raw["z_max"]),
+        )
 
     def _footprint(name: str) -> geom.ObjectFootprint:
         raw = payload.get(name)
@@ -96,7 +113,12 @@ def load_scoring_context(
         )
 
     clearance = float(payload.get("clearance_m", 0.01))
-    planar = geom.PlanarRelationSpec(
+    spec_type = (
+        geom.PolygonPlanarRelationSpec
+        if isinstance(workspace, geom.ConvexPolygonPrism)
+        else geom.PlanarRelationSpec
+    )
+    planar = spec_type(
         relation=relation,
         clearance_m=clearance,
         workspace=workspace,

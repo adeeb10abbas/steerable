@@ -1,9 +1,9 @@
 {
   "schema_version": "vla-wam-v4-object-pair-g3-scripted-k8s-render-spec-v1",
   "fixture_id": "object_pair",
-  "kube_context": "ali-prod-gpu",
+  "kube_context": "prod-dcwi-warrenq1-vmkub007",
   "namespace": "211247-prod",
-  "attempt_id": "g3s7pilot20260906b",
+  "attempt_id": "g3s7pilot20260906c",
   "image_repository": "artifactory-ci.gm.com/docker-approved/devcontainers/base",
   "image_sha256": "03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
   "image_pull_secret": "artifactory-ci-pull-secret",
@@ -12,7 +12,7 @@
   "output_parent_must_exist_on_pvc": true,
   "launch_prerequisites": [
     "Create output_parent on the PVC before kubectl create -k",
-    "Bind the passing 24-seed engineering-pilot path-scale receipt",
+    "Bind the passing engineering-pilot 0.5 path-scale receipt before render",
     "Study checkout must match expected_study_commit with a clean tracked tree"
   ],
   "prestop_wait_seconds": 120,
@@ -27,7 +27,7 @@
     "pythonpath": "/data/users/ali/vla_wam/src/steerable-v4-c7-pilot-g2:/data/users/ali/vla_wam/external/RoboLab-11142d4:/data/users/ali/RoboTwin/envs/curobo/src:/opt/v4-lane/scripts"
   },
   "study_root": "/data/users/ali/vla_wam/src/steerable-v4-c7-pilot-g2",
-  "expected_study_commit": "c89c56e3a13b36f32fcad2169a7790b6df7914eb",
+  "expected_study_commit": "5a2b674bd3356d70f41ef1759627b562d04e4227",
   "robolab_root": "/data/users/ali/vla_wam/external/RoboLab-11142d4",
   "expected_robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
   "native_control_dt_s": 0.06666666666666667,

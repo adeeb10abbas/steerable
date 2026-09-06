@@ -1,0 +1,24 @@
+{
+  "schema_version": "v4-invalid-infrastructure-attempts-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "C7",
+  "fixture_id": "object_pair",
+  "attempt_ids": [
+    "attempt0067"
+  ],
+  "affected_episode_ids": [
+    "online_correction_v4-C7-pilot-06-94ceed89851c43e3",
+    "online_correction_v4-C7-pilot-14-c98653ada4cadea3"
+  ],
+  "classification": "infrastructure_failure_before_action_execution",
+  "cause": "The live Cosmos3 server returned the qualified 32x8 action chunk as a NumPy array, while the adapter's shape validator accepted only collections.abc.Sequence containers.",
+  "observed_exception_type": "NanoPolicyContractError",
+  "observed_exception_detail": "action chunk must be a nested sequence (32, 8)",
+  "fix_commit": "ed7f0903602bb39d15fd927a4910c54fe89b264d",
+  "observed_model_request_count": 2,
+  "executed_action_count": 0,
+  "behavioral_episode_count": 0,
+  "policy_outcome_count": 0,
+  "disposition": "Preserved as invalid infrastructure attempts. Exact shape, finite-value, uint8 RGB, prompt, seed, and reset checks remain enforced while qualified array-backed action and future responses are now accepted.",
+  "policy_failures_inferred": false
+}

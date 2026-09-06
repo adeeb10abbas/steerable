@@ -1836,7 +1836,7 @@ def compile_g3_aggregate_receipt(
                 scripted_files.append({"key": list(key), **dict(record)})
 
     return {
-        "schema_version": AGGREGATE_SCHEMA,
+        "schema_version": aggregate_receipt_schema_g3(str(plan.get("fixture_id"))),
         "campaign_id": plan.get("campaign_id"),
         "fixture_id": plan.get("fixture_id"),
         "status": status,
@@ -1874,7 +1874,7 @@ def compile_g3_aggregate_receipt(
             "scripted": scripted_failures,
         },
         "release_boundary": (
-            "A passing aggregate completes horizontal G3 only and authorizes G4 "
+            "A passing aggregate completes this fixture's G3 only and authorizes G4 "
             "preparation. Policy inference and reset-registry release remain blocked."
         ),
     }
@@ -1885,12 +1885,15 @@ def validate_g3_aggregate_receipt(
     *,
     plan: Mapping[str, Any] | None = None,
 ) -> None:
+    fixture_id = receipt.get("fixture_id")
+    if not isinstance(fixture_id, str):
+        raise G3GateError("G3 aggregate receipt lacks fixture_id")
     _require(
-        receipt.get("schema_version") == AGGREGATE_SCHEMA,
+        receipt.get("schema_version") == aggregate_receipt_schema_g3(fixture_id),
         "G3 aggregate receipt schema differs",
     )
     _require(receipt.get("campaign_id") == "online_correction_v4", "campaign differs")
-    _require(receipt.get("fixture_id") == "horizontal", "fixture differs")
+    _require(receipt.get("fixture_id") == fixture_id, "fixture differs")
     _require(
         receipt.get("model_request_count") == 0,
         "G3 aggregate records model requests",
@@ -1911,6 +1914,7 @@ def validate_g3_aggregate_receipt(
         )
     if plan is not None:
         validate_plan_payload(plan)
+        _require(plan.get("fixture_id") == fixture_id, "fixture binding differs")
         selected = receipt.get("selected_scale")
         if selected is not None:
             if selected not in _plan_scale_candidates(plan):

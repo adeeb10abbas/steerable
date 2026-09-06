@@ -18,8 +18,10 @@ from experiments.online_correction_v4.model_blind_g3 import (
     G3GateError,
     HORIZONTAL_GOALS,
     PATH_SAMPLE_INTERVAL_S,
+    aggregate_receipt_schema_g3,
     build_counterbalance_index,
     build_plan_payload,
+    compile_g3_aggregate_receipt,
     compile_path_seed_receipt,
     expected_path_check_keys,
     path_checks_per_scale_for_seed_count,
@@ -27,6 +29,7 @@ from experiments.online_correction_v4.model_blind_g3 import (
     resolve_geometry_contract,
     validate_path_seed_receipt,
     validate_plan_payload,
+    validate_g3_aggregate_receipt,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -128,6 +131,22 @@ class ObjectPairG3PathTests(unittest.TestCase):
             plan["information_gate"]["goal_area_gate_fixtures"],
             ["horizontal", "reference_binding"],
         )
+
+    def test_object_pair_aggregate_uses_fixture_schema(self) -> None:
+        plan = json.loads(
+            (
+                ROOT
+                / "artifacts/online_correction_v4/setup/object_pair_g3_plan.candidate.json"
+            ).read_text(encoding="utf-8")
+        )
+        receipt = compile_g3_aggregate_receipt(
+            plan=plan,
+            plan_receipt={"path": "object_pair_g3_plan.candidate.json", "sha256": "0" * 64},
+            path_scale_receipts=[],
+        )
+        self.assertEqual(receipt["schema_version"], aggregate_receipt_schema_g3("object_pair"))
+        self.assertEqual(receipt["fixture_id"], "object_pair")
+        validate_g3_aggregate_receipt(receipt, plan=plan)
 
     def test_object_pair_low_shrinking_fraction_passes_information_gate(self) -> None:
         plan = json.loads(

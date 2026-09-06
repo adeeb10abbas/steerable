@@ -1,7 +1,8 @@
-"""Tests for the formula-closed horizontal model-blind G3 plan."""
+"""Tests for the formula-closed horizontal model-blind G3 plan and receipts."""
 
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 from pathlib import Path
@@ -9,9 +10,19 @@ import tempfile
 import unittest
 
 from experiments.online_correction_v4.model_blind_g3 import (
+    G3GateError,
+    HORIZONTAL_GOALS,
+    HORIZONTAL_PATH_CHECKS_PER_SEED,
+    PATH_SCENARIOS,
+    PATH_SAMPLE_INTERVAL_S,
+    compile_path_seed_receipt,
+    compile_scripted_check_receipt,
+    expected_path_check_keys,
+    validate_path_seed_receipt,
+    validate_plan_payload,
+    validate_scripted_check_receipt,
     build_counterbalance_index,
     select_extreme_reset_seeds,
-    validate_plan_payload,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -38,6 +49,55 @@ BUILDER_SPEC = importlib.util.spec_from_file_location(
 builder = importlib.util.module_from_spec(BUILDER_SPEC)
 assert BUILDER_SPEC.loader is not None
 BUILDER_SPEC.loader.exec_module(builder)
+
+
+def _evidence(path: str, payload: bytes) -> dict[str, object]:
+    return {
+        "path": path,
+        "sha256": hashlib.sha256(payload).hexdigest(),
+        "bytes": len(payload),
+    }
+
+
+def _passing_path_observation(
+    *,
+    goal: str,
+    scenario: str,
+    suffix: str = "a",
+) -> dict[str, object]:
+    measured = f"evidence/measured/{goal}_{scenario}_{suffix}.json".encode("utf-8")
+    reference = f"evidence/reference/{goal}_{scenario}_{suffix}.json".encode("utf-8")
+    return {
+        "planned_duration_s": 1.0,
+        "sample_interval_s": PATH_SAMPLE_INTERVAL_S,
+        "sample_count": 51,
+        "measured_pose_evidence": _evidence(
+            f"artifacts/g3/measured/{goal}_{scenario}_{suffix}.json",
+            measured,
+        ),
+        "reference_pose_evidence": _evidence(
+            f"artifacts/g3/reference/{goal}_{scenario}_{suffix}.json",
+            reference,
+        ),
+        "collision_free": True,
+        "support_valid": True,
+        "reachable_workspace": True,
+        "legal_goal_nonempty": True,
+        "reference_robot_contact": False,
+        "unmodeled_collision": False,
+        "reasons": [],
+    }
+
+
+def _full_path_observations(*, failing_key: tuple[str, str] | None = None) -> list[dict[str, object]]:
+    observations: list[dict[str, object]] = []
+    for goal, scenario in expected_path_check_keys():
+        obs = _passing_path_observation(goal=goal, scenario=scenario)
+        if failing_key == (goal, scenario):
+            obs["collision_free"] = False
+            obs["reasons"] = ["collision detected"]
+        observations.append(obs)
+    return observations
 
 
 class ModelBlindG3PlanTests(unittest.TestCase):
@@ -102,6 +162,304 @@ class ModelBlindG3PlanTests(unittest.TestCase):
             )
             self.assertEqual(rebuilt.read_bytes(), PLAN.read_bytes())
             self.assertEqual(report["registered_reset_count"], 128)
+
+
+class ModelBlindG3PathReceiptTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.plan = json.loads(PLAN.read_text(encoding="utf-8"))
+        validate_plan_payload(cls.plan)
+        cls.plan_receipt = {
+            "path": str(PLAN.relative_to(ROOT)),
+            "sha256": hashlib.sha256(PLAN.read_bytes()).hexdigest(),
+        }
+
+    def test_expected_path_check_order_has_exactly_24_cases(self) -> None:
+        keys = expected_path_check_keys()
+        self.assertEqual(len(keys), 24)
+        self.assertEqual(HORIZONTAL_PATH_CHECKS_PER_SEED, 24)
+        self.assertEqual(
+            keys,
+            tuple((goal, scenario) for goal in HORIZONTAL_GOALS for scenario in PATH_SCENARIOS),
+        )
+
+    def test_compile_and_validate_passing_path_seed_receipt(self) -> None:
+        receipt = compile_path_seed_receipt(
+            plan=self.plan,
+            plan_receipt=self.plan_receipt,
+            environment_seed=2100000000,
+            scale=1.0,
+            check_observations=_full_path_observations(),
+        )
+        validate_path_seed_receipt(receipt, plan=self.plan)
+        self.assertEqual(receipt["schema_version"], "v4-horizontal-g3-path-seed-receipt-v1")
+        self.assertEqual(receipt["check_count"], 24)
+        self.assertEqual(len(receipt["checks"]), 24)
+        self.assertTrue(receipt["passed"])
+        self.assertEqual(receipt["passed_check_count"], 24)
+        self.assertEqual(receipt["failed_check_count"], 0)
+        self.assertEqual(receipt["checks"][0]["goal"], "left")
+        self.assertEqual(receipt["checks"][0]["scenario"], "original_sham")
+        self.assertEqual(receipt["checks"][-1]["goal"], "behind")
+        self.assertEqual(receipt["checks"][-1]["scenario"], "reversal")
+        self.assertEqual(receipt["displacement_m"], 0.12)
+        self.assertEqual(
+            receipt["direction_task_coefficients_by_goal"]["left"],
+            self.plan["direction_task_coefficients_by_env_seed"]["2100000000"]["left"],
+        )
+
+    def test_compile_records_partial_failure(self) -> None:
+        receipt = compile_path_seed_receipt(
+            plan=self.plan,
+            plan_receipt=self.plan_receipt,
+            environment_seed=2100000004,
+            scale=0.75,
+            check_observations=_full_path_observations(
+                failing_key=("front", "fast_drift")
+            ),
+        )
+        validate_path_seed_receipt(receipt, plan=self.plan)
+        self.assertFalse(receipt["passed"])
+        self.assertEqual(receipt["failed_check_count"], 1)
+        failed = next(check for check in receipt["checks"] if not check["passed"])
+        self.assertEqual(failed["goal"], "front")
+        self.assertEqual(failed["scenario"], "fast_drift")
+        self.assertEqual(failed["reasons"], ["collision detected"])
+
+    def test_rejects_wrong_observation_count(self) -> None:
+        with self.assertRaises(G3GateError):
+            compile_path_seed_receipt(
+                plan=self.plan,
+                plan_receipt=self.plan_receipt,
+                environment_seed=2100000000,
+                scale=1.0,
+                check_observations=_full_path_observations()[:23],
+            )
+
+    def test_rejects_unregistered_scale(self) -> None:
+        with self.assertRaises(G3GateError):
+            compile_path_seed_receipt(
+                plan=self.plan,
+                plan_receipt=self.plan_receipt,
+                environment_seed=2100000000,
+                scale=1.25,
+                check_observations=_full_path_observations(),
+            )
+
+    def test_rejects_non_finite_numeric(self) -> None:
+        observations = _full_path_observations()
+        observations[0]["planned_duration_s"] = float("nan")
+        with self.assertRaises(G3GateError):
+            compile_path_seed_receipt(
+                plan=self.plan,
+                plan_receipt=self.plan_receipt,
+                environment_seed=2100000000,
+                scale=1.0,
+                check_observations=observations,
+            )
+
+    def test_rejects_sample_interval_above_cap(self) -> None:
+        observations = _full_path_observations()
+        observations[0]["sample_interval_s"] = PATH_SAMPLE_INTERVAL_S + 0.001
+        with self.assertRaises(G3GateError):
+            compile_path_seed_receipt(
+                plan=self.plan,
+                plan_receipt=self.plan_receipt,
+                environment_seed=2100000000,
+                scale=1.0,
+                check_observations=observations,
+            )
+
+    def test_rejects_malformed_evidence_hash(self) -> None:
+        observations = _full_path_observations()
+        measured = observations[0]["measured_pose_evidence"]
+        assert isinstance(measured, dict)
+        measured["sha256"] = "not-a-hash"
+        with self.assertRaises(G3GateError):
+            compile_path_seed_receipt(
+                plan=self.plan,
+                plan_receipt=self.plan_receipt,
+                environment_seed=2100000000,
+                scale=1.0,
+                check_observations=observations,
+            )
+
+    def test_rejects_declared_passed_disagreeing_with_predicates(self) -> None:
+        observations = _full_path_observations()
+        observations[0]["collision_free"] = False
+        observations[0]["reasons"] = ["collision"]
+        observations[0]["passed"] = True
+        with self.assertRaises(G3GateError):
+            compile_path_seed_receipt(
+                plan=self.plan,
+                plan_receipt=self.plan_receipt,
+                environment_seed=2100000000,
+                scale=1.0,
+                check_observations=observations,
+            )
+
+    def test_validate_rejects_out_of_order_checks(self) -> None:
+        receipt = compile_path_seed_receipt(
+            plan=self.plan,
+            plan_receipt=self.plan_receipt,
+            environment_seed=2100000000,
+            scale=1.0,
+            check_observations=_full_path_observations(),
+        )
+        swapped = list(receipt["checks"])
+        swapped[0], swapped[1] = swapped[1], swapped[0]
+        bad = {**receipt, "checks": swapped}
+        with self.assertRaises(G3GateError):
+            validate_path_seed_receipt(bad, plan=self.plan)
+
+    def test_validate_rejects_plan_binding_mismatch(self) -> None:
+        receipt = compile_path_seed_receipt(
+            plan=self.plan,
+            plan_receipt=self.plan_receipt,
+            environment_seed=2100000000,
+            scale=1.0,
+            check_observations=_full_path_observations(),
+        )
+        bad = {**receipt, "scale": 2.0, "displacement_m": 0.24}
+        with self.assertRaises(G3GateError):
+            validate_path_seed_receipt(bad, plan=self.plan)
+
+    def test_validate_rejects_missing_evidence(self) -> None:
+        receipt = compile_path_seed_receipt(
+            plan=self.plan,
+            plan_receipt=self.plan_receipt,
+            environment_seed=2100000000,
+            scale=1.0,
+            check_observations=_full_path_observations(),
+        )
+        checks = list(receipt["checks"])
+        first = dict(checks[0])
+        del first["measured_pose_evidence"]
+        checks[0] = first
+        bad = {**receipt, "checks": checks}
+        with self.assertRaises(G3GateError):
+            validate_path_seed_receipt(bad)
+
+
+class ModelBlindG3ScriptedReceiptTests(unittest.TestCase):
+    def test_compile_and_validate_passing_stationary_receipt(self) -> None:
+        payload = b"scripted-stationary-left-original"
+        receipt = compile_scripted_check_receipt(
+            check_kind="stationary",
+            environment_seed=2100000000,
+            goal="left",
+            reference_position="original",
+            scale=1.0,
+            displacement_m=0.12,
+            observation={
+                "grasped": True,
+                "transported": True,
+                "released": True,
+                "stably_placed": True,
+                "goal_satisfied": True,
+                "evidence": _evidence(
+                    "artifacts/g3/scripted/stationary_left_original.json",
+                    payload,
+                ),
+                "reasons": [],
+            },
+        )
+        validate_scripted_check_receipt(receipt)
+        self.assertEqual(
+            receipt["schema_version"],
+            "v4-horizontal-g3-scripted-check-receipt-v1",
+        )
+        self.assertTrue(receipt["passed"])
+        self.assertEqual(receipt["model_request_count"], 0)
+        self.assertEqual(receipt["behavioral_episode_count"], 0)
+
+    def test_compile_and_validate_moving_failure(self) -> None:
+        receipt = compile_scripted_check_receipt(
+            check_kind="moving",
+            environment_seed=2100000098,
+            goal="behind",
+            reference_position="endpoint",
+            scale=0.5,
+            displacement_m=0.06,
+            observation={
+                "grasped": True,
+                "transported": True,
+                "released": False,
+                "stably_placed": False,
+                "goal_satisfied": False,
+                "evidence": _evidence(
+                    "artifacts/g3/scripted/moving_behind_endpoint.json",
+                    b"failed-release",
+                ),
+                "reasons": ["release not stable"],
+            },
+        )
+        validate_scripted_check_receipt(receipt)
+        self.assertFalse(receipt["passed"])
+
+    def test_rejects_invalid_check_kind(self) -> None:
+        with self.assertRaises(G3GateError):
+            compile_scripted_check_receipt(
+                check_kind="drifting",
+                environment_seed=2100000000,
+                goal="left",
+                reference_position="original",
+                scale=1.0,
+                displacement_m=0.12,
+                observation={
+                    "grasped": True,
+                    "transported": True,
+                    "released": True,
+                    "stably_placed": True,
+                    "goal_satisfied": True,
+                    "evidence": _evidence("x.json", b"x"),
+                    "reasons": [],
+                },
+            )
+
+    def test_rejects_passed_inconsistent_with_stages(self) -> None:
+        with self.assertRaises(G3GateError):
+            compile_scripted_check_receipt(
+                check_kind="stationary",
+                environment_seed=2100000000,
+                goal="left",
+                reference_position="midpoint",
+                scale=1.0,
+                displacement_m=0.12,
+                observation={
+                    "grasped": True,
+                    "transported": False,
+                    "released": False,
+                    "stably_placed": False,
+                    "goal_satisfied": False,
+                    "passed": True,
+                    "evidence": _evidence("x.json", b"x"),
+                    "reasons": ["transport failed"],
+                },
+            )
+
+    def test_validate_rejects_nonzero_model_counts(self) -> None:
+        receipt = compile_scripted_check_receipt(
+            check_kind="stationary",
+            environment_seed=2100000000,
+            goal="right",
+            reference_position="original",
+            scale=1.0,
+            displacement_m=0.12,
+            observation={
+                "grasped": True,
+                "transported": True,
+                "released": True,
+                "stably_placed": True,
+                "goal_satisfied": True,
+                "evidence": _evidence("x.json", b"x"),
+                "reasons": [],
+            },
+        )
+        bad = {**receipt, "model_request_count": 1}
+        with self.assertRaises(G3GateError):
+            validate_scripted_check_receipt(bad)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,0 +1,23 @@
+{
+  "schema_version": "v4-second-stack-g3-scale-rejection-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "C8",
+  "fixture_id": "second_stack",
+  "scale": 0.75,
+  "displacement_m": 0.06,
+  "status": "rejected_before_policy_inference",
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "scripted_smoke_expected_check_count": 12,
+  "scripted_smoke_passed_check_count": 10,
+  "rejection_reasons": [
+    "The canonical behind/endpoint trajectory produced robot contact with and displacement of the moved reference.",
+    "The canonical front/endpoint trajectory lifted the source but did not retain it through transport."
+  ],
+  "evidence": {
+    "path": "artifacts/online_correction_v4/qualification/20260906_second_stack_g3_scripted_scale_0p75_smoke_g3c8s20260906h.json",
+    "sha256": "579458a8e88da7be23e9443f25313f8940f94811293ab68b29ce654db868d738"
+  },
+  "next_candidate_scale": 0.5,
+  "release_boundary": "Scale 0.75 is rejected by model-blind controller feasibility. No policy outcome was observed or used."
+}

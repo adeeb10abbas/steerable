@@ -331,15 +331,20 @@ def _host_list(value: Any) -> list[Any]:
 def _reset_trace_sample(backend: Any, *, control_tick: int) -> dict[str, Any]:
     world = backend.modules["get_world"](backend.env)
     objects: dict[str, Any] = {}
-    for name in backend.settle_objects:
-        position, quaternion = world.get_pose(name, env_id=0)
-        objects[name] = {
-            "position_world_xyz_m": _host_list(position),
-            "quaternion_world_wxyz": _host_list(quaternion),
-            "velocity_world_xyz_rad_s": _host_list(
-                world.get_velocity(name, env_id=0)
-            ),
-        }
+    for name in (*backend.settle_objects, "table"):
+        try:
+            position, quaternion = world.get_pose(name, env_id=0)
+            objects[name] = {
+                "position_world_xyz_m": _host_list(position),
+                "quaternion_world_wxyz": _host_list(quaternion),
+                "velocity_world_xyz_rad_s": _host_list(
+                    world.get_velocity(name, env_id=0)
+                ),
+            }
+        except Exception as exc:
+            objects[name] = {
+                "sample_error": f"{type(exc).__name__}: {exc}"
+            }
     sample: dict[str, Any] = {
         "control_tick": control_tick,
         "simulation_time_s": control_tick * backend.control_dt_s,

@@ -1,0 +1,35 @@
+{
+  "schema_version": "v4-second-stack-g4-execution-receipt-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "C8",
+  "fixture_id": "second_stack",
+  "gate": "G4",
+  "attempt_id": "g4c8q20260906d",
+  "status": "passed",
+  "model_request_count": 3,
+  "behavioral_episode_count": 0,
+  "started_at_utc": "2026-09-06T22:07:06Z",
+  "completed_at_utc": "2026-09-06T22:08:20Z",
+  "kubernetes": {
+    "context": "prod-dcwi-warrenq1-vmkub007",
+    "namespace": "211247-prod",
+    "job_name": "v4-c8-g4-g4c8q20260906d",
+    "pod_uid": "bf0cc360-630e-411a-bdb7-4a08e05e5d63",
+    "node_name": "dcwipphhgc190.edc.nam.gm.com",
+    "requested_gpu_product": "NVIDIA-A40",
+    "image": "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c"
+  },
+  "job_manifest": {
+    "external_path": "/tmp/v4-c8-g4-g4c8q20260906d-job.yaml",
+    "sha256": "0f273256497009bc575beb53da0252a65962f5a4728ec1a1ed05a76fe894e8f6"
+  },
+  "job_log": {
+    "external_path": "/tmp/g4c8q20260906d.log",
+    "sha256": "14842573e8c193e1216252e2862be91567574f0dea97a9b040b3ce07754e98a7"
+  },
+  "gate_receipt": {
+    "path": "artifacts/online_correction_v4/qualification/20260906_second_stack_g4_policy_session_g4c8q20260906d.json",
+    "sha256": "1ea59a034b51e42eb48637eca76915ddb4e2aaf0da11fce3c0012463f0cd41fa"
+  },
+  "release_boundary": "This receipt completes C8 G4 only. G5-G8 and a released C8 runtime lock remain required before behavioral policy episodes."
+}

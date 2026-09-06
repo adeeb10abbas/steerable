@@ -1,0 +1,21 @@
+{
+  "schema_version": "v4-invalid-infrastructure-attempts-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "C8",
+  "fixture_id": "second_stack",
+  "attempt_ids": [
+    "g4c8q20260906c"
+  ],
+  "classification": "infrastructure_invalid_before_completed_policy_request",
+  "cause": "The exact local Cosmos-Reason2-2B backbone loaded successfully from revision 9ce19a195e423419c349abfc86fd07178b230561, but the pinned GR00T Python environment's PyTorch build supports CUDA architectures only through sm_90 and cannot execute on the toolbox B200 (sm_100).",
+  "observed_exception_type": "RuntimeError",
+  "observed_exception_detail": "CUDA error: no kernel image is available for execution on the device",
+  "checkpoint_revision": "940134b3c2948ccfdf8e7393f2d2ca869dc42833",
+  "backbone_revision": "9ce19a195e423419c349abfc86fd07178b230561",
+  "model_request_invocation_count": 1,
+  "completed_model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "policy_outcome_count": 0,
+  "policy_failures_inferred": false,
+  "disposition": "Retry G4 on a qualified A40 worker supported by the pinned PyTorch build. C8 G2 and G3 remain qualified; G4-G8 and C8 behavioral inference remain unreleased."
+}

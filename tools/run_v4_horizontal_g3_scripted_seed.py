@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import math
 import os
 from pathlib import Path
 import subprocess
@@ -285,9 +284,9 @@ def validate_scripted_seed_gate_inputs(
 def frozen_scripted_controller_config(fixture_id: str = "horizontal") -> dict[str, Any]:
     config = json.loads(json.dumps(FROZEN_SCRIPTED_CONTROLLER_CONFIG))
     if fixture_id == "object_pair":
-        # Present the sponge's 5.5 cm side, rather than its 8 cm side, to the
-        # parallel-jaw gripper while preserving the horizontal controller.
-        config["eef_yaw_offset_rad"] = math.pi / 2.0
+        # RoboLab's absolute IK controls the Robotiq base flange, while the
+        # object-pair waypoints describe the fingertip plane.
+        config["eef_tool_length_m"] = 0.1628
     return config
 
 

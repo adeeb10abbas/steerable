@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import importlib.util
 import json
-import math
 import tempfile
 import unittest
 from pathlib import Path
@@ -100,11 +99,11 @@ class FrozenControllerConfigTests(unittest.TestCase):
         self.assertAlmostEqual(config["geometry_offsets"]["descend_offset_m"], 0.025)
         self.assertAlmostEqual(config["geometry_offsets"]["place_descend_offset_m"], 0.04)
         self.assertAlmostEqual(config["gripper_close"], 0.785398)
-        self.assertNotIn("eef_yaw_offset_rad", config)
+        self.assertNotIn("eef_tool_length_m", config)
 
-    def test_object_pair_presents_short_sponge_side_to_gripper(self) -> None:
+    def test_object_pair_offsets_fingertip_waypoints_to_base_flange(self) -> None:
         config = runner.frozen_scripted_controller_config("object_pair")
-        self.assertAlmostEqual(config["eef_yaw_offset_rad"], math.pi / 2.0)
+        self.assertAlmostEqual(config["eef_tool_length_m"], 0.1628)
 
 
 class MovingCallbackTests(unittest.TestCase):

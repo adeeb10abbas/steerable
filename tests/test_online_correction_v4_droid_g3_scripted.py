@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import math
 import unittest
+from dataclasses import replace
 from types import SimpleNamespace
 
 from experiments.online_correction_v4 import geometry as geom
@@ -190,6 +191,23 @@ class TargetSelectionTests(unittest.TestCase):
                 self.assertAlmostEqual(target_task[0], self.cube[0], places=9)
             self.assertAlmostEqual(target_task[2], self.table_top + self.half_up, places=9)
             self.assertTrue(goal.region is not None and goal.region.point_inside(target_task))
+
+    def test_narrow_nonempty_goal_uses_region_midpoint(self) -> None:
+        goal = replace(
+            _goal_for_relation("left"),
+            region=geom.AxisAlignedBox(0.10, 0.11, -0.05, 0.05, 0.0, 0.08),
+        )
+        target = select_robust_target_task(
+            frame=self.frame,
+            goal=goal,
+            cube_position_world=self.cube,
+            relation="left",
+            inset_m=self.inset,
+            table_top_z_task=self.table_top,
+            object_half_up=self.half_up,
+        )
+        self.assertAlmostEqual(target[0], 0.105)
+        self.assertTrue(goal.region is not None and goal.region.point_inside(target))
 
     def test_world_target_roundtrip(self) -> None:
         goal = _goal_for_relation("left")

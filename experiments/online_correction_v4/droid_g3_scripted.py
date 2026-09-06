@@ -62,7 +62,7 @@ class ScriptedControllerConfig:
     min_grasp_lift_m: float = 0.04
     gripper_open: float = 0.0
     gripper_close: float = 0.785398
-    eef_yaw_offset_rad: float = 0.0
+    eef_tool_length_m: float = 0.0
 
     @classmethod
     def from_mapping(cls, raw: Mapping[str, Any]) -> ScriptedControllerConfig:
@@ -94,10 +94,10 @@ class ScriptedControllerConfig:
             kwargs["gripper_open"] = _require_finite_number(raw.get("gripper_open"), "gripper_open")
         if "gripper_close" in raw:
             kwargs["gripper_close"] = _require_finite_number(raw.get("gripper_close"), "gripper_close")
-        if "eef_yaw_offset_rad" in raw:
-            kwargs["eef_yaw_offset_rad"] = _require_finite_number(
-                raw.get("eef_yaw_offset_rad"),
-                "eef_yaw_offset_rad",
+        if "eef_tool_length_m" in raw:
+            kwargs["eef_tool_length_m"] = _require_positive_finite(
+                raw.get("eef_tool_length_m"),
+                "eef_tool_length_m",
             )
         return cls(**kwargs)
 
@@ -237,17 +237,25 @@ def select_robust_target_task(
         raise DroidG3ScriptedError("goal set is empty")
     region = goal.region
     cube_task = frame.world_to_task(cube_position_world)
+
+    def inset_coordinate(low: float, high: float, *, from_low: bool) -> float:
+        if high < low:
+            raise DroidG3ScriptedError("goal region has inverted bounds")
+        if high - low < 2.0 * inset:
+            return 0.5 * (low + high)
+        return low + inset if from_low else high - inset
+
     if normalized == "left":
-        x = region.x_min + inset
+        x = inset_coordinate(region.x_min, region.x_max, from_low=True)
         y = min(max(cube_task[1], region.y_min), region.y_max)
     elif normalized == "right":
-        x = region.x_max - inset
+        x = inset_coordinate(region.x_min, region.x_max, from_low=False)
         y = min(max(cube_task[1], region.y_min), region.y_max)
     elif normalized == "front":
-        y = region.y_min + inset
+        y = inset_coordinate(region.y_min, region.y_max, from_low=True)
         x = min(max(cube_task[0], region.x_min), region.x_max)
     else:
-        y = region.y_max - inset
+        y = inset_coordinate(region.y_min, region.y_max, from_low=False)
         x = min(max(cube_task[0], region.x_min), region.x_max)
     z = table_top + half_up
     z = min(max(z, region.z_min), region.z_max)
@@ -349,18 +357,11 @@ def _compose_action(
     measured_eef_quaternion: tuple[float, float, float, float],
     eef_offset_rotation: tuple[float, float, float, float],
     gripper: float,
-    eef_yaw_offset_rad: float = 0.0,
 ) -> tuple[float, ...]:
     # RoboLab's absolute-IK command is the desired EEF quaternion with the
     # fixed tool-frame offset removed, matching the established V3 controller.
-    half_yaw = 0.5 * float(eef_yaw_offset_rad)
-    world_yaw = (math.cos(half_yaw), 0.0, 0.0, math.sin(half_yaw))
-    desired_eef_quaternion = _quaternion_multiply(
-        world_yaw,
-        measured_eef_quaternion,
-    )
     quaternion = _quaternion_multiply(
-        desired_eef_quaternion,
+        measured_eef_quaternion,
         _quaternion_inverse(eef_offset_rotation),
     )
     return (
@@ -392,32 +393,32 @@ def _build_phase_segments(
     cube_approach = (
         cube_position[0],
         cube_position[1],
-        cube_position[2] + config.approach_height_m,
+        cube_position[2] + config.approach_height_m + config.eef_tool_length_m,
     )
     cube_grasp = (
         cube_position[0],
         cube_position[1],
-        cube_position[2] + config.descend_offset_m,
+        cube_position[2] + config.descend_offset_m + config.eef_tool_length_m,
     )
     cube_lift = (
         cube_position[0],
         cube_position[1],
-        cube_position[2] + config.lift_height_m,
+        cube_position[2] + config.lift_height_m + config.eef_tool_length_m,
     )
     target_transport = (
         target_position[0],
         target_position[1],
-        target_position[2] + config.transport_height_m,
+        target_position[2] + config.transport_height_m + config.eef_tool_length_m,
     )
     target_place = (
         target_position[0],
         target_position[1],
-        target_position[2] + config.place_descend_offset_m,
+        target_position[2] + config.place_descend_offset_m + config.eef_tool_length_m,
     )
     target_retreat = (
         target_position[0],
         target_position[1],
-        target_position[2] + config.retreat_height_m,
+        target_position[2] + config.retreat_height_m + config.eef_tool_length_m,
     )
     cursor = start_position
     segments: list[_PhaseSegment] = []
@@ -573,7 +574,6 @@ def run_scripted_check(
                 measured_eef_quaternion,
                 eef_offset_rotation,
                 segment.gripper,
-                controller_config.eef_yaw_offset_rad,
             )
             _obs, info = env.step(action)
             tick = next_tick

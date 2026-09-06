@@ -1,0 +1,56 @@
+{
+  "schema_version": "v4-object-pair-g2-clearance-regression-trace-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "status": "diagnostic_complete_model_blind_no_policy_requests",
+  "created_at_utc": "2026-09-06T01:00:00Z",
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "object_pair_trace": {
+    "attempt_id": "g2c7q20260905al",
+    "environment_seed": 2100040004,
+    "raw_path": "/data/users/ali/vla_wam/raw/v4/g2-object-pair/trace-g2c7q20260905al-s004/episodes/reset_settle_trace.json",
+    "raw_sha256": "7d9829f70108eda477851ccd4a34867185599b3d8b0f7e9dce80c5694ccfee48",
+    "initial_clearance_m": 0.0005,
+    "tick_0": {
+      "table_z_m": 0.05000072345137596,
+      "sponge_z_m": 0.06800000369548798,
+      "tray_z_m": 0.05950000137090683,
+      "sponge_table_contact_force_n": 1.498,
+      "tray_table_contact_force_n": 9.958
+    },
+    "tick_1": {
+      "table_z_m": 0.2495996057987213,
+      "table_linear_speed_m_s": 0.4553349191138583,
+      "sponge_z_m": 0.2670084238052368,
+      "sponge_linear_speed_m_s": 2.999961896020769,
+      "tray_z_m": 0.2587798535823822,
+      "tray_linear_speed_m_s": 3.000097846486136
+    }
+  },
+  "qualified_horizontal_reference_trace": {
+    "attempt_id": "g2href20260905a",
+    "environment_seed": 2100000000,
+    "raw_path": "/data/users/ali/vla_wam/raw/v4/g2-horizontal/trace-g2href20260905a-s000/episodes/reset_settle_trace.json",
+    "raw_sha256": "17cc83aea54438d6a6729a58be6421c18300fa0d47a6467266bfb8b47aab78e3",
+    "tick_0": {
+      "table_z_m": 0.05000072345137596,
+      "banana_table_contact_force_n": 1.178,
+      "bowl_table_contact_force_n": 4.86,
+      "rubiks_cube_table_contact_force_n": 1.959
+    },
+    "tick_1": {
+      "table_z_m": 0.04999997839331627,
+      "table_linear_speed_m_s": 0.0002610747584945086
+    }
+  },
+  "comparison": {
+    "shared_table_payload_and_initial_table_pose": true,
+    "qualified_horizontal_table_stays_at_support_height": true,
+    "object_pair_table_displacement_at_tick_1_m": 0.19959888234734535,
+    "object_pair_task_object_speeds_are_physx_depenetration_limited": true,
+    "finding": "The dynamic table is not intrinsically unstable. The object-pair launch appears only with the reduced 0.5 mm nominal clearance, whose tick-0 contact forces are already above the objects' static weights. This is a support penetration regression introduced after the prior 3 mm placement produced only small residual settling velocities."
+  },
+  "disposition": "Restore the prior 3 mm registered clearance and exact qualified table dynamics, remove the robot-table filtering workaround, retain 8.0 linear and 4.0 angular object damping, and rerun seed 2100040004 before a fresh 64-seed wave."
+}

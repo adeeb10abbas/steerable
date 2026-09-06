@@ -1,0 +1,53 @@
+{
+  "schema_version": "v4-object-pair-g2-restore-clearance-amendment-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "status": "post_result_model_blind_amendment_candidate",
+  "created_at_utc": "2026-09-06T01:01:00Z",
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "triggering_evidence": {
+    "path": "artifacts/online_correction_v4/qualification/20260905_object_pair_g2_clearance_regression_trace_g2c7q20260905al_hrefa.json",
+    "sha256": "0c381a623a49d275e322687a5d32a012484efa86b32d08bf091ccdb5c28e9ed9",
+    "finding": "The 0.5 mm placement produces excessive tick-0 support forces and a 0.20 m first-tick table displacement; the same table remains stationary in the qualified horizontal fixture."
+  },
+  "amendment": {
+    "reason": "Restore the last non-penetrating registered placement while retaining the subsequently selected damping margin.",
+    "object_base_positions_robot_m": {
+      "sponge": [
+        0.43,
+        -0.1,
+        0.0705
+      ],
+      "tray": [
+        0.44,
+        0.13,
+        0.062
+      ]
+    },
+    "initial_clearance_m": 0.003,
+    "object_linear_damping": 8.0,
+    "object_angular_damping": 4.0,
+    "table_construction": "qualified_dynamic_table_payload",
+    "remove_robot_table_collision_filter": true,
+    "restore_qualified_table_authored_velocities_and_gravity": true
+  },
+  "unchanged_contracts": {
+    "table_payload_pose_scale_and_visible_geometry": true,
+    "object_geometry_mass_inertia_and_colors": true,
+    "registered_environment_seeds_and_xy_jitter": true,
+    "settle_window_and_all_thresholds": true,
+    "camera_and_task_frame_checks": true,
+    "prompts_and_policy_weights": true
+  },
+  "required_requalification": [
+    "Replay seed 2100040004 and inspect the table and both task objects through all 75 settle ticks.",
+    "If the smoke passes, execute a fresh complete 64-seed wave.",
+    "Repeat human axis review on the fresh montage.",
+    "Do not execute policy inference until G2 and subsequent gates release this fixture."
+  ],
+  "disclosure": "This zero-policy amendment reverses the model-blind 0.5 mm clearance experiment and removes its table-filter workaround; it does not alter any policy input or outcome."
+}

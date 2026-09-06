@@ -43,7 +43,7 @@ OBJECT_SPECS: dict[str, dict[str, Any]] = {
         "linear_damping": 8.0,
         "angular_damping": 4.0,
         "display_color_rgb": [0.95, 0.78, 0.10],
-        "base_position_robot_m": [0.43, -0.10, 0.068],
+        "base_position_robot_m": [0.43, -0.10, 0.0705],
     },
     "tray": {
         "role": "reference",
@@ -57,7 +57,7 @@ OBJECT_SPECS: dict[str, dict[str, Any]] = {
         "linear_damping": 8.0,
         "angular_damping": 4.0,
         "display_color_rgb": [0.10, 0.34, 0.85],
-        "base_position_robot_m": [0.44, 0.13, 0.0595],
+        "base_position_robot_m": [0.44, 0.13, 0.062],
     },
 }
 
@@ -292,14 +292,10 @@ def build_registry(
             ),
             "object_specs": OBJECT_SPECS,
             "support_surface": {
-                "construction": "stationary_gravity_disabled_dynamic_table_payload",
+                "construction": "qualified_dynamic_table_payload",
                 "prim": "table",
                 "top_surface_z_m": 0.05,
-                "initial_clearance_m": 0.0005,
-                "initial_linear_velocity_world_m_s": [0.0, 0.0, 0.0],
-                "initial_angular_velocity_world_rad_s": [0.0, 0.0, 0.0],
-                "disable_gravity": True,
-                "robot_table_collision_filtered": True,
+                "initial_clearance_m": 0.003,
             },
             "policy_outcome_used": False,
         },

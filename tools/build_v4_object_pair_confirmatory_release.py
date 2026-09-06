@@ -95,6 +95,7 @@ def build_runtime_lock(
     *,
     pilot_lock_path: Path,
     queue_path: Path,
+    queue_manifest_path: Path,
     seed_registry_path: Path,
     main_reset_registry_path: Path,
     main_g2_path: Path,
@@ -130,8 +131,17 @@ def build_runtime_lock(
     g3 = load_json(main_g3_path)
     if g2.get("passed") is not True or g3.get("passed") is not True:
         raise ValueError("main C7 G2/G3 qualification is not passing")
+    queue_manifest = load_json(queue_manifest_path)
+    if queue_manifest.get("queue_sha256") != sha256_file(queue_path):
+        raise ValueError("confirmatory queue hash differs from queue manifest")
+    planning_manifest_sha256 = queue_manifest.get("planning_manifest_sha256")
+    if (
+        not isinstance(planning_manifest_sha256, str)
+        or len(planning_manifest_sha256) != 64
+    ):
+        raise ValueError("confirmatory queue manifest lacks planning hash")
     lock = copy.deepcopy(pilot_lock)
-    lock["manifest_sha256"] = sha256_file(queue_path)
+    lock["manifest_sha256"] = planning_manifest_sha256
     lock["source_commit"] = source_commit
     lock["release_status"] = "RELEASED"
     lock["runner"]["commit"] = source_commit
@@ -289,6 +299,7 @@ def main() -> int:
         default="/data/users/ali/vla_wam/src/steerable-v4-c7-main",
     )
     parser.add_argument("--queue", type=Path, required=True)
+    parser.add_argument("--queue-manifest", type=Path, required=True)
     parser.add_argument("--pilot-runtime-lock", type=Path, required=True)
     parser.add_argument("--pilot-seed-registry", type=Path, required=True)
     parser.add_argument("--main-reset-registry", type=Path, required=True)
@@ -320,6 +331,7 @@ def main() -> int:
     lock = build_runtime_lock(
         pilot_lock_path=args.pilot_runtime_lock.resolve(),
         queue_path=args.queue.resolve(),
+        queue_manifest_path=args.queue_manifest.resolve(),
         seed_registry_path=args.seed_registry_out.resolve(),
         main_reset_registry_path=args.main_reset_registry.resolve(),
         main_g2_path=args.main_g2.resolve(),

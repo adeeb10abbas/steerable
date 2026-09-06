@@ -1,0 +1,39 @@
+{
+  "schema_version": "v4-object-pair-g2-ground-plane-transform-trace-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "status": "diagnostic_complete_model_blind_no_policy_requests",
+  "created_at_utc": "2026-09-06T04:34:00Z",
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "smoke": {
+    "attempt_id": "g2c7q20260905am2",
+    "environment_seed": 2100040004,
+    "status": "infrastructure_invalid",
+    "raw_failure_path": "/data/users/ali/vla_wam/raw/v4/g2-object-pair/smoke-g2c7q20260905am2-s004/episodes/infrastructure_failure.json",
+    "raw_failure_sha256": "e3d26d2a6f81653ca7b7828bc23bc6c24b2e327e428071f1b33a8139c0367897",
+    "reported_terminal_sponge_linear_component_max_m_s": 0.023974802
+  },
+  "settle_trace": {
+    "attempt_id": "g2c7q20260905an",
+    "environment_seed": 2100040004,
+    "raw_path": "/data/users/ali/vla_wam/raw/v4/g2-object-pair/trace-g2c7q20260905an-s004/episodes/reset_settle_trace.json",
+    "raw_sha256": "555d153fc4f49f2e6cf1301d2c99edda301b689dcd162350a5e524f57e071df7",
+    "tick_0_table_z_m": 0.05000072345137596,
+    "tick_1_table_z_m": 0.24967873096466064,
+    "tick_3_table_z_m": 0.6489348411560059,
+    "tick_75_table_z_m": 0.7000024318695068,
+    "table_vertical_displacement_m": 0.6500017084181309
+  },
+  "resolved_bounds": {
+    "diagnostic_sha256": "3ab297c18037b1ee3e0c2f415afb4e97d2e39ba2504a184e1f1f301662103f99",
+    "table_collision_min_z_m": -0.6499992848932743,
+    "table_collision_max_z_m": 0.05000072311609982,
+    "authored_ground_plane_parent_translation_z_m": -0.65,
+    "object_pair_ground_plane_xform_op_order_authored": false,
+    "qualified_horizontal_ground_plane_xform_op_order_authored": true
+  },
+  "finding": "The table's measured 0.6500017 m rise matches the omitted ground-plane parent offset. In the object-pair scene, xformOp:translate was authored without xformOpOrder and therefore was not applied; PhysX instantiated the collision plane at z=0 and depenetrated the table until its legs cleared that plane. The qualified horizontal scene orders translate, orient, and scale and keeps the same table at z=0.05.",
+  "disposition": "Restore the qualified horizontal GroundPlane block exactly, including xformOpOrder and CollisionMesh, then rerun the same seed without changing released stability thresholds."
+}

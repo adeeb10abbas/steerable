@@ -1,0 +1,57 @@
+{
+  "schema_version": "v4-object-pair-g2-ground-plane-transform-amendment-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "status": "post_result_model_blind_amendment_candidate",
+  "created_at_utc": "2026-09-06T04:35:00Z",
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "triggering_evidence": {
+    "path": "artifacts/online_correction_v4/qualification/20260905_object_pair_g2_ground_plane_transform_trace_g2c7q20260905am2_an.json",
+    "sha256": "b96cd39743e89edb14a8e7ffac3e5d139d207592efbbf3b7cedc8c02f8bdff26",
+    "finding": "The unordered ground-plane translation is ignored, placing the plane at z=0 and driving the table upward by the intended 0.65 m offset."
+  },
+  "amendment": {
+    "reason": "Make the already-authored ground-plane transform effective and match the qualified horizontal scene composition.",
+    "ground_plane_translation_xyz_m": [
+      0.0,
+      0.0,
+      -0.65
+    ],
+    "ground_plane_orient_wxyz": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "ground_plane_scale_xyz": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "ground_plane_xform_op_order": [
+      "xformOp:translate",
+      "xformOp:orient",
+      "xformOp:scale"
+    ],
+    "restore_qualified_collision_mesh": true
+  },
+  "unchanged_contracts": {
+    "table_payload_pose_dynamics_and_collision": true,
+    "object_geometry_mass_inertia_colors_poses_and_damping": true,
+    "registered_environment_seeds_and_xy_jitter": true,
+    "settle_window_and_all_thresholds": true,
+    "camera_and_task_frame_checks": true,
+    "prompts_and_policy_weights": true
+  },
+  "required_requalification": [
+    "Replay seed 2100040004 and verify table z remains 0.05 m through all settle ticks.",
+    "If the smoke passes, execute a fresh complete 64-seed wave.",
+    "Repeat human axis review on the fresh montage.",
+    "Do not execute policy inference until G2 and subsequent gates release this fixture."
+  ],
+  "disclosure": "This zero-policy amendment repairs an inert USD transform declaration; it does not alter a policy input, outcome, gate threshold, or scoring rule."
+}

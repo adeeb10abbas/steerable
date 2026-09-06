@@ -18,6 +18,10 @@ class PilotVideoMontageTests(unittest.TestCase):
             {"g7c7p00": ["attempt0001"]},
         )
         self.assertEqual(
+            parse_selections(["v4r00=attempt0103"]),
+            {"v4r00": ["attempt0103"]},
+        )
+        self.assertEqual(
             parse_selections(
                 [
                     "g7c7p00=attempt0001",

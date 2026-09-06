@@ -7,8 +7,11 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import re
 import sys
 from typing import Any
+
+LANE_ID_RE = re.compile(r"^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$")
 
 
 def sha256_file(path: Path) -> str:
@@ -38,7 +41,7 @@ def parse_selections(values: list[str]) -> dict[str, list[str]]:
         lane, separator, attempt = value.partition("=")
         if (
             separator != "="
-            or not lane.startswith("g7")
+            or LANE_ID_RE.fullmatch(lane) is None
             or not attempt.startswith("attempt")
         ):
             raise ValueError(f"invalid lane selection: {value}")

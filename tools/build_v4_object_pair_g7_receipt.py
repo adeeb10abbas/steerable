@@ -94,13 +94,30 @@ def build_receipt(
         "outcome.goal_violation_cap_applied must be boolean",
     )
     d_cap_m = float(lock["fixtures"]["object_pair"]["D_cap_m"])
+    expected_legacy_errors: list[str] = []
+    legacy_omission_episode_ids: list[str] = []
+    for index, row in enumerate(ledger, start=1):
+        outcome = row.get("outcome", {})
+        if not isinstance(outcome, dict):
+            continue
+        missing_suffixes = [
+            suffix
+            for field, suffix in zip(
+                ("goal_set_empty", "goal_violation_cap_applied"),
+                legacy_suffixes,
+            )
+            if not isinstance(outcome.get(field), bool)
+        ]
+        if missing_suffixes:
+            episode_id = str(row["episode_id"])
+            legacy_omission_episode_ids.append(episode_id)
+            expected_legacy_errors.extend(
+                f"result {index} ({episode_id}): {suffix}"
+                for suffix in missing_suffixes
+            )
     legacy_terminal_metadata_omission_exactly_bounded = (
-        len(validation_errors) == 2 * len(ledger)
-        and all(
-            isinstance(error, str)
-            and any(error.endswith(suffix) for suffix in legacy_suffixes)
-            for error in validation_errors
-        )
+        bool(expected_legacy_errors)
+        and sorted(validation_errors) == sorted(expected_legacy_errors)
         and all(
             isinstance(
                 row.get("outcome", {}).get("goal_violation_capped_m"),
@@ -159,7 +176,7 @@ def build_receipt(
                     and ledger_manifest.get("validation_preview", {}).get(
                         "error_count"
                     )
-                    == 48
+                    == len(expected_legacy_errors)
                 )
             )
             and ledger_manifest.get("reconciliation", {}).get(
@@ -223,6 +240,10 @@ def build_receipt(
         "pilot_terminal_metadata_reconciliation": {
             "required": legacy_terminal_metadata_omission_exactly_bounded,
             "validation_error_count": len(validation_errors),
+            "legacy_omission_episode_count": len(
+                legacy_omission_episode_ids
+            ),
+            "legacy_omission_episode_ids": legacy_omission_episode_ids,
             "omitted_fields": list(legacy_suffixes),
             "recorded_distance_below_cap_count": below_cap_count,
             "recorded_distance_at_cap_count": at_cap_count,
@@ -230,7 +251,8 @@ def build_receipt(
             "d_cap_m": d_cap_m,
             "main_writer_fixed": main_writer_fixed,
             "interpretation": (
-                "The pilot writer omitted two booleans from terminal metadata. "
+                "Legacy pilot attempts omitted two booleans from terminal metadata; "
+                "retries written after the amendment retain those booleans. "
                 "G3 proves the registered goal sets are nonempty. A capped value "
                 "equal to D_cap cannot distinguish exact equality from cap "
                 "application, so those pilot booleans remain indeterminate and "

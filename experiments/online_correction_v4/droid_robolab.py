@@ -826,7 +826,7 @@ class LiveRoboLabBackend:
         dz = float(offset_world[2])
         x0, y0, z0, qw, qx, qy, qz = self._reference_baseline_pose
         pose = (x0 + dx, y0 + dy, z0 + dz, qw, qx, qy, qz)
-        asset = self.env.scene[REFERENCE_OBJECT].data
+        asset = self.env.scene[REFERENCE_OBJECT]
         pose_tensor = torch.tensor([pose], dtype=torch.float32, device=self.env.device)
         velocity_tensor = torch.zeros((1, 6), dtype=torch.float32, device=self.env.device)
         asset.write_root_pose_to_sim(pose_tensor)

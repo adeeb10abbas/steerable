@@ -6,12 +6,14 @@ import hashlib
 import json
 import math
 import re
+from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
 
 from experiments.online_correction_v4.motion import ReferenceMotionController
 
 PLAN_SCHEMA = "v4-horizontal-g3-plan-v1"
 PATH_RECEIPT_SCHEMA = "v4-horizontal-g3-path-seed-receipt-v1"
+PATH_SCALE_RECEIPT_SCHEMA = "v4-horizontal-g3-path-scale-receipt-v1"
 SCRIPTED_RECEIPT_SCHEMA = "v4-horizontal-g3-scripted-check-receipt-v1"
 AGGREGATE_SCHEMA = "v4-horizontal-g3-aggregate-receipt-v1"
 SCRIPTED_CHECK_KINDS = ("stationary", "moving")
@@ -53,6 +55,14 @@ def canonical_json_bytes(value: Any) -> bytes:
 
 def sha256_bytes(value: bytes) -> str:
     return hashlib.sha256(value).hexdigest()
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def expected_path_check_keys() -> tuple[tuple[str, str], ...]:
@@ -205,6 +215,10 @@ def _require_plan_receipt_identity(value: Any, label: str) -> dict[str, str]:
     if not isinstance(path, str) or not path.strip():
         raise G3GateError(f"{label}.path must be a non-empty string")
     return {"path": path, "sha256": digest}
+
+
+def _plan_receipt_sha256(value: Any, label: str) -> str:
+    return _require_plan_receipt_identity(value, label)["sha256"]
 
 
 def _validate_path_check_order(checks: Sequence[Mapping[str, Any]]) -> None:
@@ -1052,3 +1066,577 @@ def validate_plan_payload(plan: Mapping[str, Any]) -> None:
         and len(set(reset_seeds)) == 9,
         "G3 scripted reset selection differs",
     )
+
+
+def expected_scripted_check_keys(
+    plan: Mapping[str, Any],
+) -> tuple[tuple[str, int, str, str], ...]:
+    validate_plan_payload(plan)
+    scripted = plan.get("scripted_controller")
+    _require(isinstance(scripted, Mapping), "G3 plan lacks scripted checks")
+    reset_seeds = scripted.get("reset_env_seeds")
+    _require(
+        isinstance(reset_seeds, list) and len(reset_seeds) == 9,
+        "G3 scripted reset selection differs",
+    )
+    stationary = scripted.get("stationary")
+    moving = scripted.get("moving")
+    _require(isinstance(stationary, Mapping), "G3 plan lacks stationary scripted checks")
+    _require(isinstance(moving, Mapping), "G3 plan lacks moving scripted checks")
+    goals = stationary.get("goals")
+    positions = stationary.get("reference_positions")
+    _require(
+        list(goals) == list(HORIZONTAL_GOALS),
+        "G3 stationary scripted goals differ",
+    )
+    _require(
+        list(positions) == list(REFERENCE_POSITIONS),
+        "G3 stationary scripted reference positions differ",
+    )
+    moving_goals = moving.get("goals")
+    _require(
+        list(moving_goals) == list(HORIZONTAL_GOALS),
+        "G3 moving scripted goals differ",
+    )
+    canonical_seed = moving.get("canonical_env_seed")
+    if type(canonical_seed) is not int:
+        raise G3GateError("G3 moving canonical seed differs")
+    _require(
+        moving.get("scenario") == "move_stop",
+        "G3 moving scripted scenario differs",
+    )
+    keys: list[tuple[str, int, str, str]] = []
+    for seed in reset_seeds:
+        if type(seed) is not int:
+            raise G3GateError("G3 scripted reset seed differs")
+        for goal in HORIZONTAL_GOALS:
+            for position in REFERENCE_POSITIONS:
+                keys.append(("stationary", seed, goal, position))
+    for goal in HORIZONTAL_GOALS:
+        keys.append(("moving", canonical_seed, goal, "endpoint"))
+    _require(
+        len(keys) == HORIZONTAL_SCRIPTED_CHECK_COUNT,
+        "horizontal scripted count differs",
+    )
+    return tuple(keys)
+
+
+def _scripted_check_key(receipt: Mapping[str, Any]) -> tuple[str, int, str, str]:
+    check_kind = receipt.get("check_kind")
+    environment_seed = receipt.get("environment_seed")
+    goal = receipt.get("goal")
+    reference_position = receipt.get("reference_position")
+    if check_kind not in SCRIPTED_CHECK_KINDS:
+        raise G3GateError("scripted check kind differs")
+    if type(environment_seed) is not int:
+        raise G3GateError("environment_seed must be an integer")
+    if goal not in HORIZONTAL_GOALS:
+        raise G3GateError("scripted check goal differs")
+    if reference_position not in REFERENCE_POSITIONS:
+        raise G3GateError("scripted check reference_position differs")
+    return (check_kind, environment_seed, goal, reference_position)
+
+
+def _runtime_stratum_from_receipt(receipt: Mapping[str, Any]) -> dict[str, Any] | None:
+    runtime = receipt.get("runtime_identity")
+    if not isinstance(runtime, Mapping):
+        return None
+    study = runtime.get("study_checkout")
+    robolab = runtime.get("robolab_checkout")
+    gpu = runtime.get("gpu")
+    if not all(isinstance(item, Mapping) for item in (study, robolab, gpu)):
+        return None
+    return {
+        "study_commit": study.get("commit"),
+        "robolab_commit": robolab.get("commit"),
+        "gpu_name": gpu.get("name"),
+        "driver_version": gpu.get("driver_version"),
+        "gate_entrypoint_sha256": runtime.get("gate_entrypoint_sha256"),
+        "gate_core_sha256": runtime.get("gate_core_sha256"),
+        "droid_robolab_sha256": runtime.get("droid_robolab_sha256"),
+        "droid_g3_sha256": runtime.get("droid_g3_sha256"),
+        "plan_sha256": runtime.get("plan_sha256"),
+        "campaign_sha256": runtime.get("campaign_sha256"),
+        "reset_registry_sha256": runtime.get("reset_registry_sha256"),
+        "native_control_dt_s": runtime.get("native_control_dt_s"),
+    }
+
+
+def _merge_runtime_stratum(
+    current: dict[str, Any] | None,
+    receipt: Mapping[str, Any],
+) -> dict[str, Any] | None:
+    stratum = _runtime_stratum_from_receipt(receipt)
+    if stratum is None:
+        return current
+    if current is None:
+        return stratum
+    if current != stratum:
+        raise G3GateError("runtime stratum differs across receipts")
+    return current
+
+
+def _collect_path_seed_failures(
+    receipt: Mapping[str, Any],
+) -> list[dict[str, Any]]:
+    failures: list[dict[str, Any]] = []
+    seed = receipt.get("environment_seed")
+    if receipt.get("information_gate_passed") is False:
+        failures.append(
+            {
+                "environment_seed": seed,
+                "failure_kind": "information_gate",
+                "reasons": [
+                    f"{case.get('relation')} information gate failed"
+                    for case in receipt.get("goal_area_cases", [])
+                    if isinstance(case, Mapping)
+                    and case.get("passes_information_gate") is False
+                ],
+            }
+        )
+    checks = receipt.get("checks")
+    if isinstance(checks, list):
+        for check in checks:
+            if not isinstance(check, Mapping) or check.get("passed") is True:
+                continue
+            failures.append(
+                {
+                    "environment_seed": seed,
+                    "failure_kind": "path_check",
+                    "goal": check.get("goal"),
+                    "scenario": check.get("scenario"),
+                    "reasons": list(check.get("reasons") or []),
+                }
+            )
+    return failures
+
+
+def compile_path_scale_receipt(
+    *,
+    plan: Mapping[str, Any],
+    plan_receipt: Mapping[str, Any],
+    scale: float,
+    path_seed_receipts: Iterable[Mapping[str, Any]],
+    path_seed_receipt_files: Mapping[int, Mapping[str, Any]] | None = None,
+) -> dict[str, Any]:
+    validate_plan_payload(plan)
+    scale_value = _require_positive_finite(scale, "scale")
+    candidates = _plan_scale_candidates(plan)
+    if scale_value not in candidates:
+        raise G3GateError("scale is not a registered G3 candidate")
+    nominal = _plan_nominal_displacement_m(plan)
+    displacement_m = nominal * scale_value
+    pinned_plan = _require_plan_receipt_identity(plan_receipt, "plan_receipt")
+    expected_seeds = tuple(int(seed) for seed in plan["registered_env_seeds"])
+    _require(len(expected_seeds) == 128, "G3 reset count differs")
+
+    observed: dict[int, Mapping[str, Any]] = {}
+    runtime_stratum: dict[str, Any] | None = None
+    passed_path_check_count = 0
+    failed_path_check_count = 0
+    scientific_failures: list[dict[str, Any]] = []
+
+    for receipt in path_seed_receipts:
+        validate_path_seed_receipt(receipt, plan=plan)
+        if _require_positive_finite(receipt.get("scale"), "scale") != scale_value:
+            raise G3GateError("path seed receipt scale differs")
+        if _plan_receipt_sha256(receipt.get("plan_receipt"), "plan_receipt") != pinned_plan["sha256"]:
+            raise G3GateError("path seed receipt plan binding differs")
+        seed = receipt.get("environment_seed")
+        if type(seed) is not int or seed in observed:
+            raise G3GateError("path scale receipts contain a missing or duplicate seed")
+        observed[seed] = receipt
+        runtime_stratum = _merge_runtime_stratum(runtime_stratum, receipt)
+        passed_path_check_count += int(receipt.get("passed_check_count") or 0)
+        failed_path_check_count += int(receipt.get("failed_check_count") or 0)
+        scientific_failures.extend(_collect_path_seed_failures(receipt))
+
+    missing = sorted(set(expected_seeds) - set(observed))
+    unexpected = sorted(set(observed) - set(expected_seeds))
+    failed_seeds = sorted(
+        seed for seed, receipt in observed.items() if receipt.get("passed") is not True
+    )
+    information_gate_failed_seeds = sorted(
+        seed
+        for seed, receipt in observed.items()
+        if receipt.get("information_gate_passed") is not True
+    )
+    expected_path_check_count = len(expected_seeds) * HORIZONTAL_PATH_CHECKS_PER_SEED
+    _require(
+        expected_path_check_count == 3072,
+        "horizontal path count differs",
+    )
+
+    receipt_files: dict[str, Any] = {}
+    if path_seed_receipt_files is not None:
+        for seed in expected_seeds:
+            record = path_seed_receipt_files.get(seed)
+            if record is None:
+                continue
+            receipt_files[str(seed)] = dict(record)
+
+    passed = (
+        not missing
+        and not unexpected
+        and not failed_seeds
+        and passed_path_check_count == expected_path_check_count
+        and failed_path_check_count == 0
+    )
+    return {
+        "schema_version": PATH_SCALE_RECEIPT_SCHEMA,
+        "campaign_id": plan.get("campaign_id"),
+        "fixture_id": plan.get("fixture_id"),
+        "status": "passed" if passed else "failed",
+        "passed": passed,
+        "model_request_count": 0,
+        "behavioral_episode_count": 0,
+        "plan_receipt": pinned_plan,
+        "scale": scale_value,
+        "displacement_m": displacement_m,
+        "expected_seed_count": len(expected_seeds),
+        "observed_seed_count": len(observed),
+        "missing_env_seeds": missing,
+        "unexpected_env_seeds": unexpected,
+        "failed_env_seeds": failed_seeds,
+        "information_gate_failed_seeds": information_gate_failed_seeds,
+        "expected_path_check_count": expected_path_check_count,
+        "passed_path_check_count": passed_path_check_count,
+        "failed_path_check_count": failed_path_check_count,
+        "path_seed_receipt_files_by_env_seed": receipt_files,
+        "path_seed_receipt_sha256_by_env_seed": {
+            str(seed): sha256_bytes(canonical_json_bytes(dict(receipt)))
+            for seed, receipt in sorted(observed.items())
+        },
+        "runtime_stratum": runtime_stratum,
+        "scientific_failure_summary": scientific_failures,
+        "release_boundary": (
+            "A passing path-scale receipt completes one G3 geometry candidate only. "
+            "Scripted-controller checks and aggregate selection remain required before "
+            "G3 completion or G4 preparation."
+        ),
+    }
+
+
+def validate_path_scale_receipt(
+    receipt: Mapping[str, Any],
+    *,
+    plan: Mapping[str, Any] | None = None,
+) -> None:
+    _require(
+        receipt.get("schema_version") == PATH_SCALE_RECEIPT_SCHEMA,
+        "path scale receipt schema differs",
+    )
+    _require(receipt.get("campaign_id") == "online_correction_v4", "campaign differs")
+    _require(receipt.get("fixture_id") == "horizontal", "fixture differs")
+    _require(
+        receipt.get("model_request_count") == 0,
+        "path scale receipt records model requests",
+    )
+    _require(
+        receipt.get("behavioral_episode_count") == 0,
+        "path scale receipt records behavioral episodes",
+    )
+    scale = _require_positive_finite(receipt.get("scale"), "scale")
+    displacement_m = _require_positive_finite(receipt.get("displacement_m"), "displacement_m")
+    _require_plan_receipt_identity(receipt.get("plan_receipt"), "plan_receipt")
+    expected_path_check_count = _require_positive_int(
+        receipt.get("expected_path_check_count"),
+        "expected_path_check_count",
+    )
+    _require(expected_path_check_count == 3072, "path scale check count differs")
+    passed_count = _require_non_negative_int(
+        receipt.get("passed_path_check_count"), "passed_path_check_count"
+    )
+    failed_count = _require_non_negative_int(
+        receipt.get("failed_path_check_count"), "failed_path_check_count"
+    )
+    observed_seed_count = _require_non_negative_int(
+        receipt.get("observed_seed_count"), "observed_seed_count"
+    )
+    _require(
+        passed_count + failed_count
+        == observed_seed_count * HORIZONTAL_PATH_CHECKS_PER_SEED,
+        "path scale check totals differ",
+    )
+    missing = receipt.get("missing_env_seeds")
+    unexpected = receipt.get("unexpected_env_seeds")
+    failed_seeds = receipt.get("failed_env_seeds")
+    if not isinstance(missing, list) or not isinstance(unexpected, list):
+        raise G3GateError("path scale receipt lacks seed coverage lists")
+    if not isinstance(failed_seeds, list):
+        raise G3GateError("path scale receipt lacks failed_env_seeds")
+    receipt_passed = _require_bool(receipt.get("passed"), "passed")
+    if receipt_passed != (
+        not missing
+        and not unexpected
+        and not failed_seeds
+        and failed_count == 0
+        and passed_count == expected_path_check_count
+    ):
+        raise G3GateError("path scale receipt passed disagrees with evidence")
+    if plan is not None:
+        validate_plan_payload(plan)
+        if scale not in _plan_scale_candidates(plan):
+            raise G3GateError("scale is not bound to the G3 plan")
+        nominal = _plan_nominal_displacement_m(plan)
+        if abs(displacement_m - nominal * scale) > 1e-9:
+            raise G3GateError("displacement_m is not bound to plan scale selection")
+
+
+def _validate_scale_ladder_prefix(
+    *,
+    plan: Mapping[str, Any],
+    path_scale_receipts_by_scale: Mapping[float, Mapping[str, Any]],
+) -> None:
+    scales = _plan_scale_candidates(plan)
+    if not path_scale_receipts_by_scale:
+        return
+    highest_index = max(scales.index(scale) for scale in path_scale_receipts_by_scale)
+    for index in range(highest_index + 1):
+        scale = scales[index]
+        if scale not in path_scale_receipts_by_scale:
+            raise G3GateError(
+                f"scale ladder gap: {scale} is missing while lower scales are present"
+            )
+
+
+def _select_path_scale(
+    *,
+    plan: Mapping[str, Any],
+    path_scale_receipts_by_scale: Mapping[float, Mapping[str, Any]],
+) -> tuple[float | None, Mapping[str, Any] | None, list[float], str]:
+    scales = _plan_scale_candidates(plan)
+    _validate_scale_ladder_prefix(
+        plan=plan,
+        path_scale_receipts_by_scale=path_scale_receipts_by_scale,
+    )
+    rejected_scales: list[float] = []
+    for scale in scales:
+        receipt = path_scale_receipts_by_scale.get(scale)
+        if receipt is None:
+            if not rejected_scales:
+                return None, None, rejected_scales, "pending"
+            return None, None, rejected_scales, "blocked"
+        validate_path_scale_receipt(receipt, plan=plan)
+        if receipt.get("passed") is True:
+            expected_rejected = list(scales[: scales.index(scale)])
+            if [float(item) for item in rejected_scales] != [
+                float(item) for item in expected_rejected
+            ]:
+                raise G3GateError(
+                    "completed rejected scales are not a strict prefix before the passing scale"
+                )
+            return scale, receipt, rejected_scales, "selected"
+        rejected_scales.append(scale)
+    if rejected_scales:
+        return None, None, rejected_scales, "blocked"
+    return None, None, rejected_scales, "pending"
+
+
+def compile_g3_aggregate_receipt(
+    *,
+    plan: Mapping[str, Any],
+    plan_receipt: Mapping[str, Any],
+    path_scale_receipts: Iterable[Mapping[str, Any]],
+    path_scale_receipt_files: Mapping[float, Mapping[str, Any]] | None = None,
+    scripted_check_receipts: Iterable[Mapping[str, Any]] | None = None,
+    scripted_check_receipt_files: Mapping[
+        tuple[str, int, str, str], Mapping[str, Any]
+    ] | None = None,
+) -> dict[str, Any]:
+    validate_plan_payload(plan)
+    pinned_plan = _require_plan_receipt_identity(plan_receipt, "plan_receipt")
+    scales = _plan_scale_candidates(plan)
+    path_scale_by_scale: dict[float, Mapping[str, Any]] = {}
+    for receipt in path_scale_receipts:
+        validate_path_scale_receipt(receipt, plan=plan)
+        if _plan_receipt_sha256(receipt.get("plan_receipt"), "plan_receipt") != pinned_plan["sha256"]:
+            raise G3GateError("path scale receipt plan binding differs")
+        scale = _require_positive_finite(receipt.get("scale"), "scale")
+        if scale in path_scale_by_scale:
+            raise G3GateError("duplicate path scale receipt")
+        path_scale_by_scale[scale] = receipt
+
+    selected_scale, selected_path_scale, rejected_scales, ladder_status = (
+        _select_path_scale(plan=plan, path_scale_receipts_by_scale=path_scale_by_scale)
+    )
+
+    expected_scripted_keys = expected_scripted_check_keys(plan)
+    observed_scripted: dict[tuple[str, int, str, str], Mapping[str, Any]] = {}
+    scripted_failures: list[dict[str, Any]] = []
+    scripted_passed_count = 0
+    scripted_failed_count = 0
+    missing_scripted_keys: list[tuple[str, int, str, str]] = []
+    unexpected_scripted_keys: list[tuple[str, int, str, str]] = []
+    scripted_complete = False
+    scripted_passed = False
+    displacement_m: float | None = None
+
+    if selected_scale is not None and selected_path_scale is not None:
+        displacement_m = _require_positive_finite(
+            selected_path_scale.get("displacement_m"),
+            "displacement_m",
+        )
+        if scripted_check_receipts is None:
+            missing_scripted_keys = list(expected_scripted_keys)
+        else:
+            for receipt in scripted_check_receipts:
+                validate_scripted_check_receipt(receipt)
+                if _require_positive_finite(receipt.get("scale"), "scale") != selected_scale:
+                    raise G3GateError("scripted receipt scale differs from selected scale")
+                receipt_displacement = _require_positive_finite(
+                    receipt.get("displacement_m"), "displacement_m"
+                )
+                if abs(receipt_displacement - displacement_m) > 1e-9:
+                    raise G3GateError(
+                        "scripted receipt displacement differs from selected scale"
+                    )
+                key = _scripted_check_key(receipt)
+                if key in observed_scripted:
+                    raise G3GateError("duplicate scripted check receipt")
+                observed_scripted[key] = receipt
+                if receipt.get("passed") is True:
+                    scripted_passed_count += 1
+                else:
+                    scripted_failed_count += 1
+                    scripted_failures.append(
+                        {
+                            "check_kind": key[0],
+                            "environment_seed": key[1],
+                            "goal": key[2],
+                            "reference_position": key[3],
+                            "reasons": list(receipt.get("reasons") or []),
+                        }
+                    )
+
+            for index, expected_key in enumerate(expected_scripted_keys):
+                receipt = observed_scripted.get(expected_key)
+                if receipt is None:
+                    missing_scripted_keys.append(expected_key)
+                    continue
+                actual_key = _scripted_check_key(receipt)
+                if actual_key != expected_key:
+                    raise G3GateError("scripted receipts are out of declared order")
+                if index > 0:
+                    prior_key = expected_scripted_keys[index - 1]
+                    if prior_key not in observed_scripted:
+                        raise G3GateError("scripted receipts are missing required prefix")
+            unexpected_scripted_keys = sorted(
+                set(observed_scripted) - set(expected_scripted_keys)
+            )
+            scripted_complete = (
+                not missing_scripted_keys
+                and not unexpected_scripted_keys
+                and len(observed_scripted) == HORIZONTAL_SCRIPTED_CHECK_COUNT
+            )
+            scripted_passed = (
+                scripted_complete
+                and scripted_failed_count == 0
+                and scripted_passed_count == HORIZONTAL_SCRIPTED_CHECK_COUNT
+            )
+
+    if selected_scale is None:
+        status = ladder_status
+        passed = False
+    elif not scripted_complete:
+        status = "blocked_incomplete"
+        passed = False
+    elif not scripted_passed:
+        status = "failed"
+        passed = False
+    else:
+        status = "passed"
+        passed = True
+
+    path_scale_files: dict[str, Any] = {}
+    if path_scale_receipt_files is not None:
+        for scale, record in path_scale_receipt_files.items():
+            path_scale_files[str(scale)] = dict(record)
+
+    scripted_files: list[dict[str, Any]] = []
+    if scripted_check_receipt_files is not None:
+        for key in expected_scripted_keys:
+            record = scripted_check_receipt_files.get(key)
+            if record is not None:
+                scripted_files.append({"key": list(key), **dict(record)})
+
+    return {
+        "schema_version": AGGREGATE_SCHEMA,
+        "campaign_id": plan.get("campaign_id"),
+        "fixture_id": plan.get("fixture_id"),
+        "status": status,
+        "passed": passed,
+        "model_request_count": 0,
+        "behavioral_episode_count": 0,
+        "plan_receipt": pinned_plan,
+        "candidate_scales_descending": list(scales),
+        "rejected_scales": rejected_scales,
+        "selected_scale": selected_scale,
+        "selected_displacement_m": displacement_m,
+        "selected_path_scale_receipt_sha256": (
+            sha256_bytes(canonical_json_bytes(dict(selected_path_scale)))
+            if selected_path_scale is not None
+            else None
+        ),
+        "expected_scripted_check_count": HORIZONTAL_SCRIPTED_CHECK_COUNT,
+        "observed_scripted_check_count": len(observed_scripted),
+        "missing_scripted_check_keys": [
+            list(key) for key in missing_scripted_keys
+        ],
+        "unexpected_scripted_check_keys": [
+            list(key) for key in unexpected_scripted_keys
+        ],
+        "scripted_passed_check_count": scripted_passed_count,
+        "scripted_failed_check_count": scripted_failed_count,
+        "path_scale_receipt_files_by_scale": path_scale_files,
+        "scripted_check_receipt_files": scripted_files,
+        "scientific_failure_summary": {
+            "path_scale": (
+                selected_path_scale.get("scientific_failure_summary")
+                if selected_path_scale is not None
+                else []
+            ),
+            "scripted": scripted_failures,
+        },
+        "release_boundary": (
+            "A passing aggregate completes horizontal G3 only and authorizes G4 "
+            "preparation. Policy inference and reset-registry release remain blocked."
+        ),
+    }
+
+
+def validate_g3_aggregate_receipt(
+    receipt: Mapping[str, Any],
+    *,
+    plan: Mapping[str, Any] | None = None,
+) -> None:
+    _require(
+        receipt.get("schema_version") == AGGREGATE_SCHEMA,
+        "G3 aggregate receipt schema differs",
+    )
+    _require(receipt.get("campaign_id") == "online_correction_v4", "campaign differs")
+    _require(receipt.get("fixture_id") == "horizontal", "fixture differs")
+    _require(
+        receipt.get("model_request_count") == 0,
+        "G3 aggregate records model requests",
+    )
+    _require(
+        receipt.get("behavioral_episode_count") == 0,
+        "G3 aggregate records behavioral episodes",
+    )
+    _require_plan_receipt_identity(receipt.get("plan_receipt"), "plan_receipt")
+    passed = _require_bool(receipt.get("passed"), "passed")
+    status = receipt.get("status")
+    if passed:
+        _require(status == "passed", "passed aggregate must report passed status")
+    else:
+        _require(
+            status in {"pending", "blocked", "blocked_incomplete", "failed"},
+            "aggregate status differs",
+        )
+    if plan is not None:
+        validate_plan_payload(plan)
+        selected = receipt.get("selected_scale")
+        if selected is not None:
+            if selected not in _plan_scale_candidates(plan):
+                raise G3GateError("selected scale is not bound to the G3 plan")

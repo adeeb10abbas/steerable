@@ -215,6 +215,43 @@ class DroidLiveImportTests(unittest.TestCase):
             evidence = backend.g3_contact_force_evidence()
         self.assertEqual(evidence, {"bowl__table": 5.0})
 
+    def test_reference_motion_writes_through_rigid_object_not_data(self) -> None:
+        import numpy as np
+
+        from experiments.online_correction_v4.droid_robolab import LiveRoboLabBackend
+
+        writes: list[tuple[str, object]] = []
+        asset = SimpleNamespace(
+            data=SimpleNamespace(),
+            write_root_pose_to_sim=lambda value: writes.append(("pose", value)),
+            write_root_velocity_to_sim=lambda value: writes.append(
+                ("velocity", value)
+            ),
+        )
+        world = SimpleNamespace(
+            get_pose=lambda name, env_id: (
+                np.asarray([0.0, 0.0, 0.0]),
+                np.asarray([1.0, 0.0, 0.0, 0.0]),
+            )
+        )
+        backend = object.__new__(LiveRoboLabBackend)
+        backend.env = SimpleNamespace(
+            device="cuda:0",
+            scene={"bowl": asset},
+        )
+        backend.modules = {"get_world": lambda _env: world}
+        backend._reference_baseline_pose = (0.1, 0.2, 0.3, 1.0, 0.0, 0.0, 0.0)
+        fake_torch = SimpleNamespace(
+            float32="float32",
+            tensor=lambda value, **_kwargs: value,
+            zeros=lambda shape, **_kwargs: [[0.0] * shape[1]],
+        )
+        with mock.patch.dict(sys.modules, {"torch": fake_torch}):
+            backend.set_reference_kinematic_offset(0.12, (1.0, 0.0))
+        self.assertEqual(writes[0][0], "pose")
+        self.assertEqual(writes[0][1][0][:3], (0.1, 0.32, 0.3))
+        self.assertEqual(writes[1][0], "velocity")
+
     def test_horizontal_fixture_registry(self) -> None:
         self.assertEqual(supported_fixture_ids(), ("horizontal",))
         reg = resolve_fixture_registration("horizontal", relation="left")

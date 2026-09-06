@@ -64,6 +64,7 @@ class ClusterBinding:
     namespace: str
     pvc: str
     output_parent: str
+    pvc_publisher_pod: Optional[str] = None
 
     def validate_for_create(self) -> None:
         for label, value in (
@@ -76,6 +77,8 @@ class ClusterBinding:
                 raise CoordinatorBlockedError(f"{label} is required for --create")
         if not Path(self.output_parent).is_absolute():
             raise CoordinatorBlockedError("output_parent must be an absolute path")
+        if self.pvc_publisher_pod is not None and not self.pvc_publisher_pod.strip():
+            raise CoordinatorBlockedError("pvc_publisher_pod must be nonempty when provided")
 
 
 @dataclass(frozen=True)
@@ -565,10 +568,84 @@ def pvc_binding_root_path(output_parent: str, lane_id: str, attempt_id: str) -> 
     return f"{parent}/.coord-bindings/{lane_id}/{attempt_id}"
 
 
-def publish_staged_bindings_to_pvc(*, local_binding_root: Path, pvc_binding_root: str) -> None:
+def publish_staged_bindings_to_pvc(
+    *,
+    local_binding_root: Path,
+    pvc_binding_root: str,
+    cluster: ClusterBinding,
+    kubectl_runner: Callable[..., subprocess.CompletedProcess] | None = None,
+) -> None:
     pvc_root = Path(pvc_binding_root)
     if not pvc_root.is_absolute():
         raise CoordinatorBlockedError(f"pvc binding root must be absolute: {pvc_binding_root}")
+    if cluster.pvc_publisher_pod is not None:
+        runner = kubectl_runner or subprocess.run
+        partial_root = f"{pvc_binding_root}.partial"
+
+        def run_checked(command: list[str], label: str) -> None:
+            result = runner(command, capture_output=True, text=True)
+            if result.returncode != 0:
+                raise CoordinatorBlockedError(
+                    f"{label} failed: {result.stderr.strip() or result.stdout.strip()}"
+                )
+
+        base = [
+            "kubectl",
+            "--context",
+            cluster.kube_context,
+            "-n",
+            cluster.namespace,
+        ]
+        create_script = (
+            "from pathlib import Path; import sys; "
+            "Path(sys.argv[1]).mkdir(parents=True, exist_ok=False)"
+        )
+        run_checked(
+            [
+                *base,
+                "exec",
+                cluster.pvc_publisher_pod,
+                "--",
+                "python3",
+                "-c",
+                create_script,
+                partial_root,
+            ],
+            "remote PVC staging directory creation",
+        )
+        for source in sorted(local_binding_root.iterdir()):
+            if not source.is_file():
+                continue
+            run_checked(
+                [
+                    *base,
+                    "cp",
+                    str(source),
+                    f"{cluster.pvc_publisher_pod}:{partial_root}/{source.name}",
+                ],
+                f"remote PVC binding copy for {source.name}",
+            )
+        finalize_script = (
+            "from pathlib import Path; import sys; "
+            "partial, final = Path(sys.argv[1]), Path(sys.argv[2]); "
+            "assert not final.exists(), f'refusing to overwrite {final}'; "
+            "partial.replace(final)"
+        )
+        run_checked(
+            [
+                *base,
+                "exec",
+                cluster.pvc_publisher_pod,
+                "--",
+                "python3",
+                "-c",
+                finalize_script,
+                partial_root,
+                pvc_binding_root,
+            ],
+            "remote PVC binding publication",
+        )
+        return
     pvc_root.mkdir(parents=True, exist_ok=False)
     for source in sorted(local_binding_root.iterdir()):
         if not source.is_file():
@@ -1506,6 +1583,8 @@ def plan_campaign(
                             publish_staged_bindings_to_pvc(
                                 local_binding_root=local_binding_root,
                                 pvc_binding_root=pvc_root,
+                                cluster=cluster,
+                                kubectl_runner=kubectl_runner,
                             )
                             if lease_store is not None:
                                 for group, group_episode_ids in policy_units:

@@ -130,6 +130,14 @@ def _build_parser() -> argparse.ArgumentParser:
         help="PVC-mounted output parent directory (required for --create and rendering).",
     )
     parser.add_argument(
+        "--pvc-publisher-pod",
+        default=None,
+        help=(
+            "Existing pod with the PVC mounted; when set, write-once dispatch "
+            "bindings are published through kubectl instead of a local mount."
+        ),
+    )
+    parser.add_argument(
         "--attempt-index",
         type=int,
         default=1,
@@ -182,6 +190,7 @@ def main(argv: list[str] | None = None) -> int:
             namespace=str(args.namespace),
             pvc=str(args.pvc),
             output_parent=str(args.output_parent),
+            pvc_publisher_pod=args.pvc_publisher_pod,
         )
 
     inputs = CoordinatorInputs(

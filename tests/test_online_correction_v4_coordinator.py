@@ -24,6 +24,7 @@ from experiments.online_correction_v4.coordinator import (
     load_group_receipts,
     parse_k8s_objects,
     plan_campaign,
+    publish_staged_bindings_to_pvc,
     shard_group_units,
     stage_binding_source,
     storage_budget_allows,
@@ -178,6 +179,48 @@ def _pvc_output_parent(tmp_path: Path) -> str:
 
 
 class CoordinatorHelperTests(unittest.TestCase):
+    def test_publishes_bindings_atomically_through_pvc_pod(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            bindings = root / "bindings"
+            bindings.mkdir()
+            (bindings / "queue.jsonl").write_text("{}\n", encoding="utf-8")
+            commands: list[list[str]] = []
+
+            def runner(command, **_kwargs):
+                commands.append(command)
+                return subprocess.CompletedProcess(
+                    args=command,
+                    returncode=0,
+                    stdout="",
+                    stderr="",
+                )
+
+            publish_staged_bindings_to_pvc(
+                local_binding_root=bindings,
+                pvc_binding_root="/data/run/.coord-bindings/lane/attempt",
+                cluster=ClusterBinding(
+                    kube_context="test-context",
+                    namespace="test-namespace",
+                    pvc="test-pvc",
+                    output_parent="/data/run",
+                    pvc_publisher_pod="toolbox",
+                ),
+                kubectl_runner=runner,
+            )
+
+            self.assertEqual(len(commands), 3)
+            self.assertIn(
+                "/data/run/.coord-bindings/lane/attempt.partial",
+                commands[0],
+            )
+            self.assertEqual(commands[1][-2], str(bindings / "queue.jsonl"))
+            self.assertEqual(
+                commands[1][-1],
+                "toolbox:/data/run/.coord-bindings/lane/attempt.partial/queue.jsonl",
+            )
+            self.assertEqual(commands[2][-1], "/data/run/.coord-bindings/lane/attempt")
+
     def test_staged_binding_can_use_runtime_alias(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

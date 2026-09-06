@@ -74,7 +74,7 @@ def build_confirmatory_seed_registry(
         "campaign_id": "online_correction_v4",
         "fixture_id": FIXTURE_ID,
         "policy_id": POLICY_ID,
-        "scope": "c7_confirmatory_family",
+        "scope": "released_c7",
         "checkpoint_revision": CHECKPOINT_REVISION,
         "allowed_sampling_seeds": policy_seeds,
         "source_queue": artifact(queue_path),

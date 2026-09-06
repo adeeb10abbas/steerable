@@ -24,6 +24,7 @@ class ObjectPairConfirmatoryReleaseTests(unittest.TestCase):
             ),
         )
         seeds = registry["allowed_sampling_seeds"]
+        self.assertEqual(registry["scope"], "released_c7")
         self.assertEqual(len(seeds), 64)
         self.assertEqual(len(set(seeds)), 64)
         self.assertEqual(

@@ -1,0 +1,57 @@
+{
+  "schema_version": "v4-object-pair-g2-smoke-disposition-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "attempt_id": "g2c7q20260905t",
+  "environment_seed": 2100040004,
+  "compiled_at_utc": "2026-09-06T03:42:00Z",
+  "qualification_scope": "single_seed_transform_neutral_support_model_blind_smoke",
+  "status": "passed_reset_camera_numeric_frame_and_smoke_axis_review",
+  "g2_complete": false,
+  "authorizes_behavioral_inference": false,
+  "authorizes_full_g2_wave": true,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "released_stability_thresholds_changed": false,
+  "outcome": {
+    "passed_reset_and_camera": true,
+    "sponge_position_error_m": 0.003000026002526284,
+    "tray_position_error_m": 0.0030000534728169444,
+    "registry_position_tolerance_m": 0.005,
+    "duplicate_second_reset_idempotent": true,
+    "settle_steps": 60,
+    "stable_window_steps": 15
+  },
+  "axis_review": {
+    "status": "pass_for_wave_launch",
+    "review_basis": "human inspection of rendered three-camera axis overlay montage",
+    "left_axis": "consistent with DROID robot-base +Y",
+    "front_axis": "consistent with DROID robot-base -X toward robot",
+    "up_axis": "consistent with world +Z",
+    "all_axes_in_frame_for_all_policy_cameras": true,
+    "scope": "This smoke review authorizes the fresh 64-seed G2 wave only; the release artifact still requires separate review of the wave output."
+  },
+  "runtime_identity": {
+    "study_commit": "63881b51b4ca1d9e9d2c643c193101da6665e26a",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "driver_version": "580.95.05",
+    "gpu_product": "NVIDIA A40",
+    "native_control_dt_s": 0.06666666666666667,
+    "reset_registry_sha256": "a2ce9f64caeef9d0537c289e8c32f91d62c2e44ec1621a50eb6b3455838b89d0"
+  },
+  "preservation": {
+    "seed_receipt": {
+      "path": "file:///data/users/ali/vla_wam/raw/v4/g2-object-pair/smoke-g2c7q20260905t-s004/episodes/g2_seed_receipt.json",
+      "bytes": 12250,
+      "sha256": "f6fd28327c0954e10ab75f7de82782cc50c98c954dc3ec104cbf29cf25bcbb2c"
+    },
+    "axis_overlay_montage": {
+      "path": "file:///data/users/ali/vla_wam/raw/v4/g2-object-pair/smoke-g2c7q20260905t-s004/episodes/axis_overlay_montage.png",
+      "bytes": 3267763,
+      "sha256": "25649a5e26adf679aa29553a57e081d81059875833720df95709a60e3ef99445"
+    }
+  },
+  "disposition": "The final same-seed smoke passes all automated G2 reset, camera, and numeric frame checks with a visually coherent axis overlay. Launch one fresh 64-seed wave at this exact commit and registry hash."
+}

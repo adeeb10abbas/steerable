@@ -76,6 +76,9 @@ def _discover_scripted_receipts(root: Path) -> list[Path]:
     paths = sorted(root.resolve().rglob("g3_scripted_check_receipt.json"))
     if paths:
         return paths
+    paths = sorted(root.resolve().rglob("receipts/*.json"))
+    if paths:
+        return paths
     return sorted(root.resolve().rglob("*scripted*receipt*.json"))
 
 

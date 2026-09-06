@@ -326,6 +326,19 @@ class CompileHorizontalG3AggregateTests(unittest.TestCase):
             self.assertTrue(report["passed"])
             self.assertTrue(output.is_file())
 
+    def test_discovers_runner_receipt_directory_without_seed_summary(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            receipts = root / "run" / "episodes" / "receipts"
+            receipts.mkdir(parents=True)
+            check = receipts / "left__original.json"
+            check.write_text("{}\n", encoding="utf-8")
+            (receipts.parent / "g3_scripted_seed_receipt.json").write_text(
+                "{}\n",
+                encoding="utf-8",
+            )
+            self.assertEqual(compiler._discover_scripted_receipts(root), [check.resolve()])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -119,21 +119,6 @@ def _image_record(image: Any) -> dict[str, Any]:
     }
 
 
-def _capture_processed_observation(env: Any) -> Mapping[str, Any]:
-    outer = getattr(env, "unwrapped", env)
-    inner = getattr(outer, "env", None)
-    raw = unwrap_simpler_env(env)
-    if inner is None or not hasattr(raw, "get_obs") or not hasattr(
-        outer, "_process_observation"
-    ):
-        raise SecondStackG2Error("C8 observation bindings are unavailable")
-    raw_obs = raw.get_obs()
-    processed = outer._process_observation(raw_obs)
-    if not isinstance(processed, Mapping):
-        raise SecondStackG2Error("C8 processed observation is not a mapping")
-    return processed
-
-
 def _reset_once(
     *,
     env: Any,
@@ -142,7 +127,7 @@ def _reset_once(
     settle_steps: int,
     drift_steps: int,
 ) -> dict[str, Any]:
-    _observation, info = env.reset(seed=env_seed)
+    observation, info = env.reset(seed=env_seed)
     if (
         info.get("episode_source_obj_name") != SOURCE_OBJECT
         or info.get("episode_target_obj_name") != REFERENCE_OBJECT
@@ -183,8 +168,7 @@ def _reset_once(
         == {SOURCE_OBJECT, REFERENCE_OBJECT}
         for record in contacts
     )
-    processed = _capture_processed_observation(env)
-    image = processed.get("video.image_0")
+    image = observation.get("video.image_0")
     if image is None:
         raise SecondStackG2Error("C8 observation lacks video.image_0")
     image_record = _image_record(image)

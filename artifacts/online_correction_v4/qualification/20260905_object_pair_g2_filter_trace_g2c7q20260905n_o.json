@@ -1,0 +1,48 @@
+{
+  "schema_version": "v4-object-pair-g2-filter-trace-disposition-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "attempt_ids": [
+    "g2c7q20260905n",
+    "g2c7q20260905o"
+  ],
+  "environment_seed": 2100040004,
+  "compiled_at_utc": "2026-09-06T03:26:00Z",
+  "qualification_scope": "same_seed_model_blind_filtered_pair_smoke_and_trace",
+  "status": "infrastructure_invalid",
+  "g2_complete": false,
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "trace_summary": {
+    "robot_table_force_after_tick_zero_n": 0.0,
+    "last_stable_control_tick": 4,
+    "launch_control_tick": 5,
+    "launch_linear_component_max_m_s": 561165.875,
+    "launch_angular_component_max_rad_s": 64.58627319335938,
+    "task_object_contact_force_n_at_launch": 0.0,
+    "interpretation": "Pair filtering removed the robot-table force but did not eliminate a spontaneous kinematic-table launch. Kinematic support itself is invalid for this fixture."
+  },
+  "runtime_identity": {
+    "study_commit": "553b0af3aa2ec6f4ae17aa4484adf49146c17a0f",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "driver_version": "580.95.05",
+    "gpu_product": "NVIDIA A40",
+    "native_control_dt_s": 0.06666666666666667,
+    "reset_registry_sha256": "83bdb2cf65e736f247e8507ea351d702c5d6274931113566200f3e5b3783654a"
+  },
+  "preservation": {
+    "smoke_failure_marker": {
+      "path": "file:///data/users/ali/vla_wam/raw/v4/g2-object-pair/smoke-g2c7q20260905n-s004/episodes/infrastructure_failure.json",
+      "bytes": 1527,
+      "sha256": "824930bde3f3c61b67a9233b62f02395f702b99eb2523209e4f9295fa7014974"
+    },
+    "filtered_trace": {
+      "path": "file:///data/users/ali/vla_wam/raw/v4/g2-object-pair/trace-g2c7q20260905o-s004/episodes/reset_settle_trace.json",
+      "sha256": "d377dcb87d2da57a84590858386bc7b6861787bf4cc14d5202a944466cf55dd5"
+    }
+  },
+  "disposition": "Robot-table pair filtering succeeded but did not solve the launch. Replace the table rigid-body support mechanism with an explicit static collision slab under the registered object workspace; retain the table payload only as visual geometry and preserve all task and gate contracts."
+}

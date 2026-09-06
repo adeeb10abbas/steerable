@@ -287,6 +287,13 @@ def build_registry(
                 "/data/users/ali/vla_wam/external/RoboLab-11142d4"
             ),
             "object_specs": OBJECT_SPECS,
+            "support_collider": {
+                "construction": "static_usd_cube",
+                "prim": "table/V4ObjectPairSupportCollider",
+                "world_center_xyz_m": [0.45, 0.02, -0.01],
+                "dimensions_xyz_m": [0.5, 0.6, 0.02],
+                "top_surface_z_m": 0.0,
+            },
             "policy_outcome_used": False,
         },
         "contact_objects": ["sponge", "tray", "table"],

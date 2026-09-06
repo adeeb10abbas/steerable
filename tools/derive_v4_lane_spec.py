@@ -25,6 +25,7 @@ def derive_spec(
     *,
     source_path: Path,
     overrides: list[str],
+    replacements: list[str] | None = None,
 ) -> dict[str, Any]:
     spec = json.loads(source_path.read_text(encoding="utf-8"))
     if not isinstance(spec, dict):
@@ -35,6 +36,26 @@ def derive_spec(
             source = binding.get("source")
             if isinstance(source, str) and not Path(source).is_absolute():
                 binding["source"] = str((source_dir / source).resolve())
+    for replacement in replacements or []:
+        old, separator, new = replacement.partition("=")
+        if separator != "=" or not old:
+            raise ValueError(f"invalid string replacement: {replacement}")
+        replacement_count = 0
+
+        def replace(value: Any) -> Any:
+            nonlocal replacement_count
+            if isinstance(value, str):
+                replacement_count += value.count(old)
+                return value.replace(old, new)
+            if isinstance(value, list):
+                return [replace(item) for item in value]
+            if isinstance(value, dict):
+                return {key: replace(item) for key, item in value.items()}
+            return value
+
+        spec = replace(spec)
+        if replacement_count == 0:
+            raise ValueError(f"string replacement matched nothing: {old}")
     for override in overrides:
         keys, value = parse_override(override)
         cursor: Any = spec
@@ -53,11 +74,13 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", type=Path, required=True)
     parser.add_argument("--set", action="append", default=[])
+    parser.add_argument("--replace", action="append", default=[])
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     spec = derive_spec(
         source_path=args.source.resolve(),
         overrides=args.set,
+        replacements=args.replace,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("x", encoding="utf-8") as handle:

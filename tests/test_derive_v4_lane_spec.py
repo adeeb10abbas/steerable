@@ -19,6 +19,7 @@ class DeriveV4LaneSpecTests(unittest.TestCase):
                 json.dumps(
                     {
                         "lane_id": "old",
+                        "attempt_id": "old-attempt",
                         "policy": {
                             "gpu_product": "GPU-A",
                             "file_bindings": [
@@ -36,8 +37,10 @@ class DeriveV4LaneSpecTests(unittest.TestCase):
                     'lane_id="new"',
                     'policy.gpu_product="GPU-B"',
                 ],
+                replacements=["old-attempt=new-attempt"],
             )
             self.assertEqual(result["lane_id"], "new")
+            self.assertEqual(result["attempt_id"], "new-attempt")
             self.assertEqual(result["policy"]["gpu_product"], "GPU-B")
             self.assertEqual(
                 result["policy"]["file_bindings"][0]["source"],

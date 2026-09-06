@@ -192,6 +192,37 @@ class CoordinatorHelperTests(unittest.TestCase):
         second = shard_group_units(units, lanes)
         self.assertEqual(first, second)
         self.assertEqual(sum(len(v) for v in first.values()), 6)
+        self.assertLessEqual(
+            max(len(v) for v in first.values())
+            - min(len(v) for v in first.values()),
+            1,
+        )
+
+    def test_shard_groups_never_mixes_policy_servers_on_one_lane(self) -> None:
+        from experiments.online_correction_v4.coordinator import LaneStratum
+
+        lanes = [
+            LaneStratum(f"lane{i:02d}", "stratum-a", {}, ROOT)
+            for i in range(4)
+        ]
+        units = [
+            (
+                ExecutionGroup(
+                    group_id=f"{policy}:fixture{i}",
+                    policy=policy,
+                    fixture=f"fixture{i}",
+                ),
+                [f"{policy}-ep-{i}"],
+            )
+            for policy in ("nano", "pi05")
+            for i in range(4)
+        ]
+        buckets = shard_group_units(units, lanes)
+        for assignments in buckets.values():
+            self.assertLessEqual(
+                len({group.policy for group, _episode_ids in assignments}),
+                1,
+            )
 
     def test_storage_budget_blocks_when_exceeded(self) -> None:
         cfg = ExecutionConfig(

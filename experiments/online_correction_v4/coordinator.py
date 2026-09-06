@@ -946,11 +946,33 @@ def shard_group_units(
     if not lanes:
         return {}
     buckets: dict[str, list[tuple[ExecutionGroup, list[str]]]] = {lane.lane_id: [] for lane in lanes}
-    lane_ids = [lane.lane_id for lane in lanes]
-    for group, episode_ids in sorted(units, key=lambda item: item[0].group_id):
-        digest = hashlib.sha256(group.group_id.encode("utf-8")).hexdigest()
-        lane_id = lane_ids[int(digest[:8], 16) % len(lane_ids)]
+    policies = sorted({group.policy for group, _episode_ids in units})
+    if not policies:
+        return buckets
+    active_policies = policies[: len(lanes)]
+    policy_lanes: dict[str, list[str]] = {
+        policy: [] for policy in active_policies
+    }
+    for index, lane in enumerate(sorted(lanes, key=lambda item: item.lane_id)):
+        policy_lanes[active_policies[index % len(active_policies)]].append(lane.lane_id)
+    lane_loads = {lane.lane_id: 0 for lane in lanes}
+    ordered_units = sorted(
+        units,
+        key=lambda item: (
+            item[0].policy,
+            -len(item[1]),
+            hashlib.sha256(item[0].group_id.encode("utf-8")).hexdigest(),
+        ),
+    )
+    for group, episode_ids in ordered_units:
+        if group.policy not in policy_lanes:
+            continue
+        lane_id = min(
+            policy_lanes[group.policy],
+            key=lambda candidate: (lane_loads[candidate], candidate),
+        )
         buckets[lane_id].append((group, episode_ids))
+        lane_loads[lane_id] += len(episode_ids)
     return buckets
 
 

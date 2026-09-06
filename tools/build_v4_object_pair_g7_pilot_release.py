@@ -394,7 +394,7 @@ def main() -> None:
     parser.add_argument("--source-commit", required=True)
     parser.add_argument(
         "--runtime-root",
-        default="/data/users/ali/vla_wam/src/steerable-v4-c7-pilot-g2",
+        default="/data/users/ali/vla_wam/src/steerable-v4-c7-pilot-g7",
     )
     parser.add_argument("--pilot-seed-registry", type=Path, required=True)
     parser.add_argument("--candidate-reset-registry", type=Path, required=True)

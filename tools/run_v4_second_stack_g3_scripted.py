@@ -196,16 +196,16 @@ def _run_check(
         command = [
             source_position[0],
             source_position[1] - 0.013,
-            0.895,
+            0.89,
         ]
-        for _ in range(6):
+        for _ in range(10):
             if not move_once(command, steps=160):
                 return None
             live_source = raw.episode_source_obj.pose.p
             desired_midpoint = [
                 float(live_source[0]) + 0.0143,
                 float(live_source[1]) - 0.004,
-                float(live_source[2]) + 0.0634,
+                float(live_source[2]) + 0.0585,
             ]
             midpoint = [
                 0.5
@@ -223,7 +223,7 @@ def _run_check(
         desired_midpoint = [
             float(live_source[0]) + 0.0143,
             float(live_source[1]) - 0.004,
-            float(live_source[2]) + 0.0634,
+            float(live_source[2]) + 0.0585,
         ]
         midpoint = [
             0.5

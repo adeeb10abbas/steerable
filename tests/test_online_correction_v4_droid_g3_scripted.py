@@ -195,7 +195,7 @@ class TargetSelectionTests(unittest.TestCase):
     def test_narrow_nonempty_goal_retains_boundary_guard(self) -> None:
         goal = replace(
             _goal_for_relation("left"),
-            region=geom.AxisAlignedBox(0.10, 0.11, -0.05, 0.05, 0.0, 0.08),
+            region=geom.AxisAlignedBox(0.10, 0.104, -0.05, 0.05, 0.0, 0.08),
         )
         target = select_robust_target_task(
             frame=self.frame,
@@ -206,7 +206,7 @@ class TargetSelectionTests(unittest.TestCase):
             table_top_z_task=self.table_top,
             object_half_up=self.half_up,
         )
-        self.assertAlmostEqual(target[0], 0.105)
+        self.assertAlmostEqual(target[0], 0.101)
         self.assertTrue(goal.region is not None and goal.region.point_inside(target))
 
     def test_world_target_roundtrip(self) -> None:

@@ -175,11 +175,11 @@ def _run_check(
         initial_command: list[float],
         *,
         iterations: int = 4,
-    ) -> float:
+    ) -> float | None:
         command = list(initial_command)
         for _ in range(iterations):
             if not move_once(command):
-                return float("inf")
+                return None
             actual = raw.agent.ee_pose.p
             command = [
                 command[index] + desired[index] - float(actual[index])
@@ -286,12 +286,15 @@ def _run_check(
         source_final[2] - (float(raw.scene_table_height) + CUBE_HALF_EXTENT_M)
     )
     released_robot_contacts = _robot_contact(final_contacts, SOURCE_OBJECT)
+    alignment_errors = (
+        grasp_alignment_error,
+        lift_alignment_error,
+        transport_alignment_error,
+        release_alignment_error,
+    )
     passed = (
         not ik_failures
-        and grasp_alignment_error <= 0.03
-        and lift_alignment_error <= 0.03
-        and transport_alignment_error <= 0.03
-        and release_alignment_error <= 0.03
+        and all(error is not None and error <= 0.03 for error in alignment_errors)
         and bool(grasp_contacts)
         and lift_height >= 0.04
         and placement_xy_error <= PLACEMENT_XY_TOLERANCE_M

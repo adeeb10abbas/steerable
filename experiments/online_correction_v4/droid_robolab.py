@@ -227,6 +227,7 @@ def _import_robolab_modules(config: LiveRoboLabConfig) -> dict[str, Any]:
         from robolab.core.world.world_state import get_world
         from robolab.registrations.droid.camera_presets import WRIST_LEFT_RIGHT_HEAD
         import robolab.robots.droid as droid_robot
+        from robolab.robots.droid import EEF_OFFSET_ROT
     except ImportError as exc:
         raise DroidDependencyError(
             "RoboLab modules are unavailable after AppLauncher startup"
@@ -262,6 +263,7 @@ def _import_robolab_modules(config: LiveRoboLabConfig) -> dict[str, Any]:
         "object_dropped": object_dropped,
         "object_grabbed": object_grabbed,
         "get_world": get_world,
+        "eef_offset_rotation": EEF_OFFSET_ROT,
         "active_registration": active,
     }
 
@@ -441,18 +443,36 @@ class LiveRoboLabBackend:
         if self._latest_raw_obs is None:
             raise RoboLabBootstrapError("hold action requested before first observation")
         if self.config.action_mode == "absolute_ik":
-            robot = self.env.scene["robot"]
-            body_names = list(robot.data.body_names)
-            if "base_link" not in body_names:
+            frames = self.env.scene["frames"]
+            frame_names = list(frames.data.target_frame_names)
+            if "eef_frame" not in frame_names:
                 raise RoboLabBootstrapError(
-                    "absolute-IK hold requires robot base_link"
+                    "absolute-IK hold requires eef_frame"
                 )
-            body_index = body_names.index("base_link")
-            position = robot.data.body_pos_w[0, body_index].detach().to(
+            frame_index = frame_names.index("eef_frame")
+            position = frames.data.target_pos_w[0, frame_index].detach().to(
                 self.env.device
             )
-            quaternion = robot.data.body_quat_w[0, body_index].detach().to(
+            measured_quaternion = frames.data.target_quat_w[0, frame_index].detach().to(
                 self.env.device
+            )
+            offset = torch.as_tensor(
+                self.modules["eef_offset_rotation"],
+                dtype=measured_quaternion.dtype,
+                device=self.env.device,
+            )
+            inverse_offset = offset.clone()
+            inverse_offset[1:] *= -1
+            inverse_offset /= torch.sum(offset * offset)
+            w1, x1, y1, z1 = measured_quaternion
+            w2, x2, y2, z2 = inverse_offset
+            quaternion = torch.stack(
+                (
+                    w1 * w2 - x1 * x2 - y1 * y2 - z1 * z2,
+                    w1 * x2 + x1 * w2 + y1 * z2 - z1 * y2,
+                    w1 * y2 - x1 * z2 + y1 * w2 + z1 * x2,
+                    w1 * z2 + x1 * y2 - y1 * x2 + z1 * w2,
+                )
             )
             gripper = self._latest_raw_obs["proprio_obs"]["gripper_pos"]
             gripper_value = (

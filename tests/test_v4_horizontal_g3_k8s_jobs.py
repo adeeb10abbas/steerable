@@ -157,6 +157,9 @@ class RunV4G3CheckedTests(unittest.TestCase):
 @unittest.skipUnless(shutil.which("kubectl"), "kubectl is required")
 class HorizontalG3K8sTests(unittest.TestCase):
     def test_default_spec_renders_complete_simulator_only_seed_bundle(self) -> None:
+        expected_scale = json.loads(
+            renderer.DEFAULT_SPEC.read_text(encoding="utf-8")
+        )["scale"]
         with tempfile.TemporaryDirectory() as tmp:
             report = renderer.render(renderer.DEFAULT_SPEC, Path(tmp))
             root = Path(report["bundle_root"])
@@ -164,7 +167,7 @@ class HorizontalG3K8sTests(unittest.TestCase):
         self.assertTrue(validated["ok"])
         self.assertEqual(validated["job_count"], 128)
         self.assertEqual(validated["environment_seed_count"], 128)
-        self.assertEqual(validated["scale"], 2.0)
+        self.assertEqual(validated["scale"], expected_scale)
         self.assertEqual(validated["model_request_count"], 0)
         self.assertEqual(validated["behavioral_episode_count"], 0)
 

@@ -36,6 +36,9 @@ OBJECT_SPECS: dict[str, dict[str, Any]] = {
         "primitive": "box",
         "dimensions_m": [0.08, 0.055, 0.035],
         "mass_kg": 0.045,
+        "center_of_mass_m": [0.0, 0.0, 0.0],
+        "principal_axes_wxyz": [1.0, 0.0, 0.0, 0.0],
+        "diagonal_inertia_kg_m2": [0.0000159375, 0.00002859375, 0.00003534375],
         "display_color_rgb": [0.95, 0.78, 0.10],
         "base_position_robot_m": [0.43, -0.10, 0.0205],
     },
@@ -44,6 +47,9 @@ OBJECT_SPECS: dict[str, dict[str, Any]] = {
         "primitive": "box",
         "dimensions_m": [0.14, 0.10, 0.018],
         "mass_kg": 0.30,
+        "center_of_mass_m": [0.0, 0.0, 0.0],
+        "principal_axes_wxyz": [1.0, 0.0, 0.0, 0.0],
+        "diagonal_inertia_kg_m2": [0.0002581, 0.0004981, 0.00074],
         "display_color_rgb": [0.10, 0.34, 0.85],
         "base_position_robot_m": [0.44, 0.13, 0.012],
     },
@@ -181,7 +187,12 @@ def _validate_object_specs() -> None:
     if {row["role"] for row in OBJECT_SPECS.values()} != {"target", "reference"}:
         raise ObjectPairRegistryBuildError("object-pair roles must be target/reference")
     for name, row in OBJECT_SPECS.items():
-        for field in ("dimensions_m", "base_position_robot_m"):
+        for field in (
+            "dimensions_m",
+            "base_position_robot_m",
+            "center_of_mass_m",
+            "diagonal_inertia_kg_m2",
+        ):
             values = row.get(field)
             if (
                 not isinstance(values, list)
@@ -196,6 +207,20 @@ def _validate_object_specs() -> None:
                 raise ObjectPairRegistryBuildError(
                     f"object specification {name}.{field} must be a finite 3-vector"
                 )
+        axes = row.get("principal_axes_wxyz")
+        if (
+            not isinstance(axes, list)
+            or len(axes) != 4
+            or any(
+                isinstance(value, bool)
+                or not isinstance(value, (int, float))
+                or not math.isfinite(float(value))
+                for value in axes
+            )
+        ):
+            raise ObjectPairRegistryBuildError(
+                f"object specification {name}.principal_axes_wxyz must be a finite quaternion"
+            )
 
 
 def build_registry(

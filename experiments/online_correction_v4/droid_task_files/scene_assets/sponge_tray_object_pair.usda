@@ -22,7 +22,10 @@ def Xform "World"
     )
     {
         custom string description = "V4 C7 yellow procedural sponge candidate"
+        point3f physics:centerOfMass = (0, 0, 0)
+        float3 physics:diagonalInertia = (0.0000159375, 0.00002859375, 0.00003534375)
         float physics:mass = 0.045
+        quatf physics:principalAxes = (1, 0, 0, 0)
         bool physics:rigidBodyEnabled = 1
         quatf xformOp:orient = (1, 0, 0, 0)
         double3 xformOp:translate = (0.43, -0.10, 0.0205)
@@ -45,7 +48,10 @@ def Xform "World"
     )
     {
         custom string description = "V4 C7 blue procedural reference tray candidate"
+        point3f physics:centerOfMass = (0, 0, 0)
+        float3 physics:diagonalInertia = (0.0002581, 0.0004981, 0.00074)
         float physics:mass = 0.30
+        quatf physics:principalAxes = (1, 0, 0, 0)
         bool physics:rigidBodyEnabled = 1
         quatf xformOp:orient = (1, 0, 0, 0)
         double3 xformOp:translate = (0.44, 0.13, 0.012)

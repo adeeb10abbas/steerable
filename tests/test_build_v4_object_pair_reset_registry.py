@@ -52,6 +52,15 @@ class ObjectPairResetRegistryTests(unittest.TestCase):
             payload["scene_metadata_sha256"],
             builder.sha256_file(self.scene),
         )
+        object_specs = payload["scene_receipt"]["object_specs"]
+        self.assertEqual(
+            object_specs["sponge"]["diagonal_inertia_kg_m2"],
+            [0.0000159375, 0.00002859375, 0.00003534375],
+        )
+        self.assertEqual(
+            object_specs["tray"]["diagonal_inertia_kg_m2"],
+            [0.0002581, 0.0004981, 0.00074],
+        )
 
     def test_common_jitter_preserves_sponge_tray_relative_geometry(self):
         payload = builder.build_registry(

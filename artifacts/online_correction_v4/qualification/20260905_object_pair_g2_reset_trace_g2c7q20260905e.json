@@ -1,0 +1,72 @@
+{
+  "schema_version": "v4-object-pair-g2-reset-trace-disposition-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "attempt_id": "g2c7q20260905e",
+  "environment_seed": 2100040004,
+  "compiled_at_utc": "2026-09-06T02:55:00Z",
+  "qualification_scope": "direct_single_seed_model_blind_control_step_trace",
+  "status": "diagnostic_completed_not_a_g2_receipt",
+  "g2_complete": false,
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "trace_summary": {
+    "last_stable_control_tick": 6,
+    "launch_control_tick": 7,
+    "launch_time_s": 0.4666666666666667,
+    "sponge_tick_6": {
+      "position_world_xyz_m": [
+        0.4185069501399994,
+        -0.10758101940155029,
+        0.017499951645731926
+      ],
+      "velocity_world_xyz_rad_s": [
+        -0.000009426196811546106,
+        0.00008062865526881069,
+        -0.000019531198631739244,
+        -0.0014384305104613304,
+        -0.000028081840355298482,
+        -0.00010089579882333055
+      ]
+    },
+    "sponge_tick_7": {
+      "position_world_xyz_m": [
+        -1489919.5,
+        -28475670.0,
+        13528956.0
+      ],
+      "velocity_world_xyz_rad_s": [
+        -40170512.0,
+        -775328256.0,
+        364837792.0,
+        91.94013977050781,
+        -5.505223274230957,
+        -21.054214477539062
+      ]
+    },
+    "tray_remained_stable_at_launch_tick": true,
+    "sponge_contact_force_n_at_launch_tick": {
+      "gripper__sponge": 0.0,
+      "robot_all__sponge": 0.0,
+      "sponge__table": 0.0,
+      "sponge__tray": 0.0
+    }
+  },
+  "runtime_identity": {
+    "study_commit": "d4adabe394c9b3c7c12fc0fbf3593da2923aaba6",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "driver_version": "580.95.05",
+    "gpu_product": "NVIDIA A40",
+    "native_control_dt_s": 0.06666666666666667,
+    "reset_registry_sha256": "7ac760235dc66dbf8e72badbe1c9799f4955130105d30c0af5f11b349c9f8c4f"
+  },
+  "preservation": {
+    "raw_trace": "file:///data/users/ali/vla_wam/raw/v4/g2-object-pair/trace-g2c7q20260905e4-s004/episodes/reset_settle_trace.json",
+    "bytes": 77244,
+    "sha256": "57ee5dd502af6eeba030e4bd796db99804877ca0cff892396545307ebf811078"
+  },
+  "disposition": "The object remained settled for six ticks and then underwent a non-contact catastrophic numerical launch while the tray stayed stable. This falsifies the spawn-clearance-only explanation. Before any fresh G2 wave, explicitly author finite cuboid center-of-mass, principal-axis, and diagonal-inertia properties for both procedural rigid bodies and replay this exact seed under unchanged gate thresholds."
+}

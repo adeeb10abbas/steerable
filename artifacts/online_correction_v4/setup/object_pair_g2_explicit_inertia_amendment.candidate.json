@@ -1,0 +1,86 @@
+{
+  "schema_version": "v4-object-pair-g2-explicit-inertia-amendment-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "status": "post_result_model_blind_amendment_candidate",
+  "created_at_utc": "2026-09-06T02:56:00Z",
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "triggering_evidence": {
+    "path": "artifacts/online_correction_v4/qualification/20260905_object_pair_g2_reset_trace_g2c7q20260905e.json",
+    "sha256": "1b2c9efef9bbe989f93fad869e63225413f0b59e477d4dcf6eef4cbaa5478c2e",
+    "finding": "The sponge was stable through control tick 6 and catastrophically launched at tick 7 without a reported sponge contact; the tray remained stable."
+  },
+  "amendment": {
+    "reason": "The procedural USD authored mass but relied on simulator fallback for center of mass and inertia. The non-contact finite-to-catastrophic transition is invalid for qualification and requires explicit finite rigid-body mass properties.",
+    "method": "Uniform solid cuboid inertia in the rigid-body local frame: Ixx=m(y^2+z^2)/12, Iyy=m(x^2+z^2)/12, Izz=m(x^2+y^2)/12.",
+    "sponge": {
+      "mass_kg": 0.045,
+      "dimensions_xyz_m": [
+        0.08,
+        0.055,
+        0.035
+      ],
+      "center_of_mass_xyz_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "principal_axes_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "diagonal_inertia_kg_m2": [
+        0.0000159375,
+        0.00002859375,
+        0.00003534375
+      ]
+    },
+    "tray": {
+      "mass_kg": 0.3,
+      "dimensions_xyz_m": [
+        0.14,
+        0.1,
+        0.018
+      ],
+      "center_of_mass_xyz_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "principal_axes_wxyz": [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "diagonal_inertia_kg_m2": [
+        0.0002581,
+        0.0004981,
+        0.00074
+      ]
+    }
+  },
+  "unchanged_contracts": {
+    "registered_environment_seeds": true,
+    "spawn_clearance_from_prior_amendment": true,
+    "xy_jitter_algorithm_and_range": true,
+    "registry_position_tolerance_m": 0.005,
+    "linear_speed_max_m_s": 0.02,
+    "angular_speed_max_rad_s": 0.2,
+    "camera_and_task_frame_checks": true,
+    "prompts_and_policy_weights": true
+  },
+  "required_requalification": [
+    "Replay failed seed 2100040004 with explicit mass properties and unchanged G2 thresholds.",
+    "If the replay passes, execute a fresh complete 64-seed object-pair G2 wave.",
+    "Do not reuse any pre-amendment receipt toward release.",
+    "Release neither the reset registry nor G3 until the amended aggregate and human axis review pass."
+  ],
+  "disclosure": "This post-result amendment uses only zero-policy setup evidence. It does not cap velocities, weaken stability limits, or consume a behavioral outcome."
+}

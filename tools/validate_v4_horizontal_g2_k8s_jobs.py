@@ -89,7 +89,7 @@ def validate(root: Path) -> dict[str, Any]:
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     fixture_id = manifest.get("fixture_id")
     require(
-        fixture_id in {"horizontal", "object_pair"},
+        fixture_id in {"horizontal", "object_pair", "vertical", "containment"},
         "G2 bundle fixture is unsupported",
     )
     fixture_token = str(fixture_id).replace("_", "-")
@@ -248,11 +248,11 @@ def validate(root: Path) -> dict[str, Any]:
                 == option_values.get("--environment-seed"),
                 "G2 wrapper and child environment-seed bindings differ",
             )
-            if fixture_id == "object_pair":
+            if fixture_id != "horizontal":
                 require(
                     option_values.get("--expected-fixture") == fixture_id
                     and option_values.get("--fixture-id") == fixture_id,
-                    "G2 object-pair wrapper and child fixture bindings differ",
+                    "G2 wrapper and child fixture bindings differ",
                 )
             else:
                 require(

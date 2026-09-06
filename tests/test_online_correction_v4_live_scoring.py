@@ -169,6 +169,11 @@ class TerminalPredicateTests(unittest.TestCase):
         )
         self.assertFalse(evidence.success)
         self.assertFalse(evidence.allowed_support)
+        self.assertIs(evidence.metadata["goal_set_empty"], False)
+        self.assertIsInstance(
+            evidence.metadata["goal_violation_cap_applied"],
+            bool,
+        )
 
     def test_spinning_object_fails_terminal_stability(self) -> None:
         env = FakeRoboLabEnv()

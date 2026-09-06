@@ -56,6 +56,7 @@ class ObjectPairG7ReceiptTests(unittest.TestCase):
             review_path = root / "review.json"
             ledger_path = root / "ledger.jsonl"
             ledger_manifest_path = root / "ledger-manifest.json"
+            ledger_validation_path = root / "ledger-validation.json"
             montage_path = root / "montage.png"
             montage_path.write_bytes(b"montage")
             montage_sha = __import__("hashlib").sha256(b"montage").hexdigest()
@@ -65,6 +66,7 @@ class ObjectPairG7ReceiptTests(unittest.TestCase):
                 {
                     "release_status": "PILOT_RELEASED",
                     "released_families": ["C7"],
+                    "fixtures": {"object_pair": {"D_cap_m": 1.0}},
                 },
             )
             _write_json(
@@ -97,6 +99,10 @@ class ObjectPairG7ReceiptTests(unittest.TestCase):
                     "outputs": {"accepted_count": 24},
                 },
             )
+            _write_json(
+                ledger_validation_path,
+                {"ok": True, "errors": []},
+            )
             receipt = build_receipt(
                 queue_path=queue_path,
                 runtime_lock_path=lock_path,
@@ -104,6 +110,7 @@ class ObjectPairG7ReceiptTests(unittest.TestCase):
                 review_path=review_path,
                 accepted_ledger_path=ledger_path,
                 ledger_manifest_path=ledger_manifest_path,
+                ledger_validation_report_path=ledger_validation_path,
             )
             self.assertTrue(receipt["passed"])
             self.assertEqual(receipt["behavioral_outcomes_preserved"], {"no_grasp": 24})

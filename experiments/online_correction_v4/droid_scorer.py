@@ -218,15 +218,6 @@ class HorizontalDroidTerminalScorer:
                 missing_fields=("terminal_predicates",),
             )
         predicates_available = physical.available
-        if passive_settling_reason == "release" and not predicates_available:
-            return TerminalScoringEvidence(
-                grasp_occurred=grasp_occurred,
-                carry_verified=carry_verified,
-                released=state.detached,
-                unresolved_behavioral_failure=True,
-                predicates_available=False,
-                metadata={"failure_label": "unresolved_behavioral_failure", "missing_predicates": list(physical.missing_fields)},
-            )
         evidence = TerminalEvidence(
             p_obj_world=p_obj,
             p_named_ref_world=p_ref,
@@ -263,6 +254,14 @@ class HorizontalDroidTerminalScorer:
             metadata={
                 "failure_label": score.failure_label,
                 "goal_violation_capped_m": score.goal_violation_capped_m,
+                "goal_set_empty": score.goal_set_empty,
+                "goal_violation_cap_applied": score.goal_violation_cap_applied,
+                "goal_set_empty_cause": score.goal_set_empty_cause,
+                "missing_predicates": (
+                    list(physical.missing_fields)
+                    if not predicates_available
+                    else []
+                ),
                 "settling_samples": len(settling_predicates),
             },
         )

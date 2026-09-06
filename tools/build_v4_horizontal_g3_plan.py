@@ -28,6 +28,10 @@ DEFAULT_REGISTRY = (
     ROOT
     / "artifacts/online_correction_v4/setup/horizontal_reset_registry.candidate.json"
 )
+DEFAULT_G2_AGGREGATE = (
+    ROOT
+    / "artifacts/online_correction_v4/qualification/20260905_horizontal_g2_aggregate.json"
+)
 DEFAULT_OUTPUT = (
     ROOT
     / "artifacts/online_correction_v4/setup/horizontal_g3_plan.candidate.json"
@@ -56,11 +60,14 @@ def build(
     queue_path: Path,
     motion_path: Path,
     registry_path: Path,
+    g2_aggregate_path: Path,
     output_path: Path,
 ) -> dict:
     campaign = json.loads(campaign_path.read_text(encoding="utf-8"))
     motion = json.loads(motion_path.read_text(encoding="utf-8"))
     registry = json.loads(registry_path.read_text(encoding="utf-8"))
+    g2_aggregate_bytes = g2_aggregate_path.read_bytes()
+    g2_aggregate = json.loads(g2_aggregate_bytes)
     if campaign.get("campaign_id") != "online_correction_v4":
         raise ValueError("campaign identity differs")
     if registry.get("status") != "model_blind_candidate_not_released_for_inference":
@@ -71,6 +78,13 @@ def build(
         raise ValueError("reset candidate is not model-blind")
     if motion.get("calibration", {}).get("status") != "pending_model_blind_geometry_gate":
         raise ValueError("motion manifest calibration state differs")
+    if canonical_json_bytes(g2_aggregate) != g2_aggregate_bytes:
+        raise ValueError("G2 aggregate receipt is not canonical JSON")
+    reset_registry_receipt = g2_aggregate.get("reset_registry")
+    if not isinstance(reset_registry_receipt, dict) or reset_registry_receipt.get(
+        "sha256"
+    ) != sha256_file(registry_path):
+        raise ValueError("G2 aggregate does not bind the selected reset registry")
     rows = [
         json.loads(line)
         for line in queue_path.read_text(encoding="utf-8").splitlines()
@@ -95,6 +109,26 @@ def build(
             "reset_registry": {
                 "path": portable_path(registry_path),
                 "sha256": sha256_file(registry_path),
+            },
+            "g2_aggregate": {
+                "path": portable_path(g2_aggregate_path),
+                "sha256": sha256_file(g2_aggregate_path),
+            },
+        },
+        g2_prerequisite={
+            "schema_version": g2_aggregate.get("schema_version"),
+            "status": g2_aggregate.get("status"),
+            "passed": g2_aggregate.get("passed"),
+            "axis_review_passed": g2_aggregate.get("axis_review_passed"),
+            "expected_seed_count": g2_aggregate.get("expected_seed_count"),
+            "observed_seed_count": g2_aggregate.get("observed_seed_count"),
+            "model_request_count": g2_aggregate.get("model_request_count"),
+            "behavioral_episode_count": g2_aggregate.get(
+                "behavioral_episode_count"
+            ),
+            "receipt": {
+                "path": portable_path(g2_aggregate_path),
+                "sha256": sha256_file(g2_aggregate_path),
             },
         },
         reset_registry=registry,
@@ -132,6 +166,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--queue", type=Path, default=DEFAULT_QUEUE)
     parser.add_argument("--motion-manifest", type=Path, default=DEFAULT_MOTION)
     parser.add_argument("--reset-registry", type=Path, default=DEFAULT_REGISTRY)
+    parser.add_argument("--g2-aggregate", type=Path, default=DEFAULT_G2_AGGREGATE)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUTPUT)
     args = parser.parse_args(argv)
     report = build(
@@ -139,6 +174,7 @@ def main(argv: list[str] | None = None) -> int:
         queue_path=args.queue.resolve(),
         motion_path=args.motion_manifest.resolve(),
         registry_path=args.reset_registry.resolve(),
+        g2_aggregate_path=args.g2_aggregate.resolve(),
         output_path=args.out.resolve(),
     )
     print(json.dumps(report, indent=2, sort_keys=True))

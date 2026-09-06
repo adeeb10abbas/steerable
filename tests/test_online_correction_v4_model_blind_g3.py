@@ -26,6 +26,10 @@ PLAN = (
 QUEUE = ROOT / "artifacts/online_correction_v4/queue.jsonl"
 CAMPAIGN = ROOT / "docs/online_correction_v4/campaign.json"
 MOTION = ROOT / "artifacts/online_correction_v4/motion_manifest.json"
+G2_AGGREGATE = (
+    ROOT
+    / "artifacts/online_correction_v4/qualification/20260905_horizontal_g2_aggregate.json"
+)
 
 BUILDER_SPEC = importlib.util.spec_from_file_location(
     "build_v4_horizontal_g3_plan",
@@ -47,6 +51,13 @@ class ModelBlindG3PlanTests(unittest.TestCase):
         self.assertEqual(
             plan["scripted_controller"]["checks_per_final_geometry_candidate"],
             112,
+        )
+        self.assertEqual(plan["plan_status"], "ready_for_live_g3_execution")
+        self.assertTrue(plan["g2_prerequisite"]["passed"])
+        self.assertTrue(plan["g2_prerequisite"]["axis_review_passed"])
+        self.assertEqual(
+            plan["source_identity"]["g2_aggregate"]["sha256"],
+            plan["g2_prerequisite"]["receipt"]["sha256"],
         )
         for seed, directions in plan[
             "direction_task_coefficients_by_env_seed"
@@ -86,6 +97,7 @@ class ModelBlindG3PlanTests(unittest.TestCase):
                 queue_path=QUEUE,
                 motion_path=MOTION,
                 registry_path=REGISTRY,
+                g2_aggregate_path=G2_AGGREGATE,
                 output_path=rebuilt,
             )
             self.assertEqual(rebuilt.read_bytes(), PLAN.read_bytes())

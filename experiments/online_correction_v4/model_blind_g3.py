@@ -127,12 +127,14 @@ def build_counterbalance_index(
 def build_plan_payload(
     *,
     source_identity: Mapping[str, Any],
+    g2_prerequisite: Mapping[str, Any],
     reset_registry: Mapping[str, Any],
     queue_rows: Iterable[Mapping[str, Any]],
     scale_candidates: Iterable[float],
     nominal_displacement_m: float,
     minimum_shrinking_area_fraction: float,
 ) -> dict[str, Any]:
+    _validate_g2_prerequisite(g2_prerequisite)
     resets = reset_registry.get("resets_by_env_seed")
     _require(isinstance(resets, Mapping) and resets, "reset registry has no resets")
     seeds = tuple(sorted(int(seed) for seed in resets))
@@ -177,15 +179,11 @@ def build_plan_payload(
         "campaign_id": "online_correction_v4",
         "fixture_id": "horizontal",
         "status": "model_blind_candidate_not_released_for_inference",
-        "plan_status": "pending_g2_and_live_execution",
+        "plan_status": "ready_for_live_g3_execution",
         "model_request_count": 0,
         "behavioral_episode_count": 0,
         "source_identity": dict(source_identity),
-        "g2_prerequisite": {
-            "required_schema": "v4-horizontal-g2-aggregate-receipt-v1",
-            "required_passed": True,
-            "status": "pending_live_receipt",
-        },
+        "g2_prerequisite": dict(g2_prerequisite),
         "scale_selection": {
             "candidate_scales_descending": list(scales),
             "nominal_displacement_m": nominal_displacement_m,
@@ -246,10 +244,45 @@ def build_plan_payload(
         },
         "release_boundary": (
             "This formula-closed plan executes no model. G3 remains blocked until "
-            "G2 passes and live collision, geometry, and scripted-controller "
-            "receipts select one scale."
+            "live collision, geometry, and scripted-controller receipts select "
+            "one scale."
         ),
     }
+
+
+def _validate_g2_prerequisite(prerequisite: Mapping[str, Any]) -> None:
+    _require(
+        prerequisite.get("schema_version")
+        == "v4-horizontal-g2-aggregate-receipt-v1",
+        "G3 plan requires the horizontal G2 aggregate schema",
+    )
+    _require(
+        prerequisite.get("status") == "passed"
+        and prerequisite.get("passed") is True,
+        "G3 plan requires a passing G2 aggregate",
+    )
+    _require(
+        prerequisite.get("axis_review_passed") is True,
+        "G3 plan requires the passing G2 axis review",
+    )
+    _require(
+        prerequisite.get("expected_seed_count") == 128
+        and prerequisite.get("observed_seed_count") == 128,
+        "G3 plan requires complete G2 seed coverage",
+    )
+    _require(
+        prerequisite.get("model_request_count") == 0
+        and prerequisite.get("behavioral_episode_count") == 0,
+        "G2 prerequisite is not model-blind",
+    )
+    receipt = prerequisite.get("receipt")
+    _require(
+        isinstance(receipt, Mapping)
+        and isinstance(receipt.get("path"), str)
+        and isinstance(receipt.get("sha256"), str)
+        and len(receipt["sha256"]) == 64,
+        "G3 plan lacks a hash-pinned G2 receipt",
+    )
 
 
 def validate_plan_payload(plan: Mapping[str, Any]) -> None:
@@ -260,6 +293,13 @@ def validate_plan_payload(plan: Mapping[str, Any]) -> None:
         plan.get("behavioral_episode_count") == 0,
         "G3 plan records behavioral episodes",
     )
+    _require(
+        plan.get("plan_status") == "ready_for_live_g3_execution",
+        "G3 plan is not authorized for live model-blind execution",
+    )
+    prerequisite = plan.get("g2_prerequisite")
+    _require(isinstance(prerequisite, Mapping), "G3 plan lacks G2 prerequisite")
+    _validate_g2_prerequisite(prerequisite)
     _require(plan.get("registered_reset_count") == 128, "G3 reset count differs")
     path = plan.get("path_sweep")
     scripted = plan.get("scripted_controller")

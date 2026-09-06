@@ -67,9 +67,12 @@ def build_live_transport(*, policy_id: str, host: str, port: int) -> EpisodePoli
         raise TransportError(f"unsupported live transport policy_id: {policy_id}")
     try:
         if policy_id == NANO_POLICY_ID:
-            _create_nano_client(host=host, port=port)
+            probe_client = _create_nano_client(host=host, port=port)
         else:
-            _create_pi05_client(host=host, port=port)
+            probe_client = _create_pi05_client(host=host, port=port)
+        close = getattr(probe_client, "close", None)
+        if callable(close):
+            close()
     except ImportError as exc:
         raise TransportError(
             f"policy client for {policy_id} is unavailable in this checkout"

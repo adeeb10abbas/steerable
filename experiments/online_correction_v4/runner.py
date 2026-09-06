@@ -170,7 +170,13 @@ class EpisodeRunner:
         try:
             result = self._run_episode()
             return result
-        except Exception:
+        except Exception as exc:
+            self.recorder.set_episode_fields(
+                runtime_exception={
+                    "type": type(exc).__name__,
+                    "detail": str(exc),
+                }
+            )
             self._flush_partial(reason="exception")
             raise
         finally:

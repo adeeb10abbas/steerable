@@ -6,11 +6,14 @@ import hashlib
 import importlib.util
 import json
 import tempfile
+from types import SimpleNamespace
 import unittest
 from pathlib import Path
 
 from experiments.online_correction_v4.droid_g3 import fixture_object_spec
 from experiments.online_correction_v4.droid_g3_scripted import (
+    _object_dropped,
+    _object_grabbed,
     run_scripted_horizontal_check,
     trajectory_schema,
 )
@@ -126,6 +129,27 @@ class ObjectPairG3ScriptedTests(unittest.TestCase):
         self.assertEqual(spec.target_object, "sponge")
         self.assertEqual(spec.reference_object, "tray")
         self.assertIsNone(spec.distractor_object)
+
+    def test_object_contact_probes_use_fixture_target(self) -> None:
+        observed: list[tuple[str, str]] = []
+
+        def grabbed(_env, *, object: str, env_id: int) -> bool:
+            observed.append(("grabbed", object))
+            return env_id == 0
+
+        def dropped(_env, *, object: str, env_id: int) -> bool:
+            observed.append(("dropped", object))
+            return env_id == 0
+
+        env = SimpleNamespace(
+            backend=SimpleNamespace(
+                env=object(),
+                modules={"object_grabbed": grabbed, "object_dropped": dropped},
+            )
+        )
+        self.assertTrue(_object_grabbed(env, "sponge"))
+        self.assertTrue(_object_dropped(env, "sponge"))
+        self.assertEqual(observed, [("grabbed", "sponge"), ("dropped", "sponge")])
 
     def test_scripted_check_compile_uses_object_pair_schema(self) -> None:
         receipt = compile_scripted_check_receipt(

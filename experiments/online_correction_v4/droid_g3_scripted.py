@@ -299,14 +299,14 @@ def _read_object_pose(env: Any, name: str) -> Vec3:
     return _as_vector3(position)
 
 
-def _object_grabbed(env: Any) -> bool:
+def _object_grabbed(env: Any, target_object: str) -> bool:
     probe = env.backend.modules["object_grabbed"]
-    return bool(probe(env.backend.env, object=TARGET_OBJECT, env_id=0))
+    return bool(probe(env.backend.env, object=target_object, env_id=0))
 
 
-def _object_dropped(env: Any) -> bool:
+def _object_dropped(env: Any, target_object: str) -> bool:
     probe = env.backend.modules["object_dropped"]
-    return bool(probe(env.backend.env, object=TARGET_OBJECT, env_id=0))
+    return bool(probe(env.backend.env, object=target_object, env_id=0))
 
 
 def _quaternion_multiply(
@@ -567,8 +567,8 @@ def run_scripted_check(
             measured_position, _ = _read_eef_pose(env)
             reference_position = _read_object_pose(env, reference_object)
             object_position = _read_object_pose(env, target_object)
-            grabbed = _object_grabbed(env)
-            dropped = _object_dropped(env)
+            grabbed = _object_grabbed(env, target_object)
+            dropped = _object_dropped(env, target_object)
             trajectory.append(
                 {
                     "tick": tick,
@@ -593,12 +593,12 @@ def run_scripted_check(
         if terminated_early:
             break
         if segment.phase == "close_dwell":
-            grasp_contact_after_close = _object_grabbed(env)
+            grasp_contact_after_close = _object_grabbed(env, target_object)
             object_z_at_grasp = _read_object_pose(env, target_object)[2]
         elif segment.phase == "lift":
             object_z_after_lift = _read_object_pose(env, target_object)[2]
         elif segment.phase == "open_dwell":
-            released_after_open = _object_dropped(env)
+            released_after_open = _object_dropped(env, target_object)
     terminal_predicates = env.sample_terminal_predicates()
     final_object_position = _read_object_pose(env, target_object)
     stages, reasons = _evaluate_stages(

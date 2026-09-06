@@ -78,12 +78,9 @@ def Xform "World"
     }
 
     def "table" (
-        prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
         prepend payload = @/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/fixtures/table_maple.usd@
     )
     {
-        bool physics:kinematicEnabled = 1
-        bool physics:rigidBodyEnabled = 1
         quatf xformOp:orient = (1, 0, 0, 0)
         double3 xformOp:translate = (0.19858434796333313, 0.02206825464963913, 0.05)
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]

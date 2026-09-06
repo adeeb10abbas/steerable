@@ -1,0 +1,38 @@
+{
+  "schema_version": "v4-object-pair-g2-smoke-disposition-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "attempt_id": "g2c7q20260905v",
+  "environment_seed": 2100040004,
+  "compiled_at_utc": "2026-09-06T03:55:00Z",
+  "qualification_scope": "single_seed_corrected_tabletop_kinematic_table_model_blind_smoke",
+  "status": "infrastructure_invalid",
+  "g2_complete": false,
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "outcome": {
+    "object": "sponge",
+    "linear_component_max_m_s": 2639887.0,
+    "linear_component_limit_m_s": 0.02,
+    "angular_component_max_rad_s": 64.859733582,
+    "angular_component_limit_rad_s": 0.2,
+    "interpretation": "Correcting the object height exposed the same invalid kinematic-table timing impulse at real tabletop contact."
+  },
+  "runtime_identity": {
+    "study_commit": "508bfdab3bd729e27480957a6596c2a72a3b6d22",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "driver_version": "580.95.05",
+    "gpu_product": "NVIDIA A40",
+    "native_control_dt_s": 0.06666666666666667,
+    "reset_registry_sha256": "18d2bf0fb7f17a218ec02622c371ba4453a2d08ae531130423755b086f7f3e30"
+  },
+  "preservation": {
+    "raw_failure_marker": "file:///data/users/ali/vla_wam/raw/v4/g2-object-pair/smoke-g2c7q20260905v-s004/episodes/infrastructure_failure.json",
+    "bytes": 1529,
+    "sha256": "9758c7f4c81a128d268fe2ca64e490f13dea5daeb938ca8b952175cafb43871f"
+  },
+  "disposition": "Keep the corrected tabletop object heights and remove kinematic rigid-body mode from the visible table. Test the same payload as a static collider before considering any synthetic support geometry."
+}

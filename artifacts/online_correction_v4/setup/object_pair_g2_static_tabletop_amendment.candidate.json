@@ -1,0 +1,42 @@
+{
+  "schema_version": "v4-object-pair-g2-static-tabletop-amendment-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "status": "post_result_model_blind_amendment_candidate",
+  "created_at_utc": "2026-09-06T03:56:00Z",
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "triggering_evidence": {
+    "path": "artifacts/online_correction_v4/qualification/20260905_object_pair_g2_smoke_g2c7q20260905v.json",
+    "sha256": "fbff43b8a5e648921d520684ac0d0951ba4f75431a2d9aaceca8bc3a31d3372d",
+    "finding": "The correctly placed sponge receives a 2,639,887 m/s impulse from the kinematic table at contact."
+  },
+  "amendment": {
+    "reason": "The table does not move in C7; use its authored collision payload as static geometry and remove kinematic target timing from the simulation.",
+    "table_payload_and_transform": "unchanged",
+    "remove_physics_rigid_body_api": true,
+    "remove_physx_rigid_body_api": true,
+    "remove_kinematic_enabled": true,
+    "remove_rigid_body_enabled": true,
+    "synthetic_support_geometry": false
+  },
+  "unchanged_contracts": {
+    "corrected_tabletop_object_heights": true,
+    "registered_environment_seeds": true,
+    "object_dimensions_mass_inertia_colors": true,
+    "object_xy_positions_and_spawn_clearance": true,
+    "xy_jitter_algorithm_and_range": true,
+    "settle_window_and_stability_thresholds": true,
+    "camera_and_task_frame_checks": true,
+    "prompts_and_policy_weights": true
+  },
+  "required_requalification": [
+    "Replay seed 2100040004 on the static visible table.",
+    "Verify the objects remain on the visible tabletop without a kinematic impulse.",
+    "If the smoke passes, execute a fresh complete 64-seed wave and repeat human axis review."
+  ],
+  "disclosure": "This zero-policy amendment removes an invalid dynamic mode from an otherwise fixed environmental support."
+}

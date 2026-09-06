@@ -288,7 +288,7 @@ def build_registry(
             ),
             "object_specs": OBJECT_SPECS,
             "support_surface": {
-                "construction": "qualified_kinematic_table_payload",
+                "construction": "static_table_payload",
                 "prim": "table",
                 "top_surface_z_m": 0.3,
                 "initial_clearance_m": 0.003,

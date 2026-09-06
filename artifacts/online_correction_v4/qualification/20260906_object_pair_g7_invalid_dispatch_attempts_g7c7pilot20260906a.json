@@ -1,0 +1,25 @@
+{
+  "schema_version": "v4-invalid-infrastructure-attempts-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "C7",
+  "fixture_id": "object_pair",
+  "attempt_ids": [
+    "attempt0001",
+    "attempt0002",
+    "attempt0003",
+    "attempt0004",
+    "attempt0005",
+    "attempt0006",
+    "attempt0007",
+    "attempt0008"
+  ],
+  "classification": "infrastructure_failure_before_behavioral_execution",
+  "cause": "The staged lane dispatch script contained invalid Python exception-chaining syntax at load_dispatch_manifest and load_policy_wait_endpoint.",
+  "fix_commit": "c14517cabec7c4445e626922af57b371f3da5da5",
+  "observed_group_receipt_count": 0,
+  "observed_episode_receipt_count": 0,
+  "behavioral_episode_count": 0,
+  "policy_outcome_count": 0,
+  "disposition": "Preserved as invalid infrastructure attempts; retry with fresh attempt IDs and the syntax-checked dispatch script.",
+  "policy_failures_inferred": false
+}

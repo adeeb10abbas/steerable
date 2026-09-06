@@ -373,6 +373,13 @@ def _run_reset_trace(
     for control_tick in range(1, total_steps + 1):
         backend.step(hold)
         samples.append(_reset_trace_sample(backend, control_tick=control_tick))
+
+    def _bounds_or_error(name: str) -> dict[str, Any]:
+        try:
+            return backend.g3_world_aabb(name)
+        except Exception as exc:
+            return {"error": f"{type(exc).__name__}: {exc}"}
+
     payload = {
         "schema_version": "v4-object-pair-g2-reset-settle-trace-v1",
         "campaign_id": "online_correction_v4",
@@ -389,11 +396,11 @@ def _run_reset_trace(
         "robot": {
             "body_names": list(getattr(robot, "body_names", ())),
             "body_positions_world_m_at_end": _host_list(robot.data.body_pos_w),
-            "world_aabb_m_at_end": backend.g3_world_aabb("robot"),
+            "world_aabb_m_at_end": _bounds_or_error("robot"),
         },
-        "table_world_aabb_m_at_end": backend.g3_world_aabb("table"),
+        "table_world_aabb_m_at_end": _bounds_or_error("table"),
         "object_world_aabb_m_at_end": {
-            name: backend.g3_world_aabb(name) for name in backend.settle_objects
+            name: _bounds_or_error(name) for name in backend.settle_objects
         },
         "samples": samples,
     }

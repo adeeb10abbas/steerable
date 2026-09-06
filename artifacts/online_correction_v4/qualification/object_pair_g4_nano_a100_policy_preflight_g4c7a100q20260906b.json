@@ -1,0 +1,266 @@
+{
+  "argv": [
+    "/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/bin/python",
+    "/data/users/ali/vla_wam/src/steerable-v4-c7-g4/experiments/online_correction_v4/serve_v4_nano.py",
+    "--allowed-seeds-registry",
+    "/data/users/ali/vla_wam/src/steerable-v4-c7-g4/artifacts/online_correction_v4/setup/object_pair_g4_nano_seed_registry.candidate.json",
+    "--allowed-seeds-sha256",
+    "054a354593a6cf8ecf1c3ba492246623ed5a2586c79b46f1f9f6b65da6c00165",
+    "--checkpoint-path",
+    "/data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid",
+    "--port",
+    "18138",
+    "--host",
+    "0.0.0.0",
+    "--seed",
+    "0",
+    "--decode-video",
+    "--action-space",
+    "joint_pos",
+    "--action-dim",
+    "8",
+    "--action-chunk-size",
+    "32"
+  ],
+  "attempt_id": "g4c7a100q20260906b",
+  "checkpoint_sha256": "4b7fc1f7a98d73b3cd2995d32b926fc2bba4175f9b03a8131d81a78873b03eba",
+  "checks": {
+    "checkpoint_digest": {
+      "checkpoint_sha256": "4b7fc1f7a98d73b3cd2995d32b926fc2bba4175f9b03a8131d81a78873b03eba",
+      "hash_kind": "file",
+      "path": "/data/users/ali/vla_wam/src/steerable-v4-c7-g4/artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_v2a011_registry.json"
+    },
+    "cuda_kernel": {
+      "custom_kernel_probe": {
+        "argv": [
+          "/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/bin/python",
+          "-c",
+          "import torch; assert torch.cuda.device_count()==1; x=torch.arange(4096,device='cuda',dtype=torch.float32).square().sum(); assert float(x)>0"
+        ],
+        "elapsed_seconds": 6.8440200969344005,
+        "returncode": 0,
+        "stderr_tail": "",
+        "stdout_tail": ""
+      },
+      "device": "cuda:0"
+    },
+    "ffmpeg_encode_decode": {
+      "decoded_raw": {
+        "bytes": 12288,
+        "path": "/data/users/ali/vla_wam/raw/v4/g4-object-pair/attempt-g4c7a100q20260906b/.lane-runtime/b89f2eb9-2788-4e5b-9a2a-f1cf8deeea45/lane-g4c7na100/attempt-g4c7a100q20260906b/policy/ffmpeg-decode.raw",
+        "sha256": "46ce3e0b6f14eb131c61f38d418f7797bc2628a19a1d20017d994efd7271fafb"
+      },
+      "encoded_mp4": {
+        "bytes": 1612,
+        "path": "/data/users/ali/vla_wam/raw/v4/g4-object-pair/attempt-g4c7a100q20260906b/.lane-runtime/b89f2eb9-2788-4e5b-9a2a-f1cf8deeea45/lane-g4c7na100/attempt-g4c7a100q20260906b/policy/ffmpeg-encode.mp4",
+        "sha256": "000b1eae198fbe53e380e8751624f7b8b41893bd81a0baf943c0a88947adf3f7"
+      },
+      "ffmpeg_decode": {
+        "argv": [
+          "/data/users/ali/vla_wam/envs/lingbot-va-b200/bin/ffmpeg",
+          "-nostdin",
+          "-hide_banner",
+          "-loglevel",
+          "error",
+          "-i",
+          "/data/users/ali/vla_wam/raw/v4/g4-object-pair/attempt-g4c7a100q20260906b/.lane-runtime/b89f2eb9-2788-4e5b-9a2a-f1cf8deeea45/lane-g4c7na100/attempt-g4c7a100q20260906b/policy/ffmpeg-encode.mp4",
+          "-frames:v",
+          "1",
+          "-f",
+          "rawvideo",
+          "-pix_fmt",
+          "rgb24",
+          "-y",
+          "/data/users/ali/vla_wam/raw/v4/g4-object-pair/attempt-g4c7a100q20260906b/.lane-runtime/b89f2eb9-2788-4e5b-9a2a-f1cf8deeea45/lane-g4c7na100/attempt-g4c7a100q20260906b/policy/ffmpeg-decode.raw"
+        ],
+        "elapsed_seconds": 0.04252398503012955,
+        "returncode": 0,
+        "stderr_tail": "",
+        "stdout_tail": ""
+      },
+      "ffmpeg_encode": {
+        "argv": [
+          "/data/users/ali/vla_wam/envs/lingbot-va-b200/bin/ffmpeg",
+          "-nostdin",
+          "-hide_banner",
+          "-loglevel",
+          "error",
+          "-f",
+          "lavfi",
+          "-i",
+          "color=c=blue:s=64x64:r=2:d=1",
+          "-frames:v",
+          "2",
+          "-pix_fmt",
+          "yuv420p",
+          "-y",
+          "/data/users/ali/vla_wam/raw/v4/g4-object-pair/attempt-g4c7a100q20260906b/.lane-runtime/b89f2eb9-2788-4e5b-9a2a-f1cf8deeea45/lane-g4c7na100/attempt-g4c7a100q20260906b/policy/ffmpeg-encode.mp4"
+        ],
+        "elapsed_seconds": 0.14328157890122384,
+        "returncode": 0,
+        "stderr_tail": "",
+        "stdout_tail": ""
+      }
+    },
+    "file_bindings": [
+      {
+        "bytes": 9914,
+        "path": "/opt/v4-lane/scripts/..2026_09_06_22_41_23.682488191/lane_entrypoint.py",
+        "sha256": "8ac453697224adf12a12ff20f16686e052ef4482cece4b423dfb2d78136e6e9f"
+      },
+      {
+        "bytes": 30435,
+        "path": "/opt/v4-lane/scripts/..2026_09_06_22_41_23.682488191/startup_preflight.py",
+        "sha256": "5500d64c2450a9e33c7168155cdb608364066b2b66e3098997c780c6c5021dea"
+      },
+      {
+        "bytes": 3993,
+        "path": "/opt/v4-lane/scripts/..2026_09_06_22_41_23.682488191/check_policy_ready.py",
+        "sha256": "121ebd99e6ef7c9bbc29fda8b93032e58284edb72a21b22e872a0188a9feaafc"
+      },
+      {
+        "bytes": 5302,
+        "path": "/data/users/ali/vla_wam/src/steerable-v4-c7-g4/experiments/online_correction_v4/serve_v4_nano.py",
+        "sha256": "ada13519e95a8e746925d79a3e46fe9a808f1f9e28003d4a691626b1944ab1f8"
+      },
+      {
+        "bytes": 536,
+        "path": "/data/users/ali/vla_wam/src/steerable-v4-c7-g4/artifacts/online_correction_v4/setup/object_pair_g4_nano_seed_registry.candidate.json",
+        "sha256": "054a354593a6cf8ecf1c3ba492246623ed5a2586c79b46f1f9f6b65da6c00165"
+      },
+      {
+        "bytes": 12745,
+        "path": "/data/users/ali/vla_wam/src/steerable-v4-c7-g4/artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_v2a011_registry.json",
+        "sha256": "4b7fc1f7a98d73b3cd2995d32b926fc2bba4175f9b03a8131d81a78873b03eba"
+      }
+    ],
+    "policy_readiness": null,
+    "policy_readiness_contract": {
+      "checkpoint_loaded_before_ready": true,
+      "contract": "http_healthz_after_checkpoint_load"
+    },
+    "python_imports": {
+      "curobo_required": false,
+      "exact_imports": [
+        "torch",
+        "cosmos_framework",
+        "openpi_server.websocket_policy_server"
+      ],
+      "probe": {
+        "argv": [
+          "/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/bin/python",
+          "-c",
+          "import importlib,json,pathlib,sys\nnames=json.loads(sys.argv[1])\nrows=[]\nfor name in names:\n m=importlib.import_module(name)\n raw=getattr(m,'__file__',None)\n rows.append({'module':name,'module_file':str(pathlib.Path(raw).resolve()) if raw else None,'version':str(getattr(m,'__version__','not_exposed'))})\nprint(json.dumps(rows,sort_keys=True))\n",
+          "[\"torch\", \"cosmos_framework\", \"openpi_server.websocket_policy_server\"]"
+        ],
+        "elapsed_seconds": 2.218238385976292,
+        "returncode": 0,
+        "stderr_tail": "",
+        "stdout_tail": "[{\"module\": \"torch\", \"module_file\": \"/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/lib/python3.13/site-packages/torch/__init__.py\", \"version\": \"2.10.0+cu128\"}, {\"module\": \"cosmos_framework\", \"module_file\": \"/data/users/ali/vla_wam/external/v3-clean/cosmos-nano-411d25b/cosmos_framework/__init__.py\", \"version\": \"not_exposed\"}, {\"module\": \"openpi_server.websocket_policy_server\", \"module_file\": \"/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/lib/python3.13/site-packages/openpi_server/websocket_policy_server.py\", \"version\": \"not_exposed\"}]\n"
+      },
+      "python_bin": "/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/bin/python",
+      "results": [
+        {
+          "module": "torch",
+          "module_file": "/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/lib/python3.13/site-packages/torch/__init__.py",
+          "version": "2.10.0+cu128"
+        },
+        {
+          "module": "cosmos_framework",
+          "module_file": "/data/users/ali/vla_wam/external/v3-clean/cosmos-nano-411d25b/cosmos_framework/__init__.py",
+          "version": "not_exposed"
+        },
+        {
+          "module": "openpi_server.websocket_policy_server",
+          "module_file": "/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/lib/python3.13/site-packages/openpi_server/websocket_policy_server.py",
+          "version": "not_exposed"
+        }
+      ]
+    },
+    "runtime_directories": {
+      "HOME": {
+        "path": "/lane-runtime/home",
+        "writable": true
+      },
+      "MPLCONFIGDIR": {
+        "path": "/lane-runtime/matplotlib",
+        "writable": true
+      },
+      "TMPDIR": {
+        "path": "/lane-runtime/tmp",
+        "writable": true
+      },
+      "WARP_CACHE_PATH": {
+        "path": "/lane-runtime/warp",
+        "writable": true
+      },
+      "XDG_CACHE_HOME": {
+        "path": "/lane-runtime/xdg/cache",
+        "writable": true
+      },
+      "XDG_CONFIG_HOME": {
+        "path": "/lane-runtime/xdg/config",
+        "writable": true
+      },
+      "XDG_RUNTIME_DIR": {
+        "path": "/lane-runtime/xdg/runtime",
+        "writable": true
+      }
+    },
+    "writable_parent": {
+      "create_fsync_unlink": true,
+      "path": "/data/users/ali/vla_wam/raw/v4/g4-object-pair/attempt-g4c7a100q20260906b",
+      "writable_parent": true
+    }
+  },
+  "completed_at_utc": "2026-09-06T22:41:37.295343Z",
+  "created_at_utc": "2026-09-06T22:41:27.986901Z",
+  "effective_environment": {
+    "CUDA_VISIBLE_DEVICES": null,
+    "DISPLAY": "",
+    "FFMPEG_BIN": "/data/users/ali/vla_wam/envs/lingbot-va-b200/bin/ffmpeg",
+    "HOME": "/lane-runtime/home",
+    "LD_LIBRARY_PATH": "/data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu",
+    "LD_PRELOAD": "",
+    "MPLCONFIGDIR": "/lane-runtime/matplotlib",
+    "NVIDIA_DRIVER_CAPABILITIES": "compute,graphics,utility",
+    "NVIDIA_VISIBLE_DEVICES": "GPU-f29b160e-c1fb-4766-1b20-ced8645f38de",
+    "OMNI_KIT_ACCEPT_EULA": "YES",
+    "PYTHONNOUSERSITE": "1",
+    "PYTHONPATH": "/data/users/ali/vla_wam/src/steerable-v4-c7-g4:/data/users/ali/vla_wam/external/v3-clean/cosmos-nano-411d25b:/opt/v4-lane/scripts",
+    "PYTHONUNBUFFERED": "1",
+    "PYTHON_BIN": "/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/bin/python",
+    "TMPDIR": "/lane-runtime/tmp",
+    "VK_DRIVER_FILES": null,
+    "VK_ICD_FILENAMES": "/etc/vulkan/icd.d/nvidia_icd.json",
+    "WARP_CACHE_PATH": "/lane-runtime/warp",
+    "XDG_CACHE_HOME": "/lane-runtime/xdg/cache",
+    "XDG_CONFIG_HOME": "/lane-runtime/xdg/config",
+    "XDG_RUNTIME_DIR": "/lane-runtime/xdg/runtime"
+  },
+  "episode_output_dir_precreated": false,
+  "gpu": {
+    "driver_version": "580.95.05",
+    "gpu_name": "NVIDIA A100-SXM4-80GB",
+    "gpu_uuid": "GPU-f29b160e-c1fb-4766-1b20-ced8645f38de"
+  },
+  "gpu_uuid": "GPU-f29b160e-c1fb-4766-1b20-ced8645f38de",
+  "image_digest": "sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+  "lane_id": "g4c7na100",
+  "launch_config": {
+    "path": "/opt/v4-lane/config/policy-launch.json",
+    "sha256": "a15db73a127279a7e9df5e9a83b34e54b2b61a1d921fedadb1884501540bf099"
+  },
+  "output_parent": "/data/users/ali/vla_wam/raw/v4/g4-object-pair/attempt-g4c7a100q20260906b",
+  "passed": true,
+  "pid": 1,
+  "pod_identity": {
+    "pod_ip": "10.244.230.44",
+    "pod_name": "v4-g4c7na100-g4c7a100q20260906b-1d5924df05-policy-zp67c",
+    "pod_namespace": "211247-prod",
+    "pod_uid": "b89f2eb9-2788-4e5b-9a2a-f1cf8deeea45"
+  },
+  "role": "policy",
+  "schema_version": "vla-wam-v4-k8s-lane-startup-preflight-v1",
+  "status": "passed_startup_preflight"
+}

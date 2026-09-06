@@ -1,0 +1,49 @@
+{
+  "schema_version": "v4-object-pair-g4-hardware-stratum-receipt-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G4",
+  "attempt_id": "g4c7a100q20260906b",
+  "fixture_id": "object_pair",
+  "policy_id": "cosmos3_nano_droid",
+  "hardware_stratum": "a10080-policy_a40-simulator",
+  "status": "passed",
+  "passed": true,
+  "behavioral_episode_count": 0,
+  "qualification_scope": "policy_session_and_runtime_hardware_only_no_behavioral_episode",
+  "observed_hardware": {
+    "policy_gpu_name": "NVIDIA A100-SXM4-80GB",
+    "simulator_gpu_name": "NVIDIA A40",
+    "driver_version": "580.95.05"
+  },
+  "checks": {
+    "policy_startup_preflight_passed": true,
+    "simulator_startup_preflight_passed": true,
+    "fresh_session_exact_repeat_actions_equal": true,
+    "fresh_session_exact_repeat_futures_equal": true,
+    "action_shape_32x8_and_finite": true,
+    "future_33_frame_rgb_present": true,
+    "static_prompt_bytes_bound": true,
+    "sampling_seed_echoed": true
+  },
+  "evidence": {
+    "policy_session_receipt": {
+      "path": "artifacts/online_correction_v4/qualification/object_pair_g4_nano_policy_session_a100_g4c7a100q20260906b.json",
+      "sha256": "117885a0fcc789336fe3565c1f933c76f7def3c5e7fb8f60163a3aee97eb3890"
+    },
+    "policy_preflight": {
+      "path": "artifacts/online_correction_v4/qualification/object_pair_g4_nano_a100_policy_preflight_g4c7a100q20260906b.json",
+      "sha256": "e67000c58a939ed648a78179fc57961d2a64be97f064fa7072f9ba8739f7580d"
+    },
+    "simulator_preflight": {
+      "path": "artifacts/online_correction_v4/qualification/object_pair_g4_nano_a40_simulator_preflight_g4c7a100q20260906b.json",
+      "sha256": "127ed66314af85aefab53bb4e7ca4403d9451438cf58ff12be3467fb2b345861"
+    }
+  },
+  "render_identity": {
+    "spec_sha256": "b59adf3b837cb5897970b7560ac843afeec24a69be7ae6df35630db65767bfaf",
+    "configmap_sha256": "dc6cb6c0c4d43ab8791ccf8b09d1689266104e6202a01db202f989df3b555b4e",
+    "policy_job_sha256": "e67c1f34a6acaa1db2cf1b41ffd49b46ed71791fbb00c1fa2b3bfa2f3c245712",
+    "simulator_job_sha256": "583de4e91155a1e787865e0335d1aa1a8ab9e1d8d0914cf1576fb85e8b606c27"
+  },
+  "release_boundary": "Qualifies the exact NVIDIA A100-SXM4-80GB policy and NVIDIA A40 simulator stratum for C7 Nano execution; family release and immutable runtime-lock binding remain separate."
+}

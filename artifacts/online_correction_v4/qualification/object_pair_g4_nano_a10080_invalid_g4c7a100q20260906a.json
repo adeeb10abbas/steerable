@@ -1,0 +1,21 @@
+{
+  "schema_version": "v4-object-pair-invalid-qualification-attempt-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G4",
+  "attempt_id": "g4c7a100q20260906a",
+  "fixture_id": "object_pair",
+  "policy_id": "cosmos3_nano_droid",
+  "status": "invalid_infrastructure_attempt",
+  "behavioral_episode_count": 0,
+  "model_request_count": 0,
+  "failure_stage": "startup_preflight",
+  "failure_label": "missing_output_parent",
+  "error": "PreflightError: OUTPUT_PARENT must already exist and be absolute",
+  "resources_deleted_before_retry": true,
+  "retry_attempt_id": "g4c7a100q20260906b",
+  "retry_changed_only": [
+    "precreated the bound output parent",
+    "used a new attempt ID and policy port"
+  ],
+  "release_boundary": "This attempt is preserved as infrastructure evidence and contributes no model or behavioral result."
+}

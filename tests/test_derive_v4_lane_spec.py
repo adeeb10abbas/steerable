@@ -51,6 +51,32 @@ class DeriveV4LaneSpecTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "must be JSON"):
             parse_override("lane_id=not-json")
 
+    def test_can_preserve_relative_binding_sources(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            spec_path = Path(tmp) / "spec.json"
+            spec_path.write_text(
+                json.dumps(
+                    {
+                        "policy": {
+                            "file_bindings": [
+                                {"source": "bound.py", "path": "/bound.py"}
+                            ]
+                        },
+                        "simulator": {"file_bindings": []},
+                    }
+                ),
+                encoding="utf-8",
+            )
+            result = derive_spec(
+                source_path=spec_path,
+                overrides=[],
+                absolutize_sources=False,
+            )
+            self.assertEqual(
+                result["policy"]["file_bindings"][0]["source"],
+                "bound.py",
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

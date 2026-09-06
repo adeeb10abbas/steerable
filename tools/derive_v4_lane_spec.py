@@ -26,6 +26,7 @@ def derive_spec(
     source_path: Path,
     overrides: list[str],
     replacements: list[str] | None = None,
+    absolutize_sources: bool = True,
 ) -> dict[str, Any]:
     spec = json.loads(source_path.read_text(encoding="utf-8"))
     if not isinstance(spec, dict):
@@ -34,7 +35,11 @@ def derive_spec(
     for role in ("policy", "simulator"):
         for binding in spec.get(role, {}).get("file_bindings", []):
             source = binding.get("source")
-            if isinstance(source, str) and not Path(source).is_absolute():
+            if (
+                absolutize_sources
+                and isinstance(source, str)
+                and not Path(source).is_absolute()
+            ):
                 binding["source"] = str((source_dir / source).resolve())
     for replacement in replacements or []:
         old, separator, new = replacement.partition("=")
@@ -75,12 +80,14 @@ def main() -> int:
     parser.add_argument("--source", type=Path, required=True)
     parser.add_argument("--set", action="append", default=[])
     parser.add_argument("--replace", action="append", default=[])
+    parser.add_argument("--keep-relative-sources", action="store_true")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     spec = derive_spec(
         source_path=args.source.resolve(),
         overrides=args.set,
         replacements=args.replace,
+        absolutize_sources=not args.keep_relative_sources,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("x", encoding="utf-8") as handle:

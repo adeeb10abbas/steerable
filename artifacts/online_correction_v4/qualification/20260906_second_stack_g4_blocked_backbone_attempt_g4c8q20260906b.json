@@ -1,0 +1,19 @@
+{
+  "schema_version": "v4-invalid-infrastructure-attempts-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "C8",
+  "fixture_id": "second_stack",
+  "attempt_ids": [
+    "g4c8q20260906b"
+  ],
+  "classification": "blocked_before_policy_execution",
+  "cause": "The pinned GR00T N1.7 Bridge checkpoint requires the gated nvidia/Cosmos-Reason2-2B backbone. The cluster runtime has neither an authenticated Hugging Face session nor an existing authorized local backbone cache.",
+  "observed_exception_type": "GatedRepoError",
+  "observed_exception_detail": "401 Client Error for nvidia/Cosmos-Reason2-2B/config.json",
+  "checkpoint_revision": "940134b3c2948ccfdf8e7393f2d2ca869dc42833",
+  "observed_model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "policy_outcome_count": 0,
+  "disposition": "C8 G2 and G3 remain qualified. G4 and all C8 policy inference remain explicitly blocked pending authorized cluster access to the exact backbone; no substitute checkpoint is permitted.",
+  "policy_failures_inferred": false
+}

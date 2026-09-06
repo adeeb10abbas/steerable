@@ -1,0 +1,23 @@
+{
+  "schema_version": "v4-object-pair-g2-smoke-disposition-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "attempt_id": "g2c7q20260905m",
+  "environment_seed": 2100040004,
+  "compiled_at_utc": "2026-09-06T03:22:00Z",
+  "qualification_scope": "single_seed_robot_table_filter_implementation_smoke",
+  "status": "infrastructure_invalid",
+  "g2_complete": false,
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "failure": "The first pair-filter implementation retained table and ground overrides from the failed dynamic/static experiments, so both objects again fell 0.653 m. This is an implementation-invalid test of the filter amendment, not evidence against pair filtering.",
+  "preservation": {
+    "raw_failure_marker": "file:///data/users/ali/vla_wam/raw/v4/g2-object-pair/smoke-g2c7q20260905m-s004/episodes/infrastructure_failure.json",
+    "bytes": 1461,
+    "sha256": "3a285e422e0358735bddf5f59c3c950874dcc88d2d10bbf54fee24dc54aad698"
+  },
+  "disposition": "Restore the exact previously support-valid kinematic table and ground composition, retain only the new robot-table FilteredPairsAPI relationship, and rerun the same seed."
+}

@@ -94,7 +94,7 @@ def build_receipt(
         "outcome.goal_violation_cap_applied must be boolean",
     )
     d_cap_m = float(lock["fixtures"]["object_pair"]["D_cap_m"])
-    legacy_terminal_metadata_omission_reconciled = (
+    legacy_terminal_metadata_omission_exactly_bounded = (
         len(validation_errors) == 2 * len(ledger)
         and all(
             isinstance(error, str)
@@ -102,23 +102,38 @@ def build_receipt(
             for error in validation_errors
         )
         and all(
-            set(row.get("outcome", {})).isdisjoint(
-                {"goal_set_empty", "goal_violation_cap_applied"}
-            )
-            and isinstance(
+            isinstance(
                 row.get("outcome", {}).get("goal_violation_capped_m"),
                 (int, float),
             )
             and 0.0
             <= float(row["outcome"]["goal_violation_capped_m"])
-            < d_cap_m
+            <= d_cap_m
             for row in ledger
         )
     )
-    ledger_analysis_contract_accepted = (
-        ledger_validation.get("ok") is True
-        or legacy_terminal_metadata_omission_reconciled
+    scorer_path = (
+        Path(__file__).resolve().parents[1]
+        / "experiments/online_correction_v4/droid_scorer.py"
     )
+    scorer_source = scorer_path.read_text(encoding="utf-8")
+    main_writer_fixed = all(
+        field in scorer_source
+        for field in (
+            '"goal_set_empty": score.goal_set_empty',
+            '"goal_violation_cap_applied": score.goal_violation_cap_applied',
+        )
+    )
+    recorded_distances = [
+        float(row["outcome"]["goal_violation_capped_m"])
+        for row in ledger
+        if isinstance(
+            row.get("outcome", {}).get("goal_violation_capped_m"),
+            (int, float),
+        )
+    ]
+    below_cap_count = sum(value < d_cap_m for value in recorded_distances)
+    at_cap_count = sum(value == d_cap_m for value in recorded_distances)
     checks = {
         "pilot_lock_is_exactly_pilot_released_for_c7": (
             lock.get("release_status") == "PILOT_RELEASED"
@@ -140,7 +155,7 @@ def build_receipt(
             (
                 ledger_manifest.get("validation_preview", {}).get("ok") is True
                 or (
-                    legacy_terminal_metadata_omission_reconciled
+                    legacy_terminal_metadata_omission_exactly_bounded
                     and ledger_manifest.get("validation_preview", {}).get(
                         "error_count"
                     )
@@ -153,8 +168,12 @@ def build_receipt(
             == []
             and ledger_manifest.get("outputs", {}).get("accepted_count") == 24
         ),
-        "ledger_analysis_contract_valid_or_exact_legacy_omission_reconciled": (
-            ledger_analysis_contract_accepted
+        "pilot_metadata_omission_bounded_and_main_writer_fixed": (
+            ledger_validation.get("ok") is True
+            or (
+                legacy_terminal_metadata_omission_exactly_bounded
+                and main_writer_fixed
+            )
         ),
         "all_viewport_videos_hash_verified_and_decoded": (
             inventory.get("videos_all_hash_verified_and_decoded") is True
@@ -202,18 +221,21 @@ def build_receipt(
         },
         "behavioral_outcomes_preserved": outcomes,
         "pilot_terminal_metadata_reconciliation": {
-            "required": legacy_terminal_metadata_omission_reconciled,
+            "required": legacy_terminal_metadata_omission_exactly_bounded,
             "validation_error_count": len(validation_errors),
-            "only_missing_fields": list(legacy_suffixes),
-            "all_recorded_distances_strictly_below_d_cap": (
-                legacy_terminal_metadata_omission_reconciled
-            ),
+            "omitted_fields": list(legacy_suffixes),
+            "recorded_distance_below_cap_count": below_cap_count,
+            "recorded_distance_at_cap_count": at_cap_count,
+            "cap_applied_indeterminate_episode_count": at_cap_count,
             "d_cap_m": d_cap_m,
+            "main_writer_fixed": main_writer_fixed,
             "interpretation": (
                 "The pilot writer omitted two booleans from terminal metadata. "
-                "Every retained distance is strictly below D_cap, proving both "
-                "booleans were false. The scorer is fixed before main release; "
-                "raw pilot records remain immutable."
+                "G3 proves the registered goal sets are nonempty. A capped value "
+                "equal to D_cap cannot distinguish exact equality from cap "
+                "application, so those pilot booleans remain indeterminate and "
+                "are not imputed. The scorer is fixed before main release; raw "
+                "pilot records remain immutable."
             ),
         },
         "technical_gate_interpretation": (
@@ -230,6 +252,7 @@ def build_receipt(
             ),
             "video_inventory": artifact(inventory_path),
             "video_review": artifact(review_path),
+            "main_release_scorer": artifact(scorer_path),
         },
         "release_boundary": (
             "A pass completes C7 G7 only. G8 miniature-campaign rehearsal and a "

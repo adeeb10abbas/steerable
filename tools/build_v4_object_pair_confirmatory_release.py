@@ -134,6 +134,9 @@ def build_runtime_lock(
         seed_registry_path
     )
     fixture = lock["fixtures"][FIXTURE_ID]
+    scorer_path = ROOT / "experiments/online_correction_v4/droid_scorer.py"
+    fixture["scorer_uri"] = runtime_uri(scorer_path, runtime_root)
+    fixture["scorer_sha256"] = sha256_file(scorer_path)
     fixture["reset_registry_uri"] = runtime_uri(
         main_reset_registry_path,
         runtime_root,

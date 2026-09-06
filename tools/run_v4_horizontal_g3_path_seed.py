@@ -755,6 +755,7 @@ def main(argv: list[str] | None = None) -> int:
             registry_path=str(registry_path),
             registry_sha256=args.reset_registry_sha256,
             required_status=MODEL_BLIND_CANDIDATE_STATUS,
+            expected_fixture_id=args.fixture_id,
         )
         if args.environment_seed not in registry.positions_by_env_seed:
             raise RuntimeError("environment seed is absent from reset registry")

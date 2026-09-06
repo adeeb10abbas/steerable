@@ -221,6 +221,29 @@ def run_g2(
 
     register_simpler_envs()
     import gymnasium as gym
+    import numpy
+    import sapien
+
+    stack_receipt["runtime_dependencies"] = {
+        "python": sys.version.split()[0],
+        "numpy": numpy.__version__,
+        "gymnasium": gym.__version__,
+        "sapien": sapien.__version__,
+    }
+    expected_dependencies = (
+        registry["external_stack_identity"].get("runtime_dependencies") or {}
+    )
+    for name in ("numpy", "sapien"):
+        if stack_receipt["runtime_dependencies"][name] != expected_dependencies.get(name):
+            raise SecondStackG2Error(
+                f"C8 runtime {name} does not match the registered version"
+            )
+    if not stack_receipt["runtime_dependencies"]["python"].startswith(
+        str(expected_dependencies.get("python"))
+    ):
+        raise SecondStackG2Error(
+            "C8 runtime Python does not match the registered version"
+        )
 
     resets = registry.get("resets_by_env_seed")
     if not isinstance(resets, Mapping):

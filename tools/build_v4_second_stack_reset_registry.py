@@ -29,6 +29,9 @@ GR00T_COMMIT = "51d4c89f72fda44cbf77285c6a8114b52676b8a1"
 SIMPLER_ENV_REPO = "https://github.com/squarefk/SimplerEnv.git"
 SIMPLER_ENV_COMMIT = "8a2d286c926c1371927caa7651a412b4cc331756"
 MANISKILL_COMMIT = "c2a9e87c186300b694da6f2497dd68d2c347a4b7"
+PYTHON_VERSION = "3.10"
+NUMPY_VERSION = "1.24.4"
+SAPIEN_VERSION = "2.2.2"
 CHECKPOINT_REPO = "nvidia/GR00T-N1.7-SimplerEnv-Bridge"
 CHECKPOINT_REVISION = "940134b3c2948ccfdf8e7393f2d2ca869dc42833"
 JITTER_HALF_RANGE_M = 0.01
@@ -338,6 +341,11 @@ def build_registry(
             "checkpoint_repository": CHECKPOINT_REPO,
             "checkpoint_revision": CHECKPOINT_REVISION,
             "embodiment_tag": "SIMPLER_ENV_WIDOWX",
+            "runtime_dependencies": {
+                "python": PYTHON_VERSION,
+                "numpy": NUMPY_VERSION,
+                "sapien": SAPIEN_VERSION,
+            },
             "fixture_files": FIXTURE_FILES,
         },
         "source_identity": {

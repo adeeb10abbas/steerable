@@ -24,6 +24,7 @@ from experiments.online_correction_v4.coordinator import (
     parse_k8s_objects,
     plan_campaign,
     shard_group_units,
+    stage_binding_source,
     storage_budget_allows,
 )
 from experiments.online_correction_v4.droid_contract import PrefixMode, sha256_file
@@ -176,6 +177,19 @@ def _pvc_output_parent(tmp_path: Path) -> str:
 
 
 class CoordinatorHelperTests(unittest.TestCase):
+    def test_staged_binding_can_use_runtime_alias(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            source = root / "fixture-scoped-queue.jsonl"
+            source.write_text("{}\n", encoding="utf-8")
+            staged = stage_binding_source(
+                source,
+                root / "bindings",
+                destination_name="queue.jsonl",
+            )
+            self.assertEqual(staged.name, "queue.jsonl")
+            self.assertEqual(staged.read_bytes(), source.read_bytes())
+
     def test_shard_groups_is_deterministic_and_balanced(self) -> None:
         from experiments.online_correction_v4.coordinator import LaneStratum
 

@@ -543,9 +543,14 @@ def validate_rendered_bundle_scope(bundle_root: Path, *, behavioral: bool) -> No
             )
 
 
-def stage_binding_source(source: Path, staging_root: Path) -> Path:
+def stage_binding_source(
+    source: Path,
+    staging_root: Path,
+    *,
+    destination_name: str | None = None,
+) -> Path:
     staging_root.mkdir(parents=True, exist_ok=True)
-    destination = staging_root / source.name
+    destination = staging_root / (destination_name or source.name)
     if destination.exists():
         if sha256_file(destination) != sha256_file(source):
             raise CoordinatorBlockedError(f"conflicting staged binding already exists: {destination}")
@@ -621,10 +626,26 @@ def build_dispatch_manifest_payload(
     config_name = "campaign.json"
     manifest_name = "lane_dispatch_manifest.json"
     runner_name = runner_source.name
-    stage_binding_source(queue_path, local_binding_root)
-    stage_binding_source(runtime_lock_path, local_binding_root)
-    stage_binding_source(campaign_config_path, local_binding_root)
-    stage_binding_source(runner_source, local_binding_root)
+    stage_binding_source(
+        queue_path,
+        local_binding_root,
+        destination_name=queue_name,
+    )
+    stage_binding_source(
+        runtime_lock_path,
+        local_binding_root,
+        destination_name=lock_name,
+    )
+    stage_binding_source(
+        campaign_config_path,
+        local_binding_root,
+        destination_name=config_name,
+    )
+    stage_binding_source(
+        runner_source,
+        local_binding_root,
+        destination_name=runner_name,
+    )
     pvc_queue = f"{pvc_root}/{queue_name}"
     pvc_lock = f"{pvc_root}/{lock_name}"
     pvc_config = f"{pvc_root}/{config_name}"

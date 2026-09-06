@@ -93,6 +93,7 @@ def build_runtime_lock(
     main_reset_registry_path: Path,
     main_g2_path: Path,
     main_g3_path: Path,
+    hardware_g4_path: Path,
     g7_path: Path,
     g8_path: Path,
     analysis_manifest_path: Path,
@@ -109,6 +110,9 @@ def build_runtime_lock(
         raise ValueError("source lock is not the C7 pilot release")
     passing_receipt(g7_path, gate="G7")
     passing_receipt(g8_path, gate="G8")
+    hardware_g4 = passing_receipt(hardware_g4_path, gate="G4")
+    if hardware_g4.get("hardware_stratum") != "a10080-policy_a40-simulator":
+        raise ValueError("C7 confirmatory hardware G4 receipt has wrong stratum")
     reset = load_json(main_reset_registry_path)
     if (
         reset.get("fixture_id") != FIXTURE_ID
@@ -133,6 +137,9 @@ def build_runtime_lock(
     lock["policies"][POLICY_ID]["allowed_seed_registry_sha256"] = sha256_file(
         seed_registry_path
     )
+    lock["policies"][POLICY_ID][
+        "policy_reset_and_history_contract_uri"
+    ] = runtime_uri(hardware_g4_path, runtime_root)
     fixture = lock["fixtures"][FIXTURE_ID]
     scorer_path = ROOT / "experiments/online_correction_v4/droid_scorer.py"
     fixture["scorer_uri"] = runtime_uri(scorer_path, runtime_root)
@@ -158,6 +165,8 @@ def build_runtime_lock(
 
     receipts["prompt_and_frame_review"] = bind(main_g2_path)
     receipts["geometry_and_scripted_feasibility"] = bind(main_g3_path)
+    receipts["cluster_lane_qualification"] = bind(hardware_g4_path)
+    receipts["source_and_checkpoint_identity"] = bind(hardware_g4_path)
     receipts["historical_seed_collision_audit"] = bind(seed_registry_path)
     receipts["engineering_pilots_complete"] = bind(g7_path)
     receipts["terminal_metadata_writer_amendment"] = bind(g7_path)
@@ -184,6 +193,7 @@ def main() -> int:
     parser.add_argument("--main-reset-registry", type=Path, required=True)
     parser.add_argument("--main-g2", type=Path, required=True)
     parser.add_argument("--main-g3", type=Path, required=True)
+    parser.add_argument("--hardware-g4", type=Path, required=True)
     parser.add_argument("--g7", type=Path, required=True)
     parser.add_argument("--g8", type=Path, required=True)
     parser.add_argument("--analysis-manifest", type=Path, required=True)
@@ -205,6 +215,7 @@ def main() -> int:
         main_reset_registry_path=args.main_reset_registry.resolve(),
         main_g2_path=args.main_g2.resolve(),
         main_g3_path=args.main_g3.resolve(),
+        hardware_g4_path=args.hardware_g4.resolve(),
         g7_path=args.g7.resolve(),
         g8_path=args.g8.resolve(),
         analysis_manifest_path=args.analysis_manifest.resolve(),

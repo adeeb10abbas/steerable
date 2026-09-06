@@ -83,6 +83,7 @@ FROZEN_SCRIPTED_CONTROLLER_CONFIG: dict[str, Any] = {
     },
     "gripper_close": 0.785398,
 }
+FROZEN_SCRIPTED_GEOMETRIC_TOLERANCE_M = 0.001
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -446,9 +447,13 @@ def _run_stationary_check(
         config=controller_config,
         table_top_z_task=float(table_bounds.z_max),
         object_half_up=float(target_footprint.half_up),
+        geometric_tol_m=FROZEN_SCRIPTED_GEOMETRIC_TOLERANCE_M,
         fixture_id=fixture_id,
     )
     trajectory_result["controller_config"] = dict(controller_config)
+    trajectory_result["geometric_tolerance_m"] = (
+        FROZEN_SCRIPTED_GEOMETRIC_TOLERANCE_M
+    )
     trajectory_result["check_kind"] = "stationary"
     trajectory_result["environment_seed"] = environment_seed
     trajectory_result["reference_position"] = reference_position
@@ -576,10 +581,14 @@ def _run_moving_check(
         config=controller_config,
         table_top_z_task=float(table_bounds.z_max),
         object_half_up=float(target_footprint.half_up),
+        geometric_tol_m=FROZEN_SCRIPTED_GEOMETRIC_TOLERANCE_M,
         reference_motion_callback=callback,
         fixture_id=fixture_id,
     )
     trajectory_result["controller_config"] = dict(controller_config)
+    trajectory_result["geometric_tolerance_m"] = (
+        FROZEN_SCRIPTED_GEOMETRIC_TOLERANCE_M
+    )
     trajectory_result["check_kind"] = "moving"
     trajectory_result["environment_seed"] = environment_seed
     trajectory_result["reference_position"] = reference_position

@@ -101,6 +101,14 @@ class FrozenControllerConfigTests(unittest.TestCase):
         self.assertAlmostEqual(config["geometry_offsets"]["target_inset_m"], 0.015)
         self.assertAlmostEqual(config["gripper_close"], 0.785398)
         self.assertNotIn("eef_tool_length_m", config)
+        self.assertGreater(
+            runner.FROZEN_SCRIPTED_GEOMETRIC_TOLERANCE_M,
+            0.0,
+        )
+        self.assertLess(
+            runner.FROZEN_SCRIPTED_GEOMETRIC_TOLERANCE_M,
+            0.005,
+        )
 
     def test_object_pair_offsets_fingertip_waypoints_to_base_flange(self) -> None:
         config = runner.frozen_scripted_controller_config("object_pair")

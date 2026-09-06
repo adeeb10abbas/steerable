@@ -291,6 +291,9 @@ def frozen_scripted_controller_config(fixture_id: str = "horizontal") -> dict[st
         # The measured C7 placement bias is 24.2 mm toward the goal boundary;
         # retain 40 mm of legal-region inset for the qualification rerun.
         config["geometry_offsets"]["target_inset_m"] = 0.04
+        # The absolute-IK path loses horizontal tracking below this reachable
+        # C7 approach height; release from a 2 cm descent and settle passively.
+        config["geometry_offsets"]["place_descend_offset_m"] = 0.10
     return config
 
 

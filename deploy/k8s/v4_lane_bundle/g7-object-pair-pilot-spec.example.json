@@ -1,0 +1,124 @@
+{
+  "schema_version": "vla-wam-v4-k8s-lane-render-spec-v1",
+  "qualification_only": false,
+  "qualification_kind": "g1_infrastructure",
+  "kube_context": "ali-prod-gpu",
+  "namespace": "211247-prod",
+  "lane_id": "g7c7p00",
+  "attempt_id": "g7c7pilot20260906a",
+  "policy_port": 18127,
+  "prestop_wait_seconds": 120,
+  "expected_driver_version": "580.95.05",
+  "image_repository": "artifactory-ci.gm.com/docker-approved/devcontainers/base",
+  "image_sha256": "03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+  "image_pull_secret": "artifactory-ci-pull-secret",
+  "pvc": "211247-prod-pvc",
+  "output_parent": "/data/users/ali/vla_wam/raw/v4/g7-object-pair",
+  "entrypoint": "/opt/v4-lane/scripts/lane_entrypoint.py",
+  "runtime": {
+    "policy": {
+      "python_bin": "/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/bin/python",
+      "ffmpeg_bin": "/data/users/ali/vla_wam/envs/lingbot-va-b200/bin/ffmpeg",
+      "vk_icd_filenames": "/etc/vulkan/icd.d/nvidia_icd.json",
+      "ld_library_path": "/data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu",
+      "pythonpath": "/data/users/ali/vla_wam/src/steerable-v4-c7-pilot-g7:/data/users/ali/vla_wam/external/v3-clean/cosmos-nano-411d25b:/opt/v4-lane/scripts"
+    },
+    "simulator": {
+      "python_bin": "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python",
+      "ffmpeg_bin": "/data/users/ali/vla_wam/envs/lingbot-va-b200/bin/ffmpeg",
+      "vk_icd_filenames": "/etc/vulkan/icd.d/nvidia_icd.json",
+      "ld_library_path": "/data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu",
+      "pythonpath": "/data/users/ali/vla_wam/src/steerable-v4-c7-pilot-g7:/data/users/ali/vla_wam/external/RoboLab-11142d4:/data/users/ali/RoboTwin/envs/curobo/src:/opt/v4-lane/scripts"
+    }
+  },
+  "policy": {
+    "gpu_product": "NVIDIA-B200",
+    "expected_gpu_name": "NVIDIA B200",
+    "readiness_interface": "cosmos_http_healthz",
+    "experiment_argv": [
+      "/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/bin/python",
+      "/data/users/ali/vla_wam/src/steerable-v4-c7-pilot-g7/experiments/online_correction_v4/serve_v4_nano.py",
+      "--allowed-seeds-registry",
+      "/data/users/ali/vla_wam/src/steerable-v4-c7-pilot-g7/artifacts/online_correction_v4/setup/object_pair_g7_nano_seed_registry.released.json",
+      "--allowed-seeds-sha256",
+      "54d4e373dc59ac536926c6733db619fa88b5d45b97d28e579fe36d99c7c07def",
+      "--checkpoint-path",
+      "/data/users/ali/vla_wam/checkpoints/cosmos3_nano_policy_droid",
+      "--port",
+      "18127",
+      "--host",
+      "0.0.0.0",
+      "--seed",
+      "0",
+      "--decode-video",
+      "--action-space",
+      "joint_pos",
+      "--action-dim",
+      "8",
+      "--action-chunk-size",
+      "32"
+    ],
+    "checkpoint_path": "/data/users/ali/vla_wam/src/steerable-v4-c7-pilot-g7/artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_v2a011_registry.json",
+    "checkpoint_sha256": "4b7fc1f7a98d73b3cd2995d32b926fc2bba4175f9b03a8131d81a78873b03eba",
+    "nvidia_smi_bin": "/usr/bin/nvidia-smi",
+    "python_imports": [
+      "torch",
+      "cosmos_framework",
+      "openpi_server.websocket_policy_server"
+    ],
+    "cuda_probe_argv": [
+      "/data/users/ali/vla_wam/envs/cosmos-nano-411d25b-v3-exact/bin/python",
+      "-c",
+      "import torch; assert torch.cuda.device_count()==1; x=torch.arange(4096,device='cuda',dtype=torch.float32).square().sum(); assert float(x)>0"
+    ],
+    "file_bindings": [
+      {"source": "scripts/lane_entrypoint.py", "path": "/opt/v4-lane/scripts/lane_entrypoint.py"},
+      {"source": "scripts/startup_preflight.py", "path": "/opt/v4-lane/scripts/startup_preflight.py"},
+      {"source": "scripts/check_policy_ready.py", "path": "/opt/v4-lane/scripts/check_policy_ready.py"},
+      {"source": "../../../experiments/online_correction_v4/serve_v4_nano.py", "path": "/data/users/ali/vla_wam/src/steerable-v4-c7-pilot-g7/experiments/online_correction_v4/serve_v4_nano.py"},
+      {"source": "../../../artifacts/online_correction_v4/setup/object_pair_g7_nano_seed_registry.released.json", "path": "/data/users/ali/vla_wam/src/steerable-v4-c7-pilot-g7/artifacts/online_correction_v4/setup/object_pair_g7_nano_seed_registry.released.json"},
+      {"source": "../../../artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_v2a011_registry.json", "path": "/data/users/ali/vla_wam/src/steerable-v4-c7-pilot-g7/artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_v2a011_registry.json"}
+    ]
+  },
+  "simulator": {
+    "gpu_product": "NVIDIA-A40",
+    "expected_gpu_name": "NVIDIA A40",
+    "experiment_argv": [
+      "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python",
+      "/data/users/ali/vla_wam/src/steerable-v4-c7-pilot-g7/deploy/k8s/v4_lane_bundle/scripts/run_online_correction_v4_lane_dispatch.py",
+      "--dispatch-manifest",
+      "/data/users/ali/vla_wam/raw/v4/g7-object-pair/not-yet-rendered/lane_dispatch_manifest.json"
+    ],
+    "checkpoint_path": "/data/users/ali/vla_wam/src/steerable-v4-c7-pilot-g7/artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_v2a011_registry.json",
+    "checkpoint_sha256": "4b7fc1f7a98d73b3cd2995d32b926fc2bba4175f9b03a8131d81a78873b03eba",
+    "vulkan_contract": "isaac_app_launcher_rtx_frame_under_bound_vk_icd",
+    "nvidia_smi_bin": "/usr/bin/nvidia-smi",
+    "python_imports": [
+      "json",
+      "torch",
+      "curobo",
+      "openpi_client"
+    ],
+    "render_probe_argv": [
+      "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python",
+      "/opt/v4-lane/scripts/isaac_render_probe.py",
+      "--output",
+      "{rendered_frame}",
+      "--num-envs",
+      "1",
+      "--headless",
+      "--rendering_mode",
+      "balanced",
+      "--device",
+      "cuda:0",
+      "--kit_args=--/rtx/verifyDriverVersion/enabled=false"
+    ],
+    "file_bindings": [
+      {"source": "scripts/lane_entrypoint.py", "path": "/opt/v4-lane/scripts/lane_entrypoint.py"},
+      {"source": "scripts/startup_preflight.py", "path": "/opt/v4-lane/scripts/startup_preflight.py"},
+      {"source": "scripts/isaac_render_probe.py", "path": "/opt/v4-lane/scripts/isaac_render_probe.py"},
+      {"source": "scripts/run_online_correction_v4_lane_dispatch.py", "path": "/data/users/ali/vla_wam/src/steerable-v4-c7-pilot-g7/deploy/k8s/v4_lane_bundle/scripts/run_online_correction_v4_lane_dispatch.py"},
+      {"source": "../../../artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_v2a011_registry.json", "path": "/data/users/ali/vla_wam/src/steerable-v4-c7-pilot-g7/artifacts/vla_wam_shared_v2/pilot/expansion/cosmos3_nano_policy_droid_v2a011_registry.json"}
+    ]
+  }
+}

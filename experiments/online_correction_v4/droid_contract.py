@@ -245,6 +245,13 @@ class RuntimeLockBinding:
     def is_released(self) -> bool:
         return self.release_status == "RELEASED" and bool(self.released_families)
 
+    @property
+    def is_pilot_released(self) -> bool:
+        return (
+            self.release_status == "PILOT_RELEASED"
+            and bool(self.released_families)
+        )
+
 
 @dataclass(frozen=True)
 class LaunchArgs:
@@ -427,10 +434,15 @@ def build_launch_plan(
         expected_config_sha256=config_sha,
         expected_manifest_sha256=manifest_sha,
     )
-    if not lock.is_released:
-        _fail("runtime lock is not released for live execution")
     row = find_manifest_row(rows, args.episode_id)
     manifest = validate_manifest_row_against_lock(row, lock=lock, manifest_sha256=manifest_sha)
+    if not lock.is_released:
+        if not lock.is_pilot_released:
+            _fail("runtime lock is not released for live execution")
+        if manifest.cohort != "engineering_pilot":
+            _fail(
+                "PILOT_RELEASED runtime lock authorizes only engineering_pilot rows"
+            )
     validate_prefix_mode_for_family(lock.prefix_mode, manifest.family)
     policy_id = manifest.factors["policy"]
     policy_binding = lock.policies[policy_id]

@@ -607,7 +607,12 @@ def build_dispatch_manifest_payload(
     local_binding_root: Path,
     pvc_binding_root: str,
 ) -> tuple[dict[str, Any], Path, str]:
-    runner_source = (Path(__file__).resolve().parents[2] / lock.runner_entrypoint).resolve()
+    repo_root = Path(__file__).resolve().parents[2]
+    runner_source = (repo_root / lock.runner_entrypoint).resolve()
+    if not runner_source.is_file() and Path(lock.runner_entrypoint).is_absolute():
+        candidate = repo_root / "tools" / Path(lock.runner_entrypoint).name
+        if candidate.name == "run_online_correction_v4.py":
+            runner_source = candidate.resolve()
     if not runner_source.is_file():
         raise CoordinatorBlockedError(f"released runner source missing: {runner_source}")
     pvc_root = pvc_binding_root.rstrip("/")
@@ -1079,7 +1084,11 @@ def _blocked_family_map(
     declared_families: set[str],
 ) -> dict[str, str]:
     raw_blocked = lock.raw.get("blocked_families") or {}
-    blocked = {str(k): str(v) for k, v in raw_blocked.items()}
+    blocked = {
+        str(k): str(v)
+        for k, v in raw_blocked.items()
+        if str(k) in declared_families
+    }
     released = set(lock.released_families)
     for family in declared_families:
         if family not in released:
@@ -1139,7 +1148,7 @@ def plan_campaign(
     except DroidContractError as exc:
         raise CoordinatorBlockedError(str(exc)) from exc
 
-    if not lock.is_released:
+    if not lock.is_released and not lock.is_pilot_released:
         raise CoordinatorBlockedError("runtime lock is NOT_RELEASED")
 
     queue_sha = verify_queue_binding(
@@ -1156,6 +1165,12 @@ def plan_campaign(
     registry = CampaignRegistry.from_manifest_path(inputs.queue_path)
     if registry.config_sha256 != lock.config_sha256:
         raise CoordinatorBlockedError("queue config_sha256 does not match runtime lock")
+    if lock.is_pilot_released and any(
+        row.cohort != "engineering_pilot" for row in registry.rows
+    ):
+        raise CoordinatorBlockedError(
+            "PILOT_RELEASED runtime lock requires an engineering_pilot-only queue"
+        )
 
     launch_matrix = load_json(inputs.launch_matrix_path, "launch matrix")
     execution_config = inputs.execution_config

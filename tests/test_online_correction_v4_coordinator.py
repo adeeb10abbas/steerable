@@ -308,6 +308,68 @@ class CoordinatorPlanTests(unittest.TestCase):
                 ]:
                     self.assertEqual(registry.get(episode_id).family, "C1")
 
+    def test_pilot_release_rejects_confirmatory_queue(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            inputs = self._inputs(Path(tmp), families=["C1"])
+            lock = json.loads(inputs.runtime_lock_path.read_text(encoding="utf-8"))
+            lock["release_status"] = "PILOT_RELEASED"
+            inputs.runtime_lock_path.write_text(json.dumps(lock), encoding="utf-8")
+            with self.assertRaises(CoordinatorBlockedError) as ctx:
+                plan_campaign(inputs)
+            self.assertIn("engineering_pilot-only", str(ctx.exception))
+
+    def test_pilot_release_dispatches_engineering_pilot_only_queue(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            row = next(
+                json.loads(line)
+                for line in QUEUE_PATH.read_text(encoding="utf-8").splitlines()
+                if json.loads(line)["family"] == "C1"
+            )
+            row["cohort"] = "engineering_pilot"
+            queue_path = tmp_path / "pilot.jsonl"
+            queue_path.write_text(
+                json.dumps(row, sort_keys=True, separators=(",", ":")) + "\n",
+                encoding="utf-8",
+            )
+            queue_sha = sha256_file(queue_path)
+            queue_manifest_path = tmp_path / "pilot-manifest.json"
+            queue_manifest_path.write_text(
+                json.dumps(
+                    {
+                        "queue_sha256": queue_sha,
+                        "frozen_queue_sha256": queue_sha,
+                        "planning_manifest_sha256": queue_sha,
+                    }
+                ),
+                encoding="utf-8",
+            )
+            lock = _released_lock(
+                manifest_sha256=queue_sha,
+                config_sha256=self.config_sha,
+                families=["C1"],
+            )
+            lock["release_status"] = "PILOT_RELEASED"
+            lock_path = tmp_path / "runtime_lock.json"
+            lock_path.write_text(json.dumps(lock), encoding="utf-8")
+            matrix_path = tmp_path / "launch_matrix.json"
+            matrix_path.write_text(
+                json.dumps(_launch_matrix(template_path=SPEC_TEMPLATE)),
+                encoding="utf-8",
+            )
+            plan = plan_campaign(
+                CoordinatorInputs(
+                    runtime_lock_path=lock_path,
+                    queue_path=queue_path,
+                    queue_manifest_path=queue_manifest_path,
+                    launch_matrix_path=matrix_path,
+                    campaign_config_path=CONFIG_PATH,
+                    repo_root=ROOT,
+                )
+            )
+            self.assertEqual(plan.release_status, "PILOT_RELEASED")
+            self.assertEqual(plan.behavioral_episode_count, 1)
+
     def test_resume_from_group_receipts_skips_accepted_episodes(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             tmp_path = Path(tmp)

@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "campaign_id": "online_correction_v4",
+  "release_status": "PILOT_RELEASED",
+  "qualified_lanes": [
+    {
+      "lane_id": "g7c7p00",
+      "hardware_stratum": "a40-b200-object-pair-pilot",
+      "lane_spec_template_path": "deploy/k8s/v4_lane_bundle/g7-object-pair-pilot-spec.example.json"
+    },
+    {
+      "lane_id": "g7c7p01",
+      "hardware_stratum": "a40-b200-object-pair-pilot",
+      "lane_spec_template_path": "deploy/k8s/v4_lane_bundle/g7-object-pair-pilot-spec.example.json"
+    },
+    {
+      "lane_id": "g7c7p02",
+      "hardware_stratum": "a40-b200-object-pair-pilot",
+      "lane_spec_template_path": "deploy/k8s/v4_lane_bundle/g7-object-pair-pilot-spec.example.json"
+    },
+    {
+      "lane_id": "g7c7p03",
+      "hardware_stratum": "a40-b200-object-pair-pilot",
+      "lane_spec_template_path": "deploy/k8s/v4_lane_bundle/g7-object-pair-pilot-spec.example.json"
+    },
+    {
+      "lane_id": "g7c7p04",
+      "hardware_stratum": "a40-b200-object-pair-pilot",
+      "lane_spec_template_path": "deploy/k8s/v4_lane_bundle/g7-object-pair-pilot-spec.example.json"
+    },
+    {
+      "lane_id": "g7c7p05",
+      "hardware_stratum": "a40-b200-object-pair-pilot",
+      "lane_spec_template_path": "deploy/k8s/v4_lane_bundle/g7-object-pair-pilot-spec.example.json"
+    },
+    {
+      "lane_id": "g7c7p06",
+      "hardware_stratum": "a40-b200-object-pair-pilot",
+      "lane_spec_template_path": "deploy/k8s/v4_lane_bundle/g7-object-pair-pilot-spec.example.json"
+    },
+    {
+      "lane_id": "g7c7p07",
+      "hardware_stratum": "a40-b200-object-pair-pilot",
+      "lane_spec_template_path": "deploy/k8s/v4_lane_bundle/g7-object-pair-pilot-spec.example.json"
+    }
+  ],
+  "resource_budget": {
+    "authorized_storage_bytes": 1000000000000,
+    "estimated_bytes_per_episode": 500000000,
+    "estimated_bytes_per_infra_retry": 500000000
+  },
+  "dispatch": {
+    "max_infra_retries_per_episode": 3,
+    "lane_quarantine_threshold": 3
+  },
+  "release_boundary": "Eight logical A40/B200 lanes for the 24 excluded C7 engineering-pilot episodes only."
+}

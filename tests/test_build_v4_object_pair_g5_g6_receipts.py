@@ -38,6 +38,10 @@ class ObjectPairG5G6ReceiptTests(unittest.TestCase):
         self.assertTrue(receipt["passed"])
         self.assertEqual(
             receipt["selected_prefix_mode"],
+            "independent_natural_rollout_fallback",
+        )
+        self.assertEqual(
+            receipt["evaluation_design_label"],
             "randomized_event_triggered_evaluation",
         )
         self.assertFalse(receipt["exact_counterfactual_branching_claimed"])

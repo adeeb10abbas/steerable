@@ -219,7 +219,8 @@ def build_g5_receipt(
             "trigger_deadline_s": config.trigger_deadline_s,
             "release_detection_dwell_ticks": 2,
         },
-        "selected_prefix_mode": "randomized_event_triggered_evaluation",
+        "selected_prefix_mode": "independent_natural_rollout_fallback",
+        "evaluation_design_label": "randomized_event_triggered_evaluation",
         "exact_counterfactual_branching_claimed": False,
         "fallback_scope": {
             "C7": "authorized_after_G6_G7_G8",

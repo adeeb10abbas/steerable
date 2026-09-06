@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import argparse
 import json
 import os
 from pathlib import Path
@@ -10,8 +11,11 @@ import subprocess
 import sys
 from typing import Any
 
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
-RECEIPT_SCHEMA = "v4-horizontal-g3-path-seed-receipt-v1"
+from experiments.online_correction_v4.model_blind_g3 import path_receipt_schema
 
 
 def _load_object(path: Path) -> dict[str, Any]:
@@ -23,28 +27,30 @@ def _load_object(path: Path) -> dict[str, Any]:
 
 def main(argv: list[str] | None = None) -> int:
     arguments = list(sys.argv[1:] if argv is None else argv)
-    if (
-        len(arguments) < 6
-        or arguments[0] != "--expected-environment-seed"
-        or arguments[2] != "--expected-scale"
-        or arguments[4] != "--"
-    ):
+    if "--" not in arguments:
         print(
-            "usage: run_v4_g3_checked.py --expected-environment-seed SEED "
+            "usage: run_v4_g3_checked.py [--expected-fixture FIXTURE] "
+            "--expected-environment-seed SEED "
             "--expected-scale SCALE -- EXECUTABLE [ARG ...]",
             file=sys.stderr,
         )
         return 2
+    separator = arguments.index("--")
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument("--expected-fixture", default="horizontal")
+    parser.add_argument("--expected-environment-seed", type=int, required=True)
+    parser.add_argument("--expected-scale", type=float, required=True)
     try:
-        expected_environment_seed = int(arguments[1])
-    except ValueError:
-        print("expected environment seed must be an integer", file=sys.stderr)
+        expected, extras = parser.parse_known_args(arguments[:separator])
+    except SystemExit:
         return 2
-    try:
-        expected_scale = float(arguments[3])
-    except ValueError:
-        print("expected scale must be numeric", file=sys.stderr)
+    if extras or separator + 1 >= len(arguments):
+        print("invalid G3 wrapper arguments", file=sys.stderr)
         return 2
+
+    expected_environment_seed = expected.expected_environment_seed
+    expected_scale = expected.expected_scale
+    expected_fixture = expected.expected_fixture
 
     output_raw = os.environ.get("EPISODE_OUTPUT_DIR")
     if not output_raw:
@@ -55,7 +61,7 @@ def main(argv: list[str] | None = None) -> int:
         print("EPISODE_OUTPUT_DIR must be absolute", file=sys.stderr)
         return 2
 
-    completed = subprocess.run(arguments[5:], check=False)
+    completed = subprocess.run(arguments[separator + 1 :], check=False)
     receipt_path = output_dir / "g3_path_seed_receipt.json"
     failure_path = output_dir / "infrastructure_failure.json"
 
@@ -95,8 +101,11 @@ def main(argv: list[str] | None = None) -> int:
     except Exception as exc:
         print(f"G3 path-seed receipt is invalid: {exc}", file=sys.stderr)
         return 1
-    if receipt.get("schema_version") != RECEIPT_SCHEMA:
+    if receipt.get("schema_version") != path_receipt_schema(expected_fixture):
         print("G3 path-seed receipt schema differs", file=sys.stderr)
+        return 1
+    if receipt.get("fixture_id") != expected_fixture:
+        print("G3 path-seed receipt fixture differs", file=sys.stderr)
         return 1
     if receipt.get("environment_seed") != expected_environment_seed:
         print("G3 path-seed receipt environment seed differs", file=sys.stderr)
@@ -121,6 +130,7 @@ def main(argv: list[str] | None = None) -> int:
         json.dumps(
             {
                 "checked_g3_path_seed_receipt": str(receipt_path),
+                "fixture_id": receipt.get("fixture_id"),
                 "environment_seed": receipt.get("environment_seed"),
                 "scale": receipt.get("scale"),
                 "passed": receipt.get("passed"),

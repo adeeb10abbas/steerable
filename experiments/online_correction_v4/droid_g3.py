@@ -6,6 +6,10 @@ from itertools import product
 import math
 from typing import Any, Mapping
 
+from experiments.online_correction_v4.droid_task_files.constants import (
+    FixtureObjectSpec,
+    fixture_object_spec,
+)
 from experiments.online_correction_v4.geometry import (
     AxisAlignedBox,
     ObjectFootprint,
@@ -158,18 +162,20 @@ def supported_center_workspace(
     return workspace
 
 
-def horizontal_geometry_from_scene(
+def planar_geometry_from_scene(
     *,
     task_frame_evidence: Mapping[str, Any],
     scene_state: Mapping[str, Any],
     support_edge_margin_m: float,
+    target_object: str,
+    reference_object: str,
 ) -> dict[str, Any]:
     frame = task_frame_from_evidence(task_frame_evidence)
     objects = scene_state.get("objects")
     if not isinstance(objects, Mapping):
         raise DroidG3Error("scene state lacks objects")
-    target = objects.get("rubiks_cube")
-    reference = objects.get("bowl")
+    target = objects.get(target_object)
+    reference = objects.get(reference_object)
     if not isinstance(target, Mapping) or not isinstance(reference, Mapping):
         raise DroidG3Error("scene state lacks target/reference objects")
     table_bounds = bounds_world_to_task(frame, scene_state.get("table_world_aabb_m", {}))
@@ -189,6 +195,39 @@ def horizontal_geometry_from_scene(
         "reference_footprint": reference_footprint,
         "target_workspace": workspace,
     }
+
+
+def horizontal_geometry_from_scene(
+    *,
+    task_frame_evidence: Mapping[str, Any],
+    scene_state: Mapping[str, Any],
+    support_edge_margin_m: float,
+) -> dict[str, Any]:
+    spec = fixture_object_spec("horizontal")
+    return planar_geometry_from_scene(
+        task_frame_evidence=task_frame_evidence,
+        scene_state=scene_state,
+        support_edge_margin_m=support_edge_margin_m,
+        target_object=spec.target_object,
+        reference_object=spec.reference_object,
+    )
+
+
+def geometry_from_scene_for_fixture(
+    *,
+    fixture_id: str,
+    task_frame_evidence: Mapping[str, Any],
+    scene_state: Mapping[str, Any],
+    support_edge_margin_m: float,
+) -> dict[str, Any]:
+    spec = fixture_object_spec(fixture_id)
+    return planar_geometry_from_scene(
+        task_frame_evidence=task_frame_evidence,
+        scene_state=scene_state,
+        support_edge_margin_m=support_edge_margin_m,
+        target_object=spec.target_object,
+        reference_object=spec.reference_object,
+    )
 
 
 def reference_is_supported(
@@ -292,11 +331,22 @@ def goal_area_case(
     }
 
 
+def _contact_pairs_for_objects(object_names: tuple[str, ...]) -> set[str]:
+    pairs: set[str] = set()
+    for name in object_names:
+        pairs.add(f"{name}__table")
+        pairs.add(f"table__{name}")
+    return pairs
+
+
 def classify_contacts(
     force_n_by_pair: Mapping[str, Any],
     *,
     active_force_threshold_n: float,
+    fixture_spec: FixtureObjectSpec | None = None,
 ) -> dict[str, Any]:
+    if fixture_spec is None:
+        fixture_spec = fixture_object_spec("horizontal")
     if not math.isfinite(active_force_threshold_n) or active_force_threshold_n <= 0:
         raise DroidG3Error("active contact threshold must be positive and finite")
     active: dict[str, float] = {}
@@ -306,27 +356,24 @@ def classify_contacts(
             raise DroidG3Error(f"invalid contact force for {name!r}")
         if force >= active_force_threshold_n:
             active[str(name)] = force
+    support_objects = tuple(fixture_spec.movable_objects)
+    if fixture_spec.distractor_object is not None:
+        support_objects = support_objects + (fixture_spec.distractor_object,)
     supported = {
         name: any(
             pair in active
             for pair in (f"{name}__table", f"table__{name}")
         )
-        for name in ("rubiks_cube", "banana", "bowl")
+        for name in support_objects
     }
+    reference_object = fixture_spec.reference_object
     reference_robot_pairs = [
         pair
         for pair in active
-        if "bowl" in pair
+        if reference_object in pair
         and any(token in pair for token in ("robot_all", "gripper"))
     ]
-    allowed_pairs = {
-        "rubiks_cube__table",
-        "table__rubiks_cube",
-        "banana__table",
-        "table__banana",
-        "bowl__table",
-        "table__bowl",
-    }
+    allowed_pairs = _contact_pairs_for_objects(support_objects)
     disallowed_pairs = sorted(pair for pair in active if pair not in allowed_pairs)
     return {
         "active_force_threshold_n": active_force_threshold_n,

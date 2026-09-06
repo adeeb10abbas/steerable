@@ -12,18 +12,30 @@ from typing import Any, Mapping
 
 ROOT = Path(__file__).resolve().parents[1]
 TOOLS = ROOT / "tools"
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 
 import render_v4_k8s_lane_bundle as lane  # noqa: E402
 
+from experiments.online_correction_v4.droid_task_files.constants import (  # noqa: E402
+    OBJECT_PAIR_RESET_REGISTRY_SCHEMA,
+    RESET_REGISTRY_SCHEMA,
+)
+from experiments.online_correction_v4.model_blind_g3 import (  # noqa: E402
+    plan_schema,
+)
+
 DEFAULT_SPEC = ROOT / "deploy/k8s/v4_lane_bundle/g3-horizontal-spec.example.json"
 DEFAULT_OUTPUT = ROOT / "deploy/k8s/v4_lane_bundle/rendered-g3"
-SCHEMA = "vla-wam-v4-horizontal-g3-k8s-render-spec-v1"
-PLAN_SCHEMA = "v4-horizontal-g3-plan-v1"
-RESET_SCHEMA = "v4-droid-horizontal-reset-registry-v1"
+RESET_SCHEMAS = {
+    "horizontal": RESET_REGISTRY_SCHEMA,
+    "object_pair": OBJECT_PAIR_RESET_REGISTRY_SCHEMA,
+}
 TOP_LEVEL_KEYS = {
     "schema_version",
+    "fixture_id",
     "kube_context",
     "namespace",
     "attempt_id",
@@ -89,7 +101,7 @@ def _source(path: Any, *, spec_dir: Path, label: str) -> Path:
     return resolved
 
 
-def _read_spec(path: Path) -> tuple[dict[str, Any], str]:
+def _read_spec(path: Path) -> tuple[dict[str, Any], str, str]:
     raw = path.read_bytes()
     try:
         spec = json.loads(raw)
@@ -98,8 +110,16 @@ def _read_spec(path: Path) -> tuple[dict[str, Any], str]:
     require(isinstance(spec, dict), "G3 render spec must be an object")
     unknown = sorted(set(spec) - TOP_LEVEL_KEYS)
     require(not unknown, f"G3 render spec contains unknown keys: {unknown}")
-    require(spec.get("schema_version") == SCHEMA, "G3 render spec schema differs")
-    return spec, hashlib.sha256(raw).hexdigest()
+    fixture_id = str(spec.get("fixture_id", "horizontal"))
+    require(
+        fixture_id in RESET_SCHEMAS,
+        "G3 render spec fixture_id is unsupported",
+    )
+    expected_schema = (
+        f"vla-wam-v4-{fixture_id.replace('_', '-')}-g3-k8s-render-spec-v1"
+    )
+    require(spec.get("schema_version") == expected_schema, "G3 render spec schema differs")
+    return spec, hashlib.sha256(raw).hexdigest(), fixture_id
 
 
 def _binding(source: Path, path: str) -> dict[str, Any]:
@@ -118,10 +138,11 @@ def _scale_label(scale: float) -> str:
 
 
 def _seed_output_parent(
-    *, output_parent: str, attempt: str, scale: float, seed: int
+    *, output_parent: str, attempt: str, scale: float, seed: int, fixture_id: str
 ) -> str:
+    fixture_token = fixture_id.replace("_", "-")
     return (
-        f"{output_parent}/v4/g3-horizontal/attempt-{attempt}/"
+        f"{output_parent}/v4/g3-{fixture_token}/attempt-{attempt}/"
         f"scale-{_scale_label(scale)}/seed-{seed}"
     )
 
@@ -152,7 +173,10 @@ def _render_launch_configmap(
 
 def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
     spec_path = spec_path.resolve()
-    spec, spec_sha256 = _read_spec(spec_path)
+    spec, spec_sha256, fixture_id = _read_spec(spec_path)
+    fixture_token = fixture_id.replace("_", "-")
+    plan_schema_id = plan_schema(fixture_id)
+    reset_schema_id = RESET_SCHEMAS[fixture_id]
     namespace = lane.token(spec.get("namespace"), "namespace")
     attempt = lane.token(spec.get("attempt_id"), "attempt_id")
     kube_context = str(spec.get("kube_context") or "")
@@ -300,8 +324,12 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
     )
     plan_payload = json.loads(plan_source.read_text(encoding="utf-8"))
     require(
-        plan_payload.get("schema_version") == PLAN_SCHEMA,
+        plan_payload.get("schema_version") == plan_schema_id,
         "G3 plan schema differs",
+    )
+    require(
+        plan_payload.get("fixture_id") == fixture_id,
+        "G3 plan fixture differs from render spec",
     )
     require(
         plan_payload.get("status")
@@ -348,18 +376,23 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
     seeds = sorted(int(seed) for seed in registered)
     max_seed_jobs = int(spec.get("max_seed_jobs", len(seeds)))
     require(
-        max_seed_jobs == len(seeds),
-        "max_seed_jobs must equal complete registered plan coverage",
+        0 < max_seed_jobs <= len(seeds),
+        "max_seed_jobs must be positive and not exceed registered plan coverage",
     )
+    seeds = seeds[:max_seed_jobs]
     require(
-        plan_payload.get("registered_env_seed_count") == len(seeds),
+        plan_payload.get("registered_env_seed_count") == len(registered),
         "G3 plan registered_env_seed_count differs",
     )
 
     reset_payload = json.loads(reset_registry_source.read_text(encoding="utf-8"))
     require(
-        reset_payload.get("schema_version") == RESET_SCHEMA,
+        reset_payload.get("schema_version") == reset_schema_id,
         "reset registry schema differs",
+    )
+    require(
+        reset_payload.get("fixture_id") == fixture_id,
+        "reset registry fixture differs from render spec",
     )
     require(
         reset_payload.get("status")
@@ -382,16 +415,16 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
             for name in sorted(scripts)
         )
     ).hexdigest()
-    stem = f"v4-g3-horizontal-{attempt}-{spec_sha256[:10]}"
+    stem = f"v4-g3-{fixture_token}-{attempt}-{spec_sha256[:10]}"
     scripts_name = f"{stem}-scripts"
     bundle_root = output_root.resolve() / stem
     require(not bundle_root.exists(), f"refusing to overwrite bundle: {bundle_root}")
     bundle_root.mkdir(parents=True)
 
     common_script_labels = {
-        "app.kubernetes.io/name": "v4-horizontal-g3",
+        "app.kubernetes.io/name": f"v4-{fixture_token}-g3",
         "app.kubernetes.io/part-of": "vla-wam-v4",
-        "v4-gate": "g3-horizontal",
+        "v4-gate": f"g3-{fixture_token}",
         "v4-attempt-id": attempt,
         "v4-config-sha": spec_sha256[:16],
         "v4-scale": _scale_label(scale_value),
@@ -416,6 +449,7 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
             attempt=attempt,
             scale=scale_value,
             seed=seed,
+            fixture_id=fixture_id,
         )
         seed_output_parents.append(seed_output)
         labels = {
@@ -448,6 +482,8 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
         argv = [
             runtime["python_bin"],
             marker_wrapper_path,
+            "--expected-fixture",
+            fixture_id,
             "--expected-environment-seed",
             str(seed),
             "--expected-scale",
@@ -471,6 +507,8 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
             reset_registry_path,
             "--reset-registry-sha256",
             reset_sha,
+            "--fixture-id",
+            fixture_id,
             "--environment-seed",
             str(seed),
             "--scale",
@@ -567,10 +605,10 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
         name: lane.sha256_file(bundle_root / name) for name in sorted(files)
     }
     manifest = {
-        "schema_version": "vla-wam-v4-horizontal-g3-k8s-bundle-v1",
+        "schema_version": f"vla-wam-v4-{fixture_token}-g3-k8s-bundle-v1",
         "status": "rendered_not_created",
         "campaign_id": "online_correction_v4",
-        "fixture_id": "horizontal",
+        "fixture_id": fixture_id,
         "execution_scope": "model_blind_g3_no_policy",
         "model_request_count": 0,
         "behavioral_episode_count": 0,

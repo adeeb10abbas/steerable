@@ -142,18 +142,19 @@ class G3PathSeedEvaluationTests(unittest.TestCase):
             geometry_contract=contract,
             baseline_reference_world=baseline,
             baseline_target_world=(0.12, 0.0, 0.02),
-            baseline_banana_world=(-0.12, 0.0, 0.02),
+            baseline_distractor_world=(-0.12, 0.0, 0.02),
             direction_task=(1.0, 0.0),
             planned_displacement_m=0.06,
             planned_reference_world=planned,
             measured_reference_world=planned,
             measured_target_world=(0.12, 0.0, 0.02),
-            measured_banana_world=(-0.12, 0.0, 0.02),
+            measured_distractor_world=(-0.12, 0.0, 0.02),
             contacts={
                 "support_valid": True,
                 "reference_robot_contact": False,
                 "unmodeled_collision": False,
             },
+            target_object="rubiks_cube",
         )
         self.assertEqual(reasons, [])
         self.assertTrue(sample["support_valid"])
@@ -177,7 +178,7 @@ class G3PathSeedEvaluationTests(unittest.TestCase):
             geometry_contract=contract,
             baseline_reference_world=baseline,
             baseline_target_world=(0.12, 0.0, 0.02),
-            baseline_banana_world=(-0.12, 0.0, 0.02),
+            baseline_distractor_world=(-0.12, 0.0, 0.02),
             direction_task=(1.0, 0.0),
             planned_displacement_m=0.06,
             planned_reference_world=planned,
@@ -187,12 +188,13 @@ class G3PathSeedEvaluationTests(unittest.TestCase):
                 planned[2],
             ),
             measured_target_world=(0.12, 0.01, 0.02),
-            measured_banana_world=(-0.12, 0.0, 0.02),
+            measured_distractor_world=(-0.12, 0.0, 0.02),
             contacts={
                 "support_valid": False,
                 "reference_robot_contact": True,
                 "unmodeled_collision": True,
             },
+            target_object="rubiks_cube",
         )
         self.assertIn("reference_pose_error_exceeds_contract", reasons)
         self.assertIn("target_drift_exceeds_contract", reasons)

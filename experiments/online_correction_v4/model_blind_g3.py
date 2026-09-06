@@ -1,4 +1,4 @@
-"""Prospective contracts for horizontal model-blind motion/feasibility gate G3."""
+"""Prospective contracts for model-blind motion/feasibility gate G3."""
 
 from __future__ import annotations
 
@@ -6,16 +6,70 @@ import hashlib
 import json
 import math
 import re
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
 
+from experiments.online_correction_v4.model_blind_g2 import aggregate_receipt_schema
 from experiments.online_correction_v4.motion import ReferenceMotionController
 
-PLAN_SCHEMA = "v4-horizontal-g3-plan-v1"
-PATH_RECEIPT_SCHEMA = "v4-horizontal-g3-path-seed-receipt-v1"
-PATH_SCALE_RECEIPT_SCHEMA = "v4-horizontal-g3-path-scale-receipt-v1"
-SCRIPTED_RECEIPT_SCHEMA = "v4-horizontal-g3-scripted-check-receipt-v1"
-AGGREGATE_SCHEMA = "v4-horizontal-g3-aggregate-receipt-v1"
+
+def plan_schema(fixture_id: str) -> str:
+    return f"v4-{fixture_id.replace('_', '-')}-g3-plan-v1"
+
+
+def path_receipt_schema(fixture_id: str) -> str:
+    return f"v4-{fixture_id.replace('_', '-')}-g3-path-seed-receipt-v1"
+
+
+def path_scale_receipt_schema(fixture_id: str) -> str:
+    return f"v4-{fixture_id.replace('_', '-')}-g3-path-scale-receipt-v1"
+
+
+def scripted_receipt_schema(fixture_id: str) -> str:
+    return f"v4-{fixture_id.replace('_', '-')}-g3-scripted-check-receipt-v1"
+
+
+def aggregate_receipt_schema_g3(fixture_id: str) -> str:
+    return f"v4-{fixture_id.replace('_', '-')}-g3-aggregate-receipt-v1"
+
+
+PLAN_SCHEMA = plan_schema("horizontal")
+PATH_RECEIPT_SCHEMA = path_receipt_schema("horizontal")
+PATH_SCALE_RECEIPT_SCHEMA = path_scale_receipt_schema("horizontal")
+SCRIPTED_RECEIPT_SCHEMA = scripted_receipt_schema("horizontal")
+AGGREGATE_SCHEMA = aggregate_receipt_schema_g3("horizontal")
+
+DEFAULT_MODEL_BLIND_G3_GEOMETRY: dict[str, Any] = {
+    "extent_convention": "live_usd_world_aabb_projected_into_registered_task_frame",
+    "supported_workspace_convention": (
+        "live_table_top_aabb_eroded_by_target_projected_half_extents_and_edge_margin"
+    ),
+    "relation_clearance_m": 0.01,
+    "support_edge_margin_m": 0.005,
+    "active_contact_force_threshold_n": 0.05,
+    "reference_pose_error_max_m": 0.002,
+    "stationary_object_drift_max_m": 0.005,
+    "path_sample_max_interval_s": 0.02,
+    "robot_reference_contact_probe": (
+        "full_robot_articulation_regex_against_reference_pair_sensor"
+    ),
+    "policy_outcome_used": False,
+}
+
+
+@dataclass(frozen=True)
+class G3FixtureConfig:
+    fixture_id: str
+    counterbalance_family: str
+    expected_seed_count: int
+
+
+G3_FIXTURE_CONFIGS: dict[str, G3FixtureConfig] = {
+    "horizontal": G3FixtureConfig("horizontal", "C1", 128),
+    "object_pair": G3FixtureConfig("object_pair", "C7", 64),
+}
+
 SCRIPTED_CHECK_KINDS = ("stationary", "moving")
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 HORIZONTAL_GOALS = ("left", "right", "front", "behind")
@@ -39,6 +93,35 @@ HORIZONTAL_SCRIPTED_CHECK_COUNT = (
 
 class G3GateError(ValueError):
     """Raised when a G3 plan or receipt is incomplete."""
+
+
+def g3_fixture_config(fixture_id: str) -> G3FixtureConfig:
+    try:
+        return G3_FIXTURE_CONFIGS[fixture_id]
+    except KeyError as exc:
+        raise G3GateError(f"unsupported G3 fixture: {fixture_id!r}") from exc
+
+
+def path_checks_per_scale_for_seed_count(seed_count: int) -> int:
+    return seed_count * len(HORIZONTAL_GOALS) * len(PATH_SCENARIOS)
+
+
+def resolve_geometry_contract(
+    campaign: Mapping[str, Any],
+    fixture_id: str,
+) -> dict[str, Any]:
+    fixtures = campaign.get("fixtures")
+    if isinstance(fixtures, Mapping):
+        fixture_cfg = fixtures.get(fixture_id)
+        if isinstance(fixture_cfg, Mapping):
+            geometry = fixture_cfg.get("model_blind_g3_geometry")
+            if isinstance(geometry, Mapping):
+                return dict(geometry)
+    if fixture_id == "object_pair":
+        return dict(DEFAULT_MODEL_BLIND_G3_GEOMETRY)
+    raise G3GateError(
+        f"campaign lacks model_blind_g3_geometry for fixture {fixture_id!r}"
+    )
 
 
 def _require(condition: bool, message: str) -> None:
@@ -459,10 +542,11 @@ def compile_path_seed_receipt(
         case["passes_information_gate"] for case in compiled_goal_areas
     )
     passed = all(check["passed"] for check in checks) and information_gate_passed
+    fixture_id = str(plan.get("fixture_id"))
     return {
-        "schema_version": PATH_RECEIPT_SCHEMA,
+        "schema_version": path_receipt_schema(fixture_id),
         "campaign_id": plan.get("campaign_id"),
-        "fixture_id": plan.get("fixture_id"),
+        "fixture_id": fixture_id,
         "model_request_count": 0,
         "behavioral_episode_count": 0,
         "plan_receipt": pinned_plan,
@@ -487,12 +571,16 @@ def validate_path_seed_receipt(
     *,
     plan: Mapping[str, Any] | None = None,
 ) -> None:
+    fixture_id = receipt.get("fixture_id")
+    if not isinstance(fixture_id, str):
+        raise G3GateError("path receipt lacks fixture_id")
     _require(
-        receipt.get("schema_version") == PATH_RECEIPT_SCHEMA,
+        receipt.get("schema_version") == path_receipt_schema(fixture_id),
         "path seed receipt schema differs",
     )
     _require(receipt.get("campaign_id") == "online_correction_v4", "campaign differs")
-    _require(receipt.get("fixture_id") == "horizontal", "fixture differs")
+    if plan is not None:
+        _require(receipt.get("fixture_id") == plan.get("fixture_id"), "fixture binding differs")
     _require(receipt.get("model_request_count") == 0, "path receipt records model requests")
     _require(
         receipt.get("behavioral_episode_count") == 0,
@@ -780,18 +868,25 @@ def build_counterbalance_index(
     queue_rows: Iterable[Mapping[str, Any]],
     *,
     expected_env_seeds: Iterable[int],
+    counterbalance_family: str = "C1",
+    counterbalance_fixture: str = "horizontal",
 ) -> dict[int, dict[str, Any]]:
     expected = set(int(seed) for seed in expected_env_seeds)
     result: dict[int, dict[str, Any]] = {}
     for row in queue_rows:
-        if row.get("family") != "C1" or row.get("fixture") != "horizontal":
+        if (
+            row.get("family") != counterbalance_family
+            or row.get("fixture") != counterbalance_fixture
+        ):
             continue
         seed = row.get("env_seed")
         counterbalance = row.get("counterbalance")
         if type(seed) is not int or seed not in expected:
             continue
         if not isinstance(counterbalance, Mapping):
-            raise G3GateError(f"C1 row for seed {seed} lacks counterbalance")
+            raise G3GateError(
+                f"{counterbalance_family} row for seed {seed} lacks counterbalance"
+            )
         frozen = {
             "block_id": row.get("block_id"),
             "state_index": counterbalance.get("state_index"),
@@ -802,9 +897,14 @@ def build_counterbalance_index(
         }
         prior = result.setdefault(seed, frozen)
         if prior != frozen:
-            raise G3GateError(f"C1 counterbalance differs within seed {seed}")
+            raise G3GateError(
+                f"{counterbalance_family} counterbalance differs within seed {seed}"
+            )
     missing = sorted(expected - set(result))
-    _require(not missing, f"C1 counterbalance index misses seeds: {missing[:5]}")
+    _require(
+        not missing,
+        f"{counterbalance_family} counterbalance index misses seeds: {missing[:5]}",
+    )
     for seed, row in result.items():
         _require(type(row["block_id"]) is int, f"seed {seed} block_id is invalid")
         _require(
@@ -828,14 +928,19 @@ def build_plan_payload(
     scale_candidates: Iterable[float],
     nominal_displacement_m: float,
     minimum_shrinking_area_fraction: float,
+    fixture_id: str = "horizontal",
 ) -> dict[str, Any]:
-    _validate_g2_prerequisite(g2_prerequisite)
+    config = g3_fixture_config(fixture_id)
+    _validate_g2_prerequisite(g2_prerequisite, fixture_id=fixture_id)
     _validate_geometry_contract(geometry_contract)
     resets = reset_registry.get("resets_by_env_seed")
     _require(isinstance(resets, Mapping) and resets, "reset registry has no resets")
     seeds = tuple(sorted(int(seed) for seed in resets))
     counterbalance = build_counterbalance_index(
-        queue_rows, expected_env_seeds=seeds
+        queue_rows,
+        expected_env_seeds=seeds,
+        counterbalance_family=config.counterbalance_family,
+        counterbalance_fixture=config.fixture_id,
     )
     extremes = select_extreme_reset_seeds(
         resets_by_env_seed=resets,
@@ -858,22 +963,28 @@ def build_plan_payload(
             goal: list(
                 ReferenceMotionController.displacement_vector(
                     goal=goal,
-                    fixture="horizontal",
+                    fixture=fixture_id,
                     physical_sign=sign,
                 )
             )
             for goal in HORIZONTAL_GOALS
         }
-    path_checks_per_scale = len(seeds) * len(HORIZONTAL_GOALS) * len(PATH_SCENARIOS)
-    _require(path_checks_per_scale == 3072, "horizontal path count differs")
+    path_checks_per_scale = path_checks_per_scale_for_seed_count(len(seeds))
+    expected_path_checks = path_checks_per_scale_for_seed_count(
+        config.expected_seed_count
+    )
+    _require(
+        path_checks_per_scale == expected_path_checks,
+        f"{fixture_id} path count differs",
+    )
     _require(
         HORIZONTAL_SCRIPTED_CHECK_COUNT == 112,
         "horizontal scripted count differs",
     )
     return {
-        "schema_version": PLAN_SCHEMA,
+        "schema_version": plan_schema(fixture_id),
         "campaign_id": "online_correction_v4",
-        "fixture_id": "horizontal",
+        "fixture_id": fixture_id,
         "status": "model_blind_candidate_not_released_for_inference",
         "plan_status": "ready_for_live_g3_execution",
         "model_request_count": 0,
@@ -951,11 +1062,16 @@ def build_plan_payload(
     }
 
 
-def _validate_g2_prerequisite(prerequisite: Mapping[str, Any]) -> None:
+def _validate_g2_prerequisite(
+    prerequisite: Mapping[str, Any],
+    *,
+    fixture_id: str = "horizontal",
+) -> None:
+    config = g3_fixture_config(fixture_id)
     _require(
         prerequisite.get("schema_version")
-        == "v4-horizontal-g2-aggregate-receipt-v1",
-        "G3 plan requires the horizontal G2 aggregate schema",
+        == aggregate_receipt_schema(fixture_id),
+        f"G3 plan requires the {fixture_id} G2 aggregate schema",
     )
     _require(
         prerequisite.get("status") == "passed"
@@ -967,8 +1083,8 @@ def _validate_g2_prerequisite(prerequisite: Mapping[str, Any]) -> None:
         "G3 plan requires the passing G2 axis review",
     )
     _require(
-        prerequisite.get("expected_seed_count") == 128
-        and prerequisite.get("observed_seed_count") == 128,
+        prerequisite.get("expected_seed_count") == config.expected_seed_count
+        and prerequisite.get("observed_seed_count") == config.expected_seed_count,
         "G3 plan requires complete G2 seed coverage",
     )
     _require(
@@ -1033,8 +1149,11 @@ def _validate_geometry_contract(contract: Mapping[str, Any]) -> None:
 
 
 def validate_plan_payload(plan: Mapping[str, Any]) -> None:
-    _require(plan.get("schema_version") == PLAN_SCHEMA, "G3 plan schema differs")
-    _require(plan.get("fixture_id") == "horizontal", "G3 plan fixture differs")
+    fixture_id = plan.get("fixture_id")
+    if not isinstance(fixture_id, str):
+        raise G3GateError("G3 plan lacks fixture_id")
+    config = g3_fixture_config(fixture_id)
+    _require(plan.get("schema_version") == plan_schema(fixture_id), "G3 plan schema differs")
     _require(plan.get("model_request_count") == 0, "G3 plan records model requests")
     _require(
         plan.get("behavioral_episode_count") == 0,
@@ -1046,19 +1165,25 @@ def validate_plan_payload(plan: Mapping[str, Any]) -> None:
     )
     prerequisite = plan.get("g2_prerequisite")
     _require(isinstance(prerequisite, Mapping), "G3 plan lacks G2 prerequisite")
-    _validate_g2_prerequisite(prerequisite)
+    _validate_g2_prerequisite(prerequisite, fixture_id=fixture_id)
     geometry_contract = plan.get("geometry_contract")
     _require(
         isinstance(geometry_contract, Mapping),
         "G3 plan lacks geometry contract",
     )
     _validate_geometry_contract(geometry_contract)
-    _require(plan.get("registered_reset_count") == 128, "G3 reset count differs")
+    _require(
+        plan.get("registered_reset_count") == config.expected_seed_count,
+        "G3 reset count differs",
+    )
     path = plan.get("path_sweep")
     scripted = plan.get("scripted_controller")
     _require(isinstance(path, Mapping), "G3 plan lacks path sweep")
     _require(isinstance(scripted, Mapping), "G3 plan lacks scripted checks")
-    _require(path.get("checks_per_scale") == 3072, "G3 path count differs")
+    expected_path_checks = path_checks_per_scale_for_seed_count(
+        config.expected_seed_count
+    )
+    _require(path.get("checks_per_scale") == expected_path_checks, "G3 path count differs")
     _require(
         path.get("reset_replay_rule")
         == (
@@ -1239,8 +1364,10 @@ def compile_path_scale_receipt(
     nominal = _plan_nominal_displacement_m(plan)
     displacement_m = nominal * scale_value
     pinned_plan = _require_plan_receipt_identity(plan_receipt, "plan_receipt")
+    fixture_id = str(plan.get("fixture_id"))
+    config = g3_fixture_config(fixture_id)
     expected_seeds = tuple(int(seed) for seed in plan["registered_env_seeds"])
-    _require(len(expected_seeds) == 128, "G3 reset count differs")
+    _require(len(expected_seeds) == config.expected_seed_count, "G3 reset count differs")
 
     observed: dict[int, Mapping[str, Any]] = {}
     runtime_stratum: dict[str, Any] | None = None
@@ -1275,8 +1402,9 @@ def compile_path_scale_receipt(
     )
     expected_path_check_count = len(expected_seeds) * HORIZONTAL_PATH_CHECKS_PER_SEED
     _require(
-        expected_path_check_count == 3072,
-        "horizontal path count differs",
+        expected_path_check_count
+        == path_checks_per_scale_for_seed_count(config.expected_seed_count),
+        f"{fixture_id} path count differs",
     )
 
     receipt_files: dict[str, Any] = {}
@@ -1295,9 +1423,9 @@ def compile_path_scale_receipt(
         and failed_path_check_count == 0
     )
     return {
-        "schema_version": PATH_SCALE_RECEIPT_SCHEMA,
+        "schema_version": path_scale_receipt_schema(fixture_id),
         "campaign_id": plan.get("campaign_id"),
-        "fixture_id": plan.get("fixture_id"),
+        "fixture_id": fixture_id,
         "status": "passed" if passed else "failed",
         "passed": passed,
         "model_request_count": 0,
@@ -1334,12 +1462,17 @@ def validate_path_scale_receipt(
     *,
     plan: Mapping[str, Any] | None = None,
 ) -> None:
+    fixture_id = receipt.get("fixture_id")
+    if not isinstance(fixture_id, str):
+        raise G3GateError("path scale receipt lacks fixture_id")
+    config = g3_fixture_config(fixture_id)
     _require(
-        receipt.get("schema_version") == PATH_SCALE_RECEIPT_SCHEMA,
+        receipt.get("schema_version") == path_scale_receipt_schema(fixture_id),
         "path scale receipt schema differs",
     )
     _require(receipt.get("campaign_id") == "online_correction_v4", "campaign differs")
-    _require(receipt.get("fixture_id") == "horizontal", "fixture differs")
+    if plan is not None:
+        _require(receipt.get("fixture_id") == plan.get("fixture_id"), "fixture binding differs")
     _require(
         receipt.get("model_request_count") == 0,
         "path scale receipt records model requests",
@@ -1355,7 +1488,11 @@ def validate_path_scale_receipt(
         receipt.get("expected_path_check_count"),
         "expected_path_check_count",
     )
-    _require(expected_path_check_count == 3072, "path scale check count differs")
+    _require(
+        expected_path_check_count
+        == path_checks_per_scale_for_seed_count(config.expected_seed_count),
+        "path scale check count differs",
+    )
     passed_count = _require_non_negative_int(
         receipt.get("passed_path_check_count"), "passed_path_check_count"
     )

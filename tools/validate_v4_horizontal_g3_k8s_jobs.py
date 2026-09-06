@@ -94,9 +94,11 @@ def validate(root: Path) -> dict[str, Any]:
     manifest_path = root / "bundle-manifest.json"
     require(manifest_path.is_file(), "G3 bundle manifest is missing")
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    fixture_id = str(manifest.get("fixture_id", "horizontal"))
+    fixture_token = fixture_id.replace("_", "-")
     require(
         manifest.get("schema_version")
-        == "vla-wam-v4-horizontal-g3-k8s-bundle-v1",
+        == f"vla-wam-v4-{fixture_token}-g3-k8s-bundle-v1",
         "G3 bundle manifest schema differs",
     )
     require(
@@ -204,13 +206,14 @@ def validate(root: Path) -> dict[str, Any]:
             argv = launch.get("experiment_argv")
             require(
                 isinstance(argv, list)
-                and len(argv) >= 10
+                and len(argv) >= 12
                 and str(argv[1]).endswith("run_v4_g3_checked.py")
-                and argv[2] == "--expected-environment-seed"
-                and argv[4] == "--expected-scale"
-                and argv[6] == "--"
-                and argv[0] == argv[7]
-                and str(argv[8]).endswith("run_v4_horizontal_g3_path_seed.py"),
+                and argv[2] == "--expected-fixture"
+                and argv[4] == "--expected-environment-seed"
+                and argv[6] == "--expected-scale"
+                and argv[8] == "--"
+                and argv[0] == argv[9]
+                and str(argv[10]).endswith("run_v4_horizontal_g3_path_seed.py"),
                 "G3 launch does not invoke the path-seed runner through the marker-check wrapper",
             )
             file_bindings = launch.get("file_bindings") or []
@@ -227,7 +230,7 @@ def validate(root: Path) -> dict[str, Any]:
             runner_bindings = [
                 binding
                 for binding in file_bindings
-                if isinstance(binding, dict) and binding.get("path") == argv[8]
+                if isinstance(binding, dict) and binding.get("path") == argv[10]
             ]
             require(
                 len(runner_bindings) == 1
@@ -267,6 +270,11 @@ def validate(root: Path) -> dict[str, Any]:
                 for index in range(len(argv) - 1)
                 if str(argv[index]).startswith("--")
             }
+            require(
+                option_values.get("--expected-fixture") == fixture_id
+                and option_values.get("--fixture-id") == fixture_id,
+                "G3 wrapper and child fixture bindings differ",
+            )
             require(
                 option_values.get("--expected-environment-seed")
                 == option_values.get("--environment-seed"),
@@ -334,7 +342,10 @@ def validate(root: Path) -> dict[str, Any]:
     for job in jobs:
         metadata = job.get("metadata") or {}
         labels = metadata.get("labels") or {}
-        require(labels.get("v4-gate") == "g3-horizontal", "G3 Job gate label differs")
+        require(
+            labels.get("v4-gate") == f"g3-{fixture_token}",
+            "G3 Job gate label differs",
+        )
         require(labels.get("v4-scale") == scale_text, "G3 Job scale label differs")
         spec = job.get("spec") or {}
         require(spec.get("backoffLimit") == 0, "G3 Jobs must not retry implicitly")

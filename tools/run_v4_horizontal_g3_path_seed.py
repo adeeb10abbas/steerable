@@ -15,12 +15,24 @@ from typing import Any, Mapping, Sequence
 
 ROOT = Path(__file__).resolve().parents[1]
 ROBOLAB_COMMIT = "0aef241fb088ca21bb4ebd24448940ed56620d17"
-PROMPT = (
-    "Place the cube so that the cube is left of the bowl. "
-    "Use the robot's fixed viewpoint for left, right, front, and behind."
-)
-TRAJECTORY_SCHEMA = "v4-horizontal-g3-path-trajectory-v1"
-INFRA_FAILURE_SCHEMA = "v4-horizontal-g3-infrastructure-failure-v1"
+FIXTURE_PROMPTS = {
+    "horizontal": (
+        "Place the cube so that the cube is left of the bowl. "
+        "Use the robot's fixed viewpoint for left, right, front, and behind."
+    ),
+    "object_pair": (
+        "Place the sponge so that the sponge is left of the tray. "
+        "Use the robot's fixed viewpoint for left, right, front, and behind."
+    ),
+}
+
+
+def _trajectory_schema(fixture_id: str) -> str:
+    return f"v4-{fixture_id.replace('_', '-')}-g3-path-trajectory-v1"
+
+
+def _infra_failure_schema(fixture_id: str) -> str:
+    return f"v4-{fixture_id.replace('_', '-')}-g3-infrastructure-failure-v1"
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -33,6 +45,11 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--plan-sha256", required=True)
     parser.add_argument("--reset-registry", type=Path, required=True)
     parser.add_argument("--reset-registry-sha256", required=True)
+    parser.add_argument(
+        "--fixture-id",
+        choices=tuple(FIXTURE_PROMPTS),
+        default="horizontal",
+    )
     parser.add_argument("--environment-seed", type=int, required=True)
     parser.add_argument("--scale", type=float, required=True)
     parser.add_argument("--output-dir", type=Path)
@@ -227,14 +244,15 @@ def evaluate_path_sample(
     geometry_contract: Mapping[str, Any],
     baseline_reference_world: Sequence[float],
     baseline_target_world: Sequence[float],
-    baseline_banana_world: Sequence[float],
+    baseline_distractor_world: Sequence[float] | None,
     direction_task: Sequence[float],
     planned_displacement_m: float,
     planned_reference_world: Sequence[float],
     measured_reference_world: Sequence[float],
     measured_target_world: Sequence[float],
-    measured_banana_world: Sequence[float],
+    measured_distractor_world: Sequence[float] | None,
     contacts: Mapping[str, Any],
+    target_object: str,
 ) -> tuple[dict[str, Any], list[str]]:
     from experiments.online_correction_v4.droid_g3 import (
         goal_set_for_reference,
@@ -258,13 +276,20 @@ def evaluate_path_sample(
     target_drift_m = stationary_drift_m(baseline_target_world, measured_target_world)
     if target_drift_m > drift_max_m + 1e-12:
         reasons.append("target_drift_exceeds_contract")
-    banana_drift_m = stationary_drift_m(baseline_banana_world, measured_banana_world)
-    if banana_drift_m > drift_max_m + 1e-12:
-        reasons.append("banana_drift_exceeds_contract")
+    distractor_drift_m = None
+    if baseline_distractor_world is not None and measured_distractor_world is not None:
+        distractor_drift_m = stationary_drift_m(
+            baseline_distractor_world, measured_distractor_world
+        )
+        if distractor_drift_m > drift_max_m + 1e-12:
+            reasons.append("distractor_drift_exceeds_contract")
     path_conformance = (
         reference_pose_error_m <= pose_error_max_m + 1e-12
         and target_drift_m <= drift_max_m + 1e-12
-        and banana_drift_m <= drift_max_m + 1e-12
+        and (
+            distractor_drift_m is None
+            or distractor_drift_m <= drift_max_m + 1e-12
+        )
     )
 
     support_valid = bool(contacts.get("support_valid"))
@@ -311,8 +336,7 @@ def evaluate_path_sample(
             float(value) for value in measured_reference_world[:3]
         ],
         "reference_pose_error_m": reference_pose_error_m,
-        "rubiks_cube_drift_m": target_drift_m,
-        "banana_drift_m": banana_drift_m,
+        f"{target_object}_drift_m": target_drift_m,
         "path_conformance": path_conformance,
         "support_valid": support_valid,
         "reference_robot_contact": reference_robot_contact,
@@ -466,6 +490,12 @@ def _run_path_check(
     shared_reset: Mapping[str, Any],
     environment_seed: int,
     scale: float,
+    fixture_id: str,
+    target_object: str,
+    reference_object: str,
+    distractor_object: str | None,
+    trajectory_schema: str,
+    fixture_spec: Any,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     from experiments.online_correction_v4.droid_g3 import (
         classify_contacts,
@@ -475,7 +505,7 @@ def _run_path_check(
     from experiments.online_correction_v4.droid_task_files.constants import ENV_ACTIVE_GOAL
 
     check_id = (
-        f"online-correction-v4-g3-horizontal-{environment_seed}-"
+        f"online-correction-v4-g3-{fixture_id.replace('_', '-')}-{environment_seed}-"
         f"scale-{scale:g}-{goal}-{scenario}"
     )
     env.config.goal = goal
@@ -486,15 +516,21 @@ def _run_path_check(
     geometry = shared_reset["geometry"]
     baseline_reference = tuple(
         float(value)
-        for value in physical_reset["objects"]["bowl"]["position_world_xyz_m"]
+        for value in physical_reset["objects"][reference_object]["position_world_xyz_m"]
     )
     baseline_target = tuple(
         float(value)
-        for value in physical_reset["objects"]["rubiks_cube"]["position_world_xyz_m"]
+        for value in physical_reset["objects"][target_object]["position_world_xyz_m"]
     )
-    baseline_banana = tuple(
-        float(value)
-        for value in physical_reset["objects"]["banana"]["position_world_xyz_m"]
+    baseline_distractor = (
+        tuple(
+            float(value)
+            for value in physical_reset["objects"][distractor_object][
+                "position_world_xyz_m"
+            ]
+        )
+        if distractor_object is not None
+        else None
     )
     robot_quaternion = tuple(
         float(value) for value in physical_reset["robot_quaternion_world_wxyz"]
@@ -531,19 +567,24 @@ def _run_path_check(
         scene = backend.g3_scene_state()
         measured_reference = tuple(
             float(value)
-            for value in scene["objects"]["bowl"]["position_world_xyz_m"]
+            for value in scene["objects"][reference_object]["position_world_xyz_m"]
         )
         measured_target = tuple(
             float(value)
-            for value in scene["objects"]["rubiks_cube"]["position_world_xyz_m"]
+            for value in scene["objects"][target_object]["position_world_xyz_m"]
         )
-        measured_banana = tuple(
-            float(value)
-            for value in scene["objects"]["banana"]["position_world_xyz_m"]
+        measured_distractor = (
+            tuple(
+                float(value)
+                for value in scene["objects"][distractor_object]["position_world_xyz_m"]
+            )
+            if distractor_object is not None
+            else None
         )
         contacts = classify_contacts(
             scene.get("contact_force_n_by_pair", {}),
             active_force_threshold_n=force_threshold,
+            fixture_spec=fixture_spec,
         )
         sample_summary, sample_reasons = evaluate_path_sample(
             goal=goal,
@@ -551,14 +592,15 @@ def _run_path_check(
             geometry_contract=geometry_contract,
             baseline_reference_world=baseline_reference,
             baseline_target_world=baseline_target,
-            baseline_banana_world=baseline_banana,
+            baseline_distractor_world=baseline_distractor,
             direction_task=direction_task,
             planned_displacement_m=state.displacement_m,
             planned_reference_world=planned_reference,
             measured_reference_world=measured_reference,
             measured_target_world=measured_target,
-            measured_banana_world=measured_banana,
+            measured_distractor_world=measured_distractor,
             contacts=contacts,
+            target_object=target_object,
         )
         sample_record = {
             "planned_time_s": planned_time_s,
@@ -583,7 +625,7 @@ def _run_path_check(
     reference_record = _write_json(
         check_dir / "reference_trajectory.json",
         {
-            "schema_version": TRAJECTORY_SCHEMA,
+            "schema_version": trajectory_schema,
             "goal": goal,
             "scenario": scenario,
             "planned_duration_s": planned_duration_s,
@@ -595,7 +637,7 @@ def _run_path_check(
     measured_record = _write_json(
         check_dir / "measured_trajectory.json",
         {
-            "schema_version": TRAJECTORY_SCHEMA,
+            "schema_version": trajectory_schema,
             "goal": goal,
             "scenario": scenario,
             "planned_duration_s": planned_duration_s,
@@ -657,8 +699,11 @@ def main(argv: list[str] | None = None) -> int:
             MODEL_BLIND_CANDIDATE_STATUS,
             load_reset_registry,
         )
+        from experiments.online_correction_v4.droid_task_files.constants import (
+            fixture_object_spec,
+        )
         from experiments.online_correction_v4.droid_g3 import (
-            horizontal_geometry_from_scene,
+            geometry_from_scene_for_fixture,
         )
         from experiments.online_correction_v4.model_blind_g2 import (
             task_frame_evidence,
@@ -726,16 +771,26 @@ def main(argv: list[str] | None = None) -> int:
         )
         clearance_m = float(geometry_contract["relation_clearance_m"])
 
+        fixture_id = args.fixture_id
+        fixture_spec = fixture_object_spec(fixture_id)
+        prompt = FIXTURE_PROMPTS[fixture_id]
+        trajectory_schema = _trajectory_schema(fixture_id)
+        infra_failure_schema = _infra_failure_schema(fixture_id)
+        target_object = fixture_spec.target_object
+        reference_object = fixture_spec.reference_object
+        distractor_object = fixture_spec.distractor_object
+
         episode_id = (
-            f"online-correction-v4-g3-horizontal-{args.environment_seed}-"
+            f"online-correction-v4-g3-{fixture_id.replace('_', '-')}-"
+            f"{args.environment_seed}-"
             f"scale-{args.scale:g}"
         )
-        prompt_sha256 = sha256_bytes(PROMPT.encode("utf-8"))
+        prompt_sha256 = sha256_bytes(prompt.encode("utf-8"))
         queue_row, queue_row_sha256 = write_queue_row(
             output_dir=output_dir,
             episode_id=episode_id,
-            fixture_id="horizontal",
-            prompt_text=PROMPT,
+            fixture_id=fixture_id,
+            prompt_text=prompt,
             prompt_sha256=prompt_sha256,
             env_seed=args.environment_seed,
             goal="left",
@@ -766,7 +821,7 @@ def main(argv: list[str] | None = None) -> int:
             canonical_json_bytes(runtime_identity)
         )
         fixture = ResetFixtureBinding(
-            fixture_id="horizontal",
+            fixture_id=fixture_id,
             reset_registry_sha256=args.reset_registry_sha256,
             reset_registry_uri=f"file://{registry_path}",
         )
@@ -781,7 +836,7 @@ def main(argv: list[str] | None = None) -> int:
             env_seed=args.environment_seed,
             episode_id=episode_id,
             goal="left",
-            prompt_text=PROMPT,
+            prompt_text=prompt,
             prompt_sha256=prompt_sha256,
             policy_id="model_blind_no_policy",
             queue_row_path=queue_row,
@@ -799,7 +854,8 @@ def main(argv: list[str] | None = None) -> int:
         )
         task_frame = task_frame_evidence(physical_reset)
         initial_scene = env.backend.g3_scene_state()
-        geometry = horizontal_geometry_from_scene(
+        geometry = geometry_from_scene_for_fixture(
+            fixture_id=fixture_id,
             task_frame_evidence=task_frame,
             scene_state=initial_scene,
             support_edge_margin_m=float(
@@ -825,7 +881,7 @@ def main(argv: list[str] | None = None) -> int:
             "geometry": geometry,
             "restore_state": env.backend.capture_g3_restore_state(),
         }
-        baseline_reference = physical_reset["objects"]["bowl"][
+        baseline_reference = physical_reset["objects"][reference_object][
             "position_world_xyz_m"
         ]
         robot_quaternion = physical_reset["robot_quaternion_world_wxyz"]
@@ -855,6 +911,12 @@ def main(argv: list[str] | None = None) -> int:
                 shared_reset=shared_reset,
                 environment_seed=args.environment_seed,
                 scale=float(args.scale),
+                fixture_id=fixture_id,
+                target_object=target_object,
+                reference_object=reference_object,
+                distractor_object=distractor_object,
+                trajectory_schema=trajectory_schema,
+                fixture_spec=fixture_spec,
             )
             check_observations.append(observation)
             check_artifacts[_check_slug(goal, scenario)] = artifacts
@@ -898,10 +960,11 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps({"passed": receipt["passed"], "receipt": receipt_record}, indent=2))
         return 0
     except Exception as exc:
+        failure_fixture = args.fixture_id
         failure = {
-            "schema_version": INFRA_FAILURE_SCHEMA,
+            "schema_version": _infra_failure_schema(failure_fixture),
             "campaign_id": "online_correction_v4",
-            "fixture_id": "horizontal",
+            "fixture_id": failure_fixture,
             "environment_seed": args.environment_seed,
             "scale": args.scale,
             "status": "infrastructure_invalid",
@@ -913,7 +976,7 @@ def main(argv: list[str] | None = None) -> int:
         }
         _write_json(output_dir / "infrastructure_failure.json", failure)
         print(
-            f"[V4 horizontal G3 path] infrastructure failure: {exc}",
+            f"[V4 {failure_fixture} G3 path] infrastructure failure: {exc}",
             file=sys.stderr,
         )
         return 1

@@ -15,10 +15,10 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from experiments.online_correction_v4.model_blind_g3 import (  # noqa: E402
-    PATH_RECEIPT_SCHEMA,
-    PLAN_SCHEMA,
     canonical_json_bytes,
     compile_path_scale_receipt,
+    path_receipt_schema,
+    plan_schema,
     sha256_file,
     validate_path_scale_receipt,
     validate_plan_payload,
@@ -73,7 +73,14 @@ def compile_receipts(
     verify_external: bool = False,
 ) -> dict[str, Any]:
     plan_path = plan_path.resolve()
-    plan = _load_canonical(plan_path, schema=PLAN_SCHEMA)
+    plan_body = plan_path.read_bytes()
+    plan = json.loads(plan_body)
+    if not isinstance(plan, dict):
+        raise ValueError(f"{plan_path}: plan must be a JSON object")
+    fixture_id = plan.get("fixture_id")
+    if not isinstance(fixture_id, str):
+        raise ValueError(f"{plan_path}: plan lacks fixture_id")
+    plan = _load_canonical(plan_path, schema=plan_schema(fixture_id))
     validate_plan_payload(plan)
     plan_receipt = {
         "path": str(plan_path),
@@ -87,7 +94,7 @@ def compile_receipts(
     receipt_files: dict[int, dict[str, Any]] = {}
     verified_artifact_count = 0
     for path in receipt_paths:
-        receipt = _load_canonical(path, schema=PATH_RECEIPT_SCHEMA)
+        receipt = _load_canonical(path, schema=path_receipt_schema(fixture_id))
         if verify_external:
             verified_artifact_count += _verify_artifact_records(
                 receipt.get("checks"), label=str(path)

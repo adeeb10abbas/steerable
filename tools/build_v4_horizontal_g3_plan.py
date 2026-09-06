@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the formula-closed, zero-inference horizontal G3 check plan."""
+"""Build the formula-closed, zero-inference V4 G3 check plan."""
 
 from __future__ import annotations
 
@@ -18,24 +18,44 @@ from experiments.online_correction_v4.model_blind_g2 import (  # noqa: E402
 )
 from experiments.online_correction_v4.model_blind_g3 import (  # noqa: E402
     build_plan_payload,
+    g3_fixture_config,
+    resolve_geometry_contract,
     validate_plan_payload,
 )
 
 DEFAULT_CAMPAIGN = ROOT / "docs/online_correction_v4/campaign.json"
 DEFAULT_QUEUE = ROOT / "artifacts/online_correction_v4/queue.jsonl"
 DEFAULT_MOTION = ROOT / "artifacts/online_correction_v4/motion_manifest.json"
-DEFAULT_REGISTRY = (
-    ROOT
-    / "artifacts/online_correction_v4/setup/horizontal_reset_registry.candidate.json"
-)
-DEFAULT_G2_AGGREGATE = (
-    ROOT
-    / "artifacts/online_correction_v4/qualification/20260905_horizontal_g2_aggregate.json"
-)
-DEFAULT_OUTPUT = (
-    ROOT
-    / "artifacts/online_correction_v4/setup/horizontal_g3_plan.candidate.json"
-)
+FIXTURE_DEFAULTS = {
+    "horizontal": {
+        "registry": (
+            ROOT
+            / "artifacts/online_correction_v4/setup/horizontal_reset_registry.candidate.json"
+        ),
+        "g2_aggregate": (
+            ROOT
+            / "artifacts/online_correction_v4/qualification/20260905_horizontal_g2_aggregate.json"
+        ),
+        "output": (
+            ROOT
+            / "artifacts/online_correction_v4/setup/horizontal_g3_plan.candidate.json"
+        ),
+    },
+    "object_pair": {
+        "registry": (
+            ROOT
+            / "artifacts/online_correction_v4/setup/object_pair_reset_registry.candidate.json"
+        ),
+        "g2_aggregate": (
+            ROOT
+            / "artifacts/online_correction_v4/qualification/20260906_object_pair_g2_aggregate_g2c7q20260905ap.json"
+        ),
+        "output": (
+            ROOT
+            / "artifacts/online_correction_v4/setup/object_pair_g3_plan.candidate.json"
+        ),
+    },
+}
 
 
 def sha256_file(path: Path) -> str:
@@ -62,7 +82,9 @@ def build(
     registry_path: Path,
     g2_aggregate_path: Path,
     output_path: Path,
+    fixture_id: str = "horizontal",
 ) -> dict:
+    g3_fixture_config(fixture_id)
     campaign = json.loads(campaign_path.read_text(encoding="utf-8"))
     motion = json.loads(motion_path.read_text(encoding="utf-8"))
     registry = json.loads(registry_path.read_text(encoding="utf-8"))
@@ -91,8 +113,9 @@ def build(
         if line.strip()
     ]
     motion_config = campaign["motion"]
-    nominal = float(campaign["fixtures"]["horizontal"]["nominal_translation_m"])
+    nominal = float(campaign["fixtures"][fixture_id]["nominal_translation_m"])
     plan = build_plan_payload(
+        fixture_id=fixture_id,
         source_identity={
             "campaign": {
                 "path": portable_path(campaign_path),
@@ -131,9 +154,7 @@ def build(
                 "sha256": sha256_file(g2_aggregate_path),
             },
         },
-        geometry_contract=campaign["fixtures"]["horizontal"][
-            "model_blind_g3_geometry"
-        ],
+        geometry_contract=resolve_geometry_contract(campaign, fixture_id),
         reset_registry=registry,
         queue_rows=rows,
         scale_candidates=motion_config["calibration_scale_candidates"],
@@ -165,20 +186,27 @@ def build(
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--fixture-id",
+        choices=tuple(FIXTURE_DEFAULTS),
+        default="horizontal",
+    )
     parser.add_argument("--campaign", type=Path, default=DEFAULT_CAMPAIGN)
     parser.add_argument("--queue", type=Path, default=DEFAULT_QUEUE)
     parser.add_argument("--motion-manifest", type=Path, default=DEFAULT_MOTION)
-    parser.add_argument("--reset-registry", type=Path, default=DEFAULT_REGISTRY)
-    parser.add_argument("--g2-aggregate", type=Path, default=DEFAULT_G2_AGGREGATE)
-    parser.add_argument("--out", type=Path, default=DEFAULT_OUTPUT)
+    parser.add_argument("--reset-registry", type=Path)
+    parser.add_argument("--g2-aggregate", type=Path)
+    parser.add_argument("--out", type=Path)
     args = parser.parse_args(argv)
+    defaults = FIXTURE_DEFAULTS[args.fixture_id]
     report = build(
         campaign_path=args.campaign.resolve(),
         queue_path=args.queue.resolve(),
         motion_path=args.motion_manifest.resolve(),
-        registry_path=args.reset_registry.resolve(),
-        g2_aggregate_path=args.g2_aggregate.resolve(),
-        output_path=args.out.resolve(),
+        registry_path=(args.reset_registry or defaults["registry"]).resolve(),
+        g2_aggregate_path=(args.g2_aggregate or defaults["g2_aggregate"]).resolve(),
+        output_path=(args.out or defaults["output"]).resolve(),
+        fixture_id=args.fixture_id,
     )
     print(json.dumps(report, indent=2, sort_keys=True))
     return 0

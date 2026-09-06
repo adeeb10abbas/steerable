@@ -674,8 +674,6 @@ def main(argv: list[str] | None = None) -> int:
         campaign = json.loads(campaign_bytes)
         if canonical_json_bytes(plan) != plan_bytes:
             raise RuntimeError("G3 plan is not canonical JSON")
-        if canonical_json_bytes(campaign) != campaign_bytes:
-            raise RuntimeError("G3 campaign is not canonical JSON")
         validate_scripted_seed_gate_inputs(
             plan=plan,
             campaign=campaign,

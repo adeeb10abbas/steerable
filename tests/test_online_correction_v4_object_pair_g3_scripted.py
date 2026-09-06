@@ -178,7 +178,8 @@ class ObjectPairG3ScriptedTests(unittest.TestCase):
             "6272ef4de4c6188e65198cd5f1a7f35e1ccbaf3d8022d5a1b6d030cf0eb1b84c",
         )
         self.assertTrue(spec["output_parent_must_exist_on_pvc"])
-        self.assertTrue(spec["path_scale_receipt_binding_only"])
+        self.assertFalse(spec["path_scale_receipt_binding_only"])
+        self.assertTrue(spec["path_scale_receipt_source"].endswith(".json"))
         self.assertTrue(len(spec["launch_prerequisites"]) >= 2)
 
     def test_render_object_pair_bundle_with_local_path_scale_receipt(self) -> None:

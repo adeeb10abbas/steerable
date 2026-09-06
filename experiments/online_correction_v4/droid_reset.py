@@ -245,7 +245,13 @@ class TwoResetAttestationProxy:
             if linear is None or angular is None:
                 raise ResetAttestationError(f"{name} stability maxima are incomplete")
             if linear > LINEAR_SPEED_TOLERANCE_M_S or angular > ANGULAR_SPEED_TOLERANCE_RAD_S:
-                raise ResetAttestationError(f"{name} exceeded released stability thresholds")
+                raise ResetAttestationError(
+                    f"{name} exceeded released stability thresholds: "
+                    f"linear_component_max={float(linear):.9f}m/s "
+                    f"(limit={LINEAR_SPEED_TOLERANCE_M_S:.9f}), "
+                    f"angular_component_max={float(angular):.9f}rad/s "
+                    f"(limit={ANGULAR_SPEED_TOLERANCE_RAD_S:.9f})"
+                )
 
 
 def _terminated_or_truncated(step_result: Any) -> bool:

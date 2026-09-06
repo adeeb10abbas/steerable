@@ -33,7 +33,11 @@ from experiments.online_correction_v4.droid_policy_request import (
     observation_packed_request,
 )
 from experiments.online_correction_v4.droid_pi05_policy import DroidPi05PolicyAdapter, PI05_ACTION_SHAPE
-from experiments.online_correction_v4.droid_reset import ResetAttestationState, TwoResetAttestationProxy
+from experiments.online_correction_v4.droid_reset import (
+    ResetAttestationError,
+    ResetAttestationState,
+    TwoResetAttestationProxy,
+)
 from experiments.online_correction_v4.droid_reset_verify import (
     verify_measured_native_dt,
     verify_neutral_horizontal_layout,
@@ -680,6 +684,21 @@ class DroidReviewFixTests(unittest.TestCase):
         self.assertEqual(env.last_hold_action, (0.1,) * 8)
         env.step((0.1,) * 8)
         self.assertEqual(env.control_tick, before + 1)
+
+    def test_stability_failure_reports_measured_components(self) -> None:
+        evidence = {
+            "stability_window_component_maxima": {
+                "sponge": {
+                    "max_linear_component_speed_m_s": 0.03125,
+                    "max_angular_component_speed_rad_s": 0.375,
+                }
+            }
+        }
+        with self.assertRaisesRegex(
+            ResetAttestationError,
+            r"linear_component_max=0\.031250000m/s.*angular_component_max=0\.375000000rad/s",
+        ):
+            TwoResetAttestationProxy._validate_settle_evidence(evidence)
 
     def test_active_registration_uses_single_task_module(self) -> None:
         reg = resolve_active_registration()

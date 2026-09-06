@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 import tempfile
@@ -24,6 +25,11 @@ CANDIDATE = (
     ROOT
     / "artifacts/online_correction_v4/setup"
     / "second_stack_reset_registry.candidate.json"
+)
+CHECKPOINT = (
+    ROOT
+    / "artifacts/online_correction_v4/setup"
+    / "gr00t_n17_simplerenv_bridge_checkpoint.json"
 )
 
 
@@ -91,6 +97,23 @@ class SecondStackResetRegistryTests(unittest.TestCase):
         self.assertEqual(
             alternate["external_stack_identity"],
             committed["external_stack_identity"],
+        )
+
+    def test_checkpoint_content_receipt_is_self_consistent(self) -> None:
+        receipt = json.loads(CHECKPOINT.read_text(encoding="utf-8"))
+        files = receipt["files"]
+        self.assertEqual(receipt["revision"], CHECKPOINT_REVISION)
+        self.assertEqual(receipt["file_count"], len(files))
+        self.assertEqual(receipt["total_bytes"], sum(row["bytes"] for row in files))
+        self.assertEqual(
+            receipt["content_sha256"],
+            hashlib.sha256(
+                json.dumps(
+                    files,
+                    sort_keys=True,
+                    separators=(",", ":"),
+                ).encode("utf-8")
+            ).hexdigest(),
         )
 
 

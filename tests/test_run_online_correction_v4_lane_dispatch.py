@@ -50,6 +50,22 @@ class LaneDispatchTests(unittest.TestCase):
                 runtime_root,
             )
 
+    def test_runtime_runner_replaces_staged_copy_after_hash_validation(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            runtime_runner = root / "study/tools/run_online_correction_v4.py"
+            runtime_runner.parent.mkdir(parents=True)
+            runtime_runner.write_text("print('runtime')\n", encoding="utf-8")
+            staged_runner = root / "bindings/run_online_correction_v4.py"
+            staged_runner.parent.mkdir()
+            staged_runner.write_bytes(runtime_runner.read_bytes())
+            resolved = dispatch.resolve_runtime_runner(
+                {"runner_sha256": dispatch.sha256_file(runtime_runner)},
+                root / "study",
+                staged_runner,
+            )
+            self.assertEqual(resolved, runtime_runner)
+
 
 if __name__ == "__main__":
     unittest.main()

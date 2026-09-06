@@ -119,6 +119,23 @@ def resolve_runtime_working_directory(manifest: Mapping[str, Any]) -> Path:
     return runtime_root
 
 
+def resolve_runtime_runner(
+    manifest: Mapping[str, Any],
+    runtime_root: Path,
+    staged_runner: Path,
+) -> Path:
+    runtime_runner = runtime_root / "tools" / staged_runner.name
+    if not runtime_runner.is_file():
+        _fail(f"runtime runner is missing: {runtime_runner}")
+    expected = str(manifest["runner_sha256"])
+    observed = sha256_file(runtime_runner)
+    if observed != expected:
+        _fail(
+            f"runtime runner sha256 mismatch: expected {expected}, observed {observed}"
+        )
+    return runtime_runner
+
+
 def load_policy_wait_endpoint(launch_config_path: Path) -> tuple[str, int]:
     if not launch_config_path.is_file():
         _fail(f"simulator launch config missing: {launch_config_path}")
@@ -225,8 +242,13 @@ def main(argv: list[str] | None = None) -> int:
 
     manifest_path = Path(args.dispatch_manifest).resolve()
     manifest = load_dispatch_manifest(manifest_path)
-    runner_path = validate_runner_binding(manifest)
+    staged_runner_path = validate_runner_binding(manifest)
     runtime_working_directory = resolve_runtime_working_directory(manifest)
+    runner_path = resolve_runtime_runner(
+        manifest,
+        runtime_working_directory,
+        staged_runner_path,
+    )
     launch_config_path = Path(args.launch_config).resolve() if args.launch_config else None
 
     output_parent = os.environ.get("EPISODE_OUTPUT_DIR") or os.environ.get("OUTPUT_PARENT")

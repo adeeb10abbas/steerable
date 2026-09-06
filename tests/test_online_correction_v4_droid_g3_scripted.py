@@ -13,7 +13,6 @@ from experiments.online_correction_v4.adapters import TerminalPhysicalPredicates
 from experiments.online_correction_v4.droid_g3_scripted import (
     DroidG3ScriptedError,
     ScriptedControllerConfig,
-    _placement_feedback_target,
     minimum_jerk_waypoints,
     run_scripted_horizontal_check,
     select_robust_target_task,
@@ -154,18 +153,6 @@ class WaypointTests(unittest.TestCase):
                 self.assertTrue(all(left <= right + 1e-12 for left, right in zip(values, values[1:])))
             else:
                 self.assertTrue(all(left >= right - 1e-12 for left, right in zip(values, values[1:])))
-
-    def test_place_feedback_corrects_xy_and_clamps(self) -> None:
-        corrected = _placement_feedback_target(
-            nominal_target=(0.20, 0.10, 0.30),
-            placement_target=(0.20, 0.10, 0.05),
-            object_position=(0.24, 0.08, 0.12),
-            gain=1.0,
-            max_correction_m=0.03,
-        )
-        self.assertAlmostEqual(corrected[0], 0.17)
-        self.assertAlmostEqual(corrected[1], 0.12)
-        self.assertAlmostEqual(corrected[2], 0.30)
 
 
 class TargetSelectionTests(unittest.TestCase):

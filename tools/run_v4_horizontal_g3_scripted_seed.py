@@ -291,10 +291,6 @@ def frozen_scripted_controller_config(fixture_id: str = "horizontal") -> dict[st
         # The measured C7 placement bias is 24.2 mm toward the goal boundary;
         # retain 40 mm of legal-region inset for the qualification rerun.
         config["geometry_offsets"]["target_inset_m"] = 0.04
-        # Correct horizontal IK drift during descent using the privileged
-        # object pose; this signal remains confined to the G3 controller.
-        config["place_xy_feedback_gain"] = 1.0
-        config["place_xy_feedback_max_m"] = 0.08
     return config
 
 

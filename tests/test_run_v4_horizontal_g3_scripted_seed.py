@@ -106,8 +106,6 @@ class FrozenControllerConfigTests(unittest.TestCase):
         config = runner.frozen_scripted_controller_config("object_pair")
         self.assertAlmostEqual(config["eef_tool_length_m"], 0.14)
         self.assertAlmostEqual(config["geometry_offsets"]["target_inset_m"], 0.04)
-        self.assertAlmostEqual(config["place_xy_feedback_gain"], 1.0)
-        self.assertAlmostEqual(config["place_xy_feedback_max_m"], 0.08)
 
 
 class MovingCallbackTests(unittest.TestCase):

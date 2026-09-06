@@ -7,6 +7,7 @@ from enum import Enum
 import hashlib
 import json
 import math
+import traceback
 from typing import Any, Optional
 
 from experiments.online_correction_v4.adapters import (
@@ -175,6 +176,7 @@ class EpisodeRunner:
                 runtime_exception={
                     "type": type(exc).__name__,
                     "detail": str(exc),
+                    "traceback": traceback.format_exc(),
                 }
             )
             self._flush_partial(reason="exception")

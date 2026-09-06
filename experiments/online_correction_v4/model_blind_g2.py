@@ -22,9 +22,21 @@ from experiments.online_correction_v4.droid_task_files.reset_registry import (
 )
 from experiments.online_correction_v4.geometry import TaskFrame
 
-SEED_RECEIPT_SCHEMA = "v4-horizontal-g2-seed-receipt-v1"
-AGGREGATE_RECEIPT_SCHEMA = "v4-horizontal-g2-aggregate-receipt-v1"
-AXIS_REVIEW_SCHEMA = "v4-horizontal-g2-axis-review-v1"
+def seed_receipt_schema(fixture_id: str) -> str:
+    return f"v4-{fixture_id.replace('_', '-')}-g2-seed-receipt-v1"
+
+
+def aggregate_receipt_schema(fixture_id: str) -> str:
+    return f"v4-{fixture_id.replace('_', '-')}-g2-aggregate-receipt-v1"
+
+
+def axis_review_schema(fixture_id: str) -> str:
+    return f"v4-{fixture_id.replace('_', '-')}-g2-axis-review-v1"
+
+
+SEED_RECEIPT_SCHEMA = seed_receipt_schema("horizontal")
+AGGREGATE_RECEIPT_SCHEMA = aggregate_receipt_schema("horizontal")
+AXIS_REVIEW_SCHEMA = axis_review_schema("horizontal")
 REQUIRED_POLICY_CAMERAS = (
     "over_shoulder_left_camera",
     "wrist_cam",
@@ -219,6 +231,8 @@ def axis_projection_evidence(
     camera_geometry: Mapping[str, Any],
     camera_views: Mapping[str, Any],
     arrow_length_m: float = 0.12,
+    reference_object: str = "bowl",
+    fixture_id: str = "horizontal",
 ) -> dict[str, Any]:
     """Project task-frame axes into the exact policy-camera images."""
     if not math.isfinite(arrow_length_m) or arrow_length_m <= 0:
@@ -227,13 +241,15 @@ def axis_projection_evidence(
     objects = physical_reset.get("objects")
     if not isinstance(objects, Mapping):
         raise G2GateError("physical reset lacks objects for axis projection")
-    reference = objects.get("bowl")
+    reference = objects.get(reference_object)
     if not isinstance(reference, Mapping):
-        raise G2GateError("physical reset lacks bowl for axis projection")
+        raise G2GateError(
+            f"physical reset lacks {reference_object} for axis projection"
+        )
     reference_world = _numeric_vector(
         reference.get("position_world_xyz_m"),
         length=3,
-        label="bowl world position",
+        label=f"{reference_object} world position",
     )
     origin = (reference_world[0], reference_world[1], reference_world[2] + 0.10)
     endpoints = {
@@ -313,9 +329,11 @@ def axis_projection_evidence(
             "policy camera projections do not jointly show left/front/up axes"
         )
     return {
-        "schema_version": "v4-horizontal-g2-axis-projection-v1",
+        "schema_version": (
+            f"v4-{fixture_id.replace('_', '-')}-g2-axis-projection-v1"
+        ),
         "arrow_length_m": arrow_length_m,
-        "axis_origin_rule": "0.10m above live bowl center",
+        "axis_origin_rule": f"0.10m above live {reference_object} center",
         "axes_visible_across_policy_cameras": sorted(visible_axis_names),
         "camera_rows": rows,
     }
@@ -333,6 +351,7 @@ def compile_seed_receipt(
     expected_native_control_dt_s: float,
     runtime_identity: Mapping[str, Any],
     artifacts: Mapping[str, Any],
+    fixture_id: str = "horizontal",
 ) -> dict[str, Any]:
     validate_reset_attestation_payload(reset_attestation, episode_id=episode_id)
     position_errors = verify_physical_reset_against_registry(
@@ -340,7 +359,8 @@ def compile_seed_receipt(
         registry=registry,
         env_seed=env_seed,
     )
-    verify_neutral_horizontal_layout(physical_reset)
+    if fixture_id == "horizontal":
+        verify_neutral_horizontal_layout(physical_reset)
     measured_dt = float(physical_reset.get("measured_native_control_dt_s", 0.0))
     verify_measured_native_dt(
         measured_s=measured_dt,
@@ -380,11 +400,13 @@ def compile_seed_receipt(
         physical_reset=physical_reset,
         camera_geometry=camera_geometry,
         camera_views=camera_views,
+        reference_object=registry.object_roles["reference"].scene_object,
+        fixture_id=fixture_id,
     )
     return {
-        "schema_version": SEED_RECEIPT_SCHEMA,
+        "schema_version": seed_receipt_schema(fixture_id),
         "campaign_id": "online_correction_v4",
-        "fixture_id": "horizontal",
+        "fixture_id": fixture_id,
         "status": "passed_reset_camera_and_numeric_frame_pending_axis_visual_review",
         "passed_reset_and_camera": True,
         "g2_complete": False,
@@ -417,12 +439,13 @@ def compile_aggregate_receipt(
     expected_env_seeds: Iterable[int],
     seed_receipts: Iterable[Mapping[str, Any]],
     axis_review: Mapping[str, Any] | None,
+    fixture_id: str = "horizontal",
 ) -> dict[str, Any]:
     expected = tuple(sorted(set(int(seed) for seed in expected_env_seeds)))
     receipts = list(seed_receipts)
     observed: dict[int, Mapping[str, Any]] = {}
     for receipt in receipts:
-        if receipt.get("schema_version") != SEED_RECEIPT_SCHEMA:
+        if receipt.get("schema_version") != seed_receipt_schema(fixture_id):
             raise G2GateError("aggregate contains a seed receipt with the wrong schema")
         seed = receipt.get("environment_seed")
         if type(seed) is not int or seed in observed:
@@ -439,11 +462,11 @@ def compile_aggregate_receipt(
     )
     axis_passed = False
     if isinstance(axis_review, Mapping):
-        if axis_review.get("schema_version") != AXIS_REVIEW_SCHEMA:
+        if axis_review.get("schema_version") != axis_review_schema(fixture_id):
             raise G2GateError("axis review schema differs")
         if axis_review.get("campaign_id") != "online_correction_v4":
             raise G2GateError("axis review campaign differs")
-        if axis_review.get("fixture_id") != "horizontal":
+        if axis_review.get("fixture_id") != fixture_id:
             raise G2GateError("axis review fixture differs")
         if axis_review.get("model_request_count") != 0:
             raise G2GateError("axis review records model requests")
@@ -481,9 +504,9 @@ def compile_aggregate_receipt(
         )
     passed = not missing and not unexpected and not failed and axis_passed
     return {
-        "schema_version": AGGREGATE_RECEIPT_SCHEMA,
+        "schema_version": aggregate_receipt_schema(fixture_id),
         "campaign_id": "online_correction_v4",
-        "fixture_id": "horizontal",
+        "fixture_id": fixture_id,
         "status": "passed" if passed else "blocked_incomplete",
         "passed": passed,
         "model_request_count": 0,

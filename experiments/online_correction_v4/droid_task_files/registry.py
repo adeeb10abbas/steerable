@@ -12,6 +12,11 @@ from experiments.online_correction_v4.droid_task_files.constants import (
     EPISODE_LENGTH_S,
     EXTERNAL_SCORER_MODE,
     HORIZONTAL_RELATIONS,
+    OBJECT_PAIR_CONTACT_OBJECTS,
+    OBJECT_PAIR_REFERENCE_OBJECT,
+    OBJECT_PAIR_SCENE_METADATA_SHA256,
+    OBJECT_PAIR_SCENE_PATH,
+    OBJECT_PAIR_TARGET_OBJECT,
     ROBOLAB_SUCCESS_TERMINATION_FORBIDDEN,
     SCENE_ASSET,
     SCENE_METADATA_SHA256,
@@ -45,7 +50,10 @@ class FixtureRegistration:
 
 _TASK_ROOT = Path(__file__).resolve().parent / "task_files"
 
-_ACTIVE_TASK = ("horizontal_active.py", "V4HorizontalActiveTask")
+_ACTIVE_TASKS = {
+    "horizontal": ("horizontal_active.py", "V4HorizontalActiveTask"),
+    "object_pair": ("object_pair_active.py", "V4ObjectPairActiveTask"),
+}
 
 _HORIZONTAL_TASKS: dict[str, tuple[str, str]] = {
     "left": ("horizontal_left.py", "V4HorizontalLeftTask"),
@@ -71,8 +79,45 @@ def list_registered_horizontal_relations() -> tuple[str, ...]:
     return HORIZONTAL_RELATIONS
 
 
-def resolve_active_registration() -> FixtureRegistration:
-    module_name, class_name = _ACTIVE_TASK
+def resolve_active_registration(
+    fixture_id: str = "horizontal",
+    *,
+    allow_model_blind_candidate: bool = False,
+) -> FixtureRegistration:
+    if fixture_id == "object_pair" and allow_model_blind_candidate:
+        module_name, class_name = _ACTIVE_TASKS[fixture_id]
+        return FixtureRegistration(
+            fixture_id=fixture_id,
+            relation=None,
+            scene_asset=OBJECT_PAIR_SCENE_PATH,
+            scene_metadata_sha256=OBJECT_PAIR_SCENE_METADATA_SHA256,
+            target_object=OBJECT_PAIR_TARGET_OBJECT,
+            reference_object=OBJECT_PAIR_REFERENCE_OBJECT,
+            contact_object_list=OBJECT_PAIR_CONTACT_OBJECTS,
+            episode_length_s=EPISODE_LENGTH_S,
+            timeout_only=True,
+            external_scorer_mode=EXTERNAL_SCORER_MODE,
+            robolab_success_termination_forbidden=ROBOLAB_SUCCESS_TERMINATION_FORBIDDEN,
+            task_module=str(_TASK_ROOT / module_name),
+            task_class=class_name,
+            attributes=(
+                "spatial",
+                "online_correction_v4",
+                "object_pair",
+                "timeout_only",
+                "external_v4_scorer",
+                "active_episode_bound",
+                "model_blind_candidate",
+            ),
+        )
+    if fixture_id != "horizontal":
+        if fixture_id in BLOCKED_FIXTURE_IDS:
+            _fail(
+                f"fixture {fixture_id!r} is blocked until asset receipts exist: "
+                f"{BLOCKED_FIXTURE_IDS[fixture_id]}"
+            )
+        _fail(f"unsupported active fixture {fixture_id!r}")
+    module_name, class_name = _ACTIVE_TASKS[fixture_id]
     return FixtureRegistration(
         fixture_id="horizontal",
         relation=None,

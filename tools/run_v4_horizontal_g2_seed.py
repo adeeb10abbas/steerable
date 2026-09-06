@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run one zero-inference V4 horizontal G2 reset/camera seed on RoboLab."""
+"""Run one zero-inference V4 DROID G2 reset/camera seed on RoboLab."""
 
 from __future__ import annotations
 
@@ -14,10 +14,16 @@ from typing import Any, Mapping
 
 ROOT = Path(__file__).resolve().parents[1]
 ROBOLAB_COMMIT = "0aef241fb088ca21bb4ebd24448940ed56620d17"
-PROMPT = (
-    "Place the cube so that the cube is left of the bowl. "
-    "Use the robot's fixed viewpoint for left, right, front, and behind."
-)
+FIXTURE_PROMPTS = {
+    "horizontal": (
+        "Place the cube so that the cube is left of the bowl. "
+        "Use the robot's fixed viewpoint for left, right, front, and behind."
+    ),
+    "object_pair": (
+        "Place the sponge so that the sponge is left of the tray. "
+        "Use the robot's fixed viewpoint for left, right, front, and behind."
+    ),
+}
 
 
 def _parser() -> argparse.ArgumentParser:
@@ -26,6 +32,11 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--robolab-root", type=Path, required=True)
     parser.add_argument("--reset-registry", type=Path, required=True)
     parser.add_argument("--reset-registry-sha256", required=True)
+    parser.add_argument(
+        "--fixture-id",
+        choices=tuple(FIXTURE_PROMPTS),
+        default="horizontal",
+    )
     parser.add_argument("--environment-seed", type=int, required=True)
     parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--expected-study-commit", required=True)
@@ -299,6 +310,7 @@ def _write_json(path: Path, payload: Mapping[str, Any]) -> dict[str, Any]:
 
 def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
+    prompt = FIXTURE_PROMPTS[args.fixture_id]
     study_root = args.study_root.resolve()
     robolab_root = args.robolab_root.resolve()
     registry_path = args.reset_registry.resolve()
@@ -361,17 +373,21 @@ def main(argv: list[str] | None = None) -> int:
             registry_path=str(registry_path),
             registry_sha256=args.reset_registry_sha256,
             required_status=MODEL_BLIND_CANDIDATE_STATUS,
+            expected_fixture_id=args.fixture_id,
         )
         if args.environment_seed not in registry.positions_by_env_seed:
             raise RuntimeError("environment seed is absent from reset registry")
 
-        episode_id = f"online-correction-v4-g2-horizontal-{args.environment_seed}"
-        prompt_sha256 = sha256_bytes(PROMPT.encode("utf-8"))
+        episode_id = (
+            f"online-correction-v4-g2-{args.fixture_id.replace('_', '-')}-"
+            f"{args.environment_seed}"
+        )
+        prompt_sha256 = sha256_bytes(prompt.encode("utf-8"))
         queue_row, queue_row_sha256 = write_queue_row(
             output_dir=output_dir,
             episode_id=episode_id,
-            fixture_id="horizontal",
-            prompt_text=PROMPT,
+            fixture_id=args.fixture_id,
+            prompt_text=prompt,
             prompt_sha256=prompt_sha256,
             env_seed=args.environment_seed,
             goal="left",
@@ -397,7 +413,7 @@ def main(argv: list[str] | None = None) -> int:
             canonical_json_bytes(runtime_identity)
         )
         fixture = ResetFixtureBinding(
-            fixture_id="horizontal",
+            fixture_id=args.fixture_id,
             reset_registry_sha256=args.reset_registry_sha256,
             reset_registry_uri=f"file://{registry_path}",
         )
@@ -412,7 +428,7 @@ def main(argv: list[str] | None = None) -> int:
             env_seed=args.environment_seed,
             episode_id=episode_id,
             goal="left",
-            prompt_text=PROMPT,
+            prompt_text=prompt,
             prompt_sha256=prompt_sha256,
             policy_id="model_blind_no_policy",
             queue_row_path=queue_row,
@@ -438,6 +454,8 @@ def main(argv: list[str] | None = None) -> int:
             physical_reset=physical,
             camera_geometry=camera_geometry,
             camera_views=camera_views,
+            reference_object=registry.object_roles["reference"].scene_object,
+            fixture_id=args.fixture_id,
         )
 
         artifacts = {
@@ -473,6 +491,7 @@ def main(argv: list[str] | None = None) -> int:
             expected_native_control_dt_s=args.native_control_dt_s,
             runtime_identity=runtime_identity,
             artifacts=artifacts,
+            fixture_id=args.fixture_id,
         )
         receipt_record = _write_json(
             output_dir / "g2_seed_receipt.json",
@@ -482,9 +501,12 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     except Exception as exc:
         failure = {
-            "schema_version": "v4-horizontal-g2-infrastructure-failure-v1",
+            "schema_version": (
+                f"v4-{args.fixture_id.replace('_', '-')}-g2-"
+                "infrastructure-failure-v1"
+            ),
             "campaign_id": "online_correction_v4",
-            "fixture_id": "horizontal",
+            "fixture_id": args.fixture_id,
             "environment_seed": args.environment_seed,
             "status": "infrastructure_invalid",
             "model_request_count": 0,
@@ -495,7 +517,7 @@ def main(argv: list[str] | None = None) -> int:
         }
         _write_json(output_dir / "infrastructure_failure.json", failure)
         print(
-            f"[V4 horizontal G2] infrastructure failure: {exc}",
+            f"[V4 {args.fixture_id} G2] infrastructure failure: {exc}",
             file=sys.stderr,
         )
         return 1

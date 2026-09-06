@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
+from pathlib import Path
+
 STUDY_ID = "online_correction_v4"
 
 ENV_QUEUE_ROW = "ONLINE_CORRECTION_V4_QUEUE_ROW"
@@ -11,6 +14,7 @@ ENV_RESET_REGISTRY_SHA256 = "ONLINE_CORRECTION_V4_RESET_REGISTRY_SHA256"
 ENV_ACTIVE_GOAL = "ONLINE_CORRECTION_V4_ACTIVE_GOAL"
 
 RESET_REGISTRY_SCHEMA = "v4-droid-horizontal-reset-registry-v1"
+OBJECT_PAIR_RESET_REGISTRY_SCHEMA = "v4-droid-object-pair-reset-registry-v1"
 QUEUE_ROW_REQUIRED_KEYS = (
     "episode_id",
     "fixture",
@@ -30,6 +34,66 @@ REFERENCE_OBJECT = "bowl"
 DISTRACTOR_OBJECT = "banana"
 
 HORIZONTAL_RELATIONS = ("left", "right", "front", "behind")
+OBJECT_PAIR_RELATIONS = HORIZONTAL_RELATIONS
+
+
+@dataclass(frozen=True)
+class FixtureObjectSpec:
+    fixture_id: str
+    reset_registry_schema: str
+    scene_asset: str
+    scene_metadata_sha256: str
+    contact_objects: tuple[str, ...]
+    movable_objects: tuple[str, ...]
+    target_object: str
+    reference_object: str
+    distractor_object: str | None = None
+
+
+_REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
+OBJECT_PAIR_SCENE_ASSET = (
+    "experiments/online_correction_v4/droid_task_files/scene_assets/"
+    "sponge_tray_object_pair.usda"
+)
+OBJECT_PAIR_SCENE_PATH = str(_REPOSITORY_ROOT / OBJECT_PAIR_SCENE_ASSET)
+OBJECT_PAIR_SCENE_METADATA_SHA256 = (
+    "aa3c4ceae3bb61e65b37985935c73626172a7aebb400aee6afc4eaa9fcde7fac"
+)
+OBJECT_PAIR_CONTACT_OBJECTS = ("sponge", "tray", "table")
+OBJECT_PAIR_MOVABLE_OBJECTS = ("sponge", "tray")
+OBJECT_PAIR_TARGET_OBJECT = "sponge"
+OBJECT_PAIR_REFERENCE_OBJECT = "tray"
+
+FIXTURE_OBJECT_SPECS: dict[str, FixtureObjectSpec] = {
+    "horizontal": FixtureObjectSpec(
+        fixture_id="horizontal",
+        reset_registry_schema=RESET_REGISTRY_SCHEMA,
+        scene_asset=SCENE_ASSET,
+        scene_metadata_sha256=SCENE_METADATA_SHA256,
+        contact_objects=CONTACT_OBJECT_LIST,
+        movable_objects=MOVABLE_OBJECTS,
+        target_object=TARGET_OBJECT,
+        reference_object=REFERENCE_OBJECT,
+        distractor_object=DISTRACTOR_OBJECT,
+    ),
+    "object_pair": FixtureObjectSpec(
+        fixture_id="object_pair",
+        reset_registry_schema=OBJECT_PAIR_RESET_REGISTRY_SCHEMA,
+        scene_asset=OBJECT_PAIR_SCENE_ASSET,
+        scene_metadata_sha256=OBJECT_PAIR_SCENE_METADATA_SHA256,
+        contact_objects=OBJECT_PAIR_CONTACT_OBJECTS,
+        movable_objects=OBJECT_PAIR_MOVABLE_OBJECTS,
+        target_object=OBJECT_PAIR_TARGET_OBJECT,
+        reference_object=OBJECT_PAIR_REFERENCE_OBJECT,
+    ),
+}
+
+
+def fixture_object_spec(fixture_id: str) -> FixtureObjectSpec:
+    try:
+        return FIXTURE_OBJECT_SPECS[fixture_id]
+    except KeyError as exc:
+        raise ValueError(f"unsupported DROID fixture object specification: {fixture_id}") from exc
 
 # 60 s active policy cap plus 1.0 s passive adjudication outside the cap.
 EPISODE_LENGTH_S = 61

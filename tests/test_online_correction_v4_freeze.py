@@ -153,6 +153,7 @@ class FreezeBuilderTests(unittest.TestCase):
                     "horizontal_g2_seed_substitution_amendment.candidate.json",
                     "horizontal_g3_plan.candidate.json",
                     "horizontal_reset_registry.candidate.json",
+                    "object_pair_reset_registry.candidate.json",
                 },
             )
             for candidate in candidates:

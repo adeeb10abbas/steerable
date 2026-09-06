@@ -247,6 +247,15 @@ permitted for C5-C7; C2 and C8 retain their separate hard blockers.
 | C2 | `hard_blocked` | `BLOCKED_SETUP` — verified common-prefix replay required |
 | C8 | `hard_blocked` | `BLOCKED_RUNTIME` — GR00T Bridge/WidowX stack unverified |
 
+Model-blind C7 preparation has started without model requests. The procedural
+yellow-sponge/blue-tray USD candidate and its hash-bound 64-seed registry are
+`experiments/online_correction_v4/droid_task_files/scene_assets/sponge_tray_object_pair.usda`
+and
+`artifacts/online_correction_v4/setup/object_pair_reset_registry.candidate.json`.
+The candidate uses the frozen C7 seed namespace `2100040000`–`2100040063` and
+common x/y jitter. It is not a released fixture: live USD import, G2
+reset/camera/frame evidence, G3 paths, and scripted feasibility remain pending.
+
 Every queue row is a **registered new episode**. `reuse_episode_ids` are comparison-control links only; C3/C4 rows are not reuse-only aliases. C4 fast-schedule sham/move rows are new episodes because schedule differs from reused C1 controls.
 
 ## Exact next commands

@@ -3,15 +3,13 @@
 
 from __future__ import annotations
 
+import argparse
 import json
 import os
 from pathlib import Path
 import subprocess
 import sys
 from typing import Any
-
-
-RECEIPT_SCHEMA = "v4-horizontal-g2-seed-receipt-v1"
 
 
 def _load_object(path: Path) -> dict[str, Any]:
@@ -23,22 +21,27 @@ def _load_object(path: Path) -> dict[str, Any]:
 
 def main(argv: list[str] | None = None) -> int:
     arguments = list(sys.argv[1:] if argv is None else argv)
-    if (
-        len(arguments) < 4
-        or arguments[0] != "--expected-environment-seed"
-        or arguments[2] != "--"
-    ):
+    if "--" not in arguments:
         print(
-            "usage: run_v4_g2_checked.py --expected-environment-seed SEED "
+            "usage: run_v4_g2_checked.py [--expected-fixture FIXTURE] "
+            "--expected-environment-seed SEED "
             "-- EXECUTABLE [ARG ...]",
             file=sys.stderr,
         )
         return 2
+    separator = arguments.index("--")
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument("--expected-fixture", default="horizontal")
+    parser.add_argument("--expected-environment-seed", type=int, required=True)
     try:
-        expected_environment_seed = int(arguments[1])
-    except ValueError:
-        print("expected environment seed must be an integer", file=sys.stderr)
+        expected, extras = parser.parse_known_args(arguments[:separator])
+    except SystemExit:
         return 2
+    if extras or separator + 1 >= len(arguments):
+        print("invalid G2 wrapper arguments", file=sys.stderr)
+        return 2
+    expected_environment_seed = expected.expected_environment_seed
+    expected_fixture = expected.expected_fixture
 
     output_raw = os.environ.get("EPISODE_OUTPUT_DIR")
     if not output_raw:
@@ -49,7 +52,7 @@ def main(argv: list[str] | None = None) -> int:
         print("EPISODE_OUTPUT_DIR must be absolute", file=sys.stderr)
         return 2
 
-    completed = subprocess.run(arguments[3:], check=False)
+    completed = subprocess.run(arguments[separator + 1 :], check=False)
     receipt_path = output_dir / "g2_seed_receipt.json"
     failure_path = output_dir / "infrastructure_failure.json"
 
@@ -89,8 +92,14 @@ def main(argv: list[str] | None = None) -> int:
     except Exception as exc:
         print(f"G2 seed receipt is invalid: {exc}", file=sys.stderr)
         return 1
-    if receipt.get("schema_version") != RECEIPT_SCHEMA:
+    receipt_schema = (
+        f"v4-{expected_fixture.replace('_', '-')}-g2-seed-receipt-v1"
+    )
+    if receipt.get("schema_version") != receipt_schema:
         print("G2 seed receipt schema differs", file=sys.stderr)
+        return 1
+    if receipt.get("fixture_id") != expected_fixture:
+        print("G2 seed receipt fixture differs", file=sys.stderr)
         return 1
     if receipt.get("passed_reset_and_camera") is not True:
         print("G2 seed receipt did not pass reset and camera checks", file=sys.stderr)
@@ -110,6 +119,7 @@ def main(argv: list[str] | None = None) -> int:
             {
                 "checked_g2_seed_receipt": str(receipt_path),
                 "environment_seed": receipt.get("environment_seed"),
+                "fixture_id": receipt.get("fixture_id"),
                 "passed_reset_and_camera": True,
             },
             sort_keys=True,

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render one immutable simulator-only Kubernetes Job per horizontal G2 seed."""
+"""Render one immutable simulator-only Kubernetes Job per V4 DROID G2 seed."""
 
 from __future__ import annotations
 
@@ -23,6 +23,8 @@ SCHEMA = "vla-wam-v4-horizontal-g2-k8s-render-spec-v1"
 RESET_SCHEMA = "v4-droid-horizontal-reset-registry-v1"
 TOP_LEVEL_KEYS = {
     "schema_version",
+    "fixture_id",
+    "reset_registry_schema",
     "kube_context",
     "namespace",
     "attempt_id",
@@ -90,7 +92,18 @@ def _read_spec(path: Path) -> tuple[dict[str, Any], str]:
     require(isinstance(spec, dict), "G2 render spec must be an object")
     unknown = sorted(set(spec) - TOP_LEVEL_KEYS)
     require(not unknown, f"G2 render spec contains unknown keys: {unknown}")
-    require(spec.get("schema_version") == SCHEMA, "G2 render spec schema differs")
+    fixture_id = spec.get("fixture_id", "horizontal")
+    require(
+        fixture_id in {"horizontal", "object_pair"},
+        "G2 render spec fixture_id is unsupported",
+    )
+    expected_schema = (
+        f"vla-wam-v4-{fixture_id.replace('_', '-')}-g2-k8s-render-spec-v1"
+    )
+    require(
+        spec.get("schema_version") == expected_schema,
+        "G2 render spec schema differs",
+    )
     return spec, hashlib.sha256(raw).hexdigest()
 
 
@@ -129,6 +142,7 @@ def _render_launch_configmap(
 def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
     spec_path = spec_path.resolve()
     spec, spec_sha256 = _read_spec(spec_path)
+    fixture_id = str(spec.get("fixture_id", "horizontal"))
     namespace = lane.token(spec.get("namespace"), "namespace")
     attempt = lane.token(spec.get("attempt_id"), "attempt_id")
     kube_context = str(spec.get("kube_context") or "")
@@ -238,9 +252,21 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
         "reset registry source SHA-256 differs from spec",
     )
     reset_payload = json.loads(reset_registry_source.read_text(encoding="utf-8"))
+    expected_reset_schema = spec.get(
+        "reset_registry_schema",
+        (
+            RESET_SCHEMA
+            if fixture_id == "horizontal"
+            else "v4-droid-object-pair-reset-registry-v1"
+        ),
+    )
     require(
-        reset_payload.get("schema_version") == RESET_SCHEMA,
+        reset_payload.get("schema_version") == expected_reset_schema,
         "reset registry schema differs",
+    )
+    require(
+        reset_payload.get("fixture_id") == fixture_id,
+        "reset registry fixture differs",
     )
     require(
         reset_payload.get("status")
@@ -271,16 +297,17 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
             for name in sorted(scripts)
         )
     ).hexdigest()
-    stem = f"v4-g2-horizontal-{attempt}-{spec_sha256[:10]}"
+    fixture_token = fixture_id.replace("_", "-")
+    stem = f"v4-g2-{fixture_token}-{attempt}-{spec_sha256[:10]}"
     scripts_name = f"{stem}-scripts"
     bundle_root = output_root.resolve() / stem
     require(not bundle_root.exists(), f"refusing to overwrite bundle: {bundle_root}")
     bundle_root.mkdir(parents=True)
 
     common_script_labels = {
-        "app.kubernetes.io/name": "v4-horizontal-g2",
+        "app.kubernetes.io/name": f"v4-{fixture_token}-g2",
         "app.kubernetes.io/part-of": "vla-wam-v4",
-        "v4-gate": "g2-horizontal",
+        "v4-gate": f"g2-{fixture_token}",
         "v4-attempt-id": attempt,
         "v4-config-sha": spec_sha256[:16],
     }
@@ -295,7 +322,7 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
     resources = ["scripts-configmap.yaml"]
     seed_identities: list[dict[str, Any]] = []
     for index, seed in enumerate(seeds):
-        lane_id = f"g2h-s{index:03d}"
+        lane_id = f"g2{fixture_token[0]}-s{index:03d}"
         config_name = f"{stem}-s{index:03d}-config"
         job_name = f"{stem}-s{index:03d}"
         labels = {
@@ -325,11 +352,21 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
         argv = [
             runtime["python_bin"],
             marker_wrapper_path,
+            *(
+                ["--expected-fixture", fixture_id]
+                if fixture_id != "horizontal"
+                else []
+            ),
             "--expected-environment-seed",
             str(seed),
             "--",
             runtime["python_bin"],
             runner_path,
+            *(
+                ["--fixture-id", fixture_id]
+                if fixture_id != "horizontal"
+                else []
+            ),
             "--study-root",
             study_root,
             "--robolab-root",
@@ -426,10 +463,12 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
         name: lane.sha256_file(bundle_root / name) for name in sorted(files)
     }
     manifest = {
-        "schema_version": "vla-wam-v4-horizontal-g2-k8s-bundle-v1",
+        "schema_version": (
+            f"vla-wam-v4-{fixture_token}-g2-k8s-bundle-v1"
+        ),
         "status": "rendered_not_created",
         "campaign_id": "online_correction_v4",
-        "fixture_id": "horizontal",
+        "fixture_id": fixture_id,
         "execution_scope": "model_blind_g2_no_policy",
         "model_request_count": 0,
         "behavioral_episode_count": 0,

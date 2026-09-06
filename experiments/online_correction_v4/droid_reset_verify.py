@@ -22,11 +22,13 @@ def load_bound_reset_registry(
     registry_path: str,
     registry_sha256: str,
     required_status: str,
+    expected_fixture_id: str = "horizontal",
 ) -> ResetRegistry:
     return load_reset_registry(
         registry_path=registry_path,
         registry_sha256=registry_sha256,
         required_status=required_status,
+        expected_fixture_id=expected_fixture_id,
     )
 
 

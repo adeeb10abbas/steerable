@@ -1,0 +1,99 @@
+#usda 1.0
+(
+    defaultPrim = "World"
+    metersPerUnit = 1
+    timeCodesPerSecond = 60
+    upAxis = "Z"
+)
+
+def Xform "World"
+{
+    def Material "ObjectPairPhysicsMaterial" (
+        prepend apiSchemas = ["PhysicsMaterialAPI"]
+    )
+    {
+        float physics:dynamicFriction = 1
+        float physics:restitution = 0
+        float physics:staticFriction = 1
+    }
+
+    def Xform "sponge" (
+        prepend apiSchemas = ["PhysicsMassAPI", "PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+    )
+    {
+        custom string description = "V4 C7 yellow procedural sponge candidate"
+        float physics:mass = 0.045
+        bool physics:rigidBodyEnabled = 1
+        quatf xformOp:orient = (1, 0, 0, 0)
+        double3 xformOp:translate = (0.43, -0.10, 0.0775)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+
+        def Cube "geometry" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI"]
+        )
+        {
+            rel material:binding:physics = </World/ObjectPairPhysicsMaterial>
+            color3f[] primvars:displayColor = [(0.95, 0.78, 0.10)]
+            double size = 1
+            float3 xformOp:scale = (0.08, 0.055, 0.035)
+            uniform token[] xformOpOrder = ["xformOp:scale"]
+        }
+    }
+
+    def Xform "tray" (
+        prepend apiSchemas = ["PhysicsMassAPI", "PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+    )
+    {
+        custom string description = "V4 C7 blue procedural reference tray candidate"
+        float physics:mass = 0.30
+        bool physics:rigidBodyEnabled = 1
+        quatf xformOp:orient = (1, 0, 0, 0)
+        double3 xformOp:translate = (0.44, 0.13, 0.059)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+
+        def Cube "geometry" (
+            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI"]
+        )
+        {
+            rel material:binding:physics = </World/ObjectPairPhysicsMaterial>
+            color3f[] primvars:displayColor = [(0.10, 0.34, 0.85)]
+            double size = 1
+            float3 xformOp:scale = (0.14, 0.10, 0.018)
+            uniform token[] xformOpOrder = ["xformOp:scale"]
+        }
+    }
+
+    def "franka_table" (
+        prepend payload = @/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/fixtures/franka_table.usd@
+    )
+    {
+        quatd xformOp:orient = (6.123233995736766e-17, 0, 0, 1)
+        double3 xformOp:translate = (-0.087, 0, 0)
+    }
+
+    def "table" (
+        prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+        prepend payload = @/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/fixtures/table_maple.usd@
+    )
+    {
+        bool physics:kinematicEnabled = 1
+        bool physics:rigidBodyEnabled = 1
+        quatf xformOp:orient = (1, 0, 0, 0)
+        double3 xformOp:translate = (0.19858434796333313, 0.02206825464963913, 0.05)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+    }
+
+    def Xform "GroundPlane"
+    {
+        token visibility = "invisible"
+        double3 xformOp:translate = (0, 0, -0.65)
+
+        def Plane "CollisionPlane" (
+            prepend apiSchemas = ["PhysicsCollisionAPI"]
+        )
+        {
+            uniform token axis = "Z"
+            uniform token purpose = "guide"
+        }
+    }
+}

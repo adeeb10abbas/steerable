@@ -28,9 +28,7 @@ from experiments.online_correction_v4.droid_task_files.constants import (
     ENV_QUEUE_ROW_SHA256,
     ENV_RESET_REGISTRY,
     ENV_RESET_REGISTRY_SHA256,
-    MOVABLE_OBJECTS,
-    REFERENCE_OBJECT,
-    TARGET_OBJECT,
+    fixture_object_spec,
 )
 from experiments.online_correction_v4.droid_task_files.registry import (
     blocked_fixture_ids,
@@ -48,7 +46,6 @@ from experiments.online_correction_v4.droid_reset_verify import (
 )
 
 
-SETTLE_OBJECTS = MOVABLE_OBJECTS
 ACTION_DIM = 8
 
 
@@ -143,12 +140,15 @@ class RoboLabSession:
 def close_live_droid_stack(*, policy: Any = None) -> None:
     """Tear down live RoboLab resources once for any runner caller."""
     if RoboLabSession._started and not RoboLabSession._stack_closed:
-        try:
-            from experiments.online_correction_v4.droid_task_files.horizontal_shared import clear_episode_caches
-
-            clear_episode_caches()
-        except ImportError:
-            pass
+        for module_name in ("horizontal_shared", "object_pair_shared"):
+            try:
+                module = __import__(
+                    f"experiments.online_correction_v4.droid_task_files.{module_name}",
+                    fromlist=["clear_episode_caches"],
+                )
+                module.clear_episode_caches()
+            except ImportError:
+                pass
         RoboLabSession.end_episode()
         RoboLabSession.close()
     elif RoboLabSession._episode_active:
@@ -176,13 +176,23 @@ def build_live_robolab_env(
     g3_contact_probe: bool = False,
     action_mode: str = "joint_position",
 ) -> LiveRoboLabEnv:
-    if fixture.fixture_id in blocked_fixture_ids():
+    model_blind_object_pair = (
+        isinstance(fixture, ResetFixtureBinding)
+        and fixture.fixture_id == "object_pair"
+    )
+    if fixture.fixture_id in blocked_fixture_ids() and not model_blind_object_pair:
         raise RoboLabBootstrapError(
             f"fixture {fixture.fixture_id!r} is blocked: {blocked_fixture_ids()[fixture.fixture_id]}"
         )
-    if fixture.fixture_id != "horizontal":
+    if fixture.fixture_id not in {"horizontal", "object_pair"}:
         raise RoboLabBootstrapError(
             f"fixture {fixture.fixture_id!r} is not physically implemented in this checkout"
+        )
+    if fixture.fixture_id == "object_pair" and not isinstance(
+        fixture, ResetFixtureBinding
+    ):
+        raise RoboLabBootstrapError(
+            "object_pair is released only for model-blind qualification"
         )
     if action_mode not in {"joint_position", "absolute_ik"}:
         raise RoboLabBootstrapError(
@@ -240,7 +250,10 @@ def _import_robolab_modules(config: LiveRoboLabConfig) -> dict[str, Any]:
     if os.environ.get("ONLINE_CORRECTION_V4_OUTPUT_DIR"):
         set_output_dir(os.environ["ONLINE_CORRECTION_V4_OUTPUT_DIR"])
 
-    active = resolve_active_registration()
+    active = resolve_active_registration(
+        config.fixture.fixture_id,
+        allow_model_blind_candidate=isinstance(config.fixture, ResetFixtureBinding),
+    )
     if config.g3_contact_probe:
         droid_robot.contact_gripper = {
             **droid_robot.contact_gripper,
@@ -323,6 +336,7 @@ def _new_reset_proxy(
             if isinstance(config.fixture, ResetFixtureBinding)
             else RELEASED_FOR_POLICY_STATUS
         ),
+        expected_fixture_id=config.fixture.fixture_id,
     )
 
     def _attestation_validator(_attestation: dict[str, Any], physical: Mapping[str, Any]) -> None:
@@ -331,7 +345,8 @@ def _new_reset_proxy(
             registry=registry,
             env_seed=config.env_seed,
         )
-        verify_neutral_horizontal_layout(physical)
+        if config.fixture.fixture_id == "horizontal":
+            verify_neutral_horizontal_layout(physical)
         verify_measured_native_dt(
             measured_s=backend.control_dt_s,
             locked_s=config.locked_native_control_dt_s,
@@ -388,6 +403,16 @@ class LiveRoboLabBackend:
     _moved_object_mask_pixels_by_camera: dict[str, int] | None = None
     support_surface_tol_m: float = 0.015
     stability_speed_max_m_s: float = 0.02
+
+    @property
+    def fixture_objects(self):
+        config = getattr(self, "config", None)
+        fixture = getattr(config, "fixture", None)
+        return fixture_object_spec(getattr(fixture, "fixture_id", "horizontal"))
+
+    @property
+    def settle_objects(self) -> tuple[str, ...]:
+        return self.fixture_objects.movable_objects
 
     @property
     def control_dt_s(self) -> float:
@@ -574,7 +599,7 @@ class LiveRoboLabBackend:
         get_world = self.modules["get_world"]
         world = get_world(self.env)
         objects: dict[str, Any] = {}
-        for name in SETTLE_OBJECTS:
+        for name in self.settle_objects:
             pos, quat = world.get_pose(name, env_id=0)
             velocity = world.get_velocity(name, env_id=0)
             objects[name] = {
@@ -598,7 +623,7 @@ class LiveRoboLabBackend:
         get_world = self.modules["get_world"]
         world = get_world(self.env)
         objects: dict[str, Any] = {}
-        for name in SETTLE_OBJECTS:
+        for name in self.settle_objects:
             pos, quat = world.get_pose(name, env_id=0)
             velocity = world.get_velocity(name, env_id=0)
             objects[name] = {
@@ -625,9 +650,9 @@ class LiveRoboLabBackend:
         import torch
 
         objects = state.get("objects")
-        if not isinstance(objects, Mapping) or set(objects) != set(SETTLE_OBJECTS):
+        if not isinstance(objects, Mapping) or set(objects) != set(self.settle_objects):
             raise RoboLabBootstrapError("G3 restore state has invalid objects")
-        for name in SETTLE_OBJECTS:
+        for name in self.settle_objects:
             row = objects[name]
             if not isinstance(row, Mapping):
                 raise RoboLabBootstrapError(
@@ -730,7 +755,7 @@ class LiveRoboLabBackend:
         get_world = self.modules["get_world"]
         world = get_world(self.env)
         maxima: dict[str, Any] = {}
-        for name in SETTLE_OBJECTS:
+        for name in self.settle_objects:
             velocity = _host_numpy(world.get_velocity(name, env_id=0))
             maxima[name] = {
                 "max_linear_component_speed_m_s": float(np.max(np.abs(velocity[:3]))),
@@ -745,7 +770,7 @@ class LiveRoboLabBackend:
         robot_pos = _host_numpy(robot_pos)
         robot_quat = _host_numpy(robot_quat)
         objects: dict[str, Any] = {}
-        for name in SETTLE_OBJECTS:
+        for name in self.settle_objects:
             pos, quat = world.get_pose(name, env_id=0)
             pos = _host_numpy(pos)
             quat_obj = _host_numpy(quat)
@@ -910,8 +935,10 @@ class LiveRoboLabBackend:
         object_dropped = self.modules["object_dropped"]
         object_grabbed = self.modules["object_grabbed"]
         world = get_world(self.env)
-        obj_pos, _ = world.get_pose(TARGET_OBJECT, env_id=0)
-        ref_pos, _ = world.get_pose(REFERENCE_OBJECT, env_id=0)
+        target_object = self.fixture_objects.target_object
+        reference_object = self.fixture_objects.reference_object
+        obj_pos, _ = world.get_pose(target_object, env_id=0)
+        ref_pos, _ = world.get_pose(reference_object, env_id=0)
         robot_pos, _ = world.get_pose("robot", env_id=0)
         obj_pos = _host_numpy(obj_pos)
         ref_pos = _host_numpy(ref_pos)
@@ -919,8 +946,8 @@ class LiveRoboLabBackend:
         sim_time = self.control_tick * self.control_dt_s
         if self._initial_supported_z == 0.0:
             self._initial_supported_z = float(obj_pos[2])
-        contact = bool(object_grabbed(self.env, object=TARGET_OBJECT, env_id=0))
-        detached = bool(object_dropped(self.env, object=TARGET_OBJECT, env_id=0))
+        contact = bool(object_grabbed(self.env, object=target_object, env_id=0))
+        detached = bool(object_dropped(self.env, object=target_object, env_id=0))
         return ObjectKinematicState(
             sim_time=sim_time,
             control_tick=self.control_tick,
@@ -966,7 +993,7 @@ class LiveRoboLabBackend:
         dz = float(offset_world[2])
         x0, y0, z0, qw, qx, qy, qz = self._reference_baseline_pose
         pose = (x0 + dx, y0 + dy, z0 + dz, qw, qx, qy, qz)
-        asset = self.env.scene[REFERENCE_OBJECT]
+        asset = self.env.scene[self.fixture_objects.reference_object]
         pose_tensor = torch.tensor([pose], dtype=torch.float32, device=self.env.device)
         velocity_tensor = torch.zeros((1, 6), dtype=torch.float32, device=self.env.device)
         asset.write_root_pose_to_sim(pose_tensor)
@@ -977,7 +1004,10 @@ class LiveRoboLabBackend:
 
     def anchor_passive_settling_baseline(self, snapshot: SimulatorSnapshot | None = None) -> None:
         get_world = self.modules["get_world"]
-        pos, quat = get_world(self.env).get_pose(TARGET_OBJECT, env_id=0)
+        pos, quat = get_world(self.env).get_pose(
+            self.fixture_objects.target_object,
+            env_id=0,
+        )
         pos = _host_numpy(pos)
         quat = _host_numpy(quat)
         self._settling_baseline_position = (float(pos[0]), float(pos[1]), float(pos[2]))
@@ -1018,13 +1048,14 @@ class LiveRoboLabBackend:
         get_world = self.modules["get_world"]
         object_dropped = self.modules["object_dropped"]
         world = get_world(self.env)
-        obj_pos, obj_quat = world.get_pose(TARGET_OBJECT, env_id=0)
+        target_object = self.fixture_objects.target_object
+        obj_pos, obj_quat = world.get_pose(target_object, env_id=0)
         obj_pos = _host_numpy(obj_pos)
         obj_quat = _host_numpy(obj_quat)
-        velocity = _host_numpy(world.get_velocity(TARGET_OBJECT, env_id=0))
+        velocity = _host_numpy(world.get_velocity(target_object, env_id=0))
         linear_speed = float(np.linalg.norm(velocity[:3]))
         angular_speed = float(np.linalg.norm(velocity[3:]))
-        detached = bool(object_dropped(self.env, object=TARGET_OBJECT, env_id=0))
+        detached = bool(object_dropped(self.env, object=target_object, env_id=0))
         drift_m = 0.0
         orientation_drift = 0.0
         if self._settling_baseline_position is not None:
@@ -1055,13 +1086,19 @@ class LiveRoboLabBackend:
 
     def reference_position_world(self) -> tuple[float, float, float]:
         get_world = self.modules["get_world"]
-        pos, _ = get_world(self.env).get_pose(REFERENCE_OBJECT, env_id=0)
+        pos, _ = get_world(self.env).get_pose(
+            self.fixture_objects.reference_object,
+            env_id=0,
+        )
         pos = _host_numpy(pos)
         return (float(pos[0]), float(pos[1]), float(pos[2]))
 
     def _anchor_reference_motion(self) -> None:
         get_world = self.modules["get_world"]
-        pos, quat = get_world(self.env).get_pose(REFERENCE_OBJECT, env_id=0)
+        pos, quat = get_world(self.env).get_pose(
+            self.fixture_objects.reference_object,
+            env_id=0,
+        )
         pos = _host_numpy(pos)
         quat = _host_numpy(quat)
         self._reference_baseline_pose = tuple(float(v) for v in [*pos, *quat])

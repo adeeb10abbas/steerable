@@ -12,7 +12,7 @@
     "launch_matrix.json": "8276675d06e2684bfc688dd5c0ebe355aef90c0095b771eb26149a7a5baa049d",
     "motion_manifest.json": "c5a6b3f637b009fadbb1615a79863c76a096d5a33f9a39f36150707269c3df67",
     "prompt_manifest.json": "20e464b06576fd7e860ec86d35d9f148673066874e3441ba1483f4b81fdf59b3",
-    "protocol.json": "0a51fbb9f121fc8ae271b53272d5c24264fb42412d2ecde66929ce454b91c048",
+    "protocol.json": "52304ca1eb393a21d2cc562b7cfae7915934a6be29b47a93b33d387eb46e7046",
     "queue.jsonl": "0da589ceb3c77002d754f699cd1c64e57056ae43e2e63bd2a7def6c66a556de6",
     "queue_manifest.json": "df5c64c7cc43b0202eaa4e06f26a5235d46a162cd11ba9f683f262c8e1c948cc",
     "runtime_manifest.json": "e48684453f7e3c19934f6f1fde13e0d5ec4021b6a1274050a7ee8e9307e9a305",
@@ -65,13 +65,14 @@
     "artifacts/online_correction_v4/setup/horizontal_g2_recalibration_amendment.candidate.json",
     "artifacts/online_correction_v4/setup/horizontal_g2_seed_substitution_amendment.candidate.json",
     "artifacts/online_correction_v4/setup/horizontal_g3_plan.candidate.json",
-    "artifacts/online_correction_v4/setup/horizontal_reset_registry.candidate.json"
+    "artifacts/online_correction_v4/setup/horizontal_reset_registry.candidate.json",
+    "artifacts/online_correction_v4/setup/object_pair_reset_registry.candidate.json"
   ],
   "campaign_id": "online_correction_v4",
   "completed_groups": [],
   "design_source_commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
   "frozen_queue_sha256": "0da589ceb3c77002d754f699cd1c64e57056ae43e2e63bd2a7def6c66a556de6",
-  "generation_parent_commit": "fded74aa4072e1fb3578ff24848ca0ae7d9e3139",
+  "generation_parent_commit": "f1f35e40b117b933d703f2a1250b802f4f7384bf",
   "generation_parent_commit_meaning": "Git HEAD when freeze builder last ran; not the commit containing freeze artifacts.",
   "git_receipt": {
     "meaning": "Record freeze_commit after the commit containing artifacts/online_correction_v4/ lands.",
@@ -130,6 +131,17 @@
       "registered_env_seed_count": 128,
       "schema_version": "v4-droid-horizontal-reset-registry-v1",
       "sha256": "75164b2d6bfd2b4c1962557221e69d78449805bd65d31acc6859fd94d2129742",
+      "status": "model_blind_candidate_not_released_for_inference"
+    },
+    {
+      "amendment_status": null,
+      "behavioral_episode_count": 0,
+      "fixture_id": "object_pair",
+      "model_request_count": 0,
+      "path": "artifacts/online_correction_v4/setup/object_pair_reset_registry.candidate.json",
+      "registered_env_seed_count": 64,
+      "schema_version": "v4-droid-object-pair-reset-registry-v1",
+      "sha256": "bbbe06af5eddea4ac54b924b056c625cfc757136412eb0ffbb9b3be4cabc7419",
       "status": "model_blind_candidate_not_released_for_inference"
     }
   ],

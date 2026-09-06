@@ -17,6 +17,8 @@ from experiments.online_correction_v4.droid_task_files.binding import (
 from experiments.online_correction_v4.droid_task_files.constants import (
     EPISODE_LENGTH_S,
     HORIZONTAL_RELATIONS,
+    OBJECT_PAIR_RESET_REGISTRY_SCHEMA,
+    OBJECT_PAIR_SCENE_PATH,
     SCENE_ASSET,
     SCENE_METADATA_SHA256,
 )
@@ -25,6 +27,7 @@ from experiments.online_correction_v4.droid_task_files.registry import (
     blocked_fixture_ids,
     iter_horizontal_registrations,
     list_registered_horizontal_relations,
+    resolve_active_registration,
     resolve_fixture_registration,
     supported_fixture_ids,
 )
@@ -123,6 +126,20 @@ class FixtureRegistryTests(unittest.TestCase):
         self.assertIn("timeout_only", reg.attributes)
         self.assertTrue(reg.task_module.endswith("horizontal_left.py"))
         self.assertEqual(reg.task_class, "V4HorizontalLeftTask")
+
+    def test_object_pair_active_registration_is_model_blind_only(self) -> None:
+        with self.assertRaises(FixtureRegistryError):
+            resolve_active_registration("object_pair")
+        reg = resolve_active_registration(
+            "object_pair",
+            allow_model_blind_candidate=True,
+        )
+        self.assertEqual(reg.fixture_id, "object_pair")
+        self.assertEqual(reg.scene_asset, OBJECT_PAIR_SCENE_PATH)
+        self.assertEqual(reg.target_object, "sponge")
+        self.assertEqual(reg.reference_object, "tray")
+        self.assertTrue(reg.task_module.endswith("object_pair_active.py"))
+        self.assertIn("model_blind_candidate", reg.attributes)
 
     def test_each_relation_has_distinct_task_module(self) -> None:
         modules = {
@@ -248,6 +265,26 @@ class ResetRegistryTests(unittest.TestCase):
         digest = sha256_file(path)
         with self.assertRaises(ResetRegistryError):
             load_reset_registry(registry_path=str(path), registry_sha256=digest)
+
+    def test_object_pair_candidate_requires_explicit_fixture(self) -> None:
+        path = (
+            ROOT
+            / "artifacts/online_correction_v4/setup/"
+            "object_pair_reset_registry.candidate.json"
+        )
+        digest = sha256_file(path)
+        registry = load_reset_registry(
+            registry_path=str(path),
+            registry_sha256=digest,
+            expected_fixture_id="object_pair",
+        )
+        self.assertEqual(registry.schema_version, OBJECT_PAIR_RESET_REGISTRY_SCHEMA)
+        self.assertEqual(registry.fixture_id, "object_pair")
+        self.assertEqual(set(registry.object_roles), {"target", "reference"})
+        self.assertEqual(
+            set(registry.positions_by_env_seed),
+            set(range(2100040000, 2100040064)),
+        )
 
 
 if __name__ == "__main__":

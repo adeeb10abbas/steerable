@@ -48,6 +48,7 @@ class G2CheckedRunnerTests(unittest.TestCase):
     def test_accepts_only_passing_zero_inference_receipt(self) -> None:
         receipt = {
             "schema_version": "v4-horizontal-g2-seed-receipt-v1",
+            "fixture_id": "horizontal",
             "environment_seed": 2100000000,
             "passed_reset_and_camera": True,
             "model_request_count": 0,
@@ -84,6 +85,7 @@ class G2CheckedRunnerTests(unittest.TestCase):
     def test_rejects_receipt_for_a_different_seed(self) -> None:
         receipt = {
             "schema_version": "v4-horizontal-g2-seed-receipt-v1",
+            "fixture_id": "horizontal",
             "environment_seed": 2100000001,
             "passed_reset_and_camera": True,
             "model_request_count": 0,
@@ -95,6 +97,36 @@ class G2CheckedRunnerTests(unittest.TestCase):
                 self._run(output, _writer("g2_seed_receipt.json", receipt)),
                 1,
             )
+
+    def test_accepts_object_pair_receipt_with_explicit_fixture(self) -> None:
+        receipt = {
+            "schema_version": "v4-object-pair-g2-seed-receipt-v1",
+            "fixture_id": "object_pair",
+            "environment_seed": 2100040000,
+            "passed_reset_and_camera": True,
+            "model_request_count": 0,
+            "behavioral_episode_count": 0,
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            output = Path(tmp) / "episode"
+            with mock.patch.dict(
+                os.environ,
+                {"EPISODE_OUTPUT_DIR": str(output)},
+                clear=False,
+            ):
+                result = wrapper.main(
+                    [
+                        "--expected-fixture",
+                        "object_pair",
+                        "--expected-environment-seed",
+                        "2100040000",
+                        "--",
+                        sys.executable,
+                        "-c",
+                        _writer("g2_seed_receipt.json", receipt),
+                    ]
+                )
+            self.assertEqual(result, 0)
 
 
 if __name__ == "__main__":

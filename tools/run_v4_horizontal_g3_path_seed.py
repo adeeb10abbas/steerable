@@ -463,19 +463,16 @@ def _run_path_check(
     direction_task: tuple[float, float],
     motion_config: Mapping[str, Any],
     geometry_contract: Mapping[str, Any],
-    prompt_sha256: str,
-    runtime_identity_sha256: str,
+    shared_reset: Mapping[str, Any],
     environment_seed: int,
     scale: float,
-) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any] | None]:
+) -> tuple[dict[str, Any], dict[str, Any]]:
     from experiments.online_correction_v4.droid_g3 import (
         classify_contacts,
-        horizontal_geometry_from_scene,
         physics_sampling_stride,
         scenario_duration_s,
     )
     from experiments.online_correction_v4.droid_task_files.constants import ENV_ACTIVE_GOAL
-    from experiments.online_correction_v4.model_blind_g2 import task_frame_evidence
 
     check_id = (
         f"online-correction-v4-g3-horizontal-{environment_seed}-"
@@ -484,19 +481,9 @@ def _run_path_check(
     env.config.goal = goal
     env.config.episode_id = check_id
     os.environ[ENV_ACTIVE_GOAL] = goal
-
-    attestation, physical_reset = env.reset_for_model_blind_g3(
-        check_id=check_id,
-        prompt_sha256=prompt_sha256,
-        runtime_identity_sha256=runtime_identity_sha256,
-    )
-    task_frame = task_frame_evidence(physical_reset)
-    initial_scene = backend.g3_scene_state()
-    geometry = horizontal_geometry_from_scene(
-        task_frame_evidence=task_frame,
-        scene_state=initial_scene,
-        support_edge_margin_m=float(geometry_contract["support_edge_margin_m"]),
-    )
+    backend.restore_g3_state(shared_reset["restore_state"])
+    physical_reset = shared_reset["physical_reset"]
+    geometry = shared_reset["geometry"]
     baseline_reference = tuple(
         float(value)
         for value in physical_reset["objects"]["bowl"]["position_world_xyz_m"]
@@ -593,10 +580,6 @@ def _run_path_check(
         summary_records.append(sample_record)
 
     check_dir = output_dir / "checks" / _check_slug(goal, scenario)
-    attestation_record = _write_json(check_dir / "reset_attestation.json", attestation)
-    physical_reset_record = _write_json(
-        check_dir / "physical_reset.json", physical_reset
-    )
     reference_record = _write_json(
         check_dir / "reference_trajectory.json",
         {
@@ -630,19 +613,12 @@ def _run_path_check(
         measured_trajectory_evidence=measured_record,
         reference_trajectory_evidence=reference_record,
     )
-    goal_area_baseline = None
-    if goal == "left" and scenario == "original_sham":
-        goal_area_baseline = {
-            "geometry": geometry,
-            "baseline_reference_world": baseline_reference,
-            "robot_quaternion_wxyz": robot_quaternion,
-        }
     return observation, {
-        "reset_attestation": attestation_record,
-        "physical_reset": physical_reset_record,
+        "reset_attestation": shared_reset["reset_attestation_artifact"],
+        "physical_reset": shared_reset["physical_reset_artifact"],
         "reference_trajectory": reference_record,
         "measured_trajectory": measured_record,
-    }, goal_area_baseline
+    }
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -680,6 +656,12 @@ def main(argv: list[str] | None = None) -> int:
         from experiments.online_correction_v4.droid_task_files.reset_registry import (
             MODEL_BLIND_CANDIDATE_STATUS,
             load_reset_registry,
+        )
+        from experiments.online_correction_v4.droid_g3 import (
+            horizontal_geometry_from_scene,
+        )
+        from experiments.online_correction_v4.model_blind_g2 import (
+            task_frame_evidence,
         )
         from experiments.online_correction_v4.model_blind_g3 import (
             canonical_json_bytes,
@@ -809,12 +791,55 @@ def main(argv: list[str] | None = None) -> int:
             g3_contact_probe=True,
         )
 
+        reset_check_id = f"{episode_id}-registered-reset"
+        reset_attestation, physical_reset = env.reset_for_model_blind_g3(
+            check_id=reset_check_id,
+            prompt_sha256=prompt_sha256,
+            runtime_identity_sha256=runtime_identity_sha256,
+        )
+        task_frame = task_frame_evidence(physical_reset)
+        initial_scene = env.backend.g3_scene_state()
+        geometry = horizontal_geometry_from_scene(
+            task_frame_evidence=task_frame,
+            scene_state=initial_scene,
+            support_edge_margin_m=float(
+                geometry_contract["support_edge_margin_m"]
+            ),
+        )
+        shared_dir = output_dir / "registered_reset"
+        reset_attestation_artifact = _write_json(
+            shared_dir / "reset_attestation.json", reset_attestation
+        )
+        physical_reset_artifact = _write_json(
+            shared_dir / "physical_reset.json", physical_reset
+        )
+        initial_scene_artifact = _write_json(
+            shared_dir / "initial_scene.json", initial_scene
+        )
+        shared_reset = {
+            "reset_attestation_artifact": reset_attestation_artifact,
+            "physical_reset_artifact": physical_reset_artifact,
+            "initial_scene_artifact": initial_scene_artifact,
+            "physical_reset": physical_reset,
+            "task_frame": task_frame,
+            "geometry": geometry,
+            "restore_state": env.backend.capture_g3_restore_state(),
+        }
+        baseline_reference = physical_reset["objects"]["bowl"][
+            "position_world_xyz_m"
+        ]
+        robot_quaternion = physical_reset["robot_quaternion_world_wxyz"]
+        goal_area_inputs = {
+            "geometry": geometry,
+            "baseline_reference_world": baseline_reference,
+            "robot_quaternion_wxyz": robot_quaternion,
+        }
+
         check_observations: list[dict[str, Any]] = []
         check_artifacts: dict[str, Any] = {}
-        goal_area_inputs: dict[str, Any] | None = None
 
         for goal, scenario in expected_path_check_keys():
-            observation, artifacts, baseline_bundle = _run_path_check(
+            observation, artifacts = _run_path_check(
                 env=env,
                 backend=env.backend,
                 output_dir=output_dir,
@@ -827,18 +852,12 @@ def main(argv: list[str] | None = None) -> int:
                 ),
                 motion_config=motion_config,
                 geometry_contract=geometry_contract,
-                prompt_sha256=prompt_sha256,
-                runtime_identity_sha256=runtime_identity_sha256,
+                shared_reset=shared_reset,
                 environment_seed=args.environment_seed,
                 scale=float(args.scale),
             )
             check_observations.append(observation)
             check_artifacts[_check_slug(goal, scenario)] = artifacts
-            if baseline_bundle is not None:
-                goal_area_inputs = baseline_bundle
-
-        if goal_area_inputs is None:
-            raise RuntimeError("goal-area geometry baseline is unavailable")
 
         goal_area_cases = build_goal_area_cases(
             geometry=goal_area_inputs["geometry"],
@@ -869,6 +888,11 @@ def main(argv: list[str] | None = None) -> int:
                 "bytes": queue_row.stat().st_size,
             },
             "checks": check_artifacts,
+            "registered_reset": {
+                "reset_attestation": reset_attestation_artifact,
+                "physical_reset": physical_reset_artifact,
+                "initial_scene": initial_scene_artifact,
+            },
         }
         receipt_record = _write_json(output_dir / "g3_path_seed_receipt.json", receipt)
         print(json.dumps({"passed": receipt["passed"], "receipt": receipt_record}, indent=2))

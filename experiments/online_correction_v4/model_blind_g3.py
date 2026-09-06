@@ -905,6 +905,10 @@ def build_plan_payload(
             "goals": list(HORIZONTAL_GOALS),
             "scenarios": list(PATH_SCENARIOS),
             "sample_interval_s": PATH_SAMPLE_INTERVAL_S,
+            "reset_replay_rule": (
+                "one attested physical reset per environment seed followed by "
+                "full object and robot joint state restoration before each path"
+            ),
             "cartesian_order": [
                 "scale_descending",
                 "environment_seed_ascending",
@@ -1055,6 +1059,14 @@ def validate_plan_payload(plan: Mapping[str, Any]) -> None:
     _require(isinstance(path, Mapping), "G3 plan lacks path sweep")
     _require(isinstance(scripted, Mapping), "G3 plan lacks scripted checks")
     _require(path.get("checks_per_scale") == 3072, "G3 path count differs")
+    _require(
+        path.get("reset_replay_rule")
+        == (
+            "one attested physical reset per environment seed followed by full "
+            "object and robot joint state restoration before each path"
+        ),
+        "G3 path reset/replay rule differs",
+    )
     _require(
         scripted.get("checks_per_final_geometry_candidate") == 112,
         "G3 scripted count differs",

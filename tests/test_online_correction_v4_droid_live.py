@@ -252,6 +252,31 @@ class DroidLiveImportTests(unittest.TestCase):
         self.assertEqual(writes[0][1][0][:3], (0.1, 0.32, 0.3))
         self.assertEqual(writes[1][0], "velocity")
 
+    def test_live_builder_rejects_unknown_action_mode_before_imports(self) -> None:
+        from experiments.online_correction_v4.droid_robolab import (
+            ResetFixtureBinding,
+            RoboLabBootstrapError,
+            build_live_robolab_env,
+        )
+
+        with self.assertRaisesRegex(RoboLabBootstrapError, "action mode"):
+            build_live_robolab_env(
+                fixture=ResetFixtureBinding(
+                    fixture_id="horizontal",
+                    reset_registry_sha256="a" * 64,
+                    reset_registry_uri="file:///tmp/reset.json",
+                ),
+                env_seed=1,
+                episode_id="g3-scripted",
+                goal="left",
+                prompt_text="Place the cube.",
+                prompt_sha256="b" * 64,
+                policy_id="model_blind_no_policy",
+                queue_row_path=Path("/tmp/queue.json"),
+                queue_row_sha256="c" * 64,
+                action_mode="unsupported",
+            )
+
     def test_horizontal_fixture_registry(self) -> None:
         self.assertEqual(supported_fixture_ids(), ("horizontal",))
         reg = resolve_fixture_registration("horizontal", relation="left")

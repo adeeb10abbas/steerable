@@ -80,6 +80,7 @@ class LiveRoboLabConfig:
     headless: bool = True
     locked_native_control_dt_s: float = 0.05
     g3_contact_probe: bool = False
+    action_mode: str = "joint_position"
 
 
 class RoboLabSession:
@@ -173,6 +174,7 @@ def build_live_robolab_env(
     output_dir: Path | None = None,
     locked_native_control_dt_s: float = 0.05,
     g3_contact_probe: bool = False,
+    action_mode: str = "joint_position",
 ) -> LiveRoboLabEnv:
     if fixture.fixture_id in blocked_fixture_ids():
         raise RoboLabBootstrapError(
@@ -181,6 +183,10 @@ def build_live_robolab_env(
     if fixture.fixture_id != "horizontal":
         raise RoboLabBootstrapError(
             f"fixture {fixture.fixture_id!r} is not physically implemented in this checkout"
+        )
+    if action_mode not in {"joint_position", "absolute_ik"}:
+        raise RoboLabBootstrapError(
+            f"unsupported live RoboLab action mode: {action_mode!r}"
         )
     config = LiveRoboLabConfig(
         episode_id=episode_id,
@@ -195,6 +201,7 @@ def build_live_robolab_env(
         output_dir=output_dir,
         locked_native_control_dt_s=locked_native_control_dt_s,
         g3_contact_probe=g3_contact_probe,
+        action_mode=action_mode,
     )
     _bind_runtime_env(config)
     RoboLabSession.ensure_started(headless=config.headless)
@@ -218,7 +225,6 @@ def _import_robolab_modules(config: LiveRoboLabConfig) -> dict[str, Any]:
         import robolab.core.environments.runtime as robolab_runtime
         from robolab.core.task.conditionals import object_dropped, object_grabbed
         from robolab.core.world.world_state import get_world
-        from robolab.registrations.droid.auto_env_registrations_jointpos import auto_register_droid_envs
         from robolab.registrations.droid.camera_presets import WRIST_LEFT_RIGHT_HEAD
         import robolab.robots.droid as droid_robot
     except ImportError as exc:
@@ -239,7 +245,15 @@ def _import_robolab_modules(config: LiveRoboLabConfig) -> dict[str, Any]:
             **droid_robot.contact_gripper,
             "robot_all": "{ENV_REGEX_NS}/robot/.*",
         }
-    auto_register_droid_envs(
+    if config.action_mode == "absolute_ik":
+        from robolab.registrations.droid.auto_env_registrations_abs_ik import (
+            auto_register_droid_abs_ik_envs as register_env,
+        )
+    else:
+        from robolab.registrations.droid.auto_env_registrations_jointpos import (
+            auto_register_droid_envs as register_env,
+        )
+    register_env(
         task=[active.task_module],
         cameras=WRIST_LEFT_RIGHT_HEAD,
     )
@@ -426,6 +440,30 @@ class LiveRoboLabBackend:
 
         if self._latest_raw_obs is None:
             raise RoboLabBootstrapError("hold action requested before first observation")
+        if self.config.action_mode == "absolute_ik":
+            robot = self.env.scene["robot"]
+            body_names = list(robot.data.body_names)
+            if "base_link" not in body_names:
+                raise RoboLabBootstrapError(
+                    "absolute-IK hold requires robot base_link"
+                )
+            body_index = body_names.index("base_link")
+            position = robot.data.body_pos_w[0, body_index].detach().to(
+                self.env.device
+            )
+            quaternion = robot.data.body_quat_w[0, body_index].detach().to(
+                self.env.device
+            )
+            gripper = self._latest_raw_obs["proprio_obs"]["gripper_pos"]
+            gripper_value = (
+                gripper.detach().to(self.env.device).reshape(-1)[0] > 0.5
+            ).to(dtype=torch.float32)
+            action = torch.cat((position, quaternion, gripper_value[None]))[None]
+            if tuple(action.shape) != (1, ACTION_DIM):
+                raise RoboLabBootstrapError(
+                    f"unexpected absolute-IK hold shape: {tuple(action.shape)}"
+                )
+            return action
         obs = self._latest_raw_obs
         arm = obs["proprio_obs"]["arm_joint_pos"].detach().to(self.env.device)
         gripper = obs["proprio_obs"]["gripper_pos"].detach().to(self.env.device)
@@ -534,6 +572,88 @@ class LiveRoboLabBackend:
             "table_world_aabb_m": self.g3_world_aabb("table"),
             "contact_force_n_by_pair": self.g3_contact_force_evidence(),
         }
+
+    def capture_g3_restore_state(self) -> dict[str, Any]:
+        """Capture the full dynamic scene state reused across one seed's paths."""
+        get_world = self.modules["get_world"]
+        world = get_world(self.env)
+        objects: dict[str, Any] = {}
+        for name in SETTLE_OBJECTS:
+            pos, quat = world.get_pose(name, env_id=0)
+            velocity = world.get_velocity(name, env_id=0)
+            objects[name] = {
+                "pose": tuple(
+                    float(value)
+                    for value in [
+                        *_host_numpy(pos),
+                        *_host_numpy(quat),
+                    ]
+                ),
+                "velocity": tuple(
+                    float(value) for value in _host_numpy(velocity)
+                ),
+            }
+        robot = self.env.scene["robot"]
+        return {
+            "objects": objects,
+            "robot_joint_position": robot.data.joint_pos.detach().clone(),
+            "robot_joint_velocity": robot.data.joint_vel.detach().clone(),
+        }
+
+    def restore_g3_state(self, state: Mapping[str, Any]) -> None:
+        """Restore one captured seed state before a model-blind path replay."""
+        import torch
+
+        objects = state.get("objects")
+        if not isinstance(objects, Mapping) or set(objects) != set(SETTLE_OBJECTS):
+            raise RoboLabBootstrapError("G3 restore state has invalid objects")
+        for name in SETTLE_OBJECTS:
+            row = objects[name]
+            if not isinstance(row, Mapping):
+                raise RoboLabBootstrapError(
+                    f"G3 restore state is invalid for {name}"
+                )
+            pose = row.get("pose")
+            velocity = row.get("velocity")
+            if (
+                not isinstance(pose, tuple)
+                or len(pose) != 7
+                or not isinstance(velocity, tuple)
+                or len(velocity) != 6
+            ):
+                raise RoboLabBootstrapError(
+                    f"G3 restore state shape differs for {name}"
+                )
+            asset = self.env.scene[name]
+            asset.write_root_pose_to_sim(
+                torch.tensor(
+                    [pose], dtype=torch.float32, device=self.env.device
+                )
+            )
+            asset.write_root_velocity_to_sim(
+                torch.tensor(
+                    [velocity], dtype=torch.float32, device=self.env.device
+                )
+            )
+        joint_position = state.get("robot_joint_position")
+        joint_velocity = state.get("robot_joint_velocity")
+        if joint_position is None or joint_velocity is None:
+            raise RoboLabBootstrapError("G3 restore state lacks robot joints")
+        robot = self.env.scene["robot"]
+        robot.write_joint_state_to_sim(
+            joint_position.detach().to(self.env.device),
+            joint_velocity.detach().to(self.env.device),
+        )
+        self.env.scene.write_data_to_sim()
+        self.env.sim.step(render=False)
+        self.env.scene.update(dt=self.physics_dt_s)
+        counter = getattr(self.env, "episode_length_buf", None)
+        if counter is not None and hasattr(counter, "zero_"):
+            counter.zero_()
+        self.control_tick = 0
+        self._g3_physics_tick = 0
+        self.reference_displacement_m = 0.0
+        self._anchor_reference_motion()
 
     def g3_world_aabb(self, scene_name: str) -> dict[str, Any]:
         """Resolve a live scene asset to its USD world-aligned bounding box."""

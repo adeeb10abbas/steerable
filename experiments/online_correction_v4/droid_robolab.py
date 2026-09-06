@@ -140,7 +140,12 @@ class RoboLabSession:
 def close_live_droid_stack(*, policy: Any = None) -> None:
     """Tear down live RoboLab resources once for any runner caller."""
     if RoboLabSession._started and not RoboLabSession._stack_closed:
-        for module_name in ("horizontal_shared", "object_pair_shared"):
+        for module_name in (
+            "horizontal_shared",
+            "object_pair_shared",
+            "vertical_shared",
+            "containment_shared",
+        ):
             try:
                 module = __import__(
                     f"experiments.online_correction_v4.droid_task_files.{module_name}",
@@ -176,15 +181,23 @@ def build_live_robolab_env(
     g3_contact_probe: bool = False,
     action_mode: str = "joint_position",
 ) -> LiveRoboLabEnv:
-    model_blind_object_pair = (
+    model_blind_fixture_candidate = (
         isinstance(fixture, ResetFixtureBinding)
-        and fixture.fixture_id == "object_pair"
+        and fixture.fixture_id in {"object_pair", "vertical", "containment"}
     )
-    if fixture.fixture_id in blocked_fixture_ids() and not model_blind_object_pair:
+    if (
+        fixture.fixture_id in blocked_fixture_ids()
+        and not model_blind_fixture_candidate
+    ):
         raise RoboLabBootstrapError(
             f"fixture {fixture.fixture_id!r} is blocked: {blocked_fixture_ids()[fixture.fixture_id]}"
         )
-    if fixture.fixture_id not in {"horizontal", "object_pair"}:
+    if fixture.fixture_id not in {
+        "horizontal",
+        "object_pair",
+        "vertical",
+        "containment",
+    }:
         raise RoboLabBootstrapError(
             f"fixture {fixture.fixture_id!r} is not physically implemented in this checkout"
         )

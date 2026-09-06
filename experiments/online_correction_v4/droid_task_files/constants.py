@@ -15,6 +15,8 @@ ENV_ACTIVE_GOAL = "ONLINE_CORRECTION_V4_ACTIVE_GOAL"
 
 RESET_REGISTRY_SCHEMA = "v4-droid-horizontal-reset-registry-v1"
 OBJECT_PAIR_RESET_REGISTRY_SCHEMA = "v4-droid-object-pair-reset-registry-v1"
+VERTICAL_RESET_REGISTRY_SCHEMA = "v4-droid-vertical-reset-registry-v1"
+CONTAINMENT_RESET_REGISTRY_SCHEMA = "v4-droid-containment-reset-registry-v1"
 QUEUE_ROW_REQUIRED_KEYS = (
     "episode_id",
     "fixture",
@@ -35,6 +37,8 @@ DISTRACTOR_OBJECT = "banana"
 
 HORIZONTAL_RELATIONS = ("left", "right", "front", "behind")
 OBJECT_PAIR_RELATIONS = HORIZONTAL_RELATIONS
+VERTICAL_RELATIONS = ("above", "below")
+CONTAINMENT_RELATIONS = ("inside",)
 
 
 @dataclass(frozen=True)
@@ -64,6 +68,39 @@ OBJECT_PAIR_MOVABLE_OBJECTS = ("sponge", "tray")
 OBJECT_PAIR_TARGET_OBJECT = "sponge"
 OBJECT_PAIR_REFERENCE_OBJECT = "tray"
 
+VERTICAL_SCENE_ASSET = (
+    "experiments/online_correction_v4/droid_task_files/scene_assets/"
+    "cube_shelves_vertical.usda"
+)
+VERTICAL_SCENE_PATH = str(_REPOSITORY_ROOT / VERTICAL_SCENE_ASSET)
+VERTICAL_SCENE_METADATA_SHA256 = (
+    "23aa74a0e15e6842fd7997cd5c0da5402e1bf2621f5533e7176da36ed5deeccc"
+)
+VERTICAL_CONTACT_OBJECTS = (
+    "cube",
+    "bowl",
+    "shelf_bottom",
+    "shelf_middle",
+    "shelf_top",
+    "table",
+)
+VERTICAL_MOVABLE_OBJECTS = ("cube", "bowl")
+VERTICAL_TARGET_OBJECT = "cube"
+VERTICAL_REFERENCE_OBJECT = "bowl"
+
+CONTAINMENT_SCENE_ASSET = (
+    "experiments/online_correction_v4/droid_task_files/scene_assets/"
+    "cube_container_containment.usda"
+)
+CONTAINMENT_SCENE_PATH = str(_REPOSITORY_ROOT / CONTAINMENT_SCENE_ASSET)
+CONTAINMENT_SCENE_METADATA_SHA256 = (
+    "08aa5535e725724684495f43c62e2cfb81df42c302eca0cfb4c60f1b45c2dae7"
+)
+CONTAINMENT_CONTACT_OBJECTS = ("cube", "bowl", "table")
+CONTAINMENT_MOVABLE_OBJECTS = ("cube", "bowl")
+CONTAINMENT_TARGET_OBJECT = "cube"
+CONTAINMENT_REFERENCE_OBJECT = "bowl"
+
 FIXTURE_OBJECT_SPECS: dict[str, FixtureObjectSpec] = {
     "horizontal": FixtureObjectSpec(
         fixture_id="horizontal",
@@ -85,6 +122,26 @@ FIXTURE_OBJECT_SPECS: dict[str, FixtureObjectSpec] = {
         movable_objects=OBJECT_PAIR_MOVABLE_OBJECTS,
         target_object=OBJECT_PAIR_TARGET_OBJECT,
         reference_object=OBJECT_PAIR_REFERENCE_OBJECT,
+    ),
+    "vertical": FixtureObjectSpec(
+        fixture_id="vertical",
+        reset_registry_schema=VERTICAL_RESET_REGISTRY_SCHEMA,
+        scene_asset=VERTICAL_SCENE_ASSET,
+        scene_metadata_sha256=VERTICAL_SCENE_METADATA_SHA256,
+        contact_objects=VERTICAL_CONTACT_OBJECTS,
+        movable_objects=VERTICAL_MOVABLE_OBJECTS,
+        target_object=VERTICAL_TARGET_OBJECT,
+        reference_object=VERTICAL_REFERENCE_OBJECT,
+    ),
+    "containment": FixtureObjectSpec(
+        fixture_id="containment",
+        reset_registry_schema=CONTAINMENT_RESET_REGISTRY_SCHEMA,
+        scene_asset=CONTAINMENT_SCENE_ASSET,
+        scene_metadata_sha256=CONTAINMENT_SCENE_METADATA_SHA256,
+        contact_objects=CONTAINMENT_CONTACT_OBJECTS,
+        movable_objects=CONTAINMENT_MOVABLE_OBJECTS,
+        target_object=CONTAINMENT_TARGET_OBJECT,
+        reference_object=CONTAINMENT_REFERENCE_OBJECT,
     ),
 }
 

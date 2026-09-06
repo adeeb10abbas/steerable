@@ -8,6 +8,7 @@ from typing import Iterable
 
 from experiments.online_correction_v4.droid_task_files.constants import (
     BLOCKED_FIXTURE_IDS,
+    CONTAINMENT_RELATIONS,
     CONTACT_OBJECT_LIST,
     EPISODE_LENGTH_S,
     EXTERNAL_SCORER_MODE,
@@ -23,6 +24,8 @@ from experiments.online_correction_v4.droid_task_files.constants import (
     SUPPORTED_FIXTURE_IDS,
     TARGET_OBJECT,
     REFERENCE_OBJECT,
+    VERTICAL_RELATIONS,
+    fixture_object_spec,
 )
 
 
@@ -53,6 +56,8 @@ _TASK_ROOT = Path(__file__).resolve().parent / "task_files"
 _ACTIVE_TASKS = {
     "horizontal": ("horizontal_active.py", "V4HorizontalActiveTask"),
     "object_pair": ("object_pair_active.py", "V4ObjectPairActiveTask"),
+    "vertical": ("vertical_active.py", "V4VerticalActiveTask"),
+    "containment": ("containment_active.py", "V4ContainmentActiveTask"),
 }
 
 _HORIZONTAL_TASKS: dict[str, tuple[str, str]] = {
@@ -84,12 +89,21 @@ def resolve_active_registration(
     *,
     allow_model_blind_candidate: bool = False,
 ) -> FixtureRegistration:
-    if fixture_id == "object_pair":
+    if fixture_id in {"object_pair", "vertical", "containment"}:
+        if (
+            fixture_id in BLOCKED_FIXTURE_IDS
+            and not allow_model_blind_candidate
+        ):
+            _fail(
+                f"fixture {fixture_id!r} is blocked until asset receipts exist: "
+                f"{BLOCKED_FIXTURE_IDS[fixture_id]}"
+            )
+        spec = fixture_object_spec(fixture_id)
         module_name, class_name = _ACTIVE_TASKS[fixture_id]
         attributes = [
             "spatial",
             "online_correction_v4",
-            "object_pair",
+            fixture_id,
             "timeout_only",
             "external_v4_scorer",
             "active_episode_bound",
@@ -99,11 +113,11 @@ def resolve_active_registration(
         return FixtureRegistration(
             fixture_id=fixture_id,
             relation=None,
-            scene_asset=OBJECT_PAIR_SCENE_PATH,
-            scene_metadata_sha256=OBJECT_PAIR_SCENE_METADATA_SHA256,
-            target_object=OBJECT_PAIR_TARGET_OBJECT,
-            reference_object=OBJECT_PAIR_REFERENCE_OBJECT,
-            contact_object_list=OBJECT_PAIR_CONTACT_OBJECTS,
+            scene_asset=str(Path(__file__).resolve().parents[3] / spec.scene_asset),
+            scene_metadata_sha256=spec.scene_metadata_sha256,
+            target_object=spec.target_object,
+            reference_object=spec.reference_object,
+            contact_object_list=spec.contact_objects,
             episode_length_s=EPISODE_LENGTH_S,
             timeout_only=True,
             external_scorer_mode=EXTERNAL_SCORER_MODE,
@@ -218,6 +232,39 @@ def resolve_fixture_registration(
                 "spatial",
                 "online_correction_v4",
                 "object_pair",
+                relation,
+                "timeout_only",
+                "external_v4_scorer",
+            ),
+        )
+
+    if fixture_id in {"vertical", "containment"}:
+        allowed = VERTICAL_RELATIONS if fixture_id == "vertical" else CONTAINMENT_RELATIONS
+        if relation is None or relation not in allowed:
+            _fail(
+                f"{fixture_id} fixture registration requires one of "
+                f"{list(allowed)}, got {relation!r}"
+            )
+        spec = fixture_object_spec(fixture_id)
+        module_name, class_name = _ACTIVE_TASKS[fixture_id]
+        return FixtureRegistration(
+            fixture_id=fixture_id,
+            relation=relation,
+            scene_asset=str(Path(__file__).resolve().parents[3] / spec.scene_asset),
+            scene_metadata_sha256=spec.scene_metadata_sha256,
+            target_object=spec.target_object,
+            reference_object=spec.reference_object,
+            contact_object_list=spec.contact_objects,
+            episode_length_s=EPISODE_LENGTH_S,
+            timeout_only=True,
+            external_scorer_mode=EXTERNAL_SCORER_MODE,
+            robolab_success_termination_forbidden=ROBOLAB_SUCCESS_TERMINATION_FORBIDDEN,
+            task_module=str(_TASK_ROOT / module_name),
+            task_class=class_name,
+            attributes=(
+                "spatial",
+                "online_correction_v4",
+                fixture_id,
                 relation,
                 "timeout_only",
                 "external_v4_scorer",

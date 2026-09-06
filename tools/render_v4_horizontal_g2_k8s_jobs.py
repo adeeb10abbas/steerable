@@ -94,7 +94,7 @@ def _read_spec(path: Path) -> tuple[dict[str, Any], str]:
     require(not unknown, f"G2 render spec contains unknown keys: {unknown}")
     fixture_id = spec.get("fixture_id", "horizontal")
     require(
-        fixture_id in {"horizontal", "object_pair"},
+        fixture_id in {"horizontal", "object_pair", "vertical", "containment"},
         "G2 render spec fixture_id is unsupported",
     )
     expected_schema = (
@@ -254,11 +254,7 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
     reset_payload = json.loads(reset_registry_source.read_text(encoding="utf-8"))
     expected_reset_schema = spec.get(
         "reset_registry_schema",
-        (
-            RESET_SCHEMA
-            if fixture_id == "horizontal"
-            else "v4-droid-object-pair-reset-registry-v1"
-        ),
+        RESET_SCHEMA,
     )
     require(
         reset_payload.get("schema_version") == expected_reset_schema,

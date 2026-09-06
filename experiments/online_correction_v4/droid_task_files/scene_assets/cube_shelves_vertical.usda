@@ -29,7 +29,7 @@ def Xform "World"
         float physxRigidBody:angularDamping = 4
         float physxRigidBody:linearDamping = 8
         quatf xformOp:orient = (1, 0, 0, 0)
-        double3 xformOp:translate = (0.35, -0.18, 0.071)
+        double3 xformOp:translate = (0.35, -0.18, 0.073)
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
 
         def Cube "geometry" (
@@ -56,7 +56,7 @@ def Xform "World"
         float physxRigidBody:angularDamping = 4
         float physxRigidBody:linearDamping = 8
         quatf xformOp:orient = (1, 0, 0, 0)
-        double3 xformOp:translate = (0.53, 0.10, 0.2775)
+        double3 xformOp:translate = (0.53, 0.10, 0.2805)
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
 
         def Cube "bottom" (
@@ -70,7 +70,7 @@ def Xform "World"
             uniform token[] xformOpOrder = ["xformOp:scale"]
         }
         def Cube "wall_left" (
-            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI"]
+            prepend apiSchemas = ["MaterialBindingAPI"]
         )
         {
             rel material:binding:physics = </World/V4FixtureMaterial>
@@ -81,7 +81,7 @@ def Xform "World"
             uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
         }
         def Cube "wall_right" (
-            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI"]
+            prepend apiSchemas = ["MaterialBindingAPI"]
         )
         {
             rel material:binding:physics = </World/V4FixtureMaterial>
@@ -92,7 +92,7 @@ def Xform "World"
             uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
         }
         def Cube "wall_front" (
-            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI"]
+            prepend apiSchemas = ["MaterialBindingAPI"]
         )
         {
             rel material:binding:physics = </World/V4FixtureMaterial>
@@ -103,7 +103,7 @@ def Xform "World"
             uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
         }
         def Cube "wall_back" (
-            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI"]
+            prepend apiSchemas = ["MaterialBindingAPI"]
         )
         {
             rel material:binding:physics = </World/V4FixtureMaterial>

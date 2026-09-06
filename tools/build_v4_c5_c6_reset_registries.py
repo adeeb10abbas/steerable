@@ -38,7 +38,7 @@ FIXTURE_BUILD_SPECS: dict[str, dict[str, Any]] = {
                     0.0000106667,
                     0.0000106667,
                 ],
-                "base_position_robot_m": [0.35, -0.18, 0.071],
+                "base_position_robot_m": [0.35, -0.18, 0.073],
             },
             "bowl": {
                 "role": "reference",
@@ -47,7 +47,7 @@ FIXTURE_BUILD_SPECS: dict[str, dict[str, Any]] = {
                 "interior_dimensions_m": [0.10, 0.10, 0.0525],
                 "mass_kg": 0.22,
                 "diagonal_inertia_kg_m2": [0.00035, 0.00035, 0.00055],
-                "base_position_robot_m": [0.53, 0.10, 0.2775],
+                "base_position_robot_m": [0.53, 0.10, 0.2805],
             },
         },
         "support_geometry": {
@@ -76,7 +76,7 @@ FIXTURE_BUILD_SPECS: dict[str, dict[str, Any]] = {
                     0.0000081667,
                     0.0000081667,
                 ],
-                "base_position_robot_m": [0.43, -0.11, 0.0685],
+                "base_position_robot_m": [0.43, -0.11, 0.0705],
             },
             "bowl": {
                 "role": "reference",
@@ -85,7 +85,7 @@ FIXTURE_BUILD_SPECS: dict[str, dict[str, Any]] = {
                 "interior_dimensions_m": [0.11, 0.11, 0.0725],
                 "mass_kg": 0.28,
                 "diagonal_inertia_kg_m2": [0.00055, 0.00055, 0.00082],
-                "base_position_robot_m": [0.44, 0.13, 0.0575],
+                "base_position_robot_m": [0.44, 0.13, 0.0605],
             },
         },
         "support_geometry": {

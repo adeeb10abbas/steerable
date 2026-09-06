@@ -57,22 +57,44 @@ def _checkpoint_manifest(checkpoint_path: Path) -> dict[str, dict[str, Any]]:
 
 
 def _processed_observation(env: Any) -> dict[str, Any]:
+    import cv2
+    import numpy as np
+    from transforms3d import euler as te, quaternions as tq
+
     raw = unwrap_simpler_env(env)
     get_obs = getattr(raw, "get_obs", None)
     if not callable(get_obs):
         raise SecondStackG4Error("C8 raw environment does not expose get_obs")
-    cursor = env
-    while cursor is not None:
-        process = getattr(cursor, "_process_observation", None)
-        if callable(process):
-            value = process(get_obs())
-            if not isinstance(value, dict):
-                raise SecondStackG4Error(
-                    "C8 processed observation is not an object"
-                )
-            return value
-        cursor = getattr(cursor, "env", None)
-    raise SecondStackG4Error("C8 Bridge observation processor is unavailable")
+    raw_observation = get_obs()
+    color = np.asarray(
+        raw_observation["image"]["3rd_view_camera"]["Color"]
+    )[..., :3]
+    if color.dtype != np.uint8:
+        color = np.asarray(color, dtype=np.float32)
+        if color.size and float(np.nanmax(color)) <= 1.0:
+            color = color * 255.0
+        color = np.clip(color, 0.0, 255.0).astype(np.uint8)
+    proprio = np.asarray(raw_observation["agent"]["eef_pos"], dtype=np.float64)
+    if proprio.shape != (8,):
+        raise SecondStackG4Error("C8 Bridge eef_pos must have shape (8,)")
+    rotation = tq.quat2mat(proprio[3:7])
+    bridge_default_rotation = np.asarray(
+        [[0.0, 0.0, 1.0], [0.0, 1.0, 0.0], [-1.0, 0.0, 0.0]]
+    )
+    roll, pitch, yaw = te.mat2euler(
+        rotation @ bridge_default_rotation.T
+    )
+    return {
+        "video.image_0": cv2.resize(color, (256, 256)),
+        "state.x": [float(proprio[0])],
+        "state.y": [float(proprio[1])],
+        "state.z": [float(proprio[2])],
+        "state.roll": [float(roll)],
+        "state.pitch": [float(pitch)],
+        "state.yaw": [float(yaw)],
+        "state.pad": [0.0],
+        "state.gripper": [float(proprio[7])],
+    }
 
 
 def _batched_observation(

@@ -1,0 +1,18 @@
+{
+  "schema_version": "v4-invalid-infrastructure-attempts-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "C8",
+  "fixture_id": "second_stack",
+  "attempt_ids": [
+    "g4c8q20260906a"
+  ],
+  "classification": "infrastructure_failure_before_policy_execution",
+  "cause": "The first G4 probe passed the raw renderer observation directly to the upstream Bridge observation helper, which expects the SimplerEnv rgb observation-mode projection rather than SAPIEN Color buffers.",
+  "observed_exception_type": "KeyError",
+  "observed_exception_detail": "rgb",
+  "observed_model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "policy_outcome_count": 0,
+  "disposition": "Preserved as an invalid interface attempt. The corrected probe performs the pinned Bridge RGB, pose, orientation, and gripper projection directly from the post-registered-reset observation.",
+  "policy_failures_inferred": false
+}

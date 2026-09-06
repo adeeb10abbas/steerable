@@ -5,7 +5,12 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from tools.build_v4_object_pair_release_artifacts import build_scoring_geometry
+from experiments.online_correction_v4.droid_scorer import load_scoring_context
+from tools.build_v4_object_pair_release_artifacts import (
+    build_scoring_geometry,
+    canonical_json_bytes,
+    sha256_file,
+)
 
 
 class ObjectPairReleaseArtifactTests(unittest.TestCase):
@@ -44,16 +49,24 @@ class ObjectPairReleaseArtifactTests(unittest.TestCase):
                 g2_path=g2,
                 g3_path=g3,
             )
+            geometry_path = root / "geometry.json"
+            geometry_path.write_bytes(canonical_json_bytes(payload))
+            context = load_scoring_context(
+                geometry_path,
+                expected_sha256=sha256_file(geometry_path),
+                relation="left",
+                d_cap_m=payload["d_cap_m"],
+            )
 
-        geometry = payload["geometry"]
-        self.assertAlmostEqual(geometry["workspace"]["x_min"], -0.4475)
-        self.assertAlmostEqual(geometry["workspace"]["x_max"], 0.4875)
-        self.assertAlmostEqual(geometry["workspace"]["y_min"], -0.855)
-        self.assertAlmostEqual(geometry["workspace"]["y_max"], -0.245)
-        self.assertAlmostEqual(geometry["target_footprint"]["half_left"], 0.0275)
-        self.assertAlmostEqual(geometry["target_footprint"]["half_front"], 0.04)
-        self.assertGreater(geometry["d_cap_m"], 1.11)
-        self.assertEqual(payload["task_frame"]["u_left_world"], [0.0, 1.0, 0.0])
+        self.assertAlmostEqual(payload["workspace"]["x_min"], -0.4475)
+        self.assertAlmostEqual(payload["workspace"]["x_max"], 0.4875)
+        self.assertAlmostEqual(payload["workspace"]["y_min"], -0.855)
+        self.assertAlmostEqual(payload["workspace"]["y_max"], -0.245)
+        self.assertAlmostEqual(payload["object_footprint"]["half_left"], 0.0275)
+        self.assertAlmostEqual(payload["object_footprint"]["half_front"], 0.04)
+        self.assertGreater(payload["d_cap_m"], 1.11)
+        self.assertEqual(payload["task_frame"]["u_left"], [0.0, 1.0, 0.0])
+        self.assertEqual(context.planar_spec.relation, "left")
 
 
 if __name__ == "__main__":

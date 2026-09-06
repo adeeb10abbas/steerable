@@ -175,35 +175,35 @@ def build_scoring_geometry(
         "model_request_count": 0,
         "task_frame": {
             "basis_convention": "task coordinates are left, front, up",
-            "u_left_world": list(axes[0]),
-            "u_front_world": list(axes[1]),
-            "u_up_world": list(axes[2]),
-            "origin_world": list(origin),
+            "u_left": list(axes[0]),
+            "u_front": list(axes[1]),
+            "u_up": list(axes[2]),
+            "origin": list(origin),
         },
-        "geometry": {
+        "workspace": {
+            "x_min": workspace[0],
+            "x_max": workspace[1],
+            "y_min": workspace[2],
+            "y_max": workspace[3],
+            "z_min": workspace[4],
+            "z_max": workspace[5],
+        },
+        "object_footprint": {
+            "half_left": target_half[0],
+            "half_front": target_half[1],
+            "half_up": target_half[2],
+        },
+        "reference_footprint": {
+            "half_left": reference_half[0],
+            "half_front": reference_half[1],
+            "half_up": reference_half[2],
+        },
+        "clearance_m": RELATION_CLEARANCE_M,
+        "d_cap_m": d_cap_m,
+        "geometry_provenance": {
             "target_object": "sponge",
             "reference_object": "tray",
-            "workspace": {
-                "x_min": workspace[0],
-                "x_max": workspace[1],
-                "y_min": workspace[2],
-                "y_max": workspace[3],
-                "z_min": workspace[4],
-                "z_max": workspace[5],
-            },
-            "target_footprint": {
-                "half_left": target_half[0],
-                "half_front": target_half[1],
-                "half_up": target_half[2],
-            },
-            "reference_footprint": {
-                "half_left": reference_half[0],
-                "half_front": reference_half[1],
-                "half_up": reference_half[2],
-            },
-            "clearance_m": RELATION_CLEARANCE_M,
             "support_edge_margin_m": SUPPORT_EDGE_MARGIN_M,
-            "d_cap_m": d_cap_m,
         },
         "qualification_basis": {
             "g2_aggregate": artifact(g2_path),
@@ -299,7 +299,7 @@ def main() -> None:
             {
                 "released_reset_registry": artifact(args.released_reset_registry),
                 "scoring_geometry": artifact(args.scoring_geometry),
-                "d_cap_m": scoring_geometry["geometry"]["d_cap_m"],
+                "d_cap_m": scoring_geometry["d_cap_m"],
             },
             sort_keys=True,
         )

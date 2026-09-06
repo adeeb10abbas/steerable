@@ -241,7 +241,7 @@ def select_robust_target_task(
     def inset_coordinate(low: float, high: float, *, from_low: bool) -> float:
         if high < low:
             raise DroidG3ScriptedError("goal region has inverted bounds")
-        edge_guard = min(0.005, 0.9 * (high - low))
+        edge_guard = min(0.005, 0.5 * (high - low))
         if from_low:
             return min(low + inset, high - edge_guard)
         return max(high - inset, low + edge_guard)
@@ -562,6 +562,7 @@ def run_scripted_check(
     object_z_after_lift: float | None = None
     grasp_retained_through_transport = True
     released_after_open = False
+    grasp_xy_correction: tuple[float, float] | None = None
     for segment in segments:
         for target_position_tick in segment.waypoints:
             next_tick = tick + 1
@@ -570,8 +571,26 @@ def run_scripted_check(
             )
             if reference_motion_callback is not None:
                 reference_motion_callback(next_tick, next_sim_time_s)
+            if segment.phase == "place_descend" and grasp_xy_correction is None:
+                measured_position, _ = _read_eef_pose(env)
+                measured_object = _read_object_pose(env, target_object)
+                grasp_xy_correction = (
+                    min(max(measured_position[0] - measured_object[0], -0.02), 0.02),
+                    min(max(measured_position[1] - measured_object[1], -0.02), 0.02),
+                )
+            commanded_position = target_position_tick
+            if (
+                grasp_xy_correction is not None
+                and segment.phase
+                in {"place_descend", "open_dwell", "retreat", "settle"}
+            ):
+                commanded_position = (
+                    target_position_tick[0] + grasp_xy_correction[0],
+                    target_position_tick[1] + grasp_xy_correction[1],
+                    target_position_tick[2],
+                )
             action = _compose_action(
-                target_position_tick,
+                commanded_position,
                 measured_eef_quaternion,
                 eef_offset_rotation,
                 segment.gripper,
@@ -590,7 +609,7 @@ def run_scripted_check(
                     "sim_time_s": sim_time_s,
                     "phase": segment.phase,
                     "action": [float(value) for value in action],
-                    "target_eef_xyz": [float(value) for value in target_position_tick],
+                    "target_eef_xyz": [float(value) for value in commanded_position],
                     "measured_eef_xyz": [float(value) for value in measured_position],
                     "reference_xyz": [float(value) for value in reference_position],
                     "object_xyz": [float(value) for value in object_position],
@@ -640,6 +659,11 @@ def run_scripted_check(
         "model_request_count": 0,
         "relation": relation.strip().lower(),
         "target_world_xyz": [float(value) for value in placement_target],
+        "grasp_xy_correction_m": (
+            [float(value) for value in grasp_xy_correction]
+            if grasp_xy_correction is not None
+            else None
+        ),
         "tick_count": tick,
         "terminated_early": terminated_early,
         "termination_reason": termination_reason,

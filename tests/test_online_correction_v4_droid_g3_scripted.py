@@ -206,7 +206,7 @@ class TargetSelectionTests(unittest.TestCase):
             table_top_z_task=self.table_top,
             object_half_up=self.half_up,
         )
-        self.assertAlmostEqual(target[0], 0.1004)
+        self.assertAlmostEqual(target[0], 0.102)
         self.assertTrue(goal.region is not None and goal.region.point_inside(target))
 
     def test_world_target_roundtrip(self) -> None:
@@ -320,6 +320,16 @@ class ScriptedRunTests(unittest.TestCase):
         self.assertEqual(len(result["trajectory"]), 18)
         self.assertEqual(result["trajectory"][0]["phase"], "approach")
         self.assertEqual(result["trajectory"][-1]["phase"], "settle")
+        self.assertEqual(result["grasp_xy_correction_m"], [-0.02, -0.02])
+        place_step = next(
+            row
+            for row in result["trajectory"]
+            if row["phase"] == "place_descend"
+        )
+        self.assertAlmostEqual(
+            place_step["target_eef_xyz"][0],
+            result["target_world_xyz"][0] - 0.02,
+        )
 
     def test_stage_distinction_when_grasp_or_release_fail(self) -> None:
         goal = _goal_for_relation("left")

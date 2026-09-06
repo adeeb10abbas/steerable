@@ -1,0 +1,22 @@
+{
+  "schema_version": "v4-invalid-infrastructure-attempts-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "C7",
+  "fixture_id": "object_pair",
+  "attempt_ids": [
+    "attempt0077",
+    "attempt0078",
+    "attempt0079",
+    "attempt0080",
+    "attempt0081",
+    "attempt0082"
+  ],
+  "classification": "cancelled_before_policy_or_behavioral_execution",
+  "cause": "Only two schedulable B200 policy GPUs were available. The additional policy pods remained Pending with Insufficient nvidia.com/gpu while their paired simulator pods waited for policy readiness.",
+  "observed_model_request_count": 0,
+  "executed_action_count": 0,
+  "behavioral_episode_count": 0,
+  "policy_outcome_count": 0,
+  "disposition": "Cancelled before the 900-second policy-readiness timeout. Remaining pilot groups will receive fresh attempt IDs and launch only when matched policy capacity is available.",
+  "policy_failures_inferred": false
+}

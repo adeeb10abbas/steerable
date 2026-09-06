@@ -1,0 +1,23 @@
+{
+  "schema_version": "v4-second-stack-g3-controller-iteration-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "C8",
+  "fixture_id": "second_stack",
+  "scale": 0.5,
+  "status": "failed_before_policy_inference",
+  "model_request_count": 0,
+  "expected_check_count": 112,
+  "observed_check_count": 112,
+  "passed_check_count": 109,
+  "failed_check_count": 3,
+  "failure_summary": {
+    "unstable_or_missing_grasp_count": 2,
+    "placement_tolerance_failure_count": 1
+  },
+  "evidence": {
+    "path": "artifacts/online_correction_v4/qualification/20260906_second_stack_g3_scripted_scale_0p5_full_failed_g3c8s20260906j.json",
+    "sha256": "dcb6f68b8096b6aa1248f07da103732823fac1c2b990650924de4e2c04ddcd54"
+  },
+  "disposition": "Preserved as a failed model-blind controller iteration. Scale 0.5 remains the frozen path candidate while grasp retention and closed-loop pre-release placement are tightened.",
+  "policy_outcomes_inferred": false
+}

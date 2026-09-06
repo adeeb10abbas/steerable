@@ -265,6 +265,14 @@ def _run_check(
     simulate(30)
     source_initial = [float(value) for value in raw.episode_source_obj.pose.p]
     reference_initial = [float(value) for value in raw.episode_target_obj.pose.p]
+    final_reference_xy = (
+        endpoint_reference_xy if moving_reference else initial_reference_xy
+    )
+    axis = RELATION_AXES_SCENE_XY[str(plan_row["relation"])]
+    destination_xy = [
+        final_reference_xy[index] + GOAL_CENTER_OFFSET_M * axis[index]
+        for index in range(2)
+    ]
 
     grasp_attempts: list[dict[str, Any]] = []
     grasp_contacts: list[dict[str, Any]] = []
@@ -278,6 +286,10 @@ def _run_check(
         (-0.008, 0.0585),
         (-0.004, 0.0555),
         (-0.004, 0.0615),
+        (-0.012, 0.0585),
+        (0.004, 0.0585),
+        (-0.004, 0.0525),
+        (-0.004, 0.0645),
     )
     for attempt, (finger_y_offset, finger_z_offset) in enumerate(grasp_offsets):
         set_gripper(1.0, 100 if attempt else 60)
@@ -296,6 +308,25 @@ def _run_check(
         )
         source_lifted = [float(value) for value in raw.episode_source_obj.pose.p]
         lift_height = source_lifted[2] - source_initial[2]
+        retention_errors: list[float | None] = []
+        if lift_height >= 0.04:
+            retained_ee = [float(value) for value in raw.agent.ee_pose.p]
+            retention_errors.append(
+                slow_move(
+                    [
+                        retained_ee[0] + 0.02 * axis[0],
+                        retained_ee[1] + 0.02 * axis[1],
+                        retained_ee[2],
+                    ],
+                    segments=4,
+                )
+            )
+            retention_errors.append(slow_move(retained_ee, segments=4))
+            simulate(50)
+            source_lifted = [
+                float(value) for value in raw.episode_source_obj.pose.p
+            ]
+            lift_height = source_lifted[2] - source_initial[2]
         grasp_attempts.append(
             {
                 "attempt_index": attempt,
@@ -304,6 +335,7 @@ def _run_check(
                 "alignment_error_m": grasp_alignment_error,
                 "contact_count": len(grasp_contacts),
                 "lift_height_m": lift_height,
+                "retention_alignment_errors_m": retention_errors,
             }
         )
         if lift_height >= 0.04:
@@ -322,14 +354,6 @@ def _run_check(
                 ],
             )
             simulate(5)
-    final_reference_xy = (
-        endpoint_reference_xy if moving_reference else initial_reference_xy
-    )
-    axis = RELATION_AXES_SCENE_XY[str(plan_row["relation"])]
-    destination_xy = [
-        final_reference_xy[index] + GOAL_CENTER_OFFSET_M * axis[index]
-        for index in range(2)
-    ]
     held_offset = [
         source_lifted[index] - float(raw.agent.ee_pose.p[index])
         for index in range(3)
@@ -347,6 +371,26 @@ def _run_check(
         desired_release_ee,
         segments=8,
     )
+    placement_correction_errors: list[float | None] = []
+    for _ in range(3):
+        live_source = [float(value) for value in raw.episode_source_obj.pose.p]
+        if math.hypot(
+            live_source[0] - destination_xy[0],
+            live_source[1] - destination_xy[1],
+        ) <= 0.005:
+            break
+        live_ee = [float(value) for value in raw.agent.ee_pose.p]
+        placement_correction_errors.append(
+            align(
+                [
+                    live_ee[0] + destination_xy[0] - live_source[0],
+                    live_ee[1] + destination_xy[1] - live_source[1],
+                    live_ee[2],
+                ],
+                live_ee,
+                iterations=3,
+            )
+        )
     source_before_release = [float(value) for value in raw.episode_source_obj.pose.p]
     set_gripper(1.0, 180)
     align(
@@ -396,6 +440,14 @@ def _run_check(
             error is not None and error <= 0.04
             for error in alignment_errors[1:]
         )
+        and all(
+            error is not None and error <= 0.04
+            for error in retention_errors
+        )
+        and all(
+            error is not None and error <= 0.04
+            for error in placement_correction_errors
+        )
         and lift_height >= 0.04
         and placement_xy_error <= PLACEMENT_XY_TOLERANCE_M
         and signed_relation_clearance >= RELATION_CLEARANCE_M
@@ -434,6 +486,7 @@ def _run_check(
         },
         "grasp_contact_count": len(grasp_contacts),
         "grasp_attempts": grasp_attempts,
+        "placement_correction_errors_m": placement_correction_errors,
         "released_robot_contacts": released_robot_contacts,
         "forbidden_reference_contacts": forbidden_reference_contacts,
         "ik_failures": ik_failures,
@@ -449,6 +502,7 @@ def run_scripted_gate(
     path_receipt_path: Path,
     integration_root: Path,
     max_checks: int | None = None,
+    retry_failures_path: Path | None = None,
 ) -> dict[str, Any]:
     registry = load_json(registry_path)
     plan = load_json(plan_path)
@@ -511,6 +565,44 @@ def run_scripted_gate(
         specifications.append((canonical_seed, relation, "original", True))
     if len(specifications) != 112:
         raise SecondStackG3ScriptedError("C8 scripted plan must contain 112 checks")
+    if max_checks is not None and retry_failures_path is not None:
+        raise SecondStackG3ScriptedError(
+            "max_checks and retry_failures_path are mutually exclusive"
+        )
+    if retry_failures_path is not None:
+        prior = load_json(retry_failures_path)
+        if (
+            float(prior.get("selected_scale", float("nan"))) != selected_scale
+            or prior.get("model_request_count") != 0
+            or prior.get("geometry_plan", {}).get("sha256")
+            != sha256_file(plan_path)
+            or prior.get("path_receipt", {}).get("sha256")
+            != sha256_file(path_receipt_path)
+        ):
+            raise SecondStackG3ScriptedError(
+                "C8 failed-check retry receipt binding differs"
+            )
+        failed_specifications = {
+            (
+                int(row["environment_seed"]),
+                str(row["relation"]),
+                str(row["reference_position_label"]),
+                bool(row["moving_reference"]),
+            )
+            for row in prior.get("records", [])
+            if row.get("passed") is False
+        }
+        if not failed_specifications:
+            raise SecondStackG3ScriptedError(
+                "C8 failed-check retry receipt has no failed checks"
+            )
+        specifications = [
+            row for row in specifications if row in failed_specifications
+        ]
+        if len(specifications) != len(failed_specifications):
+            raise SecondStackG3ScriptedError(
+                "C8 failed-check retry receipt contains unknown checks"
+            )
     if max_checks is not None:
         specifications = specifications[:max_checks]
 
@@ -532,7 +624,7 @@ def run_scripted_gate(
             )
     finally:
         env.close()
-    complete = max_checks is None
+    complete = max_checks is None and retry_failures_path is None
     passed = complete and len(records) == 112 and all(row["passed"] for row in records)
     return {
         "schema_version": "v4-second-stack-g3-scripted-aggregate-v1",
@@ -576,6 +668,14 @@ def run_scripted_gate(
         "records": records,
         "model_request_count": 0,
         "behavioral_episode_count": 0,
+        "debug_selection": {
+            "max_checks": max_checks,
+            "retry_failures_path": (
+                str(retry_failures_path)
+                if retry_failures_path is not None
+                else None
+            ),
+        },
         "release_boundary": (
             "A passing receipt completes C8 G3 physical feasibility only. It does "
             "not authorize policy inference until G4-G6 and release-lock closure."
@@ -591,6 +691,7 @@ def main() -> int:
     parser.add_argument("--integration-root", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--max-checks", type=int)
+    parser.add_argument("--retry-failures-from", type=Path)
     args = parser.parse_args()
     payload = run_scripted_gate(
         registry_path=args.registry,
@@ -598,6 +699,7 @@ def main() -> int:
         path_receipt_path=args.path_receipt,
         integration_root=args.integration_root,
         max_checks=args.max_checks,
+        retry_failures_path=args.retry_failures_from,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_bytes(canonical_json_bytes(payload))
@@ -613,7 +715,13 @@ def main() -> int:
             sort_keys=True,
         )
     )
-    return 0 if payload["passed"] or args.max_checks is not None else 1
+    return (
+        0
+        if payload["passed"]
+        or args.max_checks is not None
+        or args.retry_failures_from is not None
+        else 1
+    )
 
 
 if __name__ == "__main__":

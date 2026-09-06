@@ -24,6 +24,7 @@ from experiments.online_correction_v4.second_stack import (  # noqa: E402
     SOURCE_OBJECT,
     active_contact_pairs,
     apply_registered_reset,
+    ensure_registered_support,
     task_axes_from_camera_extrinsic,
     unwrap_simpler_env,
 )
@@ -231,6 +232,7 @@ def run_g2(
     try:
         env.reset(seed=seed_values[0])
         raw = unwrap_simpler_env(env)
+        ensure_registered_support(env)
         camera = raw._cameras["3rd_view_camera"].camera
         extrinsic = camera.get_extrinsic_matrix().tolist()
         model = camera.get_model_matrix().tolist()
@@ -279,6 +281,8 @@ def run_g2(
                         first["passed"]
                         and repeated["passed"]
                         and repeat_position_error <= 0.002
+                        and first["observation"]["sha256"]
+                        == repeated["observation"]["sha256"]
                     ),
                 }
             )

@@ -90,9 +90,12 @@ def _finite_vector(
     length: int,
     label: str,
 ) -> tuple[float, ...]:
-    if not isinstance(value, Sequence) or isinstance(value, (str, bytes)):
+    if isinstance(value, (str, bytes)):
         raise SecondStackBindingError(f"{label} must be a finite vector")
-    result = tuple(float(item) for item in value)
+    try:
+        result = tuple(float(item) for item in value)
+    except (TypeError, ValueError) as exc:
+        raise SecondStackBindingError(f"{label} must be a finite vector") from exc
     if len(result) != length or any(not math.isfinite(item) for item in result):
         raise SecondStackBindingError(f"{label} must be a finite {length}-vector")
     return result

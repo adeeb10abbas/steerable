@@ -58,6 +58,7 @@ BACKGROUND_RE = re.compile(
     re.MULTILINE,
 )
 QUALIFICATION_SCOPE = "infrastructure_qualification_only_no_scientific_behavior"
+G4_POLICY_SESSION_SCOPE = "g4_policy_session_only_no_behavioral_episode"
 NOOP_RUNNERS = frozenset({"/usr/bin/true", "/bin/true"})
 V4_RUNNER_MARKER = "online_correction_v4"
 REQUIRED_IDENTITY_LABELS = ("v4-lane-id", "v4-attempt-id", "v4-config-sha")
@@ -264,11 +265,12 @@ def _contains_v4_runner(value: str) -> bool:
 
 def _validate_qualification_scope(documents: dict[str, dict[str, Any]]) -> None:
     scopes = {documents[role].get("launch_scope") for role in documents}
-    qualification_only = scopes == {QUALIFICATION_SCOPE}
+    g1_qualification = scopes == {QUALIFICATION_SCOPE}
+    g4_qualification = scopes == {G4_POLICY_SESSION_SCOPE}
     behavioral = all(not documents[role].get("launch_scope") for role in documents)
     _require(
-        qualification_only or behavioral,
-        "policy and simulator launch_scope must both be qualification-only or both absent for behavioral work",
+        g1_qualification or g4_qualification or behavioral,
+        "policy and simulator launch_scope must agree on a supported qualification scope or both be absent for behavioral work",
     )
     sim_argv = _list(documents["simulator"].get("experiment_argv"), "simulator experiment_argv")
     sim_bindings = {
@@ -276,14 +278,28 @@ def _validate_qualification_scope(documents: dict[str, dict[str, Any]]) -> None:
         for raw in _list(documents["simulator"].get("file_bindings"), "simulator file_bindings")
     }
     sim_paths = {item for item in sim_argv if _is_absolute_path(item)}
-    if qualification_only:
+    if g1_qualification:
         _require(
             sim_argv == ["/usr/bin/true"] or sim_argv == ["/bin/true"],
-            "qualification-only simulator must execute /usr/bin/true only",
+            "G1 qualification simulator must execute /usr/bin/true only",
         )
         _require(
             not any(_contains_v4_runner(path) for path in sim_paths | sim_bindings),
             "qualification-only simulator forbids online_correction_v4 runner bindings",
+        )
+        return
+    if g4_qualification:
+        _require(
+            any(str(item).endswith("run_v4_g4_nano_policy_session.py") for item in sim_argv),
+            "G4 qualification simulator must invoke the registered policy-session probe",
+        )
+        _require(
+            any(str(item).endswith("run_v4_g4_nano_policy_session.py") for item in sim_bindings),
+            "G4 qualification simulator must bind the registered policy-session probe",
+        )
+        _require(
+            not any(str(item).endswith("run_online_correction_v4.py") for item in sim_paths | sim_bindings),
+            "G4 qualification must not invoke the behavioral episode runner",
         )
         return
     _require(sim_argv not in (["/usr/bin/true"], ["/bin/true"]), "behavioral simulator must not use /usr/bin/true")
@@ -902,7 +918,12 @@ def _validate_bound_runtime_inputs(
         )
         missing = sorted(required - binding_paths)
         _require(not missing, f"{role} file_bindings omit required runtime inputs: {missing}")
-        if role == "policy" and document.get("readiness_contract") == "http_healthz_after_checkpoint_load":
+        if (
+            role == "policy"
+            and document.get("readiness_contract") == "http_healthz_after_checkpoint_load"
+            and document.get("readiness_interface", "openpi_http_healthz")
+            == "openpi_http_healthz"
+        ):
             argv = _list(document.get("experiment_argv"), "policy experiment_argv")
             root_flags = [index for index, item in enumerate(argv[:-1]) if item == "--openpi-root"]
             _require(len(root_flags) == 1, "HTTP health readiness requires one exact --openpi-root")
@@ -913,6 +934,17 @@ def _validate_bound_runtime_inputs(
                 health_server in binding_paths,
                 f"policy file_bindings omit HTTP health server semantics: {health_server}",
             )
+        if role == "policy" and document.get("readiness_interface") == "cosmos_http_healthz":
+            argv = _list(document.get("experiment_argv"), "policy experiment_argv")
+            checkpoint_flags = [
+                index for index, item in enumerate(argv[:-1]) if item == "--checkpoint-path"
+            ]
+            _require(
+                len(checkpoint_flags) == 1
+                and _is_absolute_path(argv[checkpoint_flags[0] + 1]),
+                "Cosmos HTTP readiness requires one absolute --checkpoint-path",
+            )
+            _require("--decode-video" in argv, "Cosmos policy server must expose decoded futures")
 
 
 def _validate_kustomization(path: Path) -> None:

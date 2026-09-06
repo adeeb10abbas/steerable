@@ -16,7 +16,7 @@ DEFAULT_SPEC = DEFAULT_ROOT / "spec.example.json"
 SHA_RE = re.compile(r"[0-9a-f]{64}")
 TOKEN_RE = re.compile(r"[a-z0-9](?:[-a-z0-9]*[a-z0-9])?")
 TOP_LEVEL_KEYS = {
-    "schema_version", "qualification_only", "kube_context", "namespace", "lane_id", "attempt_id",
+    "schema_version", "qualification_only", "qualification_kind", "kube_context", "namespace", "lane_id", "attempt_id",
     "policy_port", "expected_driver_version", "image_repository", "image_sha256",
     "image_pull_secret", "pvc", "output_parent", "entrypoint", "prestop_wait_seconds",
     "runtime", "policy", "simulator",
@@ -25,10 +25,12 @@ RUNTIME_KEYS = {"python_bin", "ffmpeg_bin", "vk_icd_filenames", "ld_library_path
 ROLE_KEYS = {
     "gpu_product", "expected_gpu_name", "experiment_argv", "checkpoint_path", "checkpoint_sha256",
     "nvidia_smi_bin", "python_imports", "file_bindings", "vulkan_contract", "render_probe_argv",
-    "render_probe_timeout_seconds", "cuda_probe_argv",
+    "render_probe_timeout_seconds", "cuda_probe_argv", "readiness_interface",
 }
-BINDING_KEYS = {"source", "path"}
+BINDING_KEYS = {"source", "path", "bytes", "sha256"}
 QUALIFICATION_SCOPE = "infrastructure_qualification_only_no_scientific_behavior"
+G4_POLICY_SESSION_SCOPE = "g4_policy_session_only_no_behavioral_episode"
+QUALIFICATION_KINDS = frozenset({"g1_infrastructure", "g4_policy_session"})
 NOOP_RUNNERS = frozenset({"/usr/bin/true", "/bin/true"})
 V4_RUNNER_MARKER = "online_correction_v4"
 REQUIRED_IDENTITY_LABELS = ("v4-lane-id", "v4-attempt-id", "v4-config-sha")
@@ -138,10 +140,28 @@ def binding_rows(rows: Any, *, spec_dir: Path) -> list[dict[str, Any]]:
         require(mounted not in seen, f"repeated mounted file binding: {mounted}")
         seen.add(mounted)
         source_raw = row.get("source")
-        require(isinstance(source_raw, str) and source_raw, f"file_bindings[{index}].source is missing")
-        source = (spec_dir / source_raw).resolve() if not Path(source_raw).is_absolute() else Path(source_raw)
-        require(source.is_file(), f"bound local source does not exist: {source}")
-        result.append({"path": mounted, "bytes": source.stat().st_size, "sha256": sha256_file(source)})
+        if source_raw is not None:
+            require(isinstance(source_raw, str) and source_raw, f"file_bindings[{index}].source is invalid")
+            source = (spec_dir / source_raw).resolve() if not Path(source_raw).is_absolute() else Path(source_raw)
+            require(source.is_file(), f"bound local source does not exist: {source}")
+            observed_bytes = source.stat().st_size
+            observed_sha256 = sha256_file(source)
+            if "bytes" in row:
+                require(row["bytes"] == observed_bytes, f"file_bindings[{index}].bytes differs from source")
+            if "sha256" in row:
+                require(row["sha256"] == observed_sha256, f"file_bindings[{index}].sha256 differs from source")
+            result.append({"path": mounted, "bytes": observed_bytes, "sha256": observed_sha256})
+            continue
+        external_bytes = row.get("bytes")
+        require(
+            type(external_bytes) is int and external_bytes >= 0,
+            f"file_bindings[{index}] external bytes must be a nonnegative integer",
+        )
+        external_sha256 = digest(
+            row.get("sha256"),
+            f"file_bindings[{index}] external sha256",
+        )
+        result.append({"path": mounted, "bytes": external_bytes, "sha256": external_sha256})
     return result
 
 
@@ -161,28 +181,51 @@ def _contains_v4_runner(*parts: str) -> bool:
 def validate_qualification_contract(
     *,
     qualification_only: bool,
+    qualification_kind: str,
     policy_doc: Mapping[str, Any],
     simulator_doc: Mapping[str, Any],
 ) -> None:
     require(isinstance(qualification_only, bool), "qualification_only must be a boolean")
+    require(
+        qualification_kind in QUALIFICATION_KINDS,
+        f"qualification_kind must be one of {sorted(QUALIFICATION_KINDS)}",
+    )
     sim_argv = list(simulator_doc.get("experiment_argv") or [])
     sim_bindings = _binding_paths(simulator_doc)
     sim_paths = set(_argv_paths(sim_argv))
 
     if qualification_only:
-        require(
-            sim_argv == ["/usr/bin/true"] or sim_argv == ["/bin/true"],
-            "qualification_only simulator must execute /usr/bin/true only",
-        )
-        require(
-            not any(_contains_v4_runner(path) for path in sim_paths | sim_bindings),
-            "qualification_only forbids online_correction_v4 behavioral runner bindings",
-        )
-        require(
-            not any(str(item).endswith(".py") for item in sim_argv),
-            "qualification_only forbids a Python behavioral runner in simulator argv",
-        )
+        if qualification_kind == "g1_infrastructure":
+            require(
+                sim_argv == ["/usr/bin/true"] or sim_argv == ["/bin/true"],
+                "G1 qualification simulator must execute /usr/bin/true only",
+            )
+            require(
+                not any(_contains_v4_runner(path) for path in sim_paths | sim_bindings),
+                "G1 qualification forbids online_correction_v4 behavioral runner bindings",
+            )
+            require(
+                not any(str(item).endswith(".py") for item in sim_argv),
+                "G1 qualification forbids a Python runner in simulator argv",
+            )
+        else:
+            require(
+                any(str(item).endswith("run_v4_g4_nano_policy_session.py") for item in sim_argv),
+                "G4 policy-session qualification must invoke the registered G4 probe",
+            )
+            require(
+                any(str(item).endswith("run_v4_g4_nano_policy_session.py") for item in sim_bindings),
+                "G4 policy-session qualification must bind the registered G4 probe",
+            )
+            require(
+                not any(str(item).endswith("run_online_correction_v4.py") for item in sim_paths | sim_bindings),
+                "G4 policy-session qualification forbids the behavioral episode runner",
+            )
         return
+    require(
+        qualification_kind == "g1_infrastructure",
+        "behavioral execution cannot declare a qualification-only kind",
+    )
 
     require(sim_argv not in (["/usr/bin/true"], ["/bin/true"]), "behavioral simulator must not use /usr/bin/true")
     require(len(sim_argv) >= 2, "behavioral simulator experiment_argv must be nonempty")
@@ -264,6 +307,12 @@ def launch_document(
         )
         document["policy_port"] = policy_port
         document["readiness_contract"] = "http_healthz_after_checkpoint_load"
+        readiness_interface = document.pop("readiness_interface", "openpi_http_healthz")
+        require(
+            readiness_interface in {"openpi_http_healthz", "cosmos_http_healthz"},
+            "unsupported policy readiness_interface",
+        )
+        document["readiness_interface"] = readiness_interface
         document.pop("policy_wait", None)
     else:
         document["policy_wait"] = {
@@ -292,7 +341,11 @@ def launch_document(
             required_bindings.add(item)
     missing = sorted(required_bindings - binding_paths)
     require(not missing, f"{role} file_bindings omit required runtime inputs: {missing}")
-    if role == "policy" and document.get("readiness_contract") == "http_healthz_after_checkpoint_load":
+    if (
+        role == "policy"
+        and document.get("readiness_contract") == "http_healthz_after_checkpoint_load"
+        and document.get("readiness_interface") == "openpi_http_healthz"
+    ):
         openpi_flags = [index for index, item in enumerate(argv[:-1]) if item == "--openpi-root"]
         require(len(openpi_flags) == 1, "HTTP health readiness requires one exact --openpi-root")
         openpi_root = absolute(argv[openpi_flags[0] + 1], "policy --openpi-root")
@@ -300,6 +353,23 @@ def launch_document(
         require(
             health_server in binding_paths,
             f"policy file_bindings omit HTTP health server semantics: {health_server}",
+        )
+    if role == "policy" and document.get("readiness_interface") == "cosmos_http_healthz":
+        checkpoint_flags = [
+            index for index, item in enumerate(argv[:-1]) if item == "--checkpoint-path"
+        ]
+        require(
+            len(checkpoint_flags) == 1
+            and Path(str(argv[checkpoint_flags[0] + 1])).is_absolute(),
+            "Cosmos HTTP readiness requires one absolute --checkpoint-path",
+        )
+        require("--decode-video" in argv, "Cosmos policy server must expose decoded futures")
+        require(
+            "--action-space" in argv
+            and "joint_pos" in argv
+            and "--action-chunk-size" in argv
+            and "32" in argv,
+            "Cosmos policy server action contract differs",
         )
     return document
 
@@ -560,14 +630,21 @@ def render(spec_path: Path, output_root: Path) -> dict[str, str]:
     )
     qualification_only = spec.get("qualification_only") is True
     require(spec.get("qualification_only") in (True, False), "qualification_only must be explicit true or false")
+    qualification_kind = spec.get("qualification_kind", "g1_infrastructure")
     validate_qualification_contract(
         qualification_only=qualification_only,
+        qualification_kind=qualification_kind,
         policy_doc=policy_doc,
         simulator_doc=simulator_doc,
     )
     if qualification_only:
-        policy_doc["launch_scope"] = QUALIFICATION_SCOPE
-        simulator_doc["launch_scope"] = QUALIFICATION_SCOPE
+        launch_scope = (
+            G4_POLICY_SESSION_SCOPE
+            if qualification_kind == "g4_policy_session"
+            else QUALIFICATION_SCOPE
+        )
+        policy_doc["launch_scope"] = launch_scope
+        simulator_doc["launch_scope"] = launch_scope
 
     renderer_sha = sha256_file(Path(__file__).resolve())
     runtime_scripts = load_runtime_scripts(DEFAULT_ROOT / "scripts")
@@ -603,6 +680,10 @@ def render(spec_path: Path, output_root: Path) -> dict[str, str]:
     service_identity = {**common_labels, "v4-lane-role": "policy", "service_name": policy_service, "namespace": namespace, "spec_sha256": spec_sha, "immutable_identity_sha256": immutable_identity_sha}
     simulator_doc["policy_wait"]["host"] = policy_service
     simulator_doc["policy_wait"]["service_identity"] = service_identity
+    simulator_doc["experiment_argv"] = [
+        policy_service if item == "{policy_service}" else item
+        for item in simulator_doc["experiment_argv"]
+    ]
     policy_json, simulator_json = canonical_json(policy_doc), canonical_json(simulator_doc)
     policy_sha, simulator_sha = sha256_bytes(policy_json.encode()), sha256_bytes(simulator_json.encode())
     bundle_sha = sha256_bytes((policy_sha + simulator_sha + immutable_identity_sha).encode())

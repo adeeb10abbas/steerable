@@ -43,7 +43,7 @@ OBJECT_SPECS: dict[str, dict[str, Any]] = {
         "linear_damping": 2.5,
         "angular_damping": 4.0,
         "display_color_rgb": [0.95, 0.78, 0.10],
-        "base_position_robot_m": [0.43, -0.10, 0.3205],
+        "base_position_robot_m": [0.43, -0.10, 0.0705],
     },
     "tray": {
         "role": "reference",
@@ -57,7 +57,7 @@ OBJECT_SPECS: dict[str, dict[str, Any]] = {
         "linear_damping": 2.5,
         "angular_damping": 4.0,
         "display_color_rgb": [0.10, 0.34, 0.85],
-        "base_position_robot_m": [0.44, 0.13, 0.312],
+        "base_position_robot_m": [0.44, 0.13, 0.062],
     },
 }
 
@@ -294,9 +294,9 @@ def build_registry(
             "support_surface": {
                 "construction": "top_level_transform_neutral_static_usd_cube",
                 "prim": "table/V4ObjectPairSupportCollider",
-                "world_center_xyz_m": [0.45, 0.02, 0.29],
+                "world_center_xyz_m": [0.45, 0.02, 0.04],
                 "dimensions_xyz_m": [0.5, 0.6, 0.02],
-                "top_surface_z_m": 0.3,
+                "top_surface_z_m": 0.05,
                 "initial_clearance_m": 0.003,
             },
             "policy_outcome_used": False,

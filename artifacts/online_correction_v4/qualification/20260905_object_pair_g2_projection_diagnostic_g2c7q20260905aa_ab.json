@@ -1,0 +1,49 @@
+{
+  "schema_version": "v4-object-pair-g2-projection-diagnostic-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "attempt_ids": [
+    "g2c7q20260905aa",
+    "g2c7q20260905ab"
+  ],
+  "environment_seed": 2100040004,
+  "compiled_at_utc": "2026-09-06T04:10:00Z",
+  "qualification_scope": "same_seed_model_blind_axis_projection_diagnostic",
+  "status": "infrastructure_invalid",
+  "g2_complete": false,
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "finding": {
+    "failing_camera": "wrist_cam",
+    "failing_axis": "up",
+    "error": "axis point lies behind or on the camera plane",
+    "approved_horizontal_reference_center_z_m": 0.07735103368759155,
+    "approved_horizontal_axis_origin_z_m": 0.17735103368759156,
+    "approved_horizontal_up_endpoint_z_m": 0.2973510336875915,
+    "wrist_camera_center_z_m": 0.46076926589012146,
+    "object_pair_candidate_reference_center_z_m": 0.309,
+    "object_pair_candidate_axis_origin_z_m": 0.409,
+    "object_pair_candidate_up_endpoint_z_m": 0.529,
+    "interpretation": "The earlier inferred 0.30 m tabletop offset was incorrect. It places the C7 up endpoint above the wrist camera. The approved horizontal fixture directly measures the maple tabletop near z=0.05, so the C7 object centers need a 0.05 m—not 0.30 m—support offset."
+  },
+  "preservation": {
+    "original_failure": {
+      "path": "file:///data/users/ali/vla_wam/raw/v4/g2-object-pair/smoke-g2c7q20260905aa-s004/episodes/infrastructure_failure.json",
+      "bytes": 1634,
+      "sha256": "cba2fd612db99e55aee805ba9dc6b43bbd45cd2dfbda8e9294e47a2c6d72e3fc"
+    },
+    "contextual_failure": {
+      "path": "file:///data/users/ali/vla_wam/raw/v4/g2-object-pair/smoke-g2c7q20260905ab-s004/episodes/infrastructure_failure.json",
+      "bytes": 2118,
+      "sha256": "e6a1dfa4b50ce2b027017bcd346abf5f3fd2f0a7b6c08852bb56feb9429901ce"
+    },
+    "approved_horizontal_receipt": {
+      "path": "file:///data/users/ali/vla_wam/raw/aec083f1-82d8-4099-900b-52c8673fb4e7/lane-g2h-s000/attempt-g2q20260905g/episodes/g2_seed_receipt.json",
+      "sha256": "eea2608c002fc0c880e8832055734cc39d78de7ac2da29123c840d822bd705d4"
+    }
+  },
+  "disposition": "Keep top-level decoupled visual/support assets, but move support from z=0.30 to the approved maple tabletop at z=0.05 and reduce both registered object heights by 0.25 m."
+}

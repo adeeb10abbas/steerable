@@ -30,7 +30,7 @@ def Xform "World"
         float physxRigidBody:angularDamping = 4
         float physxRigidBody:linearDamping = 2.5
         quatf xformOp:orient = (1, 0, 0, 0)
-        double3 xformOp:translate = (0.43, -0.10, 0.3205)
+        double3 xformOp:translate = (0.43, -0.10, 0.0705)
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
 
         def Cube "geometry" (
@@ -58,7 +58,7 @@ def Xform "World"
         float physxRigidBody:angularDamping = 4
         float physxRigidBody:linearDamping = 2.5
         quatf xformOp:orient = (1, 0, 0, 0)
-        double3 xformOp:translate = (0.44, 0.13, 0.312)
+        double3 xformOp:translate = (0.44, 0.13, 0.062)
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
 
         def Cube "geometry" (
@@ -99,7 +99,7 @@ def Xform "World"
             token visibility = "invisible"
             double size = 1
             float3 xformOp:scale = (0.5, 0.6, 0.02)
-            double3 xformOp:translate = (0.45, 0.02, 0.29)
+            double3 xformOp:translate = (0.45, 0.02, 0.04)
             uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
         }
     }

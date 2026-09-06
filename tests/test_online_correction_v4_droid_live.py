@@ -143,6 +143,78 @@ class DroidLiveImportTests(unittest.TestCase):
             [("detach", None, None), ("to", "cuda:0", "float32")],
         )
 
+    def test_g3_raw_physics_sampling_holds_robot_and_updates_scene(self) -> None:
+        from experiments.online_correction_v4.droid_robolab import LiveRoboLabBackend
+
+        calls: list[object] = []
+        action_manager = SimpleNamespace(
+            process_action=lambda action: calls.append(("process", action)),
+            apply_action=lambda: calls.append("apply"),
+        )
+        scene = SimpleNamespace(
+            write_data_to_sim=lambda: calls.append("write"),
+            update=lambda *, dt: calls.append(("update", dt)),
+        )
+        simulation = SimpleNamespace(
+            step=lambda *, render: calls.append(("step", render)),
+        )
+        backend = object.__new__(LiveRoboLabBackend)
+        backend.env = SimpleNamespace(
+            action_manager=action_manager,
+            scene=scene,
+            sim=simulation,
+            physics_dt=1.0 / 120.0,
+        )
+        backend._g3_physics_tick = 99
+        with mock.patch.object(
+            LiveRoboLabBackend, "hold_action_tensor", return_value="hold"
+        ):
+            backend.begin_g3_physics_sampling()
+        backend.step_g3_physics_substeps(2)
+        self.assertEqual(backend._g3_physics_tick, 2)
+        self.assertEqual(
+            calls,
+            [
+                ("process", "hold"),
+                "apply",
+                "write",
+                ("step", False),
+                ("update", 1.0 / 120.0),
+                "apply",
+                "write",
+                ("step", False),
+                ("update", 1.0 / 120.0),
+            ],
+        )
+
+    def test_g3_contact_probe_records_filtered_pair_force(self) -> None:
+        import numpy as np
+
+        from experiments.online_correction_v4.droid_robolab import LiveRoboLabBackend
+
+        sensor = SimpleNamespace(
+            data=SimpleNamespace(
+                force_matrix_w=np.asarray([[[[3.0, 4.0, 0.0]]]])
+            )
+        )
+        contact_utils = SimpleNamespace(
+            get_contact_sensors=lambda _scene: {
+                "bowl__table": sensor,
+                "gripper__all_objs": sensor,
+            }
+        )
+        backend = object.__new__(LiveRoboLabBackend)
+        backend.env = SimpleNamespace(scene=object())
+        modules = {
+            "robolab": SimpleNamespace(),
+            "robolab.core": SimpleNamespace(),
+            "robolab.core.sensors": SimpleNamespace(),
+            "robolab.core.sensors.contact_sensor_utils": contact_utils,
+        }
+        with mock.patch.dict(sys.modules, modules):
+            evidence = backend.g3_contact_force_evidence()
+        self.assertEqual(evidence, {"bowl__table": 5.0})
+
     def test_horizontal_fixture_registry(self) -> None:
         self.assertEqual(supported_fixture_ids(), ("horizontal",))
         reg = resolve_fixture_registration("horizontal", relation="left")

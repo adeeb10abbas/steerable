@@ -79,6 +79,7 @@ def _passing_path_observation(
             f"artifacts/g3/reference/{goal}_{scenario}_{suffix}.json",
             reference,
         ),
+        "path_conformance": True,
         "collision_free": True,
         "support_valid": True,
         "reachable_workspace": True,
@@ -98,6 +99,23 @@ def _full_path_observations(*, failing_key: tuple[str, str] | None = None) -> li
             obs["reasons"] = ["collision detected"]
         observations.append(obs)
     return observations
+
+
+def _goal_area_cases(*, failing_goal: str | None = None) -> list[dict[str, object]]:
+    return [
+        {
+            "relation": goal,
+            "original_area_m2": 0.10,
+            "destination_area_m2": 0.075,
+            "shrinking_direction": True,
+            "removed_area_fraction": 0.25 if goal != failing_goal else 0.10,
+            "minimum_shrinking_area_fraction": 0.20,
+            "original_goal_empty": False,
+            "destination_goal_empty": False,
+            "passes_information_gate": goal != failing_goal,
+        }
+        for goal in HORIZONTAL_GOALS
+    ]
 
 
 class ModelBlindG3PlanTests(unittest.TestCase):
@@ -190,6 +208,7 @@ class ModelBlindG3PathReceiptTests(unittest.TestCase):
             environment_seed=2100000000,
             scale=1.0,
             check_observations=_full_path_observations(),
+            goal_area_cases=_goal_area_cases(),
         )
         validate_path_seed_receipt(receipt, plan=self.plan)
         self.assertEqual(receipt["schema_version"], "v4-horizontal-g3-path-seed-receipt-v1")
@@ -217,6 +236,7 @@ class ModelBlindG3PathReceiptTests(unittest.TestCase):
             check_observations=_full_path_observations(
                 failing_key=("front", "fast_drift")
             ),
+            goal_area_cases=_goal_area_cases(),
         )
         validate_path_seed_receipt(receipt, plan=self.plan)
         self.assertFalse(receipt["passed"])
@@ -226,6 +246,20 @@ class ModelBlindG3PathReceiptTests(unittest.TestCase):
         self.assertEqual(failed["scenario"], "fast_drift")
         self.assertEqual(failed["reasons"], ["collision detected"])
 
+    def test_information_gate_failure_rejects_otherwise_clear_path(self) -> None:
+        receipt = compile_path_seed_receipt(
+            plan=self.plan,
+            plan_receipt=self.plan_receipt,
+            environment_seed=2100000000,
+            scale=1.0,
+            check_observations=_full_path_observations(),
+            goal_area_cases=_goal_area_cases(failing_goal="left"),
+        )
+        validate_path_seed_receipt(receipt, plan=self.plan)
+        self.assertEqual(receipt["failed_check_count"], 0)
+        self.assertFalse(receipt["information_gate_passed"])
+        self.assertFalse(receipt["passed"])
+
     def test_rejects_wrong_observation_count(self) -> None:
         with self.assertRaises(G3GateError):
             compile_path_seed_receipt(
@@ -234,6 +268,7 @@ class ModelBlindG3PathReceiptTests(unittest.TestCase):
                 environment_seed=2100000000,
                 scale=1.0,
                 check_observations=_full_path_observations()[:23],
+                goal_area_cases=_goal_area_cases(),
             )
 
     def test_rejects_unregistered_scale(self) -> None:
@@ -244,6 +279,7 @@ class ModelBlindG3PathReceiptTests(unittest.TestCase):
                 environment_seed=2100000000,
                 scale=1.25,
                 check_observations=_full_path_observations(),
+                goal_area_cases=_goal_area_cases(),
             )
 
     def test_rejects_non_finite_numeric(self) -> None:
@@ -256,6 +292,7 @@ class ModelBlindG3PathReceiptTests(unittest.TestCase):
                 environment_seed=2100000000,
                 scale=1.0,
                 check_observations=observations,
+                goal_area_cases=_goal_area_cases(),
             )
 
     def test_rejects_sample_interval_above_cap(self) -> None:
@@ -268,6 +305,7 @@ class ModelBlindG3PathReceiptTests(unittest.TestCase):
                 environment_seed=2100000000,
                 scale=1.0,
                 check_observations=observations,
+                goal_area_cases=_goal_area_cases(),
             )
 
     def test_rejects_malformed_evidence_hash(self) -> None:
@@ -282,6 +320,7 @@ class ModelBlindG3PathReceiptTests(unittest.TestCase):
                 environment_seed=2100000000,
                 scale=1.0,
                 check_observations=observations,
+                goal_area_cases=_goal_area_cases(),
             )
 
     def test_rejects_declared_passed_disagreeing_with_predicates(self) -> None:
@@ -296,6 +335,7 @@ class ModelBlindG3PathReceiptTests(unittest.TestCase):
                 environment_seed=2100000000,
                 scale=1.0,
                 check_observations=observations,
+                goal_area_cases=_goal_area_cases(),
             )
 
     def test_validate_rejects_out_of_order_checks(self) -> None:
@@ -305,6 +345,7 @@ class ModelBlindG3PathReceiptTests(unittest.TestCase):
             environment_seed=2100000000,
             scale=1.0,
             check_observations=_full_path_observations(),
+            goal_area_cases=_goal_area_cases(),
         )
         swapped = list(receipt["checks"])
         swapped[0], swapped[1] = swapped[1], swapped[0]
@@ -319,6 +360,7 @@ class ModelBlindG3PathReceiptTests(unittest.TestCase):
             environment_seed=2100000000,
             scale=1.0,
             check_observations=_full_path_observations(),
+            goal_area_cases=_goal_area_cases(),
         )
         bad = {**receipt, "scale": 2.0, "displacement_m": 0.24}
         with self.assertRaises(G3GateError):
@@ -331,6 +373,7 @@ class ModelBlindG3PathReceiptTests(unittest.TestCase):
             environment_seed=2100000000,
             scale=1.0,
             check_observations=_full_path_observations(),
+            goal_area_cases=_goal_area_cases(),
         )
         checks = list(receipt["checks"])
         first = dict(checks[0])

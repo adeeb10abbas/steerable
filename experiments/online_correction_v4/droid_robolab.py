@@ -79,6 +79,7 @@ class LiveRoboLabConfig:
     output_dir: Path | None = None
     headless: bool = True
     locked_native_control_dt_s: float = 0.05
+    g3_contact_probe: bool = False
 
 
 class RoboLabSession:
@@ -171,6 +172,7 @@ def build_live_robolab_env(
     queue_row_sha256: str,
     output_dir: Path | None = None,
     locked_native_control_dt_s: float = 0.05,
+    g3_contact_probe: bool = False,
 ) -> LiveRoboLabEnv:
     if fixture.fixture_id in blocked_fixture_ids():
         raise RoboLabBootstrapError(
@@ -192,6 +194,7 @@ def build_live_robolab_env(
         queue_row_sha256=queue_row_sha256,
         output_dir=output_dir,
         locked_native_control_dt_s=locked_native_control_dt_s,
+        g3_contact_probe=g3_contact_probe,
     )
     _bind_runtime_env(config)
     RoboLabSession.ensure_started(headless=config.headless)
@@ -217,6 +220,7 @@ def _import_robolab_modules(config: LiveRoboLabConfig) -> dict[str, Any]:
         from robolab.core.world.world_state import get_world
         from robolab.registrations.droid.auto_env_registrations_jointpos import auto_register_droid_envs
         from robolab.registrations.droid.camera_presets import WRIST_LEFT_RIGHT_HEAD
+        import robolab.robots.droid as droid_robot
     except ImportError as exc:
         raise DroidDependencyError(
             "RoboLab modules are unavailable after AppLauncher startup"
@@ -230,6 +234,11 @@ def _import_robolab_modules(config: LiveRoboLabConfig) -> dict[str, Any]:
         set_output_dir(os.environ["ONLINE_CORRECTION_V4_OUTPUT_DIR"])
 
     active = resolve_active_registration()
+    if config.g3_contact_probe:
+        droid_robot.contact_gripper = {
+            **droid_robot.contact_gripper,
+            "robot_all": "{ENV_REGEX_NS}/robot/.*",
+        }
     auto_register_droid_envs(
         task=[active.task_module],
         cameras=WRIST_LEFT_RIGHT_HEAD,
@@ -265,6 +274,22 @@ def _create_live_env(config: LiveRoboLabConfig, modules: dict[str, Any]) -> Live
         config=config,
         modules=modules,
     )
+    reset_proxy = _new_reset_proxy(backend=backend, config=config, modules=modules)
+    live_env = LiveRoboLabEnv(
+        backend=backend,
+        reset_proxy=reset_proxy,
+        config=config,
+    )
+    backend.reset_proxy = reset_proxy
+    return live_env
+
+
+def _new_reset_proxy(
+    *,
+    backend: LiveRoboLabBackend,
+    config: LiveRoboLabConfig,
+    modules: dict[str, Any],
+) -> TwoResetAttestationProxy:
     state = ResetAttestationState(
         episode_id=config.episode_id,
         env_seed=config.env_seed,
@@ -302,13 +327,7 @@ def _create_live_env(config: LiveRoboLabConfig, modules: dict[str, Any]) -> Live
         state=state,
         attestation_validator=_attestation_validator,
     )
-    live_env = LiveRoboLabEnv(
-        backend=backend,
-        reset_proxy=reset_proxy,
-        config=config,
-    )
-    backend.reset_proxy = reset_proxy
-    return live_env
+    return reset_proxy
 
 
 @dataclass
@@ -347,6 +366,7 @@ class LiveRoboLabBackend:
     _initial_supported_z: float = 0.0
     _reference_baseline_pose: tuple[float, ...] | None = None
     _native_dt_measured: float | None = None
+    _g3_physics_tick: int = 0
     _settling_baseline_position: tuple[float, float, float] | None = None
     _settling_baseline_orientation_wxyz: tuple[float, float, float, float] | None = None
     _moved_object_mask_pixels_by_camera: dict[str, int] | None = None
@@ -365,6 +385,20 @@ class LiveRoboLabBackend:
             self._native_dt_measured = measured
         return self._native_dt_measured
 
+    @property
+    def physics_dt_s(self) -> float:
+        value = getattr(self.env, "physics_dt", None)
+        if value is None:
+            simulation = getattr(self.env, "sim", None)
+            getter = getattr(simulation, "get_physics_dt", None)
+            value = getter() if callable(getter) else None
+        if value is None:
+            raise RoboLabBootstrapError("RoboLab env did not expose physics_dt")
+        measured = float(value)
+        if measured <= 0:
+            raise RoboLabBootstrapError("physics dt must be positive")
+        return measured
+
     def reset(self, *, seed: int) -> tuple[dict[str, Any], dict[str, Any]]:
         if seed != self.config.env_seed:
             raise RoboLabBootstrapError("env_seed differs from bound episode seed")
@@ -375,6 +409,7 @@ class LiveRoboLabBackend:
         self.reference_displacement_m = 0.0
         self._initial_supported_z = 0.0
         self._reference_baseline_pose = None
+        self._g3_physics_tick = 0
         self.last_hold_action = ()
         self._anchor_reference_motion()
         return obs, info
@@ -400,6 +435,154 @@ class LiveRoboLabBackend:
         if tuple(action.shape) != (1, ACTION_DIM):
             raise RoboLabBootstrapError(f"unexpected hold-action shape: {tuple(action.shape)}")
         return action
+
+    def begin_g3_physics_sampling(self) -> None:
+        """Latch a stationary robot command for simulator-substep G3 probes."""
+        action_manager = getattr(self.env, "action_manager", None)
+        if action_manager is None or not hasattr(action_manager, "process_action"):
+            raise RoboLabBootstrapError(
+                "RoboLab env lacks action manager for G3 physics sampling"
+            )
+        action_manager.process_action(self.hold_action_tensor())
+        self._g3_physics_tick = 0
+
+    def step_g3_physics_substeps(self, count: int) -> None:
+        """Advance raw physics without coarsening G3's 20 ms path sampling."""
+        if type(count) is not int or count <= 0:
+            raise RoboLabBootstrapError("G3 physics substep count must be positive")
+        action_manager = getattr(self.env, "action_manager", None)
+        scene = getattr(self.env, "scene", None)
+        simulation = getattr(self.env, "sim", None)
+        if (
+            action_manager is None
+            or not hasattr(action_manager, "apply_action")
+            or scene is None
+            or not hasattr(scene, "write_data_to_sim")
+            or not hasattr(scene, "update")
+            or simulation is None
+            or not hasattr(simulation, "step")
+        ):
+            raise RoboLabBootstrapError(
+                "RoboLab env lacks raw physics hooks required by G3"
+            )
+        for _ in range(count):
+            action_manager.apply_action()
+            scene.write_data_to_sim()
+            simulation.step(render=False)
+            scene.update(dt=self.physics_dt_s)
+            self._g3_physics_tick += 1
+
+    def g3_contact_force_evidence(self) -> dict[str, float]:
+        """Return maximum filtered force magnitudes for every live pair sensor."""
+        try:
+            from robolab.core.sensors.contact_sensor_utils import get_contact_sensors
+        except ImportError as exc:
+            raise RoboLabBootstrapError(
+                "RoboLab contact sensors are unavailable for G3"
+            ) from exc
+        import numpy as np
+
+        records: dict[str, float] = {}
+        sensors = get_contact_sensors(self.env.scene)
+        if not sensors:
+            raise RoboLabBootstrapError("G3 found no live contact sensors")
+        for name, sensor in sorted(sensors.items()):
+            if name.endswith("__all_objs"):
+                continue
+            data = getattr(sensor, "data", None)
+            force = getattr(data, "force_matrix_w", None) if data is not None else None
+            if force is None:
+                force = getattr(data, "net_forces_w", None) if data is not None else None
+            if force is None:
+                raise RoboLabBootstrapError(
+                    f"G3 contact sensor {name!r} exposes no force tensor"
+                )
+            array = np.asarray(_host_numpy(force), dtype=float)
+            if array.size == 0 or not np.all(np.isfinite(array)):
+                raise RoboLabBootstrapError(
+                    f"G3 contact sensor {name!r} force tensor is invalid"
+                )
+            vector_axis = array.shape[-1] if array.ndim else 0
+            if vector_axis != 3:
+                raise RoboLabBootstrapError(
+                    f"G3 contact sensor {name!r} force tensor lacks xyz vectors"
+                )
+            magnitudes = np.linalg.norm(array.reshape(-1, 3), axis=1)
+            records[name] = float(np.max(magnitudes))
+        return records
+
+    def g3_scene_state(self) -> dict[str, Any]:
+        """Capture privileged model-blind poses, velocities, bounds, and contacts."""
+        get_world = self.modules["get_world"]
+        world = get_world(self.env)
+        objects: dict[str, Any] = {}
+        for name in SETTLE_OBJECTS:
+            pos, quat = world.get_pose(name, env_id=0)
+            velocity = world.get_velocity(name, env_id=0)
+            objects[name] = {
+                "position_world_xyz_m": _host_numpy(pos).tolist(),
+                "quaternion_world_wxyz": _host_numpy(quat).tolist(),
+                "velocity_world_xyz_rad_s": _host_numpy(velocity).tolist(),
+                "world_aabb_m": self.g3_world_aabb(name),
+            }
+        return {
+            "physics_tick": self._g3_physics_tick,
+            "physics_time_s": self._g3_physics_tick * self.physics_dt_s,
+            "physics_dt_s": self.physics_dt_s,
+            "objects": objects,
+            "robot_world_aabb_m": self.g3_world_aabb("robot"),
+            "table_world_aabb_m": self.g3_world_aabb("table"),
+            "contact_force_n_by_pair": self.g3_contact_force_evidence(),
+        }
+
+    def g3_world_aabb(self, scene_name: str) -> dict[str, Any]:
+        """Resolve a live scene asset to its USD world-aligned bounding box."""
+        try:
+            asset = self.env.scene[scene_name]
+        except (KeyError, TypeError) as exc:
+            raise RoboLabBootstrapError(
+                f"G3 scene asset is unavailable: {scene_name}"
+            ) from exc
+        view = getattr(asset, "root_physx_view", None)
+        prim_paths = getattr(view, "prim_paths", None)
+        if not prim_paths:
+            raise RoboLabBootstrapError(
+                f"G3 scene asset {scene_name!r} exposes no concrete prim path"
+            )
+        prim_path = str(prim_paths[0])
+        try:
+            import omni.usd
+            from pxr import Usd, UsdGeom
+        except ImportError as exc:
+            raise RoboLabBootstrapError(
+                "USD bounds APIs are unavailable for G3"
+            ) from exc
+        stage = omni.usd.get_context().get_stage()
+        prim = stage.GetPrimAtPath(prim_path)
+        if not prim or not prim.IsValid():
+            raise RoboLabBootstrapError(
+                f"G3 could not resolve prim path for {scene_name!r}: {prim_path}"
+            )
+        cache = UsdGeom.BBoxCache(
+            Usd.TimeCode.Default(),
+            [UsdGeom.Tokens.default_, UsdGeom.Tokens.render, UsdGeom.Tokens.proxy],
+        )
+        aligned = cache.ComputeWorldBound(prim).ComputeAlignedRange()
+        minimum = [float(value) for value in aligned.GetMin()]
+        maximum = [float(value) for value in aligned.GetMax()]
+        if (
+            len(minimum) != 3
+            or len(maximum) != 3
+            or any(not value < upper for value, upper in zip(minimum, maximum))
+        ):
+            raise RoboLabBootstrapError(
+                f"G3 world bounds are invalid for {scene_name!r}"
+            )
+        return {
+            "min_xyz": minimum,
+            "max_xyz": maximum,
+            "prim_path": prim_path,
+        }
 
     def sample_stability_maxima(self) -> dict[str, Any]:
         import numpy as np
@@ -777,6 +960,36 @@ class LiveRoboLabEnv:
     @property
     def reference_displacement_m(self) -> float:
         return self.backend.reference_displacement_m
+
+    def reset_for_model_blind_g3(
+        self,
+        *,
+        check_id: str,
+        prompt_sha256: str,
+        runtime_identity_sha256: str,
+    ) -> tuple[dict[str, Any], dict[str, Any]]:
+        """Perform a fresh attested physical reset for one zero-policy G3 check."""
+        if not check_id:
+            raise RoboLabBootstrapError("G3 check_id must be non-empty")
+        self.config.episode_id = check_id
+        proxy = _new_reset_proxy(
+            backend=self.backend,
+            config=self.config,
+            modules=self.backend.modules,
+        )
+        self.reset_proxy = proxy
+        self.backend.reset_proxy = proxy
+        proxy.reset(seed=self.config.env_seed)
+        proxy.reset(seed=self.config.env_seed)
+        initial_state_sha256 = sha256_bytes(
+            self.backend.capture_observation_bytes()
+        )
+        attestation = proxy.finalize_attestation(
+            prompt_sha256=prompt_sha256,
+            runtime_identity_sha256=runtime_identity_sha256,
+            initial_state_sha256=initial_state_sha256,
+        )
+        return attestation, self.backend.physical_reset_payload()
 
     def reset(self, *, seed: int) -> tuple[dict[str, Any], dict[str, Any]]:
         return self.reset_proxy.reset(seed=seed)

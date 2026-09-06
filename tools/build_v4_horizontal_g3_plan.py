@@ -131,6 +131,9 @@ def build(
                 "sha256": sha256_file(g2_aggregate_path),
             },
         },
+        geometry_contract=campaign["fixtures"]["horizontal"][
+            "model_blind_g3_geometry"
+        ],
         reset_registry=registry,
         queue_rows=rows,
         scale_candidates=motion_config["calibration_scale_candidates"],

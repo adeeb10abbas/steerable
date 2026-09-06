@@ -68,7 +68,19 @@
       "moving_object": "cube",
       "reference": "bowl",
       "nominal_translation_m": 0.12,
-      "goal_geometry": "direction_halfspace_intersect_supported_workspace"
+      "goal_geometry": "direction_halfspace_intersect_supported_workspace",
+      "model_blind_g3_geometry": {
+        "extent_convention": "live_usd_world_aabb_projected_into_registered_task_frame",
+        "supported_workspace_convention": "live_table_top_aabb_eroded_by_target_projected_half_extents_and_edge_margin",
+        "relation_clearance_m": 0.01,
+        "support_edge_margin_m": 0.005,
+        "active_contact_force_threshold_n": 0.05,
+        "reference_pose_error_max_m": 0.002,
+        "stationary_object_drift_max_m": 0.005,
+        "path_sample_max_interval_s": 0.02,
+        "robot_reference_contact_probe": "full_robot_articulation_regex_against_reference_pair_sensor",
+        "policy_outcome_used": false
+      }
     },
     "reference_binding": {
       "seed_slot": 1,

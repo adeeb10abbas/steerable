@@ -125,7 +125,8 @@ def _require_direction_coefficients(value: Any, label: str) -> list[float]:
 
 def _path_check_passes(check: Mapping[str, Any]) -> bool:
     return (
-        check.get("collision_free") is True
+        check.get("path_conformance") is True
+        and check.get("collision_free") is True
         and check.get("support_valid") is True
         and check.get("reachable_workspace") is True
         and check.get("legal_goal_nonempty") is True
@@ -252,6 +253,10 @@ def _compile_path_check(
         f"{goal}/{scenario} sample_count",
     )
     predicates = {
+        "path_conformance": _require_bool(
+            observation.get("path_conformance"),
+            f"{goal}/{scenario} path_conformance",
+        ),
         "collision_free": _require_bool(
             observation.get("collision_free"), f"{goal}/{scenario} collision_free"
         ),
@@ -310,6 +315,83 @@ def _compile_path_check(
     return compiled
 
 
+def _compile_goal_area_cases(
+    cases: Iterable[Mapping[str, Any]],
+    *,
+    minimum_fraction: float,
+) -> list[dict[str, Any]]:
+    raw_cases = list(cases)
+    _require(
+        len(raw_cases) == len(HORIZONTAL_GOALS),
+        "path receipt requires one goal-area case per horizontal goal",
+    )
+    compiled: list[dict[str, Any]] = []
+    for goal, case in zip(HORIZONTAL_GOALS, raw_cases):
+        _require(isinstance(case, Mapping), f"goal-area case {goal} is invalid")
+        _require(case.get("relation") == goal, "goal-area cases are out of order")
+        original_area = _require_finite_number(
+            case.get("original_area_m2"), f"{goal} original_area_m2"
+        )
+        destination_area = _require_finite_number(
+            case.get("destination_area_m2"), f"{goal} destination_area_m2"
+        )
+        removed_fraction = _require_finite_number(
+            case.get("removed_area_fraction"), f"{goal} removed_area_fraction"
+        )
+        _require(
+            original_area >= 0 and destination_area >= 0,
+            f"{goal} goal areas must be non-negative",
+        )
+        _require(
+            -1e-12 <= removed_fraction <= 1.0 + 1e-12,
+            f"{goal} removed-area fraction is outside [0,1]",
+        )
+        shrinking = _require_bool(
+            case.get("shrinking_direction"), f"{goal} shrinking_direction"
+        )
+        original_empty = _require_bool(
+            case.get("original_goal_empty"), f"{goal} original_goal_empty"
+        )
+        destination_empty = _require_bool(
+            case.get("destination_goal_empty"), f"{goal} destination_goal_empty"
+        )
+        declared_minimum = _require_positive_finite(
+            case.get("minimum_shrinking_area_fraction"),
+            f"{goal} minimum_shrinking_area_fraction",
+        )
+        _require(
+            abs(declared_minimum - minimum_fraction) <= 1e-12,
+            f"{goal} information-gate threshold differs from plan",
+        )
+        expected_passes = (
+            not original_empty
+            and not destination_empty
+            and (not shrinking or removed_fraction + 1e-12 >= minimum_fraction)
+        )
+        declared_passes = _require_bool(
+            case.get("passes_information_gate"),
+            f"{goal} passes_information_gate",
+        )
+        _require(
+            declared_passes == expected_passes,
+            f"{goal} information-gate disposition differs from evidence",
+        )
+        compiled.append(
+            {
+                "relation": goal,
+                "original_area_m2": original_area,
+                "destination_area_m2": destination_area,
+                "shrinking_direction": shrinking,
+                "removed_area_fraction": removed_fraction,
+                "minimum_shrinking_area_fraction": declared_minimum,
+                "original_goal_empty": original_empty,
+                "destination_goal_empty": destination_empty,
+                "passes_information_gate": declared_passes,
+            }
+        )
+    return compiled
+
+
 def compile_path_seed_receipt(
     *,
     plan: Mapping[str, Any],
@@ -317,6 +399,7 @@ def compile_path_seed_receipt(
     environment_seed: int,
     scale: float,
     check_observations: Iterable[Mapping[str, Any]],
+    goal_area_cases: Iterable[Mapping[str, Any]],
 ) -> dict[str, Any]:
     validate_plan_payload(plan)
     if type(environment_seed) is not int:
@@ -330,6 +413,16 @@ def compile_path_seed_receipt(
     counterbalance = _plan_counterbalance_for_seed(plan, environment_seed)
     directions = _plan_direction_coefficients_for_seed(plan, environment_seed)
     pinned_plan = _require_plan_receipt_identity(plan_receipt, "plan_receipt")
+    selection = plan.get("scale_selection")
+    _require(isinstance(selection, Mapping), "G3 plan lacks scale selection")
+    minimum_fraction = _require_positive_finite(
+        selection.get("minimum_shrinking_area_fraction"),
+        "minimum shrinking-area fraction",
+    )
+    compiled_goal_areas = _compile_goal_area_cases(
+        goal_area_cases,
+        minimum_fraction=minimum_fraction,
+    )
     observations = list(check_observations)
     if len(observations) != HORIZONTAL_PATH_CHECKS_PER_SEED:
         raise G3GateError(
@@ -348,7 +441,10 @@ def compile_path_seed_receipt(
                 observation=observation,
             )
         )
-    passed = all(check["passed"] for check in checks)
+    information_gate_passed = all(
+        case["passes_information_gate"] for case in compiled_goal_areas
+    )
+    passed = all(check["passed"] for check in checks) and information_gate_passed
     return {
         "schema_version": PATH_RECEIPT_SCHEMA,
         "campaign_id": plan.get("campaign_id"),
@@ -364,6 +460,8 @@ def compile_path_seed_receipt(
         "check_order": ["goal_declared_order", "scenario_declared_order"],
         "check_count": HORIZONTAL_PATH_CHECKS_PER_SEED,
         "checks": checks,
+        "goal_area_cases": compiled_goal_areas,
+        "information_gate_passed": information_gate_passed,
         "passed": passed,
         "passed_check_count": sum(1 for check in checks if check["passed"]),
         "failed_check_count": sum(1 for check in checks if not check["passed"]),
@@ -442,6 +540,7 @@ def validate_path_seed_receipt(
             check.get("reference_pose_evidence"), f"{label} reference_pose_evidence"
         )
         for field in (
+            "path_conformance",
             "collision_free",
             "support_valid",
             "reachable_workspace",
@@ -465,8 +564,30 @@ def validate_path_seed_receipt(
         raise G3GateError("path receipt passed_check_count differs")
     if receipt.get("failed_check_count") != failed_count:
         raise G3GateError("path receipt failed_check_count differs")
+    goal_area_cases = receipt.get("goal_area_cases")
+    if not isinstance(goal_area_cases, list):
+        raise G3GateError("path receipt lacks goal-area cases")
+    minimum_fraction = 0.20
+    if plan is not None:
+        selection = plan.get("scale_selection")
+        _require(isinstance(selection, Mapping), "G3 plan lacks scale selection")
+        minimum_fraction = _require_positive_finite(
+            selection.get("minimum_shrinking_area_fraction"),
+            "minimum shrinking-area fraction",
+        )
+    compiled_goal_areas = _compile_goal_area_cases(
+        goal_area_cases,
+        minimum_fraction=minimum_fraction,
+    )
+    information_gate_passed = all(
+        case["passes_information_gate"] for case in compiled_goal_areas
+    )
+    _require(
+        receipt.get("information_gate_passed") is information_gate_passed,
+        "path receipt information-gate disposition differs",
+    )
     receipt_passed = _require_bool(receipt.get("passed"), "receipt passed")
-    if receipt_passed != (failed_count == 0):
+    if receipt_passed != (failed_count == 0 and information_gate_passed):
         raise G3GateError("path receipt passed disagrees with check outcomes")
     if plan is not None:
         validate_plan_payload(plan)
@@ -687,6 +808,7 @@ def build_plan_payload(
     *,
     source_identity: Mapping[str, Any],
     g2_prerequisite: Mapping[str, Any],
+    geometry_contract: Mapping[str, Any],
     reset_registry: Mapping[str, Any],
     queue_rows: Iterable[Mapping[str, Any]],
     scale_candidates: Iterable[float],
@@ -694,6 +816,7 @@ def build_plan_payload(
     minimum_shrinking_area_fraction: float,
 ) -> dict[str, Any]:
     _validate_g2_prerequisite(g2_prerequisite)
+    _validate_geometry_contract(geometry_contract)
     resets = reset_registry.get("resets_by_env_seed")
     _require(isinstance(resets, Mapping) and resets, "reset registry has no resets")
     seeds = tuple(sorted(int(seed) for seed in resets))
@@ -743,6 +866,7 @@ def build_plan_payload(
         "behavioral_episode_count": 0,
         "source_identity": dict(source_identity),
         "g2_prerequisite": dict(g2_prerequisite),
+        "geometry_contract": dict(geometry_contract),
         "scale_selection": {
             "candidate_scales_descending": list(scales),
             "nominal_displacement_m": nominal_displacement_m,
@@ -844,6 +968,52 @@ def _validate_g2_prerequisite(prerequisite: Mapping[str, Any]) -> None:
     )
 
 
+def _validate_geometry_contract(contract: Mapping[str, Any]) -> None:
+    _require(
+        contract.get("extent_convention")
+        == "live_usd_world_aabb_projected_into_registered_task_frame",
+        "G3 extent convention differs",
+    )
+    _require(
+        contract.get("supported_workspace_convention")
+        == (
+            "live_table_top_aabb_eroded_by_target_projected_half_extents_and_"
+            "edge_margin"
+        ),
+        "G3 supported-workspace convention differs",
+    )
+    for key in (
+        "relation_clearance_m",
+        "support_edge_margin_m",
+        "active_contact_force_threshold_n",
+        "reference_pose_error_max_m",
+        "stationary_object_drift_max_m",
+        "path_sample_max_interval_s",
+    ):
+        value = contract.get(key)
+        _require(
+            isinstance(value, (int, float))
+            and not isinstance(value, bool)
+            and math.isfinite(float(value))
+            and float(value) > 0,
+            f"G3 geometry contract {key} must be positive and finite",
+        )
+    _require(
+        abs(float(contract["path_sample_max_interval_s"]) - PATH_SAMPLE_INTERVAL_S)
+        <= 1e-12,
+        "G3 path-sampling interval differs",
+    )
+    _require(
+        contract.get("robot_reference_contact_probe")
+        == "full_robot_articulation_regex_against_reference_pair_sensor",
+        "G3 robot/reference contact probe differs",
+    )
+    _require(
+        contract.get("policy_outcome_used") is False,
+        "G3 geometry contract may not use policy outcomes",
+    )
+
+
 def validate_plan_payload(plan: Mapping[str, Any]) -> None:
     _require(plan.get("schema_version") == PLAN_SCHEMA, "G3 plan schema differs")
     _require(plan.get("fixture_id") == "horizontal", "G3 plan fixture differs")
@@ -859,6 +1029,12 @@ def validate_plan_payload(plan: Mapping[str, Any]) -> None:
     prerequisite = plan.get("g2_prerequisite")
     _require(isinstance(prerequisite, Mapping), "G3 plan lacks G2 prerequisite")
     _validate_g2_prerequisite(prerequisite)
+    geometry_contract = plan.get("geometry_contract")
+    _require(
+        isinstance(geometry_contract, Mapping),
+        "G3 plan lacks geometry contract",
+    )
+    _validate_geometry_contract(geometry_contract)
     _require(plan.get("registered_reset_count") == 128, "G3 reset count differs")
     path = plan.get("path_sweep")
     scripted = plan.get("scripted_controller")

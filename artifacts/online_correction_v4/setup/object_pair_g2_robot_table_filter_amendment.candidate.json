@@ -1,0 +1,53 @@
+{
+  "schema_version": "v4-object-pair-g2-robot-table-filter-amendment-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "status": "post_result_model_blind_amendment_candidate",
+  "created_at_utc": "2026-09-06T03:19:00Z",
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "triggering_evidence": {
+    "path": "artifacts/online_correction_v4/qualification/20260905_object_pair_g2_smoke_g2c7q20260905l.json",
+    "sha256": "5bf124262536d545696796460fc42596e591a9e50378086ad3c6b10e07ddd732",
+    "finding": "Static and dynamic table modes expose no object support, while kinematic mode supports objects but the prior trace reports pathological robot-table impulses."
+  },
+  "amendment": {
+    "reason": "Retain the only table mode that provides support and remove only the unintended collision pair implicated by the model-blind trace.",
+    "table_mode": "kinematic",
+    "filtered_pair": {
+      "source": "object-pair table rigid body",
+      "targets": "every PhysicsRigidBodyAPI prim below the live robot articulation",
+      "mechanism": "UsdPhysics.FilteredPairsAPI"
+    },
+    "required_unfiltered_pairs": [
+      "sponge-table",
+      "tray-table",
+      "sponge-robot",
+      "tray-robot",
+      "sponge-tray"
+    ]
+  },
+  "unchanged_contracts": {
+    "registered_environment_seeds": true,
+    "co_composed_object_dimensions_mass_inertia_colors": true,
+    "reset_positions_and_spawn_clearance": true,
+    "table_geometry_and_transform": true,
+    "xy_jitter_algorithm_and_range": true,
+    "registry_position_tolerance_m": 0.005,
+    "linear_speed_max_m_s": 0.02,
+    "angular_speed_max_rad_s": 0.2,
+    "camera_and_task_frame_checks": true,
+    "prompts_and_policy_weights": true
+  },
+  "required_requalification": [
+    "Verify that the live filtered-pair relationship resolves at least one robot rigid body and the table prim.",
+    "Replay failed seed 2100040004 with kinematic support and robot-table filtering.",
+    "If the replay passes, execute a fresh complete 64-seed object-pair G2 wave.",
+    "Do not reuse any pre-amendment receipt toward release.",
+    "Release neither the reset registry nor G3 until the amended aggregate and human axis review pass."
+  ],
+  "disclosure": "This post-result setup amendment uses only zero-policy contact and support evidence. It does not filter task-object contacts or weaken any acceptance threshold."
+}

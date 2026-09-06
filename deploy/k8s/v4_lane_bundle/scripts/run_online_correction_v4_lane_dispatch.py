@@ -100,6 +100,25 @@ def validate_runner_binding(manifest: Mapping[str, Any]) -> Path:
     return runner_path
 
 
+def resolve_runtime_working_directory(manifest: Mapping[str, Any]) -> Path:
+    lock_path = Path(str(manifest["runtime_lock_path"]))
+    try:
+        lock = json.loads(lock_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise DispatchError(f"cannot read runtime lock {lock_path}: {exc}") from exc
+    entrypoint = Path(str((lock.get("runner") or {}).get("entrypoint", "")))
+    runtime_root = entrypoint.parent.parent
+    marker = (
+        runtime_root
+        / "experiments"
+        / "online_correction_v4"
+        / "droid_contract.py"
+    )
+    if not runtime_root.is_absolute() or not marker.is_file():
+        _fail(f"runtime working directory is not a V4 source tree: {runtime_root}")
+    return runtime_root
+
+
 def load_policy_wait_endpoint(launch_config_path: Path) -> tuple[str, int]:
     if not launch_config_path.is_file():
         _fail(f"simulator launch config missing: {launch_config_path}")
@@ -207,6 +226,7 @@ def main(argv: list[str] | None = None) -> int:
     manifest_path = Path(args.dispatch_manifest).resolve()
     manifest = load_dispatch_manifest(manifest_path)
     runner_path = validate_runner_binding(manifest)
+    runtime_working_directory = resolve_runtime_working_directory(manifest)
     launch_config_path = Path(args.launch_config).resolve() if args.launch_config else None
 
     output_parent = os.environ.get("EPISODE_OUTPUT_DIR") or os.environ.get("OUTPUT_PARENT")
@@ -241,6 +261,7 @@ def main(argv: list[str] | None = None) -> int:
                     "behavioral_episode_count": len(manifest["episode_ids"]),
                     "policy_host": policy_host,
                     "policy_port": policy_port,
+                    "runtime_working_directory": str(runtime_working_directory),
                     "planned_invocations": planned,
                 },
                 indent=2,
@@ -258,7 +279,11 @@ def main(argv: list[str] | None = None) -> int:
             policy_host=policy_host,
             policy_port=policy_port,
         )
-        result = subprocess.run(cmd, check=False)
+        result = subprocess.run(
+            cmd,
+            check=False,
+            cwd=runtime_working_directory,
+        )
         if result.returncode != 0:
             print(
                 f"[V4 lane dispatch] episode {episode_id} failed with exit {result.returncode}",

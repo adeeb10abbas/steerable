@@ -1,0 +1,25 @@
+{
+  "schema_version": "v4-invalid-infrastructure-attempts-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "C7",
+  "fixture_id": "object_pair",
+  "attempt_ids": [
+    "attempt0033",
+    "attempt0034",
+    "attempt0035",
+    "attempt0036",
+    "attempt0037",
+    "attempt0038",
+    "attempt0039",
+    "attempt0040"
+  ],
+  "classification": "infrastructure_failure_before_behavioral_execution",
+  "cause": "The live runner reached episode binding but attempted to write the bound queue row before creating the fresh episode output directory.",
+  "fix_commit": "54856d920fcf6ed2f63877fcb4ad5a869782548e",
+  "observed_group_receipt_count": 0,
+  "observed_episode_receipt_count": 0,
+  "behavioral_episode_count": 0,
+  "policy_outcome_count": 0,
+  "disposition": "Preserved as invalid infrastructure attempts; queue-row binding now creates the fresh episode directory before writing.",
+  "policy_failures_inferred": false
+}

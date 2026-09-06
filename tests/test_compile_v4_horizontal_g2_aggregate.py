@@ -59,6 +59,7 @@ class CompileHorizontalG2Tests(unittest.TestCase):
                 directory.mkdir()
                 receipt = {
                     "schema_version": SEED_RECEIPT_SCHEMA,
+                    "fixture_id": "horizontal",
                     "environment_seed": seed,
                     "passed_reset_and_camera": True,
                     "model_request_count": 0,

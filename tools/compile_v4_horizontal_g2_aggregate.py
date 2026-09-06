@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compile complete live-seed and rendered-axis evidence for horizontal G2."""
+"""Compile complete live-seed and rendered-axis evidence for a V4 DROID G2 fixture."""
 
 from __future__ import annotations
 
@@ -19,10 +19,10 @@ from experiments.online_correction_v4.droid_task_files.reset_registry import (  
     load_reset_registry,
 )
 from experiments.online_correction_v4.model_blind_g2 import (  # noqa: E402
-    AXIS_REVIEW_SCHEMA,
-    SEED_RECEIPT_SCHEMA,
+    axis_review_schema,
     canonical_json_bytes,
     compile_aggregate_receipt,
+    seed_receipt_schema,
     sha256_file,
 )
 
@@ -96,11 +96,13 @@ def compile_receipts(
     receipts_root: Path,
     axis_review_path: Path,
     output_path: Path,
+    fixture_id: str = "horizontal",
 ) -> dict[str, Any]:
     registry = load_reset_registry(
         registry_path=str(registry_path.resolve()),
         registry_sha256=registry_sha256,
         required_status=MODEL_BLIND_CANDIDATE_STATUS,
+        expected_fixture_id=fixture_id,
     )
     receipt_paths = sorted(receipts_root.resolve().rglob("g2_seed_receipt.json"))
     if not receipt_paths:
@@ -110,7 +112,9 @@ def compile_receipts(
     runtime_stratum: dict[str, Any] | None = None
     verified_artifact_count = 0
     for path in receipt_paths:
-        receipt = _load_canonical(path, schema=SEED_RECEIPT_SCHEMA)
+        receipt = _load_canonical(path, schema=seed_receipt_schema(fixture_id))
+        if receipt.get("fixture_id") != fixture_id:
+            raise ValueError(f"{path}: fixture differs")
         if receipt.get("reset_registry_sha256") != registry.registry_sha256:
             raise ValueError(f"{path}: reset registry hash differs")
         current_stratum = _runtime_stratum(receipt)
@@ -130,7 +134,10 @@ def compile_receipts(
         receipts.append(receipt)
 
     axis_path = axis_review_path.resolve()
-    axis_review = _load_canonical(axis_path, schema=AXIS_REVIEW_SCHEMA)
+    axis_review = _load_canonical(
+        axis_path,
+        schema=axis_review_schema(fixture_id),
+    )
     verified_artifact_count += _verify_artifact_records(
         {
             "source_seed_receipt": axis_review.get("source_seed_receipt"),
@@ -142,6 +149,7 @@ def compile_receipts(
         expected_env_seeds=registry.positions_by_env_seed,
         seed_receipts=receipts,
         axis_review=axis_review,
+        fixture_id=fixture_id,
     )
     aggregate.update(
         {
@@ -160,7 +168,7 @@ def compile_receipts(
             },
             "verified_external_artifact_count": verified_artifact_count,
             "release_boundary": (
-                "A passing aggregate completes horizontal G2 only. G3-G8 and a "
+                f"A passing aggregate completes {fixture_id} G2 only. G3-G8 and a "
                 "released reset registry/runtime lock remain required before policy inference."
             ),
         }
@@ -171,6 +179,7 @@ def compile_receipts(
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--fixture-id", default="horizontal")
     parser.add_argument("--reset-registry", type=Path, required=True)
     parser.add_argument("--reset-registry-sha256", required=True)
     parser.add_argument("--receipts-root", type=Path, required=True)
@@ -183,6 +192,7 @@ def main(argv: list[str] | None = None) -> int:
         receipts_root=args.receipts_root,
         axis_review_path=args.axis_review,
         output_path=args.out,
+        fixture_id=args.fixture_id,
     )
     print(json.dumps(report, indent=2, sort_keys=True))
     return 0

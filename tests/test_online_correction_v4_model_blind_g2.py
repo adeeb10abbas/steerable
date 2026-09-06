@@ -19,6 +19,9 @@ from experiments.online_correction_v4.model_blind_g2 import (
     REQUIRED_POLICY_CAMERAS,
     compile_aggregate_receipt,
     compile_seed_receipt,
+    aggregate_receipt_schema,
+    axis_review_schema,
+    seed_receipt_schema,
     task_frame_evidence,
 )
 
@@ -136,6 +139,20 @@ def _artifacts() -> dict:
 
 
 class ModelBlindG2Tests(unittest.TestCase):
+    def test_object_pair_receipt_schemas_are_fixture_scoped(self) -> None:
+        self.assertEqual(
+            seed_receipt_schema("object_pair"),
+            "v4-object-pair-g2-seed-receipt-v1",
+        )
+        self.assertEqual(
+            aggregate_receipt_schema("object_pair"),
+            "v4-object-pair-g2-aggregate-receipt-v1",
+        )
+        self.assertEqual(
+            axis_review_schema("object_pair"),
+            "v4-object-pair-g2-axis-review-v1",
+        )
+
     def test_task_frame_uses_droid_robot_axes(self) -> None:
         frame = task_frame_evidence(_physical())
         self.assertEqual(frame["u_left_world"], [0.0, 1.0, 0.0])

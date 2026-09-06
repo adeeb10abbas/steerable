@@ -1,0 +1,25 @@
+{
+  "schema_version": "v4-invalid-infrastructure-attempts-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "C7",
+  "fixture_id": "object_pair",
+  "attempt_ids": [
+    "attempt0017",
+    "attempt0018",
+    "attempt0019",
+    "attempt0020",
+    "attempt0021",
+    "attempt0022",
+    "attempt0023",
+    "attempt0024"
+  ],
+  "classification": "infrastructure_failure_before_behavioral_execution",
+  "cause": "The staged runner was invoked from its PVC binding directory, so its registered relative V4 adapter paths could not resolve.",
+  "fix_commit": "e7024c5029a7a0a68f4e05207a64625eb1571f3c",
+  "observed_group_receipt_count": 0,
+  "observed_episode_receipt_count": 0,
+  "behavioral_episode_count": 0,
+  "policy_outcome_count": 0,
+  "disposition": "Preserved as invalid infrastructure attempts; dispatch now runs each staged runner from the released runtime source root.",
+  "policy_failures_inferred": false
+}

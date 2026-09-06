@@ -1,0 +1,45 @@
+{
+  "schema_version": "v4-object-pair-g2-tabletop-damping-amendment-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "status": "post_result_model_blind_amendment_candidate",
+  "created_at_utc": "2026-09-06T04:03:00Z",
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "triggering_evidence": {
+    "path": "artifacts/online_correction_v4/qualification/20260905_object_pair_g2_smoke_g2c7q20260905x.json",
+    "sha256": "adb057f4f5b6d23cb771d387944e748a31ada4801b7e5fc110d15e748cdbf095",
+    "finding": "On the corrected static tabletop, the undamped lightweight sponge retains 0.088662922 m/s and 3.493255854 rad/s after the frozen settle window."
+  },
+  "amendment": {
+    "reason": "Dissipate finite contact-settling energy in the procedural sponge/tray proxies without weakening the gate.",
+    "objects": [
+      "sponge",
+      "tray"
+    ],
+    "physx_rigid_body_linear_damping": 2.5,
+    "physx_rigid_body_angular_damping": 4.0
+  },
+  "unchanged_contracts": {
+    "corrected_tabletop_object_heights": true,
+    "static_tabletop_support_geometry": true,
+    "registered_environment_seeds": true,
+    "object_dimensions_mass_inertia_colors": true,
+    "object_xy_positions_and_spawn_clearance": true,
+    "xy_jitter_algorithm_and_range": true,
+    "settle_window": true,
+    "registry_position_tolerance_m": 0.005,
+    "linear_speed_max_m_s": 0.02,
+    "angular_speed_max_rad_s": 0.2,
+    "camera_and_task_frame_checks": true,
+    "prompts_and_policy_weights": true
+  },
+  "required_requalification": [
+    "Replay seed 2100040004 with damping on the corrected static tabletop.",
+    "If it passes, execute a fresh complete 64-seed wave and repeat human axis review."
+  ],
+  "disclosure": "This zero-policy amendment responds to finite settling evidence from the final support geometry; it does not relax a threshold."
+}

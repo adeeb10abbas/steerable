@@ -1,0 +1,45 @@
+{
+  "schema_version": "v4-object-pair-g2-axis-review-failure-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "attempt_id": "g2c7q20260905u",
+  "reviewed_at_utc": "2026-09-06T03:51:00Z",
+  "reviewer_identity": "adeeb10abbas",
+  "status": "failed",
+  "passed": false,
+  "g2_complete": false,
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "seed_coverage": {
+    "registered": 64,
+    "receipts_found": 64,
+    "passed_reset_and_camera": 64,
+    "infrastructure_failures": 0
+  },
+  "assertions": {
+    "left_axis_matches_fixed_robot_viewpoint": false,
+    "front_axis_points_toward_robot": false,
+    "up_axis_opposes_gravity": true,
+    "labels_and_arrow_origins_visible": true
+  },
+  "review_notes": "User explicitly failed fixed-viewpoint left and front while passing up and visibility. Comparison with the previously approved horizontal montage showed that the C7 objects were rendered on the floor instead of the qualified tabletop because their reset heights omitted the tabletop's 0.30 m offset.",
+  "source_seed_receipt": {
+    "path": "file:///data/users/ali/vla_wam/raw/c98fae64-d8f9-477d-9bcb-65e5e481ea28/lane-g2o-s000/attempt-g2c7q20260905u/episodes/g2_seed_receipt.json",
+    "sha256": "7a40ea9f98612d96901f2e388928a5a5464e89a2319322cd85d919b8d692cb21",
+    "bytes": 12605,
+    "environment_seed": 2100040000
+  },
+  "source_axis_overlay": {
+    "path": "file:///data/users/ali/vla_wam/raw/c98fae64-d8f9-477d-9bcb-65e5e481ea28/lane-g2o-s000/attempt-g2c7q20260905u/episodes/axis_overlay_montage.png",
+    "sha256": "5c3bcf9bff149aca6050fd43bd546859ddebf4d4b6fa8f56e6bc15e30016c12d",
+    "bytes": 3263452
+  },
+  "compact_collection": {
+    "local_archive_sha256": "8ce912b7613798ff13a6605b870a451df9a03afeeef6bcd7ad323f23508fdb42",
+    "note": "The authoritative compact JSON evidence remains in the 64 raw attempt directories; the local archive is a collection receipt only."
+  },
+  "disposition": "Preserve all 64 valid zero-model-request receipts, but do not release G2. Correct the registered object heights to the qualified tabletop support plane, remove diagnostic damping/support workarounds made under the incorrect height assumption, and rerun the complete gate."
+}

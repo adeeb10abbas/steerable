@@ -40,10 +40,8 @@ OBJECT_SPECS: dict[str, dict[str, Any]] = {
         "center_of_mass_m": [0.0, 0.0, 0.0],
         "principal_axes_wxyz": [1.0, 0.0, 0.0, 0.0],
         "diagonal_inertia_kg_m2": [0.0000159375, 0.00002859375, 0.00003534375],
-        "linear_damping": 2.5,
-        "angular_damping": 4.0,
         "display_color_rgb": [0.95, 0.78, 0.10],
-        "base_position_robot_m": [0.43, -0.10, 0.0205],
+        "base_position_robot_m": [0.43, -0.10, 0.3205],
     },
     "tray": {
         "role": "reference",
@@ -54,10 +52,8 @@ OBJECT_SPECS: dict[str, dict[str, Any]] = {
         "center_of_mass_m": [0.0, 0.0, 0.0],
         "principal_axes_wxyz": [1.0, 0.0, 0.0, 0.0],
         "diagonal_inertia_kg_m2": [0.0002581, 0.0004981, 0.00074],
-        "linear_damping": 2.5,
-        "angular_damping": 4.0,
         "display_color_rgb": [0.10, 0.34, 0.85],
-        "base_position_robot_m": [0.44, 0.13, 0.012],
+        "base_position_robot_m": [0.44, 0.13, 0.312],
     },
 }
 
@@ -291,12 +287,11 @@ def build_registry(
                 "/data/users/ali/vla_wam/external/RoboLab-11142d4"
             ),
             "object_specs": OBJECT_SPECS,
-            "support_collider": {
-                "construction": "static_usd_cube",
-                "prim": "table/V4ObjectPairSupportCollider",
-                "world_center_xyz_m": [0.45, 0.02, -0.01],
-                "dimensions_xyz_m": [0.5, 0.6, 0.02],
-                "top_surface_z_m": 0.0,
+            "support_surface": {
+                "construction": "qualified_kinematic_table_payload",
+                "prim": "table",
+                "top_surface_z_m": 0.3,
+                "initial_clearance_m": 0.003,
             },
             "policy_outcome_used": False,
         },

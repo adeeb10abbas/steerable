@@ -27,10 +27,8 @@ def Xform "World"
         float physics:mass = 0.045
         quatf physics:principalAxes = (1, 0, 0, 0)
         bool physics:rigidBodyEnabled = 1
-        float physxRigidBody:angularDamping = 4
-        float physxRigidBody:linearDamping = 2.5
         quatf xformOp:orient = (1, 0, 0, 0)
-        double3 xformOp:translate = (0.43, -0.10, 0.0205)
+        double3 xformOp:translate = (0.43, -0.10, 0.3205)
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
 
         def Cube "geometry" (
@@ -55,10 +53,8 @@ def Xform "World"
         float physics:mass = 0.30
         quatf physics:principalAxes = (1, 0, 0, 0)
         bool physics:rigidBodyEnabled = 1
-        float physxRigidBody:angularDamping = 4
-        float physxRigidBody:linearDamping = 2.5
         quatf xformOp:orient = (1, 0, 0, 0)
-        double3 xformOp:translate = (0.44, 0.13, 0.012)
+        double3 xformOp:translate = (0.44, 0.13, 0.312)
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
 
         def Cube "geometry" (
@@ -81,27 +77,16 @@ def Xform "World"
         double3 xformOp:translate = (-0.087, 0, 0)
     }
 
-    def Xform "table"
+    def "table" (
+        prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
+        prepend payload = @/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/fixtures/table_maple.usd@
+    )
     {
-        def "Visual" (
-            prepend payload = @/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/fixtures/table_maple.usd@
-        )
-        {
-            quatf xformOp:orient = (1, 0, 0, 0)
-            double3 xformOp:translate = (0.19858434796333313, 0.02206825464963913, 0.05)
-            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
-        }
-
-        def Cube "V4ObjectPairSupportCollider" (
-            prepend apiSchemas = ["PhysicsCollisionAPI"]
-        )
-        {
-            token visibility = "invisible"
-            double size = 1
-            float3 xformOp:scale = (0.5, 0.6, 0.02)
-            double3 xformOp:translate = (0.45, 0.02, -0.01)
-            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
-        }
+        bool physics:kinematicEnabled = 1
+        bool physics:rigidBodyEnabled = 1
+        quatf xformOp:orient = (1, 0, 0, 0)
+        double3 xformOp:translate = (0.19858434796333313, 0.02206825464963913, 0.05)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
     }
 
     def Xform "GroundPlane"

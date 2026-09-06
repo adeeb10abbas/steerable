@@ -1,0 +1,39 @@
+{
+  "schema_version": "v4-object-pair-g2-stability-diagnostic-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "attempt_id": "g2c7q20260905c",
+  "environment_seed": 2100040004,
+  "compiled_at_utc": "2026-09-06T02:44:00Z",
+  "qualification_scope": "single_same_seed_model_blind_numeric_diagnostic",
+  "status": "infrastructure_invalid",
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "fixture_changed_from_attempt_g2c7q20260905b": false,
+  "released_stability_thresholds_changed": false,
+  "measurement": {
+    "object": "sponge",
+    "linear_component_max_m_s": 779034560.0,
+    "linear_component_limit_m_s": 0.02,
+    "angular_component_max_rad_s": 48.271186829,
+    "angular_component_limit_rad_s": 0.2,
+    "interpretation": "Catastrophic PhysX launch rather than marginal residual settling. The exact-support spawn pose is not numerically valid across the registered jitter field."
+  },
+  "runtime_identity": {
+    "study_commit": "4954f4b2951fc6e06ffffba124c8ef52732c1e7f",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "driver_version": "580.95.05",
+    "gpu_product": "NVIDIA A40",
+    "native_control_dt_s": 0.06666666666666667,
+    "reset_registry_sha256": "514cbe5d2d09a3d2eb23999aa9cd04da3f1dee528446787c546b0d972ba7119b"
+  },
+  "preservation": {
+    "raw_failure_marker": "file:///data/users/ali/vla_wam/raw/231aca15-be5d-42d8-a8c7-249baf5f67b6/lane-g2o-s004/attempt-g2c7q20260905c/episodes/infrastructure_failure.json",
+    "bytes": 1509,
+    "sha256": "d172435df4e0d0e8022822b6861d102491a7843f57acfece2775c4351f6444d5"
+  },
+  "disposition": "The diagnostic confirms a setup-geometry defect. A disclosed model-blind amendment may add a small positive spawn clearance while preserving the released 5 mm registry-position tolerance and all stability thresholds. The corrected fixture must pass same-seed smoke and then a fresh complete 64-seed G2 wave."
+}

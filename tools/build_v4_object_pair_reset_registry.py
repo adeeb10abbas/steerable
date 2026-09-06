@@ -37,7 +37,7 @@ OBJECT_SPECS: dict[str, dict[str, Any]] = {
         "dimensions_m": [0.08, 0.055, 0.035],
         "mass_kg": 0.045,
         "display_color_rgb": [0.95, 0.78, 0.10],
-        "base_position_robot_m": [0.43, -0.10, 0.0175],
+        "base_position_robot_m": [0.43, -0.10, 0.0205],
     },
     "tray": {
         "role": "reference",
@@ -45,7 +45,7 @@ OBJECT_SPECS: dict[str, dict[str, Any]] = {
         "dimensions_m": [0.14, 0.10, 0.018],
         "mass_kg": 0.30,
         "display_color_rgb": [0.10, 0.34, 0.85],
-        "base_position_robot_m": [0.44, 0.13, 0.009],
+        "base_position_robot_m": [0.44, 0.13, 0.012],
     },
 }
 

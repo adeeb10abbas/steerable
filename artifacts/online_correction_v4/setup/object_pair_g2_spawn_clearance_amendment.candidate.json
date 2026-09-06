@@ -1,0 +1,66 @@
+{
+  "schema_version": "v4-object-pair-g2-spawn-clearance-amendment-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "status": "post_result_model_blind_amendment_candidate",
+  "created_at_utc": "2026-09-06T02:45:00Z",
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "triggering_evidence": [
+    {
+      "path": "artifacts/online_correction_v4/qualification/20260905_object_pair_g2_wave_g2c7q20260905b.json",
+      "sha256": "36b9b67c092ae052b671f9422b71291cd99e078b53488518a18c33cbe5492853",
+      "finding": "18 of 64 registered seeds exceeded the unchanged sponge-stability threshold."
+    },
+    {
+      "path": "artifacts/online_correction_v4/qualification/20260905_object_pair_g2_diagnostic_g2c7q20260905c.json",
+      "sha256": "d101e362502dcb6f0446ea1e8bdde1f48217a4545cbfb91b3a528f6dd95bc561",
+      "finding": "A same-seed replay measured a 779034560 m/s linear component and 48.271186829 rad/s angular component, diagnosing a catastrophic exact-support launch rather than marginal settling."
+    }
+  ],
+  "amendment": {
+    "reason": "The procedural objects were reset exactly at their nominal support-contact center heights. Small scanned-table height variation across the registered x/y jitter field can therefore begin a reset in interpenetration and trigger a PhysX launch.",
+    "scene_spawn_center_z_m": {
+      "sponge": {
+        "before": 0.0175,
+        "after": 0.0205,
+        "positive_clearance_added_m": 0.003
+      },
+      "tray": {
+        "before": 0.009,
+        "after": 0.012,
+        "positive_clearance_added_m": 0.003
+      }
+    },
+    "reset_registry_center_z_m": {
+      "sponge": {
+        "before": 0.0175,
+        "after": 0.0205
+      },
+      "tray": {
+        "before": 0.009,
+        "after": 0.012
+      }
+    }
+  },
+  "unchanged_contracts": {
+    "registered_environment_seeds": true,
+    "xy_jitter_algorithm_and_range": true,
+    "registry_position_tolerance_m": 0.005,
+    "linear_speed_max_m_s": 0.02,
+    "angular_speed_max_rad_s": 0.2,
+    "camera_and_task_frame_checks": true,
+    "prompts_and_policy_weights": true
+  },
+  "required_requalification": [
+    "Replay failed seed 2100040004 with the amended fixture and unchanged G2 thresholds.",
+    "If the replay passes, execute a fresh complete 64-seed object-pair G2 wave.",
+    "Preserve every valid failure; do not reuse any receipt from pre-amendment attempts toward release.",
+    "Complete independent human axis-overlay review only after all machine-checkable seed receipts pass.",
+    "Release neither the reset registry nor G3 until the amended aggregate passes."
+  ],
+  "disclosure": "This is a post-result setup amendment based only on zero-policy G2 evidence. No policy request or behavioral outcome informed the change."
+}

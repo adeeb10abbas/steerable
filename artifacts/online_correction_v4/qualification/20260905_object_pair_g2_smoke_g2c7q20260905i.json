@@ -1,0 +1,40 @@
+{
+  "schema_version": "v4-object-pair-g2-smoke-disposition-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "attempt_id": "g2c7q20260905i",
+  "environment_seed": 2100040004,
+  "compiled_at_utc": "2026-09-06T03:10:00Z",
+  "qualification_scope": "single_seed_native_cuboid_static_table_model_blind_smoke",
+  "status": "infrastructure_invalid",
+  "g2_complete": false,
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "amendment_receipt": "artifacts/online_correction_v4/setup/object_pair_g2_static_table_amendment.candidate.json",
+  "released_stability_thresholds_changed": false,
+  "outcome": {
+    "catastrophic_sponge_velocity_reproduced": false,
+    "position_error_m": {
+      "sponge": 0.653,
+      "tray": 0.653
+    },
+    "registry_position_tolerance_m": 0.005
+  },
+  "runtime_identity": {
+    "study_commit": "086c34ec0f8ea464a9ae5f19790174ce532441e3",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "driver_version": "580.95.05",
+    "gpu_product": "NVIDIA A40",
+    "native_control_dt_s": 0.06666666666666667,
+    "reset_registry_sha256": "728c4a619b04e5fc1f15b81676a16db98728c8eafd5ed9989cb65aea777a741e"
+  },
+  "preservation": {
+    "raw_failure_marker": "file:///data/users/ali/vla_wam/raw/v4/g2-object-pair/smoke-g2c7q20260905i-s004/episodes/infrastructure_failure.json",
+    "bytes": 1461,
+    "sha256": "3a285e422e0358735bddf5f59c3c950874dcc88d2d10bbf54fee24dc54aad698"
+  },
+  "disposition": "A static table also eliminated the launch but native cuboids again fell 0.653 m, demonstrating that separately spawned objects do not contact the imported table payload in this scene composition. Restore co-composed USD dynamic objects while retaining the static table, then replay the same seed under unchanged thresholds."
+}

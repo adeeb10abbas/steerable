@@ -33,7 +33,7 @@ JITTER_HALF_RANGE_Y_M = 0.015
 OBJECT_SPECS: dict[str, dict[str, Any]] = {
     "sponge": {
         "role": "target",
-        "construction": "isaaclab_native_cuboid_cfg",
+        "construction": "co_composed_usd_rigid_body",
         "primitive": "box",
         "dimensions_m": [0.08, 0.055, 0.035],
         "mass_kg": 0.045,
@@ -45,7 +45,7 @@ OBJECT_SPECS: dict[str, dict[str, Any]] = {
     },
     "tray": {
         "role": "reference",
-        "construction": "isaaclab_native_cuboid_cfg",
+        "construction": "co_composed_usd_rigid_body",
         "primitive": "box",
         "dimensions_m": [0.14, 0.10, 0.018],
         "mass_kg": 0.30,

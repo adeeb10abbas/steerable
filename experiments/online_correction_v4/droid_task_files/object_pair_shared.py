@@ -2,12 +2,11 @@
 
 from __future__ import annotations
 
+import copy
 import os
 from functools import lru_cache
 
 import isaaclab.envs.mdp as mdp
-import isaaclab.sim as sim_utils
-from isaaclab.assets import RigidObjectCfg
 from isaaclab.managers import TerminationTermCfg as DoneTerm
 from isaaclab.utils import configclass
 
@@ -60,56 +59,6 @@ def bound_instruction_for_active_episode() -> BoundEpisodeInstruction:
     )
 
 
-_NATIVE_OBJECTS = {
-    "sponge": {
-        "size": (0.08, 0.055, 0.035),
-        "mass_kg": 0.045,
-        "color": (0.95, 0.78, 0.10),
-    },
-    "tray": {
-        "size": (0.14, 0.10, 0.018),
-        "mass_kg": 0.30,
-        "color": (0.10, 0.34, 0.85),
-    },
-}
-
-
-def _native_cuboid(name: str, position: tuple[float, float, float]) -> RigidObjectCfg:
-    spec = _NATIVE_OBJECTS[name]
-    return RigidObjectCfg(
-        prim_path=f"{{ENV_REGEX_NS}}/scene/{name}",
-        spawn=sim_utils.CuboidCfg(
-            size=spec["size"],
-            rigid_props=sim_utils.RigidBodyPropertiesCfg(
-                rigid_body_enabled=True,
-            ),
-            mass_props=sim_utils.MassPropertiesCfg(
-                mass=spec["mass_kg"],
-            ),
-            collision_props=sim_utils.CollisionPropertiesCfg(
-                collision_enabled=True,
-                contact_offset=0.002,
-                rest_offset=0.0,
-            ),
-            visual_material=sim_utils.PreviewSurfaceCfg(
-                diffuse_color=spec["color"],
-            ),
-            physics_material=sim_utils.RigidBodyMaterialCfg(
-                static_friction=1.0,
-                dynamic_friction=1.0,
-                restitution=0.0,
-            ),
-            activate_contact_sensors=True,
-        ),
-        init_state=RigidObjectCfg.InitialStateCfg(
-            pos=position,
-            rot=(1.0, 0.0, 0.0, 0.0),
-            lin_vel=(0.0, 0.0, 0.0),
-            ang_vel=(0.0, 0.0, 0.0),
-        ),
-    )
-
-
 def scene_for_env_seed(env_seed: int):
     registry = _reset_registry()
     if env_seed not in registry.positions_by_env_seed:
@@ -118,9 +67,6 @@ def scene_for_env_seed(env_seed: int):
         )
     scene = import_scene(OBJECT_PAIR_SCENE_PATH, list(OBJECT_PAIR_CONTACT_OBJECTS))
     for name, position in registry.positions_by_env_seed[env_seed].items():
-        if name in _NATIVE_OBJECTS:
-            setattr(scene, name, _native_cuboid(name, position))
-            continue
         asset = copy.deepcopy(getattr(scene, name))
         asset.init_state.pos = position
         setattr(scene, name, asset)

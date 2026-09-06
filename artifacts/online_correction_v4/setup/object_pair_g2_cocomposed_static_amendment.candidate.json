@@ -1,0 +1,48 @@
+{
+  "schema_version": "v4-object-pair-g2-cocomposed-static-amendment-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "status": "post_result_model_blind_amendment_candidate",
+  "created_at_utc": "2026-09-06T03:11:00Z",
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "triggering_evidence": {
+    "path": "artifacts/online_correction_v4/qualification/20260905_object_pair_g2_smoke_g2c7q20260905i.json",
+    "sha256": "b60f352bf8550416dfdfa908df10328cd1ad6a34405dc41dc8a8ad2aa8bb847e",
+    "finding": "Native cuboids fell through both dynamic and static variants of the separately imported table payload."
+  },
+  "amendment": {
+    "reason": "The initial co-composed USD objects contacted the imported table, while separately spawned native cuboids did not. Restore the sponge and tray as rigid bodies in the same USD composition as the table, retain explicit finite inertia, and retain the non-moving static table that removed the launch.",
+    "object_construction": "co_composed_usd_rigid_bodies",
+    "table_construction": "static_payload_collider",
+    "retained_object_properties": [
+      "dimensions",
+      "mass",
+      "center of mass",
+      "principal axes",
+      "diagonal inertia",
+      "display colors",
+      "spawn clearance"
+    ]
+  },
+  "unchanged_contracts": {
+    "registered_environment_seeds": true,
+    "reset_positions_and_spawn_clearance": true,
+    "xy_jitter_algorithm_and_range": true,
+    "registry_position_tolerance_m": 0.005,
+    "linear_speed_max_m_s": 0.02,
+    "angular_speed_max_rad_s": 0.2,
+    "camera_and_task_frame_checks": true,
+    "prompts_and_policy_weights": true
+  },
+  "required_requalification": [
+    "Replay failed seed 2100040004 with co-composed objects and the static table.",
+    "If the replay passes, execute a fresh complete 64-seed object-pair G2 wave.",
+    "Do not reuse any pre-amendment receipt toward release.",
+    "Release neither the reset registry nor G3 until the amended aggregate and human axis review pass."
+  ],
+  "disclosure": "This post-result setup amendment uses only zero-policy infrastructure evidence and combines the two observed-valid interface properties without weakening any gate."
+}

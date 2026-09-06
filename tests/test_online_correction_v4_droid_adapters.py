@@ -31,6 +31,9 @@ from experiments.online_correction_v4.droid_pi05_policy import (
     PI05_ACTION_SHAPE,
     fake_pi05_transport,
 )
+from experiments.online_correction_v4.droid_policy_request import (
+    request_audit_projection,
+)
 from experiments.online_correction_v4.droid_reset import TwoResetAttestationProxy
 from experiments.online_correction_v4.droid_simulator import (
     DroidSimulatorAdapter,
@@ -192,6 +195,22 @@ class DroidSimulatorTests(unittest.TestCase):
 
 
 class DroidPolicyAdapterTests(unittest.TestCase):
+    def test_array_inputs_are_projected_to_compact_json_evidence(self) -> None:
+        class FakeArray:
+            shape = (2, 2)
+            dtype = "float32"
+
+            @staticmethod
+            def tobytes() -> bytes:
+                return b"array-payload"
+
+        projected = request_audit_projection(
+            {"observation/image": FakeArray(), "prompt": "place"}
+        )
+        self.assertEqual(projected["observation/image"]["shape"], [2, 2])
+        self.assertEqual(projected["observation/image"]["size_bytes"], 13)
+        json.dumps(projected, allow_nan=False)
+
     def test_nano_preserves_32x8_envelope(self) -> None:
         prompt = "Place the cube so that the cube is left of the bowl."
         adapter = DroidNanoPolicyAdapter(

@@ -24,6 +24,9 @@ from experiments.online_correction_v4.droid_reset import (
     SettleProbe,
     TwoResetAttestationProxy,
 )
+from experiments.online_correction_v4.droid_policy_request import (
+    request_audit_projection,
+)
 
 
 class DroidDependencyError(ImportError):
@@ -352,7 +355,7 @@ class DroidSimulatorAdapter:
             native = captured.native_input if isinstance(captured.native_input, Mapping) else {}
             packed = native.get("packed_request")
             if isinstance(packed, Mapping):
-                audit["packed_request"] = dict(packed)
+                audit["packed_request"] = request_audit_projection(packed)
             payload = json.dumps(audit, sort_keys=True, separators=(",", ":")).encode("utf-8")
             return CapturedObservation(
                 payload=payload,

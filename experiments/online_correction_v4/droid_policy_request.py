@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-from typing import Any, Mapping
+from typing import Any, Mapping, Sequence
 
 from experiments.online_correction_v4.adapters import FutureArtifact, ObservationPacket
 from experiments.online_correction_v4.attempts import InfraInvalidReason
@@ -99,6 +99,45 @@ def observation_packed_request(observation: ObservationPacket) -> dict[str, Any]
     if isinstance(packed, Mapping):
         return dict(packed)
     return {}
+
+
+def request_audit_projection(value: Any) -> Any:
+    """Project array-bearing policy inputs into compact, canonical JSON evidence."""
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+    if isinstance(value, Mapping):
+        return {
+            str(key): request_audit_projection(item)
+            for key, item in value.items()
+        }
+    if isinstance(value, Sequence) and not isinstance(
+        value, (str, bytes, bytearray)
+    ):
+        return [request_audit_projection(item) for item in value]
+    host = value
+    if hasattr(host, "detach"):
+        host = host.detach()
+    if hasattr(host, "cpu"):
+        host = host.cpu()
+    if hasattr(host, "numpy"):
+        host = host.numpy()
+    shape = getattr(host, "shape", None)
+    tobytes = getattr(host, "tobytes", None)
+    if shape is not None and callable(tobytes):
+        payload = tobytes()
+        return {
+            "encoding": "array_sha256",
+            "shape": [int(size) for size in shape],
+            "dtype": str(getattr(host, "dtype", "unknown")),
+            "sha256": sha256_bytes(payload),
+            "size_bytes": len(payload),
+        }
+    item = getattr(host, "item", None)
+    if callable(item):
+        return request_audit_projection(item())
+    raise TypeError(
+        f"policy request value is not audit-projectable: {type(value).__name__}"
+    )
 
 
 def build_v4_request_envelope(

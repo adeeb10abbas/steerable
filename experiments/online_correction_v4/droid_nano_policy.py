@@ -25,6 +25,7 @@ from experiments.online_correction_v4.droid_policy_request import (
     build_v4_request_envelope,
     missing_future_artifact,
     observation_packed_request,
+    request_audit_projection,
 )
 from experiments.online_correction_v4.droid_transport import EpisodePolicyTransport
 
@@ -213,7 +214,9 @@ class DroidNanoPolicyAdapter:
             action_sha256=action_sha,
             future_sha256=future_sha,
             wall_duration_s=wall_duration_s,
-            wire_request_sha256=sha256_bytes(canonical_json_bytes(wire)),
+            wire_request_sha256=sha256_bytes(
+                canonical_json_bytes(request_audit_projection(wire))
+            ),
         )
         self.records.append(record)
         self.request_count += 1

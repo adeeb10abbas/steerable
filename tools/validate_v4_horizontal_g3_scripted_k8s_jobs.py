@@ -99,9 +99,13 @@ def validate(root: Path) -> dict[str, Any]:
     manifest_path = root / "bundle-manifest.json"
     require(manifest_path.is_file(), "G3 scripted bundle manifest is missing")
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    fixture_id = str(manifest.get("fixture_id", "horizontal"))
+    fixture_token = fixture_id.replace("_", "-")
+    expected_manifest_schema = (
+        f"vla-wam-v4-{fixture_token}-g3-scripted-k8s-bundle-v1"
+    )
     require(
-        manifest.get("schema_version")
-        == "vla-wam-v4-horizontal-g3-scripted-k8s-bundle-v1",
+        manifest.get("schema_version") == expected_manifest_schema,
         "G3 scripted bundle manifest schema differs",
     )
     require(
@@ -240,13 +244,19 @@ def validate(root: Path) -> dict[str, Any]:
             require(
                 isinstance(argv, list)
                 and len(argv) >= 12
-                and str(argv[1]).endswith("run_v4_g3_scripted_checked.py")
-                and argv[2] == "--expected-environment-seed"
-                and argv[4] == "--expected-scale"
-                and argv[6] == "--expected-mode"
-                and argv[8] == "--"
-                and argv[0] == argv[9]
-                and str(argv[10]).endswith("run_v4_horizontal_g3_scripted_seed.py"),
+                and str(argv[1]).endswith("run_v4_g3_scripted_checked.py"),
+                "G3 scripted launch does not invoke the marker-check wrapper",
+            )
+            offset = 2
+            if argv[offset] == "--expected-fixture":
+                offset += 2
+            require(
+                argv[offset] == "--expected-environment-seed"
+                and argv[offset + 2] == "--expected-scale"
+                and argv[offset + 4] == "--expected-mode"
+                and argv[offset + 6] == "--"
+                and argv[0] == argv[offset + 7]
+                and str(argv[offset + 8]).endswith("run_v4_horizontal_g3_scripted_seed.py"),
                 "G3 scripted launch does not invoke the scripted-seed runner through the marker-check wrapper",
             )
             file_bindings = launch.get("file_bindings") or []
@@ -263,7 +273,7 @@ def validate(root: Path) -> dict[str, Any]:
             runner_bindings = [
                 binding
                 for binding in file_bindings
-                if isinstance(binding, dict) and binding.get("path") == argv[10]
+                if isinstance(binding, dict) and binding.get("path") == argv[offset + 8]
             ]
             require(
                 len(runner_bindings) == 1
@@ -326,6 +336,12 @@ def validate(root: Path) -> dict[str, Any]:
                 for index in range(len(argv) - 1)
                 if str(argv[index]).startswith("--")
             }
+            require(
+                option_values.get("--expected-fixture")
+                == option_values.get("--fixture-id")
+                == fixture_id,
+                "G3 scripted wrapper and child fixture bindings differ",
+            )
             require(
                 option_values.get("--expected-environment-seed")
                 == option_values.get("--environment-seed"),
@@ -401,7 +417,7 @@ def validate(root: Path) -> dict[str, Any]:
         metadata = job.get("metadata") or {}
         labels = metadata.get("labels") or {}
         require(
-            labels.get("v4-gate") == "g3-horizontal-scripted",
+            labels.get("v4-gate") == f"g3-{fixture_token}-scripted",
             "G3 scripted Job gate label differs",
         )
         require(labels.get("v4-scale") == scale_text, "G3 scripted Job scale label differs")
@@ -469,8 +485,13 @@ def validate(root: Path) -> dict[str, Any]:
             isinstance(output_parent, str) and output_parent.startswith("/data/"),
             "G3 scripted Job lacks absolute OUTPUT_PARENT",
         )
+        path_pattern = (
+            f"/scripted/attempt-{attempt_id}/scale-{scale_text}/{mode_label}/seed-"
+            if fixture_id != "horizontal"
+            else f"/attempt-{attempt_id}/scale-{scale_text}/{mode_label}/seed-"
+        )
         require(
-            f"/attempt-{attempt_id}/scale-{scale_text}/{mode_label}/seed-" in output_parent,
+            path_pattern in output_parent,
             "G3 scripted Job OUTPUT_PARENT lacks attempt/scale/mode/seed isolation",
         )
         require(

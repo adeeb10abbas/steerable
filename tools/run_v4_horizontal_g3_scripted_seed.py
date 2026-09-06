@@ -14,15 +14,31 @@ from typing import Any, Callable, Mapping, Sequence
 
 ROOT = Path(__file__).resolve().parents[1]
 ROBOLAB_COMMIT = "0aef241fb088ca21bb4ebd24448940ed56620d17"
-PROMPT = (
-    "Place the cube so that the cube is left of the bowl. "
-    "Use the robot's fixed viewpoint for left, right, front, and behind."
-)
-SEED_RECEIPT_SCHEMA = "v4-horizontal-g3-scripted-seed-receipt-v1"
-INFRA_FAILURE_SCHEMA = "v4-horizontal-g3-infrastructure-failure-v1"
+FIXTURE_PROMPTS = {
+    "horizontal": (
+        "Place the cube so that the cube is left of the bowl. "
+        "Use the robot's fixed viewpoint for left, right, front, and behind."
+    ),
+    "object_pair": (
+        "Place the sponge so that the sponge is left of the tray. "
+        "Use the robot's fixed viewpoint for left, right, front, and behind."
+    ),
+}
 SCRIPTED_MODES = ("stationary", "moving")
 STATIONARY_CHECK_COUNT = 12
 MOVING_CHECK_COUNT = 4
+
+
+def _seed_receipt_schema(fixture_id: str) -> str:
+    return f"v4-{fixture_id.replace('_', '-')}-g3-scripted-seed-receipt-v1"
+
+
+def _infra_failure_schema(fixture_id: str) -> str:
+    return f"v4-{fixture_id.replace('_', '-')}-g3-infrastructure-failure-v1"
+
+
+SEED_RECEIPT_SCHEMA = _seed_receipt_schema("horizontal")
+INFRA_FAILURE_SCHEMA = _infra_failure_schema("horizontal")
 
 _PATH_SEED_MODULE: Any | None = None
 
@@ -79,6 +95,11 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--plan-sha256", required=True)
     parser.add_argument("--reset-registry", type=Path, required=True)
     parser.add_argument("--reset-registry-sha256", required=True)
+    parser.add_argument(
+        "--fixture-id",
+        choices=tuple(FIXTURE_PROMPTS),
+        default="horizontal",
+    )
     parser.add_argument("--environment-seed", type=int, required=True)
     parser.add_argument("--scale", type=float, required=True)
     parser.add_argument("--mode", choices=SCRIPTED_MODES, required=True)
@@ -224,8 +245,11 @@ def validate_scripted_seed_gate_inputs(
     environment_seed: int,
     scale: float,
     mode: str,
+    expected_fixture_id: str = "horizontal",
     sha256_file: Any,
 ) -> None:
+    if plan.get("fixture_id") != expected_fixture_id:
+        raise RuntimeError("G3 plan fixture differs from expected fixture")
     _path_seed_module().validate_gate_inputs(
         plan=plan,
         campaign=campaign,
@@ -306,6 +330,7 @@ def compile_scripted_seed_summary(
     controller_config: Mapping[str, Any],
     check_records: Sequence[Mapping[str, Any]],
     registered_reset: Mapping[str, Any],
+    fixture_id: str = "horizontal",
 ) -> dict[str, Any]:
     expected_count = STATIONARY_CHECK_COUNT if mode == "stationary" else MOVING_CHECK_COUNT
     if len(check_records) != expected_count:
@@ -315,9 +340,9 @@ def compile_scripted_seed_summary(
     passed_count = sum(1 for record in check_records if record.get("passed") is True)
     failed_count = len(check_records) - passed_count
     return {
-        "schema_version": SEED_RECEIPT_SCHEMA,
+        "schema_version": _seed_receipt_schema(fixture_id),
         "campaign_id": "online_correction_v4",
-        "fixture_id": "horizontal",
+        "fixture_id": fixture_id,
         "mode": mode,
         "environment_seed": environment_seed,
         "scale": float(scale),
@@ -362,11 +387,12 @@ def _run_stationary_check(
     environment_seed: int,
     scale: float,
     controller_config: Mapping[str, Any],
+    fixture_id: str = "horizontal",
+    target_object: str = "rubiks_cube",
+    reference_object: str = "bowl",
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
     from experiments.online_correction_v4.droid_g3 import goal_set_for_reference
-    from experiments.online_correction_v4.droid_g3_scripted import (
-        run_scripted_horizontal_check,
-    )
+    from experiments.online_correction_v4.droid_g3_scripted import run_scripted_check
     from experiments.online_correction_v4.droid_task_files.constants import ENV_ACTIVE_GOAL
     from experiments.online_correction_v4.model_blind_g3 import (
         compile_scripted_check_receipt,
@@ -386,7 +412,8 @@ def _run_stationary_check(
     env.set_reference_kinematic_offset(offset_m, direction_task)
     scene = backend.g3_scene_state()
     reference_position_world = tuple(
-        float(value) for value in scene["objects"]["bowl"]["position_world_xyz_m"]
+        float(value)
+        for value in scene["objects"][reference_object]["position_world_xyz_m"]
     )
     clearance_m = float(geometry_contract["relation_clearance_m"])
     goal_set = goal_set_for_reference(
@@ -397,14 +424,17 @@ def _run_stationary_check(
     )
     table_bounds = geometry["table_bounds_task"]
     target_footprint = geometry["target_footprint"]
-    trajectory_result = run_scripted_horizontal_check(
+    trajectory_result = run_scripted_check(
         env,
+        target_object=target_object,
+        reference_object=reference_object,
         relation=goal,
         goal=goal_set,
         frame=geometry["frame"],
         config=controller_config,
         table_top_z_task=float(table_bounds.z_max),
         object_half_up=float(target_footprint.half_up),
+        fixture_id=fixture_id,
     )
     trajectory_result["controller_config"] = dict(controller_config)
     trajectory_result["check_kind"] = "stationary"
@@ -434,6 +464,7 @@ def _run_stationary_check(
             "reasons": list(trajectory_result.get("reasons") or []),
             "passed": trajectory_result.get("passed"),
         },
+        fixture_id=fixture_id,
     )
     validate_scripted_check_receipt(receipt)
     receipt_record = _write_json_exclusive(
@@ -465,15 +496,13 @@ def _run_moving_check(
     scale: float,
     controller_config: Mapping[str, Any],
     motion_config: Mapping[str, Any],
+    fixture_id: str = "horizontal",
+    target_object: str = "rubiks_cube",
+    reference_object: str = "bowl",
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
     from experiments.online_correction_v4.droid_g3 import goal_set_for_reference
-    from experiments.online_correction_v4.droid_g3_scripted import (
-        run_scripted_horizontal_check,
-    )
-    from experiments.online_correction_v4.droid_task_files.constants import (
-        ENV_ACTIVE_GOAL,
-        TARGET_OBJECT,
-    )
+    from experiments.online_correction_v4.droid_g3_scripted import run_scripted_check
+    from experiments.online_correction_v4.droid_task_files.constants import ENV_ACTIVE_GOAL
     from experiments.online_correction_v4.model_blind_g3 import (
         compile_scripted_check_receipt,
         validate_scripted_check_receipt,
@@ -492,7 +521,7 @@ def _run_moving_check(
     physical_reset = shared_reset["physical_reset"]
     baseline_reference = tuple(
         float(value)
-        for value in physical_reset["objects"]["bowl"]["position_world_xyz_m"]
+        for value in physical_reset["objects"][reference_object]["position_world_xyz_m"]
     )
     robot_quaternion = tuple(
         float(value) for value in physical_reset["robot_quaternion_world_wxyz"]
@@ -513,7 +542,7 @@ def _run_moving_check(
     probe = env.backend.modules["object_grabbed"]
 
     def object_grabbed_probe() -> bool:
-        return bool(probe(env.backend.env, object=TARGET_OBJECT, env_id=0))
+        return bool(probe(env.backend.env, object=target_object, env_id=0))
 
     callback, motion_state = build_moving_reference_motion_callback(
         env,
@@ -525,8 +554,10 @@ def _run_moving_check(
     )
     table_bounds = geometry["table_bounds_task"]
     target_footprint = geometry["target_footprint"]
-    trajectory_result = run_scripted_horizontal_check(
+    trajectory_result = run_scripted_check(
         env,
+        target_object=target_object,
+        reference_object=reference_object,
         relation=goal,
         goal=goal_set,
         frame=geometry["frame"],
@@ -534,6 +565,7 @@ def _run_moving_check(
         table_top_z_task=float(table_bounds.z_max),
         object_half_up=float(target_footprint.half_up),
         reference_motion_callback=callback,
+        fixture_id=fixture_id,
     )
     trajectory_result["controller_config"] = dict(controller_config)
     trajectory_result["check_kind"] = "moving"
@@ -563,6 +595,7 @@ def _run_moving_check(
             "reasons": list(trajectory_result.get("reasons") or []),
             "passed": trajectory_result.get("passed"),
         },
+        fixture_id=fixture_id,
     )
     validate_scripted_check_receipt(receipt)
     receipt_record = _write_json_exclusive(
@@ -615,6 +648,8 @@ def main(argv: list[str] | None = None) -> int:
     try:
         from experiments.online_correction_v4.droid_contract import sha256_bytes
         from experiments.online_correction_v4.droid_g3 import (
+            fixture_object_spec,
+            geometry_from_scene_for_fixture,
             horizontal_geometry_from_scene,
             task_frame_from_evidence,
         )
@@ -653,6 +688,7 @@ def main(argv: list[str] | None = None) -> int:
             environment_seed=args.environment_seed,
             scale=args.scale,
             mode=args.mode,
+            expected_fixture_id=args.fixture_id,
             sha256_file=sha256_file,
         )
         if sha256_file(registry_path) != args.reset_registry_sha256:
@@ -685,6 +721,7 @@ def main(argv: list[str] | None = None) -> int:
             registry_path=str(registry_path),
             registry_sha256=args.reset_registry_sha256,
             required_status=MODEL_BLIND_CANDIDATE_STATUS,
+            expected_fixture_id=args.fixture_id,
         )
         if args.environment_seed not in registry.positions_by_env_seed:
             raise RuntimeError("environment seed is absent from reset registry")
@@ -695,16 +732,22 @@ def main(argv: list[str] | None = None) -> int:
         motion_config = dict(campaign["motion"])
         controller_config = frozen_scripted_controller_config()
 
+        fixture_id = args.fixture_id
+        fixture_spec = fixture_object_spec(fixture_id)
+        prompt = FIXTURE_PROMPTS[fixture_id]
+        target_object = fixture_spec.target_object
+        reference_object = fixture_spec.reference_object
+
         episode_id = (
-            f"online-correction-v4-g3-scripted-{args.mode}-"
-            f"{args.environment_seed}-scale-{args.scale:g}"
+            f"online-correction-v4-g3-scripted-{fixture_id.replace('_', '-')}-"
+            f"{args.mode}-{args.environment_seed}-scale-{args.scale:g}"
         )
-        prompt_sha256 = sha256_bytes(PROMPT.encode("utf-8"))
+        prompt_sha256 = sha256_bytes(prompt.encode("utf-8"))
         queue_row, queue_row_sha256 = write_queue_row(
             output_dir=output_dir,
             episode_id=episode_id,
-            fixture_id="horizontal",
-            prompt_text=PROMPT,
+            fixture_id=fixture_id,
+            prompt_text=prompt,
             prompt_sha256=prompt_sha256,
             env_seed=args.environment_seed,
             goal="left",
@@ -731,10 +774,11 @@ def main(argv: list[str] | None = None) -> int:
             "native_control_dt_s": args.native_control_dt_s,
             "scale": float(args.scale),
             "mode": args.mode,
+            "fixture_id": fixture_id,
         }
         runtime_identity_sha256 = sha256_bytes(canonical_json_bytes(runtime_identity))
         fixture = ResetFixtureBinding(
-            fixture_id="horizontal",
+            fixture_id=fixture_id,
             reset_registry_sha256=args.reset_registry_sha256,
             reset_registry_uri=f"file://{registry_path}",
         )
@@ -749,7 +793,7 @@ def main(argv: list[str] | None = None) -> int:
             env_seed=args.environment_seed,
             episode_id=episode_id,
             goal="left",
-            prompt_text=PROMPT,
+            prompt_text=prompt,
             prompt_sha256=prompt_sha256,
             policy_id="model_blind_no_policy",
             queue_row_path=queue_row,
@@ -769,11 +813,19 @@ def main(argv: list[str] | None = None) -> int:
         task_frame_dict = task_frame_evidence(physical_reset)
         task_frame_from_evidence(task_frame_dict)
         initial_scene = env.backend.g3_scene_state()
-        geometry = horizontal_geometry_from_scene(
-            task_frame_evidence=task_frame_dict,
-            scene_state=initial_scene,
-            support_edge_margin_m=float(geometry_contract["support_edge_margin_m"]),
-        )
+        if fixture_id == "horizontal":
+            geometry = horizontal_geometry_from_scene(
+                task_frame_evidence=task_frame_dict,
+                scene_state=initial_scene,
+                support_edge_margin_m=float(geometry_contract["support_edge_margin_m"]),
+            )
+        else:
+            geometry = geometry_from_scene_for_fixture(
+                fixture_id=fixture_id,
+                task_frame_evidence=task_frame_dict,
+                scene_state=initial_scene,
+                support_edge_margin_m=float(geometry_contract["support_edge_margin_m"]),
+            )
         shared_dir = output_dir / "registered_reset"
         reset_attestation_artifact = _write_json_exclusive(
             shared_dir / "reset_attestation.json", reset_attestation
@@ -813,6 +865,9 @@ def main(argv: list[str] | None = None) -> int:
                     environment_seed=args.environment_seed,
                     scale=float(args.scale),
                     controller_config=controller_config,
+                    fixture_id=fixture_id,
+                    target_object=target_object,
+                    reference_object=reference_object,
                 )
             else:
                 _receipt, check_record, _trajectory = _run_moving_check(
@@ -829,6 +884,9 @@ def main(argv: list[str] | None = None) -> int:
                     scale=float(args.scale),
                     controller_config=controller_config,
                     motion_config=motion_config,
+                    fixture_id=fixture_id,
+                    target_object=target_object,
+                    reference_object=reference_object,
                 )
             check_records.append(check_record)
 
@@ -848,6 +906,7 @@ def main(argv: list[str] | None = None) -> int:
                 "physical_reset": physical_reset_artifact,
                 "initial_scene": initial_scene_artifact,
             },
+            fixture_id=fixture_id,
         )
         summary_record = _write_json_exclusive(
             output_dir / "g3_scripted_seed_receipt.json", summary
@@ -860,10 +919,11 @@ def main(argv: list[str] | None = None) -> int:
         )
         return 0
     except Exception as exc:
+        failure_fixture = args.fixture_id
         failure = {
-            "schema_version": INFRA_FAILURE_SCHEMA,
+            "schema_version": _infra_failure_schema(failure_fixture),
             "campaign_id": "online_correction_v4",
-            "fixture_id": "horizontal",
+            "fixture_id": failure_fixture,
             "mode": args.mode,
             "environment_seed": args.environment_seed,
             "scale": args.scale,
@@ -876,7 +936,7 @@ def main(argv: list[str] | None = None) -> int:
         }
         _write_infrastructure_failure(output_dir, failure)
         print(
-            f"[V4 horizontal G3 scripted] infrastructure failure: {exc}",
+            f"[V4 {failure_fixture} G3 scripted] infrastructure failure: {exc}",
             file=sys.stderr,
         )
         return 1

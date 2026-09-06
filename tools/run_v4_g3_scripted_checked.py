@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import argparse
 import json
 import os
 from pathlib import Path
@@ -10,7 +11,12 @@ import subprocess
 import sys
 from typing import Any
 
-RECEIPT_SCHEMA = "v4-horizontal-g3-scripted-seed-receipt-v1"
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from experiments.online_correction_v4.model_blind_g3 import scripted_seed_receipt_schema
+
 SCRIPTED_MODES = ("stationary", "moving")
 EXPECTED_CHECK_COUNTS = {"stationary": 12, "moving": 4}
 
@@ -37,9 +43,12 @@ def _validate_seed_receipt(
     expected_environment_seed: int,
     expected_scale: float,
     expected_mode: str,
+    expected_fixture: str,
 ) -> None:
-    if receipt.get("schema_version") != RECEIPT_SCHEMA:
+    if receipt.get("schema_version") != scripted_seed_receipt_schema(expected_fixture):
         raise ValueError("G3 scripted-seed receipt schema differs")
+    if receipt.get("fixture_id") != expected_fixture:
+        raise ValueError("G3 scripted-seed receipt fixture differs")
     if receipt.get("environment_seed") != expected_environment_seed:
         raise ValueError("G3 scripted-seed receipt environment seed differs")
     if abs(float(receipt.get("scale", float("nan"))) - expected_scale) > 1e-9:
@@ -99,31 +108,28 @@ def _validate_seed_receipt(
 
 def main(argv: list[str] | None = None) -> int:
     arguments = list(sys.argv[1:] if argv is None else argv)
-    if (
-        len(arguments) < 8
-        or arguments[0] != "--expected-environment-seed"
-        or arguments[2] != "--expected-scale"
-        or arguments[4] != "--expected-mode"
-        or arguments[6] != "--"
-    ):
+    if "--" not in arguments:
         print(
-            "usage: run_v4_g3_scripted_checked.py --expected-environment-seed SEED "
-            "--expected-scale SCALE --expected-mode MODE -- EXECUTABLE [ARG ...]",
+            "usage: run_v4_g3_scripted_checked.py [--expected-fixture FIXTURE] "
+            "--expected-environment-seed SEED --expected-scale SCALE "
+            "--expected-mode MODE -- EXECUTABLE [ARG ...]",
             file=sys.stderr,
         )
         return 2
+    separator = arguments.index("--")
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument("--expected-fixture", default="horizontal")
+    parser.add_argument("--expected-environment-seed", type=int, required=True)
+    parser.add_argument("--expected-scale", type=float, required=True)
+    parser.add_argument("--expected-mode", required=True)
     try:
-        expected_environment_seed = int(arguments[1])
-    except ValueError:
-        print("expected environment seed must be an integer", file=sys.stderr)
+        expected, extras = parser.parse_known_args(arguments[:separator])
+    except SystemExit:
         return 2
-    try:
-        expected_scale = float(arguments[3])
-    except ValueError:
-        print("expected scale must be numeric", file=sys.stderr)
+    if extras or separator + 1 >= len(arguments):
+        print("invalid G3 scripted wrapper arguments", file=sys.stderr)
         return 2
-    expected_mode = arguments[5]
-    if expected_mode not in SCRIPTED_MODES:
+    if expected.expected_mode not in SCRIPTED_MODES:
         print("expected mode must be stationary or moving", file=sys.stderr)
         return 2
 
@@ -136,7 +142,7 @@ def main(argv: list[str] | None = None) -> int:
         print("EPISODE_OUTPUT_DIR must be absolute", file=sys.stderr)
         return 2
 
-    completed = subprocess.run(arguments[7:], check=False)
+    completed = subprocess.run(arguments[separator + 1 :], check=False)
     receipt_path = output_dir / "g3_scripted_seed_receipt.json"
     failure_path = output_dir / "infrastructure_failure.json"
 
@@ -178,9 +184,10 @@ def main(argv: list[str] | None = None) -> int:
         _validate_seed_receipt(
             receipt,
             output_dir=output_dir,
-            expected_environment_seed=expected_environment_seed,
-            expected_scale=expected_scale,
-            expected_mode=expected_mode,
+            expected_environment_seed=expected.expected_environment_seed,
+            expected_scale=expected.expected_scale,
+            expected_mode=expected.expected_mode,
+            expected_fixture=expected.expected_fixture,
         )
     except Exception as exc:
         print(f"G3 scripted-seed receipt is invalid: {exc}", file=sys.stderr)
@@ -190,6 +197,7 @@ def main(argv: list[str] | None = None) -> int:
         json.dumps(
             {
                 "checked_g3_scripted_seed_receipt": str(receipt_path),
+                "fixture_id": receipt.get("fixture_id"),
                 "environment_seed": receipt.get("environment_seed"),
                 "scale": receipt.get("scale"),
                 "mode": receipt.get("mode"),

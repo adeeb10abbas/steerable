@@ -311,6 +311,8 @@ class RunV4G3ScriptedCheckedTests(unittest.TestCase):
 
     def _argv(self, executable: str, *, mode: str = "moving") -> list[str]:
         return [
+            "--expected-fixture",
+            "horizontal",
             "--expected-environment-seed",
             "2100000000",
             "--expected-scale",

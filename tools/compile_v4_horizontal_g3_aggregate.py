@@ -15,12 +15,11 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from experiments.online_correction_v4.model_blind_g3 import (  # noqa: E402
-    PATH_SCALE_RECEIPT_SCHEMA,
-    PLAN_SCHEMA,
-    SCRIPTED_RECEIPT_SCHEMA,
     _scripted_check_key,
     canonical_json_bytes,
     compile_g3_aggregate_receipt,
+    path_scale_receipt_schema,
+    scripted_receipt_schema,
     sha256_file,
     validate_g3_aggregate_receipt,
     validate_plan_payload,
@@ -89,7 +88,13 @@ def compile_receipts(
     verify_external: bool = False,
 ) -> dict[str, Any]:
     plan_path = plan_path.resolve()
-    plan = _load_canonical(plan_path, schema=PLAN_SCHEMA)
+    plan_body = plan_path.read_bytes()
+    plan = json.loads(plan_body)
+    if not isinstance(plan, dict):
+        raise ValueError(f"{plan_path}: plan must be a JSON object")
+    fixture_id = str(plan.get("fixture_id", "horizontal"))
+    if plan_body != canonical_json_bytes(plan):
+        raise ValueError(f"{plan_path}: JSON is not canonical")
     validate_plan_payload(plan)
     plan_receipt = {
         "path": str(plan_path),
@@ -100,8 +105,9 @@ def compile_receipts(
     path_scale_receipts: list[dict[str, Any]] = []
     path_scale_files: dict[float, dict[str, Any]] = {}
     verified_artifact_count = 0
+    path_scale_schema = path_scale_receipt_schema(fixture_id)
     for path in path_scale_paths:
-        receipt = _load_canonical(path, schema=PATH_SCALE_RECEIPT_SCHEMA)
+        receipt = _load_canonical(path, schema=path_scale_schema)
         scale = float(receipt["scale"])
         if verify_external:
             verified_artifact_count += _verify_artifact_records(
@@ -119,8 +125,9 @@ def compile_receipts(
     scripted_files: dict[tuple[str, int, str, str], dict[str, Any]] = {}
     if scripted_receipts_root is not None:
         scripted_receipts = []
+        scripted_schema = scripted_receipt_schema(fixture_id)
         for path in _discover_scripted_receipts(scripted_receipts_root):
-            receipt = _load_canonical(path, schema=SCRIPTED_RECEIPT_SCHEMA)
+            receipt = _load_canonical(path, schema=scripted_schema)
             if verify_external:
                 verified_artifact_count += _verify_artifact_records(
                     receipt.get("evidence"), label=str(path)

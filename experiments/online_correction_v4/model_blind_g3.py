@@ -30,6 +30,10 @@ def scripted_receipt_schema(fixture_id: str) -> str:
     return f"v4-{fixture_id.replace('_', '-')}-g3-scripted-check-receipt-v1"
 
 
+def scripted_seed_receipt_schema(fixture_id: str) -> str:
+    return f"v4-{fixture_id.replace('_', '-')}-g3-scripted-seed-receipt-v1"
+
+
 def aggregate_receipt_schema_g3(fixture_id: str) -> str:
     return f"v4-{fixture_id.replace('_', '-')}-g3-aggregate-receipt-v1"
 
@@ -787,6 +791,7 @@ def compile_scripted_check_receipt(
     scale: float,
     displacement_m: float,
     observation: Mapping[str, Any],
+    fixture_id: str = "horizontal",
 ) -> dict[str, Any]:
     if check_kind not in SCRIPTED_CHECK_KINDS:
         raise G3GateError("scripted check kind differs")
@@ -811,9 +816,9 @@ def compile_scripted_check_receipt(
     if not isinstance(reasons, list) or any(not isinstance(item, str) for item in reasons):
         raise G3GateError("reasons must be a string list")
     compiled = {
-        "schema_version": SCRIPTED_RECEIPT_SCHEMA,
+        "schema_version": scripted_receipt_schema(fixture_id),
         "campaign_id": "online_correction_v4",
-        "fixture_id": "horizontal",
+        "fixture_id": fixture_id,
         "model_request_count": 0,
         "behavioral_episode_count": 0,
         "check_kind": check_kind,
@@ -838,12 +843,15 @@ def compile_scripted_check_receipt(
 
 
 def validate_scripted_check_receipt(receipt: Mapping[str, Any]) -> None:
+    fixture_id = receipt.get("fixture_id")
+    if not isinstance(fixture_id, str):
+        raise G3GateError("scripted receipt lacks fixture_id")
     _require(
-        receipt.get("schema_version") == SCRIPTED_RECEIPT_SCHEMA,
+        receipt.get("schema_version") == scripted_receipt_schema(fixture_id),
         "scripted receipt schema differs",
     )
     _require(receipt.get("campaign_id") == "online_correction_v4", "campaign differs")
-    _require(receipt.get("fixture_id") == "horizontal", "fixture differs")
+    _require(receipt.get("fixture_id") == fixture_id, "fixture differs")
     _require(
         receipt.get("model_request_count") == 0,
         "scripted receipt records model requests",

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Render immutable simulator-only Kubernetes Jobs for horizontal G3 scripted seeds."""
+"""Render immutable simulator-only Kubernetes Jobs for G3 scripted seeds."""
 
 from __future__ import annotations
 
@@ -18,19 +18,33 @@ if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 
 import render_v4_k8s_lane_bundle as lane  # noqa: E402
+from experiments.online_correction_v4.droid_task_files.constants import (  # noqa: E402
+    OBJECT_PAIR_RESET_REGISTRY_SCHEMA,
+)
+from experiments.online_correction_v4.model_blind_g3 import (  # noqa: E402
+    g3_fixture_config,
+    path_scale_receipt_schema,
+    plan_schema,
+)
 
 DEFAULT_SPEC = (
     ROOT / "deploy/k8s/v4_lane_bundle/g3-scripted-horizontal-spec.example.json"
 )
 DEFAULT_OUTPUT = ROOT / "deploy/k8s/v4_lane_bundle/rendered-g3-scripted"
-SCHEMA = "vla-wam-v4-horizontal-g3-scripted-k8s-render-spec-v1"
-PLAN_SCHEMA = "v4-horizontal-g3-plan-v1"
-RESET_SCHEMA = "v4-droid-horizontal-reset-registry-v1"
+RESET_SCHEMAS = {
+    "horizontal": "v4-droid-horizontal-reset-registry-v1",
+    "object_pair": OBJECT_PAIR_RESET_REGISTRY_SCHEMA,
+}
+SCRIPTED_LANE_PREFIX = {
+    "horizontal": "g3hs",
+    "object_pair": "g3c7s",
+}
 SCRIPTED_MODES = ("stationary", "moving")
 AUTHORIZATION_BLOCKED = "blocked_pending_g3_path_scale_pass"
 AUTHORIZATION_AUTHORIZED = "authorized_by_passing_path_scale_receipt"
 TOP_LEVEL_KEYS = {
     "schema_version",
+    "fixture_id",
     "kube_context",
     "namespace",
     "attempt_id",
@@ -39,6 +53,8 @@ TOP_LEVEL_KEYS = {
     "image_pull_secret",
     "pvc",
     "output_parent",
+    "output_parent_must_exist_on_pvc",
+    "launch_prerequisites",
     "prestop_wait_seconds",
     "expected_driver_version",
     "gpu_product",
@@ -54,6 +70,7 @@ TOP_LEVEL_KEYS = {
     "path_scale_receipt_source",
     "path_scale_receipt_path",
     "path_scale_receipt_sha256",
+    "path_scale_receipt_binding_only",
     "marker_wrapper_source",
     "marker_wrapper_path",
     "runner_source",
@@ -99,7 +116,7 @@ def _source(path: Any, *, spec_dir: Path, label: str) -> Path:
     return resolved
 
 
-def _read_spec(path: Path) -> tuple[dict[str, Any], str]:
+def _read_spec(path: Path) -> tuple[dict[str, Any], str, str]:
     raw = path.read_bytes()
     try:
         spec = json.loads(raw)
@@ -108,8 +125,16 @@ def _read_spec(path: Path) -> tuple[dict[str, Any], str]:
     require(isinstance(spec, dict), "G3 scripted render spec must be an object")
     unknown = sorted(set(spec) - TOP_LEVEL_KEYS)
     require(not unknown, f"G3 scripted render spec contains unknown keys: {unknown}")
-    require(spec.get("schema_version") == SCHEMA, "G3 scripted render spec schema differs")
-    return spec, hashlib.sha256(raw).hexdigest()
+    fixture_id = str(spec.get("fixture_id", "horizontal"))
+    require(
+        fixture_id in RESET_SCHEMAS,
+        "G3 scripted render spec fixture_id is unsupported",
+    )
+    expected_schema = (
+        f"vla-wam-v4-{fixture_id.replace('_', '-')}-g3-scripted-k8s-render-spec-v1"
+    )
+    require(spec.get("schema_version") == expected_schema, "G3 scripted render spec schema differs")
+    return spec, hashlib.sha256(raw).hexdigest(), fixture_id
 
 
 def _binding(source: Path, path: str) -> dict[str, Any]:
@@ -145,65 +170,76 @@ def _resolve_authorized_path_scale_receipt(
     scale_value: float,
     plan_payload: Mapping[str, Any],
     plan_sha: str,
-) -> tuple[Path, str, str, dict[str, Any]]:
+    fixture_id: str,
+) -> tuple[Path | None, str, str | None, dict[str, Any] | None]:
     from experiments.online_correction_v4.model_blind_g3 import (
-        PATH_SCALE_RECEIPT_SCHEMA,
         validate_path_scale_receipt,
     )
 
-    receipt_source = _source(
-        spec.get("path_scale_receipt_source"),
-        spec_dir=spec_dir,
-        label="path_scale_receipt_source",
-    )
     receipt_path = _absolute(spec.get("path_scale_receipt_path"), "path_scale_receipt_path")
-    receipt_sha = lane.digest(
-        spec.get("path_scale_receipt_sha256"), "path_scale_receipt_sha256"
-    )
-    require(
-        lane.sha256_file(receipt_source) == receipt_sha,
-        "path-scale receipt source SHA-256 differs from spec",
-    )
-    try:
-        receipt_payload = json.loads(receipt_source.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as exc:
-        raise G3ScriptedRenderError("path-scale receipt source is invalid JSON") from exc
-    require(isinstance(receipt_payload, dict), "path-scale receipt must be an object")
-    require(
-        receipt_payload.get("schema_version") == PATH_SCALE_RECEIPT_SCHEMA,
-        "path-scale receipt schema differs",
-    )
-    validate_path_scale_receipt(receipt_payload, plan=plan_payload)
-    require(
-        receipt_payload.get("passed") is True
-        and receipt_payload.get("status") == "passed",
-        "path-scale receipt must report a passing complete scale",
-    )
-    require(
-        receipt_payload.get("observed_seed_count") == 128
-        and receipt_payload.get("expected_seed_count") == 128,
-        "path-scale receipt seed coverage is incomplete",
-    )
-    require(
-        not receipt_payload.get("missing_env_seeds")
-        and not receipt_payload.get("unexpected_env_seeds")
-        and not receipt_payload.get("failed_env_seeds"),
-        "path-scale receipt reports missing, unexpected, or failed seeds",
-    )
-    require(
-        receipt_payload.get("failed_path_check_count") == 0,
-        "path-scale receipt reports failed path checks",
-    )
-    require(
-        float(receipt_payload.get("scale", float("nan"))) == float(scale_value),
-        "path-scale receipt scale differs from scripted render spec",
-    )
-    plan_receipt = receipt_payload.get("plan_receipt") or {}
-    require(
-        isinstance(plan_receipt, Mapping)
-        and plan_receipt.get("sha256") == plan_sha,
-        "path-scale receipt plan SHA-256 differs from scripted render spec",
-    )
+    receipt_sha_raw = spec.get("path_scale_receipt_sha256")
+    binding_only = spec.get("path_scale_receipt_binding_only") is True
+    receipt_source: Path | None = None
+    receipt_sha: str | None = None
+    receipt_payload: dict[str, Any] | None = None
+    if binding_only:
+        require(
+            isinstance(receipt_sha_raw, str) and len(receipt_sha_raw) == 64,
+            "binding-only scripted spec requires path_scale_receipt_sha256",
+        )
+        receipt_sha = lane.digest(receipt_sha_raw, "path_scale_receipt_sha256")
+    else:
+        receipt_source = _source(
+            spec.get("path_scale_receipt_source"),
+            spec_dir=spec_dir,
+            label="path_scale_receipt_source",
+        )
+        receipt_sha = lane.digest(receipt_sha_raw, "path_scale_receipt_sha256")
+        require(
+            lane.sha256_file(receipt_source) == receipt_sha,
+            "path-scale receipt source SHA-256 differs from spec",
+        )
+        try:
+            receipt_payload = json.loads(receipt_source.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            raise G3ScriptedRenderError("path-scale receipt source is invalid JSON") from exc
+        require(isinstance(receipt_payload, dict), "path-scale receipt must be an object")
+        require(
+            receipt_payload.get("schema_version") == path_scale_receipt_schema(fixture_id),
+            "path-scale receipt schema differs",
+        )
+        validate_path_scale_receipt(receipt_payload, plan=plan_payload)
+        require(
+            receipt_payload.get("passed") is True
+            and receipt_payload.get("status") == "passed",
+            "path-scale receipt must report a passing complete scale",
+        )
+        expected_seed_count = g3_fixture_config(fixture_id).expected_seed_count
+        require(
+            receipt_payload.get("observed_seed_count") == expected_seed_count
+            and receipt_payload.get("expected_seed_count") == expected_seed_count,
+            "path-scale receipt seed coverage is incomplete",
+        )
+        require(
+            not receipt_payload.get("missing_env_seeds")
+            and not receipt_payload.get("unexpected_env_seeds")
+            and not receipt_payload.get("failed_env_seeds"),
+            "path-scale receipt reports missing, unexpected, or failed seeds",
+        )
+        require(
+            receipt_payload.get("failed_path_check_count") == 0,
+            "path-scale receipt reports failed path checks",
+        )
+        require(
+            float(receipt_payload.get("scale", float("nan"))) == float(scale_value),
+            "path-scale receipt scale differs from scripted render spec",
+        )
+        plan_receipt = receipt_payload.get("plan_receipt") or {}
+        require(
+            isinstance(plan_receipt, Mapping)
+            and plan_receipt.get("sha256") == plan_sha,
+            "path-scale receipt plan SHA-256 differs from scripted render spec",
+        )
     return receipt_source, receipt_path, receipt_sha, receipt_payload
 
 
@@ -215,10 +251,21 @@ def _scale_label(scale: float) -> str:
 
 
 def _job_output_parent(
-    *, output_parent: str, attempt: str, scale: float, mode: str, seed: int
+    *,
+    output_parent: str,
+    attempt: str,
+    scale: float,
+    mode: str,
+    seed: int,
+    fixture_id: str,
 ) -> str:
+    if fixture_id == "horizontal":
+        return (
+            f"{output_parent}/attempt-{attempt}/"
+            f"scale-{_scale_label(scale)}/{mode}/seed-{seed}"
+        )
     return (
-        f"{output_parent}/attempt-{attempt}/"
+        f"{output_parent}/scripted/attempt-{attempt}/"
         f"scale-{_scale_label(scale)}/{mode}/seed-{seed}"
     )
 
@@ -247,7 +294,11 @@ def _render_launch_configmap(
     return "\n".join(rows) + "\n"
 
 
-def _scripted_jobs(plan_payload: Mapping[str, Any]) -> list[tuple[int, str, str]]:
+def _scripted_jobs(
+    plan_payload: Mapping[str, Any],
+    *,
+    fixture_id: str,
+) -> list[tuple[int, str, str]]:
     scripted = plan_payload.get("scripted_controller")
     require(isinstance(scripted, Mapping), "G3 plan lacks scripted_controller")
     reset_seeds_raw = scripted.get("reset_env_seeds")
@@ -261,17 +312,24 @@ def _scripted_jobs(plan_payload: Mapping[str, Any]) -> list[tuple[int, str, str]
     require(isinstance(moving, Mapping), "G3 plan lacks moving scripted checks")
     canonical_seed = moving.get("canonical_env_seed")
     require(type(canonical_seed) is int, "G3 plan lacks canonical_env_seed")
+    lane_prefix = SCRIPTED_LANE_PREFIX[fixture_id]
     jobs: list[tuple[int, str, str]] = []
     for index, seed in enumerate(reset_seeds):
-        jobs.append((seed, "stationary", f"g3hs-st{index:03d}"))
-    jobs.append((canonical_seed, "moving", "g3hs-mv000"))
+        jobs.append((seed, "stationary", f"{lane_prefix}-st{index:03d}"))
+    jobs.append((canonical_seed, "moving", f"{lane_prefix}-mv000"))
     require(len(jobs) == 10, "G3 scripted bundle must render exactly ten jobs")
     return jobs
 
 
 def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
     spec_path = spec_path.resolve()
-    spec, spec_sha256 = _read_spec(spec_path)
+    spec, spec_sha256, fixture_id = _read_spec(spec_path)
+    fixture_token = fixture_id.replace("_", "-")
+    plan_schema_id = plan_schema(fixture_id)
+    reset_schema_id = RESET_SCHEMAS[fixture_id]
+    bundle_schema = (
+        f"vla-wam-v4-{fixture_token}-g3-scripted-k8s-bundle-v1"
+    )
     _enforce_authorization_status(spec)
     namespace = lane.token(spec.get("namespace"), "namespace")
     attempt = lane.token(spec.get("attempt_id"), "attempt_id")
@@ -420,8 +478,12 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
     )
     plan_payload = json.loads(plan_source.read_text(encoding="utf-8"))
     require(
-        plan_payload.get("schema_version") == PLAN_SCHEMA,
+        plan_payload.get("schema_version") == plan_schema_id,
         "G3 plan schema differs",
+    )
+    require(
+        plan_payload.get("fixture_id") == fixture_id,
+        "G3 plan fixture differs from render spec",
     )
     require(
         plan_payload.get("status")
@@ -474,13 +536,18 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
         scale_value=scale_value,
         plan_payload=plan_payload,
         plan_sha=plan_sha,
+        fixture_id=fixture_id,
     )
-    scripted_jobs = _scripted_jobs(plan_payload)
+    scripted_jobs = _scripted_jobs(plan_payload, fixture_id=fixture_id)
 
     reset_payload = json.loads(reset_registry_source.read_text(encoding="utf-8"))
     require(
-        reset_payload.get("schema_version") == RESET_SCHEMA,
+        reset_payload.get("schema_version") == reset_schema_id,
         "reset registry schema differs",
+    )
+    require(
+        reset_payload.get("fixture_id") == fixture_id,
+        "reset registry fixture differs from render spec",
     )
     require(
         reset_payload.get("status")
@@ -503,16 +570,17 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
             for name in sorted(scripts)
         )
     ).hexdigest()
-    stem = f"v4-g3-horizontal-scripted-{attempt}-{spec_sha256[:10]}"
+    stem = f"v4-g3-{fixture_token}-scripted-{attempt}-{spec_sha256[:10]}"
     scripts_name = f"{stem}-scripts"
     bundle_root = output_root.resolve() / stem
     require(not bundle_root.exists(), f"refusing to overwrite bundle: {bundle_root}")
     bundle_root.mkdir(parents=True)
 
     common_script_labels = {
-        "app.kubernetes.io/name": "v4-horizontal-g3-scripted",
+        "app.kubernetes.io/name": f"v4-{fixture_token}-g3-scripted",
         "app.kubernetes.io/part-of": "vla-wam-v4",
-        "v4-gate": "g3-horizontal-scripted",
+        "v4-gate": f"g3-{fixture_token}-scripted",
+        "v4-fixture-id": fixture_id,
         "v4-attempt-id": attempt,
         "v4-config-sha": spec_sha256[:16],
         "v4-scale": _scale_label(scale_value),
@@ -537,6 +605,7 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
             scale=scale_value,
             mode=mode,
             seed=seed,
+            fixture_id=fixture_id,
         )
         job_output_parents.append(job_output)
         labels = {
@@ -554,23 +623,32 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
             _binding(campaign_source, campaign_path),
             _binding(plan_source, plan_path),
             _binding(reset_registry_source, reset_registry_path),
-            _binding(path_scale_receipt_source, path_scale_receipt_path),
-            _binding(
-                ROOT / "deploy/k8s/v4_lane_bundle/scripts/lane_entrypoint.py",
-                "/opt/v4-lane/scripts/lane_entrypoint.py",
-            ),
-            _binding(
-                ROOT / "deploy/k8s/v4_lane_bundle/scripts/startup_preflight.py",
-                "/opt/v4-lane/scripts/startup_preflight.py",
-            ),
-            _binding(
-                ROOT / "deploy/k8s/v4_lane_bundle/scripts/isaac_render_probe.py",
-                "/opt/v4-lane/scripts/isaac_render_probe.py",
-            ),
         ]
+        if path_scale_receipt_source is not None:
+            bindings.append(
+                _binding(path_scale_receipt_source, path_scale_receipt_path)
+            )
+        bindings.extend(
+            [
+                _binding(
+                    ROOT / "deploy/k8s/v4_lane_bundle/scripts/lane_entrypoint.py",
+                    "/opt/v4-lane/scripts/lane_entrypoint.py",
+                ),
+                _binding(
+                    ROOT / "deploy/k8s/v4_lane_bundle/scripts/startup_preflight.py",
+                    "/opt/v4-lane/scripts/startup_preflight.py",
+                ),
+                _binding(
+                    ROOT / "deploy/k8s/v4_lane_bundle/scripts/isaac_render_probe.py",
+                    "/opt/v4-lane/scripts/isaac_render_probe.py",
+                ),
+            ]
+        )
         argv = [
             runtime["python_bin"],
             marker_wrapper_path,
+            "--expected-fixture",
+            fixture_id,
             "--expected-environment-seed",
             str(seed),
             "--expected-scale",
@@ -596,6 +674,8 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
             reset_registry_path,
             "--reset-registry-sha256",
             reset_sha,
+            "--fixture-id",
+            fixture_id,
             "--environment-seed",
             str(seed),
             "--scale",
@@ -697,11 +777,19 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
     file_hashes = {
         name: lane.sha256_file(bundle_root / name) for name in sorted(files)
     }
+    launch_prerequisites = spec.get("launch_prerequisites")
+    if not isinstance(launch_prerequisites, list):
+        launch_prerequisites = []
+    if spec.get("output_parent_must_exist_on_pvc") is True:
+        launch_prerequisites = [
+            *launch_prerequisites,
+            "output_parent must already exist on the PVC before creating Jobs",
+        ]
     manifest = {
-        "schema_version": "vla-wam-v4-horizontal-g3-scripted-k8s-bundle-v1",
+        "schema_version": bundle_schema,
         "status": "rendered_not_created",
         "campaign_id": "online_correction_v4",
-        "fixture_id": "horizontal",
+        "fixture_id": fixture_id,
         "execution_scope": "model_blind_g3_no_policy",
         "model_request_count": 0,
         "behavioral_episode_count": 0,
@@ -732,6 +820,11 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
         "gate_core_sha256": lane.sha256_file(gate_core_source),
         "files_sha256": file_hashes,
         "job_identities": job_identities,
+        "output_parent": output_parent,
+        "output_parent_must_exist_on_pvc": spec.get(
+            "output_parent_must_exist_on_pvc"
+        ),
+        "launch_prerequisites": launch_prerequisites,
         "release_boundary": (
             "Creating this bundle runs only zero-inference G3 scripted-seed checks at "
             "one registered scale. It does not authorize policy inference."

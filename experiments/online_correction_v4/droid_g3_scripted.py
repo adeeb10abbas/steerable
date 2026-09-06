@@ -15,7 +15,11 @@ from experiments.online_correction_v4.droid_task_files.constants import (
 from experiments.online_correction_v4.geometry import GoalSetResult, TaskFrame, Vec3, point_in_goal_set
 from experiments.online_correction_v4.motion import minimum_jerk_scalar
 
-TRAJECTORY_SCHEMA = "v4-horizontal-g3-scripted-trajectory-v1"
+def trajectory_schema(fixture_id: str) -> str:
+    return f"v4-{fixture_id.replace('_', '-')}-g3-scripted-trajectory-v1"
+
+
+TRAJECTORY_SCHEMA = trajectory_schema("horizontal")
 PHASES = (
     "approach",
     "descend",
@@ -492,9 +496,11 @@ def _evaluate_stages(
     return stages, reasons
 
 
-def run_scripted_horizontal_check(
+def run_scripted_check(
     env: Any,
     *,
+    target_object: str,
+    reference_object: str,
     relation: str,
     goal: GoalSetResult,
     frame: TaskFrame,
@@ -503,8 +509,9 @@ def run_scripted_horizontal_check(
     object_half_up: float,
     geometric_tol_m: float = 0.0,
     reference_motion_callback: ReferenceMotionCallback | None = None,
+    fixture_id: str = "horizontal",
 ) -> dict[str, Any]:
-    """Execute one privileged scripted horizontal check with no model/policy calls."""
+    """Execute one privileged scripted check with no model/policy calls."""
     controller_config = (
         config
         if isinstance(config, ScriptedControllerConfig)
@@ -514,7 +521,7 @@ def run_scripted_horizontal_check(
     eef_offset_rotation = _as_quaternion_wxyz(
         env.backend.modules["eef_offset_rotation"]
     )
-    cube_position = _read_object_pose(env, TARGET_OBJECT)
+    cube_position = _read_object_pose(env, target_object)
     placement_target = select_robust_target_world(
         frame=frame,
         goal=goal,
@@ -558,8 +565,8 @@ def run_scripted_horizontal_check(
             tick = next_tick
             sim_time_s = tick * control_dt_s if control_dt_s > 0.0 else float(tick)
             measured_position, _ = _read_eef_pose(env)
-            reference_position = _read_object_pose(env, REFERENCE_OBJECT)
-            object_position = _read_object_pose(env, TARGET_OBJECT)
+            reference_position = _read_object_pose(env, reference_object)
+            object_position = _read_object_pose(env, target_object)
             grabbed = _object_grabbed(env)
             dropped = _object_dropped(env)
             trajectory.append(
@@ -587,13 +594,13 @@ def run_scripted_horizontal_check(
             break
         if segment.phase == "close_dwell":
             grasp_contact_after_close = _object_grabbed(env)
-            object_z_at_grasp = _read_object_pose(env, TARGET_OBJECT)[2]
+            object_z_at_grasp = _read_object_pose(env, target_object)[2]
         elif segment.phase == "lift":
-            object_z_after_lift = _read_object_pose(env, TARGET_OBJECT)[2]
+            object_z_after_lift = _read_object_pose(env, target_object)[2]
         elif segment.phase == "open_dwell":
             released_after_open = _object_dropped(env)
     terminal_predicates = env.sample_terminal_predicates()
-    final_object_position = _read_object_pose(env, TARGET_OBJECT)
+    final_object_position = _read_object_pose(env, target_object)
     stages, reasons = _evaluate_stages(
         frame=frame,
         goal=goal,
@@ -611,7 +618,8 @@ def run_scripted_horizontal_check(
         reasons = [termination_reason, *reasons]
     passed = all(stages.values()) and not terminated_early
     return {
-        "schema_version": TRAJECTORY_SCHEMA,
+        "schema_version": trajectory_schema(fixture_id),
+        "fixture_id": fixture_id,
         "model_request_count": 0,
         "relation": relation.strip().lower(),
         "target_world_xyz": [float(value) for value in placement_target],
@@ -623,6 +631,35 @@ def run_scripted_horizontal_check(
         "reasons": reasons,
         "passed": passed,
     }
+
+
+def run_scripted_horizontal_check(
+    env: Any,
+    *,
+    relation: str,
+    goal: GoalSetResult,
+    frame: TaskFrame,
+    config: Mapping[str, Any] | ScriptedControllerConfig,
+    table_top_z_task: float,
+    object_half_up: float,
+    geometric_tol_m: float = 0.0,
+    reference_motion_callback: ReferenceMotionCallback | None = None,
+) -> dict[str, Any]:
+    """Execute one privileged scripted horizontal check with no model/policy calls."""
+    return run_scripted_check(
+        env,
+        target_object=TARGET_OBJECT,
+        reference_object=REFERENCE_OBJECT,
+        relation=relation,
+        goal=goal,
+        frame=frame,
+        config=config,
+        table_top_z_task=table_top_z_task,
+        object_half_up=object_half_up,
+        geometric_tol_m=geometric_tol_m,
+        reference_motion_callback=reference_motion_callback,
+        fixture_id="horizontal",
+    )
 
 
 def trajectory_json_compatible(result: Mapping[str, Any]) -> str:

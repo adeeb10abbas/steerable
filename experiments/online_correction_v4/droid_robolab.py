@@ -281,6 +281,63 @@ def _import_robolab_modules(config: LiveRoboLabConfig) -> dict[str, Any]:
     }
 
 
+def _filter_object_pair_robot_table_collisions(env: Any) -> dict[str, Any]:
+    """Filter only the non-task robot/table support collision pair."""
+    try:
+        import omni.usd
+        from pxr import Usd, UsdPhysics
+    except ImportError as exc:
+        raise RoboLabBootstrapError(
+            "USD collision-filter APIs are unavailable for object_pair"
+        ) from exc
+
+    robot = env.scene["robot"]
+    root_view = getattr(robot, "root_physx_view", None)
+    prim_paths = getattr(root_view, "prim_paths", None)
+    if not prim_paths or len(prim_paths) != 1:
+        raise RoboLabBootstrapError(
+            "object_pair collision filter requires one concrete robot prim"
+        )
+    robot_path = str(prim_paths[0])
+    if not robot_path.endswith("/robot"):
+        raise RoboLabBootstrapError(
+            f"unexpected object_pair robot prim path: {robot_path}"
+        )
+    table_path = f"{robot_path[:-len('/robot')]}/scene/table"
+    stage = omni.usd.get_context().get_stage()
+    robot_prim = stage.GetPrimAtPath(robot_path)
+    table_prim = stage.GetPrimAtPath(table_path)
+    if not robot_prim or not robot_prim.IsValid():
+        raise RoboLabBootstrapError(
+            f"object_pair robot prim is unavailable: {robot_path}"
+        )
+    if not table_prim or not table_prim.IsValid():
+        raise RoboLabBootstrapError(
+            f"object_pair table prim is unavailable: {table_path}"
+        )
+    robot_body_paths = [
+        str(prim.GetPath())
+        for prim in Usd.PrimRange(robot_prim)
+        if prim.HasAPI(UsdPhysics.RigidBodyAPI)
+    ]
+    if not robot_body_paths:
+        raise RoboLabBootstrapError(
+            "object_pair collision filter found no robot rigid bodies"
+        )
+    relation = UsdPhysics.FilteredPairsAPI.Apply(
+        table_prim
+    ).CreateFilteredPairsRel()
+    for body_path in robot_body_paths:
+        relation.AddTarget(body_path)
+    return {
+        "schema_version": "v4-object-pair-robot-table-filter-v1",
+        "table_prim_path": table_path,
+        "robot_root_prim_path": robot_path,
+        "robot_rigid_body_paths": robot_body_paths,
+        "filtered_pair_count": len(robot_body_paths),
+    }
+
+
 def _create_live_env(config: LiveRoboLabConfig, modules: dict[str, Any]) -> LiveRoboLabEnv:
     active = modules["active_registration"]
     robolab_runtime = modules["robolab_runtime"]
@@ -298,6 +355,10 @@ def _create_live_env(config: LiveRoboLabConfig, modules: dict[str, Any]) -> Live
         renderer=os.environ.get("V4_DROID_RENDERER", "realtime"),
         rendering_mode=os.environ.get("V4_DROID_RENDERING_MODE", "balanced"),
     )
+    if config.fixture.fixture_id == "object_pair":
+        modules["object_pair_robot_table_filter"] = (
+            _filter_object_pair_robot_table_collisions(env)
+        )
     backend = LiveRoboLabBackend(
         env=env,
         config=config,
@@ -790,6 +851,9 @@ class LiveRoboLabBackend:
             "robot_quaternion_world_wxyz": robot_quat.tolist(),
             "measured_native_control_dt_s": self.control_dt_s,
         }
+        collision_filter = self.modules.get("object_pair_robot_table_filter")
+        if collision_filter is not None:
+            payload["object_pair_robot_table_filter"] = dict(collision_filter)
         return payload
 
     def camera_geometry_payload(

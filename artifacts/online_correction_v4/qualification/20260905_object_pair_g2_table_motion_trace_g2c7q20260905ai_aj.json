@@ -1,0 +1,60 @@
+{
+  "schema_version": "v4-object-pair-g2-table-motion-trace-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "attempt_ids": [
+    "g2c7q20260905ai",
+    "g2c7q20260905aj"
+  ],
+  "environment_seed": 2100040004,
+  "compiled_at_utc": "2026-09-06T04:34:00Z",
+  "qualification_scope": "same_seed_model_blind_dynamic_table_motion_smoke_and_trace",
+  "status": "infrastructure_invalid",
+  "g2_complete": false,
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "trace_summary": {
+    "table_initial_position_world_xyz_m": [
+      0.198584,
+      0.022068,
+      0.050001
+    ],
+    "table_tick_one_position_world_xyz_m": [
+      0.198642,
+      0.02167,
+      0.249657
+    ],
+    "table_terminal_position_world_xyz_m": [
+      0.250218,
+      0.054429,
+      0.700003
+    ],
+    "table_terminal_z_displacement_m": 0.650002,
+    "sponge_terminal_z_m": 0.717503,
+    "tray_terminal_z_m": 0.709001,
+    "interpretation": "Robot-table collision drives the dynamic table upward by 0.65 m. Object damping only makes sponge/tray track this invalid moving support and cannot satisfy stability robustly."
+  },
+  "runtime_identity": {
+    "study_commit": "b3f7c4b71a3b77581661c8f1c7eb743176b4348e",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "driver_version": "580.95.05",
+    "gpu_product": "NVIDIA A40",
+    "native_control_dt_s": 0.06666666666666667,
+    "reset_registry_sha256": "b3d197412ea0537768a0b4d878a1750246c234cfe072b7fbb855a3e86524e16e"
+  },
+  "preservation": {
+    "smoke_failure_marker": {
+      "path": "file:///data/users/ali/vla_wam/raw/v4/g2-object-pair/smoke-g2c7q20260905ai-s004/episodes/infrastructure_failure.json",
+      "bytes": 1515,
+      "sha256": "3018bb980afee659fa83a473ee7efad7ff37ab5febac35b491cbd3e8901ef096"
+    },
+    "settle_trace": {
+      "path": "file:///data/users/ali/vla_wam/raw/v4/g2-object-pair/trace-g2c7q20260905aj-s004/episodes/reset_settle_trace.json",
+      "sha256": "628dddf4389175739a57cd01bbb8047f686739f67516b69ed30ae1bc20a14270"
+    }
+  },
+  "disposition": "Keep the qualified visual/dynamic table payload but author zero table velocities, disable table gravity, and filter only robot-table collision pairs before reset. Preserve object-table collision."
+}

@@ -285,8 +285,9 @@ def frozen_scripted_controller_config(fixture_id: str = "horizontal") -> dict[st
     config = json.loads(json.dumps(FROZEN_SCRIPTED_CONTROLLER_CONFIG))
     if fixture_id == "object_pair":
         # RoboLab's absolute IK controls the Robotiq base flange, while the
-        # object-pair waypoints describe the fingertip plane.
-        config["eef_tool_length_m"] = 0.1628
+        # object-pair waypoints describe the center of its finger-pad grasp
+        # region (13 cm below the flange), not the 16.28 cm fingertip edge.
+        config["eef_tool_length_m"] = 0.13
     return config
 
 

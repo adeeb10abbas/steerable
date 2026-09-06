@@ -103,7 +103,7 @@ class FrozenControllerConfigTests(unittest.TestCase):
 
     def test_object_pair_offsets_fingertip_waypoints_to_base_flange(self) -> None:
         config = runner.frozen_scripted_controller_config("object_pair")
-        self.assertAlmostEqual(config["eef_tool_length_m"], 0.1628)
+        self.assertAlmostEqual(config["eef_tool_length_m"], 0.13)
 
 
 class MovingCallbackTests(unittest.TestCase):

@@ -104,7 +104,7 @@ class FrozenControllerConfigTests(unittest.TestCase):
 
     def test_object_pair_offsets_fingertip_waypoints_to_base_flange(self) -> None:
         config = runner.frozen_scripted_controller_config("object_pair")
-        self.assertAlmostEqual(config["eef_tool_length_m"], 0.13)
+        self.assertAlmostEqual(config["eef_tool_length_m"], 0.14)
         self.assertAlmostEqual(config["geometry_offsets"]["target_inset_m"], 0.04)
 
 

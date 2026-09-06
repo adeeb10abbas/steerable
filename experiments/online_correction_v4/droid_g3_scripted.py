@@ -241,9 +241,9 @@ def select_robust_target_task(
     def inset_coordinate(low: float, high: float, *, from_low: bool) -> float:
         if high < low:
             raise DroidG3ScriptedError("goal region has inverted bounds")
-        if high - low < 2.0 * inset:
-            return 0.5 * (low + high)
-        return low + inset if from_low else high - inset
+        if from_low:
+            return min(low + inset, high)
+        return max(high - inset, low)
 
     if normalized == "left":
         x = inset_coordinate(region.x_min, region.x_max, from_low=True)

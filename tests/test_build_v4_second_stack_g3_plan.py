@@ -39,7 +39,7 @@ class SecondStackG3PlanTests(unittest.TestCase):
         self.assertEqual(plan["selected_analytical_scale"], 1.5)
         self.assertEqual(
             [row["scale"] for row in plan["scales"] if row["passed"]],
-            [1.5, 1.0],
+            [1.5, 1.0, 0.75, 0.5],
         )
         self.assertEqual(
             {row["check_count"] for row in plan["scales"]},

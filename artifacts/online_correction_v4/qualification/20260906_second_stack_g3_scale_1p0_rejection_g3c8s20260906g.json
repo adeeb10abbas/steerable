@@ -1,0 +1,23 @@
+{
+  "schema_version": "v4-second-stack-g3-scale-rejection-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "C8",
+  "fixture_id": "second_stack",
+  "scale": 1.0,
+  "displacement_m": 0.08,
+  "status": "rejected_before_policy_inference",
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "scripted_smoke_expected_check_count": 12,
+  "scripted_smoke_passed_check_count": 10,
+  "rejection_reasons": [
+    "The canonical behind/endpoint trajectory produced robot contact with the moved reference.",
+    "The canonical right/midpoint trajectory did not retain the source through lift across the frozen contact-feedback grasp attempts."
+  ],
+  "evidence": {
+    "path": "artifacts/online_correction_v4/qualification/20260906_second_stack_g3_scripted_scale_1p0_smoke_g3c8s20260906g.json",
+    "sha256": "f98bb03970ca71ed1fd9bd9da43d72940e0f84789fe8ecd0e8a47f05c7fb8466"
+  },
+  "next_candidate_scale": 0.75,
+  "release_boundary": "Scale 1.0 is rejected by model-blind controller feasibility. No policy outcome was observed or used."
+}

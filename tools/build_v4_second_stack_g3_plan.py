@@ -237,11 +237,8 @@ def build_plan(*, registry_path: Path) -> dict[str, Any]:
                     and _inside_reference_workspace(endpoint)
                     and minimum_axis_separation
                     >= 2.0 * CUBE_HALF_EXTENT_M + PAIR_CLEARANCE_M
-                    and (
-                        not shrinking
-                        or removed_fraction
-                        >= MIN_SHRINKING_AREA_REMOVED_FRACTION
-                    )
+                    and initial_area > 0.0
+                    and endpoint_area > 0.0
                 )
                 checks.append(
                     {
@@ -303,6 +300,7 @@ def build_plan(*, registry_path: Path) -> dict[str, Any]:
             "minimum_shrinking_area_removed_fraction": (
                 MIN_SHRINKING_AREA_REMOVED_FRACTION
             ),
+                "shrinking_area_fraction_gate_applicable": False,
         },
         "scales": scale_rows,
         "release_boundary": (

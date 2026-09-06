@@ -1,0 +1,39 @@
+{
+  "schema_version": "v4-object-pair-g2-smoke-disposition-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "attempt_id": "g2c7q20260905ag",
+  "environment_seed": 2100040004,
+  "compiled_at_utc": "2026-09-06T04:26:00Z",
+  "qualification_scope": "single_seed_linear_damping_4_5_model_blind_smoke",
+  "status": "infrastructure_invalid",
+  "g2_complete": false,
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "outcome": {
+    "sponge_stability_passed": true,
+    "object": "tray",
+    "linear_component_max_m_s": 0.024020737,
+    "linear_component_limit_m_s": 0.02,
+    "angular_component_max_rad_s": 0.066463284,
+    "angular_component_limit_rad_s": 0.2,
+    "interpretation": "Increasing damping changes the limiting object but leaves finite energy from the intentionally authored 3 mm drop."
+  },
+  "runtime_identity": {
+    "study_commit": "f85ab20b3cfddd1727e44c83cfc405ea9bfe52c9",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "driver_version": "580.95.05",
+    "gpu_product": "NVIDIA A40",
+    "native_control_dt_s": 0.06666666666666667,
+    "reset_registry_sha256": "7ae3106d53f6bafba5c19b503a056c496cdffb1888e433651cdbc0fa710bfe48"
+  },
+  "preservation": {
+    "raw_failure_marker": "file:///data/users/ali/vla_wam/raw/v4/g2-object-pair/smoke-g2c7q20260905ag-s004/episodes/infrastructure_failure.json",
+    "bytes": 1511,
+    "sha256": "545821cd9e3091b8841a429d607f479669f873770b6f8f8fa68f467aa5b62e45"
+  },
+  "disposition": "Retain damping and reduce model-blind initial support clearance from 3.0 mm to 0.5 mm, removing unnecessary reset impact energy while preserving a non-interpenetrating spawn."
+}

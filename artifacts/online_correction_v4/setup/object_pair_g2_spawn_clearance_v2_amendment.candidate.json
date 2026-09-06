@@ -1,0 +1,51 @@
+{
+  "schema_version": "v4-object-pair-g2-spawn-clearance-amendment-v2",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "status": "post_result_model_blind_amendment_candidate",
+  "created_at_utc": "2026-09-06T04:27:00Z",
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "triggering_evidence": {
+    "path": "artifacts/online_correction_v4/qualification/20260905_object_pair_g2_smoke_g2c7q20260905ag.json",
+    "sha256": "941938a6321af7aa348c24145a9b7748b1e0e8addd91bc514dc1b87f2ab7873a",
+    "finding": "With final damping and table geometry, the limiting object alternates because both are deliberately dropped 3 mm during reset."
+  },
+  "amendment": {
+    "reason": "Retain positive separation while reducing artificial reset impact energy.",
+    "tabletop_z_m": 0.05,
+    "initial_clearance_before_m": 0.003,
+    "initial_clearance_after_m": 0.0005,
+    "sponge_base_position_robot_m": [
+      0.43,
+      -0.1,
+      0.068
+    ],
+    "tray_base_position_robot_m": [
+      0.44,
+      0.13,
+      0.0595
+    ]
+  },
+  "unchanged_contracts": {
+    "qualified_table_composition": true,
+    "object_dimensions_mass_inertia_colors_and_damping": true,
+    "registered_environment_seeds": true,
+    "object_xy_positions_and_pair_clearance": true,
+    "xy_jitter_algorithm_and_range": true,
+    "settle_window": true,
+    "registry_position_tolerance_m": 0.005,
+    "linear_speed_max_m_s": 0.02,
+    "angular_speed_max_rad_s": 0.2,
+    "camera_and_task_frame_checks": true,
+    "prompts_and_policy_weights": true
+  },
+  "required_requalification": [
+    "Replay seed 2100040004 at 0.5 mm support clearance.",
+    "If it passes, execute a fresh complete 64-seed wave and repeat human axis review."
+  ],
+  "disclosure": "This zero-policy amendment reduces an artificial reset drop while retaining positive, non-overlapping support clearance."
+}

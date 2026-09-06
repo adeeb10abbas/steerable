@@ -582,12 +582,14 @@ class EpisodeRunner:
         snapshot = self._latest_snapshot
         self.recorder.record_trajectory_row(
             {
-                "simulation_time": snapshot.sim_time,
-                "control_step": snapshot.control_tick,
-                "reference_displacement_m": snapshot.reference_displacement_m,
+                "simulation_time": float(snapshot.sim_time),
+                "control_step": int(snapshot.control_tick),
+                "reference_displacement_m": float(
+                    snapshot.reference_displacement_m
+                ),
                 "commanded_action": list(action) if action is not None else None,
-                "grasp_eligible": self.grasp.eligible,
-                "detach_armed": self.detach.armed,
+                "grasp_eligible": bool(self.grasp.eligible),
+                "detach_armed": bool(self.detach.armed),
             }
         )
 

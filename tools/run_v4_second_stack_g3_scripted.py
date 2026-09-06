@@ -208,6 +208,9 @@ def _run_check(
 
     def align_gripper_to_source(
         source_position: list[float],
+        *,
+        finger_y_offset_m: float,
+        finger_z_offset_m: float,
     ) -> float | None:
         command = [
             source_position[0],
@@ -220,8 +223,8 @@ def _run_check(
             live_source = raw.episode_source_obj.pose.p
             desired_midpoint = [
                 float(live_source[0]) + 0.0143,
-                float(live_source[1]) - 0.004,
-                float(live_source[2]) + 0.0585,
+                float(live_source[1]) + finger_y_offset_m,
+                float(live_source[2]) + finger_z_offset_m,
             ]
             midpoint = [
                 0.5
@@ -238,8 +241,8 @@ def _run_check(
         live_source = raw.episode_source_obj.pose.p
         desired_midpoint = [
             float(live_source[0]) + 0.0143,
-            float(live_source[1]) - 0.004,
-            float(live_source[2]) + 0.0585,
+            float(live_source[1]) + finger_y_offset_m,
+            float(live_source[2]) + finger_z_offset_m,
         ]
         midpoint = [
             0.5
@@ -269,10 +272,21 @@ def _run_check(
     lift_alignment_error: float | None = None
     source_lifted = list(source_initial)
     lift_height = 0.0
-    for attempt in range(3):
+    grasp_offsets = (
+        (-0.004, 0.0585),
+        (0.0, 0.0585),
+        (-0.008, 0.0585),
+        (-0.004, 0.0555),
+        (-0.004, 0.0615),
+    )
+    for attempt, (finger_y_offset, finger_z_offset) in enumerate(grasp_offsets):
         set_gripper(1.0, 100 if attempt else 60)
         live_source = [float(value) for value in raw.episode_source_obj.pose.p]
-        grasp_alignment_error = align_gripper_to_source(live_source)
+        grasp_alignment_error = align_gripper_to_source(
+            live_source,
+            finger_y_offset_m=finger_y_offset,
+            finger_z_offset_m=finger_z_offset,
+        )
         set_gripper(-1.0, 180)
         grasp_contacts = _robot_contact(record_contacts(), SOURCE_OBJECT)
         current_ee = [float(value) for value in raw.agent.ee_pose.p]
@@ -285,6 +299,8 @@ def _run_check(
         grasp_attempts.append(
             {
                 "attempt_index": attempt,
+                "finger_y_offset_m": finger_y_offset,
+                "finger_z_offset_m": finger_z_offset,
                 "alignment_error_m": grasp_alignment_error,
                 "contact_count": len(grasp_contacts),
                 "lift_height_m": lift_height,

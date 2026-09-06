@@ -98,12 +98,14 @@ class FrozenControllerConfigTests(unittest.TestCase):
         self.assertAlmostEqual(config["geometry_offsets"]["approach_height_m"], 0.12)
         self.assertAlmostEqual(config["geometry_offsets"]["descend_offset_m"], 0.025)
         self.assertAlmostEqual(config["geometry_offsets"]["place_descend_offset_m"], 0.04)
+        self.assertAlmostEqual(config["geometry_offsets"]["target_inset_m"], 0.015)
         self.assertAlmostEqual(config["gripper_close"], 0.785398)
         self.assertNotIn("eef_tool_length_m", config)
 
     def test_object_pair_offsets_fingertip_waypoints_to_base_flange(self) -> None:
         config = runner.frozen_scripted_controller_config("object_pair")
         self.assertAlmostEqual(config["eef_tool_length_m"], 0.13)
+        self.assertAlmostEqual(config["geometry_offsets"]["target_inset_m"], 0.04)
 
 
 class MovingCallbackTests(unittest.TestCase):

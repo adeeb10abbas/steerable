@@ -288,6 +288,9 @@ def frozen_scripted_controller_config(fixture_id: str = "horizontal") -> dict[st
         # object-pair waypoints describe the center of its finger-pad grasp
         # region (13 cm below the flange), not the 16.28 cm fingertip edge.
         config["eef_tool_length_m"] = 0.13
+        # The measured C7 placement bias is 24.2 mm toward the goal boundary;
+        # retain 40 mm of legal-region inset for the qualification rerun.
+        config["geometry_offsets"]["target_inset_m"] = 0.04
     return config
 
 

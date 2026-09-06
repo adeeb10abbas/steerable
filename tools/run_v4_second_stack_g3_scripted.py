@@ -272,6 +272,9 @@ def _run_check(
     set_reference_xy(env, initial_reference_xy)
     simulate(30)
     source_initial = [float(value) for value in raw.episode_source_obj.pose.p]
+    source_initial_quaternion = [
+        float(value) for value in raw.episode_source_obj.pose.q
+    ]
     reference_initial = [float(value) for value in raw.episode_target_obj.pose.p]
     final_reference_xy = (
         endpoint_reference_xy if moving_reference else initial_reference_xy
@@ -306,6 +309,17 @@ def _run_check(
         finger_y_offset,
         finger_z_offset,
     ) in enumerate(grasp_offsets):
+        if attempt:
+            set_gripper(1.0, 40)
+            raw.episode_source_obj.set_pose(
+                sapien.Pose(
+                    p=source_initial,
+                    q=source_initial_quaternion,
+                )
+            )
+            raw.episode_source_obj.set_velocity([0.0, 0.0, 0.0])
+            raw.episode_source_obj.set_angular_velocity([0.0, 0.0, 0.0])
+            simulate(30)
         set_gripper(0.8, 100 if attempt else 60)
         live_source = [float(value) for value in raw.episode_source_obj.pose.p]
         grasp_alignment_error = align_gripper_to_source(
@@ -358,6 +372,7 @@ def _run_check(
                 "contact_count": len(grasp_contacts),
                 "lift_height_m": lift_height,
                 "retention_alignment_errors_m": retention_errors,
+                "source_reset_before_attempt": bool(attempt),
             }
         )
         if lift_height >= 0.04:

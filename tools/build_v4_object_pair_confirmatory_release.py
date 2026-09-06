@@ -20,6 +20,7 @@ from tools.build_v4_object_pair_g7_pilot_release import (
     sha256_file,
     write_exclusive,
 )
+from tools.derive_v4_lane_spec import derive_spec
 
 HEX40 = re.compile(r"^[0-9a-f]{40}$")
 
@@ -180,6 +181,100 @@ def build_runtime_lock(
     return lock
 
 
+def build_confirmatory_lane_spec(
+    *,
+    pilot_lane_spec_path: Path,
+    pilot_seed_registry_path: Path,
+    seed_registry_path: Path,
+    runtime_root: str,
+    output_parent: str,
+) -> dict:
+    pilot_spec = load_json(pilot_lane_spec_path)
+    pilot_pythonpath = str(pilot_spec["runtime"]["policy"]["pythonpath"])
+    pilot_runtime_root = pilot_pythonpath.split(":", 1)[0]
+    return derive_spec(
+        source_path=pilot_lane_spec_path,
+        overrides=[
+            'lane_id="c7m00"',
+            'attempt_id="c7mainrelease20260906a"',
+            "policy_port=18157",
+            f"output_parent={json.dumps(output_parent)}",
+            'policy.gpu_product="NVIDIA-A100-SXM4-80GB"',
+            'policy.expected_gpu_name="NVIDIA A100-SXM4-80GB"',
+        ],
+        replacements=[
+            f"{pilot_runtime_root}={runtime_root}",
+            f"{pilot_seed_registry_path.name}={seed_registry_path.name}",
+            (
+                f"{sha256_file(pilot_seed_registry_path)}="
+                f"{sha256_file(seed_registry_path)}"
+            ),
+            "g7-object-pair=c7-object-pair-main",
+        ],
+        absolutize_sources=False,
+    )
+
+
+def build_launch_matrix(
+    *,
+    lane_spec_path: Path,
+    runtime_lock_path: Path,
+    hardware_g4_path: Path,
+    lane_count: int,
+) -> dict:
+    if lane_count < 1 or lane_count > 40:
+        raise ValueError("C7 confirmatory lane count must be between 1 and 40")
+    lock = load_json(runtime_lock_path)
+    if (
+        lock.get("release_status") != "RELEASED"
+        or lock.get("released_families") != ["C7"]
+    ):
+        raise ValueError("C7 confirmatory runtime lock is not released")
+    hardware = passing_receipt(hardware_g4_path, gate="G4")
+    if hardware.get("hardware_stratum") != "a10080-policy_a40-simulator":
+        raise ValueError("C7 launch matrix hardware stratum is not qualified")
+    spec = load_json(lane_spec_path)
+    if (
+        spec.get("qualification_only") is not False
+        or spec.get("policy", {}).get("gpu_product") != "NVIDIA-A100-SXM4-80GB"
+        or spec.get("simulator", {}).get("gpu_product") != "NVIDIA-A40"
+    ):
+        raise ValueError("C7 confirmatory lane spec has wrong execution hardware")
+    return {
+        "schema_version": 1,
+        "campaign_id": "online_correction_v4",
+        "release_status": "RELEASED",
+        "qualified_lanes": [
+            {
+                "lane_id": f"c7m{index:02d}",
+                "hardware_stratum": "a10080-policy_a40-simulator",
+                "lane_spec_template_path": str(
+                    lane_spec_path.resolve().relative_to(ROOT)
+                ),
+            }
+            for index in range(lane_count)
+        ],
+        "resource_budget": {
+            "authorized_storage_bytes": 1000000000000,
+            "estimated_bytes_per_episode": 500000000,
+            "estimated_bytes_per_infra_retry": 500000000,
+        },
+        "dispatch": {
+            "max_infra_retries_per_episode": 3,
+            "lane_quarantine_threshold": 3,
+        },
+        "bindings": {
+            "runtime_lock": artifact(runtime_lock_path),
+            "hardware_g4_receipt": artifact(hardware_g4_path),
+            "lane_spec": artifact(lane_spec_path),
+        },
+        "release_boundary": (
+            f"{lane_count} qualified A100-80GB policy/A40 simulator lanes for "
+            "the 768 frozen C7 confirmatory rows only."
+        ),
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source-commit", required=True)
@@ -197,6 +292,14 @@ def main() -> int:
     parser.add_argument("--g7", type=Path, required=True)
     parser.add_argument("--g8", type=Path, required=True)
     parser.add_argument("--analysis-manifest", type=Path, required=True)
+    parser.add_argument("--pilot-lane-spec", type=Path, required=True)
+    parser.add_argument("--lane-spec-out", type=Path, required=True)
+    parser.add_argument("--launch-matrix-out", type=Path, required=True)
+    parser.add_argument("--lane-count", type=int, default=40)
+    parser.add_argument(
+        "--output-parent",
+        default="/data/users/ali/vla_wam/raw/v4/c7-object-pair-main",
+    )
     parser.add_argument("--seed-registry-out", type=Path, required=True)
     parser.add_argument("--runtime-lock-out", type=Path, required=True)
     args = parser.parse_args()
@@ -226,6 +329,33 @@ def main() -> int:
         args.runtime_lock_out.resolve(),
         canonical_json_bytes(lock),
     )
+    lane_spec = build_confirmatory_lane_spec(
+        pilot_lane_spec_path=args.pilot_lane_spec.resolve(),
+        pilot_seed_registry_path=args.pilot_seed_registry.resolve(),
+        seed_registry_path=args.seed_registry_out.resolve(),
+        runtime_root=args.runtime_root.rstrip("/"),
+        output_parent=args.output_parent.rstrip("/"),
+    )
+    write_exclusive(
+        args.lane_spec_out.resolve(),
+        json.dumps(
+            lane_spec,
+            allow_nan=False,
+            indent=2,
+            sort_keys=True,
+        ).encode("utf-8")
+        + b"\n",
+    )
+    launch_matrix = build_launch_matrix(
+        lane_spec_path=args.lane_spec_out.resolve(),
+        runtime_lock_path=args.runtime_lock_out.resolve(),
+        hardware_g4_path=args.hardware_g4.resolve(),
+        lane_count=args.lane_count,
+    )
+    write_exclusive(
+        args.launch_matrix_out.resolve(),
+        canonical_json_bytes(launch_matrix),
+    )
     print(
         json.dumps(
             {
@@ -241,6 +371,8 @@ def main() -> int:
                 ),
                 "seed_registry": artifact(args.seed_registry_out.resolve()),
                 "runtime_lock": artifact(args.runtime_lock_out.resolve()),
+                "lane_spec": artifact(args.lane_spec_out.resolve()),
+                "launch_matrix": artifact(args.launch_matrix_out.resolve()),
             },
             sort_keys=True,
         )

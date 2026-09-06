@@ -1,11 +1,15 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
+import tempfile
 import unittest
 
 from tools.build_v4_object_pair_confirmatory_release import (
     ROOT,
+    build_confirmatory_lane_spec,
     build_confirmatory_seed_registry,
+    build_launch_matrix,
 )
 
 
@@ -26,6 +30,78 @@ class ObjectPairConfirmatoryReleaseTests(unittest.TestCase):
             registry["pilot_collision_audit"]["collision_count"],
             0,
         )
+
+    def test_lane_spec_and_matrix_bind_a100_stratum(self) -> None:
+        pilot_seed = (
+            ROOT
+            / "artifacts/online_correction_v4/setup/"
+            "object_pair_g7_nano_seed_registry.released.json"
+        )
+        with tempfile.TemporaryDirectory(dir=ROOT) as tmp:
+            temp = Path(tmp)
+            seed_path = temp / "object_pair_c7_confirmatory_nano_seed_registry.released.json"
+            seed_path.write_text(
+                json.dumps(
+                    build_confirmatory_seed_registry(
+                        queue_path=ROOT
+                        / "artifacts/online_correction_v4/queue.jsonl",
+                        pilot_seed_registry_path=pilot_seed,
+                    )
+                ),
+                encoding="utf-8",
+            )
+            spec = build_confirmatory_lane_spec(
+                pilot_lane_spec_path=ROOT
+                / "deploy/k8s/v4_lane_bundle/"
+                "g7-object-pair-pilot-spec.example.json",
+                pilot_seed_registry_path=pilot_seed,
+                seed_registry_path=seed_path,
+                runtime_root="/runtime/c7-main",
+                output_parent="/raw/c7-main",
+            )
+            self.assertEqual(
+                spec["policy"]["gpu_product"],
+                "NVIDIA-A100-SXM4-80GB",
+            )
+            self.assertTrue(
+                any(
+                    seed_path.name in item
+                    for item in spec["policy"]["experiment_argv"]
+                )
+            )
+            self.assertIn(
+                "/runtime/c7-main",
+                spec["runtime"]["policy"]["pythonpath"],
+            )
+            self.assertFalse(
+                Path(spec["policy"]["file_bindings"][0]["source"]).is_absolute()
+            )
+            spec_path = temp / "spec.json"
+            spec_path.write_text(json.dumps(spec), encoding="utf-8")
+            lock_path = temp / "lock.json"
+            lock_path.write_text(
+                json.dumps(
+                    {
+                        "release_status": "RELEASED",
+                        "released_families": ["C7"],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            matrix = build_launch_matrix(
+                lane_spec_path=spec_path,
+                runtime_lock_path=lock_path,
+                hardware_g4_path=ROOT
+                / "artifacts/online_correction_v4/qualification/"
+                "object_pair_g4_nano_a10080_a40_hardware_"
+                "g4c7a100q20260906b.json",
+                lane_count=40,
+            )
+            self.assertEqual(len(matrix["qualified_lanes"]), 40)
+            self.assertEqual(
+                matrix["qualified_lanes"][-1]["lane_id"],
+                "c7m39",
+            )
 
 
 if __name__ == "__main__":

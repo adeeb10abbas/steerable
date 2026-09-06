@@ -1252,6 +1252,7 @@ def write_queue_row(
         "factors": {"goal": goal},
     }
     path = output_dir / f"{episode_id}.queue_row.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(row, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return path, sha256_bytes(path.read_bytes())
 

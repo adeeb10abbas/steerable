@@ -1,0 +1,26 @@
+{
+  "schema_version": "v4-invalid-infrastructure-attempts-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "C7",
+  "fixture_id": "object_pair",
+  "attempt_ids": [
+    "attempt0049",
+    "attempt0050",
+    "attempt0051",
+    "attempt0052",
+    "attempt0053",
+    "attempt0054",
+    "attempt0055",
+    "attempt0056"
+  ],
+  "classification": "infrastructure_failure_before_behavioral_execution",
+  "cause": "The mandatory viewport frame was captured and attested, then the runner raised an exception before the first trajectory row or policy request. The prior partial-evidence schema did not retain the exception detail.",
+  "diagnostic_commit": "68379e10f0f845cb2d8778ceaedf9034634aa77b",
+  "observed_partial_attempt_count": 3,
+  "observed_viewport_frame_count": 3,
+  "observed_model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "policy_outcome_count": 0,
+  "disposition": "Preserved as invalid infrastructure attempts; the next attempt persists exception type and detail before cleanup and closes the transport construction probe.",
+  "policy_failures_inferred": false
+}

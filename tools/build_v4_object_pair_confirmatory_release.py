@@ -160,6 +160,7 @@ def build_runtime_lock(
     receipts["geometry_and_scripted_feasibility"] = bind(main_g3_path)
     receipts["historical_seed_collision_audit"] = bind(seed_registry_path)
     receipts["engineering_pilots_complete"] = bind(g7_path)
+    receipts["terminal_metadata_writer_amendment"] = bind(g7_path)
     receipts["full_miniature_campaign"] = bind(g8_path)
     receipts["frozen_analysis_and_inventory"] = bind(analysis_manifest_path)
     lock.pop("pilot_release_boundary", None)

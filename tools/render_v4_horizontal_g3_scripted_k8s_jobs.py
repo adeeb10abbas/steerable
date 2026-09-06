@@ -22,7 +22,7 @@ from experiments.online_correction_v4.droid_task_files.constants import (  # noq
     OBJECT_PAIR_RESET_REGISTRY_SCHEMA,
 )
 from experiments.online_correction_v4.model_blind_g3 import (  # noqa: E402
-    g3_fixture_config,
+    g3_expected_seed_count,
     path_scale_receipt_schema,
     plan_schema,
 )
@@ -214,7 +214,10 @@ def _resolve_authorized_path_scale_receipt(
             and receipt_payload.get("status") == "passed",
             "path-scale receipt must report a passing complete scale",
         )
-        expected_seed_count = g3_fixture_config(fixture_id).expected_seed_count
+        expected_seed_count = g3_expected_seed_count(
+            fixture_id,
+            str(plan_payload.get("qualification_scope", "confirmatory")),
+        )
         require(
             receipt_payload.get("observed_seed_count") == expected_seed_count
             and receipt_payload.get("expected_seed_count") == expected_seed_count,

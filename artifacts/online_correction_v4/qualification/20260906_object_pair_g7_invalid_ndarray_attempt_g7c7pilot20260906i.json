@@ -1,0 +1,19 @@
+{
+  "schema_version": "v4-invalid-infrastructure-attempts-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "C7",
+  "fixture_id": "object_pair",
+  "attempt_ids": [
+    "attempt0065"
+  ],
+  "classification": "infrastructure_failure_before_behavioral_execution",
+  "cause": "JSON serialization still encountered an ndarray after the initial trajectory row had been normalized and written. The failure remained before the first recorded policy request.",
+  "observed_exception_type": "TypeError",
+  "observed_exception_detail": "Object of type ndarray is not JSON serializable",
+  "diagnostic_commit": "7b8b7b2297c4b9a4e7c24fe10e5829b48475fbd2",
+  "observed_model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "policy_outcome_count": 0,
+  "disposition": "Preserved as an invalid infrastructure attempt; the next single-lane attempt retains the full traceback to identify the remaining serialization boundary.",
+  "policy_failures_inferred": false
+}

@@ -46,6 +46,14 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--pod")
     parser.add_argument("--pod-uid")
     parser.add_argument("--native-control-dt-s", type=float, required=True)
+    parser.add_argument(
+        "--reset-trace-only",
+        action="store_true",
+        help=(
+            "Run an explicitly non-qualifying model-blind settle trace instead "
+            "of producing a G2 receipt."
+        ),
+    )
     return parser
 
 
@@ -308,6 +316,90 @@ def _write_json(path: Path, payload: Mapping[str, Any]) -> dict[str, Any]:
     }
 
 
+def _host_list(value: Any) -> list[Any]:
+    if hasattr(value, "detach"):
+        value = value.detach()
+    if hasattr(value, "cpu"):
+        value = value.cpu()
+    if hasattr(value, "numpy"):
+        value = value.numpy()
+    if hasattr(value, "tolist"):
+        value = value.tolist()
+    return value if isinstance(value, list) else list(value)
+
+
+def _reset_trace_sample(backend: Any, *, control_tick: int) -> dict[str, Any]:
+    world = backend.modules["get_world"](backend.env)
+    objects: dict[str, Any] = {}
+    for name in backend.settle_objects:
+        position, quaternion = world.get_pose(name, env_id=0)
+        objects[name] = {
+            "position_world_xyz_m": _host_list(position),
+            "quaternion_world_wxyz": _host_list(quaternion),
+            "velocity_world_xyz_rad_s": _host_list(
+                world.get_velocity(name, env_id=0)
+            ),
+        }
+    sample: dict[str, Any] = {
+        "control_tick": control_tick,
+        "simulation_time_s": control_tick * backend.control_dt_s,
+        "objects": objects,
+    }
+    try:
+        sample["contact_force_n_by_sensor"] = backend.g3_contact_force_evidence()
+    except Exception as exc:
+        sample["contact_probe_error"] = f"{type(exc).__name__}: {exc}"
+    return sample
+
+
+def _run_reset_trace(
+    *,
+    env: Any,
+    environment_seed: int,
+    output_dir: Path,
+    runtime_identity: Mapping[str, Any],
+) -> dict[str, Any]:
+    from experiments.online_correction_v4.droid_reset import (
+        SETTLE_STEPS,
+        STABILITY_WINDOW_STEPS,
+    )
+
+    backend = env.backend
+    backend.reset(seed=environment_seed)
+    robot = backend.env.scene["robot"]
+    samples = [_reset_trace_sample(backend, control_tick=0)]
+    hold = backend.hold_action_tensor()
+    total_steps = SETTLE_STEPS + STABILITY_WINDOW_STEPS
+    for control_tick in range(1, total_steps + 1):
+        backend.step(hold)
+        samples.append(_reset_trace_sample(backend, control_tick=control_tick))
+    payload = {
+        "schema_version": "v4-object-pair-g2-reset-settle-trace-v1",
+        "campaign_id": "online_correction_v4",
+        "fixture_id": backend.config.fixture.fixture_id,
+        "environment_seed": environment_seed,
+        "status": "diagnostic_only_not_a_g2_receipt",
+        "authorizes_behavioral_inference": False,
+        "authorizes_g3_execution": False,
+        "model_request_count": 0,
+        "behavioral_episode_count": 0,
+        "settle_steps": SETTLE_STEPS,
+        "stability_window_steps": STABILITY_WINDOW_STEPS,
+        "runtime_identity": dict(runtime_identity),
+        "robot": {
+            "body_names": list(getattr(robot, "body_names", ())),
+            "body_positions_world_m_at_end": _host_list(robot.data.body_pos_w),
+            "world_aabb_m_at_end": backend.g3_world_aabb("robot"),
+        },
+        "table_world_aabb_m_at_end": backend.g3_world_aabb("table"),
+        "object_world_aabb_m_at_end": {
+            name: backend.g3_world_aabb(name) for name in backend.settle_objects
+        },
+        "samples": samples,
+    }
+    return _write_json(output_dir / "reset_settle_trace.json", payload)
+
+
 def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     prompt = FIXTURE_PROMPTS[args.fixture_id]
@@ -435,7 +527,17 @@ def main(argv: list[str] | None = None) -> int:
             queue_row_sha256=queue_row_sha256,
             output_dir=output_dir / "robolab_native",
             locked_native_control_dt_s=args.native_control_dt_s,
+            g3_contact_probe=args.reset_trace_only,
         )
+        if args.reset_trace_only:
+            trace_record = _run_reset_trace(
+                env=env,
+                environment_seed=args.environment_seed,
+                output_dir=output_dir,
+                runtime_identity=runtime_identity,
+            )
+            print(json.dumps({"diagnostic_trace": trace_record}, indent=2))
+            return 0
         env.reset(seed=args.environment_seed)
         env.reset(seed=args.environment_seed)
         initial_state_sha256 = sha256_bytes(env.capture_observation_bytes())

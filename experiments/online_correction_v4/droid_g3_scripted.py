@@ -63,6 +63,8 @@ class ScriptedControllerConfig:
     gripper_open: float = 0.0
     gripper_close: float = 0.785398
     eef_tool_length_m: float = 0.0
+    place_xy_feedback_gain: float = 0.0
+    place_xy_feedback_max_m: float = 0.08
 
     @classmethod
     def from_mapping(cls, raw: Mapping[str, Any]) -> ScriptedControllerConfig:
@@ -98,6 +100,16 @@ class ScriptedControllerConfig:
             kwargs["eef_tool_length_m"] = _require_positive_finite(
                 raw.get("eef_tool_length_m"),
                 "eef_tool_length_m",
+            )
+        if "place_xy_feedback_gain" in raw:
+            kwargs["place_xy_feedback_gain"] = _require_nonnegative_finite(
+                raw.get("place_xy_feedback_gain"),
+                "place_xy_feedback_gain",
+            )
+        if "place_xy_feedback_max_m" in raw:
+            kwargs["place_xy_feedback_max_m"] = _require_positive_finite(
+                raw.get("place_xy_feedback_max_m"),
+                "place_xy_feedback_max_m",
             )
         return cls(**kwargs)
 
@@ -138,6 +150,13 @@ def _require_positive_finite(value: Any, label: str) -> float:
     number = _require_finite_number(value, label)
     if number <= 0.0:
         raise DroidG3ScriptedError(f"{label} must be positive")
+    return number
+
+
+def _require_nonnegative_finite(value: Any, label: str) -> float:
+    number = _require_finite_number(value, label)
+    if number < 0.0:
+        raise DroidG3ScriptedError(f"{label} must be nonnegative")
     return number
 
 
@@ -376,6 +395,29 @@ def _compose_action(
     )
 
 
+def _placement_feedback_target(
+    *,
+    nominal_target: Vec3,
+    placement_target: Vec3,
+    object_position: Vec3,
+    gain: float,
+    max_correction_m: float,
+) -> Vec3:
+    correction_x = min(
+        max(gain * (placement_target[0] - object_position[0]), -max_correction_m),
+        max_correction_m,
+    )
+    correction_y = min(
+        max(gain * (placement_target[1] - object_position[1]), -max_correction_m),
+        max_correction_m,
+    )
+    return (
+        nominal_target[0] + correction_x,
+        nominal_target[1] + correction_y,
+        nominal_target[2],
+    )
+
+
 @dataclass(frozen=True)
 class _PhaseSegment:
     phase: str
@@ -569,8 +611,20 @@ def run_scripted_check(
             )
             if reference_motion_callback is not None:
                 reference_motion_callback(next_tick, next_sim_time_s)
+            command_position = target_position_tick
+            if (
+                segment.phase == "place_descend"
+                and controller_config.place_xy_feedback_gain > 0.0
+            ):
+                command_position = _placement_feedback_target(
+                    nominal_target=target_position_tick,
+                    placement_target=placement_target,
+                    object_position=_read_object_pose(env, target_object),
+                    gain=controller_config.place_xy_feedback_gain,
+                    max_correction_m=controller_config.place_xy_feedback_max_m,
+                )
             action = _compose_action(
-                target_position_tick,
+                command_position,
                 measured_eef_quaternion,
                 eef_offset_rotation,
                 segment.gripper,
@@ -589,7 +643,10 @@ def run_scripted_check(
                     "sim_time_s": sim_time_s,
                     "phase": segment.phase,
                     "action": [float(value) for value in action],
-                    "target_eef_xyz": [float(value) for value in target_position_tick],
+                    "target_eef_xyz": [float(value) for value in command_position],
+                    "nominal_target_eef_xyz": [
+                        float(value) for value in target_position_tick
+                    ],
                     "measured_eef_xyz": [float(value) for value in measured_position],
                     "reference_xyz": [float(value) for value in reference_position],
                     "object_xyz": [float(value) for value in object_position],

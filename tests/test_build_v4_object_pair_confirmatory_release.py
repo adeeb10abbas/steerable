@@ -63,6 +63,11 @@ class ObjectPairConfirmatoryReleaseTests(unittest.TestCase):
                 spec["policy"]["gpu_product"],
                 "NVIDIA-A100-SXM4-80GB",
             )
+            port_index = spec["policy"]["experiment_argv"].index("--port")
+            self.assertEqual(
+                spec["policy"]["experiment_argv"][port_index + 1],
+                "18157",
+            )
             self.assertTrue(
                 any(
                     seed_path.name in item

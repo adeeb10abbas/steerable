@@ -8,6 +8,11 @@ import copy
 import json
 from pathlib import Path
 import re
+import sys
+
+REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
+if str(REPOSITORY_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPOSITORY_ROOT))
 
 from tools.build_v4_object_pair_g7_pilot_release import (
     CHECKPOINT_REVISION,
@@ -209,6 +214,7 @@ def build_confirmatory_lane_spec(
                 f"{sha256_file(pilot_seed_registry_path)}="
                 f"{sha256_file(seed_registry_path)}"
             ),
+            "18127=18157",
             "g7-object-pair=c7-object-pair-main",
         ],
         absolutize_sources=False,

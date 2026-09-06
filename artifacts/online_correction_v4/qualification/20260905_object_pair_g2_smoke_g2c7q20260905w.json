@@ -1,0 +1,36 @@
+{
+  "schema_version": "v4-object-pair-g2-smoke-disposition-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "attempt_id": "g2c7q20260905w",
+  "environment_seed": 2100040004,
+  "compiled_at_utc": "2026-09-06T03:58:00Z",
+  "qualification_scope": "single_seed_corrected_tabletop_static_payload_model_blind_smoke",
+  "status": "infrastructure_invalid",
+  "g2_complete": false,
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "outcome": {
+    "sponge_position_error_m": 0.303,
+    "tray_position_error_m": 0.303,
+    "registry_position_tolerance_m": 0.005,
+    "interpretation": "Without rigid-body mode, the scanned table payload does not expose an active support collision; both objects settle 0.303 m below their registered tabletop positions."
+  },
+  "runtime_identity": {
+    "study_commit": "aa201a65f0ec75d4bdea0ee9d45e44db3f801484",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "driver_version": "580.95.05",
+    "gpu_product": "NVIDIA A40",
+    "native_control_dt_s": 0.06666666666666667,
+    "reset_registry_sha256": "b152af4ffabc8b7023e57eb58e61dbf88f9f9d9f6d1308a67a6bbc801de942f0"
+  },
+  "preservation": {
+    "raw_failure_marker": "file:///data/users/ali/vla_wam/raw/v4/g2-object-pair/smoke-g2c7q20260905w-s004/episodes/infrastructure_failure.json",
+    "bytes": 1461,
+    "sha256": "f1aee8a8dddbca821e38fcd1e4bd7aa187ccf0d9f4b9f3198c2cf90b91af0e53"
+  },
+  "disposition": "Keep the static visible table and corrected object heights. Add a static box collider aligned to the measured z=0.3 tabletop under the payload-bearing table prim."
+}

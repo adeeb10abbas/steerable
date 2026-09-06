@@ -1,0 +1,191 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "v4-g3-object-pair-scripted-g3s7q20260906k-d6562a85e4-j002"
+  namespace: "211247-prod"
+  labels:
+    app.kubernetes.io/name: "v4-object-pair-g3-scripted"
+    app.kubernetes.io/part-of: "vla-wam-v4"
+    v4-gate: "g3-object-pair-scripted"
+    v4-fixture-id: "object_pair"
+    v4-attempt-id: "g3s7q20260906k"
+    v4-config-sha: "d6562a85e468d9ad"
+    v4-scale: "0.5"
+    v4-lane-id: "g3c7s-st002"
+    v4-lane-role: "simulator"
+    v4-job-index: "002"
+    v4-scripted-mode: "stationary"
+    v4-environment-seed: "2100040052"
+spec:
+  completions: 1
+  parallelism: 1
+  backoffLimit: 0
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: "v4-object-pair-g3-scripted"
+        app.kubernetes.io/part-of: "vla-wam-v4"
+        v4-gate: "g3-object-pair-scripted"
+        v4-fixture-id: "object_pair"
+        v4-attempt-id: "g3s7q20260906k"
+        v4-config-sha: "d6562a85e468d9ad"
+        v4-scale: "0.5"
+        v4-lane-id: "g3c7s-st002"
+        v4-lane-role: "simulator"
+        v4-job-index: "002"
+        v4-scripted-mode: "stationary"
+        v4-environment-seed: "2100040052"
+      annotations:
+        v4-image-digest: "sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c"
+    spec:
+      restartPolicy: Never
+      terminationGracePeriodSeconds: 300
+      nodeSelector:
+        node-role.kubernetes.io/worker-gpu: ""
+        nvidia.com/gpu.product: "NVIDIA-A40"
+      tolerations:
+        - key: nvidia.com/gpu
+          operator: Equal
+          value: "present"
+          effect: NoSchedule
+      securityContext:
+        fsGroup: 2518800
+        supplementalGroups: [2518800]
+        seccompProfile:
+          type: RuntimeDefault
+      imagePullSecrets:
+        - name: "artifactory-ci-pull-secret"
+      containers:
+        - name: simulator
+          image: "artifactory-ci.gm.com/docker-approved/devcontainers/base@sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c"
+          imagePullPolicy: IfNotPresent
+          command:
+            - "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python"
+            - "/opt/v4-lane/scripts/lane_entrypoint.py"
+          resources:
+            requests:
+              cpu: "16"
+              memory: 64Gi
+              nvidia.com/gpu: 1
+            limits:
+              cpu: "64"
+              memory: 128Gi
+              nvidia.com/gpu: 1
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 816149040
+            runAsGroup: 2518800
+            capabilities:
+              drop: [ALL]
+          env:
+            - name: POD_UID
+              valueFrom:
+                fieldRef:
+                  fieldPath: "metadata.uid"
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: "metadata.name"
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: "metadata.namespace"
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: "status.podIP"
+            - name: IMAGE_DIGEST_EXPECTED
+              valueFrom:
+                configMapKeyRef:
+                  name: "v4-g3-object-pair-scripted-g3s7q20260906k-d6562a85e4-j002-config"
+                  key: "image.digest"
+            - name: LANE_ROLE
+              value: "simulator"
+            - name: LANE_ID
+              value: "g3c7s-st002"
+            - name: ATTEMPT_ID
+              value: "g3s7q20260906k"
+            - name: OUTPUT_PARENT
+              value: "/data/users/ali/vla_wam/raw/v4/g3-object-pair/scripted/attempt-g3s7q20260906k/scale-0.5/stationary/seed-2100040052"
+            - name: KUBE_CONTEXT
+              value: "prod-dcwi-warrenq1-vmkub007"
+            - name: LANE_LAUNCH_CONFIG
+              value: "/opt/v4-lane/config/simulator-launch.json"
+            - name: LANE_LAUNCH_CONFIG_SHA256
+              value: "76c62ff8225c555312585a964db8504939ba9fda76a148580d56d1975935e38f"
+            - name: HOME
+              value: "/lane-runtime/home"
+            - name: XDG_CACHE_HOME
+              value: "/lane-runtime/xdg/cache"
+            - name: XDG_CONFIG_HOME
+              value: "/lane-runtime/xdg/config"
+            - name: XDG_RUNTIME_DIR
+              value: "/lane-runtime/xdg/runtime"
+            - name: WARP_CACHE_PATH
+              value: "/lane-runtime/warp"
+            - name: MPLCONFIGDIR
+              value: "/lane-runtime/matplotlib"
+            - name: TMPDIR
+              value: "/lane-runtime/tmp"
+            - name: VK_ICD_FILENAMES
+              value: "/etc/vulkan/icd.d/nvidia_icd.json"
+            - name: LD_LIBRARY_PATH
+              value: "/data/users/ali/vla_wam/envs/robolab-native-libs-ubuntu2204/usr/lib/x86_64-linux-gnu:/data/users/ali/glvnd/lib:/data/users/ali/vla_wam/envs/fastwam-native-libs/lib:/usr/lib/x86_64-linux-gnu"
+            - name: PYTHONPATH
+              value: "/data/users/ali/vla_wam/src/steerable-v4-g3-object-pair-94da67f:/data/users/ali/vla_wam/external/RoboLab-11142d4:/data/users/ali/RoboTwin/envs/curobo/src:/opt/v4-lane/scripts"
+            - name: PYTHON_BIN
+              value: "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python"
+            - name: FFMPEG_BIN
+              value: "/data/users/ali/vla_wam/envs/lingbot-va-b200/bin/ffmpeg"
+            - name: PYTHONNOUSERSITE
+              value: "1"
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: PRESTOP_WAIT_SECONDS
+              value: "120"
+            - name: NVIDIA_DRIVER_CAPABILITIES
+              value: "compute,graphics,utility"
+            - name: DISPLAY
+              value: ""
+            - name: LD_PRELOAD
+              value: ""
+            - name: OMNI_KIT_ACCEPT_EULA
+              value: "YES"
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: lane-runtime
+              mountPath: /lane-runtime
+            - name: dshm
+              mountPath: /dev/shm
+            - name: launch-config
+              mountPath: /opt/v4-lane/config
+              readOnly: true
+            - name: lane-scripts
+              mountPath: "/opt/v4-lane/scripts"
+              readOnly: true
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python"
+                  - "/opt/v4-lane/scripts/lane_entrypoint.py"
+                  - --prestop
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: "211247-prod-pvc"
+        - name: lane-runtime
+          emptyDir: {}
+        - name: dshm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 96Gi
+        - name: launch-config
+          configMap:
+            name: "v4-g3-object-pair-scripted-g3s7q20260906k-d6562a85e4-j002-config"
+        - name: lane-scripts
+          configMap:
+            name: "v4-g3-object-pair-scripted-g3s7q20260906k-d6562a85e4-scripts"
+            defaultMode: 0555

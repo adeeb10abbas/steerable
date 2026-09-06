@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "v4-g3-object-pair-g3c7p20260906a-a3b2c67473-s000-config"
+  namespace: "211247-prod"
+  labels:
+    app.kubernetes.io/name: "v4-object-pair-g3"
+    app.kubernetes.io/part-of: "vla-wam-v4"
+    v4-gate: "g3-object-pair"
+    v4-attempt-id: "g3c7p20260906a"
+    v4-config-sha: "a3b2c674730698e4"
+    v4-scale: "2.0"
+    v4-lane-id: "g3h-s000"
+    v4-lane-role: "simulator"
+    v4-seed-index: "000"
+    v4-environment-seed: "2100040000"
+immutable: true
+data:
+  simulator-launch.json: |
+    {"checkpoint_path":"/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/setup/object_pair_g3_plan.candidate.json","checkpoint_semantics":"model_blind_g3_plan_candidate","checkpoint_sha256":"d95d2842b93e5bda32e2029ad155c29224fd1761f7e18f8118ec76dc714d2a17","execution_scope":"model_blind_g3_no_policy","expected_driver_version":"580.95.05","expected_gpu_name":"NVIDIA A40","experiment_argv":["/usr/bin/python3","/Users/SZ5VJY/steerable-1/tools/run_v4_g3_checked.py","--expected-fixture","object_pair","--expected-environment-seed","2100040000","--expected-scale","2.0","--","/usr/bin/python3","/Users/SZ5VJY/steerable-1/tools/run_v4_horizontal_g3_path_seed.py","--study-root","/Users/SZ5VJY/steerable-1","--robolab-root","/Users/SZ5VJY/steerable-1","--campaign","/Users/SZ5VJY/steerable-1/docs/online_correction_v4/campaign.json","--campaign-sha256","7b207c38353a2194859a01130318237cc55231e3504b1a2632b12b28f93c22b9","--plan","/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/setup/object_pair_g3_plan.candidate.json","--plan-sha256","d95d2842b93e5bda32e2029ad155c29224fd1761f7e18f8118ec76dc714d2a17","--reset-registry","/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/setup/object_pair_reset_registry.candidate.json","--reset-registry-sha256","6272ef4de4c6188e65198cd5f1a7f35e1ccbaf3d8022d5a1b6d030cf0eb1b84c","--fixture-id","object_pair","--environment-seed","2100040000","--scale","2.0","--expected-study-commit","a912526d0d9c483105702105d7a27f500a616df4","--expected-robolab-commit","0aef241fb088ca21bb4ebd24448940ed56620d17","--expected-driver-version","580.95.05","--native-control-dt-s","0.06666666666666667"],"file_bindings":[{"bytes":5018,"path":"/Users/SZ5VJY/steerable-1/tools/run_v4_g3_checked.py","sha256":"22d0daad8565130aee279f4aa6730245434f53416b315e1203f3d8a29da5385b"},{"bytes":37981,"path":"/Users/SZ5VJY/steerable-1/tools/run_v4_horizontal_g3_path_seed.py","sha256":"e52edb1d4016de3edf5b18a7d6b12ae6bd55d6e558e749b139e53be6463f37b5"},{"bytes":72485,"path":"/Users/SZ5VJY/steerable-1/experiments/online_correction_v4/model_blind_g3.py","sha256":"1e9ea5226d47750dce425e275ae2242817e5df423677fc8b68a76b4019610bb1"},{"bytes":17487,"path":"/Users/SZ5VJY/steerable-1/docs/online_correction_v4/campaign.json","sha256":"7b207c38353a2194859a01130318237cc55231e3504b1a2632b12b28f93c22b9"},{"bytes":17061,"path":"/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/setup/object_pair_g3_plan.candidate.json","sha256":"d95d2842b93e5bda32e2029ad155c29224fd1761f7e18f8118ec76dc714d2a17"},{"bytes":18819,"path":"/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/setup/object_pair_reset_registry.candidate.json","sha256":"6272ef4de4c6188e65198cd5f1a7f35e1ccbaf3d8022d5a1b6d030cf0eb1b84c"},{"bytes":9914,"path":"/opt/v4-lane/scripts/lane_entrypoint.py","sha256":"8ac453697224adf12a12ff20f16686e052ef4482cece4b423dfb2d78136e6e9f"},{"bytes":30435,"path":"/opt/v4-lane/scripts/startup_preflight.py","sha256":"5500d64c2450a9e33c7168155cdb608364066b2b66e3098997c780c6c5021dea"},{"bytes":3150,"path":"/opt/v4-lane/scripts/isaac_render_probe.py","sha256":"22c852c3e2ba913ff5593874e148522711e516f89747fc8ac0238e1f56fbd491"}],"gpu_product":"NVIDIA-A40","nvidia_smi_bin":"/usr/bin/nvidia-smi","policy_wait":null,"python_imports":["json","torch","curobo","experiments.online_correction_v4.model_blind_g3"],"render_probe_argv":["/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python","/opt/v4-lane/scripts/isaac_render_probe.py","--output","{rendered_frame}","--num-envs","1","--headless","--rendering_mode","balanced","--device","cuda:0","--kit_args=--/rtx/verifyDriverVersion/enabled=false"],"render_probe_timeout_seconds":300,"role":"simulator","schema_version":"vla-wam-v4-k8s-lane-launch-v1","vulkan_contract":"isaac_app_launcher_rtx_frame_under_bound_vk_icd"}
+  image.digest: "sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c"
+  render-spec.sha256: "a3b2c674730698e4eb67f5613a2a608e391789a42dc2c774d277cd9c702764a0"
+  renderer.sha256: "550fa471c2fa6c232c74ca5527c364489c60737a2a7dfe85aaa5dedb30d216d0"

@@ -82,8 +82,19 @@ def instruction_for_active_episode() -> dict[str, str]:
     return bound_instruction_for_active_episode().instruction
 
 
+def instruction_dict_for_relation(relation: str) -> dict[str, str]:
+    return load_bound_instruction(
+        expected_fixture="object_pair",
+        expected_goal=relation,
+    ).instruction
+
+
 def task_attributes_for_active_episode() -> list[str]:
     return task_attributes(active_goal())
+
+
+def task_attributes_for_relation(relation: str) -> list[str]:
+    return task_attributes(relation)
 
 
 def timeout_only_termination():
@@ -96,9 +107,11 @@ __all__ = [
     "active_goal",
     "bound_instruction_for_active_episode",
     "clear_episode_caches",
+    "instruction_dict_for_relation",
     "instruction_for_active_episode",
     "scene_for_active_episode",
     "scene_for_env_seed",
     "task_attributes_for_active_episode",
+    "task_attributes_for_relation",
     "timeout_only_termination",
 ]

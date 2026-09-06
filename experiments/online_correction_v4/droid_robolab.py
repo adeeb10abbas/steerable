@@ -188,12 +188,6 @@ def build_live_robolab_env(
         raise RoboLabBootstrapError(
             f"fixture {fixture.fixture_id!r} is not physically implemented in this checkout"
         )
-    if fixture.fixture_id == "object_pair" and not isinstance(
-        fixture, ResetFixtureBinding
-    ):
-        raise RoboLabBootstrapError(
-            "object_pair is released only for model-blind qualification"
-        )
     if action_mode not in {"joint_position", "absolute_ik"}:
         raise RoboLabBootstrapError(
             f"unsupported live RoboLab action mode: {action_mode!r}"

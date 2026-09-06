@@ -282,10 +282,14 @@ class DroidLiveImportTests(unittest.TestCase):
             )
 
     def test_horizontal_fixture_registry(self) -> None:
-        self.assertEqual(supported_fixture_ids(), ("horizontal",))
+        self.assertEqual(supported_fixture_ids(), ("horizontal", "object_pair"))
         reg = resolve_fixture_registration("horizontal", relation="left")
         self.assertTrue(reg.timeout_only)
         self.assertTrue(reg.robolab_success_termination_forbidden)
+        object_pair = resolve_fixture_registration("object_pair", relation="left")
+        self.assertEqual(object_pair.target_object, "sponge")
+        self.assertEqual(object_pair.reference_object, "tray")
+        self.assertTrue(object_pair.timeout_only)
         with self.assertRaises(Exception):
             resolve_fixture_registration("reference_binding")
         self.assertIn("reference_binding", blocked_fixture_ids())

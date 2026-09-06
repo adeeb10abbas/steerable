@@ -101,8 +101,8 @@ def _sample_reset_registry(*, env_seed: int = 2100000045) -> dict:
 
 
 class FixtureRegistryTests(unittest.TestCase):
-    def test_supported_fixture_is_horizontal_only(self) -> None:
-        self.assertEqual(supported_fixture_ids(), ("horizontal",))
+    def test_supported_planar_fixtures(self) -> None:
+        self.assertEqual(supported_fixture_ids(), ("horizontal", "object_pair"))
 
     def test_all_horizontal_relations_registered(self) -> None:
         self.assertEqual(list_registered_horizontal_relations(), HORIZONTAL_RELATIONS)
@@ -127,9 +127,9 @@ class FixtureRegistryTests(unittest.TestCase):
         self.assertTrue(reg.task_module.endswith("horizontal_left.py"))
         self.assertEqual(reg.task_class, "V4HorizontalLeftTask")
 
-    def test_object_pair_active_registration_is_model_blind_only(self) -> None:
-        with self.assertRaises(FixtureRegistryError):
-            resolve_active_registration("object_pair")
+    def test_object_pair_active_registration_supports_policy_and_model_blind_modes(self) -> None:
+        released = resolve_active_registration("object_pair")
+        self.assertNotIn("model_blind_candidate", released.attributes)
         reg = resolve_active_registration(
             "object_pair",
             allow_model_blind_candidate=True,
@@ -140,6 +140,9 @@ class FixtureRegistryTests(unittest.TestCase):
         self.assertEqual(reg.reference_object, "tray")
         self.assertTrue(reg.task_module.endswith("object_pair_active.py"))
         self.assertIn("model_blind_candidate", reg.attributes)
+        relation = resolve_fixture_registration("object_pair", relation="left")
+        self.assertEqual(relation.relation, "left")
+        self.assertEqual(relation.task_class, "V4ObjectPairActiveTask")
 
     def test_each_relation_has_distinct_task_module(self) -> None:
         modules = {

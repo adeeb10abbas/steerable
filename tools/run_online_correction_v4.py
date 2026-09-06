@@ -173,11 +173,25 @@ def main(argv: list[str] | None = None) -> int:
             policy_port=args.policy_port,
             output_dir=launch_args.output_dir,
         )
+        fixture_config = config_raw.get("fixtures", {}).get(manifest.fixture, {})
+        nominal_translation_m = fixture_config.get("nominal_translation_m")
+        if (
+            isinstance(nominal_translation_m, bool)
+            or not isinstance(nominal_translation_m, (int, float))
+            or float(nominal_translation_m) <= 0.0
+        ):
+            raise RuntimeError(
+                f"campaign fixture {manifest.fixture!r} lacks a positive "
+                "nominal_translation_m"
+            )
+        displacement_m = float(nominal_translation_m) * float(
+            fixture_binding.calibration_scale
+        )
         runner, _finalizer = build_episode_runner(
             binding,
             output_dir=launch_args.output_dir,
             attempt_id=launch_args.attempt_id,
-            displacement_m=fixture_binding.calibration_scale,
+            displacement_m=displacement_m,
             motion_direction=resolve_motion_direction(manifest),
             scenario=manifest.factors.get("scenario", "move_stop"),
             motion_config=config_raw["motion"],

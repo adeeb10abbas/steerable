@@ -84,8 +84,18 @@ def resolve_active_registration(
     *,
     allow_model_blind_candidate: bool = False,
 ) -> FixtureRegistration:
-    if fixture_id == "object_pair" and allow_model_blind_candidate:
+    if fixture_id == "object_pair":
         module_name, class_name = _ACTIVE_TASKS[fixture_id]
+        attributes = [
+            "spatial",
+            "online_correction_v4",
+            "object_pair",
+            "timeout_only",
+            "external_v4_scorer",
+            "active_episode_bound",
+        ]
+        if allow_model_blind_candidate:
+            attributes.append("model_blind_candidate")
         return FixtureRegistration(
             fixture_id=fixture_id,
             relation=None,
@@ -100,15 +110,7 @@ def resolve_active_registration(
             robolab_success_termination_forbidden=ROBOLAB_SUCCESS_TERMINATION_FORBIDDEN,
             task_module=str(_TASK_ROOT / module_name),
             task_class=class_name,
-            attributes=(
-                "spatial",
-                "online_correction_v4",
-                "object_pair",
-                "timeout_only",
-                "external_v4_scorer",
-                "active_episode_bound",
-                "model_blind_candidate",
-            ),
+            attributes=tuple(attributes),
         )
     if fixture_id != "horizontal":
         if fixture_id in BLOCKED_FIXTURE_IDS:
@@ -183,6 +185,39 @@ def resolve_fixture_registration(
                 "spatial",
                 "online_correction_v4",
                 "horizontal",
+                relation,
+                "timeout_only",
+                "external_v4_scorer",
+            ),
+        )
+
+    if fixture_id == "object_pair":
+        if relation is None:
+            _fail("object_pair fixture registration requires an explicit relation label")
+        if relation not in HORIZONTAL_RELATIONS:
+            _fail(
+                f"unsupported object_pair relation {relation!r}; "
+                f"expected one of {list(HORIZONTAL_RELATIONS)}"
+            )
+        module_name, class_name = _ACTIVE_TASKS[fixture_id]
+        return FixtureRegistration(
+            fixture_id=fixture_id,
+            relation=relation,
+            scene_asset=OBJECT_PAIR_SCENE_PATH,
+            scene_metadata_sha256=OBJECT_PAIR_SCENE_METADATA_SHA256,
+            target_object=OBJECT_PAIR_TARGET_OBJECT,
+            reference_object=OBJECT_PAIR_REFERENCE_OBJECT,
+            contact_object_list=OBJECT_PAIR_CONTACT_OBJECTS,
+            episode_length_s=EPISODE_LENGTH_S,
+            timeout_only=True,
+            external_scorer_mode=EXTERNAL_SCORER_MODE,
+            robolab_success_termination_forbidden=ROBOLAB_SUCCESS_TERMINATION_FORBIDDEN,
+            task_module=str(_TASK_ROOT / module_name),
+            task_class=class_name,
+            attributes=(
+                "spatial",
+                "online_correction_v4",
+                "object_pair",
                 relation,
                 "timeout_only",
                 "external_v4_scorer",

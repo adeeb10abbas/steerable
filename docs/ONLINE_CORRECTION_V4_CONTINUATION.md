@@ -256,6 +256,15 @@ The candidate uses the frozen C7 seed namespace `2100040000`–`2100040063` and
 common x/y jitter. It is not a released fixture: live USD import, G2
 reset/camera/frame evidence, G3 paths, and scripted feasibility remain pending.
 
+The first zero-model-request C7 G2 smoke, `g2c7q20260905a`, proved the USD task,
+camera stack, and simulator startup but was infrastructure-invalid at reset
+attestation: the procedural sponge and tray settled 60 mm and 50 mm below
+their provisional centers. The compact receipt is
+`artifacts/online_correction_v4/qualification/20260905_object_pair_g2_smoke_g2c7q20260905a.json`.
+No G2 result was claimed. The model-blind candidate was recalibrated to the
+observed support plane (box half-heights 17.5 mm and 9 mm); all scene and reset
+hashes changed, requiring a fresh attempt identifier and pinned checkout.
+
 Every queue row is a **registered new episode**. `reuse_episode_ids` are comparison-control links only; C3/C4 rows are not reuse-only aliases. C4 fast-schedule sham/move rows are new episodes because schedule differs from reused C1 controls.
 
 ## Exact next commands

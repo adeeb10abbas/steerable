@@ -25,7 +25,7 @@ def Xform "World"
         float physics:mass = 0.045
         bool physics:rigidBodyEnabled = 1
         quatf xformOp:orient = (1, 0, 0, 0)
-        double3 xformOp:translate = (0.43, -0.10, 0.0775)
+        double3 xformOp:translate = (0.43, -0.10, 0.0175)
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
 
         def Cube "geometry" (
@@ -48,7 +48,7 @@ def Xform "World"
         float physics:mass = 0.30
         bool physics:rigidBodyEnabled = 1
         quatf xformOp:orient = (1, 0, 0, 0)
-        double3 xformOp:translate = (0.44, 0.13, 0.059)
+        double3 xformOp:translate = (0.44, 0.13, 0.009)
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
 
         def Cube "geometry" (

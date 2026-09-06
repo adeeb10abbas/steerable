@@ -206,7 +206,7 @@ class TargetSelectionTests(unittest.TestCase):
             table_top_z_task=self.table_top,
             object_half_up=self.half_up,
         )
-        self.assertAlmostEqual(target[0], 0.101)
+        self.assertAlmostEqual(target[0], 0.102)
         self.assertTrue(goal.region is not None and goal.region.point_inside(target))
 
     def test_world_target_roundtrip(self) -> None:

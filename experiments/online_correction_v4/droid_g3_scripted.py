@@ -241,7 +241,7 @@ def select_robust_target_task(
     def inset_coordinate(low: float, high: float, *, from_low: bool) -> float:
         if high < low:
             raise DroidG3ScriptedError("goal region has inverted bounds")
-        edge_guard = min(0.005, 0.75 * (high - low))
+        edge_guard = min(0.005, 0.5 * (high - low))
         if from_low:
             return min(low + inset, high - edge_guard)
         return max(high - inset, low + edge_guard)

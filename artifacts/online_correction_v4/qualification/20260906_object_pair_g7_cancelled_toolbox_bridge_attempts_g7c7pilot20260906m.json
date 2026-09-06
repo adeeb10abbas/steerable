@@ -1,0 +1,20 @@
+{
+  "schema_version": "v4-invalid-infrastructure-attempts-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "C7",
+  "fixture_id": "object_pair",
+  "attempt_ids": [
+    "attempt0085",
+    "attempt0086",
+    "attempt0087"
+  ],
+  "classification": "cancelled_before_policy_or_behavioral_execution",
+  "cause": "A capacity-expansion plan required explicit service endpoints for policy servers on the existing toolbox B200, but namespace RBAC forbids creating discovery.k8s.io EndpointSlice resources.",
+  "authorization_error": "endpointslices.discovery.k8s.io is forbidden for the active cluster identity in namespace 211247-prod",
+  "observed_model_request_count": 0,
+  "executed_action_count": 0,
+  "behavioral_episode_count": 0,
+  "policy_outcome_count": 0,
+  "disposition": "The three toolbox policy processes were terminated and paired simulator resources were deleted before policy readiness. Pilot execution remains on the two schedulable, fully rendered B200 policy lanes.",
+  "policy_failures_inferred": false
+}

@@ -1,0 +1,25 @@
+{
+  "schema_version": "v4-invalid-infrastructure-attempts-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "C7",
+  "fixture_id": "object_pair",
+  "attempt_ids": [
+    "attempt0025",
+    "attempt0026",
+    "attempt0027",
+    "attempt0028",
+    "attempt0029",
+    "attempt0030",
+    "attempt0031",
+    "attempt0032"
+  ],
+  "classification": "infrastructure_failure_before_behavioral_execution",
+  "cause": "The dispatch working directory was corrected, but the copied runner still derived its study root from the staged runner __file__ path.",
+  "fix_commit": "fc814e61425551c1698d2b38d0649f501b7ee879",
+  "observed_group_receipt_count": 0,
+  "observed_episode_receipt_count": 0,
+  "behavioral_episode_count": 0,
+  "policy_outcome_count": 0,
+  "disposition": "Preserved as invalid infrastructure attempts; the dispatcher now hash-validates and executes the runner in the released source tree.",
+  "policy_failures_inferred": false
+}

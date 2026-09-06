@@ -1,0 +1,43 @@
+{
+  "schema_version": "v4-object-pair-g2-linear-damping-amendment-v4",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "status": "post_result_model_blind_amendment_candidate",
+  "created_at_utc": "2026-09-06T04:31:00Z",
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "triggering_evidence": {
+    "path": "artifacts/online_correction_v4/qualification/20260905_object_pair_g2_smoke_g2c7q20260905ah.json",
+    "sha256": "5784d3ff04cd7759f976a14fbcbea8e5cd410e832368f01600d367a71e2c7944",
+    "finding": "At final geometry and clearance, linear damping 4.5 leaves 0.001524312 m/s excess while angular stability passes."
+  },
+  "amendment": {
+    "objects": [
+      "sponge",
+      "tray"
+    ],
+    "physx_rigid_body_linear_damping_before": 4.5,
+    "physx_rigid_body_linear_damping_after": 8.0,
+    "physx_rigid_body_angular_damping_unchanged": 4.0
+  },
+  "unchanged_contracts": {
+    "all_scene_geometry_table_composition_and_clearance": true,
+    "registered_environment_seeds": true,
+    "object_dimensions_mass_inertia_colors_and_poses": true,
+    "settle_window": true,
+    "registry_position_tolerance_m": 0.005,
+    "linear_speed_max_m_s": 0.02,
+    "angular_speed_max_rad_s": 0.2,
+    "camera_and_task_frame_checks": true,
+    "prompts_and_policy_weights": true
+  },
+  "required_requalification": [
+    "Replay seed 2100040004 at linear damping 8.0.",
+    "If it passes, execute a fresh complete 64-seed wave and repeat human axis review.",
+    "Use the direct-command pilot to confirm the damped sponge remains manipulable before policy release."
+  ],
+  "disclosure": "This zero-policy amendment provides stability margin; downstream pilot gates remain responsible for manipulability."
+}

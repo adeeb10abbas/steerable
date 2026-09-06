@@ -1,0 +1,38 @@
+{
+  "schema_version": "v4-object-pair-g2-smoke-disposition-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "attempt_id": "g2c7q20260905ah",
+  "environment_seed": 2100040004,
+  "compiled_at_utc": "2026-09-06T04:30:00Z",
+  "qualification_scope": "single_seed_half_millimeter_clearance_model_blind_smoke",
+  "status": "infrastructure_invalid",
+  "g2_complete": false,
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "outcome": {
+    "object": "sponge",
+    "linear_component_max_m_s": 0.021524312,
+    "linear_component_limit_m_s": 0.02,
+    "angular_component_max_rad_s": 0.09123645,
+    "angular_component_limit_rad_s": 0.2,
+    "interpretation": "Reducing reset clearance leaves a small persistent linear contact margin on the qualified dynamic table; angular stability passes comfortably."
+  },
+  "runtime_identity": {
+    "study_commit": "54abf7d781593206c895cac419928a35471d01eb",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "driver_version": "580.95.05",
+    "gpu_product": "NVIDIA A40",
+    "native_control_dt_s": 0.06666666666666667,
+    "reset_registry_sha256": "81309e7add24d571d8a3eba34129b69b21010087f9e5ae5170eac6753b029af1"
+  },
+  "preservation": {
+    "raw_failure_marker": "file:///data/users/ali/vla_wam/raw/v4/g2-object-pair/smoke-g2c7q20260905ah-s004/episodes/infrastructure_failure.json",
+    "bytes": 1515,
+    "sha256": "f7d1ddf7e690383a3c1e4c01358c3e80289ea7f441025f76389b557f6356104a"
+  },
+  "disposition": "Retain all final geometry and clearance. Increase only linear damping to 8.0 to provide margin across the 64-seed wave; leave angular damping and thresholds unchanged."
+}

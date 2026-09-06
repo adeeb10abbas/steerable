@@ -1,0 +1,49 @@
+{
+  "schema_version": "v4-object-pair-g2-nested-support-trace-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "attempt_ids": [
+    "g2c7q20260905y",
+    "g2c7q20260905z"
+  ],
+  "environment_seed": 2100040004,
+  "compiled_at_utc": "2026-09-06T04:06:00Z",
+  "qualification_scope": "same_seed_model_blind_nested_support_smoke_and_trace",
+  "status": "infrastructure_invalid",
+  "g2_complete": false,
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "trace_summary": {
+    "initial_sponge_z_m": 0.3205,
+    "tick_one_sponge_z_m": 0.29762,
+    "tick_one_sponge_vertical_velocity_m_s": -0.5956,
+    "tick_two_sponge_z_m": 0.39011,
+    "tick_two_sponge_vertical_velocity_m_s": 2.0783,
+    "terminal_sponge_angular_component_max_rad_s": 8.0198,
+    "robot_table_force_n_after_activation": 218444.721,
+    "interpretation": "The support collider nested under the payload-bearing table is absent during the first control tick. It activates only after the sponge has penetrated the support plane, then produces a depenetration impulse."
+  },
+  "runtime_identity": {
+    "study_commit": "311d046a2206d24769fe44da992ca578194a908c",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "driver_version": "580.95.05",
+    "gpu_product": "NVIDIA A40",
+    "native_control_dt_s": 0.06666666666666667,
+    "reset_registry_sha256": "3b5a972650e288e8721a93add35acb77843c5c651d37e791af4d0a69181fe549"
+  },
+  "preservation": {
+    "smoke_failure_marker": {
+      "path": "file:///data/users/ali/vla_wam/raw/v4/g2-object-pair/smoke-g2c7q20260905y-s004/episodes/infrastructure_failure.json",
+      "bytes": 1515,
+      "sha256": "3d09013018681f0e3fca78d6369a5ae7138dc6550ca5c486dffaabeac86855e3"
+    },
+    "settle_trace": {
+      "path": "file:///data/users/ali/vla_wam/raw/v4/g2-object-pair/trace-g2c7q20260905z-s004/episodes/reset_settle_trace.json",
+      "sha256": "7ee6f0872bedf2f970c8bf65f873f58fe3e21b5be2759a3bec1cd864e4c6608f"
+    }
+  },
+  "disposition": "Decouple visual payload composition from support physics. Keep the visible payload as a top-level table_visual asset and make table a transform-neutral top-level support collider so it is active before the first physics step."
+}

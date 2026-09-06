@@ -292,14 +292,9 @@ def build_registry(
             ),
             "object_specs": OBJECT_SPECS,
             "support_surface": {
-                "construction": "static_usd_cube_on_table_payload",
+                "construction": "top_level_transform_neutral_static_usd_cube",
                 "prim": "table/V4ObjectPairSupportCollider",
-                "authored_local_center_xyz_m": [
-                    0.2514156520366669,
-                    -0.00206825464963913,
-                    -0.06,
-                ],
-                "measured_world_center_xyz_m": [0.45, 0.02, 0.29],
+                "world_center_xyz_m": [0.45, 0.02, 0.29],
                 "dimensions_xyz_m": [0.5, 0.6, 0.02],
                 "top_surface_z_m": 0.3,
                 "initial_clearance_m": 0.003,

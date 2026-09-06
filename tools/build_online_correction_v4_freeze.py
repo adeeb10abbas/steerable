@@ -988,6 +988,12 @@ def build_continuation_state(
         and row.get("status") == "passed_machine_checks_pending_axis_visual_review"
         for row in qualification_receipts
     )
+    g2_complete = any(
+        row.get("gate") == "G2"
+        and row.get("attempt_id") == "g2q20260905g"
+        and row.get("status") == "passed"
+        for row in qualification_receipts
+    )
     g2_requalification_frozen = any(
         row.get("schema_version") == "v4-horizontal-g2-post-result-amendment-v1"
         and row.get("amendment_status") == "frozen_for_model_blind_requalification"
@@ -999,7 +1005,14 @@ def build_continuation_state(
         and row.get("amendment_status") == "frozen_for_model_blind_requalification"
         for row in model_blind_candidates
     )
-    if g2_machine_checks_passed:
+    if g2_complete:
+        cluster_blocker = (
+            "G2_COMPLETE: all 128 replacement-seed reset/camera/numeric-frame "
+            "checks and the human axis review passed with zero model requests. "
+            "Only model-blind G3 motion/feasibility preparation is authorized; "
+            "policy inference remains prohibited."
+        )
+    elif g2_machine_checks_passed:
         cluster_blocker = (
             "AXIS_REVIEW_PENDING: all 128 replacement-seed horizontal G2 "
             "reset/camera/numeric-frame checks passed with zero model requests. "
@@ -1051,7 +1064,8 @@ def build_continuation_state(
     g2_setup_commands = (
         []
         if (
-            g2_machine_checks_passed
+            g2_complete
+            or g2_machine_checks_passed
             or (g2_requalification_failed and not g2_seed_substitution_frozen)
             or (g2_setup_failed and not g2_requalification_frozen)
         )

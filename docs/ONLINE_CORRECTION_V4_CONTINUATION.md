@@ -184,6 +184,18 @@ G2 is still incomplete: the required human review of the hash-pinned
 left/front/up montage and the aggregate receipt are pending. Do not launch G3
 or any policy request from the machine-check result alone.
 
+The user then passed all four required montage assertions in the questionnaire
+under reviewer identity `adeeb10abbas`. The immutable review receipt is
+`artifacts/online_correction_v4/qualification/20260905_horizontal_g2_axis_review.json`
+and the aggregate compiler verified all 128 seeds, no missing/unexpected/failed
+seeds, the review, and 1,410 referenced external artifacts. The passing
+aggregate is
+`artifacts/online_correction_v4/qualification/20260905_horizontal_g2_aggregate.json`;
+the compact gate disposition is
+`artifacts/online_correction_v4/qualification/20260905_horizontal_g2_gate_receipt.json`.
+Horizontal G2 is complete. This authorizes only model-blind G3
+motion/feasibility preparation, not policy inference.
+
 After inspecting the montage,
 `tools/record_v4_horizontal_g2_axis_review.py` records the four explicit
 orientation assertions. `tools/compile_v4_horizontal_g2_aggregate.py` then
@@ -216,12 +228,13 @@ Every queue row is a **registered new episode**. `reuse_episode_ids` are compari
 
 ## Exact next commands
 
-No fresh cluster launch is authorized. Record the pending human axis review
-and compile the complete G2 aggregate first. G3, reset-registry release,
-policy inference, and behavioral episodes remain prohibited.
+G2 is complete. Only model-blind G3 motion/feasibility preparation is
+authorized next. Reset-registry release, policy inference, and behavioral
+episodes remain prohibited.
 
 ```bash
 python3 tools/online_correction_v4.py validate
+python3 tools/build_v4_horizontal_g3_plan.py
 python3 tools/build_online_correction_v4_freeze.py --out artifacts/online_correction_v4
 python3 tools/validate_online_correction_v4.py
 python3 -m unittest discover -s tests -p 'test_online_correction_v4*.py'

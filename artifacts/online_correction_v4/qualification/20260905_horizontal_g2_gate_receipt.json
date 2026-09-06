@@ -1,0 +1,48 @@
+{
+  "schema_version": "v4-horizontal-g2-gate-disposition-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "horizontal",
+  "attempt_id": "g2q20260905g",
+  "compiled_at_utc": "2026-09-06T00:31:47Z",
+  "qualification_scope": "infrastructure_only_no_scientific_behavior",
+  "status": "passed",
+  "passed": true,
+  "g2_complete": true,
+  "authorizes_g3_execution": true,
+  "authorizes_behavioral_inference": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "seed_evidence": {
+    "registered_seed_count": 128,
+    "observed_seed_count": 128,
+    "passing_seed_count": 128,
+    "failure_count": 0,
+    "wave_receipt_path": "artifacts/online_correction_v4/qualification/20260905_horizontal_g2_wave_g2q20260905g.json"
+  },
+  "axis_review": {
+    "path": "artifacts/online_correction_v4/qualification/20260905_horizontal_g2_axis_review.json",
+    "sha256": "41b3245a6ee8c66479a8a1ce7b4544e68f7a4be5497e90d4c6c2c67c43610a38",
+    "reviewer_identity": "adeeb10abbas",
+    "passed": true
+  },
+  "aggregate": {
+    "path": "artifacts/online_correction_v4/qualification/20260905_horizontal_g2_aggregate.json",
+    "sha256": "009e3217a494cdb76b281a68488854e593ed8542c80510ed7df70a3900584bd0",
+    "expected_seed_count": 128,
+    "observed_seed_count": 128,
+    "axis_review_passed": true,
+    "verified_external_artifact_count": 1410,
+    "passed": true
+  },
+  "runtime_identity": {
+    "study_commit": "289ad39f4f718b43e13ddacb06ebf49b56549bbc",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "driver_version": "580.95.05",
+    "gpu_product": "NVIDIA A40",
+    "native_control_dt_s": 0.06666666666666667,
+    "registry_position_tolerance_m": 0.005,
+    "reset_registry_sha256": "75164b2d6bfd2b4c1962557221e69d78449805bd65d31acc6859fd94d2129742"
+  },
+  "release_boundary": "This receipt completes horizontal G2 and authorizes model-blind G3 preparation only. G3-G8, the direct-command gate, runtime lock, and reset-registry release remain required before any policy inference."
+}

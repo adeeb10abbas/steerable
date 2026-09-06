@@ -157,6 +157,19 @@ class DroidContractTests(unittest.TestCase):
                 "C2",
             )
 
+    def test_verified_prefix_mode_vocabulary_matches_analysis(self) -> None:
+        from experiments.online_correction_v4.analysis import (
+            VERIFIED_COMMON_PREFIX_MODES,
+        )
+
+        self.assertEqual(
+            {
+                PrefixMode.DETERMINISTIC_FRESH_SESSION_REPLAY.value,
+                PrefixMode.QUALIFIED_FULL_STATE_SNAPSHOT.value,
+            },
+            VERIFIED_COMMON_PREFIX_MODES,
+        )
+
     def test_build_launch_plan_with_released_lock(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             tmp_path = Path(tmp)

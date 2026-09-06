@@ -42,9 +42,11 @@ TODO_PREFIX = "TODO_"
 
 
 class PrefixMode(str, Enum):
-    FRESH_SESSION_DETERMINISTIC_REPLAY = "fresh_session_deterministic_replay"
-    COMPLETE_STATE_SNAPSHOT_BRANCH = "complete_state_snapshot_branch"
+    DETERMINISTIC_FRESH_SESSION_REPLAY = "deterministic_fresh_session_replay"
+    QUALIFIED_FULL_STATE_SNAPSHOT = "qualified_full_state_snapshot"
     INDEPENDENT_NATURAL_ROLLOUT_FALLBACK = "independent_natural_rollout_fallback"
+    FRESH_SESSION_DETERMINISTIC_REPLAY = DETERMINISTIC_FRESH_SESSION_REPLAY
+    COMPLETE_STATE_SNAPSHOT_BRANCH = QUALIFIED_FULL_STATE_SNAPSHOT
 
 
 class DroidContractError(ValueError):

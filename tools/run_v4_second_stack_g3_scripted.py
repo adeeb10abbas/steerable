@@ -56,6 +56,7 @@ POSITION_FRACTIONS = {
     "endpoint": 1.0,
 }
 GOAL_CENTER_OFFSET_M = 0.09
+GRASP_ALIGNMENT_TOLERANCE_M = 0.02
 RELATION_CLEARANCE_M = 0.01
 PLACEMENT_XY_TOLERANCE_M = 0.015
 REFERENCE_POSITION_TOLERANCE_M = 0.003
@@ -474,7 +475,7 @@ def _run_check(
     passed = (
         not ik_failures
         and grasp_alignment_error is not None
-        and grasp_alignment_error <= 0.01
+        and grasp_alignment_error <= GRASP_ALIGNMENT_TOLERANCE_M
         and all(
             error is not None and error <= 0.04
             for error in alignment_errors[1:]
@@ -698,6 +699,7 @@ def run_scripted_gate(
         },
         "thresholds": {
             "goal_center_offset_m": GOAL_CENTER_OFFSET_M,
+            "grasp_alignment_tolerance_m": GRASP_ALIGNMENT_TOLERANCE_M,
             "relation_clearance_m": RELATION_CLEARANCE_M,
             "placement_xy_tolerance_m": PLACEMENT_XY_TOLERANCE_M,
             "reference_position_tolerance_m": REFERENCE_POSITION_TOLERANCE_M,

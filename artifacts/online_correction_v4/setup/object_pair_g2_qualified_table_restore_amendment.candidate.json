@@ -1,0 +1,51 @@
+{
+  "schema_version": "v4-object-pair-g2-qualified-table-restore-amendment-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "status": "post_result_model_blind_amendment_candidate",
+  "created_at_utc": "2026-09-06T04:15:00Z",
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "triggering_evidence": {
+    "path": "artifacts/online_correction_v4/qualification/20260905_object_pair_g2_visual_alignment_diagnostic_g2c7q20260905ad.json",
+    "sha256": "1ddd1946c51f71dc56f599d871ddf807a5c3978dbed46154d66543d6bd94c8c6",
+    "finding": "Decoupled visual/support geometry passes numeric checks but does not reproduce the qualified maple tabletop in policy cameras."
+  },
+  "amendment": {
+    "reason": "Use the exact table composition already qualified by the complete horizontal G2 gate.",
+    "source": "RoboLab assets/scenes/rubiks_cube_banana_bowl.usda table block",
+    "restore": [
+      "PhysicsRigidBodyAPI",
+      "PhysxRigidBodyAPI",
+      "kinematicEnabled=0",
+      "rigidBodyEnabled=1",
+      "authored initial linear and angular velocities",
+      "identity scale",
+      "qualified pose and table_01 override"
+    ],
+    "remove": [
+      "table_visual",
+      "V4ObjectPairSupportCollider"
+    ],
+    "retain_corrected_object_heights": true,
+    "retain_procedural_object_damping": true
+  },
+  "unchanged_contracts": {
+    "registered_environment_seeds": true,
+    "object_dimensions_mass_inertia_colors": true,
+    "object_xy_positions_and_spawn_clearance": true,
+    "xy_jitter_algorithm_and_range": true,
+    "settle_window_and_stability_thresholds": true,
+    "camera_and_task_frame_checks": true,
+    "prompts_and_policy_weights": true
+  },
+  "required_requalification": [
+    "Replay seed 2100040004 with the exact qualified table block.",
+    "Verify numeric G2 and visual tabletop alignment.",
+    "If the smoke passes, execute a fresh complete 64-seed wave and repeat human axis review."
+  ],
+  "disclosure": "This amendment restores previously qualified support composition; it does not introduce a new tuned support geometry."
+}

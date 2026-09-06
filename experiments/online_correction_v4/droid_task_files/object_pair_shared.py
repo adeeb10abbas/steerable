@@ -65,10 +65,7 @@ def scene_for_env_seed(env_seed: int):
         raise RuntimeError(
             f"env_seed {env_seed} is not registered in the object-pair reset registry"
         )
-    scene = import_scene(
-        OBJECT_PAIR_SCENE_PATH,
-        [*OBJECT_PAIR_CONTACT_OBJECTS, "table_visual"],
-    )
+    scene = import_scene(OBJECT_PAIR_SCENE_PATH, list(OBJECT_PAIR_CONTACT_OBJECTS))
     for name, position in registry.positions_by_env_seed[env_seed].items():
         asset = copy.deepcopy(getattr(scene, name))
         asset.init_state.pos = position

@@ -292,10 +292,8 @@ def build_registry(
             ),
             "object_specs": OBJECT_SPECS,
             "support_surface": {
-                "construction": "top_level_transform_neutral_static_usd_cube",
-                "prim": "table/V4ObjectPairSupportCollider",
-                "world_center_xyz_m": [0.45, 0.02, 0.04],
-                "dimensions_xyz_m": [0.5, 0.6, 0.02],
+                "construction": "qualified_dynamic_table_payload",
+                "prim": "table",
                 "top_surface_z_m": 0.05,
                 "initial_clearance_m": 0.003,
             },

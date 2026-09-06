@@ -1,0 +1,42 @@
+{
+  "schema_version": "v4-object-pair-g2-smoke-disposition-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "attempt_id": "g2c7q20260905q",
+  "environment_seed": 2100040004,
+  "compiled_at_utc": "2026-09-06T03:34:00Z",
+  "qualification_scope": "single_seed_damped_explicit_support_model_blind_smoke",
+  "status": "infrastructure_invalid",
+  "g2_complete": false,
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "amendment_receipt": "artifacts/online_correction_v4/setup/object_pair_g2_damping_amendment.candidate.json",
+  "released_stability_thresholds_changed": false,
+  "outcome": {
+    "catastrophic_launch_eliminated": true,
+    "support_preserved": true,
+    "damping_improved_stability": true,
+    "object": "sponge",
+    "linear_component_max_m_s": 0.033871897,
+    "linear_component_limit_m_s": 0.02,
+    "angular_component_max_rad_s": 0.557506502,
+    "angular_component_limit_rad_s": 0.2
+  },
+  "runtime_identity": {
+    "study_commit": "9fb1a343ff0d948c9556da44d9d45c2731c7bcc1",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "driver_version": "580.95.05",
+    "gpu_product": "NVIDIA A40",
+    "native_control_dt_s": 0.06666666666666667,
+    "reset_registry_sha256": "6e6783b13efa97475d1a1655a3f2fb0518743779972636b8f88f2373fc5f581b"
+  },
+  "preservation": {
+    "raw_failure_marker": "file:///data/users/ali/vla_wam/raw/v4/g2-object-pair/smoke-g2c7q20260905q-s004/episodes/infrastructure_failure.json",
+    "bytes": 1515,
+    "sha256": "b50fdab89a06f0d3260c1f7b46fffcc904c438876142c40ef60441e438591b0f"
+  },
+  "disposition": "Finite damping materially reduced both violations but did not pass the unchanged thresholds. Apply one disclosed damping escalation, replay the same seed, and preserve all gate limits."
+}

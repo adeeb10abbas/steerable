@@ -27,8 +27,8 @@ def Xform "World"
         float physics:mass = 0.045
         quatf physics:principalAxes = (1, 0, 0, 0)
         bool physics:rigidBodyEnabled = 1
-        float physxRigidBody:angularDamping = 2
-        float physxRigidBody:linearDamping = 1
+        float physxRigidBody:angularDamping = 4
+        float physxRigidBody:linearDamping = 2.5
         quatf xformOp:orient = (1, 0, 0, 0)
         double3 xformOp:translate = (0.43, -0.10, 0.0205)
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
@@ -55,8 +55,8 @@ def Xform "World"
         float physics:mass = 0.30
         quatf physics:principalAxes = (1, 0, 0, 0)
         bool physics:rigidBodyEnabled = 1
-        float physxRigidBody:angularDamping = 2
-        float physxRigidBody:linearDamping = 1
+        float physxRigidBody:angularDamping = 4
+        float physxRigidBody:linearDamping = 2.5
         quatf xformOp:orient = (1, 0, 0, 0)
         double3 xformOp:translate = (0.44, 0.13, 0.012)
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]

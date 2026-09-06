@@ -1,0 +1,26 @@
+{
+  "schema_version": "v4-invalid-infrastructure-attempts-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "C7",
+  "fixture_id": "object_pair",
+  "attempt_ids": [
+    "attempt0009",
+    "attempt0010",
+    "attempt0011",
+    "attempt0012",
+    "attempt0013",
+    "attempt0014",
+    "attempt0015",
+    "attempt0016"
+  ],
+  "classification": "infrastructure_failure_before_behavioral_execution",
+  "cause": "The corrected dispatch script was rendered into the retry binding, but the persistent runtime checkout still contained the pre-fix script and failed the immutable file-binding hash preflight.",
+  "expected_dispatch_script_sha256": "92ec898698fc331cd9e9bb360681ec3e00db2f261d7c7cd3b3e226060477f0f7",
+  "observed_runtime_dispatch_script_sha256": "bf8e6a9cb569af0f3791703fdc36f91e45c5f5f68f0e29907ddc80f353967779",
+  "observed_group_receipt_count": 0,
+  "observed_episode_receipt_count": 0,
+  "behavioral_episode_count": 0,
+  "policy_outcome_count": 0,
+  "disposition": "Preserved as invalid infrastructure attempts; persistent runtime checkout updated before a fresh retry.",
+  "policy_failures_inferred": false
+}

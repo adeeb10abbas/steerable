@@ -193,11 +193,6 @@ def _run_check(
     def align_gripper_to_source(
         source_position: list[float],
     ) -> float | None:
-        desired_midpoint = [
-            source_position[0] + 0.0143,
-            source_position[1],
-            source_position[2] + 0.0634,
-        ]
         command = [
             source_position[0],
             source_position[1] - 0.013,
@@ -206,6 +201,12 @@ def _run_check(
         for _ in range(6):
             if not move_once(command, steps=160):
                 return None
+            live_source = raw.episode_source_obj.pose.p
+            desired_midpoint = [
+                float(live_source[0]) + 0.0143,
+                float(live_source[1]) - 0.004,
+                float(live_source[2]) + 0.0634,
+            ]
             midpoint = [
                 0.5
                 * (
@@ -218,6 +219,12 @@ def _run_check(
                 command[index] + desired_midpoint[index] - midpoint[index]
                 for index in range(3)
             ]
+        live_source = raw.episode_source_obj.pose.p
+        desired_midpoint = [
+            float(live_source[0]) + 0.0143,
+            float(live_source[1]) - 0.004,
+            float(live_source[2]) + 0.0634,
+        ]
         midpoint = [
             0.5
             * (

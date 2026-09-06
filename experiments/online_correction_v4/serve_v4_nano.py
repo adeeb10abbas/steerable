@@ -87,7 +87,7 @@ _allowed_seeds, _seed_scope = _load_allowed_seeds(
 
 # The pinned checkpoint references its exact Wan2.2 VAE through ``uvx hf``.
 # Preserve the already-qualified resolver and cache independently of pod HOME.
-_python_bin = Path(sys.executable).resolve().parent
+_python_bin = Path(sys.executable).parent
 os.environ["PATH"] = f"{_python_bin}:{os.environ.get('PATH', '')}"
 os.environ.setdefault(
     "HF_HOME",

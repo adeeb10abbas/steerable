@@ -1,0 +1,50 @@
+{
+  "schema_version": "v4-object-pair-g2-support-transform-trace-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "attempt_ids": [
+    "g2c7q20260905r",
+    "g2c7q20260905s"
+  ],
+  "environment_seed": 2100040004,
+  "compiled_at_utc": "2026-09-06T03:38:00Z",
+  "qualification_scope": "same_seed_model_blind_support_transform_smoke_and_trace",
+  "status": "infrastructure_invalid",
+  "g2_complete": false,
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "trace_summary": {
+    "registered_sponge_z_m": 0.0205,
+    "final_sponge_z_m": 0.3175,
+    "position_error_m": 0.297,
+    "first_step_sponge_z_m": 0.23235,
+    "peak_sponge_z_m": 0.52217,
+    "final_linear_component_max_m_s": 0.0167,
+    "final_angular_component_max_rad_s": 0.135,
+    "robot_table_force_n_after_first_step": 56005.373,
+    "interpretation": "Damping passes the released terminal speed limits, but the support slab inherited a 0.3 m transform offset from the payload-bearing table prim. It launched the sponge upward before supporting it at z=0.3."
+  },
+  "runtime_identity": {
+    "study_commit": "bfd24b21c2224677c89d634afdc3c6d7222d9642",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "driver_version": "580.95.05",
+    "gpu_product": "NVIDIA A40",
+    "native_control_dt_s": 0.06666666666666667,
+    "reset_registry_sha256": "d70251b08cef8d822f045c098ed1aff9be8e7a85c6f0c83bdc61e6d0dea1deb4"
+  },
+  "preservation": {
+    "smoke_failure_marker": {
+      "path": "file:///data/users/ali/vla_wam/raw/v4/g2-object-pair/smoke-g2c7q20260905r-s004/episodes/infrastructure_failure.json",
+      "bytes": 1461,
+      "sha256": "84c1d640b52238eee62c42f74e3882c16c18b14d31f5747b5c0fcc95c1c436af"
+    },
+    "settle_trace": {
+      "path": "file:///data/users/ali/vla_wam/raw/v4/g2-object-pair/trace-g2c7q20260905s-s004/episodes/reset_settle_trace.json",
+      "sha256": "b515f74b97770819a710bf51e128ff07f7b64bd559df9112b993dd1a758301d8"
+    }
+  },
+  "disposition": "Keep the successful damping values. Make table a transform-neutral container, move the visual payload to a child prim, and author the support collider in container/world coordinates so its top is exactly z=0."
+}

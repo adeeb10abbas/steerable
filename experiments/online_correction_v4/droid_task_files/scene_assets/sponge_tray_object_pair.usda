@@ -81,13 +81,16 @@ def Xform "World"
         double3 xformOp:translate = (-0.087, 0, 0)
     }
 
-    def "table" (
-        prepend payload = @/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/fixtures/table_maple.usd@
-    )
+    def Xform "table"
     {
-        quatf xformOp:orient = (1, 0, 0, 0)
-        double3 xformOp:translate = (0.19858434796333313, 0.02206825464963913, 0.05)
-        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        def "Visual" (
+            prepend payload = @/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/fixtures/table_maple.usd@
+        )
+        {
+            quatf xformOp:orient = (1, 0, 0, 0)
+            double3 xformOp:translate = (0.19858434796333313, 0.02206825464963913, 0.05)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+        }
 
         def Cube "V4ObjectPairSupportCollider" (
             prepend apiSchemas = ["PhysicsCollisionAPI"]
@@ -96,7 +99,7 @@ def Xform "World"
             token visibility = "invisible"
             double size = 1
             float3 xformOp:scale = (0.5, 0.6, 0.02)
-            double3 xformOp:translate = (0.2514156520366669, -0.00206825464963913, -0.06)
+            double3 xformOp:translate = (0.45, 0.02, -0.01)
             uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
         }
     }

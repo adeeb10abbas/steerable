@@ -78,9 +78,15 @@ def Xform "World"
     }
 
     def "table" (
+        prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
         prepend payload = @/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/fixtures/table_maple.usd@
     )
     {
+        vector3f physics:angularVelocity = (0, 0, 0)
+        bool physics:kinematicEnabled = 0
+        bool physics:rigidBodyEnabled = 1
+        vector3f physics:velocity = (0, 0, 0)
+        bool physxRigidBody:disableGravity = 1
         quatf xformOp:orient = (1, 0, 0, 0)
         float3 xformOp:scale = (1, 1, 1)
         double3 xformOp:translate = (0.19858434796333313, 0.02206825464963913, 0.05)

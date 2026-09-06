@@ -32,8 +32,8 @@ def load_queue(path: Path) -> dict[str, dict[str, Any]]:
     return rows
 
 
-def parse_selections(values: list[str]) -> dict[str, str]:
-    selections = {}
+def parse_selections(values: list[str]) -> dict[str, list[str]]:
+    selections: dict[str, list[str]] = {}
     for value in values:
         lane, separator, attempt = value.partition("=")
         if (
@@ -42,9 +42,10 @@ def parse_selections(values: list[str]) -> dict[str, str]:
             or not attempt.startswith("attempt")
         ):
             raise ValueError(f"invalid lane selection: {value}")
-        if lane in selections:
-            raise ValueError(f"duplicate lane selection: {lane}")
-        selections[lane] = attempt
+        attempts = selections.setdefault(lane, [])
+        if attempt in attempts:
+            raise ValueError(f"duplicate lane-attempt selection: {value}")
+        attempts.append(attempt)
     if not selections:
         raise ValueError("at least one lane selection is required")
     return selections
@@ -54,7 +55,7 @@ def discover_attempts(
     *,
     raw_root: Path,
     queue: dict[str, dict[str, Any]],
-    selections: dict[str, str],
+    selections: dict[str, list[str]],
 ) -> dict[str, Path]:
     attempts: dict[str, Path] = {}
     for complete_path in raw_root.rglob("COMPLETE.json"):
@@ -67,13 +68,16 @@ def discover_attempts(
             ),
             None,
         )
-        if lane is None or complete.get("attempt_id") != selections[lane]:
+        if (
+            lane is None
+            or complete.get("attempt_id") not in selections[lane]
+        ):
             continue
         episode_id = str(complete.get("episode_id"))
         if episode_id not in queue:
             raise ValueError(f"selected attempt is outside pilot queue: {episode_id}")
         if complete.get("status") != "valid":
-            raise ValueError(f"selected attempt is not valid: {episode_id}")
+            continue
         if episode_id in attempts:
             raise ValueError(f"duplicate selected attempt: {episode_id}")
         attempts[episode_id] = complete_path.parent
@@ -90,7 +94,7 @@ def render_montage(
     *,
     raw_root: Path,
     queue_path: Path,
-    selections: dict[str, str],
+    selections: dict[str, list[str]],
     montage_path: Path,
     inventory_path: Path,
 ) -> dict[str, Any]:

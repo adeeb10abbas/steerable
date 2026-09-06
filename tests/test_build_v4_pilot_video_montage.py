@@ -15,15 +15,19 @@ class PilotVideoMontageTests(unittest.TestCase):
     def test_selection_parser_is_fail_closed(self) -> None:
         self.assertEqual(
             parse_selections(["g7c7p00=attempt0001"]),
-            {"g7c7p00": "attempt0001"},
+            {"g7c7p00": ["attempt0001"]},
         )
-        with self.assertRaisesRegex(ValueError, "duplicate"):
+        self.assertEqual(
             parse_selections(
                 [
                     "g7c7p00=attempt0001",
                     "g7c7p00=attempt0002",
                 ]
-            )
+            ),
+            {"g7c7p00": ["attempt0001", "attempt0002"]},
+        )
+        with self.assertRaisesRegex(ValueError, "duplicate"):
+            parse_selections(["g7c7p00=attempt0001"] * 2)
 
     def test_discovery_requires_exact_queue_coverage(self) -> None:
         episode_id = "online_correction_v4-C7-pilot-00-example"
@@ -51,7 +55,7 @@ class PilotVideoMontageTests(unittest.TestCase):
             discovered = discover_attempts(
                 raw_root=root,
                 queue={episode_id: {"episode_id": episode_id}},
-                selections={"g7c7p00": "attempt0001"},
+                selections={"g7c7p00": ["attempt0001"]},
             )
             self.assertEqual(discovered, {episode_id: attempt})
             with self.assertRaisesRegex(ValueError, "missing"):
@@ -61,7 +65,7 @@ class PilotVideoMontageTests(unittest.TestCase):
                         episode_id: {"episode_id": episode_id},
                         "missing": {"episode_id": "missing"},
                     },
-                    selections={"g7c7p00": "attempt0001"},
+                    selections={"g7c7p00": ["attempt0001"]},
                 )
 
 

@@ -8,67 +8,6 @@
 
 def Xform "World"
 {
-    def Material "ObjectPairPhysicsMaterial" (
-        prepend apiSchemas = ["PhysicsMaterialAPI"]
-    )
-    {
-        float physics:dynamicFriction = 1
-        float physics:restitution = 0
-        float physics:staticFriction = 1
-    }
-
-    def Xform "sponge" (
-        prepend apiSchemas = ["PhysicsMassAPI", "PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
-    )
-    {
-        custom string description = "V4 C7 yellow procedural sponge candidate"
-        point3f physics:centerOfMass = (0, 0, 0)
-        float3 physics:diagonalInertia = (0.0000159375, 0.00002859375, 0.00003534375)
-        float physics:mass = 0.045
-        quatf physics:principalAxes = (1, 0, 0, 0)
-        bool physics:rigidBodyEnabled = 1
-        quatf xformOp:orient = (1, 0, 0, 0)
-        double3 xformOp:translate = (0.43, -0.10, 0.0205)
-        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
-
-        def Cube "geometry" (
-            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI"]
-        )
-        {
-            rel material:binding:physics = </World/ObjectPairPhysicsMaterial>
-            color3f[] primvars:displayColor = [(0.95, 0.78, 0.10)]
-            double size = 1
-            float3 xformOp:scale = (0.08, 0.055, 0.035)
-            uniform token[] xformOpOrder = ["xformOp:scale"]
-        }
-    }
-
-    def Xform "tray" (
-        prepend apiSchemas = ["PhysicsMassAPI", "PhysicsRigidBodyAPI", "PhysxRigidBodyAPI"]
-    )
-    {
-        custom string description = "V4 C7 blue procedural reference tray candidate"
-        point3f physics:centerOfMass = (0, 0, 0)
-        float3 physics:diagonalInertia = (0.0002581, 0.0004981, 0.00074)
-        float physics:mass = 0.30
-        quatf physics:principalAxes = (1, 0, 0, 0)
-        bool physics:rigidBodyEnabled = 1
-        quatf xformOp:orient = (1, 0, 0, 0)
-        double3 xformOp:translate = (0.44, 0.13, 0.012)
-        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
-
-        def Cube "geometry" (
-            prepend apiSchemas = ["MaterialBindingAPI", "PhysicsCollisionAPI"]
-        )
-        {
-            rel material:binding:physics = </World/ObjectPairPhysicsMaterial>
-            color3f[] primvars:displayColor = [(0.10, 0.34, 0.85)]
-            double size = 1
-            float3 xformOp:scale = (0.14, 0.10, 0.018)
-            uniform token[] xformOpOrder = ["xformOp:scale"]
-        }
-    }
-
     def "franka_table" (
         prepend payload = @/data/users/ali/vla_wam/external/RoboLab-11142d4/assets/fixtures/franka_table.usd@
     )

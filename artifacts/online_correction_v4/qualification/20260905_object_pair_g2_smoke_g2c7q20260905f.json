@@ -1,0 +1,39 @@
+{
+  "schema_version": "v4-object-pair-g2-smoke-disposition-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "attempt_id": "g2c7q20260905f",
+  "environment_seed": 2100040004,
+  "compiled_at_utc": "2026-09-06T02:58:00Z",
+  "qualification_scope": "single_seed_post_explicit_inertia_model_blind_smoke",
+  "status": "infrastructure_invalid",
+  "g2_complete": false,
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "amendment_receipt": "artifacts/online_correction_v4/setup/object_pair_g2_explicit_inertia_amendment.candidate.json",
+  "released_stability_thresholds_changed": false,
+  "measurement": {
+    "object": "sponge",
+    "linear_component_max_m_s": 775326272.0,
+    "linear_component_limit_m_s": 0.02,
+    "angular_component_max_rad_s": 42.129020691,
+    "angular_component_limit_rad_s": 0.2
+  },
+  "runtime_identity": {
+    "study_commit": "26e008a39d373c03e7568cc44ff5bff0bb5f52fc",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "driver_version": "580.95.05",
+    "gpu_product": "NVIDIA A40",
+    "native_control_dt_s": 0.06666666666666667,
+    "reset_registry_sha256": "2d8023f1d68cf8e172850d17eb69420d424f886ec299d342e3d1aeb28ad8b645"
+  },
+  "preservation": {
+    "raw_failure_marker": "file:///data/users/ali/vla_wam/raw/v4/g2-object-pair/smoke-g2c7q20260905f-s004/episodes/infrastructure_failure.json",
+    "bytes": 1533,
+    "sha256": "c15dbbcd57ff7f464e0a8be9f30c255da59037b7a1d99aa9a356366db684801e"
+  },
+  "disposition": "Explicit inertia authored inside the imported procedural USD did not prevent the same catastrophic launch. Do not run a full wave. The next model-blind amendment must replace the imported dynamic prims with Isaac Lab native CuboidCfg spawns, while retaining the same dimensions, mass, appearance, reset positions, seeds, and released gate thresholds."
+}

@@ -24,6 +24,8 @@ from experiments.online_correction_v4.droid_contract import (
 from experiments.online_correction_v4.droid_nano_policy import (
     DroidNanoPolicyAdapter,
     NANO_ACTION_SHAPE,
+    _normalize_action_chunk,
+    _normalize_future,
     fake_nano_transport,
 )
 from experiments.online_correction_v4.droid_pi05_policy import (
@@ -195,6 +197,21 @@ class DroidSimulatorTests(unittest.TestCase):
 
 
 class DroidPolicyAdapterTests(unittest.TestCase):
+    def test_array_backed_nano_response_preserves_exact_shapes(self) -> None:
+        class FakeActionArray:
+            @staticmethod
+            def tolist() -> list[list[float]]:
+                return [[0.0] * 8 for _ in range(32)]
+
+        class FakeFutureArray:
+            shape = (33, 528, 640, 3)
+            dtype = "uint8"
+
+        actions = _normalize_action_chunk(FakeActionArray(), NANO_ACTION_SHAPE)
+        future = FakeFutureArray()
+        self.assertEqual((len(actions), len(actions[0])), NANO_ACTION_SHAPE)
+        self.assertIs(_normalize_future(future), future)
+
     def test_array_inputs_are_projected_to_compact_json_evidence(self) -> None:
         class FakeArray:
             shape = (2, 2)

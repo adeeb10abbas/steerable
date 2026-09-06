@@ -38,6 +38,9 @@ Transport = Callable[[dict[str, Any]], Mapping[str, Any]]
 
 
 def _normalize_action_chunk(raw: Any, expected_shape: tuple[int, int]) -> tuple[tuple[float, ...], ...]:
+    tolist = getattr(raw, "tolist", None)
+    if callable(tolist):
+        raw = tolist()
     rows, cols = expected_shape
     if not isinstance(raw, Sequence) or isinstance(raw, (str, bytes)):
         raise NanoPolicyContractError(f"action chunk must be a nested sequence {expected_shape}")
@@ -79,6 +82,22 @@ def _encode_future_payload(normalized_future: Any) -> tuple[bytes, str, str]:
 
 
 def _normalize_future(raw: Any) -> Any:
+    shape = getattr(raw, "shape", None)
+    if shape is not None:
+        observed_shape = tuple(int(size) for size in shape)
+        if (
+            len(observed_shape) != 4
+            or observed_shape[0] != 33
+            or observed_shape[-1] != 3
+        ):
+            raise NanoPolicyContractError(
+                "every exposed Nano future must have shape (33, H, W, 3)"
+            )
+        if str(getattr(raw, "dtype", "")) != "uint8":
+            raise NanoPolicyContractError(
+                "array-backed Nano futures must use uint8 RGB values"
+            )
+        return raw
     if not isinstance(raw, Sequence) or isinstance(raw, (str, bytes)):
         raise NanoPolicyContractError("future must be a 4D nested sequence")
     if len(raw) != 33:

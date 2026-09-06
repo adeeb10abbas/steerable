@@ -89,10 +89,7 @@ _allowed_seeds, _seed_scope = _load_allowed_seeds(
 # Preserve the already-qualified resolver and cache independently of pod HOME.
 _python_bin = Path(sys.executable).parent
 os.environ["PATH"] = f"{_python_bin}:{os.environ.get('PATH', '')}"
-os.environ.setdefault(
-    "HF_HOME",
-    "/data/users/ali/vla_wam/cache/huggingface-cosmos",
-)
+os.environ["HF_HOME"] = "/data/users/ali/vla_wam/cache/huggingface-cosmos"
 
 from cosmos_framework.scripts import action_policy_server_robolab as server  # noqa: E402
 

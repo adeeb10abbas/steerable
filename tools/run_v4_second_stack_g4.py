@@ -56,6 +56,50 @@ def _checkpoint_manifest(checkpoint_path: Path) -> dict[str, dict[str, Any]]:
     return records
 
 
+def _verify_backbone_cache(
+    *,
+    backbone_path: Path,
+    backbone_revision: str,
+    hf_home: Path,
+) -> dict[str, Any]:
+    if len(backbone_revision) != 40 or any(
+        character not in "0123456789abcdef" for character in backbone_revision
+    ):
+        raise SecondStackG4Error("C8 backbone revision must be a lowercase commit")
+    if not backbone_path.is_dir():
+        raise SecondStackG4Error(f"C8 backbone is missing: {backbone_path}")
+    metadata_root = backbone_path / ".cache" / "huggingface" / "download"
+    for filename in ("config.json", "model.safetensors"):
+        metadata = metadata_root / f"{filename}.metadata"
+        if not metadata.is_file():
+            raise SecondStackG4Error(
+                f"C8 backbone provenance metadata is missing: {metadata}"
+            )
+        observed_revision = metadata.read_text(encoding="utf-8").splitlines()[0]
+        if observed_revision != backbone_revision:
+            raise SecondStackG4Error(
+                f"C8 backbone revision differs for {filename}: "
+                f"{observed_revision}"
+            )
+    cache_repo = hf_home / "hub" / "models--nvidia--Cosmos-Reason2-2B"
+    main_ref = cache_repo / "refs" / "main"
+    snapshot = cache_repo / "snapshots" / backbone_revision
+    if (
+        not main_ref.is_file()
+        or main_ref.read_text(encoding="utf-8").strip() != backbone_revision
+    ):
+        raise SecondStackG4Error("C8 backbone cache main ref differs")
+    if not snapshot.exists() or snapshot.resolve() != backbone_path.resolve():
+        raise SecondStackG4Error("C8 backbone cache snapshot differs")
+    return {
+        "repository": "nvidia/Cosmos-Reason2-2B",
+        "revision": backbone_revision,
+        "path": str(backbone_path),
+        "hf_home": str(hf_home),
+        "content_manifest": _checkpoint_manifest(backbone_path),
+    }
+
+
 def _processed_observation(env: Any) -> dict[str, Any]:
     import cv2
     import numpy as np
@@ -170,6 +214,9 @@ def run_g4(
     registry_path: Path,
     integration_root: Path,
     checkpoint_path: Path,
+    backbone_path: Path,
+    backbone_revision: str,
+    hf_home: Path,
 ) -> dict[str, Any]:
     registry = load_json(registry_path)
     if (
@@ -183,6 +230,15 @@ def run_g4(
     )
     if not checkpoint_path.is_dir():
         raise SecondStackG4Error(f"C8 checkpoint is missing: {checkpoint_path}")
+    backbone_receipt = _verify_backbone_cache(
+        backbone_path=backbone_path,
+        backbone_revision=backbone_revision,
+        hf_home=hf_home,
+    )
+    os.environ["HF_HOME"] = str(hf_home)
+    os.environ["HF_HUB_OFFLINE"] = "1"
+    os.environ["GROOT_HF_LOCAL_FIRST"] = "1"
+    os.environ["GROOT_PATCH_MISTRAL"] = "1"
 
     sys.path.insert(0, str(integration_root))
     import gymnasium as gym
@@ -283,6 +339,7 @@ def run_g4(
             "checkpoint_revision"
         ],
         "checkpoint_content_manifest": _checkpoint_manifest(checkpoint_path),
+        "backbone": backbone_receipt,
         "reset_registry": {
             "path": str(registry_path),
             "sha256": sha256_file(registry_path),
@@ -326,12 +383,18 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--registry", type=Path, required=True)
     parser.add_argument("--integration-root", type=Path, required=True)
     parser.add_argument("--checkpoint", type=Path, required=True)
+    parser.add_argument("--backbone", type=Path, required=True)
+    parser.add_argument("--backbone-revision", required=True)
+    parser.add_argument("--hf-home", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
     payload = run_g4(
         registry_path=args.registry.resolve(),
         integration_root=args.integration_root.resolve(),
         checkpoint_path=args.checkpoint.resolve(),
+        backbone_path=args.backbone.resolve(),
+        backbone_revision=args.backbone_revision,
+        hf_home=args.hf_home.resolve(),
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     with args.output.open("xb") as handle:

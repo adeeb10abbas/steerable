@@ -1,0 +1,119 @@
+{
+  "allocation": {
+    "episode_count": 24,
+    "motion_episode_count": 8,
+    "scenario_counts": {
+      "destination_static": 8,
+      "move_stop": 8,
+      "original_sham": 8
+    },
+    "static_episode_count": 16
+  },
+  "behavioral_episode_count": 24,
+  "behavioral_outcomes_preserved": {
+    "no_grasp": 23,
+    "transport_incomplete": 1
+  },
+  "campaign_id": "online_correction_v4",
+  "checks": {
+    "accepted_ledger_has_exact_full_coverage": true,
+    "all_24_videos_received_visual_review": true,
+    "all_viewport_videos_hash_verified_and_decoded": true,
+    "ledger_manifest_reports_no_errors": true,
+    "pilot_allocation_is_16_static_and_8_motion": true,
+    "pilot_lock_is_exactly_pilot_released_for_c7": true,
+    "pilot_metadata_omission_bounded_and_main_writer_fixed": true,
+    "queue_contains_24_disjoint_engineering_rows": true,
+    "review_binds_exact_montage": true,
+    "valid_failures_preserved_without_success_threshold": true
+  },
+  "family_id": "C7",
+  "fixture_id": "object_pair",
+  "gate": "G7",
+  "model_request_count": 0,
+  "passed": true,
+  "pilot_terminal_metadata_reconciliation": {
+    "cap_applied_indeterminate_episode_count": 6,
+    "d_cap_m": 1.1169377727544767,
+    "interpretation": "Legacy pilot attempts omitted two booleans from terminal metadata; retries written after the amendment retain those booleans. G3 proves the registered goal sets are nonempty. A capped value equal to D_cap cannot distinguish exact equality from cap application, so those pilot booleans remain indeterminate and are not imputed. The scorer is fixed before main release; raw pilot records remain immutable.",
+    "legacy_omission_episode_count": 20,
+    "legacy_omission_episode_ids": [
+      "online_correction_v4-C7-pilot-00-8323e00c0b7b62b3",
+      "online_correction_v4-C7-pilot-01-4a1b64982cec9b98",
+      "online_correction_v4-C7-pilot-02-5bef871507c2ca94",
+      "online_correction_v4-C7-pilot-03-8c4a86d01f7cbc05",
+      "online_correction_v4-C7-pilot-04-185ff3f3e885dff7",
+      "online_correction_v4-C7-pilot-05-33eaf9480c9e2524",
+      "online_correction_v4-C7-pilot-06-94ceed89851c43e3",
+      "online_correction_v4-C7-pilot-07-0c413070a205953c",
+      "online_correction_v4-C7-pilot-08-7e2fa714f3b27b33",
+      "online_correction_v4-C7-pilot-09-213b144d50241e28",
+      "online_correction_v4-C7-pilot-10-4bdc02e947b3089c",
+      "online_correction_v4-C7-pilot-11-6fdbbba253565348",
+      "online_correction_v4-C7-pilot-12-cbea4df9e2141059",
+      "online_correction_v4-C7-pilot-13-9b3ffb075865ac27",
+      "online_correction_v4-C7-pilot-14-c98653ada4cadea3",
+      "online_correction_v4-C7-pilot-15-ccbc0a0f38e33ff0",
+      "online_correction_v4-C7-pilot-16-85336b323b561279",
+      "online_correction_v4-C7-pilot-17-faaac40a2543fbc6",
+      "online_correction_v4-C7-pilot-20-de749c5c0d67667b",
+      "online_correction_v4-C7-pilot-22-a3446eba7a028a69"
+    ],
+    "main_writer_fixed": true,
+    "omitted_fields": [
+      "outcome.goal_set_empty must be boolean",
+      "outcome.goal_violation_cap_applied must be boolean"
+    ],
+    "recorded_distance_at_cap_count": 6,
+    "recorded_distance_below_cap_count": 18,
+    "required": true,
+    "validation_error_count": 40
+  },
+  "policy_id": "cosmos3_nano_droid",
+  "qualification_basis": {
+    "accepted_ledger": {
+      "bytes": 87400,
+      "path": "/data/users/ali/vla_wam/derived/v4/g7-object-pair-ledger-20260906a/accepted_ledger.jsonl",
+      "sha256": "6fc586a2a4e12e1873daf078903227849cfce7078a3121325e687893607e5ea2"
+    },
+    "accepted_ledger_manifest": {
+      "bytes": 8854,
+      "path": "/data/users/ali/vla_wam/derived/v4/g7-object-pair-ledger-20260906a/accepted_ledger_manifest.json",
+      "sha256": "fd6a012e543c04a8f499c1d69b97f64dd2e164c4b7185f681440e20fb56bfd35"
+    },
+    "accepted_ledger_validation": {
+      "bytes": 5440,
+      "path": "/data/users/ali/vla_wam/derived/v4/g7-object-pair-ledger-20260906a/ledger-validation.json",
+      "sha256": "cc3a9fb54054b8486b1c1154a3bae8051ddf0c7691b7fd8812edaad4407efb30"
+    },
+    "main_release_scorer": {
+      "bytes": 12554,
+      "path": "/data/users/ali/vla_wam/src/steerable-v4-c7-pilot-g7/experiments/online_correction_v4/droid_scorer.py",
+      "sha256": "dc6c2a9e77e0e1d662b01774de1cbad2c8e7bf14c04b24fb499312a3d229b0dd"
+    },
+    "pilot_queue": {
+      "bytes": 26862,
+      "path": "/data/users/ali/vla_wam/src/steerable-v4-c7-pilot-g7/artifacts/online_correction_v4/setup/object_pair_g7_pilot_queue.jsonl",
+      "sha256": "d90cc3a4cd38131de9ed6c18052ad687a3c24779b97457281d0a45e7385aea8a"
+    },
+    "pilot_runtime_lock": {
+      "bytes": 8188,
+      "path": "/data/users/ali/vla_wam/src/steerable-v4-c7-pilot-g7/artifacts/online_correction_v4/setup/object_pair_g7_runtime_lock.released.json",
+      "sha256": "ede23e47ca58d1563075512f557eaf63f141fe01cf354b7d743e2177325cf446"
+    },
+    "video_inventory": {
+      "bytes": 20768,
+      "path": "/data/users/ali/vla_wam/derived/v4/g7-object-pair-review-20260906a/inventory.json",
+      "sha256": "1d845981ce33b925a4d2bab98992568f2f6c78a6bd47935adfb6012b46a3931a"
+    },
+    "video_review": {
+      "bytes": 2537,
+      "path": "/data/users/ali/vla_wam/derived/v4/g7-object-pair-review-20260906a/video-review.json",
+      "sha256": "cd5fbeccc93aabe9c5857151036be9f58541ccbf27d362df51c6271f36fc1857"
+    }
+  },
+  "release_boundary": "A pass completes C7 G7 only. G8 miniature-campaign rehearsal and a separate RELEASED lock remain required before confirmatory episodes.",
+  "schema_version": "v4-object-pair-g7-engineering-pilot-receipt-v1",
+  "status": "passed",
+  "technical_gate_interpretation": "G7 requires complete valid execution and inspectable evidence; it does not require a grasp, success, or positive language effect."
+}

@@ -1,0 +1,79 @@
+{
+  "behavioral_episode_count": 0,
+  "campaign_id": "online_correction_v4",
+  "checks": {
+    "compiler_rejected_deliberate_infra_failure": true,
+    "failed_attempt_retry_exercised": true,
+    "figure_rendered": true,
+    "interruption_failed_closed": true,
+    "no_trigger_episode_present": true,
+    "prior_invalid_attempt_inventory_present": true,
+    "resume_restored_full_coverage": true,
+    "scheduler_execution_evidence_present": true,
+    "valid_behavior_failure_present": true
+  },
+  "controlled_interruption": {
+    "accepted_after_resume": 3,
+    "accepted_before_resume": 2,
+    "missing_before_resume": 1
+  },
+  "deliberate_infrastructure_failure": {
+    "mechanism": "A copied manifest binding declared an intentionally incorrect trajectory digest; the compiler rejected it while accepting the untouched retry.",
+    "path": "/data/users/ali/vla_wam/derived/v4/g8-object-pair-miniature-20260906a/attempts/online_correction_v4-C7-pilot-00-8323e00c0b7b62b3/attempt-g8-deliberate-infra-failure"
+  },
+  "gate": "G8",
+  "miniature_episode_ids": [
+    "online_correction_v4-C7-pilot-00-8323e00c0b7b62b3",
+    "online_correction_v4-C7-pilot-01-4a1b64982cec9b98",
+    "online_correction_v4-C7-pilot-02-5bef871507c2ca94"
+  ],
+  "model_request_count": 0,
+  "outcome_counts": {
+    "no_grasp": 3
+  },
+  "outputs": {
+    "figure": {
+      "path": "/data/users/ali/vla_wam/derived/v4/g8-object-pair-miniature-20260906a/miniature_outcomes.svg",
+      "sha256": "ce45b19b5bb362adab55201a9e92357f9b63f04676819359cc96192a597e8343"
+    },
+    "miniature_manifest": {
+      "path": "/data/users/ali/vla_wam/derived/v4/g8-object-pair-miniature-20260906a/miniature_manifest.jsonl",
+      "sha256": "49ff48f5bc6a104d6a6b1a67160268243e8ba4025d33cd8118d4593f8dfb50ea"
+    },
+    "rejected_attempts": {
+      "path": "/data/users/ali/vla_wam/derived/v4/g8-object-pair-miniature-20260906a/retry-ledger/rejected_attempts.jsonl",
+      "sha256": "96503481088bad3129b25cef84b8c8fef207743c192a9dbcc26d226c9bd43241"
+    },
+    "resumed_ledger": {
+      "path": "/data/users/ali/vla_wam/derived/v4/g8-object-pair-miniature-20260906a/resumed-ledger/accepted_ledger.jsonl",
+      "sha256": "b1d7bdaa5441a425657c4af9d1d6a642919d2d732533ee471d576c1f16448dce"
+    },
+    "retry_ledger": {
+      "path": "/data/users/ali/vla_wam/derived/v4/g8-object-pair-miniature-20260906a/retry-ledger/accepted_ledger.jsonl",
+      "sha256": "b1d7bdaa5441a425657c4af9d1d6a642919d2d732533ee471d576c1f16448dce"
+    }
+  },
+  "passed": true,
+  "release_boundary": "This proves the G8 pipeline with reused excluded pilot evidence and controlled harness failures. It adds no behavioral observations.",
+  "reused_excluded_engineering_episode_count": 3,
+  "schema_version": "v4-g8-miniature-campaign-rehearsal-v1",
+  "source_artifacts": [
+    {
+      "path": "/data/users/ali/vla_wam/src/steerable-v4-c7-pilot-g7/artifacts/online_correction_v4/setup/object_pair_g7_pilot_queue.jsonl",
+      "sha256": "d90cc3a4cd38131de9ed6c18052ad687a3c24779b97457281d0a45e7385aea8a"
+    },
+    {
+      "path": "/data/users/ali/vla_wam/src/steerable-v4-c7-pilot-g7/docs/online_correction_v4/campaign.json",
+      "sha256": "7b207c38353a2194859a01130318237cc55231e3504b1a2632b12b28f93c22b9"
+    },
+    {
+      "path": "/data/users/ali/vla_wam/src/steerable-v4-c7-pilot-g7/artifacts/online_correction_v4/setup/object_pair_g7_pilot_launch_matrix.json",
+      "sha256": "ffba5ac58b6b9ef845d1c2400345fa922f76b1fcae47676c3fba766458db1fde"
+    },
+    {
+      "path": "/data/users/ali/vla_wam/src/steerable-v4-c7-pilot-g7/artifacts/online_correction_v4/qualification/20260906_object_pair_g7_invalid_array_response_attempt_g7c7pilot20260906k.json",
+      "sha256": "31f77b930539252ec290d0eb6da0d24840eb833770350bf826c000bfcaa3d1f1"
+    }
+  ],
+  "status": "passed"
+}

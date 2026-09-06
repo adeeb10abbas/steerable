@@ -1,0 +1,245 @@
+{
+  "attempt_selection_rule": "latest_verified_valid_by_attempt_id",
+  "inputs": {
+    "attempt_count": 33,
+    "attempts_root": "/data/users/ali/vla_wam/derived/v4/g7-object-pair-finalized-20260906a",
+    "manifest_episode_count": 24,
+    "manifest_path": "/data/users/ali/vla_wam/src/steerable-v4-c7-pilot-g7/artifacts/online_correction_v4/setup/object_pair_g7_pilot_queue.jsonl",
+    "manifest_sha256": "d90cc3a4cd38131de9ed6c18052ad687a3c24779b97457281d0a45e7385aea8a",
+    "protocol_sha256": "90c5869893d8b9c1ea61185c44cc2e2ae7ceadc274d944612dd4e0dd67a312c9",
+    "scorer_sha256": "784faa7dc27fbf79069558aee2498bae006360a76c129a86cb74f35e27a75ace"
+  },
+  "limitations": [
+    "Accepted rows never synthesize C2 prefix verification or response metrics.",
+    "C2 confirmatory analysis remains blocked until runtime emits the complete contract."
+  ],
+  "outputs": {
+    "accepted_count": 24,
+    "accepted_ledger_path": "/data/users/ali/vla_wam/derived/v4/g7-object-pair-ledger-20260906a/accepted_ledger.jsonl",
+    "accepted_ledger_sha256": "6fc586a2a4e12e1873daf078903227849cfce7078a3121325e687893607e5ea2",
+    "accepted_unique_episode_ids": [
+      "online_correction_v4-C7-pilot-00-8323e00c0b7b62b3",
+      "online_correction_v4-C7-pilot-01-4a1b64982cec9b98",
+      "online_correction_v4-C7-pilot-02-5bef871507c2ca94",
+      "online_correction_v4-C7-pilot-03-8c4a86d01f7cbc05",
+      "online_correction_v4-C7-pilot-04-185ff3f3e885dff7",
+      "online_correction_v4-C7-pilot-05-33eaf9480c9e2524",
+      "online_correction_v4-C7-pilot-06-94ceed89851c43e3",
+      "online_correction_v4-C7-pilot-07-0c413070a205953c",
+      "online_correction_v4-C7-pilot-08-7e2fa714f3b27b33",
+      "online_correction_v4-C7-pilot-09-213b144d50241e28",
+      "online_correction_v4-C7-pilot-10-4bdc02e947b3089c",
+      "online_correction_v4-C7-pilot-11-6fdbbba253565348",
+      "online_correction_v4-C7-pilot-12-cbea4df9e2141059",
+      "online_correction_v4-C7-pilot-13-9b3ffb075865ac27",
+      "online_correction_v4-C7-pilot-14-c98653ada4cadea3",
+      "online_correction_v4-C7-pilot-15-ccbc0a0f38e33ff0",
+      "online_correction_v4-C7-pilot-16-85336b323b561279",
+      "online_correction_v4-C7-pilot-17-faaac40a2543fbc6",
+      "online_correction_v4-C7-pilot-18-0a8bb61cfe2c4922",
+      "online_correction_v4-C7-pilot-19-2617ed06a5d778f8",
+      "online_correction_v4-C7-pilot-20-de749c5c0d67667b",
+      "online_correction_v4-C7-pilot-21-d2d984d49f973704",
+      "online_correction_v4-C7-pilot-22-a3446eba7a028a69",
+      "online_correction_v4-C7-pilot-23-053bddd03e077b2c"
+    ],
+    "rejected_attempts_path": "/data/users/ali/vla_wam/derived/v4/g7-object-pair-ledger-20260906a/rejected_attempts.jsonl",
+    "rejected_attempts_sha256": "4c86fc8738eb3f2e6586bac9961ce413ecb8f13c9e65462546a8665fe19adcd6",
+    "rejected_count": 9
+  },
+  "reconciliation": {
+    "accepted_valid_unique": 24,
+    "by_family": {
+      "C7": {
+        "accepted_valid": 24,
+        "missing_valid": 0,
+        "planned": 24
+      }
+    },
+    "control_reuse_links": [
+      {
+        "episode_id": "online_correction_v4-C7-pilot-00-8323e00c0b7b62b3",
+        "family": "C7",
+        "missing_control_ids": [],
+        "reuse_episode_ids": [],
+        "reuse_sources_accepted": true
+      },
+      {
+        "episode_id": "online_correction_v4-C7-pilot-01-4a1b64982cec9b98",
+        "family": "C7",
+        "missing_control_ids": [],
+        "reuse_episode_ids": [],
+        "reuse_sources_accepted": true
+      },
+      {
+        "episode_id": "online_correction_v4-C7-pilot-02-5bef871507c2ca94",
+        "family": "C7",
+        "missing_control_ids": [],
+        "reuse_episode_ids": [],
+        "reuse_sources_accepted": true
+      },
+      {
+        "episode_id": "online_correction_v4-C7-pilot-03-8c4a86d01f7cbc05",
+        "family": "C7",
+        "missing_control_ids": [],
+        "reuse_episode_ids": [],
+        "reuse_sources_accepted": true
+      },
+      {
+        "episode_id": "online_correction_v4-C7-pilot-04-185ff3f3e885dff7",
+        "family": "C7",
+        "missing_control_ids": [],
+        "reuse_episode_ids": [],
+        "reuse_sources_accepted": true
+      },
+      {
+        "episode_id": "online_correction_v4-C7-pilot-05-33eaf9480c9e2524",
+        "family": "C7",
+        "missing_control_ids": [],
+        "reuse_episode_ids": [],
+        "reuse_sources_accepted": true
+      },
+      {
+        "episode_id": "online_correction_v4-C7-pilot-06-94ceed89851c43e3",
+        "family": "C7",
+        "missing_control_ids": [],
+        "reuse_episode_ids": [],
+        "reuse_sources_accepted": true
+      },
+      {
+        "episode_id": "online_correction_v4-C7-pilot-07-0c413070a205953c",
+        "family": "C7",
+        "missing_control_ids": [],
+        "reuse_episode_ids": [],
+        "reuse_sources_accepted": true
+      },
+      {
+        "episode_id": "online_correction_v4-C7-pilot-08-7e2fa714f3b27b33",
+        "family": "C7",
+        "missing_control_ids": [],
+        "reuse_episode_ids": [],
+        "reuse_sources_accepted": true
+      },
+      {
+        "episode_id": "online_correction_v4-C7-pilot-09-213b144d50241e28",
+        "family": "C7",
+        "missing_control_ids": [],
+        "reuse_episode_ids": [],
+        "reuse_sources_accepted": true
+      },
+      {
+        "episode_id": "online_correction_v4-C7-pilot-10-4bdc02e947b3089c",
+        "family": "C7",
+        "missing_control_ids": [],
+        "reuse_episode_ids": [],
+        "reuse_sources_accepted": true
+      },
+      {
+        "episode_id": "online_correction_v4-C7-pilot-11-6fdbbba253565348",
+        "family": "C7",
+        "missing_control_ids": [],
+        "reuse_episode_ids": [],
+        "reuse_sources_accepted": true
+      },
+      {
+        "episode_id": "online_correction_v4-C7-pilot-12-cbea4df9e2141059",
+        "family": "C7",
+        "missing_control_ids": [],
+        "reuse_episode_ids": [],
+        "reuse_sources_accepted": true
+      },
+      {
+        "episode_id": "online_correction_v4-C7-pilot-13-9b3ffb075865ac27",
+        "family": "C7",
+        "missing_control_ids": [],
+        "reuse_episode_ids": [],
+        "reuse_sources_accepted": true
+      },
+      {
+        "episode_id": "online_correction_v4-C7-pilot-14-c98653ada4cadea3",
+        "family": "C7",
+        "missing_control_ids": [],
+        "reuse_episode_ids": [],
+        "reuse_sources_accepted": true
+      },
+      {
+        "episode_id": "online_correction_v4-C7-pilot-15-ccbc0a0f38e33ff0",
+        "family": "C7",
+        "missing_control_ids": [],
+        "reuse_episode_ids": [],
+        "reuse_sources_accepted": true
+      },
+      {
+        "episode_id": "online_correction_v4-C7-pilot-16-85336b323b561279",
+        "family": "C7",
+        "missing_control_ids": [],
+        "reuse_episode_ids": [],
+        "reuse_sources_accepted": true
+      },
+      {
+        "episode_id": "online_correction_v4-C7-pilot-17-faaac40a2543fbc6",
+        "family": "C7",
+        "missing_control_ids": [],
+        "reuse_episode_ids": [],
+        "reuse_sources_accepted": true
+      },
+      {
+        "episode_id": "online_correction_v4-C7-pilot-18-0a8bb61cfe2c4922",
+        "family": "C7",
+        "missing_control_ids": [],
+        "reuse_episode_ids": [],
+        "reuse_sources_accepted": true
+      },
+      {
+        "episode_id": "online_correction_v4-C7-pilot-19-2617ed06a5d778f8",
+        "family": "C7",
+        "missing_control_ids": [],
+        "reuse_episode_ids": [],
+        "reuse_sources_accepted": true
+      },
+      {
+        "episode_id": "online_correction_v4-C7-pilot-20-de749c5c0d67667b",
+        "family": "C7",
+        "missing_control_ids": [],
+        "reuse_episode_ids": [],
+        "reuse_sources_accepted": true
+      },
+      {
+        "episode_id": "online_correction_v4-C7-pilot-21-d2d984d49f973704",
+        "family": "C7",
+        "missing_control_ids": [],
+        "reuse_episode_ids": [],
+        "reuse_sources_accepted": true
+      },
+      {
+        "episode_id": "online_correction_v4-C7-pilot-22-a3446eba7a028a69",
+        "family": "C7",
+        "missing_control_ids": [],
+        "reuse_episode_ids": [],
+        "reuse_sources_accepted": true
+      },
+      {
+        "episode_id": "online_correction_v4-C7-pilot-23-053bddd03e077b2c",
+        "family": "C7",
+        "missing_control_ids": [],
+        "reuse_episode_ids": [],
+        "reuse_sources_accepted": true
+      }
+    ],
+    "missing_control_links": [],
+    "missing_episode_ids": [],
+    "missing_valid": 0,
+    "planned_episodes": 24,
+    "unknown_accepted_episode_ids": []
+  },
+  "schema_version": "online-correction-v4-accepted-ledger-manifest-v1",
+  "validation_preview": {
+    "c2_incomplete_episode_ids": [],
+    "error_count": 40,
+    "ok": false
+  },
+  "verified_common_prefix_modes": [
+    "deterministic_fresh_session_replay",
+    "qualified_full_state_snapshot"
+  ]
+}

@@ -84,6 +84,7 @@ def build(
     g2_aggregate_path: Path,
     output_path: Path,
     fixture_id: str = "horizontal",
+    qualification_scope: str = "confirmatory",
 ) -> dict:
     g3_fixture_config(fixture_id)
     campaign = json.loads(campaign_path.read_text(encoding="utf-8"))
@@ -117,6 +118,7 @@ def build(
     nominal = float(campaign["fixtures"][fixture_id]["nominal_translation_m"])
     plan = build_plan_payload(
         fixture_id=fixture_id,
+        qualification_scope=qualification_scope,
         source_identity={
             "campaign": {
                 "path": portable_path(campaign_path),
@@ -193,6 +195,11 @@ def main(argv: list[str] | None = None) -> int:
         choices=tuple(FIXTURE_DEFAULTS),
         default="horizontal",
     )
+    parser.add_argument(
+        "--qualification-scope",
+        choices=("confirmatory", "engineering_pilot"),
+        default="confirmatory",
+    )
     parser.add_argument("--campaign", type=Path, default=DEFAULT_CAMPAIGN)
     parser.add_argument("--queue", type=Path, default=DEFAULT_QUEUE)
     parser.add_argument("--motion-manifest", type=Path, default=DEFAULT_MOTION)
@@ -209,6 +216,7 @@ def main(argv: list[str] | None = None) -> int:
         g2_aggregate_path=(args.g2_aggregate or defaults["g2_aggregate"]).resolve(),
         output_path=(args.out or defaults["output"]).resolve(),
         fixture_id=args.fixture_id,
+        qualification_scope=args.qualification_scope,
     )
     print(json.dumps(report, indent=2, sort_keys=True))
     return 0

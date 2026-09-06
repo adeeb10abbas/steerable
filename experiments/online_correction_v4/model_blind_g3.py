@@ -109,6 +109,21 @@ def g3_fixture_config(fixture_id: str) -> G3FixtureConfig:
         raise G3GateError(f"unsupported G3 fixture: {fixture_id!r}") from exc
 
 
+def g3_expected_seed_count(
+    fixture_id: str,
+    qualification_scope: str | None = None,
+) -> int:
+    config = g3_fixture_config(fixture_id)
+    scope = qualification_scope or "confirmatory"
+    if scope == "confirmatory":
+        return config.expected_seed_count
+    if fixture_id == "object_pair" and scope == "engineering_pilot":
+        return 24
+    raise G3GateError(
+        f"unsupported G3 qualification scope {scope!r} for {fixture_id!r}"
+    )
+
+
 def path_checks_per_scale_for_seed_count(seed_count: int) -> int:
     return seed_count * len(HORIZONTAL_GOALS) * len(PATH_SCENARIOS)
 
@@ -613,6 +628,10 @@ def compile_path_seed_receipt(
         "schema_version": path_receipt_schema(fixture_id),
         "campaign_id": plan.get("campaign_id"),
         "fixture_id": fixture_id,
+        "qualification_scope": plan.get(
+            "qualification_scope",
+            "confirmatory",
+        ),
         "model_request_count": 0,
         "behavioral_episode_count": 0,
         "plan_receipt": pinned_plan,
@@ -993,6 +1012,51 @@ def build_counterbalance_index(
     return result
 
 
+def build_pilot_counterbalance_index(
+    queue_rows: Iterable[Mapping[str, Any]],
+    *,
+    resets_by_env_seed: Mapping[str, Any],
+    counterbalance_family: str,
+    counterbalance_fixture: str,
+) -> dict[int, dict[str, Any]]:
+    by_block: dict[int, dict[str, Any]] = {}
+    for row in queue_rows:
+        if (
+            row.get("family") != counterbalance_family
+            or row.get("fixture") != counterbalance_fixture
+        ):
+            continue
+        block = row.get("block_id")
+        counterbalance = row.get("counterbalance")
+        if type(block) is not int or not isinstance(counterbalance, Mapping):
+            continue
+        frozen = {
+            "block_id": block,
+            "state_index": counterbalance.get("state_index"),
+            "physical_translation_sign": counterbalance.get(
+                "physical_translation_sign"
+            ),
+            "event_phase_fraction": counterbalance.get("event_phase_fraction"),
+        }
+        prior = by_block.setdefault(block, frozen)
+        if prior != frozen:
+            raise G3GateError(
+                f"{counterbalance_family} counterbalance differs within block {block}"
+            )
+    result: dict[int, dict[str, Any]] = {}
+    for key, reset in resets_by_env_seed.items():
+        if not isinstance(reset, Mapping):
+            raise G3GateError(f"pilot reset {key!r} is not an object")
+        env_seed = int(key)
+        block = reset.get("block_index")
+        if type(block) is not int or block not in by_block:
+            raise G3GateError(
+                f"pilot reset {env_seed} lacks a registered counterbalance block"
+            )
+        result[env_seed] = dict(by_block[block])
+    return result
+
+
 def build_plan_payload(
     *,
     source_identity: Mapping[str, Any],
@@ -1005,19 +1069,35 @@ def build_plan_payload(
     minimum_shrinking_area_fraction: float,
     goal_area_gate_fixtures: Sequence[str] | None = None,
     fixture_id: str = "horizontal",
+    qualification_scope: str = "confirmatory",
 ) -> dict[str, Any]:
+    if not isinstance(qualification_scope, str):
+        raise G3GateError("G3 plan qualification_scope is invalid")
     config = g3_fixture_config(fixture_id)
-    _validate_g2_prerequisite(g2_prerequisite, fixture_id=fixture_id)
+    expected_seed_count = g3_expected_seed_count(fixture_id, qualification_scope)
+    _validate_g2_prerequisite(
+        g2_prerequisite,
+        fixture_id=fixture_id,
+        expected_seed_count=expected_seed_count,
+    )
     _validate_geometry_contract(geometry_contract)
     resets = reset_registry.get("resets_by_env_seed")
     _require(isinstance(resets, Mapping) and resets, "reset registry has no resets")
     seeds = tuple(sorted(int(seed) for seed in resets))
-    counterbalance = build_counterbalance_index(
-        queue_rows,
-        expected_env_seeds=seeds,
-        counterbalance_family=config.counterbalance_family,
-        counterbalance_fixture=config.fixture_id,
-    )
+    if qualification_scope == "engineering_pilot":
+        counterbalance = build_pilot_counterbalance_index(
+            queue_rows,
+            resets_by_env_seed=resets,
+            counterbalance_family=config.counterbalance_family,
+            counterbalance_fixture=config.fixture_id,
+        )
+    else:
+        counterbalance = build_counterbalance_index(
+            queue_rows,
+            expected_env_seeds=seeds,
+            counterbalance_family=config.counterbalance_family,
+            counterbalance_fixture=config.fixture_id,
+        )
     extremes = select_extreme_reset_seeds(
         resets_by_env_seed=resets,
         counterbalance_by_env_seed=counterbalance,
@@ -1047,7 +1127,7 @@ def build_plan_payload(
         }
     path_checks_per_scale = path_checks_per_scale_for_seed_count(len(seeds))
     expected_path_checks = path_checks_per_scale_for_seed_count(
-        config.expected_seed_count
+        expected_seed_count
     )
     _require(
         path_checks_per_scale == expected_path_checks,
@@ -1070,6 +1150,7 @@ def build_plan_payload(
         "schema_version": plan_schema(fixture_id),
         "campaign_id": "online_correction_v4",
         "fixture_id": fixture_id,
+        "qualification_scope": qualification_scope,
         "status": "model_blind_candidate_not_released_for_inference",
         "plan_status": "ready_for_live_g3_execution",
         "model_request_count": 0,
@@ -1159,8 +1240,14 @@ def _validate_g2_prerequisite(
     prerequisite: Mapping[str, Any],
     *,
     fixture_id: str = "horizontal",
+    expected_seed_count: int | None = None,
 ) -> None:
     config = g3_fixture_config(fixture_id)
+    expected = (
+        config.expected_seed_count
+        if expected_seed_count is None
+        else expected_seed_count
+    )
     _require(
         prerequisite.get("schema_version")
         == aggregate_receipt_schema(fixture_id),
@@ -1176,8 +1263,8 @@ def _validate_g2_prerequisite(
         "G3 plan requires the passing G2 axis review",
     )
     _require(
-        prerequisite.get("expected_seed_count") == config.expected_seed_count
-        and prerequisite.get("observed_seed_count") == config.expected_seed_count,
+        prerequisite.get("expected_seed_count") == expected
+        and prerequisite.get("observed_seed_count") == expected,
         "G3 plan requires complete G2 seed coverage",
     )
     _require(
@@ -1245,7 +1332,13 @@ def validate_plan_payload(plan: Mapping[str, Any]) -> None:
     fixture_id = plan.get("fixture_id")
     if not isinstance(fixture_id, str):
         raise G3GateError("G3 plan lacks fixture_id")
-    config = g3_fixture_config(fixture_id)
+    qualification_scope = plan.get("qualification_scope", "confirmatory")
+    if not isinstance(qualification_scope, str):
+        raise G3GateError("G3 plan qualification_scope is invalid")
+    expected_seed_count = g3_expected_seed_count(
+        fixture_id,
+        qualification_scope,
+    )
     _require(plan.get("schema_version") == plan_schema(fixture_id), "G3 plan schema differs")
     _require(plan.get("model_request_count") == 0, "G3 plan records model requests")
     _require(
@@ -1258,7 +1351,11 @@ def validate_plan_payload(plan: Mapping[str, Any]) -> None:
     )
     prerequisite = plan.get("g2_prerequisite")
     _require(isinstance(prerequisite, Mapping), "G3 plan lacks G2 prerequisite")
-    _validate_g2_prerequisite(prerequisite, fixture_id=fixture_id)
+    _validate_g2_prerequisite(
+        prerequisite,
+        fixture_id=fixture_id,
+        expected_seed_count=expected_seed_count,
+    )
     geometry_contract = plan.get("geometry_contract")
     _require(
         isinstance(geometry_contract, Mapping),
@@ -1266,7 +1363,7 @@ def validate_plan_payload(plan: Mapping[str, Any]) -> None:
     )
     _validate_geometry_contract(geometry_contract)
     _require(
-        plan.get("registered_reset_count") == config.expected_seed_count,
+        plan.get("registered_reset_count") == expected_seed_count,
         "G3 reset count differs",
     )
     path = plan.get("path_sweep")
@@ -1274,7 +1371,7 @@ def validate_plan_payload(plan: Mapping[str, Any]) -> None:
     _require(isinstance(path, Mapping), "G3 plan lacks path sweep")
     _require(isinstance(scripted, Mapping), "G3 plan lacks scripted checks")
     expected_path_checks = path_checks_per_scale_for_seed_count(
-        config.expected_seed_count
+        expected_seed_count
     )
     _require(path.get("checks_per_scale") == expected_path_checks, "G3 path count differs")
     _require(
@@ -1491,9 +1588,12 @@ def compile_path_scale_receipt(
     displacement_m = nominal * scale_value
     pinned_plan = _require_plan_receipt_identity(plan_receipt, "plan_receipt")
     fixture_id = str(plan.get("fixture_id"))
-    config = g3_fixture_config(fixture_id)
+    expected_seed_count = g3_expected_seed_count(
+        fixture_id,
+        str(plan.get("qualification_scope", "confirmatory")),
+    )
     expected_seeds = tuple(int(seed) for seed in plan["registered_env_seeds"])
-    _require(len(expected_seeds) == config.expected_seed_count, "G3 reset count differs")
+    _require(len(expected_seeds) == expected_seed_count, "G3 reset count differs")
 
     observed: dict[int, Mapping[str, Any]] = {}
     runtime_stratum: dict[str, Any] | None = None
@@ -1529,7 +1629,7 @@ def compile_path_scale_receipt(
     expected_path_check_count = len(expected_seeds) * HORIZONTAL_PATH_CHECKS_PER_SEED
     _require(
         expected_path_check_count
-        == path_checks_per_scale_for_seed_count(config.expected_seed_count),
+        == path_checks_per_scale_for_seed_count(expected_seed_count),
         f"{fixture_id} path count differs",
     )
 
@@ -1552,6 +1652,10 @@ def compile_path_scale_receipt(
         "schema_version": path_scale_receipt_schema(fixture_id),
         "campaign_id": plan.get("campaign_id"),
         "fixture_id": fixture_id,
+        "qualification_scope": plan.get(
+            "qualification_scope",
+            "confirmatory",
+        ),
         "status": "passed" if passed else "failed",
         "passed": passed,
         "model_request_count": 0,
@@ -1591,7 +1695,17 @@ def validate_path_scale_receipt(
     fixture_id = receipt.get("fixture_id")
     if not isinstance(fixture_id, str):
         raise G3GateError("path scale receipt lacks fixture_id")
-    config = g3_fixture_config(fixture_id)
+    qualification_scope = (
+        plan.get("qualification_scope", "confirmatory")
+        if plan is not None
+        else receipt.get("qualification_scope", "confirmatory")
+    )
+    if not isinstance(qualification_scope, str):
+        raise G3GateError("path scale qualification_scope is invalid")
+    expected_seed_count = g3_expected_seed_count(
+        fixture_id,
+        qualification_scope,
+    )
     _require(
         receipt.get("schema_version") == path_scale_receipt_schema(fixture_id),
         "path scale receipt schema differs",
@@ -1616,7 +1730,7 @@ def validate_path_scale_receipt(
     )
     _require(
         expected_path_check_count
-        == path_checks_per_scale_for_seed_count(config.expected_seed_count),
+        == path_checks_per_scale_for_seed_count(expected_seed_count),
         "path scale check count differs",
     )
     passed_count = _require_non_negative_int(

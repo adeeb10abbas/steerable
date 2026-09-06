@@ -18,6 +18,7 @@ from experiments.online_correction_v4.coordinator import (
     CoordinatorInputs,
     ExecutionConfig,
     GroupReceipt,
+    assignment_lease_group_id,
     assert_behavioral_lane_spec,
     episode_retry_exhausted,
     load_group_receipts,
@@ -237,6 +238,34 @@ class CoordinatorHelperTests(unittest.TestCase):
                 len({group.policy for group, _episode_ids in assignments}),
                 1,
             )
+
+    def test_one_large_group_is_split_across_policy_lanes(self) -> None:
+        from experiments.online_correction_v4.coordinator import LaneStratum
+
+        lanes = [
+            LaneStratum(f"lane{i:02d}", "stratum-a", {}, ROOT)
+            for i in range(4)
+        ]
+        group = ExecutionGroup(
+            group_id="nano:object_pair",
+            policy="nano",
+            fixture="object_pair",
+        )
+        buckets = shard_group_units(
+            [(group, [f"ep-{index:02d}" for index in range(20)])],
+            lanes,
+        )
+        episode_counts = [
+            sum(len(episode_ids) for _group, episode_ids in assignments)
+            for assignments in buckets.values()
+        ]
+        self.assertEqual(episode_counts, [5, 5, 5, 5])
+        lease_ids = {
+            assignment_lease_group_id(assigned_group, episode_ids)
+            for assignments in buckets.values()
+            for assigned_group, episode_ids in assignments
+        }
+        self.assertEqual(len(lease_ids), 4)
 
     def test_storage_budget_blocks_when_exceeded(self) -> None:
         cfg = ExecutionConfig(

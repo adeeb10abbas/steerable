@@ -424,10 +424,11 @@ def load_durable_group_leases(
 
 def apply_durable_group_leases(scheduler: CampaignScheduler, leases: Mapping[str, GroupLease]) -> None:
     for group_id, lease in leases.items():
-        if group_id not in scheduler.registry.by_execution_group:
+        registry_group_id = group_id.split("#shard-", 1)[0]
+        if registry_group_id not in scheduler.registry.by_execution_group:
             raise CoordinatorBlockedError(f"unknown group in durable lease: {group_id}")
-        scheduler.active_leases[group_id] = lease
-        scheduler.group_states[group_id] = GroupExecutionState.LEASED
+        scheduler.active_leases[registry_group_id] = lease
+        scheduler.group_states[registry_group_id] = GroupExecutionState.LEASED
 
 
 def collect_reserved_attempt_ids(
@@ -964,6 +965,7 @@ def shard_group_units(
     units: Sequence[tuple[ExecutionGroup, list[str]]],
     lanes: Sequence[LaneStratum],
 ) -> dict[str, list[tuple[ExecutionGroup, list[str]]]]:
+    """Balance episode shards without changing the frozen manifest groups."""
     if not lanes:
         return {}
     buckets: dict[str, list[tuple[ExecutionGroup, list[str]]]] = {lane.lane_id: [] for lane in lanes}
@@ -988,13 +990,38 @@ def shard_group_units(
     for group, episode_ids in ordered_units:
         if group.policy not in policy_lanes:
             continue
-        lane_id = min(
-            policy_lanes[group.policy],
-            key=lambda candidate: (lane_loads[candidate], candidate),
-        )
-        buckets[lane_id].append((group, episode_ids))
-        lane_loads[lane_id] += len(episode_ids)
+        shards: dict[str, list[str]] = {}
+        for episode_id in episode_ids:
+            lane_id = min(
+                policy_lanes[group.policy],
+                key=lambda candidate: (lane_loads[candidate], candidate),
+            )
+            shards.setdefault(lane_id, []).append(episode_id)
+            lane_loads[lane_id] += 1
+        for lane_id in sorted(shards):
+            buckets[lane_id].append((group, shards[lane_id]))
     return buckets
+
+
+def assignment_lease_group_id(
+    group: ExecutionGroup,
+    episode_ids: Sequence[str],
+) -> str:
+    """Name a durable lease for one deterministic subset of a frozen group."""
+    if not episode_ids:
+        raise CoordinatorBlockedError("cannot lease an empty episode shard")
+    digest = hashlib.sha256(
+        json.dumps(
+            {
+                "group_id": group.group_id,
+                "episode_ids": list(episode_ids),
+            },
+            allow_nan=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+    ).hexdigest()[:16]
+    return f"{group.group_id}#shard-{digest}"
 
 
 def estimate_storage_need(
@@ -1481,14 +1508,18 @@ def plan_campaign(
                                 pvc_binding_root=pvc_root,
                             )
                             if lease_store is not None:
-                                for group in groups:
-                                    if group.group_id in durable_leases:
+                                for group, group_episode_ids in policy_units:
+                                    lease_group_id = assignment_lease_group_id(
+                                        group,
+                                        group_episode_ids,
+                                    )
+                                    if lease_group_id in durable_leases:
                                         raise CoordinatorBlockedError(
-                                            f"group {group.group_id} is already leased durably"
+                                            f"group shard {lease_group_id} is already leased durably"
                                         )
                                     try:
                                         lease = lease_store.acquire(
-                                            group_id=group.group_id,
+                                            group_id=lease_group_id,
                                             owner_lane=lane.lane_id,
                                             attempt_id=attempt_id,
                                             manifest_sha256=lock.manifest_sha256,
@@ -1496,9 +1527,8 @@ def plan_campaign(
                                     except LeaseConflict as exc:
                                         raise CoordinatorBlockedError(str(exc)) from exc
                                     assignment_leases.append(lease)
-                                    acquired_group_ids.append(group.group_id)
-                                    durable_leases[group.group_id] = lease
-                                    scheduler.active_leases[group.group_id] = lease
+                                    acquired_group_ids.append(lease_group_id)
+                                    durable_leases[lease_group_id] = lease
                                     scheduler.group_states[group.group_id] = GroupExecutionState.LEASED
                             result = kubectl_create_bundle(
                                 bundle_root=bundle_root,

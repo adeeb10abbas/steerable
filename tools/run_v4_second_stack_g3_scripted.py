@@ -178,10 +178,11 @@ def _run_check(
         initial_command: list[float],
         *,
         iterations: int = 6,
+        steps_per_iteration: int = 140,
     ) -> float | None:
         command = list(initial_command)
         for _ in range(iterations):
-            if not move_once(command):
+            if not move_once(command, steps=steps_per_iteration):
                 return None
             actual = raw.agent.ee_pose.p
             command = [
@@ -194,6 +195,7 @@ def _run_check(
         desired: list[float],
         *,
         segments: int = 8,
+        steps_per_segment: int = 100,
     ) -> float | None:
         start = [float(value) for value in raw.agent.ee_pose.p]
         for segment in range(1, segments + 1):
@@ -202,9 +204,14 @@ def _run_check(
                 start[index] + fraction * (desired[index] - start[index])
                 for index in range(3)
             ]
-            if not move_once(waypoint, steps=100):
+            if not move_once(waypoint, steps=steps_per_segment):
                 return None
-        return align(desired, desired, iterations=3)
+        return align(
+            desired,
+            desired,
+            iterations=3,
+            steps_per_iteration=max(40, steps_per_segment),
+        )
 
     def align_gripper_to_source(
         source_position: list[float],
@@ -380,11 +387,13 @@ def _run_check(
     ]
     transport_alignment_error = slow_move(
         [desired_release_ee[0], desired_release_ee[1], 1.01],
-        segments=12,
+        segments=24,
+        steps_per_segment=30,
     )
     release_alignment_error = slow_move(
         desired_release_ee,
-        segments=8,
+        segments=12,
+        steps_per_segment=30,
     )
     placement_correction_errors: list[float | None] = []
     for _ in range(3):

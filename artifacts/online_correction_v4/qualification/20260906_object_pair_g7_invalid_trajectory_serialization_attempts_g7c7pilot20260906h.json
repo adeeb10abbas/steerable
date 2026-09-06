@@ -1,0 +1,27 @@
+{
+  "schema_version": "v4-invalid-infrastructure-attempts-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "C7",
+  "fixture_id": "object_pair",
+  "attempt_ids": [
+    "attempt0057",
+    "attempt0058",
+    "attempt0059",
+    "attempt0060",
+    "attempt0061",
+    "attempt0062",
+    "attempt0063",
+    "attempt0064"
+  ],
+  "classification": "infrastructure_failure_before_behavioral_execution",
+  "cause": "The initial trajectory row retained a NumPy ndarray scalar, and incremental JSON serialization failed before the first policy request.",
+  "observed_exception_type": "TypeError",
+  "observed_exception_detail": "Object of type ndarray is not JSON serializable",
+  "fix_commit": "bee57316283897b245f16f9791d6a796eaa88f4e",
+  "observed_partial_attempt_count": 3,
+  "observed_model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "policy_outcome_count": 0,
+  "disposition": "Preserved as invalid infrastructure attempts; trajectory time, step, displacement, and state flags are now normalized to native JSON scalar types.",
+  "policy_failures_inferred": false
+}

@@ -1,0 +1,20 @@
+{
+  "schema_version": "v4-invalid-infrastructure-attempts-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "C7",
+  "fixture_id": "object_pair",
+  "attempt_ids": [
+    "attempt0066"
+  ],
+  "classification": "infrastructure_failure_before_behavioral_execution",
+  "cause": "DroidSimulatorAdapter.capture_observation inserted the array-bearing packed policy request into a JSON audit payload without projecting arrays to compact hashes.",
+  "observed_traceback_location": "experiments/online_correction_v4/droid_simulator.py:356",
+  "observed_exception_type": "TypeError",
+  "observed_exception_detail": "Object of type ndarray is not JSON serializable",
+  "fix_commit": "0b814df02685cb98c20098f099750c6aae6f95a8",
+  "observed_model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "policy_outcome_count": 0,
+  "disposition": "Preserved as an invalid infrastructure attempt; packed arrays are now represented by dtype, shape, byte count, and SHA-256 in audit JSON while exact native arrays remain on the policy transport path.",
+  "policy_failures_inferred": false
+}

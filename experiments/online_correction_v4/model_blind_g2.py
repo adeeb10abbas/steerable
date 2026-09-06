@@ -287,19 +287,30 @@ def axis_projection_evidence(
         ):
             raise G2GateError(f"camera {name} geometry and RGB dimensions differ")
 
-        def _project(point: Iterable[float]) -> tuple[float, float]:
-            return project_world_target_to_pixel(
-                camera_center_world_m=geometry.get("camera_center_world_m", ()),
-                camera_quaternion_world_wxyz_ros=geometry.get(
-                    "camera_quaternion_world_wxyz_ros", ()
-                ),
-                target_world_m=point,
-                intrinsic_matrix_3x3=geometry.get("intrinsic_matrix_3x3", ()),
-            )
+        def _project(
+            label: str, point: Iterable[float]
+        ) -> tuple[float, float]:
+            try:
+                return project_world_target_to_pixel(
+                    camera_center_world_m=geometry.get(
+                        "camera_center_world_m", ()
+                    ),
+                    camera_quaternion_world_wxyz_ros=geometry.get(
+                        "camera_quaternion_world_wxyz_ros", ()
+                    ),
+                    target_world_m=point,
+                    intrinsic_matrix_3x3=geometry.get(
+                        "intrinsic_matrix_3x3", ()
+                    ),
+                )
+            except G2GateError as exc:
+                raise G2GateError(
+                    f"camera {name} projection for {label} failed: {exc}"
+                ) from exc
 
-        projected_origin = _project(origin)
+        projected_origin = _project("origin", origin)
         projected_endpoints = {
-            axis: _project(point) for axis, point in endpoints.items()
+            axis: _project(axis, point) for axis, point in endpoints.items()
         }
         in_frame = {
             axis: (

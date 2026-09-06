@@ -241,9 +241,10 @@ def select_robust_target_task(
     def inset_coordinate(low: float, high: float, *, from_low: bool) -> float:
         if high < low:
             raise DroidG3ScriptedError("goal region has inverted bounds")
+        edge_guard = min(0.005, 0.5 * (high - low))
         if from_low:
-            return min(low + inset, high)
-        return max(high - inset, low)
+            return min(low + inset, high - edge_guard)
+        return max(high - inset, low + edge_guard)
 
     if normalized == "left":
         x = inset_coordinate(region.x_min, region.x_max, from_low=True)
@@ -602,7 +603,7 @@ def run_scripted_check(
                 terminated_early = True
                 termination_reason = "simulator_terminated" if info.get("terminated") else "simulator_truncated"
                 break
-            if segment.phase in {"lift", "transport", "place_descend"} and not grabbed:
+            if segment.phase in {"transport", "place_descend"} and not grabbed:
                 grasp_retained_through_transport = False
         if terminated_early:
             break
@@ -611,6 +612,8 @@ def run_scripted_check(
             object_z_at_grasp = _read_object_pose(env, target_object)[2]
         elif segment.phase == "lift":
             object_z_after_lift = _read_object_pose(env, target_object)[2]
+            if not _object_grabbed(env, target_object):
+                grasp_retained_through_transport = False
         elif segment.phase == "open_dwell":
             released_after_open = _object_dropped(env, target_object)
     terminal_predicates = env.sample_terminal_predicates()

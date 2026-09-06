@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 import tempfile
@@ -51,6 +52,49 @@ class StageV4FinalizedAttemptsTests(unittest.TestCase):
             staged = output / "episode-a" / "attempt-1"
             self.assertTrue(staged.is_symlink())
             self.assertEqual(staged.resolve(), attempt.resolve())
+
+    def test_loads_hash_bound_queue_from_release_manifest(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            queue = root / "pilot.jsonl"
+            queue_bytes = (
+                json.dumps({"episode_id": "episode-a"}, sort_keys=True) + "\n"
+            ).encode("utf-8")
+            queue.write_bytes(queue_bytes)
+            manifest = root / "manifest.json"
+            manifest.write_text(
+                json.dumps(
+                    {
+                        "queue_path": str(queue),
+                        "queue_sha256": hashlib.sha256(queue_bytes).hexdigest(),
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            self.assertEqual(load_manifest_ids(manifest), {"episode-a"})
+
+    def test_rejects_release_manifest_queue_hash_mismatch(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            queue = root / "pilot.jsonl"
+            queue.write_text(
+                json.dumps({"episode_id": "episode-a"}) + "\n",
+                encoding="utf-8",
+            )
+            manifest = root / "manifest.json"
+            manifest.write_text(
+                json.dumps(
+                    {
+                        "queue_path": str(queue),
+                        "queue_sha256": "0" * 64,
+                    }
+                ),
+                encoding="utf-8",
+            )
+
+            with self.assertRaisesRegex(ValueError, "queue hash differs"):
+                load_manifest_ids(manifest)
 
 
 if __name__ == "__main__":

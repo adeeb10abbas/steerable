@@ -4,10 +4,13 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 from pathlib import Path
 from typing import Any
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 def load_manifest_ids(path: Path) -> set[str]:
@@ -16,7 +19,30 @@ def load_manifest_ids(path: Path) -> set[str]:
         rows = [json.loads(line) for line in text.splitlines() if line.strip()]
     else:
         payload = json.loads(text)
-        rows = payload["episodes"] if isinstance(payload, dict) else payload
+        if not isinstance(payload, dict):
+            rows = payload
+        elif isinstance(payload.get("episodes"), list):
+            rows = payload["episodes"]
+        else:
+            queue_value = payload.get("queue_path")
+            if not isinstance(queue_value, str) or not queue_value:
+                raise ValueError("manifest has neither episodes nor queue_path")
+            queue_path = Path(queue_value)
+            if not queue_path.is_absolute():
+                adjacent = path.parent / queue_path
+                queue_path = adjacent if adjacent.is_file() else ROOT / queue_path
+            queue_bytes = queue_path.read_bytes()
+            expected_sha256 = payload.get("queue_sha256")
+            if (
+                isinstance(expected_sha256, str)
+                and hashlib.sha256(queue_bytes).hexdigest() != expected_sha256
+            ):
+                raise ValueError("manifest queue hash differs")
+            rows = [
+                json.loads(line)
+                for line in queue_bytes.decode("utf-8").splitlines()
+                if line.strip()
+            ]
     ids = {str(row["episode_id"]) for row in rows}
     if not ids:
         raise ValueError("manifest has no episode IDs")

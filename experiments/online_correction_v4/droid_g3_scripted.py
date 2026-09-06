@@ -62,6 +62,7 @@ class ScriptedControllerConfig:
     min_grasp_lift_m: float = 0.04
     gripper_open: float = 0.0
     gripper_close: float = 0.785398
+    eef_yaw_offset_rad: float = 0.0
 
     @classmethod
     def from_mapping(cls, raw: Mapping[str, Any]) -> ScriptedControllerConfig:
@@ -93,6 +94,11 @@ class ScriptedControllerConfig:
             kwargs["gripper_open"] = _require_finite_number(raw.get("gripper_open"), "gripper_open")
         if "gripper_close" in raw:
             kwargs["gripper_close"] = _require_finite_number(raw.get("gripper_close"), "gripper_close")
+        if "eef_yaw_offset_rad" in raw:
+            kwargs["eef_yaw_offset_rad"] = _require_finite_number(
+                raw.get("eef_yaw_offset_rad"),
+                "eef_yaw_offset_rad",
+            )
         return cls(**kwargs)
 
     def phase_tick(self, phase: str) -> int:
@@ -343,11 +349,18 @@ def _compose_action(
     measured_eef_quaternion: tuple[float, float, float, float],
     eef_offset_rotation: tuple[float, float, float, float],
     gripper: float,
+    eef_yaw_offset_rad: float = 0.0,
 ) -> tuple[float, ...]:
     # RoboLab's absolute-IK command is the desired EEF quaternion with the
     # fixed tool-frame offset removed, matching the established V3 controller.
-    quaternion = _quaternion_multiply(
+    half_yaw = 0.5 * float(eef_yaw_offset_rad)
+    world_yaw = (math.cos(half_yaw), 0.0, 0.0, math.sin(half_yaw))
+    desired_eef_quaternion = _quaternion_multiply(
+        world_yaw,
         measured_eef_quaternion,
+    )
+    quaternion = _quaternion_multiply(
+        desired_eef_quaternion,
         _quaternion_inverse(eef_offset_rotation),
     )
     return (
@@ -560,6 +573,7 @@ def run_scripted_check(
                 measured_eef_quaternion,
                 eef_offset_rotation,
                 segment.gripper,
+                controller_config.eef_yaw_offset_rad,
             )
             _obs, info = env.step(action)
             tick = next_tick

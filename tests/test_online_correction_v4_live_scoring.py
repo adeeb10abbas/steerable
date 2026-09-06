@@ -15,6 +15,7 @@ from experiments.online_correction_v4.motion import MotionDirectionError, Refere
 from experiments.online_correction_v4 import geometry as geom
 from experiments.online_correction_v4.adapters import SimulatorSnapshot
 from experiments.online_correction_v4.scoring import ScoringContext
+from experiments.online_correction_v4.terminal_stability import target_object_contact_names
 
 
 def _manifest(**overrides) -> EpisodeManifestRow:
@@ -110,6 +111,22 @@ class MotionDirectionTests(unittest.TestCase):
 
 
 class TerminalPredicateTests(unittest.TestCase):
+    def test_support_contact_filter_uses_fixture_target_object(self) -> None:
+        contacts = (
+            "rubiks_cube__table",
+            "sponge__table",
+            "tray__table",
+            "sponge__gripper",
+        )
+        self.assertEqual(
+            target_object_contact_names(contacts, target_object="sponge"),
+            ("table",),
+        )
+        self.assertEqual(
+            target_object_contact_names(("rubiks_cube__table",), target_object="sponge"),
+            (),
+        )
+
     def test_unsupported_drop_does_not_count_as_success(self) -> None:
         env = FakeRoboLabEnv()
         env.support_contacts = ()

@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 from pathlib import Path
 import subprocess
@@ -281,8 +282,13 @@ def validate_scripted_seed_gate_inputs(
         raise RuntimeError("moving scripted mode requires the canonical env seed")
 
 
-def frozen_scripted_controller_config() -> dict[str, Any]:
-    return json.loads(json.dumps(FROZEN_SCRIPTED_CONTROLLER_CONFIG))
+def frozen_scripted_controller_config(fixture_id: str = "horizontal") -> dict[str, Any]:
+    config = json.loads(json.dumps(FROZEN_SCRIPTED_CONTROLLER_CONFIG))
+    if fixture_id == "object_pair":
+        # Present the sponge's 5.5 cm side, rather than its 8 cm side, to the
+        # parallel-jaw gripper while preserving the horizontal controller.
+        config["eef_yaw_offset_rad"] = math.pi / 2.0
+    return config
 
 
 def build_moving_reference_motion_callback(
@@ -728,9 +734,8 @@ def main(argv: list[str] | None = None) -> int:
         displacement_m = nominal * float(args.scale)
         geometry_contract = dict(plan["geometry_contract"])
         motion_config = dict(campaign["motion"])
-        controller_config = frozen_scripted_controller_config()
-
         fixture_id = args.fixture_id
+        controller_config = frozen_scripted_controller_config(fixture_id)
         fixture_spec = fixture_object_spec(fixture_id)
         prompt = FIXTURE_PROMPTS[fixture_id]
         target_object = fixture_spec.target_object

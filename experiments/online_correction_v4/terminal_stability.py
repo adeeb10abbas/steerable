@@ -98,12 +98,16 @@ def evaluate_horizontal_terminal_sample(
     )
 
 
-def target_object_contact_names(contact_names: Sequence[str]) -> tuple[str, ...]:
+def target_object_contact_names(
+    contact_names: Sequence[str],
+    *,
+    target_object: str = TARGET_OBJECT,
+) -> tuple[str, ...]:
     """Reduce raw contact sensor names to registered support contact labels."""
     labels: set[str] = set()
     for name in contact_names:
         lowered = str(name).lower()
-        if TARGET_OBJECT not in lowered:
+        if target_object.lower() not in lowered:
             continue
         if "table" in lowered:
             labels.add("table")

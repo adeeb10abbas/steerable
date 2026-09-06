@@ -1041,7 +1041,10 @@ class LiveRoboLabBackend:
                 continue
             if force_norm >= threshold_n:
                 active.append(name)
-        return target_object_contact_names(active)
+        return target_object_contact_names(
+            active,
+            target_object=self.fixture_objects.target_object,
+        )
 
     def sample_terminal_predicates(self) -> TerminalPhysicalPredicates:
         import numpy as np

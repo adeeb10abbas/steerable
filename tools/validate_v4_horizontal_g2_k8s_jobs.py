@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate a rendered simulator-only V4 horizontal G2 Kubernetes bundle."""
+"""Validate a rendered simulator-only V4 DROID G2 Kubernetes bundle."""
 
 from __future__ import annotations
 
@@ -87,9 +87,15 @@ def validate(root: Path) -> dict[str, Any]:
     manifest_path = root / "bundle-manifest.json"
     require(manifest_path.is_file(), "G2 bundle manifest is missing")
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    fixture_id = manifest.get("fixture_id")
+    require(
+        fixture_id in {"horizontal", "object_pair"},
+        "G2 bundle fixture is unsupported",
+    )
+    fixture_token = str(fixture_id).replace("_", "-")
     require(
         manifest.get("schema_version")
-        == "vla-wam-v4-horizontal-g2-k8s-bundle-v1",
+        == f"vla-wam-v4-{fixture_token}-g2-k8s-bundle-v1",
         "G2 bundle manifest schema differs",
     )
     require(
@@ -175,16 +181,17 @@ def validate(root: Path) -> dict[str, Any]:
             )
             require(launch.get("policy_wait") is None, "G2 launch must not wait for a policy")
             argv = launch.get("experiment_argv")
+            separator = argv.index("--") if isinstance(argv, list) and "--" in argv else -1
             require(
                 isinstance(argv, list)
                 and len(argv) >= 8
                 and str(argv[1]).endswith("run_v4_g2_checked.py")
-                and argv[2] == "--expected-environment-seed"
-                and argv[4] == "--"
-                and argv[0] == argv[5]
-                and str(argv[6]).endswith("run_v4_horizontal_g2_seed.py"),
+                and separator >= 4
+                and argv[0] == argv[separator + 1]
+                and str(argv[separator + 2]).endswith("run_v4_horizontal_g2_seed.py"),
                 "G2 launch does not invoke the seed runner through the marker-check wrapper",
             )
+            runner_path = argv[separator + 2]
             file_bindings = launch.get("file_bindings") or []
             wrapper_bindings = [
                 binding
@@ -199,7 +206,7 @@ def validate(root: Path) -> dict[str, Any]:
             runner_bindings = [
                 binding
                 for binding in file_bindings
-                if isinstance(binding, dict) and binding.get("path") == argv[6]
+                if isinstance(binding, dict) and binding.get("path") == runner_path
             ]
             require(
                 len(runner_bindings) == 1
@@ -241,6 +248,18 @@ def validate(root: Path) -> dict[str, Any]:
                 == option_values.get("--environment-seed"),
                 "G2 wrapper and child environment-seed bindings differ",
             )
+            if fixture_id == "object_pair":
+                require(
+                    option_values.get("--expected-fixture") == fixture_id
+                    and option_values.get("--fixture-id") == fixture_id,
+                    "G2 object-pair wrapper and child fixture bindings differ",
+                )
+            else:
+                require(
+                    "--expected-fixture" not in option_values
+                    and "--fixture-id" not in option_values,
+                    "G2 horizontal launch contains an unexpected fixture override",
+                )
             require(
                 option_values.get("--expected-study-commit")
                 == expected_study_commit,
@@ -280,7 +299,10 @@ def validate(root: Path) -> dict[str, Any]:
     for job in jobs:
         metadata = job.get("metadata") or {}
         labels = metadata.get("labels") or {}
-        require(labels.get("v4-gate") == "g2-horizontal", "G2 Job gate label differs")
+        require(
+            labels.get("v4-gate") == f"g2-{fixture_token}",
+            "G2 Job gate label differs",
+        )
         spec = job.get("spec") or {}
         require(spec.get("backoffLimit") == 0, "G2 Jobs must not retry implicitly")
         pod_spec = ((spec.get("template") or {}).get("spec") or {})
@@ -333,6 +355,7 @@ def validate(root: Path) -> dict[str, Any]:
         "configmap_count": len(configmaps),
         "environment_seed_count": len(observed_seeds),
         "execution_scope": "model_blind_g2_no_policy",
+        "fixture_id": fixture_id,
         "model_request_count": 0,
         "behavioral_episode_count": 0,
     }

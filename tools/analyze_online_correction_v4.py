@@ -33,6 +33,12 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--manifest", type=Path, required=True)
     parser.add_argument("--results", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument(
+        "--validation-report",
+        type=Path,
+        default=None,
+        help="Optionally write the raw ledger validation object as JSON.",
+    )
     parser.add_argument("--bootstrap-resamples", type=int, default=DEFAULT_BOOTSTRAP_RESAMPLES)
     parser.add_argument("--seed", type=int, default=DEFAULT_ANALYSIS_SEED)
     parser.add_argument(
@@ -46,6 +52,13 @@ def main(argv: list[str] | None = None) -> int:
         manifest = load_manifest(args.manifest)
         results = load_accepted_ledger(args.results)
         validation = validate_accepted_ledger(manifest, results, config=config)
+        if args.validation_report is not None:
+            args.validation_report.parent.mkdir(parents=True, exist_ok=True)
+            args.validation_report.write_text(
+                json.dumps(validation, allow_nan=False, indent=2, sort_keys=True)
+                + "\n",
+                encoding="utf-8",
+            )
         if args.validate_only:
             report = {"ok": validation["ok"], "validation": validation}
             print(json.dumps(report, indent=2, sort_keys=True))

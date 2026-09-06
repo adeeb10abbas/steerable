@@ -190,6 +190,22 @@ def _run_check(
             ]
         return _distance(raw.agent.ee_pose.p, desired)
 
+    def slow_move(
+        desired: list[float],
+        *,
+        segments: int = 8,
+    ) -> float | None:
+        start = [float(value) for value in raw.agent.ee_pose.p]
+        for segment in range(1, segments + 1):
+            fraction = segment / segments
+            waypoint = [
+                start[index] + fraction * (desired[index] - start[index])
+                for index in range(3)
+            ]
+            if not move_once(waypoint, steps=100):
+                return None
+        return align(desired, desired, iterations=3)
+
     def align_gripper_to_source(
         source_position: list[float],
     ) -> float | None:
@@ -247,16 +263,35 @@ def _run_check(
     source_initial = [float(value) for value in raw.episode_source_obj.pose.p]
     reference_initial = [float(value) for value in raw.episode_target_obj.pose.p]
 
-    set_gripper(1.0, 60)
-    grasp_alignment_error = align_gripper_to_source(source_initial)
-    set_gripper(-1.0, 160)
-    grasp_contacts = _robot_contact(record_contacts(), SOURCE_OBJECT)
-    lift_alignment_error = align(
-        [source_initial[0] - 0.0015, source_initial[1] - 0.0035, 1.01],
-        [source_initial[0], source_initial[1] - 0.013, 1.0],
-    )
-    source_lifted = [float(value) for value in raw.episode_source_obj.pose.p]
-    lift_height = source_lifted[2] - source_initial[2]
+    grasp_attempts: list[dict[str, Any]] = []
+    grasp_contacts: list[dict[str, Any]] = []
+    grasp_alignment_error: float | None = None
+    lift_alignment_error: float | None = None
+    source_lifted = list(source_initial)
+    lift_height = 0.0
+    for attempt in range(3):
+        set_gripper(1.0, 100 if attempt else 60)
+        live_source = [float(value) for value in raw.episode_source_obj.pose.p]
+        grasp_alignment_error = align_gripper_to_source(live_source)
+        set_gripper(-1.0, 180)
+        grasp_contacts = _robot_contact(record_contacts(), SOURCE_OBJECT)
+        current_ee = [float(value) for value in raw.agent.ee_pose.p]
+        lift_alignment_error = slow_move(
+            [current_ee[0], current_ee[1], 1.01],
+            segments=8,
+        )
+        source_lifted = [float(value) for value in raw.episode_source_obj.pose.p]
+        lift_height = source_lifted[2] - source_initial[2]
+        grasp_attempts.append(
+            {
+                "attempt_index": attempt,
+                "alignment_error_m": grasp_alignment_error,
+                "contact_count": len(grasp_contacts),
+                "lift_height_m": lift_height,
+            }
+        )
+        if lift_height >= 0.04:
+            break
 
     if moving_reference:
         start = list(initial_reference_xy)
@@ -288,13 +323,13 @@ def _run_check(
         destination_xy[1] - held_offset[1],
         0.905 - held_offset[2],
     ]
-    transport_alignment_error = align(
+    transport_alignment_error = slow_move(
         [desired_release_ee[0], desired_release_ee[1], 1.01],
-        [desired_release_ee[0], desired_release_ee[1], 1.0],
+        segments=12,
     )
-    release_alignment_error = align(
+    release_alignment_error = slow_move(
         desired_release_ee,
-        [desired_release_ee[0], desired_release_ee[1], 0.895],
+        segments=8,
     )
     source_before_release = [float(value) for value in raw.episode_source_obj.pose.p]
     set_gripper(1.0, 180)
@@ -382,6 +417,7 @@ def _run_check(
             "release": release_alignment_error,
         },
         "grasp_contact_count": len(grasp_contacts),
+        "grasp_attempts": grasp_attempts,
         "released_robot_contacts": released_robot_contacts,
         "forbidden_reference_contacts": forbidden_reference_contacts,
         "ik_failures": ik_failures,
@@ -401,10 +437,12 @@ def run_scripted_gate(
     registry = load_json(registry_path)
     plan = load_json(plan_path)
     path_receipt = load_json(path_receipt_path)
-    selected_scale = float(plan["selected_analytical_scale"])
+    analytical_scale = float(plan["selected_analytical_scale"])
+    selected_scale = float(path_receipt.get("scale", float("nan")))
     if (
         path_receipt.get("passed") is not True
-        or float(path_receipt.get("scale", float("nan"))) != selected_scale
+        or not math.isfinite(selected_scale)
+        or selected_scale > analytical_scale
         or path_receipt.get("reset_registry", {}).get("sha256")
         != sha256_file(registry_path)
         or path_receipt.get("geometry_plan", {}).get("sha256")
@@ -489,6 +527,7 @@ def run_scripted_gate(
         "passed": passed,
         "qualification_scope": "confirmatory",
         "selected_scale": selected_scale,
+        "analytical_selected_scale": analytical_scale,
         "selected_displacement_m": float(selected["displacement_m"]),
         "expected_check_count": 112,
         "observed_check_count": len(records),

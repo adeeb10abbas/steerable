@@ -153,6 +153,7 @@ def run_path_gate(
     plan_path: Path,
     integration_root: Path,
     path_steps: int,
+    scale: float | None = None,
 ) -> dict[str, Any]:
     if path_steps < 25:
         raise SecondStackG3PathError("path_steps must sample at least 50 Hz")
@@ -165,7 +166,12 @@ def run_path_gate(
         != sha256_file(registry_path)
     ):
         raise SecondStackG3PathError("C8 registry and G3 plan binding differs")
-    selected_scale = plan.get("selected_analytical_scale")
+    analytical_scale = plan.get("selected_analytical_scale")
+    selected_scale = analytical_scale if scale is None else float(scale)
+    if float(selected_scale) > float(analytical_scale):
+        raise SecondStackG3PathError(
+            "C8 path scale cannot exceed the analytical selection"
+        )
     selected_rows = [
         row
         for row in plan.get("scales", [])
@@ -221,6 +227,12 @@ def run_path_gate(
         "model_request_count": 0,
         "behavioral_episode_count": 0,
         "scale": selected_scale,
+        "analytical_selected_scale": analytical_scale,
+        "scale_selection_mode": (
+            "analytical_selection"
+            if scale is None
+            else "controller_feasibility_fallback_candidate"
+        ),
         "displacement_m": selected_rows[0]["displacement_m"],
         "expected_check_count": 256,
         "observed_check_count": len(records),
@@ -250,6 +262,7 @@ def main() -> int:
     parser.add_argument("--integration-root", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--path-steps", type=int, default=250)
+    parser.add_argument("--scale", type=float)
     args = parser.parse_args()
     if args.output.exists():
         raise FileExistsError(f"refusing to overwrite C8 G3 path receipt: {args.output}")
@@ -258,6 +271,7 @@ def main() -> int:
         plan_path=args.plan.resolve(),
         integration_root=args.integration_root.resolve(),
         path_steps=args.path_steps,
+        scale=args.scale,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_bytes(canonical_json_bytes(payload))

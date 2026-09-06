@@ -717,7 +717,18 @@ def build_gate_report(
     config: dict,
     seed_manifest: dict,
     seed_manifest_sha256: str,
+    qualification_receipts: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
+    qualification_receipts = qualification_receipts or []
+    horizontal_g2_passed = any(
+        row.get("gate") == "G2" and row.get("status") == "passed"
+        for row in qualification_receipts
+    )
+    horizontal_g3_failed = any(
+        row.get("gate") == "G3"
+        and row.get("status") == "failed_model_blind_setup_gate"
+        for row in qualification_receipts
+    )
     receipts = {
         name: {
             "passed": False,
@@ -737,6 +748,7 @@ def build_gate_report(
     pending_not_released: dict[str, str] = {}
     for family in config["families"]:
         fid = family["id"]
+        fixture = family["fixture"]
         gate = family_gate_status(fid)
         families[fid] = {
             **gate,
@@ -745,8 +757,16 @@ def build_gate_report(
             "qualification_gates": {
                 "G0_source_and_access": "pending",
                 "G1_infrastructure": "pending",
-                "G2_state_and_coordinates": "pending",
-                "G3_motion_and_feasibility": "pending",
+                "G2_state_and_coordinates": (
+                    "passed"
+                    if fixture == "horizontal" and horizontal_g2_passed
+                    else "pending"
+                ),
+                "G3_motion_and_feasibility": (
+                    "failed"
+                    if fixture == "horizontal" and horizontal_g3_failed
+                    else "pending"
+                ),
                 "G4_policy_session": "pending",
                 "G5_trigger_and_branch_replay": "blocked" if fid == "C2" else "pending",
                 "G6_measurement": "pending",
@@ -921,6 +941,7 @@ def discover_qualification_receipts() -> list[dict[str, Any]]:
             {
                 "path": str(path.relative_to(ROOT)),
                 "sha256": file_sha256(path),
+                "schema_version": payload.get("schema_version"),
                 "compiled_at_utc": payload.get("compiled_at_utc"),
                 "qualification_scope": payload.get("qualification_scope"),
                 "gate": payload.get("gate"),
@@ -1005,7 +1026,22 @@ def build_continuation_state(
         and row.get("amendment_status") == "frozen_for_model_blind_requalification"
         for row in model_blind_candidates
     )
-    if g2_complete:
+    g3_failed = any(
+        row.get("gate") == "G3"
+        and row.get("status") == "failed_model_blind_setup_gate"
+        for row in qualification_receipts
+    )
+    if g3_failed:
+        cluster_blocker = (
+            "G3_FAILED: every registered horizontal displacement scale "
+            "(2.0, 1.5, 1.0, 0.75, 0.5) was conclusively rejected on the "
+            "canonical first environment seed. The final 0.5 scale passed the "
+            "information gate but produced forbidden cube-bowl contact, target "
+            "drift, and support failures. Scripted checks, G4-G8, pilots, and "
+            "policy inference remain prohibited; no smaller post-result scale "
+            "is authorized by this campaign."
+        )
+    elif g2_complete:
         cluster_blocker = (
             "G2_COMPLETE: all 128 replacement-seed reset/camera/numeric-frame "
             "checks and the human axis review passed with zero model requests. "
@@ -1138,6 +1174,14 @@ def build_continuation_state(
         "limitations": [
             "Prospective design freeze only; no V4 policy inference has been run.",
             "Launch-critical runtime manifests remain unreleased until qualification receipts pass.",
+            *(
+                [
+                    "Horizontal G3 failed all registered scales; downstream horizontal "
+                    "qualification and policy execution are blocked."
+                ]
+                if g3_failed
+                else []
+            ),
         ],
     }
 
@@ -1242,7 +1286,13 @@ def build_freeze(
     artifact_hashes["launch_matrix.json"] = write_json(
         out_dir / "launch_matrix.json", build_launch_matrix_stub(config)
     )
-    gate_report = build_gate_report(config, seed_manifest, artifact_hashes["seed_manifest.json"])
+    qualification_receipts = discover_qualification_receipts()
+    gate_report = build_gate_report(
+        config,
+        seed_manifest,
+        artifact_hashes["seed_manifest.json"],
+        qualification_receipts,
+    )
     artifact_hashes["gate_report.json"] = write_json(out_dir / "gate_report.json", gate_report)
     artifact_hashes["continuation_state.json"] = write_json(
         out_dir / "continuation_state.json",
@@ -1253,7 +1303,7 @@ def build_freeze(
             planning_manifest_sha256,
             frozen_queue_sha256,
             gate_report,
-            discover_qualification_receipts(),
+            qualification_receipts,
             discover_model_blind_candidates(),
         ),
     )

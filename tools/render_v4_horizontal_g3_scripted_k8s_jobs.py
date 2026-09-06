@@ -12,6 +12,8 @@ from typing import Any, Mapping
 
 ROOT = Path(__file__).resolve().parents[1]
 TOOLS = ROOT / "tools"
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 
@@ -25,6 +27,8 @@ SCHEMA = "vla-wam-v4-horizontal-g3-scripted-k8s-render-spec-v1"
 PLAN_SCHEMA = "v4-horizontal-g3-plan-v1"
 RESET_SCHEMA = "v4-droid-horizontal-reset-registry-v1"
 SCRIPTED_MODES = ("stationary", "moving")
+AUTHORIZATION_BLOCKED = "blocked_pending_g3_path_scale_pass"
+AUTHORIZATION_AUTHORIZED = "authorized_by_passing_path_scale_receipt"
 TOP_LEVEL_KEYS = {
     "schema_version",
     "kube_context",
@@ -46,6 +50,10 @@ TOP_LEVEL_KEYS = {
     "expected_robolab_commit",
     "native_control_dt_s",
     "scale",
+    "authorization_status",
+    "path_scale_receipt_source",
+    "path_scale_receipt_path",
+    "path_scale_receipt_sha256",
     "marker_wrapper_source",
     "marker_wrapper_path",
     "runner_source",
@@ -110,6 +118,93 @@ def _binding(source: Path, path: str) -> dict[str, Any]:
         "bytes": source.stat().st_size,
         "sha256": lane.sha256_file(source),
     }
+
+
+def _enforce_authorization_status(spec: Mapping[str, Any]) -> None:
+    status = spec.get("authorization_status")
+    if status == AUTHORIZATION_BLOCKED:
+        require(
+            spec.get("path_scale_receipt_source") is None
+            and spec.get("path_scale_receipt_path") is None
+            and spec.get("path_scale_receipt_sha256") is None,
+            "blocked scripted spec must leave path-scale receipt fields null",
+        )
+        raise G3ScriptedRenderError(
+            "G3 scripted render is blocked pending a passing path-scale receipt"
+        )
+    require(
+        status == AUTHORIZATION_AUTHORIZED,
+        "authorization_status must authorize scripted render with a passing path-scale receipt",
+    )
+
+
+def _resolve_authorized_path_scale_receipt(
+    spec: Mapping[str, Any],
+    *,
+    spec_dir: Path,
+    scale_value: float,
+    plan_payload: Mapping[str, Any],
+    plan_sha: str,
+) -> tuple[Path, str, str, dict[str, Any]]:
+    from experiments.online_correction_v4.model_blind_g3 import (
+        PATH_SCALE_RECEIPT_SCHEMA,
+        validate_path_scale_receipt,
+    )
+
+    receipt_source = _source(
+        spec.get("path_scale_receipt_source"),
+        spec_dir=spec_dir,
+        label="path_scale_receipt_source",
+    )
+    receipt_path = _absolute(spec.get("path_scale_receipt_path"), "path_scale_receipt_path")
+    receipt_sha = lane.digest(
+        spec.get("path_scale_receipt_sha256"), "path_scale_receipt_sha256"
+    )
+    require(
+        lane.sha256_file(receipt_source) == receipt_sha,
+        "path-scale receipt source SHA-256 differs from spec",
+    )
+    try:
+        receipt_payload = json.loads(receipt_source.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise G3ScriptedRenderError("path-scale receipt source is invalid JSON") from exc
+    require(isinstance(receipt_payload, dict), "path-scale receipt must be an object")
+    require(
+        receipt_payload.get("schema_version") == PATH_SCALE_RECEIPT_SCHEMA,
+        "path-scale receipt schema differs",
+    )
+    validate_path_scale_receipt(receipt_payload, plan=plan_payload)
+    require(
+        receipt_payload.get("passed") is True
+        and receipt_payload.get("status") == "passed",
+        "path-scale receipt must report a passing complete scale",
+    )
+    require(
+        receipt_payload.get("observed_seed_count") == 128
+        and receipt_payload.get("expected_seed_count") == 128,
+        "path-scale receipt seed coverage is incomplete",
+    )
+    require(
+        not receipt_payload.get("missing_env_seeds")
+        and not receipt_payload.get("unexpected_env_seeds")
+        and not receipt_payload.get("failed_env_seeds"),
+        "path-scale receipt reports missing, unexpected, or failed seeds",
+    )
+    require(
+        receipt_payload.get("failed_path_check_count") == 0,
+        "path-scale receipt reports failed path checks",
+    )
+    require(
+        float(receipt_payload.get("scale", float("nan"))) == float(scale_value),
+        "path-scale receipt scale differs from scripted render spec",
+    )
+    plan_receipt = receipt_payload.get("plan_receipt") or {}
+    require(
+        isinstance(plan_receipt, Mapping)
+        and plan_receipt.get("sha256") == plan_sha,
+        "path-scale receipt plan SHA-256 differs from scripted render spec",
+    )
+    return receipt_source, receipt_path, receipt_sha, receipt_payload
 
 
 def _scale_label(scale: float) -> str:
@@ -177,6 +272,7 @@ def _scripted_jobs(plan_payload: Mapping[str, Any]) -> list[tuple[int, str, str]
 def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
     spec_path = spec_path.resolve()
     spec, spec_sha256 = _read_spec(spec_path)
+    _enforce_authorization_status(spec)
     namespace = lane.token(spec.get("namespace"), "namespace")
     attempt = lane.token(spec.get("attempt_id"), "attempt_id")
     kube_context = str(spec.get("kube_context") or "")
@@ -367,6 +463,18 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
         },
         "selected scale is not registered in the G3 plan",
     )
+    (
+        path_scale_receipt_source,
+        path_scale_receipt_path,
+        path_scale_receipt_sha256,
+        _path_scale_receipt_payload,
+    ) = _resolve_authorized_path_scale_receipt(
+        spec,
+        spec_dir=spec_path.parent,
+        scale_value=scale_value,
+        plan_payload=plan_payload,
+        plan_sha=plan_sha,
+    )
     scripted_jobs = _scripted_jobs(plan_payload)
 
     reset_payload = json.loads(reset_registry_source.read_text(encoding="utf-8"))
@@ -446,6 +554,7 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
             _binding(campaign_source, campaign_path),
             _binding(plan_source, plan_path),
             _binding(reset_registry_source, reset_registry_path),
+            _binding(path_scale_receipt_source, path_scale_receipt_path),
             _binding(
                 ROOT / "deploy/k8s/v4_lane_bundle/scripts/lane_entrypoint.py",
                 "/opt/v4-lane/scripts/lane_entrypoint.py",
@@ -514,6 +623,9 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
             "checkpoint_path": plan_path,
             "checkpoint_sha256": plan_sha,
             "checkpoint_semantics": "model_blind_g3_plan_candidate",
+            "authorization_status": AUTHORIZATION_AUTHORIZED,
+            "path_scale_receipt_path": path_scale_receipt_path,
+            "path_scale_receipt_sha256": path_scale_receipt_sha256,
             "nvidia_smi_bin": "/usr/bin/nvidia-smi",
             "python_imports": python_imports,
             "vulkan_contract": "isaac_app_launcher_rtx_frame_under_bound_vk_icd",
@@ -597,6 +709,9 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
         "namespace": namespace,
         "attempt_id": attempt,
         "scale": scale_value,
+        "authorization_status": AUTHORIZATION_AUTHORIZED,
+        "path_scale_receipt_path": path_scale_receipt_path,
+        "path_scale_receipt_sha256": path_scale_receipt_sha256,
         "gpu_product": gpu_product,
         "expected_study_commit": expected_study_commit,
         "expected_robolab_commit": expected_robolab_commit,

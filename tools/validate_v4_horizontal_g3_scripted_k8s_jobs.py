@@ -14,6 +14,7 @@ from typing import Any, Mapping
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPTED_MODES = ("stationary", "moving")
+AUTHORIZATION_AUTHORIZED = "authorized_by_passing_path_scale_receipt"
 
 
 class G3ScriptedBundleValidationError(ValueError):
@@ -155,11 +156,29 @@ def validate(root: Path) -> dict[str, Any]:
     campaign_sha256 = manifest.get("campaign_sha256")
     plan_sha256 = manifest.get("plan_sha256")
     reset_registry_sha256 = manifest.get("reset_registry_sha256")
+    path_scale_receipt_sha256 = manifest.get("path_scale_receipt_sha256")
+    path_scale_receipt_path = manifest.get("path_scale_receipt_path")
+    authorization_status = manifest.get("authorization_status")
     marker_wrapper_sha256 = manifest.get("marker_wrapper_sha256")
     runner_sha256 = manifest.get("runner_sha256")
     gate_core_sha256 = manifest.get("gate_core_sha256")
     attempt_id = manifest.get("attempt_id")
     require(isinstance(attempt_id, str) and attempt_id, "G3 scripted manifest lacks attempt_id")
+    require(
+        authorization_status == AUTHORIZATION_AUTHORIZED,
+        "G3 scripted manifest lacks passing path-scale authorization",
+    )
+    require(
+        isinstance(path_scale_receipt_path, str)
+        and Path(path_scale_receipt_path).is_absolute(),
+        "G3 scripted manifest lacks path-scale receipt path",
+    )
+    require(
+        isinstance(path_scale_receipt_sha256, str)
+        and len(path_scale_receipt_sha256) == 64
+        and all(char in "0123456789abcdef" for char in path_scale_receipt_sha256),
+        "G3 scripted manifest lacks path-scale receipt SHA-256",
+    )
     require(
         isinstance(expected_study_commit, str) and len(expected_study_commit) == 40,
         "G3 scripted manifest lacks expected study commit",
@@ -263,6 +282,29 @@ def validate(root: Path) -> dict[str, Any]:
                 len(gate_bindings) == 1
                 and gate_bindings[0].get("sha256") == gate_core_sha256,
                 "G3 scripted gate-core binding differs from the manifest",
+            )
+            path_scale_bindings = [
+                binding
+                for binding in file_bindings
+                if isinstance(binding, dict)
+                and binding.get("path") == path_scale_receipt_path
+            ]
+            require(
+                len(path_scale_bindings) == 1
+                and path_scale_bindings[0].get("sha256") == path_scale_receipt_sha256,
+                "G3 scripted path-scale receipt binding differs from the manifest",
+            )
+            require(
+                launch.get("authorization_status") == AUTHORIZATION_AUTHORIZED,
+                "G3 scripted launch lacks path-scale authorization",
+            )
+            require(
+                launch.get("path_scale_receipt_path") == path_scale_receipt_path,
+                "G3 scripted launch path-scale receipt path differs",
+            )
+            require(
+                launch.get("path_scale_receipt_sha256") == path_scale_receipt_sha256,
+                "G3 scripted launch path-scale receipt SHA-256 differs",
             )
             lowered = " ".join(str(item).lower() for item in argv)
             require(

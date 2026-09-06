@@ -205,7 +205,7 @@ aggregate authorizes G2 only: the candidate reset registry remains
 unreleased for policy use until G3 and the later gates pass.
 
 `artifacts/online_correction_v4/setup/horizontal_g3_plan.candidate.json`
-formula-closes the next model-blind gate without executing it. It binds all
+formula-closed the model-blind gate before execution. It binds all
 128 reset seeds, the five descending scale candidates, 3,072 live path checks
 per scale (15,360 maximum), and the 112 horizontal scripted checks required
 for a final geometry candidate. The nine scripted reset cases are selected
@@ -213,14 +213,36 @@ from xy-jitter extrema while covering each counterbalance state twice. The
 plan also freezes task-frame motion directions so left/right share one
 physical axis and front/behind share the other; requested goal polarity does
 not determine the independently balanced physical motion sign. Live G3
-collision, support, reachable-workspace, and scripted grasp/place evidence is
-still pending and cannot be replaced by this plan.
+started in the registered descending order on canonical first seed
+`2100000000`. Each candidate is a conjunction across seeds and path checks, so
+one valid failed seed conclusively rejects that scale and permits the next
+registered scale without spending the remaining 127 resets.
+
+All five candidates failed. Scales 2.0, 1.5, 1.0, and 0.75 failed path and/or
+information predicates. At the final 0.5 scale (0.06 m), all four goal-area
+information cases passed, but the front/behind movement checks produced
+forbidden cube-bowl contact, manipulated-cube drift above 5 mm, reference pose
+error, and intermittent support loss. The scale receipts each verified 148
+external artifacts before aggregation. The aggregate rejected
+`[2.0, 1.5, 1.0, 0.75, 0.5]`, selected no scale, and has status `blocked`:
+`artifacts/online_correction_v4/qualification/20260905_horizontal_g3_aggregate.json`.
+The compact disposition is
+`artifacts/online_correction_v4/qualification/20260905_horizontal_g3_gate_receipt.json`.
+No scripted checks were run because their prospective authorization requires a
+complete passing path scale. The scripted Kubernetes renderer now enforces
+that dependency and its default spec is explicitly blocked.
+
+Horizontal G3 therefore failed. G4-G8, direct-command and policy pilots, reset
+registry release, and all registered horizontal policy episodes remain
+prohibited. No smaller displacement or post-result scene change is authorized
+by this campaign.
 
 ### Family disposition
 
 | Family | Disposition | Status |
 | --- | --- | --- |
-| C1, C3–C7 | `pending_qualification` | `NOT_RELEASED` — runtime/geometry receipts pending |
+| C1, C3, C4 | `pending_qualification` | `NOT_RELEASED` — horizontal G3 failed all registered scales |
+| C5–C7 | `pending_qualification` | `NOT_RELEASED` — their separate fixtures remain unqualified |
 | C2 | `hard_blocked` | `BLOCKED_SETUP` — verified common-prefix replay required |
 | C8 | `hard_blocked` | `BLOCKED_RUNTIME` — GR00T Bridge/WidowX stack unverified |
 
@@ -228,63 +250,16 @@ Every queue row is a **registered new episode**. `reuse_episode_ids` are compari
 
 ## Exact next commands
 
-G2 is complete. Only model-blind G3 motion/feasibility preparation is
-authorized next. Reset-registry release, policy inference, and behavioral
-episodes remain prohibited.
+There is no authorized downstream experiment command in this campaign.
+Validation and evidence-preservation commands are:
 
 ```bash
 python3 tools/online_correction_v4.py validate
-python3 tools/build_v4_horizontal_g3_plan.py
 python3 tools/build_online_correction_v4_freeze.py --out artifacts/online_correction_v4
 python3 tools/validate_online_correction_v4.py
 python3 -m unittest discover -s tests -p 'test_online_correction_v4*.py'
 python3 tools/validate_vla_wam_v2_protocol.py
 python3 tools/validate_vla_wam_v3_protocol.py
-```
-
-The live G2 seed entrypoint is supported only inside a fresh qualified
-simulator Job at a clean pushed checkout:
-
-```bash
-python3 tools/run_v4_g2_checked.py \
-  --expected-environment-seed "$ENV_SEED" -- \
-python3 tools/run_v4_horizontal_g2_seed.py \
-  --study-root "$STUDY_ROOT" \
-  --robolab-root "$ROBOLAB_ROOT" \
-  --reset-registry "$RESET_REGISTRY" \
-  --reset-registry-sha256 "$RESET_REGISTRY_SHA256" \
-  --environment-seed "$ENV_SEED" \
-  --output-dir "$WRITE_ONCE_OUTPUT" \
-  --expected-study-commit "$EXPECTED_STUDY_COMMIT" \
-  --expected-driver-version "$EXPECTED_DRIVER_VERSION" \
-  --native-control-dt-s "$NATIVE_CONTROL_DT_S" \
-  --gpu-uuid "$GPU_UUID" \
-  --pod "$POD_NAME" \
-  --pod-uid "$POD_UID"
-```
-
-Each invocation covers one registered seed and explicitly remains incomplete
-for G2 until aggregate seed coverage and rendered-axis review pass.
-
-After all Jobs finish, inspect one hash-bound `axis_overlay_montage.png`, then
-record and compile:
-
-```bash
-python3 tools/record_v4_horizontal_g2_axis_review.py \
-  --seed-receipt "$G2_SEED_RECEIPT" \
-  --axis-overlay "$G2_AXIS_MONTAGE" \
-  --reviewer-identity "$REVIEWER_IDENTITY" \
-  --left-axis-matches-fixed-robot-viewpoint \
-  --front-axis-points-toward-robot \
-  --up-axis-opposes-gravity \
-  --labels-and-arrow-origins-visible \
-  --out "$G2_AXIS_REVIEW"
-python3 tools/compile_v4_horizontal_g2_aggregate.py \
-  --reset-registry artifacts/online_correction_v4/setup/horizontal_reset_registry.candidate.json \
-  --reset-registry-sha256 0c5fd649739cd19b74ec1874f306cf345a70fb110047294204295f9f53ced328 \
-  --receipts-root "$G2_RECEIPTS_ROOT" \
-  --axis-review "$G2_AXIS_REVIEW" \
-  --out "$G2_AGGREGATE_RECEIPT"
 ```
 
 ## Freeze artifact index

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import os
@@ -13,7 +14,22 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
+from experiments.online_correction_v4.model_blind_g3 import (
+    PATH_SAMPLE_INTERVAL_S,
+    canonical_json_bytes,
+    compile_path_scale_receipt,
+    compile_path_seed_receipt,
+    expected_path_check_keys,
+    sha256_file,
+    validate_path_scale_receipt,
+    validate_plan_payload,
+)
+
 ROOT = Path(__file__).resolve().parents[1]
+PLAN = (
+    ROOT
+    / "artifacts/online_correction_v4/setup/horizontal_g3_plan.candidate.json"
+)
 
 
 def _load(name: str, relative: str):
@@ -37,6 +53,132 @@ runner = _load(
     "run_v4_horizontal_g3_scripted_seed",
     "tools/run_v4_horizontal_g3_scripted_seed.py",
 )
+
+
+def _evidence(path: str, payload: bytes) -> dict[str, object]:
+    return {
+        "path": path,
+        "sha256": hashlib.sha256(payload).hexdigest(),
+        "bytes": len(payload),
+    }
+
+
+def _passing_path_observations(*, suffix: str = "a") -> list[dict[str, object]]:
+    observations: list[dict[str, object]] = []
+    for goal, scenario in expected_path_check_keys():
+        measured = f"evidence/measured/{goal}_{scenario}_{suffix}.json".encode("utf-8")
+        reference = f"evidence/reference/{goal}_{scenario}_{suffix}.json".encode("utf-8")
+        observations.append(
+            {
+                "planned_duration_s": 1.0,
+                "sample_interval_s": PATH_SAMPLE_INTERVAL_S,
+                "sample_count": 51,
+                "measured_pose_evidence": _evidence(
+                    f"artifacts/g3/measured/{goal}_{scenario}_{suffix}.json",
+                    measured,
+                ),
+                "reference_pose_evidence": _evidence(
+                    f"artifacts/g3/reference/{goal}_{scenario}_{suffix}.json",
+                    reference,
+                ),
+                "path_conformance": True,
+                "collision_free": True,
+                "support_valid": True,
+                "reachable_workspace": True,
+                "legal_goal_nonempty": True,
+                "reference_robot_contact": False,
+                "unmodeled_collision": False,
+                "reasons": [],
+            }
+        )
+    return observations
+
+
+def _goal_area_cases() -> list[dict[str, object]]:
+    return [
+        {
+            "relation": goal,
+            "original_area_m2": 0.10,
+            "destination_area_m2": 0.075,
+            "shrinking_direction": True,
+            "removed_area_fraction": 0.25,
+            "minimum_shrinking_area_fraction": 0.20,
+            "original_goal_empty": False,
+            "destination_goal_empty": False,
+            "passes_information_gate": True,
+        }
+        for goal in ("left", "right", "front", "behind")
+    ]
+
+
+def _build_path_seed_receipt(
+    *,
+    plan: dict[str, object],
+    plan_receipt: dict[str, str],
+    environment_seed: int,
+    scale: float,
+    passed: bool = True,
+) -> dict[str, object]:
+    observations = _passing_path_observations(suffix=str(environment_seed))
+    if not passed:
+        observations[0]["collision_free"] = False
+        observations[0]["reasons"] = ["collision detected"]
+    return compile_path_seed_receipt(
+        plan=plan,
+        plan_receipt=plan_receipt,
+        environment_seed=environment_seed,
+        scale=scale,
+        check_observations=observations,
+        goal_area_cases=_goal_area_cases(),
+    )
+
+
+def _write_passing_path_scale_receipt(tmp: Path, *, scale: float = 1.0) -> Path:
+    plan = json.loads(PLAN.read_text(encoding="utf-8"))
+    validate_plan_payload(plan)
+    plan_receipt = {"path": str(PLAN), "sha256": sha256_file(PLAN)}
+    receipts = [
+        _build_path_seed_receipt(
+            plan=plan,
+            plan_receipt=plan_receipt,
+            environment_seed=int(seed),
+            scale=scale,
+        )
+        for seed in plan["registered_env_seeds"]
+    ]
+    report = compile_path_scale_receipt(
+        plan=plan,
+        plan_receipt=plan_receipt,
+        scale=scale,
+        path_seed_receipts=receipts,
+    )
+    validate_path_scale_receipt(report, plan=plan)
+    receipt_path = tmp / "g3_path_scale_receipt.json"
+    receipt_path.write_bytes(canonical_json_bytes(report))
+    return receipt_path
+
+
+def _authorized_spec(tmp: Path, receipt_path: Path) -> Path:
+    spec = json.loads(renderer.DEFAULT_SPEC.read_text(encoding="utf-8"))
+    spec_dir = renderer.DEFAULT_SPEC.parent
+    for key in (
+        "marker_wrapper_source",
+        "runner_source",
+        "gate_core_source",
+        "campaign_source",
+        "plan_source",
+        "reset_registry_source",
+    ):
+        value = spec.get(key)
+        if isinstance(value, str) and value and not Path(value).is_absolute():
+            spec[key] = str((spec_dir / value).resolve())
+    spec["authorization_status"] = "authorized_by_passing_path_scale_receipt"
+    spec["path_scale_receipt_source"] = str(receipt_path.resolve())
+    spec["path_scale_receipt_path"] = str(receipt_path.resolve())
+    spec["path_scale_receipt_sha256"] = sha256_file(receipt_path)
+    spec_path = tmp / "authorized-spec.json"
+    spec_path.write_text(json.dumps(spec), encoding="utf-8")
+    return spec_path
 
 
 def _valid_compact_receipt(
@@ -313,53 +455,128 @@ class RunV4G3ScriptedCheckedTests(unittest.TestCase):
 
 @unittest.skipUnless(shutil.which("kubectl"), "kubectl is required")
 class HorizontalG3ScriptedK8sTests(unittest.TestCase):
-    def test_default_spec_renders_complete_simulator_only_scripted_bundle(self) -> None:
-        spec = json.loads(renderer.DEFAULT_SPEC.read_text(encoding="utf-8"))
-        expected_scale = spec["scale"]
-        expected_attempt = spec["attempt_id"]
+    def test_default_spec_render_is_blocked_pending_path_scale_pass(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            report = renderer.render(renderer.DEFAULT_SPEC, Path(tmp))
+            with self.assertRaises(renderer.G3ScriptedRenderError):
+                renderer.render(renderer.DEFAULT_SPEC, Path(tmp))
+
+    def test_authorized_spec_renders_complete_simulator_only_scripted_bundle(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            receipt_path = _write_passing_path_scale_receipt(tmp_path)
+            receipt_sha = sha256_file(receipt_path)
+            spec_path = _authorized_spec(tmp_path, receipt_path)
+            spec = json.loads(spec_path.read_text(encoding="utf-8"))
+            expected_scale = spec["scale"]
+            expected_attempt = spec["attempt_id"]
+            report = renderer.render(spec_path, tmp_path / "out")
             root = Path(report["bundle_root"])
             validated = validator.validate(root)
             manifest = json.loads((root / "bundle-manifest.json").read_text(encoding="utf-8"))
-        self.assertTrue(validated["ok"])
-        self.assertEqual(validated["job_count"], 10)
-        self.assertEqual(validated["scripted_job_count"], 10)
-        self.assertEqual(validated["scale"], expected_scale)
-        self.assertEqual(validated["model_request_count"], 0)
-        self.assertEqual(validated["behavioral_episode_count"], 0)
-        self.assertEqual(manifest["attempt_id"], expected_attempt)
-        modes = {row["mode"] for row in manifest["scripted_jobs"]}
-        self.assertEqual(modes, {"stationary", "moving"})
-        stationary = [
-            row for row in manifest["scripted_jobs"] if row["mode"] == "stationary"
-        ]
-        moving = [row for row in manifest["scripted_jobs"] if row["mode"] == "moving"]
-        self.assertEqual(len(stationary), 9)
-        self.assertEqual(len(moving), 1)
-        canonical = next(row for row in moving)["environment_seed"]
-        self.assertIn(
-            (canonical, "stationary"),
-            {(row["environment_seed"], row["mode"]) for row in manifest["scripted_jobs"]},
-        )
+            self.assertTrue(validated["ok"])
+            self.assertEqual(validated["job_count"], 10)
+            self.assertEqual(validated["scripted_job_count"], 10)
+            self.assertEqual(validated["scale"], expected_scale)
+            self.assertEqual(validated["model_request_count"], 0)
+            self.assertEqual(validated["behavioral_episode_count"], 0)
+            self.assertEqual(manifest["attempt_id"], expected_attempt)
+            self.assertEqual(
+                manifest["authorization_status"],
+                "authorized_by_passing_path_scale_receipt",
+            )
+            self.assertEqual(manifest["path_scale_receipt_sha256"], receipt_sha)
+            modes = {row["mode"] for row in manifest["scripted_jobs"]}
+            self.assertEqual(modes, {"stationary", "moving"})
+            stationary = [
+                row for row in manifest["scripted_jobs"] if row["mode"] == "stationary"
+            ]
+            moving = [row for row in manifest["scripted_jobs"] if row["mode"] == "moving"]
+            self.assertEqual(len(stationary), 9)
+            self.assertEqual(len(moving), 1)
+            canonical = next(row for row in moving)["environment_seed"]
+            self.assertIn(
+                (canonical, "stationary"),
+                {(row["environment_seed"], row["mode"]) for row in manifest["scripted_jobs"]},
+            )
+
+    def test_renderer_rejects_failed_path_scale_receipt(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            plan = json.loads(PLAN.read_text(encoding="utf-8"))
+            plan_receipt = {"path": str(PLAN), "sha256": sha256_file(PLAN)}
+            seeds = list(plan["registered_env_seeds"])
+            receipts = [
+                _build_path_seed_receipt(
+                    plan=plan,
+                    plan_receipt=plan_receipt,
+                    environment_seed=int(seed),
+                    scale=1.0,
+                    passed=int(seed) != int(seeds[0]),
+                )
+                for seed in seeds
+            ]
+            failed = compile_path_scale_receipt(
+                plan=plan,
+                plan_receipt=plan_receipt,
+                scale=1.0,
+                path_seed_receipts=receipts,
+            )
+            receipt_path = tmp_path / "g3_path_scale_receipt_failed.json"
+            receipt_path.write_bytes(canonical_json_bytes(failed))
+            spec_path = _authorized_spec(tmp_path, receipt_path)
+            with self.assertRaises(renderer.G3ScriptedRenderError):
+                renderer.render(spec_path, tmp_path / "out")
+
+    def test_renderer_rejects_partial_path_scale_receipt(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            plan = json.loads(PLAN.read_text(encoding="utf-8"))
+            plan_receipt = {"path": str(PLAN), "sha256": sha256_file(PLAN)}
+            seeds = list(plan["registered_env_seeds"])[:-1]
+            receipts = [
+                _build_path_seed_receipt(
+                    plan=plan,
+                    plan_receipt=plan_receipt,
+                    environment_seed=int(seed),
+                    scale=1.0,
+                )
+                for seed in seeds
+            ]
+            partial = compile_path_scale_receipt(
+                plan=plan,
+                plan_receipt=plan_receipt,
+                scale=1.0,
+                path_seed_receipts=receipts,
+            )
+            receipt_path = tmp_path / "g3_path_scale_receipt_partial.json"
+            receipt_path.write_bytes(canonical_json_bytes(partial))
+            spec_path = _authorized_spec(tmp_path, receipt_path)
+            with self.assertRaises(renderer.G3ScriptedRenderError):
+                renderer.render(spec_path, tmp_path / "out")
 
     def test_renderer_rejects_unknown_keys(self) -> None:
-        spec = json.loads(renderer.DEFAULT_SPEC.read_text(encoding="utf-8"))
-        spec["unexpected_field"] = True
         with tempfile.TemporaryDirectory() as tmp:
-            spec_path = Path(tmp) / "spec.json"
-            spec_path.write_text(json.dumps(spec), encoding="utf-8")
+            tmp_path = Path(tmp)
+            receipt_path = _write_passing_path_scale_receipt(tmp_path)
+            spec_path = _authorized_spec(tmp_path, receipt_path)
+            spec = json.loads(spec_path.read_text(encoding="utf-8"))
+            spec["unexpected_field"] = True
+            bad_spec_path = tmp_path / "bad-spec.json"
+            bad_spec_path.write_text(json.dumps(spec), encoding="utf-8")
             with self.assertRaises(renderer.G3ScriptedRenderError):
-                renderer.render(spec_path, Path(tmp) / "out")
+                renderer.render(bad_spec_path, tmp_path / "out")
 
     def test_renderer_rejects_unregistered_scale(self) -> None:
-        spec = json.loads(renderer.DEFAULT_SPEC.read_text(encoding="utf-8"))
-        spec["scale"] = 9.9
         with tempfile.TemporaryDirectory() as tmp:
-            spec_path = Path(tmp) / "spec.json"
-            spec_path.write_text(json.dumps(spec), encoding="utf-8")
+            tmp_path = Path(tmp)
+            receipt_path = _write_passing_path_scale_receipt(tmp_path)
+            spec_path = _authorized_spec(tmp_path, receipt_path)
+            spec = json.loads(spec_path.read_text(encoding="utf-8"))
+            spec["scale"] = 9.9
+            bad_spec_path = tmp_path / "bad-scale-spec.json"
+            bad_spec_path.write_text(json.dumps(spec), encoding="utf-8")
             with self.assertRaises(renderer.G3ScriptedRenderError):
-                renderer.render(spec_path, Path(tmp) / "out")
+                renderer.render(bad_spec_path, tmp_path / "out")
 
 
 if __name__ == "__main__":

@@ -94,6 +94,32 @@ class FreezeBuilderTests(unittest.TestCase):
                 len(audit.get("env_collisions", [])),
             )
 
+    def test_horizontal_g3_failure_is_reflected_without_releasing_other_fixtures(self):
+        config, config_sha256 = v4.load_json(self.config_path)
+        rows = builder.enrich_queue_rows(
+            config,
+            v4.build_manifest(config, config_sha256),
+        )
+        seed = builder.build_seed_manifest(config, rows)
+        gate = builder.build_gate_report(
+            config,
+            seed,
+            "0" * 64,
+            [
+                {"gate": "G2", "status": "passed"},
+                {"gate": "G3", "status": "failed_model_blind_setup_gate"},
+            ],
+        )
+        for family in ("C1", "C3", "C4"):
+            family_gates = gate["families"][family]["qualification_gates"]
+            self.assertEqual(family_gates["G2_state_and_coordinates"], "passed")
+            self.assertEqual(family_gates["G3_motion_and_feasibility"], "failed")
+        self.assertEqual(
+            gate["families"]["C5"]["qualification_gates"]["G3_motion_and_feasibility"],
+            "pending",
+        )
+        self.assertEqual(gate["release_status"], "NOT_RELEASED")
+
     def test_continuation_authority_includes_freeze_index(self):
         with tempfile.TemporaryDirectory() as tmp:
             out = Path(tmp)

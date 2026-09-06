@@ -352,7 +352,7 @@ def run_scripted_gate(
     selected_scale = float(plan["selected_analytical_scale"])
     if (
         path_receipt.get("passed") is not True
-        or float(path_receipt.get("selected_scale")) != selected_scale
+        or float(path_receipt.get("scale", float("nan"))) != selected_scale
         or path_receipt.get("reset_registry", {}).get("sha256")
         != sha256_file(registry_path)
         or path_receipt.get("geometry_plan", {}).get("sha256")

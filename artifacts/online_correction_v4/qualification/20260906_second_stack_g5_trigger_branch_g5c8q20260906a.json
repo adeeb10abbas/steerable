@@ -1,0 +1,45 @@
+{
+  "behavioral_episode_count": 0,
+  "campaign_id": "online_correction_v4",
+  "checks": {
+    "detachment_ignored_before_verified_carry": true,
+    "excess_relative_drift_resets_dwell": true,
+    "first_detachment_requires_two_ticks": true,
+    "fresh_policy_session_repeat_qualified": true,
+    "live_scripted_grasp_transport_release_basis": true,
+    "no_trigger_without_registered_lift": true,
+    "stable_carry_triggers_after_registered_dwell": true
+  },
+  "detector_contract": {
+    "dwell_s": 0.2,
+    "min_lift_m": 0.04,
+    "native_control_dt_s": 0.2,
+    "relative_drift_max_m": 0.01,
+    "release_detection_dwell_ticks": 2,
+    "trigger_deadline_s": 40.0
+  },
+  "evaluation_design_label": "randomized_event_triggered_evaluation",
+  "exact_counterfactual_branching_claimed": false,
+  "family_id": "C8",
+  "fixture_id": "second_stack",
+  "gate": "G5",
+  "model_request_count": 0,
+  "passed": true,
+  "policy_id": "groot_n1_7_simplerenv_bridge",
+  "qualification_basis": {
+    "g3_scripted_physics": {
+      "bytes": 223696,
+      "path": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/qualification/20260906_second_stack_g3_scripted_scale_0p5_full_g3c8s20260906w.json",
+      "sha256": "fa1388be4b469a25249d8d32fa02b8e7c62ba3308f744f7c0c0f7d984c56dc28"
+    },
+    "g4_policy_session": {
+      "bytes": 12445,
+      "path": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/qualification/20260906_second_stack_g4_policy_session_g4c8q20260906d.json",
+      "sha256": "1ea59a034b51e42eb48637eca76915ddb4e2aaf0da11fce3c0012463f0cd41fa"
+    }
+  },
+  "release_boundary": "A pass qualifies the prospectively permitted independent-natural-rollout mode for C8. It does not authorize exact-prefix claims, C2, or C8 behavioral inference before G6-G8.",
+  "schema_version": "v4-second-stack-g5-trigger-branch-receipt-v1",
+  "selected_prefix_mode": "independent_natural_rollout_fallback",
+  "status": "passed"
+}

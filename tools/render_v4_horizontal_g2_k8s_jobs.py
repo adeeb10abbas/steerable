@@ -94,7 +94,14 @@ def _read_spec(path: Path) -> tuple[dict[str, Any], str]:
     require(not unknown, f"G2 render spec contains unknown keys: {unknown}")
     fixture_id = spec.get("fixture_id", "horizontal")
     require(
-        fixture_id in {"horizontal", "object_pair", "vertical", "containment"},
+        fixture_id
+        in {
+            "horizontal",
+            "object_pair",
+            "reference_binding",
+            "vertical",
+            "containment",
+        },
         "G2 render spec fixture_id is unsupported",
     )
     expected_schema = (

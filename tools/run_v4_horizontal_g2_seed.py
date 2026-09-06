@@ -23,6 +23,10 @@ FIXTURE_PROMPTS = {
         "Place the sponge so that the sponge is left of the tray. "
         "Use the robot's fixed viewpoint for left, right, front, and behind."
     ),
+    "reference_binding": (
+        "Place the cube so that the cube is left of the blue bowl. "
+        "Use the robot's fixed viewpoint for left, right, front, and behind."
+    ),
     "vertical": "Place the cube so that the cube is above the bowl.",
     "containment": "Place the cube so that the cube is inside the bowl.",
 }

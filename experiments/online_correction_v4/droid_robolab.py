@@ -143,6 +143,7 @@ def close_live_droid_stack(*, policy: Any = None) -> None:
         for module_name in (
             "horizontal_shared",
             "object_pair_shared",
+            "reference_binding_shared",
             "vertical_shared",
             "containment_shared",
         ):
@@ -183,7 +184,8 @@ def build_live_robolab_env(
 ) -> LiveRoboLabEnv:
     model_blind_fixture_candidate = (
         isinstance(fixture, ResetFixtureBinding)
-        and fixture.fixture_id in {"object_pair", "vertical", "containment"}
+        and fixture.fixture_id
+        in {"object_pair", "reference_binding", "vertical", "containment"}
     )
     if (
         fixture.fixture_id in blocked_fixture_ids()
@@ -195,6 +197,7 @@ def build_live_robolab_env(
     if fixture.fixture_id not in {
         "horizontal",
         "object_pair",
+        "reference_binding",
         "vertical",
         "containment",
     }:

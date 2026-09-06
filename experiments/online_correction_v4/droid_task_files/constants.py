@@ -15,6 +15,9 @@ ENV_ACTIVE_GOAL = "ONLINE_CORRECTION_V4_ACTIVE_GOAL"
 
 RESET_REGISTRY_SCHEMA = "v4-droid-horizontal-reset-registry-v1"
 OBJECT_PAIR_RESET_REGISTRY_SCHEMA = "v4-droid-object-pair-reset-registry-v1"
+REFERENCE_BINDING_RESET_REGISTRY_SCHEMA = (
+    "v4-droid-reference-binding-reset-registry-v1"
+)
 VERTICAL_RESET_REGISTRY_SCHEMA = "v4-droid-vertical-reset-registry-v1"
 CONTAINMENT_RESET_REGISTRY_SCHEMA = "v4-droid-containment-reset-registry-v1"
 QUEUE_ROW_REQUIRED_KEYS = (
@@ -37,6 +40,7 @@ DISTRACTOR_OBJECT = "banana"
 
 HORIZONTAL_RELATIONS = ("left", "right", "front", "behind")
 OBJECT_PAIR_RELATIONS = HORIZONTAL_RELATIONS
+REFERENCE_BINDING_RELATIONS = HORIZONTAL_RELATIONS
 VERTICAL_RELATIONS = ("above", "below")
 CONTAINMENT_RELATIONS = ("inside",)
 
@@ -67,6 +71,27 @@ OBJECT_PAIR_CONTACT_OBJECTS = ("sponge", "tray", "table")
 OBJECT_PAIR_MOVABLE_OBJECTS = ("sponge", "tray")
 OBJECT_PAIR_TARGET_OBJECT = "sponge"
 OBJECT_PAIR_REFERENCE_OBJECT = "tray"
+
+REFERENCE_BINDING_SCENE_ASSET = (
+    "experiments/online_correction_v4/droid_task_files/scene_assets/"
+    "cube_two_bowls_reference_binding.usda"
+)
+REFERENCE_BINDING_SCENE_PATH = str(
+    _REPOSITORY_ROOT / REFERENCE_BINDING_SCENE_ASSET
+)
+REFERENCE_BINDING_SCENE_METADATA_SHA256 = (
+    "5f2a7791effaff7a2c09c5777fafdf80e8d07a6831888f4115a82ababf61514c"
+)
+REFERENCE_BINDING_CONTACT_OBJECTS = (
+    "cube",
+    "blue_bowl",
+    "yellow_bowl",
+    "table",
+)
+REFERENCE_BINDING_MOVABLE_OBJECTS = ("cube", "blue_bowl", "yellow_bowl")
+REFERENCE_BINDING_TARGET_OBJECT = "cube"
+REFERENCE_BINDING_REFERENCE_OBJECT = "blue_bowl"
+REFERENCE_BINDING_DISTRACTOR_OBJECT = "yellow_bowl"
 
 VERTICAL_SCENE_ASSET = (
     "experiments/online_correction_v4/droid_task_files/scene_assets/"
@@ -122,6 +147,17 @@ FIXTURE_OBJECT_SPECS: dict[str, FixtureObjectSpec] = {
         movable_objects=OBJECT_PAIR_MOVABLE_OBJECTS,
         target_object=OBJECT_PAIR_TARGET_OBJECT,
         reference_object=OBJECT_PAIR_REFERENCE_OBJECT,
+    ),
+    "reference_binding": FixtureObjectSpec(
+        fixture_id="reference_binding",
+        reset_registry_schema=REFERENCE_BINDING_RESET_REGISTRY_SCHEMA,
+        scene_asset=REFERENCE_BINDING_SCENE_ASSET,
+        scene_metadata_sha256=REFERENCE_BINDING_SCENE_METADATA_SHA256,
+        contact_objects=REFERENCE_BINDING_CONTACT_OBJECTS,
+        movable_objects=REFERENCE_BINDING_MOVABLE_OBJECTS,
+        target_object=REFERENCE_BINDING_TARGET_OBJECT,
+        reference_object=REFERENCE_BINDING_REFERENCE_OBJECT,
+        distractor_object=REFERENCE_BINDING_DISTRACTOR_OBJECT,
     ),
     "vertical": FixtureObjectSpec(
         fixture_id="vertical",

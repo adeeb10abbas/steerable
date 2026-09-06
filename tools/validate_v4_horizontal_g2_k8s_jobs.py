@@ -89,7 +89,14 @@ def validate(root: Path) -> dict[str, Any]:
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     fixture_id = manifest.get("fixture_id")
     require(
-        fixture_id in {"horizontal", "object_pair", "vertical", "containment"},
+        fixture_id
+        in {
+            "horizontal",
+            "object_pair",
+            "reference_binding",
+            "vertical",
+            "containment",
+        },
         "G2 bundle fixture is unsupported",
     )
     fixture_token = str(fixture_id).replace("_", "-")

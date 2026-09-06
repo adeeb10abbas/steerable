@@ -18,6 +18,7 @@ from experiments.online_correction_v4.droid_task_files.constants import (
     OBJECT_PAIR_SCENE_METADATA_SHA256,
     OBJECT_PAIR_SCENE_PATH,
     OBJECT_PAIR_TARGET_OBJECT,
+    REFERENCE_BINDING_RELATIONS,
     ROBOLAB_SUCCESS_TERMINATION_FORBIDDEN,
     SCENE_ASSET,
     SCENE_METADATA_SHA256,
@@ -56,6 +57,10 @@ _TASK_ROOT = Path(__file__).resolve().parent / "task_files"
 _ACTIVE_TASKS = {
     "horizontal": ("horizontal_active.py", "V4HorizontalActiveTask"),
     "object_pair": ("object_pair_active.py", "V4ObjectPairActiveTask"),
+    "reference_binding": (
+        "reference_binding_active.py",
+        "V4ReferenceBindingActiveTask",
+    ),
     "vertical": ("vertical_active.py", "V4VerticalActiveTask"),
     "containment": ("containment_active.py", "V4ContainmentActiveTask"),
 }
@@ -89,7 +94,12 @@ def resolve_active_registration(
     *,
     allow_model_blind_candidate: bool = False,
 ) -> FixtureRegistration:
-    if fixture_id in {"object_pair", "vertical", "containment"}:
+    if fixture_id in {
+        "object_pair",
+        "reference_binding",
+        "vertical",
+        "containment",
+    }:
         if (
             fixture_id in BLOCKED_FIXTURE_IDS
             and not allow_model_blind_candidate
@@ -238,8 +248,13 @@ def resolve_fixture_registration(
             ),
         )
 
-    if fixture_id in {"vertical", "containment"}:
-        allowed = VERTICAL_RELATIONS if fixture_id == "vertical" else CONTAINMENT_RELATIONS
+    if fixture_id in {"reference_binding", "vertical", "containment"}:
+        if fixture_id == "reference_binding":
+            allowed = REFERENCE_BINDING_RELATIONS
+        elif fixture_id == "vertical":
+            allowed = VERTICAL_RELATIONS
+        else:
+            allowed = CONTAINMENT_RELATIONS
         if relation is None or relation not in allowed:
             _fail(
                 f"{fixture_id} fixture registration requires one of "

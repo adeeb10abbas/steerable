@@ -1,0 +1,22 @@
+{
+  "schema_version": "v4-second-stack-g3-controller-iteration-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "C8",
+  "fixture_id": "second_stack",
+  "scale": 0.5,
+  "status": "failed_before_policy_inference",
+  "model_request_count": 0,
+  "expected_check_count": 112,
+  "observed_check_count": 112,
+  "passed_check_count": 111,
+  "failed_check_count": 1,
+  "failure_summary": {
+    "forbidden_robot_reference_contact_count": 1
+  },
+  "evidence": {
+    "path": "artifacts/online_correction_v4/qualification/20260906_second_stack_g3_scripted_scale_0p5_full_failed_g3c8s20260906m.json",
+    "sha256": "510e7c3a27b4a6556f644bb4e22a2f7da74f1fa16dfd633affa6a3739df57166"
+  },
+  "disposition": "Preserved as a failed model-blind controller iteration. The final retry narrows the pre-grasp finger aperture to avoid sweeping the nearby endpoint reference.",
+  "policy_outcomes_inferred": false
+}

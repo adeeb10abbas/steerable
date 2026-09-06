@@ -6,6 +6,7 @@ import hashlib
 import importlib.util
 import json
 from pathlib import Path
+import tempfile
 import unittest
 
 from experiments.online_correction_v4.droid_g3 import (
@@ -131,6 +132,53 @@ class ObjectPairG3PathTests(unittest.TestCase):
             plan["information_gate"]["goal_area_gate_fixtures"],
             ["horizontal", "reference_binding"],
         )
+
+    def test_build_object_pair_engineering_pilot_plan(self) -> None:
+        registry = (
+            ROOT
+            / "artifacts/online_correction_v4/setup/"
+            "object_pair_pilot_reset_registry.candidate.json"
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            g2 = root / "g2.json"
+            g2.write_text(
+                json.dumps(
+                    {
+                        "schema_version": "v4-object-pair-g2-aggregate-receipt-v1",
+                        "status": "passed",
+                        "passed": True,
+                        "axis_review_passed": True,
+                        "expected_seed_count": 24,
+                        "observed_seed_count": 24,
+                        "model_request_count": 0,
+                        "behavioral_episode_count": 0,
+                        "reset_registry": {
+                            "sha256": builder.sha256_file(registry),
+                        },
+                    },
+                    sort_keys=True,
+                    separators=(",", ":"),
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            output = root / "plan.json"
+            report = builder.build(
+                campaign_path=CAMPAIGN,
+                queue_path=QUEUE,
+                motion_path=MOTION,
+                registry_path=registry,
+                g2_aggregate_path=g2,
+                output_path=output,
+                fixture_id="object_pair",
+                qualification_scope="engineering_pilot",
+            )
+            plan = json.loads(output.read_text(encoding="utf-8"))
+        self.assertEqual(report["registered_reset_count"], 24)
+        self.assertEqual(report["path_checks_per_scale"], 576)
+        self.assertEqual(plan["qualification_scope"], "engineering_pilot")
+        validate_plan_payload(plan)
 
     def test_object_pair_aggregate_uses_fixture_schema(self) -> None:
         plan = json.loads(

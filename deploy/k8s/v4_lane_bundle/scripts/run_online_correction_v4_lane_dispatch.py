@@ -45,7 +45,7 @@ def load_dispatch_manifest(path: Path) -> dict[str, Any]:
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
-        _fail(f"cannot read dispatch manifest {path}: {exc}") from exc
+        raise DispatchError(f"cannot read dispatch manifest {path}: {exc}") from exc
     if not isinstance(payload, dict):
         _fail("dispatch manifest must be a JSON object")
     if payload.get("schema_version") != DISPATCH_SCHEMA:
@@ -106,7 +106,9 @@ def load_policy_wait_endpoint(launch_config_path: Path) -> tuple[str, int]:
     try:
         config = json.loads(launch_config_path.read_text(encoding="utf-8"))
     except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
-        _fail(f"cannot read simulator launch config {launch_config_path}: {exc}") from exc
+        raise DispatchError(
+            f"cannot read simulator launch config {launch_config_path}: {exc}"
+        ) from exc
     if not isinstance(config, dict):
         _fail("simulator launch config must be a JSON object")
     wait = config.get("policy_wait")

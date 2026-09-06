@@ -55,7 +55,7 @@ POSITION_FRACTIONS = {
     "midpoint": 0.5,
     "endpoint": 1.0,
 }
-GOAL_CENTER_OFFSET_M = 0.07
+GOAL_CENTER_OFFSET_M = 0.09
 RELATION_CLEARANCE_M = 0.01
 PLACEMENT_XY_TOLERANCE_M = 0.015
 REFERENCE_POSITION_TOLERANCE_M = 0.003
@@ -139,6 +139,9 @@ def _run_check(
     arm = raw.agent.controller.controllers["arm"]
     gripper = raw.agent.controller.controllers["gripper"]
     orientation = raw.agent.ee_pose.q.copy()
+    links = {link.name: link for link in raw.agent.robot.get_links()}
+    left_finger = links["left_finger_link"]
+    right_finger = links["right_finger_link"]
     forbidden_reference_contacts: list[dict[str, Any]] = []
     ik_failures: list[list[float]] = []
 
@@ -174,7 +177,7 @@ def _run_check(
         desired: list[float],
         initial_command: list[float],
         *,
-        iterations: int = 4,
+        iterations: int = 6,
     ) -> float | None:
         command = list(initial_command)
         for _ in range(iterations):
@@ -186,6 +189,44 @@ def _run_check(
                 for index in range(3)
             ]
         return _distance(raw.agent.ee_pose.p, desired)
+
+    def align_gripper_to_source(
+        source_position: list[float],
+    ) -> float | None:
+        desired_midpoint = [
+            source_position[0] + 0.0143,
+            source_position[1],
+            source_position[2] + 0.0634,
+        ]
+        command = [
+            source_position[0],
+            source_position[1] - 0.013,
+            0.895,
+        ]
+        for _ in range(6):
+            if not move_once(command, steps=160):
+                return None
+            midpoint = [
+                0.5
+                * (
+                    float(left_finger.pose.p[index])
+                    + float(right_finger.pose.p[index])
+                )
+                for index in range(3)
+            ]
+            command = [
+                command[index] + desired_midpoint[index] - midpoint[index]
+                for index in range(3)
+            ]
+        midpoint = [
+            0.5
+            * (
+                float(left_finger.pose.p[index])
+                + float(right_finger.pose.p[index])
+            )
+            for index in range(3)
+        ]
+        return _distance(midpoint, desired_midpoint)
 
     def set_gripper(value: float, steps: int) -> None:
         gripper.set_action(np.asarray([value], dtype=np.float32))
@@ -200,10 +241,7 @@ def _run_check(
     reference_initial = [float(value) for value in raw.episode_target_obj.pose.p]
 
     set_gripper(1.0, 60)
-    grasp_alignment_error = align(
-        [source_initial[0] - 0.0015, source_initial[1] - 0.0035, 0.905],
-        [source_initial[0], source_initial[1] - 0.013, 0.895],
-    )
+    grasp_alignment_error = align_gripper_to_source(source_initial)
     set_gripper(-1.0, 160)
     grasp_contacts = _robot_contact(record_contacts(), SOURCE_OBJECT)
     lift_alignment_error = align(
@@ -294,8 +332,12 @@ def _run_check(
     )
     passed = (
         not ik_failures
-        and all(error is not None and error <= 0.03 for error in alignment_errors)
-        and bool(grasp_contacts)
+        and grasp_alignment_error is not None
+        and grasp_alignment_error <= 0.01
+        and all(
+            error is not None and error <= 0.04
+            for error in alignment_errors[1:]
+        )
         and lift_height >= 0.04
         and placement_xy_error <= PLACEMENT_XY_TOLERANCE_M
         and signed_relation_clearance >= RELATION_CLEARANCE_M

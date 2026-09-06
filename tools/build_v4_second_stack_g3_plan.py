@@ -152,6 +152,24 @@ def point_segment_distance(
     return math.hypot(point[0] - nearest[0], point[1] - nearest[1])
 
 
+def minimum_axis_separation_on_segment(
+    point: tuple[float, float],
+    start: tuple[float, float],
+    end: tuple[float, float],
+    *,
+    samples: int = 2000,
+) -> float:
+    if samples <= 0:
+        raise SecondStackG3PlanError("segment samples must be positive")
+    return min(
+        max(
+            abs(start[0] + index / samples * (end[0] - start[0]) - point[0]),
+            abs(start[1] + index / samples * (end[1] - start[1]) - point[1]),
+        )
+        for index in range(samples + 1)
+    )
+
+
 def _inside_reference_workspace(point: tuple[float, float]) -> bool:
     center_x, center_y = SUPPORT_CENTER_SCENE_M[:2]
     half_x = SUPPORT_HALF_EXTENTS_M[0] - CUBE_HALF_EXTENT_M - SUPPORT_EDGE_MARGIN_M
@@ -208,11 +226,16 @@ def build_plan(*, registry_path: Path) -> dict[str, Any]:
                     reference,
                     endpoint,
                 )
+                minimum_axis_separation = minimum_axis_separation_on_segment(
+                    source,
+                    reference,
+                    endpoint,
+                )
                 shrinking = sign == 1
                 passed = (
                     _inside_reference_workspace(reference)
                     and _inside_reference_workspace(endpoint)
-                    and minimum_pair_distance
+                    and minimum_axis_separation
                     >= 2.0 * CUBE_HALF_EXTENT_M + PAIR_CLEARANCE_M
                     and (
                         not shrinking
@@ -229,6 +252,9 @@ def build_plan(*, registry_path: Path) -> dict[str, Any]:
                         "endpoint_reference_scene_xy_m": list(endpoint),
                         "minimum_source_reference_center_distance_m": (
                             minimum_pair_distance
+                        ),
+                        "minimum_source_reference_axis_separation_m": (
+                            minimum_axis_separation
                         ),
                         "initial_goal_area_m2": initial_area,
                         "endpoint_goal_area_m2": endpoint_area,

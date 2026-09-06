@@ -128,6 +128,12 @@ def ensure_registered_support(env: Any) -> Any:
     existing = getattr(raw, "_v4_second_stack_support", None)
     if existing is not None:
         return existing
+    disabled_shapes = 0
+    arena = getattr(raw, "arena", None)
+    if arena is not None and hasattr(arena, "get_collision_shapes"):
+        for shape in arena.get_collision_shapes():
+            shape.set_collision_groups(0, 0, 0, 0)
+            disabled_shapes += 1
     source, _reference = fixture_actors(env)
     builder = raw._scene.create_actor_builder()
     pose_type = type(source.pose)
@@ -137,6 +143,7 @@ def ensure_registered_support(env: Any) -> Any:
     )
     support = builder.build_static(name="v4_second_stack_support")
     raw._v4_second_stack_support = support
+    raw._v4_disabled_arena_collision_shape_count = disabled_shapes
     return support
 
 

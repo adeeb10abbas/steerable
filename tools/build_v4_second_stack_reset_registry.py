@@ -316,14 +316,16 @@ def build_registry(
         "support_collider": {
             "name": "v4_second_stack_support",
             "kind": "static_box_collision_only",
+            "disabled_malformed_arena_collision": True,
+            "expected_disabled_arena_collision_shape_count": 1,
             "center_scene_m": [-0.16, 0.0, 0.84],
             "half_extents_m": [0.40, 0.35, 0.03],
             "top_surface_z_m": 0.87,
             "basis": (
                 "The pinned SAPIEN runtime loads the visible Bridge arena but its "
-                "nonconvex GLB collision index buffer is empty. This model-blind "
-                "collider restores the task's declared scene_table_height without "
-                "altering observations."
+                "nonconvex GLB collision index buffer is empty. The malformed shape "
+                "is collision-disabled and this model-blind collider restores the "
+                "task's declared scene_table_height without altering observations."
             ),
             "policy_outcome_used": False,
         },

@@ -40,6 +40,9 @@ PATH_SCALE_RECEIPT_SCHEMA = path_scale_receipt_schema("horizontal")
 SCRIPTED_RECEIPT_SCHEMA = scripted_receipt_schema("horizontal")
 AGGREGATE_SCHEMA = aggregate_receipt_schema_g3("horizontal")
 
+DEFAULT_GOAL_AREA_GATE_FIXTURES: tuple[str, ...] = ("horizontal", "reference_binding")
+
+
 DEFAULT_MODEL_BLIND_G3_GEOMETRY: dict[str, Any] = {
     "extent_convention": "live_usd_world_aabb_projected_into_registered_task_frame",
     "supported_workspace_convention": (
@@ -412,10 +415,64 @@ def _compile_path_check(
     return compiled
 
 
+def resolve_goal_area_gate_fixtures(
+    campaign: Mapping[str, Any],
+) -> tuple[str, ...]:
+    motion = campaign.get("motion")
+    if not isinstance(motion, Mapping):
+        return DEFAULT_GOAL_AREA_GATE_FIXTURES
+    fixtures = motion.get("goal_area_gate_fixtures")
+    if not isinstance(fixtures, list) or not fixtures:
+        return DEFAULT_GOAL_AREA_GATE_FIXTURES
+    return tuple(str(fixture_id) for fixture_id in fixtures)
+
+
+def shrinking_area_fraction_gate_applicable(
+    fixture_id: str,
+    *,
+    goal_area_gate_fixtures: Sequence[str] | None = None,
+) -> bool:
+    fixtures = (
+        tuple(goal_area_gate_fixtures)
+        if goal_area_gate_fixtures is not None
+        else DEFAULT_GOAL_AREA_GATE_FIXTURES
+    )
+    return fixture_id in fixtures
+
+
+def expected_information_gate_pass(
+    *,
+    original_empty: bool,
+    destination_empty: bool,
+    shrinking: bool,
+    removed_fraction: float,
+    minimum_fraction: float,
+    apply_shrinking_fraction_gate: bool,
+) -> bool:
+    if original_empty or destination_empty:
+        return False
+    if not apply_shrinking_fraction_gate:
+        return True
+    return not shrinking or removed_fraction + 1e-12 >= minimum_fraction
+
+
+def _plan_shrinking_area_fraction_gate_applicable(plan: Mapping[str, Any]) -> bool:
+    information_gate = plan.get("information_gate")
+    if isinstance(information_gate, Mapping):
+        return _require_bool(
+            information_gate.get("shrinking_area_fraction_gate_applicable"),
+            "shrinking_area_fraction_gate_applicable",
+        )
+    fixture_id = plan.get("fixture_id")
+    _require(isinstance(fixture_id, str), "G3 plan lacks fixture_id")
+    return shrinking_area_fraction_gate_applicable(fixture_id)
+
+
 def _compile_goal_area_cases(
     cases: Iterable[Mapping[str, Any]],
     *,
     minimum_fraction: float,
+    apply_shrinking_fraction_gate: bool = True,
 ) -> list[dict[str, Any]]:
     raw_cases = list(cases)
     _require(
@@ -460,10 +517,13 @@ def _compile_goal_area_cases(
             abs(declared_minimum - minimum_fraction) <= 1e-12,
             f"{goal} information-gate threshold differs from plan",
         )
-        expected_passes = (
-            not original_empty
-            and not destination_empty
-            and (not shrinking or removed_fraction + 1e-12 >= minimum_fraction)
+        expected_passes = expected_information_gate_pass(
+            original_empty=original_empty,
+            destination_empty=destination_empty,
+            shrinking=shrinking,
+            removed_fraction=removed_fraction,
+            minimum_fraction=minimum_fraction,
+            apply_shrinking_fraction_gate=apply_shrinking_fraction_gate,
         )
         declared_passes = _require_bool(
             case.get("passes_information_gate"),
@@ -516,9 +576,11 @@ def compile_path_seed_receipt(
         selection.get("minimum_shrinking_area_fraction"),
         "minimum shrinking-area fraction",
     )
+    apply_shrinking_fraction_gate = _plan_shrinking_area_fraction_gate_applicable(plan)
     compiled_goal_areas = _compile_goal_area_cases(
         goal_area_cases,
         minimum_fraction=minimum_fraction,
+        apply_shrinking_fraction_gate=apply_shrinking_fraction_gate,
     )
     observations = list(check_observations)
     if len(observations) != HORIZONTAL_PATH_CHECKS_PER_SEED:
@@ -670,6 +732,7 @@ def validate_path_seed_receipt(
     if not isinstance(goal_area_cases, list):
         raise G3GateError("path receipt lacks goal-area cases")
     minimum_fraction = 0.20
+    apply_shrinking_fraction_gate = True
     if plan is not None:
         selection = plan.get("scale_selection")
         _require(isinstance(selection, Mapping), "G3 plan lacks scale selection")
@@ -677,9 +740,13 @@ def validate_path_seed_receipt(
             selection.get("minimum_shrinking_area_fraction"),
             "minimum shrinking-area fraction",
         )
+        apply_shrinking_fraction_gate = _plan_shrinking_area_fraction_gate_applicable(
+            plan
+        )
     compiled_goal_areas = _compile_goal_area_cases(
         goal_area_cases,
         minimum_fraction=minimum_fraction,
+        apply_shrinking_fraction_gate=apply_shrinking_fraction_gate,
     )
     information_gate_passed = all(
         case["passes_information_gate"] for case in compiled_goal_areas
@@ -928,6 +995,7 @@ def build_plan_payload(
     scale_candidates: Iterable[float],
     nominal_displacement_m: float,
     minimum_shrinking_area_fraction: float,
+    goal_area_gate_fixtures: Sequence[str] | None = None,
     fixture_id: str = "horizontal",
 ) -> dict[str, Any]:
     config = g3_fixture_config(fixture_id)
@@ -981,7 +1049,16 @@ def build_plan_payload(
         HORIZONTAL_SCRIPTED_CHECK_COUNT == 112,
         "horizontal scripted count differs",
     )
-    return {
+    gate_fixtures = (
+        tuple(goal_area_gate_fixtures)
+        if goal_area_gate_fixtures is not None
+        else DEFAULT_GOAL_AREA_GATE_FIXTURES
+    )
+    shrinking_gate_applicable = shrinking_area_fraction_gate_applicable(
+        fixture_id,
+        goal_area_gate_fixtures=gate_fixtures,
+    )
+    payload: dict[str, Any] = {
         "schema_version": plan_schema(fixture_id),
         "campaign_id": "online_correction_v4",
         "fixture_id": fixture_id,
@@ -1060,6 +1137,14 @@ def build_plan_payload(
             "one scale."
         ),
     }
+    if fixture_id == "object_pair":
+        payload["information_gate"] = {
+            "shrinking_area_fraction_gate_applicable": shrinking_gate_applicable,
+            "goal_area_gate_fixtures": list(gate_fixtures),
+            "nonempty_original_and_destination_required": True,
+            "policy_outcome_used": False,
+        }
+    return payload
 
 
 def _validate_g2_prerequisite(
@@ -1196,6 +1281,39 @@ def validate_plan_payload(plan: Mapping[str, Any]) -> None:
         scripted.get("checks_per_final_geometry_candidate") == 112,
         "G3 scripted count differs",
     )
+    information_gate = plan.get("information_gate")
+    expected_applicable = shrinking_area_fraction_gate_applicable(fixture_id)
+    if fixture_id == "object_pair":
+        _require(
+            isinstance(information_gate, Mapping),
+            "object_pair G3 plan lacks information_gate",
+        )
+        _require(
+            information_gate.get("shrinking_area_fraction_gate_applicable") is False,
+            "object_pair must not apply the shrinking-area fraction gate",
+        )
+        gate_fixtures = information_gate.get("goal_area_gate_fixtures")
+        _require(
+            isinstance(gate_fixtures, list)
+            and tuple(gate_fixtures) == DEFAULT_GOAL_AREA_GATE_FIXTURES,
+            "object_pair goal_area_gate_fixtures differ from campaign",
+        )
+        _require(
+            information_gate.get("nonempty_original_and_destination_required") is True,
+            "object_pair requires nonempty original and destination goal sets",
+        )
+    elif isinstance(information_gate, Mapping):
+        _require(
+            information_gate.get("shrinking_area_fraction_gate_applicable")
+            == expected_applicable,
+            "information_gate applicability disagrees with fixture",
+        )
+        gate_fixtures = information_gate.get("goal_area_gate_fixtures")
+        _require(
+            isinstance(gate_fixtures, list)
+            and tuple(gate_fixtures) == DEFAULT_GOAL_AREA_GATE_FIXTURES,
+            "goal_area_gate_fixtures differ from campaign",
+        )
     reset_seeds = scripted.get("reset_env_seeds")
     _require(
         isinstance(reset_seeds, list)

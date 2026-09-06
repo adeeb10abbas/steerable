@@ -20,6 +20,7 @@ from experiments.online_correction_v4.model_blind_g3 import (  # noqa: E402
     build_plan_payload,
     g3_fixture_config,
     resolve_geometry_contract,
+    resolve_goal_area_gate_fixtures,
     validate_plan_payload,
 )
 
@@ -162,6 +163,7 @@ def build(
         minimum_shrinking_area_fraction=float(
             motion_config["primary_horizontal_minimum_shrinking_goal_area_fraction"]
         ),
+        goal_area_gate_fixtures=resolve_goal_area_gate_fixtures(campaign),
     )
     validate_plan_payload(plan)
     body = canonical_json_bytes(plan)

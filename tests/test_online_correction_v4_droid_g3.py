@@ -142,6 +142,64 @@ class DroidG3GeometryTests(unittest.TestCase):
         self.assertFalse(expanding["shrinking_direction"])
         self.assertTrue(expanding["passes_information_gate"])
 
+    def test_shrinking_below_threshold_fails_when_gate_applicable(self) -> None:
+        geometry = horizontal_geometry_from_scene(
+            task_frame_evidence=FRAME,
+            scene_state=_scene(),
+            support_edge_margin_m=0.005,
+        )
+        shrinking = goal_area_case(
+            geometry=geometry,
+            relation="left",
+            original_reference_world=(0.0, 0.0, 0.025),
+            endpoint_reference_world=(0.04, 0.0, 0.025),
+            clearance_m=0.01,
+            minimum_shrinking_area_fraction=0.20,
+            apply_shrinking_area_fraction_gate=True,
+        )
+        self.assertTrue(shrinking["shrinking_direction"])
+        self.assertLess(shrinking["removed_area_fraction"], 0.20)
+        self.assertFalse(shrinking["passes_information_gate"])
+
+    def test_shrinking_below_threshold_passes_when_gate_not_applicable(self) -> None:
+        geometry = horizontal_geometry_from_scene(
+            task_frame_evidence=FRAME,
+            scene_state=_scene(),
+            support_edge_margin_m=0.005,
+        )
+        shrinking = goal_area_case(
+            geometry=geometry,
+            relation="left",
+            original_reference_world=(0.0, 0.0, 0.025),
+            endpoint_reference_world=(0.04, 0.0, 0.025),
+            clearance_m=0.01,
+            minimum_shrinking_area_fraction=0.20,
+            apply_shrinking_area_fraction_gate=False,
+        )
+        self.assertTrue(shrinking["shrinking_direction"])
+        self.assertLess(shrinking["removed_area_fraction"], 0.20)
+        self.assertFalse(shrinking["original_goal_empty"])
+        self.assertFalse(shrinking["destination_goal_empty"])
+        self.assertTrue(shrinking["passes_information_gate"])
+
+    def test_empty_destination_fails_even_when_gate_not_applicable(self) -> None:
+        geometry = horizontal_geometry_from_scene(
+            task_frame_evidence=FRAME,
+            scene_state=_scene(),
+            support_edge_margin_m=0.005,
+        )
+        empty_destination = goal_area_case(
+            geometry=geometry,
+            relation="left",
+            original_reference_world=(0.0, 0.0, 0.025),
+            endpoint_reference_world=(0.49, 0.0, 0.025),
+            clearance_m=0.01,
+            minimum_shrinking_area_fraction=0.20,
+            apply_shrinking_area_fraction_gate=False,
+        )
+        self.assertTrue(empty_destination["destination_goal_empty"])
+        self.assertFalse(empty_destination["passes_information_gate"])
+
     def test_reference_support_uses_full_footprint(self) -> None:
         geometry = horizontal_geometry_from_scene(
             task_frame_evidence=FRAME,

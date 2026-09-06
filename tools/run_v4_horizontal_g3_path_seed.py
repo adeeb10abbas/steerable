@@ -445,6 +445,7 @@ def build_goal_area_cases(
     robot_quaternion_wxyz: Sequence[float],
     clearance_m: float,
     minimum_shrinking_area_fraction: float,
+    apply_shrinking_area_fraction_gate: bool = True,
 ) -> list[dict[str, Any]]:
     from experiments.online_correction_v4.droid_g3 import goal_area_case
     from experiments.online_correction_v4.model_blind_g3 import HORIZONTAL_GOALS
@@ -467,6 +468,7 @@ def build_goal_area_cases(
                 endpoint_reference_world=endpoint,
                 clearance_m=clearance_m,
                 minimum_shrinking_area_fraction=minimum_shrinking_area_fraction,
+                apply_shrinking_area_fraction_gate=apply_shrinking_area_fraction_gate,
             )
         )
     return cases
@@ -713,6 +715,7 @@ def main(argv: list[str] | None = None) -> int:
             compile_path_seed_receipt,
             expected_path_check_keys,
             validate_path_seed_receipt,
+            _plan_shrinking_area_fraction_gate_applicable,
         )
 
         plan_bytes = plan_path.read_bytes()
@@ -769,6 +772,9 @@ def main(argv: list[str] | None = None) -> int:
         ]
         minimum_fraction = float(
             plan["scale_selection"]["minimum_shrinking_area_fraction"]
+        )
+        apply_shrinking_fraction_gate = _plan_shrinking_area_fraction_gate_applicable(
+            plan
         )
         clearance_m = float(geometry_contract["relation_clearance_m"])
 
@@ -932,6 +938,7 @@ def main(argv: list[str] | None = None) -> int:
             robot_quaternion_wxyz=goal_area_inputs["robot_quaternion_wxyz"],
             clearance_m=clearance_m,
             minimum_shrinking_area_fraction=minimum_fraction,
+            apply_shrinking_area_fraction_gate=apply_shrinking_fraction_gate,
         )
         plan_receipt = {"path": str(plan_path.resolve()), "sha256": args.plan_sha256}
         receipt = compile_path_seed_receipt(

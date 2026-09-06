@@ -16,11 +16,16 @@ from experiments.online_correction_v4.droid_g3 import (
 )
 from experiments.online_correction_v4.model_blind_g3 import (
     G3GateError,
+    HORIZONTAL_GOALS,
+    PATH_SAMPLE_INTERVAL_S,
     build_counterbalance_index,
     build_plan_payload,
+    compile_path_seed_receipt,
+    expected_path_check_keys,
     path_checks_per_scale_for_seed_count,
     plan_schema,
     resolve_geometry_contract,
+    validate_path_seed_receipt,
     validate_plan_payload,
 )
 
@@ -44,6 +49,39 @@ BUILDER_SPEC = importlib.util.spec_from_file_location(
 builder = importlib.util.module_from_spec(BUILDER_SPEC)
 assert BUILDER_SPEC.loader is not None
 BUILDER_SPEC.loader.exec_module(builder)
+
+
+def _passing_path_observations() -> list[dict[str, object]]:
+    observations: list[dict[str, object]] = []
+    for goal, scenario in expected_path_check_keys():
+        measured = f"evidence/measured/{goal}_{scenario}.json".encode("utf-8")
+        reference = f"evidence/reference/{goal}_{scenario}.json".encode("utf-8")
+        observations.append(
+            {
+                "planned_duration_s": 1.0,
+                "sample_interval_s": PATH_SAMPLE_INTERVAL_S,
+                "sample_count": 51,
+                "measured_pose_evidence": {
+                    "path": f"artifacts/g3/measured/{goal}_{scenario}.json",
+                    "sha256": hashlib.sha256(measured).hexdigest(),
+                    "bytes": len(measured),
+                },
+                "reference_pose_evidence": {
+                    "path": f"artifacts/g3/reference/{goal}_{scenario}.json",
+                    "sha256": hashlib.sha256(reference).hexdigest(),
+                    "bytes": len(reference),
+                },
+                "path_conformance": True,
+                "collision_free": True,
+                "support_valid": True,
+                "reachable_workspace": True,
+                "legal_goal_nonempty": True,
+                "reference_robot_contact": False,
+                "unmodeled_collision": False,
+                "reasons": [],
+            }
+        )
+    return observations
 
 
 class ObjectPairG3PathTests(unittest.TestCase):
@@ -83,6 +121,114 @@ class ObjectPairG3PathTests(unittest.TestCase):
         self.assertEqual(plan["schema_version"], plan_schema("object_pair"))
         self.assertEqual(plan["fixture_id"], "object_pair")
         self.assertEqual(plan["path_sweep"]["checks_per_scale"], 1536)
+        self.assertFalse(
+            plan["information_gate"]["shrinking_area_fraction_gate_applicable"]
+        )
+        self.assertEqual(
+            plan["information_gate"]["goal_area_gate_fixtures"],
+            ["horizontal", "reference_binding"],
+        )
+
+    def test_object_pair_low_shrinking_fraction_passes_information_gate(self) -> None:
+        plan = json.loads(
+            (
+                ROOT
+                / "artifacts/online_correction_v4/setup/object_pair_g3_plan.candidate.json"
+            ).read_text(encoding="utf-8")
+        )
+        plan_receipt = {"path": "object_pair_g3_plan.candidate.json", "sha256": "0" * 64}
+        goal_area_cases = [
+            {
+                "relation": goal,
+                "original_area_m2": 0.10,
+                "destination_area_m2": 0.09,
+                "shrinking_direction": True,
+                "removed_area_fraction": 0.10,
+                "minimum_shrinking_area_fraction": 0.20,
+                "original_goal_empty": False,
+                "destination_goal_empty": False,
+                "passes_information_gate": True,
+            }
+            for goal in HORIZONTAL_GOALS
+        ]
+        observations = _passing_path_observations()
+        receipt = compile_path_seed_receipt(
+            plan=plan,
+            plan_receipt=plan_receipt,
+            environment_seed=int(plan["registered_env_seeds"][0]),
+            scale=float(plan["scale_selection"]["candidate_scales_descending"][0]),
+            check_observations=observations,
+            goal_area_cases=goal_area_cases,
+        )
+        validate_path_seed_receipt(receipt, plan=plan)
+        self.assertTrue(receipt["information_gate_passed"])
+        self.assertTrue(receipt["passed"])
+
+    def test_object_pair_empty_destination_fails_information_gate(self) -> None:
+        plan = json.loads(
+            (
+                ROOT
+                / "artifacts/online_correction_v4/setup/object_pair_g3_plan.candidate.json"
+            ).read_text(encoding="utf-8")
+        )
+        plan_receipt = {"path": "object_pair_g3_plan.candidate.json", "sha256": "0" * 64}
+        goal_area_cases = [
+            {
+                "relation": goal,
+                "original_area_m2": 0.10,
+                "destination_area_m2": 0.0,
+                "shrinking_direction": True,
+                "removed_area_fraction": 1.0,
+                "minimum_shrinking_area_fraction": 0.20,
+                "original_goal_empty": False,
+                "destination_goal_empty": goal == "left",
+                "passes_information_gate": goal != "left",
+            }
+            for goal in HORIZONTAL_GOALS
+        ]
+        observations = _passing_path_observations()
+        receipt = compile_path_seed_receipt(
+            plan=plan,
+            plan_receipt=plan_receipt,
+            environment_seed=int(plan["registered_env_seeds"][0]),
+            scale=float(plan["scale_selection"]["candidate_scales_descending"][0]),
+            check_observations=observations,
+            goal_area_cases=goal_area_cases,
+        )
+        validate_path_seed_receipt(receipt, plan=plan)
+        self.assertFalse(receipt["information_gate_passed"])
+        self.assertFalse(receipt["passed"])
+
+    def test_horizontal_low_shrinking_fraction_fails_information_gate(self) -> None:
+        plan_path = ROOT / "artifacts/online_correction_v4/setup/horizontal_g3_plan.candidate.json"
+        plan = json.loads(plan_path.read_text(encoding="utf-8"))
+        plan_receipt = {"path": plan_path.name, "sha256": "0" * 64}
+        goal_area_cases = [
+            {
+                "relation": goal,
+                "original_area_m2": 0.10,
+                "destination_area_m2": 0.09,
+                "shrinking_direction": True,
+                "removed_area_fraction": 0.10,
+                "minimum_shrinking_area_fraction": 0.20,
+                "original_goal_empty": False,
+                "destination_goal_empty": False,
+                "passes_information_gate": False,
+            }
+            for goal in HORIZONTAL_GOALS
+        ]
+        observations = _passing_path_observations()
+        receipt = compile_path_seed_receipt(
+            plan=plan,
+            plan_receipt=plan_receipt,
+            environment_seed=int(plan["registered_env_seeds"][0]),
+            scale=float(plan["scale_selection"]["candidate_scales_descending"][0]),
+            check_observations=observations,
+            goal_area_cases=goal_area_cases,
+        )
+        validate_path_seed_receipt(receipt, plan=plan)
+        self.assertFalse(receipt["information_gate_passed"])
+        self.assertFalse(receipt["passed"])
 
     def test_counterbalance_index_uses_c7_rows(self) -> None:
         registry = json.loads(REGISTRY.read_text(encoding="utf-8"))

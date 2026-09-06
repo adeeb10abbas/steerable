@@ -284,6 +284,7 @@ def goal_area_case(
     endpoint_reference_world: tuple[float, float, float],
     clearance_m: float,
     minimum_shrinking_area_fraction: float,
+    apply_shrinking_area_fraction_gate: bool = True,
 ) -> dict[str, Any]:
     before = goal_set_for_reference(
         geometry=geometry,
@@ -314,7 +315,8 @@ def goal_area_case(
         not before.empty
         and not after.empty
         and (
-            not shrinking
+            not apply_shrinking_area_fraction_gate
+            or not shrinking
             or removed_fraction + 1e-12 >= minimum_shrinking_area_fraction
         )
     )

@@ -1037,9 +1037,10 @@ def build_continuation_state(
             "(2.0, 1.5, 1.0, 0.75, 0.5) was conclusively rejected on the "
             "canonical first environment seed. The final 0.5 scale passed the "
             "information gate but produced forbidden cube-bowl contact, target "
-            "drift, and support failures. Scripted checks, G4-G8, pilots, and "
-            "policy inference remain prohibited; no smaller post-result scale "
-            "is authorized by this campaign."
+            "drift, and support failures. Horizontal scripted checks, G4-G8, "
+            "pilots, and policy inference remain prohibited for C1/C3/C4; no "
+            "smaller post-result scale is authorized. Independently scoped "
+            "model-blind fixture qualification may continue for C5-C7."
         )
     elif g2_complete:
         cluster_blocker = (
@@ -1177,7 +1178,7 @@ def build_continuation_state(
             *(
                 [
                     "Horizontal G3 failed all registered scales; downstream horizontal "
-                    "qualification and policy execution are blocked."
+                    "qualification and policy execution for C1/C3/C4 are blocked."
                 ]
                 if g3_failed
                 else []

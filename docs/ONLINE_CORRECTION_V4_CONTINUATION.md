@@ -233,9 +233,10 @@ complete passing path scale. The scripted Kubernetes renderer now enforces
 that dependency and its default spec is explicitly blocked.
 
 Horizontal G3 therefore failed. G4-G8, direct-command and policy pilots, reset
-registry release, and all registered horizontal policy episodes remain
-prohibited. No smaller displacement or post-result scene change is authorized
-by this campaign.
+registry release, and policy episodes remain prohibited for C1/C3/C4. No
+smaller horizontal displacement or post-result scene change is authorized by
+this campaign. Independently scoped model-blind fixture qualification remains
+permitted for C5-C7; C2 and C8 retain their separate hard blockers.
 
 ### Family disposition
 
@@ -250,8 +251,10 @@ Every queue row is a **registered new episode**. `reuse_episode_ids` are compari
 
 ## Exact next commands
 
-There is no authorized downstream experiment command in this campaign.
-Validation and evidence-preservation commands are:
+There is no authorized downstream horizontal experiment command. The next
+implementation target is simulator-only, model-blind fixture qualification for
+C5-C7; no cluster launcher for those fixtures is released yet. Validation and
+evidence-preservation commands are:
 
 ```bash
 python3 tools/online_correction_v4.py validate

@@ -1,0 +1,38 @@
+{
+  "schema_version": "v4-object-pair-g2-smoke-disposition-v1",
+  "campaign_id": "online_correction_v4",
+  "gate": "G2",
+  "fixture_id": "object_pair",
+  "attempt_id": "g2c7q20260905af",
+  "environment_seed": 2100040004,
+  "compiled_at_utc": "2026-09-06T04:22:00Z",
+  "qualification_scope": "single_seed_linear_damping_3_5_model_blind_smoke",
+  "status": "infrastructure_invalid",
+  "g2_complete": false,
+  "authorizes_behavioral_inference": false,
+  "authorizes_g3_execution": false,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "outcome": {
+    "object": "sponge",
+    "linear_component_max_m_s": 0.020300133,
+    "linear_component_limit_m_s": 0.02,
+    "excess_m_s": 0.000300133,
+    "angular_component_max_rad_s": 0.161006644,
+    "angular_component_limit_rad_s": 0.2
+  },
+  "runtime_identity": {
+    "study_commit": "030d69c7410ac2b96871d157db2de4eacfe1e658",
+    "robolab_commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+    "driver_version": "580.95.05",
+    "gpu_product": "NVIDIA A40",
+    "native_control_dt_s": 0.06666666666666667,
+    "reset_registry_sha256": "1642966fd52a9e81046aebdcead19a17d8d7dbd356fc9317dc61343f39120a50"
+  },
+  "preservation": {
+    "raw_failure_marker": "file:///data/users/ali/vla_wam/raw/v4/g2-object-pair/smoke-g2c7q20260905af-s004/episodes/infrastructure_failure.json",
+    "bytes": 1515,
+    "sha256": "53adca152c7af03f281e34adf691c2b85a7e46e988fc9ce1859399a422157660"
+  },
+  "disposition": "All geometry and angular checks pass; linear speed misses by 0.000300133 m/s. Apply a final conservative linear damping value of 4.5 and rerun without altering the threshold."
+}

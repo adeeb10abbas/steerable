@@ -299,7 +299,7 @@ def _run_check(
         finger_y_offset,
         finger_z_offset,
     ) in enumerate(grasp_offsets):
-        set_gripper(0.4, 100 if attempt else 60)
+        set_gripper(0.8, 100 if attempt else 60)
         live_source = [float(value) for value in raw.episode_source_obj.pose.p]
         grasp_alignment_error = align_gripper_to_source(
             live_source,

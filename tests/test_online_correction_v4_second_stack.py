@@ -59,6 +59,8 @@ def _env():
         episode_source_obj=source,
         episode_target_obj=reference,
         _scene=scene,
+        _v4_second_stack_support=object(),
+        scene_table_height=0.87,
     )
     inner = SimpleNamespace(unwrapped=raw)
     wrapper = SimpleNamespace(env=inner)
@@ -75,7 +77,7 @@ class SecondStackBindingTests(unittest.TestCase):
         with self.assertRaises(SecondStackBindingError):
             direct_prompt("above")
 
-    def test_registered_reset_preserves_live_z_and_zeros_velocity(self) -> None:
+    def test_registered_reset_uses_declared_support_height_and_zeros_velocity(self) -> None:
         env, source, reference, scene = _env()
         result = apply_registered_reset(
             env,
@@ -87,8 +89,8 @@ class SecondStackBindingTests(unittest.TestCase):
             },
             settle_steps=3,
         )
-        self.assertEqual(source.pose.p, [-0.21, -0.05, -1.0514])
-        self.assertEqual(reference.pose.p, [-0.11, 0.05, -1.0514])
+        self.assertEqual(source.pose.p, [-0.21, -0.05, 0.887])
+        self.assertEqual(reference.pose.p, [-0.11, 0.05, 0.887])
         self.assertEqual(source.velocity, [0.0, 0.0, 0.0])
         self.assertEqual(reference.angular_velocity, [0.0, 0.0, 0.0])
         self.assertEqual(scene.steps, 3)

@@ -308,10 +308,23 @@ def build_registry(
             "z_jitter_m": 0.0,
             "application": (
                 "one common SimplerEnv scene-frame x/y translation is applied to "
-                "both cubes after the official reset and before the settling dwell; "
-                "each actor retains its official live reset z coordinate"
+                "both cubes after the official reset and before the settling dwell"
             ),
-            "z_binding": "official_live_reset_actor_z",
+            "z_binding": "scene_table_height_plus_0p015m_half_extent_plus_0p002m_clearance",
+            "policy_outcome_used": False,
+        },
+        "support_collider": {
+            "name": "v4_second_stack_support",
+            "kind": "static_box_collision_only",
+            "center_scene_m": [-0.16, 0.0, 0.84],
+            "half_extents_m": [0.40, 0.35, 0.03],
+            "top_surface_z_m": 0.87,
+            "basis": (
+                "The pinned SAPIEN runtime loads the visible Bridge arena but its "
+                "nonconvex GLB collision index buffer is empty. This model-blind "
+                "collider restores the task's declared scene_table_height without "
+                "altering observations."
+            ),
             "policy_outcome_used": False,
         },
         "external_stack_identity": {

@@ -10,6 +10,10 @@ FIXTURE_ID = "second_stack"
 ENV_NAME = "simpler_env_widowx/widowx_stack_cube"
 SOURCE_OBJECT = "baked_green_cube_3cm"
 REFERENCE_OBJECT = "baked_yellow_cube_3cm"
+CUBE_HALF_EXTENT_M = 0.015
+RESET_CLEARANCE_M = 0.002
+SUPPORT_CENTER_SCENE_M = (-0.16, 0.0, 0.84)
+SUPPORT_HALF_EXTENTS_M = (0.40, 0.35, 0.03)
 RELATIONS = ("left", "right", "front", "behind")
 RELATION_AXES_SCENE_XY = {
     "left": (0.48393356800079346, -0.8751052618026733),
@@ -119,6 +123,23 @@ def fixture_actors(env: Any) -> tuple[Any, Any]:
     return source, reference
 
 
+def ensure_registered_support(env: Any) -> Any:
+    raw = unwrap_simpler_env(env)
+    existing = getattr(raw, "_v4_second_stack_support", None)
+    if existing is not None:
+        return existing
+    source, _reference = fixture_actors(env)
+    builder = raw._scene.create_actor_builder()
+    pose_type = type(source.pose)
+    builder.add_box_collision(
+        pose=pose_type(p=SUPPORT_CENTER_SCENE_M, q=[1.0, 0.0, 0.0, 0.0]),
+        half_size=SUPPORT_HALF_EXTENTS_M,
+    )
+    support = builder.build_static(name="v4_second_stack_support")
+    raw._v4_second_stack_support = support
+    return support
+
+
 def apply_registered_reset(
     env: Any,
     reset_row: Mapping[str, Any],
@@ -134,6 +155,11 @@ def apply_registered_reset(
         raise SecondStackBindingError("C8 reset row lacks positions_scene_xy_m")
     raw = unwrap_simpler_env(env)
     source, reference = fixture_actors(env)
+    ensure_registered_support(env)
+    table_height = float(getattr(raw, "scene_table_height", float("nan")))
+    if not math.isfinite(table_height):
+        raise SecondStackBindingError("C8 live scene table height is unavailable")
+    reset_z = table_height + CUBE_HALF_EXTENT_M + RESET_CLEARANCE_M
     live: dict[str, list[float]] = {}
     for actor in (source, reference):
         xy = _finite_vector(
@@ -141,8 +167,8 @@ def apply_registered_reset(
             length=2,
             label=f"positions_scene_xy_m.{actor.name}",
         )
-        current_position, current_quaternion = actor_pose(actor)
-        destination = [xy[0], xy[1], current_position[2]]
+        _current_position, current_quaternion = actor_pose(actor)
+        destination = [xy[0], xy[1], reset_z]
         pose_type = type(actor.pose)
         actor.set_pose(pose_type(p=destination, q=current_quaternion))
         if hasattr(actor, "set_velocity"):

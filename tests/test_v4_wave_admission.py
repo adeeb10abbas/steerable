@@ -23,7 +23,7 @@ def test_superseded_attempts_are_recognized() -> None:
 
 def test_horizontal_g3_is_scientifically_blocked() -> None:
     assert admission.is_scientifically_blocked_attempt("g3r20260908g")
-    assert not admission.is_scientifically_blocked_attempt("g3rb20260908v")
+    assert admission.is_scientifically_blocked_attempt("g3rb20260908v")
 
 
 def test_reference_binding_live_control_matches_tier_zero() -> None:
@@ -43,10 +43,11 @@ def test_c7_attempts_never_blocked_by_tier() -> None:
     }
     admitted, report = admission.compute_admitted_attempts(summary)
     assert "g3r20260908g" not in admitted
-    assert "g3rb20260908v" in admitted
+    assert "g3rb20260908v" not in admitted
     assert "g2r20260908g" in admitted
     assert "attempt0351" in report["c7_always_admitted"]
     assert "g3r20260908g" in report["scientifically_blocked"]
+    assert "g3rb20260908v" in report["scientifically_blocked"]
 
 
 def test_promoted_c2_and_c6_admit_in_parallel_with_g2_backfill() -> None:
@@ -59,7 +60,6 @@ def test_promoted_c2_and_c6_admit_in_parallel_with_g2_backfill() -> None:
     }
     admitted, report = admission.compute_admitted_attempts(summary)
     assert set(admitted) == {
-        "g3rb20260908v",
         "g3c6p20260908a10040g",
         "g2r20260908g",
     }
@@ -89,6 +89,11 @@ def test_c5_deprioritized_only_after_achievable_tiers_complete() -> None:
     assert admitted == ["g3c5p20260908a10080g"]
 
 
+def test_dispatch_gate_blocks_scientifically_blocked_reference_binding_g3() -> None:
+    with pytest.raises(admission.WaveAdmissionError, match="scientifically blocked"):
+        admission.require_dispatch_admission(attempt_id="g3rb20260908v", attempt_summary={})
+
+
 def test_dispatch_gate_blocks_scientifically_blocked_horizontal_g3() -> None:
     with pytest.raises(admission.WaveAdmissionError, match="scientifically blocked"):
         admission.require_dispatch_admission(attempt_id="g3r20260908g", attempt_summary={})
@@ -96,7 +101,7 @@ def test_dispatch_gate_blocks_scientifically_blocked_horizontal_g3() -> None:
 
 def test_dispatch_gate_blocks_non_admitted_attempt() -> None:
     summary = {
-        "g3rb20260908v": {"total": 128, "active": 50, "succeeded": 0, "failed": 0, "pending": 78, "suspended": 0},
+        "g2r20260908g": {"total": 128, "active": 50, "succeeded": 0, "failed": 0, "pending": 78, "suspended": 0},
         "g3c5p20260908a10080g": {"total": 1, "active": 0, "succeeded": 0, "failed": 0, "pending": 1, "suspended": 1},
     }
     with pytest.raises(admission.WaveAdmissionError, match="wave admission gate blocked"):
@@ -140,10 +145,10 @@ def test_wall_clock_estimates_use_partial_wave_job_counts() -> None:
     assert g2["remaining_seeds"] == 97
 
 
-def test_achievable_episode_estimates_cover_6400_episodes() -> None:
+def test_achievable_episode_estimates_cover_2304_episodes() -> None:
     payload = admission.build_achievable_episode_estimates()
-    assert payload["achievable_episode_total"] == 6400
-    assert payload["blocked_episode_total"] == 11264
+    assert payload["achievable_episode_total"] == 2304
+    assert payload["blocked_episode_total"] == 15360
     assert payload["parallel_strata_materially_faster"] is True
     assert payload["qualification_wall_clock_hours"]["parallel_a10040_c6"] < (
         payload["qualification_wall_clock_hours"]["serialized"]

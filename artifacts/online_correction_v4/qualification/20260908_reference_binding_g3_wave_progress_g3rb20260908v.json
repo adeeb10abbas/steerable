@@ -1,62 +1,13 @@
 {
   "attempt_id": "g3rb20260908v",
-  "compiled_at_utc": "2026-09-08T15:55:00Z",
-  "confirmatory_scale": 0.5,
-  "computation_audit": {
-    "path": "artifacts/online_correction_v4/qualification/20260908_information_gate_computation_audit.json",
-    "verdict": "computation_correct_scientific_rejection"
-  },
-  "failed_jobs": [
-    {
-      "failure_kind": "infrastructure_invalid",
-      "job": "v4-g3-rb-g3rb20260908v-60670a185c-s059",
-      "reason": "BackoffLimitExceeded during Isaac env setup before receipt write",
-      "retry_job": "v4-g3-rb-g3rb20260908v-72a5290972-s059",
-      "seed_index": 59
-    },
-    {
-      "failure_kind": "infrastructure_invalid",
-      "job": "v4-g3-rb-g3rb20260908v-60670a185c-s062",
-      "reason": "BackoffLimitExceeded during Isaac env setup before receipt write",
-      "retry_job": "v4-g3-rb-g3rb20260908v-72a5290972-s062",
-      "seed_index": 62
-    },
-    {
-      "failure_kind": "infrastructure_invalid",
-      "job": "v4-g3-rb-g3rb20260908v-60670a185c-s108",
-      "reason": "BackoffLimitExceeded",
-      "seed_index": 108
-    }
-  ],
-  "homogeneous_pin": "c401fb4577d8003a019ecf7ff7be549f2c0a5931",
-  "jobs_complete": 89,
-  "jobs_failed": 3,
-  "jobs_running": 36,
-  "jobs_total": 128,
-  "authoritative_aggregate": {
-    "path": "artifacts/online_correction_v4/qualification/20260908_reference_binding_g3_path_scale_g3rb20260908v_authoritative.json",
-    "observed_seed_count": 107,
-    "expected_seed_count": 128,
-    "path_checks_passed": 2568,
-    "path_checks_expected_partial": 3072,
-    "information_gate_failed_of_observed": "80/107",
-    "sign_split_observed": {
-      "physical_translation_sign_-1": "0 pass / 53 fail",
-      "physical_translation_sign_+1": "27 pass / 27 fail"
-    },
-    "goal_split_observed_case_level": {
-      "front": "107 pass / 0 fail",
-      "behind": "55 pass / 52 fail",
-      "left": "80 pass / 27 fail",
-      "right": "79 pass / 28 fail"
-    },
-    "status": "provisional_pending_wave_completion",
-    "finalize_blocked_until": "128/128 homogeneous receipts on PVC"
-  },
-  "provisional_gate_decision": "artifacts/online_correction_v4/qualification/20260908_reference_binding_g3_gate_decision_g3rb20260908v_provisional.json",
-  "pvc_receipts_root": "/data/users/ali/vla_wam/raw/v4/g3-reference-binding/attempt-g3rb20260908v",
-  "refill_bundle": "artifacts/online_correction_v4/execution/g3_reference_binding_20260908/rendered-refill-missing35/v4-g3-rb-g3rb20260908v-2a5f61fac0/bundle-manifest.json",
-  "schema_version": "v4-reference-binding-g3-wave-progress-v1",
-  "status": "in_progress",
-  "wave_dispatch_receipt": "artifacts/online_correction_v4/qualification/20260908_reference_binding_g3_wave_dispatch_g3rb20260908v.json"
+  "compiled_at_utc": "2026-09-07T17:08:03Z",
+  "complete": true,
+  "decision": "failed",
+  "expected_seed_count": 128,
+  "gate_decision": "artifacts/online_correction_v4/qualification/20260908_reference_binding_g3_gate_decision_g3rb20260908v.json",
+  "gate_decision_sha256": "6acb3ae85d2d1bd3a34f61e0dadaa7a32cf3802af67aa3e0d8f3bdfcc3bc297a",
+  "observed_seed_count": 128,
+  "passed": false,
+  "primary_estimand_status": "not_estimable",
+  "schema_version": "v4-reference-binding-g3-wave-progress-v1"
 }

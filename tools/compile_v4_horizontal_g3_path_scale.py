@@ -55,9 +55,19 @@ def _verify_artifact_records(value: Any, *, label: str) -> int:
     return verified
 
 
-def _write_exclusive(path: Path, payload: Mapping[str, Any]) -> None:
+def _write_exclusive(
+    path: Path,
+    payload: Mapping[str, Any],
+    *,
+    overwrite: bool = False,
+) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     body = canonical_json_bytes(dict(payload))
+    if path.exists():
+        if not overwrite:
+            raise FileExistsError(f"refusing to overwrite path-scale receipt: {path}")
+        path.write_bytes(body)
+        return
     with path.open("xb") as handle:
         handle.write(body)
         handle.flush()
@@ -71,6 +81,7 @@ def compile_receipts(
     receipts_root: Path,
     output_path: Path,
     verify_external: bool = False,
+    overwrite: bool = False,
 ) -> dict[str, Any]:
     plan_path = plan_path.resolve()
     plan_body = plan_path.read_bytes()
@@ -130,7 +141,7 @@ def compile_receipts(
             "verified_external_artifact_count": verified_artifact_count,
         }
     )
-    _write_exclusive(output_path.resolve(), aggregate)
+    _write_exclusive(output_path.resolve(), aggregate, overwrite=overwrite)
     return aggregate
 
 

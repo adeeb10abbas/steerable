@@ -93,6 +93,7 @@ WRONG_STRATUM_PARALLEL_ATTEMPT_IDS: frozenset[str] = frozenset(
 SCIENTIFICALLY_BLOCKED_ATTEMPT_IDS: frozenset[str] = frozenset(
     {
         "g3r20260908g",
+        "g3rb20260908v",
     }
 )
 
@@ -106,12 +107,12 @@ DEPRIORITIZED_ATTEMPT_IDS: frozenset[str] = frozenset(
 ACHIEVABLE_EPISODE_COUNTS: dict[str, int] = {
     "C7_object_pair": 768,
     "C6_containment": 768,
-    "C2_reference_binding": 4096,
     "C8_second_stack": 768,
 }
 
 BLOCKED_EPISODE_COUNTS: dict[str, int] = {
     "C1_C3_C4_horizontal": 9728,
+    "C2_reference_binding": 4096,
     "C5_vertical": 1536,
 }
 
@@ -332,7 +333,8 @@ def _tier_incomplete_attempts(
     return sorted(
         aid
         for aid in tier_attempts
-        if attempt_has_work_remaining(attempt_summary[aid])
+        if not is_scientifically_blocked_attempt(aid)
+        and attempt_has_work_remaining(attempt_summary[aid])
     )
 
 

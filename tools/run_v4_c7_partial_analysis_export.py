@@ -489,11 +489,11 @@ def main(argv: list[str] | None = None) -> int:
             "C1": "scientifically blocked with C3/C4: horizontal G3 information-gate rejection across full registered ladder at scale 0.5 (64/128 seeds fail right/behind for physical_translation_sign=-1); receipt 20260908_horizontal_g3_gate_decision_g3r20260908g.json",
             "C2": (
                 "scientifically blocked: homogeneous G3 gate g3rb20260908v failed shrinking-area "
-                "information gate at confirmatory scale 0.5; sign=-1 observed 0 pass among "
-                "completed negative-sign seeds, sign=+1 partial failures on left/behind; front "
-                "goal passes on all observed seeds; all path checks pass; computation audit "
-                "confirmed correct gate math; primary estimand not estimable; 4096 confirmatory "
-                "episodes blocked"
+                "information gate at confirmatory scale 0.5 (96/128 seeds fail); sign=-1 "
+                "0/64 pass and sign=+1 32/64 fail; front goal passes 128/128 case checks; "
+                "behind fails 63/128; all 3072 path checks pass; computation audit confirmed "
+                "correct gate math; primary estimand not estimable; 4096 confirmatory episodes "
+                "blocked; no criterion was adjusted to recover blocked scope"
             ),
             "C3": "scientifically blocked with C1/C4: horizontal information-gate failure on registered ladder",
             "C4": "scientifically blocked with C1/C3: horizontal information-gate failure on registered ladder",

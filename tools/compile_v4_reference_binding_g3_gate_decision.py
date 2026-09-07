@@ -136,6 +136,7 @@ def compile_gate_decision(
         scale=scale,
         receipts_root=receipts_root,
         output_path=path_scale_out,
+        overwrite=overwrite,
     )
     receipt_paths = sorted(receipts_root.resolve().rglob("g3_path_seed_receipt.json"))
     receipts = [json.loads(path.read_bytes()) for path in receipt_paths]

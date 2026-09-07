@@ -239,8 +239,8 @@
     "status": "pending"
   },
   "hard_blocked_families": {
-    "C2": "Primary reference-selectivity (H) requires verified common-prefix replay within each prompt; deterministic fresh-session replay and qualified full-state snapshot are not yet demonstrated on the target runtime.",
-    "C8": "BLOCKED_RUNTIME: GR00T N1.7 Bridge/WidowX checkpoint URI, integration commit, adapter, native control period, and SimplerEnv fixture object names are not verified on cluster workers; second-stack geometry and scoring receipts remain pending."
+    "C2": "scientifically blocked: homogeneous G3 gate g3rb20260908v finalized at 128/128 with shrinking-area information-gate rejection at scale 0.5 (96/128 seeds fail; sign=-1 0/64 pass; sign=+1 32/64 fail; front 128/128 case pass; behind 63/128 fail; all 3072 path checks pass); computation audit confirmed correct gate math; primary estimand not estimable; 4096 confirmatory episodes blocked; receipt artifacts/online_correction_v4/qualification/20260908_reference_binding_g3_gate_decision_g3rb20260908v.json",
+    "C8": "G7 confirmatory receipt passed (g7c8q20260908a); pilot G3 path gate passed 96/96; 24 engineering-pilot episodes, G8 miniature rehearsal with --select, confirmatory runtime lock, and 768-episode dispatch remain blocked pending second_stack policy-runner wiring via launch_online_correction_v4.py"
   },
   "implementation_status": "IMPLEMENTING",
   "limitations": [
@@ -823,10 +823,10 @@
     }
   ],
   "next_commands": [
-    "python3 tools/online_correction_v4.py validate",
-    "python3 tools/build_online_correction_v4_freeze.py --out artifacts/online_correction_v4",
-    "python3 tools/validate_online_correction_v4.py",
-    "python3 -m unittest discover -s tests -p 'test_online_correction_v4*.py'",
+    "python3 tools/launch_online_correction_v4.py --create --runtime-lock artifacts/online_correction_v4/setup/second_stack_g7_pilot_runtime_lock.released.json --queue artifacts/online_correction_v4/setup/second_stack_g7_pilot_queue.jsonl --queue-manifest artifacts/online_correction_v4/setup/second_stack_g7_pilot_queue_manifest.json --launch-matrix artifacts/online_correction_v4/setup/second_stack_g7_pilot_launch_matrix.json --campaign-config docs/online_correction_v4/campaign.json --kube-context prod-dcwi-warrenq1-vmkub007 --namespace 211247-prod --pvc 211247-prod-pvc --render-output-root /tmp/v4-g7-c8-pilot-create",
+    "python3 tools/run_v4_second_stack_g8_miniature_rehearsal.py --raw-root /data/users/ali/vla_wam/raw/v4/g8-second-stack-rehearsal --select g8c8p00=attempt0001 --select g8c8p01=attempt0002 --select g8c8p02=attempt0003 --output-dir /data/users/ali/vla_wam/derived/v4/g8-second-stack-miniature-20260908a",
+    "python3 tools/build_v4_second_stack_confirmatory_release.py --source-commit HEAD --runtime-image-digest sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c --queue artifacts/online_correction_v4/queue.jsonl --pilot-runtime-lock artifacts/online_correction_v4/setup/second_stack_g7_pilot_runtime_lock.released.json --pilot-seed-registry artifacts/online_correction_v4/setup/second_stack_pilot_seed_registry.candidate.json --candidate-reset-registry artifacts/online_correction_v4/setup/second_stack_reset_registry.candidate.json --main-g2 artifacts/online_correction_v4/qualification/20260908_second_stack_pilot_g2_aggregate_g2c8p20260908a.json --main-g3 artifacts/online_correction_v4/qualification/20260906_second_stack_g3_path_g3c8p20260906b.json --hardware-g4 artifacts/online_correction_v4/qualification/20260906_second_stack_g4_execution_g4c8q20260906d.json --g7 artifacts/online_correction_v4/qualification/20260908_second_stack_g7_confirmatory_g7c8q20260908a.json --g8 artifacts/online_correction_v4/qualification/20260908_second_stack_g8_miniature_g8c8q20260908a.json --analysis-manifest artifacts/online_correction_v4/frozen_analysis_manifest.json --manifest-out artifacts/online_correction_v4/setup/c8_confirmatory/queue.frozen.jsonl --queue-manifest-out artifacts/online_correction_v4/setup/c8_confirmatory/queue_manifest.json --seed-registry-out artifacts/online_correction_v4/setup/c8_confirmatory/groot_seed_registry.released.json --released-reset-out artifacts/online_correction_v4/setup/c8_confirmatory/reset_registry.released.json --runtime-lock-out artifacts/online_correction_v4/setup/c8_confirmatory/runtime_lock.released.json --lane-spec-out artifacts/online_correction_v4/setup/c8_confirmatory/lane_spec.json --launch-matrix-out artifacts/online_correction_v4/setup/c8_confirmatory/launch_matrix.released.json",
+    "python3 tools/run_v4_c7_partial_analysis_export.py --accepted-ledger /data/users/ali/vla_wam/raw/v4/c7-object-pair-main/compiled_ledger_20260908h/accepted_ledger.jsonl --output-root artifacts/online_correction_v4/results/c7_partial/20260908h --export-label 20260908h",
     "python3 tools/validate_vla_wam_v2_protocol.py",
     "python3 tools/validate_vla_wam_v3_protocol.py"
   ],

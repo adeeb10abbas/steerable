@@ -52,18 +52,30 @@ def test_c7_attempts_never_blocked_by_tier() -> None:
 def test_promoted_c2_and_c6_admit_in_parallel_with_g2_backfill() -> None:
     summary = {
         "g3rb20260908v": {"total": 128, "active": 50, "succeeded": 13, "failed": 0, "pending": 65, "suspended": 0},
-        "g3c6p20260908a10080g": {"total": 1, "active": 0, "succeeded": 0, "failed": 0, "pending": 1, "suspended": 1},
+        "g3c6p20260908a10040g": {"total": 1, "active": 0, "succeeded": 0, "failed": 0, "pending": 1, "suspended": 1},
         "g2r20260908g": {"total": 128, "active": 0, "succeeded": 103, "failed": 0, "pending": 25, "suspended": 25},
         "g3c5p20260908a10080g": {"total": 1, "active": 0, "succeeded": 0, "failed": 0, "pending": 1, "suspended": 1},
+        "g3c6p20260908a10080g": {"total": 1, "active": 0, "succeeded": 0, "failed": 0, "pending": 1, "suspended": 1},
     }
     admitted, report = admission.compute_admitted_attempts(summary)
     assert set(admitted) == {
         "g3rb20260908v",
-        "g3c6p20260908a10080g",
+        "g3c6p20260908a10040g",
         "g2r20260908g",
     }
     assert "g3c5p20260908a10080g" not in admitted
-    assert "g3c5p20260908a10080g" in report["deprioritized_deferred"]
+    assert "g3c6p20260908a10080g" not in admitted
+    assert "g3c6p20260908a10080g" in report["wrong_stratum_parallel_suspended"]
+
+
+def test_wrong_stratum_c6_a10080g_never_admitted() -> None:
+    assert admission.is_wrong_stratum_parallel_attempt("g3c6p20260908a10080g")
+    summary = {
+        "g3rb20260908v": {"total": 128, "active": 0, "succeeded": 128, "failed": 0, "pending": 0, "suspended": 0},
+        "g3c6p20260908a10080g": {"total": 1, "active": 1, "succeeded": 0, "failed": 0, "pending": 0, "suspended": 0},
+    }
+    admitted, _ = admission.compute_admitted_attempts(summary)
+    assert "g3c6p20260908a10080g" not in admitted
 
 
 def test_c5_deprioritized_only_after_achievable_tiers_complete() -> None:

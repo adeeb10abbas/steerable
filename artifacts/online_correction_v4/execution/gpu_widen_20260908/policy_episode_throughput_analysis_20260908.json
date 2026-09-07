@@ -1,0 +1,203 @@
+{
+  "achievable_episode_total": 6400,
+  "blocked_episode_total": 11264,
+  "c7_object_pair": {
+    "completion_hours_after_c2_qual_with_wave007": 12.2,
+    "completion_hours_at_current_pairs": 18.7,
+    "healthy_lane_pairs": 15,
+    "in_progress_episodes": 7,
+    "max_safe_pairs_after_c2_qual": 23,
+    "minutes_per_episode_per_lane_assumed": 25.0,
+    "orphaned_policy_lanes": [
+      "c7m26",
+      "c7m30"
+    ],
+    "remaining_episodes": 673,
+    "target_episodes": 768,
+    "terminal_episodes": 88,
+    "wave_007_lane_count_planned": 23
+  },
+  "concurrency_limit_root_cause": {
+    "detail": "C7 confirmatory is frozen on a10080-policy_a40-simulator (a10080-policy_a40-simulator). Each lane pair binds one A100-80GB policy server and one A40 simulator. Currently 15 healthy pairs run (17 dispatched, 2 sim failures). C2 G3 qual consumes 0 A100-80GB lanes in parallel, leaving 80 headroom on a 95-GPU pool. Policy server startup is not the bottleneck once lanes are bound; episode wall-clock is dominated by cosmos-nano query cadence (~25 min/episode/lane).",
+    "not_the_bottleneck": [
+      "policy_server_cold_start_after_lane_bind",
+      "A40 pool exhaustion while C2 qual runs on A100-80GB"
+    ],
+    "primary": "rendered_lane_pairs_and_frozen_hardware_stratum"
+  },
+  "honest_6400_episode_completion_hours": {
+    "c7_at_best_safe_23_pairs_after_c2_qual": 12.2,
+    "c7_only_at_current_15_pairs": 18.7,
+    "full_6400_sequential_best_case": 105.5,
+    "note": "Families other than C7 cannot start policy episodes until G3 gates and runtime locks release. Estimate sums qual wall-clock then serial policy collection."
+  },
+  "observed_at_utc": "2026-09-07T14:18:48Z",
+  "per_stratum_g4_expansion": {
+    "c2_reference_binding": {
+      "owner": "Agent C (reference_binding)",
+      "reason": "Policy episodes not yet authorized; still in G3 qual. Agent C owns C2 gates.",
+      "would_legitimately_expand_throughput": false
+    },
+    "c6_containment": {
+      "owner": "Agent B (containment)",
+      "reason": "Model-blind G3 on A100-40GB parallel stratum is legitimate after per-product smoke attestation; does not require G4 (simulator-only gate).",
+      "would_legitimately_expand_throughput": true
+    },
+    "c7_confirmatory": {
+      "governing_receipt": "artifacts/online_correction_v4/qualification/object_pair_g4_nano_a10080_a40_hardware_g4c7a100q20260906b.json",
+      "owner": "C7 campaign agent (object_pair confirmatory)",
+      "reason": "Moving C7 off a10080-policy_a40-simulator requires a new G4 hardware receipt and runtime-lock amendment per g4_policy_family_hardware_report_20260908.json. Current bottleneck is lane-pair count and A100-80GB sharing with C2 qual, not attestation of A40 sim leg.",
+      "would_legitimately_expand_throughput": false
+    }
+  },
+  "pool_headroom_snapshot": {
+    "NVIDIA-A100-SXM4-40GB": {
+      "assigned_to_c6_parallel_stratum": 0,
+      "pool_size": 64,
+      "status": "idle_available_for_agent_b"
+    },
+    "NVIDIA-A100-SXM4-80GB": {
+      "c2_g3_qual_lanes": 0,
+      "c7_policy_lanes": 15,
+      "headroom": 80,
+      "pool_size": 95
+    },
+    "NVIDIA-A40": {
+      "c7_simulator_lanes": 15,
+      "headroom": 25,
+      "pool_size": 40
+    },
+    "NVIDIA-B200": {
+      "pool_size": 40,
+      "status": "idle_alternate_for_c6_attestation"
+    }
+  },
+  "qualification_before_policy_episodes": {
+    "achievable_episode_counts": {
+      "C2_reference_binding": 4096,
+      "C6_containment": 768,
+      "C7_object_pair": 768,
+      "C8_second_stack": 768
+    },
+    "achievable_episode_total": 6400,
+    "blocked_episode_counts": {
+      "C1_C3_C4_horizontal": 9728,
+      "C5_vertical": 1536
+    },
+    "blocked_episode_total": 11264,
+    "estimated_at_utc": "2026-09-07T14:18:48Z",
+    "note": "C7 behavioral episodes continue on protected a10080-policy/a40-simulator lanes throughout. G2 horizontal evidence runs as A100-80GB backfill and does not extend the C2 critical path when C2 dominates pool occupancy.",
+    "parallel_strata_materially_faster": true,
+    "parallel_strata_time_saved_minutes": 94,
+    "qualification_gates": {
+      "assumptions": {
+        "g2_seed_minutes": 35,
+        "g3_path_seed_minutes": 47,
+        "gpu_pool_sizes": {
+          "NVIDIA-A100-SXM4-40GB": 64,
+          "NVIDIA-A100-SXM4-80GB": 95,
+          "NVIDIA-A40": 40,
+          "NVIDIA-B200": 40
+        },
+        "parallel_attestation_products": [
+          "NVIDIA-A100-SXM4-40GB",
+          "NVIDIA-B200"
+        ],
+        "parallel_strata_enabled": true,
+        "primary_plus_backfill_on_a10080": true
+      },
+      "estimated_at_utc": "2026-09-07T14:18:48Z",
+      "main_episode_start_note": "6,400 achievable episodes (C7/C6/C2/C8) may dispatch after their qualification tiers complete and per-fixture live controls pass. 11,264 episodes across C1/C3/C4 horizontal and C5 vertical remain scientifically blocked.",
+      "parallel_qualification_minutes": 94,
+      "qualification_completion_hours": 1.6,
+      "schema_version": "v4-wave-admission-estimates-v2",
+      "serialized_a10080_minutes": 94,
+      "tier_estimates": [
+        {
+          "admission_class": "primary",
+          "alternate_gpu_products": [],
+          "attempt_ids": [],
+          "cumulative_minutes_from_now": 60.0,
+          "episodes_gated": 6400,
+          "estimated_wave_minutes": 60,
+          "gpu_product": null,
+          "pool_size": 4,
+          "remaining_seeds": 2,
+          "seed_minutes_assumed": 60,
+          "tier_complete": false,
+          "tier_id": "natural_grasp_live_control"
+        },
+        {
+          "admission_class": "primary",
+          "alternate_gpu_products": [],
+          "attempt_ids": [
+            "g3rb20260908v"
+          ],
+          "cumulative_minutes_from_now": 154.0,
+          "episodes_gated": 4096,
+          "estimated_wave_minutes": 94,
+          "gpu_product": "NVIDIA-A100-SXM4-80GB",
+          "pool_size": 95,
+          "remaining_seeds": 128,
+          "seed_minutes_assumed": 47,
+          "tier_complete": false,
+          "tier_id": "reference_binding_g3"
+        },
+        {
+          "admission_class": "parallel_stratum",
+          "alternate_gpu_products": [
+            "NVIDIA-B200"
+          ],
+          "attempt_ids": [
+            "g3c6p20260908a10040g"
+          ],
+          "cumulative_minutes_from_now": 154.0,
+          "episodes_gated": 768,
+          "estimated_wave_minutes": 47,
+          "gpu_product": "NVIDIA-A100-SXM4-40GB",
+          "pool_size": 64,
+          "remaining_seeds": 64,
+          "seed_minutes_assumed": 47,
+          "tier_complete": false,
+          "tier_id": "c6_containment_g3"
+        },
+        {
+          "admission_class": "backfill",
+          "alternate_gpu_products": [
+            "NVIDIA-A40"
+          ],
+          "attempt_ids": [
+            "g2gpu20260908g",
+            "g2r20260908g"
+          ],
+          "cumulative_minutes_from_now": 154.0,
+          "episodes_gated": 0,
+          "estimated_wave_minutes": 70,
+          "gpu_product": "NVIDIA-A100-SXM4-80GB",
+          "pool_size": 95,
+          "remaining_seeds": 128,
+          "seed_minutes_assumed": 35,
+          "tier_complete": false,
+          "tier_id": "horizontal_g2_evidence"
+        }
+      ]
+    },
+    "qualification_wall_clock_hours": {
+      "parallel_a10040_c6": 2.4,
+      "parallel_b200_c6": 3.1,
+      "serialized": 3.9
+    },
+    "qualification_wall_clock_minutes": {
+      "parallel_a10080_c2_with_a10040_c6": 141,
+      "parallel_a10080_c2_with_b200_c6": 188,
+      "serialized_a10080_then_a10040": 235
+    },
+    "remaining_g3_seeds": {
+      "containment_g3c6p20260908a10040g": 0,
+      "horizontal_g2_evidence_backfill": 0,
+      "reference_binding_g3rb20260908v": 0
+    },
+    "schema_version": "v4-achievable-episode-estimates-v1"
+  },
+  "schema_version": "v4-policy-episode-throughput-analysis-v1"
+}

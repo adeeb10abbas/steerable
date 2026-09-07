@@ -78,6 +78,13 @@ CURRENT_HOMOGENEOUS_ATTEMPT_IDS: frozenset[str] = frozenset(
         "g2gpu20260908g",
         "g3rb20260908v",
         "g3c5p20260908a10080g",
+        "g3c6p20260908a10040g",
+    }
+)
+
+# C6 parallel-stratum migration: A100-80GB attempt competes with C2; Agent B owns a10040g dispatch.
+WRONG_STRATUM_PARALLEL_ATTEMPT_IDS: frozenset[str] = frozenset(
+    {
         "g3c6p20260908a10080g",
     }
 )
@@ -161,15 +168,15 @@ ADMISSION_TIERS: tuple[AdmissionTier, ...] = (
     AdmissionTier(
         tier_id="c6_containment_g3",
         priority=2,
-        attempt_ids=frozenset({"g3c6p20260908a10080g"}),
-        attempt_patterns=(r"g3c6p20260908a10080g",),
+        attempt_ids=frozenset({"g3c6p20260908a10040g"}),
+        attempt_patterns=(r"g3c6p20260908a10040g",),
         gpu_product="NVIDIA-A100-SXM4-40GB",
-        alternate_gpu_products=("NVIDIA-B200", "NVIDIA-A100-SXM4-80GB"),
+        alternate_gpu_products=("NVIDIA-B200",),
         admission_class="parallel_stratum",
-        seed_count=128,
+        seed_count=64,
         seed_minutes=G3_PATH_SEED_MINUTES,
         episodes_gated=768,
-        description="C6 containment G3 smoke and ladder (live controls passed; parallel stratum)",
+        description="C6 containment 64-seed G3 ladder on parallel stratum (Agent B gate owner)",
     ),
     AdmissionTier(
         tier_id="horizontal_g2_evidence",
@@ -221,6 +228,10 @@ def is_scientifically_blocked_attempt(attempt_id: str) -> bool:
 
 def is_deprioritized_attempt(attempt_id: str) -> bool:
     return attempt_id in DEPRIORITIZED_ATTEMPT_IDS
+
+
+def is_wrong_stratum_parallel_attempt(attempt_id: str) -> bool:
+    return attempt_id in WRONG_STRATUM_PARALLEL_ATTEMPT_IDS
 
 
 def is_superseded_attempt(attempt_id: str) -> bool:
@@ -344,6 +355,7 @@ def compute_admitted_attempts(
         "tiers": [],
         "c7_always_admitted": [],
         "scientifically_blocked": [],
+        "wrong_stratum_parallel_suspended": [],
         "deprioritized_deferred": [],
     }
 
@@ -352,6 +364,8 @@ def compute_admitted_attempts(
             report["c7_always_admitted"].append(attempt_id)
         if is_scientifically_blocked_attempt(attempt_id):
             report["scientifically_blocked"].append(attempt_id)
+        if is_wrong_stratum_parallel_attempt(attempt_id):
+            report["wrong_stratum_parallel_suspended"].append(attempt_id)
 
     achievable_priority_pending = _achievable_priority_incomplete(attempt_summary)
 
@@ -574,7 +588,7 @@ def build_achievable_episode_estimates(
         "qualification_gates": qual,
         "remaining_g3_seeds": {
             "reference_binding_g3rb20260908v": c2_remaining,
-            "containment_g3c6p20260908a10080g": c6_remaining,
+            "containment_g3c6p20260908a10040g": c6_remaining,
             "horizontal_g2_evidence_backfill": g2_remaining,
         },
         "qualification_wall_clock_minutes": {
@@ -719,7 +733,9 @@ def enforce_admission_on_cluster(
         name = str(job["metadata"]["name"])
         should_run = (
             attempt in admitted_set or attempt in c7_attempts
-        ) and not is_scientifically_blocked_attempt(attempt)
+        ) and not is_scientifically_blocked_attempt(attempt) and not is_wrong_stratum_parallel_attempt(
+            attempt
+        )
         currently_suspended = bool(job.get("spec", {}).get("suspend"))
         if should_run and currently_suspended:
             if set_job_suspend(

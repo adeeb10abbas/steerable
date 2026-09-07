@@ -1,0 +1,42 @@
+{
+  "schema_version": "v4-parallel-stratum-handoff-v1",
+  "observed_at_utc": "2026-09-07T14:30:00Z",
+  "fixture_id": "containment",
+  "gate_owner": "Agent B",
+  "capacity_agent_role": "stratum routing, admission, and attestation infrastructure only",
+  "superseded_wrong_stratum_attempt": {
+    "attempt_id": "g3c6p20260908a10080g",
+    "gpu_product": "NVIDIA-A100-SXM4-80GB",
+    "reason": "Competes with C2 reference_binding on A100-80GB; smoke failed at stale pin with KeyError left",
+    "action_taken": "suspended_by_admission_enforcement"
+  },
+  "parallel_stratum_target": {
+    "attempt_id": "g3c6p20260908a10040g",
+    "gpu_product": "NVIDIA-A100-SXM4-40GB",
+    "alternate_gpu_product": "NVIDIA-B200",
+    "homogeneous_pin": "a1c5d9a3cdb552a85eb7c7744d996f48b2afe338",
+    "seed_count": 64,
+    "isolated_checkout_workstream": "g3_c5c6",
+    "expected_isolated_study_root_pattern": "/data/users/ali/vla_wam/src/steerable-v4-g3_c5c6-a1c5d9a3-g3c6p20260908a10040g"
+  },
+  "attestation_requirement": {
+    "baseline_gpu_product": "NVIDIA-A40",
+    "baseline_notes": "A40 is the first qualified model-blind stratum for containment per g4_policy_family_hardware_report_20260908.json",
+    "candidate_must_pass": "1-seed G3 smoke on target GPU product before 64-seed wave",
+    "registry_key": "containment:G3:NVIDIA-A100-SXM4-40GB",
+    "compare_tool": "tools/compare_v4_model_blind_gpu_determinism.py",
+    "smoke_registry": "artifacts/online_correction_v4/setup/gpu_smoke_registry.json",
+    "code_identity_rule": "All receipts in one aggregate must share study_commit a1c5d9a3; never mix GPU strata inside one aggregate"
+  },
+  "agent_b_dispatch_commands": {
+    "isolated_checkout": ".venv/bin/python tools/sync_v4_cluster_study_checkouts.py --workstream g3_c5c6 --attempt-id g3c6p20260908a10040g --pin-commit a1c5d9a3cdb552a85eb7c7744d996f48b2afe338 --apply",
+    "smoke_render_dispatch": ".venv/bin/python tools/dispatch_v4_model_blind_k8s_bundle.py --spec deploy/k8s/v4_lane_bundle/g3-containment-a10040-smoke-spec.json --output-root artifacts/online_correction_v4/execution/c5c6_g3_20260908/rendered-a10040-smoke-a1c5d9a3 --smoke --prequeue-if-blocked --create",
+    "wave_after_smoke_passes": ".venv/bin/python tools/dispatch_v4_model_blind_k8s_bundle.py --spec deploy/k8s/v4_lane_bundle/g3-containment-a10040-wave-spec.json --output-root artifacts/online_correction_v4/execution/c5c6_g3_20260908/rendered-a10040-wave-a1c5d9a3 --prequeue-if-blocked --create",
+    "re_enforce_admission": ".venv/bin/python tools/enforce_v4_wave_admission.py --enforce-only"
+  },
+  "render_specs_committed": [
+    "deploy/k8s/v4_lane_bundle/g3-containment-a10040-smoke-spec.json",
+    "deploy/k8s/v4_lane_bundle/g3-containment-a10040-wave-spec.json"
+  ],
+  "admission_tier": "c6_containment_g3 parallel_stratum priority 2"
+}

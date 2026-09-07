@@ -85,7 +85,7 @@
       "failed": 17,
       "pending": 0,
       "succeeded": 111,
-      "suspended": 56,
+      "suspended": 128,
       "total": 128
     },
     "g3c2a40smoke20260908a": {
@@ -178,10 +178,10 @@
     },
     "g3c6p20260908a10080g": {
       "active": 0,
-      "failed": 0,
-      "pending": 1,
+      "failed": 1,
+      "pending": 0,
       "succeeded": 0,
-      "suspended": 1,
+      "suspended": 0,
       "total": 1
     },
     "g3c7p20260906b": {
@@ -294,6 +294,14 @@
       "pending": 0,
       "succeeded": 1,
       "suspended": 1,
+      "total": 1
+    },
+    "g3ngp20260908cn4": {
+      "active": 0,
+      "failed": 0,
+      "pending": 0,
+      "succeeded": 1,
+      "suspended": 0,
       "total": 1
     },
     "g3ngp20260908cneg": {
@@ -509,7 +517,7 @@
       "failed": 0,
       "pending": 0,
       "succeeded": 1,
-      "suspended": 0,
+      "suspended": 1,
       "total": 1
     },
     "g3ngrb20260908neg": {
@@ -533,7 +541,7 @@
       "failed": 1,
       "pending": 0,
       "succeeded": 0,
-      "suspended": 0,
+      "suspended": 1,
       "total": 1
     },
     "g3ngrb20260908t": {
@@ -541,7 +549,7 @@
       "failed": 1,
       "pending": 0,
       "succeeded": 0,
-      "suspended": 0,
+      "suspended": 1,
       "total": 1
     },
     "g3ngrb20260908u": {
@@ -549,7 +557,7 @@
       "failed": 0,
       "pending": 0,
       "succeeded": 1,
-      "suspended": 0,
+      "suspended": 1,
       "total": 1
     },
     "g3ngrb20260908v": {
@@ -557,7 +565,7 @@
       "failed": 0,
       "pending": 0,
       "succeeded": 1,
-      "suspended": 0,
+      "suspended": 1,
       "total": 1
     },
     "g3r20260908d": {
@@ -585,12 +593,12 @@
       "total": 1
     },
     "g3rb20260908v": {
-      "active": 0,
+      "active": 87,
       "failed": 0,
-      "pending": 115,
-      "succeeded": 13,
-      "suspended": 128,
-      "total": 128
+      "pending": 0,
+      "succeeded": 36,
+      "suspended": 0,
+      "total": 123
     },
     "g3s7pilot20260906a": {
       "active": 0,
@@ -693,7 +701,7 @@
       "failed": 1,
       "pending": 0,
       "succeeded": 0,
-      "suspended": 0,
+      "suspended": 1,
       "total": 1
     },
     "horizng20260908t": {
@@ -701,7 +709,7 @@
       "failed": 0,
       "pending": 0,
       "succeeded": 1,
-      "suspended": 0,
+      "suspended": 1,
       "total": 1
     }
   },
@@ -722,7 +730,7 @@
         "C5_vertical": 1536
       },
       "blocked_episode_total": 11264,
-      "estimated_at_utc": "2026-09-07T14:08:36Z",
+      "estimated_at_utc": "2026-09-07T14:18:48Z",
       "note": "C7 behavioral episodes continue on protected a10080-policy/a40-simulator lanes throughout. G2 horizontal evidence runs as A100-80GB backfill and does not extend the C2 critical path when C2 dominates pool occupancy.",
       "parallel_strata_materially_faster": true,
       "parallel_strata_time_saved_minutes": 47,
@@ -743,12 +751,12 @@
           "parallel_strata_enabled": true,
           "primary_plus_backfill_on_a10080": true
         },
-        "estimated_at_utc": "2026-09-07T14:08:36Z",
+        "estimated_at_utc": "2026-09-07T14:18:48Z",
         "main_episode_start_note": "6,400 achievable episodes (C7/C6/C2/C8) may dispatch after their qualification tiers complete and per-fixture live controls pass. 11,264 episodes across C1/C3/C4 horizontal and C5 vertical remain scientifically blocked.",
-        "parallel_qualification_minutes": 94,
-        "qualification_completion_hours": 1.6,
+        "parallel_qualification_minutes": 47,
+        "qualification_completion_hours": 0.8,
         "schema_version": "v4-wave-admission-estimates-v2",
-        "serialized_a10080_minutes": 94,
+        "serialized_a10080_minutes": 47,
         "tier_estimates": [
           {
             "admission_class": "primary",
@@ -770,12 +778,12 @@
             "attempt_ids": [
               "g3rb20260908v"
             ],
-            "cumulative_minutes_from_now": 274.0,
+            "cumulative_minutes_from_now": 227.0,
             "episodes_gated": 4096,
-            "estimated_wave_minutes": 94,
+            "estimated_wave_minutes": 47,
             "gpu_product": "NVIDIA-A100-SXM4-80GB",
             "pool_size": 95,
-            "remaining_seeds": 115,
+            "remaining_seeds": 87,
             "seed_minutes_assumed": 47,
             "tier_complete": false,
             "tier_id": "reference_binding_g3"
@@ -783,20 +791,19 @@
           {
             "admission_class": "parallel_stratum",
             "alternate_gpu_products": [
-              "NVIDIA-B200",
-              "NVIDIA-A100-SXM4-80GB"
+              "NVIDIA-B200"
             ],
             "attempt_ids": [
-              "g3c6p20260908a10080g"
+              "g3c6p20260908a10040g"
             ],
-            "cumulative_minutes_from_now": 274.0,
+            "cumulative_minutes_from_now": 227.0,
             "episodes_gated": 768,
-            "estimated_wave_minutes": 47,
+            "estimated_wave_minutes": 0.0,
             "gpu_product": "NVIDIA-A100-SXM4-40GB",
             "pool_size": 64,
-            "remaining_seeds": 1,
+            "remaining_seeds": 0,
             "seed_minutes_assumed": 47,
-            "tier_complete": false,
+            "tier_complete": true,
             "tier_id": "c6_containment_g3"
           },
           {
@@ -808,7 +815,7 @@
               "g2gpu20260908g",
               "g2r20260908g"
             ],
-            "cumulative_minutes_from_now": 274.0,
+            "cumulative_minutes_from_now": 227.0,
             "episodes_gated": 0,
             "estimated_wave_minutes": 35,
             "gpu_product": "NVIDIA-A100-SXM4-80GB",
@@ -821,25 +828,24 @@
         ]
       },
       "qualification_wall_clock_hours": {
-        "parallel_a10040_c6": 1.6,
-        "parallel_b200_c6": 1.6,
-        "serialized": 2.4
+        "parallel_a10040_c6": 2.4,
+        "parallel_b200_c6": 3.1,
+        "serialized": 3.1
       },
       "qualification_wall_clock_minutes": {
-        "parallel_a10080_c2_with_a10040_c6": 94,
-        "parallel_a10080_c2_with_b200_c6": 94,
-        "serialized_a10080_then_a10040": 141
+        "parallel_a10080_c2_with_a10040_c6": 141,
+        "parallel_a10080_c2_with_b200_c6": 188,
+        "serialized_a10080_then_a10040": 188
       },
       "remaining_g3_seeds": {
-        "containment_g3c6p20260908a10080g": 1,
+        "containment_g3c6p20260908a10040g": 0,
         "horizontal_g2_evidence_backfill": 18,
-        "reference_binding_g3rb20260908v": 115
+        "reference_binding_g3rb20260908v": 87
       },
       "schema_version": "v4-achievable-episode-estimates-v1"
     },
     "admission_report": {
       "admitted_attempts": [
-        "g3c6p20260908a10080g",
         "g3rb20260908v"
       ],
       "c7_always_admitted": [],
@@ -862,10 +868,7 @@
           "tier_id": "reference_binding_g3"
         },
         {
-          "attempt_ids": [
-            "g3c6p20260908a10080g"
-          ],
-          "status": "admitted",
+          "status": "no_jobs",
           "tier_id": "c6_containment_g3"
         },
         {
@@ -879,10 +882,12 @@
           "status": "deprioritized_deferred",
           "tier_id": "c5_vertical_g3"
         }
+      ],
+      "wrong_stratum_parallel_suspended": [
+        "g3c6p20260908a10080g"
       ]
     },
     "admitted_attempts": [
-      "g3c6p20260908a10080g",
       "g3rb20260908v"
     ],
     "attempt_summary": {
@@ -971,7 +976,7 @@
         "failed": 17,
         "pending": 0,
         "succeeded": 111,
-        "suspended": 62,
+        "suspended": 128,
         "total": 128
       },
       "g3c2a40smoke20260908a": {
@@ -1064,10 +1069,10 @@
       },
       "g3c6p20260908a10080g": {
         "active": 0,
-        "failed": 0,
-        "pending": 1,
+        "failed": 1,
+        "pending": 0,
         "succeeded": 0,
-        "suspended": 1,
+        "suspended": 0,
         "total": 1
       },
       "g3c7p20260906b": {
@@ -1180,6 +1185,14 @@
         "pending": 0,
         "succeeded": 1,
         "suspended": 1,
+        "total": 1
+      },
+      "g3ngp20260908cn4": {
+        "active": 0,
+        "failed": 0,
+        "pending": 0,
+        "succeeded": 1,
+        "suspended": 0,
         "total": 1
       },
       "g3ngp20260908cneg": {
@@ -1395,7 +1408,7 @@
         "failed": 0,
         "pending": 0,
         "succeeded": 1,
-        "suspended": 0,
+        "suspended": 1,
         "total": 1
       },
       "g3ngrb20260908neg": {
@@ -1419,7 +1432,7 @@
         "failed": 1,
         "pending": 0,
         "succeeded": 0,
-        "suspended": 0,
+        "suspended": 1,
         "total": 1
       },
       "g3ngrb20260908t": {
@@ -1427,7 +1440,7 @@
         "failed": 1,
         "pending": 0,
         "succeeded": 0,
-        "suspended": 0,
+        "suspended": 1,
         "total": 1
       },
       "g3ngrb20260908u": {
@@ -1435,7 +1448,7 @@
         "failed": 0,
         "pending": 0,
         "succeeded": 1,
-        "suspended": 0,
+        "suspended": 1,
         "total": 1
       },
       "g3ngrb20260908v": {
@@ -1443,7 +1456,7 @@
         "failed": 0,
         "pending": 0,
         "succeeded": 1,
-        "suspended": 0,
+        "suspended": 1,
         "total": 1
       },
       "g3r20260908d": {
@@ -1471,12 +1484,12 @@
         "total": 1
       },
       "g3rb20260908v": {
-        "active": 0,
+        "active": 87,
         "failed": 0,
-        "pending": 115,
-        "succeeded": 13,
-        "suspended": 128,
-        "total": 128
+        "pending": 0,
+        "succeeded": 36,
+        "suspended": 0,
+        "total": 123
       },
       "g3s7pilot20260906a": {
         "active": 0,
@@ -1579,7 +1592,7 @@
         "failed": 1,
         "pending": 0,
         "succeeded": 0,
-        "suspended": 0,
+        "suspended": 1,
         "total": 1
       },
       "horizng20260908t": {
@@ -1587,56 +1600,17 @@
         "failed": 0,
         "pending": 0,
         "succeeded": 1,
-        "suspended": 0,
+        "suspended": 1,
         "total": 1
       }
     },
-    "jobs_suspended": 73,
-    "jobs_unsuspended": 129,
+    "jobs_suspended": 2,
+    "jobs_unsuspended": 0,
     "suspended_sample": [
-      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s062",
-      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s063",
-      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s064",
-      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s065",
-      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s066",
-      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s067",
-      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s068",
-      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s069",
-      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s070",
-      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s071",
-      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s072",
-      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s073",
-      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s074",
-      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s075",
-      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s076",
-      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s077",
-      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s078",
-      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s079",
-      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s080",
-      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s081"
+      "v4-c-ngpc-g3ngp20260908cn4-29c32dae17-job",
+      "v4-g3-cont-g3c6p20260908a10080g-9a6114e547-s000"
     ],
-    "unsuspended_sample": [
-      "v4-g3-cont-g3c6p20260908a10080g-9a6114e547-s000",
-      "v4-g3-rb-g3rb20260908v-60670a185c-s000",
-      "v4-g3-rb-g3rb20260908v-60670a185c-s001",
-      "v4-g3-rb-g3rb20260908v-60670a185c-s002",
-      "v4-g3-rb-g3rb20260908v-60670a185c-s003",
-      "v4-g3-rb-g3rb20260908v-60670a185c-s004",
-      "v4-g3-rb-g3rb20260908v-60670a185c-s005",
-      "v4-g3-rb-g3rb20260908v-60670a185c-s006",
-      "v4-g3-rb-g3rb20260908v-60670a185c-s007",
-      "v4-g3-rb-g3rb20260908v-60670a185c-s008",
-      "v4-g3-rb-g3rb20260908v-60670a185c-s009",
-      "v4-g3-rb-g3rb20260908v-60670a185c-s010",
-      "v4-g3-rb-g3rb20260908v-60670a185c-s011",
-      "v4-g3-rb-g3rb20260908v-60670a185c-s012",
-      "v4-g3-rb-g3rb20260908v-60670a185c-s013",
-      "v4-g3-rb-g3rb20260908v-60670a185c-s014",
-      "v4-g3-rb-g3rb20260908v-60670a185c-s015",
-      "v4-g3-rb-g3rb20260908v-60670a185c-s016",
-      "v4-g3-rb-g3rb20260908v-60670a185c-s017",
-      "v4-g3-rb-g3rb20260908v-60670a185c-s018"
-    ],
+    "unsuspended_sample": [],
     "wall_clock_estimates": {
       "assumptions": {
         "g2_seed_minutes": 35,
@@ -1654,12 +1628,12 @@
         "parallel_strata_enabled": true,
         "primary_plus_backfill_on_a10080": true
       },
-      "estimated_at_utc": "2026-09-07T14:08:36Z",
+      "estimated_at_utc": "2026-09-07T14:18:48Z",
       "main_episode_start_note": "6,400 achievable episodes (C7/C6/C2/C8) may dispatch after their qualification tiers complete and per-fixture live controls pass. 11,264 episodes across C1/C3/C4 horizontal and C5 vertical remain scientifically blocked.",
-      "parallel_qualification_minutes": 94,
-      "qualification_completion_hours": 1.6,
+      "parallel_qualification_minutes": 47,
+      "qualification_completion_hours": 0.8,
       "schema_version": "v4-wave-admission-estimates-v2",
-      "serialized_a10080_minutes": 94,
+      "serialized_a10080_minutes": 47,
       "tier_estimates": [
         {
           "admission_class": "primary",
@@ -1681,12 +1655,12 @@
           "attempt_ids": [
             "g3rb20260908v"
           ],
-          "cumulative_minutes_from_now": 274.0,
+          "cumulative_minutes_from_now": 227.0,
           "episodes_gated": 4096,
-          "estimated_wave_minutes": 94,
+          "estimated_wave_minutes": 47,
           "gpu_product": "NVIDIA-A100-SXM4-80GB",
           "pool_size": 95,
-          "remaining_seeds": 115,
+          "remaining_seeds": 87,
           "seed_minutes_assumed": 47,
           "tier_complete": false,
           "tier_id": "reference_binding_g3"
@@ -1694,20 +1668,19 @@
         {
           "admission_class": "parallel_stratum",
           "alternate_gpu_products": [
-            "NVIDIA-B200",
-            "NVIDIA-A100-SXM4-80GB"
+            "NVIDIA-B200"
           ],
           "attempt_ids": [
-            "g3c6p20260908a10080g"
+            "g3c6p20260908a10040g"
           ],
-          "cumulative_minutes_from_now": 274.0,
+          "cumulative_minutes_from_now": 227.0,
           "episodes_gated": 768,
-          "estimated_wave_minutes": 47,
+          "estimated_wave_minutes": 0.0,
           "gpu_product": "NVIDIA-A100-SXM4-40GB",
           "pool_size": 64,
-          "remaining_seeds": 1,
+          "remaining_seeds": 0,
           "seed_minutes_assumed": 47,
-          "tier_complete": false,
+          "tier_complete": true,
           "tier_id": "c6_containment_g3"
         },
         {
@@ -1719,7 +1692,7 @@
             "g2gpu20260908g",
             "g2r20260908g"
           ],
-          "cumulative_minutes_from_now": 274.0,
+          "cumulative_minutes_from_now": 227.0,
           "episodes_gated": 0,
           "estimated_wave_minutes": 35,
           "gpu_product": "NVIDIA-A100-SXM4-80GB",
@@ -1734,7 +1707,7 @@
   },
   "kube_context": "prod-dcwi-warrenq1-vmkub007",
   "namespace": "211247-prod",
-  "observed_at_utc": "2026-09-07T14:08:36Z",
+  "observed_at_utc": "2026-09-07T14:18:48Z",
   "schema_version": "v4-wave-admission-enforcement-receipt-v1",
   "superseded_attempt_ids": [
     "g2gpu20260908a10040",

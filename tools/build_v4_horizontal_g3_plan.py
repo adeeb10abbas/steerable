@@ -56,6 +56,38 @@ FIXTURE_DEFAULTS = {
             / "artifacts/online_correction_v4/setup/object_pair_g3_plan.candidate.json"
         ),
     },
+    "vertical": {
+        "registry": (
+            ROOT
+            / "artifacts/online_correction_v4/setup/vertical_reset_registry.candidate.json"
+        ),
+        "g2_aggregate": (
+            ROOT
+            / "artifacts/online_correction_v4/qualification/"
+            "20260906_vertical_g2_aggregate_g2c5q20260906c.json"
+        ),
+        "output": (
+            ROOT
+            / "artifacts/online_correction_v4/setup/vertical_g3_plan.candidate.json"
+        ),
+    },
+    "containment": {
+        "registry": (
+            ROOT
+            / "artifacts/online_correction_v4/setup/"
+            "containment_reset_registry.candidate.json"
+        ),
+        "g2_aggregate": (
+            ROOT
+            / "artifacts/online_correction_v4/qualification/"
+            "20260906_containment_g2_aggregate_g2c6q20260906c.json"
+        ),
+        "output": (
+            ROOT
+            / "artifacts/online_correction_v4/setup/"
+            "containment_g3_plan.candidate.json"
+        ),
+    },
 }
 
 

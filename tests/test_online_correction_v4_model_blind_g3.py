@@ -41,6 +41,34 @@ G2_AGGREGATE = (
     ROOT
     / "artifacts/online_correction_v4/qualification/20260905_horizontal_g2_aggregate.json"
 )
+FIXTURE_PLAN_CASES = {
+    "vertical": {
+        "registry": ROOT
+        / "artifacts/online_correction_v4/setup/vertical_reset_registry.candidate.json",
+        "g2": ROOT
+        / "artifacts/online_correction_v4/qualification/"
+        "20260906_vertical_g2_aggregate_g2c5q20260906c.json",
+        "plan": ROOT
+        / "artifacts/online_correction_v4/setup/vertical_g3_plan.candidate.json",
+        "goals": ["above", "below"],
+        "path_checks": 768,
+        "scripted_checks": 56,
+    },
+    "containment": {
+        "registry": ROOT
+        / "artifacts/online_correction_v4/setup/"
+        "containment_reset_registry.candidate.json",
+        "g2": ROOT
+        / "artifacts/online_correction_v4/qualification/"
+        "20260906_containment_g2_aggregate_g2c6q20260906c.json",
+        "plan": ROOT
+        / "artifacts/online_correction_v4/setup/"
+        "containment_g3_plan.candidate.json",
+        "goals": ["inside"],
+        "path_checks": 384,
+        "scripted_checks": 28,
+    },
+}
 
 BUILDER_SPEC = importlib.util.spec_from_file_location(
     "build_v4_horizontal_g3_plan",
@@ -180,6 +208,35 @@ class ModelBlindG3PlanTests(unittest.TestCase):
             )
             self.assertEqual(rebuilt.read_bytes(), PLAN.read_bytes())
             self.assertEqual(report["registered_reset_count"], 128)
+
+    def test_fixture_specific_plans_preserve_registered_goal_spaces(self) -> None:
+        for fixture_id, case in FIXTURE_PLAN_CASES.items():
+            with self.subTest(fixture_id=fixture_id), tempfile.TemporaryDirectory() as tmp:
+                rebuilt = Path(tmp) / Path(case["plan"]).name
+                report = builder.build(
+                    campaign_path=CAMPAIGN,
+                    queue_path=QUEUE,
+                    motion_path=MOTION,
+                    registry_path=Path(case["registry"]),
+                    g2_aggregate_path=Path(case["g2"]),
+                    output_path=rebuilt,
+                    fixture_id=fixture_id,
+                )
+                plan = json.loads(rebuilt.read_text(encoding="utf-8"))
+                validate_plan_payload(plan)
+                self.assertEqual(plan["path_sweep"]["goals"], case["goals"])
+                self.assertEqual(
+                    plan["path_sweep"]["checks_per_scale"],
+                    case["path_checks"],
+                )
+                self.assertEqual(
+                    plan["scripted_controller"][
+                        "checks_per_final_geometry_candidate"
+                    ],
+                    case["scripted_checks"],
+                )
+                self.assertEqual(rebuilt.read_bytes(), Path(case["plan"]).read_bytes())
+                self.assertEqual(report["registered_reset_count"], 64)
 
 
 class ModelBlindG3PathReceiptTests(unittest.TestCase):

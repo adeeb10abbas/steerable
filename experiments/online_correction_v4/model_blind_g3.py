@@ -70,11 +70,18 @@ class G3FixtureConfig:
     fixture_id: str
     counterbalance_family: str
     expected_seed_count: int
+    goals: tuple[str, ...]
 
 
 G3_FIXTURE_CONFIGS: dict[str, G3FixtureConfig] = {
-    "horizontal": G3FixtureConfig("horizontal", "C1", 128),
-    "object_pair": G3FixtureConfig("object_pair", "C7", 64),
+    "horizontal": G3FixtureConfig(
+        "horizontal", "C1", 128, ("left", "right", "front", "behind")
+    ),
+    "vertical": G3FixtureConfig("vertical", "C5", 64, ("above", "below")),
+    "containment": G3FixtureConfig("containment", "C6", 64, ("inside",)),
+    "object_pair": G3FixtureConfig(
+        "object_pair", "C7", 64, ("left", "right", "front", "behind")
+    ),
 }
 
 SCRIPTED_CHECK_KINDS = ("stationary", "moving")
@@ -124,8 +131,20 @@ def g3_expected_seed_count(
     )
 
 
-def path_checks_per_scale_for_seed_count(seed_count: int) -> int:
-    return seed_count * len(HORIZONTAL_GOALS) * len(PATH_SCENARIOS)
+def goals_for_fixture(fixture_id: str) -> tuple[str, ...]:
+    return g3_fixture_config(fixture_id).goals
+
+
+def path_checks_per_scale_for_seed_count(
+    seed_count: int,
+    fixture_id: str = "horizontal",
+) -> int:
+    return seed_count * len(goals_for_fixture(fixture_id)) * len(PATH_SCENARIOS)
+
+
+def scripted_check_count(fixture_id: str) -> int:
+    goal_count = len(goals_for_fixture(fixture_id))
+    return 9 * goal_count * len(REFERENCE_POSITIONS) + goal_count
 
 
 def resolve_geometry_contract(
@@ -139,7 +158,7 @@ def resolve_geometry_contract(
             geometry = fixture_cfg.get("model_blind_g3_geometry")
             if isinstance(geometry, Mapping):
                 return dict(geometry)
-    if fixture_id == "object_pair":
+    if fixture_id in {"object_pair", "vertical", "containment"}:
         return dict(DEFAULT_MODEL_BLIND_G3_GEOMETRY)
     raise G3GateError(
         f"campaign lacks model_blind_g3_geometry for fixture {fixture_id!r}"
@@ -170,10 +189,12 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
-def expected_path_check_keys() -> tuple[tuple[str, str], ...]:
+def expected_path_check_keys(
+    fixture_id: str = "horizontal",
+) -> tuple[tuple[str, str], ...]:
     return tuple(
         (goal, scenario)
-        for goal in HORIZONTAL_GOALS
+        for goal in goals_for_fixture(fixture_id)
         for scenario in PATH_SCENARIOS
     )
 
@@ -303,8 +324,9 @@ def _plan_direction_coefficients_for_seed(
         raise G3GateError(
             f"G3 plan lacks direction task coefficients for seed {environment_seed}"
         )
+    fixture_id = str(plan.get("fixture_id"))
     result: dict[str, list[float]] = {}
-    for goal in HORIZONTAL_GOALS:
+    for goal in goals_for_fixture(fixture_id):
         result[goal] = _require_direction_coefficients(
             directions.get(goal),
             f"direction_task_coefficients[{environment_seed}][{goal}]",
@@ -326,11 +348,15 @@ def _plan_receipt_sha256(value: Any, label: str) -> str:
     return _require_plan_receipt_identity(value, label)["sha256"]
 
 
-def _validate_path_check_order(checks: Sequence[Mapping[str, Any]]) -> None:
-    expected = expected_path_check_keys()
-    if len(checks) != HORIZONTAL_PATH_CHECKS_PER_SEED:
+def _validate_path_check_order(
+    checks: Sequence[Mapping[str, Any]],
+    *,
+    fixture_id: str = "horizontal",
+) -> None:
+    expected = expected_path_check_keys(fixture_id)
+    if len(checks) != len(expected):
         raise G3GateError(
-            f"path receipt must contain exactly {HORIZONTAL_PATH_CHECKS_PER_SEED} checks"
+            f"path receipt must contain exactly {len(expected)} checks"
         )
     seen: set[tuple[str, str]] = set()
     for index, (expected_goal, expected_scenario) in enumerate(expected):
@@ -492,14 +518,15 @@ def _compile_goal_area_cases(
     *,
     minimum_fraction: float,
     apply_shrinking_fraction_gate: bool = True,
+    goals: Sequence[str] = HORIZONTAL_GOALS,
 ) -> list[dict[str, Any]]:
     raw_cases = list(cases)
     _require(
-        len(raw_cases) == len(HORIZONTAL_GOALS),
-        "path receipt requires one goal-area case per horizontal goal",
+        len(raw_cases) == len(goals),
+        "path receipt requires one goal-area case per fixture goal",
     )
     compiled: list[dict[str, Any]] = []
-    for goal, case in zip(HORIZONTAL_GOALS, raw_cases):
+    for goal, case in zip(goals, raw_cases):
         _require(isinstance(case, Mapping), f"goal-area case {goal} is invalid")
         _require(case.get("relation") == goal, "goal-area cases are out of order")
         original_area = _require_finite_number(
@@ -596,18 +623,22 @@ def compile_path_seed_receipt(
         "minimum shrinking-area fraction",
     )
     apply_shrinking_fraction_gate = _plan_shrinking_area_fraction_gate_applicable(plan)
+    fixture_id = str(plan.get("fixture_id"))
+    goals = goals_for_fixture(fixture_id)
     compiled_goal_areas = _compile_goal_area_cases(
         goal_area_cases,
         minimum_fraction=minimum_fraction,
         apply_shrinking_fraction_gate=apply_shrinking_fraction_gate,
+        goals=goals,
     )
     observations = list(check_observations)
-    if len(observations) != HORIZONTAL_PATH_CHECKS_PER_SEED:
+    expected_checks = expected_path_check_keys(fixture_id)
+    if len(observations) != len(expected_checks):
         raise G3GateError(
-            f"path seed receipt requires exactly {HORIZONTAL_PATH_CHECKS_PER_SEED} observations"
+            f"path seed receipt requires exactly {len(expected_checks)} observations"
         )
     checks: list[dict[str, Any]] = []
-    for (goal, scenario), observation in zip(expected_path_check_keys(), observations):
+    for (goal, scenario), observation in zip(expected_checks, observations):
         if not isinstance(observation, Mapping):
             raise G3GateError(f"{goal}/{scenario} observation must be a mapping")
         checks.append(
@@ -623,7 +654,6 @@ def compile_path_seed_receipt(
         case["passes_information_gate"] for case in compiled_goal_areas
     )
     passed = all(check["passed"] for check in checks) and information_gate_passed
-    fixture_id = str(plan.get("fixture_id"))
     return {
         "schema_version": path_receipt_schema(fixture_id),
         "campaign_id": plan.get("campaign_id"),
@@ -641,7 +671,7 @@ def compile_path_seed_receipt(
         "counterbalance": counterbalance,
         "direction_task_coefficients_by_goal": directions,
         "check_order": ["goal_declared_order", "scenario_declared_order"],
-        "check_count": HORIZONTAL_PATH_CHECKS_PER_SEED,
+        "check_count": len(expected_checks),
         "checks": checks,
         "goal_area_cases": compiled_goal_areas,
         "information_gate_passed": information_gate_passed,
@@ -683,12 +713,14 @@ def validate_path_seed_receipt(
     directions = receipt.get("direction_task_coefficients_by_goal")
     if not isinstance(directions, Mapping):
         raise G3GateError("path receipt lacks direction task coefficients")
-    for goal in HORIZONTAL_GOALS:
+    goals = goals_for_fixture(fixture_id)
+    for goal in goals:
         _require_direction_coefficients(
             directions.get(goal),
             f"direction_task_coefficients_by_goal[{goal}]",
         )
-    if receipt.get("check_count") != HORIZONTAL_PATH_CHECKS_PER_SEED:
+    expected_check_count = len(expected_path_check_keys(fixture_id))
+    if receipt.get("check_count") != expected_check_count:
         raise G3GateError("path receipt check_count differs")
     if receipt.get("check_order") != [
         "goal_declared_order",
@@ -699,7 +731,7 @@ def validate_path_seed_receipt(
     if not isinstance(checks_raw, list):
         raise G3GateError("path receipt lacks checks")
     checks = [check for check in checks_raw if isinstance(check, Mapping)]
-    _validate_path_check_order(checks)
+    _validate_path_check_order(checks, fixture_id=fixture_id)
     for check in checks:
         goal = check.get("goal")
         scenario = check.get("scenario")
@@ -770,6 +802,7 @@ def validate_path_seed_receipt(
         goal_area_cases,
         minimum_fraction=minimum_fraction,
         apply_shrinking_fraction_gate=apply_shrinking_fraction_gate,
+        goals=goals,
     )
     information_gate_passed = all(
         case["passes_information_gate"] for case in compiled_goal_areas
@@ -794,7 +827,7 @@ def validate_path_seed_receipt(
         if dict(counterbalance) != expected_counterbalance:
             raise G3GateError("counterbalance is not bound to the G3 plan")
         expected_directions = _plan_direction_coefficients_for_seed(plan, environment_seed)
-        for goal in HORIZONTAL_GOALS:
+        for goal in goals:
             if list(directions[goal]) != expected_directions[goal]:
                 raise G3GateError(
                     "direction_task_coefficients_by_goal is not bound to the G3 plan"
@@ -816,7 +849,7 @@ def compile_scripted_check_receipt(
         raise G3GateError("scripted check kind differs")
     if type(environment_seed) is not int:
         raise G3GateError("environment_seed must be an integer")
-    if goal not in HORIZONTAL_GOALS:
+    if goal not in goals_for_fixture(fixture_id):
         raise G3GateError("scripted check goal differs")
     if reference_position not in REFERENCE_POSITIONS:
         raise G3GateError("scripted check reference_position differs")
@@ -886,7 +919,7 @@ def validate_scripted_check_receipt(receipt: Mapping[str, Any]) -> None:
     if type(environment_seed) is not int:
         raise G3GateError("environment_seed must be an integer")
     goal = receipt.get("goal")
-    if goal not in HORIZONTAL_GOALS:
+    if goal not in goals_for_fixture(fixture_id):
         raise G3GateError("scripted check goal differs")
     reference_position = receipt.get("reference_position")
     if reference_position not in REFERENCE_POSITIONS:
@@ -1112,6 +1145,7 @@ def build_plan_payload(
         math.isfinite(nominal_displacement_m) and nominal_displacement_m > 0,
         "nominal displacement must be positive",
     )
+    goals = goals_for_fixture(fixture_id)
     directions: dict[str, Any] = {}
     for seed in seeds:
         sign = int(counterbalance[seed]["physical_translation_sign"])
@@ -1123,20 +1157,21 @@ def build_plan_payload(
                     physical_sign=sign,
                 )
             )
-            for goal in HORIZONTAL_GOALS
+            for goal in goals
         }
-    path_checks_per_scale = path_checks_per_scale_for_seed_count(len(seeds))
+    path_checks_per_scale = path_checks_per_scale_for_seed_count(
+        len(seeds),
+        fixture_id,
+    )
     expected_path_checks = path_checks_per_scale_for_seed_count(
-        expected_seed_count
+        expected_seed_count,
+        fixture_id,
     )
     _require(
         path_checks_per_scale == expected_path_checks,
         f"{fixture_id} path count differs",
     )
-    _require(
-        HORIZONTAL_SCRIPTED_CHECK_COUNT == 112,
-        "horizontal scripted count differs",
-    )
+    scripted_checks = scripted_check_count(fixture_id)
     gate_fixtures = (
         tuple(goal_area_gate_fixtures)
         if goal_area_gate_fixtures is not None
@@ -1150,7 +1185,6 @@ def build_plan_payload(
         "schema_version": plan_schema(fixture_id),
         "campaign_id": "online_correction_v4",
         "fixture_id": fixture_id,
-        "qualification_scope": qualification_scope,
         "status": "model_blind_candidate_not_released_for_inference",
         "plan_status": "ready_for_live_g3_execution",
         "model_request_count": 0,
@@ -1179,7 +1213,7 @@ def build_plan_payload(
         },
         "direction_task_coefficients_by_env_seed": directions,
         "path_sweep": {
-            "goals": list(HORIZONTAL_GOALS),
+            "goals": list(goals),
             "scenarios": list(PATH_SCENARIOS),
             "sample_interval_s": PATH_SAMPLE_INTERVAL_S,
             "reset_replay_rule": (
@@ -1204,17 +1238,17 @@ def build_plan_payload(
             ),
             "reset_env_seeds": list(extremes),
             "stationary": {
-                "goals": list(HORIZONTAL_GOALS),
+                "goals": list(goals),
                 "reference_positions": list(REFERENCE_POSITIONS),
-                "checks_per_scale": HORIZONTAL_STATIONARY_CHECK_COUNT,
+                "checks_per_scale": 9 * len(goals) * len(REFERENCE_POSITIONS),
             },
             "moving": {
                 "canonical_env_seed": extremes[0],
-                "goals": list(HORIZONTAL_GOALS),
+                "goals": list(goals),
                 "scenario": "move_stop",
-                "checks_per_scale": HORIZONTAL_MOVING_CHECK_COUNT,
+                "checks_per_scale": len(goals),
             },
-            "checks_per_final_geometry_candidate": HORIZONTAL_SCRIPTED_CHECK_COUNT,
+            "checks_per_final_geometry_candidate": scripted_checks,
             "candidate_attempt_rule": (
                 "run scripted checks only after that scale passes exhaustive path "
                 "and information checks; preserve every rejected candidate receipt"
@@ -1226,6 +1260,8 @@ def build_plan_payload(
             "one scale."
         ),
     }
+    if fixture_id != "horizontal" or qualification_scope != "confirmatory":
+        payload["qualification_scope"] = qualification_scope
     if fixture_id == "object_pair":
         payload["information_gate"] = {
             "shrinking_area_fraction_gate_applicable": shrinking_gate_applicable,
@@ -1371,9 +1407,12 @@ def validate_plan_payload(plan: Mapping[str, Any]) -> None:
     _require(isinstance(path, Mapping), "G3 plan lacks path sweep")
     _require(isinstance(scripted, Mapping), "G3 plan lacks scripted checks")
     expected_path_checks = path_checks_per_scale_for_seed_count(
-        expected_seed_count
+        expected_seed_count,
+        fixture_id,
     )
     _require(path.get("checks_per_scale") == expected_path_checks, "G3 path count differs")
+    goals = goals_for_fixture(fixture_id)
+    _require(path.get("goals") == list(goals), "G3 path goals differ")
     _require(
         path.get("reset_replay_rule")
         == (
@@ -1383,7 +1422,8 @@ def validate_plan_payload(plan: Mapping[str, Any]) -> None:
         "G3 path reset/replay rule differs",
     )
     _require(
-        scripted.get("checks_per_final_geometry_candidate") == 112,
+        scripted.get("checks_per_final_geometry_candidate")
+        == scripted_check_count(fixture_id),
         "G3 scripted count differs",
     )
     information_gate = plan.get("information_gate")
@@ -1446,7 +1486,7 @@ def expected_scripted_check_keys(
     goals = stationary.get("goals")
     positions = stationary.get("reference_positions")
     _require(
-        list(goals) == list(HORIZONTAL_GOALS),
+        list(goals) == list(goals_for_fixture(str(plan.get("fixture_id")))),
         "G3 stationary scripted goals differ",
     )
     _require(
@@ -1455,7 +1495,8 @@ def expected_scripted_check_keys(
     )
     moving_goals = moving.get("goals")
     _require(
-        list(moving_goals) == list(HORIZONTAL_GOALS),
+        list(moving_goals)
+        == list(goals_for_fixture(str(plan.get("fixture_id")))),
         "G3 moving scripted goals differ",
     )
     canonical_seed = moving.get("canonical_env_seed")
@@ -1466,17 +1507,18 @@ def expected_scripted_check_keys(
         "G3 moving scripted scenario differs",
     )
     keys: list[tuple[str, int, str, str]] = []
+    fixture_goals = goals_for_fixture(str(plan.get("fixture_id")))
     for seed in reset_seeds:
         if type(seed) is not int:
             raise G3GateError("G3 scripted reset seed differs")
-        for goal in HORIZONTAL_GOALS:
+        for goal in fixture_goals:
             for position in REFERENCE_POSITIONS:
                 keys.append(("stationary", seed, goal, position))
-    for goal in HORIZONTAL_GOALS:
+    for goal in fixture_goals:
         keys.append(("moving", canonical_seed, goal, "endpoint"))
     _require(
-        len(keys) == HORIZONTAL_SCRIPTED_CHECK_COUNT,
-        "horizontal scripted count differs",
+        len(keys) == scripted_check_count(str(plan.get("fixture_id"))),
+        "fixture scripted count differs",
     )
     return tuple(keys)
 
@@ -1486,11 +1528,14 @@ def _scripted_check_key(receipt: Mapping[str, Any]) -> tuple[str, int, str, str]
     environment_seed = receipt.get("environment_seed")
     goal = receipt.get("goal")
     reference_position = receipt.get("reference_position")
+    fixture_id = receipt.get("fixture_id")
+    if not isinstance(fixture_id, str):
+        raise G3GateError("scripted receipt lacks fixture_id")
     if check_kind not in SCRIPTED_CHECK_KINDS:
         raise G3GateError("scripted check kind differs")
     if type(environment_seed) is not int:
         raise G3GateError("environment_seed must be an integer")
-    if goal not in HORIZONTAL_GOALS:
+    if goal not in goals_for_fixture(fixture_id):
         raise G3GateError("scripted check goal differs")
     if reference_position not in REFERENCE_POSITIONS:
         raise G3GateError("scripted check reference_position differs")
@@ -1626,10 +1671,14 @@ def compile_path_scale_receipt(
         for seed, receipt in observed.items()
         if receipt.get("information_gate_passed") is not True
     )
-    expected_path_check_count = len(expected_seeds) * HORIZONTAL_PATH_CHECKS_PER_SEED
+    checks_per_seed = len(expected_path_check_keys(fixture_id))
+    expected_path_check_count = len(expected_seeds) * checks_per_seed
     _require(
         expected_path_check_count
-        == path_checks_per_scale_for_seed_count(expected_seed_count),
+        == path_checks_per_scale_for_seed_count(
+            expected_seed_count,
+            fixture_id,
+        ),
         f"{fixture_id} path count differs",
     )
 
@@ -1730,7 +1779,10 @@ def validate_path_scale_receipt(
     )
     _require(
         expected_path_check_count
-        == path_checks_per_scale_for_seed_count(expected_seed_count),
+        == path_checks_per_scale_for_seed_count(
+            expected_seed_count,
+            fixture_id,
+        ),
         "path scale check count differs",
     )
     passed_count = _require_non_negative_int(
@@ -1744,7 +1796,7 @@ def validate_path_scale_receipt(
     )
     _require(
         passed_count + failed_count
-        == observed_seed_count * HORIZONTAL_PATH_CHECKS_PER_SEED,
+        == observed_seed_count * len(expected_path_check_keys(fixture_id)),
         "path scale check totals differ",
     )
     missing = receipt.get("missing_env_seeds")
@@ -1851,6 +1903,7 @@ def compile_g3_aggregate_receipt(
     )
 
     expected_scripted_keys = expected_scripted_check_keys(plan)
+    expected_scripted_count = scripted_check_count(str(plan.get("fixture_id")))
     observed_scripted: dict[tuple[str, int, str, str], Mapping[str, Any]] = {}
     scripted_failures: list[dict[str, Any]] = []
     scripted_passed_count = 0
@@ -1916,12 +1969,12 @@ def compile_g3_aggregate_receipt(
             scripted_complete = (
                 not missing_scripted_keys
                 and not unexpected_scripted_keys
-                and len(observed_scripted) == HORIZONTAL_SCRIPTED_CHECK_COUNT
+                and len(observed_scripted) == expected_scripted_count
             )
             scripted_passed = (
                 scripted_complete
                 and scripted_failed_count == 0
-                and scripted_passed_count == HORIZONTAL_SCRIPTED_CHECK_COUNT
+                and scripted_passed_count == expected_scripted_count
             )
 
     if selected_scale is None:
@@ -1967,7 +2020,7 @@ def compile_g3_aggregate_receipt(
             if selected_path_scale is not None
             else None
         ),
-        "expected_scripted_check_count": HORIZONTAL_SCRIPTED_CHECK_COUNT,
+        "expected_scripted_check_count": expected_scripted_count,
         "observed_scripted_check_count": len(observed_scripted),
         "missing_scripted_check_keys": [
             list(key) for key in missing_scripted_keys

@@ -1,0 +1,33 @@
+{
+  "behavioral_episode_count": 38,
+  "config_sha256": "7b207c38353a2194859a01130318237cc55231e3504b1a2632b12b28f93c22b9",
+  "dispatch_mode": "behavioral_infra_retry",
+  "kube_context": "prod-dcwi-warrenq1-vmkub007",
+  "lane_assignments": [
+    {
+      "attempt_id": "attempt0347",
+      "create_status": "created",
+      "episode_count": 19,
+      "infra_failure_class": "policy_healthz_readiness_timeout",
+      "lane_id": "c7m29",
+      "prior_attempt_id": "attempt0336",
+      "policy_job": "v4-c7m29-attempt0347-64f4e1ea42-policy",
+      "simulator_job": "v4-c7m29-attempt0347-64f4e1ea42-sim"
+    },
+    {
+      "attempt_id": "attempt0348",
+      "create_status": "created",
+      "episode_count": 19,
+      "infra_failure_class": "policy_healthz_readiness_timeout",
+      "lane_id": "c7m30",
+      "prior_attempt_id": "attempt0337",
+      "policy_job": "v4-c7m30-attempt0348-2922239a12-policy",
+      "simulator_job": "v4-c7m30-attempt0348-2922239a12-sim"
+    }
+  ],
+  "manifest_sha256": "b7ed349a0907a8ded7c5d368f9298d27b8b85d4875e54e5f9a74ac55e2d0ba30",
+  "namespace": "211247-prod",
+  "queue_sha256": "0da589ceb3c77002d754f699cd1c64e57056ae43e2e63bd2a7def6c66a556de6",
+  "runtime_lock_sha256": "f218a24a79d09d928eb770d3f1e297b976eeb43d2d28d0df8dda40e5d7438cad",
+  "schema_version": "v4-c7-infra-retry-create-wave-v1"
+}

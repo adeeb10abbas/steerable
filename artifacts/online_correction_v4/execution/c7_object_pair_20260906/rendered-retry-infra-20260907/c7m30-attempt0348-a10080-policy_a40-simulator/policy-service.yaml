@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: "v4-c7m30-attempt0348-2922239a12-policy"
+  namespace: "211247-prod"
+  labels:
+    v4-lane-id: "c7m30"
+    v4-attempt-id: "attempt0348"
+    v4-config-sha: "2922239a1216221ce10559bfb5bf253a"
+    v4-lane-role: "policy"
+spec:
+  publishNotReadyAddresses: false
+  selector:
+    v4-lane-id: "c7m30"
+    v4-attempt-id: "attempt0348"
+    v4-config-sha: "2922239a1216221ce10559bfb5bf253a"
+    v4-lane-role: "policy"
+  ports:
+    - name: policy
+      port: 18157
+      targetPort: 18157
+      protocol: TCP

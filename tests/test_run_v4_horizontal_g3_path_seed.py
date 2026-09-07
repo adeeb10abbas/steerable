@@ -89,7 +89,7 @@ class G3PathSeedSamplingTests(unittest.TestCase):
         self.assertEqual(runner.motion_onset_s_for_scenario("original_sham"), 0.0)
 
     def test_configure_motion_controller_schedules_onset_for_moving_profiles(self) -> None:
-        motion = json.loads(CAMPAIGN.read_text(encoding="utf-8"))["motion"]
+        motion = json.loads(LIVE_CAMPAIGN.read_text(encoding="utf-8"))["motion"]
         moving = runner.configure_motion_controller(
             "move_stop",
             displacement_m=0.12,
@@ -130,7 +130,7 @@ class G3PathSeedGeometryTests(unittest.TestCase):
 class G3PathSeedEvaluationTests(unittest.TestCase):
     def test_evaluate_path_sample_passes_clean_support(self) -> None:
         geometry = _geometry()
-        contract = json.loads(CAMPAIGN.read_text(encoding="utf-8"))["fixtures"][
+        contract = json.loads(LIVE_CAMPAIGN.read_text(encoding="utf-8"))["fixtures"][
             "horizontal"
         ]["model_blind_g3_geometry"]
         baseline = (0.0, 0.0, 0.025)
@@ -166,7 +166,7 @@ class G3PathSeedEvaluationTests(unittest.TestCase):
 
     def test_evaluate_path_sample_records_pose_and_drift_violations(self) -> None:
         geometry = _geometry()
-        contract = json.loads(CAMPAIGN.read_text(encoding="utf-8"))["fixtures"][
+        contract = json.loads(LIVE_CAMPAIGN.read_text(encoding="utf-8"))["fixtures"][
             "horizontal"
         ]["model_blind_g3_geometry"]
         baseline = (0.0, 0.0, 0.025)

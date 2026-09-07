@@ -12,22 +12,40 @@
     "sha256": "59e5eb59b193c45e949e4c1c2b95d85481e3955f6cace464d3a896ee1adc5360",
     "note": "Raw episode receipts preserved on PVC; ledger rows retained as provenance only."
   },
-  "live_positive_control": {
+  "failed_positive_control": {
     "path": "artifacts/online_correction_v4/qualification/20260908_object_pair_natural_grasp_live_positive_control_g3ngp20260908m.json",
     "attempt_id": "g3ngp20260908m",
     "verdict": "blocking_setup_defect",
     "scripted_grasp_stages_passed": true,
     "trigger_eligible": false
   },
+  "verified_positive_control": {
+    "path": "artifacts/online_correction_v4/qualification/20260908_object_pair_natural_grasp_live_positive_control_g3ngp20260908p.json",
+    "attempt_id": "g3ngp20260908p",
+    "verdict": "intervention_deliverable",
+    "scripted_grasp_stages_passed": true,
+    "trigger_eligible": true,
+    "study_commit": "c9c988da1d2ea7ffd81702a0024a7a39a20bb892"
+  },
+  "verified_negative_control": {
+    "path": "artifacts/online_correction_v4/qualification/20260908_object_pair_natural_grasp_live_negative_control_g3ngp20260908negb.json",
+    "attempt_id": "g3ngp20260908negb",
+    "verdict": "hold_only_no_trigger",
+    "trigger_eligible": false,
+    "study_commit": "c9c988da1d2ea7ffd81702a0024a7a39a20bb892"
+  },
   "defect": {
     "component": "experiments/online_correction_v4/droid_robolab.py::object_kinematic_state",
     "summary": "NaturalGraspDetector received robot-base pose as gripper position and object_grabbed() as contact, so trigger_eligible never fired despite successful scripted grasps in live Isaac.",
-    "repair_status": "disclosed_setup_repair_in_progress",
-    "repair_owner": "Agent B"
+    "repair_status": "disclosed_setup_repair_verified",
+    "repair_owner": "Agent B",
+    "repair_study_commit": "96ccf4ad95b292e61da28eafc2ad9a7b6dfa5e65",
+    "amendment": "artifacts/online_correction_v4/setup/natural_grasp_trigger_wiring_repair_amendment.candidate.json",
+    "live_control_registry": "artifacts/online_correction_v4/setup/natural_grasp_live_control_registry.json"
   },
   "paper_boundary": "The 279 C7 episodes collected before repair verification were run under an inoperative intervention trigger. They must not enter behavioral success-rate claims, wording contrasts, or policy-failure interpretation.",
   "policy_dispatch_blocked": {
-    "C2_confirmatory_4096": "blocked until repaired trigger passes live positive control",
-    "C8_confirmatory_768": "blocked until repaired trigger passes live positive control"
+    "C2_confirmatory_4096": "unblocked once family consumes natural_grasp_live_control_registry at study commit 96ccf4a+",
+    "C8_confirmatory_768": "unblocked once family consumes natural_grasp_live_control_registry at study commit 96ccf4a+"
   }
 }

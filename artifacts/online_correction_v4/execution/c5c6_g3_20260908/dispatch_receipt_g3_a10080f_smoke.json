@@ -1,0 +1,28 @@
+{
+  "schema_version": "v4-c5c6-g3-dispatch-receipt-v1",
+  "compiled_at_utc": "2026-09-08T10:40:00Z",
+  "gpu_product": "NVIDIA-A100-SXM4-80GB",
+  "scale": 0.5,
+  "study_commit": "96ccf4ad95b292e61da28eafc2ad9a7b6dfa5e65",
+  "attempt_ids": {
+    "vertical": "g3c5p20260908a10080f",
+    "containment": "g3c6p20260908a10080f"
+  },
+  "smoke": true,
+  "max_seed_jobs": 1,
+  "cleared_stale_locks": "g3c5p20260908a10080e and g3c6p20260908a10080e (127 locks)",
+  "campaign_pin": "frozen 7b207c38 campaign.json on cluster g3_c5c6 checkout with skip-worktree",
+  "spec_paths": {
+    "vertical": "deploy/k8s/v4_lane_bundle/g3-vertical-a10080f-smoke-spec.json",
+    "containment": "deploy/k8s/v4_lane_bundle/g3-containment-a10080f-smoke-spec.json"
+  },
+  "render_roots": {
+    "vertical": "artifacts/online_correction_v4/execution/c5c6_g3_20260908/rendered-g3-vertical-smoke",
+    "containment": "artifacts/online_correction_v4/execution/c5c6_g3_20260908/rendered-g3-containment-smoke"
+  },
+  "supersedes_attempt_ids": [
+    "g3c5p20260908a10080e",
+    "g3c6p20260908a10080e"
+  ],
+  "status": "smoke_jobs_running"
+}

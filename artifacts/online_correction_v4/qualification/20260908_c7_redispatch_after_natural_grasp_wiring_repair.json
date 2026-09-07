@@ -5,12 +5,13 @@
   "target_episodes": 768,
   "reclassified_infra_invalid_episodes": 279,
   "reclassification_receipt": "artifacts/online_correction_v4/qualification/20260908_c7_natural_grasp_trigger_wiring_reclassification.json",
-  "repair_study_commit": "c9c988da1d2ea7ffd81702a0024a7a39a20bb892",
+  "repair_study_commit": "96ccf4ad95b292e61da28eafc2ad9a7b6dfa5e65",
   "natural_grasp_registry": "artifacts/online_correction_v4/setup/natural_grasp_live_control_registry.json",
   "dispatch_gate_status": "unblocked",
-  "prior_wave_status": "wave-005 lanes still active on pre-repair study checkout; must be drained before counting repaired-path episodes",
-  "redispatch_action": "Stop wave-005 C7 policy/simulator jobs, clear stale attempt locks on pre-repair lanes only, then dispatch wave-006 from frozen C7 bindings with enforce_dispatch_gates() and study checkout pinned to c9c988d",
+  "prior_wave_status": "wave-005 drained; pre-repair attempt0307-0350 jobs deleted and leases cleared",
+  "redispatch_action": "wave-006 dispatched 17 lanes (attempt0351-0367) on study commit 96ccf4a with natural_grasp_live_control gate",
+  "wave_006_receipt": "artifacts/online_correction_v4/execution/c7_object_pair_20260906/dispatch_receipt_wave-006_20260908.json",
   "raw_evidence_preserved": true,
   "accepted_ledger_excludes_reclassified": true,
-  "status": "queued_for_wave_006_redispatch"
+  "status": "wave_006_redispatch_running"
 }

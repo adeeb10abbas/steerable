@@ -136,6 +136,30 @@ class C8SecondStackRunnerTests(unittest.TestCase):
         for value in maxima.values():
             self.assertIsInstance(value, dict)
 
+    def test_groot_wire_json_projection_preserves_arrays_for_http_transport(self) -> None:
+        import json
+
+        try:
+            import numpy as np
+        except ImportError:
+            self.skipTest("numpy required for GR00T wire JSON regression")
+
+        from experiments.online_correction_v4.droid_policy_request import (
+            request_audit_projection,
+            wire_json_projection,
+        )
+
+        processed = {
+            "video.image_0": np.zeros((256, 256, 3), dtype=np.uint8),
+            "state.x": [0.1],
+        }
+        wire = {"processed_observation": processed, "prompt": "stack the green cube"}
+        encoded = wire_json_projection(wire)
+        json.dumps(encoded, sort_keys=True, allow_nan=False)
+        self.assertIsInstance(encoded["processed_observation"]["video.image_0"], list)
+        audit = request_audit_projection(wire)
+        self.assertEqual(audit["processed_observation"]["video.image_0"]["encoding"], "array_sha256")
+
 
 if __name__ == "__main__":
     unittest.main()

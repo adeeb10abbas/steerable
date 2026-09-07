@@ -116,7 +116,13 @@ class GrootBridgeHttpClient:
     def _query_server(self, request: dict[str, Any]) -> Mapping[str, Any]:
         import json
 
-        body = json.dumps(request, sort_keys=True, allow_nan=False).encode("utf-8")
+        from experiments.online_correction_v4.droid_policy_request import wire_json_projection
+
+        body = json.dumps(
+            wire_json_projection(request),
+            sort_keys=True,
+            allow_nan=False,
+        ).encode("utf-8")
         self._http.request(
             "POST",
             "/v4/infer",

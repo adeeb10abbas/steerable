@@ -18,7 +18,14 @@ def digest_bytes(value: bytes) -> str:
 
 
 def canonical_json_bytes(value: Any) -> bytes:
-    return json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False).encode("utf-8")
+    from experiments.online_correction_v4.droid_policy_request import request_audit_projection
+
+    return json.dumps(
+        request_audit_projection(value),
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode("utf-8")
 
 
 @dataclass

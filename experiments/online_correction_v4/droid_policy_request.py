@@ -109,6 +109,48 @@ def observation_packed_request(observation: ObservationPacket) -> dict[str, Any]
     return {}
 
 
+def wire_json_projection(value: Any) -> Any:
+    """Convert policy wire payloads into strict JSON for HTTP transports."""
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+    if isinstance(value, Mapping):
+        return {
+            str(key): wire_json_projection(item)
+            for key, item in value.items()
+        }
+    try:
+        import numpy as np
+    except ImportError:
+        np = None
+    if np is not None and isinstance(value, np.ndarray):
+        return value.tolist()
+    if np is not None and isinstance(value, np.generic):
+        return value.item()
+    if isinstance(value, (bytes, bytearray)):
+        raise TypeError("wire JSON payloads must not contain raw bytes")
+    if isinstance(value, Sequence):
+        return [wire_json_projection(item) for item in value]
+    host = value
+    if hasattr(host, "detach"):
+        host = host.detach()
+    if hasattr(host, "cpu"):
+        host = host.cpu()
+    if hasattr(host, "numpy"):
+        host = host.numpy()
+    if np is not None and isinstance(host, np.ndarray):
+        return host.tolist()
+    if np is not None and isinstance(host, np.generic):
+        return host.item()
+    item = getattr(host, "item", None)
+    if callable(item):
+        return wire_json_projection(item())
+    if hasattr(host, "tolist"):
+        return host.tolist()
+    raise TypeError(
+        f"policy wire value is not JSON-serializable: {type(value).__name__}"
+    )
+
+
 def request_audit_projection(value: Any) -> Any:
     """Project array-bearing policy inputs into compact, canonical JSON evidence."""
     if value is None or isinstance(value, (str, int, float, bool)):
@@ -117,6 +159,20 @@ def request_audit_projection(value: Any) -> Any:
         return {
             str(key): request_audit_projection(item)
             for key, item in value.items()
+        }
+    try:
+        import numpy as np
+    except ImportError:
+        np = None
+    if np is not None and isinstance(value, np.ndarray):
+        host = value
+        payload = host.tobytes()
+        return {
+            "encoding": "array_sha256",
+            "shape": [int(size) for size in host.shape],
+            "dtype": str(host.dtype),
+            "sha256": sha256_bytes(payload),
+            "size_bytes": len(payload),
         }
     if isinstance(value, Sequence) and not isinstance(
         value, (str, bytes, bytearray)

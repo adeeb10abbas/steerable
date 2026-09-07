@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Gated V4 GPU-stratum smoke dispatch — full waves blocked until smoke registry passes.
+# Gated V4 GPU-stratum smoke dispatch with isolated study checkouts.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
@@ -9,12 +9,11 @@ POD=211247-sz5vjy-vla4-b200-4gpu
 OUT=artifacts/online_correction_v4/execution/gpu_widen_20260908
 SPEC_G2=artifacts/online_correction_v4/execution/g2_horizontal_repair_v2_20260908/rendered-a10080-smoke/.dispatch-g2r20260908a10080a.render-spec.json
 
-echo "== sync cluster study checkouts =="
+echo "== verify legacy shared checkouts are not mutable =="
 python3 tools/sync_v4_cluster_study_checkouts.py \
   --kube-context "$CTX" \
   --namespace "$NS" \
-  --publisher-pod "$POD" \
-  --apply
+  --publisher-pod "$POD"
 
 dispatch_smoke() {
   local attempt="$1"
@@ -30,10 +29,4 @@ dispatch_smoke() {
     --create
 }
 
-# Smokes only — full waves require a passed registry entry per fixture/GPU/gate.
-# Re-run individual smokes after checkout sync; omit attempts already running.
-# dispatch_smoke g2gpu20260908a40b NVIDIA-A40
-# dispatch_smoke g2gpu20260908a10040 NVIDIA-A100-SXM4-40GB
-# dispatch_smoke g2gpu20260908b200 NVIDIA-B200
-
-echo "Smoke dispatch helper loaded; uncomment target smokes after verifying checkout pin manifest."
+echo "Isolated checkout dispatch helper loaded; smokes provision per-attempt study roots automatically."

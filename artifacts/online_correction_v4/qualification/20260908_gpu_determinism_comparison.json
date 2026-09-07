@@ -1,7 +1,7 @@
 {
   "schema_version": "v4-model-blind-gpu-determinism-comparison-v1",
-  "compiled_at_utc": "2026-09-08T05:50:00Z",
-  "status": "baseline_pending_a40_capacity",
+  "compiled_at_utc": "2026-09-07T11:43:00Z",
+  "status": "baseline_pending_container_create",
   "registry_position_tolerance_m": 0.005,
   "reset_registry_sha256": "392dcdfd797644f514b74cf82f65b3a69d7ba1120e959b55e0447df18d61ab13",
   "environment_seed": 2100000000,
@@ -22,16 +22,12 @@
   },
   "baseline": {
     "gpu_product": "NVIDIA-A40",
-    "attempt_id": "g2gpu20260908a40b",
-    "job_name": "v4-g2-horizontal-g2gpu20260908a40b-11feca0806-s000",
-    "status": "pending_scheduling",
-    "note": "Same reset registry stratum required; original g2q20260905g A40 baseline uses different registry and must not be mixed."
+    "attempt_id": "g2gpu20260908a40c",
+    "job_name": "v4-g2-horizontal-g2gpu20260908a40c-abb294f876-s000",
+    "owner": "Agent A",
+    "study_pin": "96ccf4ad95b292e61da28eafc2ad9a7b6dfa5e65",
+    "status": "pod_stuck_container_creating_52m",
+    "note": "Capacity coordinates with Agent A baseline; do not duplicate. Compare when s000 receipt lands."
   },
-  "containment_g3_s000": {
-    "status": "no_path_receipt",
-    "reason": "InstructionBindingError queue row goal inside != task relation left",
-    "infra_attestation": "runtime-preflight.passed and Isaac launch observed before fixture failure",
-    "owner": "Agent B C5/C6 containment fixture"
-  },
-  "compare_command_when_baseline_ready": ".venv/bin/python tools/compare_v4_model_blind_gpu_determinism.py --baseline <a40-repair-v2-receipt.json> --candidate artifacts/online_correction_v4/qualification/gpu_receipts_20260908/g2_repair_v2_seed2100000000_a10080.json --out artifacts/online_correction_v4/qualification/20260908_gpu_determinism_a10080_repair_v2_result.json"
+  "compare_command_when_baseline_ready": ".venv/bin/python tools/compare_v4_model_blind_gpu_determinism.py --baseline <a40-repair-v2-receipt.json> --candidate artifacts/online_correction_v4/qualification/gpu_receipts_20260908/g2_repair_v2_seed2100000000_a10080.json --out artifacts/online_correction_v4/qualification/20260908_gpu_determinism_a10080_vs_a40_repair_v2_result.json"
 }

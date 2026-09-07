@@ -18,7 +18,24 @@ DEFAULT_NATURAL_GRASP_REGISTRY = (
     ROOT / "artifacts/online_correction_v4/setup/natural_grasp_live_control_registry.json"
 )
 
-FIXTURES_REQUIRING_NATURAL_GRASP_LIVE_CONTROL = frozenset({"object_pair"})
+FIXTURES_REQUIRING_NATURAL_GRASP_LIVE_CONTROL = frozenset(
+    {
+        "object_pair",
+        "horizontal",
+        "vertical",
+        "containment",
+        "reference_binding",
+        "second_stack",
+    }
+)
+NATURAL_GRASP_PLATFORMS: dict[str, str] = {
+    "object_pair": "isaac",
+    "horizontal": "isaac",
+    "vertical": "isaac",
+    "containment": "isaac",
+    "reference_binding": "isaac",
+    "second_stack": "simplerenv",
+}
 POLICY_TRIGGER_GATES = frozenset({"G4", "G5", "G6", "G7", "G8", "policy", "confirmatory"})
 
 JOB_OUTPUT_PARENT_RE = re.compile(
@@ -76,13 +93,16 @@ def record_passed_natural_grasp_live_control(
     receipt_path: str,
     receipt_sha256: str,
     study_commit: str,
+    platform: str | None = None,
     registry_path: Path = DEFAULT_NATURAL_GRASP_REGISTRY,
 ) -> None:
     if control_mode not in {"scripted_grasp", "hold_only"}:
         raise ValueError(f"unsupported control_mode: {control_mode}")
+    resolved_platform = platform or NATURAL_GRASP_PLATFORMS.get(fixture_id, "isaac")
     registry = load_natural_grasp_registry(registry_path)
     entry = {
         "fixture_id": fixture_id,
+        "platform": resolved_platform,
         "control_mode": control_mode,
         "attempt_id": attempt_id,
         "receipt_path": receipt_path,
@@ -111,6 +131,7 @@ def require_natural_grasp_live_control(
 ) -> dict[str, Any]:
     if fixture_id not in FIXTURES_REQUIRING_NATURAL_GRASP_LIVE_CONTROL:
         return {"required": False, "fixture_id": fixture_id}
+    platform = NATURAL_GRASP_PLATFORMS.get(fixture_id, "isaac")
     registry = load_natural_grasp_registry(registry_path)
     by_mode = {
         str(item.get("control_mode")): item
@@ -125,8 +146,20 @@ def require_natural_grasp_live_control(
     if missing:
         raise DispatchGateError(
             "natural-grasp live-control gate blocked dispatch: fixture "
-            f"{fixture_id} missing passed controls {missing}. Run live positive "
-            "(scripted_grasp) and negative (hold_only) controls in Isaac first."
+            f"{fixture_id} ({platform}) missing passed controls {missing}. "
+            "Each policy family requires its own live positive (scripted_grasp) and "
+            "negative (hold_only) controls on the repaired trigger path; object_pair "
+            "registry entries do not cover other fixtures."
+        )
+    wrong_platform = [
+        item.get("control_mode")
+        for item in by_mode.values()
+        if str(item.get("platform", platform)) != platform
+    ]
+    if wrong_platform:
+        raise DispatchGateError(
+            f"natural-grasp live-control registry platform mismatch for {fixture_id}: "
+            f"expected {platform}, found mismatched controls {wrong_platform}"
         )
     if study_commit is not None:
         expected = study_commit.lower()
@@ -143,6 +176,7 @@ def require_natural_grasp_live_control(
     return {
         "required": True,
         "fixture_id": fixture_id,
+        "platform": platform,
         "positive_control": by_mode["scripted_grasp"],
         "negative_control": by_mode["hold_only"],
     }

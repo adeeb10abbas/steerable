@@ -21,6 +21,7 @@ if str(TOOLS) not in sys.path:
 
 import v4_gpu_scheduling as gpu_scheduling  # noqa: E402
 import v4_dispatch_gates as dispatch_gates  # noqa: E402
+import v4_study_checkout_isolation as checkout_isolation  # noqa: E402
 
 
 def _load_renderer(schema_version: str):
@@ -89,6 +90,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--publisher-pod", default="211247-sz5vjy-vla4-b200-4gpu")
     parser.add_argument("--skip-cluster-gates", action="store_true")
+    parser.add_argument("--skip-checkout-isolation", action="store_true")
     parser.add_argument("--create", action="store_true")
     args = parser.parse_args(argv)
 
@@ -101,6 +103,23 @@ def main(argv: list[str] | None = None) -> int:
         gpu_product=args.gpu_product,
         attempt_id=args.attempt_id,
     )
+    isolation_report: dict[str, Any] | None = None
+    if not args.skip_checkout_isolation:
+        try:
+            isolation_report = checkout_isolation.ensure_isolated_study_root_for_dispatch(
+                patched,
+                kube_context=str(patched["kube_context"]),
+                namespace=str(patched["namespace"]),
+                publisher_pod=str(args.publisher_pod),
+                apply=True,
+            )
+        except checkout_isolation.CheckoutIsolationError as exc:
+            print(str(exc), file=sys.stderr)
+            return 2
+        if isolation_report.get("study_root"):
+            patched["study_root"] = str(isolation_report["study_root"])
+    if isolation_report is not None:
+        print(json.dumps({"checkout_isolation": isolation_report}, indent=2, sort_keys=True))
     spec_path = args.spec.resolve().parent / (
         f".dispatch-{patched['attempt_id']}.render-spec.json"
     )

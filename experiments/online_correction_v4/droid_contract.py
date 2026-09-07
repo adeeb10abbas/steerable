@@ -232,6 +232,7 @@ class RuntimeLockBinding:
     campaign_id: str
     config_sha256: str
     manifest_sha256: str
+    queue_sha256: str
     release_status: str
     released_families: tuple[str, ...]
     runner_entrypoint: str
@@ -310,6 +311,7 @@ def validate_runtime_lock(
     lock_path: Path,
     *,
     expected_manifest_sha256: str | None = None,
+    expected_queue_sha256: str | None = None,
     expected_config_sha256: str | None = None,
 ) -> RuntimeLockBinding:
     if not lock_path.is_file():
@@ -321,10 +323,16 @@ def validate_runtime_lock(
         _fail("runtime lock campaign_id mismatch")
     config_sha = _require_sha256(raw.get("config_sha256"), "runtime lock config_sha256")
     manifest_sha = _require_sha256(raw.get("manifest_sha256"), "runtime lock manifest_sha256")
+    queue_sha = _require_sha256(
+        raw.get("frozen_queue_sha256", manifest_sha),
+        "runtime lock frozen_queue_sha256",
+    )
     if expected_config_sha256 is not None and config_sha != expected_config_sha256:
         _fail("runtime lock config_sha256 does not match campaign config")
     if expected_manifest_sha256 is not None and manifest_sha != expected_manifest_sha256:
         _fail("runtime lock manifest_sha256 does not match supplied manifest")
+    if expected_queue_sha256 is not None and queue_sha != expected_queue_sha256:
+        _fail("runtime lock frozen_queue_sha256 does not match supplied queue")
     runner = raw.get("runner")
     if not isinstance(runner, dict):
         _fail("runtime lock runner binding is required")
@@ -363,6 +371,7 @@ def validate_runtime_lock(
         campaign_id=str(raw["campaign_id"]),
         config_sha256=config_sha,
         manifest_sha256=manifest_sha,
+        queue_sha256=queue_sha,
         release_status=str(raw.get("release_status", "NOT_RELEASED")),
         released_families=released,
         runner_entrypoint=str(runner["entrypoint"]),
@@ -382,8 +391,8 @@ def validate_manifest_row_against_lock(
     lock: RuntimeLockBinding,
     manifest_sha256: str,
 ) -> EpisodeManifestRow:
-    if lock.manifest_sha256 != manifest_sha256:
-        _fail("manifest SHA-256 does not match runtime lock binding")
+    if lock.queue_sha256 != manifest_sha256:
+        _fail("queue SHA-256 does not match runtime lock binding")
     manifest = EpisodeManifestRow.from_manifest_dict(row)
     if manifest.campaign != lock.campaign_id:
         _fail("manifest row campaign mismatch")
@@ -434,7 +443,7 @@ def build_launch_plan(
     lock = validate_runtime_lock(
         args.runtime_lock_path,
         expected_config_sha256=config_sha,
-        expected_manifest_sha256=manifest_sha,
+        expected_queue_sha256=manifest_sha,
     )
     row = find_manifest_row(rows, args.episode_id)
     manifest = validate_manifest_row_against_lock(row, lock=lock, manifest_sha256=manifest_sha)

@@ -149,7 +149,7 @@ def main(argv: list[str] | None = None) -> int:
         lock = validate_runtime_lock(
             launch_args.runtime_lock_path,
             expected_config_sha256=config_sha,
-            expected_manifest_sha256=manifest_sha,
+            expected_queue_sha256=manifest_sha,
         )
         row = find_manifest_row(rows, launch_args.episode_id)
         manifest = validate_manifest_row_against_lock(row, lock=lock, manifest_sha256=manifest_sha)

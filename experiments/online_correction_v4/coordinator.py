@@ -1307,6 +1307,9 @@ def plan_campaign(
         inputs.runtime_lock_path,
         expected_config_sha256=config_sha,
         expected_manifest_sha256=lock.manifest_sha256,
+        expected_queue_sha256=(
+            queue_sha if "frozen_queue_sha256" in lock.raw else None
+        ),
     )
 
     registry = CampaignRegistry.from_manifest_path(inputs.queue_path)

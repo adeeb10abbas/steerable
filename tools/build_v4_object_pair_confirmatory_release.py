@@ -142,6 +142,7 @@ def build_runtime_lock(
         raise ValueError("confirmatory queue manifest lacks planning hash")
     lock = copy.deepcopy(pilot_lock)
     lock["manifest_sha256"] = planning_manifest_sha256
+    lock["frozen_queue_sha256"] = sha256_file(queue_path)
     lock["source_commit"] = source_commit
     lock["release_status"] = "RELEASED"
     lock["runner"]["commit"] = source_commit

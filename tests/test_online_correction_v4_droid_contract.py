@@ -199,6 +199,42 @@ class DroidContractTests(unittest.TestCase):
             self.assertEqual(plan["policy_id"], "cosmos3_nano_droid")
             self.assertTrue(plan["dry_run"])
 
+    def test_distinct_planning_and_frozen_queue_hashes_are_bound(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            row = _manifest_row()
+            row["config_sha256"] = self.config_sha
+            manifest_path = tmp_path / "manifest.jsonl"
+            manifest_path.write_text(json.dumps(row) + "\n", encoding="utf-8")
+            queue_sha = __import__(
+                "experiments.online_correction_v4.droid_contract",
+                fromlist=["sha256_file"],
+            ).sha256_file(manifest_path)
+            lock = _released_lock(
+                manifest_sha256="d" * 64,
+                config_sha256=self.config_sha,
+            )
+            lock["frozen_queue_sha256"] = queue_sha
+            lock_path = tmp_path / "runtime_lock.json"
+            lock_path.write_text(json.dumps(lock), encoding="utf-8")
+            args = LaunchArgs(
+                manifest_path=manifest_path,
+                runtime_lock_path=lock_path,
+                episode_id="ep-test",
+                attempt_id="attempt-001",
+                output_dir=tmp_path / "output",
+                dry_run=True,
+                validate_only=True,
+            )
+
+            plan = build_launch_plan(
+                args,
+                study_root=ROOT,
+                campaign_config_path=CONFIG_PATH,
+            )
+
+            self.assertEqual(plan["manifest_sha256"], "d" * 64)
+
     def test_pilot_released_lock_accepts_only_engineering_pilot_rows(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             tmp_path = Path(tmp)

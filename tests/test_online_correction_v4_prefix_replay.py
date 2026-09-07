@@ -118,6 +118,9 @@ def _session(path: Path, *, attempt_id: str, policy_sha: str, simulator_sha: str
             "no_reused_hidden_session_state": True,
             "policy_process_identity_sha256": policy_sha,
             "simulator_process_identity_sha256": simulator_sha,
+            "policy_launch_sha256": SHA_A,
+            "simulator_launch_sha256": SHA_B,
+            "runtime_lock_sha256": SHA_C,
         },
     )
     return path

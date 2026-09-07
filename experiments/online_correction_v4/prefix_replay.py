@@ -118,7 +118,31 @@ def _fresh_session_projection(
             receipt.get("simulator_process_identity_sha256"),
             "simulator process identity",
         ),
+        "policy_launch_sha256": _require_sha(
+            receipt.get("policy_launch_sha256"),
+            "policy launch identity",
+        ),
+        "simulator_launch_sha256": _require_sha(
+            receipt.get("simulator_launch_sha256"),
+            "simulator launch identity",
+        ),
+        "runtime_lock_sha256": _require_sha(
+            receipt.get("runtime_lock_sha256"),
+            "runtime lock identity",
+        ),
     }
+
+
+def _attempt_evidence(attempt_dir: Path) -> dict[str, Any]:
+    evidence: dict[str, Any] = {}
+    for name in ("episode.json", "events.json", "requests.json", "trajectory.json"):
+        path = attempt_dir / name
+        evidence[name] = {
+            "path": str(path),
+            "sha256": sha256_file(path),
+            "bytes": path.stat().st_size,
+        }
+    return evidence
 
 
 def _request_projection(
@@ -377,6 +401,13 @@ def verify_common_prefix(
     ):
         if left_session[key] == right_session[key]:
             raise PrefixReplayError(f"fresh replay reused {key}")
+    for key in (
+        "policy_launch_sha256",
+        "simulator_launch_sha256",
+        "runtime_lock_sha256",
+    ):
+        if left_session[key] != right_session[key]:
+            raise PrefixReplayError(f"fresh replay runtime binding {key} differs")
 
     identity = {
         "prefix_group_id": left_episode.get("prefix_group_id"),
@@ -412,8 +443,8 @@ def verify_common_prefix(
             "right": right_session,
         },
         "evidence": {
-            "left_attempt_dir": str(left_attempt_dir),
-            "right_attempt_dir": str(right_attempt_dir),
+            "left_attempt": _attempt_evidence(left_attempt_dir),
+            "right_attempt": _attempt_evidence(right_attempt_dir),
             "left_session_receipt": {
                 "path": str(left_session_receipt_path),
                 "sha256": sha256_file(left_session_receipt_path),

@@ -63,6 +63,71 @@
     "retirement_manifest": "artifacts/online_correction_v4/execution/c7_object_pair_20260906/compile_retirement_pending.json",
     "schema_version": "v4-c7-compile-retirement-v1"
   },
+  "c8_confirmatory_scenario_grasp_pattern": {
+    "aggregate_outcomes": {
+      "no_grasp": 6,
+      "transport_incomplete": 0
+    },
+    "by_scenario": {
+      "destination_static": {
+        "episodes_completed": 1,
+        "grasp_achieved": 0,
+        "no_grasp": 1,
+        "transport_incomplete": 0
+      },
+      "move_stop": {
+        "episodes_completed": 1,
+        "grasp_achieved": 0,
+        "no_grasp": 1,
+        "transport_incomplete": 0
+      },
+      "original_sham": {
+        "episodes_completed": 4,
+        "grasp_achieved": 0,
+        "no_grasp": 4,
+        "transport_incomplete": 0
+      }
+    },
+    "campaign_id": "online_correction_v4",
+    "classification": {
+      "behavioral_valid": true,
+      "infra_invalid_excluded": {
+        "confirmatory_preflight_20260908a": 4,
+        "pilot_attempts_0093_0103": 39,
+        "reset_registry_sim_20260908a": 1
+      }
+    },
+    "cohort": "confirmatory",
+    "family_id": "C8",
+    "fixture_id": "second_stack",
+    "grasp_achieved_count": 0,
+    "ledger_compile_id": "20260908a",
+    "ledger_manifest_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/confirmatory-ledger-20260908a/accepted_ledger_manifest.json",
+    "ledger_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/confirmatory-ledger-20260908a/accepted_ledger.jsonl",
+    "observed_at_utc": "2026-09-08T03:35:00Z",
+    "pattern_note": "At 6/768 confirmatory episodes (single active lane c8m13), all outcomes are no_grasp. Pilot ordering (destination_static highest grasp rate) is not yet observable at confirmatory scale; report will update as width grows.",
+    "pilot_reference_by_scenario": {
+      "destination_static": {
+        "episodes": 8,
+        "grasp_achieved": 6
+      },
+      "move_stop": {
+        "episodes": 8,
+        "grasp_achieved": 4
+      },
+      "original_sham": {
+        "episodes": 8,
+        "grasp_achieved": 2
+      }
+    },
+    "progress": {
+      "behavioral_valid": 6,
+      "coverage_fraction": 0.0078125,
+      "total_queued": 768
+    },
+    "queue_uri": "artifacts/online_correction_v4/setup/c8_confirmatory/queue.frozen.jsonl",
+    "schema_version": "v4-c8-confirmatory-composition-by-scenario-v1"
+  },
   "c8_pilot_scenario_grasp_pattern": {
     "aggregate_outcomes": {
       "no_grasp": 12,
@@ -122,7 +187,7 @@
     "confirmatory_episodes_per_family": 768,
     "estimated_confirmatory_walltime_hours_at_full_pool": 16,
     "note": "Once C7 releases the A40 pool, C8 confirmatory throughput is bounded by 20 authorized lane pairs on the G4-attested A40 stratum; 768 episodes at that parallelism is approximately 16 wall-clock hours.",
-    "receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908c.json"
+    "receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908d.json"
   },
   "criteria_amended": false,
   "disclosed_setup_repairs": [
@@ -137,14 +202,17 @@
         "accepted_valid_unique": 0,
         "coverage_fraction": 0.0,
         "coverage_label": "0/768 confirmatory accepted; 384/768 dispatched",
+        "dispatch_receipt": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/create-c6confirm20260908d.json",
         "dispatch_status": "dispatched_pending_capacity",
         "dispatched_episodes": 384,
         "export_phase": "confirmatory",
         "export_status": "dispatched_partial",
+        "lane_count": 32,
         "ledger_compile_id": null,
         "missing_episodes": 768,
+        "note": "Wave D dispatched; wave E follows on Agent B schedule.",
         "planned_episodes": 768,
-        "wave": "B"
+        "wave": "D"
       },
       "coverage_fraction": 1.0,
       "coverage_label": "24/24 (100.0%)",
@@ -263,39 +331,165 @@
     "C8": {
       "accepted_valid_unique": 24,
       "confirmatory_dispatch": {
-        "accepted_valid_unique": 1,
-        "capacity": {
-          "authorized_confirmatory_lane_pairs": 20,
-          "binding_limit": "G4-attested A40 GR00T Bridge stratum",
-          "c7_a40_occupancy_releasing": true,
-          "handoff_uri": "artifacts/online_correction_v4/execution/gpu_widen_20260908/c8_pilot_lane_expansion_handoff_agent_a.json"
+        "accepted_valid_unique": 6,
+        "aggregate_outcomes": {
+          "no_grasp": 6
         },
-        "coverage_fraction": 0.001302,
-        "coverage_label": "1/768 confirmatory accepted; 768/768 dispatched",
-        "dispatch_status": "dispatched",
-        "dispatched_episodes": 768,
-        "execution_status_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908c.json",
-        "export_phase": "confirmatory",
-        "export_status": "dispatched_partial",
-        "first_valid_by_scenario": {
+        "by_scenario": {
+          "destination_static": {
+            "completed": 1,
+            "grasp_achieved": 0,
+            "no_grasp": 1,
+            "transport_incomplete": 0
+          },
           "move_stop": {
-            "no_grasp": 1
+            "completed": 1,
+            "grasp_achieved": 0,
+            "no_grasp": 1,
+            "transport_incomplete": 0
+          },
+          "original_sham": {
+            "completed": 4,
+            "grasp_achieved": 0,
+            "no_grasp": 4,
+            "transport_incomplete": 0
           }
         },
-        "first_valid_episode": {
-          "no_grasp": 1
-        },
-        "lane_pairs_dispatched": null,
-        "ledger_compile_id": "c8_execution_status_20260908c",
-        "missing_episodes": 767,
+        "composition_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_confirmatory_composition_by_scenario_20260908a.json",
+        "confirmatory_lanes": [
+          {
+            "completed": 0,
+            "lane_id": "c8m00",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m01",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m02",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m03",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m04",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m05",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m06",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m07",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m08",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m09",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m10",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m11",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m12",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 6,
+            "lane_id": "c8m13",
+            "queued": 32,
+            "state": "running"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m14",
+            "queued": 38,
+            "state": "running"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m15",
+            "queued": 38,
+            "state": "running"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m16",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m17",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m18",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m19",
+            "queued": 38,
+            "state": "blocked"
+          }
+        ],
+        "coverage_fraction": 0.007812,
+        "coverage_label": "6/768 confirmatory accepted; 768/768 dispatched",
+        "dispatch_status": "dispatched",
+        "dispatched_episodes": 768,
+        "execution_status_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908d.json",
+        "export_phase": "confirmatory",
+        "export_status": "dispatched_partial",
+        "ledger_compile_id": "20260908a",
+        "missing_episodes": 762,
         "planned_episodes": 768,
-        "pod_summary": {
-          "Completed": 0,
-          "Error": 0,
-          "Pending": 37,
-          "Running": 3
-        },
-        "wave": "main"
+        "wave": "main",
+        "wave_width_note": "Only c8m13 has behavioral completes at current width; per-scenario ordering not yet testable."
       },
       "coverage_fraction": 1.0,
       "coverage_label": "24/24 (100.0%)",

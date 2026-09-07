@@ -27,49 +27,178 @@
       "accepted_valid_unique": 0,
       "coverage_fraction": 0.0,
       "coverage_label": "0/768 confirmatory accepted; 384/768 dispatched",
+      "dispatch_receipt": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/create-c6confirm20260908d.json",
       "dispatch_status": "dispatched_pending_capacity",
       "dispatched_episodes": 384,
       "export_phase": "confirmatory",
       "export_status": "dispatched_partial",
+      "lane_count": 32,
       "ledger_compile_id": null,
       "missing_episodes": 768,
+      "note": "Wave D dispatched; wave E follows on Agent B schedule.",
       "planned_episodes": 768,
-      "wave": "B"
+      "wave": "D"
     },
     "C8": {
-      "accepted_valid_unique": 1,
-      "capacity": {
-        "authorized_confirmatory_lane_pairs": 20,
-        "binding_limit": "G4-attested A40 GR00T Bridge stratum",
-        "c7_a40_occupancy_releasing": true,
-        "handoff_uri": "artifacts/online_correction_v4/execution/gpu_widen_20260908/c8_pilot_lane_expansion_handoff_agent_a.json"
+      "accepted_valid_unique": 6,
+      "aggregate_outcomes": {
+        "no_grasp": 6
       },
-      "coverage_fraction": 0.001302,
-      "coverage_label": "1/768 confirmatory accepted; 768/768 dispatched",
-      "dispatch_status": "dispatched",
-      "dispatched_episodes": 768,
-      "execution_status_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908c.json",
-      "export_phase": "confirmatory",
-      "export_status": "dispatched_partial",
-      "first_valid_by_scenario": {
+      "by_scenario": {
+        "destination_static": {
+          "completed": 1,
+          "grasp_achieved": 0,
+          "no_grasp": 1,
+          "transport_incomplete": 0
+        },
         "move_stop": {
-          "no_grasp": 1
+          "completed": 1,
+          "grasp_achieved": 0,
+          "no_grasp": 1,
+          "transport_incomplete": 0
+        },
+        "original_sham": {
+          "completed": 4,
+          "grasp_achieved": 0,
+          "no_grasp": 4,
+          "transport_incomplete": 0
         }
       },
-      "first_valid_episode": {
-        "no_grasp": 1
-      },
-      "lane_pairs_dispatched": null,
-      "ledger_compile_id": "c8_execution_status_20260908c",
-      "missing_episodes": 767,
+      "composition_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_confirmatory_composition_by_scenario_20260908a.json",
+      "confirmatory_lanes": [
+        {
+          "completed": 0,
+          "lane_id": "c8m00",
+          "queued": 38,
+          "state": "blocked"
+        },
+        {
+          "completed": 0,
+          "lane_id": "c8m01",
+          "queued": 38,
+          "state": "blocked"
+        },
+        {
+          "completed": 0,
+          "lane_id": "c8m02",
+          "queued": 38,
+          "state": "blocked"
+        },
+        {
+          "completed": 0,
+          "lane_id": "c8m03",
+          "queued": 38,
+          "state": "blocked"
+        },
+        {
+          "completed": 0,
+          "lane_id": "c8m04",
+          "queued": 38,
+          "state": "blocked"
+        },
+        {
+          "completed": 0,
+          "lane_id": "c8m05",
+          "queued": 38,
+          "state": "blocked"
+        },
+        {
+          "completed": 0,
+          "lane_id": "c8m06",
+          "queued": 38,
+          "state": "blocked"
+        },
+        {
+          "completed": 0,
+          "lane_id": "c8m07",
+          "queued": 38,
+          "state": "blocked"
+        },
+        {
+          "completed": 0,
+          "lane_id": "c8m08",
+          "queued": 38,
+          "state": "blocked"
+        },
+        {
+          "completed": 0,
+          "lane_id": "c8m09",
+          "queued": 38,
+          "state": "blocked"
+        },
+        {
+          "completed": 0,
+          "lane_id": "c8m10",
+          "queued": 38,
+          "state": "blocked"
+        },
+        {
+          "completed": 0,
+          "lane_id": "c8m11",
+          "queued": 38,
+          "state": "blocked"
+        },
+        {
+          "completed": 0,
+          "lane_id": "c8m12",
+          "queued": 38,
+          "state": "blocked"
+        },
+        {
+          "completed": 6,
+          "lane_id": "c8m13",
+          "queued": 32,
+          "state": "running"
+        },
+        {
+          "completed": 0,
+          "lane_id": "c8m14",
+          "queued": 38,
+          "state": "running"
+        },
+        {
+          "completed": 0,
+          "lane_id": "c8m15",
+          "queued": 38,
+          "state": "running"
+        },
+        {
+          "completed": 0,
+          "lane_id": "c8m16",
+          "queued": 38,
+          "state": "blocked"
+        },
+        {
+          "completed": 0,
+          "lane_id": "c8m17",
+          "queued": 38,
+          "state": "blocked"
+        },
+        {
+          "completed": 0,
+          "lane_id": "c8m18",
+          "queued": 38,
+          "state": "blocked"
+        },
+        {
+          "completed": 0,
+          "lane_id": "c8m19",
+          "queued": 38,
+          "state": "blocked"
+        }
+      ],
+      "coverage_fraction": 0.007812,
+      "coverage_label": "6/768 confirmatory accepted; 768/768 dispatched",
+      "dispatch_status": "dispatched",
+      "dispatched_episodes": 768,
+      "execution_status_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908d.json",
+      "export_phase": "confirmatory",
+      "export_status": "dispatched_partial",
+      "ledger_compile_id": "20260908a",
+      "missing_episodes": 762,
       "planned_episodes": 768,
-      "pod_summary": {
-        "Completed": 0,
-        "Error": 0,
-        "Pending": 37,
-        "Running": 3
-      },
-      "wave": "main"
+      "wave": "main",
+      "wave_width_note": "Only c8m13 has behavioral completes at current width; per-scenario ordering not yet testable."
     }
   },
   "cross_fixture_contrast": [
@@ -201,6 +330,21 @@
         "transport_incomplete": 12
       },
       "path": "artifacts/online_correction_v4/results/registered/20260908/families/C8/20260908c8pilot"
+    },
+    "C8_confirmatory": {
+      "export_coverage": {
+        "accepted_valid_unique": 6,
+        "coverage_fraction": 0.007812,
+        "coverage_label": "6/768 (0.8%)",
+        "export_status": "partial",
+        "ledger_compile_id": "20260908a",
+        "missing_episodes": 762,
+        "planned_episodes": 768
+      },
+      "outcome_composition": {
+        "no_grasp": 6
+      },
+      "path": "artifacts/online_correction_v4/results/registered/20260908/families/C8/20260908c8confirmatory"
     }
   },
   "frozen_analysis_manifest": "artifacts/online_correction_v4/frozen_analysis_manifest.json",
@@ -210,20 +354,22 @@
     "Blocked families carry qualification receipts only; no policy episodes were dispatched.",
     "279 pre-repair C7 episodes remain excluded from behavioral claims.",
     "C7 partial uses compile-m until FINAL 768/768 compile lands; retired partials documented in compile_retirement_pending.json.",
-    "C6/C8 confirmatory tables refresh when Agent B and Agent A ledger compiles land."
+    "C6/C8 confirmatory tables refresh as Agent B and Agent A ledger compiles accumulate.",
+    "C8 per-scenario grasp ordering contrast is not estimable at current confirmatory width (6/768)."
   ],
   "not_estimable_primary_estimands": [
     "C1/C3/C4 primary wording and reference-selectivity contrasts",
     "C2 reference-selectivity primary (H)",
-    "C5 vertical family (IK reachability block)"
+    "C5 vertical family (IK reachability block)",
+    "C8 per-scenario grasp ordering contrast (confirmatory underpowered at current width)"
   ],
   "paper_narrative": {
     "headline": "Geometry repair succeeded; registered fixture is scientifically blocked by a scale squeeze",
     "paragraphs": [
-      "**PARTIAL EXPORT** \u2014 three achievable families are in flight. C7 confirmatory coverage 580/768 (75.5%) on compiled_ledger_20260908m (retired partials k/l/m documented in compile_retirement_pending.json pending FINAL 768/768); C6 G7 pilot 24/24 complete with confirmatory wave B dispatched (0/768 confirmatory accepted; 384/768 dispatched); C8 G7 pilot 24/24 with confirmatory 1/768 confirmatory accepted; 768/768 dispatched.",
+      "**PARTIAL EXPORT** \u2014 three achievable families are in flight. C7 confirmatory coverage 580/768 (75.5%) on compiled_ledger_20260908m (retired partials k/l/m documented in compile_retirement_pending.json pending FINAL 768/768); C6 G7 pilot 24/24 complete with confirmatory wave D dispatched (0/768 confirmatory accepted; 384/768 dispatched); C8 G7 pilot 24/24 with confirmatory 6/768 confirmatory accepted; 768/768 dispatched.",
       "Registered campaign scope: 17,664 planned policy episodes; 2,304 achievable (C6, C7, C8 confirmatory families \u00d7 768); 15,360 scientifically blocked (C1/C3/C4 horizontal information-gate squeeze 9,728; C2 reference_binding information gate 4,096; C5 vertical IK reachability 768). No eligibility criterion, threshold, or scale ladder was amended to recover blocked scope.",
       "Cross-fixture contrast (compiled ledgers): C7 object_pair on Isaac is dominated by no_grasp (574/580) but is not uniformly no_grasp \u2014 compile-m adds 3 transport_incomplete, 2 wrong_goal_region, and 1 support_or_containment_failed (0 successes). C6 containment pilot shows grasps and placement attempts (18 no_grasp, 3 transport_incomplete, 3 wrong_goal_region). C8 second_stack WidowX pilot achieves grasp on 12/24 episodes (12 no_grasp, 12 transport_incomplete); transport_incomplete implies successful grasp with incomplete transport.",
-      "C8 per-scenario grasp pattern (pilot, ledger 20260908b) is the campaign's most suggestive result for online scene movement: original_sham 2/8, destination_static 6/8, move_stop 4/8 grasp achieved. Confirmatory analysis must test this ordering at scale, not only aggregate failure rates.",
+      "C8 pilot per-scenario grasp rates (destination_static 6/8, move_stop 4/8, original_sham 2/8) form a hypothesis about online scene movement that confirmatory data will test under the registered estimator with Holm multiplicity handling. This pilot ordering is suggestive only and must not be reported as an established result. At 6/768 confirmatory episodes (single active lane c8m13), all outcomes are no_grasp and the pilot ordering is not yet observable at confirmatory scale. The per-scenario grasp contrast is not estimable at current width; if the final cohort remains underpowered for that registered test, it will be marked not estimable rather than reported as a trend.",
       "C7 compile provenance is explicit: partial compiles k (548), l (565), m (580), and stale .compiled-ledger-final (551) are retired in favor of compiled_ledger_20260908_FINAL at 768/768 require-full-coverage; see compile_retirement_provenance.csv.",
       "Capacity finding: C8 confirmatory throughput is bound by the G4-attested A40 GR00T Bridge stratum (20 authorized lane pairs). Once C7 releases the A40 pool, 768 C8 confirmatory episodes at that parallelism require roughly 16 wall-clock hours.",
       "Three disclosed setup repairs bound this export: (1) NaturalGraspDetector trigger observation wiring now uses finger-contact coupling instead of robot-base pose; (2) eef_tool_length_m=0.14 flange-versus-fingerpad offset applied uniformly across Isaac fixtures; (3) second_stack SimplerEnv observation and sampling defect repaired with control-boundary sampling and provisioned render libraries.",

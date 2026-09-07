@@ -1,16 +1,16 @@
 {
   "blocked_scope": {
-    "bytes": 17932,
+    "bytes": 23482,
     "path": "artifacts/online_correction_v4/results/registered/20260908/blocked_scope.json",
-    "sha256": "95c870b6beb516c75d38888fe252181492cc57e47a30f46732b75f4bf50390c1"
+    "sha256": "b428609a868f243a055d09d917c7239f6cc169db0ef4f658da6cd5763b8464a4"
   },
   "c7_ledger_rows": 580,
   "c7_planned_episodes": 768,
   "c7_valid_success_records": 0,
   "evidence_memo": {
-    "bytes": 12886,
+    "bytes": 17044,
     "path": "artifacts/online_correction_v4/results/registered/20260908/paper/evidence_memo.json",
-    "sha256": "dcbc92d4366b6bfe6bb79c1e0d2cd6a49c28490db0473e3d4ef46ece1aa30d0a"
+    "sha256": "76e5525123179da2ac73f8d9cdcec5fc00bcbaac6c8768c14edd839a75a6ece3"
   },
   "export_coverage": {
     "C6": {
@@ -55,6 +55,10 @@
     "C8": {
       "manifest_sha256": "9e6c30c1a545595f3356f1ff226b0d80e3d8264acbe10ba7fda85eca8d63dd7b",
       "path": "artifacts/online_correction_v4/results/registered/20260908/families/C8/20260908c8pilot"
+    },
+    "C8_confirmatory": {
+      "manifest_sha256": "46f301b126b7206740324f1962b35722ebcab33d03bc702c58ed2026a97fad9f",
+      "path": "artifacts/online_correction_v4/results/registered/20260908/families/C8/20260908c8confirmatory"
     }
   },
   "family_rollups": {
@@ -63,14 +67,17 @@
         "accepted_valid_unique": 0,
         "coverage_fraction": 0.0,
         "coverage_label": "0/768 confirmatory accepted; 384/768 dispatched",
+        "dispatch_receipt": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/create-c6confirm20260908d.json",
         "dispatch_status": "dispatched_pending_capacity",
         "dispatched_episodes": 384,
         "export_phase": "confirmatory",
         "export_status": "dispatched_partial",
+        "lane_count": 32,
         "ledger_compile_id": null,
         "missing_episodes": 768,
+        "note": "Wave D dispatched; wave E follows on Agent B schedule.",
         "planned_episodes": 768,
-        "wave": "B"
+        "wave": "D"
       },
       "outcome_composition": {
         "no_grasp": 18,
@@ -89,39 +96,165 @@
     },
     "C8": {
       "confirmatory_dispatch": {
-        "accepted_valid_unique": 1,
-        "capacity": {
-          "authorized_confirmatory_lane_pairs": 20,
-          "binding_limit": "G4-attested A40 GR00T Bridge stratum",
-          "c7_a40_occupancy_releasing": true,
-          "handoff_uri": "artifacts/online_correction_v4/execution/gpu_widen_20260908/c8_pilot_lane_expansion_handoff_agent_a.json"
+        "accepted_valid_unique": 6,
+        "aggregate_outcomes": {
+          "no_grasp": 6
         },
-        "coverage_fraction": 0.001302,
-        "coverage_label": "1/768 confirmatory accepted; 768/768 dispatched",
-        "dispatch_status": "dispatched",
-        "dispatched_episodes": 768,
-        "execution_status_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908c.json",
-        "export_phase": "confirmatory",
-        "export_status": "dispatched_partial",
-        "first_valid_by_scenario": {
+        "by_scenario": {
+          "destination_static": {
+            "completed": 1,
+            "grasp_achieved": 0,
+            "no_grasp": 1,
+            "transport_incomplete": 0
+          },
           "move_stop": {
-            "no_grasp": 1
+            "completed": 1,
+            "grasp_achieved": 0,
+            "no_grasp": 1,
+            "transport_incomplete": 0
+          },
+          "original_sham": {
+            "completed": 4,
+            "grasp_achieved": 0,
+            "no_grasp": 4,
+            "transport_incomplete": 0
           }
         },
-        "first_valid_episode": {
-          "no_grasp": 1
-        },
-        "lane_pairs_dispatched": null,
-        "ledger_compile_id": "c8_execution_status_20260908c",
-        "missing_episodes": 767,
+        "composition_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_confirmatory_composition_by_scenario_20260908a.json",
+        "confirmatory_lanes": [
+          {
+            "completed": 0,
+            "lane_id": "c8m00",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m01",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m02",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m03",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m04",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m05",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m06",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m07",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m08",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m09",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m10",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m11",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m12",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 6,
+            "lane_id": "c8m13",
+            "queued": 32,
+            "state": "running"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m14",
+            "queued": 38,
+            "state": "running"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m15",
+            "queued": 38,
+            "state": "running"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m16",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m17",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m18",
+            "queued": 38,
+            "state": "blocked"
+          },
+          {
+            "completed": 0,
+            "lane_id": "c8m19",
+            "queued": 38,
+            "state": "blocked"
+          }
+        ],
+        "coverage_fraction": 0.007812,
+        "coverage_label": "6/768 confirmatory accepted; 768/768 dispatched",
+        "dispatch_status": "dispatched",
+        "dispatched_episodes": 768,
+        "execution_status_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908d.json",
+        "export_phase": "confirmatory",
+        "export_status": "dispatched_partial",
+        "ledger_compile_id": "20260908a",
+        "missing_episodes": 762,
         "planned_episodes": 768,
-        "pod_summary": {
-          "Completed": 0,
-          "Error": 0,
-          "Pending": 37,
-          "Running": 3
-        },
-        "wave": "main"
+        "wave": "main",
+        "wave_width_note": "Only c8m13 has behavioral completes at current width; per-scenario ordering not yet testable."
       },
       "outcome_composition": {
         "no_grasp": 12,
@@ -166,16 +299,16 @@
   },
   "output_root": "artifacts/online_correction_v4/results/registered/20260908",
   "results_md": {
-    "bytes": 6016,
+    "bytes": 6407,
     "path": "artifacts/online_correction_v4/results/registered/20260908/paper/RESULTS.md",
-    "sha256": "1f7bc07aa0bf61ab935db7c7fab1cc522748047c7ece0f1358b73705fc121de2"
+    "sha256": "3b3e56ec307b16633573a13d070b61a688eadc8db833a16d88b2cd6bbef45d43"
   },
   "schema_version": "v4-registered-campaign-export-manifest-v1",
   "tables": {
     "audit_report.json": {
-      "bytes": 9903,
+      "bytes": 15445,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/audit_report.json",
-      "sha256": "238cc4ab8858b53a8ed05abb5a621211f364561edfa54f18c380bea45aa74e3e"
+      "sha256": "b39ee6925d07b6d90d80c038462c81edeb510bcf6fc101ef7948fa9f0df27142"
     },
     "blocked_families.csv": {
       "bytes": 1242,
@@ -202,10 +335,20 @@
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c7_scenario_outcome_breakdown.csv",
       "sha256": "1da653b9c84ee89d50c93620aa2dd23b48025df539c3eec92f19566a0d1712fd"
     },
+    "c8_confirmatory_grasp_by_scenario.csv": {
+      "bytes": 341,
+      "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c8_confirmatory_grasp_by_scenario.csv",
+      "sha256": "1e1d9ebb88c91dd114e1668bdcb8e72790d076cf89030ccf148d707718e1edf8"
+    },
+    "c8_confirmatory_outcome_composition.csv": {
+      "bytes": 33,
+      "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c8_confirmatory_outcome_composition.csv",
+      "sha256": "48929439ea8daba52dd758469bf4bc3ceba83c7ceb7390568a00ef5075bee8bb"
+    },
     "c8_grasp_by_scenario.csv": {
-      "bytes": 159,
+      "bytes": 268,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c8_grasp_by_scenario.csv",
-      "sha256": "62c796f79ba130b514d077ab3c8151c62a043f7424160883f02ddba00999822a"
+      "sha256": "f1c51791b148793649c73aa04c1abbf9fcf8f8a34aa573afd7bcef1d23f7c70e"
     },
     "c8_outcome_composition.csv": {
       "bytes": 59,
@@ -233,14 +376,14 @@
       "sha256": "2d006bcf8528932e59c66d4c8f9f56b30a91787a97ece23ff0fe662b87f79da2"
     },
     "family_coverage.csv": {
-      "bytes": 436,
+      "bytes": 563,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/family_coverage.csv",
-      "sha256": "db0dcda0a416ceb6e8a77711008ca3a5dba624ca86567dee57125938d0ccfff5"
+      "sha256": "e2a83a0d8ea9835c3e23d3776eab6b5a0122be9dacf588d49527e70116162aec"
     },
     "results_manifest": {
-      "bytes": 7811,
+      "bytes": 11824,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/results_manifest.json",
-      "sha256": "3201e27b8f59f38f0b7b3be3e05192807a2cccb256aca3c6c6d3103267d15e8a"
+      "sha256": "6976540cf0aa559fa77778bfb3de9d6e764c485992e8ae759005334f7a4a63a0"
     },
     "scale_ladder_squeeze.csv": {
       "bytes": 565,
@@ -248,9 +391,9 @@
       "sha256": "9fd28c21eb075ee5baf5460cdb4342b5651dcaae987cda6d2e74b30067ad1062"
     },
     "scope_summary.csv": {
-      "bytes": 392,
+      "bytes": 472,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/scope_summary.csv",
-      "sha256": "d1165bb8be8ecb56d9fa4d4a16e0b14bf6ea01dadc02dce385a2480fe735a1ba"
+      "sha256": "fd84f65184ef0b2b89cb83acc441ad7bc4719598b5cffd06bb7108dfd52473e2"
     }
   },
   "tag": "20260908"

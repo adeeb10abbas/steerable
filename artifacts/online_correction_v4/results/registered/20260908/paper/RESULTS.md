@@ -1,14 +1,14 @@
 # V4 registered campaign results
 
-> **PARTIAL EXPORT** — C7 580/768 (75.5%); C6 pilot 24/24 (100.0%) with confirmatory 0/768 confirmatory accepted; 384/768 dispatched; C8 pilot 24/24 (100.0%) with confirmatory 1/768 confirmatory accepted; 768/768 dispatched.
+> **PARTIAL EXPORT** — C7 580/768 (75.5%); C6 pilot 24/24 (100.0%) with confirmatory 0/768 confirmatory accepted; 384/768 dispatched; C8 pilot 24/24 (100.0%) with confirmatory 6/768 confirmatory accepted; 768/768 dispatched.
 
-**PARTIAL EXPORT** — three achievable families are in flight. C7 confirmatory coverage 580/768 (75.5%) on compiled_ledger_20260908m (retired partials k/l/m documented in compile_retirement_pending.json pending FINAL 768/768); C6 G7 pilot 24/24 complete with confirmatory wave B dispatched (0/768 confirmatory accepted; 384/768 dispatched); C8 G7 pilot 24/24 with confirmatory 1/768 confirmatory accepted; 768/768 dispatched.
+**PARTIAL EXPORT** — three achievable families are in flight. C7 confirmatory coverage 580/768 (75.5%) on compiled_ledger_20260908m (retired partials k/l/m documented in compile_retirement_pending.json pending FINAL 768/768); C6 G7 pilot 24/24 complete with confirmatory wave D dispatched (0/768 confirmatory accepted; 384/768 dispatched); C8 G7 pilot 24/24 with confirmatory 6/768 confirmatory accepted; 768/768 dispatched.
 
 Registered campaign scope: 17,664 planned policy episodes; 2,304 achievable (C6, C7, C8 confirmatory families × 768); 15,360 scientifically blocked (C1/C3/C4 horizontal information-gate squeeze 9,728; C2 reference_binding information gate 4,096; C5 vertical IK reachability 768). No eligibility criterion, threshold, or scale ladder was amended to recover blocked scope.
 
 Cross-fixture contrast (compiled ledgers): C7 object_pair on Isaac is dominated by no_grasp (574/580) but is not uniformly no_grasp — compile-m adds 3 transport_incomplete, 2 wrong_goal_region, and 1 support_or_containment_failed (0 successes). C6 containment pilot shows grasps and placement attempts (18 no_grasp, 3 transport_incomplete, 3 wrong_goal_region). C8 second_stack WidowX pilot achieves grasp on 12/24 episodes (12 no_grasp, 12 transport_incomplete); transport_incomplete implies successful grasp with incomplete transport.
 
-C8 per-scenario grasp pattern (pilot, ledger 20260908b) is the campaign's most suggestive result for online scene movement: original_sham 2/8, destination_static 6/8, move_stop 4/8 grasp achieved. Confirmatory analysis must test this ordering at scale, not only aggregate failure rates.
+C8 pilot per-scenario grasp rates (destination_static 6/8, move_stop 4/8, original_sham 2/8) form a hypothesis about online scene movement that confirmatory data will test under the registered estimator with Holm multiplicity handling. This pilot ordering is suggestive only and must not be reported as an established result. At 6/768 confirmatory episodes (single active lane c8m13), all outcomes are no_grasp and the pilot ordering is not yet observable at confirmatory scale. The per-scenario grasp contrast is not estimable at current width; if the final cohort remains underpowered for that registered test, it will be marked not estimable rather than reported as a trend.
 
 C7 compile provenance is explicit: partial compiles k (548), l (565), m (580), and stale .compiled-ledger-final (551) are retired in favor of compiled_ledger_20260908_FINAL at 768/768 require-full-coverage; see compile_retirement_provenance.csv.
 

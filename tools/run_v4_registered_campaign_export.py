@@ -52,15 +52,23 @@ DEFAULT_C8_PILOT_MANIFEST = (
 )
 C8_EXECUTION_STATUS = (
     ROOT
-    / "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908c.json"
+    / "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908d.json"
 )
 C8_EXECUTION_STATUS_FALLBACK = (
     ROOT
-    / "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908b.json"
+    / "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908c.json"
 )
 C8_PILOT_COMPOSITION = (
     ROOT
     / "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_pilot_composition_by_scenario_20260908a.json"
+)
+C8_CONFIRMATORY_COMPOSITION = (
+    ROOT
+    / "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_confirmatory_composition_by_scenario_20260908a.json"
+)
+DEFAULT_C8_CONFIRMATORY_LEDGER = (
+    ROOT
+    / "artifacts/online_correction_v4/execution/c8_second_stack_20260908/confirmatory-ledger-20260908a/accepted_ledger.jsonl"
 )
 C7_COMPILE_RETIREMENT = (
     ROOT
@@ -77,6 +85,10 @@ DEFAULT_C7_PARTIAL_LEDGER_M = (
 C6_WAVE_B_DISPATCH = (
     ROOT
     / "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/create-c6confirm20260908b.json"
+)
+C6_WAVE_D_DISPATCH = (
+    ROOT
+    / "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/create-c6confirm20260908d.json"
 )
 C6_G7_RECEIPT = (
     ROOT
@@ -149,19 +161,31 @@ def build_compile_retirement_rows(retirement: dict[str, Any]) -> list[dict[str, 
     return rows
 
 
-def build_c8_grasp_by_scenario_rows(composition: dict[str, Any]) -> list[dict[str, Any]]:
+def build_c8_grasp_by_scenario_rows(composition: dict[str, Any], *, cohort: str) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for scenario, payload in (composition.get("by_scenario") or {}).items():
+        episodes = int(
+            payload.get("episodes")
+            or payload.get("episodes_completed")
+            or payload.get("completed")
+            or 0
+        )
+        grasp = int(payload.get("grasp_achieved") or 0)
         rows.append(
             {
+                "cohort": cohort,
                 "scenario": scenario,
-                "episodes": payload.get("episodes"),
-                "grasp_achieved": payload.get("grasp_achieved"),
+                "episodes": episodes,
+                "grasp_achieved": grasp,
                 "no_grasp": payload.get("no_grasp"),
                 "transport_incomplete": payload.get("transport_incomplete"),
-                "grasp_rate": round(
-                    float(payload.get("grasp_achieved", 0)) / max(int(payload.get("episodes") or 1), 1),
-                    3,
+                "grasp_rate": round(grasp / max(episodes, 1), 3),
+                "estimability_note": (
+                    "pilot_hypothesis_only"
+                    if cohort == "pilot"
+                    else "confirmatory_underpowered_not_estimable"
+                    if episodes < 8
+                    else "confirmatory_partial"
                 ),
             }
         )
@@ -205,11 +229,31 @@ def resolve_c7_ledger(args: argparse.Namespace) -> tuple[Path, str, bool]:
 
 
 def load_c8_execution_status() -> dict[str, Any]:
-    if C8_EXECUTION_STATUS.is_file():
-        return load_json(C8_EXECUTION_STATUS)
-    if C8_EXECUTION_STATUS_FALLBACK.is_file():
-        return load_json(C8_EXECUTION_STATUS_FALLBACK)
+    for path in (C8_EXECUTION_STATUS, C8_EXECUTION_STATUS_FALLBACK):
+        if path.is_file():
+            return load_json(path)
     return {}
+
+
+def resolve_c8_status_receipt_path() -> Path | None:
+    for path in (C8_EXECUTION_STATUS, C8_EXECUTION_STATUS_FALLBACK):
+        if path.is_file():
+            return path
+    return None
+
+
+def resolve_campaign_export_status(*, c7_is_final: bool, family_rollups: dict[str, dict]) -> str:
+    if not c7_is_final:
+        return "partial"
+    c6_accepted = int(
+        ((family_rollups.get("C6") or {}).get("confirmatory_dispatch") or {}).get("accepted_valid_unique") or 0
+    )
+    c8_accepted = int(
+        ((family_rollups.get("C8") or {}).get("confirmatory_dispatch") or {}).get("accepted_valid_unique") or 0
+    )
+    if c6_accepted >= 768 and c8_accepted >= 768:
+        return "complete"
+    return "partial"
 
 
 def build_campaign_blocked_scope(
@@ -219,6 +263,7 @@ def build_campaign_blocked_scope(
     family_status: dict[str, dict],
     compile_provenance: dict[str, Any],
     c8_scenario_grasp: dict[str, Any] | None = None,
+    c8_confirmatory_grasp: dict[str, Any] | None = None,
 ) -> dict:
     campaign = dict(c7_blocked_scope.get("campaign_scope_revision") or {})
     horizontal_finding = horizontal_blocked_scope.get("scientific_finding") or {}
@@ -267,13 +312,14 @@ def build_campaign_blocked_scope(
                 "that parallelism is approximately 16 wall-clock hours."
             ),
             "receipt": str(
-                (C8_EXECUTION_STATUS if C8_EXECUTION_STATUS.is_file() else C8_EXECUTION_STATUS_FALLBACK).relative_to(
-                    ROOT
-                )
+                resolve_c8_status_receipt_path().relative_to(ROOT)
+                if resolve_c8_status_receipt_path()
+                else C8_EXECUTION_STATUS.relative_to(ROOT)
             ),
         },
         "c7_compile_provenance": compile_provenance,
         "c8_pilot_scenario_grasp_pattern": c8_scenario_grasp,
+        "c8_confirmatory_scenario_grasp_pattern": c8_confirmatory_grasp,
         "not_estimable_or_blocked": not_estimable,
         "scientific_blockers": c7_blocked_scope.get("scientific_blockers"),
         "horizontal_evidence": {
@@ -331,6 +377,21 @@ def build_family_coverage_rows(family_rollups: dict[str, dict]) -> list[dict[str
                 "ledger_compile_id": coverage.get("ledger_compile_id"),
             }
         )
+        if family == "C8" and int(confirmatory.get("accepted_valid_unique") or 0) > 0:
+            rows.append(
+                {
+                    "family": "C8",
+                    "fixture": rollup.get("fixture"),
+                    "evidence_phase": "confirmatory_partial",
+                    "export_status": confirmatory.get("export_status"),
+                    "coverage_label": confirmatory.get("coverage_label"),
+                    "accepted_valid_unique": confirmatory.get("accepted_valid_unique"),
+                    "planned_episodes": confirmatory.get("planned_episodes"),
+                    "confirmatory_dispatched": confirmatory.get("dispatched_episodes"),
+                    "confirmatory_accepted": confirmatory.get("accepted_valid_unique"),
+                    "ledger_compile_id": confirmatory.get("ledger_compile_id"),
+                }
+            )
     return rows
 
 
@@ -343,6 +404,7 @@ def build_campaign_tables(
     campaign_export_status: str,
     compile_provenance: dict[str, Any],
     c8_scenario_grasp: dict[str, Any] | None,
+    c8_confirmatory_grasp: dict[str, Any] | None = None,
 ) -> dict[str, list[dict]]:
     validation = c7_audit.get("validation") or {}
     c7_coverage = (family_rollups.get("C7") or {}).get("coverage") or {}
@@ -356,6 +418,10 @@ def build_campaign_tables(
         {"metric": "c7_coverage_label", "value": c7_coverage.get("coverage_label")},
         {"metric": "c6_pilot_coverage_label", "value": ((family_rollups.get("C6") or {}).get("coverage") or {}).get("coverage_label")},
         {"metric": "c8_pilot_coverage_label", "value": ((family_rollups.get("C8") or {}).get("coverage") or {}).get("coverage_label")},
+        {
+            "metric": "c8_confirmatory_coverage_label",
+            "value": ((family_rollups.get("C8") or {}).get("confirmatory_dispatch") or {}).get("coverage_label"),
+        },
         {"metric": "c7_accepted_valid_unique", "value": validation.get("accepted_unique")},
         {"metric": "c7_valid_success_records", "value": validation.get("valid_success_records")},
         {"metric": "criteria_amended", "value": campaign_blocked.get("criteria_amended", False)},
@@ -403,7 +469,17 @@ def build_campaign_tables(
         ),
     }
     if c8_scenario_grasp:
-        tables["c8_grasp_by_scenario.csv"] = build_c8_grasp_by_scenario_rows(c8_scenario_grasp)
+        tables["c8_grasp_by_scenario.csv"] = build_c8_grasp_by_scenario_rows(c8_scenario_grasp, cohort="pilot")
+    if c8_confirmatory_grasp:
+        tables["c8_confirmatory_grasp_by_scenario.csv"] = build_c8_grasp_by_scenario_rows(
+            c8_confirmatory_grasp,
+            cohort="confirmatory",
+        )
+        confirmatory_composition = c8_confirmatory_grasp.get("aggregate_outcomes") or {}
+        if confirmatory_composition:
+            tables["c8_confirmatory_outcome_composition.csv"] = outcome_composition_rows(
+                confirmatory_composition
+            )
     for family in ("C6", "C8"):
         rollup = family_rollups.get(family) or {}
         composition = rollup.get("outcome_composition") or {}
@@ -473,15 +549,21 @@ def build_campaign_evidence_memo(
     c6_pilot_text = format_outcome_decomposition(c6_rollup.get("outcome_composition") or {})
     c8_pilot_text = format_outcome_decomposition(c8_rollup.get("outcome_composition") or {})
     c8_confirmatory = (c8_rollup.get("confirmatory_dispatch") or {})
-    c8_grasp_scenarios = (C8_PILOT_COMPOSITION.is_file() and load_json(C8_PILOT_COMPOSITION).get("by_scenario")) or {}
+    c8_pilot_scenarios = (C8_PILOT_COMPOSITION.is_file() and load_json(C8_PILOT_COMPOSITION).get("by_scenario")) or {}
+    c8_confirmatory_progress = (
+        C8_CONFIRMATORY_COMPOSITION.is_file() and load_json(C8_CONFIRMATORY_COMPOSITION)
+    ) or {}
+    c8_confirmatory_by_scenario = c8_confirmatory_progress.get("by_scenario") or {}
+    c8_confirmatory_valid = int(c8_confirmatory.get("accepted_valid_unique") or 0)
     campaign_paragraphs = [
         f"**{campaign_export_status.upper()} EXPORT** — three achievable families are in flight. "
         f"C7 confirmatory coverage {c7_coverage.get('coverage_label', 'n/a')} on "
         f"{c7_coverage.get('ledger_compile_id', 'n/a')} (retired partials k/l/m documented in "
         f"compile_retirement_pending.json pending FINAL 768/768); C6 G7 pilot 24/24 complete with "
-        f"confirmatory wave B dispatched ({c6_rollup.get('confirmatory_dispatch', {}).get('coverage_label', 'n/a')}); "
+        f"confirmatory wave {c6_rollup.get('confirmatory_dispatch', {}).get('wave', 'D')} dispatched "
+        f"({c6_rollup.get('confirmatory_dispatch', {}).get('coverage_label', 'n/a')}); "
         f"C8 G7 pilot 24/24 with confirmatory "
-        f"{c8_confirmatory.get('coverage_label', '1/768 accepted; first valid move_stop no_grasp')}.",
+        f"{c8_confirmatory.get('coverage_label', 'n/a')}.",
         "Registered campaign scope: 17,664 planned policy episodes; 2,304 achievable "
         "(C6, C7, C8 confirmatory families × 768); 15,360 scientifically blocked "
         "(C1/C3/C4 horizontal information-gate squeeze 9,728; C2 reference_binding "
@@ -496,11 +578,18 @@ def build_campaign_evidence_memo(
         "(0 successes). C6 containment pilot shows grasps and placement attempts "
         f"({c6_pilot_text}). C8 second_stack WidowX pilot achieves grasp on 12/24 episodes "
         f"({c8_pilot_text}); transport_incomplete implies successful grasp with incomplete transport.",
-        "C8 per-scenario grasp pattern (pilot, ledger 20260908b) is the campaign's most suggestive "
-        f"result for online scene movement: original_sham {c8_grasp_scenarios.get('original_sham', {}).get('grasp_achieved', 'n/a')}/8, "
-        f"destination_static {c8_grasp_scenarios.get('destination_static', {}).get('grasp_achieved', 'n/a')}/8, "
-        f"move_stop {c8_grasp_scenarios.get('move_stop', {}).get('grasp_achieved', 'n/a')}/8 grasp achieved. "
-        "Confirmatory analysis must test this ordering at scale, not only aggregate failure rates.",
+        "C8 pilot per-scenario grasp rates (destination_static "
+        f"{c8_pilot_scenarios.get('destination_static', {}).get('grasp_achieved', 'n/a')}/8, "
+        f"move_stop {c8_pilot_scenarios.get('move_stop', {}).get('grasp_achieved', 'n/a')}/8, "
+        f"original_sham {c8_pilot_scenarios.get('original_sham', {}).get('grasp_achieved', 'n/a')}/8) "
+        "form a hypothesis about online scene movement that confirmatory data will test under the "
+        "registered estimator with Holm multiplicity handling. This pilot ordering is suggestive only "
+        "and must not be reported as an established result. At "
+        f"{c8_confirmatory_valid}/768 confirmatory episodes (single active lane c8m13), all outcomes "
+        "are no_grasp and the pilot ordering is not yet observable at confirmatory scale. The "
+        "per-scenario grasp contrast is not estimable at current width; if the final cohort remains "
+        "underpowered for that registered test, it will be marked not estimable rather than reported "
+        "as a trend.",
         "C7 compile provenance is explicit: partial compiles k (548), l (565), m (580), and stale "
         ".compiled-ledger-final (551) are retired in favor of compiled_ledger_20260908_FINAL at "
         "768/768 require-full-coverage; see compile_retirement_provenance.csv.",
@@ -575,12 +664,14 @@ def build_campaign_evidence_memo(
             "Blocked families carry qualification receipts only; no policy episodes were dispatched.",
             "279 pre-repair C7 episodes remain excluded from behavioral claims.",
             "C7 partial uses compile-m until FINAL 768/768 compile lands; retired partials documented in compile_retirement_pending.json.",
-            "C6/C8 confirmatory tables refresh when Agent B and Agent A ledger compiles land.",
+            "C6/C8 confirmatory tables refresh as Agent B and Agent A ledger compiles accumulate.",
+            "C8 per-scenario grasp ordering contrast is not estimable at current confirmatory width (6/768).",
         ],
         "not_estimable_primary_estimands": [
             "C1/C3/C4 primary wording and reference-selectivity contrasts",
             "C2 reference-selectivity primary (H)",
             "C5 vertical family (IK reachability block)",
+            "C8 per-scenario grasp ordering contrast (confirmatory underpowered at current width)",
         ],
     }
 
@@ -662,36 +753,52 @@ def resolve_pilot_defaults(args: argparse.Namespace) -> tuple[Path | None, Path,
 
 
 def load_confirmatory_dispatch_metadata() -> tuple[dict[str, Any], dict[str, Any]]:
-    c6_dispatch = build_dispatch_coverage_metadata(
-        accepted=0,
-        planned=768,
-        dispatched=int(load_json(C6_WAVE_B_DISPATCH).get("behavioral_episode_count", 384)),
-        compile_id=None,
-        wave="B",
-    ) if C6_WAVE_B_DISPATCH.is_file() else {}
+    c6_dispatch: dict[str, Any] = {}
+    if C6_WAVE_D_DISPATCH.is_file():
+        wave_payload = load_json(C6_WAVE_D_DISPATCH)
+        c6_dispatch = build_dispatch_coverage_metadata(
+            accepted=0,
+            planned=768,
+            dispatched=int(wave_payload.get("behavioral_episode_count", 384)),
+            compile_id=None,
+            wave="D",
+        )
+        c6_dispatch["dispatch_receipt"] = str(C6_WAVE_D_DISPATCH.relative_to(ROOT))
+        c6_dispatch["lane_count"] = wave_payload.get("lane_count")
+        c6_dispatch["note"] = "Wave D dispatched; wave E follows on Agent B schedule."
+    elif C6_WAVE_B_DISPATCH.is_file():
+        c6_dispatch = build_dispatch_coverage_metadata(
+            accepted=0,
+            planned=768,
+            dispatched=int(load_json(C6_WAVE_B_DISPATCH).get("behavioral_episode_count", 384)),
+            compile_id=None,
+            wave="B",
+        )
     c8_dispatch = {}
     status = load_c8_execution_status()
+    status_path = resolve_c8_status_receipt_path()
     if status:
-        progress = status.get("confirmatory_progress") or status.get("confirmatory_lanes") or {}
+        progress = status.get("confirmatory_progress") or {}
         c8_dispatch = build_dispatch_coverage_metadata(
-            accepted=int(progress.get("behavioral_valid") or 0),
-            planned=int((status.get("confirmatory_lock") or {}).get("queue_episodes") or 768),
-            dispatched=int(progress.get("total_queued") or 768),
-            compile_id="c8_execution_status_20260908c",
+            accepted=int(progress.get("valid") or progress.get("behavioral_valid") or 0),
+            planned=int(progress.get("queued") or (status.get("confirmatory_lock") or {}).get("queue_episodes") or 768),
+            dispatched=int(progress.get("queued") or 768),
+            compile_id=status.get("confirmatory_ledger_compile_id")
+            or (status.get("agent_c_hooks") or {}).get("c8_confirmatory_ledger_compile_id")
+            or (status_path.name.replace("c8_execution_status_", "").replace(".json", "") if status_path else None),
             wave="main",
         )
-        c8_dispatch["lane_pairs_dispatched"] = progress.get("dispatched_lane_pairs") or status.get(
-            "confirmatory_lanes", {}
-        ).get("dispatched_lane_pairs")
-        c8_dispatch["pod_summary"] = progress.get("pod_summary")
-        c8_dispatch["capacity"] = status.get("capacity")
-        c8_dispatch["first_valid_episode"] = progress.get("aggregate_outcomes")
-        c8_dispatch["first_valid_by_scenario"] = progress.get("by_scenario")
-        c8_dispatch["execution_status_receipt"] = str(
-            (C8_EXECUTION_STATUS if C8_EXECUTION_STATUS.is_file() else C8_EXECUTION_STATUS_FALLBACK).relative_to(
-                ROOT
-            )
+        c8_dispatch["aggregate_outcomes"] = progress.get("aggregate_outcomes")
+        c8_dispatch["by_scenario"] = progress.get("by_scenario")
+        c8_dispatch["confirmatory_lanes"] = status.get("confirmatory_lanes")
+        c8_dispatch["wave_width_note"] = (
+            "Only c8m13 has behavioral completes at current width; per-scenario ordering not yet testable."
         )
+        c8_dispatch["composition_receipt"] = (
+            str(C8_CONFIRMATORY_COMPOSITION.relative_to(ROOT)) if C8_CONFIRMATORY_COMPOSITION.is_file() else None
+        )
+        if status_path:
+            c8_dispatch["execution_status_receipt"] = str(status_path.relative_to(ROOT))
     return c6_dispatch, c8_dispatch
 
 
@@ -799,6 +906,10 @@ def main(argv: list[str] | None = None) -> int:
             c7_primary_rows = list(csv.DictReader(handle))
 
     family_exports: dict[str, dict] = {"C7": c7_payload}
+    c8_scenario_grasp = load_json(C8_PILOT_COMPOSITION) if C8_PILOT_COMPOSITION.is_file() else None
+    c8_confirmatory_grasp = (
+        load_json(C8_CONFIRMATORY_COMPOSITION) if C8_CONFIRMATORY_COMPOSITION.is_file() else None
+    )
     pilot_sources: dict[str, tuple[Path, Path, str | None]] = {}
     c6_ledger, c6_manifest, c6_compile_id, c8_ledger, c8_manifest, c8_compile_id = resolve_pilot_defaults(args)
     optional_families = (
@@ -826,6 +937,19 @@ def main(argv: list[str] | None = None) -> int:
         )
         family_exports[family] = payload
 
+    if DEFAULT_C8_CONFIRMATORY_LEDGER.is_file() and DEFAULT_C8_MANIFEST.is_file():
+        c8_confirmatory_tag = f"{args.tag}c8confirmatory"
+        c8_confirmatory_payload = export_family(
+            family="C8",
+            ledger=DEFAULT_C8_CONFIRMATORY_LEDGER,
+            manifest=DEFAULT_C8_MANIFEST.resolve(),
+            config=args.config.resolve(),
+            out_root=out_root,
+            tag=c8_confirmatory_tag,
+            compile_id=(c8_confirmatory_grasp or {}).get("ledger_compile_id") or "20260908a",
+        )
+        family_exports["C8_confirmatory"] = c8_confirmatory_payload
+
     horizontal_blocked = load_json(HORIZONTAL_SLICE / "blocked_scope.json")
     horizontal_memo = load_json(HORIZONTAL_SLICE / "paper" / "evidence_memo.json")
 
@@ -837,7 +961,6 @@ def main(argv: list[str] | None = None) -> int:
         compile_id=c7_compile_id,
     )
     c6_confirmatory_dispatch, c8_confirmatory_dispatch = load_confirmatory_dispatch_metadata()
-    c8_scenario_grasp = load_json(C8_PILOT_COMPOSITION) if C8_PILOT_COMPOSITION.is_file() else None
     compile_provenance = load_compile_provenance(
         active_compile_id=c7_compile_id,
         active_rows=c7_rows,
@@ -894,7 +1017,7 @@ def main(argv: list[str] | None = None) -> int:
         )
 
     c7_outcome_composition = family_rollups["C7"]["outcome_composition"]
-    campaign_export_status = "complete" if c7_is_final else "partial"
+    campaign_export_status = resolve_campaign_export_status(c7_is_final=c7_is_final, family_rollups=family_rollups)
     family_status = build_family_status(family_rollups)
 
     campaign_blocked = build_campaign_blocked_scope(
@@ -903,6 +1026,7 @@ def main(argv: list[str] | None = None) -> int:
         family_status=family_status,
         compile_provenance=compile_provenance,
         c8_scenario_grasp=c8_scenario_grasp,
+        c8_confirmatory_grasp=c8_confirmatory_grasp,
     )
     blocked_path = out_root / "blocked_scope.json"
     blocked_path.write_text(json.dumps(campaign_blocked, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -930,6 +1054,7 @@ def main(argv: list[str] | None = None) -> int:
         campaign_export_status=campaign_export_status,
         compile_provenance=compile_provenance,
         c8_scenario_grasp=c8_scenario_grasp,
+        c8_confirmatory_grasp=c8_confirmatory_grasp,
     )
     table_artifacts: dict[str, dict] = {}
     for name, rows in campaign_tables.items():
@@ -958,6 +1083,7 @@ def main(argv: list[str] | None = None) -> int:
         "ledger_compile_id": c7_compile_id,
         "compile_provenance": compile_provenance,
         "c8_pilot_scenario_grasp": c8_scenario_grasp,
+        "c8_confirmatory_scenario_grasp": c8_confirmatory_grasp,
         "outcome_composition": c7_outcome_composition,
         "pvc_complete_note": (
             "Ledger compile against confirmatory manifest is required to separate "

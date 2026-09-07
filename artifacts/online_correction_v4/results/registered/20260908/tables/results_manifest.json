@@ -1,18 +1,106 @@
 {
   "export_coverage": {
+    "C6": {
+      "accepted_valid_unique": 24,
+      "coverage_fraction": 1.0,
+      "coverage_label": "24/24 (100.0%)",
+      "export_status": "complete",
+      "ledger_compile_id": "g7-containment-20260908a",
+      "missing_episodes": 0,
+      "planned_episodes": 24
+    },
     "C7": {
       "accepted_valid_unique": 548,
       "coverage_fraction": 0.713542,
       "coverage_label": "548/768 (71.4%)",
+      "export_phase": "confirmatory_partial",
       "export_status": "partial",
       "ledger_compile_id": "compiled_ledger_20260908k",
       "missing_episodes": 220,
       "planned_episodes": 768
+    },
+    "C8": {
+      "accepted_valid_unique": 24,
+      "coverage_fraction": 1.0,
+      "coverage_label": "24/24 (100.0%)",
+      "export_status": "complete",
+      "ledger_compile_id": "20260908b",
+      "missing_episodes": 0,
+      "planned_episodes": 24
     }
   },
   "export_status": "partial",
+  "family_rollups": {
+    "C6": {
+      "confirmatory_dispatch": {
+        "accepted_valid_unique": 0,
+        "coverage_fraction": 0.0,
+        "coverage_label": "0/768 confirmatory accepted; 384/768 dispatched",
+        "dispatch_status": "dispatched_pending_capacity",
+        "dispatched_episodes": 384,
+        "export_phase": "confirmatory",
+        "export_status": "dispatched_partial",
+        "ledger_compile_id": null,
+        "missing_episodes": 768,
+        "planned_episodes": 768,
+        "wave": "B"
+      },
+      "outcome_composition": {
+        "no_grasp": 18,
+        "transport_incomplete": 3,
+        "wrong_goal_region": 3
+      }
+    },
+    "C7": {
+      "confirmatory_dispatch": {},
+      "outcome_composition": {
+        "no_grasp": 544,
+        "transport_incomplete": 4
+      }
+    },
+    "C8": {
+      "confirmatory_dispatch": {
+        "accepted_valid_unique": 0,
+        "capacity": {
+          "authorized_confirmatory_lane_pairs": 20,
+          "authorized_pilot_lanes": 8,
+          "binding_limit": "G4-attested A40 GR00T Bridge stratum",
+          "c7_a40_occupancy_blocks_scheduling": true,
+          "do_not_use_without_g4_receipt": [
+            "A100-80GB",
+            "B200"
+          ],
+          "estimated_c7_release_hours": 2.3,
+          "handoff_uri": "artifacts/online_correction_v4/execution/gpu_widen_20260908/c8_pilot_lane_expansion_handoff_agent_a.json"
+        },
+        "coverage_fraction": 0.0,
+        "coverage_label": "0/768 confirmatory accepted; 768/768 dispatched",
+        "dispatch_status": "dispatched_pending_capacity",
+        "dispatched_episodes": 768,
+        "export_phase": "confirmatory",
+        "export_status": "dispatched_partial",
+        "lane_pairs_dispatched": 20,
+        "ledger_compile_id": null,
+        "missing_episodes": 768,
+        "planned_episodes": 768,
+        "pod_summary": {
+          "Completed": 0,
+          "Error": 0,
+          "Pending": 40,
+          "Running": 0
+        },
+        "wave": "main"
+      },
+      "outcome_composition": {
+        "no_grasp": 12,
+        "transport_incomplete": 12
+      }
+    }
+  },
   "family_tables": {
-    "C7": "artifacts/online_correction_v4/results/registered/20260908/families/C7/20260908c7/tables"
+    "C6": "artifacts/online_correction_v4/results/registered/20260908/families/C6/20260908c6pilot/tables",
+    "C7": "artifacts/online_correction_v4/results/registered/20260908/families/C7/20260908c7/tables",
+    "C8": "artifacts/online_correction_v4/results/registered/20260908/families/C8/20260908c8pilot/tables"
   },
   "figures_manifest": {
     "bytes": 433,
@@ -22,24 +110,59 @@
   "schema_version": "v4-registered-campaign-results-manifest-v1",
   "tables": {
     "audit_report.json": {
-      "bytes": 2938,
+      "bytes": 5642,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/audit_report.json",
-      "sha256": "f9c0f40a4aa907745d7a9fc7a72a1e57e71fabdc0a25b11e21c8b2ea5f6a00cf"
+      "sha256": "fded4abb70319d0f80c865922fb4fb15bf2f4ccb21f822e35c8a02d90b7773e2"
     },
     "blocked_families.csv": {
       "bytes": 1242,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/blocked_families.csv",
       "sha256": "2602f85fc8ea41fd217d5ca98f926daf2f145cbe1293aec0272768135dc2413a"
     },
+    "c6_outcome_composition.csv": {
+      "bytes": 79,
+      "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c6_outcome_composition.csv",
+      "sha256": "fa9192be3cf7e9bd454360676eb30772a4045bdafdb658912d8f2eabf2df0bf3"
+    },
+    "c6_scenario_outcome_breakdown.csv": {
+      "bytes": 252,
+      "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c6_scenario_outcome_breakdown.csv",
+      "sha256": "fc91db6d692dd6c7519958dd4571c49dfbc946190a72da3413c08c4b5a464037"
+    },
     "c7_outcome_composition.csv": {
       "bytes": 59,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c7_outcome_composition.csv",
       "sha256": "bf2f693cd876f0a5000e3e7b74b251f27bd0af90e3fe40eed7913154908ce335"
     },
+    "c7_scenario_outcome_breakdown.csv": {
+      "bytes": 230,
+      "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c7_scenario_outcome_breakdown.csv",
+      "sha256": "0452896629827c0d2175849aecd81ec0a133495d679f96d763918a8dc5f4fc14"
+    },
+    "c8_outcome_composition.csv": {
+      "bytes": 59,
+      "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c8_outcome_composition.csv",
+      "sha256": "f3dcf967f4204f2c49527516b9206ca8d1bb14f6d4e72bf518db1e7ce91db090"
+    },
+    "c8_scenario_outcome_breakdown.csv": {
+      "bytes": 224,
+      "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c8_scenario_outcome_breakdown.csv",
+      "sha256": "430405d1f61e133f97a55c5fb52a8d1f60110632ee063191f3867f9e7b25cdf7"
+    },
     "campaign_primary_results.csv": {
       "bytes": 1549,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/campaign_primary_results.csv",
       "sha256": "2131691505c3bd7232c83ba4c16be1160214ee19aa60801b3c01da005aa5bc9a"
+    },
+    "cross_fixture_outcome_contrast.csv": {
+      "bytes": 380,
+      "path": "artifacts/online_correction_v4/results/registered/20260908/tables/cross_fixture_outcome_contrast.csv",
+      "sha256": "b8b14bf44d13867d6272de86cc87f25cc4f79f39bc4d45e1589e22765cce1465"
+    },
+    "family_coverage.csv": {
+      "bytes": 436,
+      "path": "artifacts/online_correction_v4/results/registered/20260908/tables/family_coverage.csv",
+      "sha256": "2dbc07ad6cfb7fc3bc13d71e5e3ee80742f9729b72f698305f736beb5ee4a75d"
     },
     "scale_ladder_squeeze.csv": {
       "bytes": 565,
@@ -47,9 +170,9 @@
       "sha256": "9fd28c21eb075ee5baf5460cdb4342b5651dcaae987cda6d2e74b30067ad1062"
     },
     "scope_summary.csv": {
-      "bytes": 342,
+      "bytes": 392,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/scope_summary.csv",
-      "sha256": "03d18120acd68aed2fc9d3c842af14ff0db1b2718c1b868d3aeb77cb367034f9"
+      "sha256": "eb39df66f9870be6e2622489be1919e0aaac0fc3fc9e6024a135361e28f23e7d"
     }
   },
   "tag": "20260908"

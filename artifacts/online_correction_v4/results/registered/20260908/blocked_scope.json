@@ -10,6 +10,26 @@
     "C2_reference_binding": 4096,
     "C5_vertical": 768
   },
+  "c7_compile_ambiguity": {
+    "authoritative_partial_accepted": 548,
+    "authoritative_partial_compile_id": "compiled_ledger_20260908k",
+    "final_compile_status": "pending_require_full_coverage_768",
+    "interpretation": "Do not paper over compile ambiguity: compile-l adds at least one wrong_goal_region and four transport_incomplete among 565 rows; the labeled partial export uses compile-k until Agent B publishes a single FINAL require-full-coverage compile at 768/768.",
+    "pvc_raw_valid_count": 583,
+    "stale_or_superseded_partials": {
+      "compiled-ledger-final": 551,
+      "compiled_ledger_20260908l": 565
+    }
+  },
+  "capacity_finding": {
+    "authorized_confirmatory_lane_pairs": 20,
+    "binding_throughput_constraint": "C8 G4-attested A40 GR00T Bridge stratum",
+    "c7_a40_pool_occupancy_blocks_c8_confirmatory": true,
+    "confirmatory_episodes_per_family": 768,
+    "estimated_confirmatory_walltime_hours_at_full_pool": 16,
+    "note": "Once C7 releases the A40 pool, C8 confirmatory throughput is bounded by 20 authorized lane pairs on the G4-attested A40 stratum; 768 episodes at that parallelism is approximately 16 wall-clock hours.",
+    "receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908b.json"
+  },
   "criteria_amended": false,
   "disclosed_setup_repairs": [
     "NaturalGraspDetector trigger observation wiring repaired: object_kinematic_state() now uses finger-contact coupling instead of robot-base pose (C7)",
@@ -18,16 +38,80 @@
   ],
   "family_status": {
     "C6": {
-      "export_status": "awaiting_receipt",
-      "note": "Only fixture passing information gate on both translation-sign halves",
-      "planned_episodes": 768,
-      "status": "achievable; confirmatory dispatch in progress (Agent B)"
+      "accepted_valid_unique": 24,
+      "confirmatory_dispatch": {
+        "accepted_valid_unique": 0,
+        "coverage_fraction": 0.0,
+        "coverage_label": "0/768 confirmatory accepted; 384/768 dispatched",
+        "dispatch_status": "dispatched_pending_capacity",
+        "dispatched_episodes": 384,
+        "export_phase": "confirmatory",
+        "export_status": "dispatched_partial",
+        "ledger_compile_id": null,
+        "missing_episodes": 768,
+        "planned_episodes": 768,
+        "wave": "B"
+      },
+      "coverage_fraction": 1.0,
+      "coverage_label": "24/24 (100.0%)",
+      "evidence_phase": "g7_pilot_complete",
+      "export_status": "complete",
+      "fixture": "containment",
+      "ledger_compile_id": "g7-containment-20260908a",
+      "missing_episodes": 0,
+      "outcome_composition": {
+        "no_grasp": 18,
+        "transport_incomplete": 3,
+        "wrong_goal_region": 3
+      },
+      "planned_episodes": 24,
+      "platform": "isaac_droid",
+      "scenario_outcome_breakdown": [
+        {
+          "count": 6,
+          "failure_label": "no_grasp",
+          "scenario": "destination_static"
+        },
+        {
+          "count": 2,
+          "failure_label": "wrong_goal_region",
+          "scenario": "destination_static"
+        },
+        {
+          "count": 6,
+          "failure_label": "no_grasp",
+          "scenario": "move_stop"
+        },
+        {
+          "count": 1,
+          "failure_label": "transport_incomplete",
+          "scenario": "move_stop"
+        },
+        {
+          "count": 1,
+          "failure_label": "wrong_goal_region",
+          "scenario": "move_stop"
+        },
+        {
+          "count": 6,
+          "failure_label": "no_grasp",
+          "scenario": "original_sham"
+        },
+        {
+          "count": 2,
+          "failure_label": "transport_incomplete",
+          "scenario": "original_sham"
+        }
+      ]
     },
     "C7": {
       "accepted_valid_unique": 548,
       "coverage_fraction": 0.713542,
       "coverage_label": "548/768 (71.4%)",
+      "evidence_phase": "confirmatory_partial",
+      "export_phase": "confirmatory_partial",
       "export_status": "partial",
+      "fixture": "object_pair",
       "ledger_compile_id": "compiled_ledger_20260908k",
       "missing_episodes": 220,
       "outcome_composition": {
@@ -35,13 +119,120 @@
         "transport_incomplete": 4
       },
       "planned_episodes": 768,
-      "pre_repair_excluded": 279
+      "platform": "isaac_droid",
+      "pre_repair_excluded": 279,
+      "scenario_outcome_breakdown": [
+        {
+          "count": 181,
+          "failure_label": "no_grasp",
+          "scenario": "destination_static"
+        },
+        {
+          "count": 1,
+          "failure_label": "transport_incomplete",
+          "scenario": "destination_static"
+        },
+        {
+          "count": 189,
+          "failure_label": "no_grasp",
+          "scenario": "move_stop"
+        },
+        {
+          "count": 1,
+          "failure_label": "transport_incomplete",
+          "scenario": "move_stop"
+        },
+        {
+          "count": 174,
+          "failure_label": "no_grasp",
+          "scenario": "original_sham"
+        },
+        {
+          "count": 2,
+          "failure_label": "transport_incomplete",
+          "scenario": "original_sham"
+        }
+      ]
     },
     "C8": {
-      "export_status": "awaiting_receipt",
-      "note": "Cross-platform check on GR00T Bridge / SimplerEnv stack",
-      "planned_episodes": 768,
-      "status": "achievable; G7 pilot dispatched; confirmatory after G8 (Agent A)"
+      "accepted_valid_unique": 24,
+      "confirmatory_dispatch": {
+        "accepted_valid_unique": 0,
+        "capacity": {
+          "authorized_confirmatory_lane_pairs": 20,
+          "authorized_pilot_lanes": 8,
+          "binding_limit": "G4-attested A40 GR00T Bridge stratum",
+          "c7_a40_occupancy_blocks_scheduling": true,
+          "do_not_use_without_g4_receipt": [
+            "A100-80GB",
+            "B200"
+          ],
+          "estimated_c7_release_hours": 2.3,
+          "handoff_uri": "artifacts/online_correction_v4/execution/gpu_widen_20260908/c8_pilot_lane_expansion_handoff_agent_a.json"
+        },
+        "coverage_fraction": 0.0,
+        "coverage_label": "0/768 confirmatory accepted; 768/768 dispatched",
+        "dispatch_status": "dispatched_pending_capacity",
+        "dispatched_episodes": 768,
+        "export_phase": "confirmatory",
+        "export_status": "dispatched_partial",
+        "lane_pairs_dispatched": 20,
+        "ledger_compile_id": null,
+        "missing_episodes": 768,
+        "planned_episodes": 768,
+        "pod_summary": {
+          "Completed": 0,
+          "Error": 0,
+          "Pending": 40,
+          "Running": 0
+        },
+        "wave": "main"
+      },
+      "coverage_fraction": 1.0,
+      "coverage_label": "24/24 (100.0%)",
+      "evidence_phase": "g7_pilot_complete",
+      "export_status": "complete",
+      "fixture": "second_stack",
+      "ledger_compile_id": "20260908b",
+      "missing_episodes": 0,
+      "outcome_composition": {
+        "no_grasp": 12,
+        "transport_incomplete": 12
+      },
+      "planned_episodes": 24,
+      "platform": "widowx_simplerenv",
+      "scenario_outcome_breakdown": [
+        {
+          "count": 2,
+          "failure_label": "no_grasp",
+          "scenario": "destination_static"
+        },
+        {
+          "count": 6,
+          "failure_label": "transport_incomplete",
+          "scenario": "destination_static"
+        },
+        {
+          "count": 4,
+          "failure_label": "no_grasp",
+          "scenario": "move_stop"
+        },
+        {
+          "count": 4,
+          "failure_label": "transport_incomplete",
+          "scenario": "move_stop"
+        },
+        {
+          "count": 6,
+          "failure_label": "no_grasp",
+          "scenario": "original_sham"
+        },
+        {
+          "count": 2,
+          "failure_label": "transport_incomplete",
+          "scenario": "original_sham"
+        }
+      ]
     }
   },
   "horizontal_evidence": {

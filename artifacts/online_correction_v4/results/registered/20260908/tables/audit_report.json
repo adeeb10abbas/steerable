@@ -56,17 +56,103 @@
     }
   },
   "export_coverage": {
+    "C6": {
+      "accepted_valid_unique": 24,
+      "coverage_fraction": 1.0,
+      "coverage_label": "24/24 (100.0%)",
+      "export_status": "complete",
+      "ledger_compile_id": "g7-containment-20260908a",
+      "missing_episodes": 0,
+      "planned_episodes": 24
+    },
     "C7": {
       "accepted_valid_unique": 548,
       "coverage_fraction": 0.713542,
       "coverage_label": "548/768 (71.4%)",
+      "export_phase": "confirmatory_partial",
       "export_status": "partial",
       "ledger_compile_id": "compiled_ledger_20260908k",
       "missing_episodes": 220,
       "planned_episodes": 768
+    },
+    "C8": {
+      "accepted_valid_unique": 24,
+      "coverage_fraction": 1.0,
+      "coverage_label": "24/24 (100.0%)",
+      "export_status": "complete",
+      "ledger_compile_id": "20260908b",
+      "missing_episodes": 0,
+      "planned_episodes": 24
     }
   },
   "export_status": "partial",
+  "family_rollups": {
+    "C6": {
+      "confirmatory_dispatch": {
+        "accepted_valid_unique": 0,
+        "coverage_fraction": 0.0,
+        "coverage_label": "0/768 confirmatory accepted; 384/768 dispatched",
+        "dispatch_status": "dispatched_pending_capacity",
+        "dispatched_episodes": 384,
+        "export_phase": "confirmatory",
+        "export_status": "dispatched_partial",
+        "ledger_compile_id": null,
+        "missing_episodes": 768,
+        "planned_episodes": 768,
+        "wave": "B"
+      },
+      "outcome_composition": {
+        "no_grasp": 18,
+        "transport_incomplete": 3,
+        "wrong_goal_region": 3
+      }
+    },
+    "C7": {
+      "confirmatory_dispatch": {},
+      "outcome_composition": {
+        "no_grasp": 544,
+        "transport_incomplete": 4
+      }
+    },
+    "C8": {
+      "confirmatory_dispatch": {
+        "accepted_valid_unique": 0,
+        "capacity": {
+          "authorized_confirmatory_lane_pairs": 20,
+          "authorized_pilot_lanes": 8,
+          "binding_limit": "G4-attested A40 GR00T Bridge stratum",
+          "c7_a40_occupancy_blocks_scheduling": true,
+          "do_not_use_without_g4_receipt": [
+            "A100-80GB",
+            "B200"
+          ],
+          "estimated_c7_release_hours": 2.3,
+          "handoff_uri": "artifacts/online_correction_v4/execution/gpu_widen_20260908/c8_pilot_lane_expansion_handoff_agent_a.json"
+        },
+        "coverage_fraction": 0.0,
+        "coverage_label": "0/768 confirmatory accepted; 768/768 dispatched",
+        "dispatch_status": "dispatched_pending_capacity",
+        "dispatched_episodes": 768,
+        "export_phase": "confirmatory",
+        "export_status": "dispatched_partial",
+        "lane_pairs_dispatched": 20,
+        "ledger_compile_id": null,
+        "missing_episodes": 768,
+        "planned_episodes": 768,
+        "pod_summary": {
+          "Completed": 0,
+          "Error": 0,
+          "Pending": 40,
+          "Running": 0
+        },
+        "wave": "main"
+      },
+      "outcome_composition": {
+        "no_grasp": 12,
+        "transport_incomplete": 12
+      }
+    }
+  },
   "frozen_analysis_manifest": "artifacts/online_correction_v4/frozen_analysis_manifest.json",
   "ledger_compile_id": "compiled_ledger_20260908k",
   "ledger_rows_compiled": 548,

@@ -9,6 +9,7 @@ import json
 import subprocess
 import sys
 from pathlib import Path
+from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -16,10 +17,13 @@ if str(ROOT) not in sys.path:
 
 from tools.v4_registered_export_helpers import (  # noqa: E402
     build_coverage_metadata,
+    build_dispatch_coverage_metadata,
     format_outcome_decomposition,
     load_accepted_ledger_rows,
+    load_manifest_by_episode_id,
     outcome_composition_rows,
     summarize_outcome_composition,
+    summarize_scenario_outcome_breakdown,
 )
 
 DEFAULT_CONFIG = ROOT / "docs/online_correction_v4/campaign.json"
@@ -31,6 +35,36 @@ DEFAULT_C6_MANIFEST = (
 )
 DEFAULT_C8_MANIFEST = (
     ROOT / "artifacts/online_correction_v4/setup/c8_confirmatory/queue.frozen.jsonl"
+)
+DEFAULT_C6_PILOT_LEDGER = (
+    ROOT
+    / "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/pilot-ledger-20260908a/accepted_ledger.jsonl"
+)
+DEFAULT_C6_PILOT_MANIFEST = (
+    ROOT / "artifacts/online_correction_v4/setup/containment_g7_pilot_manifest.jsonl"
+)
+DEFAULT_C8_PILOT_LEDGER = (
+    ROOT
+    / "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pilot-ledger-20260908b/accepted_ledger.jsonl"
+)
+DEFAULT_C8_PILOT_MANIFEST = (
+    ROOT / "artifacts/online_correction_v4/setup/second_stack_g7_pilot_queue.jsonl"
+)
+C8_EXECUTION_STATUS = (
+    ROOT
+    / "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908b.json"
+)
+C6_WAVE_B_DISPATCH = (
+    ROOT
+    / "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/create-c6confirm20260908b.json"
+)
+C6_G7_RECEIPT = (
+    ROOT
+    / "artifacts/online_correction_v4/qualification/20260908_containment_g7_pilot_receipt_g7c6p20260908a.json"
+)
+C8_G7_RECEIPT = (
+    ROOT
+    / "artifacts/online_correction_v4/qualification/20260908_second_stack_g7_pilot_g7c8p20260908a.json"
 )
 HORIZONTAL_SLICE = (
     ROOT / "artifacts/online_correction_v4/results/horizontal_geometry_repair_v2/20260908"
@@ -76,11 +110,7 @@ def build_campaign_blocked_scope(
     *,
     c7_blocked_scope: dict,
     horizontal_blocked_scope: dict,
-    horizontal_evidence_memo: dict,
-    c7_coverage: dict,
-    c7_outcome_composition: dict[str, int],
-    c6_coverage: dict | None = None,
-    c8_coverage: dict | None = None,
+    family_status: dict[str, dict],
 ) -> dict:
     campaign = dict(c7_blocked_scope.get("campaign_scope_revision") or {})
     horizontal_finding = horizontal_blocked_scope.get("scientific_finding") or {}
@@ -116,26 +146,35 @@ def build_campaign_blocked_scope(
         "pre_repair_c7_excluded_episodes": campaign.get("pre_repair_c7_excluded_episodes", 279),
         "horizontal_geometry_repair_note": campaign.get("horizontal_geometry_repair_note"),
         "horizontal_scale_squeeze": campaign.get("horizontal_scale_squeeze"),
-        "family_status": {
-            "C7": {
-                **c7_coverage,
-                "outcome_composition": c7_outcome_composition,
-                "pre_repair_excluded": campaign.get("pre_repair_c7_excluded_episodes", 279),
+        "family_status": family_status,
+        "capacity_finding": {
+            "binding_throughput_constraint": "C8 G4-attested A40 GR00T Bridge stratum",
+            "c7_a40_pool_occupancy_blocks_c8_confirmatory": True,
+            "authorized_confirmatory_lane_pairs": 20,
+            "confirmatory_episodes_per_family": 768,
+            "estimated_confirmatory_walltime_hours_at_full_pool": 16,
+            "note": (
+                "Once C7 releases the A40 pool, C8 confirmatory throughput is bounded by "
+                "20 authorized lane pairs on the G4-attested A40 stratum; 768 episodes at "
+                "that parallelism is approximately 16 wall-clock hours."
+            ),
+            "receipt": str(C8_EXECUTION_STATUS.relative_to(ROOT)),
+        },
+        "c7_compile_ambiguity": {
+            "authoritative_partial_compile_id": "compiled_ledger_20260908k",
+            "authoritative_partial_accepted": 548,
+            "stale_or_superseded_partials": {
+                "compiled-ledger-final": 551,
+                "compiled_ledger_20260908l": 565,
             },
-            "C6": c6_coverage
-            or {
-                "planned_episodes": 768,
-                "export_status": "awaiting_receipt",
-                "status": "achievable; confirmatory dispatch in progress (Agent B)",
-                "note": "Only fixture passing information gate on both translation-sign halves",
-            },
-            "C8": c8_coverage
-            or {
-                "planned_episodes": 768,
-                "export_status": "awaiting_receipt",
-                "status": "achievable; G7 pilot dispatched; confirmatory after G8 (Agent A)",
-                "note": "Cross-platform check on GR00T Bridge / SimplerEnv stack",
-            },
+            "pvc_raw_valid_count": 583,
+            "final_compile_status": "pending_require_full_coverage_768",
+            "interpretation": (
+                "Do not paper over compile ambiguity: compile-l adds at least one "
+                "wrong_goal_region and four transport_incomplete among 565 rows; the labeled "
+                "partial export uses compile-k until Agent B publishes a single FINAL "
+                "require-full-coverage compile at 768/768."
+            ),
         },
         "not_estimable_or_blocked": not_estimable,
         "scientific_blockers": c7_blocked_scope.get("scientific_blockers"),
@@ -148,16 +187,64 @@ def build_campaign_blocked_scope(
     }
 
 
+def build_cross_fixture_contrast_rows(
+    *,
+    family_rollups: dict[str, dict],
+) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for family, rollup in family_rollups.items():
+        composition = rollup.get("outcome_composition") or {}
+        rows.append(
+            {
+                "family": family,
+                "fixture": rollup.get("fixture"),
+                "platform": rollup.get("platform"),
+                "evidence_phase": rollup.get("evidence_phase"),
+                "coverage_label": (rollup.get("coverage") or {}).get("coverage_label"),
+                "episode_count": (rollup.get("coverage") or {}).get("accepted_valid_unique"),
+                "success": composition.get("success", 0),
+                "no_grasp": composition.get("no_grasp", 0),
+                "transport_incomplete": composition.get("transport_incomplete", 0),
+                "wrong_goal_region": composition.get("wrong_goal_region", 0),
+                "wrong_placement": composition.get("wrong_placement", 0),
+            }
+        )
+    return rows
+
+
+def build_family_coverage_rows(family_rollups: dict[str, dict]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for family, rollup in family_rollups.items():
+        coverage = rollup.get("coverage") or {}
+        confirmatory = rollup.get("confirmatory_dispatch") or {}
+        rows.append(
+            {
+                "family": family,
+                "fixture": rollup.get("fixture"),
+                "evidence_phase": rollup.get("evidence_phase"),
+                "export_status": coverage.get("export_status"),
+                "coverage_label": coverage.get("coverage_label"),
+                "accepted_valid_unique": coverage.get("accepted_valid_unique"),
+                "planned_episodes": coverage.get("planned_episodes"),
+                "confirmatory_dispatched": confirmatory.get("dispatched_episodes"),
+                "confirmatory_accepted": confirmatory.get("accepted_valid_unique"),
+                "ledger_compile_id": coverage.get("ledger_compile_id"),
+            }
+        )
+    return rows
+
+
 def build_campaign_tables(
     *,
     campaign_blocked: dict,
     c7_audit: dict,
     c7_primary_rows: list[dict],
-    c7_outcome_composition: dict[str, int],
-    c7_coverage: dict,
+    family_rollups: dict[str, dict],
     campaign_export_status: str,
 ) -> dict[str, list[dict]]:
     validation = c7_audit.get("validation") or {}
+    c7_coverage = (family_rollups.get("C7") or {}).get("coverage") or {}
+    c7_outcome_composition = (family_rollups.get("C7") or {}).get("outcome_composition") or {}
     scope_summary = [
         {"metric": "campaign_export_status", "value": campaign_export_status},
         {"metric": "original_planned_policy_episodes", "value": campaign_blocked.get("original_planned_policy_episodes", 17664)},
@@ -165,9 +252,10 @@ def build_campaign_tables(
         {"metric": "scientifically_blocked_episodes", "value": campaign_blocked.get("scientifically_blocked_episodes", 15360)},
         {"metric": "pre_repair_c7_excluded_episodes", "value": campaign_blocked.get("pre_repair_c7_excluded_episodes", 279)},
         {"metric": "c7_coverage_label", "value": c7_coverage.get("coverage_label")},
+        {"metric": "c6_pilot_coverage_label", "value": ((family_rollups.get("C6") or {}).get("coverage") or {}).get("coverage_label")},
+        {"metric": "c8_pilot_coverage_label", "value": ((family_rollups.get("C8") or {}).get("coverage") or {}).get("coverage_label")},
         {"metric": "c7_accepted_valid_unique", "value": validation.get("accepted_unique")},
         {"metric": "c7_valid_success_records", "value": validation.get("valid_success_records")},
-        {"metric": "c7_valid_failure_records", "value": validation.get("valid_failure_records")},
         {"metric": "criteria_amended", "value": campaign_blocked.get("criteria_amended", False)},
     ]
     breakdown = campaign_blocked.get("blocked_breakdown") or {}
@@ -198,13 +286,29 @@ def build_campaign_tables(
         or []
     ]
     estimand_status = [{**row, "analysis_scope": "registered_primary_contrast_registry"} for row in c7_primary_rows]
-    return {
+    tables: dict[str, list[dict]] = {
         "scope_summary.csv": scope_summary,
         "blocked_families.csv": blocked_families,
         "scale_ladder_squeeze.csv": squeeze_rows,
         "campaign_primary_results.csv": estimand_status,
         "c7_outcome_composition.csv": outcome_composition_rows(c7_outcome_composition),
+        "family_coverage.csv": build_family_coverage_rows(family_rollups),
+        "cross_fixture_outcome_contrast.csv": build_cross_fixture_contrast_rows(
+            family_rollups=family_rollups
+        ),
     }
+    for family in ("C6", "C8"):
+        rollup = family_rollups.get(family) or {}
+        composition = rollup.get("outcome_composition") or {}
+        if composition:
+            tables[f"{family.lower()}_outcome_composition.csv"] = outcome_composition_rows(composition)
+        scenario_rows = rollup.get("scenario_outcome_breakdown") or []
+        if scenario_rows:
+            tables[f"{family.lower()}_scenario_outcome_breakdown.csv"] = scenario_rows
+    c7_scenario_rows = (family_rollups.get("C7") or {}).get("scenario_outcome_breakdown") or []
+    if c7_scenario_rows:
+        tables["c7_scenario_outcome_breakdown.csv"] = c7_scenario_rows
+    return tables
 
 
 def render_campaign_scope_figure(*, rows: list[dict], out_path: Path, export_status: str) -> None:
@@ -246,24 +350,51 @@ def build_campaign_evidence_memo(
     horizontal_memo: dict,
     c7_export_manifest: dict,
     c7_audit: dict,
-    c7_coverage: dict,
-    c7_outcome_composition: dict[str, int],
     campaign_export_status: str,
+    family_rollups: dict[str, dict],
     family_exports: dict[str, dict],
 ) -> dict:
     horizontal_narrative = horizontal_memo.get("paper_narrative") or {}
     paragraphs = list(horizontal_narrative.get("paragraphs") or [])
     validation = c7_audit.get("validation") or {}
+    c7_rollup = family_rollups.get("C7") or {}
+    c7_coverage = c7_rollup.get("coverage") or {}
+    c7_outcome_composition = c7_rollup.get("outcome_composition") or {}
+    c6_rollup = family_rollups.get("C6") or {}
+    c8_rollup = family_rollups.get("C8") or {}
     decomposition_text = format_outcome_decomposition(c7_outcome_composition)
+    c6_pilot_text = format_outcome_decomposition(c6_rollup.get("outcome_composition") or {})
+    c8_pilot_text = format_outcome_decomposition(c8_rollup.get("outcome_composition") or {})
     campaign_paragraphs = [
-        f"**{campaign_export_status.upper()} EXPORT** — C7 confirmatory coverage "
-        f"{c7_coverage['coverage_label']}. This bundle is not the final 768/768 "
-        "confirmatory result until Agent B's require-full-coverage compile lands.",
+        f"**{campaign_export_status.upper()} EXPORT** — three achievable families are in flight. "
+        f"C7 confirmatory coverage {c7_coverage.get('coverage_label', 'n/a')} on compile-k; "
+        f"C6 G7 pilot 24/24 complete with confirmatory wave B dispatched (0/384 accepted); "
+        f"C8 G7 pilot 24/24 complete with confirmatory lock released and 768 episodes dispatched "
+        "(0/768 accepted, Pending on A40 capacity held by C7).",
         "Registered campaign scope: 17,664 planned policy episodes; 2,304 achievable "
         "(C6, C7, C8 confirmatory families × 768); 15,360 scientifically blocked "
         "(C1/C3/C4 horizontal information-gate squeeze 9,728; C2 reference_binding "
         "information gate 4,096; C5 vertical IK reachability 768). No eligibility "
         "criterion, threshold, or scale ladder was amended to recover blocked scope.",
+        "Cross-fixture contrast (compiled ledgers only): C7 object_pair on Isaac DROID is "
+        f"dominated by no_grasp ({c7_outcome_composition.get('no_grasp', 0)} of "
+        f"{c7_coverage.get('accepted_valid_unique', 0)} partial confirmatory rows on compile-k, "
+        f"plus {c7_outcome_composition.get('transport_incomplete', 0)} transport_incomplete; "
+        "0 successes). C6 containment G7 pilot and C8 second_stack G7 pilot both show grasps, "
+        f"transports, and placement attempts ({c6_pilot_text}; {c8_pilot_text}). C8 WidowX "
+        "SimplerEnv stack yields transport_incomplete on half of pilot episodes (12/24). The "
+        "near-total absence of grasping in C7 therefore reads fixture- and platform-specific, "
+        "not a universal property of the policies.",
+        "Per-scenario breakdowns are exported in family tables rather than single aggregates. "
+        "C8 pilot spans 8 original_sham, 8 destination_static, and 8 move_stop scenarios; "
+        "C6 pilot uses the same scenario allocation.",
+        "C7 compile ambiguity is not papered over: compile-k (548 accepted) is the labeled "
+        "partial authority; compile-l (565, includes 1 wrong_goal_region) and "
+        ".compiled-ledger-final (551, stale) are superseded pending Agent B's single FINAL "
+        "require-full-coverage compile at 768/768.",
+        "Capacity finding: C8 confirmatory throughput is bound by the G4-attested A40 GR00T "
+        "Bridge stratum (20 authorized lane pairs). Once C7 releases the A40 pool, 768 C8 "
+        "confirmatory episodes at that parallelism require roughly 16 wall-clock hours.",
         "Three disclosed setup repairs bound this export: (1) NaturalGraspDetector trigger "
         "observation wiring now uses finger-contact coupling instead of robot-base pose; "
         "(2) eef_tool_length_m=0.14 flange-versus-fingerpad offset applied uniformly across "
@@ -286,22 +417,25 @@ def build_campaign_evidence_memo(
     campaign_paragraphs.append(
         "C2 primary reference-selectivity (H) remains not estimable; the homogeneous G3 gate "
         "finalized at 128/128 as a scientific block with computation-correct information-gate "
-        "rejection (4096 episodes). C8 G7 engineering pilot is dispatched; confirmatory lock "
-        "and 768-episode dispatch follow G8 and Agent A receipt handoff."
+        "rejection (4096 episodes). C6 is the only fixture passing the information gate on both "
+        "translation-sign halves; C8 is the cross-platform WidowX/SimplerEnv check."
     )
     return {
         "schema_version": "v4-registered-campaign-evidence-memo-v1",
         "export_status": campaign_export_status,
         "export_coverage": {
-            "C7": c7_coverage,
-            "C6": family_exports.get("C6", {}).get("export_coverage"),
-            "C8": family_exports.get("C8", {}).get("export_coverage"),
+            family: (family_rollups.get(family) or {}).get("coverage")
+            for family in ("C7", "C6", "C8")
         },
+        "confirmatory_dispatch": {
+            family: (family_rollups.get(family) or {}).get("confirmatory_dispatch")
+            for family in ("C6", "C8")
+        },
+        "cross_fixture_contrast": build_cross_fixture_contrast_rows(family_rollups=family_rollups),
         "frozen_analysis_manifest": str(FROZEN_ANALYSIS.relative_to(ROOT)),
         "headline": (
-            f"{campaign_export_status.title()} registered export: achievable confirmatory scope "
-            "is 2,304 episodes; 15,360 blocked by registered fixture geometry with disclosed "
-            "setup repairs and no criterion amendments"
+            f"{campaign_export_status.title()} registered export: C7 Isaac no_grasp dominance "
+            "contrasts with C6/C8 pilot transport and placement attempts across fixtures"
         ),
         "paper_narrative": {
             "headline": horizontal_narrative.get("headline"),
@@ -328,8 +462,8 @@ def build_campaign_evidence_memo(
         "limitations": [
             "Blocked families carry qualification receipts only; no policy episodes were dispatched.",
             "279 pre-repair C7 episodes remain excluded from behavioral claims.",
-            "Refresh this export by recompiling the C7 ledger from PVC attempts and re-running this tool.",
-            "C6 and C8 confirmatory family tables land when Agent B and Agent A complete dispatch.",
+            "C7 partial uses compile-k until FINAL 768/768 compile lands; do not treat compile-l or stale final as authoritative.",
+            "C6/C8 confirmatory tables refresh when Agent B and Agent A ledger compiles land.",
         ],
         "not_estimable_primary_estimands": [
             "C1/C3/C4 primary wording and reference-selectivity contrasts",
@@ -337,6 +471,103 @@ def build_campaign_evidence_memo(
             "C5 vertical family (IK reachability block)",
         ],
     }
+
+
+def build_family_rollup(
+    *,
+    family: str,
+    fixture: str,
+    platform: str,
+    evidence_phase: str,
+    ledger: Path,
+    manifest: Path,
+    coverage: dict[str, Any],
+    confirmatory_dispatch: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    rows = load_accepted_ledger_rows(ledger)
+    manifest_by_id = load_manifest_by_episode_id(manifest)
+    composition = summarize_outcome_composition(rows)
+    return {
+        "family": family,
+        "fixture": fixture,
+        "platform": platform,
+        "evidence_phase": evidence_phase,
+        "coverage": coverage,
+        "outcome_composition": composition,
+        "scenario_outcome_breakdown": summarize_scenario_outcome_breakdown(rows, manifest_by_id),
+        "confirmatory_dispatch": confirmatory_dispatch or {},
+        "receipt_path": (
+            str(C6_G7_RECEIPT.relative_to(ROOT))
+            if family == "C6" and C6_G7_RECEIPT.is_file()
+            else str(C8_G7_RECEIPT.relative_to(ROOT))
+            if family == "C8" and C8_G7_RECEIPT.is_file()
+            else None
+        ),
+    }
+
+
+def build_family_status(family_rollups: dict[str, dict]) -> dict[str, dict]:
+    status: dict[str, dict] = {}
+    for family, rollup in family_rollups.items():
+        coverage = dict(rollup.get("coverage") or {})
+        payload = {
+            **coverage,
+            "fixture": rollup.get("fixture"),
+            "platform": rollup.get("platform"),
+            "evidence_phase": rollup.get("evidence_phase"),
+            "outcome_composition": rollup.get("outcome_composition") or {},
+            "scenario_outcome_breakdown": rollup.get("scenario_outcome_breakdown") or [],
+        }
+        confirmatory = rollup.get("confirmatory_dispatch") or {}
+        if confirmatory:
+            payload["confirmatory_dispatch"] = confirmatory
+        if family == "C7":
+            payload["pre_repair_excluded"] = 279
+        status[family] = payload
+    return status
+
+
+def resolve_pilot_defaults(args: argparse.Namespace) -> tuple[Path | None, Path, str | None, Path | None, Path, str | None]:
+    c6_ledger = args.c6_ledger
+    c6_manifest = args.c6_manifest
+    c6_compile_id = args.c6_ledger_compile_id
+    if c6_ledger is None and not args.no_default_pilot_exports and DEFAULT_C6_PILOT_LEDGER.is_file():
+        c6_ledger = DEFAULT_C6_PILOT_LEDGER
+        c6_manifest = DEFAULT_C6_PILOT_MANIFEST
+        c6_compile_id = c6_compile_id or "g7-containment-20260908a"
+    c8_ledger = args.c8_ledger
+    c8_manifest = args.c8_manifest
+    c8_compile_id = args.c8_ledger_compile_id
+    if c8_ledger is None and not args.no_default_pilot_exports and DEFAULT_C8_PILOT_LEDGER.is_file():
+        c8_ledger = DEFAULT_C8_PILOT_LEDGER
+        c8_manifest = DEFAULT_C8_PILOT_MANIFEST
+        c8_compile_id = c8_compile_id or "20260908b"
+    return c6_ledger, c6_manifest, c6_compile_id, c8_ledger, c8_manifest, c8_compile_id
+
+
+def load_confirmatory_dispatch_metadata() -> tuple[dict[str, Any], dict[str, Any]]:
+    c6_dispatch = build_dispatch_coverage_metadata(
+        accepted=0,
+        planned=768,
+        dispatched=int(load_json(C6_WAVE_B_DISPATCH).get("behavioral_episode_count", 384)),
+        compile_id=None,
+        wave="B",
+    ) if C6_WAVE_B_DISPATCH.is_file() else {}
+    c8_dispatch = {}
+    if C8_EXECUTION_STATUS.is_file():
+        status = load_json(C8_EXECUTION_STATUS)
+        confirmatory = status.get("confirmatory_lanes") or {}
+        c8_dispatch = build_dispatch_coverage_metadata(
+            accepted=int(confirmatory.get("behavioral_valid") or 0),
+            planned=int((status.get("confirmatory_lock") or {}).get("queue_episodes") or 768),
+            dispatched=int(confirmatory.get("total_queued") or 768),
+            compile_id=None,
+            wave="main",
+        )
+        c8_dispatch["lane_pairs_dispatched"] = confirmatory.get("dispatched_lane_pairs")
+        c8_dispatch["pod_summary"] = confirmatory.get("pod_summary")
+        c8_dispatch["capacity"] = status.get("capacity")
+    return c6_dispatch, c8_dispatch
 
 
 def export_family(
@@ -399,6 +630,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--c8-ledger", type=Path, default=None)
     parser.add_argument("--c8-manifest", type=Path, default=DEFAULT_C8_MANIFEST)
     parser.add_argument("--c8-ledger-compile-id", type=str, default=None)
+    parser.add_argument(
+        "--no-default-pilot-exports",
+        action="store_true",
+        help="Do not auto-include C6/C8 G7 pilot ledgers from default repo paths",
+    )
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
     parser.add_argument(
         "--out",
@@ -440,13 +676,13 @@ def main(argv: list[str] | None = None) -> int:
             c7_primary_rows = list(csv.DictReader(handle))
 
     family_exports: dict[str, dict] = {"C7": c7_payload}
-    c6_coverage = None
-    c8_coverage = None
+    pilot_sources: dict[str, tuple[Path, Path, str | None]] = {}
+    c6_ledger, c6_manifest, c6_compile_id, c8_ledger, c8_manifest, c8_compile_id = resolve_pilot_defaults(args)
     optional_families = (
-        ("C6", args.c6_ledger, args.c6_manifest, args.c6_ledger_compile_id),
-        ("C8", args.c8_ledger, args.c8_manifest, args.c8_ledger_compile_id),
+        ("C6", c6_ledger, c6_manifest, c6_compile_id, f"{args.tag}c6pilot"),
+        ("C8", c8_ledger, c8_manifest, c8_compile_id, f"{args.tag}c8pilot"),
     )
-    for family, ledger_arg, manifest_arg, compile_id in optional_families:
+    for family, ledger_arg, manifest_arg, compile_id, tag in optional_families:
         if ledger_arg is None:
             continue
         ledger = ledger_arg.resolve()
@@ -455,7 +691,7 @@ def main(argv: list[str] | None = None) -> int:
             raise SystemExit(f"missing {family} accepted ledger: {ledger}")
         if not manifest.is_file():
             raise SystemExit(f"missing {family} manifest: {manifest}")
-        tag = f"{args.tag}{family.lower()}"
+        pilot_sources[family] = (ledger, manifest, compile_id)
         payload = export_family(
             family=family,
             ledger=ledger,
@@ -466,10 +702,6 @@ def main(argv: list[str] | None = None) -> int:
             compile_id=compile_id,
         )
         family_exports[family] = payload
-        if family == "C6":
-            c6_coverage = payload["export_coverage"]
-        if family == "C8":
-            c8_coverage = payload["export_coverage"]
 
     horizontal_blocked = load_json(HORIZONTAL_SLICE / "blocked_scope.json")
     horizontal_memo = load_json(HORIZONTAL_SLICE / "paper" / "evidence_memo.json")
@@ -481,24 +713,61 @@ def main(argv: list[str] | None = None) -> int:
         planned=c7_planned,
         compile_id=args.c7_ledger_compile_id,
     )
-    c7_outcome_composition = c7_payload["outcome_composition"] or summarize_outcome_composition(
-        load_accepted_ledger_rows(c7_ledger)
-    )
-    campaign_export_status = "complete" if c7_coverage.get("export_status") == "complete" else "partial"
-    if any(
-        (payload.get("export_coverage") or {}).get("export_status") == "partial"
-        for payload in family_exports.values()
-    ):
-        campaign_export_status = "partial"
+    c7_coverage["export_phase"] = "confirmatory_partial"
+    c6_confirmatory_dispatch, c8_confirmatory_dispatch = load_confirmatory_dispatch_metadata()
+
+    family_rollups: dict[str, dict] = {
+        "C7": build_family_rollup(
+            family="C7",
+            fixture="object_pair",
+            platform="isaac_droid",
+            evidence_phase="confirmatory_partial",
+            ledger=c7_ledger,
+            manifest=args.c7_manifest.resolve(),
+            coverage=c7_coverage,
+        )
+    }
+    if "C6" in pilot_sources:
+        ledger, manifest, compile_id = pilot_sources["C6"]
+        family_rollups["C6"] = build_family_rollup(
+            family="C6",
+            fixture="containment",
+            platform="isaac_droid",
+            evidence_phase="g7_pilot_complete",
+            ledger=ledger,
+            manifest=manifest,
+            coverage=build_coverage_metadata(
+                accepted=len(load_accepted_ledger_rows(ledger)),
+                planned=24,
+                compile_id=compile_id,
+            ),
+            confirmatory_dispatch=c6_confirmatory_dispatch,
+        )
+    if "C8" in pilot_sources:
+        ledger, manifest, compile_id = pilot_sources["C8"]
+        family_rollups["C8"] = build_family_rollup(
+            family="C8",
+            fixture="second_stack",
+            platform="widowx_simplerenv",
+            evidence_phase="g7_pilot_complete",
+            ledger=ledger,
+            manifest=manifest,
+            coverage=build_coverage_metadata(
+                accepted=len(load_accepted_ledger_rows(ledger)),
+                planned=24,
+                compile_id=compile_id,
+            ),
+            confirmatory_dispatch=c8_confirmatory_dispatch,
+        )
+
+    c7_outcome_composition = family_rollups["C7"]["outcome_composition"]
+    campaign_export_status = "partial"
+    family_status = build_family_status(family_rollups)
 
     campaign_blocked = build_campaign_blocked_scope(
         c7_blocked_scope=c7_blocked_scope,
         horizontal_blocked_scope=horizontal_blocked,
-        horizontal_evidence_memo=horizontal_memo,
-        c7_coverage=c7_coverage,
-        c7_outcome_composition=c7_outcome_composition,
-        c6_coverage=c6_coverage,
-        c8_coverage=c8_coverage,
+        family_status=family_status,
     )
     blocked_path = out_root / "blocked_scope.json"
     blocked_path.write_text(json.dumps(campaign_blocked, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -508,9 +777,8 @@ def main(argv: list[str] | None = None) -> int:
         horizontal_memo=horizontal_memo,
         c7_export_manifest=c7_export_manifest,
         c7_audit=c7_audit,
-        c7_coverage=c7_coverage,
-        c7_outcome_composition=c7_outcome_composition,
         campaign_export_status=campaign_export_status,
+        family_rollups=family_rollups,
         family_exports=family_exports,
     )
     paper_dir = out_root / "paper"
@@ -523,8 +791,7 @@ def main(argv: list[str] | None = None) -> int:
         campaign_blocked=campaign_blocked,
         c7_audit=c7_audit,
         c7_primary_rows=c7_primary_rows,
-        c7_outcome_composition=c7_outcome_composition,
-        c7_coverage=c7_coverage,
+        family_rollups=family_rollups,
         campaign_export_status=campaign_export_status,
     )
     table_artifacts: dict[str, dict] = {}
@@ -537,8 +804,15 @@ def main(argv: list[str] | None = None) -> int:
         "schema_version": "v4-registered-campaign-audit-v1",
         "export_status": campaign_export_status,
         "export_coverage": {
-            family: payload.get("export_coverage")
-            for family, payload in family_exports.items()
+            family: (family_rollups.get(family) or {}).get("coverage")
+            for family in family_rollups
+        },
+        "family_rollups": {
+            family: {
+                "outcome_composition": rollup.get("outcome_composition"),
+                "confirmatory_dispatch": rollup.get("confirmatory_dispatch"),
+            }
+            for family, rollup in family_rollups.items()
         },
         "frozen_analysis_manifest": str(FROZEN_ANALYSIS.relative_to(ROOT)),
         "c7_family_audit": c7_audit,
@@ -577,8 +851,15 @@ def main(argv: list[str] | None = None) -> int:
         "tag": args.tag,
         "export_status": campaign_export_status,
         "export_coverage": {
-            family: payload.get("export_coverage")
-            for family, payload in family_exports.items()
+            family: (family_rollups.get(family) or {}).get("coverage")
+            for family in family_rollups
+        },
+        "family_rollups": {
+            family: {
+                "outcome_composition": rollup.get("outcome_composition"),
+                "confirmatory_dispatch": rollup.get("confirmatory_dispatch"),
+            }
+            for family, rollup in family_rollups.items()
         },
         "tables": table_artifacts,
         "figures_manifest": artifact(figures_manifest_path),
@@ -590,10 +871,11 @@ def main(argv: list[str] | None = None) -> int:
     results_manifest_path.write_text(json.dumps(results_manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
     status_banner = (
-        f"> **{campaign_export_status.upper()} EXPORT** — C7 coverage {c7_coverage['coverage_label']}. "
-        "Not the final 768/768 confirmatory result.\n\n"
-        if campaign_export_status == "partial"
-        else ""
+        f"> **{campaign_export_status.upper()} EXPORT** — C7 {c7_coverage.get('coverage_label')}; "
+        f"C6 pilot {((family_rollups.get('C6') or {}).get('coverage') or {}).get('coverage_label', 'n/a')} "
+        f"with confirmatory {((family_rollups.get('C6') or {}).get('confirmatory_dispatch') or {}).get('coverage_label', 'n/a')}; "
+        f"C8 pilot {((family_rollups.get('C8') or {}).get('coverage') or {}).get('coverage_label', 'n/a')} "
+        f"with confirmatory {((family_rollups.get('C8') or {}).get('confirmatory_dispatch') or {}).get('coverage_label', 'n/a')}.\n\n"
     )
     results_stub = paper_dir / "RESULTS.md"
     results_stub.write_text(
@@ -624,10 +906,20 @@ def main(argv: list[str] | None = None) -> int:
         "tag": args.tag,
         "export_status": campaign_export_status,
         "export_coverage": {
-            family: payload.get("export_coverage")
-            for family, payload in family_exports.items()
+            family: (family_rollups.get(family) or {}).get("coverage")
+            for family in family_rollups
         },
-        "outcome_composition": {"C7": c7_outcome_composition},
+        "family_rollups": {
+            family: {
+                "outcome_composition": rollup.get("outcome_composition"),
+                "confirmatory_dispatch": rollup.get("confirmatory_dispatch"),
+            }
+            for family, rollup in family_rollups.items()
+        },
+        "outcome_composition": {
+            family: rollup.get("outcome_composition")
+            for family, rollup in family_rollups.items()
+        },
         "output_root": str(out_root.relative_to(ROOT)),
         "family_exports": {
             family: {

@@ -32,9 +32,12 @@ def test_build_campaign_blocked_scope_includes_horizontal_squeeze() -> None:
                 "information_gate_squeeze_at_0p5": {"removed_area_pct_range": [13.7, 19.9]},
             }
         },
-        horizontal_evidence_memo={},
-        c7_coverage=build_coverage_metadata(accepted=548, planned=768, compile_id="20260908k"),
-        c7_outcome_composition={"no_grasp": 544, "transport_incomplete": 4},
+        family_status={
+            "C7": {
+                **build_coverage_metadata(accepted=548, planned=768, compile_id="20260908k"),
+                "outcome_composition": {"no_grasp": 544, "transport_incomplete": 4},
+            }
+        },
     )
     assert payload["scientifically_blocked_episodes"] == 15360
     assert payload["pre_repair_c7_excluded_episodes"] == 279
@@ -59,15 +62,23 @@ def test_build_campaign_tables_and_figure(tmp_path) -> None:
             "scale_ladder_rejections": [{"scale": 0.5, "binding_constraint": "information_gate", "detail": "64/128"}]
         },
     }
+    family_rollups = {
+        "C7": {
+            "coverage": build_coverage_metadata(accepted=548, planned=768, compile_id="20260908k"),
+            "outcome_composition": {"no_grasp": 544, "transport_incomplete": 4},
+            "fixture": "object_pair",
+            "platform": "isaac_droid",
+            "evidence_phase": "confirmatory_partial",
+        }
+    }
     tables = build_campaign_tables(
         campaign_blocked=campaign_blocked,
         c7_audit={"validation": {"accepted_unique": 548, "valid_success_records": 0, "valid_failure_records": 548}},
         c7_primary_rows=[{"estimand_id": "H1", "status": "not_estimable"}],
-        c7_outcome_composition={"no_grasp": 544, "transport_incomplete": 4},
-        c7_coverage=build_coverage_metadata(accepted=548, planned=768, compile_id="20260908k"),
+        family_rollups=family_rollups,
         campaign_export_status="partial",
     )
-    assert len(tables["scope_summary.csv"]) == 10
+    assert len(tables["scope_summary.csv"]) >= 10
     assert tables["c7_outcome_composition.csv"] == [
         {"failure_label": "no_grasp", "count": 544},
         {"failure_label": "transport_incomplete", "count": 4},

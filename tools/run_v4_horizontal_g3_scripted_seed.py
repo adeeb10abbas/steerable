@@ -296,11 +296,12 @@ def validate_scripted_seed_gate_inputs(
 
 def frozen_scripted_controller_config(fixture_id: str = "horizontal") -> dict[str, Any]:
     config = json.loads(json.dumps(FROZEN_SCRIPTED_CONTROLLER_CONFIG))
+    # RoboLab's absolute IK controls the Robotiq base flange, while the
+    # scripted waypoints describe the center of the finger-pad grasp region
+    # (14 cm below the flange), not the fingertip edge. All Isaac fixtures
+    # share this controller; only object_pair retains placement inset overrides.
+    config["eef_tool_length_m"] = 0.14
     if fixture_id == "object_pair":
-        # RoboLab's absolute IK controls the Robotiq base flange, while the
-        # object-pair waypoints describe the center of its finger-pad grasp
-        # region (14 cm below the flange), not the 16.28 cm fingertip edge.
-        config["eef_tool_length_m"] = 0.14
         # The measured C7 placement bias is 24.2 mm toward the goal boundary;
         # retain 40 mm of legal-region inset for the qualification rerun.
         config["geometry_offsets"]["target_inset_m"] = 0.04

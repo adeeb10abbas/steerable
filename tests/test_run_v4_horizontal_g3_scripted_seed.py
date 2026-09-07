@@ -133,7 +133,7 @@ class FrozenControllerConfigTests(unittest.TestCase):
         self.assertAlmostEqual(config["geometry_offsets"]["place_descend_offset_m"], 0.04)
         self.assertAlmostEqual(config["geometry_offsets"]["target_inset_m"], 0.015)
         self.assertAlmostEqual(config["gripper_close"], 0.785398)
-        self.assertNotIn("eef_tool_length_m", config)
+        self.assertAlmostEqual(config["eef_tool_length_m"], 0.14)
         self.assertGreater(
             runner.FROZEN_SCRIPTED_GEOMETRIC_TOLERANCE_M,
             0.0,
@@ -143,9 +143,20 @@ class FrozenControllerConfigTests(unittest.TestCase):
             0.005,
         )
 
-    def test_object_pair_offsets_fingertip_waypoints_to_base_flange(self) -> None:
+    def test_robotiq_tool_length_applies_to_all_fixtures(self) -> None:
+        for fixture_id in (
+            "horizontal",
+            "vertical",
+            "containment",
+            "reference_binding",
+            "object_pair",
+        ):
+            with self.subTest(fixture_id=fixture_id):
+                config = runner.frozen_scripted_controller_config(fixture_id)
+                self.assertAlmostEqual(config["eef_tool_length_m"], 0.14)
+
+    def test_object_pair_retains_placement_geometry_overrides(self) -> None:
         config = runner.frozen_scripted_controller_config("object_pair")
-        self.assertAlmostEqual(config["eef_tool_length_m"], 0.14)
         self.assertAlmostEqual(config["geometry_offsets"]["target_inset_m"], 0.04)
         self.assertAlmostEqual(config["geometry_offsets"]["place_descend_offset_m"], 0.10)
 

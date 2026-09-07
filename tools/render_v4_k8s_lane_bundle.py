@@ -34,8 +34,9 @@ TOP_LEVEL_KEYS = {
     "schema_version", "qualification_only", "qualification_kind", "kube_context", "namespace", "lane_id", "attempt_id",
     "policy_port", "expected_driver_version", "image_repository", "image_sha256",
     "image_pull_secret", "pvc", "output_parent", "entrypoint", "prestop_wait_seconds",
-    "runtime", "policy", "simulator",
+    "policy_wait_timeout_seconds", "runtime", "policy", "simulator",
 }
+DEFAULT_POLICY_WAIT_TIMEOUT_SECONDS = 900
 RUNTIME_KEYS = {"python_bin", "ffmpeg_bin", "vk_icd_filenames", "ld_library_path", "pythonpath"}
 ROLE_KEYS = {
     "gpu_product", "expected_gpu_name", "experiment_argv", "checkpoint_path", "checkpoint_sha256",
@@ -760,6 +761,12 @@ def render(spec_path: Path, output_root: Path) -> dict[str, str]:
     if simulator_doc.get("readiness_interface") != "embedded_in_policy_container":
         simulator_doc["policy_wait"]["host"] = policy_service
         simulator_doc["policy_wait"]["service_identity"] = service_identity
+        policy_wait_timeout = spec.get("policy_wait_timeout_seconds", DEFAULT_POLICY_WAIT_TIMEOUT_SECONDS)
+        require(
+            isinstance(policy_wait_timeout, int) and policy_wait_timeout > 0,
+            "policy_wait_timeout_seconds must be a positive integer",
+        )
+        simulator_doc["policy_wait"]["timeout_seconds"] = policy_wait_timeout
     policy_json, simulator_json = canonical_json(policy_doc), canonical_json(simulator_doc)
     policy_sha, simulator_sha = sha256_bytes(policy_json.encode()), sha256_bytes(simulator_json.encode())
     bundle_sha = sha256_bytes((policy_sha + simulator_sha + immutable_identity_sha).encode())

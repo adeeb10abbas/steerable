@@ -162,6 +162,28 @@ def test_renderer_accepts_behavioral_v4_runner_binding(tmp_path: Path) -> None:
     assert "infrastructure_qualification_only_no_scientific_behavior" not in configmap
 
 
+def test_renderer_honors_policy_wait_timeout_seconds(tmp_path: Path) -> None:
+    spec_path = _replace_sources(ROOT / "deploy/k8s/v4_lane_bundle/spec.example.json", tmp_path)
+    spec = json.loads(spec_path.read_text(encoding="utf-8"))
+    runner = tmp_path / "run_online_correction_v4_episodes.py"
+    runner.write_text("# behavioral stub\n", encoding="utf-8")
+    mounted = f"/data/runner/{runner.name}"
+    spec["qualification_only"] = False
+    spec["policy_wait_timeout_seconds"] = 2400
+    spec["simulator"]["experiment_argv"] = [
+        spec["runtime"]["simulator"]["python_bin"],
+        mounted,
+        "--queue",
+        "/data/queue.jsonl",
+    ]
+    spec["simulator"]["file_bindings"].append({"source": str(runner), "path": mounted})
+    spec_path.write_text(json.dumps(spec, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    output = tmp_path / "policy-wait"
+    RENDERER.render(spec_path, output)
+    configmap = (output / "configmap.yaml").read_text(encoding="utf-8")
+    assert '"timeout_seconds":2400' in configmap
+
+
 def test_vendored_openpi_health_server_is_exact_c23745b_source() -> None:
     source = ROOT / "deploy/k8s/v4_lane_bundle/frozen_sources/openpi_websocket_policy_server.c23745b.py"
     payload = source.read_bytes()

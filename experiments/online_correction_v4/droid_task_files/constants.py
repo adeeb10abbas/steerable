@@ -199,11 +199,10 @@ PASSIVE_ADJUDICATION_S = 1.0
 EXTERNAL_SCORER_MODE = "external_v4_first_placement"
 ROBOLAB_SUCCESS_TERMINATION_FORBIDDEN = True
 
-SUPPORTED_FIXTURE_IDS = frozenset({"horizontal", "object_pair"})
+SUPPORTED_FIXTURE_IDS = frozenset({"horizontal", "object_pair", "containment"})
 
 BLOCKED_FIXTURE_IDS: dict[str, str] = {
     "reference_binding": "named_reference_asset_receipt_pending",
     "vertical": "vertical_fixture_asset_receipt_pending",
-    "containment": "containment_fixture_asset_receipt_pending",
     "second_stack": "second_stack_bridge_fixture_asset_receipt_pending",
 }

@@ -206,6 +206,10 @@ def main(argv: list[str] | None = None) -> int:
         required_status=MODEL_BLIND_CANDIDATE_STATUS,
         expected_fixture_id=FIXTURE_ID,
     )
+    registry_payload = json.loads(registry_path.read_bytes())
+    from run_v4_horizontal_g3_path_seed import _fixture_geometry_from_registry
+
+    fixture_geometry = _fixture_geometry_from_registry(registry_payload, FIXTURE_ID)
     if args.environment_seed not in registry.positions_by_env_seed:
         raise RuntimeError("environment seed is absent from reset registry")
 
@@ -290,6 +294,7 @@ def main(argv: list[str] | None = None) -> int:
             task_frame_evidence=task_frame_dict,
             scene_state=initial_scene,
             support_edge_margin_m=float(geometry_contract["support_edge_margin_m"]),
+            fixture_geometry=fixture_geometry,
         )
         controller_config = frozen_scripted_controller_config(FIXTURE_ID)
         table_bounds = geometry["table_bounds_task"]

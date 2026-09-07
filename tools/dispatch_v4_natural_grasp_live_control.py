@@ -52,7 +52,7 @@ FIXTURE_CONFIG: dict[str, dict[str, Any]] = {
         "g2_aggregate_sha256": "2a35cc05b1e5f419a06f61afe64efc0f92cf9e8b89d5c307f502aa3ea2d401b2",
         "runner_source": ROOT / "tools/run_v4_vertical_natural_grasp_live_positive_control.py",
         "output_qual_dir": "vertical-natural-grasp-positive-control",
-        "k8s_name_token": "vertical-natural-grasp-pc",
+        "k8s_name_token": "v-ngpc",
     },
     "containment": {
         "environment_seed": 2100030000,
@@ -67,7 +67,7 @@ FIXTURE_CONFIG: dict[str, dict[str, Any]] = {
         "g2_aggregate_sha256": "f639a143e87a2afb343a34ebc88ca6174921b63b960aad415331b34984d6a54c",
         "runner_source": ROOT / "tools/run_v4_containment_natural_grasp_live_positive_control.py",
         "output_qual_dir": "containment-natural-grasp-positive-control",
-        "k8s_name_token": "containment-natural-grasp-pc",
+        "k8s_name_token": "c-ngpc",
     },
 }
 
@@ -390,6 +390,32 @@ def main(argv: list[str] | None = None) -> int:
     print(json.dumps(receipt, indent=2, sort_keys=True))
     if not args.create:
         return 0
+
+    qual_dirs = sorted(
+        {
+            FIXTURE_CONFIG[args.fixture]["output_qual_dir"],
+            FIXTURE_CONFIG["vertical"]["output_qual_dir"],
+            FIXTURE_CONFIG["containment"]["output_qual_dir"],
+        }
+    )
+    mkdir_cmd = " && ".join(
+        f"mkdir -p /data/users/ali/vla_wam/raw/v4/qualification/{name}"
+        for name in qual_dirs
+    )
+    subprocess.run(
+        [
+            "kubectl",
+            "exec",
+            "-n",
+            NAMESPACE,
+            PUBLISHER_POD,
+            "--",
+            "bash",
+            "-c",
+            mkdir_cmd,
+        ],
+        check=True,
+    )
 
     bundle_root = ROOT / receipt["bundle_path"]
     for name in ("configmap.yaml", "scripts-configmap.yaml", "job.yaml"):

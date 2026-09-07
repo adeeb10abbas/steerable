@@ -116,13 +116,20 @@ def main(argv: list[str] | None = None) -> int:
         except checkout_isolation.CheckoutIsolationError as exc:
             print(str(exc), file=sys.stderr)
             return 2
-        if isolation_report.get("study_root"):
-            patched["study_root"] = str(isolation_report["study_root"])
+        legacy_root = str(isolation_report.get("legacy_study_root") or patched.get("study_root") or "")
+        isolated_root = str(isolation_report.get("study_root") or "")
+        if isolated_root and legacy_root and isolated_root != legacy_root:
+            patched = checkout_isolation.rewrite_spec_study_root_paths(
+                patched,
+                legacy_study_root=legacy_root,
+                isolated_study_root=isolated_root,
+            )
+        elif isolated_root:
+            patched["study_root"] = isolated_root
     if isolation_report is not None:
         print(json.dumps({"checkout_isolation": isolation_report}, indent=2, sort_keys=True))
-    spec_path = args.spec.resolve().parent / (
-        f".dispatch-{patched['attempt_id']}.render-spec.json"
-    )
+    spec_path = args.spec.resolve().parent / f".dispatch-{patched['attempt_id']}.render-spec.json"
+    spec_path.parent.mkdir(parents=True, exist_ok=True)
     spec_path.write_text(
         json.dumps(patched, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )

@@ -290,6 +290,43 @@ def provision_isolated_checkout(
     return entry
 
 
+STUDY_ROOT_PATH_KEYS: tuple[str, ...] = (
+    "marker_wrapper_path",
+    "runner_path",
+    "gate_core_path",
+    "campaign_path",
+    "plan_path",
+    "reset_registry_path",
+)
+
+
+def rewrite_spec_study_root_paths(
+    spec: dict[str, Any],
+    *,
+    legacy_study_root: str,
+    isolated_study_root: str,
+) -> dict[str, Any]:
+    """Point cluster-bound paths at the immutable isolated checkout."""
+    legacy = legacy_study_root.rstrip("/")
+    isolated = isolated_study_root.rstrip("/")
+    if legacy == isolated:
+        return spec
+    patched = dict(spec)
+    patched["study_root"] = isolated
+    for key in STUDY_ROOT_PATH_KEYS:
+        value = patched.get(key)
+        if isinstance(value, str) and value.startswith(legacy):
+            patched[key] = isolated + value[len(legacy) :]
+    runtime = patched.get("runtime")
+    if isinstance(runtime, dict):
+        runtime_copy = dict(runtime)
+        pythonpath = runtime_copy.get("pythonpath")
+        if isinstance(pythonpath, str):
+            runtime_copy["pythonpath"] = pythonpath.replace(legacy, isolated)
+        patched["runtime"] = runtime_copy
+    return patched
+
+
 def resolve_workstream_id(study_root: str) -> str | None:
     for workstream_id, template_root in WORKSTREAM_TEMPLATE_ROOTS.items():
         if study_root == template_root or study_root.startswith(

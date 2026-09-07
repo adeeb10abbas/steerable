@@ -49,6 +49,28 @@ def test_assert_checkout_mutable_blocks_legacy_with_live_jobs(tmp_path: Path) ->
             )
 
 
+def test_rewrite_spec_study_root_paths_rewrites_cluster_paths() -> None:
+    legacy = isolation.WORKSTREAM_TEMPLATE_ROOTS["c2_g3"]
+    isolated = isolation.isolated_study_root(
+        workstream_id="c2_g3",
+        pin_commit="c401fb4577d8003a019ecf7ff7be549f2c0a5931",
+        attempt_id="g3rb20260908v",
+    )
+    spec = {
+        "study_root": legacy,
+        "runner_path": f"{legacy}/tools/run_v4_horizontal_g3_path_seed.py",
+        "runtime": {"pythonpath": f"{legacy}:/other"},
+    }
+    patched = isolation.rewrite_spec_study_root_paths(
+        spec,
+        legacy_study_root=legacy,
+        isolated_study_root=isolated,
+    )
+    assert patched["study_root"] == isolated
+    assert patched["runner_path"] == f"{isolated}/tools/run_v4_horizontal_g3_path_seed.py"
+    assert patched["runtime"]["pythonpath"] == f"{isolated}:/other"
+
+
 def test_resolve_workstream_id_from_legacy_and_isolated_paths() -> None:
     legacy = isolation.WORKSTREAM_TEMPLATE_ROOTS["g2_repair_v2"]
     isolated = isolation.isolated_study_root(

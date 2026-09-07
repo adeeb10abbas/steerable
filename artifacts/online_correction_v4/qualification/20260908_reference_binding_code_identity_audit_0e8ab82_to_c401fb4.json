@@ -1,0 +1,22 @@
+{
+  "aggregate_mixing_allowed": false,
+  "aggregate_rule": "homogeneous_runtime_stratum_required",
+  "audited_at_utc": "2026-09-07T12:00:00Z",
+  "base_commit": "0e8ab827fea4392be2b50aef25758fac3ea1a4b0",
+  "compiler_would_accept_mixed_stratum": false,
+  "disclosure_only_model_blind_path_clean": false,
+  "head_commit": "c401fb4577d8003a019ecf7ff7be549f2c0a5931",
+  "model_blind_check_touched_files": [
+    "experiments/online_correction_v4/droid_robolab.py",
+    "tools/run_v4_horizontal_g3_path_seed.py"
+  ],
+  "rationale": "Prior reference_binding G3 path receipts at 0e8ab82 and mixed retry pins cannot merge with repaired-path receipts. Full homogeneous re-execution at c401fb4 (includes trigger repair and path-seed normalization) is required before aggregate compilation.",
+  "re_run_required_for_homogeneous_aggregate": true,
+  "schema_version": "v4-code-identity-aggregate-audit-v1",
+  "superseded_attempt_ids": [
+    "g3rb20260908k",
+    "g3rb20260908r",
+    "g3rb20260908r2"
+  ],
+  "homogeneous_redispatch_attempt_id": "g3rb20260908v"
+}

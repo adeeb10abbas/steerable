@@ -1,0 +1,113 @@
+{
+  "attempt_id": "c8mainrelease20260908a",
+  "entrypoint": "/opt/v4-lane/scripts/lane_entrypoint.py",
+  "expected_driver_version": "580.95.05",
+  "image_pull_secret": "artifactory-ci-pull-secret",
+  "image_repository": "artifactory-ci.gm.com/docker-approved/devcontainers/base",
+  "image_sha256": "03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+  "kube_context": "prod-dcwi-warrenq1-vmkub007",
+  "lane_id": "c8m00",
+  "namespace": "211247-prod",
+  "output_parent": "/data/users/ali/vla_wam/raw/v4/c8-second-stack-main",
+  "policy": {
+    "checkpoint_path": "/data/users/ali/vla_wam/checkpoints/groot-n1.7-simplerenv-bridge",
+    "checkpoint_registry_path": "/data/users/ali/vla_wam/src/steerable-v4-c8-main/artifacts/online_correction_v4/setup/second_stack_g4_checkpoint_registry.candidate.json",
+    "checkpoint_sha256": "ba6ebd8503df6950d18e416a9d4d1b945b02493af7fea5406bfe7f889acc9c4f",
+    "expected_gpu_name": "NVIDIA A40",
+    "experiment_argv": [
+      "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/gr00t/eval/sim/SimplerEnv/simpler_uv/.venv/bin/python",
+      "/data/users/ali/vla_wam/src/steerable-v4-c8-main/tools/run_v4_groot_bridge_policy_server.py",
+      "--host",
+      "0.0.0.0",
+      "--port",
+      "18200",
+      "--checkpoint-path",
+      "/data/users/ali/vla_wam/checkpoints/groot-n1.7-simplerenv-bridge",
+      "--integration-root",
+      "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89"
+    ],
+    "file_bindings": [
+      {
+        "path": "/opt/v4-lane/scripts/lane_entrypoint.py",
+        "source": "scripts/lane_entrypoint.py"
+      },
+      {
+        "path": "/opt/v4-lane/scripts/startup_preflight.py",
+        "source": "scripts/startup_preflight.py"
+      },
+      {
+        "path": "/opt/v4-lane/scripts/check_policy_ready.py",
+        "source": "scripts/check_policy_ready.py"
+      },
+      {
+        "path": "/data/users/ali/vla_wam/src/steerable-v4-c8-main/tools/run_v4_groot_bridge_policy_server.py",
+        "source": "../../../tools/run_v4_groot_bridge_policy_server.py"
+      },
+      {
+        "path": "/data/users/ali/vla_wam/src/steerable-v4-c8-main/artifacts/online_correction_v4/setup/second_stack_g4_checkpoint_registry.candidate.json",
+        "source": "../../../artifacts/online_correction_v4/setup/second_stack_g4_checkpoint_registry.candidate.json"
+      }
+    ],
+    "gpu_product": "NVIDIA-A40",
+    "nvidia_smi_bin": "/usr/bin/nvidia-smi",
+    "python_imports": [
+      "torch",
+      "simpler_env"
+    ],
+    "readiness_interface": "groot_bridge_http",
+    "vulkan_contract": {
+      "required": false
+    }
+  },
+  "policy_port": 18200,
+  "policy_wait_timeout_seconds": 2400,
+  "prestop_wait_seconds": 120,
+  "pvc": "211247-prod-pvc",
+  "qualification_only": false,
+  "runtime": {
+    "policy": {
+      "ffmpeg_bin": "/data/users/ali/vla_wam/envs/lingbot-va-b200/bin/ffmpeg",
+      "ld_library_path": "/data/users/ali/vla_wam/envs/groot-render-libs/lib:/usr/lib/x86_64-linux-gnu",
+      "python_bin": "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/gr00t/eval/sim/SimplerEnv/simpler_uv/.venv/bin/python",
+      "pythonpath": "/data/users/ali/vla_wam/src/steerable-v4-c8-main:/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/external_dependencies/SimplerEnv",
+      "vk_icd_filenames": "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/external_dependencies/SimplerEnv/nvidia_icd.json"
+    },
+    "simulator": {
+      "ffmpeg_bin": "/data/users/ali/vla_wam/envs/lingbot-va-b200/bin/ffmpeg",
+      "ld_library_path": "/data/users/ali/vla_wam/envs/groot-render-libs/lib:/usr/lib/x86_64-linux-gnu",
+      "python_bin": "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/gr00t/eval/sim/SimplerEnv/simpler_uv/.venv/bin/python",
+      "pythonpath": "/data/users/ali/vla_wam/src/steerable-v4-c8-main:/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/external_dependencies/SimplerEnv",
+      "vk_icd_filenames": "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/external_dependencies/SimplerEnv/nvidia_icd.json"
+    }
+  },
+  "schema_version": "vla-wam-v4-k8s-lane-render-spec-v1",
+  "simulator": {
+    "checkpoint_path": "",
+    "checkpoint_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "expected_gpu_name": "NVIDIA A40",
+    "experiment_argv": [],
+    "file_bindings": [
+      {
+        "path": "/opt/v4-lane/scripts/lane_entrypoint.py",
+        "source": "scripts/lane_entrypoint.py"
+      },
+      {
+        "path": "/opt/v4-lane/scripts/startup_preflight.py",
+        "source": "scripts/startup_preflight.py"
+      },
+      {
+        "path": "/data/users/ali/vla_wam/src/steerable-v4-c8-main/deploy/k8s/v4_lane_bundle/scripts/run_online_correction_v4_lane_dispatch.py",
+        "source": "scripts/run_online_correction_v4_lane_dispatch.py"
+      }
+    ],
+    "gpu_product": "NVIDIA-A40",
+    "nvidia_smi_bin": "/usr/bin/nvidia-smi",
+    "python_imports": [
+      "simpler_env"
+    ],
+    "readiness_interface": "embedded_in_policy_container",
+    "vulkan_contract": {
+      "required": true
+    }
+  }
+}

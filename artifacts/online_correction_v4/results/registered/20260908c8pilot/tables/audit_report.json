@@ -1,0 +1,89 @@
+{
+  "c7_family_audit": {
+    "analysis_scope": "offline_compiler_without_raw_trajectory_replay",
+    "c2_primary_response_contract": {
+      "anchor": "t_event_planned+2.0s",
+      "goal_set_branch": "move",
+      "horizon_s": 2.0,
+      "requires_verified_common_prefix": true,
+      "terminal_goal_violation_fallback_forbidden": true
+    },
+    "coverage_reconciliation": {
+      "accepted_valid_unique": 279,
+      "by_family": {
+        "C7": {
+          "accepted_valid": 279,
+          "planned": 279
+        }
+      },
+      "missing_valid": 0,
+      "planned_episodes": 279,
+      "status_counts": {
+        "valid": 279
+      }
+    },
+    "limitations": [
+      "episode_outcomes.parquet, event_outcomes.parquet, and paired_contrasts.parquet are not emitted because this repository has no pinned parquet dependency; compact CSV tables are exported instead",
+      "figures are not generated without accepted trajectory evidence"
+    ],
+    "validation": {
+      "accepted_unique": 279,
+      "analysis_scope": "accepted_ledger_loading_and_coverage_reconciliation",
+      "assigned": 279,
+      "audit_scope": "coverage_and_basic_record_consistency_only",
+      "campaign_id": "online_correction_v4",
+      "coverage_by_family": {
+        "C7": {
+          "accepted_unique": 279,
+          "assigned": 279,
+          "blocked_records": 0,
+          "missing": 0
+        }
+      },
+      "duplicate_accepted_episode_ids": [],
+      "errors": [],
+      "infrastructure_attempts": 0,
+      "limitations": [
+        "Trace/video contents and remote URIs are not opened.",
+        "Scoring, pairing eligibility, receipt truth and statistical analyses require the documented independent audit."
+      ],
+      "missing_episode_ids": [],
+      "ok": true,
+      "primary_response_anchor": "t_event_planned+2.0s",
+      "primary_response_horizon_s": 2.0,
+      "valid_failure_records": 279,
+      "valid_success_records": 0
+    }
+  },
+  "export_coverage": {
+    "C7": {
+      "accepted_valid_unique": 279,
+      "coverage_fraction": 0.363281,
+      "coverage_label": "279/768 (36.3%)",
+      "export_status": "partial",
+      "ledger_compile_id": null,
+      "missing_episodes": 489,
+      "planned_episodes": 768
+    },
+    "C8": {
+      "accepted_valid_unique": 24,
+      "coverage_fraction": 1.0,
+      "coverage_label": "24/24 (100.0%)",
+      "export_status": "complete",
+      "ledger_compile_id": "20260908b",
+      "missing_episodes": 0,
+      "planned_episodes": 24
+    }
+  },
+  "export_status": "partial",
+  "frozen_analysis_manifest": "artifacts/online_correction_v4/frozen_analysis_manifest.json",
+  "ledger_compile_id": null,
+  "ledger_rows_compiled": 279,
+  "ledger_source": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/results/c7_partial/source/accepted_ledger_20260907g.jsonl",
+  "outcome_composition": {
+    "no_grasp": 276,
+    "transport_incomplete": 3
+  },
+  "pvc_complete_note": "Ledger compile against confirmatory manifest is required to separate 279 pre-repair infrastructure-invalid C7 episodes from repaired-path rows.",
+  "schema_version": "v4-registered-campaign-audit-v1"
+}

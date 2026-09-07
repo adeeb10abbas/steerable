@@ -330,7 +330,10 @@ def main() -> int:
     parser.add_argument("--seed-registry-out", type=Path, required=True)
     parser.add_argument("--released-reset-out", type=Path, required=True)
     parser.add_argument("--runtime-lock-out", type=Path, required=True)
-    parser.add_argument("--lane-spec-out", type=Path, required=True)
+    default_lane_spec = (
+        ROOT / "deploy/k8s/v4_lane_bundle/c8-second-stack-confirmatory-spec.json"
+    )
+    parser.add_argument("--lane-spec-out", type=Path, default=default_lane_spec)
     parser.add_argument("--launch-matrix-out", type=Path, required=True)
     args = parser.parse_args()
     rows = extract_confirmatory_rows(args.queue.resolve())
@@ -395,6 +398,27 @@ def main() -> int:
         args.runtime_lock_out.resolve(),
         canonical_json_bytes(lock),
     )
+    runtime_root = args.runtime_root.rstrip("/")
+    python_bin = (
+        "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/"
+        "gr00t/eval/sim/SimplerEnv/simpler_uv/.venv/bin/python"
+    )
+    simpler_env_root = (
+        "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/"
+        "external_dependencies/SimplerEnv"
+    )
+    runtime_common = {
+        "python_bin": python_bin,
+        "ffmpeg_bin": "/data/users/ali/vla_wam/envs/lingbot-va-b200/bin/ffmpeg",
+        "vk_icd_filenames": (
+            "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/"
+            "external_dependencies/SimplerEnv/nvidia_icd.json"
+        ),
+        "ld_library_path": (
+            "/data/users/ali/vla_wam/envs/groot-render-libs/lib:/usr/lib/x86_64-linux-gnu"
+        ),
+        "pythonpath": f"{runtime_root}:{simpler_env_root}",
+    }
     lane_spec = {
         "schema_version": "vla-wam-v4-k8s-lane-render-spec-v1",
         "qualification_only": False,
@@ -403,6 +427,7 @@ def main() -> int:
         "lane_id": "c8m00",
         "attempt_id": "c8mainrelease20260908a",
         "policy_port": 18200,
+        "policy_wait_timeout_seconds": 2400,
         "expected_driver_version": "580.95.05",
         "image_repository": "artifactory-ci.gm.com/docker-approved/devcontainers/base",
         "image_sha256": args.runtime_image_digest.removeprefix("sha256:"),
@@ -412,40 +437,62 @@ def main() -> int:
         "entrypoint": "/opt/v4-lane/scripts/lane_entrypoint.py",
         "prestop_wait_seconds": 120,
         "runtime": {
-            "python_bin": (
-                "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/"
-                "gr00t/eval/sim/SimplerEnv/simpler_uv/.venv/bin/python"
-            ),
-            "ffmpeg_bin": "/data/users/ali/vla_wam/envs/lingbot-va-b200/bin/ffmpeg",
-            "vk_icd_filenames": (
-                "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/"
-                "external_dependencies/SimplerEnv/nvidia_icd.json"
-            ),
-            "ld_library_path": (
-                "/data/users/ali/vla_wam/envs/groot-render-libs/lib:/usr/lib/x86_64-linux-gnu"
-            ),
-            "pythonpath": (
-                f"{args.runtime_root.rstrip('/')}:"
-                "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/"
-                "external_dependencies/SimplerEnv"
-            ),
+            "policy": dict(runtime_common),
+            "simulator": dict(runtime_common),
         },
         "policy": {
             "gpu_product": "NVIDIA-A40",
             "expected_gpu_name": "NVIDIA A40",
             "experiment_argv": [
-                "{python_bin}",
-                f"{args.runtime_root.rstrip('/')}/tools/run_online_correction_v4.py",
+                python_bin,
+                f"{runtime_root}/tools/run_v4_groot_bridge_policy_server.py",
+                "--host",
+                "0.0.0.0",
+                "--port",
+                "18200",
+                "--checkpoint-path",
+                "/data/users/ali/vla_wam/checkpoints/groot-n1.7-simplerenv-bridge",
+                "--integration-root",
+                "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89",
             ],
             "checkpoint_path": (
                 "/data/users/ali/vla_wam/checkpoints/groot-n1.7-simplerenv-bridge"
             ),
-            "checkpoint_sha256": sha256_file(
-                args.hardware_g4.resolve()
+            "checkpoint_sha256": "ba6ebd8503df6950d18e416a9d4d1b945b02493af7fea5406bfe7f889acc9c4f",
+            "checkpoint_registry_path": (
+                f"{runtime_root}/artifacts/online_correction_v4/setup/"
+                "second_stack_g4_checkpoint_registry.candidate.json"
             ),
             "nvidia_smi_bin": "/usr/bin/nvidia-smi",
             "python_imports": ["torch", "simpler_env"],
-            "file_bindings": [],
+            "file_bindings": [
+                {
+                    "source": "scripts/lane_entrypoint.py",
+                    "path": "/opt/v4-lane/scripts/lane_entrypoint.py",
+                },
+                {
+                    "source": "scripts/startup_preflight.py",
+                    "path": "/opt/v4-lane/scripts/startup_preflight.py",
+                },
+                {
+                    "source": "scripts/check_policy_ready.py",
+                    "path": "/opt/v4-lane/scripts/check_policy_ready.py",
+                },
+                {
+                    "source": "../../../tools/run_v4_groot_bridge_policy_server.py",
+                    "path": f"{runtime_root}/tools/run_v4_groot_bridge_policy_server.py",
+                },
+                {
+                    "source": (
+                        "../../../artifacts/online_correction_v4/setup/"
+                        "second_stack_g4_checkpoint_registry.candidate.json"
+                    ),
+                    "path": (
+                        f"{runtime_root}/artifacts/online_correction_v4/setup/"
+                        "second_stack_g4_checkpoint_registry.candidate.json"
+                    ),
+                },
+            ],
             "vulkan_contract": {"required": False},
             "readiness_interface": "groot_bridge_http",
         },
@@ -457,7 +504,23 @@ def main() -> int:
             "checkpoint_sha256": "0" * 64,
             "nvidia_smi_bin": "/usr/bin/nvidia-smi",
             "python_imports": ["simpler_env"],
-            "file_bindings": [],
+            "file_bindings": [
+                {
+                    "source": "scripts/lane_entrypoint.py",
+                    "path": "/opt/v4-lane/scripts/lane_entrypoint.py",
+                },
+                {
+                    "source": "scripts/startup_preflight.py",
+                    "path": "/opt/v4-lane/scripts/startup_preflight.py",
+                },
+                {
+                    "source": "scripts/run_online_correction_v4_lane_dispatch.py",
+                    "path": (
+                        f"{runtime_root}/deploy/k8s/v4_lane_bundle/scripts/"
+                        "run_online_correction_v4_lane_dispatch.py"
+                    ),
+                },
+            ],
             "vulkan_contract": {"required": True},
             "readiness_interface": "embedded_in_policy_container",
         },

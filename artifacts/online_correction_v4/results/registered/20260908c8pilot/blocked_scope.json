@@ -1,0 +1,154 @@
+{
+  "achievable_breakdown": {
+    "C6": 768,
+    "C7": 768,
+    "C8": 768
+  },
+  "achievable_policy_episodes": 2304,
+  "blocked_breakdown": {
+    "C1_C3_C4_horizontal": 9728,
+    "C2_reference_binding": 4096,
+    "C5_vertical": 768
+  },
+  "criteria_amended": false,
+  "disclosed_setup_repairs": [
+    "NaturalGraspDetector trigger observation wiring repaired: object_kinematic_state() now uses finger-contact coupling instead of robot-base pose (C7)",
+    "eef_tool_length_m=0.14 flange-versus-fingerpad offset applied uniformly across Isaac fixtures",
+    "second_stack observation and sampling defect repaired: SimplerEnv adapter uses control-boundary sampling with provisioned LD_LIBRARY_PATH/VK_ICD_FILENAMES (C8)"
+  ],
+  "family_status": {
+    "C6": {
+      "export_status": "awaiting_receipt",
+      "note": "Only fixture passing information gate on both translation-sign halves",
+      "planned_episodes": 768,
+      "status": "achievable; confirmatory dispatch in progress (Agent B)"
+    },
+    "C7": {
+      "accepted_valid_unique": 279,
+      "coverage_fraction": 0.363281,
+      "coverage_label": "279/768 (36.3%)",
+      "export_status": "partial",
+      "ledger_compile_id": null,
+      "missing_episodes": 489,
+      "outcome_composition": {
+        "no_grasp": 276,
+        "transport_incomplete": 3
+      },
+      "planned_episodes": 768,
+      "pre_repair_excluded": 279
+    },
+    "C8": {
+      "accepted_valid_unique": 24,
+      "coverage_fraction": 1.0,
+      "coverage_label": "24/24 (100.0%)",
+      "export_status": "complete",
+      "ledger_compile_id": "20260908b",
+      "missing_episodes": 0,
+      "planned_episodes": 24
+    }
+  },
+  "horizontal_evidence": {
+    "blocked_scope": "artifacts/online_correction_v4/results/horizontal_geometry_repair_v2/20260908/blocked_scope.json",
+    "evidence_memo": "artifacts/online_correction_v4/results/horizontal_geometry_repair_v2/20260908/paper/evidence_memo.json",
+    "manifest": "artifacts/online_correction_v4/results/horizontal_geometry_repair_v2/20260908/evidence_manifest.json"
+  },
+  "horizontal_geometry_repair_note": "Geometry repair v2 restored physical feasibility (3072/3072 path checks pass at scale 0.5) but no registered ladder scale simultaneously satisfies large-displacement goal non-emptiness and the frozen 20% shrinking-area information threshold at small displacement.",
+  "horizontal_scale_squeeze": {
+    "classification": "registered_fixture_design_squeeze",
+    "evidence_slice": "artifacts/online_correction_v4/results/horizontal_geometry_repair_v2/20260908",
+    "information_gate_at_0p5": {
+      "computation_audit_receipt": "artifacts/online_correction_v4/qualification/20260908_information_gate_computation_audit.json",
+      "computation_audit_verdict": "computation_correct_scientific_rejection",
+      "confirmatory_scale": 0.5,
+      "displacement_m": 0.06,
+      "failed_goals_on_negative_sign": [
+        "right",
+        "behind"
+      ],
+      "failed_seeds": 64,
+      "information_threshold": 0.2,
+      "negative_sign_seeds_failed": "64/64",
+      "passed_seeds": 64,
+      "path_checks_passed": "3072/3072",
+      "positive_sign_seeds_failed": "0/64",
+      "removed_area_fraction_range_negative_sign": {
+        "max": 0.19862990150678536,
+        "min": 0.13692608825615002
+      },
+      "smoke_pass_note": "Single-seed smoke passed because smoke seed has physical_translation_sign=+1; full registry exposes exact half-seed split.",
+      "smoke_seed": 2100000000,
+      "smoke_seed_sign": 1
+    },
+    "scale_ladder_rejections": [
+      {
+        "binding_constraint": "information_and_physical",
+        "detail": "legal_goal_empty on 10/24 paths; unmodeled_collision and reference_not_supported on 10/24; information gate fails globally",
+        "scale": 2.0
+      },
+      {
+        "binding_constraint": "physical",
+        "detail": "legal_goal_empty on 5/24; unmodeled_collision and support/drift/pose failures on 10/24",
+        "scale": 1.5
+      },
+      {
+        "binding_constraint": "physical",
+        "detail": "legal_goal_empty on 5/24; unmodeled_collision on all 10 failed paths",
+        "scale": 1.0
+      },
+      {
+        "binding_constraint": "physical",
+        "detail": "legal_goal_empty on 5/24; unmodeled_collision on 10/24",
+        "scale": 0.75
+      },
+      {
+        "binding_constraint": "information_gate",
+        "detail": "all path checks pass; 64/128 seeds fail right/behind information gate for physical_translation_sign=-1",
+        "scale": 0.5
+      }
+    ]
+  },
+  "not_estimable_or_blocked": {
+    "C1": "scientifically blocked with C3/C4: registered fixture design squeeze \u2014 geometry repair v2 restored physical feasibility (3072/3072 path checks at scale 0.5) but no ladder scale satisfies both large-displacement goal non-emptiness and the frozen 20% shrinking-area information threshold; scale 0.5 fails information gate on 64/128 seeds (all sign=-1, removed area 13.7\u201319.9%); receipt 20260908_horizontal_g3_gate_decision_g3r20260908g.json; horizontal_geometry_repair_v2/20260908 evidence slice",
+    "C2": "scientifically blocked: homogeneous G3 gate g3rb20260908v failed shrinking-area information gate at confirmatory scale 0.5 (96/128 seeds fail); sign=-1 0/64 pass and sign=+1 32/64 fail; front goal passes 128/128 case checks; behind fails 63/128; all 3072 path checks pass; computation audit confirmed correct gate math; primary estimand not estimable; 4096 confirmatory episodes blocked; no criterion was adjusted to recover blocked scope",
+    "C3": "scientifically blocked with C1/C4: horizontal information-gate failure on registered ladder",
+    "C4": "scientifically blocked with C1/C3: horizontal information-gate failure on registered ladder",
+    "C5": "scientifically blocked: vertical IK reachability finding at seed 2100020000 scale 0.5; receipt 20260908_vertical_natural_grasp_live_control_finding_g3ngp20260908vp8.json",
+    "C6": "achievable (768 episodes); dispatch pending qualification completion",
+    "C7": "partial export (279/768 (36.3%)): timing-audit-backed policy failures on repaired-path confirmatory completes \u2014 276 no_grasp, 3 transport_incomplete; 279 pre-repair episodes excluded",
+    "C8": "achievable (768 episodes); pilot G3 path gate passed 96/96 (g3c8p20260908f); G7 confirmatory receipt passed (g7c8q20260908a); 24 pilot episodes, G8 rehearsal, confirmatory runtime lock, and 768 dispatch blocked pending groot_bridge_widowx registration in launch_online_correction_v4.py (SUPPORTED_DROID_POLICIES) and second_stack live behavioral runner wiring"
+  },
+  "original_planned_policy_episodes": 17664,
+  "pre_repair_c7_excluded_episodes": 279,
+  "schema_version": "v4-registered-campaign-blocked-scope-v1",
+  "scientific_blockers": {
+    "horizontal_information_gate": {
+      "affected_episodes": 9728,
+      "affected_families": [
+        "C1",
+        "C3",
+        "C4"
+      ],
+      "attempt_id": "g3r20260908g",
+      "receipt_path": "artifacts/online_correction_v4/qualification/20260908_horizontal_g3_gate_decision_g3r20260908g.json"
+    },
+    "reference_binding_information_gate": {
+      "affected_episodes": 4096,
+      "affected_families": [
+        "C2"
+      ],
+      "attempt_id": "g3rb20260908v",
+      "computation_audit_path": "artifacts/online_correction_v4/qualification/20260908_information_gate_computation_audit.json",
+      "finalized_at_utc": "2026-09-07T17:07:20Z",
+      "primary_estimand_status": "not_estimable",
+      "receipt_path": "artifacts/online_correction_v4/qualification/20260908_reference_binding_g3_gate_decision_g3rb20260908v.json"
+    },
+    "vertical_ik_reachability": {
+      "affected_episodes": 768,
+      "affected_families": [
+        "C5"
+      ],
+      "receipt_path": "artifacts/online_correction_v4/qualification/20260908_vertical_natural_grasp_live_control_finding_g3ngp20260908vp8.json"
+    }
+  },
+  "scientifically_blocked_episodes": 15360
+}

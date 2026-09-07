@@ -282,22 +282,36 @@ def active_c7_lane_pairs(lane_jobs: Sequence[LaneJobRef]) -> dict[str, LaneJobRe
     }
 
 
+def c7_lanes_with_unsuspended_jobs(lane_jobs: Sequence[LaneJobRef]) -> set[str]:
+    return {
+        ref.lane_id
+        for ref in lane_jobs
+        if C7_LANE_RE.match(ref.lane_id) and not ref.suspend
+    }
+
+
 def select_c7_throttle_jobs(lane_jobs: Sequence[LaneJobRef], *, ceiling: int) -> tuple[list[LaneJobRef], dict[str, Any]]:
     active_pairs = active_c7_lane_pairs(lane_jobs)
+    unsuspended_lanes = c7_lanes_with_unsuspended_jobs(lane_jobs)
     sim_failed = {
         ref.lane_id
         for ref in lane_jobs
         if C7_LANE_RE.match(ref.lane_id) and ref.role == "sim" and ref.failed > 0 and ref.active == 0
     }
-    ranked = sorted(
-        active_pairs.items(),
-        key=lambda item: (item[0] in sim_failed, int(item[0][3:]) if item[0][3:].isdigit() else 999),
-    )
-    keep = {lane for lane, _ in ranked[:ceiling]}
-    throttle = {lane for lane, _ in ranked[ceiling:]}
+
+    def lane_rank(lane_id: str) -> tuple[int, int, int]:
+        in_active = lane_id in active_pairs
+        policy_active = int(active_pairs.get(lane_id) is not None and active_pairs[lane_id].active > 0)
+        index = int(lane_id[3:]) if lane_id[3:].isdigit() else 999
+        return (0 if in_active else 1, int(lane_id in sim_failed), index)
+
+    ranked_lanes = sorted(unsuspended_lanes, key=lane_rank)
+    keep = set(ranked_lanes[:ceiling])
+    throttle = unsuspended_lanes - keep
     jobs = [ref for ref in lane_jobs if C7_LANE_RE.match(ref.lane_id) and ref.lane_id in throttle and not ref.suspend]
     report = {
         "active_lane_pairs_before": len(active_pairs),
+        "unsuspended_lanes_before": len(unsuspended_lanes),
         "ceiling": ceiling,
         "lanes_kept": sorted(keep),
         "lanes_throttled": sorted(throttle),

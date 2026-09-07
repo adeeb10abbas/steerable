@@ -68,6 +68,17 @@ def test_c7_throttle_keeps_lowest_index_lanes() -> None:
     assert len(report["lanes_kept"]) == 24
 
 
+def test_c7_throttle_includes_orphan_sim_lanes() -> None:
+    jobs = [_lane_job("c7m06", "attempt0573", "sim", active=0, failed=1)]
+    for index in range(25):
+        lane = f"c7m{index:02d}"
+        if lane == "c7m06":
+            continue
+        jobs.extend([_lane_job(lane, f"attempt{500+index:04d}", "policy"), _lane_job(lane, f"attempt{500+index:04d}", "sim")])
+    throttle_jobs, report = arbitration.select_c7_throttle_jobs(jobs, ceiling=20)
+    assert "c7m06" in report["lanes_throttled"]
+
+
 def test_pilot_priority_detects_c8_failure() -> None:
     health = arbitration.pilot_lane_health([_lane_job("g7c8p00", "attempt0020", "policy", active=0, failed=1)])
     assert "g7c8p00" in health["c8_pending_lanes"]

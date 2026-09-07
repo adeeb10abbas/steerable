@@ -1,9 +1,9 @@
 {
   "c7_lane_ceiling": 20,
   "c7_throttle": {
-    "active_lane_pairs_before": 24,
+    "active_lane_pairs_before": 20,
     "ceiling": 20,
-    "jobs_to_suspend": 12,
+    "jobs_to_suspend": 0,
     "lanes_kept": [
       "c7m00",
       "c7m03",
@@ -26,188 +26,43 @@
       "c7m28",
       "c7m30"
     ],
-    "lanes_throttled": [
-      "c7m01",
-      "c7m02",
-      "c7m05",
-      "c7m31"
-    ],
-    "suspended_count": 12,
-    "suspended_jobs": [
-      {
-        "attempt_id": "attempt0474",
-        "infra_invalid_preemption": true,
-        "job": "v4-c7m01-attempt0474-7d804f4855-policy",
-        "lane_id": "c7m01",
-        "reason_code": "pilot_priority_c7_throttle",
-        "role": "policy",
-        "suspended": true
-      },
-      {
-        "attempt_id": "attempt0474",
-        "infra_invalid_preemption": true,
-        "job": "v4-c7m01-attempt0474-7d804f4855-sim",
-        "lane_id": "c7m01",
-        "reason_code": "pilot_priority_c7_throttle",
-        "role": "sim",
-        "suspended": true
-      },
-      {
-        "attempt_id": "attempt0475",
-        "infra_invalid_preemption": true,
-        "job": "v4-c7m02-attempt0475-3b5cb3744c-policy",
-        "lane_id": "c7m02",
-        "reason_code": "pilot_priority_c7_throttle",
-        "role": "policy",
-        "suspended": true
-      },
-      {
-        "attempt_id": "attempt0475",
-        "infra_invalid_preemption": true,
-        "job": "v4-c7m02-attempt0475-3b5cb3744c-sim",
-        "lane_id": "c7m02",
-        "reason_code": "pilot_priority_c7_throttle",
-        "role": "sim",
-        "suspended": true
-      },
-      {
-        "attempt_id": "attempt0571",
-        "infra_invalid_preemption": true,
-        "job": "v4-c7m02-attempt0571-3b20216518-policy",
-        "lane_id": "c7m02",
-        "reason_code": "pilot_priority_c7_throttle",
-        "role": "policy",
-        "suspended": true
-      },
-      {
-        "attempt_id": "attempt0571",
-        "infra_invalid_preemption": true,
-        "job": "v4-c7m02-attempt0571-3b20216518-sim",
-        "lane_id": "c7m02",
-        "reason_code": "pilot_priority_c7_throttle",
-        "role": "sim",
-        "suspended": true
-      },
-      {
-        "attempt_id": "attempt0478",
-        "infra_invalid_preemption": true,
-        "job": "v4-c7m05-attempt0478-9c26d8da90-policy",
-        "lane_id": "c7m05",
-        "reason_code": "pilot_priority_c7_throttle",
-        "role": "policy",
-        "suspended": true
-      },
-      {
-        "attempt_id": "attempt0478",
-        "infra_invalid_preemption": true,
-        "job": "v4-c7m05-attempt0478-9c26d8da90-sim",
-        "lane_id": "c7m05",
-        "reason_code": "pilot_priority_c7_throttle",
-        "role": "sim",
-        "suspended": true
-      },
-      {
-        "attempt_id": "attempt0572",
-        "infra_invalid_preemption": true,
-        "job": "v4-c7m05-attempt0572-661abc04c6-policy",
-        "lane_id": "c7m05",
-        "reason_code": "pilot_priority_c7_throttle",
-        "role": "policy",
-        "suspended": true
-      },
-      {
-        "attempt_id": "attempt0572",
-        "infra_invalid_preemption": true,
-        "job": "v4-c7m05-attempt0572-661abc04c6-sim",
-        "lane_id": "c7m05",
-        "reason_code": "pilot_priority_c7_throttle",
-        "role": "sim",
-        "suspended": true
-      },
-      {
-        "attempt_id": "attempt0546",
-        "infra_invalid_preemption": true,
-        "job": "v4-c7m31-attempt0546-a1e510c10c-policy",
-        "lane_id": "c7m31",
-        "reason_code": "pilot_priority_c7_throttle",
-        "role": "policy",
-        "suspended": true
-      },
-      {
-        "attempt_id": "attempt0546",
-        "infra_invalid_preemption": true,
-        "job": "v4-c7m31-attempt0546-a1e510c10c-sim",
-        "lane_id": "c7m31",
-        "reason_code": "pilot_priority_c7_throttle",
-        "role": "sim",
-        "suspended": true
-      }
-    ]
+    "lanes_throttled": [],
+    "suspended_count": 0,
+    "suspended_jobs": [],
+    "unsuspended_lanes_before": 20
   },
   "cancelled_superseded_jobs": [],
   "deleted_stale_pilot_jobs": [
     {
-      "attempt_id": "attempt0032",
+      "attempt_id": "attempt0069",
       "canonical_attempt_id": null,
       "deleted": true,
-      "job": "v4-g7c8p02-attempt0032-b741f63ff9-policy",
-      "lane_id": "g7c8p02",
+      "job": "v4-g7c8p06-attempt0069-c8aec2fd1c-policy",
+      "lane_id": "g7c8p06",
       "reason_code": "invalid_c8_pilot_lane"
     },
     {
-      "attempt_id": "attempt0032",
+      "attempt_id": "attempt0069",
       "canonical_attempt_id": null,
       "deleted": true,
-      "job": "v4-g7c8p02-attempt0032-b741f63ff9-sim",
-      "lane_id": "g7c8p02",
+      "job": "v4-g7c8p06-attempt0069-c8aec2fd1c-sim",
+      "lane_id": "g7c8p06",
       "reason_code": "invalid_c8_pilot_lane"
     },
     {
-      "attempt_id": "attempt0033",
+      "attempt_id": "attempt0070",
       "canonical_attempt_id": null,
       "deleted": true,
-      "job": "v4-g7c8p03-attempt0033-10a616bcdc-policy",
-      "lane_id": "g7c8p03",
+      "job": "v4-g7c8p07-attempt0070-6e8afc8142-policy",
+      "lane_id": "g7c8p07",
       "reason_code": "invalid_c8_pilot_lane"
     },
     {
-      "attempt_id": "attempt0033",
+      "attempt_id": "attempt0070",
       "canonical_attempt_id": null,
       "deleted": true,
-      "job": "v4-g7c8p03-attempt0033-10a616bcdc-sim",
-      "lane_id": "g7c8p03",
-      "reason_code": "invalid_c8_pilot_lane"
-    },
-    {
-      "attempt_id": "attempt0034",
-      "canonical_attempt_id": null,
-      "deleted": true,
-      "job": "v4-g7c8p04-attempt0034-08392ad288-policy",
-      "lane_id": "g7c8p04",
-      "reason_code": "invalid_c8_pilot_lane"
-    },
-    {
-      "attempt_id": "attempt0034",
-      "canonical_attempt_id": null,
-      "deleted": true,
-      "job": "v4-g7c8p04-attempt0034-08392ad288-sim",
-      "lane_id": "g7c8p04",
-      "reason_code": "invalid_c8_pilot_lane"
-    },
-    {
-      "attempt_id": "attempt0035",
-      "canonical_attempt_id": null,
-      "deleted": true,
-      "job": "v4-g7c8p05-attempt0035-682daed0a9-policy",
-      "lane_id": "g7c8p05",
-      "reason_code": "invalid_c8_pilot_lane"
-    },
-    {
-      "attempt_id": "attempt0035",
-      "canonical_attempt_id": null,
-      "deleted": true,
-      "job": "v4-g7c8p05-attempt0035-682daed0a9-sim",
-      "lane_id": "g7c8p05",
+      "job": "v4-g7c8p07-attempt0070-6e8afc8142-sim",
+      "lane_id": "g7c8p07",
       "reason_code": "invalid_c8_pilot_lane"
     }
   ],
@@ -215,24 +70,16 @@
   "kube_context": "prod-dcwi-warrenq1-vmkub007",
   "mode": "pilot_priority",
   "namespace": "211247-prod",
-  "observed_at_utc": "2026-09-07T20:12:49Z",
+  "observed_at_utc": "2026-09-07T20:33:51Z",
   "pilot_lane_health": {
     "c6_healthy_lanes": [
       "g7c6p00",
-      "g7c6p00",
-      "g7c6p01",
       "g7c6p01",
       "g7c6p02",
-      "g7c6p02",
-      "g7c6p03",
       "g7c6p03",
       "g7c6p04",
-      "g7c6p04",
-      "g7c6p05",
       "g7c6p05",
       "g7c6p06",
-      "g7c6p06",
-      "g7c6p07",
       "g7c6p07"
     ],
     "c6_pending_lanes": [],

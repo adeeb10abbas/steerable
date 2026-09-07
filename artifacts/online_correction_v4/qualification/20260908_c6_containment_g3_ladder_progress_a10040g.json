@@ -1,0 +1,29 @@
+{
+  "schema_version": "v4-c6-containment-g3-ladder-progress-v1",
+  "campaign_id": "online_correction_v4",
+  "fixture_id": "containment",
+  "family_id": "containment_c6",
+  "attempt_id": "g3c6p20260908a10040g",
+  "study_commit": "a1c5d9a3a0bd903dce5c7f18372b16a9aa096b98",
+  "gpu_product": "NVIDIA-A100-SXM4-40GB",
+  "scale": 0.5,
+  "observed_at_utc": "2026-09-08T15:10:00Z",
+  "expected_seed_count": 64,
+  "completed_seed_receipts": 24,
+  "running_seed_jobs": 40,
+  "information_gate_by_physical_translation_sign": {
+    "+1": {
+      "completed": 12,
+      "passed": 12,
+      "failed": 0
+    },
+    "-1": {
+      "completed": 12,
+      "passed": 12,
+      "failed": 0
+    }
+  },
+  "third_fixture_note": "Early containment ladder receipts show balanced pass on both translation-sign halves, unlike horizontal (64/128 fail on negative half) and reference_binding (~42/59 fail pattern under Agent C audit). No gate adjustment performed; awaiting full 64-seed registry.",
+  "g3_gate_decision": "pending_full_ladder",
+  "status": "in_progress"
+}

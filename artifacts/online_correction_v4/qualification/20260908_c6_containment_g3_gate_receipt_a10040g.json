@@ -1,0 +1,43 @@
+{
+  "schema_version": "v4-c6-containment-g3-gate-receipt-v1",
+  "campaign_id": "online_correction_v4",
+  "fixture_id": "containment",
+  "family_id": "containment_c6",
+  "attempt_id": "g3c6p20260908a10040g",
+  "study_commit": "a1c5d9a3a0bd903dce5c7f18372b16a9aa096b98",
+  "gpu_product": "NVIDIA-A100-SXM4-40GB",
+  "scale": 0.5,
+  "observed_at_utc": "2026-09-08T15:20:00Z",
+  "expected_seed_count": 64,
+  "completed_seed_receipts": 63,
+  "information_gate_by_physical_translation_sign": {
+    "+1": {
+      "completed": 32,
+      "passed": 32,
+      "failed": 0
+    },
+    "-1": {
+      "completed": 31,
+      "passed": 31,
+      "failed": 0
+    }
+  },
+  "missing_seed_receipts": [
+    {
+      "environment_seed": 2100030031,
+      "k8s_job": "v4-g3-cont-g3c6p20260908a10040g-df4256b42c-s031",
+      "status": "running_stuck_rtx_startup",
+      "note": "Job active >27m with Hydra/RTX init warnings; no g3_path_seed_receipt.json yet."
+    }
+  ],
+  "cross_fixture_comparison": {
+    "horizontal_g3r20260908g": "64/128 seeds fail information gate, concentrated on physical_translation_sign=-1 (right/behind relations)",
+    "reference_binding_g3rb20260908v": "~42/59 seeds fail under Agent C audit with similar negative-sign concentration (pending shared computation audit)",
+    "containment_g3c6p20260908a10040g": "63/63 completed seeds pass on BOTH halves (+1: 32/32, -1: 31/31); third independent fixture does NOT reproduce horizontal/reference_binding negative-sign failure signature"
+  },
+  "g3_gate_decision": "pending_full_64_seed_registry",
+  "g3_gate_decision_detail": "All completed seeds pass information gate on both translation-sign halves. One seed (2100030031) lacks receipt due to infra stall; family gate cannot close until retry completes.",
+  "g4_g8_status": "blocked_on_g3_family_pass",
+  "confirmatory_768_status": "blocked_on_g3_g8",
+  "status": "in_progress"
+}

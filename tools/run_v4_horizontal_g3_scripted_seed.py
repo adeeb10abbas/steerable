@@ -860,9 +860,6 @@ def main(argv: list[str] | None = None) -> int:
                 task_frame_evidence=task_frame_dict,
                 scene_state=initial_scene,
                 support_edge_margin_m=float(geometry_contract["support_edge_margin_m"]),
-                fixture_geometry=registry_payload["scene_receipt"][
-                    "support_geometry"
-                ],
             )
         else:
             geometry = geometry_from_scene_for_fixture(

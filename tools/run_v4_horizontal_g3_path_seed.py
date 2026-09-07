@@ -41,6 +41,16 @@ def _infra_failure_schema(fixture_id: str) -> str:
     return f"v4-{fixture_id.replace('_', '-')}-g3-infrastructure-failure-v1"
 
 
+def _optional_registry_support_geometry(
+    registry_payload: Mapping[str, Any],
+) -> Mapping[str, Any] | None:
+    scene_receipt = registry_payload.get("scene_receipt")
+    if not isinstance(scene_receipt, Mapping):
+        return None
+    support_geometry = scene_receipt.get("support_geometry")
+    return support_geometry if isinstance(support_geometry, Mapping) else None
+
+
 def _fixture_geometry_from_registry(
     registry_payload: Mapping[str, Any], fixture_id: str
 ) -> Mapping[str, Any] | None:

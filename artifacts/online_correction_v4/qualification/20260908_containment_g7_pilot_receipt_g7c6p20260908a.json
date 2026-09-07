@@ -1,0 +1,99 @@
+{
+  "allocation": {
+    "episode_count": 24,
+    "motion_episode_count": 8,
+    "scenario_counts": {
+      "destination_static": 8,
+      "move_stop": 8,
+      "original_sham": 8
+    },
+    "static_episode_count": 16
+  },
+  "behavioral_episode_count": 24,
+  "behavioral_outcomes_preserved": {
+    "no_grasp": 18,
+    "transport_incomplete": 3,
+    "wrong_goal_region": 3
+  },
+  "campaign_id": "online_correction_v4",
+  "checks": {
+    "accepted_ledger_has_exact_full_coverage": true,
+    "all_24_videos_received_visual_review": true,
+    "all_viewport_videos_hash_verified_and_decoded": true,
+    "ledger_manifest_reports_no_errors": true,
+    "pilot_allocation_is_16_static_and_8_motion": true,
+    "pilot_lock_is_exactly_pilot_released_for_c7": true,
+    "pilot_metadata_omission_bounded_and_main_writer_fixed": true,
+    "queue_contains_24_disjoint_engineering_rows": true,
+    "review_binds_exact_montage": true,
+    "valid_failures_preserved_without_success_threshold": true
+  },
+  "family_id": "C6",
+  "fixture_id": "containment",
+  "gate": "G7",
+  "model_request_count": 0,
+  "passed": true,
+  "pilot_terminal_metadata_reconciliation": {
+    "cap_applied_indeterminate_episode_count": 24,
+    "d_cap_m": 0.16,
+    "interpretation": "Legacy pilot attempts omitted two booleans from terminal metadata; retries written after the amendment retain those booleans. G3 proves the registered goal sets are nonempty. A capped value equal to D_cap cannot distinguish exact equality from cap application, so those pilot booleans remain indeterminate and are not imputed. The scorer is fixed before main release; raw pilot records remain immutable.",
+    "legacy_omission_episode_count": 0,
+    "legacy_omission_episode_ids": [],
+    "main_writer_fixed": true,
+    "omitted_fields": [
+      "outcome.goal_set_empty must be boolean",
+      "outcome.goal_violation_cap_applied must be boolean"
+    ],
+    "recorded_distance_at_cap_count": 24,
+    "recorded_distance_below_cap_count": 0,
+    "required": false,
+    "validation_error_count": 0
+  },
+  "policy_id": "cosmos3_nano_droid",
+  "qualification_basis": {
+    "accepted_ledger": {
+      "bytes": 92751,
+      "path": "/data/users/ali/vla_wam/derived/v4/g7-containment-20260908a/ledger/accepted_ledger.jsonl",
+      "sha256": "8f02d4f5e6ae3e0518301171c7034bd8ca7ffa3c2e4957499b4566377ac57c27"
+    },
+    "accepted_ledger_manifest": {
+      "bytes": 8827,
+      "path": "/data/users/ali/vla_wam/derived/v4/g7-containment-20260908a/ledger/accepted_ledger_manifest.json",
+      "sha256": "15437c86718675be64884b6e70b6440db36da4abd902abeafc6336601da70bc7"
+    },
+    "accepted_ledger_validation": {
+      "bytes": 27,
+      "path": "/data/users/ali/vla_wam/derived/v4/g7-containment-20260908a/ledger/validation_report.json",
+      "sha256": "d2b7897e59ace8ab96a1ad037c1b0638b98a626c87f2346c6a7d61add5147517"
+    },
+    "main_release_scorer": {
+      "bytes": 15352,
+      "path": "/data/users/ali/vla_wam/src/steerable-v4-c7-main/experiments/online_correction_v4/droid_scorer.py",
+      "sha256": "1044a11d48051e75805ba77eb0623470b3babfb755f5d24c4f23fc744624e836"
+    },
+    "pilot_queue": {
+      "bytes": 25060,
+      "path": "/data/users/ali/vla_wam/src/steerable-v4-c7-main/artifacts/online_correction_v4/setup/containment_g7_pilot_manifest.jsonl",
+      "sha256": "ce947b25bbcf1374cebcedc6f27ec278f51f151290921592f13162490ecd6341"
+    },
+    "pilot_runtime_lock": {
+      "bytes": 8723,
+      "path": "/data/users/ali/vla_wam/src/steerable-v4-c7-main/artifacts/online_correction_v4/setup/containment_g7_pilot_runtime_lock.released.20260908r1.json",
+      "sha256": "e216092936ec40932cb60e35a26a1728aee73bc5d1ce99fd4d2f78a295df1b52"
+    },
+    "video_inventory": {
+      "bytes": 20766,
+      "path": "/data/users/ali/vla_wam/derived/v4/g7-containment-20260908a/video_inventory.json",
+      "sha256": "ee5e7725e8a706c4561887eb26d1e7c874f1bc65b4c7f76809397bfb4a21756f"
+    },
+    "video_review": {
+      "bytes": 2445,
+      "path": "/data/users/ali/vla_wam/derived/v4/g7-containment-20260908a/video_review.json",
+      "sha256": "307889e79e7a498c8140cc55a1b11cd64672b79e6bae8770ba256f1b83292691"
+    }
+  },
+  "release_boundary": "A pass completes C6 G7 only. G8 miniature-campaign rehearsal and a separate RELEASED lock remain required before confirmatory episodes.",
+  "schema_version": "v4-containment-g7-engineering-pilot-receipt-v1",
+  "status": "passed",
+  "technical_gate_interpretation": "G7 requires complete valid execution and inspectable evidence; it does not require a grasp, success, or positive language effect."
+}

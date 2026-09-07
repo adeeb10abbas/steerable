@@ -53,30 +53,9 @@ def build_receipt(
             accepted_ledger_path=accepted_ledger_path,
             ledger_manifest_path=ledger_manifest_path,
             ledger_validation_report_path=ledger_validation_report_path,
-        )
-        lock = load_json(runtime_lock_path)
-        ledger = load_jsonl(accepted_ledger_path)
-        queue = load_jsonl(queue_path)
-        d_cap_m = float(lock["fixtures"][fixture_id]["D_cap_m"])
-        payload["schema_version"] = (
-            f"v4-{fixture_id.replace('_', '-')}-g7-engineering-pilot-receipt-v1"
-        )
-        payload["family_id"] = profile.family_id
-        payload["fixture_id"] = fixture_id
-        payload["checks"]["pilot_lock_is_exactly_pilot_released_for_c7"] = (
-            lock.get("release_status") == "PILOT_RELEASED"
-            and lock.get("released_families") == [profile.family_id]
-        )
-        payload["checks"]["queue_contains_24_disjoint_engineering_rows"] = (
-            len(queue) == 24
-            and all(not row.get("reuse_episode_ids") for row in queue)
-            and all(row.get("family") == profile.family_id for row in queue)
-        )
-        payload["pilot_terminal_metadata_reconciliation"]["d_cap_m"] = d_cap_m
-        payload["release_boundary"] = (
-            f"A pass completes {profile.family_id} G7 only. G8 miniature-campaign "
-            "rehearsal and a separate RELEASED lock remain required before "
-            "confirmatory episodes."
+            family_id=profile.family_id,
+            fixture_id=fixture_id,
+            policy_id=profile.policy_id,
         )
     return payload
 

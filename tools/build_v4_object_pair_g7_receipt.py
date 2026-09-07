@@ -53,6 +53,10 @@ def build_receipt(
     accepted_ledger_path: Path,
     ledger_manifest_path: Path,
     ledger_validation_report_path: Path,
+    family_id: str = "C7",
+    fixture_id: str = "object_pair",
+    policy_id: str = "cosmos3_nano_droid",
+    cohort: str = "engineering_pilot",
 ) -> dict[str, Any]:
     queue = load_jsonl(queue_path)
     lock = load_json(runtime_lock_path)
@@ -68,8 +72,10 @@ def build_receipt(
     queue_ids = set(queue_by_id)
     scenario_counts: dict[str, int] = {}
     for row in queue:
-        if row.get("family") != "C7" or row.get("cohort") != "engineering_pilot":
-            raise ValueError("C7 pilot queue contains a non-pilot row")
+        if row.get("family") != family_id or row.get("cohort") != cohort:
+            raise ValueError(
+                f"{family_id} pilot queue contains a non-{cohort} row"
+            )
         scenario = str(row["factors"]["scenario"])
         scenario_counts[scenario] = scenario_counts.get(scenario, 0) + 1
     static_count = sum(
@@ -93,7 +99,7 @@ def build_receipt(
         "outcome.goal_set_empty must be boolean",
         "outcome.goal_violation_cap_applied must be boolean",
     )
-    d_cap_m = float(lock["fixtures"]["object_pair"]["D_cap_m"])
+    d_cap_m = float(lock["fixtures"][fixture_id]["D_cap_m"])
     expected_legacy_errors: list[str] = []
     legacy_omission_episode_ids: list[str] = []
     for index, row in enumerate(ledger, start=1):
@@ -154,7 +160,7 @@ def build_receipt(
     checks = {
         "pilot_lock_is_exactly_pilot_released_for_c7": (
             lock.get("release_status") == "PILOT_RELEASED"
-            and lock.get("released_families") == ["C7"]
+            and lock.get("released_families") == [family_id]
         ),
         "queue_contains_24_disjoint_engineering_rows": (
             len(queue) == 24
@@ -218,12 +224,27 @@ def build_receipt(
         ),
     }
     passed = all(checks.values())
+    schema_version = (
+        "v4-object-pair-g7-engineering-pilot-receipt-v1"
+        if fixture_id == "object_pair"
+        else f"v4-{fixture_id.replace('_', '-')}-g7-engineering-pilot-receipt-v1"
+    )
+    release_boundary = (
+        "A pass completes C7 G7 only. G8 miniature-campaign rehearsal and a "
+        "separate RELEASED lock remain required before confirmatory episodes."
+        if family_id == "C7"
+        else (
+            f"A pass completes {family_id} G7 only. G8 miniature-campaign "
+            "rehearsal and a separate RELEASED lock remain required before "
+            "confirmatory episodes."
+        )
+    )
     return {
-        "schema_version": "v4-object-pair-g7-engineering-pilot-receipt-v1",
+        "schema_version": schema_version,
         "campaign_id": "online_correction_v4",
-        "family_id": "C7",
-        "fixture_id": "object_pair",
-        "policy_id": "cosmos3_nano_droid",
+        "family_id": family_id,
+        "fixture_id": fixture_id,
+        "policy_id": policy_id,
         "gate": "G7",
         "status": "passed" if passed else "blocked",
         "passed": passed,
@@ -276,10 +297,7 @@ def build_receipt(
             "video_review": artifact(review_path),
             "main_release_scorer": artifact(scorer_path),
         },
-        "release_boundary": (
-            "A pass completes C7 G7 only. G8 miniature-campaign rehearsal and a "
-            "separate RELEASED lock remain required before confirmatory episodes."
-        ),
+        "release_boundary": release_boundary,
     }
 
 

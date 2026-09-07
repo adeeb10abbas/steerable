@@ -1,0 +1,2502 @@
+{
+  "behavioral_episode_count": 384,
+  "blocked_groups": [],
+  "complete_group_count": 0,
+  "config_sha256": "3594cedb3a440e5d944b37f709e25e41a98ed03dccc6bc4b7656a02f03440bee",
+  "create_wave_receipt": null,
+  "dispatch_mode": "behavioral",
+  "dispatchable_group_count": 1,
+  "effect_size_peeking": false,
+  "lane_assignments": [
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0001",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m00-attempt0001-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m00/attempt0001/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m00",
+      "launch_hash": "cce917bac091f312a325bf28847e6715e4dca112fc9ee2352cc9129d169b05ab",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m00/attempt0001",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b052-b100457cf4caaa79",
+        "online_correction_v4-C6-b003-990c7ebd648d108d",
+        "online_correction_v4-C6-b027-37e3df6a122a02f4",
+        "online_correction_v4-C6-b043-fb4001ef498717f8",
+        "online_correction_v4-C6-b032-7f1d2a17521e3962",
+        "online_correction_v4-C6-b041-a3188723e67f9c54",
+        "online_correction_v4-C6-b035-1fa864f1ce4d4dbf",
+        "online_correction_v4-C6-b001-23043d3d0417206f",
+        "online_correction_v4-C6-b001-937cadd1e16c5563",
+        "online_correction_v4-C6-b005-0e79e6104a92b3dc",
+        "online_correction_v4-C6-b027-522f133f97b83a22",
+        "online_correction_v4-C6-b046-3275a43c33970670"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m00-attempt0001-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0001",
+              "v4-config-sha": "dd16785e98a883e4cfbcb88725e2648a",
+              "v4-lane-id": "c6m00"
+            },
+            "name": "v4-c6m00-attempt0001-dd16785e98-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0001",
+              "v4-config-sha": "dd16785e98a883e4cfbcb88725e2648a",
+              "v4-lane-id": "c6m00",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m00-attempt0001-dd16785e98-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0001",
+              "v4-config-sha": "dd16785e98a883e4cfbcb88725e2648a",
+              "v4-lane-id": "c6m00",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m00-attempt0001-dd16785e98-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0001",
+              "v4-config-sha": "dd16785e98a883e4cfbcb88725e2648a",
+              "v4-lane-id": "c6m00",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m00-attempt0001-dd16785e98-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0002",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m01-attempt0002-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m01/attempt0002/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m01",
+      "launch_hash": "0aaa58f9ccad3224047765ba8e61262146597fcde02baf5e5fa2ce0a858f3530",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m01/attempt0002",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b053-4ce8ea5047c023a3",
+        "online_correction_v4-C6-b043-a32344bdb47f9231",
+        "online_correction_v4-C6-b024-c7ef8a1f10bf1060",
+        "online_correction_v4-C6-b059-1830ffb690169b0e",
+        "online_correction_v4-C6-b063-2cb820163e76ff5d",
+        "online_correction_v4-C6-b008-c7a6476b79bece01",
+        "online_correction_v4-C6-b017-2312cd1aa5136247",
+        "online_correction_v4-C6-b020-e7e354d39eb93e47",
+        "online_correction_v4-C6-b002-a3ce7ca085acf29a",
+        "online_correction_v4-C6-b038-52d96a6ae34a56ee",
+        "online_correction_v4-C6-b017-19e52e838a952664",
+        "online_correction_v4-C6-b041-dc0dc210a9d85153"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m01-attempt0002-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0002",
+              "v4-config-sha": "3a9edd70ccce2193b5dd010272c2e149",
+              "v4-lane-id": "c6m01"
+            },
+            "name": "v4-c6m01-attempt0002-3a9edd70cc-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0002",
+              "v4-config-sha": "3a9edd70ccce2193b5dd010272c2e149",
+              "v4-lane-id": "c6m01",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m01-attempt0002-3a9edd70cc-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0002",
+              "v4-config-sha": "3a9edd70ccce2193b5dd010272c2e149",
+              "v4-lane-id": "c6m01",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m01-attempt0002-3a9edd70cc-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0002",
+              "v4-config-sha": "3a9edd70ccce2193b5dd010272c2e149",
+              "v4-lane-id": "c6m01",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m01-attempt0002-3a9edd70cc-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0003",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m02-attempt0003-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m02/attempt0003/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m02",
+      "launch_hash": "956b3213d5e59abb2a9382616669d182988237067c30e6fe6b055f1fd2ccc291",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m02/attempt0003",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b036-73593e242681aed1",
+        "online_correction_v4-C6-b009-a7c8c64a22df1ea2",
+        "online_correction_v4-C6-b005-870d99325c97d7b4",
+        "online_correction_v4-C6-b013-70913d1a4590f796",
+        "online_correction_v4-C6-b057-be9be5dc96547a33",
+        "online_correction_v4-C6-b053-3bb037f403a0b120",
+        "online_correction_v4-C6-b025-f0543bf9f933624e",
+        "online_correction_v4-C6-b007-1c18f47a5f8a6149",
+        "online_correction_v4-C6-b031-8b3cc66edbe4217e",
+        "online_correction_v4-C6-b059-63a3db0d652ca454",
+        "online_correction_v4-C6-b009-e03cc4fcf1d1a148",
+        "online_correction_v4-C6-b057-13dcdf261efd1c0f"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m02-attempt0003-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0003",
+              "v4-config-sha": "197a31c2d7deb7a1cc462bbbba6e8ea6",
+              "v4-lane-id": "c6m02"
+            },
+            "name": "v4-c6m02-attempt0003-197a31c2d7-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0003",
+              "v4-config-sha": "197a31c2d7deb7a1cc462bbbba6e8ea6",
+              "v4-lane-id": "c6m02",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m02-attempt0003-197a31c2d7-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0003",
+              "v4-config-sha": "197a31c2d7deb7a1cc462bbbba6e8ea6",
+              "v4-lane-id": "c6m02",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m02-attempt0003-197a31c2d7-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0003",
+              "v4-config-sha": "197a31c2d7deb7a1cc462bbbba6e8ea6",
+              "v4-lane-id": "c6m02",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m02-attempt0003-197a31c2d7-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0004",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m03-attempt0004-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m03/attempt0004/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m03",
+      "launch_hash": "5fa09c60cbcee03be6eb7155d9d8c46d7c498b6e15aec3527a0e86f526419d7e",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m03/attempt0004",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b026-5c12941ad215456e",
+        "online_correction_v4-C6-b029-f0cd1348fb8f2b09",
+        "online_correction_v4-C6-b046-036c0d92ad1277b0",
+        "online_correction_v4-C6-b039-bfca049fd289103b",
+        "online_correction_v4-C6-b008-ca682b464bed1451",
+        "online_correction_v4-C6-b005-1f1901e947ea50e3",
+        "online_correction_v4-C6-b047-0496f44aa0696387",
+        "online_correction_v4-C6-b028-62600c0f308eaacb",
+        "online_correction_v4-C6-b059-a6f3bdf0c8e68326",
+        "online_correction_v4-C6-b049-d3b18732d21fae69",
+        "online_correction_v4-C6-b045-2d8054001c2a610b",
+        "online_correction_v4-C6-b063-19eaa15eb535f80d"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m03-attempt0004-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0004",
+              "v4-config-sha": "9a9308d3fcd4c6bbb205d799d08c9547",
+              "v4-lane-id": "c6m03"
+            },
+            "name": "v4-c6m03-attempt0004-9a9308d3fc-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0004",
+              "v4-config-sha": "9a9308d3fcd4c6bbb205d799d08c9547",
+              "v4-lane-id": "c6m03",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m03-attempt0004-9a9308d3fc-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0004",
+              "v4-config-sha": "9a9308d3fcd4c6bbb205d799d08c9547",
+              "v4-lane-id": "c6m03",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m03-attempt0004-9a9308d3fc-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0004",
+              "v4-config-sha": "9a9308d3fcd4c6bbb205d799d08c9547",
+              "v4-lane-id": "c6m03",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m03-attempt0004-9a9308d3fc-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0005",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m04-attempt0005-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m04/attempt0005/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m04",
+      "launch_hash": "86c71aa5bc4a3ab01f265dc73fdaf9e300b472b32b7b37257bde51abd09c45ec",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m04/attempt0005",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b019-3d98ed35a7dc5ec5",
+        "online_correction_v4-C6-b029-1116f5b3c1e94206",
+        "online_correction_v4-C6-b009-3df2eb4116e17740",
+        "online_correction_v4-C6-b054-bfd1b5fa548eda57",
+        "online_correction_v4-C6-b010-ab382ae76f7468b3",
+        "online_correction_v4-C6-b047-a68685073d753f16",
+        "online_correction_v4-C6-b016-6c6a7f412eb51d06",
+        "online_correction_v4-C6-b045-74e2bb93dbf5026c",
+        "online_correction_v4-C6-b038-84b49f2837a4c9f3",
+        "online_correction_v4-C6-b048-04bbe385de45bd4d",
+        "online_correction_v4-C6-b019-e3a79c659219ac3a",
+        "online_correction_v4-C6-b051-bd9cd1aaa5b3b640"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m04-attempt0005-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0005",
+              "v4-config-sha": "22c681b954b8be7926337673bdf1279b",
+              "v4-lane-id": "c6m04"
+            },
+            "name": "v4-c6m04-attempt0005-22c681b954-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0005",
+              "v4-config-sha": "22c681b954b8be7926337673bdf1279b",
+              "v4-lane-id": "c6m04",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m04-attempt0005-22c681b954-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0005",
+              "v4-config-sha": "22c681b954b8be7926337673bdf1279b",
+              "v4-lane-id": "c6m04",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m04-attempt0005-22c681b954-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0005",
+              "v4-config-sha": "22c681b954b8be7926337673bdf1279b",
+              "v4-lane-id": "c6m04",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m04-attempt0005-22c681b954-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0006",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m05-attempt0006-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m05/attempt0006/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m05",
+      "launch_hash": "1f32756ab1ef901c96a0f98d62828f6e3c7d028121246b1b7e8fba666f8a8597",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m05/attempt0006",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b027-7fe3aaae0ff5b489",
+        "online_correction_v4-C6-b042-75ae4fb6f2bcf30a",
+        "online_correction_v4-C6-b006-dd156b9515218d05",
+        "online_correction_v4-C6-b056-46baf2ab7404454c",
+        "online_correction_v4-C6-b020-8a1d65af6e8033b1",
+        "online_correction_v4-C6-b053-45441b1ed0ac4172",
+        "online_correction_v4-C6-b042-1e06db169a24a329",
+        "online_correction_v4-C6-b024-be8b5df3146857cb",
+        "online_correction_v4-C6-b016-79b9066a18e7b24a",
+        "online_correction_v4-C6-b002-510e590d7c0728f1",
+        "online_correction_v4-C6-b054-0076ce679c046e1b",
+        "online_correction_v4-C6-b028-403cd9b33b0a8dc4"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m05-attempt0006-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0006",
+              "v4-config-sha": "433e28e52d5527843b5cbae7443b50df",
+              "v4-lane-id": "c6m05"
+            },
+            "name": "v4-c6m05-attempt0006-433e28e52d-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0006",
+              "v4-config-sha": "433e28e52d5527843b5cbae7443b50df",
+              "v4-lane-id": "c6m05",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m05-attempt0006-433e28e52d-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0006",
+              "v4-config-sha": "433e28e52d5527843b5cbae7443b50df",
+              "v4-lane-id": "c6m05",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m05-attempt0006-433e28e52d-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0006",
+              "v4-config-sha": "433e28e52d5527843b5cbae7443b50df",
+              "v4-lane-id": "c6m05",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m05-attempt0006-433e28e52d-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0007",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m06-attempt0007-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m06/attempt0007/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m06",
+      "launch_hash": "2c1846df292e0a4e34e27051fc3badcb3c0006afacad1faf1fde345ea4b498c9",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m06/attempt0007",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b007-816b5acdd704d546",
+        "online_correction_v4-C6-b046-88232c324ea2b10a",
+        "online_correction_v4-C6-b029-c1dd79cfcc2835e2",
+        "online_correction_v4-C6-b017-d7b2992e3651aab3",
+        "online_correction_v4-C6-b058-2389091b7027ee1a",
+        "online_correction_v4-C6-b009-296cf00c4e7dde6e",
+        "online_correction_v4-C6-b061-7a3027e77ac4cdf1",
+        "online_correction_v4-C6-b055-9574b49a2f8d8ecf",
+        "online_correction_v4-C6-b035-d738958c16d21d44",
+        "online_correction_v4-C6-b030-72efbd9de63414ac",
+        "online_correction_v4-C6-b056-9f32c6536abbe2ec",
+        "online_correction_v4-C6-b043-ff3c48279a4f30d1"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m06-attempt0007-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0007",
+              "v4-config-sha": "827e93284d8ecbd52302b8748a2b8384",
+              "v4-lane-id": "c6m06"
+            },
+            "name": "v4-c6m06-attempt0007-827e93284d-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0007",
+              "v4-config-sha": "827e93284d8ecbd52302b8748a2b8384",
+              "v4-lane-id": "c6m06",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m06-attempt0007-827e93284d-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0007",
+              "v4-config-sha": "827e93284d8ecbd52302b8748a2b8384",
+              "v4-lane-id": "c6m06",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m06-attempt0007-827e93284d-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0007",
+              "v4-config-sha": "827e93284d8ecbd52302b8748a2b8384",
+              "v4-lane-id": "c6m06",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m06-attempt0007-827e93284d-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0008",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m07-attempt0008-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m07/attempt0008/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m07",
+      "launch_hash": "516a77f9289796432aaf4b5c689c9cb546fe22065e33068adb3c87a372223afd",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m07/attempt0008",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b057-6f42f23e42a682f6",
+        "online_correction_v4-C6-b008-c8b6dbe657465210",
+        "online_correction_v4-C6-b018-71e79d04f9074efc",
+        "online_correction_v4-C6-b033-24a0a0ca3ae5acbd",
+        "online_correction_v4-C6-b054-bf6d1b552c53f989",
+        "online_correction_v4-C6-b004-65f8174fbf8d9280",
+        "online_correction_v4-C6-b006-cb1b7c645e2ec1cd",
+        "online_correction_v4-C6-b012-3273900b837bf07b",
+        "online_correction_v4-C6-b030-5817cb2b60046eb6",
+        "online_correction_v4-C6-b032-74fde41f4ea0ea95",
+        "online_correction_v4-C6-b058-578451384a20cb9b",
+        "online_correction_v4-C6-b025-a526492a2c59cfd9"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m07-attempt0008-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0008",
+              "v4-config-sha": "6d83c7fb7b5305f01e4a7754df5f3048",
+              "v4-lane-id": "c6m07"
+            },
+            "name": "v4-c6m07-attempt0008-6d83c7fb7b-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0008",
+              "v4-config-sha": "6d83c7fb7b5305f01e4a7754df5f3048",
+              "v4-lane-id": "c6m07",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m07-attempt0008-6d83c7fb7b-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0008",
+              "v4-config-sha": "6d83c7fb7b5305f01e4a7754df5f3048",
+              "v4-lane-id": "c6m07",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m07-attempt0008-6d83c7fb7b-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0008",
+              "v4-config-sha": "6d83c7fb7b5305f01e4a7754df5f3048",
+              "v4-lane-id": "c6m07",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m07-attempt0008-6d83c7fb7b-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0009",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m08-attempt0009-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m08/attempt0009/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m08",
+      "launch_hash": "287d4fd1cc80f137482e37310b0615d74ebbf11901530d146076e0c8ee74fd6c",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m08/attempt0009",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b051-fd95c875c3786452",
+        "online_correction_v4-C6-b006-e98385a047b99eb8",
+        "online_correction_v4-C6-b046-38db4f7db6e3b793",
+        "online_correction_v4-C6-b013-e8e5568055daf389",
+        "online_correction_v4-C6-b043-6a176ddea77b2ed3",
+        "online_correction_v4-C6-b042-3fc4b2bbf1c7d405",
+        "online_correction_v4-C6-b060-986d0030c91b61d6",
+        "online_correction_v4-C6-b021-dc85b2f354aa22bb",
+        "online_correction_v4-C6-b032-8b50c280cbda6e2e",
+        "online_correction_v4-C6-b023-3f9b90cb431d22bd",
+        "online_correction_v4-C6-b061-2035c9fe71547ec2",
+        "online_correction_v4-C6-b020-0f8e00718d2f5937"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m08-attempt0009-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0009",
+              "v4-config-sha": "13426e5eef7bac393422c5b84cafd5d6",
+              "v4-lane-id": "c6m08"
+            },
+            "name": "v4-c6m08-attempt0009-13426e5eef-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0009",
+              "v4-config-sha": "13426e5eef7bac393422c5b84cafd5d6",
+              "v4-lane-id": "c6m08",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m08-attempt0009-13426e5eef-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0009",
+              "v4-config-sha": "13426e5eef7bac393422c5b84cafd5d6",
+              "v4-lane-id": "c6m08",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m08-attempt0009-13426e5eef-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0009",
+              "v4-config-sha": "13426e5eef7bac393422c5b84cafd5d6",
+              "v4-lane-id": "c6m08",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m08-attempt0009-13426e5eef-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0010",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m09-attempt0010-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m09/attempt0010/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m09",
+      "launch_hash": "d50d9a49aa6811fff1cf92f1781a43a9a10893d096863dcac76026e85f7b8333",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m09/attempt0010",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b027-37a453d03ff30f3a",
+        "online_correction_v4-C6-b048-40cc0e7731dcbd16",
+        "online_correction_v4-C6-b029-9c6ac4bcc2432c50",
+        "online_correction_v4-C6-b025-7fac51427f2a267f",
+        "online_correction_v4-C6-b004-d04ab9678e994935",
+        "online_correction_v4-C6-b012-1cae6e06cd05f4a7",
+        "online_correction_v4-C6-b063-472378626508ed71",
+        "online_correction_v4-C6-b018-3d180a2c2a7891f3",
+        "online_correction_v4-C6-b039-39953f10f1f9e430",
+        "online_correction_v4-C6-b022-d41f4696aae0df4c",
+        "online_correction_v4-C6-b049-44af1ffa96a73b4c",
+        "online_correction_v4-C6-b062-c1c47d2dcf3c5a84"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m09-attempt0010-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0010",
+              "v4-config-sha": "518cd7c3f24fdb151eb90edc8b68854c",
+              "v4-lane-id": "c6m09"
+            },
+            "name": "v4-c6m09-attempt0010-518cd7c3f2-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0010",
+              "v4-config-sha": "518cd7c3f24fdb151eb90edc8b68854c",
+              "v4-lane-id": "c6m09",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m09-attempt0010-518cd7c3f2-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0010",
+              "v4-config-sha": "518cd7c3f24fdb151eb90edc8b68854c",
+              "v4-lane-id": "c6m09",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m09-attempt0010-518cd7c3f2-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0010",
+              "v4-config-sha": "518cd7c3f24fdb151eb90edc8b68854c",
+              "v4-lane-id": "c6m09",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m09-attempt0010-518cd7c3f2-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0011",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m10-attempt0011-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m10/attempt0011/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m10",
+      "launch_hash": "49b6f58e722a12cad40c1d721306508f378c6a8ef1c06be692d51fede8d28ae1",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m10/attempt0011",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b020-f8b8b3389af7d4f4",
+        "online_correction_v4-C6-b059-e32a1ca20660c46a",
+        "online_correction_v4-C6-b025-e2d472bccea7c799",
+        "online_correction_v4-C6-b015-70356de8c791943a",
+        "online_correction_v4-C6-b029-948e9eafc0204128",
+        "online_correction_v4-C6-b003-67c1ed66cea209da",
+        "online_correction_v4-C6-b044-d1899a5edd208603",
+        "online_correction_v4-C6-b036-74c4c536746bcd91",
+        "online_correction_v4-C6-b000-e50de7857279b0b3",
+        "online_correction_v4-C6-b014-e68cf9bc428d2168",
+        "online_correction_v4-C6-b036-d231eb1566fcaa95",
+        "online_correction_v4-C6-b050-34d85a3533e0ee45"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m10-attempt0011-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0011",
+              "v4-config-sha": "8de0e8b9bd5cc8593831ed7063cd3d2f",
+              "v4-lane-id": "c6m10"
+            },
+            "name": "v4-c6m10-attempt0011-8de0e8b9bd-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0011",
+              "v4-config-sha": "8de0e8b9bd5cc8593831ed7063cd3d2f",
+              "v4-lane-id": "c6m10",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m10-attempt0011-8de0e8b9bd-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0011",
+              "v4-config-sha": "8de0e8b9bd5cc8593831ed7063cd3d2f",
+              "v4-lane-id": "c6m10",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m10-attempt0011-8de0e8b9bd-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0011",
+              "v4-config-sha": "8de0e8b9bd5cc8593831ed7063cd3d2f",
+              "v4-lane-id": "c6m10",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m10-attempt0011-8de0e8b9bd-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0012",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m11-attempt0012-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m11/attempt0012/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m11",
+      "launch_hash": "b796f61d8dd5668029f3b38960a6917cec65a9e6955d7c0f56361c474ddf4ab8",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m11/attempt0012",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b040-985c48d9029c5d46",
+        "online_correction_v4-C6-b019-7b5da5394d61600a",
+        "online_correction_v4-C6-b038-3a17eeef395d97fa",
+        "online_correction_v4-C6-b026-a0af7f2a815681e3",
+        "online_correction_v4-C6-b035-d7852ee7e93993eb",
+        "online_correction_v4-C6-b040-061066e4fc218ea3",
+        "online_correction_v4-C6-b034-abfce426a691a36b",
+        "online_correction_v4-C6-b031-94282bfdbc79d9c0",
+        "online_correction_v4-C6-b056-d883b532ce6b2ceb",
+        "online_correction_v4-C6-b001-139c9ff724dec4c2",
+        "online_correction_v4-C6-b043-464daacb3ad70e93",
+        "online_correction_v4-C6-b024-91c7c205a12c6b54"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m11-attempt0012-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0012",
+              "v4-config-sha": "af15daa19dc9d4722e795c6c1e703a87",
+              "v4-lane-id": "c6m11"
+            },
+            "name": "v4-c6m11-attempt0012-af15daa19d-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0012",
+              "v4-config-sha": "af15daa19dc9d4722e795c6c1e703a87",
+              "v4-lane-id": "c6m11",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m11-attempt0012-af15daa19d-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0012",
+              "v4-config-sha": "af15daa19dc9d4722e795c6c1e703a87",
+              "v4-lane-id": "c6m11",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m11-attempt0012-af15daa19d-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0012",
+              "v4-config-sha": "af15daa19dc9d4722e795c6c1e703a87",
+              "v4-lane-id": "c6m11",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m11-attempt0012-af15daa19d-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0013",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m12-attempt0013-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m12/attempt0013/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m12",
+      "launch_hash": "1df547ffb9fb5452c77785a6aff9a0aaec6c864ec9296873130a6368aba179ef",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m12/attempt0013",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b031-32e01b6eb328b62d",
+        "online_correction_v4-C6-b014-366041bf8cb4a2e7",
+        "online_correction_v4-C6-b015-a125cd673e79afa0",
+        "online_correction_v4-C6-b022-547ca5c6584f3202",
+        "online_correction_v4-C6-b003-12c52ea9ac231514",
+        "online_correction_v4-C6-b051-080d3cc178d49733",
+        "online_correction_v4-C6-b055-7034ff113323ec9e",
+        "online_correction_v4-C6-b008-06bb21e8a30ee966",
+        "online_correction_v4-C6-b003-0faa892936271268",
+        "online_correction_v4-C6-b016-9428b6f4d355ec27",
+        "online_correction_v4-C6-b013-2363cbf545640451",
+        "online_correction_v4-C6-b058-4407506ca7bf2641"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m12-attempt0013-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0013",
+              "v4-config-sha": "7301e65e1e459dadbece3248bdeb8fa7",
+              "v4-lane-id": "c6m12"
+            },
+            "name": "v4-c6m12-attempt0013-7301e65e1e-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0013",
+              "v4-config-sha": "7301e65e1e459dadbece3248bdeb8fa7",
+              "v4-lane-id": "c6m12",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m12-attempt0013-7301e65e1e-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0013",
+              "v4-config-sha": "7301e65e1e459dadbece3248bdeb8fa7",
+              "v4-lane-id": "c6m12",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m12-attempt0013-7301e65e1e-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0013",
+              "v4-config-sha": "7301e65e1e459dadbece3248bdeb8fa7",
+              "v4-lane-id": "c6m12",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m12-attempt0013-7301e65e1e-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0014",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m13-attempt0014-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m13/attempt0014/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m13",
+      "launch_hash": "b9df1109a37aa0740b605fb54d2a5298767a8bc039ce5a8ac465c14a2bdb3dbb",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m13/attempt0014",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b023-cfd25db0c0a895fd",
+        "online_correction_v4-C6-b014-31c52668f554a026",
+        "online_correction_v4-C6-b054-57c101f062a7128f",
+        "online_correction_v4-C6-b002-e2849f0a77f6f493",
+        "online_correction_v4-C6-b041-fecba0b0d7a808c0",
+        "online_correction_v4-C6-b038-aba4a8affacef82e",
+        "online_correction_v4-C6-b039-509a015ef90bd737",
+        "online_correction_v4-C6-b015-414c320359af9578",
+        "online_correction_v4-C6-b041-e497591d59fa13af",
+        "online_correction_v4-C6-b011-c2f998816be75a8b",
+        "online_correction_v4-C6-b020-5db556c1f65841fb",
+        "online_correction_v4-C6-b057-eaccb1aaf1e21617"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m13-attempt0014-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0014",
+              "v4-config-sha": "e2a47540bbbddf2d1e6123e879ce64e0",
+              "v4-lane-id": "c6m13"
+            },
+            "name": "v4-c6m13-attempt0014-e2a47540bb-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0014",
+              "v4-config-sha": "e2a47540bbbddf2d1e6123e879ce64e0",
+              "v4-lane-id": "c6m13",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m13-attempt0014-e2a47540bb-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0014",
+              "v4-config-sha": "e2a47540bbbddf2d1e6123e879ce64e0",
+              "v4-lane-id": "c6m13",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m13-attempt0014-e2a47540bb-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0014",
+              "v4-config-sha": "e2a47540bbbddf2d1e6123e879ce64e0",
+              "v4-lane-id": "c6m13",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m13-attempt0014-e2a47540bb-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0015",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m14-attempt0015-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m14/attempt0015/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m14",
+      "launch_hash": "d29a70d9a7aa360cf97bb72a04f3b550a90af86ab9da00272b4c3a3205f456d3",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m14/attempt0015",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b004-152c40b68c322dd5",
+        "online_correction_v4-C6-b037-f3be81553f692d11",
+        "online_correction_v4-C6-b028-fcf334767e2898c6",
+        "online_correction_v4-C6-b026-f7e82aaf792cc697",
+        "online_correction_v4-C6-b006-60763e0e6879e414",
+        "online_correction_v4-C6-b014-404604e1acdfbff4",
+        "online_correction_v4-C6-b031-be4d5683a8ba7d5f",
+        "online_correction_v4-C6-b000-3203ea77ae86399b",
+        "online_correction_v4-C6-b010-a1f0e1c599508a51",
+        "online_correction_v4-C6-b029-4e47bd5fa3ccca82",
+        "online_correction_v4-C6-b062-d73743170e07f21c",
+        "online_correction_v4-C6-b026-695ac42e6f441805"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m14-attempt0015-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0015",
+              "v4-config-sha": "01633d67fca097280399a6b2014c01fa",
+              "v4-lane-id": "c6m14"
+            },
+            "name": "v4-c6m14-attempt0015-01633d67fc-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0015",
+              "v4-config-sha": "01633d67fca097280399a6b2014c01fa",
+              "v4-lane-id": "c6m14",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m14-attempt0015-01633d67fc-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0015",
+              "v4-config-sha": "01633d67fca097280399a6b2014c01fa",
+              "v4-lane-id": "c6m14",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m14-attempt0015-01633d67fc-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0015",
+              "v4-config-sha": "01633d67fca097280399a6b2014c01fa",
+              "v4-lane-id": "c6m14",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m14-attempt0015-01633d67fc-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0016",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m15-attempt0016-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m15/attempt0016/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m15",
+      "launch_hash": "fe76fd7b8f3b613e1b960c5d9c59f8ec43c1518ac989a4740bdeaa4817894d6b",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m15/attempt0016",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b030-48f6b3191f7a7292",
+        "online_correction_v4-C6-b015-ad4b9ee047f3f10a",
+        "online_correction_v4-C6-b021-bbbca3335004b789",
+        "online_correction_v4-C6-b060-206b5448f8a82662",
+        "online_correction_v4-C6-b063-3fb290eff9afd2da",
+        "online_correction_v4-C6-b016-bfd4a2d14792f60d",
+        "online_correction_v4-C6-b062-1d3becf26ad1b3e7",
+        "online_correction_v4-C6-b004-a3985b9fe7a5c6b1",
+        "online_correction_v4-C6-b031-4dfe504b778520ac",
+        "online_correction_v4-C6-b001-1cb75350b11ac3f3",
+        "online_correction_v4-C6-b036-831cefcfa52667a3",
+        "online_correction_v4-C6-b033-56df0336c70de94d"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m15-attempt0016-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0016",
+              "v4-config-sha": "7ce7a1b1bbdd60cf366b482aa921fd7b",
+              "v4-lane-id": "c6m15"
+            },
+            "name": "v4-c6m15-attempt0016-7ce7a1b1bb-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0016",
+              "v4-config-sha": "7ce7a1b1bbdd60cf366b482aa921fd7b",
+              "v4-lane-id": "c6m15",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m15-attempt0016-7ce7a1b1bb-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0016",
+              "v4-config-sha": "7ce7a1b1bbdd60cf366b482aa921fd7b",
+              "v4-lane-id": "c6m15",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m15-attempt0016-7ce7a1b1bb-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0016",
+              "v4-config-sha": "7ce7a1b1bbdd60cf366b482aa921fd7b",
+              "v4-lane-id": "c6m15",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m15-attempt0016-7ce7a1b1bb-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0017",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m16-attempt0017-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m16/attempt0017/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m16",
+      "launch_hash": "4375628a2456dd670d848fa3b13855781dd188a0ff13cd50938314448cce7bfa",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m16/attempt0017",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b003-b6e15415b55edb1e",
+        "online_correction_v4-C6-b030-efefa5623912e61f",
+        "online_correction_v4-C6-b023-63d252107dfd55f9",
+        "online_correction_v4-C6-b052-18c44cb0eb6c335c",
+        "online_correction_v4-C6-b053-901ca08f3be0e749",
+        "online_correction_v4-C6-b006-6b3ec549701d0e2e",
+        "online_correction_v4-C6-b059-cb907ec98598967b",
+        "online_correction_v4-C6-b019-56c8ce9cd270710b",
+        "online_correction_v4-C6-b002-6d0a7cfbd4a09004",
+        "online_correction_v4-C6-b023-d83fc827fb92e3d2",
+        "online_correction_v4-C6-b044-d08af359baf1650d",
+        "online_correction_v4-C6-b003-2a85312652036738"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m16-attempt0017-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0017",
+              "v4-config-sha": "3fddb4706f53ef07b2f619f8fd012d2a",
+              "v4-lane-id": "c6m16"
+            },
+            "name": "v4-c6m16-attempt0017-3fddb4706f-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0017",
+              "v4-config-sha": "3fddb4706f53ef07b2f619f8fd012d2a",
+              "v4-lane-id": "c6m16",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m16-attempt0017-3fddb4706f-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0017",
+              "v4-config-sha": "3fddb4706f53ef07b2f619f8fd012d2a",
+              "v4-lane-id": "c6m16",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m16-attempt0017-3fddb4706f-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0017",
+              "v4-config-sha": "3fddb4706f53ef07b2f619f8fd012d2a",
+              "v4-lane-id": "c6m16",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m16-attempt0017-3fddb4706f-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0018",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m17-attempt0018-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m17/attempt0018/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m17",
+      "launch_hash": "bbcce13ea64608c5e27ad813215547944c4d4ff4a98fcb5e09826e50279b90b6",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m17/attempt0018",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b002-4865c0a5876e8c43",
+        "online_correction_v4-C6-b000-fb4ccc7961f042b4",
+        "online_correction_v4-C6-b009-ec03290e58b82e6b",
+        "online_correction_v4-C6-b044-961a6fdec8d38f72",
+        "online_correction_v4-C6-b056-abe60a87c016c4a2",
+        "online_correction_v4-C6-b018-7e55633ff976f925",
+        "online_correction_v4-C6-b048-1bdfe2457f8e271a",
+        "online_correction_v4-C6-b000-53f527666c035188",
+        "online_correction_v4-C6-b052-9d958da59ae237b8",
+        "online_correction_v4-C6-b021-16d9c820e592295a",
+        "online_correction_v4-C6-b011-56db38238736ee24",
+        "online_correction_v4-C6-b042-3064f84b0833078f"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m17-attempt0018-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0018",
+              "v4-config-sha": "5e970bc7bba3e36e9eea587f85be912f",
+              "v4-lane-id": "c6m17"
+            },
+            "name": "v4-c6m17-attempt0018-5e970bc7bb-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0018",
+              "v4-config-sha": "5e970bc7bba3e36e9eea587f85be912f",
+              "v4-lane-id": "c6m17",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m17-attempt0018-5e970bc7bb-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0018",
+              "v4-config-sha": "5e970bc7bba3e36e9eea587f85be912f",
+              "v4-lane-id": "c6m17",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m17-attempt0018-5e970bc7bb-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0018",
+              "v4-config-sha": "5e970bc7bba3e36e9eea587f85be912f",
+              "v4-lane-id": "c6m17",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m17-attempt0018-5e970bc7bb-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0019",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m18-attempt0019-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m18/attempt0019/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m18",
+      "launch_hash": "612d142bcb3c4969b776027e8974003908a32b6fa966971a05712b8be3db2553",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m18/attempt0019",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b054-1c8f150ea645a805",
+        "online_correction_v4-C6-b010-100689b1ce03fb45",
+        "online_correction_v4-C6-b024-a7c44a1e73392a47",
+        "online_correction_v4-C6-b033-f4def3e6204c2d9c",
+        "online_correction_v4-C6-b051-f8a448f607fe73f7",
+        "online_correction_v4-C6-b040-e5750de5846316e0",
+        "online_correction_v4-C6-b051-8b1b6864c70ee4c0",
+        "online_correction_v4-C6-b022-9d59e12af4510629",
+        "online_correction_v4-C6-b044-a289901ee6be0a58",
+        "online_correction_v4-C6-b050-6a186f8d730db25f",
+        "online_correction_v4-C6-b034-d20011ced763275f",
+        "online_correction_v4-C6-b008-0d8bd80aa3449589"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m18-attempt0019-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0019",
+              "v4-config-sha": "a83e783b385c10273acbcb18b4dd027d",
+              "v4-lane-id": "c6m18"
+            },
+            "name": "v4-c6m18-attempt0019-a83e783b38-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0019",
+              "v4-config-sha": "a83e783b385c10273acbcb18b4dd027d",
+              "v4-lane-id": "c6m18",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m18-attempt0019-a83e783b38-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0019",
+              "v4-config-sha": "a83e783b385c10273acbcb18b4dd027d",
+              "v4-lane-id": "c6m18",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m18-attempt0019-a83e783b38-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0019",
+              "v4-config-sha": "a83e783b385c10273acbcb18b4dd027d",
+              "v4-lane-id": "c6m18",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m18-attempt0019-a83e783b38-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0020",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m19-attempt0020-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m19/attempt0020/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m19",
+      "launch_hash": "9c9c67940df2c4e53f0ee8748048ad98950f7d7043b083dbd340c65b83154cdf",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m19/attempt0020",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b048-edb66371e19c90cf",
+        "online_correction_v4-C6-b060-e0100d013c38a7b8",
+        "online_correction_v4-C6-b047-cd57f263ca9dcf67",
+        "online_correction_v4-C6-b021-037bdbd623e3e05a",
+        "online_correction_v4-C6-b037-6cbd7c7f7783128e",
+        "online_correction_v4-C6-b019-c05383ce8b9328e3",
+        "online_correction_v4-C6-b049-e7bef9abd22256ba",
+        "online_correction_v4-C6-b035-72fb681fe2a3c9f3",
+        "online_correction_v4-C6-b048-6d6f051db547613d",
+        "online_correction_v4-C6-b016-5ebba7cc744a7972",
+        "online_correction_v4-C6-b025-35eea897935f8119",
+        "online_correction_v4-C6-b050-266a101181f5777a"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m19-attempt0020-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0020",
+              "v4-config-sha": "7db56ccf40ed5d96355ca968dcd8dbc6",
+              "v4-lane-id": "c6m19"
+            },
+            "name": "v4-c6m19-attempt0020-7db56ccf40-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0020",
+              "v4-config-sha": "7db56ccf40ed5d96355ca968dcd8dbc6",
+              "v4-lane-id": "c6m19",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m19-attempt0020-7db56ccf40-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0020",
+              "v4-config-sha": "7db56ccf40ed5d96355ca968dcd8dbc6",
+              "v4-lane-id": "c6m19",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m19-attempt0020-7db56ccf40-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0020",
+              "v4-config-sha": "7db56ccf40ed5d96355ca968dcd8dbc6",
+              "v4-lane-id": "c6m19",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m19-attempt0020-7db56ccf40-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0021",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m20-attempt0021-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m20/attempt0021/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m20",
+      "launch_hash": "32645e80d8a00852c32cf12291c31b2d766b6ea62a6ef56c6fd5e08568ed650d",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m20/attempt0021",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b041-3d6ba05e1ed2e2e5",
+        "online_correction_v4-C6-b044-da7b2087d6149001",
+        "online_correction_v4-C6-b010-5fea22d9d266ae93",
+        "online_correction_v4-C6-b001-9cfae1b5c5643fba",
+        "online_correction_v4-C6-b044-a1cfe4e65a6a2402",
+        "online_correction_v4-C6-b012-77821fb95d042c47",
+        "online_correction_v4-C6-b045-f98e68ec7ac22843",
+        "online_correction_v4-C6-b005-4bc9298ebe04fe72",
+        "online_correction_v4-C6-b056-538fdabaa3097837",
+        "online_correction_v4-C6-b032-3fddc5d666cfb77a",
+        "online_correction_v4-C6-b019-6696d02380a870d5",
+        "online_correction_v4-C6-b017-d45f6d02e818f3f8"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m20-attempt0021-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0021",
+              "v4-config-sha": "d8aa475e5d694bdbac61d3452d569396",
+              "v4-lane-id": "c6m20"
+            },
+            "name": "v4-c6m20-attempt0021-d8aa475e5d-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0021",
+              "v4-config-sha": "d8aa475e5d694bdbac61d3452d569396",
+              "v4-lane-id": "c6m20",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m20-attempt0021-d8aa475e5d-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0021",
+              "v4-config-sha": "d8aa475e5d694bdbac61d3452d569396",
+              "v4-lane-id": "c6m20",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m20-attempt0021-d8aa475e5d-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0021",
+              "v4-config-sha": "d8aa475e5d694bdbac61d3452d569396",
+              "v4-lane-id": "c6m20",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m20-attempt0021-d8aa475e5d-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0022",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m21-attempt0022-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m21/attempt0022/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m21",
+      "launch_hash": "b71455dfe734a964770c7c49d5eba75b40a7f878684eb18efd1c370ef4da2d95",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m21/attempt0022",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b020-9927add8c3e19f61",
+        "online_correction_v4-C6-b045-90d8089c04c499d6",
+        "online_correction_v4-C6-b052-123eb8bfba65399c",
+        "online_correction_v4-C6-b011-34826119f06a9f98",
+        "online_correction_v4-C6-b042-2858fbdcd64fe3e0",
+        "online_correction_v4-C6-b041-a54efcb1f0d5cf62",
+        "online_correction_v4-C6-b007-c733992ddc581c79",
+        "online_correction_v4-C6-b060-cafa9a40f2764f8f",
+        "online_correction_v4-C6-b037-c82a85e0b35dcfc3",
+        "online_correction_v4-C6-b046-6db9334b830277bb",
+        "online_correction_v4-C6-b032-051b46f71efcbf78",
+        "online_correction_v4-C6-b011-81c735dd17c0f17b"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m21-attempt0022-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0022",
+              "v4-config-sha": "571fb1273f21a176c4acb596bb1bc8b7",
+              "v4-lane-id": "c6m21"
+            },
+            "name": "v4-c6m21-attempt0022-571fb1273f-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0022",
+              "v4-config-sha": "571fb1273f21a176c4acb596bb1bc8b7",
+              "v4-lane-id": "c6m21",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m21-attempt0022-571fb1273f-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0022",
+              "v4-config-sha": "571fb1273f21a176c4acb596bb1bc8b7",
+              "v4-lane-id": "c6m21",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m21-attempt0022-571fb1273f-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0022",
+              "v4-config-sha": "571fb1273f21a176c4acb596bb1bc8b7",
+              "v4-lane-id": "c6m21",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m21-attempt0022-571fb1273f-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0023",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m22-attempt0023-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m22/attempt0023/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m22",
+      "launch_hash": "b27a5e4aae6cbab0ba11ed2caaf1ccf0fc23d57f0f380354852b901741fdef68",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m22/attempt0023",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b039-b4449dd78a4234c8",
+        "online_correction_v4-C6-b008-aa6d4650117fb815",
+        "online_correction_v4-C6-b048-e2a8dd024c308233",
+        "online_correction_v4-C6-b034-05c1f65eacfcf4e0",
+        "online_correction_v4-C6-b002-f6347caf99e13d61",
+        "online_correction_v4-C6-b006-79df31c8a0a873f5",
+        "online_correction_v4-C6-b028-90655339c09c95ee",
+        "online_correction_v4-C6-b030-4f118a57b9ec6ff1",
+        "online_correction_v4-C6-b055-5f83bbb40b63f25a",
+        "online_correction_v4-C6-b047-f855df9d7c897d34",
+        "online_correction_v4-C6-b033-3cc23d1535c57a6a",
+        "online_correction_v4-C6-b028-216612a921aa1855"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m22-attempt0023-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0023",
+              "v4-config-sha": "369074b95142dd92e36791b58a781579",
+              "v4-lane-id": "c6m22"
+            },
+            "name": "v4-c6m22-attempt0023-369074b951-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0023",
+              "v4-config-sha": "369074b95142dd92e36791b58a781579",
+              "v4-lane-id": "c6m22",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m22-attempt0023-369074b951-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0023",
+              "v4-config-sha": "369074b95142dd92e36791b58a781579",
+              "v4-lane-id": "c6m22",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m22-attempt0023-369074b951-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0023",
+              "v4-config-sha": "369074b95142dd92e36791b58a781579",
+              "v4-lane-id": "c6m22",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m22-attempt0023-369074b951-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0024",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m23-attempt0024-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m23/attempt0024/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m23",
+      "launch_hash": "6695768ac6b6c4be071fb19df2d6ec7f4606aba304421afac7bee5d315d12988",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m23/attempt0024",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b049-aeda42d3f188a738",
+        "online_correction_v4-C6-b035-cbeca1ec8e7d7b00",
+        "online_correction_v4-C6-b022-34d89c690ee0481d",
+        "online_correction_v4-C6-b061-2316d54e9f097aec",
+        "online_correction_v4-C6-b058-18f498451c1d9f3c",
+        "online_correction_v4-C6-b024-86290610a8eb5f3c",
+        "online_correction_v4-C6-b060-5a18e0b8be785803",
+        "online_correction_v4-C6-b056-62ae4f983a107170",
+        "online_correction_v4-C6-b063-f05173af47593659",
+        "online_correction_v4-C6-b005-731d4fd6ad432ffc",
+        "online_correction_v4-C6-b022-fc70e5e7ece77c26",
+        "online_correction_v4-C6-b045-53ed10d6f87186fe"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m23-attempt0024-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0024",
+              "v4-config-sha": "0f1f86d97c1ccc51e145c56c50967761",
+              "v4-lane-id": "c6m23"
+            },
+            "name": "v4-c6m23-attempt0024-0f1f86d97c-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0024",
+              "v4-config-sha": "0f1f86d97c1ccc51e145c56c50967761",
+              "v4-lane-id": "c6m23",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m23-attempt0024-0f1f86d97c-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0024",
+              "v4-config-sha": "0f1f86d97c1ccc51e145c56c50967761",
+              "v4-lane-id": "c6m23",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m23-attempt0024-0f1f86d97c-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0024",
+              "v4-config-sha": "0f1f86d97c1ccc51e145c56c50967761",
+              "v4-lane-id": "c6m23",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m23-attempt0024-0f1f86d97c-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0025",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m24-attempt0025-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m24/attempt0025/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m24",
+      "launch_hash": "c275b47120de408c917ce9fa3502bc798bd41788f04751f20937230bf24862ff",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m24/attempt0025",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b043-15eb666b445fb944",
+        "online_correction_v4-C6-b058-0d890b0f1ae5431d",
+        "online_correction_v4-C6-b040-3da1f293d033a5e3",
+        "online_correction_v4-C6-b015-5276d5e6f91c5eb7",
+        "online_correction_v4-C6-b040-a51da5530bf1826b",
+        "online_correction_v4-C6-b026-d7e09521851897b8",
+        "online_correction_v4-C6-b039-7cdd9f5b9170f7fa",
+        "online_correction_v4-C6-b010-471ed07d7ddac063",
+        "online_correction_v4-C6-b060-11b8311456fc0084",
+        "online_correction_v4-C6-b042-f915d5564558f018",
+        "online_correction_v4-C6-b055-c8a7cd623e427cee",
+        "online_correction_v4-C6-b012-907178697cc2930f"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m24-attempt0025-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0025",
+              "v4-config-sha": "94beb2fc75f4020515cbaf925e2bbf6c",
+              "v4-lane-id": "c6m24"
+            },
+            "name": "v4-c6m24-attempt0025-94beb2fc75-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0025",
+              "v4-config-sha": "94beb2fc75f4020515cbaf925e2bbf6c",
+              "v4-lane-id": "c6m24",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m24-attempt0025-94beb2fc75-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0025",
+              "v4-config-sha": "94beb2fc75f4020515cbaf925e2bbf6c",
+              "v4-lane-id": "c6m24",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m24-attempt0025-94beb2fc75-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0025",
+              "v4-config-sha": "94beb2fc75f4020515cbaf925e2bbf6c",
+              "v4-lane-id": "c6m24",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m24-attempt0025-94beb2fc75-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0026",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m25-attempt0026-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m25/attempt0026/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m25",
+      "launch_hash": "2270357c119bb42161487c39cfb7742752eafae5cea608835182d0fec7df77ee",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m25/attempt0026",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b000-54c149fce92a6ada",
+        "online_correction_v4-C6-b007-51140b14a549dd19",
+        "online_correction_v4-C6-b061-099683b64ac9fb9d",
+        "online_correction_v4-C6-b023-99d65ffec8413f9b",
+        "online_correction_v4-C6-b040-06b69ee0b939ed1c",
+        "online_correction_v4-C6-b024-83a909748c33fc8e",
+        "online_correction_v4-C6-b021-6c4f88055a237b75",
+        "online_correction_v4-C6-b012-6efad2eb571303c3",
+        "online_correction_v4-C6-b038-9eaf469abd64ad1a",
+        "online_correction_v4-C6-b013-1f566bf31e7cdf36",
+        "online_correction_v4-C6-b027-fbfe61939a4fbabb",
+        "online_correction_v4-C6-b050-2ea32dffcbc64acd"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m25-attempt0026-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0026",
+              "v4-config-sha": "9dd239df3916a87187ef0cd84bca8094",
+              "v4-lane-id": "c6m25"
+            },
+            "name": "v4-c6m25-attempt0026-9dd239df39-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0026",
+              "v4-config-sha": "9dd239df3916a87187ef0cd84bca8094",
+              "v4-lane-id": "c6m25",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m25-attempt0026-9dd239df39-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0026",
+              "v4-config-sha": "9dd239df3916a87187ef0cd84bca8094",
+              "v4-lane-id": "c6m25",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m25-attempt0026-9dd239df39-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0026",
+              "v4-config-sha": "9dd239df3916a87187ef0cd84bca8094",
+              "v4-lane-id": "c6m25",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m25-attempt0026-9dd239df39-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0027",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m26-attempt0027-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m26/attempt0027/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m26",
+      "launch_hash": "5e155a9d00a44114d27bbc89d0ff2225499caa8858200f97614e0883deb3b7ea",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m26/attempt0027",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b033-f5c3bd62ed78e4f2",
+        "online_correction_v4-C6-b045-0a9f0d4d059437f7",
+        "online_correction_v4-C6-b050-889cdb5d6b7b680e",
+        "online_correction_v4-C6-b037-de440f8f5fe57943",
+        "online_correction_v4-C6-b010-24884943c0a521a6",
+        "online_correction_v4-C6-b057-24a7e5eff5b652e2",
+        "online_correction_v4-C6-b007-4cf055088abab79d",
+        "online_correction_v4-C6-b007-5c55b43a857b681b",
+        "online_correction_v4-C6-b012-869f066cffd75e0b",
+        "online_correction_v4-C6-b053-249be05cdd33b5f3",
+        "online_correction_v4-C6-b051-97016237fa210891",
+        "online_correction_v4-C6-b005-68d317ab61b74600"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m26-attempt0027-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0027",
+              "v4-config-sha": "376d6d8f7034d6a553890d2fe68e743f",
+              "v4-lane-id": "c6m26"
+            },
+            "name": "v4-c6m26-attempt0027-376d6d8f70-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0027",
+              "v4-config-sha": "376d6d8f7034d6a553890d2fe68e743f",
+              "v4-lane-id": "c6m26",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m26-attempt0027-376d6d8f70-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0027",
+              "v4-config-sha": "376d6d8f7034d6a553890d2fe68e743f",
+              "v4-lane-id": "c6m26",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m26-attempt0027-376d6d8f70-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0027",
+              "v4-config-sha": "376d6d8f7034d6a553890d2fe68e743f",
+              "v4-lane-id": "c6m26",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m26-attempt0027-376d6d8f70-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0028",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m27-attempt0028-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m27/attempt0028/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m27",
+      "launch_hash": "171b6106aa947a5dcb98dcd615ad5a82b217d808092b5b7d58fabd1b01e1c04c",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m27/attempt0028",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b035-eb3adbdfc1437a6f",
+        "online_correction_v4-C6-b049-2941697c437cbeca",
+        "online_correction_v4-C6-b014-971076903cd0c685",
+        "online_correction_v4-C6-b013-4b5b69cceadc1e92",
+        "online_correction_v4-C6-b022-b28080c74111d834",
+        "online_correction_v4-C6-b052-c2ded537ccb5425a",
+        "online_correction_v4-C6-b013-2f933db0e0072893",
+        "online_correction_v4-C6-b053-3da6b7727eaf7abf",
+        "online_correction_v4-C6-b055-0b35e1203b88f107",
+        "online_correction_v4-C6-b037-28699c4ea9600e47",
+        "online_correction_v4-C6-b014-41f88c65baf7a4c1",
+        "online_correction_v4-C6-b055-aaa5dd77227ceb36"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m27-attempt0028-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0028",
+              "v4-config-sha": "a4de6ba0152537f5f106ed2a209e6666",
+              "v4-lane-id": "c6m27"
+            },
+            "name": "v4-c6m27-attempt0028-a4de6ba015-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0028",
+              "v4-config-sha": "a4de6ba0152537f5f106ed2a209e6666",
+              "v4-lane-id": "c6m27",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m27-attempt0028-a4de6ba015-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0028",
+              "v4-config-sha": "a4de6ba0152537f5f106ed2a209e6666",
+              "v4-lane-id": "c6m27",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m27-attempt0028-a4de6ba015-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0028",
+              "v4-config-sha": "a4de6ba0152537f5f106ed2a209e6666",
+              "v4-lane-id": "c6m27",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m27-attempt0028-a4de6ba015-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0029",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m28-attempt0029-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m28/attempt0029/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m28",
+      "launch_hash": "0df3b5ce5cb39b35db5bc372540a3950b7b591fa8e9a2bf1693ede89a47857ac",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m28/attempt0029",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b009-a305d0e432e3d01b",
+        "online_correction_v4-C6-b018-b4b6fb3250e4c311",
+        "online_correction_v4-C6-b034-aa0cc6941cbe9097",
+        "online_correction_v4-C6-b059-33a2277485e33083",
+        "online_correction_v4-C6-b036-9afe2754bf5e98e5",
+        "online_correction_v4-C6-b004-4526b45b7647289e",
+        "online_correction_v4-C6-b036-5b7ae0113a9fd219",
+        "online_correction_v4-C6-b031-b702dfc8203b131a",
+        "online_correction_v4-C6-b063-e2cc047389ecaa49",
+        "online_correction_v4-C6-b027-6705f12d36f8f844",
+        "online_correction_v4-C6-b061-fe3701e447205dc4",
+        "online_correction_v4-C6-b039-ae557154c713ad6d"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m28-attempt0029-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0029",
+              "v4-config-sha": "5fc9e0a2e8f756994ccd0efe3c380e69",
+              "v4-lane-id": "c6m28"
+            },
+            "name": "v4-c6m28-attempt0029-5fc9e0a2e8-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0029",
+              "v4-config-sha": "5fc9e0a2e8f756994ccd0efe3c380e69",
+              "v4-lane-id": "c6m28",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m28-attempt0029-5fc9e0a2e8-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0029",
+              "v4-config-sha": "5fc9e0a2e8f756994ccd0efe3c380e69",
+              "v4-lane-id": "c6m28",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m28-attempt0029-5fc9e0a2e8-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0029",
+              "v4-config-sha": "5fc9e0a2e8f756994ccd0efe3c380e69",
+              "v4-lane-id": "c6m28",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m28-attempt0029-5fc9e0a2e8-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0030",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m29-attempt0030-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m29/attempt0030/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m29",
+      "launch_hash": "7da147cb3c5f19426ad885d5f9e27f9745744a14ca545b7abe467e44ad59113f",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m29/attempt0030",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b058-6fc3d76c92d8bda0",
+        "online_correction_v4-C6-b034-58e6fedd41b5c5bd",
+        "online_correction_v4-C6-b000-72a5270017ef3a70",
+        "online_correction_v4-C6-b062-e111ca349b10b577",
+        "online_correction_v4-C6-b021-c23dc0360e39034d",
+        "online_correction_v4-C6-b062-e1daacd479a9614e",
+        "online_correction_v4-C6-b061-7dea1c18de1fa991",
+        "online_correction_v4-C6-b001-5facc4f25173dea9",
+        "online_correction_v4-C6-b047-cf08de65664de42a",
+        "online_correction_v4-C6-b052-5bce32dc3a5f5d36",
+        "online_correction_v4-C6-b018-6f5c83d57d27ad90",
+        "online_correction_v4-C6-b047-001706dd4d922e80"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m29-attempt0030-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0030",
+              "v4-config-sha": "53f875d3c97f6f6e0766ba0fa4a77e6c",
+              "v4-lane-id": "c6m29"
+            },
+            "name": "v4-c6m29-attempt0030-53f875d3c9-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0030",
+              "v4-config-sha": "53f875d3c97f6f6e0766ba0fa4a77e6c",
+              "v4-lane-id": "c6m29",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m29-attempt0030-53f875d3c9-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0030",
+              "v4-config-sha": "53f875d3c97f6f6e0766ba0fa4a77e6c",
+              "v4-lane-id": "c6m29",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m29-attempt0030-53f875d3c9-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0030",
+              "v4-config-sha": "53f875d3c97f6f6e0766ba0fa4a77e6c",
+              "v4-lane-id": "c6m29",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m29-attempt0030-53f875d3c9-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0031",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m30-attempt0031-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m30/attempt0031/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m30",
+      "launch_hash": "1abebeb5ed4f5cbb08e484af04477d05f465f2c11b748e238526a37c639f2238",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m30/attempt0031",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b025-68398697955cf89e",
+        "online_correction_v4-C6-b011-9693855b8666b257",
+        "online_correction_v4-C6-b018-f9e37ad2c6d9bd0e",
+        "online_correction_v4-C6-b032-a126cf3de40ec604",
+        "online_correction_v4-C6-b011-02f3aa18712bacbf",
+        "online_correction_v4-C6-b015-b07ccb80bbecb01e",
+        "online_correction_v4-C6-b054-5c848523a129f785",
+        "online_correction_v4-C6-b050-a07c6b4877bc731c",
+        "online_correction_v4-C6-b026-e8770f6854431cef",
+        "online_correction_v4-C6-b017-04473e514f83f8e0",
+        "online_correction_v4-C6-b004-6fc0ac9c6409ef32",
+        "online_correction_v4-C6-b023-24e47b2229e9bbbd"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m30-attempt0031-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0031",
+              "v4-config-sha": "910d78acb066c7290ac5811d314f6a9d",
+              "v4-lane-id": "c6m30"
+            },
+            "name": "v4-c6m30-attempt0031-910d78acb0-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0031",
+              "v4-config-sha": "910d78acb066c7290ac5811d314f6a9d",
+              "v4-lane-id": "c6m30",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m30-attempt0031-910d78acb0-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0031",
+              "v4-config-sha": "910d78acb066c7290ac5811d314f6a9d",
+              "v4-lane-id": "c6m30",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m30-attempt0031-910d78acb0-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0031",
+              "v4-config-sha": "910d78acb066c7290ac5811d314f6a9d",
+              "v4-lane-id": "c6m30",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m30-attempt0031-910d78acb0-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "acquired_group_leases": [],
+      "attempt_id": "attempt0032",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908a/c6m31-attempt0032-a10040-policy_b200-simulator",
+      "create_status": "rendered",
+      "dispatch_manifest_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m31/attempt0032/lane_dispatch_manifest.json",
+      "group_ids": [
+        "cosmos3_nano_droid:containment"
+      ],
+      "hardware_stratum": "a10040-policy_b200-simulator",
+      "lane_id": "c6m31",
+      "launch_hash": "fd1359f585bed20617ac717c6f4e023821fb17e4cf1f2a271156fc6f9677a3e2",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/.coord-bindings/c6m31/attempt0032",
+      "remaining_episode_ids": [
+        "online_correction_v4-C6-b034-f9d0b72dc0ea69db",
+        "online_correction_v4-C6-b033-7db79baf88980b5c",
+        "online_correction_v4-C6-b038-f767b5e2e9fdaf6c",
+        "online_correction_v4-C6-b057-cc5819f8c8d7409e",
+        "online_correction_v4-C6-b037-d70b193b4246c06c",
+        "online_correction_v4-C6-b028-abf81e1268d5e9f8",
+        "online_correction_v4-C6-b017-18311d8853c27ba7",
+        "online_correction_v4-C6-b049-cd889769a4f86ef1",
+        "online_correction_v4-C6-b046-6e061a081bd78de1",
+        "online_correction_v4-C6-b030-66bc2028deca0e07",
+        "online_correction_v4-C6-b016-87c114861625a047",
+        "online_correction_v4-C6-b062-669ae5fa9316b47f"
+      ],
+      "spec_path": "/Users/SZ5VJY/steerable-1/deploy/k8s/v4_lane_bundle/.coord-c6m31-attempt0032-render-spec.json",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0032",
+              "v4-config-sha": "3922fa4d072a4625e588595def1f71bb",
+              "v4-lane-id": "c6m31"
+            },
+            "name": "v4-c6m31-attempt0032-3922fa4d07-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0032",
+              "v4-config-sha": "3922fa4d072a4625e588595def1f71bb",
+              "v4-lane-id": "c6m31",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m31-attempt0032-3922fa4d07-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0032",
+              "v4-config-sha": "3922fa4d072a4625e588595def1f71bb",
+              "v4-lane-id": "c6m31",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m31-attempt0032-3922fa4d07-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0032",
+              "v4-config-sha": "3922fa4d072a4625e588595def1f71bb",
+              "v4-lane-id": "c6m31",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m31-attempt0032-3922fa4d07-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    }
+  ],
+  "manifest_sha256": "b7ed349a0907a8ded7c5d368f9298d27b8b85d4875e54e5f9a74ac55e2d0ba30",
+  "partial_create_wave": false,
+  "partial_group_count": 0,
+  "pending_group_count": 1,
+  "quarantined_lanes": [],
+  "queue_sha256": "d825808858f18f1678f0036b9db5218a0b76516a252a526f67dfe4cc2c159ee6",
+  "release_status": "RELEASED",
+  "resume_receipt_count": 0,
+  "scheduling_inputs": {
+    "accepted_episode_count": 0,
+    "classifier_retry_policy_max": 3,
+    "coordination_state_loaded": true,
+    "durable_group_lease_count": 0,
+    "lane_quarantine_threshold": 3,
+    "max_infra_retries": 3,
+    "reserved_attempt_id_count": 32,
+    "retry_policy_allows_behavioral_retry": false
+  },
+  "schema_version": "v4-campaign-coordinator-plan-v1",
+  "storage_budget": {
+    "authorized_storage_bytes": 1000000000000,
+    "bytes_already_used": 0,
+    "estimated_pending_bytes": 192000000000,
+    "estimated_total_bytes": 192000000000,
+    "status": "within_budget"
+  }
+}

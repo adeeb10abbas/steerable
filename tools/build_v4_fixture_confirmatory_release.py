@@ -60,11 +60,19 @@ def build_confirmatory_seed_registry(
     pilot_seed_registry_path: Path,
 ) -> dict:
     profile = qualification_profile(fixture_id)
-    rows = [row for row in load_jsonl(queue_path) if row.get("family") == profile.family_id]
-    if len(rows) != profile.confirmatory_episode_count:
+    rows = [
+        row
+        for row in load_jsonl(queue_path)
+        if row.get("family") == profile.family_id
+        and row.get("factors", {}).get("policy") == profile.policy_id
+    ]
+    if len(rows) not in (
+        profile.confirmatory_episode_count,
+        profile.confirmatory_episode_count // 2,
+    ):
         raise ValueError(
             f"confirmatory {profile.family_id} allocation must contain "
-            f"{profile.confirmatory_episode_count} rows"
+            f"{profile.confirmatory_episode_count} rows for {profile.policy_id}"
         )
     policy_seeds = list(dict.fromkeys(int(row["policy_seed"]) for row in rows))
     if len(policy_seeds) != profile.confirmatory_block_seed_count:
@@ -224,7 +232,8 @@ def build_confirmatory_lane_spec(
     pilot_spec = load_json(pilot_lane_spec_path)
     pilot_pythonpath = str(pilot_spec["runtime"]["policy"]["pythonpath"])
     pilot_runtime_root = pilot_pythonpath.split(":", 1)[0]
-    return derive_spec(
+    pilot_policy_port = int(pilot_spec.get("policy_port", policy_port))
+    spec = derive_spec(
         source_path=pilot_lane_spec_path,
         overrides=[
             f'lane_id="{lane_id}"',
@@ -246,6 +255,13 @@ def build_confirmatory_lane_spec(
         ],
         absolutize_sources=False,
     )
+    argv = spec["policy"]["experiment_argv"]
+    pilot_port_token = str(pilot_policy_port)
+    policy_port_token = str(policy_port)
+    for index, token in enumerate(argv):
+        if token == pilot_port_token:
+            argv[index] = policy_port_token
+    return spec
 
 
 def build_launch_matrix(

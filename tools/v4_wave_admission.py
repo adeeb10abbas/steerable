@@ -83,7 +83,7 @@ CURRENT_HOMOGENEOUS_ATTEMPT_IDS: frozenset[str] = frozenset(
 )
 
 C7_ATTEMPT_RE = re.compile(r"^attempt0\d+$|^c7m\d+$", re.I)
-NATURAL_GRASP_ATTEMPT_RE = re.compile(r"g3ngp|nglive|natgrasp|livectrl", re.I)
+NATURAL_GRASP_ATTEMPT_RE = re.compile(r"g3ngp|g3ngrb|nglive|natgrasp|livectrl", re.I)
 
 
 class WaveAdmissionError(RuntimeError):
@@ -108,7 +108,7 @@ ADMISSION_TIERS: tuple[AdmissionTier, ...] = (
         tier_id="natural_grasp_live_control",
         priority=0,
         attempt_ids=frozenset(),
-        attempt_patterns=(r"g3ngp", r"nglive", r"natgrasp", r"livectrl", r"horizng"),
+        attempt_patterns=(r"g3ngp", r"g3ngrb", r"nglive", r"natgrasp", r"livectrl", r"horizng"),
         gpu_product=None,
         seed_count=2,
         seed_minutes=LIVE_CONTROL_JOB_MINUTES,

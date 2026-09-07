@@ -21,6 +21,13 @@ def test_superseded_attempts_are_recognized() -> None:
     assert not admission.is_superseded_attempt("g3r20260908g")
 
 
+def test_reference_binding_live_control_matches_tier_zero() -> None:
+    tier = admission.tier_for_attempt("g3ngrb20260908p")
+    assert tier is not None
+    assert tier.tier_id == "natural_grasp_live_control"
+    assert admission.tier_for_attempt("g3ngrb20260908neg").tier_id == "natural_grasp_live_control"
+
+
 def test_c7_attempts_never_blocked_by_tier() -> None:
     assert admission.is_c7_attempt("attempt0351")
     summary = {

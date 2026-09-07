@@ -1,0 +1,40 @@
+{
+  "schema_version": "v4-reference-binding-natural-grasp-live-control-finding-v1",
+  "recorded_at_utc": "2026-09-07T12:54:00Z",
+  "fixture_id": "reference_binding",
+  "attempt_id": "g3ngrb20260908p",
+  "control_mode": "scripted_grasp",
+  "environment_seed": 2100010000,
+  "scale": 0.5,
+  "goal": "left",
+  "study_commit": "c401fb4577d8003a019ecf7ff7be549f2c0a5931",
+  "gpu_product": "NVIDIA-A100-SXM4-40GB",
+  "receipt_path": "artifacts/online_correction_v4/qualification/20260908_reference_binding_natural_grasp_live_positive_control_g3ngrb20260908p.json",
+  "verdict": "blocking_setup_defect",
+  "passed": false,
+  "trigger_eligible": false,
+  "scripted_trajectory_passed": false,
+  "scripted_grasp_stages": {
+    "goal_satisfied": false,
+    "grasped": false,
+    "released": true,
+    "stably_placed": true,
+    "transported": false
+  },
+  "diagnosis": "Live positive control at canonical seed 2100010000 failed before NaturalGraspDetector eligibility: scripted controller did not complete grasp or transport (grasped=false, transported=false, goal_satisfied=false). This is recorded as a fixture setup/controller finding at pin c401fb4; thresholds were not adjusted.",
+  "registry_action": "do_not_register_passed_control",
+  "dispatch_impact": {
+    "C2_natural_grasp_live_control_gate": "blocked",
+    "C2_policy_4096": "blocked pending passing positive and negative live controls",
+    "g3rb20260908v_wave": "continues under tier-3 admission; wave path evidence remains separate from live-control gate"
+  },
+  "negative_control_attempt_id": "g3ngrb20260908neg",
+  "negative_control_status": "passed",
+  "negative_control_receipt_path": "artifacts/online_correction_v4/qualification/20260908_reference_binding_natural_grasp_live_negative_control_g3ngrb20260908neg.json",
+  "negative_control_summary": {
+    "passed": true,
+    "trigger_eligible": false,
+    "verdict": "negative_control_passed",
+    "control_mode": "hold_only"
+  }
+}

@@ -12,7 +12,7 @@
     "launch_matrix.json": "8276675d06e2684bfc688dd5c0ebe355aef90c0095b771eb26149a7a5baa049d",
     "motion_manifest.json": "c5a6b3f637b009fadbb1615a79863c76a096d5a33f9a39f36150707269c3df67",
     "prompt_manifest.json": "20e464b06576fd7e860ec86d35d9f148673066874e3441ba1483f4b81fdf59b3",
-    "protocol.json": "65847c601f47ec92a141fc935527f0fd0bc8f596167d7d25662e0234a5992777",
+    "protocol.json": "e3e12d1186712700504d120a806817759ff9c6c08156d34d757018b208c2d392",
     "queue.jsonl": "0bcaab5d4911d1e2b407478dc56648415852fe5e1f13ea335179d6633ca41eb1",
     "queue_manifest.json": "f73de262064a457edac15b13744d11b8f13645cf8dc0e9668091f97135388668",
     "runtime_manifest.json": "e48684453f7e3c19934f6f1fde13e0d5ec4021b6a1274050a7ee8e9307e9a305",
@@ -222,6 +222,8 @@
     "artifacts/online_correction_v4/setup/reference_binding_g3_plan.candidate.json",
     "artifacts/online_correction_v4/setup/reference_binding_reset_registry.candidate.json",
     "artifacts/online_correction_v4/setup/second_stack_g3_plan.candidate.json",
+    "artifacts/online_correction_v4/setup/second_stack_pilot_reset_registry.candidate.json",
+    "artifacts/online_correction_v4/setup/second_stack_pilot_seed_registry.candidate.json",
     "artifacts/online_correction_v4/setup/second_stack_reset_registry.candidate.json",
     "artifacts/online_correction_v4/setup/vertical_g3_plan.candidate.json",
     "artifacts/online_correction_v4/setup/vertical_reset_registry.candidate.json"
@@ -230,7 +232,7 @@
   "completed_groups": [],
   "design_source_commit": "ce561e66f82e95055e39d3d7711691982f6b2086",
   "frozen_queue_sha256": "0bcaab5d4911d1e2b407478dc56648415852fe5e1f13ea335179d6633ca41eb1",
-  "generation_parent_commit": "b05b16c43ca6d686f12675a8f07c8f72f45e8cc0",
+  "generation_parent_commit": "4f732a00d132a50a22271e3d9e76dd93a8a4b803",
   "generation_parent_commit_meaning": "Git HEAD when freeze builder last ran; not the commit containing freeze artifacts.",
   "git_receipt": {
     "meaning": "Record freeze_commit after the commit containing artifacts/online_correction_v4/ lands.",
@@ -762,6 +764,28 @@
       "registered_env_seed_count": null,
       "schema_version": "v4-second-stack-g3-geometry-plan-v1",
       "sha256": "2be3584439701d418758787ae75e70aaa00f81ba68a58dfdaa36234db9156614",
+      "status": "model_blind_candidate_not_released_for_inference"
+    },
+    {
+      "amendment_status": null,
+      "behavioral_episode_count": 0,
+      "fixture_id": "second_stack",
+      "model_request_count": 0,
+      "path": "artifacts/online_correction_v4/setup/second_stack_pilot_reset_registry.candidate.json",
+      "registered_env_seed_count": 24,
+      "schema_version": "v4-simpler-env-widowx-reset-registry-v1",
+      "sha256": "09080659c8d8df1fdafc2b119f90e130846c108c2992bea024a52667d9db05d5",
+      "status": "model_blind_candidate_not_released_for_inference"
+    },
+    {
+      "amendment_status": null,
+      "behavioral_episode_count": 0,
+      "fixture_id": "second_stack",
+      "model_request_count": 0,
+      "path": "artifacts/online_correction_v4/setup/second_stack_pilot_seed_registry.candidate.json",
+      "registered_env_seed_count": null,
+      "schema_version": "v4-second-stack-engineering-pilot-seed-registry-v1",
+      "sha256": "d3f64f51ac3d1f1a259f1ac375e8214e82609c5a6e893dafdb23dab311b6ac3d",
       "status": "model_blind_candidate_not_released_for_inference"
     },
     {

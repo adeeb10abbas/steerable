@@ -178,7 +178,7 @@ def build_payloads(
         "fixture_id": FIXTURE_ID,
         "policy_id": POLICY_ID,
         "cohort": "engineering_pilot",
-        "status": "candidate_not_released_for_policy_requests",
+        "status": "model_blind_candidate_not_released_for_inference",
         "behavioral_episode_count": 0,
         "model_request_count": 0,
         "rows": rows,

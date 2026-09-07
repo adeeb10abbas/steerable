@@ -1,0 +1,73 @@
+{
+  "schema_version": "v4-horizontal-g3-collision-forensic-receipt-v1",
+  "campaign_id": "online_correction_v4",
+  "fixture_id": "horizontal",
+  "attempt_id": "g3p20260905h",
+  "environment_seed": 2100000000,
+  "scale": 0.5,
+  "displacement_m": 0.06,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "forensic_source": {
+    "kubernetes_context": "prod-dcwi-warrenq1-vmkub007",
+    "namespace": "211247-prod",
+    "read_only_access": true,
+    "pvc_root": "/data/users/ali/vla_wam/raw/v4/g3-horizontal/attempt-g3p20260905h/scale-0.5/seed-2100000000/4d123f89-51df-4c86-b190-9a94841d8ca4/lane-g3h-s000/attempt-g3p20260905h/episodes",
+    "path_scale_receipt": {
+      "path": "artifacts/online_correction_v4/qualification/20260905_horizontal_g3_path_scale_0p5_g3p20260905h.json",
+      "sha256": "ed44eaf60280d5ee91a9a20b39d0c5927cb7ff57d74471f1bde503e24401a63f"
+    }
+  },
+  "physical_reset_poses_robot_base_m": {
+    "bowl": [0.4289674460887909, 0.12890803813934326, 0.07735103368759155],
+    "rubiks_cube": [0.2935180366039276, 0.12148545682430267, 0.08110573142766953]
+  },
+  "live_evidence_hashes": {
+    "g3_path_seed_receipt.json": "4db0f4617d02792dcf5e0d2c6e26957ec78427a8d2ef6ff99b07bd2196a88b8e",
+    "registered_reset/initial_scene.json": "415bc7f11ed74ef6c249f1d28ead3a588b1d929c5b401f0af631afdc1bc20a1c",
+    "registered_reset/physical_reset.json": "ba9c61ee8cc4abba53cf171e33accb7d6fa2c3dae77cc2d1a7557b736e0261b7"
+  },
+  "contact_forensics": [
+    {
+      "check": "front__move_stop",
+      "contact_pair": "rubiks_cube__bowl",
+      "first_contact_sample_index": 18,
+      "planned_time_s": 0.3,
+      "planned_displacement_m": 0.04095359999999999,
+      "physics_time_s": 0.30833333333333335,
+      "force_n": 2.3634903991529304,
+      "unmodeled_collision": true
+    },
+    {
+      "check": "front__destination_static",
+      "contact_pair": "rubiks_cube__bowl",
+      "first_contact_sample_index": 0,
+      "planned_time_s": 0.0,
+      "planned_displacement_m": 0.06,
+      "physics_time_s": 0.008333333333333333,
+      "force_n": 856.442122613333,
+      "unmodeled_collision": true
+    }
+  ],
+  "passing_path_checks_at_scale": [
+    "left__original_sham",
+    "right__move_stop"
+  ],
+  "aabb_freshness_audit": {
+    "source": "registered_reset/initial_scene.json",
+    "sha256": "415bc7f11ed74ef6c249f1d28ead3a588b1d929c5b401f0af631afdc1bc20a1c",
+    "rubiks_cube": {
+      "root_pose_world_xyz_m": [0.2935180366039276, 0.12148545682430267, 0.08110573142766953],
+      "usd_aabb_center_world_xyz_m": [0.4204832419653382, -0.06850546624672754, 0.07869696469493008],
+      "root_minus_aabb_center_m": [-0.1269652053614106, 0.18999092307103022, 0.002408766732739445]
+    },
+    "bowl": {
+      "root_pose_world_xyz_m": [0.4289674460887909, 0.12890803813934326, 0.07735103368759155],
+      "usd_aabb_center_world_xyz_m": [0.442583531141281, 0.1265821903944015, 0.07732785493135451],
+      "root_minus_aabb_center_m": [-0.013616085052490123, 0.002325847744941767, 2.3178756237043907e-05]
+    },
+    "impact": "Stale root-pose metadata for rubiks_cube only. G3 scoring uses live USD world AABB projected into the registered task frame; projected dimensions remain usable and are bound in the repair clearance audit."
+  },
+  "scientific_disposition": "layout_collision_not_model_failure",
+  "release_boundary": "Forensic receipt only. Does not authorize repaired or original horizontal policy inference."
+}

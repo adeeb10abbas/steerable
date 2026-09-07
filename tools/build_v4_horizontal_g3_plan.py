@@ -113,17 +113,29 @@ def build(
     queue_path: Path,
     motion_path: Path,
     registry_path: Path,
-    g2_aggregate_path: Path,
+    g2_aggregate_path: Path | None,
     output_path: Path,
     fixture_id: str = "horizontal",
     qualification_scope: str = "confirmatory",
+    geometry_repair_mode: bool = False,
 ) -> dict:
     g3_fixture_config(fixture_id)
     campaign = json.loads(campaign_path.read_text(encoding="utf-8"))
     motion = json.loads(motion_path.read_text(encoding="utf-8"))
     registry = json.loads(registry_path.read_text(encoding="utf-8"))
-    g2_aggregate_bytes = g2_aggregate_path.read_bytes()
-    g2_aggregate = json.loads(g2_aggregate_bytes)
+    g2_aggregate: dict | None = None
+    if g2_aggregate_path is not None:
+        g2_aggregate_bytes = g2_aggregate_path.read_bytes()
+        g2_aggregate = json.loads(g2_aggregate_bytes)
+        if canonical_json_bytes(g2_aggregate) != g2_aggregate_bytes:
+            raise ValueError("G2 aggregate receipt is not canonical JSON")
+        reset_registry_receipt = g2_aggregate.get("reset_registry")
+        if not isinstance(reset_registry_receipt, dict) or reset_registry_receipt.get(
+            "sha256"
+        ) != sha256_file(registry_path):
+            raise ValueError("G2 aggregate does not bind the selected reset registry")
+    elif not geometry_repair_mode:
+        raise ValueError("G2 aggregate is required unless geometry_repair_mode is set")
     if campaign.get("campaign_id") != "online_correction_v4":
         raise ValueError("campaign identity differs")
     if registry.get("status") != "model_blind_candidate_not_released_for_inference":
@@ -134,13 +146,6 @@ def build(
         raise ValueError("reset candidate is not model-blind")
     if motion.get("calibration", {}).get("status") != "pending_model_blind_geometry_gate":
         raise ValueError("motion manifest calibration state differs")
-    if canonical_json_bytes(g2_aggregate) != g2_aggregate_bytes:
-        raise ValueError("G2 aggregate receipt is not canonical JSON")
-    reset_registry_receipt = g2_aggregate.get("reset_registry")
-    if not isinstance(reset_registry_receipt, dict) or reset_registry_receipt.get(
-        "sha256"
-    ) != sha256_file(registry_path):
-        raise ValueError("G2 aggregate does not bind the selected reset registry")
     rows = [
         json.loads(line)
         for line in queue_path.read_text(encoding="utf-8").splitlines()
@@ -148,32 +153,45 @@ def build(
     ]
     motion_config = campaign["motion"]
     nominal = float(campaign["fixtures"][fixture_id]["nominal_translation_m"])
-    plan = build_plan_payload(
-        fixture_id=fixture_id,
-        qualification_scope=qualification_scope,
-        source_identity={
-            "campaign": {
-                "path": portable_path(campaign_path),
-                "sha256": sha256_file(campaign_path),
-            },
-            "queue": {
-                "path": portable_path(queue_path),
-                "sha256": sha256_file(queue_path),
-            },
-            "motion_manifest": {
-                "path": portable_path(motion_path),
-                "sha256": sha256_file(motion_path),
-            },
-            "reset_registry": {
-                "path": portable_path(registry_path),
-                "sha256": sha256_file(registry_path),
-            },
-            "g2_aggregate": {
-                "path": portable_path(g2_aggregate_path),
-                "sha256": sha256_file(g2_aggregate_path),
-            },
+    source_identity = {
+        "campaign": {
+            "path": portable_path(campaign_path),
+            "sha256": sha256_file(campaign_path),
         },
-        g2_prerequisite={
+        "queue": {
+            "path": portable_path(queue_path),
+            "sha256": sha256_file(queue_path),
+        },
+        "motion_manifest": {
+            "path": portable_path(motion_path),
+            "sha256": sha256_file(motion_path),
+        },
+        "reset_registry": {
+            "path": portable_path(registry_path),
+            "sha256": sha256_file(registry_path),
+        },
+    }
+    if g2_aggregate_path is not None and g2_aggregate is not None:
+        source_identity["g2_aggregate"] = {
+            "path": portable_path(g2_aggregate_path),
+            "sha256": sha256_file(g2_aggregate_path),
+        }
+    if geometry_repair_mode:
+        g2_prerequisite = {
+            "schema_version": "v4-horizontal-g2-aggregate-receipt-v1",
+            "status": "pending_geometry_repair_requalification",
+            "passed": False,
+            "axis_review_passed": False,
+            "expected_seed_count": registry.get("registered_env_seed_count"),
+            "observed_seed_count": 0,
+            "model_request_count": 0,
+            "behavioral_episode_count": 0,
+            "receipt": None,
+        }
+        plan_status = "pending_repaired_g2_prerequisite"
+    else:
+        assert g2_aggregate is not None
+        g2_prerequisite = {
             "schema_version": g2_aggregate.get("schema_version"),
             "status": g2_aggregate.get("status"),
             "passed": g2_aggregate.get("passed"),
@@ -188,7 +206,13 @@ def build(
                 "path": portable_path(g2_aggregate_path),
                 "sha256": sha256_file(g2_aggregate_path),
             },
-        },
+        }
+        plan_status = "ready_for_live_g3_execution"
+    plan = build_plan_payload(
+        fixture_id=fixture_id,
+        qualification_scope=qualification_scope,
+        source_identity=source_identity,
+        g2_prerequisite=g2_prerequisite,
         geometry_contract=resolve_geometry_contract(campaign, fixture_id),
         reset_registry=registry,
         queue_rows=rows,
@@ -199,6 +223,13 @@ def build(
         ),
         goal_area_gate_fixtures=resolve_goal_area_gate_fixtures(campaign),
     )
+    plan["plan_status"] = plan_status
+    if geometry_repair_mode:
+        plan["geometry_repair_mode"] = True
+        plan["release_boundary"] = (
+            "Repaired-layout formula-closed plan. Fresh repaired G2 and G3 "
+            "qualification are required before any policy inference."
+        )
     validate_plan_payload(plan)
     body = canonical_json_bytes(plan)
     output_path.parent.mkdir(parents=True, exist_ok=True)

@@ -238,11 +238,44 @@ smaller horizontal displacement or post-result scene change is authorized by
 this campaign. Independently scoped model-blind fixture qualification remains
 permitted for C5-C7; C2 and C8 retain their separate hard blockers.
 
+### Disclosed horizontal geometry repair (2026-09-07)
+
+Independent PVC forensics on attempt `g3p20260905h` scale 0.5 confirmed a
+layout collision, not model failure: `rubiks_cube__bowl` contact at
+`planned_time_s=0.3` / `planned_displacement_m=0.0409536` / `2.36349 N`, and
+`destination_static` front overlap at `856.442 N` on the first sample.
+Left/right sham and move-stop checks passed. The live USD AABB audit shows
+rubiks_cube root pose is stale relative to its projected AABB center; scoring
+already uses live AABB, so projected dimensions remain usable.
+
+A V4-only amendment freezes one deterministic cube-only repair: move
+`rubiks_cube` along robot-base `-X` by `-0.01` m (the smallest 1 cm increment
+giving conservative 0.5-scale swept-AABB separation plus the existing 5 mm
+guard) before common XY jitter for all 128 resets. Bowl, banana, assets,
+physics, task frame, prompts, scoring, timing, scale ladder, and thresholds
+are unchanged. Original failed receipts and raw evidence are preserved.
+
+Repaired-layout artifacts use fixture_version
+`horizontal_geometry_repair_v1` and cohort
+`confirmatory_horizontal_geometry_repair_v1`:
+
+- `artifacts/online_correction_v4/qualification/20260907_horizontal_g3_collision_forensic_g3p20260905h.json`
+- `artifacts/online_correction_v4/setup/horizontal_geometry_repair_amendment.candidate.json`
+- `artifacts/online_correction_v4/setup/horizontal_reset_registry.geometry_repair_v1.candidate.json`
+- `artifacts/online_correction_v4/setup/horizontal_g3_plan.geometry_repair_v1.candidate.json`
+- `artifacts/online_correction_v4/queue_horizontal_geometry_repair_v1.jsonl` (9,728 C1/C3/C4 rows)
+- `artifacts/online_correction_v4/setup/horizontal_geometry_repair_inventory_v1.json`
+
+Historical `docs/online_correction_v4/campaign.json` and
+`artifacts/online_correction_v4/queue.jsonl` remain unchanged. Fresh repaired
+G2 and unchanged descending-ladder G3 are the next dependency phase; no
+repaired horizontal policy inference is authorized until those gates pass.
+
 ### Family disposition
 
 | Family | Disposition | Status |
 | --- | --- | --- |
-| C1, C3, C4 | `pending_qualification` | `NOT_RELEASED` — horizontal G3 failed all registered scales |
+| C1, C3, C4 | `pending_qualification` | `NOT_RELEASED` — original-layout G3 failed; repaired inventory frozen pending fresh repaired G2/G3 |
 | C5–C7 | `pending_qualification` | `NOT_RELEASED` — their separate fixtures remain unqualified |
 | C2 | `hard_blocked` | `BLOCKED_SETUP` — verified common-prefix replay required |
 | C8 | `hard_blocked` | `BLOCKED_RUNTIME` — GR00T Bridge/WidowX stack unverified |

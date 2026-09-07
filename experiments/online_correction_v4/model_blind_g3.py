@@ -1108,11 +1108,12 @@ def build_plan_payload(
         raise G3GateError("G3 plan qualification_scope is invalid")
     config = g3_fixture_config(fixture_id)
     expected_seed_count = g3_expected_seed_count(fixture_id, qualification_scope)
-    _validate_g2_prerequisite(
-        g2_prerequisite,
-        fixture_id=fixture_id,
-        expected_seed_count=expected_seed_count,
-    )
+    if g2_prerequisite.get("status") != "pending_geometry_repair_requalification":
+        _validate_g2_prerequisite(
+            g2_prerequisite,
+            fixture_id=fixture_id,
+            expected_seed_count=expected_seed_count,
+        )
     _validate_geometry_contract(geometry_contract)
     resets = reset_registry.get("resets_by_env_seed")
     _require(isinstance(resets, Mapping) and resets, "reset registry has no resets")
@@ -1381,17 +1382,29 @@ def validate_plan_payload(plan: Mapping[str, Any]) -> None:
         plan.get("behavioral_episode_count") == 0,
         "G3 plan records behavioral episodes",
     )
-    _require(
-        plan.get("plan_status") == "ready_for_live_g3_execution",
-        "G3 plan is not authorized for live model-blind execution",
-    )
-    prerequisite = plan.get("g2_prerequisite")
-    _require(isinstance(prerequisite, Mapping), "G3 plan lacks G2 prerequisite")
-    _validate_g2_prerequisite(
-        prerequisite,
-        fixture_id=fixture_id,
-        expected_seed_count=expected_seed_count,
-    )
+    if plan.get("geometry_repair_mode") is True:
+        _require(
+            plan.get("plan_status") == "pending_repaired_g2_prerequisite",
+            "repaired G3 plan must remain blocked pending fresh G2",
+        )
+        prerequisite = plan.get("g2_prerequisite")
+        _require(isinstance(prerequisite, Mapping), "G3 plan lacks G2 prerequisite")
+        _require(
+            prerequisite.get("status") == "pending_geometry_repair_requalification",
+            "repaired G3 plan lacks pending G2 prerequisite",
+        )
+    else:
+        _require(
+            plan.get("plan_status") == "ready_for_live_g3_execution",
+            "G3 plan is not authorized for live model-blind execution",
+        )
+        prerequisite = plan.get("g2_prerequisite")
+        _require(isinstance(prerequisite, Mapping), "G3 plan lacks G2 prerequisite")
+        _validate_g2_prerequisite(
+            prerequisite,
+            fixture_id=fixture_id,
+            expected_seed_count=expected_seed_count,
+        )
     geometry_contract = plan.get("geometry_contract")
     _require(
         isinstance(geometry_contract, Mapping),

@@ -7,10 +7,13 @@ import argparse
 import hashlib
 import json
 import math
+import sys
 from pathlib import Path
 from typing import Any, Iterable, Mapping
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 DEFAULT_CAMPAIGN = ROOT / "docs/online_correction_v4/campaign.json"
 DEFAULT_QUEUE = ROOT / "artifacts/online_correction_v4/queue.jsonl"
 DEFAULT_SOURCE = (
@@ -21,8 +24,17 @@ DEFAULT_SOURCE = (
 DEFAULT_OUTPUT = (
     ROOT / "artifacts/online_correction_v4/setup/horizontal_reset_registry.candidate.json"
 )
+DEFAULT_REPAIR_AMENDMENT = (
+    ROOT
+    / "artifacts/online_correction_v4/setup/horizontal_geometry_repair_amendment.candidate.json"
+)
+DEFAULT_REPAIRED_OUTPUT = (
+    ROOT
+    / "artifacts/online_correction_v4/setup/horizontal_reset_registry.geometry_repair_v1.candidate.json"
+)
 
 SCHEMA_VERSION = "v4-droid-horizontal-reset-registry-v1"
+REPAIRED_SCHEMA_VERSION = "v4-droid-horizontal-reset-registry-geometry-repair-v1"
 STATUS = "model_blind_candidate_not_released_for_inference"
 JITTER_ALGORITHM = "sha256_u64_independent_axes_common_scene_translation_v1"
 JITTER_HALF_RANGE_X_M = 0.015
@@ -207,11 +219,32 @@ def deterministic_axis_jitter(*, env_seed: int, axis: str, half_range_m: float) 
     return (2.0 * unit - 1.0) * half_range_m
 
 
+def _load_geometry_repair_amendment(path: Path) -> dict[str, Any]:
+    amendment = _read_json(path)
+    if amendment.get("schema_version") != "v4-horizontal-geometry-repair-amendment-v1":
+        raise ResetRegistryBuildError("geometry repair amendment schema differs")
+    if amendment.get("fixture_id") != "horizontal":
+        raise ResetRegistryBuildError("geometry repair amendment fixture differs")
+    repair = amendment.get("repair")
+    if not isinstance(repair, Mapping):
+        raise ResetRegistryBuildError("geometry repair amendment lacks repair block")
+    offset = repair.get("cube_robot_base_x_offset_m")
+    if (
+        isinstance(offset, bool)
+        or not isinstance(offset, (int, float))
+        or not math.isfinite(float(offset))
+        or float(offset) >= 0.0
+    ):
+        raise ResetRegistryBuildError("geometry repair offset must be a finite negative value")
+    return amendment
+
+
 def build_registry(
     *,
     campaign_path: Path,
     queue_path: Path,
     source_report_path: Path,
+    geometry_repair_amendment_path: Path | None = None,
 ) -> dict[str, Any]:
     campaign = _read_json(campaign_path)
     if campaign.get("campaign_id") != "online_correction_v4":
@@ -220,6 +253,52 @@ def build_registry(
     seeds = horizontal_env_seeds(campaign=campaign, queue_rows=queue_rows)
     source_report = _read_json(source_report_path)
     base = base_positions_from_v3_report(source_report)
+    repair_amendment: dict[str, Any] | None = None
+    repair_offset_m = 0.0
+    if geometry_repair_amendment_path is not None:
+        from experiments.online_correction_v4.horizontal_geometry_repair import (
+            FIXTURE_VERSION,
+            apply_cube_repair_offset,
+            minimum_cube_repair_offset_m,
+        )
+
+        repair_amendment = _load_geometry_repair_amendment(
+            geometry_repair_amendment_path
+        )
+        frozen_offset = float(repair_amendment["repair"]["cube_robot_base_x_offset_m"])
+        provisional_resets: dict[str, Any] = {}
+        for block_index, env_seed in enumerate(seeds):
+            dx = deterministic_axis_jitter(
+                env_seed=env_seed, axis="x", half_range_m=JITTER_HALF_RANGE_X_M
+            )
+            dy = deterministic_axis_jitter(
+                env_seed=env_seed, axis="y", half_range_m=JITTER_HALF_RANGE_Y_M
+            )
+            positions = {
+                name: [
+                    base[name][0] + dx,
+                    base[name][1] + dy,
+                    base[name][2],
+                ]
+                for name in MOVABLE_OBJECTS
+            }
+            provisional_resets[str(env_seed)] = {
+                "block_index": block_index,
+                "jitter_robot_base_xy_m": [dx, dy],
+                "positions_robot_base_m": positions,
+            }
+        selected_offset, clearance_audit = minimum_cube_repair_offset_m(
+            base_positions_robot_base_m=base,
+            resets_by_env_seed=provisional_resets,
+        )
+        if abs(selected_offset - frozen_offset) > 1e-12:
+            raise ResetRegistryBuildError(
+                "geometry repair amendment offset differs from deterministic selection"
+            )
+        base = apply_cube_repair_offset(base, repair_offset_robot_base_x_m=frozen_offset)
+        repair_offset_m = frozen_offset
+        if repair_amendment.get("fixture_version") != FIXTURE_VERSION:
+            raise ResetRegistryBuildError("geometry repair fixture_version differs")
     scene_asset = "rubiks_cube_banana_bowl.usda"
     scene_metadata_sha256 = (
         "83ecf76a1fde9091b5db9012b76790aca36c2fe6b2c36a8885f4f98d7c4b7e1c"
@@ -250,8 +329,10 @@ def build_registry(
             "positions_robot_base_m": positions,
         }
 
-    return {
-        "schema_version": SCHEMA_VERSION,
+    payload: dict[str, Any] = {
+        "schema_version": (
+            REPAIRED_SCHEMA_VERSION if repair_amendment is not None else SCHEMA_VERSION
+        ),
         "campaign_id": "online_correction_v4",
         "fixture_id": "horizontal",
         "status": STATUS,
@@ -309,6 +390,16 @@ def build_registry(
             "must pass before any policy inference."
         ),
     }
+    if repair_amendment is not None:
+        payload["fixture_version"] = repair_amendment["fixture_version"]
+        payload["geometry_repair"] = {
+            "amendment_path": portable_path(geometry_repair_amendment_path),
+            "amendment_sha256": sha256_file(geometry_repair_amendment_path),
+            "cube_robot_base_x_offset_m": repair_offset_m,
+            "application_order": "cube_offset_before_common_xy_jitter",
+            "policy_outcome_used": False,
+        }
+    return payload
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -316,6 +407,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--campaign", type=Path, default=DEFAULT_CAMPAIGN)
     parser.add_argument("--queue", type=Path, default=DEFAULT_QUEUE)
     parser.add_argument("--source-report", type=Path, default=DEFAULT_SOURCE)
+    parser.add_argument("--geometry-repair-amendment", type=Path, default=None)
     parser.add_argument("--out", type=Path, default=DEFAULT_OUTPUT)
     args = parser.parse_args(argv)
 
@@ -323,6 +415,11 @@ def main(argv: list[str] | None = None) -> int:
         campaign_path=args.campaign.resolve(),
         queue_path=args.queue.resolve(),
         source_report_path=args.source_report.resolve(),
+        geometry_repair_amendment_path=(
+            args.geometry_repair_amendment.resolve()
+            if args.geometry_repair_amendment is not None
+            else None
+        ),
     )
     body = canonical_json_bytes(payload)
     args.out.parent.mkdir(parents=True, exist_ok=True)

@@ -2,7 +2,8 @@
   "active_blockers": [
     "BLOCKED_RUNTIME: GR00T N1.7 Bridge/WidowX checkpoint URI, integration commit, adapter, native control period, and SimplerEnv fixture object names are not verified on cluster workers; second-stack geometry and scoring receipts remain pending.",
     "Primary reference-selectivity (H) requires verified common-prefix replay within each prompt; deterministic fresh-session replay and qualified full-state snapshot are not yet demonstrated on the target runtime.",
-    "G3_FAILED: every registered horizontal displacement scale (2.0, 1.5, 1.0, 0.75, 0.5) was conclusively rejected on the canonical first environment seed. The final 0.5 scale passed the information gate but produced forbidden cube-bowl contact, target drift, and support failures. Horizontal scripted checks, G4-G8, pilots, and policy inference remain prohibited for C1/C3/C4; no smaller post-result scale is authorized. Independently scoped model-blind fixture qualification may continue for C5-C7."
+    "G3_FAILED_ORIGINAL_LAYOUT: every registered horizontal displacement scale (2.0, 1.5, 1.0, 0.75, 0.5) was conclusively rejected on the canonical first environment seed under the original layout. A disclosed V4-only cube-only geometry repair and repaired C1/C3/C4 inventory are frozen; fresh repaired G2/G3 qualification is required before any horizontal policy inference.",
+    "HORIZONTAL_REPAIR_PENDING_G2_G3: repaired reset registry, queue, and G3 plan for fixture_version horizontal_geometry_repair_v1 exist, but no repaired G2 or G3 qualification receipts are bound yet."
   ],
   "active_branch": "research/online-correction-v4",
   "artifact_sha256": {
@@ -67,7 +68,13 @@
     "artifacts/online_correction_v4/setup/horizontal_g2_seed_substitution_amendment.candidate.json",
     "artifacts/online_correction_v4/setup/horizontal_g3_plan.candidate.json",
     "artifacts/online_correction_v4/setup/horizontal_reset_registry.candidate.json",
-    "artifacts/online_correction_v4/setup/object_pair_reset_registry.candidate.json"
+    "artifacts/online_correction_v4/qualification/20260907_horizontal_g3_collision_forensic_g3p20260905h.json",
+    "artifacts/online_correction_v4/setup/horizontal_geometry_repair_amendment.candidate.json",
+    "artifacts/online_correction_v4/setup/horizontal_geometry_repair_inventory_v1.json",
+    "artifacts/online_correction_v4/setup/horizontal_reset_registry.geometry_repair_v1.candidate.json",
+    "artifacts/online_correction_v4/setup/horizontal_g3_plan.geometry_repair_v1.candidate.json",
+    "artifacts/online_correction_v4/setup/object_pair_reset_registry.candidate.json",
+    "artifacts/online_correction_v4/queue_horizontal_geometry_repair_v1.jsonl"
   ],
   "campaign_id": "online_correction_v4",
   "completed_groups": [],
@@ -87,7 +94,7 @@
   "limitations": [
     "Prospective design freeze only; no V4 policy inference has been run.",
     "Launch-critical runtime manifests remain unreleased until qualification receipts pass.",
-    "Horizontal G3 failed all registered scales; downstream horizontal qualification and policy execution for C1/C3/C4 are blocked."
+    "Horizontal original-layout G3 failed all registered scales; a disclosed cube-only geometry repair and repaired C1/C3/C4 inventory are frozen pending fresh repaired G2/G3."
   ],
   "model_blind_candidates": [
     {
@@ -135,6 +142,42 @@
       "status": "model_blind_candidate_not_released_for_inference"
     },
     {
+      "amendment_status": "frozen_for_model_blind_requalification",
+      "behavioral_episode_count": 0,
+      "fixture_id": "horizontal",
+      "fixture_version": "horizontal_geometry_repair_v1",
+      "model_request_count": 0,
+      "path": "artifacts/online_correction_v4/setup/horizontal_geometry_repair_amendment.candidate.json",
+      "registered_env_seed_count": null,
+      "schema_version": "v4-horizontal-geometry-repair-amendment-v1",
+      "sha256": "4c6a84c5447450f46774fea4637d1396f71f42448ea33902c0d2f2ada77596b8",
+      "status": "model_blind_candidate_not_released_for_inference"
+    },
+    {
+      "amendment_status": null,
+      "behavioral_episode_count": 0,
+      "fixture_id": "horizontal",
+      "fixture_version": "horizontal_geometry_repair_v1",
+      "model_request_count": 0,
+      "path": "artifacts/online_correction_v4/setup/horizontal_reset_registry.geometry_repair_v1.candidate.json",
+      "registered_env_seed_count": 128,
+      "schema_version": "v4-droid-horizontal-reset-registry-geometry-repair-v1",
+      "sha256": "c9d921b5d5b4c358c6534567bb626297cb0ec6ed1c2142355b895548d6a8d30d",
+      "status": "model_blind_candidate_not_released_for_inference"
+    },
+    {
+      "amendment_status": null,
+      "behavioral_episode_count": 0,
+      "fixture_id": "horizontal",
+      "fixture_version": "horizontal_geometry_repair_v1",
+      "model_request_count": 0,
+      "path": "artifacts/online_correction_v4/setup/horizontal_g3_plan.geometry_repair_v1.candidate.json",
+      "registered_env_seed_count": 128,
+      "schema_version": "v4-horizontal-g3-plan-v1",
+      "sha256": "239b187637325cffe917591b5558cc4f26c2eaa399bf807d7aba3dc43081cd20",
+      "status": "model_blind_candidate_not_released_for_inference"
+    },
+    {
       "amendment_status": null,
       "behavioral_episode_count": 0,
       "fixture_id": "object_pair",
@@ -142,15 +185,19 @@
       "path": "artifacts/online_correction_v4/setup/object_pair_reset_registry.candidate.json",
       "registered_env_seed_count": 64,
       "schema_version": "v4-droid-object-pair-reset-registry-v1",
-      "sha256": "514cbe5d2d09a3d2eb23999aa9cd04da3f1dee528446787c546b0d972ba7119b",
+      "sha256": "6272ef4de4c6188e65198cd5f1a7f35e1ccbaf3d8022d5a1b6d030cf0eb1b84c",
       "status": "model_blind_candidate_not_released_for_inference"
     }
   ],
   "next_commands": [
-    "python3 tools/online_correction_v4.py validate",
-    "python3 tools/build_online_correction_v4_freeze.py --out artifacts/online_correction_v4",
+    "python3 tools/validate_v4_horizontal_geometry_repair.py",
+    "python3 -m unittest tests.test_v4_horizontal_geometry_repair",
+    "python3 tools/build_v4_horizontal_geometry_repair_amendment.py",
+    "python3 tools/build_v4_horizontal_reset_registry.py --geometry-repair-amendment artifacts/online_correction_v4/setup/horizontal_geometry_repair_amendment.candidate.json --out artifacts/online_correction_v4/setup/horizontal_reset_registry.geometry_repair_v1.candidate.json",
+    "python3 tools/build_v4_horizontal_geometry_repair_inventory.py",
+    "Copy deploy/k8s/v4_lane_bundle/g2-horizontal-spec.example.json to a repaired attempt spec binding horizontal_reset_registry.geometry_repair_v1.candidate.json, then: python3 tools/render_v4_horizontal_g2_k8s_jobs.py --spec <repaired-g2-spec.json>",
+    "Copy deploy/k8s/v4_lane_bundle/g3-horizontal-spec.example.json to a repaired attempt spec binding horizontal_g3_plan.geometry_repair_v1.candidate.json and horizontal_reset_registry.geometry_repair_v1.candidate.json, then: python3 tools/render_v4_horizontal_g3_k8s_jobs.py --spec <repaired-g3-spec.json>",
     "python3 tools/validate_online_correction_v4.py",
-    "python3 -m unittest discover -s tests -p 'test_online_correction_v4*.py'",
     "python3 tools/validate_vla_wam_v2_protocol.py",
     "python3 tools/validate_vla_wam_v3_protocol.py"
   ],

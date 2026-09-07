@@ -1,0 +1,51 @@
+{
+  "schema_version": "vla-wam-v4-k8s-lane-render-spec-v1",
+  "qualification_only": false,
+  "kube_context": "prod-dcwi-warrenq1-vmkub007",
+  "namespace": "211247-prod",
+  "lane_id": "g7c8p00",
+  "attempt_id": "g7c8pilot20260908a",
+  "policy_port": 18200,
+  "expected_driver_version": "580.95.05",
+  "image_repository": "artifactory-ci.gm.com/docker-approved/devcontainers/base",
+  "image_sha256": "03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+  "image_pull_secret": "artifactory-ci-pull-secret",
+  "pvc": "211247-prod-pvc",
+  "output_parent": "/data/users/ali/vla_wam/raw/v4/g7-second-stack",
+  "entrypoint": "/opt/v4-lane/scripts/lane_entrypoint.py",
+  "prestop_wait_seconds": 120,
+  "runtime": {
+    "python_bin": "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/gr00t/eval/sim/SimplerEnv/simpler_uv/.venv/bin/python",
+    "ffmpeg_bin": "/data/users/ali/vla_wam/envs/lingbot-va-b200/bin/ffmpeg",
+    "vk_icd_filenames": "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/external_dependencies/SimplerEnv/nvidia_icd.json",
+    "ld_library_path": "/data/users/ali/vla_wam/envs/groot-render-libs/lib:/usr/lib/x86_64-linux-gnu",
+    "pythonpath": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2:/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/external_dependencies/SimplerEnv"
+  },
+  "policy": {
+    "gpu_product": "NVIDIA-A40",
+    "expected_gpu_name": "NVIDIA A40",
+    "experiment_argv": [
+      "{python_bin}",
+      "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/tools/run_online_correction_v4.py"
+    ],
+    "checkpoint_path": "/data/users/ali/vla_wam/checkpoints/groot-n1.7-simplerenv-bridge",
+    "checkpoint_sha256": "14842573e8c193e1216252e2862be91567574f0dea97a9b040b3ce07754e98a7",
+    "nvidia_smi_bin": "/usr/bin/nvidia-smi",
+    "python_imports": ["torch", "simpler_env"],
+    "file_bindings": [],
+    "vulkan_contract": {"required": false},
+    "readiness_interface": "groot_bridge_http"
+  },
+  "simulator": {
+    "gpu_product": "NVIDIA-A40",
+    "expected_gpu_name": "NVIDIA A40",
+    "experiment_argv": [],
+    "checkpoint_path": "",
+    "checkpoint_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "nvidia_smi_bin": "/usr/bin/nvidia-smi",
+    "python_imports": ["simpler_env"],
+    "file_bindings": [],
+    "vulkan_contract": {"required": true},
+    "readiness_interface": "embedded_in_policy_container"
+  }
+}

@@ -500,7 +500,13 @@ def main(argv: list[str] | None = None) -> int:
             "C5": "scientifically blocked: vertical IK reachability finding at seed 2100020000 scale 0.5; receipt 20260908_vertical_natural_grasp_live_control_finding_g3ngp20260908vp8.json",
             "C6": "achievable (768 episodes); dispatch pending qualification completion",
             "C7": c7_status,
-            "C8": "achievable (768 episodes); pilot G3 path gate passed 96/96 (g3c8p20260908f); confirmatory G7/G8 release and dispatch in progress",
+            "C8": (
+                "achievable (768 episodes); pilot G3 path gate passed 96/96 (g3c8p20260908f); "
+                "G7 confirmatory receipt passed (g7c8q20260908a); 24 pilot episodes, G8 rehearsal, "
+                "confirmatory runtime lock, and 768 dispatch blocked pending groot_bridge_widowx "
+                "registration in launch_online_correction_v4.py (SUPPORTED_DROID_POLICIES) and "
+                "second_stack live behavioral runner wiring"
+            ),
         },
         "scientific_blockers": {
             "horizontal_information_gate": {
@@ -512,8 +518,8 @@ def main(argv: list[str] | None = None) -> int:
             "reference_binding_information_gate": {
                 "attempt_id": "g3rb20260908v",
                 "receipt_path": "artifacts/online_correction_v4/qualification/20260908_reference_binding_g3_gate_decision_g3rb20260908v.json",
-                "provisional_receipt_path": "artifacts/online_correction_v4/qualification/20260908_reference_binding_g3_gate_decision_g3rb20260908v_provisional.json",
                 "computation_audit_path": "artifacts/online_correction_v4/qualification/20260908_information_gate_computation_audit.json",
+                "finalized_at_utc": "2026-09-07T17:07:20Z",
                 "affected_families": ["C2"],
                 "affected_episodes": 4096,
                 "primary_estimand_status": "not_estimable",
@@ -565,8 +571,15 @@ def main(argv: list[str] | None = None) -> int:
             "repair_status": reclassification.get("defect", {}).get("repair_status"),
             "status": trigger_status,
             "policy_dispatch_blocked": {
-                "C2_confirmatory_4096": "held until homogeneous G3 gate (both translation signs), G4-G6, prefix replay, and confirmatory runtime lock",
-                "C8_confirmatory_768": "held until G7/G8, confirmatory runtime lock, and second_stack policy runner wiring",
+                "C2_confirmatory_4096": (
+                    "scientifically blocked: final gate receipt "
+                    "20260908_reference_binding_g3_gate_decision_g3rb20260908v.json; "
+                    "primary estimand not estimable; 4096 episodes excluded from achievable scope"
+                ),
+                "C8_confirmatory_768": (
+                    "held until 24 pilot episodes, G8 rehearsal, confirmatory runtime lock, "
+                    "and groot_bridge_widowx live runner wiring in launch_online_correction_v4.py"
+                ),
             },
             "paper_caveat": paper_caveat,
         },

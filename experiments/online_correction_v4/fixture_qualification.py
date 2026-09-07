@@ -27,6 +27,19 @@ class G4PromptPair:
 
 
 @dataclass(frozen=True)
+class PilotAllocationProfile:
+    env_seed_start: int
+    env_seed_end: int  # inclusive
+    stationary_count: int = 16
+    motion_count: int = 8
+    goal_cycle: tuple[str, ...] = ("inside",)
+    wording_cycle: tuple[str, ...] = ("direct", "inverse")
+    scenario_stationary_first: str = "original_sham"
+    scenario_stationary_second: str = "destination_static"
+    scenario_motion: str = "move_stop"
+
+
+@dataclass(frozen=True)
 class FixtureQualificationProfile:
     fixture_id: str
     family_id: str
@@ -40,6 +53,13 @@ class FixtureQualificationProfile:
     g4_sampling_seed: int
     horizontal_prompt_suffix: bool
     g4_prompt_pair: G4PromptPair
+    pilot_allocation: PilotAllocationProfile | None = None
+    confirmatory_episode_count: int = 768
+    confirmatory_block_seed_count: int = 64
+    nano_seed_registry_schema: str = "v4-nano-policy-seed-registry-v1"
+    pilot_seed_registry_schema: str | None = None
+    hardware_stratum: str | None = None
+    writer_output_parent: str | None = None
 
 
 def _g4_schema(fixture_id: str) -> str:
@@ -52,6 +72,26 @@ def _g5_schema(fixture_id: str) -> str:
 
 def _g6_schema(fixture_id: str) -> str:
     return f"v4-{fixture_id.replace('_', '-')}-g6-measurement-receipt-v1"
+
+
+def _pilot_schema(fixture_id: str) -> str:
+    return f"v4-{fixture_id.replace('_', '-')}-engineering-pilot-seed-registry-v1"
+
+
+def _object_pair_pilot_allocation() -> PilotAllocationProfile:
+    return PilotAllocationProfile(
+        env_seed_start=2110000800,
+        env_seed_end=2110000823,
+        goal_cycle=("left", "right", "front", "behind"),
+        wording_cycle=("direct",),
+    )
+
+
+def _containment_pilot_allocation() -> PilotAllocationProfile:
+    return PilotAllocationProfile(
+        env_seed_start=2110000600,
+        env_seed_end=2110000623,
+    )
 
 
 def _object_pair_g4_prompts() -> G4PromptPair:
@@ -80,6 +120,10 @@ FIXTURE_QUALIFICATION_PROFILES: dict[str, FixtureQualificationProfile] = {
         g4_sampling_seed=2110000800,
         horizontal_prompt_suffix=True,
         g4_prompt_pair=_object_pair_g4_prompts(),
+        pilot_allocation=_object_pair_pilot_allocation(),
+        pilot_seed_registry_schema="v4-object-pair-engineering-pilot-seed-registry-v1",
+        hardware_stratum="a10080-policy_a40-simulator",
+        writer_output_parent="/data/users/ali/vla_wam/raw/v4/g7-object-pair",
     ),
     "containment": FixtureQualificationProfile(
         fixture_id="containment",
@@ -94,6 +138,10 @@ FIXTURE_QUALIFICATION_PROFILES: dict[str, FixtureQualificationProfile] = {
         g4_sampling_seed=2110030800,
         horizontal_prompt_suffix=False,
         g4_prompt_pair=_containment_g4_prompts(),
+        pilot_allocation=_containment_pilot_allocation(),
+        pilot_seed_registry_schema=_pilot_schema("containment"),
+        hardware_stratum="a10040-policy_b200-simulator",
+        writer_output_parent="/data/users/ali/vla_wam/raw/v4/g7-containment",
     ),
 }
 
@@ -107,4 +155,4 @@ def qualification_profile(fixture_id: str) -> FixtureQualificationProfile:
 
 def manipulated_and_reference(fixture_id: str) -> tuple[str, str]:
     spec = fixture_object_spec(fixture_id)
-    return spec.manipulated_object, spec.reference_object
+    return spec.target_object, spec.reference_object

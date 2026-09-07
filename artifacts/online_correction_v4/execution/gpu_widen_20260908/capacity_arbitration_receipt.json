@@ -1,0 +1,1155 @@
+{
+  "c7_lane_ceiling": 24,
+  "c7_throttle": {
+    "active_lane_pairs_before": 24,
+    "ceiling": 24,
+    "jobs_to_suspend": 0,
+    "lanes_kept": [
+      "c7m00",
+      "c7m01",
+      "c7m02",
+      "c7m03",
+      "c7m04",
+      "c7m05",
+      "c7m07",
+      "c7m09",
+      "c7m10",
+      "c7m11",
+      "c7m12",
+      "c7m13",
+      "c7m15",
+      "c7m16",
+      "c7m17",
+      "c7m18",
+      "c7m19",
+      "c7m21",
+      "c7m23",
+      "c7m24",
+      "c7m26",
+      "c7m28",
+      "c7m30",
+      "c7m31"
+    ],
+    "lanes_throttled": [],
+    "suspended_count": 0,
+    "suspended_jobs": []
+  },
+  "cancelled_superseded_jobs": [],
+  "deleted_stale_pilot_jobs": [],
+  "dry_run": false,
+  "kube_context": "prod-dcwi-warrenq1-vmkub007",
+  "mode": "pilot_priority",
+  "namespace": "211247-prod",
+  "observed_at_utc": "2026-09-07T20:09:34Z",
+  "pilot_priority_still_required": true,
+  "pool_utilization": {
+    "pending_lane_roles": {
+      "c6_pilot_policy": 0,
+      "c6_pilot_sim": 0,
+      "c7_policy": 0,
+      "c7_sim": 0,
+      "c8_pilot_policy": 0,
+      "c8_pilot_sim": 0
+    },
+    "pool_free_estimate": {
+      "NVIDIA-A100-SXM4-40GB": 64,
+      "NVIDIA-A100-SXM4-80GB": 72,
+      "NVIDIA-A40": 17,
+      "NVIDIA-B200": 40
+    },
+    "pool_sizes": {
+      "NVIDIA-A100-SXM4-40GB": 64,
+      "NVIDIA-A100-SXM4-80GB": 95,
+      "NVIDIA-A40": 40,
+      "NVIDIA-B200": 40
+    },
+    "pool_used_estimate": {
+      "NVIDIA-A100-SXM4-40GB": 0,
+      "NVIDIA-A100-SXM4-80GB": 23,
+      "NVIDIA-A40": 23,
+      "NVIDIA-B200": 0
+    },
+    "running_lane_roles": {
+      "c6_pilot_policy": 0,
+      "c6_pilot_sim": 0,
+      "c7_policy": 23,
+      "c7_sim": 23,
+      "c8_pilot_policy": 0,
+      "c8_pilot_sim": 0
+    }
+  },
+  "reclaimed_model_blind_jobs": [
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g2gpu20260908g",
+      "job": "v4-g2-horizontal-g2gpu20260908g-3ea0cb097e-s000",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g2r20260908g",
+      "job": "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s036",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g2r20260908g",
+      "job": "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s041",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g2r20260908g",
+      "job": "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s047",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g2r20260908g",
+      "job": "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s052",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g2r20260908g",
+      "job": "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s055",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g2r20260908g",
+      "job": "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s057",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g2r20260908g",
+      "job": "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s058",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g2r20260908g",
+      "job": "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s059",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g2r20260908g",
+      "job": "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s060",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g2r20260908g",
+      "job": "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s062",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g2r20260908g",
+      "job": "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s064",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g2r20260908g",
+      "job": "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s065",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g2r20260908g",
+      "job": "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s066",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g2r20260908g",
+      "job": "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s082",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g2r20260908g",
+      "job": "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s084",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g2r20260908g",
+      "job": "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s108",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g2r20260908g",
+      "job": "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s125",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3c6p20260908a10080g",
+      "job": "v4-g3-cont-g3c6p20260908a10080g-9a6114e547-s000",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3r20260908g",
+      "job": "v4-g3-horizontal-g3r20260908g-27e0010473-s000",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3r20260908g",
+      "job": "v4-g3-horizontal-g3r20260908g-27e0010473-s001",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3r20260908g",
+      "job": "v4-g3-horizontal-g3r20260908g-27e0010473-s002",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3r20260908g",
+      "job": "v4-g3-horizontal-g3r20260908g-27e0010473-s003",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3r20260908g",
+      "job": "v4-g3-horizontal-g3r20260908g-27e0010473-s004",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3r20260908g",
+      "job": "v4-g3-horizontal-g3r20260908g-27e0010473-s006",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3r20260908g",
+      "job": "v4-g3-horizontal-g3r20260908g-27e0010473-s070",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3r20260908g",
+      "job": "v4-g3-horizontal-g3r20260908g-27e0010473-s080",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3r20260908g",
+      "job": "v4-g3-horizontal-g3r20260908g-27e0010473-s081",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3r20260908g",
+      "job": "v4-g3-horizontal-g3r20260908g-27e0010473-s082",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3r20260908g",
+      "job": "v4-g3-horizontal-g3r20260908g-27e0010473-s083",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3r20260908g",
+      "job": "v4-g3-horizontal-g3r20260908g-27e0010473-s084",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3r20260908g",
+      "job": "v4-g3-horizontal-g3r20260908g-27e0010473-s085",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3r20260908g",
+      "job": "v4-g3-horizontal-g3r20260908g-27e0010473-s088",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3r20260908g",
+      "job": "v4-g3-horizontal-g3r20260908g-27e0010473-s089",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3r20260908g",
+      "job": "v4-g3-horizontal-g3r20260908g-27e0010473-s090",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3r20260908g",
+      "job": "v4-g3-horizontal-g3r20260908g-27e0010473-s091",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3r20260908g",
+      "job": "v4-g3-horizontal-g3r20260908g-27e0010473-s092",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3r20260908g",
+      "job": "v4-g3-horizontal-g3r20260908g-27e0010473-s093",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3r20260908g",
+      "job": "v4-g3-horizontal-g3r20260908g-27e0010473-s095",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3r20260908g",
+      "job": "v4-g3-horizontal-g3r20260908g-27e0010473-s096",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3r20260908g",
+      "job": "v4-g3-horizontal-g3r20260908g-27e0010473-s097",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3r20260908g",
+      "job": "v4-g3-horizontal-g3r20260908g-27e0010473-s098",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3r20260908g",
+      "job": "v4-g3-horizontal-g3r20260908g-27e0010473-s100",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3r20260908g",
+      "job": "v4-g3-horizontal-g3r20260908g-27e0010473-s101",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3r20260908g",
+      "job": "v4-g3-horizontal-g3r20260908g-27e0010473-s103",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3r20260908g",
+      "job": "v4-g3-horizontal-g3r20260908g-27e0010473-s109",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3r20260908g",
+      "job": "v4-g3-horizontal-g3r20260908g-27e0010473-s117",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3r20260908g",
+      "job": "v4-g3-horizontal-g3r20260908g-27e0010473-s118",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s027",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s034",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s038",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s065",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s069",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s071",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s073",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s075",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s076",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s077",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s078",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s080",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s082",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s083",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s084",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s085",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s086",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s087",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s088",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s091",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s092",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s093",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s094",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s096",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s101",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s102",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s103",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s108",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s112",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s113",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s114",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s115",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s116",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s117",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-2a5f61fac0-s118",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-60670a185c-s038",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-60670a185c-s059",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-60670a185c-s062",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-60670a185c-s071",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-60670a185c-s073",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-60670a185c-s103",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-60670a185c-s108",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-60670a185c-s112",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-6f875f62a7-s027",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-6f875f62a7-s038",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-6f875f62a7-s073",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-6f875f62a7-s075",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-6f875f62a7-s077",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-6f875f62a7-s078",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-6f875f62a7-s088",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-6f875f62a7-s091",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-6f875f62a7-s092",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-6f875f62a7-s094",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-6f875f62a7-s096",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-6f875f62a7-s101",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-6f875f62a7-s102",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-6f875f62a7-s103",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-6f875f62a7-s112",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-6f875f62a7-s113",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-6f875f62a7-s114",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-6f875f62a7-s115",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-6f875f62a7-s116",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-6f875f62a7-s117",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-6f875f62a7-s118",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-72a5290972-s059",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-72a5290972-s062",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-d86a16f787-s014",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-d86a16f787-s015",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-d86a16f787-s017",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-d86a16f787-s019",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    },
+    {
+      "action": "suspend",
+      "active": 0,
+      "attempt_id": "g3rb20260908v",
+      "job": "v4-g3-rb-g3rb20260908v-d86a16f787-s020",
+      "reason_code": "blocked_or_completed_family_reclaim",
+      "reclaimed": false,
+      "succeeded": 0
+    }
+  ],
+  "schema_version": "v4-capacity-arbitration-enforcement-receipt-v1"
+}

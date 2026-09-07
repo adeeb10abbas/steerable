@@ -116,8 +116,16 @@ BLOCKED_EPISODE_COUNTS: dict[str, int] = {
     "C5_vertical": 1536,
 }
 
+G7_PILOT_ATTEMPT_PATTERNS: tuple[str, ...] = (
+    r"^attempt00(20|21)$",
+    r"^attempt00(57|58|59|60|61|62|63|64)$",
+)
+G7_PILOT_LANE_PATTERNS: tuple[str, ...] = (r"^g7c6p\d+$", r"^g7c8p\d+$")
+
 C7_ATTEMPT_RE = re.compile(r"^attempt0\d+$|^c7m\d+$", re.I)
 NATURAL_GRASP_ATTEMPT_RE = re.compile(r"g3ngp|g3ngrb|nglive|natgrasp|livectrl", re.I)
+G7_PILOT_ATTEMPT_RE = re.compile("|".join(G7_PILOT_ATTEMPT_PATTERNS), re.I)
+G7_PILOT_LANE_RE = re.compile("|".join(G7_PILOT_LANE_PATTERNS), re.I)
 
 
 class WaveAdmissionError(RuntimeError):
@@ -140,6 +148,19 @@ class AdmissionTier:
 
 
 ADMISSION_TIERS: tuple[AdmissionTier, ...] = (
+    AdmissionTier(
+        tier_id="g7_engineering_pilots",
+        priority=-1,
+        attempt_ids=frozenset(),
+        attempt_patterns=G7_PILOT_ATTEMPT_PATTERNS,
+        gpu_product=None,
+        alternate_gpu_products=(),
+        admission_class="pilot_priority",
+        seed_count=24,
+        seed_minutes=25,
+        episodes_gated=1536,
+        description="C6/C8 G7 engineering pilots gate 768-episode confirmatory families",
+    ),
     AdmissionTier(
         tier_id="natural_grasp_live_control",
         priority=0,
@@ -221,6 +242,10 @@ def save_registry(payload: dict[str, Any], path: Path = DEFAULT_REGISTRY) -> Non
 
 def is_c7_attempt(attempt_id: str) -> bool:
     return bool(C7_ATTEMPT_RE.match(attempt_id))
+
+
+def is_g7_pilot_attempt(attempt_id: str) -> bool:
+    return bool(G7_PILOT_ATTEMPT_RE.match(attempt_id))
 
 
 def is_scientifically_blocked_attempt(attempt_id: str) -> bool:
@@ -408,13 +433,12 @@ def compute_admitted_attempts(
 
         if tier.admission_class == "backfill":
             admitted.extend(incomplete)
-            report["tiers"].append(
-                {
-                    "tier_id": tier.tier_id,
-                    "status": "admitted_backfill",
-                    "attempt_ids": incomplete,
-                }
-            )
+            report["tiers"].append({"tier_id": tier.tier_id, "status": "admitted_backfill", "attempt_ids": incomplete})
+            continue
+
+        if tier.admission_class == "pilot_priority":
+            admitted.extend(incomplete)
+            report["tiers"].append({"tier_id": tier.tier_id, "status": "admitted_pilot_priority", "attempt_ids": incomplete})
             continue
 
         admitted.extend(incomplete)
@@ -737,10 +761,8 @@ def enforce_admission_on_cluster(
             continue
         name = str(job["metadata"]["name"])
         should_run = (
-            attempt in admitted_set or attempt in c7_attempts
-        ) and not is_scientifically_blocked_attempt(attempt) and not is_wrong_stratum_parallel_attempt(
-            attempt
-        )
+            attempt in admitted_set or attempt in c7_attempts or is_g7_pilot_attempt(attempt)
+        ) and not is_scientifically_blocked_attempt(attempt) and not is_wrong_stratum_parallel_attempt(attempt)
         currently_suspended = bool(job.get("spec", {}).get("suspend"))
         if should_run and currently_suspended:
             if set_job_suspend(

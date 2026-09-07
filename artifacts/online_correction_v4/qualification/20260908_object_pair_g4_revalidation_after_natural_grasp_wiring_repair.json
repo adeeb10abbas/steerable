@@ -1,0 +1,25 @@
+{
+  "schema_version": "v4-object-pair-g4-revalidation-after-trigger-wiring-repair-v1",
+  "fixture_id": "object_pair",
+  "gate": "G4",
+  "passed": true,
+  "revalidation_basis": "G4 policy-session interface is independent of NaturalGraspDetector observation wiring; the existing live policy-session receipt remains authoritative.",
+  "prior_g4_receipt": {
+    "path": "artifacts/online_correction_v4/qualification/object_pair_g4_nano_policy_session_a100_g4c7a100q20260906b.json",
+    "status": "passed"
+  },
+  "shared_code_repair_commits": [
+    "56ea9a65dfffb75aeba01ff930efcf92357ba587",
+    "265ae2793efb9e158ba2209b440215001933b4bb",
+    "308f5dab36968f39f13a97b2db76797e6ed92e83",
+    "c9c988da1d2ea7ffd81702a0024a7a39a20bb892"
+  ],
+  "natural_grasp_live_controls": {
+    "registry_path": "artifacts/online_correction_v4/setup/natural_grasp_live_control_registry.json",
+    "positive_control_attempt_id": "g3ngp20260908p",
+    "negative_control_attempt_id": "g3ngp20260908negb",
+    "study_commit": "c9c988da1d2ea7ffd81702a0024a7a39a20bb892"
+  },
+  "behavioral_episode_count": 0,
+  "status": "passed"
+}

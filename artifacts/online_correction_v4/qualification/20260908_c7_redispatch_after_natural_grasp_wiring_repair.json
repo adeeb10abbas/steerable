@@ -1,0 +1,16 @@
+{
+  "schema_version": "v4-c7-redispatch-after-natural-grasp-wiring-repair-v1",
+  "family": "C7",
+  "fixture_id": "object_pair",
+  "target_episodes": 768,
+  "reclassified_infra_invalid_episodes": 279,
+  "reclassification_receipt": "artifacts/online_correction_v4/qualification/20260908_c7_natural_grasp_trigger_wiring_reclassification.json",
+  "repair_study_commit": "c9c988da1d2ea7ffd81702a0024a7a39a20bb892",
+  "natural_grasp_registry": "artifacts/online_correction_v4/setup/natural_grasp_live_control_registry.json",
+  "dispatch_gate_status": "unblocked",
+  "prior_wave_status": "wave-005 lanes still active on pre-repair study checkout; must be drained before counting repaired-path episodes",
+  "redispatch_action": "Stop wave-005 C7 policy/simulator jobs, clear stale attempt locks on pre-repair lanes only, then dispatch wave-006 from frozen C7 bindings with enforce_dispatch_gates() and study checkout pinned to c9c988d",
+  "raw_evidence_preserved": true,
+  "accepted_ledger_excludes_reclassified": true,
+  "status": "queued_for_wave_006_redispatch"
+}

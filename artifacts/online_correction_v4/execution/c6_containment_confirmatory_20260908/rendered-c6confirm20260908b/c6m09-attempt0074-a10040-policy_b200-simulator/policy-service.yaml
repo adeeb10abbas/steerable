@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: "v4-c6m09-attempt0074-ccd5d24467-policy"
+  namespace: "211247-prod"
+  labels:
+    v4-lane-id: "c6m09"
+    v4-attempt-id: "attempt0074"
+    v4-config-sha: "ccd5d2446763b60a13de127bcd13a2eb"
+    v4-lane-role: "policy"
+spec:
+  publishNotReadyAddresses: false
+  selector:
+    v4-lane-id: "c6m09"
+    v4-attempt-id: "attempt0074"
+    v4-config-sha: "ccd5d2446763b60a13de127bcd13a2eb"
+    v4-lane-role: "policy"
+  ports:
+    - name: policy
+      port: 18160
+      targetPort: 18160
+      protocol: TCP

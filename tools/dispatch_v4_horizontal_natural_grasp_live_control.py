@@ -91,6 +91,8 @@ def build_launch_config(
         binding(SCRIPT_ROOT / "startup_preflight.py", "/opt/v4-lane/scripts/startup_preflight.py"),
         binding(SCRIPT_ROOT / "isaac_render_probe.py", "/opt/v4-lane/scripts/isaac_render_probe.py"),
         binding(ROOT / "tools/run_v4_horizontal_natural_grasp_live_positive_control.py", runner_cluster),
+        binding(ROOT / "tools/v4_natural_grasp_live_control_runner.py", cluster("tools/v4_natural_grasp_live_control_runner.py")),
+        binding(ROOT / "tools/run_v4_horizontal_g3_path_seed.py", cluster("tools/run_v4_horizontal_g3_path_seed.py")),
         binding(campaign, cluster("artifacts/online_correction_v4/setup/campaign_horizontal_repair_v2_frozen.json")),
         binding(ROOT / "experiments/online_correction_v4/detectors.py", cluster("experiments/online_correction_v4/detectors.py")),
         binding(ROOT / "experiments/online_correction_v4/droid_g3_scripted.py", cluster("experiments/online_correction_v4/droid_g3_scripted.py")),

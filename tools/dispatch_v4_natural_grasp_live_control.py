@@ -168,6 +168,8 @@ def render_bundle(
     }
     bindings = [
         _binding(cfg["runner_source"], runner_path),
+        _binding(ROOT / "tools/v4_natural_grasp_live_control_runner.py", f"{study_root}/tools/v4_natural_grasp_live_control_runner.py"),
+        _binding(ROOT / "tools/run_v4_horizontal_g3_path_seed.py", f"{study_root}/tools/run_v4_horizontal_g3_path_seed.py"),
         _binding(ROOT / "tools/run_v4_horizontal_g3_scripted_seed.py", f"{study_root}/tools/run_v4_horizontal_g3_scripted_seed.py"),
         _binding(ROOT / "experiments/online_correction_v4/detectors.py", f"{study_root}/experiments/online_correction_v4/detectors.py"),
         _binding(ROOT / "experiments/online_correction_v4/droid_robolab.py", f"{study_root}/experiments/online_correction_v4/droid_robolab.py"),

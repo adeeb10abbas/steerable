@@ -79,6 +79,7 @@ def build_launch_config(
     control_mode: str,
     gpu_product: str,
     expected_gpu_name: str,
+    pin_commit: str,
 ) -> dict[str, Any]:
     runner_cluster = RUNNER_CLUSTER_PATH
     output_dir = f"{OUTPUT_PARENT}/{attempt_id}"
@@ -102,6 +103,8 @@ def build_launch_config(
         binding(SCRIPT_ROOT / "startup_preflight.py", "/opt/v4-lane/scripts/startup_preflight.py"),
         binding(SCRIPT_ROOT / "isaac_render_probe.py", "/opt/v4-lane/scripts/isaac_render_probe.py"),
         binding(RUNNER, runner_cluster),
+        binding(ROOT / "tools/v4_natural_grasp_live_control_runner.py", cluster("tools/v4_natural_grasp_live_control_runner.py")),
+        binding(ROOT / "tools/run_v4_horizontal_g3_path_seed.py", cluster("tools/run_v4_horizontal_g3_path_seed.py")),
         binding(CAMPAIGN, cluster("docs/online_correction_v4/campaign.json")),
         binding(ROOT / "experiments/online_correction_v4/detectors.py", cluster("experiments/online_correction_v4/detectors.py")),
         binding(ROOT / "experiments/online_correction_v4/droid_g3_scripted.py", cluster("experiments/online_correction_v4/droid_g3_scripted.py")),
@@ -133,7 +136,7 @@ def build_launch_config(
         "--goal",
         GOAL,
         "--expected-study-commit",
-        PIN_COMMIT,
+        pin_commit,
         "--expected-robolab-commit",
         ROBOLAB_COMMIT,
         "--expected-driver-version",
@@ -536,12 +539,13 @@ def dispatch_one(
     attempt_id: str,
     control_mode: str,
     gpu_product: str,
+    pin_commit: str,
     create: bool,
 ) -> dict[str, Any]:
     expected_gpu_name = gpu_scheduling.display_name_for_product(gpu_product)
     isolation = checkout_isolation.provision_isolated_checkout(
         workstream_id=WORKSTREAM_ID,
-        pin_commit=PIN_COMMIT,
+        pin_commit=pin_commit,
         attempt_id=attempt_id,
         kube_context=KUBE_CONTEXT,
         namespace=NAMESPACE,
@@ -555,6 +559,7 @@ def dispatch_one(
         control_mode=control_mode,
         gpu_product=gpu_product,
         expected_gpu_name=expected_gpu_name,
+        pin_commit=pin_commit,
     )
     launch_body = launch_config_bytes(launch) + b"\n"
     launch_sha = sha256_bytes(launch_body)
@@ -600,7 +605,7 @@ def dispatch_one(
         "output_parent": OUTPUT_PARENT,
         "output_dir": f"{OUTPUT_PARENT}/{attempt_id}",
         "study_root": study_root,
-        "study_commit": PIN_COMMIT,
+        "study_commit": pin_commit,
         "gpu_product": gpu_product,
     }
     (bundle_dir / "dispatch_receipt.json").write_text(
@@ -630,6 +635,7 @@ def main(argv: list[str] | None = None) -> int:
         default="scripted_grasp",
     )
     parser.add_argument("--gpu-product", default="NVIDIA-A100-SXM4-40GB")
+    parser.add_argument("--pin-commit", default=PIN_COMMIT)
     parser.add_argument("--create", action="store_true")
     parser.add_argument("--enforce-admission", action="store_true")
     args = parser.parse_args(argv)
@@ -649,6 +655,7 @@ def main(argv: list[str] | None = None) -> int:
         attempt_id=args.attempt_id,
         control_mode=args.control_mode,
         gpu_product=args.gpu_product,
+        pin_commit=args.pin_commit,
         create=args.create,
     )
     print(json.dumps(receipt, indent=2, sort_keys=True))

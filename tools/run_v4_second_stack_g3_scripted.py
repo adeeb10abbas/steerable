@@ -129,12 +129,14 @@ def _run_check(
     plan_row: Mapping[str, Any],
     position_label: str,
     moving_reference: bool,
+    skip_initial_reset: bool = False,
 ) -> dict[str, Any]:
     import numpy as np
     import sapien.core as sapien
 
-    env.reset(seed=env_seed)
-    apply_registered_reset(env, reset_row, settle_steps=30)
+    if not skip_initial_reset:
+        env.reset(seed=env_seed)
+        apply_registered_reset(env, reset_row, settle_steps=30)
     raw = unwrap_simpler_env(env)
     ensure_registered_support(env)
     arm = raw.agent.controller.controllers["arm"]

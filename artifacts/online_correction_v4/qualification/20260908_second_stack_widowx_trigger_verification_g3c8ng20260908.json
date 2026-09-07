@@ -1,0 +1,47 @@
+{
+  "audited_at_utc": "2026-09-08T13:47:00Z",
+  "campaign_id": "online_correction_v4",
+  "family_id": "C8",
+  "fixture_id": "second_stack",
+  "isaac_robolab_defect_reference": {
+    "component": "experiments/online_correction_v4/droid_robolab.py::object_kinematic_state",
+    "defect": "robot-base pose used as gripper position when not grabbed",
+    "path": "artifacts/online_correction_v4/qualification/20260908_reference_binding_natural_grasp_live_control_finding_g3ngrb20260908p.json"
+  },
+  "live_control_receipts": {
+    "negative": {
+      "attempt_id": "g3c8ng20260908neg",
+      "path": "artifacts/online_correction_v4/qualification/20260908_second_stack_natural_grasp_live_negative_control_g3c8ng20260908neg.json"
+    },
+    "positive": {
+      "attempt_id": "g3c8ng20260908p",
+      "path": "artifacts/online_correction_v4/qualification/20260908_second_stack_natural_grasp_live_positive_control_g3c8ng20260908p.json"
+    }
+  },
+  "observation_adapter": {
+    "component": "experiments/online_correction_v4/second_stack_kinematic.py::SecondStackKinematicAdapter",
+    "contact_source": "finger-target contact pairs via active_contact_pairs",
+    "gripper_reference_when_not_in_contact": "finger_midpoint",
+    "gripper_reference_when_in_contact": "object_center (Isaac grabbed coupling)",
+    "physics_sampling": "NaturalGraspDetector fed at 0.2 s control boundaries from SAPIEN 0.002 s substeps"
+  },
+  "path_audit_at_post_reset": {
+    "ee_to_target_m": 0.17453843033150468,
+    "finger_to_target_m": 0.19654098720922125,
+    "robot_base_to_target_m": 0.37362105641342475
+  },
+  "robot_base_defect_audit": {
+    "equivalent_isaac_robot_base_defect_present": true,
+    "robot_base_reference_would_support_spurious_trigger": false,
+    "production_path_uses_robot_base": false
+  },
+  "schema_version": "v4-second-stack-widowx-trigger-verification-v1",
+  "trigger_verdict": {
+    "negative_control_passed": true,
+    "positive_control_passed": true,
+    "scripted_trajectory_passed": true,
+    "trigger_eligible_on_positive": true,
+    "trigger_event_t_eligible_s": 18.000000854954123
+  },
+  "verdict": "widowx_trigger_adapter_verified_independent_of_isaac_repair"
+}

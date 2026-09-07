@@ -406,24 +406,34 @@ def load_finalized_attempts(
 
     if worker_count == 1:
         fresh = [_load_one(path) for path in pending]
+        if checkpoint_dir is not None:
+            for parsed in fresh:
+                _append_verification_checkpoint(
+                    checkpoint_dir,
+                    {
+                        **_attempt_checkpoint_key(parsed.attempt_path),
+                        "episode_id": parsed.episode_id,
+                        "attempt_id": parsed.attempt_id,
+                        "verification_errors": list(parsed.verification_errors),
+                    },
+                )
     else:
         fresh = []
         with ThreadPoolExecutor(max_workers=worker_count) as pool:
             futures = {pool.submit(_load_one, path): path for path in pending}
             for future in as_completed(futures):
-                fresh.append(future.result())
-
-    if checkpoint_dir is not None:
-        for parsed in fresh:
-            _append_verification_checkpoint(
-                checkpoint_dir,
-                {
-                    **_attempt_checkpoint_key(parsed.attempt_path),
-                    "episode_id": parsed.episode_id,
-                    "attempt_id": parsed.attempt_id,
-                    "verification_errors": list(parsed.verification_errors),
-                },
-            )
+                parsed = future.result()
+                fresh.append(parsed)
+                if checkpoint_dir is not None:
+                    _append_verification_checkpoint(
+                        checkpoint_dir,
+                        {
+                            **_attempt_checkpoint_key(parsed.attempt_path),
+                            "episode_id": parsed.episode_id,
+                            "attempt_id": parsed.attempt_id,
+                            "verification_errors": list(parsed.verification_errors),
+                        },
+                    )
 
     return sorted([*loaded, *fresh], key=lambda item: (item.episode_id, item.attempt_id))
 

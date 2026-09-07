@@ -16,8 +16,8 @@
   "capacity_finding": "C8 cannot use A100-80GB or B200 under its G4-attested A40 GR00T Bridge stratum. With C7 at its 40-lane ceiling the entire A40 pool is consumed by C7 simulators, so C8 lanes queue until C7 releases A40. After C7 completes, up to 20 concurrent C8 lane pairs (40 A40 GPUs) are authorized.",
   "concurrent_lane_limits": {
     "after_c7_releases_a40_simulators": 20,
-    "current_max_concurrent_c8_lanes": 7,
-    "current_observed_c7_sim_lanes": 25,
+    "current_max_concurrent_c8_lanes": 8,
+    "current_observed_c7_sim_lanes": 19,
     "while_c7_at_40_ceiling": 0
   },
   "fixture_id": "second_stack",

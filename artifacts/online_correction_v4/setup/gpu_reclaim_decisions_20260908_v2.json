@@ -1,0 +1,40 @@
+{
+  "schema_version": "v4-gpu-reclaim-decisions-v2",
+  "observed_at_utc": "2026-09-08T05:50:00Z",
+  "reexamined_for_a40_starvation": true,
+  "decisions": [
+    {
+      "pod": "bzbwd1-a40-index-5594b754bb-n6lsz",
+      "gpu_pool": "NVIDIA-A40",
+      "gpu_utilization_percent": 0,
+      "gpu_memory_used_mib": 1904,
+      "action": "do_not_stop",
+      "reason": "Non-zero GPU memory resident; likely embedding/index service. Cannot prove idle without process owner confirmation. Would free one A40 slot if stopped but risk breaking unknown index workload."
+    },
+    {
+      "pod": "v3e004-rtx-nano-server-05-ali",
+      "gpu_pool": "NVIDIA-RTX-PRO-6000-Blackwell-Server-Edition",
+      "action": "do_not_stop",
+      "reason": "Closed V3E004 track on non-A40 pool; reclaim does not address 132 A40-pinned pending jobs."
+    },
+    {
+      "pod": "211247-sz5vjy-vla4-b200-4gpu",
+      "gpu_pool": "NVIDIA-B200",
+      "action": "do_not_stop",
+      "reason": "Active publisher pod for OUTPUT_PARENT prep and qualification dispatch."
+    },
+    {
+      "pod": "211247-sz5vjy-groot-b200-2gpu",
+      "gpu_pool": "NVIDIA-B200",
+      "action": "do_not_stop",
+      "reason": "Active B200 workload in namespace."
+    },
+    {
+      "pod": "211247-ali-b200-1gpu",
+      "gpu_pool": "NVIDIA-B200",
+      "action": "do_not_stop",
+      "reason": "Active B200 workload in namespace."
+    }
+  ],
+  "summary": "No pods stopped. bzbwd1 is the only A40 holder among reclaim candidates but is not provably idle. RTX/B200 targets do not free A40 pins."
+}

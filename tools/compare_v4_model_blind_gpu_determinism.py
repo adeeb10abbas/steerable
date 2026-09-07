@@ -36,11 +36,24 @@ def _gpu_name(receipt: Mapping[str, Any]) -> str:
 
 
 def _position_errors(receipt: Mapping[str, Any]) -> Mapping[str, Any]:
+    top_level = receipt.get("position_max_error_m_by_object")
+    if isinstance(top_level, Mapping):
+        return top_level
     attestation = receipt.get("reset_attestation") or {}
     errors = attestation.get("position_errors_m")
-    if not isinstance(errors, Mapping):
-        raise ValueError("receipt lacks reset_attestation.position_errors_m")
-    return errors
+    if isinstance(errors, Mapping):
+        return errors
+    raise ValueError(
+        "receipt lacks position_max_error_m_by_object or reset_attestation.position_errors_m"
+    )
+
+
+def _reset_registry_sha256(receipt: Mapping[str, Any]) -> str:
+    attestation = receipt.get("reset_attestation") or {}
+    value = attestation.get("reset_registry_sha256")
+    if not isinstance(value, str) or not value:
+        raise ValueError("receipt lacks reset_attestation.reset_registry_sha256")
+    return value
 
 
 def _max_position_error(errors: Mapping[str, Any]) -> float:
@@ -60,6 +73,13 @@ def compare_receipts(
     candidate_seed = candidate.get("environment_seed")
     if baseline_seed != candidate_seed:
         raise ValueError("environment_seed differs between baseline and candidate")
+    baseline_registry = _reset_registry_sha256(baseline)
+    candidate_registry = _reset_registry_sha256(candidate)
+    if baseline_registry != candidate_registry:
+        raise ValueError(
+            "reset_registry_sha256 differs between baseline and candidate; "
+            "compare only within the same reset registry stratum"
+        )
     baseline_errors = _position_errors(baseline)
     candidate_errors = _position_errors(candidate)
     if set(baseline_errors) != set(candidate_errors):

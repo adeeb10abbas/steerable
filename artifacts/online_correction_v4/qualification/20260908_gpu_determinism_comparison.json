@@ -1,39 +1,37 @@
 {
   "schema_version": "v4-model-blind-gpu-determinism-comparison-v1",
-  "compiled_at_utc": "2026-09-08T05:25:00Z",
-  "status": "partial_pending_receipts",
+  "compiled_at_utc": "2026-09-08T05:50:00Z",
+  "status": "baseline_pending_a40_capacity",
   "registry_position_tolerance_m": 0.005,
+  "reset_registry_sha256": "392dcdfd797644f514b74cf82f65b3a69d7ba1120e959b55e0447df18d61ab13",
+  "environment_seed": 2100000000,
+  "fixture_id": "horizontal",
+  "gate": "G2",
+  "candidate": {
+    "gpu_product": "NVIDIA-A100-SXM4-80GB",
+    "gpu_display_name": "NVIDIA A100-SXM4-80GB",
+    "attempt_id": "g2r20260908a10080a",
+    "receipt_path": "artifacts/online_correction_v4/qualification/gpu_receipts_20260908/g2_repair_v2_seed2100000000_a10080.json",
+    "receipt_sha256": "dacceca03ee957d2fdbd0ac053533c01a808ede04d035ebd373202c0e2a3f6df",
+    "reset_fingerprint_sha256": "271731c4be6ecce4ba75bf3bf366d6b114e96be9cf425c0710ef41be51c0cfc0",
+    "position_max_error_m_by_object": {
+      "banana": 0.00019746289428013153,
+      "bowl": 0.0009880589025809128,
+      "rubiks_cube": 0.0013149891870810615
+    }
+  },
   "baseline": {
     "gpu_product": "NVIDIA-A40",
-    "gpu_display_name": "NVIDIA A40",
-    "reference_gate": "G2 horizontal",
-    "reference_receipt": "artifacts/online_correction_v4/qualification/20260905_horizontal_g2_gate_receipt.json",
-    "environment_seed": 2100000000,
-    "notes": "A40 baseline from qualified horizontal G2 gate; G3 containment seed 2100030000 comparison pending write-once receipts from widened wave."
+    "attempt_id": "g2gpu20260908a40b",
+    "job_name": "v4-g2-horizontal-g2gpu20260908a40b-11feca0806-s000",
+    "status": "pending_scheduling",
+    "note": "Same reset registry stratum required; original g2q20260905g A40 baseline uses different registry and must not be mixed."
   },
-  "candidates": [
-    {
-      "gpu_product": "NVIDIA-A100-SXM4-80GB",
-      "attempt_id": "g3c6p20260908a10080c",
-      "fixture": "containment",
-      "environment_seed": 2100030000,
-      "preflight_status": "passed",
-      "isaac_launch_status": "passed",
-      "receipt_comparison_status": "pending",
-      "notes": "Pod reached G3 runner; awaiting seed receipt on PVC for compare_v4_model_blind_gpu_determinism.py."
-    },
-    {
-      "gpu_product": "NVIDIA-A100-SXM4-40GB",
-      "attempt_id": "g3gpusmoke20260908a10040",
-      "status": "not_dispatched",
-      "reason": "Awaiting 1-seed replicate dispatch after launch-config newline SHA fix validated on a10080c wave."
-    },
-    {
-      "gpu_product": "NVIDIA-B200",
-      "attempt_id": "g3gpusmoke20260908b200",
-      "status": "not_dispatched",
-      "reason": "Same as A100-40GB; replicate path ready."
-    }
-  ],
-  "compare_command": ".venv/bin/python tools/compare_v4_model_blind_gpu_determinism.py --baseline <a40-receipt.json> --candidate <candidate-receipt.json>"
+  "containment_g3_s000": {
+    "status": "no_path_receipt",
+    "reason": "InstructionBindingError queue row goal inside != task relation left",
+    "infra_attestation": "runtime-preflight.passed and Isaac launch observed before fixture failure",
+    "owner": "Agent B C5/C6 containment fixture"
+  },
+  "compare_command_when_baseline_ready": ".venv/bin/python tools/compare_v4_model_blind_gpu_determinism.py --baseline <a40-repair-v2-receipt.json> --candidate artifacts/online_correction_v4/qualification/gpu_receipts_20260908/g2_repair_v2_seed2100000000_a10080.json --out artifacts/online_correction_v4/qualification/20260908_gpu_determinism_a10080_repair_v2_result.json"
 }

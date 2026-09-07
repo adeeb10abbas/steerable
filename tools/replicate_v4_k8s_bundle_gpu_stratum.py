@@ -83,6 +83,33 @@ def _rewrite_bundle(
             path.write_text(updated, encoding="utf-8")
 
 
+def _trim_to_max_seeds(dest: Path, max_seeds: int) -> None:
+    if max_seeds < 1:
+        raise ValueError("max_seeds must be positive")
+    for path in sorted(dest.glob("s*-*.yaml")):
+        match = re.fullmatch(r"s(\d{3})-(configmap|job)\.yaml", path.name)
+        if match is None:
+            continue
+        if int(match.group(1)) >= max_seeds:
+            path.unlink()
+    resources = sorted(
+        name
+        for name in (p.name for p in dest.glob("*.yaml"))
+        if name == "kustomization.yaml"
+        or name == "scripts-configmap.yaml"
+        or name == "bundle-manifest.json"
+        or re.fullmatch(r"s\d{3}-(?:configmap|job)\.yaml", name)
+    )
+    kustom = dest / "kustomization.yaml"
+    kustom.write_text(
+        "apiVersion: kustomize.config.k8s.io/v1beta1\n"
+        "kind: Kustomization\n"
+        "resources:\n"
+        + "".join(f"  - {name}\n" for name in resources if name != "kustomization.yaml"),
+        encoding="utf-8",
+    )
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source-bundle", type=Path, required=True)
@@ -91,6 +118,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--to-attempt-id", required=True)
     parser.add_argument("--from-gpu-product", default="NVIDIA-A40")
     parser.add_argument("--to-gpu-product", required=True)
+    parser.add_argument("--max-seeds", type=int, default=None, help="Keep only first N seed jobs")
     parser.add_argument("--kube-context", default=None)
     parser.add_argument("--create", action="store_true")
     args = parser.parse_args(argv)
@@ -111,6 +139,8 @@ def main(argv: list[str] | None = None) -> int:
         from_gpu_product=args.from_gpu_product,
         to_gpu_product=args.to_gpu_product,
     )
+    if args.max_seeds is not None:
+        _trim_to_max_seeds(dest, args.max_seeds)
 
     manifest_path = dest / "bundle-manifest.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))

@@ -1,0 +1,98 @@
+{
+  "schema_version": "v4-gpu-pool-widen-dispatch-receipt-v2",
+  "observed_at_utc": "2026-09-08T05:50:00Z",
+  "kube_context": "prod-dcwi-warrenq1-vmkub007",
+  "namespace": "211247-prod",
+  "utilization_before": {
+    "pending_by_gpu_selector": {
+      "NVIDIA-A40": 132
+    },
+    "running_by_gpu_selector": {
+      "NVIDIA-A40": 24,
+      "NVIDIA-A100-SXM4-80GB": 29
+    }
+  },
+  "utilization_after": {
+    "pending_by_gpu_selector": {
+      "NVIDIA-A40": 138,
+      "NVIDIA-A100-SXM4-80GB": 467,
+      "NVIDIA-A100-SXM4-40GB": 46,
+      "NVIDIA-B200": 123
+    },
+    "running_by_gpu_selector": {
+      "NVIDIA-A40": 24,
+      "NVIDIA-A100-SXM4-80GB": 26,
+      "NVIDIA-A100-SXM4-40GB": 7,
+      "NVIDIA-B200": 1,
+      "(none)": 10
+    }
+  },
+  "newly_enabled_pools": [
+    {
+      "gpu_product": "NVIDIA-A100-SXM4-80GB",
+      "waves": [
+        {
+          "attempt_id": "g3c6p20260908a10080c",
+          "fixture": "containment",
+          "job_prefix": "v4-g3-containment-g3c6p20260908a10080c-30dffd5752",
+          "job_count": 64
+        },
+        {
+          "attempt_id": "g3c5p20260908a10080c",
+          "fixture": "vertical",
+          "job_prefix": "v4-g3-vertical-g3c5p20260908a10080c-3210363d9b",
+          "job_count": 64
+        }
+      ],
+      "g2_smoke": {
+        "attempt_id": "g2r20260908a10080a",
+        "job_name": "v4-g2-horizontal-g2r20260908a10080a-11feca0806-s000",
+        "status": "Complete"
+      }
+    },
+    {
+      "gpu_product": "NVIDIA-A100-SXM4-40GB",
+      "waves": [
+        {
+          "attempt_id": "g3c6p20260908a10040",
+          "job_prefix": "v4-g3-containment-g3c6p20260908a10040-30dffd5752",
+          "job_count": 64
+        },
+        {
+          "attempt_id": "g3c5p20260908a10040",
+          "job_prefix": "v4-g3-vertical-g3c5p20260908a10040-3210363d9b",
+          "job_count": 64
+        }
+      ],
+      "g2_smoke": {
+        "attempt_id": "g2gpu20260908a10040",
+        "job_name": "v4-g2-horizontal-g2gpu20260908a10040-11feca0806-s000",
+        "status": "Failed_study_commit_drift"
+      }
+    },
+    {
+      "gpu_product": "NVIDIA-B200",
+      "waves": [
+        {
+          "attempt_id": "g3c6p20260908b200",
+          "job_prefix": "v4-g3-containment-g3c6p20260908b200-30dffd5752",
+          "job_count": 64
+        },
+        {
+          "attempt_id": "g3c5p20260908b200",
+          "job_prefix": "v4-g3-vertical-g3c5p20260908b200-3210363d9b",
+          "job_count": 64
+        }
+      ],
+      "g2_smoke": {
+        "attempt_id": "g2gpu20260908b200",
+        "job_name": "v4-g2-horizontal-g2gpu20260908b200-11feca0806-s000",
+        "status": "Failed_study_commit_drift"
+      }
+    }
+  ],
+  "rtx_pro_6000_excluded": {
+    "reason": "Not in MODEL_BLIND_SIMULATOR_POOL; no Isaac/PhysX attestation receipt. V3E004 pods on RTX are closed-track leftovers and do not relieve A40 starvation."
+  },
+  "c7_policy_boundary": "Policy episodes remain on frozen a10080-policy_a40-simulator; other families require per-stratum G4 hardware receipts before policy dispatch."
+}

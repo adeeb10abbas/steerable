@@ -1,0 +1,35 @@
+{
+  "schema_version": "v4-gpu-product-attestation-v1",
+  "compiled_at_utc": "2026-09-08T05:50:00Z",
+  "gpu_product": "NVIDIA-A100-SXM4-80GB",
+  "gpu_display_name": "NVIDIA A100-SXM4-80GB",
+  "attestation_fixture": "horizontal_geometry_repair_v2",
+  "gate": "G2",
+  "environment_seed": 2100000000,
+  "reset_registry_sha256": "392dcdfd797644f514b74cf82f65b3a69d7ba1120e959b55e0447df18d61ab13",
+  "attempt_id": "g2r20260908a10080a",
+  "immutable_job_name": "v4-g2-horizontal-g2r20260908a10080a-11feca0806-s000",
+  "status": "passed",
+  "receipt_path": "artifacts/online_correction_v4/qualification/gpu_receipts_20260908/g2_repair_v2_seed2100000000_a10080.json",
+  "receipt_sha256": "dacceca03ee957d2fdbd0ac053533c01a808ede04d035ebd373202c0e2a3f6df",
+  "runtime_identity": {
+    "driver_version": "580.95.05",
+    "gpu_name": "NVIDIA A100-SXM4-80GB"
+  },
+  "position_max_error_m_by_object": {
+    "banana": 0.00019746289428013153,
+    "bowl": 0.0009880589025809128,
+    "rubiks_cube": 0.0013149891870810615
+  },
+  "max_position_error_m": 0.0013149891870810615,
+  "registry_position_tolerance_m": 0.005,
+  "within_registry_tolerance": true,
+  "isaac_render_probe": "passed_via_g2_seed_receipt",
+  "determinism_baseline": {
+    "status": "pending_a40_repair_v2_baseline",
+    "baseline_attempt_id": "g2gpu20260908a40b",
+    "baseline_job_name": "v4-g2-horizontal-g2gpu20260908a40b-11feca0806-s000",
+    "reason": "A40 pool saturated; baseline pod pending scheduling. Compare with compare_v4_model_blind_gpu_determinism.py once baseline receipt lands."
+  },
+  "g3_containment_note": "Containment G3 path seed 2100030000 on A100-80GB passed GPU/Isaac preflight but failed InstructionBindingError (Agent B fixture queue binding); not a GPU incompatibility."
+}

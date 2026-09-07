@@ -77,6 +77,9 @@ G3_FIXTURE_CONFIGS: dict[str, G3FixtureConfig] = {
     "horizontal": G3FixtureConfig(
         "horizontal", "C1", 128, ("left", "right", "front", "behind")
     ),
+    "reference_binding": G3FixtureConfig(
+        "reference_binding", "C2", 128, ("left", "right", "front", "behind")
+    ),
     "vertical": G3FixtureConfig("vertical", "C5", 64, ("above", "below")),
     "containment": G3FixtureConfig("containment", "C6", 64, ("inside",)),
     "object_pair": G3FixtureConfig(

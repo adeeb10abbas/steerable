@@ -204,11 +204,26 @@ def discover_finalized_attempts(attempts_root: Path) -> list[ParsedAttempt]:
     if not attempts_root.is_dir():
         raise LedgerError(f"attempts root is not a directory: {attempts_root}")
     discovered: list[ParsedAttempt] = []
-    for episode_dir in sorted(path for path in attempts_root.iterdir() if path.is_dir()):
-        for attempt_dir in sorted(path for path in episode_dir.iterdir() if path.is_dir()):
-            if (attempt_dir / "COMPLETE.json").is_file():
+    seen: set[Path] = set()
+    for complete_path in sorted(attempts_root.rglob("COMPLETE.json")):
+        attempt_dir = complete_path.parent.resolve()
+        if attempt_dir in seen:
+            continue
+        seen.add(attempt_dir)
+        discovered.append(load_finalized_attempt(attempt_dir))
+    if not discovered:
+        for episode_dir in sorted(path for path in attempts_root.iterdir() if path.is_dir()):
+            for attempt_dir in sorted(path for path in episode_dir.iterdir() if path.is_dir()):
+                attempt_dir = attempt_dir.resolve()
+                if attempt_dir in seen or not (attempt_dir / "COMPLETE.json").is_file():
+                    continue
+                seen.add(attempt_dir)
                 discovered.append(load_finalized_attempt(attempt_dir))
     return discovered
+
+
+def _relative_uri(path: Path, root: Path) -> str:
+    return str(path.resolve().relative_to(root.resolve()))
 
 
 def _provenance_block(
@@ -217,7 +232,7 @@ def _provenance_block(
     attempts_root: Path,
     selection_rule: str = ATTEMPT_SELECTION_RULE,
 ) -> dict[str, Any]:
-    rel_path = parsed.attempt_path.relative_to(attempts_root)
+    rel_path = Path(_relative_uri(parsed.attempt_path, attempts_root))
     return {
         "attempt_root_uri": str(rel_path),
         "complete_receipt_sha256": digest_bytes((parsed.attempt_path / "COMPLETE.json").read_bytes()),
@@ -250,8 +265,11 @@ def _video_fields(episode: Mapping[str, Any], *, attempt_path: Path, attempts_ro
         if video_uri and not video_uri.startswith("/"):
             return video_uri, video_sha256
         if video_uri:
-            return str((attempt_path / video_uri).relative_to(attempts_root)), video_sha256
-    return str(attempt_path.relative_to(attempts_root) / "viewport_video.bin"), ""
+            return (
+                _relative_uri(attempt_path / video_uri, attempts_root),
+                video_sha256,
+            )
+    return _relative_uri(attempt_path / "viewport_video.bin", attempts_root), ""
 
 
 def _outcome_from_episode(episode: Mapping[str, Any], *, family: str) -> dict[str, Any]:
@@ -330,7 +348,7 @@ def build_accepted_row(
         parsed, protocol_sha256=protocol_sha256, scorer_sha256=scorer_sha256
     )
     video_uri, video_sha256 = _video_fields(episode, attempt_path=parsed.attempt_path, attempts_root=attempts_root)
-    trace_uri = str(parsed.attempt_path.relative_to(attempts_root) / "trajectory.json")
+    trace_uri = _relative_uri(parsed.attempt_path / "trajectory.json", attempts_root)
     outcome = _outcome_from_episode(episode, family=str(manifest_row["family"]))
     row: dict[str, Any] = {
         "schema_version": ACCEPTED_LEDGER_SCHEMA_VERSION,

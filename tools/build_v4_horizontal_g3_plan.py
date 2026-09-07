@@ -88,6 +88,23 @@ FIXTURE_DEFAULTS = {
             "containment_g3_plan.candidate.json"
         ),
     },
+    "reference_binding": {
+        "registry": (
+            ROOT
+            / "artifacts/online_correction_v4/setup/"
+            "reference_binding_reset_registry.candidate.json"
+        ),
+        "g2_aggregate": (
+            ROOT
+            / "artifacts/online_correction_v4/qualification/"
+            "20260906_reference_binding_g2_aggregate_g2c2q20260906a.json"
+        ),
+        "output": (
+            ROOT
+            / "artifacts/online_correction_v4/setup/"
+            "reference_binding_g3_plan.candidate.json"
+        ),
+    },
 }
 
 

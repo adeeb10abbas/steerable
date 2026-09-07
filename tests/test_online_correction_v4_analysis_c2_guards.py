@@ -13,7 +13,7 @@ from experiments.online_correction_v4.analysis import (
     _c2_estimator,
 )
 
-from test_online_correction_v4_analysis import (
+from tests.test_online_correction_v4_analysis import (
     GOAL_SET_HASH,
     _fill_c2_block,
     _result,

@@ -22,6 +22,7 @@ import render_v4_k8s_lane_bundle as lane  # noqa: E402
 from experiments.online_correction_v4.droid_task_files.constants import (  # noqa: E402
     CONTAINMENT_RESET_REGISTRY_SCHEMA,
     OBJECT_PAIR_RESET_REGISTRY_SCHEMA,
+    REFERENCE_BINDING_RESET_REGISTRY_SCHEMA,
     RESET_REGISTRY_SCHEMA,
     VERTICAL_RESET_REGISTRY_SCHEMA,
 )
@@ -33,6 +34,7 @@ DEFAULT_SPEC = ROOT / "deploy/k8s/v4_lane_bundle/g3-horizontal-spec.example.json
 DEFAULT_OUTPUT = ROOT / "deploy/k8s/v4_lane_bundle/rendered-g3"
 RESET_SCHEMAS = {
     "horizontal": RESET_REGISTRY_SCHEMA,
+    "reference_binding": REFERENCE_BINDING_RESET_REGISTRY_SCHEMA,
     "object_pair": OBJECT_PAIR_RESET_REGISTRY_SCHEMA,
     "vertical": VERTICAL_RESET_REGISTRY_SCHEMA,
     "containment": CONTAINMENT_RESET_REGISTRY_SCHEMA,

@@ -29,3 +29,17 @@ def test_containment_runner_constants() -> None:
     assert mod.FIXTURE_ID == "containment"
     assert mod.CANONICAL_ENV_SEED == 2100030000
     assert mod.DEFAULT_GOAL == "inside"
+
+
+def test_shared_scripted_controller_applies_robotiq_flange_offset_for_all_fixtures() -> None:
+    from run_v4_horizontal_g3_scripted_seed import frozen_scripted_controller_config
+
+    for fixture_id in (
+        "horizontal",
+        "reference_binding",
+        "vertical",
+        "containment",
+        "object_pair",
+    ):
+        config = frozen_scripted_controller_config(fixture_id)
+        assert config["eef_tool_length_m"] == 0.14, fixture_id

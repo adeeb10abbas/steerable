@@ -1,0 +1,20 @@
+{
+  "schema_version": "v4-natural-grasp-scripted-grasp-root-cause-v1",
+  "recorded_at_utc": "2026-09-07T13:40:00Z",
+  "root_cause": "eef_tool_length_m omitted for non-object_pair fixtures in frozen_scripted_controller_config",
+  "mechanism": "RoboLab absolute IK commands the Robotiq flange pose, but scripted waypoints describe the finger-pad grasp center 0.14 m below the flange. object_pair alone received eef_tool_length_m=0.14; other fixtures defaulted to 0.0, commanding descend/lift heights ~0.14 m above the object at close.",
+  "evidence": {
+    "object_pair_descend_target_z_m": 0.2325,
+    "horizontal_pre_fix_descend_target_z_m": 0.1061,
+    "horizontal_pre_fix_object_z_at_close_m": 0.0675,
+    "horizontal_pre_fix_eef_z_at_close_m": 0.186,
+    "reference_binding_pre_fix_descend_target_z_m": 0.095,
+    "object_pair_trajectory_pvc": "/data/users/ali/vla_wam/raw/v4/qualification/object-pair-natural-grasp-positive-control/g3ngp20260908p/scripted_trajectory.json",
+    "horizontal_trajectory_pvc": "/data/users/ali/vla_wam/raw/v4/qualification/horizontal-natural-grasp-positive-control/horizng20260908r/scripted_trajectory.json",
+    "reference_binding_trajectory_pvc": "/data/users/ali/vla_wam/raw/v4/qualification/reference-binding-natural-grasp-positive-control/g3ngrb20260908p/scripted_trajectory.json"
+  },
+  "shared_fix_commit": "52973dfbe2842d59469f5d567c4ed1e8312abcf4",
+  "shared_fix_summary": "Apply eef_tool_length_m=0.14 in frozen_scripted_controller_config for every fixture; consolidate all live-control runners through tools/v4_natural_grasp_live_control_runner.py.",
+  "detector_thresholds_changed": false,
+  "negative_control_specificity": "All fixtures hold_only controls passed with trigger_eligible=false before fix, confirming detector specificity."
+}

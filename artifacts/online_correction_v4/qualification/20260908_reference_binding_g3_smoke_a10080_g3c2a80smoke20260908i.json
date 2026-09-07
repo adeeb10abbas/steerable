@@ -1,0 +1,24 @@
+{
+  "schema_version": "v4-reference-binding-g3-path-scale-receipt-v1",
+  "campaign_id": "online_correction_v4",
+  "fixture_id": "reference_binding",
+  "gate": "G3",
+  "attempt_id": "g3c2a80smoke20260908i",
+  "status": "passed",
+  "passed": true,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "gpu_product": "NVIDIA-A100-SXM4-80GB",
+  "gpu_stratum": "NVIDIA-A100-SXM4-80GB",
+  "scale": 0.5,
+  "environment_seed": 2100010000,
+  "expected_study_commit": "089f2b6f826c1913a1765d8d6329be025ee5cdb0",
+  "study_root": "/data/users/ali/vla_wam/src/steerable-v4-c2-g3",
+  "dispatch_gates": "tools/dispatch_v4_model_blind_k8s_bundle.py --smoke",
+  "external_receipt": {
+    "path": "/data/users/ali/vla_wam/raw/v4/g3-reference-binding/attempt-g3c2a80smoke20260908i/scale-0.5/seed-2100010000/5dc0092b-3ff0-41de-891d-a552c2a1e3c6/lane-g3h-s000/attempt-g3c2a80smoke20260908i/episodes/g3_path_seed_receipt.json",
+    "sha256": "019f5ba58833b68ee890b8b02017fbb5a7af59a8b777d5abbbef70004bb90f3a",
+    "bytes": 67943
+  },
+  "release_boundary": "Homogeneous A100-80GB G3 smoke only; enables reference_binding G3 path wave on this stratum after smoke-before-wave gate."
+}

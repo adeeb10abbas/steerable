@@ -1,16 +1,26 @@
 {
-  "schema_version": "v4-gpu-smoke-registry-v1",
   "passed_smokes": [
     {
-      "key": "horizontal:G2:NVIDIA-A100-SXM4-80GB",
+      "attempt_id": "g2r20260908a10080a",
       "fixture_id": "horizontal",
       "gate": "G2",
       "gpu_product": "NVIDIA-A100-SXM4-80GB",
-      "attempt_id": "g2r20260908a10080a",
+      "key": "horizontal:G2:NVIDIA-A100-SXM4-80GB",
+      "notes": "geometry_repair_v2 registry seed 2100000000; enables A100-80GB G2 waves only until per-fixture G3 smokes pass separately",
       "receipt_path": "artifacts/online_correction_v4/qualification/gpu_receipts_20260908/g2_repair_v2_seed2100000000_a10080.json",
       "receipt_sha256": "dacceca03ee957d2fdbd0ac053533c01a808ede04d035ebd373202c0e2a3f6df",
-      "status": "passed",
-      "notes": "geometry_repair_v2 registry seed 2100000000; enables A100-80GB G2 waves only until per-fixture G3 smokes pass separately"
+      "status": "passed"
+    },
+    {
+      "attempt_id": "g3c2a80smoke20260908i",
+      "fixture_id": "reference_binding",
+      "gate": "G3",
+      "gpu_product": "NVIDIA-A100-SXM4-80GB",
+      "key": "reference_binding:G3:NVIDIA-A100-SXM4-80GB",
+      "receipt_path": "artifacts/online_correction_v4/qualification/20260908_reference_binding_g3_smoke_a10080_g3c2a80smoke20260908i.json",
+      "receipt_sha256": "7efbc98d36db97a4ad7c130a3279ed5fb50b84ff2c43a737c0e0489d7f705386",
+      "status": "passed"
     }
-  ]
+  ],
+  "schema_version": "v4-gpu-smoke-registry-v1"
 }

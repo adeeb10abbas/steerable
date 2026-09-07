@@ -1,0 +1,38 @@
+{
+  "campaign_id": "online_correction_v4",
+  "compiled_at_utc": "2026-09-07T10:45:00Z",
+  "disposition_summary": {
+    "g2_original_wave_infrastructure_invalid": 88,
+    "g3_original_wave_infrastructure_invalid": 42,
+    "g3_original_wave_scientific_complete": 86,
+    "retry_dispatched_at_pin": "96ccf4ad95b292e61da28eafc2ad9a7b6dfa5e65"
+  },
+  "fixture_id": "horizontal",
+  "fixture_version": "horizontal_geometry_repair_v2",
+  "note": "Mid-wave cluster checkout drift (0e8ab82 bundle vs 96ccf4a cluster during Agent B trigger repair landing) caused infrastructure_invalid failures. Scientifically valid receipts from original wave at 0e8ab82 may require homogenous-stratum re-run at 96ccf4a before path-scale compile if runtime stratum differs.",
+  "original_attempts": {
+    "g2": {
+      "attempt_id": "g2r20260908a10080w",
+      "bundle_pin": "0e8ab827fea4392be2b50aef25758fac3ea1a4b0",
+      "root_cause": "checkout drift during wave"
+    },
+    "g3": {
+      "attempt_id": "g3r20260908a10080w",
+      "bundle_pin": "0e8ab827fea4392be2b50aef25758fac3ea1a4b0",
+      "root_cause": "checkout drift during wave"
+    }
+  },
+  "retry_attempts": {
+    "g2": {
+      "attempt_id": "g2r20260908a10080r",
+      "bundle_hash_suffix": "84986601d9",
+      "jobs_dispatched": 88
+    },
+    "g3": {
+      "attempt_id": "g3r20260908a10080r",
+      "bundle_hash_suffix": "a2db8e195f",
+      "jobs_dispatched": 42
+    }
+  },
+  "schema_version": "v4-horizontal-wave-checkout-drift-triage-v1"
+}

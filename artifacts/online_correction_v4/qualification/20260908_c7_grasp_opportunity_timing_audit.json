@@ -1,0 +1,48 @@
+{
+  "schema_version": "v4-c7-grasp-opportunity-timing-audit-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "object_pair_c7",
+  "fixture_id": "object_pair",
+  "observed_at_utc": "2026-09-08T14:30:00Z",
+  "natural_grasp_trigger_path": "repaired_wiring_verified",
+  "registered_timing": {
+    "episode_cap_s": 60.0,
+    "release_settling_s": 1.0,
+    "trigger_deadline_s": 40.0,
+    "natural_grasp_min_lift_m": 0.04,
+    "natural_grasp_dwell_s": 0.2,
+    "native_control_dt_s": 0.06666666666666667,
+    "standard_query_period_s": 0.5333333333333333,
+    "source": "artifacts/online_correction_v4/setup/c7_confirmatory/campaign.frozen.json"
+  },
+  "evidence_scope": {
+    "attempt_filter": "attempt0351_plus_repaired_path",
+    "episodes_audited": 178,
+    "audit_method": "PVC COMPLETE.json + episode.json + trajectory.json per terminal"
+  },
+  "observed_episode_dynamics": {
+    "end_reason": "timeout",
+    "timeout_after_no_grasp": true,
+    "failure_stage": "pickup",
+    "trajectory_row_count_mean": 916,
+    "simulation_time_last_s_min": 61.0,
+    "simulation_time_last_s_max": 61.0,
+    "grasp_eligible_true_steps_total": 0,
+    "event_delivered": false,
+    "event_observed": false
+  },
+  "interpretation": {
+    "verdict": "policy_failure_under_correct_timing",
+    "verdict_detail": "Episodes on the validated repaired trigger path run the full 61.0 s simulation window (916 control steps at native dt), exceeding the registered 40.0 s trigger deadline and 60.0 s episode cap plus passive settling. grasp_eligible remains false for every audited trajectory step; all terminals carry timeout_after_no_grasp=true. This is not an episode-budget truncation artifact.",
+    "not_episode_budget_artifact_because": [
+      "simulation_time reaches 61.0 s on every sampled repaired-path terminal",
+      "916 control ticks matches full cap at native_control_dt_s",
+      "passive_settling_reason=timeout with end_reason=timeout",
+      "trigger window fully elapsed before terminal scoring"
+    ],
+    "registered_timing_unchanged": true
+  },
+  "sample_episode_id": "online_correction_v4-C7-b000-0f7d332241178968",
+  "sample_attempt_id": "attempt0351",
+  "status": "complete"
+}

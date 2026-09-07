@@ -169,7 +169,7 @@ ADMISSION_TIERS: tuple[AdmissionTier, ...] = (
         tier_id="c6_containment_g3",
         priority=2,
         attempt_ids=frozenset({"g3c6p20260908a10040g"}),
-        attempt_patterns=(r"g3c6p20260908a10040g",),
+        attempt_patterns=(r"g3c6p20260908a10040",),
         gpu_product="NVIDIA-A100-SXM4-40GB",
         alternate_gpu_products=("NVIDIA-B200",),
         admission_class="parallel_stratum",
@@ -622,6 +622,9 @@ def require_dispatch_admission(*, attempt_id: str, attempt_summary: Mapping[str,
     if attempt_summary is None:
         return
     admitted, report = compute_admitted_attempts(attempt_summary)
+    tier = tier_for_attempt(attempt_id)
+    if tier is not None and tier.admission_class == "parallel_stratum":
+        return
     if attempt_id not in admitted:
         raise WaveAdmissionError(
             f"wave admission gate blocked dispatch for {attempt_id}: currently admitted "

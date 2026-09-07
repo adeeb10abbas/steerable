@@ -103,6 +103,16 @@ def test_dispatch_gate_blocks_non_admitted_attempt() -> None:
         admission.require_dispatch_admission(attempt_id="g3c5p20260908a10080g", attempt_summary=summary)
 
 
+def test_parallel_stratum_new_dispatch_allowed_while_primary_runs() -> None:
+    summary = {
+        "g3rb20260908v": {"total": 128, "active": 50, "succeeded": 0, "failed": 0, "pending": 78, "suspended": 0},
+    }
+    admission.require_dispatch_admission(
+        attempt_id="g3c6p20260908a10040i",
+        attempt_summary=summary,
+    )
+
+
 def test_mixed_pin_c5_c6_without_g_suffix_superseded() -> None:
     assert admission.is_superseded_attempt("g3c5p20260908a10080")
     assert admission.is_superseded_attempt("g3c6p20260908a10080c")

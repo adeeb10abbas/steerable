@@ -1,0 +1,79 @@
+{
+  "schema_version": "v4-c7-wave-progress-receipt-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "object_pair_c7",
+  "fixture_id": "object_pair",
+  "observed_at_utc": "2026-09-08T14:30:00Z",
+  "behavioral_episode_target": 768,
+  "natural_grasp_trigger_path": "repaired_wiring_verified",
+  "study_commit_dispatch": "a1c5d9a3a0bd903dce5c7f18372b16a9aa096b98",
+  "coordination_state": {
+    "attempt_index": 487,
+    "lane_infra_failures": {
+      "c7m26": 1,
+      "c7m29": 1,
+      "c7m30": 1
+    }
+  },
+  "wave_dispatch": {
+    "wave-006": {
+      "lanes": 17,
+      "status": "draining_with_orphan_retries"
+    },
+    "wave-007": {
+      "lanes_dispatched": 23,
+      "attempt_id_range": "attempt0368-attempt0462",
+      "rendered_root": "artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-wave-007"
+    },
+    "wave-007-refill": {
+      "lanes_dispatched": 25,
+      "attempt_id_range": "attempt0463-attempt0487",
+      "includes_infra_retry": ["c7m26", "c7m30"],
+      "rendered_root": "artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-wave-007-refill"
+    }
+  },
+  "terminal_counts_pvc": {
+    "complete_json_files": 615,
+    "unique_episode_ids": 514,
+    "remaining_to_target": 254,
+    "repaired_path_attempt0351_plus": {
+      "terminals": 178,
+      "failure_label": {
+        "no_grasp": 175,
+        "transport_incomplete": 3
+      },
+      "end_reason": {
+        "timeout": 178
+      },
+      "status": {
+        "valid": 178
+      }
+    },
+    "all_confirmatory_failure_label": {
+      "no_grasp": 609,
+      "transport_incomplete": 6
+    }
+  },
+  "running_lanes": {
+    "policy_sim_job_pairs": 28,
+    "note": "Raised from 15 healthy wave-006 pairs after horizontal/vertical suspension and wave-007 refill; still below 40-lane frozen stratum ceiling."
+  },
+  "concurrency_assessment": {
+    "frozen_stratum": "a10080-policy_a40-simulator",
+    "qualified_lane_ceiling": 40,
+    "current_running_pairs": 28,
+    "safe_to_raise": true,
+    "binding_constraint": "Frozen C7 stratum caps at 40 concurrent A100-80GB policy + A40 simulator pairs, not 17. Remaining headroom is ~12 pairs if GPU inventory allows.",
+    "completion_estimate_768": {
+      "at_28_lanes_25min_per_episode": "~3.8 hours for 254 remaining unique episodes",
+      "at_40_lanes_25min_per_episode": "~2.6 hours for 254 remaining unique episodes",
+      "assumptions": "25 min wall-clock per episode at standard nano cadence; no additional infra orphaning"
+    }
+  },
+  "outcome_composition_running": {
+    "note": "All observed valid terminals timeout; zero successes. Repaired-path composition matches pre-repair no-grasp pattern.",
+    "no_grasp_fraction_repaired": 0.983,
+    "transport_incomplete_fraction_repaired": 0.017
+  },
+  "status": "in_progress"
+}

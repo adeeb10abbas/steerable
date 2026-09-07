@@ -318,6 +318,20 @@ class G3PathSeedGateValidationTests(unittest.TestCase):
         ])
 
 
+class G3PathSeedRegistryGeometryTests(unittest.TestCase):
+    def test_optional_registry_support_geometry_absent(self) -> None:
+        payload = {"scene_receipt": {"support_surface": {"construction": "x"}}}
+        self.assertIsNone(runner._optional_registry_support_geometry(payload))
+
+    def test_optional_registry_support_geometry_present(self) -> None:
+        geometry = {"interior_reference_local_m": {"x_min": 0.0}}
+        payload = {"scene_receipt": {"support_geometry": geometry}}
+        self.assertEqual(
+            runner._optional_registry_support_geometry(payload),
+            geometry,
+        )
+
+
 class G3PathSeedImportSafetyTests(unittest.TestCase):
     def test_runner_module_imports_without_robolab(self) -> None:
         blocked = {

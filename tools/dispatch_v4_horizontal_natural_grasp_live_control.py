@@ -70,6 +70,7 @@ def build_launch_config(
     control_mode: str,
     gpu_product: str,
     expected_gpu_name: str,
+    pin_commit: str,
 ) -> dict[str, Any]:
     campaign = ROOT / "artifacts/online_correction_v4/setup/campaign_horizontal_repair_v2_frozen.json"
     plan = ROOT / "artifacts/online_correction_v4/setup/horizontal_g3_plan.geometry_repair_v2.candidate.json"
@@ -121,7 +122,7 @@ def build_launch_config(
         "--goal",
         GOAL,
         "--expected-study-commit",
-        PIN_COMMIT,
+        pin_commit,
         "--expected-robolab-commit",
         ROBOLAB_COMMIT,
         "--expected-driver-version",
@@ -436,12 +437,13 @@ def dispatch_one(
     attempt_id: str,
     control_mode: str,
     gpu_product: str,
+    pin_commit: str,
     create: bool,
 ) -> dict[str, Any]:
     expected_gpu_name = gpu_scheduling.display_name_for_product(gpu_product)
     isolation = checkout_isolation.provision_isolated_checkout(
         workstream_id=WORKSTREAM_ID,
-        pin_commit=PIN_COMMIT,
+        pin_commit=pin_commit,
         attempt_id=attempt_id,
         kube_context=KUBE_CONTEXT,
         namespace=NAMESPACE,
@@ -455,6 +457,7 @@ def dispatch_one(
         control_mode=control_mode,
         gpu_product=gpu_product,
         expected_gpu_name=expected_gpu_name,
+        pin_commit=pin_commit,
     )
     launch_json = json.dumps(launch, sort_keys=True, separators=(",", ":"))
     launch_sha = sha256_bytes(launch_json.encode("utf-8") + b"\n")
@@ -500,7 +503,7 @@ def dispatch_one(
         "output_parent": OUTPUT_PARENT,
         "output_dir": f"{OUTPUT_PARENT}/{attempt_id}",
         "study_root": study_root,
-        "study_commit": PIN_COMMIT,
+        "study_commit": pin_commit,
         "gpu_product": gpu_product,
     }
     (bundle_dir / "dispatch_receipt.json").write_text(
@@ -536,6 +539,7 @@ def main(argv: list[str] | None = None) -> int:
         default="scripted_grasp",
     )
     parser.add_argument("--gpu-product", default="NVIDIA-A100-SXM4-40GB")
+    parser.add_argument("--pin-commit", default=PIN_COMMIT)
     parser.add_argument("--create", action="store_true")
     parser.add_argument("--enforce-admission", action="store_true")
     args = parser.parse_args(argv)
@@ -555,6 +559,7 @@ def main(argv: list[str] | None = None) -> int:
         attempt_id=args.attempt_id,
         control_mode=args.control_mode,
         gpu_product=args.gpu_product,
+        pin_commit=args.pin_commit,
         create=args.create,
     )
     print(json.dumps(receipt, indent=2, sort_keys=True))

@@ -1,11 +1,6 @@
 {
-  "a40_baseline": {
-    "attempt_id": "g2gpu20260908a40c",
-    "disposition": "superseded_by_homogeneous_rerun",
-    "note": "Prior A40 baseline at stale pin; re-run after G2 homogeneous wave completes"
-  },
   "campaign_id": "online_correction_v4",
-  "compiled_at_utc": "2026-09-07T12:05:00Z",
+  "compiled_at_utc": "2026-09-07T13:00:00Z",
   "episode_dispatch": {
     "blocked": 9728,
     "completed": 0,
@@ -15,38 +10,37 @@
   "fixture_version": "horizontal_geometry_repair_v2",
   "g2_wave": {
     "attempt_id": "g2r20260908g",
-    "bundle_hash_suffix": "10e8fea3b8",
-    "isolated_study_root": "/data/users/ali/vla_wam/src/steerable-v4-g2_repair_v2-c401fb45-g2r20260908g",
-    "job_count": 128,
-    "status": "128 Running"
+    "complete": 32,
+    "status": "suspended_pending_tier_advance",
+    "suspended": 96,
+    "total": 128
   },
   "g3_path_wave": {
     "attempt_id": "g3r20260908g",
-    "bundle_hash_suffix": "27e0010473",
-    "isolated_study_root": "/data/users/ali/vla_wam/src/steerable-v4-g2_repair_v2-c401fb45-g3r20260908g",
-    "job_count": 128,
+    "complete": 38,
+    "failed": 8,
+    "running": 25,
     "scale": 0.5,
-    "status": "128 Pending (A100-80GB pool saturated)"
-  },
-  "g3_scripted": {
-    "status": "blocked_pending_path_scale_receipt"
-  },
-  "g4_g8": {
-    "status": "blocked_pending_g3_aggregate_and_horizontal_live_controls"
+    "status": "in_flight_after_tier0_live_controls",
+    "suspended": 57,
+    "total": 128
   },
   "g5_live_controls": {
-    "horizontal_negative": "not_dispatched",
-    "horizontal_positive": "not_dispatched",
-    "runner": "tools/run_v4_horizontal_natural_grasp_live_positive_control.py",
-    "status": "pending_dispatch_at_pin_c401fb4"
+    "diagnosis": "artifacts/online_correction_v4/qualification/20260908_horizontal_natural_grasp_live_control_diagnosis.json",
+    "negative": {
+      "attempt_id": "horizng20260908negb",
+      "passed": true,
+      "receipt": "artifacts/online_correction_v4/qualification/20260908_horizontal_natural_grasp_live_negative_control_horizng20260908negb.json",
+      "trigger_eligible": false
+    },
+    "positive": {
+      "attempt_ids": ["horizng20260908p", "horizng20260908r"],
+      "passed": false,
+      "registry_status": "not_registered_pending_positive_pass",
+      "trigger_eligible": false
+    },
+    "status": "negative_passed_positive_blocking_setup_defect"
   },
-  "invalidated_prior_waves": [
-    "g3r20260908a10080w",
-    "g3r20260908a10080r",
-    "g2r20260908a10080w",
-    "g2r20260908a10080r"
-  ],
-  "schema_version": "v4-horizontal-repair-progress-v1",
-  "selected_g3_scale": 0.5,
-  "single_pin": "c401fb4577d8003a019ecf7ff7be549f2c0a5931"
+  "homogeneous_pin": "c401fb4577d8003a019ecf7ff7be549f2c0a5931",
+  "schema_version": "v4-horizontal-repair-progress-v1"
 }

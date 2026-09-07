@@ -1,0 +1,50 @@
+{
+  "campaign_id": "online_correction_v4",
+  "defect_class": "blocking_setup_defect",
+  "disposition": "g5_live_control_positive_unresolved",
+  "fixture_id": "horizontal",
+  "fixture_version": "horizontal_geometry_repair_v2",
+  "negative_control": {
+    "attempt_id": "horizng20260908negb",
+    "passed": true,
+    "receipt_path": "artifacts/online_correction_v4/qualification/20260908_horizontal_natural_grasp_live_negative_control_horizng20260908negb.json",
+    "study_commit": "c401fb4577d8003a019ecf7ff7be549f2c0a5931",
+    "trigger_eligible": false,
+    "verdict": "negative_control_passed"
+  },
+  "positive_control_attempts": [
+    {
+      "attempt_id": "horizng20260908p",
+      "defect_note": "Used geometry_from_scene_for_fixture instead of horizontal_geometry_from_scene",
+      "passed": false,
+      "receipt_path": "artifacts/online_correction_v4/qualification/20260908_horizontal_natural_grasp_live_positive_control_horizng20260908p.json",
+      "scripted_grasp_stages": {
+        "grasped": false,
+        "transported": false
+      },
+      "study_commit": "c401fb4577d8003a019ecf7ff7be549f2c0a5931",
+      "trigger_eligible": false,
+      "verdict": "blocking_setup_defect"
+    },
+    {
+      "attempt_id": "horizng20260908r",
+      "defect_note": "After horizontal_geometry_from_scene repair; scripted trajectory still fails contact/lift",
+      "passed": false,
+      "receipt_path": "artifacts/online_correction_v4/qualification/20260908_horizontal_natural_grasp_live_positive_control_horizng20260908r.json",
+      "scripted_trajectory_reasons": [
+        "no_contact_after_close",
+        "insufficient_lift_after_close",
+        "object_center_outside_goal_set"
+      ],
+      "study_commit": "8d8b5562565fe36a0825873da2d600998189e9a5",
+      "trigger_eligible": false,
+      "verdict": "blocking_setup_defect"
+    }
+  ],
+  "recorded_at_utc": "2026-09-07T12:58:00Z",
+  "schema_version": "v4-horizontal-natural-grasp-live-control-diagnosis-v1",
+  "specificity": "confirmed",
+  "specificity_evidence": "hold_only negative control did not fire trigger_eligible across full trigger_deadline_s window",
+  "summary": "Horizontal live positive control fails because privileged scripted_grasp cannot achieve contact and lift in live Isaac at scale 0.5 seed 2100000000; this is not the object_pair trigger-wiring pattern (scripted stages fail before detector eligibility). G3 path seed 2100000000 at scale 0.5 passes reference-trajectory checks but does not exercise this full scripted transport grasp.",
+  "wiring_pattern_differs_from_object_pair": true
+}

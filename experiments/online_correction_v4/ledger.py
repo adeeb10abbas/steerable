@@ -251,6 +251,33 @@ def _register_discovered_attempt(
     discovered.append(attempt_dir)
 
 
+def _discover_lane_episode_attempts(
+    attempts_root: Path,
+    *,
+    episode_ids: set[str],
+    seen: set[Path],
+    discovered: list[Path],
+) -> None:
+    for batch_dir in sorted(path for path in attempts_root.iterdir() if path.is_dir()):
+        for lane_dir in sorted(batch_dir.glob("lane-*")):
+            if not lane_dir.is_dir():
+                continue
+            for run_dir in sorted(path for path in lane_dir.iterdir() if path.is_dir()):
+                episodes_dir = run_dir / "episodes"
+                if not episodes_dir.is_dir():
+                    continue
+                for episode_dir in sorted(path for path in episodes_dir.iterdir() if path.is_dir()):
+                    if episode_dir.name not in episode_ids:
+                        continue
+                    for complete_path in sorted(episode_dir.rglob("COMPLETE.json")):
+                        _register_discovered_attempt(
+                            complete_path,
+                            episode_ids=episode_ids,
+                            seen=seen,
+                            discovered=discovered,
+                        )
+
+
 def discover_finalized_attempt_directories(
     attempts_root: Path,
     *,
@@ -260,6 +287,15 @@ def discover_finalized_attempt_directories(
         raise LedgerError(f"attempts root is not a directory: {attempts_root}")
     discovered: list[Path] = []
     seen: set[Path] = set()
+    if episode_ids:
+        _discover_lane_episode_attempts(
+            attempts_root,
+            episode_ids=episode_ids,
+            seen=seen,
+            discovered=discovered,
+        )
+    if discovered:
+        return discovered
     search_roots = [
         child
         for child in sorted(attempts_root.iterdir())

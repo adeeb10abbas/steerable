@@ -452,6 +452,40 @@ class DroidTerminalScorerTests(unittest.TestCase):
             ctx = load_scoring_context(path, expected_sha256=digest, relation="left", d_cap_m=0.12)
             self.assertIsNotNone(ctx.planar_spec)
 
+    def test_load_scoring_context_containment_inside(self) -> None:
+        geometry = {
+            "task_frame": {
+                "u_left": [0.0, 1.0, 0.0],
+                "u_front": [-1.0, 0.0, 0.0],
+                "u_up": [0.0, 0.0, 1.0],
+                "origin": [0.0, 0.0, 0.0],
+            },
+            "workspace": {
+                "x_min": -0.5,
+                "x_max": 0.5,
+                "y_min": -0.5,
+                "y_max": 0.5,
+                "z_min": 0.0,
+                "z_max": 0.2,
+            },
+            "object_footprint": {"half_left": 0.0175, "half_front": 0.0175, "half_up": 0.0175},
+            "reference_footprint": {"half_left": 0.07, "half_front": 0.07, "half_up": 0.04375},
+            "interior_reference_local_m": {
+                "x": [-0.055, 0.055],
+                "y": [-0.055, 0.055],
+                "z": [0.0075, 0.08],
+            },
+            "wall_clearance_m": 0.005,
+            "clearance_m": 0.01,
+        }
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "geometry.json"
+            path.write_text(json.dumps(geometry), encoding="utf-8")
+            digest = sha256_bytes(path.read_bytes())
+            ctx = load_scoring_context(path, expected_sha256=digest, relation="inside", d_cap_m=0.16)
+            self.assertIsNone(ctx.planar_spec)
+            self.assertIsNotNone(ctx.containment_spec)
+
 
 class DroidRunnerBindingTests(unittest.TestCase):
     def test_episode_runner_receives_terminal_scorer(self) -> None:

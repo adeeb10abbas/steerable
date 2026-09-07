@@ -37,6 +37,40 @@ def resolve_file_uri(uri: str, *, label: str) -> Path:
     return Path(uri).expanduser().resolve()
 
 
+def _parse_interior_reference_local_m(raw: Mapping[str, Any]) -> geom.AxisAlignedBox:
+    if "x_min" in raw:
+        try:
+            return geom.AxisAlignedBox(
+                float(raw["x_min"]),
+                float(raw["x_max"]),
+                float(raw["y_min"]),
+                float(raw["y_max"]),
+                float(raw["z_min"]),
+                float(raw["z_max"]),
+            )
+        except (KeyError, TypeError, ValueError) as exc:
+            raise TerminalScorerError(
+                "interior_reference_local_m bounds are malformed"
+            ) from exc
+    if all(axis in raw for axis in ("x", "y", "z")):
+        try:
+            return geom.AxisAlignedBox(
+                float(raw["x"][0]),
+                float(raw["x"][1]),
+                float(raw["y"][0]),
+                float(raw["y"][1]),
+                float(raw["z"][0]),
+                float(raw["z"][1]),
+            )
+        except (IndexError, TypeError, ValueError) as exc:
+            raise TerminalScorerError(
+                "interior_reference_local_m axis ranges are malformed"
+            ) from exc
+    raise TerminalScorerError(
+        "interior_reference_local_m must provide x/y/z ranges or x_min bounds"
+    )
+
+
 def load_scoring_context(
     geometry_path: Path,
     *,
@@ -112,6 +146,26 @@ def load_scoring_context(
             half_up=float(raw["half_up"]),
         )
 
+    object_footprint = _footprint("object_footprint")
+    reference_footprint = _footprint("reference_footprint")
+    if relation in geom.CONTAINMENT_RELATIONS:
+        interior_raw = payload.get("interior_reference_local_m")
+        if not isinstance(interior_raw, dict):
+            raise TerminalScorerError(
+                "geometry interior_reference_local_m is required for containment"
+            )
+        wall_clearance_raw = payload.get("wall_clearance_m", payload.get("clearance_m", 0.01))
+        containment = geom.ContainmentSpec(
+            interior_reference_local=_parse_interior_reference_local_m(interior_raw),
+            object_footprint=object_footprint,
+            wall_clearance_m=float(wall_clearance_raw),
+        )
+        return ScoringContext(
+            frame=frame,
+            d_cap_m=d_cap_m,
+            containment_spec=containment,
+        )
+
     clearance = float(payload.get("clearance_m", 0.01))
     spec_type = (
         geom.PolygonPlanarRelationSpec
@@ -122,8 +176,8 @@ def load_scoring_context(
         relation=relation,
         clearance_m=clearance,
         workspace=workspace,
-        object_footprint=_footprint("object_footprint"),
-        reference_footprint=_footprint("reference_footprint"),
+        object_footprint=object_footprint,
+        reference_footprint=reference_footprint,
     )
     return ScoringContext(frame=frame, d_cap_m=d_cap_m, planar_spec=planar)
 

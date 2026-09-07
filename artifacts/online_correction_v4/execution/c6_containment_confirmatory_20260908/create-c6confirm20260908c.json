@@ -1,0 +1,18 @@
+{
+  "behavioral_episode_count": 384,
+  "dispatch_mode": "behavioral_confirmatory_wave_c",
+  "infra_failure_class": "policy_preflight_missing_seed_registry_on_pvc",
+  "kube_context": "prod-dcwi-warrenq1-vmkub007",
+  "lane_count": 32,
+  "lane_assignments_summary": {
+    "attempt_range": "attempt0097-attempt0128",
+    "episodes_per_lane": 12,
+    "lanes": "c6m00-c6m31"
+  },
+  "namespace": "211247-prod",
+  "prior_wave_failure": "wave B attempts 0065-0096: all 32 policy jobs failed preflight (seed registry missing on PVC); sims timed out waiting for policy; policy recreate blocked by write-once attempt locks",
+  "remediation": "Copied containment_c6_confirmatory_nano_seed_registry.released.json to PVC; released wave B leases; cleared stale attempt locks; dispatched fresh wave C",
+  "schema_version": "v4-c6-confirmatory-create-wave-v1",
+  "seed_registry_path": "/data/users/ali/vla_wam/src/steerable-v4-c7-main/artifacts/online_correction_v4/setup/containment_c6_confirmatory_nano_seed_registry.released.json",
+  "seed_registry_sha256": "3ca037ec6856e7402c3cbc9e94f081eeb6ee61c6d096a1424033b19ab1f8cd40"
+}

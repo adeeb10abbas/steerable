@@ -19,6 +19,7 @@ ALLOWED_SCOPES = {
     "g4_policy_session_only",
     "g7_engineering_pilot",
     "g8_miniature_campaign",
+    "released_c6",
     "released_c7",
 }
 

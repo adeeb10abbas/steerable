@@ -1,0 +1,17 @@
+{
+  "behavioral_episode_count": 384,
+  "dispatch_mode": "behavioral_confirmatory_wave_d",
+  "infra_failure_class": "policy_runtime_unsupported_seed_registry_scope_fixed",
+  "kube_context": "prod-dcwi-warrenq1-vmkub007",
+  "lane_count": 32,
+  "lane_assignments_summary": {
+    "attempt_range": "attempt0161-attempt0192",
+    "episodes_per_lane": 12,
+    "lanes": "c6m00-c6m31"
+  },
+  "namespace": "211247-prod",
+  "prior_wave_failure": "wave C attempts 0129-0156: policy failed RuntimeError unsupported scope released_c6 after seed registry copied to PVC",
+  "remediation": "Added released_c6 to serve_v4_nano ALLOWED_SCOPES; deployed to PVC; released wave C leases; cleared locks; dispatched wave D",
+  "schema_version": "v4-c6-confirmatory-create-wave-v1",
+  "serve_v4_nano_sha256": "033c260936ba3f8e00908a5af52ce80d8d202a8f2358bc9686b14620f15c2ba3"
+}

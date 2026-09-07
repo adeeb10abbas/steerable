@@ -1,0 +1,56 @@
+{
+  "argv": [
+    "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/gr00t/eval/sim/SimplerEnv/simpler_uv/.venv/bin/python",
+    "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/tools/run_online_correction_v4.py"
+  ],
+  "attempt_id": "attempt0020",
+  "completed_at_utc": "2026-09-07T19:28:10.979517Z",
+  "created_at_utc": "2026-09-07T19:27:35.184235Z",
+  "effective_environment": {
+    "CUDA_VISIBLE_DEVICES": null,
+    "DISPLAY": "",
+    "FFMPEG_BIN": "/data/users/ali/vla_wam/envs/lingbot-va-b200/bin/ffmpeg",
+    "HOME": "/lane-runtime/home",
+    "LD_LIBRARY_PATH": "/data/users/ali/vla_wam/envs/groot-render-libs/lib:/usr/lib/x86_64-linux-gnu",
+    "LD_PRELOAD": "",
+    "MPLCONFIGDIR": "/lane-runtime/matplotlib",
+    "NVIDIA_DRIVER_CAPABILITIES": "compute,graphics,utility",
+    "NVIDIA_VISIBLE_DEVICES": "GPU-8fcaadc2-f836-2077-c879-c0ee94c6a205",
+    "OMNI_KIT_ACCEPT_EULA": "YES",
+    "PYTHONNOUSERSITE": "1",
+    "PYTHONPATH": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2:/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/external_dependencies/SimplerEnv",
+    "PYTHONUNBUFFERED": "1",
+    "PYTHON_BIN": "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/gr00t/eval/sim/SimplerEnv/simpler_uv/.venv/bin/python",
+    "TMPDIR": "/lane-runtime/tmp",
+    "VK_DRIVER_FILES": null,
+    "VK_ICD_FILENAMES": "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/external_dependencies/SimplerEnv/nvidia_icd.json",
+    "WARP_CACHE_PATH": "/lane-runtime/warp",
+    "XDG_CACHE_HOME": "/lane-runtime/xdg/cache",
+    "XDG_CONFIG_HOME": "/lane-runtime/xdg/config",
+    "XDG_RUNTIME_DIR": "/lane-runtime/xdg/runtime"
+  },
+  "episode_output_dir_precreated": false,
+  "error": {
+    "message": "checkpoint digest changed: expected ba6ebd8503df6950d18e416a9d4d1b945b02493af7fea5406bfe7f889acc9c4f, got c3068bd39a2824a248c8fafde74a8a71864182c556efeb40772280bb7f97550c",
+    "traceback": "Traceback (most recent call last):\n  File \"/opt/v4-lane/scripts/..2026_09_07_19_27_34.3122178160/startup_preflight.py\", line 686, in run_preflight\n    checkpoint = verify_checkpoint(config)\n  File \"/opt/v4-lane/scripts/..2026_09_07_19_27_34.3122178160/startup_preflight.py\", line 452, in verify_checkpoint\n    raise PreflightError(f\"checkpoint digest changed: expected {expected}, got {actual}\")\nstartup_preflight.PreflightError: checkpoint digest changed: expected ba6ebd8503df6950d18e416a9d4d1b945b02493af7fea5406bfe7f889acc9c4f, got c3068bd39a2824a248c8fafde74a8a71864182c556efeb40772280bb7f97550c\n",
+    "type": "PreflightError"
+  },
+  "image_digest": "sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+  "lane_id": "g7c8p00",
+  "launch_config": {
+    "path": "/opt/v4-lane/config/policy-launch.json",
+    "sha256": "9f57453959c9ca9dea28ec851fe55e5bffe8a9610affb2ab82afc1bbd0d06933"
+  },
+  "output_parent": "/data/users/ali/vla_wam/raw/v4/g7-second-stack",
+  "passed": false,
+  "pid": 1,
+  "pod_identity": {
+    "pod_ip": "10.244.61.84",
+    "pod_name": "v4-g7c8p00-attempt0020-279dabcfb9-policy-tr65l",
+    "pod_namespace": "211247-prod",
+    "pod_uid": "3ef3a11a-ebbd-4b95-9800-b0f0bc5c12df"
+  },
+  "role": "policy",
+  "schema_version": "vla-wam-v4-k8s-lane-startup-preflight-v1",
+  "status": "infrastructure_invalid_startup_preflight"
+}

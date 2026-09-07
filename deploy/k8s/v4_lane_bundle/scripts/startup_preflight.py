@@ -14,6 +14,7 @@ import http.client
 import json
 import os
 from pathlib import Path
+import re
 import socket
 import subprocess
 import sys
@@ -453,6 +454,64 @@ def verify_checkpoint(config: Mapping[str, Any]) -> dict[str, Any]:
     return {"path": str(path.resolve()), "hash_kind": kind, "checkpoint_sha256": actual}
 
 
+def verify_groot_bridge_checkpoint(config: Mapping[str, Any]) -> dict[str, Any]:
+    checkpoint_path = Path(_require_string(config, "checkpoint_path"))
+    registry_path = Path(_require_string(config, "checkpoint_registry_path"))
+    if not checkpoint_path.is_absolute() or not registry_path.is_absolute():
+        raise PreflightError("GR00T checkpoint and registry paths must be absolute")
+    expected_registry_sha256 = _require_string(config, "checkpoint_sha256").lower()
+    actual_registry_sha256 = sha256_file(registry_path)
+    if actual_registry_sha256 != expected_registry_sha256:
+        raise PreflightError(
+            "checkpoint registry digest changed: "
+            f"expected {expected_registry_sha256}, got {actual_registry_sha256}"
+        )
+    try:
+        registry = json.loads(registry_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise PreflightError(f"checkpoint registry is not readable JSON: {registry_path}") from exc
+    files = registry.get("files")
+    if not isinstance(files, dict) or not files:
+        raise PreflightError("checkpoint registry must contain a nonempty files object")
+    if not checkpoint_path.is_dir():
+        raise PreflightError(f"GR00T checkpoint path is not a directory: {checkpoint_path}")
+    verified_files: list[dict[str, Any]] = []
+    for relative_path in sorted(files):
+        record = files[relative_path]
+        if not isinstance(record, dict):
+            raise PreflightError(f"checkpoint registry record must be an object: {relative_path}")
+        expected_bytes = record.get("bytes")
+        expected_sha256 = str(record.get("sha256", "")).lower()
+        if not isinstance(expected_bytes, int) or not re.fullmatch(r"[0-9a-f]{64}", expected_sha256):
+            raise PreflightError(f"checkpoint registry record is invalid: {relative_path}")
+        file_path = checkpoint_path / relative_path
+        if not file_path.is_file():
+            raise PreflightError(f"checkpoint file missing: {file_path}")
+        actual_bytes = file_path.stat().st_size
+        actual_sha256 = sha256_file(file_path)
+        if actual_bytes != expected_bytes or actual_sha256 != expected_sha256:
+            raise PreflightError(
+                f"checkpoint file mismatch for {relative_path}: "
+                f"bytes expected {expected_bytes} got {actual_bytes}, "
+                f"sha256 expected {expected_sha256} got {actual_sha256}"
+            )
+        verified_files.append(
+            {
+                "path": str(file_path.resolve()),
+                "relative_path": relative_path,
+                "bytes": actual_bytes,
+                "sha256": actual_sha256,
+            }
+        )
+    return {
+        "path": str(checkpoint_path.resolve()),
+        "hash_kind": "groot-bridge-registry-v1",
+        "checkpoint_sha256": actual_registry_sha256,
+        "checkpoint_registry_path": str(registry_path.resolve()),
+        "verified_file_count": len(verified_files),
+    }
+
+
 def verify_file_bindings(config: Mapping[str, Any]) -> list[dict[str, Any]]:
     bindings = config.get("file_bindings")
     if not isinstance(bindings, list) or not bindings:
@@ -683,8 +742,20 @@ def run_preflight(
             raise PreflightError(f"unsupported lane role: {role!r}")
         checks["ffmpeg_encode_decode"] = verify_ffmpeg(evidence_dir)
         checks["file_bindings"] = verify_file_bindings(config)
-        checkpoint = verify_checkpoint(config)
-        checks["checkpoint_digest"] = checkpoint
+        if (
+            role == "simulator"
+            and config.get("readiness_interface") == "embedded_in_policy_container"
+            and not str(config.get("checkpoint_path") or "").strip()
+        ):
+            checks["checkpoint_digest"] = {
+                "skipped": True,
+                "reason": "embedded_in_policy_container has no standalone checkpoint path",
+            }
+        elif config.get("readiness_interface") == "groot_bridge_http":
+            checks["checkpoint_digest"] = verify_groot_bridge_checkpoint(config)
+        else:
+            checks["checkpoint_digest"] = verify_checkpoint(config)
+        checkpoint = checks["checkpoint_digest"]
         gpu = query_gpu_identity(config)
         checks["policy_readiness"] = wait_for_policy(config) if role == "simulator" else None
         report = {
@@ -693,7 +764,7 @@ def run_preflight(
             "passed": True,
             "gpu_uuid": gpu["gpu_uuid"],
             "gpu": gpu,
-            "checkpoint_sha256": checkpoint["checkpoint_sha256"],
+            "checkpoint_sha256": checkpoint.get("checkpoint_sha256"),
             "checks": checks,
             "completed_at_utc": utc_now(),
         }

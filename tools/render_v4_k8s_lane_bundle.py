@@ -40,8 +40,8 @@ DEFAULT_POLICY_WAIT_TIMEOUT_SECONDS = 900
 RUNTIME_KEYS = {"python_bin", "ffmpeg_bin", "vk_icd_filenames", "ld_library_path", "pythonpath"}
 ROLE_KEYS = {
     "gpu_product", "expected_gpu_name", "experiment_argv", "checkpoint_path", "checkpoint_sha256",
-    "nvidia_smi_bin", "python_imports", "file_bindings", "vulkan_contract", "render_probe_argv",
-    "render_probe_timeout_seconds", "cuda_probe_argv", "readiness_interface",
+    "checkpoint_registry_path", "nvidia_smi_bin", "python_imports", "file_bindings", "vulkan_contract",
+    "render_probe_argv", "render_probe_timeout_seconds", "cuda_probe_argv", "readiness_interface",
 }
 BINDING_KEYS = {"source", "path", "bytes", "sha256"}
 QUALIFICATION_SCOPE = "infrastructure_qualification_only_no_scientific_behavior"
@@ -405,6 +405,10 @@ def launch_document(
         and checkpoint_path.startswith("/data/users/ali/vla_wam/checkpoints/")
     ) and checkpoint_path:
         required_bindings.add(checkpoint_path)
+    registry_path = document.get("checkpoint_registry_path")
+    if role == "policy" and readiness_interface == "groot_bridge_http":
+        require(isinstance(registry_path, str) and registry_path, "groot_bridge policy requires checkpoint_registry_path")
+        required_bindings.add(registry_path)
     for item in list(argv) + (list(render) if isinstance(render, list) else []):
         if Path(item).is_absolute() and Path(item).suffix == ".py":
             required_bindings.add(item)

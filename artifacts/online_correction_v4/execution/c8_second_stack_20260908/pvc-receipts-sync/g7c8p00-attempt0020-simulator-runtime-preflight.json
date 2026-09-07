@@ -1,0 +1,60 @@
+{
+  "argv": [
+    "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/gr00t/eval/sim/SimplerEnv/simpler_uv/.venv/bin/python",
+    "/data/users/ali/vla_wam/raw/v4/g7-second-stack/.coord-bindings/g7c8p00/attempt0020/run_online_correction_v4_lane_dispatch.py",
+    "--dispatch-manifest",
+    "/data/users/ali/vla_wam/raw/v4/g7-second-stack/.coord-bindings/g7c8p00/attempt0020/lane_dispatch_manifest.json",
+    "--launch-config",
+    "/opt/v4-lane/config/simulator-launch.json"
+  ],
+  "attempt_id": "attempt0020",
+  "completed_at_utc": "2026-09-07T19:29:10.331638Z",
+  "created_at_utc": "2026-09-07T19:29:02.484375Z",
+  "effective_environment": {
+    "CUDA_VISIBLE_DEVICES": null,
+    "DISPLAY": "",
+    "FFMPEG_BIN": "/data/users/ali/vla_wam/envs/lingbot-va-b200/bin/ffmpeg",
+    "HOME": "/lane-runtime/home",
+    "LD_LIBRARY_PATH": "/data/users/ali/vla_wam/envs/groot-render-libs/lib:/usr/lib/x86_64-linux-gnu",
+    "LD_PRELOAD": "",
+    "MPLCONFIGDIR": "/lane-runtime/matplotlib",
+    "NVIDIA_DRIVER_CAPABILITIES": "compute,graphics,utility",
+    "NVIDIA_VISIBLE_DEVICES": "GPU-8fcaadc2-f836-2077-c879-c0ee94c6a205",
+    "OMNI_KIT_ACCEPT_EULA": "YES",
+    "PYTHONNOUSERSITE": "1",
+    "PYTHONPATH": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2:/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/external_dependencies/SimplerEnv",
+    "PYTHONUNBUFFERED": "1",
+    "PYTHON_BIN": "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/gr00t/eval/sim/SimplerEnv/simpler_uv/.venv/bin/python",
+    "TMPDIR": "/lane-runtime/tmp",
+    "VK_DRIVER_FILES": null,
+    "VK_ICD_FILENAMES": "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/external_dependencies/SimplerEnv/nvidia_icd.json",
+    "WARP_CACHE_PATH": "/lane-runtime/warp",
+    "XDG_CACHE_HOME": "/lane-runtime/xdg/cache",
+    "XDG_CONFIG_HOME": "/lane-runtime/xdg/config",
+    "XDG_RUNTIME_DIR": "/lane-runtime/xdg/runtime"
+  },
+  "episode_output_dir_precreated": false,
+  "error": {
+    "message": "launch config requires nonempty string 'checkpoint_path'",
+    "traceback": "Traceback (most recent call last):\n  File \"/opt/v4-lane/scripts/..2026_09_07_19_29_01.2865421040/startup_preflight.py\", line 686, in run_preflight\n    checkpoint = verify_checkpoint(config)\n  File \"/opt/v4-lane/scripts/..2026_09_07_19_29_01.2865421040/startup_preflight.py\", line 446, in verify_checkpoint\n    path = Path(_require_string(config, \"checkpoint_path\"))\n  File \"/opt/v4-lane/scripts/..2026_09_07_19_29_01.2865421040/startup_preflight.py\", line 112, in _require_string\n    raise PreflightError(f\"launch config requires nonempty string {key!r}\")\nstartup_preflight.PreflightError: launch config requires nonempty string 'checkpoint_path'\n",
+    "type": "PreflightError"
+  },
+  "image_digest": "sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+  "lane_id": "g7c8p00",
+  "launch_config": {
+    "path": "/opt/v4-lane/config/simulator-launch.json",
+    "sha256": "803445e266893343689df70d5e9629c1cde9179e8920cf30438a732479f11469"
+  },
+  "output_parent": "/data/users/ali/vla_wam/raw/v4/g7-second-stack",
+  "passed": false,
+  "pid": 1,
+  "pod_identity": {
+    "pod_ip": "10.244.61.113",
+    "pod_name": "v4-g7c8p00-attempt0020-279dabcfb9-sim-48hc5",
+    "pod_namespace": "211247-prod",
+    "pod_uid": "43fe268e-a056-40db-bdb1-e5757b6e2b84"
+  },
+  "role": "simulator",
+  "schema_version": "vla-wam-v4-k8s-lane-startup-preflight-v1",
+  "status": "infrastructure_invalid_startup_preflight"
+}

@@ -365,6 +365,7 @@ def build_runtime_lock(
                 "allowed_seed_registry_uri": f"{runtime_root}/{groot_seed_registry_path.relative_to(ROOT)}",
                 "allowed_seed_registry_sha256": sha256_file(groot_seed_registry_path),
                 "checkpoint_revision": CHECKPOINT_REVISION,
+                "checkpoint_registry_uri": f"{runtime_root}/{checkpoint_registry_path.relative_to(ROOT)}",
             }
         },
         "fixtures": {

@@ -799,10 +799,12 @@ def build_lane_spec(
     if image_digest.startswith("sha256:"):
         image_digest = image_digest.split(":", 1)[1]
     spec["image_sha256"] = image_digest
-    for role in ("policy", "simulator"):
-        role_doc = spec.get(role)
-        if isinstance(role_doc, dict):
-            role_doc["checkpoint_sha256"] = policy_binding.checkpoint_sha256
+    policy_doc = spec.get("policy")
+    if isinstance(policy_doc, dict):
+        policy_doc["checkpoint_sha256"] = policy_binding.checkpoint_sha256
+        registry_uri = getattr(policy_binding, "checkpoint_registry_uri", None)
+        if registry_uri:
+            policy_doc["checkpoint_registry_path"] = registry_uri
 
     spec["qualification_only"] = False
     group_ids = [group.group_id for group in assignment_groups]

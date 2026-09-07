@@ -326,6 +326,7 @@ def launch_document(
     if role == "simulator":
         if embedded_simulator:
             require(render is None, "embedded simulator must not declare render probes")
+            document.pop("vulkan_contract", None)
         else:
             require(
                 document.get("vulkan_contract") == "isaac_app_launcher_rtx_frame_under_bound_vk_icd",

@@ -662,9 +662,20 @@ def run_preflight(
         checks["runtime_directories"] = verify_runtime_directories()
         checks["writable_parent"] = verify_writable_parent(output_parent)
         checks["cuda_kernel"] = verify_cuda(config)
+        embedded_simulator = (
+            role == "simulator"
+            and config.get("readiness_interface") == "embedded_in_policy_container"
+        )
         if role == "simulator":
-            checks["vulkan_and_rendered_frame"] = verify_vulkan_and_render(config, evidence_dir)
-            checks["python_imports"] = verify_imports(config, require_curobo=True)
+            if embedded_simulator:
+                checks["vulkan_and_rendered_frame"] = {
+                    "skipped": True,
+                    "reason": "embedded_in_policy_container uses policy-side SimplerEnv rendering",
+                }
+                checks["python_imports"] = verify_imports(config, require_curobo=False)
+            else:
+                checks["vulkan_and_rendered_frame"] = verify_vulkan_and_render(config, evidence_dir)
+                checks["python_imports"] = verify_imports(config, require_curobo=True)
         elif role == "policy":
             checks["python_imports"] = verify_imports(config, require_curobo=False)
             checks["policy_readiness_contract"] = verify_policy_readiness_contract(config)

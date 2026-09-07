@@ -1,0 +1,33 @@
+{
+  "attempt_ids": [
+    "attempt0332",
+    "attempt0333",
+    "attempt0334"
+  ],
+  "behavioral_episode_count": 0,
+  "compiled_at_utc": "2026-09-07T04:30:00Z",
+  "disposition": "infrastructure_invalid",
+  "failure_class": "simulator_job_error_before_first_episode",
+  "failure_detail": "simulator Job failed with backoff exhausted while policy pod remained Pending; zero episodes started",
+  "lanes": [
+    {
+      "attempt_id": "attempt0332",
+      "lane_id": "c7m25",
+      "sim_job": "v4-c7m25-attempt0332-4dc1f8f7f4-sim"
+    },
+    {
+      "attempt_id": "attempt0333",
+      "lane_id": "c7m26",
+      "sim_job": "v4-c7m26-attempt0333-86280b08d1-sim"
+    },
+    {
+      "attempt_id": "attempt0334",
+      "lane_id": "c7m27",
+      "sim_job": "v4-c7m27-attempt0334-547bb048d8-sim"
+    }
+  ],
+  "qualification_scope": "confirmatory_main_queue",
+  "schema_version": "v4-c7-infra-invalid-attempt-disposition-v1",
+  "status": "infrastructure_invalid",
+  "yield_action": "deferred_with_episode_ids_in_defer-yield-g3-20260907.json"
+}

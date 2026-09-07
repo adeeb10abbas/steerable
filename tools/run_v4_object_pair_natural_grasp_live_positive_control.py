@@ -103,6 +103,12 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--pod-uid")
     parser.add_argument("--native-control-dt-s", type=float, required=True)
     parser.add_argument("--attempt-id", required=True)
+    parser.add_argument(
+        "--control-mode",
+        choices=("scripted_grasp", "hold_only"),
+        default="scripted_grasp",
+        help="scripted_grasp=live positive control; hold_only=live negative control",
+    )
     return parser
 
 
@@ -301,53 +307,80 @@ def main(argv: list[str] | None = None) -> int:
             clearance_m=float(geometry_contract["relation_clearance_m"]),
         )
         instrumented = GraspDetectorInstrumentedEnv(env, detector)
-        trajectory_result = run_scripted_check(
-            instrumented,
-            target_object=fixture_spec.target_object,
-            reference_object=fixture_spec.reference_object,
-            relation=goal,
-            goal=goal_set,
-            frame=geometry["frame"],
-            config=controller_config,
-            table_top_z_task=float(table_bounds.z_max),
-            object_half_up=float(target_footprint.half_up),
-            geometric_tol_m=FROZEN_SCRIPTED_GEOMETRIC_TOLERANCE_M,
-            fixture_id=FIXTURE_ID,
-        )
-        hold_ticks = max(int(round(timing.natural_grasp_dwell_s / args.native_control_dt_s)) + 2, 4)
-        for _ in range(hold_ticks):
-            if detector.eligible:
-                break
-            state = env.object_kinematic_state()
-            detector.update(state)
-            instrumented.detector_samples.append(
-                {
-                    "control_tick": state.control_tick,
-                    "sim_time_s": state.sim_time,
-                    "contact": state.contact,
-                    "lift_m": state.object_z_pos - state.initial_supported_z,
-                    "relative_drift_m": (
-                        (state.object_x - state.gripper_x) ** 2
-                        + (state.object_y - state.gripper_y) ** 2
-                        + (state.object_z_pos - state.gripper_z) ** 2
-                    )
-                    ** 0.5,
-                    "trigger_eligible": detector.eligible,
-                    "grasp_occurred": detector.grasp_occurred,
-                    "event": None
-                    if detector.event is None
-                    else detector.event.__dict__,
-                    "phase": "post_scripted_hold",
-                }
+        control_mode = args.control_mode
+        if control_mode == "hold_only":
+            observation_ticks = max(
+                int(round(timing.trigger_deadline_s / args.native_control_dt_s)) + 2,
+                4,
             )
+            for _ in range(observation_ticks):
+                instrumented.step(env.hold_action())
+            trajectory_result = {
+                "passed": True,
+                "mode": "hold_only",
+                "tick_count": observation_ticks,
+                "stages": {},
+            }
+        else:
+            trajectory_result = run_scripted_check(
+                instrumented,
+                target_object=fixture_spec.target_object,
+                reference_object=fixture_spec.reference_object,
+                relation=goal,
+                goal=goal_set,
+                frame=geometry["frame"],
+                config=controller_config,
+                table_top_z_task=float(table_bounds.z_max),
+                object_half_up=float(target_footprint.half_up),
+                geometric_tol_m=FROZEN_SCRIPTED_GEOMETRIC_TOLERANCE_M,
+                fixture_id=FIXTURE_ID,
+            )
+            hold_ticks = max(
+                int(round(timing.natural_grasp_dwell_s / args.native_control_dt_s)) + 2, 4
+            )
+            for _ in range(hold_ticks):
+                if detector.eligible:
+                    break
+                state = env.object_kinematic_state()
+                detector.update(state)
+                instrumented.detector_samples.append(
+                    {
+                        "control_tick": state.control_tick,
+                        "sim_time_s": state.sim_time,
+                        "contact": state.contact,
+                        "lift_m": state.object_z_pos - state.initial_supported_z,
+                        "relative_drift_m": (
+                            (state.object_x - state.gripper_x) ** 2
+                            + (state.object_y - state.gripper_y) ** 2
+                            + (state.object_z_pos - state.gripper_z) ** 2
+                        )
+                        ** 0.5,
+                        "trigger_eligible": detector.eligible,
+                        "grasp_occurred": detector.grasp_occurred,
+                        "event": None
+                        if detector.event is None
+                        else detector.event.__dict__,
+                        "phase": "post_scripted_hold",
+                    }
+                )
 
         scripted_grasp_stages = trajectory_result.get("stages", {})
         trigger_event = detector.event.__dict__ if detector.event is not None else None
-        verdict = "intervention_deliverable" if detector.eligible else "blocking_setup_defect"
+        if control_mode == "hold_only":
+            verdict = (
+                "negative_control_passed"
+                if not detector.eligible
+                else "blocking_false_positive"
+            )
+        else:
+            verdict = (
+                "intervention_deliverable" if detector.eligible else "blocking_setup_defect"
+            )
         receipt = {
             "schema_version": RECEIPT_SCHEMA,
             "fixture_id": FIXTURE_ID,
             "attempt_id": args.attempt_id,
+            "control_mode": control_mode,
             "environment_seed": args.environment_seed,
             "scale": float(args.scale),
             "goal": goal,
@@ -367,8 +400,24 @@ def main(argv: list[str] | None = None) -> int:
             "grasp_occurred": detector.grasp_occurred,
             "trigger_event": trigger_event,
             "verdict": verdict,
-            "passed": detector.eligible,
-            "status": "passed" if detector.eligible else "blocking_setup_defect",
+            "passed": (
+                detector.eligible
+                if control_mode == "scripted_grasp"
+                else not detector.eligible
+            ),
+            "status": (
+                "passed"
+                if (
+                    detector.eligible
+                    if control_mode == "scripted_grasp"
+                    else not detector.eligible
+                )
+                else (
+                    "blocking_setup_defect"
+                    if control_mode == "scripted_grasp"
+                    else "blocking_false_positive"
+                )
+            ),
             "runtime_identity": runtime_identity,
             "detector_sample_count": len(instrumented.detector_samples),
             "detector_samples_tail": instrumented.detector_samples[-8:],
@@ -387,7 +436,8 @@ def main(argv: list[str] | None = None) -> int:
             },
         )
         print(json.dumps({"receipt": receipt_identity, "verdict": verdict, "trigger_eligible": detector.eligible}))
-        return 0 if detector.eligible else 2
+        passed = receipt["passed"]
+        return 0 if passed else 2
     except Exception as exc:
         infra = {
             "schema_version": "v4-object-pair-natural-grasp-live-positive-control-infra-v1",

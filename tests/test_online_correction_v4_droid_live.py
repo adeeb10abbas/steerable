@@ -997,6 +997,65 @@ class DroidReviewFixTests(unittest.TestCase):
         self.assertEqual(len(captured["args"]), 2)  # type: ignore[arg-type]
         self.assertEqual(packed["prompt"], "prompt")
 
+    def test_object_kinematic_state_uses_eef_pose_and_contact_wiring(self) -> None:
+        import numpy as np
+
+        from experiments.online_correction_v4.droid_robolab import (
+            GRIPPER_CONTACT_FORCE_THRESHOLD_N,
+            LiveRoboLabBackend,
+            LiveRoboLabConfig,
+        )
+
+        config = LiveRoboLabConfig(
+            episode_id="ep",
+            env_seed=1,
+            goal="left",
+            prompt_text="prompt",
+            prompt_sha256="p" * 64,
+            policy_id="cosmos3_nano_droid",
+            fixture=replace(_fixture_binding(), fixture_id="object_pair"),
+            queue_row_path=Path("/tmp/queue.json"),
+            queue_row_sha256="q" * 64,
+        )
+        backend = object.__new__(LiveRoboLabBackend)
+        backend.config = config
+        backend.control_tick = 4
+        backend._initial_supported_z = 0.81
+        backend._latest_raw_obs = {"proprio_obs": {"gripper_pos": np.asarray([0.9])}}
+        backend.modules = {
+            "get_world": lambda _env: SimpleNamespace(
+                get_pose=lambda name, env_id=0: (
+                    np.asarray([0.50, 0.12, 0.85], dtype=np.float32),
+                    None,
+                )
+            ),
+            "object_grabbed": lambda _env, object, env_id=0: False,
+            "object_dropped": lambda _env, object, env_id=0: False,
+        }
+        backend.env = SimpleNamespace(
+            step_dt=0.06666666666666667,
+            scene={
+                "frames": SimpleNamespace(
+                    data=SimpleNamespace(
+                        target_frame_names=["eef_frame"],
+                        target_pos_w=np.asarray([[[0.51, 0.12, 0.86]]], dtype=np.float32),
+                    )
+                )
+            },
+        )
+        with mock.patch.object(
+            LiveRoboLabBackend,
+            "g3_contact_force_evidence",
+            return_value={"sponge__robot_all": GRIPPER_CONTACT_FORCE_THRESHOLD_N + 0.1},
+        ):
+            state = backend.object_kinematic_state()
+        self.assertAlmostEqual(state.gripper_x, 0.51)
+        self.assertAlmostEqual(state.gripper_y, 0.12)
+        self.assertAlmostEqual(state.gripper_z, 0.86)
+        self.assertTrue(state.contact)
+        self.assertAlmostEqual(state.object_x, 0.50)
+        self.assertAlmostEqual(state.object_z_pos, 0.85)
+
     def test_live_backend_reset_clears_kinematic_cache(self) -> None:
         from experiments.online_correction_v4.droid_robolab import LiveRoboLabBackend, LiveRoboLabConfig
 
@@ -1013,6 +1072,9 @@ class DroidReviewFixTests(unittest.TestCase):
         )
         backend = LiveRoboLabBackend(env=object(), config=config, modules={})
         backend._anchor_reference_motion = lambda: None  # type: ignore[method-assign]
+        backend._anchor_initial_supported_z = lambda: setattr(  # type: ignore[method-assign]
+            backend, "_initial_supported_z", 0.0
+        )
         backend._initial_supported_z = 0.83
         backend._reference_baseline_pose = (1.0, 2.0, 3.0, 1.0, 0.0, 0.0, 0.0)
         backend.last_hold_action = (0.1,) * 8

@@ -132,6 +132,10 @@ def build_g5_receipt(
     g3_path: Path,
     g4: dict[str, Any],
     g4_path: Path,
+    live_positive_control: dict[str, Any] | None = None,
+    live_positive_control_path: Path | None = None,
+    live_negative_control: dict[str, Any] | None = None,
+    live_negative_control_path: Path | None = None,
 ) -> dict[str, Any]:
     require_pass(g3, schema=G3_SCHEMA, path=g3_path)
     require_pass(g4, schema=G4_SCHEMA, path=g4_path)
@@ -199,6 +203,16 @@ def build_g5_receipt(
             g3.get("scripted_passed_check_count") == 112
             and g3.get("scripted_failed_check_count") == 0
         ),
+        "live_positive_control_trigger_eligible": (
+            live_positive_control is not None
+            and live_positive_control.get("trigger_eligible") is True
+            and live_positive_control.get("verdict") == "intervention_deliverable"
+        ),
+        "live_negative_control_did_not_fire": (
+            live_negative_control is not None
+            and live_negative_control.get("trigger_eligible") is False
+            and live_negative_control.get("verdict") == "negative_control_passed"
+        ),
     }
     passed = all(checks.values())
     return {
@@ -229,6 +243,16 @@ def build_g5_receipt(
         "qualification_basis": {
             "g3_scripted_physics": artifact(g3_path),
             "g4_policy_session": artifact(g4_path),
+            **(
+                {"live_positive_control": artifact(live_positive_control_path)}
+                if live_positive_control_path is not None
+                else {}
+            ),
+            **(
+                {"live_negative_control": artifact(live_negative_control_path)}
+                if live_negative_control_path is not None
+                else {}
+            ),
         },
         "release_boundary": (
             "Passes C7 G5 using the prospectively permitted independent-natural-"
@@ -532,6 +556,8 @@ def main() -> None:
     )
     parser.add_argument("--g5-out", type=Path, required=True)
     parser.add_argument("--g6-out", type=Path, required=True)
+    parser.add_argument("--live-positive-control", type=Path, default=None)
+    parser.add_argument("--live-negative-control", type=Path, default=None)
     args = parser.parse_args()
     for output in (args.g5_out, args.g6_out):
         if output.exists():
@@ -545,6 +571,26 @@ def main() -> None:
         g3_path=args.g3_aggregate.resolve(),
         g4=g4,
         g4_path=args.g4_receipt.resolve(),
+        live_positive_control=(
+            load_json(args.live_positive_control)
+            if args.live_positive_control is not None
+            else None
+        ),
+        live_positive_control_path=(
+            args.live_positive_control.resolve()
+            if args.live_positive_control is not None
+            else None
+        ),
+        live_negative_control=(
+            load_json(args.live_negative_control)
+            if args.live_negative_control is not None
+            else None
+        ),
+        live_negative_control_path=(
+            args.live_negative_control.resolve()
+            if args.live_negative_control is not None
+            else None
+        ),
     )
     g6 = build_g6_receipt(
         geometry_payload=geometry,

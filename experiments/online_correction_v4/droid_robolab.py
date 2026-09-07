@@ -45,6 +45,10 @@ from experiments.online_correction_v4.droid_reset_verify import (
     verify_physical_reset_against_registry,
 )
 
+# Observation wiring constants (not NaturalGraspDetector thresholds).
+GRIPPER_CONTACT_FORCE_THRESHOLD_N = 0.05
+GRIPPER_OBJECT_PROXIMITY_M = 0.12
+
 
 ACTION_DIM = 8
 
@@ -463,6 +467,7 @@ class LiveRoboLabBackend:
         self._g3_physics_tick = 0
         self.last_hold_action = ()
         self._anchor_reference_motion()
+        self._anchor_initial_supported_z()
         return obs, info
 
     def step(self, action: Any) -> tuple[dict[str, Any], dict[str, Any]]:
@@ -973,32 +978,85 @@ class LiveRoboLabBackend:
             image = np.clip(image, 0.0, 255.0).astype(np.uint8)
         return capture_from_ndarray(image, format_kind="raw_rgb24")
 
+    def _anchor_initial_supported_z(self) -> None:
+        get_world = self.modules["get_world"]
+        world = get_world(self.env)
+        obj_pos, _ = world.get_pose(self.fixture_objects.target_object, env_id=0)
+        obj_pos = _host_numpy(obj_pos)
+        self._initial_supported_z = float(obj_pos[2])
+
+    def _eef_position_world_xyz(self) -> tuple[float, float, float]:
+        frames = self.env.scene["frames"]
+        frame_names = list(frames.data.target_frame_names)
+        if "eef_frame" not in frame_names:
+            raise RoboLabBootstrapError(
+                "object_kinematic_state requires eef_frame in scene frames"
+            )
+        index = frame_names.index("eef_frame")
+        position = _host_numpy(frames.data.target_pos_w[0, index])
+        return float(position[0]), float(position[1]), float(position[2])
+
+    def _gripper_is_closed(self) -> bool:
+        obs = self._latest_raw_obs
+        if obs is None:
+            return False
+        proprio = getattr(obs, "get", lambda _key: None)("proprio_obs")
+        if not isinstance(proprio, Mapping):
+            return False
+        gripper = proprio.get("gripper_pos")
+        if gripper is None:
+            return False
+        value = float(_host_numpy(gripper).reshape(-1)[0])
+        return value > 0.5
+
+    def _gripper_target_contact(
+        self,
+        target_object: str,
+        obj_pos: tuple[float, float, float],
+        eef_pos: tuple[float, float, float],
+    ) -> bool:
+        object_grabbed = self.modules["object_grabbed"]
+        if bool(object_grabbed(self.env, object=target_object, env_id=0)):
+            return True
+        try:
+            forces = self.g3_contact_force_evidence()
+            for pair_name, force_n in forces.items():
+                if target_object not in pair_name:
+                    continue
+                if any(token in pair_name for token in ("gripper", "robot_all", "robot")):
+                    if float(force_n) >= GRIPPER_CONTACT_FORCE_THRESHOLD_N:
+                        return True
+        except RoboLabBootstrapError:
+            pass
+        if self._gripper_is_closed():
+            import math
+
+            if math.dist(eef_pos, obj_pos) <= GRIPPER_OBJECT_PROXIMITY_M:
+                return True
+        return False
+
     def object_kinematic_state(self) -> ObjectKinematicState:
         get_world = self.modules["get_world"]
         object_dropped = self.modules["object_dropped"]
-        object_grabbed = self.modules["object_grabbed"]
         world = get_world(self.env)
         target_object = self.fixture_objects.target_object
-        reference_object = self.fixture_objects.reference_object
         obj_pos, _ = world.get_pose(target_object, env_id=0)
-        ref_pos, _ = world.get_pose(reference_object, env_id=0)
-        robot_pos, _ = world.get_pose("robot", env_id=0)
         obj_pos = _host_numpy(obj_pos)
-        ref_pos = _host_numpy(ref_pos)
-        robot_pos = _host_numpy(robot_pos)
+        eef_x, eef_y, eef_z = self._eef_position_world_xyz()
         sim_time = self.control_tick * self.control_dt_s
         if self._initial_supported_z == 0.0:
             self._initial_supported_z = float(obj_pos[2])
-        contact = bool(object_grabbed(self.env, object=target_object, env_id=0))
+        obj_xyz = (float(obj_pos[0]), float(obj_pos[1]), float(obj_pos[2]))
+        contact = self._gripper_target_contact(target_object, obj_xyz, (eef_x, eef_y, eef_z))
         detached = bool(object_dropped(self.env, object=target_object, env_id=0))
         return ObjectKinematicState(
             sim_time=sim_time,
             control_tick=self.control_tick,
             object_z=float(obj_pos[2]),
             initial_supported_z=self._initial_supported_z,
-            gripper_x=float(robot_pos[0]),
-            gripper_y=float(robot_pos[1]),
-            gripper_z=float(robot_pos[2]),
+            gripper_x=eef_x,
+            gripper_y=eef_y,
+            gripper_z=eef_z,
             object_x=float(obj_pos[0]),
             object_y=float(obj_pos[1]),
             object_z_pos=float(obj_pos[2]),

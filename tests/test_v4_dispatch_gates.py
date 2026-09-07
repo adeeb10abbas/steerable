@@ -70,6 +70,45 @@ def test_collect_output_parents_from_fixture_bundle() -> None:
     assert all(parent.startswith("/data/") for parent in parents)
 
 
+def test_require_natural_grasp_live_control_blocks_without_registry(tmp_path: Path) -> None:
+    registry = tmp_path / "natural_grasp_registry.json"
+    registry.write_text(
+        json.dumps(
+            {
+                "schema_version": "v4-natural-grasp-live-control-registry-v1",
+                "passed_controls": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+    with pytest.raises(gates.DispatchGateError, match="natural-grasp live-control gate blocked"):
+        gates.require_natural_grasp_live_control(
+            fixture_id="object_pair",
+            registry_path=registry,
+        )
+
+
+def test_require_natural_grasp_live_control_allows_registered_pair(tmp_path: Path) -> None:
+    registry = tmp_path / "natural_grasp_registry.json"
+    for mode, attempt in (("scripted_grasp", "g3ngp20260908n"), ("hold_only", "g3ngp20260908neg")):
+        gates.record_passed_natural_grasp_live_control(
+            fixture_id="object_pair",
+            control_mode=mode,
+            attempt_id=attempt,
+            receipt_path=f"artifacts/{attempt}.json",
+            receipt_sha256="abc123",
+            study_commit="deadbeef",
+            registry_path=registry,
+        )
+    report = gates.require_natural_grasp_live_control(
+        fixture_id="object_pair",
+        study_commit="deadbeef",
+        registry_path=registry,
+    )
+    assert report["required"] is True
+    assert report["positive_control"]["attempt_id"] == "g3ngp20260908n"
+
+
 def test_enforce_dispatch_gates_smoke_skips_registry(tmp_path: Path) -> None:
     bundle = tmp_path / "bundle"
     bundle.mkdir()

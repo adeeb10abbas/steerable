@@ -14,6 +14,12 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_REGISTRY = (
     ROOT / "artifacts/online_correction_v4/setup/gpu_smoke_registry.json"
 )
+DEFAULT_NATURAL_GRASP_REGISTRY = (
+    ROOT / "artifacts/online_correction_v4/setup/natural_grasp_live_control_registry.json"
+)
+
+FIXTURES_REQUIRING_NATURAL_GRASP_LIVE_CONTROL = frozenset({"object_pair"})
+POLICY_TRIGGER_GATES = frozenset({"G4", "G5", "G6", "G7", "G8", "policy", "confirmatory"})
 
 JOB_OUTPUT_PARENT_RE = re.compile(
     r'name: OUTPUT_PARENT\n\s+value: "([^"]+)"'
@@ -41,6 +47,105 @@ def load_smoke_registry(path: Path = DEFAULT_REGISTRY) -> dict[str, Any]:
 def save_smoke_registry(payload: dict[str, Any], path: Path = DEFAULT_REGISTRY) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def load_natural_grasp_registry(
+    path: Path = DEFAULT_NATURAL_GRASP_REGISTRY,
+) -> dict[str, Any]:
+    if not path.is_file():
+        return {
+            "schema_version": "v4-natural-grasp-live-control-registry-v1",
+            "passed_controls": [],
+        }
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def save_natural_grasp_registry(
+    payload: dict[str, Any],
+    path: Path = DEFAULT_NATURAL_GRASP_REGISTRY,
+) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def record_passed_natural_grasp_live_control(
+    *,
+    fixture_id: str,
+    control_mode: str,
+    attempt_id: str,
+    receipt_path: str,
+    receipt_sha256: str,
+    study_commit: str,
+    registry_path: Path = DEFAULT_NATURAL_GRASP_REGISTRY,
+) -> None:
+    if control_mode not in {"scripted_grasp", "hold_only"}:
+        raise ValueError(f"unsupported control_mode: {control_mode}")
+    registry = load_natural_grasp_registry(registry_path)
+    entry = {
+        "fixture_id": fixture_id,
+        "control_mode": control_mode,
+        "attempt_id": attempt_id,
+        "receipt_path": receipt_path,
+        "receipt_sha256": receipt_sha256,
+        "study_commit": study_commit.lower(),
+        "status": "passed",
+    }
+    passed = [
+        item
+        for item in registry.get("passed_controls", [])
+        if not (
+            item.get("fixture_id") == fixture_id
+            and item.get("control_mode") == control_mode
+        )
+    ]
+    passed.append(entry)
+    registry["passed_controls"] = passed
+    save_natural_grasp_registry(registry, registry_path)
+
+
+def require_natural_grasp_live_control(
+    *,
+    fixture_id: str,
+    study_commit: str | None = None,
+    registry_path: Path = DEFAULT_NATURAL_GRASP_REGISTRY,
+) -> dict[str, Any]:
+    if fixture_id not in FIXTURES_REQUIRING_NATURAL_GRASP_LIVE_CONTROL:
+        return {"required": False, "fixture_id": fixture_id}
+    registry = load_natural_grasp_registry(registry_path)
+    by_mode = {
+        str(item.get("control_mode")): item
+        for item in registry.get("passed_controls", [])
+        if item.get("fixture_id") == fixture_id and item.get("status") == "passed"
+    }
+    missing = [
+        mode
+        for mode in ("scripted_grasp", "hold_only")
+        if mode not in by_mode
+    ]
+    if missing:
+        raise DispatchGateError(
+            "natural-grasp live-control gate blocked dispatch: fixture "
+            f"{fixture_id} missing passed controls {missing}. Run live positive "
+            "(scripted_grasp) and negative (hold_only) controls in Isaac first."
+        )
+    if study_commit is not None:
+        expected = study_commit.lower()
+        drifted = [
+            item.get("control_mode")
+            for item in by_mode.values()
+            if str(item.get("study_commit", "")).lower() != expected
+        ]
+        if drifted:
+            raise DispatchGateError(
+                f"natural-grasp live-control registry stale for {fixture_id}: "
+                f"controls {drifted} recorded under a different study commit than {expected}"
+            )
+    return {
+        "required": True,
+        "fixture_id": fixture_id,
+        "positive_control": by_mode["scripted_grasp"],
+        "negative_control": by_mode["hold_only"],
+    }
 
 
 def record_passed_smoke(
@@ -317,6 +422,16 @@ def enforce_dispatch_gates(
             gpu_product=gpu_product,
             registry_path=registry_path,
         )
+    natural_grasp_report: dict[str, Any] | None = None
+    if (
+        not is_smoke
+        and fixture_id in FIXTURES_REQUIRING_NATURAL_GRASP_LIVE_CONTROL
+        and gate in POLICY_TRIGGER_GATES
+    ):
+        natural_grasp_report = require_natural_grasp_live_control(
+            fixture_id=fixture_id,
+            study_commit=expected_study_commit,
+        )
     consistency = verify_bundle_cluster_consistency(
         bundle_root,
         kube_context=kube_context,
@@ -330,4 +445,9 @@ def enforce_dispatch_gates(
         namespace=namespace,
         publisher_pod=publisher_pod,
     )
-    return {"consistency": consistency, "output_parents_prepared": prepared, "is_smoke": is_smoke}
+    return {
+        "consistency": consistency,
+        "output_parents_prepared": prepared,
+        "is_smoke": is_smoke,
+        "natural_grasp_live_control": natural_grasp_report,
+    }

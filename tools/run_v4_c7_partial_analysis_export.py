@@ -18,6 +18,10 @@ from experiments.online_correction_v4.analysis import load_manifest  # noqa: E40
 
 DEFAULT_CONFIG = ROOT / "docs/online_correction_v4/campaign.json"
 DEFAULT_MANIFEST = ROOT / "artifacts/online_correction_v4/queue.jsonl"
+GRASP_POSITIVE_CONTROL_AUDIT = (
+    ROOT
+    / "artifacts/online_correction_v4/qualification/20260908_c7_grasp_detector_positive_control_audit.json"
+)
 
 
 def sha256_file(path: Path) -> str:
@@ -152,28 +156,100 @@ def main(argv: list[str] | None = None) -> int:
         check=True,
         cwd=ROOT,
     )
-    blocked_path = out_root / "blocked_scope.json"
-    blocked_path.write_text(
-        json.dumps(
-            {
-                "schema_version": "v4-c7-partial-blocked-scope-v1",
-                "accepted_c7_episodes": scope_summary["accepted_unique_episodes"],
-                "planned_c7_episodes": scope_summary["planned_family_episodes"],
-                "missing_c7_episodes": scope_summary["missing_family_episodes"],
-                "not_estimable_or_blocked": {
-                    "C1": "no accepted ledger rows in this partial export",
-                    "C2": "primary blocked until verified common-prefix replay",
-                    "C3": "no accepted ledger rows in this partial export",
-                    "C4": "no accepted ledger rows in this partial export",
-                    "C5": "no accepted ledger rows in this partial export",
-                    "C6": "no accepted ledger rows in this partial export",
-                    "C8": "no accepted ledger rows in this partial export",
-                },
-            },
-            indent=2,
-            sort_keys=True,
+    figures = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "tools/render_v4_analysis_figures.py"),
+            "--tables",
+            str(out_root / "tables"),
+            "--out",
+            str(out_root / "figures"),
+        ],
+        check=True,
+        cwd=ROOT,
+    )
+    grasp_audit = {}
+    if GRASP_POSITIVE_CONTROL_AUDIT.is_file():
+        grasp_audit = json.loads(
+            GRASP_POSITIVE_CONTROL_AUDIT.read_text(encoding="utf-8")
         )
-        + "\n",
+    memo_path = out_root / "paper" / "evidence_memo.json"
+    if memo_path.is_file():
+        memo = json.loads(memo_path.read_text(encoding="utf-8"))
+        memo.setdefault("limitations", [])
+        memo["limitations"] = [
+            item
+            for item in memo["limitations"]
+            if "Figures require accepted trajectory" not in item
+        ]
+        memo["limitations"].extend(
+            [
+                "C7 confirmatory success rates in this partial export are preliminary only; Agent B is verifying whether zero successes reflect genuine policy behavior or an interface regression.",
+                "NaturalGraspDetector has only a synthetic G5 positive control; zero trigger_eligible across live C7 episodes is not yet a settled policy headline until the live Isaac scripted grasp verdict lands.",
+                "C2 primary inference remains not estimable until verified common-prefix replay is recorded.",
+                "C2 and C8 full policy dispatches (4096 and 768 episodes) remain blocked until the live trigger positive-control question is resolved.",
+            ]
+        )
+        memo["intervention_trigger_positive_control"] = {
+            "audit_path": str(GRASP_POSITIVE_CONTROL_AUDIT.relative_to(ROOT))
+            if GRASP_POSITIVE_CONTROL_AUDIT.is_file()
+            else None,
+            "finding": grasp_audit.get("finding", "pending_verdict"),
+            "live_trigger_eligible_observed": grasp_audit.get(
+                "live_policy_positive_control", {}
+            ).get("trigger_eligible_true_observed"),
+            "status": "pending_live_isaac_verdict",
+            "paper_caveat": grasp_audit.get(
+                "paper_distinction",
+                "Do not present zero trigger_eligible as a settled policy finding until live detector positive control is verified.",
+            ),
+        }
+        memo_path.write_text(
+            json.dumps(memo, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+    blocked_path = out_root / "blocked_scope.json"
+    blocked_payload = {
+        "schema_version": "v4-c7-partial-blocked-scope-v1",
+        "accepted_c7_episodes": scope_summary["accepted_unique_episodes"],
+        "planned_c7_episodes": scope_summary["planned_family_episodes"],
+        "missing_c7_episodes": scope_summary["missing_family_episodes"],
+        "not_estimable_or_blocked": {
+            "C1": "no accepted ledger rows in this partial export",
+            "C2": "primary blocked until verified common-prefix replay; policy dispatch blocked pending trigger positive-control verdict",
+            "C3": "no accepted ledger rows in this partial export",
+            "C4": "no accepted ledger rows in this partial export",
+            "C5": "no accepted ledger rows in this partial export",
+            "C6": "no accepted ledger rows in this partial export",
+            "C7": "partial export only; preliminary — zero successes not a settled headline pending Agent B interface verification and live NaturalGraspDetector positive control",
+            "C8": "no accepted ledger rows; policy dispatch blocked pending trigger positive-control verdict",
+        },
+        "intervention_trigger_positive_control": {
+            "audit_path": str(GRASP_POSITIVE_CONTROL_AUDIT.relative_to(ROOT))
+            if GRASP_POSITIVE_CONTROL_AUDIT.is_file()
+            else None,
+            "audit_sha256": sha256_file(GRASP_POSITIVE_CONTROL_AUDIT)
+            if GRASP_POSITIVE_CONTROL_AUDIT.is_file()
+            else None,
+            "finding": grasp_audit.get("finding", "pending_verdict"),
+            "live_trigger_eligible_observed": grasp_audit.get(
+                "live_policy_positive_control", {}
+            ).get("trigger_eligible_true_observed"),
+            "synthetic_positive_control_only": grasp_audit.get(
+                "synthetic_positive_control", {}
+            ).get("present"),
+            "status": "pending_live_isaac_verdict",
+            "policy_dispatch_blocked": {
+                "C2_confirmatory_4096": "blocked until live trigger fires or study amends intervention mechanism",
+                "C8_confirmatory_768": "blocked until live trigger fires or study amends intervention mechanism",
+            },
+            "paper_caveat": grasp_audit.get(
+                "paper_distinction",
+                "A never-firing NaturalGraspDetector in live Isaac is materially different from a policy that never grasps; report both explicitly.",
+            ),
+        },
+    }
+    blocked_path.write_text(
+        json.dumps(blocked_payload, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
     manifest = {
@@ -193,9 +269,15 @@ def main(argv: list[str] | None = None) -> int:
             "path": str(blocked_path),
             "sha256": sha256_file(blocked_path),
         },
+        "figures": json.loads(
+            (out_root / "figures" / "figures_manifest.json").read_text(encoding="utf-8")
+        )
+        if (out_root / "figures" / "figures_manifest.json").is_file()
+        else {},
         "output_root": str(out_root),
         "analyze_exit_code": analyze.returncode,
         "export_exit_code": export.returncode,
+        "figures_exit_code": figures.returncode,
     }
     manifest_path = out_root / "results_export_manifest.json"
     manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")

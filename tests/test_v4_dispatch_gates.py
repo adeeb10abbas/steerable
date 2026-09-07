@@ -114,6 +114,32 @@ def test_enforce_dispatch_gates_smoke_skips_registry(tmp_path: Path) -> None:
     assert report["output_parents_prepared"] == 1
 
 
+def test_verify_file_bindings_skips_configmap_lane_scripts() -> None:
+    calls: list[str] = []
+
+    def fake_kubectl(*, kube_context, namespace, publisher_pod, script):  # noqa: ANN001
+        calls.append(script)
+        return '{"bytes":"1","sha256":"aa"}\n'
+
+    with mock.patch.object(gates, "_kubectl_exec", side_effect=fake_kubectl):
+        checked = gates.verify_file_bindings_on_cluster(
+            [
+                {"path": "/data/study/tools/x.py", "sha256": "aa", "bytes": 1},
+                {
+                    "path": "/opt/v4-lane/scripts/lane_entrypoint.py",
+                    "sha256": "bb",
+                    "bytes": 2,
+                },
+            ],
+            kube_context="ctx",
+            namespace="ns",
+            publisher_pod="pod",
+        )
+    assert len(checked) == 1
+    assert checked[0]["path"] == "/data/study/tools/x.py"
+    assert len(calls) == 1
+
+
 def test_enforce_dispatch_gates_wave_requires_smoke(tmp_path: Path) -> None:
     bundle = tmp_path / "bundle"
     bundle.mkdir()

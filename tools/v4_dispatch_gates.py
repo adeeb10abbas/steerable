@@ -197,6 +197,10 @@ def verify_file_bindings_on_cluster(
     checked: list[dict[str, Any]] = []
     for binding in bindings:
         path = str(binding["path"])
+        # Lane scripts ship in the immutable bundle ConfigMap and mount at
+        # /opt/v4-lane inside the pod; they are not PVC-resident study files.
+        if path.startswith("/opt/v4-lane/"):
+            continue
         expected_sha = str(binding["sha256"]).lower()
         expected_bytes = int(binding["bytes"])
         script = (

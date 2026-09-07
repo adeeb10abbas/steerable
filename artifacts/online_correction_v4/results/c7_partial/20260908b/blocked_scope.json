@@ -1,0 +1,29 @@
+{
+  "accepted_c7_episodes": 279,
+  "intervention_trigger_positive_control": {
+    "audit_path": "artifacts/online_correction_v4/qualification/20260908_c7_grasp_detector_positive_control_audit.json",
+    "audit_sha256": "d5269cb333eb45166b7b4d74c7b067b200f221e6805b81c1e0128bedb532fb23",
+    "finding": "partial_positive_control_only",
+    "live_trigger_eligible_observed": false,
+    "paper_caveat": "Zero trigger_eligible across C7 pilots and confirmatory episodes reflects policy/sim behavior under NaturalGraspDetector, but the detector itself is validated only by G5 synthetic kinematic checks\u2014not by a live sim positive control at the same thresholds. A detector that never fires in live episodes is materially different from a policy that never grasps; both should be reported.",
+    "policy_dispatch_blocked": {
+      "C2_confirmatory_4096": "blocked until live trigger fires or study amends intervention mechanism",
+      "C8_confirmatory_768": "blocked until live trigger fires or study amends intervention mechanism"
+    },
+    "status": "pending_live_isaac_verdict",
+    "synthetic_positive_control_only": true
+  },
+  "missing_c7_episodes": 489,
+  "not_estimable_or_blocked": {
+    "C1": "no accepted ledger rows in this partial export",
+    "C2": "primary blocked until verified common-prefix replay; policy dispatch blocked pending trigger positive-control verdict",
+    "C3": "no accepted ledger rows in this partial export",
+    "C4": "no accepted ledger rows in this partial export",
+    "C5": "no accepted ledger rows in this partial export",
+    "C6": "no accepted ledger rows in this partial export",
+    "C7": "partial export only; preliminary \u2014 zero successes not a settled headline pending Agent B interface verification and live NaturalGraspDetector positive control",
+    "C8": "no accepted ledger rows; policy dispatch blocked pending trigger positive-control verdict"
+  },
+  "planned_c7_episodes": 768,
+  "schema_version": "v4-c7-partial-blocked-scope-v1"
+}

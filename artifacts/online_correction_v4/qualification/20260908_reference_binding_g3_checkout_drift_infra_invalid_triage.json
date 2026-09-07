@@ -1,0 +1,55 @@
+{
+  "affected_attempt_ids": [
+    "g3c2a80scale0p5-a99f44e894",
+    "g3c2a80smoke20260908-f7fa2e12a0",
+    "g3c2a80smoke20260908a-d65df6d65d",
+    "g3c2a80smoke20260908b-d70614f906",
+    "g3gpu20260908a10040-5ec5f179e3",
+    "g3gpu20260908a10080-d00ee331b1",
+    "g3gpu20260908b200-b2a50c44b2"
+  ],
+  "behavioral_episode_count": 0,
+  "cancellation_receipt": "artifacts/online_correction_v4/execution/gpu_widen_20260908/cancellation_receipt_20260908.json",
+  "compiled_at_utc": "2026-09-08T07:10:00Z",
+  "disposition": "infrastructure_invalid",
+  "failure_classes": {
+    "file_bindings_drift": {
+      "count_jobs": 2,
+      "detail": "bundle file_bindings hash for tools/run_v4_horizontal_g3_path_seed.py did not match cluster checkout after a79d55b fix landed",
+      "example_attempt_id": "g3c2a80smoke20260908-f7fa2e12a0",
+      "fix_commit": "3a0c71ec96a07fc6b6efb462664e0a978b7042bc"
+    },
+    "output_parent_missing": {
+      "count_jobs": 2,
+      "detail": "hand-rolled dispatch created jobs before OUTPUT_PARENT mkdir on PVC",
+      "example_attempt_id": "g3c2a80smoke20260908a-d65df6d65d"
+    },
+    "stale_bundle_commit": {
+      "count_jobs": 128,
+      "detail": "rendered wave pinned expected_study_commit 4617db3 predating scene_receipt.support_geometry fix; preflight or runner KeyError",
+      "example_attempt_id": "g3c2a80scale0p5-a99f44e894",
+      "pinned_commit": "4617db39d5d3252339d1d96703dbd954a30cc8a8",
+      "required_commit": "3a0c71ec96a07fc6b6efb462664e0a978b7042bc"
+    },
+    "tracked_checkout_dirty": {
+      "count_jobs": 2,
+      "detail": "G3 runner _git_identity rejected dirty steerable-v4-c2-g3 checkout during GPU widen smokes",
+      "example_attempt_id": "g3gpu20260908a10080-d00ee331b1"
+    }
+  },
+  "fix_commits": [
+    "a79d55bed8303ffa48b8d31f04850104f51200f2",
+    "964ade81b689c4a49a63db000e7cdaf813a8902e"
+  ],
+  "immutable_retry_requires": [
+    "sync steerable-v4-c2-g3 to pin 3a0c71e via tools/sync_v4_cluster_study_checkouts.py",
+    "re-render bundles with expected_study_commit matching cluster HEAD",
+    "dispatch only through tools/dispatch_v4_model_blind_k8s_bundle.py with --smoke then smoke registry before wave"
+  ],
+  "model_request_count": 0,
+  "schema_version": "v4-reference-binding-g3-checkout-drift-infra-triage-v1",
+  "status": "infrastructure_invalid",
+  "total_failed_or_cancelled_jobs": 139,
+  "triage_agent": "C2_reference_binding",
+  "verdict": "All listed attempts are infrastructure-invalid checkout or bundle-binding drift. None may enter G3 aggregates or policy inference. Retry only after gated re-render at cluster pin 3a0c71e."
+}

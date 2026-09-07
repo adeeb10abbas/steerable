@@ -44,7 +44,7 @@ def render_subset(
         raise ValueError("episode retry IDs must be nonempty and unique")
     lock = validate_runtime_lock(
         runtime_lock_path,
-        expected_manifest_sha256=sha256_file(queue_path),
+        expected_queue_sha256=sha256_file(queue_path),
         expected_config_sha256=sha256_file(campaign_config_path),
     )
     if not (lock.is_released or lock.is_pilot_released):

@@ -1,12 +1,11 @@
 {
   "a40_baseline": {
     "attempt_id": "g2gpu20260908a40c",
-    "bundle_pin": "96ccf4ad95b292e61da28eafc2ad9a7b6dfa5e65",
-    "job_name": "v4-g2-horizontal-g2gpu20260908a40c-abb294f876-s000",
-    "status": "pending_gpu_capacity"
+    "disposition": "superseded_by_homogeneous_rerun",
+    "note": "Prior A40 baseline at stale pin; re-run after G2 homogeneous wave completes"
   },
   "campaign_id": "online_correction_v4",
-  "compiled_at_utc": "2026-09-07T11:40:00Z",
+  "compiled_at_utc": "2026-09-07T12:05:00Z",
   "episode_dispatch": {
     "blocked": 9728,
     "completed": 0,
@@ -15,44 +14,39 @@
   },
   "fixture_version": "horizontal_geometry_repair_v2",
   "g2_wave": {
-    "original_attempt": "g2r20260908a10080w",
-    "original_complete": 33,
-    "original_infrastructure_invalid": 88,
-    "retry_attempt": "g2r20260908a10080r",
-    "retry_jobs_dispatched": 88,
-    "retry_pod_status": {
-      "ContainerCreating": 3,
-      "Pending": 85
-    },
-    "status": "retry_queued_capacity_blocked"
+    "attempt_id": "g2r20260908g",
+    "bundle_hash_suffix": "10e8fea3b8",
+    "isolated_study_root": "/data/users/ali/vla_wam/src/steerable-v4-g2_repair_v2-c401fb45-g2r20260908g",
+    "job_count": 128,
+    "status": "128 Running"
   },
   "g3_path_wave": {
-    "original_attempt": "g3r20260908a10080w",
-    "original_scientific_complete": 86,
-    "original_infrastructure_invalid": 42,
-    "path_receipts_on_pvc": 91,
-    "retry_attempt": "g3r20260908a10080r",
-    "retry_jobs_dispatched": 42,
-    "retry_pod_status": {
-      "ContainerCreating": 8,
-      "Pending": 34
-    },
+    "attempt_id": "g3r20260908g",
+    "bundle_hash_suffix": "27e0010473",
+    "isolated_study_root": "/data/users/ali/vla_wam/src/steerable-v4-g2_repair_v2-c401fb45-g3r20260908g",
+    "job_count": 128,
     "scale": 0.5,
-    "status": "retry_queued_capacity_blocked",
-    "stratum_note": "86 original receipts at study pin 0e8ab82; compile requires homogeneous runtime stratum at 96ccf4a — may require re-run of original completes after retries land"
+    "status": "128 Pending (A100-80GB pool saturated)"
   },
   "g3_scripted": {
     "status": "blocked_pending_path_scale_receipt"
   },
   "g4_g8": {
-    "status": "blocked_pending_g3_aggregate_and_g5_horizontal_live_control"
+    "status": "blocked_pending_g3_aggregate_and_horizontal_live_controls"
   },
-  "g5_trigger_gate": {
-    "horizontal_scope_live_control": "not_yet_run",
-    "object_pair_live_positive_control": "passed_at_96ccf4a",
-    "registry": "artifacts/online_correction_v4/setup/natural_grasp_live_control_registry.json",
-    "verdict": "Hold 9728 episodes until horizontal repaired-scope G5 validated on repaired live trigger path"
+  "g5_live_controls": {
+    "horizontal_negative": "not_dispatched",
+    "horizontal_positive": "not_dispatched",
+    "runner": "tools/run_v4_horizontal_natural_grasp_live_positive_control.py",
+    "status": "pending_dispatch_at_pin_c401fb4"
   },
+  "invalidated_prior_waves": [
+    "g3r20260908a10080w",
+    "g3r20260908a10080r",
+    "g2r20260908a10080w",
+    "g2r20260908a10080r"
+  ],
   "schema_version": "v4-horizontal-repair-progress-v1",
-  "selected_g3_scale": 0.5
+  "selected_g3_scale": 0.5,
+  "single_pin": "c401fb4577d8003a019ecf7ff7be549f2c0a5931"
 }

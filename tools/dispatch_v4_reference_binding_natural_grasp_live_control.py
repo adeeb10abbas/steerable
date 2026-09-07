@@ -21,7 +21,7 @@ import v4_gpu_scheduling as gpu_scheduling  # noqa: E402
 import v4_study_checkout_isolation as checkout_isolation  # noqa: E402
 import v4_wave_admission as wave_admission  # noqa: E402
 
-PIN_COMMIT = "c401fb4577d8003a019ecf7ff7be549f2c0a5931"
+PIN_COMMIT = "2a827a16cdb552a85eb7c7744d996f48b2afe338"
 WORKSTREAM_ID = "c2_g3"
 FIXTURE_ID = "reference_binding"
 ENV_SEED = 2100010000
@@ -38,9 +38,6 @@ ROBOLAB_COMMIT = "0aef241fb088ca21bb4ebd24448940ed56620d17"
 EXPECTED_DRIVER = "580.95.05"
 OUTPUT_PARENT = (
     "/data/users/ali/vla_wam/raw/v4/qualification/reference-binding-natural-grasp-positive-control"
-)
-RUNNER_CLUSTER_PATH = (
-    f"{OUTPUT_PARENT}/runner/run_v4_reference_binding_natural_grasp_live_positive_control.py"
 )
 PYTHON_BIN = "/data/users/ali/vla_wam/envs/robolab-v2-isaac50/bin/python"
 SCRIPT_ROOT = ROOT / "deploy/k8s/v4_lane_bundle/scripts"
@@ -81,7 +78,7 @@ def build_launch_config(
     expected_gpu_name: str,
     pin_commit: str,
 ) -> dict[str, Any]:
-    runner_cluster = RUNNER_CLUSTER_PATH
+    runner_cluster = f"{study_root}/tools/run_v4_reference_binding_natural_grasp_live_positive_control.py"
     output_dir = f"{OUTPUT_PARENT}/{attempt_id}"
 
     def cluster(rel: str) -> str:
@@ -235,89 +232,6 @@ def render_configmap(*, name: str, attempt_id: str, config_sha: str, launch: dic
         "  simulator-launch.json: |\n"
         f"    {launch_json}\n"
         f"  image.digest: \"sha256:{IMAGE_SHA256}\"\n"
-    )
-
-
-def upload_runner_to_cluster() -> None:
-    runner_bytes = RUNNER.read_bytes()
-    digest = sha256_bytes(runner_bytes)
-    check = subprocess.run(
-        [
-            "kubectl",
-            "--context",
-            KUBE_CONTEXT,
-            "-n",
-            NAMESPACE,
-            "exec",
-            PUBLISHER_POD,
-            "--",
-            PYTHON_BIN,
-            "-c",
-            (
-                "import hashlib, pathlib\n"
-                f"path = pathlib.Path('{RUNNER_CLUSTER_PATH}')\n"
-                "if path.is_file():\n"
-                f"    raise SystemExit(0 if hashlib.sha256(path.read_bytes()).hexdigest() == '{digest}' else 1)"
-            ),
-        ],
-        check=False,
-        capture_output=True,
-        text=True,
-    )
-    if check.returncode == 0:
-        return
-    subprocess.run(
-        [
-            "kubectl",
-            "--context",
-            KUBE_CONTEXT,
-            "-n",
-            NAMESPACE,
-            "exec",
-            PUBLISHER_POD,
-            "--",
-            "mkdir",
-            "-p",
-            f"{OUTPUT_PARENT}/runner",
-        ],
-        check=True,
-        capture_output=True,
-        text=True,
-    )
-    completed = subprocess.run(
-        [
-            "kubectl",
-            "--context",
-            KUBE_CONTEXT,
-            "-n",
-            NAMESPACE,
-            "cp",
-            str(RUNNER),
-            f"{NAMESPACE}/{PUBLISHER_POD}:{RUNNER_CLUSTER_PATH}",
-        ],
-        check=False,
-        capture_output=True,
-        text=True,
-    )
-    if completed.returncode != 0:
-        raise RuntimeError(completed.stderr or completed.stdout or "runner upload failed")
-    subprocess.run(
-        [
-            "kubectl",
-            "--context",
-            KUBE_CONTEXT,
-            "-n",
-            NAMESPACE,
-            "exec",
-            PUBLISHER_POD,
-            "--",
-            "chmod",
-            "755",
-            RUNNER_CLUSTER_PATH,
-        ],
-        check=True,
-        capture_output=True,
-        text=True,
     )
 
 
@@ -612,7 +526,6 @@ def dispatch_one(
         json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
     if create:
-        upload_runner_to_cluster()
         for manifest in ("configmap.yaml", "scripts-configmap.yaml", "job.yaml"):
             completed = subprocess.run(
                 ["kubectl", "--context", KUBE_CONTEXT, "apply", "-f", str(bundle_dir / manifest)],

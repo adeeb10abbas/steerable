@@ -1,8 +1,14 @@
 {
   "schema_version": "v4-natural-grasp-live-control-status-v1",
   "registry_path": "artifacts/online_correction_v4/setup/natural_grasp_live_control_registry.json",
-  "observed_at_utc": "2026-09-07T13:28:00Z",
+  "observed_at_utc": "2026-09-07T13:58:00Z",
   "gate_requirement": "Each fixture requires passed scripted_grasp and hold_only controls at dispatch study_commit",
+  "root_cause_receipt": "artifacts/online_correction_v4/qualification/20260907_natural_grasp_scripted_grasp_root_cause.json",
+  "shared_fix_commits": [
+    "52973dfb",
+    "493dbd9c",
+    "2a827a16"
+  ],
   "fixtures": {
     "object_pair": {
       "platform": "isaac",
@@ -20,14 +26,45 @@
       },
       "dispatch_gate": "open_for_c7_at_matching_commit"
     },
+    "containment": {
+      "platform": "isaac",
+      "scripted_grasp": {
+        "status": "passed",
+        "attempt_id": "g3ngp20260908cp5",
+        "receipt": "artifacts/online_correction_v4/qualification/20260907_containment_natural_grasp_live_positive_control_g3ngp20260908cp5.json",
+        "study_commit": "2a827a16cdb552a85eb7c7744d996f48b2afe338"
+      },
+      "hold_only": {
+        "status": "passed",
+        "attempt_id": "g3ngp20260908cn3",
+        "receipt": "artifacts/online_correction_v4/qualification/20260908_containment_natural_grasp_live_negative_control_g3ngp20260908cn3.json",
+        "study_commit": "c5ff489454b5a1ac141c8d2640d10bf55d683789"
+      },
+      "dispatch_gate": "open_when_hold_only_revalidated_at_shared_pin"
+    },
+    "reference_binding": {
+      "platform": "isaac",
+      "scripted_grasp": {
+        "status": "passed",
+        "attempt_id": "g3ngrb20260908u",
+        "receipt": "artifacts/online_correction_v4/qualification/20260908_reference_binding_natural_grasp_live_positive_control_g3ngrb20260908u.json",
+        "study_commit": "2a827a16cdb552a85eb7c7744d996f48b2afe338"
+      },
+      "hold_only": {
+        "status": "passed",
+        "attempt_id": "g3ngrb20260908v",
+        "receipt": "artifacts/online_correction_v4/qualification/20260908_reference_binding_natural_grasp_live_negative_control_g3ngrb20260908v.json",
+        "study_commit": "2a827a16cdb552a85eb7c7744d996f48b2afe338"
+      },
+      "dispatch_gate": "open_at_shared_pin_2a827a16"
+    },
     "vertical": {
       "platform": "isaac",
       "scripted_grasp": {
         "status": "finding",
-        "attempt_id": "g3ngp20260908vp6",
-        "receipt": "artifacts/online_correction_v4/qualification/20260908_vertical_natural_grasp_live_positive_control_g3ngp20260908vp6.json",
-        "finding": "artifacts/online_correction_v4/qualification/20260908_vertical_natural_grasp_live_control_finding_g3ngp20260908vp6.json",
-        "study_commit": "00885cd772a67cb99b8fc15aebfac2b568b10cc6",
+        "attempt_id": "g3ngp20260908vp8",
+        "finding": "artifacts/online_correction_v4/qualification/20260908_vertical_natural_grasp_live_control_finding_g3ngp20260908vp8.json",
+        "study_commit": "2a827a16cdb552a85eb7c7744d996f48b2afe338",
         "verdict": "blocking_setup_defect"
       },
       "hold_only": {
@@ -36,32 +73,16 @@
         "receipt": "artifacts/online_correction_v4/qualification/20260908_vertical_natural_grasp_live_negative_control_g3ngp20260908vn6.json",
         "study_commit": "00885cd772a67cb99b8fc15aebfac2b568b10cc6"
       },
-      "dispatch_gate": "blocked_on_positive_control",
-      "diagnosis": "artifacts/online_correction_v4/qualification/20260908_vertical_natural_grasp_live_control_diagnosis.json"
-    },
-    "containment": {
-      "platform": "isaac",
-      "scripted_grasp": {
-        "status": "finding",
-        "attempt_id": "g3ngp20260908cp3",
-        "receipt": "artifacts/online_correction_v4/qualification/20260908_containment_natural_grasp_live_positive_control_g3ngp20260908cp3.json",
-        "finding": "artifacts/online_correction_v4/qualification/20260908_containment_natural_grasp_live_control_finding_g3ngp20260908cp3.json",
-        "study_commit": "c5ff489454b5a1ac141c8d2640d10bf55d683789",
-        "verdict": "blocking_setup_defect"
-      },
-      "hold_only": {
-        "status": "passed",
-        "attempt_id": "g3ngp20260908cn3",
-        "receipt": "artifacts/online_correction_v4/qualification/20260908_containment_natural_grasp_live_negative_control_g3ngp20260908cn3.json",
-        "study_commit": "c5ff489454b5a1ac141c8d2640d10bf55d683789"
-      },
       "dispatch_gate": "blocked_on_positive_control"
     },
     "horizontal": {
       "platform": "isaac",
       "scripted_grasp": {
         "status": "finding",
-        "diagnosis": "artifacts/online_correction_v4/qualification/20260908_horizontal_natural_grasp_live_control_diagnosis.json"
+        "attempt_id": "horizng20260908t",
+        "finding": "artifacts/online_correction_v4/qualification/20260908_horizontal_natural_grasp_live_control_finding_horizng20260908t.json",
+        "study_commit": "2a827a16cdb552a85eb7c7744d996f48b2afe338",
+        "verdict": "blocking_setup_defect"
       },
       "hold_only": {
         "status": "passed",

@@ -1,0 +1,42 @@
+{
+  "schema_version": "v4-natural-grasp-live-control-finding-v1",
+  "recorded_at_utc": "2026-09-07T13:55:00Z",
+  "fixture_id": "horizontal",
+  "attempt_id": "horizng20260908t",
+  "control_mode": "scripted_grasp",
+  "study_commit": "2a827a16cdb552a85eb7c7744d996f48b2afe338",
+  "shared_fix_applied": true,
+  "eef_tool_length_m": 0.14,
+  "verdict": "blocking_setup_defect",
+  "trigger_eligible": false,
+  "passed": false,
+  "scripted_grasp_stages": {
+    "goal_satisfied": false,
+    "grasped": false,
+    "released": true,
+    "stably_placed": true,
+    "transported": false
+  },
+  "scripted_trajectory_evidence": {
+    "close_dwell": {
+      "eef_z_m": 0.2576484978199005,
+      "object_grabbed": true,
+      "object_z_m": 0.08566658943891525,
+      "target_z_m": 0.24610612630844117
+    },
+    "lift": {
+      "eef_z_m": 0.33874741196632385,
+      "object_grabbed": false,
+      "object_z_m": 0.08110696077346802
+    },
+    "reasons": [
+      "insufficient_lift_after_close",
+      "object_center_outside_goal_set"
+    ]
+  },
+  "interpretation": "After applying the shared Robotiq flange offset (eef_tool_length_m=0.14), the scripted controller achieves finger-pad contact and a transient grasp at close_dwell, but the object is not retained through the lift phase. This is distinct from the pre-fix flange-offset defect and indicates a fixture-specific grasp stability / transport feasibility limit at seed 2100000000 scale 0.5 rather than a detector or runner divergence.",
+  "negative_control_specificity": "horizng20260908negb hold_only passed with trigger_eligible=false.",
+  "pvc_receipt_path": "/data/users/ali/vla_wam/raw/v4/qualification/horizontal-natural-grasp-positive-control/horizng20260908t/natural_grasp_positive_control.json",
+  "pvc_trajectory_path": "/data/users/ali/vla_wam/raw/v4/qualification/horizontal-natural-grasp-positive-control/horizng20260908t/scripted_trajectory.json",
+  "dispatch_gate": "blocked_on_positive_control"
+}

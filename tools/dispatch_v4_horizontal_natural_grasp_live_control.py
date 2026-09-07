@@ -21,7 +21,7 @@ import v4_gpu_scheduling as gpu_scheduling  # noqa: E402
 import v4_study_checkout_isolation as checkout_isolation  # noqa: E402
 import v4_wave_admission as wave_admission  # noqa: E402
 
-PIN_COMMIT = "c401fb4577d8003a019ecf7ff7be549f2c0a5931"
+PIN_COMMIT = "2a827a16cdb552a85eb7c7744d996f48b2afe338"
 WORKSTREAM_ID = "g2_repair_v2"
 FIXTURE_ID = "horizontal"
 ENV_SEED = 2100000000

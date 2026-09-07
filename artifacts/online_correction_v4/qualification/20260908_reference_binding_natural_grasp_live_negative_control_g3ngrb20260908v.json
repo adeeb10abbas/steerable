@@ -1,0 +1,158 @@
+{
+  "attempt_id": "g3ngrb20260908v",
+  "behavioral_episode_count": 0,
+  "control_mode": "hold_only",
+  "detector_class": "NaturalGraspDetector",
+  "detector_config": {
+    "dwell_s": 0.2,
+    "min_lift_m": 0.04,
+    "relative_drift_max_m": 0.01,
+    "trigger_deadline_s": 40.0
+  },
+  "detector_sample_count": 602,
+  "detector_samples_tail": [
+    {
+      "contact": false,
+      "control_tick": 595,
+      "event": null,
+      "grasp_occurred": false,
+      "lift_m": -0.00299999862909317,
+      "relative_drift_m": 0.4020050438771493,
+      "sim_time_s": 39.666666666666664,
+      "trigger_eligible": false
+    },
+    {
+      "contact": false,
+      "control_tick": 596,
+      "event": null,
+      "grasp_occurred": false,
+      "lift_m": -0.002999909222126007,
+      "relative_drift_m": 0.40200495023736016,
+      "sim_time_s": 39.733333333333334,
+      "trigger_eligible": false
+    },
+    {
+      "contact": false,
+      "control_tick": 597,
+      "event": null,
+      "grasp_occurred": false,
+      "lift_m": -0.0029999613761901855,
+      "relative_drift_m": 0.4020050024332504,
+      "sim_time_s": 39.8,
+      "trigger_eligible": false
+    },
+    {
+      "contact": false,
+      "control_tick": 598,
+      "event": null,
+      "grasp_occurred": false,
+      "lift_m": -0.0029999911785125732,
+      "relative_drift_m": 0.40200503117711534,
+      "sim_time_s": 39.86666666666667,
+      "trigger_eligible": false
+    },
+    {
+      "contact": false,
+      "control_tick": 599,
+      "event": null,
+      "grasp_occurred": false,
+      "lift_m": -0.0029999390244483948,
+      "relative_drift_m": 0.4020049644798529,
+      "sim_time_s": 39.93333333333333,
+      "trigger_eligible": false
+    },
+    {
+      "contact": false,
+      "control_tick": 600,
+      "event": null,
+      "grasp_occurred": false,
+      "lift_m": -0.0029999390244483948,
+      "relative_drift_m": 0.4020049788357077,
+      "sim_time_s": 40.0,
+      "trigger_eligible": false
+    },
+    {
+      "contact": false,
+      "control_tick": 601,
+      "event": null,
+      "grasp_occurred": false,
+      "lift_m": -0.0029999837279319763,
+      "relative_drift_m": 0.4020050256460558,
+      "sim_time_s": 40.06666666666666,
+      "trigger_eligible": false
+    },
+    {
+      "contact": false,
+      "control_tick": 602,
+      "event": null,
+      "grasp_occurred": false,
+      "lift_m": -0.0029999688267707825,
+      "relative_drift_m": 0.40200495392805496,
+      "sim_time_s": 40.13333333333333,
+      "trigger_eligible": false
+    }
+  ],
+  "environment_seed": 2100010000,
+  "fixture_id": "reference_binding",
+  "goal": "left",
+  "grasp_occurred": false,
+  "model_request_count": 0,
+  "native_control_dt_s": 0.06666666666666667,
+  "passed": true,
+  "runtime_identity": {
+    "droid_robolab_sha256": "37e79b49fb2c02378904fd5a7041b40f7c823f0e7ca98d471d34c8c9cbca5106",
+    "gpu": {
+      "driver_version": "580.95.05",
+      "index": "0",
+      "name": "NVIDIA A100-SXM4-40GB",
+      "uuid": "GPU-3f64b7a5-fcac-df0c-27b7-7fa531c8161a"
+    },
+    "natural_grasp_detector_module_sha256": "4e6cd107c2b734b682164af0be832a06f4dfaef04824460718e1c6f35c48048a",
+    "pod": "v4-reference-binding-natural-grasp-pc-g3ngrb20260908v-job-wh4p4",
+    "pod_uid": "2ea774be-7ea2-4baf-9e57-da59216a17f3",
+    "positive_control_runner_sha256": "4e2fc5faa3647d0b7e539008de12880666d3a347b707c89de844fbbe2af15c24",
+    "robolab_checkout": {
+      "commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+      "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4",
+      "tracked_diff_empty": true
+    },
+    "study_checkout": {
+      "commit": "2a827a16cdb552a85eb7c7744d996f48b2afe338",
+      "path": "/data/users/ali/vla_wam/src/steerable-v4-c2_g3-2a827a16-g3ngrb20260908v",
+      "tracked_diff_empty": true
+    }
+  },
+  "scale": 0.5,
+  "schema_version": "v4-reference-binding-natural-grasp-live-positive-control-v1",
+  "scripted_controller_config": {
+    "eef_tool_length_m": 0.14,
+    "geometry_offsets": {
+      "approach_height_m": 0.12,
+      "descend_offset_m": 0.025,
+      "lift_height_m": 0.12,
+      "place_descend_offset_m": 0.04,
+      "retreat_height_m": 0.1,
+      "target_inset_m": 0.015,
+      "transport_height_m": 0.12
+    },
+    "gripper_close": 0.785398,
+    "phase_ticks": {
+      "approach": 30,
+      "close_dwell": 30,
+      "descend": 30,
+      "lift": 30,
+      "open_dwell": 30,
+      "place_descend": 30,
+      "retreat": 30,
+      "settle": 15,
+      "transport": 30
+    }
+  },
+  "scripted_grasp_stages": {},
+  "scripted_trajectory_passed": true,
+  "status": "passed",
+  "trajectory_tick_count": 602,
+  "trigger_eligible": false,
+  "trigger_event": null,
+  "verdict": "negative_control_passed"
+}

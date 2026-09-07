@@ -1,0 +1,24 @@
+{
+  "schema_version": "v4-natural-grasp-live-control-finding-v1",
+  "recorded_at_utc": "2026-09-07T13:55:00Z",
+  "fixture_id": "vertical",
+  "attempt_id": "g3ngp20260908vp8",
+  "control_mode": "scripted_grasp",
+  "study_commit": "2a827a16cdb552a85eb7c7744d996f48b2afe338",
+  "shared_fix_applied": true,
+  "eef_tool_length_m": 0.14,
+  "verdict": "blocking_setup_defect",
+  "trigger_eligible": false,
+  "passed": false,
+  "scripted_grasp_stages": {
+    "goal_satisfied": false,
+    "grasped": false,
+    "released": true,
+    "stably_placed": true,
+    "transported": false
+  },
+  "interpretation": "With the shared flange offset applied, the vertical fixture scripted descend target is reachable in planning but absolute IK cannot place the EEF at the commanded descend height above the shelf object at seed 2100020000 scale 0.5. Measured EEF remains ~0.13 m above the object at close, indicating a reachability / workspace limit for this fixture geometry rather than missing target-object resolution in the live-control runner.",
+  "negative_control_specificity": "g3ngp20260908vn6 hold_only passed with trigger_eligible=false.",
+  "pvc_receipt_path": "/data/users/ali/vla_wam/raw/v4/qualification/vertical-natural-grasp-positive-control/g3ngp20260908vp8/natural_grasp_positive_control.json",
+  "dispatch_gate": "blocked_on_positive_control"
+}

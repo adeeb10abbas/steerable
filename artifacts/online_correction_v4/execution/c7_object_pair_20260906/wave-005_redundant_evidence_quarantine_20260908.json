@@ -1,0 +1,25 @@
+{
+  "schema_version": "v4-c7-wave-005-redundant-evidence-quarantine-v1",
+  "quarantined_at_utc": "2026-09-08T07:15:00Z",
+  "reason": "wave-005 duplicate attempt0471+ jobs on already-leased lanes; redundant PVC writes quarantined after job teardown",
+  "accepted_ledger_invalidated_count": 0,
+  "quarantined_episodes": [
+    {
+      "lane_id": "c7m01",
+      "attempt_id": "attempt0472",
+      "episode_id": "online_correction_v4-C7-b000-73e4ddd92ed640e3",
+      "quarantine_path": "/data/users/ali/vla_wam/raw/v4/c7-object-pair-main/quarantine/wave-005-redundant-20260908/c7m01-attempt047x",
+      "in_accepted_ledger": false,
+      "classification": "infrastructure_invalid_redundant_attempt_write"
+    },
+    {
+      "lane_id": "c7m08",
+      "attempt_id": "attempt0479",
+      "episode_id": "online_correction_v4-C7-b001-38f5b638edfaa054",
+      "quarantine_path": "/data/users/ali/vla_wam/raw/v4/c7-object-pair-main/quarantine/wave-005-redundant-20260908/c7m08-attempt047x",
+      "in_accepted_ledger": false,
+      "classification": "infrastructure_invalid_redundant_attempt_write"
+    }
+  ],
+  "note": "Neither episode entered accepted_ledger.jsonl; owners retained in-progress leases and evidence."
+}

@@ -30,6 +30,13 @@ TRIGGER_WIRING_RECLASSIFICATION = (
     ROOT
     / "artifacts/online_correction_v4/qualification/20260908_c7_natural_grasp_trigger_wiring_reclassification.json"
 )
+NATURAL_GRASP_LIVE_CONTROL_REGISTRY = (
+    ROOT / "artifacts/online_correction_v4/setup/natural_grasp_live_control_registry.json"
+)
+REPAIRED_POSITIVE_CONTROL = (
+    ROOT
+    / "artifacts/online_correction_v4/qualification/20260908_object_pair_natural_grasp_live_positive_control_g3ngp20260908p.json"
+)
 
 
 def sha256_file(path: Path) -> str:
@@ -272,18 +279,39 @@ def main(argv: list[str] | None = None) -> int:
     reclassification = {}
     if apply_reclassification and reclassification_path.is_file():
         reclassification = json.loads(reclassification_path.read_text(encoding="utf-8"))
+    live_control_registry = {}
+    if NATURAL_GRASP_LIVE_CONTROL_REGISTRY.is_file():
+        live_control_registry = json.loads(
+            NATURAL_GRASP_LIVE_CONTROL_REGISTRY.read_text(encoding="utf-8")
+        )
+    repaired_positive = {}
+    if REPAIRED_POSITIVE_CONTROL.is_file():
+        repaired_positive = json.loads(REPAIRED_POSITIVE_CONTROL.read_text(encoding="utf-8"))
+    passed_live_controls = live_control_registry.get("passed_controls") or []
+    repair_verified = (
+        len(passed_live_controls) >= 2
+        and all(item.get("status") == "passed" for item in passed_live_controls)
+    )
     trigger_finding = (
-        "blocking_setup_defect"
-        if live_positive.get("verdict") == "blocking_setup_defect"
-        else grasp_audit.get("finding", "pending_verdict")
+        "blocking_setup_defect_confirmed_then_repaired"
+        if apply_reclassification and repair_verified
+        else (
+            "blocking_setup_defect"
+            if live_positive.get("verdict") == "blocking_setup_defect"
+            else grasp_audit.get("finding", "pending_verdict")
+        )
     )
     trigger_status = (
-        "blocking_setup_defect_confirmed"
-        if live_positive.get("verdict") == "blocking_setup_defect"
-        else "pending_live_isaac_verdict"
+        "repair_verified_object_pair_isaac"
+        if apply_reclassification and repair_verified
+        else (
+            "blocking_setup_defect_confirmed"
+            if live_positive.get("verdict") == "blocking_setup_defect"
+            else "pending_live_isaac_verdict"
+        )
     )
     paper_caveat = (
-        "Live Isaac positive control confirmed a blocking setup defect: scripted grasp stages passed but trigger_eligible never fired because object_kinematic_state() fed NaturalGraspDetector robot-base pose and object_grabbed() contact. The 279 C7 episodes collected before repair verification were run under an inoperative intervention trigger and are excluded from all behavioral claims."
+        "Live Isaac positive control confirmed a blocking setup defect: scripted grasp stages passed but trigger_eligible never fired because object_kinematic_state() fed NaturalGraspDetector robot-base pose and object_grabbed() contact. The 279 C7 episodes collected before repair verification were run under an inoperative intervention trigger and are excluded from all behavioral claims. Post-repair live positive and negative controls passed on object_pair Isaac at study commit c9c988d; confirmatory redispatch is required before any behavioral headline."
         if apply_reclassification
         else grasp_audit.get(
             "paper_distinction",
@@ -350,7 +378,7 @@ def main(argv: list[str] | None = None) -> int:
         )
     blocked_path = out_root / "blocked_scope.json"
     c7_status = (
-        "all 279 previously accepted episodes reclassified infrastructure-invalid under inoperative NaturalGraspDetector wiring; excluded from behavioral claims pending repair verification"
+        "all 279 previously accepted episodes reclassified infrastructure-invalid under inoperative NaturalGraspDetector wiring; excluded from behavioral claims; raw PVC evidence preserved"
         if apply_reclassification
         else "partial export only; preliminary — zero successes not a settled headline pending Agent B interface verification and live NaturalGraspDetector positive control"
     )
@@ -367,13 +395,13 @@ def main(argv: list[str] | None = None) -> int:
         "missing_c7_episodes": scope_summary["missing_family_episodes"],
         "not_estimable_or_blocked": {
             "C1": "no accepted ledger rows in this partial export",
-            "C2": "primary blocked until verified common-prefix replay after repaired trigger path; policy dispatch blocked pending live positive control on repaired wiring",
+            "C2": "primary blocked until verified common-prefix replay on reference_binding after G3/G4-G6; policy dispatch held until confirmatory lanes use repair-verified trigger wiring",
             "C3": "no accepted ledger rows in this partial export",
             "C4": "no accepted ledger rows in this partial export",
             "C5": "no accepted ledger rows in this partial export",
             "C6": "no accepted ledger rows in this partial export",
             "C7": c7_status,
-            "C8": "no accepted ledger rows; policy dispatch blocked pending repaired trigger live positive control",
+            "C8": "no accepted ledger rows; policy dispatch blocked pending second_stack trigger-adapter verification separate from Isaac repair",
         },
         "intervention_trigger_positive_control": {
             "audit_path": str(GRASP_POSITIVE_CONTROL_AUDIT.relative_to(ROOT))
@@ -388,11 +416,27 @@ def main(argv: list[str] | None = None) -> int:
             "live_positive_control_sha256": sha256_file(LIVE_POSITIVE_CONTROL)
             if LIVE_POSITIVE_CONTROL.is_file()
             else None,
+            "repaired_positive_control_path": str(REPAIRED_POSITIVE_CONTROL.relative_to(ROOT))
+            if REPAIRED_POSITIVE_CONTROL.is_file()
+            else None,
+            "repaired_positive_control_sha256": sha256_file(REPAIRED_POSITIVE_CONTROL)
+            if REPAIRED_POSITIVE_CONTROL.is_file()
+            else None,
+            "live_controls_registry_path": str(
+                NATURAL_GRASP_LIVE_CONTROL_REGISTRY.relative_to(ROOT)
+            )
+            if NATURAL_GRASP_LIVE_CONTROL_REGISTRY.is_file()
+            else None,
             "reclassification_path": str(reclassification_path.relative_to(ROOT))
             if apply_reclassification
             else None,
             "finding": trigger_finding,
-            "live_trigger_eligible_observed": live_positive.get("trigger_eligible"),
+            "live_trigger_eligible_observed_pre_repair": live_positive.get(
+                "trigger_eligible"
+            ),
+            "live_trigger_eligible_observed_post_repair": repaired_positive.get(
+                "trigger_eligible"
+            ),
             "scripted_grasp_stages_passed": live_positive.get(
                 "scripted_trajectory_passed"
             ),
@@ -400,8 +444,8 @@ def main(argv: list[str] | None = None) -> int:
             "repair_status": reclassification.get("defect", {}).get("repair_status"),
             "status": trigger_status,
             "policy_dispatch_blocked": {
-                "C2_confirmatory_4096": "blocked until repaired trigger passes live positive control",
-                "C8_confirmatory_768": "blocked until repaired trigger passes live positive control",
+                "C2_confirmatory_4096": "held until C2 G3 gate, prefix replay, and confirmatory dispatch on repair-verified study checkout",
+                "C8_confirmatory_768": "held until second_stack trigger-adapter path is verified independently of Isaac object_pair repair",
             },
             "paper_caveat": paper_caveat,
         },

@@ -1,0 +1,22 @@
+{
+  "schema_version": "v4-infrastructure-invalid-triage-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "reference_binding_c2",
+  "gate": "G3",
+  "fixture_id": "reference_binding",
+  "attempt_id": "g3rb20260908k",
+  "recorded_at_utc": "2026-09-08T10:30:00Z",
+  "verdict": "partial_infrastructure_invalid",
+  "failure_class": "mid_wave_cluster_checkout_drift",
+  "summary": "17 of 128 path-seed jobs failed preflight when steerable-v4-c2-g3 advanced from pinned 0e8ab82 to 96ccf4ad mid-wave while bundle expected_study_commit remained 0e8ab82.",
+  "root_cause": "checkout commit differs from required expected_study_commit during G3 path preflight",
+  "required_study_commit": "0e8ab827fea4392be2b50aef25758fac3ea1a4b0",
+  "observed_failure_commit": "96ccf4ad95b292e61da28eafc2ad9a7b6dfa5e65",
+  "failed_seed_indices": [27, 54, 64, 67, 69, 71, 72, 78, 79, 80, 83, 88, 99, 103, 106, 113, 126],
+  "jobs_complete_valid": 96,
+  "jobs_failed_infra_invalid": 17,
+  "jobs_running_at_triage": 15,
+  "eligible_for_g3_aggregate": false,
+  "remediation": "Sync c2_g3 checkout back to 0e8ab82 and gated-dispatch retry attempt g3rb20260908r for failed seed indices only.",
+  "replacement_attempt_id": "g3rb20260908r"
+}

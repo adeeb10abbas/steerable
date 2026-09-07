@@ -84,6 +84,7 @@ TOP_LEVEL_KEYS = {
     "render_probe_argv",
     "python_imports",
     "max_seed_jobs",
+    "seed_indices",
 }
 
 
@@ -402,13 +403,32 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
     )
     registered = plan_payload.get("registered_env_seeds")
     require(isinstance(registered, list) and registered, "G3 plan has no seeds")
-    seeds = sorted(int(seed) for seed in registered)
-    max_seed_jobs = int(spec.get("max_seed_jobs", len(seeds)))
-    require(
-        0 < max_seed_jobs <= len(seeds),
-        "max_seed_jobs must be positive and not exceed registered plan coverage",
-    )
-    seeds = seeds[:max_seed_jobs]
+    all_seeds = sorted(int(seed) for seed in registered)
+    seed_indices = spec.get("seed_indices")
+    if seed_indices is not None:
+        require(
+            isinstance(seed_indices, list) and seed_indices,
+            "seed_indices must be a nonempty list of 0-based indices",
+        )
+        selected_indices = [int(index) for index in seed_indices]
+        require(
+            all(0 <= index < len(all_seeds) for index in selected_indices),
+            "seed_indices must refer to registered plan seeds",
+        )
+        require(
+            len(selected_indices) == len(set(selected_indices)),
+            "seed_indices must not repeat",
+        )
+        seeds = [all_seeds[index] for index in selected_indices]
+        render_seed_indices = selected_indices
+    else:
+        max_seed_jobs = int(spec.get("max_seed_jobs", len(all_seeds)))
+        require(
+            0 < max_seed_jobs <= len(all_seeds),
+            "max_seed_jobs must be positive and not exceed registered plan coverage",
+        )
+        seeds = all_seeds[:max_seed_jobs]
+        render_seed_indices = list(range(len(seeds)))
     require(
         plan_payload.get("registered_env_seed_count") == len(registered),
         "G3 plan registered_env_seed_count differs",
@@ -475,7 +495,8 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
     resources = ["scripts-configmap.yaml"]
     seed_identities: list[dict[str, Any]] = []
     seed_output_parents: list[str] = []
-    for index, seed in enumerate(seeds):
+    for render_index, seed in enumerate(seeds):
+        index = render_seed_indices[render_index]
         lane_id = f"g3h-s{index:03d}"
         config_name = f"{stem}-s{index:03d}-config"
         job_name = f"{stem}-s{index:03d}"

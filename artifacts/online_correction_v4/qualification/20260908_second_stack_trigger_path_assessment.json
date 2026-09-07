@@ -1,0 +1,30 @@
+{
+  "schema_version": "v4-second-stack-trigger-path-assessment-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "C8",
+  "fixture_id": "second_stack",
+  "recorded_at_utc": "2026-09-08T10:35:00Z",
+  "isaac_object_pair_repair": {
+    "component": "experiments/online_correction_v4/droid_robolab.py::object_kinematic_state",
+    "defect": "robot-base pose used as gripper reference before repair",
+    "repair_commits": [
+      "265ae2793efb9e158ba2209b440215001933b4bb",
+      "308f5dab36968f39f13a97b2db76797e6ed92e83",
+      "c9c988da1d2ea7ffd81702a0024a7a39a20bb892"
+    ],
+    "live_controls_registry": "artifacts/online_correction_v4/setup/natural_grasp_live_control_registry.json",
+    "status": "repair_verified_object_pair_isaac"
+  },
+  "second_stack_policy_trigger_path": {
+    "simulator_stack": "SimplerEnv / ManiSkill2_real2sim via GR00T Bridge integration",
+    "uses_droid_robolab_object_kinematic_state": false,
+    "uses_natural_grasp_detector_at_runtime": "not yet wired for C8 policy episodes; model-blind G2-G3 uses privileged scripted transport in tools/run_v4_second_stack_g3_scripted.py",
+    "equivalent_robot_base_vs_gripper_bug": "not applicable to current second_stack model-blind path; separate C8 policy trigger adapter must be verified before confirmatory 768 dispatch",
+    "status": "independent_verification_required",
+    "pilot_execution_path": "tools/run_v4_second_stack_pilot_g2_g3.py (local SimplerEnv, not Isaac k8s gated dispatch)"
+  },
+  "policy_dispatch_blocked": {
+    "C8_confirmatory_768": "held until C8 policy trigger adapter is attested on SimplerEnv/WidowX; Isaac repair alone does not clear C8"
+  },
+  "paper_boundary": "Do not transfer object_pair Isaac NaturalGraspDetector repair evidence to C8 Bridge/WidowX without a fixture-specific live control on the second_stack observation path."
+}

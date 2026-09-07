@@ -1,0 +1,28 @@
+# V4 results export stub
+
+_Generated from accepted ledger; replace TODO markers after review._
+
+## Coverage by cell
+
+_not available_
+
+## Primary results
+
+| contrast_registry_key | policy_id | robot_stack | estimand | point_estimate | ci95_low | ci95_high | standard_error | p_value | test_status | not_estimable_reason | holm_adjusted_p_value | holm_rejected_alpha_0.05 | n_reset_blocks | n_effective_blocks | bootstrap_resamples | bootstrap_seed | undefined_bootstrap_resamples | zero_or_undefined_se_resamples | descriptive_json |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| C1_wording_x_motion_success_per_main_policy | cosmos3_nano_droid | robolab_droid | wording_x_motion_success_interaction_pp |  |  |  |  |  | not_estimable | no C1 reset blocks in supplied manifest |  | 0 | 0 | 0 | 10000 | 20260905 | 0 | 0 | "{""reason"": ""no C1 reset blocks in supplied manifest""}" |
+| C1_wording_x_motion_success_per_main_policy | pi05_droid | robolab_droid | wording_x_motion_success_interaction_pp |  |  |  |  |  | not_estimable | no C1 reset blocks in supplied manifest |  | 0 | 0 | 0 | 10000 | 20260906 | 0 | 0 | "{""reason"": ""no C1 reset blocks in supplied manifest""}" |
+| C2_reference_x_motion_goal_improvement_per_main_policy | cosmos3_nano_droid | robolab_droid | reference_selectivity_equal_goal_m |  |  |  |  |  | not_estimable | no C2 reset blocks in supplied manifest |  | 0 | 0 | 0 | 10000 | 20260907 | 0 | 0 | "{""reason"": ""no C2 reset blocks in supplied manifest""}" |
+| C2_reference_x_motion_goal_improvement_per_main_policy | pi05_droid | robolab_droid | reference_selectivity_equal_goal_m |  |  |  |  |  | not_estimable | no C2 reset blocks in supplied manifest |  | 0 | 0 | 0 | 10000 | 20260908 | 0 | 0 | "{""reason"": ""no C2 reset blocks in supplied manifest""}" |
+## Scope replications (C5–C8)
+
+_not available_
+
+## Failure composition
+
+_not available_
+
+## Timing and motion
+
+_not available_
+

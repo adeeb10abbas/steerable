@@ -3,21 +3,26 @@
   "campaign_id": "online_correction_v4",
   "family_id": "reference_binding_c2",
   "fixture_id": "reference_binding",
-  "attempt_id": "g3rb20260908k",
+  "attempt_ids": {
+    "primary_wave": "g3rb20260908k",
+    "checkout_drift_retry": "g3rb20260908r2"
+  },
   "gpu_product": "NVIDIA-A100-SXM4-80GB",
   "scale": 0.5,
   "seed_count_planned": 128,
-  "observed_at_utc": "2026-09-08T09:10:00Z",
-  "jobs_complete": 57,
-  "jobs_running": 71,
-  "jobs_failed": 0,
-  "path_seed_receipts_on_pvc": 58,
-  "pvc_attempt_root": "/data/users/ali/vla_wam/raw/v4/g3-reference-binding/attempt-g3rb20260908k",
+  "observed_at_utc": "2026-09-08T10:55:00Z",
+  "jobs_complete_primary": 96,
+  "jobs_failed_infra_checkout_drift": 17,
+  "jobs_running_primary": 15,
+  "jobs_dispatched_retry": 17,
+  "path_seed_receipts_on_pvc_primary": 96,
+  "pvc_attempt_root_primary": "/data/users/ali/vla_wam/raw/v4/g3-reference-binding/attempt-g3rb20260908k",
+  "g3_gate_decision": "pending",
   "next_actions": [
-    "Wait for remaining path-seed jobs to Complete",
-    "Compile path-scale receipt via compile_v4_horizontal_g3_path_scale.py on PVC receipts root",
-    "Update g3-scripted-reference-binding-spec with passing path-scale receipt binding and gated-dispatch scripted checks",
-    "Compile per-stratum aggregate and reference_binding G3 gate receipt"
+    "Wait for primary-wave tail and g3rb20260908r2 retry jobs to Complete",
+    "Compile g3_path_scale_receipt from combined PVC receipts under attempt-g3rb20260908k and g3rb20260908r2",
+    "Bind passing path-scale receipt into g3-scripted-reference-binding-spec and gated-dispatch scripted checks",
+    "Compile reference_binding G3 aggregate and gate receipt"
   ],
   "status": "in_progress"
 }

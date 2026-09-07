@@ -1,0 +1,40 @@
+{
+  "accepted_c7_episodes_behavioral": 0,
+  "infra_invalid_c7_episodes_trigger_wiring": 279,
+  "intervention_trigger_positive_control": {
+    "audit_path": "artifacts/online_correction_v4/qualification/20260908_c7_grasp_detector_positive_control_audit.json",
+    "audit_sha256": "d5269cb333eb45166b7b4d74c7b067b200f221e6805b81c1e0128bedb532fb23",
+    "defect_component": "experiments/online_correction_v4/droid_robolab.py::object_kinematic_state",
+    "finding": "blocking_setup_defect_confirmed_then_repaired",
+    "live_controls_registry_path": "artifacts/online_correction_v4/setup/natural_grasp_live_control_registry.json",
+    "live_positive_control_path": "artifacts/online_correction_v4/qualification/20260908_object_pair_natural_grasp_live_positive_control_g3ngp20260908m.json",
+    "live_positive_control_sha256": "7f851fef591e973c35d84c6e85f01e82b2f47b32c1766cbb404c82836f1bbd97",
+    "live_trigger_eligible_observed_post_repair": true,
+    "live_trigger_eligible_observed_pre_repair": false,
+    "paper_caveat": "Live Isaac positive control confirmed a blocking setup defect: scripted grasp stages passed but trigger_eligible never fired because object_kinematic_state() fed NaturalGraspDetector robot-base pose and object_grabbed() contact. The 279 C7 episodes collected before repair verification were run under an inoperative intervention trigger and are excluded from all behavioral claims. Post-repair live positive and negative controls passed on object_pair Isaac at study commit c9c988d; confirmatory redispatch is required before any behavioral headline.",
+    "policy_dispatch_blocked": {
+      "C2_confirmatory_4096": "held until C2 G3 gate, prefix replay, and confirmatory dispatch on repair-verified study checkout",
+      "C8_confirmatory_768": "held until second_stack trigger-adapter path is verified independently of Isaac object_pair repair"
+    },
+    "reclassification_path": "artifacts/online_correction_v4/qualification/20260908_c7_natural_grasp_trigger_wiring_reclassification.json",
+    "repair_status": "disclosed_setup_repair_verified",
+    "repaired_positive_control_path": "artifacts/online_correction_v4/qualification/20260908_object_pair_natural_grasp_live_positive_control_g3ngp20260908p.json",
+    "repaired_positive_control_sha256": "cb80d2d1cf72c8bc38c9c4d340c690f6662e1fcff5650bf6f489997e7da6402b",
+    "scripted_grasp_stages_passed": true,
+    "status": "repair_verified_object_pair_isaac"
+  },
+  "missing_c7_episodes": 768,
+  "not_estimable_or_blocked": {
+    "C1": "no accepted ledger rows in this partial export",
+    "C2": "primary blocked until verified common-prefix replay on reference_binding after G3/G4-G6; policy dispatch held until confirmatory lanes use repair-verified trigger wiring",
+    "C3": "no accepted ledger rows in this partial export",
+    "C4": "no accepted ledger rows in this partial export",
+    "C5": "no accepted ledger rows in this partial export",
+    "C6": "no accepted ledger rows in this partial export",
+    "C7": "all 279 previously accepted episodes reclassified infrastructure-invalid under inoperative NaturalGraspDetector wiring; excluded from behavioral claims; raw PVC evidence preserved",
+    "C8": "no accepted ledger rows; policy dispatch blocked pending second_stack trigger-adapter verification separate from Isaac repair"
+  },
+  "planned_c7_episodes": 768,
+  "schema_version": "v4-c7-partial-blocked-scope-v1",
+  "source_accepted_ledger_episodes": 279
+}

@@ -97,6 +97,7 @@ def compile_receipts(
     axis_review_path: Path,
     output_path: Path,
     fixture_id: str = "horizontal",
+    attempt_id: str | None = None,
 ) -> dict[str, Any]:
     registry = load_reset_registry(
         registry_path=str(registry_path.resolve()),
@@ -105,18 +106,32 @@ def compile_receipts(
         expected_fixture_id=fixture_id,
     )
     receipt_paths = sorted(receipts_root.resolve().rglob("g2_seed_receipt.json"))
+    if attempt_id is not None:
+        attempt_token = f"attempt-{attempt_id}"
+        receipt_paths = [
+            path for path in receipt_paths if attempt_token in str(path)
+        ]
     if not receipt_paths:
         raise ValueError("no G2 seed receipts found")
     receipts: list[dict[str, Any]] = []
     receipt_files: dict[str, Any] = {}
     runtime_stratum: dict[str, Any] | None = None
     verified_artifact_count = 0
+    seen_seeds: set[int] = set()
+    duplicate_receipt_paths: list[str] = []
     for path in receipt_paths:
         receipt = _load_canonical(path, schema=seed_receipt_schema(fixture_id))
         if receipt.get("fixture_id") != fixture_id:
             raise ValueError(f"{path}: fixture differs")
         if receipt.get("reset_registry_sha256") != registry.registry_sha256:
             raise ValueError(f"{path}: reset registry hash differs")
+        seed = receipt.get("environment_seed")
+        if type(seed) is not int:
+            raise ValueError(f"{path}: environment_seed is missing")
+        if seed in seen_seeds:
+            duplicate_receipt_paths.append(str(path))
+            continue
+        seen_seeds.add(seed)
         current_stratum = _runtime_stratum(receipt)
         if runtime_stratum is None:
             runtime_stratum = current_stratum
@@ -125,7 +140,6 @@ def compile_receipts(
         verified_artifact_count += _verify_artifact_records(
             receipt.get("artifacts"), label=str(path)
         )
-        seed = receipt.get("environment_seed")
         receipt_files[str(seed)] = {
             "path": str(path),
             "sha256": sha256_file(path),
@@ -161,6 +175,7 @@ def compile_receipts(
             },
             "runtime_stratum": runtime_stratum,
             "seed_receipt_files_by_env_seed": receipt_files,
+            "duplicate_receipt_paths_excluded": duplicate_receipt_paths,
             "axis_review_file": {
                 "path": str(axis_path),
                 "sha256": sha256_file(axis_path),
@@ -183,6 +198,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--reset-registry", type=Path, required=True)
     parser.add_argument("--reset-registry-sha256", required=True)
     parser.add_argument("--receipts-root", type=Path, required=True)
+    parser.add_argument("--attempt-id", default=None)
     parser.add_argument("--axis-review", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args(argv)
@@ -193,6 +209,7 @@ def main(argv: list[str] | None = None) -> int:
         axis_review_path=args.axis_review,
         output_path=args.out,
         fixture_id=args.fixture_id,
+        attempt_id=args.attempt_id,
     )
     print(json.dumps(report, indent=2, sort_keys=True))
     return 0

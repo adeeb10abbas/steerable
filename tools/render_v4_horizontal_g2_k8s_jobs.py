@@ -56,6 +56,7 @@ TOP_LEVEL_KEYS = {
     "render_probe_argv",
     "python_imports",
     "max_seed_jobs",
+    "seed_indices",
 }
 
 
@@ -284,17 +285,37 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
     )
     resets = reset_payload.get("resets_by_env_seed")
     require(isinstance(resets, dict) and resets, "reset registry has no seeds")
-    seeds = sorted(int(seed) for seed in resets)
-    max_seed_jobs = int(spec.get("max_seed_jobs", len(seeds)))
-    if max_seed_jobs == len(seeds):
-        pass
-    elif max_seed_jobs == 1:
-        seeds = seeds[:1]
-    else:
+    all_seeds = sorted(int(seed) for seed in resets)
+    seed_indices = spec.get("seed_indices")
+    if seed_indices is not None:
         require(
-            False,
-            "max_seed_jobs must equal complete registered reset coverage or 1 for determinism smokes",
+            isinstance(seed_indices, list) and seed_indices,
+            "seed_indices must be a nonempty list of 0-based indices",
         )
+        selected_indices = [int(index) for index in seed_indices]
+        require(
+            all(0 <= index < len(all_seeds) for index in selected_indices),
+            "seed_indices must refer to registered reset seeds",
+        )
+        require(
+            len(selected_indices) == len(set(selected_indices)),
+            "seed_indices must not repeat",
+        )
+        seeds = [all_seeds[index] for index in selected_indices]
+        render_seed_indices = selected_indices
+    else:
+        max_seed_jobs = int(spec.get("max_seed_jobs", len(all_seeds)))
+        if max_seed_jobs == len(all_seeds):
+            seeds = all_seeds
+            render_seed_indices = list(range(len(all_seeds)))
+        elif max_seed_jobs == 1:
+            seeds = all_seeds[:1]
+            render_seed_indices = [0]
+        else:
+            require(
+                False,
+                "max_seed_jobs must equal complete registered reset coverage or 1 for determinism smokes",
+            )
 
     scripts = lane.load_runtime_scripts(
         ROOT / "deploy/k8s/v4_lane_bundle/scripts"
@@ -330,7 +351,8 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
     }
     resources = ["scripts-configmap.yaml"]
     seed_identities: list[dict[str, Any]] = []
-    for index, seed in enumerate(seeds):
+    for render_index, seed in enumerate(seeds):
+        index = render_seed_indices[render_index]
         lane_id = f"g2{fixture_token[0]}-s{index:03d}"
         config_name = f"{stem}-s{index:03d}-config"
         job_name = f"{stem}-s{index:03d}"

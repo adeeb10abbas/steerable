@@ -1,0 +1,33 @@
+{
+  "amendment_basis": {
+    "prior_lock_sha256": "71e7f86f5e3dbda46ae3a03a7a07959fc4562a13dce71955362bf93226adb3df",
+    "prior_runner_commit": "f5ff00f7627858f0e28bc2ce24c341960684983",
+    "runner_wiring_commit": "25300af1577cb460d9417610a3e48a7abd47038d",
+    "timeout_extension_commit": "9e60016f7627858f0e28bc2ce24c341960684983"
+  },
+  "attempts_invalidated_as_infra": [
+    "attempt0002",
+    "attempt0003",
+    "attempt0004",
+    "attempt0005",
+    "attempt0006",
+    "attempt0007",
+    "attempt0008",
+    "attempt0009"
+  ],
+  "gate": "c8_g7_pilot_runner_rebind",
+  "infra_failure_classes": [
+    "released_runner_sha256_mismatch",
+    "insufficient_nvidia.com/gpu_scheduling"
+  ],
+  "passed": true,
+  "qualification_scope": "engineering_pilot",
+  "released_runtime_lock": {
+    "path": "artifacts/online_correction_v4/setup/second_stack_g7_pilot_runtime_lock.released.20260908r1.json",
+    "runner_sha256": "af01ac34727a6afa255bf5c079abf5dd62f8011a5051a4c9743eab05e719d86e",
+    "source_commit": "9e60016f7627858f0e28bc2ce24c341960684983",
+    "study_root": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2"
+  },
+  "schema_version": 1,
+  "status": "passed"
+}

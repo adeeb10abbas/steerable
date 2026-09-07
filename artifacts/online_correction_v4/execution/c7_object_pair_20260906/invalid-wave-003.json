@@ -1,0 +1,27 @@
+{
+  "behavioral_episode_count": 0,
+  "ended_at_utc": "2026-09-07T00:08:37Z",
+  "failure": {
+    "affected_attempt_range": [
+      "attempt0296",
+      "attempt0305"
+    ],
+    "class": "stale_runner_hash_in_promoted_runtime_lock",
+    "created_lane_count": 10,
+    "created_lane_range": [
+      "c7m00",
+      "c7m09"
+    ],
+    "representative_error": "[V4 lane dispatch] blocked: released runner sha256 mismatch"
+  },
+  "remediation": {
+    "invalid_cluster_resources_deleted": true,
+    "invalid_durable_leases_deleted": true,
+    "next_attempt_index": 307,
+    "release_builder_rebinds_runner_sha256": true,
+    "rendered_only_attempt_reserved": "attempt0306"
+  },
+  "schema_version": "v4-c7-infrastructure-invalid-wave-v1",
+  "started_at_utc": "2026-09-07T00:04:45Z",
+  "status": "infra_invalid_before_policy_or_behavioral_execution"
+}

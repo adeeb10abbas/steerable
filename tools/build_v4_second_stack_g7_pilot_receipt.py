@@ -12,13 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from tools.build_v4_object_pair_g7_receipt import (  # noqa: E402
-    artifact,
-    build_receipt as build_object_pair_receipt,
-    load_json,
-    load_jsonl,
-)
-
+from tools.build_v4_object_pair_g7_receipt import artifact, load_json, load_jsonl  # noqa: E402
 
 FIXTURE_ID = "second_stack"
 FAMILY_ID = "C8"
@@ -35,38 +29,220 @@ def build_receipt(
     ledger_manifest_path: Path,
     ledger_validation_report_path: Path,
 ) -> dict[str, object]:
-    payload = build_object_pair_receipt(
-        queue_path=queue_path,
-        runtime_lock_path=runtime_lock_path,
-        inventory_path=inventory_path,
-        review_path=review_path,
-        accepted_ledger_path=accepted_ledger_path,
-        ledger_manifest_path=ledger_manifest_path,
-        ledger_validation_report_path=ledger_validation_report_path,
-    )
-    lock = load_json(runtime_lock_path)
     queue = load_jsonl(queue_path)
+    lock = load_json(runtime_lock_path)
+    inventory = load_json(inventory_path)
+    review = load_json(review_path)
+    ledger = load_jsonl(accepted_ledger_path)
+    ledger_manifest = load_json(ledger_manifest_path)
+    ledger_validation = load_json(ledger_validation_report_path)
+    queue_by_id = {str(row["episode_id"]): row for row in queue}
+    ledger_by_id = {str(row["episode_id"]): row for row in ledger}
+    if len(queue_by_id) != len(queue) or len(ledger_by_id) != len(ledger):
+        raise ValueError("C8 queue or ledger has duplicate episode IDs")
+    queue_ids = set(queue_by_id)
+    scenario_counts: dict[str, int] = {}
+    for row in queue:
+        if row.get("family") != FAMILY_ID or row.get("cohort") != "engineering_pilot":
+            raise ValueError("C8 pilot queue contains a non-pilot row")
+        scenario = str(row["factors"]["scenario"])
+        scenario_counts[scenario] = scenario_counts.get(scenario, 0) + 1
+    static_count = sum(
+        count
+        for scenario, count in scenario_counts.items()
+        if scenario in {"original_sham", "destination_static"}
+    )
+    motion_count = scenario_counts.get("move_stop", 0)
+    reviewed_ids = set(review.get("reviewed_episode_ids") or [])
+    inventory_ids = {
+        str(record["episode_id"]) for record in inventory.get("records") or []
+    }
+    ledger_ids = set(ledger_by_id)
+    outcomes: dict[str, int] = {}
+    for row in ledger:
+        label = str(row.get("outcome", {}).get("failure_label", "missing"))
+        outcomes[label] = outcomes.get(label, 0) + 1
+    validation_errors = ledger_validation.get("errors") or []
+    legacy_suffixes = (
+        "outcome.goal_set_empty must be boolean",
+        "outcome.goal_violation_cap_applied must be boolean",
+    )
     d_cap_m = float(lock["fixtures"][FIXTURE_ID]["D_cap_m"])
-    payload["schema_version"] = "v4-second-stack-g7-engineering-pilot-receipt-v1"
-    payload["family_id"] = FAMILY_ID
-    payload["fixture_id"] = FIXTURE_ID
-    payload["policy_id"] = POLICY_ID
-    payload["checks"]["pilot_lock_is_exactly_pilot_released_for_c7"] = (
-        lock.get("release_status") == "PILOT_RELEASED"
-        and lock.get("released_families") == [FAMILY_ID]
+    expected_legacy_errors: list[str] = []
+    legacy_omission_episode_ids: list[str] = []
+    for index, row in enumerate(ledger, start=1):
+        outcome = row.get("outcome", {})
+        if not isinstance(outcome, dict):
+            continue
+        missing_suffixes = [
+            suffix
+            for field, suffix in zip(
+                ("goal_set_empty", "goal_violation_cap_applied"),
+                legacy_suffixes,
+            )
+            if not isinstance(outcome.get(field), bool)
+        ]
+        if missing_suffixes:
+            episode_id = str(row["episode_id"])
+            legacy_omission_episode_ids.append(episode_id)
+            expected_legacy_errors.extend(
+                f"result {index} ({episode_id}): {suffix}"
+                for suffix in missing_suffixes
+            )
+    legacy_terminal_metadata_omission_exactly_bounded = (
+        bool(expected_legacy_errors)
+        and sorted(validation_errors) == sorted(expected_legacy_errors)
+        and all(
+            isinstance(
+                row.get("outcome", {}).get("goal_violation_capped_m"),
+                (int, float),
+            )
+            and 0.0 <= float(row["outcome"]["goal_violation_capped_m"]) <= d_cap_m
+            for row in ledger
+        )
     )
-    payload["checks"]["queue_contains_24_disjoint_engineering_rows"] = (
-        len(queue) == 24
-        and all(not row.get("reuse_episode_ids") for row in queue)
-        and all(row.get("family") == FAMILY_ID for row in queue)
+    scorer_path = ROOT / "experiments/online_correction_v4/droid_scorer.py"
+    scorer_source = scorer_path.read_text(encoding="utf-8")
+    main_writer_fixed = all(
+        field in scorer_source
+        for field in (
+            '"goal_set_empty": score.goal_set_empty',
+            '"goal_violation_cap_applied": score.goal_violation_cap_applied',
+        )
     )
-    payload["pilot_terminal_metadata_reconciliation"]["d_cap_m"] = d_cap_m
-    payload["release_boundary"] = (
-        f"A pass completes {FAMILY_ID} G7 engineering pilot only. G8 "
-        "miniature-campaign rehearsal and a separate RELEASED lock remain "
-        "required before confirmatory episodes."
-    )
-    return payload
+    recorded_distances = [
+        float(row["outcome"]["goal_violation_capped_m"])
+        for row in ledger
+        if isinstance(
+            row.get("outcome", {}).get("goal_violation_capped_m"),
+            (int, float),
+        )
+    ]
+    below_cap_count = sum(value < d_cap_m for value in recorded_distances)
+    at_cap_count = sum(value == d_cap_m for value in recorded_distances)
+    checks = {
+        "pilot_lock_is_exactly_pilot_released_for_c8": (
+            lock.get("release_status") == "PILOT_RELEASED"
+            and lock.get("released_families") == [FAMILY_ID]
+        ),
+        "queue_contains_24_disjoint_engineering_rows": (
+            len(queue) == 24
+            and all(not row.get("reuse_episode_ids") for row in queue)
+        ),
+        "pilot_allocation_is_16_static_and_8_motion": (
+            static_count == 16 and motion_count == 8
+        ),
+        "accepted_ledger_has_exact_full_coverage": (
+            ledger_ids == queue_ids
+            and len(ledger) == 24
+            and all(row.get("status") == "valid" for row in ledger)
+        ),
+        "ledger_manifest_reports_no_errors": (
+            (
+                ledger_manifest.get("validation_preview", {}).get("ok") is True
+                or (
+                    legacy_terminal_metadata_omission_exactly_bounded
+                    and ledger_manifest.get("validation_preview", {}).get(
+                        "error_count"
+                    )
+                    == len(expected_legacy_errors)
+                )
+            )
+            and ledger_manifest.get("reconciliation", {}).get("missing_episode_ids")
+            == []
+            and ledger_manifest.get("outputs", {}).get("accepted_count") == 24
+        ),
+        "pilot_metadata_omission_bounded_and_main_writer_fixed": (
+            ledger_validation.get("ok") is True
+            or (
+                legacy_terminal_metadata_omission_exactly_bounded and main_writer_fixed
+            )
+        ),
+        "all_viewport_videos_hash_verified_and_decoded": (
+            inventory.get("videos_all_hash_verified_and_decoded") is True
+            and inventory.get("valid_episode_count") == 24
+            and inventory_ids == queue_ids
+        ),
+        "all_24_videos_received_visual_review": (
+            review.get("passed") is True
+            and reviewed_ids == queue_ids
+            and review.get("assertions", {}).get(
+                "all_videos_decode_without_visible_corruption"
+            )
+            is True
+            and review.get("assertions", {}).get(
+                "robot_scene_and_task_objects_visible"
+            )
+            is True
+        ),
+        "review_binds_exact_montage": (
+            review.get("montage_sha256") == inventory.get("montage", {}).get("sha256")
+        ),
+        "valid_failures_preserved_without_success_threshold": (
+            sum(outcomes.values()) == 24
+        ),
+    }
+    passed = all(checks.values())
+    return {
+        "schema_version": "v4-second-stack-g7-engineering-pilot-receipt-v1",
+        "campaign_id": "online_correction_v4",
+        "family_id": FAMILY_ID,
+        "fixture_id": FIXTURE_ID,
+        "policy_id": POLICY_ID,
+        "gate": "G7",
+        "status": "passed" if passed else "blocked",
+        "passed": passed,
+        "model_request_count": 0,
+        "behavioral_episode_count": 24,
+        "checks": checks,
+        "allocation": {
+            "episode_count": len(queue),
+            "static_episode_count": static_count,
+            "motion_episode_count": motion_count,
+            "scenario_counts": scenario_counts,
+        },
+        "behavioral_outcomes_preserved": outcomes,
+        "pilot_terminal_metadata_reconciliation": {
+            "required": legacy_terminal_metadata_omission_exactly_bounded,
+            "validation_error_count": len(validation_errors),
+            "legacy_omission_episode_count": len(legacy_omission_episode_ids),
+            "legacy_omission_episode_ids": legacy_omission_episode_ids,
+            "omitted_fields": list(legacy_suffixes),
+            "recorded_distance_below_cap_count": below_cap_count,
+            "recorded_distance_at_cap_count": at_cap_count,
+            "cap_applied_indeterminate_episode_count": at_cap_count,
+            "d_cap_m": d_cap_m,
+            "main_writer_fixed": main_writer_fixed,
+            "interpretation": (
+                "Legacy pilot attempts omitted two booleans from terminal metadata; "
+                "retries written after the amendment retain those booleans. "
+                "G3 proves the registered goal sets are nonempty. A capped value "
+                "equal to D_cap cannot distinguish exact equality from cap "
+                "application, so those pilot booleans remain indeterminate and "
+                "are not imputed. The scorer is fixed before main release; raw "
+                "pilot records remain immutable."
+            ),
+        },
+        "technical_gate_interpretation": (
+            "G7 requires complete valid execution and inspectable evidence; it "
+            "does not require a grasp, success, or positive language effect."
+        ),
+        "qualification_basis": {
+            "pilot_queue": artifact(queue_path),
+            "pilot_runtime_lock": artifact(runtime_lock_path),
+            "accepted_ledger": artifact(accepted_ledger_path),
+            "accepted_ledger_manifest": artifact(ledger_manifest_path),
+            "accepted_ledger_validation": artifact(ledger_validation_report_path),
+            "video_inventory": artifact(inventory_path),
+            "video_review": artifact(review_path),
+            "main_release_scorer": artifact(scorer_path),
+        },
+        "release_boundary": (
+            "A pass completes C8 G7 engineering pilot only. G8 miniature-campaign "
+            "rehearsal and a separate RELEASED lock remain required before "
+            "confirmatory episodes."
+        ),
+    }
 
 
 def main() -> int:

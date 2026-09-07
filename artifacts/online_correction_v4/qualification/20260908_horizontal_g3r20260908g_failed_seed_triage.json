@@ -1,0 +1,52 @@
+{
+  "attempt_id": "g3r20260908g",
+  "bundle_suffix": "27e0010473",
+  "compiled_at_utc": "2026-09-07T13:40:00Z",
+  "disposition_summary": {
+    "homogeneous_receipts_on_pvc": 128,
+    "infrastructure_invalid_k8s_job_failures": 29,
+    "infrastructure_retry_required": 0,
+    "scientific_seed_failures_in_receipts": 64
+  },
+  "failed_k8s_jobs": {
+    "count": 29,
+    "failure_class": "infrastructure_invalid",
+    "root_cause": "attempt_lock_already_exists_on_retry",
+    "evidence": "startup_preflight.PreflightError: attempt lock already exists; primary pod completed and wrote g3_path_seed_receipt.json before admission/resume re-created the job",
+    "job_indices": [
+      0, 1, 2, 3, 4, 6, 70, 80, 81, 82, 83, 84, 85, 88, 89, 90, 91, 92, 93, 95, 96, 97, 98, 100, 101, 103, 109, 117, 118
+    ],
+    "retry_action": "none — homogeneous receipts already present for all 128 env seeds; do not re-dispatch same attempt_id without fresh output roots"
+  },
+  "homogeneous_pin": "c401fb4577d8003a019ecf7ff7be549f2c0a5931",
+  "path_seed_receipts_root": "/data/users/ali/vla_wam/raw/v4/g3-horizontal/attempt-g3r20260908g/scale-0.5",
+  "scale": 0.5,
+  "schema_version": "v4-horizontal-g3-wave-failed-seed-triage-v1",
+  "scientific_failures_in_receipts": {
+    "count": 64,
+    "failure_class": "scientific_reject",
+    "failure_kind": "information_gate",
+    "pattern": "All seeds with physical_translation_sign=-1 (state_index 1 and 3) fail right and/or behind shrinking-area-fraction information gates at scale 0.5 while all 24 path checks per seed pass",
+    "example_seed": 2100000004,
+    "example_detail": {
+      "failed_check_count": 0,
+      "information_gate_passed": false,
+      "passed_check_count": 24,
+      "right_removed_area_fraction": 0.13692608825615002,
+      "behind_removed_area_fraction": 0.19862990150678536,
+      "minimum_shrinking_area_fraction": 0.2
+    },
+    "failed_env_seeds": [
+      2100000004, 2100000005, 2100000006, 2100000007, 2100000012, 2100000013, 2100000014, 2100000015,
+      2100000020, 2100000021, 2100000022, 2100000023, 2100000028, 2100000029, 2100000030, 2100000031,
+      2100000036, 2100000037, 2100000038, 2100000039, 2100000044, 2100000045, 2100000046, 2100000047,
+      2100000053, 2100000054, 2100000055, 2100000060, 2100000061, 2100000062, 2100000063, 2100000068,
+      2100000069, 2100000070, 2100000071, 2100000076, 2100000077, 2100000078, 2100000079, 2100000084,
+      2100000085, 2100000086, 2100000087, 2100000092, 2100000093, 2100000094, 2100000095, 2100000100,
+      2100000102, 2100000103, 2100000108, 2100000109, 2100000110, 2100000111, 2100000116, 2100000117,
+      2100000118, 2100000119, 2100000124, 2100000125, 2100000126, 2100000127, 2100000128, 2100000129
+    ],
+    "passed_env_seeds_count": 64
+  },
+  "smoke_context": "Scale 0.5 smoke passed 24/24 path checks on canonical seed 2100000000 only (positive translation sign); full 128-seed confirmatory wave exposes information-gate rejection on the negative-sign half of the registry"
+}

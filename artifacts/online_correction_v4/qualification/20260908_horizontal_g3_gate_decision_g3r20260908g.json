@@ -1,0 +1,16 @@
+{
+  "attempt_id": "g3r20260908g",
+  "compiled_at_utc": "2026-09-07T13:45:00Z",
+  "confirmatory_scale": 0.5,
+  "decision": "failed",
+  "gate_id": "G3_horizontal_geometry_repair_v2",
+  "homogeneous_pin": "c401fb4577d8003a019ecf7ff7be549f2c0a5931",
+  "passed": false,
+  "path_scale_receipt": "artifacts/online_correction_v4/qualification/20260908_horizontal_g3_path_scale_0p5_g3r20260908g.json",
+  "reason": "Confirmatory 128-seed homogeneous wave at scale 0.5: all 3072 path checks pass but 64/128 seeds fail shrinking-area-fraction information gates on right/behind for physical_translation_sign=-1 counterbalance blocks",
+  "scale_ladder_evidence": "artifacts/online_correction_v4/qualification/20260908_horizontal_repair_g3_smoke_a10080_ladder_progress.json",
+  "schema_version": "v4-horizontal-g3-gate-decision-v1",
+  "scripted_checks_status": "blocked_pending_passing_path_scale",
+  "scripted_checks_blocked_reason": "render_v4_horizontal_g3_scripted_k8s_jobs requires authorized_by_passing_path_scale_receipt",
+  "smoke_selection_note": "Scale 0.5 selected from single-seed smoke (2100000000, positive translation); full registry exposes half-seed information-gate rejection"
+}

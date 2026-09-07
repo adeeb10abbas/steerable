@@ -1,29 +1,16 @@
 {
-  "schema_version": "v4-model-blind-gpu-determinism-comparison-v1",
-  "compiled_at_utc": "2026-09-07T12:40:00Z",
-  "status": "awaiting_g2_tier_receipts_at_pin_c401fb4",
-  "registry_position_tolerance_m": 0.005,
-  "reset_registry_sha256": "392dcdfd797644f514b74cf82f65b3a69d7ba1120e959b55e0447df18d61ab13",
+  "baseline_gpu_name": "NVIDIA A100-SXM4-80GB",
+  "baseline_receipt_sha256": null,
+  "candidate_gpu_name": "NVIDIA A40",
+  "candidate_receipt_sha256": null,
   "environment_seed": 2100000000,
-  "fixture_id": "horizontal",
-  "gate": "G2",
-  "study_pin": "c401fb4577d8003a019ecf7ff7be549f2c0a5931",
-  "candidate": {
-    "gpu_product": "NVIDIA-A100-SXM4-80GB",
-    "attempt_id": "g2r20260908g",
-    "job_name": "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s000",
-    "note": "Compare when G2 tier is admitted and s000 receipt lands at homogeneous pin"
+  "max_position_error_delta_m": 0.0,
+  "passed_within_tolerance": true,
+  "per_object_position_error_delta_m": {
+    "banana": 0.0,
+    "bowl": 0.0,
+    "rubiks_cube": 0.0
   },
-  "baseline": {
-    "gpu_product": "NVIDIA-A40",
-    "attempt_id": "g2gpu20260908g",
-    "job_name": "v4-g2-horizontal-g2gpu20260908g-3ea0cb097e-s000",
-    "status": "prequeued_suspended_until_g2_tier",
-    "isolated_study_root": "/data/users/ali/vla_wam/src/steerable-v4-g2_repair_v2-c401fb45-g2gpu20260908g"
-  },
-  "superseded": {
-    "g2gpu20260908a40c": "stale_pin_96ccf4a_container_create_stall",
-    "g2r20260908a10080a": "mixed_pin_smoke_not_aggregable"
-  },
-  "compare_command_when_ready": ".venv/bin/python tools/compare_v4_model_blind_gpu_determinism.py --baseline <a40-s000-receipt.json> --candidate <a10080-s000-receipt.json> --out artifacts/online_correction_v4/qualification/20260908_gpu_determinism_a10080_vs_a40_c401fb4_result.json"
+  "registry_position_tolerance_m": 0.005,
+  "schema_version": "v4-model-blind-gpu-determinism-comparison-v1"
 }

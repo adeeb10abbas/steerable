@@ -1,0 +1,46 @@
+{
+  "attempt_ids": {
+    "a10080_baseline": "g2r20260908g",
+    "a40_candidate": "g2gpu20260908g"
+  },
+  "compiled_at_utc": "2026-09-07T13:45:00Z",
+  "environment_seed": 2100000000,
+  "homogeneous_study_commit": "c401fb4577d8003a019ecf7ff7be549f2c0a5931",
+  "note": "A40 job pod failed on lock-collision retry after primary s000 completed; comparison uses the successful primary receipts.",
+  "receipt_paths_on_pvc": {
+    "a10080_baseline": "/data/users/ali/vla_wam/raw/37e8bab8-501a-47d7-8c0b-46a88ac398ac/lane-g2h-s000/attempt-g2r20260908g/episodes/g2_seed_receipt.json",
+    "a40_candidate": "/data/users/ali/vla_wam/raw/451af62c-8f6e-4146-8d91-d1ac102b6ff6/lane-g2h-s000/attempt-g2gpu20260908g/episodes/g2_seed_receipt.json"
+  },
+  "schema_version": "v4-horizontal-g4-g8-campaign-readiness-v1",
+  "status": "blocked_pending_prerequisites",
+  "blocked_gates": {
+    "G3": "path-scale confirmatory failed at scale 0.5 (64/128 information_gate on negative translation sign); scripted checks and aggregate gate blocked",
+    "G2": "wave g2r20260908g in progress (~103/128 receipts); aggregate and axis review pending",
+    "G5_horizontal_live_positive": "natural_grasp_live_control_registry.json lacks horizontal scripted_grasp entry; Agent B owns shared scripted-grasp fix and re-registration",
+    "runtime_lock": "not frozen — requires passing G3 aggregate, G2 aggregate+axis, and per-fixture live controls at homogeneous pin"
+  },
+  "episode_dispatch": {
+    "expected_row_count": 9728,
+    "completed": 0,
+    "running": 0,
+    "queued": 0,
+    "blocked": 9728,
+    "queue_artifact": "artifacts/online_correction_v4/queue_horizontal_geometry_repair_v2.jsonl",
+    "inventory_artifact": "artifacts/online_correction_v4/setup/horizontal_geometry_repair_inventory_v2.json",
+    "campaign_artifact": "artifacts/online_correction_v4/setup/campaign_horizontal_repair_v2_frozen.json"
+  },
+  "ready_artifacts": {
+    "homogeneous_pin": "c401fb4577d8003a019ecf7ff7be549f2c0a5931",
+    "g3_plan": "artifacts/online_correction_v4/setup/horizontal_g3_plan.geometry_repair_v2.candidate.json",
+    "reset_registry": "artifacts/online_correction_v4/setup/horizontal_reset_registry.geometry_repair_v2.candidate.json",
+    "dispatch_tool": "tools/dispatch_v4_model_blind_k8s_bundle.py",
+    "admission_tool": "tools/enforce_v4_wave_admission.py",
+    "runtime_lock_template": "docs/online_correction_v4/runtime_lock.template.json"
+  },
+  "immediate_next_on_g5_unblock": [
+    "Agent B registers horizontal scripted_grasp positive control in natural_grasp_live_control_registry.json at pin c401fb4",
+    "Pass G3 gate or receive amended scale/plan authorization",
+    "Compile and release runtime_lock.json binding inventory v2 + homogeneous pin",
+    "dispatch_v4_model_blind_k8s_bundle.py for C1/C3/C4 episode rows (9728 total)"
+  ]
+}

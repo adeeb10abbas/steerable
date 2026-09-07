@@ -198,6 +198,24 @@ class HorizontalG3K8sTests(unittest.TestCase):
             with self.assertRaises(renderer.G3RenderError):
                 renderer.render(spec_path, Path(tmp) / "out")
 
+    def test_reference_binding_wave_job_names_fit_kubernetes_limit(self) -> None:
+        spec_path = ROOT / "deploy/k8s/v4_lane_bundle/g3-reference-binding-spec.example.json"
+        with tempfile.TemporaryDirectory() as tmp:
+            report = renderer.render(spec_path, Path(tmp))
+            manifest = json.loads(
+                (Path(report["bundle_root"]) / "bundle-manifest.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+        self.assertEqual(manifest["seed_count"], 128)
+        for seed_identity in manifest["seed_identities"]:
+            job_name = seed_identity["job_name"]
+            self.assertLessEqual(
+                len(job_name),
+                renderer.lane.K8S_METADATA_NAME_MAX,
+                msg=job_name,
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

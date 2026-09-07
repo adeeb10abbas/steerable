@@ -444,7 +444,13 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
             for name in sorted(scripts)
         )
     ).hexdigest()
-    stem = f"v4-g3-{fixture_token}-{attempt}-{spec_sha256[:10]}"
+    fixture_stem = lane.fixture_k8s_stem_token(fixture_id)
+    stem = f"v4-g3-{fixture_stem}-{attempt}-{spec_sha256[:10]}"
+    worst_job_name = f"{stem}-s{max(len(seeds) - 1, 0):03d}"
+    lane.assert_k8s_metadata_name(
+        worst_job_name,
+        context="G3 path-seed job",
+    )
     scripts_name = f"{stem}-scripts"
     bundle_root = output_root.resolve() / stem
     require(not bundle_root.exists(), f"refusing to overwrite bundle: {bundle_root}")

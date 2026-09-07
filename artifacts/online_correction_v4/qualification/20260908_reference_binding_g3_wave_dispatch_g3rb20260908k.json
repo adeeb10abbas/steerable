@@ -1,0 +1,24 @@
+{
+  "schema_version": "v4-g3-wave-dispatch-receipt-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "reference_binding_c2",
+  "fixture_id": "reference_binding",
+  "gate": "G3",
+  "attempt_id": "g3rb20260908k",
+  "gpu_product": "NVIDIA-A100-SXM4-80GB",
+  "expected_study_commit": "0e8ab827fea4392be2b50aef25758fac3ea1a4b0",
+  "scale": 0.5,
+  "seed_count": 128,
+  "dispatch_path": "gated",
+  "bundle_root": "artifacts/online_correction_v4/execution/g3_reference_binding_20260908/rendered-wave-gated-a10080-k/v4-g3-rb-g3rb20260908k-a2eb0ccf3a",
+  "smoke_prerequisite": {
+    "attempt_id": "g3c2a80smoke20260908i",
+    "registry_path": "artifacts/online_correction_v4/setup/gpu_smoke_registry.json"
+  },
+  "dispatched_at_utc": "2026-09-08T07:55:00Z",
+  "jobs_created": 128,
+  "supersedes_attempt_ids": [
+    "g3c2a80scale0p5-20260908j",
+    "g3c2a80scale0p5-a99f44e894"
+  ]
+}

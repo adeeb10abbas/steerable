@@ -1,0 +1,23 @@
+{
+  "schema_version": "v4-infrastructure-invalid-triage-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "reference_binding_c2",
+  "gate": "G3",
+  "fixture_id": "reference_binding",
+  "recorded_at_utc": "2026-09-08T07:35:00Z",
+  "verdict": "infrastructure_invalid",
+  "failure_class": "kubernetes_metadata_name_length_exceeded",
+  "summary": "Rendered wave attempt g3c2a80scale0p5-20260908j used reference-binding stem tokens that produced 65-character Job metadata names; Kubernetes rejects Job names above 63 characters via the auto-injected job-name pod label, so kubectl create returned partial Invalid errors and zero jobs landed.",
+  "root_cause": "render_v4_horizontal_g3_k8s_jobs.py stem used full fixture token reference-binding with a 26-character attempt_id, yielding v4-g3-reference-binding-g3c2a80scale0p5-20260908j-{hash}-sNNN names longer than the 63-character Kubernetes metadata.name limit.",
+  "remediation": "Shortened k8s stem alias to rb via FIXTURE_K8S_STEM_ALIASES, added fail-closed assert_k8s_metadata_name validation before bundle write, and re-dispatched wave attempt g3rb20260908k through gated dispatch.",
+  "attempts_affected": [
+    {
+      "attempt_id": "g3c2a80scale0p5-20260908j",
+      "bundle_root": "artifacts/online_correction_v4/execution/g3_reference_binding_20260908/rendered-wave-gated-a10080-j/v4-g3-reference-binding-g3c2a80scale0p5-20260908j-a71f1cd230",
+      "jobs_created_on_cluster": 0,
+      "eligible_for_g3_aggregate": false
+    }
+  ],
+  "supersedes_attempt_ids": [],
+  "replacement_attempt_id": "g3rb20260908k"
+}

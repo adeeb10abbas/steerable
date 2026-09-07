@@ -22,6 +22,13 @@ DEFAULT_ROOT = REPO_ROOT / "deploy/k8s/v4_lane_bundle"
 DEFAULT_SPEC = DEFAULT_ROOT / "spec.example.json"
 SHA_RE = re.compile(r"[0-9a-f]{64}")
 TOKEN_RE = re.compile(r"[a-z0-9](?:[-a-z0-9]*[a-z0-9])?")
+K8S_METADATA_NAME_MAX = 63
+FIXTURE_K8S_STEM_ALIASES = {
+    "containment": "cont",
+    "object_pair": "op",
+    "reference_binding": "rb",
+    "vertical": "vert",
+}
 TOP_LEVEL_KEYS = {
     "schema_version", "qualification_only", "qualification_kind", "kube_context", "namespace", "lane_id", "attempt_id",
     "policy_port", "expected_driver_version", "image_repository", "image_sha256",
@@ -108,6 +115,21 @@ def read_spec(path: Path) -> tuple[dict[str, Any], str]:
 def token(value: Any, label: str) -> str:
     require(isinstance(value, str) and TOKEN_RE.fullmatch(value) is not None, f"unsafe {label}")
     return value
+
+
+def fixture_k8s_stem_token(fixture_id: str) -> str:
+    alias = FIXTURE_K8S_STEM_ALIASES.get(fixture_id)
+    if alias is not None:
+        return alias
+    return fixture_id.replace("_", "-")
+
+
+def assert_k8s_metadata_name(name: str, *, context: str) -> None:
+    require(
+        isinstance(name, str)
+        and 0 < len(name) <= K8S_METADATA_NAME_MAX,
+        f"{context} metadata name exceeds Kubernetes {K8S_METADATA_NAME_MAX}-character limit: {name!r} ({len(name)} chars)",
+    )
 
 
 def absolute(value: Any, label: str) -> str:

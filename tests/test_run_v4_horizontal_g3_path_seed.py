@@ -317,8 +317,22 @@ class G3PathSeedGateValidationTests(unittest.TestCase):
             "behind",
         ])
 
-
-class G3PathSeedRegistryGeometryTests(unittest.TestCase):
+    def test_build_goal_area_cases_respects_direction_by_goal_keys(self) -> None:
+        geometry = _geometry()
+        cases = runner.build_goal_area_cases(
+            geometry=geometry,
+            baseline_reference_world=(0.0, 0.0, 0.025),
+            direction_by_goal={
+                "left": [1.0, 0.0],
+                "right": [1.0, 0.0],
+            },
+            displacement_m=0.12,
+            robot_quaternion_wxyz=(1.0, 0.0, 0.0, 0.0),
+            clearance_m=0.01,
+            minimum_shrinking_area_fraction=0.20,
+        )
+        self.assertEqual(len(cases), 2)
+        self.assertEqual([case["relation"] for case in cases], ["left", "right"])
     def test_optional_registry_support_geometry_absent(self) -> None:
         payload = {"scene_receipt": {"support_surface": {"construction": "x"}}}
         self.assertIsNone(runner._optional_registry_support_geometry(payload))

@@ -538,11 +538,10 @@ def build_goal_area_cases(
     apply_shrinking_area_fraction_gate: bool = True,
 ) -> list[dict[str, Any]]:
     from experiments.online_correction_v4.droid_g3 import goal_area_case
-    from experiments.online_correction_v4.model_blind_g3 import HORIZONTAL_GOALS
 
     cases: list[dict[str, Any]] = []
     original = tuple(float(value) for value in baseline_reference_world[:3])
-    for goal in HORIZONTAL_GOALS:
+    for goal in direction_by_goal:
         direction = direction_by_goal[str(goal)]
         endpoint = expected_reference_world_position(
             baseline_world=original,

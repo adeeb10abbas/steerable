@@ -61,7 +61,7 @@
       "failed": 1,
       "pending": 0,
       "succeeded": 0,
-      "suspended": 0,
+      "suspended": 1,
       "total": 1
     },
     "g2r20260908a": {
@@ -81,11 +81,11 @@
       "total": 1
     },
     "g2r20260908g": {
-      "active": 47,
-      "failed": 15,
+      "active": 0,
+      "failed": 17,
       "pending": 0,
-      "succeeded": 66,
-      "suspended": 0,
+      "succeeded": 111,
+      "suspended": 56,
       "total": 128
     },
     "g3c2a40smoke20260908a": {
@@ -341,7 +341,15 @@
       "failed": 1,
       "pending": 0,
       "succeeded": 0,
-      "suspended": 0,
+      "suspended": 1,
+      "total": 1
+    },
+    "g3ngp20260908cp5": {
+      "active": 0,
+      "failed": 0,
+      "pending": 0,
+      "succeeded": 1,
+      "suspended": 1,
       "total": 1
     },
     "g3ngp20260908m": {
@@ -493,6 +501,14 @@
       "failed": 1,
       "pending": 0,
       "succeeded": 0,
+      "suspended": 1,
+      "total": 1
+    },
+    "g3ngp20260908vp8": {
+      "active": 0,
+      "failed": 0,
+      "pending": 0,
+      "succeeded": 1,
       "suspended": 0,
       "total": 1
     },
@@ -510,6 +526,38 @@
       "pending": 0,
       "succeeded": 1,
       "suspended": 1,
+      "total": 1
+    },
+    "g3ngrb20260908s": {
+      "active": 0,
+      "failed": 1,
+      "pending": 0,
+      "succeeded": 0,
+      "suspended": 0,
+      "total": 1
+    },
+    "g3ngrb20260908t": {
+      "active": 0,
+      "failed": 1,
+      "pending": 0,
+      "succeeded": 0,
+      "suspended": 0,
+      "total": 1
+    },
+    "g3ngrb20260908u": {
+      "active": 0,
+      "failed": 0,
+      "pending": 0,
+      "succeeded": 1,
+      "suspended": 0,
+      "total": 1
+    },
+    "g3ngrb20260908v": {
+      "active": 0,
+      "failed": 0,
+      "pending": 0,
+      "succeeded": 1,
+      "suspended": 0,
       "total": 1
     },
     "g3r20260908d": {
@@ -637,6 +685,22 @@
       "failed": 1,
       "pending": 0,
       "succeeded": 0,
+      "suspended": 1,
+      "total": 1
+    },
+    "horizng20260908s": {
+      "active": 0,
+      "failed": 1,
+      "pending": 0,
+      "succeeded": 0,
+      "suspended": 0,
+      "total": 1
+    },
+    "horizng20260908t": {
+      "active": 0,
+      "failed": 0,
+      "pending": 0,
+      "succeeded": 1,
       "suspended": 0,
       "total": 1
     }
@@ -645,31 +709,181 @@
   "cancelled_jobs": [],
   "dry_run": false,
   "enforcement": {
+    "achievable_episode_estimates": {
+      "achievable_episode_counts": {
+        "C2_reference_binding": 4096,
+        "C6_containment": 768,
+        "C7_object_pair": 768,
+        "C8_second_stack": 768
+      },
+      "achievable_episode_total": 6400,
+      "blocked_episode_counts": {
+        "C1_C3_C4_horizontal": 9728,
+        "C5_vertical": 1536
+      },
+      "blocked_episode_total": 11264,
+      "estimated_at_utc": "2026-09-07T14:08:36Z",
+      "note": "C7 behavioral episodes continue on protected a10080-policy/a40-simulator lanes throughout. G2 horizontal evidence runs as A100-80GB backfill and does not extend the C2 critical path when C2 dominates pool occupancy.",
+      "parallel_strata_materially_faster": true,
+      "parallel_strata_time_saved_minutes": 47,
+      "qualification_gates": {
+        "assumptions": {
+          "g2_seed_minutes": 35,
+          "g3_path_seed_minutes": 47,
+          "gpu_pool_sizes": {
+            "NVIDIA-A100-SXM4-40GB": 64,
+            "NVIDIA-A100-SXM4-80GB": 95,
+            "NVIDIA-A40": 40,
+            "NVIDIA-B200": 40
+          },
+          "parallel_attestation_products": [
+            "NVIDIA-A100-SXM4-40GB",
+            "NVIDIA-B200"
+          ],
+          "parallel_strata_enabled": true,
+          "primary_plus_backfill_on_a10080": true
+        },
+        "estimated_at_utc": "2026-09-07T14:08:36Z",
+        "main_episode_start_note": "6,400 achievable episodes (C7/C6/C2/C8) may dispatch after their qualification tiers complete and per-fixture live controls pass. 11,264 episodes across C1/C3/C4 horizontal and C5 vertical remain scientifically blocked.",
+        "parallel_qualification_minutes": 94,
+        "qualification_completion_hours": 1.6,
+        "schema_version": "v4-wave-admission-estimates-v2",
+        "serialized_a10080_minutes": 94,
+        "tier_estimates": [
+          {
+            "admission_class": "primary",
+            "alternate_gpu_products": [],
+            "attempt_ids": [],
+            "cumulative_minutes_from_now": 180.0,
+            "episodes_gated": 6400,
+            "estimated_wave_minutes": 180,
+            "gpu_product": null,
+            "pool_size": 4,
+            "remaining_seeds": 10,
+            "seed_minutes_assumed": 60,
+            "tier_complete": false,
+            "tier_id": "natural_grasp_live_control"
+          },
+          {
+            "admission_class": "primary",
+            "alternate_gpu_products": [],
+            "attempt_ids": [
+              "g3rb20260908v"
+            ],
+            "cumulative_minutes_from_now": 274.0,
+            "episodes_gated": 4096,
+            "estimated_wave_minutes": 94,
+            "gpu_product": "NVIDIA-A100-SXM4-80GB",
+            "pool_size": 95,
+            "remaining_seeds": 115,
+            "seed_minutes_assumed": 47,
+            "tier_complete": false,
+            "tier_id": "reference_binding_g3"
+          },
+          {
+            "admission_class": "parallel_stratum",
+            "alternate_gpu_products": [
+              "NVIDIA-B200",
+              "NVIDIA-A100-SXM4-80GB"
+            ],
+            "attempt_ids": [
+              "g3c6p20260908a10080g"
+            ],
+            "cumulative_minutes_from_now": 274.0,
+            "episodes_gated": 768,
+            "estimated_wave_minutes": 47,
+            "gpu_product": "NVIDIA-A100-SXM4-40GB",
+            "pool_size": 64,
+            "remaining_seeds": 1,
+            "seed_minutes_assumed": 47,
+            "tier_complete": false,
+            "tier_id": "c6_containment_g3"
+          },
+          {
+            "admission_class": "backfill",
+            "alternate_gpu_products": [
+              "NVIDIA-A40"
+            ],
+            "attempt_ids": [
+              "g2gpu20260908g",
+              "g2r20260908g"
+            ],
+            "cumulative_minutes_from_now": 274.0,
+            "episodes_gated": 0,
+            "estimated_wave_minutes": 35,
+            "gpu_product": "NVIDIA-A100-SXM4-80GB",
+            "pool_size": 95,
+            "remaining_seeds": 18,
+            "seed_minutes_assumed": 35,
+            "tier_complete": false,
+            "tier_id": "horizontal_g2_evidence"
+          }
+        ]
+      },
+      "qualification_wall_clock_hours": {
+        "parallel_a10040_c6": 1.6,
+        "parallel_b200_c6": 1.6,
+        "serialized": 2.4
+      },
+      "qualification_wall_clock_minutes": {
+        "parallel_a10080_c2_with_a10040_c6": 94,
+        "parallel_a10080_c2_with_b200_c6": 94,
+        "serialized_a10080_then_a10040": 141
+      },
+      "remaining_g3_seeds": {
+        "containment_g3c6p20260908a10080g": 1,
+        "horizontal_g2_evidence_backfill": 18,
+        "reference_binding_g3rb20260908v": 115
+      },
+      "schema_version": "v4-achievable-episode-estimates-v1"
+    },
     "admission_report": {
       "admitted_attempts": [
-        "g2r20260908g"
+        "g3c6p20260908a10080g",
+        "g3rb20260908v"
       ],
       "c7_always_admitted": [],
+      "deprioritized_deferred": [
+        "g3c5p20260908a10080g"
+      ],
+      "scientifically_blocked": [
+        "g3r20260908g"
+      ],
       "tiers": [
         {
           "status": "complete",
           "tier_id": "natural_grasp_live_control"
         },
         {
-          "status": "complete",
-          "tier_id": "horizontal_g3_path"
+          "attempt_ids": [
+            "g3rb20260908v"
+          ],
+          "status": "admitted",
+          "tier_id": "reference_binding_g3"
         },
         {
           "attempt_ids": [
-            "g2r20260908g"
+            "g3c6p20260908a10080g"
           ],
           "status": "admitted",
-          "tier_id": "horizontal_g2"
+          "tier_id": "c6_containment_g3"
+        },
+        {
+          "status": "complete",
+          "tier_id": "horizontal_g2_evidence"
+        },
+        {
+          "attempt_ids": [
+            "g3c5p20260908a10080g"
+          ],
+          "status": "deprioritized_deferred",
+          "tier_id": "c5_vertical_g3"
         }
       ]
     },
     "admitted_attempts": [
-      "g2r20260908g"
+      "g3c6p20260908a10080g",
+      "g3rb20260908v"
     ],
     "attempt_summary": {
       "g2c2q20260906a": {
@@ -733,7 +947,7 @@
         "failed": 1,
         "pending": 0,
         "succeeded": 0,
-        "suspended": 0,
+        "suspended": 1,
         "total": 1
       },
       "g2r20260908a": {
@@ -753,11 +967,11 @@
         "total": 1
       },
       "g2r20260908g": {
-        "active": 47,
-        "failed": 15,
+        "active": 0,
+        "failed": 17,
         "pending": 0,
-        "succeeded": 66,
-        "suspended": 0,
+        "succeeded": 111,
+        "suspended": 62,
         "total": 128
       },
       "g3c2a40smoke20260908a": {
@@ -1013,7 +1227,15 @@
         "failed": 1,
         "pending": 0,
         "succeeded": 0,
-        "suspended": 0,
+        "suspended": 1,
+        "total": 1
+      },
+      "g3ngp20260908cp5": {
+        "active": 0,
+        "failed": 0,
+        "pending": 0,
+        "succeeded": 1,
+        "suspended": 1,
         "total": 1
       },
       "g3ngp20260908m": {
@@ -1165,6 +1387,14 @@
         "failed": 1,
         "pending": 0,
         "succeeded": 0,
+        "suspended": 1,
+        "total": 1
+      },
+      "g3ngp20260908vp8": {
+        "active": 0,
+        "failed": 0,
+        "pending": 0,
+        "succeeded": 1,
         "suspended": 0,
         "total": 1
       },
@@ -1182,6 +1412,38 @@
         "pending": 0,
         "succeeded": 1,
         "suspended": 1,
+        "total": 1
+      },
+      "g3ngrb20260908s": {
+        "active": 0,
+        "failed": 1,
+        "pending": 0,
+        "succeeded": 0,
+        "suspended": 0,
+        "total": 1
+      },
+      "g3ngrb20260908t": {
+        "active": 0,
+        "failed": 1,
+        "pending": 0,
+        "succeeded": 0,
+        "suspended": 0,
+        "total": 1
+      },
+      "g3ngrb20260908u": {
+        "active": 0,
+        "failed": 0,
+        "pending": 0,
+        "succeeded": 1,
+        "suspended": 0,
+        "total": 1
+      },
+      "g3ngrb20260908v": {
+        "active": 0,
+        "failed": 0,
+        "pending": 0,
+        "succeeded": 1,
+        "suspended": 0,
         "total": 1
       },
       "g3r20260908d": {
@@ -1309,19 +1571,72 @@
         "failed": 1,
         "pending": 0,
         "succeeded": 0,
+        "suspended": 1,
+        "total": 1
+      },
+      "horizng20260908s": {
+        "active": 0,
+        "failed": 1,
+        "pending": 0,
+        "succeeded": 0,
+        "suspended": 0,
+        "total": 1
+      },
+      "horizng20260908t": {
+        "active": 0,
+        "failed": 0,
+        "pending": 0,
+        "succeeded": 1,
         "suspended": 0,
         "total": 1
       }
     },
-    "jobs_suspended": 4,
-    "jobs_unsuspended": 0,
+    "jobs_suspended": 73,
+    "jobs_unsuspended": 129,
     "suspended_sample": [
-      "v4-c-ngpc-g3ngp20260908cp4-4e0d8b42d9-job",
-      "v4-g2-horizontal-g2gpu20260908g-3ea0cb097e-s000",
-      "v4-horizontal-natural-grasp-pc-horizng20260908r2-job",
-      "v4-v-ngpc-g3ngp20260908vp7-0baed25c63-job"
+      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s062",
+      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s063",
+      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s064",
+      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s065",
+      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s066",
+      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s067",
+      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s068",
+      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s069",
+      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s070",
+      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s071",
+      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s072",
+      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s073",
+      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s074",
+      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s075",
+      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s076",
+      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s077",
+      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s078",
+      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s079",
+      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s080",
+      "v4-g2-horizontal-g2r20260908g-10e8fea3b8-s081"
     ],
-    "unsuspended_sample": [],
+    "unsuspended_sample": [
+      "v4-g3-cont-g3c6p20260908a10080g-9a6114e547-s000",
+      "v4-g3-rb-g3rb20260908v-60670a185c-s000",
+      "v4-g3-rb-g3rb20260908v-60670a185c-s001",
+      "v4-g3-rb-g3rb20260908v-60670a185c-s002",
+      "v4-g3-rb-g3rb20260908v-60670a185c-s003",
+      "v4-g3-rb-g3rb20260908v-60670a185c-s004",
+      "v4-g3-rb-g3rb20260908v-60670a185c-s005",
+      "v4-g3-rb-g3rb20260908v-60670a185c-s006",
+      "v4-g3-rb-g3rb20260908v-60670a185c-s007",
+      "v4-g3-rb-g3rb20260908v-60670a185c-s008",
+      "v4-g3-rb-g3rb20260908v-60670a185c-s009",
+      "v4-g3-rb-g3rb20260908v-60670a185c-s010",
+      "v4-g3-rb-g3rb20260908v-60670a185c-s011",
+      "v4-g3-rb-g3rb20260908v-60670a185c-s012",
+      "v4-g3-rb-g3rb20260908v-60670a185c-s013",
+      "v4-g3-rb-g3rb20260908v-60670a185c-s014",
+      "v4-g3-rb-g3rb20260908v-60670a185c-s015",
+      "v4-g3-rb-g3rb20260908v-60670a185c-s016",
+      "v4-g3-rb-g3rb20260908v-60670a185c-s017",
+      "v4-g3-rb-g3rb20260908v-60670a185c-s018"
+    ],
     "wall_clock_estimates": {
       "assumptions": {
         "g2_seed_minutes": 35,
@@ -1336,59 +1651,37 @@
           "NVIDIA-A100-SXM4-40GB",
           "NVIDIA-B200"
         ],
-        "serialized_tiers": true
+        "parallel_strata_enabled": true,
+        "primary_plus_backfill_on_a10080": true
       },
-      "estimated_at_utc": "2026-09-07T13:39:12Z",
-      "main_episode_start_note": "17,664 policy episodes may dispatch only after all admitted qualification tiers complete, per-fixture live controls pass at the homogeneous pin, and runtime locks release.",
-      "qualification_completion_hours": 5.7,
-      "schema_version": "v4-wave-admission-estimates-v1",
+      "estimated_at_utc": "2026-09-07T14:08:36Z",
+      "main_episode_start_note": "6,400 achievable episodes (C7/C6/C2/C8) may dispatch after their qualification tiers complete and per-fixture live controls pass. 11,264 episodes across C1/C3/C4 horizontal and C5 vertical remain scientifically blocked.",
+      "parallel_qualification_minutes": 94,
+      "qualification_completion_hours": 1.6,
+      "schema_version": "v4-wave-admission-estimates-v2",
+      "serialized_a10080_minutes": 94,
       "tier_estimates": [
         {
+          "admission_class": "primary",
+          "alternate_gpu_products": [],
           "attempt_ids": [],
-          "cumulative_minutes_from_now": 120.0,
-          "episodes_gated": 17664,
-          "estimated_wave_minutes": 120,
+          "cumulative_minutes_from_now": 180.0,
+          "episodes_gated": 6400,
+          "estimated_wave_minutes": 180,
           "gpu_product": null,
           "pool_size": 4,
-          "remaining_seeds": 7,
+          "remaining_seeds": 10,
           "seed_minutes_assumed": 60,
           "tier_complete": false,
           "tier_id": "natural_grasp_live_control"
         },
         {
-          "attempt_ids": [
-            "g3r20260908g"
-          ],
-          "cumulative_minutes_from_now": 167.0,
-          "episodes_gated": 9728,
-          "estimated_wave_minutes": 47,
-          "gpu_product": "NVIDIA-A100-SXM4-80GB",
-          "pool_size": 95,
-          "remaining_seeds": 29,
-          "seed_minutes_assumed": 47,
-          "tier_complete": false,
-          "tier_id": "horizontal_g3_path"
-        },
-        {
-          "attempt_ids": [
-            "g2gpu20260908g",
-            "g2r20260908g"
-          ],
-          "cumulative_minutes_from_now": 202.0,
-          "episodes_gated": 9728,
-          "estimated_wave_minutes": 35,
-          "gpu_product": "NVIDIA-A100-SXM4-80GB",
-          "pool_size": 95,
-          "remaining_seeds": 63,
-          "seed_minutes_assumed": 35,
-          "tier_complete": false,
-          "tier_id": "horizontal_g2"
-        },
-        {
+          "admission_class": "primary",
+          "alternate_gpu_products": [],
           "attempt_ids": [
             "g3rb20260908v"
           ],
-          "cumulative_minutes_from_now": 296.0,
+          "cumulative_minutes_from_now": 274.0,
           "episodes_gated": 4096,
           "estimated_wave_minutes": 94,
           "gpu_product": "NVIDIA-A100-SXM4-80GB",
@@ -1399,26 +1692,49 @@
           "tier_id": "reference_binding_g3"
         },
         {
+          "admission_class": "parallel_stratum",
+          "alternate_gpu_products": [
+            "NVIDIA-B200",
+            "NVIDIA-A100-SXM4-80GB"
+          ],
           "attempt_ids": [
-            "g3c5p20260908a10080g",
             "g3c6p20260908a10080g"
           ],
-          "cumulative_minutes_from_now": 343.0,
-          "episodes_gated": 2304,
+          "cumulative_minutes_from_now": 274.0,
+          "episodes_gated": 768,
           "estimated_wave_minutes": 47,
-          "gpu_product": "NVIDIA-A100-SXM4-80GB",
-          "pool_size": 95,
-          "remaining_seeds": 2,
+          "gpu_product": "NVIDIA-A100-SXM4-40GB",
+          "pool_size": 64,
+          "remaining_seeds": 1,
           "seed_minutes_assumed": 47,
           "tier_complete": false,
-          "tier_id": "c5_c6_g3"
+          "tier_id": "c6_containment_g3"
+        },
+        {
+          "admission_class": "backfill",
+          "alternate_gpu_products": [
+            "NVIDIA-A40"
+          ],
+          "attempt_ids": [
+            "g2gpu20260908g",
+            "g2r20260908g"
+          ],
+          "cumulative_minutes_from_now": 274.0,
+          "episodes_gated": 0,
+          "estimated_wave_minutes": 35,
+          "gpu_product": "NVIDIA-A100-SXM4-80GB",
+          "pool_size": 95,
+          "remaining_seeds": 18,
+          "seed_minutes_assumed": 35,
+          "tier_complete": false,
+          "tier_id": "horizontal_g2_evidence"
         }
       ]
     }
   },
   "kube_context": "prod-dcwi-warrenq1-vmkub007",
   "namespace": "211247-prod",
-  "observed_at_utc": "2026-09-07T13:39:12Z",
+  "observed_at_utc": "2026-09-07T14:08:36Z",
   "schema_version": "v4-wave-admission-enforcement-receipt-v1",
   "superseded_attempt_ids": [
     "g2gpu20260908a10040",

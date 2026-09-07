@@ -82,6 +82,32 @@ CURRENT_HOMOGENEOUS_ATTEMPT_IDS: frozenset[str] = frozenset(
     }
 )
 
+# Horizontal G3 confirmatory failed at scale 0.5 — C1/C3/C4 episodes scientifically blocked.
+SCIENTIFICALLY_BLOCKED_ATTEMPT_IDS: frozenset[str] = frozenset(
+    {
+        "g3r20260908g",
+    }
+)
+
+# C5 vertical positive live control fails on reachability — deprioritized, not cancelled.
+DEPRIORITIZED_ATTEMPT_IDS: frozenset[str] = frozenset(
+    {
+        "g3c5p20260908a10080g",
+    }
+)
+
+ACHIEVABLE_EPISODE_COUNTS: dict[str, int] = {
+    "C7_object_pair": 768,
+    "C6_containment": 768,
+    "C2_reference_binding": 4096,
+    "C8_second_stack": 768,
+}
+
+BLOCKED_EPISODE_COUNTS: dict[str, int] = {
+    "C1_C3_C4_horizontal": 9728,
+    "C5_vertical": 1536,
+}
+
 C7_ATTEMPT_RE = re.compile(r"^attempt0\d+$|^c7m\d+$", re.I)
 NATURAL_GRASP_ATTEMPT_RE = re.compile(r"g3ngp|g3ngrb|nglive|natgrasp|livectrl", re.I)
 
@@ -97,6 +123,8 @@ class AdmissionTier:
     attempt_ids: frozenset[str]
     attempt_patterns: tuple[str, ...]
     gpu_product: str | None
+    alternate_gpu_products: tuple[str, ...]
+    admission_class: str
     seed_count: int
     seed_minutes: float
     episodes_gated: int
@@ -110,54 +138,64 @@ ADMISSION_TIERS: tuple[AdmissionTier, ...] = (
         attempt_ids=frozenset(),
         attempt_patterns=(r"g3ngp", r"g3ngrb", r"nglive", r"natgrasp", r"livectrl", r"horizng"),
         gpu_product=None,
+        alternate_gpu_products=(),
+        admission_class="primary",
         seed_count=2,
         seed_minutes=LIVE_CONTROL_JOB_MINUTES,
-        episodes_gated=17664,
-        description="Per-fixture Isaac/SimplerEnv natural-grasp positive/negative controls",
-    ),
-    AdmissionTier(
-        tier_id="horizontal_g3_path",
-        priority=1,
-        attempt_ids=frozenset({"g3r20260908g"}),
-        attempt_patterns=(),
-        gpu_product="NVIDIA-A100-SXM4-80GB",
-        seed_count=128,
-        seed_minutes=G3_PATH_SEED_MINUTES,
-        episodes_gated=9728,
-        description="Horizontal geometry_repair_v2 G3 path scale-0.5 homogeneous wave",
-    ),
-    AdmissionTier(
-        tier_id="horizontal_g2",
-        priority=2,
-        attempt_ids=frozenset({"g2r20260908g", "g2gpu20260908g"}),
-        attempt_patterns=(),
-        gpu_product="NVIDIA-A100-SXM4-80GB",
-        seed_count=128,
-        seed_minutes=G2_SEED_MINUTES,
-        episodes_gated=9728,
-        description="Horizontal G2 homogeneous wave (includes A40 determinism s000 in-wave)",
+        episodes_gated=6400,
+        description="Per-fixture natural-grasp controls for families with open dispatch gates",
     ),
     AdmissionTier(
         tier_id="reference_binding_g3",
-        priority=3,
+        priority=1,
         attempt_ids=frozenset({"g3rb20260908v"}),
         attempt_patterns=(),
         gpu_product="NVIDIA-A100-SXM4-80GB",
+        alternate_gpu_products=(),
+        admission_class="primary",
         seed_count=128,
         seed_minutes=G3_PATH_SEED_MINUTES,
         episodes_gated=4096,
-        description="C2 reference_binding G3 path homogeneous wave",
+        description="C2 reference_binding G3 path homogeneous wave (live controls passed)",
     ),
     AdmissionTier(
-        tier_id="c5_c6_g3",
-        priority=4,
-        attempt_ids=frozenset({"g3c5p20260908a10080g", "g3c6p20260908a10080g"}),
-        attempt_patterns=(r"g3c5p20260908a10080", r"g3c6p20260908a10080"),
-        gpu_product="NVIDIA-A100-SXM4-80GB",
+        tier_id="c6_containment_g3",
+        priority=2,
+        attempt_ids=frozenset({"g3c6p20260908a10080g"}),
+        attempt_patterns=(r"g3c6p20260908a10080g",),
+        gpu_product="NVIDIA-A100-SXM4-40GB",
+        alternate_gpu_products=("NVIDIA-B200", "NVIDIA-A100-SXM4-80GB"),
+        admission_class="parallel_stratum",
         seed_count=128,
         seed_minutes=G3_PATH_SEED_MINUTES,
-        episodes_gated=2304,
-        description="C5 vertical and C6 containment G3 smokes then full waves at homogeneous pin",
+        episodes_gated=768,
+        description="C6 containment G3 smoke and ladder (live controls passed; parallel stratum)",
+    ),
+    AdmissionTier(
+        tier_id="horizontal_g2_evidence",
+        priority=3,
+        attempt_ids=frozenset({"g2r20260908g", "g2gpu20260908g"}),
+        attempt_patterns=(),
+        gpu_product="NVIDIA-A100-SXM4-80GB",
+        alternate_gpu_products=("NVIDIA-A40",),
+        admission_class="backfill",
+        seed_count=128,
+        seed_minutes=G2_SEED_MINUTES,
+        episodes_gated=0,
+        description="Horizontal G2 evidence completion and determinism attestation (backfill, non-blocking)",
+    ),
+    AdmissionTier(
+        tier_id="c5_vertical_g3",
+        priority=4,
+        attempt_ids=frozenset({"g3c5p20260908a10080g"}),
+        attempt_patterns=(r"g3c5p20260908a10080g",),
+        gpu_product="NVIDIA-A100-SXM4-80GB",
+        alternate_gpu_products=(),
+        admission_class="deprioritized",
+        seed_count=128,
+        seed_minutes=G3_PATH_SEED_MINUTES,
+        episodes_gated=0,
+        description="C5 vertical G3 (positive live control blocked on reachability; evidence preserved)",
     ),
 )
 
@@ -175,6 +213,14 @@ def save_registry(payload: dict[str, Any], path: Path = DEFAULT_REGISTRY) -> Non
 
 def is_c7_attempt(attempt_id: str) -> bool:
     return bool(C7_ATTEMPT_RE.match(attempt_id))
+
+
+def is_scientifically_blocked_attempt(attempt_id: str) -> bool:
+    return attempt_id in SCIENTIFICALLY_BLOCKED_ATTEMPT_IDS
+
+
+def is_deprioritized_attempt(attempt_id: str) -> bool:
+    return attempt_id in DEPRIORITIZED_ATTEMPT_IDS
 
 
 def is_superseded_attempt(attempt_id: str) -> bool:
@@ -263,48 +309,109 @@ def attempt_has_work_remaining(stats: Mapping[str, int]) -> bool:
     return succeeded + failed < total
 
 
+def _tier_incomplete_attempts(
+    tier: AdmissionTier,
+    attempt_summary: Mapping[str, Mapping[str, int]],
+) -> list[str]:
+    tier_attempts = [
+        aid
+        for aid in attempt_summary
+        if tier_for_attempt(aid) == tier and not is_superseded_attempt(aid)
+    ]
+    return sorted(
+        aid
+        for aid in tier_attempts
+        if attempt_has_work_remaining(attempt_summary[aid])
+    )
+
+
+def _achievable_priority_incomplete(
+    attempt_summary: Mapping[str, Mapping[str, int]],
+) -> bool:
+    for tier in ADMISSION_TIERS:
+        if tier.admission_class in {"primary", "parallel_stratum", "backfill"}:
+            if _tier_incomplete_attempts(tier, attempt_summary):
+                return True
+    return False
+
+
 def compute_admitted_attempts(
     attempt_summary: Mapping[str, Mapping[str, int]],
 ) -> tuple[list[str], dict[str, Any]]:
     """Return attempt ids that may run now and diagnostic report."""
     admitted: list[str] = []
-    report: dict[str, Any] = {"tiers": [], "c7_always_admitted": []}
+    report: dict[str, Any] = {
+        "tiers": [],
+        "c7_always_admitted": [],
+        "scientifically_blocked": [],
+        "deprioritized_deferred": [],
+    }
 
-    for attempt_id, stats in attempt_summary.items():
+    for attempt_id in attempt_summary:
         if is_c7_attempt(attempt_id):
             report["c7_always_admitted"].append(attempt_id)
+        if is_scientifically_blocked_attempt(attempt_id):
+            report["scientifically_blocked"].append(attempt_id)
+
+    achievable_priority_pending = _achievable_priority_incomplete(attempt_summary)
 
     for tier in ADMISSION_TIERS:
-        tier_attempts = [
-            aid
-            for aid in attempt_summary
-            if tier_for_attempt(aid) == tier and not is_superseded_attempt(aid)
-        ]
-        if not tier_attempts:
-            report["tiers"].append({"tier_id": tier.tier_id, "status": "no_jobs"})
-            continue
-        incomplete = [
-            aid
-            for aid in tier_attempts
-            if attempt_has_work_remaining(attempt_summary[aid])
-        ]
+        incomplete = _tier_incomplete_attempts(tier, attempt_summary)
         if not incomplete:
-            report["tiers"].append({"tier_id": tier.tier_id, "status": "complete"})
+            tier_attempts = [
+                aid
+                for aid in attempt_summary
+                if tier_for_attempt(aid) == tier and not is_superseded_attempt(aid)
+            ]
+            if not tier_attempts:
+                report["tiers"].append({"tier_id": tier.tier_id, "status": "no_jobs"})
+            else:
+                report["tiers"].append({"tier_id": tier.tier_id, "status": "complete"})
             continue
-        # Admit all incomplete waves in this tier (e.g. G2 A100-80GB + A40 determinism s000).
-        chosen = sorted(incomplete)
-        admitted.extend(chosen)
+
+        if tier.admission_class == "deprioritized":
+            if achievable_priority_pending:
+                report["deprioritized_deferred"].extend(incomplete)
+                report["tiers"].append(
+                    {
+                        "tier_id": tier.tier_id,
+                        "status": "deprioritized_deferred",
+                        "attempt_ids": incomplete,
+                    }
+                )
+                continue
+            admitted.extend(incomplete)
+            report["tiers"].append(
+                {
+                    "tier_id": tier.tier_id,
+                    "status": "admitted_deprioritized",
+                    "attempt_ids": incomplete,
+                }
+            )
+            continue
+
+        if tier.admission_class == "backfill":
+            admitted.extend(incomplete)
+            report["tiers"].append(
+                {
+                    "tier_id": tier.tier_id,
+                    "status": "admitted_backfill",
+                    "attempt_ids": incomplete,
+                }
+            )
+            continue
+
+        admitted.extend(incomplete)
         report["tiers"].append(
             {
                 "tier_id": tier.tier_id,
                 "status": "admitted",
-                "attempt_ids": chosen,
+                "attempt_ids": incomplete,
             }
         )
-        break  # only one tier active at a time
 
-    report["admitted_attempts"] = admitted
-    return admitted, report
+    report["admitted_attempts"] = sorted(set(admitted))
+    return report["admitted_attempts"], report
 
 
 def estimate_wave_minutes(
@@ -318,37 +425,39 @@ def estimate_wave_minutes(
     return math.ceil(seed_count / pool_size) * seed_minutes
 
 
+def _remaining_seeds_for_tier(
+    tier: AdmissionTier,
+    attempt_summary: Mapping[str, Mapping[str, int]],
+) -> tuple[int, bool]:
+    tier_attempts = [
+        aid
+        for aid in attempt_summary
+        if tier_for_attempt(aid) == tier and not is_superseded_attempt(aid)
+    ]
+    if not tier_attempts:
+        return 0, True
+    remaining = 0
+    for aid in tier_attempts:
+        stats = attempt_summary[aid]
+        expected = min(tier.seed_count, int(stats.get("total") or tier.seed_count))
+        remaining += max(0, expected - int(stats.get("succeeded") or 0))
+    return remaining, remaining <= 0
+
+
 def build_wall_clock_estimates(
     attempt_summary: Mapping[str, Mapping[str, int]] | None = None,
 ) -> dict[str, Any]:
     estimates: list[dict[str, Any]] = []
     cumulative = 0.0
+    parallel_stratum_minutes: list[float] = []
     for tier in ADMISSION_TIERS:
+        if tier.admission_class == "deprioritized":
+            continue
         pool = GPU_POOL_SIZES.get(tier.gpu_product or "NVIDIA-A100-SXM4-80GB", 95)
         remaining_seeds = tier.seed_count
         tier_complete = False
         if attempt_summary is not None:
-            tier_attempts = [
-                aid
-                for aid in attempt_summary
-                if tier_for_attempt(aid) == tier and not is_superseded_attempt(aid)
-            ]
-            if not tier_attempts:
-                tier_complete = True
-                remaining_seeds = 0
-            else:
-                remaining_seeds = 0
-                for aid in tier_attempts:
-                    stats = attempt_summary[aid]
-                    expected = min(
-                        tier.seed_count,
-                        int(stats.get("total") or tier.seed_count),
-                    )
-                    remaining_seeds += max(
-                        0,
-                        expected - int(stats.get("succeeded") or 0),
-                    )
-                tier_complete = remaining_seeds <= 0
+            remaining_seeds, tier_complete = _remaining_seeds_for_tier(tier, attempt_summary)
         if tier_complete or remaining_seeds <= 0:
             minutes = 0.0
         else:
@@ -357,12 +466,21 @@ def build_wall_clock_estimates(
                 pool_size=pool if tier.gpu_product else 4,
                 seed_minutes=tier.seed_minutes,
             )
-        cumulative += minutes
+        if tier.admission_class == "parallel_stratum":
+            parallel_stratum_minutes.append(minutes)
+        elif tier.admission_class == "backfill":
+            pass  # backfill does not extend serialized critical path
+        elif tier.admission_class == "primary":
+            cumulative += minutes
+        else:
+            cumulative += minutes
         estimates.append(
             {
                 "tier_id": tier.tier_id,
                 "attempt_ids": sorted(tier.attempt_ids),
+                "admission_class": tier.admission_class,
                 "gpu_product": tier.gpu_product,
+                "alternate_gpu_products": list(tier.alternate_gpu_products),
                 "remaining_seeds": remaining_seeds,
                 "tier_complete": tier_complete,
                 "pool_size": pool if tier.gpu_product else 4,
@@ -372,11 +490,20 @@ def build_wall_clock_estimates(
                 "episodes_gated": tier.episodes_gated,
             }
         )
+    parallel_critical_path = max(parallel_stratum_minutes) if parallel_stratum_minutes else 0.0
+    serialized_a10080 = sum(
+        e["estimated_wave_minutes"]
+        for e in estimates
+        if e.get("admission_class") == "primary"
+        and e.get("gpu_product") == "NVIDIA-A100-SXM4-80GB"
+    )
+    parallel_qualification_minutes = max(serialized_a10080, parallel_critical_path)
     return {
-        "schema_version": "v4-wave-admission-estimates-v1",
+        "schema_version": "v4-wave-admission-estimates-v2",
         "estimated_at_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "assumptions": {
-            "serialized_tiers": True,
+            "primary_plus_backfill_on_a10080": True,
+            "parallel_strata_enabled": True,
             "g3_path_seed_minutes": G3_PATH_SEED_MINUTES,
             "g2_seed_minutes": G2_SEED_MINUTES,
             "gpu_pool_sizes": GPU_POOL_SIZES,
@@ -385,25 +512,106 @@ def build_wall_clock_estimates(
                 "NVIDIA-B200",
             ],
         },
-        "qualification_completion_hours": round(cumulative / 60.0, 1),
+        "qualification_completion_hours": round(parallel_qualification_minutes / 60.0, 1),
+        "parallel_qualification_minutes": parallel_qualification_minutes,
+        "serialized_a10080_minutes": serialized_a10080,
         "main_episode_start_note": (
-            "17,664 policy episodes may dispatch only after all admitted qualification tiers "
-            "complete, per-fixture live controls pass at the homogeneous pin, and runtime locks release."
+            "6,400 achievable episodes (C7/C6/C2/C8) may dispatch after their qualification "
+            "tiers complete and per-fixture live controls pass. 11,264 episodes across C1/C3/C4 "
+            "horizontal and C5 vertical remain scientifically blocked."
         ),
         "tier_estimates": estimates,
+    }
+
+
+def build_achievable_episode_estimates(
+    attempt_summary: Mapping[str, Mapping[str, int]] | None = None,
+) -> dict[str, Any]:
+    achievable_total = sum(ACHIEVABLE_EPISODE_COUNTS.values())
+    blocked_total = sum(BLOCKED_EPISODE_COUNTS.values())
+    qual = build_wall_clock_estimates(attempt_summary)
+    c2_remaining = 0
+    c6_remaining = 0
+    g2_remaining = 0
+    if attempt_summary is not None:
+        c2_remaining, _ = _remaining_seeds_for_tier(
+            next(t for t in ADMISSION_TIERS if t.tier_id == "reference_binding_g3"),
+            attempt_summary,
+        )
+        c6_remaining, _ = _remaining_seeds_for_tier(
+            next(t for t in ADMISSION_TIERS if t.tier_id == "c6_containment_g3"),
+            attempt_summary,
+        )
+        g2_remaining, _ = _remaining_seeds_for_tier(
+            next(t for t in ADMISSION_TIERS if t.tier_id == "horizontal_g2_evidence"),
+            attempt_summary,
+        )
+    c2_minutes = estimate_wave_minutes(
+        seed_count=c2_remaining or 115,
+        pool_size=GPU_POOL_SIZES["NVIDIA-A100-SXM4-80GB"],
+        seed_minutes=G3_PATH_SEED_MINUTES,
+    )
+    c6_minutes_a10040 = estimate_wave_minutes(
+        seed_count=c6_remaining or 129,
+        pool_size=GPU_POOL_SIZES["NVIDIA-A100-SXM4-40GB"],
+        seed_minutes=G3_PATH_SEED_MINUTES,
+    )
+    c6_minutes_b200 = estimate_wave_minutes(
+        seed_count=c6_remaining or 129,
+        pool_size=GPU_POOL_SIZES["NVIDIA-B200"],
+        seed_minutes=G3_PATH_SEED_MINUTES,
+    )
+    serialized_total = c2_minutes + c6_minutes_a10040
+    parallel_total = max(c2_minutes, c6_minutes_a10040)
+    parallel_b200 = max(c2_minutes, c6_minutes_b200)
+    return {
+        "schema_version": "v4-achievable-episode-estimates-v1",
+        "estimated_at_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "achievable_episode_counts": ACHIEVABLE_EPISODE_COUNTS,
+        "achievable_episode_total": achievable_total,
+        "blocked_episode_counts": BLOCKED_EPISODE_COUNTS,
+        "blocked_episode_total": blocked_total,
+        "qualification_gates": qual,
+        "remaining_g3_seeds": {
+            "reference_binding_g3rb20260908v": c2_remaining,
+            "containment_g3c6p20260908a10080g": c6_remaining,
+            "horizontal_g2_evidence_backfill": g2_remaining,
+        },
+        "qualification_wall_clock_minutes": {
+            "serialized_a10080_then_a10040": serialized_total,
+            "parallel_a10080_c2_with_a10040_c6": parallel_total,
+            "parallel_a10080_c2_with_b200_c6": parallel_b200,
+        },
+        "qualification_wall_clock_hours": {
+            "serialized": round(serialized_total / 60.0, 1),
+            "parallel_a10040_c6": round(parallel_total / 60.0, 1),
+            "parallel_b200_c6": round(parallel_b200 / 60.0, 1),
+        },
+        "parallel_strata_materially_faster": parallel_total < serialized_total,
+        "parallel_strata_time_saved_minutes": serialized_total - parallel_total,
+        "note": (
+            "C7 behavioral episodes continue on protected a10080-policy/a40-simulator lanes "
+            "throughout. G2 horizontal evidence runs as A100-80GB backfill and does not extend "
+            "the C2 critical path when C2 dominates pool occupancy."
+        ),
     }
 
 
 def require_dispatch_admission(*, attempt_id: str, attempt_summary: Mapping[str, Mapping[str, int]] | None = None) -> None:
     if is_c7_attempt(attempt_id) or is_superseded_attempt(attempt_id):
         return
+    if is_scientifically_blocked_attempt(attempt_id):
+        raise WaveAdmissionError(
+            f"wave admission gate blocked dispatch for {attempt_id}: scientifically blocked "
+            f"(horizontal G3 confirmatory failed; C1/C3/C4 episodes not authorized)"
+        )
     if attempt_summary is None:
         return
     admitted, report = compute_admitted_attempts(attempt_summary)
     if attempt_id not in admitted:
         raise WaveAdmissionError(
             f"wave admission gate blocked dispatch for {attempt_id}: currently admitted "
-            f"{admitted or ['none']}. Serialized tiers: "
+            f"{admitted or ['none']}. Priority tiers: "
             + ", ".join(t.tier_id for t in ADMISSION_TIERS)
             + f". Detail: {json.dumps(report['tiers'], sort_keys=True)}"
         )
@@ -509,7 +717,9 @@ def enforce_admission_on_cluster(
         if not attempt or is_superseded_attempt(attempt):
             continue
         name = str(job["metadata"]["name"])
-        should_run = attempt in admitted_set or attempt in c7_attempts
+        should_run = (
+            attempt in admitted_set or attempt in c7_attempts
+        ) and not is_scientifically_blocked_attempt(attempt)
         currently_suspended = bool(job.get("spec", {}).get("suspend"))
         if should_run and currently_suspended:
             if set_job_suspend(
@@ -539,4 +749,5 @@ def enforce_admission_on_cluster(
         "suspended_sample": suspended[:20],
         "unsuspended_sample": unsuspended[:20],
         "wall_clock_estimates": build_wall_clock_estimates(summary),
+        "achievable_episode_estimates": build_achievable_episode_estimates(summary),
     }

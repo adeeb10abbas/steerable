@@ -1,0 +1,47 @@
+{
+  "schema_version": "v4-wave-admission-reprioritization-v1",
+  "observed_at_utc": "2026-09-07T14:10:00Z",
+  "trigger": "Horizontal G3 confirmatory failed at scale 0.5; flange-offset fix opened C2/C6 live controls; C5/horizontal live controls explicitly blocked",
+  "evidence": {
+    "horizontal_g3_gate_decision": "artifacts/online_correction_v4/qualification/20260908_horizontal_g3_gate_decision_g3r20260908g.json",
+    "natural_grasp_status": "artifacts/online_correction_v4/qualification/20260908_natural_grasp_live_control_status_by_fixture.json",
+    "g2_determinism_attestation": "artifacts/online_correction_v4/qualification/20260908_horizontal_g2_gpu_determinism_attestation.json",
+    "flange_offset_fix_commits": ["52973dfb", "493dbd9c", "2a827a16", "79fd87c3"]
+  },
+  "revised_admission_order": [
+    "natural_grasp_live_control (open fixtures only)",
+    "reference_binding_g3 g3rb20260908v — primary A100-80GB",
+    "c6_containment_g3 g3c6p20260908a10080g — parallel A100-40GB/B200 stratum",
+    "horizontal_g2_evidence g2r20260908g/g2gpu20260908g — backfill, non-blocking",
+    "c5_vertical_g3 g3c5p20260908a10080g — deprioritized"
+  ],
+  "scientifically_blocked": {
+    "attempt_ids": ["g3r20260908g"],
+    "episodes_blocked": 9728,
+    "reason": "G3 confirmatory 128-seed wave failed shrinking-area information gate on 64/128 seeds; entire scale ladder rejected"
+  },
+  "deprioritized": {
+    "attempt_ids": ["g3c5p20260908a10080g"],
+    "episodes_blocked": 1536,
+    "reason": "Vertical positive live control fails on IK/workspace reachability"
+  },
+  "achievable_episode_scope": {
+    "C7_object_pair": 768,
+    "C6_containment": 768,
+    "C2_reference_binding": 4096,
+    "C8_second_stack": 768,
+    "total": 6400
+  },
+  "blocked_episode_scope": {
+    "C1_C3_C4_horizontal": 9728,
+    "C5_vertical": 1536,
+    "total": 11264
+  },
+  "enforcement_result": {
+    "admitted_attempts": ["g3rb20260908v", "g3c6p20260908a10080g"],
+    "jobs_suspended": 73,
+    "jobs_unsuspended": 129,
+    "horizontal_g3_suspended": 128,
+    "g2_wave_complete": true
+  }
+}

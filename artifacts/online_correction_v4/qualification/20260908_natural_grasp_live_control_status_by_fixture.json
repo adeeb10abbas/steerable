@@ -1,7 +1,7 @@
 {
   "schema_version": "v4-natural-grasp-live-control-status-v1",
   "registry_path": "artifacts/online_correction_v4/setup/natural_grasp_live_control_registry.json",
-  "observed_at_utc": "2026-09-08T12:15:00Z",
+  "observed_at_utc": "2026-09-07T13:28:00Z",
   "gate_requirement": "Each fixture requires passed scripted_grasp and hold_only controls at dispatch study_commit",
   "fixtures": {
     "object_pair": {
@@ -23,37 +23,51 @@
     "vertical": {
       "platform": "isaac",
       "scripted_grasp": {
-        "status": "missing",
-        "runner": "not_yet_implemented (horizontal template at tools/run_v4_horizontal_natural_grasp_live_positive_control.py)"
+        "status": "finding",
+        "attempt_id": "g3ngp20260908vp6",
+        "receipt": "artifacts/online_correction_v4/qualification/20260908_vertical_natural_grasp_live_positive_control_g3ngp20260908vp6.json",
+        "finding": "artifacts/online_correction_v4/qualification/20260908_vertical_natural_grasp_live_control_finding_g3ngp20260908vp6.json",
+        "study_commit": "00885cd772a67cb99b8fc15aebfac2b568b10cc6",
+        "verdict": "blocking_setup_defect"
       },
       "hold_only": {
-        "status": "missing"
+        "status": "passed",
+        "attempt_id": "g3ngp20260908vn6",
+        "receipt": "artifacts/online_correction_v4/qualification/20260908_vertical_natural_grasp_live_negative_control_g3ngp20260908vn6.json",
+        "study_commit": "00885cd772a67cb99b8fc15aebfac2b568b10cc6"
       },
-      "dispatch_gate": "blocked"
+      "dispatch_gate": "blocked_on_positive_control",
+      "diagnosis": "artifacts/online_correction_v4/qualification/20260908_vertical_natural_grasp_live_control_diagnosis.json"
     },
     "containment": {
       "platform": "isaac",
       "scripted_grasp": {
-        "status": "missing",
-        "runner": "not_yet_implemented (horizontal template at tools/run_v4_horizontal_natural_grasp_live_positive_control.py)"
+        "status": "finding",
+        "attempt_id": "g3ngp20260908cp3",
+        "receipt": "artifacts/online_correction_v4/qualification/20260908_containment_natural_grasp_live_positive_control_g3ngp20260908cp3.json",
+        "finding": "artifacts/online_correction_v4/qualification/20260908_containment_natural_grasp_live_control_finding_g3ngp20260908cp3.json",
+        "study_commit": "c5ff489454b5a1ac141c8d2640d10bf55d683789",
+        "verdict": "blocking_setup_defect"
       },
       "hold_only": {
-        "status": "missing"
+        "status": "passed",
+        "attempt_id": "g3ngp20260908cn3",
+        "receipt": "artifacts/online_correction_v4/qualification/20260908_containment_natural_grasp_live_negative_control_g3ngp20260908cn3.json",
+        "study_commit": "c5ff489454b5a1ac141c8d2640d10bf55d683789"
       },
-      "dispatch_gate": "blocked"
+      "dispatch_gate": "blocked_on_positive_control"
     },
     "horizontal": {
       "platform": "isaac",
       "scripted_grasp": {
-        "status": "runner_available",
-        "runner": "tools/run_v4_horizontal_natural_grasp_live_positive_control.py",
-        "registry_entry": "not_registered"
+        "status": "finding",
+        "diagnosis": "artifacts/online_correction_v4/qualification/20260908_horizontal_natural_grasp_live_control_diagnosis.json"
       },
       "hold_only": {
-        "status": "runner_available",
-        "registry_entry": "not_registered"
+        "status": "passed",
+        "attempt_id": "horizng20260908negb"
       },
-      "dispatch_gate": "blocked_on_registry"
+      "dispatch_gate": "blocked_on_positive_control"
     }
   }
 }

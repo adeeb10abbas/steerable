@@ -1,0 +1,134 @@
+{
+  "attempt_id": "g3ngp20260908vn6",
+  "behavioral_episode_count": 0,
+  "control_mode": "hold_only",
+  "detector_class": "NaturalGraspDetector",
+  "detector_config": {
+    "dwell_s": 0.2,
+    "min_lift_m": 0.04,
+    "relative_drift_max_m": 0.01,
+    "trigger_deadline_s": 40.0
+  },
+  "detector_sample_count": 602,
+  "detector_samples_tail": [
+    {
+      "contact": false,
+      "control_tick": 595,
+      "event": null,
+      "grasp_occurred": false,
+      "lift_m": -0.0029999539256095886,
+      "relative_drift_m": 0.4413097610364184,
+      "sim_time_s": 39.666666666666664,
+      "trigger_eligible": false
+    },
+    {
+      "contact": false,
+      "control_tick": 596,
+      "event": null,
+      "grasp_occurred": false,
+      "lift_m": -0.0029997900128364563,
+      "relative_drift_m": 0.441309422174661,
+      "sim_time_s": 39.733333333333334,
+      "trigger_eligible": false
+    },
+    {
+      "contact": false,
+      "control_tick": 597,
+      "event": null,
+      "grasp_occurred": false,
+      "lift_m": -0.00299999862909317,
+      "relative_drift_m": 0.44130976574227065,
+      "sim_time_s": 39.8,
+      "trigger_eligible": false
+    },
+    {
+      "contact": false,
+      "control_tick": 598,
+      "event": null,
+      "grasp_occurred": false,
+      "lift_m": -0.0030000582337379456,
+      "relative_drift_m": 0.44130978229874035,
+      "sim_time_s": 39.86666666666667,
+      "trigger_eligible": false
+    },
+    {
+      "contact": false,
+      "control_tick": 599,
+      "event": null,
+      "grasp_occurred": false,
+      "lift_m": -0.0029999464750289917,
+      "relative_drift_m": 0.44130964863446587,
+      "sim_time_s": 39.93333333333333,
+      "trigger_eligible": false
+    },
+    {
+      "contact": false,
+      "control_tick": 600,
+      "event": null,
+      "grasp_occurred": false,
+      "lift_m": -0.003000035881996155,
+      "relative_drift_m": 0.44130970368607075,
+      "sim_time_s": 40.0,
+      "trigger_eligible": false
+    },
+    {
+      "contact": false,
+      "control_tick": 601,
+      "event": null,
+      "grasp_occurred": false,
+      "lift_m": -0.0029999688267707825,
+      "relative_drift_m": 0.4413096680186982,
+      "sim_time_s": 40.06666666666666,
+      "trigger_eligible": false
+    },
+    {
+      "contact": false,
+      "control_tick": 602,
+      "event": null,
+      "grasp_occurred": false,
+      "lift_m": -0.003000006079673767,
+      "relative_drift_m": 0.44130971546747094,
+      "sim_time_s": 40.13333333333333,
+      "trigger_eligible": false
+    }
+  ],
+  "environment_seed": 2100020000,
+  "fixture_id": "vertical",
+  "goal": "above",
+  "grasp_occurred": false,
+  "model_request_count": 0,
+  "native_control_dt_s": 0.06666666666666667,
+  "passed": true,
+  "runtime_identity": {
+    "droid_robolab_sha256": "37e79b49fb2c02378904fd5a7041b40f7c823f0e7ca98d471d34c8c9cbca5106",
+    "gpu": {
+      "driver_version": "580.95.05",
+      "index": "0",
+      "name": "NVIDIA A40",
+      "uuid": "GPU-7c98d85a-00a0-e4fc-4a56-1e7418d7b5ab"
+    },
+    "natural_grasp_detector_module_sha256": "4e6cd107c2b734b682164af0be832a06f4dfaef04824460718e1c6f35c48048a",
+    "pod": "v4-v-ngpc-g3ngp20260908vn6-2b19d907b6-job-v6z85",
+    "pod_uid": "0cda391f-6608-4d87-a094-6f9aaad448cd",
+    "positive_control_runner_sha256": "0cfcbb09f36d7b86c589610d409d2c8bc91757ec32666970da032c350f7316dc",
+    "robolab_checkout": {
+      "commit": "0aef241fb088ca21bb4ebd24448940ed56620d17",
+      "path": "/data/users/ali/vla_wam/external/RoboLab-11142d4",
+      "tracked_diff_empty": true
+    },
+    "study_checkout": {
+      "commit": "00885cd772a67cb99b8fc15aebfac2b568b10cc6",
+      "path": "/data/users/ali/vla_wam/src/steerable-v4-g3_c5c6-00885cd7-g3ngp20260908vn6",
+      "tracked_diff_empty": true
+    }
+  },
+  "scale": 0.5,
+  "schema_version": "v4-vertical-natural-grasp-live-positive-control-v1",
+  "scripted_grasp_stages": {},
+  "scripted_trajectory_passed": true,
+  "status": "passed",
+  "trajectory_tick_count": 602,
+  "trigger_eligible": false,
+  "trigger_event": null,
+  "verdict": "negative_control_passed"
+}

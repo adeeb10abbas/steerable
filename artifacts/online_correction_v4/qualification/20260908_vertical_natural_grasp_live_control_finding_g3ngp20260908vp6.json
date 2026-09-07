@@ -1,0 +1,36 @@
+{
+  "schema_version": "v4-vertical-natural-grasp-live-control-finding-v1",
+  "recorded_at_utc": "2026-09-07T13:28:00Z",
+  "fixture_id": "vertical",
+  "attempt_id": "g3ngp20260908vp6",
+  "control_mode": "scripted_grasp",
+  "environment_seed": 2100020000,
+  "scale": 0.5,
+  "goal": "above",
+  "study_commit": "00885cd772a67cb99b8fc15aebfac2b568b10cc6",
+  "gpu_product": "NVIDIA-A40",
+  "receipt_path": "artifacts/online_correction_v4/qualification/20260908_vertical_natural_grasp_live_positive_control_g3ngp20260908vp6.json",
+  "verdict": "blocking_setup_defect",
+  "passed": false,
+  "trigger_eligible": false,
+  "scripted_trajectory_passed": false,
+  "scripted_grasp_stages": {
+    "goal_satisfied": false,
+    "grasped": false,
+    "released": true,
+    "stably_placed": true,
+    "transported": false
+  },
+  "diagnosis": "After registry shelf-geometry repair at 00885cd7, live positive control at seed 2100020000 still fails before NaturalGraspDetector eligibility: scripted controller did not achieve grasp or transport. Recorded as fixture setup/controller finding; thresholds were not adjusted.",
+  "registry_action": "do_not_register_passed_control",
+  "negative_control_attempt_id": "g3ngp20260908vn6",
+  "negative_control_status": "passed",
+  "negative_control_receipt_path": "artifacts/online_correction_v4/qualification/20260908_vertical_natural_grasp_live_negative_control_g3ngp20260908vn6.json",
+  "negative_control_receipt_sha256": "8447720d940767e9688eebe4512e7d0695f15db4a79789035f42b9a9fd75835e",
+  "negative_control_summary": {
+    "passed": true,
+    "trigger_eligible": false,
+    "verdict": "negative_control_passed",
+    "control_mode": "hold_only"
+  }
+}

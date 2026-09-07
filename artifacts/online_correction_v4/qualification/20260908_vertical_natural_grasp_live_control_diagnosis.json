@@ -1,0 +1,47 @@
+{
+  "schema_version": "v4-vertical-natural-grasp-live-control-diagnosis-v1",
+  "campaign_id": "online_correction_v4",
+  "fixture_id": "vertical",
+  "recorded_at_utc": "2026-09-07T13:28:00Z",
+  "infra_repair_chain": [
+    {
+      "commit": "24cc32c1b234947f97e242f77728c90c2cec92c8",
+      "issue": "g3_scene_state omitted shelf objects",
+      "outcome": "still failed: kinematic shelves lack PhysX prim_paths"
+    },
+    {
+      "commit": "415d1a0beec6962e1f9c9ed087206a01427fff8f",
+      "issue": "cfg prim_path fallback insufficient on shelf Xforms",
+      "outcome": "still failed: no cfg.prim_path on shelf assets"
+    },
+    {
+      "commit": "00885cd772a67cb99b8fc15aebfac2b568b10cc6",
+      "issue": "vertical geometry required shelf AABBs",
+      "outcome": "resolved infra; geometry derives shelf volumes from reset-registry support_geometry"
+    }
+  ],
+  "negative_control": {
+    "attempt_id": "g3ngp20260908vn6",
+    "passed": true,
+    "study_commit": "00885cd772a67cb99b8fc15aebfac2b568b10cc6",
+    "receipt_path": "artifacts/online_correction_v4/qualification/20260908_vertical_natural_grasp_live_negative_control_g3ngp20260908vn6.json",
+    "trigger_eligible": false,
+    "verdict": "negative_control_passed"
+  },
+  "positive_control": {
+    "attempt_id": "g3ngp20260908vp6",
+    "passed": false,
+    "study_commit": "00885cd772a67cb99b8fc15aebfac2b568b10cc6",
+    "receipt_path": "artifacts/online_correction_v4/qualification/20260908_vertical_natural_grasp_live_positive_control_g3ngp20260908vp6.json",
+    "finding_path": "artifacts/online_correction_v4/qualification/20260908_vertical_natural_grasp_live_control_finding_g3ngp20260908vp6.json",
+    "verdict": "blocking_setup_defect",
+    "trigger_eligible": false,
+    "scripted_grasp_stages": {
+      "grasped": false,
+      "transported": false,
+      "goal_satisfied": false
+    }
+  },
+  "dispatch_gate": "blocked_on_positive_control",
+  "specificity_evidence": "hold_only negative control did not fire trigger_eligible across full trigger_deadline_s window at pin 00885cd7"
+}

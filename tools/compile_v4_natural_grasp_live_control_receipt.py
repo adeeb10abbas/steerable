@@ -59,12 +59,13 @@ def main(argv: list[str] | None = None) -> int:
         raise FileExistsError(f"refusing to overwrite: {args.out}")
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    digest = hashlib.sha256(args.out.read_bytes()).hexdigest()
+    out_path = args.out.resolve()
+    digest = hashlib.sha256(out_path.read_bytes()).hexdigest()
     dispatch_gates.record_passed_natural_grasp_live_control(
         fixture_id=args.fixture_id,
         control_mode=args.control_mode,
         attempt_id=args.attempt_id,
-        receipt_path=str(args.out.relative_to(ROOT)),
+        receipt_path=str(out_path.relative_to(ROOT.resolve())),
         receipt_sha256=digest,
         study_commit=args.study_commit.lower(),
         registry_path=args.registry,

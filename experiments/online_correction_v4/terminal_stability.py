@@ -55,6 +55,8 @@ def evaluate_horizontal_terminal_sample(
     orientation_drift_rad: float = 0.0,
     predicates_available: bool = True,
     missing_fields: tuple[str, ...] = (),
+    allowed_support_contacts: frozenset[str] = HORIZONTAL_SUPPORT_CONTACTS,
+    containment_contacts: frozenset[str] = frozenset(),
 ) -> TerminalPhysicalPredicates:
     """Evaluate one passive-settling sample using registered velocity and pose tolerances."""
     if not predicates_available:
@@ -80,13 +82,23 @@ def evaluate_horizontal_terminal_sample(
     else:
         support_evidence_available = True
         missing = tuple(missing_fields)
-        allowed_support = detached and any(
-            contact in HORIZONTAL_SUPPORT_CONTACTS for contact in support_contacts
+        allowed_containment = detached and any(
+            contact in containment_contacts for contact in support_contacts
+        )
+        allowed_support = detached and (
+            allowed_containment
+            or any(
+                contact in allowed_support_contacts
+                for contact in support_contacts
+            )
         )
 
     return TerminalPhysicalPredicates(
         available=True,
         allowed_support=allowed_support,
+        allowed_containment=(
+            False if support_contacts is None else allowed_containment
+        ),
         stable_for_dwell=stable_for_dwell,
         linear_speed_m_s=linear_speed_m_s,
         angular_speed_rad_s=angular_speed_rad_s,
@@ -109,6 +121,7 @@ def target_object_contact_names(
         lowered = str(name).lower()
         if target_object.lower() not in lowered:
             continue
-        if "table" in lowered:
-            labels.add("table")
+        for support_name in ("table", "shelf_top", "shelf_bottom", "bowl"):
+            if support_name in lowered:
+                labels.add(support_name)
     return tuple(sorted(labels))

@@ -75,6 +75,39 @@ class ScriptedSeedOrderingTests(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             runner.expected_scripted_seed_checks(plan=changed, mode="moving")
 
+    def test_fixture_specific_check_orders_use_registered_goals(self) -> None:
+        cases = {
+            "vertical": (6, 2),
+            "containment": (3, 1),
+        }
+        for fixture_id, (stationary_count, moving_count) in cases.items():
+            with self.subTest(fixture_id=fixture_id):
+                plan = json.loads(
+                    (
+                        ROOT
+                        / "artifacts/online_correction_v4/setup/"
+                        f"{fixture_id}_g3_plan.candidate.json"
+                    ).read_text(encoding="utf-8")
+                )
+                self.assertEqual(
+                    len(
+                        runner.expected_scripted_seed_checks(
+                            plan=plan,
+                            mode="stationary",
+                        )
+                    ),
+                    stationary_count,
+                )
+                self.assertEqual(
+                    len(
+                        runner.expected_scripted_seed_checks(
+                            plan=plan,
+                            mode="moving",
+                        )
+                    ),
+                    moving_count,
+                )
+
     def test_check_slug_is_stable(self) -> None:
         self.assertEqual(runner.check_slug("left", "midpoint"), "left__midpoint")
 

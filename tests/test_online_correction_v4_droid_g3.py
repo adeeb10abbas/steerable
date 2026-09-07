@@ -9,12 +9,17 @@ from experiments.online_correction_v4.droid_g3 import (
     DroidG3Error,
     bounds_world_to_task,
     classify_contacts,
+    geometry_from_scene_for_fixture,
     goal_area_case,
+    goal_set_for_reference,
     horizontal_geometry_from_scene,
     physics_sampling_stride,
     reference_is_supported,
     scenario_duration_s,
     task_frame_from_evidence,
+)
+from experiments.online_correction_v4.droid_task_files.constants import (
+    fixture_object_spec,
 )
 
 
@@ -225,6 +230,74 @@ class DroidG3GeometryTests(unittest.TestCase):
             )
         )
 
+    def test_vertical_goal_regions_bind_live_shelf_surfaces(self) -> None:
+        scene = _scene()
+        scene["objects"].update(
+            {
+                "cube": scene["objects"]["rubiks_cube"],
+                "shelf_top": {
+                    "world_aabb_m": _bounds(-0.2, 0.2, -0.2, 0.2, 0.40, 0.42)
+                },
+                "shelf_bottom": {
+                    "world_aabb_m": _bounds(-0.2, 0.2, -0.2, 0.2, 0.10, 0.12)
+                },
+            }
+        )
+        geometry = geometry_from_scene_for_fixture(
+            fixture_id="vertical",
+            task_frame_evidence=FRAME,
+            scene_state=scene,
+            support_edge_margin_m=0.005,
+            fixture_geometry={"horizontal_overlap_min_m": 0.03},
+        )
+        above = goal_set_for_reference(
+            geometry=geometry,
+            relation="above",
+            reference_position_world=(0.0, 0.0, 0.27),
+            clearance_m=0.02,
+        )
+        below = goal_set_for_reference(
+            geometry=geometry,
+            relation="below",
+            reference_position_world=(0.0, 0.0, 0.27),
+            clearance_m=0.02,
+        )
+        self.assertFalse(above.empty)
+        self.assertFalse(below.empty)
+        assert above.region is not None and below.region is not None
+        self.assertGreater(above.region.z_min, below.region.z_max)
+
+    def test_containment_goal_region_uses_registry_interior(self) -> None:
+        scene = _scene()
+        scene["objects"]["cube"] = scene["objects"]["rubiks_cube"]
+        geometry = geometry_from_scene_for_fixture(
+            fixture_id="containment",
+            task_frame_evidence=FRAME,
+            scene_state=scene,
+            support_edge_margin_m=0.005,
+            fixture_geometry={
+                "interior_reference_local_m": {
+                    "x_min": -0.055,
+                    "x_max": 0.055,
+                    "y_min": -0.055,
+                    "y_max": 0.055,
+                    "z_min": 0.0075,
+                    "z_max": 0.08,
+                },
+                "wall_clearance_m": 0.008,
+            },
+        )
+        inside = goal_set_for_reference(
+            geometry=geometry,
+            relation="inside",
+            reference_position_world=(0.0, 0.0, 0.025),
+            clearance_m=0.02,
+        )
+        self.assertFalse(inside.empty)
+        assert inside.region is not None
+        self.assertLess(inside.region.x_min, inside.region.x_max)
+        self.assertLess(inside.region.y_min, inside.region.y_max)
+
 
 class DroidG3ContactTests(unittest.TestCase):
     def test_only_supported_table_contacts_pass(self) -> None:
@@ -265,6 +338,18 @@ class DroidG3ContactTests(unittest.TestCase):
                 {"bowl__table": math.nan},
                 active_force_threshold_n=0.05,
             )
+
+    def test_vertical_reference_requires_middle_shelf_support(self) -> None:
+        result = classify_contacts(
+            {
+                "cube__table": 1.0,
+                "bowl__shelf_middle": 2.0,
+            },
+            active_force_threshold_n=0.05,
+            fixture_spec=fixture_object_spec("vertical"),
+        )
+        self.assertTrue(result["support_valid"])
+        self.assertFalse(result["unmodeled_collision"])
 
 
 if __name__ == "__main__":

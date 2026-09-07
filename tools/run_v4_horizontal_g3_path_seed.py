@@ -24,6 +24,8 @@ FIXTURE_PROMPTS = {
         "Place the sponge so that the sponge is left of the tray. "
         "Use the robot's fixed viewpoint for left, right, front, and behind."
     ),
+    "vertical": "Place the cube so that the cube is above the bowl.",
+    "containment": "Place the cube inside the bowl.",
 }
 
 
@@ -303,13 +305,20 @@ def evaluate_path_sample(
         reasons.append("unmodeled_collision")
 
     reference_position = tuple(float(value) for value in measured_reference_world)
-    reference_supported = reference_is_supported(
-        frame=frame,
-        reference_position_world=reference_position,
-        table_bounds_task=table_bounds,
-        reference_footprint=reference_footprint,
-        edge_margin_m=edge_margin_m,
-    )
+    if geometry.get("fixture_id") == "vertical":
+        supported_by_object = contacts.get("supported_by_object", {})
+        reference_supported = bool(
+            isinstance(supported_by_object, Mapping)
+            and supported_by_object.get(geometry["reference_object"])
+        )
+    else:
+        reference_supported = reference_is_supported(
+            frame=frame,
+            reference_position_world=reference_position,
+            table_bounds_task=table_bounds,
+            reference_footprint=reference_footprint,
+            edge_margin_m=edge_margin_m,
+        )
     if not reference_supported:
         reasons.append("reference_not_supported")
 
@@ -760,6 +769,7 @@ def main(argv: list[str] | None = None) -> int:
             required_status=MODEL_BLIND_CANDIDATE_STATUS,
             expected_fixture_id=args.fixture_id,
         )
+        registry_payload = json.loads(registry_path.read_bytes())
         if args.environment_seed not in registry.positions_by_env_seed:
             raise RuntimeError("environment seed is absent from reset registry")
 
@@ -800,7 +810,7 @@ def main(argv: list[str] | None = None) -> int:
             prompt_text=prompt,
             prompt_sha256=prompt_sha256,
             env_seed=args.environment_seed,
-            goal="left",
+            goal=str(plan["path_sweep"]["goals"][0]),
         )
         runtime_identity = {
             "study_checkout": study_identity,
@@ -868,6 +878,9 @@ def main(argv: list[str] | None = None) -> int:
             support_edge_margin_m=float(
                 geometry_contract["support_edge_margin_m"]
             ),
+            fixture_geometry=registry_payload["scene_receipt"][
+                "support_geometry"
+            ],
         )
         shared_dir = output_dir / "registered_reset"
         reset_attestation_artifact = _write_json(
@@ -901,7 +914,7 @@ def main(argv: list[str] | None = None) -> int:
         check_observations: list[dict[str, Any]] = []
         check_artifacts: dict[str, Any] = {}
 
-        for goal, scenario in expected_path_check_keys():
+        for goal, scenario in expected_path_check_keys(fixture_id):
             observation, artifacts = _run_path_check(
                 env=env,
                 backend=env.backend,

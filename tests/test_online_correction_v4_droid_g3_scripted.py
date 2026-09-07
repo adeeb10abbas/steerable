@@ -223,6 +223,29 @@ class TargetSelectionTests(unittest.TestCase):
         task = self.frame.world_to_task(world)
         self.assertTrue(goal.region is not None and goal.region.point_inside(task))
 
+    def test_nonplanar_relations_select_region_center(self) -> None:
+        region = geom.AxisAlignedBox(-0.04, 0.02, -0.03, 0.05, 0.12, 0.16)
+        goal = geom.GoalSetResult(
+            region=region,
+            empty=False,
+            empty_cause=None,
+            projection_kind="terminal",
+            component_id="test",
+        )
+        for relation in ("above", "below", "inside"):
+            target = select_robust_target_task(
+                frame=self.frame,
+                goal=goal,
+                cube_position_world=self.cube,
+                relation=relation,
+                inset_m=self.inset,
+                table_top_z_task=self.table_top,
+                object_half_up=self.half_up,
+            )
+            for observed, expected in zip(target, (-0.01, 0.01, 0.14)):
+                self.assertAlmostEqual(observed, expected)
+            self.assertTrue(region.point_inside(target))
+
 
 class ConfigValidationTests(unittest.TestCase):
     def test_rejects_nonpositive_ticks(self) -> None:

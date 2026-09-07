@@ -23,6 +23,8 @@ FIXTURE_PROMPTS = {
         "Place the sponge so that the sponge is left of the tray. "
         "Use the robot's fixed viewpoint for left, right, front, and behind."
     ),
+    "vertical": "Place the cube so that the cube is above the bowl.",
+    "containment": "Place the cube inside the bowl.",
 }
 SCRIPTED_MODES = ("stationary", "moving")
 STATIONARY_CHECK_COUNT = 12
@@ -205,8 +207,8 @@ def expected_scripted_seed_checks(
 ) -> tuple[tuple[str, str], ...]:
     """Return goal/reference pairs for one scripted seed job in declared order."""
     from experiments.online_correction_v4.model_blind_g3 import (
-        HORIZONTAL_GOALS,
         REFERENCE_POSITIONS,
+        goals_for_fixture,
     )
 
     if mode not in SCRIPTED_MODES:
@@ -214,13 +216,18 @@ def expected_scripted_seed_checks(
     scripted = plan.get("scripted_controller")
     if not isinstance(scripted, Mapping):
         raise RuntimeError("G3 plan lacks scripted checks")
+    expected_goals = list(goals_for_fixture(str(plan.get("fixture_id"))))
     if mode == "stationary":
-        positions = scripted.get("stationary", {}).get("reference_positions")
+        stationary = scripted.get("stationary", {})
+        positions = stationary.get("reference_positions")
         if list(positions) != list(REFERENCE_POSITIONS):
             raise RuntimeError("G3 stationary scripted reference positions differ")
+        goals = stationary.get("goals")
+        if goals != expected_goals:
+            raise RuntimeError("G3 stationary scripted goals differ")
         return tuple(
             (goal, position)
-            for goal in HORIZONTAL_GOALS
+            for goal in goals
             for position in REFERENCE_POSITIONS
         )
     moving = scripted.get("moving")
@@ -228,9 +235,10 @@ def expected_scripted_seed_checks(
         raise RuntimeError("G3 plan lacks moving scripted checks")
     if moving.get("scenario") != "move_stop":
         raise RuntimeError("G3 moving scripted scenario differs")
-    if moving.get("goals") != list(HORIZONTAL_GOALS):
+    goals = moving.get("goals")
+    if goals != expected_goals:
         raise RuntimeError("G3 moving scripted goals differ")
-    return tuple((goal, "endpoint") for goal in HORIZONTAL_GOALS)
+    return tuple((goal, "endpoint") for goal in goals)
 
 
 def validate_scripted_seed_gate_inputs(
@@ -345,7 +353,17 @@ def compile_scripted_seed_summary(
     registered_reset: Mapping[str, Any],
     fixture_id: str = "horizontal",
 ) -> dict[str, Any]:
-    expected_count = STATIONARY_CHECK_COUNT if mode == "stationary" else MOVING_CHECK_COUNT
+    from experiments.online_correction_v4.model_blind_g3 import (
+        REFERENCE_POSITIONS,
+        goals_for_fixture,
+    )
+
+    goal_count = len(goals_for_fixture(fixture_id))
+    expected_count = (
+        goal_count * len(REFERENCE_POSITIONS)
+        if mode == "stationary"
+        else goal_count
+    )
     if len(check_records) != expected_count:
         raise RuntimeError(
             f"scripted seed summary requires exactly {expected_count} check records"
@@ -742,6 +760,7 @@ def main(argv: list[str] | None = None) -> int:
             required_status=MODEL_BLIND_CANDIDATE_STATUS,
             expected_fixture_id=args.fixture_id,
         )
+        registry_payload = json.loads(registry_path.read_bytes())
         if args.environment_seed not in registry.positions_by_env_seed:
             raise RuntimeError("environment seed is absent from reset registry")
 
@@ -761,6 +780,7 @@ def main(argv: list[str] | None = None) -> int:
             f"{args.mode}-{args.environment_seed}-scale-{args.scale:g}"
         )
         prompt_sha256 = sha256_bytes(prompt.encode("utf-8"))
+        initial_goal = str(plan["scripted_controller"]["stationary"]["goals"][0])
         queue_row, queue_row_sha256 = write_queue_row(
             output_dir=output_dir,
             episode_id=episode_id,
@@ -768,7 +788,7 @@ def main(argv: list[str] | None = None) -> int:
             prompt_text=prompt,
             prompt_sha256=prompt_sha256,
             env_seed=args.environment_seed,
-            goal="left",
+            goal=initial_goal,
         )
         runtime_identity = {
             "study_checkout": study_identity,
@@ -810,7 +830,7 @@ def main(argv: list[str] | None = None) -> int:
             fixture=fixture,
             env_seed=args.environment_seed,
             episode_id=episode_id,
-            goal="left",
+            goal=initial_goal,
             prompt_text=prompt,
             prompt_sha256=prompt_sha256,
             policy_id="model_blind_no_policy",
@@ -836,6 +856,9 @@ def main(argv: list[str] | None = None) -> int:
                 task_frame_evidence=task_frame_dict,
                 scene_state=initial_scene,
                 support_edge_margin_m=float(geometry_contract["support_edge_margin_m"]),
+                fixture_geometry=registry_payload["scene_receipt"][
+                    "support_geometry"
+                ],
             )
         else:
             geometry = geometry_from_scene_for_fixture(

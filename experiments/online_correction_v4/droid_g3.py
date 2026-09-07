@@ -12,10 +12,14 @@ from experiments.online_correction_v4.droid_task_files.constants import (
 )
 from experiments.online_correction_v4.geometry import (
     AxisAlignedBox,
+    ContainmentSpec,
     ObjectFootprint,
     PlanarRelationSpec,
+    ShelfRelationSpec,
     TaskFrame,
+    build_containment_goal_set,
     build_planar_goal_set,
+    build_shelf_goal_set,
     planar_goal_area,
     shrinking_area_fraction,
 )
@@ -219,15 +223,82 @@ def geometry_from_scene_for_fixture(
     task_frame_evidence: Mapping[str, Any],
     scene_state: Mapping[str, Any],
     support_edge_margin_m: float,
+    fixture_geometry: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     spec = fixture_object_spec(fixture_id)
-    return planar_geometry_from_scene(
+    geometry = planar_geometry_from_scene(
         task_frame_evidence=task_frame_evidence,
         scene_state=scene_state,
         support_edge_margin_m=support_edge_margin_m,
         target_object=spec.target_object,
         reference_object=spec.reference_object,
     )
+    geometry["fixture_id"] = fixture_id
+    geometry["target_object"] = spec.target_object
+    geometry["reference_object"] = spec.reference_object
+    objects = scene_state.get("objects")
+    assert isinstance(objects, Mapping)
+    if fixture_id == "vertical":
+        if not isinstance(fixture_geometry, Mapping):
+            raise DroidG3Error("vertical fixture geometry is unavailable")
+        horizontal_overlap = fixture_geometry.get("horizontal_overlap_min_m")
+        if (
+            isinstance(horizontal_overlap, bool)
+            or not isinstance(horizontal_overlap, (int, float))
+            or not math.isfinite(float(horizontal_overlap))
+            or float(horizontal_overlap) < 0
+        ):
+            raise DroidG3Error("vertical horizontal overlap is invalid")
+        geometry["horizontal_overlap_min_m"] = float(horizontal_overlap)
+        target_half_up = geometry["target_footprint"].half_up
+        for scene_name, result_name in (
+            ("shelf_top", "top_shelf_goal_volume"),
+            ("shelf_bottom", "bottom_shelf_goal_volume"),
+        ):
+            shelf = objects.get(scene_name)
+            if not isinstance(shelf, Mapping):
+                raise DroidG3Error(f"vertical scene lacks {scene_name}")
+            physical = bounds_world_to_task(
+                geometry["frame"],
+                shelf.get("world_aabb_m", {}),
+            )
+            tolerance = 0.002
+            geometry[result_name] = AxisAlignedBox(
+                physical.x_min,
+                physical.x_max,
+                physical.y_min,
+                physical.y_max,
+                physical.z_max - tolerance,
+                physical.z_max + 2.0 * target_half_up + tolerance,
+            )
+    elif fixture_id == "containment":
+        if not isinstance(fixture_geometry, Mapping):
+            raise DroidG3Error("containment fixture geometry is unavailable")
+        raw_bounds = fixture_geometry.get("interior_reference_local_m")
+        if not isinstance(raw_bounds, Mapping):
+            raise DroidG3Error("containment interior bounds are unavailable")
+        try:
+            local_bounds = AxisAlignedBox(
+                float(raw_bounds["x_min"]),
+                float(raw_bounds["x_max"]),
+                float(raw_bounds["y_min"]),
+                float(raw_bounds["y_max"]),
+                float(raw_bounds["z_min"]),
+                float(raw_bounds["z_max"]),
+            )
+        except (KeyError, TypeError, ValueError) as exc:
+            raise DroidG3Error("containment interior bounds are malformed") from exc
+        wall_clearance = fixture_geometry.get("wall_clearance_m")
+        if (
+            isinstance(wall_clearance, bool)
+            or not isinstance(wall_clearance, (int, float))
+            or not math.isfinite(float(wall_clearance))
+            or float(wall_clearance) < 0
+        ):
+            raise DroidG3Error("containment wall clearance is invalid")
+        geometry["interior_reference_local"] = local_bounds
+        geometry["wall_clearance_m"] = float(wall_clearance)
+    return geometry
 
 
 def reference_is_supported(
@@ -258,22 +329,54 @@ def goal_set_for_reference(
     reference_position_world: tuple[float, float, float],
     clearance_m: float,
 ):
-    if relation not in {"left", "right", "front", "behind"}:
-        raise DroidG3Error(f"unsupported horizontal relation: {relation!r}")
     if not math.isfinite(clearance_m) or clearance_m < 0:
         raise DroidG3Error("relation clearance must be finite and non-negative")
-    spec = PlanarRelationSpec(
-        relation=relation,  # type: ignore[arg-type]
-        clearance_m=clearance_m,
-        workspace=geometry["target_workspace"],
-        object_footprint=geometry["target_footprint"],
-        reference_footprint=geometry["reference_footprint"],
-    )
-    return build_planar_goal_set(
-        geometry["frame"],
-        spec,
-        reference_position_world,
-    )
+    fixture_id = geometry.get("fixture_id", "horizontal")
+    if fixture_id in {"horizontal", "object_pair"}:
+        if relation not in {"left", "right", "front", "behind"}:
+            raise DroidG3Error(f"unsupported planar relation: {relation!r}")
+        spec = PlanarRelationSpec(
+            relation=relation,  # type: ignore[arg-type]
+            clearance_m=clearance_m,
+            workspace=geometry["target_workspace"],
+            object_footprint=geometry["target_footprint"],
+            reference_footprint=geometry["reference_footprint"],
+        )
+        return build_planar_goal_set(
+            geometry["frame"],
+            spec,
+            reference_position_world,
+        )
+    if fixture_id == "vertical":
+        if relation not in {"above", "below"}:
+            raise DroidG3Error(f"unsupported vertical relation: {relation!r}")
+        spec = ShelfRelationSpec(
+            relation=relation,  # type: ignore[arg-type]
+            top_shelf=geometry["top_shelf_goal_volume"],
+            bottom_shelf=geometry["bottom_shelf_goal_volume"],
+            reference_footprint=geometry["reference_footprint"],
+            object_footprint=geometry["target_footprint"],
+            horizontal_overlap_min_m=geometry["horizontal_overlap_min_m"],
+        )
+        return build_shelf_goal_set(
+            geometry["frame"],
+            spec,
+            reference_position_world,
+        )
+    if fixture_id == "containment":
+        if relation != "inside":
+            raise DroidG3Error(f"unsupported containment relation: {relation!r}")
+        spec = ContainmentSpec(
+            interior_reference_local=geometry["interior_reference_local"],
+            object_footprint=geometry["target_footprint"],
+            wall_clearance_m=geometry["wall_clearance_m"],
+        )
+        return build_containment_goal_set(
+            geometry["frame"],
+            spec,
+            reference_position_world,
+        )
+    raise DroidG3Error(f"unsupported fixture for G3 goal geometry: {fixture_id!r}")
 
 
 def goal_area_case(
@@ -361,13 +464,19 @@ def classify_contacts(
     support_objects = tuple(fixture_spec.movable_objects)
     if fixture_spec.distractor_object is not None:
         support_objects = support_objects + (fixture_spec.distractor_object,)
-    supported = {
-        name: any(
-            pair in active
-            for pair in (f"{name}__table", f"table__{name}")
-        )
-        for name in support_objects
-    }
+    support_surfaces = {name: ("table",) for name in support_objects}
+    if fixture_spec.fixture_id == "vertical":
+        support_surfaces[fixture_spec.reference_object] = ("shelf_middle",)
+    supported = {}
+    allowed_pairs: set[str] = set()
+    for name, surfaces in support_surfaces.items():
+        pairs = {
+            pair
+            for surface in surfaces
+            for pair in (f"{name}__{surface}", f"{surface}__{name}")
+        }
+        supported[name] = any(pair in active for pair in pairs)
+        allowed_pairs.update(pairs)
     reference_object = fixture_spec.reference_object
     reference_robot_pairs = [
         pair
@@ -375,7 +484,6 @@ def classify_contacts(
         if reference_object in pair
         and any(token in pair for token in ("robot_all", "gripper"))
     ]
-    allowed_pairs = _contact_pairs_for_objects(support_objects)
     disallowed_pairs = sorted(pair for pair in active if pair not in allowed_pairs)
     return {
         "active_force_threshold_n": active_force_threshold_n,

@@ -228,7 +228,7 @@ def select_robust_target_task(
 ) -> Vec3:
     """Pick a robust task-frame placement point inside a nonempty planar goal set."""
     normalized = relation.strip().lower()
-    if normalized not in HORIZONTAL_RELATIONS:
+    if normalized not in {*HORIZONTAL_RELATIONS, "above", "below", "inside"}:
         raise DroidG3ScriptedError(f"unsupported relation {relation!r}")
     inset = _require_positive_finite(inset_m, "target_inset_m")
     half_up = _require_positive_finite(object_half_up, "object_half_up")
@@ -237,6 +237,15 @@ def select_robust_target_task(
         raise DroidG3ScriptedError("goal set is empty")
     region = goal.region
     cube_task = frame.world_to_task(cube_position_world)
+    if normalized in {"above", "below", "inside"}:
+        target = (
+            (region.x_min + region.x_max) / 2.0,
+            (region.y_min + region.y_max) / 2.0,
+            (region.z_min + region.z_max) / 2.0,
+        )
+        if not region.point_inside(target):
+            raise DroidG3ScriptedError("selected target lies outside goal region")
+        return target
 
     def inset_coordinate(low: float, high: float, *, from_low: bool) -> float:
         if high < low:

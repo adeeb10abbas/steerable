@@ -1111,6 +1111,15 @@ class LiveRoboLabBackend:
                 self._settling_baseline_orientation_wxyz,
                 obj_quat,
             )
+        allowed_support_contacts = frozenset({"table"})
+        containment_contacts: frozenset[str] = frozenset()
+        if self.config.fixture == "vertical":
+            allowed_support_contacts = frozenset(
+                {"shelf_top", "shelf_bottom"}
+            )
+        elif self.config.fixture == "containment":
+            allowed_support_contacts = frozenset()
+            containment_contacts = frozenset({"bowl"})
         sample = evaluate_horizontal_terminal_sample(
             detached=detached,
             linear_speed_m_s=linear_speed,
@@ -1118,6 +1127,8 @@ class LiveRoboLabBackend:
             support_contacts=self.probe_support_contacts(),
             position_drift_m=drift_m,
             orientation_drift_rad=orientation_drift,
+            allowed_support_contacts=allowed_support_contacts,
+            containment_contacts=containment_contacts,
         )
         return sample
 

@@ -20,8 +20,10 @@ if str(TOOLS) not in sys.path:
 import render_v4_k8s_lane_bundle as lane  # noqa: E402
 
 from experiments.online_correction_v4.droid_task_files.constants import (  # noqa: E402
+    CONTAINMENT_RESET_REGISTRY_SCHEMA,
     OBJECT_PAIR_RESET_REGISTRY_SCHEMA,
     RESET_REGISTRY_SCHEMA,
+    VERTICAL_RESET_REGISTRY_SCHEMA,
 )
 from experiments.online_correction_v4.model_blind_g3 import (  # noqa: E402
     plan_schema,
@@ -32,6 +34,8 @@ DEFAULT_OUTPUT = ROOT / "deploy/k8s/v4_lane_bundle/rendered-g3"
 RESET_SCHEMAS = {
     "horizontal": RESET_REGISTRY_SCHEMA,
     "object_pair": OBJECT_PAIR_RESET_REGISTRY_SCHEMA,
+    "vertical": VERTICAL_RESET_REGISTRY_SCHEMA,
+    "containment": CONTAINMENT_RESET_REGISTRY_SCHEMA,
 }
 TOP_LEVEL_KEYS = {
     "schema_version",

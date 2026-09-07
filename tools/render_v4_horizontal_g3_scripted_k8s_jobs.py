@@ -19,7 +19,10 @@ if str(TOOLS) not in sys.path:
 
 import render_v4_k8s_lane_bundle as lane  # noqa: E402
 from experiments.online_correction_v4.droid_task_files.constants import (  # noqa: E402
+    CONTAINMENT_RESET_REGISTRY_SCHEMA,
     OBJECT_PAIR_RESET_REGISTRY_SCHEMA,
+    RESET_REGISTRY_SCHEMA,
+    VERTICAL_RESET_REGISTRY_SCHEMA,
 )
 from experiments.online_correction_v4.model_blind_g3 import (  # noqa: E402
     g3_expected_seed_count,
@@ -32,12 +35,16 @@ DEFAULT_SPEC = (
 )
 DEFAULT_OUTPUT = ROOT / "deploy/k8s/v4_lane_bundle/rendered-g3-scripted"
 RESET_SCHEMAS = {
-    "horizontal": "v4-droid-horizontal-reset-registry-v1",
+    "horizontal": RESET_REGISTRY_SCHEMA,
     "object_pair": OBJECT_PAIR_RESET_REGISTRY_SCHEMA,
+    "vertical": VERTICAL_RESET_REGISTRY_SCHEMA,
+    "containment": CONTAINMENT_RESET_REGISTRY_SCHEMA,
 }
 SCRIPTED_LANE_PREFIX = {
     "horizontal": "g3hs",
     "object_pair": "g3c7s",
+    "vertical": "g3c5s",
+    "containment": "g3c6s",
 }
 SCRIPTED_MODES = ("stationary", "moving")
 AUTHORIZATION_BLOCKED = "blocked_pending_g3_path_scale_pass"

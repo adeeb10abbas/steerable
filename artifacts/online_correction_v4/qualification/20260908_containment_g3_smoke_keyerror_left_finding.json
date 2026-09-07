@@ -7,7 +7,7 @@
   "root_cause": "build_goal_area_cases hardcoded HORIZONTAL_GOALS instead of plan fixture goals",
   "error": "KeyError: 'left'",
   "mechanism": "Containment path-seed runner iterated left/right/front/behind for shrinking-area information gate, but containment plan registers only inside goal with direction_task_coefficients_by_env_seed[seed]['inside'].",
-  "shared_fix_commit": "pending",
+  "shared_fix_commit": "a1c5d9a3",
   "shared_fix_summary": "Iterate direction_by_goal keys in build_goal_area_cases rather than HORIZONTAL_GOALS constant.",
   "g3_gate_decision": "blocked_pending_fix_and_rerun",
   "next_action": "Re-dispatch g3c6 smoke and full 64-seed ladder at single pin after fix; validate both physical_translation_sign halves before confirmatory wave."

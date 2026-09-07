@@ -288,9 +288,21 @@ def main(argv: list[str] | None = None) -> int:
     if REPAIRED_POSITIVE_CONTROL.is_file():
         repaired_positive = json.loads(REPAIRED_POSITIVE_CONTROL.read_text(encoding="utf-8"))
     passed_live_controls = live_control_registry.get("passed_controls") or []
+    rb_controls = {
+        item.get("control_mode"): item
+        for item in passed_live_controls
+        if item.get("fixture_id") == "reference_binding" and item.get("status") == "passed"
+    }
+    c8_controls = {
+        item.get("control_mode"): item
+        for item in passed_live_controls
+        if item.get("fixture_id") == "second_stack" and item.get("status") == "passed"
+    }
     repair_verified = (
-        len(passed_live_controls) >= 2
-        and all(item.get("status") == "passed" for item in passed_live_controls)
+        "scripted_grasp" in rb_controls
+        and "hold_only" in rb_controls
+        and "scripted_grasp" in c8_controls
+        and "hold_only" in c8_controls
     )
     trigger_finding = (
         "blocking_setup_defect_confirmed_then_repaired"
@@ -334,8 +346,12 @@ def main(argv: list[str] | None = None) -> int:
             memo["limitations"].extend(
                 [
                     "C7 confirmatory episodes previously compiled as accepted_valid are reclassified infrastructure-invalid under inoperative NaturalGraspDetector wiring; zero successes must not appear in behavioral claims.",
-                    "C2 primary inference remains not estimable until verified common-prefix replay is recorded after the repaired trigger path passes live positive control.",
-                    "C2 and C8 full policy dispatches (4096 and 768 episodes) remain blocked until the repaired trigger path passes live positive and negative controls.",
+                    "279 pre-repair C7 episodes remain excluded from all behavioral claims under disclosed setup repair (eef_tool_length_m flange offset).",
+                    "Original campaign allocation was 17,664 policy episodes; achievable scope after disclosed scientific blocks is 6,400 (C7 768 + C6 768 + C2 4,096 + C8 768).",
+                    "C1/C3/C4 (9,728 episodes) are scientifically blocked: horizontal G3 homogeneous 128-seed wave failed shrinking-area information gates on right/behind for physical_translation_sign=-1 across half the registry.",
+                    "C5 (768 episodes) is scientifically blocked: vertical fixture IK reachability finding at confirmatory geometry.",
+                    "C2 primary inference remains not estimable until verified common-prefix replay is recorded after G3/G4-G6; live controls for reference_binding now pass under shared flange-offset repair.",
+                    "C8 confirmatory dispatch remains blocked until G7/G8, confirmatory runtime lock, and policy runner wiring complete; SimplerEnv trigger adapter is verified independently.",
                 ]
             )
         else:
@@ -383,7 +399,7 @@ def main(argv: list[str] | None = None) -> int:
         else "partial export only; preliminary — zero successes not a settled headline pending Agent B interface verification and live NaturalGraspDetector positive control"
     )
     blocked_payload = {
-        "schema_version": "v4-c7-partial-blocked-scope-v1",
+        "schema_version": "v4-c7-partial-blocked-scope-v2",
         "accepted_c7_episodes_behavioral": 0 if apply_reclassification else scope_summary["accepted_unique_episodes"],
         "infra_invalid_c7_episodes_trigger_wiring": reclassification.get(
             "episode_count_reclassified", len(source_accepted_rows)
@@ -393,15 +409,48 @@ def main(argv: list[str] | None = None) -> int:
         "source_accepted_ledger_episodes": len(source_accepted_rows),
         "planned_c7_episodes": scope_summary["planned_family_episodes"],
         "missing_c7_episodes": scope_summary["missing_family_episodes"],
+        "campaign_scope_revision": {
+            "original_planned_policy_episodes": 17664,
+            "achievable_policy_episodes": 6400,
+            "achievable_breakdown": {
+                "C2": 4096,
+                "C6": 768,
+                "C7": 768,
+                "C8": 768,
+            },
+            "scientifically_blocked_episodes": 11264,
+            "blocked_breakdown": {
+                "C1_C3_C4_horizontal": 9728,
+                "C5_vertical": 768,
+            },
+            "disclosed_setup_repairs": [
+                "eef_tool_length_m=0.14 flange offset applied uniformly across Isaac fixtures (shared root cause with object_pair-only prior binding)",
+                "NaturalGraspDetector SimplerEnv adapter uses finger-contact object coupling and control-boundary sampling (C8)",
+            ],
+            "pre_repair_c7_excluded_episodes": 279,
+        },
         "not_estimable_or_blocked": {
-            "C1": "no accepted ledger rows in this partial export",
-            "C2": "primary blocked until verified common-prefix replay on reference_binding after G3/G4-G6; policy dispatch held until confirmatory lanes use repair-verified trigger wiring",
-            "C3": "no accepted ledger rows in this partial export",
-            "C4": "no accepted ledger rows in this partial export",
-            "C5": "no accepted ledger rows in this partial export",
-            "C6": "no accepted ledger rows in this partial export",
+            "C1": "scientifically blocked with C3/C4: horizontal G3 information-gate rejection across full registered ladder at scale 0.5 (64/128 seeds fail right/behind for physical_translation_sign=-1); receipt 20260908_horizontal_g3_gate_decision_g3r20260908g.json",
+            "C2": "live controls pass (g3ngrb20260908u/v); homogeneous G3 path wave g3rb20260908v in progress; primary not-estimable until prefix replay; confirmatory 4096 held until G3 gate + G4-G6 + runtime lock",
+            "C3": "scientifically blocked with C1/C4: horizontal information-gate failure on registered ladder",
+            "C4": "scientifically blocked with C1/C3: horizontal information-gate failure on registered ladder",
+            "C5": "scientifically blocked: vertical IK reachability finding at seed 2100020000 scale 0.5; receipt 20260908_vertical_natural_grasp_live_control_finding_g3ngp20260908vp8.json",
+            "C6": "achievable (768 episodes); dispatch pending qualification completion",
             "C7": c7_status,
-            "C8": "no accepted ledger rows; policy dispatch blocked pending second_stack trigger-adapter verification separate from Isaac repair",
+            "C8": "trigger adapter verified (g3c8ng20260908p/neg); confirmatory 768 held until G7/G8, runtime lock, and policy runner wiring",
+        },
+        "scientific_blockers": {
+            "horizontal_information_gate": {
+                "attempt_id": "g3r20260908g",
+                "receipt_path": "artifacts/online_correction_v4/qualification/20260908_horizontal_g3_gate_decision_g3r20260908g.json",
+                "affected_families": ["C1", "C3", "C4"],
+                "affected_episodes": 9728,
+            },
+            "vertical_ik_reachability": {
+                "receipt_path": "artifacts/online_correction_v4/qualification/20260908_vertical_natural_grasp_live_control_finding_g3ngp20260908vp8.json",
+                "affected_families": ["C5"],
+                "affected_episodes": 768,
+            },
         },
         "intervention_trigger_positive_control": {
             "audit_path": str(GRASP_POSITIVE_CONTROL_AUDIT.relative_to(ROOT))
@@ -444,8 +493,8 @@ def main(argv: list[str] | None = None) -> int:
             "repair_status": reclassification.get("defect", {}).get("repair_status"),
             "status": trigger_status,
             "policy_dispatch_blocked": {
-                "C2_confirmatory_4096": "held until C2 G3 gate, prefix replay, and confirmatory dispatch on repair-verified study checkout",
-                "C8_confirmatory_768": "held until second_stack trigger-adapter path is verified independently of Isaac object_pair repair",
+                "C2_confirmatory_4096": "held until homogeneous G3 gate (both translation signs), G4-G6, prefix replay, and confirmatory runtime lock",
+                "C8_confirmatory_768": "held until G7/G8, confirmatory runtime lock, and second_stack policy runner wiring",
             },
             "paper_caveat": paper_caveat,
         },

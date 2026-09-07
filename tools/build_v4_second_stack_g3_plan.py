@@ -180,17 +180,34 @@ def _inside_reference_workspace(point: tuple[float, float]) -> bool:
     )
 
 
-def build_plan(*, registry_path: Path) -> dict[str, Any]:
+def build_plan(
+    *,
+    registry_path: Path,
+    confirmatory_registry_path: Path | None = None,
+) -> dict[str, Any]:
     registry = json.loads(registry_path.read_text(encoding="utf-8"))
+    expected_seed_count = int(registry.get("registered_env_seed_count") or 0)
     if (
         not isinstance(registry, dict)
         or registry.get("fixture_id") != "second_stack"
-        or registry.get("registered_env_seed_count") != 64
+        or expected_seed_count <= 0
     ):
         raise SecondStackG3PlanError("C8 reset registry differs")
+    confirmatory_signs: dict[int, int] = {}
+    if confirmatory_registry_path is not None:
+        confirmatory = json.loads(confirmatory_registry_path.read_text(encoding="utf-8"))
+        for row in confirmatory.get("resets_by_env_seed", {}).values():
+            if not isinstance(row, Mapping):
+                continue
+            block_index = row.get("block_index")
+            sign = row.get("physical_translation_sign")
+            if block_index is not None and sign is not None:
+                confirmatory_signs[int(block_index)] = int(sign)
     resets = registry.get("resets_by_env_seed")
     if not isinstance(resets, Mapping):
         raise SecondStackG3PlanError("C8 reset registry lacks rows")
+    if len(resets) != expected_seed_count:
+        raise SecondStackG3PlanError("C8 reset registry seed count mismatch")
     scale_rows: list[dict[str, Any]] = []
     for scale in SCALES:
         displacement = NOMINAL_TRANSLATION_M * scale
@@ -200,7 +217,19 @@ def build_plan(*, registry_path: Path) -> dict[str, Any]:
             positions = row["positions_scene_xy_m"]
             source = tuple(float(value) for value in positions[SOURCE_OBJECT])
             reference = tuple(float(value) for value in positions[REFERENCE_OBJECT])
-            sign = int(row["physical_translation_sign"])
+            if "physical_translation_sign" in row:
+                sign = int(row["physical_translation_sign"])
+            elif "block_index" in row:
+                block_index = int(row["block_index"])
+                if block_index not in confirmatory_signs:
+                    raise SecondStackG3PlanError(
+                        f"missing physical_translation_sign for block_index {block_index}"
+                    )
+                sign = confirmatory_signs[block_index]
+            else:
+                raise SecondStackG3PlanError(
+                    "C8 reset row lacks physical_translation_sign and block_index"
+                )
             for relation in RELATION_AXES_SCENE_XY:
                 endpoint = reference_destination_xy(
                     initial_xy=reference,
@@ -270,17 +299,25 @@ def build_plan(*, registry_path: Path) -> dict[str, Any]:
             }
         )
     selected = next((row for row in scale_rows if row["passed"]), None)
+    try:
+        registry_rel = str(registry_path.resolve().relative_to(ROOT))
+    except ValueError:
+        registry_rel = str(registry_path)
     return {
         "schema_version": "v4-second-stack-g3-geometry-plan-v1",
         "campaign_id": "online_correction_v4",
         "family_ids": ["C8"],
         "fixture_id": "second_stack",
-        "qualification_scope": "model_blind_no_policy",
-        "status": "candidate_not_released_for_inference",
+        "qualification_scope": (
+            "engineering_pilot"
+            if registry.get("qualification_scope") == "engineering_pilot"
+            else "model_blind_no_policy"
+        ),
+        "status": registry.get("status", "candidate_not_released_for_inference"),
         "model_request_count": 0,
         "behavioral_episode_count": 0,
         "reset_registry": {
-            "path": str(registry_path),
+            "path": registry_rel,
             "sha256": sha256_file(registry_path),
         },
         "scale_ladder": list(SCALES),
@@ -313,11 +350,23 @@ def build_plan(*, registry_path: Path) -> dict[str, Any]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--registry", type=Path, required=True)
+    parser.add_argument(
+        "--confirmatory-registry",
+        type=Path,
+        help="Confirmatory reset registry supplying physical_translation_sign by block_index for pilot plans",
+    )
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     if args.output.exists():
         raise FileExistsError(f"refusing to overwrite C8 G3 plan: {args.output}")
-    payload = build_plan(registry_path=args.registry.resolve())
+    payload = build_plan(
+        registry_path=args.registry.resolve(),
+        confirmatory_registry_path=(
+            args.confirmatory_registry.resolve()
+            if args.confirmatory_registry is not None
+            else None
+        ),
+    )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_bytes(canonical_json_bytes(payload))
     print(

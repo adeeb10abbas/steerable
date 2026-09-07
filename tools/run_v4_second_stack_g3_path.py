@@ -179,11 +179,12 @@ def run_path_gate(
     ]
     if len(selected_rows) != 1 or selected_rows[0].get("passed") is not True:
         raise SecondStackG3PathError("C8 analytical scale is not passing")
+    resets = registry["resets_by_env_seed"]
     checks_by_key = {
         (int(row["environment_seed"]), str(row["relation"])): row
         for row in selected_rows[0]["checks"]
     }
-    if len(checks_by_key) != 256:
+    if len(checks_by_key) != len(resets) * 4:
         raise SecondStackG3PathError("C8 analytical plan lacks complete checks")
     stack_receipt = verify_external_stack(
         integration_root=integration_root,
@@ -195,7 +196,6 @@ def run_path_gate(
     register_simpler_envs()
     import gymnasium as gym
 
-    resets = registry["resets_by_env_seed"]
     env = gym.make(ENV_NAME)
     records: list[dict[str, Any]] = []
     try:
@@ -214,14 +214,17 @@ def run_path_gate(
                 )
     finally:
         env.close()
-    passed = len(records) == 256 and all(row["passed"] for row in records)
+    expected_check_count = len(resets) * 4
+    passed = len(records) == expected_check_count and all(row["passed"] for row in records)
     return {
         "schema_version": "v4-second-stack-g3-path-aggregate-v1",
         "campaign_id": "online_correction_v4",
         "family_ids": ["C8"],
         "fixture_id": "second_stack",
         "gate": "G3",
-        "qualification_scope": "model_blind_no_policy",
+        "qualification_scope": registry.get(
+            "qualification_scope", "model_blind_no_policy"
+        ),
         "status": "passed" if passed else "failed",
         "passed": passed,
         "model_request_count": 0,
@@ -234,7 +237,7 @@ def run_path_gate(
             else "controller_feasibility_fallback_candidate"
         ),
         "displacement_m": selected_rows[0]["displacement_m"],
-        "expected_check_count": 256,
+        "expected_check_count": expected_check_count,
         "observed_check_count": len(records),
         "path_duration_s": 0.5,
         "path_steps": path_steps,

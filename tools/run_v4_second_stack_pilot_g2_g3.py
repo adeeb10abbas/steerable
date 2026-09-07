@@ -16,8 +16,13 @@ DEFAULT_PILOT_RESET = (
     ROOT
     / "artifacts/online_correction_v4/setup/second_stack_pilot_reset_registry.candidate.json"
 )
+DEFAULT_CONFIRMATORY_RESET = (
+    ROOT
+    / "artifacts/online_correction_v4/setup/second_stack_reset_registry.candidate.json"
+)
 DEFAULT_PLAN = (
-    ROOT / "artifacts/online_correction_v4/setup/second_stack_g3_plan.candidate.json"
+    ROOT
+    / "artifacts/online_correction_v4/setup/second_stack_pilot_g3_plan.candidate.json"
 )
 DEFAULT_INTEGRATION = Path("/data/users/ali/vla_wam/external/gr00t-bridge-integration")
 
@@ -110,17 +115,16 @@ def main(argv: list[str] | None = None) -> int:
         "max_seeds": args.max_seeds,
         "scale": args.scale,
         "outputs": {
-            "g2_aggregate": str(g2_out.relative_to(ROOT)),
-            "g3_path_receipt": str(g3_path_out.relative_to(ROOT)),
+            "g2_aggregate": str(g2_out),
+            "g3_path_receipt": str(g3_path_out),
             "g3_scripted_aggregate": None
             if args.skip_g3_scripted
-            else str(g3_scripted_out.relative_to(ROOT)),
+            else str(g3_scripted_out),
         },
         "execution_path": "local_simplerenv_not_k8s",
         "release_boundary": (
-            "Engineering-pilot model-blind qualification only. Policy episodes remain "
-            "blocked until repaired Isaac trigger path passes live controls and C8 "
-            "policy trigger adapter is verified separately."
+            "Engineering-pilot model-blind qualification only. Confirmatory policy "
+            "episodes remain blocked until G7/G8 and a separate RELEASED runtime lock."
         ),
     }
     manifest_path = out_root / "pilot_g2_g3_manifest.json"

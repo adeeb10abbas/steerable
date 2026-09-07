@@ -1,0 +1,11 @@
+{
+  "schema_version": "v4-c8-pilot-lane-retirement-receipt-v1",
+  "observed_at_utc": "2026-09-08T03:20:00Z",
+  "action": "retire_redundant_pilot_lanes",
+  "reason": "G7 engineering pilot satisfied at 24/24 valid; r16 expansion lanes g7c8p02-g7c8p07 were throughput validation only",
+  "retired_lanes": ["g7c8p02", "g7c8p03", "g7c8p04", "g7c8p05", "g7c8p06", "g7c8p07"],
+  "retained_lanes": ["g7c8p00", "g7c8p01"],
+  "retained_note": "g7c8p00/01 completed r15 pilot queue; policy pods may remain Running until manually torn down",
+  "resources_deleted": "job,service,configmap labeled v4-lane-id per lane",
+  "dispatch_receipt_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/create-pilot-g7c8p20260908r16.json"
+}

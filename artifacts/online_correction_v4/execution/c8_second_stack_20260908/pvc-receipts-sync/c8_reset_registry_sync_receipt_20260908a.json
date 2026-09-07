@@ -1,0 +1,17 @@
+{
+  "schema_version": "v4-c8-reset-registry-sync-receipt-v1",
+  "observed_at_utc": "2026-09-08T03:25:00Z",
+  "issue": "reset registry digest mismatch on first confirmatory sim runs",
+  "expected_sha256": "8da6b69ca01e2de15b28df5fe980ae056c04033c9e0b9a3b0d5c1751b269890f",
+  "cluster_stale_sha256": "2191aaf3114945d9e130e96a7b443a712b4988a4518afe1f080a3bc76e02471f",
+  "registry_uri": "/data/users/ali/vla_wam/src/steerable-v4-c8-main/artifacts/online_correction_v4/setup/c8_confirmatory/reset_registry.released.json",
+  "source_uri": "artifacts/online_correction_v4/setup/c8_confirmatory/reset_registry.released.json",
+  "classification": "infra_invalid",
+  "separate_from_behavioral": true,
+  "affected_lanes_before_fix": ["c8m12"],
+  "remediation": "kubectl cp released registry to cluster g2 checkout; recreated c8m11/c8m12 jobs",
+  "regression_check": {
+    "serialization": "no JSON/seed errors observed after fix",
+    "first_valid_confirmatory_after_fix": true
+  }
+}

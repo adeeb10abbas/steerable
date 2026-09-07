@@ -1,0 +1,52 @@
+{
+  "schema_version": "v4-c8-pilot-composition-by-scenario-v1",
+  "observed_at_utc": "2026-09-08T03:20:00Z",
+  "campaign_id": "online_correction_v4",
+  "family_id": "C8",
+  "fixture_id": "second_stack",
+  "cohort": "engineering_pilot",
+  "valid_episodes": 24,
+  "ledger_compile_id": "20260908b",
+  "ledger_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pilot-ledger-20260908b/accepted_ledger.jsonl",
+  "queue_uri": "artifacts/online_correction_v4/setup/second_stack_g7_pilot_queue.jsonl",
+  "aggregate_outcomes": {
+    "no_grasp": 12,
+    "transport_incomplete": 12
+  },
+  "grasp_achieved_count": 12,
+  "grasp_achieved_note": "transport_incomplete implies grasp succeeded but placement/transport did not complete before timeout; 12/24 pilot episodes achieved grasp vs C7 object_pair 0/548 successes in confirmatory slice",
+  "by_scenario": {
+    "original_sham": {
+      "episodes": 8,
+      "no_grasp": 6,
+      "transport_incomplete": 2,
+      "grasp_achieved": 2
+    },
+    "destination_static": {
+      "episodes": 8,
+      "no_grasp": 2,
+      "transport_incomplete": 6,
+      "grasp_achieved": 6
+    },
+    "move_stop": {
+      "episodes": 8,
+      "no_grasp": 4,
+      "transport_incomplete": 4,
+      "grasp_achieved": 4
+    }
+  },
+  "motion_vs_static": {
+    "static_episodes": 16,
+    "motion_episodes": 8,
+    "static_grasp_achieved": 8,
+    "motion_grasp_achieved": 4
+  },
+  "classification": {
+    "behavioral_valid": true,
+    "infra_invalid_excluded": {
+      "count": 39,
+      "attempt_range": "0093-0103",
+      "inventory_uri": "artifacts/online_correction_v4/qualification/20260908_c8_g7_infra_invalid_attempts_0093_0103_inventory.json"
+    }
+  }
+}

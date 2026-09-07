@@ -1,0 +1,107 @@
+{
+  "schema_version": "v4-c8-execution-status-receipt-v1",
+  "observed_at_utc": "2026-09-08T03:30:00Z",
+  "campaign_id": "online_correction_v4",
+  "family_id": "C8",
+  "fixture_id": "second_stack",
+  "hardware_stratum": "a40-groot-bridge-policy_simulator",
+  "classification": {
+    "infra_invalid_attempts_0093_0103": {
+      "count": 39,
+      "inventory_uri": "artifacts/online_correction_v4/qualification/20260908_c8_g7_infra_invalid_attempts_0093_0103_inventory.json",
+      "separate_from_behavioral": true
+    },
+    "infra_invalid_confirmatory_preflight_20260908a": {
+      "count": 4,
+      "receipt_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_checkout_symlink_receipt_20260908a.json",
+      "separate_from_behavioral": true
+    },
+    "infra_invalid_reset_registry_mismatch_20260908a": {
+      "count": 1,
+      "receipt_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_reset_registry_sync_receipt_20260908a.json",
+      "separate_from_behavioral": true,
+      "note": "c8m12 sim failed before registry sync; no behavioral episode recorded"
+    },
+    "behavioral_pilot_valid": 24,
+    "behavioral_confirmatory_completed": 1
+  },
+  "pilot_g7": {
+    "passed": true,
+    "receipt_uri": "artifacts/online_correction_v4/qualification/20260908_second_stack_g7_pilot_g7c8p20260908a.json",
+    "accepted_ledger_compile_id": "20260908b",
+    "composition_by_scenario_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_pilot_composition_by_scenario_20260908a.json",
+    "composition": {
+      "valid_episodes": 24,
+      "grasp_achieved": 12,
+      "aggregate_outcomes": {
+        "no_grasp": 12,
+        "transport_incomplete": 12
+      },
+      "by_scenario": {
+        "original_sham": {"episodes": 8, "no_grasp": 6, "transport_incomplete": 2, "grasp_achieved": 2},
+        "destination_static": {"episodes": 8, "no_grasp": 2, "transport_incomplete": 6, "grasp_achieved": 6},
+        "move_stop": {"episodes": 8, "no_grasp": 4, "transport_incomplete": 4, "grasp_achieved": 4}
+      },
+      "cross_platform_note": "12/24 pilot episodes achieved grasp (transport_incomplete); C7 object_pair confirmatory slice reported 544/548 no_grasp with 0 successes"
+    }
+  },
+  "pilot_lane_retirement_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_pilot_lane_retirement_20260908a.json",
+  "g8_miniature": {
+    "passed": true,
+    "receipt_uri": "artifacts/online_correction_v4/qualification/20260908_second_stack_g8_miniature_g8c8q20260908a.json"
+  },
+  "confirmatory_lock": {
+    "release_status": "RELEASED",
+    "runtime_lock_uri": "artifacts/online_correction_v4/setup/c8_confirmatory/runtime_lock.released.json",
+    "queue_episodes": 768,
+    "dispatch_receipt_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/create-confirmatory-c8main20260908a.json"
+  },
+  "confirmatory_progress": {
+    "behavioral_completed": 1,
+    "behavioral_valid": 1,
+    "behavioral_infra_invalid": 0,
+    "total_queued": 768,
+    "aggregate_outcomes": {
+      "no_grasp": 1
+    },
+    "by_scenario": {
+      "move_stop": {"no_grasp": 1}
+    },
+    "regression_check": {
+      "serialization": "none observed on first valid episode",
+      "sampling_seed": "none observed",
+      "reset_registry": "fixed via cluster sync before wave deepened"
+    },
+    "pod_summary": {
+      "Running": 3,
+      "Pending": 37,
+      "Error": 0,
+      "Completed": 0
+    }
+  },
+  "capacity": {
+    "binding_limit": "G4-attested A40 GR00T Bridge stratum",
+    "c7_a40_occupancy_releasing": true,
+    "authorized_confirmatory_lane_pairs": 20,
+    "handoff_uri": "artifacts/online_correction_v4/execution/gpu_widen_20260908/c8_pilot_lane_expansion_handoff_agent_a.json"
+  },
+  "agent_c_hooks": {
+    "c8_ledger_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pilot-ledger-20260908b/accepted_ledger.jsonl",
+    "c8_manifest_uri": "artifacts/online_correction_v4/setup/c8_confirmatory/queue.frozen.jsonl",
+    "c8_ledger_compile_id": "20260908b",
+    "status_label": "confirmatory_in_progress_1_of_768"
+  },
+  "blockers": [
+    {
+      "id": "confirmatory_throughput",
+      "impact": "767/768 confirmatory episodes remaining",
+      "action": "Continue 20 lane pairs as A40 frees; monitor for infra at scale"
+    },
+    {
+      "id": "reset_registry_cluster_sync",
+      "impact": "1 infra_invalid sim before registry cp",
+      "action": "RESOLVED: released registry synced to cluster; verify no further digest mismatches"
+    }
+  ],
+  "source_commit": "f75c45d5"
+}

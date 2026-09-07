@@ -1,96 +1,678 @@
 {
-  "c7_lane_ceiling": 20,
-  "c7_throttle": {
-    "active_lane_pairs_before": 20,
-    "ceiling": 20,
-    "jobs_to_suspend": 0,
-    "lanes_kept": [
-      "c7m00",
-      "c7m03",
-      "c7m04",
-      "c7m07",
-      "c7m09",
-      "c7m10",
-      "c7m11",
-      "c7m12",
-      "c7m13",
-      "c7m15",
-      "c7m16",
-      "c7m17",
-      "c7m18",
-      "c7m19",
-      "c7m21",
-      "c7m23",
-      "c7m24",
-      "c7m26",
-      "c7m28",
-      "c7m30"
+  "c7_lane_ceiling": 40,
+  "c7_restore": {
+    "ceiling_restored": 40,
+    "unsuspended_count": 64,
+    "unsuspended_jobs": [
+      {
+        "attempt_id": "attempt0474",
+        "job": "v4-c7m01-attempt0474-7d804f4855-policy",
+        "lane_id": "c7m01",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0474",
+        "job": "v4-c7m01-attempt0474-7d804f4855-sim",
+        "lane_id": "c7m01",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      },
+      {
+        "attempt_id": "attempt0475",
+        "job": "v4-c7m02-attempt0475-3b5cb3744c-policy",
+        "lane_id": "c7m02",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0475",
+        "job": "v4-c7m02-attempt0475-3b5cb3744c-sim",
+        "lane_id": "c7m02",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      },
+      {
+        "attempt_id": "attempt0571",
+        "job": "v4-c7m02-attempt0571-3b20216518-policy",
+        "lane_id": "c7m02",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0571",
+        "job": "v4-c7m02-attempt0571-3b20216518-sim",
+        "lane_id": "c7m02",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      },
+      {
+        "attempt_id": "attempt0478",
+        "job": "v4-c7m05-attempt0478-9c26d8da90-policy",
+        "lane_id": "c7m05",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0478",
+        "job": "v4-c7m05-attempt0478-9c26d8da90-sim",
+        "lane_id": "c7m05",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      },
+      {
+        "attempt_id": "attempt0572",
+        "job": "v4-c7m05-attempt0572-661abc04c6-policy",
+        "lane_id": "c7m05",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0572",
+        "job": "v4-c7m05-attempt0572-661abc04c6-sim",
+        "lane_id": "c7m05",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      },
+      {
+        "attempt_id": "attempt0351",
+        "job": "v4-c7m06-attempt0351-f7b3f9888e-policy",
+        "lane_id": "c7m06",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0351",
+        "job": "v4-c7m06-attempt0351-f7b3f9888e-sim",
+        "lane_id": "c7m06",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      },
+      {
+        "attempt_id": "attempt0573",
+        "job": "v4-c7m06-attempt0573-7bef6d9ad0-policy",
+        "lane_id": "c7m06",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0573",
+        "job": "v4-c7m06-attempt0573-7bef6d9ad0-sim",
+        "lane_id": "c7m06",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      },
+      {
+        "attempt_id": "attempt0480",
+        "job": "v4-c7m08-attempt0480-a2e7d18763-policy",
+        "lane_id": "c7m08",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0480",
+        "job": "v4-c7m08-attempt0480-a2e7d18763-sim",
+        "lane_id": "c7m08",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      },
+      {
+        "attempt_id": "attempt0574",
+        "job": "v4-c7m08-attempt0574-9a1418f99b-policy",
+        "lane_id": "c7m08",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0574",
+        "job": "v4-c7m08-attempt0574-9a1418f99b-sim",
+        "lane_id": "c7m08",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      },
+      {
+        "attempt_id": "attempt0352",
+        "job": "v4-c7m14-attempt0352-64c33a6dfa-policy",
+        "lane_id": "c7m14",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0352",
+        "job": "v4-c7m14-attempt0352-64c33a6dfa-sim",
+        "lane_id": "c7m14",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      },
+      {
+        "attempt_id": "attempt0353",
+        "job": "v4-c7m20-attempt0353-1e302fa257-policy",
+        "lane_id": "c7m20",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0353",
+        "job": "v4-c7m20-attempt0353-1e302fa257-sim",
+        "lane_id": "c7m20",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      },
+      {
+        "attempt_id": "attempt0575",
+        "job": "v4-c7m20-attempt0575-d6cf576610-policy",
+        "lane_id": "c7m20",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0575",
+        "job": "v4-c7m20-attempt0575-d6cf576610-sim",
+        "lane_id": "c7m20",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      },
+      {
+        "attempt_id": "attempt0354",
+        "job": "v4-c7m22-attempt0354-94198cd09e-policy",
+        "lane_id": "c7m22",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0354",
+        "job": "v4-c7m22-attempt0354-94198cd09e-sim",
+        "lane_id": "c7m22",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      },
+      {
+        "attempt_id": "attempt0576",
+        "job": "v4-c7m22-attempt0576-d40ce3f07f-policy",
+        "lane_id": "c7m22",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0576",
+        "job": "v4-c7m22-attempt0576-d40ce3f07f-sim",
+        "lane_id": "c7m22",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      },
+      {
+        "attempt_id": "attempt0355",
+        "job": "v4-c7m25-attempt0355-fd9594e125-policy",
+        "lane_id": "c7m25",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0355",
+        "job": "v4-c7m25-attempt0355-fd9594e125-sim",
+        "lane_id": "c7m25",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      },
+      {
+        "attempt_id": "attempt0577",
+        "job": "v4-c7m25-attempt0577-07105a9056-policy",
+        "lane_id": "c7m25",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0577",
+        "job": "v4-c7m25-attempt0577-07105a9056-sim",
+        "lane_id": "c7m25",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      },
+      {
+        "attempt_id": "attempt0357",
+        "job": "v4-c7m27-attempt0357-e61f1992ff-policy",
+        "lane_id": "c7m27",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0357",
+        "job": "v4-c7m27-attempt0357-e61f1992ff-sim",
+        "lane_id": "c7m27",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      },
+      {
+        "attempt_id": "attempt0358",
+        "job": "v4-c7m29-attempt0358-a34d789f2c-policy",
+        "lane_id": "c7m29",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0358",
+        "job": "v4-c7m29-attempt0358-a34d789f2c-sim",
+        "lane_id": "c7m29",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      },
+      {
+        "attempt_id": "attempt0546",
+        "job": "v4-c7m31-attempt0546-a1e510c10c-policy",
+        "lane_id": "c7m31",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0546",
+        "job": "v4-c7m31-attempt0546-a1e510c10c-sim",
+        "lane_id": "c7m31",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      },
+      {
+        "attempt_id": "attempt0360",
+        "job": "v4-c7m32-attempt0360-f1b72440e9-policy",
+        "lane_id": "c7m32",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0360",
+        "job": "v4-c7m32-attempt0360-f1b72440e9-sim",
+        "lane_id": "c7m32",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      },
+      {
+        "attempt_id": "attempt0361",
+        "job": "v4-c7m33-attempt0361-e5eb63ce1c-policy",
+        "lane_id": "c7m33",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0361",
+        "job": "v4-c7m33-attempt0361-e5eb63ce1c-sim",
+        "lane_id": "c7m33",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      },
+      {
+        "attempt_id": "attempt0578",
+        "job": "v4-c7m33-attempt0578-a49f70591c-policy",
+        "lane_id": "c7m33",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0578",
+        "job": "v4-c7m33-attempt0578-a49f70591c-sim",
+        "lane_id": "c7m33",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      },
+      {
+        "attempt_id": "attempt0362",
+        "job": "v4-c7m34-attempt0362-c50f6b981c-policy",
+        "lane_id": "c7m34",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0362",
+        "job": "v4-c7m34-attempt0362-c50f6b981c-sim",
+        "lane_id": "c7m34",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      },
+      {
+        "attempt_id": "attempt0363",
+        "job": "v4-c7m35-attempt0363-e3ffacd389-policy",
+        "lane_id": "c7m35",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0363",
+        "job": "v4-c7m35-attempt0363-e3ffacd389-sim",
+        "lane_id": "c7m35",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      },
+      {
+        "attempt_id": "attempt0579",
+        "job": "v4-c7m35-attempt0579-a72d1b4273-policy",
+        "lane_id": "c7m35",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0579",
+        "job": "v4-c7m35-attempt0579-a72d1b4273-sim",
+        "lane_id": "c7m35",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      },
+      {
+        "attempt_id": "attempt0364",
+        "job": "v4-c7m36-attempt0364-99ccd00c29-policy",
+        "lane_id": "c7m36",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0364",
+        "job": "v4-c7m36-attempt0364-99ccd00c29-sim",
+        "lane_id": "c7m36",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      },
+      {
+        "attempt_id": "attempt0580",
+        "job": "v4-c7m36-attempt0580-528e2144d2-policy",
+        "lane_id": "c7m36",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0580",
+        "job": "v4-c7m36-attempt0580-528e2144d2-sim",
+        "lane_id": "c7m36",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      },
+      {
+        "attempt_id": "attempt0365",
+        "job": "v4-c7m37-attempt0365-daf52aa0ec-policy",
+        "lane_id": "c7m37",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0365",
+        "job": "v4-c7m37-attempt0365-daf52aa0ec-sim",
+        "lane_id": "c7m37",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      },
+      {
+        "attempt_id": "attempt0581",
+        "job": "v4-c7m37-attempt0581-351e33ee84-policy",
+        "lane_id": "c7m37",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0581",
+        "job": "v4-c7m37-attempt0581-351e33ee84-sim",
+        "lane_id": "c7m37",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      },
+      {
+        "attempt_id": "attempt0366",
+        "job": "v4-c7m38-attempt0366-ec45791566-policy",
+        "lane_id": "c7m38",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0366",
+        "job": "v4-c7m38-attempt0366-ec45791566-sim",
+        "lane_id": "c7m38",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      },
+      {
+        "attempt_id": "attempt0582",
+        "job": "v4-c7m38-attempt0582-7a2cc34577-policy",
+        "lane_id": "c7m38",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0582",
+        "job": "v4-c7m38-attempt0582-7a2cc34577-sim",
+        "lane_id": "c7m38",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      },
+      {
+        "attempt_id": "attempt0367",
+        "job": "v4-c7m39-attempt0367-52a7939f95-policy",
+        "lane_id": "c7m39",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "policy"
+      },
+      {
+        "attempt_id": "attempt0367",
+        "job": "v4-c7m39-attempt0367-52a7939f95-sim",
+        "lane_id": "c7m39",
+        "reason_code": "c7_restore_after_pilot_priority",
+        "role": "sim"
+      }
+    ]
+  },
+  "c8_capacity_matrix": {
+    "a40_pool_size": 40,
+    "amendment_basis": "artifacts/online_correction_v4/qualification/20260908_c8_g7_pilot_lane_quarantine_reset_amendment.json",
+    "authorized_pilot_lane_count": 8,
+    "authorized_pilot_lane_ids": [
+      "g7c8p00",
+      "g7c8p01",
+      "g7c8p02",
+      "g7c8p03",
+      "g7c8p04",
+      "g7c8p05",
+      "g7c8p06",
+      "g7c8p07"
     ],
-    "lanes_throttled": [],
-    "suspended_count": 0,
-    "suspended_jobs": [],
-    "unsuspended_lanes_before": 20
+    "c8_agent_dispatch_note": "Dispatch all eight pilot lanes g7c8p00-g7c8p07; admission will not delete them. Lanes beyond current A40 headroom remain Pending until C7 simulators release GPUs.",
+    "capacity_finding": "C8 cannot use A100-80GB or B200 under its G4-attested A40 GR00T Bridge stratum. With C7 at its 40-lane ceiling the entire A40 pool is consumed by C7 simulators, so C8 lanes queue until C7 releases A40. After C7 completes, up to 20 concurrent C8 lane pairs (40 A40 GPUs) are authorized.",
+    "concurrent_lane_limits": {
+      "after_c7_releases_a40_simulators": 20,
+      "current_max_concurrent_c8_lanes": 7,
+      "current_observed_c7_sim_lanes": 25,
+      "while_c7_at_40_ceiling": 0
+    },
+    "fixture_id": "second_stack",
+    "frozen_stratum": "a40-groot-bridge-policy_simulator",
+    "gpu_product": "NVIDIA-A40",
+    "gpus_per_lane_pair": 2,
+    "policy_id": "groot_bridge_widowx",
+    "schema_version": "v4-c8-released-capacity-matrix-v1",
+    "superseded_two_lane_cap": [
+      "g7c8p00",
+      "g7c8p01"
+    ],
+    "wall_clock_hours": {
+      "confirmatory_768_at_20_lanes_post_c7": 16.0,
+      "confirmatory_768_at_2_lanes": 160.0,
+      "confirmatory_768_at_8_lanes": 40.0,
+      "pilot_24_episodes_at_2_lanes": 5.0,
+      "pilot_24_episodes_at_8_lanes": 1.2
+    }
   },
   "cancelled_superseded_jobs": [],
+  "confirmatory_handoff_plan": {
+    "never_mix_strata_in_aggregate": true,
+    "parallel_confirmatory_strata": {
+      "C6_containment": {
+        "does_not_compete_with_c8_a40": true,
+        "estimated_hours_at_8_lanes": 40.0,
+        "owner": "Agent B",
+        "stratum": "b200-policy_a10040-simulator"
+      },
+      "C8_second_stack": {
+        "estimated_hours_at_20_lanes_post_c7": 16.0,
+        "owner": "C8 agent",
+        "stratum": "a40-groot-bridge-policy_simulator"
+      }
+    },
+    "released_resources": {
+      "NVIDIA-A100-SXM4-80GB": {
+        "gpus_freed": 40,
+        "notes": "C6/C8 confirmatory cannot consume C7 policy GPUs without new G4 receipts.",
+        "route_to": "not_assignable_off_c7_stratum"
+      },
+      "NVIDIA-A40": {
+        "gpus_freed": 40,
+        "max_concurrent_c8_lanes": 20,
+        "primary_recipient": "C8_second_stack_confirmatory"
+      }
+    },
+    "schema_version": "v4-confirmatory-capacity-handoff-v1",
+    "sequencing": [
+      "C7 completes remaining episodes on restored 40-lane ceiling (~2.3 h estimated).",
+      "C7 A40 simulators terminate; route all 40 A40 to C8 confirmatory (up to 20 lane pairs).",
+      "C6 confirmatory continues in parallel on B200/A100-40GB (independent stratum).",
+      "Whichever family reaches confirmatory dispatch readiness first gets priority within its own stratum only."
+    ],
+    "trigger": "c7_object_pair_reaches_768_terminal_episodes"
+  },
   "deleted_stale_pilot_jobs": [
     {
-      "attempt_id": "attempt0069",
-      "canonical_attempt_id": null,
+      "attempt_id": "attempt0093",
+      "canonical_attempt_id": "attempt0104",
       "deleted": true,
-      "job": "v4-g7c8p06-attempt0069-c8aec2fd1c-policy",
-      "lane_id": "g7c8p06",
-      "reason_code": "invalid_c8_pilot_lane"
+      "job": "v4-g7c8p00-attempt0093-bbfaa0747e-policy",
+      "lane_id": "g7c8p00",
+      "reason_code": "stale_pilot_lane_attempt"
     },
     {
-      "attempt_id": "attempt0069",
-      "canonical_attempt_id": null,
+      "attempt_id": "attempt0093",
+      "canonical_attempt_id": "attempt0104",
       "deleted": true,
-      "job": "v4-g7c8p06-attempt0069-c8aec2fd1c-sim",
-      "lane_id": "g7c8p06",
-      "reason_code": "invalid_c8_pilot_lane"
+      "job": "v4-g7c8p00-attempt0093-bbfaa0747e-sim",
+      "lane_id": "g7c8p00",
+      "reason_code": "stale_pilot_lane_attempt"
     },
     {
-      "attempt_id": "attempt0070",
-      "canonical_attempt_id": null,
+      "attempt_id": "attempt0099",
+      "canonical_attempt_id": "attempt0104",
       "deleted": true,
-      "job": "v4-g7c8p07-attempt0070-6e8afc8142-policy",
-      "lane_id": "g7c8p07",
-      "reason_code": "invalid_c8_pilot_lane"
+      "job": "v4-g7c8p00-attempt0099-5032f69b67-policy",
+      "lane_id": "g7c8p00",
+      "reason_code": "stale_pilot_lane_attempt"
     },
     {
-      "attempt_id": "attempt0070",
-      "canonical_attempt_id": null,
+      "attempt_id": "attempt0099",
+      "canonical_attempt_id": "attempt0104",
       "deleted": true,
-      "job": "v4-g7c8p07-attempt0070-6e8afc8142-sim",
-      "lane_id": "g7c8p07",
-      "reason_code": "invalid_c8_pilot_lane"
+      "job": "v4-g7c8p00-attempt0099-5032f69b67-sim",
+      "lane_id": "g7c8p00",
+      "reason_code": "stale_pilot_lane_attempt"
+    },
+    {
+      "attempt_id": "attempt0102",
+      "canonical_attempt_id": "attempt0104",
+      "deleted": true,
+      "job": "v4-g7c8p00-attempt0102-57a36e433a-policy",
+      "lane_id": "g7c8p00",
+      "reason_code": "stale_pilot_lane_attempt"
+    },
+    {
+      "attempt_id": "attempt0102",
+      "canonical_attempt_id": "attempt0104",
+      "deleted": true,
+      "job": "v4-g7c8p00-attempt0102-57a36e433a-sim",
+      "lane_id": "g7c8p00",
+      "reason_code": "stale_pilot_lane_attempt"
+    },
+    {
+      "attempt_id": "attempt0094",
+      "canonical_attempt_id": "attempt0105",
+      "deleted": true,
+      "job": "v4-g7c8p01-attempt0094-f7472fc5fc-policy",
+      "lane_id": "g7c8p01",
+      "reason_code": "stale_pilot_lane_attempt"
+    },
+    {
+      "attempt_id": "attempt0094",
+      "canonical_attempt_id": "attempt0105",
+      "deleted": true,
+      "job": "v4-g7c8p01-attempt0094-f7472fc5fc-sim",
+      "lane_id": "g7c8p01",
+      "reason_code": "stale_pilot_lane_attempt"
+    },
+    {
+      "attempt_id": "attempt0100",
+      "canonical_attempt_id": "attempt0105",
+      "deleted": true,
+      "job": "v4-g7c8p01-attempt0100-7c34fefec3-policy",
+      "lane_id": "g7c8p01",
+      "reason_code": "stale_pilot_lane_attempt"
+    },
+    {
+      "attempt_id": "attempt0100",
+      "canonical_attempt_id": "attempt0105",
+      "deleted": true,
+      "job": "v4-g7c8p01-attempt0100-7c34fefec3-sim",
+      "lane_id": "g7c8p01",
+      "reason_code": "stale_pilot_lane_attempt"
+    },
+    {
+      "attempt_id": "attempt0103",
+      "canonical_attempt_id": "attempt0105",
+      "deleted": true,
+      "job": "v4-g7c8p01-attempt0103-7ecada95df-policy",
+      "lane_id": "g7c8p01",
+      "reason_code": "stale_pilot_lane_attempt"
+    },
+    {
+      "attempt_id": "attempt0103",
+      "canonical_attempt_id": "attempt0105",
+      "deleted": true,
+      "job": "v4-g7c8p01-attempt0103-7ecada95df-sim",
+      "lane_id": "g7c8p01",
+      "reason_code": "stale_pilot_lane_attempt"
     }
   ],
   "dry_run": false,
   "kube_context": "prod-dcwi-warrenq1-vmkub007",
-  "mode": "pilot_priority",
+  "mode": "normal",
   "namespace": "211247-prod",
-  "observed_at_utc": "2026-09-07T20:33:51Z",
+  "observed_at_utc": "2026-09-07T21:16:49Z",
   "pilot_lane_health": {
     "c6_healthy_lanes": [
-      "g7c6p00",
-      "g7c6p01",
       "g7c6p02",
       "g7c6p03",
+      "g7c6p06"
+    ],
+    "c6_pending_lanes": [
+      "g7c6p00",
+      "g7c6p01",
       "g7c6p04",
       "g7c6p05",
-      "g7c6p06",
       "g7c6p07"
     ],
-    "c6_pending_lanes": [],
-    "c8_healthy_lanes": [],
-    "c8_pending_lanes": [
+    "c8_healthy_lanes": [
       "g7c8p00",
       "g7c8p01"
+    ],
+    "c8_pending_lanes": [
+      "g7c8p02",
+      "g7c8p03",
+      "g7c8p04",
+      "g7c8p05",
+      "g7c8p06",
+      "g7c8p07"
     ]
   },
   "pilot_priority_still_required": true,
   "pool_utilization": {
+    "c8_authorized_pilot_lanes": [
+      "g7c8p00",
+      "g7c8p01",
+      "g7c8p02",
+      "g7c8p03",
+      "g7c8p04",
+      "g7c8p05",
+      "g7c8p06",
+      "g7c8p07"
+    ],
+    "c8_max_concurrent_lanes": 7,
     "pending_lane_roles": {
       "c6_pilot_policy": 0,
       "c6_pilot_sim": 0,
@@ -100,9 +682,9 @@
       "c8_pilot_sim": 0
     },
     "pool_free_estimate": {
-      "NVIDIA-A100-SXM4-40GB": 56,
-      "NVIDIA-A100-SXM4-80GB": 76,
-      "NVIDIA-A40": 20,
+      "NVIDIA-A100-SXM4-40GB": 61,
+      "NVIDIA-A100-SXM4-80GB": 68,
+      "NVIDIA-A40": 11,
       "NVIDIA-B200": 32
     },
     "pool_sizes": {
@@ -112,18 +694,18 @@
       "NVIDIA-B200": 40
     },
     "pool_used_estimate": {
-      "NVIDIA-A100-SXM4-40GB": 8,
-      "NVIDIA-A100-SXM4-80GB": 19,
-      "NVIDIA-A40": 20,
+      "NVIDIA-A100-SXM4-40GB": 3,
+      "NVIDIA-A100-SXM4-80GB": 27,
+      "NVIDIA-A40": 29,
       "NVIDIA-B200": 8
     },
     "running_lane_roles": {
       "c6_pilot_policy": 8,
-      "c6_pilot_sim": 8,
-      "c7_policy": 19,
-      "c7_sim": 20,
-      "c8_pilot_policy": 0,
-      "c8_pilot_sim": 0
+      "c6_pilot_sim": 3,
+      "c7_policy": 27,
+      "c7_sim": 25,
+      "c8_pilot_policy": 2,
+      "c8_pilot_sim": 2
     }
   },
   "reclaimed_model_blind_jobs": [

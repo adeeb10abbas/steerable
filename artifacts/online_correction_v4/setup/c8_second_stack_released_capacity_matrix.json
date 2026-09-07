@@ -1,0 +1,40 @@
+{
+  "a40_pool_size": 40,
+  "amendment_basis": "artifacts/online_correction_v4/qualification/20260908_c8_g7_pilot_lane_quarantine_reset_amendment.json",
+  "authorized_pilot_lane_count": 8,
+  "authorized_pilot_lane_ids": [
+    "g7c8p00",
+    "g7c8p01",
+    "g7c8p02",
+    "g7c8p03",
+    "g7c8p04",
+    "g7c8p05",
+    "g7c8p06",
+    "g7c8p07"
+  ],
+  "c8_agent_dispatch_note": "Dispatch all eight pilot lanes g7c8p00-g7c8p07; admission will not delete them. Lanes beyond current A40 headroom remain Pending until C7 simulators release GPUs.",
+  "capacity_finding": "C8 cannot use A100-80GB or B200 under its G4-attested A40 GR00T Bridge stratum. With C7 at its 40-lane ceiling the entire A40 pool is consumed by C7 simulators, so C8 lanes queue until C7 releases A40. After C7 completes, up to 20 concurrent C8 lane pairs (40 A40 GPUs) are authorized.",
+  "concurrent_lane_limits": {
+    "after_c7_releases_a40_simulators": 20,
+    "current_max_concurrent_c8_lanes": 7,
+    "current_observed_c7_sim_lanes": 25,
+    "while_c7_at_40_ceiling": 0
+  },
+  "fixture_id": "second_stack",
+  "frozen_stratum": "a40-groot-bridge-policy_simulator",
+  "gpu_product": "NVIDIA-A40",
+  "gpus_per_lane_pair": 2,
+  "policy_id": "groot_bridge_widowx",
+  "schema_version": "v4-c8-released-capacity-matrix-v1",
+  "superseded_two_lane_cap": [
+    "g7c8p00",
+    "g7c8p01"
+  ],
+  "wall_clock_hours": {
+    "confirmatory_768_at_20_lanes_post_c7": 16.0,
+    "confirmatory_768_at_2_lanes": 160.0,
+    "confirmatory_768_at_8_lanes": 40.0,
+    "pilot_24_episodes_at_2_lanes": 5.0,
+    "pilot_24_episodes_at_8_lanes": 1.2
+  }
+}

@@ -40,12 +40,27 @@ def test_latest_attempt_is_canonical_for_c6() -> None:
 
 def test_invalid_c8_lane_is_reclaimed() -> None:
     deleted = arbitration.reclaim_stale_pilot_lane_jobs(
-        [_lane_job("g7c8p02", "attempt0032", "policy")],
+        [_lane_job("g7c8p08", "attempt0032", "policy")],
         kube_context="ctx",
         namespace="ns",
         dry_run=True,
     )
     assert deleted[0]["reason_code"] == "invalid_c8_pilot_lane"
+
+
+def test_c8_pilot_lanes_00_through_07_are_authorized() -> None:
+    assert len(arbitration.G7_C8_PILOT_LANE_IDS) == 8
+    assert "g7c8p02" in arbitration.G7_C8_PILOT_LANE_IDS
+    assert "g7c8p07" in arbitration.G7_C8_PILOT_LANE_IDS
+    assert not arbitration.is_authorized_c8_pilot_lane("g7c8p08")
+
+
+def test_c8_capacity_matrix_reports_post_c7_lane_ceiling() -> None:
+    matrix = arbitration.build_c8_capacity_matrix(c7_sim_lanes_running=20)
+    assert matrix["authorized_pilot_lane_count"] == 8
+    assert matrix["concurrent_lane_limits"]["current_max_concurrent_c8_lanes"] == 8
+    assert matrix["concurrent_lane_limits"]["after_c7_releases_a40_simulators"] == 20
+    assert matrix["wall_clock_hours"]["confirmatory_768_at_20_lanes_post_c7"] == 16.0
 
 
 def test_stale_pilot_jobs_are_identified() -> None:
@@ -91,6 +106,8 @@ def test_pilot_priority_releases_when_c6_and_c8_healthy() -> None:
         lane = f"g7c6p{index:02d}"
         attempt = f"attempt{73 + index:04d}"
         jobs.extend([_lane_job(lane, attempt, "policy"), _lane_job(lane, attempt, "sim")])
-    jobs.extend([_lane_job("g7c8p00", "attempt0020", "policy"), _lane_job("g7c8p00", "attempt0020", "sim")])
-    jobs.extend([_lane_job("g7c8p01", "attempt0021", "policy"), _lane_job("g7c8p01", "attempt0021", "sim")])
+    for index in range(8):
+        lane = f"g7c8p{index:02d}"
+        attempt = f"attempt{104 + index:04d}"
+        jobs.extend([_lane_job(lane, attempt, "policy"), _lane_job(lane, attempt, "sim")])
     assert arbitration.pilots_need_priority(jobs) is False

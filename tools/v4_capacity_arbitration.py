@@ -17,6 +17,10 @@ DEFAULT_STATE = ROOT / "artifacts/online_correction_v4/execution/gpu_widen_20260
 C7_NORMAL_LANE_CEILING = 40
 C7_PILOT_PRIORITY_LANE_CEILING = 24
 
+A40_POOL_SIZE = 40
+A40_GPUS_PER_C8_LANE = 2
+A40_GPUS_PER_C7_SIM = 1
+
 G7_C6_PILOT_LANE_RE = re.compile(r"^g7c6p\d+$", re.I)
 G7_C8_PILOT_LANE_RE = re.compile(r"^g7c8p\d+$", re.I)
 C7_LANE_RE = re.compile(r"^c7m\d+$", re.I)
@@ -28,9 +32,22 @@ LANE_JOB_RE = re.compile(
 G7_C6_PILOT_ATTEMPT_RANGE = tuple(f"attempt{aid:04d}" for aid in range(57, 65)) + tuple(
     f"attempt{aid:04d}" for aid in range(73, 81)
 )
-G7_C8_PILOT_LANE_IDS: frozenset[str] = frozenset({"g7c8p00", "g7c8p01"})
-G7_C8_PILOT_ATTEMPT_IDS: frozenset[str] = frozenset({"attempt0020", "attempt0021"})
+G7_C8_PILOT_LANE_COUNT = 8
+G7_C8_PILOT_LANE_IDS: frozenset[str] = frozenset(
+    f"g7c8p{index:02d}" for index in range(G7_C8_PILOT_LANE_COUNT)
+)
+# After C7 releases A40 simulators, C8 confirmatory may use up to half the A40 pool.
+G7_C8_CONFIRMATORY_MAX_LANES = A40_POOL_SIZE // A40_GPUS_PER_C8_LANE
+C8_EPISODE_MINUTES_PER_LANE = 25.0
+C6_EPISODE_MINUTES_PER_LANE = 25.0
+CONFIRMATORY_EPISODE_TARGET = 768
+PILOT_EPISODE_TARGET = 24
+
 G7_C6_PILOT_LANE_COUNT = 8
+
+DEFAULT_C8_CAPACITY_MATRIX = (
+    ROOT / "artifacts/online_correction_v4/setup/c8_second_stack_released_capacity_matrix.json"
+)
 
 RECLAIMABLE_MODEL_BLIND_ATTEMPT_IDS: frozenset[str] = frozenset(
     {
@@ -185,7 +202,7 @@ def reclaim_stale_pilot_lane_jobs(
         if G7_C6_PILOT_LANE_RE.match(ref.lane_id) or G7_C8_PILOT_LANE_RE.match(ref.lane_id):
             by_lane.setdefault(ref.lane_id, []).append(ref)
     for lane_id, refs in sorted(by_lane.items()):
-        if G7_C8_PILOT_LANE_RE.match(lane_id) and lane_id not in G7_C8_PILOT_LANE_IDS:
+        if G7_C8_PILOT_LANE_RE.match(lane_id) and not is_authorized_c8_pilot_lane(lane_id):
             for ref in refs:
                 ok = _delete_job(job_name=ref.name, kube_context=kube_context, namespace=namespace, dry_run=dry_run)
                 deleted.append(
@@ -346,12 +363,132 @@ def apply_c7_throttle(
 def restore_c7_ceiling(
     lane_jobs: Sequence[LaneJobRef], *, ceiling: int, kube_context: str, namespace: str, dry_run: bool,
 ) -> dict[str, Any]:
-    unsuspended = []
+    unsuspended: list[dict[str, str]] = []
     for ref in lane_jobs:
         if C7_LANE_RE.match(ref.lane_id) and ref.suspend:
             if _patch_job_suspend(job_name=ref.name, suspend=False, kube_context=kube_context, namespace=namespace, dry_run=dry_run):
-                unsuspended.append(ref.name)
-    return {"ceiling_restored": ceiling, "unsuspended_jobs": unsuspended}
+                unsuspended.append(
+                    {
+                        "job": ref.name,
+                        "lane_id": ref.lane_id,
+                        "attempt_id": ref.attempt_id,
+                        "role": ref.role,
+                        "reason_code": "c7_restore_after_pilot_priority",
+                    }
+                )
+    return {
+        "ceiling_restored": ceiling,
+        "unsuspended_count": len(unsuspended),
+        "unsuspended_jobs": unsuspended,
+    }
+
+
+def is_authorized_c8_pilot_lane(lane_id: str) -> bool:
+    return lane_id in G7_C8_PILOT_LANE_IDS
+
+
+def max_concurrent_c8_lanes(*, c7_sim_lanes_running: int) -> int:
+    free_a40 = max(0, A40_POOL_SIZE - c7_sim_lanes_running * A40_GPUS_PER_C7_SIM)
+    return min(G7_C8_PILOT_LANE_COUNT, free_a40 // A40_GPUS_PER_C8_LANE)
+
+
+def build_c8_capacity_matrix(*, c7_sim_lanes_running: int) -> dict[str, Any]:
+    concurrent_now = max_concurrent_c8_lanes(c7_sim_lanes_running=c7_sim_lanes_running)
+    concurrent_after_c7 = G7_C8_CONFIRMATORY_MAX_LANES
+    pilot_remaining = PILOT_EPISODE_TARGET  # dispatch agent tracks exact count
+    confirmatory_remaining = CONFIRMATORY_EPISODE_TARGET
+
+    def hours(episodes: int, lanes: int, minutes: float) -> float:
+        if lanes <= 0:
+            return float("inf")
+        return round((episodes / lanes) * (minutes / 60.0), 1)
+
+    return {
+        "schema_version": "v4-c8-released-capacity-matrix-v1",
+        "fixture_id": "second_stack",
+        "policy_id": "groot_bridge_widowx",
+        "frozen_stratum": "a40-groot-bridge-policy_simulator",
+        "gpu_product": "NVIDIA-A40",
+        "gpus_per_lane_pair": A40_GPUS_PER_C8_LANE,
+        "a40_pool_size": A40_POOL_SIZE,
+        "authorized_pilot_lane_ids": sorted(G7_C8_PILOT_LANE_IDS),
+        "authorized_pilot_lane_count": G7_C8_PILOT_LANE_COUNT,
+        "superseded_two_lane_cap": ["g7c8p00", "g7c8p01"],
+        "amendment_basis": (
+            "artifacts/online_correction_v4/qualification/"
+            "20260908_c8_g7_pilot_lane_quarantine_reset_amendment.json"
+        ),
+        "concurrent_lane_limits": {
+            "while_c7_at_40_ceiling": max_concurrent_c8_lanes(c7_sim_lanes_running=C7_NORMAL_LANE_CEILING),
+            "current_observed_c7_sim_lanes": c7_sim_lanes_running,
+            "current_max_concurrent_c8_lanes": concurrent_now,
+            "after_c7_releases_a40_simulators": concurrent_after_c7,
+        },
+        "wall_clock_hours": {
+            "pilot_24_episodes_at_2_lanes": hours(PILOT_EPISODE_TARGET, 2, C8_EPISODE_MINUTES_PER_LANE),
+            "pilot_24_episodes_at_8_lanes": hours(PILOT_EPISODE_TARGET, G7_C8_PILOT_LANE_COUNT, C8_EPISODE_MINUTES_PER_LANE),
+            "confirmatory_768_at_2_lanes": hours(CONFIRMATORY_EPISODE_TARGET, 2, C8_EPISODE_MINUTES_PER_LANE),
+            "confirmatory_768_at_8_lanes": hours(CONFIRMATORY_EPISODE_TARGET, G7_C8_PILOT_LANE_COUNT, C8_EPISODE_MINUTES_PER_LANE),
+            "confirmatory_768_at_20_lanes_post_c7": hours(
+                CONFIRMATORY_EPISODE_TARGET, concurrent_after_c7, C8_EPISODE_MINUTES_PER_LANE
+            ),
+        },
+        "capacity_finding": (
+            "C8 cannot use A100-80GB or B200 under its G4-attested A40 GR00T Bridge stratum. "
+            f"With C7 at its {C7_NORMAL_LANE_CEILING}-lane ceiling the entire A40 pool is consumed "
+            "by C7 simulators, so C8 lanes queue until C7 releases A40. After C7 completes, up to "
+            f"{concurrent_after_c7} concurrent C8 lane pairs ({concurrent_after_c7 * A40_GPUS_PER_C8_LANE} "
+            f"A40 GPUs) are authorized."
+        ),
+        "c8_agent_dispatch_note": (
+            "Dispatch all eight pilot lanes g7c8p00-g7c8p07; admission will not delete them. "
+            "Lanes beyond current A40 headroom remain Pending until C7 simulators release GPUs."
+        ),
+    }
+
+
+def build_confirmatory_handoff_plan(*, c7_remaining_episodes: int = 220) -> dict[str, Any]:
+    c7_hours = (c7_remaining_episodes / C7_NORMAL_LANE_CEILING) * (C8_EPISODE_MINUTES_PER_LANE / 60.0)
+    c8_hours_post_c7 = (CONFIRMATORY_EPISODE_TARGET / G7_C8_CONFIRMATORY_MAX_LANES) * (
+        C8_EPISODE_MINUTES_PER_LANE / 60.0
+    )
+    c6_hours = (CONFIRMATORY_EPISODE_TARGET / G7_C6_PILOT_LANE_COUNT) * (C6_EPISODE_MINUTES_PER_LANE / 60.0)
+    return {
+        "schema_version": "v4-confirmatory-capacity-handoff-v1",
+        "trigger": "c7_object_pair_reaches_768_terminal_episodes",
+        "released_resources": {
+            "NVIDIA-A100-SXM4-80GB": {
+                "gpus_freed": C7_NORMAL_LANE_CEILING,
+                "route_to": "not_assignable_off_c7_stratum",
+                "notes": "C6/C8 confirmatory cannot consume C7 policy GPUs without new G4 receipts.",
+            },
+            "NVIDIA-A40": {
+                "gpus_freed": C7_NORMAL_LANE_CEILING,
+                "primary_recipient": "C8_second_stack_confirmatory",
+                "max_concurrent_c8_lanes": G7_C8_CONFIRMATORY_MAX_LANES,
+            },
+        },
+        "parallel_confirmatory_strata": {
+            "C6_containment": {
+                "stratum": "b200-policy_a10040-simulator",
+                "does_not_compete_with_c8_a40": True,
+                "estimated_hours_at_8_lanes": round(c6_hours, 1),
+                "owner": "Agent B",
+            },
+            "C8_second_stack": {
+                "stratum": "a40-groot-bridge-policy_simulator",
+                "estimated_hours_at_20_lanes_post_c7": round(c8_hours_post_c7, 1),
+                "owner": "C8 agent",
+            },
+        },
+        "sequencing": [
+            "C7 completes remaining episodes on restored 40-lane ceiling (~{:.1f} h estimated).".format(c7_hours),
+            "C7 A40 simulators terminate; route all 40 A40 to C8 confirmatory (up to 20 lane pairs).",
+            "C6 confirmatory continues in parallel on B200/A100-40GB (independent stratum).",
+            "Whichever family reaches confirmatory dispatch readiness first gets priority within its own stratum only.",
+        ],
+        "never_mix_strata_in_aggregate": True,
+    }
 
 
 def pilot_lane_health(lane_jobs: Sequence[LaneJobRef]) -> dict[str, Any]:
@@ -439,7 +576,9 @@ def summarize_pool_usage(lane_jobs: Sequence[LaneJobRef]) -> dict[str, Any]:
             bucket[f"c6_pilot_{ref.role}"] += 1
         elif G7_C8_PILOT_LANE_RE.match(ref.lane_id):
             bucket[f"c8_pilot_{ref.role}"] += 1
-    pool_sizes = {"NVIDIA-A100-SXM4-80GB": 95, "NVIDIA-A100-SXM4-40GB": 64, "NVIDIA-A40": 40, "NVIDIA-B200": 40}
+    pool_sizes = {"NVIDIA-A100-SXM4-80GB": 95, "NVIDIA-A100-SXM4-40GB": 64, "NVIDIA-A40": A40_POOL_SIZE, "NVIDIA-B200": 40}
+    c7_sim_running = running["c7_sim"]
+    c8_concurrent_cap = max_concurrent_c8_lanes(c7_sim_lanes_running=c7_sim_running)
     used = {
         "NVIDIA-A100-SXM4-80GB": running["c7_policy"],
         "NVIDIA-A40": running["c7_sim"] + running["c8_pilot_policy"] + running["c8_pilot_sim"],
@@ -452,6 +591,8 @@ def summarize_pool_usage(lane_jobs: Sequence[LaneJobRef]) -> dict[str, Any]:
         "pool_used_estimate": used,
         "pool_free_estimate": {k: pool_sizes[k] - used[k] for k in pool_sizes},
         "pool_sizes": pool_sizes,
+        "c8_max_concurrent_lanes": c8_concurrent_cap,
+        "c8_authorized_pilot_lanes": sorted(G7_C8_PILOT_LANE_IDS),
     }
 
 
@@ -476,12 +617,22 @@ def enforce_capacity_arbitration(
         all_jobs = fetch_namespace_jobs(kube_context=kube_context, namespace=namespace)
         lane_jobs = [ref for ref in (parse_lane_job(job) for job in all_jobs) if ref is not None]
     c7_report: dict[str, Any] = {"skipped": True}
-    if resolved_mode == "pilot_priority" and pilots_need_priority(lane_jobs):
-        c7_report = apply_c7_throttle(lane_jobs, ceiling=resolved_ceiling, kube_context=kube_context, namespace=namespace, dry_run=dry_run)
-    elif resolved_mode == "c7_restore":
-        c7_report = restore_c7_ceiling(lane_jobs, ceiling=C7_NORMAL_LANE_CEILING, kube_context=kube_context, namespace=namespace, dry_run=dry_run)
+    if resolved_mode == "c7_restore":
+        c7_report = restore_c7_ceiling(
+            lane_jobs, ceiling=C7_NORMAL_LANE_CEILING, kube_context=kube_context, namespace=namespace, dry_run=dry_run,
+        )
+        resolved_mode = "normal"
+        resolved_ceiling = C7_NORMAL_LANE_CEILING
+    elif resolved_mode == "pilot_priority" and pilots_need_priority(lane_jobs):
+        c7_report = apply_c7_throttle(
+            lane_jobs, ceiling=resolved_ceiling, kube_context=kube_context, namespace=namespace, dry_run=dry_run,
+        )
     if not dry_run:
         lane_jobs = [ref for ref in (parse_lane_job(job) for job in fetch_namespace_jobs(kube_context=kube_context, namespace=namespace)) if ref is not None]
+    pool_util = summarize_pool_usage(lane_jobs)
+    c8_matrix = build_c8_capacity_matrix(c7_sim_lanes_running=pool_util["running_lane_roles"]["c7_sim"])
+    handoff = build_confirmatory_handoff_plan(c7_remaining_episodes=220)
+    c7_action_key = "c7_restore" if "unsuspended_count" in c7_report else "c7_throttle"
     payload = {
         "schema_version": "v4-capacity-arbitration-enforcement-receipt-v1",
         "observed_at_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -493,16 +644,25 @@ def enforce_capacity_arbitration(
         "cancelled_superseded_jobs": wave_cancelled,
         "reclaimed_model_blind_jobs": model_blind_reclaimed,
         "deleted_stale_pilot_jobs": stale_pilot_deleted,
-        "c7_throttle": c7_report,
-        "pool_utilization": summarize_pool_usage(lane_jobs),
+        c7_action_key: c7_report,
+        "c8_capacity_matrix": c8_matrix,
+        "confirmatory_handoff_plan": handoff,
+        "pool_utilization": pool_util,
         "pilot_lane_health": pilot_lane_health(lane_jobs),
         "pilot_priority_still_required": pilots_need_priority(lane_jobs),
     }
     if not dry_run:
+        DEFAULT_C8_CAPACITY_MATRIX.parent.mkdir(parents=True, exist_ok=True)
+        DEFAULT_C8_CAPACITY_MATRIX.write_text(
+            json.dumps(c8_matrix, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+        handoff_path = ROOT / "artifacts/online_correction_v4/execution/gpu_widen_20260908/confirmatory_capacity_handoff_plan.json"
+        handoff_path.write_text(json.dumps(handoff, indent=2, sort_keys=True) + "\n", encoding="utf-8")
         state.update(
             {
                 "mode": resolved_mode,
                 "c7_lane_ceiling": resolved_ceiling,
+                "c8_authorized_pilot_lanes": sorted(G7_C8_PILOT_LANE_IDS),
                 "last_enforcement_at_utc": payload["observed_at_utc"],
                 "pilot_priority_still_required": payload["pilot_priority_still_required"],
             }

@@ -1,0 +1,36 @@
+{
+  "never_mix_strata_in_aggregate": true,
+  "parallel_confirmatory_strata": {
+    "C6_containment": {
+      "does_not_compete_with_c8_a40": true,
+      "estimated_hours_at_8_lanes": 40.0,
+      "owner": "Agent B",
+      "stratum": "b200-policy_a10040-simulator"
+    },
+    "C8_second_stack": {
+      "estimated_hours_at_20_lanes_post_c7": 16.0,
+      "owner": "C8 agent",
+      "stratum": "a40-groot-bridge-policy_simulator"
+    }
+  },
+  "released_resources": {
+    "NVIDIA-A100-SXM4-80GB": {
+      "gpus_freed": 40,
+      "notes": "C6/C8 confirmatory cannot consume C7 policy GPUs without new G4 receipts.",
+      "route_to": "not_assignable_off_c7_stratum"
+    },
+    "NVIDIA-A40": {
+      "gpus_freed": 40,
+      "max_concurrent_c8_lanes": 20,
+      "primary_recipient": "C8_second_stack_confirmatory"
+    }
+  },
+  "schema_version": "v4-confirmatory-capacity-handoff-v1",
+  "sequencing": [
+    "C7 completes remaining episodes on restored 40-lane ceiling (~2.3 h estimated).",
+    "C7 A40 simulators terminate; route all 40 A40 to C8 confirmatory (up to 20 lane pairs).",
+    "C6 confirmatory continues in parallel on B200/A100-40GB (independent stratum).",
+    "Whichever family reaches confirmatory dispatch readiness first gets priority within its own stratum only."
+  ],
+  "trigger": "c7_object_pair_reaches_768_terminal_episodes"
+}

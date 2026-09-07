@@ -1,0 +1,40 @@
+{
+  "schema_version": "v4-c8-pilot-lane-expansion-handoff-v1",
+  "observed_at_utc": "2026-09-07T21:15:00Z",
+  "gate_owner": "C8 agent (second_stack)",
+  "capacity_agent_role": "lane authorization matrix and admission alignment only",
+  "superseded_restriction": {
+    "prior_authorized_lanes": ["g7c8p00", "g7c8p01"],
+    "reason": "Artificial two-lane cap blocked 24-episode pilot completion"
+  },
+  "amended_authorization": {
+    "authorized_pilot_lane_ids": [
+      "g7c8p00",
+      "g7c8p01",
+      "g7c8p02",
+      "g7c8p03",
+      "g7c8p04",
+      "g7c8p05",
+      "g7c8p06",
+      "g7c8p07"
+    ],
+    "lane_count": 8,
+    "episodes_per_lane_pilot": 3,
+    "frozen_stratum": "a40-groot-bridge-policy_simulator",
+    "gpu_product": "NVIDIA-A40",
+    "gpus_per_lane_pair": 2,
+    "matrix_artifact": "artifacts/online_correction_v4/setup/c8_second_stack_released_capacity_matrix.json",
+    "amendment_basis": "artifacts/online_correction_v4/qualification/20260908_c8_g7_pilot_lane_quarantine_reset_amendment.json"
+  },
+  "admission_alignment": {
+    "capacity_arbitration_will_not_delete": "g7c8p00-g7c8p07",
+    "invalid_lanes_still_deleted": "g7c8p08 and above",
+    "concurrent_placement_note": "Each lane pair consumes 2 A40 GPUs. With C7 at 40-lane ceiling, C8 lanes beyond A40 headroom remain Pending until C7 simulators release GPUs."
+  },
+  "c8_agent_dispatch": {
+    "render_all_eight_lanes": "Use existing rendered-pilot-r7 manifests for g7c8p02-g7c8p07 or re-render from current pin",
+    "canonical_attempts": "One immutable attempt per lane; do not reuse invalidated attempts from quarantine reset amendment",
+    "enforce_after_dispatch": ".venv/bin/python tools/enforce_v4_capacity_arbitration.py --mode normal"
+  },
+  "wall_clock_pilot_hours_at_8_lanes": 1.3
+}

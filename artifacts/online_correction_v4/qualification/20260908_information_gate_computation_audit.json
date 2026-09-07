@@ -1,0 +1,52 @@
+{
+  "audited_at_utc": "2026-09-07T15:05:00Z",
+  "code_paths_reviewed": [
+    "experiments/online_correction_v4/droid_g3.py:goal_area_case",
+    "experiments/online_correction_v4/geometry.py:shrinking_area_fraction",
+    "tools/run_v4_horizontal_g3_path_seed.py:build_goal_area_cases",
+    "tools/run_v4_horizontal_g3_path_seed.py:expected_reference_world_position",
+    "experiments/online_correction_v4/motion.py:ReferenceMotionController.displacement_vector"
+  ],
+  "confirmatory_horizontal_wave": {
+    "attempt_id": "g3r20260908g",
+    "failed_env_seeds": 64,
+    "failed_goals_on_negative_sign": ["right", "behind"],
+    "information_gate_failed_seeds": 64,
+    "observed_seed_count": 128,
+    "passed_env_seeds": 64,
+    "path_checks_passed": 3072,
+    "scale": 0.5,
+    "smoke_seed": 2100000000,
+    "smoke_seed_sign": 1
+  },
+  "example_negative_sign_receipt": {
+    "environment_seed": 2100000004,
+    "goal_area_cases": {
+      "behind": {"passes_information_gate": false, "removed_area_fraction": 0.19862990150678536, "shrinking_direction": true},
+      "front": {"passes_information_gate": true, "removed_area_fraction": 0.0, "shrinking_direction": false},
+      "left": {"passes_information_gate": true, "removed_area_fraction": 0.0, "shrinking_direction": false},
+      "right": {"passes_information_gate": false, "removed_area_fraction": 0.13692608825615002, "shrinking_direction": true}
+    },
+    "physical_translation_sign": -1
+  },
+  "example_positive_sign_receipt": {
+    "environment_seed": 2100000016,
+    "goal_area_cases": {
+      "behind": {"passes_information_gate": true, "removed_area_fraction": 0.0, "shrinking_direction": false},
+      "front": {"passes_information_gate": true, "removed_area_fraction": 0.6357, "shrinking_direction": true},
+      "left": {"passes_information_gate": true, "removed_area_fraction": 0.2431, "shrinking_direction": true},
+      "right": {"passes_information_gate": true, "removed_area_fraction": 0.0, "shrinking_direction": false}
+    },
+    "physical_translation_sign": 1
+  },
+  "findings": {
+    "area_comparison_order": "before=original reference pose, after=counterbalance endpoint; shrinking_area_fraction removes overlap from before area (equivalent to 1 - area(intersection)/area(before))",
+    "direction_binding": "plan direction_task_coefficients encode physical_translation_sign on shared left/right and front/behind axes; path checks and goal-area cases use the same coefficients and positive displacement_m magnitude",
+    "implementation_defect_found": false,
+    "negative_sign_split_is_exact": true,
+    "reference_binding_partial_wave_note": "Independent reference_binding wave g3rb20260908v (89/128 receipts at audit time) shows all 42 observed sign=-1 failures and additional sign=+1 left failures; pattern is not identical to horizontal but shares the same gate implementation"
+  },
+  "schema_version": "v4-information-gate-computation-audit-v1",
+  "scientific_interpretation": "At scale 0.5 (0.06 m), negative-sign shrinking-direction cases (right/behind for horizontal) remove 13.7-19.9% of legal goal area—just below the frozen 20% threshold—while positive-sign shrinking cases (left/front) exceed 20%. All 3072 path checks pass, so this is information-gate rejection rather than physical infeasibility. Workspace-edge clipping asymmetry under the registered counterbalance axis explains why the negative half fails while the positive half passes; this is not evidence of a sign inversion bug in the gate code.",
+  "verdict": "computation_correct_scientific_rejection"
+}

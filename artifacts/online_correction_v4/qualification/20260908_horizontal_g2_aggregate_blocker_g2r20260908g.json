@@ -1,0 +1,17 @@
+{
+  "attempt_id": "g2r20260908g",
+  "blocker_class": "infrastructure_incomplete",
+  "compiled_at_utc": "2026-09-07T15:05:00Z",
+  "expected_seed_count": 128,
+  "homogeneous_pin": "c401fb4577d8003a019ecf7ff7be549f2c0a5931",
+  "k8s_jobs": {
+    "complete": 111,
+    "failed": 17,
+    "failed_class": "attempt_lock_already_exists_on_retry"
+  },
+  "missing_env_seeds": [2100000127],
+  "observed_receipt_count": 127,
+  "remediation": "Re-dispatch only seed 2100000127 under g2r20260908g with a fresh lane output root or lock cleanup; s127 job reports Complete but no g2_seed_receipt.json is on PVC",
+  "schema_version": "v4-horizontal-g2-aggregate-blocker-v1",
+  "status": "blocked_incomplete"
+}

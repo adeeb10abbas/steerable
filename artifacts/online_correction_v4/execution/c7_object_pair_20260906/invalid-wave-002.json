@@ -1,0 +1,28 @@
+{
+  "behavioral_episode_count": 0,
+  "ended_at_utc": "2026-09-07T00:03:37Z",
+  "failure": {
+    "affected_attempt_range": [
+      "attempt0219",
+      "attempt0254"
+    ],
+    "class": "planning_manifest_and_frozen_queue_hash_conflation",
+    "created_lane_count": 36,
+    "created_lane_range": [
+      "c7m00",
+      "c7m35"
+    ],
+    "representative_error": "[V4 DROID] blocked: runtime lock manifest_sha256 does not match supplied manifest"
+  },
+  "remediation": {
+    "dual_hash_runtime_binding_added": true,
+    "invalid_cluster_resources_deleted": true,
+    "invalid_durable_leases_deleted": true,
+    "next_attempt_index": 256,
+    "pinned_runtime_commit": "9d2be91c9b0682950194285eba4e8157bdd2c15e",
+    "rendered_only_attempt_reserved": "attempt0255"
+  },
+  "schema_version": "v4-c7-infrastructure-invalid-wave-v1",
+  "started_at_utc": "2026-09-06T23:53:18Z",
+  "status": "infra_invalid_before_policy_or_behavioral_execution"
+}

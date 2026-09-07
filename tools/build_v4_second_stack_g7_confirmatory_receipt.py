@@ -5,13 +5,17 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from tools.build_v4_second_stack_g7_pilot_release import (
     FIXTURE_ID,
     POLICY_ID,
-    ROOT,
     artifact,
     canonical_json_bytes,
     load_json,

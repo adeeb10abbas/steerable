@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compile provisional C2 reference_binding G3 gate decision with sign/goal splits."""
+"""Compile C2 reference_binding G3 gate decision with sign/goal splits."""
 
 from __future__ import annotations
 
@@ -116,6 +116,9 @@ def compile_gate_decision(
     decision_out: Path,
     attempt_id: str,
     homogeneous_pin: str,
+    finalize: bool = False,
+    computation_audit_path: Path | None = None,
+    overwrite: bool = False,
 ) -> dict[str, Any]:
     plan = _load_json(plan_path)
     reset_registry = _load_json(reset_registry_path)
@@ -145,54 +148,107 @@ def compile_gate_decision(
     sign_minus_one = splits["by_physical_translation_sign"].get("-1", {})
     sign_plus_one = splits["by_physical_translation_sign"].get("1", {})
 
-    decision = {
+    info_failed = len(path_scale.get("information_gate_failed_seeds") or [])
+    front_goal = splits["by_goal_relation"].get("front", {})
+    behind_goal = splits["by_goal_relation"].get("behind", {})
+    if finalize and not complete:
+        raise ValueError(
+            f"cannot finalize gate decision until wave is complete ({observed}/{expected})"
+        )
+    if finalize and computation_audit_path is None:
+        raise ValueError("finalize requires --computation-audit receipt path")
+    audit_binding = None
+    if computation_audit_path is not None:
+        audit = _load_json(computation_audit_path)
+        if audit.get("verdict") != "computation_correct_scientific_rejection":
+            raise ValueError("computation audit verdict is not computation_correct_scientific_rejection")
+        audit_binding = {
+            "path": str(computation_audit_path.relative_to(ROOT)),
+            "sha256": sha256_file(computation_audit_path),
+            "verdict": audit.get("verdict"),
+        }
+    passed = raw_pass and complete
+    if finalize:
+        decision_value = "passed" if passed else "failed"
+    else:
+        decision_value = "provisional_pending_computation_audit"
+    decision: dict[str, Any] = {
         "schema_version": "v4-reference-binding-g3-gate-decision-v1",
         "attempt_id": attempt_id,
         "compiled_at_utc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "confirmatory_scale": scale,
-        "decision": "provisional_pending_computation_audit",
+        "decision": decision_value,
         "gate_id": "G3_reference_binding_homogeneous",
         "homogeneous_pin": homogeneous_pin,
-        "passed": False,
-        "provisional_status": {
+        "passed": passed,
+        "information_gate_splits": splits,
+        "path_scale_receipt": str(path_scale_out.relative_to(ROOT)),
+        "computation_audit": audit_binding,
+    }
+    if finalize:
+        decision["scientific_interpretation"] = (
+            "At confirmatory scale 0.5 (0.06 m), negative-sign shrinking-direction "
+            "cases remove 13.7-19.9% of legal goal area—just below the frozen 20% "
+            "threshold—while positive-sign shrinking cases can exceed 20%. All path "
+            "checks pass; this is registered information-gate rejection under "
+            "counterbalance semantics, not physical infeasibility. Agent A audit "
+            "confirmed the gate computation is correct; Agent B containment passed "
+            "both translation-sign halves, isolating this to reference_binding geometry."
+        )
+        decision["primary_estimand_status"] = (
+            "not_estimable" if not passed else "pending_prefix_replay"
+        )
+        decision["reason"] = (
+            f"Homogeneous 128-seed wave at scale {scale}: "
+            f"{path_scale.get('passed_path_check_count')}/{path_scale.get('expected_path_check_count')} "
+            f"path checks pass; {info_failed}/{expected} seeds fail shrinking-area "
+            f"information gates; sign=+1 failures "
+            f"{sign_plus_one.get('seeds_fail', 0)}/{sign_plus_one.get('seeds_pass', 0) + sign_plus_one.get('seeds_fail', 0)} "
+            f"and sign=-1 failures "
+            f"{sign_minus_one.get('seeds_fail', 0)}/{sign_minus_one.get('seeds_pass', 0) + sign_minus_one.get('seeds_fail', 0)}; "
+            f"front goal case pass/fail {front_goal.get('case_pass', 0)}/"
+            f"{front_goal.get('case_fail', 0)}; behind "
+            f"{behind_goal.get('case_pass', 0)}/{behind_goal.get('case_fail', 0)}."
+        )
+        decision["scripted_checks_status"] = (
+            "blocked_pending_passing_path_scale" if not passed else "authorized"
+        )
+        if not passed:
+            decision["affected_confirmatory_episodes"] = 4096
+            decision["release_boundary"] = (
+                "C2 confirmatory policy inference is scientifically blocked at the "
+                "registered homogeneous scale 0.5; do not dispatch 4,096 episodes."
+            )
+    else:
+        decision["provisional_status"] = {
             "wave_complete": complete,
             "observed_seed_count": observed,
             "expected_seed_count": expected,
             "raw_path_scale_passed": raw_pass,
-            "information_gate_failed_seed_count": len(
-                path_scale.get("information_gate_failed_seeds") or []
-            ),
-            "pending_agent_a_audit": (
-                "Agent A auditing shrinking-area information-gate computation for "
-                "physical_translation_sign=-1 ordering/consistency before any C2 "
-                "scientific-block or confirmatory release decision."
-            ),
+            "information_gate_failed_seed_count": info_failed,
             "do_not_block_c2_scope_yet": True,
-            "signature_note": (
-                "Partial/full observed failures concentrate on physical_translation_sign=-1 "
-                "with all path checks passing, matching horizontal's asymmetric pattern."
-            ),
-        },
-        "information_gate_splits": splits,
-        "path_scale_receipt": str(path_scale_out.relative_to(ROOT)),
-        "reason": (
+        }
+        decision["reason"] = (
             f"Homogeneous wave at scale {scale}: {observed}/{expected} seeds observed; "
             f"path checks {path_scale.get('passed_path_check_count')}/"
             f"{path_scale.get('expected_path_check_count')} pass; "
             f"information-gate failures sign=+1 "
             f"{sign_plus_one.get('seeds_fail', 0)}/{sign_plus_one.get('seeds_pass', 0) + sign_plus_one.get('seeds_fail', 0)} "
             f"and sign=-1 "
-            f"{sign_minus_one.get('seeds_fail', 0)}/{sign_minus_one.get('seeds_pass', 0) + sign_minus_one.get('seeds_fail', 0)}; "
-            "gate decision provisional pending Agent A computation audit."
-        ),
-        "scripted_checks_status": "blocked_pending_provisional_gate_resolution",
-    }
+            f"{sign_minus_one.get('seeds_fail', 0)}/{sign_minus_one.get('seeds_pass', 0) + sign_minus_one.get('seeds_fail', 0)}."
+        )
+        decision["scripted_checks_status"] = "blocked_pending_provisional_gate_resolution"
     decision_out.parent.mkdir(parents=True, exist_ok=True)
     body = canonical_json_bytes(decision)
-    with decision_out.open("xb") as handle:
-        handle.write(body)
-        handle.flush()
-        os.fsync(handle.fileno())
+    if decision_out.exists():
+        if not overwrite:
+            raise FileExistsError(f"refusing to overwrite gate decision: {decision_out}")
+        decision_out.write_bytes(body)
+    else:
+        with decision_out.open("xb") as handle:
+            handle.write(body)
+            handle.flush()
+            os.fsync(handle.fileno())
     return decision
 
 
@@ -223,6 +279,18 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--path-scale-out", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument(
+        "--finalize",
+        action="store_true",
+        help="Emit final gate decision (requires complete 128/128 wave).",
+    )
+    parser.add_argument(
+        "--computation-audit",
+        type=Path,
+        default=ROOT
+        / "artifacts/online_correction_v4/qualification/20260908_information_gate_computation_audit.json",
+    )
+    parser.add_argument("--overwrite", action="store_true")
     args = parser.parse_args(argv)
     decision = compile_gate_decision(
         plan_path=args.plan.resolve(),
@@ -234,6 +302,11 @@ def main(argv: list[str] | None = None) -> int:
         decision_out=args.out.resolve(),
         attempt_id=args.attempt_id,
         homogeneous_pin=args.homogeneous_pin,
+        finalize=args.finalize,
+        computation_audit_path=args.computation_audit.resolve()
+        if args.finalize
+        else None,
+        overwrite=args.overwrite,
     )
     print(json.dumps(decision, indent=2, sort_keys=True))
     return 0

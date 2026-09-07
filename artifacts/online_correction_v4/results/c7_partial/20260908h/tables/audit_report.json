@@ -1,0 +1,56 @@
+{
+  "analysis_scope": "offline_compiler_without_raw_trajectory_replay",
+  "c2_primary_response_contract": {
+    "anchor": "t_event_planned+2.0s",
+    "goal_set_branch": "move",
+    "horizon_s": 2.0,
+    "requires_verified_common_prefix": true,
+    "terminal_goal_violation_fallback_forbidden": true
+  },
+  "coverage_reconciliation": {
+    "accepted_valid_unique": 536,
+    "by_family": {
+      "C7": {
+        "accepted_valid": 536,
+        "planned": 536
+      }
+    },
+    "missing_valid": 0,
+    "planned_episodes": 536,
+    "status_counts": {
+      "valid": 536
+    }
+  },
+  "limitations": [
+    "episode_outcomes.parquet, event_outcomes.parquet, and paired_contrasts.parquet are not emitted because this repository has no pinned parquet dependency; compact CSV tables are exported instead",
+    "figures are not generated without accepted trajectory evidence"
+  ],
+  "validation": {
+    "accepted_unique": 536,
+    "analysis_scope": "accepted_ledger_loading_and_coverage_reconciliation",
+    "assigned": 536,
+    "audit_scope": "coverage_and_basic_record_consistency_only",
+    "campaign_id": "online_correction_v4",
+    "coverage_by_family": {
+      "C7": {
+        "accepted_unique": 536,
+        "assigned": 536,
+        "blocked_records": 0,
+        "missing": 0
+      }
+    },
+    "duplicate_accepted_episode_ids": [],
+    "errors": [],
+    "infrastructure_attempts": 0,
+    "limitations": [
+      "Trace/video contents and remote URIs are not opened.",
+      "Scoring, pairing eligibility, receipt truth and statistical analyses require the documented independent audit."
+    ],
+    "missing_episode_ids": [],
+    "ok": true,
+    "primary_response_anchor": "t_event_planned+2.0s",
+    "primary_response_horizon_s": 2.0,
+    "valid_failure_records": 536,
+    "valid_success_records": 0
+  }
+}

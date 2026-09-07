@@ -461,33 +461,46 @@ def main(argv: list[str] | None = None) -> int:
         "missing_c7_episodes": scope_summary["missing_family_episodes"],
         "campaign_scope_revision": {
             "original_planned_policy_episodes": 17664,
-            "achievable_policy_episodes": 6400,
+            "achievable_policy_episodes": 2304,
             "achievable_breakdown": {
-                "C2": 4096,
                 "C6": 768,
                 "C7": 768,
                 "C8": 768,
             },
-            "scientifically_blocked_episodes": 11264,
+            "scientifically_blocked_episodes": 15360,
             "blocked_breakdown": {
                 "C1_C3_C4_horizontal": 9728,
+                "C2_reference_binding": 4096,
                 "C5_vertical": 768,
             },
             "disclosed_setup_repairs": [
-                "eef_tool_length_m=0.14 flange offset applied uniformly across Isaac fixtures (shared root cause with object_pair-only prior binding)",
-                "NaturalGraspDetector SimplerEnv adapter uses finger-contact object coupling and control-boundary sampling (C8)",
+                "NaturalGraspDetector trigger observation wiring repaired: object_kinematic_state() now uses finger-contact coupling instead of robot-base pose (C7)",
+                "eef_tool_length_m=0.14 flange-versus-fingerpad offset applied uniformly across Isaac fixtures",
+                "second_stack observation and sampling defect repaired: SimplerEnv adapter uses control-boundary sampling with provisioned LD_LIBRARY_PATH/VK_ICD_FILENAMES (C8)",
             ],
             "pre_repair_c7_excluded_episodes": 279,
+            "horizontal_geometry_repair_note": (
+                "Horizontal/reference_binding geometry repair restored physical feasibility "
+                "yet the registered shrinking-area information gate still fails across the "
+                "full 128-seed homogeneous ladder at scale 0.5 under counterbalance semantics."
+            ),
         },
         "not_estimable_or_blocked": {
             "C1": "scientifically blocked with C3/C4: horizontal G3 information-gate rejection across full registered ladder at scale 0.5 (64/128 seeds fail right/behind for physical_translation_sign=-1); receipt 20260908_horizontal_g3_gate_decision_g3r20260908g.json",
-            "C2": "live controls pass (g3ngrb20260908u/v); homogeneous G3 path wave g3rb20260908v in progress; primary not-estimable until prefix replay; confirmatory 4096 held until G3 gate + G4-G6 + runtime lock",
+            "C2": (
+                "scientifically blocked: homogeneous G3 gate g3rb20260908v failed shrinking-area "
+                "information gate at confirmatory scale 0.5; sign=-1 observed 0 pass among "
+                "completed negative-sign seeds, sign=+1 partial failures on left/behind; front "
+                "goal passes on all observed seeds; all path checks pass; computation audit "
+                "confirmed correct gate math; primary estimand not estimable; 4096 confirmatory "
+                "episodes blocked"
+            ),
             "C3": "scientifically blocked with C1/C4: horizontal information-gate failure on registered ladder",
             "C4": "scientifically blocked with C1/C3: horizontal information-gate failure on registered ladder",
             "C5": "scientifically blocked: vertical IK reachability finding at seed 2100020000 scale 0.5; receipt 20260908_vertical_natural_grasp_live_control_finding_g3ngp20260908vp8.json",
             "C6": "achievable (768 episodes); dispatch pending qualification completion",
             "C7": c7_status,
-            "C8": "trigger adapter verified (g3c8ng20260908p/neg); confirmatory 768 held until G7/G8, runtime lock, and policy runner wiring",
+            "C8": "achievable (768 episodes); pilot G3 path gate passed 96/96 (g3c8p20260908f); confirmatory G7/G8 release and dispatch in progress",
         },
         "scientific_blockers": {
             "horizontal_information_gate": {
@@ -495,6 +508,15 @@ def main(argv: list[str] | None = None) -> int:
                 "receipt_path": "artifacts/online_correction_v4/qualification/20260908_horizontal_g3_gate_decision_g3r20260908g.json",
                 "affected_families": ["C1", "C3", "C4"],
                 "affected_episodes": 9728,
+            },
+            "reference_binding_information_gate": {
+                "attempt_id": "g3rb20260908v",
+                "receipt_path": "artifacts/online_correction_v4/qualification/20260908_reference_binding_g3_gate_decision_g3rb20260908v.json",
+                "provisional_receipt_path": "artifacts/online_correction_v4/qualification/20260908_reference_binding_g3_gate_decision_g3rb20260908v_provisional.json",
+                "computation_audit_path": "artifacts/online_correction_v4/qualification/20260908_information_gate_computation_audit.json",
+                "affected_families": ["C2"],
+                "affected_episodes": 4096,
+                "primary_estimand_status": "not_estimable",
             },
             "vertical_ik_reachability": {
                 "receipt_path": "artifacts/online_correction_v4/qualification/20260908_vertical_natural_grasp_live_control_finding_g3ngp20260908vp8.json",

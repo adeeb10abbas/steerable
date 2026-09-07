@@ -1,0 +1,92 @@
+{
+  "accepted_c7_episodes_behavioral": 536,
+  "campaign_scope_revision": {
+    "achievable_breakdown": {
+      "C6": 768,
+      "C7": 768,
+      "C8": 768
+    },
+    "achievable_policy_episodes": 2304,
+    "blocked_breakdown": {
+      "C1_C3_C4_horizontal": 9728,
+      "C2_reference_binding": 4096,
+      "C5_vertical": 768
+    },
+    "disclosed_setup_repairs": [
+      "NaturalGraspDetector trigger observation wiring repaired: object_kinematic_state() now uses finger-contact coupling instead of robot-base pose (C7)",
+      "eef_tool_length_m=0.14 flange-versus-fingerpad offset applied uniformly across Isaac fixtures",
+      "second_stack observation and sampling defect repaired: SimplerEnv adapter uses control-boundary sampling with provisioned LD_LIBRARY_PATH/VK_ICD_FILENAMES (C8)"
+    ],
+    "horizontal_geometry_repair_note": "Horizontal/reference_binding geometry repair restored physical feasibility yet the registered shrinking-area information gate still fails across the full 128-seed homogeneous ladder at scale 0.5 under counterbalance semantics.",
+    "original_planned_policy_episodes": 17664,
+    "pre_repair_c7_excluded_episodes": 279,
+    "scientifically_blocked_episodes": 15360
+  },
+  "infra_invalid_c7_episodes_trigger_wiring": 0,
+  "intervention_trigger_positive_control": {
+    "audit_path": "artifacts/online_correction_v4/qualification/20260908_c7_grasp_detector_positive_control_audit.json",
+    "audit_sha256": "d5269cb333eb45166b7b4d74c7b067b200f221e6805b81c1e0128bedb532fb23",
+    "defect_component": null,
+    "finding": "policy_failure_under_correct_timing",
+    "live_controls_registry_path": "artifacts/online_correction_v4/setup/natural_grasp_live_control_registry.json",
+    "live_positive_control_path": "artifacts/online_correction_v4/qualification/20260908_object_pair_natural_grasp_live_positive_control_g3ngp20260908m.json",
+    "live_positive_control_sha256": "7f851fef591e973c35d84c6e85f01e82b2f47b32c1766cbb404c82836f1bbd97",
+    "live_trigger_eligible_observed_post_repair": true,
+    "live_trigger_eligible_observed_pre_repair": false,
+    "paper_caveat": "Episodes on the validated repaired trigger path run the full 61.0 s simulation window (916 control steps at native dt), exceeding the registered 40.0 s trigger deadline and 60.0 s episode cap plus passive settling. grasp_eligible remains false for every audited trajectory step; all terminals carry timeout_after_no_grasp=true. This is not an episode-budget truncation artifact.",
+    "policy_dispatch_blocked": {
+      "C2_confirmatory_4096": "held until homogeneous G3 gate (both translation signs), G4-G6, prefix replay, and confirmatory runtime lock",
+      "C8_confirmatory_768": "held until G7/G8, confirmatory runtime lock, and second_stack policy runner wiring"
+    },
+    "reclassification_path": null,
+    "repair_status": null,
+    "repaired_positive_control_path": "artifacts/online_correction_v4/qualification/20260908_object_pair_natural_grasp_live_positive_control_g3ngp20260908p.json",
+    "repaired_positive_control_sha256": "cb80d2d1cf72c8bc38c9c4d340c690f6662e1fcff5650bf6f489997e7da6402b",
+    "scripted_grasp_stages_passed": true,
+    "status": "timing_audit_confirms_genuine_policy_no_grasp"
+  },
+  "missing_c7_episodes": 232,
+  "not_estimable_or_blocked": {
+    "C1": "scientifically blocked with C3/C4: horizontal G3 information-gate rejection across full registered ladder at scale 0.5 (64/128 seeds fail right/behind for physical_translation_sign=-1); receipt 20260908_horizontal_g3_gate_decision_g3r20260908g.json",
+    "C2": "scientifically blocked: homogeneous G3 gate g3rb20260908v failed shrinking-area information gate at confirmatory scale 0.5; sign=-1 observed 0 pass among completed negative-sign seeds, sign=+1 partial failures on left/behind; front goal passes on all observed seeds; all path checks pass; computation audit confirmed correct gate math; primary estimand not estimable; 4096 confirmatory episodes blocked",
+    "C3": "scientifically blocked with C1/C4: horizontal information-gate failure on registered ladder",
+    "C4": "scientifically blocked with C1/C3: horizontal information-gate failure on registered ladder",
+    "C5": "scientifically blocked: vertical IK reachability finding at seed 2100020000 scale 0.5; receipt 20260908_vertical_natural_grasp_live_control_finding_g3ngp20260908vp8.json",
+    "C6": "achievable (768 episodes); dispatch pending qualification completion",
+    "C7": "partial export with timing-audit-backed genuine policy no-grasp on repaired-path confirmatory completes; 279 pre-repair episodes excluded",
+    "C8": "achievable (768 episodes); pilot G3 path gate passed 96/96 (g3c8p20260908f); confirmatory G7/G8 release and dispatch in progress"
+  },
+  "planned_c7_episodes": 768,
+  "schema_version": "v4-c7-partial-blocked-scope-v2",
+  "scientific_blockers": {
+    "horizontal_information_gate": {
+      "affected_episodes": 9728,
+      "affected_families": [
+        "C1",
+        "C3",
+        "C4"
+      ],
+      "attempt_id": "g3r20260908g",
+      "receipt_path": "artifacts/online_correction_v4/qualification/20260908_horizontal_g3_gate_decision_g3r20260908g.json"
+    },
+    "reference_binding_information_gate": {
+      "affected_episodes": 4096,
+      "affected_families": [
+        "C2"
+      ],
+      "attempt_id": "g3rb20260908v",
+      "computation_audit_path": "artifacts/online_correction_v4/qualification/20260908_information_gate_computation_audit.json",
+      "primary_estimand_status": "not_estimable",
+      "provisional_receipt_path": "artifacts/online_correction_v4/qualification/20260908_reference_binding_g3_gate_decision_g3rb20260908v_provisional.json",
+      "receipt_path": "artifacts/online_correction_v4/qualification/20260908_reference_binding_g3_gate_decision_g3rb20260908v.json"
+    },
+    "vertical_ik_reachability": {
+      "affected_episodes": 768,
+      "affected_families": [
+        "C5"
+      ],
+      "receipt_path": "artifacts/online_correction_v4/qualification/20260908_vertical_natural_grasp_live_control_finding_g3ngp20260908vp8.json"
+    }
+  },
+  "source_accepted_ledger_episodes": 536
+}

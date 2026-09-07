@@ -1,14 +1,17 @@
 {
   "attempt_id": "g3rb20260908v",
-  "compiled_at_utc": "2026-09-08T15:10:00Z",
+  "compiled_at_utc": "2026-09-08T15:55:00Z",
   "confirmatory_scale": 0.5,
+  "computation_audit": {
+    "path": "artifacts/online_correction_v4/qualification/20260908_information_gate_computation_audit.json",
+    "verdict": "computation_correct_scientific_rejection"
+  },
   "failed_jobs": [
     {
       "failure_kind": "infrastructure_invalid",
       "job": "v4-g3-rb-g3rb20260908v-60670a185c-s059",
       "reason": "BackoffLimitExceeded during Isaac env setup before receipt write",
       "retry_job": "v4-g3-rb-g3rb20260908v-72a5290972-s059",
-      "retry_status": "running",
       "seed_index": 59
     },
     {
@@ -16,36 +19,43 @@
       "job": "v4-g3-rb-g3rb20260908v-60670a185c-s062",
       "reason": "BackoffLimitExceeded during Isaac env setup before receipt write",
       "retry_job": "v4-g3-rb-g3rb20260908v-72a5290972-s062",
-      "retry_status": "running",
       "seed_index": 62
+    },
+    {
+      "failure_kind": "infrastructure_invalid",
+      "job": "v4-g3-rb-g3rb20260908v-60670a185c-s108",
+      "reason": "BackoffLimitExceeded",
+      "seed_index": 108
     }
   ],
   "homogeneous_pin": "c401fb4577d8003a019ecf7ff7be549f2c0a5931",
-  "jobs_complete": 84,
-  "jobs_failed": 2,
-  "jobs_running": 44,
+  "jobs_complete": 89,
+  "jobs_failed": 3,
+  "jobs_running": 36,
   "jobs_total": 128,
-  "partial_path_scale_signal": {
-    "information_gate_failed_of_observed": "42/59",
-    "note": "Partial compile from 59 locally synced PVC receipts; cluster PVC had 91 receipts at 15:10Z; not authoritative until 128/128 terminal",
-    "observed_receipts_local_sync": 59,
-    "observed_receipts_pvc": 91,
-    "path_checks_passed": 1416,
+  "authoritative_aggregate": {
+    "path": "artifacts/online_correction_v4/qualification/20260908_reference_binding_g3_path_scale_g3rb20260908v_authoritative.json",
+    "observed_seed_count": 107,
+    "expected_seed_count": 128,
+    "path_checks_passed": 2568,
     "path_checks_expected_partial": 3072,
-    "sign_split_observed_59": {
-      "physical_translation_sign_-1": "0 pass / 28 fail",
-      "physical_translation_sign_+1": "17 pass / 14 fail"
+    "information_gate_failed_of_observed": "80/107",
+    "sign_split_observed": {
+      "physical_translation_sign_-1": "0 pass / 53 fail",
+      "physical_translation_sign_+1": "27 pass / 27 fail"
     },
-    "goal_split_observed_59_case_level": {
-      "behind": "31 pass / 0 fail",
-      "front": "31 pass / 0 fail",
-      "left": "17 pass / 14 fail",
-      "right": "31 pass / 0 fail"
+    "goal_split_observed_case_level": {
+      "front": "107 pass / 0 fail",
+      "behind": "55 pass / 52 fail",
+      "left": "80 pass / 27 fail",
+      "right": "79 pass / 28 fail"
     },
-    "status": "provisional_pending_computation_audit"
+    "status": "provisional_pending_wave_completion",
+    "finalize_blocked_until": "128/128 homogeneous receipts on PVC"
   },
   "provisional_gate_decision": "artifacts/online_correction_v4/qualification/20260908_reference_binding_g3_gate_decision_g3rb20260908v_provisional.json",
   "pvc_receipts_root": "/data/users/ali/vla_wam/raw/v4/g3-reference-binding/attempt-g3rb20260908v",
+  "refill_bundle": "artifacts/online_correction_v4/execution/g3_reference_binding_20260908/rendered-refill-missing35/v4-g3-rb-g3rb20260908v-2a5f61fac0/bundle-manifest.json",
   "schema_version": "v4-reference-binding-g3-wave-progress-v1",
   "status": "in_progress",
   "wave_dispatch_receipt": "artifacts/online_correction_v4/qualification/20260908_reference_binding_g3_wave_dispatch_g3rb20260908v.json"

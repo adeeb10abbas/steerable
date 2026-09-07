@@ -160,6 +160,13 @@ class C8SecondStackRunnerTests(unittest.TestCase):
         audit = request_audit_projection(wire)
         self.assertEqual(audit["processed_observation"]["video.image_0"]["encoding"], "array_sha256")
 
+    def test_groot_sampling_seed_uses_policy_seed_uint32_contract(self) -> None:
+        from experiments.online_correction_v4.droid_groot_policy import groot_sampling_seed
+
+        seed = groot_sampling_seed(policy_seed=963700566, request_index=0)
+        self.assertEqual(seed, 963700566)
+        self.assertLessEqual(seed, (1 << 32) - 1)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -29,6 +29,20 @@ class GrootPolicyContractError(RuntimeError):
     """Raised when GR00T Bridge request/response contracts diverge."""
 
 
+UINT32_MAX = (1 << 32) - 1
+
+
+def groot_sampling_seed(*, policy_seed: int, request_index: int) -> int:
+    """Map episode policy seeds into GR00T Bridge's uint32 seed contract."""
+    del request_index
+    seed = int(policy_seed)
+    if seed < 0 or seed > UINT32_MAX:
+        raise GrootPolicyContractError(
+            f"policy_seed {seed} exceeds GR00T Bridge uint32 sampling range"
+        )
+    return seed
+
+
 Transport = Callable[[dict[str, Any]], Mapping[str, Any]]
 
 
@@ -100,7 +114,10 @@ class DroidGrootPolicyAdapter:
         if observation.payload_sha256 != sha256_bytes(observation.payload):
             raise GrootPolicyContractError("observation payload hash mismatch")
         reset_hash = self._ensure_reset()
-        request_seed = self.policy_seed * 1000 + self.request_count
+        request_seed = groot_sampling_seed(
+            policy_seed=self.policy_seed,
+            request_index=self.request_count,
+        )
         action_step_start = self._action_step_start()
         packed = _observation_packed_request(observation)
         audit = {

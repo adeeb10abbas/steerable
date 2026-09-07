@@ -1,0 +1,10 @@
+{
+  "amendment_id": "c8-g7-pilot-groot-wire-json-20260908",
+  "basis_runtime_lock": "artifacts/online_correction_v4/setup/second_stack_g7_pilot_runtime_lock.released.20260908r3.json",
+  "commit": "90744041c8106edee91615a89f0578cd4395e113",
+  "infra_failure_class": "malformed_action_interface",
+  "observed_failure": "First GR00T Bridge HTTP request failed in GrootBridgeHttpClient._query_server because json.dumps received ndarray-bearing processed_observation payloads.",
+  "released_runtime_lock": "artifacts/online_correction_v4/setup/second_stack_g7_pilot_runtime_lock.released.20260908r4.json",
+  "repair": "wire_json_projection converts ndarray/tensor observations to nested lists at the HTTP wire boundary; request_audit_projection and canonical_json_bytes retain compact array_sha256 audit evidence.",
+  "retry_policy": "infrastructure_invalid_only"
+}

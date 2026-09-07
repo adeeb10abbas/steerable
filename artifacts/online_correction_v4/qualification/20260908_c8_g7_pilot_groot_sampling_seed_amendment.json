@@ -1,0 +1,10 @@
+{
+  "amendment_id": "c8-g7-pilot-groot-sampling-seed-20260908",
+  "basis_runtime_lock": "artifacts/online_correction_v4/setup/second_stack_g7_pilot_runtime_lock.released.20260908r4.json",
+  "commit": "90744041c8106edee91615a89f0578cd4395e113",
+  "infra_failure_class": "malformed_action_interface",
+  "observed_failure": "GR00T Bridge HTTP 400: Seed must be between 0 and 2**32 - 1 because policy_seed * 1000 + request_index overflowed gr00t.utils.determinism.seed_everything.",
+  "released_runtime_lock": "artifacts/online_correction_v4/setup/second_stack_g7_pilot_runtime_lock.released.20260908r5.json",
+  "repair": "groot_sampling_seed sends the frozen episode policy_seed directly, matching the G4 policy-session and nano adapter uint32 contract.",
+  "retry_policy": "infrastructure_invalid_only"
+}

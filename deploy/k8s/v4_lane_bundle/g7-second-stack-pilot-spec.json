@@ -36,10 +36,18 @@
     "expected_gpu_name": "NVIDIA A40",
     "experiment_argv": [
       "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/gr00t/eval/sim/SimplerEnv/simpler_uv/.venv/bin/python",
-      "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/tools/run_online_correction_v4.py"
+      "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/tools/run_v4_groot_bridge_policy_server.py",
+      "--host",
+      "0.0.0.0",
+      "--port",
+      "18200",
+      "--checkpoint-path",
+      "/data/users/ali/vla_wam/checkpoints/groot-n1.7-simplerenv-bridge",
+      "--integration-root",
+      "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89"
     ],
     "checkpoint_path": "/data/users/ali/vla_wam/checkpoints/groot-n1.7-simplerenv-bridge",
-    "checkpoint_sha256": "14842573e8c193e1216252e2862be91567574f0dea97a9b040b3ce07754e98a7",
+    "checkpoint_sha256": "ba6ebd8503df6950d18e416a9d4d1b945b02493af7fea5406bfe7f889acc9c4f",
     "checkpoint_registry_path": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/artifacts/online_correction_v4/setup/second_stack_g4_checkpoint_registry.candidate.json",
     "nvidia_smi_bin": "/usr/bin/nvidia-smi",
     "python_imports": ["torch", "simpler_env"],
@@ -47,7 +55,7 @@
       {"source": "scripts/lane_entrypoint.py", "path": "/opt/v4-lane/scripts/lane_entrypoint.py"},
       {"source": "scripts/startup_preflight.py", "path": "/opt/v4-lane/scripts/startup_preflight.py"},
       {"source": "scripts/check_policy_ready.py", "path": "/opt/v4-lane/scripts/check_policy_ready.py"},
-      {"source": "../../../tools/run_online_correction_v4.py", "path": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/tools/run_online_correction_v4.py"},
+      {"source": "../../../tools/run_v4_groot_bridge_policy_server.py", "path": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/tools/run_v4_groot_bridge_policy_server.py"},
       {"source": "../../../artifacts/online_correction_v4/setup/second_stack_g4_checkpoint_registry.candidate.json", "path": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/artifacts/online_correction_v4/setup/second_stack_g4_checkpoint_registry.candidate.json"}
     ],
     "vulkan_contract": {"required": false},

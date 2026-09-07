@@ -369,17 +369,14 @@ def launch_document(
             document["readiness_contract"] = "http_healthz_after_checkpoint_load"
             document.pop("policy_wait", None)
     else:
-        if embedded_simulator:
-            document.pop("policy_wait", None)
-        else:
-            document["policy_wait"] = {
-                "mode": "http_healthz",
-                "host": policy_service,
-                "port": policy_port,
-                "timeout_seconds": 900,
-                "poll_seconds": 2,
-                "service_identity": dict(service_identity),
-            }
+        document["policy_wait"] = {
+            "mode": "http_healthz",
+            "host": policy_service,
+            "port": policy_port,
+            "timeout_seconds": 900,
+            "poll_seconds": 2,
+            "service_identity": dict(service_identity),
+        }
         document.pop("readiness_contract", None)
     binding_paths = {str(binding["path"]) for binding in document["file_bindings"]}
     entrypoint_path = Path(entrypoint)
@@ -763,7 +760,7 @@ def render(spec_path: Path, output_root: Path) -> dict[str, str]:
         policy_service if item == "{policy_service}" else item
         for item in simulator_doc["experiment_argv"]
     ]
-    if simulator_doc.get("readiness_interface") != "embedded_in_policy_container":
+    if simulator_doc.get("readiness_interface") != "embedded_in_policy_container" or "policy_wait" in simulator_doc:
         simulator_doc["policy_wait"]["host"] = policy_service
         simulator_doc["policy_wait"]["service_identity"] = service_identity
         policy_wait_timeout = spec.get("policy_wait_timeout_seconds", DEFAULT_POLICY_WAIT_TIMEOUT_SECONDS)

@@ -1,0 +1,57 @@
+{
+  "campaign_id": "online_correction_v4",
+  "dispatch": {
+    "lane_quarantine_threshold": 3,
+    "max_infra_retries_per_episode": 3
+  },
+  "qualified_lanes": [
+    {
+      "hardware_stratum": "a40-single-container-groot-bridge-pilot",
+      "lane_id": "g7c8p00",
+      "lane_spec_template_path": "deploy/k8s/v4_lane_bundle/g7-second-stack-pilot-spec.json"
+    },
+    {
+      "hardware_stratum": "a40-single-container-groot-bridge-pilot",
+      "lane_id": "g7c8p01",
+      "lane_spec_template_path": "deploy/k8s/v4_lane_bundle/g7-second-stack-pilot-spec.json"
+    },
+    {
+      "hardware_stratum": "a40-single-container-groot-bridge-pilot",
+      "lane_id": "g7c8p02",
+      "lane_spec_template_path": "deploy/k8s/v4_lane_bundle/g7-second-stack-pilot-spec.json"
+    },
+    {
+      "hardware_stratum": "a40-single-container-groot-bridge-pilot",
+      "lane_id": "g7c8p03",
+      "lane_spec_template_path": "deploy/k8s/v4_lane_bundle/g7-second-stack-pilot-spec.json"
+    },
+    {
+      "hardware_stratum": "a40-single-container-groot-bridge-pilot",
+      "lane_id": "g7c8p04",
+      "lane_spec_template_path": "deploy/k8s/v4_lane_bundle/g7-second-stack-pilot-spec.json"
+    },
+    {
+      "hardware_stratum": "a40-single-container-groot-bridge-pilot",
+      "lane_id": "g7c8p05",
+      "lane_spec_template_path": "deploy/k8s/v4_lane_bundle/g7-second-stack-pilot-spec.json"
+    },
+    {
+      "hardware_stratum": "a40-single-container-groot-bridge-pilot",
+      "lane_id": "g7c8p06",
+      "lane_spec_template_path": "deploy/k8s/v4_lane_bundle/g7-second-stack-pilot-spec.json"
+    },
+    {
+      "hardware_stratum": "a40-single-container-groot-bridge-pilot",
+      "lane_id": "g7c8p07",
+      "lane_spec_template_path": "deploy/k8s/v4_lane_bundle/g7-second-stack-pilot-spec.json"
+    }
+  ],
+  "release_boundary": "Full eight-lane C8 engineering pilot after GR00T policy-server argv and embedded policy_wait fixes.",
+  "release_status": "PILOT_RELEASED",
+  "resource_budget": {
+    "authorized_storage_bytes": 1000000000000,
+    "estimated_bytes_per_episode": 500000000,
+    "estimated_bytes_per_infra_retry": 500000000
+  },
+  "schema_version": 1
+}

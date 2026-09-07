@@ -20,6 +20,7 @@ if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 
 import v4_gpu_scheduling as gpu_scheduling  # noqa: E402
+import v4_dispatch_gates as dispatch_gates  # noqa: E402
 
 
 def _load_renderer(schema_version: str):
@@ -81,6 +82,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--gpu-product", default=None)
     parser.add_argument("--attempt-id", default=None)
     parser.add_argument("--max-seed-jobs", type=int, default=None)
+    parser.add_argument(
+        "--smoke",
+        action="store_true",
+        help="1-seed smoke dispatch; skips smoke-before-wave gate",
+    )
+    parser.add_argument("--publisher-pod", default="211247-sz5vjy-vla4-b200-4gpu")
+    parser.add_argument("--skip-cluster-gates", action="store_true")
     parser.add_argument("--create", action="store_true")
     args = parser.parse_args(argv)
 
@@ -107,6 +115,31 @@ def main(argv: list[str] | None = None) -> int:
 
     if not args.create:
         return 0
+
+    is_smoke = bool(
+        args.smoke
+        or (args.max_seed_jobs is not None and int(args.max_seed_jobs) == 1)
+    )
+    fixture_id = str(patched.get("fixture_id") or "horizontal")
+    gate = "G2" if "g2" in str(patched["schema_version"]) else "G3"
+    gpu_product = str(patched["gpu_product"])
+    if not args.skip_cluster_gates:
+        try:
+            gate_report = dispatch_gates.enforce_dispatch_gates(
+                bundle_root=bundle_root,
+                fixture_id=fixture_id,
+                gate=gate,
+                gpu_product=gpu_product,
+                kube_context=str(patched["kube_context"]),
+                namespace=str(patched["namespace"]),
+                publisher_pod=str(args.publisher_pod),
+                expected_study_commit=str(patched.get("expected_study_commit") or ""),
+                is_smoke=is_smoke,
+            )
+        except dispatch_gates.DispatchGateError as exc:
+            print(str(exc), file=sys.stderr)
+            return 2
+        print(json.dumps({"dispatch_gates": gate_report}, indent=2, sort_keys=True))
 
     kube_context = str(patched["kube_context"])
     completed = subprocess.run(

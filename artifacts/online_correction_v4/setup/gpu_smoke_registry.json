@@ -1,0 +1,16 @@
+{
+  "schema_version": "v4-gpu-smoke-registry-v1",
+  "passed_smokes": [
+    {
+      "key": "horizontal:G2:NVIDIA-A100-SXM4-80GB",
+      "fixture_id": "horizontal",
+      "gate": "G2",
+      "gpu_product": "NVIDIA-A100-SXM4-80GB",
+      "attempt_id": "g2r20260908a10080a",
+      "receipt_path": "artifacts/online_correction_v4/qualification/gpu_receipts_20260908/g2_repair_v2_seed2100000000_a10080.json",
+      "receipt_sha256": "dacceca03ee957d2fdbd0ac053533c01a808ede04d035ebd373202c0e2a3f6df",
+      "status": "passed",
+      "notes": "geometry_repair_v2 registry seed 2100000000; enables A100-80GB G2 waves only until per-fixture G3 smokes pass separately"
+    }
+  ]
+}

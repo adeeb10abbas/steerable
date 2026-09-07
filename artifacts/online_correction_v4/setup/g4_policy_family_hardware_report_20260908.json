@@ -1,0 +1,80 @@
+{
+  "schema_version": "v4-g4-policy-family-hardware-report-v1",
+  "observed_at_utc": "2026-09-08T06:45:00Z",
+  "summary": "Model-blind simulator widening is not a policy widening. C7 confirmatory is frozen on a10080-policy_a40-simulator. Other policy families need a new G4 receipt and runtime-lock amendment before episodes run on a different GPU product than originally attested.",
+  "families": [
+    {
+      "family_id": "object_pair_c7_confirmatory",
+      "fixture": "object_pair",
+      "gate": "G4",
+      "attested_stratum": "a10080-policy_a40-simulator",
+      "attested_gpu_products": ["NVIDIA-A100-SXM4-80GB", "NVIDIA-A40"],
+      "policy_episodes_stay_on": "NVIDIA-A40 simulator stratum with A100-80GB policy server",
+      "needs_new_g4_if_moved": true,
+      "governing_receipt": "artifacts/online_correction_v4/qualification/object_pair_g4_nano_a10080_a40_hardware_g4c7a100q20260906b.json",
+      "runtime_lock": "artifacts/online_correction_v4/runtime_locks/object_pair_c7_confirmatory_runtime_lock.released.json",
+      "notes": "Do not move policy or simulator to B200/A100-40 without new G4 hardware receipt and runtime-lock amendment."
+    },
+    {
+      "family_id": "object_pair_c7_g7_pilot",
+      "fixture": "object_pair",
+      "gate": "G7",
+      "attested_stratum": "a40-b200-object-pair-pilot",
+      "attested_gpu_products": ["NVIDIA-A40", "NVIDIA-B200"],
+      "policy_episodes_stay_on": "pilot matrix stratum only",
+      "needs_new_g4_if_moved": true,
+      "notes": "Separate from confirmatory; pilot stratum is not interchangeable with confirmatory hardware receipt."
+    },
+    {
+      "family_id": "horizontal_model_blind_g2",
+      "fixture": "horizontal",
+      "gate": "G2",
+      "attested_stratum": "per-gpu-product homogeneous stratum",
+      "attested_gpu_products": ["NVIDIA-A40", "NVIDIA-A100-SXM4-80GB"],
+      "policy_episodes_stay_on": "N/A — simulator-only gate",
+      "needs_new_g4_if_moved": false,
+      "notes": "A40 is first qualified stratum; A100-80GB attested via repair-v2 smoke. A100-40GB and B200 require passing smokes before waves."
+    },
+    {
+      "family_id": "containment_model_blind_g3",
+      "fixture": "containment",
+      "gate": "G3",
+      "attested_stratum": "per-gpu-product homogeneous stratum",
+      "attested_gpu_products": ["NVIDIA-A40"],
+      "policy_episodes_stay_on": "N/A — simulator-only gate",
+      "needs_new_g4_if_moved": false,
+      "notes": "No alternate-GPU smoke passed yet; Agent B owns fixture binding fix."
+    },
+    {
+      "family_id": "vertical_model_blind_g3",
+      "fixture": "vertical",
+      "gate": "G3",
+      "attested_stratum": "per-gpu-product homogeneous stratum",
+      "attested_gpu_products": ["NVIDIA-A40"],
+      "policy_episodes_stay_on": "N/A — simulator-only gate",
+      "needs_new_g4_if_moved": false,
+      "notes": "No alternate-GPU smoke passed yet."
+    },
+    {
+      "family_id": "reference_binding_c2",
+      "fixture": "reference_binding",
+      "gate": "C2",
+      "attested_stratum": "Agent C checkout steerable-v4-c2-g3",
+      "attested_gpu_products": ["NVIDIA-A100-SXM4-80GB"],
+      "policy_episodes_stay_on": "Agent C boundary — not capacity-widened",
+      "needs_new_g4_if_moved": true,
+      "notes": "Stale pre-fix wave cancelled; re-render required after checkout sync."
+    }
+  ],
+  "already_attested_on_a40": [
+    "horizontal_model_blind_g2",
+    "containment_model_blind_g3",
+    "vertical_model_blind_g3",
+    "object_pair_c7_confirmatory simulator leg"
+  ],
+  "needs_per_stratum_g4_if_episodes_off_original_product": [
+    "object_pair_c7_confirmatory",
+    "object_pair_c7_g7_pilot",
+    "reference_binding_c2"
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "schema_version": "v4-model-blind-gpu-determinism-comparison-v1",
+  "compiled_at_utc": "2026-09-08T05:25:00Z",
+  "status": "partial_pending_receipts",
+  "registry_position_tolerance_m": 0.005,
+  "baseline": {
+    "gpu_product": "NVIDIA-A40",
+    "gpu_display_name": "NVIDIA A40",
+    "reference_gate": "G2 horizontal",
+    "reference_receipt": "artifacts/online_correction_v4/qualification/20260905_horizontal_g2_gate_receipt.json",
+    "environment_seed": 2100000000,
+    "notes": "A40 baseline from qualified horizontal G2 gate; G3 containment seed 2100030000 comparison pending write-once receipts from widened wave."
+  },
+  "candidates": [
+    {
+      "gpu_product": "NVIDIA-A100-SXM4-80GB",
+      "attempt_id": "g3c6p20260908a10080c",
+      "fixture": "containment",
+      "environment_seed": 2100030000,
+      "preflight_status": "passed",
+      "isaac_launch_status": "passed",
+      "receipt_comparison_status": "pending",
+      "notes": "Pod reached G3 runner; awaiting seed receipt on PVC for compare_v4_model_blind_gpu_determinism.py."
+    },
+    {
+      "gpu_product": "NVIDIA-A100-SXM4-40GB",
+      "attempt_id": "g3gpusmoke20260908a10040",
+      "status": "not_dispatched",
+      "reason": "Awaiting 1-seed replicate dispatch after launch-config newline SHA fix validated on a10080c wave."
+    },
+    {
+      "gpu_product": "NVIDIA-B200",
+      "attempt_id": "g3gpusmoke20260908b200",
+      "status": "not_dispatched",
+      "reason": "Same as A100-40GB; replicate path ready."
+    }
+  ],
+  "compare_command": ".venv/bin/python tools/compare_v4_model_blind_gpu_determinism.py --baseline <a40-receipt.json> --candidate <candidate-receipt.json>"
+}

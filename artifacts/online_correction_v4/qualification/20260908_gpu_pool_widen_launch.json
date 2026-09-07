@@ -1,0 +1,56 @@
+{
+  "schema_version": "v4-gpu-pool-widen-launch-receipt-v1",
+  "campaign_id": "online_correction_v4",
+  "compiled_at_utc": "2026-09-08T05:30:00Z",
+  "cluster": {
+    "context": "prod-dcwi-warrenq1-vmkub007",
+    "namespace": "211247-prod"
+  },
+  "hardware_binding_analysis": {
+    "path": "artifacts/online_correction_v4/setup/hardware_binding_analysis_20260908.json",
+    "sha256": "pending_commit"
+  },
+  "smoke_waves": [
+    {
+      "attempt_id": "g3gpu20260908a10080",
+      "gpu_product": "NVIDIA-A100-SXM4-80GB",
+      "fixture_id": "reference_binding",
+      "job_prefix": "v4-g3-reference-binding-g3gpu20260908a10080-d00ee331b1"
+    },
+    {
+      "attempt_id": "g3gpu20260908a10040",
+      "gpu_product": "NVIDIA-A100-SXM4-40GB",
+      "fixture_id": "reference_binding",
+      "job_prefix": "v4-g3-reference-binding-g3gpu20260908a10040-5ec5f179e3"
+    },
+    {
+      "attempt_id": "g3gpu20260908b200",
+      "gpu_product": "NVIDIA-B200",
+      "fixture_id": "reference_binding",
+      "job_prefix": "v4-g3-reference-binding-g3gpu20260908b200-b2a50c44b2"
+    }
+  ],
+  "widened_waves": [
+    {
+      "attempt_id": "g3c6p20260908a10080b",
+      "gpu_product": "NVIDIA-A100-SXM4-80GB",
+      "fixture_id": "containment",
+      "seed_count": 64,
+      "job_prefix": "v4-g3-containment-g3c6p20260908a10080b-30dffd5752",
+      "output_parent": "/data/users/ali/vla_wam/raw/v4/g3-containment/attempt-g3c6p20260908a10080b/scale-0.5"
+    },
+    {
+      "attempt_id": "g3c5p20260908a10080b",
+      "gpu_product": "NVIDIA-A100-SXM4-80GB",
+      "fixture_id": "vertical",
+      "seed_count": 64,
+      "job_prefix": "v4-g3-vertical-g3c5p20260908a10080b-3210363d9b",
+      "output_parent": "/data/users/ali/vla_wam/raw/v4/g3-vertical/attempt-g3c5p20260908a10080b/scale-0.5"
+    }
+  ],
+  "unchanged_a40_waves": {
+    "note": "Original 132 A40-pinned pending jobs remain as backfill; policy C7 lanes stay on frozen a10080-policy_a40-simulator stratum.",
+    "pending_a40_count_at_launch": 132
+  },
+  "release_boundary": "Infrastructure capacity widening only. Gate receipts compile per homogeneous GPU stratum after jobs complete."
+}

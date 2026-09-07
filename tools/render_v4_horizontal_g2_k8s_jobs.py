@@ -16,6 +16,7 @@ if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 
 import render_v4_k8s_lane_bundle as lane  # noqa: E402
+import v4_gpu_scheduling as gpu_scheduling  # noqa: E402
 
 DEFAULT_SPEC = ROOT / "deploy/k8s/v4_lane_bundle/g2-horizontal-spec.example.json"
 DEFAULT_OUTPUT = ROOT / "deploy/k8s/v4_lane_bundle/rendered-g2"
@@ -196,10 +197,10 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
         expected_driver and expected_driver.count(".") == 2,
         "expected_driver_version is invalid",
     )
-    gpu_product = lane.gpu_product(spec.get("gpu_product"), "gpu_product")
-    expected_gpu_name = lane.gpu_display_name(
-        spec.get("expected_gpu_name"), "expected_gpu_name"
-    )
+    gpu_sched = gpu_scheduling.resolve_model_blind_scheduling(spec)
+    gpu_product = gpu_sched["gpu_product"]
+    expected_gpu_name = gpu_sched["expected_gpu_name"]
+    gpu_product_allowlist = gpu_sched["gpu_product_allowlist"]
     native_control_dt_s = spec.get("native_control_dt_s")
     require(
         isinstance(native_control_dt_s, (int, float))
@@ -396,7 +397,9 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
             "experiment_argv": argv,
             "file_bindings": bindings,
             "gpu_product": gpu_product,
+            "gpu_product_allowlist": gpu_product_allowlist,
             "expected_gpu_name": expected_gpu_name,
+            "allowed_gpu_names": gpu_sched["allowed_gpu_names"],
             "expected_driver_version": expected_driver,
             "checkpoint_path": reset_registry_path,
             "checkpoint_sha256": reset_sha,
@@ -431,6 +434,7 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
             image=image,
             image_digest=image_digest,
             gpu_product_value=gpu_product,
+            gpu_product_allowlist=gpu_product_allowlist,
             lane=lane_id,
             attempt=attempt,
             output_parent=output_parent,
@@ -479,6 +483,7 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
         "namespace": namespace,
         "attempt_id": attempt,
         "gpu_product": gpu_product,
+        "gpu_product_allowlist": gpu_product_allowlist,
         "expected_study_commit": expected_study_commit,
         "expected_robolab_commit": expected_robolab_commit,
         "native_control_dt_s": float(native_control_dt_s),

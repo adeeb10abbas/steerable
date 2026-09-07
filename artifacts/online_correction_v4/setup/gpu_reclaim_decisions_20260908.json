@@ -1,0 +1,70 @@
+{
+  "schema_version": "v4-gpu-reclaim-decisions-v1",
+  "observed_at_utc": "2026-09-08T05:25:00Z",
+  "namespace": "211247-prod",
+  "kube_context": "prod-dcwi-warrenq1-vmkub007",
+  "decisions": [
+    {
+      "pod": "v3e004-rtx-nano-server-05-ali",
+      "gpu_pool": "NVIDIA-RTX-PRO-6000-Blackwell-Server-Edition",
+      "age_days": 29,
+      "action": "do_not_stop",
+      "reason": "V3E004 closed per artifacts/vla_wam_shared_v3/continuation_state.json (do_not_rerun_any_valid_v3e004_cell) but occupies RTX pool, not A40; reclaim would not relieve A40 starvation and lacks explicit owner sign-off."
+    },
+    {
+      "pod": "v3e004-rtx-nano-server-06-ali",
+      "gpu_pool": "NVIDIA-RTX-PRO-6000-Blackwell-Server-Edition",
+      "action": "do_not_stop",
+      "reason": "Same as v3e004-rtx-nano-server-05-ali."
+    },
+    {
+      "pod": "v3e004-rtx-runner-13-ali",
+      "gpu_pool": "NVIDIA-RTX-PRO-6000-Blackwell-Server-Edition",
+      "action": "do_not_stop",
+      "reason": "Same RTX stratum; not provably safe to stop without owner confirmation."
+    },
+    {
+      "pod": "v3e004-rtx-runner-14-ali",
+      "gpu_pool": "NVIDIA-RTX-PRO-6000-Blackwell-Server-Edition",
+      "action": "do_not_stop",
+      "reason": "Same RTX stratum; not provably safe to stop without owner confirmation."
+    },
+    {
+      "pod": "vla-wam-pi05-stochastic-a-ali",
+      "gpu_pool": "NVIDIA-RTX-PRO-6000-Blackwell-Server-Edition",
+      "action": "do_not_stop",
+      "reason": "Historical V3 work; GPU product outside starved A40 pool; cannot prove idle without process-level audit."
+    },
+    {
+      "pod": "vla-wam-pi05-stochastic-b-ali",
+      "gpu_pool": "NVIDIA-RTX-PRO-6000-Blackwell-Server-Edition",
+      "action": "do_not_stop",
+      "reason": "Same as vla-wam-pi05-stochastic-a-ali."
+    },
+    {
+      "pod": "bzbwd1-a40-index-5594b754bb-n6lsz",
+      "gpu_pool": "NVIDIA-A40",
+      "action": "do_not_stop",
+      "reason": "~1904 MiB GPU memory in use; not provably idle."
+    },
+    {
+      "pod": "211247-sz5vjy-vla4-b200-4gpu",
+      "gpu_pool": "NVIDIA-B200",
+      "action": "do_not_stop",
+      "reason": "Active V4 publisher/util pod used for OUTPUT_PARENT preparation."
+    },
+    {
+      "pod": "211247-sz5vjy-groot-b200-2gpu",
+      "gpu_pool": "NVIDIA-B200",
+      "action": "do_not_stop",
+      "reason": "Active B200 work in namespace."
+    },
+    {
+      "pod": "211247-ali-b200-1gpu",
+      "gpu_pool": "NVIDIA-B200",
+      "action": "do_not_stop",
+      "reason": "Active B200 work in namespace."
+    }
+  ],
+  "summary": "No pods stopped. RTX and B200 leftovers do not free A40; only provably idle A40 holders would help the original 132 pending A40-pinned jobs."
+}

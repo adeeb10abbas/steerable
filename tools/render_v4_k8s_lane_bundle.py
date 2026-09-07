@@ -7,10 +7,17 @@ import hashlib
 import json
 from pathlib import Path
 import re
-from typing import Any, Mapping
-
+from typing import Any, Mapping, Sequence
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+TOOLS = REPO_ROOT / "tools"
+import sys
+
+if str(TOOLS) not in sys.path:
+    sys.path.insert(0, str(TOOLS))
+
+import v4_gpu_scheduling as gpu_scheduling  # noqa: E402
+
 DEFAULT_ROOT = REPO_ROOT / "deploy/k8s/v4_lane_bundle"
 DEFAULT_SPEC = DEFAULT_ROOT / "spec.example.json"
 SHA_RE = re.compile(r"[0-9a-f]{64}")
@@ -510,6 +517,7 @@ def render_job(
     entrypoint: str,
     prestop_wait_seconds: int,
     kube_context: str,
+    gpu_product_allowlist: Sequence[str] | None = None,
 ) -> str:
     env = common_env(
         role=role, lane=lane, attempt=attempt, output_parent=output_parent,
@@ -527,7 +535,11 @@ def render_job(
     ]
     rows += [f"        {key}: {yaml_scalar(value)}" for key, value in role_labels.items()]
     rows += ["      annotations:", f"        v4-image-digest: {yaml_scalar(image_digest)}", "    spec:", "      restartPolicy: Never", "      terminationGracePeriodSeconds: 300"]
-    rows += ["      nodeSelector:", '        node-role.kubernetes.io/worker-gpu: ""', f"        nvidia.com/gpu.product: {yaml_scalar(gpu_product_value)}"]
+    rows += gpu_scheduling.render_pod_gpu_scheduling_yaml(
+        gpu_product=gpu_product_value,
+        gpu_product_allowlist=gpu_product_allowlist,
+        indent="      ",
+    )
     rows += ["      tolerations:", "        - key: nvidia.com/gpu", "          operator: Equal", '          value: "present"', "          effect: NoSchedule"]
     rows += ["      securityContext:", "        fsGroup: 2518800", "        supplementalGroups: [2518800]", "        seccompProfile:", "          type: RuntimeDefault"]
     rows += ["      imagePullSecrets:", f"        - name: {yaml_scalar(image_pull_secret)}", "      containers:", f"        - name: {role}", f"          image: {yaml_scalar(image)}", "          imagePullPolicy: IfNotPresent"]

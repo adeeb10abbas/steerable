@@ -1,0 +1,68 @@
+{
+  "schema_version": "v4-gpu-pool-widen-dispatch-receipt-v1",
+  "observed_at_utc": "2026-09-08T05:25:00Z",
+  "kube_context": "prod-dcwi-warrenq1-vmkub007",
+  "namespace": "211247-prod",
+  "before": {
+    "pending_pods_total": 132,
+    "pending_by_gpu_selector": {
+      "NVIDIA-A40": 132
+    },
+    "starvation": "All model-blind G2/G3 jobs hard-pinned to A40 (42 allocatable) while A100-80GB, A100-40GB, and B200 pools idle."
+  },
+  "after": {
+    "pending_pods_total": 253,
+    "pending_by_gpu_selector": {
+      "NVIDIA-A40": 132,
+      "NVIDIA-A100-SXM4-80GB": 121
+    },
+    "widened_waves": [
+      {
+        "attempt_id": "g3c6p20260908a10080c",
+        "fixture": "containment",
+        "gate": "G3",
+        "gpu_product": "NVIDIA-A100-SXM4-80GB",
+        "job_count": 64,
+        "job_name_prefix": "v4-g3-containment-g3c6p20260908a10080c-30dffd5752",
+        "running_pods_observed": 5,
+        "notes": "Pods pass preflight and launch Isaac; some seeds hit InstructionBindingError (queue goal vs task relation) unrelated to GPU widening."
+      },
+      {
+        "attempt_id": "g3c5p20260908a10080c",
+        "fixture": "vertical",
+        "gate": "G3",
+        "gpu_product": "NVIDIA-A100-SXM4-80GB",
+        "job_count": 64,
+        "job_name_prefix": "v4-g3-vertical-g3c5p20260908a10080c-3210363d9b",
+        "running_pods_observed": 0,
+        "notes": "Submitted; scheduling queued behind containment and C7 policy A100-80GB load."
+      }
+    ],
+    "previously_starved_now_scheduled": 5,
+    "net_capacity_effect": "128 homogeneous A100-80GB jobs added; 5+ running on previously idle A100-80GB nodes while 132 original A40-pinned jobs remain pending as backfill."
+  },
+  "smoke_attempts": {
+    "reference_binding_g3": {
+      "attempt_ids": [
+        "g3gpu20260908a10080",
+        "g3gpu20260908a10040",
+        "g3gpu20260908b200"
+      ],
+      "status": "infrastructure_invalid",
+      "reason": "steerable-v4-c2-g3 study checkout dirty on cluster (clean-tree gate); not a GPU compatibility failure."
+    },
+    "containment_g3_a10080": {
+      "attempt_id": "g3c6p20260908a10080c",
+      "status": "running_attestation_in_progress",
+      "reason": "Full 64-seed wave on A100-80GB serves as primary GPU smoke for Isaac/PhysX sim path."
+    }
+  },
+  "tools": [
+    "tools/v4_gpu_scheduling.py",
+    "tools/replicate_v4_k8s_bundle_gpu_stratum.py",
+    "tools/prepare_v4_k8s_output_parents.py",
+    "tools/dispatch_v4_model_blind_k8s_bundle.py",
+    "tools/compare_v4_model_blind_gpu_determinism.py"
+  ],
+  "c7_boundary": "Policy episode lanes remain on frozen a10080-policy_a40-simulator stratum; not widened."
+}

@@ -1,0 +1,64 @@
+{
+  "schema_version": "v4-hardware-binding-analysis-v1",
+  "compiled_at_utc": "2026-09-08T05:00:00Z",
+  "campaign_id": "online_correction_v4",
+  "summary": {
+    "model_blind_g2_g3_simulator": "NOT frozen to A40. A40 is the V3 operational default and the first qualified stratum. Additional simulator products require per-product determinism attestation and homogeneous-stratum aggregates.",
+    "policy_episode_lanes": "BOUND per released runtime lock and G4 hardware-stratum receipt to the qualified product pair recorded for each fixture release.",
+    "c7_confirmatory": "Frozen to a10080-policy_a40-simulator via object_pair_c7_confirmatory_runtime_lock.released.json and object_pair_g4_nano_a10080_a40_hardware_g4c7a100q20260906b.json."
+  },
+  "governing_artifacts": [
+    {
+      "path": "docs/online_correction_v4/03_AGENT_EXECUTION_RUNBOOK.md",
+      "section": "Reuse existing components deliberately",
+      "binding": "V3 bundle defaults to A40 simulation and A100 policy; new hardware requires qualification, not a silent label edit."
+    },
+    {
+      "path": "docs/online_correction_v4/03_AGENT_EXECUTION_RUNBOOK.md",
+      "section": "Cluster dispatch and isolation",
+      "binding": "Balance over hardware strata; keep materially different runtime behavior in separate strata."
+    },
+    {
+      "path": "docs/online_correction_v4/01_EXPERIMENTS.md",
+      "binding": "Keep all branches of a block on a compatible software/hardware class."
+    },
+    {
+      "path": "artifacts/online_correction_v4/qualification/20260905_horizontal_g2_gate_receipt.json",
+      "binding": "Records first horizontal G2 qualification on NVIDIA A40; authorizes G3 preparation only."
+    },
+    {
+      "path": "artifacts/online_correction_v4/qualification/object_pair_g4_nano_a10080_a40_hardware_g4c7a100q20260906b.json",
+      "binding": "Qualifies exact A100-80GB policy + A40 simulator stratum for C7 Nano execution."
+    },
+    {
+      "path": "artifacts/online_correction_v4/setup/object_pair_c7_confirmatory_launch_matrix.released.json",
+      "binding": "40 qualified lanes all declare hardware_stratum a10080-policy_a40-simulator."
+    },
+    {
+      "path": "tools/compile_v4_horizontal_g2_aggregate.py",
+      "binding": "Aggregate compilation rejects mixed gpu_name within one receipt set."
+    },
+    {
+      "path": "experiments/online_correction_v4/model_blind_g3.py",
+      "binding": "G3 aggregate rejects mixed runtime stratum including gpu_name across path receipts."
+    },
+    {
+      "path": "deploy/k8s/v4_lane_bundle/g2-horizontal-repair-v2-smoke-spec.json",
+      "binding": "Operational default gpu_product NVIDIA-A40 in render specs; not a protocol.json field."
+    }
+  ],
+  "a40_pin_provenance": "Render specs under deploy/k8s/v4_lane_bundle/ and tools/render_v3_k8s_lane_bundle.py inherited the historical V3 DROID lane split (A40 simulator, A100-80GB policy). No V4 protocol.json field freezes simulator GPU product for model-blind gates.",
+  "widening_procedure": {
+    "model_blind_g2_g3": [
+      "Run one real smoke seed per newly enabled simulator GPU product.",
+      "Compare reset position errors against the A40 baseline under registry_position_tolerance_m (0.005 m).",
+      "Dispatch homogeneous-stratum waves with a distinct attempt_id per GPU product.",
+      "Compile gate aggregates separately per runtime stratum."
+    ],
+    "policy_episodes": [
+      "Do not change simulator or policy GPU products without a new G4 hardware-stratum receipt and disclosed runtime-lock amendment.",
+      "Never mix device classes inside a paired contrast or matched control set."
+    ]
+  },
+  "release_boundary": "This analysis authorizes model-blind simulator pool widening after attestation. It does not amend C7 or any other released policy runtime lock."
+}

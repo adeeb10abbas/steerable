@@ -13,6 +13,13 @@ import subprocess
 from typing import Any, Mapping
 
 ROOT = Path(__file__).resolve().parents[1]
+TOOLS = ROOT / "tools"
+import sys
+
+if str(TOOLS) not in sys.path:
+    sys.path.insert(0, str(TOOLS))
+
+import v4_gpu_scheduling as gpu_scheduling  # noqa: E402
 
 
 class G2BundleValidationError(ValueError):
@@ -314,6 +321,14 @@ def validate(root: Path) -> dict[str, Any]:
         require(spec.get("backoffLimit") == 0, "G2 Jobs must not retry implicitly")
         pod_spec = ((spec.get("template") or {}).get("spec") or {})
         require(pod_spec.get("restartPolicy") == "Never", "G2 restartPolicy must be Never")
+        try:
+            gpu_scheduling.validate_pod_gpu_scheduling(
+                pod_spec,
+                gpu_product=str(manifest.get("gpu_product")),
+                gpu_product_allowlist=manifest.get("gpu_product_allowlist"),
+            )
+        except gpu_scheduling.GpuSchedulingError as exc:
+            raise G2BundleValidationError(str(exc)) from exc
         containers = pod_spec.get("containers") or []
         require(len(containers) == 1, "G2 Job must contain exactly one simulator container")
         container = containers[0]

@@ -505,9 +505,22 @@ def query_gpu_identity(config: Mapping[str, Any]) -> dict[str, Any]:
     if len(parts) != 3 or not parts[0].startswith("GPU-"):
         raise PreflightError(f"unexpected nvidia-smi identity row: {rows[0]!r}")
     expected_name = _require_string(config, "expected_gpu_name")
+    allowed_names = config.get("allowed_gpu_names")
+    if allowed_names is None:
+        allowed = {expected_name}
+    else:
+        if not isinstance(allowed_names, list) or not allowed_names:
+            raise PreflightError("allowed_gpu_names must be a nonempty list when present")
+        allowed = {str(item) for item in allowed_names}
+        if expected_name not in allowed:
+            raise PreflightError(
+                f"expected_gpu_name {expected_name!r} is not listed in allowed_gpu_names"
+            )
     expected_driver = _require_string(config, "expected_driver_version")
-    if parts[1] != expected_name:
-        raise PreflightError(f"GPU name differs: expected {expected_name!r}, got {parts[1]!r}")
+    if parts[1] not in allowed:
+        raise PreflightError(
+            f"GPU name differs: expected one of {sorted(allowed)!r}, got {parts[1]!r}"
+        )
     if parts[2] != expected_driver:
         raise PreflightError(f"GPU driver differs: expected {expected_driver!r}, got {parts[2]!r}")
     return {"gpu_uuid": parts[0], "gpu_name": parts[1], "driver_version": parts[2]}

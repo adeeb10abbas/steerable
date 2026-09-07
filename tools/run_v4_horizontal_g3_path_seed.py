@@ -51,6 +51,53 @@ def _optional_registry_support_geometry(
     return support_geometry if isinstance(support_geometry, Mapping) else None
 
 
+def _normalize_support_geometry(
+    support_geometry: Mapping[str, Any],
+    *,
+    fixture_id: str,
+    scene_receipt: Mapping[str, Any],
+) -> dict[str, Any]:
+    normalized = dict(support_geometry)
+    if fixture_id == "vertical":
+        if "horizontal_overlap_min_m" not in normalized:
+            object_specs = scene_receipt.get("object_specs")
+            if not isinstance(object_specs, Mapping):
+                raise RuntimeError("vertical reset registry lacks scene_receipt.object_specs")
+            cube_spec = object_specs.get("cube")
+            if not isinstance(cube_spec, Mapping):
+                raise RuntimeError("vertical reset registry lacks cube object_specs")
+            dimensions = cube_spec.get("dimensions_m")
+            if (
+                not isinstance(dimensions, list)
+                or len(dimensions) < 2
+                or not all(isinstance(value, (int, float)) for value in dimensions[:2])
+            ):
+                raise RuntimeError("vertical cube dimensions_m must declare XY extents")
+            normalized["horizontal_overlap_min_m"] = float(
+                min(float(dimensions[0]), float(dimensions[1]))
+            )
+    elif fixture_id == "containment":
+        raw_bounds = normalized.get("interior_reference_local_m")
+        if isinstance(raw_bounds, Mapping) and "x_min" not in raw_bounds:
+            try:
+                x_bounds = raw_bounds["x"]
+                y_bounds = raw_bounds["y"]
+                z_bounds = raw_bounds["z"]
+                normalized["interior_reference_local_m"] = {
+                    "x_min": float(x_bounds[0]),
+                    "x_max": float(x_bounds[1]),
+                    "y_min": float(y_bounds[0]),
+                    "y_max": float(y_bounds[1]),
+                    "z_min": float(z_bounds[0]),
+                    "z_max": float(z_bounds[1]),
+                }
+            except (KeyError, IndexError, TypeError, ValueError) as exc:
+                raise RuntimeError(
+                    "containment interior_reference_local_m must use x/y/z ranges or x_min bounds"
+                ) from exc
+    return normalized
+
+
 def _fixture_geometry_from_registry(
     registry_payload: Mapping[str, Any], fixture_id: str
 ) -> Mapping[str, Any] | None:
@@ -64,7 +111,11 @@ def _fixture_geometry_from_registry(
         raise RuntimeError(
             f"{fixture_id} reset registry lacks scene_receipt.support_geometry"
         )
-    return support_geometry
+    return _normalize_support_geometry(
+        support_geometry,
+        fixture_id=fixture_id,
+        scene_receipt=scene_receipt,
+    )
 
 
 def _parser() -> argparse.ArgumentParser:

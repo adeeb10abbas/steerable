@@ -331,6 +331,36 @@ class G3PathSeedRegistryGeometryTests(unittest.TestCase):
             geometry,
         )
 
+    def test_fixture_geometry_from_registry_adds_vertical_overlap(self) -> None:
+        payload = {
+            "scene_receipt": {
+                "object_specs": {"cube": {"dimensions_m": [0.04, 0.04, 0.04]}},
+                "support_geometry": {"kind": "three_stationary_shelves"},
+            }
+        }
+        geometry = runner._fixture_geometry_from_registry(payload, "vertical")
+        assert geometry is not None
+        self.assertEqual(geometry["horizontal_overlap_min_m"], 0.04)
+
+    def test_fixture_geometry_from_registry_normalizes_containment_interior(self) -> None:
+        payload = {
+            "scene_receipt": {
+                "support_geometry": {
+                    "interior_reference_local_m": {
+                        "x": [-0.055, 0.055],
+                        "y": [-0.055, 0.055],
+                        "z": [0.0075, 0.08],
+                    },
+                    "wall_clearance_m": 0.005,
+                }
+            }
+        }
+        geometry = runner._fixture_geometry_from_registry(payload, "containment")
+        assert geometry is not None
+        interior = geometry["interior_reference_local_m"]
+        self.assertEqual(interior["x_min"], -0.055)
+        self.assertEqual(interior["z_max"], 0.08)
+
 
 class G3PathSeedImportSafetyTests(unittest.TestCase):
     def test_runner_module_imports_without_robolab(self) -> None:

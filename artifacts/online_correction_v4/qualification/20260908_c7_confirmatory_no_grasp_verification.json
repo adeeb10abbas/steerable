@@ -1,0 +1,58 @@
+{
+  "accepted_ledger_episode_count": 279,
+  "behavioral_episode_count": 279,
+  "compiled_at_utc": "2026-09-08T05:50:00Z",
+  "comparators": {
+    "g4_policy_session": {
+      "action_shape": [32, 8],
+      "native_control_dt_s": 0.06666666666666667,
+      "passed": true,
+      "prompt_sha256": "08b35b526212f980580d4863b8a2c118f1f45b7403f4c06bbe480663b8b4c485",
+      "receipt": "artifacts/online_correction_v4/qualification/object_pair_g4_nano_policy_session_a100_g4c7a100q20260906b.json"
+    },
+    "g7_engineering_pilot": {
+      "outcome_counts": {
+        "no_grasp": 23,
+        "transport_incomplete": 1
+      },
+      "passed": true,
+      "receipt": "artifacts/online_correction_v4/qualification/20260906_object_pair_g7_engineering_pilot_g7c7q20260906a.json",
+      "trigger_eligible_rate": 0.0
+    },
+    "object_pair_g3_scripted": {
+      "passed": true,
+      "receipt": "artifacts/online_correction_v4/qualification/20260906_object_pair_g3_aggregate_g3s7q20260906l.json"
+    },
+    "runtime_lock": {
+      "achieved_standard_query_period_s": 0.5333333333333333,
+      "native_control_dt_s": 0.06666666666666667,
+      "receipt": "artifacts/online_correction_v4/setup/object_pair_c7_confirmatory_runtime_lock.released.json"
+    }
+  },
+  "confirmatory_outcome_counts": {
+    "no_grasp": 276,
+    "transport_incomplete": 3
+  },
+  "gripper_trajectory_samples": [
+    {
+      "close_command_steps_gt_0p5": 27,
+      "episode_id": "online_correction_v4-C7-b021-0578f74c26429ddc",
+      "gripper_command_max": 0.638,
+      "grasp_eligible_steps": 0,
+      "outcome": "no_grasp"
+    },
+    {
+      "close_command_steps_gt_0p5": 492,
+      "episode_id": "online_correction_v4-C7-b030-380a0ff986e69eca",
+      "gripper_command_max": 0.638,
+      "grasp_eligible_steps": 0,
+      "outcome": "transport_incomplete"
+    }
+  ],
+  "model_request_count": 279,
+  "schema_version": "v4-c7-confirmatory-no-grasp-verification-v1",
+  "success_count": 0,
+  "trigger_eligible_count": 0,
+  "verdict": "genuine_policy_behavior",
+  "verdict_detail": "Confirmatory lanes match frozen G4 interface (prompt, control period, 32x8 actions). Trajectories show commanded gripper closes in many episodes but simulator grasp/trigger eligibility never occurs before timeout, reproducing the G7 engineering pilot no-grasp pattern. No interface regression identified; preserve all valid failures."
+}

@@ -1,0 +1,38 @@
+{
+  "schema_version": "v4-second-stack-g3-path-receipt-v1",
+  "campaign_id": "online_correction_v4",
+  "family_ids": ["C8"],
+  "fixture_id": "second_stack",
+  "gate": "G3",
+  "attempt_id": "g3c8p20260908f",
+  "qualification_scope": "engineering_pilot",
+  "status": "passed",
+  "passed": true,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "compiled_at_utc": "2026-09-08T15:06:00Z",
+  "study_commit": "785329fdd3b3e813bf07af87d629d5d5036ebf35",
+  "scale": 0.5,
+  "observed_check_count": 96,
+  "expected_check_count": 96,
+  "geometry_plan": {
+    "path": "artifacts/online_correction_v4/setup/second_stack_pilot_g3_plan.candidate.json",
+    "sha256": "f5d6841248486d230392bb1ab4e8bade09efee2500f43ebf581ea3bffa24bfab"
+  },
+  "reset_registry": {
+    "path": "artifacts/online_correction_v4/setup/second_stack_pilot_reset_registry.candidate.json",
+    "sha256": "09080659c8d8df1fdafc2b119f90e130846c108c2992bea024a52667d9db05d5"
+  },
+  "external_receipt": {
+    "path": "/data/users/ali/vla_wam/raw/v4/g3-second-stack/pilot-g3c8p20260908f/pilot_g3_path_scale_0p5.json",
+    "sha256": "017b34fec7887787f408a39a03c0763f259f5c42f0d809464765dbcdc8e1d2d8"
+  },
+  "runtime": {
+    "pod": "211247-sz5vjy-groot-b200-2gpu",
+    "integration_root": "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89",
+    "simpler_python": "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/gr00t/eval/sim/SimplerEnv/simpler_uv/.venv/bin/python",
+    "ld_library_path": "/data/users/ali/vla_wam/envs/groot-render-libs/lib:/usr/lib/x86_64-linux-gnu",
+    "vk_icd_filenames": "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/external_dependencies/SimplerEnv/nvidia_icd.json"
+  },
+  "release_boundary": "Engineering-pilot G3 path gate only; confirmatory G7/G8 and 768-episode dispatch remain blocked until confirmatory runtime lock is frozen."
+}

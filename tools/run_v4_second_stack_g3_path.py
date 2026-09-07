@@ -22,6 +22,7 @@ from experiments.online_correction_v4.second_stack import (  # noqa: E402
     active_contact_pairs,
     apply_registered_reset,
     ensure_registered_support,
+    prepare_simpler_env_imports,
     set_reference_xy,
     unwrap_simpler_env,
 )
@@ -190,7 +191,7 @@ def run_path_gate(
         integration_root=integration_root,
         registry=registry,
     )
-    sys.path.insert(0, str(integration_root))
+    prepare_simpler_env_imports(integration_root)
     from gr00t.eval.sim.SimplerEnv.simpler_env import register_simpler_envs
 
     register_simpler_envs()

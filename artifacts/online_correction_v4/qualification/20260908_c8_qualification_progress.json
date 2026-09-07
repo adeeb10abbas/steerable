@@ -1,0 +1,38 @@
+{
+  "schema_version": "v4-c8-qualification-progress-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "C8",
+  "fixture_id": "second_stack",
+  "observed_at_utc": "2026-09-08T15:10:00Z",
+  "cluster_checkout": {
+    "study_root": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2",
+    "head_commit": "785329fdd3b3e813bf07af87d629d5d5036ebf35",
+    "pilot_g3_plan_sha256": "f5d6841248486d230392bb1ab4e8bade09efee2500f43ebf581ea3bffa24bfab"
+  },
+  "pilot_g3_path_gate": {
+    "attempt_id": "g3c8p20260908f",
+    "passed": true,
+    "observed_check_count": 96,
+    "receipt": "artifacts/online_correction_v4/qualification/20260908_second_stack_pilot_g3_path_g3c8p20260908f.json",
+    "external_receipt_sha256": "017b34fec7887787f408a39a03c0763f259f5c42f0d809464765dbcdc8e1d2d8"
+  },
+  "confirmatory_dispatch": {
+    "target_episodes": 768,
+    "completed": 0,
+    "running": 0,
+    "queued": 768,
+    "status": "blocked_pending_g7_g8_runtime_lock"
+  },
+  "remaining_gates": [
+    "build confirmatory G7 release with sha256:03f5ce7d and Sep-6 G4-G6 receipts",
+    "G8 miniature rehearsal",
+    "freeze confirmatory runtime lock",
+    "wire second_stack policy runner dispatch via launch_online_correction_v4.py"
+  ],
+  "simpler_env_provisioning": {
+    "status": "verified_on_groot",
+    "simpler_python": "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/gr00t/eval/sim/SimplerEnv/simpler_uv/.venv/bin/python",
+    "ld_library_path": "/data/users/ali/vla_wam/envs/groot-render-libs/lib:/usr/lib/x86_64-linux-gnu",
+    "vk_icd_filenames": "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/external_dependencies/SimplerEnv/nvidia_icd.json"
+  }
+}

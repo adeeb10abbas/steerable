@@ -37,6 +37,10 @@ REPAIRED_POSITIVE_CONTROL = (
     ROOT
     / "artifacts/online_correction_v4/qualification/20260908_object_pair_natural_grasp_live_positive_control_g3ngp20260908p.json"
 )
+GRASP_OPPORTUNITY_TIMING_AUDIT = (
+    ROOT
+    / "artifacts/online_correction_v4/qualification/20260908_c7_grasp_opportunity_timing_audit.json"
+)
 
 
 def sha256_file(path: Path) -> str:
@@ -287,6 +291,18 @@ def main(argv: list[str] | None = None) -> int:
     repaired_positive = {}
     if REPAIRED_POSITIVE_CONTROL.is_file():
         repaired_positive = json.loads(REPAIRED_POSITIVE_CONTROL.read_text(encoding="utf-8"))
+    timing_audit = {}
+    if GRASP_OPPORTUNITY_TIMING_AUDIT.is_file():
+        timing_audit = json.loads(
+            GRASP_OPPORTUNITY_TIMING_AUDIT.read_text(encoding="utf-8")
+        )
+    timing_verdict = timing_audit.get("interpretation", {}).get("verdict")
+    timing_audit_complete = timing_audit.get("status") == "complete"
+    policy_no_grasp_settled = (
+        not apply_reclassification
+        and timing_audit_complete
+        and timing_verdict == "policy_failure_under_correct_timing"
+    )
     passed_live_controls = live_control_registry.get("passed_controls") or []
     rb_controls = {
         item.get("control_mode"): item
@@ -308,26 +324,38 @@ def main(argv: list[str] | None = None) -> int:
         "blocking_setup_defect_confirmed_then_repaired"
         if apply_reclassification and repair_verified
         else (
-            "blocking_setup_defect"
-            if live_positive.get("verdict") == "blocking_setup_defect"
-            else grasp_audit.get("finding", "pending_verdict")
+            "policy_failure_under_correct_timing"
+            if policy_no_grasp_settled
+            else (
+                "blocking_setup_defect"
+                if live_positive.get("verdict") == "blocking_setup_defect"
+                else grasp_audit.get("finding", "pending_verdict")
+            )
         )
     )
     trigger_status = (
         "repair_verified_object_pair_isaac"
         if apply_reclassification and repair_verified
         else (
-            "blocking_setup_defect_confirmed"
-            if live_positive.get("verdict") == "blocking_setup_defect"
-            else "pending_live_isaac_verdict"
+            "timing_audit_confirms_genuine_policy_no_grasp"
+            if policy_no_grasp_settled
+            else (
+                "blocking_setup_defect_confirmed"
+                if live_positive.get("verdict") == "blocking_setup_defect"
+                else "pending_live_isaac_verdict"
+            )
         )
     )
     paper_caveat = (
         "Live Isaac positive control confirmed a blocking setup defect: scripted grasp stages passed but trigger_eligible never fired because object_kinematic_state() fed NaturalGraspDetector robot-base pose and object_grabbed() contact. The 279 C7 episodes collected before repair verification were run under an inoperative intervention trigger and are excluded from all behavioral claims. Post-repair live positive and negative controls passed on object_pair Isaac at study commit c9c988d; confirmatory redispatch is required before any behavioral headline."
         if apply_reclassification
-        else grasp_audit.get(
-            "paper_distinction",
-            "Do not present zero trigger_eligible as a settled policy finding until live detector positive control is verified.",
+        else (
+            timing_audit.get("interpretation", {}).get("verdict_detail")
+            if policy_no_grasp_settled
+            else grasp_audit.get(
+                "paper_distinction",
+                "Do not present zero trigger_eligible as a settled policy finding until live detector positive control is verified.",
+            )
         )
     )
     memo_path = out_root / "paper" / "evidence_memo.json"
@@ -355,17 +383,35 @@ def main(argv: list[str] | None = None) -> int:
                 ]
             )
         else:
-            memo["limitations"].extend(
-                [
-                    "C7 confirmatory success rates in this partial export are preliminary only; Agent B is verifying whether zero successes reflect genuine policy behavior or an interface regression.",
-                    "NaturalGraspDetector has only a synthetic G5 positive control; zero trigger_eligible across live C7 episodes is not yet a settled policy headline until the live Isaac scripted grasp verdict lands.",
-                    "C2 primary inference remains not estimable until verified common-prefix replay is recorded.",
-                    "C2 and C8 full policy dispatches (4096 and 768 episodes) remain blocked until the live trigger positive-control question is resolved.",
-                ]
-            )
+            limitations = [
+                "279 pre-repair C7 episodes remain excluded from all behavioral claims under disclosed setup repair (eef_tool_length_m flange offset).",
+                "C2 primary inference remains not estimable until verified common-prefix replay is recorded.",
+            ]
+            if policy_no_grasp_settled:
+                limitations.extend(
+                    [
+                        "Agent B timing audit confirms repaired-path confirmatory episodes run the full 61.0 s simulation window with grasp_eligible false on every control tick; zero successes reflect genuine policy no-grasp under registered timing, not episode-budget truncation.",
+                        "C2 and C8 full policy dispatches (4096 and 768 episodes) remain blocked until their respective qualification gates complete.",
+                    ]
+                )
+            else:
+                limitations.extend(
+                    [
+                        "C7 confirmatory success rates in this partial export are preliminary only; Agent B is verifying whether zero successes reflect genuine policy behavior or an interface regression.",
+                        "NaturalGraspDetector has only a synthetic G5 positive control; zero trigger_eligible across live C7 episodes is not yet a settled policy headline until the live Isaac scripted grasp verdict lands.",
+                        "C2 and C8 full policy dispatches (4096 and 768 episodes) remain blocked until the live trigger positive-control question is resolved.",
+                    ]
+                )
+            memo["limitations"].extend(limitations)
         memo["intervention_trigger_positive_control"] = {
             "audit_path": str(GRASP_POSITIVE_CONTROL_AUDIT.relative_to(ROOT))
             if GRASP_POSITIVE_CONTROL_AUDIT.is_file()
+            else None,
+            "timing_audit_path": str(GRASP_OPPORTUNITY_TIMING_AUDIT.relative_to(ROOT))
+            if GRASP_OPPORTUNITY_TIMING_AUDIT.is_file()
+            else None,
+            "timing_audit_sha256": sha256_file(GRASP_OPPORTUNITY_TIMING_AUDIT)
+            if GRASP_OPPORTUNITY_TIMING_AUDIT.is_file()
             else None,
             "live_positive_control_path": str(LIVE_POSITIVE_CONTROL.relative_to(ROOT))
             if LIVE_POSITIVE_CONTROL.is_file()
@@ -396,7 +442,11 @@ def main(argv: list[str] | None = None) -> int:
     c7_status = (
         "all 279 previously accepted episodes reclassified infrastructure-invalid under inoperative NaturalGraspDetector wiring; excluded from behavioral claims; raw PVC evidence preserved"
         if apply_reclassification
-        else "partial export only; preliminary — zero successes not a settled headline pending Agent B interface verification and live NaturalGraspDetector positive control"
+        else (
+            "partial export with timing-audit-backed genuine policy no-grasp on repaired-path confirmatory completes; 279 pre-repair episodes excluded"
+            if policy_no_grasp_settled
+            else "partial export only; preliminary — zero successes not a settled headline pending Agent B interface verification and live NaturalGraspDetector positive control"
+        )
     )
     blocked_payload = {
         "schema_version": "v4-c7-partial-blocked-scope-v2",

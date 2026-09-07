@@ -27,6 +27,7 @@ FIXTURE_K8S_STEM_ALIASES = {
     "containment": "cont",
     "object_pair": "op",
     "reference_binding": "rb",
+    "second_stack": "ss",
     "vertical": "vert",
 }
 TOP_LEVEL_KEYS = {

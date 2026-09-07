@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import math
+import sys
+from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 
@@ -25,6 +27,23 @@ RELATION_AXES_SCENE_XY = {
 
 class SecondStackBindingError(ValueError):
     pass
+
+
+def prepare_simpler_env_imports(integration_root: Path) -> list[str]:
+    """Register SimplerEnv/ManiSkill import roots before GR00T sim registration."""
+    roots = [
+        integration_root.resolve(),
+        integration_root.resolve() / "external_dependencies/SimplerEnv",
+        integration_root.resolve()
+        / "external_dependencies/SimplerEnv/ManiSkill2_real2sim",
+    ]
+    inserted: list[str] = []
+    for root in roots:
+        root_str = str(root)
+        if root.is_dir() and root_str not in sys.path:
+            sys.path.insert(0, root_str)
+            inserted.append(root_str)
+    return inserted
 
 
 def direct_prompt(relation: str) -> str:

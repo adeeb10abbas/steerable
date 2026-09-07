@@ -1,70 +1,50 @@
 {
   "attempt_id": "g3rb20260908v",
-  "compiled_at_utc": "2026-09-07T14:30:00Z",
+  "compiled_at_utc": "2026-09-08T15:10:00Z",
   "confirmatory_scale": 0.5,
   "failed_jobs": [
     {
       "failure_kind": "infrastructure_invalid",
-      "job": "v4-g3-rb-g3rb20260908v-60670a185c-s014",
-      "reason": "stale_attempt_lock FileExistsError on lane-g3h-s014",
-      "retry_bundle": "v4-g3-rb-g3rb20260908v-d86a16f787-s014",
-      "seed_index": 14
-    },
-    {
-      "failure_kind": "infrastructure_invalid",
-      "job": "v4-g3-rb-g3rb20260908v-60670a185c-s015",
-      "reason": "stale_attempt_lock FileExistsError on lane-g3h-s015",
-      "retry_bundle": "v4-g3-rb-g3rb20260908v-d86a16f787-s015",
-      "seed_index": 15
-    },
-    {
-      "failure_kind": "infrastructure_invalid",
-      "job": "v4-g3-rb-g3rb20260908v-60670a185c-s017",
-      "reason": "stale_attempt_lock FileExistsError on lane-g3h-s017",
-      "retry_bundle": "v4-g3-rb-g3rb20260908v-d86a16f787-s017",
-      "seed_index": 17
-    },
-    {
-      "failure_kind": "infrastructure_invalid",
-      "job": "v4-g3-rb-g3rb20260908v-60670a185c-s019",
-      "reason": "stale_attempt_lock FileExistsError on lane-g3h-s019",
-      "retry_bundle": "v4-g3-rb-g3rb20260908v-d86a16f787-s019",
-      "seed_index": 19
-    },
-    {
-      "failure_kind": "infrastructure_invalid",
-      "job": "v4-g3-rb-g3rb20260908v-60670a185c-s020",
-      "reason": "stale_attempt_lock FileExistsError on lane-g3h-s020",
-      "retry_bundle": "v4-g3-rb-g3rb20260908v-d86a16f787-s020",
-      "seed_index": 20
-    },
-    {
-      "failure_kind": "infrastructure_invalid",
       "job": "v4-g3-rb-g3rb20260908v-60670a185c-s059",
       "reason": "BackoffLimitExceeded during Isaac env setup before receipt write",
-      "retry_status": "pending_render",
+      "retry_job": "v4-g3-rb-g3rb20260908v-72a5290972-s059",
+      "retry_status": "running",
       "seed_index": 59
     },
     {
       "failure_kind": "infrastructure_invalid",
       "job": "v4-g3-rb-g3rb20260908v-60670a185c-s062",
       "reason": "BackoffLimitExceeded during Isaac env setup before receipt write",
-      "retry_status": "pending_render",
+      "retry_job": "v4-g3-rb-g3rb20260908v-72a5290972-s062",
+      "retry_status": "running",
       "seed_index": 62
     }
   ],
   "homogeneous_pin": "c401fb4577d8003a019ecf7ff7be549f2c0a5931",
-  "jobs_complete": 55,
+  "jobs_complete": 84,
   "jobs_failed": 2,
-  "jobs_running": 71,
+  "jobs_running": 44,
   "jobs_total": 128,
   "partial_path_scale_signal": {
     "information_gate_failed_of_observed": "42/59",
-    "note": "Partial compile from PVC receipts at 14:23Z; not authoritative until 128/128 terminal",
-    "observed_receipts": 59,
+    "note": "Partial compile from 59 locally synced PVC receipts; cluster PVC had 91 receipts at 15:10Z; not authoritative until 128/128 terminal",
+    "observed_receipts_local_sync": 59,
+    "observed_receipts_pvc": 91,
     "path_checks_passed": 1416,
-    "status": "failed"
+    "path_checks_expected_partial": 3072,
+    "sign_split_observed_59": {
+      "physical_translation_sign_-1": "0 pass / 28 fail",
+      "physical_translation_sign_+1": "17 pass / 14 fail"
+    },
+    "goal_split_observed_59_case_level": {
+      "behind": "31 pass / 0 fail",
+      "front": "31 pass / 0 fail",
+      "left": "17 pass / 14 fail",
+      "right": "31 pass / 0 fail"
+    },
+    "status": "provisional_pending_computation_audit"
   },
+  "provisional_gate_decision": "artifacts/online_correction_v4/qualification/20260908_reference_binding_g3_gate_decision_g3rb20260908v_provisional.json",
   "pvc_receipts_root": "/data/users/ali/vla_wam/raw/v4/g3-reference-binding/attempt-g3rb20260908v",
   "schema_version": "v4-reference-binding-g3-wave-progress-v1",
   "status": "in_progress",

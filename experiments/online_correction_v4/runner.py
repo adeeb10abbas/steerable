@@ -113,6 +113,7 @@ class EpisodeRunner:
     terminal_scorer: TerminalScoringAdapter | None = None
     viewport_writer: ViewportVideoWriter | None = None
     classifier: AttemptClassifier = field(default_factory=AttemptClassifier)
+    kinematic_adapter: Any | None = None
     reference: ReferenceMotionController = field(init=False)
     grasp: NaturalGraspDetector = field(init=False)
     detach: DetachmentDetector = field(init=False)
@@ -337,6 +338,11 @@ class EpisodeRunner:
 
         snapshot = self.simulator.step_control(action_values)
         self._latest_snapshot = snapshot
+        adapter = self.kinematic_adapter
+        if adapter is not None:
+            on_boundary = getattr(adapter, "on_control_boundary", None)
+            if callable(on_boundary):
+                on_boundary()
         self._capture_viewport_frame(snapshot=snapshot)
         self._post_physics(snapshot)
         if self.clock.passive_settling_active:
@@ -441,7 +447,11 @@ class EpisodeRunner:
         )
 
     def _post_physics(self, snapshot: Any) -> None:
-        grasp_event = self.grasp.update(snapshot.object_state)
+        if self.kinematic_adapter is not None:
+            object_state = self.kinematic_adapter.object_kinematic_state()
+        else:
+            object_state = snapshot.object_state
+        grasp_event = self.grasp.update(object_state)
         if grasp_event is not None and not self.flags.trigger_eligible:
             self.flags.trigger_eligible = True
             self.detach.arm_after_verified_carry()
@@ -454,7 +464,7 @@ class EpisodeRunner:
             self.recorder.record_event({"event_index": 1, "kind": "event_planned", "sim_time": onset})
 
         if self.detach.armed:
-            detach_event = self.detach.update(snapshot.object_state)
+            detach_event = self.detach.update(object_state)
             if detach_event is not None and not self.flags.passive_settling_started:
                 self.reference.freeze_at(detach_event.t_detected, reason="release_detected")
                 self.flags.motion_truncated_by_release = True

@@ -48,6 +48,14 @@ from experiments.online_correction_v4.droid_reset_verify import (
 # Observation wiring constants (not NaturalGraspDetector thresholds).
 GRIPPER_CONTACT_FORCE_THRESHOLD_N = 0.05
 GRIPPER_OBJECT_PROXIMITY_M = 0.12
+FINGER_BODY_NAME_CANDIDATES = (
+    "left_inner_finger",
+    "right_inner_finger",
+    "left_outer_finger",
+    "right_outer_finger",
+    "leftfinger",
+    "rightfinger",
+)
 
 
 ACTION_DIM = 8
@@ -985,7 +993,7 @@ class LiveRoboLabBackend:
         obj_pos = _host_numpy(obj_pos)
         self._initial_supported_z = float(obj_pos[2])
 
-    def _eef_position_world_xyz(self) -> tuple[float, float, float]:
+    def _eef_frame_world_xyz(self) -> tuple[float, float, float]:
         frames = self.env.scene["frames"]
         frame_names = list(frames.data.target_frame_names)
         if "eef_frame" not in frame_names:
@@ -995,6 +1003,36 @@ class LiveRoboLabBackend:
         index = frame_names.index("eef_frame")
         position = _host_numpy(frames.data.target_pos_w[0, index])
         return float(position[0]), float(position[1]), float(position[2])
+
+    def _finger_midpoint_world_xyz(self) -> tuple[float, float, float] | None:
+        scene = getattr(self.env, "scene", None)
+        if not isinstance(scene, Mapping) or "robot" not in scene:
+            return None
+        robot = scene["robot"]
+        body_names = list(robot.data.body_names)
+        positions: list[tuple[float, float, float]] = []
+        for candidate in FINGER_BODY_NAME_CANDIDATES:
+            if candidate not in body_names:
+                continue
+            index = body_names.index(candidate)
+            position = _host_numpy(robot.data.body_pos_w[0, index])
+            positions.append(
+                (float(position[0]), float(position[1]), float(position[2]))
+            )
+        if not positions:
+            return None
+        count = float(len(positions))
+        return (
+            sum(item[0] for item in positions) / count,
+            sum(item[1] for item in positions) / count,
+            sum(item[2] for item in positions) / count,
+        )
+
+    def _gripper_reference_world_xyz(self) -> tuple[float, float, float]:
+        finger_midpoint = self._finger_midpoint_world_xyz()
+        if finger_midpoint is not None:
+            return finger_midpoint
+        return self._eef_frame_world_xyz()
 
     def _gripper_is_closed(self) -> bool:
         obs = self._latest_raw_obs
@@ -1042,21 +1080,23 @@ class LiveRoboLabBackend:
         target_object = self.fixture_objects.target_object
         obj_pos, _ = world.get_pose(target_object, env_id=0)
         obj_pos = _host_numpy(obj_pos)
-        eef_x, eef_y, eef_z = self._eef_position_world_xyz()
+        gripper_x, gripper_y, gripper_z = self._gripper_reference_world_xyz()
         sim_time = self.control_tick * self.control_dt_s
         if self._initial_supported_z == 0.0:
             self._initial_supported_z = float(obj_pos[2])
         obj_xyz = (float(obj_pos[0]), float(obj_pos[1]), float(obj_pos[2]))
-        contact = self._gripper_target_contact(target_object, obj_xyz, (eef_x, eef_y, eef_z))
+        contact = self._gripper_target_contact(
+            target_object, obj_xyz, (gripper_x, gripper_y, gripper_z)
+        )
         detached = bool(object_dropped(self.env, object=target_object, env_id=0))
         return ObjectKinematicState(
             sim_time=sim_time,
             control_tick=self.control_tick,
             object_z=float(obj_pos[2]),
             initial_supported_z=self._initial_supported_z,
-            gripper_x=eef_x,
-            gripper_y=eef_y,
-            gripper_z=eef_z,
+            gripper_x=gripper_x,
+            gripper_y=gripper_y,
+            gripper_z=gripper_z,
             object_x=float(obj_pos[0]),
             object_y=float(obj_pos[1]),
             object_z_pos=float(obj_pos[2]),

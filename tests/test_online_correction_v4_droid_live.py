@@ -1056,6 +1056,68 @@ class DroidReviewFixTests(unittest.TestCase):
         self.assertAlmostEqual(state.object_x, 0.50)
         self.assertAlmostEqual(state.object_z_pos, 0.85)
 
+    def test_object_kinematic_state_prefers_finger_midpoint_over_eef_frame(self) -> None:
+        import numpy as np
+
+        from experiments.online_correction_v4.droid_robolab import LiveRoboLabBackend, LiveRoboLabConfig
+
+        config = LiveRoboLabConfig(
+            episode_id="ep",
+            env_seed=1,
+            goal="left",
+            prompt_text="prompt",
+            prompt_sha256="p" * 64,
+            policy_id="cosmos3_nano_droid",
+            fixture=replace(_fixture_binding(), fixture_id="object_pair"),
+            queue_row_path=Path("/tmp/queue.json"),
+            queue_row_sha256="q" * 64,
+        )
+        backend = object.__new__(LiveRoboLabBackend)
+        backend.config = config
+        backend.control_tick = 2
+        backend._initial_supported_z = 0.81
+        backend._latest_raw_obs = {"proprio_obs": {"gripper_pos": np.asarray([0.9])}}
+        backend.modules = {
+            "get_world": lambda _env: SimpleNamespace(
+                get_pose=lambda name, env_id=0: (
+                    np.asarray([0.50, 0.12, 0.85], dtype=np.float32),
+                    None,
+                )
+            ),
+            "object_grabbed": lambda _env, object, env_id=0: True,
+            "object_dropped": lambda _env, object, env_id=0: False,
+        }
+        backend.env = SimpleNamespace(
+            step_dt=0.06666666666666667,
+            scene={
+                "frames": SimpleNamespace(
+                    data=SimpleNamespace(
+                        target_frame_names=["eef_frame"],
+                        target_pos_w=np.asarray([[[0.40, 0.10, 0.70]]], dtype=np.float32),
+                    )
+                ),
+                "robot": SimpleNamespace(
+                    data=SimpleNamespace(
+                        body_names=["left_inner_finger", "right_inner_finger"],
+                        body_pos_w=np.asarray(
+                            [
+                                [
+                                    [0.495, 0.118, 0.848],
+                                    [0.505, 0.122, 0.852],
+                                ]
+                            ],
+                            dtype=np.float32,
+                        ),
+                    )
+                ),
+            },
+        )
+        state = backend.object_kinematic_state()
+        self.assertAlmostEqual(state.gripper_x, 0.50)
+        self.assertAlmostEqual(state.gripper_y, 0.12)
+        self.assertAlmostEqual(state.gripper_z, 0.85)
+        self.assertTrue(state.contact)
+
     def test_live_backend_reset_clears_kinematic_cache(self) -> None:
         from experiments.online_correction_v4.droid_robolab import LiveRoboLabBackend, LiveRoboLabConfig
 

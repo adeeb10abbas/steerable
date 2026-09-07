@@ -314,17 +314,16 @@ def launch_document(
         require(argv, f"{role} experiment argv must be nonempty")
         absolute(argv[0], f"{role} experiment_argv[0]")
     for key in ("checkpoint_path", "nvidia_smi_bin"):
+        if key == "checkpoint_path" and embedded_simulator and not document.get(key):
+            continue
         absolute(document.get(key), f"{role} {key}")
-    digest(document.get("checkpoint_sha256"), f"{role} checkpoint_sha256")
+    if not (embedded_simulator and not document.get("checkpoint_path")):
+        digest(document.get("checkpoint_sha256"), f"{role} checkpoint_sha256")
     imports = document.get("python_imports")
     require(isinstance(imports, list) and imports and all(isinstance(item, str) and item for item in imports), f"{role} imports invalid")
     render = document.get("render_probe_argv")
     if role == "simulator":
         if embedded_simulator:
-            require(
-                argv == [] or argv is None or (isinstance(argv, list) and not argv),
-                "embedded simulator must not declare experiment argv",
-            )
             require(render is None, "embedded simulator must not declare render probes")
         else:
             require(
@@ -385,13 +384,25 @@ def launch_document(
     required_bindings = {
         entrypoint,
         str(entrypoint_path.with_name("startup_preflight.py")),
-        str(document["checkpoint_path"]),
-        str(
-            entrypoint_path.with_name(
-                "check_policy_ready.py" if role == "policy" else "isaac_render_probe.py"
-            )
-        ),
     }
+    if embedded_simulator:
+        pass
+    else:
+        required_bindings.add(
+            str(
+                entrypoint_path.with_name(
+                    "check_policy_ready.py" if role == "policy" else "isaac_render_probe.py"
+                )
+            )
+        )
+    readiness_interface = document.get("readiness_interface")
+    checkpoint_path = str(document["checkpoint_path"])
+    if not (
+        role == "policy"
+        and readiness_interface == "groot_bridge_http"
+        and checkpoint_path.startswith("/data/users/ali/vla_wam/checkpoints/")
+    ) and checkpoint_path:
+        required_bindings.add(checkpoint_path)
     for item in list(argv) + (list(render) if isinstance(render, list) else []):
         if Path(item).is_absolute() and Path(item).suffix == ".py":
             required_bindings.add(item)
@@ -742,12 +753,13 @@ def render(spec_path: Path, output_root: Path) -> dict[str, str]:
     simulator_job = f"{stem}-sim"
     policy_service = f"{stem}-policy"
     service_identity = {**common_labels, "v4-lane-role": "policy", "service_name": policy_service, "namespace": namespace, "spec_sha256": spec_sha, "immutable_identity_sha256": immutable_identity_sha}
-    simulator_doc["policy_wait"]["host"] = policy_service
-    simulator_doc["policy_wait"]["service_identity"] = service_identity
     simulator_doc["experiment_argv"] = [
         policy_service if item == "{policy_service}" else item
         for item in simulator_doc["experiment_argv"]
     ]
+    if simulator_doc.get("readiness_interface") != "embedded_in_policy_container":
+        simulator_doc["policy_wait"]["host"] = policy_service
+        simulator_doc["policy_wait"]["service_identity"] = service_identity
     policy_json, simulator_json = canonical_json(policy_doc), canonical_json(simulator_doc)
     policy_sha, simulator_sha = sha256_bytes(policy_json.encode()), sha256_bytes(simulator_json.encode())
     bundle_sha = sha256_bytes((policy_sha + simulator_sha + immutable_identity_sha).encode())

@@ -480,9 +480,16 @@ def main(argv: list[str] | None = None) -> int:
             ],
             "pre_repair_c7_excluded_episodes": 279,
             "horizontal_geometry_repair_note": (
-                "Horizontal/reference_binding geometry repair restored physical feasibility "
-                "yet the registered shrinking-area information gate still fails across the "
-                "full 128-seed homogeneous ladder at scale 0.5 under counterbalance semantics."
+                "Registered fixture design squeeze (Agent A handoff "
+                "horizontal_geometry_repair_v2/20260908): geometry repair v2 restored "
+                "physical feasibility (3072/3072 path checks at scale 0.5) but no ladder "
+                "scale satisfies both large-displacement goal non-emptiness and the frozen "
+                "20% shrinking-area information threshold; scales 2.0–0.75 fail on physical "
+                "constraints; scale 0.5 fails information gate on 64/128 seeds (all sign=-1, "
+                "removed area 13.7–19.9%). Same gate pattern blocks C2 reference_binding separately."
+            ),
+            "horizontal_evidence_slice": (
+                "artifacts/online_correction_v4/results/horizontal_geometry_repair_v2/20260908"
             ),
         },
         "not_estimable_or_blocked": {

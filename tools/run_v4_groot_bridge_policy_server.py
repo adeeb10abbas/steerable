@@ -27,6 +27,8 @@ class GrootBridgePolicyServer:
     ) -> None:
         os.environ.setdefault("GROOT_HF_LOCAL_FIRST", "1")
         os.environ.setdefault("GROOT_PATCH_MISTRAL", "1")
+        os.environ.setdefault("HF_HOME", "/data/users/ali/vla_wam/hf_home")
+        os.environ.setdefault("HF_HUB_OFFLINE", "1")
         sys.path.insert(0, str(integration_root))
         from gr00t.policy.gr00t_policy import Gr00tPolicy, Gr00tSimPolicyWrapper
 

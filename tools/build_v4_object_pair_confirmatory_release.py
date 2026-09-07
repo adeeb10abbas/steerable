@@ -147,6 +147,7 @@ def build_runtime_lock(
     lock["release_status"] = "RELEASED"
     lock["runner"]["commit"] = source_commit
     lock["runner"]["entrypoint"] = f"{runtime_root}/tools/run_online_correction_v4.py"
+    lock["runner"]["sha256"] = sha256_file(ROOT / "tools/run_online_correction_v4.py")
     lock["policies"][POLICY_ID]["allowed_seed_registry_uri"] = runtime_uri(
         seed_registry_path,
         runtime_root,

@@ -6,6 +6,7 @@ import json
 import os
 import re
 from collections import Counter, defaultdict
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Mapping, Sequence
@@ -100,6 +101,23 @@ class LedgerCompileResult:
         return not self.errors
 
 
+def _verify_blob_entry(attempt_path: Path, index: int, blob: Mapping[str, Any]) -> str | None:
+    if not isinstance(blob, dict):
+        return f"blob {index}: must be an object"
+    rel = blob.get("relative_path")
+    expected_sha = blob.get("sha256")
+    if not isinstance(rel, str) or not rel:
+        return f"blob {index}: relative_path required"
+    blob_path = attempt_path / rel
+    if not blob_path.is_file():
+        return f"blob {index}: missing file {rel}"
+    payload = blob_path.read_bytes()
+    actual_sha = recorder_digest_bytes(payload)
+    if expected_sha != actual_sha:
+        return f"blob {index}: sha256 mismatch for {rel}"
+    return None
+
+
 def verify_evidence_manifest(attempt_path: Path, manifest: Mapping[str, Any]) -> list[str]:
     errors: list[str] = []
     episode_path = attempt_path / "episode.json"
@@ -145,24 +163,23 @@ def verify_evidence_manifest(attempt_path: Path, manifest: Mapping[str, Any]) ->
     blobs = manifest.get("blobs")
     if not isinstance(blobs, list):
         errors.append("evidence_manifest.blobs must be a list")
-    else:
-        for index, blob in enumerate(blobs):
-            if not isinstance(blob, dict):
-                errors.append(f"blob {index}: must be an object")
-                continue
-            rel = blob.get("relative_path")
-            expected_sha = blob.get("sha256")
-            if not isinstance(rel, str) or not rel:
-                errors.append(f"blob {index}: relative_path required")
-                continue
-            blob_path = attempt_path / rel
-            if not blob_path.is_file():
-                errors.append(f"blob {index}: missing file {rel}")
-                continue
-            payload = blob_path.read_bytes()
-            actual_sha = recorder_digest_bytes(payload)
-            if expected_sha != actual_sha:
-                errors.append(f"blob {index}: sha256 mismatch for {rel}")
+    elif blobs:
+        blob_workers = min(8, len(blobs))
+        if blob_workers <= 1:
+            for index, blob in enumerate(blobs):
+                issue = _verify_blob_entry(attempt_path, index, blob)
+                if issue:
+                    errors.append(issue)
+        else:
+            with ThreadPoolExecutor(max_workers=blob_workers) as pool:
+                futures = {
+                    pool.submit(_verify_blob_entry, attempt_path, index, blob): index
+                    for index, blob in enumerate(blobs)
+                }
+                for future in as_completed(futures):
+                    issue = future.result()
+                    if issue:
+                        errors.append(issue)
 
     complete_path = attempt_path / "COMPLETE.json"
     if complete_path.is_file():
@@ -200,26 +217,197 @@ def load_finalized_attempt(attempt_path: Path) -> ParsedAttempt:
     )
 
 
-def discover_finalized_attempts(attempts_root: Path) -> list[ParsedAttempt]:
+def _complete_path_matches_episode_ids(
+    complete_path: Path,
+    episode_ids: set[str],
+) -> bool:
+    return any(part in episode_ids for part in complete_path.parts)
+
+
+def _register_discovered_attempt(
+    complete_path: Path,
+    *,
+    episode_ids: set[str] | None,
+    seen: set[Path],
+    discovered: list[Path],
+) -> None:
+    attempt_dir = complete_path.parent.resolve()
+    if attempt_dir in seen:
+        return
+    if episode_ids is not None and not _complete_path_matches_episode_ids(
+        complete_path,
+        episode_ids,
+    ):
+        return
+    if episode_ids is not None:
+        complete = _load_json(complete_path)
+        episode_id = str(
+            complete.get("episode_id")
+            or complete_path.parent.parent.name
+        )
+        if episode_id not in episode_ids:
+            return
+    seen.add(attempt_dir)
+    discovered.append(attempt_dir)
+
+
+def discover_finalized_attempt_directories(
+    attempts_root: Path,
+    *,
+    episode_ids: set[str] | None = None,
+) -> list[Path]:
     if not attempts_root.is_dir():
         raise LedgerError(f"attempts root is not a directory: {attempts_root}")
-    discovered: list[ParsedAttempt] = []
+    discovered: list[Path] = []
     seen: set[Path] = set()
-    for complete_path in sorted(attempts_root.rglob("COMPLETE.json")):
-        attempt_dir = complete_path.parent.resolve()
-        if attempt_dir in seen:
-            continue
-        seen.add(attempt_dir)
-        discovered.append(load_finalized_attempt(attempt_dir))
+    search_roots = [
+        child
+        for child in sorted(attempts_root.iterdir())
+        if child.is_dir()
+    ]
+    if not search_roots:
+        search_roots = [attempts_root]
+    for search_root in search_roots:
+        for complete_path in sorted(search_root.rglob("COMPLETE.json")):
+            _register_discovered_attempt(
+                complete_path,
+                episode_ids=episode_ids,
+                seen=seen,
+                discovered=discovered,
+            )
     if not discovered:
         for episode_dir in sorted(path for path in attempts_root.iterdir() if path.is_dir()):
             for attempt_dir in sorted(path for path in episode_dir.iterdir() if path.is_dir()):
-                attempt_dir = attempt_dir.resolve()
-                if attempt_dir in seen or not (attempt_dir / "COMPLETE.json").is_file():
+                complete_path = attempt_dir / "COMPLETE.json"
+                if not complete_path.is_file():
                     continue
-                seen.add(attempt_dir)
-                discovered.append(load_finalized_attempt(attempt_dir))
+                _register_discovered_attempt(
+                    complete_path,
+                    episode_ids=episode_ids,
+                    seen=seen,
+                    discovered=discovered,
+                )
     return discovered
+
+
+def _attempt_checkpoint_key(attempt_path: Path) -> dict[str, Any]:
+    complete_path = attempt_path / "COMPLETE.json"
+    manifest_path = attempt_path / "evidence_manifest.json"
+    return {
+        "attempt_path": str(attempt_path.resolve()),
+        "complete_mtime_ns": complete_path.stat().st_mtime_ns if complete_path.is_file() else None,
+        "evidence_manifest_sha256": digest_bytes(manifest_path.read_bytes())
+        if manifest_path.is_file()
+        else None,
+    }
+
+
+def _load_verification_checkpoint(checkpoint_dir: Path) -> dict[str, dict[str, Any]]:
+    path = checkpoint_dir / "verification_checkpoint.jsonl"
+    if not path.is_file():
+        return {}
+    rows: dict[str, dict[str, Any]] = {}
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        row = json.loads(line)
+        key = row.get("attempt_path")
+        if isinstance(key, str):
+            rows[key] = row
+    return rows
+
+
+def _append_verification_checkpoint(checkpoint_dir: Path, row: Mapping[str, Any]) -> None:
+    checkpoint_dir.mkdir(parents=True, exist_ok=True)
+    path = checkpoint_dir / "verification_checkpoint.jsonl"
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(
+            json.dumps(dict(row), sort_keys=True, separators=(",", ":")) + "\n"
+        )
+
+
+def load_finalized_attempts(
+    attempt_dirs: Sequence[Path],
+    *,
+    workers: int = 1,
+    checkpoint_dir: Path | None = None,
+) -> list[ParsedAttempt]:
+    checkpoint = _load_verification_checkpoint(checkpoint_dir) if checkpoint_dir else {}
+    pending: list[Path] = []
+    loaded: list[ParsedAttempt] = []
+
+    for attempt_dir in attempt_dirs:
+        key = str(attempt_dir.resolve())
+        current = _attempt_checkpoint_key(attempt_dir)
+        cached = checkpoint.get(key)
+        if (
+            cached
+            and cached.get("complete_mtime_ns") == current["complete_mtime_ns"]
+            and cached.get("evidence_manifest_sha256") == current["evidence_manifest_sha256"]
+            and isinstance(cached.get("verification_errors"), list)
+        ):
+            loaded.append(
+                ParsedAttempt(
+                    attempt_path=attempt_dir,
+                    episode_id=str(cached["episode_id"]),
+                    attempt_id=str(cached["attempt_id"]),
+                    complete=_load_json(attempt_dir / "COMPLETE.json"),
+                    episode=_load_json(attempt_dir / "episode.json"),
+                    evidence_manifest=_load_json(attempt_dir / "evidence_manifest.json"),
+                    verification_errors=list(cached["verification_errors"]),
+                )
+            )
+        else:
+            pending.append(attempt_dir)
+
+    if not pending:
+        return sorted(loaded, key=lambda item: (item.episode_id, item.attempt_id))
+
+    worker_count = max(1, int(workers))
+
+    def _load_one(attempt_dir: Path) -> ParsedAttempt:
+        return load_finalized_attempt(attempt_dir)
+
+    if worker_count == 1:
+        fresh = [_load_one(path) for path in pending]
+    else:
+        fresh = []
+        with ThreadPoolExecutor(max_workers=worker_count) as pool:
+            futures = {pool.submit(_load_one, path): path for path in pending}
+            for future in as_completed(futures):
+                fresh.append(future.result())
+
+    if checkpoint_dir is not None:
+        for parsed in fresh:
+            _append_verification_checkpoint(
+                checkpoint_dir,
+                {
+                    **_attempt_checkpoint_key(parsed.attempt_path),
+                    "episode_id": parsed.episode_id,
+                    "attempt_id": parsed.attempt_id,
+                    "verification_errors": list(parsed.verification_errors),
+                },
+            )
+
+    return sorted([*loaded, *fresh], key=lambda item: (item.episode_id, item.attempt_id))
+
+
+def discover_finalized_attempts(
+    attempts_root: Path,
+    *,
+    episode_ids: set[str] | None = None,
+    workers: int = 1,
+    checkpoint_dir: Path | None = None,
+) -> list[ParsedAttempt]:
+    directories = discover_finalized_attempt_directories(
+        attempts_root,
+        episode_ids=episode_ids,
+    )
+    return load_finalized_attempts(
+        directories,
+        workers=workers,
+        checkpoint_dir=checkpoint_dir,
+    )
 
 
 def _relative_uri(path: Path, root: Path) -> str:

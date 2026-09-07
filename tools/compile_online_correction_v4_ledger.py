@@ -15,7 +15,8 @@ if str(ROOT) not in sys.path:
 from experiments.online_correction_v4.ledger import (  # noqa: E402
     LedgerError,
     compile_accepted_ledger_from_attempts,
-    discover_finalized_attempts,
+    discover_finalized_attempt_directories,
+    load_finalized_attempts,
     load_queue_episode_ids,
     write_ledger_outputs,
 )
@@ -64,13 +65,39 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Compile and validate without writing output files.",
     )
+    parser.add_argument(
+        "--workers",
+        type=int,
+        default=1,
+        help="Parallel workers for attempt evidence verification.",
+    )
+    parser.add_argument(
+        "--checkpoint-dir",
+        type=Path,
+        default=None,
+        help="Resume attempt verification from a checkpoint directory.",
+    )
+    parser.add_argument(
+        "--manifest-scoped-discovery",
+        action="store_true",
+        help="Only verify attempts whose episode_id appears in the manifest.",
+    )
     args = parser.parse_args(argv)
     try:
         config, _ = load_campaign_config(args.config)
         protocol_sha256 = args.protocol_sha256 or _load_protocol_sha256(args.config)
         scorer_sha256 = args.scorer_sha256 or _load_scorer_sha256(config)
         manifest = load_manifest(args.manifest)
-        attempts = discover_finalized_attempts(args.attempts_root)
+        episode_ids = {str(row["episode_id"]) for row in manifest} if args.manifest_scoped_discovery else None
+        attempt_dirs = discover_finalized_attempt_directories(
+            args.attempts_root,
+            episode_ids=episode_ids,
+        )
+        attempts = load_finalized_attempts(
+            attempt_dirs,
+            workers=max(1, args.workers),
+            checkpoint_dir=args.checkpoint_dir.resolve() if args.checkpoint_dir else None,
+        )
         queue_path = args.queue
         if queue_path is None and DEFAULT_QUEUE.is_file():
             queue_path = DEFAULT_QUEUE
@@ -91,6 +118,8 @@ def main(argv: list[str] | None = None) -> int:
             "warnings": result.warnings,
             "reconciliation": result.reconciliation,
             "validation_preview": result.manifest_payload.get("validation_preview"),
+            "discovered_attempt_count": len(attempts),
+            "discovered_directory_count": len(attempt_dirs),
         }
         if not result.ok:
             print(json.dumps(report, indent=2, sort_keys=True))

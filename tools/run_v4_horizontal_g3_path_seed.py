@@ -41,6 +41,22 @@ def _infra_failure_schema(fixture_id: str) -> str:
     return f"v4-{fixture_id.replace('_', '-')}-g3-infrastructure-failure-v1"
 
 
+def _fixture_geometry_from_registry(
+    registry_payload: Mapping[str, Any], fixture_id: str
+) -> Mapping[str, Any] | None:
+    if fixture_id not in {"vertical", "containment"}:
+        return None
+    scene_receipt = registry_payload.get("scene_receipt")
+    if not isinstance(scene_receipt, Mapping):
+        raise RuntimeError(f"{fixture_id} reset registry lacks scene_receipt")
+    support_geometry = scene_receipt.get("support_geometry")
+    if not isinstance(support_geometry, Mapping):
+        raise RuntimeError(
+            f"{fixture_id} reset registry lacks scene_receipt.support_geometry"
+        )
+    return support_geometry
+
+
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--study-root", type=Path, required=True)
@@ -807,6 +823,7 @@ def main(argv: list[str] | None = None) -> int:
             f"scale-{args.scale:g}"
         )
         prompt_sha256 = sha256_bytes(prompt.encode("utf-8"))
+        binding_goal = str(plan["path_sweep"]["goals"][0])
         queue_row, queue_row_sha256 = write_queue_row(
             output_dir=output_dir,
             episode_id=episode_id,
@@ -814,7 +831,7 @@ def main(argv: list[str] | None = None) -> int:
             prompt_text=prompt,
             prompt_sha256=prompt_sha256,
             env_seed=args.environment_seed,
-            goal=str(plan["path_sweep"]["goals"][0]),
+            goal=binding_goal,
         )
         runtime_identity = {
             "study_checkout": study_identity,
@@ -856,7 +873,7 @@ def main(argv: list[str] | None = None) -> int:
             fixture=fixture,
             env_seed=args.environment_seed,
             episode_id=episode_id,
-            goal="left",
+            goal=binding_goal,
             prompt_text=prompt,
             prompt_sha256=prompt_sha256,
             policy_id="model_blind_no_policy",
@@ -882,9 +899,9 @@ def main(argv: list[str] | None = None) -> int:
             support_edge_margin_m=float(
                 geometry_contract["support_edge_margin_m"]
             ),
-            fixture_geometry=registry_payload["scene_receipt"][
-                "support_geometry"
-            ],
+            fixture_geometry=_fixture_geometry_from_registry(
+                registry_payload, fixture_id
+            ),
         )
         shared_dir = output_dir / "registered_reset"
         reset_attestation_artifact = _write_json(

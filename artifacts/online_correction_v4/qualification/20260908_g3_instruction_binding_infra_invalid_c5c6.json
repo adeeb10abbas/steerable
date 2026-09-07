@@ -1,0 +1,20 @@
+{
+  "affected_attempt_ids": [
+    "g3c6p20260908a10080c",
+    "g3c5p20260908a10080c"
+  ],
+  "behavioral_episode_count": 0,
+  "compiled_at_utc": "2026-09-08T05:45:00Z",
+  "disposition": "infrastructure_invalid",
+  "failure_class": "queue_row_goal_mismatch_in_path_seed_runner",
+  "failure_detail": "run_v4_horizontal_g3_path_seed.py wrote queue rows with fixture-specific goals (inside/above) but called build_live_robolab_env with hardcoded goal=left, causing InstructionBindingError before Isaac launch.",
+  "fix_commit": "pending_push",
+  "fix_file": "tools/run_v4_horizontal_g3_path_seed.py",
+  "gpu_stratum": "NVIDIA-A100-SXM4-80GB",
+  "immutable_retry_attempt_ids": [
+    "g3c6p20260908a10080d",
+    "g3c5p20260908a10080d"
+  ],
+  "schema_version": "v4-g3-instruction-binding-infra-disposition-v1",
+  "status": "infrastructure_invalid"
+}

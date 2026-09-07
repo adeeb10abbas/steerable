@@ -33,6 +33,7 @@ def summarize_outcome_composition(rows: list[dict[str, Any]]) -> dict[str, int]:
         "no_grasp",
         "transport_incomplete",
         "wrong_goal_region",
+        "support_or_containment_failed",
         "wrong_placement",
         "unknown",
     )

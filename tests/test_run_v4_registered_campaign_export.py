@@ -34,15 +34,24 @@ def test_build_campaign_blocked_scope_includes_horizontal_squeeze() -> None:
         },
         family_status={
             "C7": {
-                **build_coverage_metadata(accepted=548, planned=768, compile_id="20260908k"),
-                "outcome_composition": {"no_grasp": 544, "transport_incomplete": 4},
+                **build_coverage_metadata(accepted=580, planned=768, compile_id="20260908m"),
+                "outcome_composition": {
+                    "no_grasp": 574,
+                    "transport_incomplete": 3,
+                    "wrong_goal_region": 2,
+                    "support_or_containment_failed": 1,
+                },
             }
         },
+        compile_provenance={"active_compile_id": "compiled_ledger_20260908m", "is_final": False},
+        c8_scenario_grasp={"grasp_achieved_count": 12},
     )
     assert payload["scientifically_blocked_episodes"] == 15360
     assert payload["pre_repair_c7_excluded_episodes"] == 279
     assert payload["horizontal_scale_squeeze"]["classification"] == "information_gate_squeeze"
     assert payload["criteria_amended"] is False
+    assert payload["c7_compile_provenance"]["active_compile_id"] == "compiled_ledger_20260908m"
+    assert payload["c8_pilot_scenario_grasp_pattern"]["grasp_achieved_count"] == 12
     assert "C1" in payload["not_estimable_or_blocked"]
 
 
@@ -73,10 +82,12 @@ def test_build_campaign_tables_and_figure(tmp_path) -> None:
     }
     tables = build_campaign_tables(
         campaign_blocked=campaign_blocked,
-        c7_audit={"validation": {"accepted_unique": 548, "valid_success_records": 0, "valid_failure_records": 548}},
+        c7_audit={"validation": {"accepted_unique": 580, "valid_success_records": 0, "valid_failure_records": 580}},
         c7_primary_rows=[{"estimand_id": "H1", "status": "not_estimable"}],
         family_rollups=family_rollups,
         campaign_export_status="partial",
+        compile_provenance={"active_compile_id": "compiled_ledger_20260908m", "is_final": False},
+        c8_scenario_grasp=None,
     )
     assert len(tables["scope_summary.csv"]) >= 10
     assert tables["c7_outcome_composition.csv"] == [

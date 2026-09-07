@@ -27,7 +27,7 @@ _Generated from accepted ledger; replace TODO markers after review._
 | online_correction_v4-C7-b001-38f5b638edfaa054 | C7 | object_pair | 1 | cosmos3_nano_droid | behind | direct | destination_static | single | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 0 |
 | online_correction_v4-C7-b001-4e1d003f60685724 | C7 | object_pair | 1 | cosmos3_nano_droid | left | direct | move_stop | single | 1 | 1 | 0 | 0 | 0 | 0 | 0 | 0 |
 
-_Showing 20 of 548 rows. Source: `/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/results/registered/20260908/families/C7/20260908c7/tables/coverage_by_cell.csv`._
+_Showing 20 of 580 rows. Source: `/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/results/registered/20260908/families/C7/20260908c7/tables/coverage_by_cell.csv`._
 
 ## Primary results
 
@@ -67,7 +67,7 @@ _Showing 20 of 548 rows. Source: `/Users/SZ5VJY/steerable-1/artifacts/online_cor
 | online_correction_v4-C7-b001-38f5b638edfaa054 | C7 | cosmos3_nano_droid | 1 | behind | destination_static | 1 | 0 | pickup | no_grasp | 0 | 0 | 0 | 0 |  |
 | online_correction_v4-C7-b001-4e1d003f60685724 | C7 | cosmos3_nano_droid | 1 | left | move_stop | 1 | 0 | pickup | no_grasp | 0 | 0 | 0 | 0 |  |
 
-_Showing 20 of 548 rows. Source: `/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/results/registered/20260908/families/C7/20260908c7/tables/failure_composition.csv`._
+_Showing 20 of 580 rows. Source: `/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/results/registered/20260908/families/C7/20260908c7/tables/failure_composition.csv`._
 
 ## Timing and motion
 
@@ -94,5 +94,5 @@ _Showing 20 of 548 rows. Source: `/Users/SZ5VJY/steerable-1/artifacts/online_cor
 | online_correction_v4-C7-b001-38f5b638edfaa054 | C7 | cosmos3_nano_droid | 1 | 1 |  |  |  |  |  |  |  |  |  |  |
 | online_correction_v4-C7-b001-4e1d003f60685724 | C7 | cosmos3_nano_droid | 1 | 1 |  |  |  |  |  |  |  |  |  |  |
 
-_Showing 20 of 548 rows. Source: `/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/results/registered/20260908/families/C7/20260908c7/tables/timing_and_motion.csv`._
+_Showing 20 of 580 rows. Source: `/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/results/registered/20260908/families/C7/20260908c7/tables/timing_and_motion.csv`._
 

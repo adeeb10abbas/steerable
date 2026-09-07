@@ -1,0 +1,31 @@
+{
+  "schema_version": "v4-c7-compiled-ledger-receipt-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "object_pair_c7",
+  "compiled_at_utc": "2026-09-08T03:45:00Z",
+  "pvc_output_root": "/data/users/ali/vla_wam/raw/v4/c7-object-pair-main/compiled_ledger_20260908m",
+  "manifest_scope": "768 C7 confirmatory episodes (queue.frozen.jsonl)",
+  "accepted_row_count": 580,
+  "accepted_ledger_sha256": "66c3f7ee19d42c3f220cdd0593f56e1323cd228f303896eea55417b8d53eae69",
+  "planned_episodes": 768,
+  "missing_valid": 188,
+  "pre_repair_excluded_episodes": 279,
+  "outcome_composition": {
+    "no_grasp": 574,
+    "transport_incomplete": 3,
+    "wrong_goal_region": 2,
+    "support_or_containment_failed": 1,
+    "success": 0,
+    "wrong_placement": 0
+  },
+  "reconciliation_note": "Latest partial compile from Agent B before FINAL 768/768 require-full-coverage compile; supersedes compile-k/l and stale .compiled-ledger-final per compile_retirement_pending.json.",
+  "ledger_paths": {
+    "accepted_ledger": "compiled_ledger_20260908m/accepted_ledger.jsonl",
+    "accepted_ledger_manifest": "compiled_ledger_20260908m/accepted_ledger_manifest.json",
+    "rejected_attempts": "compiled_ledger_20260908m/rejected_attempts.jsonl"
+  },
+  "status": "partial_latest_not_final",
+  "supersedes": "compiled_ledger_20260908k_receipt.json",
+  "superseded_by_pending": "compiled_ledger_20260908_FINAL",
+  "retirement_manifest_uri": "artifacts/online_correction_v4/execution/c7_object_pair_20260906/compile_retirement_pending.json"
+}

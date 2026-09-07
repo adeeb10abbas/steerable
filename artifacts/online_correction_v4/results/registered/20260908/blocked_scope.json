@@ -10,16 +10,110 @@
     "C2_reference_binding": 4096,
     "C5_vertical": 768
   },
-  "c7_compile_ambiguity": {
-    "authoritative_partial_accepted": 548,
-    "authoritative_partial_compile_id": "compiled_ledger_20260908k",
-    "final_compile_status": "pending_require_full_coverage_768",
-    "interpretation": "Do not paper over compile ambiguity: compile-l adds at least one wrong_goal_region and four transport_incomplete among 565 rows; the labeled partial export uses compile-k until Agent B publishes a single FINAL require-full-coverage compile at 768/768.",
-    "pvc_raw_valid_count": 583,
-    "stale_or_superseded_partials": {
-      "compiled-ledger-final": 551,
-      "compiled_ledger_20260908l": 565
-    }
+  "c7_compile_provenance": {
+    "active_compile_id": "compiled_ledger_20260908m",
+    "active_rows": 580,
+    "authoritative_compile_id": "compiled_ledger_20260908_FINAL",
+    "final_compile_path": "/data/users/ali/vla_wam/raw/v4/c7-object-pair-main/compiled_ledger_20260908_FINAL",
+    "is_final": false,
+    "note": "Partial compiles below are non-authoritative progress snapshots. Only compiled_ledger_20260908_FINAL with require-full-coverage at 768/768 may be cited in paper exports.",
+    "retired_partials": [
+      {
+        "composition": {
+          "no_grasp": 544,
+          "transport_incomplete": 4
+        },
+        "path": "/data/users/ali/vla_wam/raw/v4/c7-object-pair-main/compiled_ledger_20260908k",
+        "rows": 548,
+        "superseded_by": "compiled_ledger_20260908_FINAL"
+      },
+      {
+        "composition": {
+          "no_grasp": 547,
+          "transport_incomplete": 4
+        },
+        "path": "/data/users/ali/vla_wam/raw/v4/c7-object-pair-main/.compiled-ledger-final",
+        "rows": 551,
+        "status": "stale_do_not_cite",
+        "superseded_by": "compiled_ledger_20260908_FINAL"
+      },
+      {
+        "composition": {
+          "no_grasp": 560,
+          "transport_incomplete": 4,
+          "wrong_goal_region": 1
+        },
+        "path": "/data/users/ali/vla_wam/raw/v4/c7-object-pair-main/compiled_ledger_20260908l",
+        "rows": 565,
+        "superseded_by": "compiled_ledger_20260908_FINAL"
+      },
+      {
+        "composition": {
+          "no_grasp": 574,
+          "support_or_containment_failed": 1,
+          "transport_incomplete": 3,
+          "wrong_goal_region": 2
+        },
+        "path": "/data/users/ali/vla_wam/raw/v4/c7-object-pair-main/compiled_ledger_20260908m",
+        "rows": 580,
+        "status": "latest_partial_not_final",
+        "superseded_by": "compiled_ledger_20260908_FINAL"
+      }
+    ],
+    "retirement_manifest": "artifacts/online_correction_v4/execution/c7_object_pair_20260906/compile_retirement_pending.json",
+    "schema_version": "v4-c7-compile-retirement-v1"
+  },
+  "c8_pilot_scenario_grasp_pattern": {
+    "aggregate_outcomes": {
+      "no_grasp": 12,
+      "transport_incomplete": 12
+    },
+    "by_scenario": {
+      "destination_static": {
+        "episodes": 8,
+        "grasp_achieved": 6,
+        "no_grasp": 2,
+        "transport_incomplete": 6
+      },
+      "move_stop": {
+        "episodes": 8,
+        "grasp_achieved": 4,
+        "no_grasp": 4,
+        "transport_incomplete": 4
+      },
+      "original_sham": {
+        "episodes": 8,
+        "grasp_achieved": 2,
+        "no_grasp": 6,
+        "transport_incomplete": 2
+      }
+    },
+    "campaign_id": "online_correction_v4",
+    "classification": {
+      "behavioral_valid": true,
+      "infra_invalid_excluded": {
+        "attempt_range": "0093-0103",
+        "count": 39,
+        "inventory_uri": "artifacts/online_correction_v4/qualification/20260908_c8_g7_infra_invalid_attempts_0093_0103_inventory.json"
+      }
+    },
+    "cohort": "engineering_pilot",
+    "family_id": "C8",
+    "fixture_id": "second_stack",
+    "grasp_achieved_count": 12,
+    "grasp_achieved_note": "transport_incomplete implies grasp succeeded but placement/transport did not complete before timeout; 12/24 pilot episodes achieved grasp vs C7 object_pair 0/548 successes in confirmatory slice",
+    "ledger_compile_id": "20260908b",
+    "ledger_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pilot-ledger-20260908b/accepted_ledger.jsonl",
+    "motion_vs_static": {
+      "motion_episodes": 8,
+      "motion_grasp_achieved": 4,
+      "static_episodes": 16,
+      "static_grasp_achieved": 8
+    },
+    "observed_at_utc": "2026-09-08T03:20:00Z",
+    "queue_uri": "artifacts/online_correction_v4/setup/second_stack_g7_pilot_queue.jsonl",
+    "schema_version": "v4-c8-pilot-composition-by-scenario-v1",
+    "valid_episodes": 24
   },
   "capacity_finding": {
     "authorized_confirmatory_lane_pairs": 20,
@@ -28,7 +122,7 @@
     "confirmatory_episodes_per_family": 768,
     "estimated_confirmatory_walltime_hours_at_full_pool": 16,
     "note": "Once C7 releases the A40 pool, C8 confirmatory throughput is bounded by 20 authorized lane pairs on the G4-attested A40 stratum; 768 episodes at that parallelism is approximately 16 wall-clock hours.",
-    "receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908b.json"
+    "receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908c.json"
   },
   "criteria_amended": false,
   "disclosed_setup_repairs": [
@@ -105,25 +199,27 @@
       ]
     },
     "C7": {
-      "accepted_valid_unique": 548,
-      "coverage_fraction": 0.713542,
-      "coverage_label": "548/768 (71.4%)",
+      "accepted_valid_unique": 580,
+      "coverage_fraction": 0.755208,
+      "coverage_label": "580/768 (75.5%)",
       "evidence_phase": "confirmatory_partial",
       "export_phase": "confirmatory_partial",
       "export_status": "partial",
       "fixture": "object_pair",
-      "ledger_compile_id": "compiled_ledger_20260908k",
-      "missing_episodes": 220,
+      "ledger_compile_id": "compiled_ledger_20260908m",
+      "missing_episodes": 188,
       "outcome_composition": {
-        "no_grasp": 544,
-        "transport_incomplete": 4
+        "no_grasp": 574,
+        "support_or_containment_failed": 1,
+        "transport_incomplete": 3,
+        "wrong_goal_region": 2
       },
       "planned_episodes": 768,
       "platform": "isaac_droid",
       "pre_repair_excluded": 279,
       "scenario_outcome_breakdown": [
         {
-          "count": 181,
+          "count": 193,
           "failure_label": "no_grasp",
           "scenario": "destination_static"
         },
@@ -133,23 +229,33 @@
           "scenario": "destination_static"
         },
         {
-          "count": 189,
+          "count": 196,
           "failure_label": "no_grasp",
           "scenario": "move_stop"
         },
         {
           "count": 1,
-          "failure_label": "transport_incomplete",
+          "failure_label": "wrong_goal_region",
           "scenario": "move_stop"
         },
         {
-          "count": 174,
+          "count": 185,
           "failure_label": "no_grasp",
+          "scenario": "original_sham"
+        },
+        {
+          "count": 1,
+          "failure_label": "support_or_containment_failed",
           "scenario": "original_sham"
         },
         {
           "count": 2,
           "failure_label": "transport_incomplete",
+          "scenario": "original_sham"
+        },
+        {
+          "count": 1,
+          "failure_label": "wrong_goal_region",
           "scenario": "original_sham"
         }
       ]
@@ -157,34 +263,37 @@
     "C8": {
       "accepted_valid_unique": 24,
       "confirmatory_dispatch": {
-        "accepted_valid_unique": 0,
+        "accepted_valid_unique": 1,
         "capacity": {
           "authorized_confirmatory_lane_pairs": 20,
-          "authorized_pilot_lanes": 8,
           "binding_limit": "G4-attested A40 GR00T Bridge stratum",
-          "c7_a40_occupancy_blocks_scheduling": true,
-          "do_not_use_without_g4_receipt": [
-            "A100-80GB",
-            "B200"
-          ],
-          "estimated_c7_release_hours": 2.3,
+          "c7_a40_occupancy_releasing": true,
           "handoff_uri": "artifacts/online_correction_v4/execution/gpu_widen_20260908/c8_pilot_lane_expansion_handoff_agent_a.json"
         },
-        "coverage_fraction": 0.0,
-        "coverage_label": "0/768 confirmatory accepted; 768/768 dispatched",
-        "dispatch_status": "dispatched_pending_capacity",
+        "coverage_fraction": 0.001302,
+        "coverage_label": "1/768 confirmatory accepted; 768/768 dispatched",
+        "dispatch_status": "dispatched",
         "dispatched_episodes": 768,
+        "execution_status_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908c.json",
         "export_phase": "confirmatory",
         "export_status": "dispatched_partial",
-        "lane_pairs_dispatched": 20,
-        "ledger_compile_id": null,
-        "missing_episodes": 768,
+        "first_valid_by_scenario": {
+          "move_stop": {
+            "no_grasp": 1
+          }
+        },
+        "first_valid_episode": {
+          "no_grasp": 1
+        },
+        "lane_pairs_dispatched": null,
+        "ledger_compile_id": "c8_execution_status_20260908c",
+        "missing_episodes": 767,
         "planned_episodes": 768,
         "pod_summary": {
           "Completed": 0,
           "Error": 0,
-          "Pending": 40,
-          "Running": 0
+          "Pending": 37,
+          "Running": 3
         },
         "wave": "main"
       },
@@ -302,7 +411,7 @@
     "C4": "scientifically blocked with C1/C3: horizontal information-gate failure on registered ladder",
     "C5": "scientifically blocked: vertical IK reachability finding at seed 2100020000 scale 0.5; receipt 20260908_vertical_natural_grasp_live_control_finding_g3ngp20260908vp8.json",
     "C6": "achievable (768 episodes); dispatch pending qualification completion",
-    "C7": "partial export (548/768 (71.4%)): timing-audit-backed policy failures on repaired-path confirmatory completes \u2014 544 no_grasp, 4 transport_incomplete; 279 pre-repair episodes excluded",
+    "C7": "partial export (580/768 (75.5%)): timing-audit-backed policy failures on repaired-path confirmatory completes \u2014 574 no_grasp, 3 transport_incomplete, 2 wrong_goal_region, 1 support_or_containment_failed; 279 pre-repair episodes excluded",
     "C8": "achievable (768 episodes); pilot G3 path gate passed 96/96 (g3c8p20260908f); G7 confirmatory receipt passed (g7c8q20260908a); 24 pilot episodes, G8 rehearsal, confirmatory runtime lock, and 768 dispatch blocked pending groot_bridge_widowx registration in launch_online_correction_v4.py (SUPPORTED_DROID_POLICIES) and second_stack live behavioral runner wiring"
   },
   "original_planned_policy_episodes": 17664,

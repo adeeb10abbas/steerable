@@ -1,16 +1,16 @@
 {
   "blocked_scope": {
-    "bytes": 14110,
+    "bytes": 17932,
     "path": "artifacts/online_correction_v4/results/registered/20260908/blocked_scope.json",
-    "sha256": "6719a29d8eaeaf2864f6b84d642812d0e224a942ffec315415ad433f834ab1bb"
+    "sha256": "95c870b6beb516c75d38888fe252181492cc57e47a30f46732b75f4bf50390c1"
   },
-  "c7_ledger_rows": 548,
+  "c7_ledger_rows": 580,
   "c7_planned_episodes": 768,
   "c7_valid_success_records": 0,
   "evidence_memo": {
-    "bytes": 12303,
+    "bytes": 12886,
     "path": "artifacts/online_correction_v4/results/registered/20260908/paper/evidence_memo.json",
-    "sha256": "d7514dd6f3caa8e64776b928cb8bb13a9bb9c47a3f4481f7b6262249b6d8714b"
+    "sha256": "dcbc92d4366b6bfe6bb79c1e0d2cd6a49c28490db0473e3d4ef46ece1aa30d0a"
   },
   "export_coverage": {
     "C6": {
@@ -23,13 +23,13 @@
       "planned_episodes": 24
     },
     "C7": {
-      "accepted_valid_unique": 548,
-      "coverage_fraction": 0.713542,
-      "coverage_label": "548/768 (71.4%)",
+      "accepted_valid_unique": 580,
+      "coverage_fraction": 0.755208,
+      "coverage_label": "580/768 (75.5%)",
       "export_phase": "confirmatory_partial",
       "export_status": "partial",
-      "ledger_compile_id": "compiled_ledger_20260908k",
-      "missing_episodes": 220,
+      "ledger_compile_id": "compiled_ledger_20260908m",
+      "missing_episodes": 188,
       "planned_episodes": 768
     },
     "C8": {
@@ -49,7 +49,7 @@
       "path": "artifacts/online_correction_v4/results/registered/20260908/families/C6/20260908c6pilot"
     },
     "C7": {
-      "manifest_sha256": "d2af926dfa2a0f8b57d6d5b3d33caa66e5d56321c50367acf170985acf723cf6",
+      "manifest_sha256": "30386daf29a79305dbe9d0c65ab2b0730539d4700087516391e44f96032d3f30",
       "path": "artifacts/online_correction_v4/results/registered/20260908/families/C7/20260908c7"
     },
     "C8": {
@@ -81,40 +81,45 @@
     "C7": {
       "confirmatory_dispatch": {},
       "outcome_composition": {
-        "no_grasp": 544,
-        "transport_incomplete": 4
+        "no_grasp": 574,
+        "support_or_containment_failed": 1,
+        "transport_incomplete": 3,
+        "wrong_goal_region": 2
       }
     },
     "C8": {
       "confirmatory_dispatch": {
-        "accepted_valid_unique": 0,
+        "accepted_valid_unique": 1,
         "capacity": {
           "authorized_confirmatory_lane_pairs": 20,
-          "authorized_pilot_lanes": 8,
           "binding_limit": "G4-attested A40 GR00T Bridge stratum",
-          "c7_a40_occupancy_blocks_scheduling": true,
-          "do_not_use_without_g4_receipt": [
-            "A100-80GB",
-            "B200"
-          ],
-          "estimated_c7_release_hours": 2.3,
+          "c7_a40_occupancy_releasing": true,
           "handoff_uri": "artifacts/online_correction_v4/execution/gpu_widen_20260908/c8_pilot_lane_expansion_handoff_agent_a.json"
         },
-        "coverage_fraction": 0.0,
-        "coverage_label": "0/768 confirmatory accepted; 768/768 dispatched",
-        "dispatch_status": "dispatched_pending_capacity",
+        "coverage_fraction": 0.001302,
+        "coverage_label": "1/768 confirmatory accepted; 768/768 dispatched",
+        "dispatch_status": "dispatched",
         "dispatched_episodes": 768,
+        "execution_status_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908c.json",
         "export_phase": "confirmatory",
         "export_status": "dispatched_partial",
-        "lane_pairs_dispatched": 20,
-        "ledger_compile_id": null,
-        "missing_episodes": 768,
+        "first_valid_by_scenario": {
+          "move_stop": {
+            "no_grasp": 1
+          }
+        },
+        "first_valid_episode": {
+          "no_grasp": 1
+        },
+        "lane_pairs_dispatched": null,
+        "ledger_compile_id": "c8_execution_status_20260908c",
+        "missing_episodes": 767,
         "planned_episodes": 768,
         "pod_summary": {
           "Completed": 0,
           "Error": 0,
-          "Pending": 40,
-          "Running": 0
+          "Pending": 37,
+          "Running": 3
         },
         "wave": "main"
       },
@@ -128,12 +133,12 @@
     "campaign_scope": {
       "bytes": 712,
       "path": "artifacts/online_correction_v4/results/registered/20260908/figures/campaign_scope.svg",
-      "sha256": "d7143d7e801d67fb079bcf53fc3d5a7eb9899452bcf4a5947ecc7465918d44b8"
+      "sha256": "89cd0816bd4c60a991b83e40e9a5948efb89449820dab9562a2360d4470eee15"
     },
     "manifest": {
       "bytes": 433,
       "path": "artifacts/online_correction_v4/results/registered/20260908/figures/figures_manifest.json",
-      "sha256": "58ebd8d82c31aa43291b5156792c60a46f3d998493a7be37e1f2eb2581975868"
+      "sha256": "3a42d119fb4c36b8926443ced4c14cafc003ea249b637a124c1d8d488ba84943"
     }
   },
   "frozen_analysis_manifest": {
@@ -149,8 +154,10 @@
       "wrong_goal_region": 3
     },
     "C7": {
-      "no_grasp": 544,
-      "transport_incomplete": 4
+      "no_grasp": 574,
+      "support_or_containment_failed": 1,
+      "transport_incomplete": 3,
+      "wrong_goal_region": 2
     },
     "C8": {
       "no_grasp": 12,
@@ -159,16 +166,16 @@
   },
   "output_root": "artifacts/online_correction_v4/results/registered/20260908",
   "results_md": {
-    "bytes": 5912,
+    "bytes": 6016,
     "path": "artifacts/online_correction_v4/results/registered/20260908/paper/RESULTS.md",
-    "sha256": "e8e5229b93af1ff5502c6b2998d106cf0686e5d41842b5e1398d31e29d718f99"
+    "sha256": "1f7bc07aa0bf61ab935db7c7fab1cc522748047c7ece0f1358b73705fc121de2"
   },
   "schema_version": "v4-registered-campaign-export-manifest-v1",
   "tables": {
     "audit_report.json": {
-      "bytes": 5642,
+      "bytes": 9903,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/audit_report.json",
-      "sha256": "fded4abb70319d0f80c865922fb4fb15bf2f4ccb21f822e35c8a02d90b7773e2"
+      "sha256": "238cc4ab8858b53a8ed05abb5a621211f364561edfa54f18c380bea45aa74e3e"
     },
     "blocked_families.csv": {
       "bytes": 1242,
@@ -186,14 +193,19 @@
       "sha256": "fc91db6d692dd6c7519958dd4571c49dfbc946190a72da3413c08c4b5a464037"
     },
     "c7_outcome_composition.csv": {
-      "bytes": 59,
+      "bytes": 113,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c7_outcome_composition.csv",
-      "sha256": "bf2f693cd876f0a5000e3e7b74b251f27bd0af90e3fe40eed7913154908ce335"
+      "sha256": "d507bb68972cae8d07234da8fe6da7295731d3ec6876b62ecf14f606f06ffa15"
     },
     "c7_scenario_outcome_breakdown.csv": {
-      "bytes": 230,
+      "bytes": 309,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c7_scenario_outcome_breakdown.csv",
-      "sha256": "0452896629827c0d2175849aecd81ec0a133495d679f96d763918a8dc5f4fc14"
+      "sha256": "1da653b9c84ee89d50c93620aa2dd23b48025df539c3eec92f19566a0d1712fd"
+    },
+    "c8_grasp_by_scenario.csv": {
+      "bytes": 159,
+      "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c8_grasp_by_scenario.csv",
+      "sha256": "62c796f79ba130b514d077ab3c8151c62a043f7424160883f02ddba00999822a"
     },
     "c8_outcome_composition.csv": {
       "bytes": 59,
@@ -210,20 +222,25 @@
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/campaign_primary_results.csv",
       "sha256": "2131691505c3bd7232c83ba4c16be1160214ee19aa60801b3c01da005aa5bc9a"
     },
+    "compile_retirement_provenance.csv": {
+      "bytes": 503,
+      "path": "artifacts/online_correction_v4/results/registered/20260908/tables/compile_retirement_provenance.csv",
+      "sha256": "5a8aee8ce0c49f22b37892398b56c8b1df19ee3121c4a65235e4fe5c28c668ed"
+    },
     "cross_fixture_outcome_contrast.csv": {
-      "bytes": 380,
+      "bytes": 436,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/cross_fixture_outcome_contrast.csv",
-      "sha256": "b8b14bf44d13867d6272de86cc87f25cc4f79f39bc4d45e1589e22765cce1465"
+      "sha256": "2d006bcf8528932e59c66d4c8f9f56b30a91787a97ece23ff0fe662b87f79da2"
     },
     "family_coverage.csv": {
       "bytes": 436,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/family_coverage.csv",
-      "sha256": "2dbc07ad6cfb7fc3bc13d71e5e3ee80742f9729b72f698305f736beb5ee4a75d"
+      "sha256": "db0dcda0a416ceb6e8a77711008ca3a5dba624ca86567dee57125938d0ccfff5"
     },
     "results_manifest": {
-      "bytes": 7052,
+      "bytes": 7811,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/results_manifest.json",
-      "sha256": "245cd09811c38200535353d295d84a5ca3c75295bc4d236355afe3e19236ab45"
+      "sha256": "3201e27b8f59f38f0b7b3be3e05192807a2cccb256aca3c6c6d3103267d15e8a"
     },
     "scale_ladder_squeeze.csv": {
       "bytes": 565,
@@ -233,7 +250,7 @@
     "scope_summary.csv": {
       "bytes": 392,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/scope_summary.csv",
-      "sha256": "eb39df66f9870be6e2622489be1919e0aaac0fc3fc9e6024a135361e28f23e7d"
+      "sha256": "d1165bb8be8ecb56d9fa4d4a16e0b14bf6ea01dadc02dce385a2480fe735a1ba"
     }
   },
   "tag": "20260908"

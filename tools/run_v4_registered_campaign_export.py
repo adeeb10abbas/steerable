@@ -52,7 +52,27 @@ DEFAULT_C8_PILOT_MANIFEST = (
 )
 C8_EXECUTION_STATUS = (
     ROOT
+    / "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908c.json"
+)
+C8_EXECUTION_STATUS_FALLBACK = (
+    ROOT
     / "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908b.json"
+)
+C8_PILOT_COMPOSITION = (
+    ROOT
+    / "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_pilot_composition_by_scenario_20260908a.json"
+)
+C7_COMPILE_RETIREMENT = (
+    ROOT
+    / "artifacts/online_correction_v4/execution/c7_object_pair_20260906/compile_retirement_pending.json"
+)
+DEFAULT_C7_FINAL_LEDGER = (
+    ROOT
+    / "artifacts/online_correction_v4/execution/c7_object_pair_20260906/pvc-ledgers/compiled_ledger_20260908_FINAL/accepted_ledger.jsonl"
+)
+DEFAULT_C7_PARTIAL_LEDGER_M = (
+    ROOT
+    / "artifacts/online_correction_v4/execution/c7_object_pair_20260906/pvc-ledgers/compiled_ledger_20260908m/accepted_ledger.jsonl"
 )
 C6_WAVE_B_DISPATCH = (
     ROOT
@@ -99,11 +119,97 @@ def write_csv(path: Path, rows: list[dict]) -> None:
     if not rows:
         path.write_text("", encoding="utf-8")
         return
-    fieldnames = list(rows[0].keys())
+    fieldnames: list[str] = []
+    seen: set[str] = set()
+    for row in rows:
+        for key in row:
+            if key not in seen:
+                seen.add(key)
+                fieldnames.append(key)
     with path.open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(rows)
+
+
+def build_compile_retirement_rows(retirement: dict[str, Any]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for item in retirement.get("retired_partials") or []:
+        path = str(item.get("path") or "")
+        compile_id = path.rsplit("/", 1)[-1] if path else ""
+        rows.append(
+            {
+                "compile_id": compile_id,
+                "rows": item.get("rows"),
+                "status": item.get("status", "retired_partial"),
+                "superseded_by": item.get("superseded_by"),
+                **{f"outcome_{key}": value for key, value in (item.get("composition") or {}).items()},
+            }
+        )
+    return rows
+
+
+def build_c8_grasp_by_scenario_rows(composition: dict[str, Any]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for scenario, payload in (composition.get("by_scenario") or {}).items():
+        rows.append(
+            {
+                "scenario": scenario,
+                "episodes": payload.get("episodes"),
+                "grasp_achieved": payload.get("grasp_achieved"),
+                "no_grasp": payload.get("no_grasp"),
+                "transport_incomplete": payload.get("transport_incomplete"),
+                "grasp_rate": round(
+                    float(payload.get("grasp_achieved", 0)) / max(int(payload.get("episodes") or 1), 1),
+                    3,
+                ),
+            }
+        )
+    return rows
+
+
+def load_compile_provenance(*, active_compile_id: str, active_rows: int, is_final: bool) -> dict[str, Any]:
+    if not C7_COMPILE_RETIREMENT.is_file():
+        return {
+            "active_compile_id": active_compile_id,
+            "active_rows": active_rows,
+            "is_final": is_final,
+            "retirement_manifest": None,
+        }
+    retirement = load_json(C7_COMPILE_RETIREMENT)
+    return {
+        "schema_version": retirement.get("schema_version"),
+        "retirement_manifest": str(C7_COMPILE_RETIREMENT.relative_to(ROOT)),
+        "final_compile_path": retirement.get("final_compile_path"),
+        "authoritative_compile_id": active_compile_id if is_final else retirement.get("final_compile_path", "").rsplit("/", 1)[-1],
+        "active_compile_id": active_compile_id,
+        "active_rows": active_rows,
+        "is_final": is_final,
+        "retired_partials": retirement.get("retired_partials"),
+        "note": retirement.get("note"),
+    }
+
+
+def resolve_c7_ledger(args: argparse.Namespace) -> tuple[Path, str, bool]:
+    if args.c7_ledger is not None:
+        path = args.c7_ledger.resolve()
+        compile_id = args.c7_ledger_compile_id or path.parent.name
+        return path, compile_id, compile_id.endswith("FINAL")
+    if DEFAULT_C7_FINAL_LEDGER.is_file():
+        return DEFAULT_C7_FINAL_LEDGER, "compiled_ledger_20260908_FINAL", True
+    if DEFAULT_C7_PARTIAL_LEDGER_M.is_file():
+        return DEFAULT_C7_PARTIAL_LEDGER_M, "compiled_ledger_20260908m", False
+    raise SystemExit(
+        "missing C7 accepted ledger: provide --c7-ledger or place compile-m/FINAL under pvc-ledgers/"
+    )
+
+
+def load_c8_execution_status() -> dict[str, Any]:
+    if C8_EXECUTION_STATUS.is_file():
+        return load_json(C8_EXECUTION_STATUS)
+    if C8_EXECUTION_STATUS_FALLBACK.is_file():
+        return load_json(C8_EXECUTION_STATUS_FALLBACK)
+    return {}
 
 
 def build_campaign_blocked_scope(
@@ -111,6 +217,8 @@ def build_campaign_blocked_scope(
     c7_blocked_scope: dict,
     horizontal_blocked_scope: dict,
     family_status: dict[str, dict],
+    compile_provenance: dict[str, Any],
+    c8_scenario_grasp: dict[str, Any] | None = None,
 ) -> dict:
     campaign = dict(c7_blocked_scope.get("campaign_scope_revision") or {})
     horizontal_finding = horizontal_blocked_scope.get("scientific_finding") or {}
@@ -158,24 +266,14 @@ def build_campaign_blocked_scope(
                 "20 authorized lane pairs on the G4-attested A40 stratum; 768 episodes at "
                 "that parallelism is approximately 16 wall-clock hours."
             ),
-            "receipt": str(C8_EXECUTION_STATUS.relative_to(ROOT)),
-        },
-        "c7_compile_ambiguity": {
-            "authoritative_partial_compile_id": "compiled_ledger_20260908k",
-            "authoritative_partial_accepted": 548,
-            "stale_or_superseded_partials": {
-                "compiled-ledger-final": 551,
-                "compiled_ledger_20260908l": 565,
-            },
-            "pvc_raw_valid_count": 583,
-            "final_compile_status": "pending_require_full_coverage_768",
-            "interpretation": (
-                "Do not paper over compile ambiguity: compile-l adds at least one "
-                "wrong_goal_region and four transport_incomplete among 565 rows; the labeled "
-                "partial export uses compile-k until Agent B publishes a single FINAL "
-                "require-full-coverage compile at 768/768."
+            "receipt": str(
+                (C8_EXECUTION_STATUS if C8_EXECUTION_STATUS.is_file() else C8_EXECUTION_STATUS_FALLBACK).relative_to(
+                    ROOT
+                )
             ),
         },
+        "c7_compile_provenance": compile_provenance,
+        "c8_pilot_scenario_grasp_pattern": c8_scenario_grasp,
         "not_estimable_or_blocked": not_estimable,
         "scientific_blockers": c7_blocked_scope.get("scientific_blockers"),
         "horizontal_evidence": {
@@ -207,6 +305,8 @@ def build_cross_fixture_contrast_rows(
                 "transport_incomplete": composition.get("transport_incomplete", 0),
                 "wrong_goal_region": composition.get("wrong_goal_region", 0),
                 "wrong_placement": composition.get("wrong_placement", 0),
+                "support_or_containment_failed": composition.get("support_or_containment_failed", 0),
+                "grasp_achieved": rollup.get("grasp_achieved"),
             }
         )
     return rows
@@ -241,6 +341,8 @@ def build_campaign_tables(
     c7_primary_rows: list[dict],
     family_rollups: dict[str, dict],
     campaign_export_status: str,
+    compile_provenance: dict[str, Any],
+    c8_scenario_grasp: dict[str, Any] | None,
 ) -> dict[str, list[dict]]:
     validation = c7_audit.get("validation") or {}
     c7_coverage = (family_rollups.get("C7") or {}).get("coverage") or {}
@@ -296,7 +398,12 @@ def build_campaign_tables(
         "cross_fixture_outcome_contrast.csv": build_cross_fixture_contrast_rows(
             family_rollups=family_rollups
         ),
+        "compile_retirement_provenance.csv": build_compile_retirement_rows(
+            load_json(C7_COMPILE_RETIREMENT) if C7_COMPILE_RETIREMENT.is_file() else {}
+        ),
     }
+    if c8_scenario_grasp:
+        tables["c8_grasp_by_scenario.csv"] = build_c8_grasp_by_scenario_rows(c8_scenario_grasp)
     for family in ("C6", "C8"):
         rollup = family_rollups.get(family) or {}
         composition = rollup.get("outcome_composition") or {}
@@ -365,36 +472,41 @@ def build_campaign_evidence_memo(
     decomposition_text = format_outcome_decomposition(c7_outcome_composition)
     c6_pilot_text = format_outcome_decomposition(c6_rollup.get("outcome_composition") or {})
     c8_pilot_text = format_outcome_decomposition(c8_rollup.get("outcome_composition") or {})
+    c8_confirmatory = (c8_rollup.get("confirmatory_dispatch") or {})
+    c8_grasp_scenarios = (C8_PILOT_COMPOSITION.is_file() and load_json(C8_PILOT_COMPOSITION).get("by_scenario")) or {}
     campaign_paragraphs = [
         f"**{campaign_export_status.upper()} EXPORT** — three achievable families are in flight. "
-        f"C7 confirmatory coverage {c7_coverage.get('coverage_label', 'n/a')} on compile-k; "
-        f"C6 G7 pilot 24/24 complete with confirmatory wave B dispatched (0/384 accepted); "
-        f"C8 G7 pilot 24/24 complete with confirmatory lock released and 768 episodes dispatched "
-        "(0/768 accepted, Pending on A40 capacity held by C7).",
+        f"C7 confirmatory coverage {c7_coverage.get('coverage_label', 'n/a')} on "
+        f"{c7_coverage.get('ledger_compile_id', 'n/a')} (retired partials k/l/m documented in "
+        f"compile_retirement_pending.json pending FINAL 768/768); C6 G7 pilot 24/24 complete with "
+        f"confirmatory wave B dispatched ({c6_rollup.get('confirmatory_dispatch', {}).get('coverage_label', 'n/a')}); "
+        f"C8 G7 pilot 24/24 with confirmatory "
+        f"{c8_confirmatory.get('coverage_label', '1/768 accepted; first valid move_stop no_grasp')}.",
         "Registered campaign scope: 17,664 planned policy episodes; 2,304 achievable "
         "(C6, C7, C8 confirmatory families × 768); 15,360 scientifically blocked "
         "(C1/C3/C4 horizontal information-gate squeeze 9,728; C2 reference_binding "
         "information gate 4,096; C5 vertical IK reachability 768). No eligibility "
         "criterion, threshold, or scale ladder was amended to recover blocked scope.",
-        "Cross-fixture contrast (compiled ledgers only): C7 object_pair on Isaac DROID is "
-        f"dominated by no_grasp ({c7_outcome_composition.get('no_grasp', 0)} of "
-        f"{c7_coverage.get('accepted_valid_unique', 0)} partial confirmatory rows on compile-k, "
-        f"plus {c7_outcome_composition.get('transport_incomplete', 0)} transport_incomplete; "
-        "0 successes). C6 containment G7 pilot and C8 second_stack G7 pilot both show grasps, "
-        f"transports, and placement attempts ({c6_pilot_text}; {c8_pilot_text}). C8 WidowX "
-        "SimplerEnv stack yields transport_incomplete on half of pilot episodes (12/24). The "
-        "near-total absence of grasping in C7 therefore reads fixture- and platform-specific, "
-        "not a universal property of the policies.",
-        "Per-scenario breakdowns are exported in family tables rather than single aggregates. "
-        "C8 pilot spans 8 original_sham, 8 destination_static, and 8 move_stop scenarios; "
-        "C6 pilot uses the same scenario allocation.",
-        "C7 compile ambiguity is not papered over: compile-k (548 accepted) is the labeled "
-        "partial authority; compile-l (565, includes 1 wrong_goal_region) and "
-        ".compiled-ledger-final (551, stale) are superseded pending Agent B's single FINAL "
-        "require-full-coverage compile at 768/768.",
-        "Capacity finding: C8 confirmatory throughput is bound by the G4-attested A40 GR00T "
-        "Bridge stratum (20 authorized lane pairs). Once C7 releases the A40 pool, 768 C8 "
-        "confirmatory episodes at that parallelism require roughly 16 wall-clock hours.",
+        "Cross-fixture contrast (compiled ledgers): C7 object_pair on Isaac is dominated by "
+        f"no_grasp ({c7_outcome_composition.get('no_grasp', 0)}/{c7_coverage.get('accepted_valid_unique', 0)}) "
+        f"but is not uniformly no_grasp — compile-m adds "
+        f"{c7_outcome_composition.get('transport_incomplete', 0)} transport_incomplete, "
+        f"{c7_outcome_composition.get('wrong_goal_region', 0)} wrong_goal_region, and "
+        f"{c7_outcome_composition.get('support_or_containment_failed', 0)} support_or_containment_failed "
+        "(0 successes). C6 containment pilot shows grasps and placement attempts "
+        f"({c6_pilot_text}). C8 second_stack WidowX pilot achieves grasp on 12/24 episodes "
+        f"({c8_pilot_text}); transport_incomplete implies successful grasp with incomplete transport.",
+        "C8 per-scenario grasp pattern (pilot, ledger 20260908b) is the campaign's most suggestive "
+        f"result for online scene movement: original_sham {c8_grasp_scenarios.get('original_sham', {}).get('grasp_achieved', 'n/a')}/8, "
+        f"destination_static {c8_grasp_scenarios.get('destination_static', {}).get('grasp_achieved', 'n/a')}/8, "
+        f"move_stop {c8_grasp_scenarios.get('move_stop', {}).get('grasp_achieved', 'n/a')}/8 grasp achieved. "
+        "Confirmatory analysis must test this ordering at scale, not only aggregate failure rates.",
+        "C7 compile provenance is explicit: partial compiles k (548), l (565), m (580), and stale "
+        ".compiled-ledger-final (551) are retired in favor of compiled_ledger_20260908_FINAL at "
+        "768/768 require-full-coverage; see compile_retirement_provenance.csv.",
+        "Capacity finding: C8 confirmatory throughput is bound by the G4-attested A40 GR00T Bridge "
+        "stratum (20 authorized lane pairs). Once C7 releases the A40 pool, 768 C8 confirmatory "
+        "episodes at that parallelism require roughly 16 wall-clock hours.",
         "Three disclosed setup repairs bound this export: (1) NaturalGraspDetector trigger "
         "observation wiring now uses finger-contact coupling instead of robot-base pose; "
         "(2) eef_tool_length_m=0.14 flange-versus-fingerpad offset applied uniformly across "
@@ -462,7 +574,7 @@ def build_campaign_evidence_memo(
         "limitations": [
             "Blocked families carry qualification receipts only; no policy episodes were dispatched.",
             "279 pre-repair C7 episodes remain excluded from behavioral claims.",
-            "C7 partial uses compile-k until FINAL 768/768 compile lands; do not treat compile-l or stale final as authoritative.",
+            "C7 partial uses compile-m until FINAL 768/768 compile lands; retired partials documented in compile_retirement_pending.json.",
             "C6/C8 confirmatory tables refresh when Agent B and Agent A ledger compiles land.",
         ],
         "not_estimable_primary_estimands": [
@@ -483,11 +595,12 @@ def build_family_rollup(
     manifest: Path,
     coverage: dict[str, Any],
     confirmatory_dispatch: dict[str, Any] | None = None,
+    grasp_achieved: int | None = None,
 ) -> dict[str, Any]:
     rows = load_accepted_ledger_rows(ledger)
     manifest_by_id = load_manifest_by_episode_id(manifest)
     composition = summarize_outcome_composition(rows)
-    return {
+    payload = {
         "family": family,
         "fixture": fixture,
         "platform": platform,
@@ -504,6 +617,9 @@ def build_family_rollup(
             else None
         ),
     }
+    if grasp_achieved is not None:
+        payload["grasp_achieved"] = grasp_achieved
+    return payload
 
 
 def build_family_status(family_rollups: dict[str, dict]) -> dict[str, dict]:
@@ -554,19 +670,28 @@ def load_confirmatory_dispatch_metadata() -> tuple[dict[str, Any], dict[str, Any
         wave="B",
     ) if C6_WAVE_B_DISPATCH.is_file() else {}
     c8_dispatch = {}
-    if C8_EXECUTION_STATUS.is_file():
-        status = load_json(C8_EXECUTION_STATUS)
-        confirmatory = status.get("confirmatory_lanes") or {}
+    status = load_c8_execution_status()
+    if status:
+        progress = status.get("confirmatory_progress") or status.get("confirmatory_lanes") or {}
         c8_dispatch = build_dispatch_coverage_metadata(
-            accepted=int(confirmatory.get("behavioral_valid") or 0),
+            accepted=int(progress.get("behavioral_valid") or 0),
             planned=int((status.get("confirmatory_lock") or {}).get("queue_episodes") or 768),
-            dispatched=int(confirmatory.get("total_queued") or 768),
-            compile_id=None,
+            dispatched=int(progress.get("total_queued") or 768),
+            compile_id="c8_execution_status_20260908c",
             wave="main",
         )
-        c8_dispatch["lane_pairs_dispatched"] = confirmatory.get("dispatched_lane_pairs")
-        c8_dispatch["pod_summary"] = confirmatory.get("pod_summary")
+        c8_dispatch["lane_pairs_dispatched"] = progress.get("dispatched_lane_pairs") or status.get(
+            "confirmatory_lanes", {}
+        ).get("dispatched_lane_pairs")
+        c8_dispatch["pod_summary"] = progress.get("pod_summary")
         c8_dispatch["capacity"] = status.get("capacity")
+        c8_dispatch["first_valid_episode"] = progress.get("aggregate_outcomes")
+        c8_dispatch["first_valid_by_scenario"] = progress.get("by_scenario")
+        c8_dispatch["execution_status_receipt"] = str(
+            (C8_EXECUTION_STATUS if C8_EXECUTION_STATUS.is_file() else C8_EXECUTION_STATUS_FALLBACK).relative_to(
+                ROOT
+            )
+        )
     return c6_dispatch, c8_dispatch
 
 
@@ -621,7 +746,7 @@ def export_family(
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--c7-ledger", type=Path, required=True)
+    parser.add_argument("--c7-ledger", type=Path, default=None)
     parser.add_argument("--c7-manifest", type=Path, default=DEFAULT_C7_MANIFEST)
     parser.add_argument("--c7-ledger-compile-id", type=str, default=None)
     parser.add_argument("--c6-ledger", type=Path, default=None)
@@ -644,9 +769,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--tag", type=str, default="20260908")
     args = parser.parse_args(argv)
 
-    c7_ledger = args.c7_ledger.resolve()
-    if not c7_ledger.is_file():
-        raise SystemExit(f"missing C7 accepted ledger: {c7_ledger}")
+    c7_ledger, c7_compile_id, c7_is_final = resolve_c7_ledger(args)
 
     out_root = args.out.resolve() / args.tag
     if out_root.exists():
@@ -663,7 +786,7 @@ def main(argv: list[str] | None = None) -> int:
         config=args.config.resolve(),
         out_root=out_root,
         tag=c7_tag,
-        compile_id=args.c7_ledger_compile_id,
+        compile_id=c7_compile_id,
     )
     c7_export_manifest = c7_payload["export_manifest"]
     c7_blocked_scope = c7_payload["blocked_scope"]
@@ -711,20 +834,29 @@ def main(argv: list[str] | None = None) -> int:
     c7_coverage = c7_payload["export_coverage"] or build_coverage_metadata(
         accepted=c7_rows,
         planned=c7_planned,
-        compile_id=args.c7_ledger_compile_id,
+        compile_id=c7_compile_id,
     )
-    c7_coverage["export_phase"] = "confirmatory_partial"
     c6_confirmatory_dispatch, c8_confirmatory_dispatch = load_confirmatory_dispatch_metadata()
+    c8_scenario_grasp = load_json(C8_PILOT_COMPOSITION) if C8_PILOT_COMPOSITION.is_file() else None
+    compile_provenance = load_compile_provenance(
+        active_compile_id=c7_compile_id,
+        active_rows=c7_rows,
+        is_final=c7_is_final,
+    )
 
     family_rollups: dict[str, dict] = {
         "C7": build_family_rollup(
             family="C7",
             fixture="object_pair",
             platform="isaac_droid",
-            evidence_phase="confirmatory_partial",
+            evidence_phase="confirmatory_final" if c7_is_final else "confirmatory_partial",
             ledger=c7_ledger,
             manifest=args.c7_manifest.resolve(),
-            coverage=c7_coverage,
+            coverage={
+                **c7_coverage,
+                "export_phase": "confirmatory_final" if c7_is_final else "confirmatory_partial",
+                "ledger_compile_id": c7_compile_id,
+            },
         )
     }
     if "C6" in pilot_sources:
@@ -758,16 +890,19 @@ def main(argv: list[str] | None = None) -> int:
                 compile_id=compile_id,
             ),
             confirmatory_dispatch=c8_confirmatory_dispatch,
+            grasp_achieved=(c8_scenario_grasp or {}).get("grasp_achieved_count"),
         )
 
     c7_outcome_composition = family_rollups["C7"]["outcome_composition"]
-    campaign_export_status = "partial"
+    campaign_export_status = "complete" if c7_is_final else "partial"
     family_status = build_family_status(family_rollups)
 
     campaign_blocked = build_campaign_blocked_scope(
         c7_blocked_scope=c7_blocked_scope,
         horizontal_blocked_scope=horizontal_blocked,
         family_status=family_status,
+        compile_provenance=compile_provenance,
+        c8_scenario_grasp=c8_scenario_grasp,
     )
     blocked_path = out_root / "blocked_scope.json"
     blocked_path.write_text(json.dumps(campaign_blocked, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -793,6 +928,8 @@ def main(argv: list[str] | None = None) -> int:
         c7_primary_rows=c7_primary_rows,
         family_rollups=family_rollups,
         campaign_export_status=campaign_export_status,
+        compile_provenance=compile_provenance,
+        c8_scenario_grasp=c8_scenario_grasp,
     )
     table_artifacts: dict[str, dict] = {}
     for name, rows in campaign_tables.items():
@@ -818,7 +955,9 @@ def main(argv: list[str] | None = None) -> int:
         "c7_family_audit": c7_audit,
         "ledger_rows_compiled": c7_rows,
         "ledger_source": str(c7_ledger),
-        "ledger_compile_id": args.c7_ledger_compile_id,
+        "ledger_compile_id": c7_compile_id,
+        "compile_provenance": compile_provenance,
+        "c8_pilot_scenario_grasp": c8_scenario_grasp,
         "outcome_composition": c7_outcome_composition,
         "pvc_complete_note": (
             "Ledger compile against confirmatory manifest is required to separate "

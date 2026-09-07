@@ -9,17 +9,19 @@
       "terminal_goal_violation_fallback_forbidden": true
     },
     "coverage_reconciliation": {
-      "accepted_valid_unique": 548,
+      "accepted_valid_unique": 580,
       "by_family": {
         "C7": {
-          "accepted_valid": 548,
-          "planned": 548
+          "accepted_valid": 580,
+          "event_delivered": 1,
+          "planned": 580,
+          "trigger_eligible": 3
         }
       },
       "missing_valid": 0,
-      "planned_episodes": 548,
+      "planned_episodes": 580,
       "status_counts": {
-        "valid": 548
+        "valid": 580
       }
     },
     "limitations": [
@@ -27,15 +29,15 @@
       "figures are not generated without accepted trajectory evidence"
     ],
     "validation": {
-      "accepted_unique": 548,
+      "accepted_unique": 580,
       "analysis_scope": "accepted_ledger_loading_and_coverage_reconciliation",
-      "assigned": 548,
+      "assigned": 580,
       "audit_scope": "coverage_and_basic_record_consistency_only",
       "campaign_id": "online_correction_v4",
       "coverage_by_family": {
         "C7": {
-          "accepted_unique": 548,
-          "assigned": 548,
+          "accepted_unique": 580,
+          "assigned": 580,
           "blocked_records": 0,
           "missing": 0
         }
@@ -51,9 +53,114 @@
       "ok": true,
       "primary_response_anchor": "t_event_planned+2.0s",
       "primary_response_horizon_s": 2.0,
-      "valid_failure_records": 548,
+      "valid_failure_records": 580,
       "valid_success_records": 0
     }
+  },
+  "c8_pilot_scenario_grasp": {
+    "aggregate_outcomes": {
+      "no_grasp": 12,
+      "transport_incomplete": 12
+    },
+    "by_scenario": {
+      "destination_static": {
+        "episodes": 8,
+        "grasp_achieved": 6,
+        "no_grasp": 2,
+        "transport_incomplete": 6
+      },
+      "move_stop": {
+        "episodes": 8,
+        "grasp_achieved": 4,
+        "no_grasp": 4,
+        "transport_incomplete": 4
+      },
+      "original_sham": {
+        "episodes": 8,
+        "grasp_achieved": 2,
+        "no_grasp": 6,
+        "transport_incomplete": 2
+      }
+    },
+    "campaign_id": "online_correction_v4",
+    "classification": {
+      "behavioral_valid": true,
+      "infra_invalid_excluded": {
+        "attempt_range": "0093-0103",
+        "count": 39,
+        "inventory_uri": "artifacts/online_correction_v4/qualification/20260908_c8_g7_infra_invalid_attempts_0093_0103_inventory.json"
+      }
+    },
+    "cohort": "engineering_pilot",
+    "family_id": "C8",
+    "fixture_id": "second_stack",
+    "grasp_achieved_count": 12,
+    "grasp_achieved_note": "transport_incomplete implies grasp succeeded but placement/transport did not complete before timeout; 12/24 pilot episodes achieved grasp vs C7 object_pair 0/548 successes in confirmatory slice",
+    "ledger_compile_id": "20260908b",
+    "ledger_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pilot-ledger-20260908b/accepted_ledger.jsonl",
+    "motion_vs_static": {
+      "motion_episodes": 8,
+      "motion_grasp_achieved": 4,
+      "static_episodes": 16,
+      "static_grasp_achieved": 8
+    },
+    "observed_at_utc": "2026-09-08T03:20:00Z",
+    "queue_uri": "artifacts/online_correction_v4/setup/second_stack_g7_pilot_queue.jsonl",
+    "schema_version": "v4-c8-pilot-composition-by-scenario-v1",
+    "valid_episodes": 24
+  },
+  "compile_provenance": {
+    "active_compile_id": "compiled_ledger_20260908m",
+    "active_rows": 580,
+    "authoritative_compile_id": "compiled_ledger_20260908_FINAL",
+    "final_compile_path": "/data/users/ali/vla_wam/raw/v4/c7-object-pair-main/compiled_ledger_20260908_FINAL",
+    "is_final": false,
+    "note": "Partial compiles below are non-authoritative progress snapshots. Only compiled_ledger_20260908_FINAL with require-full-coverage at 768/768 may be cited in paper exports.",
+    "retired_partials": [
+      {
+        "composition": {
+          "no_grasp": 544,
+          "transport_incomplete": 4
+        },
+        "path": "/data/users/ali/vla_wam/raw/v4/c7-object-pair-main/compiled_ledger_20260908k",
+        "rows": 548,
+        "superseded_by": "compiled_ledger_20260908_FINAL"
+      },
+      {
+        "composition": {
+          "no_grasp": 547,
+          "transport_incomplete": 4
+        },
+        "path": "/data/users/ali/vla_wam/raw/v4/c7-object-pair-main/.compiled-ledger-final",
+        "rows": 551,
+        "status": "stale_do_not_cite",
+        "superseded_by": "compiled_ledger_20260908_FINAL"
+      },
+      {
+        "composition": {
+          "no_grasp": 560,
+          "transport_incomplete": 4,
+          "wrong_goal_region": 1
+        },
+        "path": "/data/users/ali/vla_wam/raw/v4/c7-object-pair-main/compiled_ledger_20260908l",
+        "rows": 565,
+        "superseded_by": "compiled_ledger_20260908_FINAL"
+      },
+      {
+        "composition": {
+          "no_grasp": 574,
+          "support_or_containment_failed": 1,
+          "transport_incomplete": 3,
+          "wrong_goal_region": 2
+        },
+        "path": "/data/users/ali/vla_wam/raw/v4/c7-object-pair-main/compiled_ledger_20260908m",
+        "rows": 580,
+        "status": "latest_partial_not_final",
+        "superseded_by": "compiled_ledger_20260908_FINAL"
+      }
+    ],
+    "retirement_manifest": "artifacts/online_correction_v4/execution/c7_object_pair_20260906/compile_retirement_pending.json",
+    "schema_version": "v4-c7-compile-retirement-v1"
   },
   "export_coverage": {
     "C6": {
@@ -66,13 +173,13 @@
       "planned_episodes": 24
     },
     "C7": {
-      "accepted_valid_unique": 548,
-      "coverage_fraction": 0.713542,
-      "coverage_label": "548/768 (71.4%)",
+      "accepted_valid_unique": 580,
+      "coverage_fraction": 0.755208,
+      "coverage_label": "580/768 (75.5%)",
       "export_phase": "confirmatory_partial",
       "export_status": "partial",
-      "ledger_compile_id": "compiled_ledger_20260908k",
-      "missing_episodes": 220,
+      "ledger_compile_id": "compiled_ledger_20260908m",
+      "missing_episodes": 188,
       "planned_episodes": 768
     },
     "C8": {
@@ -110,40 +217,45 @@
     "C7": {
       "confirmatory_dispatch": {},
       "outcome_composition": {
-        "no_grasp": 544,
-        "transport_incomplete": 4
+        "no_grasp": 574,
+        "support_or_containment_failed": 1,
+        "transport_incomplete": 3,
+        "wrong_goal_region": 2
       }
     },
     "C8": {
       "confirmatory_dispatch": {
-        "accepted_valid_unique": 0,
+        "accepted_valid_unique": 1,
         "capacity": {
           "authorized_confirmatory_lane_pairs": 20,
-          "authorized_pilot_lanes": 8,
           "binding_limit": "G4-attested A40 GR00T Bridge stratum",
-          "c7_a40_occupancy_blocks_scheduling": true,
-          "do_not_use_without_g4_receipt": [
-            "A100-80GB",
-            "B200"
-          ],
-          "estimated_c7_release_hours": 2.3,
+          "c7_a40_occupancy_releasing": true,
           "handoff_uri": "artifacts/online_correction_v4/execution/gpu_widen_20260908/c8_pilot_lane_expansion_handoff_agent_a.json"
         },
-        "coverage_fraction": 0.0,
-        "coverage_label": "0/768 confirmatory accepted; 768/768 dispatched",
-        "dispatch_status": "dispatched_pending_capacity",
+        "coverage_fraction": 0.001302,
+        "coverage_label": "1/768 confirmatory accepted; 768/768 dispatched",
+        "dispatch_status": "dispatched",
         "dispatched_episodes": 768,
+        "execution_status_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908c.json",
         "export_phase": "confirmatory",
         "export_status": "dispatched_partial",
-        "lane_pairs_dispatched": 20,
-        "ledger_compile_id": null,
-        "missing_episodes": 768,
+        "first_valid_by_scenario": {
+          "move_stop": {
+            "no_grasp": 1
+          }
+        },
+        "first_valid_episode": {
+          "no_grasp": 1
+        },
+        "lane_pairs_dispatched": null,
+        "ledger_compile_id": "c8_execution_status_20260908c",
+        "missing_episodes": 767,
         "planned_episodes": 768,
         "pod_summary": {
           "Completed": 0,
           "Error": 0,
-          "Pending": 40,
-          "Running": 0
+          "Pending": 37,
+          "Running": 3
         },
         "wave": "main"
       },
@@ -154,12 +266,14 @@
     }
   },
   "frozen_analysis_manifest": "artifacts/online_correction_v4/frozen_analysis_manifest.json",
-  "ledger_compile_id": "compiled_ledger_20260908k",
-  "ledger_rows_compiled": 548,
-  "ledger_source": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/pvc-ledgers/compiled_ledger_20260908k/accepted_ledger.jsonl",
+  "ledger_compile_id": "compiled_ledger_20260908m",
+  "ledger_rows_compiled": 580,
+  "ledger_source": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/pvc-ledgers/compiled_ledger_20260908m/accepted_ledger.jsonl",
   "outcome_composition": {
-    "no_grasp": 544,
-    "transport_incomplete": 4
+    "no_grasp": 574,
+    "support_or_containment_failed": 1,
+    "transport_incomplete": 3,
+    "wrong_goal_region": 2
   },
   "pvc_complete_note": "Ledger compile against confirmatory manifest is required to separate 279 pre-repair infrastructure-invalid C7 episodes from repaired-path rows.",
   "schema_version": "v4-registered-campaign-audit-v1"

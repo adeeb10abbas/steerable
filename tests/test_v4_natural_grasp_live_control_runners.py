@@ -1,0 +1,31 @@
+"""Tests for fixture-specific natural-grasp live-control runners."""
+
+from __future__ import annotations
+
+import importlib.util
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def _load_runner(name: str):
+    path = ROOT / "tools" / name
+    spec = importlib.util.spec_from_file_location(name.replace(".py", ""), path)
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_vertical_runner_constants() -> None:
+    mod = _load_runner("run_v4_vertical_natural_grasp_live_positive_control.py")
+    assert mod.FIXTURE_ID == "vertical"
+    assert mod.CANONICAL_ENV_SEED == 2100020000
+    assert mod.DEFAULT_GOAL == "above"
+
+
+def test_containment_runner_constants() -> None:
+    mod = _load_runner("run_v4_containment_natural_grasp_live_positive_control.py")
+    assert mod.FIXTURE_ID == "containment"
+    assert mod.CANONICAL_ENV_SEED == 2100030000
+    assert mod.DEFAULT_GOAL == "inside"

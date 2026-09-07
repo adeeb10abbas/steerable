@@ -221,10 +221,14 @@ def _pilot_g3_ok(profile_fixture_id: str, pilot_g3: dict[str, Any]) -> bool:
         )
     expected_paths = pilot_g3.get("expected_path_check_count")
     observed_paths = pilot_g3.get("observed_path_check_count")
+    if observed_paths is None:
+        observed_paths = pilot_g3.get("passed_path_check_count")
     if expected_paths == observed_paths == 144:
         return True
     expected_checks = pilot_g3.get("expected_check_count")
     observed_checks = pilot_g3.get("observed_check_count")
+    if observed_checks is None:
+        observed_checks = pilot_g3.get("passed_path_check_count")
     return expected_checks == observed_checks == 144
 
 

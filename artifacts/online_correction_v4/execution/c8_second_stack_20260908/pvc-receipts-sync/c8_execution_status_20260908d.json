@@ -1,0 +1,65 @@
+{
+  "schema_version": "v4-c8-execution-status-receipt-v1",
+  "observed_at_utc": "2026-09-08T03:35:00Z",
+  "campaign_id": "online_correction_v4",
+  "family_id": "C8",
+  "fixture_id": "second_stack",
+  "classification": {
+    "infra_invalid_attempts_0093_0103": {"count": 39, "separate_from_behavioral": true},
+    "infra_invalid_confirmatory_preflight_20260908a": {"count": 4, "separate_from_behavioral": true},
+    "infra_invalid_reset_registry_mismatch_20260908a": {"count": 1, "separate_from_behavioral": true},
+    "behavioral_pilot_valid": 24,
+    "behavioral_confirmatory_valid": 6
+  },
+  "pilot_composition_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_pilot_composition_by_scenario_20260908a.json",
+  "confirmatory_composition_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_confirmatory_composition_by_scenario_20260908a.json",
+  "confirmatory_ledger_compile_id": "20260908a",
+  "confirmatory_ledger_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/confirmatory-ledger-20260908a/accepted_ledger.jsonl",
+  "confirmatory_progress": {
+    "valid": 6,
+    "queued": 768,
+    "aggregate_outcomes": {"no_grasp": 6},
+    "by_scenario": {
+      "original_sham": {"completed": 4, "no_grasp": 4, "transport_incomplete": 0, "grasp_achieved": 0},
+      "destination_static": {"completed": 1, "no_grasp": 1, "transport_incomplete": 0, "grasp_achieved": 0},
+      "move_stop": {"completed": 1, "no_grasp": 1, "transport_incomplete": 0, "grasp_achieved": 0}
+    },
+    "regression_check": {
+      "serialization": "none in 6 valid episodes",
+      "sampling_seed": "none",
+      "reset_registry_digest": "none after cluster sync"
+    }
+  },
+  "confirmatory_lanes": [
+    {"lane_id": "c8m00", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m01", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m02", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m03", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m04", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m05", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m06", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m07", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m08", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m09", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m10", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m11", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m12", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m13", "completed": 6, "queued": 32, "state": "running"},
+    {"lane_id": "c8m14", "completed": 0, "queued": 38, "state": "running"},
+    {"lane_id": "c8m15", "completed": 0, "queued": 38, "state": "running"},
+    {"lane_id": "c8m16", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m17", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m18", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m19", "completed": 0, "queued": 38, "state": "blocked"}
+  ],
+  "agent_c_hooks": {
+    "c8_pilot_ledger_compile_id": "20260908b",
+    "c8_confirmatory_ledger_compile_id": "20260908a",
+    "status_label": "confirmatory_in_progress_6_of_768"
+  },
+  "blockers": [
+    {"id": "confirmatory_throughput", "impact": "762/768 remaining", "action": "Continue as C7 tail (~188 eps) releases A40; 3 lanes running"},
+    {"id": "wave_width", "impact": "Only c8m13 has behavioral completes; pattern not yet testable at scale", "action": "Monitor per-scenario grasp rates as lanes 14-19 schedule"}
+  ],
+  "source_commit": "6d72ae8a"
+}

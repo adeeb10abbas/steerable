@@ -1,0 +1,56 @@
+{
+  "schema_version": "v4-c8-confirmatory-composition-by-scenario-v1",
+  "observed_at_utc": "2026-09-08T03:35:00Z",
+  "campaign_id": "online_correction_v4",
+  "family_id": "C8",
+  "fixture_id": "second_stack",
+  "cohort": "confirmatory",
+  "ledger_compile_id": "20260908a",
+  "ledger_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/confirmatory-ledger-20260908a/accepted_ledger.jsonl",
+  "ledger_manifest_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/confirmatory-ledger-20260908a/accepted_ledger_manifest.json",
+  "queue_uri": "artifacts/online_correction_v4/setup/c8_confirmatory/queue.frozen.jsonl",
+  "progress": {
+    "behavioral_valid": 6,
+    "total_queued": 768,
+    "coverage_fraction": 0.0078125
+  },
+  "aggregate_outcomes": {
+    "no_grasp": 6,
+    "transport_incomplete": 0
+  },
+  "grasp_achieved_count": 0,
+  "by_scenario": {
+    "original_sham": {
+      "episodes_completed": 4,
+      "no_grasp": 4,
+      "transport_incomplete": 0,
+      "grasp_achieved": 0
+    },
+    "destination_static": {
+      "episodes_completed": 1,
+      "no_grasp": 1,
+      "transport_incomplete": 0,
+      "grasp_achieved": 0
+    },
+    "move_stop": {
+      "episodes_completed": 1,
+      "no_grasp": 1,
+      "transport_incomplete": 0,
+      "grasp_achieved": 0
+    }
+  },
+  "pilot_reference_by_scenario": {
+    "original_sham": {"grasp_achieved": 2, "episodes": 8},
+    "destination_static": {"grasp_achieved": 6, "episodes": 8},
+    "move_stop": {"grasp_achieved": 4, "episodes": 8}
+  },
+  "pattern_note": "At 6/768 confirmatory episodes (single active lane c8m13), all outcomes are no_grasp. Pilot ordering (destination_static highest grasp rate) is not yet observable at confirmatory scale; report will update as width grows.",
+  "classification": {
+    "behavioral_valid": true,
+    "infra_invalid_excluded": {
+      "pilot_attempts_0093_0103": 39,
+      "confirmatory_preflight_20260908a": 4,
+      "reset_registry_sim_20260908a": 1
+    }
+  }
+}

@@ -19,6 +19,24 @@ DEFAULT_QUEUE = ROOT / "artifacts/online_correction_v4/queue.jsonl"
 DEFAULT_QUEUE_MANIFEST = ROOT / "artifacts/online_correction_v4/queue_manifest.json"
 DEFAULT_LAUNCH_MATRIX = ROOT / "artifacts/online_correction_v4/launch_matrix.json"
 DEFAULT_RUNTIME_LOCK = ROOT / "docs/online_correction_v4/runtime_lock.template.json"
+C7_LAUNCH_MATRIX = (
+    ROOT
+    / "artifacts/online_correction_v4/setup/object_pair_c7_confirmatory_launch_matrix.released.json"
+)
+
+
+def _launch_matrix_for_runtime_lock(runtime_lock: Path) -> Path:
+    name = runtime_lock.name
+    if "runtime_lock" in name:
+        sibling = runtime_lock.with_name(name.replace("runtime_lock", "launch_matrix"))
+        if sibling.is_file():
+            return sibling
+    if runtime_lock.resolve() == (
+        ROOT
+        / "artifacts/online_correction_v4/setup/object_pair_c7_confirmatory_runtime_lock.released.json"
+    ).resolve() and C7_LAUNCH_MATRIX.is_file():
+        return C7_LAUNCH_MATRIX
+    return DEFAULT_LAUNCH_MATRIX
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -49,8 +67,8 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--launch-matrix",
         type=Path,
-        default=DEFAULT_LAUNCH_MATRIX,
-        help="Absolute path to launch_matrix.json.",
+        default=None,
+        help="Absolute path to launch_matrix.json (defaults from runtime lock when released).",
     )
     parser.add_argument(
         "--campaign-config",
@@ -150,6 +168,12 @@ def main(argv: list[str] | None = None) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)
 
+    launch_matrix_path = (
+        args.launch_matrix.resolve()
+        if args.launch_matrix is not None
+        else _launch_matrix_for_runtime_lock(args.runtime_lock.resolve())
+    )
+
     if args.create and args.dry_run:
         print("[V4 coordinator] blocked: --create and --dry-run are mutually exclusive", file=sys.stderr)
         return 2
@@ -172,45 +196,61 @@ def main(argv: list[str] | None = None) -> int:
         CoordinatorError,
         CoordinatorInputs,
         plan_campaign,
+        resolve_released_campaign_bindings,
     )
 
-    cluster_binding = None
-    render_root = args.render_output_root.resolve() if args.render_output_root else None
-    needs_binding = args.create or render_root is not None
-    if needs_binding:
-        if not all([args.kube_context, args.namespace, args.pvc, args.output_parent]):
-            print(
-                "[V4 coordinator] blocked: --kube-context, --namespace, --pvc, and "
-                "--output-parent are required when rendering or creating lanes",
-                file=sys.stderr,
-            )
-            return 2
-        cluster_binding = ClusterBinding(
-            kube_context=str(args.kube_context),
-            namespace=str(args.namespace),
-            pvc=str(args.pvc),
-            output_parent=str(args.output_parent),
-            pvc_publisher_pod=args.pvc_publisher_pod,
-        )
-
-    inputs = CoordinatorInputs(
-        runtime_lock_path=args.runtime_lock.resolve(),
-        queue_path=args.queue.resolve(),
-        queue_manifest_path=args.queue_manifest.resolve(),
-        launch_matrix_path=args.launch_matrix.resolve(),
-        campaign_config_path=args.campaign_config.resolve(),
-        group_receipts_dir=args.group_receipts_dir.resolve() if args.group_receipts_dir else None,
-        coordination_state_path=args.coordination_state.resolve() if args.coordination_state else None,
-        group_lease_root=args.group_lease_root.resolve() if args.group_lease_root else None,
-        evidence_root=args.evidence_root.resolve() if args.evidence_root else None,
-        render_output_root=render_root,
-        cluster_binding=cluster_binding,
-        attempt_index=args.attempt_index,
-        qualification_only=args.qualification_only,
-        repo_root=ROOT,
-    )
+    repo_root = ROOT
 
     try:
+        resolved_bindings = resolve_released_campaign_bindings(
+            runtime_lock_path=args.runtime_lock.resolve(),
+            repo_root=repo_root,
+            campaign_config_path=args.campaign_config.resolve(),
+            queue_path=args.queue.resolve(),
+            queue_manifest_path=args.queue_manifest.resolve(),
+        )
+        if resolved_bindings.binding_note:
+            print(
+                f"[V4 coordinator] {resolved_bindings.binding_note}",
+                file=sys.stderr,
+            )
+
+        cluster_binding = None
+        render_root = args.render_output_root.resolve() if args.render_output_root else None
+        needs_binding = args.create or render_root is not None
+        if needs_binding:
+            if not all([args.kube_context, args.namespace, args.pvc, args.output_parent]):
+                print(
+                    "[V4 coordinator] blocked: --kube-context, --namespace, --pvc, and "
+                    "--output-parent are required when rendering or creating lanes",
+                    file=sys.stderr,
+                )
+                return 2
+            cluster_binding = ClusterBinding(
+                kube_context=str(args.kube_context),
+                namespace=str(args.namespace),
+                pvc=str(args.pvc),
+                output_parent=str(args.output_parent),
+                pvc_publisher_pod=args.pvc_publisher_pod,
+            )
+
+        inputs = CoordinatorInputs(
+            runtime_lock_path=args.runtime_lock.resolve(),
+            queue_path=resolved_bindings.queue_path,
+            queue_manifest_path=resolved_bindings.queue_manifest_path,
+            launch_matrix_path=launch_matrix_path,
+            campaign_config_path=resolved_bindings.campaign_config_path,
+            group_receipts_dir=args.group_receipts_dir.resolve() if args.group_receipts_dir else None,
+            coordination_state_path=args.coordination_state.resolve() if args.coordination_state else None,
+            group_lease_root=args.group_lease_root.resolve() if args.group_lease_root else None,
+            evidence_root=args.evidence_root.resolve() if args.evidence_root else None,
+            render_output_root=render_root,
+            cluster_binding=cluster_binding,
+            attempt_index=args.attempt_index,
+            qualification_only=args.qualification_only,
+            repo_root=ROOT,
+        )
+
         plan = plan_campaign(
             inputs,
             render_bundles=render_root is not None,

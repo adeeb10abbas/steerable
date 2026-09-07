@@ -25,6 +25,7 @@ from experiments.online_correction_v4.coordinator import (
     parse_k8s_objects,
     plan_campaign,
     publish_staged_bindings_to_pvc,
+    resolve_released_campaign_bindings,
     shard_group_units,
     stage_binding_source,
     storage_budget_allows,
@@ -1053,6 +1054,31 @@ class CoordinatorCliTests(unittest.TestCase):
         )
         self.assertEqual(result.returncode, 2)
         self.assertIn("group-lease-root", result.stderr)
+
+
+class ReleasedCampaignBindingTests(unittest.TestCase):
+    C7_LOCK = (
+        ROOT
+        / "artifacts/online_correction_v4/setup/object_pair_c7_confirmatory_runtime_lock.released.json"
+    )
+    FROZEN_DIR = ROOT / "artifacts/online_correction_v4/setup/c7_confirmatory"
+
+    def test_c7_global_defaults_resolve_to_frozen_copy(self) -> None:
+        if not self.C7_LOCK.is_file() or not self.FROZEN_DIR.is_dir():
+            self.skipTest("C7 confirmatory release artifacts are not present")
+        resolved = resolve_released_campaign_bindings(
+            runtime_lock_path=self.C7_LOCK,
+            repo_root=ROOT,
+            campaign_config_path=CONFIG_PATH,
+            queue_path=QUEUE_PATH,
+            queue_manifest_path=QUEUE_MANIFEST_PATH,
+        )
+        self.assertEqual(
+            resolved.campaign_config_path,
+            self.FROZEN_DIR / "campaign.frozen.json",
+        )
+        self.assertEqual(resolved.queue_path, self.FROZEN_DIR / "queue.frozen.jsonl")
+        self.assertIsNotNone(resolved.binding_note)
 
 
 class CoordinatorReceiptLoaderTests(unittest.TestCase):

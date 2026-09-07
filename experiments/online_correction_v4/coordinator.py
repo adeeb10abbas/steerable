@@ -426,12 +426,17 @@ def load_durable_group_leases(
 
 
 def apply_durable_group_leases(scheduler: CampaignScheduler, leases: Mapping[str, GroupLease]) -> None:
+    touched_groups: set[str] = set()
     for group_id, lease in leases.items():
         registry_group_id = group_id.split("#shard-", 1)[0]
         if registry_group_id not in scheduler.registry.by_execution_group:
             raise CoordinatorBlockedError(f"unknown group in durable lease: {group_id}")
-        scheduler.active_leases[registry_group_id] = lease
-        scheduler.group_states[registry_group_id] = GroupExecutionState.LEASED
+        scheduler.active_leases[group_id] = lease
+        touched_groups.add(registry_group_id)
+    for registry_group_id in touched_groups:
+        group = scheduler.registry.by_execution_group[registry_group_id]
+        if scheduler._group_remaining_episodes(group):
+            scheduler.group_states[registry_group_id] = GroupExecutionState.PARTIAL
 
 
 def collect_reserved_attempt_ids(
@@ -868,6 +873,110 @@ def build_lane_spec(
     return spec
 
 
+C7_CONFIRMATORY_BINDING_DIR = Path(
+    "artifacts/online_correction_v4/setup/c7_confirmatory"
+)
+FROZEN_CAMPAIGN_SUFFIX = "campaign.frozen.json"
+FROZEN_QUEUE_SUFFIX = "queue.frozen.jsonl"
+FROZEN_QUEUE_MANIFEST_SUFFIX = "queue_manifest.frozen.json"
+
+
+@dataclass(frozen=True)
+class ResolvedCampaignBindings:
+    campaign_config_path: Path
+    queue_path: Path
+    queue_manifest_path: Path
+    binding_note: Optional[str] = None
+
+
+def _frozen_binding_candidates(
+    runtime_lock_path: Path,
+    repo_root: Path,
+) -> list[Path]:
+    lock_parent = runtime_lock_path.resolve().parent
+    candidates = [
+        lock_parent / "c7_confirmatory",
+        repo_root / C7_CONFIRMATORY_BINDING_DIR,
+    ]
+    seen: set[Path] = set()
+    ordered: list[Path] = []
+    for candidate in candidates:
+        resolved = candidate.resolve()
+        if resolved not in seen:
+            seen.add(resolved)
+            ordered.append(resolved)
+    return ordered
+
+
+def resolve_released_campaign_bindings(
+    *,
+    runtime_lock_path: Path,
+    repo_root: Path,
+    campaign_config_path: Path,
+    queue_path: Path,
+    queue_manifest_path: Path,
+) -> ResolvedCampaignBindings:
+    """Bind dispatch inputs to the released runtime lock, not the mutable global queue."""
+    try:
+        lock = validate_runtime_lock(runtime_lock_path)
+    except DroidContractError as exc:
+        raise CoordinatorBlockedError(str(exc)) from exc
+
+    supplied_campaign_sha = sha256_file(campaign_config_path)
+    manifest_doc = load_json(queue_manifest_path, "queue manifest")
+    supplied_manifest_sha = str(manifest_doc.get("planning_manifest_sha256") or "")
+    if (
+        supplied_campaign_sha == lock.config_sha256
+        and supplied_manifest_sha == lock.manifest_sha256
+    ):
+        verify_queue_binding(
+            queue_path=queue_path,
+            queue_manifest_path=queue_manifest_path,
+            expected_manifest_sha256=lock.manifest_sha256,
+        )
+        return ResolvedCampaignBindings(
+            campaign_config_path=campaign_config_path,
+            queue_path=queue_path,
+            queue_manifest_path=queue_manifest_path,
+        )
+
+    for binding_dir in _frozen_binding_candidates(runtime_lock_path, repo_root):
+        frozen_campaign = binding_dir / FROZEN_CAMPAIGN_SUFFIX
+        frozen_queue = binding_dir / FROZEN_QUEUE_SUFFIX
+        frozen_manifest = binding_dir / FROZEN_QUEUE_MANIFEST_SUFFIX
+        if not all(path.is_file() for path in (frozen_campaign, frozen_queue, frozen_manifest)):
+            continue
+        frozen_campaign_sha = sha256_file(frozen_campaign)
+        frozen_queue_sha = sha256_file(frozen_queue)
+        frozen_manifest_doc = load_json(frozen_manifest, "frozen queue manifest")
+        frozen_manifest_sha = str(frozen_manifest_doc.get("planning_manifest_sha256") or "")
+        if (
+            frozen_campaign_sha == lock.config_sha256
+            and frozen_manifest_sha == lock.manifest_sha256
+            and frozen_queue_sha == lock.queue_sha256
+        ):
+            try:
+                binding_label = str(binding_dir.relative_to(repo_root.resolve()))
+            except ValueError:
+                binding_label = str(binding_dir)
+            return ResolvedCampaignBindings(
+                campaign_config_path=frozen_campaign,
+                queue_path=frozen_queue,
+                queue_manifest_path=frozen_manifest,
+                binding_note=(
+                    "supplied campaign/queue bytes drifted from released runtime lock "
+                    f"({supplied_campaign_sha[:8]} vs {lock.config_sha256[:8]}); "
+                    f"bound to frozen copies under {binding_label}"
+                ),
+            )
+
+    raise CoordinatorBlockedError(
+        "supplied campaign/queue binding does not match released runtime lock "
+        f"(config {supplied_campaign_sha} != lock {lock.config_sha256}); "
+        "provide frozen copies whose hashes match the lock"
+    )
+
+
 def verify_queue_binding(
     *,
     queue_path: Path,
@@ -991,6 +1100,34 @@ def classify_group_episodes(
     return dispatchable, blocked
 
 
+def exclude_leased_shards(
+    units: Sequence[tuple[ExecutionGroup, list[str]]],
+    lanes: Sequence[LaneStratum],
+    durable_leases: Mapping[str, GroupLease],
+) -> list[tuple[ExecutionGroup, list[str]]]:
+    """Drop episode shards that already hold a durable group lease."""
+    if not durable_leases or not units:
+        return list(units)
+    remaining_by_group: dict[str, list[str]] = {}
+    for _lane_id, lane_units in shard_group_units(units, lanes).items():
+        for group, shard_episode_ids in lane_units:
+            lease_group_id = assignment_lease_group_id(group, shard_episode_ids)
+            if lease_group_id in durable_leases:
+                continue
+            bucket = remaining_by_group.setdefault(group.group_id, [])
+            bucket.extend(shard_episode_ids)
+    filtered: list[tuple[ExecutionGroup, list[str]]] = []
+    seen_groups: set[str] = set()
+    for group, _episode_ids in units:
+        if group.group_id in seen_groups:
+            continue
+        seen_groups.add(group.group_id)
+        episode_ids = sorted(set(remaining_by_group.get(group.group_id, ())))
+        if episode_ids:
+            filtered.append((group, episode_ids))
+    return filtered
+
+
 def dispatchable_group_units(
     scheduler: CampaignScheduler,
     *,
@@ -1000,8 +1137,6 @@ def dispatchable_group_units(
     units: list[tuple[ExecutionGroup, list[str]]] = []
     blocked_records: list[dict[str, Any]] = []
     for group in scheduler.registry.iter_groups():
-        if group.group_id in scheduler.active_leases:
-            continue
         dispatchable, blocked = classify_group_episodes(
             group,
             scheduler,
@@ -1286,12 +1421,24 @@ def plan_campaign(
         else DispatchMode.BEHAVIORAL
     )
 
-    config_sha = sha256_file(inputs.campaign_config_path)
+    repo_root = inputs.repo_root or Path(__file__).resolve().parents[2]
+    resolved_bindings = resolve_released_campaign_bindings(
+        runtime_lock_path=inputs.runtime_lock_path,
+        repo_root=repo_root,
+        campaign_config_path=inputs.campaign_config_path,
+        queue_path=inputs.queue_path,
+        queue_manifest_path=inputs.queue_manifest_path,
+    )
+    campaign_config_path = resolved_bindings.campaign_config_path
+    queue_path = resolved_bindings.queue_path
+    queue_manifest_path = resolved_bindings.queue_manifest_path
+    inputs.campaign_config_path = campaign_config_path
+    inputs.queue_path = queue_path
+    inputs.queue_manifest_path = queue_manifest_path
+
+    config_sha = sha256_file(campaign_config_path)
     try:
-        lock = validate_runtime_lock(
-            inputs.runtime_lock_path,
-            expected_config_sha256=config_sha,
-        )
+        lock = validate_runtime_lock(inputs.runtime_lock_path)
     except DroidContractError as exc:
         raise CoordinatorBlockedError(str(exc)) from exc
 
@@ -1299,20 +1446,23 @@ def plan_campaign(
         raise CoordinatorBlockedError("runtime lock is NOT_RELEASED")
 
     queue_sha = verify_queue_binding(
-        queue_path=inputs.queue_path,
-        queue_manifest_path=inputs.queue_manifest_path,
+        queue_path=queue_path,
+        queue_manifest_path=queue_manifest_path,
         expected_manifest_sha256=lock.manifest_sha256,
     )
-    lock = validate_runtime_lock(
-        inputs.runtime_lock_path,
-        expected_config_sha256=config_sha,
-        expected_manifest_sha256=lock.manifest_sha256,
-        expected_queue_sha256=(
-            queue_sha if "frozen_queue_sha256" in lock.raw else None
-        ),
-    )
+    try:
+        lock = validate_runtime_lock(
+            inputs.runtime_lock_path,
+            expected_config_sha256=config_sha,
+            expected_manifest_sha256=lock.manifest_sha256,
+            expected_queue_sha256=(
+                queue_sha if "frozen_queue_sha256" in lock.raw else None
+            ),
+        )
+    except DroidContractError as exc:
+        raise CoordinatorBlockedError(str(exc)) from exc
 
-    registry = CampaignRegistry.from_manifest_path(inputs.queue_path)
+    registry = CampaignRegistry.from_manifest_path(queue_path)
     if registry.config_sha256 != lock.config_sha256:
         raise CoordinatorBlockedError("queue config_sha256 does not match runtime lock")
     if lock.is_pilot_released and any(
@@ -1351,7 +1501,12 @@ def plan_campaign(
             if count >= execution_config.lane_quarantine_threshold
         )
     )
-    active_lanes = [lane for lane in lanes if lane.lane_id not in quarantined]
+    leased_lane_ids = {lease.owner_lane for lease in durable_leases.values()}
+    active_lanes = [
+        lane
+        for lane in lanes
+        if lane.lane_id not in quarantined and lane.lane_id not in leased_lane_ids
+    ]
 
     blocked_groups: list[dict[str, Any]] = []
     dispatch_units: list[tuple[ExecutionGroup, list[str]]] = []
@@ -1362,6 +1517,12 @@ def plan_campaign(
             episode_infra_failures=coordination_state.episode_infra_failures,
             execution_config=execution_config,
         )
+        if durable_leases:
+            dispatch_units = exclude_leased_shards(
+                dispatch_units,
+                active_lanes,
+                durable_leases,
+            )
         blocked_groups.extend(aggregate_blocked_groups(blocked_records))
 
     if (

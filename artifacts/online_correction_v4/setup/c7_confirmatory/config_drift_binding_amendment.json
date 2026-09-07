@@ -1,0 +1,36 @@
+{
+  "amendment_id": "c7_confirmatory_global_queue_drift_binding_fix_20260908",
+  "campaign_id": "online_correction_v4",
+  "disclosed_reason": "Commit 4f732a0 regenerated the global V4 queue and campaign freeze after a disclosed reference_binding G3 geometry amendment for C2. That amendment is legitimate for C2 but must not invalidate the already-frozen, already-executing C7 confirmatory campaign bound to runtime lock object_pair_c7_confirmatory_runtime_lock.released.json.",
+  "drift_observed": {
+    "global_campaign_config_sha256": "3594cedb3a440e5d944b37f709e25e41a98ed03dccc6bc4b7656a02f03440bee",
+    "global_queue_manifest_planning_sha256": "4a874b14fbc31cc269173610c4a43d1f8f701f7c533825263393ef43e09588bc",
+    "released_runtime_lock_config_sha256": "7b207c38353a2194859a01130318237cc55231e3504b1a2632b12b28f93c22b9",
+    "released_runtime_lock_frozen_queue_sha256": "0da589ceb3c77002d754f699cd1c64e57056ae43e2e63bd2a7def6c66a556de6",
+    "released_runtime_lock_manifest_sha256": "b7ed349a0907a8ded7c5d368f9298d27b8b85d4875e54e5f9a74ac55e2d0ba30"
+  },
+  "fix": {
+    "binding_directory": "artifacts/online_correction_v4/setup/c7_confirmatory",
+    "coordinator_behavior": "resolve_released_campaign_bindings() validates the released runtime lock first, then selects frozen campaign/queue copies when global defaults drift.",
+    "launch_tool_behavior": "launch_online_correction_v4 auto-binds frozen copies for released locks; global queue.jsonl remains mutable for unrelated families.",
+    "runtime_lock_edited": false,
+    "frozen_queue_retroactively_rewritten": false
+  },
+  "frozen_binding_hashes": {
+    "campaign.frozen.json": "7b207c38353a2194859a01130318237cc55231e3504b1a2632b12b28f93c22b9",
+    "queue.frozen.jsonl": "0da589ceb3c77002d754f699cd1c64e57056ae43e2e63bd2a7def6c66a556de6",
+    "queue_manifest.frozen.json_planning_sha256": "b7ed349a0907a8ded7c5d368f9298d27b8b85d4875e54e5f9a74ac55e2d0ba30"
+  },
+  "c7_confirmatory_scope_verification": {
+    "episode_count": 768,
+    "scope_fields_byte_identical_to_frozen_queue_excluding_row_config_sha256": true,
+    "global_queue_c7_scope_identical_excluding_config_sha256": true,
+    "note": "Each queue row embeds config_sha256 from its planning freeze; C7 confirmatory rows retain 7b207c38 in the frozen copy only."
+  },
+  "schema_version": "v4-c7-config-drift-binding-amendment-v1",
+  "source_commits": {
+    "frozen_campaign_snapshot": "424a91b",
+    "frozen_queue_snapshot": "b05b16c",
+    "global_drift_introduced": "4f732a0"
+  }
+}

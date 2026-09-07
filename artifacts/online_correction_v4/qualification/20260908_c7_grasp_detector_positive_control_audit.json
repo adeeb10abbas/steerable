@@ -1,0 +1,47 @@
+{
+  "audit_id": "c7_grasp_detector_positive_control_20260908",
+  "campaign_id": "online_correction_v4",
+  "detector_contract": {
+    "class": "NaturalGraspDetector",
+    "dwell_s": 0.2,
+    "min_lift_m": 0.04,
+    "relative_drift_max_m": 0.01,
+    "source": "artifacts/online_correction_v4/qualification/20260906_object_pair_g5_trigger_branch_g5c7q20260906a.json"
+  },
+  "finding": "partial_positive_control_only",
+  "live_policy_positive_control": {
+    "grasp_eligible_true_observed": false,
+    "trigger_eligible_true_observed": false,
+    "scope_searched": [
+      "C7 G7 engineering pilot (24 episodes)",
+      "C7 confirmatory partial corpus (279 episodes at audit time)",
+      "committed qualification receipts under artifacts/online_correction_v4/qualification/*object_pair*"
+    ],
+    "verdict": "No live policy episode under object_pair produced grasp_eligible or trigger_eligible true with the runtime NaturalGraspDetector thresholds."
+  },
+  "synthetic_positive_control": {
+    "present": true,
+    "source": "tools/build_v4_object_pair_g5_g6_receipts.py build_g5_receipt()",
+    "checks": {
+      "no_trigger_without_registered_lift": "synthetic kinematic_state with lift_m=0.0",
+      "stable_carry_triggers_after_registered_dwell": "synthetic kinematic_state with lift_m=0.05 for 4 ticks at dt=1/15"
+    },
+    "verdict": "G5 validates NaturalGraspDetector logic on synthetic ObjectKinematicState, not in live Isaac sim with the policy gripper."
+  },
+  "g3_scripted_basis": {
+    "present": true,
+    "distinct_detector": true,
+    "source": "experiments/online_correction_v4/droid_g3_scripted.py privileged controller",
+    "g3_aggregate": "20260906_object_pair_g3_aggregate_g3s7q20260906l.json",
+    "observed_scripted_check_count": 112,
+    "grasp_eligible_or_trigger_eligible_in_receipts": false,
+    "verdict": "G3 scripted feasibility uses a separate privileged grasp/transport controller and stage predicates (grasped, min_grasp_lift_m). It is not a live positive control for NaturalGraspDetector at policy runtime."
+  },
+  "direct_command_gate": {
+    "object_pair_v4_gate_found": false,
+    "verdict": "No object_pair V4 direct-command gate receipt producing grasp_eligible true under NaturalGraspDetector was found in-repo."
+  },
+  "paper_distinction": "Zero trigger_eligible across C7 pilots and confirmatory episodes reflects policy/sim behavior under NaturalGraspDetector, but the detector itself is validated only by G5 synthetic kinematic checks—not by a live sim positive control at the same thresholds. A detector that never fires in live episodes is materially different from a policy that never grasps; both should be reported.",
+  "schema_version": "v4-grasp-detector-positive-control-audit-v1",
+  "status": "complete"
+}

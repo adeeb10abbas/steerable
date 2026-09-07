@@ -1,0 +1,59 @@
+{
+  "campaign_id": "online_correction_v4",
+  "excluded_engineering_policy_pilots": 240,
+  "expected_confirmatory_episodes": 17664,
+  "frozen_queue_sha256": "0da589ceb3c77002d754f699cd1c64e57056ae43e2e63bd2a7def6c66a556de6",
+  "hash_semantics": {
+    "frozen_queue_sha256": "Enriched queue.jsonl bytes written by the freeze builder.",
+    "planning_manifest_sha256": "Pre-enrichment planning inventory from build_manifest."
+  },
+  "planning_manifest_sha256": "b7ed349a0907a8ded7c5d368f9298d27b8b85d4875e54e5f9a74ac55e2d0ba30",
+  "queue_path": "artifacts/online_correction_v4/queue.jsonl",
+  "queue_sha256": "0da589ceb3c77002d754f699cd1c64e57056ae43e2e63bd2a7def6c66a556de6",
+  "registered_new_episodes_by_family": {
+    "C1": 6144,
+    "C2": 4096,
+    "C3": 1536,
+    "C4": 2048,
+    "C5": 1536,
+    "C6": 768,
+    "C7": 768,
+    "C8": 768
+  },
+  "release_status": "NOT_RELEASED",
+  "reuse_semantics": "Every queue row is a registered new episode. reuse_episode_ids link to prior control episode IDs for analysis pairing; C3/C4 rows remain new episodes even when they reference C1/C3 controls. C4 fast-schedule sham/move rows are new because schedule differs.",
+  "row_count": 17664,
+  "rows_by_execution_group": {
+    "cosmos3_nano_droid:containment": 384,
+    "cosmos3_nano_droid:horizontal": 4864,
+    "cosmos3_nano_droid:object_pair": 768,
+    "cosmos3_nano_droid:reference_binding": 2048,
+    "cosmos3_nano_droid:vertical": 768,
+    "groot_bridge_widowx:second_stack": 768,
+    "pi05_droid:containment": 384,
+    "pi05_droid:horizontal": 4864,
+    "pi05_droid:reference_binding": 2048,
+    "pi05_droid:vertical": 768
+  },
+  "schema_version": 1,
+  "total_control_reference_edges_by_family": {
+    "C1": 0,
+    "C2": 0,
+    "C3": 3072,
+    "C4": 8192,
+    "C5": 0,
+    "C6": 0,
+    "C7": 0,
+    "C8": 0
+  },
+  "unique_referenced_control_episode_ids_by_family": {
+    "C1": 0,
+    "C2": 0,
+    "C3": 1024,
+    "C4": 2048,
+    "C5": 0,
+    "C6": 0,
+    "C7": 0,
+    "C8": 0
+  }
+}

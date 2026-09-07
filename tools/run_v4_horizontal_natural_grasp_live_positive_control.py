@@ -134,8 +134,8 @@ def main(argv: list[str] | None = None) -> int:
     from experiments.online_correction_v4.detectors import GraspDetectorConfig, NaturalGraspDetector
     from experiments.online_correction_v4.droid_g3 import (
         fixture_object_spec,
-        geometry_from_scene_for_fixture,
         goal_set_for_reference,
+        horizontal_geometry_from_scene,
         task_frame_from_evidence,
     )
     from experiments.online_correction_v4.droid_g3_scripted import run_scripted_check
@@ -285,8 +285,7 @@ def main(argv: list[str] | None = None) -> int:
         task_frame_from_evidence(task_frame_dict)
         initial_scene = env.backend.g3_scene_state()
         geometry_contract = dict(plan["geometry_contract"])
-        geometry = geometry_from_scene_for_fixture(
-            fixture_id=FIXTURE_ID,
+        geometry = horizontal_geometry_from_scene(
             task_frame_evidence=task_frame_dict,
             scene_state=initial_scene,
             support_edge_margin_m=float(geometry_contract["support_edge_margin_m"]),

@@ -1,0 +1,22 @@
+{
+  "schema_version": "v4-c7-compiled-ledger-receipt-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "object_pair_c7",
+  "compiled_at_utc": "2026-09-07T17:09:00Z",
+  "pvc_output_root": "/data/users/ali/vla_wam/raw/v4/c7-object-pair-main/compiled_ledger_20260908i",
+  "manifest_scope": "768 C7 confirmatory episodes (queue.frozen.jsonl)",
+  "attempt_count_at_compile": 712,
+  "pvc_complete_json_at_refresh": 873,
+  "accepted_row_count": 541,
+  "accepted_ledger_sha256": "d348a47dfad11526aedd2ed6b882995b3879cfa690edef0050ddb408a785c195",
+  "planned_episodes": 768,
+  "missing_valid": 227,
+  "pre_repair_excluded_episodes": 279,
+  "reconciliation_note": "Ledger compile against confirmatory manifest deduplicates to latest verified valid attempt per episode_id and separates 279 pre-repair infrastructure-invalid episodes from repaired-path accepted rows.",
+  "ledger_paths": {
+    "accepted_ledger": "compiled_ledger_20260908i/accepted_ledger.jsonl",
+    "accepted_ledger_manifest": "compiled_ledger_20260908i/accepted_ledger_manifest.json",
+    "rejected_attempts": "compiled_ledger_20260908i/rejected_attempts.jsonl"
+  },
+  "status": "partial_in_progress"
+}

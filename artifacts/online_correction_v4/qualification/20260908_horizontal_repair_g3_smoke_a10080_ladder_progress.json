@@ -1,0 +1,68 @@
+{
+  "attempts": [
+    {
+      "attempt_id": "g3r20260908a10080a",
+      "disposition": "infrastructure_invalid",
+      "gpu_product": "NVIDIA-A100-SXM4-80GB",
+      "job_name": "v4-g3-horizontal-g3r20260908a10080a-5f63eb88a8-s000",
+      "root_cause": "KeyError scene_receipt in run_v4_horizontal_g3_path_seed.py (pre-a79d55b)"
+    },
+    {
+      "attempt_id": "g3r20260908a10080b",
+      "check_count": 24,
+      "disposition": "scientific_reject",
+      "failed_check_count": 15,
+      "gpu_product": "NVIDIA-A100-SXM4-80GB",
+      "job_name": "v4-g3-horizontal-g3r20260908a10080b-e38255e574-s000",
+      "passed": false,
+      "scale": 2.0,
+      "study_commit": "a79d55bed8303ffa48b8d31f04850104f51200f2"
+    },
+    {
+      "attempt_id": "g3r20260908a10080c",
+      "check_count": 24,
+      "disposition": "scientific_reject",
+      "failed_check_count": 10,
+      "gpu_product": "NVIDIA-A100-SXM4-80GB",
+      "job_name": "v4-g3-horizontal-g3r20260908a10080c-15091ece8f-s000",
+      "passed": false,
+      "scale": 1.5,
+      "study_commit": "a79d55bed8303ffa48b8d31f04850104f51200f2"
+    },
+    {
+      "attempt_id": "g3r20260908a10080d",
+      "disposition": "submitted_pending_schedule",
+      "gpu_product": "NVIDIA-A100-SXM4-80GB",
+      "job_name": "v4-g3-horizontal-g3r20260908a10080d-5744935d7c-s000",
+      "scale": 1.0
+    },
+    {
+      "attempt_id": "g3r20260908a10080e",
+      "disposition": "submitted_pending_schedule",
+      "gpu_product": "NVIDIA-A100-SXM4-80GB",
+      "job_name": "v4-g3-horizontal-g3r20260908a10080e-b28f4028ff-s000",
+      "scale": 0.75
+    },
+    {
+      "attempt_id": "g3r20260908a10080f",
+      "disposition": "submitted_pending_schedule",
+      "gpu_product": "NVIDIA-A100-SXM4-80GB",
+      "job_name": "v4-g3-horizontal-g3r20260908a10080f-a1cb7b6186-s000",
+      "scale": 0.5
+    }
+  ],
+  "campaign_id": "online_correction_v4",
+  "compiled_at_utc": "2026-09-07T06:34:00Z",
+  "fixture_version": "horizontal_geometry_repair_v2",
+  "gate": "G3",
+  "g2_smoke_a10080": {
+    "attempt_id": "g2r20260908a10080a",
+    "job_name": "v4-g2-horizontal-g2r20260908a10080a-11feca0806-s000",
+    "status": "Complete"
+  },
+  "gpu_stratum": "NVIDIA-A100-SXM4-80GB",
+  "next_action": "Await scales 1.0/0.75/0.5 smokes; stop ladder at first 24/24 pass or compile fixture-blocked receipt if all reject.",
+  "reset_registry_sha256": "392dcdfd797644f514b74cf82f65b3a69d7ba1120e959b55e0447df18d61ab13",
+  "schema_version": "v4-horizontal-repair-g3-smoke-ladder-progress-v1",
+  "selected_scale": null
+}

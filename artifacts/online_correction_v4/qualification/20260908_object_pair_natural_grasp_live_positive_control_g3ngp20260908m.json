@@ -1,0 +1,41 @@
+{
+  "schema_version": "v4-object-pair-natural-grasp-live-positive-control-v1",
+  "attempt_id": "g3ngp20260908m",
+  "audited_at_utc": "2026-09-08T08:26:00Z",
+  "dispatch_bundle": "artifacts/online_correction_v4/qualification/dispatch_g3ngp20260908m",
+  "pvc_receipt_path": "/data/users/ali/vla_wam/raw/v4/qualification/object-pair-natural-grasp-positive-control/g3ngp20260908m/natural_grasp_positive_control.json",
+  "pvc_scripted_trajectory_path": "/data/users/ali/vla_wam/raw/v4/qualification/object-pair-natural-grasp-positive-control/g3ngp20260908m/scripted_trajectory.json",
+  "verdict": "blocking_setup_defect",
+  "trigger_eligible": false,
+  "scripted_trajectory_passed": true,
+  "scripted_grasp_stages": {
+    "grasped": true,
+    "transported": true,
+    "goal_satisfied": true,
+    "stably_placed": true,
+    "released": true
+  },
+  "diagnosis": {
+    "summary": "Model-blind scripted grasp completed all stages, but NaturalGraspDetector never reached trigger_eligible under live Isaac.",
+    "observed_failure_modes": [
+      "contact remained false across all 260 detector samples despite scripted grasped=true",
+      "lift_m stayed near 0 (max ~1.3e-7 m) versus min_lift_m=0.04",
+      "relative_drift_m ~0.524 m versus relative_drift_max_m=0.01 because object pose was compared to robot base pose rather than end-effector",
+      "grasp_occurred internal latch fired on carrying heuristic but stable carry dwell never started"
+    ],
+    "likely_root_cause": "object_kinematic_state() uses world.get_pose('robot') for gripper_x/y/z and object_grabbed() for contact; neither tracks the scripted end-effector grasp in this live stack, so the intervention path is not deliverable as wired.",
+    "campaign_implication": "Do not burn remaining C1-C8 behavioral budget until object_kinematic_state/contact sources are corrected and this positive control is re-run to trigger_eligible=true."
+  },
+  "detector_config": {
+    "min_lift_m": 0.04,
+    "dwell_s": 0.2,
+    "relative_drift_max_m": 0.01,
+    "trigger_deadline_s": 40.0
+  },
+  "environment_seed": 2100040000,
+  "fixture_id": "object_pair",
+  "scale": 0.5,
+  "goal": "left",
+  "study_commit": "b6063c794550dec01704f9d5857c40344fc61ffc",
+  "receipt_sha256": "78a4fef945b977f1daa6c5dbdb7cf8472d2a2b11d29734f88f7ddaacbba677ea"
+}

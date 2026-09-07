@@ -109,8 +109,10 @@ def _parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     study_root = args.study_root.resolve()
-    if str(study_root) not in sys.path:
-        sys.path.insert(0, str(study_root))
+    tools_root = study_root / "tools"
+    for path_entry in (study_root, tools_root):
+        if str(path_entry) not in sys.path:
+            sys.path.insert(0, str(path_entry))
 
     output_raw = args.output_dir or (
         Path(os.environ["EPISODE_OUTPUT_DIR"]) if os.environ.get("EPISODE_OUTPUT_DIR") else None
@@ -181,7 +183,7 @@ def main(argv: list[str] | None = None) -> int:
     if not pod_name or not pod_uid:
         raise RuntimeError("--pod/--pod-uid or POD_NAME/POD_UID are required")
 
-    timing = TimingConfig.from_campaign(campaign)
+    timing = TimingConfig.from_mapping(campaign["timing"])
     detector = NaturalGraspDetector(
         config=GraspDetectorConfig(
             min_lift_m=timing.natural_grasp_min_lift_m,
@@ -221,8 +223,8 @@ def main(argv: list[str] | None = None) -> int:
         goal=goal,
     )
     runtime_identity = {
-        "study_checkout": _git_identity(study_root, args.expected_study_commit),
-        "robolab_checkout": _git_identity(robolab_root, args.expected_robolab_commit),
+        "study_checkout": _git_identity(study_root, expected_commit=args.expected_study_commit),
+        "robolab_checkout": _git_identity(robolab_root, expected_commit=args.expected_robolab_commit),
         "gpu": _gpu_identity(
             expected_driver=args.expected_driver_version,
             gpu_uuid=args.gpu_uuid,
@@ -273,9 +275,16 @@ def main(argv: list[str] | None = None) -> int:
             prompt_sha256=prompt_sha256,
             runtime_identity_sha256=runtime_identity_sha256,
         )
-        task_frame_from_evidence(task_frame_evidence(physical_reset))
-        geometry = geometry_from_scene_for_fixture(env, fixture_id=FIXTURE_ID)
+        task_frame_dict = task_frame_evidence(physical_reset)
+        task_frame_from_evidence(task_frame_dict)
+        initial_scene = env.backend.g3_scene_state()
         geometry_contract = dict(plan["geometry_contract"])
+        geometry = geometry_from_scene_for_fixture(
+            fixture_id=FIXTURE_ID,
+            task_frame_evidence=task_frame_dict,
+            scene_state=initial_scene,
+            support_edge_margin_m=float(geometry_contract["support_edge_margin_m"]),
+        )
         controller_config = frozen_scripted_controller_config(FIXTURE_ID)
         table_bounds = geometry["table_bounds_task"]
         target_footprint = geometry["target_footprint"]
@@ -392,7 +401,7 @@ def main(argv: list[str] | None = None) -> int:
         raise
     finally:
         if env is not None:
-            close_live_droid_stack(env)
+            close_live_droid_stack()
 
 
 if __name__ == "__main__":

@@ -1,0 +1,25 @@
+{
+  "schema_version": "v4-c7-duplicate-lane-audit-v1",
+  "audited_at_utc": "2026-09-08T07:45:00Z",
+  "wave_id": "wave-005",
+  "pvc_root": "/data/users/ali/vla_wam/raw/v4/c7-object-pair-main",
+  "accepted_ledger_path": "/data/users/ali/vla_wam/raw/v4/c7-object-pair-main/compiled_ledger_20260907g/accepted_ledger.jsonl",
+  "accepted_ledger_rows": 279,
+  "accepted_ledger_unique_episode_ids": 279,
+  "duplicate_episode_ids_in_ledger": false,
+  "accepted_evidence_invalidated_count": 0,
+  "ambiguous_episodes": [],
+  "lanes_with_overlap": 0,
+  "lanes_affected_historical": 25,
+  "lanes_with_redundant_attempt_dirs_remaining": 14,
+  "lanes_with_redundant_complete": 0,
+  "live_duplicate_active_attempts": 0,
+  "live_attempt471plus_jobs": 0,
+  "actions_taken_prior": {
+    "redundant_k8s_jobs_deleted": 25,
+    "redundant_group_leases_removed": 25,
+    "redundant_pvc_attempt_dirs_quarantined": 2,
+    "owner_jobs_preserved": true
+  },
+  "verdict": "accepted_ledger_clean_no_interleaved_evidence"
+}

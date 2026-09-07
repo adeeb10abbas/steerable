@@ -732,6 +732,19 @@ class LiveRoboLabBackend:
         self.reference_displacement_m = 0.0
         self._anchor_reference_motion()
 
+    def _g3_asset_prim_path(self, asset: Any) -> str:
+        for owner_name in ("root_physx_view", "_root_physx_view"):
+            paths = getattr(getattr(asset, owner_name, None), "prim_paths", None)
+            if paths:
+                return str(paths[0])
+        cfg = getattr(asset, "cfg", None)
+        prim_path = getattr(cfg, "prim_path", None)
+        if prim_path:
+            return str(prim_path).replace("{ENV_REGEX_NS}", "/World/envs/env_0")
+        raise RoboLabBootstrapError(
+            "G3 scene asset exposes no concrete prim path"
+        )
+
     def g3_world_aabb(self, scene_name: str) -> dict[str, Any]:
         """Resolve a live scene asset to its USD world-aligned bounding box."""
         try:
@@ -740,13 +753,12 @@ class LiveRoboLabBackend:
             raise RoboLabBootstrapError(
                 f"G3 scene asset is unavailable: {scene_name}"
             ) from exc
-        view = getattr(asset, "root_physx_view", None)
-        prim_paths = getattr(view, "prim_paths", None)
-        if not prim_paths:
+        try:
+            prim_path = self._g3_asset_prim_path(asset)
+        except RoboLabBootstrapError as exc:
             raise RoboLabBootstrapError(
                 f"G3 scene asset {scene_name!r} exposes no concrete prim path"
-            )
-        prim_path = str(prim_paths[0])
+            ) from exc
         try:
             import omni.usd
             from pxr import Usd, UsdGeom

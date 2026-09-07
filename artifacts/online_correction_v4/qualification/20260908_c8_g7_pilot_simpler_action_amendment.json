@@ -1,0 +1,10 @@
+{
+  "amendment_id": "c8-g7-pilot-simpler-action-dict-20260908",
+  "basis_runtime_lock": "artifacts/online_correction_v4/setup/second_stack_g7_pilot_runtime_lock.released.20260908r2.json",
+  "commit": "f91d5b1bbfb56d16bd63e11369d1d5f8e7196348",
+  "infra_failure_class": "malformed_action_interface",
+  "observed_failure": "SimplerEnv gym step raised IndexError because LiveSecondStackBackend passed an 8-vector numpy array instead of action.x/y/z dict components.",
+  "released_runtime_lock": "artifacts/online_correction_v4/setup/second_stack_g7_pilot_runtime_lock.released.20260908r3.json",
+  "repair": "tuple_to_simpler_env_action converts V4 action tuples before gymnasium env.step for embedded SimplerEnv lanes.",
+  "retry_policy": "infrastructure_invalid_only"
+}

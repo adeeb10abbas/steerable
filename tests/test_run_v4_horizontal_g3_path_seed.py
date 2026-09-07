@@ -15,7 +15,11 @@ PLAN = (
     ROOT
     / "artifacts/online_correction_v4/setup/horizontal_g3_plan.candidate.json"
 )
-CAMPAIGN = ROOT / "docs/online_correction_v4/campaign.json"
+LIVE_CAMPAIGN = ROOT / "docs/online_correction_v4/campaign.json"
+PINNED_CAMPAIGN = (
+    ROOT
+    / "artifacts/online_correction_v4/setup/c7_confirmatory/campaign.frozen.json"
+)
 REGISTRY = (
     ROOT
     / "artifacts/online_correction_v4/setup/horizontal_reset_registry.candidate.json"
@@ -256,16 +260,26 @@ class G3PathSeedGateValidationTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.plan = json.loads(PLAN.read_text(encoding="utf-8"))
-        cls.campaign = json.loads(CAMPAIGN.read_text(encoding="utf-8"))
+        pinned = cls.plan["source_identity"]["campaign"]
+        cls.pinned_campaign_path = ROOT / str(pinned["path"])
+        cls.pinned_campaign_sha256 = str(pinned["sha256"])
+        cls.pinned_campaign = json.loads(
+            PINNED_CAMPAIGN.read_text(encoding="utf-8")
+        )
 
     def test_validate_gate_inputs_accepts_pinned_plan(self) -> None:
         from experiments.online_correction_v4.droid_task_files.binding import sha256_file
 
+        self.assertEqual(
+            sha256_file(PINNED_CAMPAIGN),
+            self.pinned_campaign_sha256,
+            "frozen campaign bytes must match the G3 plan source_identity digest",
+        )
         runner.validate_gate_inputs(
             plan=self.plan,
-            campaign=self.campaign,
-            campaign_path=CAMPAIGN,
-            campaign_sha256=sha256_file(CAMPAIGN),
+            campaign=self.pinned_campaign,
+            campaign_path=PINNED_CAMPAIGN,
+            campaign_sha256=self.pinned_campaign_sha256,
             plan_path=PLAN,
             plan_sha256=sha256_file(PLAN),
             reset_registry_path=REGISTRY,
@@ -275,14 +289,39 @@ class G3PathSeedGateValidationTests(unittest.TestCase):
             sha256_file=sha256_file,
         )
 
+    def test_live_campaign_digest_drift_is_detected(self) -> None:
+        from experiments.online_correction_v4.droid_task_files.binding import sha256_file
+
+        live_digest = sha256_file(LIVE_CAMPAIGN)
+        self.assertNotEqual(
+            live_digest,
+            self.pinned_campaign_sha256,
+            "docs/online_correction_v4/campaign.json must not silently match the "
+            "G3-pinned frozen digest once live design edits diverge",
+        )
+        with self.assertRaises(RuntimeError, msg="campaign digest differs from pinned G3 plan"):
+            runner.validate_gate_inputs(
+                plan=self.plan,
+                campaign=json.loads(LIVE_CAMPAIGN.read_text(encoding="utf-8")),
+                campaign_path=LIVE_CAMPAIGN,
+                campaign_sha256=live_digest,
+                plan_path=PLAN,
+                plan_sha256=sha256_file(PLAN),
+                reset_registry_path=REGISTRY,
+                reset_registry_sha256=sha256_file(REGISTRY),
+                environment_seed=2100000000,
+                scale=1.0,
+                sha256_file=sha256_file,
+            )
+
     def test_validate_gate_inputs_rejects_hash_mismatch(self) -> None:
         from experiments.online_correction_v4.droid_task_files.binding import sha256_file
 
         with self.assertRaises(RuntimeError):
             runner.validate_gate_inputs(
                 plan=self.plan,
-                campaign=self.campaign,
-                campaign_path=CAMPAIGN,
+                campaign=self.pinned_campaign,
+                campaign_path=self.pinned_campaign_path,
                 campaign_sha256="0" * 64,
                 plan_path=PLAN,
                 plan_sha256=sha256_file(PLAN),

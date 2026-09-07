@@ -1,0 +1,34 @@
+{
+  "amendment_basis": {
+    "misclassification": "Global C8 runner defects and capacity preemption were counted against per-lane infra failure counters, quarantining all eight lanes before behavioral episodes could complete.",
+    "invalidated_attempts": [
+      "attempt0053",
+      "attempt0054",
+      "attempt0055",
+      "attempt0056",
+      "attempt0057",
+      "attempt0058",
+      "attempt0059",
+      "attempt0060",
+      "attempt0069",
+      "attempt0070"
+    ],
+    "runner_fix_commit": "1b7c1e42f3e307781840b04646b5c925e6ce8618",
+    "vulkan_fix_commit": "c792910c3afeafaa3f86b73496f7629349b3d8cf"
+  },
+  "gate": "c8_g7_pilot_lane_quarantine_reset",
+  "passed": true,
+  "qualification_scope": "engineering_pilot",
+  "reset_lane_infra_failures_to": {
+    "g7c8p00": 1,
+    "g7c8p01": 1,
+    "g7c8p02": 1,
+    "g7c8p03": 1,
+    "g7c8p04": 1,
+    "g7c8p05": 1,
+    "g7c8p06": 1,
+    "g7c8p07": 1
+  },
+  "schema_version": 1,
+  "status": "passed"
+}

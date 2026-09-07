@@ -1,0 +1,249 @@
+{
+  "argv": [
+    "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/gr00t/eval/sim/SimplerEnv/simpler_uv/.venv/bin/python",
+    "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/tools/run_v4_groot_bridge_policy_server.py",
+    "--host",
+    "0.0.0.0",
+    "--port",
+    "18200",
+    "--checkpoint-path",
+    "/data/users/ali/vla_wam/checkpoints/groot-n1.7-simplerenv-bridge",
+    "--integration-root",
+    "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89"
+  ],
+  "attempt_id": "attempt0053",
+  "checkpoint_sha256": "ba6ebd8503df6950d18e416a9d4d1b945b02493af7fea5406bfe7f889acc9c4f",
+  "checks": {
+    "checkpoint_digest": {
+      "checkpoint_registry_path": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/artifacts/online_correction_v4/setup/second_stack_g4_checkpoint_registry.candidate.json",
+      "checkpoint_sha256": "ba6ebd8503df6950d18e416a9d4d1b945b02493af7fea5406bfe7f889acc9c4f",
+      "hash_kind": "groot-bridge-registry-v1",
+      "path": "/data/users/ali/vla_wam/checkpoints/gr00t_n17_simplerenv_bridge_940134b3",
+      "verified_file_count": 16
+    },
+    "cuda_kernel": {
+      "available": true,
+      "device": "cuda:0",
+      "device_name": "NVIDIA A40",
+      "kernel_result": 22923264000.0,
+      "probe": {
+        "argv": [
+          "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/gr00t/eval/sim/SimplerEnv/simpler_uv/.venv/bin/python",
+          "-c",
+          "import json, torch\nassert torch.cuda.is_available(), 'torch CUDA unavailable'\nx=torch.arange(4096,device='cuda:0',dtype=torch.float32)\ny=(x*x+3*x).sum()\ntorch.cuda.synchronize()\nexpected=sum(float(i*i+3*i) for i in range(4096))\nassert abs(float(y.cpu())-expected) <= max(1.0,abs(expected)*1e-6)\nprint(json.dumps({'available':True,'device':'cuda:0','device_name':torch.cuda.get_device_name(0),'kernel_result':float(y.cpu())}))\n"
+        ],
+        "elapsed_seconds": 6.971072173999346,
+        "returncode": 0,
+        "stderr_tail": "",
+        "stdout_tail": "{\"available\": true, \"device\": \"cuda:0\", \"device_name\": \"NVIDIA A40\", \"kernel_result\": 22923264000.0}\n"
+      }
+    },
+    "ffmpeg_encode_decode": {
+      "decoded_raw": {
+        "bytes": 12288,
+        "path": "/data/users/ali/vla_wam/raw/v4/g7-second-stack/.lane-runtime/91ee499a-cd4e-4b52-8751-1d4b11d8cd74/lane-g7c8p00/attempt-attempt0053/policy/ffmpeg-decode.raw",
+        "sha256": "46ce3e0b6f14eb131c61f38d418f7797bc2628a19a1d20017d994efd7271fafb"
+      },
+      "encoded_mp4": {
+        "bytes": 1612,
+        "path": "/data/users/ali/vla_wam/raw/v4/g7-second-stack/.lane-runtime/91ee499a-cd4e-4b52-8751-1d4b11d8cd74/lane-g7c8p00/attempt-attempt0053/policy/ffmpeg-encode.mp4",
+        "sha256": "000b1eae198fbe53e380e8751624f7b8b41893bd81a0baf943c0a88947adf3f7"
+      },
+      "ffmpeg_decode": {
+        "argv": [
+          "/data/users/ali/vla_wam/envs/lingbot-va-b200/bin/ffmpeg",
+          "-nostdin",
+          "-hide_banner",
+          "-loglevel",
+          "error",
+          "-i",
+          "/data/users/ali/vla_wam/raw/v4/g7-second-stack/.lane-runtime/91ee499a-cd4e-4b52-8751-1d4b11d8cd74/lane-g7c8p00/attempt-attempt0053/policy/ffmpeg-encode.mp4",
+          "-frames:v",
+          "1",
+          "-f",
+          "rawvideo",
+          "-pix_fmt",
+          "rgb24",
+          "-y",
+          "/data/users/ali/vla_wam/raw/v4/g7-second-stack/.lane-runtime/91ee499a-cd4e-4b52-8751-1d4b11d8cd74/lane-g7c8p00/attempt-attempt0053/policy/ffmpeg-decode.raw"
+        ],
+        "elapsed_seconds": 0.04532963899873721,
+        "returncode": 0,
+        "stderr_tail": "",
+        "stdout_tail": ""
+      },
+      "ffmpeg_encode": {
+        "argv": [
+          "/data/users/ali/vla_wam/envs/lingbot-va-b200/bin/ffmpeg",
+          "-nostdin",
+          "-hide_banner",
+          "-loglevel",
+          "error",
+          "-f",
+          "lavfi",
+          "-i",
+          "color=c=blue:s=64x64:r=2:d=1",
+          "-frames:v",
+          "2",
+          "-pix_fmt",
+          "yuv420p",
+          "-y",
+          "/data/users/ali/vla_wam/raw/v4/g7-second-stack/.lane-runtime/91ee499a-cd4e-4b52-8751-1d4b11d8cd74/lane-g7c8p00/attempt-attempt0053/policy/ffmpeg-encode.mp4"
+        ],
+        "elapsed_seconds": 0.24741795499903674,
+        "returncode": 0,
+        "stderr_tail": "",
+        "stdout_tail": ""
+      }
+    },
+    "file_bindings": [
+      {
+        "bytes": 9914,
+        "path": "/opt/v4-lane/scripts/..2026_09_07_20_29_32.832646850/lane_entrypoint.py",
+        "sha256": "8ac453697224adf12a12ff20f16686e052ef4482cece4b423dfb2d78136e6e9f"
+      },
+      {
+        "bytes": 35095,
+        "path": "/opt/v4-lane/scripts/..2026_09_07_20_29_32.832646850/startup_preflight.py",
+        "sha256": "2f626058209727371b96f013d16e80d920008b34f27e47a4a2b75473687e11fc"
+      },
+      {
+        "bytes": 3993,
+        "path": "/opt/v4-lane/scripts/..2026_09_07_20_29_32.832646850/check_policy_ready.py",
+        "sha256": "121ebd99e6ef7c9bbc29fda8b93032e58284edb72a21b22e872a0188a9feaafc"
+      },
+      {
+        "bytes": 4814,
+        "path": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/tools/run_v4_groot_bridge_policy_server.py",
+        "sha256": "090f535ccde311b5ec28d636ab037c600dbd12944933f09e9b7db09faec1739d"
+      },
+      {
+        "bytes": 2541,
+        "path": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/artifacts/online_correction_v4/setup/second_stack_g4_checkpoint_registry.candidate.json",
+        "sha256": "ba6ebd8503df6950d18e416a9d4d1b945b02493af7fea5406bfe7f889acc9c4f"
+      }
+    ],
+    "policy_readiness": null,
+    "policy_readiness_contract": {
+      "checkpoint_loaded_before_ready": true,
+      "contract": "http_healthz_after_checkpoint_load"
+    },
+    "python_imports": {
+      "curobo_required": false,
+      "exact_imports": [
+        "torch",
+        "simpler_env"
+      ],
+      "probe": {
+        "argv": [
+          "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/gr00t/eval/sim/SimplerEnv/simpler_uv/.venv/bin/python",
+          "-c",
+          "import importlib,json,pathlib,sys\nnames=json.loads(sys.argv[1])\nrows=[]\nfor name in names:\n m=importlib.import_module(name)\n raw=getattr(m,'__file__',None)\n rows.append({'module':name,'module_file':str(pathlib.Path(raw).resolve()) if raw else None,'version':str(getattr(m,'__version__','not_exposed'))})\nprint(json.dumps(rows,sort_keys=True))\n",
+          "[\"torch\", \"simpler_env\"]"
+        ],
+        "elapsed_seconds": 6.828522798999984,
+        "returncode": 0,
+        "stderr_tail": "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/gr00t/eval/sim/SimplerEnv/simpler_uv/.venv/lib/python3.10/site-packages/sapien/core/renderer_config.py:4: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.\n  import pkg_resources\n",
+        "stdout_tail": "[{\"module\": \"torch\", \"module_file\": \"/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/gr00t/eval/sim/SimplerEnv/simpler_uv/.venv/lib/python3.10/site-packages/torch/__init__.py\", \"version\": \"2.7.0+cu126\"}, {\"module\": \"simpler_env\", \"module_file\": \"/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/external_dependencies/SimplerEnv/simpler_env/__init__.py\", \"version\": \"not_exposed\"}]\n"
+      },
+      "python_bin": "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/gr00t/eval/sim/SimplerEnv/simpler_uv/.venv/bin/python",
+      "results": [
+        {
+          "module": "torch",
+          "module_file": "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/gr00t/eval/sim/SimplerEnv/simpler_uv/.venv/lib/python3.10/site-packages/torch/__init__.py",
+          "version": "2.7.0+cu126"
+        },
+        {
+          "module": "simpler_env",
+          "module_file": "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/external_dependencies/SimplerEnv/simpler_env/__init__.py",
+          "version": "not_exposed"
+        }
+      ]
+    },
+    "runtime_directories": {
+      "HOME": {
+        "path": "/lane-runtime/home",
+        "writable": true
+      },
+      "MPLCONFIGDIR": {
+        "path": "/lane-runtime/matplotlib",
+        "writable": true
+      },
+      "TMPDIR": {
+        "path": "/lane-runtime/tmp",
+        "writable": true
+      },
+      "WARP_CACHE_PATH": {
+        "path": "/lane-runtime/warp",
+        "writable": true
+      },
+      "XDG_CACHE_HOME": {
+        "path": "/lane-runtime/xdg/cache",
+        "writable": true
+      },
+      "XDG_CONFIG_HOME": {
+        "path": "/lane-runtime/xdg/config",
+        "writable": true
+      },
+      "XDG_RUNTIME_DIR": {
+        "path": "/lane-runtime/xdg/runtime",
+        "writable": true
+      }
+    },
+    "writable_parent": {
+      "create_fsync_unlink": true,
+      "path": "/data/users/ali/vla_wam/raw/v4/g7-second-stack",
+      "writable_parent": true
+    }
+  },
+  "completed_at_utc": "2026-09-07T20:30:23.242038Z",
+  "created_at_utc": "2026-09-07T20:29:33.269605Z",
+  "effective_environment": {
+    "CUDA_VISIBLE_DEVICES": null,
+    "DISPLAY": "",
+    "FFMPEG_BIN": "/data/users/ali/vla_wam/envs/lingbot-va-b200/bin/ffmpeg",
+    "HOME": "/lane-runtime/home",
+    "LD_LIBRARY_PATH": "/data/users/ali/vla_wam/envs/groot-render-libs/lib:/usr/lib/x86_64-linux-gnu",
+    "LD_PRELOAD": "",
+    "MPLCONFIGDIR": "/lane-runtime/matplotlib",
+    "NVIDIA_DRIVER_CAPABILITIES": "compute,graphics,utility",
+    "NVIDIA_VISIBLE_DEVICES": "GPU-872e7072-60f3-5671-7908-05a4ba6be7f8",
+    "OMNI_KIT_ACCEPT_EULA": "YES",
+    "PYTHONNOUSERSITE": "1",
+    "PYTHONPATH": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2:/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/external_dependencies/SimplerEnv",
+    "PYTHONUNBUFFERED": "1",
+    "PYTHON_BIN": "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/gr00t/eval/sim/SimplerEnv/simpler_uv/.venv/bin/python",
+    "TMPDIR": "/lane-runtime/tmp",
+    "VK_DRIVER_FILES": null,
+    "VK_ICD_FILENAMES": "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/external_dependencies/SimplerEnv/nvidia_icd.json",
+    "WARP_CACHE_PATH": "/lane-runtime/warp",
+    "XDG_CACHE_HOME": "/lane-runtime/xdg/cache",
+    "XDG_CONFIG_HOME": "/lane-runtime/xdg/config",
+    "XDG_RUNTIME_DIR": "/lane-runtime/xdg/runtime"
+  },
+  "episode_output_dir_precreated": false,
+  "gpu": {
+    "driver_version": "580.95.05",
+    "gpu_name": "NVIDIA A40",
+    "gpu_uuid": "GPU-872e7072-60f3-5671-7908-05a4ba6be7f8"
+  },
+  "gpu_uuid": "GPU-872e7072-60f3-5671-7908-05a4ba6be7f8",
+  "image_digest": "sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+  "lane_id": "g7c8p00",
+  "launch_config": {
+    "path": "/opt/v4-lane/config/policy-launch.json",
+    "sha256": "14d9148715438c8178b3e31795af72271cca6e37367e8d51ddaf3a7dc25984bc"
+  },
+  "output_parent": "/data/users/ali/vla_wam/raw/v4/g7-second-stack",
+  "passed": true,
+  "pid": 1,
+  "pod_identity": {
+    "pod_ip": "10.244.193.233",
+    "pod_name": "v4-g7c8p00-attempt0053-4229813cc8-policy-xzln9",
+    "pod_namespace": "211247-prod",
+    "pod_uid": "91ee499a-cd4e-4b52-8751-1d4b11d8cd74"
+  },
+  "role": "policy",
+  "schema_version": "vla-wam-v4-k8s-lane-startup-preflight-v1",
+  "status": "passed_startup_preflight"
+}

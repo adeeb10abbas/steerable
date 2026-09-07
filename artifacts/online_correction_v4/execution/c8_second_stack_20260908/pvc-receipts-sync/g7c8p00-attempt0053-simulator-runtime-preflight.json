@@ -1,0 +1,276 @@
+{
+  "argv": [
+    "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/gr00t/eval/sim/SimplerEnv/simpler_uv/.venv/bin/python",
+    "/data/users/ali/vla_wam/raw/v4/g7-second-stack/.coord-bindings/g7c8p00/attempt0053/run_online_correction_v4_lane_dispatch.py",
+    "--dispatch-manifest",
+    "/data/users/ali/vla_wam/raw/v4/g7-second-stack/.coord-bindings/g7c8p00/attempt0053/lane_dispatch_manifest.json",
+    "--launch-config",
+    "/opt/v4-lane/config/simulator-launch.json"
+  ],
+  "attempt_id": "attempt0053",
+  "checkpoint_sha256": null,
+  "checks": {
+    "checkpoint_digest": {
+      "reason": "embedded_in_policy_container has no standalone checkpoint path",
+      "skipped": true
+    },
+    "cuda_kernel": {
+      "available": true,
+      "device": "cuda:0",
+      "device_name": "NVIDIA A40",
+      "kernel_result": 22923264000.0,
+      "probe": {
+        "argv": [
+          "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/gr00t/eval/sim/SimplerEnv/simpler_uv/.venv/bin/python",
+          "-c",
+          "import json, torch\nassert torch.cuda.is_available(), 'torch CUDA unavailable'\nx=torch.arange(4096,device='cuda:0',dtype=torch.float32)\ny=(x*x+3*x).sum()\ntorch.cuda.synchronize()\nexpected=sum(float(i*i+3*i) for i in range(4096))\nassert abs(float(y.cpu())-expected) <= max(1.0,abs(expected)*1e-6)\nprint(json.dumps({'available':True,'device':'cuda:0','device_name':torch.cuda.get_device_name(0),'kernel_result':float(y.cpu())}))\n"
+        ],
+        "elapsed_seconds": 5.690226794999944,
+        "returncode": 0,
+        "stderr_tail": "",
+        "stdout_tail": "{\"available\": true, \"device\": \"cuda:0\", \"device_name\": \"NVIDIA A40\", \"kernel_result\": 22923264000.0}\n"
+      }
+    },
+    "ffmpeg_encode_decode": {
+      "decoded_raw": {
+        "bytes": 12288,
+        "path": "/data/users/ali/vla_wam/raw/v4/g7-second-stack/.lane-runtime/f815f632-bebe-4be7-b57f-f4764ffcd800/lane-g7c8p00/attempt-attempt0053/simulator/ffmpeg-decode.raw",
+        "sha256": "46ce3e0b6f14eb131c61f38d418f7797bc2628a19a1d20017d994efd7271fafb"
+      },
+      "encoded_mp4": {
+        "bytes": 1612,
+        "path": "/data/users/ali/vla_wam/raw/v4/g7-second-stack/.lane-runtime/f815f632-bebe-4be7-b57f-f4764ffcd800/lane-g7c8p00/attempt-attempt0053/simulator/ffmpeg-encode.mp4",
+        "sha256": "000b1eae198fbe53e380e8751624f7b8b41893bd81a0baf943c0a88947adf3f7"
+      },
+      "ffmpeg_decode": {
+        "argv": [
+          "/data/users/ali/vla_wam/envs/lingbot-va-b200/bin/ffmpeg",
+          "-nostdin",
+          "-hide_banner",
+          "-loglevel",
+          "error",
+          "-i",
+          "/data/users/ali/vla_wam/raw/v4/g7-second-stack/.lane-runtime/f815f632-bebe-4be7-b57f-f4764ffcd800/lane-g7c8p00/attempt-attempt0053/simulator/ffmpeg-encode.mp4",
+          "-frames:v",
+          "1",
+          "-f",
+          "rawvideo",
+          "-pix_fmt",
+          "rgb24",
+          "-y",
+          "/data/users/ali/vla_wam/raw/v4/g7-second-stack/.lane-runtime/f815f632-bebe-4be7-b57f-f4764ffcd800/lane-g7c8p00/attempt-attempt0053/simulator/ffmpeg-decode.raw"
+        ],
+        "elapsed_seconds": 0.043007099000533344,
+        "returncode": 0,
+        "stderr_tail": "",
+        "stdout_tail": ""
+      },
+      "ffmpeg_encode": {
+        "argv": [
+          "/data/users/ali/vla_wam/envs/lingbot-va-b200/bin/ffmpeg",
+          "-nostdin",
+          "-hide_banner",
+          "-loglevel",
+          "error",
+          "-f",
+          "lavfi",
+          "-i",
+          "color=c=blue:s=64x64:r=2:d=1",
+          "-frames:v",
+          "2",
+          "-pix_fmt",
+          "yuv420p",
+          "-y",
+          "/data/users/ali/vla_wam/raw/v4/g7-second-stack/.lane-runtime/f815f632-bebe-4be7-b57f-f4764ffcd800/lane-g7c8p00/attempt-attempt0053/simulator/ffmpeg-encode.mp4"
+        ],
+        "elapsed_seconds": 0.1492839410002489,
+        "returncode": 0,
+        "stderr_tail": "",
+        "stdout_tail": ""
+      }
+    },
+    "file_bindings": [
+      {
+        "bytes": 9914,
+        "path": "/opt/v4-lane/scripts/..2026_09_07_20_29_32.2618385192/lane_entrypoint.py",
+        "sha256": "8ac453697224adf12a12ff20f16686e052ef4482cece4b423dfb2d78136e6e9f"
+      },
+      {
+        "bytes": 35095,
+        "path": "/opt/v4-lane/scripts/..2026_09_07_20_29_32.2618385192/startup_preflight.py",
+        "sha256": "2f626058209727371b96f013d16e80d920008b34f27e47a4a2b75473687e11fc"
+      },
+      {
+        "bytes": 11898,
+        "path": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/deploy/k8s/v4_lane_bundle/scripts/run_online_correction_v4_lane_dispatch.py",
+        "sha256": "4a37959daedba7b741d0bf6ace4113ac481cf2647f935a4f84fcb4dc0579b9be"
+      },
+      {
+        "bytes": 11898,
+        "path": "/data/users/ali/vla_wam/raw/v4/g7-second-stack/.coord-bindings/g7c8p00/attempt0053/run_online_correction_v4_lane_dispatch.py",
+        "sha256": "4a37959daedba7b741d0bf6ace4113ac481cf2647f935a4f84fcb4dc0579b9be"
+      },
+      {
+        "bytes": 1265,
+        "path": "/data/users/ali/vla_wam/raw/v4/g7-second-stack/.coord-bindings/g7c8p00/attempt0053/lane_dispatch_manifest.json",
+        "sha256": "7cc3c56c5758841f5a6417f87212923fab2f8ae7c2c6a755eeb7753def9dd1ca"
+      },
+      {
+        "bytes": 27417,
+        "path": "/data/users/ali/vla_wam/raw/v4/g7-second-stack/.coord-bindings/g7c8p00/attempt0053/queue.jsonl",
+        "sha256": "b67913fefb1f2b86e95040bb9a03293ff92f4e02e5a8b89988569c8908fd9a7c"
+      },
+      {
+        "bytes": 8049,
+        "path": "/data/users/ali/vla_wam/raw/v4/g7-second-stack/.coord-bindings/g7c8p00/attempt0053/runtime_lock.json",
+        "sha256": "e57cd85bb9e9f534ac4036433abac7a462ff96d95779c4af07efbe9d87755cc7"
+      },
+      {
+        "bytes": 18147,
+        "path": "/data/users/ali/vla_wam/raw/v4/g7-second-stack/.coord-bindings/g7c8p00/attempt0053/campaign.json",
+        "sha256": "3594cedb3a440e5d944b37f709e25e41a98ed03dccc6bc4b7656a02f03440bee"
+      },
+      {
+        "bytes": 8040,
+        "path": "/data/users/ali/vla_wam/raw/v4/g7-second-stack/.coord-bindings/g7c8p00/attempt0053/run_online_correction_v4.py",
+        "sha256": "af01ac34727a6afa255bf5c079abf5dd62f8011a5051a4c9743eab05e719d86e"
+      }
+    ],
+    "policy_readiness": {
+      "health": {
+        "body": "OK",
+        "method": "GET",
+        "path": "/healthz",
+        "status": 200
+      },
+      "host": "v4-g7c8p00-attempt0053-4229813cc8-policy",
+      "mode": "http_healthz",
+      "port": 18200,
+      "service_identity": {
+        "immutable_identity_sha256": "4229813cc8e57afd82c8334b54aa7019ef348b63ac9735e281a9f268acfac692",
+        "namespace": "211247-prod",
+        "service_name": "v4-g7c8p00-attempt0053-4229813cc8-policy",
+        "spec_sha256": "46a9f41b7d8627a7fa03fbb49f53d3e89ad6477df57b901b214cebfd713d5d79",
+        "v4-attempt-id": "attempt0053",
+        "v4-config-sha": "4229813cc8e57afd82c8334b54aa7019",
+        "v4-lane-id": "g7c8p00",
+        "v4-lane-role": "policy"
+      }
+    },
+    "python_imports": {
+      "curobo_required": false,
+      "exact_imports": [
+        "simpler_env"
+      ],
+      "probe": {
+        "argv": [
+          "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/gr00t/eval/sim/SimplerEnv/simpler_uv/.venv/bin/python",
+          "-c",
+          "import importlib,json,pathlib,sys\nnames=json.loads(sys.argv[1])\nrows=[]\nfor name in names:\n m=importlib.import_module(name)\n raw=getattr(m,'__file__',None)\n rows.append({'module':name,'module_file':str(pathlib.Path(raw).resolve()) if raw else None,'version':str(getattr(m,'__version__','not_exposed'))})\nprint(json.dumps(rows,sort_keys=True))\n",
+          "[\"simpler_env\"]"
+        ],
+        "elapsed_seconds": 2.9517669630004093,
+        "returncode": 0,
+        "stderr_tail": "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/gr00t/eval/sim/SimplerEnv/simpler_uv/.venv/lib/python3.10/site-packages/sapien/core/renderer_config.py:4: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.\n  import pkg_resources\n",
+        "stdout_tail": "[{\"module\": \"simpler_env\", \"module_file\": \"/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/external_dependencies/SimplerEnv/simpler_env/__init__.py\", \"version\": \"not_exposed\"}]\n"
+      },
+      "python_bin": "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/gr00t/eval/sim/SimplerEnv/simpler_uv/.venv/bin/python",
+      "results": [
+        {
+          "module": "simpler_env",
+          "module_file": "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/external_dependencies/SimplerEnv/simpler_env/__init__.py",
+          "version": "not_exposed"
+        }
+      ]
+    },
+    "runtime_directories": {
+      "HOME": {
+        "path": "/lane-runtime/home",
+        "writable": true
+      },
+      "MPLCONFIGDIR": {
+        "path": "/lane-runtime/matplotlib",
+        "writable": true
+      },
+      "TMPDIR": {
+        "path": "/lane-runtime/tmp",
+        "writable": true
+      },
+      "WARP_CACHE_PATH": {
+        "path": "/lane-runtime/warp",
+        "writable": true
+      },
+      "XDG_CACHE_HOME": {
+        "path": "/lane-runtime/xdg/cache",
+        "writable": true
+      },
+      "XDG_CONFIG_HOME": {
+        "path": "/lane-runtime/xdg/config",
+        "writable": true
+      },
+      "XDG_RUNTIME_DIR": {
+        "path": "/lane-runtime/xdg/runtime",
+        "writable": true
+      }
+    },
+    "vulkan_and_rendered_frame": {
+      "reason": "embedded_in_policy_container uses policy-side SimplerEnv rendering",
+      "skipped": true
+    },
+    "writable_parent": {
+      "create_fsync_unlink": true,
+      "path": "/data/users/ali/vla_wam/raw/v4/g7-second-stack",
+      "writable_parent": true
+    }
+  },
+  "completed_at_utc": "2026-09-07T20:31:08.143497Z",
+  "created_at_utc": "2026-09-07T20:29:33.069013Z",
+  "effective_environment": {
+    "CUDA_VISIBLE_DEVICES": null,
+    "DISPLAY": "",
+    "FFMPEG_BIN": "/data/users/ali/vla_wam/envs/lingbot-va-b200/bin/ffmpeg",
+    "HOME": "/lane-runtime/home",
+    "LD_LIBRARY_PATH": "/data/users/ali/vla_wam/envs/groot-render-libs/lib:/usr/lib/x86_64-linux-gnu",
+    "LD_PRELOAD": "",
+    "MPLCONFIGDIR": "/lane-runtime/matplotlib",
+    "NVIDIA_DRIVER_CAPABILITIES": "compute,graphics,utility",
+    "NVIDIA_VISIBLE_DEVICES": "GPU-bbdbeaae-37a8-3420-0e95-36fbbf0e134f",
+    "OMNI_KIT_ACCEPT_EULA": "YES",
+    "PYTHONNOUSERSITE": "1",
+    "PYTHONPATH": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2:/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/external_dependencies/SimplerEnv",
+    "PYTHONUNBUFFERED": "1",
+    "PYTHON_BIN": "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/gr00t/eval/sim/SimplerEnv/simpler_uv/.venv/bin/python",
+    "TMPDIR": "/lane-runtime/tmp",
+    "VK_DRIVER_FILES": null,
+    "VK_ICD_FILENAMES": "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/external_dependencies/SimplerEnv/nvidia_icd.json",
+    "WARP_CACHE_PATH": "/lane-runtime/warp",
+    "XDG_CACHE_HOME": "/lane-runtime/xdg/cache",
+    "XDG_CONFIG_HOME": "/lane-runtime/xdg/config",
+    "XDG_RUNTIME_DIR": "/lane-runtime/xdg/runtime"
+  },
+  "episode_output_dir_precreated": false,
+  "gpu": {
+    "driver_version": "580.95.05",
+    "gpu_name": "NVIDIA A40",
+    "gpu_uuid": "GPU-bbdbeaae-37a8-3420-0e95-36fbbf0e134f"
+  },
+  "gpu_uuid": "GPU-bbdbeaae-37a8-3420-0e95-36fbbf0e134f",
+  "image_digest": "sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+  "lane_id": "g7c8p00",
+  "launch_config": {
+    "path": "/opt/v4-lane/config/simulator-launch.json",
+    "sha256": "b89462c59198d87f35ffc6df52873b866105e12145b517d6406654ac2117d010"
+  },
+  "output_parent": "/data/users/ali/vla_wam/raw/v4/g7-second-stack",
+  "passed": true,
+  "pid": 1,
+  "pod_identity": {
+    "pod_ip": "10.244.61.77",
+    "pod_name": "v4-g7c8p00-attempt0053-4229813cc8-sim-pqnv7",
+    "pod_namespace": "211247-prod",
+    "pod_uid": "f815f632-bebe-4be7-b57f-f4764ffcd800"
+  },
+  "role": "simulator",
+  "schema_version": "vla-wam-v4-k8s-lane-startup-preflight-v1",
+  "status": "passed_startup_preflight"
+}

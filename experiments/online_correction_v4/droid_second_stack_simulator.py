@@ -248,6 +248,9 @@ class LiveSecondStackBackend:
         return json.dumps(audit, sort_keys=True, separators=(",", ":")).encode("utf-8")
 
     def capture_viewport_frame(self) -> bytes | None:
+        import cv2
+        import numpy as np
+
         from experiments.online_correction_v4.second_stack import unwrap_simpler_env
 
         raw = unwrap_simpler_env(self.env)
@@ -256,6 +259,9 @@ class LiveSecondStackBackend:
             return None
         raw_observation = get_obs()
         color = raw_observation["image"]["3rd_view_camera"]["Color"]
+        array = np.asarray(color)
+        if array.ndim == 3 and array.shape[-1] == 4:
+            array = array[..., :3]
         if array.dtype != np.uint8:
             array = np.clip(array * 255.0, 0.0, 255.0).astype(np.uint8)
         encoded, _buffer = cv2.imencode(".png", cv2.cvtColor(array, cv2.COLOR_RGB2BGR))

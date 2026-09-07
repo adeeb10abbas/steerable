@@ -783,7 +783,7 @@ def run_preflight(
                 "image_digest": image_digest,
                 "pid": os.getpid(),
                 "argv": list(experiment_argv),
-                "checkpoint_sha256": checkpoint["checkpoint_sha256"],
+                "checkpoint_sha256": checkpoint.get("checkpoint_sha256"),
                 "preflight": {"path": str(report_path), "sha256": sha256_file(report_path)},
             },
         )

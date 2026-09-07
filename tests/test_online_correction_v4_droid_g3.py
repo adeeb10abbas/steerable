@@ -230,6 +230,24 @@ class DroidG3GeometryTests(unittest.TestCase):
             )
         )
 
+    def test_reference_binding_goal_regions_use_planar_relations(self) -> None:
+        scene = _scene()
+        scene["objects"]["cube"] = scene["objects"]["rubiks_cube"]
+        scene["objects"]["blue_bowl"] = scene["objects"]["bowl"]
+        geometry = geometry_from_scene_for_fixture(
+            fixture_id="reference_binding",
+            task_frame_evidence=FRAME,
+            scene_state=scene,
+            support_edge_margin_m=0.005,
+        )
+        goal = goal_set_for_reference(
+            geometry=geometry,
+            relation="left",
+            reference_position_world=(0.0, 0.0, 0.025),
+            clearance_m=0.01,
+        )
+        self.assertFalse(goal.empty)
+
     def test_vertical_goal_regions_bind_live_shelf_surfaces(self) -> None:
         scene = _scene()
         scene["objects"].update(

@@ -332,7 +332,7 @@ def goal_set_for_reference(
     if not math.isfinite(clearance_m) or clearance_m < 0:
         raise DroidG3Error("relation clearance must be finite and non-negative")
     fixture_id = geometry.get("fixture_id", "horizontal")
-    if fixture_id in {"horizontal", "object_pair"}:
+    if fixture_id in {"horizontal", "object_pair", "reference_binding"}:
         if relation not in {"left", "right", "front", "behind"}:
             raise DroidG3Error(f"unsupported planar relation: {relation!r}")
         spec = PlanarRelationSpec(

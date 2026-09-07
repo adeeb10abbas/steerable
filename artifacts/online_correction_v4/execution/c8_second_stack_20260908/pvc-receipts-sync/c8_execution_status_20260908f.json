@@ -1,0 +1,62 @@
+{
+  "schema_version": "v4-c8-execution-status-receipt-v1",
+  "observed_at_utc": "2026-09-08T04:00:00Z",
+  "confirmatory_ledger_compile_id": "20260908c",
+  "next_milestone_compile_at": 50,
+  "confirmatory_progress": {
+    "valid": 18,
+    "remaining": 750,
+    "total": 768,
+    "by_scenario": {
+      "original_sham": {"completed": 7, "no_grasp": 7, "transport_incomplete": 0, "grasp_achieved": 0},
+      "destination_static": {"completed": 5, "no_grasp": 4, "transport_incomplete": 1, "grasp_achieved": 1},
+      "move_stop": {"completed": 6, "no_grasp": 6, "transport_incomplete": 0, "grasp_achieved": 0}
+    },
+    "ordering_holds": "insufficient_coverage",
+    "ordering_note": "18/768; c8m14 joined c8m13 with 2 completing lanes—still insufficient for ordering test"
+  },
+  "wave_width": {
+    "parallel_scheduling_observed": "partial",
+    "parallel_note": "c8m14 produced first completes alongside c8m13; c8m00-12 and c8m16-19 still Pending",
+    "lanes_running": 3,
+    "lanes_blocked": 17,
+    "lanes_with_completes": 2,
+    "pods_running": 5,
+    "pods_pending": 35,
+    "serial_absorption_risk": true
+  },
+  "capacity_investigation_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_a40_reclaim_coordination_20260908a.json",
+  "regression_check": {
+    "serialization": "none through 16 valid",
+    "sampling_seed": "none",
+    "reset_registry_digest": "verified; no new mismatches"
+  },
+  "confirmatory_lanes_summary": {
+    "c8m13": {"completed": 16, "queued": 22, "state": "running"},
+    "c8m14": {"completed": 2, "queued": 36, "state": "running"},
+    "c8m15": {"completed": 0, "queued": 38, "state": "running"},
+    "c8m00_c8m12_c8m16_c8m19": {"completed": 0, "queued": 38, "state": "blocked", "count": 17}
+  },
+  "agent_c_hooks": {
+    "c8_confirmatory_ledger_compile_id": "20260908c",
+    "status_label": "confirmatory_in_progress_18_of_768_partial_parallel"
+  },
+  "blockers": [
+    {
+      "id": "a40_fragmentation_and_c7_stale",
+      "impact": "~20 A40 GPUs free per pool estimate but 35 C8 pods Pending; 10 C7 policy-running/sim-error mismatches + 41 Error pods",
+      "action": "Agent B + capacity agent reclaim stale C7 objects per c8_a40_reclaim_coordination_20260908a.json"
+    },
+    {
+      "id": "serial_absorption",
+      "impact": "Only c8m13 completing; c8m14/15 running without completes yet",
+      "action": "Monitor parallel schedule of c8m00-12 and c8m16-19 when slots consolidate"
+    },
+    {
+      "id": "ordering_not_testable",
+      "impact": "16/768 single-lane coverage",
+      "action": "Recompile at 50 and 100 milestones"
+    }
+  ],
+  "source_commit": "5635a38e"
+}

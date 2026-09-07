@@ -1,0 +1,44 @@
+{
+  "schema_version": "v4-c8-a40-reclaim-coordination-v1",
+  "observed_at_utc": "2026-09-08T04:00:00Z",
+  "requestor": "C8 Agent A",
+  "coordinate_with": ["Agent B (C7)", "capacity agent"],
+  "problem": "C8 confirmatory wave width stuck at 3 running lanes while 35/40 pods Pending despite A40 pool showing ~20 GPUs free",
+  "pool_snapshot": {
+    "A40_used_estimate": 20,
+    "A40_free_estimate": 20,
+    "A40_pool_size": 40,
+    "c7_sim_running": 18,
+    "c8_max_concurrent_lanes_per_capacity_matrix": 8,
+    "source": "enforce_v4_capacity_arbitration.py --mode normal --dry-run pool_utilization"
+  },
+  "c7_stale_evidence": {
+    "error_pods_total": 41,
+    "mismatched_lane_pairs_policy_running_sim_error": 10,
+    "mismatched_examples": [
+      "c7m01/attempt0583 policy=Running sim=Error",
+      "c7m01/attempt0589 policy=Running sim=Error",
+      "c7m02/attempt0584 policy=Running sim=Error",
+      "c7m05/attempt0591 policy=Running sim=Error",
+      "c7m31/attempt0586 policy=Running sim=Error"
+    ],
+    "note": "Orphaned Running C7 policy pods paired with Error sims may indicate reclaimable coordination waste; Agent B reported 27 stale Error pods—verify whether any still hold node bindings"
+  },
+  "c8_scheduling": {
+    "pending_pods": 35,
+    "running_pods": 5,
+    "running_lanes": ["c8m13", "c8m14", "c8m15"],
+    "lanes_with_behavioral_completes": ["c8m13"],
+    "parallel_scheduling_observed": false,
+    "failed_scheduling_reason": "Insufficient nvidia.com/gpu on A40 nodeSelector nodes (fragmentation across ~21 nodes)"
+  },
+  "requested_actions": [
+    "Agent B: delete or terminate stale C7 Error job/pod objects for superseded attempts, especially mismatched policy-running/sim-error pairs",
+    "Capacity agent: confirm A40 fragmentation vs true occupancy; authorize C8 confirmatory to use freed slots up to 20 lane pairs when C7 tail completes",
+    "C8: no redispatch; existing c8m00-c8m19 jobs remain queued and should parallelize when slots consolidate"
+  ],
+  "c8_will_not": [
+    "Delete C7 resources unilaterally",
+    "Use A100/B200 without new G4 receipts"
+  ]
+}

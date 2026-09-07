@@ -114,6 +114,28 @@ class C8SecondStackRunnerTests(unittest.TestCase):
         norm = (direction[0] ** 2 + direction[1] ** 2) ** 0.5
         self.assertAlmostEqual(norm, 1.0, places=5)
 
+    def test_second_stack_settle_probe_matches_reset_merge_contract(self) -> None:
+        from dataclasses import dataclass
+
+        from experiments.online_correction_v4.droid_second_stack_simulator import (
+            SecondStackSettleProbe,
+        )
+        from experiments.online_correction_v4.second_stack import REFERENCE_OBJECT
+
+        @dataclass
+        class _Backend:
+            kinematic_adapter: object = object()
+
+        probe = SecondStackSettleProbe(backend=_Backend())  # type: ignore[arg-type]
+        maxima = probe.sample_stability()
+        self.assertIn(REFERENCE_OBJECT, maxima)
+        row = maxima[REFERENCE_OBJECT]
+        self.assertIsInstance(row, dict)
+        self.assertIn("max_linear_component_speed_m_s", row)
+        self.assertIn("max_angular_component_speed_rad_s", row)
+        for value in maxima.values():
+            self.assertIsInstance(value, dict)
+
 
 if __name__ == "__main__":
     unittest.main()

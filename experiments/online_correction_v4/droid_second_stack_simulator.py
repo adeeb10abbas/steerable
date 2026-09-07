@@ -98,13 +98,13 @@ class SecondStackSettleProbe:
         return (0.0,) * 8
 
     def sample_stability(self) -> dict[str, Any]:
-        state = self.backend.kinematic_adapter.object_kinematic_state()
+        # Stability maxima must match the droid_reset merge contract: every value is a
+        # component-speed dict. Scalar telemetry belongs in physical_reset_payload.
         return {
             REFERENCE_OBJECT: {
                 "max_linear_component_speed_m_s": 0.0,
                 "max_angular_component_speed_rad_s": 0.0,
             },
-            "object_z_m": state.object_z_pos,
         }
 
     def physical_reset_payload(self) -> dict[str, Any]:

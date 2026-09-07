@@ -1,0 +1,60 @@
+{
+  "argv": [
+    "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/gr00t/eval/sim/SimplerEnv/simpler_uv/.venv/bin/python",
+    "/data/users/ali/vla_wam/raw/v4/g7-second-stack/.coord-bindings/g7c8p00/attempt0018/run_online_correction_v4_lane_dispatch.py",
+    "--dispatch-manifest",
+    "/data/users/ali/vla_wam/raw/v4/g7-second-stack/.coord-bindings/g7c8p00/attempt0018/lane_dispatch_manifest.json",
+    "--launch-config",
+    "/opt/v4-lane/config/simulator-launch.json"
+  ],
+  "attempt_id": "attempt0018",
+  "completed_at_utc": "2026-09-07T19:20:21.362270Z",
+  "created_at_utc": "2026-09-07T19:20:15.427326Z",
+  "effective_environment": {
+    "CUDA_VISIBLE_DEVICES": null,
+    "DISPLAY": "",
+    "FFMPEG_BIN": "/data/users/ali/vla_wam/envs/lingbot-va-b200/bin/ffmpeg",
+    "HOME": "/lane-runtime/home",
+    "LD_LIBRARY_PATH": "/data/users/ali/vla_wam/envs/groot-render-libs/lib:/usr/lib/x86_64-linux-gnu",
+    "LD_PRELOAD": "",
+    "MPLCONFIGDIR": "/lane-runtime/matplotlib",
+    "NVIDIA_DRIVER_CAPABILITIES": "compute,graphics,utility",
+    "NVIDIA_VISIBLE_DEVICES": "GPU-bbdbeaae-37a8-3420-0e95-36fbbf0e134f",
+    "OMNI_KIT_ACCEPT_EULA": "YES",
+    "PYTHONNOUSERSITE": "1",
+    "PYTHONPATH": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2:/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/external_dependencies/SimplerEnv",
+    "PYTHONUNBUFFERED": "1",
+    "PYTHON_BIN": "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/gr00t/eval/sim/SimplerEnv/simpler_uv/.venv/bin/python",
+    "TMPDIR": "/lane-runtime/tmp",
+    "VK_DRIVER_FILES": null,
+    "VK_ICD_FILENAMES": "/data/users/ali/vla_wam/external/Isaac-GR00T-51d4c89/external_dependencies/SimplerEnv/nvidia_icd.json",
+    "WARP_CACHE_PATH": "/lane-runtime/warp",
+    "XDG_CACHE_HOME": "/lane-runtime/xdg/cache",
+    "XDG_CONFIG_HOME": "/lane-runtime/xdg/config",
+    "XDG_RUNTIME_DIR": "/lane-runtime/xdg/runtime"
+  },
+  "episode_output_dir_precreated": false,
+  "error": {
+    "message": "launch config requires nonempty string 'vulkan_contract'",
+    "traceback": "Traceback (most recent call last):\n  File \"/opt/v4-lane/scripts/..2026_09_07_19_20_10.3416217558/startup_preflight.py\", line 666, in run_preflight\n    checks[\"vulkan_and_rendered_frame\"] = verify_vulkan_and_render(config, evidence_dir)\n  File \"/opt/v4-lane/scripts/..2026_09_07_19_20_10.3416217558/startup_preflight.py\", line 322, in verify_vulkan_and_render\n    contract = _require_string(config, \"vulkan_contract\")\n  File \"/opt/v4-lane/scripts/..2026_09_07_19_20_10.3416217558/startup_preflight.py\", line 112, in _require_string\n    raise PreflightError(f\"launch config requires nonempty string {key!r}\")\nstartup_preflight.PreflightError: launch config requires nonempty string 'vulkan_contract'\n",
+    "type": "PreflightError"
+  },
+  "image_digest": "sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c",
+  "lane_id": "g7c8p00",
+  "launch_config": {
+    "path": "/opt/v4-lane/config/simulator-launch.json",
+    "sha256": "3daed11d103e9b3db905eb35fb8f30bdc765ef59f1816abb10a13f8868a396c4"
+  },
+  "output_parent": "/data/users/ali/vla_wam/raw/v4/g7-second-stack",
+  "passed": false,
+  "pid": 1,
+  "pod_identity": {
+    "pod_ip": "10.244.61.119",
+    "pod_name": "v4-g7c8p00-attempt0018-4cf91d2af4-sim-m9hnt",
+    "pod_namespace": "211247-prod",
+    "pod_uid": "bacff69c-fa3d-4381-b5d2-788125ef9b01"
+  },
+  "role": "simulator",
+  "schema_version": "vla-wam-v4-k8s-lane-startup-preflight-v1",
+  "status": "infrastructure_invalid_startup_preflight"
+}

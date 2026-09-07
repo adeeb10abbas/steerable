@@ -15,6 +15,11 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from experiments.online_correction_v4.analysis import load_manifest  # noqa: E402
+from tools.v4_registered_export_helpers import (  # noqa: E402
+    build_coverage_metadata,
+    format_outcome_decomposition,
+    summarize_outcome_composition,
+)
 
 DEFAULT_CONFIG = ROOT / "docs/online_correction_v4/campaign.json"
 DEFAULT_MANIFEST = ROOT / "artifacts/online_correction_v4/queue.jsonl"
@@ -175,6 +180,8 @@ def main(argv: list[str] | None = None) -> int:
         default=ROOT / "artifacts/online_correction_v4/results/c7_partial",
     )
     parser.add_argument("--tag", type=str, default="latest")
+    parser.add_argument("--family", type=str, default="C7")
+    parser.add_argument("--ledger-compile-id", type=str, default=None)
     parser.add_argument(
         "--apply-trigger-wiring-reclassification",
         action="store_true",
@@ -197,10 +204,20 @@ def main(argv: list[str] | None = None) -> int:
     else:
         analysis_results = source_accepted_rows
     accepted_rows = source_accepted_rows
+    family = args.family
     scoped_manifest, scope_summary = build_scoped_manifest(
         queue_path=args.manifest.resolve(),
         accepted_rows=[] if apply_reclassification else accepted_rows,
+        family=family,
         allow_empty=apply_reclassification,
+    )
+    outcome_composition = (
+        {} if apply_reclassification else summarize_outcome_composition(source_accepted_rows)
+    )
+    export_coverage = build_coverage_metadata(
+        accepted=scope_summary["accepted_unique_episodes"],
+        planned=scope_summary["planned_family_episodes"],
+        compile_id=args.ledger_compile_id,
     )
     if apply_reclassification:
         scope_summary = {
@@ -403,6 +420,8 @@ def main(argv: list[str] | None = None) -> int:
                     ]
                 )
             memo["limitations"].extend(limitations)
+        memo["export_coverage"] = export_coverage
+        memo["outcome_composition"] = outcome_composition
         memo["intervention_trigger_positive_control"] = {
             "audit_path": str(GRASP_POSITIVE_CONTROL_AUDIT.relative_to(ROOT))
             if GRASP_POSITIVE_CONTROL_AUDIT.is_file()
@@ -439,15 +458,25 @@ def main(argv: list[str] | None = None) -> int:
             json.dumps(memo, indent=2, sort_keys=True) + "\n", encoding="utf-8"
         )
     blocked_path = out_root / "blocked_scope.json"
-    c7_status = (
-        "all 279 previously accepted episodes reclassified infrastructure-invalid under inoperative NaturalGraspDetector wiring; excluded from behavioral claims; raw PVC evidence preserved"
-        if apply_reclassification
-        else (
-            "partial export with timing-audit-backed genuine policy no-grasp on repaired-path confirmatory completes; 279 pre-repair episodes excluded"
-            if policy_no_grasp_settled
-            else "partial export only; preliminary — zero successes not a settled headline pending Agent B interface verification and live NaturalGraspDetector positive control"
+    decomposition_text = format_outcome_decomposition(outcome_composition)
+    if apply_reclassification:
+        family_status = (
+            "all 279 previously accepted episodes reclassified infrastructure-invalid under "
+            "inoperative NaturalGraspDetector wiring; excluded from behavioral claims; raw PVC "
+            "evidence preserved"
         )
-    )
+    elif policy_no_grasp_settled:
+        family_status = (
+            f"{export_coverage['export_status']} export ({export_coverage['coverage_label']}): "
+            f"timing-audit-backed policy failures on repaired-path confirmatory completes — "
+            f"{decomposition_text}; 279 pre-repair episodes excluded"
+        )
+    else:
+        family_status = (
+            f"{export_coverage['export_status']} export ({export_coverage['coverage_label']}) only; "
+            "preliminary — zero successes not a settled headline pending Agent B interface "
+            "verification and live NaturalGraspDetector positive control"
+        )
     blocked_payload = {
         "schema_version": "v4-c7-partial-blocked-scope-v2",
         "accepted_c7_episodes_behavioral": 0 if apply_reclassification else scope_summary["accepted_unique_episodes"],
@@ -506,7 +535,7 @@ def main(argv: list[str] | None = None) -> int:
             "C4": "scientifically blocked with C1/C3: horizontal information-gate failure on registered ladder",
             "C5": "scientifically blocked: vertical IK reachability finding at seed 2100020000 scale 0.5; receipt 20260908_vertical_natural_grasp_live_control_finding_g3ngp20260908vp8.json",
             "C6": "achievable (768 episodes); dispatch pending qualification completion",
-            "C7": c7_status,
+            family: family_status,
             "C8": (
                 "achievable (768 episodes); pilot G3 path gate passed 96/96 (g3c8p20260908f); "
                 "G7 confirmatory receipt passed (g7c8q20260908a); 24 pilot episodes, G8 rehearsal, "
@@ -598,6 +627,9 @@ def main(argv: list[str] | None = None) -> int:
     manifest = {
         "schema_version": "v4-c7-partial-results-manifest-v1",
         "tag": args.tag,
+        "family": family,
+        "export_coverage": export_coverage,
+        "outcome_composition": outcome_composition,
         "scope_summary": scope_summary,
         "accepted_ledger": {
             "path": str(results),

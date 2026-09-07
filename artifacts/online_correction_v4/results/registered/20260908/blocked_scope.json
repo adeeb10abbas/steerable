@@ -18,15 +18,28 @@
   ],
   "family_status": {
     "C6": {
+      "export_status": "awaiting_receipt",
+      "note": "Only fixture passing information gate on both translation-sign halves",
       "planned_episodes": 768,
       "status": "achievable; confirmatory dispatch in progress (Agent B)"
     },
     "C7": {
-      "accepted_ledger_rows": 541,
+      "accepted_valid_unique": 548,
+      "coverage_fraction": 0.713542,
+      "coverage_label": "548/768 (71.4%)",
+      "export_status": "partial",
+      "ledger_compile_id": "compiled_ledger_20260908k",
+      "missing_episodes": 220,
+      "outcome_composition": {
+        "no_grasp": 544,
+        "transport_incomplete": 4
+      },
       "planned_episodes": 768,
       "pre_repair_excluded": 279
     },
     "C8": {
+      "export_status": "awaiting_receipt",
+      "note": "Cross-platform check on GR00T Bridge / SimplerEnv stack",
       "planned_episodes": 768,
       "status": "achievable; G7 pilot dispatched; confirmatory after G8 (Agent A)"
     }
@@ -98,7 +111,7 @@
     "C4": "scientifically blocked with C1/C3: horizontal information-gate failure on registered ladder",
     "C5": "scientifically blocked: vertical IK reachability finding at seed 2100020000 scale 0.5; receipt 20260908_vertical_natural_grasp_live_control_finding_g3ngp20260908vp8.json",
     "C6": "achievable (768 episodes); dispatch pending qualification completion",
-    "C7": "partial export with timing-audit-backed genuine policy no-grasp on repaired-path confirmatory completes; 279 pre-repair episodes excluded",
+    "C7": "partial export (548/768 (71.4%)): timing-audit-backed policy failures on repaired-path confirmatory completes \u2014 544 no_grasp, 4 transport_incomplete; 279 pre-repair episodes excluded",
     "C8": "achievable (768 episodes); pilot G3 path gate passed 96/96 (g3c8p20260908f); G7 confirmatory receipt passed (g7c8q20260908a); 24 pilot episodes, G8 rehearsal, confirmatory runtime lock, and 768 dispatch blocked pending groot_bridge_widowx registration in launch_online_correction_v4.py (SUPPORTED_DROID_POLICIES) and second_stack live behavioral runner wiring"
   },
   "original_planned_policy_episodes": 17664,

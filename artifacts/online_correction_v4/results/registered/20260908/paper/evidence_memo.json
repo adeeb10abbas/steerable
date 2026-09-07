@@ -1,13 +1,58 @@
 {
   "c7_export": {
-    "accepted_ledger_sha256": "d348a47dfad11526aedd2ed6b882995b3879cfa690edef0050ddb408a785c195",
-    "accepted_valid_unique": 541,
+    "accepted_ledger_sha256": "b06bb811a7d682387d12cf491af9355b00363412642ba1795f1e0f2f41b37203",
+    "accepted_valid_unique": 548,
+    "export_coverage": {
+      "accepted_valid_unique": 548,
+      "coverage_fraction": 0.713542,
+      "coverage_label": "548/768 (71.4%)",
+      "export_status": "partial",
+      "ledger_compile_id": "compiled_ledger_20260908k",
+      "missing_episodes": 220,
+      "planned_episodes": 768
+    },
+    "outcome_composition": {
+      "no_grasp": 544,
+      "transport_incomplete": 4
+    },
     "tag": "20260908c7",
-    "valid_failure_records": 541,
+    "valid_failure_records": 548,
     "valid_success_records": 0
   },
+  "export_coverage": {
+    "C6": null,
+    "C7": {
+      "accepted_valid_unique": 548,
+      "coverage_fraction": 0.713542,
+      "coverage_label": "548/768 (71.4%)",
+      "export_status": "partial",
+      "ledger_compile_id": "compiled_ledger_20260908k",
+      "missing_episodes": 220,
+      "planned_episodes": 768
+    },
+    "C8": null
+  },
+  "export_status": "partial",
+  "family_exports": {
+    "C7": {
+      "export_coverage": {
+        "accepted_valid_unique": 548,
+        "coverage_fraction": 0.713542,
+        "coverage_label": "548/768 (71.4%)",
+        "export_status": "partial",
+        "ledger_compile_id": "compiled_ledger_20260908k",
+        "missing_episodes": 220,
+        "planned_episodes": 768
+      },
+      "outcome_composition": {
+        "no_grasp": 544,
+        "transport_incomplete": 4
+      },
+      "path": "artifacts/online_correction_v4/results/registered/20260908/families/C7/20260908c7"
+    }
+  },
   "frozen_analysis_manifest": "artifacts/online_correction_v4/frozen_analysis_manifest.json",
-  "headline": "Achievable confirmatory scope is 2,304 episodes; 15,360 blocked by registered fixture geometry with disclosed setup repairs and no criterion amendments",
+  "headline": "Partial registered export: achievable confirmatory scope is 2,304 episodes; 15,360 blocked by registered fixture geometry with disclosed setup repairs and no criterion amendments",
   "horizontal_slice": "artifacts/online_correction_v4/results/horizontal_geometry_repair_v2/20260908",
   "limitations": [
     "Blocked families carry qualification receipts only; no policy episodes were dispatched.",
@@ -23,6 +68,7 @@
   "paper_narrative": {
     "headline": "Geometry repair succeeded; registered fixture is scientifically blocked by a scale squeeze",
     "paragraphs": [
+      "**PARTIAL EXPORT** \u2014 C7 confirmatory coverage 548/768 (71.4%). This bundle is not the final 768/768 confirmatory result until Agent B's require-full-coverage compile lands.",
       "Registered campaign scope: 17,664 planned policy episodes; 2,304 achievable (C6, C7, C8 confirmatory families \u00d7 768); 15,360 scientifically blocked (C1/C3/C4 horizontal information-gate squeeze 9,728; C2 reference_binding information gate 4,096; C5 vertical IK reachability 768). No eligibility criterion, threshold, or scale ladder was amended to recover blocked scope.",
       "Three disclosed setup repairs bound this export: (1) NaturalGraspDetector trigger observation wiring now uses finger-contact coupling instead of robot-base pose; (2) eef_tool_length_m=0.14 flange-versus-fingerpad offset applied uniformly across Isaac fixtures; (3) second_stack SimplerEnv observation and sampling defect repaired with control-boundary sampling and provisioned render libraries.",
       "279 pre-repair C7 episodes are excluded from all behavioral claims; only a ledger compile against the confirmatory manifest separates repaired-path accepted rows from infrastructure-invalid pre-repair attempts.",
@@ -31,7 +77,7 @@
       "Scale 0.5 is the only ladder candidate with full physical path feasibility, but the homogeneous 128-seed wave fails the frozen 20% shrinking-area information gate on exactly 64/128 seeds\u2014all with physical_translation_sign=-1\u2014on right and behind goals. Removed-area fractions for those failing cases lie in 13.7\u201319.9%, just below threshold. All 64 sign=+1 seeds pass. Independent computation audit confirms correct gate math; this is not a sign-inversion bug.",
       "G2 infrastructure gate passed with complete 128-seed aggregate and axis review at pin c401fb4. A40 versus A100-80GB determinism attestation passed at seed 2100000000. G5 negative control (hold_only) passed; positive scripted-grasp control documents fixture-specific transport feasibility limits and remains blocked pending Agent B shared-path fix\u2014not a criterion change.",
       "Primary estimand for C1/C3/C4 (9,728 episodes) is not estimable under the registered fixture. C2 (4,096 episodes) remains separately blocked on reference_binding information-gate evidence. No criteria, thresholds, or ladder scales were amended.",
-      "C7 behavioral evidence under verified repaired NaturalGraspDetector timing: timing_audit_confirms_genuine_policy_no_grasp \u2014 policy_failure_under_correct_timing. Compiled ledger: 541 accepted valid, 0 successes, 541 valid failures.",
+      "C7 behavioral evidence under verified repaired NaturalGraspDetector timing: timing_audit_confirms_genuine_policy_no_grasp \u2014 policy_failure_under_correct_timing. Compiled ledger (compiled_ledger_20260908k): 548 accepted valid with outcome decomposition 544 no_grasp, 4 transport_incomplete.",
       "C2 primary reference-selectivity (H) remains not estimable; the homogeneous G3 gate finalized at 128/128 as a scientific block with computation-correct information-gate rejection (4096 episodes). C8 G7 engineering pilot is dispatched; confirmatory lock and 768-episode dispatch follow G8 and Agent A receipt handoff."
     ]
   },

@@ -14,9 +14,23 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from tools.v4_registered_export_helpers import (  # noqa: E402
+    build_coverage_metadata,
+    format_outcome_decomposition,
+    load_accepted_ledger_rows,
+    outcome_composition_rows,
+    summarize_outcome_composition,
+)
+
 DEFAULT_CONFIG = ROOT / "docs/online_correction_v4/campaign.json"
 DEFAULT_C7_MANIFEST = (
     ROOT / "artifacts/online_correction_v4/setup/c7_confirmatory/queue.frozen.jsonl"
+)
+DEFAULT_C6_MANIFEST = (
+    ROOT / "artifacts/online_correction_v4/setup/c6_confirmatory/queue.frozen.jsonl"
+)
+DEFAULT_C8_MANIFEST = (
+    ROOT / "artifacts/online_correction_v4/setup/c8_confirmatory/queue.frozen.jsonl"
 )
 HORIZONTAL_SLICE = (
     ROOT / "artifacts/online_correction_v4/results/horizontal_geometry_repair_v2/20260908"
@@ -63,8 +77,10 @@ def build_campaign_blocked_scope(
     c7_blocked_scope: dict,
     horizontal_blocked_scope: dict,
     horizontal_evidence_memo: dict,
-    c7_ledger_rows: int,
-    c7_planned: int,
+    c7_coverage: dict,
+    c7_outcome_composition: dict[str, int],
+    c6_coverage: dict | None = None,
+    c8_coverage: dict | None = None,
 ) -> dict:
     campaign = dict(c7_blocked_scope.get("campaign_scope_revision") or {})
     horizontal_finding = horizontal_blocked_scope.get("scientific_finding") or {}
@@ -102,17 +118,23 @@ def build_campaign_blocked_scope(
         "horizontal_scale_squeeze": campaign.get("horizontal_scale_squeeze"),
         "family_status": {
             "C7": {
-                "accepted_ledger_rows": c7_ledger_rows,
-                "planned_episodes": c7_planned,
+                **c7_coverage,
+                "outcome_composition": c7_outcome_composition,
                 "pre_repair_excluded": campaign.get("pre_repair_c7_excluded_episodes", 279),
             },
-            "C6": {
+            "C6": c6_coverage
+            or {
                 "planned_episodes": 768,
+                "export_status": "awaiting_receipt",
                 "status": "achievable; confirmatory dispatch in progress (Agent B)",
+                "note": "Only fixture passing information gate on both translation-sign halves",
             },
-            "C8": {
+            "C8": c8_coverage
+            or {
                 "planned_episodes": 768,
+                "export_status": "awaiting_receipt",
                 "status": "achievable; G7 pilot dispatched; confirmatory after G8 (Agent A)",
+                "note": "Cross-platform check on GR00T Bridge / SimplerEnv stack",
             },
         },
         "not_estimable_or_blocked": not_estimable,
@@ -131,13 +153,18 @@ def build_campaign_tables(
     campaign_blocked: dict,
     c7_audit: dict,
     c7_primary_rows: list[dict],
+    c7_outcome_composition: dict[str, int],
+    c7_coverage: dict,
+    campaign_export_status: str,
 ) -> dict[str, list[dict]]:
     validation = c7_audit.get("validation") or {}
     scope_summary = [
+        {"metric": "campaign_export_status", "value": campaign_export_status},
         {"metric": "original_planned_policy_episodes", "value": campaign_blocked.get("original_planned_policy_episodes", 17664)},
         {"metric": "achievable_policy_episodes", "value": campaign_blocked.get("achievable_policy_episodes", 2304)},
         {"metric": "scientifically_blocked_episodes", "value": campaign_blocked.get("scientifically_blocked_episodes", 15360)},
         {"metric": "pre_repair_c7_excluded_episodes", "value": campaign_blocked.get("pre_repair_c7_excluded_episodes", 279)},
+        {"metric": "c7_coverage_label", "value": c7_coverage.get("coverage_label")},
         {"metric": "c7_accepted_valid_unique", "value": validation.get("accepted_unique")},
         {"metric": "c7_valid_success_records", "value": validation.get("valid_success_records")},
         {"metric": "c7_valid_failure_records", "value": validation.get("valid_failure_records")},
@@ -176,10 +203,11 @@ def build_campaign_tables(
         "blocked_families.csv": blocked_families,
         "scale_ladder_squeeze.csv": squeeze_rows,
         "campaign_primary_results.csv": estimand_status,
+        "c7_outcome_composition.csv": outcome_composition_rows(c7_outcome_composition),
     }
 
 
-def render_campaign_scope_figure(*, rows: list[dict], out_path: Path) -> None:
+def render_campaign_scope_figure(*, rows: list[dict], out_path: Path, export_status: str) -> None:
     planned = next((row["value"] for row in rows if row["metric"] == "original_planned_policy_episodes"), 17664)
     achievable = next((row["value"] for row in rows if row["metric"] == "achievable_policy_episodes"), 2304)
     blocked = next((row["value"] for row in rows if row["metric"] == "scientifically_blocked_episodes"), 15360)
@@ -200,10 +228,11 @@ def render_campaign_scope_figure(*, rows: list[dict], out_path: Path) -> None:
         parts.append(f'<rect x="{x}" y="{y0}" width="{seg_w}" height="{bar_h}" fill="{color}" />')
         parts.append(f'<text x="{x + 4}" y="{y0 + 22}" font-size="12" fill="#111">{label}: {value}</text>')
         x += seg_w
+    c7_coverage_label = next((row["value"] for row in rows if row["metric"] == "c7_coverage_label"), "n/a")
     svg = (
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">'
         f'<text x="20" y="28" font-size="16" font-weight="600">V4 registered campaign scope</text>'
-        f'<text x="20" y="52" font-size="12" fill="#444">Planned policy episodes: {planned}</text>'
+        f'<text x="20" y="52" font-size="12" fill="#444">Planned policy episodes: {planned}; export: {export_status.upper()}; C7 {c7_coverage_label}</text>'
         + "".join(parts)
         + "</svg>\n"
     )
@@ -217,11 +246,19 @@ def build_campaign_evidence_memo(
     horizontal_memo: dict,
     c7_export_manifest: dict,
     c7_audit: dict,
+    c7_coverage: dict,
+    c7_outcome_composition: dict[str, int],
+    campaign_export_status: str,
+    family_exports: dict[str, dict],
 ) -> dict:
     horizontal_narrative = horizontal_memo.get("paper_narrative") or {}
     paragraphs = list(horizontal_narrative.get("paragraphs") or [])
     validation = c7_audit.get("validation") or {}
+    decomposition_text = format_outcome_decomposition(c7_outcome_composition)
     campaign_paragraphs = [
+        f"**{campaign_export_status.upper()} EXPORT** — C7 confirmatory coverage "
+        f"{c7_coverage['coverage_label']}. This bundle is not the final 768/768 "
+        "confirmatory result until Agent B's require-full-coverage compile lands.",
         "Registered campaign scope: 17,664 planned policy episodes; 2,304 achievable "
         "(C6, C7, C8 confirmatory families × 768); 15,360 scientifically blocked "
         "(C1/C3/C4 horizontal information-gate squeeze 9,728; C2 reference_binding "
@@ -242,9 +279,9 @@ def build_campaign_evidence_memo(
             "C7 behavioral evidence under verified repaired NaturalGraspDetector timing: "
             f"{c7_memo['intervention_trigger_positive_control'].get('status')} — "
             f"{c7_memo['intervention_trigger_positive_control'].get('finding')}. "
-            f"Compiled ledger: {validation.get('accepted_unique', 'n/a')} accepted valid, "
-            f"{validation.get('valid_success_records', 0)} successes, "
-            f"{validation.get('valid_failure_records', 0)} valid failures."
+            f"Compiled ledger ({c7_coverage.get('ledger_compile_id', 'n/a')}): "
+            f"{validation.get('accepted_unique', 'n/a')} accepted valid with outcome decomposition "
+            f"{decomposition_text}."
         )
     campaign_paragraphs.append(
         "C2 primary reference-selectivity (H) remains not estimable; the homogeneous G3 gate "
@@ -254,10 +291,17 @@ def build_campaign_evidence_memo(
     )
     return {
         "schema_version": "v4-registered-campaign-evidence-memo-v1",
+        "export_status": campaign_export_status,
+        "export_coverage": {
+            "C7": c7_coverage,
+            "C6": family_exports.get("C6", {}).get("export_coverage"),
+            "C8": family_exports.get("C8", {}).get("export_coverage"),
+        },
         "frozen_analysis_manifest": str(FROZEN_ANALYSIS.relative_to(ROOT)),
         "headline": (
-            "Achievable confirmatory scope is 2,304 episodes; 15,360 blocked by registered "
-            "fixture geometry with disclosed setup repairs and no criterion amendments"
+            f"{campaign_export_status.title()} registered export: achievable confirmatory scope "
+            "is 2,304 episodes; 15,360 blocked by registered fixture geometry with disclosed "
+            "setup repairs and no criterion amendments"
         ),
         "paper_narrative": {
             "headline": horizontal_narrative.get("headline"),
@@ -269,6 +313,16 @@ def build_campaign_evidence_memo(
             "accepted_valid_unique": validation.get("accepted_unique"),
             "valid_success_records": validation.get("valid_success_records"),
             "valid_failure_records": validation.get("valid_failure_records"),
+            "outcome_composition": c7_outcome_composition,
+            "export_coverage": c7_coverage,
+        },
+        "family_exports": {
+            family: {
+                "path": payload.get("path"),
+                "export_coverage": payload.get("export_coverage"),
+                "outcome_composition": payload.get("outcome_composition"),
+            }
+            for family, payload in family_exports.items()
         },
         "horizontal_slice": str(HORIZONTAL_SLICE.relative_to(ROOT)),
         "limitations": [
@@ -285,10 +339,66 @@ def build_campaign_evidence_memo(
     }
 
 
+def export_family(
+    *,
+    family: str,
+    ledger: Path,
+    manifest: Path,
+    config: Path,
+    out_root: Path,
+    tag: str,
+    compile_id: str | None,
+) -> dict:
+    family_out = out_root / "families" / family
+    subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "tools/run_v4_c7_partial_analysis_export.py"),
+            "--results",
+            str(ledger),
+            "--manifest",
+            str(manifest),
+            "--config",
+            str(config),
+            "--out",
+            str(family_out),
+            "--tag",
+            tag,
+            "--family",
+            family,
+            *(["--ledger-compile-id", compile_id] if compile_id else []),
+        ],
+        check=True,
+        cwd=ROOT,
+    )
+    export_manifest = load_json(family_out / tag / "results_export_manifest.json")
+    return {
+        "path": str((family_out / tag).relative_to(ROOT)),
+        "manifest_sha256": sha256_file(family_out / tag / "results_export_manifest.json"),
+        "export_manifest": export_manifest,
+        "blocked_scope": load_json(family_out / tag / "blocked_scope.json"),
+        "memo": load_json(family_out / tag / "paper" / "evidence_memo.json")
+        if (family_out / tag / "paper" / "evidence_memo.json").is_file()
+        else {},
+        "audit": load_json(family_out / tag / "tables" / "audit_report.json")
+        if (family_out / tag / "tables" / "audit_report.json").is_file()
+        else {},
+        "export_coverage": export_manifest.get("export_coverage") or {},
+        "outcome_composition": export_manifest.get("outcome_composition") or {},
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--c7-ledger", type=Path, required=True)
     parser.add_argument("--c7-manifest", type=Path, default=DEFAULT_C7_MANIFEST)
+    parser.add_argument("--c7-ledger-compile-id", type=str, default=None)
+    parser.add_argument("--c6-ledger", type=Path, default=None)
+    parser.add_argument("--c6-manifest", type=Path, default=DEFAULT_C6_MANIFEST)
+    parser.add_argument("--c6-ledger-compile-id", type=str, default=None)
+    parser.add_argument("--c8-ledger", type=Path, default=None)
+    parser.add_argument("--c8-manifest", type=Path, default=DEFAULT_C8_MANIFEST)
+    parser.add_argument("--c8-ledger-compile-id", type=str, default=None)
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
     parser.add_argument(
         "--out",
@@ -310,50 +420,85 @@ def main(argv: list[str] | None = None) -> int:
     out_root.mkdir(parents=True)
 
     c7_tag = f"{args.tag}c7"
-    c7_out = out_root / "families" / "C7"
-    subprocess.run(
-        [
-            sys.executable,
-            str(ROOT / "tools/run_v4_c7_partial_analysis_export.py"),
-            "--results",
-            str(c7_ledger),
-            "--manifest",
-            str(args.c7_manifest.resolve()),
-            "--config",
-            str(args.config.resolve()),
-            "--out",
-            str(c7_out),
-            "--tag",
-            c7_tag,
-        ],
-        check=True,
-        cwd=ROOT,
+    c7_payload = export_family(
+        family="C7",
+        ledger=c7_ledger,
+        manifest=args.c7_manifest.resolve(),
+        config=args.config.resolve(),
+        out_root=out_root,
+        tag=c7_tag,
+        compile_id=args.c7_ledger_compile_id,
     )
-
-    c7_export_manifest = load_json(c7_out / c7_tag / "results_export_manifest.json")
-    c7_blocked_scope = load_json(c7_out / c7_tag / "blocked_scope.json")
-    c7_memo_path = c7_out / c7_tag / "paper" / "evidence_memo.json"
-    c7_memo = load_json(c7_memo_path) if c7_memo_path.is_file() else {}
-    c7_audit_path = c7_out / c7_tag / "tables" / "audit_report.json"
-    c7_audit = load_json(c7_audit_path) if c7_audit_path.is_file() else {}
-    c7_primary_path = c7_out / c7_tag / "tables" / "primary_results.csv"
+    c7_export_manifest = c7_payload["export_manifest"]
+    c7_blocked_scope = c7_payload["blocked_scope"]
+    c7_memo = c7_payload["memo"]
+    c7_audit = c7_payload["audit"]
+    c7_primary_path = out_root / "families" / "C7" / c7_tag / "tables" / "primary_results.csv"
     c7_primary_rows: list[dict] = []
     if c7_primary_path.is_file():
         with c7_primary_path.open(encoding="utf-8", newline="") as handle:
             c7_primary_rows = list(csv.DictReader(handle))
 
+    family_exports: dict[str, dict] = {"C7": c7_payload}
+    c6_coverage = None
+    c8_coverage = None
+    optional_families = (
+        ("C6", args.c6_ledger, args.c6_manifest, args.c6_ledger_compile_id),
+        ("C8", args.c8_ledger, args.c8_manifest, args.c8_ledger_compile_id),
+    )
+    for family, ledger_arg, manifest_arg, compile_id in optional_families:
+        if ledger_arg is None:
+            continue
+        ledger = ledger_arg.resolve()
+        manifest = manifest_arg.resolve()
+        if not ledger.is_file():
+            raise SystemExit(f"missing {family} accepted ledger: {ledger}")
+        if not manifest.is_file():
+            raise SystemExit(f"missing {family} manifest: {manifest}")
+        tag = f"{args.tag}{family.lower()}"
+        payload = export_family(
+            family=family,
+            ledger=ledger,
+            manifest=manifest,
+            config=args.config.resolve(),
+            out_root=out_root,
+            tag=tag,
+            compile_id=compile_id,
+        )
+        family_exports[family] = payload
+        if family == "C6":
+            c6_coverage = payload["export_coverage"]
+        if family == "C8":
+            c8_coverage = payload["export_coverage"]
+
     horizontal_blocked = load_json(HORIZONTAL_SLICE / "blocked_scope.json")
     horizontal_memo = load_json(HORIZONTAL_SLICE / "paper" / "evidence_memo.json")
 
-    c7_rows = sum(1 for line in c7_ledger.read_text(encoding="utf-8").splitlines() if line.strip())
+    c7_rows = len(load_accepted_ledger_rows(c7_ledger))
     c7_planned = int(c7_blocked_scope.get("planned_c7_episodes") or 768)
+    c7_coverage = c7_payload["export_coverage"] or build_coverage_metadata(
+        accepted=c7_rows,
+        planned=c7_planned,
+        compile_id=args.c7_ledger_compile_id,
+    )
+    c7_outcome_composition = c7_payload["outcome_composition"] or summarize_outcome_composition(
+        load_accepted_ledger_rows(c7_ledger)
+    )
+    campaign_export_status = "complete" if c7_coverage.get("export_status") == "complete" else "partial"
+    if any(
+        (payload.get("export_coverage") or {}).get("export_status") == "partial"
+        for payload in family_exports.values()
+    ):
+        campaign_export_status = "partial"
 
     campaign_blocked = build_campaign_blocked_scope(
         c7_blocked_scope=c7_blocked_scope,
         horizontal_blocked_scope=horizontal_blocked,
         horizontal_evidence_memo=horizontal_memo,
-        c7_ledger_rows=c7_rows,
-        c7_planned=c7_planned,
+        c7_coverage=c7_coverage,
+        c7_outcome_composition=c7_outcome_composition,
+        c6_coverage=c6_coverage,
+        c8_coverage=c8_coverage,
     )
     blocked_path = out_root / "blocked_scope.json"
     blocked_path.write_text(json.dumps(campaign_blocked, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -363,6 +508,10 @@ def main(argv: list[str] | None = None) -> int:
         horizontal_memo=horizontal_memo,
         c7_export_manifest=c7_export_manifest,
         c7_audit=c7_audit,
+        c7_coverage=c7_coverage,
+        c7_outcome_composition=c7_outcome_composition,
+        campaign_export_status=campaign_export_status,
+        family_exports=family_exports,
     )
     paper_dir = out_root / "paper"
     paper_dir.mkdir(parents=True, exist_ok=True)
@@ -374,6 +523,9 @@ def main(argv: list[str] | None = None) -> int:
         campaign_blocked=campaign_blocked,
         c7_audit=c7_audit,
         c7_primary_rows=c7_primary_rows,
+        c7_outcome_composition=c7_outcome_composition,
+        c7_coverage=c7_coverage,
+        campaign_export_status=campaign_export_status,
     )
     table_artifacts: dict[str, dict] = {}
     for name, rows in campaign_tables.items():
@@ -383,10 +535,17 @@ def main(argv: list[str] | None = None) -> int:
 
     audit_report = {
         "schema_version": "v4-registered-campaign-audit-v1",
+        "export_status": campaign_export_status,
+        "export_coverage": {
+            family: payload.get("export_coverage")
+            for family, payload in family_exports.items()
+        },
         "frozen_analysis_manifest": str(FROZEN_ANALYSIS.relative_to(ROOT)),
         "c7_family_audit": c7_audit,
         "ledger_rows_compiled": c7_rows,
-        "ledger_source": str(c7_ledger.relative_to(ROOT)),
+        "ledger_source": str(c7_ledger),
+        "ledger_compile_id": args.c7_ledger_compile_id,
+        "outcome_composition": c7_outcome_composition,
         "pvc_complete_note": (
             "Ledger compile against confirmatory manifest is required to separate "
             "279 pre-repair infrastructure-invalid C7 episodes from repaired-path rows."
@@ -398,12 +557,17 @@ def main(argv: list[str] | None = None) -> int:
 
     figures_dir = out_root / "figures"
     scope_figure = figures_dir / "campaign_scope.svg"
-    render_campaign_scope_figure(rows=campaign_tables["scope_summary.csv"], out_path=scope_figure)
+    render_campaign_scope_figure(
+        rows=campaign_tables["scope_summary.csv"],
+        out_path=scope_figure,
+        export_status=campaign_export_status,
+    )
     figures_manifest_path = figures_dir / "figures_manifest.json"
     figures_manifest = {
         "schema_version": "v4-registered-campaign-figures-v1",
+        "export_status": campaign_export_status,
         "campaign_scope": artifact(scope_figure),
-        "c7_family_figures": str((c7_out / c7_tag / "figures").relative_to(ROOT)),
+        "c7_family_figures": str((out_root / "families" / "C7" / c7_tag / "figures").relative_to(ROOT)),
     }
     figures_manifest_path.write_text(json.dumps(figures_manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
@@ -411,20 +575,45 @@ def main(argv: list[str] | None = None) -> int:
     results_manifest = {
         "schema_version": "v4-registered-campaign-results-manifest-v1",
         "tag": args.tag,
+        "export_status": campaign_export_status,
+        "export_coverage": {
+            family: payload.get("export_coverage")
+            for family, payload in family_exports.items()
+        },
         "tables": table_artifacts,
         "figures_manifest": artifact(figures_manifest_path),
-        "c7_family_tables": str((c7_out / c7_tag / "tables").relative_to(ROOT)),
+        "family_tables": {
+            family: f"{payload['path']}/tables"
+            for family, payload in family_exports.items()
+        },
     }
     results_manifest_path.write_text(json.dumps(results_manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
+    status_banner = (
+        f"> **{campaign_export_status.upper()} EXPORT** — C7 coverage {c7_coverage['coverage_label']}. "
+        "Not the final 768/768 confirmatory result.\n\n"
+        if campaign_export_status == "partial"
+        else ""
+    )
     results_stub = paper_dir / "RESULTS.md"
     results_stub.write_text(
         "# V4 registered campaign results\n\n"
+        + status_banner
         + "\n\n".join(campaign_memo["paper_narrative"]["paragraphs"])
         + "\n\n## Campaign tables and figures\n\n"
         + f"- Tables: `{tables_dir.relative_to(ROOT)}/`\n"
         + f"- Figures: `{figures_dir.relative_to(ROOT)}/`\n"
-        + f"- C7 family export: `families/C7/{c7_tag}/`\n"
+        + f"- C7 family export: `{c7_payload['path']}/`\n"
+        + (
+            f"- C6 family export: `{family_exports['C6']['path']}/`\n"
+            if "C6" in family_exports
+            else "- C6 family export: awaiting Agent B confirmatory ledger receipt\n"
+        )
+        + (
+            f"- C8 family export: `{family_exports['C8']['path']}/`\n"
+            if "C8" in family_exports
+            else "- C8 family export: awaiting Agent A confirmatory ledger receipt\n"
+        )
         + f"- Horizontal squeeze slice: `{HORIZONTAL_SLICE.relative_to(ROOT)}/`\n",
         encoding="utf-8",
     )
@@ -433,10 +622,19 @@ def main(argv: list[str] | None = None) -> int:
     manifest = {
         "schema_version": "v4-registered-campaign-export-manifest-v1",
         "tag": args.tag,
+        "export_status": campaign_export_status,
+        "export_coverage": {
+            family: payload.get("export_coverage")
+            for family, payload in family_exports.items()
+        },
+        "outcome_composition": {"C7": c7_outcome_composition},
         "output_root": str(out_root.relative_to(ROOT)),
-        "c7_family_export": {
-            "path": str((c7_out / c7_tag).relative_to(ROOT)),
-            "manifest_sha256": sha256_file(c7_out / c7_tag / "results_export_manifest.json"),
+        "family_exports": {
+            family: {
+                "path": payload["path"],
+                "manifest_sha256": payload["manifest_sha256"],
+            }
+            for family, payload in family_exports.items()
         },
         "horizontal_slice": str(HORIZONTAL_SLICE.relative_to(ROOT)),
         "blocked_scope": artifact(blocked_path),

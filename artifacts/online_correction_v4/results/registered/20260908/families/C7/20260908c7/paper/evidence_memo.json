@@ -5,18 +5,27 @@
   },
   "bootstrap_resamples": 10000,
   "coverage": {
-    "accepted_valid_unique": 541,
+    "accepted_valid_unique": 548,
     "by_family": {
       "C7": {
-        "accepted_valid": 541,
-        "planned": 541
+        "accepted_valid": 548,
+        "planned": 548
       }
     },
     "missing_valid": 0,
-    "planned_episodes": 541,
+    "planned_episodes": 548,
     "status_counts": {
-      "valid": 541
+      "valid": 548
     }
+  },
+  "export_coverage": {
+    "accepted_valid_unique": 548,
+    "coverage_fraction": 0.713542,
+    "coverage_label": "548/768 (71.4%)",
+    "export_status": "partial",
+    "ledger_compile_id": "compiled_ledger_20260908k",
+    "missing_episodes": 220,
+    "planned_episodes": 768
   },
   "intervention_trigger_positive_control": {
     "audit_path": "artifacts/online_correction_v4/qualification/20260908_c7_grasp_detector_positive_control_audit.json",
@@ -37,6 +46,10 @@
     "Agent B timing audit confirms repaired-path confirmatory episodes run the full 61.0 s simulation window with grasp_eligible false on every control tick; zero successes reflect genuine policy no-grasp under registered timing, not episode-budget truncation.",
     "C2 and C8 full policy dispatches (4096 and 768 episodes) remain blocked until their respective qualification gates complete."
   ],
+  "outcome_composition": {
+    "no_grasp": 544,
+    "transport_incomplete": 4
+  },
   "primary_results": [
     {
       "bootstrap_resamples": 10000,

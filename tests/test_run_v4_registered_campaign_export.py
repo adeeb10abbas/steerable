@@ -7,6 +7,7 @@ from tools.run_v4_registered_campaign_export import (
     build_campaign_tables,
     render_campaign_scope_figure,
 )
+from tools.v4_registered_export_helpers import build_coverage_metadata
 
 
 def test_build_campaign_blocked_scope_includes_horizontal_squeeze() -> None:
@@ -32,8 +33,8 @@ def test_build_campaign_blocked_scope_includes_horizontal_squeeze() -> None:
             }
         },
         horizontal_evidence_memo={},
-        c7_ledger_rows=541,
-        c7_planned=768,
+        c7_coverage=build_coverage_metadata(accepted=548, planned=768, compile_id="20260908k"),
+        c7_outcome_composition={"no_grasp": 544, "transport_incomplete": 4},
     )
     assert payload["scientifically_blocked_episodes"] == 15360
     assert payload["pre_repair_c7_excluded_episodes"] == 279
@@ -60,12 +61,19 @@ def test_build_campaign_tables_and_figure(tmp_path) -> None:
     }
     tables = build_campaign_tables(
         campaign_blocked=campaign_blocked,
-        c7_audit={"validation": {"accepted_unique": 541, "valid_success_records": 0, "valid_failure_records": 541}},
+        c7_audit={"validation": {"accepted_unique": 548, "valid_success_records": 0, "valid_failure_records": 548}},
         c7_primary_rows=[{"estimand_id": "H1", "status": "not_estimable"}],
+        c7_outcome_composition={"no_grasp": 544, "transport_incomplete": 4},
+        c7_coverage=build_coverage_metadata(accepted=548, planned=768, compile_id="20260908k"),
+        campaign_export_status="partial",
     )
-    assert len(tables["scope_summary.csv"]) == 8
+    assert len(tables["scope_summary.csv"]) == 10
+    assert tables["c7_outcome_composition.csv"] == [
+        {"failure_label": "no_grasp", "count": 544},
+        {"failure_label": "transport_incomplete", "count": 4},
+    ]
     assert tables["blocked_families.csv"][0]["blocked_episodes"] == 9728
     figure_path = tmp_path / "campaign_scope.svg"
-    render_campaign_scope_figure(rows=tables["scope_summary.csv"], out_path=figure_path)
+    render_campaign_scope_figure(rows=tables["scope_summary.csv"], out_path=figure_path, export_status="partial")
     assert figure_path.is_file()
     assert "V4 registered campaign scope" in figure_path.read_text(encoding="utf-8")

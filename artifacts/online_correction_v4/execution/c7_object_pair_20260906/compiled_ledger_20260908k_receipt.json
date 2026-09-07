@@ -1,0 +1,27 @@
+{
+  "schema_version": "v4-c7-compiled-ledger-receipt-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "object_pair_c7",
+  "compiled_at_utc": "2026-09-07T20:26:00Z",
+  "pvc_output_root": "/data/users/ali/vla_wam/raw/v4/c7-object-pair-main/compiled_ledger_20260908k",
+  "manifest_scope": "768 C7 confirmatory episodes (queue.frozen.jsonl)",
+  "accepted_row_count": 548,
+  "accepted_ledger_sha256": "b06bb811a7d682387d12cf491af9355b00363412642ba1795f1e0f2f41b37203",
+  "planned_episodes": 768,
+  "missing_valid": 220,
+  "pre_repair_excluded_episodes": 279,
+  "outcome_composition": {
+    "no_grasp": 544,
+    "transport_incomplete": 4,
+    "success": 0,
+    "wrong_placement": 0
+  },
+  "reconciliation_note": "Authoritative partial compile from Agent B; ledger compile against confirmatory manifest deduplicates to latest verified valid attempt per episode_id and separates 279 pre-repair infrastructure-invalid episodes from repaired-path accepted rows.",
+  "ledger_paths": {
+    "accepted_ledger": "compiled_ledger_20260908k/accepted_ledger.jsonl",
+    "accepted_ledger_manifest": "compiled_ledger_20260908k/accepted_ledger_manifest.json",
+    "rejected_attempts": "compiled_ledger_20260908k/rejected_attempts.jsonl"
+  },
+  "status": "partial_in_progress",
+  "supersedes": "compiled_ledger_20260908i_receipt.json"
+}

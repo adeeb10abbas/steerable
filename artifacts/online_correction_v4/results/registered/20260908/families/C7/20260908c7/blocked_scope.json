@@ -1,5 +1,5 @@
 {
-  "accepted_c7_episodes_behavioral": 541,
+  "accepted_c7_episodes_behavioral": 548,
   "campaign_scope_revision": {
     "achievable_breakdown": {
       "C6": 768,
@@ -46,7 +46,7 @@
     "scripted_grasp_stages_passed": true,
     "status": "timing_audit_confirms_genuine_policy_no_grasp"
   },
-  "missing_c7_episodes": 227,
+  "missing_c7_episodes": 220,
   "not_estimable_or_blocked": {
     "C1": "scientifically blocked with C3/C4: horizontal G3 information-gate rejection across full registered ladder at scale 0.5 (64/128 seeds fail right/behind for physical_translation_sign=-1); receipt 20260908_horizontal_g3_gate_decision_g3r20260908g.json",
     "C2": "scientifically blocked: homogeneous G3 gate g3rb20260908v failed shrinking-area information gate at confirmatory scale 0.5 (96/128 seeds fail); sign=-1 0/64 pass and sign=+1 32/64 fail; front goal passes 128/128 case checks; behind fails 63/128; all 3072 path checks pass; computation audit confirmed correct gate math; primary estimand not estimable; 4096 confirmatory episodes blocked; no criterion was adjusted to recover blocked scope",
@@ -54,7 +54,7 @@
     "C4": "scientifically blocked with C1/C3: horizontal information-gate failure on registered ladder",
     "C5": "scientifically blocked: vertical IK reachability finding at seed 2100020000 scale 0.5; receipt 20260908_vertical_natural_grasp_live_control_finding_g3ngp20260908vp8.json",
     "C6": "achievable (768 episodes); dispatch pending qualification completion",
-    "C7": "partial export with timing-audit-backed genuine policy no-grasp on repaired-path confirmatory completes; 279 pre-repair episodes excluded",
+    "C7": "partial export (548/768 (71.4%)): timing-audit-backed policy failures on repaired-path confirmatory completes \u2014 544 no_grasp, 4 transport_incomplete; 279 pre-repair episodes excluded",
     "C8": "achievable (768 episodes); pilot G3 path gate passed 96/96 (g3c8p20260908f); G7 confirmatory receipt passed (g7c8q20260908a); 24 pilot episodes, G8 rehearsal, confirmatory runtime lock, and 768 dispatch blocked pending groot_bridge_widowx registration in launch_online_correction_v4.py (SUPPORTED_DROID_POLICIES) and second_stack live behavioral runner wiring"
   },
   "planned_c7_episodes": 768,
@@ -89,5 +89,5 @@
       "receipt_path": "artifacts/online_correction_v4/qualification/20260908_vertical_natural_grasp_live_control_finding_g3ngp20260908vp8.json"
     }
   },
-  "source_accepted_ledger_episodes": 541
+  "source_accepted_ledger_episodes": 548
 }

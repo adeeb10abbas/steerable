@@ -9,17 +9,17 @@
       "terminal_goal_violation_fallback_forbidden": true
     },
     "coverage_reconciliation": {
-      "accepted_valid_unique": 541,
+      "accepted_valid_unique": 548,
       "by_family": {
         "C7": {
-          "accepted_valid": 541,
-          "planned": 541
+          "accepted_valid": 548,
+          "planned": 548
         }
       },
       "missing_valid": 0,
-      "planned_episodes": 541,
+      "planned_episodes": 548,
       "status_counts": {
-        "valid": 541
+        "valid": 548
       }
     },
     "limitations": [
@@ -27,15 +27,15 @@
       "figures are not generated without accepted trajectory evidence"
     ],
     "validation": {
-      "accepted_unique": 541,
+      "accepted_unique": 548,
       "analysis_scope": "accepted_ledger_loading_and_coverage_reconciliation",
-      "assigned": 541,
+      "assigned": 548,
       "audit_scope": "coverage_and_basic_record_consistency_only",
       "campaign_id": "online_correction_v4",
       "coverage_by_family": {
         "C7": {
-          "accepted_unique": 541,
-          "assigned": 541,
+          "accepted_unique": 548,
+          "assigned": 548,
           "blocked_records": 0,
           "missing": 0
         }
@@ -51,13 +51,30 @@
       "ok": true,
       "primary_response_anchor": "t_event_planned+2.0s",
       "primary_response_horizon_s": 2.0,
-      "valid_failure_records": 541,
+      "valid_failure_records": 548,
       "valid_success_records": 0
     }
   },
+  "export_coverage": {
+    "C7": {
+      "accepted_valid_unique": 548,
+      "coverage_fraction": 0.713542,
+      "coverage_label": "548/768 (71.4%)",
+      "export_status": "partial",
+      "ledger_compile_id": "compiled_ledger_20260908k",
+      "missing_episodes": 220,
+      "planned_episodes": 768
+    }
+  },
+  "export_status": "partial",
   "frozen_analysis_manifest": "artifacts/online_correction_v4/frozen_analysis_manifest.json",
-  "ledger_rows_compiled": 541,
-  "ledger_source": "artifacts/online_correction_v4/execution/c7_object_pair_20260906/pvc-ledgers/compiled_ledger_20260908i/accepted_ledger.jsonl",
+  "ledger_compile_id": "compiled_ledger_20260908k",
+  "ledger_rows_compiled": 548,
+  "ledger_source": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/pvc-ledgers/compiled_ledger_20260908k/accepted_ledger.jsonl",
+  "outcome_composition": {
+    "no_grasp": 544,
+    "transport_incomplete": 4
+  },
   "pvc_complete_note": "Ledger compile against confirmatory manifest is required to separate 279 pre-repair infrastructure-invalid C7 episodes from repaired-path rows.",
   "schema_version": "v4-registered-campaign-audit-v1"
 }

@@ -127,8 +127,18 @@ def g3_expected_seed_count(
     scope = qualification_scope or "confirmatory"
     if scope == "confirmatory":
         return config.expected_seed_count
-    if fixture_id == "object_pair" and scope == "engineering_pilot":
-        return 24
+    if scope == "engineering_pilot":
+        from experiments.online_correction_v4.fixture_qualification import (
+            qualification_profile,
+        )
+
+        profile = qualification_profile(fixture_id)
+        allocation = profile.pilot_allocation
+        if allocation is None:
+            raise G3GateError(
+                f"unsupported G3 qualification scope {scope!r} for {fixture_id!r}"
+            )
+        return allocation.env_seed_end - allocation.env_seed_start + 1
     raise G3GateError(
         f"unsupported G3 qualification scope {scope!r} for {fixture_id!r}"
     )

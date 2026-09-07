@@ -1,0 +1,48 @@
+{
+  "attempt_ids": {
+    "g2_smoke_retry": "g2r20260908c",
+    "g3_smoke_retry_scale_2p0": "g3r20260908i"
+  },
+  "behavioral_episode_count": 0,
+  "blocked_jobs": [
+    {
+      "attempt_id": "g2r20260908c",
+      "job_name": "v4-g2-horizontal-g2r20260908c-53fedf9e97-s000",
+      "reason": "Pending scheduling: 24/24 A40 GPUs in use; 128 C5/C6 G3 pending jobs submitted ~3h48m earlier compete ahead of horizontal in the namespace pending queue (133 total pending).",
+      "status": "capacity_pending"
+    },
+    {
+      "attempt_id": "g3r20260908i",
+      "job_name": "v4-g3-horizontal-g3r20260908i-3308c3638a-s000",
+      "reason": "Pending scheduling: same A40 saturation and C5/C6 queue precedence.",
+      "status": "capacity_pending"
+    }
+  ],
+  "campaign_id": "online_correction_v4",
+  "cluster": {
+    "context": "prod-dcwi-warrenq1-vmkub007",
+    "gpu_product": "NVIDIA-A40",
+    "namespace": "211247-prod",
+    "pending_a40_qualification_pods": 133,
+    "running_a40_pods": 24
+  },
+  "compiled_at_utc": "2026-09-08T04:40:00Z",
+  "disposition": "Retry jobs submitted after df0de5f schema and OUTPUT_PARENT fixes; awaiting A40 slots without disturbing C5/C6/C7 running lanes.",
+  "fixture_version": "horizontal_geometry_repair_v2",
+  "frozen_bindings": {
+    "plan_sha256": "a6dcd82a3279fba3f2ba1a75d74a7100a0064ccd049e2833c8231895c3d468f1",
+    "queue_sha256": "dabd6c302e89136bfd2e0a071e5c9642176d60632b46657d8e28f3ef0e14e186",
+    "reset_registry_sha256": "392dcdfd797644f514b74cf82f65b3a69d7ba1120e959b55e0447df18d61ab13",
+    "study_commit": "df0de5f927a352ef3f5420fdfcce420dc75f3e54"
+  },
+  "gate": "G2/G3",
+  "infrastructure_invalid_attempts": [
+    "g2r20260908a",
+    "g3r20260908d"
+  ],
+  "model_request_count": 0,
+  "next_action": "Poll g2r20260908c and g3r20260908i until Running/Complete; on G3 scale-2.0 smoke pass proceed descending ladder; on fail re-run remaining scales before fixture block report.",
+  "qualification_scope": "model_blind_motion_and_feasibility_no_policy",
+  "schema_version": "v4-horizontal-repair-launch-receipt-v1",
+  "status": "submitted_capacity_pending"
+}

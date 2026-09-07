@@ -1,0 +1,32 @@
+{
+  "attempt_id": "g3r20260908d",
+  "authorizes_behavioral_inference": false,
+  "behavioral_episode_count": 0,
+  "campaign_id": "online_correction_v4",
+  "check_count": 0,
+  "compiled_at_utc": "2026-09-08T04:40:00Z",
+  "displacement_m": 0.24,
+  "environment_seed": 2100000000,
+  "finding": "Repaired-layout G3 scale-2.0 smoke failed at startup preflight because OUTPUT_PARENT was not pre-created on the PVC.",
+  "fixture_id": "horizontal",
+  "fixture_version": "horizontal_geometry_repair_v2",
+  "gate": "G3",
+  "job_name": "v4-g3-horizontal-g3r20260908d-ec3799f18a-s000",
+  "model_request_count": 0,
+  "plan_sha256": "a6dcd82a3279fba3f2ba1a75d74a7100a0064ccd049e2833c8231895c3d468f1",
+  "pod_outcome": {
+    "container_exit_code": 1,
+    "phase": "Failed"
+  },
+  "qualification_scope": "model_blind_motion_and_feasibility_no_policy",
+  "remediation": "Pre-create /data/users/ali/vla_wam/raw/v4/g3-horizontal/attempt-<id>/scale-<scale>/seed-<seed> before kubectl create; retry under g3r20260908i.",
+  "reset_registry_sha256": "392dcdfd797644f514b74cf82f65b3a69d7ba1120e959b55e0447df18d61ab13",
+  "root_cause": {
+    "error": "OUTPUT_PARENT must already exist and be absolute",
+    "error_type": "PreflightError"
+  },
+  "scale": 2.0,
+  "schema_version": "v4-horizontal-g3-path-smoke-summary-v1",
+  "scope": "single_environment_seed_engineering_smoke_not_full_scale_receipt",
+  "status": "infrastructure_invalid"
+}

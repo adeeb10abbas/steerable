@@ -1,0 +1,31 @@
+{
+  "attempt_id": "g2r20260908a",
+  "authorizes_behavioral_inference": false,
+  "behavioral_episode_count": 0,
+  "campaign_id": "online_correction_v4",
+  "compiled_at_utc": "2026-09-08T04:40:00Z",
+  "environment_seed": 2100000000,
+  "finding": "Repaired-layout G2 smoke failed before reset attestation because the cluster checkout predated geometry-repair reset-registry schema acceptance in load_reset_registry.",
+  "fixture_id": "horizontal",
+  "fixture_version": "horizontal_geometry_repair_v2",
+  "gate": "G2",
+  "infrastructure_failure_marker_count": 1,
+  "job_name": "v4-g2-horizontal-g2r20260908a-f7546f9c31-s000",
+  "model_request_count": 0,
+  "passing_seed_receipt_count": 0,
+  "pod_outcome": {
+    "container_exit_code": 1,
+    "marker_check_worked": true,
+    "phase": "Failed"
+  },
+  "qualification_scope": "infrastructure_only_no_scientific_behavior",
+  "remediation": "Commit df0de5f accepts v4-droid-horizontal-reset-registry-geometry-repair-v1; retry under g2r20260908c.",
+  "reset_registry_sha256": "392dcdfd797644f514b74cf82f65b3a69d7ba1120e959b55e0447df18d61ab13",
+  "root_cause": {
+    "error": "reset registry schema mismatch",
+    "error_type": "ResetRegistryError",
+    "study_commit": "5874f2f6cb4eca2e9e7fd67026fbedc529b446d2"
+  },
+  "schema_version": "v4-horizontal-g2-attempt-disposition-v1",
+  "status": "infrastructure_invalid"
+}

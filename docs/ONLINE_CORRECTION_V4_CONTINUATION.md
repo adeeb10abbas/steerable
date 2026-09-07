@@ -238,38 +238,42 @@ smaller horizontal displacement or post-result scene change is authorized by
 this campaign. Independently scoped model-blind fixture qualification remains
 permitted for C5-C7; C2 and C8 retain their separate hard blockers.
 
-### Disclosed horizontal geometry repair (2026-09-07)
+### Disclosed horizontal geometry repair (2026-09-07 / corrected 2026-09-08)
 
 Independent PVC forensics on attempt `g3p20260905h` scale 0.5 confirmed a
-layout collision, not model failure: `rubiks_cube__bowl` contact at
-`planned_time_s=0.3` / `planned_displacement_m=0.0409536` / `2.36349 N`, and
-`destination_static` front overlap at `856.442 N` on the first sample.
-Left/right sham and move-stop checks passed. The live USD AABB audit shows
-rubiks_cube root pose is stale relative to its projected AABB center; scoring
-already uses live AABB, so projected dimensions remain usable.
+real layout collision, not model failure: `rubiks_cube__bowl` contact at
+`planned_displacement_m=0.0409536` / `2.36349 N` on `front__move_stop`, with
+measured cube drift rising to `21.2 mm` by path end; `destination_static`
+registers `856.442 N` on the first sample. Left/right sham and move-stop
+checks passed. At reset, live PhysX reports `rubiks_cube__bowl=0 N` even though
+X/Z AABB intervals overlap and rubiks_cube root pose is stale relative to its
+live world AABB center; later contacts are true PhysX collisions along the
+front/behind robot-base `-X` motion axis, not sensor misattribution.
 
-A V4-only amendment freezes one deterministic cube-only repair: move
-`rubiks_cube` along robot-base `-X` by `-0.01` m (the smallest 1 cm increment
-giving conservative 0.5-scale swept-AABB separation plus the existing 5 mm
-guard) before common XY jitter for all 128 resets. Bowl, banana, assets,
-physics, task frame, prompts, scoring, timing, scale ladder, and thresholds
-are unchanged. Original failed receipts and raw evidence are preserved.
+The first repair attempt (`horizontal_geometry_repair_v1`, commit `3ea1cb1`)
+used a defective 3D AABB clearance model dominated by an `85.6 mm` Y gap. A
+`1 cm` cube `-X` shift would only delay first contact to about `0.05095 m`,
+still before the `0.06 m` endpoint. The corrected amendment
+(`horizontal_geometry_repair_v2`) freezes cube-only `-X` by `-0.03 m`: the
+smallest 1 cm increment such that PVC witness-delayed first contact on
+front/behind `-X` paths reaches `0.06 m + 5 mm` across all 128 jittered resets.
 
-Repaired-layout artifacts use fixture_version
-`horizontal_geometry_repair_v1` and cohort
-`confirmatory_horizontal_geometry_repair_v1`:
+Repaired-layout authority is fixture_version
+`horizontal_geometry_repair_v2` and cohort
+`confirmatory_horizontal_geometry_repair_v2`:
 
 - `artifacts/online_correction_v4/qualification/20260907_horizontal_g3_collision_forensic_g3p20260905h.json`
+- `artifacts/online_correction_v4/qualification/20260908_horizontal_g3_contact_geometry_witness_g3p20260905h.json`
 - `artifacts/online_correction_v4/setup/horizontal_geometry_repair_amendment.candidate.json`
-- `artifacts/online_correction_v4/setup/horizontal_reset_registry.geometry_repair_v1.candidate.json`
-- `artifacts/online_correction_v4/setup/horizontal_g3_plan.geometry_repair_v1.candidate.json`
-- `artifacts/online_correction_v4/queue_horizontal_geometry_repair_v1.jsonl` (9,728 C1/C3/C4 rows)
-- `artifacts/online_correction_v4/setup/horizontal_geometry_repair_inventory_v1.json`
+- `artifacts/online_correction_v4/setup/horizontal_reset_registry.geometry_repair_v2.candidate.json`
+- `artifacts/online_correction_v4/setup/horizontal_g3_plan.geometry_repair_v2.candidate.json`
+- `artifacts/online_correction_v4/queue_horizontal_geometry_repair_v2.jsonl` (9,728 C1/C3/C4 rows)
+- `artifacts/online_correction_v4/setup/horizontal_geometry_repair_inventory_v2.json`
 
-Historical `docs/online_correction_v4/campaign.json` and
-`artifacts/online_correction_v4/queue.jsonl` remain unchanged. Fresh repaired
-G2 and unchanged descending-ladder G3 are the next dependency phase; no
-repaired horizontal policy inference is authorized until those gates pass.
+Superseded but preserved: `horizontal_geometry_repair_v1` queue/registry/plan
+artifacts from commit `3ea1cb1`. Historical `docs/online_correction_v4/campaign.json`
+and `artifacts/online_correction_v4/queue.jsonl` remain unchanged. Fresh
+repaired G2 and unchanged descending-ladder G3 are the next dependency phase.
 
 ### Family disposition
 

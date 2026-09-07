@@ -53,19 +53,19 @@ DEFAULT_AMENDMENT = (
 )
 DEFAULT_QUEUE_OUT = (
     ROOT
-    / "artifacts/online_correction_v4/queue_horizontal_geometry_repair_v1.jsonl"
+    / "artifacts/online_correction_v4/queue_horizontal_geometry_repair_v2.jsonl"
 )
 DEFAULT_MANIFEST_OUT = (
     ROOT
-    / "artifacts/online_correction_v4/setup/horizontal_geometry_repair_inventory_v1.json"
+    / "artifacts/online_correction_v4/setup/horizontal_geometry_repair_inventory_v2.json"
 )
 DEFAULT_RESET_OUT = (
     ROOT
-    / "artifacts/online_correction_v4/setup/horizontal_reset_registry.geometry_repair_v1.candidate.json"
+    / "artifacts/online_correction_v4/setup/horizontal_reset_registry.geometry_repair_v2.candidate.json"
 )
 DEFAULT_G3_OUT = (
     ROOT
-    / "artifacts/online_correction_v4/setup/horizontal_g3_plan.geometry_repair_v1.candidate.json"
+    / "artifacts/online_correction_v4/setup/horizontal_g3_plan.geometry_repair_v2.candidate.json"
 )
 AFFECTED_FAMILIES = ("C1", "C3", "C4")
 EXPECTED_ROW_COUNT = 9728

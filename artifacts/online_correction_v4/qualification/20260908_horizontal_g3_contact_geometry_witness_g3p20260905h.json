@@ -1,0 +1,85 @@
+{
+  "schema_version": "v4-horizontal-g3-contact-geometry-witness-v1",
+  "campaign_id": "online_correction_v4",
+  "fixture_id": "horizontal",
+  "attempt_id": "g3p20260905h",
+  "environment_seed": 2100000000,
+  "scale": 0.5,
+  "displacement_m": 0.06,
+  "model_request_count": 0,
+  "behavioral_episode_count": 0,
+  "supersedes_repair_assessment": {
+    "commit": "3ea1cb1",
+    "fixture_version": "horizontal_geometry_repair_v1",
+    "defect": "Used 3D AABB separation dominated by an 85.6 mm Y gap while PhysX reported real rubiks_cube__bowl contact; a 1 cm cube -X offset cannot clear the full 0.06 m front path from witness timing alone."
+  },
+  "forensic_source": {
+    "kubernetes_context": "prod-dcwi-warrenq1-vmkub007",
+    "namespace": "211247-prod",
+    "read_only_access": true,
+    "pvc_episode_root": "/data/users/ali/vla_wam/raw/v4/g3-horizontal/attempt-g3p20260905h/scale-0.5/seed-2100000000/4d123f89-51df-4c86-b190-9a94841d8ca4/lane-g3h-s000/attempt-g3p20260905h/episodes",
+    "runtime_stratum_sha256": "ed44eaf60280d5ee91a9a20b39d0c5927cb7ff57d74471f1bde503e24401a63f"
+  },
+  "live_geometry_at_reset": {
+    "initial_scene_sha256": "415bc7f11ed74ef6c249f1d28ead3a588b1d929c5b401f0af631afdc1bc20a1c",
+    "initial_rubiks_cube__bowl_force_n": 0.0,
+    "rubiks_cube_root_world_xyz_m": [0.2935180366039276, 0.12148545682430267, 0.08110573142766953],
+    "rubiks_cube_world_aabb_m": {
+      "min_xyz": [0.39127529231730607, -0.09744829743391743, 0.0496023569875199],
+      "max_xyz": [0.44969119161337034, -0.039562635059537644, 0.10779157240234026]
+    },
+    "bowl_root_world_xyz_m": [0.4289674460887909, 0.12890803813934326, 0.07735103368759155],
+    "bowl_world_aabb_m": {
+      "min_xyz": [0.3618268424133713, 0.04600550650063867, 0.0497811528779535],
+      "max_xyz": [0.5233402198691908, 0.20715887428816432, 0.10487455698475552]
+    },
+    "table_plane_overlap_at_reset": false,
+    "aabb_overlap_x_m": 0.05841589929606428,
+    "aabb_overlap_z_m": 0.055093404106802024,
+    "aabb_overlap_y_m": 0.0,
+    "root_minus_aabb_center_rubiks_cube_m": [-0.1269652053614106, 0.18999092307103022, 0.002408766732739445]
+  },
+  "contact_is_real_not_misattribution": {
+    "sensor_pair": "rubiks_cube__bowl",
+    "classification_rule": "active force >= 0.05 N and pair not in allowed support pairs",
+    "front__move_stop": {
+      "first_contact_sample_index": 18,
+      "planned_displacement_m": 0.04095359999999999,
+      "force_n": 2.3634903991529304,
+      "cube_drift_m_at_contact": 0.0025997996168450836,
+      "cube_drift_m_at_path_end": 0.021231804850441474,
+      "bowl_motion_delta_world_xyz_m": [-0.05990248918533325, -5.748867988586426e-05, 0.00014457851648330688],
+      "direction_task_coefficients": [0.0, 1.0]
+    },
+    "behind__move_stop": {
+      "first_contact_sample_index": 17,
+      "planned_displacement_m": 0.037411585185112825,
+      "force_n": 1.0365746767743176,
+      "cube_drift_m_at_contact": 0.0005828634780481631
+    },
+    "front__destination_static": {
+      "first_contact_sample_index": 0,
+      "planned_displacement_m": 0.06,
+      "force_n": 856.442122613333,
+      "bowl_root_world_xyz_m_at_sample": [0.3718557059764862, 0.12732267379760742, 0.07934881746768951]
+    },
+    "passing_without_contact": ["left__original_sham", "right__move_stop"],
+    "conclusion": "PhysX contact forces coincide with measured cube drift and persist after the bowl reference moves along robot-base -X. This is not a stale sensor label: rubiks_cube__bowl is zero at reset despite X/Z AABB overlap, then rises only once the bowl path closes the layout collision."
+  },
+  "v1_repair_contradiction": {
+    "one_cm_offset_naive_contact_delay_m": 0.05095359999999999,
+    "still_before_endpoint_m": 0.06,
+    "three_cm_witness_delayed_front_contact_m": 0.07095359999999999,
+    "three_cm_witness_delayed_behind_contact_m": 0.067411585185112826,
+    "support_edge_guard_m": 0.005,
+    "explanation": "Live world AABB Y intervals remain separated while PhysX contacts along the front/behind robot-base X motion axis. Repair clearance must therefore bind to PVC first-contact timing on that axis, not to 3D AABB separation or stale rubiks_cube root pose."
+  },
+  "corrected_repair_floor": {
+    "fixture_version": "horizontal_geometry_repair_v2",
+    "cube_robot_base_x_offset_m": -0.03,
+    "increments_of_1cm": 3,
+    "selection_rule": "Smallest 1 cm cube -X increment such that witness-delayed first contact on front/behind -X paths reaches displacement_m plus the 5 mm guard, verified across all 128 jittered resets for front/behind only; left/right paths already passed on the original layout.",
+    "witness_binding_goal": "behind"
+  },
+  "release_boundary": "Geometry witness only. Does not authorize repaired G2/G3 or policy inference."
+}

@@ -105,6 +105,22 @@ def validate(
     if sha256_file(original_registry_path) == sha256_file(reset_registry_path):
         errors.append("repaired reset registry is byte-identical to original layout")
 
+    superseded_v1_queue = ROOT / "artifacts/online_correction_v4/queue_horizontal_geometry_repair_v1.jsonl"
+    if superseded_v1_queue.is_file():
+        v1_rows = load_jsonl(superseded_v1_queue)
+        v1_ids = {row["episode_id"] for row in v1_rows}
+        if repaired_ids & v1_ids:
+            errors.append("repaired v2 queue episode_id collides with superseded v1 queue")
+
+    witness_path = (
+        ROOT
+        / "artifacts/online_correction_v4/qualification/20260908_horizontal_g3_contact_geometry_witness_g3p20260905h.json"
+    )
+    if witness_path.is_file():
+        witness = load_json(witness_path)
+        if witness.get("corrected_repair_floor", {}).get("cube_robot_base_x_offset_m") != offset:
+            errors.append("amendment offset differs from geometry witness floor")
+
     return errors
 
 
@@ -120,24 +136,24 @@ def main() -> int:
         "--inventory-manifest",
         type=Path,
         default=ROOT
-        / "artifacts/online_correction_v4/setup/horizontal_geometry_repair_inventory_v1.json",
+        / "artifacts/online_correction_v4/setup/horizontal_geometry_repair_inventory_v2.json",
     )
     parser.add_argument(
         "--queue",
         type=Path,
-        default=ROOT / "artifacts/online_correction_v4/queue_horizontal_geometry_repair_v1.jsonl",
+        default=ROOT / "artifacts/online_correction_v4/queue_horizontal_geometry_repair_v2.jsonl",
     )
     parser.add_argument(
         "--reset-registry",
         type=Path,
         default=ROOT
-        / "artifacts/online_correction_v4/setup/horizontal_reset_registry.geometry_repair_v1.candidate.json",
+        / "artifacts/online_correction_v4/setup/horizontal_reset_registry.geometry_repair_v2.candidate.json",
     )
     parser.add_argument(
         "--g3-plan",
         type=Path,
         default=ROOT
-        / "artifacts/online_correction_v4/setup/horizontal_g3_plan.geometry_repair_v1.candidate.json",
+        / "artifacts/online_correction_v4/setup/horizontal_g3_plan.geometry_repair_v2.candidate.json",
     )
     parser.add_argument(
         "--historical-queue",

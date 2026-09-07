@@ -21,8 +21,8 @@ from experiments.online_correction_v4.horizontal_geometry_repair import (  # noq
     MINIMUM_SCALE,
     REPAIR_INCREMENT_M,
     SUPPORT_EDGE_GUARD_M,
+    canonical_aabb_freshness_audit,
     minimum_cube_repair_offset_m,
-    root_pose_aabb_center_mismatch_audit,
 )
 
 SPEC = importlib.util.spec_from_file_location(
@@ -40,6 +40,10 @@ DEFAULT_OUTPUT = (
 FORENSIC_RECEIPT = (
     ROOT
     / "artifacts/online_correction_v4/qualification/20260907_horizontal_g3_collision_forensic_g3p20260905h.json"
+)
+WITNESS_RECEIPT = (
+    ROOT
+    / "artifacts/online_correction_v4/qualification/20260908_horizontal_g3_contact_geometry_witness_g3p20260905h.json"
 )
 
 
@@ -77,9 +81,8 @@ def main() -> int:
         base_positions_robot_base_m=registry["source_identity"]["base_positions_robot_base_m"],
         resets_by_env_seed=registry["resets_by_env_seed"],
     )
-    forensic = json.loads(FORENSIC_RECEIPT.read_text(encoding="utf-8"))
     payload = {
-        "schema_version": "v4-horizontal-geometry-repair-amendment-v1",
+        "schema_version": "v4-horizontal-geometry-repair-amendment-v2",
         "campaign_id": "online_correction_v4",
         "fixture_id": "horizontal",
         "fixture_version": FIXTURE_VERSION,
@@ -95,6 +98,7 @@ def main() -> int:
                 / "artifacts/online_correction_v4/qualification/20260905_horizontal_g3_path_scale_0p5_g3p20260905h.json"
             ),
             "forensic_receipt": artifact(FORENSIC_RECEIPT),
+            "geometry_witness_receipt": artifact(WITNESS_RECEIPT),
             "attempt_id": "g3p20260905h",
             "failed_scale": MINIMUM_SCALE,
             "original_reset_registry": artifact(
@@ -105,8 +109,10 @@ def main() -> int:
         "repair": {
             "selection_rule": (
                 "Move only rubiks_cube along robot-base -X in 1 cm increments before "
-                "deterministic common XY jitter until the minimum 0.5-scale conservative "
-                "bowl swept-AABB separation meets the existing 5 mm support-edge guard."
+                "deterministic common XY jitter. Select the smallest increment such that "
+                "PVC witness-delayed first rubiks_cube__bowl contact on front/behind -X "
+                "paths reaches the 0.5-scale displacement plus the existing 5 mm guard, "
+                "verified across all 128 jittered resets for front/behind only."
             ),
             "cube_robot_base_x_offset_m": offset_m,
             "increment_m": REPAIR_INCREMENT_M,
@@ -129,7 +135,8 @@ def main() -> int:
             "policy_outcome_used": False,
             "clearance_audit": clearance_audit,
         },
-        "aabb_freshness_audit": forensic["aabb_freshness_audit"],
+        "aabb_freshness_audit": canonical_aabb_freshness_audit(),
+        "supersedes_fixture_version": "horizontal_geometry_repair_v1",
         "required_requalification": {
             "fresh_g2_required": True,
             "fresh_g3_required": True,
@@ -147,10 +154,9 @@ def main() -> int:
         },
         "disclosure": (
             "Disclosed V4-only geometry repair after conclusive model-blind G3 "
-            "collision evidence on the original layout. Original failed receipts "
-            "and raw PVC traces are preserved. V2/V3 and unrelated families remain "
-            "unchanged. C7 confirmatory execution counts were inspected for PVC "
-            "forensics only; no horizontal policy outcomes were used."
+            "collision evidence on the original layout. v1 used a defective 3D AABB "
+            "clearance model; v2 binds to PVC contact timing and live world AABB. "
+            "Original failed receipts and raw PVC traces are preserved."
         ),
     }
     args.out.parent.mkdir(parents=True, exist_ok=True)

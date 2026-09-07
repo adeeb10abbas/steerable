@@ -221,7 +221,10 @@ def deterministic_axis_jitter(*, env_seed: int, axis: str, half_range_m: float) 
 
 def _load_geometry_repair_amendment(path: Path) -> dict[str, Any]:
     amendment = _read_json(path)
-    if amendment.get("schema_version") != "v4-horizontal-geometry-repair-amendment-v1":
+    if amendment.get("schema_version") not in {
+        "v4-horizontal-geometry-repair-amendment-v1",
+        "v4-horizontal-geometry-repair-amendment-v2",
+    }:
         raise ResetRegistryBuildError("geometry repair amendment schema differs")
     if amendment.get("fixture_id") != "horizontal":
         raise ResetRegistryBuildError("geometry repair amendment fixture differs")

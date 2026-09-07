@@ -1080,11 +1080,17 @@ class LiveRoboLabBackend:
         target_object = self.fixture_objects.target_object
         obj_pos, _ = world.get_pose(target_object, env_id=0)
         obj_pos = _host_numpy(obj_pos)
-        gripper_x, gripper_y, gripper_z = self._gripper_reference_world_xyz()
         sim_time = self.control_tick * self.control_dt_s
         if self._initial_supported_z == 0.0:
             self._initial_supported_z = float(obj_pos[2])
         obj_xyz = (float(obj_pos[0]), float(obj_pos[1]), float(obj_pos[2]))
+        object_grabbed = self.modules["object_grabbed"]
+        grabbed = bool(object_grabbed(self.env, object=target_object, env_id=0))
+        if grabbed:
+            # Physics attachment makes the target object the coupled gripper reference.
+            gripper_x, gripper_y, gripper_z = obj_xyz
+        else:
+            gripper_x, gripper_y, gripper_z = self._gripper_reference_world_xyz()
         contact = self._gripper_target_contact(
             target_object, obj_xyz, (gripper_x, gripper_y, gripper_z)
         )

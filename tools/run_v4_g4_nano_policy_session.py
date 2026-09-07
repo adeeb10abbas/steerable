@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the zero-behavior C7 Nano policy-session qualification probe."""
+"""Run the zero-behavior Nano policy-session qualification probe for one fixture."""
 
 from __future__ import annotations
 
@@ -15,23 +15,12 @@ import cv2
 import numpy as np
 from openpi_client import websocket_client_policy
 
+from experiments.online_correction_v4.fixture_qualification import (
+    qualification_profile,
+)
 
 CHECKPOINT_REVISION = "6706d7680581c255ff61e0f3bb49d90eac55c79e"
 POLICY_ID = "cosmos3_nano_droid"
-FIXTURE_ID = "object_pair"
-LEFT_PROMPT = (
-    "Place the sponge so that the sponge is left of the tray. "
-    "Use the robot's fixed viewpoint for left, right, front, and behind."
-)
-RIGHT_PROMPT = (
-    "Place the sponge so that the sponge is right of the tray. "
-    "Use the robot's fixed viewpoint for left, right, front, and behind."
-)
-CONDITIONS = (
-    ("left", LEFT_PROMPT),
-    ("left_fresh_session_exact_repeat", LEFT_PROMPT),
-    ("right", RIGHT_PROMPT),
-)
 JOINT_POSITION = np.asarray(
     [0.0, -0.6283185307179586, 0.0, -2.5132741228718345, 0.0, 1.8849555921538759, 0.0],
     dtype=np.float32,
@@ -100,6 +89,7 @@ def _fresh_request(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--fixture-id", default="object_pair")
     parser.add_argument("--checkpoint-registry", type=Path, required=True)
     parser.add_argument("--seed-registry", type=Path, required=True)
     parser.add_argument("--seed-registry-sha256", required=True)
@@ -110,6 +100,17 @@ def main() -> None:
     parser.add_argument("--port", type=int, required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
+
+    profile = qualification_profile(args.fixture_id)
+    prompts = profile.g4_prompt_pair
+    conditions = (
+        (prompts.primary_label, prompts.primary_prompt),
+        (
+            f"{prompts.primary_label}_fresh_session_exact_repeat",
+            prompts.primary_prompt,
+        ),
+        (prompts.alternate_label, prompts.alternate_prompt),
+    )
 
     if args.output.exists():
         raise FileExistsError(f"refusing to overwrite G4 output: {args.output}")
@@ -128,6 +129,8 @@ def main() -> None:
     seed_registry = json.loads(args.seed_registry.read_text(encoding="utf-8"))
     if seed_registry.get("scope") != "g4_policy_session_only":
         raise RuntimeError("G4 seed registry scope mismatch")
+    if seed_registry.get("fixture_id") not in {None, profile.fixture_id}:
+        raise RuntimeError("G4 seed registry fixture mismatch")
     if args.sampling_seed not in seed_registry.get("allowed_sampling_seeds", []):
         raise RuntimeError("G4 sampling seed is not registered")
 
@@ -144,8 +147,9 @@ def main() -> None:
     records: list[dict[str, Any]] = []
     actions: dict[str, np.ndarray] = {}
     futures: dict[str, np.ndarray] = {}
+    repeat_key = f"{prompts.primary_label}_fresh_session_exact_repeat"
     try:
-        for condition, prompt in CONDITIONS:
+        for condition, prompt in conditions:
             response, wall_seconds = _fresh_request(
                 host=args.host,
                 port=args.port,
@@ -186,18 +190,14 @@ def main() -> None:
                 }
             )
 
-        repeat_action_equal = bool(
-            np.array_equal(actions["left"], actions["left_fresh_session_exact_repeat"])
-        )
-        repeat_future_equal = bool(
-            np.array_equal(futures["left"], futures["left_fresh_session_exact_repeat"])
-        )
+        repeat_action_equal = bool(np.array_equal(actions[prompts.primary_label], actions[repeat_key]))
+        repeat_future_equal = bool(np.array_equal(futures[prompts.primary_label], futures[repeat_key]))
         prompt_action_rms = float(
             np.sqrt(
                 np.mean(
                     (
-                        actions["left"].astype(np.float64)
-                        - actions["right"].astype(np.float64)
+                        actions[prompts.primary_label].astype(np.float64)
+                        - actions[prompts.alternate_label].astype(np.float64)
                     )
                     ** 2
                 )
@@ -206,8 +206,8 @@ def main() -> None:
         prompt_future_mae = float(
             np.mean(
                 np.abs(
-                    futures["left"].astype(np.float64)
-                    - futures["right"].astype(np.float64)
+                    futures[prompts.primary_label].astype(np.float64)
+                    - futures[prompts.alternate_label].astype(np.float64)
                 )
             )
         )
@@ -215,16 +215,17 @@ def main() -> None:
             raise RuntimeError("G4 prompt comparison metrics are nonfinite")
         passed = repeat_action_equal and repeat_future_equal
         receipt = {
-            "schema_version": "v4-object-pair-g4-nano-policy-session-receipt-v1",
+            "schema_version": profile.g4_receipt_schema,
             "campaign_id": "online_correction_v4",
             "gate": "G4",
-            "fixture_id": FIXTURE_ID,
+            "fixture_id": profile.fixture_id,
+            "family_id": profile.family_id,
             "policy_id": POLICY_ID,
             "status": "passed" if passed else "failed",
             "passed": passed,
             "qualification_scope": "policy_session_only_no_behavioral_episode",
             "behavioral_episode_count": 0,
-            "model_request_count": len(CONDITIONS),
+            "model_request_count": len(conditions),
             "fresh_client_session_per_request": True,
             "checkpoint_registry": _artifact(args.checkpoint_registry),
             "checkpoint_revision": CHECKPOINT_REVISION,
@@ -248,14 +249,14 @@ def main() -> None:
                 "static_prompt_bytes_bound": True,
             },
             "reported_not_gated_language_diagnostics": {
-                "left_right_action_rms": prompt_action_rms,
-                "left_right_future_pixel_mae": prompt_future_mae,
+                f"{prompts.primary_label}_{prompts.alternate_label}_action_rms": prompt_action_rms,
+                f"{prompts.primary_label}_{prompts.alternate_label}_future_pixel_mae": prompt_future_mae,
                 "note": "G4 does not require a positive prompt effect.",
             },
             "release_boundary": (
-                "A pass establishes the C7 Nano G4 policy-session interface only. "
-                "G5-G8 and an immutable released runtime lock remain required before "
-                "confirmatory policy episodes."
+                f"A pass establishes the {profile.family_id} Nano G4 policy-session "
+                "interface only. G5-G8 and an immutable released runtime lock remain "
+                "required before confirmatory policy episodes."
             ),
         }
         receipt_path = args.output / "g4_policy_session_receipt.json"
@@ -265,7 +266,8 @@ def main() -> None:
                 {
                     "passed": passed,
                     "receipt": _artifact(receipt_path),
-                    "model_request_count": len(CONDITIONS),
+                    "model_request_count": len(conditions),
+                    "fixture_id": profile.fixture_id,
                 },
                 sort_keys=True,
             )
@@ -278,7 +280,8 @@ def main() -> None:
             failure_path.write_text(
                 json.dumps(
                     {
-                        "schema_version": "v4-object-pair-g4-infrastructure-failure-v1",
+                        "schema_version": f"v4-{profile.fixture_id.replace('_', '-')}-g4-infrastructure-failure-v1",
+                        "fixture_id": profile.fixture_id,
                         "behavioral_episode_count": 0,
                         "model_request_count_completed": len(records),
                     },

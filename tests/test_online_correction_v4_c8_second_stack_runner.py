@@ -28,6 +28,18 @@ RUNNER = ROOT / "tools/run_online_correction_v4.py"
 
 
 class C8SecondStackRunnerTests(unittest.TestCase):
+    def test_tuple_to_simpler_env_action_maps_groot_components(self) -> None:
+        from experiments.online_correction_v4.droid_groot_observation import (
+            GROOT_ACTION_COMPONENT_KEYS,
+            tuple_to_simpler_env_action,
+        )
+
+        action = (0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 1.0, 0.0)
+        mapped = tuple_to_simpler_env_action(action)
+        self.assertEqual(set(mapped), set(GROOT_ACTION_COMPONENT_KEYS))
+        self.assertAlmostEqual(float(mapped["action.x"][0]), 0.1)
+        self.assertAlmostEqual(float(mapped["action.gripper"][0]), 1.0)
+
     def test_groot_policy_registered_in_contract(self) -> None:
         self.assertIn(GROOT_POLICY_ID, ("cosmos3_nano_droid", "pi05_droid", GROOT_POLICY_ID))
         self.assertEqual(expected_action_shape(GROOT_POLICY_ID), (8, 8))

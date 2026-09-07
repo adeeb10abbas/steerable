@@ -77,6 +77,31 @@ def batched_observation(
     return batched
 
 
+GROOT_ACTION_COMPONENT_KEYS = (
+    "action.x",
+    "action.y",
+    "action.z",
+    "action.roll",
+    "action.pitch",
+    "action.yaw",
+    "action.gripper",
+)
+
+
+def tuple_to_simpler_env_action(action: tuple[float, ...]) -> dict[str, Any]:
+    """Convert one V4 action tuple into the SimplerEnv gym step dict."""
+    import numpy as np
+
+    if len(action) < len(GROOT_ACTION_COMPONENT_KEYS):
+        raise GrootObservationError(
+            f"action tuple must have at least {len(GROOT_ACTION_COMPONENT_KEYS)} dims"
+        )
+    return {
+        key: np.asarray([float(action[index])], dtype=np.float32)
+        for index, key in enumerate(GROOT_ACTION_COMPONENT_KEYS)
+    }
+
+
 def normalize_groot_action_chunk(raw: Any, expected_shape: tuple[int, int]) -> tuple[tuple[float, ...], ...]:
     """Convert GR00T Bridge action dict output into V4 (horizon, 8) tuples."""
     import math
@@ -86,15 +111,7 @@ def normalize_groot_action_chunk(raw: Any, expected_shape: tuple[int, int]) -> t
         raw = tolist()
     rows, cols = expected_shape
     if isinstance(raw, Mapping):
-        component_order = (
-            "action.x",
-            "action.y",
-            "action.z",
-            "action.roll",
-            "action.pitch",
-            "action.yaw",
-            "action.gripper",
-        )
+        component_order = GROOT_ACTION_COMPONENT_KEYS
         import numpy as np
 
         arrays = []

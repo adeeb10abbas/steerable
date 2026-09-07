@@ -12,7 +12,10 @@ from typing import Any, Mapping
 from experiments.online_correction_v4.adapters import CapturedObservation, SimulatorSnapshot, TerminalPhysicalPredicates
 from experiments.online_correction_v4.detectors import ObjectKinematicState
 from experiments.online_correction_v4.droid_contract import FixtureRuntimeBinding, sha256_bytes
-from experiments.online_correction_v4.droid_groot_observation import processed_observation_from_env
+from experiments.online_correction_v4.droid_groot_observation import (
+    processed_observation_from_env,
+    tuple_to_simpler_env_action,
+)
 from experiments.online_correction_v4.droid_reset import ResetAttestationState, TwoResetAttestationProxy
 from experiments.online_correction_v4.droid_scorer import resolve_file_uri
 from experiments.online_correction_v4.droid_simulator import DroidDependencyError
@@ -191,7 +194,7 @@ class LiveSecondStackBackend:
         raw.agent.before_simulation_step()
         step_fn = getattr(self.env, "step", None)
         if callable(step_fn):
-            step_fn(np.asarray(action_values, dtype=np.float32))
+            step_fn(tuple_to_simpler_env_action(action_values))
         else:
             steps_per_control = max(
                 1,
@@ -340,7 +343,7 @@ class LiveSecondStackEnv:
         )
 
     def close(self) -> None:
-        close = getattr(self.env, "close", None)
+        close = getattr(self.backend.env, "close", None)
         if callable(close):
             close()
 

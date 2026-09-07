@@ -1,0 +1,23 @@
+{
+  "schema_version": "v4-g3-wave-progress-receipt-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "reference_binding_c2",
+  "fixture_id": "reference_binding",
+  "attempt_id": "g3rb20260908k",
+  "gpu_product": "NVIDIA-A100-SXM4-80GB",
+  "scale": 0.5,
+  "seed_count_planned": 128,
+  "observed_at_utc": "2026-09-08T09:10:00Z",
+  "jobs_complete": 57,
+  "jobs_running": 71,
+  "jobs_failed": 0,
+  "path_seed_receipts_on_pvc": 58,
+  "pvc_attempt_root": "/data/users/ali/vla_wam/raw/v4/g3-reference-binding/attempt-g3rb20260908k",
+  "next_actions": [
+    "Wait for remaining path-seed jobs to Complete",
+    "Compile path-scale receipt via compile_v4_horizontal_g3_path_scale.py on PVC receipts root",
+    "Update g3-scripted-reference-binding-spec with passing path-scale receipt binding and gated-dispatch scripted checks",
+    "Compile per-stratum aggregate and reference_binding G3 gate receipt"
+  ],
+  "status": "in_progress"
+}

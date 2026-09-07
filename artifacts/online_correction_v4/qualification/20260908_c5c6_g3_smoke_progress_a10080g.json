@@ -1,0 +1,49 @@
+{
+  "schema_version": "v4-c5c6-g3-smoke-progress-receipt-v1",
+  "campaign_id": "online_correction_v4",
+  "study_commit": "4dfccb7fd4e584f447c07d73a681eecfd59765a2",
+  "code_identity_note": "Geometry registry wiring fix in 4dfccb7; isolated checkouts per 18681fc",
+  "dispatch_receipt": "artifacts/online_correction_v4/execution/c5c6_g3_20260908/dispatch_receipt_g3_a10080g_smoke.json",
+  "observed_at_utc": "2026-09-08T12:15:00Z",
+  "fixtures": {
+    "vertical": {
+      "fixture_id": "vertical",
+      "attempt_id": "g3c5p20260908a10080g",
+      "isolated_study_root": "/data/users/ali/vla_wam/src/steerable-v4-g3_c5c6-4dfccb7f-g3c5p20260908a10080g",
+      "k8s_job": "v4-g3-vert-g3c5p20260908a10080g-ca28aa1c3d-s000",
+      "pod_phase": "Pending",
+      "scheduling_blocker": "Insufficient nvidia.com/gpu (21 nodes); contending with C7 wave-006 policy/simulator lanes",
+      "path_seed_receipts_on_pvc": 0,
+      "g3_gate_decision": "pending_smoke_completion"
+    },
+    "containment": {
+      "fixture_id": "containment",
+      "attempt_id": "g3c6p20260908a10080g",
+      "isolated_study_root": "/data/users/ali/vla_wam/src/steerable-v4-g3_c5c6-4dfccb7f-g3c6p20260908a10080g",
+      "k8s_job": "v4-g3-cont-g3c6p20260908a10080g-9a6114e547-s000",
+      "pod_phase": "Pending",
+      "scheduling_blocker": "Insufficient nvidia.com/gpu (21 nodes); contending with C7 wave-006 policy/simulator lanes",
+      "path_seed_receipts_on_pvc": 0,
+      "g3_gate_decision": "pending_smoke_completion"
+    }
+  },
+  "supersedes_infra_invalid": [
+    "g3c5p20260908a10080f",
+    "g3c6p20260908a10080f",
+    "g3c5p20260908a10080e",
+    "g3c6p20260908a10080e"
+  ],
+  "next_actions": [
+    "Await A100 GPU scheduling for both smokes or coordinate capacity with C7 wave-006",
+    "Compile path-scale receipts at 4dfccb7 pin on success",
+    "Run full G3 scale ladder at single homogeneous pin per fixture",
+    "Implement and run vertical/containment live natural-grasp pos/neg controls (G5 gate)",
+    "Advance G4-G8 and freeze runtime locks before confirmatory dispatch"
+  ],
+  "confirmatory_episodes_blocked": {
+    "c5_vertical": 1536,
+    "c6_containment": 768,
+    "reason": "G3 smoke not complete; per-fixture live controls not registered"
+  },
+  "status": "blocked_gpu_capacity"
+}

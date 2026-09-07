@@ -1,0 +1,59 @@
+{
+  "schema_version": "v4-natural-grasp-live-control-status-v1",
+  "registry_path": "artifacts/online_correction_v4/setup/natural_grasp_live_control_registry.json",
+  "observed_at_utc": "2026-09-08T12:15:00Z",
+  "gate_requirement": "Each fixture requires passed scripted_grasp and hold_only controls at dispatch study_commit",
+  "fixtures": {
+    "object_pair": {
+      "platform": "isaac",
+      "scripted_grasp": {
+        "status": "passed",
+        "attempt_id": "g3ngp20260908p",
+        "receipt": "artifacts/online_correction_v4/qualification/20260908_object_pair_natural_grasp_live_positive_control_g3ngp20260908p.json",
+        "study_commit": "c9c988da1d2ea7ffd81702a0024a7a39a20bb892"
+      },
+      "hold_only": {
+        "status": "passed",
+        "attempt_id": "g3ngp20260908negb",
+        "receipt": "artifacts/online_correction_v4/qualification/20260908_object_pair_natural_grasp_live_negative_control_g3ngp20260908negb.json",
+        "study_commit": "c9c988da1d2ea7ffd81702a0024a7a39a20bb892"
+      },
+      "dispatch_gate": "open_for_c7_at_matching_commit"
+    },
+    "vertical": {
+      "platform": "isaac",
+      "scripted_grasp": {
+        "status": "missing",
+        "runner": "not_yet_implemented (horizontal template at tools/run_v4_horizontal_natural_grasp_live_positive_control.py)"
+      },
+      "hold_only": {
+        "status": "missing"
+      },
+      "dispatch_gate": "blocked"
+    },
+    "containment": {
+      "platform": "isaac",
+      "scripted_grasp": {
+        "status": "missing",
+        "runner": "not_yet_implemented (horizontal template at tools/run_v4_horizontal_natural_grasp_live_positive_control.py)"
+      },
+      "hold_only": {
+        "status": "missing"
+      },
+      "dispatch_gate": "blocked"
+    },
+    "horizontal": {
+      "platform": "isaac",
+      "scripted_grasp": {
+        "status": "runner_available",
+        "runner": "tools/run_v4_horizontal_natural_grasp_live_positive_control.py",
+        "registry_entry": "not_registered"
+      },
+      "hold_only": {
+        "status": "runner_available",
+        "registry_entry": "not_registered"
+      },
+      "dispatch_gate": "blocked_on_registry"
+    }
+  }
+}

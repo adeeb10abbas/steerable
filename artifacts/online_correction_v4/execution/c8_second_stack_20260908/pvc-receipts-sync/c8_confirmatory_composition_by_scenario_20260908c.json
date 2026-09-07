@@ -1,0 +1,72 @@
+{
+  "schema_version": "v4-c8-confirmatory-composition-by-scenario-v1",
+  "observed_at_utc": "2026-09-08T03:50:00Z",
+  "campaign_id": "online_correction_v4",
+  "family_id": "C8",
+  "fixture_id": "second_stack",
+  "cohort": "confirmatory",
+  "ledger_compile_id": "20260908c",
+  "ledger_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/confirmatory-ledger-20260908c/accepted_ledger.jsonl",
+  "ledger_manifest_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/confirmatory-ledger-20260908c/accepted_ledger_manifest.json",
+  "prior_compile_id": "20260908a",
+  "queue_uri": "artifacts/online_correction_v4/setup/c8_confirmatory/queue.frozen.jsonl",
+  "progress": {
+    "behavioral_valid": 14,
+    "total_queued": 768,
+    "coverage_fraction": 0.018229,
+    "active_completing_lanes": ["c8m13"],
+    "running_lanes_not_yet_completing": ["c8m14", "c8m15"]
+  },
+  "aggregate_outcomes": {
+    "no_grasp": 13,
+    "transport_incomplete": 1
+  },
+  "grasp_achieved_count": 1,
+  "by_scenario": {
+    "original_sham": {
+      "episodes_completed": 6,
+      "no_grasp": 6,
+      "transport_incomplete": 0,
+      "grasp_achieved": 0,
+      "grasp_rate": 0.0
+    },
+    "destination_static": {
+      "episodes_completed": 4,
+      "no_grasp": 3,
+      "transport_incomplete": 1,
+      "grasp_achieved": 1,
+      "grasp_rate": 0.25
+    },
+    "move_stop": {
+      "episodes_completed": 4,
+      "no_grasp": 4,
+      "transport_incomplete": 0,
+      "grasp_achieved": 0,
+      "grasp_rate": 0.0
+    }
+  },
+  "pilot_reference_by_scenario": {
+    "original_sham": {"grasp_achieved": 2, "episodes": 8, "grasp_rate": 0.25},
+    "destination_static": {"grasp_achieved": 6, "episodes": 8, "grasp_rate": 0.75},
+    "move_stop": {"grasp_achieved": 4, "episodes": 8, "grasp_rate": 0.5}
+  },
+  "ordering_assessment": {
+    "pilot_ordering": "destination_static > move_stop > original_sham (by grasp_rate)",
+    "confirmatory_observed_ordering_at_14_eps": "destination_static (1/4) > move_stop (0/4) = original_sham (0/6)",
+    "ordering_holds": "insufficient_coverage",
+    "note": "First confirmatory grasp is destination_static (1 transport_incomplete). Sample sizes per scenario are 4-6 episodes from a single lane; pilot ordering cannot be confirmed or rejected yet."
+  },
+  "classification": {
+    "behavioral_valid": true,
+    "infra_invalid_excluded": {
+      "pilot_attempts_0093_0103": 39,
+      "confirmatory_preflight_20260908a": 4,
+      "reset_registry_sim_20260908a": 1
+    }
+  },
+  "regression_check": {
+    "serialization": "none in 14 valid episodes",
+    "sampling_seed": "none",
+    "reset_registry_digest": "8da6b69c… verified on cluster; no new mismatches"
+  }
+}

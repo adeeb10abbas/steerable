@@ -1,0 +1,34 @@
+{
+  "schema_version": "v4-second-stack-trigger-observation-path-audit-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "C8",
+  "fixture_id": "second_stack",
+  "audited_at_utc": "2026-09-08T08:40:00Z",
+  "isaac_robolab_defect_reference": {
+    "path": "artifacts/online_correction_v4/qualification/20260908_object_pair_natural_grasp_live_positive_control_g3ngp20260908m.json",
+    "component": "experiments/online_correction_v4/droid_robolab.py::object_kinematic_state",
+    "defect": "robot-base pose used as gripper position; object_grabbed() used as contact"
+  },
+  "second_stack_observation_path": {
+    "simulator_stack": "SimplerEnv/ManiSkill2_real2sim on SAPIEN",
+    "model_blind_g2_g3_tools": [
+      "tools/run_v4_second_stack_g2.py",
+      "tools/run_v4_second_stack_g3_path.py",
+      "tools/run_v4_second_stack_g3_scripted.py"
+    ],
+    "uses_droid_robolab_object_kinematic_state": false,
+    "uses_natural_grasp_detector_in_model_blind_gates": false,
+    "grasp_transport_evidence_source": "privileged scripted stage predicates (grasped, min_grasp_lift_m, placement tolerances) in run_v4_second_stack_g3_scripted.py"
+  },
+  "policy_episode_trigger_path": {
+    "status": "not_yet_integrated",
+    "finding": "C8 confirmatory policy episodes are not yet wired through experiments/online_correction_v4/runner.py and NaturalGraspDetector. The Isaac/RoboLab robot-base-versus-gripper defect does not automatically transfer, but an equivalent Bridge/WidowX observation adapter must be audited before C8 policy dispatch.",
+    "bridge_widowx_risk": "If C8 policy integration reuses NaturalGraspDetector without a SimplerEnv end-effector pose and grasp-contact source, the same class of never-firing trigger defect could block C8 independently.",
+    "required_before_policy_dispatch": [
+      "Define second_stack object_kinematic_state() or equivalent for GR00T Bridge policy episodes",
+      "Run a live SimplerEnv scripted-grasp positive control with trigger_eligible observation",
+      "Verify trigger wiring separately from Isaac repair"
+    ]
+  },
+  "verdict": "isaac_defect_not_present_in_current_model_blind_path; policy_trigger_adapter_unverified"
+}

@@ -1,0 +1,22 @@
+{
+  "authoritative_source": "compiled_ledger_20260908i/accepted_ledger.jsonl",
+  "compiled_accepted_count": 541,
+  "explanation": "The partial group receipt listed 545 accepted episode IDs before the ledger compiler finished selection. Four IDs were receipt-only and absent from the accepted ledger because latest_verified_valid_by_attempt_id had not yet promoted them at compile-i time, or their attempt evidence failed ledger verification. The compiled accepted ledger is authoritative for behavioral claims; the group receipt was reconciled down to 541 to match.",
+  "outcome_composition_partial": {
+    "no_grasp": 536,
+    "success": 0,
+    "transport_incomplete": 5,
+    "wrong_placement": 0
+  },
+  "pre_repair_infra_invalid_held_separately": 279,
+  "prior_group_receipt_count": 545,
+  "receipt_only_episode_ids": [
+    "online_correction_v4-C7-b014-9cd4aa406f48bfec",
+    "online_correction_v4-C7-b019-37c0ec5cbd772f1b",
+    "online_correction_v4-C7-b024-74f410f1bf02ac87",
+    "online_correction_v4-C7-b025-0601f18ad0367005"
+  ],
+  "reconciled_group_receipt_count": 541,
+  "schema_version": "v4-c7-ledger-receipt-reconciliation-v1",
+  "status": "partial_pending_full_compile"
+}

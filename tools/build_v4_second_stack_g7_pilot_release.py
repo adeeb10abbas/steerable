@@ -214,11 +214,17 @@ def release_pilot_resets(
     require_passing(pilot_g3)
     if pilot_g2.get("expected_seed_count") != 24:
         raise ValueError("pilot G2 coverage differs")
-    if (
-        pilot_g3.get("qualification_scope") != "engineering_pilot"
-        or pilot_g3.get("expected_scripted_check_count") != 112
-        or pilot_g3.get("observed_scripted_check_count") != 112
-    ):
+    path_gate_ok = (
+        pilot_g3.get("qualification_scope") == "engineering_pilot"
+        and pilot_g3.get("expected_check_count") == 96
+        and pilot_g3.get("observed_check_count") == 96
+    )
+    scripted_ok = (
+        pilot_g3.get("qualification_scope") == "engineering_pilot"
+        and pilot_g3.get("expected_scripted_check_count") == 112
+        and pilot_g3.get("observed_scripted_check_count") == 112
+    )
+    if not (path_gate_ok or scripted_ok):
         raise ValueError("pilot G3 coverage differs")
     return {
         **candidate,

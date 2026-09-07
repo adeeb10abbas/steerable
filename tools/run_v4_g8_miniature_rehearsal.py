@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 from pathlib import Path
+import shutil
 import sys
 from typing import Any
 
@@ -60,7 +61,12 @@ def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
 def _link_attempt(root: Path, episode_id: str, source: Path) -> Path:
     destination = root / episode_id / source.name
     destination.parent.mkdir(parents=True, exist_ok=True)
-    destination.symlink_to(source, target_is_directory=True)
+    if destination.exists() or destination.is_symlink():
+        if destination.is_dir() and not destination.is_symlink():
+            shutil.rmtree(destination)
+        else:
+            destination.unlink()
+    shutil.copytree(source, destination, symlinks=False)
     return destination
 
 
@@ -71,14 +77,14 @@ def _make_deliberate_invalid_attempt(
     source: Path,
 ) -> Path:
     destination = root / episode_id / "attempt-g8-deliberate-infra-failure"
-    destination.mkdir()
-    for child in source.iterdir():
-        if child.name in {"COMPLETE.json", "evidence_manifest.json"}:
-            continue
-        (destination / child.name).symlink_to(
-            child,
-            target_is_directory=child.is_dir(),
-        )
+    if destination.exists():
+        shutil.rmtree(destination)
+    shutil.copytree(
+        source,
+        destination,
+        symlinks=False,
+        ignore=shutil.ignore_patterns("COMPLETE.json", "evidence_manifest.json"),
+    )
     evidence = json.loads(
         (source / "evidence_manifest.json").read_text(encoding="utf-8")
     )

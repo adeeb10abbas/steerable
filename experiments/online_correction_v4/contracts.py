@@ -191,6 +191,9 @@ class EpisodeManifestRow:
     counterbalance: dict[str, Any]
     prompt_recipe: dict[str, Any]
     execution_order: int = 0
+    prompt_id: str = ""
+    prompt_text: str = ""
+    prompt_sha256: str = ""
 
     @classmethod
     def from_manifest_dict(cls, row: Mapping[str, Any]) -> EpisodeManifestRow:
@@ -217,6 +220,9 @@ class EpisodeManifestRow:
             counterbalance=dict(row["counterbalance"]),
             prompt_recipe=dict(row["prompt_recipe"]),
             execution_order=int(row.get("execution_order", 0)),
+            prompt_id=str(row.get("prompt_id", "")),
+            prompt_text=str(row.get("prompt_text", "")),
+            prompt_sha256=str(row.get("prompt_sha256", "")),
         )
 
 

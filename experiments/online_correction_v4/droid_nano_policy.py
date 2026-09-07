@@ -262,6 +262,17 @@ class DroidNanoPolicyAdapter:
                 payload=future_payload,
                 payload_sha256=future_sha,
             ),
+            request_audit={
+                "request_index": record.request_index,
+                "request_sampling_seed": record.sampling_seed,
+                "action_step_start": record.action_step_start,
+                "observation_sha256": record.observation_sha256,
+                "prompt_sha256": record.prompt_sha256,
+                "reset_fingerprint_sha256": record.reset_fingerprint_sha256,
+                "runtime_identity_sha256": record.runtime_identity_sha256,
+                "wire_request_sha256": record.wire_request_sha256,
+                "future_sha256": record.future_sha256,
+            },
         )
 
     def _action_step_start(self) -> int:

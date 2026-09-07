@@ -124,6 +124,7 @@ def _runtime_lock() -> RuntimeLockBinding:
         campaign_id="online_correction_v4",
         config_sha256="abc",
         manifest_sha256="def",
+        queue_sha256="def",
         release_status="RELEASED",
         released_families=("C1",),
         runner_entrypoint="tools/run_online_correction_v4.py",
@@ -253,6 +254,10 @@ class DroidPolicyAdapterTests(unittest.TestCase):
         self.assertEqual(len(response.actions), NANO_ACTION_SHAPE[0])
         self.assertEqual(len(response.actions[0]), NANO_ACTION_SHAPE[1])
         self.assertEqual(len(adapter.persisted_future_digests), 1)
+        self.assertEqual(
+            response.request_audit["wire_request_sha256"],
+            adapter.records[0].wire_request_sha256,
+        )
 
     def test_pi05_preserves_15x8_and_request_seed(self) -> None:
         prompt = "Place the cube so that the cube is left of the bowl."
@@ -278,6 +283,10 @@ class DroidPolicyAdapterTests(unittest.TestCase):
         )
         self.assertEqual(len(response.actions), PI05_ACTION_SHAPE[0])
         self.assertEqual(adapter.records[0].request_sampling_seed, 42000)
+        self.assertEqual(
+            response.request_audit["wire_request_sha256"],
+            adapter.records[0].wire_request_sha256,
+        )
 
     def test_static_prompt_is_enforced(self) -> None:
         prompt = "Place the cube so that the cube is left of the bowl."

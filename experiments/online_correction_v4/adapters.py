@@ -55,6 +55,7 @@ class PolicyResponse:
     action_sha256: str = ""
     generated_horizon: int = 0
     future_artifact: FutureArtifact | None = None
+    request_audit: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)

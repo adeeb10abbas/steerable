@@ -155,6 +155,16 @@ class DroidPi05PolicyAdapter:
             wall_duration_s=wall_duration_s,
             action_sha256=action_sha,
             generated_horizon=PI05_ACTION_CHUNK_STEPS,
+            request_audit={
+                "request_index": record.request_index,
+                "request_sampling_seed": record.request_sampling_seed,
+                "action_step_start": record.action_step_start,
+                "observation_sha256": record.observation_sha256,
+                "prompt_sha256": record.prompt_sha256,
+                "reset_fingerprint_sha256": record.reset_fingerprint_sha256,
+                "runtime_identity_sha256": record.runtime_identity_sha256,
+                "wire_request_sha256": record.wire_request_sha256,
+            },
         )
 
     def _action_step_start(self) -> int:

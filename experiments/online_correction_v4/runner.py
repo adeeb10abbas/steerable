@@ -203,6 +203,9 @@ class EpisodeRunner:
             prefix_group_id=self.manifest_row.prefix_group_id,
             env_seed=self.manifest_row.env_seed,
             policy_seed=self.manifest_row.policy_seed,
+            prompt_id=self.manifest_row.prompt_id,
+            prompt_sha256=self.manifest_row.prompt_sha256,
+            policy_id=self.manifest_row.factors.get("policy"),
             scenario=self.run_config.scenario,
             query_schedule=self.clock.schedule.value,
         )
@@ -563,6 +566,7 @@ class EpisodeRunner:
                 "action_sha256": response.action_sha256 or digest_bytes(repr(response.actions).encode("utf-8")),
                 "generated_horizon": response.generated_horizon,
                 "executed_action_count": executed_action_count,
+                "policy_request_audit": dict(response.request_audit),
             }
         )
         self.recorder.flush_incremental(fsync=True)
@@ -582,6 +586,7 @@ class EpisodeRunner:
         if self._latest_snapshot is None:
             return
         snapshot = self._latest_snapshot
+        state = snapshot.object_state
         self.recorder.record_trajectory_row(
             {
                 "simulation_time": float(snapshot.sim_time),
@@ -592,6 +597,34 @@ class EpisodeRunner:
                 "commanded_action": list(action) if action is not None else None,
                 "grasp_eligible": bool(self.grasp.eligible),
                 "detach_armed": bool(self.detach.armed),
+                "object_state": {
+                    "object_position_world": [
+                        float(state.object_x),
+                        float(state.object_y),
+                        float(state.object_z_pos),
+                    ],
+                    "gripper_position_world": [
+                        float(state.gripper_x),
+                        float(state.gripper_y),
+                        float(state.gripper_z),
+                    ],
+                    "initial_supported_z": float(state.initial_supported_z),
+                    "contact": bool(state.contact),
+                    "detached": bool(state.detached),
+                },
+                "reference_position_world": [
+                    float(value) for value in snapshot.reference_position_world
+                ],
+                "controller_state": {
+                    "pending_action_count": self.clock.action_queue.pending_count,
+                    "executed_action_count": len(self.clock.action_queue.executed),
+                    "pending_request_count": len(self.clock.pending_requests),
+                    "completed_request_count": len(self.clock.completed_requests),
+                    "next_query_time": self.clock.next_query_time,
+                    "fast_schedule_active": self.clock.fast_schedule_active,
+                    "policy_phase_active": self.clock.policy_phase_active,
+                    "passive_settling_active": self.clock.passive_settling_active,
+                },
             }
         )
 

@@ -1,0 +1,42 @@
+{
+  "campaign_id": "online_correction_v4",
+  "cluster_study_pin": "0e8ab827fea4392be2b50aef25758fac3ea1a4b0",
+  "compiled_at_utc": "2026-09-07T07:45:00Z",
+  "dispatch_gates": {
+    "file_bindings_checked": 768,
+    "output_parents_prepared": 128,
+    "smoke_registry_keys": [
+      "horizontal:G2:NVIDIA-A100-SXM4-80GB",
+      "horizontal:G3:NVIDIA-A100-SXM4-80GB"
+    ],
+    "study_checkout_clean": true
+  },
+  "fixture_version": "horizontal_geometry_repair_v2",
+  "g2_wave": {
+    "attempt_id": "g2r20260908a10080w",
+    "bundle_hash_suffix": "ded5585899",
+    "bundle_root": "artifacts/online_correction_v4/execution/g2_horizontal_repair_v2_20260908/rendered-a10080-wave-gated/v4-g2-horizontal-g2r20260908a10080w-ded5585899",
+    "gpu_product": "NVIDIA-A100-SXM4-80GB",
+    "job_count": 128,
+    "job_prefix": "v4-g2-horizontal-g2r20260908a10080w-ded5585899",
+    "status_at_dispatch": "128 Running"
+  },
+  "g3_wave": {
+    "attempt_id": "g3r20260908a10080w",
+    "bundle_hash_suffix": "19097c01cc",
+    "bundle_root": "artifacts/online_correction_v4/execution/g3_horizontal_repair_v2_20260908/rendered-a10080-wave-scale-0p5-gated/v4-g3-horizontal-g3r20260908a10080w-19097c01cc",
+    "gpu_product": "NVIDIA-A100-SXM4-80GB",
+    "job_count": 128,
+    "job_prefix": "v4-g3-horizontal-g3r20260908a10080w-19097c01cc",
+    "scale": 0.5,
+    "status_at_dispatch": "128 Running"
+  },
+  "note": "G3 path wave completed partial kubectl create on first attempt (head -30 truncated); full 128 jobs created on second create pass. ConfigMaps s000-s030 AlreadyExists is benign.",
+  "schema_version": "v4-horizontal-gated-wave-dispatch-v1",
+  "selected_g3_scale": 0.5,
+  "supersedes_attempts": [
+    "g2r20260908a10080a-s001..s127",
+    "g3r20260908a10080a",
+    "g3r20260908d"
+  ]
+}

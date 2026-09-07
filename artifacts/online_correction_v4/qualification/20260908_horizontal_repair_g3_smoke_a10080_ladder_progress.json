@@ -102,14 +102,34 @@
     },
     {
       "attempt_id": "g3r20260908a10080h",
-      "disposition": "gated_redispatch_pending",
+      "binding_constraint": null,
+      "check_count": 24,
+      "disposition": "valid_smoke_pass",
+      "failed_check_count": 0,
       "gpu_product": "NVIDIA-A100-SXM4-80GB",
+      "information_gate_passed": true,
+      "job_name": "v4-g3-horizontal-g3r20260908a10080h-2952f7e55d-s000",
+      "passed": true,
+      "receipt_path": "artifacts/online_correction_v4/qualification/gpu_receipts_20260908/g3_repair_v2_smoke_scale0p5_seed2100000000_a10080.json",
       "scale": 0.5,
-      "study_pin": "3a0c71ec96a07fc6b6efb462664e0a978b7042bc"
+      "study_commit": "eddd1d4f2db2c61c29852062587adac2955a75e8"
     }
   ],
   "campaign_id": "online_correction_v4",
-  "compiled_at_utc": "2026-09-07T07:22:00Z",
+  "compiled_at_utc": "2026-09-07T07:45:00Z",
+  "g3_path_wave": {
+    "attempt_id": "g3r20260908a10080w",
+    "job_prefix": "v4-g3-horizontal-g3r20260908a10080w-19097c01cc",
+    "scale": 0.5,
+    "seed_count": 128,
+    "status": "running"
+  },
+  "g2_path_wave": {
+    "attempt_id": "g2r20260908a10080w",
+    "job_prefix": "v4-g2-horizontal-g2r20260908a10080w-ded5585899",
+    "seed_count": 128,
+    "status": "running"
+  },
   "fixture_version": "horizontal_geometry_repair_v2",
   "gate": "G3",
   "g2_smoke_a10080": {
@@ -118,8 +138,9 @@
     "status": "Complete"
   },
   "gpu_stratum": "NVIDIA-A100-SXM4-80GB",
-  "next_action": "Complete gated 0.5 smoke; if reject, compile fixture-blocked receipt. Do not weaken gates or tune geometry from policy performance.",
+  "next_action": "Monitor g3r20260908a10080w 128x24 path wave and g2r20260908a10080w G2 wave; compile path-scale receipt then dispatch 112 scripted checks; await A40 determinism baseline coordination.",
   "reset_registry_sha256": "392dcdfd797644f514b74cf82f65b3a69d7ba1120e959b55e0447df18d61ab13",
   "schema_version": "v4-horizontal-repair-g3-smoke-ladder-progress-v1",
-  "selected_scale": null
+  "selected_scale": 0.5,
+  "study_pin_at_dispatch": "0e8ab827fea4392be2b50aef25758fac3ea1a4b0"
 }

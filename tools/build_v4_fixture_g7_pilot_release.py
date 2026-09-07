@@ -24,6 +24,12 @@ from experiments.online_correction_v4.fixture_qualification import (  # noqa: E4
 from experiments.online_correction_v4.geometry import build_prompt  # noqa: E402
 
 CHECKPOINT_REVISION = "6706d7680581c255ff61e0f3bb49d90eac55c79e"
+DEFAULT_POLICY_CHECKPOINT_REGISTRY = (
+    ROOT
+    / "artifacts/vla_wam_shared_v2/pilot/expansion/"
+    "cosmos3_nano_policy_droid_v2a011_registry.json"
+)
+POLICY_SEED_REGISTRY_SCHEMA = "v4-nano-policy-seed-registry-v1"
 COSMOS_COMMIT = "411d25b2e35bc441126f48c44a4b93e1c0564274"
 IMAGE_DIGEST = (
     "sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c"
@@ -54,6 +60,25 @@ def load_json(path: Path) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise ValueError(f"{path} must contain a JSON object")
     return value
+
+
+def validate_policy_checkpoint_registry(path: Path) -> None:
+    """Reject G4/G7 nano seed registries masquerading as checkpoint registries."""
+    payload = load_json(path)
+    schema = payload.get("schema_version")
+    if schema == POLICY_SEED_REGISTRY_SCHEMA:
+        raise ValueError(
+            f"{path} is a nano policy seed registry ({schema}); "
+            f"use the model checkpoint registry at {DEFAULT_POLICY_CHECKPOINT_REGISTRY}"
+        )
+    if "allowed_sampling_seeds" in payload and "behavioral_queue" not in payload:
+        raise ValueError(
+            f"{path} looks like a sampling-seed registry, not a model checkpoint registry"
+        )
+    if "behavioral_queue" not in payload and "amendment_id" not in payload:
+        raise ValueError(
+            f"{path} lacks checkpoint-registry markers (behavioral_queue or amendment_id)"
+        )
 
 
 def artifact(path: Path, *, runtime_path: str | None = None) -> dict[str, Any]:
@@ -302,6 +327,7 @@ def build_runtime_lock(
     g5_path: Path,
     g6_path: Path,
 ) -> dict[str, Any]:
+    validate_policy_checkpoint_registry(checkpoint_registry_path)
     profile = qualification_profile(fixture_id)
     if not HEX40.fullmatch(source_commit):
         raise ValueError("source_commit must be a full lowercase Git SHA")
@@ -476,6 +502,7 @@ def main() -> None:
         if output.exists():
             raise FileExistsError(f"refusing to overwrite pilot release: {output}")
 
+    validate_policy_checkpoint_registry(args.checkpoint_registry.resolve())
     profile = qualification_profile(args.fixture_id)
     campaign_path = ROOT / "docs/online_correction_v4/campaign.json"
     rows = pilot_rows(

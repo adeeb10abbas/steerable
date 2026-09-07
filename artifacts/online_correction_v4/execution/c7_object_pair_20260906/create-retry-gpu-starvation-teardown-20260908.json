@@ -1,0 +1,15 @@
+{
+  "behavioral_episode_count": 220,
+  "dispatch_mode": "behavioral_infra_retry_teardown",
+  "infra_failure_class": "a40_gpu_starvation_sim_pending_over_30m",
+  "kube_context": "prod-dcwi-warrenq1-vmkub007",
+  "lane_assignments": [
+    {"attempt_id": "attempt0603", "lane_id": "c7m01", "action": "lease_released_jobs_deleted"},
+    {"attempt_id": "attempt0604", "lane_id": "c7m02", "action": "lease_released_jobs_deleted"},
+    {"attempt_id": "attempt0605", "lane_id": "c7m05", "action": "lease_released_jobs_deleted"},
+    {"attempt_id": "attempt0606", "lane_id": "c7m31", "action": "lease_released_jobs_deleted"}
+  ],
+  "namespace": "211247-prod",
+  "note": "Released shard leases so 18 saturated sim lanes continue; episodes remain in coordinator queue bound to receipt gap (548 accepted vs 590+ PVC valid). Re-dispatch occurs when active leases complete.",
+  "schema_version": "v4-c7-infra-retry-teardown-v1"
+}

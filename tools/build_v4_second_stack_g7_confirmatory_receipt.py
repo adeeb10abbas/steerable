@@ -19,10 +19,20 @@ from tools.build_v4_second_stack_g7_pilot_release import (
     artifact,
     canonical_json_bytes,
     load_json,
-    require_passing,
     sha256_file,
     write_exclusive,
 )
+
+
+def passing_receipt(path: Path, *, gate: str | None = None) -> dict:
+    payload = load_json(path)
+    if gate is not None and payload.get("gate") != gate:
+        raise ValueError(f"{path} is not a {gate} receipt")
+    if payload.get("passed") is not True and payload.get("status") != "passed":
+        raise ValueError(f"{path} is not passing")
+    if payload.get("fixture_id") != FIXTURE_ID:
+        raise ValueError("qualification fixture mismatch")
+    return payload
 
 
 def load_jsonl(path: Path) -> list[dict]:
@@ -61,11 +71,11 @@ def build_receipt(
     pilot_g3 = load_json(pilot_g3_path_receipt)
     if pilot_g3.get("passed") is not True:
         raise ValueError("pilot G3 path receipt is not passing")
-    require_passing(load_json(main_g2_path))
-    require_passing(load_json(main_g3_path))
-    require_passing(load_json(hardware_g4_path))
-    require_passing(load_json(g5_path))
-    require_passing(load_json(g6_path))
+    passing_receipt(main_g2_path)
+    passing_receipt(main_g3_path, gate="G3")
+    passing_receipt(hardware_g4_path, gate="G4")
+    passing_receipt(g5_path, gate="G5")
+    passing_receipt(g6_path, gate="G6")
     policy_seeds = list(dict.fromkeys(int(row["policy_seed"]) for row in rows))
     env_seeds = list(dict.fromkeys(int(row["env_seed"]) for row in rows))
     if len(policy_seeds) != 64:

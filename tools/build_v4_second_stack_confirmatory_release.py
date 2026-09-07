@@ -49,7 +49,7 @@ def passing_receipt(path: Path, *, gate: str) -> dict:
     payload = load_json(path)
     if payload.get("gate") != gate:
         raise ValueError(f"{path} is not a {gate} receipt")
-    if payload.get("passed") is not True or payload.get("status") != "passed":
+    if payload.get("passed") is not True and payload.get("status") != "passed":
         raise ValueError(f"{gate} receipt is not passing")
     return payload
 

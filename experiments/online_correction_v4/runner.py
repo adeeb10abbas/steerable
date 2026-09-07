@@ -187,10 +187,16 @@ class EpisodeRunner:
 
     def _run_episode(self) -> EpisodeRunResult:
         from experiments.online_correction_v4.droid_robolab import LiveRoboLabEnv, RoboLabSession
+        from experiments.online_correction_v4.droid_second_stack_simulator import (
+            LiveSecondStackEnv,
+            SecondStackSession,
+        )
 
         env = getattr(self.simulator, "env", None)
         if isinstance(env, LiveRoboLabEnv):
             RoboLabSession.begin_episode(self.manifest_row.episode_id)
+        elif isinstance(env, LiveSecondStackEnv):
+            SecondStackSession.begin_episode(self.manifest_row.episode_id)
         self._latest_snapshot = self.simulator.reset(env_seed=self.manifest_row.env_seed)
         self._apply_registered_reference_pose(sim_time=0.0)
         if self._latest_snapshot is not None:

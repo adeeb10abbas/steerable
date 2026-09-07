@@ -7,7 +7,7 @@ from typing import Any, Mapping, Sequence
 
 from experiments.online_correction_v4.adapters import FutureArtifact, ObservationPacket
 from experiments.online_correction_v4.attempts import InfraInvalidReason
-from experiments.online_correction_v4.droid_contract import NANO_POLICY_ID, PI05_POLICY_ID, sha256_bytes
+from experiments.online_correction_v4.droid_contract import GROOT_POLICY_ID, NANO_POLICY_ID, PI05_POLICY_ID, sha256_bytes
 
 
 class PolicyInfraInvalidError(Exception):
@@ -50,6 +50,14 @@ _PI05_WIRE_KEYS = frozenset(
         "prompt",
         "sampling_seed",
         "action_step_start",
+    }
+)
+_GROOT_WIRE_KEYS = frozenset(
+    {
+        "prompt",
+        "sampling_seed",
+        "action_step_start",
+        "processed_observation",
     }
 )
 
@@ -154,8 +162,13 @@ def build_v4_request_envelope(
 
 
 def extract_server_wire_request(request: Mapping[str, Any], *, policy_id: str) -> dict[str, Any]:
-    """Return only the keys accepted by released Cosmos3 / π0.5 websocket servers."""
-    allowed = _NANO_WIRE_KEYS if policy_id == NANO_POLICY_ID else _PI05_WIRE_KEYS
+    """Return only the keys accepted by released policy servers."""
+    if policy_id == NANO_POLICY_ID:
+        allowed = _NANO_WIRE_KEYS
+    elif policy_id == GROOT_POLICY_ID:
+        allowed = _GROOT_WIRE_KEYS
+    else:
+        allowed = _PI05_WIRE_KEYS
     wire: dict[str, Any] = {}
     for key, value in request.items():
         if key.startswith(_OBSERVATION_KEY_PREFIX) or key in allowed:
@@ -164,6 +177,10 @@ def extract_server_wire_request(request: Mapping[str, Any], *, policy_id: str) -
         instruction = request.get("instruction")
         if isinstance(instruction, str):
             wire["prompt"] = instruction
+    if policy_id == GROOT_POLICY_ID and "processed_observation" not in wire:
+        processed = request.get("processed_observation")
+        if isinstance(processed, Mapping):
+            wire["processed_observation"] = dict(processed)
     return wire
 
 

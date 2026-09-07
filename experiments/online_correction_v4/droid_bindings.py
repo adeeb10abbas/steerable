@@ -14,14 +14,17 @@ from experiments.online_correction_v4.contracts import EpisodeManifestRow, Polic
 from experiments.online_correction_v4.droid_contract import (
     DroidContractError,
     FixtureRuntimeBinding,
+    GROOT_POLICY_ID,
     LaunchArgs,
     NANO_POLICY_ID,
     PI05_POLICY_ID,
+    SECOND_STACK_FIXTURE_ID,
     PolicyRuntimeBinding,
     RuntimeLockBinding,
     build_launch_plan,
     sha256_bytes,
 )
+from experiments.online_correction_v4.second_stack import RELATION_AXES_SCENE_XY
 from experiments.online_correction_v4.droid_policy_request import PolicyInfraInvalidError
 from experiments.online_correction_v4.droid_scorer import TerminalScorerError, build_terminal_scorer
 from experiments.online_correction_v4.droid_simulator import (
@@ -52,6 +55,7 @@ class DroidEpisodeBinding:
     clock: ControlledSimulationClock
     timing: TimingConfig
     terminal_scorer: TerminalScoringAdapter | None = None
+    kinematic_adapter: Any | None = None
 
 
 class DroidEpisodeRunner(EpisodeRunner):
@@ -184,6 +188,24 @@ class DroidEpisodeRunner(EpisodeRunner):
 
 def resolve_motion_direction(manifest: EpisodeManifestRow) -> tuple[float, float]:
     """Derive the live reference-motion unit vector from manifest counterbalance."""
+    if manifest.fixture == SECOND_STACK_FIXTURE_ID:
+        goal = manifest.factors.get("goal")
+        if not isinstance(goal, str):
+            raise DroidContractError("manifest goal is required for second_stack motion")
+        try:
+            physical_sign = int(manifest.counterbalance["physical_translation_sign"])
+        except (KeyError, TypeError, ValueError) as exc:
+            raise MotionDirectionError(
+                "counterbalance.physical_translation_sign is required"
+            ) from exc
+        if physical_sign not in (-1, 1):
+            raise MotionDirectionError(
+                f"counterbalance.physical_translation_sign must be +/-1, got {physical_sign!r}"
+            )
+        axis = RELATION_AXES_SCENE_XY.get(goal.strip().lower())
+        if axis is None:
+            raise MotionDirectionError(f"unsupported second_stack goal direction {goal!r}")
+        return (physical_sign * axis[0], physical_sign * axis[1])
     return ReferenceMotionController.resolve_live_direction(
         fixture=manifest.fixture,
         goal=manifest.factors["goal"],
@@ -280,6 +302,24 @@ def build_fake_binding(
             ensure_reset_attestation=reset_callback,
             executed_action_count=executed,
         )
+    elif policy_id == GROOT_POLICY_ID:
+        from experiments.online_correction_v4.droid_groot_policy import (
+            DroidGrootPolicyAdapter,
+            fake_groot_transport,
+        )
+
+        policy = DroidGrootPolicyAdapter(
+            binding=policy_binding,
+            episode_id=manifest.episode_id,
+            policy_seed=manifest.policy_seed,
+            prompt_text=prompt_text,
+            prompt_sha256=prompt_sha256,
+            reset_fingerprint_sha256=reset_fingerprint_sha256,
+            runtime_identity_sha256=runtime_identity_sha256,
+            transport=fake_groot_transport(manifest.policy_seed),
+            ensure_reset_attestation=reset_callback,
+            executed_action_count=executed,
+        )
     else:
         raise DroidContractError(f"unsupported policy for fake binding: {policy_id}")
     return DroidEpisodeBinding(
@@ -327,6 +367,89 @@ def build_live_binding(
         schedule=schedule,
         action_queue=ActionQueue(native_control_dt_s=native_dt),
     )
+    policy_id = manifest.factors["policy"]
+    fixture_id = manifest.fixture
+    if fixture_id == SECOND_STACK_FIXTURE_ID:
+        if policy_id != GROOT_POLICY_ID:
+            raise DroidContractError(
+                f"second_stack live binding requires {GROOT_POLICY_ID}, got {policy_id!r}"
+            )
+        from experiments.online_correction_v4.droid_second_stack_simulator import (
+            SecondStackBootstrapError,
+            build_live_second_stack_env,
+        )
+
+        try:
+            live_env = build_live_second_stack_env(
+                fixture=fixture_binding,
+                env_seed=manifest.env_seed,
+                episode_id=manifest.episode_id,
+                goal=str(manifest.factors.get("goal", "left")),
+                prompt_text=prompt_text,
+                prompt_sha256=prompt_sha256,
+                locked_native_control_dt_s=native_dt,
+            )
+        except (DroidDependencyError, SecondStackBootstrapError) as exc:
+            raise DroidContractError(str(exc)) from exc
+        simulator = DroidSimulatorAdapter.from_live_env(
+            episode_id=manifest.episode_id,
+            env_seed=manifest.env_seed,
+            fixture=fixture_binding,
+            env=live_env,
+            reset_proxy=live_env.reset_proxy,
+        )
+        simulator.prompt_sha256 = prompt_sha256
+        simulator.runtime_identity_sha256 = runtime_identity_sha256
+        simulator.experiment_clock = clock
+        executed = _executed_action_count(clock)
+        reset_callback = _simulator_reset_fingerprint(simulator)
+        try:
+            transport = build_live_transport(
+                policy_id=policy_id,
+                host=policy_host,
+                port=policy_port,
+            )
+        except TransportError as exc:
+            raise DroidContractError(str(exc)) from exc
+        from experiments.online_correction_v4.droid_groot_policy import DroidGrootPolicyAdapter
+
+        policy: PolicyAdapter = DroidGrootPolicyAdapter(
+            binding=policy_binding,
+            episode_id=manifest.episode_id,
+            policy_seed=manifest.policy_seed,
+            prompt_text=prompt_text,
+            prompt_sha256=prompt_sha256,
+            reset_fingerprint_sha256="",
+            runtime_identity_sha256=runtime_identity_sha256,
+            transport=transport,
+            ensure_reset_attestation=reset_callback,
+            executed_action_count=executed,
+        )
+        scorer = terminal_scorer
+        if scorer is None:
+            try:
+                scorer = build_terminal_scorer(
+                    manifest=manifest,
+                    fixture_binding=fixture_binding,
+                    timing=timing,
+                )
+            except (DroidContractError, TerminalScorerError) as exc:
+                raise DroidContractError(str(exc)) from exc
+        return DroidEpisodeBinding(
+            manifest=manifest,
+            lock=lock,
+            policy_binding=policy_binding,
+            fixture_binding=fixture_binding,
+            prompt_text=prompt_text,
+            prompt_sha256=prompt_sha256,
+            simulator=simulator,
+            policy=policy,
+            clock=clock,
+            timing=timing,
+            terminal_scorer=scorer,
+            kinematic_adapter=live_env.kinematic_adapter,
+        )
+
     queue_parent = output_dir or Path("/tmp")
     queue_row_path, queue_row_sha256 = write_queue_row(
         output_dir=queue_parent,
@@ -463,6 +586,7 @@ def build_episode_runner(
         recorder=recorder,
         terminal_scorer=binding.terminal_scorer,
         viewport_writer=viewport_writer,
+        kinematic_adapter=binding.kinematic_adapter,
         run_config=EpisodeRunConfig(
             displacement_m=displacement_m,
             motion_direction=motion_direction,
@@ -478,11 +602,16 @@ def build_episode_runner(
 
 def _build_viewport_writer(binding: DroidEpisodeBinding):
     from experiments.online_correction_v4.droid_robolab import LiveRoboLabEnv
+    from experiments.online_correction_v4.droid_second_stack_simulator import LiveSecondStackEnv
     from experiments.online_correction_v4.testing import FakeViewportVideoWriter
 
     native_dt = binding.policy_binding.native_control_dt_s
     fps = round(1.0 / native_dt, 6)
     if isinstance(binding.simulator.env, LiveRoboLabEnv):
+        from experiments.online_correction_v4.viewport_video import build_live_viewport_writer
+
+        return build_live_viewport_writer(fps=fps)
+    if isinstance(binding.simulator.env, LiveSecondStackEnv):
         from experiments.online_correction_v4.viewport_video import build_live_viewport_writer
 
         return build_live_viewport_writer(fps=fps)

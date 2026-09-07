@@ -304,8 +304,15 @@ def launch_document(
         }
     )
     argv = document.get("experiment_argv")
-    require(isinstance(argv, list) and argv and all(isinstance(item, str) and item for item in argv), f"{role} argv invalid")
-    absolute(argv[0], f"{role} experiment_argv[0]")
+    require(
+        isinstance(argv, list) and all(isinstance(item, str) for item in argv),
+        f"{role} argv invalid",
+    )
+    simulator_readiness = document.get("readiness_interface")
+    embedded_simulator = role == "simulator" and simulator_readiness == "embedded_in_policy_container"
+    if not embedded_simulator:
+        require(argv, f"{role} experiment argv must be nonempty")
+        absolute(argv[0], f"{role} experiment_argv[0]")
     for key in ("checkpoint_path", "nvidia_smi_bin"):
         absolute(document.get(key), f"{role} {key}")
     digest(document.get("checkpoint_sha256"), f"{role} checkpoint_sha256")
@@ -313,15 +320,26 @@ def launch_document(
     require(isinstance(imports, list) and imports and all(isinstance(item, str) and item for item in imports), f"{role} imports invalid")
     render = document.get("render_probe_argv")
     if role == "simulator":
-        require(
-            document.get("vulkan_contract") == "isaac_app_launcher_rtx_frame_under_bound_vk_icd",
-            "simulator vulkan_contract differs",
-        )
-        require(any(str(item).split(".")[0] == "curobo" for item in imports), "simulator imports lack CuRobo")
-        require(isinstance(render, list) and render and absolute(render[0], "simulator render argv[0]"), "simulator render argv invalid")
-        require(any("{rendered_frame}" in str(item) for item in render), "simulator render argv lacks output placeholder")
+        if embedded_simulator:
+            require(
+                argv == [] or argv is None or (isinstance(argv, list) and not argv),
+                "embedded simulator must not declare experiment argv",
+            )
+            require(render is None, "embedded simulator must not declare render probes")
+        else:
+            require(
+                document.get("vulkan_contract") == "isaac_app_launcher_rtx_frame_under_bound_vk_icd",
+                "simulator vulkan_contract differs",
+            )
+            require(any(str(item).split(".")[0] == "curobo" for item in imports), "simulator imports lack CuRobo")
+            require(isinstance(render, list) and render and absolute(render[0], "simulator render argv[0]"), "simulator render argv invalid")
+            require(any("{rendered_frame}" in str(item) for item in render), "simulator render argv lacks output placeholder")
     else:
-        require(render is None and "vulkan_contract" not in document, "policy must not declare simulator render/Vulkan probes")
+        vulkan_contract = document.get("vulkan_contract")
+        if isinstance(vulkan_contract, dict) and vulkan_contract.get("required") is False:
+            require(render is None, "policy must not declare simulator render probes")
+        else:
+            require(render is None and "vulkan_contract" not in document, "policy must not declare simulator render/Vulkan probes")
     cuda_probe = document.get("cuda_probe_argv")
     if cuda_probe is not None:
         require(
@@ -330,29 +348,37 @@ def launch_document(
         )
         absolute(cuda_probe[0], f"{role} cuda_probe_argv[0]")
     if role == "policy":
-        port_flags = [index for index, item in enumerate(argv[:-1]) if item == "--port"]
-        require(
-            len(port_flags) == 1 and str(argv[port_flags[0] + 1]) == str(policy_port),
-            "policy experiment argv port differs from policy_port",
-        )
-        document["policy_port"] = policy_port
-        document["readiness_contract"] = "http_healthz_after_checkpoint_load"
         readiness_interface = document.pop("readiness_interface", "openpi_http_healthz")
         require(
-            readiness_interface in {"openpi_http_healthz", "cosmos_http_healthz"},
+            readiness_interface in {"openpi_http_healthz", "cosmos_http_healthz", "groot_bridge_http"},
             "unsupported policy readiness_interface",
         )
         document["readiness_interface"] = readiness_interface
-        document.pop("policy_wait", None)
+        if readiness_interface == "groot_bridge_http":
+            document["policy_port"] = policy_port
+            document["readiness_contract"] = "http_healthz_after_checkpoint_load"
+            document.pop("policy_wait", None)
+        else:
+            port_flags = [index for index, item in enumerate(argv[:-1]) if item == "--port"]
+            require(
+                len(port_flags) == 1 and str(argv[port_flags[0] + 1]) == str(policy_port),
+                "policy experiment argv port differs from policy_port",
+            )
+            document["policy_port"] = policy_port
+            document["readiness_contract"] = "http_healthz_after_checkpoint_load"
+            document.pop("policy_wait", None)
     else:
-        document["policy_wait"] = {
-            "mode": "http_healthz",
-            "host": policy_service,
-            "port": policy_port,
-            "timeout_seconds": 900,
-            "poll_seconds": 2,
-            "service_identity": dict(service_identity),
-        }
+        if embedded_simulator:
+            document.pop("policy_wait", None)
+        else:
+            document["policy_wait"] = {
+                "mode": "http_healthz",
+                "host": policy_service,
+                "port": policy_port,
+                "timeout_seconds": 900,
+                "poll_seconds": 2,
+                "service_identity": dict(service_identity),
+            }
         document.pop("readiness_contract", None)
     binding_paths = {str(binding["path"]) for binding in document["file_bindings"]}
     entrypoint_path = Path(entrypoint)

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any, Callable, Mapping
 
-from experiments.online_correction_v4.droid_contract import NANO_POLICY_ID, PI05_POLICY_ID
+from experiments.online_correction_v4.droid_contract import GROOT_POLICY_ID, NANO_POLICY_ID, PI05_POLICY_ID
 from experiments.online_correction_v4.droid_policy_request import (
     ServerEnvelopeGateError,
     extract_server_wire_request,
@@ -29,6 +29,8 @@ class EpisodePolicyTransport:
         self.close()
         if self.policy_id == NANO_POLICY_ID:
             self._client = _create_nano_client(host=self.host, port=self.port)
+        elif self.policy_id == GROOT_POLICY_ID:
+            self._client = _create_groot_client(host=self.host, port=self.port)
         else:
             self._client = _create_pi05_client(host=self.host, port=self.port)
 
@@ -63,11 +65,13 @@ class EpisodePolicyTransport:
 
 
 def build_live_transport(*, policy_id: str, host: str, port: int) -> EpisodePolicyTransport:
-    if policy_id not in {NANO_POLICY_ID, PI05_POLICY_ID}:
+    if policy_id not in {NANO_POLICY_ID, PI05_POLICY_ID, GROOT_POLICY_ID}:
         raise TransportError(f"unsupported live transport policy_id: {policy_id}")
     try:
         if policy_id == NANO_POLICY_ID:
             probe_client = _create_nano_client(host=host, port=port)
+        elif policy_id == GROOT_POLICY_ID:
+            probe_client = _create_groot_client(host=host, port=port)
         else:
             probe_client = _create_pi05_client(host=host, port=port)
         close = getattr(probe_client, "close", None)
@@ -94,6 +98,45 @@ def _create_pi05_client(*, host: str, port: int) -> Any:
         remote_port=port,
         policy_variant="pi05",
     )
+
+
+class GrootBridgeHttpClient:
+    """Minimal HTTP client for the C8 GR00T Bridge policy server."""
+
+    def __init__(self, *, remote_host: str, remote_port: int) -> None:
+        import http.client
+
+        self._host = remote_host
+        self._port = int(remote_port)
+        self._http = http.client.HTTPConnection(self._host, self._port, timeout=120.0)
+
+    def close(self) -> None:
+        self._http.close()
+
+    def _query_server(self, request: dict[str, Any]) -> Mapping[str, Any]:
+        import json
+
+        body = json.dumps(request, sort_keys=True, allow_nan=False).encode("utf-8")
+        self._http.request(
+            "POST",
+            "/v4/infer",
+            body=body,
+            headers={"Content-Type": "application/json"},
+        )
+        response = self._http.getresponse()
+        payload = response.read()
+        if response.status != 200:
+            raise TransportError(
+                f"GR00T Bridge HTTP {response.status}: {payload[:512]!r}"
+            )
+        decoded = json.loads(payload.decode("utf-8"))
+        if not isinstance(decoded, dict):
+            raise TransportError("GR00T Bridge response must be a JSON object")
+        return decoded
+
+
+def _create_groot_client(*, host: str, port: int) -> GrootBridgeHttpClient:
+    return GrootBridgeHttpClient(remote_host=host, remote_port=port)
 
 
 def _looks_like_envelope_rejection(message: str) -> bool:

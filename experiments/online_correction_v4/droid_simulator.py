@@ -458,8 +458,11 @@ class DroidSimulatorAdapter:
     def _snapshot_after_step(self) -> SimulatorSnapshot:
         state = self.env.object_kinematic_state()
         ref_pos = (0.0, 0.0, 0.0)
-        if hasattr(self.env, "reference_position_world"):
-            ref_pos = self.env.reference_position_world()
+        reference_world = getattr(self.env, "reference_position_world", None)
+        if callable(reference_world):
+            ref_pos = reference_world()
+        elif hasattr(self.env, "reference_position_world"):
+            ref_pos = self.env.reference_position_world
         elif isinstance(self.env, FakeRoboLabEnv):
             ref_pos = (0.0, 0.0, 0.0)
         snapshot = SimulatorSnapshot(

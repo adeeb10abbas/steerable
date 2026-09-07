@@ -21,18 +21,25 @@ ADAPTER_CONTRACT_FILES: tuple[str, ...] = (
     "experiments/online_correction_v4/droid_simulator.py",
     "experiments/online_correction_v4/droid_nano_policy.py",
     "experiments/online_correction_v4/droid_pi05_policy.py",
+    "experiments/online_correction_v4/droid_groot_policy.py",
+    "experiments/online_correction_v4/droid_groot_observation.py",
+    "experiments/online_correction_v4/droid_second_stack_simulator.py",
     "experiments/online_correction_v4/droid_bindings.py",
 )
 
 NANO_POLICY_ID = "cosmos3_nano_droid"
 PI05_POLICY_ID = "pi05_droid"
-SUPPORTED_DROID_POLICIES = (NANO_POLICY_ID, PI05_POLICY_ID)
+GROOT_POLICY_ID = "groot_bridge_widowx"
+SUPPORTED_DROID_POLICIES = (NANO_POLICY_ID, PI05_POLICY_ID, GROOT_POLICY_ID)
+SECOND_STACK_FIXTURE_ID = "second_stack"
 
 NANO_ACTION_CHUNK_STEPS = 32
 PI05_ACTION_CHUNK_STEPS = 15
+GROOT_ACTION_CHUNK_STEPS = 8
 ACTION_DIM = 8
 NANO_ACTION_SHAPE = (NANO_ACTION_CHUNK_STEPS, ACTION_DIM)
 PI05_ACTION_SHAPE = (PI05_ACTION_CHUNK_STEPS, ACTION_DIM)
+GROOT_ACTION_SHAPE = (GROOT_ACTION_CHUNK_STEPS, ACTION_DIM)
 
 RESET_SCHEMA = "v4-droid-reset-attestation-v1"
 WRITER_CONTRACT_SCHEMA = "v4-droid-writer-contract-v1"
@@ -502,5 +509,7 @@ def expected_action_shape(policy_id: str) -> tuple[int, int]:
         return NANO_ACTION_SHAPE
     if policy_id == PI05_POLICY_ID:
         return PI05_ACTION_SHAPE
+    if policy_id == GROOT_POLICY_ID:
+        return GROOT_ACTION_SHAPE
     _fail(f"unsupported policy action shape lookup: {policy_id}")
     raise AssertionError("unreachable")

@@ -275,6 +275,21 @@ def build_terminal_scorer(
     timing: TimingConfig | None = None,
 ) -> HorizontalDroidTerminalScorer:
     fixture_id = manifest.fixture
+    if fixture_id == "second_stack":
+        relation = relation_from_wording(
+            manifest.factors["goal"],
+            manifest.factors.get("wording", "direct"),
+        )
+        if scoring_context is not None:
+            return HorizontalDroidTerminalScorer(relation=relation, ctx=scoring_context, timing=timing)
+        geometry_path = resolve_file_uri(fixture_binding.geometry_uri, label="geometry")
+        ctx = load_scoring_context(
+            geometry_path,
+            expected_sha256=fixture_binding.geometry_sha256,
+            relation=relation,
+            d_cap_m=fixture_binding.d_cap_m,
+        )
+        return HorizontalDroidTerminalScorer(relation=relation, ctx=ctx, timing=timing)
     if fixture_id in blocked_fixture_ids():
         raise DroidContractError(
             f"fixture {fixture_id!r} is blocked until asset receipts exist: "

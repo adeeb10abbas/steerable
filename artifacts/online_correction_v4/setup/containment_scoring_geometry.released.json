@@ -1,0 +1,74 @@
+{
+  "schema_version": "v4-containment-scoring-geometry-v1",
+  "campaign_id": "online_correction_v4",
+  "fixture_id": "containment",
+  "status": "released_for_policy_qualification",
+  "behavioral_episode_count": 0,
+  "model_request_count": 0,
+  "task_frame": {
+    "basis_convention": "task coordinates are left, front, up",
+    "u_left": [
+      0.0,
+      1.0,
+      0.0
+    ],
+    "u_front": [
+      -1.0,
+      0.0,
+      0.0
+    ],
+    "u_up": [
+      0.0,
+      0.0,
+      1.0
+    ],
+    "origin": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "workspace": {
+    "x_min": -0.45543174527585506,
+    "x_max": 0.4995682545751333,
+    "y_min": -0.8760843419283628,
+    "y_max": -0.2210843539983034,
+    "z_min": 0.05000072311609982,
+    "z_max": 0.08500072326511143
+  },
+  "object_footprint": {
+    "half_left": 0.0175000000745058,
+    "half_front": 0.017500000074505806,
+    "half_up": 0.017500000074505806
+  },
+  "reference_footprint": {
+    "half_left": 0.07000000029802322,
+    "half_front": 0.0700000002980232,
+    "half_up": 0.043749999469146136
+  },
+  "clearance_m": 0.01,
+  "d_cap_m": 0.16,
+  "geometry_provenance": {
+    "target_object": "cube",
+    "reference_object": "bowl",
+    "support_edge_margin_m": 0.005
+  },
+  "qualification_basis": {
+    "g2_aggregate": {
+      "path": "artifacts/online_correction_v4/qualification/20260908_containment_pilot_g2_aggregate_g2c6pilot20260908b.json",
+      "bytes": 12257,
+      "sha256": "5cd43223cea12a190b2293ac64a62551dc10b693d8c45e826116612540cf27fb"
+    },
+    "g3_path_scale": {
+      "path": "artifacts/online_correction_v4/qualification/20260908_containment_pilot_g3_path_scale_0p5_g3c6pilot20260908f.json",
+      "bytes": 11947,
+      "sha256": "183803aecf14bfb222624fa952230c50e8f98dc5edc3e40293924bf3b8d63315"
+    },
+    "live_initial_scene": {
+      "path": "/tmp/containment_initial_scene.json",
+      "sha256": "a7dd2088eea438960d5a250693f2ea2a5734d29d84640d712ca5f72a584698e3",
+      "bytes": 1871
+    }
+  },
+  "release_boundary": "Released for C6 G7-G8 engineering pilot and confirmatory policy episodes after runtime lock binding."
+}

@@ -1,0 +1,87 @@
+{
+  "campaign_id": "online_correction_v4",
+  "compiled_at_utc": "2026-09-07T07:22:00Z",
+  "disposition_summary": {
+    "do_not_redispatch_without_gated_rerender": true,
+    "infrastructure_invalid": 68,
+    "pre_dispatch_gate_bypass": true,
+    "running_stale_wave_jobs": 55,
+    "scientific_reject_g3": 4,
+    "valid_smoke_complete": 2
+  },
+  "fixture_id": "horizontal",
+  "fixture_version": "horizontal_geometry_repair_v2",
+  "gate": "G2/G3 pre-wave",
+  "note": "Do not retry the stale G2 128-seed wave (bundle pinned 4617db3) or pre-gate G3 smokes. Re-render at study pin 3a0c71e and use tools/dispatch_v4_model_blind_k8s_bundle.py with dispatch gates.",
+  "schema_version": "v4-horizontal-failed-pod-triage-v1",
+  "study_pin_commit": "3a0c71ec96a07fc6b6efb462664e0a978b7042bc",
+  "triage_buckets": [
+    {
+      "attempt_pattern": "g2r20260908a10080a-11feca0806-s001..s127",
+      "count_failed": 55,
+      "count_running_stale": 55,
+      "disposition": "infrastructure_invalid",
+      "evidence": "Pod logs: checkout commit a79d55b differs from required 4617db3 (bundle expected_study_commit stale vs cluster at dispatch). Example job v4-g2-horizontal-g2r20260908a10080a-11feca0806-s001.",
+      "root_cause": "pre-gate hand-rolled wave dispatch with stale bundle pin; exactly the failure class commit 964ade8 dispatch gates prevent.",
+      "retry_policy": "blocked_until_rerender_at_3a0c71e_with_gated_dispatch"
+    },
+    {
+      "attempt_id": "g2r20260908a10080a",
+      "count_complete": 1,
+      "disposition": "valid_smoke",
+      "evidence": "g2_seed_receipt passed_reset_and_camera; registered in gpu_smoke_registry.json",
+      "job_name": "v4-g2-horizontal-g2r20260908a10080a-11feca0806-s000"
+    },
+    {
+      "attempt_id": "g2r20260908a",
+      "count_failed": 1,
+      "disposition": "infrastructure_invalid",
+      "evidence": "schema_version mismatch on reset registry (pre-df0de5f bundle)",
+      "job_name": "v4-g2-horizontal-g2r20260908a-f7546f9c31-s000"
+    },
+    {
+      "attempt_ids": [
+        "g2gpu20260908a10040",
+        "g2gpu20260908b200",
+        "g2r20260908c"
+      ],
+      "count_failed": 3,
+      "disposition": "infrastructure_invalid",
+      "evidence": "Early non-A100-80GB or superseded bundle attempts before repair-v2 pin stabilization",
+      "retry_policy": "superseded_by_a10080_smoke_registry"
+    },
+    {
+      "attempt_id": "g3r20260908a10080a",
+      "count_failed": 1,
+      "disposition": "infrastructure_invalid",
+      "evidence": "KeyError scene_receipt in run_v4_horizontal_g3_path_seed.py (pre-a79d55b fix)",
+      "job_name": "v4-g3-horizontal-g3r20260908a10080a-5f63eb88a8-s000"
+    },
+    {
+      "attempt_id": "g3r20260908d",
+      "count_failed": 1,
+      "disposition": "infrastructure_invalid",
+      "evidence": "PreflightError: OUTPUT_PARENT must already exist (pre prepare_v4_k8s_output_parents gate)",
+      "job_name": "v4-g3-horizontal-g3r20260908d-ec3799f18a-s000"
+    },
+    {
+      "attempt_ids": [
+        "g3r20260908a10080b",
+        "g3r20260908a10080c",
+        "g3r20260908a10080d",
+        "g3r20260908a10080e"
+      ],
+      "count_complete_scientific_reject": 4,
+      "disposition": "scientific_reject",
+      "evidence": "g3_path_seed_receipt.json on PVC under /data/users/ali/vla_wam/raw/v4/g3-horizontal/",
+      "retry_policy": "no_redispatch_same_scale; ladder continues to smaller scales only"
+    },
+    {
+      "attempt_id": "g3r20260908a10080f",
+      "count_deleted_pending": 1,
+      "disposition": "infrastructure_invalid",
+      "evidence": "Pod Pending 81m+ in saturated queue; deleted without receipt. Superseded by gated retry g3r20260908a10080h.",
+      "retry_policy": "gated_redispatch_only"
+    }
+  ]
+}

@@ -32,17 +32,6 @@ class DroidRoboLabTests(unittest.TestCase):
             self.assertTrue(path.is_file())
             self.assertEqual(len(digest), 64)
 
-    def test_g3_scene_capture_objects_include_vertical_shelves(self) -> None:
-        backend = object.__new__(LiveRoboLabBackend)
-        backend.config = SimpleNamespace(
-            fixture=SimpleNamespace(fixture_id="vertical"),
-        )
-        captured = backend.g3_scene_capture_objects
-        self.assertIn("cube", captured)
-        self.assertIn("bowl", captured)
-        self.assertIn("shelf_top", captured)
-        self.assertIn("shelf_bottom", captured)
-
     @unittest.skipIf(np is None, "numpy is owned by the cluster runtime")
     def test_viewport_capture_falls_back_to_observation_group(self) -> None:
         backend = object.__new__(LiveRoboLabBackend)

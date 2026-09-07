@@ -437,15 +437,6 @@ class LiveRoboLabBackend:
         return self.fixture_objects.movable_objects
 
     @property
-    def g3_scene_capture_objects(self) -> tuple[str, ...]:
-        """Objects whose poses and bounds must appear in privileged scene state."""
-        names: list[str] = list(self.settle_objects)
-        for name in self.fixture_objects.contact_objects:
-            if name not in names and name != "robot":
-                names.append(name)
-        return tuple(names)
-
-    @property
     def control_dt_s(self) -> float:
         if self._native_dt_measured is None:
             step_dt = getattr(self.env, "step_dt", None)
@@ -631,7 +622,7 @@ class LiveRoboLabBackend:
         get_world = self.modules["get_world"]
         world = get_world(self.env)
         objects: dict[str, Any] = {}
-        for name in self.g3_scene_capture_objects:
+        for name in self.settle_objects:
             pos, quat = world.get_pose(name, env_id=0)
             velocity = world.get_velocity(name, env_id=0)
             objects[name] = {

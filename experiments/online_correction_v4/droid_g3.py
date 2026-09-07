@@ -201,6 +201,67 @@ def planar_geometry_from_scene(
     }
 
 
+def _robot_base_point_to_world(
+    frame: TaskFrame, point_robot: tuple[float, float, float]
+) -> tuple[float, float, float]:
+    x_rb, y_rb, z_rb = point_robot
+    return frame.task_to_world((y_rb, -x_rb, z_rb))
+
+
+def _vertical_shelf_world_aabb(
+    frame: TaskFrame,
+    fixture_geometry: Mapping[str, Any],
+    shelf_name: str,
+) -> dict[str, list[float]]:
+    centers_z = fixture_geometry.get("shelf_center_z_m")
+    if not isinstance(centers_z, list) or len(centers_z) < 3:
+        raise DroidG3Error("vertical shelf_center_z_m is unavailable")
+    shelf_index = {"shelf_bottom": 0, "shelf_middle": 1, "shelf_top": 2}.get(
+        shelf_name
+    )
+    if shelf_index is None:
+        raise DroidG3Error(f"unsupported vertical shelf name: {shelf_name}")
+    center_x = fixture_geometry.get("shelf_center_robot_x_m")
+    depth = fixture_geometry.get("shelf_depth_x_m")
+    width = fixture_geometry.get("shelf_width_y_m")
+    thickness = fixture_geometry.get("shelf_thickness_m")
+    if (
+        isinstance(center_x, bool)
+        or not isinstance(center_x, (int, float))
+        or isinstance(depth, bool)
+        or not isinstance(depth, (int, float))
+        or isinstance(width, bool)
+        or not isinstance(width, (int, float))
+        or isinstance(thickness, bool)
+        or not isinstance(thickness, (int, float))
+    ):
+        raise DroidG3Error("vertical shelf dimensions are unavailable")
+    center = (
+        float(center_x),
+        0.0,
+        float(centers_z[shelf_index]),
+    )
+    half_extents = (
+        float(depth) / 2.0,
+        float(width) / 2.0,
+        float(thickness) / 2.0,
+    )
+    world_points = [
+        _robot_base_point_to_world(
+            frame,
+            (
+                center[0] + dx * half_extents[0],
+                center[1] + dy * half_extents[1],
+                center[2] + dz * half_extents[2],
+            ),
+        )
+        for dx, dy, dz in product((-1.0, 1.0), repeat=3)
+    ]
+    min_xyz = [min(point[index] for point in world_points) for index in range(3)]
+    max_xyz = [max(point[index] for point in world_points) for index in range(3)]
+    return {"min_xyz": min_xyz, "max_xyz": max_xyz}
+
+
 def horizontal_geometry_from_scene(
     *,
     task_frame_evidence: Mapping[str, Any],
@@ -251,17 +312,25 @@ def geometry_from_scene_for_fixture(
             raise DroidG3Error("vertical horizontal overlap is invalid")
         geometry["horizontal_overlap_min_m"] = float(horizontal_overlap)
         target_half_up = geometry["target_footprint"].half_up
+        frame = geometry["frame"]
         for scene_name, result_name in (
             ("shelf_top", "top_shelf_goal_volume"),
             ("shelf_bottom", "bottom_shelf_goal_volume"),
         ):
             shelf = objects.get(scene_name)
-            if not isinstance(shelf, Mapping):
-                raise DroidG3Error(f"vertical scene lacks {scene_name}")
-            physical = bounds_world_to_task(
-                geometry["frame"],
-                shelf.get("world_aabb_m", {}),
+            world_bounds = (
+                shelf.get("world_aabb_m")
+                if isinstance(shelf, Mapping)
+                and isinstance(shelf.get("world_aabb_m"), Mapping)
+                else None
             )
+            if world_bounds is None:
+                world_bounds = _vertical_shelf_world_aabb(
+                    frame,
+                    fixture_geometry,
+                    scene_name,
+                )
+            physical = bounds_world_to_task(frame, world_bounds)
             tolerance = 0.002
             geometry[result_name] = AxisAlignedBox(
                 physical.x_min,

@@ -248,6 +248,28 @@ class DroidG3GeometryTests(unittest.TestCase):
         )
         self.assertFalse(goal.empty)
 
+    def test_vertical_goal_regions_use_registry_shelf_fallback(self) -> None:
+        scene = _scene()
+        scene["objects"]["cube"] = scene["objects"]["rubiks_cube"]
+        geometry = geometry_from_scene_for_fixture(
+            fixture_id="vertical",
+            task_frame_evidence=FRAME,
+            scene_state=scene,
+            support_edge_margin_m=0.005,
+            fixture_geometry={
+                "horizontal_overlap_min_m": 0.03,
+                "shelf_center_robot_x_m": 0.53,
+                "shelf_center_z_m": [0.11, 0.26, 0.41],
+                "shelf_depth_x_m": 0.28,
+                "shelf_width_y_m": 0.48,
+                "shelf_thickness_m": 0.02,
+            },
+        )
+        self.assertIn("top_shelf_goal_volume", geometry)
+        self.assertIn("bottom_shelf_goal_volume", geometry)
+        self.assertFalse(geometry["top_shelf_goal_volume"].is_empty())
+        self.assertFalse(geometry["bottom_shelf_goal_volume"].is_empty())
+
     def test_vertical_goal_regions_bind_live_shelf_surfaces(self) -> None:
         scene = _scene()
         scene["objects"].update(

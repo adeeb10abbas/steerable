@@ -1,15 +1,15 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: "v4-object-pair-natural-grasp-pc-g3ngp20260908neg-job"
+  name: "v4-object-pair-natural-grasp-pc-g3ngp20260908p-job"
   namespace: "211247-prod"
   labels:
     app.kubernetes.io/name: "v4-object-pair-natural-grasp-pc"
     app.kubernetes.io/part-of: "vla-wam-v4"
     v4-gate: "object-pair-natural-grasp-pc"
     v4-fixture-id: "object_pair"
-    v4-attempt-id: "g3ngp20260908neg"
-    v4-config-sha: "dd5303aeda16c1ed"
+    v4-attempt-id: "g3ngp20260908p"
+    v4-config-sha: "15fc856ed5643c4c"
     v4-scale: "0.5"
     v4-lane-id: "ngpc-st000"
     v4-lane-role: "simulator"
@@ -27,8 +27,8 @@ spec:
         app.kubernetes.io/part-of: "vla-wam-v4"
         v4-gate: "object-pair-natural-grasp-pc"
         v4-fixture-id: "object_pair"
-        v4-attempt-id: "g3ngp20260908neg"
-        v4-config-sha: "dd5303aeda16c1ed"
+        v4-attempt-id: "g3ngp20260908p"
+        v4-config-sha: "15fc856ed5643c4c"
         v4-scale: "0.5"
         v4-lane-id: "ngpc-st000"
         v4-lane-role: "simulator"
@@ -98,14 +98,14 @@ spec:
             - name: IMAGE_DIGEST_EXPECTED
               valueFrom:
                 configMapKeyRef:
-                  name: "v4-object-pair-natural-grasp-pc-g3ngp20260908neg-job-config"
+                  name: "v4-object-pair-natural-grasp-pc-g3ngp20260908p-job-config"
                   key: "image.digest"
             - name: LANE_ROLE
               value: "simulator"
             - name: LANE_ID
               value: "ngpc-st000"
             - name: ATTEMPT_ID
-              value: "g3ngp20260908neg"
+              value: "g3ngp20260908p"
             - name: OUTPUT_PARENT
               value: "/data/users/ali/vla_wam/raw/v4/qualification/object-pair-natural-grasp-positive-control"
             - name: KUBE_CONTEXT
@@ -113,7 +113,7 @@ spec:
             - name: LANE_LAUNCH_CONFIG
               value: "/opt/v4-lane/config/simulator-launch.json"
             - name: LANE_LAUNCH_CONFIG_SHA256
-              value: "dd5303aeda16c1edf8f4f14bed5dc4691fb590eeabc78c1823a4528fb9f5eee1"
+              value: "15fc856ed5643c4c843df0484fc4a081b9f80ede2f468bf45826bc4cc88927df"
             - name: HOME
               value: "/lane-runtime/home"
             - name: XDG_CACHE_HOME
@@ -184,8 +184,8 @@ spec:
             sizeLimit: 96Gi
         - name: launch-config
           configMap:
-            name: "v4-object-pair-natural-grasp-pc-g3ngp20260908neg-job-config"
+            name: "v4-object-pair-natural-grasp-pc-g3ngp20260908p-job-config"
         - name: lane-scripts
           configMap:
-            name: "v4-object-pair-natural-grasp-pc-g3ngp20260908neg-2708471d0e-scripts"
+            name: "v4-object-pair-natural-grasp-pc-g3ngp20260908p-2708471d0e-scripts"
             defaultMode: 0555

@@ -1335,6 +1335,9 @@ class LiveRoboLabEnv:
     def step(self, action: tuple[float, ...] | None) -> tuple[dict[str, Any], dict[str, Any]]:
         return self.reset_proxy.step(action)
 
+    def hold_action(self) -> Any:
+        return self.backend.hold_action_tensor()
+
     def capture_observation_bytes(self) -> bytes:
         return self.backend.capture_observation_bytes()
 

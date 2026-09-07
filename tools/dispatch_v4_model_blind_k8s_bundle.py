@@ -22,6 +22,7 @@ if str(TOOLS) not in sys.path:
 import v4_gpu_scheduling as gpu_scheduling  # noqa: E402
 import v4_dispatch_gates as dispatch_gates  # noqa: E402
 import v4_study_checkout_isolation as checkout_isolation  # noqa: E402
+import v4_wave_admission as wave_admission  # noqa: E402
 
 
 def _load_renderer(schema_version: str):
@@ -91,6 +92,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--publisher-pod", default="211247-sz5vjy-vla4-b200-4gpu")
     parser.add_argument("--skip-cluster-gates", action="store_true")
     parser.add_argument("--skip-checkout-isolation", action="store_true")
+    parser.add_argument(
+        "--prequeue-if-blocked",
+        action="store_true",
+        help="Create jobs even when not currently admitted; enforcement will suspend them",
+    )
     parser.add_argument("--create", action="store_true")
     args = parser.parse_args(argv)
 
@@ -142,6 +148,22 @@ def main(argv: list[str] | None = None) -> int:
     if not args.create:
         return 0
 
+    attempt_id = str(patched["attempt_id"])
+    if not args.skip_cluster_gates and not args.prequeue_if_blocked:
+        try:
+            jobs = wave_admission.fetch_v4_jobs(
+                kube_context=str(patched["kube_context"]),
+                namespace=str(patched["namespace"]),
+            )
+            summary = wave_admission.summarize_attempts(jobs)
+            wave_admission.require_dispatch_admission(
+                attempt_id=attempt_id,
+                attempt_summary=summary,
+            )
+        except wave_admission.WaveAdmissionError as exc:
+            print(str(exc), file=sys.stderr)
+            return 2
+
     is_smoke = bool(
         args.smoke
         or (args.max_seed_jobs is not None and int(args.max_seed_jobs) == 1)
@@ -178,6 +200,17 @@ def main(argv: list[str] | None = None) -> int:
         print(completed.stderr or completed.stdout, file=sys.stderr)
         return completed.returncode
     print(completed.stdout)
+    if args.prequeue_if_blocked and not args.skip_cluster_gates:
+        jobs = wave_admission.fetch_v4_jobs(
+            kube_context=kube_context,
+            namespace=str(patched["namespace"]),
+        )
+        wave_admission.enforce_admission_on_cluster(
+            jobs,
+            kube_context=kube_context,
+            namespace=str(patched["namespace"]),
+            dry_run=False,
+        )
     return 0
 
 

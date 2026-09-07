@@ -286,10 +286,15 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
     require(isinstance(resets, dict) and resets, "reset registry has no seeds")
     seeds = sorted(int(seed) for seed in resets)
     max_seed_jobs = int(spec.get("max_seed_jobs", len(seeds)))
-    require(
-        max_seed_jobs == len(seeds),
-        "max_seed_jobs must equal complete registered reset coverage",
-    )
+    if max_seed_jobs == len(seeds):
+        pass
+    elif max_seed_jobs == 1:
+        seeds = seeds[:1]
+    else:
+        require(
+            False,
+            "max_seed_jobs must equal complete registered reset coverage or 1 for determinism smokes",
+        )
 
     scripts = lane.load_runtime_scripts(
         ROOT / "deploy/k8s/v4_lane_bundle/scripts"

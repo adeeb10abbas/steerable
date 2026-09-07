@@ -1,0 +1,28 @@
+{
+  "schema_version": "v4-wave-admission-initial-enforcement-v1",
+  "observed_at_utc": "2026-09-07T12:20:00Z",
+  "justification": "Homogeneous re-run at pin c401fb4 queued three full 128-seed waves plus smokes while superseded mixed-pin waves still held GPUs. Serialized admission cancelled infrastructure-invalid superseded attempts and suspended non-admitted homogeneous waves so only one tier runs at a time.",
+  "superseded_cancelled_job_count": 263,
+  "non_admitted_suspended_job_count": 821,
+  "admitted_after_enforcement": ["g3r20260908g"],
+  "capacity_freed": {
+    "pending_before": 357,
+    "pending_after": 112,
+    "competing_active_waves_before": 3,
+    "admitted_active_jobs_after": 124,
+    "note": "A100-80GB pending dominated pre-enforcement queue; post-enforcement only horizontal G3 path runs on the A100-80GB pool."
+  },
+  "superseded_attempt_patterns": [
+    "g3rb20260908r2",
+    "g2r20260908a10080w",
+    "g3r20260908a10080w",
+    "g2r20260908a10080r",
+    "g3r20260908a10080r",
+    "g3c5p20260908a10080[a-f]",
+    "g3c6p20260908a10080[a-f]",
+    "g2gpu20260908a40b",
+    "g2gpu20260908a40c"
+  ],
+  "prior_stratum_cancellation_receipt": "artifacts/online_correction_v4/execution/gpu_widen_20260908/cancellation_receipt_20260908.json",
+  "prior_stratum_cancelled_job_count": 384
+}

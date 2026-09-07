@@ -16,6 +16,22 @@
       "suspended": 64,
       "total": 64
     },
+    "g2c6pilot20260908a": {
+      "active": 0,
+      "failed": 24,
+      "pending": 0,
+      "succeeded": 0,
+      "suspended": 24,
+      "total": 24
+    },
+    "g2c6pilot20260908b": {
+      "active": 0,
+      "failed": 0,
+      "pending": 0,
+      "succeeded": 24,
+      "suspended": 24,
+      "total": 24
+    },
     "g2c6q20260906c": {
       "active": 0,
       "failed": 0,
@@ -84,9 +100,9 @@
       "active": 0,
       "failed": 17,
       "pending": 0,
-      "succeeded": 111,
-      "suspended": 128,
-      "total": 128
+      "succeeded": 113,
+      "suspended": 130,
+      "total": 130
     },
     "g3c2a40smoke20260908a": {
       "active": 0,
@@ -152,14 +168,6 @@
       "suspended": 64,
       "total": 64
     },
-    "g3c5p20260908a10080g": {
-      "active": 0,
-      "failed": 0,
-      "pending": 1,
-      "succeeded": 0,
-      "suspended": 1,
-      "total": 1
-    },
     "g3c6p20260906a": {
       "active": 0,
       "failed": 64,
@@ -176,13 +184,69 @@
       "suspended": 1,
       "total": 1
     },
+    "g3c6p20260908a10040g": {
+      "active": 0,
+      "failed": 0,
+      "pending": 0,
+      "succeeded": 63,
+      "suspended": 63,
+      "total": 63
+    },
+    "g3c6p20260908a10040i": {
+      "active": 0,
+      "failed": 0,
+      "pending": 0,
+      "succeeded": 1,
+      "suspended": 1,
+      "total": 1
+    },
+    "g3c6p20260908a10040s031r": {
+      "active": 0,
+      "failed": 0,
+      "pending": 0,
+      "succeeded": 1,
+      "suspended": 1,
+      "total": 1
+    },
     "g3c6p20260908a10080g": {
       "active": 0,
       "failed": 1,
       "pending": 0,
       "succeeded": 0,
-      "suspended": 0,
+      "suspended": 1,
       "total": 1
+    },
+    "g3c6pilot20260908b": {
+      "active": 0,
+      "failed": 24,
+      "pending": 0,
+      "succeeded": 0,
+      "suspended": 24,
+      "total": 24
+    },
+    "g3c6pilot20260908c": {
+      "active": 0,
+      "failed": 24,
+      "pending": 0,
+      "succeeded": 0,
+      "suspended": 24,
+      "total": 24
+    },
+    "g3c6pilot20260908e": {
+      "active": 0,
+      "failed": 24,
+      "pending": 0,
+      "succeeded": 0,
+      "suspended": 24,
+      "total": 24
+    },
+    "g3c6pilot20260908f": {
+      "active": 0,
+      "failed": 0,
+      "pending": 10,
+      "succeeded": 14,
+      "suspended": 24,
+      "total": 24
     },
     "g3c7p20260906b": {
       "active": 0,
@@ -301,7 +365,7 @@
       "failed": 0,
       "pending": 0,
       "succeeded": 1,
-      "suspended": 0,
+      "suspended": 1,
       "total": 1
     },
     "g3ngp20260908cneg": {
@@ -593,12 +657,12 @@
       "total": 1
     },
     "g3rb20260908v": {
-      "active": 87,
-      "failed": 0,
-      "pending": 0,
-      "succeeded": 36,
-      "suspended": 0,
-      "total": 123
+      "active": 0,
+      "failed": 66,
+      "pending": 5,
+      "succeeded": 119,
+      "suspended": 190,
+      "total": 190
     },
     "g3s7pilot20260906a": {
       "active": 0,
@@ -719,18 +783,18 @@
   "enforcement": {
     "achievable_episode_estimates": {
       "achievable_episode_counts": {
-        "C2_reference_binding": 4096,
         "C6_containment": 768,
         "C7_object_pair": 768,
         "C8_second_stack": 768
       },
-      "achievable_episode_total": 6400,
+      "achievable_episode_total": 2304,
       "blocked_episode_counts": {
         "C1_C3_C4_horizontal": 9728,
+        "C2_reference_binding": 4096,
         "C5_vertical": 1536
       },
-      "blocked_episode_total": 11264,
-      "estimated_at_utc": "2026-09-07T14:18:48Z",
+      "blocked_episode_total": 15360,
+      "estimated_at_utc": "2026-09-07T20:12:53Z",
       "note": "C7 behavioral episodes continue on protected a10080-policy/a40-simulator lanes throughout. G2 horizontal evidence runs as A100-80GB backfill and does not extend the C2 critical path when C2 dominates pool occupancy.",
       "parallel_strata_materially_faster": true,
       "parallel_strata_time_saved_minutes": 47,
@@ -751,13 +815,27 @@
           "parallel_strata_enabled": true,
           "primary_plus_backfill_on_a10080": true
         },
-        "estimated_at_utc": "2026-09-07T14:18:48Z",
+        "estimated_at_utc": "2026-09-07T20:12:53Z",
         "main_episode_start_note": "6,400 achievable episodes (C7/C6/C2/C8) may dispatch after their qualification tiers complete and per-fixture live controls pass. 11,264 episodes across C1/C3/C4 horizontal and C5 vertical remain scientifically blocked.",
         "parallel_qualification_minutes": 47,
         "qualification_completion_hours": 0.8,
         "schema_version": "v4-wave-admission-estimates-v2",
         "serialized_a10080_minutes": 47,
         "tier_estimates": [
+          {
+            "admission_class": "pilot_priority",
+            "alternate_gpu_products": [],
+            "attempt_ids": [],
+            "cumulative_minutes_from_now": 0.0,
+            "episodes_gated": 1536,
+            "estimated_wave_minutes": 0.0,
+            "gpu_product": null,
+            "pool_size": 4,
+            "remaining_seeds": 0,
+            "seed_minutes_assumed": 25,
+            "tier_complete": true,
+            "tier_id": "g7_engineering_pilots"
+          },
           {
             "admission_class": "primary",
             "alternate_gpu_products": [],
@@ -783,7 +861,7 @@
             "estimated_wave_minutes": 47,
             "gpu_product": "NVIDIA-A100-SXM4-80GB",
             "pool_size": 95,
-            "remaining_seeds": 87,
+            "remaining_seeds": 9,
             "seed_minutes_assumed": 47,
             "tier_complete": false,
             "tier_id": "reference_binding_g3"
@@ -820,7 +898,7 @@
             "estimated_wave_minutes": 35,
             "gpu_product": "NVIDIA-A100-SXM4-80GB",
             "pool_size": 95,
-            "remaining_seeds": 18,
+            "remaining_seeds": 16,
             "seed_minutes_assumed": 35,
             "tier_complete": false,
             "tier_id": "horizontal_g2_evidence"
@@ -839,36 +917,34 @@
       },
       "remaining_g3_seeds": {
         "containment_g3c6p20260908a10040g": 0,
-        "horizontal_g2_evidence_backfill": 18,
-        "reference_binding_g3rb20260908v": 87
+        "horizontal_g2_evidence_backfill": 16,
+        "reference_binding_g3rb20260908v": 9
       },
       "schema_version": "v4-achievable-episode-estimates-v1"
     },
     "admission_report": {
-      "admitted_attempts": [
+      "admitted_attempts": [],
+      "c7_always_admitted": [],
+      "deprioritized_deferred": [],
+      "scientifically_blocked": [
+        "g3r20260908g",
         "g3rb20260908v"
       ],
-      "c7_always_admitted": [],
-      "deprioritized_deferred": [
-        "g3c5p20260908a10080g"
-      ],
-      "scientifically_blocked": [
-        "g3r20260908g"
-      ],
       "tiers": [
+        {
+          "status": "no_jobs",
+          "tier_id": "g7_engineering_pilots"
+        },
         {
           "status": "complete",
           "tier_id": "natural_grasp_live_control"
         },
         {
-          "attempt_ids": [
-            "g3rb20260908v"
-          ],
-          "status": "admitted",
+          "status": "complete",
           "tier_id": "reference_binding_g3"
         },
         {
-          "status": "no_jobs",
+          "status": "complete",
           "tier_id": "c6_containment_g3"
         },
         {
@@ -876,10 +952,7 @@
           "tier_id": "horizontal_g2_evidence"
         },
         {
-          "attempt_ids": [
-            "g3c5p20260908a10080g"
-          ],
-          "status": "deprioritized_deferred",
+          "status": "no_jobs",
           "tier_id": "c5_vertical_g3"
         }
       ],
@@ -887,9 +960,7 @@
         "g3c6p20260908a10080g"
       ]
     },
-    "admitted_attempts": [
-      "g3rb20260908v"
-    ],
+    "admitted_attempts": [],
     "attempt_summary": {
       "g2c2q20260906a": {
         "active": 0,
@@ -906,6 +977,22 @@
         "succeeded": 64,
         "suspended": 64,
         "total": 64
+      },
+      "g2c6pilot20260908a": {
+        "active": 0,
+        "failed": 24,
+        "pending": 0,
+        "succeeded": 0,
+        "suspended": 24,
+        "total": 24
+      },
+      "g2c6pilot20260908b": {
+        "active": 0,
+        "failed": 0,
+        "pending": 0,
+        "succeeded": 24,
+        "suspended": 24,
+        "total": 24
       },
       "g2c6q20260906c": {
         "active": 0,
@@ -975,9 +1062,9 @@
         "active": 0,
         "failed": 17,
         "pending": 0,
-        "succeeded": 111,
-        "suspended": 128,
-        "total": 128
+        "succeeded": 113,
+        "suspended": 130,
+        "total": 130
       },
       "g3c2a40smoke20260908a": {
         "active": 0,
@@ -1043,14 +1130,6 @@
         "suspended": 64,
         "total": 64
       },
-      "g3c5p20260908a10080g": {
-        "active": 0,
-        "failed": 0,
-        "pending": 1,
-        "succeeded": 0,
-        "suspended": 1,
-        "total": 1
-      },
       "g3c6p20260906a": {
         "active": 0,
         "failed": 64,
@@ -1067,13 +1146,69 @@
         "suspended": 1,
         "total": 1
       },
+      "g3c6p20260908a10040g": {
+        "active": 0,
+        "failed": 0,
+        "pending": 0,
+        "succeeded": 63,
+        "suspended": 63,
+        "total": 63
+      },
+      "g3c6p20260908a10040i": {
+        "active": 0,
+        "failed": 0,
+        "pending": 0,
+        "succeeded": 1,
+        "suspended": 1,
+        "total": 1
+      },
+      "g3c6p20260908a10040s031r": {
+        "active": 0,
+        "failed": 0,
+        "pending": 0,
+        "succeeded": 1,
+        "suspended": 1,
+        "total": 1
+      },
       "g3c6p20260908a10080g": {
         "active": 0,
         "failed": 1,
         "pending": 0,
         "succeeded": 0,
-        "suspended": 0,
+        "suspended": 1,
         "total": 1
+      },
+      "g3c6pilot20260908b": {
+        "active": 0,
+        "failed": 24,
+        "pending": 0,
+        "succeeded": 0,
+        "suspended": 24,
+        "total": 24
+      },
+      "g3c6pilot20260908c": {
+        "active": 0,
+        "failed": 24,
+        "pending": 0,
+        "succeeded": 0,
+        "suspended": 24,
+        "total": 24
+      },
+      "g3c6pilot20260908e": {
+        "active": 0,
+        "failed": 24,
+        "pending": 0,
+        "succeeded": 0,
+        "suspended": 24,
+        "total": 24
+      },
+      "g3c6pilot20260908f": {
+        "active": 0,
+        "failed": 0,
+        "pending": 10,
+        "succeeded": 14,
+        "suspended": 24,
+        "total": 24
       },
       "g3c7p20260906b": {
         "active": 0,
@@ -1192,7 +1327,7 @@
         "failed": 0,
         "pending": 0,
         "succeeded": 1,
-        "suspended": 0,
+        "suspended": 1,
         "total": 1
       },
       "g3ngp20260908cneg": {
@@ -1484,12 +1619,12 @@
         "total": 1
       },
       "g3rb20260908v": {
-        "active": 87,
-        "failed": 0,
-        "pending": 0,
-        "succeeded": 36,
-        "suspended": 0,
-        "total": 123
+        "active": 0,
+        "failed": 66,
+        "pending": 5,
+        "succeeded": 119,
+        "suspended": 190,
+        "total": 190
       },
       "g3s7pilot20260906a": {
         "active": 0,
@@ -1604,12 +1739,9 @@
         "total": 1
       }
     },
-    "jobs_suspended": 2,
+    "jobs_suspended": 0,
     "jobs_unsuspended": 0,
-    "suspended_sample": [
-      "v4-c-ngpc-g3ngp20260908cn4-29c32dae17-job",
-      "v4-g3-cont-g3c6p20260908a10080g-9a6114e547-s000"
-    ],
+    "suspended_sample": [],
     "unsuspended_sample": [],
     "wall_clock_estimates": {
       "assumptions": {
@@ -1628,13 +1760,27 @@
         "parallel_strata_enabled": true,
         "primary_plus_backfill_on_a10080": true
       },
-      "estimated_at_utc": "2026-09-07T14:18:48Z",
+      "estimated_at_utc": "2026-09-07T20:12:53Z",
       "main_episode_start_note": "6,400 achievable episodes (C7/C6/C2/C8) may dispatch after their qualification tiers complete and per-fixture live controls pass. 11,264 episodes across C1/C3/C4 horizontal and C5 vertical remain scientifically blocked.",
       "parallel_qualification_minutes": 47,
       "qualification_completion_hours": 0.8,
       "schema_version": "v4-wave-admission-estimates-v2",
       "serialized_a10080_minutes": 47,
       "tier_estimates": [
+        {
+          "admission_class": "pilot_priority",
+          "alternate_gpu_products": [],
+          "attempt_ids": [],
+          "cumulative_minutes_from_now": 0.0,
+          "episodes_gated": 1536,
+          "estimated_wave_minutes": 0.0,
+          "gpu_product": null,
+          "pool_size": 4,
+          "remaining_seeds": 0,
+          "seed_minutes_assumed": 25,
+          "tier_complete": true,
+          "tier_id": "g7_engineering_pilots"
+        },
         {
           "admission_class": "primary",
           "alternate_gpu_products": [],
@@ -1660,7 +1806,7 @@
           "estimated_wave_minutes": 47,
           "gpu_product": "NVIDIA-A100-SXM4-80GB",
           "pool_size": 95,
-          "remaining_seeds": 87,
+          "remaining_seeds": 9,
           "seed_minutes_assumed": 47,
           "tier_complete": false,
           "tier_id": "reference_binding_g3"
@@ -1697,7 +1843,7 @@
           "estimated_wave_minutes": 35,
           "gpu_product": "NVIDIA-A100-SXM4-80GB",
           "pool_size": 95,
-          "remaining_seeds": 18,
+          "remaining_seeds": 16,
           "seed_minutes_assumed": 35,
           "tier_complete": false,
           "tier_id": "horizontal_g2_evidence"
@@ -1707,7 +1853,7 @@
   },
   "kube_context": "prod-dcwi-warrenq1-vmkub007",
   "namespace": "211247-prod",
-  "observed_at_utc": "2026-09-07T14:18:48Z",
+  "observed_at_utc": "2026-09-07T20:12:53Z",
   "schema_version": "v4-wave-admission-enforcement-receipt-v1",
   "superseded_attempt_ids": [
     "g2gpu20260908a10040",

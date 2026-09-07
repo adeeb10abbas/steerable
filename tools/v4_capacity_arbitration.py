@@ -25,8 +25,12 @@ LANE_JOB_RE = re.compile(
     re.I,
 )
 
-G7_C6_PILOT_ATTEMPT_RANGE = tuple(f"attempt{aid:04d}" for aid in range(57, 65))
+G7_C6_PILOT_ATTEMPT_RANGE = tuple(f"attempt{aid:04d}" for aid in range(57, 65)) + tuple(
+    f"attempt{aid:04d}" for aid in range(73, 81)
+)
+G7_C8_PILOT_LANE_IDS: frozenset[str] = frozenset({"g7c8p00", "g7c8p01"})
 G7_C8_PILOT_ATTEMPT_IDS: frozenset[str] = frozenset({"attempt0020", "attempt0021"})
+G7_C6_PILOT_LANE_COUNT = 8
 
 RECLAIMABLE_MODEL_BLIND_ATTEMPT_IDS: frozenset[str] = frozenset(
     {
@@ -97,8 +101,30 @@ def canonical_c6_pilot_attempt(lane_id: str) -> str | None:
     match = re.match(r"^g7c6p(\d+)$", lane_id, re.I)
     if not match:
         return None
-    attempt_num = 57 + int(match.group(1))
-    return f"attempt{attempt_num:04d}" if attempt_num <= 64 else None
+    lane_index = int(match.group(1))
+    if lane_index >= G7_C6_PILOT_LANE_COUNT:
+        return None
+    return None
+
+
+def latest_attempt_for_lane(refs: Sequence[LaneJobRef]) -> str | None:
+    attempts = [ref.attempt_id for ref in refs if ref.attempt_id.startswith("attempt")]
+    if not attempts:
+        return None
+    return max(attempts)
+
+
+def canonical_pilot_attempt(lane_id: str, refs: Sequence[LaneJobRef]) -> str | None:
+    if G7_C8_PILOT_LANE_RE.match(lane_id):
+        if lane_id not in G7_C8_PILOT_LANE_IDS:
+            return None
+        nums = [int(re.sub(r"\D", "", ref.attempt_id) or 0) for ref in refs]
+        return f"attempt{max(nums):04d}" if nums else None
+    if G7_C6_PILOT_LANE_RE.match(lane_id):
+        if canonical_c6_pilot_attempt(lane_id) is None and not refs:
+            return None
+        return latest_attempt_for_lane(refs)
+    return None
 
 
 def fetch_namespace_jobs(*, kube_context: str, namespace: str) -> list[dict[str, Any]]:
@@ -159,10 +185,21 @@ def reclaim_stale_pilot_lane_jobs(
         if G7_C6_PILOT_LANE_RE.match(ref.lane_id) or G7_C8_PILOT_LANE_RE.match(ref.lane_id):
             by_lane.setdefault(ref.lane_id, []).append(ref)
     for lane_id, refs in sorted(by_lane.items()):
-        canonical = canonical_c6_pilot_attempt(lane_id)
-        if G7_C8_PILOT_LANE_RE.match(lane_id):
-            nums = [int(re.sub(r"\D", "", ref.attempt_id) or 0) for ref in refs]
-            canonical = f"attempt{max(nums):04d}" if nums else None
+        if G7_C8_PILOT_LANE_RE.match(lane_id) and lane_id not in G7_C8_PILOT_LANE_IDS:
+            for ref in refs:
+                ok = _delete_job(job_name=ref.name, kube_context=kube_context, namespace=namespace, dry_run=dry_run)
+                deleted.append(
+                    {
+                        "job": ref.name,
+                        "lane_id": ref.lane_id,
+                        "attempt_id": ref.attempt_id,
+                        "canonical_attempt_id": None,
+                        "reason_code": "invalid_c8_pilot_lane",
+                        "deleted": ok,
+                    }
+                )
+            continue
+        canonical = canonical_pilot_attempt(lane_id, refs)
         if not canonical:
             continue
         for ref in refs:
@@ -209,7 +246,10 @@ def reclaim_redundant_model_blind_jobs(
             continue
         action = "suspend"
         ok = False
-        if active == 0 and not job.get("spec", {}).get("suspend"):
+        if job.get("spec", {}).get("suspend"):
+            ok = True
+            action = "already_suspended"
+        elif active == 0:
             ok = _patch_job_suspend(job_name=name, suspend=True, kube_context=kube_context, namespace=namespace, dry_run=dry_run)
         elif active > 0:
             ok = _delete_job(job_name=name, kube_context=kube_context, namespace=namespace, dry_run=dry_run)
@@ -300,24 +340,74 @@ def restore_c7_ceiling(
     return {"ceiling_restored": ceiling, "unsuspended_jobs": unsuspended}
 
 
-def pilots_need_priority(lane_jobs: Sequence[LaneJobRef]) -> bool:
-    c6_healthy = 0
+def pilot_lane_health(lane_jobs: Sequence[LaneJobRef]) -> dict[str, Any]:
+    by_lane: dict[str, list[LaneJobRef]] = {}
+    for ref in lane_jobs:
+        if G7_C6_PILOT_LANE_RE.match(ref.lane_id) or G7_C8_PILOT_LANE_RE.match(ref.lane_id):
+            by_lane.setdefault(ref.lane_id, []).append(ref)
+
+    c6_healthy: list[str] = []
+    c6_pending: list[str] = []
     for lane_id in sorted({ref.lane_id for ref in lane_jobs if G7_C6_PILOT_LANE_RE.match(ref.lane_id)}):
-        canonical = canonical_c6_pilot_attempt(lane_id)
-        if not canonical:
+        if int(lane_id[6:]) >= G7_C6_PILOT_LANE_COUNT:
             continue
-        canon = [ref for ref in lane_jobs if ref.lane_id == lane_id and ref.attempt_id == canonical]
+        refs = by_lane.get(lane_id, [])
+        canonical = canonical_pilot_attempt(lane_id, refs)
+        if not canonical:
+            c6_pending.append(lane_id)
+            continue
+        canon = [ref for ref in refs if ref.attempt_id == canonical]
         policy = next((ref for ref in canon if ref.role == "policy"), None)
         sim = next((ref for ref in canon if ref.role == "sim"), None)
-        if policy and sim and not policy.suspend and not sim.suspend and policy.active > 0 and sim.active > 0:
-            c6_healthy += 1
-    c8_needs = any(
-        G7_C8_PILOT_LANE_RE.match(ref.lane_id)
-        and ref.attempt_id in G7_C8_PILOT_ATTEMPT_IDS
-        and (ref.failed > 0 or (ref.active == 0 and ref.succeeded == 0))
-        for ref in lane_jobs
-    )
-    return c6_healthy < 8 or c8_needs
+        if (
+            policy
+            and sim
+            and not policy.suspend
+            and not sim.suspend
+            and policy.active > 0
+            and sim.active > 0
+        ):
+            c6_healthy.append(lane_id)
+        else:
+            c6_pending.append(lane_id)
+
+    c8_healthy: list[str] = []
+    c8_pending: list[str] = []
+    for lane_id in sorted(G7_C8_PILOT_LANE_IDS):
+        refs = by_lane.get(lane_id, [])
+        if not refs:
+            c8_pending.append(lane_id)
+            continue
+        canonical = canonical_pilot_attempt(lane_id, refs)
+        if not canonical:
+            c8_pending.append(lane_id)
+            continue
+        canon = [ref for ref in refs if ref.attempt_id == canonical]
+        policy = next((ref for ref in canon if ref.role == "policy"), None)
+        sim = next((ref for ref in canon if ref.role == "sim"), None)
+        if (
+            policy
+            and sim
+            and not policy.suspend
+            and not sim.suspend
+            and policy.active > 0
+            and sim.active > 0
+        ):
+            c8_healthy.append(lane_id)
+        else:
+            c8_pending.append(lane_id)
+
+    return {
+        "c6_healthy_lanes": c6_healthy,
+        "c6_pending_lanes": c6_pending,
+        "c8_healthy_lanes": c8_healthy,
+        "c8_pending_lanes": c8_pending,
+    }
+
+
+def pilots_need_priority(lane_jobs: Sequence[LaneJobRef]) -> bool:
+    health = pilot_lane_health(lane_jobs)
+    return len(health["c6_healthy_lanes"]) < G7_C6_PILOT_LANE_COUNT or bool(health["c8_pending_lanes"])
 
 
 def summarize_pool_usage(lane_jobs: Sequence[LaneJobRef]) -> dict[str, Any]:
@@ -391,6 +481,7 @@ def enforce_capacity_arbitration(
         "deleted_stale_pilot_jobs": stale_pilot_deleted,
         "c7_throttle": c7_report,
         "pool_utilization": summarize_pool_usage(lane_jobs),
+        "pilot_lane_health": pilot_lane_health(lane_jobs),
         "pilot_priority_still_required": pilots_need_priority(lane_jobs),
     }
     if not dry_run:

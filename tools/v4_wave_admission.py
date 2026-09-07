@@ -119,6 +119,7 @@ BLOCKED_EPISODE_COUNTS: dict[str, int] = {
 G7_PILOT_ATTEMPT_PATTERNS: tuple[str, ...] = (
     r"^attempt00(20|21)$",
     r"^attempt00(57|58|59|60|61|62|63|64)$",
+    r"^attempt00(73|74|75|76|77|78|79|80)$",
 )
 G7_PILOT_LANE_PATTERNS: tuple[str, ...] = (r"^g7c6p\d+$", r"^g7c8p\d+$")
 

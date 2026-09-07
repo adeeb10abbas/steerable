@@ -258,13 +258,20 @@ class LiveSecondStackBackend:
         if not callable(get_obs):
             return None
         raw_observation = get_obs()
-        color = raw_observation["image"]["3rd_view_camera"]["Color"]
-        array = np.asarray(color)
-        if array.ndim == 3 and array.shape[-1] == 4:
-            array = array[..., :3]
-        if array.dtype != np.uint8:
-            array = np.clip(array * 255.0, 0.0, 255.0).astype(np.uint8)
-        encoded, _buffer = cv2.imencode(".png", cv2.cvtColor(array, cv2.COLOR_RGB2BGR))
+        color = np.asarray(raw_observation["image"]["3rd_view_camera"]["Color"])[..., :3]
+        while color.ndim > 3 and color.shape[0] == 1:
+            color = color[0]
+        if color.dtype != np.uint8:
+            color = np.asarray(color, dtype=np.float32)
+            if color.size and float(np.nanmax(color)) <= 1.0:
+                color = color * 255.0
+            color = np.clip(color, 0.0, 255.0).astype(np.uint8)
+        ok, encoded = cv2.imencode(
+            ".png",
+            cv2.cvtColor(np.ascontiguousarray(color), cv2.COLOR_RGB2BGR),
+        )
+        if not ok:
+            return None
         return encoded.tobytes()
 
     def latest_processed_observation(self) -> dict[str, Any]:

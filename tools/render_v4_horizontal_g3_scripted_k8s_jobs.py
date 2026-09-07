@@ -500,10 +500,25 @@ def render(spec_path: Path, output_root: Path) -> dict[str, Any]:
         == "model_blind_candidate_not_released_for_inference",
         "G3 plan must remain an unreleased model-blind candidate",
     )
-    require(
-        plan_payload.get("plan_status") == "ready_for_live_g3_execution",
-        "G3 plan is not ready for live execution",
-    )
+    if plan_payload.get("geometry_repair_mode") is True:
+        require(
+            plan_payload.get("plan_status") == "pending_repaired_g2_prerequisite",
+            "repaired G3 plan must remain blocked pending fresh G2",
+        )
+        g2_prerequisite = plan_payload.get("g2_prerequisite")
+        require(
+            isinstance(g2_prerequisite, dict),
+            "repaired G3 plan lacks G2 prerequisite",
+        )
+        require(
+            g2_prerequisite.get("status") == "pending_geometry_repair_requalification",
+            "repaired G3 plan lacks pending G2 prerequisite",
+        )
+    else:
+        require(
+            plan_payload.get("plan_status") == "ready_for_live_g3_execution",
+            "G3 plan is not ready for live execution",
+        )
     require(
         plan_payload.get("model_request_count") == 0
         and plan_payload.get("behavioral_episode_count") == 0,

@@ -12,6 +12,7 @@ from experiments.online_correction_v4.droid_task_files.binding import sha256_fil
 from experiments.online_correction_v4.droid_task_files.constants import (
     ENV_RESET_REGISTRY,
     ENV_RESET_REGISTRY_SHA256,
+    GEOMETRY_REPAIR_RESET_REGISTRY_SCHEMA,
     FixtureObjectSpec,
     fixture_object_spec,
 )
@@ -108,7 +109,11 @@ def load_reset_registry(
     if not isinstance(payload, dict):
         _fail("reset registry must be a JSON object")
     if payload.get("schema_version") != spec.reset_registry_schema:
-        _fail("reset registry schema mismatch")
+        allowed = {spec.reset_registry_schema}
+        if expected_fixture_id == "horizontal":
+            allowed.add(GEOMETRY_REPAIR_RESET_REGISTRY_SCHEMA)
+        if payload.get("schema_version") not in allowed:
+            _fail("reset registry schema mismatch")
     if payload.get("fixture_id") != expected_fixture_id:
         _fail(f"reset registry fixture_id must be {expected_fixture_id}")
     status = payload.get("status")

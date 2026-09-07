@@ -14,6 +14,9 @@ ENV_RESET_REGISTRY_SHA256 = "ONLINE_CORRECTION_V4_RESET_REGISTRY_SHA256"
 ENV_ACTIVE_GOAL = "ONLINE_CORRECTION_V4_ACTIVE_GOAL"
 
 RESET_REGISTRY_SCHEMA = "v4-droid-horizontal-reset-registry-v1"
+GEOMETRY_REPAIR_RESET_REGISTRY_SCHEMA = (
+    "v4-droid-horizontal-reset-registry-geometry-repair-v1"
+)
 OBJECT_PAIR_RESET_REGISTRY_SCHEMA = "v4-droid-object-pair-reset-registry-v1"
 REFERENCE_BINDING_RESET_REGISTRY_SCHEMA = (
     "v4-droid-reference-binding-reset-registry-v1"

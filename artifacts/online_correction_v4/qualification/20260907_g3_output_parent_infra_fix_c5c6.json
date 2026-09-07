@@ -1,0 +1,14 @@
+{
+  "action": "create_g3_output_parent_directories",
+  "compiled_at_utc": "2026-09-07T04:45:00Z",
+  "containment_directory_count": 64,
+  "failure_class": "infrastructure_invalid",
+  "failure_detail": "G3 path-seed jobs failed preflight because OUTPUT_PARENT directories did not exist on PVC",
+  "fix": "mkdir -p all scale-0.5 seed directories for vertical (2100020000-2100020063) and containment (2100030000-2100030063)",
+  "retried_jobs": [
+    "v4-g3-vertical-g3c5p20260906a-3210363d9b-s004",
+    "v4-g3-containment-g3c6p20260907a-30dffd5752-s063"
+  ],
+  "schema_version": "v4-g3-infra-output-parent-fix-v1",
+  "vertical_directory_count": 64
+}

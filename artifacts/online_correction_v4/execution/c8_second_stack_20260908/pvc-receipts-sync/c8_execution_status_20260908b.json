@@ -1,0 +1,135 @@
+{
+  "schema_version": "v4-c8-execution-status-receipt-v1",
+  "observed_at_utc": "2026-09-08T02:55:00Z",
+  "campaign_id": "online_correction_v4",
+  "family_id": "C8",
+  "fixture_id": "second_stack",
+  "hardware_stratum": "a40-groot-bridge-policy_simulator",
+  "classification": {
+    "infra_invalid_attempts_0093_0103": {
+      "count": 39,
+      "inventory_uri": "artifacts/online_correction_v4/qualification/20260908_c8_g7_infra_invalid_attempts_0093_0103_inventory.json",
+      "separate_from_behavioral": true
+    },
+    "infra_invalid_confirmatory_preflight_20260908a": {
+      "count": 4,
+      "receipt_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_checkout_symlink_receipt_20260908a.json",
+      "separate_from_behavioral": true,
+      "cause": "missing steerable-v4-c8-main cluster checkout"
+    },
+    "behavioral_pilot_valid": 24,
+    "behavioral_confirmatory_completed": 0
+  },
+  "pilot_g7": {
+    "passed": true,
+    "receipt_uri": "artifacts/online_correction_v4/qualification/20260908_second_stack_g7_pilot_g7c8p20260908a.json",
+    "accepted_ledger_compile_id": "20260908b",
+    "accepted_ledger_manifest_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pilot-ledger-20260908b/accepted_ledger_manifest.json",
+    "composition": {
+      "valid_episodes": 24,
+      "outcomes": {
+        "no_grasp": 12,
+        "transport_incomplete": 12
+      },
+      "scenario_counts": {
+        "original_sham": 8,
+        "destination_static": 8,
+        "move_stop": 8
+      },
+      "static_episodes": 16,
+      "motion_episodes": 8,
+      "end_reason": "timeout"
+    }
+  },
+  "g8_miniature": {
+    "passed": true,
+    "receipt_uri": "artifacts/online_correction_v4/qualification/20260908_second_stack_g8_miniature_g8c8q20260908a.json"
+  },
+  "confirmatory_lock": {
+    "release_status": "RELEASED",
+    "runtime_lock_uri": "artifacts/online_correction_v4/setup/c8_confirmatory/runtime_lock.released.json",
+    "queue_episodes": 768,
+    "launch_matrix_uri": "artifacts/online_correction_v4/setup/c8_confirmatory/launch_matrix.released.json",
+    "dispatch_receipt_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/create-confirmatory-c8main20260908a.json"
+  },
+  "capacity": {
+    "binding_limit": "G4-attested A40 GR00T Bridge stratum",
+    "c7_a40_occupancy_blocks_scheduling": true,
+    "estimated_c7_release_hours": 2.3,
+    "authorized_pilot_lanes": 8,
+    "authorized_confirmatory_lane_pairs": 20,
+    "handoff_uri": "artifacts/online_correction_v4/execution/gpu_widen_20260908/c8_pilot_lane_expansion_handoff_agent_a.json",
+    "do_not_use_without_g4_receipt": ["A100-80GB", "B200"]
+  },
+  "pilot_lanes": [
+    {"lane_id": "g7c8p00", "attempt_id": "attempt0104", "episodes_completed": 12, "episodes_queued": 0, "policy": "Running", "simulator": "Completed", "state": "idle_complete"},
+    {"lane_id": "g7c8p01", "attempt_id": "attempt0105", "episodes_completed": 12, "episodes_queued": 0, "policy": "Running", "simulator": "Completed", "state": "idle_complete"},
+    {"lane_id": "g7c8p02", "attempt_id": "attempt0107", "episodes_completed": 0, "episodes_queued": 3, "policy": "Running", "simulator": "Completed", "state": "running_redundant"},
+    {"lane_id": "g7c8p03", "attempt_id": "attempt0108", "episodes_completed": 0, "episodes_queued": 3, "policy": "Running", "simulator": "Pending", "state": "blocked_a40"},
+    {"lane_id": "g7c8p04", "attempt_id": "attempt0109", "episodes_completed": 0, "episodes_queued": 3, "policy": "Running", "simulator": "missing", "state": "blocked_a40"},
+    {"lane_id": "g7c8p05", "attempt_id": "attempt0110", "episodes_completed": 0, "episodes_queued": 3, "policy": "Pending", "simulator": "Pending", "state": "blocked_a40"},
+    {"lane_id": "g7c8p06", "attempt_id": "attempt0111", "episodes_completed": 0, "episodes_queued": 3, "policy": "Pending", "simulator": "Running", "state": "blocked_a40"},
+    {"lane_id": "g7c8p07", "attempt_id": "attempt0112", "episodes_completed": 0, "episodes_queued": 3, "policy": "Pending", "simulator": "Pending", "state": "blocked_a40"}
+  ],
+  "confirmatory_lanes": {
+    "dispatched_lane_pairs": 20,
+    "episodes_per_lane": 38,
+    "total_queued": 768,
+    "behavioral_completed": 0,
+    "behavioral_valid": 0,
+    "behavioral_infra_invalid": 0,
+    "pod_summary": {
+      "Pending": 40,
+      "Running": 0,
+      "Completed": 0,
+      "Error": 0
+    },
+    "lanes": [
+      {"lane_id": "c8m00", "attempt_id": "attempt0001", "episodes_completed": 0, "episodes_queued": 38, "state": "blocked_a40"},
+      {"lane_id": "c8m01", "attempt_id": "attempt0002", "episodes_completed": 0, "episodes_queued": 38, "state": "blocked_a40"},
+      {"lane_id": "c8m02", "attempt_id": "attempt0003", "episodes_completed": 0, "episodes_queued": 38, "state": "blocked_a40"},
+      {"lane_id": "c8m03", "attempt_id": "attempt0004", "episodes_completed": 0, "episodes_queued": 38, "state": "blocked_a40"},
+      {"lane_id": "c8m04", "attempt_id": "attempt0005", "episodes_completed": 0, "episodes_queued": 38, "state": "blocked_a40"},
+      {"lane_id": "c8m05", "attempt_id": "attempt0006", "episodes_completed": 0, "episodes_queued": 38, "state": "blocked_a40"},
+      {"lane_id": "c8m06", "attempt_id": "attempt0007", "episodes_completed": 0, "episodes_queued": 38, "state": "blocked_a40", "note": "recreated after checkout symlink fix"},
+      {"lane_id": "c8m07", "attempt_id": "attempt0008", "episodes_completed": 0, "episodes_queued": 38, "state": "blocked_a40", "note": "recreated after checkout symlink fix"},
+      {"lane_id": "c8m08", "attempt_id": "attempt0009", "episodes_completed": 0, "episodes_queued": 38, "state": "blocked_a40"},
+      {"lane_id": "c8m09", "attempt_id": "attempt0010", "episodes_completed": 0, "episodes_queued": 38, "state": "blocked_a40", "note": "recreated after checkout symlink fix"},
+      {"lane_id": "c8m10", "attempt_id": "attempt0011", "episodes_completed": 0, "episodes_queued": 38, "state": "blocked_a40"},
+      {"lane_id": "c8m11", "attempt_id": "attempt0012", "episodes_completed": 0, "episodes_queued": 38, "state": "blocked_a40"},
+      {"lane_id": "c8m12", "attempt_id": "attempt0013", "episodes_completed": 0, "episodes_queued": 38, "state": "blocked_a40"},
+      {"lane_id": "c8m13", "attempt_id": "attempt0014", "episodes_completed": 0, "episodes_queued": 38, "state": "blocked_a40"},
+      {"lane_id": "c8m14", "attempt_id": "attempt0015", "episodes_completed": 0, "episodes_queued": 38, "state": "blocked_a40"},
+      {"lane_id": "c8m15", "attempt_id": "attempt0016", "episodes_completed": 0, "episodes_queued": 38, "state": "blocked_a40"},
+      {"lane_id": "c8m16", "attempt_id": "attempt0017", "episodes_completed": 0, "episodes_queued": 38, "state": "blocked_a40"},
+      {"lane_id": "c8m17", "attempt_id": "attempt0018", "episodes_completed": 0, "episodes_queued": 38, "state": "blocked_a40"},
+      {"lane_id": "c8m18", "attempt_id": "attempt0019", "episodes_completed": 0, "episodes_queued": 38, "state": "blocked_a40"},
+      {"lane_id": "c8m19", "attempt_id": "attempt0020", "episodes_completed": 0, "episodes_queued": 38, "state": "blocked_a40"}
+    ]
+  },
+  "agent_c_hooks": {
+    "c8_ledger_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pilot-ledger-20260908b/accepted_ledger.jsonl",
+    "c8_manifest_uri": "artifacts/online_correction_v4/setup/c8_confirmatory/queue.frozen.jsonl",
+    "c8_ledger_compile_id": "20260908b",
+    "registered_export_uri": "artifacts/online_correction_v4/results/registered/20260908c8pilot/registered_export_manifest.json",
+    "status_label": "pilot_complete_confirmatory_dispatched_pending_a40"
+  },
+  "blockers": [
+    {
+      "id": "c7_a40_pool_occupancy",
+      "impact": "All 20 confirmatory lane pairs and most pilot expansion lanes Pending",
+      "action": "Wait for C7 40-lane completion (~2.3h); pods auto-schedule when A40 frees"
+    },
+    {
+      "id": "confirmatory_behavioral_throughput",
+      "impact": "768 confirmatory episodes at 0/768 behavioral complete",
+      "action": "No redispatch needed; monitor first completes after A40 release"
+    },
+    {
+      "id": "cluster_checkout_symlink",
+      "impact": "4 confirmatory preflight infra_invalid before symlink",
+      "action": "RESOLVED: steerable-v4-c8-main -> steerable-v4-c8-g2 symlink at commit 06d70914; c8m06/07/09 jobs recreated"
+    }
+  ],
+  "source_commit": "94a78c0cbd0212e54de23f058b978f73b2c122db"
+}

@@ -1,0 +1,38 @@
+{
+  "schema_version": "v4-c8-cluster-checkout-receipt-v1",
+  "observed_at_utc": "2026-09-08T02:55:00Z",
+  "action": "create_symlink",
+  "source_path": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2",
+  "target_path": "/data/users/ali/vla_wam/src/steerable-v4-c8-main",
+  "source_commit": "06d709140e56f0f5ada541e12b0e691510a33abf",
+  "reason": "Confirmatory lane_spec and runtime_lock bind file paths under steerable-v4-c8-main; cluster had only steerable-v4-c8-g2 checkout at matching commit.",
+  "preflight_failures_before_fix": [
+    {
+      "lane_id": "c8m06",
+      "attempt_id": "attempt0007",
+      "role": "simulator",
+      "error": "bound launch file is missing: .../steerable-v4-c8-main/deploy/k8s/v4_lane_bundle/scripts/run_online_correction_v4_lane_dispatch.py"
+    },
+    {
+      "lane_id": "c8m07",
+      "attempt_id": "attempt0008",
+      "role": "policy",
+      "error": "bound launch file is missing: .../steerable-v4-c8-main/tools/run_v4_groot_bridge_policy_server.py"
+    },
+    {
+      "lane_id": "c8m07",
+      "attempt_id": "attempt0008",
+      "role": "simulator",
+      "error": "bound launch file is missing: .../steerable-v4-c8-main/deploy/k8s/v4_lane_bundle/scripts/run_online_correction_v4_lane_dispatch.py"
+    },
+    {
+      "lane_id": "c8m09",
+      "attempt_id": "attempt0010",
+      "role": "policy",
+      "error": "bound launch file is missing: .../steerable-v4-c8-main/tools/run_v4_groot_bridge_policy_server.py"
+    }
+  ],
+  "classification": "infra_invalid",
+  "separate_from_behavioral": true,
+  "remediation": "Deleted and recreated jobs for c8m06, c8m07, c8m09 after symlink; lanes return to Pending until C7 releases A40 pool."
+}

@@ -1,65 +1,69 @@
 {
   "achievable_breakdown": {
-    "C6": 768,
+    "C6": 384,
     "C7": 768,
     "C8": 768
   },
-  "achievable_policy_episodes": 2304,
+  "achievable_policy_episodes": 1920,
   "blocked_breakdown": {
     "C1_C3_C4_horizontal": 9728,
     "C2_reference_binding": 4096,
-    "C5_vertical": 768
+    "C5_vertical": 768,
+    "C6_pi05_containment": 384
   },
   "c6_confirmatory_scenario_grasp_pattern": {
-    "compiled_at_utc": "2026-09-08T12:42:00Z",
-    "confirmatory_terminals": 313,
+    "compiled_at_utc": "2026-09-08T12:57:36Z",
+    "confirmatory_terminals": 337,
     "grasp_definition_notes": {
       "c6_rule": "failure_label != no_grasp (shared scorer with C8)",
-      "c8_wrong_goal_region_asymmetry": "Report both conventions side by side; use transport_incomplete_only for cross-platform magnitude comparison",
-      "transport_incomplete_only": "failure_label == transport_incomplete \u2014 C8-comparable label set (C8: zero wrong_goal_region in 768 eps)"
+      "c8_wrong_goal_region_asymmetry": "C8 observed zero wrong_goal_region in 407 episodes; C6 has nonzero wgr \u2014 use ti_only for cross-platform magnitude comparison",
+      "transport_incomplete_only": "failure_label == transport_incomplete (C8-comparable label set)"
     },
     "grasp_rate_by_scenario": {
       "destination_static": {
-        "episodes": 89,
-        "grasp_achieved_c6_rule": 24,
-        "grasp_achieved_transport_incomplete_only": 22,
-        "grasp_rate_c6_rule_pct": 27.0,
-        "grasp_rate_transport_incomplete_only_pct": 24.7,
+        "episodes": 116,
+        "grasp_achieved_c6_rule": 27,
+        "grasp_achieved_transport_incomplete_only": 25,
+        "grasp_rate_c6_rule_pct": 23.3,
+        "grasp_rate_transport_incomplete_only_pct": 21.6,
+        "no_grasp": 89,
         "outcomes": {
-          "no_grasp": 65,
-          "transport_incomplete": 22,
+          "no_grasp": 89,
+          "transport_incomplete": 25,
           "wrong_goal_region": 2
         },
         "wrong_goal_region_count": 2,
-        "wrong_goal_region_share_pct": 2.2
+        "wrong_goal_region_share_pct": 1.7
       },
       "move_stop": {
-        "episodes": 85,
-        "grasp_achieved_c6_rule": 16,
-        "grasp_achieved_transport_incomplete_only": 15,
-        "grasp_rate_c6_rule_pct": 18.8,
+        "episodes": 108,
+        "grasp_achieved_c6_rule": 21,
+        "grasp_achieved_transport_incomplete_only": 19,
+        "grasp_rate_c6_rule_pct": 19.4,
         "grasp_rate_transport_incomplete_only_pct": 17.6,
+        "no_grasp": 87,
         "outcomes": {
-          "no_grasp": 69,
-          "transport_incomplete": 15,
-          "wrong_goal_region": 1
-        },
-        "wrong_goal_region_count": 1,
-        "wrong_goal_region_share_pct": 1.2
-      },
-      "original_sham": {
-        "episodes": 94,
-        "grasp_achieved_c6_rule": 19,
-        "grasp_achieved_transport_incomplete_only": 17,
-        "grasp_rate_c6_rule_pct": 20.2,
-        "grasp_rate_transport_incomplete_only_pct": 18.1,
-        "outcomes": {
-          "no_grasp": 75,
-          "transport_incomplete": 17,
+          "no_grasp": 87,
+          "transport_incomplete": 19,
           "wrong_goal_region": 2
         },
         "wrong_goal_region_count": 2,
-        "wrong_goal_region_share_pct": 2.1
+        "wrong_goal_region_share_pct": 1.9
+      },
+      "original_sham": {
+        "episodes": 113,
+        "grasp_achieved_c6_rule": 22,
+        "grasp_achieved_transport_incomplete_only": 20,
+        "grasp_rate_c6_rule_pct": 19.5,
+        "grasp_rate_transport_incomplete_only_pct": 17.7,
+        "no_grasp": 91,
+        "outcomes": {
+          "no_grasp": 91,
+          "transport_incomplete": 20,
+          "wrong_goal_region": 2
+        },
+        "wrong_goal_region_count": 2,
+        "wrong_goal_region_share_pct": 1.8
       }
     },
     "milestones": {
@@ -67,12 +71,80 @@
       "32": "passed",
       "384": "pending"
     },
-    "ordering_note": "At n=268 (313 terminals total): c6_rule ordering destination_static (27.0%) > original_sham (20.2%) > move_stop (18.8%); transport_incomplete_only ordering destination_static (24.7%) > original_sham (18.1%) > move_stop (17.6%). Early apparent inversion at n=56 resolved as n grew; destination_static now ranks first on Isaac, matching C8 direction. C6 absolute rates ~3\u00d7 C8 at comparable n; platform\u00d7scenario interaction table remains not estimable until C6 768/768.",
-    "scenario_breakdown_at_n": 268,
+    "ordering_note": "At n=337, C6 rule ordering: destination_static (23.3%) > original_sham (19.5%) > move_stop (19.4%). Also report transport_incomplete_only for C8-comparable cells (C8 has zero wrong_goal_region in 407 eps). Per-cell n not estimable until 384; Agent C platform\u00d7scenario table remains not estimable.",
     "schema_version": "v4-c6-wave-progress-receipt-v1",
-    "supersedes": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/c6_wave_d_progress_receipt_20260908k.json",
+    "supersedes": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/c6_wave_d_progress_receipt_20260908l.json",
     "wave_id": "c6confirm20260908f",
     "wave_label": "D"
+  },
+  "c6_denominator_correction": {
+    "action_taken": "Do not amend runtime lock to bind pi05_droid. Do not dispatch wave E. Finish released wave D to 384 and compile against queue.frozen.cosmos3_nano.jsonl with --require-full-coverage.",
+    "correct_confirmatory_denominator": 384,
+    "episodes_per_scenario": 128,
+    "evidence": {
+      "c6_planning_inventory_not_released": {
+        "note": "Planning inventory only; not bound by released runtime lock",
+        "path": "artifacts/online_correction_v4/setup/c6_confirmatory/queue.frozen.jsonl",
+        "policy_split": {
+          "cosmos3_nano_droid": 384,
+          "pi05_droid": 384
+        },
+        "row_count": 768
+      },
+      "c6_released_queue_manifest": {
+        "path": "artifacts/online_correction_v4/setup/c6_confirmatory/queue_manifest.frozen.cosmos3_nano.json",
+        "policy_id": "cosmos3_nano_droid",
+        "row_count": 384,
+        "scenario_counts": {
+          "destination_static": 128,
+          "move_stop": 128,
+          "original_sham": 128
+        }
+      },
+      "c6_released_runtime_lock": {
+        "bound_policies": [
+          "cosmos3_nano_droid"
+        ],
+        "does_not_match_full_768_queue": "artifacts/online_correction_v4/setup/c6_confirmatory/queue.frozen.jsonl (sha256 ff0c9448...)",
+        "frozen_queue_sha256": "d825808858f18f1678f0036b9db5218a0b76516a252a526f67dfe4cc2c159ee6",
+        "matches_queue": "artifacts/online_correction_v4/setup/c6_confirmatory/queue.frozen.cosmos3_nano.jsonl",
+        "path": "artifacts/online_correction_v4/setup/containment_c6_confirmatory_runtime_lock.released.json"
+      },
+      "c7_closed_reference": {
+        "compile_id": "compiled_ledger_20260908_FINAL",
+        "confirmatory_rows": 768,
+        "family": "C7",
+        "interpretation": "768 reached on a single released policy, not two-policy decomposition",
+        "policies_in_released_compile": [
+          "cosmos3_nano_droid"
+        ],
+        "scenarios_per_policy": 256
+      },
+      "c8_closed_reference": {
+        "confirmatory_rows": 768,
+        "family": "C8",
+        "interpretation": "768 reached on a single released policy",
+        "policies_in_released_compile": [
+          "groot_bridge_widowx"
+        ],
+        "scenarios_per_policy": 256
+      },
+      "pi05_containment_qualification_absent": {
+        "c6_g4_through_g8_all_nano": [
+          "20260908_containment_g4_nano_policy_session_g4c6q20260908d.json",
+          "20260908_containment_g5_trigger_branch_g4c6q20260908d.json",
+          "20260908_containment_g6_measurement_g4c6q20260908d.json",
+          "20260908_containment_g7_pilot_receipt_g7c6p20260908a.json",
+          "20260908_containment_g8_miniature_g8c6p20260908a.json"
+        ],
+        "g7_g8_policy_id": "cosmos3_nano_droid",
+        "search": "No G4\u2013G8 containment qualification receipt with policy_id pi05_droid under artifacts/online_correction_v4/qualification/"
+      }
+    },
+    "incorrect_planning_denominator": 768,
+    "pi05_containment_blocked_episodes": 384,
+    "receipt": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/c6_wave_e_blocked_scope_20260908.json",
+    "released_policy": "cosmos3_nano_droid"
   },
   "c6_runner_binding_resolution": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/runner_binding_resolution_20260908.json",
   "c7_compile_provenance": {
@@ -367,10 +439,14 @@
     "valid_episodes": 24
   },
   "capacity_finding": {
-    "c6_confirmatory_valid": 313,
+    "c6_confirmatory_valid": 337,
     "c8_confirmatory_valid": 768,
     "c8_execution_status_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908r.json",
-    "confirmatory_episodes_per_family": 768,
+    "confirmatory_episodes_per_family": {
+      "C6": 384,
+      "C7": 768,
+      "C8": 768
+    },
     "episode_lane_assignment": {
       "c7_reshard_walltime_hours": 5.4,
       "evidence": "artifacts/online_correction_v4/execution/c7_object_pair_20260906/c7_released_tail_reshard_analysis_20260908.json",
@@ -803,27 +879,30 @@
     "C4": "scientifically blocked with C1/C3: horizontal information-gate failure on registered ladder",
     "C5": "scientifically blocked: vertical IK reachability finding at seed 2100020000 scale 0.5; receipt 20260908_vertical_natural_grasp_live_control_finding_g3ngp20260908vp8.json",
     "C6": "achievable (768 episodes); dispatch pending qualification completion",
+    "C6_pi05_containment": "384 pi05_droid containment episodes scientifically blocked: pi05 was never qualified for containment through G4\u2013G8; released runtime lock binds cosmos3_nano_droid only (queue.frozen.cosmos3_nano.jsonl, 384 rows, sha256 d8258088); planning inventory 768-row queue (ff0c9448) is not released scope. See c6_wave_e_blocked_scope_20260908.json.",
     "C7": "complete export (768/768 (100.0%)): timing-audit-backed policy failures on repaired-path confirmatory completes \u2014 761 no_grasp, 3 transport_incomplete, 2 wrong_goal_region, 2 support_or_containment_failed; 279 pre-repair episodes excluded",
     "C8": "achievable (768 episodes); pilot G3 path gate passed 96/96 (g3c8p20260908f); G7 confirmatory receipt passed (g7c8q20260908a); 24 pilot episodes, G8 rehearsal, confirmatory runtime lock, and 768 dispatch blocked pending groot_bridge_widowx registration in launch_online_correction_v4.py (SUPPORTED_DROID_POLICIES) and second_stack live behavioral runner wiring",
-    "platform_x_scenario_grasp_interaction": "Cross-platform scenario grasp ordering contrast (C6 Isaac containment vs C8 WidowX SimplerEnv) is registered under platform_x_scenario_grasp_interaction with Holm scope registered_scenario_contrast_family_with_platform_stratum. C8 confirmatory is terminal at 768/768; C6 at 313/768 \u2014 estimand remains insufficient_coverage_not_estimable until C6 is terminal. Both platforms currently agree in direction (destination_static ranks first); an early C6 inversion at n\u224856 resolved as n grew and must not be carried forward as a standing finding."
+    "platform_x_scenario_grasp_interaction": "Cross-platform scenario grasp ordering contrast (C6 Isaac containment vs C8 WidowX SimplerEnv) is registered under platform_x_scenario_grasp_interaction with Holm scope registered_scenario_contrast_family_with_platform_stratum. C8 confirmatory is terminal at 768/768; C6 at 337/384 \u2014 estimand remains insufficient_coverage_not_estimable until C6 reaches 384/384. destination_static_ranks_first_only \u2014 no stable three-way ordering claimed. C6 contributes 128 episodes per scenario (cosmos3_nano_droid released queue); C7 and C8 contribute 256 per scenario \u2014 platform\u00d7scenario contrast is unbalanced and underpowered."
   },
   "original_planned_policy_episodes": 17664,
   "platform_scenario_grasp_contrast": [
     {
       "cohort": "confirmatory_partial",
       "cross_platform_magnitude_note": "Compare C6 ti_only to C8 grasp_rate (C8 has zero wrong_goal_region)",
-      "episodes": 89,
+      "episodes": 116,
       "estimability_note": "insufficient_coverage_not_estimable",
       "family": "C6",
       "fixture": "containment",
-      "grasp_achieved_c6_rule": 24,
-      "grasp_achieved_transport_incomplete_only": 22,
+      "grasp_achieved_c6_rule": 27,
+      "grasp_achieved_transport_incomplete_only": 25,
       "grasp_convention": "non_no_grasp",
-      "grasp_rate": 0.27,
+      "grasp_rate": 0.233,
       "holm_scope": "registered_scenario_contrast_family_with_platform_stratum",
+      "ordering_claim_limit": "destination_static_ranks_first_only \u2014 no stable three-way ordering claimed",
       "pilot_grasp_rate": null,
       "platform": "isaac_droid",
-      "platform_ordering": "Both platforms agree in direction: destination_static ranks first at current width. Early C6 inversion at n\u224856 resolved as n grew; C6 absolute rates ~3\u00d7 C8 (ti_only for magnitude).",
+      "platform_cell_episodes_per_scenario": 128,
+      "platform_ordering": "destination_static_ranks_first_only \u2014 no stable three-way ordering claimed. C6 second/third ranks swap at n=268/330/337; C8 move_stop=original_sham tied at 3.1%. C6 contributes 128 episodes per scenario (cosmos3_nano_droid released queue); C7 and C8 contribute 256 per scenario \u2014 platform\u00d7scenario contrast is unbalanced and underpowered.",
       "registered_estimand": "platform_x_scenario_grasp_interaction",
       "scenario": "destination_static",
       "scenario_rank_within_platform": 1,
@@ -832,38 +911,42 @@
     {
       "cohort": "confirmatory_partial",
       "cross_platform_magnitude_note": "Compare C6 ti_only to C8 grasp_rate (C8 has zero wrong_goal_region)",
-      "episodes": 85,
+      "episodes": 108,
       "estimability_note": "insufficient_coverage_not_estimable",
       "family": "C6",
       "fixture": "containment",
-      "grasp_achieved_c6_rule": 16,
-      "grasp_achieved_transport_incomplete_only": 15,
+      "grasp_achieved_c6_rule": 21,
+      "grasp_achieved_transport_incomplete_only": 19,
       "grasp_convention": "non_no_grasp",
-      "grasp_rate": 0.188,
+      "grasp_rate": 0.194,
       "holm_scope": "registered_scenario_contrast_family_with_platform_stratum",
+      "ordering_claim_limit": "destination_static_ranks_first_only \u2014 no stable three-way ordering claimed",
       "pilot_grasp_rate": null,
       "platform": "isaac_droid",
-      "platform_ordering": "Both platforms agree in direction: destination_static ranks first at current width. Early C6 inversion at n\u224856 resolved as n grew; C6 absolute rates ~3\u00d7 C8 (ti_only for magnitude).",
+      "platform_cell_episodes_per_scenario": 128,
+      "platform_ordering": "destination_static_ranks_first_only \u2014 no stable three-way ordering claimed. C6 second/third ranks swap at n=268/330/337; C8 move_stop=original_sham tied at 3.1%. C6 contributes 128 episodes per scenario (cosmos3_nano_droid released queue); C7 and C8 contribute 256 per scenario \u2014 platform\u00d7scenario contrast is unbalanced and underpowered.",
       "registered_estimand": "platform_x_scenario_grasp_interaction",
       "scenario": "move_stop",
       "scenario_rank_within_platform": 3,
-      "wrong_goal_region_count": 1
+      "wrong_goal_region_count": 2
     },
     {
       "cohort": "confirmatory_partial",
       "cross_platform_magnitude_note": "Compare C6 ti_only to C8 grasp_rate (C8 has zero wrong_goal_region)",
-      "episodes": 94,
+      "episodes": 113,
       "estimability_note": "insufficient_coverage_not_estimable",
       "family": "C6",
       "fixture": "containment",
-      "grasp_achieved_c6_rule": 19,
-      "grasp_achieved_transport_incomplete_only": 17,
+      "grasp_achieved_c6_rule": 22,
+      "grasp_achieved_transport_incomplete_only": 20,
       "grasp_convention": "non_no_grasp",
-      "grasp_rate": 0.202,
+      "grasp_rate": 0.195,
       "holm_scope": "registered_scenario_contrast_family_with_platform_stratum",
+      "ordering_claim_limit": "destination_static_ranks_first_only \u2014 no stable three-way ordering claimed",
       "pilot_grasp_rate": null,
       "platform": "isaac_droid",
-      "platform_ordering": "Both platforms agree in direction: destination_static ranks first at current width. Early C6 inversion at n\u224856 resolved as n grew; C6 absolute rates ~3\u00d7 C8 (ti_only for magnitude).",
+      "platform_cell_episodes_per_scenario": 128,
+      "platform_ordering": "destination_static_ranks_first_only \u2014 no stable three-way ordering claimed. C6 second/third ranks swap at n=268/330/337; C8 move_stop=original_sham tied at 3.1%. C6 contributes 128 episodes per scenario (cosmos3_nano_droid released queue); C7 and C8 contribute 256 per scenario \u2014 platform\u00d7scenario contrast is unbalanced and underpowered.",
       "registered_estimand": "platform_x_scenario_grasp_interaction",
       "scenario": "original_sham",
       "scenario_rank_within_platform": 2,
@@ -872,18 +955,20 @@
     {
       "cohort": "confirmatory_partial",
       "cross_platform_magnitude_note": "Compare C6 ti_only to C8 grasp_rate (C8 has zero wrong_goal_region)",
-      "episodes": 89,
+      "episodes": 116,
       "estimability_note": "insufficient_coverage_not_estimable",
       "family": "C6",
       "fixture": "containment",
-      "grasp_achieved_c6_rule": 24,
-      "grasp_achieved_transport_incomplete_only": 22,
+      "grasp_achieved_c6_rule": 27,
+      "grasp_achieved_transport_incomplete_only": 25,
       "grasp_convention": "transport_incomplete_only",
-      "grasp_rate": 0.247,
+      "grasp_rate": 0.216,
       "holm_scope": "registered_scenario_contrast_family_with_platform_stratum",
+      "ordering_claim_limit": "destination_static_ranks_first_only \u2014 no stable three-way ordering claimed",
       "pilot_grasp_rate": null,
       "platform": "isaac_droid",
-      "platform_ordering": "Both platforms agree in direction: destination_static ranks first at current width. Early C6 inversion at n\u224856 resolved as n grew; C6 absolute rates ~3\u00d7 C8 (ti_only for magnitude).",
+      "platform_cell_episodes_per_scenario": 128,
+      "platform_ordering": "destination_static_ranks_first_only \u2014 no stable three-way ordering claimed. C6 second/third ranks swap at n=268/330/337; C8 move_stop=original_sham tied at 3.1%. C6 contributes 128 episodes per scenario (cosmos3_nano_droid released queue); C7 and C8 contribute 256 per scenario \u2014 platform\u00d7scenario contrast is unbalanced and underpowered.",
       "registered_estimand": "platform_x_scenario_grasp_interaction",
       "scenario": "destination_static",
       "scenario_rank_within_platform": 1,
@@ -892,38 +977,42 @@
     {
       "cohort": "confirmatory_partial",
       "cross_platform_magnitude_note": "Compare C6 ti_only to C8 grasp_rate (C8 has zero wrong_goal_region)",
-      "episodes": 85,
+      "episodes": 108,
       "estimability_note": "insufficient_coverage_not_estimable",
       "family": "C6",
       "fixture": "containment",
-      "grasp_achieved_c6_rule": 16,
-      "grasp_achieved_transport_incomplete_only": 15,
+      "grasp_achieved_c6_rule": 21,
+      "grasp_achieved_transport_incomplete_only": 19,
       "grasp_convention": "transport_incomplete_only",
       "grasp_rate": 0.176,
       "holm_scope": "registered_scenario_contrast_family_with_platform_stratum",
+      "ordering_claim_limit": "destination_static_ranks_first_only \u2014 no stable three-way ordering claimed",
       "pilot_grasp_rate": null,
       "platform": "isaac_droid",
-      "platform_ordering": "Both platforms agree in direction: destination_static ranks first at current width. Early C6 inversion at n\u224856 resolved as n grew; C6 absolute rates ~3\u00d7 C8 (ti_only for magnitude).",
+      "platform_cell_episodes_per_scenario": 128,
+      "platform_ordering": "destination_static_ranks_first_only \u2014 no stable three-way ordering claimed. C6 second/third ranks swap at n=268/330/337; C8 move_stop=original_sham tied at 3.1%. C6 contributes 128 episodes per scenario (cosmos3_nano_droid released queue); C7 and C8 contribute 256 per scenario \u2014 platform\u00d7scenario contrast is unbalanced and underpowered.",
       "registered_estimand": "platform_x_scenario_grasp_interaction",
       "scenario": "move_stop",
       "scenario_rank_within_platform": 3,
-      "wrong_goal_region_count": 1
+      "wrong_goal_region_count": 2
     },
     {
       "cohort": "confirmatory_partial",
       "cross_platform_magnitude_note": "Compare C6 ti_only to C8 grasp_rate (C8 has zero wrong_goal_region)",
-      "episodes": 94,
+      "episodes": 113,
       "estimability_note": "insufficient_coverage_not_estimable",
       "family": "C6",
       "fixture": "containment",
-      "grasp_achieved_c6_rule": 19,
-      "grasp_achieved_transport_incomplete_only": 17,
+      "grasp_achieved_c6_rule": 22,
+      "grasp_achieved_transport_incomplete_only": 20,
       "grasp_convention": "transport_incomplete_only",
-      "grasp_rate": 0.181,
+      "grasp_rate": 0.177,
       "holm_scope": "registered_scenario_contrast_family_with_platform_stratum",
+      "ordering_claim_limit": "destination_static_ranks_first_only \u2014 no stable three-way ordering claimed",
       "pilot_grasp_rate": null,
       "platform": "isaac_droid",
-      "platform_ordering": "Both platforms agree in direction: destination_static ranks first at current width. Early C6 inversion at n\u224856 resolved as n grew; C6 absolute rates ~3\u00d7 C8 (ti_only for magnitude).",
+      "platform_cell_episodes_per_scenario": 128,
+      "platform_ordering": "destination_static_ranks_first_only \u2014 no stable three-way ordering claimed. C6 second/third ranks swap at n=268/330/337; C8 move_stop=original_sham tied at 3.1%. C6 contributes 128 episodes per scenario (cosmos3_nano_droid released queue); C7 and C8 contribute 256 per scenario \u2014 platform\u00d7scenario contrast is unbalanced and underpowered.",
       "registered_estimand": "platform_x_scenario_grasp_interaction",
       "scenario": "original_sham",
       "scenario_rank_within_platform": 2,
@@ -940,9 +1029,11 @@
       "grasp_convention": "transport_incomplete_only",
       "grasp_rate": 0.0586,
       "holm_scope": "registered_scenario_contrast_family_with_platform_stratum",
+      "ordering_claim_limit": "destination_static_ranks_first_only \u2014 no stable three-way ordering claimed",
       "pilot_grasp_rate": 0.75,
       "platform": "widowx_simplerenv",
-      "platform_ordering": "Both platforms agree in direction: destination_static ranks first at current width. Early C6 inversion at n\u224856 resolved as n grew; C6 absolute rates ~3\u00d7 C8 (ti_only for magnitude).",
+      "platform_cell_episodes_per_scenario": 256,
+      "platform_ordering": "destination_static_ranks_first_only \u2014 no stable three-way ordering claimed. C6 second/third ranks swap at n=268/330/337; C8 move_stop=original_sham tied at 3.1%. C6 contributes 128 episodes per scenario (cosmos3_nano_droid released queue); C7 and C8 contribute 256 per scenario \u2014 platform\u00d7scenario contrast is unbalanced and underpowered.",
       "registered_estimand": "platform_x_scenario_grasp_interaction",
       "scenario": "destination_static",
       "scenario_rank_within_platform": 1
@@ -958,9 +1049,11 @@
       "grasp_convention": "transport_incomplete_only",
       "grasp_rate": 0.0312,
       "holm_scope": "registered_scenario_contrast_family_with_platform_stratum",
+      "ordering_claim_limit": "destination_static_ranks_first_only \u2014 no stable three-way ordering claimed",
       "pilot_grasp_rate": 0.5,
       "platform": "widowx_simplerenv",
-      "platform_ordering": "Both platforms agree in direction: destination_static ranks first at current width. Early C6 inversion at n\u224856 resolved as n grew; C6 absolute rates ~3\u00d7 C8 (ti_only for magnitude).",
+      "platform_cell_episodes_per_scenario": 256,
+      "platform_ordering": "destination_static_ranks_first_only \u2014 no stable three-way ordering claimed. C6 second/third ranks swap at n=268/330/337; C8 move_stop=original_sham tied at 3.1%. C6 contributes 128 episodes per scenario (cosmos3_nano_droid released queue); C7 and C8 contribute 256 per scenario \u2014 platform\u00d7scenario contrast is unbalanced and underpowered.",
       "registered_estimand": "platform_x_scenario_grasp_interaction",
       "scenario": "move_stop",
       "scenario_rank_within_platform": 3
@@ -976,9 +1069,11 @@
       "grasp_convention": "transport_incomplete_only",
       "grasp_rate": 0.0312,
       "holm_scope": "registered_scenario_contrast_family_with_platform_stratum",
+      "ordering_claim_limit": "destination_static_ranks_first_only \u2014 no stable three-way ordering claimed",
       "pilot_grasp_rate": 0.25,
       "platform": "widowx_simplerenv",
-      "platform_ordering": "Both platforms agree in direction: destination_static ranks first at current width. Early C6 inversion at n\u224856 resolved as n grew; C6 absolute rates ~3\u00d7 C8 (ti_only for magnitude).",
+      "platform_cell_episodes_per_scenario": 256,
+      "platform_ordering": "destination_static_ranks_first_only \u2014 no stable three-way ordering claimed. C6 second/third ranks swap at n=268/330/337; C8 move_stop=original_sham tied at 3.1%. C6 contributes 128 episodes per scenario (cosmos3_nano_droid released queue); C7 and C8 contribute 256 per scenario \u2014 platform\u00d7scenario contrast is unbalanced and underpowered.",
       "registered_estimand": "platform_x_scenario_grasp_interaction",
       "scenario": "original_sham",
       "scenario_rank_within_platform": 2
@@ -1016,5 +1111,5 @@
       "receipt_path": "artifacts/online_correction_v4/qualification/20260908_vertical_natural_grasp_live_control_finding_g3ngp20260908vp8.json"
     }
   },
-  "scientifically_blocked_episodes": 15360
+  "scientifically_blocked_episodes": 15744
 }

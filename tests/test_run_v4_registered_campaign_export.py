@@ -46,7 +46,7 @@ def test_build_campaign_blocked_scope_includes_horizontal_squeeze() -> None:
         compile_provenance={"active_compile_id": "compiled_ledger_20260908m", "is_final": False},
         c8_scenario_grasp={"grasp_achieved_count": 12},
     )
-    assert payload["scientifically_blocked_episodes"] == 15360
+    assert payload["scientifically_blocked_episodes"] == 15744
     assert payload["pre_repair_c7_excluded_episodes"] == 279
     assert payload["horizontal_scale_squeeze"]["classification"] == "information_gate_squeeze"
     assert payload["criteria_amended"] is False

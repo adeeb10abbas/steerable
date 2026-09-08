@@ -120,7 +120,7 @@ C6_RUNNER_BINDING = (
 )
 C6_WAVE_PROGRESS = (
     ROOT
-    / "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/c6_wave_d_progress_receipt_20260908l.json"
+    / "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/c6_wave_d_progress_receipt_20260908m.json"
 )
 C7_RESHARD_ANALYSIS = (
     ROOT
@@ -145,6 +145,48 @@ HORIZONTAL_SLICE = (
     ROOT / "artifacts/online_correction_v4/results/horizontal_geometry_repair_v2/20260908"
 )
 FROZEN_ANALYSIS = ROOT / "artifacts/online_correction_v4/frozen_analysis_manifest.json"
+C6_WAVE_E_BLOCKED_SCOPE = (
+    ROOT
+    / "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/c6_wave_e_blocked_scope_20260908.json"
+)
+C6_CONFIRMATORY_PLANNED = 384
+C7_CONFIRMATORY_PLANNED = 768
+C8_CONFIRMATORY_PLANNED = 768
+C6_PI05_BLOCKED_EPISODES = 384
+CAMPAIGN_ACHIEVABLE_POLICY_EPISODES = 1920
+CAMPAIGN_BLOCKED_POLICY_EPISODES = 15744
+ORDERING_CLAIM_LIMIT = (
+    "destination_static_ranks_first_only — no stable three-way ordering claimed"
+)
+PLATFORM_CELL_IMBALANCE_NOTE = (
+    "C6 contributes 128 episodes per scenario (cosmos3_nano_droid released queue); "
+    "C7 and C8 contribute 256 per scenario — platform×scenario contrast is unbalanced and underpowered"
+)
+
+
+def load_c6_denominator_blocked_scope() -> dict[str, Any]:
+    if C6_WAVE_E_BLOCKED_SCOPE.is_file():
+        return load_json(C6_WAVE_E_BLOCKED_SCOPE)
+    return {}
+
+
+def apply_corrected_campaign_scope(campaign: dict[str, Any]) -> dict[str, Any]:
+    corrected = dict(campaign)
+    achievable_breakdown = dict(corrected.get("achievable_breakdown") or {})
+    achievable_breakdown.update(
+        {
+            "C6": C6_CONFIRMATORY_PLANNED,
+            "C7": C7_CONFIRMATORY_PLANNED,
+            "C8": C8_CONFIRMATORY_PLANNED,
+        }
+    )
+    blocked_breakdown = dict(corrected.get("blocked_breakdown") or {})
+    blocked_breakdown["C6_pi05_containment"] = C6_PI05_BLOCKED_EPISODES
+    corrected["achievable_breakdown"] = achievable_breakdown
+    corrected["blocked_breakdown"] = blocked_breakdown
+    corrected["achievable_policy_episodes"] = CAMPAIGN_ACHIEVABLE_POLICY_EPISODES
+    corrected["scientifically_blocked_episodes"] = CAMPAIGN_BLOCKED_POLICY_EPISODES
+    return corrected
 
 
 def sha256_file(path: Path) -> str:
@@ -246,7 +288,7 @@ def build_c8_grasp_by_scenario_rows(composition: dict[str, Any], *, cohort: str)
                         "insufficient_coverage_not_estimable"
                         if (composition.get("ordering_assessment") or {}).get("ordering_holds")
                         == "insufficient_coverage"
-                        or int((composition.get("progress") or {}).get("behavioral_valid") or 0) < 768
+                        or int((composition.get("progress") or {}).get("behavioral_valid") or 0) < C8_CONFIRMATORY_PLANNED
                         else "confirmatory_partial"
                     )
                 ),
@@ -285,8 +327,8 @@ def _c6_grasp_rate(stats: dict[str, Any], *, convention: str) -> float:
 
 
 def _platform_interaction_estimability(*, c6_terminals: int, c8_valid: int) -> str:
-    if c6_terminals >= 768 and c8_valid >= 768:
-        return "confirmatory_full_coverage"
+    if c6_terminals >= C6_CONFIRMATORY_PLANNED and c8_valid >= C8_CONFIRMATORY_PLANNED:
+        return "confirmatory_full_coverage_unbalanced_cells"
     return "insufficient_coverage_not_estimable"
 
 
@@ -304,8 +346,14 @@ def build_platform_scenario_grasp_contrast_rows(
     c6_terminals = int((c6_progress or {}).get("confirmatory_terminals") or 0)
     estimability = _platform_interaction_estimability(c6_terminals=c6_terminals, c8_valid=c8_valid)
     platform_ordering = (
-        "Both platforms agree in direction: destination_static ranks first at current width. "
-        "Early C6 inversion at n≈56 resolved as n grew; C6 absolute rates ~3× C8 (ti_only for magnitude)."
+        f"{ORDERING_CLAIM_LIMIT}. C6 second/third ranks swap at n=268/330/337; "
+        "C8 move_stop=original_sham tied at 3.1%. "
+        f"{PLATFORM_CELL_IMBALANCE_NOTE}."
+    )
+    c6_cohort = (
+        "confirmatory_final"
+        if c6_terminals >= C6_CONFIRMATORY_PLANNED
+        else "confirmatory_partial"
     )
 
     if c6_progress:
@@ -327,7 +375,7 @@ def build_platform_scenario_grasp_contrast_rows(
                         "family": "C6",
                         "platform": "isaac_droid",
                         "fixture": "containment",
-                        "cohort": "confirmatory_partial",
+                        "cohort": c6_cohort,
                         "grasp_convention": label,
                         "scenario": scenario,
                         "episodes": stats.get("episodes"),
@@ -341,6 +389,8 @@ def build_platform_scenario_grasp_contrast_rows(
                         "pilot_grasp_rate": None,
                         "scenario_rank_within_platform": rank.get(scenario),
                         "platform_ordering": platform_ordering,
+                        "ordering_claim_limit": ORDERING_CLAIM_LIMIT,
+                        "platform_cell_episodes_per_scenario": 128,
                         "registered_estimand": "platform_x_scenario_grasp_interaction",
                         "estimability_note": estimability,
                         "holm_scope": "registered_scenario_contrast_family_with_platform_stratum",
@@ -356,7 +406,7 @@ def build_platform_scenario_grasp_contrast_rows(
             reverse=True,
         )
         c8_rank = {scenario: idx + 1 for idx, (scenario, _) in enumerate(c8_ranked)}
-        c8_cohort = "confirmatory_final" if c8_valid >= 768 else "confirmatory_partial"
+        c8_cohort = "confirmatory_final" if c8_valid >= C8_CONFIRMATORY_PLANNED else "confirmatory_partial"
         for scenario in scenario_order:
             stats = c8_by.get(scenario) or {}
             pilot_grasp = (c8_pilot_by.get(scenario) or {}).get("grasp_achieved")
@@ -375,6 +425,8 @@ def build_platform_scenario_grasp_contrast_rows(
                     "pilot_grasp_rate": round(float(pilot_grasp or 0) / pilot_eps, 3),
                     "scenario_rank_within_platform": c8_rank.get(scenario),
                     "platform_ordering": platform_ordering,
+                    "ordering_claim_limit": ORDERING_CLAIM_LIMIT,
+                    "platform_cell_episodes_per_scenario": 256,
                     "registered_estimand": "platform_x_scenario_grasp_interaction",
                     "estimability_note": estimability,
                     "holm_scope": "registered_scenario_contrast_family_with_platform_stratum",
@@ -408,6 +460,7 @@ def build_c6_confirmatory_grasp_rows(progress: dict[str, Any]) -> list[dict[str,
                     stats, convention="transport_incomplete_only"
                 ),
                 "wrong_goal_region_count": stats.get("wrong_goal_region_count"),
+                "ordering_claim_limit": ORDERING_CLAIM_LIMIT,
                 "estimability_note": "insufficient_coverage_not_estimable",
             }
         )
@@ -462,7 +515,11 @@ def build_capacity_finding() -> dict[str, Any]:
             "policies": ["c8_a40_spread", "c6_a10040_spread"],
             "purpose": "Topology spread and soft anti-affinity to bin-pack single-GPU pods across nodes",
         },
-        "confirmatory_episodes_per_family": 768,
+        "confirmatory_episodes_per_family": {
+            "C6": C6_CONFIRMATORY_PLANNED,
+            "C7": C7_CONFIRMATORY_PLANNED,
+            "C8": C8_CONFIRMATORY_PLANNED,
+        },
         "estimated_c8_confirmatory_walltime_hours_at_full_a40_pool": 16,
         "c8_execution_status_receipt": str(resolve_c8_status_receipt_path().relative_to(ROOT))
         if resolve_c8_status_receipt_path()
@@ -569,8 +626,8 @@ def resolve_c8_confirmatory_composition() -> dict[str, Any] | None:
         or (str(C8_EPISODE_ACCOUNTING.relative_to(ROOT)) if C8_EPISODE_ACCOUNTING.is_file() else None),
         "progress": {
             "behavioral_valid": use_valid,
-            "total_queued": 768,
-            "coverage_fraction": round(use_valid / 768, 4) if use_valid else milestone.get("progress", {}).get("coverage_fraction"),
+            "total_queued": C8_CONFIRMATORY_PLANNED,
+            "coverage_fraction": round(use_valid / C8_CONFIRMATORY_PLANNED, 4) if use_valid else milestone.get("progress", {}).get("coverage_fraction"),
         },
         "aggregate_outcomes": aggregate,
         "grasp_achieved_count": grasp_total,
@@ -597,7 +654,7 @@ def resolve_campaign_export_status(*, c7_is_final: bool, family_rollups: dict[st
     c8_accepted = int(
         ((family_rollups.get("C8") or {}).get("confirmatory_dispatch") or {}).get("accepted_valid_unique") or 0
     )
-    if c6_accepted >= 768 and c8_accepted >= 768:
+    if c6_accepted >= C6_CONFIRMATORY_PLANNED and c8_accepted >= C8_CONFIRMATORY_PLANNED:
         return "complete"
     return "partial"
 
@@ -613,7 +670,8 @@ def build_campaign_blocked_scope(
     c8_confound_check: dict[str, Any] | None = None,
     c6_confirmatory_progress: dict[str, Any] | None = None,
 ) -> dict:
-    campaign = dict(c7_blocked_scope.get("campaign_scope_revision") or {})
+    campaign = apply_corrected_campaign_scope(dict(c7_blocked_scope.get("campaign_scope_revision") or {}))
+    c6_denominator_scope = load_c6_denominator_blocked_scope()
     horizontal_finding = horizontal_blocked_scope.get("scientific_finding") or {}
     squeeze = horizontal_finding.get("information_gate_squeeze_at_0p5") or {}
     campaign["horizontal_geometry_repair_note"] = horizontal_finding.get(
@@ -636,21 +694,26 @@ def build_campaign_blocked_scope(
         "20260908_horizontal_g3_gate_decision_g3r20260908g.json; "
         "horizontal_geometry_repair_v2/20260908 evidence slice"
     )
+    not_estimable["C6_pi05_containment"] = (
+        "384 pi05_droid containment episodes scientifically blocked: pi05 was never qualified "
+        "for containment through G4–G8; released runtime lock binds cosmos3_nano_droid only "
+        "(queue.frozen.cosmos3_nano.jsonl, 384 rows, sha256 d8258088); planning inventory "
+        "768-row queue (ff0c9448) is not released scope. See c6_wave_e_blocked_scope_20260908.json."
+    )
     not_estimable["platform_x_scenario_grasp_interaction"] = (
         "Cross-platform scenario grasp ordering contrast (C6 Isaac containment vs C8 WidowX "
         "SimplerEnv) is registered under platform_x_scenario_grasp_interaction with Holm scope "
         "registered_scenario_contrast_family_with_platform_stratum. C8 confirmatory is terminal "
-        f"at {int((c8_confirmatory_grasp or {}).get('progress', {}).get('behavioral_valid') or 768)}/768; "
-        f"C6 at {int((c6_confirmatory_progress or {}).get('confirmatory_terminals') or 0)}/768 — "
-        "estimand remains insufficient_coverage_not_estimable until C6 is terminal. Both platforms "
-        "currently agree in direction (destination_static ranks first); an early C6 inversion at "
-        "n≈56 resolved as n grew and must not be carried forward as a standing finding."
+        f"at {int((c8_confirmatory_grasp or {}).get('progress', {}).get('behavioral_valid') or C8_CONFIRMATORY_PLANNED)}/{C8_CONFIRMATORY_PLANNED}; "
+        f"C6 at {int((c6_confirmatory_progress or {}).get('confirmatory_terminals') or 0)}/{C6_CONFIRMATORY_PLANNED} — "
+        f"estimand remains insufficient_coverage_not_estimable until C6 reaches {C6_CONFIRMATORY_PLANNED}/{C6_CONFIRMATORY_PLANNED}. "
+        f"{ORDERING_CLAIM_LIMIT}. {PLATFORM_CELL_IMBALANCE_NOTE}."
     )
     return {
         "schema_version": "v4-registered-campaign-blocked-scope-v1",
         "original_planned_policy_episodes": campaign.get("original_planned_policy_episodes", 17664),
-        "achievable_policy_episodes": campaign.get("achievable_policy_episodes", 2304),
-        "scientifically_blocked_episodes": campaign.get("scientifically_blocked_episodes", 15360),
+        "achievable_policy_episodes": campaign.get("achievable_policy_episodes", CAMPAIGN_ACHIEVABLE_POLICY_EPISODES),
+        "scientifically_blocked_episodes": campaign.get("scientifically_blocked_episodes", CAMPAIGN_BLOCKED_POLICY_EPISODES),
         "achievable_breakdown": campaign.get("achievable_breakdown"),
         "blocked_breakdown": campaign.get("blocked_breakdown"),
         "disclosed_setup_repairs": campaign.get("disclosed_setup_repairs"),
@@ -659,6 +722,18 @@ def build_campaign_blocked_scope(
         "horizontal_scale_squeeze": campaign.get("horizontal_scale_squeeze"),
         "family_status": family_status,
         "capacity_finding": build_capacity_finding(),
+        "c6_denominator_correction": {
+            "receipt": str(C6_WAVE_E_BLOCKED_SCOPE.relative_to(ROOT))
+            if C6_WAVE_E_BLOCKED_SCOPE.is_file()
+            else None,
+            "correct_confirmatory_denominator": C6_CONFIRMATORY_PLANNED,
+            "incorrect_planning_denominator": 768,
+            "pi05_containment_blocked_episodes": C6_PI05_BLOCKED_EPISODES,
+            "released_policy": "cosmos3_nano_droid",
+            "episodes_per_scenario": 128,
+            "evidence": c6_denominator_scope.get("evidence"),
+            "action_taken": c6_denominator_scope.get("action_taken"),
+        },
         "c6_runner_binding_resolution": (
             str(C6_RUNNER_BINDING.relative_to(ROOT)) if C6_RUNNER_BINDING.is_file() else None
         ),
@@ -732,7 +807,7 @@ def build_family_coverage_rows(family_rollups: dict[str, dict]) -> list[dict[str
         if family == "C8" and int(confirmatory.get("accepted_valid_unique") or 0) > 0:
             c8_confirm_accepted = int(confirmatory.get("accepted_valid_unique") or 0)
             c8_confirm_phase = (
-                "confirmatory_final" if c8_confirm_accepted >= 768 else "confirmatory_partial"
+                "confirmatory_final" if c8_confirm_accepted >= C8_CONFIRMATORY_PLANNED else "confirmatory_partial"
             )
             rows.append(
                 {
@@ -749,11 +824,17 @@ def build_family_coverage_rows(family_rollups: dict[str, dict]) -> list[dict[str
                 }
             )
         if family == "C6" and int(confirmatory.get("accepted_valid_unique") or 0) > 0:
+            c6_confirm_accepted = int(confirmatory.get("accepted_valid_unique") or 0)
+            c6_confirm_phase = (
+                "confirmatory_final"
+                if c6_confirm_accepted >= C6_CONFIRMATORY_PLANNED
+                else "confirmatory_partial"
+            )
             rows.append(
                 {
                     "family": "C6",
                     "fixture": rollup.get("fixture"),
-                    "evidence_phase": "confirmatory_partial",
+                    "evidence_phase": c6_confirm_phase,
                     "export_status": confirmatory.get("export_status"),
                     "coverage_label": confirmatory.get("coverage_label"),
                     "accepted_valid_unique": confirmatory.get("accepted_valid_unique"),
@@ -785,8 +866,8 @@ def build_campaign_tables(
     scope_summary = [
         {"metric": "campaign_export_status", "value": campaign_export_status},
         {"metric": "original_planned_policy_episodes", "value": campaign_blocked.get("original_planned_policy_episodes", 17664)},
-        {"metric": "achievable_policy_episodes", "value": campaign_blocked.get("achievable_policy_episodes", 2304)},
-        {"metric": "scientifically_blocked_episodes", "value": campaign_blocked.get("scientifically_blocked_episodes", 15360)},
+        {"metric": "achievable_policy_episodes", "value": campaign_blocked.get("achievable_policy_episodes", CAMPAIGN_ACHIEVABLE_POLICY_EPISODES)},
+        {"metric": "scientifically_blocked_episodes", "value": campaign_blocked.get("scientifically_blocked_episodes", CAMPAIGN_BLOCKED_POLICY_EPISODES)},
         {"metric": "pre_repair_c7_excluded_episodes", "value": campaign_blocked.get("pre_repair_c7_excluded_episodes", 279)},
         {"metric": "c7_coverage_label", "value": c7_coverage.get("coverage_label")},
         {"metric": "c6_pilot_coverage_label", "value": ((family_rollups.get("C6") or {}).get("coverage") or {}).get("coverage_label")},
@@ -798,10 +879,14 @@ def build_campaign_tables(
         {
             "metric": "c6_confirmatory_coverage_label",
             "value": (
-                f"{int((c6_confirmatory_progress or {}).get('confirmatory_terminals') or 0)}/768"
+                f"{int((c6_confirmatory_progress or {}).get('confirmatory_terminals') or 0)}/{C6_CONFIRMATORY_PLANNED}"
                 if c6_confirmatory_progress
                 else None
             ),
+        },
+        {
+            "metric": "c6_confirmatory_planned_episodes",
+            "value": C6_CONFIRMATORY_PLANNED,
         },
         {"metric": "c7_accepted_valid_unique", "value": validation.get("accepted_unique")},
         {"metric": "c7_valid_success_records", "value": validation.get("valid_success_records")},
@@ -814,13 +899,15 @@ def build_campaign_tables(
         ("C1_C3_C4_horizontal", ("C1", "C3", "C4")),
         ("C2_reference_binding", ("C2",)),
         ("C5_vertical", ("C5",)),
+        ("C6_pi05_containment", ("C6",)),
     ):
+        status_key = "C6_pi05_containment" if block_key == "C6_pi05_containment" else families[0]
         blocked_families.append(
             {
                 "block_class": block_key,
                 "blocked_episodes": breakdown.get(block_key),
                 "families": ",".join(families),
-                "status": not_estimable.get(families[0], ""),
+                "status": not_estimable.get(status_key, ""),
             }
         )
     squeeze_rows = [
@@ -881,10 +968,10 @@ def build_campaign_tables(
                     "fixture": "containment",
                     "evidence_phase": "confirmatory_partial",
                     "export_status": "dispatched_partial",
-                    "coverage_label": f"{c6_accepted}/768 confirmatory accepted",
+                    "coverage_label": f"{c6_accepted}/{C6_CONFIRMATORY_PLANNED} confirmatory accepted",
                     "accepted_valid_unique": c6_accepted,
-                    "planned_episodes": 768,
-                    "confirmatory_dispatched": 384,
+                    "planned_episodes": C6_CONFIRMATORY_PLANNED,
+                    "confirmatory_dispatched": C6_CONFIRMATORY_PLANNED,
                     "confirmatory_accepted": c6_accepted,
                     "ledger_compile_id": "",
                 }
@@ -912,8 +999,8 @@ def build_campaign_tables(
 
 def render_campaign_scope_figure(*, rows: list[dict], out_path: Path, export_status: str) -> None:
     planned = next((row["value"] for row in rows if row["metric"] == "original_planned_policy_episodes"), 17664)
-    achievable = next((row["value"] for row in rows if row["metric"] == "achievable_policy_episodes"), 2304)
-    blocked = next((row["value"] for row in rows if row["metric"] == "scientifically_blocked_episodes"), 15360)
+    achievable = next((row["value"] for row in rows if row["metric"] == "achievable_policy_episodes"), CAMPAIGN_ACHIEVABLE_POLICY_EPISODES)
+    blocked = next((row["value"] for row in rows if row["metric"] == "scientifically_blocked_episodes"), CAMPAIGN_BLOCKED_POLICY_EPISODES)
     excluded = next((row["value"] for row in rows if row["metric"] == "pre_repair_c7_excluded_episodes"), 279)
     width = 720
     height = 220
@@ -981,12 +1068,16 @@ def build_campaign_evidence_memo(
         f"{c7_coverage.get('coverage_label', 'n/a')} on {c7_coverage.get('ledger_compile_id', 'n/a')} "
         f"(require-full-coverage compile; primary behavioral family closed). "
         f"C8 confirmatory {c8_confirmatory_valid}/768 terminal (ledger compile {c8_ledger_id}). "
-        f"C6 confirmatory {c6_confirmatory_valid}/768 terminals (wave F).",
-        "Registered campaign scope: 17,664 planned policy episodes; 2,304 achievable "
-        "(C6, C7, C8 confirmatory families × 768); 15,360 scientifically blocked "
-        "(C1/C3/C4 horizontal information-gate squeeze 9,728; C2 reference_binding "
-        "information gate 4,096; C5 vertical IK reachability 768). No eligibility "
-        "criterion, threshold, or scale ladder was amended to recover blocked scope.",
+        f"C6 confirmatory {c6_confirmatory_valid}/{C6_CONFIRMATORY_PLANNED} terminals (cosmos3_nano_droid released queue; wave D).",
+        (
+            "Registered campaign scope: 17,664 planned policy episodes; **1,920 achievable** "
+            f"(C6 {C6_CONFIRMATORY_PLANNED} + C7 {C7_CONFIRMATORY_PLANNED} + C8 {C8_CONFIRMATORY_PLANNED}); "
+            "**15,744 scientifically blocked** "
+            "(C1/C3/C4 horizontal squeeze 9,728; C2 reference_binding 4,096; C5 vertical 768; "
+            f"C6 pi05 containment {C6_PI05_BLOCKED_EPISODES} — discovered block, not amended criterion). "
+            "C6's released runtime lock binds cosmos3_nano_droid only (384 rows, 128/scenario); "
+            "768 planning inventory included 384 unqualified pi05_droid episodes."
+        ),
         (
             f"C7 FINAL composition ({c7_coverage.get('ledger_compile_id', 'n/a')}): "
             f"{c7_outcome_composition.get('no_grasp', 0)} no_grasp, "
@@ -1009,13 +1100,16 @@ def build_campaign_evidence_memo(
             f"move_stop {100 * float(c8_confirmatory_by_scenario.get('move_stop', {}).get('grasp_rate', 0)):.1f}%, "
             f"original_sham {100 * float(c8_confirmatory_by_scenario.get('original_sham', {}).get('grasp_rate', 0)):.1f}% "
             "grasp rate (transport_incomplete convention; zero wrong_goal_region across 768). "
-            "Destination_static ranks first; move_stop ≈ original_sham — pilot 75/50/25% magnitudes not reproduced."
+            "Destination_static ranks first on both platforms. "
+            f"{ORDERING_CLAIM_LIMIT}; C8 move_stop=original_sham tied at 3.1%; "
+            "C6 second/third ranks swap as n grows (268 sham>move, 330 move>sham, 337 sham>move)."
         ),
         "C8 destination_static confound elimination: green-to-yellow reset distance identical at "
         "0.1414 m across scenarios; protocol difference is reference placement profile only.",
         (
-            f"C6 confirmatory at {c6_confirmatory_valid}/768 ({C6_WAVE_PROGRESS.name}): "
-            f"at n={c6_breakdown_n} per-scenario rates reported under **both grasp conventions**. "
+            f"C6 confirmatory at {c6_confirmatory_valid}/{C6_CONFIRMATORY_PLANNED} "
+            f"({C6_WAVE_PROGRESS.name}): per-scenario rates under **both grasp conventions** "
+            f"(128 episodes/scenario released scope vs 256 for C7/C8 — unbalanced platform contrast). "
             f"**C6 rule (non-no_grasp):** destination_static "
             f"{c6_grasp_rates.get('destination_static', {}).get('grasp_rate_c6_rule_pct', 'n/a')}% "
             f"({c6_grasp_rates.get('destination_static', {}).get('grasp_achieved_c6_rule', 'n/a')}/"
@@ -1026,10 +1120,8 @@ def build_campaign_evidence_memo(
             f"{c6_grasp_rates.get('destination_static', {}).get('grasp_rate_transport_incomplete_only_pct', 'n/a')}%, "
             f"move_stop {c6_grasp_rates.get('move_stop', {}).get('grasp_rate_transport_incomplete_only_pct', 'n/a')}%, "
             f"original_sham {c6_grasp_rates.get('original_sham', {}).get('grasp_rate_transport_incomplete_only_pct', 'n/a')}%. "
-            "Early apparent inversion at n≈56 resolved as n grew; destination_static now ranks first on "
-            "Isaac, matching C8 direction. C6 absolute rates run ~3× C8; use ti_only for cross-platform "
-            "magnitude comparison because C6 has nonzero wrong_goal_region. Platform×scenario interaction "
-            "remains not estimable until C6 reaches 768/768."
+            f"{ORDERING_CLAIM_LIMIT}. Platform×scenario interaction remains not estimable until "
+            f"C6 reaches {C6_CONFIRMATORY_PLANNED}/{C6_CONFIRMATORY_PLANNED}."
         ),
         "C6 wave D was re-rendered as rendered-c6confirm20260908f after a shared-checkout runner "
         "conflict; operating rule in runner_binding_resolution_20260908.json requires re-render when "
@@ -1081,8 +1173,8 @@ def build_campaign_evidence_memo(
         "cross_fixture_contrast": build_cross_fixture_contrast_rows(family_rollups=family_rollups),
         "frozen_analysis_manifest": str(FROZEN_ANALYSIS.relative_to(ROOT)),
         "headline": (
-            f"{campaign_export_status.title()} registered export: C7 FINAL 768/768 no_grasp dominance; "
-            "C8 confirmatory terminal; C6 partial with dual grasp conventions and platform ordering aligned"
+            f"{campaign_export_status.title()} registered export: C7 FINAL 768/768; C8 confirmatory terminal; "
+            f"C6 {c6_confirmatory_valid}/{C6_CONFIRMATORY_PLANNED} with corrected denominator and pi05 block disclosed"
         ),
         "paper_narrative": {
             "headline": horizontal_narrative.get("headline"),
@@ -1109,15 +1201,18 @@ def build_campaign_evidence_memo(
         "limitations": [
             "Blocked families carry qualification receipts only; no policy episodes were dispatched.",
             "279 pre-repair C7 episodes remain excluded from behavioral claims.",
-            "C6 confirmatory partial (313/768); platform×scenario interaction not estimable until C6 terminal.",
+            f"C6 confirmatory partial ({c6_confirmatory_valid}/{C6_CONFIRMATORY_PLANNED}); "
+            "384 pi05 containment episodes blocked (discovered, not amended); "
+            "platform×scenario interaction not estimable until C6 terminal and unbalanced by cell size.",
             "C6 reports both non-no_grasp and transport_incomplete_only grasp conventions; use ti_only for C8 magnitude comparison.",
-            "C8 claim limit: only destination_static ranking first; pilot 3-way ordering magnitudes not reproduced.",
+            f"{ORDERING_CLAIM_LIMIT}.",
         ],
         "not_estimable_primary_estimands": [
             "C1/C3/C4 primary wording and reference-selectivity contrasts",
             "C2 reference-selectivity primary (H)",
             "C5 vertical family (IK reachability block)",
-            "platform_x_scenario_grasp_interaction (C6 313/768 partial; C8 768/768 terminal)",
+            "C6_pi05_containment (384 episodes; pi05 never qualified for containment)",
+            f"platform_x_scenario_grasp_interaction (C6 {c6_confirmatory_valid}/{C6_CONFIRMATORY_PLANNED} partial; C8 {C8_CONFIRMATORY_PLANNED}/{C8_CONFIRMATORY_PLANNED} terminal; 128 vs 256 eps/scenario)",
         ],
     }
 
@@ -1208,8 +1303,8 @@ def load_confirmatory_dispatch_metadata() -> tuple[dict[str, Any], dict[str, Any
         c6_accepted = int(c6_progress.get("confirmatory_terminals") or 0) if c6_progress else 0
         c6_dispatch = build_dispatch_coverage_metadata(
             accepted=c6_accepted,
-            planned=768,
-            dispatched=int(wave_payload.get("behavioral_episode_count", 384)),
+            planned=C6_CONFIRMATORY_PLANNED,
+            dispatched=int(wave_payload.get("behavioral_episode_count", C6_CONFIRMATORY_PLANNED)),
             compile_id=None,
             wave=wave_label,
         )
@@ -1227,15 +1322,16 @@ def load_confirmatory_dispatch_metadata() -> tuple[dict[str, Any], dict[str, Any
             str(C6_RUNNER_BINDING.relative_to(ROOT)) if C6_RUNNER_BINDING.is_file() else None
         )
         c6_dispatch["note"] = (
-            f"C6 confirmatory {c6_accepted}/768 terminals; platform×scenario interaction tracked at partial width."
+            f"C6 confirmatory {c6_accepted}/{C6_CONFIRMATORY_PLANNED} terminals; "
+            "released cosmos3_nano_droid queue only (128/scenario)."
             if c6_accepted
             else "Wave D re-rendered as 20260908f; confirmatory terminals pending."
         )
     elif C6_WAVE_B_DISPATCH.is_file():
         c6_dispatch = build_dispatch_coverage_metadata(
             accepted=0,
-            planned=768,
-            dispatched=int(load_json(C6_WAVE_B_DISPATCH).get("behavioral_episode_count", 384)),
+            planned=C6_CONFIRMATORY_PLANNED,
+            dispatched=int(load_json(C6_WAVE_B_DISPATCH).get("behavioral_episode_count", C6_CONFIRMATORY_PLANNED)),
             compile_id=None,
             wave="B",
         )
@@ -1252,8 +1348,8 @@ def load_confirmatory_dispatch_metadata() -> tuple[dict[str, Any], dict[str, Any
         )
         c8_dispatch = build_dispatch_coverage_metadata(
             accepted=int(progress.get("valid") or progress.get("behavioral_valid") or 0),
-            planned=768,
-            dispatched=768,
+            planned=C8_CONFIRMATORY_PLANNED,
+            dispatched=C8_CONFIRMATORY_PLANNED,
             compile_id=milestone_id,
             wave="main",
         )

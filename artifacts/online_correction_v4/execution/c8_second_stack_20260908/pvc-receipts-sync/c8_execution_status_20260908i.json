@@ -1,74 +1,60 @@
 {
   "schema_version": "v4-c8-execution-status-receipt-v1",
-  "observed_at_utc": "2026-09-08T05:00:00Z",
-  "confirmatory_ledger_compile_id": "20260908d",
-  "next_milestone_compile_id": "20260908e",
-  "next_milestone_at": 100,
+  "observed_at_utc": "2026-09-08T05:25:00Z",
+  "confirmatory_ledger_compile_id_50_milestone": "20260908d",
+  "confirmatory_ledger_compile_id_100_milestone": null,
+  "confirmatory_ledger_compile_id_live": "20260908e_interim_84",
+  "next_milestone_compile_at": 100,
   "confirmatory_progress": {
-    "valid": 73,
-    "remaining": 695,
-    "total": 768,
+    "valid": 84,
+    "remaining": 684,
     "by_scenario": {
-      "original_sham": {"completed": 26, "no_grasp": 26, "transport_incomplete": 0, "grasp_achieved": 0},
-      "destination_static": {"completed": 22, "no_grasp": 21, "transport_incomplete": 1, "grasp_achieved": 1},
-      "move_stop": {"completed": 25, "no_grasp": 24, "transport_incomplete": 1, "grasp_achieved": 1}
+      "original_sham": {"completed": 30, "no_grasp": 30, "transport_incomplete": 0, "grasp_achieved": 0},
+      "destination_static": {"completed": 25, "no_grasp": 23, "transport_incomplete": 2, "grasp_achieved": 2},
+      "move_stop": {"completed": 29, "no_grasp": 28, "transport_incomplete": 1, "grasp_achieved": 1}
     },
-    "grasp_achieved_total": 2,
-    "ordering_holds": "insufficient_coverage",
-    "ordering_note": "73/768; 2 grasps (destination_static 1, move_stop 1); pilot ordering not testable"
+    "ordering_holds": "insufficient_coverage"
   },
-  "milestone_ledger": {
-    "50_milestone_compile_id": "20260908d",
-    "50_milestone_valid_at_commit": 73,
-    "100_milestone_compile_id": "20260908e",
-    "100_milestone_remaining": 27
+  "anti_affinity_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_anti_affinity_placement_outcome_20260908a.json",
+  "destination_static_confound_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_destination_static_confound_check_20260908a.json",
+  "confirmatory_lanes": [
+    {"lane_id": "c8m00", "completed": 8, "queued": 30, "state": "running", "note": "policy Running"},
+    {"lane_id": "c8m01", "completed": 0, "queued": 38, "state": "running", "note": "sim Running"},
+    {"lane_id": "c8m02", "completed": 0, "queued": 38, "state": "partial", "note": "policy Running, sim Pending"},
+    {"lane_id": "c8m03", "completed": 0, "queued": 38, "state": "partial", "note": "policy Running, sim Pending"},
+    {"lane_id": "c8m04", "completed": 0, "queued": 38, "state": "partial", "note": "policy Running, sim Pending"},
+    {"lane_id": "c8m05", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m06", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m07", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m08", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m09", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m10", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m11", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m12", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m13", "completed": 38, "queued": 0, "state": "partial", "note": "policy Running, sim Pending"},
+    {"lane_id": "c8m14", "completed": 38, "queued": 0, "state": "partial", "note": "policy Running, sim Completed (lane finishing)"},
+    {"lane_id": "c8m15", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m16", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m17", "completed": 0, "queued": 38, "state": "partial", "note": "policy Running, sim Pending"},
+    {"lane_id": "c8m18", "completed": 0, "queued": 38, "state": "partial", "note": "policy Running, sim Pending"},
+    {"lane_id": "c8m19", "completed": 0, "queued": 38, "state": "blocked", "note": "retry Pending after policy-readiness timeout"}
+  ],
+  "failure_mode_verification": {
+    "lanes_with_episodes": ["c8m00", "c8m13", "c8m14"],
+    "observed_outcomes": ["no_grasp", "transport_incomplete"],
+    "serialization_regression": "none",
+    "sampling_seed_regression": "none",
+    "reset_registry_regression": "none"
   },
   "agent_c_hooks": {
-    "c8_pilot_ledger_compile_id": "20260908b",
-    "c8_confirmatory_ledger_compile_id": "20260908d",
-    "c8_confirmatory_composition_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_confirmatory_composition_by_scenario_20260908d.json",
-    "status_label": "confirmatory_in_progress_73_of_768_anti_affinity_partial_c8m00_executing"
+    "c8_confirmatory_ledger_compile_id_50": "20260908d",
+    "c8_confirmatory_ledger_compile_id_100": "pending_at_84_of_768",
+    "status_label": "confirmatory_in_progress_84_of_768_anti_affinity_partial"
   },
-  "capacity_diagnosis": {
-    "shortage_type": "fragmentation_plus_c7_occupancy",
-    "orphan_reclaim_outcome_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_a40_reclaim_outcome_20260908a.json",
-    "anti_affinity_outcome_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_anti_affinity_placement_outcome_20260908b.json"
-  },
-  "wave_width": {
-    "pods_running": 9,
-    "pods_pending": 30,
-    "lanes_running_pair": ["c8m00", "c8m13", "c8m14"],
-    "lanes_partial_one_pod": ["c8m01", "c8m17", "c8m18", "c8m19"],
-    "lanes_blocked": ["c8m02", "c8m03", "c8m04", "c8m05", "c8m06", "c8m07", "c8m08", "c8m09", "c8m10", "c8m11", "c8m12", "c8m15", "c8m16"],
-    "lanes_with_completes": {"c8m00": 6, "c8m13": 38, "c8m14": 29},
-    "lanes_queued_not_executing": ["c8m02", "c8m03", "c8m04", "c8m05", "c8m06", "c8m07", "c8m08", "c8m09", "c8m10", "c8m11", "c8m12", "c8m15", "c8m16", "c8m17", "c8m18", "c8m19"]
-  },
-  "regression_check": {
-    "serialization": "none through 73 valid including c8m00 (6)",
-    "sampling_seed": "none",
-    "reset_registry_digest": "8da6b69ca01e2de15b28df5fe980ae056c04033c9e0b9a3b0d5c1751b269890f"
-  },
-  "destination_static_confound_audit_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_destination_static_confound_audit_20260908a.json",
   "blockers": [
-    {
-      "id": "a40_fragmentation_residual",
-      "impact": "c8m02-c8m12 and c8m16 fully Pending; only c8m00+c8m01 gained placement after anti-affinity",
-      "action": "Capacity agent continues spread; monitor sim pod scheduling for partial lanes"
-    },
-    {
-      "id": "c7_tail_occupancy",
-      "impact": "~15 free A40 GPUs scattered across nodes; C7 still holds pairs",
-      "action": "Wait for C7 tail release; do not re-render C8 lanes independently"
-    },
-    {
-      "id": "100_milestone_pending",
-      "impact": "73/768 valid; 27 episodes to compile id 20260908e",
-      "action": "Recompile at 100 and hand per-scenario breakdown to Agent C"
-    },
-    {
-      "id": "ordering_not_testable",
-      "impact": "2 grasps across 73 episodes; most lanes never executed",
-      "action": "Hold estimability line; verify three failure modes as new lanes execute"
-    }
-  ]
+    {"id": "100_milestone", "impact": "84/768 valid; 16 episodes to compile id 20260908e", "action": "Recompile when count reaches 100"},
+    {"id": "sim_halves_pending", "impact": "28 C8 pods Pending; sim GPUs blocked despite policy spread", "action": "Continue anti-affinity tuning with capacity agent"},
+    {"id": "ordering", "impact": "84/768", "action": "insufficient_coverage — hold estimability line"}
+  ],
+  "source_commit": "0137a54f"
 }

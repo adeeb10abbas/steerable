@@ -1,0 +1,26 @@
+{
+  "schema_version": "v4-c7-orphan-policy-reclaim-receipt-v1",
+  "compiled_at_utc": "2026-09-08T04:25:00Z",
+  "cluster_context": "prod-dcwi-warrenq1-vmkub007",
+  "namespace": "211247-prod",
+  "pattern": "policy Running with sim Error/missing after infra retry teardown",
+  "orphaned_policy_jobs_deleted": 11,
+  "attempt_ids": [
+    "attempt0583", "attempt0584", "attempt0585", "attempt0586", "attempt0587",
+    "attempt0588", "attempt0590", "attempt0591", "attempt0592", "attempt0593"
+  ],
+  "note": "attempt0589 had sim pending not orphan; re-dispatched with retry wave 0589-0594",
+  "a40_gpus_reclaimed": 11,
+  "productive_pairs_preserved": 17,
+  "retry_shards_redispatched": {
+    "attempt_range": "attempt0589-attempt0594",
+    "behavioral_episode_count": 88,
+    "lanes": ["c7m01", "c7m02", "c7m05", "c7m31"]
+  },
+  "released_shard_queue_still_pending": {
+    "attempt_ids": ["attempt0603", "attempt0604", "attempt0605", "attempt0606"],
+    "behavioral_episode_count": 220,
+    "status": "leases released; re-offer when retry 0589-0594 plus productive lanes stable"
+  },
+  "coordination_file": "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_sweep_protect_list_20260908.json"
+}

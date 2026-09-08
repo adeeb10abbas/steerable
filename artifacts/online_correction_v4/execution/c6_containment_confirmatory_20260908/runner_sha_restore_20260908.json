@@ -1,0 +1,22 @@
+{
+  "schema_version": "v4-c6-infra-remediation-receipt-v1",
+  "compiled_at_utc": "2026-09-08T04:15:00Z",
+  "family_id": "containment_c6_confirmatory",
+  "failure_class": "runtime_runner_sha256_mismatch",
+  "symptom": "Sim exit: expected af01ac34... (manifest), observed 71e7f86f... (runtime tree tools/run_online_correction_v4.py)",
+  "root_cause": "Wave D rendered against released lock af01 runner; live runtime checkout at steerable-v4-c7-main carries restored 71e7 runner from C7 repair.",
+  "not_zombie_pattern": true,
+  "failed_lanes_initial": ["c6m10/attempt0171", "c6m11/attempt0172", "c6m12/attempt0173", "c6m13/attempt0174", "c6m14/attempt0175"],
+  "remediation": {
+    "pvc_manifests_patched": 33,
+    "attempt_range": "attempt0160-attempt0192",
+    "canonical_runner_sha256": "71e7f86f5e3dbda46ae3a03a7a07959fc4562a13dce71955362bf93226adb3df",
+    "canonical_runner_source": "/data/users/ali/vla_wam/src/steerable-v4-c7-main/tools/run_online_correction_v4.py",
+    "redispatched_attempts": ["attempt0171", "attempt0172", "attempt0173", "attempt0174", "attempt0175"]
+  },
+  "secondary_failure_class": "stale_attempt_lock_after_redispatch",
+  "lock_remediation": "Cleared .simulator-lane-* and .policy-lane-* locks for attempts 0171-0175 and 0179; redispatched jobs.",
+  "wave_d_status_after_remediation": "10+ sims Running after digest-aligned job restore; 8 Failed under investigation; 0 confirmatory terminals yet",
+  "confirmatory_terminals_after_fix": 0,
+  "per_scenario_composition": {}
+}

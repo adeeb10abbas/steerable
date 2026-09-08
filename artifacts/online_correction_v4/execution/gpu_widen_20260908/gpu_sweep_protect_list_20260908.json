@@ -1,0 +1,50 @@
+{
+  "schema_version": "v4-gpu-sweep-protect-list-v1",
+  "compiled_at_utc": "2026-09-08T04:15:00Z",
+  "owner_agent": "C7_object_pair_confirmatory",
+  "cluster_context": "prod-dcwi-warrenq1-vmkub007",
+  "namespace": "211247-prod",
+  "sweep_coordination": {
+    "capacity_agent_may_reclaim": "policy Running with sim Error/Failed/missing, or sim Running with policy Error/Failed/missing, excluding protected pairs below",
+    "rerunnable": true,
+    "do_not_delete": "productive_lane_pairs"
+  },
+  "productive_c7_lane_pairs": [
+    {"lane_id": "c7m00", "attempt_id": "attempt0473"},
+    {"lane_id": "c7m09", "attempt_id": "attempt0481"},
+    {"lane_id": "c7m10", "attempt_id": "attempt0482"},
+    {"lane_id": "c7m11", "attempt_id": "attempt0483"},
+    {"lane_id": "c7m12", "attempt_id": "attempt0484"},
+    {"lane_id": "c7m13", "attempt_id": "attempt0485"},
+    {"lane_id": "c7m15", "attempt_id": "attempt0535"},
+    {"lane_id": "c7m16", "attempt_id": "attempt0536"},
+    {"lane_id": "c7m17", "attempt_id": "attempt0537"},
+    {"lane_id": "c7m18", "attempt_id": "attempt0538"},
+    {"lane_id": "c7m19", "attempt_id": "attempt0539"},
+    {"lane_id": "c7m21", "attempt_id": "attempt0540"},
+    {"lane_id": "c7m23", "attempt_id": "attempt0541"},
+    {"lane_id": "c7m24", "attempt_id": "attempt0542"},
+    {"lane_id": "c7m26", "attempt_id": "attempt0543"},
+    {"lane_id": "c7m28", "attempt_id": "attempt0544"},
+    {"lane_id": "c7m30", "attempt_id": "attempt0545"}
+  ],
+  "c7_retry_shards_in_flight_do_not_preempt": [
+    {"lane_id": "c7m01", "attempt_id": "attempt0589", "remaining_episodes": 10},
+    {"lane_id": "c7m02", "attempt_id": "attempt0590", "remaining_episodes": 13},
+    {"lane_id": "c7m02", "attempt_id": "attempt0593", "remaining_episodes": 18},
+    {"lane_id": "c7m05", "attempt_id": "attempt0591", "remaining_episodes": 7},
+    {"lane_id": "c7m05", "attempt_id": "attempt0594", "remaining_episodes": 18},
+    {"lane_id": "c7m31", "attempt_id": "attempt0592", "remaining_episodes": 22}
+  ],
+  "released_shard_queue_pending_redispatch": {
+    "attempt_ids": ["attempt0603", "attempt0604", "attempt0605", "attempt0606"],
+    "behavioral_episode_count": 220,
+    "status": "leases_released_jobs_torn_down_20260908",
+    "reoffer_when": "A40 headroom after productive lanes plus retry 0589-0594 stable"
+  },
+  "reclaimed_orphan_policy_attempts_20260908": [
+    "attempt0583", "attempt0584", "attempt0585", "attempt0586", "attempt0587",
+    "attempt0588", "attempt0589", "attempt0590", "attempt0591", "attempt0592", "attempt0593"
+  ],
+  "note": "11 orphaned C7 policy-only jobs deleted 20260908; freed A40 GPUs. Retry 0589-0594 re-dispatched same session."
+}

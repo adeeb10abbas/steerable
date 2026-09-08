@@ -46,7 +46,12 @@
     "move_stop": {"no_grasp": 69, "transport_incomplete": 3, "grasp_rate_pct": 2.8},
     "original_sham": {"no_grasp": 67, "transport_incomplete": 2, "grasp_rate_pct": 2.9}
   },
-  "magnitude_gap_interpretation": "C6 'grasp' episodes at n≈63 are predominantly transport_incomplete (partial carry before timeout), not success or wrong_goal_region. Same label on C8 yields lower rates — likely platform physics/policy behavior, not definitional confound. Cross-platform contrast (platform_scenario_grasp_contrast.csv) remains not estimable until both families reach registered coverage.",
+  "c6_n128_dual_rates": {
+    "destination_static": {"c6_rule_pct": 15.0, "transport_incomplete_only_pct": 15.0, "wrong_goal_region_share_pct": 0.0},
+    "move_stop": {"c6_rule_pct": 20.0, "transport_incomplete_only_pct": 17.8, "wrong_goal_region_share_pct": 2.2},
+    "original_sham": {"c6_rule_pct": 18.6, "transport_incomplete_only_pct": 16.3, "wrong_goal_region_share_pct": 2.3}
+  },
+  "magnitude_gap_interpretation": "C6 grasp episodes are predominantly transport_incomplete; wrong_goal_region is 0–2.3% per cell at n=128 (C8 has zero across 407 eps). Aligning to transport_incomplete-only narrows but does not eliminate the 3–10× platform gap — genuine platform difference, not a counting artifact. Agent C table should use TI-only cell for cross-platform comparability.",
   "registered_estimand": "platform_x_scenario_grasp_interaction with Holm handling; currently insufficient_coverage_not_estimable",
   "action_if_divergence_found": "Would require harmonizing reporters or re-deriving from accepted ledgers only — not needed; definitions already match."
 }

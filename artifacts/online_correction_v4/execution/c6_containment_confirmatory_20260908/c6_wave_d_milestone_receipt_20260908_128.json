@@ -1,0 +1,47 @@
+{
+  "schema_version": "v4-c6-wave-progress-receipt-v1",
+  "compiled_at_utc": "2026-09-08T06:00:00Z",
+  "wave_id": "c6confirm20260908f",
+  "wave_label": "D",
+  "confirmatory_terminals": 128,
+  "milestones": {
+    "32": "passed",
+    "128": "passed",
+    "384": "pending"
+  },
+  "grasp_rate_by_scenario": {
+    "destination_static": {
+      "episodes": 40,
+      "grasp_achieved_c6_rule": 6,
+      "grasp_rate_c6_rule_pct": 15.0,
+      "grasp_achieved_transport_incomplete_only": 6,
+      "grasp_rate_transport_incomplete_only_pct": 15.0,
+      "wrong_goal_region_count": 0,
+      "wrong_goal_region_share_pct": 0.0,
+      "c8_reference_at_161_eps_pct": 7.8
+    },
+    "move_stop": {
+      "episodes": 45,
+      "grasp_achieved_c6_rule": 9,
+      "grasp_rate_c6_rule_pct": 20.0,
+      "grasp_achieved_transport_incomplete_only": 8,
+      "grasp_rate_transport_incomplete_only_pct": 17.8,
+      "wrong_goal_region_count": 1,
+      "wrong_goal_region_share_pct": 2.2,
+      "c8_reference_at_161_eps_pct": 3.6
+    },
+    "original_sham": {
+      "episodes": 43,
+      "grasp_achieved_c6_rule": 8,
+      "grasp_rate_c6_rule_pct": 18.6,
+      "grasp_achieved_transport_incomplete_only": 7,
+      "grasp_rate_transport_incomplete_only_pct": 16.3,
+      "wrong_goal_region_count": 1,
+      "wrong_goal_region_share_pct": 2.3,
+      "c8_reference_at_161_eps_pct": 1.8
+    }
+  },
+  "ordering_note": "At n=128 (milestone): move_stop leads (20.0% C6-rule / 17.8% TI-only), original_sham second (18.6% / 16.3%), destination_static last (15.0% / 15.0%). This reverses n=73 where destination_static led (22.7%) and n≈56–63 where original_sham led — ordering is unstable at partial n; do not smooth. C8 @161: destination_static > original_sham ≈ move_stop. C6 may be converging toward C8 or reflecting noise; watch at 384.",
+  "grasp_definition_note": "Report both C6-rule (failure_label != no_grasp) and transport_incomplete-only (C8-comparable; C8 has zero wrong_goal_region across 407 eps). wrong_goal_region share tracked explicitly (0–2.3% per cell at n=128).",
+  "supersedes": "c6_wave_d_progress_receipt_20260908g.json"
+}

@@ -1,0 +1,29 @@
+{
+  "fix": "fresh attempt0193-0194 after stale PVC attempt locks on redispatch lanes",
+  "render_root": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f-retry",
+  "rows": [
+    {
+      "attempt_id": "attempt0193",
+      "bundle_root": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f-retry/c6m17-attempt0193-a10040-policy_b200-simulator",
+      "created_jobs": [
+        "v4-c6m17-attempt0193-93380e7d55-sim created",
+        "v4-c6m17-attempt0193-93380e7d55-policy created (Suspended sim-first)"
+      ],
+      "episode_count": 12,
+      "lane_id": "c6m17",
+      "supersedes_attempt": "attempt0178"
+    },
+    {
+      "attempt_id": "attempt0194",
+      "bundle_root": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f-retry/c6m23-attempt0194-a10040-policy_b200-simulator",
+      "created_jobs": [
+        "v4-c6m23-attempt0194-5198eee49e-sim created",
+        "v4-c6m23-attempt0194-5198eee49e-policy created (Suspended sim-first)"
+      ],
+      "episode_count": 12,
+      "lane_id": "c6m23",
+      "supersedes_attempt": "attempt0184"
+    }
+  ],
+  "schema_version": "v4-c6-lock-collision-rerender-dispatch-v1"
+}

@@ -1,0 +1,49 @@
+{
+  "behavioral_episode_count": 188,
+  "fix": "git_pin_4f928a0_runner_staging + fresh attempt0607-0610",
+  "render_root": "artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-retry-runnerfix-20260908r5",
+  "root_cause": "staged_runner_af01_vs_lock_71e7; stale attempt locks on redispatch lanes",
+  "rows": [
+    {
+      "attempt_id": "attempt0607",
+      "created_jobs": [
+        "v4-c7m01-attempt0607-82985b1716-policy created",
+        "v4-c7m01-attempt0607-82985b1716-sim created"
+      ],
+      "episode_count": 43,
+      "lane_id": "c7m01",
+      "supersedes_attempt": "attempt0603"
+    },
+    {
+      "attempt_id": "attempt0608",
+      "created_jobs": [
+        "v4-c7m02-attempt0608-081879e2cf-policy created",
+        "v4-c7m02-attempt0608-081879e2cf-sim created"
+      ],
+      "episode_count": 49,
+      "lane_id": "c7m02",
+      "supersedes_attempt": "attempt0604"
+    },
+    {
+      "attempt_id": "attempt0609",
+      "created_jobs": [
+        "v4-c7m05-attempt0609-da9bd841f7-policy created",
+        "v4-c7m05-attempt0609-da9bd841f7-sim created"
+      ],
+      "episode_count": 47,
+      "lane_id": "c7m05",
+      "supersedes_attempt": "attempt0605"
+    },
+    {
+      "attempt_id": "attempt0610",
+      "created_jobs": [
+        "v4-c7m31-attempt0610-aec6d15c5b-policy created",
+        "v4-c7m31-attempt0610-aec6d15c5b-sim created"
+      ],
+      "episode_count": 49,
+      "lane_id": "c7m31",
+      "supersedes_attempt": "attempt0606"
+    }
+  ],
+  "schema_version": "v4-c7-released-shard-rerender-dispatch-v2"
+}

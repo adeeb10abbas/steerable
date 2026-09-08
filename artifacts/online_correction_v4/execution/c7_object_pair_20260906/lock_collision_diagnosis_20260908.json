@@ -1,0 +1,37 @@
+{
+  "schema_version": "v4-lock-collision-diagnosis-v1",
+  "compiled_at_utc": "2026-09-08T03:00:00Z",
+  "finding": "C7 r4 c7m01/c7m02 failures were dual-cause: stale PVC attempt locks from same-attempt redispatch plus staged runner af01 vs released lock 71e7. C6 c6m17/c6m23 had stale locks present but terminal sim failures were policy-readiness timeout (m17) and Isaac render-probe timeout (m23), with earlier digest-drift failures during wave-f rerender.",
+  "c7": {
+    "failed_attempts": ["attempt0603", "attempt0604"],
+    "stale_locks_observed": [
+      ".simulator-lane-c7m01-attempt-attempt0603.lock",
+      ".simulator-lane-c7m02-attempt-attempt0604.lock"
+    ],
+    "primary_r4_blocker": "released runner sha256 mismatch (expected 71e7…, observed af01…)",
+    "remediation_r5": {
+      "receipt": "create-released-shards-20260908r5.json",
+      "fresh_attempts": ["attempt0607", "attempt0608", "attempt0609", "attempt0610"],
+      "runner_staging": "artifacts/online_correction_v4/setup/c7_confirmatory/run_online_correction_v4.released_71e7.py",
+      "post_dispatch": "all four sim/policy pairs Running; first episodes in flight"
+    }
+  },
+  "c6": {
+    "failed_attempts": ["attempt0178", "attempt0184"],
+    "stale_locks_observed_and_cleared": [
+      ".simulator-lane-c6m17-attempt-attempt0178.lock",
+      ".simulator-lane-c6m23-attempt-attempt0184.lock"
+    ],
+    "terminal_failure_classes": {
+      "c6m17": "policy readiness/metadata handshake timed out",
+      "c6m23": "isaac render probe timeout (300s)"
+    },
+    "lock_collision_confirmed": "locks present from prior dispatch; fresh attempts preferred over lock-only clear",
+    "remediation": {
+      "receipt": "create-c6confirm20260908f-retry-m17m23.json",
+      "fresh_attempts": ["attempt0193", "attempt0194"],
+      "post_dispatch": "sim Running sim-first; policy Suspended pending partner"
+    }
+  },
+  "reference": "gpu_pool_sweep_receipt.json failure_root_cause_note (C8 identical signature)"
+}

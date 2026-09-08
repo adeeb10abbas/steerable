@@ -23,7 +23,54 @@
     "valid_success_records": 0
   },
   "confirmatory_dispatch": {
-    "C6": null,
+    "C6": {
+      "accepted_valid_unique": 384,
+      "coverage_fraction": 1.0,
+      "coverage_label": "384/384 (100.0%)",
+      "dispatch_receipt": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/create-c6confirm20260908f.json",
+      "dispatch_status": "dispatched",
+      "dispatched_episodes": 384,
+      "export_phase": "confirmatory_final",
+      "export_status": "complete",
+      "grasp_rate_by_scenario": {
+        "destination_static": {
+          "episodes": 128,
+          "grasp_rate_c6_rule_pct": 23.4,
+          "grasp_rate_transport_incomplete_only_pct": 21.9
+        },
+        "move_stop": {
+          "episodes": 128,
+          "grasp_rate_c6_rule_pct": 19.5,
+          "grasp_rate_transport_incomplete_only_pct": 18.0
+        },
+        "original_sham": {
+          "episodes": 128,
+          "grasp_rate_c6_rule_pct": 19.5,
+          "grasp_rate_transport_incomplete_only_pct": 18.0
+        }
+      },
+      "lane_count": 32,
+      "ledger_compile_id": "compiled_ledger_20260908_FINAL",
+      "milestones": null,
+      "missing_episodes": 0,
+      "note": "C6 confirmatory 384/384 terminals; released cosmos3_nano_droid queue only (128/scenario).",
+      "ordering_note": "At n=384: C6 rule destination_static (23.4%) > move_stop (19.5%) = original_sham (19.5%); TI-only destination_static (21.9%) > move_stop (18.0%) = original_sham (18.0%). Second/third tied at final n; ranks swapped at least three times during collection. Only destination_static ranks first is supportable.",
+      "planned_episodes": 384,
+      "post_dispatch_observed": {
+        "confirmatory_terminals": 0,
+        "note": "First sims passed runner binding; remaining Pending on A100/B200 scheduling (bin-packing), not runner mismatch.",
+        "policy_pending": 23,
+        "policy_running": 9,
+        "runner_preflight_pass": true,
+        "sim_pending": 21,
+        "sim_running": 10
+      },
+      "progress_receipt": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/c6_agent_c_handoff_final_20260908.json",
+      "rank_swap_history": "268 sham>move, 330 move>sham, 337 sham>move; tied at final n",
+      "render_root": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f",
+      "runner_binding_resolution": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/runner_binding_resolution_20260908.json",
+      "wave": "F"
+    },
     "C8": {
       "accepted_valid_unique": 768,
       "accounting_verification_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_episode_accounting_verification_20260908g.json",
@@ -245,6 +292,21 @@
       "coverage_label": "24/24 (100.0%)",
       "episode_count": 24,
       "evidence_phase": "g7_pilot_complete",
+      "family": "C6",
+      "fixture": "containment",
+      "grasp_achieved": null,
+      "no_grasp": 18,
+      "platform": "isaac_droid",
+      "success": 0,
+      "support_or_containment_failed": 0,
+      "transport_incomplete": 3,
+      "wrong_goal_region": 3,
+      "wrong_placement": 0
+    },
+    {
+      "coverage_label": "24/24 (100.0%)",
+      "episode_count": 24,
+      "evidence_phase": "g7_pilot_complete",
       "family": "C8",
       "fixture": "second_stack",
       "grasp_achieved": 12,
@@ -258,7 +320,15 @@
     }
   ],
   "export_coverage": {
-    "C6": null,
+    "C6": {
+      "accepted_valid_unique": 24,
+      "coverage_fraction": 1.0,
+      "coverage_label": "24/24 (100.0%)",
+      "export_status": "complete",
+      "ledger_compile_id": "g7-containment-20260908a",
+      "missing_episodes": 0,
+      "planned_episodes": 24
+    },
     "C7": {
       "accepted_valid_unique": 768,
       "coverage_fraction": 1.0,
@@ -279,8 +349,42 @@
       "planned_episodes": 24
     }
   },
-  "export_status": "partial",
+  "export_status": "complete",
   "family_exports": {
+    "C6": {
+      "export_coverage": {
+        "accepted_valid_unique": 24,
+        "coverage_fraction": 1.0,
+        "coverage_label": "24/24 (100.0%)",
+        "export_status": "complete",
+        "ledger_compile_id": "g7-containment-20260908a",
+        "missing_episodes": 0,
+        "planned_episodes": 24
+      },
+      "outcome_composition": {
+        "no_grasp": 18,
+        "transport_incomplete": 3,
+        "wrong_goal_region": 3
+      },
+      "path": "artifacts/online_correction_v4/results/registered/20260908/families/C6/20260908c6pilot"
+    },
+    "C6_confirmatory": {
+      "export_coverage": {
+        "accepted_valid_unique": 384,
+        "coverage_fraction": 1.0,
+        "coverage_label": "384/384 (100.0%)",
+        "export_status": "complete",
+        "ledger_compile_id": "compiled_ledger_20260908_FINAL",
+        "missing_episodes": 0,
+        "planned_episodes": 384
+      },
+      "outcome_composition": {
+        "no_grasp": 304,
+        "transport_incomplete": 74,
+        "wrong_goal_region": 6
+      },
+      "path": "artifacts/online_correction_v4/results/registered/20260908/families/C6/20260908c6confirmatory"
+    },
     "C7": {
       "export_coverage": {
         "accepted_valid_unique": 768,
@@ -333,32 +437,35 @@
     }
   },
   "frozen_analysis_manifest": "artifacts/online_correction_v4/frozen_analysis_manifest.json",
-  "headline": "Partial registered export: C7 FINAL 768/768; C8 confirmatory terminal; C6 337/384 with corrected denominator and pi05 block disclosed",
+  "headline": "Campaign-complete finding: destination_static ranks first on both platforms; move_stop and original_sham exactly tied at final n (C6 both conventions, C8 3.1%) \u2014 no moved-scene versus sham separation on two independent simulators/policies",
   "horizontal_slice": "artifacts/online_correction_v4/results/horizontal_geometry_repair_v2/20260908",
   "limitations": [
     "Blocked families carry qualification receipts only; no policy episodes were dispatched.",
     "279 pre-repair C7 episodes remain excluded from behavioral claims.",
-    "C6 confirmatory partial (337/384); 384 pi05 containment episodes blocked (discovered, not amended); platform\u00d7scenario interaction not estimable until C6 terminal and unbalanced by cell size.",
+    "C7 scenario contrast is degenerate (761/768 no_grasp, 0 successes); do not treat near-zero rates as ordering evidence.",
+    "C6 confirmatory FINAL (384/384); 384 pi05 containment episodes blocked (discovered, not amended); platform\u00d7scenario interaction not estimable (128 vs 256 eps/scenario; unbalanced cells).",
     "C6 reports both non-no_grasp and transport_incomplete_only grasp conventions; use ti_only for C8 magnitude comparison.",
-    "destination_static_ranks_first_only \u2014 no stable three-way ordering claimed."
+    "destination_static_ranks_first_only \u2014 no stable three-way ordering claimed. move_stop=original_sham tied at final n; rank 2/3 swapped \u22653 times during C6 with no stable separation at any n."
   ],
   "not_estimable_primary_estimands": [
     "C1/C3/C4 primary wording and reference-selectivity contrasts",
     "C2 reference-selectivity primary (H)",
     "C5 vertical family (IK reachability block)",
     "C6_pi05_containment (384 episodes; pi05 never qualified for containment)",
-    "platform_x_scenario_grasp_interaction (C6 337/384 partial; C8 768/768 terminal; 128 vs 256 eps/scenario)"
+    "C7 scenario ordering contrast (degenerate: 761/768 no_grasp, 0 successes)",
+    "platform_x_scenario_grasp_interaction (C6 and C8 terminal; 128 vs 256 eps/scenario unbalanced; descriptive tie finding reported)"
   ],
   "paper_narrative": {
     "headline": "Geometry repair succeeded; registered fixture is scientifically blocked by a scale squeeze",
     "paragraphs": [
-      "**PARTIAL EXPORT** \u2014 C7 confirmatory **FINAL** 768/768 (100.0%) on compiled_ledger_20260908_FINAL (require-full-coverage compile; primary behavioral family closed). C8 confirmatory 768/768 terminal (ledger compile 20260908h). C6 confirmatory 337/384 terminals (cosmos3_nano_droid released queue; wave D).",
+      "**COMPLETE EXPORT** \u2014 all three behavioral families terminal. C7 confirmatory **FINAL** 768/768 (100.0%) on compiled_ledger_20260908_FINAL (require-full-coverage compile). C8 confirmatory 768/768 terminal (ledger compile 20260908h). C6 confirmatory 384/384 FINAL on compiled_ledger_20260908_FINAL (require-full-coverage; cosmos3_nano_droid released queue, 128/scenario).",
+      "**Headline finding (campaign spine):** On two independent platforms (Isaac containment / cosmos3_nano_droid vs WidowX SimplerEnv / GR00T), different simulators and policies, destination_static ranks first in grasp rate and **move_stop and original_sham are exactly tied at final n** \u2014 C6 under both grasp conventions (move_stop 19.5% = original_sham 19.5% non-no_grasp; 18.0% = 18.0% transport_incomplete-only) and C8 at 3.1%. This is a clean, interpretable **negative result** on moved-scene versus sham separation: the data settled on no detectable difference, not a sampling artifact. Ranks two and three swapped at least three times during C6 collection (268 sham>move, 330 move>sham, 337 sham>move; tied at final n); no stable separation between move_stop and original_sham was observed at any n on either platform. Only destination_static ranking first is supportable.",
       "Registered campaign scope: 17,664 planned policy episodes; **1,920 achievable** (C6 384 + C7 768 + C8 768); **15,744 scientifically blocked** (C1/C3/C4 horizontal squeeze 9,728; C2 reference_binding 4,096; C5 vertical 768; C6 pi05 containment 384 \u2014 discovered block, not amended criterion). C6's released runtime lock binds cosmos3_nano_droid only (384 rows, 128/scenario); 768 planning inventory included 384 unqualified pi05_droid episodes.",
-      "C7 FINAL composition (compiled_ledger_20260908_FINAL): 761 no_grasp, 3 transport_incomplete, 2 wrong_goal_region, 2 support_or_containment_failed, 0 success \u2014 768/768 accepted rows. Partial compiles k, l, m and stale .compiled-ledger-final are superseded; see compile_retirement_provenance.csv.",
-      "Cross-fixture contrast (compiled ledgers): C7 object_pair on Isaac is dominated by no_grasp (761/768) but is not uniformly no_grasp. C6 containment pilot shows grasps and placement attempts (no accepted outcomes). C8 second_stack WidowX pilot achieves grasp on 12/24 episodes (12 no_grasp, 12 transport_incomplete); transport_incomplete implies successful grasp with incomplete transport.",
-      "C8 confirmatory FINAL at 768/768 (ledger compile 20260908h): destination_static 5.9%, move_stop 3.1%, original_sham 3.1% grasp rate (transport_incomplete convention; zero wrong_goal_region across 768). Destination_static ranks first on both platforms. destination_static_ranks_first_only \u2014 no stable three-way ordering claimed; C8 move_stop=original_sham tied at 3.1%; C6 second/third ranks swap as n grows (268 sham>move, 330 move>sham, 337 sham>move).",
+      "C7 FINAL composition (compiled_ledger_20260908_FINAL): 761 no_grasp, 3 transport_incomplete, 2 wrong_goal_region, 2 support_or_containment_failed, 0 success \u2014 768/768 accepted rows. C7 scenario contrast is essentially **degenerate**: 0 successes and 761/768 no_grasp \u2014 near-zero grasp rates must not be reported as a three-way scenario ordering comparison. Partial compiles k, l, m and stale .compiled-ledger-final are superseded; see compile_retirement_provenance.csv.",
+      "Cross-fixture contrast (compiled ledgers): C7 object_pair on Isaac is dominated by no_grasp (761/768). C6 containment confirmatory (compiled_ledger_20260908_FINAL): 304 no_grasp, 74 transport_incomplete, 6 wrong_goal_region, 0 success. C8 second_stack WidowX confirmatory achieves nonzero grasp on transport_incomplete episodes.",
+      "C8 confirmatory FINAL at 768/768 (ledger compile 20260908h): destination_static 5.9%, move_stop 3.1%, original_sham 3.1% grasp rate (transport_incomplete convention; zero wrong_goal_region across 768). Destination_static ranks first; move_stop=original_sham exactly tied at 3.1%.",
+      "C6 confirmatory FINAL at 384/384 (compiled_ledger_20260908_FINAL, handoff c6_agent_c_handoff_final_20260908.json): per-scenario rates at 128 episodes/scenario (vs 256 for C7/C8 \u2014 unbalanced platform contrast). **C6 rule (non-no_grasp):** destination_static 23.4% (n/a/128), move_stop 19.5% = original_sham 19.5% (exact tie). **Transport_incomplete_only (C8-comparable):** destination_static 21.9%, move_stop 18.0% = original_sham 18.0% (exact tie). destination_static_ranks_first_only \u2014 no stable three-way ordering claimed. Registered platform\u00d7scenario interaction estimand remains not estimable (unbalanced cells; C7 degenerate).",
       "C8 destination_static confound elimination: green-to-yellow reset distance identical at 0.1414 m across scenarios; protocol difference is reference placement profile only.",
-      "C6 confirmatory at 337/384 (c6_wave_d_progress_receipt_20260908m.json): per-scenario rates under **both grasp conventions** (128 episodes/scenario released scope vs 256 for C7/C8 \u2014 unbalanced platform contrast). **C6 rule (non-no_grasp):** destination_static 23.3% (27/116), move_stop 19.4%, original_sham 19.5%. **Transport_incomplete_only (C8-comparable):** destination_static 21.6%, move_stop 17.6%, original_sham 17.7%. destination_static_ranks_first_only \u2014 no stable three-way ordering claimed. Platform\u00d7scenario interaction remains not estimable until C6 reaches 384/384.",
       "C6 wave D was re-rendered as rendered-c6confirm20260908f after a shared-checkout runner conflict; operating rule in runner_binding_resolution_20260908.json requires re-render when C7 mutates the shared checkout runner.",
       "Capacity finding (revised): a lane pair is a study-design and throughput unit, not a scheduler constraint\u2014policy and simulator are separate single-GPU pods connected over HTTP. A PVC attempt-lock collision from same-attempt redispatch produced immediate simulator preflight failures across C7, C6, and C8, initially misread as Isaac warmup timeouts; remediation uses fresh attempt identities, a redispatch guard, and a 300-second startup grace (c8_execution_status_20260908o.json). Pending failures are attributable to per-node GPU fragmentation and legitimate C7 occupancy. tools/v4_gpu_pool_sweep.py reclaimed 34 GPUs; tools/v4_gpu_scheduling.py provides c8_a40_spread and c6_a10040_spread placement policies.",
       "Three disclosed setup repairs bound this export: (1) NaturalGraspDetector trigger observation wiring now uses finger-contact coupling instead of robot-base pose; (2) eef_tool_length_m=0.14 flange-versus-fingerpad offset applied uniformly across Isaac fixtures; (3) second_stack SimplerEnv observation and sampling defect repaired with control-boundary sampling and provisioned render libraries.",

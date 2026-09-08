@@ -1,16 +1,16 @@
 {
   "blocked_scope": {
-    "bytes": 47958,
+    "bytes": 52975,
     "path": "artifacts/online_correction_v4/results/registered/20260908/blocked_scope.json",
-    "sha256": "d7eb408cebc7a464a458daddb01801fcb7a901b83f3960539c787b3989547a74"
+    "sha256": "4b852b6659f08797d61232f8988675c8a05412cbffb258c253a32efcad526564"
   },
   "c7_ledger_rows": 768,
   "c7_planned_episodes": 768,
   "c7_valid_success_records": 0,
   "evidence_memo": {
-    "bytes": 17661,
+    "bytes": 23354,
     "path": "artifacts/online_correction_v4/results/registered/20260908/paper/evidence_memo.json",
-    "sha256": "bc8bfcf420d5b7d230fae7adf00b9ba5fad07336790a38a43622b4b7d9b9c149"
+    "sha256": "04500a6d6c48c2b61ac226f319c3c778e87f62de4eee1b6ad70d9ce222afd686"
   },
   "export_coverage": {
     "C6": {
@@ -42,11 +42,15 @@
       "planned_episodes": 24
     }
   },
-  "export_status": "partial",
+  "export_status": "complete",
   "family_exports": {
     "C6": {
       "manifest_sha256": "59d55e481279a46aabb62b76b571220be437e512592fbfb15310ec1711a07540",
       "path": "artifacts/online_correction_v4/results/registered/20260908/families/C6/20260908c6pilot"
+    },
+    "C6_confirmatory": {
+      "manifest_sha256": "e6349f081d36153c6b9a8311a69432c6db886c0c918a412d9cb7beb6a2cfa120",
+      "path": "artifacts/online_correction_v4/results/registered/20260908/families/C6/20260908c6confirmatory"
     },
     "C7": {
       "manifest_sha256": "741b6ecaa5ef7200ffbb21c2dbd2d120b88f7327e39e277c4582075e70327b14",
@@ -64,19 +68,38 @@
   "family_rollups": {
     "C6": {
       "confirmatory_dispatch": {
-        "accepted_valid_unique": 337,
-        "coverage_fraction": 0.0,
-        "coverage_label": "56/768 confirmatory accepted",
+        "accepted_valid_unique": 384,
+        "coverage_fraction": 1.0,
+        "coverage_label": "384/384 (100.0%)",
         "dispatch_receipt": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/create-c6confirm20260908f.json",
-        "dispatch_status": "dispatched_pending_capacity",
+        "dispatch_status": "dispatched",
         "dispatched_episodes": 384,
-        "export_phase": "confirmatory",
-        "export_status": "dispatched_partial",
+        "export_phase": "confirmatory_final",
+        "export_status": "complete",
+        "grasp_rate_by_scenario": {
+          "destination_static": {
+            "episodes": 128,
+            "grasp_rate_c6_rule_pct": 23.4,
+            "grasp_rate_transport_incomplete_only_pct": 21.9
+          },
+          "move_stop": {
+            "episodes": 128,
+            "grasp_rate_c6_rule_pct": 19.5,
+            "grasp_rate_transport_incomplete_only_pct": 18.0
+          },
+          "original_sham": {
+            "episodes": 128,
+            "grasp_rate_c6_rule_pct": 19.5,
+            "grasp_rate_transport_incomplete_only_pct": 18.0
+          }
+        },
         "lane_count": 32,
-        "ledger_compile_id": null,
-        "missing_episodes": 768,
-        "note": "Wave D re-rendered as 20260908f after shared-checkout runner conflict; 0 confirmatory terminals; wave E follows.",
-        "planned_episodes": 768,
+        "ledger_compile_id": "compiled_ledger_20260908_FINAL",
+        "milestones": null,
+        "missing_episodes": 0,
+        "note": "C6 confirmatory 384/384 terminals; released cosmos3_nano_droid queue only (128/scenario).",
+        "ordering_note": "At n=384: C6 rule destination_static (23.4%) > move_stop (19.5%) = original_sham (19.5%); TI-only destination_static (21.9%) > move_stop (18.0%) = original_sham (18.0%). Second/third tied at final n; ranks swapped at least three times during collection. Only destination_static ranks first is supportable.",
+        "planned_episodes": 384,
         "post_dispatch_observed": {
           "confirmatory_terminals": 0,
           "note": "First sims passed runner binding; remaining Pending on A100/B200 scheduling (bin-packing), not runner mismatch.",
@@ -86,7 +109,8 @@
           "sim_pending": 21,
           "sim_running": 10
         },
-        "progress_receipt": "c6confirm20260908f",
+        "progress_receipt": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/c6_agent_c_handoff_final_20260908.json",
+        "rank_swap_history": "268 sham>move, 330 move>sham, 337 sham>move; tied at final n",
         "render_root": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f",
         "runner_binding_resolution": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/runner_binding_resolution_20260908.json",
         "wave": "F"
@@ -315,14 +339,14 @@
   },
   "figures": {
     "campaign_scope": {
-      "bytes": 713,
+      "bytes": 714,
       "path": "artifacts/online_correction_v4/results/registered/20260908/figures/campaign_scope.svg",
-      "sha256": "c9102c61580f8e0e48ca7d6f2075a63207e8db428f87823a13aca39c88405858"
+      "sha256": "fa8b293e39bab0da7bb9f998e6a71c34a6ff49cc24d62ff1e0a048bfa0c6685a"
     },
     "manifest": {
-      "bytes": 433,
+      "bytes": 434,
       "path": "artifacts/online_correction_v4/results/registered/20260908/figures/figures_manifest.json",
-      "sha256": "2d37ef16b28f3d5ad749337c9358d5f81340541ea077d26de43049db208c786a"
+      "sha256": "03c3b3e52c430cff3e563729a6984e12d1e2f7657a4541a7477cf6effa3c0051"
     }
   },
   "frozen_analysis_manifest": {
@@ -332,6 +356,11 @@
   },
   "horizontal_slice": "artifacts/online_correction_v4/results/horizontal_geometry_repair_v2/20260908",
   "outcome_composition": {
+    "C6": {
+      "no_grasp": 18,
+      "transport_incomplete": 3,
+      "wrong_goal_region": 3
+    },
     "C7": {
       "no_grasp": 761,
       "support_or_containment_failed": 2,
@@ -345,16 +374,16 @@
   },
   "output_root": "artifacts/online_correction_v4/results/registered/20260908",
   "results_md": {
-    "bytes": 7362,
+    "bytes": 8507,
     "path": "artifacts/online_correction_v4/results/registered/20260908/paper/RESULTS.md",
-    "sha256": "75f2ef6ebf5dcd470d3e69995ed850018b934f09ff6b1bb595b8209e7a3a7d8a"
+    "sha256": "074845c24f49d9ba1117469b52db79dcc7e25fc8d6977e27979db001551ed317"
   },
   "schema_version": "v4-registered-campaign-export-manifest-v1",
   "tables": {
     "audit_report.json": {
-      "bytes": 22649,
+      "bytes": 24598,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/audit_report.json",
-      "sha256": "7ae5b5418f61345daf7eca61650b3be15c87976e39f484a84a04101ba80f62f4"
+      "sha256": "80887c21693695f0b2e28a0077be6886000c6ebcdb82a3c48b28559d68d92690"
     },
     "blocked_families.csv": {
       "bytes": 1614,
@@ -362,14 +391,24 @@
       "sha256": "f7c3f0881ba22826ffc6aacd1fd0e4b4433e438758752285505ec3765926f0d7"
     },
     "c6_confirmatory_grasp_by_scenario.csv": {
-      "bytes": 705,
+      "bytes": 883,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c6_confirmatory_grasp_by_scenario.csv",
-      "sha256": "d0c9ee8e29c03087af8f1fa82b53894f4b522786767edf13e500edd97b886185"
+      "sha256": "fdc6c42aa5a329e51e0302e7f91c7014898401031c963ac40a1388a234a8c7af"
     },
     "c6_confirmatory_outcome_composition.csv": {
       "bytes": 81,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c6_confirmatory_outcome_composition.csv",
-      "sha256": "82397840581016a56ccaec3f75f65b85bd04d47623e3063ac6e1e598bb0b6187"
+      "sha256": "d43a1858da2f2fa24da31640d11ac8069fd1806bf3fcf4077f0d606828b52188"
+    },
+    "c6_outcome_composition.csv": {
+      "bytes": 79,
+      "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c6_outcome_composition.csv",
+      "sha256": "fa9192be3cf7e9bd454360676eb30772a4045bdafdb658912d8f2eabf2df0bf3"
+    },
+    "c6_scenario_outcome_breakdown.csv": {
+      "bytes": 252,
+      "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c6_scenario_outcome_breakdown.csv",
+      "sha256": "fc91db6d692dd6c7519958dd4571c49dfbc946190a72da3413c08c4b5a464037"
     },
     "c7_outcome_composition.csv": {
       "bytes": 113,
@@ -422,24 +461,24 @@
       "sha256": "9052cc007b718d5e67ee19e8dd79c314fb3cccf0343184a2c3021f7d27585526"
     },
     "cross_fixture_outcome_contrast.csv": {
-      "bytes": 357,
+      "bytes": 435,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/cross_fixture_outcome_contrast.csv",
-      "sha256": "e39fc50529ec298a969201cfc23a801ef3692bfa999f33c8bb4390d4849f2447"
+      "sha256": "072556b3d76502044587eead82a024426cc4da77cd13d6955fab0b8a9ab629d0"
     },
     "family_coverage.csv": {
-      "bytes": 539,
+      "bytes": 641,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/family_coverage.csv",
-      "sha256": "977a46d7610eebfb4054bf51500f0b8a73e885aa9180d299c9a85b53034892f2"
+      "sha256": "58d010fd4a6d96ad1dc84c7d3e4931ac6fcd42d469c596adc5ee7ad86ae8a1d5"
     },
     "platform_scenario_grasp_contrast.csv": {
-      "bytes": 6958,
+      "bytes": 8732,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/platform_scenario_grasp_contrast.csv",
-      "sha256": "7af1bf1a461e4cd8acbfebab2704112322d8a24b309e2cf70fe1fed014da8ae1"
+      "sha256": "52a02e1f16add93b66a8b105f09ebc4ec9db9265f0df633c8d713d7fa9b58549"
     },
     "results_manifest": {
-      "bytes": 12401,
+      "bytes": 16175,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/results_manifest.json",
-      "sha256": "8349bab6fbde341dbd776f9101a627c6f2ed9fdf9ad07771327b807164d8dcc5"
+      "sha256": "aed3d254b65f9bc35d0c7650737852f2deca16b2f25692b2fbf5c58c408990d6"
     },
     "scale_ladder_squeeze.csv": {
       "bytes": 565,
@@ -447,9 +486,9 @@
       "sha256": "9fd28c21eb075ee5baf5460cdb4342b5651dcaae987cda6d2e74b30067ad1062"
     },
     "scope_summary.csv": {
-      "bytes": 506,
+      "bytes": 521,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/scope_summary.csv",
-      "sha256": "27de5c9242bf86c2223a3b69fc11f74480c1721ff0dc06997cc0484b2c531015"
+      "sha256": "e653f9f07e88a1e19b770ebe1b5196fe914c2d0100c1950e23da696cc69cbb25"
     }
   },
   "tag": "20260908"

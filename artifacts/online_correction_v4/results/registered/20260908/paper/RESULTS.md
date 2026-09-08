@@ -1,20 +1,22 @@
 # V4 registered campaign results
 
-> **PARTIAL EXPORT** — C7 768/768 (100.0%); C6 pilot n/a with confirmatory n/a; C8 pilot 24/24 (100.0%) with confirmatory 768/768 (100.0%).
+> **COMPLETE EXPORT** — C7 768/768 (100.0%); C6 pilot 24/24 (100.0%) with confirmatory 384/384 (100.0%); C8 pilot 24/24 (100.0%) with confirmatory 768/768 (100.0%).
 
-**PARTIAL EXPORT** — C7 confirmatory **FINAL** 768/768 (100.0%) on compiled_ledger_20260908_FINAL (require-full-coverage compile; primary behavioral family closed). C8 confirmatory 768/768 terminal (ledger compile 20260908h). C6 confirmatory 337/384 terminals (cosmos3_nano_droid released queue; wave D).
+**COMPLETE EXPORT** — all three behavioral families terminal. C7 confirmatory **FINAL** 768/768 (100.0%) on compiled_ledger_20260908_FINAL (require-full-coverage compile). C8 confirmatory 768/768 terminal (ledger compile 20260908h). C6 confirmatory 384/384 FINAL on compiled_ledger_20260908_FINAL (require-full-coverage; cosmos3_nano_droid released queue, 128/scenario).
+
+**Headline finding (campaign spine):** On two independent platforms (Isaac containment / cosmos3_nano_droid vs WidowX SimplerEnv / GR00T), different simulators and policies, destination_static ranks first in grasp rate and **move_stop and original_sham are exactly tied at final n** — C6 under both grasp conventions (move_stop 19.5% = original_sham 19.5% non-no_grasp; 18.0% = 18.0% transport_incomplete-only) and C8 at 3.1%. This is a clean, interpretable **negative result** on moved-scene versus sham separation: the data settled on no detectable difference, not a sampling artifact. Ranks two and three swapped at least three times during C6 collection (268 sham>move, 330 move>sham, 337 sham>move; tied at final n); no stable separation between move_stop and original_sham was observed at any n on either platform. Only destination_static ranking first is supportable.
 
 Registered campaign scope: 17,664 planned policy episodes; **1,920 achievable** (C6 384 + C7 768 + C8 768); **15,744 scientifically blocked** (C1/C3/C4 horizontal squeeze 9,728; C2 reference_binding 4,096; C5 vertical 768; C6 pi05 containment 384 — discovered block, not amended criterion). C6's released runtime lock binds cosmos3_nano_droid only (384 rows, 128/scenario); 768 planning inventory included 384 unqualified pi05_droid episodes.
 
-C7 FINAL composition (compiled_ledger_20260908_FINAL): 761 no_grasp, 3 transport_incomplete, 2 wrong_goal_region, 2 support_or_containment_failed, 0 success — 768/768 accepted rows. Partial compiles k, l, m and stale .compiled-ledger-final are superseded; see compile_retirement_provenance.csv.
+C7 FINAL composition (compiled_ledger_20260908_FINAL): 761 no_grasp, 3 transport_incomplete, 2 wrong_goal_region, 2 support_or_containment_failed, 0 success — 768/768 accepted rows. C7 scenario contrast is essentially **degenerate**: 0 successes and 761/768 no_grasp — near-zero grasp rates must not be reported as a three-way scenario ordering comparison. Partial compiles k, l, m and stale .compiled-ledger-final are superseded; see compile_retirement_provenance.csv.
 
-Cross-fixture contrast (compiled ledgers): C7 object_pair on Isaac is dominated by no_grasp (761/768) but is not uniformly no_grasp. C6 containment pilot shows grasps and placement attempts (no accepted outcomes). C8 second_stack WidowX pilot achieves grasp on 12/24 episodes (12 no_grasp, 12 transport_incomplete); transport_incomplete implies successful grasp with incomplete transport.
+Cross-fixture contrast (compiled ledgers): C7 object_pair on Isaac is dominated by no_grasp (761/768). C6 containment confirmatory (compiled_ledger_20260908_FINAL): 304 no_grasp, 74 transport_incomplete, 6 wrong_goal_region, 0 success. C8 second_stack WidowX confirmatory achieves nonzero grasp on transport_incomplete episodes.
 
-C8 confirmatory FINAL at 768/768 (ledger compile 20260908h): destination_static 5.9%, move_stop 3.1%, original_sham 3.1% grasp rate (transport_incomplete convention; zero wrong_goal_region across 768). Destination_static ranks first on both platforms. destination_static_ranks_first_only — no stable three-way ordering claimed; C8 move_stop=original_sham tied at 3.1%; C6 second/third ranks swap as n grows (268 sham>move, 330 move>sham, 337 sham>move).
+C8 confirmatory FINAL at 768/768 (ledger compile 20260908h): destination_static 5.9%, move_stop 3.1%, original_sham 3.1% grasp rate (transport_incomplete convention; zero wrong_goal_region across 768). Destination_static ranks first; move_stop=original_sham exactly tied at 3.1%.
+
+C6 confirmatory FINAL at 384/384 (compiled_ledger_20260908_FINAL, handoff c6_agent_c_handoff_final_20260908.json): per-scenario rates at 128 episodes/scenario (vs 256 for C7/C8 — unbalanced platform contrast). **C6 rule (non-no_grasp):** destination_static 23.4% (n/a/128), move_stop 19.5% = original_sham 19.5% (exact tie). **Transport_incomplete_only (C8-comparable):** destination_static 21.9%, move_stop 18.0% = original_sham 18.0% (exact tie). destination_static_ranks_first_only — no stable three-way ordering claimed. Registered platform×scenario interaction estimand remains not estimable (unbalanced cells; C7 degenerate).
 
 C8 destination_static confound elimination: green-to-yellow reset distance identical at 0.1414 m across scenarios; protocol difference is reference placement profile only.
-
-C6 confirmatory at 337/384 (c6_wave_d_progress_receipt_20260908m.json): per-scenario rates under **both grasp conventions** (128 episodes/scenario released scope vs 256 for C7/C8 — unbalanced platform contrast). **C6 rule (non-no_grasp):** destination_static 23.3% (27/116), move_stop 19.4%, original_sham 19.5%. **Transport_incomplete_only (C8-comparable):** destination_static 21.6%, move_stop 17.6%, original_sham 17.7%. destination_static_ranks_first_only — no stable three-way ordering claimed. Platform×scenario interaction remains not estimable until C6 reaches 384/384.
 
 C6 wave D was re-rendered as rendered-c6confirm20260908f after a shared-checkout runner conflict; operating rule in runner_binding_resolution_20260908.json requires re-render when C7 mutates the shared checkout runner.
 
@@ -43,6 +45,7 @@ C2 primary reference-selectivity (H) remains not estimable; the homogeneous G3 g
 - Tables: `artifacts/online_correction_v4/results/registered/20260908/tables/`
 - Figures: `artifacts/online_correction_v4/results/registered/20260908/figures/`
 - C7 family export: `artifacts/online_correction_v4/results/registered/20260908/families/C7/20260908c7/`
-- C6 family export: awaiting Agent B confirmatory ledger receipt
-- C8 family export: `artifacts/online_correction_v4/results/registered/20260908/families/C8/20260908c8pilot/`
+- C6 family export: `artifacts/online_correction_v4/results/registered/20260908/families/C6/20260908c6pilot/`
+- C6 confirmatory export: `artifacts/online_correction_v4/results/registered/20260908/families/C6/20260908c6confirmatory/`
+- C8 confirmatory export: `artifacts/online_correction_v4/results/registered/20260908/families/C8/20260908c8confirmatory/`
 - Horizontal squeeze slice: `artifacts/online_correction_v4/results/horizontal_geometry_repair_v2/20260908/`

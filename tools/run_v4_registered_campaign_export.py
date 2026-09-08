@@ -52,13 +52,13 @@ DEFAULT_C8_PILOT_MANIFEST = (
 )
 C8_EXECUTION_STATUS = (
     ROOT
-    / "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908i.json"
+    / "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908p.json"
 )
 C8_EXECUTION_STATUS_FALLBACKS = (
     ROOT
-    / "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908h.json",
+    / "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908o.json",
     ROOT
-    / "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908g.json",
+    / "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908i.json",
     ROOT
     / "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908d.json",
 )
@@ -68,7 +68,11 @@ C8_PILOT_COMPOSITION = (
 )
 C8_CONFIRMATORY_COMPOSITION_MILESTONE = (
     ROOT
-    / "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_confirmatory_composition_by_scenario_20260908d.json"
+    / "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_confirmatory_composition_by_scenario_20260908f.json"
+)
+C8_EPISODE_ACCOUNTING = (
+    ROOT
+    / "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_episode_accounting_verification_20260908e.json"
 )
 C8_DESTINATION_STATIC_CONFOUND = (
     ROOT
@@ -76,7 +80,7 @@ C8_DESTINATION_STATIC_CONFOUND = (
 )
 DEFAULT_C8_CONFIRMATORY_LEDGER = (
     ROOT
-    / "artifacts/online_correction_v4/execution/c8_second_stack_20260908/confirmatory-ledger-20260908d/accepted_ledger.jsonl"
+    / "artifacts/online_correction_v4/execution/c8_second_stack_20260908/confirmatory-ledger-20260908f/accepted_ledger.jsonl"
 )
 C7_COMPILE_RETIREMENT = (
     ROOT
@@ -105,6 +109,18 @@ C6_WAVE_F_DISPATCH = (
 C6_RUNNER_BINDING = (
     ROOT
     / "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/runner_binding_resolution_20260908.json"
+)
+C6_WAVE_PROGRESS = (
+    ROOT
+    / "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/c6_wave_d_progress_receipt_20260908e.json"
+)
+C7_RESHARD_ANALYSIS = (
+    ROOT
+    / "artifacts/online_correction_v4/execution/c7_object_pair_20260906/c7_released_tail_reshard_analysis_20260908.json"
+)
+C8_LOCK_COLLISION_STATUS = (
+    ROOT
+    / "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908o.json"
 )
 GPU_POOL_SWEEP_RECEIPT = (
     ROOT / "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_pool_sweep_receipt.json"
@@ -237,10 +253,116 @@ def build_confound_check_rows(confound: dict[str, Any]) -> list[dict[str, Any]]:
     return rows
 
 
+def build_platform_scenario_grasp_contrast_rows(
+    *,
+    c6_progress: dict[str, Any] | None,
+    c8_composition: dict[str, Any] | None,
+    c8_pilot: dict[str, Any] | None,
+) -> list[dict[str, Any]]:
+    """Cross-platform confirmatory grasp rates for platform×scenario interaction analysis."""
+    rows: list[dict[str, Any]] = []
+    c8_pilot_by = (c8_pilot or {}).get("by_scenario") or {}
+    scenario_order = ("destination_static", "move_stop", "original_sham")
+
+    if c6_progress:
+        c6_rates = c6_progress.get("grasp_rate_by_scenario") or {}
+        c6_ranked = sorted(
+            c6_rates.items(),
+            key=lambda item: float(item[1].get("grasp_rate_pct") or 0),
+            reverse=True,
+        )
+        c6_rank = {scenario: idx + 1 for idx, (scenario, _) in enumerate(c6_ranked)}
+        for scenario in scenario_order:
+            stats = c6_rates.get(scenario) or {}
+            rows.append(
+                {
+                    "family": "C6",
+                    "platform": "isaac_droid",
+                    "fixture": "containment",
+                    "cohort": "confirmatory_partial",
+                    "scenario": scenario,
+                    "episodes": stats.get("episodes"),
+                    "grasp_achieved": stats.get("grasp_achieved"),
+                    "grasp_rate": round(float(stats.get("grasp_rate_pct") or 0) / 100, 3),
+                    "pilot_grasp_rate": None,
+                    "scenario_rank_within_platform": c6_rank.get(scenario),
+                    "platform_ordering": "original_sham > destination_static > move_stop (inverted vs C8 at n=56)",
+                    "registered_estimand": "platform_x_scenario_grasp_interaction",
+                    "estimability_note": "insufficient_coverage_not_estimable",
+                    "holm_scope": "registered_scenario_contrast_family_with_platform_stratum",
+                }
+            )
+
+    if c8_composition:
+        c8_by = c8_composition.get("by_scenario") or {}
+        c8_ranked = sorted(
+            c8_by.items(),
+            key=lambda item: float(item[1].get("grasp_rate") or 0),
+            reverse=True,
+        )
+        c8_rank = {scenario: idx + 1 for idx, (scenario, _) in enumerate(c8_ranked)}
+        valid = int((c8_composition.get("progress") or {}).get("behavioral_valid") or 0)
+        for scenario in scenario_order:
+            stats = c8_by.get(scenario) or {}
+            pilot_grasp = (c8_pilot_by.get(scenario) or {}).get("grasp_achieved")
+            pilot_eps = (c8_pilot_by.get(scenario) or {}).get("episodes") or 8
+            rows.append(
+                {
+                    "family": "C8",
+                    "platform": "widowx_simplerenv",
+                    "fixture": "second_stack",
+                    "cohort": "confirmatory_partial",
+                    "scenario": scenario,
+                    "episodes": stats.get("episodes_completed"),
+                    "grasp_achieved": stats.get("grasp_achieved"),
+                    "grasp_rate": stats.get("grasp_rate"),
+                    "pilot_grasp_rate": round(float(pilot_grasp or 0) / pilot_eps, 3),
+                    "scenario_rank_within_platform": c8_rank.get(scenario),
+                    "platform_ordering": (
+                        "destination_static ranks first at milestones 84/101/161/204; "
+                        "move_stop ≈ original_sham — pilot 3-way ordering not reproduced"
+                    ),
+                    "registered_estimand": "platform_x_scenario_grasp_interaction",
+                    "estimability_note": "insufficient_coverage_not_estimable"
+                    if valid < 768
+                    else "confirmatory_partial",
+                    "holm_scope": "registered_scenario_contrast_family_with_platform_stratum",
+                }
+            )
+    return rows
+
+
+def load_c6_confirmatory_progress() -> dict[str, Any] | None:
+    if not C6_WAVE_PROGRESS.is_file():
+        return None
+    return load_json(C6_WAVE_PROGRESS)
+
+
+def build_c6_confirmatory_grasp_rows(progress: dict[str, Any]) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    for scenario, stats in (progress.get("grasp_rate_by_scenario") or {}).items():
+        episodes = int(stats.get("episodes") or 0)
+        grasp = int(stats.get("grasp_achieved") or 0)
+        rows.append(
+            {
+                "cohort": "confirmatory",
+                "scenario": scenario,
+                "episodes": episodes,
+                "grasp_achieved": grasp,
+                "grasp_rate": round(float(stats.get("grasp_rate_pct") or 0) / 100, 3),
+                "estimability_note": "insufficient_coverage_not_estimable",
+            }
+        )
+    return rows
+
+
 def build_capacity_finding() -> dict[str, Any]:
     sweep = load_json(GPU_POOL_SWEEP_RECEIPT) if GPU_POOL_SWEEP_RECEIPT.is_file() else {}
     session = sweep.get("session_cumulative") or {}
     status = load_c8_execution_status()
+    lock_status = load_json(C8_LOCK_COLLISION_STATUS) if C8_LOCK_COLLISION_STATUS.is_file() else {}
+    reshard = load_json(C7_RESHARD_ANALYSIS) if C7_RESHARD_ANALYSIS.is_file() else {}
+    root_cause = lock_status.get("root_cause_resolution") or {}
     return {
         "lane_pair_model": (
             "Lane pair is a study-design and throughput unit, not a Kubernetes scheduler "
@@ -250,6 +372,26 @@ def build_capacity_finding() -> dict[str, Any]:
             "Pending pod failures are attributable to per-node GPU fragmentation and legitimate "
             "C7 occupancy, not an unsatisfiable two-GPU request on one node."
         ),
+        "episode_lane_assignment": {
+            "frozen_queue_carries_no_lane_id": True,
+            "lane_assignment_runtime_only": True,
+            "evidence": str(C7_RESHARD_ANALYSIS.relative_to(ROOT)) if C7_RESHARD_ANALYSIS.is_file() else None,
+            "note": (
+                "Frozen queue.frozen.jsonl constrains episode identity and seeds but not execution "
+                "topology; C7 tail re-shard across 14 lane identities (attempt0611–0624) is legitimate."
+            ),
+            "c7_reshard_walltime_hours": (reshard.get("wall_clock_estimate") or {}).get("r6_14_lanes_hours"),
+        },
+        "pvc_attempt_lock_collision": {
+            "cause": (lock_status.get("root_cause_resolution") or {}).get("cause")
+            or "sweep_redispatch_same_attempt_id_without_clearing_pvc_attempt_locks",
+            "misread_as": "Isaac warmup timeouts across C7, C6, and C8",
+            "remediation": root_cause.get("capacity_agent_fixes")
+            or ["fresh attempt identities", "redispatch guard", "300s startup grace"],
+            "receipt": str(C8_LOCK_COLLISION_STATUS.relative_to(ROOT))
+            if C8_LOCK_COLLISION_STATUS.is_file()
+            else None,
+        },
         "gpu_orphan_sweep": {
             "tool": "tools/v4_gpu_pool_sweep.py",
             "receipt": str(GPU_POOL_SWEEP_RECEIPT.relative_to(ROOT)) if GPU_POOL_SWEEP_RECEIPT.is_file() else None,
@@ -268,6 +410,7 @@ def build_capacity_finding() -> dict[str, Any]:
         if resolve_c8_status_receipt_path()
         else None,
         "c8_confirmatory_valid": (status.get("confirmatory_progress") or {}).get("valid"),
+        "c6_confirmatory_valid": (load_c6_confirmatory_progress() or {}).get("confirmatory_terminals"),
     }
 
 
@@ -349,30 +492,38 @@ def resolve_c8_confirmatory_composition() -> dict[str, Any] | None:
             "grasp_rate": round(grasp / max(completed, 1), 3),
         }
     ordering = milestone.get("ordering_assessment") or {}
+    milestone_valid = int((milestone.get("progress") or {}).get("behavioral_valid") or 0)
+    use_valid = max(live_valid, milestone_valid)
+    if milestone_valid >= live_valid and milestone.get("by_scenario"):
+        by_scenario = milestone.get("by_scenario") or by_scenario
+        grasp_total = int(milestone.get("grasp_achieved_count") or grasp_total)
+        aggregate = milestone.get("aggregate_outcomes") or aggregate
     return {
         **milestone,
-        "ledger_compile_id_milestone_50": milestone.get("ledger_compile_id") or "20260908d",
+        "ledger_compile_id": milestone.get("ledger_compile_id") or "20260908f",
+        "ledger_compile_id_milestone_200": milestone.get("ledger_compile_id"),
         "ledger_compile_id_live_interim": status.get("confirmatory_ledger_compile_id_live"),
         "next_milestone_compile_at": status.get("next_milestone_compile_at") or milestone.get("next_milestone_compile_at"),
+        "accounting_verification_uri": status.get("accounting_verification_uri")
+        or (str(C8_EPISODE_ACCOUNTING.relative_to(ROOT)) if C8_EPISODE_ACCOUNTING.is_file() else None),
         "progress": {
-            "behavioral_valid": live_valid,
-            "total_queued": int(progress.get("remaining", 0) + live_valid) if progress.get("remaining") is not None else 768,
-            "coverage_fraction": round(live_valid / 768, 4) if live_valid else milestone.get("progress", {}).get("coverage_fraction"),
+            "behavioral_valid": use_valid,
+            "total_queued": 768,
+            "coverage_fraction": round(use_valid / 768, 4) if use_valid else milestone.get("progress", {}).get("coverage_fraction"),
         },
-        "aggregate_outcomes": aggregate if live_valid else milestone.get("aggregate_outcomes"),
-        "grasp_achieved_count": grasp_total if live_valid else milestone.get("grasp_achieved_count"),
+        "aggregate_outcomes": aggregate,
+        "grasp_achieved_count": grasp_total,
         "by_scenario": by_scenario,
         "ordering_assessment": {
             **ordering,
             "ordering_holds": progress.get("ordering_holds") or ordering.get("ordering_holds", "insufficient_coverage"),
-            "confirmatory_observed_at_live": (
-                "destination_static > move_stop > original_sham"
-                if live_valid >= 6
-                else ordering.get("confirmatory_observed_at_83")
+            "claim_limit": (
+                "Only destination_static ranking first is claimed; pilot 3-way ordering magnitudes not reproduced"
             ),
         },
+        "spread_compression_history": milestone.get("spread_compression_history"),
         "confound_check_uri": status.get("destination_static_confound_uri")
-        or milestone.get("ordering_assessment", {}).get("confound_check_uri"),
+        or ordering.get("confound_check_uri"),
     }
 
 
@@ -399,6 +550,7 @@ def build_campaign_blocked_scope(
     c8_scenario_grasp: dict[str, Any] | None = None,
     c8_confirmatory_grasp: dict[str, Any] | None = None,
     c8_confound_check: dict[str, Any] | None = None,
+    c6_confirmatory_progress: dict[str, Any] | None = None,
 ) -> dict:
     campaign = dict(c7_blocked_scope.get("campaign_scope_revision") or {})
     horizontal_finding = horizontal_blocked_scope.get("scientific_finding") or {}
@@ -423,6 +575,15 @@ def build_campaign_blocked_scope(
         "20260908_horizontal_g3_gate_decision_g3r20260908g.json; "
         "horizontal_geometry_repair_v2/20260908 evidence slice"
     )
+    not_estimable["platform_x_scenario_grasp_interaction"] = (
+        "Cross-platform scenario grasp ordering contrast (C6 Isaac containment vs C8 WidowX "
+        "SimplerEnv) is registered under platform_x_scenario_grasp_interaction with Holm scope "
+        "registered_scenario_contrast_family_with_platform_stratum. At current partial widths "
+        "(C6 56/768, C8 204/768) the estimand is insufficient_coverage_not_estimable. C6 "
+        "ordering (original_sham highest at second consecutive milestone) inverts C8 ordering "
+        "(destination_static ranks first at four milestones); a genuine platform-dependent "
+        "interaction is reportable if it persists at full coverage — neither outcome is pre-committed."
+    )
     return {
         "schema_version": "v4-registered-campaign-blocked-scope-v1",
         "original_planned_policy_episodes": campaign.get("original_planned_policy_episodes", 17664),
@@ -443,6 +604,12 @@ def build_campaign_blocked_scope(
         "c7_compile_provenance": compile_provenance,
         "c8_pilot_scenario_grasp_pattern": c8_scenario_grasp,
         "c8_confirmatory_scenario_grasp_pattern": c8_confirmatory_grasp,
+        "c6_confirmatory_scenario_grasp_pattern": c6_confirmatory_progress,
+        "platform_scenario_grasp_contrast": build_platform_scenario_grasp_contrast_rows(
+            c6_progress=c6_confirmatory_progress,
+            c8_composition=c8_confirmatory_grasp,
+            c8_pilot=c8_scenario_grasp,
+        ),
         "not_estimable_or_blocked": not_estimable,
         "scientific_blockers": c7_blocked_scope.get("scientific_blockers"),
         "horizontal_evidence": {
@@ -515,6 +682,21 @@ def build_family_coverage_rows(family_rollups: dict[str, dict]) -> list[dict[str
                     "ledger_compile_id": confirmatory.get("ledger_compile_id"),
                 }
             )
+        if family == "C6" and int(confirmatory.get("accepted_valid_unique") or 0) > 0:
+            rows.append(
+                {
+                    "family": "C6",
+                    "fixture": rollup.get("fixture"),
+                    "evidence_phase": "confirmatory_partial",
+                    "export_status": confirmatory.get("export_status"),
+                    "coverage_label": confirmatory.get("coverage_label"),
+                    "accepted_valid_unique": confirmatory.get("accepted_valid_unique"),
+                    "planned_episodes": confirmatory.get("planned_episodes"),
+                    "confirmatory_dispatched": confirmatory.get("dispatched_episodes"),
+                    "confirmatory_accepted": confirmatory.get("accepted_valid_unique"),
+                    "ledger_compile_id": confirmatory.get("ledger_compile_id"),
+                }
+            )
     return rows
 
 
@@ -529,6 +711,7 @@ def build_campaign_tables(
     c8_scenario_grasp: dict[str, Any] | None,
     c8_confirmatory_grasp: dict[str, Any] | None = None,
     c8_confound_check: dict[str, Any] | None = None,
+    c6_confirmatory_progress: dict[str, Any] | None = None,
 ) -> dict[str, list[dict]]:
     validation = c7_audit.get("validation") or {}
     c7_coverage = (family_rollups.get("C7") or {}).get("coverage") or {}
@@ -606,6 +789,18 @@ def build_campaign_tables(
             )
     if c8_confound_check:
         tables["c8_destination_static_confound_check.csv"] = build_confound_check_rows(c8_confound_check)
+    if c6_confirmatory_progress:
+        tables["c6_confirmatory_grasp_by_scenario.csv"] = build_c6_confirmatory_grasp_rows(c6_confirmatory_progress)
+        c6_outcomes = (c6_confirmatory_progress.get("composition_at_56") or {}).get("by_outcome") or {}
+        if c6_outcomes:
+            tables["c6_confirmatory_outcome_composition.csv"] = outcome_composition_rows(c6_outcomes)
+    platform_rows = build_platform_scenario_grasp_contrast_rows(
+        c6_progress=c6_confirmatory_progress,
+        c8_composition=c8_confirmatory_grasp,
+        c8_pilot=c8_scenario_grasp,
+    )
+    if platform_rows:
+        tables["platform_scenario_grasp_contrast.csv"] = platform_rows
     for family in ("C6", "C8"):
         rollup = family_rollups.get(family) or {}
         composition = rollup.get("outcome_composition") or {}
@@ -679,17 +874,18 @@ def build_campaign_evidence_memo(
     c8_confirmatory_progress = resolve_c8_confirmatory_composition() or {}
     c8_confirmatory_by_scenario = c8_confirmatory_progress.get("by_scenario") or {}
     c8_confirmatory_valid = int(c8_confirmatory.get("accepted_valid_unique") or 0)
-    c8_confound = load_json(C8_DESTINATION_STATIC_CONFOUND) if C8_DESTINATION_STATIC_CONFOUND.is_file() else {}
-    confound_evidence = (c8_confound.get("evidence") or {}).get("green_yellow_distance_at_reset_m") or {}
+    c6_confirmatory_progress = load_c6_confirmatory_progress() or {}
+    c6_confirmatory_valid = int(c6_confirmatory_progress.get("confirmatory_terminals") or 0)
+    c6_grasp_rates = c6_confirmatory_progress.get("grasp_rate_by_scenario") or {}
+    reshard = load_json(C7_RESHARD_ANALYSIS) if C7_RESHARD_ANALYSIS.is_file() else {}
+    accounting = load_json(C8_EPISODE_ACCOUNTING) if C8_EPISODE_ACCOUNTING.is_file() else {}
     campaign_paragraphs = [
         f"**{campaign_export_status.upper()} EXPORT** — three achievable families are in flight. "
         f"C7 confirmatory coverage {c7_coverage.get('coverage_label', 'n/a')} on "
-        f"{c7_coverage.get('ledger_compile_id', 'n/a')} (retired partials k/l/m documented in "
-        f"compile_retirement_pending.json pending FINAL 768/768); C6 G7 pilot 24/24 complete with "
-        f"confirmatory wave {c6_rollup.get('confirmatory_dispatch', {}).get('wave', 'F')} re-rendered "
-        f"({c6_rollup.get('confirmatory_dispatch', {}).get('coverage_label', 'n/a')}); "
-        f"C8 G7 pilot 24/24 with confirmatory "
-        f"{c8_confirmatory.get('coverage_label', 'n/a')}.",
+        f"{c7_coverage.get('ledger_compile_id', 'n/a')} "
+        f"({c7_coverage.get('accepted_valid_unique', 'n/a')}/768; FINAL compile pending); "
+        f"C6 confirmatory {c6_confirmatory_valid}/768 terminals (wave F re-render); "
+        f"C8 confirmatory {c8_confirmatory_valid}/768 (milestone compile 20260908f at 204).",
         "Registered campaign scope: 17,664 planned policy episodes; 2,304 achievable "
         "(C6, C7, C8 confirmatory families × 768); 15,360 scientifically blocked "
         "(C1/C3/C4 horizontal information-gate squeeze 9,728; C2 reference_binding "
@@ -708,40 +904,69 @@ def build_campaign_evidence_memo(
         f"{c8_pilot_scenarios.get('destination_static', {}).get('grasp_achieved', 'n/a')}/8 = 75%, "
         f"move_stop {c8_pilot_scenarios.get('move_stop', {}).get('grasp_achieved', 'n/a')}/8 = 50%, "
         f"original_sham {c8_pilot_scenarios.get('original_sham', {}).get('grasp_achieved', 'n/a')}/8 = 25%) "
-        "form a hypothesis about reference-placement effects on online scene movement. At "
-        f"{c8_confirmatory_valid}/768 confirmatory episodes (milestone compile 20260908d at 50+, "
-        f"20260908e reserved for 100), observed rates are destination_static "
+        "formed a hypothesis about reference-placement effects. At "
+        f"{c8_confirmatory_valid}/768 confirmatory episodes (ledger compile 20260908f), observed "
+        f"grasp rates are destination_static "
         f"{c8_confirmatory_by_scenario.get('destination_static', {}).get('grasp_achieved', 0)}/"
         f"{c8_confirmatory_by_scenario.get('destination_static', {}).get('episodes_completed', 0)} "
         f"({100 * float(c8_confirmatory_by_scenario.get('destination_static', {}).get('grasp_rate', 0)):.1f}%), "
         f"move_stop {c8_confirmatory_by_scenario.get('move_stop', {}).get('grasp_achieved', 0)}/"
-        f"{c8_confirmatory_by_scenario.get('move_stop', {}).get('episodes_completed', 0)}, "
+        f"{c8_confirmatory_by_scenario.get('move_stop', {}).get('episodes_completed', 0)} "
+        f"({100 * float(c8_confirmatory_by_scenario.get('move_stop', {}).get('grasp_rate', 0)):.1f}%), "
         f"original_sham {c8_confirmatory_by_scenario.get('original_sham', {}).get('grasp_achieved', 0)}/"
-        f"{c8_confirmatory_by_scenario.get('original_sham', {}).get('episodes_completed', 0)}. "
-        "The ordering direction matches the pilot but remains insufficient_coverage and is marked "
-        "not estimable under the registered estimator with Holm handling.",
+        f"{c8_confirmatory_by_scenario.get('original_sham', {}).get('episodes_completed', 0)} "
+        f"({100 * float(c8_confirmatory_by_scenario.get('original_sham', {}).get('grasp_rate', 0)):.1f}%). "
+        "Destination_static has ranked first at milestones 84, 101, 161, and 204, but magnitudes "
+        "remain far below pilot reference and move_stop ≈ original_sham — the pilot's clean three-way "
+        "ordering is not reproducing at scale. **Claim limit:** only destination_static ranking first "
+        "is claimed; registered per-scenario contrast remains insufficient_coverage_not_estimable.",
+        "C8 episode accounting at the 200-episode milestone (c8_episode_accounting_verification_20260908e.json): "
+        f"{(accounting.get('verification') or {}).get('episodes_retained_from_baseline', 101)} retained plus "
+        f"{(accounting.get('verification') or {}).get('new_episodes_since_baseline', 103)} new, "
+        f"{(accounting.get('verification') or {}).get('partial_episodes_counted_as_behavioral', 0)} partials counted — "
+        f"verdict: {(accounting.get('verification') or {}).get('verdict', 'accounting_intact')}.",
         "C8 destination_static confound elimination (c8_destination_static_confound_check_20260908a.json): "
         "green-to-yellow reset distance is identical at 0.1414 m across all three scenarios over 256 seeds "
-        f"each ({', '.join(f'{s} mean={confound_evidence.get(s, {}).get('mean')} m' for s in ('original_sham', 'destination_static', 'move_stop'))}). "
-        "Higher destination_static grasp rate is therefore not explained by the object starting closer to "
-        "the goal region; the registered protocol difference is reference placement (static reference at "
-        "planned+D versus sham identity and move_stop motion profiles). This converts the scenario "
-        "ordering from a suggestive trend into a testable claim about reference placement rather than "
-        "task geometry.",
-        "C6 wave D was cleanly re-rendered as rendered-c6confirm20260908f after a shared-checkout "
-        "runner conflict; operating rule documented in runner_binding_resolution_20260908.json: when C7 "
-        "mutates the shared checkout runner, C6 must re-render in-flight waves from the updated "
-        "released lock—never patch coord bindings on PVC alone. C6 still has 0 confirmatory terminals "
-        "with simulators running; confirmatory ledger compile pending.",
+        "each. Higher destination_static grasp rate is not explained by object starting closer to the goal "
+        "region; the registered protocol difference is reference placement profile.",
+        (
+            f"C6 confirmatory at {c6_confirmatory_valid}/768 (c6_wave_d_progress_receipt_20260908e.json): "
+            f"destination_static {c6_grasp_rates.get('destination_static', {}).get('grasp_rate_pct', 'n/a')}%, "
+            f"move_stop {c6_grasp_rates.get('move_stop', {}).get('grasp_rate_pct', 'n/a')}%, "
+            f"original_sham {c6_grasp_rates.get('original_sham', {}).get('grasp_rate_pct', 'n/a')}% "
+            f"(n={c6_grasp_rates.get('destination_static', {}).get('episodes', 'n/a')}/"
+            f"{c6_grasp_rates.get('move_stop', {}).get('episodes', 'n/a')}/"
+            f"{c6_grasp_rates.get('original_sham', {}).get('episodes', 'n/a')} per cell). "
+            "Original_sham is highest, inverting C8's ordering — the second consecutive C6 milestone "
+            "showing this pattern. Per-cell n is 16–21 and not interpretable yet; the registered "
+            "platform×scenario interaction estimand (platform_scenario_grasp_contrast.csv) structures "
+            "this as a testable contrast rather than an anomaly, with neither uniform nor "
+            "platform-dependent outcome pre-committed."
+        ),
+        (
+            f"C7 tail re-shard (c7_released_tail_reshard_analysis_20260908.json): final "
+            f"{reshard.get('executed_reshard', {}).get('r6_assigned', 180)} episodes moved from 4 lanes "
+            f"to {reshard.get('executed_reshard', {}).get('lane_count', 14)} lanes "
+            f"({reshard.get('executed_reshard', {}).get('attempt_range', 'attempt0611-0624')}), "
+            f"cutting estimated wall time from ~22 h to ~"
+            f"{(reshard.get('wall_clock_estimate') or {}).get('r6_14_lanes_hours', 5.4)} h. "
+            "Frozen queue.frozen.jsonl carries episode identity and seeds but no lane_id; "
+            "episode-to-lane assignment is runtime-only, which makes re-sharding legitimate."
+        ),
+        "C6 wave D was re-rendered as rendered-c6confirm20260908f after a shared-checkout runner "
+        "conflict; operating rule in runner_binding_resolution_20260908.json requires re-render when "
+        "C7 mutates the shared checkout runner.",
         "C7 compile provenance is explicit: partial compiles k (548), l (565), m (580), and stale "
         ".compiled-ledger-final (551) are retired in favor of compiled_ledger_20260908_FINAL at "
         "768/768 require-full-coverage; see compile_retirement_provenance.csv.",
         "Capacity finding (revised): a lane pair is a study-design and throughput unit, not a scheduler "
-        "constraint—policy and simulator are separate single-GPU pods connected over HTTP. Pending "
-        "failures are attributable to per-node GPU fragmentation and legitimate C7 occupancy, not an "
-        "unsatisfiable two-GPU request. tools/v4_gpu_pool_sweep.py reclaimed 34 GPUs across four pools "
-        "(receipt gpu_pool_sweep_receipt.json); tools/v4_gpu_scheduling.py provides reusable "
-        "c8_a40_spread and c6_a10040_spread placement policies for anti-affinity bin-packing.",
+        "constraint—policy and simulator are separate single-GPU pods connected over HTTP. A PVC "
+        "attempt-lock collision from same-attempt redispatch produced immediate simulator preflight "
+        "failures across C7, C6, and C8, initially misread as Isaac warmup timeouts; remediation "
+        "uses fresh attempt identities, a redispatch guard, and a 300-second startup grace "
+        "(c8_execution_status_20260908o.json). Pending failures are attributable to per-node GPU "
+        "fragmentation and legitimate C7 occupancy. tools/v4_gpu_pool_sweep.py reclaimed 34 GPUs; "
+        "tools/v4_gpu_scheduling.py provides c8_a40_spread and c6_a10040_spread placement policies.",
         "Three disclosed setup repairs bound this export: (1) NaturalGraspDetector trigger "
         "observation wiring now uses finger-contact coupling instead of robot-base pose; "
         "(2) eef_tool_length_m=0.14 flange-versus-fingerpad offset applied uniformly across "
@@ -781,8 +1006,9 @@ def build_campaign_evidence_memo(
         "cross_fixture_contrast": build_cross_fixture_contrast_rows(family_rollups=family_rollups),
         "frozen_analysis_manifest": str(FROZEN_ANALYSIS.relative_to(ROOT)),
         "headline": (
-            f"{campaign_export_status.title()} registered export: C7 Isaac no_grasp dominance "
-            "contrasts with C6/C8 pilot transport and placement attempts across fixtures"
+            f"{campaign_export_status.title()} registered export: C7 no_grasp dominance; "
+            "C8 destination_static ranks first at partial confirmatory width; "
+            "C6/C8 platform×scenario ordering contrast structured not pre-committed"
         ),
         "paper_narrative": {
             "headline": horizontal_narrative.get("headline"),
@@ -810,14 +1036,16 @@ def build_campaign_evidence_memo(
             "Blocked families carry qualification receipts only; no policy episodes were dispatched.",
             "279 pre-repair C7 episodes remain excluded from behavioral claims.",
             "C7 partial uses compile-m until FINAL 768/768 compile lands; retired partials documented in compile_retirement_pending.json.",
-            "C6/C8 confirmatory tables refresh as Agent B and Agent A ledger compiles accumulate.",
-            "C8 per-scenario grasp ordering contrast is not estimable at current confirmatory width (insufficient_coverage).",
+            "C6/C8 confirmatory tables refresh as ledger compiles accumulate.",
+            "C8 claim limit: only destination_static ranking first; pilot 3-way ordering magnitudes not reproduced.",
+            "Platform×scenario grasp interaction (C6 Isaac vs C8 WidowX) is insufficient_coverage_not_estimable at current widths.",
         ],
         "not_estimable_primary_estimands": [
             "C1/C3/C4 primary wording and reference-selectivity contrasts",
             "C2 reference-selectivity primary (H)",
             "C5 vertical family (IK reachability block)",
-            "C8 per-scenario grasp ordering contrast (confirmatory underpowered at current width)",
+            "C8 per-scenario grasp ordering contrast (confirmatory underpowered at 204/768)",
+            "platform_x_scenario_grasp_interaction (C6 56/768 + C8 204/768 partial)",
         ],
     }
 
@@ -900,31 +1128,37 @@ def resolve_pilot_defaults(args: argparse.Namespace) -> tuple[Path | None, Path,
 
 def load_confirmatory_dispatch_metadata() -> tuple[dict[str, Any], dict[str, Any]]:
     c6_dispatch: dict[str, Any] = {}
+    c6_progress = load_c6_confirmatory_progress()
     wave_path = C6_WAVE_F_DISPATCH if C6_WAVE_F_DISPATCH.is_file() else C6_WAVE_D_DISPATCH
-    if wave_path.is_file():
-        wave_payload = load_json(wave_path)
+    if c6_progress or wave_path.is_file():
+        wave_payload = load_json(wave_path) if wave_path.is_file() else {}
         wave_label = "F" if wave_path == C6_WAVE_F_DISPATCH else "D"
+        c6_accepted = int(c6_progress.get("confirmatory_terminals") or 0) if c6_progress else 0
         c6_dispatch = build_dispatch_coverage_metadata(
-            accepted=0,
+            accepted=c6_accepted,
             planned=768,
             dispatched=int(wave_payload.get("behavioral_episode_count", 384)),
             compile_id=None,
             wave=wave_label,
         )
-        c6_dispatch["dispatch_receipt"] = str(wave_path.relative_to(ROOT))
-        c6_dispatch["lane_count"] = wave_payload.get("lane_count")
-        c6_dispatch["render_root"] = (wave_payload.get("lane_assignments_summary") or {}).get("render_root")
-        c6_dispatch["post_dispatch_observed"] = wave_payload.get("post_dispatch_observed")
+        if c6_progress:
+            c6_dispatch["progress_receipt"] = str(C6_WAVE_PROGRESS.relative_to(ROOT))
+            c6_dispatch["grasp_rate_by_scenario"] = c6_progress.get("grasp_rate_by_scenario")
+            c6_dispatch["ordering_note"] = c6_progress.get("ordering_note")
+            c6_dispatch["milestones"] = c6_progress.get("milestones")
+        if wave_path.is_file():
+            c6_dispatch["dispatch_receipt"] = str(wave_path.relative_to(ROOT))
+            c6_dispatch["lane_count"] = wave_payload.get("lane_count")
+            c6_dispatch["render_root"] = (wave_payload.get("lane_assignments_summary") or {}).get("render_root")
+            c6_dispatch["post_dispatch_observed"] = wave_payload.get("post_dispatch_observed")
         c6_dispatch["runner_binding_resolution"] = (
             str(C6_RUNNER_BINDING.relative_to(ROOT)) if C6_RUNNER_BINDING.is_file() else None
         )
-        if wave_label == "F":
-            c6_dispatch["note"] = (
-                "Wave D re-rendered as 20260908f after shared-checkout runner conflict; "
-                "0 confirmatory terminals; wave E follows."
-            )
-        else:
-            c6_dispatch["note"] = "Wave D dispatched; wave E follows on Agent B schedule."
+        c6_dispatch["note"] = (
+            f"C6 confirmatory {c6_accepted}/768 terminals; platform×scenario interaction tracked at partial width."
+            if c6_accepted
+            else "Wave D re-rendered as 20260908f; confirmatory terminals pending."
+        )
     elif C6_WAVE_B_DISPATCH.is_file():
         c6_dispatch = build_dispatch_coverage_metadata(
             accepted=0,
@@ -938,7 +1172,11 @@ def load_confirmatory_dispatch_metadata() -> tuple[dict[str, Any], dict[str, Any
     status_path = resolve_c8_status_receipt_path()
     if status:
         progress = status.get("confirmatory_progress") or {}
-        milestone_id = status.get("confirmatory_ledger_compile_id_50_milestone") or "20260908d"
+        milestone_id = (
+            status.get("confirmatory_ledger_compile_id_200_milestone")
+            or status.get("confirmatory_ledger_compile_id_100_milestone")
+            or "20260908f"
+        )
         c8_dispatch = build_dispatch_coverage_metadata(
             accepted=int(progress.get("valid") or progress.get("behavioral_valid") or 0),
             planned=768,
@@ -946,9 +1184,12 @@ def load_confirmatory_dispatch_metadata() -> tuple[dict[str, Any], dict[str, Any
             compile_id=milestone_id,
             wave="main",
         )
-        c8_dispatch["ledger_compile_id_live_interim"] = status.get("confirmatory_ledger_compile_id_live")
-        c8_dispatch["next_milestone_compile_at"] = status.get("next_milestone_compile_at")
-        c8_dispatch["aggregate_outcomes"] = progress.get("aggregate_outcomes")
+        c8_dispatch["ledger_compile_id_200_milestone"] = status.get("confirmatory_ledger_compile_id_200_milestone")
+        c8_dispatch["ledger_compile_id_400_pending"] = status.get("agent_c_hooks", {}).get(
+            "c8_confirmatory_ledger_compile_id_400"
+        )
+        c8_dispatch["accounting_verification_uri"] = status.get("accounting_verification_uri")
+        c8_dispatch["ordering_persistence"] = progress.get("ordering_persistence")
         c8_dispatch["by_scenario"] = progress.get("by_scenario")
         c8_dispatch["ordering_holds"] = progress.get("ordering_holds")
         c8_dispatch["confirmatory_lanes"] = status.get("confirmatory_lanes")
@@ -1069,6 +1310,7 @@ def main(argv: list[str] | None = None) -> int:
     family_exports: dict[str, dict] = {"C7": c7_payload}
     c8_scenario_grasp = load_json(C8_PILOT_COMPOSITION) if C8_PILOT_COMPOSITION.is_file() else None
     c8_confirmatory_grasp = resolve_c8_confirmatory_composition()
+    c6_confirmatory_progress = load_c6_confirmatory_progress()
     c8_confound_check = (
         load_json(C8_DESTINATION_STATIC_CONFOUND) if C8_DESTINATION_STATIC_CONFOUND.is_file() else None
     )
@@ -1108,7 +1350,7 @@ def main(argv: list[str] | None = None) -> int:
             config=args.config.resolve(),
             out_root=out_root,
             tag=c8_confirmatory_tag,
-            compile_id=(c8_confirmatory_grasp or {}).get("ledger_compile_id_milestone_50") or "20260908d",
+            compile_id=(c8_confirmatory_grasp or {}).get("ledger_compile_id") or "20260908f",
         )
         family_exports["C8_confirmatory"] = c8_confirmatory_payload
 
@@ -1190,6 +1432,7 @@ def main(argv: list[str] | None = None) -> int:
         c8_scenario_grasp=c8_scenario_grasp,
         c8_confirmatory_grasp=c8_confirmatory_grasp,
         c8_confound_check=c8_confound_check,
+        c6_confirmatory_progress=c6_confirmatory_progress,
     )
     blocked_path = out_root / "blocked_scope.json"
     blocked_path.write_text(json.dumps(campaign_blocked, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -1219,6 +1462,7 @@ def main(argv: list[str] | None = None) -> int:
         c8_scenario_grasp=c8_scenario_grasp,
         c8_confirmatory_grasp=c8_confirmatory_grasp,
         c8_confound_check=c8_confound_check,
+        c6_confirmatory_progress=c6_confirmatory_progress,
     )
     table_artifacts: dict[str, dict] = {}
     for name, rows in campaign_tables.items():
@@ -1248,6 +1492,7 @@ def main(argv: list[str] | None = None) -> int:
         "compile_provenance": compile_provenance,
         "c8_pilot_scenario_grasp": c8_scenario_grasp,
         "c8_confirmatory_scenario_grasp": c8_confirmatory_grasp,
+        "c6_confirmatory_progress": c6_confirmatory_progress,
         "c8_destination_static_confound_check": c8_confound_check,
         "outcome_composition": c7_outcome_composition,
         "pvc_complete_note": (

@@ -10,6 +10,53 @@
     "C2_reference_binding": 4096,
     "C5_vertical": 768
   },
+  "c6_confirmatory_scenario_grasp_pattern": {
+    "compiled_at_utc": "2026-09-08T04:45:00Z",
+    "composition_at_56": {
+      "by_outcome": {
+        "no_grasp": 48,
+        "transport_incomplete": 7,
+        "wrong_goal_region": 1
+      },
+      "by_scenario": {
+        "destination_static": 19,
+        "move_stop": 21,
+        "original_sham": 16
+      }
+    },
+    "confirmatory_terminals": 56,
+    "grasp_rate_by_scenario": {
+      "destination_static": {
+        "c8_reference_at_161_eps_pct": 7.8,
+        "episodes": 19,
+        "grasp_achieved": 3,
+        "grasp_rate_pct": 15.8
+      },
+      "move_stop": {
+        "c8_reference_at_161_eps_pct": 3.6,
+        "episodes": 21,
+        "grasp_achieved": 2,
+        "grasp_rate_pct": 9.5
+      },
+      "original_sham": {
+        "c8_reference_at_161_eps_pct": 1.8,
+        "episodes": 16,
+        "grasp_achieved": 3,
+        "grasp_rate_pct": 18.8
+      }
+    },
+    "milestones": {
+      "128": "pending",
+      "32": "passed",
+      "384": "pending"
+    },
+    "ordering_note": "At n=56, original_sham grasp rate (18.8%) exceeds destination_static (15.8%) and move_stop (9.5%) \u2014 inverted vs C8's ordering (7.8% / 3.6% / 1.8%). Too early to interpret; watch at 128 and 384.",
+    "runnerfix_dispatch": "create-c6confirm20260908f-runnerfix.json",
+    "schema_version": "v4-c6-wave-progress-receipt-v1",
+    "supersedes": "c6_wave_d_progress_receipt_20260908d.json",
+    "wave_id": "c6confirm20260908f",
+    "wave_label": "D"
+  },
   "c6_runner_binding_resolution": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/runner_binding_resolution_20260908.json",
   "c7_compile_provenance": {
     "active_compile_id": "compiled_ledger_20260908m",
@@ -65,66 +112,110 @@
     "schema_version": "v4-c7-compile-retirement-v1"
   },
   "c8_confirmatory_scenario_grasp_pattern": {
+    "accounting_verification_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_episode_accounting_verification_20260908e.json",
     "aggregate_outcomes": {
-      "no_grasp": 81,
-      "transport_incomplete": 3
+      "no_grasp": 195,
+      "transport_incomplete": 9
     },
     "by_scenario": {
       "destination_static": {
-        "episodes_completed": 25,
-        "grasp_achieved": 2,
-        "grasp_rate": 0.08,
-        "no_grasp": 23,
-        "transport_incomplete": 2
+        "episodes_completed": 63,
+        "grasp_achieved": 4,
+        "grasp_rate": 0.063,
+        "no_grasp": 59,
+        "transport_incomplete": 4
       },
       "move_stop": {
-        "episodes_completed": 29,
-        "grasp_achieved": 1,
-        "grasp_rate": 0.034,
-        "no_grasp": 28,
-        "transport_incomplete": 1
+        "episodes_completed": 72,
+        "grasp_achieved": 2,
+        "grasp_rate": 0.028,
+        "no_grasp": 69,
+        "transport_incomplete": 3
       },
       "original_sham": {
-        "episodes_completed": 30,
-        "grasp_achieved": 0,
-        "grasp_rate": 0.0,
-        "no_grasp": 30,
-        "transport_incomplete": 0
+        "episodes_completed": 69,
+        "grasp_achieved": 2,
+        "grasp_rate": 0.029,
+        "no_grasp": 67,
+        "transport_incomplete": 2
       }
     },
-    "confound_check_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_destination_static_confound_check_20260908a.json",
-    "grasp_achieved_count": 3,
+    "confound_check_uri": null,
+    "grasp_achieved_count": 9,
     "lanes_with_completes": {
-      "c8m00": 8,
+      "c8m00": 15,
+      "c8m01": 6,
+      "c8m02": 6,
+      "c8m03": 7,
+      "c8m05": 39,
+      "c8m10": 2,
       "c8m13": 38,
-      "c8m14": 37
+      "c8m14": 38,
+      "c8m16": 38,
+      "c8m17": 7,
+      "c8m18": 6,
+      "c8m19": 2
     },
-    "ledger_compile_id": "20260908d",
-    "ledger_compile_id_live_interim": "20260908e_interim_84",
-    "ledger_compile_id_milestone_50": "20260908d",
-    "ledger_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/confirmatory-ledger-20260908d/accepted_ledger.jsonl",
-    "milestone": 50,
-    "milestone_note": "Compiled at 83 valid episodes (passed 50 threshold)",
-    "next_milestone_compile_at": 100,
-    "observed_at_utc": "2026-09-08T05:10:00Z",
+    "ledger_compile_id": "20260908f",
+    "ledger_compile_id_live_interim": null,
+    "ledger_compile_id_milestone_200": "20260908f",
+    "ledger_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/confirmatory-ledger-20260908f/accepted_ledger.jsonl",
+    "milestone": 200,
+    "milestone_note": "Compiled at 204 valid episodes (passed 200 threshold)",
+    "next_milestone_compile_at": 400,
+    "observed_at_utc": "2026-09-08T07:45:00Z",
     "ordering_assessment": {
-      "confirmatory_observed_at_83": "destination_static (8%) > move_stop (3.4%) > original_sham (0%)",
-      "confirmatory_observed_at_live": "destination_static > move_stop > original_sham",
-      "confound_check_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_destination_static_confound_check_20260908a.json",
+      "claim_limit": "Only destination_static ranking first is claimed; pilot 3-way ordering magnitudes not reproduced",
+      "confirmatory_observed_at_204": "destination_static (6.3%) > original_sham (2.9%) \u2248 move_stop (2.8%)",
+      "note": "Directionally consistent with pilot across four successive milestones; not testable at 204/768",
       "ordering_holds": "insufficient_coverage",
-      "pilot_ordering": "destination_static > move_stop > original_sham"
+      "ordering_persistence_note": "Destination_static has ranked first at milestones 84, 101, 161, and 204; magnitudes remain far below pilot reference and are not claimed as significant.",
+      "pilot_ordering": "destination_static (75%) > move_stop (50%) > original_sham (25%)"
     },
+    "prior_milestone_compile_id": "20260908e",
     "progress": {
-      "behavioral_valid": 84,
-      "coverage_fraction": 0.1094,
+      "behavioral_valid": 204,
+      "coverage_fraction": 0.2656,
       "total_queued": 768
     },
     "regression_check": {
-      "reset_registry_digest": "none through c8m00 first completes",
-      "sampling_seed": "none",
+      "preflight_lock_collision": "none on fresh attempts",
       "serialization": "none"
     },
-    "schema_version": "v4-c8-confirmatory-composition-by-scenario-v1"
+    "schema_version": "v4-c8-confirmatory-composition-by-scenario-v1",
+    "sim_first_unsuspend": {
+      "automatic_fired_before_manual_enforce": false,
+      "c8_policies_unsuspended": 16,
+      "healthy_pairs_after_unsuspend": 8,
+      "manual_enforce_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_gpu_placement_unsuspend_20260908a.json"
+    },
+    "spread_compression_history": {
+      "at_101": {
+        "destination_static": 0.061,
+        "move_stop": 0.032,
+        "original_sham": 0.027
+      },
+      "at_161": {
+        "destination_static": 0.078,
+        "move_stop": 0.036,
+        "original_sham": 0.018
+      },
+      "at_204": {
+        "destination_static": 0.063,
+        "move_stop": 0.028,
+        "original_sham": 0.029
+      },
+      "at_84": {
+        "destination_static": 0.08,
+        "move_stop": 0.035,
+        "original_sham": 0.0
+      },
+      "pilot_reference_not_expected_magnitude": {
+        "destination_static": 0.75,
+        "move_stop": 0.5,
+        "original_sham": 0.25
+      }
+    }
   },
   "c8_destination_static_confound_check": {
     "answer": "initial_cube_geometry_is_identical_across_scenarios",
@@ -231,20 +322,23 @@
     "valid_episodes": 24
   },
   "capacity_finding": {
-    "c8_confirmatory_valid": 84,
-    "c8_execution_status_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908i.json",
+    "c6_confirmatory_valid": 56,
+    "c8_confirmatory_valid": 204,
+    "c8_execution_status_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908p.json",
     "confirmatory_episodes_per_family": 768,
+    "episode_lane_assignment": {
+      "c7_reshard_walltime_hours": 5.4,
+      "evidence": "artifacts/online_correction_v4/execution/c7_object_pair_20260906/c7_released_tail_reshard_analysis_20260908.json",
+      "frozen_queue_carries_no_lane_id": true,
+      "lane_assignment_runtime_only": true,
+      "note": "Frozen queue.frozen.jsonl constrains episode identity and seeds but not execution topology; C7 tail re-shard across 14 lane identities (attempt0611\u20130624) is legitimate."
+    },
     "estimated_c8_confirmatory_walltime_hours_at_full_a40_pool": 16,
     "gpu_orphan_sweep": {
-      "pools_swept": 4,
+      "pools_swept": 0,
       "receipt": "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_pool_sweep_receipt.json",
-      "reclaimed_gpu_total": 34,
-      "reclaimed_gpus_by_product": {
-        "NVIDIA-A100-SXM4-40GB": 15,
-        "NVIDIA-A100-SXM4-80GB": 4,
-        "NVIDIA-A40": 7,
-        "NVIDIA-B200": 8
-      },
+      "reclaimed_gpu_total": null,
+      "reclaimed_gpus_by_product": null,
       "tool": "tools/v4_gpu_pool_sweep.py"
     },
     "lane_pair_model": "Lane pair is a study-design and throughput unit, not a Kubernetes scheduler constraint: policy and simulator are separate single-GPU pods connected over HTTP.",
@@ -256,6 +350,17 @@
       ],
       "purpose": "Topology spread and soft anti-affinity to bin-pack single-GPU pods across nodes",
       "tool": "tools/v4_gpu_scheduling.py"
+    },
+    "pvc_attempt_lock_collision": {
+      "cause": "sweep_redispatch_same_attempt_id_without_clearing_pvc_attempt_locks",
+      "misread_as": "Isaac warmup timeouts across C7, C6, and C8",
+      "receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908o.json",
+      "remediation": [
+        "allow_redispatch=false_default",
+        "300s_isaac_startup_grace",
+        "c8m13_c8m14_shielded",
+        "live_sweeps_dry_run_only"
+      ]
     }
   },
   "criteria_amended": false,
@@ -265,87 +370,6 @@
     "second_stack observation and sampling defect repaired: SimplerEnv adapter uses control-boundary sampling with provisioned LD_LIBRARY_PATH/VK_ICD_FILENAMES (C8)"
   ],
   "family_status": {
-    "C6": {
-      "accepted_valid_unique": 24,
-      "confirmatory_dispatch": {
-        "accepted_valid_unique": 0,
-        "coverage_fraction": 0.0,
-        "coverage_label": "0/768 confirmatory accepted; 384/768 dispatched",
-        "dispatch_receipt": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/create-c6confirm20260908f.json",
-        "dispatch_status": "dispatched_pending_capacity",
-        "dispatched_episodes": 384,
-        "export_phase": "confirmatory",
-        "export_status": "dispatched_partial",
-        "lane_count": 32,
-        "ledger_compile_id": null,
-        "missing_episodes": 768,
-        "note": "Wave D re-rendered as 20260908f after shared-checkout runner conflict; 0 confirmatory terminals; wave E follows.",
-        "planned_episodes": 768,
-        "post_dispatch_observed": {
-          "confirmatory_terminals": 0,
-          "note": "First sims passed runner binding; remaining Pending on A100/B200 scheduling (bin-packing), not runner mismatch.",
-          "policy_pending": 23,
-          "policy_running": 9,
-          "runner_preflight_pass": true,
-          "sim_pending": 21,
-          "sim_running": 10
-        },
-        "render_root": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f",
-        "runner_binding_resolution": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/runner_binding_resolution_20260908.json",
-        "wave": "F"
-      },
-      "coverage_fraction": 1.0,
-      "coverage_label": "24/24 (100.0%)",
-      "evidence_phase": "g7_pilot_complete",
-      "export_status": "complete",
-      "fixture": "containment",
-      "ledger_compile_id": "g7-containment-20260908a",
-      "missing_episodes": 0,
-      "outcome_composition": {
-        "no_grasp": 18,
-        "transport_incomplete": 3,
-        "wrong_goal_region": 3
-      },
-      "planned_episodes": 24,
-      "platform": "isaac_droid",
-      "scenario_outcome_breakdown": [
-        {
-          "count": 6,
-          "failure_label": "no_grasp",
-          "scenario": "destination_static"
-        },
-        {
-          "count": 2,
-          "failure_label": "wrong_goal_region",
-          "scenario": "destination_static"
-        },
-        {
-          "count": 6,
-          "failure_label": "no_grasp",
-          "scenario": "move_stop"
-        },
-        {
-          "count": 1,
-          "failure_label": "transport_incomplete",
-          "scenario": "move_stop"
-        },
-        {
-          "count": 1,
-          "failure_label": "wrong_goal_region",
-          "scenario": "move_stop"
-        },
-        {
-          "count": 6,
-          "failure_label": "no_grasp",
-          "scenario": "original_sham"
-        },
-        {
-          "count": 2,
-          "failure_label": "transport_incomplete",
-          "scenario": "original_sham"
-        }
-      ]
-    },
     "C7": {
       "accepted_valid_unique": 580,
       "coverage_fraction": 0.755208,
@@ -411,174 +435,222 @@
     "C8": {
       "accepted_valid_unique": 24,
       "confirmatory_dispatch": {
-        "accepted_valid_unique": 84,
-        "aggregate_outcomes": null,
+        "accepted_valid_unique": 204,
+        "accounting_verification_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_episode_accounting_verification_20260908e.json",
         "by_scenario": {
           "destination_static": {
-            "completed": 25,
-            "grasp_achieved": 2,
-            "no_grasp": 23,
-            "transport_incomplete": 2
+            "completed": 63,
+            "grasp_achieved": 4,
+            "grasp_rate": 0.063
           },
           "move_stop": {
-            "completed": 29,
-            "grasp_achieved": 1,
-            "no_grasp": 28,
-            "transport_incomplete": 1
+            "completed": 72,
+            "grasp_achieved": 2,
+            "grasp_rate": 0.028
           },
           "original_sham": {
-            "completed": 30,
-            "grasp_achieved": 0,
-            "no_grasp": 30,
-            "transport_incomplete": 0
+            "completed": 69,
+            "grasp_achieved": 2,
+            "grasp_rate": 0.029
           }
         },
-        "composition_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_confirmatory_composition_by_scenario_20260908d.json",
+        "composition_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_confirmatory_composition_by_scenario_20260908f.json",
         "confirmatory_lanes": [
           {
-            "completed": 8,
+            "attempt_id": "attempt0006",
+            "blocked": 0,
+            "completed": 39,
+            "lane_id": "c8m05",
+            "queued": 0,
+            "running": 0,
+            "state": "lane_complete_policy_reclaimed"
+          },
+          {
+            "attempt_id": "attempt0017",
+            "blocked": 0,
+            "completed": 38,
+            "lane_id": "c8m16",
+            "queued": 0,
+            "running": 0,
+            "state": "lane_complete_policy_reclaimed"
+          },
+          {
+            "attempt_id": "attempt0014",
+            "blocked": 0,
+            "completed": 38,
+            "lane_id": "c8m13",
+            "queued": 0,
+            "running": 0,
+            "state": "lane_complete_ledger_intact"
+          },
+          {
+            "attempt_id": "attempt0015",
+            "blocked": 0,
+            "completed": 38,
+            "lane_id": "c8m14",
+            "queued": 0,
+            "running": 0,
+            "state": "lane_complete_ledger_intact"
+          },
+          {
+            "attempt_id": "attempt0021",
+            "blocked": 0,
+            "completed": 15,
             "lane_id": "c8m00",
-            "note": "policy Running",
-            "queued": 30,
-            "state": "running"
+            "queued": 24,
+            "running": 1,
+            "state": "healthy_pair_running"
           },
           {
-            "completed": 0,
+            "attempt_id": "attempt0022",
+            "blocked": 0,
+            "completed": 6,
             "lane_id": "c8m01",
-            "note": "sim Running",
-            "queued": 38,
-            "state": "running"
+            "queued": 33,
+            "running": 1,
+            "state": "healthy_pair_running"
           },
           {
-            "completed": 0,
+            "attempt_id": "attempt0023",
+            "blocked": 0,
+            "completed": 6,
             "lane_id": "c8m02",
-            "note": "policy Running, sim Pending",
-            "queued": 38,
-            "state": "partial"
+            "queued": 33,
+            "running": 1,
+            "state": "healthy_pair_running"
           },
           {
-            "completed": 0,
+            "attempt_id": "attempt0024",
+            "blocked": 0,
+            "completed": 7,
             "lane_id": "c8m03",
-            "note": "policy Running, sim Pending",
-            "queued": 38,
-            "state": "partial"
+            "queued": 32,
+            "running": 1,
+            "state": "healthy_pair_running"
           },
           {
+            "attempt_id": "attempt0025",
+            "blocked": 0,
             "completed": 0,
             "lane_id": "c8m04",
-            "note": "policy Running, sim Pending",
-            "queued": 38,
-            "state": "partial"
+            "queued": 39,
+            "running": 1,
+            "state": "sim_first_warming_or_pending_policy"
           },
           {
-            "completed": 0,
-            "lane_id": "c8m05",
-            "queued": 38,
-            "state": "blocked"
-          },
-          {
+            "attempt_id": "attempt0026",
+            "blocked": 0,
             "completed": 0,
             "lane_id": "c8m06",
-            "queued": 38,
-            "state": "blocked"
+            "queued": 39,
+            "running": 1,
+            "state": "sim_first_warming_or_pending_policy"
           },
           {
+            "attempt_id": "attempt0027",
+            "blocked": 0,
             "completed": 0,
             "lane_id": "c8m07",
-            "queued": 38,
-            "state": "blocked"
+            "queued": 39,
+            "running": 1,
+            "state": "sim_first_warming_or_pending_policy"
           },
           {
+            "attempt_id": "attempt0028",
+            "blocked": 0,
             "completed": 0,
             "lane_id": "c8m08",
             "queued": 38,
-            "state": "blocked"
+            "running": 1,
+            "state": "sim_first_warming_or_pending_policy"
           },
           {
+            "attempt_id": "attempt0029",
+            "blocked": 0,
             "completed": 0,
             "lane_id": "c8m09",
             "queued": 38,
-            "state": "blocked"
+            "running": 1,
+            "state": "sim_first_warming_or_pending_policy"
           },
           {
-            "completed": 0,
+            "attempt_id": "attempt0037",
+            "blocked": 0,
+            "completed": 2,
             "lane_id": "c8m10",
-            "queued": 38,
-            "state": "blocked"
+            "queued": 36,
+            "running": 1,
+            "state": "healthy_pair_running"
           },
           {
+            "attempt_id": "attempt0031",
+            "blocked": 0,
             "completed": 0,
             "lane_id": "c8m11",
             "queued": 38,
-            "state": "blocked"
+            "running": 1,
+            "state": "sim_first_warming_or_pending_policy"
           },
           {
+            "attempt_id": "attempt0032",
+            "blocked": 0,
             "completed": 0,
             "lane_id": "c8m12",
             "queued": 38,
-            "state": "blocked"
+            "running": 1,
+            "state": "sim_first_warming_or_pending_policy"
           },
           {
-            "completed": 38,
-            "lane_id": "c8m13",
-            "note": "policy Running, sim Pending",
-            "queued": 0,
-            "state": "partial"
-          },
-          {
-            "completed": 38,
-            "lane_id": "c8m14",
-            "note": "policy Running, sim Completed (lane finishing)",
-            "queued": 0,
-            "state": "partial"
-          },
-          {
+            "attempt_id": "attempt0033",
+            "blocked": 0,
             "completed": 0,
             "lane_id": "c8m15",
             "queued": 38,
-            "state": "blocked"
+            "running": 1,
+            "state": "sim_first_warming_or_pending_policy"
           },
           {
-            "completed": 0,
-            "lane_id": "c8m16",
-            "queued": 38,
-            "state": "blocked"
-          },
-          {
-            "completed": 0,
+            "attempt_id": "attempt0034",
+            "blocked": 0,
+            "completed": 7,
             "lane_id": "c8m17",
-            "note": "policy Running, sim Pending",
-            "queued": 38,
-            "state": "partial"
+            "queued": 31,
+            "running": 1,
+            "state": "healthy_pair_running"
           },
           {
-            "completed": 0,
+            "attempt_id": "attempt0035",
+            "blocked": 0,
+            "completed": 6,
             "lane_id": "c8m18",
-            "note": "policy Running, sim Pending",
-            "queued": 38,
-            "state": "partial"
+            "queued": 32,
+            "running": 1,
+            "state": "healthy_pair_running"
           },
           {
-            "completed": 0,
+            "attempt_id": "attempt0036",
+            "blocked": 0,
+            "completed": 2,
             "lane_id": "c8m19",
-            "note": "retry Pending after policy-readiness timeout",
-            "queued": 38,
-            "state": "blocked"
+            "queued": 36,
+            "running": 1,
+            "state": "healthy_pair_running"
           }
         ],
-        "confound_check_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_destination_static_confound_check_20260908a.json",
-        "coverage_fraction": 0.109375,
-        "coverage_label": "84/768 confirmatory accepted; 768/768 dispatched",
+        "confound_check_uri": null,
+        "coverage_fraction": 0.265625,
+        "coverage_label": "204/768 confirmatory accepted; 768/768 dispatched",
         "dispatch_status": "dispatched",
         "dispatched_episodes": 768,
-        "execution_status_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908i.json",
+        "execution_status_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908p.json",
         "export_phase": "confirmatory",
         "export_status": "dispatched_partial",
-        "ledger_compile_id": "20260908d",
-        "ledger_compile_id_live_interim": "20260908e_interim_84",
-        "missing_episodes": 684,
-        "next_milestone_compile_at": 100,
+        "ledger_compile_id": "20260908f",
+        "ledger_compile_id_200_milestone": "20260908f",
+        "ledger_compile_id_400_pending": "pending_at_204_of_768",
+        "missing_episodes": 564,
         "ordering_holds": "insufficient_coverage",
+        "ordering_persistence": "destination_static ranked first at 84, 101, 161, and 204 milestones; magnitudes remain far below pilot \u2014 not claimed as significant",
         "planned_episodes": 768,
         "wave": "main"
       },
@@ -697,9 +769,108 @@
     "C5": "scientifically blocked: vertical IK reachability finding at seed 2100020000 scale 0.5; receipt 20260908_vertical_natural_grasp_live_control_finding_g3ngp20260908vp8.json",
     "C6": "achievable (768 episodes); dispatch pending qualification completion",
     "C7": "partial export (580/768 (75.5%)): timing-audit-backed policy failures on repaired-path confirmatory completes \u2014 574 no_grasp, 3 transport_incomplete, 2 wrong_goal_region, 1 support_or_containment_failed; 279 pre-repair episodes excluded",
-    "C8": "achievable (768 episodes); pilot G3 path gate passed 96/96 (g3c8p20260908f); G7 confirmatory receipt passed (g7c8q20260908a); 24 pilot episodes, G8 rehearsal, confirmatory runtime lock, and 768 dispatch blocked pending groot_bridge_widowx registration in launch_online_correction_v4.py (SUPPORTED_DROID_POLICIES) and second_stack live behavioral runner wiring"
+    "C8": "achievable (768 episodes); pilot G3 path gate passed 96/96 (g3c8p20260908f); G7 confirmatory receipt passed (g7c8q20260908a); 24 pilot episodes, G8 rehearsal, confirmatory runtime lock, and 768 dispatch blocked pending groot_bridge_widowx registration in launch_online_correction_v4.py (SUPPORTED_DROID_POLICIES) and second_stack live behavioral runner wiring",
+    "platform_x_scenario_grasp_interaction": "Cross-platform scenario grasp ordering contrast (C6 Isaac containment vs C8 WidowX SimplerEnv) is registered under platform_x_scenario_grasp_interaction with Holm scope registered_scenario_contrast_family_with_platform_stratum. At current partial widths (C6 56/768, C8 204/768) the estimand is insufficient_coverage_not_estimable. C6 ordering (original_sham highest at second consecutive milestone) inverts C8 ordering (destination_static ranks first at four milestones); a genuine platform-dependent interaction is reportable if it persists at full coverage \u2014 neither outcome is pre-committed."
   },
   "original_planned_policy_episodes": 17664,
+  "platform_scenario_grasp_contrast": [
+    {
+      "cohort": "confirmatory_partial",
+      "episodes": 19,
+      "estimability_note": "insufficient_coverage_not_estimable",
+      "family": "C6",
+      "fixture": "containment",
+      "grasp_achieved": 3,
+      "grasp_rate": 0.158,
+      "holm_scope": "registered_scenario_contrast_family_with_platform_stratum",
+      "pilot_grasp_rate": null,
+      "platform": "isaac_droid",
+      "platform_ordering": "original_sham > destination_static > move_stop (inverted vs C8 at n=56)",
+      "registered_estimand": "platform_x_scenario_grasp_interaction",
+      "scenario": "destination_static",
+      "scenario_rank_within_platform": 2
+    },
+    {
+      "cohort": "confirmatory_partial",
+      "episodes": 21,
+      "estimability_note": "insufficient_coverage_not_estimable",
+      "family": "C6",
+      "fixture": "containment",
+      "grasp_achieved": 2,
+      "grasp_rate": 0.095,
+      "holm_scope": "registered_scenario_contrast_family_with_platform_stratum",
+      "pilot_grasp_rate": null,
+      "platform": "isaac_droid",
+      "platform_ordering": "original_sham > destination_static > move_stop (inverted vs C8 at n=56)",
+      "registered_estimand": "platform_x_scenario_grasp_interaction",
+      "scenario": "move_stop",
+      "scenario_rank_within_platform": 3
+    },
+    {
+      "cohort": "confirmatory_partial",
+      "episodes": 16,
+      "estimability_note": "insufficient_coverage_not_estimable",
+      "family": "C6",
+      "fixture": "containment",
+      "grasp_achieved": 3,
+      "grasp_rate": 0.188,
+      "holm_scope": "registered_scenario_contrast_family_with_platform_stratum",
+      "pilot_grasp_rate": null,
+      "platform": "isaac_droid",
+      "platform_ordering": "original_sham > destination_static > move_stop (inverted vs C8 at n=56)",
+      "registered_estimand": "platform_x_scenario_grasp_interaction",
+      "scenario": "original_sham",
+      "scenario_rank_within_platform": 1
+    },
+    {
+      "cohort": "confirmatory_partial",
+      "episodes": 63,
+      "estimability_note": "insufficient_coverage_not_estimable",
+      "family": "C8",
+      "fixture": "second_stack",
+      "grasp_achieved": 4,
+      "grasp_rate": 0.063,
+      "holm_scope": "registered_scenario_contrast_family_with_platform_stratum",
+      "pilot_grasp_rate": 0.75,
+      "platform": "widowx_simplerenv",
+      "platform_ordering": "destination_static ranks first at milestones 84/101/161/204; move_stop \u2248 original_sham \u2014 pilot 3-way ordering not reproduced",
+      "registered_estimand": "platform_x_scenario_grasp_interaction",
+      "scenario": "destination_static",
+      "scenario_rank_within_platform": 1
+    },
+    {
+      "cohort": "confirmatory_partial",
+      "episodes": 72,
+      "estimability_note": "insufficient_coverage_not_estimable",
+      "family": "C8",
+      "fixture": "second_stack",
+      "grasp_achieved": 2,
+      "grasp_rate": 0.028,
+      "holm_scope": "registered_scenario_contrast_family_with_platform_stratum",
+      "pilot_grasp_rate": 0.5,
+      "platform": "widowx_simplerenv",
+      "platform_ordering": "destination_static ranks first at milestones 84/101/161/204; move_stop \u2248 original_sham \u2014 pilot 3-way ordering not reproduced",
+      "registered_estimand": "platform_x_scenario_grasp_interaction",
+      "scenario": "move_stop",
+      "scenario_rank_within_platform": 3
+    },
+    {
+      "cohort": "confirmatory_partial",
+      "episodes": 69,
+      "estimability_note": "insufficient_coverage_not_estimable",
+      "family": "C8",
+      "fixture": "second_stack",
+      "grasp_achieved": 2,
+      "grasp_rate": 0.029,
+      "holm_scope": "registered_scenario_contrast_family_with_platform_stratum",
+      "pilot_grasp_rate": 0.25,
+      "platform": "widowx_simplerenv",
+      "platform_ordering": "destination_static ranks first at milestones 84/101/161/204; move_stop \u2248 original_sham \u2014 pilot 3-way ordering not reproduced",
+      "registered_estimand": "platform_x_scenario_grasp_interaction",
+      "scenario": "original_sham",
+      "scenario_rank_within_platform": 2
+    }
+  ],
   "pre_repair_c7_excluded_episodes": 279,
   "schema_version": "v4-registered-campaign-blocked-scope-v1",
   "scientific_blockers": {

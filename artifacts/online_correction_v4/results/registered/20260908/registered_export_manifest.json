@@ -1,16 +1,16 @@
 {
   "blocked_scope": {
-    "bytes": 27975,
+    "bytes": 35504,
     "path": "artifacts/online_correction_v4/results/registered/20260908/blocked_scope.json",
-    "sha256": "22d738cda0982a39f6e2d44fa96975f7a9512af7272ca47794616457adf72e82"
+    "sha256": "b55063abf0790dcc39096fc5c5647dc7660e125ed3968d75d8cd26ccebfb6e21"
   },
   "c7_ledger_rows": 580,
   "c7_planned_episodes": 768,
   "c7_valid_success_records": 0,
   "evidence_memo": {
-    "bytes": 19766,
+    "bytes": 19937,
     "path": "artifacts/online_correction_v4/results/registered/20260908/paper/evidence_memo.json",
-    "sha256": "c37ac328c3c75dae03f9b0ee41df4b2f3b861ace16296c9162ed15aaeae039f9"
+    "sha256": "bc249fcb3c49fcfdc49f2b2978bc7f5acace83149dceac2004a2270ac27309bf"
   },
   "export_coverage": {
     "C6": {
@@ -57,16 +57,16 @@
       "path": "artifacts/online_correction_v4/results/registered/20260908/families/C8/20260908c8pilot"
     },
     "C8_confirmatory": {
-      "manifest_sha256": "0f1e4d760bd5f0e73b99d49013f1d83da98a8b9b0a82edf840e5aa14197c0dfe",
+      "manifest_sha256": "ffd920b57b75b10453c6cdda2f3423a1a182b4ef6a1718fd4a776b7b480bc4ed",
       "path": "artifacts/online_correction_v4/results/registered/20260908/families/C8/20260908c8confirmatory"
     }
   },
   "family_rollups": {
     "C6": {
       "confirmatory_dispatch": {
-        "accepted_valid_unique": 0,
+        "accepted_valid_unique": 56,
         "coverage_fraction": 0.0,
-        "coverage_label": "0/768 confirmatory accepted; 384/768 dispatched",
+        "coverage_label": "56/768 confirmatory accepted",
         "dispatch_receipt": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/create-c6confirm20260908f.json",
         "dispatch_status": "dispatched_pending_capacity",
         "dispatched_episodes": 384,
@@ -86,6 +86,7 @@
           "sim_pending": 21,
           "sim_running": 10
         },
+        "progress_receipt": "c6confirm20260908f",
         "render_root": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f",
         "runner_binding_resolution": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/runner_binding_resolution_20260908.json",
         "wave": "F"
@@ -107,174 +108,222 @@
     },
     "C8": {
       "confirmatory_dispatch": {
-        "accepted_valid_unique": 84,
-        "aggregate_outcomes": null,
+        "accepted_valid_unique": 204,
+        "accounting_verification_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_episode_accounting_verification_20260908e.json",
         "by_scenario": {
           "destination_static": {
-            "completed": 25,
-            "grasp_achieved": 2,
-            "no_grasp": 23,
-            "transport_incomplete": 2
+            "completed": 63,
+            "grasp_achieved": 4,
+            "grasp_rate": 0.063
           },
           "move_stop": {
-            "completed": 29,
-            "grasp_achieved": 1,
-            "no_grasp": 28,
-            "transport_incomplete": 1
+            "completed": 72,
+            "grasp_achieved": 2,
+            "grasp_rate": 0.028
           },
           "original_sham": {
-            "completed": 30,
-            "grasp_achieved": 0,
-            "no_grasp": 30,
-            "transport_incomplete": 0
+            "completed": 69,
+            "grasp_achieved": 2,
+            "grasp_rate": 0.029
           }
         },
-        "composition_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_confirmatory_composition_by_scenario_20260908d.json",
+        "composition_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_confirmatory_composition_by_scenario_20260908f.json",
         "confirmatory_lanes": [
           {
-            "completed": 8,
+            "attempt_id": "attempt0006",
+            "blocked": 0,
+            "completed": 39,
+            "lane_id": "c8m05",
+            "queued": 0,
+            "running": 0,
+            "state": "lane_complete_policy_reclaimed"
+          },
+          {
+            "attempt_id": "attempt0017",
+            "blocked": 0,
+            "completed": 38,
+            "lane_id": "c8m16",
+            "queued": 0,
+            "running": 0,
+            "state": "lane_complete_policy_reclaimed"
+          },
+          {
+            "attempt_id": "attempt0014",
+            "blocked": 0,
+            "completed": 38,
+            "lane_id": "c8m13",
+            "queued": 0,
+            "running": 0,
+            "state": "lane_complete_ledger_intact"
+          },
+          {
+            "attempt_id": "attempt0015",
+            "blocked": 0,
+            "completed": 38,
+            "lane_id": "c8m14",
+            "queued": 0,
+            "running": 0,
+            "state": "lane_complete_ledger_intact"
+          },
+          {
+            "attempt_id": "attempt0021",
+            "blocked": 0,
+            "completed": 15,
             "lane_id": "c8m00",
-            "note": "policy Running",
-            "queued": 30,
-            "state": "running"
+            "queued": 24,
+            "running": 1,
+            "state": "healthy_pair_running"
           },
           {
-            "completed": 0,
+            "attempt_id": "attempt0022",
+            "blocked": 0,
+            "completed": 6,
             "lane_id": "c8m01",
-            "note": "sim Running",
-            "queued": 38,
-            "state": "running"
+            "queued": 33,
+            "running": 1,
+            "state": "healthy_pair_running"
           },
           {
-            "completed": 0,
+            "attempt_id": "attempt0023",
+            "blocked": 0,
+            "completed": 6,
             "lane_id": "c8m02",
-            "note": "policy Running, sim Pending",
-            "queued": 38,
-            "state": "partial"
+            "queued": 33,
+            "running": 1,
+            "state": "healthy_pair_running"
           },
           {
-            "completed": 0,
+            "attempt_id": "attempt0024",
+            "blocked": 0,
+            "completed": 7,
             "lane_id": "c8m03",
-            "note": "policy Running, sim Pending",
-            "queued": 38,
-            "state": "partial"
+            "queued": 32,
+            "running": 1,
+            "state": "healthy_pair_running"
           },
           {
+            "attempt_id": "attempt0025",
+            "blocked": 0,
             "completed": 0,
             "lane_id": "c8m04",
-            "note": "policy Running, sim Pending",
-            "queued": 38,
-            "state": "partial"
+            "queued": 39,
+            "running": 1,
+            "state": "sim_first_warming_or_pending_policy"
           },
           {
-            "completed": 0,
-            "lane_id": "c8m05",
-            "queued": 38,
-            "state": "blocked"
-          },
-          {
+            "attempt_id": "attempt0026",
+            "blocked": 0,
             "completed": 0,
             "lane_id": "c8m06",
-            "queued": 38,
-            "state": "blocked"
+            "queued": 39,
+            "running": 1,
+            "state": "sim_first_warming_or_pending_policy"
           },
           {
+            "attempt_id": "attempt0027",
+            "blocked": 0,
             "completed": 0,
             "lane_id": "c8m07",
-            "queued": 38,
-            "state": "blocked"
+            "queued": 39,
+            "running": 1,
+            "state": "sim_first_warming_or_pending_policy"
           },
           {
+            "attempt_id": "attempt0028",
+            "blocked": 0,
             "completed": 0,
             "lane_id": "c8m08",
             "queued": 38,
-            "state": "blocked"
+            "running": 1,
+            "state": "sim_first_warming_or_pending_policy"
           },
           {
+            "attempt_id": "attempt0029",
+            "blocked": 0,
             "completed": 0,
             "lane_id": "c8m09",
             "queued": 38,
-            "state": "blocked"
+            "running": 1,
+            "state": "sim_first_warming_or_pending_policy"
           },
           {
-            "completed": 0,
+            "attempt_id": "attempt0037",
+            "blocked": 0,
+            "completed": 2,
             "lane_id": "c8m10",
-            "queued": 38,
-            "state": "blocked"
+            "queued": 36,
+            "running": 1,
+            "state": "healthy_pair_running"
           },
           {
+            "attempt_id": "attempt0031",
+            "blocked": 0,
             "completed": 0,
             "lane_id": "c8m11",
             "queued": 38,
-            "state": "blocked"
+            "running": 1,
+            "state": "sim_first_warming_or_pending_policy"
           },
           {
+            "attempt_id": "attempt0032",
+            "blocked": 0,
             "completed": 0,
             "lane_id": "c8m12",
             "queued": 38,
-            "state": "blocked"
+            "running": 1,
+            "state": "sim_first_warming_or_pending_policy"
           },
           {
-            "completed": 38,
-            "lane_id": "c8m13",
-            "note": "policy Running, sim Pending",
-            "queued": 0,
-            "state": "partial"
-          },
-          {
-            "completed": 38,
-            "lane_id": "c8m14",
-            "note": "policy Running, sim Completed (lane finishing)",
-            "queued": 0,
-            "state": "partial"
-          },
-          {
+            "attempt_id": "attempt0033",
+            "blocked": 0,
             "completed": 0,
             "lane_id": "c8m15",
             "queued": 38,
-            "state": "blocked"
+            "running": 1,
+            "state": "sim_first_warming_or_pending_policy"
           },
           {
-            "completed": 0,
-            "lane_id": "c8m16",
-            "queued": 38,
-            "state": "blocked"
-          },
-          {
-            "completed": 0,
+            "attempt_id": "attempt0034",
+            "blocked": 0,
+            "completed": 7,
             "lane_id": "c8m17",
-            "note": "policy Running, sim Pending",
-            "queued": 38,
-            "state": "partial"
+            "queued": 31,
+            "running": 1,
+            "state": "healthy_pair_running"
           },
           {
-            "completed": 0,
+            "attempt_id": "attempt0035",
+            "blocked": 0,
+            "completed": 6,
             "lane_id": "c8m18",
-            "note": "policy Running, sim Pending",
-            "queued": 38,
-            "state": "partial"
+            "queued": 32,
+            "running": 1,
+            "state": "healthy_pair_running"
           },
           {
-            "completed": 0,
+            "attempt_id": "attempt0036",
+            "blocked": 0,
+            "completed": 2,
             "lane_id": "c8m19",
-            "note": "retry Pending after policy-readiness timeout",
-            "queued": 38,
-            "state": "blocked"
+            "queued": 36,
+            "running": 1,
+            "state": "healthy_pair_running"
           }
         ],
-        "confound_check_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_destination_static_confound_check_20260908a.json",
-        "coverage_fraction": 0.109375,
-        "coverage_label": "84/768 confirmatory accepted; 768/768 dispatched",
+        "confound_check_uri": null,
+        "coverage_fraction": 0.265625,
+        "coverage_label": "204/768 confirmatory accepted; 768/768 dispatched",
         "dispatch_status": "dispatched",
         "dispatched_episodes": 768,
-        "execution_status_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908i.json",
+        "execution_status_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908p.json",
         "export_phase": "confirmatory",
         "export_status": "dispatched_partial",
-        "ledger_compile_id": "20260908d",
-        "ledger_compile_id_live_interim": "20260908e_interim_84",
-        "missing_episodes": 684,
-        "next_milestone_compile_at": 100,
+        "ledger_compile_id": "20260908f",
+        "ledger_compile_id_200_milestone": "20260908f",
+        "ledger_compile_id_400_pending": "pending_at_204_of_768",
+        "missing_episodes": 564,
         "ordering_holds": "insufficient_coverage",
+        "ordering_persistence": "destination_static ranked first at 84, 101, 161, and 204 milestones; magnitudes remain far below pilot \u2014 not claimed as significant",
         "planned_episodes": 768,
         "wave": "main"
       },
@@ -303,11 +352,6 @@
   },
   "horizontal_slice": "artifacts/online_correction_v4/results/horizontal_geometry_repair_v2/20260908",
   "outcome_composition": {
-    "C6": {
-      "no_grasp": 18,
-      "transport_incomplete": 3,
-      "wrong_goal_region": 3
-    },
     "C7": {
       "no_grasp": 574,
       "support_or_containment_failed": 1,
@@ -321,21 +365,31 @@
   },
   "output_root": "artifacts/online_correction_v4/results/registered/20260908",
   "results_md": {
-    "bytes": 7671,
+    "bytes": 8319,
     "path": "artifacts/online_correction_v4/results/registered/20260908/paper/RESULTS.md",
-    "sha256": "caaed81afa0596eea7be0216bb0b70de7d4f76e0277b4b7279f735752d3d2d34"
+    "sha256": "09e432596153273ece478cd24bea6b0bbcbe14f055c36a29cdf380a852fee334"
   },
   "schema_version": "v4-registered-campaign-export-manifest-v1",
   "tables": {
     "audit_report.json": {
-      "bytes": 19083,
+      "bytes": 21941,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/audit_report.json",
-      "sha256": "6867ddc996575abb517484774d08e7a5dcafe3043301a89faaa3719ad1e9b75f"
+      "sha256": "a886d49ff6e47b65b6758261da88d4075c84e046c2bc53bb73b78150a7fa9530"
     },
     "blocked_families.csv": {
       "bytes": 1242,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/blocked_families.csv",
       "sha256": "2602f85fc8ea41fd217d5ca98f926daf2f145cbe1293aec0272768135dc2413a"
+    },
+    "c6_confirmatory_grasp_by_scenario.csv": {
+      "bytes": 296,
+      "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c6_confirmatory_grasp_by_scenario.csv",
+      "sha256": "53106c9c0ebf4da9d6e3728048a2f716264041a59a2d5d43f3888d52c30fb601"
+    },
+    "c6_confirmatory_outcome_composition.csv": {
+      "bytes": 79,
+      "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c6_confirmatory_outcome_composition.csv",
+      "sha256": "ca66264578abcca878d8e6605377a518bac42cb45d98e22f647a1e7cf09c9198"
     },
     "c6_outcome_composition.csv": {
       "bytes": 79,
@@ -358,14 +412,14 @@
       "sha256": "1da653b9c84ee89d50c93620aa2dd23b48025df539c3eec92f19566a0d1712fd"
     },
     "c8_confirmatory_grasp_by_scenario.csv": {
-      "bytes": 338,
+      "bytes": 341,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c8_confirmatory_grasp_by_scenario.csv",
-      "sha256": "ee162580958b10b9bfcdbbf8d003d6f34c9e73b4c0bff9366383603811294925"
+      "sha256": "bb6491139f9f3771dcf6cb1f8a7f21faf5cdbe857a753204ec8ddc7ad5133b82"
     },
     "c8_confirmatory_outcome_composition.csv": {
-      "bytes": 58,
+      "bytes": 59,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c8_confirmatory_outcome_composition.csv",
-      "sha256": "9677c3261e70fa289914e51436b7bfbdf5fd5cacd414dd21e7653fb9b83f0d8a"
+      "sha256": "d907575cbd9cfc6c47d27f947d5ebe80aa8150f8941bf189b8dc7f49b6a43eb5"
     },
     "c8_destination_static_confound_check.csv": {
       "bytes": 461,
@@ -403,14 +457,19 @@
       "sha256": "2d006bcf8528932e59c66d4c8f9f56b30a91787a97ece23ff0fe662b87f79da2"
     },
     "family_coverage.csv": {
-      "bytes": 567,
+      "bytes": 672,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/family_coverage.csv",
-      "sha256": "8972c287332cbeb94d7e5d3386c6e0bb8973e6f14e490ad7db93ddbfc9da8f50"
+      "sha256": "673bccc5d8ec59a9d4ea2acbe9c14d55991e0bd16942f7e346193a0b0bb765bf"
+    },
+    "platform_scenario_grasp_contrast.csv": {
+      "bytes": 2081,
+      "path": "artifacts/online_correction_v4/results/registered/20260908/tables/platform_scenario_grasp_contrast.csv",
+      "sha256": "79adb4410ddcc186c5d1ce696cd401ec9d59a3c39fd2f6f82e449a341e86849f"
     },
     "results_manifest": {
-      "bytes": 13534,
+      "bytes": 13706,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/results_manifest.json",
-      "sha256": "e0614f8f84b8467c6d9076b5334cafc443816fb3a86ac83c63792ffcdd5bfb45"
+      "sha256": "bd6644eae2e31a9cd04fbd4a8e767267642104739a60e2a3393b4cb49cc3a5c1"
     },
     "scale_ladder_squeeze.csv": {
       "bytes": 565,
@@ -418,9 +477,9 @@
       "sha256": "9fd28c21eb075ee5baf5460cdb4342b5651dcaae987cda6d2e74b30067ad1062"
     },
     "scope_summary.csv": {
-      "bytes": 473,
+      "bytes": 460,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/scope_summary.csv",
-      "sha256": "d8f0371fb3fa2ec564e4b6657ddb1e11c44654bea98bce9deb58d4fa89af665b"
+      "sha256": "a5c9da0a4b73a6e83e8ec148f1bbeb37bdfd0faf28938a7956f9dbca1241eb69"
     }
   },
   "tag": "20260908"

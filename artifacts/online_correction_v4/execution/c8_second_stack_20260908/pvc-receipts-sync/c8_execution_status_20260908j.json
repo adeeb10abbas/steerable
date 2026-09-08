@@ -1,0 +1,71 @@
+{
+  "schema_version": "v4-c8-execution-status-receipt-v1",
+  "observed_at_utc": "2026-09-08T05:30:00Z",
+  "confirmatory_ledger_compile_id_50_milestone": "20260908d",
+  "confirmatory_ledger_compile_id_100_milestone": null,
+  "next_milestone_compile_at": 100,
+  "confirmatory_progress": {
+    "valid": 84,
+    "remaining": 684,
+    "by_scenario": {
+      "original_sham": {"completed": 30, "no_grasp": 30, "transport_incomplete": 0, "grasp_achieved": 0, "grasp_rate": 0.0},
+      "destination_static": {"completed": 25, "no_grasp": 23, "transport_incomplete": 2, "grasp_achieved": 2, "grasp_rate": 0.08},
+      "move_stop": {"completed": 29, "no_grasp": 28, "transport_incomplete": 1, "grasp_achieved": 1, "grasp_rate": 0.0345}
+    },
+    "pilot_grasp_rates_directional_reference": {
+      "destination_static": 0.75,
+      "move_stop": 0.50,
+      "original_sham": 0.25
+    },
+    "ordering_holds": "insufficient_coverage",
+    "ordering_direction": "destination_static (8.0%) > move_stop (3.5%) > original_sham (0.0%) — directionally consistent with pilot, not testable"
+  },
+  "policy_sim_asymmetry_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_policy_sim_asymmetry_coordination_20260908a.json",
+  "simulator_halves_placed": {
+    "any_new_sim_running": false,
+    "sim_running_count": 1,
+    "sim_running_lane": "c8m01",
+    "sim_running_productive": false,
+    "note": "c8m01 sim is orphan (policy job Failed); 17 sim pods still Pending"
+  },
+  "confirmatory_lanes": [
+    {"lane_id": "c8m00", "completed": 8, "queued": 30, "state": "orphan_policy", "note": "policy Running, sim job Failed"},
+    {"lane_id": "c8m01", "completed": 0, "queued": 38, "state": "orphan_sim", "note": "sim Running 42m+, policy Failed, 0 episodes"},
+    {"lane_id": "c8m02", "completed": 0, "queued": 38, "state": "partial", "note": "policy Running, sim Pending"},
+    {"lane_id": "c8m03", "completed": 0, "queued": 38, "state": "partial", "note": "policy Running, sim Pending"},
+    {"lane_id": "c8m04", "completed": 0, "queued": 38, "state": "partial", "note": "policy Running, sim Pending"},
+    {"lane_id": "c8m05", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m06", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m07", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m08", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m09", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m10", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m11", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m12", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m13", "completed": 38, "queued": 0, "state": "partial", "note": "policy Running, sim Pending"},
+    {"lane_id": "c8m14", "completed": 38, "queued": 0, "state": "complete"},
+    {"lane_id": "c8m15", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m16", "completed": 0, "queued": 38, "state": "blocked"},
+    {"lane_id": "c8m17", "completed": 0, "queued": 38, "state": "partial", "note": "policy Running, sim Pending"},
+    {"lane_id": "c8m18", "completed": 0, "queued": 38, "state": "partial", "note": "policy Running, sim Pending"},
+    {"lane_id": "c8m19", "completed": 0, "queued": 38, "state": "blocked"}
+  ],
+  "failure_mode_verification": {
+    "lanes_with_episodes": ["c8m00", "c8m13", "c8m14"],
+    "observed_outcomes": ["no_grasp", "transport_incomplete"],
+    "lanes_not_yet_executed": 17,
+    "regressions": "none behavioral"
+  },
+  "agent_c_hooks": {
+    "c8_confirmatory_ledger_compile_id_50": "20260908d",
+    "c8_confirmatory_ledger_compile_id_100": "pending — reserve 20260908e at >=100 valid",
+    "status_label": "confirmatory_stalled_84_of_768_policy_sim_asymmetry"
+  },
+  "blockers": [
+    {"id": "100_milestone", "impact": "84/768 valid, throughput flat 3+ min", "action": "Recompile as 20260908e when count >= 100"},
+    {"id": "policy_sim_asymmetry", "impact": "8 policy Running vs 1 orphan sim Running vs 17 sim Pending", "action": "Capacity agent: sim-first placement ordering + orphan half teardown (see c8_policy_sim_asymmetry_coordination_20260908a.json)"},
+    {"id": "c7_tail", "impact": "~188 C7 episodes remain on shared A40 pool", "action": "Bounded wait; C7 completion releases full pool (~160h -> ~16h for C8 768)"},
+    {"id": "ordering", "impact": "84/768 per-scenario n", "action": "insufficient_coverage — hold estimability line"}
+  ],
+  "source_commit": "02dcf0aa"
+}

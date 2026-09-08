@@ -1,0 +1,50 @@
+{
+  "schema_version": "v4-c8-policy-sim-asymmetry-coordination-v1",
+  "observed_at_utc": "2026-09-08T05:30:00Z",
+  "requestor": "C8 Agent A (lane rendering owner)",
+  "coordinate_with": ["capacity agent"],
+  "problem": "Anti-affinity spread places policy halves but simulator halves remain Pending; scattered 1-GPU slots are consumed by policies while simulators wait",
+  "asymmetry_counts": {
+    "policy_running": 8,
+    "sim_running": 1,
+    "sim_pending": 17,
+    "total_c8_pending_pods": 28,
+    "failed_scheduling_reason": "Insufficient nvidia.com/gpu on 20-21 A40 nodes (fragmentation)"
+  },
+  "orphan_half_pairs": [
+    {
+      "lane": "c8m00",
+      "policy": "Running (3h+)",
+      "sim": "Job Failed BackoffLimitExceeded (pod cleaned up)",
+      "impact": "Policy GPU slot consumed; lane produced 8 episodes then stalled"
+    },
+    {
+      "lane": "c8m01",
+      "policy": "Job Failed BackoffLimitExceeded",
+      "sim": "Running 42m+ on hgc186, zero behavioral completes",
+      "impact": "Orphan sim burns 1 A40 GPU with no policy endpoint; pure waste"
+    }
+  ],
+  "partial_pairs_policy_only": ["c8m02", "c8m03", "c8m04", "c8m17", "c8m18"],
+  "fully_blocked_lanes": ["c8m05", "c8m06", "c8m07", "c8m08", "c8m09", "c8m10", "c8m11", "c8m12", "c8m15", "c8m16", "c8m19"],
+  "productive_lanes": {
+    "c8m13": {"completed": 38, "state": "policy Running, sim Pending"},
+    "c8m14": {"completed": 38, "state": "lane complete (sim Completed)"}
+  },
+  "proposed_fix_for_capacity_agent": {
+    "primary": "Change placement ordering: schedule simulator half FIRST on scattered 1-GPU slots, defer policy until sim is Running (or use paired co-scheduling that reserves both GPUs atomically)",
+    "secondary": "Tear down orphan halves (c8m01 sim-only, c8m00 policy-only) to reclaim wasted slots for pending sim pods",
+    "tertiary": "Prefer sim spread over policy spread under v4-gpu-spread-family=c8-a40 when only single slots available",
+    "do_not": "C8 will not re-render lanes independently; coordinate placement change through capacity agent"
+  },
+  "c7_tail_context": {
+    "c7_episodes_remaining_estimate": 188,
+    "impact_on_c8": "C7 completion releases full 40-GPU A40 pool; C8 768 episodes drops from ~160h serial to ~16h at 20 parallel lane pairs",
+    "bounded_wait": true
+  },
+  "c8_confirmatory_progress": {
+    "valid": 84,
+    "milestone_100_compile_id": "20260908e",
+    "milestone_100_status": "pending_16_episodes_short_throughput_stalled_on_sim_halves"
+  }
+}

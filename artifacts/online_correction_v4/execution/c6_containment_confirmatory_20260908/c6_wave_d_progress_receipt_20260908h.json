@@ -1,43 +1,66 @@
 {
-  "schema_version": "v4-c6-wave-progress-receipt-v1",
-  "compiled_at_utc": "2026-09-08T04:45:00Z",
-  "wave_id": "c6confirm20260908f",
-  "wave_label": "D",
-  "confirmatory_terminals": 77,
-  "milestones": {
-    "32": "passed",
-    "128": "pending",
-    "384": "pending"
+  "compiled_at_utc": "2026-09-08T08:51:15Z",
+  "confirmatory_terminals": 238,
+  "grasp_definition_notes": {
+    "c6_rule": "failure_label != no_grasp (shared scorer with C8)",
+    "c8_wrong_goal_region_asymmetry": "C8 observed zero wrong_goal_region in 407 episodes; C6 has nonzero wgr \u2014 use ti_only for cross-platform magnitude comparison",
+    "transport_incomplete_only": "failure_label == transport_incomplete (C8-comparable label set)"
   },
   "grasp_rate_by_scenario": {
     "destination_static": {
-      "episodes": 25,
-      "grasp_rate_c6_rule_pct": 20.0,
-      "grasp_rate_transport_incomplete_only_pct": 20.0,
-      "wrong_goal_region_share_pct": 0.0,
-      "c8_reference_at_161_ti_only_pct": 7.8
+      "episodes": 77,
+      "grasp_achieved_c6_rule": 21,
+      "grasp_achieved_transport_incomplete_only": 19,
+      "grasp_rate_c6_rule_pct": 27.3,
+      "grasp_rate_transport_incomplete_only_pct": 24.7,
+      "no_grasp": 56,
+      "outcomes": {
+        "no_grasp": 56,
+        "transport_incomplete": 19,
+        "wrong_goal_region": 2
+      },
+      "wrong_goal_region_count": 2,
+      "wrong_goal_region_share_pct": 2.6
     },
     "move_stop": {
-      "episodes": 28,
-      "grasp_rate_c6_rule_pct": 10.7,
-      "grasp_rate_transport_incomplete_only_pct": 10.7,
-      "wrong_goal_region_share_pct": 0.0,
-      "c8_reference_at_161_ti_only_pct": 3.6
+      "episodes": 76,
+      "grasp_achieved_c6_rule": 13,
+      "grasp_achieved_transport_incomplete_only": 12,
+      "grasp_rate_c6_rule_pct": 17.1,
+      "grasp_rate_transport_incomplete_only_pct": 15.8,
+      "no_grasp": 63,
+      "outcomes": {
+        "no_grasp": 63,
+        "transport_incomplete": 12,
+        "wrong_goal_region": 1
+      },
+      "wrong_goal_region_count": 1,
+      "wrong_goal_region_share_pct": 1.3
     },
     "original_sham": {
-      "episodes": 24,
-      "grasp_rate_c6_rule_pct": 16.7,
-      "grasp_rate_transport_incomplete_only_pct": 12.5,
-      "wrong_goal_region_share_pct": 4.2,
-      "c8_reference_at_161_ti_only_pct": 1.8
+      "episodes": 85,
+      "grasp_achieved_c6_rule": 18,
+      "grasp_achieved_transport_incomplete_only": 16,
+      "grasp_rate_c6_rule_pct": 21.2,
+      "grasp_rate_transport_incomplete_only_pct": 18.8,
+      "no_grasp": 67,
+      "outcomes": {
+        "no_grasp": 67,
+        "transport_incomplete": 16,
+        "wrong_goal_region": 2
+      },
+      "wrong_goal_region_count": 2,
+      "wrong_goal_region_share_pct": 2.4
     }
   },
-  "grasp_definition_notes": {
-    "c6_rule": "failure_label != no_grasp",
-    "c8_comparable": "failure_label == transport_incomplete only (C8 has zero wrong_goal_region across 407 eps per Agent A)",
-    "agent_a_alignment": "original_sham C6-rule 16.7% vs TI-only 12.5% at n=77; gap vs C8 survives alignment"
+  "milestones": {
+    "128": "passed",
+    "32": "passed",
+    "384": "pending"
   },
-  "ordering_note": "At n=77 ordering SHIFTED from prior milestones: destination_static leads (20.0% C6-rule / 20.0% TI-only), original_sham second (16.7% / 12.5%), move_stop last (10.7%). Earlier n=56/63 had original_sham first — may be small-n noise converging toward C8 ordering (destination_static > move_stop ≈ original_sham). Report raw ordering at each milestone without smoothing.",
-  "healthy_pairs_observed": 9,
-  "supersedes": "c6_wave_d_progress_receipt_20260908g.json"
+  "ordering_note": "At n=238, C6 rule ordering: destination_static (27.3%) > original_sham (21.2%) > move_stop (17.1%). Also report transport_incomplete_only for C8-comparable cells (C8 has zero wrong_goal_region in 407 eps). Per-cell n not estimable until 384; Agent C platform\u00d7scenario table remains not estimable.",
+  "schema_version": "v4-c6-wave-progress-receipt-v1",
+  "supersedes": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/c6_wave_d_progress_receipt_20260908g.json",
+  "wave_id": "c6confirm20260908f",
+  "wave_label": "D"
 }

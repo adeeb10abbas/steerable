@@ -1,0 +1,71 @@
+{
+  "attempt_id": "attempt0625",
+  "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-c7-final-tail-20260908/c7m11-attempt0625-a10080-policy_a40-simulator",
+  "dispatch_outcome": {
+    "c7_gate_actions": [],
+    "job_actions": [
+      {
+        "applied": true,
+        "job": "v4-c7m11-attempt0625-6aaa83a6b8-sim",
+        "message": "job.batch/v4-c7m11-attempt0625-6aaa83a6b8-sim created"
+      },
+      {
+        "applied": true,
+        "job": "v4-c7m11-attempt0625-6aaa83a6b8-policy",
+        "message": "job.batch/v4-c7m11-attempt0625-6aaa83a6b8-policy created"
+      }
+    ],
+    "status": "dispatched",
+    "teardown_inventory": {
+      "kube_context": "prod-dcwi-warrenq1-vmkub007",
+      "objects": [
+        {
+          "kind": "ConfigMap",
+          "labels": {
+            "v4-attempt-id": "attempt0625",
+            "v4-config-sha": "6aaa83a6b88a9e66182572544b406dfc",
+            "v4-lane-id": "c7m11"
+          },
+          "name": "v4-c7m11-attempt0625-6aaa83a6b8-launch",
+          "namespace": "211247-prod"
+        },
+        {
+          "kind": "Job",
+          "labels": {
+            "v4-attempt-id": "attempt0625",
+            "v4-config-sha": "6aaa83a6b88a9e66182572544b406dfc",
+            "v4-lane-id": "c7m11",
+            "v4-lane-role": "policy"
+          },
+          "name": "v4-c7m11-attempt0625-6aaa83a6b8-policy",
+          "namespace": "211247-prod"
+        },
+        {
+          "kind": "Job",
+          "labels": {
+            "v4-attempt-id": "attempt0625",
+            "v4-config-sha": "6aaa83a6b88a9e66182572544b406dfc",
+            "v4-lane-id": "c7m11",
+            "v4-lane-role": "simulator"
+          },
+          "name": "v4-c7m11-attempt0625-6aaa83a6b8-sim",
+          "namespace": "211247-prod"
+        },
+        {
+          "kind": "Service",
+          "labels": {
+            "v4-attempt-id": "attempt0625",
+            "v4-config-sha": "6aaa83a6b88a9e66182572544b406dfc",
+            "v4-lane-id": "c7m11",
+            "v4-lane-role": "policy"
+          },
+          "name": "v4-c7m11-attempt0625-6aaa83a6b8-policy",
+          "namespace": "211247-prod"
+        }
+      ]
+    }
+  },
+  "episode_id": "online_correction_v4-C7-b046-105254cc61a67588",
+  "lane_id": "c7m11",
+  "schema_version": "v4-c7-final-tail-dispatch-v1"
+}

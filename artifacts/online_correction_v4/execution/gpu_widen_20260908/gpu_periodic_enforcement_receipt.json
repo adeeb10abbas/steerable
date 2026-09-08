@@ -1,22 +1,22 @@
 {
   "a40_routing": {
     "a40_pool": {
-      "c8_gpus_observed": 16,
-      "free_estimate": 14,
+      "c8_gpus_observed": 0,
+      "free_estimate": 40,
       "size": 40,
-      "used": 26
+      "used": 0
     },
-    "c6_sim_ready_policy_waiting": 0,
-    "c7_a40_sims_reserved": 10,
+    "c6_sim_ready_policy_waiting": 13,
+    "c7_a40_sims_reserved": 0,
     "c7_active_lanes_for_estimate": 14,
     "c7_r6_reshard_lanes_observed": 14,
     "c7_tail_lanes_legacy": 4,
-    "c8_authorized_lane_pairs": 15,
-    "c8_healthy_pairs_observed": 8,
+    "c8_authorized_lane_pairs": 20,
+    "c8_healthy_pairs_observed": 0,
     "c8_sim_ready_policy_waiting": 0,
     "decision": "split_a40_r6_reshard_plus_c8_ramp",
     "reshard_feasible": "yes_agent_b_rendered_r6_dispatched",
-    "reshard_note": "Agent B r6 resharding live on 14 lane identities (attempt0611-0624). Remaining A40 routed to C8 up to 15 pairs."
+    "reshard_note": "Agent B r6 resharding live on 14 lane identities (attempt0611-0624). Remaining A40 routed to C8 up to 20 pairs."
   },
   "automation": {
     "allow_redispatch": false,
@@ -45,14 +45,14 @@
   "loop_active": true,
   "loop_pid": 95492,
   "namespace": "211247-prod",
-  "observed_at_utc": "2026-09-08T04:01:12Z",
+  "observed_at_utc": "2026-09-08T11:41:18Z",
   "pool_utilization": {
-    "pending_gpu_pods": 4,
+    "pending_gpu_pods": 21,
     "pool_free_estimate": {
-      "NVIDIA-A100-SXM4-40GB": 58,
-      "NVIDIA-A100-SXM4-80GB": 95,
-      "NVIDIA-A40": 14,
-      "NVIDIA-B200": 34
+      "NVIDIA-A100-SXM4-40GB": 40,
+      "NVIDIA-A100-SXM4-80GB": 81,
+      "NVIDIA-A40": 40,
+      "NVIDIA-B200": 29
     },
     "pool_sizes": {
       "NVIDIA-A100-SXM4-40GB": 64,
@@ -61,26 +61,24 @@
       "NVIDIA-B200": 40
     },
     "running_gpus_by_family_role": {
-      "c6_policy": 6,
-      "c6_sim": 6,
-      "c7_sim": 10,
-      "c8_policy": 8,
-      "c8_sim": 8
+      "c6_policy": 11,
+      "c6_sim": 24,
+      "c7_policy": 14
     },
     "running_gpus_by_product": {
-      "NVIDIA-A100-SXM4-40GB": 6,
-      "NVIDIA-A40": 26,
-      "NVIDIA-B200": 6
+      "NVIDIA-A100-SXM4-40GB": 24,
+      "NVIDIA-A100-SXM4-80GB": 14,
+      "NVIDIA-B200": 11
     }
   },
   "protect_list_path": "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_sweep_protect_list_20260908_phase2.json",
   "scheduling_state": {
     "c6": {
-      "healthy_pairs": 6,
+      "healthy_pairs": 11,
       "lane_prefix": "c6m",
-      "partial_pairs": 4,
+      "partial_pairs": 21,
       "pending_pairs": 0,
-      "total_lanes_seen": 10
+      "total_lanes_seen": 32
     },
     "c7": {
       "healthy_pairs": 0,
@@ -90,9 +88,9 @@
       "total_lanes_seen": 14
     },
     "c8": {
-      "healthy_pairs": 8,
+      "healthy_pairs": 0,
       "lane_prefix": "c8m",
-      "partial_pairs": 12,
+      "partial_pairs": 20,
       "pending_pairs": 0,
       "total_lanes_seen": 20
     }
@@ -105,16 +103,16 @@
         "policy_id": "c8_a40_spread",
         "scheduling_state_after": {
           "c6": {
-            "healthy_pairs": 6,
+            "healthy_pairs": 11,
             "lane_prefix": "c6m",
-            "partial_pairs": 4,
+            "partial_pairs": 21,
             "pending_pairs": 0,
-            "total_lanes_seen": 10
+            "total_lanes_seen": 32
           },
           "c8": {
-            "healthy_pairs": 8,
+            "healthy_pairs": 0,
             "lane_prefix": "c8m",
-            "partial_pairs": 12,
+            "partial_pairs": 20,
             "pending_pairs": 0,
             "total_lanes_seen": 20
           }
@@ -127,16 +125,16 @@
         "policy_id": "c6_a10040_spread",
         "scheduling_state_after": {
           "c6": {
-            "healthy_pairs": 6,
+            "healthy_pairs": 11,
             "lane_prefix": "c6m",
-            "partial_pairs": 4,
+            "partial_pairs": 21,
             "pending_pairs": 0,
-            "total_lanes_seen": 10
+            "total_lanes_seen": 32
           },
           "c8": {
-            "healthy_pairs": 8,
+            "healthy_pairs": 0,
             "lane_prefix": "c8m",
-            "partial_pairs": 12,
+            "partial_pairs": 20,
             "pending_pairs": 0,
             "total_lanes_seen": 20
           }
@@ -150,18 +148,19 @@
   },
   "sweep_dry_run": {
     "finished_lane_orphan_policies": [],
-    "jobs_would_delete": 10,
+    "jobs_would_delete": 15,
     "reclaimed_gpus_would_be": {
-      "NVIDIA-A40": 10
+      "NVIDIA-A100-SXM4-40GB": 13,
+      "NVIDIA-A100-SXM4-80GB": 1
     }
   },
   "wall_clock_estimates": {
-    "c6_confirmatory_hours_at_healthy_pairs": 53.3,
+    "c6_confirmatory_hours_at_healthy_pairs": 29.1,
     "c7_tail_188_hours_at_4_lanes": 19.6,
     "c7_tail_188_hours_at_active_lanes": 5.6,
     "c7_tail_188_hours_if_r6_14_lanes": 5.6,
-    "c8_remaining_hours_at_current_healthy": 29.4,
-    "c8_remaining_hours_at_max_authorized_pairs": 15.7,
+    "c8_remaining_hours_at_current_healthy": 235.0,
+    "c8_remaining_hours_at_max_authorized_pairs": 11.8,
     "c8_remaining_hours_if_c7_r6_14_lanes": 18.1
   }
 }

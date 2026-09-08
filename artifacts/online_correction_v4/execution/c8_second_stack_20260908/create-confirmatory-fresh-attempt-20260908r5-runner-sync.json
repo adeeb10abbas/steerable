@@ -1,0 +1,730 @@
+{
+  "complete_lanes_skipped": [
+    "c8m13",
+    "c8m14"
+  ],
+  "dispatch_outcomes": [
+    {
+      "attempt_id": "attempt0054",
+      "bundle_root": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m04-attempt0054-a40-single-container-groot-bridge",
+      "job_actions": [
+        {
+          "action": "apply_rendered_job",
+          "applied": true,
+          "job": "v4-c8m04-attempt0054-1b834a4206-sim",
+          "lane_id": "c8m04",
+          "message": "job.batch/v4-c8m04-attempt0054-1b834a4206-sim created",
+          "policy_suspended_on_create": false,
+          "rendered_from": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m04-attempt0054-a40-single-container-groot-bridge/simulator-job.yaml",
+          "role": "simulator",
+          "sim_first": true
+        },
+        {
+          "action": "apply_rendered_job",
+          "applied": true,
+          "job": "v4-c8m04-attempt0054-1b834a4206-policy",
+          "lane_id": "c8m04",
+          "message": "job.batch/v4-c8m04-attempt0054-1b834a4206-policy created",
+          "policy_suspended_on_create": true,
+          "rendered_from": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m04-attempt0054-a40-single-container-groot-bridge/policy-job.yaml",
+          "role": "policy",
+          "sim_first": true
+        }
+      ],
+      "lane_id": "c8m04",
+      "status": "dispatched",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0054",
+              "v4-config-sha": "1b834a4206b53f576db3f13affc20dfd",
+              "v4-lane-id": "c8m04"
+            },
+            "name": "v4-c8m04-attempt0054-1b834a4206-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0054",
+              "v4-config-sha": "1b834a4206b53f576db3f13affc20dfd",
+              "v4-lane-id": "c8m04",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c8m04-attempt0054-1b834a4206-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0054",
+              "v4-config-sha": "1b834a4206b53f576db3f13affc20dfd",
+              "v4-lane-id": "c8m04",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c8m04-attempt0054-1b834a4206-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0054",
+              "v4-config-sha": "1b834a4206b53f576db3f13affc20dfd",
+              "v4-lane-id": "c8m04",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c8m04-attempt0054-1b834a4206-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "attempt_id": "attempt0055",
+      "bundle_root": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m06-attempt0055-a40-single-container-groot-bridge",
+      "job_actions": [
+        {
+          "action": "apply_rendered_job",
+          "applied": true,
+          "job": "v4-c8m06-attempt0055-5498f887a3-sim",
+          "lane_id": "c8m06",
+          "message": "job.batch/v4-c8m06-attempt0055-5498f887a3-sim created",
+          "policy_suspended_on_create": false,
+          "rendered_from": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m06-attempt0055-a40-single-container-groot-bridge/simulator-job.yaml",
+          "role": "simulator",
+          "sim_first": true
+        },
+        {
+          "action": "apply_rendered_job",
+          "applied": true,
+          "job": "v4-c8m06-attempt0055-5498f887a3-policy",
+          "lane_id": "c8m06",
+          "message": "job.batch/v4-c8m06-attempt0055-5498f887a3-policy created",
+          "policy_suspended_on_create": true,
+          "rendered_from": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m06-attempt0055-a40-single-container-groot-bridge/policy-job.yaml",
+          "role": "policy",
+          "sim_first": true
+        }
+      ],
+      "lane_id": "c8m06",
+      "status": "dispatched",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0055",
+              "v4-config-sha": "5498f887a3c45d11ed4af0484905377b",
+              "v4-lane-id": "c8m06"
+            },
+            "name": "v4-c8m06-attempt0055-5498f887a3-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0055",
+              "v4-config-sha": "5498f887a3c45d11ed4af0484905377b",
+              "v4-lane-id": "c8m06",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c8m06-attempt0055-5498f887a3-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0055",
+              "v4-config-sha": "5498f887a3c45d11ed4af0484905377b",
+              "v4-lane-id": "c8m06",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c8m06-attempt0055-5498f887a3-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0055",
+              "v4-config-sha": "5498f887a3c45d11ed4af0484905377b",
+              "v4-lane-id": "c8m06",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c8m06-attempt0055-5498f887a3-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "attempt_id": "attempt0056",
+      "bundle_root": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m07-attempt0056-a40-single-container-groot-bridge",
+      "job_actions": [
+        {
+          "action": "apply_rendered_job",
+          "applied": true,
+          "job": "v4-c8m07-attempt0056-dd2b37cd30-sim",
+          "lane_id": "c8m07",
+          "message": "job.batch/v4-c8m07-attempt0056-dd2b37cd30-sim created",
+          "policy_suspended_on_create": false,
+          "rendered_from": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m07-attempt0056-a40-single-container-groot-bridge/simulator-job.yaml",
+          "role": "simulator",
+          "sim_first": true
+        },
+        {
+          "action": "apply_rendered_job",
+          "applied": true,
+          "job": "v4-c8m07-attempt0056-dd2b37cd30-policy",
+          "lane_id": "c8m07",
+          "message": "job.batch/v4-c8m07-attempt0056-dd2b37cd30-policy created",
+          "policy_suspended_on_create": true,
+          "rendered_from": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m07-attempt0056-a40-single-container-groot-bridge/policy-job.yaml",
+          "role": "policy",
+          "sim_first": true
+        }
+      ],
+      "lane_id": "c8m07",
+      "status": "dispatched",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0056",
+              "v4-config-sha": "dd2b37cd3029dce0e6686fb7aa4a02ae",
+              "v4-lane-id": "c8m07"
+            },
+            "name": "v4-c8m07-attempt0056-dd2b37cd30-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0056",
+              "v4-config-sha": "dd2b37cd3029dce0e6686fb7aa4a02ae",
+              "v4-lane-id": "c8m07",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c8m07-attempt0056-dd2b37cd30-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0056",
+              "v4-config-sha": "dd2b37cd3029dce0e6686fb7aa4a02ae",
+              "v4-lane-id": "c8m07",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c8m07-attempt0056-dd2b37cd30-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0056",
+              "v4-config-sha": "dd2b37cd3029dce0e6686fb7aa4a02ae",
+              "v4-lane-id": "c8m07",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c8m07-attempt0056-dd2b37cd30-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "attempt_id": "attempt0057",
+      "bundle_root": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m08-attempt0057-a40-single-container-groot-bridge",
+      "job_actions": [
+        {
+          "action": "apply_rendered_job",
+          "applied": true,
+          "job": "v4-c8m08-attempt0057-e3f9030a0a-sim",
+          "lane_id": "c8m08",
+          "message": "job.batch/v4-c8m08-attempt0057-e3f9030a0a-sim created",
+          "policy_suspended_on_create": false,
+          "rendered_from": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m08-attempt0057-a40-single-container-groot-bridge/simulator-job.yaml",
+          "role": "simulator",
+          "sim_first": true
+        },
+        {
+          "action": "apply_rendered_job",
+          "applied": true,
+          "job": "v4-c8m08-attempt0057-e3f9030a0a-policy",
+          "lane_id": "c8m08",
+          "message": "job.batch/v4-c8m08-attempt0057-e3f9030a0a-policy created",
+          "policy_suspended_on_create": true,
+          "rendered_from": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m08-attempt0057-a40-single-container-groot-bridge/policy-job.yaml",
+          "role": "policy",
+          "sim_first": true
+        }
+      ],
+      "lane_id": "c8m08",
+      "status": "dispatched",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0057",
+              "v4-config-sha": "e3f9030a0a528e26fdf0bb81cc46eb24",
+              "v4-lane-id": "c8m08"
+            },
+            "name": "v4-c8m08-attempt0057-e3f9030a0a-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0057",
+              "v4-config-sha": "e3f9030a0a528e26fdf0bb81cc46eb24",
+              "v4-lane-id": "c8m08",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c8m08-attempt0057-e3f9030a0a-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0057",
+              "v4-config-sha": "e3f9030a0a528e26fdf0bb81cc46eb24",
+              "v4-lane-id": "c8m08",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c8m08-attempt0057-e3f9030a0a-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0057",
+              "v4-config-sha": "e3f9030a0a528e26fdf0bb81cc46eb24",
+              "v4-lane-id": "c8m08",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c8m08-attempt0057-e3f9030a0a-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "attempt_id": "attempt0058",
+      "bundle_root": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m09-attempt0058-a40-single-container-groot-bridge",
+      "job_actions": [
+        {
+          "action": "apply_rendered_job",
+          "applied": true,
+          "job": "v4-c8m09-attempt0058-04dd6430ac-sim",
+          "lane_id": "c8m09",
+          "message": "job.batch/v4-c8m09-attempt0058-04dd6430ac-sim created",
+          "policy_suspended_on_create": false,
+          "rendered_from": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m09-attempt0058-a40-single-container-groot-bridge/simulator-job.yaml",
+          "role": "simulator",
+          "sim_first": true
+        },
+        {
+          "action": "apply_rendered_job",
+          "applied": true,
+          "job": "v4-c8m09-attempt0058-04dd6430ac-policy",
+          "lane_id": "c8m09",
+          "message": "job.batch/v4-c8m09-attempt0058-04dd6430ac-policy created",
+          "policy_suspended_on_create": true,
+          "rendered_from": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m09-attempt0058-a40-single-container-groot-bridge/policy-job.yaml",
+          "role": "policy",
+          "sim_first": true
+        }
+      ],
+      "lane_id": "c8m09",
+      "status": "dispatched",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0058",
+              "v4-config-sha": "04dd6430ac4c723840fc055c67441e6c",
+              "v4-lane-id": "c8m09"
+            },
+            "name": "v4-c8m09-attempt0058-04dd6430ac-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0058",
+              "v4-config-sha": "04dd6430ac4c723840fc055c67441e6c",
+              "v4-lane-id": "c8m09",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c8m09-attempt0058-04dd6430ac-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0058",
+              "v4-config-sha": "04dd6430ac4c723840fc055c67441e6c",
+              "v4-lane-id": "c8m09",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c8m09-attempt0058-04dd6430ac-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0058",
+              "v4-config-sha": "04dd6430ac4c723840fc055c67441e6c",
+              "v4-lane-id": "c8m09",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c8m09-attempt0058-04dd6430ac-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "attempt_id": "attempt0059",
+      "bundle_root": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m11-attempt0059-a40-single-container-groot-bridge",
+      "job_actions": [
+        {
+          "action": "apply_rendered_job",
+          "applied": true,
+          "job": "v4-c8m11-attempt0059-63b349b5da-sim",
+          "lane_id": "c8m11",
+          "message": "job.batch/v4-c8m11-attempt0059-63b349b5da-sim created",
+          "policy_suspended_on_create": false,
+          "rendered_from": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m11-attempt0059-a40-single-container-groot-bridge/simulator-job.yaml",
+          "role": "simulator",
+          "sim_first": true
+        },
+        {
+          "action": "apply_rendered_job",
+          "applied": true,
+          "job": "v4-c8m11-attempt0059-63b349b5da-policy",
+          "lane_id": "c8m11",
+          "message": "job.batch/v4-c8m11-attempt0059-63b349b5da-policy created",
+          "policy_suspended_on_create": true,
+          "rendered_from": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m11-attempt0059-a40-single-container-groot-bridge/policy-job.yaml",
+          "role": "policy",
+          "sim_first": true
+        }
+      ],
+      "lane_id": "c8m11",
+      "status": "dispatched",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0059",
+              "v4-config-sha": "63b349b5da0a3a9cb74d9d9882e3c385",
+              "v4-lane-id": "c8m11"
+            },
+            "name": "v4-c8m11-attempt0059-63b349b5da-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0059",
+              "v4-config-sha": "63b349b5da0a3a9cb74d9d9882e3c385",
+              "v4-lane-id": "c8m11",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c8m11-attempt0059-63b349b5da-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0059",
+              "v4-config-sha": "63b349b5da0a3a9cb74d9d9882e3c385",
+              "v4-lane-id": "c8m11",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c8m11-attempt0059-63b349b5da-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0059",
+              "v4-config-sha": "63b349b5da0a3a9cb74d9d9882e3c385",
+              "v4-lane-id": "c8m11",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c8m11-attempt0059-63b349b5da-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "attempt_id": "attempt0060",
+      "bundle_root": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m12-attempt0060-a40-single-container-groot-bridge",
+      "job_actions": [
+        {
+          "action": "apply_rendered_job",
+          "applied": true,
+          "job": "v4-c8m12-attempt0060-4f514e1518-sim",
+          "lane_id": "c8m12",
+          "message": "job.batch/v4-c8m12-attempt0060-4f514e1518-sim created",
+          "policy_suspended_on_create": false,
+          "rendered_from": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m12-attempt0060-a40-single-container-groot-bridge/simulator-job.yaml",
+          "role": "simulator",
+          "sim_first": true
+        },
+        {
+          "action": "apply_rendered_job",
+          "applied": true,
+          "job": "v4-c8m12-attempt0060-4f514e1518-policy",
+          "lane_id": "c8m12",
+          "message": "job.batch/v4-c8m12-attempt0060-4f514e1518-policy created",
+          "policy_suspended_on_create": true,
+          "rendered_from": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m12-attempt0060-a40-single-container-groot-bridge/policy-job.yaml",
+          "role": "policy",
+          "sim_first": true
+        }
+      ],
+      "lane_id": "c8m12",
+      "status": "dispatched",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0060",
+              "v4-config-sha": "4f514e15183e51988d8c764389c96cb6",
+              "v4-lane-id": "c8m12"
+            },
+            "name": "v4-c8m12-attempt0060-4f514e1518-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0060",
+              "v4-config-sha": "4f514e15183e51988d8c764389c96cb6",
+              "v4-lane-id": "c8m12",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c8m12-attempt0060-4f514e1518-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0060",
+              "v4-config-sha": "4f514e15183e51988d8c764389c96cb6",
+              "v4-lane-id": "c8m12",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c8m12-attempt0060-4f514e1518-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0060",
+              "v4-config-sha": "4f514e15183e51988d8c764389c96cb6",
+              "v4-lane-id": "c8m12",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c8m12-attempt0060-4f514e1518-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "attempt_id": "attempt0061",
+      "bundle_root": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m15-attempt0061-a40-single-container-groot-bridge",
+      "job_actions": [
+        {
+          "action": "apply_rendered_job",
+          "applied": true,
+          "job": "v4-c8m15-attempt0061-94559f08e0-sim",
+          "lane_id": "c8m15",
+          "message": "job.batch/v4-c8m15-attempt0061-94559f08e0-sim created",
+          "policy_suspended_on_create": false,
+          "rendered_from": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m15-attempt0061-a40-single-container-groot-bridge/simulator-job.yaml",
+          "role": "simulator",
+          "sim_first": true
+        },
+        {
+          "action": "apply_rendered_job",
+          "applied": true,
+          "job": "v4-c8m15-attempt0061-94559f08e0-policy",
+          "lane_id": "c8m15",
+          "message": "job.batch/v4-c8m15-attempt0061-94559f08e0-policy created",
+          "policy_suspended_on_create": true,
+          "rendered_from": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m15-attempt0061-a40-single-container-groot-bridge/policy-job.yaml",
+          "role": "policy",
+          "sim_first": true
+        }
+      ],
+      "lane_id": "c8m15",
+      "status": "dispatched",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0061",
+              "v4-config-sha": "94559f08e0e990a26534568f725aa324",
+              "v4-lane-id": "c8m15"
+            },
+            "name": "v4-c8m15-attempt0061-94559f08e0-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0061",
+              "v4-config-sha": "94559f08e0e990a26534568f725aa324",
+              "v4-lane-id": "c8m15",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c8m15-attempt0061-94559f08e0-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0061",
+              "v4-config-sha": "94559f08e0e990a26534568f725aa324",
+              "v4-lane-id": "c8m15",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c8m15-attempt0061-94559f08e0-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0061",
+              "v4-config-sha": "94559f08e0e990a26534568f725aa324",
+              "v4-lane-id": "c8m15",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c8m15-attempt0061-94559f08e0-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    }
+  ],
+  "lane_attempt_map": {
+    "c8m04": "attempt0054",
+    "c8m06": "attempt0055",
+    "c8m07": "attempt0056",
+    "c8m08": "attempt0057",
+    "c8m09": "attempt0058",
+    "c8m11": "attempt0059",
+    "c8m12": "attempt0060",
+    "c8m15": "attempt0061"
+  },
+  "protected_lanes": [
+    "c8m05",
+    "c8m16"
+  ],
+  "render_outcomes": [
+    {
+      "attempt_id": "attempt0054",
+      "bundle_root": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m04-attempt0054-a40-single-container-groot-bridge",
+      "lane_id": "c8m04",
+      "launch_hash": "bdb03803966995c552e9a676d83ac373d633c15dcc2caf2fc706647c082eb21a",
+      "prior_attempt_id": "attempt0005",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c8-second-stack-main/.coord-bindings/c8m04/attempt0054",
+      "remaining_episode_count": 39,
+      "status": "rendered"
+    },
+    {
+      "attempt_id": "attempt0055",
+      "bundle_root": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m06-attempt0055-a40-single-container-groot-bridge",
+      "lane_id": "c8m06",
+      "launch_hash": "b9faf98609c8b0dbd61770596414647918a663d44b5c3e1f76c0380446011e1e",
+      "prior_attempt_id": "attempt0007",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c8-second-stack-main/.coord-bindings/c8m06/attempt0055",
+      "remaining_episode_count": 39,
+      "status": "rendered"
+    },
+    {
+      "attempt_id": "attempt0056",
+      "bundle_root": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m07-attempt0056-a40-single-container-groot-bridge",
+      "lane_id": "c8m07",
+      "launch_hash": "80d5bbe8e6fe81d76f886c09497b1bd99da866e5b9fa6d8d8c2fd598c0b7155e",
+      "prior_attempt_id": "attempt0008",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c8-second-stack-main/.coord-bindings/c8m07/attempt0056",
+      "remaining_episode_count": 39,
+      "status": "rendered"
+    },
+    {
+      "attempt_id": "attempt0057",
+      "bundle_root": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m08-attempt0057-a40-single-container-groot-bridge",
+      "lane_id": "c8m08",
+      "launch_hash": "35bcbd5538dca82d6c2f159ba93abfc325d47293baebd830c7532ceb66fc587c",
+      "prior_attempt_id": "attempt0009",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c8-second-stack-main/.coord-bindings/c8m08/attempt0057",
+      "remaining_episode_count": 38,
+      "status": "rendered"
+    },
+    {
+      "attempt_id": "attempt0058",
+      "bundle_root": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m09-attempt0058-a40-single-container-groot-bridge",
+      "lane_id": "c8m09",
+      "launch_hash": "ad88203533607aa755ea1e3273a101b5d508f10ffc7766146554d4f02582f7a2",
+      "prior_attempt_id": "attempt0010",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c8-second-stack-main/.coord-bindings/c8m09/attempt0058",
+      "remaining_episode_count": 38,
+      "status": "rendered"
+    },
+    {
+      "attempt_id": "attempt0059",
+      "bundle_root": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m11-attempt0059-a40-single-container-groot-bridge",
+      "lane_id": "c8m11",
+      "launch_hash": "7190b01f84e8e27d09706be7c775bf9ce249ef5af90e9cbee765adef670e50ed",
+      "prior_attempt_id": "attempt0012",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c8-second-stack-main/.coord-bindings/c8m11/attempt0059",
+      "remaining_episode_count": 38,
+      "status": "rendered"
+    },
+    {
+      "attempt_id": "attempt0060",
+      "bundle_root": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m12-attempt0060-a40-single-container-groot-bridge",
+      "lane_id": "c8m12",
+      "launch_hash": "456fe47a6956479b3fc288a654462a9001a450be144948696c9d2880b8111542",
+      "prior_attempt_id": "attempt0013",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c8-second-stack-main/.coord-bindings/c8m12/attempt0060",
+      "remaining_episode_count": 38,
+      "status": "rendered"
+    },
+    {
+      "attempt_id": "attempt0061",
+      "bundle_root": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5/c8m15-attempt0061-a40-single-container-groot-bridge",
+      "lane_id": "c8m15",
+      "launch_hash": "d49fbfb7f111fe726d984603852b65d76cb7bbc34f4a1332cddc2400080f31b8",
+      "prior_attempt_id": "attempt0016",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c8-second-stack-main/.coord-bindings/c8m15/attempt0061",
+      "remaining_episode_count": 38,
+      "status": "rendered"
+    }
+  ],
+  "render_output_root": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r5",
+  "schema_version": "v4-c8-fresh-attempt-rerender-dispatch-v1"
+}

@@ -112,7 +112,7 @@ C6_RUNNER_BINDING = (
 )
 C6_WAVE_PROGRESS = (
     ROOT
-    / "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/c6_wave_d_progress_receipt_20260908e.json"
+    / "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/c6_wave_d_progress_receipt_20260908h.json"
 )
 C7_RESHARD_ANALYSIS = (
     ROOT

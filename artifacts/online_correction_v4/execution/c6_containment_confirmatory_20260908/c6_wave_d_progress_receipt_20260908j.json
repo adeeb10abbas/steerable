@@ -1,0 +1,49 @@
+{
+  "schema_version": "v4-c6-wave-progress-receipt-v1",
+  "compiled_at_utc": "2026-09-08T11:00:00Z",
+  "wave_id": "c6confirm20260908f",
+  "wave_label": "D",
+  "confirmatory_terminals": 269,
+  "milestones": {
+    "32": "passed",
+    "128": "passed",
+    "384": "pending"
+  },
+  "grasp_definition_notes": {
+    "c6_rule": "failure_label != no_grasp (shared HorizontalDroidTerminalScorer with C8)",
+    "transport_incomplete_only": "failure_label == transport_incomplete — C8-comparable label set",
+    "c8_wrong_goal_region_asymmetry": "C8: 0 wrong_goal_region in 407+ eps; C6: 5 at n=269 — report both conventions; use ti_only for cross-platform magnitude comparison"
+  },
+  "grasp_rate_by_scenario": {
+    "destination_static": {
+      "episodes": 90,
+      "grasp_achieved_c6_rule": 25,
+      "grasp_rate_c6_rule_pct": 27.8,
+      "grasp_achieved_transport_incomplete_only": 23,
+      "grasp_rate_transport_incomplete_only_pct": 25.6,
+      "wrong_goal_region_count": 2,
+      "wrong_goal_region_share_pct": 2.2
+    },
+    "move_stop": {
+      "episodes": 85,
+      "grasp_achieved_c6_rule": 16,
+      "grasp_rate_c6_rule_pct": 18.8,
+      "grasp_achieved_transport_incomplete_only": 15,
+      "grasp_rate_transport_incomplete_only_pct": 17.6,
+      "wrong_goal_region_count": 1,
+      "wrong_goal_region_share_pct": 1.2
+    },
+    "original_sham": {
+      "episodes": 94,
+      "grasp_achieved_c6_rule": 19,
+      "grasp_rate_c6_rule_pct": 20.2,
+      "grasp_achieved_transport_incomplete_only": 17,
+      "grasp_rate_transport_incomplete_only_pct": 18.1,
+      "wrong_goal_region_count": 2,
+      "wrong_goal_region_share_pct": 2.1
+    }
+  },
+  "ordering_note": "At n=269 (128 passed): BOTH conventions — destination_static (27.8% c6 / 25.6% ti) > original_sham (20.2% / 18.1%) > move_stop (18.8% / 17.6%). Inverts C8 ordering (6.3% / 2.9% / 2.8% at n=204). Ordering unstable across milestones (n=128 had move_stop first). Report at 384.",
+  "wave_d_tail_dispatch": "create-c6confirm20260908f-wave-d-tail.json",
+  "supersedes": "c6_wave_d_progress_receipt_20260908i.json"
+}

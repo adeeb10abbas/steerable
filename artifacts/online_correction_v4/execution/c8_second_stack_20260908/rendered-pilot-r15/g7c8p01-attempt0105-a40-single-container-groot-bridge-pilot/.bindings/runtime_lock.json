@@ -1,0 +1,174 @@
+{
+  "blocked_families": {
+    "C1": "Not included in the fixture-scoped C8 engineering-pilot release",
+    "C2": "Not included in the fixture-scoped C8 engineering-pilot release",
+    "C3": "Not included in the fixture-scoped C8 engineering-pilot release",
+    "C4": "Not included in the fixture-scoped C8 engineering-pilot release",
+    "C5": "Not included in the fixture-scoped C8 engineering-pilot release",
+    "C6": "Not included in the fixture-scoped C8 engineering-pilot release",
+    "C7": "Not included in the fixture-scoped C8 engineering-pilot release"
+  },
+  "campaign_id": "online_correction_v4",
+  "config_sha256": "3594cedb3a440e5d944b37f709e25e41a98ed03dccc6bc4b7656a02f03440bee",
+  "fixtures": {
+    "second_stack": {
+      "D_cap_m": 1.0065783625729297,
+      "calibration_scale": 0.5,
+      "frame_transform_uri": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/artifacts/online_correction_v4/setup/second_stack_scoring_geometry.released.json",
+      "geometry_sha256": "e450fe84709d6f194321b3ea0698514aeb0bb9a5d95ee781887914c9cd77d9cc",
+      "geometry_uri": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/artifacts/online_correction_v4/setup/second_stack_scoring_geometry.released.json",
+      "goal_geometry_and_tolerances_uri": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/artifacts/online_correction_v4/setup/second_stack_scoring_geometry.released.json",
+      "intervention_trajectory_registry_uri": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/artifacts/online_correction_v4/qualification/20260908_second_stack_pilot_g3_path_g3c8p20260908f.json",
+      "reset_registry_sha256": "c031780aff43171da3340b4a0a3a0a1622d59f1bb04cd099e7163de4917b5185",
+      "reset_registry_uri": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/artifacts/online_correction_v4/setup/second_stack_g7_pilot_reset_registry.released.json",
+      "scorer_sha256": "dc6c2a9e77e0e1d662b01774de1cbad2c8e7bf14c04b24fb499312a3d229b0dd",
+      "scorer_uri": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/experiments/online_correction_v4/droid_scorer.py",
+      "scoring_and_visibility_thresholds_uri": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/artifacts/online_correction_v4/qualification/20260906_second_stack_g6_measurement_g6c8q20260906a.json",
+      "trigger_release_detector_uri": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/artifacts/online_correction_v4/qualification/20260906_second_stack_g5_trigger_branch_g5c8q20260906a.json"
+    }
+  },
+  "manifest_sha256": "b67913fefb1f2b86e95040bb9a03293ff92f4e02e5a8b89988569c8908fd9a7c",
+  "pilot_release_boundary": "PILOT_RELEASED authorizes only engineering_pilot manifest rows. Confirmatory dispatch remains fail-closed until G7 and G8 pass and a separate RELEASED lock is generated.",
+  "policies": {
+    "groot_bridge_widowx": {
+      "achieved_delay_s": 0.2,
+      "achieved_fast_query_period_s": 0.4,
+      "achieved_standard_query_period_s": 0.6000000000000001,
+      "allowed_seed_registry_sha256": "f78f698aee054f9a8303e852b06f931f7a633439311f578e033a36bdb6452baa",
+      "allowed_seed_registry_uri": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/artifacts/online_correction_v4/setup/second_stack_g7_pilot_groot_seed_registry.released.json",
+      "checkpoint_revision": "940134b3c2948ccfdf8e7393f2d2ca869dc42833",
+      "checkpoint_sha256": "ba6ebd8503df6950d18e416a9d4d1b945b02493af7fea5406bfe7f889acc9c4f",
+      "checkpoint_uri": "/data/users/ali/vla_wam/checkpoints/groot-n1.7-simplerenv-bridge",
+      "integration_commit": "51d4c89f72fda44cbf77285c6a8114b52676b8a1",
+      "native_control_dt_s": 0.2,
+      "policy_reset_and_history_contract_uri": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/artifacts/online_correction_v4/qualification/20260906_second_stack_g4_execution_g4c8q20260906d.json",
+      "prediction_horizon_actions": 8,
+      "runtime_image_digest": "sha256:03f5ce7d090fbd378070a8216d0aedfc6e473c52da99b40b0cf53918612a297c"
+    }
+  },
+  "prefix_mode": "independent_natural_rollout_fallback",
+  "prefix_mode_receipt_sha256": "f8f6eb79471e37e4da862f84a64c0a7d42fc793bd5d2d6ea29710138dd2ec12a",
+  "receipts": {
+    "cluster_lane_qualification": {
+      "family_ids": [
+        "C8"
+      ],
+      "passed": true,
+      "sha256": "84442a06bae737d69afc27c3b14babfb553d1c17dbdf051a768509c61a2cadee",
+      "uri": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/artifacts/online_correction_v4/qualification/20260906_second_stack_g4_execution_g4c8q20260906d.json"
+    },
+    "controlled_clock_and_queue": {
+      "family_ids": [
+        "C8"
+      ],
+      "passed": true,
+      "sha256": "d97ca14a9b1e8a5ec1fda8290b5e30de6a8c489c2620160848a93b51a875286c",
+      "uri": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/artifacts/online_correction_v4/qualification/20260906_second_stack_g6_measurement_g6c8q20260906a.json"
+    },
+    "engineering_pilots_complete": {
+      "family_ids": [
+        "C8"
+      ],
+      "passed": false,
+      "sha256": "f78f698aee054f9a8303e852b06f931f7a633439311f578e033a36bdb6452baa",
+      "uri": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/artifacts/online_correction_v4/setup/second_stack_g7_pilot_groot_seed_registry.released.json"
+    },
+    "frozen_analysis_and_inventory": {
+      "family_ids": [
+        "C8"
+      ],
+      "passed": false,
+      "sha256": "b67913fefb1f2b86e95040bb9a03293ff92f4e02e5a8b89988569c8908fd9a7c",
+      "uri": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/artifacts/online_correction_v4/setup/second_stack_g7_pilot_queue.jsonl"
+    },
+    "geometry_and_scripted_feasibility": {
+      "family_ids": [
+        "C8"
+      ],
+      "passed": true,
+      "sha256": "a5e25478e4c90e906c4feeb2e19958abd0797769f1699632f4cc12e06797c380",
+      "uri": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/artifacts/online_correction_v4/qualification/20260908_second_stack_pilot_g3_path_g3c8p20260908f.json"
+    },
+    "historical_seed_collision_audit": {
+      "family_ids": [
+        "C8"
+      ],
+      "passed": true,
+      "sha256": "f78f698aee054f9a8303e852b06f931f7a633439311f578e033a36bdb6452baa",
+      "uri": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/artifacts/online_correction_v4/setup/second_stack_g7_pilot_groot_seed_registry.released.json"
+    },
+    "natural_trigger_and_first_release": {
+      "family_ids": [
+        "C8"
+      ],
+      "passed": true,
+      "sha256": "f8f6eb79471e37e4da862f84a64c0a7d42fc793bd5d2d6ea29710138dd2ec12a",
+      "uri": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/artifacts/online_correction_v4/qualification/20260906_second_stack_g5_trigger_branch_g5c8q20260906a.json"
+    },
+    "prefix_replay_or_declared_fallback": {
+      "family_ids": [
+        "C8"
+      ],
+      "passed": true,
+      "sha256": "f8f6eb79471e37e4da862f84a64c0a7d42fc793bd5d2d6ea29710138dd2ec12a",
+      "uri": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/artifacts/online_correction_v4/qualification/20260906_second_stack_g5_trigger_branch_g5c8q20260906a.json"
+    },
+    "prompt_and_frame_review": {
+      "family_ids": [
+        "C8"
+      ],
+      "passed": true,
+      "sha256": "66c70e2b55897ad669051df2435c62d8cd4caaa7cd29d634be9e0aa56e50ab1f",
+      "uri": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/artifacts/online_correction_v4/qualification/20260908_second_stack_pilot_g2_aggregate_g2c8p20260908a.json"
+    },
+    "scorer_independent_cases": {
+      "family_ids": [
+        "C8"
+      ],
+      "passed": true,
+      "sha256": "d97ca14a9b1e8a5ec1fda8290b5e30de6a8c489c2620160848a93b51a875286c",
+      "uri": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/artifacts/online_correction_v4/qualification/20260906_second_stack_g6_measurement_g6c8q20260906a.json"
+    },
+    "source_and_checkpoint_identity": {
+      "family_ids": [
+        "C8"
+      ],
+      "passed": true,
+      "sha256": "84442a06bae737d69afc27c3b14babfb553d1c17dbdf051a768509c61a2cadee",
+      "uri": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/artifacts/online_correction_v4/qualification/20260906_second_stack_g4_execution_g4c8q20260906d.json"
+    },
+    "trace_video_and_atomic_storage": {
+      "family_ids": [
+        "C8"
+      ],
+      "passed": true,
+      "sha256": "d97ca14a9b1e8a5ec1fda8290b5e30de6a8c489c2620160848a93b51a875286c",
+      "uri": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/artifacts/online_correction_v4/qualification/20260906_second_stack_g6_measurement_g6c8q20260906a.json"
+    }
+  },
+  "release_status": "PILOT_RELEASED",
+  "released_families": [
+    "C8"
+  ],
+  "runner": {
+    "commit": "200c27a200550ceffa9f284a11641b9cd711e47b",
+    "entrypoint": "/data/users/ali/vla_wam/src/steerable-v4-c8-g2/tools/run_online_correction_v4.py",
+    "sha256": "af01ac34727a6afa255bf5c079abf5dd62f8011a5051a4c9743eab05e719d86e"
+  },
+  "schema_version": 1,
+  "source_commit": "200c27a200550ceffa9f284a11641b9cd711e47b",
+  "writer_contract": {
+    "incremental_fsync_required": true,
+    "output_parent_uri": "/data/users/ali/vla_wam/raw/v4/g7-second-stack",
+    "required_streams": [
+      "viewport_video",
+      "trajectory",
+      "requests",
+      "observations",
+      "events"
+    ],
+    "schema_version": "v4-droid-writer-contract-v1",
+    "viewport_video_required": true,
+    "write_once_attempt_directories": true
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "schema_version": "v4-c8-orphan-policy-reclaim-v1",
+  "observed_at_utc": "2026-09-08T07:28:00Z",
+  "reason": "sim Complete with policy still Running on lanes with zero queued episodes; A40 GPUs held idle",
+  "actions": [
+    {
+      "lane_id": "c8m05",
+      "attempt_id": "attempt0006",
+      "job": "v4-c8m05-attempt0006-b89124140a-policy",
+      "completed_episodes": 39,
+      "queued_episodes": 0,
+      "action": "delete_job",
+      "deleted": true,
+      "gpus_reclaimed_estimate": 1
+    },
+    {
+      "lane_id": "c8m16",
+      "attempt_id": "attempt0017",
+      "job": "v4-c8m16-attempt0017-7d4d9ebdc2-policy",
+      "completed_episodes": 38,
+      "queued_episodes": 0,
+      "action": "delete_job",
+      "deleted": true,
+      "gpus_reclaimed_estimate": 1
+    }
+  ],
+  "gpus_reclaimed_total_estimate": 2,
+  "not_reclaimed": {
+    "c8m13": {"reason": "productive_c8_lane_pair in protect list; ledger complete 38/38; policy Suspended sim Failed"},
+    "c8m14": {"reason": "lane complete; sim Failed only"}
+  },
+  "accounting_impact": "none — reclaim after lane completion; ledger unchanged"
+}

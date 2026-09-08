@@ -1,0 +1,300 @@
+{
+  "actions": [
+    {
+      "action": "unsuspend_policy_sim_ready",
+      "job": "v4-c6m17-attempt0193-93380e7d55-policy",
+      "lane_id": "c6m17",
+      "unsuspended": true
+    },
+    {
+      "action": "unsuspend_policy_sim_ready",
+      "job": "v4-c6m23-attempt0194-5198eee49e-policy",
+      "lane_id": "c6m23",
+      "unsuspended": true
+    },
+    {
+      "action": "unsuspend_policy_sim_ready",
+      "job": "v4-c8m00-attempt0021-1221c16bbe-policy",
+      "lane_id": "c8m00",
+      "unsuspended": true
+    },
+    {
+      "action": "unsuspend_policy_sim_ready",
+      "job": "v4-c8m01-attempt0022-cee02cfe00-policy",
+      "lane_id": "c8m01",
+      "unsuspended": true
+    },
+    {
+      "action": "unsuspend_policy_sim_ready",
+      "job": "v4-c8m02-attempt0023-27ec1a72be-policy",
+      "lane_id": "c8m02",
+      "unsuspended": true
+    },
+    {
+      "action": "unsuspend_policy_sim_ready",
+      "job": "v4-c8m03-attempt0024-c0fe02f779-policy",
+      "lane_id": "c8m03",
+      "unsuspended": true
+    },
+    {
+      "action": "unsuspend_policy_sim_ready",
+      "job": "v4-c8m04-attempt0025-13f15342f4-policy",
+      "lane_id": "c8m04",
+      "unsuspended": true
+    },
+    {
+      "action": "suspend_until_sim_running",
+      "job": "v4-c8m05-attempt0006-b89124140a-policy",
+      "lane_id": "c8m05",
+      "reason_code": "sim_first_gate",
+      "role": "policy",
+      "suspended": true
+    },
+    {
+      "action": "unsuspend_policy_sim_ready",
+      "job": "v4-c8m06-attempt0026-7d60e7c255-policy",
+      "lane_id": "c8m06",
+      "unsuspended": true
+    },
+    {
+      "action": "unsuspend_policy_sim_ready",
+      "job": "v4-c8m07-attempt0027-1d8c6103e8-policy",
+      "lane_id": "c8m07",
+      "unsuspended": true
+    },
+    {
+      "action": "unsuspend_policy_sim_ready",
+      "job": "v4-c8m08-attempt0028-f0e3d7e71f-policy",
+      "lane_id": "c8m08",
+      "unsuspended": true
+    },
+    {
+      "action": "unsuspend_policy_sim_ready",
+      "job": "v4-c8m09-attempt0029-760a43f542-policy",
+      "lane_id": "c8m09",
+      "unsuspended": true
+    },
+    {
+      "action": "unsuspend_policy_sim_ready",
+      "job": "v4-c8m10-attempt0037-843901b342-policy",
+      "lane_id": "c8m10",
+      "unsuspended": true
+    },
+    {
+      "action": "unsuspend_policy_sim_ready",
+      "job": "v4-c8m11-attempt0031-d6c4dd853b-policy",
+      "lane_id": "c8m11",
+      "unsuspended": true
+    },
+    {
+      "action": "unsuspend_policy_sim_ready",
+      "job": "v4-c8m12-attempt0032-4ad75ed04f-policy",
+      "lane_id": "c8m12",
+      "unsuspended": true
+    },
+    {
+      "action": "suspend_until_sim_running",
+      "job": "v4-c8m13-attempt0014-5c3330d125-policy",
+      "lane_id": "c8m13",
+      "reason_code": "sim_first_gate",
+      "role": "policy",
+      "suspended": true
+    },
+    {
+      "action": "unsuspend_policy_sim_ready",
+      "job": "v4-c8m15-attempt0033-de724d787e-policy",
+      "lane_id": "c8m15",
+      "unsuspended": true
+    },
+    {
+      "action": "suspend_until_sim_running",
+      "job": "v4-c8m16-attempt0017-7d4d9ebdc2-policy",
+      "lane_id": "c8m16",
+      "reason_code": "sim_first_gate",
+      "role": "policy",
+      "suspended": true
+    },
+    {
+      "action": "unsuspend_policy_sim_ready",
+      "job": "v4-c8m17-attempt0034-34834527b3-policy",
+      "lane_id": "c8m17",
+      "unsuspended": true
+    },
+    {
+      "action": "unsuspend_policy_sim_ready",
+      "job": "v4-c8m18-attempt0035-848c86e8cf-policy",
+      "lane_id": "c8m18",
+      "unsuspended": true
+    },
+    {
+      "action": "unsuspend_policy_sim_ready",
+      "job": "v4-c8m19-attempt0036-9ae0d1537a-policy",
+      "lane_id": "c8m19",
+      "unsuspended": true
+    }
+  ],
+  "additional_c8_healthy_pairs": 5,
+  "c8_admission_coordination": {
+    "enforce_command": ".venv/bin/python tools/enforce_v4_capacity_arbitration.py --mode gpu_placement --policy c8_a40_spread",
+    "note": "C8 agent must set placement_policy in lane render specs; capacity agent replaces Pending Jobs lacking spread.",
+    "renderer_field": "placement_policy",
+    "renderer_value_for_c8": "c8_a40_spread"
+  },
+  "dry_run": false,
+  "jobs_replaced": 0,
+  "kube_context": "prod-dcwi-warrenq1-vmkub007",
+  "lane_pair_capacity_binding": {
+    "binding_factor": "planning_and_pool_occupancy_not_single_pod_binpack",
+    "family": "C8_second_stack",
+    "finding": "C8 policy and simulator are independent 1-GPU pods on NVIDIA-A40 connected via in-cluster Service HTTP. Kubernetes does not require co-scheduling on one node or one 2-GPU request. The 2-GPU lane pair is the throughput planning unit because both pods must be Running for episodes, not because the scheduler atomically allocates two GPUs. Pending C8 pods with pool-wide free A40 capacity therefore indicate per-node fragmentation and competing C7 A40 occupancy, not a rigid 2-GPU bin-packing constraint.",
+    "hardware_stratum": "a40-single-container-groot-bridge",
+    "paper_note": "Report lane-pair concurrency as a study-design unit (2\u00d7A40 per lane), but attribute scheduling failures to fragmented single-GPU nodes rather than an unsatisfiable 2-GPU pod request.",
+    "planning_gpus_per_lane_pair": 2,
+    "policy_sim_co_location_required": false,
+    "scheduler_gpu_request_per_pod": 1
+  },
+  "namespace": "211247-prod",
+  "observed_at_utc": "2026-09-08T03:27:36Z",
+  "placement_policy": {
+    "defer_roles_until_partner_running": [
+      "policy"
+    ],
+    "gpu_product": "NVIDIA-A40",
+    "hardware_stratum": "a40-single-container-groot-bridge",
+    "lane_id_prefixes": [
+      "c8m",
+      "g7c8p"
+    ],
+    "max_skew": 1,
+    "policy_id": "c8_a40_spread",
+    "roles": [
+      "policy",
+      "simulator"
+    ],
+    "schedule_order": [
+      "simulator",
+      "policy"
+    ],
+    "schema_version": "v4-gpu-placement-policy-v1",
+    "spread_family_label": "c8-a40",
+    "spread_roles": [
+      "simulator"
+    ],
+    "topology_key": "kubernetes.io/hostname",
+    "when_unsatisfiable": "ScheduleAnyway"
+  },
+  "pool_utilization_after": {
+    "pending_gpu_pods": 11,
+    "pool_free_estimate": {
+      "NVIDIA-A100-SXM4-40GB": 56,
+      "NVIDIA-A100-SXM4-80GB": 91,
+      "NVIDIA-A40": 15,
+      "NVIDIA-B200": 32
+    },
+    "pool_sizes": {
+      "NVIDIA-A100-SXM4-40GB": 64,
+      "NVIDIA-A100-SXM4-80GB": 95,
+      "NVIDIA-A40": 40,
+      "NVIDIA-B200": 40
+    },
+    "running_gpus_by_family_role": {
+      "c6_policy": 8,
+      "c6_sim": 8,
+      "c7_policy": 4,
+      "c7_sim": 4,
+      "c8_policy": 5,
+      "c8_sim": 16
+    },
+    "running_gpus_by_product": {
+      "NVIDIA-A100-SXM4-40GB": 8,
+      "NVIDIA-A100-SXM4-80GB": 4,
+      "NVIDIA-A40": 25,
+      "NVIDIA-B200": 8
+    }
+  },
+  "pool_utilization_before": {
+    "pending_gpu_pods": 0,
+    "pool_free_estimate": {
+      "NVIDIA-A100-SXM4-40GB": 56,
+      "NVIDIA-A100-SXM4-80GB": 91,
+      "NVIDIA-A40": 17,
+      "NVIDIA-B200": 34
+    },
+    "pool_sizes": {
+      "NVIDIA-A100-SXM4-40GB": 64,
+      "NVIDIA-A100-SXM4-80GB": 95,
+      "NVIDIA-A40": 40,
+      "NVIDIA-B200": 40
+    },
+    "running_gpus_by_family_role": {
+      "c6_policy": 6,
+      "c6_sim": 8,
+      "c7_policy": 4,
+      "c7_sim": 4,
+      "c8_policy": 3,
+      "c8_sim": 16
+    },
+    "running_gpus_by_product": {
+      "NVIDIA-A100-SXM4-40GB": 8,
+      "NVIDIA-A100-SXM4-80GB": 4,
+      "NVIDIA-A40": 23,
+      "NVIDIA-B200": 6
+    }
+  },
+  "protect_list_path": "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_sweep_protect_list_20260908.json",
+  "protected_c7_lane_count": 21,
+  "scheduling_state_after": {
+    "c6": {
+      "healthy_pairs": 8,
+      "lane_prefix": "c6m",
+      "partial_pairs": 2,
+      "pending_pairs": 0,
+      "total_lanes_seen": 10
+    },
+    "c8": {
+      "healthy_pairs": 5,
+      "lane_prefix": "c8m",
+      "partial_pairs": 15,
+      "pending_pairs": 0,
+      "total_lanes_seen": 20
+    }
+  },
+  "scheduling_state_before": {
+    "c8": {
+      "healthy_pairs": 0,
+      "lane_prefix": "c8m",
+      "partial_pairs": 20,
+      "pending_pairs": 0,
+      "total_lanes_seen": 20
+    }
+  },
+  "schema_version": "v4-gpu-placement-receipt-v1",
+  "sim_first_ordering": {
+    "defer_roles_until_partner_running": [
+      "policy"
+    ],
+    "productive_c8_lanes_preserved": [
+      "c8m13",
+      "c8m14"
+    ],
+    "schedule_order": [
+      "simulator",
+      "policy"
+    ],
+    "spread_roles": [
+      "simulator"
+    ],
+    "startup_grace_seconds": 300
+  },
+  "wall_clock_estimates": {
+    "c6_confirmatory_768_hours_at_8_lanes": 40.0,
+    "c8_confirmatory_768_hours_after": {
+      "at_20_lanes_post_c7": 16.0,
+      "at_current_healthy_lanes": 64.0
+    },
+    "c8_confirmatory_768_hours_before": {
+      "at_20_lanes_post_c7": 16.0,
+      "at_2_lanes": 160.0
+    }
+  }
+}

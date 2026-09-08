@@ -1,0 +1,40 @@
+{
+  "schema_version": "v4-c8-confirmatory-composition-by-scenario-v1",
+  "observed_at_utc": "2026-09-08T07:45:00Z",
+  "milestone": 200,
+  "milestone_note": "Compiled at 204 valid episodes (passed 200 threshold)",
+  "ledger_compile_id": "20260908f",
+  "prior_milestone_compile_id": "20260908e",
+  "next_milestone_compile_at": 400,
+  "ledger_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/confirmatory-ledger-20260908f/accepted_ledger.jsonl",
+  "progress": {"behavioral_valid": 204, "total_queued": 768, "coverage_fraction": 0.2656},
+  "aggregate_outcomes": {"no_grasp": 195, "transport_incomplete": 9},
+  "grasp_achieved_count": 9,
+  "by_scenario": {
+    "original_sham": {"episodes_completed": 69, "no_grasp": 67, "transport_incomplete": 2, "grasp_achieved": 2, "grasp_rate": 0.029},
+    "destination_static": {"episodes_completed": 63, "no_grasp": 59, "transport_incomplete": 4, "grasp_achieved": 4, "grasp_rate": 0.063},
+    "move_stop": {"episodes_completed": 72, "no_grasp": 69, "transport_incomplete": 3, "grasp_achieved": 2, "grasp_rate": 0.028}
+  },
+  "ordering_assessment": {
+    "pilot_ordering": "destination_static (75%) > move_stop (50%) > original_sham (25%)",
+    "confirmatory_observed_at_204": "destination_static (6.3%) > original_sham (2.9%) ≈ move_stop (2.8%)",
+    "ordering_holds": "insufficient_coverage",
+    "ordering_persistence_note": "Destination_static has ranked first at milestones 84, 101, 161, and 204; magnitudes remain far below pilot reference and are not claimed as significant.",
+    "note": "Directionally consistent with pilot across four successive milestones; not testable at 204/768"
+  },
+  "spread_compression_history": {
+    "at_84": {"destination_static": 0.080, "move_stop": 0.035, "original_sham": 0.000},
+    "at_101": {"destination_static": 0.061, "move_stop": 0.032, "original_sham": 0.027},
+    "at_161": {"destination_static": 0.078, "move_stop": 0.036, "original_sham": 0.018},
+    "at_204": {"destination_static": 0.063, "move_stop": 0.028, "original_sham": 0.029},
+    "pilot_reference_not_expected_magnitude": {"destination_static": 0.75, "move_stop": 0.50, "original_sham": 0.25}
+  },
+  "lanes_with_completes": {"c8m00": 15, "c8m01": 6, "c8m02": 6, "c8m03": 7, "c8m05": 39, "c8m10": 2, "c8m13": 38, "c8m14": 38, "c8m16": 38, "c8m17": 7, "c8m18": 6, "c8m19": 2},
+  "sim_first_unsuspend": {
+    "automatic_fired_before_manual_enforce": false,
+    "manual_enforce_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_gpu_placement_unsuspend_20260908a.json",
+    "c8_policies_unsuspended": 16,
+    "healthy_pairs_after_unsuspend": 8
+  },
+  "regression_check": {"serialization": "none", "preflight_lock_collision": "none on fresh attempts"}
+}

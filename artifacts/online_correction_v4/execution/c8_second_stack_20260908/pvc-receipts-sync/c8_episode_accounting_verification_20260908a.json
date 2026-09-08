@@ -1,0 +1,27 @@
+{
+  "schema_version": "v4-c8-episode-accounting-verification-v1",
+  "observed_at_utc": "2026-09-08T06:05:00Z",
+  "ledger_compile_id": "20260908e",
+  "baseline_compile_id": "20260908d",
+  "verification": {
+    "baseline_episode_count": 83,
+    "current_episode_count": 101,
+    "episodes_retained_from_baseline": 83,
+    "episodes_lost_from_baseline": 0,
+    "new_episodes_since_baseline": 18,
+    "non_valid_rows_in_current": 0,
+    "partial_episodes_counted_as_behavioral": 0,
+    "verdict": "accounting_intact_through_reclaim_and_redispatch"
+  },
+  "productive_lane_integrity": {
+    "c8m13": {"expected": 38, "observed_in_ledger": 38, "status": "intact"},
+    "c8m14": {"expected": 38, "observed_in_ledger": 38, "status": "intact_after_productive_lane_protection"},
+    "c8m00": {"observed": 8, "note": "reclaimed orphan policy; prior completes preserved"}
+  },
+  "new_throughput_lanes_since_sim_first": {
+    "c8m05": 16,
+    "c8m16": 1
+  },
+  "failure_modes_observed": ["no_grasp", "transport_incomplete"],
+  "infra_excluded": "Failed/Suspended jobs and orphan halves not counted in accepted ledger"
+}

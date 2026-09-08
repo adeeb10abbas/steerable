@@ -1,0 +1,60 @@
+{
+  "schema_version": "v4-c8-execution-status-receipt-v1",
+  "observed_at_utc": "2026-09-08T06:05:00Z",
+  "confirmatory_ledger_compile_id": "20260908e",
+  "confirmatory_ledger_compile_id_50_milestone": "20260908d",
+  "next_milestone_compile_at": 200,
+  "confirmatory_progress": {
+    "valid": 101,
+    "remaining": 667,
+    "by_scenario": {
+      "original_sham": {"completed": 37, "grasp_achieved": 1, "grasp_rate": 0.027},
+      "destination_static": {"completed": 33, "grasp_achieved": 2, "grasp_rate": 0.061},
+      "move_stop": {"completed": 31, "grasp_achieved": 1, "grasp_rate": 0.032}
+    },
+    "ordering_holds": "insufficient_coverage",
+    "ordering_direction": "destination_static > move_stop > original_sham — directionally consistent with pilot (75/50/25%), not testable"
+  },
+  "sim_first_placement": {
+    "healthy_pairs": 8,
+    "healthy_lanes": ["c8m02", "c8m03", "c8m05", "c8m08", "c8m10", "c8m13", "c8m16", "c8m17"],
+    "before_fix": {"policy_running": 8, "sim_running": 1, "healthy_pairs": 1},
+    "after_fix": {"policy_running": 8, "sim_running": 14, "healthy_pairs": 8},
+    "fix_verdict": "sim_first_placement_confirmed_effective"
+  },
+  "accounting_verification_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_episode_accounting_verification_20260908a.json",
+  "confirmatory_lanes": [
+    {"lane_id": "c8m00", "completed": 8, "queued": 30, "state": "reclaimed", "note": "sim Error, policy Suspended"},
+    {"lane_id": "c8m01", "completed": 0, "queued": 38, "state": "failed", "note": "prior orphan reclaimed"},
+    {"lane_id": "c8m02", "completed": 0, "queued": 38, "state": "healthy_pair"},
+    {"lane_id": "c8m03", "completed": 0, "queued": 38, "state": "healthy_pair"},
+    {"lane_id": "c8m04", "completed": 0, "queued": 38, "state": "partial", "note": "sim Running, policy Suspended"},
+    {"lane_id": "c8m05", "completed": 16, "queued": 22, "state": "healthy_pair_running"},
+    {"lane_id": "c8m06", "completed": 0, "queued": 38, "state": "partial"},
+    {"lane_id": "c8m07", "completed": 0, "queued": 38, "state": "failed", "note": "sim Failed"},
+    {"lane_id": "c8m08", "completed": 0, "queued": 38, "state": "healthy_pair"},
+    {"lane_id": "c8m09", "completed": 0, "queued": 38, "state": "partial"},
+    {"lane_id": "c8m10", "completed": 0, "queued": 38, "state": "healthy_pair"},
+    {"lane_id": "c8m11", "completed": 0, "queued": 38, "state": "failed", "note": "sim Failed"},
+    {"lane_id": "c8m12", "completed": 0, "queued": 38, "state": "failed", "note": "sim Failed"},
+    {"lane_id": "c8m13", "completed": 38, "queued": 0, "state": "healthy_pair", "note": "intact after protection"},
+    {"lane_id": "c8m14", "completed": 38, "queued": 0, "state": "complete", "note": "38 episodes verified in ledger"},
+    {"lane_id": "c8m15", "completed": 0, "queued": 38, "state": "failed", "note": "sim Failed"},
+    {"lane_id": "c8m16", "completed": 1, "queued": 37, "state": "healthy_pair_running"},
+    {"lane_id": "c8m17", "completed": 0, "queued": 38, "state": "healthy_pair"},
+    {"lane_id": "c8m18", "completed": 0, "queued": 38, "state": "partial"},
+    {"lane_id": "c8m19", "completed": 0, "queued": 38, "state": "partial"}
+  ],
+  "agent_c_hooks": {
+    "c8_confirmatory_ledger_compile_id": "20260908e",
+    "c8_confirmatory_ledger_compile_id_50": "20260908d",
+    "status_label": "confirmatory_in_progress_101_of_768_sim_first_fix_verified"
+  },
+  "blockers": [
+    {"id": "200_milestone", "impact": "667 episodes remain", "action": "Recompile at 200"},
+    {"id": "failed_sim_lanes", "impact": "c8m07, c8m11, c8m12, c8m15 sim Failed", "action": "Capacity agent retry after slot consolidation"},
+    {"id": "c7_tail", "impact": "~188 C7 episodes on shared A40 pool", "action": "Bounded wait; full pool release -> ~16h for remaining 667"},
+    {"id": "ordering", "impact": "101/768", "action": "insufficient_coverage"}
+  ],
+  "source_commit": "b3f5b102"
+}

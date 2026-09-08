@@ -1,0 +1,30 @@
+{
+  "schema_version": "v4-c8-confirmatory-composition-by-scenario-v1",
+  "observed_at_utc": "2026-09-08T06:05:00Z",
+  "milestone": 100,
+  "milestone_note": "Compiled at 101 valid episodes (passed 100 threshold)",
+  "ledger_compile_id": "20260908e",
+  "next_milestone_compile_at": 200,
+  "ledger_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/confirmatory-ledger-20260908e/accepted_ledger.jsonl",
+  "progress": {"behavioral_valid": 101, "total_queued": 768, "coverage_fraction": 0.1315},
+  "aggregate_outcomes": {"no_grasp": 97, "transport_incomplete": 4},
+  "grasp_achieved_count": 4,
+  "by_scenario": {
+    "original_sham": {"episodes_completed": 37, "no_grasp": 36, "transport_incomplete": 1, "grasp_achieved": 1, "grasp_rate": 0.027},
+    "destination_static": {"episodes_completed": 33, "no_grasp": 31, "transport_incomplete": 2, "grasp_achieved": 2, "grasp_rate": 0.061},
+    "move_stop": {"episodes_completed": 31, "no_grasp": 30, "transport_incomplete": 1, "grasp_achieved": 1, "grasp_rate": 0.032}
+  },
+  "ordering_assessment": {
+    "pilot_ordering": "destination_static (75%) > move_stop (50%) > original_sham (25%)",
+    "confirmatory_observed_at_101": "destination_static (6.1%) > move_stop (3.2%) > original_sham (2.7%)",
+    "ordering_holds": "insufficient_coverage",
+    "note": "Directionally consistent with pilot; not testable at 101/768"
+  },
+  "lanes_with_completes": {"c8m00": 8, "c8m05": 16, "c8m13": 38, "c8m14": 38, "c8m16": 1},
+  "sim_first_fix": {
+    "healthy_pairs_before": 1,
+    "healthy_pairs_after": 8,
+    "healthy_lanes": ["c8m02", "c8m03", "c8m05", "c8m08", "c8m10", "c8m13", "c8m16", "c8m17"]
+  },
+  "regression_check": {"serialization": "none", "sampling_seed": "none", "reset_registry_digest": "none"}
+}

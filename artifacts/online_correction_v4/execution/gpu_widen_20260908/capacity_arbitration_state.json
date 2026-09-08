@@ -33,7 +33,8 @@
     "policy_id": "c8_a40_spread",
     "c6_policy_id": "c6_a10040_spread",
     "rerun_command": ".venv/bin/python tools/enforce_v4_capacity_arbitration.py --mode gpu_placement --policy c8_a40_spread",
-    "rendered_root_for_c8": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r1"
+    "rendered_root_for_c8": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r1",
+    "enforce_safety": "Skip replace when partner leg Running; never replace Missing/Unknown pods (between-episodes partial lanes)."
   },
   "last_enforcement_at_utc": "2026-09-08T00:49:02Z",
   "mode": "normal",

@@ -105,10 +105,25 @@ def lane_matches_policy(lane_id: str, placement_policy: Mapping[str, Any]) -> bo
 
 
 def job_should_replace(job: JobRef) -> bool:
-    """Replace only Pending/Missing pods lacking spread; never disrupt Running GPU work."""
+    """Replace only Pending/Failed pods lacking spread; never disrupt Running GPU work."""
     if job.has_spread:
         return False
-    return job.pod_phase in {"Pending", "Missing", "Failed", "Unknown"}
+    # Missing/Unknown often indicates a between-episodes restart while the partner leg
+    # is still Running; treat those as productive partial lanes, not idle clutter.
+    return job.pod_phase in {"Pending", "Failed"}
+
+
+def job_has_running_partner(
+    job: JobRef,
+    *,
+    lanes_by_id: Mapping[str, Sequence[JobRef]],
+) -> bool:
+    for peer in lanes_by_id.get(job.lane_id) or ():
+        if peer.name == job.name or peer.attempt_id != job.attempt_id:
+            continue
+        if peer.pod_phase == "Running":
+            return True
+    return False
 
 
 def build_job_doc_with_placement(
@@ -250,6 +265,7 @@ def job_needs_placement(
     *,
     placement_policy: Mapping[str, Any],
     protect_list: Mapping[str, Any],
+    lanes_by_id: Mapping[str, Sequence[JobRef]],
 ) -> bool:
     if not lane_matches_policy(job.lane_id, placement_policy):
         return False
@@ -261,6 +277,8 @@ def job_needs_placement(
         attempt_id=job.attempt_id,
         protect_list=protect_list,
     ):
+        return False
+    if job_has_running_partner(job, lanes_by_id=lanes_by_id):
         return False
     return job_should_replace(job)
 
@@ -306,7 +324,12 @@ def enforce_gpu_placement(
             )
         )
     for job in sorted(parsed, key=lambda row: (row.lane_id, row.role, row.name)):
-        if not job_needs_placement(job, placement_policy=placement_policy, protect_list=protect_list):
+        if not job_needs_placement(
+            job,
+            placement_policy=placement_policy,
+            protect_list=protect_list,
+            lanes_by_id=lanes_by_id,
+        ):
             continue
         if job.pod_phase == "Running":
             actions.append(

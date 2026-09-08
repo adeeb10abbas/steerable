@@ -1,0 +1,31 @@
+{
+  "schema_version": "v4-c6-wave-milestone-receipt-v1",
+  "compiled_at_utc": "2026-09-08T03:05:00Z",
+  "wave_id": "c6confirm20260908f",
+  "wave_label": "D",
+  "attempt_range": "attempt0161-attempt0192",
+  "planned_wave_episodes": 384,
+  "confirmatory_terminals": 32,
+  "milestone": 32,
+  "composition": {
+    "by_scenario": {
+      "move_stop": 15,
+      "destination_static": 9,
+      "original_sham": 8
+    },
+    "by_outcome": {
+      "no_grasp": 28,
+      "transport_incomplete": 3,
+      "wrong_goal_region": 1
+    },
+    "by_status": {
+      "valid": 32
+    }
+  },
+  "lock_collision_remediation": {
+    "c6m17": "attempt0178 failed; fresh attempt0193 sim Running (create-c6confirm20260908f-retry-m17m23.json)",
+    "c6m23": "attempt0184 failed; fresh attempt0194 sim Running"
+  },
+  "next_milestones": [128, 384],
+  "supersedes": "c6_wave_d_milestone_receipt_20260908b.json"
+}

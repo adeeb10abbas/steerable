@@ -1,0 +1,39 @@
+{
+  "schema_version": "v4-c8-destination-static-confound-audit-v1",
+  "observed_at_utc": "2026-09-08T04:30:00Z",
+  "question": "Is destination_static accidentally easier because the object starts closer to the goal region?",
+  "verdict": "green_start_geometry_identical_reference_preplaced_by_design",
+  "pick_object": {
+    "role": "baked_green_cube_3cm",
+    "base_position_scene_xy_m": [-0.21, -0.05],
+    "source": "reset_registry.released.json object_specs — identical across all scenarios"
+  },
+  "reference_object": {
+    "role": "baked_yellow_cube_3cm",
+    "base_position_scene_xy_m": [-0.11, 0.05],
+    "note": "Same reset jitter registry for all scenarios; shared env_seed pool 2100050000-2100050063 per scenario in confirmatory queue"
+  },
+  "scenario_mechanism_diff": {
+    "original_sham": "Reference displacement fraction 0.0 always (sham); no event delivery",
+    "destination_static": "Reference pre-offset to destination_fraction=1.0 * displacement_m from t=0 (yellow block at goal region); stationary; by design per motion.py DESTINATION_STATIC",
+    "move_stop": "Reference moves after natural grasp event on minimum-jerk profile"
+  },
+  "counterbalance_parity": {
+    "confirmatory": "256 episodes per scenario; identical event_phase_fraction {0,0.25,0.5,0.75}, balanced physical_translation_sign and goals",
+    "pilot": "8 per scenario; original_sham and destination_static both stationary; move_stop motion-only difference in pilot_kind"
+  },
+  "implication_for_grasp_rates": {
+    "pick_geometry": "NOT easier for grasp — green cube start identical",
+    "visual_goal_cue": "destination_static places yellow reference at goal before pick — intentional research manipulation, not accidental confound; could aid post-grasp transport/placement visually",
+    "reviewer_response": "If ordering holds at scale, report that reference-at-goal is the hypothesized mechanism, not shortened pick distance"
+  },
+  "confirmatory_grasp_at_audit_time": {
+    "destination_static_grasp": 1,
+    "total_valid": 55,
+    "ordering_testable": false
+  },
+  "code_references": [
+    "experiments/online_correction_v4/motion.py ReferenceMotionController DESTINATION_STATIC",
+    "experiments/online_correction_v4/runner.py _maybe_mark_event_delivered skips original_sham and destination_static"
+  ]
+}

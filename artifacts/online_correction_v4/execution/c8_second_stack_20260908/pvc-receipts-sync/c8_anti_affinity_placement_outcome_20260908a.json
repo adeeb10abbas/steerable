@@ -1,0 +1,32 @@
+{
+  "schema_version": "v4-c8-anti-affinity-placement-outcome-v1",
+  "observed_at_utc": "2026-09-08T04:30:00Z",
+  "capacity_agent_change": "topologySpreadConstraints + soft podAntiAffinity via tools/v4_gpu_scheduling.py",
+  "c8_coordination": "Did not re-render independently; capacity agent owns placement policy on existing lane bundles",
+  "before": {"running_pods": 5, "pending_pods": 35, "running_lanes": ["c8m13", "c8m14", "c8m15"], "lanes_with_completes": ["c8m13", "c8m14"]},
+  "after": {
+    "running_pods": 8,
+    "pending_pods": 29,
+    "newly_scheduled_lanes": ["c8m00", "c8m17", "c8m18", "c8m19"],
+    "partial_lane_detail": {
+      "c8m00": "policy Running, sim Pending",
+      "c8m17": "policy Running, sim Pending",
+      "c8m18": "policy Running, sim Pending",
+      "c8m19": "sim Running, policy Pending"
+    },
+    "fully_running_pairs": ["c8m13", "c8m14"],
+    "still_blocked_bulk_c8m01_c8m12": ["c8m01", "c8m02", "c8m03", "c8m04", "c8m05", "c8m06", "c8m07", "c8m08", "c8m09", "c8m10", "c8m11", "c8m12"],
+    "still_blocked_c8m16": true,
+    "lanes_with_completes": ["c8m13", "c8m14"]
+  },
+  "binding_constraint_test": {
+    "pairing_bin_packing_was_binding": "partially",
+    "evidence": "Anti-affinity placed 4 additional lane pairs (c8m00, c8m17-19) without waiting for full C7 tail; 13/17 previously blocked bulk lanes still Pending",
+    "serial_absorption": "All 53 behavioral completes still from c8m13 (34) + c8m14 (19); new lanes not yet completing"
+  },
+  "regression_check_on_new_lanes": {
+    "serialization": "none observed on newly scheduled pods",
+    "sampling_seed": "none",
+    "reset_registry_digest": "verified unchanged"
+  }
+}

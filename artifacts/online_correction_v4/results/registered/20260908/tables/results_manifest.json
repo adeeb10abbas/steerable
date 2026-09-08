@@ -36,7 +36,7 @@
         "accepted_valid_unique": 0,
         "coverage_fraction": 0.0,
         "coverage_label": "0/768 confirmatory accepted; 384/768 dispatched",
-        "dispatch_receipt": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/create-c6confirm20260908d.json",
+        "dispatch_receipt": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/create-c6confirm20260908f.json",
         "dispatch_status": "dispatched_pending_capacity",
         "dispatched_episodes": 384,
         "export_phase": "confirmatory",
@@ -44,9 +44,20 @@
         "lane_count": 32,
         "ledger_compile_id": null,
         "missing_episodes": 768,
-        "note": "Wave D dispatched; wave E follows on Agent B schedule.",
+        "note": "Wave D re-rendered as 20260908f after shared-checkout runner conflict; 0 confirmatory terminals; wave E follows.",
         "planned_episodes": 768,
-        "wave": "D"
+        "post_dispatch_observed": {
+          "confirmatory_terminals": 0,
+          "note": "First sims passed runner binding; remaining Pending on A100/B200 scheduling (bin-packing), not runner mismatch.",
+          "policy_pending": 23,
+          "policy_running": 9,
+          "runner_preflight_pass": true,
+          "sim_pending": 21,
+          "sim_running": 10
+        },
+        "render_root": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f",
+        "runner_binding_resolution": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/runner_binding_resolution_20260908.json",
+        "wave": "F"
       },
       "outcome_composition": {
         "no_grasp": 18,
@@ -65,61 +76,64 @@
     },
     "C8": {
       "confirmatory_dispatch": {
-        "accepted_valid_unique": 6,
-        "aggregate_outcomes": {
-          "no_grasp": 6
-        },
+        "accepted_valid_unique": 84,
+        "aggregate_outcomes": null,
         "by_scenario": {
           "destination_static": {
-            "completed": 1,
-            "grasp_achieved": 0,
-            "no_grasp": 1,
-            "transport_incomplete": 0
+            "completed": 25,
+            "grasp_achieved": 2,
+            "no_grasp": 23,
+            "transport_incomplete": 2
           },
           "move_stop": {
-            "completed": 1,
-            "grasp_achieved": 0,
-            "no_grasp": 1,
-            "transport_incomplete": 0
+            "completed": 29,
+            "grasp_achieved": 1,
+            "no_grasp": 28,
+            "transport_incomplete": 1
           },
           "original_sham": {
-            "completed": 4,
+            "completed": 30,
             "grasp_achieved": 0,
-            "no_grasp": 4,
+            "no_grasp": 30,
             "transport_incomplete": 0
           }
         },
-        "composition_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_confirmatory_composition_by_scenario_20260908a.json",
+        "composition_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_confirmatory_composition_by_scenario_20260908d.json",
         "confirmatory_lanes": [
           {
-            "completed": 0,
+            "completed": 8,
             "lane_id": "c8m00",
-            "queued": 38,
-            "state": "blocked"
+            "note": "policy Running",
+            "queued": 30,
+            "state": "running"
           },
           {
             "completed": 0,
             "lane_id": "c8m01",
+            "note": "sim Running",
             "queued": 38,
-            "state": "blocked"
+            "state": "running"
           },
           {
             "completed": 0,
             "lane_id": "c8m02",
+            "note": "policy Running, sim Pending",
             "queued": 38,
-            "state": "blocked"
+            "state": "partial"
           },
           {
             "completed": 0,
             "lane_id": "c8m03",
+            "note": "policy Running, sim Pending",
             "queued": 38,
-            "state": "blocked"
+            "state": "partial"
           },
           {
             "completed": 0,
             "lane_id": "c8m04",
+            "note": "policy Running, sim Pending",
             "queued": 38,
-            "state": "blocked"
+            "state": "partial"
           },
           {
             "completed": 0,
@@ -170,22 +184,24 @@
             "state": "blocked"
           },
           {
-            "completed": 6,
+            "completed": 38,
             "lane_id": "c8m13",
-            "queued": 32,
-            "state": "running"
+            "note": "policy Running, sim Pending",
+            "queued": 0,
+            "state": "partial"
           },
           {
-            "completed": 0,
+            "completed": 38,
             "lane_id": "c8m14",
-            "queued": 38,
-            "state": "running"
+            "note": "policy Running, sim Completed (lane finishing)",
+            "queued": 0,
+            "state": "partial"
           },
           {
             "completed": 0,
             "lane_id": "c8m15",
             "queued": 38,
-            "state": "running"
+            "state": "blocked"
           },
           {
             "completed": 0,
@@ -196,34 +212,40 @@
           {
             "completed": 0,
             "lane_id": "c8m17",
+            "note": "policy Running, sim Pending",
             "queued": 38,
-            "state": "blocked"
+            "state": "partial"
           },
           {
             "completed": 0,
             "lane_id": "c8m18",
+            "note": "policy Running, sim Pending",
             "queued": 38,
-            "state": "blocked"
+            "state": "partial"
           },
           {
             "completed": 0,
             "lane_id": "c8m19",
+            "note": "retry Pending after policy-readiness timeout",
             "queued": 38,
             "state": "blocked"
           }
         ],
-        "coverage_fraction": 0.007812,
-        "coverage_label": "6/768 confirmatory accepted; 768/768 dispatched",
+        "confound_check_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_destination_static_confound_check_20260908a.json",
+        "coverage_fraction": 0.109375,
+        "coverage_label": "84/768 confirmatory accepted; 768/768 dispatched",
         "dispatch_status": "dispatched",
         "dispatched_episodes": 768,
-        "execution_status_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908d.json",
+        "execution_status_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908i.json",
         "export_phase": "confirmatory",
         "export_status": "dispatched_partial",
-        "ledger_compile_id": "20260908a",
-        "missing_episodes": 762,
+        "ledger_compile_id": "20260908d",
+        "ledger_compile_id_live_interim": "20260908e_interim_84",
+        "missing_episodes": 684,
+        "next_milestone_compile_at": 100,
+        "ordering_holds": "insufficient_coverage",
         "planned_episodes": 768,
-        "wave": "main",
-        "wave_width_note": "Only c8m13 has behavioral completes at current width; per-scenario ordering not yet testable."
+        "wave": "main"
       },
       "outcome_composition": {
         "no_grasp": 12,
@@ -245,9 +267,9 @@
   "schema_version": "v4-registered-campaign-results-manifest-v1",
   "tables": {
     "audit_report.json": {
-      "bytes": 15445,
+      "bytes": 19083,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/audit_report.json",
-      "sha256": "b39ee6925d07b6d90d80c038462c81edeb510bcf6fc101ef7948fa9f0df27142"
+      "sha256": "6867ddc996575abb517484774d08e7a5dcafe3043301a89faaa3719ad1e9b75f"
     },
     "blocked_families.csv": {
       "bytes": 1242,
@@ -275,14 +297,19 @@
       "sha256": "1da653b9c84ee89d50c93620aa2dd23b48025df539c3eec92f19566a0d1712fd"
     },
     "c8_confirmatory_grasp_by_scenario.csv": {
-      "bytes": 341,
+      "bytes": 338,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c8_confirmatory_grasp_by_scenario.csv",
-      "sha256": "1e1d9ebb88c91dd114e1668bdcb8e72790d076cf89030ccf148d707718e1edf8"
+      "sha256": "ee162580958b10b9bfcdbbf8d003d6f34c9e73b4c0bff9366383603811294925"
     },
     "c8_confirmatory_outcome_composition.csv": {
-      "bytes": 33,
+      "bytes": 58,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c8_confirmatory_outcome_composition.csv",
-      "sha256": "48929439ea8daba52dd758469bf4bc3ceba83c7ceb7390568a00ef5075bee8bb"
+      "sha256": "9677c3261e70fa289914e51436b7bfbdf5fd5cacd414dd21e7653fb9b83f0d8a"
+    },
+    "c8_destination_static_confound_check.csv": {
+      "bytes": 461,
+      "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c8_destination_static_confound_check.csv",
+      "sha256": "a251806fdfb30f6cfbe2b192f3c9bf2f1d676edb8608a67834be9b3030607c0f"
     },
     "c8_grasp_by_scenario.csv": {
       "bytes": 268,
@@ -315,9 +342,9 @@
       "sha256": "2d006bcf8528932e59c66d4c8f9f56b30a91787a97ece23ff0fe662b87f79da2"
     },
     "family_coverage.csv": {
-      "bytes": 563,
+      "bytes": 567,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/family_coverage.csv",
-      "sha256": "e2a83a0d8ea9835c3e23d3776eab6b5a0122be9dacf588d49527e70116162aec"
+      "sha256": "8972c287332cbeb94d7e5d3386c6e0bb8973e6f14e490ad7db93ddbfc9da8f50"
     },
     "scale_ladder_squeeze.csv": {
       "bytes": 565,
@@ -325,9 +352,9 @@
       "sha256": "9fd28c21eb075ee5baf5460cdb4342b5651dcaae987cda6d2e74b30067ad1062"
     },
     "scope_summary.csv": {
-      "bytes": 472,
+      "bytes": 473,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/scope_summary.csv",
-      "sha256": "fd84f65184ef0b2b89cb83acc441ad7bc4719598b5cffd06bb7108dfd52473e2"
+      "sha256": "d8f0371fb3fa2ec564e4b6657ddb1e11c44654bea98bce9deb58d4fa89af665b"
     }
   },
   "tag": "20260908"

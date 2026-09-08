@@ -8,17 +8,19 @@
     "terminal_goal_violation_fallback_forbidden": true
   },
   "coverage_reconciliation": {
-    "accepted_valid_unique": 6,
+    "accepted_valid_unique": 83,
     "by_family": {
       "C8": {
-        "accepted_valid": 6,
-        "planned": 6
+        "accepted_valid": 83,
+        "event_delivered": 1,
+        "planned": 83,
+        "trigger_eligible": 3
       }
     },
     "missing_valid": 0,
-    "planned_episodes": 6,
+    "planned_episodes": 83,
     "status_counts": {
-      "valid": 6
+      "valid": 83
     }
   },
   "limitations": [
@@ -26,15 +28,15 @@
     "figures are not generated without accepted trajectory evidence"
   ],
   "validation": {
-    "accepted_unique": 6,
+    "accepted_unique": 83,
     "analysis_scope": "accepted_ledger_loading_and_coverage_reconciliation",
-    "assigned": 6,
+    "assigned": 83,
     "audit_scope": "coverage_and_basic_record_consistency_only",
     "campaign_id": "online_correction_v4",
     "coverage_by_family": {
       "C8": {
-        "accepted_unique": 6,
-        "assigned": 6,
+        "accepted_unique": 83,
+        "assigned": 83,
         "blocked_records": 0,
         "missing": 0
       }
@@ -50,7 +52,7 @@
     "ok": true,
     "primary_response_anchor": "t_event_planned+2.0s",
     "primary_response_horizon_s": 2.0,
-    "valid_failure_records": 6,
+    "valid_failure_records": 83,
     "valid_success_records": 0
   }
 }

@@ -27,7 +27,7 @@
       "accepted_valid_unique": 0,
       "coverage_fraction": 0.0,
       "coverage_label": "0/768 confirmatory accepted; 384/768 dispatched",
-      "dispatch_receipt": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/create-c6confirm20260908d.json",
+      "dispatch_receipt": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/create-c6confirm20260908f.json",
       "dispatch_status": "dispatched_pending_capacity",
       "dispatched_episodes": 384,
       "export_phase": "confirmatory",
@@ -35,66 +35,80 @@
       "lane_count": 32,
       "ledger_compile_id": null,
       "missing_episodes": 768,
-      "note": "Wave D dispatched; wave E follows on Agent B schedule.",
+      "note": "Wave D re-rendered as 20260908f after shared-checkout runner conflict; 0 confirmatory terminals; wave E follows.",
       "planned_episodes": 768,
-      "wave": "D"
+      "post_dispatch_observed": {
+        "confirmatory_terminals": 0,
+        "note": "First sims passed runner binding; remaining Pending on A100/B200 scheduling (bin-packing), not runner mismatch.",
+        "policy_pending": 23,
+        "policy_running": 9,
+        "runner_preflight_pass": true,
+        "sim_pending": 21,
+        "sim_running": 10
+      },
+      "render_root": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f",
+      "runner_binding_resolution": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/runner_binding_resolution_20260908.json",
+      "wave": "F"
     },
     "C8": {
-      "accepted_valid_unique": 6,
-      "aggregate_outcomes": {
-        "no_grasp": 6
-      },
+      "accepted_valid_unique": 84,
+      "aggregate_outcomes": null,
       "by_scenario": {
         "destination_static": {
-          "completed": 1,
-          "grasp_achieved": 0,
-          "no_grasp": 1,
-          "transport_incomplete": 0
+          "completed": 25,
+          "grasp_achieved": 2,
+          "no_grasp": 23,
+          "transport_incomplete": 2
         },
         "move_stop": {
-          "completed": 1,
-          "grasp_achieved": 0,
-          "no_grasp": 1,
-          "transport_incomplete": 0
+          "completed": 29,
+          "grasp_achieved": 1,
+          "no_grasp": 28,
+          "transport_incomplete": 1
         },
         "original_sham": {
-          "completed": 4,
+          "completed": 30,
           "grasp_achieved": 0,
-          "no_grasp": 4,
+          "no_grasp": 30,
           "transport_incomplete": 0
         }
       },
-      "composition_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_confirmatory_composition_by_scenario_20260908a.json",
+      "composition_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_confirmatory_composition_by_scenario_20260908d.json",
       "confirmatory_lanes": [
         {
-          "completed": 0,
+          "completed": 8,
           "lane_id": "c8m00",
-          "queued": 38,
-          "state": "blocked"
+          "note": "policy Running",
+          "queued": 30,
+          "state": "running"
         },
         {
           "completed": 0,
           "lane_id": "c8m01",
+          "note": "sim Running",
           "queued": 38,
-          "state": "blocked"
+          "state": "running"
         },
         {
           "completed": 0,
           "lane_id": "c8m02",
+          "note": "policy Running, sim Pending",
           "queued": 38,
-          "state": "blocked"
+          "state": "partial"
         },
         {
           "completed": 0,
           "lane_id": "c8m03",
+          "note": "policy Running, sim Pending",
           "queued": 38,
-          "state": "blocked"
+          "state": "partial"
         },
         {
           "completed": 0,
           "lane_id": "c8m04",
+          "note": "policy Running, sim Pending",
           "queued": 38,
-          "state": "blocked"
+          "state": "partial"
         },
         {
           "completed": 0,
@@ -145,22 +159,24 @@
           "state": "blocked"
         },
         {
-          "completed": 6,
+          "completed": 38,
           "lane_id": "c8m13",
-          "queued": 32,
-          "state": "running"
+          "note": "policy Running, sim Pending",
+          "queued": 0,
+          "state": "partial"
         },
         {
-          "completed": 0,
+          "completed": 38,
           "lane_id": "c8m14",
-          "queued": 38,
-          "state": "running"
+          "note": "policy Running, sim Completed (lane finishing)",
+          "queued": 0,
+          "state": "partial"
         },
         {
           "completed": 0,
           "lane_id": "c8m15",
           "queued": 38,
-          "state": "running"
+          "state": "blocked"
         },
         {
           "completed": 0,
@@ -171,34 +187,40 @@
         {
           "completed": 0,
           "lane_id": "c8m17",
+          "note": "policy Running, sim Pending",
           "queued": 38,
-          "state": "blocked"
+          "state": "partial"
         },
         {
           "completed": 0,
           "lane_id": "c8m18",
+          "note": "policy Running, sim Pending",
           "queued": 38,
-          "state": "blocked"
+          "state": "partial"
         },
         {
           "completed": 0,
           "lane_id": "c8m19",
+          "note": "retry Pending after policy-readiness timeout",
           "queued": 38,
           "state": "blocked"
         }
       ],
-      "coverage_fraction": 0.007812,
-      "coverage_label": "6/768 confirmatory accepted; 768/768 dispatched",
+      "confound_check_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_destination_static_confound_check_20260908a.json",
+      "coverage_fraction": 0.109375,
+      "coverage_label": "84/768 confirmatory accepted; 768/768 dispatched",
       "dispatch_status": "dispatched",
       "dispatched_episodes": 768,
-      "execution_status_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908d.json",
+      "execution_status_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908i.json",
       "export_phase": "confirmatory",
       "export_status": "dispatched_partial",
-      "ledger_compile_id": "20260908a",
-      "missing_episodes": 762,
+      "ledger_compile_id": "20260908d",
+      "ledger_compile_id_live_interim": "20260908e_interim_84",
+      "missing_episodes": 684,
+      "next_milestone_compile_at": 100,
+      "ordering_holds": "insufficient_coverage",
       "planned_episodes": 768,
-      "wave": "main",
-      "wave_width_note": "Only c8m13 has behavioral completes at current width; per-scenario ordering not yet testable."
+      "wave": "main"
     }
   },
   "cross_fixture_contrast": [
@@ -333,16 +355,17 @@
     },
     "C8_confirmatory": {
       "export_coverage": {
-        "accepted_valid_unique": 6,
-        "coverage_fraction": 0.007812,
-        "coverage_label": "6/768 (0.8%)",
+        "accepted_valid_unique": 83,
+        "coverage_fraction": 0.108073,
+        "coverage_label": "83/768 (10.8%)",
         "export_status": "partial",
-        "ledger_compile_id": "20260908a",
-        "missing_episodes": 762,
+        "ledger_compile_id": "20260908d",
+        "missing_episodes": 685,
         "planned_episodes": 768
       },
       "outcome_composition": {
-        "no_grasp": 6
+        "no_grasp": 80,
+        "transport_incomplete": 3
       },
       "path": "artifacts/online_correction_v4/results/registered/20260908/families/C8/20260908c8confirmatory"
     }
@@ -355,7 +378,7 @@
     "279 pre-repair C7 episodes remain excluded from behavioral claims.",
     "C7 partial uses compile-m until FINAL 768/768 compile lands; retired partials documented in compile_retirement_pending.json.",
     "C6/C8 confirmatory tables refresh as Agent B and Agent A ledger compiles accumulate.",
-    "C8 per-scenario grasp ordering contrast is not estimable at current confirmatory width (6/768)."
+    "C8 per-scenario grasp ordering contrast is not estimable at current confirmatory width (insufficient_coverage)."
   ],
   "not_estimable_primary_estimands": [
     "C1/C3/C4 primary wording and reference-selectivity contrasts",
@@ -366,12 +389,14 @@
   "paper_narrative": {
     "headline": "Geometry repair succeeded; registered fixture is scientifically blocked by a scale squeeze",
     "paragraphs": [
-      "**PARTIAL EXPORT** \u2014 three achievable families are in flight. C7 confirmatory coverage 580/768 (75.5%) on compiled_ledger_20260908m (retired partials k/l/m documented in compile_retirement_pending.json pending FINAL 768/768); C6 G7 pilot 24/24 complete with confirmatory wave D dispatched (0/768 confirmatory accepted; 384/768 dispatched); C8 G7 pilot 24/24 with confirmatory 6/768 confirmatory accepted; 768/768 dispatched.",
+      "**PARTIAL EXPORT** \u2014 three achievable families are in flight. C7 confirmatory coverage 580/768 (75.5%) on compiled_ledger_20260908m (retired partials k/l/m documented in compile_retirement_pending.json pending FINAL 768/768); C6 G7 pilot 24/24 complete with confirmatory wave F re-rendered (0/768 confirmatory accepted; 384/768 dispatched); C8 G7 pilot 24/24 with confirmatory 84/768 confirmatory accepted; 768/768 dispatched.",
       "Registered campaign scope: 17,664 planned policy episodes; 2,304 achievable (C6, C7, C8 confirmatory families \u00d7 768); 15,360 scientifically blocked (C1/C3/C4 horizontal information-gate squeeze 9,728; C2 reference_binding information gate 4,096; C5 vertical IK reachability 768). No eligibility criterion, threshold, or scale ladder was amended to recover blocked scope.",
       "Cross-fixture contrast (compiled ledgers): C7 object_pair on Isaac is dominated by no_grasp (574/580) but is not uniformly no_grasp \u2014 compile-m adds 3 transport_incomplete, 2 wrong_goal_region, and 1 support_or_containment_failed (0 successes). C6 containment pilot shows grasps and placement attempts (18 no_grasp, 3 transport_incomplete, 3 wrong_goal_region). C8 second_stack WidowX pilot achieves grasp on 12/24 episodes (12 no_grasp, 12 transport_incomplete); transport_incomplete implies successful grasp with incomplete transport.",
-      "C8 pilot per-scenario grasp rates (destination_static 6/8, move_stop 4/8, original_sham 2/8) form a hypothesis about online scene movement that confirmatory data will test under the registered estimator with Holm multiplicity handling. This pilot ordering is suggestive only and must not be reported as an established result. At 6/768 confirmatory episodes (single active lane c8m13), all outcomes are no_grasp and the pilot ordering is not yet observable at confirmatory scale. The per-scenario grasp contrast is not estimable at current width; if the final cohort remains underpowered for that registered test, it will be marked not estimable rather than reported as a trend.",
+      "C8 pilot per-scenario grasp rates (destination_static 6/8 = 75%, move_stop 4/8 = 50%, original_sham 2/8 = 25%) form a hypothesis about reference-placement effects on online scene movement. At 84/768 confirmatory episodes (milestone compile 20260908d at 50+, 20260908e reserved for 100), observed rates are destination_static 2/25 (8.0%), move_stop 1/29, original_sham 0/30. The ordering direction matches the pilot but remains insufficient_coverage and is marked not estimable under the registered estimator with Holm handling.",
+      "C8 destination_static confound elimination (c8_destination_static_confound_check_20260908a.json): green-to-yellow reset distance is identical at 0.1414 m across all three scenarios over 256 seeds each (original_sham mean=0.1414 m, destination_static mean=0.1414 m, move_stop mean=0.1414 m). Higher destination_static grasp rate is therefore not explained by the object starting closer to the goal region; the registered protocol difference is reference placement (static reference at planned+D versus sham identity and move_stop motion profiles). This converts the scenario ordering from a suggestive trend into a testable claim about reference placement rather than task geometry.",
+      "C6 wave D was cleanly re-rendered as rendered-c6confirm20260908f after a shared-checkout runner conflict; operating rule documented in runner_binding_resolution_20260908.json: when C7 mutates the shared checkout runner, C6 must re-render in-flight waves from the updated released lock\u2014never patch coord bindings on PVC alone. C6 still has 0 confirmatory terminals with simulators running; confirmatory ledger compile pending.",
       "C7 compile provenance is explicit: partial compiles k (548), l (565), m (580), and stale .compiled-ledger-final (551) are retired in favor of compiled_ledger_20260908_FINAL at 768/768 require-full-coverage; see compile_retirement_provenance.csv.",
-      "Capacity finding: C8 confirmatory throughput is bound by the G4-attested A40 GR00T Bridge stratum (20 authorized lane pairs). Once C7 releases the A40 pool, 768 C8 confirmatory episodes at that parallelism require roughly 16 wall-clock hours.",
+      "Capacity finding (revised): a lane pair is a study-design and throughput unit, not a scheduler constraint\u2014policy and simulator are separate single-GPU pods connected over HTTP. Pending failures are attributable to per-node GPU fragmentation and legitimate C7 occupancy, not an unsatisfiable two-GPU request. tools/v4_gpu_pool_sweep.py reclaimed 34 GPUs across four pools (receipt gpu_pool_sweep_receipt.json); tools/v4_gpu_scheduling.py provides reusable c8_a40_spread and c6_a10040_spread placement policies for anti-affinity bin-packing.",
       "Three disclosed setup repairs bound this export: (1) NaturalGraspDetector trigger observation wiring now uses finger-contact coupling instead of robot-base pose; (2) eef_tool_length_m=0.14 flange-versus-fingerpad offset applied uniformly across Isaac fixtures; (3) second_stack SimplerEnv observation and sampling defect repaired with control-boundary sampling and provisioned render libraries.",
       "279 pre-repair C7 episodes are excluded from all behavioral claims; only a ledger compile against the confirmatory manifest separates repaired-path accepted rows from infrastructure-invalid pre-repair attempts.",
       "Disclosed geometry repair v2 (cube-only robot-base -X offset -0.03 m before common XY jitter) restored physical feasibility on the horizontal DROID fixture. Witness-delayed PVC contact timing verified clearance across all 128 jittered resets; every confirmatory path check passes at scale 0.5 (0.06 m displacement).",

@@ -1,0 +1,28 @@
+{
+  "schema_version": "v4-c8-a40-reclaim-outcome-v1",
+  "observed_at_utc": "2026-09-08T04:10:00Z",
+  "prior_coordination_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_a40_reclaim_coordination_20260908a.json",
+  "orphan_reclaim_status": "executed",
+  "before": {
+    "c7_mismatched_policy_running_sim_error_pairs": 10,
+    "c8_pending_pods": 35,
+    "c8_lanes_blocked": 17
+  },
+  "after": {
+    "c7_mismatched_policy_running_sim_error_pairs": 0,
+    "c8_pending_pods": 35,
+    "c8_lanes_blocked": 17,
+    "c8_lanes_running": 3,
+    "c8_lanes_with_completes": ["c8m13", "c8m14"]
+  },
+  "diagnosis": "orphans_cleared_fragmentation_and_c7_occupancy_remain",
+  "evidence": {
+    "orphans_not_primary_blocker_after_reclaim": "C7 mismatched pairs dropped to 0 but c8m00-c8m12 and c8m16-c8m19 remain Pending",
+    "a40_pool_estimate": {"used": 20, "free": 20, "pool_size": 40},
+    "c7_sim_still_on_a40": 18,
+    "scheduling_failure": "Insufficient nvidia.com/gpu on 21 A40-selector nodes (per-node fragmentation; C8 lane pairs need 2 GPUs co-schedulable)",
+    "serial_absorption": "c8m13 (21 eps) + c8m14 (5 eps) absorb all behavioral throughput; bulk lanes not yet scheduled"
+  },
+  "contrast_with_c6": "C6 A100 zombie sim reclaim freed scheduling within 15s; C8 A40 orphan reclaim cleared mismatches but did not unblock bulk Pending lanes—different failure mode",
+  "capacity_agent_action_requested": "Re-runnable A40 sweep confirmed useful for orphan detection; continue monitoring as C7 tail (~178 eps) releases sim slots"
+}

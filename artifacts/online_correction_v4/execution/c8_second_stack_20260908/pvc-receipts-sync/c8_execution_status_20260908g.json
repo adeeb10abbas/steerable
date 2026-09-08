@@ -1,0 +1,59 @@
+{
+  "schema_version": "v4-c8-execution-status-receipt-v1",
+  "observed_at_utc": "2026-09-08T04:10:00Z",
+  "confirmatory_ledger_compile_id": "20260908c",
+  "next_milestone_compile_at": 50,
+  "confirmatory_progress": {
+    "valid": 26,
+    "remaining": 742,
+    "total": 768,
+    "by_scenario": {
+      "original_sham": {"completed": 9, "no_grasp": 9, "transport_incomplete": 0, "grasp_achieved": 0},
+      "destination_static": {"completed": 8, "no_grasp": 7, "transport_incomplete": 1, "grasp_achieved": 1},
+      "move_stop": {"completed": 9, "no_grasp": 9, "transport_incomplete": 0, "grasp_achieved": 0}
+    },
+    "ordering_holds": "insufficient_coverage",
+    "ordering_note": "26/768; 1 grasp in destination_static only; pilot ordering neither confirmed nor rejected"
+  },
+  "capacity_diagnosis": {
+    "shortage_type": "orphans_cleared_fragmentation_and_c7_occupancy_remain",
+    "orphan_reclaim_outcome_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_a40_reclaim_outcome_20260908a.json",
+    "c7_mismatched_pairs_after_sweep": 0,
+    "bulk_lanes_still_pending_after_sweep": true
+  },
+  "wave_width": {
+    "parallel_scheduling_after_reclaim": "partial_serial",
+    "lanes_with_completes": {"c8m13": 21, "c8m14": 5},
+    "lanes_running_not_completing": ["c8m15"],
+    "lanes_blocked": ["c8m00", "c8m01", "c8m02", "c8m03", "c8m04", "c8m05", "c8m06", "c8m07", "c8m08", "c8m09", "c8m10", "c8m11", "c8m12", "c8m16", "c8m17", "c8m18", "c8m19"],
+    "pods_running": 5,
+    "pods_pending": 35
+  },
+  "regression_check": {
+    "serialization": "none through 26 valid across c8m13 and c8m14",
+    "sampling_seed": "none",
+    "reset_registry_digest": "8da6b69c… verified"
+  },
+  "agent_c_hooks": {
+    "c8_confirmatory_ledger_compile_id": "20260908c",
+    "status_label": "confirmatory_in_progress_26_of_768_fragmentation_after_orphan_reclaim"
+  },
+  "blockers": [
+    {
+      "id": "a40_fragmentation_plus_c7_tail",
+      "impact": "17/20 lane pairs Pending despite ~20 free A40 GPUs and 0 orphan pairs",
+      "action": "Wait for C7 sim release as tail completes; monitor bulk lane parallel schedule"
+    },
+    {
+      "id": "serial_absorption",
+      "impact": "c8m13+c8m14 absorb 26/26 completes",
+      "action": "If c8m00-12 stay Pending after C7 tail, fragmentation is confirmed binding limit"
+    },
+    {
+      "id": "ordering_not_testable",
+      "impact": "26/768",
+      "action": "Recompile at 50 and 100 milestones"
+    }
+  ],
+  "source_commit": "27719153"
+}

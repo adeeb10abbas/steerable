@@ -397,6 +397,7 @@ def validate_family_dispositions_cross_artifact(
     errors: list[str],
 ) -> None:
     if campaign_is_terminal(continuation):
+        validate_completed_families_ledger_receipts(continuation, errors)
         return
     campaign_family_ids = {f["id"] for f in config.get("families", [])}
     protocol_family_ids = {f["id"] for f in protocol.get("families", [])}
@@ -430,6 +431,178 @@ def validate_family_dispositions_cross_artifact(
         cfg = next(f for f in config["families"] if f["id"] == fid)
         if gate.get("expected_new_episodes") != cfg["expected_new_episodes"]:
             errors.append(f"gate_report {fid} expected_new_episodes != campaign")
+
+
+TERMINAL_COMPLETED_FAMILY_EXPORT_KEYS = {
+    "C6": "C6_confirmatory",
+    "C7": "C7",
+    "C8": "C8_confirmatory",
+}
+
+
+def _repo_relative_path(path_str: str) -> Path:
+    path = Path(path_str)
+    if not path.is_absolute():
+        return path
+    try:
+        return path.relative_to(ROOT)
+    except ValueError:
+        parts = path.parts
+        if "artifacts" in parts:
+            idx = parts.index("artifacts")
+            return Path(*parts[idx:])
+        return path
+
+
+def _parse_coverage_fraction(label: str) -> tuple[int, int] | None:
+    if not isinstance(label, str) or "/" not in label:
+        return None
+    left, right = label.split("/", 1)
+    try:
+        return int(left), int(right.split()[0])
+    except ValueError:
+        return None
+
+
+def _load_registered_export_manifest(continuation: dict) -> dict[str, Any] | None:
+    export_meta = continuation.get("registered_export") or {}
+    manifest_rel = export_meta.get("manifest_path")
+    if not isinstance(manifest_rel, str) or not manifest_rel.strip():
+        errors_hint = "continuation_state.registered_export.manifest_path"
+        return None
+    manifest_path = ROOT / manifest_rel
+    if not manifest_path.is_file():
+        return None
+    return json.loads(manifest_path.read_text(encoding="utf-8"))
+
+
+def _accepted_ledger_stats(ledger_path: Path) -> tuple[int, int, set[str]]:
+    row_count = 0
+    episode_ids: set[str] = set()
+    families: set[str] = set()
+    for line in ledger_path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        payload = json.loads(line)
+        if not isinstance(payload, dict):
+            raise ValueError(f"{ledger_path}: accepted ledger row must be an object")
+        row_count += 1
+        episode_id = payload.get("episode_id")
+        if isinstance(episode_id, str) and episode_id:
+            episode_ids.add(episode_id)
+        family = payload.get("family")
+        if isinstance(family, str) and family:
+            families.add(family)
+    return row_count, len(episode_ids), families
+
+
+def validate_completed_families_ledger_receipts(continuation: dict, errors: list[str]) -> None:
+    """Terminal-close replacement for design-freeze family disposition cross-checks.
+
+    Asserts continuation_state.completed_families matches on-disk confirmatory
+    ledger receipts referenced by the registered export manifests.
+    """
+    completed = continuation.get("completed_families")
+    if not isinstance(completed, dict) or not completed:
+        errors.append("continuation_state.completed_families must be a non-empty object at campaign close")
+        return
+
+    registered_manifest = _load_registered_export_manifest(continuation)
+    if registered_manifest is None:
+        rel = (continuation.get("registered_export") or {}).get("manifest_path")
+        errors.append(f"registered export manifest missing or unreadable: {rel}")
+        return
+
+    family_exports = registered_manifest.get("family_exports") or {}
+    for family_id, export_key in TERMINAL_COMPLETED_FAMILY_EXPORT_KEYS.items():
+        family_state = completed.get(family_id)
+        if not isinstance(family_state, dict):
+            errors.append(f"continuation_state.completed_families missing {family_id}")
+            continue
+
+        export_entry = family_exports.get(export_key)
+        if not isinstance(export_entry, dict):
+            errors.append(f"registered export manifest missing family_exports.{export_key}")
+            continue
+
+        export_root = _repo_relative_path(str(export_entry.get("path") or ""))
+        results_manifest_path = ROOT / export_root / "results_export_manifest.json"
+        if not results_manifest_path.is_file():
+            errors.append(f"results export manifest missing for {family_id}: {results_manifest_path}")
+            continue
+
+        results_manifest = json.loads(results_manifest_path.read_text(encoding="utf-8"))
+        export_coverage = results_manifest.get("export_coverage") or {}
+        scope_summary = results_manifest.get("scope_summary") or {}
+        accepted_ledger = results_manifest.get("accepted_ledger") or {}
+
+        expected_compile_id = family_state.get("ledger_compile_id")
+        manifest_compile_id = export_coverage.get("ledger_compile_id")
+        if expected_compile_id != manifest_compile_id:
+            errors.append(
+                f"{family_id}: continuation ledger_compile_id {expected_compile_id!r} "
+                f"!= results export manifest {manifest_compile_id!r}"
+            )
+
+        coverage = _parse_coverage_fraction(str(family_state.get("confirmatory_coverage") or ""))
+        if coverage is None:
+            errors.append(f"{family_id}: invalid confirmatory_coverage label")
+            continue
+        accepted_count, planned_count = coverage
+        if accepted_count != planned_count:
+            errors.append(
+                f"{family_id}: confirmatory_coverage must be full at campaign close ({family_state.get('confirmatory_coverage')})"
+            )
+
+        for field_name, actual in (
+            ("export_coverage.accepted_valid_unique", export_coverage.get("accepted_valid_unique")),
+            ("export_coverage.planned_episodes", export_coverage.get("planned_episodes")),
+            ("scope_summary.accepted_unique_episodes", scope_summary.get("accepted_unique_episodes")),
+            ("scope_summary.planned_family_episodes", scope_summary.get("planned_family_episodes")),
+        ):
+            if actual != planned_count:
+                errors.append(
+                    f"{family_id}: {field_name}={actual!r} != expected {planned_count} from continuation"
+                )
+
+        if export_coverage.get("export_status") != "complete":
+            errors.append(f"{family_id}: results export manifest export_status must be complete")
+        if family_state.get("export_status") != "complete":
+            errors.append(f"{family_id}: continuation completed_families.export_status must be complete")
+
+        ledger_rel = _repo_relative_path(str(accepted_ledger.get("path") or ""))
+        ledger_path = ROOT / ledger_rel
+        if not ledger_path.is_file():
+            errors.append(f"{family_id}: accepted ledger missing at {ledger_rel}")
+            continue
+
+        compile_id = str(expected_compile_id or manifest_compile_id or "")
+        if compile_id and compile_id not in ledger_path.as_posix():
+            errors.append(
+                f"{family_id}: accepted ledger path {ledger_rel} does not contain compile id {compile_id!r}"
+            )
+
+        expected_sha = accepted_ledger.get("sha256")
+        if isinstance(expected_sha, str) and HEX64.fullmatch(expected_sha):
+            actual_sha = hashlib.sha256(ledger_path.read_bytes()).hexdigest()
+            if actual_sha != expected_sha:
+                errors.append(f"{family_id}: accepted ledger sha256 mismatch vs results export manifest")
+
+        try:
+            row_count, unique_episodes, ledger_families = _accepted_ledger_stats(ledger_path)
+        except (json.JSONDecodeError, ValueError) as exc:
+            errors.append(f"{family_id}: accepted ledger parse error: {exc}")
+            continue
+
+        if row_count != planned_count or unique_episodes != planned_count:
+            errors.append(
+                f"{family_id}: accepted ledger rows={row_count} unique_episodes={unique_episodes} "
+                f"!= expected {planned_count}"
+            )
+        if ledger_families != {family_id}:
+            errors.append(
+                f"{family_id}: accepted ledger families {sorted(ledger_families)} != {{{family_id}}}"
+            )
 
 
 def validate_stub_artifacts_in_freeze_index(

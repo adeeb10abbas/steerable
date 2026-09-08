@@ -301,8 +301,14 @@ def build_c8_grasp_by_scenario_rows(composition: dict[str, Any], *, cohort: str)
                         "insufficient_coverage_not_estimable"
                         if (composition.get("ordering_assessment") or {}).get("ordering_holds")
                         == "insufficient_coverage"
-                        or int((composition.get("progress") or {}).get("behavioral_valid") or 0) < C8_CONFIRMATORY_PLANNED
-                        else "confirmatory_partial"
+                        or int((composition.get("progress") or {}).get("behavioral_valid") or 0)
+                        < C8_CONFIRMATORY_PLANNED
+                        else (
+                            "confirmatory_final_full_coverage"
+                            if int((composition.get("progress") or {}).get("behavioral_valid") or 0)
+                            >= C8_CONFIRMATORY_PLANNED
+                            else "confirmatory_partial"
+                        )
                     )
                 ),
             }

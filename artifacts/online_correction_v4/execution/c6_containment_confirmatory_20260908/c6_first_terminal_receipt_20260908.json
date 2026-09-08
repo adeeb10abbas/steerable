@@ -1,0 +1,40 @@
+{
+  "schema_version": "v4-c6-first-terminal-receipt-v1",
+  "compiled_at_utc": "2026-09-08T05:50:00Z",
+  "wave_id": "c6confirm20260908f",
+  "attempt_range": "attempt0161-attempt0192",
+  "confirmatory_terminals": 1,
+  "planned_wave_d_episodes": 384,
+  "first_terminal": {
+    "lane_id": "c6m09",
+    "attempt_id": "attempt0170",
+    "episode_id": "online_correction_v4-C6-b027-37a453d03ff30f3a",
+    "scenario": "destination_static",
+    "failure_label": "no_grasp",
+    "status": "valid",
+    "failure_stage": "pickup",
+    "t_episode_end_s": 61.0,
+    "complete_path_suffix": "lane-c6m09/attempt-attempt0170/episodes/online_correction_v4-C6-b027-37a453d03ff30f3a/.../COMPLETE.json"
+  },
+  "composition": {
+    "by_scenario": {
+      "destination_static": 1
+    },
+    "by_outcome": {
+      "no_grasp": 1
+    },
+    "by_status": {
+      "valid": 1
+    }
+  },
+  "cluster_at_first_terminal": {
+    "healthy_pairs": 6,
+    "sim_running": 10,
+    "sim_pending": 4
+  },
+  "blockers_cleared": [
+    "containment_reset_registry.released.json staged on shared checkout",
+    "sim-first paired placement via c6_a10040_spread (capacity agent + enforce pass)"
+  ],
+  "note": "First valid confirmatory terminal after registry staging and paired placement; additional COMPLETE.json expected as 6 healthy lanes drain 12 eps/lane."
+}

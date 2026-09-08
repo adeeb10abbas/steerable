@@ -1,0 +1,10 @@
+{
+  "schema_version": "v4-c6-paired-placement-enforce-pass-v1",
+  "compiled_at_utc": "2026-09-08T05:48:00Z",
+  "command": ".venv/bin/python tools/enforce_v4_capacity_arbitration.py --mode gpu_placement --policy c6_a10040_spread",
+  "coordination_with": "capacity_agent sim-first c6_a10040_spread + split-pair reclaim c6m00-c6m08",
+  "scheduling_state_before": {"healthy_pairs": 2},
+  "scheduling_state_after": {"healthy_pairs": 6, "partial_pairs": 9, "sim_running": 10, "sim_pending": 4},
+  "actions_applied": 8,
+  "note": "Post-pass suspend/unsuspend sync; does not replace capacity agent orphan reclaim receipt in gpu_widen_20260908/gpu_pool_sweep_receipt.json"
+}

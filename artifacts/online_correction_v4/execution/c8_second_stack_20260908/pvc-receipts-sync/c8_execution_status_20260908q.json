@@ -1,0 +1,71 @@
+{
+  "schema_version": "v4-c8-execution-status-receipt-v1",
+  "observed_at_utc": "2026-09-08T08:45:00Z",
+  "confirmatory_ledger_compile_id_200_milestone": "20260908f",
+  "confirmatory_ledger_compile_id_400_milestone": "20260908g",
+  "live_ledger_count": 407,
+  "next_milestone_compile_at": 768,
+  "accounting_verification_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_episode_accounting_verification_20260908f.json",
+  "composition_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_confirmatory_composition_by_scenario_20260908g.json",
+  "grasp_definition_comparison_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_c6_grasp_definition_comparison_20260908a.json",
+  "r3_failed_sim_redispatch_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/create-confirmatory-fresh-attempt-20260908r3-failed-sims.json",
+  "confirmatory_progress": {
+    "valid": 407,
+    "remaining": 361,
+    "by_scenario": {
+      "original_sham": {"completed": 130, "grasp_achieved": 4, "grasp_rate": 0.031},
+      "destination_static": {"completed": 139, "grasp_achieved": 10, "grasp_rate": 0.072},
+      "move_stop": {"completed": 138, "grasp_achieved": 4, "grasp_rate": 0.029}
+    },
+    "ordering_holds": "insufficient_coverage",
+    "ordering_persistence": "destination_static first at 84/101/161/204/407; not significant"
+  },
+  "periodic_unsuspend_gate": {
+    "restored_by_capacity_agent": "180s loop for c8_a40_spread, c6_a10040_spread, C7",
+    "automatic_fired_post_restore": true,
+    "evidence": "r3 lanes c8m04/c8m06 policies unsuspended to Running within ~60s of sim Running without manual enforce; c8m07-15 remain Suspended inside 300s Isaac grace as expected",
+    "manual_enforce_still_needed_at_204": "documented in 20260908f prior to loop restore"
+  },
+  "healthy_pairs": {
+    "count": 7,
+    "lanes": ["c8m01", "c8m02", "c8m03", "c8m10", "c8m17", "c8m18", "c8m19"],
+    "authorized_target": 15,
+    "r3_sim_warming": ["c8m04", "c8m06", "c8m07", "c8m08", "c8m09", "c8m11", "c8m12", "c8m15"],
+    "r3_attempt_map": {"c8m04": "attempt0038", "c8m06": "attempt0039", "c8m07": "attempt0040", "c8m08": "attempt0041", "c8m09": "attempt0042", "c8m11": "attempt0043", "c8m12": "attempt0044", "c8m15": "attempt0045"}
+  },
+  "c7_pool_sequencing": "Tail re-sharded to 14 lanes on attempt0607-0610; ~5h to completion then more A40 for C8 toward 20 pairs",
+  "confirmatory_lanes": [
+    {"lane_id": "c8m05", "attempt_id": "attempt0006", "completed": 39, "queued": 0, "running": 0, "blocked": 0, "state": "lane_complete"},
+    {"lane_id": "c8m16", "attempt_id": "attempt0017", "completed": 38, "queued": 0, "running": 0, "blocked": 0, "state": "lane_complete"},
+    {"lane_id": "c8m13", "attempt_id": "attempt0014", "completed": 38, "queued": 0, "running": 0, "blocked": 0, "state": "lane_complete"},
+    {"lane_id": "c8m14", "attempt_id": "attempt0015", "completed": 38, "queued": 0, "running": 0, "blocked": 0, "state": "lane_complete"},
+    {"lane_id": "c8m00", "attempt_id": "attempt0021", "completed": 39, "queued": 0, "running": 0, "blocked": 0, "state": "lane_complete_or_sim_stopped"},
+    {"lane_id": "c8m01", "attempt_id": "attempt0022", "completed": 30, "queued": 9, "running": 1, "blocked": 0, "state": "healthy_pair_running"},
+    {"lane_id": "c8m02", "attempt_id": "attempt0023", "completed": 31, "queued": 8, "running": 1, "blocked": 0, "state": "healthy_pair_running"},
+    {"lane_id": "c8m03", "attempt_id": "attempt0024", "completed": 33, "queued": 6, "running": 1, "blocked": 0, "state": "healthy_pair_running"},
+    {"lane_id": "c8m04", "attempt_id": "attempt0038", "completed": 0, "queued": 39, "running": 1, "blocked": 0, "state": "r3_fresh_attempt_sim_warming"},
+    {"lane_id": "c8m06", "attempt_id": "attempt0039", "completed": 0, "queued": 39, "running": 1, "blocked": 0, "state": "r3_fresh_attempt_sim_warming"},
+    {"lane_id": "c8m07", "attempt_id": "attempt0040", "completed": 0, "queued": 39, "running": 1, "blocked": 0, "state": "r3_fresh_attempt_sim_warming"},
+    {"lane_id": "c8m08", "attempt_id": "attempt0041", "completed": 0, "queued": 38, "running": 1, "blocked": 0, "state": "r3_fresh_attempt_sim_warming"},
+    {"lane_id": "c8m09", "attempt_id": "attempt0042", "completed": 0, "queued": 38, "running": 1, "blocked": 0, "state": "r3_fresh_attempt_sim_warming"},
+    {"lane_id": "c8m10", "attempt_id": "attempt0037", "completed": 28, "queued": 10, "running": 1, "blocked": 0, "state": "healthy_pair_running"},
+    {"lane_id": "c8m11", "attempt_id": "attempt0043", "completed": 0, "queued": 38, "running": 1, "blocked": 0, "state": "r3_fresh_attempt_sim_warming"},
+    {"lane_id": "c8m12", "attempt_id": "attempt0044", "completed": 0, "queued": 38, "running": 1, "blocked": 0, "state": "r3_fresh_attempt_sim_warming"},
+    {"lane_id": "c8m15", "attempt_id": "attempt0045", "completed": 0, "queued": 38, "running": 1, "blocked": 0, "state": "r3_fresh_attempt_sim_warming"},
+    {"lane_id": "c8m17", "attempt_id": "attempt0034", "completed": 35, "queued": 3, "running": 1, "blocked": 0, "state": "healthy_pair_running"},
+    {"lane_id": "c8m18", "attempt_id": "attempt0035", "completed": 32, "queued": 6, "running": 1, "blocked": 0, "state": "healthy_pair_running"},
+    {"lane_id": "c8m19", "attempt_id": "attempt0036", "completed": 26, "queued": 12, "running": 1, "blocked": 0, "state": "healthy_pair_running"}
+  ],
+  "agent_c_hooks": {
+    "c8_confirmatory_ledger_compile_id_200": "20260908f",
+    "c8_confirmatory_ledger_compile_id_400": "20260908g",
+    "c8_confirmatory_ledger_compile_id_768": "pending_at_407_of_768",
+    "status_label": "confirmatory_407_milestone_20260908g_7_healthy_r3_dispatched"
+  },
+  "blockers": [
+    {"id": "768_completion", "impact": "407/768", "action": "Drive 7 healthy + 8 r3 warming lanes; final compile at 768"},
+    {"id": "healthy_pair_ramp", "impact": "7/15 authorized", "action": "r3 sims through grace + periodic unsuspend; C7 tail finish frees A40"},
+    {"id": "c6_c8_grasp_gap", "impact": "3-10× rate gap persists after label alignment", "action": "Not a counting confound; platform interaction watch — see grasp_definition_comparison receipt"},
+    {"id": "ordering", "impact": "407/768", "action": "insufficient_coverage — report compression honestly"}
+  ]
+}

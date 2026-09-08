@@ -1,0 +1,35 @@
+{
+  "schema_version": "v4-c8-confirmatory-composition-by-scenario-v1",
+  "observed_at_utc": "2026-09-08T08:45:00Z",
+  "milestone": 400,
+  "milestone_note": "Compiled at 407 valid episodes (passed 400 threshold)",
+  "ledger_compile_id": "20260908g",
+  "prior_milestone_compile_id": "20260908f",
+  "next_milestone_compile_at": 768,
+  "ledger_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/confirmatory-ledger-20260908g/accepted_ledger.jsonl",
+  "progress": {"behavioral_valid": 407, "total_queued": 768, "coverage_fraction": 0.530},
+  "aggregate_outcomes": {"no_grasp": 389, "transport_incomplete": 18},
+  "grasp_achieved_count": 18,
+  "failure_modes_observed": ["no_grasp", "transport_incomplete"],
+  "failure_modes_not_yet_observed_on_executed_lanes": ["wrong_goal_region", "infrastructure_failure"],
+  "by_scenario": {
+    "original_sham": {"episodes_completed": 130, "no_grasp": 126, "transport_incomplete": 4, "grasp_achieved": 4, "grasp_rate": 0.031},
+    "destination_static": {"episodes_completed": 139, "no_grasp": 129, "transport_incomplete": 10, "grasp_achieved": 10, "grasp_rate": 0.072},
+    "move_stop": {"episodes_completed": 138, "no_grasp": 134, "transport_incomplete": 4, "grasp_achieved": 4, "grasp_rate": 0.029}
+  },
+  "ordering_assessment": {
+    "pilot_ordering": "destination_static (75%) > move_stop (50%) > original_sham (25%)",
+    "confirmatory_observed_at_407": "destination_static (7.2%) > original_sham (3.1%) > move_stop (2.9%)",
+    "ordering_holds": "insufficient_coverage",
+    "ordering_persistence": "destination_static ranked first at milestones 84, 101, 161, 204, and 407",
+    "note": "Directionally consistent with pilot across five milestones; magnitudes remain far below pilot — not claimed as significant"
+  },
+  "spread_compression_history": {
+    "at_84": {"destination_static": 0.080, "move_stop": 0.035, "original_sham": 0.000},
+    "at_101": {"destination_static": 0.061, "move_stop": 0.032, "original_sham": 0.027},
+    "at_161": {"destination_static": 0.078, "move_stop": 0.036, "original_sham": 0.018},
+    "at_204": {"destination_static": 0.063, "move_stop": 0.028, "original_sham": 0.029},
+    "at_407": {"destination_static": 0.072, "move_stop": 0.029, "original_sham": 0.031},
+    "pilot_reference_not_expected_magnitude": {"destination_static": 0.75, "move_stop": 0.50, "original_sham": 0.25}
+  }
+}

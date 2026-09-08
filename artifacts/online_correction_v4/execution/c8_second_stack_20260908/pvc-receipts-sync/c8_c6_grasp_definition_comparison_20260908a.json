@@ -1,0 +1,48 @@
+{
+  "schema_version": "v4-c8-c6-grasp-definition-comparison-v1",
+  "observed_at_utc": "2026-09-08T08:45:00Z",
+  "purpose": "Determine whether C6 vs C8 grasp-rate gap is confounded by outcome-label definitions before 768",
+  "c8_grasp_definition": {
+    "operational_rule": "grasp_achieved when failure_stage != pickup",
+    "ledger_equivalent": "failure_label == transport_incomplete",
+    "interpretation": "Object was grasped but placement/transport did not complete",
+    "success_rows": "success=false for all observed C8 confirmatory rows at 407"
+  },
+  "c6_grasp_definition": {
+    "operational_rule": "grasp_achieved when failure_label != no_grasp",
+    "source_tool": "tools/report_c6_confirmatory_grasp_by_scenario.py",
+    "includes_labels": ["transport_incomplete", "wrong_goal_region", "any_other_non_no_grasp"],
+    "interpretation": "Any pickup success with downstream placement failure counts as grasp"
+  },
+  "c8_observed_labels_at_407": {
+    "no_grasp": 389,
+    "transport_incomplete": 18,
+    "wrong_goal_region": 0,
+    "other": 0
+  },
+  "c6_observed_labels_live_pvc_at_73_terminals": {
+    "destination_static": {"no_grasp": 17, "transport_incomplete": 5, "wrong_goal_region": 0},
+    "move_stop": {"no_grasp": 25, "transport_incomplete": 3, "wrong_goal_region": 0},
+    "original_sham": {"no_grasp": 19, "transport_incomplete": 3, "wrong_goal_region": 1}
+  },
+  "aligned_comparison_transport_incomplete_only": {
+    "c8_at_407": {
+      "destination_static": {"n": 139, "grasp": 10, "rate_pct": 7.2},
+      "move_stop": {"n": 138, "grasp": 4, "rate_pct": 2.9},
+      "original_sham": {"n": 130, "grasp": 4, "rate_pct": 3.1}
+    },
+    "c6_at_73": {
+      "destination_static": {"n": 22, "grasp": 5, "rate_pct": 22.7},
+      "move_stop": {"n": 28, "grasp": 3, "rate_pct": 10.7},
+      "original_sham": {"n": 23, "grasp": 3, "rate_pct": 13.0}
+    },
+    "note": "C6 sham transport-only excludes the single wrong_goal_region terminal"
+  },
+  "confound_assessment": {
+    "label_mapping_confounded": false,
+    "rationale": "C8 emits only no_grasp and transport_incomplete. C6 grasp script additionally counts wrong_goal_region, but only 1/73 C6 terminals observed. Aligning on transport_incomplete does not close the 3–10× rate gap.",
+    "agent_c_platform_table_status": "Comparison valid for label definitions; persistent gap likely reflects platform/fixture differences or incomplete n — not grasp counting mismatch",
+    "action_for_agent_b": "Confirm C6 milestone receipts use same failure_label != no_grasp rule; document wrong_goal share at 128/384 C6 milestones"
+  },
+  "ordering_note": "C8 ordering (dest > sham ≈ move) persists at 407 with insufficient_coverage; C6 at n=73 inverts (sham highest) — platform interaction watch per Agent C"
+}

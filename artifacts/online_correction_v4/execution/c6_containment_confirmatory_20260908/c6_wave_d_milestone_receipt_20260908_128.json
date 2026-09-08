@@ -1,9 +1,9 @@
 {
   "schema_version": "v4-c6-wave-progress-receipt-v1",
-  "compiled_at_utc": "2026-09-08T06:00:00Z",
+  "compiled_at_utc": "2026-09-08T06:10:00Z",
   "wave_id": "c6confirm20260908f",
   "wave_label": "D",
-  "confirmatory_terminals": 128,
+  "confirmatory_terminals": 130,
   "milestones": {
     "32": "passed",
     "128": "passed",
@@ -21,27 +21,36 @@
       "c8_reference_at_161_eps_pct": 7.8
     },
     "move_stop": {
-      "episodes": 45,
+      "episodes": 46,
       "grasp_achieved_c6_rule": 9,
-      "grasp_rate_c6_rule_pct": 20.0,
+      "grasp_rate_c6_rule_pct": 19.6,
       "grasp_achieved_transport_incomplete_only": 8,
-      "grasp_rate_transport_incomplete_only_pct": 17.8,
+      "grasp_rate_transport_incomplete_only_pct": 17.4,
       "wrong_goal_region_count": 1,
       "wrong_goal_region_share_pct": 2.2,
       "c8_reference_at_161_eps_pct": 3.6
     },
     "original_sham": {
-      "episodes": 43,
+      "episodes": 44,
       "grasp_achieved_c6_rule": 8,
-      "grasp_rate_c6_rule_pct": 18.6,
+      "grasp_rate_c6_rule_pct": 18.2,
       "grasp_achieved_transport_incomplete_only": 7,
-      "grasp_rate_transport_incomplete_only_pct": 16.3,
+      "grasp_rate_transport_incomplete_only_pct": 15.9,
       "wrong_goal_region_count": 1,
       "wrong_goal_region_share_pct": 2.3,
       "c8_reference_at_161_eps_pct": 1.8
     }
   },
-  "ordering_note": "At n=128 (milestone): move_stop leads (20.0% C6-rule / 17.8% TI-only), original_sham second (18.6% / 16.3%), destination_static last (15.0% / 15.0%). This reverses n=73 where destination_static led (22.7%) and n≈56–63 where original_sham led — ordering is unstable at partial n; do not smooth. C8 @161: destination_static > original_sham ≈ move_stop. C6 may be converging toward C8 or reflecting noise; watch at 384.",
-  "grasp_definition_note": "Report both C6-rule (failure_label != no_grasp) and transport_incomplete-only (C8-comparable; C8 has zero wrong_goal_region across 407 eps). wrong_goal_region share tracked explicitly (0–2.3% per cell at n=128).",
+  "grasp_definition_notes": {
+    "c6_rule": "failure_label != no_grasp (includes wrong_goal_region)",
+    "transport_incomplete_only": "C8-comparable cell; C8 has zero wrong_goal_region across 407 episodes",
+    "agent_a_audit": "Aligning to transport_incomplete_only shifts original_sham 17.4%→13.0% at n=73; gap survives alignment"
+  },
+  "ordering_note": "At n=128 (130 observed): move_stop leads (19.6% c6-rule / 17.4% ti-only), original_sham second (18.2% / 15.9%), destination_static last (15.0% / 15.0%). This REVERSES the n=73 ordering where destination_static led (22.7%). Small-n reordering — may be converging toward C8's destination_static-first pattern but not claimed; report raw ranks at each milestone without smoothing.",
+  "ordering_history": {
+    "n_56": "original_sham > destination_static > move_stop",
+    "n_73": "destination_static > original_sham > move_stop",
+    "n_128": "move_stop > original_sham > destination_static"
+  },
   "supersedes": "c6_wave_d_progress_receipt_20260908g.json"
 }

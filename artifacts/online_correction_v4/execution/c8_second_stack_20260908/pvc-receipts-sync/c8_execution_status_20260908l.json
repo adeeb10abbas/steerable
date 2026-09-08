@@ -1,0 +1,70 @@
+{
+  "schema_version": "v4-c8-execution-status-receipt-v1",
+  "observed_at_utc": "2026-09-08T06:25:00Z",
+  "confirmatory_ledger_compile_id_100_milestone": "20260908e",
+  "confirmatory_ledger_compile_id_200_milestone": null,
+  "live_ledger_count": 121,
+  "next_milestone_compile_at": 200,
+  "confirmatory_progress": {
+    "valid": 121,
+    "remaining": 647,
+    "by_scenario": {
+      "original_sham": {"completed": 40, "grasp_achieved": 1, "grasp_rate": 0.025},
+      "destination_static": {"completed": 43, "grasp_achieved": 3, "grasp_rate": 0.070},
+      "move_stop": {"completed": 38, "grasp_achieved": 1, "grasp_rate": 0.026}
+    },
+    "ordering_holds": "insufficient_coverage",
+    "ordering_direction": "destination_static (7.0%) > move_stop (2.6%) > original_sham (2.5%) — directionally consistent with pilot (75/50/25%)",
+    "spread_compression_note": "As coverage grew 84→101→121, destination_static rate fell 8.0→6.1→7.0% while original_sham rose 0.0→2.7→2.5%; gap compressing — pilot effect sizes must not be treated as expected confirmatory magnitudes"
+  },
+  "healthy_pairs": {
+    "count": 2,
+    "lanes": ["c8m05", "c8m16"],
+    "peak_after_sim_first_fix": 8,
+    "note": "Temporary drop during pool sweep + sim-Failed churn on c8m13/c8m14/retries"
+  },
+  "retry_outcome_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_failed_lane_retry_outcome_20260908a.json",
+  "accounting": {
+    "retained_from_20260908e": 101,
+    "lost": 0,
+    "new_since_20260908e": 20,
+    "c8m13": 38,
+    "c8m14": 38,
+    "verdict": "intact"
+  },
+  "confirmatory_lanes": [
+    {"lane_id": "c8m00", "completed": 8, "queued": 30, "state": "infra_sim_failed"},
+    {"lane_id": "c8m01", "completed": 0, "queued": 38, "state": "infra_sim_failed"},
+    {"lane_id": "c8m02", "completed": 0, "queued": 38, "state": "infra_policy_failed"},
+    {"lane_id": "c8m03", "completed": 0, "queued": 38, "state": "infra_policy_failed"},
+    {"lane_id": "c8m04", "completed": 0, "queued": 38, "state": "infra_sim_failed"},
+    {"lane_id": "c8m05", "completed": 26, "queued": 12, "state": "healthy_pair_running"},
+    {"lane_id": "c8m06", "completed": 0, "queued": 38, "state": "infra_sim_failed"},
+    {"lane_id": "c8m07", "completed": 0, "queued": 38, "state": "infra_sim_failed_retry"},
+    {"lane_id": "c8m08", "completed": 0, "queued": 38, "state": "partial_policy_only"},
+    {"lane_id": "c8m09", "completed": 0, "queued": 38, "state": "partial_sim_only"},
+    {"lane_id": "c8m10", "completed": 0, "queued": 38, "state": "partial_policy_only"},
+    {"lane_id": "c8m11", "completed": 0, "queued": 38, "state": "infra_sim_failed_retry"},
+    {"lane_id": "c8m12", "completed": 0, "queued": 38, "state": "infra_sim_failed_retry"},
+    {"lane_id": "c8m13", "completed": 38, "queued": 0, "state": "partial_sim_failed", "note": "38 episodes intact in ledger"},
+    {"lane_id": "c8m14", "completed": 38, "queued": 0, "state": "infra_sim_failed", "note": "38 episodes intact in ledger"},
+    {"lane_id": "c8m15", "completed": 0, "queued": 38, "state": "infra_sim_failed_retry"},
+    {"lane_id": "c8m16", "completed": 11, "queued": 27, "state": "healthy_pair_running"},
+    {"lane_id": "c8m17", "completed": 0, "queued": 38, "state": "infra_policy_failed"},
+    {"lane_id": "c8m18", "completed": 0, "queued": 38, "state": "partial_sim_only"},
+    {"lane_id": "c8m19", "completed": 0, "queued": 38, "state": "infra_sim_failed"}
+  ],
+  "agent_c_hooks": {
+    "c8_confirmatory_ledger_compile_id_100": "20260908e",
+    "c8_confirmatory_ledger_compile_id_200": "pending_at_121_of_768",
+    "status_label": "confirmatory_in_progress_121_healthy_pairs_2_post_sweep_churn"
+  },
+  "blockers": [
+    {"id": "200_milestone", "impact": "121/768", "action": "Recompile as next compile id when count >= 200"},
+    {"id": "sim_failed_churn", "impact": "Multiple sim Failed including retried lanes and c8m13/c8m14", "action": "Capacity agent root-cause + redispatch with slot consolidation"},
+    {"id": "healthy_pair_count", "impact": "Down to 2 productive pairs", "action": "Restore c8m08/10/13 sim halves without disturbing ledger"},
+    {"id": "c7_tail", "impact": "~188 episodes", "action": "Full A40 pool release -> ~16h for 647 remaining"},
+    {"id": "ordering", "impact": "121/768", "action": "insufficient_coverage"}
+  ],
+  "source_commit": "94e6fb88"
+}

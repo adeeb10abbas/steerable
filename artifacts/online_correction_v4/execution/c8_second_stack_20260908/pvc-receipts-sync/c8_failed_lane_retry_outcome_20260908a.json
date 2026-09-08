@@ -1,0 +1,18 @@
+{
+  "schema_version": "v4-c8-failed-lane-retry-outcome-v1",
+  "observed_at_utc": "2026-09-08T06:25:00Z",
+  "coordination_with": "capacity agent",
+  "retried_lanes_infra": ["c8m00", "c8m01", "c8m07", "c8m11", "c8m12", "c8m15"],
+  "method": "sim-first redispatch from rendered-confirmatory-r1 via v4_gpu_placement_enforce.redispatch_lane_pairs",
+  "pool_sweep_before_retry": {"jobs_deleted": 14, "note": "v4_gpu_pool_sweep slot consolidation"},
+  "outcomes": {
+    "c8m00": {"sim": "Failed", "policy": "Suspended", "completed_preserved": 8, "queued_remaining": 30, "verdict": "infra_sim_failed_redispatch"},
+    "c8m01": {"sim": "Failed", "policy": "Suspended", "completed": 0, "verdict": "infra_sim_failed_redispatch"},
+    "c8m07": {"sim": "Failed", "policy": "Suspended", "completed": 0, "verdict": "infra_sim_failed_redispatch"},
+    "c8m11": {"sim": "Failed", "policy": "Suspended", "completed": 0, "verdict": "infra_sim_failed_redispatch"},
+    "c8m12": {"sim": "Failed", "policy": "Suspended", "completed": 0, "verdict": "infra_sim_failed_redispatch"},
+    "c8m15": {"sim": "Failed", "policy": "Suspended", "completed": 0, "verdict": "infra_sim_failed_redispatch"}
+  },
+  "sim_first_behavior_confirmed": "All retried lanes applied sim job first with policy Suspended pending sim Running",
+  "follow_up": "Capacity agent: investigate sim Failed root cause on retried lanes; c8m13/c8m14 sim also Failed post-sweep — productive-lane protection preserved ledger completes"
+}

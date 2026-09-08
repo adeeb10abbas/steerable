@@ -1,0 +1,31 @@
+{
+  "schema_version": "v4-c8-anti-affinity-placement-outcome-v1",
+  "observed_at_utc": "2026-09-08T05:00:00Z",
+  "supersedes": "c8_anti_affinity_placement_outcome_20260908a.json",
+  "capacity_agent_change": "topologySpreadConstraints + soft podAntiAffinity via tools/v4_gpu_scheduling.py",
+  "c8_coordination": "Did not re-render independently; capacity agent owns placement policy on existing lane bundles",
+  "binding_constraint_test": {
+    "target_lanes": ["c8m00", "c8m01", "c8m02", "c8m03", "c8m04", "c8m05", "c8m06", "c8m07", "c8m08", "c8m09", "c8m10", "c8m11", "c8m12", "c8m16", "c8m17", "c8m18", "c8m19"],
+    "pairing_bin_packing_was_binding": "partially",
+    "verdict": "Anti-affinity relieved colocation enough to schedule c8m00 fully and c8m01 partially; c8m02-c8m12 and c8m16 remain fully Pending. c8m17-c8m19 still one-pod partial. Residual binding is fragmented free-GPU count, not orphan waste."
+  },
+  "after_followup": {
+    "pods_running": 9,
+    "pods_pending": 30,
+    "fully_running_pairs": ["c8m00", "c8m13", "c8m14"],
+    "partial_pairs": {
+      "c8m01": "policy Running, sim Pending",
+      "c8m17": "policy Running, sim Pending",
+      "c8m18": "policy Running, sim Pending",
+      "c8m19": "sim Running, policy Pending"
+    },
+    "fully_blocked": ["c8m02", "c8m03", "c8m04", "c8m05", "c8m06", "c8m07", "c8m08", "c8m09", "c8m10", "c8m11", "c8m12", "c8m15", "c8m16"],
+    "lanes_with_valid_completes": {"c8m00": 6, "c8m13": 38, "c8m14": 29},
+    "c8m00_first_anti_affinity_execution": true
+  },
+  "regression_check_on_new_lanes": {
+    "serialization": "none on c8m00 through 6 valid",
+    "sampling_seed": "none",
+    "reset_registry_digest": "8da6b69ca01e2de15b28df5fe980ae056c04033c9e0b9a3b0d5c1751b269890f verified"
+  }
+}

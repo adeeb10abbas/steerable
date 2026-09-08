@@ -1,87 +1,26 @@
 {
   "schema_version": "v4-c8-confirmatory-composition-by-scenario-v1",
-  "observed_at_utc": "2026-09-08T04:35:00Z",
-  "campaign_id": "online_correction_v4",
-  "family_id": "C8",
-  "fixture_id": "second_stack",
-  "cohort": "confirmatory",
-  "ledger_compile_id": "20260908d",
+  "observed_at_utc": "2026-09-08T05:00:00Z",
   "milestone": 50,
-  "ledger_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/confirmatory-ledger-20260908d/accepted_ledger.jsonl",
-  "ledger_manifest_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/confirmatory-ledger-20260908d/accepted_ledger_manifest.json",
-  "prior_compile_id": "20260908c",
+  "milestone_note": "Compiled at 73 valid episodes (passed 50-milestone threshold; 100 milestone pending at compile id 20260908e)",
+  "ledger_compile_id": "20260908d",
   "next_milestone_compile_id": "20260908e",
   "next_milestone_at": 100,
-  "queue_uri": "artifacts/online_correction_v4/setup/c8_confirmatory/queue.frozen.jsonl",
-  "progress": {
-    "behavioral_valid": 55,
-    "total_queued": 768,
-    "coverage_fraction": 0.071615,
-    "active_completing_lanes": ["c8m13", "c8m14"],
-    "partial_scheduled_lanes": ["c8m00", "c8m17", "c8m18", "c8m19"],
-    "blocked_bulk_lanes": ["c8m01", "c8m02", "c8m03", "c8m04", "c8m05", "c8m06", "c8m07", "c8m08", "c8m09", "c8m10", "c8m11", "c8m12", "c8m16"]
-  },
-  "aggregate_outcomes": {
-    "no_grasp": 54,
-    "transport_incomplete": 1
-  },
-  "grasp_achieved_count": 1,
+  "ledger_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/confirmatory-ledger-20260908d/accepted_ledger.jsonl",
+  "progress": {"behavioral_valid": 73, "total_queued": 768},
+  "aggregate_outcomes": {"no_grasp": 71, "transport_incomplete": 2},
+  "grasp_achieved_count": 2,
+  "by_lane_completes": {"c8m00": 6, "c8m13": 38, "c8m14": 29},
   "by_scenario": {
-    "original_sham": {
-      "episodes_completed": 20,
-      "no_grasp": 20,
-      "transport_incomplete": 0,
-      "grasp_achieved": 0,
-      "grasp_rate": 0.0
-    },
-    "destination_static": {
-      "episodes_completed": 16,
-      "no_grasp": 15,
-      "transport_incomplete": 1,
-      "grasp_achieved": 1,
-      "grasp_rate": 0.0625
-    },
-    "move_stop": {
-      "episodes_completed": 19,
-      "no_grasp": 19,
-      "transport_incomplete": 0,
-      "grasp_achieved": 0,
-      "grasp_rate": 0.0
-    }
-  },
-  "pilot_reference_by_scenario": {
-    "original_sham": {"grasp_achieved": 2, "episodes": 8, "grasp_rate": 0.25},
-    "destination_static": {"grasp_achieved": 6, "episodes": 8, "grasp_rate": 0.75},
-    "move_stop": {"grasp_achieved": 4, "episodes": 8, "grasp_rate": 0.5}
+    "original_sham": {"episodes_completed": 26, "no_grasp": 26, "transport_incomplete": 0, "grasp_achieved": 0, "grasp_rate": 0.0},
+    "destination_static": {"episodes_completed": 22, "no_grasp": 21, "transport_incomplete": 1, "grasp_achieved": 1, "grasp_rate": 0.045},
+    "move_stop": {"episodes_completed": 25, "no_grasp": 24, "transport_incomplete": 1, "grasp_achieved": 1, "grasp_rate": 0.04}
   },
   "ordering_assessment": {
-    "pilot_ordering": "destination_static > move_stop > original_sham (by grasp_rate)",
-    "confirmatory_observed_ordering_at_55_eps": "destination_static (1/16) > move_stop (0/19) = original_sham (0/20)",
+    "pilot_ordering": "destination_static (75%) > move_stop (50%) > original_sham (25%)",
+    "confirmatory_observed_at_73": "destination_static (4.5%) ≈ move_stop (4.0%) > original_sham (0%)",
     "ordering_holds": "insufficient_coverage",
-    "note": "Single grasp remains destination_static only. Per-scenario n=16-20 from two lanes; pilot ordering neither confirmed nor rejected."
+    "feasibility_audit_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_destination_static_confound_audit_20260908a.json"
   },
-  "anti_affinity_placement": {
-    "policy_change": "c8_a40_spread via tools/v4_gpu_scheduling.py (capacity agent; no C8 re-render)",
-    "newly_partial_or_running": ["c8m00", "c8m17", "c8m18", "c8m19"],
-    "still_blocked_c8m00_c8m12": ["c8m01", "c8m02", "c8m03", "c8m04", "c8m05", "c8m06", "c8m07", "c8m08", "c8m09", "c8m10", "c8m11", "c8m12"],
-    "still_blocked_c8m16": true,
-    "bin_packing_binding": "partially — 4 additional lanes gained one pod each; 13 bulk pairs fully Pending"
-  },
-  "classification": {
-    "behavioral_valid": true,
-    "infra_invalid_excluded": {
-      "pilot_attempts_0093_0103": 39,
-      "confirmatory_preflight_20260908a": 4,
-      "reset_registry_sim_20260908a": 1
-    }
-  },
-  "regression_check": {
-    "serialization": "none in 55 valid episodes",
-    "sampling_seed": "none",
-    "reset_registry_digest": "8da6b69c… verified; no new mismatches on executing lanes"
-  },
-  "agent_c_hooks": {
-    "c8_confirmatory_ledger_compile_id": "20260908d",
-    "c8_pilot_ledger_compile_id": "20260908b"
-  }
+  "anti_affinity_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_anti_affinity_placement_outcome_20260908b.json"
 }

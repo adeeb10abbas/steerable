@@ -1,8 +1,16 @@
 {
   "schema_version": "v4-c8-destination-static-confound-audit-v1",
-  "observed_at_utc": "2026-09-08T04:30:00Z",
+  "observed_at_utc": "2026-09-08T05:00:00Z",
   "question": "Is destination_static accidentally easier because the object starts closer to the goal region?",
   "verdict": "green_start_geometry_identical_reference_preplaced_by_design",
+  "green_yellow_separation_m": {
+    "confirmatory_mean_all_scenarios": 0.1414,
+    "confirmatory_std": 0.0,
+    "confirmatory_n_per_scenario": 256,
+    "pilot_mean_all_scenarios": 0.1414,
+    "registry_uri": "artifacts/online_correction_v4/setup/c8_confirmatory/reset_registry.released.json",
+    "verdict": "NOT closer to goal at reset — identical pick/reference spacing across scenarios"
+  },
   "pick_object": {
     "role": "baked_green_cube_3cm",
     "base_position_scene_xy_m": [-0.21, -0.05],
@@ -29,7 +37,9 @@
   },
   "confirmatory_grasp_at_audit_time": {
     "destination_static_grasp": 1,
-    "total_valid": 55,
+    "move_stop_grasp": 1,
+    "original_sham_grasp": 0,
+    "total_valid": 73,
     "ordering_testable": false
   },
   "code_references": [

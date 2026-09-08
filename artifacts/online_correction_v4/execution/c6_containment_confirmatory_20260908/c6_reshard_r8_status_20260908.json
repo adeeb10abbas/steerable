@@ -1,8 +1,10 @@
 {
   "schema_version": "v4-c6-reshard-status-v1",
   "compiled_at_utc": "2026-09-08T12:58:00Z",
-  "wave_d_scope": "384 cosmos3_nano_droid rows (queue.frozen.cosmos3_nano.jsonl)",
-  "full_confirmatory_scope": "768 rows (384 nano + 384 pi05) in queue.frozen.jsonl",
+  "wave_d_scope": "384 cosmos3_nano_droid rows — released confirmatory scope (queue.frozen.cosmos3_nano.jsonl)",
+  "full_planning_inventory": "768 rows in queue.frozen.jsonl (384 nano + 384 pi05 planning only)",
+  "correct_confirmatory_denominator": 384,
+  "wave_e_status": "blocked — pi05 never qualified; see c6_wave_e_blocked_scope_20260908.json",
   "terminals_on_pvc": 337,
   "wave_d_remaining": 47,
   "reshard_r8": {
@@ -18,12 +20,12 @@
     "note": "32 lanes dispatched; sim-first gate unsuspended 15 policies; pairs still ramping"
   },
   "wave_e_blocker": {
-    "status": "blocked",
-    "reason": "pi05_droid not bound in containment_c6_confirmatory_runtime_lock.released.json",
-    "episodes_when_unblocked": 384,
-    "estimated_hours_at_32_lanes": 5.0
+    "status": "blocked_permanently",
+    "reason": "pi05_droid never passed C6 containment G4–G8; not a missing lock binding — see c6_wave_e_blocked_scope_20260908.json",
+    "planning_inventory_pi05_rows": 384,
+    "released_confirmatory_rows": 384
   },
-  "full_768_wall_clock_estimate_hours": 5.8,
+  "full_768_wall_clock_estimate_hours": null,
   "recovery_tool_fires": 2,
   "recovery_tool_chronic": true
 }

@@ -1,17 +1,17 @@
 {
   "schema_version": "v4-c6-agent-c-handoff-pending-v1",
   "family": "C6",
-  "wave_d_milestone_compile_id": "compiled_ledger_20260908_wave_d384",
-  "final_compile_when": "768/768 accepted with --require-full-coverage",
+  "correct_confirmatory_denominator": 384,
+  "denominator_evidence_path": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/c6_wave_e_blocked_scope_20260908.json",
+  "released_queue_path": "artifacts/online_correction_v4/setup/c6_confirmatory/queue.frozen.cosmos3_nano.jsonl",
+  "released_policy": "cosmos3_nano_droid",
+  "final_compile_when": "384/384 accepted with --require-full-coverage on released nano queue",
   "final_compile_id": "compiled_ledger_20260908_FINAL",
   "final_compile_command_template": ".venv/bin/python tools/run_c6_confirmatory_compile_on_cluster.py --compile-id compiled_ledger_20260908_FINAL --require-full-coverage",
-  "wave_d_384_receipt_path": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/c6_wave_d_milestone_receipt_20260908_384.json",
-  "pvc_attempts_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main",
-  "manifest_path": "artifacts/online_correction_v4/setup/c6_confirmatory/queue.frozen.jsonl",
+  "wave_e_status": "blocked — pi05_droid never qualified for containment (see c6_wave_e_blocked_scope_20260908.json)",
   "grasp_conventions": {
     "c6_rule": "failure_label != no_grasp",
     "transport_incomplete_only": "failure_label == transport_incomplete"
   },
-  "ordering_claim_limit": "Only destination_static ranks first is supportable when move_stop and original_sham tie or swap across milestones.",
-  "note": "Wave D (cosmos3_nano, 384 rows) must close before wave E (pi05_droid, 384 rows) opens. pi05_droid is not yet bound in the released C6 runtime lock."
+  "ordering_claim_limit": "Only destination_static ranks first is supportable; move_stop and original_sham swap at second/third as n grows."
 }

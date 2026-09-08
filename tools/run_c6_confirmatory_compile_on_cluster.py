@@ -17,8 +17,8 @@ NS = "211247-prod"
 POD = "211247-ali-b200-1gpu"
 ATTEMPTS_ROOT = "/data/users/ali/vla_wam/raw/v4/c6-containment-main"
 REMOTE_DIR = "/tmp/v4-c6-final-compile"
-MANIFEST = ROOT / "artifacts/online_correction_v4/setup/c6_confirmatory/queue.frozen.jsonl"
-SCOPED_MANIFEST_ARC = "artifacts/online_correction_v4/setup/c6_confirmatory/queue.frozen.jsonl"
+MANIFEST = ROOT / "artifacts/online_correction_v4/setup/c6_confirmatory/queue.frozen.cosmos3_nano.jsonl"
+SCOPED_MANIFEST_ARC = "artifacts/online_correction_v4/setup/c6_confirmatory/queue.frozen.cosmos3_nano.jsonl"
 
 
 def main(argv: list[str] | None = None) -> int:

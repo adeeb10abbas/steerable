@@ -1,0 +1,60 @@
+{
+  "schema_version": "v4-c6-wave-e-blocked-scope-v1",
+  "compiled_at_utc": "2026-09-08T13:05:00Z",
+  "decision": "wave_E_blocked",
+  "situation": 2,
+  "situation_label": "pi05_droid was never qualified for the containment fixture; wave E is scientifically blocked",
+  "correct_confirmatory_denominator": 384,
+  "incorrect_denominator": 768,
+  "denominator_correction_rationale": "Released C6 confirmatory scope is 384 cosmos3_nano_droid rows (128 per scenario), matching C7/C8 pattern of one released policy at full scenario balance. The 768 figure in planning inventory splits 384 nano + 384 pi05 but only nano was qualified through G4–G8 and bound in the released runtime lock.",
+  "evidence": {
+    "c7_closed_reference": {
+      "family": "C7",
+      "confirmatory_rows": 768,
+      "policies_in_released_compile": ["cosmos3_nano_droid"],
+      "scenarios_per_policy": 256,
+      "compile_id": "compiled_ledger_20260908_FINAL",
+      "interpretation": "768 reached on a single released policy, not two-policy decomposition"
+    },
+    "c8_closed_reference": {
+      "family": "C8",
+      "confirmatory_rows": 768,
+      "policies_in_released_compile": ["groot_bridge_widowx"],
+      "scenarios_per_policy": 256,
+      "interpretation": "768 reached on a single released policy"
+    },
+    "c6_released_runtime_lock": {
+      "path": "artifacts/online_correction_v4/setup/containment_c6_confirmatory_runtime_lock.released.json",
+      "frozen_queue_sha256": "d825808858f18f1678f0036b9db5218a0b76516a252a526f67dfe4cc2c159ee6",
+      "bound_policies": ["cosmos3_nano_droid"],
+      "matches_queue": "artifacts/online_correction_v4/setup/c6_confirmatory/queue.frozen.cosmos3_nano.jsonl",
+      "does_not_match_full_768_queue": "artifacts/online_correction_v4/setup/c6_confirmatory/queue.frozen.jsonl (sha256 ff0c9448...)"
+    },
+    "c6_released_queue_manifest": {
+      "path": "artifacts/online_correction_v4/setup/c6_confirmatory/queue_manifest.frozen.cosmos3_nano.json",
+      "row_count": 384,
+      "policy_id": "cosmos3_nano_droid",
+      "scenario_counts": {"destination_static": 128, "move_stop": 128, "original_sham": 128}
+    },
+    "c6_planning_inventory_not_released": {
+      "path": "artifacts/online_correction_v4/setup/c6_confirmatory/queue.frozen.jsonl",
+      "row_count": 768,
+      "policy_split": {"cosmos3_nano_droid": 384, "pi05_droid": 384},
+      "note": "Planning inventory only; not bound by released runtime lock"
+    },
+    "pi05_containment_qualification_absent": {
+      "search": "No G4–G8 containment qualification receipt with policy_id pi05_droid under artifacts/online_correction_v4/qualification/",
+      "c6_g4_through_g8_all_nano": [
+        "20260908_containment_g4_nano_policy_session_g4c6q20260908d.json",
+        "20260908_containment_g5_trigger_branch_g4c6q20260908d.json",
+        "20260908_containment_g6_measurement_g4c6q20260908d.json",
+        "20260908_containment_g7_pilot_receipt_g7c6p20260908a.json",
+        "20260908_containment_g8_miniature_g8c6p20260908a.json"
+      ],
+      "g7_g8_policy_id": "cosmos3_nano_droid"
+    }
+  },
+  "action_taken": "Do not amend runtime lock to bind pi05_droid. Do not dispatch wave E. Finish released wave D to 384 and compile against queue.frozen.cosmos3_nano.jsonl with --require-full-coverage.",
+  "agent_c_denominator": 384,
+  "wave_e_status": "blocked_permanently_until_pi05_containment_g4_g8_qualification"
+}

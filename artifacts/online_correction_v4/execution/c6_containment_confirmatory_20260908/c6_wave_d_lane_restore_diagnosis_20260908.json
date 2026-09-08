@@ -1,0 +1,36 @@
+{
+  "schema_version": "v4-c6-wave-d-lane-restore-diagnosis-v1",
+  "compiled_at_utc": "2026-09-08T04:20:00Z",
+  "problem": "Capacity agent estimated 53.3h for 768 episodes at 6 healthy pairs despite ~58 free A100-40GB and ~34 free B200 — same lane-count mistake as C7 r5.",
+  "root_cause": {
+    "primary": "Wave F created sim jobs for 10/32 lanes only; 13 lanes had no jobs; 9 had policy-only (Suspended) with no sim partner.",
+    "secondary": "Partial sim-restore reused wave-F attempt IDs; launch ConfigMaps expected pre-71e7 lock hash while PVC bindings carried post-amendment runtime_lock.json — 18 sim PreflightError failures.",
+    "not_causes": ["GPU pool exhaustion", "sim-first gate absent for C6 (gate fires; c6_a10040_spread in 180s periodic loop)"]
+  },
+  "lane_inventory_before_restore": {
+    "healthy_sim_policy_running": 6,
+    "healthy_lane_ids": ["c6m09", "c6m10", "c6m21", "c6m27", "c6m28", "c6m30"],
+    "policy_only_suspended_no_sim": 9,
+    "no_jobs": 13,
+    "failed_runnerfix_preflight": 4
+  },
+  "fix": {
+    "tool": "tools/dispatch_c6_wave_d_lane_restore.py",
+    "receipt": "create-c6confirm20260908f-sim-restore.json",
+    "lanes_restored": 26,
+    "fresh_attempt_range": "attempt0200–attempt0225",
+    "healthy_lanes_preserved": 6
+  },
+  "estimate_revision": {
+    "at_6_pairs_hours": 53.3,
+    "wave_d_remaining_episodes": 328,
+    "at_32_pairs_hours": 2.5,
+    "at_20_pairs_hours": 4.0
+  },
+  "periodic_gate_verified": {
+    "loop_seconds": 180,
+    "policies": ["c8_a40_spread", "c6_a10040_spread"],
+    "pid_observed": true,
+    "manual_gate_unsuspend_sample": "c6m05 attempt0205 unsuspended after redispatch"
+  }
+}

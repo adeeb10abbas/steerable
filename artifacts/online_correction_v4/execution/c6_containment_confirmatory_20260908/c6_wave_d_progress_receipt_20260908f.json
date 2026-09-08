@@ -1,0 +1,43 @@
+{
+  "schema_version": "v4-c6-wave-progress-receipt-v1",
+  "compiled_at_utc": "2026-09-08T04:22:00Z",
+  "wave_id": "c6confirm20260908f",
+  "wave_label": "D",
+  "confirmatory_terminals": 63,
+  "milestones": {
+    "32": "passed",
+    "128": "pending",
+    "384": "pending"
+  },
+  "composition_at_63": {
+    "by_scenario": {
+      "destination_static": 21,
+      "move_stop": 25,
+      "original_sham": 17
+    }
+  },
+  "grasp_rate_by_scenario": {
+    "destination_static": {
+      "episodes": 21,
+      "grasp_achieved": 4,
+      "grasp_rate_pct": 19.0,
+      "c8_reference_at_161_eps_pct": 7.8
+    },
+    "move_stop": {
+      "episodes": 25,
+      "grasp_achieved": 3,
+      "grasp_rate_pct": 12.0,
+      "c8_reference_at_161_eps_pct": 3.6
+    },
+    "original_sham": {
+      "episodes": 17,
+      "grasp_achieved": 4,
+      "grasp_rate_pct": 23.5,
+      "c8_reference_at_161_eps_pct": 1.8
+    }
+  },
+  "ordering_note": "PROMINENT WATCH at n=63 (second consecutive milestone after n=56): original_sham grasp (23.5%) exceeds destination_static (19.0%) and move_stop (12.0%), inverting C8 ordering (1.8% / 7.8% / 3.6%). Per-cell n still 17–25 — not interpretable; report again at 128 and 384. If inversion holds at full n, headline becomes platform-dependent interaction.",
+  "lane_restore": "create-c6confirm20260908f-sim-restore.json",
+  "healthy_pairs_after_restore": "32 lanes dispatched; ramping from 6 toward 32",
+  "supersedes": "c6_wave_d_progress_receipt_20260908e.json"
+}

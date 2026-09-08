@@ -59,8 +59,8 @@ def main(argv: list[str] | None = None) -> int:
         runtime_lock_path=runtime_lock_path,
         repo_root=ROOT,
         campaign_config_path=campaign_config_path,
-        queue_path=ROOT / "artifacts/online_correction_v4/setup/c6_confirmatory/queue.frozen.jsonl",
-        queue_manifest_path=ROOT / "artifacts/online_correction_v4/setup/c6_confirmatory/queue_manifest.frozen.json",
+        queue_path=ROOT / "artifacts/online_correction_v4/setup/c6_confirmatory/queue.frozen.cosmos3_nano.jsonl",
+        queue_manifest_path=ROOT / "artifacts/online_correction_v4/setup/c6_confirmatory/queue_manifest.frozen.cosmos3_nano.json",
     )
     lock = validate_runtime_lock(runtime_lock_path)
     verify_queue_binding(

@@ -33,6 +33,62 @@ PERIODIC_POLICIES = (
 )
 
 
+def enforce_c7_sim_first_gate(
+    *,
+    kube_context: str,
+    namespace: str,
+    dry_run: bool = False,
+) -> list[dict[str, Any]]:
+    """Unsuspend C7 policy jobs once their simulator pod is Running (no spread policy)."""
+    pods = [
+        p
+        for p in (
+            gpu_sweep.parse_pod(item)
+            for item in gpu_sweep.fetch_pods(kube_context=kube_context, namespace=namespace)
+        )
+        if p is not None and p.lane_id.startswith("c7m")
+    ]
+    by_lane: dict[str, list[gpu_sweep.PodRef]] = {}
+    for pod in pods:
+        by_lane.setdefault(pod.lane_id, []).append(pod)
+    actions: list[dict[str, Any]] = []
+    raw_jobs = gpu_placement.fetch_jobs(kube_context=kube_context, namespace=namespace)
+    job_suspend: dict[str, bool] = {}
+    for item in raw_jobs:
+        name = str(item.get("metadata", {}).get("name") or "")
+        if "-policy" not in name or not name.startswith("v4-c7m"):
+            continue
+        job_suspend[name] = bool((item.get("spec") or {}).get("suspend"))
+    for lane_id in sorted(by_lane):
+        latest = gpu_sweep._latest_pods(by_lane[lane_id])
+        sim = latest.get("sim")
+        policy = latest.get("policy")
+        if not sim or sim.phase != "Running" or sim.gpu_count <= 0:
+            continue
+        if not policy or policy.phase == "Running":
+            continue
+        job_name = policy.job_name
+        if not job_name or not job_suspend.get(job_name):
+            continue
+        ok = gpu_placement.patch_job_suspend(
+            name=job_name,
+            suspend=False,
+            kube_context=kube_context,
+            namespace=namespace,
+            dry_run=dry_run,
+        )
+        actions.append(
+            {
+                "action": "unsuspend_policy_sim_ready",
+                "job": job_name,
+                "lane_id": lane_id,
+                "unsuspended": ok,
+                "policy_id": "c7_sim_first_adhoc",
+            }
+        )
+    return actions
+
+
 def _receipt_relative_path(path: Path) -> str:
     resolved = path.resolve()
     try:
@@ -117,6 +173,22 @@ def run_periodic_enforcement(
                 "scheduling_state_after": receipt.get("scheduling_state_after") or {},
             }
         )
+
+    c7_gate_actions = enforce_c7_sim_first_gate(
+        kube_context=kube_context,
+        namespace=namespace,
+        dry_run=False,
+    )
+    c7_unsuspended = sum(1 for row in c7_gate_actions if row.get("unsuspended"))
+    unsuspend_total += c7_unsuspended
+    placement_receipts.append(
+        {
+            "policy_id": "c7_sim_first_adhoc",
+            "unsuspended": c7_unsuspended,
+            "suspended": 0,
+            "actions": c7_gate_actions,
+        }
+    )
 
     sweep_receipt = gpu_sweep.run_gpu_pool_sweep(
         kube_context=kube_context,

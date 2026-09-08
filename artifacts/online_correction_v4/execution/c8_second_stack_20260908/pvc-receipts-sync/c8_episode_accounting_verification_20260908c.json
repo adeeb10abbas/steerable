@@ -1,0 +1,23 @@
+{
+  "schema_version": "v4-c8-episode-accounting-verification-v1",
+  "observed_at_utc": "2026-09-08T07:05:00Z",
+  "ledger_compile_id_baseline": "20260908e",
+  "live_count": 123,
+  "verification": {
+    "baseline_episode_count": 101,
+    "current_episode_count": 123,
+    "episodes_retained_from_baseline": 101,
+    "episodes_lost_from_baseline": 0,
+    "new_episodes_since_baseline": 22,
+    "non_valid_rows": 0,
+    "partial_episodes_counted_as_behavioral": 0,
+    "verdict": "accounting_intact_post_fresh_attempt_dispatch"
+  },
+  "fresh_attempt_dispatch_note": "16 held lanes re-rendered with attempt0021-0036; no ledger change at dispatch time",
+  "productive_lane_integrity": {
+    "c8m13": {"observed": 38, "status": "lane_complete"},
+    "c8m14": {"observed": 38, "status": "lane_complete"},
+    "c8m05": {"observed": 27, "status": "healthy_pair_protected"},
+    "c8m16": {"observed": 12, "status": "healthy_pair_protected"}
+  }
+}

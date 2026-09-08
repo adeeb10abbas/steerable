@@ -1,0 +1,36 @@
+{
+  "schema_version": "v4-c8-fresh-attempt-dispatch-outcome-v1",
+  "observed_at_utc": "2026-09-08T07:05:00Z",
+  "root_cause_resolved": "PVC attempt lock collision from same-attempt redispatch; fresh immutable attempt IDs used instead of lock clearing",
+  "render_wave": "rendered-confirmatory-r2",
+  "dispatch_receipt_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/create-confirmatory-fresh-attempt-20260908r2.json",
+  "coordination_state_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/coordination_state_confirmatory.json",
+  "protected_lanes": ["c8m05", "c8m16"],
+  "complete_lanes_skipped": {
+    "c8m13": {"completed": 38, "queued": 0, "reason": "lane complete; ledger intact at 38/38"},
+    "c8m14": {"completed": 38, "queued": 0, "reason": "lane complete; ledger intact at 38/38"}
+  },
+  "lane_attempt_transitions": [
+    {"lane_id": "c8m00", "prior_attempt_id": "attempt0001", "fresh_attempt_id": "attempt0021", "remaining_episodes": 31, "preflight": "sim Running"},
+    {"lane_id": "c8m01", "prior_attempt_id": "attempt0002", "fresh_attempt_id": "attempt0022", "remaining_episodes": 39, "preflight": "sim Running"},
+    {"lane_id": "c8m02", "prior_attempt_id": "attempt0003", "fresh_attempt_id": "attempt0023", "remaining_episodes": 39, "preflight": "sim Running"},
+    {"lane_id": "c8m03", "prior_attempt_id": "attempt0004", "fresh_attempt_id": "attempt0024", "remaining_episodes": 39, "preflight": "sim Running"},
+    {"lane_id": "c8m04", "prior_attempt_id": "attempt0005", "fresh_attempt_id": "attempt0025", "remaining_episodes": 39, "preflight": "sim Running"},
+    {"lane_id": "c8m06", "prior_attempt_id": "attempt0007", "fresh_attempt_id": "attempt0026", "remaining_episodes": 39, "preflight": "sim Running"},
+    {"lane_id": "c8m07", "prior_attempt_id": "attempt0008", "fresh_attempt_id": "attempt0027", "remaining_episodes": 39, "preflight": "sim Running"},
+    {"lane_id": "c8m08", "prior_attempt_id": "attempt0009", "fresh_attempt_id": "attempt0028", "remaining_episodes": 38, "preflight": "sim Running"},
+    {"lane_id": "c8m09", "prior_attempt_id": "attempt0010", "fresh_attempt_id": "attempt0029", "remaining_episodes": 38, "preflight": "sim Running"},
+    {"lane_id": "c8m10", "prior_attempt_id": "attempt0011", "fresh_attempt_id": "attempt0030", "remaining_episodes": 38, "preflight": "sim Running"},
+    {"lane_id": "c8m11", "prior_attempt_id": "attempt0012", "fresh_attempt_id": "attempt0031", "remaining_episodes": 38, "preflight": "sim Running"},
+    {"lane_id": "c8m12", "prior_attempt_id": "attempt0013", "fresh_attempt_id": "attempt0032", "remaining_episodes": 38, "preflight": "sim Running"},
+    {"lane_id": "c8m15", "prior_attempt_id": "attempt0016", "fresh_attempt_id": "attempt0033", "remaining_episodes": 38, "preflight": "sim Running"},
+    {"lane_id": "c8m17", "prior_attempt_id": "attempt0018", "fresh_attempt_id": "attempt0034", "remaining_episodes": 38, "preflight": "sim Running"},
+    {"lane_id": "c8m18", "prior_attempt_id": "attempt0019", "fresh_attempt_id": "attempt0035", "remaining_episodes": 38, "preflight": "sim Running"},
+    {"lane_id": "c8m19", "prior_attempt_id": "attempt0020", "fresh_attempt_id": "attempt0036", "remaining_episodes": 38, "preflight": "sim Running"}
+  ],
+  "dispatched_lane_count": 16,
+  "sim_first_policy_suspended_count": 16,
+  "preflight_lock_collision_count": 0,
+  "healthy_pairs_at_dispatch": {"count": 2, "lanes": ["c8m05", "c8m16"]},
+  "sim_warming_pairs": {"count": 16, "note": "fresh attempts sim Running, policy Suspended pending sim-first unsuspend"}
+}

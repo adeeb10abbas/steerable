@@ -1,0 +1,31 @@
+{
+  "schema_version": "v4-c8-sweep-hold-coordination-v1",
+  "observed_at_utc": "2026-09-08T06:35:00Z",
+  "requestor": "C8 Agent A",
+  "coordinate_with": ["capacity agent"],
+  "directive": "Hold C8 lane retries and pool sweeps until capacity agent stabilizes startup grace",
+  "context": {
+    "sim_failure_pattern": "All 6 sim-first retries failed within ~16m; c8m13/c8m14 sim Failed immediately after sweep deleting 14 jobs despite productive-lane protect list",
+    "hypothesis": "Sweep or placement enforcement may tear down simulators still in Isaac warmup (observed up to 300s before Running)",
+    "capacity_agent_actions_requested": [
+      "Root-cause whether sweep/placement kills sim pods pre-Running during warmup",
+      "Add startup grace period if confirmed",
+      "Hold sweeps until grace is in place"
+    ]
+  },
+  "c8_will_not": [
+    "Redispatch failed lanes independently until capacity agent clears hold",
+    "Run v4_gpu_pool_sweep or redispatch_lane_pairs on C8 without coordination"
+  ],
+  "c8_will_continue": [
+    "Protect c8m05 and c8m16 healthy pairs — sole throughput carriers (+20 eps through churn)",
+    "Compile ledger at milestones with accounting verification",
+    "Monitor c8m13/c8m14 ledger integrity (38 each) without touching their jobs"
+  ],
+  "c7_pool_sequencing": {
+    "note": "C7 reachability deadlock: 188 missing episodes on deferred shards; 17 productive lanes hold A40 pool",
+    "agreed_fix": "Drain/teardown C7 productive pairs, dispatch shards, route freed pool to C8",
+    "implication": "C8 full 20-lane throughput sequenced behind C7 teardown, not C7 episode completion alone"
+  },
+  "live_progress": {"valid": 123, "healthy_pairs": 2, "healthy_lanes": ["c8m05", "c8m16"]}
+}

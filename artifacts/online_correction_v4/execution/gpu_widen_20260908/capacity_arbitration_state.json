@@ -12,31 +12,28 @@
     "g7c8p07"
   ],
   "gpu_pool_sweep": {
-    "last_sweep_at_utc": "2026-09-08T00:04:38Z",
+    "last_sweep_at_utc": "2026-09-08T01:28:00Z",
     "receipt": "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_pool_sweep_receipt.json",
     "rerun_command": ".venv/bin/python tools/enforce_v4_capacity_arbitration.py --mode gpu_sweep",
     "protect_list": "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_sweep_protect_list_20260908.json",
-    "session_passes": 2,
-    "session_reclaimed_gpus_by_product": {
-      "NVIDIA-A100-SXM4-40GB": 15,
-      "NVIDIA-A100-SXM4-80GB": 4,
-      "NVIDIA-A40": 7,
-      "NVIDIA-B200": 8
-    },
-    "session_reclaimed_gpu_total": 34,
-    "a40_diagnosis": "per_node_fragmentation_plus_c7_occupancy_after_orphan_clear"
+    "split_pair_detection": "Running half + partner Failed/Error (not Pending between-episodes)",
+    "whole_lane_redispatch": true,
+    "productive_c8_lanes_excluded_from_split_reclaim": ["c8m13", "c8m14"]
   },
   "gpu_placement": {
-    "last_placement_at_utc": "2026-09-08T00:49:02Z",
+    "last_placement_at_utc": "2026-09-08T01:29:00Z",
     "coordination_handoff": "artifacts/online_correction_v4/execution/gpu_widen_20260908/c8_placement_coordination_handoff.json",
     "receipt": "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_placement_receipt.json",
     "policy_id": "c8_a40_spread",
     "c6_policy_id": "c6_a10040_spread",
-    "rerun_command": ".venv/bin/python tools/enforce_v4_capacity_arbitration.py --mode gpu_placement --policy c8_a40_spread",
-    "rendered_root_for_c8": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r1",
-    "enforce_safety": "Skip replace when partner leg Running; never replace Missing/Unknown pods (between-episodes partial lanes)."
+    "sim_first_ordering": {
+      "schedule_order": ["simulator", "policy"],
+      "spread_roles": ["simulator"],
+      "defer_policy_until_sim_running": true
+    },
+    "rerun_command": ".venv/bin/python tools/enforce_v4_capacity_arbitration.py --mode gpu_placement --policy c8_a40_spread"
   },
-  "last_enforcement_at_utc": "2026-09-08T00:49:02Z",
+  "last_enforcement_at_utc": "2026-09-08T01:29:00Z",
   "mode": "normal",
   "pilot_priority_still_required": true,
   "schema_version": "v4-capacity-arbitration-state-v1"

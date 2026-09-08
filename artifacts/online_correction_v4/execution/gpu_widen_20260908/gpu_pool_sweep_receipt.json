@@ -1,12 +1,12 @@
 {
   "a40_assessment": {
     "a40_free_gpus_estimate": 15,
-    "a40_orphan_gpu_count": 1,
-    "a40_orphan_policy_count": 1,
-    "a40_pending_gpu_pods": 64,
+    "a40_orphan_gpu_count": 2,
+    "a40_orphan_policy_count": 2,
+    "a40_pending_gpu_pods": 61,
     "a40_used_gpus": 25,
     "diagnosis": "mixed_orphans_and_per_node_fragmentation",
-    "note": "Some free A40 capacity (15 GPUs) coexists with 64 Pending pods; after orphan reclaim, remaining failures likely per-node bin-packing fragmentation.",
+    "note": "Some free A40 capacity (15 GPUs) coexists with 61 Pending pods; after orphan reclaim, remaining failures likely per-node bin-packing fragmentation.",
     "placement_recommendation": "Stay on A40 stratum; no G4 expansion available. After orphan reclaim, if Pending persists, reduce concurrent C7 sim lanes temporarily or enable pod anti-affinity / spread constraints so C8 pairs bin-pack across more A40 nodes instead of colliding on saturated nodes. Do not move C8 to A100/B200 without new G4 receipts."
   },
   "confirmatory_handoff_plan": {
@@ -48,9 +48,8 @@
   "detection": {
     "clutter_no_gpu": [],
     "healthy_lane_pairs": [
-      "c6m15",
-      "c6m16",
-      "c6m17",
+      "c6m09",
+      "c6m10",
       "c7m00",
       "c7m09",
       "c7m10",
@@ -67,103 +66,323 @@
       "c7m24",
       "c7m26",
       "c7m28",
-      "c7m30",
-      "c8m13",
-      "c8m14"
+      "c7m30"
     ],
     "orphan_policies": [
       {
-        "attempt_id": "attempt0016",
+        "attempt_id": "attempt0161",
+        "gpu_count": 1,
+        "gpu_product": "NVIDIA-B200",
+        "job": "v4-c6m00-attempt0161-784b239fc9-policy",
+        "lane_id": "c6m00",
+        "pod": "v4-c6m00-attempt0161-784b239fc9-policy-z7l28",
+        "reason_code": "split_pair_orphan_policy_half",
+        "sim_job_failed": true,
+        "sim_phase": "Failed"
+      },
+      {
+        "attempt_id": "attempt0162",
+        "gpu_count": 1,
+        "gpu_product": "NVIDIA-B200",
+        "job": "v4-c6m01-attempt0162-b788425f00-policy",
+        "lane_id": "c6m01",
+        "pod": "v4-c6m01-attempt0162-b788425f00-policy-4vrct",
+        "reason_code": "split_pair_orphan_policy_half",
+        "sim_job_failed": false,
+        "sim_phase": "Succeeded"
+      },
+      {
+        "attempt_id": "attempt0164",
+        "gpu_count": 1,
+        "gpu_product": "NVIDIA-B200",
+        "job": "v4-c6m03-attempt0164-f5316c732f-policy",
+        "lane_id": "c6m03",
+        "pod": "v4-c6m03-attempt0164-f5316c732f-policy-mksfx",
+        "reason_code": "split_pair_orphan_policy_half",
+        "sim_job_failed": false,
+        "sim_phase": "Succeeded"
+      },
+      {
+        "attempt_id": "attempt0165",
+        "gpu_count": 1,
+        "gpu_product": "NVIDIA-B200",
+        "job": "v4-c6m04-attempt0165-050285736a-policy",
+        "lane_id": "c6m04",
+        "pod": "v4-c6m04-attempt0165-050285736a-policy-hjqqh",
+        "reason_code": "split_pair_orphan_policy_half",
+        "sim_job_failed": false,
+        "sim_phase": "Succeeded"
+      },
+      {
+        "attempt_id": "attempt0166",
+        "gpu_count": 1,
+        "gpu_product": "NVIDIA-B200",
+        "job": "v4-c6m05-attempt0166-2368b849b1-policy",
+        "lane_id": "c6m05",
+        "pod": "v4-c6m05-attempt0166-2368b849b1-policy-gj4bj",
+        "reason_code": "split_pair_orphan_policy_half",
+        "sim_job_failed": false,
+        "sim_phase": "Succeeded"
+      },
+      {
+        "attempt_id": "attempt0167",
+        "gpu_count": 1,
+        "gpu_product": "NVIDIA-B200",
+        "job": "v4-c6m06-attempt0167-c4933cf51b-policy",
+        "lane_id": "c6m06",
+        "pod": "v4-c6m06-attempt0167-c4933cf51b-policy-7j8xb",
+        "reason_code": "split_pair_orphan_policy_half",
+        "sim_job_failed": false,
+        "sim_phase": "Succeeded"
+      },
+      {
+        "attempt_id": "attempt0168",
+        "gpu_count": 1,
+        "gpu_product": "NVIDIA-B200",
+        "job": "v4-c6m07-attempt0168-509a8394d8-policy",
+        "lane_id": "c6m07",
+        "pod": "v4-c6m07-attempt0168-509a8394d8-policy-ts4cq",
+        "reason_code": "split_pair_orphan_policy_half",
+        "sim_job_failed": false,
+        "sim_phase": "Succeeded"
+      },
+      {
+        "attempt_id": "attempt0169",
+        "gpu_count": 1,
+        "gpu_product": "NVIDIA-B200",
+        "job": "v4-c6m08-attempt0169-3816fdf9f8-policy",
+        "lane_id": "c6m08",
+        "pod": "v4-c6m08-attempt0169-3816fdf9f8-policy-wwmvt",
+        "reason_code": "split_pair_orphan_policy_half",
+        "sim_job_failed": false,
+        "sim_phase": "Succeeded"
+      },
+      {
+        "attempt_id": "attempt0001",
         "gpu_count": 1,
         "gpu_product": "NVIDIA-A40",
-        "job": "v4-c8m15-attempt0016-b52aff0c4f-policy",
-        "lane_id": "c8m15",
-        "pod": "v4-c8m15-attempt0016-b52aff0c4f-policy-lr2fh",
-        "reason_code": "orphan_policy_dead_sim",
-        "sim_attempt": null,
+        "job": "v4-c8m00-attempt0001-09a518a6cc-policy",
+        "lane_id": "c8m00",
+        "pod": "v4-c8m00-attempt0001-09a518a6cc-policy-9zpvj",
+        "reason_code": "split_pair_orphan_policy_half",
+        "sim_job_failed": false,
         "sim_phase": "missing"
+      },
+      {
+        "attempt_id": "attempt0015",
+        "gpu_count": 1,
+        "gpu_product": "NVIDIA-A40",
+        "job": "v4-c8m14-attempt0015-a00cdb085f-policy",
+        "lane_id": "c8m14",
+        "pod": "v4-c8m14-attempt0015-a00cdb085f-policy-4782r",
+        "reason_code": "split_pair_orphan_policy_half",
+        "sim_job_failed": false,
+        "sim_phase": "Succeeded"
+      }
+    ],
+    "split_pair_orphans": [
+      {
+        "attempt_id": "attempt0161",
+        "gpu_count": 1,
+        "gpu_product": "NVIDIA-B200",
+        "job": "v4-c6m00-attempt0161-784b239fc9-policy",
+        "lane_id": "c6m00",
+        "pod": "v4-c6m00-attempt0161-784b239fc9-policy-z7l28",
+        "reason_code": "split_pair_orphan_policy_half",
+        "sim_job_failed": true,
+        "sim_phase": "Failed"
+      },
+      {
+        "attempt_id": "attempt0162",
+        "gpu_count": 1,
+        "gpu_product": "NVIDIA-B200",
+        "job": "v4-c6m01-attempt0162-b788425f00-policy",
+        "lane_id": "c6m01",
+        "pod": "v4-c6m01-attempt0162-b788425f00-policy-4vrct",
+        "reason_code": "split_pair_orphan_policy_half",
+        "sim_job_failed": false,
+        "sim_phase": "Succeeded"
+      },
+      {
+        "attempt_id": "attempt0164",
+        "gpu_count": 1,
+        "gpu_product": "NVIDIA-B200",
+        "job": "v4-c6m03-attempt0164-f5316c732f-policy",
+        "lane_id": "c6m03",
+        "pod": "v4-c6m03-attempt0164-f5316c732f-policy-mksfx",
+        "reason_code": "split_pair_orphan_policy_half",
+        "sim_job_failed": false,
+        "sim_phase": "Succeeded"
+      },
+      {
+        "attempt_id": "attempt0165",
+        "gpu_count": 1,
+        "gpu_product": "NVIDIA-B200",
+        "job": "v4-c6m04-attempt0165-050285736a-policy",
+        "lane_id": "c6m04",
+        "pod": "v4-c6m04-attempt0165-050285736a-policy-hjqqh",
+        "reason_code": "split_pair_orphan_policy_half",
+        "sim_job_failed": false,
+        "sim_phase": "Succeeded"
+      },
+      {
+        "attempt_id": "attempt0166",
+        "gpu_count": 1,
+        "gpu_product": "NVIDIA-B200",
+        "job": "v4-c6m05-attempt0166-2368b849b1-policy",
+        "lane_id": "c6m05",
+        "pod": "v4-c6m05-attempt0166-2368b849b1-policy-gj4bj",
+        "reason_code": "split_pair_orphan_policy_half",
+        "sim_job_failed": false,
+        "sim_phase": "Succeeded"
+      },
+      {
+        "attempt_id": "attempt0167",
+        "gpu_count": 1,
+        "gpu_product": "NVIDIA-B200",
+        "job": "v4-c6m06-attempt0167-c4933cf51b-policy",
+        "lane_id": "c6m06",
+        "pod": "v4-c6m06-attempt0167-c4933cf51b-policy-7j8xb",
+        "reason_code": "split_pair_orphan_policy_half",
+        "sim_job_failed": false,
+        "sim_phase": "Succeeded"
+      },
+      {
+        "attempt_id": "attempt0168",
+        "gpu_count": 1,
+        "gpu_product": "NVIDIA-B200",
+        "job": "v4-c6m07-attempt0168-509a8394d8-policy",
+        "lane_id": "c6m07",
+        "pod": "v4-c6m07-attempt0168-509a8394d8-policy-ts4cq",
+        "reason_code": "split_pair_orphan_policy_half",
+        "sim_job_failed": false,
+        "sim_phase": "Succeeded"
+      },
+      {
+        "attempt_id": "attempt0169",
+        "gpu_count": 1,
+        "gpu_product": "NVIDIA-B200",
+        "job": "v4-c6m08-attempt0169-3816fdf9f8-policy",
+        "lane_id": "c6m08",
+        "pod": "v4-c6m08-attempt0169-3816fdf9f8-policy-wwmvt",
+        "reason_code": "split_pair_orphan_policy_half",
+        "sim_job_failed": false,
+        "sim_phase": "Succeeded"
+      },
+      {
+        "attempt_id": "attempt0001",
+        "gpu_count": 1,
+        "gpu_product": "NVIDIA-A40",
+        "job": "v4-c8m00-attempt0001-09a518a6cc-policy",
+        "lane_id": "c8m00",
+        "pod": "v4-c8m00-attempt0001-09a518a6cc-policy-9zpvj",
+        "reason_code": "split_pair_orphan_policy_half",
+        "sim_job_failed": false,
+        "sim_phase": "missing"
+      },
+      {
+        "attempt_id": "attempt0015",
+        "gpu_count": 1,
+        "gpu_product": "NVIDIA-A40",
+        "job": "v4-c8m14-attempt0015-a00cdb085f-policy",
+        "lane_id": "c8m14",
+        "pod": "v4-c8m14-attempt0015-a00cdb085f-policy-4782r",
+        "reason_code": "split_pair_orphan_policy_half",
+        "sim_job_failed": false,
+        "sim_phase": "Succeeded"
       }
     ],
     "zombie_policies": [],
     "zombie_sims": [
       {
-        "attempt_id": "attempt0166",
+        "attempt_id": "attempt0172",
         "gpu_count": 1,
         "gpu_product": "NVIDIA-A100-SXM4-40GB",
-        "job": "v4-c6m05-attempt0166-b0819de5d0-sim",
-        "lane_id": "c6m05",
-        "pod": "v4-c6m05-attempt0166-b0819de5d0-sim-ljv6n",
+        "job": "v4-c6m11-attempt0172-f7275912a4-sim",
+        "lane_id": "c6m11",
+        "pod": "v4-c6m11-attempt0172-f7275912a4-sim-86qnq",
         "policy_phase": "Pending",
         "reason_code": "zombie_sim_idle_policy_dead"
       },
       {
-        "attempt_id": "attempt0167",
+        "attempt_id": "attempt0173",
         "gpu_count": 1,
         "gpu_product": "NVIDIA-A100-SXM4-40GB",
-        "job": "v4-c6m06-attempt0167-9210f468fd-sim",
-        "lane_id": "c6m06",
-        "pod": "v4-c6m06-attempt0167-9210f468fd-sim-ncmgk",
+        "job": "v4-c6m12-attempt0173-78230887de-sim",
+        "lane_id": "c6m12",
+        "pod": "v4-c6m12-attempt0173-78230887de-sim-c7n27",
         "policy_phase": "Pending",
         "reason_code": "zombie_sim_idle_policy_dead"
       },
       {
-        "attempt_id": "attempt0170",
+        "attempt_id": "attempt0174",
         "gpu_count": 1,
         "gpu_product": "NVIDIA-A100-SXM4-40GB",
-        "job": "v4-c6m09-attempt0170-9afa426655-sim",
-        "lane_id": "c6m09",
-        "pod": "v4-c6m09-attempt0170-9afa426655-sim-fxf6x",
+        "job": "v4-c6m13-attempt0174-f134c89ca0-sim",
+        "lane_id": "c6m13",
+        "pod": "v4-c6m13-attempt0174-f134c89ca0-sim-9rhtb",
         "policy_phase": "Pending",
         "reason_code": "zombie_sim_idle_policy_dead"
       },
       {
-        "attempt_id": "attempt0185",
+        "attempt_id": "attempt0175",
         "gpu_count": 1,
         "gpu_product": "NVIDIA-A100-SXM4-40GB",
-        "job": "v4-c6m24-attempt0185-b27fdae450-sim",
-        "lane_id": "c6m24",
-        "pod": "v4-c6m24-attempt0185-b27fdae450-sim-mlsh6",
+        "job": "v4-c6m14-attempt0175-121bb1eff7-sim",
+        "lane_id": "c6m14",
+        "pod": "v4-c6m14-attempt0175-121bb1eff7-sim-q5dnf",
         "policy_phase": "Pending",
         "reason_code": "zombie_sim_idle_policy_dead"
       },
       {
-        "attempt_id": "attempt0186",
+        "attempt_id": "attempt0176",
         "gpu_count": 1,
         "gpu_product": "NVIDIA-A100-SXM4-40GB",
-        "job": "v4-c6m25-attempt0186-259a8fcae6-sim",
-        "lane_id": "c6m25",
-        "pod": "v4-c6m25-attempt0186-259a8fcae6-sim-l22vk",
+        "job": "v4-c6m15-attempt0176-3d77bc64f5-sim",
+        "lane_id": "c6m15",
+        "pod": "v4-c6m15-attempt0176-3d77bc64f5-sim-9jpkg",
         "policy_phase": "Pending",
         "reason_code": "zombie_sim_idle_policy_dead"
       },
       {
-        "attempt_id": "attempt0190",
+        "attempt_id": "attempt0177",
         "gpu_count": 1,
         "gpu_product": "NVIDIA-A100-SXM4-40GB",
-        "job": "v4-c6m29-attempt0190-d8bdae7191-sim",
-        "lane_id": "c6m29",
-        "pod": "v4-c6m29-attempt0190-d8bdae7191-sim-r6wss",
+        "job": "v4-c6m16-attempt0177-82045df9b0-sim",
+        "lane_id": "c6m16",
+        "pod": "v4-c6m16-attempt0177-82045df9b0-sim-4xrqb",
         "policy_phase": "Pending",
         "reason_code": "zombie_sim_idle_policy_dead"
       },
       {
-        "attempt_id": "attempt0479",
+        "attempt_id": "attempt0179",
+        "gpu_count": 1,
+        "gpu_product": "NVIDIA-A100-SXM4-40GB",
+        "job": "v4-c6m18-attempt0179-af31331cd2-sim",
+        "lane_id": "c6m18",
+        "pod": "v4-c6m18-attempt0179-af31331cd2-sim-hdbqn",
+        "policy_phase": "Pending",
+        "reason_code": "zombie_sim_idle_policy_dead"
+      },
+      {
+        "attempt_id": "attempt0180",
+        "gpu_count": 1,
+        "gpu_product": "NVIDIA-A100-SXM4-40GB",
+        "job": "v4-c6m19-attempt0180-2c3dcc085c-sim",
+        "lane_id": "c6m19",
+        "pod": "v4-c6m19-attempt0180-2c3dcc085c-sim-dnmpd",
+        "policy_phase": "Pending",
+        "reason_code": "zombie_sim_idle_policy_dead"
+      },
+      {
+        "attempt_id": "attempt0002",
         "gpu_count": 1,
         "gpu_product": "NVIDIA-A40",
-        "job": "v4-c7m07-attempt0479-ce9f3560c0-sim",
-        "lane_id": "c7m07",
-        "pod": "v4-c7m07-attempt0479-ce9f3560c0-sim-zw5nk",
+        "job": "v4-c8m01-attempt0002-7bfe0b99ce-sim",
+        "lane_id": "c8m01",
+        "pod": "v4-c8m01-attempt0002-7bfe0b99ce-sim-nmwzz",
+        "policy_job_failed": false,
         "policy_phase": "missing",
-        "reason_code": "zombie_sim_idle_policy_dead"
-      },
-      {
-        "attempt_id": "attempt0005",
-        "gpu_count": 1,
-        "gpu_product": "NVIDIA-A40",
-        "job": "v4-c8m04-attempt0005-e5ec420f46-sim",
-        "lane_id": "c8m04",
-        "pod": "v4-c8m04-attempt0005-e5ec420f46-sim-vhtn6",
-        "policy_phase": "Pending",
         "reason_code": "zombie_sim_idle_policy_dead"
       }
     ]
@@ -171,25 +390,14 @@
   "dry_run": false,
   "kube_context": "prod-dcwi-warrenq1-vmkub007",
   "namespace": "211247-prod",
-  "observed_at_utc": "2026-09-08T00:04:38Z",
-  "session_cumulative": {
-    "passes": 2,
-    "reclaimed_gpus_by_product": {
-      "NVIDIA-A100-SXM4-40GB": 15,
-      "NVIDIA-A100-SXM4-80GB": 4,
-      "NVIDIA-A40": 7,
-      "NVIDIA-B200": 8
-    },
-    "reclaimed_gpu_total": 34,
-    "note": "Two consecutive live sweeps; second pass receipt overwrites per-pass actions but session totals are cumulative."
-  },
+  "observed_at_utc": "2026-09-08T01:27:28Z",
   "pool_utilization_after": {
-    "pending_gpu_pods": 64,
+    "pending_gpu_pods": 61,
     "pool_free_estimate": {
-      "NVIDIA-A100-SXM4-40GB": 55,
-      "NVIDIA-A100-SXM4-80GB": 78,
+      "NVIDIA-A100-SXM4-40GB": 54,
+      "NVIDIA-A100-SXM4-80GB": 72,
       "NVIDIA-A40": 15,
-      "NVIDIA-B200": 28
+      "NVIDIA-B200": 30
     },
     "pool_sizes": {
       "NVIDIA-A100-SXM4-40GB": 64,
@@ -198,27 +406,27 @@
       "NVIDIA-B200": 40
     },
     "running_gpus_by_family_role": {
-      "c6_policy": 12,
-      "c6_sim": 9,
-      "c7_policy": 17,
-      "c7_sim": 18,
-      "c8_policy": 4,
-      "c8_sim": 3
+      "c6_policy": 10,
+      "c6_sim": 10,
+      "c7_policy": 23,
+      "c7_sim": 17,
+      "c8_policy": 7,
+      "c8_sim": 1
     },
     "running_gpus_by_product": {
-      "NVIDIA-A100-SXM4-40GB": 9,
-      "NVIDIA-A100-SXM4-80GB": 17,
+      "NVIDIA-A100-SXM4-40GB": 10,
+      "NVIDIA-A100-SXM4-80GB": 23,
       "NVIDIA-A40": 25,
-      "NVIDIA-B200": 12
+      "NVIDIA-B200": 10
     }
   },
   "pool_utilization_before": {
-    "pending_gpu_pods": 65,
+    "pending_gpu_pods": 69,
     "pool_free_estimate": {
-      "NVIDIA-A100-SXM4-40GB": 55,
-      "NVIDIA-A100-SXM4-80GB": 78,
-      "NVIDIA-A40": 15,
-      "NVIDIA-B200": 28
+      "NVIDIA-A100-SXM4-40GB": 54,
+      "NVIDIA-A100-SXM4-80GB": 72,
+      "NVIDIA-A40": 14,
+      "NVIDIA-B200": 30
     },
     "pool_sizes": {
       "NVIDIA-A100-SXM4-40GB": 64,
@@ -227,141 +435,366 @@
       "NVIDIA-B200": 40
     },
     "running_gpus_by_family_role": {
-      "c6_policy": 12,
-      "c6_sim": 9,
-      "c7_policy": 17,
-      "c7_sim": 18,
-      "c8_policy": 4,
-      "c8_sim": 3
+      "c6_policy": 10,
+      "c6_sim": 10,
+      "c7_policy": 23,
+      "c7_sim": 17,
+      "c8_policy": 8,
+      "c8_sim": 1
     },
     "running_gpus_by_product": {
-      "NVIDIA-A100-SXM4-40GB": 9,
-      "NVIDIA-A100-SXM4-80GB": 17,
-      "NVIDIA-A40": 25,
-      "NVIDIA-B200": 12
+      "NVIDIA-A100-SXM4-40GB": 10,
+      "NVIDIA-A100-SXM4-80GB": 23,
+      "NVIDIA-A40": 26,
+      "NVIDIA-B200": 10
     }
+  },
+  "protect_list": {
+    "path": "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_sweep_protect_list_20260908.json",
+    "productive_c7_pairs": 17,
+    "retry_shards": 6
   },
   "reclaim": {
     "actions": [
       {
-        "action": "delete_job",
-        "attempt_id": "attempt0016",
+        "action": "delete_split_pair_whole_lane",
+        "attempt_id": "attempt0161",
         "deleted": true,
-        "gpu_count": 1,
-        "gpu_product": "NVIDIA-A40",
-        "job": "v4-c8m15-attempt0016-b52aff0c4f-policy",
-        "lane_id": "c8m15",
-        "reason_code": "orphan_policy_dead_sim"
+        "job": "v4-c6m00-attempt0161-784b239fc9-policy",
+        "lane_id": "c6m00",
+        "reason_code": "split_pair_orphan_whole_lane"
       },
       {
-        "action": "delete_job",
+        "action": "delete_split_pair_whole_lane",
+        "attempt_id": "attempt0161",
+        "deleted": true,
+        "job": "v4-c6m00-attempt0161-784b239fc9-sim",
+        "lane_id": "c6m00",
+        "reason_code": "split_pair_orphan_whole_lane"
+      },
+      {
+        "action": "delete_split_pair_whole_lane",
+        "attempt_id": "attempt0162",
+        "deleted": true,
+        "job": "v4-c6m01-attempt0162-b788425f00-policy",
+        "lane_id": "c6m01",
+        "reason_code": "split_pair_orphan_whole_lane"
+      },
+      {
+        "action": "delete_split_pair_whole_lane",
+        "attempt_id": "attempt0162",
+        "deleted": true,
+        "job": "v4-c6m01-attempt0162-b788425f00-sim",
+        "lane_id": "c6m01",
+        "reason_code": "split_pair_orphan_whole_lane"
+      },
+      {
+        "action": "delete_split_pair_whole_lane",
+        "attempt_id": "attempt0164",
+        "deleted": true,
+        "job": "v4-c6m03-attempt0164-f5316c732f-policy",
+        "lane_id": "c6m03",
+        "reason_code": "split_pair_orphan_whole_lane"
+      },
+      {
+        "action": "delete_split_pair_whole_lane",
+        "attempt_id": "attempt0164",
+        "deleted": true,
+        "job": "v4-c6m03-attempt0164-f5316c732f-sim",
+        "lane_id": "c6m03",
+        "reason_code": "split_pair_orphan_whole_lane"
+      },
+      {
+        "action": "delete_split_pair_whole_lane",
+        "attempt_id": "attempt0165",
+        "deleted": true,
+        "job": "v4-c6m04-attempt0165-050285736a-policy",
+        "lane_id": "c6m04",
+        "reason_code": "split_pair_orphan_whole_lane"
+      },
+      {
+        "action": "delete_split_pair_whole_lane",
+        "attempt_id": "attempt0165",
+        "deleted": true,
+        "job": "v4-c6m04-attempt0165-050285736a-sim",
+        "lane_id": "c6m04",
+        "reason_code": "split_pair_orphan_whole_lane"
+      },
+      {
+        "action": "delete_split_pair_whole_lane",
         "attempt_id": "attempt0166",
         "deleted": true,
-        "gpu_count": 1,
-        "gpu_product": "NVIDIA-A100-SXM4-40GB",
-        "job": "v4-c6m05-attempt0166-b0819de5d0-sim",
+        "job": "v4-c6m05-attempt0166-2368b849b1-policy",
         "lane_id": "c6m05",
-        "reason_code": "zombie_sim_idle_policy_dead"
+        "reason_code": "split_pair_orphan_whole_lane"
       },
       {
-        "action": "delete_job",
+        "action": "delete_split_pair_whole_lane",
+        "attempt_id": "attempt0166",
+        "deleted": true,
+        "job": "v4-c6m05-attempt0166-2368b849b1-sim",
+        "lane_id": "c6m05",
+        "reason_code": "split_pair_orphan_whole_lane"
+      },
+      {
+        "action": "delete_split_pair_whole_lane",
         "attempt_id": "attempt0167",
         "deleted": true,
-        "gpu_count": 1,
-        "gpu_product": "NVIDIA-A100-SXM4-40GB",
-        "job": "v4-c6m06-attempt0167-9210f468fd-sim",
+        "job": "v4-c6m06-attempt0167-c4933cf51b-policy",
         "lane_id": "c6m06",
-        "reason_code": "zombie_sim_idle_policy_dead"
+        "reason_code": "split_pair_orphan_whole_lane"
+      },
+      {
+        "action": "delete_split_pair_whole_lane",
+        "attempt_id": "attempt0167",
+        "deleted": true,
+        "job": "v4-c6m06-attempt0167-c4933cf51b-sim",
+        "lane_id": "c6m06",
+        "reason_code": "split_pair_orphan_whole_lane"
+      },
+      {
+        "action": "delete_split_pair_whole_lane",
+        "attempt_id": "attempt0168",
+        "deleted": true,
+        "job": "v4-c6m07-attempt0168-509a8394d8-policy",
+        "lane_id": "c6m07",
+        "reason_code": "split_pair_orphan_whole_lane"
+      },
+      {
+        "action": "delete_split_pair_whole_lane",
+        "attempt_id": "attempt0168",
+        "deleted": true,
+        "job": "v4-c6m07-attempt0168-509a8394d8-sim",
+        "lane_id": "c6m07",
+        "reason_code": "split_pair_orphan_whole_lane"
+      },
+      {
+        "action": "delete_split_pair_whole_lane",
+        "attempt_id": "attempt0169",
+        "deleted": true,
+        "job": "v4-c6m08-attempt0169-3816fdf9f8-policy",
+        "lane_id": "c6m08",
+        "reason_code": "split_pair_orphan_whole_lane"
+      },
+      {
+        "action": "delete_split_pair_whole_lane",
+        "attempt_id": "attempt0169",
+        "deleted": true,
+        "job": "v4-c6m08-attempt0169-3816fdf9f8-sim",
+        "lane_id": "c6m08",
+        "reason_code": "split_pair_orphan_whole_lane"
+      },
+      {
+        "action": "delete_split_pair_whole_lane",
+        "attempt_id": "attempt0001",
+        "deleted": true,
+        "job": "v4-c8m00-attempt0001-09a518a6cc-policy",
+        "lane_id": "c8m00",
+        "reason_code": "split_pair_orphan_whole_lane"
+      },
+      {
+        "action": "delete_split_pair_whole_lane",
+        "attempt_id": "attempt0001",
+        "deleted": true,
+        "job": "v4-c8m00-attempt0001-09a518a6cc-sim",
+        "lane_id": "c8m00",
+        "reason_code": "split_pair_orphan_whole_lane"
+      },
+      {
+        "action": "delete_split_pair_whole_lane",
+        "attempt_id": "attempt0015",
+        "deleted": true,
+        "job": "v4-c8m14-attempt0015-a00cdb085f-policy",
+        "lane_id": "c8m14",
+        "reason_code": "split_pair_orphan_whole_lane"
+      },
+      {
+        "action": "delete_split_pair_whole_lane",
+        "attempt_id": "attempt0015",
+        "deleted": true,
+        "job": "v4-c8m14-attempt0015-a00cdb085f-sim",
+        "lane_id": "c8m14",
+        "reason_code": "split_pair_orphan_whole_lane"
       },
       {
         "action": "delete_job",
-        "attempt_id": "attempt0170",
+        "attempt_id": "attempt0172",
         "deleted": true,
         "gpu_count": 1,
         "gpu_product": "NVIDIA-A100-SXM4-40GB",
-        "job": "v4-c6m09-attempt0170-9afa426655-sim",
-        "lane_id": "c6m09",
+        "job": "v4-c6m11-attempt0172-f7275912a4-sim",
+        "lane_id": "c6m11",
         "reason_code": "zombie_sim_idle_policy_dead"
       },
       {
         "action": "delete_job",
-        "attempt_id": "attempt0185",
+        "attempt_id": "attempt0173",
         "deleted": true,
         "gpu_count": 1,
         "gpu_product": "NVIDIA-A100-SXM4-40GB",
-        "job": "v4-c6m24-attempt0185-b27fdae450-sim",
-        "lane_id": "c6m24",
+        "job": "v4-c6m12-attempt0173-78230887de-sim",
+        "lane_id": "c6m12",
         "reason_code": "zombie_sim_idle_policy_dead"
       },
       {
         "action": "delete_job",
-        "attempt_id": "attempt0186",
+        "attempt_id": "attempt0174",
         "deleted": true,
         "gpu_count": 1,
         "gpu_product": "NVIDIA-A100-SXM4-40GB",
-        "job": "v4-c6m25-attempt0186-259a8fcae6-sim",
-        "lane_id": "c6m25",
+        "job": "v4-c6m13-attempt0174-f134c89ca0-sim",
+        "lane_id": "c6m13",
         "reason_code": "zombie_sim_idle_policy_dead"
       },
       {
         "action": "delete_job",
-        "attempt_id": "attempt0190",
+        "attempt_id": "attempt0175",
         "deleted": true,
         "gpu_count": 1,
         "gpu_product": "NVIDIA-A100-SXM4-40GB",
-        "job": "v4-c6m29-attempt0190-d8bdae7191-sim",
-        "lane_id": "c6m29",
+        "job": "v4-c6m14-attempt0175-121bb1eff7-sim",
+        "lane_id": "c6m14",
         "reason_code": "zombie_sim_idle_policy_dead"
       },
       {
         "action": "delete_job",
-        "attempt_id": "attempt0479",
+        "attempt_id": "attempt0176",
+        "deleted": true,
+        "gpu_count": 1,
+        "gpu_product": "NVIDIA-A100-SXM4-40GB",
+        "job": "v4-c6m15-attempt0176-3d77bc64f5-sim",
+        "lane_id": "c6m15",
+        "reason_code": "zombie_sim_idle_policy_dead"
+      },
+      {
+        "action": "delete_job",
+        "attempt_id": "attempt0177",
+        "deleted": true,
+        "gpu_count": 1,
+        "gpu_product": "NVIDIA-A100-SXM4-40GB",
+        "job": "v4-c6m16-attempt0177-82045df9b0-sim",
+        "lane_id": "c6m16",
+        "reason_code": "zombie_sim_idle_policy_dead"
+      },
+      {
+        "action": "delete_job",
+        "attempt_id": "attempt0179",
+        "deleted": true,
+        "gpu_count": 1,
+        "gpu_product": "NVIDIA-A100-SXM4-40GB",
+        "job": "v4-c6m18-attempt0179-af31331cd2-sim",
+        "lane_id": "c6m18",
+        "reason_code": "zombie_sim_idle_policy_dead"
+      },
+      {
+        "action": "delete_job",
+        "attempt_id": "attempt0180",
+        "deleted": true,
+        "gpu_count": 1,
+        "gpu_product": "NVIDIA-A100-SXM4-40GB",
+        "job": "v4-c6m19-attempt0180-2c3dcc085c-sim",
+        "lane_id": "c6m19",
+        "reason_code": "zombie_sim_idle_policy_dead"
+      },
+      {
+        "action": "delete_job",
+        "attempt_id": "attempt0002",
         "deleted": true,
         "gpu_count": 1,
         "gpu_product": "NVIDIA-A40",
-        "job": "v4-c7m07-attempt0479-ce9f3560c0-sim",
-        "lane_id": "c7m07",
-        "reason_code": "zombie_sim_idle_policy_dead"
-      },
-      {
-        "action": "delete_job",
-        "attempt_id": "attempt0005",
-        "deleted": true,
-        "gpu_count": 1,
-        "gpu_product": "NVIDIA-A40",
-        "job": "v4-c8m04-attempt0005-e5ec420f46-sim",
-        "lane_id": "c8m04",
+        "job": "v4-c8m01-attempt0002-7bfe0b99ce-sim",
+        "lane_id": "c8m01",
         "reason_code": "zombie_sim_idle_policy_dead"
       }
     ],
-    "jobs_deleted": 9,
-    "reclaimed_gpu_total": 9,
+    "jobs_deleted": 29,
+    "protect_list_path": "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_sweep_protect_list_20260908.json",
+    "reclaimed_gpu_total": 19,
     "reclaimed_gpus_by_product": {
-      "NVIDIA-A100-SXM4-40GB": 6,
-      "NVIDIA-A40": 3
-    }
+      "NVIDIA-A100-SXM4-40GB": 8,
+      "NVIDIA-A40": 3,
+      "NVIDIA-B200": 8
+    },
+    "split_pair_lanes_reclaimed": [
+      "c6m00",
+      "c6m01",
+      "c6m03",
+      "c6m04",
+      "c6m05",
+      "c6m06",
+      "c6m07",
+      "c6m08",
+      "c8m00",
+      "c8m14"
+    ]
   },
+  "redispatch_actions": [
+    {
+      "action": "apply_rendered_job",
+      "applied": true,
+      "job": "v4-c8m00-attempt0001-09a518a6cc-sim",
+      "lane_id": "c8m00",
+      "message": "job.batch/v4-c8m00-attempt0001-09a518a6cc-sim created",
+      "policy_suspended_on_create": false,
+      "rendered_from": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r1/c8m00-attempt0001-a40-single-container-groot-bridge/simulator-job.yaml",
+      "role": "simulator",
+      "sim_first": true
+    },
+    {
+      "action": "apply_rendered_job",
+      "applied": true,
+      "job": "v4-c8m00-attempt0001-09a518a6cc-policy",
+      "lane_id": "c8m00",
+      "message": "job.batch/v4-c8m00-attempt0001-09a518a6cc-policy created",
+      "policy_suspended_on_create": true,
+      "rendered_from": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r1/c8m00-attempt0001-a40-single-container-groot-bridge/policy-job.yaml",
+      "role": "policy",
+      "sim_first": true
+    },
+    {
+      "action": "apply_rendered_job",
+      "applied": true,
+      "job": "v4-c8m14-attempt0015-a00cdb085f-sim",
+      "lane_id": "c8m14",
+      "message": "job.batch/v4-c8m14-attempt0015-a00cdb085f-sim created",
+      "policy_suspended_on_create": false,
+      "rendered_from": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r1/c8m14-attempt0015-a40-single-container-groot-bridge/simulator-job.yaml",
+      "role": "simulator",
+      "sim_first": true
+    },
+    {
+      "action": "apply_rendered_job",
+      "applied": true,
+      "job": "v4-c8m14-attempt0015-a00cdb085f-policy",
+      "lane_id": "c8m14",
+      "message": "job.batch/v4-c8m14-attempt0015-a00cdb085f-policy created",
+      "policy_suspended_on_create": true,
+      "rendered_from": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r1/c8m14-attempt0015-a40-single-container-groot-bridge/policy-job.yaml",
+      "role": "policy",
+      "sim_first": true
+    }
+  ],
   "scheduling_state": {
     "c6": {
-      "healthy_pairs": 3,
+      "healthy_pairs": 9,
       "lane_prefix": "c6m",
-      "partial_pairs": 20,
-      "pending_pairs": 9,
-      "total_lanes_seen": 32
+      "partial_pairs": 2,
+      "pending_pairs": 12,
+      "total_lanes_seen": 23
     },
     "c7": {
       "healthy_pairs": 17,
       "lane_prefix": "c7m",
-      "partial_pairs": 1,
+      "partial_pairs": 4,
       "pending_pairs": 0,
-      "total_lanes_seen": 18
+      "total_lanes_seen": 21
     },
     "c8": {
-      "healthy_pairs": 2,
+      "healthy_pairs": 0,
       "lane_prefix": "c8m",
-      "partial_pairs": 3,
-      "pending_pairs": 14,
-      "total_lanes_seen": 19
+      "partial_pairs": 10,
+      "pending_pairs": 10,
+      "total_lanes_seen": 20
     }
   },
   "schema_version": "v4-gpu-pool-sweep-receipt-v1",

@@ -126,17 +126,29 @@ def _sim_is_dead(sim: PodRef | None) -> bool:
 
 
 def _between_episodes_healthy(policy: PodRef, sim: PodRef | None) -> bool:
-    """Policy may idle between episodes while sim restarts on same attempt."""
-    if sim is None:
+    """Running policy may idle between episodes while sim restarts on same attempt."""
+    if sim is None or policy is None:
         return False
     if policy.attempt_id != sim.attempt_id:
+        return False
+    if policy.phase != "Running":
         return False
     if sim.phase in {"Pending", "Running"}:
         return True
     return False
 
 
-def detect_lane_mismatches(pods: Sequence[PodRef]) -> dict[str, Any]:
+def _partner_is_failed_not_pending(partner: PodRef | None) -> bool:
+    if partner is None:
+        return True
+    return partner.phase in {"Failed", "Error", "Succeeded"}
+
+
+def detect_lane_mismatches(
+    pods: Sequence[PodRef],
+    *,
+    job_failed_by_name: Mapping[str, bool] | None = None,
+) -> dict[str, Any]:
     by_lane: dict[str, list[PodRef]] = defaultdict(list)
     for pod in pods:
         by_lane[pod.lane_id].append(pod)
@@ -144,8 +156,17 @@ def detect_lane_mismatches(pods: Sequence[PodRef]) -> dict[str, Any]:
     orphan_policies: list[dict[str, Any]] = []
     zombie_sims: list[dict[str, Any]] = []
     zombie_policies: list[dict[str, Any]] = []
+    split_pair_orphans: list[dict[str, Any]] = []
     healthy_pairs: list[str] = []
     clutter_no_gpu: list[dict[str, Any]] = []
+    job_failed = job_failed_by_name or {}
+
+    def _job_is_failed(job_name: str, pod: PodRef | None) -> bool:
+        if job_failed.get(job_name):
+            return True
+        if pod is None:
+            return False
+        return pod.phase in {"Failed", "Error"}
 
     for lane_id in sorted(by_lane):
         latest = _latest_pods(by_lane[lane_id])
@@ -179,7 +200,22 @@ def detect_lane_mismatches(pods: Sequence[PodRef]) -> dict[str, Any]:
         if pol_run and sim_run and policy and sim and policy.attempt_id == sim.attempt_id:
             healthy_pairs.append(lane_id)
             continue
-        if pol_run and policy and _sim_is_dead(sim) and not _between_episodes_healthy(policy, sim):
+        if pol_run and policy and _partner_is_failed_not_pending(sim) and not _between_episodes_healthy(policy, sim):
+            reason = "split_pair_orphan_policy_half"
+            entry = {
+                "lane_id": lane_id,
+                "attempt_id": policy.attempt_id,
+                "pod": policy.name,
+                "job": policy.job_name,
+                "gpu_product": policy.gpu_product,
+                "gpu_count": policy.gpu_count,
+                "sim_phase": sim.phase if sim else "missing",
+                "sim_job_failed": _job_is_failed(sim.job_name if sim else "", sim),
+                "reason_code": reason,
+            }
+            orphan_policies.append(entry)
+            split_pair_orphans.append(entry)
+        elif pol_run and policy and _sim_is_dead(sim) and not _between_episodes_healthy(policy, sim):
             orphan_policies.append(
                 {
                     "lane_id": lane_id,
@@ -193,9 +229,16 @@ def detect_lane_mismatches(pods: Sequence[PodRef]) -> dict[str, Any]:
                     "reason_code": "orphan_policy_dead_sim",
                 }
             )
-        if sim_run and sim and (not pol_run) and (policy is None or _sim_is_dead(policy) or policy.phase in {"Failed", "Error"}):
-            zombie_sims.append(
-                {
+        if sim_run and sim and not pol_run:
+            if policy and _between_episodes_healthy(policy, sim):
+                pass
+            elif policy is None or _partner_is_failed_not_pending(policy) or policy.phase in {"Failed", "Error"}:
+                reason = (
+                    "split_pair_orphan_sim_half"
+                    if policy and _partner_is_failed_not_pending(policy)
+                    else "zombie_sim_idle_policy_dead"
+                )
+                entry = {
                     "lane_id": lane_id,
                     "attempt_id": sim.attempt_id,
                     "pod": sim.name,
@@ -203,9 +246,25 @@ def detect_lane_mismatches(pods: Sequence[PodRef]) -> dict[str, Any]:
                     "gpu_product": sim.gpu_product,
                     "gpu_count": sim.gpu_count,
                     "policy_phase": policy.phase if policy else "missing",
-                    "reason_code": "zombie_sim_idle_policy_dead",
+                    "policy_job_failed": _job_is_failed(policy.job_name if policy else "", policy),
+                    "reason_code": reason,
                 }
-            )
+                zombie_sims.append(entry)
+                if reason.startswith("split_pair"):
+                    split_pair_orphans.append(entry)
+            elif policy and policy.phase == "Pending":
+                zombie_sims.append(
+                    {
+                        "lane_id": lane_id,
+                        "attempt_id": sim.attempt_id,
+                        "pod": sim.name,
+                        "job": sim.job_name,
+                        "gpu_product": sim.gpu_product,
+                        "gpu_count": sim.gpu_count,
+                        "policy_phase": policy.phase,
+                        "reason_code": "zombie_sim_idle_policy_dead",
+                    }
+                )
         if pol_run and sim_run and policy and sim and policy.attempt_id != sim.attempt_id:
             # Stale attempt on one leg — prefer deleting the non-latest attempt via job delete.
             for pod in (policy, sim):
@@ -230,6 +289,7 @@ def detect_lane_mismatches(pods: Sequence[PodRef]) -> dict[str, Any]:
         "orphan_policies": orphan_policies,
         "zombie_sims": zombie_sims,
         "zombie_policies": zombie_policies,
+        "split_pair_orphans": split_pair_orphans,
         "clutter_no_gpu": clutter_no_gpu,
     }
 
@@ -347,6 +407,38 @@ def filter_protected_rows(
     return allowed, skipped
 
 
+def build_job_failed_map(jobs: Sequence[Mapping[str, Any]]) -> dict[str, bool]:
+    failed: dict[str, bool] = {}
+    for job in jobs:
+        name = str(job.get("metadata", {}).get("name") or "")
+        if not name:
+            continue
+        status = job.get("status") or {}
+        failed[name] = int(status.get("failed") or 0) > 0
+    return failed
+
+
+def delete_lane_attempt_jobs(
+    *,
+    lane_id: str,
+    attempt_id: str,
+    kube_context: str,
+    namespace: str,
+    dry_run: bool,
+) -> list[str]:
+    deleted: list[str] = []
+    prefix = f"v4-{lane_id}-{attempt_id}-"
+    for job in fetch_jobs(kube_context=kube_context, namespace=namespace):
+        name = str(job.get("metadata", {}).get("name") or "")
+        if not name.startswith(prefix):
+            continue
+        if not (name.endswith("-policy") or name.endswith("-sim")):
+            continue
+        if _delete_job(job_name=name, kube_context=kube_context, namespace=namespace, dry_run=dry_run):
+            deleted.append(name)
+    return deleted
+
+
 def reclaim_detected(
     detection: Mapping[str, Any],
     *,
@@ -358,6 +450,56 @@ def reclaim_detected(
     actions: list[dict[str, Any]] = []
     reclaimed_gpus: Counter[str] = Counter()
     protect_list = protect_list or gpu_scheduling.load_protect_list()
+    split_lane_keys: set[tuple[str, str]] = set()
+    for row in detection.get("split_pair_orphans") or []:
+        allowed, skipped = filter_protected_rows([row], protect_list=protect_list)
+        for skip in skipped:
+            actions.append(
+                {
+                    "action": "skip_reclaim",
+                    "job": skip.get("job"),
+                    "lane_id": skip.get("lane_id"),
+                    "reason_code": "protect_list_preserved",
+                    "deleted": False,
+                }
+            )
+        if allowed:
+            lane_id = str(row["lane_id"])
+            if lane_id in gpu_scheduling.PRODUCTIVE_C8_LANE_IDS:
+                continue
+            split_lane_keys.add((lane_id, str(row["attempt_id"])))
+
+    redispatch_lane_ids: list[str] = []
+    for lane_id, attempt_id in sorted(split_lane_keys):
+        deleted_jobs = delete_lane_attempt_jobs(
+            lane_id=lane_id,
+            attempt_id=attempt_id,
+            kube_context=kube_context,
+            namespace=namespace,
+            dry_run=dry_run,
+        )
+        for job_name in deleted_jobs:
+            actions.append(
+                {
+                    "action": "delete_split_pair_whole_lane",
+                    "job": job_name,
+                    "lane_id": lane_id,
+                    "attempt_id": attempt_id,
+                    "reason_code": "split_pair_orphan_whole_lane",
+                    "deleted": True,
+                }
+            )
+        if deleted_jobs and lane_id not in redispatch_lane_ids:
+            redispatch_lane_ids.append(lane_id)
+
+    for row in detection.get("split_pair_orphans") or []:
+        if (str(row.get("lane_id")), str(row.get("attempt_id"))) in split_lane_keys:
+            product = str(row.get("gpu_product") or "")
+            count = int(row.get("gpu_count") or 0)
+            if product and count:
+                reclaimed_gpus[product] += count
+
+    skip_jobs = {str(row.get("job")) for row in (detection.get("split_pair_orphans") or []) if row.get("job")}
 
     def reclaim_rows(rows: Sequence[Mapping[str, Any]], *, default_reason: str) -> None:
         allowed, skipped = filter_protected_rows(rows, protect_list=protect_list)
@@ -375,7 +517,9 @@ def reclaim_detected(
         seen_jobs: set[str] = set()
         for row in allowed:
             job = str(row.get("job") or "")
-            if not job or job in seen_jobs:
+            if not job or job in seen_jobs or job in skip_jobs:
+                continue
+            if (str(row.get("lane_id")), str(row.get("attempt_id"))) in split_lane_keys:
                 continue
             seen_jobs.add(job)
             gpu_product = str(row.get("gpu_product") or "")
@@ -424,6 +568,7 @@ def reclaim_detected(
         "reclaimed_gpus_by_product": dict(reclaimed_gpus),
         "reclaimed_gpu_total": sum(reclaimed_gpus.values()),
         "jobs_deleted": sum(1 for action in actions if action.get("deleted")),
+        "split_pair_lanes_reclaimed": sorted(redispatch_lane_ids),
         "protect_list_path": str(gpu_scheduling.DEFAULT_PROTECT_LIST.relative_to(ROOT)),
     }
 
@@ -483,12 +628,16 @@ def run_gpu_pool_sweep(
     dry_run: bool,
     c7_remaining_episodes: int = 188,
     protect_list_path: Path | None = None,
+    c8_rendered_root: Path | None = None,
+    c6_rendered_root: Path | None = None,
 ) -> dict[str, Any]:
     protect_list = gpu_scheduling.load_protect_list(protect_list_path)
+    raw_jobs = fetch_jobs(kube_context=kube_context, namespace=namespace)
+    job_failed = build_job_failed_map(raw_jobs)
     raw_pods = fetch_pods(kube_context=kube_context, namespace=namespace)
     pods = [parsed for parsed in (parse_pod(item) for item in raw_pods) if parsed is not None]
     before_usage = summarize_gpu_usage(pods)
-    detection = detect_lane_mismatches(pods)
+    detection = detect_lane_mismatches(pods, job_failed_by_name=job_failed)
     reclaim = reclaim_detected(
         detection,
         kube_context=kube_context,
@@ -496,6 +645,46 @@ def run_gpu_pool_sweep(
         dry_run=dry_run,
         protect_list=protect_list,
     )
+    redispatch_actions: list[dict[str, Any]] = []
+    if not dry_run and reclaim.get("split_pair_lanes_reclaimed"):
+        import v4_gpu_placement_enforce as placement  # noqa: WPS433
+
+        c8_lanes = [
+            lane
+            for lane in reclaim["split_pair_lanes_reclaimed"]
+            if str(lane).startswith("c8m") or str(lane).startswith("g7c8p")
+        ]
+        c6_lanes = [
+            lane
+            for lane in reclaim["split_pair_lanes_reclaimed"]
+            if str(lane).startswith("c6m") or str(lane).startswith("g7c6p")
+        ]
+        c8_root = c8_rendered_root or placement.DEFAULT_C8_RENDERED_ROOT
+        c6_root = c6_rendered_root or placement.DEFAULT_C6_RENDERED_ROOT
+        if c8_lanes and c8_root.is_dir():
+            redispatch_actions.extend(
+                placement.redispatch_lane_pairs(
+                    lane_ids=c8_lanes,
+                    rendered_root=c8_root,
+                    policy_id="c8_a40_spread",
+                    kube_context=kube_context,
+                    namespace=namespace,
+                    dry_run=False,
+                    protect_list=protect_list,
+                )
+            )
+        if c6_lanes and c6_root.is_dir():
+            redispatch_actions.extend(
+                placement.redispatch_lane_pairs(
+                    lane_ids=c6_lanes,
+                    rendered_root=c6_root,
+                    policy_id="c6_a10040_spread",
+                    kube_context=kube_context,
+                    namespace=namespace,
+                    dry_run=False,
+                    protect_list=protect_list,
+                )
+            )
     if not dry_run:
         raw_pods = fetch_pods(kube_context=kube_context, namespace=namespace)
         pods = [parsed for parsed in (parse_pod(item) for item in raw_pods) if parsed is not None]
@@ -510,6 +699,7 @@ def run_gpu_pool_sweep(
         "dry_run": dry_run,
         "detection": detection,
         "reclaim": reclaim,
+        "redispatch_actions": redispatch_actions,
         "a40_assessment": a40_assessment,
         "pool_utilization_before": before_usage,
         "pool_utilization_after": after_usage,

@@ -29,6 +29,15 @@ DEFAULT_RECEIPT = (
     / "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_placement_receipt.json"
 )
 DEFAULT_PROTECT_LIST = gpu_scheduling.DEFAULT_PROTECT_LIST
+DEFAULT_C8_RENDERED_ROOT = (
+    ROOT
+    / "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r1"
+)
+DEFAULT_C6_RENDERED_ROOT = (
+    ROOT
+    / "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f"
+)
+PRODUCTIVE_C8_LANES = gpu_scheduling.PRODUCTIVE_C8_LANE_IDS
 
 LANE_JOB_RE = re.compile(
     r"^v4-(?P<lane>c7m\d+|c8m\d+|g7c6p\d+|g7c8p\d+|c6m\d+)-"
@@ -49,6 +58,8 @@ class JobRef:
     role: str
     pod_phase: str
     has_spread: bool
+    suspended: bool
+    job_failed: bool
 
 
 def _kubectl_json(args: list[str]) -> Any:
@@ -89,6 +100,7 @@ def parse_job(job: Mapping[str, Any], *, pod_phases: Mapping[str, str]) -> JobRe
     if not match:
         return None
     labels = (job.get("spec", {}) or {}).get("template", {}).get("metadata", {}).get("labels") or {}
+    status = job.get("status") or {}
     return JobRef(
         name=name,
         lane_id=str(match.group("lane")),
@@ -96,6 +108,8 @@ def parse_job(job: Mapping[str, Any], *, pod_phases: Mapping[str, str]) -> JobRe
         role=str(match.group("role")),
         pod_phase=str(pod_phases.get(name) or "Missing"),
         has_spread=bool(labels.get("v4-gpu-spread-family")),
+        suspended=bool((job.get("spec") or {}).get("suspend")),
+        job_failed=int(status.get("failed") or 0) > 0,
     )
 
 
@@ -164,6 +178,59 @@ def build_job_doc_with_placement(
     return doc
 
 
+def patch_job_suspend(*, name: str, suspend: bool, kube_context: str, namespace: str, dry_run: bool) -> bool:
+    if dry_run:
+        return True
+    completed = subprocess.run(
+        [
+            "kubectl", "--context", kube_context, "-n", namespace,
+            "patch", "job", name, "--type=merge", "-p", json.dumps({"spec": {"suspend": suspend}}),
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    return completed.returncode == 0
+
+
+def lane_partner_sim_running(job: JobRef, *, lanes_by_id: Mapping[str, Sequence[JobRef]]) -> bool:
+    for peer in lanes_by_id.get(job.lane_id) or ():
+        if peer.role != "sim" or peer.attempt_id != job.attempt_id:
+            continue
+        if peer.pod_phase == "Running":
+            return True
+    return False
+
+
+def lane_between_episodes(job: JobRef, *, lanes_by_id: Mapping[str, Sequence[JobRef]]) -> bool:
+    """Running policy with Pending sim on same attempt (productive restart window)."""
+    if job.role != "policy" or job.pod_phase != "Running":
+        return False
+    if job.lane_id in PRODUCTIVE_C8_LANES:
+        for peer in lanes_by_id.get(job.lane_id) or ():
+            if peer.role == "sim" and peer.attempt_id == job.attempt_id and peer.pod_phase in {"Pending", "Running"}:
+                return True
+    return False
+
+
+def policy_should_suspend_until_sim_running(
+    job: JobRef,
+    *,
+    placement_policy: Mapping[str, Any],
+    lanes_by_id: Mapping[str, Sequence[JobRef]],
+) -> bool:
+    role = "simulator" if job.role == "sim" else job.role
+    if not gpu_scheduling.role_is_deferred_until_partner_running(placement_policy, role):
+        return False
+    if job.suspended:
+        return False
+    if lane_between_episodes(job, lanes_by_id=lanes_by_id):
+        return False
+    if lane_partner_sim_running(job, lanes_by_id=lanes_by_id):
+        return False
+    return job.pod_phase in {"Running", "Pending", "Missing"}
+
+
 def delete_job(*, name: str, kube_context: str, namespace: str, dry_run: bool) -> bool:
     if dry_run:
         return True
@@ -203,6 +270,8 @@ def apply_rendered_lane_jobs(
     namespace: str,
     dry_run: bool,
     protect_list: Mapping[str, Any],
+    lane_glob: str = "c8m*",
+    sim_first: bool = True,
 ) -> list[dict[str, Any]]:
     try:
         import yaml
@@ -211,8 +280,13 @@ def apply_rendered_lane_jobs(
     protected = gpu_scheduling.protected_c7_lane_ids(protect_list)
     placement_policy = gpu_scheduling.PLACEMENT_POLICIES[policy_id]
     actions: list[dict[str, Any]] = []
-    for lane_dir in sorted(rendered_root.glob("c8m*")):
-        for job_file in ("policy-job.yaml", "simulator-job.yaml"):
+    job_files = (
+        ("simulator-job.yaml", "policy-job.yaml")
+        if sim_first
+        else ("policy-job.yaml", "simulator-job.yaml")
+    )
+    for lane_dir in sorted(rendered_root.glob(lane_glob)):
+        for job_file in job_files:
             path = lane_dir / job_file
             if not path.is_file():
                 continue
@@ -224,11 +298,10 @@ def apply_rendered_lane_jobs(
                 lane_id=lane_id, attempt_id=attempt_id, protect_list=protect_list
             ):
                 continue
-            if role.replace("simulator", "sim") not in (
-                "policy",
-                "simulator",
-            ) and role not in placement_policy.get("roles", ()):
-                pass
+            if role == "policy" and gpu_scheduling.role_is_deferred_until_partner_running(
+                placement_policy, "policy"
+            ):
+                doc.setdefault("spec", {})["suspend"] = True
             pod_spec = doc["spec"]["template"]["spec"]
             pod_labels = doc["spec"]["template"]["metadata"].setdefault("labels", {})
             extra = gpu_scheduling.inject_placement_into_pod_spec(
@@ -252,11 +325,83 @@ def apply_rendered_lane_jobs(
                     "action": "apply_rendered_job",
                     "job": doc["metadata"]["name"],
                     "lane_id": lane_id,
-                    "rendered_from": str(path.relative_to(ROOT)),
+                    "role": role,
+                    "sim_first": sim_first,
+                    "policy_suspended_on_create": bool(doc.get("spec", {}).get("suspend")),
+                    "rendered_from": str(path.relative_to(ROOT) if path.is_relative_to(ROOT) else path),
                     "applied": ok,
                     "message": (completed.stderr or completed.stdout or "").strip()[:240],
                 }
             )
+    return actions
+
+
+def apply_rendered_lane_dir(
+    *,
+    lane_dir: Path,
+    policy_id: str,
+    kube_context: str,
+    namespace: str,
+    dry_run: bool,
+    protect_list: Mapping[str, Any],
+) -> list[dict[str, Any]]:
+    return apply_rendered_lane_jobs(
+        rendered_root=lane_dir.parent,
+        policy_id=policy_id,
+        kube_context=kube_context,
+        namespace=namespace,
+        dry_run=dry_run,
+        protect_list=protect_list,
+        lane_glob=lane_dir.name,
+        sim_first=True,
+    )
+
+
+def redispatch_lane_pairs(
+    *,
+    lane_ids: Sequence[str],
+    rendered_root: Path,
+    policy_id: str,
+    kube_context: str,
+    namespace: str,
+    dry_run: bool,
+    protect_list: Mapping[str, Any],
+) -> list[dict[str, Any]]:
+    """Delete all jobs for listed lanes then re-apply sim-first whole pair from rendered bundle."""
+    actions: list[dict[str, Any]] = []
+    wanted = set(lane_ids)
+    if not wanted or not rendered_root.is_dir():
+        return actions
+    raw_jobs = fetch_jobs(kube_context=kube_context, namespace=namespace)
+    for job in raw_jobs:
+        name = str(job.get("metadata", {}).get("name") or "")
+        match = LANE_JOB_RE.match(name)
+        if not match or str(match.group("lane")) not in wanted:
+            continue
+        deleted = delete_job(name=name, kube_context=kube_context, namespace=namespace, dry_run=dry_run)
+        actions.append(
+            {
+                "action": "delete_for_redispatch",
+                "job": name,
+                "lane_id": match.group("lane"),
+                "deleted": deleted,
+            }
+        )
+    for lane_id in sorted(wanted):
+        matches = sorted(rendered_root.glob(f"{lane_id}-*"))
+        if not matches:
+            actions.append({"action": "redispatch_skipped", "lane_id": lane_id, "reason": "no_rendered_dir"})
+            continue
+        actions.extend(
+            apply_rendered_lane_dir(
+                lane_dir=matches[0],
+                policy_id=policy_id,
+                kube_context=kube_context,
+                namespace=namespace,
+                dry_run=dry_run,
+                protect_list=protect_list,
+            )
+        )
     return actions
 
 
@@ -278,6 +423,9 @@ def job_needs_placement(
         protect_list=protect_list,
     ):
         return False
+    if gpu_scheduling.role_is_deferred_until_partner_running(placement_policy, role):
+        if not lane_partner_sim_running(job, lanes_by_id=lanes_by_id):
+            return False
     if job_has_running_partner(job, lanes_by_id=lanes_by_id):
         return False
     return job_should_replace(job)
@@ -312,6 +460,46 @@ def enforce_gpu_placement(
         lanes_by_id[job.lane_id].append(job)
 
     actions: list[dict[str, Any]] = []
+    schedule_order = {role: index for index, role in enumerate(placement_policy.get("schedule_order") or ())}
+
+    def role_sort_key(job: JobRef) -> tuple[int, str, str]:
+        role = "simulator" if job.role == "sim" else job.role
+        return (schedule_order.get(role, 99), job.lane_id, job.name)
+
+    for job in sorted(parsed, key=role_sort_key):
+        if policy_should_suspend_until_sim_running(
+            job, placement_policy=placement_policy, lanes_by_id=lanes_by_id
+        ):
+            ok = patch_job_suspend(
+                name=job.name, suspend=True, kube_context=kube_context, namespace=namespace, dry_run=dry_run
+            )
+            actions.append(
+                {
+                    "action": "suspend_until_sim_running",
+                    "job": job.name,
+                    "lane_id": job.lane_id,
+                    "role": job.role,
+                    "reason_code": "sim_first_gate",
+                    "suspended": ok,
+                }
+            )
+        elif (
+            job.role == "policy"
+            and job.suspended
+            and lane_partner_sim_running(job, lanes_by_id=lanes_by_id)
+        ):
+            ok = patch_job_suspend(
+                name=job.name, suspend=False, kube_context=kube_context, namespace=namespace, dry_run=dry_run
+            )
+            actions.append(
+                {
+                    "action": "unsuspend_policy_sim_ready",
+                    "job": job.name,
+                    "lane_id": job.lane_id,
+                    "unsuspended": ok,
+                }
+            )
+
     if rendered_root is not None:
         actions.extend(
             apply_rendered_lane_jobs(
@@ -323,7 +511,7 @@ def enforce_gpu_placement(
                 protect_list=protect_list,
             )
         )
-    for job in sorted(parsed, key=lambda row: (row.lane_id, row.role, row.name)):
+    for job in sorted(parsed, key=role_sort_key):
         if not job_needs_placement(
             job,
             placement_policy=placement_policy,
@@ -398,6 +586,14 @@ def enforce_gpu_placement(
         "namespace": namespace,
         "dry_run": dry_run,
         "placement_policy": placement_policy,
+        "sim_first_ordering": {
+            "schedule_order": list(placement_policy.get("schedule_order") or ()),
+            "spread_roles": list(placement_policy.get("spread_roles") or ()),
+            "defer_roles_until_partner_running": list(
+                placement_policy.get("defer_roles_until_partner_running") or ()
+            ),
+            "productive_c8_lanes_preserved": sorted(PRODUCTIVE_C8_LANES),
+        },
         "protect_list_path": str(protect_list_path.relative_to(ROOT)),
         "protected_c7_lane_count": len(protected_c7_lanes),
         "actions": actions,

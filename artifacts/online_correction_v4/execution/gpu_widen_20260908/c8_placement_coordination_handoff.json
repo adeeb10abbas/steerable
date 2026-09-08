@@ -1,18 +1,28 @@
 {
-  "schema_version": "v4-c8-placement-coordination-handoff-v1",
-  "compiled_at_utc": "2026-09-08T00:50:00Z",
+  "schema_version": "v4-c8-placement-coordination-handoff-v2",
+  "compiled_at_utc": "2026-09-08T01:30:00Z",
   "owner": "capacity_agent",
+  "coordination_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_policy_sim_asymmetry_coordination_20260908a.json",
   "c8_agent_action_required": {
     "render_spec_field": "placement_policy",
     "value": "c8_a40_spread",
     "hardware_stratum_unchanged": "a40-single-container-groot-bridge",
     "gpu_product_unchanged": "NVIDIA-A40",
-    "note": "Set placement_policy in every C8 confirmatory and pilot lane render spec. The shared renderer (render_v4_k8s_lane_bundle.py) emits topologySpreadConstraints and soft C7 podAntiAffinity automatically when this field is present."
+    "note": "Set placement_policy in every C8 confirmatory and pilot lane render spec. Renderer emits sim-only spread and sim-first Job suspend on policy."
+  },
+  "sim_first_ordering": {
+    "schedule_order": ["simulator", "policy"],
+    "spread_roles": ["simulator"],
+    "defer_roles_until_partner_running": ["policy"],
+    "productive_c8_lanes_never_split_reclaim": ["c8m13", "c8m14"],
+    "rationale": "Policy-first spread consumed scattered A40 slots while simulators stayed Pending; half-placed lanes waste GPUs without producing episodes."
   },
   "capacity_agent_enforcement": {
-    "command": ".venv/bin/python tools/enforce_v4_capacity_arbitration.py --mode gpu_placement --policy c8_a40_spread",
+    "sweep_command": ".venv/bin/python tools/enforce_v4_capacity_arbitration.py --mode gpu_sweep",
+    "placement_command": ".venv/bin/python tools/enforce_v4_capacity_arbitration.py --mode gpu_placement --policy c8_a40_spread",
+    "c6_placement_command": ".venv/bin/python tools/enforce_v4_capacity_arbitration.py --mode gpu_placement --policy c6_a10040_spread",
     "with_rendered_bundle": ".venv/bin/python tools/enforce_v4_capacity_arbitration.py --mode gpu_placement --policy c8_a40_spread --rendered-root artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r1",
-    "behavior": "Replaces Pending/Missing C8 Jobs lacking v4-gpu-spread-family label; never deletes Running GPU pods; honors gpu_sweep_protect_list_20260908.json for C7 lanes."
+    "behavior": "Sim spread + policy suspend until sim Running; split-pair orphan reclaim deletes whole lane and redispatches sim-first; honors gpu_sweep_protect_list for C7."
   },
   "admission_rules": {
     "c8_lanes_admitted": "c8m00-c8m19 confirmatory plus g7c8p00-g7c8p07 pilot",
@@ -21,14 +31,15 @@
   },
   "c6_parallel_policy": {
     "placement_policy": "c6_a10040_spread",
-    "command": ".venv/bin/python tools/enforce_v4_capacity_arbitration.py --mode gpu_placement --policy c6_a10040_spread",
-    "applies_to_roles": ["simulator"],
-    "note": "C6 sim spread on A100-40GB only; B200 policy pods unchanged."
+    "schedule_order": ["simulator", "policy"],
+    "spread_roles": ["simulator"],
+    "defer_b200_policy_until_a10040_sim_running": true
   },
   "tooling_locations": {
     "placement_policies": "tools/v4_gpu_scheduling.py PLACEMENT_POLICIES",
     "renderer_integration": "tools/render_v4_k8s_lane_bundle.py render_job()",
     "live_enforcement": "tools/v4_gpu_placement_enforce.py",
-    "cli_entrypoint": "tools/enforce_v4_capacity_arbitration.py --mode gpu_placement"
+    "split_pair_sweep": "tools/v4_gpu_pool_sweep.py detect_lane_mismatches + redispatch_lane_pairs",
+    "cli_entrypoint": "tools/enforce_v4_capacity_arbitration.py"
   }
 }

@@ -40,7 +40,7 @@ def test_orphan_policy_dead_sim_detected() -> None:
     ]
     detection = sweep.detect_lane_mismatches(pods)
     assert len(detection["orphan_policies"]) == 1
-    assert detection["orphan_policies"][0]["reason_code"] == "orphan_policy_dead_sim"
+    assert detection["orphan_policies"][0]["reason_code"] == "split_pair_orphan_policy_half"
     assert detection["orphan_policies"][0]["gpu_product"] == "NVIDIA-A100-SXM4-80GB"
 
 
@@ -93,3 +93,23 @@ def test_healthy_lane_pair_not_flagged() -> None:
     assert detection["healthy_lane_pairs"] == ["c8m13"]
     assert detection["orphan_policies"] == []
     assert detection["zombie_sims"] == []
+
+
+def test_split_pair_orphan_detected_when_partner_failed() -> None:
+    pods = [
+        _pod("c8m00", "attempt0001", "policy"),
+        _pod("c8m00", "attempt0001", "sim", phase="Failed"),
+    ]
+    detection = sweep.detect_lane_mismatches(pods)
+    assert len(detection["split_pair_orphans"]) == 1
+    assert detection["split_pair_orphans"][0]["reason_code"] == "split_pair_orphan_policy_half"
+
+
+def test_split_pair_not_detected_when_sim_pending_between_episodes() -> None:
+    pods = [
+        _pod("c8m13", "attempt0014", "policy"),
+        _pod("c8m13", "attempt0014", "sim", phase="Pending"),
+    ]
+    detection = sweep.detect_lane_mismatches(pods)
+    assert detection["split_pair_orphans"] == []
+    assert detection["orphan_policies"] == []

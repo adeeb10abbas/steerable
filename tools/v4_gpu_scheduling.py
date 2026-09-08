@@ -190,6 +190,8 @@ DEFAULT_PROTECT_LIST = (
     / "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_sweep_protect_list_20260908.json"
 )
 
+PRODUCTIVE_C8_LANE_IDS = frozenset({"c8m13", "c8m14"})
+
 PLACEMENT_POLICY_SCHEMA_VERSION = "v4-gpu-placement-policy-v1"
 
 # Registered spread profiles. Renderer and enforce tooling share these keys.
@@ -203,6 +205,10 @@ PLACEMENT_POLICIES: dict[str, dict[str, Any]] = {
         "max_skew": 1,
         "when_unsatisfiable": "ScheduleAnyway",
         "roles": ("policy", "simulator"),
+        # Sim-first: spread and schedule simulator before policy consumes scattered slots.
+        "schedule_order": ("simulator", "policy"),
+        "spread_roles": ("simulator",),
+        "defer_roles_until_partner_running": ("policy",),
         "hardware_stratum": "a40-single-container-groot-bridge",
         "lane_id_prefixes": ("c8m", "g7c8p"),
     },
@@ -215,6 +221,10 @@ PLACEMENT_POLICIES: dict[str, dict[str, Any]] = {
         "max_skew": 1,
         "when_unsatisfiable": "ScheduleAnyway",
         "roles": ("simulator",),
+        "schedule_order": ("simulator", "policy"),
+        "spread_roles": ("simulator",),
+        "defer_roles_until_partner_running": ("policy",),
+        "defer_partner_gpu_product": "NVIDIA-B200",
         "hardware_stratum": "b200-policy_a10040-simulator",
         "lane_id_prefixes": ("c6m", "g7c6p"),
     },
@@ -273,6 +283,17 @@ def is_lane_protected(
     return (lane_id, attempt_id) in protected_lane_attempt_keys(protect_list)
 
 
+def role_gets_spread(placement_policy: Mapping[str, Any], role: str) -> bool:
+    spread_roles = placement_policy.get("spread_roles")
+    if spread_roles is None:
+        return role in placement_policy.get("roles", ())
+    return role in spread_roles
+
+
+def role_is_deferred_until_partner_running(placement_policy: Mapping[str, Any], role: str) -> bool:
+    return role in placement_policy.get("defer_roles_until_partner_running", ())
+
+
 def render_pod_placement_yaml(
     *,
     placement_policy: Mapping[str, Any],
@@ -282,6 +303,8 @@ def render_pod_placement_yaml(
 ) -> tuple[list[str], dict[str, str]]:
     """Emit topologySpreadConstraints and soft anti-affinity YAML lines."""
     if role not in placement_policy.get("roles", ()):
+        return [], {}
+    if not role_gets_spread(placement_policy, role):
         return [], {}
     spread_label = str(placement_policy["spread_family_label"])
     extra_labels = {"v4-gpu-spread-family": spread_label}
@@ -323,6 +346,8 @@ def inject_placement_into_pod_spec(
 ) -> dict[str, str]:
     """Mutate a Job pod spec dict in place; return extra labels to merge."""
     if role not in placement_policy.get("roles", ()):
+        return {}
+    if not role_gets_spread(placement_policy, role):
         return {}
     spread_label = str(placement_policy["spread_family_label"])
     extra_labels = {"v4-gpu-spread-family": spread_label}

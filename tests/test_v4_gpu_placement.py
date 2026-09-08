@@ -21,22 +21,31 @@ def _job(lane_id: str, role: str, phase: str, *, has_spread: bool = False) -> pl
         role=role,
         pod_phase=phase,
         has_spread=has_spread,
+        suspended=False,
+        job_failed=False,
     )
 
 
 def test_c8_spread_yaml_includes_topology_and_protect_affinity() -> None:
     rows, labels = gpu_scheduling.render_pod_placement_yaml(
         placement_policy=gpu_scheduling.PLACEMENT_POLICIES["c8_a40_spread"],
-        role="policy",
+        role="simulator",
         protected_c7_lanes=["c7m00", "c7m09"],
         indent="      ",
     )
     joined = "\n".join(rows)
     assert "topologySpreadConstraints" in joined
-    assert "v4-gpu-spread-family: c8-a40" in joined or 'c8-a40' in joined
+    assert "c8-a40" in joined
     assert "podAntiAffinity" in joined
     assert "c7m00" in joined
     assert labels["v4-gpu-spread-family"] == "c8-a40"
+    policy_rows, policy_labels = gpu_scheduling.render_pod_placement_yaml(
+        placement_policy=gpu_scheduling.PLACEMENT_POLICIES["c8_a40_spread"],
+        role="policy",
+        indent="      ",
+    )
+    assert policy_rows == []
+    assert policy_labels == {}
 
 
 def test_c6_spread_applies_to_simulator_role_only() -> None:

@@ -1,0 +1,49 @@
+{
+  "schema_version": "v4-c8-confirmatory-composition-by-scenario-v1",
+  "observed_at_utc": "2026-09-08T08:50:00Z",
+  "milestone": 768,
+  "milestone_note": "Final confirmatory compile at 768/768 valid episodes",
+  "ledger_compile_id": "20260908h",
+  "prior_milestone_compile_id": "20260908g",
+  "ledger_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/confirmatory-ledger-20260908h/accepted_ledger.jsonl",
+  "progress": {"behavioral_valid": 768, "total_queued": 768, "coverage_fraction": 1.0},
+  "aggregate_outcomes": {"no_grasp": 737, "transport_incomplete": 31},
+  "grasp_achieved_count": 31,
+  "failure_modes_observed": ["no_grasp", "transport_incomplete"],
+  "failure_modes_never_observed": ["wrong_goal_region", "grasp_lost", "release_failed", "success"],
+  "platform_failure_mode_note": "Zero wrong_goal_region across 768 C8 episodes vs occasional C6 wrong_goal — substantive stack difference in how failed grasps terminate",
+  "by_scenario": {
+    "original_sham": {"episodes_completed": 256, "no_grasp": 248, "transport_incomplete": 8, "grasp_achieved": 8, "grasp_rate": 0.0312},
+    "destination_static": {"episodes_completed": 256, "no_grasp": 241, "transport_incomplete": 15, "grasp_achieved": 15, "grasp_rate": 0.0586},
+    "move_stop": {"episodes_completed": 256, "no_grasp": 248, "transport_incomplete": 8, "grasp_achieved": 8, "grasp_rate": 0.0312}
+  },
+  "ordering_assessment": {
+    "pilot_ordering": "destination_static (75%) > move_stop (50%) > original_sham (25%)",
+    "confirmatory_observed_at_768": "destination_static (5.9%) > move_stop (3.1%) = original_sham (3.1%)",
+    "destination_static_ranks_first": true,
+    "three_way_pilot_ordering_reproduced": false,
+    "move_stop_original_sham_crossed_at_407": true,
+    "ordering_holds": "destination_static_ranks_first_only",
+    "estimability": {
+      "full_coverage": "estimable_at_768",
+      "per_scenario_grasp_rates": "estimable_at_n256_per_cell",
+      "three_way_pilot_ordering_contrast": "not_estimable_for_pilot_replication — move and sham tied; only dest-first ranking claimable",
+      "note": "Pilot magnitudes (75/50/25%) not reproduced; compression honest across milestones 84→768"
+    }
+  },
+  "spread_compression_history": {
+    "at_84": {"destination_static": 0.080, "move_stop": 0.035, "original_sham": 0.000},
+    "at_101": {"destination_static": 0.061, "move_stop": 0.032, "original_sham": 0.027},
+    "at_161": {"destination_static": 0.078, "move_stop": 0.036, "original_sham": 0.018},
+    "at_204": {"destination_static": 0.063, "move_stop": 0.028, "original_sham": 0.029},
+    "at_407": {"destination_static": 0.072, "move_stop": 0.029, "original_sham": 0.031},
+    "at_768": {"destination_static": 0.059, "move_stop": 0.031, "original_sham": 0.031},
+    "pilot_reference_not_expected_magnitude": {"destination_static": 0.75, "move_stop": 0.50, "original_sham": 0.25}
+  },
+  "lanes_with_completes": {
+    "c8m00": 39, "c8m01": 39, "c8m02": 39, "c8m03": 39, "c8m04": 39, "c8m05": 39,
+    "c8m06": 39, "c8m07": 39, "c8m08": 38, "c8m09": 38, "c8m10": 38, "c8m11": 38,
+    "c8m12": 38, "c8m13": 38, "c8m14": 38, "c8m15": 38, "c8m16": 38, "c8m17": 38,
+    "c8m18": 38, "c8m19": 38
+  }
+}

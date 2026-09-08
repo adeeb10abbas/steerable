@@ -1,0 +1,51 @@
+{
+  "schema_version": "v4-c8-execution-status-receipt-v1",
+  "observed_at_utc": "2026-09-08T08:50:00Z",
+  "confirmatory_ledger_compile_id_final": "20260908h",
+  "confirmatory_ledger_compile_id_400_milestone": "20260908g",
+  "live_ledger_count": 768,
+  "campaign_complete": true,
+  "accounting_verification_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_episode_accounting_verification_20260908g.json",
+  "composition_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_confirmatory_composition_by_scenario_20260908h.json",
+  "confirmatory_progress": {
+    "valid": 768,
+    "remaining": 0,
+    "by_scenario": {
+      "original_sham": {"completed": 256, "grasp_achieved": 8, "grasp_rate": 0.0312},
+      "destination_static": {"completed": 256, "grasp_achieved": 15, "grasp_rate": 0.0586},
+      "move_stop": {"completed": 256, "grasp_achieved": 8, "grasp_rate": 0.0312}
+    },
+    "ordering_holds": "destination_static_ranks_first_only",
+    "three_way_pilot_ordering_reproduced": false,
+    "estimability_at_768": "per_scenario_grasp_rates_estimable; three_way_pilot_ordering_not_estimable"
+  },
+  "healthy_pairs_at_completion": {"count": 0, "note": "All 20 lanes complete; jobs torn down or sim Complete"},
+  "confirmatory_lanes": [
+    {"lane_id": "c8m00", "completed": 39, "queued": 0, "running": 0, "blocked": 0, "state": "lane_complete"},
+    {"lane_id": "c8m01", "completed": 39, "queued": 0, "running": 0, "blocked": 0, "state": "lane_complete"},
+    {"lane_id": "c8m02", "completed": 39, "queued": 0, "running": 0, "blocked": 0, "state": "lane_complete"},
+    {"lane_id": "c8m03", "completed": 39, "queued": 0, "running": 0, "blocked": 0, "state": "lane_complete"},
+    {"lane_id": "c8m04", "completed": 39, "queued": 0, "running": 0, "blocked": 0, "state": "lane_complete"},
+    {"lane_id": "c8m05", "completed": 39, "queued": 0, "running": 0, "blocked": 0, "state": "lane_complete"},
+    {"lane_id": "c8m06", "completed": 39, "queued": 0, "running": 0, "blocked": 0, "state": "lane_complete"},
+    {"lane_id": "c8m07", "completed": 39, "queued": 0, "running": 0, "blocked": 0, "state": "lane_complete"},
+    {"lane_id": "c8m08", "completed": 38, "queued": 0, "running": 0, "blocked": 0, "state": "lane_complete"},
+    {"lane_id": "c8m09", "completed": 38, "queued": 0, "running": 0, "blocked": 0, "state": "lane_complete"},
+    {"lane_id": "c8m10", "completed": 38, "queued": 0, "running": 0, "blocked": 0, "state": "lane_complete"},
+    {"lane_id": "c8m11", "completed": 38, "queued": 0, "running": 0, "blocked": 0, "state": "lane_complete"},
+    {"lane_id": "c8m12", "completed": 38, "queued": 0, "running": 0, "blocked": 0, "state": "lane_complete"},
+    {"lane_id": "c8m13", "completed": 38, "queued": 0, "running": 0, "blocked": 0, "state": "lane_complete"},
+    {"lane_id": "c8m14", "completed": 38, "queued": 0, "running": 0, "blocked": 0, "state": "lane_complete"},
+    {"lane_id": "c8m15", "completed": 38, "queued": 0, "running": 0, "blocked": 0, "state": "lane_complete"},
+    {"lane_id": "c8m16", "completed": 38, "queued": 0, "running": 0, "blocked": 0, "state": "lane_complete"},
+    {"lane_id": "c8m17", "completed": 38, "queued": 0, "running": 0, "blocked": 0, "state": "lane_complete"},
+    {"lane_id": "c8m18", "completed": 38, "queued": 0, "running": 0, "blocked": 0, "state": "lane_complete"},
+    {"lane_id": "c8m19", "completed": 38, "queued": 0, "running": 0, "blocked": 0, "state": "lane_complete"}
+  ],
+  "agent_c_hooks": {
+    "c8_confirmatory_ledger_compile_id_400": "20260908g",
+    "c8_confirmatory_ledger_compile_id_final": "20260908h",
+    "status_label": "confirmatory_768_complete_20260908h"
+  },
+  "blockers": []
+}

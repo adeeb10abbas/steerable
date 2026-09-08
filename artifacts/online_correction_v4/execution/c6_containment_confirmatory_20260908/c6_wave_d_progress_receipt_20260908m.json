@@ -1,0 +1,66 @@
+{
+  "compiled_at_utc": "2026-09-08T12:57:36Z",
+  "confirmatory_terminals": 337,
+  "grasp_definition_notes": {
+    "c6_rule": "failure_label != no_grasp (shared scorer with C8)",
+    "c8_wrong_goal_region_asymmetry": "C8 observed zero wrong_goal_region in 407 episodes; C6 has nonzero wgr \u2014 use ti_only for cross-platform magnitude comparison",
+    "transport_incomplete_only": "failure_label == transport_incomplete (C8-comparable label set)"
+  },
+  "grasp_rate_by_scenario": {
+    "destination_static": {
+      "episodes": 116,
+      "grasp_achieved_c6_rule": 27,
+      "grasp_achieved_transport_incomplete_only": 25,
+      "grasp_rate_c6_rule_pct": 23.3,
+      "grasp_rate_transport_incomplete_only_pct": 21.6,
+      "no_grasp": 89,
+      "outcomes": {
+        "no_grasp": 89,
+        "transport_incomplete": 25,
+        "wrong_goal_region": 2
+      },
+      "wrong_goal_region_count": 2,
+      "wrong_goal_region_share_pct": 1.7
+    },
+    "move_stop": {
+      "episodes": 108,
+      "grasp_achieved_c6_rule": 21,
+      "grasp_achieved_transport_incomplete_only": 19,
+      "grasp_rate_c6_rule_pct": 19.4,
+      "grasp_rate_transport_incomplete_only_pct": 17.6,
+      "no_grasp": 87,
+      "outcomes": {
+        "no_grasp": 87,
+        "transport_incomplete": 19,
+        "wrong_goal_region": 2
+      },
+      "wrong_goal_region_count": 2,
+      "wrong_goal_region_share_pct": 1.9
+    },
+    "original_sham": {
+      "episodes": 113,
+      "grasp_achieved_c6_rule": 22,
+      "grasp_achieved_transport_incomplete_only": 20,
+      "grasp_rate_c6_rule_pct": 19.5,
+      "grasp_rate_transport_incomplete_only_pct": 17.7,
+      "no_grasp": 91,
+      "outcomes": {
+        "no_grasp": 91,
+        "transport_incomplete": 20,
+        "wrong_goal_region": 2
+      },
+      "wrong_goal_region_count": 2,
+      "wrong_goal_region_share_pct": 1.8
+    }
+  },
+  "milestones": {
+    "128": "passed",
+    "32": "passed",
+    "384": "pending"
+  },
+  "ordering_note": "At n=337, C6 rule ordering: destination_static (23.3%) > original_sham (19.5%) > move_stop (19.4%). Also report transport_incomplete_only for C8-comparable cells (C8 has zero wrong_goal_region in 407 eps). Per-cell n not estimable until 384; Agent C platform\u00d7scenario table remains not estimable.",
+  "schema_version": "v4-c6-wave-progress-receipt-v1",
+  "supersedes": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/c6_wave_d_progress_receipt_20260908l.json",
+  "wave_id": "c6confirm20260908f",
+  "wave_label": "D"
+}

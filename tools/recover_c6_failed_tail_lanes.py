@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Recover C6 wave-D tail lanes with Failed sims (sim-first policy deadlock)."""
+"""Recover C6 confirmatory lanes with Failed sims (sim-first policy deadlock)."""
 
 from __future__ import annotations
 
@@ -12,7 +12,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 EXEC = ROOT / "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908"
 TAIL_RECEIPT = EXEC / "create-c6confirm20260908f-wave-d-tail.json"
+RESHARD_RECEIPT = EXEC / "create-c6confirm20260908f-reshard-r8.json"
 TAIL_RENDER = EXEC / "rendered-c6confirm20260908f-wave-d-tail"
+RESHARD_RENDER = EXEC / "rendered-c6confirm20260908f-reshard-r8"
+RECOVERY_LOG = EXEC / "c6_recovery_fire_log.json"
 
 
 def _pod_phases(*, kube_context: str, namespace: str) -> dict[str, dict[str, list[str]]]:
@@ -36,9 +39,42 @@ def _pod_phases(*, kube_context: str, namespace: str) -> dict[str, dict[str, lis
     return by_lane
 
 
+def _resolve_plan(*, tail_receipt: Path | None) -> tuple[dict, Path, Path]:
+    if tail_receipt is not None:
+        receipt_path = tail_receipt
+    elif RESHARD_RECEIPT.is_file():
+        receipt_path = RESHARD_RECEIPT
+    else:
+        receipt_path = TAIL_RECEIPT
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    render_root = Path(receipt.get("render_output_root") or str(RESHARD_RENDER if receipt_path == RESHARD_RECEIPT else TAIL_RENDER))
+    return receipt, receipt_path, render_root
+
+
+def _append_recovery_log(*, receipt_path: Path, out: dict) -> dict:
+    log: dict = {"schema_version": "v4-c6-recovery-fire-log-v1", "fires": []}
+    if RECOVERY_LOG.is_file():
+        log = json.loads(RECOVERY_LOG.read_text(encoding="utf-8"))
+    entry = {
+        "receipt_path": str(receipt_path),
+        "failed_lane_count": out["failed_lane_count"],
+        "failed_lanes": out["failed_lanes"],
+    }
+    log.setdefault("fires", []).append(entry)
+    log["total_fires"] = len(log["fires"])
+    RECOVERY_LOG.write_text(json.dumps(log, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return log
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dispatch", action="store_true")
+    parser.add_argument(
+        "--tail-receipt",
+        type=Path,
+        default=None,
+        help="Dispatch plan receipt (default: latest reshard or wave-d-tail)",
+    )
     parser.add_argument(
         "--receipt-out",
         type=Path,
@@ -53,12 +89,14 @@ def main(argv: list[str] | None = None) -> int:
     publisher_pod = "211247-ali-b200-1gpu"
     pvc_root = "/data/users/ali/vla_wam/raw/v4/c6-containment-main"
 
-    plan = json.loads(TAIL_RECEIPT.read_text(encoding="utf-8"))["plan"]
+    receipt, receipt_path, render_root = _resolve_plan(tail_receipt=args.tail_receipt)
+    plan = receipt["plan"]
     lane_attempt = {row["lane_id"]: row["attempt_id"] for row in plan}
+    attempt_nums = sorted({int(row["attempt_id"].removeprefix("attempt")) for row in plan})
     phases = _pod_phases(kube_context=kube_context, namespace=namespace)
 
     targets: list[str] = []
-    for lane_id, attempt_id in lane_attempt.items():
+    for lane_id in lane_attempt:
         lane_phases = phases.get(lane_id, {})
         sim_phases = lane_phases.get("sim", [])
         if any(p in {"Failed", "Error"} for p in sim_phases):
@@ -68,13 +106,16 @@ def main(argv: list[str] | None = None) -> int:
 import glob, json, os
 root = {json.dumps(pvc_root)}
 removed = []
-for att in range(226, 258):
+for att in {json.dumps(attempt_nums)}:
     for path in glob.glob(root + f"/**/.simulator-lane-*-attempt-attempt{{att:04d}}.lock", recursive=True):
         os.remove(path)
         removed.append(path)
 print(json.dumps({{"removed_count": len(removed)}}))
 """
     lock_clear = {}
+    actions: list[dict] = []
+    gate: dict = {}
+
     if args.dispatch:
         proc = subprocess.run(
             [
@@ -97,8 +138,6 @@ print(json.dumps({{"removed_count": len(removed)}}))
         if proc.returncode == 0:
             lock_clear = json.loads(proc.stdout.strip())
 
-    actions: list[dict] = []
-    if args.dispatch:
         jobs_proc = subprocess.run(
             ["kubectl", "get", "jobs", "-n", namespace, "--context", kube_context, "-o", "name"],
             capture_output=True,
@@ -156,9 +195,9 @@ print(json.dumps({{"removed_count": len(removed)}}))
                         }
                     )
 
-            matches = sorted(TAIL_RENDER.glob(f"{lane_id}-{attempt_id}-*"))
+            matches = sorted(render_root.glob(f"{lane_id}-{attempt_id}-*"))
             if not matches:
-                raise SystemExit(f"missing bundle for {lane_id} {attempt_id}")
+                raise SystemExit(f"missing bundle for {lane_id} {attempt_id} under {render_root}")
             sim_path = matches[0] / "simulator-job.yaml"
             doc = yaml.safe_load(sim_path.read_text(encoding="utf-8"))
             create = subprocess.run(
@@ -193,12 +232,15 @@ print(json.dumps({{"removed_count": len(removed)}}))
             gates_only=True,
             settle_seconds=5,
         )
-    else:
-        gate = {}
 
     out = {
-        "schema_version": "v4-c6-wave-d-tail-recovery-v1",
-        "root_cause": "Sim-first deadlock on tail attempts 0226-0257: policies Suspended, sims timed out waiting for /healthz (same class as C7 r6). Gate fires but only after sim Running; failed sims never reached Running.",
+        "schema_version": "v4-c6-tail-recovery-v1",
+        "plan_receipt": str(receipt_path),
+        "attempt_range": receipt.get("attempt_range"),
+        "root_cause": (
+            "Sim-first deadlock: policies Suspended until paired sim Running; sims that fail /healthz "
+            "never unsuspend policy. Requires explicit sim delete+recreate (same class as C7 r6)."
+        ),
         "failed_lane_count": len(targets),
         "failed_lanes": sorted(targets),
         "lock_clear": lock_clear,
@@ -206,6 +248,8 @@ print(json.dumps({{"removed_count": len(removed)}}))
         "sim_first_gate": gate.get("actions") if isinstance(gate, dict) else [],
     }
     args.receipt_out.write_text(json.dumps(out, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    if args.dispatch and targets:
+        out["recovery_fire_log"] = _append_recovery_log(receipt_path=receipt_path, out=out)
     print(json.dumps(out, indent=2))
     return 0
 

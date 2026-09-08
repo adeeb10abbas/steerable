@@ -1,0 +1,22 @@
+{
+  "schema_version": "v4-c6-recovery-fire-log-v1",
+  "root_cause": "Sim-first gate only unsuspends when paired sim is Running; failed /healthz sims leave policy Suspended until explicit sim delete+recreate.",
+  "total_fires": 2,
+  "fires": [
+    {
+      "fire_id": "20260908-wave-d-tail-r1",
+      "receipt_path": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/c6_wave_d_tail_recovery_20260908.json",
+      "attempt_range": "attempt0226-attempt0257",
+      "failed_lane_count": 15,
+      "failed_lanes_note": "c6m09-c6m23 sim Failed/Error; recovery dispatched delete_sim+create_sim+unsuspend_policy",
+      "chronic_assessment": "Recurring under sim-first gate without periodic failed-sim recreation"
+    },
+    {
+      "fire_id": "20260908-reshard-r8-post",
+      "receipt_path": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/create-c6confirm20260908f-reshard-r8.json",
+      "attempt_range": "attempt0300-attempt0331",
+      "failed_lane_count": 0,
+      "note": "Post full 32-lane re-shard dispatch; no failed sims at fire time"
+    }
+  ]
+}

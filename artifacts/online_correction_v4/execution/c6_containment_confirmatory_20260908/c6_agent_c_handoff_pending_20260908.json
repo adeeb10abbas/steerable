@@ -1,0 +1,17 @@
+{
+  "schema_version": "v4-c6-agent-c-handoff-pending-v1",
+  "family": "C6",
+  "wave_d_milestone_compile_id": "compiled_ledger_20260908_wave_d384",
+  "final_compile_when": "768/768 accepted with --require-full-coverage",
+  "final_compile_id": "compiled_ledger_20260908_FINAL",
+  "final_compile_command_template": ".venv/bin/python tools/run_c6_confirmatory_compile_on_cluster.py --compile-id compiled_ledger_20260908_FINAL --require-full-coverage",
+  "wave_d_384_receipt_path": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/c6_wave_d_milestone_receipt_20260908_384.json",
+  "pvc_attempts_root": "/data/users/ali/vla_wam/raw/v4/c6-containment-main",
+  "manifest_path": "artifacts/online_correction_v4/setup/c6_confirmatory/queue.frozen.jsonl",
+  "grasp_conventions": {
+    "c6_rule": "failure_label != no_grasp",
+    "transport_incomplete_only": "failure_label == transport_incomplete"
+  },
+  "ordering_claim_limit": "Only destination_static ranks first is supportable when move_stop and original_sham tie or swap across milestones.",
+  "note": "Wave D (cosmos3_nano, 384 rows) must close before wave E (pi05_droid, 384 rows) opens. pi05_droid is not yet bound in the released C6 runtime lock."
+}

@@ -1,0 +1,51 @@
+{
+  "schema_version": "v4-c6-wave-progress-receipt-v1",
+  "compiled_at_utc": "2026-09-08T09:58:00Z",
+  "wave_id": "c6confirm20260908f",
+  "wave_label": "D",
+  "confirmatory_terminals": 264,
+  "milestones": {
+    "32": "passed",
+    "128": "passed",
+    "384": "pending"
+  },
+  "grasp_definition_notes": {
+    "c6_rule": "failure_label != no_grasp (shared scorer with C8)",
+    "transport_incomplete_only": "failure_label == transport_incomplete — C8-comparable label set (C8: zero wrong_goal_region in 407+ eps)",
+    "c8_wrong_goal_region_asymmetry": "Report both conventions; use ti_only for cross-platform magnitude comparison"
+  },
+  "grasp_rate_by_scenario": {
+    "destination_static": {
+      "episodes": 88,
+      "grasp_achieved_c6_rule": 24,
+      "grasp_rate_c6_rule_pct": 27.3,
+      "grasp_achieved_transport_incomplete_only": 22,
+      "grasp_rate_transport_incomplete_only_pct": 25.0,
+      "wrong_goal_region_count": 2,
+      "wrong_goal_region_share_pct": 2.3,
+      "outcomes": {"no_grasp": 64, "transport_incomplete": 22, "wrong_goal_region": 2}
+    },
+    "move_stop": {
+      "episodes": 84,
+      "grasp_achieved_c6_rule": 16,
+      "grasp_rate_c6_rule_pct": 19.0,
+      "grasp_achieved_transport_incomplete_only": 15,
+      "grasp_rate_transport_incomplete_only_pct": 17.9,
+      "wrong_goal_region_count": 1,
+      "wrong_goal_region_share_pct": 1.2,
+      "outcomes": {"no_grasp": 68, "transport_incomplete": 15, "wrong_goal_region": 1}
+    },
+    "original_sham": {
+      "episodes": 92,
+      "grasp_achieved_c6_rule": 18,
+      "grasp_rate_c6_rule_pct": 19.6,
+      "grasp_achieved_transport_incomplete_only": 16,
+      "grasp_rate_transport_incomplete_only_pct": 17.4,
+      "wrong_goal_region_count": 2,
+      "wrong_goal_region_share_pct": 2.2,
+      "outcomes": {"no_grasp": 74, "transport_incomplete": 16, "wrong_goal_region": 2}
+    }
+  },
+  "ordering_note": "At n=264 (128 milestone passed): c6_rule ordering destination_static (27.3%) > original_sham (19.6%) > move_stop (19.0%). ti_only ordering: destination_static (25.0%) > original_sham (17.4%) > move_stop (17.9%). Inverts C8 ordering either way. Report again at 384.",
+  "supersedes": "c6_wave_d_progress_receipt_20260908h.json"
+}

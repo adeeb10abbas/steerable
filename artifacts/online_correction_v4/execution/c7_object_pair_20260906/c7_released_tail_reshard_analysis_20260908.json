@@ -1,0 +1,53 @@
+{
+  "schema_version": "v4-c7-released-tail-reshard-analysis-v1",
+  "compiled_at_utc": "2026-09-08T04:45:00Z",
+  "question": "Can the 188 missing C7 episodes be re-sharded across freed productive lane identities?",
+  "verdict": {
+    "resharding_allowed": true,
+    "reason": "Frozen queue.frozen.jsonl rows bind episode_id, block_id, block_key, env_seed, policy_seed, prefix_group_id, and counterbalance only. No lane_id or dispatch-lane field exists on any of 768 C7 confirmatory rows. Lane assignment is runtime-only via coordinator.shard_group_units.",
+    "concurrent_attempts_per_lane": "Not applicable as primary fix; one attempt per lane identity is the standard sim-first pair model. Re-sharding is the correct lever."
+  },
+  "prior_mistake": {
+    "error": "20-24 hour tail estimate assumed 188 episodes on 4 lane identities (r5: c7m01/02/05/31) was a capacity constraint.",
+    "actual_constraint": "Dispatch sharding choice only. Productive teardown freed 17 lane identities and A40 headroom; r5 used 4 lanes by mistake of convenience after lock-collision rerender."
+  },
+  "executed_reshard": {
+    "dispatch_receipt": "create-released-tail-reshard-20260908r6.json",
+    "supersedes": "create-released-shards-20260908r5.json",
+    "teardown_r5_attempts": ["attempt0607", "attempt0608", "attempt0609", "attempt0610"],
+    "lane_count": 14,
+    "lane_identities": [
+      "c7m03", "c7m04", "c7m06", "c7m07", "c7m08", "c7m09", "c7m10",
+      "c7m11", "c7m12", "c7m13", "c7m14", "c7m15", "c7m16", "c7m18"
+    ],
+    "attempt_range": "attempt0611-attempt0624",
+    "episodes_per_lane": "12-13 (180 total after excluding 8 r5-completed before teardown)",
+    "episode_integrity": {
+      "missing_from_580_compile": 188,
+      "completed_on_r5_before_teardown": 8,
+      "r6_assigned": 180,
+      "r6_covers_remaining_exactly": true,
+      "duplicate_episode_ids": 0,
+      "dropped_episode_ids": 0,
+      "policy_seed_env_seed_preserved": "manifest rows referenced by episode_id unchanged"
+    }
+  },
+  "a40_capacity_split": {
+    "a40_pool_size": 40,
+    "c7_lane_pairs_allocated": 14,
+    "c7_a40_gpus": 14,
+    "reserved_for_c8_max_lane_pairs": 13,
+    "note": "14 not 17: leave 26 A40 GPUs (13 C8 pairs) so C8 can scale toward 20 pairs while C7 tail completes. Both families progress."
+  },
+  "wall_clock_estimate": {
+    "prior_r5_4_lanes_hours": "20-24 (incorrect planning artifact)",
+    "r6_14_lanes_hours": 5.4,
+    "basis": "180 remaining × 25 min/lane ÷ 14 lanes ≈ 5.4 h"
+  },
+  "final_compile": {
+    "still_pending": true,
+    "accepted_partial": "580/768 compiled_ledger_20260908m",
+    "tail_terminals_observed_post_reshard": 8,
+    "final_path": "/data/users/ali/vla_wam/raw/v4/c7-object-pair-main/compiled_ledger_20260908_FINAL"
+  }
+}

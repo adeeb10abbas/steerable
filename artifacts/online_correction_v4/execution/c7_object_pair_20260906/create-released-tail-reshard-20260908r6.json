@@ -1,0 +1,1114 @@
+{
+  "a40_capacity_split": {
+    "a40_pool_size": 40,
+    "c7_a40_gpus": 14,
+    "c7_lane_pairs": 14,
+    "note": "C8 confirmatory uses 2\u00d7A40 per pair; leave headroom for C8 scale toward 20 pairs.",
+    "reserved_for_c8_lane_pairs_max": 13
+  },
+  "completed_r5_count": 8,
+  "completed_r5_episode_ids": [
+    "online_correction_v4-C7-b020-617cf644ddf45af8",
+    "online_correction_v4-C7-b020-882f758bef5fce61",
+    "online_correction_v4-C7-b020-b35bc5a80e0175c7",
+    "online_correction_v4-C7-b020-bd7681876ec4fca7",
+    "online_correction_v4-C7-b020-d9d36e5ee6364f53",
+    "online_correction_v4-C7-b021-fcb7cf06a254f744",
+    "online_correction_v4-C7-b022-d54b55b4292acf43",
+    "online_correction_v4-C7-b023-a6d1ae442093b370"
+  ],
+  "dispatch_outcomes": [
+    {
+      "attempt_id": "attempt0611",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-released-tail-reshard-20260908r6/c7m03-attempt0611-a10080-policy_a40-simulator",
+      "job_actions": [
+        {
+          "applied": true,
+          "job": "v4-c7m03-attempt0611-f9d2a6c9a7-sim",
+          "message": "job.batch/v4-c7m03-attempt0611-f9d2a6c9a7-sim created",
+          "role": "simulator"
+        },
+        {
+          "applied": true,
+          "job": "v4-c7m03-attempt0611-f9d2a6c9a7-policy",
+          "message": "job.batch/v4-c7m03-attempt0611-f9d2a6c9a7-policy created",
+          "role": "policy"
+        }
+      ],
+      "lane_id": "c7m03",
+      "status": "dispatched",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0611",
+              "v4-config-sha": "f9d2a6c9a7b27270a775b436611c3cdc",
+              "v4-lane-id": "c7m03"
+            },
+            "name": "v4-c7m03-attempt0611-f9d2a6c9a7-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0611",
+              "v4-config-sha": "f9d2a6c9a7b27270a775b436611c3cdc",
+              "v4-lane-id": "c7m03",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c7m03-attempt0611-f9d2a6c9a7-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0611",
+              "v4-config-sha": "f9d2a6c9a7b27270a775b436611c3cdc",
+              "v4-lane-id": "c7m03",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c7m03-attempt0611-f9d2a6c9a7-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0611",
+              "v4-config-sha": "f9d2a6c9a7b27270a775b436611c3cdc",
+              "v4-lane-id": "c7m03",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c7m03-attempt0611-f9d2a6c9a7-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "attempt_id": "attempt0612",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-released-tail-reshard-20260908r6/c7m04-attempt0612-a10080-policy_a40-simulator",
+      "job_actions": [
+        {
+          "applied": true,
+          "job": "v4-c7m04-attempt0612-3793234c34-sim",
+          "message": "job.batch/v4-c7m04-attempt0612-3793234c34-sim created",
+          "role": "simulator"
+        },
+        {
+          "applied": true,
+          "job": "v4-c7m04-attempt0612-3793234c34-policy",
+          "message": "job.batch/v4-c7m04-attempt0612-3793234c34-policy created",
+          "role": "policy"
+        }
+      ],
+      "lane_id": "c7m04",
+      "status": "dispatched",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0612",
+              "v4-config-sha": "3793234c34b69df7a017f106c011a2ca",
+              "v4-lane-id": "c7m04"
+            },
+            "name": "v4-c7m04-attempt0612-3793234c34-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0612",
+              "v4-config-sha": "3793234c34b69df7a017f106c011a2ca",
+              "v4-lane-id": "c7m04",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c7m04-attempt0612-3793234c34-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0612",
+              "v4-config-sha": "3793234c34b69df7a017f106c011a2ca",
+              "v4-lane-id": "c7m04",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c7m04-attempt0612-3793234c34-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0612",
+              "v4-config-sha": "3793234c34b69df7a017f106c011a2ca",
+              "v4-lane-id": "c7m04",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c7m04-attempt0612-3793234c34-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "attempt_id": "attempt0613",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-released-tail-reshard-20260908r6/c7m06-attempt0613-a10080-policy_a40-simulator",
+      "job_actions": [
+        {
+          "applied": true,
+          "job": "v4-c7m06-attempt0613-96560257ac-sim",
+          "message": "job.batch/v4-c7m06-attempt0613-96560257ac-sim created",
+          "role": "simulator"
+        },
+        {
+          "applied": true,
+          "job": "v4-c7m06-attempt0613-96560257ac-policy",
+          "message": "job.batch/v4-c7m06-attempt0613-96560257ac-policy created",
+          "role": "policy"
+        }
+      ],
+      "lane_id": "c7m06",
+      "status": "dispatched",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0613",
+              "v4-config-sha": "96560257ac8e47470a690a84d43da70b",
+              "v4-lane-id": "c7m06"
+            },
+            "name": "v4-c7m06-attempt0613-96560257ac-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0613",
+              "v4-config-sha": "96560257ac8e47470a690a84d43da70b",
+              "v4-lane-id": "c7m06",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c7m06-attempt0613-96560257ac-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0613",
+              "v4-config-sha": "96560257ac8e47470a690a84d43da70b",
+              "v4-lane-id": "c7m06",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c7m06-attempt0613-96560257ac-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0613",
+              "v4-config-sha": "96560257ac8e47470a690a84d43da70b",
+              "v4-lane-id": "c7m06",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c7m06-attempt0613-96560257ac-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "attempt_id": "attempt0614",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-released-tail-reshard-20260908r6/c7m07-attempt0614-a10080-policy_a40-simulator",
+      "job_actions": [
+        {
+          "applied": true,
+          "job": "v4-c7m07-attempt0614-0ebe5a111d-sim",
+          "message": "job.batch/v4-c7m07-attempt0614-0ebe5a111d-sim created",
+          "role": "simulator"
+        },
+        {
+          "applied": true,
+          "job": "v4-c7m07-attempt0614-0ebe5a111d-policy",
+          "message": "job.batch/v4-c7m07-attempt0614-0ebe5a111d-policy created",
+          "role": "policy"
+        }
+      ],
+      "lane_id": "c7m07",
+      "status": "dispatched",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0614",
+              "v4-config-sha": "0ebe5a111d09b746e3cb20d776618b94",
+              "v4-lane-id": "c7m07"
+            },
+            "name": "v4-c7m07-attempt0614-0ebe5a111d-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0614",
+              "v4-config-sha": "0ebe5a111d09b746e3cb20d776618b94",
+              "v4-lane-id": "c7m07",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c7m07-attempt0614-0ebe5a111d-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0614",
+              "v4-config-sha": "0ebe5a111d09b746e3cb20d776618b94",
+              "v4-lane-id": "c7m07",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c7m07-attempt0614-0ebe5a111d-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0614",
+              "v4-config-sha": "0ebe5a111d09b746e3cb20d776618b94",
+              "v4-lane-id": "c7m07",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c7m07-attempt0614-0ebe5a111d-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "attempt_id": "attempt0615",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-released-tail-reshard-20260908r6/c7m08-attempt0615-a10080-policy_a40-simulator",
+      "job_actions": [
+        {
+          "applied": true,
+          "job": "v4-c7m08-attempt0615-82b17020b1-sim",
+          "message": "job.batch/v4-c7m08-attempt0615-82b17020b1-sim created",
+          "role": "simulator"
+        },
+        {
+          "applied": true,
+          "job": "v4-c7m08-attempt0615-82b17020b1-policy",
+          "message": "job.batch/v4-c7m08-attempt0615-82b17020b1-policy created",
+          "role": "policy"
+        }
+      ],
+      "lane_id": "c7m08",
+      "status": "dispatched",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0615",
+              "v4-config-sha": "82b17020b1c3a8f2af2770033b4bbdbb",
+              "v4-lane-id": "c7m08"
+            },
+            "name": "v4-c7m08-attempt0615-82b17020b1-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0615",
+              "v4-config-sha": "82b17020b1c3a8f2af2770033b4bbdbb",
+              "v4-lane-id": "c7m08",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c7m08-attempt0615-82b17020b1-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0615",
+              "v4-config-sha": "82b17020b1c3a8f2af2770033b4bbdbb",
+              "v4-lane-id": "c7m08",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c7m08-attempt0615-82b17020b1-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0615",
+              "v4-config-sha": "82b17020b1c3a8f2af2770033b4bbdbb",
+              "v4-lane-id": "c7m08",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c7m08-attempt0615-82b17020b1-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "attempt_id": "attempt0616",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-released-tail-reshard-20260908r6/c7m09-attempt0616-a10080-policy_a40-simulator",
+      "job_actions": [
+        {
+          "applied": true,
+          "job": "v4-c7m09-attempt0616-78a293eade-sim",
+          "message": "job.batch/v4-c7m09-attempt0616-78a293eade-sim created",
+          "role": "simulator"
+        },
+        {
+          "applied": true,
+          "job": "v4-c7m09-attempt0616-78a293eade-policy",
+          "message": "job.batch/v4-c7m09-attempt0616-78a293eade-policy created",
+          "role": "policy"
+        }
+      ],
+      "lane_id": "c7m09",
+      "status": "dispatched",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0616",
+              "v4-config-sha": "78a293eadeff9261ea481c23743ba554",
+              "v4-lane-id": "c7m09"
+            },
+            "name": "v4-c7m09-attempt0616-78a293eade-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0616",
+              "v4-config-sha": "78a293eadeff9261ea481c23743ba554",
+              "v4-lane-id": "c7m09",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c7m09-attempt0616-78a293eade-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0616",
+              "v4-config-sha": "78a293eadeff9261ea481c23743ba554",
+              "v4-lane-id": "c7m09",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c7m09-attempt0616-78a293eade-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0616",
+              "v4-config-sha": "78a293eadeff9261ea481c23743ba554",
+              "v4-lane-id": "c7m09",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c7m09-attempt0616-78a293eade-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "attempt_id": "attempt0617",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-released-tail-reshard-20260908r6/c7m10-attempt0617-a10080-policy_a40-simulator",
+      "job_actions": [
+        {
+          "applied": true,
+          "job": "v4-c7m10-attempt0617-5773acedf8-sim",
+          "message": "job.batch/v4-c7m10-attempt0617-5773acedf8-sim created",
+          "role": "simulator"
+        },
+        {
+          "applied": true,
+          "job": "v4-c7m10-attempt0617-5773acedf8-policy",
+          "message": "job.batch/v4-c7m10-attempt0617-5773acedf8-policy created",
+          "role": "policy"
+        }
+      ],
+      "lane_id": "c7m10",
+      "status": "dispatched",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0617",
+              "v4-config-sha": "5773acedf8f2bc41cd7010d3fc5e8d0d",
+              "v4-lane-id": "c7m10"
+            },
+            "name": "v4-c7m10-attempt0617-5773acedf8-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0617",
+              "v4-config-sha": "5773acedf8f2bc41cd7010d3fc5e8d0d",
+              "v4-lane-id": "c7m10",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c7m10-attempt0617-5773acedf8-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0617",
+              "v4-config-sha": "5773acedf8f2bc41cd7010d3fc5e8d0d",
+              "v4-lane-id": "c7m10",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c7m10-attempt0617-5773acedf8-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0617",
+              "v4-config-sha": "5773acedf8f2bc41cd7010d3fc5e8d0d",
+              "v4-lane-id": "c7m10",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c7m10-attempt0617-5773acedf8-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "attempt_id": "attempt0618",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-released-tail-reshard-20260908r6/c7m11-attempt0618-a10080-policy_a40-simulator",
+      "job_actions": [
+        {
+          "applied": true,
+          "job": "v4-c7m11-attempt0618-f1f5078c66-sim",
+          "message": "job.batch/v4-c7m11-attempt0618-f1f5078c66-sim created",
+          "role": "simulator"
+        },
+        {
+          "applied": true,
+          "job": "v4-c7m11-attempt0618-f1f5078c66-policy",
+          "message": "job.batch/v4-c7m11-attempt0618-f1f5078c66-policy created",
+          "role": "policy"
+        }
+      ],
+      "lane_id": "c7m11",
+      "status": "dispatched",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0618",
+              "v4-config-sha": "f1f5078c66cfa180dfba07237593821c",
+              "v4-lane-id": "c7m11"
+            },
+            "name": "v4-c7m11-attempt0618-f1f5078c66-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0618",
+              "v4-config-sha": "f1f5078c66cfa180dfba07237593821c",
+              "v4-lane-id": "c7m11",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c7m11-attempt0618-f1f5078c66-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0618",
+              "v4-config-sha": "f1f5078c66cfa180dfba07237593821c",
+              "v4-lane-id": "c7m11",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c7m11-attempt0618-f1f5078c66-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0618",
+              "v4-config-sha": "f1f5078c66cfa180dfba07237593821c",
+              "v4-lane-id": "c7m11",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c7m11-attempt0618-f1f5078c66-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "attempt_id": "attempt0619",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-released-tail-reshard-20260908r6/c7m12-attempt0619-a10080-policy_a40-simulator",
+      "job_actions": [
+        {
+          "applied": true,
+          "job": "v4-c7m12-attempt0619-a94fd6f985-sim",
+          "message": "job.batch/v4-c7m12-attempt0619-a94fd6f985-sim created",
+          "role": "simulator"
+        },
+        {
+          "applied": true,
+          "job": "v4-c7m12-attempt0619-a94fd6f985-policy",
+          "message": "job.batch/v4-c7m12-attempt0619-a94fd6f985-policy created",
+          "role": "policy"
+        }
+      ],
+      "lane_id": "c7m12",
+      "status": "dispatched",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0619",
+              "v4-config-sha": "a94fd6f985f3b1303d984d723b849925",
+              "v4-lane-id": "c7m12"
+            },
+            "name": "v4-c7m12-attempt0619-a94fd6f985-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0619",
+              "v4-config-sha": "a94fd6f985f3b1303d984d723b849925",
+              "v4-lane-id": "c7m12",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c7m12-attempt0619-a94fd6f985-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0619",
+              "v4-config-sha": "a94fd6f985f3b1303d984d723b849925",
+              "v4-lane-id": "c7m12",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c7m12-attempt0619-a94fd6f985-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0619",
+              "v4-config-sha": "a94fd6f985f3b1303d984d723b849925",
+              "v4-lane-id": "c7m12",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c7m12-attempt0619-a94fd6f985-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "attempt_id": "attempt0620",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-released-tail-reshard-20260908r6/c7m13-attempt0620-a10080-policy_a40-simulator",
+      "job_actions": [
+        {
+          "applied": true,
+          "job": "v4-c7m13-attempt0620-36e80f6eb9-sim",
+          "message": "job.batch/v4-c7m13-attempt0620-36e80f6eb9-sim created",
+          "role": "simulator"
+        },
+        {
+          "applied": true,
+          "job": "v4-c7m13-attempt0620-36e80f6eb9-policy",
+          "message": "job.batch/v4-c7m13-attempt0620-36e80f6eb9-policy created",
+          "role": "policy"
+        }
+      ],
+      "lane_id": "c7m13",
+      "status": "dispatched",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0620",
+              "v4-config-sha": "36e80f6eb9c88302ce2f33572425706a",
+              "v4-lane-id": "c7m13"
+            },
+            "name": "v4-c7m13-attempt0620-36e80f6eb9-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0620",
+              "v4-config-sha": "36e80f6eb9c88302ce2f33572425706a",
+              "v4-lane-id": "c7m13",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c7m13-attempt0620-36e80f6eb9-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0620",
+              "v4-config-sha": "36e80f6eb9c88302ce2f33572425706a",
+              "v4-lane-id": "c7m13",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c7m13-attempt0620-36e80f6eb9-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0620",
+              "v4-config-sha": "36e80f6eb9c88302ce2f33572425706a",
+              "v4-lane-id": "c7m13",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c7m13-attempt0620-36e80f6eb9-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "attempt_id": "attempt0621",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-released-tail-reshard-20260908r6/c7m14-attempt0621-a10080-policy_a40-simulator",
+      "job_actions": [
+        {
+          "applied": true,
+          "job": "v4-c7m14-attempt0621-11732818ad-sim",
+          "message": "job.batch/v4-c7m14-attempt0621-11732818ad-sim created",
+          "role": "simulator"
+        },
+        {
+          "applied": true,
+          "job": "v4-c7m14-attempt0621-11732818ad-policy",
+          "message": "job.batch/v4-c7m14-attempt0621-11732818ad-policy created",
+          "role": "policy"
+        }
+      ],
+      "lane_id": "c7m14",
+      "status": "dispatched",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0621",
+              "v4-config-sha": "11732818ad70e01574f6ae35e83dd377",
+              "v4-lane-id": "c7m14"
+            },
+            "name": "v4-c7m14-attempt0621-11732818ad-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0621",
+              "v4-config-sha": "11732818ad70e01574f6ae35e83dd377",
+              "v4-lane-id": "c7m14",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c7m14-attempt0621-11732818ad-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0621",
+              "v4-config-sha": "11732818ad70e01574f6ae35e83dd377",
+              "v4-lane-id": "c7m14",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c7m14-attempt0621-11732818ad-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0621",
+              "v4-config-sha": "11732818ad70e01574f6ae35e83dd377",
+              "v4-lane-id": "c7m14",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c7m14-attempt0621-11732818ad-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "attempt_id": "attempt0622",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-released-tail-reshard-20260908r6/c7m15-attempt0622-a10080-policy_a40-simulator",
+      "job_actions": [
+        {
+          "applied": true,
+          "job": "v4-c7m15-attempt0622-abfa8e0dd3-sim",
+          "message": "job.batch/v4-c7m15-attempt0622-abfa8e0dd3-sim created",
+          "role": "simulator"
+        },
+        {
+          "applied": true,
+          "job": "v4-c7m15-attempt0622-abfa8e0dd3-policy",
+          "message": "job.batch/v4-c7m15-attempt0622-abfa8e0dd3-policy created",
+          "role": "policy"
+        }
+      ],
+      "lane_id": "c7m15",
+      "status": "dispatched",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0622",
+              "v4-config-sha": "abfa8e0dd3b3dab70e34933a8db5c43e",
+              "v4-lane-id": "c7m15"
+            },
+            "name": "v4-c7m15-attempt0622-abfa8e0dd3-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0622",
+              "v4-config-sha": "abfa8e0dd3b3dab70e34933a8db5c43e",
+              "v4-lane-id": "c7m15",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c7m15-attempt0622-abfa8e0dd3-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0622",
+              "v4-config-sha": "abfa8e0dd3b3dab70e34933a8db5c43e",
+              "v4-lane-id": "c7m15",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c7m15-attempt0622-abfa8e0dd3-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0622",
+              "v4-config-sha": "abfa8e0dd3b3dab70e34933a8db5c43e",
+              "v4-lane-id": "c7m15",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c7m15-attempt0622-abfa8e0dd3-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "attempt_id": "attempt0623",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-released-tail-reshard-20260908r6/c7m16-attempt0623-a10080-policy_a40-simulator",
+      "job_actions": [
+        {
+          "applied": true,
+          "job": "v4-c7m16-attempt0623-7e4885c072-sim",
+          "message": "job.batch/v4-c7m16-attempt0623-7e4885c072-sim created",
+          "role": "simulator"
+        },
+        {
+          "applied": true,
+          "job": "v4-c7m16-attempt0623-7e4885c072-policy",
+          "message": "job.batch/v4-c7m16-attempt0623-7e4885c072-policy created",
+          "role": "policy"
+        }
+      ],
+      "lane_id": "c7m16",
+      "status": "dispatched",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0623",
+              "v4-config-sha": "7e4885c072942d34153fa25cd8e3a0db",
+              "v4-lane-id": "c7m16"
+            },
+            "name": "v4-c7m16-attempt0623-7e4885c072-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0623",
+              "v4-config-sha": "7e4885c072942d34153fa25cd8e3a0db",
+              "v4-lane-id": "c7m16",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c7m16-attempt0623-7e4885c072-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0623",
+              "v4-config-sha": "7e4885c072942d34153fa25cd8e3a0db",
+              "v4-lane-id": "c7m16",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c7m16-attempt0623-7e4885c072-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0623",
+              "v4-config-sha": "7e4885c072942d34153fa25cd8e3a0db",
+              "v4-lane-id": "c7m16",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c7m16-attempt0623-7e4885c072-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "attempt_id": "attempt0624",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-released-tail-reshard-20260908r6/c7m18-attempt0624-a10080-policy_a40-simulator",
+      "job_actions": [
+        {
+          "applied": true,
+          "job": "v4-c7m18-attempt0624-946e578961-sim",
+          "message": "job.batch/v4-c7m18-attempt0624-946e578961-sim created",
+          "role": "simulator"
+        },
+        {
+          "applied": true,
+          "job": "v4-c7m18-attempt0624-946e578961-policy",
+          "message": "job.batch/v4-c7m18-attempt0624-946e578961-policy created",
+          "role": "policy"
+        }
+      ],
+      "lane_id": "c7m18",
+      "status": "dispatched",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0624",
+              "v4-config-sha": "946e5789618a76ce2feef5afe190102f",
+              "v4-lane-id": "c7m18"
+            },
+            "name": "v4-c7m18-attempt0624-946e578961-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0624",
+              "v4-config-sha": "946e5789618a76ce2feef5afe190102f",
+              "v4-lane-id": "c7m18",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c7m18-attempt0624-946e578961-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0624",
+              "v4-config-sha": "946e5789618a76ce2feef5afe190102f",
+              "v4-lane-id": "c7m18",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c7m18-attempt0624-946e578961-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0624",
+              "v4-config-sha": "946e5789618a76ce2feef5afe190102f",
+              "v4-lane-id": "c7m18",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c7m18-attempt0624-946e578961-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    }
+  ],
+  "lane_attempt_map": {
+    "c7m03": "attempt0611",
+    "c7m04": "attempt0612",
+    "c7m06": "attempt0613",
+    "c7m07": "attempt0614",
+    "c7m08": "attempt0615",
+    "c7m09": "attempt0616",
+    "c7m10": "attempt0617",
+    "c7m11": "attempt0618",
+    "c7m12": "attempt0619",
+    "c7m13": "attempt0620",
+    "c7m14": "attempt0621",
+    "c7m15": "attempt0622",
+    "c7m16": "attempt0623",
+    "c7m18": "attempt0624"
+  },
+  "lane_count": 14,
+  "remaining_episode_count": 180,
+  "render_outcomes": [
+    {
+      "attempt_id": "attempt0611",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-released-tail-reshard-20260908r6/c7m03-attempt0611-a10080-policy_a40-simulator",
+      "episode_count": 13,
+      "lane_id": "c7m03",
+      "runner_sha256": "71e7f86f5e3dbda46ae3a03a7a07959fc4562a13dce71955362bf93226adb3df"
+    },
+    {
+      "attempt_id": "attempt0612",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-released-tail-reshard-20260908r6/c7m04-attempt0612-a10080-policy_a40-simulator",
+      "episode_count": 13,
+      "lane_id": "c7m04",
+      "runner_sha256": "71e7f86f5e3dbda46ae3a03a7a07959fc4562a13dce71955362bf93226adb3df"
+    },
+    {
+      "attempt_id": "attempt0613",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-released-tail-reshard-20260908r6/c7m06-attempt0613-a10080-policy_a40-simulator",
+      "episode_count": 13,
+      "lane_id": "c7m06",
+      "runner_sha256": "71e7f86f5e3dbda46ae3a03a7a07959fc4562a13dce71955362bf93226adb3df"
+    },
+    {
+      "attempt_id": "attempt0614",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-released-tail-reshard-20260908r6/c7m07-attempt0614-a10080-policy_a40-simulator",
+      "episode_count": 13,
+      "lane_id": "c7m07",
+      "runner_sha256": "71e7f86f5e3dbda46ae3a03a7a07959fc4562a13dce71955362bf93226adb3df"
+    },
+    {
+      "attempt_id": "attempt0615",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-released-tail-reshard-20260908r6/c7m08-attempt0615-a10080-policy_a40-simulator",
+      "episode_count": 13,
+      "lane_id": "c7m08",
+      "runner_sha256": "71e7f86f5e3dbda46ae3a03a7a07959fc4562a13dce71955362bf93226adb3df"
+    },
+    {
+      "attempt_id": "attempt0616",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-released-tail-reshard-20260908r6/c7m09-attempt0616-a10080-policy_a40-simulator",
+      "episode_count": 13,
+      "lane_id": "c7m09",
+      "runner_sha256": "71e7f86f5e3dbda46ae3a03a7a07959fc4562a13dce71955362bf93226adb3df"
+    },
+    {
+      "attempt_id": "attempt0617",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-released-tail-reshard-20260908r6/c7m10-attempt0617-a10080-policy_a40-simulator",
+      "episode_count": 13,
+      "lane_id": "c7m10",
+      "runner_sha256": "71e7f86f5e3dbda46ae3a03a7a07959fc4562a13dce71955362bf93226adb3df"
+    },
+    {
+      "attempt_id": "attempt0618",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-released-tail-reshard-20260908r6/c7m11-attempt0618-a10080-policy_a40-simulator",
+      "episode_count": 13,
+      "lane_id": "c7m11",
+      "runner_sha256": "71e7f86f5e3dbda46ae3a03a7a07959fc4562a13dce71955362bf93226adb3df"
+    },
+    {
+      "attempt_id": "attempt0619",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-released-tail-reshard-20260908r6/c7m12-attempt0619-a10080-policy_a40-simulator",
+      "episode_count": 13,
+      "lane_id": "c7m12",
+      "runner_sha256": "71e7f86f5e3dbda46ae3a03a7a07959fc4562a13dce71955362bf93226adb3df"
+    },
+    {
+      "attempt_id": "attempt0620",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-released-tail-reshard-20260908r6/c7m13-attempt0620-a10080-policy_a40-simulator",
+      "episode_count": 13,
+      "lane_id": "c7m13",
+      "runner_sha256": "71e7f86f5e3dbda46ae3a03a7a07959fc4562a13dce71955362bf93226adb3df"
+    },
+    {
+      "attempt_id": "attempt0621",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-released-tail-reshard-20260908r6/c7m14-attempt0621-a10080-policy_a40-simulator",
+      "episode_count": 13,
+      "lane_id": "c7m14",
+      "runner_sha256": "71e7f86f5e3dbda46ae3a03a7a07959fc4562a13dce71955362bf93226adb3df"
+    },
+    {
+      "attempt_id": "attempt0622",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-released-tail-reshard-20260908r6/c7m15-attempt0622-a10080-policy_a40-simulator",
+      "episode_count": 13,
+      "lane_id": "c7m15",
+      "runner_sha256": "71e7f86f5e3dbda46ae3a03a7a07959fc4562a13dce71955362bf93226adb3df"
+    },
+    {
+      "attempt_id": "attempt0623",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-released-tail-reshard-20260908r6/c7m16-attempt0623-a10080-policy_a40-simulator",
+      "episode_count": 12,
+      "lane_id": "c7m16",
+      "runner_sha256": "71e7f86f5e3dbda46ae3a03a7a07959fc4562a13dce71955362bf93226adb3df"
+    },
+    {
+      "attempt_id": "attempt0624",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-released-tail-reshard-20260908r6/c7m18-attempt0624-a10080-policy_a40-simulator",
+      "episode_count": 12,
+      "lane_id": "c7m18",
+      "runner_sha256": "71e7f86f5e3dbda46ae3a03a7a07959fc4562a13dce71955362bf93226adb3df"
+    }
+  ],
+  "render_output_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-released-tail-reshard-20260908r6",
+  "resharding_allowed": true,
+  "resharding_reason": "Frozen queue rows carry episode_id/block_id/policy_seed/env_seed only; lane_id is dispatch-time via coordinator.shard_group_units, not manifest-bound.",
+  "schema_version": "v4-c7-released-tail-reshard-v1",
+  "supersedes_dispatch": "create-released-shards-20260908r5.json",
+  "teardown_jobs": [
+    "v4-c7m01-attempt0607-82985b1716-policy",
+    "v4-c7m01-attempt0607-82985b1716-sim",
+    "v4-c7m02-attempt0608-081879e2cf-policy",
+    "v4-c7m02-attempt0608-081879e2cf-sim",
+    "v4-c7m05-attempt0609-da9bd841f7-policy",
+    "v4-c7m05-attempt0609-da9bd841f7-sim",
+    "v4-c7m31-attempt0610-aec6d15c5b-policy",
+    "v4-c7m31-attempt0610-aec6d15c5b-sim"
+  ],
+  "teardown_r5_attempts": [
+    "attempt0607",
+    "attempt0608",
+    "attempt0609",
+    "attempt0610"
+  ],
+  "wall_clock_estimate_hours": 5.4
+}

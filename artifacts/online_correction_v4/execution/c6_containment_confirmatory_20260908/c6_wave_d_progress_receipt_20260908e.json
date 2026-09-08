@@ -1,0 +1,47 @@
+{
+  "schema_version": "v4-c6-wave-progress-receipt-v1",
+  "compiled_at_utc": "2026-09-08T04:45:00Z",
+  "wave_id": "c6confirm20260908f",
+  "wave_label": "D",
+  "confirmatory_terminals": 56,
+  "milestones": {
+    "32": "passed",
+    "128": "pending",
+    "384": "pending"
+  },
+  "composition_at_56": {
+    "by_outcome": {
+      "no_grasp": 48,
+      "transport_incomplete": 7,
+      "wrong_goal_region": 1
+    },
+    "by_scenario": {
+      "destination_static": 19,
+      "move_stop": 21,
+      "original_sham": 16
+    }
+  },
+  "grasp_rate_by_scenario": {
+    "destination_static": {
+      "episodes": 19,
+      "grasp_achieved": 3,
+      "grasp_rate_pct": 15.8,
+      "c8_reference_at_161_eps_pct": 7.8
+    },
+    "move_stop": {
+      "episodes": 21,
+      "grasp_achieved": 2,
+      "grasp_rate_pct": 9.5,
+      "c8_reference_at_161_eps_pct": 3.6
+    },
+    "original_sham": {
+      "episodes": 16,
+      "grasp_achieved": 3,
+      "grasp_rate_pct": 18.8,
+      "c8_reference_at_161_eps_pct": 1.8
+    }
+  },
+  "ordering_note": "At n=56, original_sham grasp rate (18.8%) exceeds destination_static (15.8%) and move_stop (9.5%) — inverted vs C8's ordering (7.8% / 3.6% / 1.8%). Too early to interpret; watch at 128 and 384.",
+  "runnerfix_dispatch": "create-c6confirm20260908f-runnerfix.json",
+  "supersedes": "c6_wave_d_progress_receipt_20260908d.json"
+}

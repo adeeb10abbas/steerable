@@ -1,0 +1,103 @@
+{
+  "schema_version": "v4-c8-execution-status-receipt-v1",
+  "observed_at_utc": "2026-09-08T07:30:00Z",
+  "confirmatory_ledger_compile_id_100_milestone": "20260908e",
+  "confirmatory_ledger_compile_id_200_milestone": null,
+  "live_ledger_count": 161,
+  "next_milestone_compile_at": 200,
+  "fresh_attempt_dispatch_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/create-confirmatory-fresh-attempt-20260908r2.json",
+  "fresh_attempt_retry_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/create-confirmatory-fresh-attempt-20260908r2b-c8m10.json",
+  "accounting_verification_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_episode_accounting_verification_20260908d.json",
+  "root_cause_resolution": {
+    "cause": "sweep_redispatch_same_attempt_id_without_clearing_pvc_attempt_locks",
+    "capacity_agent_fixes": ["allow_redispatch=false_default", "300s_isaac_startup_grace", "c8m13_c8m14_shielded", "live_sweeps_dry_run_only"],
+    "c8_unblock": "fresh_attempt_ids_r2_not_lock_clearing"
+  },
+  "confirmatory_progress": {
+    "valid": 161,
+    "remaining": 607,
+    "by_scenario": {
+      "original_sham": {"completed": 55, "grasp_achieved": 1, "grasp_rate": 0.018},
+      "destination_static": {"completed": 51, "grasp_achieved": 4, "grasp_rate": 0.078},
+      "move_stop": {"completed": 55, "grasp_achieved": 2, "grasp_rate": 0.036}
+    },
+    "ordering_holds": "insufficient_coverage",
+    "spread_compression_history": {
+      "at_84": {"destination_static": 0.080, "move_stop": 0.035, "original_sham": 0.000},
+      "at_101": {"destination_static": 0.061, "move_stop": 0.032, "original_sham": 0.027},
+      "at_123": {"destination_static": 0.070, "move_stop": 0.026, "original_sham": 0.024},
+      "at_161": {"destination_static": 0.078, "move_stop": 0.036, "original_sham": 0.018},
+      "pilot_reference_not_expected_magnitude": {"destination_static": 0.75, "move_stop": 0.50, "original_sham": 0.25}
+    }
+  },
+  "healthy_pairs": {"count": 0, "lanes": [], "note": "All r2 sim-first pairs still within Isaac startup grace; policies suspended"},
+  "sim_warming_pairs": {
+    "count": 16,
+    "lanes": ["c8m00", "c8m01", "c8m02", "c8m03", "c8m04", "c8m06", "c8m07", "c8m08", "c8m09", "c8m10", "c8m11", "c8m12", "c8m15", "c8m17", "c8m18", "c8m19"],
+    "policy": "sim Running, policy Suspended; expect unsuspend as sims pass grace"
+  },
+  "lane_complete_orphan_policy": {
+    "count": 2,
+    "lanes": ["c8m05", "c8m16"],
+    "note": "Sim Complete; policy still Running on original protected attempts"
+  },
+  "c7_pool_sequencing": "188 deferred-shard episodes on attempt0603-0606 dispatched post productive-pair teardown; A40 pool handoff imminent",
+  "fresh_attempt_lane_map": {
+    "c8m00": "attempt0021",
+    "c8m01": "attempt0022",
+    "c8m02": "attempt0023",
+    "c8m03": "attempt0024",
+    "c8m04": "attempt0025",
+    "c8m06": "attempt0026",
+    "c8m07": "attempt0027",
+    "c8m08": "attempt0028",
+    "c8m09": "attempt0029",
+    "c8m10": "attempt0037",
+    "c8m11": "attempt0031",
+    "c8m12": "attempt0032",
+    "c8m15": "attempt0033",
+    "c8m17": "attempt0034",
+    "c8m18": "attempt0035",
+    "c8m19": "attempt0036"
+  },
+  "protected_skipped": {
+    "protected": ["c8m05", "c8m16"],
+    "complete_skipped": ["c8m13", "c8m14"],
+    "c8m13_note": "38/38 ledger complete; 0 queued; no fresh attempt required",
+    "c8m14_note": "38/38 lane complete; no fresh attempt required"
+  },
+  "confirmatory_lanes": [
+    {"lane_id": "c8m05", "attempt_id": "attempt0006", "completed": 39, "queued": 0, "running": 0, "blocked": 0, "state": "lane_complete"},
+    {"lane_id": "c8m16", "attempt_id": "attempt0017", "completed": 38, "queued": 0, "running": 0, "blocked": 0, "state": "lane_complete"},
+    {"lane_id": "c8m13", "attempt_id": "attempt0014", "completed": 38, "queued": 0, "running": 0, "blocked": 0, "state": "lane_complete_ledger_intact"},
+    {"lane_id": "c8m14", "attempt_id": "attempt0015", "completed": 38, "queued": 0, "running": 0, "blocked": 0, "state": "lane_complete_ledger_intact"},
+    {"lane_id": "c8m00", "attempt_id": "attempt0021", "completed": 8, "queued": 31, "running": 0, "blocked": 0, "state": "fresh_attempt_sim_warming"},
+    {"lane_id": "c8m01", "attempt_id": "attempt0022", "completed": 0, "queued": 39, "running": 0, "blocked": 0, "state": "fresh_attempt_sim_warming"},
+    {"lane_id": "c8m02", "attempt_id": "attempt0023", "completed": 0, "queued": 39, "running": 0, "blocked": 0, "state": "fresh_attempt_sim_warming"},
+    {"lane_id": "c8m03", "attempt_id": "attempt0024", "completed": 0, "queued": 39, "running": 0, "blocked": 0, "state": "fresh_attempt_sim_warming"},
+    {"lane_id": "c8m04", "attempt_id": "attempt0025", "completed": 0, "queued": 39, "running": 0, "blocked": 0, "state": "fresh_attempt_sim_warming"},
+    {"lane_id": "c8m06", "attempt_id": "attempt0026", "completed": 0, "queued": 39, "running": 0, "blocked": 0, "state": "fresh_attempt_sim_warming"},
+    {"lane_id": "c8m07", "attempt_id": "attempt0027", "completed": 0, "queued": 39, "running": 0, "blocked": 0, "state": "fresh_attempt_sim_warming"},
+    {"lane_id": "c8m08", "attempt_id": "attempt0028", "completed": 0, "queued": 38, "running": 0, "blocked": 0, "state": "fresh_attempt_sim_warming"},
+    {"lane_id": "c8m09", "attempt_id": "attempt0029", "completed": 0, "queued": 38, "running": 0, "blocked": 0, "state": "fresh_attempt_sim_warming"},
+    {"lane_id": "c8m10", "attempt_id": "attempt0037", "completed": 0, "queued": 38, "running": 0, "blocked": 0, "state": "fresh_attempt_sim_warming_retry"},
+    {"lane_id": "c8m11", "attempt_id": "attempt0031", "completed": 0, "queued": 38, "running": 0, "blocked": 0, "state": "fresh_attempt_sim_warming"},
+    {"lane_id": "c8m12", "attempt_id": "attempt0032", "completed": 0, "queued": 38, "running": 0, "blocked": 0, "state": "fresh_attempt_sim_warming"},
+    {"lane_id": "c8m15", "attempt_id": "attempt0033", "completed": 0, "queued": 38, "running": 0, "blocked": 0, "state": "fresh_attempt_sim_warming"},
+    {"lane_id": "c8m17", "attempt_id": "attempt0034", "completed": 0, "queued": 38, "running": 0, "blocked": 0, "state": "fresh_attempt_sim_warming"},
+    {"lane_id": "c8m18", "attempt_id": "attempt0035", "completed": 0, "queued": 38, "running": 0, "blocked": 0, "state": "fresh_attempt_sim_warming"},
+    {"lane_id": "c8m19", "attempt_id": "attempt0036", "completed": 0, "queued": 38, "running": 0, "blocked": 0, "state": "fresh_attempt_sim_warming"}
+  ],
+  "regression_check": {"serialization": "none", "preflight_lock_collision": "none on fresh attempts"},
+  "agent_c_hooks": {
+    "c8_confirmatory_ledger_compile_id_100": "20260908e",
+    "c8_confirmatory_ledger_compile_id_200": "pending_at_161_of_768",
+    "status_label": "confirmatory_161_fresh_attempt_r2_unblocked_sim_warming"
+  },
+  "blockers": [
+    {"id": "200_milestone", "impact": "161/768", "action": "Recompile as 20260908f when count >= 200 with accounting verification"},
+    {"id": "sim_warmup_to_healthy", "impact": "16 sim-first pairs warming (~26-30 min Isaac startup)", "action": "Monitor grace window; expect healthy pair count to climb toward 8 then 20 once C7 shards release A40"},
+    {"id": "c7_pool_sequencing", "impact": "Full 20-lane C8 throughput", "action": "C7 attempt0603-0606 in flight; productive pairs torn down"},
+    {"id": "ordering", "impact": "161/768", "action": "insufficient_coverage — pilot magnitudes not expected effect size; compression honest at 161"}
+  ]
+}

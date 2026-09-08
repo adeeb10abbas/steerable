@@ -1,0 +1,24 @@
+{
+  "schema_version": "v4-c8-episode-accounting-verification-v1",
+  "observed_at_utc": "2026-09-08T07:30:00Z",
+  "ledger_compile_id_baseline": "20260908e",
+  "live_count": 161,
+  "verification": {
+    "baseline_episode_count": 101,
+    "current_episode_count": 161,
+    "episodes_retained_from_baseline": 101,
+    "episodes_lost_from_baseline": 0,
+    "new_episodes_since_baseline": 60,
+    "non_valid_rows": 0,
+    "partial_episodes_counted_as_behavioral": 0,
+    "verdict": "accounting_intact_post_fresh_attempt_r2_dispatch"
+  },
+  "fresh_attempt_dispatch_note": "16 held lanes on attempt0021-0036 plus c8m10 retry attempt0037; no episode loss from PVC lock root-cause churn",
+  "productive_lane_integrity": {
+    "c8m13": {"observed": 38, "queued": 0, "status": "lane_complete_ledger_intact"},
+    "c8m14": {"observed": 38, "queued": 0, "status": "lane_complete_ledger_intact"},
+    "c8m05": {"observed": 39, "queued": 0, "status": "lane_complete_sim_complete"},
+    "c8m16": {"observed": 38, "queued": 0, "status": "lane_complete_sim_complete"},
+    "c8m00": {"observed": 8, "queued": 31, "status": "fresh_attempt0021_sim_warming"}
+  }
+}

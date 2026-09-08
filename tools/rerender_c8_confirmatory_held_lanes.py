@@ -23,18 +23,21 @@ def _load_completed_episode_ids(ledger_path: Path) -> set[str]:
     return completed
 
 
-def _lane_attempt_map() -> dict[str, str]:
+def _lane_attempt_map(
+    *,
+    only_lanes: frozenset[str] | None = None,
+    start_attempt_index: int = 21,
+) -> dict[str, str]:
     create = json.loads(
         (EXEC / "create-confirmatory-c8main20260908a.json").read_text(encoding="utf-8")
     )
-    completed = _load_completed_episode_ids(
-        EXEC / "confirmatory-ledger-20260908e/accepted_ledger.jsonl"
-    )
     mapping: dict[str, str] = {}
-    attempt_index = 21
+    attempt_index = start_attempt_index
     for assignment in create["lane_assignments"]:
         lane_id = assignment["lane_id"]
         if lane_id in PROTECT or lane_id in SKIP_COMPLETE:
+            continue
+        if only_lanes is not None and lane_id not in only_lanes:
             continue
         mapping[lane_id] = f"attempt{attempt_index:04d}"
         attempt_index += 1
@@ -45,6 +48,10 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--render-only", action="store_true")
     parser.add_argument("--dispatch-only", action="store_true")
+    parser.add_argument("--lanes", type=str, default="", help="Comma-separated lane ids (default: all held)")
+    parser.add_argument("--start-attempt-index", type=int, default=21)
+    parser.add_argument("--render-root", type=Path, default=None)
+    parser.add_argument("--receipt-out", type=Path, default=None)
     args = parser.parse_args(argv)
 
     if str(ROOT) not in sys.path:
@@ -73,7 +80,8 @@ def main(argv: list[str] | None = None) -> int:
     pvc = "211247-prod-pvc"
     output_parent = "/data/users/ali/vla_wam/raw/v4/c8-second-stack-main"
     pvc_publisher_pod = "211247-ali-b200-1gpu"
-    render_root = EXEC / "rendered-confirmatory-r2"
+    only_lanes = frozenset(p.strip() for p in args.lanes.split(",") if p.strip()) or None
+    render_root = args.render_root or EXEC / "rendered-confirmatory-r2"
     protect_list_path = (
         ROOT
         / "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_sweep_protect_list_20260908_phase2.json"
@@ -109,7 +117,10 @@ def main(argv: list[str] | None = None) -> int:
     completed = _load_completed_episode_ids(
         EXEC / "confirmatory-ledger-20260908e/accepted_ledger.jsonl"
     )
-    lane_attempt_map = _lane_attempt_map()
+    lane_attempt_map = _lane_attempt_map(
+        only_lanes=only_lanes,
+        start_attempt_index=args.start_attempt_index,
+    )
     cluster = ClusterBinding(
         kube_context=kube_context,
         namespace=namespace,
@@ -260,7 +271,7 @@ def main(argv: list[str] | None = None) -> int:
         "render_outcomes": outcomes,
         "dispatch_outcomes": dispatch_outcomes,
     }
-    receipt_path = EXEC / "create-confirmatory-fresh-attempt-20260908r2.json"
+    receipt_path = args.receipt_out or EXEC / "create-confirmatory-fresh-attempt-20260908r2.json"
     receipt_path.write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps(receipt, indent=2))
     return 0

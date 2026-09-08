@@ -1,0 +1,107 @@
+{
+  "complete_lanes_skipped": [
+    "c8m13",
+    "c8m14"
+  ],
+  "dispatch_outcomes": [
+    {
+      "attempt_id": "attempt0037",
+      "bundle_root": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r2b/c8m10-attempt0037-a40-single-container-groot-bridge",
+      "job_actions": [
+        {
+          "action": "apply_rendered_job",
+          "applied": true,
+          "job": "v4-c8m10-attempt0037-843901b342-sim",
+          "lane_id": "c8m10",
+          "message": "job.batch/v4-c8m10-attempt0037-843901b342-sim created",
+          "policy_suspended_on_create": false,
+          "rendered_from": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r2b/c8m10-attempt0037-a40-single-container-groot-bridge/simulator-job.yaml",
+          "role": "simulator",
+          "sim_first": true
+        },
+        {
+          "action": "apply_rendered_job",
+          "applied": true,
+          "job": "v4-c8m10-attempt0037-843901b342-policy",
+          "lane_id": "c8m10",
+          "message": "job.batch/v4-c8m10-attempt0037-843901b342-policy created",
+          "policy_suspended_on_create": true,
+          "rendered_from": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r2b/c8m10-attempt0037-a40-single-container-groot-bridge/policy-job.yaml",
+          "role": "policy",
+          "sim_first": true
+        }
+      ],
+      "lane_id": "c8m10",
+      "status": "dispatched",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0037",
+              "v4-config-sha": "843901b342fe617b0380270e34e90332",
+              "v4-lane-id": "c8m10"
+            },
+            "name": "v4-c8m10-attempt0037-843901b342-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0037",
+              "v4-config-sha": "843901b342fe617b0380270e34e90332",
+              "v4-lane-id": "c8m10",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c8m10-attempt0037-843901b342-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0037",
+              "v4-config-sha": "843901b342fe617b0380270e34e90332",
+              "v4-lane-id": "c8m10",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c8m10-attempt0037-843901b342-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0037",
+              "v4-config-sha": "843901b342fe617b0380270e34e90332",
+              "v4-lane-id": "c8m10",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c8m10-attempt0037-843901b342-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    }
+  ],
+  "lane_attempt_map": {
+    "c8m10": "attempt0037"
+  },
+  "protected_lanes": [
+    "c8m05",
+    "c8m16"
+  ],
+  "render_outcomes": [
+    {
+      "attempt_id": "attempt0037",
+      "bundle_root": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r2b/c8m10-attempt0037-a40-single-container-groot-bridge",
+      "lane_id": "c8m10",
+      "launch_hash": "d714f8cfc15e491ecf8213ee41d4f37825e4749e0370a31a09984aff40ae4903",
+      "prior_attempt_id": "attempt0011",
+      "pvc_binding_root": "/data/users/ali/vla_wam/raw/v4/c8-second-stack-main/.coord-bindings/c8m10/attempt0037",
+      "remaining_episode_count": 38,
+      "status": "rendered"
+    }
+  ],
+  "render_output_root": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r2b",
+  "schema_version": "v4-c8-fresh-attempt-rerender-dispatch-v1"
+}

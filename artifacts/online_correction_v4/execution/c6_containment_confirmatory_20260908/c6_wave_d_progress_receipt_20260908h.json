@@ -1,0 +1,43 @@
+{
+  "schema_version": "v4-c6-wave-progress-receipt-v1",
+  "compiled_at_utc": "2026-09-08T04:45:00Z",
+  "wave_id": "c6confirm20260908f",
+  "wave_label": "D",
+  "confirmatory_terminals": 77,
+  "milestones": {
+    "32": "passed",
+    "128": "pending",
+    "384": "pending"
+  },
+  "grasp_rate_by_scenario": {
+    "destination_static": {
+      "episodes": 25,
+      "grasp_rate_c6_rule_pct": 20.0,
+      "grasp_rate_transport_incomplete_only_pct": 20.0,
+      "wrong_goal_region_share_pct": 0.0,
+      "c8_reference_at_161_ti_only_pct": 7.8
+    },
+    "move_stop": {
+      "episodes": 28,
+      "grasp_rate_c6_rule_pct": 10.7,
+      "grasp_rate_transport_incomplete_only_pct": 10.7,
+      "wrong_goal_region_share_pct": 0.0,
+      "c8_reference_at_161_ti_only_pct": 3.6
+    },
+    "original_sham": {
+      "episodes": 24,
+      "grasp_rate_c6_rule_pct": 16.7,
+      "grasp_rate_transport_incomplete_only_pct": 12.5,
+      "wrong_goal_region_share_pct": 4.2,
+      "c8_reference_at_161_ti_only_pct": 1.8
+    }
+  },
+  "grasp_definition_notes": {
+    "c6_rule": "failure_label != no_grasp",
+    "c8_comparable": "failure_label == transport_incomplete only (C8 has zero wrong_goal_region across 407 eps per Agent A)",
+    "agent_a_alignment": "original_sham C6-rule 16.7% vs TI-only 12.5% at n=77; gap vs C8 survives alignment"
+  },
+  "ordering_note": "At n=77 ordering SHIFTED from prior milestones: destination_static leads (20.0% C6-rule / 20.0% TI-only), original_sham second (16.7% / 12.5%), move_stop last (10.7%). Earlier n=56/63 had original_sham first — may be small-n noise converging toward C8 ordering (destination_static > move_stop ≈ original_sham). Report raw ordering at each milestone without smoothing.",
+  "healthy_pairs_observed": 9,
+  "supersedes": "c6_wave_d_progress_receipt_20260908g.json"
+}

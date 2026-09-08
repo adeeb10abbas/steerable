@@ -2,7 +2,15 @@
   "schema_version": "v4-grasp-definition-consistency-audit-v1",
   "compiled_at_utc": "2026-09-08T04:35:00Z",
   "question": "Are C6 (Isaac/DROID) and C8 (WidowX/Bridge) grasp rates comparable, or confounded by different outcome-label definitions?",
-  "verdict": "DEFINITIONS_MATCH — operational grasp rate uses the same rule on both platforms; magnitude gap is not from a reporting artifact.",
+  "verdict": "DEFINITIONS_CLOSE_BUT_NOT_IDENTICAL_IN_EFFECT — shared scorer and C6-rule match; C8-comparable cell uses transport_incomplete only because C8 has zero wrong_goal_region.",
+  "agent_a_audit_correction": {
+    "c8_wrong_goal_region_across_407_eps": 0,
+    "c8_grasp_count_basis": "entirely transport_incomplete",
+    "c6_includes_in_grasp_rule": ["transport_incomplete", "wrong_goal_region", "grasp_lost", "etc."],
+    "original_sham_example_at_n73": {"c6_rule_pct": 17.4, "transport_incomplete_only_pct": 13.0},
+    "platform_gap_survives_alignment": true,
+    "action": "Report both C6-rule and transport_incomplete-only rates at 128 and 384 milestones; track wrong_goal_region_share per scenario as n grows"
+  },
   "operational_grasp_rate_definition": {
     "rule": "grasp_achieved := (failure_label != 'no_grasp')",
     "includes_labels": [

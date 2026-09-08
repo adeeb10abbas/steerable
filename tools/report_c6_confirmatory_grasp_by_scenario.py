@@ -14,11 +14,20 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 SCENARIOS = ("original_sham", "destination_static", "move_stop")
+TRANSPORT_INCOMPLETE = "transport_incomplete"
+WRONG_GOAL_REGION = "wrong_goal_region"
 
 
 def scan_terminals(attempts_root: Path) -> dict:
     by_scenario: dict[str, dict] = defaultdict(
-        lambda: {"episodes": 0, "grasp_achieved": 0, "no_grasp": 0, "outcomes": defaultdict(int)}
+        lambda: {
+            "episodes": 0,
+            "grasp_achieved_c6_rule": 0,
+            "grasp_achieved_transport_incomplete_only": 0,
+            "wrong_goal_region": 0,
+            "no_grasp": 0,
+            "outcomes": defaultdict(int),
+        }
     )
     for complete in attempts_root.rglob("COMPLETE.json"):
         episode_json = complete.parent / "episode.json"
@@ -33,21 +42,45 @@ def scan_terminals(attempts_root: Path) -> dict:
         if label == "no_grasp":
             bucket["no_grasp"] += 1
         else:
-            bucket["grasp_achieved"] += 1
+            bucket["grasp_achieved_c6_rule"] += 1
+        if label == TRANSPORT_INCOMPLETE:
+            bucket["grasp_achieved_transport_incomplete_only"] += 1
+        if label == WRONG_GOAL_REGION:
+            bucket["wrong_goal_region"] += 1
     payload = {
         "terminals": sum(v["episodes"] for v in by_scenario.values()),
+        "grasp_definition_notes": {
+            "c6_rule": "failure_label != no_grasp (includes wrong_goal_region, transport_incomplete, etc.)",
+            "transport_incomplete_only": "failure_label == transport_incomplete (C8-comparable cell; C8 has zero wrong_goal_region)",
+            "wrong_goal_region_share": "wrong_goal_region / episodes per scenario",
+        },
         "by_scenario": {},
     }
     for scenario in SCENARIOS:
-        bucket = by_scenario.get(scenario, {"episodes": 0, "grasp_achieved": 0, "no_grasp": 0, "outcomes": {}})
+        bucket = by_scenario.get(
+            scenario,
+            {
+                "episodes": 0,
+                "grasp_achieved_c6_rule": 0,
+                "grasp_achieved_transport_incomplete_only": 0,
+                "wrong_goal_region": 0,
+                "no_grasp": 0,
+                "outcomes": {},
+            },
+        )
         eps = int(bucket["episodes"])
-        grasp = int(bucket["grasp_achieved"])
+        grasp_c6 = int(bucket["grasp_achieved_c6_rule"])
+        grasp_ti = int(bucket["grasp_achieved_transport_incomplete_only"])
+        wgr = int(bucket["wrong_goal_region"])
         payload["by_scenario"][scenario] = {
             "episodes": eps,
-            "grasp_achieved": grasp,
+            "grasp_achieved_c6_rule": grasp_c6,
+            "grasp_rate_c6_rule_pct": round(100 * grasp_c6 / max(eps, 1), 1),
+            "grasp_achieved_transport_incomplete_only": grasp_ti,
+            "grasp_rate_transport_incomplete_only_pct": round(100 * grasp_ti / max(eps, 1), 1),
+            "wrong_goal_region_count": wgr,
+            "wrong_goal_region_share_pct": round(100 * wgr / max(eps, 1), 1),
             "no_grasp": int(bucket["no_grasp"]),
-            "grasp_rate": round(grasp / max(eps, 1), 4),
-            "grasp_rate_pct": round(100 * grasp / max(eps, 1), 1),
             "outcomes": dict(bucket["outcomes"]),
         }
     return payload

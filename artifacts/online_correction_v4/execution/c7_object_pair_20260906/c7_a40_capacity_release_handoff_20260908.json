@@ -1,0 +1,15 @@
+{
+  "schema_version": "v4-a40-capacity-handoff-post-c7-v1",
+  "compiled_at_utc": "2026-09-08T12:45:00Z",
+  "trigger": "C7 confirmatory FINAL 768/768 complete; all 14 r6 A40 sim lanes torn down",
+  "freed_resources": {
+    "a40_simulator_gpus": 14,
+    "a10080_policy_gpus_from_c7_lanes": 14,
+    "note": "C6 uses A100-40/B200 stratum only — does not consume A40"
+  },
+  "beneficiary": "C8 confirmatory (second_stack, 2×A40 per pair)",
+  "c8_remaining_episodes_approx": 564,
+  "routing_decision": "Route freed A40 pool headroom to C8 lane ramp per c7_released_shard_sequencing_plan phase 5_route_a40_to_c8",
+  "coordination_target": "capacity agent / enforce_v4_capacity_arbitration --policy c8_a40_spread",
+  "protect_list_note": "Remove or downgrade c7_retry_shards_in_flight_do_not_preempt entries now that r6 is complete"
+}

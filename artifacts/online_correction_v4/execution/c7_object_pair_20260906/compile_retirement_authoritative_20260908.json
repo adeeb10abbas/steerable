@@ -1,14 +1,26 @@
 {
-  "authoritative_compile": "compiled_ledger_20260908_FINAL",
-  "authoritative_receipt": "artifacts/online_correction_v4/execution/c7_object_pair_20260906/compiled_ledger_20260908_FINAL_receipt.json",
-  "authoritative_manifest": "compile_retirement_authoritative_20260908.json",
-  "status": "authoritative",
-  "receipt_sync_status": "synced",
+  "schema_version": "v4-c7-compile-retirement-v1",
   "campaign_id": "online_correction_v4",
   "family_id": "C7",
-  "final_compile_path": "/data/users/ali/vla_wam/raw/v4/c7-object-pair-main/compiled_ledger_20260908_FINAL",
+  "status": "authoritative",
+  "authoritative_compile": {
+    "compile_id": "compiled_ledger_20260908_FINAL",
+    "pvc_path": "/data/users/ali/vla_wam/raw/v4/c7-object-pair-main/compiled_ledger_20260908_FINAL",
+    "require_full_coverage": true,
+    "accepted_rows": 768,
+    "composition": {
+      "no_grasp": 761,
+      "transport_incomplete": 3,
+      "wrong_goal_region": 2,
+      "support_or_containment_failed": 2,
+      "success": 0
+    },
+    "receipt": "compiled_ledger_20260908_FINAL_receipt.json",
+    "agent_c_handoff": "c7_agent_c_handoff_pending_final_20260908.json"
+  },
+  "retired_at_utc": "2026-09-08T12:45:00Z",
+  "receipt_sync_status": "synced",
   "note": "Partial compiles below are non-authoritative progress snapshots. Only compiled_ledger_20260908_FINAL with require-full-coverage at 768/768 may be cited in paper exports.",
-  "retired_at_utc": "2026-09-08T12:30:00Z",
   "retired_partials": [
     {
       "composition": {"no_grasp": 544, "transport_incomplete": 4},
@@ -30,12 +42,16 @@
       "superseded_by": "compiled_ledger_20260908_FINAL"
     },
     {
-      "composition": {"no_grasp": 574, "support_or_containment_failed": 1, "transport_incomplete": 3, "wrong_goal_region": 2},
+      "composition": {
+        "no_grasp": 574,
+        "support_or_containment_failed": 1,
+        "transport_incomplete": 3,
+        "wrong_goal_region": 2
+      },
       "path": "/data/users/ali/vla_wam/raw/v4/c7-object-pair-main/compiled_ledger_20260908m",
       "rows": 580,
       "status": "latest_partial_not_final",
       "superseded_by": "compiled_ledger_20260908_FINAL"
     }
-  ],
-  "schema_version": "v4-c7-compile-retirement-v1"
+  ]
 }

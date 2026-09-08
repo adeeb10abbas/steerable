@@ -581,6 +581,8 @@ def render_job(
     prestop_wait_seconds: int,
     kube_context: str,
     gpu_product_allowlist: Sequence[str] | None = None,
+    placement_policy: Mapping[str, Any] | None = None,
+    protected_c7_lanes: Sequence[str] | None = None,
 ) -> str:
     env = common_env(
         role=role, lane=lane, attempt=attempt, output_parent=output_parent,
@@ -591,6 +593,15 @@ def render_job(
     if role == "policy":
         env.append({"name": "POLICY_PORT", "value": str(policy_port)})
     role_labels = {**common_labels, "v4-lane-role": role}
+    placement_rows: list[str] = []
+    if placement_policy is not None:
+        placement_rows, spread_labels = gpu_scheduling.render_pod_placement_yaml(
+            placement_policy=placement_policy,
+            role=role,
+            protected_c7_lanes=protected_c7_lanes,
+            indent="      ",
+        )
+        role_labels.update(spread_labels)
     rows = ["apiVersion: batch/v1", "kind: Job", "metadata:"]
     rows += metadata_lines(name, namespace, role_labels, "  ")
     rows += [
@@ -603,6 +614,7 @@ def render_job(
         gpu_product_allowlist=gpu_product_allowlist,
         indent="      ",
     )
+    rows += placement_rows
     rows += ["      tolerations:", "        - key: nvidia.com/gpu", "          operator: Equal", '          value: "present"', "          effect: NoSchedule"]
     rows += ["      securityContext:", "        fsGroup: 2518800", "        supplementalGroups: [2518800]", "        seccompProfile:", "          type: RuntimeDefault"]
     rows += ["      imagePullSecrets:", f"        - name: {yaml_scalar(image_pull_secret)}", "      containers:", f"        - name: {role}", f"          image: {yaml_scalar(image)}", "          imagePullPolicy: IfNotPresent"]
@@ -772,6 +784,30 @@ def render(spec_path: Path, output_root: Path) -> dict[str, str]:
     policy_json, simulator_json = canonical_json(policy_doc), canonical_json(simulator_doc)
     policy_sha, simulator_sha = sha256_bytes(policy_json.encode()), sha256_bytes(simulator_json.encode())
     bundle_sha = sha256_bytes((policy_sha + simulator_sha + immutable_identity_sha).encode())
+    placement_policy = gpu_scheduling.resolve_placement_policy(spec)
+    protected_c7_lanes = (
+        gpu_scheduling.protected_c7_lane_ids(gpu_scheduling.load_protect_list())
+        if placement_policy is not None
+        else None
+    )
+    job_common = dict(
+        namespace=namespace,
+        configmap=configmap,
+        scripts_configmap=scripts_configmap,
+        image=image,
+        image_digest=image_digest,
+        lane=lane,
+        attempt=attempt,
+        output_parent=output_parent,
+        policy_port=policy_port,
+        pvc=pvc,
+        image_pull_secret=image_pull_secret,
+        entrypoint=entrypoint,
+        prestop_wait_seconds=prestop_wait_seconds,
+        kube_context=kube_context,
+        placement_policy=placement_policy,
+        protected_c7_lanes=protected_c7_lanes,
+    )
     files = {
         "configmap.yaml": render_configmap(name=configmap, namespace=namespace, common_labels=common_labels, policy_json=policy_json, simulator_json=simulator_json, image_digest=image_digest, spec_sha=spec_sha, renderer_sha=renderer_sha, immutable_identity_sha=immutable_identity_sha, bundle_sha=bundle_sha, kube_context=kube_context),
         "scripts-configmap.yaml": render_scripts_configmap(
@@ -780,9 +816,9 @@ def render(spec_path: Path, output_root: Path) -> dict[str, str]:
             common_labels=common_labels,
             scripts=runtime_scripts,
         ),
-        "policy-job.yaml": render_job(role="policy", name=policy_job, namespace=namespace, common_labels=policy_labels, configmap=configmap, scripts_configmap=scripts_configmap, image=image, image_digest=image_digest, gpu_product_value=policy_doc["gpu_product"], lane=lane, attempt=attempt, output_parent=output_parent, launch_sha=policy_sha, runtime=runtime["policy"], policy_port=policy_port, pvc=pvc, image_pull_secret=image_pull_secret, entrypoint=entrypoint, prestop_wait_seconds=prestop_wait_seconds, kube_context=kube_context),
+        "policy-job.yaml": render_job(role="policy", name=policy_job, common_labels=policy_labels, gpu_product_value=policy_doc["gpu_product"], launch_sha=policy_sha, runtime=runtime["policy"], **job_common),
         "policy-service.yaml": render_service(name=policy_service, namespace=namespace, common_labels=policy_labels, port=policy_port),
-        "simulator-job.yaml": render_job(role="simulator", name=simulator_job, namespace=namespace, common_labels=simulator_labels, configmap=configmap, scripts_configmap=scripts_configmap, image=image, image_digest=image_digest, gpu_product_value=simulator_doc["gpu_product"], lane=lane, attempt=attempt, output_parent=output_parent, launch_sha=simulator_sha, runtime=runtime["simulator"], policy_port=policy_port, pvc=pvc, image_pull_secret=image_pull_secret, entrypoint=entrypoint, prestop_wait_seconds=prestop_wait_seconds, kube_context=kube_context),
+        "simulator-job.yaml": render_job(role="simulator", name=simulator_job, common_labels=simulator_labels, gpu_product_value=simulator_doc["gpu_product"], launch_sha=simulator_sha, runtime=runtime["simulator"], **job_common),
         "kustomization.yaml": "apiVersion: kustomize.config.k8s.io/v1beta1\nkind: Kustomization\nresources:\n  - configmap.yaml\n  - scripts-configmap.yaml\n  - policy-service.yaml\n  - policy-job.yaml\n  - simulator-job.yaml\n",
     }
     canonical_scripts = sorted((DEFAULT_ROOT / "scripts").glob("*.py"))

@@ -20,6 +20,7 @@ if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 
 import v4_capacity_arbitration as arbitration  # noqa: E402
+import v4_gpu_scheduling as gpu_scheduling  # noqa: E402
 
 DEFAULT_RECEIPT = (
     ROOT / "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_pool_sweep_receipt.json"
@@ -325,19 +326,54 @@ def _delete_job(*, job_name: str, kube_context: str, namespace: str, dry_run: bo
     return completed.returncode == 0
 
 
+def filter_protected_rows(
+    rows: Sequence[Mapping[str, Any]],
+    *,
+    protect_list: Mapping[str, Any],
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    allowed: list[dict[str, Any]] = []
+    skipped: list[dict[str, Any]] = []
+    for row in rows:
+        lane_id = str(row.get("lane_id") or "")
+        attempt_id = str(row.get("attempt_id") or "")
+        if gpu_scheduling.is_lane_protected(
+            lane_id=lane_id,
+            attempt_id=attempt_id,
+            protect_list=protect_list,
+        ):
+            skipped.append({**dict(row), "reason_code": "protect_list_preserved"})
+        else:
+            allowed.append(dict(row))
+    return allowed, skipped
+
+
 def reclaim_detected(
     detection: Mapping[str, Any],
     *,
     kube_context: str,
     namespace: str,
     dry_run: bool,
+    protect_list: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     actions: list[dict[str, Any]] = []
     reclaimed_gpus: Counter[str] = Counter()
+    protect_list = protect_list or gpu_scheduling.load_protect_list()
 
     def reclaim_rows(rows: Sequence[Mapping[str, Any]], *, default_reason: str) -> None:
+        allowed, skipped = filter_protected_rows(rows, protect_list=protect_list)
+        for row in skipped:
+            actions.append(
+                {
+                    "action": "skip_reclaim",
+                    "job": row.get("job"),
+                    "lane_id": row.get("lane_id"),
+                    "attempt_id": row.get("attempt_id"),
+                    "reason_code": "protect_list_preserved",
+                    "deleted": False,
+                }
+            )
         seen_jobs: set[str] = set()
-        for row in rows:
+        for row in allowed:
             job = str(row.get("job") or "")
             if not job or job in seen_jobs:
                 continue
@@ -388,6 +424,7 @@ def reclaim_detected(
         "reclaimed_gpus_by_product": dict(reclaimed_gpus),
         "reclaimed_gpu_total": sum(reclaimed_gpus.values()),
         "jobs_deleted": sum(1 for action in actions if action.get("deleted")),
+        "protect_list_path": str(gpu_scheduling.DEFAULT_PROTECT_LIST.relative_to(ROOT)),
     }
 
 
@@ -445,12 +482,20 @@ def run_gpu_pool_sweep(
     namespace: str,
     dry_run: bool,
     c7_remaining_episodes: int = 188,
+    protect_list_path: Path | None = None,
 ) -> dict[str, Any]:
+    protect_list = gpu_scheduling.load_protect_list(protect_list_path)
     raw_pods = fetch_pods(kube_context=kube_context, namespace=namespace)
     pods = [parsed for parsed in (parse_pod(item) for item in raw_pods) if parsed is not None]
     before_usage = summarize_gpu_usage(pods)
     detection = detect_lane_mismatches(pods)
-    reclaim = reclaim_detected(detection, kube_context=kube_context, namespace=namespace, dry_run=dry_run)
+    reclaim = reclaim_detected(
+        detection,
+        kube_context=kube_context,
+        namespace=namespace,
+        dry_run=dry_run,
+        protect_list=protect_list,
+    )
     if not dry_run:
         raw_pods = fetch_pods(kube_context=kube_context, namespace=namespace)
         pods = [parsed for parsed in (parse_pod(item) for item in raw_pods) if parsed is not None]
@@ -475,6 +520,11 @@ def run_gpu_pool_sweep(
         },
         "wall_clock_estimates": estimate_wall_clocks(c7_remaining=c7_remaining_episodes),
         "confirmatory_handoff_plan": handoff,
+        "protect_list": {
+            "path": str((protect_list_path or gpu_scheduling.DEFAULT_PROTECT_LIST).relative_to(ROOT)),
+            "productive_c7_pairs": len(protect_list.get("productive_c7_lane_pairs") or []),
+            "retry_shards": len(protect_list.get("c7_retry_shards_in_flight_do_not_preempt") or []),
+        },
     }
 
 

@@ -435,14 +435,27 @@ def build_c8_capacity_matrix(*, c7_sim_lanes_running: int) -> dict[str, Any]:
         },
         "capacity_finding": (
             "C8 cannot use A100-80GB or B200 under its G4-attested A40 GR00T Bridge stratum. "
-            f"With C7 at its {C7_NORMAL_LANE_CEILING}-lane ceiling the entire A40 pool is consumed "
-            "by C7 simulators, so C8 lanes queue until C7 releases A40. After C7 completes, up to "
-            f"{concurrent_after_c7} concurrent C8 lane pairs ({concurrent_after_c7 * A40_GPUS_PER_C8_LANE} "
-            f"A40 GPUs) are authorized."
+            "Pending pods with pool-wide A40 headroom indicate per-node fragmentation plus C7 "
+            "A40 occupancy; apply placement_policy c8_a40_spread. Lane pairs are 2×1-GPU pods "
+            "(planning unit), not atomically co-scheduled 2-GPU requests. After C7 completes, "
+            f"up to {concurrent_after_c7} concurrent C8 lane pairs are authorized."
         ),
+        "placement_policy": {
+            "renderer_field": "placement_policy",
+            "policy_id": "c8_a40_spread",
+            "enforce_command": (
+                ".venv/bin/python tools/enforce_v4_capacity_arbitration.py "
+                "--mode gpu_placement --policy c8_a40_spread"
+            ),
+            "protect_list": (
+                "artifacts/online_correction_v4/execution/gpu_widen_20260908/"
+                "gpu_sweep_protect_list_20260908.json"
+            ),
+        },
         "c8_agent_dispatch_note": (
-            "Dispatch all eight pilot lanes g7c8p00-g7c8p07; admission will not delete them. "
-            "Lanes beyond current A40 headroom remain Pending until C7 simulators release GPUs."
+            "Set placement_policy: c8_a40_spread in C8 lane render specs. Admission preserves "
+            "healthy pairs and honors gpu_sweep_protect_list_20260908.json. Pending lanes without "
+            "spread are replaced via enforce --mode gpu_placement."
         ),
     }
 

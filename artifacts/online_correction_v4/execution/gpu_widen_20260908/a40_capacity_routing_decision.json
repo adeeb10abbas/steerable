@@ -7,44 +7,44 @@
   },
   "c6_sim_ready_policy_waiting": 0,
   "c7_a40_sims_reserved": 0,
-  "c7_active_lanes_for_estimate": 14,
-  "c7_r6_reshard_lanes_observed": 14,
+  "c7_active_lanes_for_estimate": 4,
+  "c7_r6_reshard_lanes_observed": 0,
   "c7_tail_lanes_legacy": 4,
   "c8_authorized_lane_pairs": 20,
   "c8_healthy_pairs_observed": 0,
   "c8_sim_ready_policy_waiting": 0,
-  "decision": "split_a40_r6_reshard_plus_c8_ramp",
-  "observed_at_utc": "2026-09-08T12:52:21Z",
-  "reshard_feasible": "yes_agent_b_rendered_r6_dispatched",
-  "reshard_note": "Agent B r6 resharding live on 14 lane identities (attempt0611-0624). Remaining A40 routed to C8 up to 20 pairs.",
+  "decision": "route_bulk_a40_to_c8_while_c7_tail_runs_4_lanes",
+  "observed_at_utc": "2026-09-08T14:59:37Z",
+  "reshard_feasible": "yes_pending_dispatch",
+  "reshard_note": "Interim: C7 tail on c7m01/02/05/31 (attempt0607-0610) until r6 dispatch completes. Route remaining A40 to C8 up to 20 pairs.",
   "scheduling_state": {
     "c6": {
-      "healthy_pairs": 9,
+      "healthy_pairs": 0,
       "lane_prefix": "c6m",
-      "partial_pairs": 11,
+      "partial_pairs": 0,
       "pending_pairs": 0,
-      "total_lanes_seen": 20
+      "total_lanes_seen": 0
     },
     "c7": {
       "healthy_pairs": 0,
       "lane_prefix": "c7m",
-      "partial_pairs": 14,
+      "partial_pairs": 0,
       "pending_pairs": 0,
-      "total_lanes_seen": 14
+      "total_lanes_seen": 0
     },
     "c8": {
       "healthy_pairs": 0,
       "lane_prefix": "c8m",
-      "partial_pairs": 20,
+      "partial_pairs": 0,
       "pending_pairs": 0,
-      "total_lanes_seen": 20
+      "total_lanes_seen": 0
     }
   },
   "schema_version": "v4-a40-capacity-routing-decision-v1",
   "wall_clock_estimates": {
-    "c6_confirmatory_hours_at_healthy_pairs": 35.6,
+    "c6_confirmatory_hours_at_healthy_pairs": 320.0,
     "c7_tail_188_hours_at_4_lanes": 19.6,
-    "c7_tail_188_hours_at_active_lanes": 5.6,
+    "c7_tail_188_hours_at_active_lanes": 19.6,
     "c7_tail_188_hours_if_r6_14_lanes": 5.6,
     "c8_remaining_hours_at_current_healthy": 235.0,
     "c8_remaining_hours_at_max_authorized_pairs": 11.8,

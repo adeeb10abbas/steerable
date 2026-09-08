@@ -1,13 +1,22 @@
 {
-  "attempt_range": "attempt0300-attempt0331",
+  "attempt_range": "attempt0332-attempt0361",
   "failed_lane_count": 0,
   "failed_lanes": [],
   "lock_clear": {
-    "removed_count": 26
+    "removed_count": 0
   },
-  "plan_receipt": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/create-c6confirm20260908f-reshard-r8.json",
+  "plan_receipt": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/create-c6confirm20260908f-reshard-r9.json",
   "recovery_actions": [],
   "root_cause": "Sim-first deadlock: policies Suspended until paired sim Running; sims that fail /healthz never unsuspend policy. Requires explicit sim delete+recreate (same class as C7 r6).",
   "schema_version": "v4-c6-tail-recovery-v1",
-  "sim_first_gate": []
+  "sim_first_gate": [
+    {
+      "action": "suspend_until_sim_running",
+      "job": "v4-c6m18-attempt0350-c2297396ce-policy",
+      "lane_id": "c6m18",
+      "reason_code": "sim_first_gate",
+      "role": "policy",
+      "suspended": true
+    }
+  ]
 }

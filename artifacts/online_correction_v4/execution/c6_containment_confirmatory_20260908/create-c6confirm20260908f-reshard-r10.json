@@ -1,0 +1,170 @@
+{
+  "attempt_range": "attempt0362-attempt0364",
+  "authorized_lane_count": 32,
+  "authorized_matrix_cap": "launch_matrix release_boundary: 32 qualified lanes for 768 frozen C6 rows \u2014 at cap, not exceeded",
+  "completed_on_pvc": 381,
+  "dispatch_outcomes": [
+    {
+      "attempt_id": "attempt0362",
+      "bundle_root": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f-reshard-r10/c6m00-attempt0362-a10040-policy_b200-simulator",
+      "episode_count": 1,
+      "job_actions": [
+        {
+          "applied": true,
+          "job": "v4-c6m00-attempt0362-9cca3f44e7-sim"
+        },
+        {
+          "applied": true,
+          "job": "v4-c6m00-attempt0362-9cca3f44e7-policy"
+        }
+      ],
+      "lane_id": "c6m00"
+    },
+    {
+      "attempt_id": "attempt0363",
+      "bundle_root": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f-reshard-r10/c6m01-attempt0363-a10040-policy_b200-simulator",
+      "episode_count": 1,
+      "job_actions": [
+        {
+          "applied": true,
+          "job": "v4-c6m01-attempt0363-16057a9f19-sim"
+        },
+        {
+          "applied": true,
+          "job": "v4-c6m01-attempt0363-16057a9f19-policy"
+        }
+      ],
+      "lane_id": "c6m01"
+    },
+    {
+      "attempt_id": "attempt0364",
+      "bundle_root": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f-reshard-r10/c6m02-attempt0364-a10040-policy_b200-simulator",
+      "episode_count": 1,
+      "job_actions": [
+        {
+          "applied": true,
+          "job": "v4-c6m02-attempt0364-0526a86906-sim"
+        },
+        {
+          "applied": true,
+          "job": "v4-c6m02-attempt0364-0526a86906-policy"
+        }
+      ],
+      "lane_id": "c6m02"
+    }
+  ],
+  "lanes_dispatched": 3,
+  "lock_clear": {
+    "removed_count": 0
+  },
+  "max_episodes_per_lane": 1,
+  "plan": [
+    {
+      "attempt_id": "attempt0362",
+      "bundle_root": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f-reshard-r10/c6m00-attempt0362-a10040-policy_b200-simulator",
+      "episode_count": 1,
+      "lane_id": "c6m00"
+    },
+    {
+      "attempt_id": "attempt0363",
+      "bundle_root": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f-reshard-r10/c6m01-attempt0363-a10040-policy_b200-simulator",
+      "episode_count": 1,
+      "lane_id": "c6m01"
+    },
+    {
+      "attempt_id": "attempt0364",
+      "bundle_root": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f-reshard-r10/c6m02-attempt0364-a10040-policy_b200-simulator",
+      "episode_count": 1,
+      "lane_id": "c6m02"
+    }
+  ],
+  "prior_tail_dispatch_superseded": "create-c6confirm20260908f-wave-d-tail.json (attempt0226-0257)",
+  "queue_episodes": 384,
+  "remaining_episodes": 3,
+  "render_output_root": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f-reshard-r10",
+  "resharding_reason": "C7/C8 complete; cluster free. Remaining episodes were draining through ~11 healthy lanes while 11+ lanes had Complete/Failed sims idle. Re-shard 438 tail across all 32 authorized lanes.",
+  "schema_version": "v4-c6-confirmatory-reshard-v1",
+  "sim_first_gate": [
+    {
+      "action": "unsuspend_policy_sim_ready",
+      "job": "v4-c6m00-attempt0362-9cca3f44e7-policy",
+      "lane_id": "c6m00",
+      "unsuspended": true
+    },
+    {
+      "action": "unsuspend_policy_sim_ready",
+      "job": "v4-c6m01-attempt0363-16057a9f19-policy",
+      "lane_id": "c6m01",
+      "unsuspended": true
+    },
+    {
+      "action": "unsuspend_policy_sim_ready",
+      "job": "v4-c6m02-attempt0364-0526a86906-policy",
+      "lane_id": "c6m02",
+      "unsuspended": true
+    }
+  ],
+  "teardown_jobs": [
+    "v4-c6m00-attempt0332-0f636a979e-policy",
+    "v4-c6m00-attempt0332-0f636a979e-sim",
+    "v4-c6m01-attempt0333-1165e303c3-policy",
+    "v4-c6m01-attempt0333-1165e303c3-sim",
+    "v4-c6m02-attempt0334-84e2d998d8-policy",
+    "v4-c6m02-attempt0334-84e2d998d8-sim",
+    "v4-c6m03-attempt0335-9bfee14ae1-policy",
+    "v4-c6m03-attempt0335-9bfee14ae1-sim",
+    "v4-c6m04-attempt0336-2776b375b4-policy",
+    "v4-c6m04-attempt0336-2776b375b4-sim",
+    "v4-c6m05-attempt0337-42fac6febf-policy",
+    "v4-c6m05-attempt0337-42fac6febf-sim",
+    "v4-c6m06-attempt0338-1e3e5931e2-policy",
+    "v4-c6m06-attempt0338-1e3e5931e2-sim",
+    "v4-c6m07-attempt0339-b3281f2cfb-policy",
+    "v4-c6m07-attempt0339-b3281f2cfb-sim",
+    "v4-c6m08-attempt0340-a36df6626e-policy",
+    "v4-c6m08-attempt0340-a36df6626e-sim",
+    "v4-c6m09-attempt0341-6e91a6b33b-policy",
+    "v4-c6m09-attempt0341-6e91a6b33b-sim",
+    "v4-c6m10-attempt0342-8f4bcdc98c-policy",
+    "v4-c6m10-attempt0342-8f4bcdc98c-sim",
+    "v4-c6m11-attempt0343-4061dcba13-policy",
+    "v4-c6m11-attempt0343-4061dcba13-sim",
+    "v4-c6m12-attempt0344-9dc0c321ba-policy",
+    "v4-c6m12-attempt0344-9dc0c321ba-sim",
+    "v4-c6m13-attempt0345-8de8c18d81-policy",
+    "v4-c6m13-attempt0345-8de8c18d81-sim",
+    "v4-c6m14-attempt0346-0e4a86268a-policy",
+    "v4-c6m14-attempt0346-0e4a86268a-sim",
+    "v4-c6m15-attempt0347-0bcc5574b8-policy",
+    "v4-c6m15-attempt0347-0bcc5574b8-sim",
+    "v4-c6m16-attempt0348-5c7f55d66c-policy",
+    "v4-c6m16-attempt0348-5c7f55d66c-sim",
+    "v4-c6m17-attempt0349-6c4c487cd8-policy",
+    "v4-c6m17-attempt0349-6c4c487cd8-sim",
+    "v4-c6m18-attempt0350-c2297396ce-policy",
+    "v4-c6m18-attempt0350-c2297396ce-sim",
+    "v4-c6m19-attempt0351-9e2b69d553-policy",
+    "v4-c6m19-attempt0351-9e2b69d553-sim",
+    "v4-c6m20-attempt0352-e0305a2665-policy",
+    "v4-c6m20-attempt0352-e0305a2665-sim",
+    "v4-c6m21-attempt0353-2518cf03c3-policy",
+    "v4-c6m21-attempt0353-2518cf03c3-sim",
+    "v4-c6m22-attempt0354-ca7745666a-policy",
+    "v4-c6m22-attempt0354-ca7745666a-sim",
+    "v4-c6m23-attempt0355-bda9e802a6-policy",
+    "v4-c6m23-attempt0355-bda9e802a6-sim",
+    "v4-c6m24-attempt0356-bac634db9c-policy",
+    "v4-c6m24-attempt0356-bac634db9c-sim",
+    "v4-c6m25-attempt0357-4b3ae21c64-policy",
+    "v4-c6m25-attempt0357-4b3ae21c64-sim",
+    "v4-c6m26-attempt0358-3c76bdea78-policy",
+    "v4-c6m26-attempt0358-3c76bdea78-sim",
+    "v4-c6m27-attempt0359-50cbf62929-policy",
+    "v4-c6m27-attempt0359-50cbf62929-sim",
+    "v4-c6m28-attempt0360-be72444636-policy",
+    "v4-c6m28-attempt0360-be72444636-sim",
+    "v4-c6m29-attempt0361-67dfcfd5fd-policy",
+    "v4-c6m29-attempt0361-67dfcfd5fd-sim"
+  ],
+  "wall_clock_estimate_hours_at_full_lanes": 0.4
+}

@@ -18,7 +18,8 @@ POD = "211247-ali-b200-1gpu"
 ATTEMPTS_ROOT = "/data/users/ali/vla_wam/raw/v4/c7-object-pair-main"
 OUT_ROOT = f"{ATTEMPTS_ROOT}/compiled_ledger_20260908_FINAL"
 REMOTE_DIR = "/tmp/v4-c7-final-compile"
-MANIFEST = ROOT / "artifacts/online_correction_v4/setup/c7_confirmatory/queue.frozen.jsonl"
+MANIFEST = ROOT / "artifacts/online_correction_v4/setup/c7_confirmatory/queue.frozen.c7_only.jsonl"
+SCOPED_MANIFEST_ARC = "artifacts/online_correction_v4/setup/c7_confirmatory/queue.frozen.c7_only.jsonl"
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -40,6 +41,11 @@ def main(argv: list[str] | None = None) -> int:
         MANIFEST,
         ROOT / "artifacts/online_correction_v4/protocol.json",
     ]
+    if not MANIFEST.is_file():
+        raise SystemExit(
+            f"missing C7-scoped manifest: {MANIFEST} "
+            "(filter queue.frozen.jsonl to family C7; require-full-coverage needs 768 rows not 17664)"
+        )
     for path in paths_to_copy:
         if not path.exists():
             raise SystemExit(f"missing required path: {path}")
@@ -64,10 +70,10 @@ mkdir -p {REMOTE_DIR}
 tar xzf {remote_tar} -C {REMOTE_DIR}
 cd {REMOTE_DIR}
 PYTHONPATH=. python3 tools/compile_online_correction_v4_ledger.py \\
-  --manifest artifacts/online_correction_v4/setup/c7_confirmatory/queue.frozen.jsonl \\
+  --manifest {SCOPED_MANIFEST_ARC} \\
   --attempts-root {ATTEMPTS_ROOT} \\
   --out {OUT_ROOT} \\
-  --queue artifacts/online_correction_v4/setup/c7_confirmatory/queue.frozen.jsonl \\
+  --queue {SCOPED_MANIFEST_ARC} \\
   --require-full-coverage \\
   --manifest-scoped-discovery \\
   --workers 4

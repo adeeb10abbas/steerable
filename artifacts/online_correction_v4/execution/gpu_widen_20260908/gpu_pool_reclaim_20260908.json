@@ -1,0 +1,84 @@
+{
+  "schema_version": "v4-gpu-pool-reclaim-receipt-v1",
+  "compiled_at_utc": "2026-09-08T04:00:00Z",
+  "cluster_context": "prod-dcwi-warrenq1-vmkub007",
+  "namespace": "211247-prod",
+  "investigation": {
+    "c7_error_pods_reported": 27,
+    "c7_error_pods_actual": {
+      "count": 14,
+      "role": "policy",
+      "phase_display": "Error",
+      "container_state": "terminated",
+      "gpu_held": false,
+      "attempt_ids": [
+        "attempt0474",
+        "attempt0571",
+        "attempt0572",
+        "attempt0573",
+        "attempt0574",
+        "attempt0575",
+        "attempt0577",
+        "attempt0546",
+        "attempt0360",
+        "attempt0578",
+        "attempt0579",
+        "attempt0580",
+        "attempt0581",
+        "attempt0582"
+      ],
+      "note": "Stale failed policy Job pods from infra retries (runner mismatch, preemption). Terminated containers release GPU at exit; objects lingered as Error until Job delete."
+    },
+    "c7_sim_failed_pods": {
+      "gpu_held": false,
+      "note": "Prior-session sim Failed pods from attempts 0474/0583-0593 likewise held no GPU."
+    },
+    "a40_saturation_cause": "18 Running C7 sim lanes at ceiling plus ~3 Running C8 sim lanes, not Error/Failed pod objects."
+  },
+  "c6_a100_blocker": {
+    "root_cause": "zombie_sim_jobs",
+    "zombie_count": 9,
+    "attempt_ids": [
+      "attempt0129",
+      "attempt0075",
+      "attempt0081",
+      "attempt0082",
+      "attempt0089",
+      "attempt0092",
+      "attempt0093",
+      "attempt0095",
+      "attempt0096"
+    ],
+    "symptom": "Sim pods Running with Error policy counterparts; sims idle in policy-wait while holding A100 GPUs.",
+    "scheduling_error": "0/118 nodes: 14 Insufficient nvidia.com/gpu for wave D sims despite nominal free A100 capacity."
+  },
+  "actions": [
+    {
+      "action": "delete_c7_stale_error_policy_jobs",
+      "jobs_deleted": 14,
+      "gpu_freed": 0,
+      "clutter_cleared": true
+    },
+    {
+      "action": "delete_c6_zombie_sim_policy_jobs",
+      "jobs_deleted": 9,
+      "gpu_freed": 9,
+      "note": "Second pass after first broad purge left zombies Running; explicit attempt-id delete succeeded."
+    },
+    {
+      "action": "clear_stale_c6_pvc_lane_locks",
+      "locks_removed": 32,
+      "scope": "pre-wave-D attempts only; attempts 0161-0192 retained"
+    }
+  ],
+  "post_reclaim_observed": {
+    "c7_errorish_pods": 0,
+    "c7_running_sims": 18,
+    "c6_wave_de_running_sims": 9,
+    "c6_wave_de_pending_sims": 20,
+    "c8_running_sims": 3,
+    "a100_running_sims_total": 9,
+    "a40_running_sims_total": 21
+  },
+  "outcome": "C6 wave D sims began scheduling on reclaimed A100 within 15s of zombie Job delete. C7/A40 throughput unchanged (Error pods were not the saturating factor). C8 remains A40-starved until C7 tail completes."
+}

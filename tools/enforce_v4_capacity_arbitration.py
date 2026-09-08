@@ -91,6 +91,7 @@ def main(argv: list[str] | None = None) -> int:
                 "--receipt-out",
                 str(args.periodic_receipt_out),
                 *(["--loop-seconds", str(args.loop_seconds)] if args.loop_seconds else []),
+                *(["--record-loop-pid"] if args.loop_seconds else []),
             ]
         )
     if args.mode == "c7_sequencing":

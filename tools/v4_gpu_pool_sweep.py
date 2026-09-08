@@ -627,6 +627,65 @@ def reclaim_detected(
     }
 
 
+def reclaim_finished_lane_orphan_policies(
+    detection: Mapping[str, Any],
+    *,
+    kube_context: str,
+    namespace: str,
+    dry_run: bool,
+    lane_ids: frozenset[str] | None = None,
+) -> dict[str, Any]:
+    """Live-delete orphan policies on finished lanes only; never redispatch."""
+    wanted = lane_ids or gpu_scheduling.FINISHED_C8_LANE_ORPHAN_RECLAIM
+    actions: list[dict[str, Any]] = []
+    reclaimed_gpus: Counter[str] = Counter()
+    for row in detection.get("orphan_policies") or []:
+        lane_id = str(row.get("lane_id") or "")
+        if lane_id not in wanted:
+            continue
+        if str(row.get("reason_code") or "") != "orphan_policy_dead_sim":
+            continue
+        job = str(row.get("job") or "")
+        if not job:
+            continue
+        gpu_product = str(row.get("gpu_product") or "")
+        gpu_count = int(row.get("gpu_count") or 0)
+        ok = _delete_job(job_name=job, kube_context=kube_context, namespace=namespace, dry_run=dry_run)
+        actions.append(
+            {
+                "action": "delete_finished_lane_orphan_policy",
+                "job": job,
+                "lane_id": lane_id,
+                "attempt_id": row.get("attempt_id"),
+                "reason_code": "finished_lane_orphan_policy_dead_sim",
+                "gpu_product": gpu_product,
+                "gpu_count": gpu_count,
+                "deleted": ok,
+            }
+        )
+        if ok and gpu_count > 0 and gpu_product:
+            reclaimed_gpus[gpu_product] += gpu_count
+    return {
+        "lane_ids": sorted(wanted),
+        "jobs_deleted": sum(1 for row in actions if row.get("deleted")),
+        "actions": actions,
+        "reclaimed_gpus_by_product": dict(reclaimed_gpus),
+        "reclaimed_gpu_total": sum(reclaimed_gpus.values()),
+    }
+
+
+def count_c7_r6_reshard_lanes(pods: Sequence[PodRef]) -> int:
+    lanes: set[str] = set()
+    lo = gpu_scheduling.C7_R6_RESHARD_ATTEMPT_MIN
+    hi = gpu_scheduling.C7_R6_RESHARD_ATTEMPT_MAX
+    for pod in pods:
+        if not pod.lane_id.startswith("c7m"):
+            continue
+        if lo <= pod.attempt_id <= hi and pod.gpu_count > 0:
+            lanes.add(pod.lane_id)
+    return len(lanes)
+
+
 def estimate_wall_clocks(*, c7_remaining: int = 188) -> dict[str, Any]:
     c8_lanes = arbitration.G7_C8_CONFIRMATORY_MAX_LANES
     c6_lanes = 8

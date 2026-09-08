@@ -192,6 +192,13 @@ DEFAULT_PROTECT_LIST = (
 
 PRODUCTIVE_C8_LANE_IDS = frozenset({"c8m13", "c8m14"})
 
+# Completed C8 confirmatory lanes whose orphan policy pods may be live-reclaimed safely.
+FINISHED_C8_LANE_ORPHAN_RECLAIM = frozenset({"c8m05", "c8m16"})
+
+# C7 released-tail r6 resharding attempt range (Agent B bundle rendered-released-tail-reshard-20260908r6).
+C7_R6_RESHARD_ATTEMPT_MIN = "attempt0611"
+C7_R6_RESHARD_ATTEMPT_MAX = "attempt0624"
+
 # Isaac Lab / PhysX warmup can exceed 120s; do not judge pods dead during this window.
 ISAAC_STARTUP_GRACE_SECONDS = 300
 

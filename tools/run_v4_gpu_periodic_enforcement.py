@@ -33,6 +33,50 @@ PERIODIC_POLICIES = (
 )
 
 
+def _receipt_relative_path(path: Path) -> str:
+    resolved = path.resolve()
+    try:
+        return str(resolved.relative_to(ROOT))
+    except ValueError:
+        return str(path)
+
+
+def count_sim_first_gate_pairs(
+    pods: Sequence[gpu_sweep.PodRef], *, lane_prefix: str
+) -> dict[str, int]:
+    """Sim Running with policy not yet Running (Suspended/Pending schedule window)."""
+    by_lane: dict[str, list[gpu_sweep.PodRef]] = {}
+    for pod in pods:
+        if pod.lane_id.startswith(lane_prefix):
+            by_lane.setdefault(pod.lane_id, []).append(pod)
+    sim_ready_policy_waiting = healthy = 0
+    for lane_id in by_lane:
+        latest = gpu_sweep._latest_pods(by_lane[lane_id])
+        policy = latest.get("policy")
+        sim = latest.get("sim")
+        if (
+            sim
+            and sim.phase == "Running"
+            and sim.gpu_count > 0
+            and policy
+            and policy.phase != "Running"
+        ):
+            sim_ready_policy_waiting += 1
+        if (
+            policy
+            and sim
+            and policy.phase == "Running"
+            and policy.gpu_count > 0
+            and sim.phase == "Running"
+            and sim.gpu_count > 0
+        ):
+            healthy += 1
+    return {
+        "sim_ready_policy_waiting": sim_ready_policy_waiting,
+        "healthy_pairs": healthy,
+    }
+
+
 def run_periodic_enforcement(
     *,
     kube_context: str,
@@ -82,6 +126,13 @@ def run_periodic_enforcement(
         protect_list_path=protect_list_path,
         allow_redispatch=False,
     )
+    detection = sweep_receipt.get("detection") or {}
+    finished_orphan_reclaim = gpu_sweep.reclaim_finished_lane_orphan_policies(
+        detection,
+        kube_context=kube_context,
+        namespace=namespace,
+        dry_run=False,
+    )
     raw_pods = gpu_sweep.fetch_pods(kube_context=kube_context, namespace=namespace)
     pods = [p for p in (gpu_sweep.parse_pod(item) for item in raw_pods) if p is not None]
     usage = gpu_sweep.summarize_gpu_usage(pods)
@@ -101,6 +152,9 @@ def run_periodic_enforcement(
     )
     c8_healthy = int(c8_state.get("healthy_pairs") or 0)
     c7_healthy = int(c7_state.get("healthy_pairs") or 0)
+    c7_r6_lanes = gpu_sweep.count_c7_r6_reshard_lanes(pods)
+    c8_gate = count_sim_first_gate_pairs(pods, lane_prefix="c8m")
+    c6_gate = count_sim_first_gate_pairs(pods, lane_prefix="c6m")
 
     minutes = arbitration.C8_EPISODE_MINUTES_PER_LANE
     c6_minutes = arbitration.C6_EPISODE_MINUTES_PER_LANE
@@ -110,21 +164,32 @@ def run_periodic_enforcement(
             return float("inf")
         return round((episodes / lanes) * (lane_minutes / 60.0), 1)
 
-    c7_r6_reshard_lanes = 14
+    c7_active_lanes = max(c7_r6_lanes, c7_tail_lanes) if c7_r6_lanes else c7_tail_lanes
+    if c7_r6_lanes >= 10:
+        routing_decision = "split_a40_r6_reshard_plus_c8_ramp"
+        reshard_note = (
+            f"Agent B r6 resharding live on {c7_r6_lanes} lane identities "
+            f"(attempt0611-0624). Remaining A40 routed to C8 up to {c8_max_pairs} pairs."
+        )
+    else:
+        routing_decision = "route_bulk_a40_to_c8_while_c7_tail_runs_4_lanes"
+        reshard_note = (
+            "Interim: C7 tail on c7m01/02/05/31 (attempt0607-0610) until r6 dispatch completes. "
+            f"Route remaining A40 to C8 up to {c8_max_pairs} pairs."
+        )
+
     routing = {
-        "decision": "route_bulk_a40_to_c8_while_c7_tail_runs_4_lanes",
-        "reshard_feasible": "yes_agent_b_rendered_r6_pending_dispatch",
-        "reshard_note": (
-            "Agent B rendered released-tail resharding bundle "
-            "(rendered-released-tail-reshard-20260908r6) across 14 lane identities. "
-            "Until r6 dispatch is live, interim routing keeps 4 A40 sims for c7m01/02/05/31 "
-            "(attempt0607-0610) and routes remaining A40 to C8 up to 18 pairs."
-        ),
-        "c7_r6_reshard_lanes_available": c7_r6_reshard_lanes,
-        "c7_tail_lanes": c7_tail_lanes,
+        "decision": routing_decision,
+        "reshard_feasible": "yes_agent_b_rendered_r6_dispatched" if c7_r6_lanes else "yes_pending_dispatch",
+        "reshard_note": reshard_note,
+        "c7_r6_reshard_lanes_observed": c7_r6_lanes,
+        "c7_tail_lanes_legacy": c7_tail_lanes,
+        "c7_active_lanes_for_estimate": c7_active_lanes,
         "c7_a40_sims_reserved": c7_a40_sims,
         "c8_authorized_lane_pairs": c8_max_pairs,
         "c8_healthy_pairs_observed": c8_healthy,
+        "c8_sim_ready_policy_waiting": c8_gate["sim_ready_policy_waiting"],
+        "c6_sim_ready_policy_waiting": c6_gate["sim_ready_policy_waiting"],
         "a40_pool": {
             "size": arbitration.A40_POOL_SIZE,
             "used": a40_used,
@@ -135,8 +200,8 @@ def run_periodic_enforcement(
 
     finished_lane_orphans = [
         row
-        for row in (sweep_receipt.get("detection") or {}).get("orphan_policies") or []
-        if str(row.get("lane_id") or "") in {"c8m05", "c8m16"}
+        for row in (detection.get("orphan_policies") or [])
+        if str(row.get("lane_id") or "") in gpu_scheduling.FINISHED_C8_LANE_ORPHAN_RECLAIM
     ]
 
     return {
@@ -151,7 +216,11 @@ def run_periodic_enforcement(
             "sweep_live": False,
             "allow_redispatch": False,
             "rerun_command": ".venv/bin/python tools/run_v4_gpu_periodic_enforcement.py",
-            "loop_command": ".venv/bin/python tools/run_v4_gpu_periodic_enforcement.py --loop-seconds 180",
+            "loop_command": (
+                ".venv/bin/python tools/run_v4_gpu_periodic_enforcement.py "
+                "--loop-seconds 180 --record-loop-pid"
+            ),
+            "finished_lane_orphan_reclaim_live": True,
         },
         "sim_first_gates": {
             "policies_unsuspended_this_tick": unsuspend_total,
@@ -163,19 +232,19 @@ def run_periodic_enforcement(
             "reclaimed_gpus_would_be": (sweep_receipt.get("reclaim") or {}).get("reclaimed_gpus_by_product"),
             "finished_lane_orphan_policies": finished_lane_orphans,
         },
+        "finished_lane_orphan_reclaim_live": finished_orphan_reclaim,
         "scheduling_state": {"c7": c7_state, "c8": c8_state, "c6": c6_state},
         "pool_utilization": usage,
         "a40_routing": routing,
         "wall_clock_estimates": {
-            "c7_tail_188_hours_at_4_lanes": hours(c7_remaining_episodes, c7_tail_lanes),
-            "c7_tail_188_hours_if_r6_14_lanes_dispatched": hours(
-                c7_remaining_episodes, c7_r6_reshard_lanes
-            ),
+            "c7_tail_188_hours_at_4_lanes": hours(c7_remaining_episodes, 4),
+            "c7_tail_188_hours_at_active_lanes": hours(c7_remaining_episodes, c7_active_lanes),
+            "c7_tail_188_hours_if_r6_14_lanes": hours(c7_remaining_episodes, 14),
             "c8_remaining_hours_at_current_healthy": hours(c8_remaining_episodes, max(c8_healthy, 1)),
             "c8_remaining_hours_at_max_authorized_pairs": hours(c8_remaining_episodes, max(c8_max_pairs, 1)),
-            "c8_remaining_hours_if_c7_r6_dispatched_13_pairs": hours(
+            "c8_remaining_hours_if_c7_r6_14_lanes": hours(
                 c8_remaining_episodes,
-                max((arbitration.A40_POOL_SIZE - c7_r6_reshard_lanes) // arbitration.A40_GPUS_PER_C8_LANE, 1),
+                max((arbitration.A40_POOL_SIZE - 14) // arbitration.A40_GPUS_PER_C8_LANE, 1),
             ),
             "c6_confirmatory_hours_at_healthy_pairs": hours(
                 arbitration.CONFIRMATORY_EPISODE_TARGET,
@@ -183,7 +252,7 @@ def run_periodic_enforcement(
                 lane_minutes=c6_minutes,
             ),
         },
-        "protect_list_path": str(protect_list_path.relative_to(ROOT)),
+        "protect_list_path": _receipt_relative_path(protect_list_path),
     }
 
 
@@ -193,7 +262,11 @@ def update_capacity_state(*, receipt: Mapping[str, Any]) -> None:
     if state_path.is_file():
         state = json.loads(state_path.read_text(encoding="utf-8"))
     state.setdefault("gpu_placement", {})
-    state["gpu_placement"]["periodic_enforcement"] = receipt.get("automation") or {}
+    state["gpu_placement"]["periodic_enforcement"] = {
+        **(receipt.get("automation") or {}),
+        "loop_active": receipt.get("loop_active", False),
+        "loop_pid": receipt.get("loop_pid"),
+    }
     state["gpu_placement"]["last_periodic_at_utc"] = receipt.get("observed_at_utc")
     state["gpu_placement"]["last_unsuspended_count"] = (
         (receipt.get("sim_first_gates") or {}).get("policies_unsuspended_this_tick")
@@ -217,7 +290,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--receipt-out", type=Path, default=DEFAULT_RECEIPT)
     parser.add_argument("--loop-seconds", type=int, default=0, help="If >0, rerun forever at this interval.")
     parser.add_argument("--max-ticks", type=int, default=0, help="Stop loop after N ticks (0 = unlimited).")
+    parser.add_argument("--record-loop-pid", action="store_true", help="Mark loop as active in capacity state.")
     args = parser.parse_args(list(argv) if argv is not None else None)
+
+    import os
 
     tick = 0
     while True:
@@ -229,6 +305,9 @@ def main(argv: Sequence[str] | None = None) -> int:
             c7_tail_lanes=args.c7_tail_lanes,
             c8_remaining_episodes=args.c8_remaining,
         )
+        if args.loop_seconds > 0 and args.record_loop_pid:
+            receipt["loop_active"] = True
+            receipt["loop_pid"] = os.getpid()
         args.receipt_out.parent.mkdir(parents=True, exist_ok=True)
         args.receipt_out.write_text(json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8")
         routing_out = args.receipt_out.parent / "a40_capacity_routing_decision.json"

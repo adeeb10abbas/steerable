@@ -37,6 +37,16 @@ DEFAULT_C6_RENDERED_ROOT = (
     ROOT
     / "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f"
 )
+
+
+def _receipt_relative_path(path: Path) -> str:
+    resolved = path.resolve()
+    try:
+        return str(resolved.relative_to(ROOT))
+    except ValueError:
+        return str(path)
+
+
 PRODUCTIVE_C8_LANES = gpu_scheduling.PRODUCTIVE_C8_LANE_IDS
 
 LANE_JOB_RE = re.compile(
@@ -662,7 +672,7 @@ def enforce_gpu_placement(
             "productive_c8_lanes_preserved": sorted(PRODUCTIVE_C8_LANES),
             "startup_grace_seconds": gpu_scheduling.ISAAC_STARTUP_GRACE_SECONDS,
         },
-        "protect_list_path": str(protect_list_path.relative_to(ROOT)),
+        "protect_list_path": _receipt_relative_path(protect_list_path),
         "protected_c7_lane_count": len(protected_c7_lanes),
         "actions": actions,
         "jobs_replaced": sum(

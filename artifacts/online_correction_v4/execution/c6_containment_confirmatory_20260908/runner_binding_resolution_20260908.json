@@ -1,0 +1,25 @@
+{
+  "schema_version": "v4-shared-checkout-runner-binding-resolution-v1",
+  "compiled_at_utc": "2026-09-08T05:10:00Z",
+  "problem": {
+    "shared_runtime_checkout": "/data/users/ali/vla_wam/src/steerable-v4-c7-main",
+    "families_sharing_checkout": ["C7", "C6"],
+    "conflict": "C7 runner restore at commit 4f928a0 changed tools/run_online_correction_v4.py to sha 71e7…; C6 wave D (20260908d) rendered against lock/manifest af01…",
+    "validation_rule": "lane dispatch validates BOTH coord-binding staged runner AND runtime tree tools/run_online_correction_v4.py against manifest runner_sha256",
+    "ad_hoc_patch_failure": "PVC manifest edits without re-rendering immutable launch ConfigMaps caused LANE_LAUNCH_CONFIG_SHA256 drift and increased Failed lanes"
+  },
+  "resolution": {
+    "authoritative_runner_sha256": "71e7f86f5e3dbda46ae3a03a7a07959fc4562a13dce71955362bf93226adb3df",
+    "authoritative_runner_commit": "4f928a0005422a972e4c35ef16604bf6b1a31aae",
+    "lock_uri": "artifacts/online_correction_v4/setup/containment_c6_confirmatory_runtime_lock.released.json",
+    "render_path": "render_lane_bundle via coordinator; NOT in-place PVC patching",
+    "binding_model": "Per-attempt staged copy at .coord-bindings/{lane}/{attempt}/run_online_correction_v4.py with matching sha embedded in lane_dispatch_manifest.json and simulator launch file_bindings; runtime checkout must match lock.runner.entrypoint sha",
+    "operating_rule": "When C7 mutates shared checkout runner, C6 must re-render all in-flight waves from updated released lock before dispatch; never patch coord bindings on PVC alone"
+  },
+  "wave_d_rerender": {
+    "supersedes_render_generation": "rendered-c6confirm20260908d",
+    "render_generation": "rendered-c6confirm20260908f",
+    "dispatch_receipt": "create-c6confirm20260908f.json",
+    "attempt_range": "attempt0161-attempt0192"
+  }
+}

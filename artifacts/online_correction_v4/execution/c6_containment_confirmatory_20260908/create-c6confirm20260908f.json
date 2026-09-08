@@ -1,0 +1,29 @@
+{
+  "behavioral_episode_count": 384,
+  "dispatch_mode": "behavioral_confirmatory_wave_d_rerender",
+  "infra_failure_class": "runtime_runner_sha256_mismatch_and_configmap_digest_drift",
+  "kube_context": "prod-dcwi-warrenq1-vmkub007",
+  "lane_count": 32,
+  "lane_assignments_summary": {
+    "attempt_range": "attempt0161-attempt0192",
+    "episodes_per_lane": 12,
+    "lanes": "c6m00-c6m31",
+    "render_root": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f"
+  },
+  "namespace": "211247-prod",
+  "prior_wave_failure": "wave D 20260908d: manifest pinned af01 runner; live checkout 71e7 after C7 repair. Ad-hoc PVC patching caused immutable ConfigMap digest drift (5 failed grew to 15).",
+  "remediation": "Clean re-render via render_lane_bundle/coordinator against released lock runner 71e7f86f…@4f928a0; tear down 20260908d jobs; full kustomize apply 20260908f (policy+sim+immutable launch ConfigMaps).",
+  "released_runner_sha256": "71e7f86f5e3dbda46ae3a03a7a07959fc4562a13dce71955362bf93226adb3df",
+  "released_runner_commit": "4f928a0005422a972e4c35ef16604bf6b1a31aae",
+  "schema_version": "v4-c6-confirmatory-create-wave-v1",
+  "supersedes": "create-c6confirm20260908d.json",
+  "post_dispatch_observed": {
+    "sim_running": 10,
+    "sim_pending": 21,
+    "policy_running": 9,
+    "policy_pending": 23,
+    "confirmatory_terminals": 0,
+    "runner_preflight_pass": true,
+    "note": "First sims passed runner binding; remaining Pending on A100/B200 scheduling (bin-packing), not runner mismatch."
+  }
+}

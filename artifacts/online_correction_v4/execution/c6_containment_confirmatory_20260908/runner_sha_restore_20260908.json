@@ -16,7 +16,11 @@
   },
   "secondary_failure_class": "stale_attempt_lock_after_redispatch",
   "lock_remediation": "Cleared .simulator-lane-* and .policy-lane-* locks for attempts 0171-0175 and 0179; redispatched jobs.",
-  "wave_d_status_after_remediation": "10+ sims Running after digest-aligned job restore; 8 Failed under investigation; 0 confirmatory terminals yet",
+  "status": "superseded_by_clean_rerender_20260908f",
+  "supersedes": "create-c6confirm20260908d.json",
+  "superseded_by": "create-c6confirm20260908f.json",
+  "ad_hoc_pvc_patch_retired": true,
+  "wave_d_status_after_remediation": "Clean re-render 20260908f deployed; 10 sims Running, runner preflight passed; 0 confirmatory terminals yet",
   "confirmatory_terminals_after_fix": 0,
   "per_scenario_composition": {}
 }

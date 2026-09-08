@@ -1,0 +1,20 @@
+{
+  "schema_version": "v4-c7-agent-c-handoff-pending-v1",
+  "compiled_at_utc": "2026-09-08T02:50:00Z",
+  "status": "released_shards_dispatched_pending_final_compile",
+  "authoritative_partial_compile": {
+    "compile_id": "compiled_ledger_20260908m",
+    "accepted_row_count": 580,
+    "missing_valid": 188
+  },
+  "released_shard_dispatch": "create-released-shards-20260908r4.json",
+  "final_compile_when": "768/768 accepted with --require-full-coverage",
+  "final_compile_path": "/data/users/ali/vla_wam/raw/v4/c7-object-pair-main/compiled_ledger_20260908_FINAL",
+  "final_compile_command_template": ".venv/bin/python tools/compile_online_correction_v4_ledger.py --manifest artifacts/online_correction_v4/setup/c7_confirmatory/queue.frozen.jsonl --attempts-root /data/users/ali/vla_wam/raw/v4/c7-object-pair-main --out /data/users/ali/vla_wam/raw/v4/c7-object-pair-main/compiled_ledger_20260908_FINAL --queue artifacts/online_correction_v4/setup/c7_confirmatory/queue.frozen.jsonl --require-full-coverage --manifest-scoped-discovery",
+  "post_final_actions": [
+    "Sync receipt to artifacts/online_correction_v4/execution/c7_object_pair_20260906/pvc-ledgers/",
+    "Set compile_retirement_pending.json authoritative_compile to compiled_ledger_20260908_FINAL",
+    "Hand path to Agent C for primary behavioral family closure"
+  ],
+  "agent_c_note": "Primary behavioral family closes only after FINAL 768/768 compile lands; partial m remains authoritative until then."
+}

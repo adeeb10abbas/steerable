@@ -7,278 +7,25 @@
   "compiled_accepted": 580,
   "missing_episodes": 188,
   "missing_only_on_released_shards": true,
-  "observed_at_utc": "2026-09-08T02:25:52Z",
+  "observed_at_utc": "2026-09-08T02:49:52Z",
   "phases": [
     {
       "action": "Hold protect list; let 17 productive C7 pairs finish current shards.",
       "do_not_teardown_until": "Agent B compile shows 0 remaining episodes on productive shards",
       "phase": "1_productive_drain",
-      "productive_lane_jobs": [
-        {
-          "attempt_id": "attempt0473",
-          "job": "v4-c7m00-attempt0473-61adf2ac82-policy",
-          "lane_id": "c7m00",
-          "role": "policy"
-        },
-        {
-          "attempt_id": "attempt0473",
-          "job": "v4-c7m00-attempt0473-61adf2ac82-sim",
-          "lane_id": "c7m00",
-          "role": "sim"
-        },
-        {
-          "attempt_id": "attempt0481",
-          "job": "v4-c7m09-attempt0481-9a423f3b91-policy",
-          "lane_id": "c7m09",
-          "role": "policy"
-        },
-        {
-          "attempt_id": "attempt0481",
-          "job": "v4-c7m09-attempt0481-9a423f3b91-sim",
-          "lane_id": "c7m09",
-          "role": "sim"
-        },
-        {
-          "attempt_id": "attempt0482",
-          "job": "v4-c7m10-attempt0482-9ecb1d0d3b-policy",
-          "lane_id": "c7m10",
-          "role": "policy"
-        },
-        {
-          "attempt_id": "attempt0482",
-          "job": "v4-c7m10-attempt0482-9ecb1d0d3b-sim",
-          "lane_id": "c7m10",
-          "role": "sim"
-        },
-        {
-          "attempt_id": "attempt0483",
-          "job": "v4-c7m11-attempt0483-50feaf44d4-policy",
-          "lane_id": "c7m11",
-          "role": "policy"
-        },
-        {
-          "attempt_id": "attempt0483",
-          "job": "v4-c7m11-attempt0483-50feaf44d4-sim",
-          "lane_id": "c7m11",
-          "role": "sim"
-        },
-        {
-          "attempt_id": "attempt0484",
-          "job": "v4-c7m12-attempt0484-cbbbf04b3f-policy",
-          "lane_id": "c7m12",
-          "role": "policy"
-        },
-        {
-          "attempt_id": "attempt0484",
-          "job": "v4-c7m12-attempt0484-cbbbf04b3f-sim",
-          "lane_id": "c7m12",
-          "role": "sim"
-        },
-        {
-          "attempt_id": "attempt0485",
-          "job": "v4-c7m13-attempt0485-b150649f41-policy",
-          "lane_id": "c7m13",
-          "role": "policy"
-        },
-        {
-          "attempt_id": "attempt0485",
-          "job": "v4-c7m13-attempt0485-b150649f41-sim",
-          "lane_id": "c7m13",
-          "role": "sim"
-        },
-        {
-          "attempt_id": "attempt0535",
-          "job": "v4-c7m15-attempt0535-29f3fe6b1c-policy",
-          "lane_id": "c7m15",
-          "role": "policy"
-        },
-        {
-          "attempt_id": "attempt0535",
-          "job": "v4-c7m15-attempt0535-29f3fe6b1c-sim",
-          "lane_id": "c7m15",
-          "role": "sim"
-        },
-        {
-          "attempt_id": "attempt0536",
-          "job": "v4-c7m16-attempt0536-24b8c1e7b2-policy",
-          "lane_id": "c7m16",
-          "role": "policy"
-        },
-        {
-          "attempt_id": "attempt0536",
-          "job": "v4-c7m16-attempt0536-24b8c1e7b2-sim",
-          "lane_id": "c7m16",
-          "role": "sim"
-        },
-        {
-          "attempt_id": "attempt0537",
-          "job": "v4-c7m17-attempt0537-89eb82378e-policy",
-          "lane_id": "c7m17",
-          "role": "policy"
-        },
-        {
-          "attempt_id": "attempt0537",
-          "job": "v4-c7m17-attempt0537-89eb82378e-sim",
-          "lane_id": "c7m17",
-          "role": "sim"
-        },
-        {
-          "attempt_id": "attempt0538",
-          "job": "v4-c7m18-attempt0538-7c0c14ee46-policy",
-          "lane_id": "c7m18",
-          "role": "policy"
-        },
-        {
-          "attempt_id": "attempt0538",
-          "job": "v4-c7m18-attempt0538-7c0c14ee46-sim",
-          "lane_id": "c7m18",
-          "role": "sim"
-        },
-        {
-          "attempt_id": "attempt0539",
-          "job": "v4-c7m19-attempt0539-81c79d3acf-policy",
-          "lane_id": "c7m19",
-          "role": "policy"
-        },
-        {
-          "attempt_id": "attempt0539",
-          "job": "v4-c7m19-attempt0539-81c79d3acf-sim",
-          "lane_id": "c7m19",
-          "role": "sim"
-        },
-        {
-          "attempt_id": "attempt0540",
-          "job": "v4-c7m21-attempt0540-6fc45ca560-policy",
-          "lane_id": "c7m21",
-          "role": "policy"
-        },
-        {
-          "attempt_id": "attempt0540",
-          "job": "v4-c7m21-attempt0540-6fc45ca560-sim",
-          "lane_id": "c7m21",
-          "role": "sim"
-        },
-        {
-          "attempt_id": "attempt0541",
-          "job": "v4-c7m23-attempt0541-7a2aebd3f5-policy",
-          "lane_id": "c7m23",
-          "role": "policy"
-        },
-        {
-          "attempt_id": "attempt0541",
-          "job": "v4-c7m23-attempt0541-7a2aebd3f5-sim",
-          "lane_id": "c7m23",
-          "role": "sim"
-        },
-        {
-          "attempt_id": "attempt0542",
-          "job": "v4-c7m24-attempt0542-21a8b97ca2-policy",
-          "lane_id": "c7m24",
-          "role": "policy"
-        },
-        {
-          "attempt_id": "attempt0542",
-          "job": "v4-c7m24-attempt0542-21a8b97ca2-sim",
-          "lane_id": "c7m24",
-          "role": "sim"
-        },
-        {
-          "attempt_id": "attempt0543",
-          "job": "v4-c7m26-attempt0543-35a76a430c-policy",
-          "lane_id": "c7m26",
-          "role": "policy"
-        },
-        {
-          "attempt_id": "attempt0543",
-          "job": "v4-c7m26-attempt0543-35a76a430c-sim",
-          "lane_id": "c7m26",
-          "role": "sim"
-        },
-        {
-          "attempt_id": "attempt0544",
-          "job": "v4-c7m28-attempt0544-9f282ea080-policy",
-          "lane_id": "c7m28",
-          "role": "policy"
-        },
-        {
-          "attempt_id": "attempt0544",
-          "job": "v4-c7m28-attempt0544-9f282ea080-sim",
-          "lane_id": "c7m28",
-          "role": "sim"
-        },
-        {
-          "attempt_id": "attempt0545",
-          "job": "v4-c7m30-attempt0545-c6f6160c1f-policy",
-          "lane_id": "c7m30",
-          "role": "policy"
-        },
-        {
-          "attempt_id": "attempt0545",
-          "job": "v4-c7m30-attempt0545-c6f6160c1f-sim",
-          "lane_id": "c7m30",
-          "role": "sim"
-        }
-      ],
+      "productive_lane_jobs": [],
       "status": "in_progress"
     },
     {
       "action": "Coordinate with Agent B; delete whole productive lane pairs to free A40.",
-      "job_ids_to_delete": [
-        "v4-c7m00-attempt0473-61adf2ac82-policy",
-        "v4-c7m00-attempt0473-61adf2ac82-sim",
-        "v4-c7m09-attempt0481-9a423f3b91-policy",
-        "v4-c7m09-attempt0481-9a423f3b91-sim",
-        "v4-c7m10-attempt0482-9ecb1d0d3b-policy",
-        "v4-c7m10-attempt0482-9ecb1d0d3b-sim",
-        "v4-c7m11-attempt0483-50feaf44d4-policy",
-        "v4-c7m11-attempt0483-50feaf44d4-sim",
-        "v4-c7m12-attempt0484-cbbbf04b3f-policy",
-        "v4-c7m12-attempt0484-cbbbf04b3f-sim",
-        "v4-c7m13-attempt0485-b150649f41-policy",
-        "v4-c7m13-attempt0485-b150649f41-sim",
-        "v4-c7m15-attempt0535-29f3fe6b1c-policy",
-        "v4-c7m15-attempt0535-29f3fe6b1c-sim",
-        "v4-c7m16-attempt0536-24b8c1e7b2-policy",
-        "v4-c7m16-attempt0536-24b8c1e7b2-sim",
-        "v4-c7m17-attempt0537-89eb82378e-policy",
-        "v4-c7m17-attempt0537-89eb82378e-sim",
-        "v4-c7m18-attempt0538-7c0c14ee46-policy",
-        "v4-c7m18-attempt0538-7c0c14ee46-sim",
-        "v4-c7m19-attempt0539-81c79d3acf-policy",
-        "v4-c7m19-attempt0539-81c79d3acf-sim",
-        "v4-c7m21-attempt0540-6fc45ca560-policy",
-        "v4-c7m21-attempt0540-6fc45ca560-sim",
-        "v4-c7m23-attempt0541-7a2aebd3f5-policy",
-        "v4-c7m23-attempt0541-7a2aebd3f5-sim",
-        "v4-c7m24-attempt0542-21a8b97ca2-policy",
-        "v4-c7m24-attempt0542-21a8b97ca2-sim",
-        "v4-c7m26-attempt0543-35a76a430c-policy",
-        "v4-c7m26-attempt0543-35a76a430c-sim",
-        "v4-c7m28-attempt0544-9f282ea080-policy",
-        "v4-c7m28-attempt0544-9f282ea080-sim",
-        "v4-c7m30-attempt0545-c6f6160c1f-policy",
-        "v4-c7m30-attempt0545-c6f6160c1f-sim"
-      ],
+      "job_ids_to_delete": [],
       "phase": "2_teardown_productive_pairs",
       "protect_list_update": "Remove productive_c7_lane_pairs section after in-flight episodes complete",
       "status": "blocked_until_phase_1"
     },
     {
       "action": "Delete suspended retry r3 0589-0594 (strict subset; no net new coverage).",
-      "job_ids_to_delete": [
-        "v4-c7m01-attempt0589-33f6c1979d-policy",
-        "v4-c7m01-attempt0589-33f6c1979d-sim",
-        "v4-c7m02-attempt0590-09e79626cf-policy",
-        "v4-c7m02-attempt0590-09e79626cf-sim",
-        "v4-c7m02-attempt0593-8d58bfda9c-policy",
-        "v4-c7m02-attempt0593-8d58bfda9c-sim",
-        "v4-c7m05-attempt0591-7f5790d9ea-policy",
-        "v4-c7m05-attempt0591-7f5790d9ea-sim",
-        "v4-c7m05-attempt0594-c86add72ec-policy",
-        "v4-c7m05-attempt0594-c86add72ec-sim",
-        "v4-c7m31-attempt0592-6d00b703d7-policy",
-        "v4-c7m31-attempt0592-6d00b703d7-sim"
-      ],
+      "job_ids_to_delete": [],
       "phase": "3_skip_retry_r3",
       "status": "pending"
     },
@@ -299,9 +46,9 @@
   "pool_utilization": {
     "pending_gpu_pods": 0,
     "pool_free_estimate": {
-      "NVIDIA-A100-SXM4-40GB": 55,
-      "NVIDIA-A100-SXM4-80GB": 78,
-      "NVIDIA-A40": 15,
+      "NVIDIA-A100-SXM4-40GB": 56,
+      "NVIDIA-A100-SXM4-80GB": 91,
+      "NVIDIA-A40": 33,
       "NVIDIA-B200": 34
     },
     "pool_sizes": {
@@ -312,16 +59,16 @@
     },
     "running_gpus_by_family_role": {
       "c6_policy": 6,
-      "c6_sim": 9,
-      "c7_policy": 17,
-      "c7_sim": 16,
+      "c6_sim": 8,
+      "c7_policy": 4,
+      "c7_sim": 1,
       "c8_policy": 5,
-      "c8_sim": 4
+      "c8_sim": 1
     },
     "running_gpus_by_product": {
-      "NVIDIA-A100-SXM4-40GB": 9,
-      "NVIDIA-A100-SXM4-80GB": 17,
-      "NVIDIA-A40": 25,
+      "NVIDIA-A100-SXM4-40GB": 8,
+      "NVIDIA-A100-SXM4-80GB": 4,
+      "NVIDIA-A40": 7,
       "NVIDIA-B200": 6
     }
   },
@@ -342,16 +89,16 @@
   ],
   "scheduling_state": {
     "c7": {
-      "healthy_pairs": 16,
+      "healthy_pairs": 1,
       "lane_prefix": "c7m",
-      "partial_pairs": 5,
+      "partial_pairs": 3,
       "pending_pairs": 0,
-      "total_lanes_seen": 21
+      "total_lanes_seen": 4
     },
     "c8": {
-      "healthy_pairs": 2,
+      "healthy_pairs": 1,
       "lane_prefix": "c8m",
-      "partial_pairs": 18,
+      "partial_pairs": 19,
       "pending_pairs": 0,
       "total_lanes_seen": 20
     }

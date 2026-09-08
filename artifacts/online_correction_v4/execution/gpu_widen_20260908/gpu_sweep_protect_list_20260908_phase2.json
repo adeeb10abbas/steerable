@@ -1,0 +1,86 @@
+{
+  "c7_retry_shards_in_flight_do_not_preempt": [],
+  "cluster_context": "prod-dcwi-warrenq1-vmkub007",
+  "compiled_at_utc": "2026-09-08T02:49:52Z",
+  "namespace": "211247-prod",
+  "note": "Phase 1: protect productive C7 + productive C8. Phase 2 (post-drain): protect released 0603-0606 only; route A40 to C8 up to 20 pairs.",
+  "owner_agent": "C7_object_pair_confirmatory",
+  "phase2_teardown_coordination": {
+    "action": "Remove productive_c7_lane_pairs protection; delete whole productive pairs; skip r3 retry teardown",
+    "protect_list_phase2_path": "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_sweep_protect_list_phase2_20260908.json",
+    "sequencing_plan": "artifacts/online_correction_v4/execution/gpu_widen_20260908/c7_released_shard_sequencing_plan.json",
+    "then_dispatch": "attempt0603-0606 only",
+    "trigger": "Agent B compile shows 0 remaining episodes on productive shards"
+  },
+  "productive_c7_lane_pairs": [],
+  "productive_c8_lane_pairs": [
+    {
+      "accepted_episodes": 38,
+      "attempt_id": "attempt0014",
+      "lane_id": "c8m13"
+    },
+    {
+      "accepted_episodes": 38,
+      "attempt_id": "attempt0014",
+      "lane_id": "c8m14"
+    }
+  ],
+  "reclaimed_orphan_policy_attempts_20260908": [
+    "attempt0583",
+    "attempt0584",
+    "attempt0585",
+    "attempt0586",
+    "attempt0587",
+    "attempt0588",
+    "attempt0589",
+    "attempt0590",
+    "attempt0591",
+    "attempt0592",
+    "attempt0593"
+  ],
+  "released_shard_protect_during_dispatch": [
+    {
+      "attempt_id": "attempt0603"
+    },
+    {
+      "attempt_id": "attempt0604"
+    },
+    {
+      "attempt_id": "attempt0605"
+    },
+    {
+      "attempt_id": "attempt0606"
+    }
+  ],
+  "released_shard_queue_pending_redispatch": {
+    "attempt_ids": [
+      "attempt0603",
+      "attempt0604",
+      "attempt0605",
+      "attempt0606"
+    ],
+    "behavioral_episode_count": 220,
+    "missing_episode_coverage": 188,
+    "reachability_analysis": "artifacts/online_correction_v4/execution/c7_object_pair_20260906/c7_episode_reachability_analysis_20260908.json",
+    "reoffer_when": "A40 headroom after productive lane drain (not retry-first)",
+    "skip_retry_r3_attempts": [
+      "attempt0589",
+      "attempt0590",
+      "attempt0591",
+      "attempt0592",
+      "attempt0593",
+      "attempt0594"
+    ],
+    "status": "ready_for_dispatch_post_teardown",
+    "supersedes_retry_r3": true
+  },
+  "schema_version": "v4-gpu-sweep-protect-list-v1",
+  "sequencing_phase": "2_teardown_complete_protect_released_only",
+  "sweep_coordination": {
+    "capacity_agent_may_reclaim": "policy Running with sim Error/Failed/missing, or sim Running with policy Error/Failed/missing, excluding protected pairs below",
+    "do_not_delete": "productive_lane_pairs",
+    "live_sweep_halted_until": "C8 agent re-renders fresh attempt_ids or PVC attempt locks cleared; automatic redispatch disabled",
+    "rerunnable": true,
+    "startup_grace_seconds": 300
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "schema_version": "v4-c6-wave-milestone-receipt-v1",
+  "compiled_at_utc": "2026-09-08T06:15:00Z",
+  "wave_id": "c6confirm20260908f",
+  "wave_label": "D",
+  "attempt_range": "attempt0161-attempt0192",
+  "planned_wave_episodes": 384,
+  "confirmatory_terminals": 8,
+  "milestone": "first_conversion_batch",
+  "composition": {
+    "by_scenario": {
+      "original_sham": 2,
+      "destination_static": 2,
+      "move_stop": 4
+    },
+    "by_outcome": {
+      "no_grasp": 7,
+      "wrong_goal_region": 1
+    },
+    "by_status": {
+      "valid": 8
+    }
+  },
+  "cluster_at_milestone": {
+    "healthy_pairs": 6,
+    "sim_running": 11,
+    "note": "Conversion active after reset-registry staging and sim-first c6_a10040_spread paired placement"
+  },
+  "next_milestones": [
+    {"target_terminals": 32, "report": "per-scenario composition"},
+    {"target_terminals": 128, "report": "per-scenario composition"},
+    {"target_terminals": 384, "action": "close wave D; open wave E (384)"},
+    {"target_terminals": 768, "action": "confirmatory ledger compile with per-scenario composition"}
+  ],
+  "supersedes_partial": "c6_first_terminal_receipt_20260908.json"
+}

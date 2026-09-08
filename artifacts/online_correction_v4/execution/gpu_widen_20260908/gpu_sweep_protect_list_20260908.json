@@ -39,8 +39,11 @@
   "released_shard_queue_pending_redispatch": {
     "attempt_ids": ["attempt0603", "attempt0604", "attempt0605", "attempt0606"],
     "behavioral_episode_count": 220,
+    "missing_episode_coverage": 188,
     "status": "leases_released_jobs_torn_down_20260908",
-    "reoffer_when": "A40 headroom after productive lanes plus retry 0589-0594 stable"
+    "reoffer_when": "A40 headroom after productive lane drain (not retry-first)",
+    "reachability_analysis": "artifacts/online_correction_v4/execution/c7_object_pair_20260906/c7_episode_reachability_analysis_20260908.json",
+    "supersedes_retry_r3": true
   },
   "reclaimed_orphan_policy_attempts_20260908": [
     "attempt0583", "attempt0584", "attempt0585", "attempt0586", "attempt0587",

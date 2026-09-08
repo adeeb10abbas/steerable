@@ -16,7 +16,12 @@
     "bundle_root": "rendered-retry-runnerfix-20260908",
     "create_status": "deferred",
     "prior_status": "leases released during A40 starvation teardown",
-    "defer_reason": "Same lanes as retry 0589-0594 (c7m01/02/05/31); re-offer after retry completes"
+    "defer_reason": "Same lanes as retry 0589-0594 (c7m01/02/05/31); A40 held by 17 productive pairs",
+    "reachability_analysis": "c7_episode_reachability_analysis_20260908.json",
+    "dispatch_when": "productive_lane_drain_then_A40_free",
+    "dispatch_priority": "sole_path_580_to_768",
+    "supersedes_retry_r3": true,
+    "note": "All 188 missing episodes are exactly the released-shard queue; productive lanes add zero net coverage. Skip redundant r3 retry subset; dispatch 0603-0606 after productive teardown."
   },
   "authoritative_compile_count_unchanged": {
     "compile_id": "compiled_ledger_20260908m",

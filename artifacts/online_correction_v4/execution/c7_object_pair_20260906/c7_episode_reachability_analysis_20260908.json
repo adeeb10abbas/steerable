@@ -1,0 +1,58 @@
+{
+  "schema_version": "v4-c7-episode-reachability-analysis-v1",
+  "compiled_at_utc": "2026-09-08T06:15:00Z",
+  "manifest_scope": {
+    "family": "C7",
+    "cohort": "confirmatory",
+    "planned_episodes": 768,
+    "source": "artifacts/online_correction_v4/setup/c7_confirmatory/queue.frozen.jsonl"
+  },
+  "authoritative_compile": {
+    "compile_id": "compiled_ledger_20260908m",
+    "accepted_row_count": 580,
+    "missing_valid": 188
+  },
+  "reachability_verdict": {
+    "reachable_from_productive_lanes_alone": false,
+    "productive_only_missing_count": 0,
+    "all_missing_assignable_only_via_released_shards": true,
+    "deadlock_risk_if_unaddressed": true,
+    "deadlock_mechanism": "17 productive A40 lane pairs hold the saturated pool while all 188 missing episodes sit exclusively on deferred released shards 0603-0606; retry r3 0589-0594 is a strict subset and cannot add net new coverage beyond released."
+  },
+  "shard_inventory": {
+    "productive_lane_pairs": {
+      "count": 17,
+      "attempt_range": "attempt0473-attempt0545",
+      "protected_by": "gpu_sweep_protect_list_20260908.json",
+      "additional_accepted_episodes_remaining": 0
+    },
+    "retry_r3_shards": {
+      "attempt_ids": ["attempt0589", "attempt0590", "attempt0591", "attempt0592", "attempt0593", "attempt0594"],
+      "behavioral_episode_count": 73,
+      "missing_episode_overlap": 59,
+      "subset_of_released": true,
+      "cluster_status": "policies suspended (sim-first gate); simulators Pending on saturated A40 held by productive lanes",
+      "recommendation": "defer_or_teardown_after_productive_drain; superseded by released 0603-0606 for FINAL coverage"
+    },
+    "released_shards": {
+      "attempt_ids": ["attempt0603", "attempt0604", "attempt0605", "attempt0606"],
+      "behavioral_episode_count": 220,
+      "missing_episode_overlap": 188,
+      "covers_all_missing": true,
+      "create_status": "deferred",
+      "bundle_root": "rendered-retry-runnerfix-20260908"
+    }
+  },
+  "resolution_plan": {
+    "sequence": [
+      "Let 17 productive lanes finish current shards; compile count stays at 580 until released shards run.",
+      "On productive drain signal, coordinate capacity agent to tear down productive pairs and free A40 headroom.",
+      "Re-render released shards 0603-0606 from current runtime lock if hash drift since 20260908 defer.",
+      "Dispatch 0603-0606 only (220 eps, 188 net new); skip redundant r3 retry subset to avoid duplicate work.",
+      "Incremental compile after released shard progress; FINAL compile at 768/768 with --require-full-coverage.",
+      "Sync receipt, mark retirement manifest authoritative, hand path to Agent C."
+    ],
+    "final_compile_path": "/data/users/ali/vla_wam/raw/v4/c7-object-pair-main/compiled_ledger_20260908_FINAL",
+    "stall_avoided": "No wait on r3 retry placement while holding A40; released dispatch is the sole path from 580 to 768."
+  }
+}

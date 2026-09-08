@@ -9,6 +9,9 @@ htmlcov/
 .DS_Store
 tmp/pdfs/
 
+# V4 lane render output (generated k8s bundles; authoritative dispatch JSON is committed separately).
+artifacts/online_correction_v4/execution/**/rendered-*/
+
 # Reproducible downloads and large row-level artifacts.
 data/raw/
 data/groot_cmi/

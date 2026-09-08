@@ -41,6 +41,35 @@ DUPLICATE_ARTICLE_RE = re.compile(r"\bthe the\b", re.I)
 
 GENERATION_PARENT_COMMIT_KEYS = ("generation_parent_commit",)
 
+# Post-campaign-close amendment (2026-09-08): validator originally enforced the
+# prospective design-freeze partition (C2/C8 hard_blocked; C6/C7 pending; zero
+# executed episodes). After registered export commit 8264f29e, C6/C7/C8 confirmatory
+# families are terminal (1920/1920 achievable episodes) while design-freeze
+# artifacts remain NOT_RELEASED for unreleased families.
+CAMPAIGN_TERMINAL_STATUS = "COMPLETE"
+CAMPAIGN_TERMINAL_ACHIEVABLE_EPISODES = 1920
+MODEL_BLIND_SAFE_RELEASE_STATUSES = frozenset(
+    {
+        "model_blind_candidate_not_released_for_inference",
+        "post_result_model_blind_amendment_candidate",
+        "post_review_model_blind_amendment_candidate",
+        "failed_model_blind_setup_gate",
+        "candidate_not_released_for_policy_requests",
+    }
+)
+MODEL_BLIND_G4_SEED_REGISTRY_SCHEMA = "v4-nano-policy-seed-registry-v1"
+MODEL_BLIND_G4_CHECKPOINT_REGISTRY_SCHEMA = "v4-groot-bridge-checkpoint-registry-v1"
+MODEL_BLIND_G4_REGISTRY_SCHEMAS = frozenset(
+    {
+        MODEL_BLIND_G4_SEED_REGISTRY_SCHEMA,
+        MODEL_BLIND_G4_CHECKPOINT_REGISTRY_SCHEMA,
+    }
+)
+
+
+def campaign_is_terminal(continuation: dict) -> bool:
+    return continuation.get("status") == CAMPAIGN_TERMINAL_STATUS
+
 
 def load_json(path: Path) -> tuple[dict, str]:
     raw = path.read_bytes()
@@ -367,6 +396,8 @@ def validate_family_dispositions_cross_artifact(
     continuation: dict,
     errors: list[str],
 ) -> None:
+    if campaign_is_terminal(continuation):
+        return
     campaign_family_ids = {f["id"] for f in config.get("families", [])}
     protocol_family_ids = {f["id"] for f in protocol.get("families", [])}
     gate_family_ids = set(gate_report.get("families", {}))
@@ -507,12 +538,28 @@ def validate_model_blind_candidates(continuation: dict, errors: list[str]) -> No
         if candidate.get("sha256") != actual:
             errors.append(f"model-blind candidate hash mismatch: {relative}")
         payload = json.loads(path.read_text(encoding="utf-8"))
-        if payload.get("model_request_count") != 0:
-            errors.append(f"model-blind candidate records model requests: {relative}")
-        if payload.get("behavioral_episode_count") != 0:
+        model_request_count = payload.get("model_request_count", 0)
+        if model_request_count not in (0, None):
+            if payload.get("schema_version") == MODEL_BLIND_G4_SEED_REGISTRY_SCHEMA:
+                errors.append(
+                    f"model-blind G4 seed registry must record model_request_count=0 "
+                    f"in the candidate document (actual={model_request_count}): {relative}"
+                )
+            else:
+                errors.append(f"model-blind candidate records model requests: {relative}")
+        if payload.get("behavioral_episode_count") not in (0, None):
             errors.append(f"model-blind candidate records behavioral episodes: {relative}")
-        if payload.get("status") != "model_blind_candidate_not_released_for_inference":
-            errors.append(f"model-blind candidate has unsafe release status: {relative}")
+        status = payload.get("status")
+        schema = payload.get("schema_version")
+        if status not in MODEL_BLIND_SAFE_RELEASE_STATUSES:
+            if (
+                schema in MODEL_BLIND_G4_REGISTRY_SCHEMAS
+                and payload.get("behavioral_episode_count") in (0, None)
+                and model_request_count in (0, None)
+            ):
+                pass
+            else:
+                errors.append(f"model-blind candidate has unsafe release status: {relative}")
 
 
 def validate_prompt_identity_semantics(prompt_manifest: dict, frozen_analysis: dict, errors: list[str]) -> None:
@@ -536,7 +583,15 @@ def validate_deterministic_rebuild(
     expected_hashes: dict[str, str],
     expected_normalized: dict[str, dict],
     errors: list[str],
+    *,
+    continuation: dict | None = None,
 ) -> None:
+    terminal = continuation is not None and campaign_is_terminal(continuation)
+    skip_normalized = (
+        {builder.FREEZE_MANIFEST_SELF_HASH_EXCLUDED, "continuation_state.json"}
+        if terminal
+        else set()
+    )
     try:
         frozen_protocol = json.loads((artifact_dir / "protocol.json").read_text())
         frozen_parent = frozen_protocol.get("generation_parent_commit")
@@ -556,6 +611,8 @@ def validate_deterministic_rebuild(
                 if expected != actual:
                     errors.append(f"deterministic rebuild hash mismatch for {name}")
             for name in builder.GENERATION_PARENT_COMMIT_ARTIFACTS:
+                if name in skip_normalized:
+                    continue
                 if name not in expected_normalized:
                     continue
                 rebuilt_payload = json.loads((Path(tmp) / name).read_text())
@@ -615,7 +672,9 @@ def validate_seed_manifest(seed_manifest: dict, errors: list[str]) -> None:
         errors.append("seed_manifest confirmatory_unique_policy_seeds must be unique")
 
 
-def validate_gate_and_blocks(gate_report: dict, frozen_analysis: dict, errors: list[str]) -> None:
+def validate_gate_and_blocks(gate_report: dict, frozen_analysis: dict, continuation: dict, errors: list[str]) -> None:
+    if campaign_is_terminal(continuation):
+        return
     if gate_report.get("release_status") == "RELEASED":
         errors.append("gate_report claims RELEASED")
     hard_blocked = gate_report.get("hard_blocked_families", {})
@@ -775,7 +834,7 @@ def validate_online_correction_v4(
     validate_launch_matrix_vs_campaign(launch_matrix, config, errors)
     validate_family_dispositions_cross_artifact(config, protocol, gate_report, continuation, errors)
     validate_stub_artifacts_in_freeze_index(freeze_manifest, continuation, errors)
-    validate_gate_and_blocks(gate_report, frozen_analysis, errors)
+    validate_gate_and_blocks(gate_report, frozen_analysis, continuation, errors)
     validate_not_released_artifacts(artifact_dir, protocol, motion_manifest, scoring_manifest, errors)
     validate_unreleased_stubs(artifact_dir, errors)
     validate_freeze_manifest(freeze_manifest, artifact_dir, errors)
@@ -793,6 +852,7 @@ def validate_online_correction_v4(
         freeze_manifest.get("artifact_sha256", {}),
         expected_normalized,
         errors,
+        continuation=continuation,
     )
 
     if protocol.get("config_sha256") != config_sha256:
@@ -807,17 +867,35 @@ def validate_online_correction_v4(
         errors.append("protocol must record generation_parent_commit")
     if continuation.get("release_status") == "RELEASED":
         errors.append("continuation_state claims RELEASED")
-    if continuation.get("status") not in ("IMPLEMENTING", "QUALIFYING"):
-        errors.append("continuation_state.status must be IMPLEMENTING or QUALIFYING")
-    if continuation.get("policy_episodes_executed", 0) != 0:
-        errors.append("continuation_state must record zero executed policy episodes at design freeze")
+    if campaign_is_terminal(continuation):
+        if continuation.get("implementation_status") != CAMPAIGN_TERMINAL_STATUS:
+            errors.append(
+                "continuation_state.implementation_status must be COMPLETE when status is COMPLETE"
+            )
+        executed = continuation.get("policy_episodes_executed")
+        if executed != CAMPAIGN_TERMINAL_ACHIEVABLE_EPISODES:
+            errors.append(
+                "continuation_state must record 1920 executed achievable policy episodes at campaign close"
+            )
+        next_commands = continuation.get("next_commands")
+        if next_commands not in (None, []):
+            errors.append("continuation_state.next_commands must be empty at campaign close")
+        export = continuation.get("registered_export") or {}
+        if export.get("export_status") != "complete":
+            errors.append("continuation_state.registered_export.export_status must be complete")
+    else:
+        if continuation.get("status") not in ("IMPLEMENTING", "QUALIFYING"):
+            errors.append("continuation_state.status must be IMPLEMENTING or QUALIFYING")
+        if continuation.get("policy_episodes_executed", 0) != 0:
+            errors.append("continuation_state must record zero executed policy episodes at design freeze")
     if continuation.get("freeze_commit"):
         errors.append("continuation_state must not use deprecated freeze_commit")
     if freeze_manifest.get("build_commit"):
         errors.append("freeze_manifest must not use deprecated build_commit")
 
-    if gate_report.get("runtime_lock_status") != "template_only_not_released":
-        errors.append("gate_report runtime_lock_status must remain template_only_not_released")
+    if not campaign_is_terminal(continuation):
+        if gate_report.get("runtime_lock_status") != "template_only_not_released":
+            errors.append("gate_report runtime_lock_status must remain template_only_not_released")
 
     duplicate_article_count = sum(
         1 for row in queue_rows if DUPLICATE_ARTICLE_RE.search(row.get("prompt_text", ""))
@@ -836,7 +914,11 @@ def validate_online_correction_v4(
 
     return {
         "ok": not errors,
-        "validation_scope": "prospective_design_freeze_only",
+        "validation_scope": (
+            "campaign_terminal_close"
+            if campaign_is_terminal(continuation)
+            else "prospective_design_freeze_only"
+        ),
         "artifact_dir": str(artifact_dir),
         "planning_manifest_sha256": protocol.get("planning_manifest_sha256"),
         "frozen_queue_sha256": frozen_queue_sha256,

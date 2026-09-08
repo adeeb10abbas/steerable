@@ -928,15 +928,25 @@ def build_launch_matrix_stub(config: dict) -> dict[str, Any]:
     }
 
 
+def _load_qualification_receipt_json(path: Path) -> dict[str, Any]:
+    """Parse qualification JSON, skipping accidental kubectl log prefixes on line 1."""
+    raw = path.read_text(encoding="utf-8")
+    lines = raw.splitlines()
+    if lines and not lines[0].lstrip().startswith("{"):
+        raw = "\n".join(lines[1:]).lstrip()
+    payload = json.loads(raw)
+    if not isinstance(payload, dict):
+        raise ValueError(f"qualification receipt must be an object: {path}")
+    return payload
+
+
 def discover_qualification_receipts() -> list[dict[str, Any]]:
     receipt_dir = DEFAULT_OUT / "qualification"
     if not receipt_dir.is_dir():
         return []
     receipts: list[dict[str, Any]] = []
     for path in sorted(receipt_dir.glob("*.json")):
-        payload = json.loads(path.read_text(encoding="utf-8"))
-        if not isinstance(payload, dict):
-            raise ValueError(f"qualification receipt must be an object: {path}")
+        payload = _load_qualification_receipt_json(path)
         receipts.append(
             {
                 "path": str(path.relative_to(ROOT)),

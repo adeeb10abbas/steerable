@@ -18,7 +18,9 @@
   ],
   "post_create_observed": {
     "policy_running": 6,
-    "sim_pending": 6,
-    "note": "Policies loading Cosmos checkpoint; sims Pending on A40 scheduling behind 17 productive lanes"
+    "policy_suspended_sim_first": 6,
+    "sim_pending_a40": 6,
+    "sim_running": 0,
+    "note": "Policies suspended until sim Running per sim-first gate; sims Pending on A40 (17 productive lanes saturated pool)"
   }
 }

@@ -1,0 +1,28 @@
+{
+  "schema_version": "v4-c7-released-shard-reoffer-receipt-v1",
+  "compiled_at_utc": "2026-09-08T05:35:00Z",
+  "kube_context": "prod-dcwi-warrenq1-vmkub007",
+  "namespace": "211247-prod",
+  "retry_shards_redispatched": {
+    "attempt_ids": ["attempt0589", "attempt0590", "attempt0591", "attempt0592", "attempt0593", "attempt0594"],
+    "behavioral_episode_count": 88,
+    "bundle_root": "rendered-retry-infra-preempt-20260908r2",
+    "create_status": "created",
+    "remediation": "Re-rendered from current lock after serve_v4_nano.py hash drift; stale PVC locks cleared"
+  },
+  "released_shards_reoffered": {
+    "attempt_ids": ["attempt0603", "attempt0604", "attempt0605", "attempt0606"],
+    "behavioral_episode_count": 220,
+    "bundle_root": "rendered-retry-runnerfix-20260908",
+    "create_status": "deferred",
+    "prior_status": "leases released during A40 starvation teardown",
+    "defer_reason": "Same lanes as retry 0589-0594 (c7m01/02/05/31); re-offer after retry completes"
+  },
+  "authoritative_compile_count_unchanged": {
+    "compile_id": "compiled_ledger_20260908m",
+    "accepted_row_count": 580,
+    "planned_episodes": 768,
+    "missing_valid": 188
+  },
+  "note": "17 productive lanes preserved per protect list; 0603-0606 require re-render from current lock before dispatch (same rule as C6 wave D)."
+}

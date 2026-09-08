@@ -1,0 +1,25 @@
+{
+  "schema_version": "v4-c7-infra-retry-create-wave-v1",
+  "behavioral_episode_count": 88,
+  "dispatch_mode": "behavioral_infra_retry_shared_checkout_rerender",
+  "infra_failure_class": "bound_launch_file_hash_drift_after_c7_repair",
+  "kube_context": "prod-dcwi-warrenq1-vmkub007",
+  "namespace": "211247-prod",
+  "released_runner_sha256": "71e7f86f5e3dbda46ae3a03a7a07959fc4562a13dce71955362bf93226adb3df",
+  "render_root": "artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-retry-infra-preempt-20260908r2",
+  "supersedes": "create-retry-infra-preempt-20260908r1.json",
+  "remediation": "Re-render retry shards 0589-0594 from current lock after serve_v4_nano.py hash drift on shared checkout; clear stale PVC attempt locks; full bundle delete-recreate.",
+  "lane_assignments": [
+    {"attempt_id": "attempt0589", "lane_id": "c7m01", "create_status": "created"},
+    {"attempt_id": "attempt0590", "lane_id": "c7m02", "create_status": "created"},
+    {"attempt_id": "attempt0591", "lane_id": "c7m05", "create_status": "created"},
+    {"attempt_id": "attempt0592", "lane_id": "c7m31", "create_status": "created"},
+    {"attempt_id": "attempt0593", "lane_id": "c7m02", "create_status": "created"},
+    {"attempt_id": "attempt0594", "lane_id": "c7m05", "create_status": "created"}
+  ],
+  "released_shard_queue_deferred": {
+    "attempt_ids": ["attempt0603", "attempt0604", "attempt0605", "attempt0606"],
+    "behavioral_episode_count": 220,
+    "status": "deferred until retry lanes 0589-0594 complete (same c7m01/02/05/31 lanes)"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "schema_version": "v4-c6-gpu-spread-placement-receipt-v1",
+  "campaign_id": "online_correction_v4",
+  "family_id": "containment_c6",
+  "wave_id": "c6confirm20260908f",
+  "attempt_range": "attempt0161-attempt0192",
+  "observed_at_utc": "2026-09-08T01:13:09Z",
+  "kube_context": "prod-dcwi-warrenq1-vmkub007",
+  "namespace": "211247-prod",
+  "rendered_root": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f",
+  "enforce_command": ".venv/bin/python tools/enforce_v4_capacity_arbitration.py --mode gpu_placement --policy c6_a10040_spread --rendered-root artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f",
+  "placement_policy": "c6_a10040_spread",
+  "spread_family_label": "c6-a10040-sim",
+  "jobs_replaced": 21,
+  "roles_targeted": ["simulator"],
+  "scheduling_state_at_apply": {
+    "healthy_pairs": 8,
+    "partial_pairs": 3,
+    "pending_pairs": 21,
+    "total_lanes": 32,
+    "sim_running": 10,
+    "sim_pending": 21,
+    "sim_failed": 1,
+    "policy_running": 9,
+    "policy_pending": 23
+  },
+  "pool_free_estimate_at_apply": {
+    "NVIDIA-A100-SXM4-40GB": 54,
+    "NVIDIA-B200": 31
+  },
+  "finding": "Placement not capacity: 21 Pending sim Jobs received topology-spread labels via replace_job_with_spread; shortage was bin-packing on A100-40GB stratum not aggregate pool headroom.",
+  "post_apply_note": "Spread-labeled pods enter scheduler queue; Running count rises as A100-40GB nodes absorb spread topology. Wave D confirmatory terminals still 0 pending Isaac warmup.",
+  "related_receipt": "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_placement_receipt.json",
+  "shared_checkout_rule": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/runner_binding_resolution_20260908.json"
+}

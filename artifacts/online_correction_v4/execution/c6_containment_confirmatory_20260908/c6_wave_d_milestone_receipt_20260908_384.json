@@ -1,0 +1,66 @@
+{
+  "compiled_at_utc": "2026-09-08T14:41:25Z",
+  "confirmatory_terminals": 390,
+  "grasp_definition_notes": {
+    "c6_rule": "failure_label != no_grasp (shared scorer with C8)",
+    "c8_wrong_goal_region_asymmetry": "C8 observed zero wrong_goal_region in 407 episodes; C6 has nonzero wgr \u2014 use ti_only for cross-platform magnitude comparison",
+    "transport_incomplete_only": "failure_label == transport_incomplete (C8-comparable label set)"
+  },
+  "grasp_rate_by_scenario": {
+    "destination_static": {
+      "episodes": 129,
+      "grasp_achieved_c6_rule": 30,
+      "grasp_achieved_transport_incomplete_only": 28,
+      "grasp_rate_c6_rule_pct": 23.3,
+      "grasp_rate_transport_incomplete_only_pct": 21.7,
+      "no_grasp": 99,
+      "outcomes": {
+        "no_grasp": 99,
+        "transport_incomplete": 28,
+        "wrong_goal_region": 2
+      },
+      "wrong_goal_region_count": 2,
+      "wrong_goal_region_share_pct": 1.6
+    },
+    "move_stop": {
+      "episodes": 131,
+      "grasp_achieved_c6_rule": 26,
+      "grasp_achieved_transport_incomplete_only": 23,
+      "grasp_rate_c6_rule_pct": 19.8,
+      "grasp_rate_transport_incomplete_only_pct": 17.6,
+      "no_grasp": 105,
+      "outcomes": {
+        "no_grasp": 105,
+        "transport_incomplete": 23,
+        "wrong_goal_region": 3
+      },
+      "wrong_goal_region_count": 3,
+      "wrong_goal_region_share_pct": 2.3
+    },
+    "original_sham": {
+      "episodes": 130,
+      "grasp_achieved_c6_rule": 25,
+      "grasp_achieved_transport_incomplete_only": 23,
+      "grasp_rate_c6_rule_pct": 19.2,
+      "grasp_rate_transport_incomplete_only_pct": 17.7,
+      "no_grasp": 105,
+      "outcomes": {
+        "no_grasp": 105,
+        "transport_incomplete": 23,
+        "wrong_goal_region": 2
+      },
+      "wrong_goal_region_count": 2,
+      "wrong_goal_region_share_pct": 1.5
+    }
+  },
+  "milestones": {
+    "128": "passed",
+    "32": "passed",
+    "384": "passed"
+  },
+  "ordering_note": "At n=390, C6 rule ordering: destination_static (23.3%) > move_stop (19.8%) > original_sham (19.2%); TI-only ordering: destination_static (21.7%) > original_sham (17.7%) > move_stop (17.6%). FINAL at 384: destination_static ranks first under both conventions. Second and third ranks swapped at least three times as n grew (268, 330, 337); the final rank order at n=384 is not evidence of a stable rank between move_stop and original_sham. Only the claim that destination_static ranks first is supportable.",
+  "schema_version": "v4-c6-wave-progress-receipt-v1",
+  "supersedes": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/c6_wave_d_progress_receipt_20260908m.json",
+  "wave_id": "c6confirm20260908f",
+  "wave_label": "D"
+}

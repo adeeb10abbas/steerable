@@ -1,0 +1,41 @@
+{
+  "schema_version": "v4-c6-agent-c-handoff-final-v1",
+  "compiled_at_utc": "2026-09-08T14:41:19Z",
+  "status": "FINAL",
+  "family": "C6",
+  "confirmatory_denominator": 384,
+  "compile_id": "compiled_ledger_20260908_FINAL",
+  "pvc_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/compiled_ledger_20260908_FINAL",
+  "require_full_coverage": true,
+  "accepted_rows": 384,
+  "queue_path": "artifacts/online_correction_v4/setup/c6_confirmatory/queue.frozen.cosmos3_nano.jsonl",
+  "released_policy": "cosmos3_nano_droid",
+  "composition": {
+    "no_grasp": 304,
+    "transport_incomplete": 74,
+    "wrong_goal_region": 6,
+    "grasp_rate_c6_rule_pct": 20.8,
+    "grasp_rate_transport_incomplete_only_pct": 19.3
+  },
+  "grasp_rate_by_scenario_at_384": {
+    "destination_static": {
+      "episodes": 128,
+      "grasp_rate_c6_rule_pct": 23.4,
+      "grasp_rate_transport_incomplete_only_pct": 21.9
+    },
+    "move_stop": {
+      "episodes": 128,
+      "grasp_rate_c6_rule_pct": 19.5,
+      "grasp_rate_transport_incomplete_only_pct": 18.0
+    },
+    "original_sham": {
+      "episodes": 128,
+      "grasp_rate_c6_rule_pct": 19.5,
+      "grasp_rate_transport_incomplete_only_pct": 18.0
+    }
+  },
+  "ordering_note": "At n=384: C6 rule destination_static (23.4%) > move_stop (19.5%) = original_sham (19.5%); TI-only destination_static (21.9%) > move_stop (18.0%) = original_sham (18.0%). Second/third tied at final n; ranks swapped at least three times during collection. Only destination_static ranks first is supportable.",
+  "milestone_receipt_path": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/c6_wave_d_milestone_receipt_20260908_384.json",
+  "wave_e_blocked_scope_path": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/c6_wave_e_blocked_scope_20260908.json",
+  "agent_c_note": "C6 confirmatory closed at 384/384 on released cosmos3_nano scope. Campaign achievable total is 1920 with C6_pi05_containment blocked at 384."
+}

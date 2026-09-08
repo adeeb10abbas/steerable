@@ -1,0 +1,11 @@
+{
+  "schema_version": "v4-c6-collection-scheduling-diagnosis-v1",
+  "compiled_at_utc": "2026-09-08T14:42:00Z",
+  "symptom": "337 unique terminals stalled for ~90 min after r8 re-shard despite free GPUs; 21 pods reported Pending at peak",
+  "root_cause": "Not GPU FailedScheduling. Pending pods were successfully assigned (default-scheduler events show Successfully assigned). Stall was post-reshard lane ramp: sim-first gate requires sim Running before policy unsuspend; most lanes completed their 1-2 episode shards and terminated, leaving a shrinking tail on fewer active pairs. Collection resumed when attempt0362-0364 lanes reached healthy Running pairs.",
+  "recovery_tool_fired": false,
+  "duplicate_complete_files_on_pvc": 5,
+  "duplicate_note": "Re-shard retries produced 5 duplicate COMPLETE paths; compiler selected latest valid attempts yielding exactly 384 accepted rows.",
+  "final_tail": "Last 2 missing queue rows collected on c6m00-c6m02 attempt0362-0364 in ~3 minutes once pairs were healthy.",
+  "gpu_capacity": "Not binding at campaign close; C7/C8 already reclaimed"
+}

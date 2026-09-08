@@ -113,11 +113,27 @@ def main(argv: list[str] | None = None) -> int:
         ordering_rates.append((scenario, float(bucket.get("grasp_rate_c6_rule_pct") or 0)))
 
     ordering_rates.sort(key=lambda x: -x[1])
+    ti_ordering = []
+    for scenario in SCENARIOS:
+        bucket = grasp.get("by_scenario", {}).get(scenario, {})
+        ti_ordering.append((scenario, float(bucket.get("grasp_rate_transport_incomplete_only_pct") or 0)))
+    ti_ordering.sort(key=lambda x: -x[1])
     ordering_note = (
-        f"At n={terminals}, C6 rule ordering: {' > '.join(f'{s} ({r:.1f}%)' for s,r in ordering_rates)}. "
-        "Also report transport_incomplete_only for C8-comparable cells (C8 has zero wrong_goal_region in 407 eps). "
-        "Per-cell n not estimable until 384; Agent C platform×scenario table remains not estimable."
+        f"At n={terminals}, C6 rule ordering: {' > '.join(f'{s} ({r:.1f}%)' for s,r in ordering_rates)}; "
+        f"TI-only ordering: {' > '.join(f'{s} ({r:.1f}%)' for s,r in ti_ordering)}. "
     )
+    if terminals >= 384:
+        ordering_note += (
+            "FINAL at 384: destination_static ranks first under both conventions. "
+            "Second and third ranks swapped at least three times as n grew (268, 330, 337); "
+            "the final rank order at n=384 is not evidence of a stable rank between move_stop and original_sham. "
+            "Only the claim that destination_static ranks first is supportable."
+        )
+    else:
+        ordering_note += (
+            "Second/third rank order has swapped across milestones — do not over-read rank stability. "
+            "Also report transport_incomplete_only for C8-comparable cells."
+        )
 
     receipt = {
         "schema_version": "v4-c6-wave-progress-receipt-v1",

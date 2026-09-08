@@ -1,0 +1,51 @@
+{
+  "agent_c_handoff_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/compiled_ledger_20260908_FINAL",
+  "compile_id": "compiled_ledger_20260908_FINAL",
+  "confirmatory_denominator": 384,
+  "pvc_path": "/data/users/ali/vla_wam/raw/v4/c6-containment-main/compiled_ledger_20260908_FINAL",
+  "require_full_coverage": true,
+  "schema_version": "v4-c6-confirmatory-compile-receipt-v1",
+  "summary": {
+    "accepted_rows": 384,
+    "composition": {
+      "no_grasp": 304,
+      "transport_incomplete": 74,
+      "wrong_goal_region": 6
+    },
+    "grasp_rate_c6_rule_pct": 20.8,
+    "grasp_rate_transport_incomplete_only_pct": 19.3,
+    "by_scenario": {
+      "destination_static": {
+        "episodes": 128,
+        "grasp_rate_c6_rule_pct": 23.4,
+        "grasp_rate_transport_incomplete_only_pct": 21.9,
+        "outcomes": {
+          "no_grasp": 98,
+          "transport_incomplete": 28,
+          "wrong_goal_region": 2
+        }
+      },
+      "move_stop": {
+        "episodes": 128,
+        "grasp_rate_c6_rule_pct": 19.5,
+        "grasp_rate_transport_incomplete_only_pct": 18.0,
+        "outcomes": {
+          "no_grasp": 103,
+          "transport_incomplete": 23,
+          "wrong_goal_region": 2
+        }
+      },
+      "original_sham": {
+        "episodes": 128,
+        "grasp_rate_c6_rule_pct": 19.5,
+        "grasp_rate_transport_incomplete_only_pct": 18.0,
+        "outcomes": {
+          "no_grasp": 103,
+          "transport_incomplete": 23,
+          "wrong_goal_region": 2
+        }
+      }
+    }
+  },
+  "ordering_note": "At n=384 C6 rule: destination_static > move_stop = original_sham. TI-only: destination_static > move_stop = original_sham. Second/third tied at terminal n; rank swaps during collection mean only destination_static-first is supportable."
+}

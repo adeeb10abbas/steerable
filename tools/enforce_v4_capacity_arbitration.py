@@ -39,6 +39,12 @@ def main(argv: list[str] | None = None) -> int:
         default="c8_a40_spread",
     )
     parser.add_argument("--protect-list", type=Path, default=gpu_scheduling.DEFAULT_PROTECT_LIST)
+    parser.add_argument(
+        "--rendered-root",
+        type=Path,
+        default=None,
+        help="Optional C8 rendered bundle root for gpu_placement mode.",
+    )
     parser.add_argument("--receipt-out", type=Path, default=DEFAULT_RECEIPT)
     parser.add_argument("--sweep-receipt-out", type=Path, default=DEFAULT_SWEEP_RECEIPT)
     parser.add_argument("--placement-receipt-out", type=Path, default=DEFAULT_PLACEMENT_RECEIPT)
@@ -50,6 +56,7 @@ def main(argv: list[str] | None = None) -> int:
             namespace=args.namespace,
             dry_run=args.dry_run,
             protect_list_path=args.protect_list,
+            rendered_root=args.rendered_root,
         )
         if not args.dry_run:
             args.placement_receipt_out.parent.mkdir(parents=True, exist_ok=True)

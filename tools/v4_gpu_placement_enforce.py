@@ -243,14 +243,6 @@ def apply_rendered_lane_jobs(
                 }
             )
     return actions
-    by_role = {job.role: job for job in jobs if job.lane_id == lane_id}
-    policy = by_role.get("policy")
-    sim = by_role.get("sim")
-    if policy and sim and policy.pod_phase == "Running" and sim.pod_phase == "Running":
-        return "healthy"
-    if policy and sim and policy.pod_phase == "Pending" and sim.pod_phase == "Pending":
-        return "pending"
-    return "partial"
 
 
 def job_needs_placement(

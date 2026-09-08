@@ -1,0 +1,34 @@
+{
+  "schema_version": "v4-c8-placement-coordination-handoff-v1",
+  "compiled_at_utc": "2026-09-08T00:50:00Z",
+  "owner": "capacity_agent",
+  "c8_agent_action_required": {
+    "render_spec_field": "placement_policy",
+    "value": "c8_a40_spread",
+    "hardware_stratum_unchanged": "a40-single-container-groot-bridge",
+    "gpu_product_unchanged": "NVIDIA-A40",
+    "note": "Set placement_policy in every C8 confirmatory and pilot lane render spec. The shared renderer (render_v4_k8s_lane_bundle.py) emits topologySpreadConstraints and soft C7 podAntiAffinity automatically when this field is present."
+  },
+  "capacity_agent_enforcement": {
+    "command": ".venv/bin/python tools/enforce_v4_capacity_arbitration.py --mode gpu_placement --policy c8_a40_spread",
+    "with_rendered_bundle": ".venv/bin/python tools/enforce_v4_capacity_arbitration.py --mode gpu_placement --policy c8_a40_spread --rendered-root artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r1",
+    "behavior": "Replaces Pending/Missing C8 Jobs lacking v4-gpu-spread-family label; never deletes Running GPU pods; honors gpu_sweep_protect_list_20260908.json for C7 lanes."
+  },
+  "admission_rules": {
+    "c8_lanes_admitted": "c8m00-c8m19 confirmatory plus g7c8p00-g7c8p07 pilot",
+    "no_a100_b200": true,
+    "protect_list_path": "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_sweep_protect_list_20260908.json"
+  },
+  "c6_parallel_policy": {
+    "placement_policy": "c6_a10040_spread",
+    "command": ".venv/bin/python tools/enforce_v4_capacity_arbitration.py --mode gpu_placement --policy c6_a10040_spread",
+    "applies_to_roles": ["simulator"],
+    "note": "C6 sim spread on A100-40GB only; B200 policy pods unchanged."
+  },
+  "tooling_locations": {
+    "placement_policies": "tools/v4_gpu_scheduling.py PLACEMENT_POLICIES",
+    "renderer_integration": "tools/render_v4_k8s_lane_bundle.py render_job()",
+    "live_enforcement": "tools/v4_gpu_placement_enforce.py",
+    "cli_entrypoint": "tools/enforce_v4_capacity_arbitration.py --mode gpu_placement"
+  }
+}

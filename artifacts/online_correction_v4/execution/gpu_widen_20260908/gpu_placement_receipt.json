@@ -1,51 +1,55 @@
 {
   "a40_fragmentation_confirmed": {
     "diagnosis": "per_node_fragmentation_plus_c7_legitimate_occupancy",
-    "pending_c8_gpu_pods_with_spread": 31,
-    "pool_free_a40_estimate": 15
+    "note": "After orphan reclaim and spread placement, C8 bulk lanes remain Pending while pool shows ~14-15 free A40 GPUs. Pending count did not drop when orphans cleared (35→35 per C8 agent); spread session moved pending pods 35→29 and placed 4 partial lane legs on distinct nodes.",
+    "pending_c8_gpu_pods_after_spread": 29,
+    "pool_free_a40_estimate": 14
   },
-  "additional_c8_healthy_pairs_vs_pre_spread_baseline_2": 0,
+  "actions": [],
+  "additional_c8_healthy_pairs": 0,
+  "additional_c8_partial_lane_pairs_vs_baseline_2_healthy": 3,
   "c8_admission_coordination": {
+    "coordination_handoff": "artifacts/online_correction_v4/execution/gpu_widen_20260908/c8_placement_coordination_handoff.json",
     "enforce_command": ".venv/bin/python tools/enforce_v4_capacity_arbitration.py --mode gpu_placement --policy c8_a40_spread",
     "rendered_root_flag": "--rendered-root artifacts/online_correction_v4/execution/c8_second_stack_20260908/rendered-confirmatory-r1",
     "renderer_field": "placement_policy",
     "renderer_value_for_c8": "c8_a40_spread"
   },
+  "dry_run": false,
+  "jobs_replaced": 0,
+  "kube_context": "prod-dcwi-warrenq1-vmkub007",
   "lane_pair_capacity_binding": {
     "binding_factor": "planning_and_pool_occupancy_not_single_pod_binpack",
     "family": "C8_second_stack",
     "finding": "C8 policy and simulator are independent 1-GPU pods on NVIDIA-A40 connected via in-cluster Service HTTP. Kubernetes does not require co-scheduling on one node or one 2-GPU request. The 2-GPU lane pair is the throughput planning unit because both pods must be Running for episodes, not because the scheduler atomically allocates two GPUs. Pending C8 pods with pool-wide free A40 capacity therefore indicate per-node fragmentation and competing C7 A40 occupancy, not a rigid 2-GPU bin-packing constraint.",
     "hardware_stratum": "a40-single-container-groot-bridge",
-    "paper_note": "Report lane-pair concurrency as a study-design unit (2\u00d7A40 per lane), but attribute scheduling failures to fragmented single-GPU nodes rather than an unsatisfiable 2-GPU pod request.",
+    "paper_note": "Report lane-pair concurrency as a study-design unit (2×A40 per lane), but attribute scheduling failures to fragmented single-GPU nodes rather than an unsatisfiable 2-GPU pod request.",
     "planning_gpus_per_lane_pair": 2,
     "policy_sim_co_location_required": false,
-    "scheduler_gpu_request_per_pod": 1
+    "scheduler_gpu_request_per_pod": 1,
+    "two_gpu_pair_is_binding_for_scheduler": false,
+    "two_gpu_pair_is_binding_for_throughput_planning": true
   },
-  "observed_at_utc": "2026-09-08T00:37:18Z",
+  "namespace": "211247-prod",
+  "observed_at_utc": "2026-09-08T00:49:02Z",
   "placement_policy": {
     "gpu_product": "NVIDIA-A40",
     "hardware_stratum": "a40-single-container-groot-bridge",
-    "lane_id_prefixes": [
-      "c8m",
-      "g7c8p"
-    ],
+    "lane_id_prefixes": ["c8m", "g7c8p"],
     "max_skew": 1,
     "policy_id": "c8_a40_spread",
-    "roles": [
-      "policy",
-      "simulator"
-    ],
+    "roles": ["policy", "simulator"],
     "schema_version": "v4-gpu-placement-policy-v1",
     "spread_family_label": "c8-a40",
     "topology_key": "kubernetes.io/hostname",
     "when_unsatisfiable": "ScheduleAnyway"
   },
   "pool_utilization_after": {
-    "pending_gpu_pods": 34,
+    "pending_gpu_pods": 97,
     "pool_free_estimate": {
       "NVIDIA-A100-SXM4-40GB": 64,
       "NVIDIA-A100-SXM4-80GB": 78,
-      "NVIDIA-A40": 15,
+      "NVIDIA-A40": 14,
       "NVIDIA-B200": 40
     },
     "pool_sizes": {
@@ -57,8 +61,21 @@
     "running_gpus_by_family_role": {
       "c7_policy": 17,
       "c7_sim": 17,
-      "c8_policy": 5,
+      "c8_policy": 6,
       "c8_sim": 3
+    },
+    "running_gpus_by_product": {
+      "NVIDIA-A100-SXM4-80GB": 17,
+      "NVIDIA-A40": 26
+    }
+  },
+  "pool_utilization_before": {
+    "pending_gpu_pods": 98,
+    "pool_free_estimate": {
+      "NVIDIA-A100-SXM4-40GB": 64,
+      "NVIDIA-A100-SXM4-80GB": 78,
+      "NVIDIA-A40": 15,
+      "NVIDIA-B200": 40
     },
     "running_gpus_by_product": {
       "NVIDIA-A100-SXM4-80GB": 17,
@@ -66,32 +83,47 @@
     }
   },
   "protect_list_path": "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_sweep_protect_list_20260908.json",
+  "protected_c7_lane_count": 21,
   "scheduling_state_after": {
     "c6": {
       "healthy_pairs": 0,
       "lane_prefix": "c6m",
-      "partial_pairs": 9,
-      "pending_pairs": 0,
-      "total_lanes_seen": 9
+      "partial_pairs": 0,
+      "pending_pairs": 32,
+      "total_lanes_seen": 32
     },
     "c8": {
       "healthy_pairs": 2,
       "lane_prefix": "c8m",
-      "partial_pairs": 4,
-      "pending_pairs": 14,
+      "partial_pairs": 5,
+      "partial_lanes_with_one_leg_running": ["c8m00", "c8m15", "c8m17", "c8m18", "c8m19"],
+      "pending_pairs": 13,
+      "productive_lanes": ["c8m13", "c8m14"],
       "total_lanes_seen": 20
     }
   },
+  "scheduling_state_before_spread_session": {
+    "c8": {
+      "healthy_pairs": 2,
+      "partial_pairs": 0,
+      "pending_gpu_pods": 35,
+      "pending_pairs": 17,
+      "productive_lanes": ["c8m13", "c8m14"]
+    }
+  },
   "schema_version": "v4-gpu-placement-receipt-v1",
-  "session_summary": {
-    "c8m00_sim_scheduled_after_spread": true,
-    "note": "Spread applied to all C8 confirmatory rendered jobs; pool remains A40-saturated by C7 sim occupancy.",
-    "pending_jobs_recreated_via_rendered_root": true,
-    "rendered_jobs_applied_with_spread": 32
+  "session_initial_apply": {
+    "observed_at_utc": "2026-09-08T00:37:18Z",
+    "rendered_jobs_applied_with_spread": 32,
+    "newly_scheduled_partial_lanes": ["c8m00", "c8m17", "c8m18", "c8m19"],
+    "pending_gpu_pods_before": 35,
+    "pending_gpu_pods_after": 29
   },
   "wall_clock_estimates": {
     "c6_confirmatory_768_hours_at_8_lanes": 40.0,
     "c8_confirmatory_768_hours_at_20_lanes_post_c7": 16.0,
-    "c8_confirmatory_768_hours_at_current_lanes": 160.0
+    "c8_confirmatory_768_hours_at_2_healthy_lanes": 160.0,
+    "c8_confirmatory_768_hours_at_6_partial_legs_if_all_pair": 51.2,
+    "c7_remaining_hours_at_17_lanes": 4.6
   }
 }

@@ -1,0 +1,17 @@
+{
+  "schema_version": "v4-c7-r6-ramp-status-v1",
+  "compiled_at_utc": "2026-09-08T04:40:00Z",
+  "partial_ledger": "580/768 compiled_ledger_20260908m",
+  "r6_tail_episodes_remaining": 180,
+  "r6_lane_count": 14,
+  "healthy_pairs_observed": 10,
+  "healthy_pairs_target": 14,
+  "ramp_blockers_resolved": [
+    "sim-first gate missing for C7 (added c7_sim_first_adhoc to 180s loop in 8e824d0c)",
+    "stale simulator attempt locks from failed first sim pass (cleared via recover_c7_r6_stale_locks.py)"
+  ],
+  "remaining_ramp_blocker": "2/14 sim pods Pending on A40 GPU scheduling (c7m16, c7m18)",
+  "r6_completes_observed": 0,
+  "final_compile_path": "/data/users/ali/vla_wam/raw/v4/c7-object-pair-main/compiled_ledger_20260908_FINAL",
+  "final_compile_status": "pending_768_full_coverage"
+}

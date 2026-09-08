@@ -1,0 +1,41 @@
+{
+  "schema_version": "v4-c6-wave-progress-receipt-v1",
+  "compiled_at_utc": "2026-09-08T04:38:00Z",
+  "wave_id": "c6confirm20260908f",
+  "wave_label": "D",
+  "confirmatory_terminals": 73,
+  "milestones": {
+    "32": "passed",
+    "128": "pending",
+    "384": "pending"
+  },
+  "grasp_rate_by_scenario": {
+    "destination_static": {
+      "episodes": 22,
+      "grasp_achieved": 5,
+      "grasp_rate_pct": 22.7,
+      "c8_reference_at_161_eps_pct": 7.8
+    },
+    "move_stop": {
+      "episodes": 28,
+      "grasp_achieved": 3,
+      "grasp_rate_pct": 10.7,
+      "c8_reference_at_161_eps_pct": 3.6
+    },
+    "original_sham": {
+      "episodes": 23,
+      "grasp_achieved": 4,
+      "grasp_rate_pct": 17.4,
+      "c8_reference_at_161_eps_pct": 1.8
+    }
+  },
+  "ordering_note": "PROMINENT WATCH — third+ consecutive milestone: original_sham (17.4%) and destination_static (22.7%) exceed move_stop (10.7%), inverting C8 ordering (7.8% / 3.6% / 1.8% at n=161). Per-cell n=22–28; not estimable. Report again at 128 and 384 for Agent C platform×scenario table.",
+  "outcome_breakdown_by_scenario": {
+    "destination_static": {"no_grasp": 17, "transport_incomplete": 5},
+    "move_stop": {"no_grasp": 25, "transport_incomplete": 3},
+    "original_sham": {"no_grasp": 19, "transport_incomplete": 3, "wrong_goal_region": 1}
+  },
+  "grasp_definition_audit": "c6_c8_grasp_definition_consistency_audit_20260908.json",
+  "healthy_pairs_observed": "~19 C6 lanes with sim+policy Running after attempt0200 restore",
+  "supersedes": "c6_wave_d_progress_receipt_20260908f.json"
+}

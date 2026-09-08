@@ -1,0 +1,44 @@
+{
+  "schema_version": "v4-grasp-definition-consistency-audit-v1",
+  "compiled_at_utc": "2026-09-08T04:35:00Z",
+  "question": "Are C6 (Isaac/DROID) and C8 (WidowX/Bridge) grasp rates comparable, or confounded by different outcome-label definitions?",
+  "verdict": "DEFINITIONS_MATCH — operational grasp rate uses the same rule on both platforms; magnitude gap is not from a reporting artifact.",
+  "operational_grasp_rate_definition": {
+    "rule": "grasp_achieved := (failure_label != 'no_grasp')",
+    "includes_labels": [
+      "transport_incomplete",
+      "grasp_lost",
+      "wrong_goal_region",
+      "release_failed",
+      "support_or_containment_failed",
+      "success",
+      "timeout_without_completion",
+      "collision_caused_terminal_failure",
+      "unresolved_behavioral_failure"
+    ],
+    "excludes_labels": ["no_grasp"]
+  },
+  "code_references": {
+    "c6_reporter": "tools/report_c6_confirmatory_grasp_by_scenario.py (lines 33-36: no_grasp vs else grasp_achieved)",
+    "c8_composition": "c8_confirmatory_composition_by_scenario_*.json (grasp_achieved = episodes - no_grasp; transport_incomplete counts as grasp)",
+    "shared_terminal_classifier": "experiments/online_correction_v4/attempts.py derive_failure_label + classify_terminal_outcome",
+    "shared_scorer": "experiments/online_correction_v4/droid_scorer.py build_terminal_scorer → HorizontalDroidTerminalScorer for both containment and second_stack fixtures"
+  },
+  "natural_grasp_detector": {
+    "shared_params": "campaign.json natural_grasp_min_lift_m=0.04, natural_grasp_dwell_s=0.2, kinematic_grasp_relative_drift_max_m=0.01",
+    "note": "Natural-grasp trigger eligibility is separate from operational grasp rate; both families use NaturalGraspDetector in runner.py"
+  },
+  "c6_n63_outcome_breakdown": {
+    "destination_static": {"no_grasp": 17, "transport_incomplete": 4, "grasp_rate_pct": 19.0},
+    "move_stop": {"no_grasp": 24, "transport_incomplete": 3, "grasp_rate_pct": 11.1},
+    "original_sham": {"no_grasp": 17, "transport_incomplete": 3, "wrong_goal_region": 1, "grasp_rate_pct": 19.0}
+  },
+  "c8_n204_reference": {
+    "destination_static": {"no_grasp": 59, "transport_incomplete": 4, "grasp_rate_pct": 6.3},
+    "move_stop": {"no_grasp": 69, "transport_incomplete": 3, "grasp_rate_pct": 2.8},
+    "original_sham": {"no_grasp": 67, "transport_incomplete": 2, "grasp_rate_pct": 2.9}
+  },
+  "magnitude_gap_interpretation": "C6 'grasp' episodes at n≈63 are predominantly transport_incomplete (partial carry before timeout), not success or wrong_goal_region. Same label on C8 yields lower rates — likely platform physics/policy behavior, not definitional confound. Cross-platform contrast (platform_scenario_grasp_contrast.csv) remains not estimable until both families reach registered coverage.",
+  "registered_estimand": "platform_x_scenario_grasp_interaction with Holm handling; currently insufficient_coverage_not_estimable",
+  "action_if_divergence_found": "Would require harmonizing reporters or re-deriving from accepted ledgers only — not needed; definitions already match."
+}

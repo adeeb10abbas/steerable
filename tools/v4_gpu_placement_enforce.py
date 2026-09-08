@@ -484,6 +484,7 @@ def enforce_gpu_placement(
     protect_list_path: Path,
     rendered_root: Path | None = None,
     settle_seconds: int = 20,
+    gates_only: bool = False,
 ) -> dict[str, Any]:
     placement_policy = gpu_scheduling.PLACEMENT_POLICIES[policy_id]
     protect_list = gpu_scheduling.load_protect_list(protect_list_path)
@@ -512,6 +513,8 @@ def enforce_gpu_placement(
         return (schedule_order.get(role, 99), job.lane_id, job.name)
 
     for job in sorted(parsed, key=role_sort_key):
+        if not lane_matches_policy(job.lane_id, placement_policy):
+            continue
         if policy_should_suspend_until_sim_running(
             job,
             placement_policy=placement_policy,
@@ -548,7 +551,7 @@ def enforce_gpu_placement(
                 }
             )
 
-    if rendered_root is not None:
+    if rendered_root is not None and not gates_only:
         actions.extend(
             apply_rendered_lane_jobs(
                 rendered_root=rendered_root,
@@ -559,67 +562,68 @@ def enforce_gpu_placement(
                 protect_list=protect_list,
             )
         )
-    for job in sorted(parsed, key=role_sort_key):
-        if not job_needs_placement(
-            job,
-            placement_policy=placement_policy,
-            protect_list=protect_list,
-            lanes_by_id=lanes_by_id,
-            pod_refs_by_lane=pod_refs_by_lane,
-        ):
-            continue
-        if pod_refs_by_lane and lane_any_partner_in_startup_grace(
-            job, pod_refs_by_lane=pod_refs_by_lane
-        ):
-            actions.append(
-                {
-                    "action": "skip_startup_grace",
-                    "job": job.name,
-                    "lane_id": job.lane_id,
-                    "reason_code": "isaac_warmup_grace",
-                    "grace_seconds": gpu_scheduling.ISAAC_STARTUP_GRACE_SECONDS,
-                }
+    if not gates_only:
+        for job in sorted(parsed, key=role_sort_key):
+            if not job_needs_placement(
+                job,
+                placement_policy=placement_policy,
+                protect_list=protect_list,
+                lanes_by_id=lanes_by_id,
+                pod_refs_by_lane=pod_refs_by_lane,
+            ):
+                continue
+            if pod_refs_by_lane and lane_any_partner_in_startup_grace(
+                job, pod_refs_by_lane=pod_refs_by_lane
+            ):
+                actions.append(
+                    {
+                        "action": "skip_startup_grace",
+                        "job": job.name,
+                        "lane_id": job.lane_id,
+                        "reason_code": "isaac_warmup_grace",
+                        "grace_seconds": gpu_scheduling.ISAAC_STARTUP_GRACE_SECONDS,
+                    }
+                )
+                continue
+            if job.pod_phase == "Running":
+                actions.append(
+                    {
+                        "action": "skip_running_pod",
+                        "job": job.name,
+                        "lane_id": job.lane_id,
+                        "pod_phase": job.pod_phase,
+                        "reason_code": "running_pod_preserved",
+                    }
+                )
+                continue
+            raw = next(item for item in raw_jobs if item.get("metadata", {}).get("name") == job.name)
+            updated = build_job_doc_with_placement(
+                raw,
+                placement_policy=placement_policy,
+                protected_c7_lanes=protected_c7_lanes,
             )
-            continue
-        if job.pod_phase == "Running":
+            deleted = delete_job(name=job.name, kube_context=kube_context, namespace=namespace, dry_run=dry_run)
+            applied, apply_message = (
+                apply_job(doc=updated, kube_context=kube_context, namespace=namespace, dry_run=dry_run)
+                if deleted
+                else (False, "delete_failed")
+            )
             actions.append(
                 {
-                    "action": "skip_running_pod",
+                    "action": "replace_job_with_spread",
                     "job": job.name,
                     "lane_id": job.lane_id,
+                    "attempt_id": job.attempt_id,
+                    "role": job.role,
                     "pod_phase": job.pod_phase,
-                    "reason_code": "running_pod_preserved",
+                    "spread_family": placement_policy["spread_family_label"],
+                    "deleted": deleted,
+                    "applied": applied,
+                    "apply_message": apply_message,
                 }
             )
-            continue
-        raw = next(item for item in raw_jobs if item.get("metadata", {}).get("name") == job.name)
-        updated = build_job_doc_with_placement(
-            raw,
-            placement_policy=placement_policy,
-            protected_c7_lanes=protected_c7_lanes,
-        )
-        deleted = delete_job(name=job.name, kube_context=kube_context, namespace=namespace, dry_run=dry_run)
-        applied, apply_message = (
-            apply_job(doc=updated, kube_context=kube_context, namespace=namespace, dry_run=dry_run)
-            if deleted
-            else (False, "delete_failed")
-        )
-        actions.append(
-            {
-                "action": "replace_job_with_spread",
-                "job": job.name,
-                "lane_id": job.lane_id,
-                "attempt_id": job.attempt_id,
-                "role": job.role,
-                "pod_phase": job.pod_phase,
-                "spread_family": placement_policy["spread_family_label"],
-                "deleted": deleted,
-                "applied": applied,
-                "apply_message": apply_message,
-            }
-        )
 
-    if not dry_run and settle_seconds > 0:
+    if not dry_run and settle_seconds > 0 and not gates_only:
         time.sleep(settle_seconds)
 
     after_pods = sweep.fetch_pods(kube_context=kube_context, namespace=namespace)
@@ -647,6 +651,7 @@ def enforce_gpu_placement(
         "kube_context": kube_context,
         "namespace": namespace,
         "dry_run": dry_run,
+        "gates_only": gates_only,
         "placement_policy": placement_policy,
         "sim_first_ordering": {
             "schedule_order": list(placement_policy.get("schedule_order") or ()),

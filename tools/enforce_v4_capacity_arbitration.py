@@ -11,9 +11,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
+import run_v4_gpu_periodic_enforcement as gpu_periodic  # noqa: E402
 import v4_capacity_arbitration as arbitration  # noqa: E402
-import v4_gpu_placement_enforce as gpu_placement  # noqa: E402
 import v4_c7_capacity_sequencing as c7_sequencing  # noqa: E402
+import v4_gpu_placement_enforce as gpu_placement  # noqa: E402
 import v4_gpu_pool_sweep as gpu_sweep  # noqa: E402
 import v4_gpu_scheduling as gpu_scheduling  # noqa: E402
 
@@ -29,11 +30,21 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument(
         "--mode",
-        choices=("pilot_priority", "c7_restore", "normal", "gpu_sweep", "gpu_placement", "c7_sequencing"),
+        choices=(
+            "pilot_priority",
+            "c7_restore",
+            "normal",
+            "gpu_sweep",
+            "gpu_placement",
+            "gpu_periodic",
+            "c7_sequencing",
+        ),
         default=None,
     )
     parser.add_argument("--c7-ceiling", type=int, default=None)
     parser.add_argument("--c7-remaining", type=int, default=188)
+    parser.add_argument("--c7-tail-lanes", type=int, default=4)
+    parser.add_argument("--c8-remaining", type=int, default=564)
     parser.add_argument(
         "--policy",
         choices=tuple(gpu_scheduling.PLACEMENT_POLICIES),
@@ -50,12 +61,38 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--sweep-receipt-out", type=Path, default=DEFAULT_SWEEP_RECEIPT)
     parser.add_argument("--placement-receipt-out", type=Path, default=DEFAULT_PLACEMENT_RECEIPT)
     parser.add_argument(
+        "--periodic-receipt-out",
+        type=Path,
+        default=gpu_periodic.DEFAULT_RECEIPT,
+    )
+    parser.add_argument("--loop-seconds", type=int, default=0)
+    parser.add_argument(
         "--allow-redispatch",
         action="store_true",
         help="Dangerous: only when C8 agent supplies fresh attempt_ids or locks are cleared.",
     )
     parser.add_argument("--sequencing-plan-out", type=Path, default=c7_sequencing.DEFAULT_PLAN_OUT)
     args = parser.parse_args(argv)
+    if args.mode == "gpu_periodic":
+        return gpu_periodic.main(
+            [
+                "--kube-context",
+                args.kube_context,
+                "--namespace",
+                args.namespace,
+                "--protect-list",
+                str(args.protect_list),
+                "--c7-remaining",
+                str(args.c7_remaining),
+                "--c7-tail-lanes",
+                str(args.c7_tail_lanes),
+                "--c8-remaining",
+                str(args.c8_remaining),
+                "--receipt-out",
+                str(args.periodic_receipt_out),
+                *(["--loop-seconds", str(args.loop_seconds)] if args.loop_seconds else []),
+            ]
+        )
     if args.mode == "c7_sequencing":
         protect_list = gpu_scheduling.load_protect_list(args.protect_list)
         plan = c7_sequencing.build_sequencing_plan(
@@ -78,6 +115,7 @@ def main(argv: list[str] | None = None) -> int:
             dry_run=args.dry_run,
             protect_list_path=args.protect_list,
             rendered_root=args.rendered_root,
+            gates_only=False,
         )
         if not args.dry_run:
             args.placement_receipt_out.parent.mkdir(parents=True, exist_ok=True)
@@ -90,7 +128,7 @@ def main(argv: list[str] | None = None) -> int:
         receipt = gpu_sweep.run_gpu_pool_sweep(
             kube_context=args.kube_context,
             namespace=args.namespace,
-            dry_run=args.dry_run,
+            dry_run=args.dry_run or not args.allow_redispatch,
             c7_remaining_episodes=args.c7_remaining,
             protect_list_path=args.protect_list,
             allow_redispatch=args.allow_redispatch,

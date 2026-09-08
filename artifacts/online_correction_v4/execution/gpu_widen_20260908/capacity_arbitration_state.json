@@ -11,29 +11,54 @@
     "g7c8p06",
     "g7c8p07"
   ],
+  "gpu_placement": {
+    "c6_policy_id": "c6_a10040_spread",
+    "coordination_handoff": "artifacts/online_correction_v4/execution/gpu_widen_20260908/c8_placement_coordination_handoff.json",
+    "last_periodic_at_utc": "2026-09-08T03:52:58Z",
+    "last_placement_at_utc": "2026-09-08T01:29:00Z",
+    "last_unsuspended_count": 0,
+    "periodic_enforcement": {
+      "allow_redispatch": false,
+      "interval_seconds_default": 180,
+      "loop_command": ".venv/bin/python tools/run_v4_gpu_periodic_enforcement.py --loop-seconds 180",
+      "mode": "live_gates_only_plus_dry_run_sweep",
+      "policies_enforced": [
+        "c8_a40_spread",
+        "c6_a10040_spread"
+      ],
+      "rerun_command": ".venv/bin/python tools/run_v4_gpu_periodic_enforcement.py",
+      "sweep_live": false
+    },
+    "policy_id": "c8_a40_spread",
+    "receipt": "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_placement_receipt.json",
+    "rerun_command": ".venv/bin/python tools/enforce_v4_capacity_arbitration.py --mode gpu_placement --policy c8_a40_spread",
+    "sim_first_ordering": {
+      "defer_policy_until_sim_running": true,
+      "schedule_order": [
+        "simulator",
+        "policy"
+      ],
+      "spread_roles": [
+        "simulator"
+      ]
+    }
+  },
   "gpu_pool_sweep": {
+    "dry_run_only": true,
+    "last_dry_run_at_utc": "2026-09-08T03:52:58Z",
     "last_sweep_at_utc": "2026-09-08T01:28:00Z",
+    "live_sweep_enabled": false,
+    "productive_c8_lanes_excluded_from_split_reclaim": [
+      "c8m13",
+      "c8m14"
+    ],
+    "protect_list": "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_sweep_protect_list_20260908_phase2.json",
     "receipt": "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_pool_sweep_receipt.json",
     "rerun_command": ".venv/bin/python tools/enforce_v4_capacity_arbitration.py --mode gpu_sweep",
-    "protect_list": "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_sweep_protect_list_20260908.json",
     "split_pair_detection": "Running half + partner Failed/Error (not Pending between-episodes)",
-    "whole_lane_redispatch": true,
-    "productive_c8_lanes_excluded_from_split_reclaim": ["c8m13", "c8m14"]
+    "whole_lane_redispatch": true
   },
-  "gpu_placement": {
-    "last_placement_at_utc": "2026-09-08T01:29:00Z",
-    "coordination_handoff": "artifacts/online_correction_v4/execution/gpu_widen_20260908/c8_placement_coordination_handoff.json",
-    "receipt": "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_placement_receipt.json",
-    "policy_id": "c8_a40_spread",
-    "c6_policy_id": "c6_a10040_spread",
-    "sim_first_ordering": {
-      "schedule_order": ["simulator", "policy"],
-      "spread_roles": ["simulator"],
-      "defer_policy_until_sim_running": true
-    },
-    "rerun_command": ".venv/bin/python tools/enforce_v4_capacity_arbitration.py --mode gpu_placement --policy c8_a40_spread"
-  },
-  "last_enforcement_at_utc": "2026-09-08T01:29:00Z",
+  "last_enforcement_at_utc": "2026-09-08T03:52:58Z",
   "mode": "normal",
   "pilot_priority_still_required": true,
   "schema_version": "v4-capacity-arbitration-state-v1"

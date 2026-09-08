@@ -187,7 +187,7 @@ def validate_pod_gpu_scheduling(
 
 DEFAULT_PROTECT_LIST = (
     __import__("pathlib").Path(__file__).resolve().parents[1]
-    / "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_sweep_protect_list_20260908.json"
+    / "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_sweep_protect_list_20260908_phase2.json"
 )
 
 PRODUCTIVE_C8_LANE_IDS = frozenset({"c8m13", "c8m14"})

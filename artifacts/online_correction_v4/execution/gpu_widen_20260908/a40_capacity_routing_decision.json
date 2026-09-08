@@ -1,0 +1,49 @@
+{
+  "a40_pool": {
+    "c8_gpus_observed": 16,
+    "free_estimate": 18,
+    "size": 40,
+    "used": 22
+  },
+  "c7_a40_sims_reserved": 6,
+  "c7_r6_reshard_lanes_available": 14,
+  "c7_tail_lanes": 4,
+  "c8_authorized_lane_pairs": 17,
+  "c8_healthy_pairs_observed": 8,
+  "decision": "route_bulk_a40_to_c8_while_c7_tail_runs_4_lanes",
+  "observed_at_utc": "2026-09-08T03:53:44Z",
+  "reshard_feasible": "yes_agent_b_rendered_r6_pending_dispatch",
+  "reshard_note": "Agent B rendered released-tail resharding bundle (rendered-released-tail-reshard-20260908r6) across 14 lane identities. Until r6 dispatch is live, interim routing keeps 4 A40 sims for c7m01/02/05/31 (attempt0607-0610) and routes remaining A40 to C8 up to 18 pairs.",
+  "scheduling_state": {
+    "c6": {
+      "healthy_pairs": 7,
+      "lane_prefix": "c6m",
+      "partial_pairs": 3,
+      "pending_pairs": 0,
+      "total_lanes_seen": 10
+    },
+    "c7": {
+      "healthy_pairs": 4,
+      "lane_prefix": "c7m",
+      "partial_pairs": 3,
+      "pending_pairs": 0,
+      "total_lanes_seen": 7
+    },
+    "c8": {
+      "healthy_pairs": 8,
+      "lane_prefix": "c8m",
+      "partial_pairs": 12,
+      "pending_pairs": 0,
+      "total_lanes_seen": 20
+    }
+  },
+  "schema_version": "v4-a40-capacity-routing-decision-v1",
+  "wall_clock_estimates": {
+    "c6_confirmatory_hours_at_healthy_pairs": 45.7,
+    "c7_tail_188_hours_at_4_lanes": 19.6,
+    "c7_tail_188_hours_if_r6_14_lanes_dispatched": 5.6,
+    "c8_remaining_hours_at_current_healthy": 29.4,
+    "c8_remaining_hours_at_max_authorized_pairs": 13.8,
+    "c8_remaining_hours_if_c7_r6_dispatched_13_pairs": 18.1
+  }
+}

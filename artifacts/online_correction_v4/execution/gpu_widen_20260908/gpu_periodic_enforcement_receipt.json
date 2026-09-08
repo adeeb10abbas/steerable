@@ -42,8 +42,10 @@
     "reclaimed_gpus_by_product": {}
   },
   "kube_context": "prod-dcwi-warrenq1-vmkub007",
+  "loop_active": true,
+  "loop_pid": 95492,
   "namespace": "211247-prod",
-  "observed_at_utc": "2026-09-08T04:00:09Z",
+  "observed_at_utc": "2026-09-08T04:01:12Z",
   "pool_utilization": {
     "pending_gpu_pods": 4,
     "pool_free_estimate": {
@@ -121,16 +123,7 @@
         "unsuspended": 0
       },
       {
-        "actions": [
-          {
-            "action": "suspend_until_sim_running",
-            "job": "v4-c6m29-attempt0198-906bc5fd17-policy",
-            "lane_id": "c6m29",
-            "reason_code": "sim_first_gate",
-            "role": "policy",
-            "suspended": true
-          }
-        ],
+        "actions": [],
         "policy_id": "c6_a10040_spread",
         "scheduling_state_after": {
           "c6": {
@@ -148,11 +141,11 @@
             "total_lanes_seen": 20
           }
         },
-        "suspended": 1,
+        "suspended": 0,
         "unsuspended": 0
       }
     ],
-    "policies_suspended_this_tick": 1,
+    "policies_suspended_this_tick": 0,
     "policies_unsuspended_this_tick": 0
   },
   "sweep_dry_run": {

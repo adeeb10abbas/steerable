@@ -14,16 +14,16 @@
   "gpu_placement": {
     "c6_policy_id": "c6_a10040_spread",
     "coordination_handoff": "artifacts/online_correction_v4/execution/gpu_widen_20260908/c8_placement_coordination_handoff.json",
-    "last_periodic_at_utc": "2026-09-08T04:00:09Z",
+    "last_periodic_at_utc": "2026-09-08T04:01:12Z",
     "last_placement_at_utc": "2026-09-08T01:29:00Z",
     "last_unsuspended_count": 0,
     "periodic_enforcement": {
       "allow_redispatch": false,
       "finished_lane_orphan_reclaim_live": true,
       "interval_seconds_default": 180,
-      "loop_active": false,
+      "loop_active": true,
       "loop_command": ".venv/bin/python tools/run_v4_gpu_periodic_enforcement.py --loop-seconds 180 --record-loop-pid",
-      "loop_pid": null,
+      "loop_pid": 95492,
       "mode": "live_gates_only_plus_dry_run_sweep",
       "policies_enforced": [
         "c8_a40_spread",
@@ -48,7 +48,7 @@
   },
   "gpu_pool_sweep": {
     "dry_run_only": true,
-    "last_dry_run_at_utc": "2026-09-08T04:00:09Z",
+    "last_dry_run_at_utc": "2026-09-08T04:01:12Z",
     "last_sweep_at_utc": "2026-09-08T01:28:00Z",
     "live_sweep_enabled": false,
     "productive_c8_lanes_excluded_from_split_reclaim": [
@@ -61,7 +61,7 @@
     "split_pair_detection": "Running half + partner Failed/Error (not Pending between-episodes)",
     "whole_lane_redispatch": true
   },
-  "last_enforcement_at_utc": "2026-09-08T04:00:09Z",
+  "last_enforcement_at_utc": "2026-09-08T04:01:12Z",
   "mode": "normal",
   "pilot_priority_still_required": true,
   "schema_version": "v4-capacity-arbitration-state-v1"

@@ -11,7 +11,21 @@
     "g7c8p06",
     "g7c8p07"
   ],
-  "last_enforcement_at_utc": "2026-09-07T21:16:49Z",
+  "gpu_pool_sweep": {
+    "last_sweep_at_utc": "2026-09-08T00:04:38Z",
+    "receipt": "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_pool_sweep_receipt.json",
+    "rerun_command": ".venv/bin/python tools/enforce_v4_capacity_arbitration.py --mode gpu_sweep",
+    "session_passes": 2,
+    "session_reclaimed_gpus_by_product": {
+      "NVIDIA-A100-SXM4-40GB": 15,
+      "NVIDIA-A100-SXM4-80GB": 4,
+      "NVIDIA-A40": 7,
+      "NVIDIA-B200": 8
+    },
+    "session_reclaimed_gpu_total": 34,
+    "a40_diagnosis": "mixed_orphans_and_per_node_fragmentation"
+  },
+  "last_enforcement_at_utc": "2026-09-08T00:04:38Z",
   "mode": "normal",
   "pilot_priority_still_required": true,
   "schema_version": "v4-capacity-arbitration-state-v1"

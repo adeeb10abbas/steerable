@@ -1,0 +1,28 @@
+{
+  "schema_version": "v4-c8-destination-static-confound-check-v1",
+  "observed_at_utc": "2026-09-08T05:10:00Z",
+  "question": "Is destination_static accidentally easier because the object starts closer to the goal region?",
+  "answer": "initial_cube_geometry_is_identical_across_scenarios",
+  "evidence": {
+    "green_yellow_distance_at_reset_m": {
+      "original_sham": {"mean": 0.1414, "stdev": 0.0, "n": 256},
+      "destination_static": {"mean": 0.1414, "stdev": 0.0, "n": 256},
+      "move_stop": {"mean": 0.1414, "stdev": 0.0, "n": 256}
+    },
+    "source": "c8_confirmatory/reset_registry.released.json positions_scene_xy_m keyed by env_seed from queue.frozen.jsonl",
+    "protocol_difference": "destination_static places the reference at the planned +D destination from reset with no online motion; original_sham applies identity pose update; move_stop applies minimum-jerk translation (docs/online_correction_v4/01_EXPERIMENTS.md Table profile definitions)",
+    "pilot_pilot_kind": {
+      "original_sham": "stationary",
+      "destination_static": "stationary",
+      "move_stop": "motion"
+    }
+  },
+  "reviewer_alternative_to_preempt": "Higher grasp in destination_static is plausibly driven by reference already occupying the planned destination (static competence diagnostic), not shorter initial transport distance—green/yellow separation is fixed at 0.1414 m for all scenarios",
+  "confirmatory_grasp_at_milestone_83": {
+    "destination_static": {"grasp": 2, "episodes": 25, "rate": 0.08},
+    "move_stop": {"grasp": 1, "episodes": 29, "rate": 0.034},
+    "original_sham": {"grasp": 0, "episodes": 29, "rate": 0.0},
+    "ordering_testable": false,
+    "note": "Rates at 83/768 are directional only; insufficient_coverage for pilot-ordering claim"
+  }
+}

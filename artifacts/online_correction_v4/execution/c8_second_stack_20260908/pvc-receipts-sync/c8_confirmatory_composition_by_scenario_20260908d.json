@@ -1,26 +1,25 @@
 {
   "schema_version": "v4-c8-confirmatory-composition-by-scenario-v1",
-  "observed_at_utc": "2026-09-08T05:00:00Z",
+  "observed_at_utc": "2026-09-08T05:10:00Z",
   "milestone": 50,
-  "milestone_note": "Compiled at 73 valid episodes (passed 50-milestone threshold; 100 milestone pending at compile id 20260908e)",
+  "milestone_note": "Compiled at 83 valid episodes (passed 50 threshold)",
   "ledger_compile_id": "20260908d",
-  "next_milestone_compile_id": "20260908e",
-  "next_milestone_at": 100,
+  "next_milestone_compile_at": 100,
   "ledger_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/confirmatory-ledger-20260908d/accepted_ledger.jsonl",
-  "progress": {"behavioral_valid": 73, "total_queued": 768},
-  "aggregate_outcomes": {"no_grasp": 71, "transport_incomplete": 2},
-  "grasp_achieved_count": 2,
-  "by_lane_completes": {"c8m00": 6, "c8m13": 38, "c8m14": 29},
+  "progress": {"behavioral_valid": 83, "total_queued": 768, "coverage_fraction": 0.1081},
+  "aggregate_outcomes": {"no_grasp": 80, "transport_incomplete": 3},
+  "grasp_achieved_count": 3,
   "by_scenario": {
-    "original_sham": {"episodes_completed": 26, "no_grasp": 26, "transport_incomplete": 0, "grasp_achieved": 0, "grasp_rate": 0.0},
-    "destination_static": {"episodes_completed": 22, "no_grasp": 21, "transport_incomplete": 1, "grasp_achieved": 1, "grasp_rate": 0.045},
-    "move_stop": {"episodes_completed": 25, "no_grasp": 24, "transport_incomplete": 1, "grasp_achieved": 1, "grasp_rate": 0.04}
+    "original_sham": {"episodes_completed": 29, "no_grasp": 29, "transport_incomplete": 0, "grasp_achieved": 0, "grasp_rate": 0.0},
+    "destination_static": {"episodes_completed": 25, "no_grasp": 23, "transport_incomplete": 2, "grasp_achieved": 2, "grasp_rate": 0.08},
+    "move_stop": {"episodes_completed": 29, "no_grasp": 28, "transport_incomplete": 1, "grasp_achieved": 1, "grasp_rate": 0.034}
   },
   "ordering_assessment": {
-    "pilot_ordering": "destination_static (75%) > move_stop (50%) > original_sham (25%)",
-    "confirmatory_observed_at_73": "destination_static (4.5%) ≈ move_stop (4.0%) > original_sham (0%)",
+    "pilot_ordering": "destination_static > move_stop > original_sham",
+    "confirmatory_observed_at_83": "destination_static (8%) > move_stop (3.4%) > original_sham (0%)",
     "ordering_holds": "insufficient_coverage",
-    "feasibility_audit_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_destination_static_confound_audit_20260908a.json"
+    "confound_check_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_destination_static_confound_check_20260908a.json"
   },
-  "anti_affinity_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_anti_affinity_placement_outcome_20260908b.json"
+  "lanes_with_completes": {"c8m00": 8, "c8m13": 38, "c8m14": 37},
+  "regression_check": {"serialization": "none", "sampling_seed": "none", "reset_registry_digest": "none through c8m00 first completes"}
 }

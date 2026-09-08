@@ -1,16 +1,16 @@
 {
   "blocked_scope": {
-    "bytes": 35504,
+    "bytes": 41409,
     "path": "artifacts/online_correction_v4/results/registered/20260908/blocked_scope.json",
-    "sha256": "b55063abf0790dcc39096fc5c5647dc7660e125ed3968d75d8cd26ccebfb6e21"
+    "sha256": "a127e49c3b03e13dbbae2aff53e56a27874c1a3a34aa3fe273ab6e9f726e0336"
   },
-  "c7_ledger_rows": 580,
+  "c7_ledger_rows": 768,
   "c7_planned_episodes": 768,
   "c7_valid_success_records": 0,
   "evidence_memo": {
-    "bytes": 19937,
+    "bytes": 17358,
     "path": "artifacts/online_correction_v4/results/registered/20260908/paper/evidence_memo.json",
-    "sha256": "bc249fcb3c49fcfdc49f2b2978bc7f5acace83149dceac2004a2270ac27309bf"
+    "sha256": "0e8e0b99f856bd720e2c927c81a0b3cdd829085bb4101350ce0b2c7625fc813a"
   },
   "export_coverage": {
     "C6": {
@@ -23,13 +23,13 @@
       "planned_episodes": 24
     },
     "C7": {
-      "accepted_valid_unique": 580,
-      "coverage_fraction": 0.755208,
-      "coverage_label": "580/768 (75.5%)",
-      "export_phase": "confirmatory_partial",
-      "export_status": "partial",
-      "ledger_compile_id": "compiled_ledger_20260908m",
-      "missing_episodes": 188,
+      "accepted_valid_unique": 768,
+      "coverage_fraction": 1.0,
+      "coverage_label": "768/768 (100.0%)",
+      "export_phase": "confirmatory_final",
+      "export_status": "complete",
+      "ledger_compile_id": "compiled_ledger_20260908_FINAL",
+      "missing_episodes": 0,
       "planned_episodes": 768
     },
     "C8": {
@@ -49,7 +49,7 @@
       "path": "artifacts/online_correction_v4/results/registered/20260908/families/C6/20260908c6pilot"
     },
     "C7": {
-      "manifest_sha256": "30386daf29a79305dbe9d0c65ab2b0730539d4700087516391e44f96032d3f30",
+      "manifest_sha256": "741b6ecaa5ef7200ffbb21c2dbd2d120b88f7327e39e277c4582075e70327b14",
       "path": "artifacts/online_correction_v4/results/registered/20260908/families/C7/20260908c7"
     },
     "C8": {
@@ -57,14 +57,14 @@
       "path": "artifacts/online_correction_v4/results/registered/20260908/families/C8/20260908c8pilot"
     },
     "C8_confirmatory": {
-      "manifest_sha256": "ffd920b57b75b10453c6cdda2f3423a1a182b4ef6a1718fd4a776b7b480bc4ed",
+      "manifest_sha256": "9727ec33314800257ed89ad8128cac586ed20246b913a4ce9228e7cfafc305dd",
       "path": "artifacts/online_correction_v4/results/registered/20260908/families/C8/20260908c8confirmatory"
     }
   },
   "family_rollups": {
     "C6": {
       "confirmatory_dispatch": {
-        "accepted_valid_unique": 56,
+        "accepted_valid_unique": 313,
         "coverage_fraction": 0.0,
         "coverage_label": "56/768 confirmatory accepted",
         "dispatch_receipt": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/create-c6confirm20260908f.json",
@@ -100,230 +100,210 @@
     "C7": {
       "confirmatory_dispatch": {},
       "outcome_composition": {
-        "no_grasp": 574,
-        "support_or_containment_failed": 1,
+        "no_grasp": 761,
+        "support_or_containment_failed": 2,
         "transport_incomplete": 3,
         "wrong_goal_region": 2
       }
     },
     "C8": {
       "confirmatory_dispatch": {
-        "accepted_valid_unique": 204,
-        "accounting_verification_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_episode_accounting_verification_20260908e.json",
+        "accepted_valid_unique": 768,
+        "accounting_verification_uri": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_episode_accounting_verification_20260908g.json",
         "by_scenario": {
           "destination_static": {
-            "completed": 63,
-            "grasp_achieved": 4,
-            "grasp_rate": 0.063
+            "completed": 256,
+            "grasp_achieved": 15,
+            "grasp_rate": 0.0586
           },
           "move_stop": {
-            "completed": 72,
-            "grasp_achieved": 2,
-            "grasp_rate": 0.028
+            "completed": 256,
+            "grasp_achieved": 8,
+            "grasp_rate": 0.0312
           },
           "original_sham": {
-            "completed": 69,
-            "grasp_achieved": 2,
-            "grasp_rate": 0.029
+            "completed": 256,
+            "grasp_achieved": 8,
+            "grasp_rate": 0.0312
           }
         },
-        "composition_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_confirmatory_composition_by_scenario_20260908f.json",
+        "composition_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_confirmatory_composition_by_scenario_20260908h.json",
         "confirmatory_lanes": [
           {
-            "attempt_id": "attempt0006",
+            "blocked": 0,
+            "completed": 39,
+            "lane_id": "c8m00",
+            "queued": 0,
+            "running": 0,
+            "state": "lane_complete"
+          },
+          {
+            "blocked": 0,
+            "completed": 39,
+            "lane_id": "c8m01",
+            "queued": 0,
+            "running": 0,
+            "state": "lane_complete"
+          },
+          {
+            "blocked": 0,
+            "completed": 39,
+            "lane_id": "c8m02",
+            "queued": 0,
+            "running": 0,
+            "state": "lane_complete"
+          },
+          {
+            "blocked": 0,
+            "completed": 39,
+            "lane_id": "c8m03",
+            "queued": 0,
+            "running": 0,
+            "state": "lane_complete"
+          },
+          {
+            "blocked": 0,
+            "completed": 39,
+            "lane_id": "c8m04",
+            "queued": 0,
+            "running": 0,
+            "state": "lane_complete"
+          },
+          {
             "blocked": 0,
             "completed": 39,
             "lane_id": "c8m05",
             "queued": 0,
             "running": 0,
-            "state": "lane_complete_policy_reclaimed"
+            "state": "lane_complete"
           },
           {
-            "attempt_id": "attempt0017",
             "blocked": 0,
-            "completed": 38,
-            "lane_id": "c8m16",
+            "completed": 39,
+            "lane_id": "c8m06",
             "queued": 0,
             "running": 0,
-            "state": "lane_complete_policy_reclaimed"
+            "state": "lane_complete"
           },
           {
-            "attempt_id": "attempt0014",
+            "blocked": 0,
+            "completed": 39,
+            "lane_id": "c8m07",
+            "queued": 0,
+            "running": 0,
+            "state": "lane_complete"
+          },
+          {
+            "blocked": 0,
+            "completed": 38,
+            "lane_id": "c8m08",
+            "queued": 0,
+            "running": 0,
+            "state": "lane_complete"
+          },
+          {
+            "blocked": 0,
+            "completed": 38,
+            "lane_id": "c8m09",
+            "queued": 0,
+            "running": 0,
+            "state": "lane_complete"
+          },
+          {
+            "blocked": 0,
+            "completed": 38,
+            "lane_id": "c8m10",
+            "queued": 0,
+            "running": 0,
+            "state": "lane_complete"
+          },
+          {
+            "blocked": 0,
+            "completed": 38,
+            "lane_id": "c8m11",
+            "queued": 0,
+            "running": 0,
+            "state": "lane_complete"
+          },
+          {
+            "blocked": 0,
+            "completed": 38,
+            "lane_id": "c8m12",
+            "queued": 0,
+            "running": 0,
+            "state": "lane_complete"
+          },
+          {
             "blocked": 0,
             "completed": 38,
             "lane_id": "c8m13",
             "queued": 0,
             "running": 0,
-            "state": "lane_complete_ledger_intact"
+            "state": "lane_complete"
           },
           {
-            "attempt_id": "attempt0015",
             "blocked": 0,
             "completed": 38,
             "lane_id": "c8m14",
             "queued": 0,
             "running": 0,
-            "state": "lane_complete_ledger_intact"
+            "state": "lane_complete"
           },
           {
-            "attempt_id": "attempt0021",
             "blocked": 0,
-            "completed": 15,
-            "lane_id": "c8m00",
-            "queued": 24,
-            "running": 1,
-            "state": "healthy_pair_running"
-          },
-          {
-            "attempt_id": "attempt0022",
-            "blocked": 0,
-            "completed": 6,
-            "lane_id": "c8m01",
-            "queued": 33,
-            "running": 1,
-            "state": "healthy_pair_running"
-          },
-          {
-            "attempt_id": "attempt0023",
-            "blocked": 0,
-            "completed": 6,
-            "lane_id": "c8m02",
-            "queued": 33,
-            "running": 1,
-            "state": "healthy_pair_running"
-          },
-          {
-            "attempt_id": "attempt0024",
-            "blocked": 0,
-            "completed": 7,
-            "lane_id": "c8m03",
-            "queued": 32,
-            "running": 1,
-            "state": "healthy_pair_running"
-          },
-          {
-            "attempt_id": "attempt0025",
-            "blocked": 0,
-            "completed": 0,
-            "lane_id": "c8m04",
-            "queued": 39,
-            "running": 1,
-            "state": "sim_first_warming_or_pending_policy"
-          },
-          {
-            "attempt_id": "attempt0026",
-            "blocked": 0,
-            "completed": 0,
-            "lane_id": "c8m06",
-            "queued": 39,
-            "running": 1,
-            "state": "sim_first_warming_or_pending_policy"
-          },
-          {
-            "attempt_id": "attempt0027",
-            "blocked": 0,
-            "completed": 0,
-            "lane_id": "c8m07",
-            "queued": 39,
-            "running": 1,
-            "state": "sim_first_warming_or_pending_policy"
-          },
-          {
-            "attempt_id": "attempt0028",
-            "blocked": 0,
-            "completed": 0,
-            "lane_id": "c8m08",
-            "queued": 38,
-            "running": 1,
-            "state": "sim_first_warming_or_pending_policy"
-          },
-          {
-            "attempt_id": "attempt0029",
-            "blocked": 0,
-            "completed": 0,
-            "lane_id": "c8m09",
-            "queued": 38,
-            "running": 1,
-            "state": "sim_first_warming_or_pending_policy"
-          },
-          {
-            "attempt_id": "attempt0037",
-            "blocked": 0,
-            "completed": 2,
-            "lane_id": "c8m10",
-            "queued": 36,
-            "running": 1,
-            "state": "healthy_pair_running"
-          },
-          {
-            "attempt_id": "attempt0031",
-            "blocked": 0,
-            "completed": 0,
-            "lane_id": "c8m11",
-            "queued": 38,
-            "running": 1,
-            "state": "sim_first_warming_or_pending_policy"
-          },
-          {
-            "attempt_id": "attempt0032",
-            "blocked": 0,
-            "completed": 0,
-            "lane_id": "c8m12",
-            "queued": 38,
-            "running": 1,
-            "state": "sim_first_warming_or_pending_policy"
-          },
-          {
-            "attempt_id": "attempt0033",
-            "blocked": 0,
-            "completed": 0,
+            "completed": 38,
             "lane_id": "c8m15",
-            "queued": 38,
-            "running": 1,
-            "state": "sim_first_warming_or_pending_policy"
+            "queued": 0,
+            "running": 0,
+            "state": "lane_complete"
           },
           {
-            "attempt_id": "attempt0034",
             "blocked": 0,
-            "completed": 7,
+            "completed": 38,
+            "lane_id": "c8m16",
+            "queued": 0,
+            "running": 0,
+            "state": "lane_complete"
+          },
+          {
+            "blocked": 0,
+            "completed": 38,
             "lane_id": "c8m17",
-            "queued": 31,
-            "running": 1,
-            "state": "healthy_pair_running"
+            "queued": 0,
+            "running": 0,
+            "state": "lane_complete"
           },
           {
-            "attempt_id": "attempt0035",
             "blocked": 0,
-            "completed": 6,
+            "completed": 38,
             "lane_id": "c8m18",
-            "queued": 32,
-            "running": 1,
-            "state": "healthy_pair_running"
+            "queued": 0,
+            "running": 0,
+            "state": "lane_complete"
           },
           {
-            "attempt_id": "attempt0036",
             "blocked": 0,
-            "completed": 2,
+            "completed": 38,
             "lane_id": "c8m19",
-            "queued": 36,
-            "running": 1,
-            "state": "healthy_pair_running"
+            "queued": 0,
+            "running": 0,
+            "state": "lane_complete"
           }
         ],
         "confound_check_uri": null,
-        "coverage_fraction": 0.265625,
-        "coverage_label": "204/768 confirmatory accepted; 768/768 dispatched",
+        "coverage_fraction": 1.0,
+        "coverage_label": "768/768 (100.0%)",
         "dispatch_status": "dispatched",
         "dispatched_episodes": 768,
-        "execution_status_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908p.json",
+        "execution_status_receipt": "artifacts/online_correction_v4/execution/c8_second_stack_20260908/pvc-receipts-sync/c8_execution_status_20260908r.json",
         "export_phase": "confirmatory",
-        "export_status": "dispatched_partial",
-        "ledger_compile_id": "20260908f",
-        "ledger_compile_id_200_milestone": "20260908f",
-        "ledger_compile_id_400_pending": "pending_at_204_of_768",
-        "missing_episodes": 564,
-        "ordering_holds": "insufficient_coverage",
-        "ordering_persistence": "destination_static ranked first at 84, 101, 161, and 204 milestones; magnitudes remain far below pilot \u2014 not claimed as significant",
+        "export_status": "complete",
+        "ledger_compile_id": "20260908h",
+        "ledger_compile_id_200_milestone": null,
+        "ledger_compile_id_final": "20260908h",
+        "missing_episodes": 0,
+        "ordering_holds": "destination_static_ranks_first_only",
+        "ordering_persistence": null,
         "planned_episodes": 768,
         "wave": "main"
       },
@@ -335,14 +315,14 @@
   },
   "figures": {
     "campaign_scope": {
-      "bytes": 712,
+      "bytes": 713,
       "path": "artifacts/online_correction_v4/results/registered/20260908/figures/campaign_scope.svg",
-      "sha256": "89cd0816bd4c60a991b83e40e9a5948efb89449820dab9562a2360d4470eee15"
+      "sha256": "5c5f2c799907cd698107f1f4eefbc93303d529ed0740486f6b6767217d058b79"
     },
     "manifest": {
       "bytes": 433,
       "path": "artifacts/online_correction_v4/results/registered/20260908/figures/figures_manifest.json",
-      "sha256": "3a42d119fb4c36b8926443ced4c14cafc003ea249b637a124c1d8d488ba84943"
+      "sha256": "b45ab4b8cdce4818bc94ea6c8ff08ff12ce393e7b7c819558d20083bd62f181e"
     }
   },
   "frozen_analysis_manifest": {
@@ -353,8 +333,8 @@
   "horizontal_slice": "artifacts/online_correction_v4/results/horizontal_geometry_repair_v2/20260908",
   "outcome_composition": {
     "C7": {
-      "no_grasp": 574,
-      "support_or_containment_failed": 1,
+      "no_grasp": 761,
+      "support_or_containment_failed": 2,
       "transport_incomplete": 3,
       "wrong_goal_region": 2
     },
@@ -365,16 +345,16 @@
   },
   "output_root": "artifacts/online_correction_v4/results/registered/20260908",
   "results_md": {
-    "bytes": 8319,
+    "bytes": 7205,
     "path": "artifacts/online_correction_v4/results/registered/20260908/paper/RESULTS.md",
-    "sha256": "09e432596153273ece478cd24bea6b0bbcbe14f055c36a29cdf380a852fee334"
+    "sha256": "f475bf07dcb8f16fee7da8029edfc3d9239bba2959c30a02506a0540769cafa3"
   },
   "schema_version": "v4-registered-campaign-export-manifest-v1",
   "tables": {
     "audit_report.json": {
-      "bytes": 21941,
+      "bytes": 22808,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/audit_report.json",
-      "sha256": "a886d49ff6e47b65b6758261da88d4075c84e046c2bc53bb73b78150a7fa9530"
+      "sha256": "5dd5feefaa7eae964754401ec596899dca1cf97186aa70d431aa4fef18904756"
     },
     "blocked_families.csv": {
       "bytes": 1242,
@@ -382,44 +362,34 @@
       "sha256": "2602f85fc8ea41fd217d5ca98f926daf2f145cbe1293aec0272768135dc2413a"
     },
     "c6_confirmatory_grasp_by_scenario.csv": {
-      "bytes": 296,
+      "bytes": 449,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c6_confirmatory_grasp_by_scenario.csv",
-      "sha256": "53106c9c0ebf4da9d6e3728048a2f716264041a59a2d5d43f3888d52c30fb601"
+      "sha256": "781b77e9a98929e209c4a5e27307a5ced473e573e028055118a122d5abd1a2a6"
     },
     "c6_confirmatory_outcome_composition.csv": {
-      "bytes": 79,
+      "bytes": 81,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c6_confirmatory_outcome_composition.csv",
-      "sha256": "ca66264578abcca878d8e6605377a518bac42cb45d98e22f647a1e7cf09c9198"
-    },
-    "c6_outcome_composition.csv": {
-      "bytes": 79,
-      "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c6_outcome_composition.csv",
-      "sha256": "fa9192be3cf7e9bd454360676eb30772a4045bdafdb658912d8f2eabf2df0bf3"
-    },
-    "c6_scenario_outcome_breakdown.csv": {
-      "bytes": 252,
-      "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c6_scenario_outcome_breakdown.csv",
-      "sha256": "fc91db6d692dd6c7519958dd4571c49dfbc946190a72da3413c08c4b5a464037"
+      "sha256": "d96da4eeca1eda181f19e68192076ef847a47f3af52a51b3fab4836e003d1acd"
     },
     "c7_outcome_composition.csv": {
       "bytes": 113,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c7_outcome_composition.csv",
-      "sha256": "d507bb68972cae8d07234da8fe6da7295731d3ec6876b62ecf14f606f06ffa15"
+      "sha256": "e86e1d7b393b80341d9e3307cf7389be81c2547e98e5c1a4e425d8693ff1964b"
     },
     "c7_scenario_outcome_breakdown.csv": {
-      "bytes": 309,
+      "bytes": 395,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c7_scenario_outcome_breakdown.csv",
-      "sha256": "1da653b9c84ee89d50c93620aa2dd23b48025df539c3eec92f19566a0d1712fd"
+      "sha256": "075f9a4bcfb3d065def6c0c6ae333288067094c3379651be38d9234926d1ee6b"
     },
     "c8_confirmatory_grasp_by_scenario.csv": {
-      "bytes": 341,
+      "bytes": 304,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c8_confirmatory_grasp_by_scenario.csv",
-      "sha256": "bb6491139f9f3771dcf6cb1f8a7f21faf5cdbe857a753204ec8ddc7ad5133b82"
+      "sha256": "ddbc6f4da4595b42213dde258868a5caa0428f1b0b6fe9745731f0990244a515"
     },
     "c8_confirmatory_outcome_composition.csv": {
-      "bytes": 59,
+      "bytes": 60,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/c8_confirmatory_outcome_composition.csv",
-      "sha256": "d907575cbd9cfc6c47d27f947d5ebe80aa8150f8941bf189b8dc7f49b6a43eb5"
+      "sha256": "20b99a755e426045c92f19d1938002e9771d6ef4894b578038fba796c0c47668"
     },
     "c8_destination_static_confound_check.csv": {
       "bytes": 461,
@@ -447,29 +417,29 @@
       "sha256": "2131691505c3bd7232c83ba4c16be1160214ee19aa60801b3c01da005aa5bc9a"
     },
     "compile_retirement_provenance.csv": {
-      "bytes": 503,
+      "bytes": 578,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/compile_retirement_provenance.csv",
-      "sha256": "5a8aee8ce0c49f22b37892398b56c8b1df19ee3121c4a65235e4fe5c28c668ed"
+      "sha256": "9052cc007b718d5e67ee19e8dd79c314fb3cccf0343184a2c3021f7d27585526"
     },
     "cross_fixture_outcome_contrast.csv": {
-      "bytes": 436,
+      "bytes": 357,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/cross_fixture_outcome_contrast.csv",
-      "sha256": "2d006bcf8528932e59c66d4c8f9f56b30a91787a97ece23ff0fe662b87f79da2"
+      "sha256": "e39fc50529ec298a969201cfc23a801ef3692bfa999f33c8bb4390d4849f2447"
     },
     "family_coverage.csv": {
-      "bytes": 672,
+      "bytes": 539,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/family_coverage.csv",
-      "sha256": "673bccc5d8ec59a9d4ea2acbe9c14d55991e0bd16942f7e346193a0b0bb765bf"
+      "sha256": "3f8965022c46e07801252e7a70be54cef53ffbd2e6a3279e7ba9e4676707990a"
     },
     "platform_scenario_grasp_contrast.csv": {
-      "bytes": 2081,
+      "bytes": 4725,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/platform_scenario_grasp_contrast.csv",
-      "sha256": "79adb4410ddcc186c5d1ce696cd401ec9d59a3c39fd2f6f82e449a341e86849f"
+      "sha256": "76289449a22705ab82d3a6b4f3c00d6c34b72bce913b0e7e5eb0e46b6d56bff8"
     },
     "results_manifest": {
-      "bytes": 13706,
+      "bytes": 12401,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/results_manifest.json",
-      "sha256": "bd6644eae2e31a9cd04fbd4a8e767267642104739a60e2a3393b4cb49cc3a5c1"
+      "sha256": "df10ec0a520111b78229e694ddc6fe9e0e44621884766636bbc8ab74d9d8b819"
     },
     "scale_ladder_squeeze.csv": {
       "bytes": 565,
@@ -477,9 +447,9 @@
       "sha256": "9fd28c21eb075ee5baf5460cdb4342b5651dcaae987cda6d2e74b30067ad1062"
     },
     "scope_summary.csv": {
-      "bytes": 460,
+      "bytes": 468,
       "path": "artifacts/online_correction_v4/results/registered/20260908/tables/scope_summary.csv",
-      "sha256": "a5c9da0a4b73a6e83e8ec148f1bbeb37bdfd0faf28938a7956f9dbca1241eb69"
+      "sha256": "53591730a3689fd2dced21272fde649d12eb0ac542cbdb47ba65469966b4c81c"
     }
   },
   "tag": "20260908"

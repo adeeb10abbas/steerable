@@ -1,0 +1,11 @@
+{
+  "schema_version": "v4-c6-shared-checkout-artifact-staging-v1",
+  "compiled_at_utc": "2026-09-08T05:42:00Z",
+  "artifact": "containment_reset_registry.released.json",
+  "source_repo_path": "artifacts/online_correction_v4/setup/containment_reset_registry.released.json",
+  "cluster_path": "/data/users/ali/vla_wam/src/steerable-v4-c7-main/artifacts/online_correction_v4/setup/containment_reset_registry.released.json",
+  "sha256": "bce1999983c378f1ee437e90c6e5dc60c0c1ab0c266e017aa20376d20ba9346c",
+  "lock_binding": "artifacts/online_correction_v4/setup/containment_c6_confirmatory_runtime_lock.released.json fixtures.containment.reset_registry_uri",
+  "method": "kubectl cp via running C7 sim pod on 211247-prod-pvc",
+  "note": "Required for confirmatory sim episode dispatch; G7 pilot used separate checkout where geometry lived but reset_registry_uri already pointed at c7-main path in confirmatory lock."
+}

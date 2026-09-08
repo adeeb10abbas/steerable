@@ -1,0 +1,38 @@
+{
+  "schema_version": "v4-c6-confirmatory-episode-blocker-diagnosis-v1",
+  "compiled_at_utc": "2026-09-08T05:45:00Z",
+  "confirmatory_terminals": 0,
+  "per_scenario_composition": null,
+  "g7_pilot_control": {
+    "status": "24/24 closed",
+    "checkout": "steerable-v4-g3_c5c6-05554b11-g3c6pilot20260908f",
+    "finding": "G7 pilot checkout retains containment geometry and qualification artifacts; confirmatory path uses shared steerable-v4-c7-main for runner and reset_registry_uri per released lock."
+  },
+  "dispatch_history_without_terminals": [
+    "wave B/C (20260908a/b/c): zombie/orphan blockers and runner mismatch",
+    "wave D (20260908d): runner SHA mismatch vs shared checkout",
+    "wave F re-render (20260908f): runner binding fixed; episodes still 0 until reset-registry staging"
+  ],
+  "primary_episode_blocker": {
+    "class": "missing_setup_artifact_on_shared_checkout",
+    "error": "ResetRegistryError: reset registry path does not exist",
+    "expected_path": "/data/users/ali/vla_wam/src/steerable-v4-c7-main/artifacts/online_correction_v4/setup/containment_reset_registry.released.json",
+    "expected_sha256": "bce1999983c378f1ee437e90c6e5dc60c0c1ab0c266e017aa20376d20ba9346c",
+    "evidence_lane": "c6m02-attempt0163 sim Completed with stack trace in lane logs",
+    "remediation_applied": "Staged containment_reset_registry.released.json onto shared checkout via PVC pod; sha256 verified on cluster",
+    "post_fix_signal": "c6m09-attempt0170 sim logs show Isaac simulation starting (past reset_registry load)"
+  },
+  "secondary_blocker": {
+    "class": "split_pair_gpu_placement",
+    "finding": "Policy-first spread fills B200 policy halves; A100 sim halves Pending despite ~54 free A100-40GB; 0 healthy pairs at observation",
+    "wave_d_shape": "9 policy Running, 10 sim Running/Completed, 13 sim Pending, 23 policy Pending",
+    "action": "Await capacity agent sim-first/paired placement on c6_a10040_spread and orphan split-pair reclaim; do not hand-place lanes"
+  },
+  "tertiary_blocker": {
+    "class": "isaac_render_probe_timeout",
+    "lanes": ["c6m00-attempt0161"],
+    "note": "300s render probe timeout during preflight warmup; infra not binding failure"
+  },
+  "not_a_fourth_rerender": "Wave F render and runner binding are correct; missing reset registry was a checkout provisioning gap, not another manifest digest issue. Next step is sim restart after registry staging plus capacity-agent paired placement, not rendered-c6confirm20260908g.",
+  "operating_rule_cross_ref": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/runner_binding_resolution_20260908.json"
+}

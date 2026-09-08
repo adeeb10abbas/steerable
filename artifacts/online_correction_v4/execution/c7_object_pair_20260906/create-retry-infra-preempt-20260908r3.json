@@ -1,0 +1,24 @@
+{
+  "schema_version": "v4-c7-infra-retry-create-wave-v1",
+  "behavioral_episode_count": 88,
+  "dispatch_mode": "behavioral_infra_retry_shared_checkout_rerender",
+  "infra_failure_class": "wrong_pvc_name_in_render_cluster_binding",
+  "kube_context": "prod-dcwi-warrenq1-vmkub007",
+  "namespace": "211247-prod",
+  "render_root": "artifacts/online_correction_v4/execution/c7_object_pair_20260906/rendered-retry-infra-preempt-20260908r3",
+  "supersedes": "create-retry-infra-preempt-20260908r2.json",
+  "remediation": "r2 used pvc vla-wam-raw-pvc (not found); r3 re-rendered with 211247-prod-pvc matching productive C7 lanes. serve_v4_nano hash unchanged from r2.",
+  "lane_assignments": [
+    {"attempt_id": "attempt0589", "lane_id": "c7m01", "bundle_digest": "33f6c1979d", "create_status": "created"},
+    {"attempt_id": "attempt0590", "lane_id": "c7m02", "bundle_digest": "09e79626cf", "create_status": "created"},
+    {"attempt_id": "attempt0591", "lane_id": "c7m05", "bundle_digest": "7f5790d9ea", "create_status": "created"},
+    {"attempt_id": "attempt0592", "lane_id": "c7m31", "bundle_digest": "6d00b703d7", "create_status": "created"},
+    {"attempt_id": "attempt0593", "lane_id": "c7m02", "bundle_digest": "8d58bfda9c", "create_status": "created"},
+    {"attempt_id": "attempt0594", "lane_id": "c7m05", "bundle_digest": "c86add72ec", "create_status": "created"}
+  ],
+  "post_create_observed": {
+    "policy_running": 6,
+    "sim_pending": 6,
+    "note": "Policies loading Cosmos checkpoint; sims Pending on A40 scheduling behind 17 productive lanes"
+  }
+}

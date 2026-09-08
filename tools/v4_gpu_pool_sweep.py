@@ -51,6 +51,8 @@ class PodRef:
     gpu_product: str
     node_name: str
     job_name: str
+    age_seconds: float = 0.0
+    container_ready: bool = False
 
 
 class GpuPoolSweepError(RuntimeError):
@@ -89,6 +91,16 @@ def parse_pod(pod: Mapping[str, Any]) -> PodRef | None:
         if owner.get("kind") == "Job":
             job_name = str(owner.get("name") or "")
             break
+    created_raw = str(pod.get("metadata", {}).get("creationTimestamp") or "")
+    age_seconds = 0.0
+    if created_raw:
+        created = datetime.fromisoformat(created_raw.replace("Z", "+00:00"))
+        age_seconds = max(0.0, (datetime.now(timezone.utc) - created).total_seconds())
+    container_ready = False
+    for status in pod.get("status", {}).get("containerStatuses") or []:
+        if status.get("ready"):
+            container_ready = True
+            break
     return PodRef(
         name=name,
         lane_id=str(match.group("lane")),
@@ -99,7 +111,22 @@ def parse_pod(pod: Mapping[str, Any]) -> PodRef | None:
         gpu_product=str(node_selector.get("nvidia.com/gpu.product") or ""),
         node_name=str(pod.get("spec", {}).get("nodeName") or ""),
         job_name=job_name,
+        age_seconds=age_seconds,
+        container_ready=container_ready,
     )
+
+
+def _in_startup_grace(pod: PodRef | None, *, grace_seconds: int | None = None) -> bool:
+    if pod is None:
+        return False
+    grace = grace_seconds if grace_seconds is not None else gpu_scheduling.ISAAC_STARTUP_GRACE_SECONDS
+    if pod.age_seconds >= grace:
+        return False
+    if pod.phase == "Pending":
+        return True
+    if pod.phase == "Running" and not pod.container_ready:
+        return True
+    return False
 
 
 def _latest_pods(pods: Sequence[PodRef]) -> dict[str, PodRef]:
@@ -140,8 +167,25 @@ def _between_episodes_healthy(policy: PodRef, sim: PodRef | None) -> bool:
 
 def _partner_is_failed_not_pending(partner: PodRef | None) -> bool:
     if partner is None:
+        return False
+    if _in_startup_grace(partner):
+        return False
+    return partner.phase in {"Failed", "Error"}
+
+
+def _shard_complete_or_between_episodes(policy: PodRef, sim: PodRef | None) -> bool:
+    """Running policy with sim Succeeded/Pending on same attempt — not an orphan."""
+    if sim is None or policy is None:
+        return False
+    if policy.attempt_id != sim.attempt_id:
+        return False
+    if policy.phase != "Running":
+        return False
+    if sim.phase in {"Pending", "Running", "Succeeded"}:
         return True
-    return partner.phase in {"Failed", "Error", "Succeeded"}
+    if _in_startup_grace(sim):
+        return True
+    return False
 
 
 def detect_lane_mismatches(
@@ -200,6 +244,11 @@ def detect_lane_mismatches(
         if pol_run and sim_run and policy and sim and policy.attempt_id == sim.attempt_id:
             healthy_pairs.append(lane_id)
             continue
+        if pol_run and policy and _shard_complete_or_between_episodes(policy, sim):
+            healthy_pairs.append(lane_id)
+            continue
+        if pol_run and policy and _in_startup_grace(sim):
+            continue
         if pol_run and policy and _partner_is_failed_not_pending(sim) and not _between_episodes_healthy(policy, sim):
             reason = "split_pair_orphan_policy_half"
             entry = {
@@ -230,7 +279,9 @@ def detect_lane_mismatches(
                 }
             )
         if sim_run and sim and not pol_run:
-            if policy and _between_episodes_healthy(policy, sim):
+            if policy and (_between_episodes_healthy(policy, sim) or _in_startup_grace(policy)):
+                pass
+            elif policy and _shard_complete_or_between_episodes(policy, sim):
                 pass
             elif policy is None or _partner_is_failed_not_pending(policy) or policy.phase in {"Failed", "Error"}:
                 reason = (
@@ -396,6 +447,9 @@ def filter_protected_rows(
     for row in rows:
         lane_id = str(row.get("lane_id") or "")
         attempt_id = str(row.get("attempt_id") or "")
+        if lane_id in gpu_scheduling.PRODUCTIVE_C8_LANE_IDS:
+            skipped.append({**dict(row), "reason_code": "productive_c8_lane_preserved"})
+            continue
         if gpu_scheduling.is_lane_protected(
             lane_id=lane_id,
             attempt_id=attempt_id,
@@ -630,6 +684,7 @@ def run_gpu_pool_sweep(
     protect_list_path: Path | None = None,
     c8_rendered_root: Path | None = None,
     c6_rendered_root: Path | None = None,
+    allow_redispatch: bool = False,
 ) -> dict[str, Any]:
     protect_list = gpu_scheduling.load_protect_list(protect_list_path)
     raw_jobs = fetch_jobs(kube_context=kube_context, namespace=namespace)
@@ -646,17 +701,30 @@ def run_gpu_pool_sweep(
         protect_list=protect_list,
     )
     redispatch_actions: list[dict[str, Any]] = []
-    if not dry_run and reclaim.get("split_pair_lanes_reclaimed"):
+    redispatch_blocked_lanes = list(reclaim.get("split_pair_lanes_reclaimed") or [])
+    if redispatch_blocked_lanes and not allow_redispatch:
+        redispatch_actions.append(
+            {
+                "action": "redispatch_blocked",
+                "reason_code": "same_attempt_redispatch_requires_c8_agent_fresh_attempt_or_lock_clear",
+                "lanes": redispatch_blocked_lanes,
+                "note": (
+                    "Automatic redispatch disabled: re-applying same attempt_id leaves simulator "
+                    "PVC attempt locks (.simulator-lane-*-attempt-*.lock) and causes PreflightError."
+                ),
+            }
+        )
+    elif not dry_run and allow_redispatch and redispatch_blocked_lanes:
         import v4_gpu_placement_enforce as placement  # noqa: WPS433
 
         c8_lanes = [
             lane
-            for lane in reclaim["split_pair_lanes_reclaimed"]
+            for lane in redispatch_blocked_lanes
             if str(lane).startswith("c8m") or str(lane).startswith("g7c8p")
         ]
         c6_lanes = [
             lane
-            for lane in reclaim["split_pair_lanes_reclaimed"]
+            for lane in redispatch_blocked_lanes
             if str(lane).startswith("c6m") or str(lane).startswith("g7c6p")
         ]
         c8_root = c8_rendered_root or placement.DEFAULT_C8_RENDERED_ROOT
@@ -697,6 +765,12 @@ def run_gpu_pool_sweep(
         "kube_context": kube_context,
         "namespace": namespace,
         "dry_run": dry_run,
+        "allow_redispatch": allow_redispatch,
+        "startup_grace_seconds": gpu_scheduling.ISAAC_STARTUP_GRACE_SECONDS,
+        "failure_root_cause_note": (
+            "20260908: C8 sim PreflightError attempt lock already exists after sweep "
+            "redispatch reused attempt_id without lock clear — tooling caused, not Isaac warmup."
+        ),
         "detection": detection,
         "reclaim": reclaim,
         "redispatch_actions": redispatch_actions,
@@ -724,6 +798,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--namespace", default="211247-prod")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--c7-remaining", type=int, default=188)
+    parser.add_argument(
+        "--allow-redispatch",
+        action="store_true",
+        help="Dangerous: only when C8 agent supplies fresh attempt_ids or locks are cleared.",
+    )
     parser.add_argument("--receipt-out", type=Path, default=DEFAULT_RECEIPT)
     args = parser.parse_args(argv)
     receipt = run_gpu_pool_sweep(
@@ -731,6 +810,7 @@ def main(argv: list[str] | None = None) -> int:
         namespace=args.namespace,
         dry_run=args.dry_run,
         c7_remaining_episodes=args.c7_remaining,
+        allow_redispatch=args.allow_redispatch,
     )
     text = json.dumps(receipt, indent=2, sort_keys=True) + "\n"
     if not args.dry_run:

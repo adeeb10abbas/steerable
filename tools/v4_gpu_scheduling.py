@@ -192,6 +192,9 @@ DEFAULT_PROTECT_LIST = (
 
 PRODUCTIVE_C8_LANE_IDS = frozenset({"c8m13", "c8m14"})
 
+# Isaac Lab / PhysX warmup can exceed 120s; do not judge pods dead during this window.
+ISAAC_STARTUP_GRACE_SECONDS = 300
+
 PLACEMENT_POLICY_SCHEMA_VERSION = "v4-gpu-placement-policy-v1"
 
 # Registered spread profiles. Renderer and enforce tooling share these keys.

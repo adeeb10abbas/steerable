@@ -57,7 +57,6 @@ def test_between_episodes_healthy_not_reclaimed() -> None:
 def test_zombie_sim_idle_policy_dead_detected() -> None:
     pods = [
         _pod("c6m05", "attempt0170", "sim", gpu_product="NVIDIA-A100-SXM4-40GB"),
-        _pod("c6m05", "attempt0170", "policy", phase="Pending", gpu_product="NVIDIA-B200"),
     ]
     detection = sweep.detect_lane_mismatches(pods)
     assert len(detection["zombie_sims"]) == 1
@@ -113,3 +112,46 @@ def test_split_pair_not_detected_when_sim_pending_between_episodes() -> None:
     detection = sweep.detect_lane_mismatches(pods)
     assert detection["split_pair_orphans"] == []
     assert detection["orphan_policies"] == []
+
+
+def test_startup_grace_pending_sim_not_orphan() -> None:
+    pods = [
+        _pod("c8m00", "attempt0001", "policy"),
+        sweep.PodRef(
+            name="v4-c8m00-attempt0001-abc123-sim-xyz",
+            lane_id="c8m00",
+            attempt_id="attempt0001",
+            role="sim",
+            phase="Pending",
+            gpu_count=1,
+            gpu_product="NVIDIA-A40",
+            node_name="node-1",
+            job_name="v4-c8m00-attempt0001-abc123-sim",
+            age_seconds=120.0,
+            container_ready=False,
+        ),
+    ]
+    detection = sweep.detect_lane_mismatches(pods)
+    assert detection["orphan_policies"] == []
+    assert detection["split_pair_orphans"] == []
+
+
+def test_startup_grace_expired_sim_failed_is_orphan() -> None:
+    pods = [
+        _pod("c8m00", "attempt0001", "policy"),
+        sweep.PodRef(
+            name="v4-c8m00-attempt0001-abc123-sim-xyz",
+            lane_id="c8m00",
+            attempt_id="attempt0001",
+            role="sim",
+            phase="Failed",
+            gpu_count=0,
+            gpu_product="NVIDIA-A40",
+            node_name="node-1",
+            job_name="v4-c8m00-attempt0001-abc123-sim",
+            age_seconds=400.0,
+            container_ready=False,
+        ),
+    ]
+    detection = sweep.detect_lane_mismatches(pods)
+    assert len(detection["split_pair_orphans"]) == 1

@@ -218,11 +218,16 @@ def policy_should_suspend_until_sim_running(
     *,
     placement_policy: Mapping[str, Any],
     lanes_by_id: Mapping[str, Sequence[JobRef]],
+    pod_refs_by_lane: Mapping[str, Mapping[str, sweep.PodRef]] | None = None,
 ) -> bool:
     role = "simulator" if job.role == "sim" else job.role
     if not gpu_scheduling.role_is_deferred_until_partner_running(placement_policy, role):
         return False
     if job.suspended:
+        return False
+    if pod_refs_by_lane and lane_partner_in_startup_grace(
+        job, pod_refs_by_lane=pod_refs_by_lane, partner_role="sim"
+    ):
         return False
     if lane_between_episodes(job, lanes_by_id=lanes_by_id):
         return False
@@ -405,13 +410,52 @@ def redispatch_lane_pairs(
     return actions
 
 
+def lane_partner_in_startup_grace(
+    job: JobRef,
+    *,
+    pod_refs_by_lane: Mapping[str, Mapping[str, sweep.PodRef]],
+    partner_role: str,
+) -> bool:
+    latest = pod_refs_by_lane.get(job.lane_id) or {}
+    partner = latest.get(partner_role)
+    if partner is None or partner.attempt_id != job.attempt_id:
+        return False
+    return sweep._in_startup_grace(partner)
+
+
+def lane_any_partner_in_startup_grace(
+    job: JobRef,
+    *,
+    pod_refs_by_lane: Mapping[str, Mapping[str, sweep.PodRef]],
+) -> bool:
+    return lane_partner_in_startup_grace(
+        job, pod_refs_by_lane=pod_refs_by_lane, partner_role="sim"
+    ) or lane_partner_in_startup_grace(
+        job, pod_refs_by_lane=pod_refs_by_lane, partner_role="policy"
+    )
+
+
+def build_pod_refs_by_lane(pods: Sequence[sweep.PodRef]) -> dict[str, dict[str, sweep.PodRef]]:
+    by_lane: dict[str, list[sweep.PodRef]] = defaultdict(list)
+    for pod in pods:
+        by_lane[pod.lane_id].append(pod)
+    return {lane_id: sweep._latest_pods(items) for lane_id, items in by_lane.items()}
+
+
 def job_needs_placement(
     job: JobRef,
     *,
     placement_policy: Mapping[str, Any],
     protect_list: Mapping[str, Any],
     lanes_by_id: Mapping[str, Sequence[JobRef]],
+    pod_refs_by_lane: Mapping[str, Mapping[str, sweep.PodRef]] | None = None,
 ) -> bool:
+    if job.lane_id in PRODUCTIVE_C8_LANES:
+        return False
+    if pod_refs_by_lane and lane_any_partner_in_startup_grace(
+        job, pod_refs_by_lane=pod_refs_by_lane
+    ):
+        return False
     if not lane_matches_policy(job.lane_id, placement_policy):
         return False
     role = "simulator" if job.role == "sim" else job.role
@@ -452,6 +496,7 @@ def enforce_gpu_placement(
     ]
     before_pods = sweep.fetch_pods(kube_context=kube_context, namespace=namespace)
     before_pod_refs = [p for p in (sweep.parse_pod(item) for item in before_pods) if p is not None]
+    pod_refs_by_lane = build_pod_refs_by_lane(before_pod_refs)
     before_usage = sweep.summarize_gpu_usage(before_pod_refs)
     before_c8 = sweep.lane_pair_scheduling_state(before_pod_refs, lane_prefix="c8m")
 
@@ -468,7 +513,10 @@ def enforce_gpu_placement(
 
     for job in sorted(parsed, key=role_sort_key):
         if policy_should_suspend_until_sim_running(
-            job, placement_policy=placement_policy, lanes_by_id=lanes_by_id
+            job,
+            placement_policy=placement_policy,
+            lanes_by_id=lanes_by_id,
+            pod_refs_by_lane=pod_refs_by_lane,
         ):
             ok = patch_job_suspend(
                 name=job.name, suspend=True, kube_context=kube_context, namespace=namespace, dry_run=dry_run
@@ -517,7 +565,21 @@ def enforce_gpu_placement(
             placement_policy=placement_policy,
             protect_list=protect_list,
             lanes_by_id=lanes_by_id,
+            pod_refs_by_lane=pod_refs_by_lane,
         ):
+            continue
+        if pod_refs_by_lane and lane_any_partner_in_startup_grace(
+            job, pod_refs_by_lane=pod_refs_by_lane
+        ):
+            actions.append(
+                {
+                    "action": "skip_startup_grace",
+                    "job": job.name,
+                    "lane_id": job.lane_id,
+                    "reason_code": "isaac_warmup_grace",
+                    "grace_seconds": gpu_scheduling.ISAAC_STARTUP_GRACE_SECONDS,
+                }
+            )
             continue
         if job.pod_phase == "Running":
             actions.append(
@@ -593,6 +655,7 @@ def enforce_gpu_placement(
                 placement_policy.get("defer_roles_until_partner_running") or ()
             ),
             "productive_c8_lanes_preserved": sorted(PRODUCTIVE_C8_LANES),
+            "startup_grace_seconds": gpu_scheduling.ISAAC_STARTUP_GRACE_SECONDS,
         },
         "protect_list_path": str(protect_list_path.relative_to(ROOT)),
         "protected_c7_lane_count": len(protected_c7_lanes),

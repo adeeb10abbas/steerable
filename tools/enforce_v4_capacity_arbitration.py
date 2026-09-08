@@ -13,6 +13,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 import v4_capacity_arbitration as arbitration  # noqa: E402
 import v4_gpu_placement_enforce as gpu_placement  # noqa: E402
+import v4_c7_capacity_sequencing as c7_sequencing  # noqa: E402
 import v4_gpu_pool_sweep as gpu_sweep  # noqa: E402
 import v4_gpu_scheduling as gpu_scheduling  # noqa: E402
 
@@ -28,7 +29,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument(
         "--mode",
-        choices=("pilot_priority", "c7_restore", "normal", "gpu_sweep", "gpu_placement"),
+        choices=("pilot_priority", "c7_restore", "normal", "gpu_sweep", "gpu_placement", "c7_sequencing"),
         default=None,
     )
     parser.add_argument("--c7-ceiling", type=int, default=None)
@@ -48,7 +49,27 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--receipt-out", type=Path, default=DEFAULT_RECEIPT)
     parser.add_argument("--sweep-receipt-out", type=Path, default=DEFAULT_SWEEP_RECEIPT)
     parser.add_argument("--placement-receipt-out", type=Path, default=DEFAULT_PLACEMENT_RECEIPT)
+    parser.add_argument(
+        "--allow-redispatch",
+        action="store_true",
+        help="Dangerous: only when C8 agent supplies fresh attempt_ids or locks are cleared.",
+    )
+    parser.add_argument("--sequencing-plan-out", type=Path, default=c7_sequencing.DEFAULT_PLAN_OUT)
     args = parser.parse_args(argv)
+    if args.mode == "c7_sequencing":
+        protect_list = gpu_scheduling.load_protect_list(args.protect_list)
+        plan = c7_sequencing.build_sequencing_plan(
+            kube_context=args.kube_context,
+            namespace=args.namespace,
+            protect_list=protect_list,
+        )
+        if not args.dry_run:
+            args.sequencing_plan_out.parent.mkdir(parents=True, exist_ok=True)
+            args.sequencing_plan_out.write_text(
+                json.dumps(plan, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+            )
+        print(json.dumps(plan, indent=2, sort_keys=True))
+        return 0
     if args.mode == "gpu_placement":
         receipt = gpu_placement.enforce_gpu_placement(
             policy_id=args.policy,
@@ -71,12 +92,13 @@ def main(argv: list[str] | None = None) -> int:
             namespace=args.namespace,
             dry_run=args.dry_run,
             c7_remaining_episodes=args.c7_remaining,
+            protect_list_path=args.protect_list,
+            allow_redispatch=args.allow_redispatch,
         )
-        if not args.dry_run:
-            args.sweep_receipt_out.parent.mkdir(parents=True, exist_ok=True)
-            args.sweep_receipt_out.write_text(
-                json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8"
-            )
+        args.sweep_receipt_out.parent.mkdir(parents=True, exist_ok=True)
+        args.sweep_receipt_out.write_text(
+            json.dumps(receipt, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
         print(json.dumps(receipt, indent=2, sort_keys=True))
         return 0
     mode = "c7_restore" if args.mode == "normal" else args.mode

@@ -1,0 +1,22 @@
+{
+  "schema_version": "v4-gpu-sweep-protect-list-v1",
+  "compiled_at_utc": "2026-09-08T06:30:00Z",
+  "owner_agent": "capacity_agent",
+  "sequencing_phase": "2_teardown_complete_protect_released_only",
+  "sequencing_note": "Apply after Agent B productive drain signal. Productive C7 pairs no longer protected.",
+  "productive_c7_lane_pairs": [],
+  "c7_retry_shards_in_flight_do_not_preempt": [],
+  "productive_c8_lane_pairs": [],
+  "released_shard_protect_during_dispatch": [
+    {"attempt_id": "attempt0603"},
+    {"attempt_id": "attempt0604"},
+    {"attempt_id": "attempt0605"},
+    {"attempt_id": "attempt0606"}
+  ],
+  "released_shard_queue_pending_redispatch": {
+    "attempt_ids": ["attempt0603", "attempt0604", "attempt0605", "attempt0606"],
+    "behavioral_episode_count": 220,
+    "missing_episode_coverage": 188,
+    "status": "ready_for_dispatch_post_teardown"
+  }
+}

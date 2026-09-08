@@ -1,14 +1,21 @@
 {
   "schema_version": "v4-gpu-sweep-protect-list-v1",
-  "compiled_at_utc": "2026-09-08T04:15:00Z",
+  "compiled_at_utc": "2026-09-08T06:30:00Z",
   "owner_agent": "C7_object_pair_confirmatory",
   "cluster_context": "prod-dcwi-warrenq1-vmkub007",
   "namespace": "211247-prod",
+  "sequencing_phase": "1_productive_drain",
   "sweep_coordination": {
     "capacity_agent_may_reclaim": "policy Running with sim Error/Failed/missing, or sim Running with policy Error/Failed/missing, excluding protected pairs below",
     "rerunnable": true,
-    "do_not_delete": "productive_lane_pairs"
+    "do_not_delete": "productive_lane_pairs",
+    "live_sweep_halted_until": "C8 agent re-renders fresh attempt_ids or PVC attempt locks cleared; automatic redispatch disabled",
+    "startup_grace_seconds": 300
   },
+  "productive_c8_lane_pairs": [
+    {"lane_id": "c8m13", "attempt_id": "attempt0014", "accepted_episodes": 38},
+    {"lane_id": "c8m14", "attempt_id": "attempt0014", "accepted_episodes": 38}
+  ],
   "productive_c7_lane_pairs": [
     {"lane_id": "c7m00", "attempt_id": "attempt0473"},
     {"lane_id": "c7m09", "attempt_id": "attempt0481"},
@@ -40,14 +47,22 @@
     "attempt_ids": ["attempt0603", "attempt0604", "attempt0605", "attempt0606"],
     "behavioral_episode_count": 220,
     "missing_episode_coverage": 188,
-    "status": "leases_released_jobs_torn_down_20260908",
+    "status": "blocked_until_productive_teardown",
     "reoffer_when": "A40 headroom after productive lane drain (not retry-first)",
     "reachability_analysis": "artifacts/online_correction_v4/execution/c7_object_pair_20260906/c7_episode_reachability_analysis_20260908.json",
-    "supersedes_retry_r3": true
+    "supersedes_retry_r3": true,
+    "skip_retry_r3_attempts": ["attempt0589", "attempt0590", "attempt0591", "attempt0592", "attempt0593", "attempt0594"]
+  },
+  "phase2_teardown_coordination": {
+    "trigger": "Agent B compile shows 0 remaining episodes on productive shards",
+    "action": "Remove productive_c7_lane_pairs protection; delete whole productive pairs; skip r3 retry teardown",
+    "then_dispatch": "attempt0603-0606 only",
+    "protect_list_phase2_path": "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_sweep_protect_list_phase2_20260908.json",
+    "sequencing_plan": "artifacts/online_correction_v4/execution/gpu_widen_20260908/c7_released_shard_sequencing_plan.json"
   },
   "reclaimed_orphan_policy_attempts_20260908": [
     "attempt0583", "attempt0584", "attempt0585", "attempt0586", "attempt0587",
     "attempt0588", "attempt0589", "attempt0590", "attempt0591", "attempt0592", "attempt0593"
   ],
-  "note": "11 orphaned C7 policy-only jobs deleted 20260908; freed A40 GPUs. Retry 0589-0594 re-dispatched same session."
+  "note": "Phase 1: protect productive C7 + productive C8. Phase 2 (post-drain): protect released 0603-0606 only; route A40 to C8 up to 20 pairs."
 }

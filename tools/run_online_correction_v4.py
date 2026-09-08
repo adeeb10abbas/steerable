@@ -199,21 +199,9 @@ def main(argv: list[str] | None = None) -> int:
         try:
             result = runner.run()
         finally:
-            manifest_fixture = manifest.fixture
-            if manifest_fixture == "second_stack":
-                from experiments.online_correction_v4.droid_second_stack_simulator import (
-                    LiveSecondStackEnv,
-                    close_live_second_stack_stack,
-                )
+            from experiments.online_correction_v4.droid_robolab import close_live_droid_stack
 
-                env = getattr(binding.simulator, "env", None)
-                close_live_second_stack_stack(
-                    env=env if isinstance(env, LiveSecondStackEnv) else None
-                )
-            else:
-                from experiments.online_correction_v4.droid_robolab import close_live_droid_stack
-
-                close_live_droid_stack(policy=binding.policy)
+            close_live_droid_stack(policy=binding.policy)
         print(
             json.dumps(
                 {"status": result.attempt_status, "end_reason": result.end_reason.value},

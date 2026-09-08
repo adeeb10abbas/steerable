@@ -1,0 +1,356 @@
+{
+  "dispatch_outcomes": [
+    {
+      "attempt_id": "attempt0195",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f-runnerfix/c6m17-attempt0195-a10040-policy_b200-simulator",
+      "job_actions": [
+        {
+          "action": "apply_rendered_job",
+          "applied": true,
+          "job": "v4-c6m17-attempt0195-356bbaf235-sim",
+          "lane_id": "c6m17",
+          "message": "job.batch/v4-c6m17-attempt0195-356bbaf235-sim created",
+          "policy_suspended_on_create": false,
+          "rendered_from": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f-runnerfix/c6m17-attempt0195-a10040-policy_b200-simulator/simulator-job.yaml",
+          "role": "simulator",
+          "sim_first": true
+        },
+        {
+          "action": "apply_rendered_job",
+          "applied": true,
+          "job": "v4-c6m17-attempt0195-356bbaf235-policy",
+          "lane_id": "c6m17",
+          "message": "job.batch/v4-c6m17-attempt0195-356bbaf235-policy created",
+          "policy_suspended_on_create": true,
+          "rendered_from": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f-runnerfix/c6m17-attempt0195-a10040-policy_b200-simulator/policy-job.yaml",
+          "role": "policy",
+          "sim_first": true
+        }
+      ],
+      "lane_id": "c6m17",
+      "status": "dispatched",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0195",
+              "v4-config-sha": "356bbaf2352e578ab0ba22d16643e1eb",
+              "v4-lane-id": "c6m17"
+            },
+            "name": "v4-c6m17-attempt0195-356bbaf235-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0195",
+              "v4-config-sha": "356bbaf2352e578ab0ba22d16643e1eb",
+              "v4-lane-id": "c6m17",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m17-attempt0195-356bbaf235-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0195",
+              "v4-config-sha": "356bbaf2352e578ab0ba22d16643e1eb",
+              "v4-lane-id": "c6m17",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m17-attempt0195-356bbaf235-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0195",
+              "v4-config-sha": "356bbaf2352e578ab0ba22d16643e1eb",
+              "v4-lane-id": "c6m17",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m17-attempt0195-356bbaf235-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "attempt_id": "attempt0196",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f-runnerfix/c6m23-attempt0196-a10040-policy_b200-simulator",
+      "job_actions": [
+        {
+          "action": "apply_rendered_job",
+          "applied": true,
+          "job": "v4-c6m23-attempt0196-25f7f93219-sim",
+          "lane_id": "c6m23",
+          "message": "job.batch/v4-c6m23-attempt0196-25f7f93219-sim created",
+          "policy_suspended_on_create": false,
+          "rendered_from": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f-runnerfix/c6m23-attempt0196-a10040-policy_b200-simulator/simulator-job.yaml",
+          "role": "simulator",
+          "sim_first": true
+        },
+        {
+          "action": "apply_rendered_job",
+          "applied": true,
+          "job": "v4-c6m23-attempt0196-25f7f93219-policy",
+          "lane_id": "c6m23",
+          "message": "job.batch/v4-c6m23-attempt0196-25f7f93219-policy created",
+          "policy_suspended_on_create": true,
+          "rendered_from": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f-runnerfix/c6m23-attempt0196-a10040-policy_b200-simulator/policy-job.yaml",
+          "role": "policy",
+          "sim_first": true
+        }
+      ],
+      "lane_id": "c6m23",
+      "status": "dispatched",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0196",
+              "v4-config-sha": "25f7f9321969a4355cec9cbc9c3a07ae",
+              "v4-lane-id": "c6m23"
+            },
+            "name": "v4-c6m23-attempt0196-25f7f93219-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0196",
+              "v4-config-sha": "25f7f9321969a4355cec9cbc9c3a07ae",
+              "v4-lane-id": "c6m23",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m23-attempt0196-25f7f93219-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0196",
+              "v4-config-sha": "25f7f9321969a4355cec9cbc9c3a07ae",
+              "v4-lane-id": "c6m23",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m23-attempt0196-25f7f93219-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0196",
+              "v4-config-sha": "25f7f9321969a4355cec9cbc9c3a07ae",
+              "v4-lane-id": "c6m23",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m23-attempt0196-25f7f93219-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "attempt_id": "attempt0197",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f-runnerfix/c6m22-attempt0197-a10040-policy_b200-simulator",
+      "job_actions": [
+        {
+          "action": "apply_rendered_job",
+          "applied": true,
+          "job": "v4-c6m22-attempt0197-809866e70c-sim",
+          "lane_id": "c6m22",
+          "message": "job.batch/v4-c6m22-attempt0197-809866e70c-sim created",
+          "policy_suspended_on_create": false,
+          "rendered_from": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f-runnerfix/c6m22-attempt0197-a10040-policy_b200-simulator/simulator-job.yaml",
+          "role": "simulator",
+          "sim_first": true
+        },
+        {
+          "action": "apply_rendered_job",
+          "applied": true,
+          "job": "v4-c6m22-attempt0197-809866e70c-policy",
+          "lane_id": "c6m22",
+          "message": "job.batch/v4-c6m22-attempt0197-809866e70c-policy created",
+          "policy_suspended_on_create": true,
+          "rendered_from": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f-runnerfix/c6m22-attempt0197-a10040-policy_b200-simulator/policy-job.yaml",
+          "role": "policy",
+          "sim_first": true
+        }
+      ],
+      "lane_id": "c6m22",
+      "status": "dispatched",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0197",
+              "v4-config-sha": "809866e70cce3de384bddaa57320d990",
+              "v4-lane-id": "c6m22"
+            },
+            "name": "v4-c6m22-attempt0197-809866e70c-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0197",
+              "v4-config-sha": "809866e70cce3de384bddaa57320d990",
+              "v4-lane-id": "c6m22",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m22-attempt0197-809866e70c-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0197",
+              "v4-config-sha": "809866e70cce3de384bddaa57320d990",
+              "v4-lane-id": "c6m22",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m22-attempt0197-809866e70c-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0197",
+              "v4-config-sha": "809866e70cce3de384bddaa57320d990",
+              "v4-lane-id": "c6m22",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m22-attempt0197-809866e70c-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    },
+    {
+      "attempt_id": "attempt0198",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f-runnerfix/c6m29-attempt0198-a10040-policy_b200-simulator",
+      "job_actions": [
+        {
+          "action": "apply_rendered_job",
+          "applied": true,
+          "job": "v4-c6m29-attempt0198-906bc5fd17-sim",
+          "lane_id": "c6m29",
+          "message": "job.batch/v4-c6m29-attempt0198-906bc5fd17-sim created",
+          "policy_suspended_on_create": false,
+          "rendered_from": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f-runnerfix/c6m29-attempt0198-a10040-policy_b200-simulator/simulator-job.yaml",
+          "role": "simulator",
+          "sim_first": true
+        },
+        {
+          "action": "apply_rendered_job",
+          "applied": true,
+          "job": "v4-c6m29-attempt0198-906bc5fd17-policy",
+          "lane_id": "c6m29",
+          "message": "job.batch/v4-c6m29-attempt0198-906bc5fd17-policy created",
+          "policy_suspended_on_create": true,
+          "rendered_from": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f-runnerfix/c6m29-attempt0198-a10040-policy_b200-simulator/policy-job.yaml",
+          "role": "policy",
+          "sim_first": true
+        }
+      ],
+      "lane_id": "c6m29",
+      "status": "dispatched",
+      "teardown_inventory": {
+        "kube_context": "prod-dcwi-warrenq1-vmkub007",
+        "objects": [
+          {
+            "kind": "ConfigMap",
+            "labels": {
+              "v4-attempt-id": "attempt0198",
+              "v4-config-sha": "906bc5fd1784fba4dd77e9ac1aaf5ddd",
+              "v4-lane-id": "c6m29"
+            },
+            "name": "v4-c6m29-attempt0198-906bc5fd17-launch",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0198",
+              "v4-config-sha": "906bc5fd1784fba4dd77e9ac1aaf5ddd",
+              "v4-lane-id": "c6m29",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m29-attempt0198-906bc5fd17-policy",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Job",
+            "labels": {
+              "v4-attempt-id": "attempt0198",
+              "v4-config-sha": "906bc5fd1784fba4dd77e9ac1aaf5ddd",
+              "v4-lane-id": "c6m29",
+              "v4-lane-role": "simulator"
+            },
+            "name": "v4-c6m29-attempt0198-906bc5fd17-sim",
+            "namespace": "211247-prod"
+          },
+          {
+            "kind": "Service",
+            "labels": {
+              "v4-attempt-id": "attempt0198",
+              "v4-config-sha": "906bc5fd1784fba4dd77e9ac1aaf5ddd",
+              "v4-lane-id": "c6m29",
+              "v4-lane-role": "policy"
+            },
+            "name": "v4-c6m29-attempt0198-906bc5fd17-policy",
+            "namespace": "211247-prod"
+          }
+        ]
+      }
+    }
+  ],
+  "lane_attempt_map": {
+    "c6m17": "attempt0195",
+    "c6m22": "attempt0197",
+    "c6m23": "attempt0196",
+    "c6m29": "attempt0198"
+  },
+  "released_runner_sha256": "71e7f86f5e3dbda46ae3a03a7a07959fc4562a13dce71955362bf93226adb3df",
+  "render_outcomes": [
+    {
+      "attempt_id": "attempt0195",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f-runnerfix/c6m17-attempt0195-a10040-policy_b200-simulator",
+      "episode_count": 12,
+      "lane_id": "c6m17",
+      "runner_sha256": "71e7f86f5e3dbda46ae3a03a7a07959fc4562a13dce71955362bf93226adb3df"
+    },
+    {
+      "attempt_id": "attempt0196",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f-runnerfix/c6m23-attempt0196-a10040-policy_b200-simulator",
+      "episode_count": 12,
+      "lane_id": "c6m23",
+      "runner_sha256": "71e7f86f5e3dbda46ae3a03a7a07959fc4562a13dce71955362bf93226adb3df"
+    },
+    {
+      "attempt_id": "attempt0197",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f-runnerfix/c6m22-attempt0197-a10040-policy_b200-simulator",
+      "episode_count": 12,
+      "lane_id": "c6m22",
+      "runner_sha256": "71e7f86f5e3dbda46ae3a03a7a07959fc4562a13dce71955362bf93226adb3df"
+    },
+    {
+      "attempt_id": "attempt0198",
+      "bundle_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f-runnerfix/c6m29-attempt0198-a10040-policy_b200-simulator",
+      "episode_count": 12,
+      "lane_id": "c6m29",
+      "runner_sha256": "71e7f86f5e3dbda46ae3a03a7a07959fc4562a13dce71955362bf93226adb3df"
+    }
+  ],
+  "render_output_root": "/Users/SZ5VJY/steerable-1/artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f-runnerfix",
+  "root_cause": "C6 retry lanes m17/m23 rendered against stale af01 lock copy while shared checkout holds C7-pinned 71e7 runner",
+  "schema_version": "v4-c6-shared-checkout-runnerfix-rerender-v1"
+}

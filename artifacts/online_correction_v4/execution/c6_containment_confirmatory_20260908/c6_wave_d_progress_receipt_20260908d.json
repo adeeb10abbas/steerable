@@ -1,0 +1,47 @@
+{
+  "schema_version": "v4-c6-wave-progress-receipt-v1",
+  "compiled_at_utc": "2026-09-08T04:15:00Z",
+  "wave_id": "c6confirm20260908f",
+  "wave_label": "D",
+  "confirmatory_terminals": 50,
+  "milestones": {
+    "32": "passed",
+    "128": "pending",
+    "384": "pending"
+  },
+  "composition_at_50": {
+    "by_outcome": {
+      "no_grasp": 43,
+      "transport_incomplete": 6,
+      "wrong_goal_region": 1
+    },
+    "by_scenario": {
+      "destination_static": 16,
+      "move_stop": 20,
+      "original_sham": 14
+    }
+  },
+  "grasp_rate_by_scenario": {
+    "destination_static": {
+      "episodes": 16,
+      "grasp_achieved": 2,
+      "grasp_rate_pct": 12.5,
+      "c8_reference_at_161_eps_pct": 7.8
+    },
+    "move_stop": {
+      "episodes": 20,
+      "grasp_achieved": 2,
+      "grasp_rate_pct": 10.0,
+      "c8_reference_at_161_eps_pct": 3.6
+    },
+    "original_sham": {
+      "episodes": 14,
+      "grasp_achieved": 3,
+      "grasp_rate_pct": 21.4,
+      "c8_reference_at_161_eps_pct": 1.8
+    }
+  },
+  "runnerfix_dispatch": "create-c6confirm20260908f-runnerfix.json",
+  "healthy_lane_pairs_running": 10,
+  "supersedes": "c6_wave_d_milestone_receipt_20260908c.json"
+}

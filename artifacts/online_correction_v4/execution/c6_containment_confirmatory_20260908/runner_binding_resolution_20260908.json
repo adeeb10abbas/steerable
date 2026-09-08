@@ -12,6 +12,8 @@
     "authoritative_runner_sha256": "71e7f86f5e3dbda46ae3a03a7a07959fc4562a13dce71955362bf93226adb3df",
     "authoritative_runner_commit": "4f928a0005422a972e4c35ef16604bf6b1a31aae",
     "lock_uri": "artifacts/online_correction_v4/setup/containment_c6_confirmatory_runtime_lock.released.json",
+    "lock_amended_utc": "2026-09-08T04:10:00Z",
+    "lock_amendment": "C6 released lock runner sha256 aligned to shared-checkout 71e7 pin (was stale af01 in lock file while wave D f bundles used 71e7)",
     "render_path": "render_lane_bundle via coordinator; NOT in-place PVC patching",
     "binding_model": "Per-attempt staged copy at .coord-bindings/{lane}/{attempt}/run_online_correction_v4.py with matching sha embedded in lane_dispatch_manifest.json and simulator launch file_bindings; runtime checkout must match lock.runner.entrypoint sha",
     "operating_rule": "When C7 mutates shared checkout runner, C6 must re-render all in-flight waves from updated released lock before dispatch; never patch coord bindings on PVC alone"

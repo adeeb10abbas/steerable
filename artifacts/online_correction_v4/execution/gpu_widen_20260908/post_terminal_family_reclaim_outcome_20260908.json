@@ -1,0 +1,68 @@
+{
+  "schema_version": "v4-post-terminal-family-reclaim-outcome-v1",
+  "observed_at_utc": "2026-09-08T12:56:00Z",
+  "trigger": "C7 768/768 + C8 768/768 terminal; C6 sole consumer at 330/768 (438 remaining)",
+  "cluster_context": "prod-dcwi-warrenq1-vmkub007",
+  "namespace": "211247-prod",
+  "families_reclaimed": {
+    "C7": {
+      "ledger": "compiled_ledger_20260908_FINAL",
+      "jobs_deleted_total": 56,
+      "lanes_cleared": 28,
+      "gpus_reclaimed_running": {
+        "NVIDIA-A100-SXM4-80GB": 14
+      }
+    },
+    "C8": {
+      "ledger": "compile 20260908h",
+      "jobs_deleted_total": 40,
+      "lanes_cleared": 20,
+      "gpus_reclaimed_running": {},
+      "note": "Suspended policies + Complete sims deleted; A40 pool was already idle (40/40 free)"
+    }
+  },
+  "gpus_reclaimed_by_pool_total": {
+    "NVIDIA-A100-SXM4-80GB": 14,
+    "NVIDIA-A40": 0,
+    "NVIDIA-A100-SXM4-40GB": 0,
+    "NVIDIA-B200": 0
+  },
+  "pool_state_after_reclaim": {
+    "NVIDIA-A40": {"size": 40, "free_estimate": 40, "c6_absorbable": false},
+    "NVIDIA-A100-SXM4-80GB": {"size": 95, "free_estimate": 94, "c6_absorbable": false},
+    "NVIDIA-A100-SXM4-40GB": {"size": 64, "free_estimate": 41, "c6_absorbable": true},
+    "NVIDIA-B200": {"size": 40, "free_estimate": 29, "c6_absorbable": true}
+  },
+  "c6_capacity_routing": {
+    "authorized_lanes_matrix": 32,
+    "absorbable_lanes_pool_cap": 32,
+    "binding": "matrix equals pool cap — full 32 lanes authorized and schedulable",
+    "idle_not_absorbable": {
+      "NVIDIA-A40": 40,
+      "NVIDIA-A100-SXM4-80GB": 94,
+      "fraction_of_freed_capacity_c6_can_use": "100% of B200+A100-40; 0% of A40+A100-80 (134 GPUs idle)"
+    },
+    "amendment_required_for_more_than_32_lanes": "Post-result launch_matrix amendment only; qualification gates unchanged"
+  },
+  "agent_b_coordination": {
+    "owner": "Agent B",
+    "c6_dispatch": "wave-D tail recovery complete (13 lanes); sim-first gate unsuspend active",
+    "failure_mode": "sim-first gate only unsuspends when sim Running; Failed /healthz sims need explicit delete+recreate",
+    "periodic_loop_fix": "recreate_failed_c6_sim_partners live each 180s tick before unsuspend",
+    "handoff_receipt": "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/c6_wave_d_tail_recovery_20260908.json"
+  },
+  "wall_clock_estimates_c6_768": {
+    "remaining_episodes": 438,
+    "minutes_per_episode_per_lane": 25,
+    "at_authorized_32_lanes_hours": 5.7,
+    "at_current_healthy_7_lanes_hours": 26.1,
+    "achievable_estimate_hours": 7.5,
+    "achievable_note": "Expect 20–24 healthy pairs as Agent B tail sims warm and periodic unsuspend runs; 438/22×25/60 ≈ 7.5 h"
+  },
+  "tooling_receipts": [
+    "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_periodic_enforcement_receipt.json",
+    "artifacts/online_correction_v4/execution/gpu_widen_20260908/c6_capacity_routing_decision.json",
+    "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_sweep_protect_list_20260908_phase3.json"
+  ],
+  "rerun_command": ".venv/bin/python tools/run_v4_gpu_periodic_enforcement.py --c6-remaining 438 --loop-seconds 180 --record-loop-pid"
+}

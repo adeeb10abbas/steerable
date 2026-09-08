@@ -136,6 +136,23 @@ def test_startup_grace_pending_sim_not_orphan() -> None:
     assert detection["split_pair_orphans"] == []
 
 
+def test_finished_c7_running_policy_succeeded_sim_flagged_healthy_by_detector() -> None:
+    """Standard sweep marks terminal C7 pairs healthy; finished-family reclaim deletes them."""
+    pods = [
+        _pod("c7m03", "attempt0618", "policy", gpu_product="NVIDIA-A100-SXM4-80GB"),
+        _pod("c7m03", "attempt0618", "sim", phase="Succeeded", gpu_product="NVIDIA-A40"),
+    ]
+    detection = sweep.detect_lane_mismatches(pods)
+    assert "c7m03" in detection["healthy_lane_pairs"]
+
+
+def test_finished_c8_lane_ids_cover_all_confirmatory_lanes() -> None:
+    import v4_gpu_scheduling as gpu_scheduling  # noqa: E402
+
+    assert len(gpu_scheduling.FINISHED_C8_LANE_IDS) == 20
+    assert gpu_scheduling.PRODUCTIVE_C8_LANE_IDS == frozenset()
+
+
 def test_startup_grace_expired_sim_failed_is_orphan() -> None:
     pods = [
         _pod("c8m00", "attempt0001", "policy"),

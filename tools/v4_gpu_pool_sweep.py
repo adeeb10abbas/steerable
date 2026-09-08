@@ -674,6 +674,125 @@ def reclaim_finished_lane_orphan_policies(
     }
 
 
+def _latest_lane_attempt_jobs(
+    jobs: Sequence[Mapping[str, Any]], *, lane_prefix: str
+) -> dict[str, dict[str, dict[str, Any]]]:
+    """Map lane_id -> role -> latest job metadata dict."""
+    latest: dict[str, dict[str, dict[str, Any]]] = defaultdict(dict)
+    for job in jobs:
+        name = str(job.get("metadata", {}).get("name") or "")
+        match = re.match(
+            rf"^v4-(?P<lane>{re.escape(lane_prefix)}\d+)-(?P<attempt>attempt\d+)-"
+            rf"(?P<hash>[a-f0-9]+)-(?P<role>policy|sim)$",
+            name,
+            re.I,
+        )
+        if not match:
+            continue
+        lane_id = str(match.group("lane"))
+        role = str(match.group("role"))
+        attempt_id = str(match.group("attempt"))
+        current = latest[lane_id].get(role)
+        if current is None or attempt_id > str(current.get("attempt_id") or ""):
+            latest[lane_id][role] = {
+                "job": name,
+                "attempt_id": attempt_id,
+                "suspend": bool((job.get("spec") or {}).get("suspend")),
+                "active": int((job.get("status") or {}).get("active") or 0),
+                "succeeded": int((job.get("status") or {}).get("succeeded") or 0),
+                "failed": int((job.get("status") or {}).get("failed") or 0),
+            }
+    return dict(latest)
+
+
+def _running_gpu_for_job(job_name: str, pods: Sequence[PodRef]) -> tuple[str, int]:
+    for pod in pods:
+        if pod.job_name != job_name or pod.phase != "Running" or pod.gpu_count <= 0:
+            continue
+        return pod.gpu_product, pod.gpu_count
+    return "", 0
+
+
+def reclaim_finished_family_cluster_state(
+    *,
+    kube_context: str,
+    namespace: str,
+    dry_run: bool,
+    pods: Sequence[PodRef] | None = None,
+    reclaim_c7: bool | None = None,
+    reclaim_c8: bool = True,
+) -> dict[str, Any]:
+    """Delete all lane jobs for families whose confirmatory ledger is terminal (768/768).
+
+    C7 policies may still appear 'healthy' (Running policy + Succeeded sim) between episodes;
+    once the family ledger is final those jobs are pure orphan state. C8 suspended policies
+    with Complete sims likewise hold no scientific work. Never redispatch finished families.
+    """
+    if reclaim_c7 is None:
+        reclaim_c7 = gpu_scheduling.FINISHED_C7_FAMILY_COMPLETE
+    raw_jobs = fetch_jobs(kube_context=kube_context, namespace=namespace)
+    if pods is None:
+        raw_pods = fetch_pods(kube_context=kube_context, namespace=namespace)
+        pods = [parsed for parsed in (parse_pod(item) for item in raw_pods) if parsed is not None]
+    actions: list[dict[str, Any]] = []
+    reclaimed_gpus: Counter[str] = Counter()
+    lanes_cleared: dict[str, set[str]] = {"c7": set(), "c8": set()}
+    seen_jobs: set[str] = set()
+
+    def family_for_lane(lane_id: str) -> str | None:
+        if lane_id.startswith("c7m") and reclaim_c7:
+            return "c7"
+        if lane_id.startswith("c8m") and reclaim_c8 and lane_id in gpu_scheduling.FINISHED_C8_LANE_IDS:
+            return "c8"
+        return None
+
+    for job in raw_jobs:
+        name = str(job.get("metadata", {}).get("name") or "")
+        match = re.match(
+            r"^v4-(?P<lane>c[78]m\d+)-(?P<attempt>attempt\d+)-(?P<hash>[a-f0-9]+)-(?P<role>policy|sim)$",
+            name,
+            re.I,
+        )
+        if not match:
+            continue
+        lane_id = str(match.group("lane"))
+        family = family_for_lane(lane_id)
+        if family is None or name in seen_jobs:
+            continue
+        seen_jobs.add(name)
+        role = str(match.group("role"))
+        gpu_product, gpu_count = _running_gpu_for_job(name, pods)
+        ok = _delete_job(job_name=name, kube_context=kube_context, namespace=namespace, dry_run=dry_run)
+        actions.append(
+            {
+                "action": "delete_finished_family_job",
+                "family": family,
+                "lane_id": lane_id,
+                "role": role,
+                "job": name,
+                "attempt_id": str(match.group("attempt")),
+                "reason_code": "finished_family_768_terminal",
+                "deleted": ok,
+                "gpu_product": gpu_product,
+                "gpu_count": gpu_count,
+            }
+        )
+        if ok and gpu_count > 0 and gpu_product:
+            reclaimed_gpus[gpu_product] += gpu_count
+        lanes_cleared[family].add(lane_id)
+
+    return {
+        "reclaim_c7": reclaim_c7,
+        "reclaim_c8": reclaim_c8,
+        "c7_lanes_cleared": sorted(lanes_cleared["c7"]),
+        "c8_lanes_cleared": sorted(lanes_cleared["c8"]),
+        "jobs_deleted": sum(1 for row in actions if row.get("deleted")),
+        "actions": actions,
+        "reclaimed_gpus_by_product": dict(reclaimed_gpus),
+        "reclaimed_gpu_total": sum(reclaimed_gpus.values()),
+    }
+
+
 def count_c7_r6_reshard_lanes(pods: Sequence[PodRef]) -> int:
     lanes: set[str] = set()
     lo = gpu_scheduling.C7_R6_RESHARD_ATTEMPT_MIN

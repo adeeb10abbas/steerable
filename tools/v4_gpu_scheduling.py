@@ -187,13 +187,23 @@ def validate_pod_gpu_scheduling(
 
 DEFAULT_PROTECT_LIST = (
     __import__("pathlib").Path(__file__).resolve().parents[1]
-    / "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_sweep_protect_list_20260908_phase2.json"
+    / "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_sweep_protect_list_20260908_phase3.json"
 )
 
-PRODUCTIVE_C8_LANE_IDS = frozenset({"c8m13", "c8m14"})
+# C8 confirmatory complete at 768/768; no productive pairs remain protected.
+PRODUCTIVE_C8_LANE_IDS: frozenset[str] = frozenset()
 
-# Completed C8 confirmatory lanes whose orphan policy pods may be live-reclaimed safely.
-FINISHED_C8_LANE_ORPHAN_RECLAIM = frozenset({"c8m05", "c8m16"})
+# All 20 C8 confirmatory lane identities (ledger compile 20260908h, 768/768).
+FINISHED_C8_LANE_IDS: frozenset[str] = frozenset(f"c8m{index:02d}" for index in range(20))
+
+# Back-compat alias: entire finished C8 family may be orphan-reclaimed.
+FINISHED_C8_LANE_ORPHAN_RECLAIM = FINISHED_C8_LANE_IDS
+
+# C7 object_pair confirmatory complete at 768/768 (compiled_ledger_20260908_FINAL).
+FINISHED_C7_FAMILY_COMPLETE = True
+
+# Authorized C6 confirmatory lane count from containment_c6_confirmatory_launch_matrix.json.
+C6_AUTHORIZED_LANE_COUNT = 32
 
 # C7 released-tail r6 resharding attempt range (Agent B bundle rendered-released-tail-reshard-20260908r6).
 C7_R6_RESHARD_ATTEMPT_MIN = "attempt0611"

@@ -1,0 +1,38 @@
+{
+  "amendment_for_extra_c6_lanes": null,
+  "c6_absorbable_lanes_pool_cap": 32,
+  "c6_authorized_lanes": 32,
+  "c6_healthy_pairs_observed": 7,
+  "c6_lanes_seen": 23,
+  "c6_matrix_binding": "authorized_matrix_caps_at_32",
+  "c6_remaining_episodes": 438,
+  "c6_sim_ready_policy_waiting": 4,
+  "c7_status": "768/768 terminal \u2014 cluster jobs reclaimed",
+  "c8_status": "768/768 terminal \u2014 cluster jobs reclaimed",
+  "decision": "c6_sole_consumer_post_c7_c8_terminal",
+  "gpus_reclaimed_by_pool_this_tick": {
+    "NVIDIA-A100-SXM4-80GB": 1
+  },
+  "idle_not_absorbable_by_c6": {
+    "NVIDIA-A100-SXM4-80GB": 95,
+    "NVIDIA-A40": 40,
+    "note": "C6 stratum is A100-40GB sim + B200 policy; A40/A100-80GB from finished families stay idle unless amended."
+  },
+  "observed_at_utc": "2026-09-08T12:54:29Z",
+  "scheduling_state": {
+    "c6": {
+      "healthy_pairs": 7,
+      "lane_prefix": "c6m",
+      "partial_pairs": 16,
+      "pending_pairs": 0,
+      "total_lanes_seen": 23
+    }
+  },
+  "schema_version": "v4-c6-capacity-routing-decision-v1",
+  "wall_clock_estimates": {
+    "c6_achievable_estimate_note": "Use absorbable_lanes=32 (min of matrix and B200/A100-40 pool); Agent B tail recovery should lift healthy count toward that cap.",
+    "c6_remaining_hours_at_absorbable_lanes": 5.7,
+    "c6_remaining_hours_at_authorized_matrix": 5.7,
+    "c6_remaining_hours_at_healthy_pairs": 26.1
+  }
+}

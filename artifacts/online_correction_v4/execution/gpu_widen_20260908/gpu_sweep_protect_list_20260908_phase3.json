@@ -1,0 +1,27 @@
+{
+  "c7_retry_shards_in_flight_do_not_preempt": [],
+  "cluster_context": "prod-dcwi-warrenq1-vmkub007",
+  "compiled_at_utc": "2026-09-08T12:55:00Z",
+  "namespace": "211247-prod",
+  "note": "Phase 3: C7/C8 confirmatory terminal at 768/768; C6 sole consumer. No productive C7/C8 pairs protected.",
+  "owner_agent": "capacity_routing_post_terminal_families",
+  "phase3_c6_only": {
+    "c6_authorized_lanes": 32,
+    "c6_remaining_episodes": 438,
+    "c7_status": "768/768 compiled_ledger_20260908_FINAL",
+    "c8_status": "768/768 ledger compile 20260908h",
+    "trigger": "both behavioral families terminal; reclaim all c7m/c8m cluster jobs"
+  },
+  "productive_c7_lane_pairs": [],
+  "productive_c8_lane_pairs": [],
+  "released_shard_protect_during_dispatch": [],
+  "schema_version": "v4-gpu-sweep-protect-list-v1",
+  "sequencing_phase": "3_c6_sole_consumer",
+  "sweep_coordination": {
+    "capacity_agent_may_reclaim": "all c7m/c8m jobs (finished families); c6 orphan/zombie per standard detection",
+    "do_not_delete": "active c6m lane pairs unless split-pair orphan rules apply",
+    "live_sweep_halted_until": null,
+    "rerunnable": true,
+    "startup_grace_seconds": 300
+  }
+}

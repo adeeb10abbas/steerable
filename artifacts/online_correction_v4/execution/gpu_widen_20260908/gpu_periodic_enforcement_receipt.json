@@ -1,56 +1,205 @@
 {
-  "a40_routing": {
-    "a40_pool": {
-      "c8_gpus_observed": 0,
-      "free_estimate": 40,
-      "size": 40,
-      "used": 0
-    },
-    "c6_sim_ready_policy_waiting": 13,
-    "c7_a40_sims_reserved": 0,
-    "c7_active_lanes_for_estimate": 14,
-    "c7_r6_reshard_lanes_observed": 14,
-    "c7_tail_lanes_legacy": 4,
-    "c8_authorized_lane_pairs": 20,
-    "c8_healthy_pairs_observed": 0,
-    "c8_sim_ready_policy_waiting": 0,
-    "decision": "split_a40_r6_reshard_plus_c8_ramp",
-    "reshard_feasible": "yes_agent_b_rendered_r6_dispatched",
-    "reshard_note": "Agent B r6 resharding live on 14 lane identities (attempt0611-0624). Remaining A40 routed to C8 up to 20 pairs."
-  },
   "automation": {
     "allow_redispatch": false,
+    "failed_sim_recreate_live": true,
+    "finished_family_reclaim_live": true,
     "finished_lane_orphan_reclaim_live": true,
     "interval_seconds_default": 180,
     "loop_command": ".venv/bin/python tools/run_v4_gpu_periodic_enforcement.py --loop-seconds 180 --record-loop-pid",
-    "mode": "live_gates_only_plus_dry_run_sweep",
+    "mode": "c6_only_live_gates_plus_finished_family_reclaim",
     "policies_enforced": [
-      "c8_a40_spread",
       "c6_a10040_spread"
     ],
     "rerun_command": ".venv/bin/python tools/run_v4_gpu_periodic_enforcement.py",
     "sweep_live": false
   },
+  "c6_capacity_routing": {
+    "amendment_for_extra_c6_lanes": null,
+    "c6_absorbable_lanes_pool_cap": 32,
+    "c6_authorized_lanes": 32,
+    "c6_healthy_pairs_observed": 7,
+    "c6_lanes_seen": 23,
+    "c6_matrix_binding": "authorized_matrix_caps_at_32",
+    "c6_remaining_episodes": 438,
+    "c6_sim_ready_policy_waiting": 4,
+    "c7_status": "768/768 terminal \u2014 cluster jobs reclaimed",
+    "c8_status": "768/768 terminal \u2014 cluster jobs reclaimed",
+    "decision": "c6_sole_consumer_post_c7_c8_terminal",
+    "idle_not_absorbable_by_c6": {
+      "NVIDIA-A100-SXM4-80GB": 95,
+      "NVIDIA-A40": 40,
+      "note": "C6 stratum is A100-40GB sim + B200 policy; A40/A100-80GB from finished families stay idle unless amended."
+    }
+  },
+  "finished_family_reclaim_live": {
+    "actions": [
+      {
+        "action": "delete_finished_family_job",
+        "attempt_id": "attempt0476",
+        "deleted": true,
+        "family": "c7",
+        "gpu_count": 0,
+        "gpu_product": "",
+        "job": "v4-c7m03-attempt0476-ebfaac50a2-policy",
+        "lane_id": "c7m03",
+        "reason_code": "finished_family_768_terminal",
+        "role": "policy"
+      },
+      {
+        "action": "delete_finished_family_job",
+        "attempt_id": "attempt0477",
+        "deleted": true,
+        "family": "c7",
+        "gpu_count": 0,
+        "gpu_product": "",
+        "job": "v4-c7m04-attempt0477-a0b8192a70-policy",
+        "lane_id": "c7m04",
+        "reason_code": "finished_family_768_terminal",
+        "role": "policy"
+      },
+      {
+        "action": "delete_finished_family_job",
+        "attempt_id": "attempt0351",
+        "deleted": true,
+        "family": "c7",
+        "gpu_count": 0,
+        "gpu_product": "",
+        "job": "v4-c7m06-attempt0351-f7b3f9888e-policy",
+        "lane_id": "c7m06",
+        "reason_code": "finished_family_768_terminal",
+        "role": "policy"
+      },
+      {
+        "action": "delete_finished_family_job",
+        "attempt_id": "attempt0479",
+        "deleted": true,
+        "family": "c7",
+        "gpu_count": 0,
+        "gpu_product": "",
+        "job": "v4-c7m07-attempt0479-ce9f3560c0-policy",
+        "lane_id": "c7m07",
+        "reason_code": "finished_family_768_terminal",
+        "role": "policy"
+      },
+      {
+        "action": "delete_finished_family_job",
+        "attempt_id": "attempt0480",
+        "deleted": true,
+        "family": "c7",
+        "gpu_count": 0,
+        "gpu_product": "",
+        "job": "v4-c7m08-attempt0480-a2e7d18763-policy",
+        "lane_id": "c7m08",
+        "reason_code": "finished_family_768_terminal",
+        "role": "policy"
+      },
+      {
+        "action": "delete_finished_family_job",
+        "attempt_id": "attempt0618",
+        "deleted": true,
+        "family": "c7",
+        "gpu_count": 1,
+        "gpu_product": "NVIDIA-A100-SXM4-80GB",
+        "job": "v4-c7m11-attempt0618-f1f5078c66-policy",
+        "lane_id": "c7m11",
+        "reason_code": "finished_family_768_terminal",
+        "role": "policy"
+      },
+      {
+        "action": "delete_finished_family_job",
+        "attempt_id": "attempt0618",
+        "deleted": true,
+        "family": "c7",
+        "gpu_count": 0,
+        "gpu_product": "",
+        "job": "v4-c7m11-attempt0618-f1f5078c66-sim",
+        "lane_id": "c7m11",
+        "reason_code": "finished_family_768_terminal",
+        "role": "sim"
+      },
+      {
+        "action": "delete_finished_family_job",
+        "attempt_id": "attempt0352",
+        "deleted": true,
+        "family": "c7",
+        "gpu_count": 0,
+        "gpu_product": "",
+        "job": "v4-c7m14-attempt0352-64c33a6dfa-policy",
+        "lane_id": "c7m14",
+        "reason_code": "finished_family_768_terminal",
+        "role": "policy"
+      },
+      {
+        "action": "delete_finished_family_job",
+        "attempt_id": "attempt0354",
+        "deleted": true,
+        "family": "c7",
+        "gpu_count": 0,
+        "gpu_product": "",
+        "job": "v4-c7m22-attempt0354-94198cd09e-policy",
+        "lane_id": "c7m22",
+        "reason_code": "finished_family_768_terminal",
+        "role": "policy"
+      }
+    ],
+    "c7_lanes_cleared": [
+      "c7m03",
+      "c7m04",
+      "c7m06",
+      "c7m07",
+      "c7m08",
+      "c7m11",
+      "c7m14",
+      "c7m22"
+    ],
+    "c8_lanes_cleared": [],
+    "jobs_deleted": 9,
+    "reclaim_c7": true,
+    "reclaim_c8": true,
+    "reclaimed_gpu_total": 1,
+    "reclaimed_gpus_by_product": {
+      "NVIDIA-A100-SXM4-80GB": 1
+    }
+  },
   "finished_lane_orphan_reclaim_live": {
     "actions": [],
     "jobs_deleted": 0,
     "lane_ids": [
+      "c8m00",
+      "c8m01",
+      "c8m02",
+      "c8m03",
+      "c8m04",
       "c8m05",
-      "c8m16"
+      "c8m06",
+      "c8m07",
+      "c8m08",
+      "c8m09",
+      "c8m10",
+      "c8m11",
+      "c8m12",
+      "c8m13",
+      "c8m14",
+      "c8m15",
+      "c8m16",
+      "c8m17",
+      "c8m18",
+      "c8m19"
     ],
     "reclaimed_gpu_total": 0,
     "reclaimed_gpus_by_product": {}
   },
+  "gpus_reclaimed_by_pool_this_tick": {
+    "NVIDIA-A100-SXM4-80GB": 1
+  },
   "kube_context": "prod-dcwi-warrenq1-vmkub007",
-  "loop_active": true,
-  "loop_pid": 95492,
   "namespace": "211247-prod",
-  "observed_at_utc": "2026-09-08T11:41:18Z",
+  "observed_at_utc": "2026-09-08T12:54:29Z",
   "pool_utilization": {
-    "pending_gpu_pods": 21,
+    "pending_gpu_pods": 13,
     "pool_free_estimate": {
-      "NVIDIA-A100-SXM4-40GB": 40,
-      "NVIDIA-A100-SXM4-80GB": 81,
+      "NVIDIA-A100-SXM4-40GB": 41,
+      "NVIDIA-A100-SXM4-80GB": 95,
       "NVIDIA-A40": 40,
       "NVIDIA-B200": 29
     },
@@ -62,105 +211,88 @@
     },
     "running_gpus_by_family_role": {
       "c6_policy": 11,
-      "c6_sim": 24,
-      "c7_policy": 14
+      "c6_sim": 23
     },
     "running_gpus_by_product": {
-      "NVIDIA-A100-SXM4-40GB": 24,
-      "NVIDIA-A100-SXM4-80GB": 14,
+      "NVIDIA-A100-SXM4-40GB": 23,
       "NVIDIA-B200": 11
     }
   },
-  "protect_list_path": "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_sweep_protect_list_20260908_phase2.json",
+  "protect_list_path": "artifacts/online_correction_v4/execution/gpu_widen_20260908/gpu_sweep_protect_list_20260908_phase3.json",
   "scheduling_state": {
     "c6": {
-      "healthy_pairs": 11,
+      "healthy_pairs": 7,
       "lane_prefix": "c6m",
-      "partial_pairs": 21,
+      "partial_pairs": 16,
       "pending_pairs": 0,
-      "total_lanes_seen": 32
-    },
-    "c7": {
-      "healthy_pairs": 0,
-      "lane_prefix": "c7m",
-      "partial_pairs": 14,
-      "pending_pairs": 0,
-      "total_lanes_seen": 14
-    },
-    "c8": {
-      "healthy_pairs": 0,
-      "lane_prefix": "c8m",
-      "partial_pairs": 20,
-      "pending_pairs": 0,
-      "total_lanes_seen": 20
+      "total_lanes_seen": 23
     }
   },
   "schema_version": "v4-gpu-periodic-enforcement-receipt-v1",
   "sim_first_gates": {
+    "failed_sim_recreate": {
+      "actions": [],
+      "lanes_recreated": [],
+      "rendered_roots_checked": [
+        "artifacts/online_correction_v4/execution/c6_containment_confirmatory_20260908/rendered-c6confirm20260908f-sim-restore"
+      ]
+    },
+    "periodic_loop_gap_decision": {
+      "action": "recreate_failed_c6_sim_partners each tick before unsuspend (live)",
+      "agent_b_coordination": "Agent B tail recovery 20260908 used same delete+create pattern",
+      "issue": "sim_first gate unsuspends only when sim Running; Failed /healthz sims deadlock"
+    },
     "placement_receipts": [
       {
-        "actions": [],
-        "policy_id": "c8_a40_spread",
-        "scheduling_state_after": {
-          "c6": {
-            "healthy_pairs": 11,
-            "lane_prefix": "c6m",
-            "partial_pairs": 21,
-            "pending_pairs": 0,
-            "total_lanes_seen": 32
-          },
-          "c8": {
-            "healthy_pairs": 0,
-            "lane_prefix": "c8m",
-            "partial_pairs": 20,
-            "pending_pairs": 0,
-            "total_lanes_seen": 20
+        "actions": [
+          {
+            "action": "unsuspend_policy_sim_ready",
+            "job": "v4-c6m11-attempt0311-f889ccd9bd-policy",
+            "lane_id": "c6m11",
+            "unsuspended": true
           }
-        },
-        "suspended": 0,
-        "unsuspended": 0
-      },
-      {
-        "actions": [],
+        ],
         "policy_id": "c6_a10040_spread",
         "scheduling_state_after": {
           "c6": {
-            "healthy_pairs": 11,
+            "healthy_pairs": 7,
             "lane_prefix": "c6m",
-            "partial_pairs": 21,
+            "partial_pairs": 16,
             "pending_pairs": 0,
-            "total_lanes_seen": 32
+            "total_lanes_seen": 23
           },
           "c8": {
             "healthy_pairs": 0,
             "lane_prefix": "c8m",
-            "partial_pairs": 20,
+            "partial_pairs": 0,
             "pending_pairs": 0,
-            "total_lanes_seen": 20
+            "total_lanes_seen": 0
           }
         },
+        "suspended": 0,
+        "unsuspended": 1
+      },
+      {
+        "actions": [],
+        "policy_id": "c6_sim_first_adhoc",
         "suspended": 0,
         "unsuspended": 0
       }
     ],
     "policies_suspended_this_tick": 0,
-    "policies_unsuspended_this_tick": 0
+    "policies_unsuspended_this_tick": 1
   },
   "sweep_dry_run": {
     "finished_lane_orphan_policies": [],
-    "jobs_would_delete": 15,
+    "jobs_would_delete": 3,
     "reclaimed_gpus_would_be": {
-      "NVIDIA-A100-SXM4-40GB": 13,
-      "NVIDIA-A100-SXM4-80GB": 1
+      "NVIDIA-A100-SXM4-40GB": 3
     }
   },
   "wall_clock_estimates": {
-    "c6_confirmatory_hours_at_healthy_pairs": 29.1,
-    "c7_tail_188_hours_at_4_lanes": 19.6,
-    "c7_tail_188_hours_at_active_lanes": 5.6,
-    "c7_tail_188_hours_if_r6_14_lanes": 5.6,
-    "c8_remaining_hours_at_current_healthy": 235.0,
-    "c8_remaining_hours_at_max_authorized_pairs": 11.8,
-    "c8_remaining_hours_if_c7_r6_14_lanes": 18.1
+    "c6_achievable_estimate_note": "Use absorbable_lanes=32 (min of matrix and B200/A100-40 pool); Agent B tail recovery should lift healthy count toward that cap.",
+    "c6_remaining_hours_at_absorbable_lanes": 5.7,
+    "c6_remaining_hours_at_authorized_matrix": 5.7,
+    "c6_remaining_hours_at_healthy_pairs": 26.1
   }
 }
